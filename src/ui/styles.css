@@ -607,4 +607,4 @@ h1, h2, h3 { margin: 0; font-family: var(--serif); font-weight: 450; letter-spac
 .note-tools { display: flex; align-items: center; gap: 14px; margin-top: 6px; }
 .note-picture { display: inline-flex; align-items: center; gap: 10px; }
 .note-picture img { display: block; width: 56px; height: 56px; object-fit: cover; border-radius: 2px; border: 1px solid var(--rule-2); }
-.note .note-picture { display: flex; width: fit-content; margin-top: 6px; }
+.note .note-picture, .asked-before .note-picture { display: flex; width: fit-content; margin-top: 6px; }

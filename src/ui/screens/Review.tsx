@@ -473,6 +473,11 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
                     <li key={n}>
                       {note.time !== undefined && <span className="at">{clock(note.time)} </span>}
                       {note.text}
+                      {note.image !== undefined && (
+                        <a className="note-picture" href={`/api/files/${note.image}`} target="_blank" rel="noreferrer">
+                          <img src={`/api/files/${note.image}`} alt={t("review.picture")} />
+                        </a>
+                      )}
                     </li>
                   ))}
                 </ol>
