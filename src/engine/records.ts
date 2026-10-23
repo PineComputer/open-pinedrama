@@ -13,6 +13,8 @@ export interface DramaRow {
   notes: string;
   /** Where its work runs: a replay drama never starts Pine Computers, and a Pine drama never plays in replay. */
   mode: Mode;
+  /** 1 for a rehearsal: Pine's agent stands in for the drama skill with placeholder files. */
+  rehearsal: number;
   status: DramaStatus;
   note: string;
   /** Why the studio held it, as a code the app words (HoldReason); empty when it didn't. */

@@ -54,11 +54,13 @@
       "dist/ui/**",
       "dist/desktop/**",
       "fixtures/replay/**",
+      "fixtures/rehearsal/**",
       "package.json"
     ],
     "asarUnpack": [
       "dist/ui/**",
-      "fixtures/replay/**"
+      "fixtures/replay/**",
+      "fixtures/rehearsal/**"
     ],
     "mac": {
       "category": "public.app-category.video",

@@ -23,7 +23,7 @@ import { atProjectLimit } from "./scheduler.ts";
 import { all, get } from "./db.ts";
 import { type FileRow, fileUrl, filesOfTurn, toItem, versionNumber } from "./library.ts";
 import { type ComputerRow, type DramaRow, type EpisodeRow, type ReviewRow, type SessionRow, episodeCode, latestTurn, session as sessionRow } from "./records.ts";
-import { itemsOf } from "./reviews.ts";
+import { itemsOf, pendingReview } from "./reviews.ts";
 
 function still(file: FileRow): Still {
   return file.type.startsWith("video/") ? { url: fileUrl(file), video: true } : { url: fileUrl(file) };
@@ -48,6 +48,7 @@ export function dramaCard(drama: DramaRow): DramaCard {
   return {
     id: drama.id,
     mode: drama.mode,
+    rehearsal: drama.rehearsal === 1,
     title: drama.title,
     language: drama.language,
     look: drama.look,
@@ -174,8 +175,7 @@ export function dramaView(drama: DramaRow): DramaView {
       state: setupState,
       reviewId: setupReview?.id,
       kind: setupReview?.kind,
-      hasCast: (get<{ n: number }>("select count(*) as n from files where drama_id = ? and kind = 'look'", drama.id)?.n ?? 0) > 0,
-      leadsApproved: get("select id from reviews where drama_id = ? and kind = 'looks' and state = 'answered' limit 1", drama.id) !== undefined,
+      reached: setupReached(drama.id),
       activity: setupSession?.state === "open" ? setupSession.activity ?? undefined : undefined,
       note: drama.note || undefined,
       reason: (drama.reason || undefined) as HoldReason | undefined,
@@ -185,6 +185,21 @@ export function dramaView(drama: DramaRow): DramaView {
     stalled: stalled(drama),
     atLimit: atLimit(drama),
   };
+}
+
+/**
+ * How far the setup has got, by what it has made and what the maker answered (the agent may
+ * approve the leads by a plain question, or skip one): 0 reading, 1 asking, 2 drawing the
+ * leads, 3 their approval, 4 preparing every episode, 5 the shared references' approval.
+ */
+function setupReached(dramaId: string): number {
+  const made = new Set(all<{ kind: string; look: string | null }>("select kind, look from files where drama_id = ? and episode_id is null", dramaId).map((file) => (file.kind === "look" && file.look && file.look !== "base" ? "state" : file.kind)));
+  const reviews = all<{ kind: string; state: string }>("select r.kind, r.state from reviews r join sessions s on s.id = r.session_id where r.drama_id = ? and s.role = 'setup'", dramaId);
+  if (reviews.some((review) => review.kind === "references")) return 5;
+  if (reviews.some((review) => review.kind === "looks" && review.state === "answered") || ["breakdown", "location", "prop", "state"].some((kind) => made.has(kind))) return 4;
+  if (reviews.some((review) => review.kind === "looks")) return 3;
+  if (made.has("look") || reviews.some((review) => review.state === "answered")) return 2;
+  return reviews.length ? 1 : 0;
 }
 
 /** The project's limit, when this drama has work waiting that no Computer of its own can take. */
@@ -316,12 +331,12 @@ export function reviewView(review: ReviewRow): ReviewView {
 export function chatView(session: SessionRow): ChatView {
   const turn = latestTurn(session.id);
   const episode = session.episode_id ? get<EpisodeRow>("select * from episodes where id = ?", session.episode_id) : undefined;
-  const review = turn?.state === "needs_input" ? get<ReviewRow>("select * from reviews where turn_id = ?", turn.id) : undefined;
+  const review = pendingReview(session.id);
   const sends: ChatView["sends"] =
     session.state !== "open"
       ? "none"
-      : turn?.state === "needs_input"
-        ? review && review.kind !== "question"
+      : review
+        ? review.kind !== "question"
           ? "review"
           : "answer"
         : turn && !turn.ended_at && turn.state !== "answered"
@@ -336,7 +351,8 @@ export function chatView(session: SessionRow): ChatView {
     .reverse()
     .map((message): ChatMessage => {
       if (message.kind !== "input") return message;
-      const decided = decisions.get(message.text);
+      // A decision on a stop that ended its turn went as a run: its answer, then "carry on".
+      const decided = decisions.get(message.text) ?? [...decisions.entries()].find(([answer]) => message.text.startsWith(`${answer}\n\n`))?.[1];
       if (decided) {
         const items = decided.decision ? ((JSON.parse(decided.decision) as Decision).items ?? []) : [];
         const revised = items.filter((item) => item.verdict === "revise").length;

@@ -1,9 +1,9 @@
 import { Check, Pencil } from "lucide-react";
-import { useState } from "react";
+import { type CSSProperties, useState } from "react";
 import type { CastCard, Receipt } from "../../shared/types.ts";
 import { useResource } from "../api.ts";
 import { useT } from "../i18n.ts";
-import { errorText } from "../labels.ts";
+import { errorText, subjectName } from "../labels.ts";
 import { Link } from "../router.tsx";
 
 /** One look (or a place, or a prop): its versions newest first, each with what the maker decided on it. */
@@ -67,8 +67,8 @@ function Look({ name, versions }: { name: string; versions: Receipt[] }) {
 function Character({ card }: { card: CastCard }) {
   const { t } = useT();
   return (
-    <section className="character">
-      <h4>{card.subject}</h4>
+    <section className="character" style={{ "--looks": card.looks.length } as CSSProperties}>
+      <h4>{subjectName(card.subject)}</h4>
       <div className="looks">
         {card.looks.map((look) => (
           <Look key={look.look} name={look.look === "base" ? t("cast.base") : look.look} versions={look.versions} />
@@ -124,7 +124,7 @@ export function Cast({ dramaId, compact = false }: { dramaId: string; compact?: 
                 </h3>
                 <div className="figures">
                   {cards.map((card) => (
-                    <Look key={card.subject} name={card.subject} versions={card.looks[0]?.versions ?? []} />
+                    <Look key={card.subject} name={subjectName(card.subject)} versions={card.looks[0]?.versions ?? []} />
                   ))}
                 </div>
               </section>

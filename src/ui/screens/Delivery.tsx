@@ -26,6 +26,14 @@ export function Delivery({ dramaId }: { dramaId: string }) {
       <div className="work-head">
         <h2>{t("section.delivery")}</h2>
         {data.length > 0 && <span className="facts">{t("delivery.ready", { n: ready, total: data.length })}</span>}
+        {ready > 0 && (
+          <>
+            <span className="spacer" />
+            <a className="btn small ink" href={`/api/dramas/${dramaId}/season.zip`} download>
+              {t("delivery.season", { n: ready })}
+            </a>
+          </>
+        )}
       </div>
       {!data.length ? (
         <p className="empty-note">{t("delivery.empty")}</p>

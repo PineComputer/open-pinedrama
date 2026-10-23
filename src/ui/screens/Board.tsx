@@ -59,7 +59,9 @@ function Row({ row, wide, dramaId }: { row: EpisodeRow; wide: boolean; dramaId: 
         </td>
       ))}
       <td>
-        <div className={`now ${row.state === "waiting" ? "waiting" : trouble ? "trouble" : ""}`}>{nowText(row, t)}</div>
+        <div className={`now ${row.state === "waiting" ? "waiting" : trouble ? "trouble" : ""}`} title={nowText(row, t)}>
+          <span className="said">{nowText(row, t)}</span>
+        </div>
         {trouble && (
           <button
             className="link row-action"
@@ -125,7 +127,9 @@ function Card({ row, wide, dramaId }: { row: EpisodeRow; wide: boolean; dramaId:
             <i />
           </span>
         )}
-        {nowText(row, t)}
+        <span className="said" title={nowText(row, t)}>
+          {nowText(row, t)}
+        </span>
       </div>
       {trouble && (
         <button className="link row-action" disabled={resume.busy} onClick={() => void resume.run()}>
@@ -236,23 +240,20 @@ export function SetupPanel({ drama }: { drama: DramaView }) {
   const { t } = useT();
   const { setup } = drama;
   const retry = useAction(() => api(`/api/dramas/${drama.id}/retry`, { method: "POST" }));
-  // 0 reading, 1 answering a question, 2 drawing the cast, 3 approving the leads' looks.
+  const rehearse = useAction(() => api(`/api/dramas/${drama.id}/rehearse`, { method: "POST" }));
   // Reading, answering, drawing the leads, approving them; then pre-production: preparing every
-  // episode (breakdowns and shared references), and approving the shared references.
+  // episode (breakdowns and shared references), and approving the shared references. A plain
+  // question waits at the step the setup has reached, or at "answering" before any.
   const current =
     setup.state === "waiting"
       ? setup.kind === "references"
         ? 5
         : setup.kind === "looks"
           ? 3
-          : setup.leadsApproved
-            ? 4
-            : 1
-      : setup.leadsApproved
-        ? 4
-        : setup.hasCast
-          ? 2
-          : 0;
+          : Math.max(1, setup.reached)
+      : setup.reached === 3 || setup.reached === 1
+        ? setup.reached + 1
+        : setup.reached;
   const steps: TKey[] = ["setup.reading", "setup.answers", "setup.cast", "setup.approval", "setup.preparing", "setup.references"];
   const detail =
     setup.state === "stopped"
@@ -261,7 +262,7 @@ export function SetupPanel({ drama }: { drama: DramaView }) {
         : setup.note ?? t("board.stopped")
       : setup.state === "waiting"
         ? t("board.waits", { kind: t(`kind.${setup.kind ?? "question"}` as TKey) })
-        : setup.activity ?? t("setup.startingComputer");
+        : setup.activity ?? t(drama.crew.some((computer) => computer.sessions.length > 0) ? "setup.atWork" : "setup.startingComputer");
   return (
     <>
       <div className="work-head">
@@ -303,7 +304,13 @@ export function SetupPanel({ drama }: { drama: DramaView }) {
               <button className="btn" disabled={retry.busy} onClick={() => void retry.run()}>
                 {t("setup.retry")}
               </button>
-              {retry.error !== undefined && <span className="error small">{errorText(retry.error, t)}</span>}
+              {setup.reason === "no-drama-skill" && (
+                <button className="btn" disabled={rehearse.busy} onClick={() => void rehearse.run()}>
+                  {t("setup.rehearse")}
+                </button>
+              )}
+              {[retry.error, rehearse.error].map((failed, n) => failed !== undefined && <span key={n} className="error small">{errorText(failed, t)}</span>)}
+              {setup.reason === "no-drama-skill" && <p className="quiet small hint">{t("setup.rehearseHint")}</p>}
             </div>
           )}
         </div>

@@ -11,7 +11,7 @@ import { PineFleet } from "./pine-fleet.ts";
 import type { ComputerRow } from "./records.ts";
 import { ReplayFleet } from "./replay-fleet.ts";
 import { drain, pause, reconcile, resume } from "./scheduler.ts";
-import { type PineProject, checkProject, environmentProject, keyHint, saveMode, saveProject, savedMode, savedProject } from "./settings.ts";
+import { type PineProject, checkProject, dramaSkill, environmentProject, keyHint, saveMode, saveProject, savedMode, savedProject } from "./settings.ts";
 
 /** At start: the environment's project (a developer's override), the saved one, the replay, or none. */
 export function initialFleet(): Fleet | undefined {
@@ -83,5 +83,6 @@ export function appInfo(): AppInfo {
     version: VERSION,
     dataDir: DATA_DIR,
     project: mode === "pine" && project ? { endpoint: project.endpoint, keyHint: keyHint(project.apiKey), fromEnvironment: Boolean(fromEnvironment) } : undefined,
+    dramaSkill: mode === "pine" ? dramaSkill(fleet().project) : undefined,
   };
 }

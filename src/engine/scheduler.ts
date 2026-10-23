@@ -25,12 +25,13 @@ import {
 } from "./computers.ts";
 import { all, get, now, run } from "./db.ts";
 import { followEvents, followTurn, isFollowed, unsettledTurns } from "./follow.ts";
-import { DRAMA_SKILL, episodeGoal, resumeGoal, setupGoal } from "./goals.ts";
+import { DRAMA_SKILL, episodeGoal, rehearsed, resumeGoal, setupGoal } from "./goals.ts";
 import type { FileRow } from "./library.ts";
 import { publish } from "./live.ts";
-import { type ComputerRow, type DramaRow, type EpisodeRow, type SessionRow, computer as computerRow, episodeCode, latestTurn, openSessionsOf } from "./records.ts";
+import { type ComputerRow, type DramaRow, type EpisodeRow, type SessionRow, computer as computerRow, episodeCode, latestTurn, openSessionsOf, session as sessionRow } from "./records.ts";
 import { reconcileSending } from "./reviews.ts";
-import { attach, episodeArchive, hasRun, inputs, projectArchive, references, sendRun, startRun, unconfirmedRuns } from "./runs.ts";
+import { noteDramaSkill } from "./settings.ts";
+import { attach, attachKit, episodeArchive, hasRun, inputs, projectArchive, references, sendRun, startRun, unconfirmedRuns } from "./runs.ts";
 
 /** Work the clock started and hasn't finished, so a slow call never starts twice. */
 const busy = new Set<string>();
@@ -151,30 +152,47 @@ function claimComputer(drama: DramaRow): ComputerRow | undefined {
 /**
  * Whether the session's Computer offers Pine's drama skill. Without it the agent would make
  * up a drama of its own at the project's expense. The skill comes with the project, so the
- * setup's Computer answers for every Computer the drama uses after it. One that can't list
- * its skills (an older release) isn't held back on that account.
+ * setup's Computer answers for every Computer the drama uses after it, and the studio
+ * remembers the answer for the project (New drama offers a rehearsal without it). One that
+ * can't list its skills (an older release) isn't held back on that account.
  */
 async function offersDramaSkill(session: SessionRow): Promise<boolean> {
   const computer = computerRow(session.computer_id);
   if (!computer?.binding) return true;
   try {
-    return (await fleet().skills(computerRef(computer))).includes(DRAMA_SKILL);
+    const offered = (await fleet().skills(computerRef(computer))).includes(DRAMA_SKILL);
+    if (noteDramaSkill(fleet().project, offered)) publish("app");
+    return offered;
   } catch (error) {
     console.error("skills:", message(error));
     return true;
   }
 }
 
-/** Hands the setup session the screenplay and its goal: on a new session, or again on one whose start didn't finish. */
+/** Holds the drama for want of the drama skill: nothing new starts until the maker tries again or rehearses. */
+async function holdForSkill(drama: DramaRow, session: SessionRow): Promise<void> {
+  run("update dramas set status = 'stopped', reason = 'no-drama-skill', note = '', updated_at = ? where id = ?", now(), drama.id);
+  await closeSession(session);
+  publish(`drama:${drama.id}`, "dramas");
+}
+
+/** A goal as the drama gives it: rehearsed, with the stand-in kit, when the drama is a rehearsal. */
+function goalOf(drama: DramaRow, goal: string): string {
+  return drama.rehearsal ? rehearsed(goal) : goal;
+}
+
+/**
+ * Hands the setup session the screenplay and its goal: on a new session, or again on one
+ * whose start didn't finish. A rehearsal needs no drama skill; it gets the stand-in kit.
+ */
 async function beginSetup(drama: DramaRow, session: SessionRow): Promise<void> {
-  if (!(await offersDramaSkill(session))) {
-    run("update dramas set status = 'stopped', reason = 'no-drama-skill', note = '', updated_at = ? where id = ?", now(), drama.id);
-    await closeSession(session);
-    publish(`drama:${drama.id}`, "dramas");
+  if (!(await offersDramaSkill(session)) && !drama.rehearsal) {
+    await holdForSkill(drama, session);
     return;
   }
   const { sent } = await attach(session, inputs(drama.id));
-  await startRun(session, "setup", setupGoal(drama, sent));
+  if (drama.rehearsal) await attachKit(session);
+  await startRun(session, "setup", goalOf(drama, setupGoal(drama, sent)));
 }
 
 /**
@@ -237,6 +255,12 @@ function startEpisode(drama: DramaRow, episode: EpisodeRow, computer: ComputerRo
       const code = episodeCode(episode);
       session = await openSession(computer, "episode", episode.id, code);
       release();
+      // A project can lose the skill after its setup: the drama waits rather than the agent improvising each episode.
+      if (!drama.rehearsal && !(await offersDramaSkill(session))) {
+        run("update episodes set state = 'queued', session_id = null, updated_at = ? where id = ?", now(), episode.id);
+        await holdForSkill(drama, session);
+        return;
+      }
       run("update episodes set session_id = ?, updated_at = ? where id = ?", session.id, now(), episode.id);
       // The project pre-production handed over, and on a resume the episode's own packed folder;
       // a drama set up before pre-production existed gets its references as loose files.
@@ -249,10 +273,11 @@ function startEpisode(drama: DramaRow, episode: EpisodeRow, computer: ComputerRo
       }
       const { sent, skipped } = await attach(session, files);
       if (skipped.length) console.warn(`${code}: too large to hand over (over 64 MiB): ${skipped.join(", ")}`);
+      if (drama.rehearsal) await attachKit(session);
       const goal = episode.resume
         ? resumeGoal(drama, code, sent, handoff, episode.carry || undefined)
         : episodeGoal(drama, code, sent, handoff);
-      await startRun(session, episode.resume ? "resume" : "episode", goal);
+      await startRun(session, episode.resume ? "resume" : "episode", goalOf(drama, goal));
       run("update episodes set resume = 0, carry = '', continues = 0, note = '', updated_at = ? where id = ?", now(), episode.id);
       failures.delete(episode.id);
     } catch (error) {
@@ -277,7 +302,23 @@ function startEpisode(drama: DramaRow, episode: EpisodeRow, computer: ComputerRo
   if (!started) release();
 }
 
+/**
+ * Episodes whose start was cut short (the engine stopped after it opened their session but
+ * before their run was saved): the half-open session is let go and they wait their turn again.
+ */
+function recoverStarts(drama: DramaRow): void {
+  for (const episode of all<EpisodeRow>("select * from episodes where drama_id = ? and state = 'working'", drama.id)) {
+    if (busy.has(`episode:${episode.id}`)) continue;
+    const session = episode.session_id ? sessionRow(episode.session_id) : undefined;
+    if (session && (session.state !== "open" || hasRun(session.id))) continue;
+    if (session) void closeSession(session);
+    run("update episodes set state = 'queued', session_id = null, updated_at = ? where id = ? and state = 'working'", now(), episode.id);
+    publish(`drama:${drama.id}`);
+  }
+}
+
 function fill(drama: DramaRow): void {
+  recoverStarts(drama);
   const count = (state: string) => get<{ n: number }>("select count(*) as n from episodes where drama_id = ? and state = ?", drama.id, state)?.n ?? 0;
   let active = count("working") + count("waiting");
   const waiting = count("waiting");
@@ -309,7 +350,7 @@ const idleRefused = new Map<string, number>();
  */
 function tend(computer: ComputerRow): void {
   const sessions = openSessionsOf(computer.id);
-  const waiting = sessions.some((session) => latestTurn(session.id)?.state === "needs_input");
+  const waiting = sessions.some((session) => get("select id from reviews where session_id = ? and state in ('saving', 'open') limit 1", session.id) !== undefined);
   const desired = allowedIdle(waiting ? IDLE_WAITING_S : IDLE_WORKING_S);
   if (projectLimits().idleAdjustable && computer.idle_timeout !== desired && (idleRefused.get(computer.id) ?? 0) < Date.now()) {
     // Refused, or applied as something else: asked again only ten minutes later.

@@ -1,6 +1,7 @@
 import type { ReviewSummary } from "../../shared/types.ts";
 import { ago, useResource } from "../api.ts";
 import { type TKey, useT } from "../i18n.ts";
+import { plainText } from "../labels.ts";
 import { Link } from "../router.tsx";
 import { Still } from "../Still.tsx";
 
@@ -21,7 +22,7 @@ function Asks({ items, dramaId }: { items: ReviewSummary[]; dramaId?: string }) 
             <div className="where">
               {[!dramaId ? item.dramaTitle : null, item.items ? `${item.items}` : null].filter(Boolean).join(" · ")}
             </div>
-            <div className="words">{item.question}</div>
+            <div className="words">{plainText(item.question)}</div>
           </div>
           <div className="when">
             {item.state === "ended" ? t("inbox.ended") : item.state === "saving" ? "…" : <span className="seal-text">●</span>}

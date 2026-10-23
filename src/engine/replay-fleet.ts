@@ -305,7 +305,8 @@ function episodeScript(code: string, lang: Lang): Player {
       return { progress: say.recutting, files: [video(`${base}/edit/v${cut}/cut.mp4`, "cut")], ask: say.askCutAgain(code) };
     }
     stage = "done";
-    return { progress: say.accepting, files: [], summary: say.finished(code) };
+    // As Pine's agent does, the finished episode hands back its accepted cut again, unchanged.
+    return { progress: say.accepting, files: [video(`${base}/edit/v${cut}/cut.mp4`, "cut")], summary: say.finished(code) };
   };
   // Each stop and the finish also hand back the episode's own folder, packed.
   return (answer) => {
@@ -326,9 +327,19 @@ function scriptFor(goal: string, lang: Lang): Player {
   return chatScript(goal, lang);
 }
 
+/** A decision on a stop that ended its turn, sent as a run (goals.ts, decisionGoal): the recording goes on. */
+const isDecision = (goal: string) => /from there as the goal says/.test(goal);
+
 export class ReplayFleet implements Fleet {
   readonly mode = "replay" as const;
   readonly project = "replay";
+  /**
+   * How the recorded agent stops for the maker: with a question that returns its files ("ask");
+   * with one that only names them ("name"), or that doesn't mention them ("bare"); or by ending
+   * its turn with the files and its question in the summary ("finish"). Pine's agent has been
+   * seen doing each of the last three.
+   */
+  stops: "ask" | "name" | "bare" | "finish" = "ask";
   private readonly machines = new Map<string, Machine>();
   private counter = 0;
 
@@ -430,12 +441,17 @@ export class ReplayFleet implements Fleet {
       return { path: file.path, size: file.bytes.length, sha256: "", type: file.type };
     });
     const turn = session.turns.get(turnId)!;
+    const asks = step.ask !== undefined && this.stops !== "finish";
+    // Asked without returning its files: the question names them instead, or doesn't even do that.
+    const named = step.ask !== undefined && this.stops === "name";
+    const bare = step.ask !== undefined && this.stops === "bare";
+    const ask = named ? [step.ask, ...files.map((file) => `- [${file.path.split("/").pop()}](${file.path})`)].join("\n") : step.ask;
     turn.info = {
       ...turn.info,
-      state: step.ask ? "needs_input" : "completed",
-      question: step.ask ?? "",
-      summary: step.ask ?? step.summary ?? "",
-      files,
+      state: asks ? "needs_input" : "completed",
+      question: asks ? ask! : "",
+      summary: ask ?? step.summary ?? "",
+      files: named || bare ? [] : files,
       cost: Math.round((0.15 + Math.random() * 0.4) * 100) / 100,
     };
     this.emit(session, turnId, "result", turn.info.summary);
@@ -449,8 +465,9 @@ export class ReplayFleet implements Fleet {
     const latest = found.latest && found.turns.get(found.latest);
     if (latest && latest.info.state === "running") throw Object.assign(new Error("The session is busy."), { status: 409 });
     found.lang ??= languageOf(goal);
-    found.play = scriptFor(goal, found.lang);
-    const info = this.begin(found, "");
+    const decision = isDecision(goal) && found.play !== undefined;
+    if (!decision) found.play = scriptFor(goal, found.lang);
+    const info = this.begin(found, decision ? goal : "");
     found.keys.set(key, info.turnId);
     this.emit(found, info.turnId, "input", goal);
     return info;
@@ -480,6 +497,17 @@ export class ReplayFleet implements Fleet {
 
   async steer(ref: ComputerRef, session: SessionRef, turnId: string, textValue: string) {
     this.emit(this.session(ref, session), turnId, "input", textValue);
+  }
+
+  async listFiles(ref: ComputerRef, session: SessionRef, folder: string) {
+    const prefix = folder.replace(/\/$/, "") + "/";
+    const level = new Map<string, { path: string; folder: boolean; size: number }>();
+    for (const file of this.session(ref, session).files.values()) {
+      if (!file.path.startsWith(prefix)) continue;
+      const [name, ...rest] = file.path.slice(prefix.length).split("/");
+      level.set(name, rest.length ? { path: prefix + name, folder: true, size: 0 } : { path: file.path, folder: false, size: file.bytes.length });
+    }
+    return [...level.values()];
   }
 
   async openFile(ref: ComputerRef, session: SessionRef, filePath: string) {

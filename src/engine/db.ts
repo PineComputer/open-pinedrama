@@ -15,6 +15,7 @@ create table if not exists dramas (
   per_computer integer not null,    -- episodes per Computer at once (1-3)
   notes text not null default '',
   mode text not null,               -- pine | replay: where its work runs, fixed at creation
+  rehearsal integer not null default 0, -- 1: Pine's agent stands in for the drama skill (goals.ts, rehearsed)
   status text not null,             -- setup | production | done | stopped
   note text not null default '',    -- why it stopped
   continues integer not null default 0,
@@ -186,6 +187,7 @@ export function db(): DatabaseSync {
     add("dramas", "reason", "text not null default ''");
     add("computers", "stop_by", "text");
     add("computers", "project", "text not null default ''");
+    add("dramas", "rehearsal", "integer not null default 0");
     shared.__studioDb = handle;
   }
   return shared.__studioDb;

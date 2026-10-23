@@ -10,16 +10,37 @@ export function nowText(row: EpisodeRow, t: T): string {
     case "queued":
       return t("board.inLine", { n: row.position ?? 1 });
     case "working":
-      return row.activity ?? t("board.starting");
+      return row.activity ? plainText(row.activity) : t(row.computer ? "board.atWork" : "board.starting");
     case "waiting":
       return row.waitingFor === "saving" ? t("board.saving") : t("board.waits", { kind: t(`kind.${row.waitingFor ?? "question"}`) });
     case "done":
       return t("board.done");
     case "stopped":
-      return row.note ?? t("board.stopped");
+      return row.note ? plainText(row.note) : t("board.stopped");
     default:
-      return row.note ?? t("board.failed");
+      return row.note ? plainText(row.note) : t("board.failed");
   }
+}
+
+/**
+ * A character's, place's or prop's name as the agent filed it ("maya-reyes", "lin/S1"), said
+ * as words ("Maya Reyes", "Lin · S1"). Names in other scripts, and codes like S1, stay as written.
+ */
+export function subjectName(subject: string): string {
+  return subject
+    .split("/")
+    .map((part) => (/^[a-z][a-z0-9]*(?:[-_ ][a-z0-9]+)*$/.test(part) ? part.split(/[-_ ]+/).map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(" ") : part))
+    .join(" · ");
+}
+
+/** Markdown said as plain words, for a one-line preview: link labels, no markup. */
+export function plainText(markdown: string): string {
+  return markdown
+    .replace(/\[([^\]\n]+)\]\([^)\n]*\)/g, "$1")
+    .replace(/[*_`#>]+/g, "")
+    .replace(/^\s*(?:[-+]|\d+[.)])\s+/gm, "")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 const LOOKS: Record<string, Parameters<T>[0]> = { "live action": "look.live", anime: "look.anime", "3D animation": "look.3d" };

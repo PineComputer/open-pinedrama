@@ -19,10 +19,12 @@ function standardDataDir(): string {
 /** The studio's records, library and sealing key. Development uses the repository's .data/ (scripts/dev.mjs). */
 export const DATA_DIR = path.resolve(process.env.STUDIO_DATA_DIR || standardDataDir());
 
-/** What ships with the studio: the built UI and the replay's recordings. A packaged app points this at its resources. */
+/** What ships with the studio: the built UI, the replay's recordings and the rehearsal's kit. A packaged app points this at its resources. */
 const RESOURCES = path.resolve(process.env.STUDIO_RESOURCES || fileURLToPath(new URL("../..", import.meta.url)));
 export const UI_DIR = path.join(RESOURCES, "dist", "ui");
 export const FIXTURES = path.join(RESOURCES, "fixtures", "replay");
+/** The kit a rehearsal hands each session, to stand in for the drama skill (goals.ts, rehearsed). */
+export const REHEARSAL_KIT = path.join(RESOURCES, "fixtures", "rehearsal", "standin.py");
 
 /** 0 asks the system for a free port; the desktop shell does that and reads the port back. */
 export const PORT = Number(process.env.STUDIO_PORT ?? 4310);

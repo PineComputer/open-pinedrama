@@ -97,6 +97,8 @@ export interface Fleet {
   answer(computer: ComputerRef, session: SessionRef, turnId: string, text: string): Promise<TurnInfo>;
   steer(computer: ComputerRef, session: SessionRef, turnId: string, text: string): Promise<void>;
   openFile(computer: ComputerRef, session: SessionRef, path: string): Promise<ReadableStream<Uint8Array>>;
+  /** One folder of the session's working directory: its files and folders, by path from the working directory. */
+  listFiles(computer: ComputerRef, session: SessionRef, folder: string): Promise<{ path: string; folder: boolean; size: number }[]>;
   /** The session's agent events from a cursor, until aborted. */
   events(computer: ComputerRef, session: SessionRef, after: string | undefined, taskId: string | undefined, signal: AbortSignal): AsyncIterable<FleetEvent>;
   /** A browser-safe connection to the session's desktop, or null where there is none. */

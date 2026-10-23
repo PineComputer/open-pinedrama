@@ -80,9 +80,15 @@ export interface Origin {
   kind?: FileKind;
 }
 
+/** Whether the drama already has this file, at the same path with the same bytes: the agent returned it before. */
+export function seenBefore(dramaId: string, relPath: string, sha: string): boolean {
+  return get("select id from files where drama_id = ? and rel_path = ? and sha = ? limit 1", dramaId, relPath, sha) !== undefined;
+}
+
 /**
  * Saves one file and indexes it. A file already saved for the same turn and path is not
- * saved again, so following a turn twice is safe.
+ * saved again, so following a turn twice is safe; nor is one the agent returns again
+ * unchanged, which stays with the turn that first returned it (its review, its verdict).
  */
 export async function save(body: ReadableStream<Uint8Array> | Uint8Array, origin: Origin): Promise<number> {
   if (origin.turnId) {
@@ -90,6 +96,10 @@ export async function save(body: ReadableStream<Uint8Array> | Uint8Array, origin
     if (existing) return existing.id;
   }
   const { sha, size } = await store(body);
+  if (origin.turnId) {
+    const earlier = get<{ id: number }>("select id from files where drama_id = ? and rel_path = ? and sha = ? order by id limit 1", origin.dramaId, origin.relPath, sha);
+    if (earlier) return earlier.id;
+  }
   const hints = classify(origin.relPath);
   const kind = origin.kind ?? hints.kind;
   const result = run(

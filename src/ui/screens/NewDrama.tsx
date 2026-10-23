@@ -1,5 +1,6 @@
 import { type DragEvent, useEffect, useRef, useState } from "react";
-import { api } from "../api.ts";
+import type { AppInfo } from "../../shared/types.ts";
+import { api, useResource } from "../api.ts";
 import { useT } from "../i18n.ts";
 import { errorText } from "../labels.ts";
 import { navigate } from "../router.tsx";
@@ -47,6 +48,10 @@ export function NewDrama() {
   const [error, setError] = useState<unknown>();
   const picker = useRef<HTMLInputElement>(null);
   const opening = useOpening(files);
+  const app = useResource<AppInfo>("/api/app", ["app"]);
+  // Without the drama skill, a drama on Pine can be rehearsed or wait for the skill.
+  const noSkill = app.data?.mode === "pine" && app.data.dramaSkill === "missing";
+  const [rehearsal, setRehearsal] = useState(true);
 
   const add = (list: FileList | null) => {
     if (!list) return;
@@ -65,7 +70,7 @@ export function NewDrama() {
     setBusy(true);
     setError(undefined);
     const form = new FormData();
-    for (const [key, value] of Object.entries({ title, language, look, format, notes, parallel: String(parallel), perComputer: String(perComputer) })) form.set(key, value);
+    for (const [key, value] of Object.entries({ title, language, look, format, notes, parallel: String(parallel), perComputer: String(perComputer), rehearsal: noSkill && rehearsal ? "1" : "0" })) form.set(key, value);
     for (const file of files) form.append("files", file);
     try {
       const { id } = await api<{ id: string }>("/api/dramas", { method: "POST", body: form });
@@ -179,6 +184,15 @@ export function NewDrama() {
             </label>
             <textarea id="notes" className="line-area" placeholder={t("new.notesHint")} value={notes} onChange={(event) => setNotes(event.target.value)} />
           </div>
+          {noSkill && (
+            <label className="rehearse-choice">
+              <input type="checkbox" checked={rehearsal} onChange={(event) => setRehearsal(event.target.checked)} />
+              <span>
+                <strong>{t("new.rehearse")}</strong>
+                <span className="quiet small">{t("new.noSkill")}</span>
+              </span>
+            </label>
+          )}
           {error !== undefined && <p className="error flush">{errorText(error, t)}</p>}
           <div className="actions">
             <button className="btn ink" disabled={busy || !files.length || !title.trim()} onClick={start}>

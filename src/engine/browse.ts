@@ -6,7 +6,8 @@
 import type { CastCard, Decision, DeliveryRow, EpisodePage, Judged, Receipt, ReviewKind, ScriptPage, SegmentPage } from "../shared/types.ts";
 import { classify } from "./classify.ts";
 import { all } from "./db.ts";
-import { type FileRow, itemIn, toItem } from "./library.ts";
+import { type FileRow, blobPath, itemIn, toItem } from "./library.ts";
+import type { ZipEntry } from "./zip.ts";
 import { type EpisodeRow, type ReviewRow, drama as dramaRow, episodeCode } from "./records.ts";
 import { itemsOf } from "./reviews.ts";
 import { episodeViews } from "./views.ts";
@@ -132,11 +133,30 @@ export function deliveryRows(dramaId: string): DeliveryRow[] {
   });
 }
 
+/** A name that is safe as a file or folder name on every system. */
+function fileName(text: string): string {
+  return text.replace(/[\\/:*?"<>|\u0000-\u001f]+/g, " ").replace(/\s+/g, " ").trim().slice(0, 80) || "untitled";
+}
+
+/** The season as delivered: every episode's approved cut, named by episode, in a folder named for the drama. */
+export function seasonEntries(dramaId: string): { title: string; entries: ZipEntry[] } {
+  const drama = dramaRow(dramaId);
+  const title = fileName(drama?.title ?? "drama");
+  const entries = deliveryRows(dramaId).flatMap((row) => {
+    const file = row.accepted && all<FileRow>("select * from files where id = ?", row.accepted.id)[0];
+    if (!file) return [];
+    const ext = file.name.match(/\.[A-Za-z0-9]+$/)?.[0] ?? "";
+    return [{ name: `${title}/${fileName([row.code, row.title].filter(Boolean).join(" "))}${ext}`, path: blobPath(file.sha), size: file.size }];
+  });
+  return { title, entries };
+}
+
 /** Characters with every version of each look (base first), then places and props, each version with its verdict. */
 export function castCards(dramaId: string): CastCard[] {
   const files = all<FileRow>("select * from files where drama_id = ? and kind in ('look', 'location', 'prop') and type like 'image/%' order by id", dramaId);
   const reviews = reviewsByTurn("drama_id", dramaId);
   const cards = new Map<string, CastCard>();
+  const seen = new Map<string, Receipt>();
   for (const [turnId, turnFiles] of byTurn(files)) {
     const review = reviews.get(turnId);
     for (const file of turnFiles) {
@@ -150,9 +170,17 @@ export function castCards(dramaId: string): CastCard[] {
       if (!entry) card.looks.push((entry = { look, versions: [] }));
       // Only a review of looks or of the shared references judged these.
       const looked = review && (review.kind === "looks" || review.kind === "references") ? review : undefined;
-      const receipt = entry.versions.find((version) => version.turnId === turnId);
+      const verdict = judged(looked, looked?.kind === "looks" ? subject : key);
+      // The same picture returned again (with the shared references, say) is the same version; a later verdict on it is the one that holds.
+      const again = seen.get(`${kind}|${subject}|${look}|${file.sha}`);
+      if (again) {
+        if (verdict?.verdict) again.review = verdict;
+        continue;
+      }
+      let receipt = entry.versions.find((version) => version.turnId === turnId);
       if (receipt) receipt.files.push(toItem(file));
-      else entry.versions.push({ turnId, files: [toItem(file)], review: judged(looked, looked?.kind === "looks" ? subject : key) });
+      else entry.versions.push((receipt = { turnId, files: [toItem(file)], review: verdict }));
+      seen.set(`${kind}|${subject}|${look}|${file.sha}`, receipt);
     }
   }
   const order = { look: 0, location: 1, prop: 2 };

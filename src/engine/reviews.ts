@@ -6,18 +6,21 @@ import type { Decision, FileItem, ReviewItem, ReviewKind } from "../shared/types
 import { computerRef, fleet, sessionRef } from "./computers.ts";
 import { answerText } from "./decisions.ts";
 import { StudioError } from "./errors.ts";
-import { all, newId, now, run, transaction } from "./db.ts";
+import { all, get, newId, now, run, transaction } from "./db.ts";
 import { followTurn, recordTurn } from "./follow.ts";
+import { decisionGoal } from "./goals.ts";
 import { type FileRow, filesOfTurn, toItem, versionNumber } from "./library.ts";
 import { publish } from "./live.ts";
-import { type ReviewRow, type SessionRow, computer as computerRow, episode as episodeRow, episodeCode, review as reviewRow, session as sessionRow } from "./records.ts";
+import { saveRun, sendRun } from "./runs.ts";
+import { type ReviewRow, type SessionRow, type TurnRow, computer as computerRow, episode as episodeRow, episodeCode, review as reviewRow, session as sessionRow } from "./records.ts";
 
 /**
- * What a question asks for, from the files it returned and, failing that, its words. In the
- * setup, looks alone are the leads; with places, props or further looks, they are the shared
- * references pre-production made for every episode.
+ * What a stop asks the maker for, from the files it returned. In the setup, looks alone are
+ * the leads; with places, props or further looks, they are the shared references
+ * pre-production made for every episode. With nothing to look at, it is a question answered
+ * in words, whatever its words mention: a review with no items would send an empty decision.
  */
-export function inferKind(role: SessionRow["role"], files: Pick<FileRow, "kind" | "look">[], question: string): ReviewKind {
+export function inferKind(role: SessionRow["role"], files: (Pick<FileRow, "kind"> & { look?: string | null })[]): ReviewKind {
   const kinds = new Set(files.map((file) => file.kind));
   if (role === "setup") {
     if (kinds.has("location") || kinds.has("prop") || files.some((file) => file.kind === "look" && file.look && file.look !== "base")) return "references";
@@ -26,7 +29,6 @@ export function inferKind(role: SessionRow["role"], files: Pick<FileRow, "kind" 
   if (kinds.has("cut")) return "cut";
   if (kinds.has("take")) return "takes";
   if (kinds.has("storyboard")) return "storyboards";
-  if (/storyboard|分镜/i.test(question)) return "storyboards";
   return "question";
 }
 
@@ -63,6 +65,11 @@ export function itemsOf(kind: ReviewKind, files: FileRow[]): { items: ReviewItem
   return { items, other: other.map(toItem) };
 }
 
+/** The review the session waits on, if any: its latest stop, not yet decided. */
+export function pendingReview(sessionId: string): ReviewRow | undefined {
+  return get<ReviewRow>("select * from reviews where session_id = ? and state in ('saving', 'open', 'sending') order by created_at desc limit 1", sessionId);
+}
+
 /** A question just ended a turn: record it, not yet answerable. */
 export function questionAsked(session: SessionRow, turnId: string, question: string): void {
   run(
@@ -82,9 +89,7 @@ export function questionAsked(session: SessionRow, turnId: string, question: str
 
 /** The question's files are saved: it can be answered now. */
 export function questionReady(session: SessionRow, turnId: string): void {
-  const files = filesOfTurn(turnId);
-  const question = all<{ question: string }>("select question from reviews where turn_id = ?", turnId)[0]?.question ?? "";
-  run("update reviews set kind = ?, state = 'open' where turn_id = ? and state = 'saving'", inferKind(session.role, files, question), turnId);
+  run("update reviews set kind = ?, state = 'open' where turn_id = ? and state = 'saving'", inferKind(session.role, filesOfTurn(turnId)), turnId);
   publish(`drama:${session.drama_id}`, "inbox");
 }
 
@@ -147,7 +152,8 @@ export async function reconcileSending(): Promise<void> {
       if (info.state === "answered" && info.nextTurnId) {
         answered(review, session, info.nextTurnId);
         followTurn(session.id, info.nextTurnId);
-      } else if (info.state === "needs_input") {
+      } else if (info.state === "needs_input" || info.state === "completed") {
+        // Not taken (a stop that ended its turn has its decision saved as a run along with the review's answered state).
         run("update reviews set state = 'open' where id = ? and state = 'sending'", review.id);
       }
     } catch (error) {
@@ -177,7 +183,7 @@ async function send(reviewId: string, decision: Decision): Promise<ReviewRow> {
       })),
   };
   if (review.kind === "question" && !kept.words.trim()) throw new StudioError("answer-missing", "Write an answer first.");
-  if (review.kind !== "question" && kept.items.length !== items.length) throw new StudioError("verdicts-missing", "Give every item a verdict first.");
+  if (review.kind !== "question" && (!items.length || kept.items.length !== items.length)) throw new StudioError("verdicts-missing", "Give every item a verdict first.");
   const answer = answerText(kept, { kind: review.kind, subject: subject(review), labels, paths: new Map(files.map((file) => [file.id, file.rel_path])) });
 
   run("update reviews set state = 'sending', decision = ?, answer = ?, decided_at = ? where id = ?", JSON.stringify(kept), answer, now(), reviewId);
@@ -188,6 +194,21 @@ async function send(reviewId: string, decision: Decision): Promise<ReviewRow> {
   if (!session || session.state !== "open" || computer?.state !== "running") {
     run("update reviews set state = 'ended' where id = ?", reviewId);
     publish(`drama:${review.drama_id}`, "inbox");
+    return reviewRow(reviewId)!;
+  }
+  const turn = get<TurnRow>("select * from turns where id = ?", review.turn_id);
+  if (turn && turn.state !== "needs_input") {
+    // The agent ended its turn to stop for the maker: the decision is the session's next run,
+    // saved with the review's new state, then sent (and resent by the clock until Pine has it).
+    const code = review.episode_id ? episodeCode(episodeRow(review.episode_id)!) : null;
+    const key = transaction(() => {
+      const saved = saveRun(session.id, "decision", decisionGoal(answer, code));
+      run("update reviews set state = 'answered' where id = ?", review.id);
+      if (session.episode_id) run("update episodes set state = 'working', updated_at = ? where id = ?", now(), session.episode_id);
+      return saved;
+    });
+    await sendRun(key).catch((error) => console.error(`review ${review.id}:`, (error as Error).message));
+    publish(`drama:${review.drama_id}`, "inbox", `session:${session.id}`);
     return reviewRow(reviewId)!;
   }
   try {

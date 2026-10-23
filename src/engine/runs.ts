@@ -3,10 +3,11 @@
 // starts a second run.
 import path from "node:path";
 import { readFileSync } from "node:fs";
-import { MAX_ATTACHMENT } from "./config.ts";
+import { MAX_ATTACHMENT, REHEARSAL_KIT } from "./config.ts";
 import { all, get, newId, now, run, transaction } from "./db.ts";
 import { computerRef, fleet, sessionRef } from "./computers.ts";
 import { followEvents, followTurn, recordTurn } from "./follow.ts";
+import { STANDIN_KIT } from "./goals.ts";
 import { blobPath, type FileRow } from "./library.ts";
 import { publish } from "./live.ts";
 import { type SessionRow, computer as computerRow, session as sessionRow } from "./records.ts";
@@ -105,11 +106,22 @@ export async function attach(session: SessionRow, files: FileRow[]): Promise<{ s
   return { sent, skipped };
 }
 
+/** A rehearsal's kit, handed to each of its sessions with the drama's files. */
+export async function attachKit(session: SessionRow): Promise<void> {
+  const computer = computerRow(session.computer_id)!;
+  await fleet().writeFile(computerRef(computer), sessionRef(session), STANDIN_KIT, readFileSync(REHEARSAL_KIT));
+}
+
+/** Saves a run to send, with the idempotency key it will always be sent with; returns the key. */
+export function saveRun(sessionId: string, kind: string, goal: string): string {
+  const key = newId("run");
+  run("insert into runs (key, session_id, kind, goal, created_at) values (?, ?, ?, ?, ?)", key, sessionId, kind, goal, now());
+  return key;
+}
+
 /** Sends a goal to a session's agent and starts following the turn it opens. */
 export async function startRun(session: SessionRow, kind: string, goal: string): Promise<void> {
-  const key = newId("run");
-  run("insert into runs (key, session_id, kind, goal, created_at) values (?, ?, ?, ?, ?)", key, session.id, kind, goal, now());
-  await sendRun(key);
+  await sendRun(saveRun(session.id, kind, goal));
 }
 
 /** Sends a saved run, or resends it with the same key when its first response was lost. */

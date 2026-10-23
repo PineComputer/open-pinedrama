@@ -19,6 +19,7 @@ function Poster({ drama, mode }: { drama: DramaCard; mode?: Mode | "none" }) {
         : drama.status === "done"
           ? t("drama.finished")
           : undefined;
+  const stamps = [drama.rehearsal ? t("rehearsal.tag") : undefined, stamp].filter(Boolean).join(" · ");
   return (
     <div className={`poster ${CJK.test(drama.title) ? "vertical" : ""} ${drama.cast.length ? "cast" : ""}`}>
       {drama.cast.length > 0 && (
@@ -29,7 +30,7 @@ function Poster({ drama, mode }: { drama: DramaCard; mode?: Mode | "none" }) {
         </div>
       )}
       <h3>{drama.title}</h3>
-      <div className="foot">{stamp && <span className="stamp">{stamp}</span>}</div>
+      <div className="foot">{stamps && <span className="stamp">{stamps}</span>}</div>
     </div>
   );
 }
@@ -43,6 +44,8 @@ export function Slate() {
     navigate(`/d/${id}`);
   });
   const dramas = data ?? [];
+  // On a project without the drama skill, the way to try the studio on Pine is a rehearsal.
+  const noSkill = app.data?.mode === "pine" && app.data.dramaSkill === "missing";
   const producing = dramas.filter((drama) => drama.status === "setup" || drama.status === "production").length;
   const waiting = dramas.reduce((sum, drama) => sum + drama.waiting, 0);
   return (
@@ -56,12 +59,12 @@ export function Slate() {
         </Link>
       </div>
       {error !== undefined && <p className="error">{errorText(error, t)}</p>}
-      {data && dramas.length === 0 && (
+      {data && (dramas.length === 0 || noSkill) && (
         <div className="first">
-          <p className="empty-note">{t("slate.empty")}</p>
-          {app.data?.mode === "replay" && (
+          <p className="empty-note">{t(noSkill ? "slate.noSkill" : "slate.empty")}</p>
+          {(app.data?.mode === "replay" || noSkill) && (
             <button className="btn" disabled={sample.busy} onClick={() => void sample.run()}>
-              {t("slate.sample")}
+              {t(noSkill ? "slate.rehearseSample" : "slate.sample")}
             </button>
           )}
           {sample.error !== undefined && <p className="error small">{errorText(sample.error, t)}</p>}

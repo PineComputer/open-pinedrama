@@ -6,9 +6,9 @@ import { MAX_ATTACHMENT } from "./config.ts";
 import { get, newId, now, run, transaction } from "./db.ts";
 import { save } from "./library.ts";
 import { publish } from "./live.ts";
-import { type DramaRow, type ReviewRow, computer as computerRow, drama as dramaRow, episode as episodeRow, latestTurn, session as sessionRow } from "./records.ts";
+import { type DramaRow, computer as computerRow, drama as dramaRow, episode as episodeRow, latestTurn, session as sessionRow } from "./records.ts";
 import { StudioError } from "./errors.ts";
-import { decide } from "./reviews.ts";
+import { decide, pendingReview } from "./reviews.ts";
 import { startRun } from "./runs.ts";
 
 export interface NewDrama {
@@ -20,6 +20,8 @@ export interface NewDrama {
   perComputer: number;
   notes: string;
   files: { name: string; type: string; bytes: Uint8Array }[];
+  /** Pine's agent stands in for the drama skill with placeholder files (goals.ts, rehearsed). */
+  rehearsal?: boolean;
 }
 
 const clamp = (value: number, low: number, high: number) => Math.min(high, Math.max(low, Math.round(value)));
@@ -43,8 +45,8 @@ export async function createDrama(input: NewDrama, mode: Mode): Promise<string> 
   }
   transaction(() => {
     run(
-      `insert into dramas (id, title, language, look, format, parallel, per_computer, notes, mode, status, created_at, updated_at)
-       values (?, ?, ?, ?, ?, ?, ?, ?, ?, 'setup', ?, ?)`,
+      `insert into dramas (id, title, language, look, format, parallel, per_computer, notes, mode, rehearsal, status, created_at, updated_at)
+       values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'setup', ?, ?)`,
       id,
       input.title.trim(),
       input.language === "en" ? "en" : "zh",
@@ -54,6 +56,7 @@ export async function createDrama(input: NewDrama, mode: Mode): Promise<string> 
       clamp(input.perComputer || 1, 1, 3),
       input.notes.trim(),
       mode,
+      input.rehearsal ? 1 : 0,
       now(),
       now(),
     );
@@ -97,6 +100,18 @@ export function retrySetup(id: string): void {
 }
 
 /**
+ * A drama held for want of the drama skill, started again as a rehearsal: Pine's agent stands
+ * in for the skill with placeholder files, so every step runs on real Computers.
+ */
+export function rehearse(id: string): void {
+  const drama = dramaRow(id);
+  if (!drama) throw new StudioError("not-found", "No such drama.", 404);
+  if (drama.status !== "stopped" || drama.reason !== "no-drama-skill") throw new StudioError("drama-not-held", "Only a drama held for want of the drama skill can be rehearsed.", 409);
+  run("update dramas set rehearsal = 1 where id = ?", id);
+  retrySetup(id);
+}
+
+/**
  * A message to a session's agent. While a question waits, it is the answer (and the
  * review closes with it); while a turn runs, it steers; otherwise it starts a run.
  */
@@ -107,13 +122,14 @@ export async function chat(sessionId: string, text: string): Promise<void> {
   if (computer?.state !== "running") throw new StudioError("computer-not-running", "Its Computer isn't running.", 409);
   if (!text.trim()) throw new StudioError("message-empty", "Write a message first.");
   const turn = latestTurn(session.id);
-  if (turn?.state === "needs_input") {
-    // The question has a review: a plain question can be answered from here, through the same
-    // gate as the review room; anything to look at is decided in the room, item by item.
-    const review = get<ReviewRow>("select * from reviews where turn_id = ?", turn.id);
-    if (!review || review.state === "ended") throw new StudioError("question-closed", "This question can't be answered any more.", 409);
+  const review = pendingReview(session.id);
+  if (review) {
+    // The session waits on the maker: a plain question can be answered from here, through the
+    // same gate as the review room; anything to look at is decided in the room, item by item.
     if (review.kind !== "question") throw new StudioError("decide-in-review", "Decide this in its review, where the files are.", 409);
     await decide(review.id, { items: [], words: text });
+  } else if (turn?.state === "needs_input") {
+    throw new StudioError("question-closed", "This question can't be answered any more.", 409);
   } else if (turn && !turn.ended_at && turn.state !== "answered") {
     await fleet().steer(computerRef(computer), sessionRef(session), turn.id, text);
   } else {

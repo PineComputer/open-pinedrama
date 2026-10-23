@@ -118,6 +118,35 @@ export function resumeGoal(drama: DramaBrief, code: string, attachments: string[
     .join("\n");
 }
 
+/**
+ * The maker's decision on a stop where the agent ended its turn rather than asked: it goes as
+ * the session's next run, saying to carry on as before.
+ */
+export function decisionGoal(answer: string, code: string | null): string {
+  return [answer, `${code ? `Carry on with episode ${code}` : "Carry on"} from there as the goal says, stopping for my review at the next point that needs me, returning the files with your question.`].join("\n\n");
+}
+
+/** The kit a rehearsal's sessions are given (fixtures/rehearsal), under this name. */
+export const STANDIN_KIT = "standin.py";
+
+/**
+ * The same goal, rehearsed: Pine's agent stands in for the drama skill with a kit that draws
+ * placeholder pictures and clips where the skill would, so the studio's whole flow (stops,
+ * reviews, handoffs, many Computers) runs on a real project before it has the skill.
+ */
+export function rehearsed(goal: string): string {
+  const kit = `python3 attachments/${STANDIN_KIT}`;
+  return [
+    "This is a rehearsal of the studio's flow. Pine's drama skill (drama-workflow) and drama-cli are not on this Computer, and that is expected.",
+    `Wherever the goal below says to use them, stand in with the attached kit, \`${kit}\` (\`${kit} --help\` lists its commands). It writes placeholder looks, locations, props, blocking references, storyboards, takes and cuts where the skill would, and prints each path it wrote.`,
+    'Write the bible and the breakdowns yourself, short, in Markdown: drama/bible/v1/bible.md, and drama/episodes/EP001/breakdown/v1/breakdown.md for EP001 and so on, two or three segments each, with a "## seg01" heading for each segment followed by its shots as a list, one of them a line of dialogue.',
+    `For an episode, draw each segment's blocking and storyboards, then shoot one take per segment (give a segment with dialogue its line with --line), then build the cut, stopping for me where the goal says. Skip \`drama-cli init\` and \`drama-cli status\`; check a restored project with \`${kit} status\`.`,
+    "When I ask for changes, make a new version only of what I named. Everything else exactly as the goal says: the questions, the stops, packing and returning files, the list of episodes.",
+    "",
+    goal,
+  ].join("\n");
+}
+
 /** Another run in the same session, after a turn that stopped short or broke off (`brokeOff`) before the next review. */
 export function continueGoal(code: string | null, brokeOff = false): string {
   return [

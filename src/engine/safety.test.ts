@@ -20,6 +20,7 @@ type Modules = {
   replay: typeof import("./replay-fleet.ts");
   http: typeof import("./http.ts");
   views: typeof import("./views.ts");
+  flow: typeof import("./flow.ts");
 };
 let m: Modules;
 
@@ -60,6 +61,7 @@ beforeAll(async () => {
     replay: await import("./replay-fleet.ts"),
     http: await import("./http.ts"),
     views: await import("./views.ts"),
+    flow: await import("./flow.ts"),
   };
   m.db.db();
 });
@@ -189,6 +191,82 @@ describe("the production line", () => {
     expect(held.reason).toBe("no-drama-skill");
     expect(m.db.all("select r.key from runs r join sessions s on s.id = r.session_id where s.drama_id = ?", id)).toHaveLength(0);
     expect(m.db.all("select id from sessions where drama_id = ? and state = 'open'", id)).toHaveLength(0);
+    m.scheduler.stopClock();
+  });
+
+  it("rehearses a held drama with the stand-in kit, and remembers the project lacks the skill", async () => {
+    const fleet = new m.replay.ReplayFleet();
+    fleet.skills = async () => ["pdf"];
+    const kits: string[] = [];
+    const write = fleet.writeFile.bind(fleet);
+    fleet.writeFile = async (ref, session, name, content) => {
+      if (name === "standin.py") kits.push(session.name);
+      return write(ref, session, name, content);
+    };
+    quiet();
+    m.computers.setFleet(fleet);
+    m.scheduler.startClock(20);
+    const id = await m.dramas.createDrama(newDrama("Rehearsed"), "replay");
+    await until("the hold", () => m.db.get("select * from dramas where id = ? and status = 'stopped'", id));
+    expect((await import("./settings.ts")).dramaSkill(fleet.project)).toBe("missing");
+    m.dramas.rehearse(id);
+    const setup = await until("the rehearsed setup run", () => m.db.get<{ goal: string }>("select r.goal from runs r join sessions s on s.id = r.session_id where s.drama_id = ? and r.kind = 'setup'", id));
+    expect(setup.goal).toMatch(/^This is a rehearsal/);
+    expect(setup.goal).toContain("vertical short drama from the attached screenplay");
+    expect(kits).toHaveLength(1);
+    expect(m.db.get<{ status: string; rehearsal: number }>("select * from dramas where id = ?", id)).toMatchObject({ status: "setup", rehearsal: 1 });
+    expect(() => m.dramas.rehearse(id)).toThrow(/held/);
+    m.scheduler.stopClock();
+  });
+
+  it("holds a drama in production whose project lost the drama skill, before the next episode runs", async () => {
+    const fleet = new m.replay.ReplayFleet();
+    fleet.skills = async () => [];
+    quiet();
+    m.computers.setFleet(fleet);
+    const id = await m.dramas.createDrama(newDrama("Lost skill"), "replay");
+    m.db.run("update dramas set status = 'production' where id = ?", id);
+    m.db.run("insert into episodes (id, drama_id, number, title, state, updated_at) values ('ep-lost', ?, 1, 'One', 'queued', ?)", id, new Date().toISOString());
+    m.scheduler.startClock(20);
+    const held = await until("the hold", () => m.db.get<{ reason: string }>("select * from dramas where id = ? and status = 'stopped'", id));
+    expect(held.reason).toBe("no-drama-skill");
+    expect(m.db.get<{ state: string }>("select state from episodes where id = 'ep-lost'")?.state).toBe("queued");
+    expect(m.db.all("select r.key from runs r join sessions s on s.id = r.session_id where s.drama_id = ?", id)).toHaveLength(0);
+    m.scheduler.stopClock();
+  });
+
+  it("asks the maker, rather than failing, when an agent keeps finishing short of a review", async () => {
+    quiet();
+    m.computers.setFleet(new m.replay.ReplayFleet());
+    const id = await m.dramas.createDrama(newDrama("Finishing short"), "replay");
+    const at = new Date().toISOString();
+    m.db.run("update dramas set status = 'production' where id = ?", id);
+    m.db.run("insert into sessions (id, computer_id, drama_id, name, role, episode_id, state, created_at) values ('ses-short', 'pc-none', ?, 'short', 'episode', 'ep-short', 'open', ?)", id, at);
+    m.db.run("insert into episodes (id, drama_id, number, title, state, session_id, continues, updated_at) values ('ep-short', ?, 1, 'One', 'working', 'ses-short', 2, ?)", id, at);
+    m.db.run("insert into turns (id, session_id, state, summary, settled, files_saved, created_at, ended_at) values ('turn-short', 'ses-short', 'completed', 'Waiting on your go-ahead for the storyboards.', 1, 1, ?, ?)", at, at);
+    const session = m.db.get<import("./records.ts").SessionRow>("select * from sessions where id = 'ses-short'")!;
+    const info = { turnId: "turn-short", state: "completed", question: "", summary: "Waiting on your go-ahead for the storyboards.", nextTurnId: "", files: [], cost: null };
+    expect(m.flow.stopsForMaker(session, info)).toBe(false);
+    await m.flow.onEnded(session, info, false);
+    expect(m.db.get("select kind, state from reviews where turn_id = 'turn-short'")).toMatchObject({ kind: "question", state: "open" });
+    expect(m.db.get<{ state: string }>("select state from episodes where id = 'ep-short'")?.state).toBe("waiting");
+    // Said in so many words, it is a stop from the start.
+    expect(m.flow.stopsForMaker(session, { ...info, summary: "The storyboards are packed.\n\nPlease reply with approval or changes." })).toBe(true);
+    expect(m.flow.stopsForMaker(session, { ...info, summary: "分镜已完成。\n\n请审阅后回复。" })).toBe(true);
+  });
+
+  it("starts again an episode whose start was cut short before its run", async () => {
+    quiet();
+    m.computers.setFleet(new m.replay.ReplayFleet());
+    const id = await m.dramas.createDrama(newDrama("Cut short"), "replay");
+    // As the engine left it when it stopped mid-start: a session opened for the episode, no run sent.
+    const at = new Date().toISOString();
+    m.db.run("update dramas set status = 'production' where id = ?", id);
+    m.db.run("insert into sessions (id, computer_id, drama_id, name, role, episode_id, state, created_at) values ('ses-cut', 'pc-gone', ?, 'cut', 'episode', 'ep-cut', 'open', ?)", id, at);
+    m.db.run("insert into episodes (id, drama_id, number, title, state, session_id, updated_at) values ('ep-cut', ?, 1, 'One', 'working', 'ses-cut', ?)", id, at);
+    m.scheduler.startClock(20);
+    await until("its run, in a new session", () => m.db.get("select r.key from runs r join sessions s on s.id = r.session_id where s.episode_id = 'ep-cut'"));
+    expect(m.db.get<{ state: string }>("select state from sessions where id = 'ses-cut'")?.state).toBe("closed");
     m.scheduler.stopClock();
   });
 

@@ -23,12 +23,20 @@ function busyOr(error: unknown): never {
   throw error;
 }
 
+/**
+ * What the agent wrote, with real line breaks: its summaries and questions sometimes carry them
+ * written out as "\n", which would run an episode list or a Markdown list into one line.
+ */
+export function said(text: string): string {
+  return text.replace(/(?<!\\)(?:\\r)?\\n/g, "\n").replace(/(?<!\\)\\t/g, "\t");
+}
+
 function turnInfo(turn: AgentTurn): TurnInfo {
   return {
     turnId: turn.turnId,
     state: turn.state,
-    question: turn.question,
-    summary: turn.result?.summary ?? "",
+    question: said(turn.question),
+    summary: said(turn.result?.summary ?? ""),
     nextTurnId: turn.nextTurnId,
     files: (turn.result?.artifacts ?? []).map((file) => ({
       path: file.relativePath,
@@ -181,6 +189,11 @@ export class PineFleet implements Fleet {
     return this.session(ref, session).openFile(path);
   }
 
+  async listFiles(ref: ComputerRef, session: SessionRef, folder: string) {
+    const entries = await this.session(ref, session).listFiles({ path: folder });
+    return entries.map((entry) => ({ path: entry.relativePath, folder: entry.isDir, size: entry.size }));
+  }
+
   async *events(ref: ComputerRef, session: SessionRef, after: string | undefined, taskId: string | undefined, signal: AbortSignal): AsyncIterable<FleetEvent> {
     const agent = this.session(ref, session).agent;
     for await (const event of agent.events({ lastEventId: after, expectedTaskId: taskId, frames: false, signal })) {
@@ -188,11 +201,11 @@ export class PineFleet implements Fleet {
       const input = event.input();
       if (input) yield { ...base, kind: "input", text: input.text };
       const progress = event.progress();
-      if (progress) yield { ...base, kind: "progress", text: progress.text };
+      if (progress) yield { ...base, kind: "progress", text: said(progress.text) };
       const activity = event.activity();
       if (activity) yield { ...base, kind: "activity", text: activity.title, ref: activity.id, state: activity.state };
       const result = event.result();
-      if (result) yield { ...base, kind: "result", text: result.summary };
+      if (result) yield { ...base, kind: "result", text: said(result.summary) };
     }
   }
 

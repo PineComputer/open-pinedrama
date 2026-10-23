@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { classify, episodeCode, listedEpisodes } from "./classify.ts";
+import { classify, episodeCode, listedEpisodes, namedPaths } from "./classify.ts";
 
 describe("classify", () => {
   it("reads a storyboard's episode, segment, style and version", () => {
@@ -53,5 +53,38 @@ describe("episodes", () => {
       { number: 2, title: "The letter" },
       { number: 3, title: "Wedding" },
     ]);
+  });
+});
+
+describe("namedPaths", () => {
+  it("finds the files a question names but didn't return, as Pine's agent wrote one", () => {
+    const question = [
+      "请审批主角林晚的 v1 look。当前文件如下：",
+      "- [剧集 Bible](drama/bible/v1/bible.md)",
+      "- [林晚 v1 look sheet](drama/assets/characters/林晚/v1/image-1.png)",
+      "See `drama/episodes/EP001/edit/v1/cut.mp4`, handoff/EP001.tar.part-aa and /var/lib/sandbox/sessions/x/files/drama/assets/props/letter/v2/image-1.png.",
+      "Not https://example.com/a.png, nor 1.5, e.g. or a/b, nor ../secret/key.pem.",
+    ].join("\n");
+    expect(namedPaths(question)).toEqual([
+      "drama/bible/v1/bible.md",
+      "drama/assets/characters/林晚/v1/image-1.png",
+      "drama/episodes/EP001/edit/v1/cut.mp4",
+      "handoff/EP001.tar.part-aa",
+      "drama/assets/props/letter/v2/image-1.png",
+    ]);
+  });
+});
+
+describe("what the agent wrote", () => {
+  it("reads episodes listed on one line, and line breaks the agent wrote out as \\n", async () => {
+    const { said } = await import("./pine-fleet.ts");
+    expect(listedEpisodes("EP001: 回乡 EP002: 量体\nEP3 - Dinner").map((item) => [item.number, item.title])).toEqual([
+      [1, "回乡"],
+      [2, "量体"],
+      [3, "Dinner"],
+    ]);
+    const summary = said("归档：[project.tar.part-aa](handoff/project.tar.part-aa)\\n\\nEP001: 回乡\\nEP002: 量体");
+    expect(listedEpisodes(summary)).toHaveLength(2);
+    expect(said("keep C:\\\\new as written")).toBe("keep C:\\\\new as written");
   });
 });

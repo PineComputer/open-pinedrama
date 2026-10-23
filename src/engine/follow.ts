@@ -4,11 +4,12 @@
 import { ENDED, type TurnInfo } from "./fleet.ts";
 import { computerRef, fleet, markStopped, sessionRef } from "./computers.ts";
 import { all, get, now, run, transaction } from "./db.ts";
-import { save } from "./library.ts";
+import { save, seenBefore } from "./library.ts";
 import { publish } from "./live.ts";
-import { onEnded } from "./flow.ts";
+import { classify, namedPaths, typeOf } from "./classify.ts";
+import { onEnded, stopsForMaker } from "./flow.ts";
 import { questionAsked, questionReady } from "./reviews.ts";
-import { type TurnRow, computer as computerRow, session as sessionRow } from "./records.ts";
+import { type SessionRow, type TurnRow, computer as computerRow, episode as episodeRow, episodeCode, session as sessionRow } from "./records.ts";
 
 const turnsFollowed = new Map<string, Promise<void>>();
 const eventsFollowed = new Map<string, AbortController>();
@@ -17,9 +18,10 @@ function sleep(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-/** Saves what Pine says about a turn. */
+/** Saves what Pine says about a turn. A new turn clears the session's last progress line, which was the turn before's. */
 export function recordTurn(sessionId: string, info: TurnInfo): void {
   const ended = ENDED.has(info.state);
+  if (!ended && !get("select id from turns where id = ?", info.turnId)) run("update sessions set activity = null where id = ?", sessionId);
   run(
     `insert into turns (id, session_id, state, question, summary, cost, next_turn_id, created_at, ended_at)
      values (?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -84,26 +86,79 @@ async function loop(sessionId: string, firstTurn: string): Promise<void> {
 
 /**
  * A turn ended: save its files, then let the flow act on how it ended. Each step is marked
- * when done, so a turn the engine stopped halfway through is taken up again where it was.
+ * when done, so a turn the engine stopped halfway through is taken up again where it was. A
+ * stop for the maker becomes a review; its files are the ones the turn returned and any its
+ * question names but didn't return.
  */
+/** The kinds of file the maker gives a verdict on. */
+const KINDS = ["look", "location", "prop", "storyboard", "blocking", "take", "cut"];
+const REVIEWED = KINDS.map((kind) => `'${kind}'`).join(", ");
+
+function known(dramaId: string, relPath: string): boolean {
+  return get("select id from files where drama_id = ? and rel_path = ? limit 1", dramaId, relPath) !== undefined;
+}
+
+/** What the walk below brings in: what the maker reviews, and the documents they read. */
+const MADE = [...KINDS, "bible", "breakdown"];
+
+/**
+ * Pictures, clips and documents the agent made in its own folders (an episode's; for the
+ * setup, the drama's bible, assets and breakdowns) that the studio doesn't have: for a stop
+ * whose question neither returned nor named what it asks about. Listed a folder at a time, a
+ * few hundred at most.
+ */
+async function made(session: SessionRow): Promise<string[]> {
+  const computer = computerRow(session.computer_id)!;
+  const episode = session.episode_id ? episodeRow(session.episode_id) : undefined;
+  const folders = episode ? [`drama/episodes/${episodeCode(episode)}`] : ["drama/bible", "drama/assets", "drama/episodes"];
+  const found: string[] = [];
+  for (let listed = 0; folders.length && listed < 300; listed += 1) {
+    const entries = await fleet()
+      .listFiles(computerRef(computer), sessionRef(session), folders.shift()!)
+      .catch((error: { status?: number }) => {
+        if (error.status === 404) return []; // no such folder
+        throw error;
+      });
+    for (const entry of entries) {
+      if (entry.folder) folders.push(entry.path);
+      else if (MADE.includes(classify(entry.path).kind) && !known(session.drama_id, entry.path)) found.push(entry.path);
+    }
+  }
+  return found;
+}
+
 export async function settle(sessionId: string, info: TurnInfo): Promise<void> {
   const session = sessionRow(sessionId)!;
   const turn = get<TurnRow>("select * from turns where id = ?", info.turnId);
   if (turn?.settled) return;
-  if (info.state === "needs_input") questionAsked(session, info.turnId, info.question);
+  // What the turn returned that the drama doesn't have yet: an unchanged file returned again belongs to the turn that first returned it.
+  const fresh = info.files.filter((file) => !file.sha256 || !seenBefore(session.drama_id, file.path, file.sha256));
+  const stop = stopsForMaker(session, { ...info, files: fresh });
+  const asked = info.question || info.summary;
+  if (stop) questionAsked(session, info.turnId, asked);
   if (!turn?.files_saved) {
     const computer = computerRow(session.computer_id)!;
+    const where = { dramaId: session.drama_id, episodeId: session.episode_id, sessionId, turnId: info.turnId };
     try {
-      for (const file of info.files) {
+      for (const file of fresh) {
         const body = await fleet().openFile(computerRef(computer), sessionRef(session), file.path);
-        await save(body, {
-          dramaId: session.drama_id,
-          episodeId: session.episode_id,
-          sessionId,
-          turnId: info.turnId,
-          relPath: file.path,
-          type: file.type,
-        });
+        await save(body, { ...where, relPath: file.path, type: file.type });
+      }
+      // Named but not returned: fetched, unless the drama has that file already.
+      const fetch = async (relPath: string) => {
+        const body = await fleet()
+          .openFile(computerRef(computer), sessionRef(session), relPath)
+          .catch((error: { status?: number }) => {
+            if (error.status === 404) return undefined; // named, but not there
+            throw error;
+          });
+        if (body) await save(body, { ...where, relPath, type: typeOf(relPath) });
+      };
+      const named = stop ? namedPaths(asked).filter((relPath) => !info.files.some((file) => file.path === relPath) && !known(session.drama_id, relPath)) : [];
+      for (const relPath of named) await fetch(relPath);
+      // A stop that brought nothing to look at: what the agent made for it is in its folder.
+      if (stop && !get(`select id from files where turn_id = ? and kind in (${REVIEWED}) limit 1`, info.turnId)) {
+        for (const relPath of await made(session)) await fetch(relPath);
       }
       run("update turns set files_saved = 1, save_error = null where id = ?", info.turnId);
     } catch (error) {
@@ -114,10 +169,10 @@ export async function settle(sessionId: string, info: TurnInfo): Promise<void> {
     }
   }
   transaction(() => {
-    if (info.state === "needs_input") questionReady(session, info.turnId);
+    if (stop) questionReady(session, info.turnId);
     run("update turns set settled = 1 where id = ?", info.turnId);
   });
-  await onEnded(sessionRow(sessionId)!, info);
+  await onEnded(sessionRow(sessionId)!, info, stop);
   publish(`drama:${session.drama_id}`, "dramas", `session:${sessionId}`);
 }
 

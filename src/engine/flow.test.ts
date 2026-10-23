@@ -17,6 +17,7 @@ process.env.STUDIO_SECRET = Buffer.alloc(32, 7).toString("base64");
 
 let fetchApp: (request: Request) => Response | Promise<Response>;
 let stop: () => void;
+let fleet: import("./replay-fleet.ts").ReplayFleet;
 
 async function call<T>(method: string, url: string, body?: unknown): Promise<T> {
   const init: RequestInit = { method, headers: { host: "127.0.0.1:4310", origin: "http://127.0.0.1:4310", cookie: "studio=test-token" } };
@@ -59,7 +60,8 @@ beforeAll(async () => {
   const { startClock, stopClock } = await import("./scheduler.ts");
   const { app } = await import("./http.ts");
   db();
-  setFleet(new ReplayFleet());
+  fleet = new ReplayFleet();
+  setFleet(fleet);
   startClock(50);
   fetchApp = app().fetch;
   stop = stopClock;
@@ -70,109 +72,148 @@ afterAll(() => {
   rmSync(DATA, { recursive: true, force: true });
 });
 
+/** One drama from its screenplay to accepted cuts, two episodes at a time. */
+async function scenario(title: string) {
+  const form = new FormData();
+  form.set("title", title);
+  form.set("language", "en");
+  form.set("parallel", "2");
+  form.set("perComputer", "1");
+  form.append("files", new File(["EPISODE 1\nLin enters."], "screenplay.txt", { type: "text/plain" }));
+  const { id } = await call<{ id: string }>("POST", "/api/dramas", form);
+
+  // The setup asks a question, then for the leads' looks, with their sheets saved first.
+  const question = await until("the setup question", openReview(id, (item) => item.kind === "question"));
+  await call("POST", `/api/reviews/${question.id}/decision`, { items: [], words: "He is 32." });
+  const looks = await until("the looks review", openReview(id, (item) => item.kind === "looks"));
+  const looksView = await call<ReviewView>("GET", `/api/reviews/${looks.id}`);
+  expect(looksView.reviewItems.map((item) => item.key)).toEqual(["lin", "wei"]);
+  expect(looksView.otherFiles.map((file) => file.kind)).toEqual(["bible"]);
+
+  // Revising one look redraws only that one.
+  const revised = await call<ReviewView>("POST", `/api/reviews/${looks.id}/decision`, {
+    words: "Fix Wei's jacket.",
+    items: [
+      { key: "lin", verdict: "approve", notes: [] },
+      { key: "wei", verdict: "revise", notes: [{ fileId: looksView.reviewItems[1].files[0].id, x: 0.4, y: 0.6, text: "Lighter jacket." }] },
+    ],
+  });
+  expect(revised.answer).toContain("- wei: Lighter jacket. (on drama/assets/characters/wei/v1/image-1.svg, at 40% across and 60% down)");
+  const again = await until("the redrawn look", openReview(id, (item) => item.kind === "looks" && item.id !== looks.id));
+  const redrawn = await call<ReviewView>("GET", `/api/reviews/${again.id}`);
+  expect(redrawn.reviewItems.map((item) => item.key)).toEqual(["wei"]);
+  // The earlier look sits beside the new one, to compare.
+  expect(redrawn.reviewItems[0].previous?.map((file) => file.version)).toEqual(["v1"]);
+  expect(redrawn.reviewItems[0].files[0].version).toBe("v2");
+  expect(redrawn.reviewItems[0].asked?.map((note) => note.text)).toEqual(["Lighter jacket."]);
+  expect(looksView.reviewItems[0].previous).toBeUndefined();
+  await approveAll(again.id);
+
+  // Pre-production: every episode's breakdown, then the looks, places and props they use, for the maker to approve.
+  const shared = await until("the shared references", openReview(id, (item) => item.kind === "references"));
+  const sharedView = await call<ReviewView>("GET", `/api/reviews/${shared.id}`);
+  expect(sharedView.reviewItems.map((item) => item.key)).toEqual(["lin/S1", "location:home", "location:office", "prop:letter"]);
+  expect(sharedView.reviewItems.map((item) => item.label)).toEqual(["lin/S1", "home", "office", "letter"]);
+  expect(sharedView.otherFiles.filter((file) => file.kind === "breakdown")).toHaveLength(6);
+  await approveAll(shared.id);
+
+  // Production: two episodes at once, each waiting for its storyboards, on its own Computer.
+  const drama = await until("two episodes waiting", async () => {
+    const view = await call<DramaView>("GET", `/api/dramas/${id}`);
+    return view.episodeRows.filter((row) => row.state === "waiting").length === 2 ? view : undefined;
+  });
+  expect(drama.status).toBe("production");
+  expect(drama.episodeRows).toHaveLength(6);
+  expect(drama.episodeRows.filter((row) => row.state === "queued")).toHaveLength(4);
+  expect(new Set(drama.episodeRows.filter((row) => row.computer).map((row) => row.computer)).size).toBe(2);
+  await until("idle timeouts raised for the reviews", async () => {
+    const view = await call<DramaView>("GET", `/api/dramas/${id}`);
+    return view.crew.every((computer) => computer.idleTimeoutMinutes === 180) ? view : undefined;
+  });
+  // Each episode got the packed project, not loose references, and its breakdown came from pre-production.
+  const { all } = await import("./db.ts");
+  const goals = all<{ goal: string }>("select goal from runs where kind = 'episode'");
+  expect(goals.length).toBeGreaterThanOrEqual(2);
+  for (const { goal } of goals) expect(goal).toContain("attachments/project.tar.part-*");
+  expect(drama.episodeRows.every((row) => row.stages.breakdown.state === "done")).toBe(true);
+  const boards = await until("EP001 storyboards", openReview(id, (item) => item.episode === "EP001" && item.kind === "storyboards"));
+  expect((await call<ReviewView>("GET", `/api/reviews/${boards.id}`)).breakdown?.path).toBe("drama/episodes/EP001/breakdown/v1/breakdown.md");
+
+  // EP001 through storyboards, takes and the cut; then EP003 takes its place.
+  for (const kind of ["storyboards", "takes", "cut"] as const) {
+    const review = await until(`EP001 ${kind}`, openReview(id, (item) => item.episode === "EP001" && item.kind === kind));
+    await approveAll(review.id);
+  }
+  const after = await until("EP001 done and EP003 started", async () => {
+    const view = await call<DramaView>("GET", `/api/dramas/${id}`);
+    const rows = Object.fromEntries(view.episodeRows.map((row) => [row.code, row]));
+    return rows.EP001.state === "done" && rows.EP003.state !== "queued" ? view : undefined;
+  });
+  expect(after.episodeRows.find((row) => row.code === "EP001")!.stages.cut.state).toBe("done");
+
+  // Browsing: the episode receipt by receipt, with the verdict on what each review showed.
+  const episode = await call<EpisodePage>("GET", `/api/dramas/${id}/episodes/EP001`);
+  expect(episode.segments.map((segment) => segment.key)).toEqual(["seg01", "seg02", "seg03"]);
+  expect(episode.segments[0].boards[0].files.map((file) => file.kind).sort()).toEqual(["blocking", "storyboard", "storyboard"]);
+  expect(episode.segments[0].boards[0].review?.verdict).toBe("approve");
+  expect(episode.segments[0].takes[0].review?.verdict).toBe("approve");
+  expect(episode.cuts[0].review?.verdict).toBe("approve");
+  expect(episode.breakdown?.path).toBe("drama/episodes/EP001/breakdown/v1/breakdown.md");
+  expect(episode.other.some((file) => file.kind === "archive")).toBe(false);
+  expect(episode.next).toBe("EP002");
+  // Delivery: the cut approved, where it is known; the script; the cast with every version decided.
+  const delivery = await call<DeliveryRow[]>("GET", `/api/dramas/${id}/delivery`);
+  expect(delivery[0].accepted?.path).toBe("drama/episodes/EP001/edit/v1/cut.mp4");
+  expect(delivery[1].accepted).toBeUndefined();
+// The cut handed back again when the episode finished is the one approved, not a new one unreviewed.
+expect(delivery[0].latest?.review?.verdict).toBe("approve");
+// The season download: the approved cut, named by episode, in a folder named for the drama.
+const zip = await fetchApp(new Request(`http://127.0.0.1:4310/api/dramas/${id}/season.zip`, { headers: { host: "127.0.0.1:4310", cookie: "studio=test-token" } }));
+expect(zip.headers.get("content-type")).toBe("application/zip");
+const archive = Buffer.from(await zip.arrayBuffer());
+expect(archive.length).toBe(Number(zip.headers.get("content-length")));
+expect(archive.includes(Buffer.from(`${title}/EP001`))).toBe(true);
+expect(archive.includes(Buffer.from(`${title}/EP002`))).toBe(false);
+  const script = await call<ScriptPage>("GET", `/api/dramas/${id}/script`);
+  expect(script.bible?.kind).toBe("bible");
+  expect(script.breakdowns.map((entry) => entry.code)).toEqual(["EP001", "EP002", "EP003", "EP004", "EP005", "EP006"]);
+  expect(script.inputs.map((file) => file.name)).toEqual(["screenplay.txt"]);
+  const cast = await call<CastCard[]>("GET", `/api/dramas/${id}/cast`);
+  const wei = cast.find((card) => card.subject === "wei")!;
+  expect(wei.looks[0].versions.map((version) => [version.files[0].version, version.review?.verdict])).toEqual([
+    ["v2", "approve"],
+    ["v1", "revise"],
+  ]);
+  expect(cast.find((card) => card.subject === "lin")!.looks.map((look) => look.look)).toEqual(["base", "S1"]);
+}
+
 describe("a drama in replay", () => {
-  it("goes from a screenplay to accepted cuts, two episodes at a time", async () => {
-    const form = new FormData();
-    form.set("title", "Test drama");
-    form.set("language", "en");
-    form.set("parallel", "2");
-    form.set("perComputer", "1");
-    form.append("files", new File(["EPISODE 1\nLin enters."], "screenplay.txt", { type: "text/plain" }));
-    const { id } = await call<{ id: string }>("POST", "/api/dramas", form);
+  it("goes from a screenplay to accepted cuts, two episodes at a time", () => scenario("Test drama"), 30_000);
 
-    // The setup asks a question, then for the leads' looks, with their sheets saved first.
-    const question = await until("the setup question", openReview(id, (item) => item.kind === "question"));
-    await call("POST", `/api/reviews/${question.id}/decision`, { items: [], words: "He is 32." });
-    const looks = await until("the looks review", openReview(id, (item) => item.kind === "looks"));
-    const looksView = await call<ReviewView>("GET", `/api/reviews/${looks.id}`);
-    expect(looksView.reviewItems.map((item) => item.key)).toEqual(["lin", "wei"]);
-    expect(looksView.otherFiles.map((file) => file.kind)).toEqual(["bible"]);
-
-    // Revising one look redraws only that one.
-    const revised = await call<ReviewView>("POST", `/api/reviews/${looks.id}/decision`, {
-      words: "Fix Wei's jacket.",
-      items: [
-        { key: "lin", verdict: "approve", notes: [] },
-        { key: "wei", verdict: "revise", notes: [{ fileId: looksView.reviewItems[1].files[0].id, x: 0.4, y: 0.6, text: "Lighter jacket." }] },
-      ],
-    });
-    expect(revised.answer).toContain("- wei: Lighter jacket. (on drama/assets/characters/wei/v1/image-1.svg, at 40% across and 60% down)");
-    const again = await until("the redrawn look", openReview(id, (item) => item.kind === "looks" && item.id !== looks.id));
-    const redrawn = await call<ReviewView>("GET", `/api/reviews/${again.id}`);
-    expect(redrawn.reviewItems.map((item) => item.key)).toEqual(["wei"]);
-    // The earlier look sits beside the new one, to compare.
-    expect(redrawn.reviewItems[0].previous?.map((file) => file.version)).toEqual(["v1"]);
-    expect(redrawn.reviewItems[0].files[0].version).toBe("v2");
-    expect(redrawn.reviewItems[0].asked?.map((note) => note.text)).toEqual(["Lighter jacket."]);
-    expect(looksView.reviewItems[0].previous).toBeUndefined();
-    await approveAll(again.id);
-
-    // Pre-production: every episode's breakdown, then the looks, places and props they use, for the maker to approve.
-    const shared = await until("the shared references", openReview(id, (item) => item.kind === "references"));
-    const sharedView = await call<ReviewView>("GET", `/api/reviews/${shared.id}`);
-    expect(sharedView.reviewItems.map((item) => item.key)).toEqual(["lin/S1", "location:home", "location:office", "prop:letter"]);
-    expect(sharedView.reviewItems.map((item) => item.label)).toEqual(["lin/S1", "home", "office", "letter"]);
-    expect(sharedView.otherFiles.filter((file) => file.kind === "breakdown")).toHaveLength(6);
-    await approveAll(shared.id);
-
-    // Production: two episodes at once, each waiting for its storyboards, on its own Computer.
-    const drama = await until("two episodes waiting", async () => {
-      const view = await call<DramaView>("GET", `/api/dramas/${id}`);
-      return view.episodeRows.filter((row) => row.state === "waiting").length === 2 ? view : undefined;
-    });
-    expect(drama.status).toBe("production");
-    expect(drama.episodeRows).toHaveLength(6);
-    expect(drama.episodeRows.filter((row) => row.state === "queued")).toHaveLength(4);
-    expect(new Set(drama.episodeRows.filter((row) => row.computer).map((row) => row.computer)).size).toBe(2);
-    await until("idle timeouts raised for the reviews", async () => {
-      const view = await call<DramaView>("GET", `/api/dramas/${id}`);
-      return view.crew.every((computer) => computer.idleTimeoutMinutes === 180) ? view : undefined;
-    });
-    // Each episode got the packed project, not loose references, and its breakdown came from pre-production.
+  // Pine's agent may stop for the maker by ending its turn, files and question in its summary,
+  // rather than asking: the same reviews open, and each decision goes as the session's next run.
+  it("does the same when the agent ends its turn at each stop instead of asking", async () => {
+    const { run } = await import("./db.ts");
+    run("update dramas set status = 'done'");
+    fleet.stops = "finish";
+    await scenario("Test drama, finished turns");
     const { all } = await import("./db.ts");
-    const goals = all<{ goal: string }>("select goal from runs where kind = 'episode'");
-    expect(goals.length).toBeGreaterThanOrEqual(2);
-    for (const { goal } of goals) expect(goal).toContain("attachments/project.tar.part-*");
-    expect(drama.episodeRows.every((row) => row.stages.breakdown.state === "done")).toBe(true);
-    const boards = await until("EP001 storyboards", openReview(id, (item) => item.episode === "EP001" && item.kind === "storyboards"));
-    expect((await call<ReviewView>("GET", `/api/reviews/${boards.id}`)).breakdown?.path).toBe("drama/episodes/EP001/breakdown/v1/breakdown.md");
+    expect(all<{ kind: string }>("select kind from runs where kind = 'decision'").length).toBeGreaterThan(5);
+  }, 30_000);
 
-    // EP001 through storyboards, takes and the cut; then EP003 takes its place.
-    for (const kind of ["storyboards", "takes", "cut"] as const) {
-      const review = await until(`EP001 ${kind}`, openReview(id, (item) => item.episode === "EP001" && item.kind === kind));
-      await approveAll(review.id);
-    }
-    const after = await until("EP001 done and EP003 started", async () => {
-      const view = await call<DramaView>("GET", `/api/dramas/${id}`);
-      const rows = Object.fromEntries(view.episodeRows.map((row) => [row.code, row]));
-      return rows.EP001.state === "done" && rows.EP003.state !== "queued" ? view : undefined;
-    });
-    expect(after.episodeRows.find((row) => row.code === "EP001")!.stages.cut.state).toBe("done");
+  // Or ask without returning its files, naming them in the question: the studio fetches what it names.
+  it("does the same when the agent's questions only name their files", async () => {
+    const { run } = await import("./db.ts");
+    run("update dramas set status = 'done'");
+    fleet.stops = "name";
+    await scenario("Test drama, named files");
+  }, 30_000);
 
-    // Browsing: the episode receipt by receipt, with the verdict on what each review showed.
-    const episode = await call<EpisodePage>("GET", `/api/dramas/${id}/episodes/EP001`);
-    expect(episode.segments.map((segment) => segment.key)).toEqual(["seg01", "seg02", "seg03"]);
-    expect(episode.segments[0].boards[0].files.map((file) => file.kind).sort()).toEqual(["blocking", "storyboard", "storyboard"]);
-    expect(episode.segments[0].boards[0].review?.verdict).toBe("approve");
-    expect(episode.segments[0].takes[0].review?.verdict).toBe("approve");
-    expect(episode.cuts[0].review?.verdict).toBe("approve");
-    expect(episode.breakdown?.path).toBe("drama/episodes/EP001/breakdown/v1/breakdown.md");
-    expect(episode.other.some((file) => file.kind === "archive")).toBe(false);
-    expect(episode.next).toBe("EP002");
-    // Delivery: the cut approved, where it is known; the script; the cast with every version decided.
-    const delivery = await call<DeliveryRow[]>("GET", `/api/dramas/${id}/delivery`);
-    expect(delivery[0].accepted?.path).toBe("drama/episodes/EP001/edit/v1/cut.mp4");
-    expect(delivery[1].accepted).toBeUndefined();
-    const script = await call<ScriptPage>("GET", `/api/dramas/${id}/script`);
-    expect(script.bible?.kind).toBe("bible");
-    expect(script.breakdowns.map((entry) => entry.code)).toEqual(["EP001", "EP002", "EP003", "EP004", "EP005", "EP006"]);
-    expect(script.inputs.map((file) => file.name)).toEqual(["screenplay.txt"]);
-    const cast = await call<CastCard[]>("GET", `/api/dramas/${id}/cast`);
-    const wei = cast.find((card) => card.subject === "wei")!;
-    expect(wei.looks[0].versions.map((version) => [version.files[0].version, version.review?.verdict])).toEqual([
-      ["v2", "approve"],
-      ["v1", "revise"],
-    ]);
-    expect(cast.find((card) => card.subject === "lin")!.looks.map((look) => look.look)).toEqual(["base", "S1"]);
+  // Or ask about files it neither returns nor names: the studio finds them in the agent's folder.
+  it("does the same when the agent's questions don't mention their files", async () => {
+    const { run } = await import("./db.ts");
+    run("update dramas set status = 'done'");
+    fleet.stops = "bare";
+    await scenario("Test drama, bare questions");
   }, 30_000);
 });

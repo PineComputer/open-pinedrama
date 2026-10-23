@@ -45,6 +45,20 @@ export function saveMode(mode: "replay" | null): void {
   write("mode", mode);
 }
 
+/** Whether the project (Fleet.project) offers Pine's drama skill, as its Computers last said; unknown until one did. */
+export function dramaSkill(project: string): "offered" | "missing" | undefined {
+  const value = read(`skill.${project}`);
+  return value === "offered" || value === "missing" ? value : undefined;
+}
+
+/** Remembers what a Computer of the project said; whether that changed what was known. */
+export function noteDramaSkill(project: string, offered: boolean): boolean {
+  const value = offered ? "offered" : "missing";
+  if (read(`skill.${project}`) === value) return false;
+  write(`skill.${project}`, value);
+  return true;
+}
+
 /** Enough of a key to recognise it, never enough to use it. */
 export function keyHint(apiKey: string): string {
   return `${apiKey.slice(0, 3)}…${apiKey.slice(-4)}`;

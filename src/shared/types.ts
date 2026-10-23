@@ -10,6 +10,8 @@ export type ErrorCode =
   | "not-found"
   | "episode-busy"
   | "drama-not-stopped"
+  | "drama-not-held"
+  | "nothing-delivered"
   | "session-ended"
   | "computer-not-running"
   | "message-empty"
@@ -30,7 +32,6 @@ export type ErrorCode =
   | "disconnect-first"
   | "stop-failed"
   | "no-mode"
-  | "sample-replay-only"
   | "signed-out"
   | "offline"
   | "internal";
@@ -88,6 +89,8 @@ export interface AppInfo {
   version: string;
   dataDir: string;
   project?: { endpoint: string; keyHint: string; fromEnvironment: boolean };
+  /** Whether the project offers Pine's drama skill, as its Computers last said; absent until one has. */
+  dramaSkill?: "offered" | "missing";
 }
 
 export interface FileItem {
@@ -113,6 +116,8 @@ export interface DramaCard {
   id: string;
   /** Where its work runs; a drama of the other mode waits until the studio is back in its mode. */
   mode: Mode;
+  /** Pine's agent stands in for the drama skill with placeholder files. */
+  rehearsal: boolean;
   title: string;
   language: string;
   look: string;
@@ -181,9 +186,8 @@ export interface DramaView extends DramaCard {
     state: "working" | "waiting" | "done" | "stopped";
     reviewId?: string;
     kind?: ReviewKind;
-    hasCast: boolean;
-    /** The maker approved the leads: pre-production (every breakdown and shared reference) is under way. */
-    leadsApproved: boolean;
+    /** How far it has got: 0 reading, 1 asking, 2 drawing the leads, 3 their approval, 4 preparing every episode, 5 the shared references' approval. */
+    reached: number;
     activity?: string;
     note?: string;
     /** The studio held the drama before any work, and why. */

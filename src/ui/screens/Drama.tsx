@@ -66,11 +66,35 @@ function Notices({ drama }: { drama: DramaView }) {
   const { t } = useT();
   const app = useResource<AppInfo>("/api/app", ["app"]);
   const retry = useAction(() => api(`/api/dramas/${drama.id}/computers/retry`, { method: "POST" }));
+  const again = useAction(() => api(`/api/dramas/${drama.id}/retry`, { method: "POST" }));
+  const rehearse = useAction(() => api(`/api/dramas/${drama.id}/rehearse`, { method: "POST" }));
+  // Held during production (the setup panel says so before there are episodes).
+  const held = drama.status === "stopped" && drama.episodeRows.length > 0;
   const elsewhere = app.data !== undefined && app.data.mode !== "none" && app.data.mode !== drama.mode;
   return (
     <>
       {elsewhere && <p className="notice">{t(drama.mode === "replay" ? "otherMode.replayNote" : "otherMode.pineNote")}</p>}
+      {drama.rehearsal && !elsewhere && <p className="notice quiet-notice">{t("rehearsal.note")}</p>}
       {drama.atLimit !== undefined && !drama.stalled && <p className="notice">{t("limit.note", { n: drama.atLimit })}</p>}
+      {held && (
+        <div className="notice trouble">
+          <div>
+            <strong>{drama.setup.reason ? t(`setup.held.${drama.setup.reason}`) : drama.setup.note ?? t("board.stopped")}</strong>
+            {drama.setup.reason === "no-drama-skill" && <div className="why">{t("setup.rehearseHint")}</div>}
+            {[again.error, rehearse.error].map((failed, n) => failed !== undefined && <div key={n} className="error small">{errorText(failed, t)}</div>)}
+          </div>
+          <span className="notice-actions">
+            <button className="btn small" disabled={again.busy} onClick={() => void again.run()}>
+              {t("setup.retry")}
+            </button>
+            {drama.setup.reason === "no-drama-skill" && (
+              <button className="btn small" disabled={rehearse.busy} onClick={() => void rehearse.run()}>
+                {t("setup.rehearse")}
+              </button>
+            )}
+          </span>
+        </div>
+      )}
       {drama.stalled && (
         <div className="notice trouble">
           <div>
@@ -116,6 +140,7 @@ export function Drama({ id, tab, episode }: { id: string; tab: string; episode?:
           <h1>{drama.title}</h1>
           <div className="about">
             {drama.format} · {lookLabel(drama.look, t)}
+            {drama.rehearsal && <span className="rehearsal-tag">{t("rehearsal.tag")}</span>}
           </div>
         </div>
         <nav className="sections">

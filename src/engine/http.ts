@@ -20,13 +20,14 @@ import { appInfo, connectPine, disconnect, useReplay } from "./connection.ts";
 import { retryStarts } from "./computers.ts";
 import { DEFAULT_ENDPOINT } from "./settings.ts";
 import { all } from "./db.ts";
-import { chat, createDrama, desktop, resumeEpisode, retrySetup, updateDrama } from "./dramas.ts";
+import { chat, createDrama, desktop, rehearse, resumeEpisode, retrySetup, updateDrama } from "./dramas.ts";
 import { StudioError } from "./errors.ts";
 import { fileRow, openBlob } from "./library.ts";
 import { subscribe } from "./live.ts";
 import { drama as dramaRow, review as reviewRow, session as sessionRow, type SessionRow } from "./records.ts";
 import { decide, resumeWithDecision } from "./reviews.ts";
-import { castCards, deliveryRows, episodePage, scriptPage } from "./browse.ts";
+import { castCards, deliveryRows, episodePage, scriptPage, seasonEntries } from "./browse.ts";
+import { zipLength, zipStream } from "./zip.ts";
 import { chatView, dramaCards, dramaFiles, dramaView, inbox, reviewView } from "./views.ts";
 
 const LOOPBACK = /^(127\.0\.0\.1|localhost|\[::1\])(:\d+)?$/;
@@ -148,6 +149,7 @@ export function app(): Hono {
         parallel: Number(field("parallel")) || 4,
         perComputer: Number(field("perComputer")) || 1,
         notes: field("notes"),
+        rehearsal: field("rehearsal") === "1",
         files: await Promise.all(uploads.map(async (file) => ({ name: file.name, type: file.type, bytes: new Uint8Array(await file.arrayBuffer()) }))),
       }, mode);
       return c.json({ id });
@@ -156,23 +158,29 @@ export function app(): Hono {
     }
   });
 
-  // In replay, a drama from the bundled sample screenplay, so the studio can be tried in one click.
+  // A drama from the bundled sample screenplay, so the studio can be tried in one click: played
+  // back in replay, and on a Pine project rehearsed, with Pine's agent standing in for the skill.
   api.post("/api/dramas/sample", async (c) => {
-    if (appInfo().mode !== "replay") return c.json(failure("sample-replay-only", "The sample drama is for replay mode."), 409);
-    const { language } = (await c.req.json().catch(() => ({}))) as { language?: string };
-    const zh = language !== "en";
-    const name = `sample-screenplay.${zh ? "zh" : "en"}.md`;
-    const id = await createDrama({
-      title: zh ? "后妈来了" : "The Stepmother",
-      language: zh ? "zh" : "en",
-      look: "live action",
-      format: "9:16, 480p",
-      parallel: 3,
-      perComputer: 1,
-      notes: "",
-      files: [{ name, type: "text/markdown", bytes: readFileSync(path.join(FIXTURES, name)) }],
-    }, "replay");
-    return c.json({ id });
+    try {
+      const mode = currentMode();
+      const { language } = (await c.req.json().catch(() => ({}))) as { language?: string };
+      const zh = language !== "en";
+      const name = `sample-screenplay.${zh ? "zh" : "en"}.md`;
+      const id = await createDrama({
+        title: zh ? "后妈来了" : "The Stepmother",
+        language: zh ? "zh" : "en",
+        look: "live action",
+        format: "9:16, 480p",
+        parallel: 3,
+        perComputer: 1,
+        notes: "",
+        files: [{ name, type: "text/markdown", bytes: readFileSync(path.join(FIXTURES, name)) }],
+        rehearsal: mode === "pine",
+      }, mode);
+      return c.json({ id });
+    } catch (error) {
+      return fail(c, error);
+    }
   });
 
   api.get("/api/dramas/:id", (c) => {
@@ -198,6 +206,15 @@ export function app(): Hono {
     }
   });
 
+  api.post("/api/dramas/:id/rehearse", (c) => {
+    try {
+      rehearse(c.req.param("id"));
+      return c.json({ ok: true });
+    } catch (error) {
+      return fail(c, error);
+    }
+  });
+
   // After a drama's Computers wouldn't start: the maker says to try again.
   api.post("/api/dramas/:id/computers/retry", (c) => {
     retryStarts(c.req.param("id"));
@@ -207,6 +224,16 @@ export function app(): Hono {
   api.get("/api/dramas/:id/cast", (c) => c.json(castCards(c.req.param("id"))));
   api.get("/api/dramas/:id/script", (c) => c.json(scriptPage(c.req.param("id"))));
   api.get("/api/dramas/:id/delivery", (c) => c.json(deliveryRows(c.req.param("id"))));
+  // Every approved cut in one download, streamed as it is read.
+  api.get("/api/dramas/:id/season.zip", (c) => {
+    const { title, entries } = seasonEntries(c.req.param("id"));
+    if (!entries.length) return c.json(failure("nothing-delivered", "No cut is approved yet."), 404);
+    c.header("Content-Type", "application/zip");
+    c.header("Content-Length", String(zipLength(entries)));
+    c.header("Content-Disposition", `attachment; filename*=UTF-8''${encodeURIComponent(title)}.zip`);
+    c.header("Cache-Control", "no-store");
+    return c.body(zipStream(entries));
+  });
   api.get("/api/dramas/:id/episodes/:code", (c) => {
     const page = episodePage(c.req.param("id"), c.req.param("code"));
     return page ? c.json(page) : c.json(failure("not-found", "No such episode."), 404);

@@ -60,11 +60,11 @@ export function episodeCode(value: string | number): string {
 
 /**
  * The episodes a summary lists, one per line as "EP001: title" (the setup goal asks for
- * this form). Lines that don't match are ignored.
+ * this form), or several on a line. Lines that don't match are ignored.
  */
 export function listedEpisodes(text: string): { number: number; title: string }[] {
   const found = new Map<number, string>();
-  for (const line of text.split("\n")) {
+  for (const line of text.split("\n").flatMap((row) => row.split(/(?<![\p{L}\p{N}])(?=EP\s*\d)/iu))) {
     const match = line.match(/\bEP\s*0*(\d{1,4})\b\s*[:：.、\-–—]?\s*(.*)$/i);
     if (match) {
       const number = Number(match[1]);
@@ -72,4 +72,46 @@ export function listedEpisodes(text: string): { number: number; title: string }[
     }
   }
   return [...found.entries()].sort((a, b) => a[0] - b[0]).map(([number, title]) => ({ number, title }));
+}
+
+/**
+ * The working-directory files a text names: markdown links, backquoted or bare paths with a
+ * folder and an extension. A question can name files it didn't return (Pine lists a turn's
+ * files only when the agent returns them), so the studio fetches what the question names.
+ */
+export function namedPaths(text: string): string[] {
+  const found = new Set<string>();
+  const candidates = [
+    ...[...text.matchAll(/\]\(\s*<?([^)\s>]+)>?\s*\)/g)].map((m) => m[1]),
+    ...[...text.matchAll(/`([^`\n]+)`/g)].map((m) => m[1]),
+    ...[...text.matchAll(/(?:^|[\s(（「“"'：:，,])((?:[^\s()（）\[\]`'"“”「」<>，,：:;；]+\/)+[^\s()（）\[\]`'"“”「」<>，,：:;；/]+\.(?:tar\.part-[a-z0-9]+|[A-Za-z0-9]{1,5}))(?=$|[\s)）」”"'，,。.;；:：!?！？])/g)].map((m) => m[1]),
+  ];
+  for (const raw of candidates) {
+    if (/^[a-z][\w+.-]*:\/\//i.test(raw)) continue; // a web address, not a file
+    let file = raw.trim().replace(/^\.\//, "");
+    // An absolute path inside the session's working directory: the part after files/.
+    if (file.startsWith("/")) file = file.includes("/files/") ? file.slice(file.indexOf("/files/") + "/files/".length) : "";
+    if (!file || !file.includes("/") || !/\.(?:[A-Za-z0-9]{1,5}|tar\.part-[a-z0-9]+)$/.test(file) || file.split("/").some((part) => !part || part === "." || part === "..")) continue;
+    found.add(file);
+  }
+  return [...found];
+}
+
+const TYPES: Record<string, string> = {
+  png: "image/png",
+  jpg: "image/jpeg",
+  jpeg: "image/jpeg",
+  webp: "image/webp",
+  svg: "image/svg+xml",
+  mp4: "video/mp4",
+  mov: "video/quicktime",
+  webm: "video/webm",
+  md: "text/markdown",
+  json: "application/json",
+  txt: "text/plain",
+};
+
+/** A media type for a file the studio fetched by name, from its extension. */
+export function typeOf(relPath: string): string {
+  return TYPES[relPath.split(".").pop()!.toLowerCase()] ?? "application/octet-stream";
 }
