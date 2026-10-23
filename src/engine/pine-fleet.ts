@@ -1,5 +1,6 @@
 // The Fleet on Pine's server SDK. Each call rebuilds its handle from the saved records,
 // as the starter does, so any request or a restarted engine picks up where the last left off.
+import { createHash } from "node:crypto";
 import {
   Binding,
   CapacityExceededError,
@@ -41,10 +42,13 @@ function turnInfo(turn: AgentTurn): TurnInfo {
 
 export class PineFleet implements Fleet {
   readonly mode = "pine" as const;
+  readonly project: string;
   private readonly client: Client;
 
   constructor(project: { endpoint: string; apiKey: string }) {
     this.client = new Client({ endpoint: project.endpoint, apiKey: project.apiKey });
+    // A new key for the same project reads as another project: its Computers are made afresh.
+    this.project = createHash("sha256").update(`${project.endpoint}\n${project.apiKey}`).digest("hex").slice(0, 16);
   }
 
   private computer(ref: ComputerRef): Computer {
@@ -65,6 +69,7 @@ export class PineFleet implements Fleet {
       maxComputers: policy.maxConcurrentComputers,
       maxIdleSeconds: policy.lifecycle?.maxIdleTimeoutSeconds ?? null,
       idleAdjustable: policy.lifecycle !== null,
+      maxRuntimeSeconds: policy.lifecycle?.maxRuntimeAgeSeconds ?? null,
     };
   }
 
@@ -121,7 +126,9 @@ export class PineFleet implements Fleet {
   }
 
   async stopBy(ref: ComputerRef) {
-    return (await this.computer(ref).sandboxDetails()).lifetime?.deadline;
+    // stopAt: the graceful Stop starts here, twelve minutes before the hard deadline.
+    const lifetime = (await this.computer(ref).sandboxDetails()).lifetime;
+    return lifetime?.stopAt ?? lifetime?.deadline;
   }
 
   async skills(ref: ComputerRef) {
@@ -130,7 +137,7 @@ export class PineFleet implements Fleet {
   }
 
   async setIdleTimeout(ref: ComputerRef, seconds: number) {
-    await this.computer(ref).setIdleTimeout(seconds);
+    return (await this.computer(ref).setIdleTimeout(seconds)).lifetime?.idleTimeoutSeconds ?? seconds;
   }
 
   async stop(ref: ComputerRef) {

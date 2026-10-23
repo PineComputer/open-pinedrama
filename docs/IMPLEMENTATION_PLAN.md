@@ -59,7 +59,12 @@ Files are reassigned to episodes by the same path reading as everywhere else (`c
 
 And, from Pine's limits and lifecycle docs: a turn that breaks off (the Computer's services restarted, or the turn ran out of its 60 minutes) now carries on in the same session, where its files still are, within the same bounded "continue" runs as a turn that stopped short, and reaching the maker resets that count; an episode or setup that won't start backs off (15 s, doubling, at most 5 min) and after three tries says why, instead of retrying every tick.
 
-**Not yet verified:** the drama skill on real Pine (whether its provider asset handles survive a restore on another Computer); a Computer reaching its running-time limit (none on staging); Windows and Linux builds; signing and notarization. Milestone 2's spike needs the maker's go-ahead, a spend cap and a project with the drama skill.
+**With lifecycle control, same day**, on a project with a lifetime policy (idle timeout adjustable up to 24 h, 7 days of running time per start, no Pause):
+- The idle timeout the studio keeps is the one Pine says it applied; `pine:check` sets the studio's own values (3 h waiting, 1 h working) and reads them back.
+- Each start's stop-by time is kept (Pine's `stopAt`, when its graceful Stop begins, twelve minutes before the hard deadline). In the last 6 hours (the last half, on projects whose starts run less than 12) a Computer takes no new session and stops once its sessions close, then starts again with a fresh allowance, so no turn is cut off by the limit. A session already waiting on the maker stays; if Pine stops it, the maker's decision resumes the episode in a new session as before.
+- Computers belong to the project they were made in: switching projects never starts the old project's Computers on the new one; the drama gets new ones there.
+
+**Not yet verified:** the drama skill on real Pine (whether its provider asset handles survive a restore on another Computer); a Computer actually reaching its running-time limit; Windows and Linux builds; signing and notarization. Milestone 2's spike needs the maker's go-ahead, a spend cap and a project with the drama skill.
 
 ## Decisions carried in
 
@@ -78,7 +83,7 @@ Sessions on one Computer run concurrently (three at most) but share no files; Pi
 - **Setting: episodes per Computer, 1–3**, for projects whose Computer limit is the bottleneck. When Pine's shared storage ships, packing episodes onto fewer Computers becomes worth it, because the cast is set up once per Computer. Then the default can change.
 - **Attachments:** the project's parts keep their names, so `cat project.tar.part-*` puts them back in order; other attachments get flat, collision-free names. A file over 64 MiB is never attached. A drama set up before pre-production existed still gets its references as loose files.
 - **Still to learn on real Pine:** whether a restored project's uploaded references (provider asset handles, which Pine's adapter scopes) are accepted on another Computer, or must be uploaded again.
-- **Idle timeout** is per Computer: 1 h while it works, 3 h while any of its sessions waits on the maker (`setIdleTimeout`). The 1 h base matters because a question can arrive while the app is closed, when nothing can raise the timeout. On a project without a lifetime policy the timeout is fixed at start, so its Computers start with 3 h.
+- **Idle timeout** is per Computer: 1 h while it works, 3 h while any of its sessions waits on the maker (`setIdleTimeout`). The 1 h base matters because a question can arrive while the app is closed, when nothing can raise the timeout. On a project without a lifetime policy the timeout is fixed at start, so its Computers start with 3 h. Near the end of a start's running time a Computer takes no new session (see Progress).
 
 ## Rules the flow depends on
 

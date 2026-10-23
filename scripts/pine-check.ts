@@ -18,7 +18,7 @@ if (existsSync(".env.local")) process.loadEnvFile(".env.local");
 process.env.STUDIO_DATA_DIR ||= ".data";
 
 const { Client } = await import("@pinesandbox/computer");
-const { DATA_DIR } = await import("../src/engine/config.ts");
+const { DATA_DIR, IDLE_WAITING_S, IDLE_WORKING_S } = await import("../src/engine/config.ts");
 const { ENDED } = await import("../src/engine/fleet.ts");
 const { DRAMA_SKILL } = await import("../src/engine/goals.ts");
 const { PineFleet } = await import("../src/engine/pine-fleet.ts");
@@ -113,7 +113,8 @@ try {
   const limits = await step("project policy", async () => {
     const limits = await fleet.limits();
     const idle = limits.idleAdjustable ? (limits.maxIdleSeconds ? `up to ${limits.maxIdleSeconds / 3600}h, adjustable` : "adjustable") : "set at start only (no lifetime policy)";
-    return { value: limits, note: `Computers at once: ${limits.maxComputers ?? "no limit"} · idle timeout: ${idle}` };
+    const runtime = limits.maxRuntimeSeconds ? `${limits.maxRuntimeSeconds / 3600}h per start` : "no limit";
+    return { value: limits, note: `Computers at once: ${limits.maxComputers ?? "no limit"} · idle timeout: ${idle} · running time: ${runtime}` };
   });
 
   ref = await step("create a Computer", async () => {
@@ -133,7 +134,7 @@ try {
 
   await step("running time", async () => {
     const stopBy = await fleet.stopBy(computer);
-    return { value: stopBy, note: stopBy ? `must stop by ${stopBy.toISOString()} (${((stopBy.getTime() - Date.now()) / 3_600_000).toFixed(1)}h from now)` : "no limit" };
+    return { value: stopBy, note: stopBy ? `Pine stops it from ${stopBy.toISOString()} (${((stopBy.getTime() - Date.now()) / 3_600_000).toFixed(1)}h from now)` : "no limit" };
   });
 
   await step("skills", async () => {
@@ -145,9 +146,13 @@ try {
   await step("idle timeout", async () => {
     // The studio lengthens it while a session waits on the maker, where the project allows.
     if (limits && !limits.idleAdjustable) return { value: false, note: "fixed at start on this project; the studio starts with the waiting timeout" };
-    await fleet.setIdleTimeout(computer, 600);
-    await fleet.setIdleTimeout(computer, IDLE_S);
-    return { value: true, note: `600s, then back to ${IDLE_S}s` };
+    // As the studio does: longer while a session waits on the maker, then back.
+    const clamp = (seconds: number) => (limits?.maxIdleSeconds ? Math.min(seconds, limits.maxIdleSeconds) : seconds);
+    for (const seconds of [clamp(IDLE_WAITING_S), clamp(IDLE_WORKING_S), IDLE_S]) {
+      const applied = await fleet.setIdleTimeout(computer, seconds);
+      expect(applied === seconds, `asked for ${seconds}s, Pine applied ${applied}s`);
+    }
+    return { value: true, note: `${clamp(IDLE_WAITING_S) / 3600}h while waiting, ${clamp(IDLE_WORKING_S) / 3600}h working, applied as asked` };
   });
 
   // Session A: attachments in, a plain turn, files out (also from a nested folder).

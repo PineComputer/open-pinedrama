@@ -54,12 +54,14 @@ create table if not exists computers (
   id text primary key,              -- Pine's Computer id
   drama_id text not null,
   mode text not null default 'pine', -- pine | replay: which fleet made it
+  project text not null default '', -- which project it was made in (Fleet.project); '' from before this was kept
   label text not null,              -- PC-1, PC-2, ...
   credentials text not null,        -- sealed
   binding text,                     -- sealed; null while stopped
   revision text,
   state text not null,              -- starting | running | stopping | stopped | failed
   idle_timeout integer,
+  stop_by text,                     -- when Pine will stop it, its running time per start up; null where there's no limit
   last_error text,
   failures integer not null default 0, -- starts that failed in a row
   created_at text not null,
@@ -182,6 +184,8 @@ export function db(): DatabaseSync {
     add("turns", "settled", "integer not null default 0", "update turns set settled = files_saved");
     add("episodes", "carry", "text not null default ''");
     add("dramas", "reason", "text not null default ''");
+    add("computers", "stop_by", "text");
+    add("computers", "project", "text not null default ''");
     shared.__studioDb = handle;
   }
   return shared.__studioDb;

@@ -11,11 +11,13 @@ import {
   fleet,
   hasFleet,
   markStopped,
+  noteStopBy,
   openSession,
   projectLimits,
   provision,
   refreshLimits,
   restart,
+  retiring,
   runningComputers,
   setIdle,
   startable,
@@ -100,9 +102,9 @@ function capacity(drama: DramaRow): number {
   return Math.max(1, Math.ceil(drama.parallel / Math.max(1, drama.per_computer)));
 }
 
-/** A running Computer of the drama with room for one more session, or none. */
+/** A running Computer of the drama with room for one more session, and running time left for it, or none. */
 function freeComputer(drama: DramaRow): ComputerRow | undefined {
-  return runningComputers(drama.id).find((computer) => load(computer.id) < Math.max(1, drama.per_computer));
+  return runningComputers(drama.id).find((computer) => !retiring(computer) && load(computer.id) < Math.max(1, drama.per_computer));
 }
 
 /** New Computers asked for whose rows aren't saved yet (their credentials are being made): they count against the limit too. */
@@ -128,7 +130,13 @@ function claimComputer(drama: DramaRow): ComputerRow | undefined {
   const pool = all<ComputerRow>("select * from computers where drama_id = ? and mode = ? and state in ('starting', 'running', 'stopping')", drama.id, drama.mode);
   if (pool.some((computer) => computer.state === "starting")) return undefined;
   if (pool.length >= capacity(drama) || atProjectLimit()) return undefined;
-  const idle = all<ComputerRow>("select * from computers where drama_id = ? and mode = ? and state in ('stopped', 'failed') order by created_at", drama.id, drama.mode);
+  // Only Computers made in this project can start here; one from another project is left alone.
+  const idle = all<ComputerRow>(
+    "select * from computers where drama_id = ? and mode = ? and project = ? and state in ('stopped', 'failed') order by created_at",
+    drama.id,
+    drama.mode,
+    fleet().project,
+  );
   if (idle.length) {
     const next = idle.find(startable);
     if (next) once(`start:${drama.id}`, () => restart(next));
@@ -296,25 +304,32 @@ const idleRefused = new Map<string, number>();
 
 /**
  * A Computer waiting on the maker keeps running longer, within what the project allows; one
- * with nothing to do stops (and a stop that failed is tried again a minute later).
+ * with nothing to do stops (and a stop that failed is tried again a minute later), as does
+ * one near the end of its running time once its sessions close, to start again afresh.
  */
 function tend(computer: ComputerRow): void {
   const sessions = openSessionsOf(computer.id);
   const waiting = sessions.some((session) => latestTurn(session.id)?.state === "needs_input");
   const desired = allowedIdle(waiting ? IDLE_WAITING_S : IDLE_WORKING_S);
   if (projectLimits().idleAdjustable && computer.idle_timeout !== desired && (idleRefused.get(computer.id) ?? 0) < Date.now()) {
+    // Refused, or applied as something else: asked again only ten minutes later.
+    const later = () => idleRefused.set(computer.id, Date.now() + 10 * 60_000);
     once(`idle:${computer.id}`, () =>
-      setIdle(computer, desired).catch((error) => {
-        idleRefused.set(computer.id, Date.now() + 10 * 60_000);
-        throw error;
-      }),
+      setIdle(computer, desired).then(
+        () => void (computerRow(computer.id)?.idle_timeout !== desired && later()),
+        (error) => {
+          later();
+          throw error;
+        },
+      ),
     );
   }
   if (!sessions.length) {
     const drama = get<DramaRow>("select * from dramas where id = ?", computer.drama_id);
     const queued = get<{ n: number }>("select count(*) as n from episodes where drama_id = ? and state = 'queued'", computer.drama_id)?.n ?? 0;
     const triedLately = computer.last_error !== null && Date.now() - Date.parse(computer.updated_at) < 60_000;
-    if (drama && drama.status !== "setup" && !queued && !opening.get(computer.id) && !triedLately) once(`stop:${computer.id}`, () => stop(computer));
+    const done = drama && drama.status !== "setup" && !queued;
+    if (drama && (done || retiring(computer)) && !opening.get(computer.id) && !triedLately) once(`stop:${computer.id}`, () => stop(computer));
   }
 }
 
@@ -335,6 +350,8 @@ export async function reconcile(): Promise<void> {
     if (state !== "running") continue;
     // A stop that was still shutting down when the engine went away, but didn't: tend tries again.
     if (computer.state === "stopping") run("update computers set state = 'running', updated_at = ? where id = ?", now(), computer.id);
+    // Started before the studio kept running time (or before Pine reported it).
+    if (!computer.stop_by) await noteStopBy(computer.id);
     for (const session of openSessionsOf(computer.id)) {
       followEvents(session.id);
       const turn = latestTurn(session.id);

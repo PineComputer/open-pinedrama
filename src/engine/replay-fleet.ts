@@ -328,6 +328,7 @@ function scriptFor(goal: string, lang: Lang): Player {
 
 export class ReplayFleet implements Fleet {
   readonly mode = "replay" as const;
+  readonly project = "replay";
   private readonly machines = new Map<string, Machine>();
   private counter = 0;
 
@@ -348,7 +349,7 @@ export class ReplayFleet implements Fleet {
   }
 
   async limits(): Promise<Limits> {
-    return { maxComputers: null, maxIdleSeconds: null, idleAdjustable: true };
+    return { maxComputers: null, maxIdleSeconds: null, idleAdjustable: true, maxRuntimeSeconds: null };
   }
 
   async newCredentials() {
@@ -371,7 +372,7 @@ export class ReplayFleet implements Fleet {
     return this.machines.get(ref.id)?.state ?? "stopped";
   }
 
-  async stopBy() {
+  async stopBy(): Promise<Date | undefined> {
     return undefined;
   }
 
@@ -379,7 +380,9 @@ export class ReplayFleet implements Fleet {
     return [DRAMA_SKILL];
   }
 
-  async setIdleTimeout() {}
+  async setIdleTimeout(_ref: ComputerRef, seconds: number) {
+    return seconds;
+  }
 
   async stop(ref: ComputerRef) {
     this.machines.delete(ref.id);

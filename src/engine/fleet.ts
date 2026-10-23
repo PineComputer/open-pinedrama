@@ -58,6 +58,8 @@ export interface Limits {
   maxIdleSeconds: number | null;
   /** Whether a running Computer's idle timeout can be changed; without a lifetime policy it is set only at start. */
   idleAdjustable: boolean;
+  /** How long one start may run, paused time included. */
+  maxRuntimeSeconds: number | null;
 }
 
 /**
@@ -70,6 +72,8 @@ export function isBusy(error: unknown): boolean {
 
 export interface Fleet {
   readonly mode: Mode;
+  /** The project its Computers are made in, as a fingerprint that holds no secret. */
+  readonly project: string;
   limits(): Promise<Limits>;
   /** New Computer credentials, to save before Create: they are the only way to start it again. */
   newCredentials(): Promise<{ id: string; credentials: string }>;
@@ -78,11 +82,12 @@ export interface Fleet {
   startComputer(credentials: string, label: string, idleTimeoutSeconds: number): Promise<Attached>;
   /** running, paused, stopped, failed…; "stopped" when Pine no longer knows the sandbox. */
   status(computer: ComputerRef): Promise<string>;
-  /** When the running Computer must stop by (the project's running time per start), where Pine sets one. */
+  /** When Pine will begin stopping the running Computer (its running time per start is up), where the project sets a limit. */
   stopBy(computer: ComputerRef): Promise<Date | undefined>;
   /** The skills the Computer's agents are offered: Pine's that are switched on, and the project's own. */
   skills(computer: ComputerRef): Promise<string[]>;
-  setIdleTimeout(computer: ComputerRef, seconds: number): Promise<void>;
+  /** Changes the running Computer's idle timeout; resolves with the one Pine applied. */
+  setIdleTimeout(computer: ComputerRef, seconds: number): Promise<number>;
   stop(computer: ComputerRef): Promise<boolean>;
   createSession(computer: ComputerRef, label: string): Promise<SessionRef>;
   closeSession(computer: ComputerRef, name: string): Promise<void>;

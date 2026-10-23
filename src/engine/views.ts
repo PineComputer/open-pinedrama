@@ -72,6 +72,8 @@ function stageCells(episode: EpisodeRow, files: FileRow[], reviews: ReviewRow[])
   const segments = (kind: string) => new Set(files.filter((file) => file.kind === kind).map((file) => file.segment)).size;
   const counts: Partial<Record<Stage, number>> = { blocking: segments("blocking"), storyboards: segments("storyboard"), takes: segments("take") };
   let current = Math.max(-1, ...files.map((file) => FILE_STAGE[file.kind] ?? -1));
+  // Pre-production wrote and the maker accepted the breakdown: the episode's own work starts after it.
+  if (current === FILE_STAGE.breakdown) current += 1;
   const answered = reviews.filter((review) => review.state === "answered" && review.decision);
   for (const review of answered) {
     const decision = JSON.parse(review.decision!) as { items: { verdict: string }[] };
@@ -198,9 +200,10 @@ function stalled(drama: DramaRow): DramaView["stalled"] {
   const running = get<{ n: number }>("select count(*) as n from computers where drama_id = ? and mode = ? and state in ('starting', 'running')", drama.id, drama.mode)?.n ?? 0;
   if (running) return undefined;
   const failed = get<ComputerRow>(
-    "select * from computers where drama_id = ? and mode = ? and state = 'failed' and failures >= ? order by updated_at desc limit 1",
+    "select * from computers where drama_id = ? and mode = ? and project = ? and state = 'failed' and failures >= ? order by updated_at desc limit 1",
     drama.id,
     drama.mode,
+    hasFleet() ? fleet().project : "",
     START_ATTEMPTS,
   );
   return failed ? { computer: failed.label, error: failed.last_error ?? "" } : undefined;

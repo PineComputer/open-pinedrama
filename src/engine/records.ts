@@ -40,12 +40,16 @@ export interface ComputerRow {
   id: string;
   drama_id: string;
   mode: Mode;
+  /** The project it was made in (Fleet.project); it can only be started again there. */
+  project: string;
   label: string;
   credentials: string;
   binding: string | null;
   revision: string | null;
   state: "starting" | "running" | "stopping" | "stopped" | "failed";
   idle_timeout: number | null;
+  /** When Pine will stop it because its running time per start is up; null where the project sets no limit. */
+  stop_by: string | null;
   last_error: string | null;
   failures: number;
   created_at: string;

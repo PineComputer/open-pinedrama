@@ -105,8 +105,9 @@ Test in this order; each step costs more and catches what the one before can't:
    in parts from one session to the other the way pre-production hands the project to
    episodes, then stops the Computer, starts it again from its saved credentials, and
    recovers it as if its binding were lost. It needs no drama skill, takes a few minutes,
-   and Pine bills the turns, a few cents. It also says whether the project offers the drama
-   skill and whether idle timeouts can change while a Computer runs.
+   and Pine bills the turns, a few cents. It also reads the project's lifecycle (idle timeout
+   and running time per start), sets the studio's idle timeouts and reads them back, and says
+   whether the project offers the drama skill.
 4. **Your Pine project in `npm run dev`**. Without the drama skill the studio holds each new
    drama before the agent does anything, and says so; with it, this is the real thing,
    billed at Pine's rates.

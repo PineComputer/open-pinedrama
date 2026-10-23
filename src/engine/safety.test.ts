@@ -141,7 +141,7 @@ describe("the production line", () => {
 
   it("keeps within the project's limits: Computers at once, and idle time", async () => {
     const fleet = new m.replay.ReplayFleet();
-    fleet.limits = async () => ({ maxComputers: 1, maxIdleSeconds: 1800, idleAdjustable: true });
+    fleet.limits = async () => ({ maxComputers: 1, maxIdleSeconds: 1800, idleAdjustable: true, maxRuntimeSeconds: null });
     quiet();
     m.computers.setFleet(fleet);
     await m.computers.refreshLimits();
@@ -194,10 +194,11 @@ describe("the production line", () => {
 
   it("asks for the longer idle timeout at start where it can't be changed later", async () => {
     const fleet = new m.replay.ReplayFleet();
-    fleet.limits = async () => ({ maxComputers: null, maxIdleSeconds: null, idleAdjustable: false });
+    fleet.limits = async () => ({ maxComputers: null, maxIdleSeconds: null, idleAdjustable: false, maxRuntimeSeconds: null });
     let changes = 0;
-    fleet.setIdleTimeout = async () => {
+    fleet.setIdleTimeout = async (_ref, seconds) => {
       changes += 1;
+      return seconds;
     };
     quiet();
     m.computers.setFleet(fleet);
@@ -207,6 +208,58 @@ describe("the production line", () => {
     await new Promise((resolve) => setTimeout(resolve, 200));
     expect(computer.idle_timeout).toBe(3 * 60 * 60);
     expect(changes).toBe(0);
+    m.scheduler.stopClock();
+  });
+
+  it("never starts a Computer made in another project", async () => {
+    const before = new m.replay.ReplayFleet();
+    Object.defineProperty(before, "project", { value: "project-a" });
+    quiet();
+    m.computers.setFleet(before);
+    m.scheduler.startClock(20);
+    const id = await m.dramas.createDrama(newDrama("Switched projects"), "replay");
+    const first = await until("its Computer", () => computersOf(id).find((row) => row.state === "running"));
+    m.scheduler.stopClock();
+    const after = new m.replay.ReplayFleet();
+    Object.defineProperty(after, "project", { value: "project-b" });
+    let restarts = 0;
+    const start = after.startComputer.bind(after);
+    after.startComputer = async (credentials, ...rest) => {
+      if (credentials.includes(first.id)) restarts += 1;
+      return start(credentials, ...rest);
+    };
+    m.computers.setFleet(after);
+    expect(computersOf(id).find((row) => row.id === first.id)?.state).toBe("stopped");
+    m.scheduler.startClock(20);
+    await until("a Computer of the new project", () => computersOf(id).find((row) => row.id !== first.id && row.state === "running"));
+    expect(restarts).toBe(0);
+    m.scheduler.stopClock();
+  });
+
+  it("gives no new session to a Computer near the end of its running time, and starts it afresh", async () => {
+    const fleet = new m.replay.ReplayFleet();
+    let starts = 0;
+    const start = fleet.startComputer.bind(fleet);
+    fleet.startComputer = async (...args) => {
+      starts += 1;
+      return start(...args);
+    };
+    // The first start has an hour left; a fresh one, a week.
+    fleet.stopBy = async () => new Date(Date.now() + (starts === 1 ? 60 * 60_000 : 7 * 24 * 3_600_000));
+    let stops = 0;
+    const stopComputer = fleet.stop.bind(fleet);
+    fleet.stop = async (ref) => {
+      stops += 1;
+      return stopComputer(ref);
+    };
+    quiet();
+    m.computers.setFleet(fleet);
+    m.scheduler.startClock(20);
+    const id = await m.dramas.createDrama(newDrama("Near its limit"), "replay");
+    const session = await until("the setup session", () => m.db.get<{ computer_id: string }>("select * from sessions where drama_id = ? and role = 'setup'", id));
+    expect(stops).toBe(1);
+    expect(starts).toBe(2);
+    expect(computersOf(id).map((row) => row.id)).toEqual([session.computer_id]);
     m.scheduler.stopClock();
   });
 

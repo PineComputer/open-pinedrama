@@ -12,7 +12,7 @@ import { seal, unseal } from "./seal.ts";
 
 let fleetRef: Fleet | undefined;
 let limits: Limits | undefined;
-const UNKNOWN: Limits = { maxComputers: null, maxIdleSeconds: null, idleAdjustable: true };
+const UNKNOWN: Limits = { maxComputers: null, maxIdleSeconds: null, idleAdjustable: true, maxRuntimeSeconds: null };
 
 /** The project's limits as last read; none until they are known. */
 export function projectLimits(): Limits {
@@ -44,15 +44,25 @@ async function startIdle(): Promise<number> {
 }
 
 /**
- * Uses a fleet from now on. Computers another fleet made are out of its reach, so they
- * are marked stopped (replay's vanish anyway; disconnect stops Pine's before switching).
+ * Uses a fleet from now on. Computers made in another mode or project are out of its reach,
+ * so they are marked stopped (replay's vanish anyway; disconnect stops Pine's before
+ * switching), and are never started again (claimComputer).
  */
 export function setFleet(fleet: Fleet | undefined): void {
   fleetRef = fleet;
   limits = undefined;
   void refreshLimits().catch((error) => console.error("project limits:", (error as Error).message));
-  const others = all<ComputerRow>("select * from computers where state in ('starting', 'running', 'stopping') and mode != ?", fleet?.mode ?? "");
-  for (const row of others) markStopped(row, fleet ? `The studio switched to ${fleet.mode === "pine" ? "your Pine project" : "replay"}.` : "The studio was disconnected from Pine.");
+  // Running from before projects were kept: disconnecting stops everything, so they are this project's.
+  if (fleet) run("update computers set project = ? where project = '' and mode = ? and state in ('starting', 'running', 'stopping')", fleet.project, fleet.mode);
+  const others = all<ComputerRow>(
+    "select * from computers where state in ('starting', 'running', 'stopping') and (mode != ? or project != ?)",
+    fleet?.mode ?? "",
+    fleet?.project ?? "",
+  );
+  for (const row of others) {
+    const why = !fleet ? "The studio was disconnected from Pine." : fleet.mode !== row.mode ? `The studio switched to ${fleet.mode === "pine" ? "your Pine project" : "replay"}.` : "The studio switched to another Pine project.";
+    markStopped(row, why);
+  }
 }
 
 export function hasFleet(): boolean {
@@ -103,7 +113,7 @@ export function startable(row: ComputerRow): boolean {
 
 function started(id: string, attached: Attached, idle: number): void {
   run(
-    "update computers set binding = ?, revision = ?, state = 'running', idle_timeout = ?, failures = 0, last_error = null, updated_at = ? where id = ?",
+    "update computers set binding = ?, revision = ?, state = 'running', idle_timeout = ?, stop_by = null, failures = 0, last_error = null, updated_at = ? where id = ?",
     seal(attached.binding),
     attached.revision,
     idle,
@@ -124,10 +134,11 @@ export async function provision(dramaId: string): Promise<void> {
   const label = `PC-${count + 1}`;
   const { id, credentials } = await fleet().newCredentials();
   run(
-    "insert into computers (id, drama_id, mode, label, credentials, state, idle_timeout, created_at, updated_at) values (?, ?, ?, ?, ?, 'starting', ?, ?, ?)",
+    "insert into computers (id, drama_id, mode, project, label, credentials, state, idle_timeout, created_at, updated_at) values (?, ?, ?, ?, ?, ?, 'starting', ?, ?, ?)",
     id,
     dramaId,
     fleet().mode,
+    fleet().project,
     label,
     seal(credentials),
     idle,
@@ -138,6 +149,7 @@ export async function provision(dramaId: string): Promise<void> {
   await serialized(id, async () => {
     try {
       started(id, await fleet().createComputer(credentials, label, idle), idle);
+      await noteStopBy(id);
     } catch (error) {
       failedToStart(id, error);
     }
@@ -156,6 +168,7 @@ export async function restart(row: ComputerRow): Promise<void> {
     const idle = await startIdle();
     try {
       started(row.id, await fleet().startComputer(unseal(row.credentials), row.label, idle), idle);
+      await noteStopBy(row.id);
     } catch (error) {
       failedToStart(row.id, error);
     }
@@ -242,8 +255,33 @@ export async function closeSession(session: SessionRow): Promise<void> {
 }
 
 export async function setIdle(row: ComputerRow, seconds: number): Promise<void> {
-  await serialized(row.id, () => fleet().setIdleTimeout(computerRef(row), seconds));
-  run("update computers set idle_timeout = ?, updated_at = ? where id = ?", seconds, now(), row.id);
+  const applied = await serialized(row.id, () => fleet().setIdleTimeout(computerRef(row), seconds));
+  run("update computers set idle_timeout = ?, updated_at = ? where id = ?", applied, now(), row.id);
+}
+
+/** Keeps when Pine will stop a running Computer for its running time; a Computer that can't say is taken to have no limit. */
+export async function noteStopBy(id: string): Promise<void> {
+  const row = computerRow(id);
+  if (row?.state !== "running" || !row.binding) return;
+  const stopBy = await fleet()
+    .stopBy(computerRef(row))
+    .catch((error) => void console.error(`${row.label} lifetime:`, message(error)));
+  run("update computers set stop_by = ? where id = ?", stopBy ? stopBy.toISOString() : null, id);
+}
+
+/** Running time kept free at the end of a start: enough for a turn to finish and its episode to stop at a review. */
+const RETIRE_BEFORE_MS = 6 * 60 * 60_000;
+
+/**
+ * Whether a Computer is near the end of its running time: it takes no new session, and stops
+ * once its last one closes, to start again with a fresh allowance. On a project whose starts
+ * run less than twice that, the last half of each start.
+ */
+export function retiring(row: ComputerRow): boolean {
+  if (!row.stop_by) return false;
+  const runtime = projectLimits().maxRuntimeSeconds;
+  const margin = Math.min(RETIRE_BEFORE_MS, runtime ? (runtime * 1000) / 2 : RETIRE_BEFORE_MS);
+  return Date.now() >= Date.parse(row.stop_by) - margin;
 }
 
 export function runningComputers(dramaId?: string): ComputerRow[] {
