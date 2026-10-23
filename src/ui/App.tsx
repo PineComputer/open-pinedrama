@@ -86,12 +86,12 @@ export function App() {
   }, [waiting.length, t]);
 
   if (!app.data) {
-    return app.error ? (
+    return (
       <>
         <Bar waiting={[]} />
-        <Gate error={app.error} onRetry={app.reload} />
+        {app.error !== undefined && <Gate error={app.error} onRetry={app.reload} />}
       </>
-    ) : null;
+    );
   }
   if (app.data.mode === "none") {
     return (

@@ -1,9 +1,33 @@
 import { useEffect, useRef, useState } from "react";
-import type { ChatView } from "../../shared/types.ts";
+import type { ChatMessage, ChatView } from "../../shared/types.ts";
 import { api, useResource } from "../api.ts";
-import { useT } from "../i18n.ts";
+import { type TKey, useT } from "../i18n.ts";
 import { errorText } from "../labels.ts";
 import { Link } from "../router.tsx";
+
+/** One line of a session: the agent's narration and steps, and what it was sent, each in its own form. */
+function Said({ message, previous }: { message: ChatMessage; previous?: ChatMessage }) {
+  const { t } = useT();
+  // A step that only repeats the narration above it adds nothing.
+  if (message.kind === "activity" && previous?.kind === "progress" && previous.text === message.text) return null;
+  if (message.decision) {
+    const { reviewId, kind, approved, revised } = message.decision;
+    return (
+      <Link to={`/r/${reviewId}`} className="said decision">
+        {t("talk.decision", { kind: t(`kind.${kind}` as TKey), a: approved, r: revised })} →
+      </Link>
+    );
+  }
+  if (message.brief) {
+    return (
+      <details className="said brief">
+        <summary>{t("talk.brief")}</summary>
+        <div>{message.text}</div>
+      </details>
+    );
+  }
+  return <div className={`said ${message.kind}`}>{message.text}</div>;
+}
 
 /** The agents' narration and questions, per session, and a line to answer, steer or ask. */
 export function Chat({ dramaId, onClose }: { dramaId: string; onClose: () => void }) {
@@ -53,10 +77,8 @@ export function Chat({ dramaId, onClose }: { dramaId: string; onClose: () => voi
       </div>
       <div className="lines" ref={list}>
         {!active && <p className="quiet">{t("talk.none")}</p>}
-        {(chat.data?.messages ?? []).map((message) => (
-          <div key={message.id} className={`said ${message.kind}`}>
-            {message.text}
-          </div>
+        {(chat.data?.messages ?? []).map((message, index, all) => (
+          <Said key={message.id} message={message} previous={all[index - 1]} />
         ))}
       </div>
       <div className="talk-foot">

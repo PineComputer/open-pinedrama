@@ -4,6 +4,7 @@ import { api, useAction } from "../api.ts";
 import { type TKey, useT } from "../i18n.ts";
 import { errorText, nowText } from "../labels.ts";
 import { Link, navigate } from "../router.tsx";
+import { Still } from "../Still.tsx";
 import { Cast } from "./Cast.tsx";
 
 function Mark({ cell }: { cell: StageCell }) {
@@ -41,7 +42,9 @@ function Row({ row, wide }: { row: EpisodeRow; wide: boolean }) {
     <tr className={row.reviewId ? "go" : ""} onClick={() => row.reviewId && navigate(`/r/${row.reviewId}`)}>
       <td>
         <div className="ep-cell">
-          <span className={`frame ${wide ? "wide" : ""}`} style={{ backgroundImage: row.frame ? `url(${row.frame})` : undefined }} />
+          <span className={`frame ${wide ? "wide" : ""}`}>
+            <Still still={row.frame} />
+          </span>
           <div>
             {row.reviewId ? (
               <Link to={`/r/${row.reviewId}`} className="ep" onClick={(event) => event.stopPropagation()}>
@@ -90,7 +93,8 @@ function Card({ row, wide }: { row: EpisodeRow; wide: boolean }) {
   const resume = useAction(() => api(`/api/episodes/${row.id}/resume`, { method: "POST" }));
   const trouble = row.state === "stopped" || row.state === "failed";
   const picture = (
-    <span className={`shot ${wide ? "wide" : ""} ${row.frame ? "" : "blank"}`} style={row.frame ? { backgroundImage: `url(${row.frame})` } : undefined}>
+    <span className={`shot ${wide ? "wide" : ""} ${row.frame ? "" : "blank"}`}>
+      <Still still={row.frame} live />
       {!row.frame && <span className="number">{String(row.number).padStart(2, "0")}</span>}
       {row.state === "waiting" && <span className="flag">{t("board.review")}</span>}
       {row.state === "done" && <span className="flag done">{t("board.done")}</span>}

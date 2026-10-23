@@ -40,6 +40,7 @@ interface Session {
   events: FleetEvent[];
   files: Map<string, Out>;
   play?: Player;
+  lang?: Lang;
 }
 
 interface Machine {
@@ -54,35 +55,133 @@ const text = (s: string) => new TextEncoder().encode(s);
 const svg = (p: string, body: string): Out => ({ path: p, type: "image/svg+xml", bytes: text(body) });
 const video = (p: string, name: "take" | "cut"): Out => ({ path: p, type: "video/mp4", bytes: readFileSync(path.join(FIXTURES, `${name}.mp4`)) });
 
-const CAST = [
-  { id: "lin", name: "Lin Xiaoyu" },
-  { id: "wei", name: "Wei Zhen" },
-];
-const SHOTS = [
-  ["Lin enters the yard", "Wei: You're late.", "Lin hides the letter", "Close on the torn letter", "Wei turns away", "Lin alone"],
-  ["The family at dinner", "Mother: Eat.", "Lin watches Wei", "Wei pushes the bowl away"],
-  ["Night, the yard", "Lin reads the letter", "Wei at the window", "Their eyes meet", "Lin burns the letter"],
-];
+type Lang = "zh" | "en";
 
-function setupScript(): Player {
+/** The drama's language, from the goal's brief ("Language: Chinese."), as the real agent would read it. */
+function languageOf(goal: string): Lang {
+  return /Language:\s*Chinese/i.test(goal) ? "zh" : "en";
+}
+
+/** Everything the recorded agent says, in both languages. */
+const WORDS = {
+  en: {
+    cast: [
+      { id: "lin", name: "Lin Xiaoyu" },
+      { id: "wei", name: "Wei Zhen" },
+    ],
+    shots: [
+      ["Lin enters the yard", "Wei: You're late.", "Lin hides the letter", "Close on the torn letter", "Wei turns away", "Lin alone"],
+      ["The family at dinner", "Mother: Eat.", "Lin watches Wei", "Wei pushes the bowl away"],
+      ["Night, the yard", "Lin reads the letter", "Wei at the window", "Their eyes meet", "Lin burns the letter"],
+    ],
+    episodes: ["The stepmother arrives", "The letter", "Dinner", "The wedding dress", "Night market", "The truth"],
+    reading: ["Reading the screenplay and the notes", "Checking every character's age and gender"],
+    askAge: "The screenplay doesn't give Wei Zhen's age. How old is he, and should he read older than Lin Xiaoyu?",
+    drawing: ["Writing the bible", "Drawing Lin Xiaoyu's face and base look", "Drawing Wei Zhen's face and base look", "Drawing the location plates", "Drawing the key prop"],
+    redrawLook: (name: string) => `Redrawing ${name}'s look`,
+    askLooks: "The leads' looks are ready for your approval: Lin Xiaoyu and Wei Zhen. The observer noted that Wei Zhen's jacket reads darker than the bible describes.",
+    askRedrawn: (names: string[]) => `I redrew ${names.join(" and ")}. Please look again.`,
+    finishing: ["Recording your approval of the leads' looks", "Finishing the shared references"],
+    castDone: "The cast is approved and the shared references are done.\n\nEpisodes:",
+    breaking: (code: string) => [`Breaking ${code} into segments`, "Drawing the blocking references", "Drawing the multi-panel storyboards", "Observing the storyboards"],
+    askBoards: (code: string, n: number) => `${code}'s storyboards are ready for your review: ${n} segments. The observer noted that seg01 panel 4 shows a third person in the background.`,
+    redrawBoard: (seg: string) => `Redrawing ${seg}'s storyboard`,
+    askBoardsAgain: (segs: string[]) => `I redrew ${segs.join(", ")}. Please review the storyboards again.`,
+    shooting: (segs: string[]) => ["Compiling the video prompts", ...segs.map((seg) => `Shooting ${seg}`), "Checking the takes"],
+    askTakes: "Takes are in for every segment. seg02 and seg03 have dialogue the observer couldn't hear; please check them.",
+    reshoot: (seg: string) => `Shooting another take of ${seg}`,
+    askTakesAgain: (segs: string[]) => `New takes for ${segs.join(", ")}. Please check them.`,
+    cutting: ["Planning the cut", "Building the cut", "Checking the cut"],
+    askCut: (code: string) => `The cut of ${code} is ready. Please watch it.`,
+    recutting: ["Revising the cut"],
+    askCutAgain: (code: string) => `I revised the cut of ${code}. Please watch it again.`,
+    accepting: ["Recording your acceptance of the cut"],
+    finished: (code: string) => `${code} is finished: the cut is accepted.`,
+    readingMessage: ["Reading your message"],
+    noted: (goal: string) => `Noted: ${goal.slice(0, 200)}`,
+    bible: `# Stepmother in the 80s — bible (placeholder)
+
+## Characters
+- **Lin Xiaoyu**, 26, female — the new stepmother. Looks: S0 everyday, S1 wedding.
+- **Wei Zhen**, 32, male — the eldest son. Looks: S0 everyday.
+
+## Locations
+- **home** — a courtyard house, 1983.
+- **office** — the factory office.
+
+## Key props
+- **letter** — the torn letter Lin hides.
+`,
+    breakdownTitle: (code: string) => `# ${code} — breakdown (placeholder)`,
+    shot: (n: number, text: string) => `- Shot ${n}: ${text}`,
+  },
+  zh: {
+    cast: [
+      { id: "lin", name: "林晓雨" },
+      { id: "wei", name: "魏振" },
+    ],
+    shots: [
+      ["林晓雨走进院子", "魏振：你来晚了。", "林晓雨藏起那封信", "特写：撕破的信", "魏振转身离开", "林晓雨独自站着"],
+      ["一家人吃晚饭", "母亲：吃饭。", "林晓雨看着魏振", "魏振推开饭碗"],
+      ["夜，院子里", "林晓雨读信", "魏振站在窗边", "两人对视", "林晓雨烧掉那封信"],
+    ],
+    episodes: ["后妈进门", "一封信", "晚饭", "嫁衣", "夜市", "真相"],
+    reading: ["阅读剧本和备注", "核对每个角色的年龄和性别"],
+    askAge: "剧本里没有写魏振的年龄。他多大？要不要显得比林晓雨年长？",
+    drawing: ["编写设定集", "绘制林晓雨的面部和基础造型", "绘制魏振的面部和基础造型", "绘制场景", "绘制关键道具"],
+    redrawLook: (name: string) => `重新绘制${name}的造型`,
+    askLooks: "主角造型已完成，请审定：林晓雨和魏振。观察员注意到，魏振的外套比设定集里描述的颜色更深。",
+    askRedrawn: (names: string[]) => `我重新绘制了${names.join("和")}，请再看一下。`,
+    finishing: ["记录你对主角造型的确认", "完成共用参考"],
+    castDone: "角色已确认，共用参考已完成。\n\n分集：",
+    breaking: (code: string) => [`把 ${code} 拆分成段落`, "绘制站位参考", "绘制多格分镜", "检查分镜"],
+    askBoards: (code: string, n: number) => `${code} 的分镜已完成，请审阅：共 ${n} 段。观察员注意到，seg01 第 4 格的背景里多了一个人。`,
+    redrawBoard: (seg: string) => `重画 ${seg} 的分镜`,
+    askBoardsAgain: (segs: string[]) => `我重画了 ${segs.join("、")}，请再审阅一次分镜。`,
+    shooting: (segs: string[]) => ["整理视频提示词", ...segs.map((seg) => `拍摄 ${seg}`), "检查镜头"],
+    askTakes: "每一段的镜头都已拍好。seg02 和 seg03 有观察员听不清的台词，请你检查。",
+    reshoot: (seg: string) => `重拍 ${seg}`,
+    askTakesAgain: (segs: string[]) => `${segs.join("、")} 的新镜头已拍好，请检查。`,
+    cutting: ["规划剪辑", "剪辑成片", "检查成片"],
+    askCut: (code: string) => `${code} 的成片已完成，请观看。`,
+    recutting: ["修改成片"],
+    askCutAgain: (code: string) => `我修改了 ${code} 的成片，请再看一遍。`,
+    accepting: ["记录你对成片的确认"],
+    finished: (code: string) => `${code} 已完成：成片已通过。`,
+    readingMessage: ["阅读你的消息"],
+    noted: (goal: string) => `收到：${goal.slice(0, 200)}`,
+    bible: `# 后妈来了 · 设定集（示例）
+
+## 角色
+- **林晓雨**，26 岁，女，新来的后妈。造型：S0 日常，S1 婚礼。
+- **魏振**，32 岁，男，家中长子。造型：S0 日常。
+
+## 场景
+- **home**：1983 年的四合院。
+- **office**：工厂办公室。
+
+## 关键道具
+- **letter**：林晓雨藏起的那封撕破的信。
+`,
+    breakdownTitle: (code: string) => `# ${code} 拆分（示例）`,
+    shot: (n: number, text: string) => `- 镜头 ${n}：${text}`,
+  },
+};
+
+function setupScript(lang: Lang): Player {
+  const say = WORDS[lang];
   let step = 0;
   let version = 1;
   return (answer) => {
     step += 1;
-    if (step === 1) {
-      return {
-        progress: ["Reading the screenplay and the notes", "Checking every character's age and gender"],
-        files: [],
-        ask: "The screenplay doesn't give Wei Zhen's age. How old is he, and should he read older than Lin Xiaoyu?",
-      };
-    }
+    if (step === 1) return { progress: say.reading, files: [], ask: say.askAge };
     const redo = revisedKeys(answer);
     if (step === 2 || redo.length) {
       if (step > 2) version += 1;
-      const who = step === 2 ? CAST : CAST.filter((c) => redo.includes(c.name) || redo.includes(c.id));
+      const who = step === 2 ? say.cast : say.cast.filter((c) => redo.includes(c.name) || redo.includes(c.id));
       const files = who.map((c) => svg(`drama/assets/characters/${c.id}/v${version}/image-1.svg`, lookSheet(c.name, "base", `v${version}`)));
       if (step === 2) {
-        files.unshift({ path: "drama/bible/v1/bible.md", type: "text/markdown", bytes: text(BIBLE) });
+        files.unshift({ path: "drama/bible/v1/bible.md", type: "text/markdown", bytes: text(say.bible) });
         files.push(
           svg("drama/assets/scenes/home/v1/image-1.svg", plate("home", "v1")),
           svg("drama/assets/scenes/office/v1/image-1.svg", plate("office", "v1")),
@@ -91,27 +190,22 @@ function setupScript(): Player {
       }
       step = 2;
       return {
-        progress: step === 2 && version === 1
-          ? ["Writing the bible", "Drawing Lin Xiaoyu's face and base look", "Drawing Wei Zhen's face and base look", "Drawing the location plates", "Drawing the key prop"]
-          : who.map((c) => `Redrawing ${c.name}'s look`),
+        progress: version === 1 ? say.drawing : who.map((c) => say.redrawLook(c.name)),
         files,
-        ask: version === 1
-          ? "The leads' looks are ready for your approval: Lin Xiaoyu and Wei Zhen. The observer noted that Wei Zhen's jacket reads darker than the bible describes."
-          : `I redrew ${who.map((c) => c.name).join(" and ")}. Please look again.`,
+        ask: version === 1 ? say.askLooks : say.askRedrawn(who.map((c) => c.name)),
       };
     }
     return {
-      progress: ["Recording your approval of the leads' looks", "Finishing the shared references"],
+      progress: say.finishing,
       files: [],
-      summary:
-        "The cast is approved and the shared references are done.\n\nEpisodes:\n" +
-        ["The stepmother arrives", "The letter", "Dinner", "The wedding dress", "Night market", "The truth"].map((t, i) => `EP00${i + 1}: ${t}`).join("\n"),
+      summary: `${say.castDone}\n` + say.episodes.map((title, i) => `EP00${i + 1}: ${title}`).join("\n"),
     };
   };
 }
 
-function episodeScript(code: string): Player {
-  const segments = SHOTS.map((shots, i) => ({ id: `seg0${i + 1}`, shots }));
+function episodeScript(code: string, lang: Lang): Player {
+  const say = WORDS[lang];
+  const segments = say.shots.map((shots, i) => ({ id: `seg0${i + 1}`, shots }));
   let stage: "boards" | "takes" | "cut" | "done" = "boards";
   let boardVersion = 1;
   let take = 1;
@@ -122,76 +216,66 @@ function episodeScript(code: string): Player {
       svg(`${base}/multi_panel_storyboard/${seg.id}/line-art/v${v}/image-1.svg`, storyboard(`${code} ${seg.id}`, seg.shots, "line-art", `v${v}`, v === 1 && seg.id === "seg01" ? 3 : -1)),
       svg(`${base}/multi_panel_storyboard/${seg.id}/photoreal/v${v}/image-1.svg`, storyboard(`${code} ${seg.id}`, seg.shots, "photoreal", `v${v}`, v === 1 && seg.id === "seg01" ? 3 : -1)),
     ]);
+  const breakdown = [say.breakdownTitle(code), ...segments.flatMap((seg) => [`\n## ${seg.id}`, ...seg.shots.map((shot, i) => say.shot(i + 1, shot))])].join("\n");
   let started = false;
   return (answer) => {
     const redo = revisedKeys(answer);
     if (!started) {
       started = true;
       return {
-        progress: [`Breaking ${code} into segments`, "Drawing the blocking references", "Drawing the multi-panel storyboards", "Observing the storyboards"],
+        progress: say.breaking(code),
         files: [
-          { path: `${base}/breakdown/v1/breakdown.md`, type: "text/markdown", bytes: text(breakdown(code, segments)) },
+          { path: `${base}/breakdown/v1/breakdown.md`, type: "text/markdown", bytes: text(breakdown) },
           ...segments.map((seg) => svg(`${base}/blocking/${seg.id}/v1/image-1.svg`, blocking(`${code} ${seg.id}`, "v1"))),
           ...boards(segments, 1),
         ],
-        ask: `${code}'s storyboards are ready for your review: ${segments.length} segments. The observer noted that seg01 panel 4 shows a third person in the background.`,
+        ask: say.askBoards(code, segments.length),
       };
     }
     if (stage === "boards" && redo.length) {
       boardVersion += 1;
       const which = segments.filter((seg) => redo.includes(seg.id));
-      return {
-        progress: which.map((seg) => `Redrawing ${seg.id}'s storyboard`),
-        files: boards(which, boardVersion),
-        ask: `I redrew ${which.map((s) => s.id).join(", ")}. Please review the storyboards again.`,
-      };
+      return { progress: which.map((seg) => say.redrawBoard(seg.id)), files: boards(which, boardVersion), ask: say.askBoardsAgain(which.map((seg) => seg.id)) };
     }
     if (stage === "boards") {
       stage = "takes";
       return {
-        progress: ["Compiling the video prompts", ...segments.map((seg) => `Shooting ${seg.id}`), "Checking the takes"],
+        progress: say.shooting(segments.map((seg) => seg.id)),
         files: segments.map((seg) => video(`${base}/segments/${seg.id}/t01/video.mp4`, "take")),
-        ask: "Takes are in for every segment. seg02 and seg03 have dialogue the observer couldn't hear; please check them.",
+        ask: say.askTakes,
       };
     }
     if (stage === "takes" && redo.length) {
       take += 1;
       return {
-        progress: redo.map((key) => `Shooting another take of ${key}`),
+        progress: redo.map(say.reshoot),
         files: segments.filter((seg) => redo.includes(seg.id)).map((seg) => video(`${base}/segments/${seg.id}/t0${take}/video.mp4`, "take")),
-        ask: `New takes for ${redo.join(", ")}. Please check them.`,
+        ask: say.askTakesAgain(redo),
       };
     }
     if (stage === "takes") {
       stage = "cut";
-      return {
-        progress: ["Planning the cut", "Building the cut", "Checking the cut"],
-        files: [video(`${base}/edit/v1/cut.mp4`, "cut")],
-        ask: `The cut of ${code} is ready. Please watch it.`,
-      };
+      return { progress: say.cutting, files: [video(`${base}/edit/v1/cut.mp4`, "cut")], ask: say.askCut(code) };
     }
     if (stage === "cut" && redo.length) {
       cut += 1;
-      return {
-        progress: ["Revising the cut"],
-        files: [video(`${base}/edit/v${cut}/cut.mp4`, "cut")],
-        ask: `I revised the cut of ${code}. Please watch it again.`,
-      };
+      return { progress: say.recutting, files: [video(`${base}/edit/v${cut}/cut.mp4`, "cut")], ask: say.askCutAgain(code) };
     }
     stage = "done";
-    return { progress: ["Recording your acceptance of the cut"], files: [], summary: `${code} is finished: the cut is accepted.` };
+    return { progress: say.accepting, files: [], summary: say.finished(code) };
   };
 }
 
-function chatScript(goal: string): Player {
-  return () => ({ progress: ["Reading your message"], files: [], summary: `Noted: ${goal.slice(0, 200)}` });
+function chatScript(goal: string, lang: Lang): Player {
+  return () => ({ progress: WORDS[lang].readingMessage, files: [], summary: WORDS[lang].noted(goal) });
 }
 
-function scriptFor(goal: string): Player {
+/** The recording a run's goal starts; a session keeps the language its first goal set. */
+function scriptFor(goal: string, lang: Lang): Player {
   const episode = goal.match(/\b(EP\d{3})\b/);
-  if (/make episode|continue episode/i.test(goal) && episode) return episodeScript(episode[1]);
-  if (/vertical short drama from the attached screenplay/i.test(goal)) return setupScript();
-  return chatScript(goal);
+  if (/make episode|continue episode/i.test(goal) && episode) return episodeScript(episode[1], lang);
+  if (/vertical short drama from the attached screenplay/i.test(goal)) return setupScript(lang);
+  return chatScript(goal, lang);
 }
 
 export class ReplayFleet implements Fleet {
@@ -301,7 +385,8 @@ export class ReplayFleet implements Fleet {
     if (known) return { ...found.turns.get(known)!.info };
     const latest = found.latest && found.turns.get(found.latest);
     if (latest && latest.info.state === "running") throw Object.assign(new Error("The session is busy."), { status: 409 });
-    found.play = scriptFor(goal);
+    found.lang ??= languageOf(goal);
+    found.play = scriptFor(goal, found.lang);
     const info = this.begin(found, "");
     found.keys.set(key, info.turnId);
     this.emit(found, info.turnId, "input", goal);
@@ -353,22 +438,4 @@ export class ReplayFleet implements Fleet {
   async desktop() {
     return null;
   }
-}
-
-const BIBLE = `# Stepmother in the 80s — bible (placeholder)
-
-## Characters
-- **Lin Xiaoyu**, 26, female — the new stepmother. Looks: S0 everyday, S1 wedding.
-- **Wei Zhen**, 32, male — the eldest son. Looks: S0 everyday.
-
-## Locations
-- **home** — a courtyard house, 1983.
-- **office** — the factory office.
-
-## Key props
-- **letter** — the torn letter Lin hides.
-`;
-
-function breakdown(code: string, segments: { id: string; shots: string[] }[]) {
-  return [`# ${code} — breakdown (placeholder)`, ...segments.flatMap((seg) => [`\n## ${seg.id}`, ...seg.shots.map((shot, i) => `- Shot ${i + 1}: ${shot}`)])].join("\n");
 }

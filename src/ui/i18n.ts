@@ -38,7 +38,7 @@ const en = {
   "settings.connect": "Connect a project",
   "settings.language": "Language",
   "settings.data": "Data",
-  "settings.dataHint": "The records, the library of every file the agents returned, and the sealing key.",
+  "settings.dataHint": "The records, and the library of every file the agents returned.",
 
   "slate.title": "Dramas",
   "slate.facts": "{a} in production · {b} waiting for you",
@@ -181,6 +181,9 @@ const en = {
 
   "talk.setup": "Setup",
   "talk.inReview": "It waits for your review",
+  "inbox.endedTitle": "Ended before you decided",
+  "talk.brief": "The studio's brief for this session",
+  "talk.decision": "Your decision · {kind}: {a} approved · {r} to revise",
 
   "computer.starting": "Starting",
   "computer.running": "Running",
@@ -289,7 +292,7 @@ const zh: Record<Key, string> = {
   "settings.connect": "连接项目",
   "settings.language": "语言",
   "settings.data": "数据",
-  "settings.dataHint": "记录、智能体返回的所有文件，以及加密密钥。",
+  "settings.dataHint": "记录，以及智能体返回的所有文件。",
 
   "slate.title": "剧目",
   "slate.facts": "{a} 部制作中 · {b} 项等你审阅",
@@ -432,6 +435,9 @@ const zh: Record<Key, string> = {
 
   "talk.setup": "筹备",
   "talk.inReview": "它在等你审阅",
+  "inbox.endedTitle": "在你决定前已结束",
+  "talk.brief": "工作室给这个会话的任务",
+  "talk.decision": "你的决定 · {kind}：{a} 项通过 · {r} 项修改",
 
   "computer.starting": "启动中",
   "computer.running": "运行中",

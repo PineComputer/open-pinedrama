@@ -138,8 +138,8 @@ export interface EpisodeRow {
   activity?: string;
   /** The agent's own account of why it stopped early. */
   note?: string;
-  /** Its newest single frame (blocking first, else a storyboard sheet), once there is one. */
-  frame?: string;
+  /** Where it has got to, as a picture: its newest cut, else take, else blocking frame, else storyboard. */
+  frame?: Still;
   /** Its place in the queue, from 1. */
   position?: number;
   /** What it waits for the maker on; "saving" while the review's files are saved. */
@@ -186,6 +186,12 @@ export interface CastGroup {
   files: FileItem[];
 }
 
+/** A picture of the work for a card or a list: an image, or a video to show the opening frame of. */
+export interface Still {
+  url: string;
+  video?: boolean;
+}
+
 export interface ReviewSummary {
   id: string;
   dramaId: string;
@@ -195,7 +201,7 @@ export interface ReviewSummary {
   state: ReviewState;
   question: string;
   items: number;
-  thumb?: string;
+  thumb?: Still;
   createdAt: string;
 }
 
@@ -241,6 +247,10 @@ export interface ChatMessage {
   kind: "input" | "progress" | "activity" | "question" | "answer" | "result";
   text: string;
   at: string;
+  /** An input that was the studio's own goal for a run, not something the maker wrote. */
+  brief?: boolean;
+  /** An input that was the maker's decision on a review, sent in the agent's terms. */
+  decision?: { reviewId: string; kind: ReviewKind; approved: number; revised: number };
 }
 
 export interface ChatView {

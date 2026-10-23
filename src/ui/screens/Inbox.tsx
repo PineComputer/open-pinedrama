@@ -2,17 +2,17 @@ import type { ReviewSummary } from "../../shared/types.ts";
 import { ago, useResource } from "../api.ts";
 import { type TKey, useT } from "../i18n.ts";
 import { Link } from "../router.tsx";
+import { Still } from "../Still.tsx";
 
-export function InboxList({ dramaId }: { dramaId?: string }) {
+function Asks({ items, dramaId }: { items: ReviewSummary[]; dramaId?: string }) {
   const { t } = useT();
-  const { data } = useResource<ReviewSummary[]>(dramaId ? `/api/inbox?drama=${dramaId}` : "/api/inbox", ["inbox"]);
-  if (!data) return <p className="quiet">{t("loading")}</p>;
-  if (!data.length) return <p className="empty-note">{t("inbox.empty")}</p>;
   return (
     <div className="queue">
-      {data.map((item) => (
+      {items.map((item) => (
         <Link key={item.id} to={`/r/${item.id}`} className={`ask ${item.state === "ended" ? "ended" : ""}`}>
-          <div className="thumb" style={item.thumb ? { backgroundImage: `url(${item.thumb})` } : undefined} />
+          <div className="thumb">
+            <Still still={item.thumb} />
+          </div>
           <div className="shrink">
             <div className="what">
               {t(`kind.${item.kind}` as TKey)}
@@ -32,6 +32,26 @@ export function InboxList({ dramaId }: { dramaId?: string }) {
         </Link>
       ))}
     </div>
+  );
+}
+
+/** What waits for the maker, then, apart, what ended before they decided (each can carry on in a new session). */
+export function InboxList({ dramaId }: { dramaId?: string }) {
+  const { t } = useT();
+  const { data } = useResource<ReviewSummary[]>(dramaId ? `/api/inbox?drama=${dramaId}` : "/api/inbox", ["inbox"]);
+  if (!data) return <p className="quiet">{t("loading")}</p>;
+  const waiting = data.filter((item) => item.state !== "ended");
+  const ended = data.filter((item) => item.state === "ended");
+  return (
+    <>
+      {waiting.length ? <Asks items={waiting} dramaId={dramaId} /> : <p className="empty-note">{t("inbox.empty")}</p>}
+      {ended.length > 0 && (
+        <section className="ended-asks">
+          <h3 className="label">{t("inbox.endedTitle")}</h3>
+          <Asks items={ended} dramaId={dramaId} />
+        </section>
+      )}
+    </>
   );
 }
 

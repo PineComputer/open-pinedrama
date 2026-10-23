@@ -5,6 +5,7 @@ import { api, clock, useAction, useResource } from "../api.ts";
 import { type TKey, useT } from "../i18n.ts";
 import { errorText, fileKind } from "../labels.ts";
 import { Link, navigate } from "../router.tsx";
+import { Still } from "../Still.tsx";
 
 type Drafts = Record<string, { verdict?: Verdict; notes: Note[] }>;
 type T = ReturnType<typeof useT>["t"];
@@ -351,7 +352,11 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
     return () => window.removeEventListener("keydown", onKey);
   });
 
-  const thumbOf = (i: ReviewItem) => i.files.find(isImage)?.url;
+  const labelOf = (i: ReviewItem) => (i.key === "cut" ? t("kind.cut") : i.label);
+  const thumbOf = (i: ReviewItem) => {
+    const file = i.files.find(isImage) ?? i.files.find(isVideo);
+    return file && { url: file.url, video: isVideo(file) };
+  };
   const revisions = items.filter((i) => drafts[i.key]?.verdict === "revise");
   let pinNumber = 0;
 
@@ -407,9 +412,11 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
               const v = drafts[i.key]?.verdict;
               return (
                 <button key={i.key} className={n === index ? "on" : ""} onClick={() => go(n)}>
-                  <div className="frame" style={thumbOf(i) ? { backgroundImage: `url(${thumbOf(i)})` } : undefined} />
+                  <div className="frame">
+                    <Still still={thumbOf(i)} />
+                  </div>
                   <div className="cap">
-                    <span>{i.label}</span>
+                    <span>{labelOf(i)}</span>
                     {v === "approve" && <Check size={13} className="v-approve" />}
                     {v === "revise" && <Pencil size={12} className="v-revise" />}
                   </div>
@@ -422,7 +429,7 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
         <aside className="inspector">
           <div className="inspector-head">
             <div className="item">
-              <h2>{item?.label}</h2>
+              <h2>{item && labelOf(item)}</h2>
               {file?.version && <span className="quiet num">{file.version}</span>}
             </div>
             <div className="verdict">
@@ -511,7 +518,7 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
             <strong>{t("review.confirm")}</strong> {t("review.tally", { a: approved, r: revise, left })}
             {revisions.length > 0 && (
               <div className="detail">
-                {revisions.map((i) => `${i.label}: ${(drafts[i.key]?.notes ?? []).map((note) => note.text).join("; ") || "—"}`).join(" · ")}
+                {revisions.map((i) => `${labelOf(i)}: ${(drafts[i.key]?.notes ?? []).map((note) => note.text).join("; ") || "—"}`).join(" · ")}
               </div>
             )}
           </div>

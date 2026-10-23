@@ -12,12 +12,19 @@ import {
   STAGES,
   type Stage,
   type StageCell,
+  type Still,
+  type ChatMessage,
+  type Decision,
 } from "../shared/types.ts";
 import { START_ATTEMPTS } from "./computers.ts";
 import { all, get } from "./db.ts";
 import { type FileRow, fileUrl, filesOfTurn, toItem, versionNumber } from "./library.ts";
 import { type ComputerRow, type DramaRow, type EpisodeRow, type ReviewRow, type SessionRow, episodeCode, latestTurn, session as sessionRow } from "./records.ts";
 import { itemsOf } from "./reviews.ts";
+
+function still(file: FileRow): Still {
+  return file.type.startsWith("video/") ? { url: fileUrl(file), video: true } : { url: fileUrl(file) };
+}
 
 /** The first three characters' base looks, newest version each: the leads on the poster. */
 function castFaces(dramaId: string): string[] {
@@ -101,8 +108,8 @@ export function episodeViews(dramaId: string): EpisodeView[] {
     const reviews = all<ReviewRow>("select * from reviews where episode_id = ? order by created_at", episode.id);
     const open = reviews.find((review) => review.state === "open" || review.state === "saving");
     const session = episode.session_id ? sessionRow(episode.session_id) : undefined;
-    const newest = (kind: FileRow["kind"]) => files.findLast((file) => file.kind === kind && file.type.startsWith("image/"));
-    const frame = newest("blocking") ?? newest("storyboard");
+    const newest = (kind: FileRow["kind"]) => files.findLast((file) => file.kind === kind && /^(image|video)\//.test(file.type));
+    const frame = newest("cut") ?? newest("take") ?? newest("blocking") ?? newest("storyboard");
     return {
       id: episode.id,
       number: episode.number,
@@ -113,7 +120,7 @@ export function episodeViews(dramaId: string): EpisodeView[] {
       activity: episode.state === "working" ? session?.activity ?? undefined : undefined,
       // Only the agent's own account of why it stopped; the engine's reasons are for the agent.
       note: episode.state === "failed" ? episode.note || undefined : undefined,
-      frame: frame ? fileUrl(frame) : undefined,
+      frame: frame ? still(frame) : undefined,
       position: episode.state === "queued" ? queued.indexOf(episode) + 1 : undefined,
       waitingFor: episode.state === "waiting" ? (open?.state === "saving" ? "saving" : open?.kind ?? "question") : undefined,
       computer: computerLabel(session),
@@ -204,7 +211,7 @@ const PRIORITY: Record<ReviewKind, number> = { looks: 0, storyboards: 1, takes: 
 function summary(review: ReviewRow): ReviewSummary {
   const files = filesOfTurn(review.turn_id);
   const { items } = itemsOf(review.kind, files);
-  const image = files.find((file) => file.type.startsWith("image/"));
+  const image = files.find((file) => file.type.startsWith("image/")) ?? files.find((file) => file.type.startsWith("video/"));
   const episode = review.episode_id ? get<EpisodeRow>("select * from episodes where id = ?", review.episode_id) : undefined;
   return {
     id: review.id,
@@ -215,7 +222,7 @@ function summary(review: ReviewRow): ReviewSummary {
     state: review.state,
     question: review.question,
     items: items.length,
-    thumb: image ? fileUrl(image) : undefined,
+    thumb: image ? still(image) : undefined,
     createdAt: review.created_at,
   };
 }
@@ -258,15 +265,29 @@ export function chatView(session: SessionRow): ChatView {
         : turn && !turn.ended_at && turn.state !== "answered"
           ? "steer"
           : "run";
+  // What the agent was sent, told apart: the studio's goals, the maker's review decisions, the maker's own words.
+  const briefs = new Set(all<{ goal: string }>("select goal from runs where session_id = ? and kind != 'chat'", session.id).map((row) => row.goal));
+  const decisions = new Map(
+    all<ReviewRow>("select * from reviews where session_id = ? and answer is not null and kind != 'question'", session.id).map((row) => [row.answer!, row]),
+  );
+  const messages = all<ChatMessage>("select id, kind, text, at from messages where session_id = ? order by id desc limit 200", session.id)
+    .reverse()
+    .map((message): ChatMessage => {
+      if (message.kind !== "input") return message;
+      const decided = decisions.get(message.text);
+      if (decided) {
+        const items = decided.decision ? ((JSON.parse(decided.decision) as Decision).items ?? []) : [];
+        const revised = items.filter((item) => item.verdict === "revise").length;
+        return { ...message, decision: { reviewId: decided.id, kind: decided.kind, approved: items.length - revised, revised } };
+      }
+      return briefs.has(message.text) ? { ...message, brief: true } : message;
+    });
   return {
     sessionId: session.id,
     label: episode ? episodeCode(episode) : "",
     sends,
     reviewId: review && review.state !== "ended" ? review.id : undefined,
-    messages: all<{ id: number; kind: ChatView["messages"][number]["kind"]; text: string; at: string }>(
-      "select id, kind, text, at from messages where session_id = ? order by id desc limit 200",
-      session.id,
-    ).reverse(),
+    messages,
   };
 }
 
