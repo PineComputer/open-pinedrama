@@ -1,6 +1,7 @@
 // The whole production flow in replay mode, through the engine's HTTP API: a drama from
-// its screenplay to accepted cuts, with episodes in parallel, files saved before questions
-// open, and idle timeouts raised while the maker reviews.
+// its screenplay through pre-production (every breakdown and shared reference approved, the
+// project packed) to accepted cuts, with episodes in parallel on copies of that project,
+// files saved before questions open, and idle timeouts raised while the maker reviews.
 import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -85,7 +86,7 @@ describe("a drama in replay", () => {
     const looks = await until("the looks review", openReview(id, (item) => item.kind === "looks"));
     const looksView = await call<ReviewView>("GET", `/api/reviews/${looks.id}`);
     expect(looksView.reviewItems.map((item) => item.key)).toEqual(["lin", "wei"]);
-    expect(looksView.otherFiles.map((file) => file.kind).sort()).toEqual(["bible", "location", "location", "prop"]);
+    expect(looksView.otherFiles.map((file) => file.kind)).toEqual(["bible"]);
 
     // Revising one look redraws only that one.
     const revised = await call<ReviewView>("POST", `/api/reviews/${looks.id}/decision`, {
@@ -106,6 +107,14 @@ describe("a drama in replay", () => {
     expect(looksView.reviewItems[0].previous).toBeUndefined();
     await approveAll(again.id);
 
+    // Pre-production: every episode's breakdown, then the looks, places and props they use, for the maker to approve.
+    const shared = await until("the shared references", openReview(id, (item) => item.kind === "references"));
+    const sharedView = await call<ReviewView>("GET", `/api/reviews/${shared.id}`);
+    expect(sharedView.reviewItems.map((item) => item.key)).toEqual(["lin/S1", "location:home", "location:office", "prop:letter"]);
+    expect(sharedView.reviewItems.map((item) => item.label)).toEqual(["lin/S1", "home", "office", "letter"]);
+    expect(sharedView.otherFiles.filter((file) => file.kind === "breakdown")).toHaveLength(6);
+    await approveAll(shared.id);
+
     // Production: two episodes at once, each waiting for its storyboards, on its own Computer.
     const drama = await until("two episodes waiting", async () => {
       const view = await call<DramaView>("GET", `/api/dramas/${id}`);
@@ -119,6 +128,14 @@ describe("a drama in replay", () => {
       const view = await call<DramaView>("GET", `/api/dramas/${id}`);
       return view.crew.every((computer) => computer.idleTimeoutMinutes === 180) ? view : undefined;
     });
+    // Each episode got the packed project, not loose references, and its breakdown came from pre-production.
+    const { all } = await import("./db.ts");
+    const goals = all<{ goal: string }>("select goal from runs where kind = 'episode'");
+    expect(goals.length).toBeGreaterThanOrEqual(2);
+    for (const { goal } of goals) expect(goal).toContain("attachments/project.tar.part-*");
+    expect(drama.episodeRows.every((row) => row.stages.breakdown.state === "done")).toBe(true);
+    const boards = await until("EP001 storyboards", openReview(id, (item) => item.episode === "EP001" && item.kind === "storyboards"));
+    expect((await call<ReviewView>("GET", `/api/reviews/${boards.id}`)).breakdown?.path).toBe("drama/episodes/EP001/breakdown/v1/breakdown.md");
 
     // EP001 through storyboards, takes and the cut; then EP003 takes its place.
     for (const kind of ["storyboards", "takes", "cut"] as const) {

@@ -104,7 +104,7 @@ function Pinboard({ file, notes, draft, space, onPin }: { file: FileItem; notes:
 
 /** The segment's shot list, from the breakdown the agent returned, when it can be read. */
 function useShotList(review: ReviewView | undefined, key: string | undefined): string[] | undefined {
-  const breakdown = review?.otherFiles.find((file) => file.kind === "breakdown" && /markdown|text/.test(file.type));
+  const breakdown = review?.breakdown ?? review?.otherFiles.find((file) => file.kind === "breakdown" && /markdown|text/.test(file.type));
   const [text, setText] = useState<string>();
   useEffect(() => {
     if (!breakdown) return;
@@ -359,7 +359,8 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
     return () => window.removeEventListener("keydown", onKey);
   });
 
-  const labelOf = (i: ReviewItem) => (i.key === "cut" ? t("kind.cut") : i.label);
+  const labelOf = (i: ReviewItem) =>
+    i.key === "cut" ? t("kind.cut") : /^(location|prop):/.test(i.key) && i.files[0] ? `${i.label} · ${fileKind(i.files[0].kind, t)}` : i.label;
   const thumbOf = (i: ReviewItem) => {
     const file = i.files.find(isImage) ?? i.files.find(isVideo);
     return file && { url: file.url, video: isVideo(file) };

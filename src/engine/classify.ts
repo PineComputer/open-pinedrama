@@ -20,6 +20,7 @@ const SEG = String.raw`(seg\d+[a-z]?)`;
 const VER = String.raw`(v\d+)`;
 
 const RULES: [RegExp, (m: RegExpMatchArray) => Hints][] = [
+  [/(?:^|\/)handoff\/(EP\d+|project)\.tar\.part-[a-z0-9]+$/i, (m) => ({ kind: "archive", episode: /^EP/i.test(m[1]) ? m[1] : undefined })],
   [new RegExp(String.raw`episodes/(EP\d+)/edit/${VER}/[^/]+${VIDEO}`, "i"), (m) => ({ kind: "cut", episode: m[1], version: m[2] })],
   [new RegExp(String.raw`episodes/(EP\d+)/segments/${SEG}/(t\d+)/[^/]+${VIDEO}`, "i"), (m) => ({ kind: "take", episode: m[1], segment: m[2], version: m[3] })],
   [

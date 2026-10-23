@@ -10,7 +10,7 @@ import { stopEvents } from "./follow.ts";
 import { continueGoal } from "./goals.ts";
 import { publish } from "./live.ts";
 import { type ReviewRow, type SessionRow, drama as dramaRow, episode as episodeRow, episodeCode } from "./records.ts";
-import { startRun } from "./runs.ts";
+import { projectArchive, startRun } from "./runs.ts";
 
 async function close(session: SessionRow) {
   stopEvents(session.id);
@@ -28,7 +28,9 @@ async function setupEnded(session: SessionRow, info: TurnInfo) {
   const drama = dramaRow(session.drama_id)!;
   if (info.state === "completed") {
     const listed = listedEpisodes(info.summary);
-    if (listed.length) {
+    // Episodes run on copies of the project pre-production packed: no project, no production.
+    const packed = projectArchive(drama.id).length > 0;
+    if (listed.length && packed) {
       for (const item of listed) {
         run(
           "insert into episodes (id, drama_id, number, title, state, updated_at) values (?, ?, ?, ?, 'queued', ?) on conflict(drama_id, number) do nothing",
@@ -38,6 +40,9 @@ async function setupEnded(session: SessionRow, info: TurnInfo) {
           item.title,
           now(),
         );
+        // What pre-production made for this episode (its breakdown) belongs to it from now on.
+        const episode = get<{ id: string }>("select id from episodes where drama_id = ? and number = ?", drama.id, item.number)!;
+        run("update files set episode_id = ? where drama_id = ? and episode_id is null and rel_path like ?", episode.id, drama.id, `%episodes/${episodeCode({ number: item.number })}/%`);
       }
       run("update dramas set status = 'production', note = '', updated_at = ? where id = ?", now(), drama.id);
       await close(session);
@@ -45,7 +50,11 @@ async function setupEnded(session: SessionRow, info: TurnInfo) {
     }
     if (drama.continues < MAX_CONTINUES) {
       run("update dramas set continues = continues + 1 where id = ?", drama.id);
-      await startRun(session, "continue", 'List the drama\'s episodes, one per line, as "EP001: <title>".');
+      const missing = [
+        packed ? "" : "Pack the whole drama/ folder, records included, into parts of at most 60 MB (`mkdir -p handoff && tar -cf - -C drama . | split -b 60m - handoff/project.tar.part-`) and return the parts.",
+        listed.length ? "" : 'List the drama\'s episodes, one per line, as "EP001: <title>".',
+      ];
+      await startRun(session, "continue", missing.filter(Boolean).join(" "));
       return;
     }
   }

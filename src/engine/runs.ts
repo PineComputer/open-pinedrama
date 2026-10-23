@@ -13,6 +13,8 @@ import { type SessionRow, computer as computerRow, session as sessionRow } from 
 
 /** A flat, unique attachment name for a library file: Pine takes a single file name. */
 export function attachmentName(row: FileRow): string {
+  // The parts of a packed project keep their names, so `cat project.tar.part-*` puts them back in order.
+  if (row.kind === "archive") return path.posix.basename(row.rel_path);
   const ext = path.posix.extname(row.name) || "";
   const parts: (string | null | undefined)[] = (() => {
     switch (row.kind) {
@@ -45,6 +47,22 @@ export function attachmentName(row: FileRow): string {
     .join("-")
     .replace(/[^\p{L}\p{N}._-]+/gu, "_");
   return `${base}${ext}`;
+}
+
+/** The parts of the newest packed project a turn returned: the drama's (no episode) or one episode's. */
+function newestArchive(where: string, ...params: string[]): FileRow[] {
+  const newest = get<FileRow>(`select * from files where kind = 'archive' and ${where} order by id desc limit 1`, ...params);
+  return newest ? all<FileRow>(`select * from files where kind = 'archive' and turn_id = ? and ${where} order by rel_path`, newest.turn_id!, ...params) : [];
+}
+
+/** The drama-cli project pre-production handed over: bible, every breakdown and shared reference, accepted. */
+export function projectArchive(dramaId: string): FileRow[] {
+  return newestArchive("drama_id = ? and episode_id is null", dramaId);
+}
+
+/** An episode's own folder as its last session packed it, to carry on from. */
+export function episodeArchive(episodeId: string): FileRow[] {
+  return newestArchive("episode_id = ?", episodeId);
 }
 
 /** The drama's approved references: the newest bible, look, location and prop the setup returned. */

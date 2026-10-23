@@ -77,13 +77,19 @@ const WORDS = {
     episodes: ["The stepmother arrives", "The letter", "Dinner", "The wedding dress", "Night market", "The truth"],
     reading: ["Reading the screenplay and the notes", "Checking every character's age and gender"],
     askAge: "The screenplay doesn't give Wei Zhen's age. How old is he, and should he read older than Lin Xiaoyu?",
-    drawing: ["Writing the bible", "Drawing Lin Xiaoyu's face and base look", "Drawing Wei Zhen's face and base look", "Drawing the location plates", "Drawing the key prop"],
+    drawing: ["Writing the bible", "Drawing Lin Xiaoyu's face and base look", "Drawing Wei Zhen's face and base look"],
     redrawLook: (name: string) => `Redrawing ${name}'s look`,
     askLooks: "The leads' looks are ready for your approval: Lin Xiaoyu and Wei Zhen. The observer noted that Wei Zhen's jacket reads darker than the bible describes.",
     askRedrawn: (names: string[]) => `I redrew ${names.join(" and ")}. Please look again.`,
     finishing: ["Recording your approval of the leads' looks", "Finishing the shared references"],
-    castDone: "The cast is approved and the shared references are done.\n\nEpisodes:",
-    breaking: (code: string) => [`Breaking ${code} into segments`, "Drawing the blocking references", "Drawing the multi-panel storyboards", "Observing the storyboards"],
+    preparing: ["Writing every episode's breakdown", "Drawing Lin Xiaoyu's wedding look", "Drawing the location plates", "Drawing the key prop", "Checking the shared references"],
+    askReferences: (n: number) =>
+      `Every episode is prepared: ${n} breakdowns are accepted. These shared references are ready for your approval: Lin Xiaoyu's wedding look, two locations and the letter.`,
+    redrawReference: (key: string) => `Redrawing ${key}`,
+    askReferencesAgain: (keys: string[]) => `I redrew ${keys.join(", ")}. Please look again.`,
+    packing: ["Packing the project for the episodes"],
+    castDone: "The cast and the shared references are approved, and the project is packed for the episodes.\n\nEpisodes:",
+    restoring: (code: string) => [`Restoring the drama's project for ${code}`, "Drawing the blocking references", "Drawing the multi-panel storyboards", "Observing the storyboards"],
     askBoards: (code: string, n: number) => `${code}'s storyboards are ready for your review: ${n} segments. The observer noted that seg01 panel 4 shows a third person in the background.`,
     redrawBoard: (seg: string) => `Redrawing ${seg}'s storyboard`,
     askBoardsAgain: (segs: string[]) => `I redrew ${segs.join(", ")}. Please review the storyboards again.`,
@@ -128,13 +134,18 @@ const WORDS = {
     episodes: ["后妈进门", "一封信", "晚饭", "嫁衣", "夜市", "真相"],
     reading: ["阅读剧本和备注", "核对每个角色的年龄和性别"],
     askAge: "剧本里没有写魏振的年龄。他多大？要不要显得比林晓雨年长？",
-    drawing: ["编写设定集", "绘制林晓雨的面部和基础造型", "绘制魏振的面部和基础造型", "绘制场景", "绘制关键道具"],
+    drawing: ["编写设定集", "绘制林晓雨的面部和基础造型", "绘制魏振的面部和基础造型"],
     redrawLook: (name: string) => `重新绘制${name}的造型`,
     askLooks: "主角造型已完成，请审定：林晓雨和魏振。观察员注意到，魏振的外套比设定集里描述的颜色更深。",
     askRedrawn: (names: string[]) => `我重新绘制了${names.join("和")}，请再看一下。`,
     finishing: ["记录你对主角造型的确认", "完成共用参考"],
-    castDone: "角色已确认，共用参考已完成。\n\n分集：",
-    breaking: (code: string) => [`把 ${code} 拆分成段落`, "绘制站位参考", "绘制多格分镜", "检查分镜"],
+    preparing: ["撰写每一集的拆分", "绘制林晓雨的婚礼造型", "绘制场景", "绘制关键道具", "检查共用参考"],
+    askReferences: (n: number) => `每一集都已准备好：${n} 集拆分已确认。以下共用参考请你审定：林晓雨的婚礼造型、两个场景和那封信。`,
+    redrawReference: (key: string) => `重画 ${key}`,
+    askReferencesAgain: (keys: string[]) => `我重画了 ${keys.join("、")}，请再看一下。`,
+    packing: ["打包项目，交给各集"],
+    castDone: "角色与共用参考已审定，项目已打包，交给各集。\n\n分集：",
+    restoring: (code: string) => [`为 ${code} 恢复剧目项目`, "绘制站位参考", "绘制多格分镜", "检查分镜"],
     askBoards: (code: string, n: number) => `${code} 的分镜已完成，请审阅：共 ${n} 段。观察员注意到，seg01 第 4 格的背景里多了一个人。`,
     redrawBoard: (seg: string) => `重画 ${seg} 的分镜`,
     askBoardsAgain: (segs: string[]) => `我重画了 ${segs.join("、")}，请再审阅一次分镜。`,
@@ -168,36 +179,72 @@ const WORDS = {
   },
 };
 
+/** A part of a packed project, as the agent returns it (here a stand-in: replay has no drama-cli project). */
+const archive = (name: string): Out => ({ path: `handoff/${name}.tar.part-aa`, type: "application/octet-stream", bytes: text(`replay stand-in for ${name}.tar`) });
+
+const segmentsOf = (say: (typeof WORDS)[Lang]) => say.shots.map((shots, i) => ({ id: `seg0${i + 1}`, shots }));
+
+function breakdownOf(say: (typeof WORDS)[Lang], code: string): string {
+  return [say.breakdownTitle(code), ...segmentsOf(say).flatMap((seg) => [`\n## ${seg.id}`, ...seg.shots.map((shot, i) => say.shot(i + 1, shot))])].join("\n");
+}
+
+/**
+ * The setup and pre-production, in one session: the question, the bible and the leads (the
+ * maker approves), every breakdown and the shared references (the maker approves), then the
+ * project packed for the episodes.
+ */
 function setupScript(lang: Lang): Player {
   const say = WORDS[lang];
-  let step = 0;
-  let version = 1;
+  let stage: "start" | "asked" | "leads" | "references" = "start";
+  const versions = new Map<string, number>();
+  const next = (key: string) => {
+    const v = (versions.get(key) ?? 0) + 1;
+    versions.set(key, v);
+    return `v${v}`;
+  };
+  const leadSheet = (c: { id: string; name: string }) => svg(`drama/assets/characters/${c.id}/${next(c.id)}/image-1.svg`, lookSheet(c.name, "base", `v${versions.get(c.id)}`));
+  const shared = {
+    "lin/S1": () => svg(`drama/assets/characters/lin/states/S1/${next("lin/S1")}/image-1.svg`, lookSheet(say.cast[0].name, "S1", `v${versions.get("lin/S1")}`)),
+    home: () => svg(`drama/assets/scenes/home/${next("home")}/image-1.svg`, plate("home", `v${versions.get("home")}`)),
+    office: () => svg(`drama/assets/scenes/office/${next("office")}/image-1.svg`, plate("office", `v${versions.get("office")}`)),
+    letter: () => svg(`drama/assets/props/letter/${next("letter")}/image-1.svg`, prop("letter", `v${versions.get("letter")}`)),
+  } as Record<string, () => Out>;
   return (answer) => {
-    step += 1;
-    if (step === 1) return { progress: say.reading, files: [], ask: say.askAge };
     const redo = revisedKeys(answer);
-    if (step === 2 || redo.length) {
-      if (step > 2) version += 1;
-      const who = step === 2 ? say.cast : say.cast.filter((c) => redo.includes(c.name) || redo.includes(c.id));
-      const files = who.map((c) => svg(`drama/assets/characters/${c.id}/v${version}/image-1.svg`, lookSheet(c.name, "base", `v${version}`)));
-      if (step === 2) {
-        files.unshift({ path: "drama/bible/v1/bible.md", type: "text/markdown", bytes: text(say.bible) });
-        files.push(
-          svg("drama/assets/scenes/home/v1/image-1.svg", plate("home", "v1")),
-          svg("drama/assets/scenes/office/v1/image-1.svg", plate("office", "v1")),
-          svg("drama/assets/props/letter/v1/image-1.svg", prop("letter", "v1")),
-        );
-      }
-      step = 2;
+    if (stage === "start") {
+      stage = "asked";
+      return { progress: say.reading, files: [], ask: say.askAge };
+    }
+    if (stage === "asked") {
+      stage = "leads";
       return {
-        progress: version === 1 ? say.drawing : who.map((c) => say.redrawLook(c.name)),
-        files,
-        ask: version === 1 ? say.askLooks : say.askRedrawn(who.map((c) => c.name)),
+        progress: say.drawing,
+        files: [{ path: "drama/bible/v1/bible.md", type: "text/markdown", bytes: text(say.bible) }, ...say.cast.map(leadSheet)],
+        ask: say.askLooks,
       };
     }
+    if (stage === "leads" && redo.length) {
+      const who = say.cast.filter((c) => redo.includes(c.name) || redo.includes(c.id));
+      return { progress: who.map((c) => say.redrawLook(c.name)), files: who.map(leadSheet), ask: say.askRedrawn(who.map((c) => c.name)) };
+    }
+    if (stage === "leads") {
+      stage = "references";
+      return {
+        progress: say.preparing,
+        files: [
+          ...say.episodes.map((_, i) => ({ path: `drama/episodes/EP00${i + 1}/breakdown/v1/breakdown.md`, type: "text/markdown", bytes: text(breakdownOf(say, `EP00${i + 1}`)) })),
+          ...Object.values(shared).map((draw) => draw()),
+        ],
+        ask: say.askReferences(say.episodes.length),
+      };
+    }
+    if (redo.length) {
+      const which = redo.filter((key) => shared[key]);
+      return { progress: which.map(say.redrawReference), files: which.map((key) => shared[key]()), ask: say.askReferencesAgain(which) };
+    }
     return {
-      progress: say.finishing,
-      files: [],
+      progress: [...say.finishing, ...say.packing],
+      files: [archive("project")],
       summary: `${say.castDone}\n` + say.episodes.map((title, i) => `EP00${i + 1}: ${title}`).join("\n"),
     };
   };
@@ -216,19 +263,14 @@ function episodeScript(code: string, lang: Lang): Player {
       svg(`${base}/multi_panel_storyboard/${seg.id}/line-art/v${v}/image-1.svg`, storyboard(`${code} ${seg.id}`, seg.shots, "line-art", `v${v}`, v === 1 && seg.id === "seg01" ? 3 : -1)),
       svg(`${base}/multi_panel_storyboard/${seg.id}/photoreal/v${v}/image-1.svg`, storyboard(`${code} ${seg.id}`, seg.shots, "photoreal", `v${v}`, v === 1 && seg.id === "seg01" ? 3 : -1)),
     ]);
-  const breakdown = [say.breakdownTitle(code), ...segments.flatMap((seg) => [`\n## ${seg.id}`, ...seg.shots.map((shot, i) => say.shot(i + 1, shot))])].join("\n");
   let started = false;
-  return (answer) => {
+  const play = (answer: string): Step => {
     const redo = revisedKeys(answer);
     if (!started) {
       started = true;
       return {
-        progress: say.breaking(code),
-        files: [
-          { path: `${base}/breakdown/v1/breakdown.md`, type: "text/markdown", bytes: text(breakdown) },
-          ...segments.map((seg) => svg(`${base}/blocking/${seg.id}/v1/image-1.svg`, blocking(`${code} ${seg.id}`, "v1"))),
-          ...boards(segments, 1),
-        ],
+        progress: say.restoring(code),
+        files: [...segments.map((seg) => svg(`${base}/blocking/${seg.id}/v1/image-1.svg`, blocking(`${code} ${seg.id}`, "v1"))), ...boards(segments, 1)],
         ask: say.askBoards(code, segments.length),
       };
     }
@@ -263,6 +305,11 @@ function episodeScript(code: string, lang: Lang): Player {
     }
     stage = "done";
     return { progress: say.accepting, files: [], summary: say.finished(code) };
+  };
+  // Each stop and the finish also hand back the episode's own folder, packed.
+  return (answer) => {
+    const step = play(answer);
+    return { ...step, files: [...step.files, archive(code)] };
   };
 }
 

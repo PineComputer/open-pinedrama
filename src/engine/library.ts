@@ -131,7 +131,8 @@ export function toItem(row: FileRow): FileItem {
     type: row.type,
     size: row.size,
     kind: row.kind,
-    episode: row.episode_id ? episodeLabel(row.episode_id) : undefined,
+    // Pre-production writes episodes' files before the episodes exist: their path names them.
+    episode: (row.episode_id ? episodeLabel(row.episode_id) : undefined) ?? classify(row.rel_path).episode,
     segment: row.segment ?? undefined,
     subject: row.subject ?? undefined,
     look: row.look ?? undefined,

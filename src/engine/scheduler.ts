@@ -27,7 +27,7 @@ import type { FileRow } from "./library.ts";
 import { publish } from "./live.ts";
 import { type ComputerRow, type DramaRow, type EpisodeRow, type SessionRow, episodeCode, latestTurn, openSessionsOf } from "./records.ts";
 import { reconcileSending } from "./reviews.ts";
-import { attach, hasRun, inputs, references, sendRun, startRun, unconfirmedRuns } from "./runs.ts";
+import { attach, episodeArchive, hasRun, inputs, projectArchive, references, sendRun, startRun, unconfirmedRuns } from "./runs.ts";
 
 /** Work the clock started and hasn't finished, so a slow call never starts twice. */
 const busy = new Set<string>();
@@ -158,12 +158,21 @@ function startEpisode(drama: DramaRow, episode: EpisodeRow, computer: ComputerRo
       session = await openSession(computer, "episode", episode.id, code);
       release();
       run("update episodes set session_id = ?, updated_at = ? where id = ?", session.id, now(), episode.id);
-      let files: FileRow[] = [...inputs(drama.id), ...references(drama.id)];
-      if (episode.resume) files = [...files, ...all<FileRow>("select * from files where episode_id = ? and kind != 'observation' order by id", episode.id)];
+      // The project pre-production handed over, and on a resume the episode's own packed folder;
+      // a drama set up before pre-production existed gets its references as loose files.
+      const project = projectArchive(drama.id);
+      const handoff = project.length > 0;
+      let files: FileRow[] = handoff ? project : [...inputs(drama.id), ...references(drama.id)];
+      if (episode.resume) {
+        const own = handoff ? episodeArchive(episode.id) : [];
+        files = [...files, ...(own.length || handoff ? own : all<FileRow>("select * from files where episode_id = ? and kind != 'observation' order by id", episode.id))];
+      }
       const { sent, skipped } = await attach(session, files);
       if (skipped.length) console.warn(`${code}: too large to hand over (over 64 MiB): ${skipped.join(", ")}`);
       followEvents(session.id);
-      const goal = episode.resume ? resumeGoal(drama, code, sent, episode.carry || undefined) : episodeGoal(drama, code, sent);
+      const goal = episode.resume
+        ? resumeGoal(drama, code, sent, handoff, episode.carry || undefined)
+        : episodeGoal(drama, code, sent, handoff);
       await startRun(session, episode.resume ? "resume" : "episode", goal);
       run("update episodes set resume = 0, carry = '', continues = 0, note = '', updated_at = ? where id = ?", now(), episode.id);
     } catch (error) {

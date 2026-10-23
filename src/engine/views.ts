@@ -172,6 +172,7 @@ export function dramaView(drama: DramaRow): DramaView {
       reviewId: setupReview?.id,
       kind: setupReview?.kind,
       hasCast: (get<{ n: number }>("select count(*) as n from files where drama_id = ? and kind = 'look'", drama.id)?.n ?? 0) > 0,
+      leadsApproved: get("select id from reviews where drama_id = ? and kind = 'looks' and state = 'answered' limit 1", drama.id) !== undefined,
       activity: setupSession?.state === "open" ? setupSession.activity ?? undefined : undefined,
       note: drama.note || undefined,
     },
@@ -216,8 +217,8 @@ export function castGroups(dramaId: string): CastGroup[] {
   return [...groups.values()].sort((a, b) => a.kind.localeCompare(b.kind) || a.subject.localeCompare(b.subject));
 }
 
-/** Most blocking first: the drama's setup, then storyboards (they hold up shooting), takes, cuts, questions; oldest first. */
-const PRIORITY: Record<ReviewKind, number> = { looks: 0, storyboards: 1, takes: 2, cut: 3, question: 4 };
+/** Most blocking first: the drama's setup and pre-production, then storyboards (they hold up shooting), takes, cuts, questions; oldest first. */
+const PRIORITY: Record<ReviewKind, number> = { looks: 0, references: 0, storyboards: 1, takes: 2, cut: 3, question: 4 };
 
 function summary(review: ReviewRow): ReviewSummary {
   const files = filesOfTurn(review.turn_id);
@@ -250,6 +251,7 @@ export function inbox(dramaId?: string): ReviewSummary[] {
 
 const REVIEWED_KINDS: Partial<Record<ReviewKind, FileRow["kind"][]>> = {
   looks: ["look"],
+  references: ["look", "location", "prop"],
   storyboards: ["storyboard", "blocking"],
   takes: ["take"],
   cut: ["cut"],
@@ -268,7 +270,11 @@ function previousOf(review: ReviewRow, item: ReviewItem, before: number): Pick<R
     before,
     ...kinds,
   ).filter((row) => {
-    if (review.kind === "looks") return (row.subject ?? "?") === item.key.split("/")[0] && (row.look ?? "base") === (item.key.split("/")[1] ?? "base");
+    const place = item.key.match(/^(location|prop):(.+)$/);
+    if (place) return row.kind === place[1] && row.subject === place[2];
+    if (review.kind === "looks" || review.kind === "references") {
+      return row.kind === "look" && (row.subject ?? "?") === item.key.split("/")[0] && (row.look ?? "base") === (item.key.split("/")[1] ?? "base");
+    }
     if (row.episode_id !== review.episode_id) return false;
     return review.kind === "cut" || row.segment === item.key;
   });
@@ -287,9 +293,14 @@ export function reviewView(review: ReviewRow): ReviewView {
   const { items, other } = itemsOf(review.kind, files);
   const first = Math.min(...files.map((file) => file.id));
   const next = inbox().find((item) => item.id !== review.id && item.state === "open");
+  // The episode's shot list, wherever it was written (pre-production writes them all).
+  const breakdown = review.episode_id
+    ? get<FileRow>("select * from files where episode_id = ? and kind = 'breakdown' and type like 'text/%' order by id desc limit 1", review.episode_id)
+    : undefined;
   return {
     ...summary(review),
     reviewItems: items.map((item) => ({ ...item, ...previousOf(review, item, first) })),
+    breakdown: breakdown ? toItem(breakdown) : undefined,
     otherFiles: other,
     decision: review.decision ? JSON.parse(review.decision) : undefined,
     answer: review.answer ?? undefined,

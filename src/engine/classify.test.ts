@@ -12,6 +12,11 @@ describe("classify", () => {
     });
   });
 
+  it("reads the packed projects sessions hand over", () => {
+    expect(classify("handoff/project.tar.part-aa")).toEqual({ kind: "archive" });
+    expect(classify("work/handoff/EP007.tar.part-ab")).toEqual({ kind: "archive", episode: "EP007" });
+  });
+
   it("reads takes and cuts", () => {
     expect(classify("episodes/EP010/segments/seg01b/t02/video.mp4")).toMatchObject({ kind: "take", episode: "EP010", segment: "seg01b", version: "t02" });
     expect(classify("episodes/EP010/edit/v3/cut.mp4")).toMatchObject({ kind: "cut", episode: "EP010", version: "v3" });

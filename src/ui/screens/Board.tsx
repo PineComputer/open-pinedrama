@@ -238,8 +238,23 @@ export function SetupPanel({ drama }: { drama: DramaView }) {
   const { setup } = drama;
   const retry = useAction(() => api(`/api/dramas/${drama.id}/retry`, { method: "POST" }));
   // 0 reading, 1 answering a question, 2 drawing the cast, 3 approving the leads' looks.
-  const current = setup.state === "waiting" ? (setup.kind === "looks" ? 3 : 1) : setup.hasCast ? 2 : 0;
-  const steps: TKey[] = ["setup.reading", "setup.answers", "setup.cast", "setup.approval"];
+  // Reading, answering, drawing the leads, approving them; then pre-production: preparing every
+  // episode (breakdowns and shared references), and approving the shared references.
+  const current =
+    setup.state === "waiting"
+      ? setup.kind === "references"
+        ? 5
+        : setup.kind === "looks"
+          ? 3
+          : setup.leadsApproved
+            ? 4
+            : 1
+      : setup.leadsApproved
+        ? 4
+        : setup.hasCast
+          ? 2
+          : 0;
+  const steps: TKey[] = ["setup.reading", "setup.answers", "setup.cast", "setup.approval", "setup.preparing", "setup.references"];
   const detail =
     setup.state === "stopped"
       ? setup.note ?? t("board.stopped")

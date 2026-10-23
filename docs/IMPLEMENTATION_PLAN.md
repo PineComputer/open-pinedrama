@@ -42,6 +42,8 @@ The restart path is checked by hand: lost Computers mark episodes stopped and en
 - On macOS the bar is the title bar, the dock badge counts waiting reviews, and closing the window keeps the line running.
 - `npm run package` builds with electron-builder; the UI, the engine and the shell are bundled, so the app ships no `node_modules`. An unsigned macOS build was opened and ran the sample drama from its own bundled files.
 
+**Pre-production, 23 October 2026.** Parallel episodes now start from one accepted project: the setup session also writes every breakdown and draws every shared look, place and prop, the maker approves them in a "shared references" review, and the session packs the project for the episodes. The board's setup steps show pre-production; breakdowns belong to their episodes once listed, and the review room reads each episode's shot list from them.
+
 **Not yet verified:** anything against real Pine; Windows and Linux builds; signing and notarization. Milestone 2's spike needs the maker's go-ahead, a spend cap and a project with the drama skill.
 
 ## Decisions carried in
@@ -55,10 +57,12 @@ The restart path is checked by hand: lost Computers mark episodes stopped and en
 
 Sessions on one Computer run concurrently (three at most) but share no files; Pine lists cross-session storage as coming. So putting two episodes on one Computer only saves Computer quota and makes them share its CPU and memory.
 
-- **A drama has a pool of Computers.** The first one runs the setup session (read the script, bible, cast, locations, props). After the maker approves the leads' looks, every Computer in the pool takes episodes from the drama's queue.
+- **Pre-production comes first, in one session.** drama-cli keeps a drama in one project whose accepted items are bound to their exact files, and it makes looks per episode; episodes drawn in parallel from loose copies would be refused or would draw the same look twice. So the setup session, on the first Computer of the drama's pool, does all that episodes share, in one project: it reads the screenplay and asks what is missing, writes the bible, draws the leads (the maker approves), writes and accepts every episode's breakdown, and draws every look, location and key prop any breakdown uses (the maker approves this shared set). Then it packs the project, records included, into parts of at most 60 MB (`handoff/project.tar.part-*`) and lists the episodes.
+- **Episodes run on copies of that project.** Every Computer in the pool takes episodes from the drama's queue. Each episode session gets the project's parts as attachments, restores them, points the config at its own folder with `drama-cli init` (drama-cli's records hold project-relative paths and hashes, so a copy keeps its acceptances), and works only inside `episodes/EPxxx`, never making a new version of anything shared. If it needs a look, place or prop that isn't accepted, it stops and asks. At each stop it packs its own folder (`handoff/EPxxx.tar.part-*`), so a new session can carry on from it after a lost Computer.
 - **Default: one episode at a time per Computer.** When an episode is finished, its session closes and the same Computer takes the next one. The maker sets the pool size: "work on up to N episodes at once".
 - **Setting: episodes per Computer, 1–3**, for projects whose Computer limit is the bottleneck. When Pine's shared storage ships, packing episodes onto fewer Computers becomes worth it, because the cast is set up once per Computer. Then the default can change.
-- **Every episode session gets what it needs as attachments:** the screenplay, the bible, and the approved cast, location and prop images. Attachment names are flat and collision-free (`cast-lin-S0-v3.jpg`); a file over 64 MiB is never attached, and the maker sees why.
+- **Attachments:** the project's parts keep their names, so `cat project.tar.part-*` puts them back in order; other attachments get flat, collision-free names. A file over 64 MiB is never attached. A drama set up before pre-production existed still gets its references as loose files.
+- **Still to learn on real Pine:** whether a restored project's uploaded references (provider asset handles, which Pine's adapter scopes) are accepted on another Computer, or must be uploaded again.
 - **Idle timeout** is per Computer: 1 h while it works, 3 h while any of its sessions waits on the maker (`setIdleTimeout`). The 1 h base matters because a question can arrive while the app is closed, when nothing can raise the timeout.
 
 ## Rules the flow depends on

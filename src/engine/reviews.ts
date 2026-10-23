@@ -12,10 +12,17 @@ import { type FileRow, filesOfTurn, toItem, versionNumber } from "./library.ts";
 import { publish } from "./live.ts";
 import { type ReviewRow, type SessionRow, computer as computerRow, episode as episodeRow, episodeCode, review as reviewRow, session as sessionRow } from "./records.ts";
 
-/** What a question asks for, from the files it returned and, failing that, its words. */
-export function inferKind(role: SessionRow["role"], files: Pick<FileRow, "kind">[], question: string): ReviewKind {
+/**
+ * What a question asks for, from the files it returned and, failing that, its words. In the
+ * setup, looks alone are the leads; with places, props or further looks, they are the shared
+ * references pre-production made for every episode.
+ */
+export function inferKind(role: SessionRow["role"], files: Pick<FileRow, "kind" | "look">[], question: string): ReviewKind {
   const kinds = new Set(files.map((file) => file.kind));
-  if (role === "setup") return kinds.has("look") ? "looks" : "question";
+  if (role === "setup") {
+    if (kinds.has("location") || kinds.has("prop") || files.some((file) => file.kind === "look" && file.look && file.look !== "base")) return "references";
+    return kinds.has("look") ? "looks" : "question";
+  }
   if (kinds.has("cut")) return "cut";
   if (kinds.has("take")) return "takes";
   if (kinds.has("storyboard")) return "storyboards";
@@ -33,7 +40,10 @@ export function itemsOf(kind: ReviewKind, files: FileRow[]): { items: ReviewItem
   const other: FileRow[] = [];
   const add = (key: string, file: FileRow) => groups.set(key, [...(groups.get(key) ?? []), file]);
   for (const file of files) {
+    if (file.kind === "archive") continue; // the handed-over project: for sessions, not for the maker's eyes
     if (kind === "looks" && file.kind === "look") add(lookKey(file), file);
+    else if (kind === "references" && file.kind === "look") add(lookKey(file), file);
+    else if (kind === "references" && (file.kind === "location" || file.kind === "prop") && file.subject) add(`${file.kind}:${file.subject}`, file);
     else if (kind === "storyboards" && (file.kind === "storyboard" || file.kind === "blocking") && file.segment) add(file.segment, file);
     else if (kind === "takes" && file.kind === "take" && file.segment) add(file.segment, file);
     else if (kind === "cut" && file.kind === "cut") add("cut", file);
@@ -41,11 +51,13 @@ export function itemsOf(kind: ReviewKind, files: FileRow[]): { items: ReviewItem
   }
   // Within an item: storyboards line-art first, then photoreal, then the blocking reference; newest versions first.
   const order = (file: FileRow) => (file.kind === "blocking" ? 2 : file.style === "photoreal" ? 1 : 0);
+  // Characters first, then places, then props; within each, in natural order.
+  const rank = (key: string) => (key.startsWith("location:") ? 1 : key.startsWith("prop:") ? 2 : 0);
   const items = [...groups.entries()]
-    .sort(([a], [b]) => a.localeCompare(b, undefined, { numeric: true }))
+    .sort(([a], [b]) => rank(a) - rank(b) || a.localeCompare(b, undefined, { numeric: true }))
     .map(([key, rows]) => ({
       key,
-      label: key === "cut" ? "Cut" : key,
+      label: key === "cut" ? "Cut" : key.replace(/^(location|prop):/, ""),
       files: rows.sort((a, b) => order(a) - order(b) || versionNumber(b.version) - versionNumber(a.version)).map(toItem),
     }));
   return { items, other: other.map(toItem) };
@@ -81,6 +93,8 @@ function subject(review: ReviewRow): string {
   switch (review.kind) {
     case "looks":
       return "the leads' looks";
+    case "references":
+      return "the shared references";
     case "storyboards":
       return `${code}'s storyboards`;
     case "takes":

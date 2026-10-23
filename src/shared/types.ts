@@ -63,10 +63,12 @@ export type FileKind =
   | "take"
   | "cut"
   | "observation"
+  /** A part of a packed drama-cli project (the whole drama's, or one episode's), handed from session to session. */
+  | "archive"
   | "other";
 
 /** What a question asks the maker to decide, inferred from its words and its files. */
-export type ReviewKind = "looks" | "storyboards" | "takes" | "cut" | "question";
+export type ReviewKind = "looks" | "references" | "storyboards" | "takes" | "cut" | "question";
 
 /**
  * saving: the turn's files are still being copied; the question can't be answered yet.
@@ -172,7 +174,16 @@ export interface DramaView extends DramaCard {
   notes: string;
   parallel: number;
   perComputer: number;
-  setup: { state: "working" | "waiting" | "done" | "stopped"; reviewId?: string; kind?: ReviewKind; hasCast: boolean; activity?: string; note?: string };
+  setup: {
+    state: "working" | "waiting" | "done" | "stopped";
+    reviewId?: string;
+    kind?: ReviewKind;
+    hasCast: boolean;
+    /** The maker approved the leads: pre-production (every breakdown and shared reference) is under way. */
+    leadsApproved: boolean;
+    activity?: string;
+    note?: string;
+  };
   episodeRows: EpisodeRow[];
   crew: ComputerView[];
   /** Its Computers wouldn't start, several times: the line waits for the maker's "try again". */
@@ -240,6 +251,8 @@ export interface Decision {
 }
 
 export interface ReviewView extends ReviewSummary {
+  /** The episode's breakdown, for its shot list. */
+  breakdown?: FileItem;
   reviewItems: ReviewItem[];
   otherFiles: FileItem[];
   decision?: Decision;
