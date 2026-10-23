@@ -30,6 +30,8 @@ export function Settings({ app, onChange }: { app: AppInfo; onChange: () => void
                   <dd>{app.project.endpoint}</dd>
                   <dt>{t("settings.key")}</dt>
                   <dd className="num">{app.project.keyHint}</dd>
+                  <dt>{t("settings.skill")}</dt>
+                  <dd>{t(`settings.skill.${app.dramaSkill ?? "unknown"}`)}</dd>
                 </dl>
                 {app.project.fromEnvironment ? (
                   <span className="quiet">{t("settings.fromEnv")}</span>
