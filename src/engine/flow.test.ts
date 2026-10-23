@@ -97,7 +97,13 @@ describe("a drama in replay", () => {
     });
     expect(revised.answer).toContain("- wei: Lighter jacket. (on drama/assets/characters/wei/v1/image-1.svg, at 40% across and 60% down)");
     const again = await until("the redrawn look", openReview(id, (item) => item.kind === "looks" && item.id !== looks.id));
-    expect((await call<ReviewView>("GET", `/api/reviews/${again.id}`)).reviewItems.map((item) => item.key)).toEqual(["wei"]);
+    const redrawn = await call<ReviewView>("GET", `/api/reviews/${again.id}`);
+    expect(redrawn.reviewItems.map((item) => item.key)).toEqual(["wei"]);
+    // The earlier look sits beside the new one, to compare.
+    expect(redrawn.reviewItems[0].previous?.map((file) => file.version)).toEqual(["v1"]);
+    expect(redrawn.reviewItems[0].files[0].version).toBe("v2");
+    expect(redrawn.reviewItems[0].asked?.map((note) => note.text)).toEqual(["Lighter jacket."]);
+    expect(looksView.reviewItems[0].previous).toBeUndefined();
     await approveAll(again.id);
 
     // Production: two episodes at once, each waiting for its storyboards, on its own Computer.

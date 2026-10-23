@@ -255,6 +255,7 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
   const [noteText, setNoteText] = useState("");
   const [pending, setPending] = useState<{ x?: number; y?: number; time?: number; fileId?: number }>();
   const [confirming, setConfirming] = useState(false);
+  const [comparing, setComparing] = useState(false);
   const [error, setError] = useState<unknown>();
   const [busy, setBusy] = useState(false);
   const noteInput = useRef<HTMLTextAreaElement>(null);
@@ -266,7 +267,11 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
   const variants = item?.files ?? [];
   const file = variants[Math.min(variant, variants.length - 1)];
   const draft = item ? drafts[item.key] : undefined;
-  const space = { width: Math.max(0, stageSize.width - 40), height: Math.max(0, stageSize.height - 40) };
+  // The earlier version beside the current one: the same variant where it has one.
+  const before = comparing && file ? item?.previous?.find((p) => p.kind === file.kind && p.style === file.style) ?? item?.previous?.[0] : undefined;
+  const space = before
+    ? { width: Math.max(0, (stageSize.width - 40 - 24) / 2), height: Math.max(0, stageSize.height - 40 - 28) }
+    : { width: Math.max(0, stageSize.width - 40), height: Math.max(0, stageSize.height - 40) };
   const shots = useShotList(review, review.kind === "storyboards" || review.kind === "takes" ? item?.key : undefined);
   const verdicts = items.map((i) => drafts[i.key]?.verdict);
   const approved = verdicts.filter((v) => v === "approve").length;
@@ -346,6 +351,8 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
         setVerdict("revise");
         event.preventDefault();
         noteInput.current?.focus();
+      } else if (event.key === "c" && item?.previous?.length) {
+        setComparing((on) => !on);
       }
     };
     window.addEventListener("keydown", onKey);
@@ -394,18 +401,44 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
           <div className="variants">
             {variants.length > 1 &&
               variants.map((f, n) => (
-                <button key={f.id} className={n === variant ? "on" : ""} onClick={() => setVariant(n)}>
+                <button key={f.id} aria-pressed={n === variant} className={n === variant ? "on" : ""} onClick={() => setVariant(n)}>
                   {variantLabel(f, t)}
                 </button>
               ))}
+            <span className="grow" />
+            {item?.previous?.length ? (
+              <button aria-pressed={comparing} className={comparing ? "on" : ""} onClick={() => setComparing((on) => !on)}>
+                {t("review.compare")} <span className="key">C</span>
+              </button>
+            ) : null}
           </div>
-          <div className="stage" ref={stage}>
-            {file && isImage(file) && <Pinboard key={file.id} file={file} notes={draft?.notes ?? []} draft={pending?.fileId === file.id ? pending : undefined} space={space} onPin={pin} />}
-            {file && isVideo(file) && (
-              <div className="screen">
-                <video ref={video} key={file.url} src={file.url} controls playsInline preload="metadata" />
+          <div className={`stage ${before ? "compare" : ""}`} ref={stage}>
+            {before && (
+              <div className="pane before">
+                <span className="tag">
+                  {t("review.before")} {before.version}
+                </span>
+                {isImage(before) && <Pinboard key={before.id} file={before} notes={item?.asked ?? []} space={space} onPin={() => undefined} />}
+                {isVideo(before) && (
+                  <div className="screen">
+                    <video key={before.url} src={before.url} controls playsInline preload="metadata" />
+                  </div>
+                )}
               </div>
             )}
+            <div className="pane">
+              {before && (
+                <span className="tag now">
+                  {t("review.now")} {file?.version}
+                </span>
+              )}
+              {file && isImage(file) && <Pinboard key={file.id} file={file} notes={draft?.notes ?? []} draft={pending?.fileId === file.id ? pending : undefined} space={space} onPin={pin} />}
+              {file && isVideo(file) && (
+                <div className="screen">
+                  <video ref={video} key={file.url} src={file.url} controls playsInline preload="metadata" />
+                </div>
+              )}
+            </div>
           </div>
           <div className="reel">
             {items.map((i, n) => {
@@ -443,6 +476,19 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
           </div>
           <div className="inspector-body">
             <Status review={review} />
+            {item?.asked && (
+              <div className="block asked-before">
+                <span className="label">{t("review.askedBefore")}</span>
+                <ol className="shots">
+                  {item.asked.map((note, n) => (
+                    <li key={n}>
+                      {note.time !== undefined && <span className="at">{clock(note.time)} </span>}
+                      {note.text}
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            )}
             {shots && (
               <div className="block">
                 <span className="label">{t("review.shotList")}</span>

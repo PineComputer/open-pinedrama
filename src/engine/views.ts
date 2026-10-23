@@ -15,6 +15,7 @@ import {
   type Still,
   type ChatMessage,
   type Decision,
+  type ReviewItem,
 } from "../shared/types.ts";
 import { START_ATTEMPTS } from "./computers.ts";
 import { all, get } from "./db.ts";
@@ -237,13 +238,48 @@ export function inbox(dramaId?: string): ReviewSummary[] {
   return rows.sort((a, b) => rank(a) - rank(b) || a.created_at.localeCompare(b.created_at)).map(summary);
 }
 
+const REVIEWED_KINDS: Partial<Record<ReviewKind, FileRow["kind"][]>> = {
+  looks: ["look"],
+  storyboards: ["storyboard", "blocking"],
+  takes: ["take"],
+  cut: ["cut"],
+};
+
+/**
+ * What an item looked like before this turn: the same look, segment or cut from the latest
+ * earlier turn that returned it. Nothing for a first version.
+ */
+function previousOf(review: ReviewRow, item: ReviewItem, before: number): Pick<ReviewItem, "previous" | "asked"> {
+  const kinds = REVIEWED_KINDS[review.kind];
+  if (!kinds) return {};
+  const rows = all<FileRow>(
+    `select * from files where drama_id = ? and id < ? and kind in (${kinds.map(() => "?").join(", ")}) order by id`,
+    review.drama_id,
+    before,
+    ...kinds,
+  ).filter((row) => {
+    if (review.kind === "looks") return (row.subject ?? "?") === item.key.split("/")[0] && (row.look ?? "base") === (item.key.split("/")[1] ?? "base");
+    if (row.episode_id !== review.episode_id) return false;
+    return review.kind === "cut" || row.segment === item.key;
+  });
+  const turn = rows.at(-1)?.turn_id;
+  if (!turn) return {};
+  const earlier = get<ReviewRow>("select * from reviews where turn_id = ?", turn);
+  const decided = earlier?.decision ? (JSON.parse(earlier.decision) as Decision).items.find((entry) => entry.key === item.key) : undefined;
+  return {
+    previous: itemsOf(review.kind, rows.filter((row) => row.turn_id === turn)).items[0]?.files,
+    asked: decided?.notes.length ? decided.notes : undefined,
+  };
+}
+
 export function reviewView(review: ReviewRow): ReviewView {
   const files = filesOfTurn(review.turn_id);
   const { items, other } = itemsOf(review.kind, files);
+  const first = Math.min(...files.map((file) => file.id));
   const next = inbox().find((item) => item.id !== review.id && item.state === "open");
   return {
     ...summary(review),
-    reviewItems: items,
+    reviewItems: items.map((item) => ({ ...item, ...previousOf(review, item, first) })),
     otherFiles: other,
     decision: review.decision ? JSON.parse(review.decision) : undefined,
     answer: review.answer ?? undefined,

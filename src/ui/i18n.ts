@@ -249,6 +249,10 @@ const en = {
   "error.offline": "The studio's engine isn't answering.",
   "error.internal": "Something went wrong: {detail}",
   "review.sending": "Sending your decision…",
+  "review.compare": "Compare with before",
+  "review.before": "Before",
+  "review.now": "Now",
+  "review.askedBefore": "What you asked last time",
   "review.removeNote": "Remove this note",
   "loading": "Loading…",
 };
@@ -503,6 +507,10 @@ const zh: Record<Key, string> = {
   "error.offline": "工作室引擎没有响应。",
   "error.internal": "出了点问题：{detail}",
   "review.sending": "正在发送你的决定……",
+  "review.compare": "对比上一版",
+  "review.before": "上一版",
+  "review.now": "这一版",
+  "review.askedBefore": "你上次的意见",
   "review.removeNote": "删除这条批注",
   "loading": "加载中……",
 };

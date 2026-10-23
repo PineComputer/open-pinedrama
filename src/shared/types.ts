@@ -210,6 +210,10 @@ export interface ReviewItem {
   key: string;
   label: string;
   files: FileItem[];
+  /** The same thing as it was before this turn redid it, to compare side by side. */
+  previous?: FileItem[];
+  /** What the maker asked of that earlier version, pinned where they put it. */
+  asked?: Note[];
 }
 
 /** A note pinned to a spot on an image (fractions of its width and height) or a time in a video. */
