@@ -6,7 +6,7 @@ import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import type { DramaView, ReviewSummary, ReviewView } from "../shared/types.ts";
+import type { CastCard, DeliveryRow, DramaView, EpisodePage, ReviewSummary, ReviewView, ScriptPage } from "../shared/types.ts";
 
 const DATA = mkdtempSync(path.join(tmpdir(), "studio-flow-"));
 process.env.STUDIO_DATA_DIR = DATA;
@@ -148,5 +148,31 @@ describe("a drama in replay", () => {
       return rows.EP001.state === "done" && rows.EP003.state !== "queued" ? view : undefined;
     });
     expect(after.episodeRows.find((row) => row.code === "EP001")!.stages.cut.state).toBe("done");
+
+    // Browsing: the episode receipt by receipt, with the verdict on what each review showed.
+    const episode = await call<EpisodePage>("GET", `/api/dramas/${id}/episodes/EP001`);
+    expect(episode.segments.map((segment) => segment.key)).toEqual(["seg01", "seg02", "seg03"]);
+    expect(episode.segments[0].boards[0].files.map((file) => file.kind).sort()).toEqual(["blocking", "storyboard", "storyboard"]);
+    expect(episode.segments[0].boards[0].review?.verdict).toBe("approve");
+    expect(episode.segments[0].takes[0].review?.verdict).toBe("approve");
+    expect(episode.cuts[0].review?.verdict).toBe("approve");
+    expect(episode.breakdown?.path).toBe("drama/episodes/EP001/breakdown/v1/breakdown.md");
+    expect(episode.other.some((file) => file.kind === "archive")).toBe(false);
+    expect(episode.next).toBe("EP002");
+    // Delivery: the cut approved, where it is known; the script; the cast with every version decided.
+    const delivery = await call<DeliveryRow[]>("GET", `/api/dramas/${id}/delivery`);
+    expect(delivery[0].accepted?.path).toBe("drama/episodes/EP001/edit/v1/cut.mp4");
+    expect(delivery[1].accepted).toBeUndefined();
+    const script = await call<ScriptPage>("GET", `/api/dramas/${id}/script`);
+    expect(script.bible?.kind).toBe("bible");
+    expect(script.breakdowns.map((entry) => entry.code)).toEqual(["EP001", "EP002", "EP003", "EP004", "EP005", "EP006"]);
+    expect(script.inputs.map((file) => file.name)).toEqual(["screenplay.txt"]);
+    const cast = await call<CastCard[]>("GET", `/api/dramas/${id}/cast`);
+    const wei = cast.find((card) => card.subject === "wei")!;
+    expect(wei.looks[0].versions.map((version) => [version.files[0].version, version.review?.verdict])).toEqual([
+      ["v2", "approve"],
+      ["v1", "revise"],
+    ]);
+    expect(cast.find((card) => card.subject === "lin")!.looks.map((look) => look.look)).toEqual(["base", "S1"]);
   }, 30_000);
 });

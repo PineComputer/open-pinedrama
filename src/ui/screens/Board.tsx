@@ -34,25 +34,21 @@ function Mark({ cell }: { cell: StageCell }) {
 }
 
 /** One episode's line on the sheet. The whole row opens its review; its code is the keyboard's way in. */
-function Row({ row, wide }: { row: EpisodeRow; wide: boolean }) {
+function Row({ row, wide, dramaId }: { row: EpisodeRow; wide: boolean; dramaId: string }) {
   const { t } = useT();
   const resume = useAction(() => api(`/api/episodes/${row.id}/resume`, { method: "POST" }));
   const trouble = row.state === "stopped" || row.state === "failed";
   return (
-    <tr className={row.reviewId ? "go" : ""} onClick={() => row.reviewId && navigate(`/r/${row.reviewId}`)}>
+    <tr className="go" onClick={() => navigate(`/d/${dramaId}/e/${row.code}`)}>
       <td>
         <div className="ep-cell">
           <span className={`frame ${wide ? "wide" : ""}`}>
             <Still still={row.frame} />
           </span>
           <div>
-            {row.reviewId ? (
-              <Link to={`/r/${row.reviewId}`} className="ep" onClick={(event) => event.stopPropagation()}>
-                {row.code}
-              </Link>
-            ) : (
-              <div className="ep">{row.code}</div>
-            )}
+            <Link to={`/d/${dramaId}/e/${row.code}`} className="ep" onClick={(event) => event.stopPropagation()}>
+              {row.code}
+            </Link>
             {row.title && <div className="ep-title">{row.title}</div>}
           </div>
         </div>
@@ -88,7 +84,7 @@ function Row({ row, wide }: { row: EpisodeRow; wide: boolean }) {
  * a vertical drama), its five stages as a strip, and what is happening now. An episode
  * waiting for the maker is marked in seal red and opens its review.
  */
-function Card({ row, wide }: { row: EpisodeRow; wide: boolean }) {
+function Card({ row, wide, dramaId }: { row: EpisodeRow; wide: boolean; dramaId: string }) {
   const { t } = useT();
   const resume = useAction(() => api(`/api/episodes/${row.id}/resume`, { method: "POST" }));
   const trouble = row.state === "stopped" || row.state === "failed";
@@ -96,19 +92,22 @@ function Card({ row, wide }: { row: EpisodeRow; wide: boolean }) {
     <span className={`shot ${wide ? "wide" : ""} ${row.frame ? "" : "blank"}`}>
       <Still still={row.frame} live />
       {!row.frame && <span className="number">{String(row.number).padStart(2, "0")}</span>}
-      {row.state === "waiting" && <span className="flag">{t("board.review")}</span>}
       {row.state === "done" && <span className="flag done">{t("board.done")}</span>}
     </span>
   );
   return (
     <div className={`episode ${row.state}`}>
-      {row.reviewId ? (
-        <Link to={`/r/${row.reviewId}`} className="shot-link" aria-label={`${row.code} · ${t("board.review")}`}>
+      {/* The card opens the episode; a waiting one also has its own way straight to the review. */}
+      <div className="shot-wrap">
+        <Link to={`/d/${dramaId}/e/${row.code}`} className="shot-link" aria-label={row.title ? `${row.code} · ${row.title}` : row.code}>
           {picture}
         </Link>
-      ) : (
-        picture
-      )}
+        {row.state === "waiting" && row.reviewId && (
+          <Link to={`/r/${row.reviewId}`} className="flag">
+            {t("board.review")} →
+          </Link>
+        )}
+      </div>
       <div className="caption">
         <span className="code">{row.code}</span>
         {row.title && <span className="title">{row.title}</span>}
@@ -206,7 +205,7 @@ export function Board({ drama }: { drama: DramaView }) {
       ) : view === "wall" ? (
         <div className={`wall ${wide ? "wide" : ""}`}>
           {shown.map((row) => (
-            <Card key={row.id} row={row} wide={wide} />
+            <Card key={row.id} row={row} wide={wide} dramaId={drama.id} />
           ))}
         </div>
       ) : (
@@ -223,7 +222,7 @@ export function Board({ drama }: { drama: DramaView }) {
           </thead>
           <tbody>
             {shown.map((row) => (
-              <Row key={row.id} row={row} wide={wide} />
+              <Row key={row.id} row={row} wide={wide} dramaId={drama.id} />
             ))}
           </tbody>
         </table>

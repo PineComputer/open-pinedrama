@@ -110,6 +110,7 @@ export function App() {
   else if (path === "/inbox") screen = <InboxScreen />;
   else if (path === "/settings") screen = <Settings app={app.data} onChange={app.reload} />;
   else if ((params = match("/r/:id", path))) screen = <Review key={params.id} id={params.id} />;
+  else if ((params = match("/d/:id/e/:code", path))) screen = <Drama id={params.id} tab="episode" episode={params.code} />;
   else if ((params = match("/d/:id/:tab?", path))) screen = <Drama id={params.id} tab={params.tab ?? "board"} />;
 
   return (

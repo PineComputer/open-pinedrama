@@ -124,6 +124,15 @@ export function openBlob(row: FileRow, range?: { start: number; end: number }) {
 }
 
 export function toItem(row: FileRow): FileItem {
+  return item(row, undefined);
+}
+
+/** File items for an episode whose label the caller already knows, without a lookup per file. */
+export function itemIn(episode: string): (row: FileRow) => FileItem {
+  return (row) => item(row, episode);
+}
+
+function item(row: FileRow, episode: string | undefined): FileItem {
   return {
     id: row.id,
     name: row.name,
@@ -132,7 +141,7 @@ export function toItem(row: FileRow): FileItem {
     size: row.size,
     kind: row.kind,
     // Pre-production writes episodes' files before the episodes exist: their path names them.
-    episode: (row.episode_id ? episodeLabel(row.episode_id) : undefined) ?? classify(row.rel_path).episode,
+    episode: episode ?? (row.episode_id ? episodeLabel(row.episode_id) : undefined) ?? classify(row.rel_path).episode,
     segment: row.segment ?? undefined,
     subject: row.subject ?? undefined,
     look: row.look ?? undefined,

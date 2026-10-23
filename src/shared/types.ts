@@ -287,3 +287,68 @@ export interface ChatView {
 }
 
 export type LiveMessage = { type: "changed"; scope: string } | { type: "hello" };
+
+/* Browsing the drama outside reviews: episodes, the script, delivery and the cast. */
+
+/** The maker's decision on the item a review showed, as recorded: it covers everything that item held. */
+export interface Judged {
+  reviewId: string;
+  kind: ReviewKind;
+  state: ReviewState;
+  verdict?: Verdict;
+  notes: Note[];
+}
+
+/** What one turn returned for one thing (a segment's storyboards or takes, the cut, a look), and the review that showed it. */
+export interface Receipt {
+  turnId: string;
+  files: FileItem[];
+  review?: Judged;
+}
+
+export interface SegmentPage {
+  key: string;
+  /** Storyboards with their blocking reference, newest receipt first. */
+  boards: Receipt[];
+  takes: Receipt[];
+}
+
+/** One episode, whatever stage it is at: what it holds, receipt by receipt. Read only; decisions happen in reviews. */
+export interface EpisodePage {
+  dramaId: string;
+  dramaTitle: string;
+  format: string;
+  row: EpisodeRow;
+  previous?: string;
+  next?: string;
+  breakdown?: FileItem;
+  segments: SegmentPage[];
+  cuts: Receipt[];
+  /** Everything else the episode's sessions returned, recognised or not. */
+  other: FileItem[];
+}
+
+export interface ScriptPage {
+  inputs: FileItem[];
+  bible?: FileItem;
+  breakdowns: { code: string; title?: string; file: FileItem }[];
+}
+
+export interface DeliveryRow {
+  episodeId?: string;
+  code: string;
+  title: string;
+  state?: EpisodeState;
+  latest?: { file: FileItem; review?: Judged };
+  /** The cut the maker approved: the one cut its newest approved cut review showed. */
+  accepted?: FileItem;
+  /** That review showed several cuts, so which one was approved isn't known. */
+  ambiguous?: boolean;
+}
+
+/** A character, place or prop, with every version of each of its looks and what the maker decided. */
+export interface CastCard {
+  kind: "look" | "location" | "prop";
+  subject: string;
+  looks: { look: string; versions: Receipt[] }[];
+}

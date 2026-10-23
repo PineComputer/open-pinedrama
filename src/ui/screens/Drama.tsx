@@ -8,11 +8,16 @@ import { Board, SetupPanel } from "./Board.tsx";
 import { Cast } from "./Cast.tsx";
 import { Chat } from "./Chat.tsx";
 import { Crew } from "./Crew.tsx";
+import { Delivery } from "./Delivery.tsx";
+import { Episode } from "./Episode.tsx";
+import { Script } from "./Script.tsx";
 import { InboxList } from "./Inbox.tsx";
 
 const SECTIONS: [string, TKey][] = [
   ["board", "section.board"],
+  ["script", "section.script"],
   ["cast", "section.cast"],
+  ["delivery", "section.delivery"],
   ["crew", "section.crew"],
   ["inbox", "section.inbox"],
 ];
@@ -84,7 +89,7 @@ function Notices({ drama }: { drama: DramaView }) {
   );
 }
 
-export function Drama({ id, tab }: { id: string; tab: string }) {
+export function Drama({ id, tab, episode }: { id: string; tab: string; episode?: string }) {
   const { t } = useT();
   const { data: drama, error } = useResource<DramaView>(`/api/dramas/${id}`, [`drama:${id}`]);
   const [talking, setTalking] = useState(false);
@@ -115,7 +120,7 @@ export function Drama({ id, tab }: { id: string; tab: string }) {
         </div>
         <nav className="sections">
           {SECTIONS.map(([key, label], index) => (
-            <Link key={key} to={key === "board" ? `/d/${id}` : `/d/${id}/${key}`} className={tab === key ? "on" : ""} aria-current={tab === key ? "page" : undefined}>
+            <Link key={key} to={key === "board" ? `/d/${id}` : `/d/${id}/${key}`} className={tab === key || (key === "board" && tab === "episode") ? "on" : ""} aria-current={tab === key ? "page" : undefined}>
               <span className="n">{String(index + 1).padStart(2, "0")}</span>
               <span className="name">{t(label)}</span>
               {key === "inbox" && drama.waiting > 0 ? <span className="count">{drama.waiting}</span> : <span />}
@@ -159,7 +164,10 @@ export function Drama({ id, tab }: { id: string; tab: string }) {
       <section>
         <Notices drama={drama} />
         {tab === "board" && (drama.status === "setup" || (drama.status === "stopped" && !drama.episodeRows.length) ? <SetupPanel drama={drama} /> : <Board drama={drama} />)}
+        {tab === "episode" && episode && <Episode dramaId={id} code={episode} />}
+        {tab === "script" && <Script dramaId={id} />}
         {tab === "cast" && <Cast dramaId={id} />}
+        {tab === "delivery" && <Delivery dramaId={id} />}
         {tab === "crew" && <Crew drama={drama} />}
         {tab === "inbox" && (
           <>

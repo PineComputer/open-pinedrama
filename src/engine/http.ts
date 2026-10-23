@@ -26,7 +26,8 @@ import { fileRow, openBlob } from "./library.ts";
 import { subscribe } from "./live.ts";
 import { drama as dramaRow, review as reviewRow, session as sessionRow, type SessionRow } from "./records.ts";
 import { decide, resumeWithDecision } from "./reviews.ts";
-import { castGroups, chatView, dramaCards, dramaFiles, dramaView, inbox, reviewView } from "./views.ts";
+import { castCards, deliveryRows, episodePage, scriptPage } from "./browse.ts";
+import { chatView, dramaCards, dramaFiles, dramaView, inbox, reviewView } from "./views.ts";
 
 const LOOPBACK = /^(127\.0\.0\.1|localhost|\[::1\])(:\d+)?$/;
 
@@ -203,7 +204,13 @@ export function app(): Hono {
     return c.json({ ok: true });
   });
 
-  api.get("/api/dramas/:id/cast", (c) => c.json(castGroups(c.req.param("id"))));
+  api.get("/api/dramas/:id/cast", (c) => c.json(castCards(c.req.param("id"))));
+  api.get("/api/dramas/:id/script", (c) => c.json(scriptPage(c.req.param("id"))));
+  api.get("/api/dramas/:id/delivery", (c) => c.json(deliveryRows(c.req.param("id"))));
+  api.get("/api/dramas/:id/episodes/:code", (c) => {
+    const page = episodePage(c.req.param("id"), c.req.param("code"));
+    return page ? c.json(page) : c.json(failure("not-found", "No such episode."), 404);
+  });
   api.get("/api/dramas/:id/files", (c) => c.json(dramaFiles(c.req.param("id"), c.req.query("episode") || undefined)));
 
   api.get("/api/dramas/:id/sessions", (c) => {

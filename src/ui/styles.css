@@ -439,7 +439,9 @@ h1, h2, h3 { margin: 0; font-family: var(--serif); font-weight: 450; letter-spac
 .wall .shot.wide { aspect-ratio: 16 / 9; }
 .wall .shot.blank { display: grid; place-items: center; background: linear-gradient(180deg, var(--room-2), var(--room)); outline-color: transparent; }
 .wall .shot .number { font: 300 44px/1 var(--serif); color: var(--on-room-3); font-variant-numeric: lining-nums; }
-.wall .shot .flag { position: absolute; left: 8px; top: 8px; padding: 4px 7px; border-radius: 2px; background: var(--seal); color: var(--sheet); font: 600 12px/1 var(--sans); }
+.wall .shot-wrap { position: relative; }
+.wall .flag { position: absolute; left: 8px; top: 8px; z-index: 1; padding: 4px 7px; border-radius: 2px; background: var(--seal); color: var(--sheet); font: 600 12px/1 var(--sans); }
+.wall a.flag:hover, .wall a.flag:focus-visible { background: var(--seal-deep); }
 .wall .shot .flag.done { background: color-mix(in oklch, var(--room) 78%, transparent); color: var(--on-room); }
 .wall .waiting .shot { outline: 2px solid var(--seal); outline-offset: 2px; }
 .wall .shot-link:hover .shot, .wall .shot-link:focus-visible .shot { transform: translateY(-3px); }
@@ -481,3 +483,84 @@ h1, h2, h3 { margin: 0; font-family: var(--serif); font-weight: 450; letter-spac
    window's buttons and moves the window, while its links and buttons stay clickable. */
 :root[data-shell="darwin"] .bar { padding-left: 92px; -webkit-app-region: drag; user-select: none; }
 :root[data-shell] .bar a, :root[data-shell] .bar button { -webkit-app-region: no-drag; }
+
+/* The episode page: one viewer for the part chosen on the left, every version underneath. */
+.episode-page { display: grid; gap: 26px; }
+.episode-head { display: grid; gap: 12px; }
+.episode-head .back { color: var(--ink-3); font-size: 13.5px; }
+.episode-head .title-line { display: flex; align-items: baseline; gap: 18px; }
+.episode-head h2 { font-size: 30px; }
+.episode-head h2 .quiet { font-size: 22px; }
+.episode-head .status-row { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+.strip.big { display: grid; grid-template-columns: repeat(5, minmax(64px, 1fr)); gap: 4px; min-width: 360px; }
+.strip.big span { padding-top: 7px; border-top: 3px solid var(--rule); font-size: 12.5px; color: var(--ink-4); }
+.strip.big .done { border-color: var(--ink-2); color: var(--ink-2); }
+.strip.big .working { border-color: var(--work); color: var(--work); }
+.strip.big .review { border-color: var(--seal); color: var(--seal); font-weight: 600; }
+.episode-body { display: grid; grid-template-columns: 172px minmax(0, 1fr); gap: 28px; align-items: start; }
+.episode-nav { display: grid; gap: 4px; position: sticky; top: calc(var(--bar) + 20px); }
+.episode-nav button { display: grid; grid-template-columns: 30px minmax(0, 1fr) 8px; align-items: center; gap: 10px; padding: 6px 8px; border: 0; border-radius: var(--r); background: none; cursor: pointer; text-align: left; color: var(--ink-2); }
+.episode-nav button:hover { background: var(--paper-2); }
+.episode-nav button.on { background: var(--paper-3); color: var(--ink); }
+.episode-nav .thumb { position: relative; display: block; width: 30px; aspect-ratio: 3 / 4; border-radius: 2px; overflow: hidden; background: var(--room-2); }
+.episode-nav .name { font: 500 15px/1.2 var(--serif); }
+.episode-nav .dot { width: 7px; height: 7px; border-radius: 50%; background: transparent; }
+.episode-nav .dot.approved { background: var(--ink-3); }
+.episode-nav .dot.revised { background: var(--seal-deep); }
+.episode-nav .dot.waiting { background: var(--seal); }
+.episode-view { display: grid; gap: 16px; min-width: 0; }
+.episode-view .views { justify-self: start; }
+.segment-view { display: grid; grid-template-columns: minmax(0, 1fr) 260px; gap: 24px; align-items: start; }
+.receipts { display: grid; gap: 14px; min-width: 0; }
+.episode-viewing { height: min(68vh, 720px); border-radius: var(--r); overflow: hidden; grid-template-rows: auto minmax(0, 1fr); }
+.episode-viewing .variants .link { color: var(--on-room-2); font-size: 13px; }
+.pinboard.shown { cursor: default; }
+.judged { display: flex; align-items: center; gap: 6px; font-size: 13.5px; color: var(--ink-2); flex-wrap: wrap; }
+.judged.approved { color: var(--ink); }
+.judged.waiting { color: var(--seal); font-weight: 600; }
+.judged.revised { display: grid; gap: 6px; color: var(--seal-deep); }
+.judged-notes { margin: 0; padding-left: 20px; color: var(--ink-2); }
+.history { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.history .label { margin-right: 6px; }
+.history button { display: inline-flex; align-items: center; gap: 6px; padding: 4px 8px 4px 4px; border: 1px solid var(--rule); border-radius: var(--r); background: var(--sheet); cursor: pointer; font-size: 13px; color: var(--ink-2); }
+.history button.on { border-color: var(--ink); color: var(--ink); }
+.history .thumb { position: relative; display: block; width: 24px; height: 32px; border-radius: 2px; overflow: hidden; background: var(--room-2); }
+.v-approve { color: var(--ink-2); }
+.v-revise { color: var(--seal-deep); }
+
+/* The script: documents to read, chosen on the left. */
+.script { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 32px; align-items: start; }
+.script-nav { display: grid; gap: 22px; position: sticky; top: calc(var(--bar) + 20px); }
+.script-nav button { display: block; width: 100%; text-align: left; padding: 5px 8px; border: 0; border-radius: var(--r); background: none; cursor: pointer; color: var(--ink-2); font-size: 14px; }
+.script-nav button:hover { background: var(--paper-2); }
+.script-nav button.on { background: var(--paper-3); color: var(--ink); }
+.script-page { max-width: 74ch; padding: 36px 44px 56px; background: var(--sheet); border: 1px solid var(--rule); border-radius: var(--r); }
+.document { font: 400 16px/1.7 var(--serif); color: var(--ink); overflow-wrap: anywhere; }
+.document h2 { font-size: 26px; margin: 0 0 18px; }
+.document h3 { font-size: 20px; margin: 28px 0 10px; }
+.document h4 { font: 600 15px/1.4 var(--sans); margin: 22px 0 8px; }
+.document p { margin: 0 0 12px; }
+.document ul, .document ol { margin: 0 0 14px; padding-left: 22px; }
+.document li { margin: 2px 0; }
+.document code { font: 13.5px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--paper-2); padding: 1px 4px; border-radius: 2px; }
+.document hr { border: 0; border-top: 1px solid var(--rule); margin: 24px 0; }
+.document.plain { white-space: pre-wrap; margin: 0; font-size: 15px; }
+
+/* Delivery: every episode's latest cut, and the one approved. */
+.delivery .cut-line { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.chip { font-size: 12.5px; padding: 2px 7px; border-radius: 2px; background: var(--paper-2); color: var(--ink-3); }
+.chip.approve { background: var(--paper-3); color: var(--ink); }
+.chip.revise { background: var(--seal-wash); color: var(--seal-deep); }
+.chip.waiting { background: var(--seal); color: var(--sheet); }
+
+/* Cast cards: a character's looks side by side; places and props as a grid. */
+.characters { display: grid; gap: 34px; }
+.character h4 { font: 500 20px/1.2 var(--serif); margin: 0 0 12px; }
+.character .looks { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 22px; }
+.figure .versions button.revise { color: var(--seal-deep); }
+.figure .caption .link { margin-left: auto; }
+
+@media (max-width: 900px) {
+  .episode-body, .segment-view, .script { grid-template-columns: 1fr; }
+  .episode-nav, .script-nav { position: static; }
+}

@@ -1,10 +1,10 @@
 // What happens when a turn ends without a question: the setup lists the episodes and the
 // drama goes into production; an episode finishes once its cut is accepted; a turn that
 // stops early gets a bounded number of "continue" runs, then the maker is told.
-import { listedEpisodes } from "./classify.ts";
+import { classify, listedEpisodes } from "./classify.ts";
 import { MAX_CONTINUES } from "./config.ts";
 import { closeSession } from "./computers.ts";
-import { get, newId, now, run } from "./db.ts";
+import { all, get, newId, now, run } from "./db.ts";
 import type { TurnInfo } from "./fleet.ts";
 import { stopEvents } from "./follow.ts";
 import { continueGoal } from "./goals.ts";
@@ -40,9 +40,12 @@ async function setupEnded(session: SessionRow, info: TurnInfo) {
           item.title,
           now(),
         );
-        // What pre-production made for this episode (its breakdown) belongs to it from now on.
-        const episode = get<{ id: string }>("select id from episodes where drama_id = ? and number = ?", drama.id, item.number)!;
-        run("update files set episode_id = ? where drama_id = ? and episode_id is null and rel_path like ?", episode.id, drama.id, `%episodes/${episodeCode({ number: item.number })}/%`);
+      }
+      // What pre-production made for an episode (its breakdown) belongs to it from now on.
+      const byCode = new Map(all<{ id: string; number: number }>("select id, number from episodes where drama_id = ?", drama.id).map((row) => [episodeCode(row), row.id]));
+      for (const file of all<{ id: number; rel_path: string }>("select id, rel_path from files where drama_id = ? and episode_id is null", drama.id)) {
+        const episodeId = byCode.get(classify(file.rel_path).episode ?? "");
+        if (episodeId) run("update files set episode_id = ? where id = ?", episodeId, file.id);
       }
       run("update dramas set status = 'production', note = '', updated_at = ? where id = ?", now(), drama.id);
       await close(session);

@@ -154,6 +154,11 @@ create table if not exists messages (
   at text not null,
   unique (session_id, ref)
 );
+
+create index if not exists files_episode on files (episode_id, id);
+create index if not exists files_drama_kind on files (drama_id, kind, id);
+create index if not exists files_turn on files (turn_id);
+create index if not exists reviews_episode on reviews (episode_id, created_at);
 `;
 
 const shared = globalThis as typeof globalThis & { __studioDb?: DatabaseSync };
