@@ -370,4 +370,6 @@ export interface CastCard {
   kind: "look" | "location" | "prop";
   subject: string;
   looks: { look: string; versions: Receipt[] }[];
+  /** The episodes whose breakdown names it, by its id or its full name. */
+  episodes: string[];
 }

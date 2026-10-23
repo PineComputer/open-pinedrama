@@ -63,12 +63,29 @@ function Look({ name, versions }: { name: string; versions: Receipt[] }) {
   );
 }
 
+/** The episodes whose breakdowns name it, each a way to its page. */
+function Appears({ card, dramaId }: { card: CastCard; dramaId: string }) {
+  const { t } = useT();
+  if (!card.episodes.length) return null;
+  return (
+    <div className="appears">
+      <span className="quiet">{t("cast.in")}</span>
+      {card.episodes.map((code) => (
+        <Link key={code} to={`/d/${dramaId}/e/${code}`} className="link">
+          {code}
+        </Link>
+      ))}
+    </div>
+  );
+}
+
 /** A character: the base look first, then each state (S1 wedding…), side by side. */
-function Character({ card }: { card: CastCard }) {
+function Character({ card, dramaId }: { card: CastCard; dramaId: string }) {
   const { t } = useT();
   return (
     <section className="character" style={{ "--looks": card.looks.length } as CSSProperties}>
       <h4>{subjectName(card.subject)}</h4>
+      <Appears card={card} dramaId={dramaId} />
       <div className="looks">
         {card.looks.map((look) => (
           <Look key={look.look} name={look.look === "base" ? t("cast.base") : look.look} versions={look.versions} />
@@ -105,7 +122,7 @@ export function Cast({ dramaId, compact = false }: { dramaId: string; compact?: 
               </h3>
               <div className="characters">
                 {characters.map((card) => (
-                  <Character key={card.subject} card={card} />
+                  <Character key={card.subject} card={card} dramaId={dramaId} />
                 ))}
               </div>
             </section>
@@ -124,7 +141,10 @@ export function Cast({ dramaId, compact = false }: { dramaId: string; compact?: 
                 </h3>
                 <div className="figures">
                   {cards.map((card) => (
-                    <Look key={card.subject} name={subjectName(card.subject)} versions={card.looks[0]?.versions ?? []} />
+                    <div key={card.subject}>
+                      <Look name={subjectName(card.subject)} versions={card.looks[0]?.versions ?? []} />
+                      <Appears card={card} dramaId={dramaId} />
+                    </div>
                   ))}
                 </div>
               </section>

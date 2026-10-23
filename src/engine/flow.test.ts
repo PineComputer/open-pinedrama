@@ -191,6 +191,9 @@ expect(archive.includes(Buffer.from(`${title}/EP002`))).toBe(false);
     ["v1", "revise"],
   ]);
   expect(cast.find((card) => card.subject === "lin")!.looks.map((look) => look.look)).toEqual(["base", "S1"]);
+  // Where each appears, by the episodes' breakdowns.
+  expect(cast.find((card) => card.subject === "lin")!.episodes).toEqual(["EP001", "EP002", "EP003", "EP004", "EP005", "EP006"]);
+  expect(cast.find((card) => card.subject === "office")!.episodes).toEqual([]);
 }
 
 describe("a drama in replay", () => {

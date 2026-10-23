@@ -6,6 +6,7 @@
 import type { CastCard, Decision, DeliveryRow, EpisodePage, Judged, Receipt, ReviewKind, ScriptPage, SegmentPage } from "../shared/types.ts";
 import { classify } from "./classify.ts";
 import { all } from "./db.ts";
+import { readFileSync } from "node:fs";
 import { type FileRow, blobPath, itemIn, toItem } from "./library.ts";
 import type { ZipEntry } from "./zip.ts";
 import { type EpisodeRow, type ReviewRow, drama as dramaRow, episodeCode } from "./records.ts";
@@ -152,6 +153,31 @@ export function seasonEntries(dramaId: string): { title: string; entries: ZipEnt
   return { title, entries };
 }
 
+/** A breakdown's text, from the library; empty if it can't be read. */
+function textOf(fileId: number): string {
+  const row = all<FileRow>("select * from files where id = ?", fileId)[0];
+  try {
+    return row ? readFileSync(blobPath(row.sha), "utf8") : "";
+  } catch {
+    return "";
+  }
+}
+
+/**
+ * Whether a breakdown names a character, place or prop: by the id its files are kept under
+ * (lin, 林晚, engine-room), that id as words (engine room), or for a character a first name
+ * of four letters or more (MAYA_REYES as Maya). Only whole names count, so a loose mention
+ * may be missed rather than invented; Chinese, written without spaces, counts anywhere.
+ */
+function names(text: string, subject: string, character: boolean): boolean {
+  const escape = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const words = subject.split(/[-_\s]+/).filter(Boolean);
+  const forms = [subject, words.join(" "), character && words.length > 1 && words[0].length >= 4 ? words[0] : ""];
+  return forms
+    .filter((form, index) => form && forms.indexOf(form) === index)
+    .some((form) => (/\p{Script=Han}/u.test(form) ? text.includes(form) : new RegExp(`(^|[^\\p{L}\\p{N}])${escape(form)}($|[^\\p{L}\\p{N}])`, "iu").test(text)));
+}
+
 /** Characters with every version of each look (base first), then places and props, each version with its verdict. */
 export function castCards(dramaId: string): CastCard[] {
   const files = all<FileRow>("select * from files where drama_id = ? and kind in ('look', 'location', 'prop') and type like 'image/%' order by id", dramaId);
@@ -166,7 +192,7 @@ export function castCards(dramaId: string): CastCard[] {
       const look = kind === "look" ? file.look ?? "base" : "";
       // The key the review knew this item by: a character's look, or a place or prop.
       const key = kind === "look" ? (look === "base" ? subject : `${subject}/${look}`) : `${kind}:${subject}`;
-      const card = cards.get(`${kind}|${subject}`) ?? cards.set(`${kind}|${subject}`, { kind, subject, looks: [] }).get(`${kind}|${subject}`)!;
+      const card = cards.get(`${kind}|${subject}`) ?? cards.set(`${kind}|${subject}`, { kind, subject, looks: [], episodes: [] }).get(`${kind}|${subject}`)!;
       let entry = card.looks.find((candidate) => candidate.look === look);
       if (!entry) card.looks.push((entry = { look, versions: [] }));
       // Only a review of looks or of the shared references judged these.
@@ -185,9 +211,11 @@ export function castCards(dramaId: string): CastCard[] {
     }
   }
   const order = { look: 0, location: 1, prop: 2 };
+  const breakdowns = scriptPage(dramaId).breakdowns.map((entry) => ({ code: entry.code, text: textOf(entry.file.id) }));
   return [...cards.values()]
     .map((card) => ({
       ...card,
+      episodes: breakdowns.filter((entry) => names(entry.text, card.subject, card.kind === "look")).map((entry) => entry.code),
       looks: card.looks
         .sort((a, b) => (a.look === "base" ? -1 : b.look === "base" ? 1 : a.look.localeCompare(b.look, undefined, { numeric: true })))
         .map((entry) => ({ ...entry, versions: entry.versions.reverse() })),
