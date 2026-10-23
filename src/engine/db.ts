@@ -180,7 +180,8 @@ export function db(): DatabaseSync {
     add("computers", "failures", "integer not null default 0");
     add("dramas", "mode", "text not null default 'replay'");
     add("turns", "settled", "integer not null default 0", "update turns set settled = files_saved");
-  add("episodes", "carry", "text not null default ''");
+    add("episodes", "carry", "text not null default ''");
+    add("dramas", "reason", "text not null default ''");
     shared.__studioDb = handle;
   }
   return shared.__studioDb;

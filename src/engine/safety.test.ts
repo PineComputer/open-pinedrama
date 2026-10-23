@@ -141,7 +141,7 @@ describe("the production line", () => {
 
   it("keeps within the project's limits: Computers at once, and idle time", async () => {
     const fleet = new m.replay.ReplayFleet();
-    fleet.limits = async () => ({ maxComputers: 1, maxIdleSeconds: 1800 });
+    fleet.limits = async () => ({ maxComputers: 1, maxIdleSeconds: 1800, idleAdjustable: true });
     quiet();
     m.computers.setFleet(fleet);
     await m.computers.refreshLimits();
@@ -175,6 +175,61 @@ describe("the production line", () => {
     m.db.run("update computers set updated_at = ? where id = ?", new Date(0).toISOString(), waited.id);
     await until("the same Computer running", () => computersOf(id).find((row) => row.state === "running"));
     expect(computersOf(id).map((row) => row.id)).toEqual([waited.id]);
+    m.scheduler.stopClock();
+  });
+
+  it("holds a drama whose project doesn't offer the drama skill, before any run", async () => {
+    const fleet = new m.replay.ReplayFleet();
+    fleet.skills = async () => ["pdf", "docx"];
+    quiet();
+    m.computers.setFleet(fleet);
+    m.scheduler.startClock(20);
+    const id = await m.dramas.createDrama(newDrama("No skill"), "replay");
+    const held = await until("the hold", () => m.db.get<{ status: string; reason: string }>("select * from dramas where id = ? and status = 'stopped'", id));
+    expect(held.reason).toBe("no-drama-skill");
+    expect(m.db.all("select r.key from runs r join sessions s on s.id = r.session_id where s.drama_id = ?", id)).toHaveLength(0);
+    expect(m.db.all("select id from sessions where drama_id = ? and state = 'open'", id)).toHaveLength(0);
+    m.scheduler.stopClock();
+  });
+
+  it("asks for the longer idle timeout at start where it can't be changed later", async () => {
+    const fleet = new m.replay.ReplayFleet();
+    fleet.limits = async () => ({ maxComputers: null, maxIdleSeconds: null, idleAdjustable: false });
+    let changes = 0;
+    fleet.setIdleTimeout = async () => {
+      changes += 1;
+    };
+    quiet();
+    m.computers.setFleet(fleet);
+    m.scheduler.startClock(20);
+    const id = await m.dramas.createDrama(newDrama("Fixed idle"), "replay");
+    const computer = await until("its Computer", () => m.db.get<{ idle_timeout: number }>("select * from computers where drama_id = ? and state = 'running'", id));
+    await new Promise((resolve) => setTimeout(resolve, 200));
+    expect(computer.idle_timeout).toBe(3 * 60 * 60);
+    expect(changes).toBe(0);
+    m.scheduler.stopClock();
+  });
+
+  it("carries on in the same session after a turn breaks off", async () => {
+    const fleet = new m.replay.ReplayFleet();
+    const wait = fleet.wait.bind(fleet);
+    let broken = false;
+    fleet.wait = async (...args) => {
+      const info = await wait(...args);
+      if (broken) return info;
+      broken = true;
+      return { ...info, state: "failed", summary: "The Computer's services restarted." };
+    };
+    quiet();
+    m.computers.setFleet(fleet);
+    m.scheduler.startClock(20);
+    const id = await m.dramas.createDrama(newDrama("Broken off"), "replay");
+    const resent = await until("the continue run", () =>
+      m.db.get<{ session_id: string; goal: string }>("select r.* from runs r join sessions s on s.id = r.session_id where s.drama_id = ? and r.kind = 'continue'", id),
+    );
+    expect(resent.goal).toMatch(/broke off/);
+    expect(m.db.get<{ state: string }>("select state from sessions where id = ?", resent.session_id)?.state).toBe("open");
+    expect(m.db.get<{ status: string }>("select status from dramas where id = ?", id)?.status).toBe("setup");
     m.scheduler.stopClock();
   });
 

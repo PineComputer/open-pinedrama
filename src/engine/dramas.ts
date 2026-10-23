@@ -92,7 +92,7 @@ export function retrySetup(id: string): void {
   if (drama.status !== "stopped") throw new StudioError("drama-not-stopped", "The drama isn't stopped.", 409);
   // A drama that already has its episodes goes back to production; one without goes back to setup.
   const hasEpisodes = (get<{ n: number }>("select count(*) as n from episodes where drama_id = ?", id)?.n ?? 0) > 0;
-  run("update dramas set status = ?, note = '', continues = 0, updated_at = ? where id = ?", hasEpisodes ? "production" : "setup", now(), id);
+  run("update dramas set status = ?, note = '', reason = '', continues = 0, updated_at = ? where id = ?", hasEpisodes ? "production" : "setup", now(), id);
   publish(`drama:${id}`, "dramas");
 }
 

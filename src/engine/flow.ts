@@ -1,6 +1,7 @@
 // What happens when a turn ends without a question: the setup lists the episodes and the
 // drama goes into production; an episode finishes once its cut is accepted; a turn that
-// stops early gets a bounded number of "continue" runs, then the maker is told.
+// stops early or breaks off gets a bounded number of "continue" runs in the same session,
+// where its files still are, then the maker is told. Reaching the maker resets the count.
 import { classify, listedEpisodes } from "./classify.ts";
 import { MAX_CONTINUES } from "./config.ts";
 import { closeSession } from "./computers.ts";
@@ -18,7 +19,12 @@ async function close(session: SessionRow) {
 }
 
 export async function onEnded(session: SessionRow, info: TurnInfo): Promise<void> {
-  if (info.state === "needs_input") return; // the review waits for the maker
+  if (info.state === "needs_input") {
+    // The review waits for the maker; the work since the last one got somewhere.
+    if (session.role === "setup") run("update dramas set continues = 0 where id = ?", session.drama_id);
+    else run("update episodes set continues = 0 where id = ?", session.episode_id);
+    return;
+  }
   if (session.role === "setup") await setupEnded(session, info);
   else await episodeEnded(session, info);
   publish(`drama:${session.drama_id}`, "dramas", "inbox");
@@ -60,6 +66,10 @@ async function setupEnded(session: SessionRow, info: TurnInfo) {
       await startRun(session, "continue", missing.filter(Boolean).join(" "));
       return;
     }
+  } else if (info.state === "failed" && drama.continues < MAX_CONTINUES) {
+    run("update dramas set continues = continues + 1 where id = ?", drama.id);
+    await startRun(session, "continue", continueGoal(null, true));
+    return;
   }
   run(
     "update dramas set status = 'stopped', note = ?, updated_at = ? where id = ?",
@@ -85,9 +95,9 @@ async function episodeEnded(session: SessionRow, info: TurnInfo) {
     await close(session);
     return;
   }
-  if (info.state === "completed" && episode.continues < MAX_CONTINUES) {
+  if ((info.state === "completed" || info.state === "failed") && episode.continues < MAX_CONTINUES) {
     run("update episodes set continues = continues + 1, updated_at = ? where id = ?", now(), episode.id);
-    await startRun(session, "continue", continueGoal(episodeCode(episode)));
+    await startRun(session, "continue", continueGoal(episodeCode(episode), info.state === "failed"));
     return;
   }
   run(

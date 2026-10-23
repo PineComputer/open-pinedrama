@@ -45,6 +45,9 @@ export interface ApiFailure {
 /** Where a drama is: casting in its setup session, then episodes in production. */
 export type DramaStatus = "setup" | "production" | "done" | "stopped";
 
+/** Why the studio held a drama: its project's Computers don't offer Pine's drama skill. */
+export type HoldReason = "no-drama-skill";
+
 export type EpisodeState = "queued" | "working" | "waiting" | "done" | "stopped" | "failed";
 
 /** The steps of an episode, in order, as the board shows them. */
@@ -183,6 +186,8 @@ export interface DramaView extends DramaCard {
     leadsApproved: boolean;
     activity?: string;
     note?: string;
+    /** The studio held the drama before any work, and why. */
+    reason?: HoldReason;
   };
   episodeRows: EpisodeRow[];
   crew: ComputerView[];

@@ -52,7 +52,14 @@ The restart path is checked by hand: lost Computers mark episodes stopped and en
 
 Files are reassigned to episodes by the same path reading as everywhere else (`classify`), and the shot-list excerpt matches a segment exactly (`seg01` is not `seg010`).
 
-**Not yet verified:** anything against real Pine; Windows and Linux builds; signing and notarization. Milestone 2's spike needs the maker's go-ahead, a spend cap and a project with the drama skill.
+**On real Pine, before the drama skill, 23 October 2026.** `npm run pine:check` drives the engine's own Pine layer against a project (README, "Develop"); on the staging project every call the studio makes works: create, start from saved credentials, recovery of a Computer whose binding was lost, stop; sessions, attachments with Chinese names, returned files from nested folders, a question answered and followed to the turn it opened, events, and a project packed in parts in one session and restored in another. It found, and the studio now handles:
+- **Projects without a lifetime policy**, where a running Computer's idle timeout can't change: the studio starts their Computers with the waiting timeout (3 h) and leaves it.
+- **The drama skill missing**: before the setup's first run the studio asks the Computer which skills it offers (`skills.list`); without `drama-workflow` it holds the drama and says so in the maker's language, rather than let the agent improvise a drama at the project's expense. Checked in the app on staging: Computer started, session opened, drama held with no run sent, Computer stopped, in about 20 seconds.
+- **Events before a session's first run** answer 404 (no task yet), so the studio follows a session's events only once Pine has its run.
+
+And, from Pine's limits and lifecycle docs: a turn that breaks off (the Computer's services restarted, or the turn ran out of its 60 minutes) now carries on in the same session, where its files still are, within the same bounded "continue" runs as a turn that stopped short, and reaching the maker resets that count; an episode or setup that won't start backs off (15 s, doubling, at most 5 min) and after three tries says why, instead of retrying every tick.
+
+**Not yet verified:** the drama skill on real Pine (whether its provider asset handles survive a restore on another Computer); a Computer reaching its running-time limit (none on staging); Windows and Linux builds; signing and notarization. Milestone 2's spike needs the maker's go-ahead, a spend cap and a project with the drama skill.
 
 ## Decisions carried in
 
@@ -71,7 +78,7 @@ Sessions on one Computer run concurrently (three at most) but share no files; Pi
 - **Setting: episodes per Computer, 1–3**, for projects whose Computer limit is the bottleneck. When Pine's shared storage ships, packing episodes onto fewer Computers becomes worth it, because the cast is set up once per Computer. Then the default can change.
 - **Attachments:** the project's parts keep their names, so `cat project.tar.part-*` puts them back in order; other attachments get flat, collision-free names. A file over 64 MiB is never attached. A drama set up before pre-production existed still gets its references as loose files.
 - **Still to learn on real Pine:** whether a restored project's uploaded references (provider asset handles, which Pine's adapter scopes) are accepted on another Computer, or must be uploaded again.
-- **Idle timeout** is per Computer: 1 h while it works, 3 h while any of its sessions waits on the maker (`setIdleTimeout`). The 1 h base matters because a question can arrive while the app is closed, when nothing can raise the timeout.
+- **Idle timeout** is per Computer: 1 h while it works, 3 h while any of its sessions waits on the maker (`setIdleTimeout`). The 1 h base matters because a question can arrive while the app is closed, when nothing can raise the timeout. On a project without a lifetime policy the timeout is fixed at start, so its Computers start with 3 h.
 
 ## Rules the flow depends on
 

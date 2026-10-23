@@ -89,8 +89,27 @@ UI (React, Vite)  ── HTTP + one event stream ──▶  engine (Node, 127.0.
 
 ```sh
 npm run check        # typecheck and tests, including the whole flow in replay mode
+npm run pine:check   # the studio's Pine calls against your real project (see below)
 npm run build        # the UI into dist/ui, which the engine then serves itself
 ```
+
+Test in this order; each step costs more and catches what the one before can't:
+
+1. **`npm run check`**, on every change. The scheduler, reviews and flow run against the
+   replay, with failures injected (lost Creates, a busy project, turns that break off).
+2. **Replay in `npm run dev`**, for screens and the flow by hand, at no cost.
+3. **`npm run pine:check`**, after changing how the studio talks to Pine, after an SDK
+   upgrade, and against a new project or endpoint. It goes through the engine's own Pine
+   layer: it creates a Computer, gives two sessions files (with Chinese names), runs three
+   small plain-language turns (one asks a question and gets an answer), hands a folder packed
+   in parts from one session to the other the way pre-production hands the project to
+   episodes, then stops the Computer, starts it again from its saved credentials, and
+   recovers it as if its binding were lost. It needs no drama skill, takes a few minutes,
+   and Pine bills the turns, a few cents. It also says whether the project offers the drama
+   skill and whether idle timeouts can change while a Computer runs.
+4. **Your Pine project in `npm run dev`**. Without the drama skill the studio holds each new
+   drama before the agent does anything, and says so; with it, this is the real thing,
+   billed at Pine's rates.
 
 ## License
 

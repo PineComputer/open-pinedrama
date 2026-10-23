@@ -14,6 +14,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "check": "tsc --noEmit && vitest run",
+    "pine:check": "tsx scripts/pine-check.ts",
     "desktop": "node scripts/desktop.mjs && electron .",
     "package": "node scripts/desktop.mjs && electron-builder"
   },

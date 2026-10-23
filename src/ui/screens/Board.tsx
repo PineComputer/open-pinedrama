@@ -256,7 +256,9 @@ export function SetupPanel({ drama }: { drama: DramaView }) {
   const steps: TKey[] = ["setup.reading", "setup.answers", "setup.cast", "setup.approval", "setup.preparing", "setup.references"];
   const detail =
     setup.state === "stopped"
-      ? setup.note ?? t("board.stopped")
+      ? setup.reason
+        ? t(`setup.held.${setup.reason}`)
+        : setup.note ?? t("board.stopped")
       : setup.state === "waiting"
         ? t("board.waits", { kind: t(`kind.${setup.kind ?? "question"}` as TKey) })
         : setup.activity ?? t("setup.startingComputer");

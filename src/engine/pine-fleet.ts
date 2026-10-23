@@ -61,7 +61,11 @@ export class PineFleet implements Fleet {
 
   async limits() {
     const policy = await this.client.projectPolicy();
-    return { maxComputers: policy.maxConcurrentComputers, maxIdleSeconds: policy.lifecycle?.maxIdleTimeoutSeconds ?? null };
+    return {
+      maxComputers: policy.maxConcurrentComputers,
+      maxIdleSeconds: policy.lifecycle?.maxIdleTimeoutSeconds ?? null,
+      idleAdjustable: policy.lifecycle !== null,
+    };
   }
 
   async newCredentials() {
@@ -114,6 +118,15 @@ export class PineFleet implements Fleet {
       if (error instanceof NotFoundError) return "stopped";
       throw error;
     }
+  }
+
+  async stopBy(ref: ComputerRef) {
+    return (await this.computer(ref).sandboxDetails()).lifetime?.deadline;
+  }
+
+  async skills(ref: ComputerRef) {
+    const listed = await this.computer(ref).skills.list();
+    return listed.filter((skill) => skill.enabled !== false).map((skill) => String(skill.name));
   }
 
   async setIdleTimeout(ref: ComputerRef, seconds: number) {

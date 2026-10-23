@@ -15,6 +15,8 @@ export interface DramaRow {
   mode: Mode;
   status: DramaStatus;
   note: string;
+  /** Why the studio held it, as a code the app words (HoldReason); empty when it didn't. */
+  reason: string;
   continues: number;
   created_at: string;
   updated_at: string;

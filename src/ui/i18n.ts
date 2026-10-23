@@ -166,6 +166,7 @@ const en = {
   "setup.retry": "Try again",
   "setup.open": "Open",
   "setup.startingComputer": "Starting a Computer",
+  "setup.held.no-drama-skill": "Your Pine project doesn't offer the drama skill yet, so nothing was started. Ask Pine to turn it on for the project, then try again.",
 
   "kind.looks": "Leads' looks",
   "kind.references": "Shared references",
@@ -477,6 +478,7 @@ const zh: Record<Key, string> = {
   "setup.retry": "重试",
   "setup.open": "打开",
   "setup.startingComputer": "正在启动电脑",
+  "setup.held.no-drama-skill": "你的 Pine 项目还没有开通短剧技能，所以什么都没有开始。请联系 Pine 为项目开通，然后重试。",
 
   "kind.looks": "主角造型",
   "kind.references": "共用参考",

@@ -7,6 +7,7 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { FIXTURES } from "./config.ts";
 import { revisedKeys } from "./decisions.ts";
+import { DRAMA_SKILL } from "./goals.ts";
 import type { Attached, ComputerRef, Fleet, FleetEvent, Limits, SessionRef, TurnFile, TurnInfo } from "./fleet.ts";
 import { blocking, lookSheet, plate, prop, storyboard } from "./placeholders.ts";
 
@@ -347,7 +348,7 @@ export class ReplayFleet implements Fleet {
   }
 
   async limits(): Promise<Limits> {
-    return { maxComputers: null, maxIdleSeconds: null };
+    return { maxComputers: null, maxIdleSeconds: null, idleAdjustable: true };
   }
 
   async newCredentials() {
@@ -368,6 +369,14 @@ export class ReplayFleet implements Fleet {
 
   async status(ref: ComputerRef) {
     return this.machines.get(ref.id)?.state ?? "stopped";
+  }
+
+  async stopBy() {
+    return undefined;
+  }
+
+  async skills() {
+    return [DRAMA_SKILL];
   }
 
   async setIdleTimeout() {}

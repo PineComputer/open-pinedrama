@@ -4,6 +4,7 @@
 // waits on the maker; stop Computers with nothing to do; retry what didn't go through.
 import { IDLE_WAITING_S, IDLE_WORKING_S, WAITING_CAP } from "./config.ts";
 import {
+  START_ATTEMPTS,
   allowedIdle,
   closeSession,
   computerRef,
@@ -22,10 +23,10 @@ import {
 } from "./computers.ts";
 import { all, get, now, run } from "./db.ts";
 import { followEvents, followTurn, isFollowed, unsettledTurns } from "./follow.ts";
-import { episodeGoal, resumeGoal, setupGoal } from "./goals.ts";
+import { DRAMA_SKILL, episodeGoal, resumeGoal, setupGoal } from "./goals.ts";
 import type { FileRow } from "./library.ts";
 import { publish } from "./live.ts";
-import { type ComputerRow, type DramaRow, type EpisodeRow, type SessionRow, episodeCode, latestTurn, openSessionsOf } from "./records.ts";
+import { type ComputerRow, type DramaRow, type EpisodeRow, type SessionRow, computer as computerRow, episodeCode, latestTurn, openSessionsOf } from "./records.ts";
 import { reconcileSending } from "./reviews.ts";
 import { attach, episodeArchive, hasRun, inputs, projectArchive, references, sendRun, startRun, unconfirmedRuns } from "./runs.ts";
 
@@ -56,6 +57,26 @@ function once(key: string, work: () => Promise<void>): boolean {
     .catch((error) => console.error(`${key}:`, (error as Error).message))
     .finally(() => busy.delete(key));
   return true;
+}
+
+/** Work that failed lately (an episode's start, a setup's, a run's resend), so it waits before it's tried again. */
+const failures = new Map<string, { count: number; at: number }>();
+
+/** Whether failed work still waits: 15 s after the first failure, doubling, at most 5 minutes. */
+function backingOff(key: string): boolean {
+  const failed = failures.get(key);
+  return failed !== undefined && Date.now() - failed.at < Math.min(5 * 60_000, 15_000 * 2 ** (failed.count - 1));
+}
+
+/** Counts a failure; returns how many in a row. */
+function failedAgain(key: string): number {
+  const count = (failures.get(key)?.count ?? 0) + 1;
+  failures.set(key, { count, at: Date.now() });
+  return count;
+}
+
+function message(error: unknown): string {
+  return error instanceof Error ? error.message : String(error);
 }
 
 /** Sessions being opened on each Computer, counted with its open ones so two episodes never claim one slot. */
@@ -119,17 +140,64 @@ function claimComputer(drama: DramaRow): ComputerRow | undefined {
   return undefined;
 }
 
+/**
+ * Whether the session's Computer offers Pine's drama skill. Without it the agent would make
+ * up a drama of its own at the project's expense. The skill comes with the project, so the
+ * setup's Computer answers for every Computer the drama uses after it. One that can't list
+ * its skills (an older release) isn't held back on that account.
+ */
+async function offersDramaSkill(session: SessionRow): Promise<boolean> {
+  const computer = computerRow(session.computer_id);
+  if (!computer?.binding) return true;
+  try {
+    return (await fleet().skills(computerRef(computer))).includes(DRAMA_SKILL);
+  } catch (error) {
+    console.error("skills:", message(error));
+    return true;
+  }
+}
+
 /** Hands the setup session the screenplay and its goal: on a new session, or again on one whose start didn't finish. */
 async function beginSetup(drama: DramaRow, session: SessionRow): Promise<void> {
+  if (!(await offersDramaSkill(session))) {
+    run("update dramas set status = 'stopped', reason = 'no-drama-skill', note = '', updated_at = ? where id = ?", now(), drama.id);
+    await closeSession(session);
+    publish(`drama:${drama.id}`, "dramas");
+    return;
+  }
   const { sent } = await attach(session, inputs(drama.id));
-  followEvents(session.id);
   await startRun(session, "setup", setupGoal(drama, sent));
 }
 
+/**
+ * A setup that didn't start is tried again, a few times, then the drama stops and says why.
+ * A session it half opened is let go, so its Computer can stop.
+ */
+function setupFailed(drama: DramaRow, error: unknown): void {
+  const key = `setup:${drama.id}`;
+  if (failedAgain(key) < START_ATTEMPTS) return;
+  failures.delete(key);
+  run("update dramas set status = 'stopped', note = ?, updated_at = ? where id = ?", message(error), now(), drama.id);
+  const open = get<SessionRow>("select * from sessions where drama_id = ? and role = 'setup' and state = 'open'", drama.id);
+  if (open && !hasRun(open.id)) void closeSession(open);
+}
+
 function ensureSetup(drama: DramaRow): void {
+  const key = `setup:${drama.id}`;
+  if (backingOff(key)) return;
   const open = get<SessionRow>("select * from sessions where drama_id = ? and role = 'setup' and state = 'open'", drama.id);
   if (open) {
-    if (!hasRun(open.id)) once(`setup:${drama.id}`, () => beginSetup(drama, open).finally(() => publish(`drama:${drama.id}`)));
+    if (!hasRun(open.id)) {
+      once(key, () =>
+        beginSetup(drama, open)
+          .then(() => void failures.delete(key))
+          .catch((error) => {
+            setupFailed(drama, error);
+            throw error;
+          })
+          .finally(() => publish(`drama:${drama.id}`)),
+      );
+    }
     return;
   }
   const computer = claimComputer(drama);
@@ -140,6 +208,10 @@ function ensureSetup(drama: DramaRow): void {
       const session = await openSession(computer, "setup", null, "Setup");
       release();
       await beginSetup(drama, session);
+      failures.delete(key);
+    } catch (error) {
+      setupFailed(drama, error);
+      throw error;
     } finally {
       release();
       publish(`drama:${drama.id}`);
@@ -169,18 +241,24 @@ function startEpisode(drama: DramaRow, episode: EpisodeRow, computer: ComputerRo
       }
       const { sent, skipped } = await attach(session, files);
       if (skipped.length) console.warn(`${code}: too large to hand over (over 64 MiB): ${skipped.join(", ")}`);
-      followEvents(session.id);
       const goal = episode.resume
         ? resumeGoal(drama, code, sent, handoff, episode.carry || undefined)
         : episodeGoal(drama, code, sent, handoff);
       await startRun(session, episode.resume ? "resume" : "episode", goal);
       run("update episodes set resume = 0, carry = '', continues = 0, note = '', updated_at = ? where id = ?", now(), episode.id);
+      failures.delete(episode.id);
     } catch (error) {
       // A run that was saved is resent with its own key (unconfirmedRuns), so the episode keeps
-      // its session. Before that, the half-opened session is let go and the episode waits its turn again.
+      // its session. Before that, the half-opened session is let go and the episode waits its
+      // turn again, after a pause; one that won't start after a few tries waits for the maker.
       if (!session || !hasRun(session.id)) {
         if (session) await closeSession(session);
-        run("update episodes set state = 'queued', session_id = null, updated_at = ? where id = ?", now(), episode.id);
+        if (failedAgain(episode.id) >= START_ATTEMPTS) {
+          failures.delete(episode.id);
+          run("update episodes set state = 'failed', note = ?, session_id = null, updated_at = ? where id = ?", message(error), now(), episode.id);
+        } else {
+          run("update episodes set state = 'queued', session_id = null, updated_at = ? where id = ?", now(), episode.id);
+        }
       }
       throw error;
     } finally {
@@ -198,6 +276,7 @@ function fill(drama: DramaRow): void {
   const queued = all<EpisodeRow>("select * from episodes where drama_id = ? and state = 'queued' order by number", drama.id);
   for (const episode of queued) {
     if (active >= drama.parallel || waiting >= WAITING_CAP) return;
+    if (backingOff(episode.id)) continue;
     const computer = claimComputer(drama);
     if (!computer) return;
     startEpisode(drama, episode, computer);
@@ -223,7 +302,7 @@ function tend(computer: ComputerRow): void {
   const sessions = openSessionsOf(computer.id);
   const waiting = sessions.some((session) => latestTurn(session.id)?.state === "needs_input");
   const desired = allowedIdle(waiting ? IDLE_WAITING_S : IDLE_WORKING_S);
-  if (computer.idle_timeout !== desired && (idleRefused.get(computer.id) ?? 0) < Date.now()) {
+  if (projectLimits().idleAdjustable && computer.idle_timeout !== desired && (idleRefused.get(computer.id) ?? 0) < Date.now()) {
     once(`idle:${computer.id}`, () =>
       setIdle(computer, desired).catch((error) => {
         idleRefused.set(computer.id, Date.now() + 10 * 60_000);
@@ -275,7 +354,19 @@ export function tick(): void {
   }
   for (const computer of runningComputers()) tend(computer);
   for (const turn of unsettledTurns()) if (!isFollowed(turn.id)) followTurn(turn.session_id, turn.id);
-  for (const key of unconfirmedRuns()) once(`run:${key}`, () => sendRun(key));
+  for (const key of unconfirmedRuns()) {
+    // Resent with the same key until Pine confirms it, pausing longer after each failure.
+    if (backingOff(`run:${key}`)) continue;
+    once(`run:${key}`, () =>
+      sendRun(key).then(
+        () => void failures.delete(`run:${key}`),
+        (error) => {
+          failedAgain(`run:${key}`);
+          throw error;
+        },
+      ),
+    );
+  }
 }
 
 const clock = globalThis as typeof globalThis & { __studioClock?: NodeJS.Timeout[] };

@@ -2,6 +2,9 @@
 // Computer knows how to do the work; these say what to do, what the maker has decided,
 // and what to hand back. Nothing here is a protocol the Computer must implement.
 
+/** Pine's drama skill, as a Computer lists it among the skills it serves. */
+export const DRAMA_SKILL = "drama-workflow";
+
 export interface DramaBrief {
   title: string;
   language: string;
@@ -34,7 +37,7 @@ function writeIn(drama: DramaBrief): string {
  */
 export function setupGoal(drama: DramaBrief, attachments: string[]): string {
   return [
-    `Use the drama-workflow skill to produce a vertical short drama from the attached screenplay (${attachments.join(", ")}).`,
+    `Use the ${DRAMA_SKILL} skill to produce a vertical short drama from the attached screenplay (${attachments.join(", ")}).`,
     brief(drama),
     drama.notes ? `The maker's notes: ${drama.notes}` : "",
     "Make the drama-cli project in the work directory's drama/ folder.",
@@ -79,7 +82,7 @@ const EPISODE_STOPS = [
  */
 export function episodeGoal(drama: DramaBrief, code: string, attachments: string[], handoff: boolean): string {
   return [
-    `Use the drama-workflow skill to make episode ${code} of "${drama.title}".`,
+    `Use the ${DRAMA_SKILL} skill to make episode ${code} of "${drama.title}".`,
     brief(drama),
     ...(handoff
       ? handedOver(code)
@@ -96,7 +99,7 @@ export function episodeGoal(drama: DramaBrief, code: string, attachments: string
 export function resumeGoal(drama: DramaBrief, code: string, attachments: string[], handoff: boolean, decision?: string): string {
   const ownFolder = attachments.some((name) => name.startsWith(`${code}.tar.part-`));
   return [
-    `Use the drama-workflow skill to continue episode ${code} of "${drama.title}" in this new session; the earlier session ended.`,
+    `Use the ${DRAMA_SKILL} skill to continue episode ${code} of "${drama.title}" in this new session; the earlier session ended.`,
     brief(drama),
     ...(handoff
       ? [
@@ -115,8 +118,13 @@ export function resumeGoal(drama: DramaBrief, code: string, attachments: string[
     .join("\n");
 }
 
-export function continueGoal(code: string | null): string {
-  return code
-    ? `Continue episode ${code} where you stopped. Stop for my review at the next point that needs me, returning the files with your question.`
-    : "Continue where you stopped. Stop for my review at the next point that needs me, returning the files with your question.";
+/** Another run in the same session, after a turn that stopped short or broke off (`brokeOff`) before the next review. */
+export function continueGoal(code: string | null, brokeOff = false): string {
+  return [
+    brokeOff ? "Your last turn broke off before it finished; what it made is still in your working directory." : "",
+    code ? `Continue episode ${code} where you stopped.` : "Continue where you stopped.",
+    "Stop for my review at the next point that needs me, returning the files with your question.",
+  ]
+    .filter(Boolean)
+    .join(" ");
 }

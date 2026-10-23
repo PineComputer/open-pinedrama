@@ -56,6 +56,8 @@ export interface Limits {
   maxComputers: number | null;
   /** The longest idle timeout a start may ask for. */
   maxIdleSeconds: number | null;
+  /** Whether a running Computer's idle timeout can be changed; without a lifetime policy it is set only at start. */
+  idleAdjustable: boolean;
 }
 
 /**
@@ -76,6 +78,10 @@ export interface Fleet {
   startComputer(credentials: string, label: string, idleTimeoutSeconds: number): Promise<Attached>;
   /** running, paused, stopped, failed…; "stopped" when Pine no longer knows the sandbox. */
   status(computer: ComputerRef): Promise<string>;
+  /** When the running Computer must stop by (the project's running time per start), where Pine sets one. */
+  stopBy(computer: ComputerRef): Promise<Date | undefined>;
+  /** The skills the Computer's agents are offered: Pine's that are switched on, and the project's own. */
+  skills(computer: ComputerRef): Promise<string[]>;
   setIdleTimeout(computer: ComputerRef, seconds: number): Promise<void>;
   stop(computer: ComputerRef): Promise<boolean>;
   createSession(computer: ComputerRef, label: string): Promise<SessionRef>;
