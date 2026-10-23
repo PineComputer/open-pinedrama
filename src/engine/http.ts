@@ -1,17 +1,20 @@
 // The engine's HTTP API for the UI: reads, the maker's actions, library files (with range
 // requests, so video seeks), and one event stream that says what changed. Like the
 // starter, it answers only on loopback and only to its own pages.
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
+import path from "node:path";
 import { Readable } from "node:stream";
 import { serveStatic } from "@hono/node-server/serve-static";
 import { Hono, type Context } from "hono";
 import { streamSSE } from "hono/streaming";
 import type { AppInfo, Decision, LiveMessage } from "../shared/types.ts";
-import { DATA_DIR, UI_DIR, VERSION } from "./config.ts";
-import { fleet } from "./computers.ts";
+import { UI_DIR } from "./config.ts";
+import { appInfo, connectPine, disconnect, useReplay } from "./connection.ts";
+import { DEFAULT_ENDPOINT, SetupError } from "./settings.ts";
 import { all } from "./db.ts";
 import { chat, createDrama, desktop, resumeEpisode, retrySetup, updateDrama } from "./dramas.ts";
 import { fileRow, openBlob } from "./library.ts";
+import { FIXTURES } from "./replay-fleet.ts";
 import { subscribe } from "./live.ts";
 import { drama as dramaRow, review as reviewRow, session as sessionRow, type SessionRow } from "./records.ts";
 import { ReviewError, decide, resumeWithDecision } from "./reviews.ts";
@@ -37,7 +40,27 @@ export function app(): Hono {
     await next();
   });
 
-  api.get("/api/app", (c) => c.json<AppInfo>({ mode: fleet().mode, version: VERSION, dataDir: DATA_DIR }));
+  api.get("/api/app", (c) => c.json<AppInfo>(appInfo()));
+
+  api.post("/api/connection/pine", async (c) => {
+    try {
+      const { endpoint, apiKey } = (await c.req.json()) as { endpoint?: string; apiKey?: string };
+      return c.json(await connectPine({ endpoint: endpoint || DEFAULT_ENDPOINT, apiKey: apiKey ?? "" }));
+    } catch (error) {
+      if (error instanceof SetupError) return c.json({ error: error.message }, 400);
+      return fail(c, error);
+    }
+  });
+
+  api.post("/api/connection/replay", (c) => c.json(useReplay()));
+
+  api.delete("/api/connection", async (c) => {
+    try {
+      return c.json(await disconnect());
+    } catch (error) {
+      return fail(c, error);
+    }
+  });
 
   api.get("/api/dramas", (c) => c.json(dramaCards()));
 
@@ -61,6 +84,26 @@ export function app(): Hono {
     } catch (error) {
       return fail(c, error);
     }
+  });
+
+  // In replay, a drama from the bundled sample screenplay, so the studio can be tried in one click.
+  api.post("/api/dramas/sample", async (c) => {
+    if (appInfo().mode !== "replay") return c.json({ error: "The sample drama is for replay mode." }, 409);
+    const { language } = (await c.req.json().catch(() => ({}))) as { language?: string };
+    const zh = language !== "en";
+    const name = `sample-screenplay.${zh ? "zh" : "en"}.md`;
+    const id = await createDrama({
+      title: zh ? "后妈来了" : "The Stepmother",
+      language: zh ? "zh" : "en",
+      look: "live action",
+      format: "9:16, 480p",
+      budget: 6000,
+      parallel: 3,
+      perComputer: 1,
+      notes: "",
+      files: [{ name, type: "text/markdown", bytes: readFileSync(path.join(FIXTURES, name)) }],
+    });
+    return c.json({ id });
   });
 
   api.get("/api/dramas/:id", (c) => {
@@ -160,7 +203,7 @@ export function app(): Hono {
     const headers: Record<string, string> = {
       "Content-Type": row.type,
       "Accept-Ranges": "bytes",
-      "Cache-Control": "private, max-age=31536000, immutable",
+      "Cache-Control": c.req.query("v") === row.sha.slice(0, 16) ? "private, max-age=31536000, immutable" : "no-cache",
     };
     if (c.req.query("download")) headers["Content-Disposition"] = `attachment; filename*=UTF-8''${encodeURIComponent(row.name)}`;
     const range = c.req.header("range")?.match(/^bytes=(\d*)-(\d*)$/);

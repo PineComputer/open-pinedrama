@@ -43,9 +43,16 @@ create table if not exists episodes (
   unique (drama_id, number)
 );
 
+-- The studio's own settings: the Pine project it uses (its key sealed), or replay.
+create table if not exists settings (
+  key text primary key,
+  value text not null
+);
+
 create table if not exists computers (
   id text primary key,              -- Pine's Computer id
   drama_id text not null,
+  mode text not null default 'pine', -- pine | replay: which fleet made it
   label text not null,              -- PC-1, PC-2, ...
   credentials text not null,        -- sealed
   binding text,                     -- sealed; null while stopped
@@ -154,6 +161,9 @@ export function db(): DatabaseSync {
     const handle = new DatabaseSync(path.join(DATA_DIR, "studio.db"));
     handle.exec("pragma journal_mode = wal; pragma foreign_keys = on;");
     handle.exec(SCHEMA);
+    // Columns added after a data directory was first made.
+    const columns = (handle.prepare("pragma table_info(computers)").all() as { name: string }[]).map((column) => column.name);
+    if (!columns.includes("mode")) handle.exec("alter table computers add column mode text not null default 'replay'");
     shared.__studioDb = handle;
   }
   return shared.__studioDb;

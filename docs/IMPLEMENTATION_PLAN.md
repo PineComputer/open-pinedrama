@@ -21,6 +21,12 @@ Builds [PROPOSAL.md](PROPOSAL.md) v5. This file is the working plan; it changes 
 
 The restart path is checked by hand: lost Computers mark episodes stopped and end their reviews; "continue in a new session" resumes.
 
+**Onboarding and look, same day.**
+- No `.env` to edit. The first run asks for the project key, checks it with Pine (`projectPolicy`), and keeps it sealed in the data folder. Replay is one click from there, with a bundled sample screenplay.
+- Settings changes or forgets the key; forgetting stops the project's running Computers first.
+- No backend is needed for a maker with their own project; one would only serve makers without a Pine project, teams sharing a line, or a later "Sign in with Pine".
+- The screens moved to a paper-and-ink studio look: posters with the leads behind the title, a production sheet with each episode's newest frame, a dark viewing room for review.
+
 **Not yet verified:** anything against real Pine. Milestone 2's spike needs the maker's go-ahead, a spend cap and a project with the drama skill.
 
 ## Decisions carried in

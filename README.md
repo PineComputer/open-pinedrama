@@ -18,20 +18,25 @@ npm install
 npm run dev          # the engine on 127.0.0.1:4310 and the UI on http://127.0.0.1:5173
 ```
 
-Without a Pine project key the studio runs in **replay** mode: recorded turns and
-placeholder pictures and video, so every screen works with no project and no spend.
-`STUDIO_REPLAY_SPEED=4 npm run dev` plays it faster. Replay Computers live in memory, so
-restarting the engine stops them the way a real stop would: their episodes show **Resume**.
+On first run the studio asks for your Pine project's API key (Project → API keys in the
+Pine console). It checks the key with Pine, then keeps it sealed in the studio's data
+folder; nothing needs editing. The project needs Pine's drama skill. Settings changes or
+forgets the key.
 
-To use your Pine project, copy `.env.example` to `.env.local` and set
-`PINE_SANDBOX_ENDPOINT` and `PINE_SANDBOX_API_KEY`. The project needs Pine's drama skill.
+Or choose **replay**: recorded turns and placeholder pictures and video, so every screen
+works with no project and no spend, and **Start the sample drama** sets one up in a click.
+Replay Computers live in memory, so restarting the engine stops them the way a real stop
+would: their episodes show **Resume**.
 
-| Setting | |
+For development, these override what the app saves:
+
+| Variable | |
 | --- | --- |
-| `PINE_SANDBOX_ENDPOINT`, `PINE_SANDBOX_API_KEY` | Your project's endpoint and key. Without them, replay mode. |
+| `PINE_SANDBOX_API_KEY`, `PINE_SANDBOX_ENDPOINT` | Use this project instead of the saved one. |
+| `STUDIO_MODE=replay` | Start in replay. |
+| `STUDIO_REPLAY_SPEED` | Play the replay faster, e.g. `4`. |
 | `STUDIO_DATA_DIR` | Records, library and sealing key. Default `.data/`. |
 | `STUDIO_PORT` | The engine's port on 127.0.0.1. Default 4310. |
-| `STUDIO_MODE` | `pine` or `replay`, to force one. |
 
 ## How it fits together
 

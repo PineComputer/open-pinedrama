@@ -22,7 +22,11 @@ function turnInfo(turn: AgentTurn): TurnInfo {
 
 export class PineFleet implements Fleet {
   readonly mode = "pine" as const;
-  private readonly client = Client.fromEnv();
+  private readonly client: Client;
+
+  constructor(project: { endpoint: string; apiKey: string }) {
+    this.client = new Client({ endpoint: project.endpoint, apiKey: project.apiKey });
+  }
 
   private computer(ref: ComputerRef): Computer {
     return this.client.reconnectComputer(Credentials.parse(ref.credentials), Binding.parse(ref.binding));

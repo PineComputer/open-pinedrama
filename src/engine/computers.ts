@@ -10,12 +10,22 @@ import { seal, unseal } from "./seal.ts";
 
 let fleetRef: Fleet | undefined;
 
-export function setFleet(fleet: Fleet): void {
+/**
+ * Uses a fleet from now on. Computers another fleet made are out of its reach, so they
+ * are marked stopped (replay's vanish anyway; the maker stops Pine's before switching).
+ */
+export function setFleet(fleet: Fleet | undefined): void {
   fleetRef = fleet;
+  const others = all<ComputerRow>("select * from computers where state in ('starting', 'running', 'stopping') and mode != ?", fleet?.mode ?? "");
+  for (const row of others) markStopped(row, fleet ? `The studio switched to ${fleet.mode === "pine" ? "your Pine project" : "replay"}.` : "The studio was disconnected from Pine.");
+}
+
+export function hasFleet(): boolean {
+  return fleetRef !== undefined;
 }
 
 export function fleet(): Fleet {
-  if (!fleetRef) throw new Error("The fleet isn't set up.");
+  if (!fleetRef) throw new Error("Connect a Pine project first.");
   return fleetRef;
 }
 
@@ -52,9 +62,10 @@ export async function provision(dramaId: string): Promise<void> {
   const label = `PC-${count + 1}`;
   const { id, credentials } = await fleet().newCredentials();
   run(
-    "insert into computers (id, drama_id, label, credentials, state, idle_timeout, created_at, updated_at) values (?, ?, ?, ?, 'starting', ?, ?, ?)",
+    "insert into computers (id, drama_id, mode, label, credentials, state, idle_timeout, created_at, updated_at) values (?, ?, ?, ?, ?, 'starting', ?, ?, ?)",
     id,
     dramaId,
+    fleet().mode,
     label,
     seal(credentials),
     IDLE_WORKING_S,

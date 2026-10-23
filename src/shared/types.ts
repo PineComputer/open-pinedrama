@@ -38,9 +38,11 @@ export type ReviewState = "saving" | "open" | "sending" | "answered" | "ended";
 export type Verdict = "approve" | "revise";
 
 export interface AppInfo {
-  mode: Mode;
+  /** "none" until the maker connects a Pine project or chooses the replay. */
+  mode: Mode | "none";
   version: string;
   dataDir: string;
+  project?: { endpoint: string; keyHint: string; fromEnvironment: boolean };
 }
 
 export interface FileItem {
@@ -82,7 +84,8 @@ export interface DramaCard {
   computers: number;
   waiting: number;
   money: Money;
-  cover?: string;
+  /** The leads' sheets, once drawn: the faces on the drama's poster. */
+  cast: string[];
   createdAt: string;
 }
 
@@ -100,8 +103,10 @@ export interface EpisodeRow {
   stages: Record<Stage, StageCell>;
   /** The agent's own words for what it is doing, while it works. */
   activity?: string;
-  /** Why it stopped or failed, or what couldn't be handed over. */
+  /** The agent's own account of why it stopped early. */
   note?: string;
+  /** Its newest single frame (blocking first, else a storyboard sheet), once there is one. */
+  frame?: string;
   /** Its place in the queue, from 1. */
   position?: number;
   /** What it waits for the maker on; "saving" while the review's files are saved. */

@@ -1,8 +1,8 @@
-// The engine's settings: from .env.local in development, from the environment the
-// desktop app passes otherwise.
+// The engine's settings. The maker's Pine project is chosen in the app (settings.ts);
+// these are the process's own: where its data lives, its port, and the limits it keeps.
+// .env.local is read in development only, for a developer's overrides.
 import { existsSync } from "node:fs";
 import path from "node:path";
-import type { Mode } from "../shared/types.ts";
 
 if (existsSync(".env.local")) process.loadEnvFile(".env.local");
 
@@ -11,13 +11,6 @@ export const DATA_DIR = path.resolve(process.env.STUDIO_DATA_DIR ?? path.join(pr
 export const PORT = Number(process.env.STUDIO_PORT ?? 4310);
 /** The built UI, served by the engine outside development. */
 export const UI_DIR = path.resolve(process.env.STUDIO_UI_DIR ?? path.join(process.cwd(), "dist/ui"));
-
-/** Pine when a project key is set, replay otherwise; STUDIO_MODE forces one. */
-export function mode(): Mode {
-  const forced = process.env.STUDIO_MODE;
-  if (forced === "pine" || forced === "replay") return forced;
-  return process.env.PINE_SANDBOX_API_KEY ? "pine" : "replay";
-}
 
 /**
  * Idle timeouts (docs/IMPLEMENTATION_PLAN.md). Work keeps a Computer running; a question

@@ -51,7 +51,7 @@ async function setupEnded(session: SessionRow, info: TurnInfo) {
   }
   run(
     "update dramas set status = 'stopped', note = ?, updated_at = ? where id = ?",
-    info.summary || "The setup stopped before listing the episodes.",
+    info.summary ?? "",
     now(),
     drama.id,
   );
@@ -80,7 +80,7 @@ async function episodeEnded(session: SessionRow, info: TurnInfo) {
   }
   run(
     "update episodes set state = 'failed', note = ?, session_id = null, updated_at = ? where id = ?",
-    info.summary || (info.state === "completed" ? "The agent stopped without asking for the next review." : `The turn ${info.state}.`),
+    info.summary ?? "",
     now(),
     episode.id,
   );

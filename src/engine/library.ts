@@ -33,6 +33,11 @@ export interface FileRow {
   created_at: string;
 }
 
+/** A file's address for the UI. Row ids can be reused, so the URL names the content too and can be cached for good. */
+export function fileUrl(row: Pick<FileRow, "id" | "sha">): string {
+  return `/api/files/${row.id}?v=${row.sha.slice(0, 16)}`;
+}
+
 export function blobPath(sha: string): string {
   return path.join(ROOT, sha.slice(0, 2), sha);
 }
@@ -132,7 +137,7 @@ export function toItem(row: FileRow): FileItem {
     look: row.look ?? undefined,
     style: row.style ?? undefined,
     version: row.version ?? undefined,
-    url: `/api/files/${row.id}`,
+    url: fileUrl(row),
     createdAt: row.created_at,
   };
 }

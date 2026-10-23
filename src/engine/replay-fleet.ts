@@ -9,7 +9,7 @@ import { revisedKeys } from "./decisions.ts";
 import type { Attached, ComputerRef, Fleet, FleetEvent, SessionRef, TurnFile, TurnInfo } from "./fleet.ts";
 import { blocking, lookSheet, plate, prop, storyboard } from "./placeholders.ts";
 
-const FIXTURES = path.resolve(process.cwd(), "fixtures/replay");
+export const FIXTURES = path.resolve(process.cwd(), "fixtures/replay");
 const SPEED = Number(process.env.STUDIO_REPLAY_SPEED ?? 1);
 
 interface Out {

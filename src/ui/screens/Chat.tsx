@@ -1,10 +1,9 @@
-import { Send, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import type { ChatView } from "../../shared/types.ts";
 import { api, useResource } from "../api.ts";
 import { useT } from "../i18n.ts";
 
-/** The agents' narration and questions, per session, and a box to answer, steer or ask. */
+/** The agents' narration and questions, per session, and a line to answer, steer or ask. */
 export function Chat({ dramaId, onClose }: { dramaId: string; onClose: () => void }) {
   const { t } = useT();
   const sessions = useResource<ChatView[]>(`/api/dramas/${dramaId}/sessions`, [`drama:${dramaId}`]);
@@ -16,7 +15,7 @@ export function Chat({ dramaId, onClose }: { dramaId: string; onClose: () => voi
   const list = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    list.current?.scrollTo({ top: list.current.scrollHeight });
+    list.current?.scrollTo({ top: list.current.scrollHeight, behavior: "smooth" });
   }, [chat.data?.messages.length]);
 
   const send = async () => {
@@ -31,38 +30,39 @@ export function Chat({ dramaId, onClose }: { dramaId: string; onClose: () => voi
     }
   };
 
-  const placeholder = chat.data?.sends === "answer" ? t("chat.answer") : chat.data?.sends === "steer" ? t("chat.steer") : t("chat.run");
+  const placeholder = chat.data?.sends === "answer" ? t("talk.answer") : chat.data?.sends === "steer" ? t("talk.steer") : t("talk.run");
 
   return (
-    <aside className="drawer">
-      <div className="drawer-head">
-        <b>{t("chat.open")}</b>
+    <aside className="talk">
+      <div className="talk-head">
+        <h2>{t("talk.title")}</h2>
         <span style={{ flex: 1 }} />
-        <button className="btn ghost small" onClick={onClose}>
-          <X size={15} />
+        <button className="link" onClick={onClose}>
+          {t("talk.close")}
         </button>
       </div>
-      <div className="drawer-tabs">
+      <div className="talk-tabs">
         {(sessions.data ?? []).map((session) => (
-          <button key={session.sessionId} className={`btn small ${session.sessionId === active ? "" : "ghost"}`} onClick={() => setSelected(session.sessionId)}>
+          <button key={session.sessionId} className={`${session.sessionId === active ? "on" : ""} ${session.sends === "answer" ? "asks" : ""}`} onClick={() => setSelected(session.sessionId)}>
             {session.label}
-            {session.sends === "answer" && <span className="dot" style={{ color: "var(--accent)" }} />}
+            {session.sends === "answer" ? " ●" : ""}
           </button>
         ))}
       </div>
-      <div className="messages" ref={list}>
-        {!active && <p className="muted">{t("chat.none")}</p>}
+      <div className="lines" ref={list}>
+        {!active && <p className="quiet">{t("talk.none")}</p>}
         {(chat.data?.messages ?? []).map((message) => (
-          <div key={message.id} className={`msg ${message.kind}`}>
+          <div key={message.id} className={`said ${message.kind}`}>
             {message.text}
           </div>
         ))}
       </div>
-      <div style={{ display: "grid" }}>
-        {error && <p className="error" style={{ margin: "0 10px" }}>{error}</p>}
-        <div className="composer">
+      <div className="talk-foot">
+        {error && <span className="error" style={{ fontSize: 13 }}>{error}</span>}
+        <div className="row">
           <textarea
-            className="input"
+            className="line-area"
+            style={{ minHeight: 44 }}
             value={text}
             disabled={!active || chat.data?.sends === "none"}
             placeholder={placeholder}
@@ -71,8 +71,8 @@ export function Chat({ dramaId, onClose }: { dramaId: string; onClose: () => voi
               if (event.key === "Enter" && (event.metaKey || event.ctrlKey)) void send();
             }}
           />
-          <button className="btn primary" disabled={!text.trim()} onClick={send} title={t("chat.send")}>
-            <Send size={15} />
+          <button className="btn ink small" disabled={!text.trim()} onClick={send}>
+            {t("talk.send")}
           </button>
         </div>
       </div>

@@ -1,130 +1,163 @@
-import { Check, CircleDot, Loader, Minus, RotateCcw } from "lucide-react";
 import { type DramaView, STAGES, type StageCell } from "../../shared/types.ts";
 import { api } from "../api.ts";
-import { useT } from "../i18n.ts";
+import { type TKey, useT } from "../i18n.ts";
 import { nowText } from "../labels.ts";
-import { navigate } from "../router.tsx";
+import { Link, navigate } from "../router.tsx";
 import { Cast } from "./Cast.tsx";
 
-function Cell({ cell }: { cell: StageCell }) {
+function Mark({ cell }: { cell: StageCell }) {
   const { t } = useT();
-  const count = cell.count ? <span>{cell.count}</span> : null;
   switch (cell.state) {
     case "done":
-      return <span className="cell done"><Check size={15} />{count}</span>;
+      return (
+        <span className="mark done">
+          ✓{cell.count ? <span className="count num">{cell.count}</span> : null}
+        </span>
+      );
     case "working":
-      return <span className="cell working"><Loader size={14} className="spin" />{count}</span>;
+      return (
+        <span className="mark working">
+          <span className="dots">
+            <i />
+            <i />
+            <i />
+          </span>
+        </span>
+      );
     case "review":
-      return <span className="cell review"><CircleDot size={14} />{t("board.review")}{count && <> · {count}</>}</span>;
+      return <span className="mark review">{t("board.review")} →</span>;
     default:
-      return <span className="cell"><Minus size={14} /></span>;
+      return <span className="mark">—</span>;
   }
 }
 
 export function Board({ drama }: { drama: DramaView }) {
   const { t } = useT();
   const rows = drama.episodeRows;
-  if (!rows.length) return <p className="empty">{t("board.empty")}</p>;
-  const working = rows.filter((row) => row.state === "working").length;
-  const waiting = rows.filter((row) => row.state === "waiting").length;
+  const count = (state: string) => rows.filter((row) => row.state === state).length;
+  const wide = /^\s*16\s*:\s*9/.test(drama.format);
   return (
     <>
-      <table className="board">
-        <thead>
-          <tr>
-            <th />
-            {STAGES.map((stage) => (
-              <th key={stage}>{t(`stage.${stage}`)}</th>
-            ))}
-            <th>{t("board.now")}</th>
-            <th>{t("board.computer")}</th>
-            <th />
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((row) => (
-            <tr key={row.id} className={row.reviewId ? "click" : ""} onClick={() => row.reviewId && navigate(`/r/${row.reviewId}`)}>
-              <td>
-                <div className="code">{row.code}</div>
-                <div className="title">{row.title}</div>
-              </td>
+      <div className="work-head">
+        <h2>{t("section.board")}</h2>
+        {rows.length > 0 && <span className="facts">{t("board.foot", { work: count("working"), wait: count("waiting"), queued: count("queued") })}</span>}
+      </div>
+      {!rows.length ? (
+        <p className="empty-note">{t("board.empty")}</p>
+      ) : (
+        <table className="sheet">
+          <thead>
+            <tr>
+              <th>{t("board.episode")}</th>
               {STAGES.map((stage) => (
-                <td key={stage}>
-                  <Cell cell={row.stages[stage]} />
-                </td>
+                <th key={stage}>{t(`stage.${stage}` as TKey)}</th>
               ))}
-              <td>
-                <div className="now" title={nowText(row, t)} style={row.state === "waiting" ? { color: "var(--accent)" } : row.state === "stopped" || row.state === "failed" ? { color: "var(--bad)" } : undefined}>
-                  {nowText(row, t)}
-                </div>
-              </td>
-              <td className="muted">{row.computer ?? ""}</td>
-              <td>
-                {(row.state === "stopped" || row.state === "failed") && (
-                  <button
-                    className="btn small"
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      void api(`/api/episodes/${row.id}/resume`, { method: "POST" });
-                    }}
-                  >
-                    <RotateCcw size={13} />
-                    {t("board.resume")}
-                  </button>
-                )}
-              </td>
+              <th>{t("board.now")}</th>
+              <th>{t("board.computer")}</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-      <p className="line-note">
-        {t("card.atWork", { n: drama.computers })} · {working} ⟳ · {waiting} ● · {t("card.episodes", { done: drama.episodes.done, total: drama.episodes.total })}
-      </p>
+          </thead>
+          <tbody>
+            {rows.map((row) => {
+              const trouble = row.state === "stopped" || row.state === "failed";
+              return (
+                <tr key={row.id} className={row.reviewId ? "go" : ""} onClick={() => row.reviewId && navigate(`/r/${row.reviewId}`)}>
+                  <td>
+                    <div className="ep-cell">
+                      <span className={`frame ${wide ? "wide" : ""}`} style={{ backgroundImage: row.frame ? `url(${row.frame})` : undefined }} />
+                      <div>
+                        <div className="ep">{row.code}</div>
+                        {row.title && <div className="ep-title">{row.title}</div>}
+                      </div>
+                    </div>
+                  </td>
+                  {STAGES.map((stage) => (
+                    <td key={stage}>
+                      <Mark cell={row.stages[stage]} />
+                    </td>
+                  ))}
+                  <td>
+                    <div className={`now ${row.state === "waiting" ? "waiting" : trouble ? "trouble" : ""}`}>{nowText(row, t)}</div>
+                    {trouble && (
+                      <button
+                        className="link"
+                        style={{ marginTop: 4, fontSize: 13 }}
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          void api(`/api/episodes/${row.id}/resume`, { method: "POST" });
+                        }}
+                      >
+                        {t("board.resume")}
+                      </button>
+                    )}
+                  </td>
+                  <td className="pc">{row.computer ?? ""}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      )}
     </>
   );
 }
 
-/** While the drama is being set up: where the setup is, and the cast as it arrives. */
+/** While the drama is being set up: where the setup stands, and the cast as it arrives. */
 export function SetupPanel({ drama }: { drama: DramaView }) {
   const { t } = useT();
   const { setup } = drama;
   // 0 reading, 1 answering a question, 2 drawing the cast, 3 approving the leads' looks.
-  const step = setup.state === "waiting" ? (setup.kind === "looks" ? 3 : 1) : setup.hasCast ? 2 : 0;
-  const steps = [t("setup.reading"), t("setup.answers"), t("setup.cast"), t("setup.approval")];
+  const current = setup.state === "waiting" ? (setup.kind === "looks" ? 3 : 1) : setup.hasCast ? 2 : 0;
+  const steps: TKey[] = ["setup.reading", "setup.answers", "setup.cast", "setup.approval"];
+  const detail =
+    setup.state === "stopped"
+      ? setup.note ?? t("board.stopped")
+      : setup.state === "waiting"
+        ? t("board.waits", { kind: t(`kind.${setup.kind ?? "question"}` as TKey) })
+        : setup.activity ?? t("setup.startingComputer");
   return (
-    <div className="setup">
-      <div className="steps">
-        <h2 className="section" style={{ marginTop: 0 }}>{t("setup.title")}</h2>
-        {steps.map((label, index) => (
-          <div key={label} className={`step ${index === step ? "on" : index < step ? "done" : ""}`}>
-            <span className="n">{index + 1}</span>
-            {label}
-          </div>
-        ))}
-        <div className="banner" style={{ marginTop: 12 }}>
-          {drama.setup.state === "working" && <Loader size={15} className="spin" color="var(--work)" />}
-          <span style={{ flex: 1 }} className={drama.setup.state === "stopped" ? "error" : ""}>
-            {setup.state === "stopped"
-              ? setup.note ?? t("board.stopped")
-              : setup.state === "waiting"
-                ? t("board.waits", { kind: t(`kind.${setup.kind ?? "question"}`) })
-                : setup.activity ?? t("setup.startingComputer")}
-          </span>
+    <>
+      <div className="work-head">
+        <h2>{t("setup.title")}</h2>
+      </div>
+      <div className="setup">
+        <div className="steps">
+          {steps.map((label, index) => {
+            const on = index === current;
+            return (
+              <div key={label} className={`step ${on ? "on" : index < current ? "done" : ""} ${on && setup.state === "waiting" ? "waiting" : ""}`}>
+                <span className="n">{index + 1}</span>
+                <span className="what">{t(label)}</span>
+                {on && (
+                  <span className="detail">
+                    {setup.state === "working" && (
+                      <span className="dots" style={{ color: "var(--work)", marginRight: 8 }}>
+                        <i />
+                        <i />
+                        <i />
+                      </span>
+                    )}
+                    {detail}
+                    {setup.reviewId && (
+                      <>
+                        {" · "}
+                        <Link to={`/r/${setup.reviewId}`} className="link" style={{ color: "inherit" }}>
+                          {t("setup.open")}
+                        </Link>
+                      </>
+                    )}
+                  </span>
+                )}
+              </div>
+            );
+          })}
+          {setup.state === "stopped" && (
+            <button className="btn" style={{ marginTop: 16, justifySelf: "start" }} onClick={() => void api(`/api/dramas/${drama.id}/retry`, { method: "POST" })}>
+              {t("setup.retry")}
+            </button>
+          )}
         </div>
-        {drama.setup.reviewId && (
-          <button className="btn primary" onClick={() => navigate(`/r/${drama.setup.reviewId}`)}>
-            {t("setup.open")}
-          </button>
-        )}
-        {drama.setup.state === "stopped" && (
-          <button className="btn" onClick={() => void api(`/api/dramas/${drama.id}/retry`, { method: "POST" })}>
-            {t("setup.retry")}
-          </button>
-        )}
+        <Cast dramaId={drama.id} compact />
       </div>
-      <div>
-        <Cast dramaId={drama.id} />
-      </div>
-    </div>
+    </>
   );
 }

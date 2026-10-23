@@ -3,7 +3,7 @@
 // and a cap on episodes waiting for the maker); keep idle timeouts long while a session
 // waits on the maker; stop Computers with nothing to do; retry what didn't go through.
 import { IDLE_WAITING_S, IDLE_WORKING_S, WAITING_CAP } from "./config.ts";
-import { computerRef, fleet, markStopped, openSession, provision, restart, runningComputers, setIdle, stop } from "./computers.ts";
+import { computerRef, fleet, hasFleet, markStopped, openSession, provision, restart, runningComputers, setIdle, stop } from "./computers.ts";
 import { all, get, now, run } from "./db.ts";
 import { followEvents, followTurn, isFollowed, unsavedTurns } from "./follow.ts";
 import { episodeGoal, resumeGoal, setupGoal } from "./goals.ts";
@@ -57,7 +57,7 @@ function claimComputer(drama: DramaRow): ComputerRow | undefined {
   const pool = all<ComputerRow>("select * from computers where drama_id = ? and state in ('starting', 'running', 'stopping')", drama.id);
   if (pool.some((computer) => computer.state === "starting")) return undefined;
   if (pool.length >= capacity(drama)) return undefined;
-  const stopped = get<ComputerRow>("select * from computers where drama_id = ? and state = 'stopped' order by created_at limit 1", drama.id);
+  const stopped = get<ComputerRow>("select * from computers where drama_id = ? and state = 'stopped' and mode = ? order by created_at limit 1", drama.id, fleet().mode);
   once(`start:${drama.id}`, () => (stopped ? restart(stopped) : provision(drama.id)));
   return undefined;
 }
@@ -159,7 +159,8 @@ function tend(computer: ComputerRow): void {
 
 /** Every saved Computer against Pine: those that stopped are marked so; running turns are followed again. */
 export async function reconcile(): Promise<void> {
-  for (const computer of all<ComputerRow>("select * from computers where state in ('running', 'starting', 'stopping')")) {
+  if (!hasFleet()) return;
+  for (const computer of all<ComputerRow>("select * from computers where state in ('running', 'starting', 'stopping') and mode = ?", fleet().mode)) {
     if (!computer.binding) {
       if (computer.state !== "running") markStopped(computer, "Its Computer didn't finish starting.");
       continue;
@@ -180,6 +181,7 @@ export async function reconcile(): Promise<void> {
 }
 
 export function tick(): void {
+  if (!hasFleet()) return; // nothing to run on until the maker connects a project or chooses replay
   for (const drama of all<DramaRow>("select * from dramas where status in ('setup', 'production')")) {
     if (drama.status === "setup") ensureSetup(drama);
     else fill(drama);

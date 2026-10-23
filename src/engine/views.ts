@@ -15,7 +15,7 @@ import {
   type StageCell,
 } from "../shared/types.ts";
 import { all, get } from "./db.ts";
-import { type FileRow, filesOfTurn, toItem, versionNumber } from "./library.ts";
+import { type FileRow, fileUrl, filesOfTurn, toItem, versionNumber } from "./library.ts";
 import { type ComputerRow, type DramaRow, type EpisodeRow, type ReviewRow, type SessionRow, episodeCode, latestTurn, session as sessionRow } from "./records.ts";
 import { itemsOf } from "./reviews.ts";
 
@@ -28,9 +28,16 @@ function money(drama: DramaRow): Money {
   return { agent: Math.round((row?.agent ?? 0) * 100) / 100, unpriced: row?.unpriced ?? 0, budget: drama.budget };
 }
 
-function cover(dramaId: string): string | undefined {
-  const row = get<FileRow>("select * from files where drama_id = ? and kind in ('look', 'storyboard') and type like 'image/%' order by id limit 1", dramaId);
-  return row ? `/api/files/${row.id}` : undefined;
+/** The first three characters' base looks, newest version each: the leads on the poster. */
+function castFaces(dramaId: string): string[] {
+  const rows = all<FileRow>(
+    "select * from files where drama_id = ? and kind = 'look' and (look is null or look = 'base') and type like 'image/%' order by id",
+    dramaId,
+  );
+  // A Map keeps each character where it first appeared, the leads first; later versions replace earlier ones.
+  const newest = new Map<string, FileRow>();
+  for (const row of rows) newest.set(row.subject ?? row.name, row);
+  return [...newest.values()].slice(0, 3).map(fileUrl);
 }
 
 export function dramaCard(drama: DramaRow): DramaCard {
@@ -48,7 +55,7 @@ export function dramaCard(drama: DramaRow): DramaCard {
     computers: get<{ n: number }>("select count(*) as n from computers where drama_id = ? and state in ('running', 'starting')", drama.id)?.n ?? 0,
     waiting,
     money: money(drama),
-    cover: cover(drama.id),
+    cast: castFaces(drama.id),
     createdAt: drama.created_at,
   };
 }
@@ -103,6 +110,8 @@ export function episodeViews(dramaId: string): EpisodeView[] {
     const reviews = all<ReviewRow>("select * from reviews where episode_id = ? order by created_at", episode.id);
     const open = reviews.find((review) => review.state === "open" || review.state === "saving");
     const session = episode.session_id ? sessionRow(episode.session_id) : undefined;
+    const newest = (kind: FileRow["kind"]) => files.findLast((file) => file.kind === kind && file.type.startsWith("image/"));
+    const frame = newest("blocking") ?? newest("storyboard");
     return {
       id: episode.id,
       number: episode.number,
@@ -111,7 +120,9 @@ export function episodeViews(dramaId: string): EpisodeView[] {
       state: episode.state,
       stages: stageCells(episode, files, reviews),
       activity: episode.state === "working" ? session?.activity ?? undefined : undefined,
-      note: episode.note || undefined,
+      // Only the agent's own account of why it stopped; the engine's reasons are for the agent.
+      note: episode.state === "failed" ? episode.note || undefined : undefined,
+      frame: frame ? fileUrl(frame) : undefined,
       position: episode.state === "queued" ? queued.indexOf(episode) + 1 : undefined,
       waitingFor: episode.state === "waiting" ? (open?.state === "saving" ? "saving" : open?.kind ?? "question") : undefined,
       computer: computerLabel(session),
@@ -199,7 +210,7 @@ function summary(review: ReviewRow): ReviewSummary {
     state: review.state,
     question: review.question,
     items: items.length,
-    thumb: image ? `/api/files/${image.id}` : undefined,
+    thumb: image ? fileUrl(image) : undefined,
     createdAt: review.created_at,
   };
 }
