@@ -23,7 +23,7 @@ function Figure({ group }: { group: CastGroup }) {
         {group.files.length > 1 && (
           <div className="versions">
             {group.files.map((version, i) => (
-              <button key={version.id} className={i === index ? "on" : ""} onClick={() => setIndex(i)}>
+              <button key={version.id} aria-pressed={i === index} className={i === index ? "on" : ""} onClick={() => setIndex(i)}>
                 {version.version ?? i + 1}
               </button>
             ))}

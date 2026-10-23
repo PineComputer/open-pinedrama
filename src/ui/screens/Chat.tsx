@@ -69,7 +69,7 @@ export function Chat({ dramaId, onClose }: { dramaId: string; onClose: () => voi
       </div>
       <div className="talk-tabs">
         {(sessions.data ?? []).map((session) => (
-          <button key={session.sessionId} className={`${session.sessionId === active ? "on" : ""} ${session.sends === "answer" ? "asks" : ""}`} onClick={() => setSelected(session.sessionId)}>
+          <button key={session.sessionId} aria-pressed={session.sessionId === active} className={`${session.sessionId === active ? "on" : ""} ${session.sends === "answer" ? "asks" : ""}`} onClick={() => setSelected(session.sessionId)}>
             {session.label || t("talk.setup")}
             {session.sends === "answer" || session.sends === "review" ? " ●" : ""}
           </button>

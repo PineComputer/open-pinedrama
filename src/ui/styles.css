@@ -463,3 +463,12 @@ h1, h2, h3 { margin: 0; font-family: var(--serif); font-weight: 450; letter-spac
 .ended-asks .queue { opacity: 0.8; }
 .asked-before .shots li { color: var(--seal-deep); }
 .asked-before .at { color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.filters { display: flex; flex-wrap: wrap; gap: 4px 16px; }
+.filters button { background: none; border: 0; padding: 3px 0; cursor: pointer; color: var(--ink-3); border-bottom: 1px solid transparent; }
+.filters button .num { color: var(--ink-4); margin-left: 2px; }
+.filters button:hover { color: var(--ink); }
+.filters button.on { color: var(--ink); border-color: var(--ink); }
+.filters button.needs, .filters button.needs .num { color: var(--seal); }
+.filters button.needs.on { border-color: var(--seal); }
+/* The screenplay's first lines, set on the manuscript once it is dropped in. */
+.manuscript .opening { margin: 26px 0 0; max-height: 380px; overflow: hidden; white-space: pre-wrap; font: 400 14.5px/32px var(--serif); color: var(--ink-2); -webkit-mask-image: linear-gradient(180deg, #000 70%, transparent); mask-image: linear-gradient(180deg, #000 70%, transparent); }

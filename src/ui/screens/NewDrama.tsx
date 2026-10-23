@@ -1,8 +1,30 @@
-import { type DragEvent, useRef, useState } from "react";
+import { type DragEvent, useEffect, useRef, useState } from "react";
 import { api } from "../api.ts";
 import { useT } from "../i18n.ts";
 import { errorText } from "../labels.ts";
 import { navigate } from "../router.tsx";
+
+/** Files whose text the page can show; PDFs and Word files are read by the agent on the Computer. */
+const READABLE = /\.(txt|md|markdown|fountain|fdx)$/i;
+
+/** The opening of the first screenplay the page can read, to show on the manuscript. */
+function useOpening(files: File[]): string | undefined {
+  const [opening, setOpening] = useState<string>();
+  const first = files.find((file) => READABLE.test(file.name) || file.type.startsWith("text/"));
+  useEffect(() => {
+    setOpening(undefined);
+    if (!first) return;
+    let current = true;
+    void first
+      .slice(0, 6000)
+      .text()
+      .then((text) => current && setOpening(text.replace(/\r/g, "").split("\n").slice(0, 28).join("\n").trim()));
+    return () => {
+      current = false;
+    };
+  }, [first]);
+  return opening;
+}
 
 const LOOKS = [
   ["look.live", "live action"],
@@ -24,6 +46,7 @@ export function NewDrama() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<unknown>();
   const picker = useRef<HTMLInputElement>(null);
+  const opening = useOpening(files);
 
   const add = (list: FileList | null) => {
     if (!list) return;
@@ -89,6 +112,7 @@ export function NewDrama() {
               ))}
             </div>
           )}
+          {opening && <pre className="opening">{opening}</pre>}
         </div>
 
         <div className="compose-form">
@@ -102,10 +126,10 @@ export function NewDrama() {
             <div className="field">
               <span className="label">{t("new.language")}</span>
               <div className="options">
-                <button className={language === "zh" ? "on" : ""} onClick={() => setLanguage("zh")}>
+                <button aria-pressed={language === "zh"} className={language === "zh" ? "on" : ""} onClick={() => setLanguage("zh")}>
                   中文
                 </button>
-                <button className={language === "en" ? "on" : ""} onClick={() => setLanguage("en")}>
+                <button aria-pressed={language === "en"} className={language === "en" ? "on" : ""} onClick={() => setLanguage("en")}>
                   English
                 </button>
               </div>

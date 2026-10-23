@@ -444,7 +444,7 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
             {items.map((i, n) => {
               const v = drafts[i.key]?.verdict;
               return (
-                <button key={i.key} className={n === index ? "on" : ""} onClick={() => go(n)}>
+                <button key={i.key} aria-current={n === index} className={n === index ? "on" : ""} onClick={() => go(n)}>
                   <div className="frame">
                     <Still still={thumbOf(i)} />
                   </div>
@@ -466,10 +466,10 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
               {file?.version && <span className="quiet num">{file.version}</span>}
             </div>
             <div className="verdict">
-              <button className={`btn approve ${draft?.verdict === "approve" ? "on" : ""}`} disabled={!open} onClick={() => setVerdict("approve")}>
+              <button aria-pressed={draft?.verdict === "approve"} className={`btn approve ${draft?.verdict === "approve" ? "on" : ""}`} disabled={!open} onClick={() => setVerdict("approve")}>
                 {t("review.approve")} <span className="key">A</span>
               </button>
-              <button className={`btn seal-btn ${draft?.verdict === "revise" ? "on" : ""}`} disabled={!open} onClick={() => setVerdict("revise")}>
+              <button aria-pressed={draft?.verdict === "revise"} className={`btn seal-btn ${draft?.verdict === "revise" ? "on" : ""}`} disabled={!open} onClick={() => setVerdict("revise")}>
                 {t("review.revise")} <span className="key">R</span>
               </button>
             </div>

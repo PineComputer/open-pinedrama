@@ -114,7 +114,7 @@ export function Drama({ id, tab }: { id: string; tab: string }) {
         </div>
         <nav className="sections">
           {SECTIONS.map(([key, label], index) => (
-            <Link key={key} to={key === "board" ? `/d/${id}` : `/d/${id}/${key}`} className={tab === key ? "on" : ""}>
+            <Link key={key} to={key === "board" ? `/d/${id}` : `/d/${id}/${key}`} className={tab === key ? "on" : ""} aria-current={tab === key ? "page" : undefined}>
               <span className="n">{String(index + 1).padStart(2, "0")}</span>
               <span className="name">{t(label)}</span>
               {key === "inbox" && drama.waiting > 0 ? <span className="count">{drama.waiting}</span> : <span />}

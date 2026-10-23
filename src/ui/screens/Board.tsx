@@ -140,6 +140,16 @@ function Card({ row, wide }: { row: EpisodeRow; wide: boolean }) {
 
 type View = "wall" | "sheet";
 
+/** Which episodes the board shows: all, or those in one condition. */
+const FILTERS = {
+  all: () => true,
+  you: (row: EpisodeRow) => row.state === "waiting" || row.state === "stopped" || row.state === "failed",
+  working: (row: EpisodeRow) => row.state === "working",
+  queued: (row: EpisodeRow) => row.state === "queued",
+  done: (row: EpisodeRow) => row.state === "done",
+} satisfies Record<string, (row: EpisodeRow) => boolean>;
+type Filter = keyof typeof FILTERS;
+
 function savedView(): View {
   try {
     return localStorage.getItem("studio.boardView") === "sheet" ? "sheet" : "wall";
@@ -151,8 +161,9 @@ function savedView(): View {
 export function Board({ drama }: { drama: DramaView }) {
   const { t } = useT();
   const rows = drama.episodeRows;
-  const count = (state: string) => rows.filter((row) => row.state === state).length;
   const [view, setView] = useState<View>(savedView);
+  const [filter, setFilter] = useState<Filter>("all");
+  const shown = rows.filter(FILTERS[filter]);
   const choose = (next: View) => {
     setView(next);
     try {
@@ -166,7 +177,18 @@ export function Board({ drama }: { drama: DramaView }) {
     <>
       <div className="work-head">
         <h2>{t("section.board")}</h2>
-        {rows.length > 0 && <span className="facts">{t("board.foot", { work: count("working"), wait: count("waiting"), queued: count("queued") })}</span>}
+        {rows.length > 0 && (
+          <div className="filters" role="group" aria-label={t("board.filter")}>
+            {(Object.keys(FILTERS) as Filter[]).map((key) => {
+              const n = rows.filter(FILTERS[key]).length;
+              return (
+                <button key={key} aria-pressed={filter === key} className={`${filter === key ? "on" : ""} ${key === "you" && n ? "needs" : ""}`} onClick={() => setFilter(key)}>
+                  {t(`board.filter.${key}` as TKey)} <span className="num">{n}</span>
+                </button>
+              );
+            })}
+          </div>
+        )}
         <span className="grow" />
         {rows.length > 0 && (
           <div className="views" role="group" aria-label={t("board.view")}>
@@ -183,7 +205,7 @@ export function Board({ drama }: { drama: DramaView }) {
         <p className="empty-note">{t("board.empty")}</p>
       ) : view === "wall" ? (
         <div className={`wall ${wide ? "wide" : ""}`}>
-          {rows.map((row) => (
+          {shown.map((row) => (
             <Card key={row.id} row={row} wide={wide} />
           ))}
         </div>
@@ -200,7 +222,7 @@ export function Board({ drama }: { drama: DramaView }) {
             </tr>
           </thead>
           <tbody>
-            {rows.map((row) => (
+            {shown.map((row) => (
               <Row key={row.id} row={row} wide={wide} />
             ))}
           </tbody>
