@@ -1,43 +1,100 @@
 // The engine's HTTP API for the UI: reads, the maker's actions, library files (with range
-// requests, so video seeks), and one event stream that says what changed. Like the
-// starter, it answers only on loopback and only to its own pages.
+// requests, so video seeks), and one event stream that says what changed.
+//
+// Who may call it: it answers only on loopback; every API call needs this launch's token,
+// which the studio's window gets once through /api/open and keeps as an HttpOnly cookie
+// (other programs on the machine, and other local web pages, don't have it); and changes
+// come only from the studio's own origin. Files the agents returned are served so they
+// can't act as pages of the studio: unknown types download, and none may run scripts.
+import { randomBytes, timingSafeEqual } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { Readable } from "node:stream";
 import { serveStatic } from "@hono/node-server/serve-static";
 import { Hono, type Context } from "hono";
+import { getCookie, setCookie } from "hono/cookie";
 import { streamSSE } from "hono/streaming";
-import type { AppInfo, Decision, LiveMessage } from "../shared/types.ts";
-import { UI_DIR } from "./config.ts";
+import type { ApiFailure, AppInfo, Decision, ErrorCode, LiveMessage } from "../shared/types.ts";
+import { FIXTURES, UI_DIR } from "./config.ts";
 import { appInfo, connectPine, disconnect, useReplay } from "./connection.ts";
-import { DEFAULT_ENDPOINT, SetupError } from "./settings.ts";
+import { retryStarts } from "./computers.ts";
+import { DEFAULT_ENDPOINT } from "./settings.ts";
 import { all } from "./db.ts";
 import { chat, createDrama, desktop, resumeEpisode, retrySetup, updateDrama } from "./dramas.ts";
+import { StudioError } from "./errors.ts";
 import { fileRow, openBlob } from "./library.ts";
-import { FIXTURES } from "./replay-fleet.ts";
 import { subscribe } from "./live.ts";
 import { drama as dramaRow, review as reviewRow, session as sessionRow, type SessionRow } from "./records.ts";
-import { ReviewError, decide, resumeWithDecision } from "./reviews.ts";
+import { decide, resumeWithDecision } from "./reviews.ts";
 import { castGroups, chatView, dramaCards, dramaFiles, dramaView, inbox, reviewView } from "./views.ts";
 
 const LOOPBACK = /^(127\.0\.0\.1|localhost|\[::1\])(:\d+)?$/;
 
+/** This launch's token. The desktop shell (or scripts/dev.mjs) may choose it; otherwise it is new each start. */
+const TOKEN = process.env.STUDIO_TOKEN || randomBytes(24).toString("base64url");
+const COOKIE = "studio";
+
+/** The link that lets a window into the studio: the engine prints it, the desktop shell opens it. */
+export function openLink(origin: string): string {
+  return `${origin}/api/open?ticket=${TOKEN}`;
+}
+
+function isToken(value: string | undefined): boolean {
+  if (!value) return false;
+  const given = Buffer.from(value);
+  const expected = Buffer.from(TOKEN);
+  return given.length === expected.length && timingSafeEqual(given, expected);
+}
+
+function failure(code: ErrorCode, error: string, detail?: string): ApiFailure {
+  return detail === undefined ? { code, error } : { code, error, detail };
+}
+
 function fail(c: Context, error: unknown) {
-  if (error instanceof ReviewError) return c.json({ error: error.message }, error.status as 400);
+  if (error instanceof StudioError) return c.json(failure(error.code, error.message, error.detail), error.status as 400);
   console.error(error);
-  return c.json({ error: (error as Error).message ?? "Something went wrong." }, 500);
+  return c.json(failure("internal", (error as Error).message ?? "Something went wrong."), 500);
+}
+
+/** Types a window may show as they are; text the agents write is shown as plain text; anything else downloads. */
+const SHOWN = /^(image\/(png|jpeg|webp|gif|avif|svg\+xml)|video\/(mp4|webm|quicktime)|audio\/[\w.+-]+|text\/plain)$/;
+const AS_TEXT = /^(text\/markdown|application\/json|text\/csv)$/;
+
+function fileHeaders(row: { name: string; type: string; sha: string }, version: string | undefined, download: boolean): Record<string, string> {
+  const type = row.type.split(";")[0].trim().toLowerCase();
+  const shown = SHOWN.test(type) || AS_TEXT.test(type);
+  const headers: Record<string, string> = {
+    "Content-Type": SHOWN.test(type) ? row.type : AS_TEXT.test(type) ? "text/plain; charset=utf-8" : "application/octet-stream",
+    "Accept-Ranges": "bytes",
+    "Cache-Control": version === row.sha.slice(0, 16) ? "private, max-age=31536000, immutable" : "no-cache",
+    "X-Content-Type-Options": "nosniff",
+    "Content-Security-Policy": "sandbox; default-src 'none'; img-src 'self' data:; media-src 'self'; style-src 'unsafe-inline'",
+    "Cross-Origin-Resource-Policy": "same-origin",
+  };
+  if (download || !shown) headers["Content-Disposition"] = `attachment; filename*=UTF-8''${encodeURIComponent(row.name)}`;
+  return headers;
 }
 
 export function app(): Hono {
   const api = new Hono();
 
   api.use("*", async (c, next) => {
-    if (!LOOPBACK.test(c.req.header("host") ?? "")) return c.text("Not found", 404);
-    const origin = c.req.header("origin");
-    if (c.req.method !== "GET" && origin && !/^(https?:\/\/(127\.0\.0\.1|localhost)(:\d+)?|app:\/\/.*)$/.test(origin)) {
-      return c.json({ error: "Requests come only from the studio's own pages." }, 403);
+    const host = c.req.header("host") ?? "";
+    if (!LOOPBACK.test(host)) return c.text("Not found", 404);
+    // The UI's own files are public; the API is the studio's alone.
+    if (!c.req.path.startsWith("/api/") || c.req.path === "/api/open") return next();
+    if (!isToken(getCookie(c, COOKIE))) return c.json(failure("signed-out", "Open the studio from its own window, or from the link the engine printed."), 401);
+    if (c.req.method !== "GET" && c.req.method !== "HEAD" && c.req.header("origin") !== `http://${host}`) {
+      return c.json(failure("signed-out", "Changes come only from the studio's own pages."), 403);
     }
     await next();
+  });
+
+  // Exchanges the printed or shell-opened link for the cookie, then shows the studio.
+  api.get("/api/open", (c) => {
+    if (!isToken(c.req.query("ticket"))) return c.text("This link is from an earlier start of the studio. Use the one it printed this time.", 403);
+    setCookie(c, COOKIE, TOKEN, { httpOnly: true, sameSite: "Strict", path: "/", maxAge: 60 * 60 * 24 * 400 });
+    return c.redirect("/");
   });
 
   api.get("/api/app", (c) => c.json<AppInfo>(appInfo()));
@@ -47,12 +104,17 @@ export function app(): Hono {
       const { endpoint, apiKey } = (await c.req.json()) as { endpoint?: string; apiKey?: string };
       return c.json(await connectPine({ endpoint: endpoint || DEFAULT_ENDPOINT, apiKey: apiKey ?? "" }));
     } catch (error) {
-      if (error instanceof SetupError) return c.json({ error: error.message }, 400);
       return fail(c, error);
     }
   });
 
-  api.post("/api/connection/replay", (c) => c.json(useReplay()));
+  api.post("/api/connection/replay", (c) => {
+    try {
+      return c.json(useReplay());
+    } catch (error) {
+      return fail(c, error);
+    }
+  });
 
   api.delete("/api/connection", async (c) => {
     try {
@@ -64,8 +126,16 @@ export function app(): Hono {
 
   api.get("/api/dramas", (c) => c.json(dramaCards()));
 
+  /** The mode a new drama is made for: the one the studio is in. */
+  const currentMode = () => {
+    const mode = appInfo().mode;
+    if (mode === "none") throw new StudioError("no-mode", "Connect a Pine project or choose replay first.", 409);
+    return mode;
+  };
+
   api.post("/api/dramas", async (c) => {
     try {
+      const mode = currentMode();
       const body = await c.req.parseBody({ all: true });
       const field = (name: string) => String(body[name] ?? "");
       const uploads = ([] as unknown[]).concat(body.files ?? []).filter((value): value is File => value instanceof File);
@@ -74,12 +144,11 @@ export function app(): Hono {
         language: field("language"),
         look: field("look"),
         format: field("format"),
-        budget: Number(field("budget")) || null,
         parallel: Number(field("parallel")) || 4,
         perComputer: Number(field("perComputer")) || 1,
         notes: field("notes"),
         files: await Promise.all(uploads.map(async (file) => ({ name: file.name, type: file.type, bytes: new Uint8Array(await file.arrayBuffer()) }))),
-      });
+      }, mode);
       return c.json({ id });
     } catch (error) {
       return fail(c, error);
@@ -88,7 +157,7 @@ export function app(): Hono {
 
   // In replay, a drama from the bundled sample screenplay, so the studio can be tried in one click.
   api.post("/api/dramas/sample", async (c) => {
-    if (appInfo().mode !== "replay") return c.json({ error: "The sample drama is for replay mode." }, 409);
+    if (appInfo().mode !== "replay") return c.json(failure("sample-replay-only", "The sample drama is for replay mode."), 409);
     const { language } = (await c.req.json().catch(() => ({}))) as { language?: string };
     const zh = language !== "en";
     const name = `sample-screenplay.${zh ? "zh" : "en"}.md`;
@@ -97,18 +166,17 @@ export function app(): Hono {
       language: zh ? "zh" : "en",
       look: "live action",
       format: "9:16, 480p",
-      budget: 6000,
       parallel: 3,
       perComputer: 1,
       notes: "",
       files: [{ name, type: "text/markdown", bytes: readFileSync(path.join(FIXTURES, name)) }],
-    });
+    }, "replay");
     return c.json({ id });
   });
 
   api.get("/api/dramas/:id", (c) => {
     const drama = dramaRow(c.req.param("id"));
-    return drama ? c.json(dramaView(drama)) : c.json({ error: "No such drama." }, 404);
+    return drama ? c.json(dramaView(drama)) : c.json(failure("not-found", "No such drama."), 404);
   });
 
   api.patch("/api/dramas/:id", async (c) => {
@@ -127,6 +195,12 @@ export function app(): Hono {
     } catch (error) {
       return fail(c, error);
     }
+  });
+
+  // After a drama's Computers wouldn't start: the maker says to try again.
+  api.post("/api/dramas/:id/computers/retry", (c) => {
+    retryStarts(c.req.param("id"));
+    return c.json({ ok: true });
   });
 
   api.get("/api/dramas/:id/cast", (c) => c.json(castGroups(c.req.param("id"))));
@@ -150,7 +224,7 @@ export function app(): Hono {
 
   api.get("/api/reviews/:id", (c) => {
     const review = reviewRow(c.req.param("id"));
-    return review ? c.json(reviewView(review)) : c.json({ error: "No such review." }, 404);
+    return review ? c.json(reviewView(review)) : c.json(failure("not-found", "No such review."), 404);
   });
 
   api.post("/api/reviews/:id/decision", async (c) => {
@@ -173,7 +247,7 @@ export function app(): Hono {
 
   api.get("/api/sessions/:id/chat", (c) => {
     const session = sessionRow(c.req.param("id"));
-    return session ? c.json(chatView(session)) : c.json({ error: "No such session." }, 404);
+    return session ? c.json(chatView(session)) : c.json(failure("not-found", "No such session."), 404);
   });
 
   api.post("/api/sessions/:id/chat", async (c) => {
@@ -189,7 +263,7 @@ export function app(): Hono {
   api.post("/api/sessions/:id/desktop", async (c) => {
     try {
       const connection = await desktop(c.req.param("id"));
-      if (!connection) return c.json({ error: "There is no desktop to show in replay mode." }, 404);
+      if (!connection) return c.json(failure("not-found", "There is no desktop to show in replay mode."), 404);
       c.header("Cache-Control", "no-store");
       return c.json(connection);
     } catch (error) {
@@ -199,13 +273,8 @@ export function app(): Hono {
 
   api.get("/api/files/:id", (c) => {
     const row = fileRow(Number(c.req.param("id")));
-    if (!row) return c.json({ error: "No such file." }, 404);
-    const headers: Record<string, string> = {
-      "Content-Type": row.type,
-      "Accept-Ranges": "bytes",
-      "Cache-Control": c.req.query("v") === row.sha.slice(0, 16) ? "private, max-age=31536000, immutable" : "no-cache",
-    };
-    if (c.req.query("download")) headers["Content-Disposition"] = `attachment; filename*=UTF-8''${encodeURIComponent(row.name)}`;
+    if (!row) return c.json(failure("not-found", "No such file."), 404);
+    const headers = fileHeaders(row, c.req.query("v"), Boolean(c.req.query("download")));
     const range = c.req.header("range")?.match(/^bytes=(\d*)-(\d*)$/);
     if (range && row.size > 0) {
       const start = range[1] ? Number(range[1]) : Math.max(0, row.size - Number(range[2]));
@@ -232,7 +301,7 @@ export function app(): Hono {
     }),
   );
 
-  api.all("/api/*", (c) => c.json({ error: "Not found." }, 404));
+  api.all("/api/*", (c) => c.json(failure("not-found", "Not found."), 404));
 
   // The built UI, outside development (Vite serves it in development).
   if (existsSync(UI_DIR)) {

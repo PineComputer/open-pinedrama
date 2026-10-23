@@ -3,17 +3,35 @@
 // and a cap on episodes waiting for the maker); keep idle timeouts long while a session
 // waits on the maker; stop Computers with nothing to do; retry what didn't go through.
 import { IDLE_WAITING_S, IDLE_WORKING_S, WAITING_CAP } from "./config.ts";
-import { computerRef, fleet, hasFleet, markStopped, openSession, provision, restart, runningComputers, setIdle, stop } from "./computers.ts";
+import { closeSession, computerRef, fleet, hasFleet, markStopped, openSession, provision, restart, runningComputers, setIdle, startable, stop } from "./computers.ts";
 import { all, get, now, run } from "./db.ts";
-import { followEvents, followTurn, isFollowed, unsavedTurns } from "./follow.ts";
+import { followEvents, followTurn, isFollowed, unsettledTurns } from "./follow.ts";
 import { episodeGoal, resumeGoal, setupGoal } from "./goals.ts";
 import type { FileRow } from "./library.ts";
 import { publish } from "./live.ts";
 import { type ComputerRow, type DramaRow, type EpisodeRow, type SessionRow, episodeCode, latestTurn, openSessionsOf } from "./records.ts";
-import { attach, inputs, references, sendRun, startRun, unconfirmedRuns } from "./runs.ts";
+import { reconcileSending } from "./reviews.ts";
+import { attach, hasRun, inputs, references, sendRun, startRun, unconfirmedRuns } from "./runs.ts";
 
 /** Work the clock started and hasn't finished, so a slow call never starts twice. */
 const busy = new Set<string>();
+
+/** While the maker disconnects, the clock starts nothing new. */
+let paused = false;
+
+export function pause(): void {
+  paused = true;
+}
+
+export function resume(): void {
+  paused = false;
+}
+
+/** Resolves once the work the clock started has finished, or after a minute. */
+export async function drain(): Promise<void> {
+  const until = Date.now() + 60_000;
+  while (busy.size && Date.now() < until) await new Promise((resolve) => setTimeout(resolve, 200));
+}
 
 function once(key: string, work: () => Promise<void>): boolean {
   if (busy.has(key)) return false;
@@ -50,21 +68,40 @@ function freeComputer(drama: DramaRow): ComputerRow | undefined {
   return runningComputers(drama.id).find((computer) => load(computer.id) < Math.max(1, drama.per_computer));
 }
 
-/** A Computer the drama can use soon: a free running one, or one it starts now. */
+/**
+ * A Computer the drama can use soon: a free running one, or one it starts now. A stopped or
+ * failed one is started again before any new one is made, so a Create whose answer was
+ * lost is retried as the same Computer; one that keeps failing waits for the maker.
+ */
 function claimComputer(drama: DramaRow): ComputerRow | undefined {
   const free = freeComputer(drama);
   if (free) return free;
-  const pool = all<ComputerRow>("select * from computers where drama_id = ? and state in ('starting', 'running', 'stopping')", drama.id);
+  const pool = all<ComputerRow>("select * from computers where drama_id = ? and mode = ? and state in ('starting', 'running', 'stopping')", drama.id, drama.mode);
   if (pool.some((computer) => computer.state === "starting")) return undefined;
   if (pool.length >= capacity(drama)) return undefined;
-  const stopped = get<ComputerRow>("select * from computers where drama_id = ? and state = 'stopped' and mode = ? order by created_at limit 1", drama.id, fleet().mode);
-  once(`start:${drama.id}`, () => (stopped ? restart(stopped) : provision(drama.id)));
+  const idle = all<ComputerRow>("select * from computers where drama_id = ? and mode = ? and state in ('stopped', 'failed') order by created_at", drama.id, drama.mode);
+  if (idle.length) {
+    const next = idle.find(startable);
+    if (next) once(`start:${drama.id}`, () => restart(next));
+    return undefined;
+  }
+  once(`start:${drama.id}`, () => provision(drama.id));
   return undefined;
+}
+
+/** Hands the setup session the screenplay and its goal: on a new session, or again on one whose start didn't finish. */
+async function beginSetup(drama: DramaRow, session: SessionRow): Promise<void> {
+  const { sent } = await attach(session, inputs(drama.id));
+  followEvents(session.id);
+  await startRun(session, "setup", setupGoal(drama, sent));
 }
 
 function ensureSetup(drama: DramaRow): void {
   const open = get<SessionRow>("select * from sessions where drama_id = ? and role = 'setup' and state = 'open'", drama.id);
-  if (open) return;
+  if (open) {
+    if (!hasRun(open.id)) once(`setup:${drama.id}`, () => beginSetup(drama, open).finally(() => publish(`drama:${drama.id}`)));
+    return;
+  }
   const computer = claimComputer(drama);
   if (!computer) return;
   const release = reserve(computer.id);
@@ -72,9 +109,7 @@ function ensureSetup(drama: DramaRow): void {
     try {
       const session = await openSession(computer, "setup", null, "Setup");
       release();
-      const { sent } = await attach(session, inputs(drama.id));
-      followEvents(session.id);
-      await startRun(session, "setup", setupGoal(drama, sent));
+      await beginSetup(drama, session);
     } finally {
       release();
       publish(`drama:${drama.id}`);
@@ -83,37 +118,31 @@ function ensureSetup(drama: DramaRow): void {
   if (!started) release();
 }
 
-function episodeBudget(drama: DramaRow): number | null {
-  if (!drama.budget) return null;
-  const count = get<{ n: number }>("select count(*) as n from episodes where drama_id = ?", drama.id)?.n || 1;
-  return Math.floor(drama.budget / count);
-}
-
 function startEpisode(drama: DramaRow, episode: EpisodeRow, computer: ComputerRow): void {
   run("update episodes set state = 'working', note = case when resume = 1 then note else '' end, updated_at = ? where id = ?", now(), episode.id);
   const release = reserve(computer.id);
   const started = once(`episode:${episode.id}`, async () => {
+    let session: SessionRow | undefined;
     try {
       const code = episodeCode(episode);
-      const session = await openSession(computer, "episode", episode.id, code);
+      session = await openSession(computer, "episode", episode.id, code);
       release();
       run("update episodes set session_id = ?, updated_at = ? where id = ?", session.id, now(), episode.id);
       let files: FileRow[] = [...inputs(drama.id), ...references(drama.id)];
       if (episode.resume) files = [...files, ...all<FileRow>("select * from files where episode_id = ? and kind != 'observation' order by id", episode.id)];
       const { sent, skipped } = await attach(session, files);
+      if (skipped.length) console.warn(`${code}: too large to hand over (over 64 MiB): ${skipped.join(", ")}`);
       followEvents(session.id);
-      const goal = episode.resume
-        ? resumeGoal(drama, code, episodeBudget(drama), sent, episode.note || undefined)
-        : episodeGoal(drama, code, episodeBudget(drama), sent);
+      const goal = episode.resume ? resumeGoal(drama, code, sent, episode.carry || undefined) : episodeGoal(drama, code, sent);
       await startRun(session, episode.resume ? "resume" : "episode", goal);
-      run(
-        "update episodes set resume = 0, continues = 0, note = ?, updated_at = ? where id = ?",
-        skipped.length ? `Too large to hand over (over 64 MiB): ${skipped.join(", ")}` : "",
-        now(),
-        episode.id,
-      );
+      run("update episodes set resume = 0, carry = '', continues = 0, note = '', updated_at = ? where id = ?", now(), episode.id);
     } catch (error) {
-      run("update episodes set state = 'queued', updated_at = ? where id = ?", now(), episode.id);
+      // A run that was saved is resent with its own key (unconfirmedRuns), so the episode keeps
+      // its session. Before that, the half-opened session is let go and the episode waits its turn again.
+      if (!session || !hasRun(session.id)) {
+        if (session) await closeSession(session);
+        run("update episodes set state = 'queued', session_id = null, updated_at = ? where id = ?", now(), episode.id);
+      }
       throw error;
     } finally {
       release();
@@ -144,7 +173,7 @@ function fill(drama: DramaRow): void {
   }
 }
 
-/** A Computer waiting on the maker keeps running longer; one with nothing to do stops. */
+/** A Computer waiting on the maker keeps running longer; one with nothing to do stops (and a stop that failed is tried again a minute later). */
 function tend(computer: ComputerRow): void {
   const sessions = openSessionsOf(computer.id);
   const waiting = sessions.some((session) => latestTurn(session.id)?.state === "needs_input");
@@ -153,7 +182,8 @@ function tend(computer: ComputerRow): void {
   if (!sessions.length) {
     const drama = get<DramaRow>("select * from dramas where id = ?", computer.drama_id);
     const queued = get<{ n: number }>("select count(*) as n from episodes where drama_id = ? and state = 'queued'", computer.drama_id)?.n ?? 0;
-    if (drama && drama.status !== "setup" && !queued && !opening.get(computer.id)) once(`stop:${computer.id}`, () => stop(computer));
+    const triedLately = computer.last_error !== null && Date.now() - Date.parse(computer.updated_at) < 60_000;
+    if (drama && drama.status !== "setup" && !queued && !opening.get(computer.id) && !triedLately) once(`stop:${computer.id}`, () => stop(computer));
   }
 }
 
@@ -171,23 +201,27 @@ export async function reconcile(): Promise<void> {
       continue;
     }
     if (state !== "running") continue;
+    // A stop that was still shutting down when the engine went away, but didn't: tend tries again.
+    if (computer.state === "stopping") run("update computers set state = 'running', updated_at = ? where id = ?", now(), computer.id);
     for (const session of openSessionsOf(computer.id)) {
       followEvents(session.id);
       const turn = latestTurn(session.id);
       if (turn && !turn.ended_at && turn.state !== "answered") followTurn(session.id, turn.id);
     }
   }
+  await reconcileSending();
   publish("dramas", "inbox");
 }
 
 export function tick(): void {
-  if (!hasFleet()) return; // nothing to run on until the maker connects a project or chooses replay
-  for (const drama of all<DramaRow>("select * from dramas where status in ('setup', 'production')")) {
+  if (!hasFleet() || paused) return; // nothing to run on until the maker connects a project or chooses replay
+  // Only the dramas made for this mode: a replay drama never starts a Pine Computer.
+  for (const drama of all<DramaRow>("select * from dramas where status in ('setup', 'production') and mode = ?", fleet().mode)) {
     if (drama.status === "setup") ensureSetup(drama);
     else fill(drama);
   }
   for (const computer of runningComputers()) tend(computer);
-  for (const turn of unsavedTurns()) if (!isFollowed(turn.id)) followTurn(turn.session_id, turn.id);
+  for (const turn of unsettledTurns()) if (!isFollowed(turn.id)) followTurn(turn.session_id, turn.id);
   for (const key of unconfirmedRuns()) once(`run:${key}`, () => sendRun(key));
 }
 

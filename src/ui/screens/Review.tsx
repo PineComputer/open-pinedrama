@@ -1,8 +1,9 @@
 import { Check, Pencil, X } from "lucide-react";
 import { type MouseEvent, type RefObject, useEffect, useMemo, useRef, useState } from "react";
 import type { FileItem, ItemDecision, Note, ReviewItem, ReviewView, Verdict } from "../../shared/types.ts";
-import { api, clock, useResource } from "../api.ts";
+import { api, clock, useAction, useResource } from "../api.ts";
 import { type TKey, useT } from "../i18n.ts";
+import { errorText, fileKind } from "../labels.ts";
 import { Link, navigate } from "../router.tsx";
 
 type Drafts = Record<string, { verdict?: Verdict; notes: Note[] }>;
@@ -15,6 +16,41 @@ function variantLabel(file: FileItem, t: T): string {
   if (file.kind === "blocking") return t("review.variant.blocking");
   if (file.style === "line-art" || file.style === "photoreal") return t(`review.variant.${file.style}` as TKey);
   return file.version ?? file.name;
+}
+
+/**
+ * State the maker builds up in a review, kept in this browser until the decision is sent,
+ * so going on to the next review, or closing the window, doesn't lose it.
+ */
+function useDraft<V>(reviewId: string, name: string, initial: () => V): [V, (next: V | ((current: V) => V)) => void, () => void] {
+  const key = `studio.draft.${reviewId}.${name}`;
+  const [value, setValue] = useState<V>(() => {
+    try {
+      const saved = localStorage.getItem(key);
+      if (saved !== null) return JSON.parse(saved) as V;
+    } catch {
+      // no storage: the draft lasts as long as the page
+    }
+    return initial();
+  });
+  const set = (next: V | ((current: V) => V)) =>
+    setValue((current) => {
+      const updated = typeof next === "function" ? (next as (current: V) => V)(current) : next;
+      try {
+        localStorage.setItem(key, JSON.stringify(updated));
+      } catch {
+        // not kept; it still works for this visit
+      }
+      return updated;
+    });
+  const clear = () => {
+    try {
+      localStorage.removeItem(key);
+    } catch {
+      // nothing was kept
+    }
+  };
+  return [value, set, clear];
 }
 
 /** The size of an element, kept current as the window changes. */
@@ -92,12 +128,12 @@ function Returned({ files }: { files: FileItem[] }) {
   const { t } = useT();
   if (!files.length) return null;
   return (
-    <div style={{ display: "grid", gap: 8 }}>
+    <div className="block">
       <span className="label">{t("review.files")}</span>
       <div className="files">
         {files.map((file) => (
           <a key={file.id} href={file.url} target="_blank" rel="noreferrer" title={file.path}>
-            <span className="kind">{file.kind}</span>
+            <span className="kind">{fileKind(file.kind, t)}</span>
             <span>{[file.episode, file.subject, file.segment, file.version].filter(Boolean).join(" · ") || file.name}</span>
           </a>
         ))}
@@ -108,30 +144,34 @@ function Returned({ files }: { files: FileItem[] }) {
 
 function Status({ review }: { review: ReviewView }) {
   const { t } = useT();
-  const resume = () => void api(`/api/reviews/${review.id}/resume`, { method: "POST" }).then(() => navigate(`/d/${review.dramaId}`));
-  if (review.state === "saving")
+  const resume = useAction(async () => {
+    await api(`/api/reviews/${review.id}/resume`, { method: "POST" });
+    navigate(`/d/${review.dramaId}`);
+  });
+  if (review.state === "saving" || review.state === "sending")
     return (
       <div className="status-line">
-        <span className="dots" style={{ color: "var(--work)" }}>
+        <span className="dots">
           <i />
           <i />
           <i />
         </span>
-        {t("review.saving")}
+        {t(review.state === "saving" ? "review.saving" : "review.sending")}
       </div>
     );
   if (review.state === "ended")
     return (
       <div className="status-line ended">
-        <span style={{ flex: 1 }}>{t("review.ended")}</span>
+        <span className="grow">{t("review.ended")}</span>
         {review.episode && (
-          <button className="link" style={{ color: "inherit" }} onClick={resume}>
+          <button className="link inherit" disabled={resume.busy} onClick={() => void resume.run()}>
             {t("review.continue")}
           </button>
         )}
+        {resume.error !== undefined && <span className="error small">{errorText(resume.error, t)}</span>}
       </div>
     );
-  if (review.state === "answered" || review.state === "sending")
+  if (review.state === "answered")
     return (
       <div className="status-line">
         <Check size={14} />
@@ -143,33 +183,23 @@ function Status({ review }: { review: ReviewView }) {
 
 function QuestionRoom({ review, done }: { review: ReviewView; done: () => void }) {
   const { t } = useT();
-  const [answer, setAnswer] = useState(review.decision?.words ?? "");
-  const [error, setError] = useState<string>();
-  const [busy, setBusy] = useState(false);
+  const [answer, setAnswer, forget] = useDraft(review.id, "answer", () => review.decision?.words ?? "");
   const files = [...review.reviewItems.flatMap((item) => item.files), ...review.otherFiles];
   const open = review.state === "open";
-  const send = async () => {
-    setBusy(true);
-    setError(undefined);
-    try {
-      await api(`/api/reviews/${review.id}/decision`, { method: "POST", json: { items: [], words: answer } });
-      done();
-    } catch (reason) {
-      setError((reason as Error).message);
-      setBusy(false);
-    }
-  };
+  const send = useAction(async () => {
+    await api(`/api/reviews/${review.id}/decision`, { method: "POST", json: { items: [], words: answer } });
+    forget();
+    done();
+  });
   return (
     <main className="question">
-      <Link to={`/d/${review.dramaId}`} className="quiet" style={{ fontSize: 13.5 }}>
+      <Link to={`/d/${review.dramaId}`} className="crumb">
         ← {review.dramaTitle}
         {review.episode ? ` · ${review.episode}` : ""}
       </Link>
-      <div style={{ display: "grid", gap: 10 }}>
+      <div className="block">
         <span className="label">{t("review.agent")}</span>
-        <p className="asked" style={{ margin: 0 }}>
-          {review.question}
-        </p>
+        <p className="asked">{review.question}</p>
       </div>
       <Status review={review} />
       {files.some(isImage) && (
@@ -192,13 +222,13 @@ function QuestionRoom({ review, done }: { review: ReviewView; done: () => void }
           value={open ? answer : review.answer ?? answer}
           onChange={(event) => setAnswer(event.target.value)}
           onKeyDown={(event) => {
-            if (event.key === "Enter" && (event.metaKey || event.ctrlKey) && answer.trim()) void send();
+            if (event.key === "Enter" && (event.metaKey || event.ctrlKey) && answer.trim() && !send.busy) void send.run();
           }}
         />
       </div>
-      {error && <p className="error" style={{ margin: 0 }}>{error}</p>}
-      <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-        <button className="btn ink" disabled={!open || busy || !answer.trim()} onClick={send}>
+      {send.error !== undefined && <p className="error">{errorText(send.error, t)}</p>}
+      <div>
+        <button className="btn ink" disabled={!open || send.busy || !answer.trim()} onClick={() => void send.run()}>
           {t("review.sendAnswer")} <span className="key">⌘↵</span>
         </button>
       </div>
@@ -212,7 +242,7 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
   const open = review.state === "open";
   const [index, setIndex] = useState(0);
   const [variant, setVariant] = useState(0);
-  const [drafts, setDrafts] = useState<Drafts>(() =>
+  const [drafts, setDrafts, forgetDrafts] = useDraft<Drafts>(review.id, "items", () =>
     Object.fromEntries(
       items.map((item) => {
         const saved = review.decision?.items.find((decision) => decision.key === item.key);
@@ -220,11 +250,11 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
       }),
     ),
   );
-  const [words, setWords] = useState(review.decision?.words ?? "");
+  const [words, setWords, forgetWords] = useDraft(review.id, "words", () => review.decision?.words ?? "");
   const [noteText, setNoteText] = useState("");
   const [pending, setPending] = useState<{ x?: number; y?: number; time?: number; fileId?: number }>();
   const [confirming, setConfirming] = useState(false);
-  const [error, setError] = useState<string>();
+  const [error, setError] = useState<unknown>();
   const [busy, setBusy] = useState(false);
   const noteInput = useRef<HTMLTextAreaElement>(null);
   const video = useRef<HTMLVideoElement>(null);
@@ -281,9 +311,11 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
     };
     try {
       await api(`/api/reviews/${review.id}/decision`, { method: "POST", json: decision });
+      forgetDrafts();
+      forgetWords();
       done();
     } catch (reason) {
-      setError((reason as Error).message);
+      setError(reason);
       setBusy(false);
       setConfirming(false);
     }
@@ -294,7 +326,7 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
       if ((event.metaKey || event.ctrlKey) && event.key === "Enter") {
         // The first ⌘↵ shows what will be sent; the second sends it.
         event.preventDefault();
-        if (confirming) void send();
+        if (confirming && !busy) void send();
         else if (complete && open) setConfirming(true);
         return;
       }
@@ -348,9 +380,7 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
       </div>
 
       <div className="agent-says">
-        <span className="label" style={{ paddingTop: 3 }}>
-          {t("review.agent")}
-        </span>
+        <span className="label">{t("review.agent")}</span>
         <p>{review.question}</p>
       </div>
 
@@ -407,7 +437,7 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
           <div className="inspector-body">
             <Status review={review} />
             {shots && (
-              <div style={{ display: "grid", gap: 8 }}>
+              <div className="block">
                 <span className="label">{t("review.shotList")}</span>
                 <ol className="shots">
                   {shots.map((shot) => (
@@ -416,10 +446,10 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
                 </ol>
               </div>
             )}
-            <div style={{ display: "grid", gap: 10 }}>
+            <div className="block">
               <span className="label">{t("review.notes")}</span>
               {(draft?.notes ?? []).length === 0 && (
-                <span className="quiet" style={{ fontSize: 13.5 }}>
+                <span className="quiet small">
                   {file && isVideo(file) ? t("review.noNotesVideo") : t("review.noNotes")}
                 </span>
               )}
@@ -435,7 +465,7 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
                         {note.text}
                       </div>
                       {open && (
-                        <button className="remove" aria-label="Remove" onClick={() => item && update(item.key, (value) => ({ ...value, notes: value.notes.filter((_, k) => k !== n) }))}>
+                        <button className="remove" aria-label={t("review.removeNote")} onClick={() => item && update(item.key, (value) => ({ ...value, notes: value.notes.filter((_, k) => k !== n) }))}>
                           <X size={14} />
                         </button>
                       )}
@@ -446,7 +476,7 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
               {open && (
                 <>
                   {file && isVideo(file) && (
-                    <button className="link" style={{ justifySelf: "start" }} onClick={noteAtTime}>
+                    <button className="link start" onClick={noteAtTime}>
                       {t("review.noteAt", { time: clock(pending?.time ?? video.current?.currentTime ?? 0) })}
                     </button>
                   )}
@@ -495,7 +525,7 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
       ) : (
         <div className="room-foot">
           <input className="line-input words" disabled={!open} value={words} placeholder={t("review.wordsHint")} aria-label={t("review.words")} onChange={(event) => setWords(event.target.value)} />
-          {error && <span className="error">{error}</span>}
+          {error !== undefined && <span className="error">{errorText(error, t)}</span>}
           <button className="btn ink" disabled={!open || !complete || busy} onClick={() => setConfirming(true)} title={complete ? undefined : t("review.needVerdicts")}>
             {t("review.send")} <span className="key">⌘↵</span>
           </button>
@@ -515,7 +545,13 @@ export function Review({ id }: { id: string }) {
     },
     [id],
   );
-  if (error) return <main className="page"><p className="error">{error}</p></main>;
+  if (error !== undefined && !data) {
+    return (
+      <main className="page">
+        <p className="error">{errorText(error, t)}</p>
+      </main>
+    );
+  }
   if (!data) return <main className="page quiet">{t("loading")}</main>;
   return data.kind === "question" || data.reviewItems.length === 0 ? <QuestionRoom review={data} done={done} /> : <MediaRoom review={data} done={done} />;
 }

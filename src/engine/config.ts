@@ -1,16 +1,31 @@
 // The engine's settings. The maker's Pine project is chosen in the app (settings.ts);
-// these are the process's own: where its data lives, its port, and the limits it keeps.
-// .env.local is read in development only, for a developer's overrides.
-import { existsSync } from "node:fs";
+// these are the process's own: where its data lives, where its bundled files are, its
+// port, and the limits it keeps. Nothing depends on the directory it was started from.
+import os from "node:os";
 import path from "node:path";
-
-if (existsSync(".env.local")) process.loadEnvFile(".env.local");
+import { fileURLToPath } from "node:url";
 
 export const VERSION = "0.1.0";
-export const DATA_DIR = path.resolve(process.env.STUDIO_DATA_DIR ?? path.join(process.cwd(), ".data"));
+const APP_NAME = "Pine Drama Studio";
+
+/** Where an installed app keeps its data on each system. */
+function standardDataDir(): string {
+  const home = os.homedir();
+  if (process.platform === "darwin") return path.join(home, "Library", "Application Support", APP_NAME);
+  if (process.platform === "win32") return path.join(process.env.APPDATA || path.join(home, "AppData", "Roaming"), APP_NAME);
+  return path.join(process.env.XDG_DATA_HOME || path.join(home, ".local", "share"), "pine-drama-studio");
+}
+
+/** The studio's records, library and sealing key. Development uses the repository's .data/ (scripts/dev.mjs). */
+export const DATA_DIR = path.resolve(process.env.STUDIO_DATA_DIR || standardDataDir());
+
+/** What ships with the studio: the built UI and the replay's recordings. A packaged app points this at its resources. */
+const RESOURCES = path.resolve(process.env.STUDIO_RESOURCES || fileURLToPath(new URL("../..", import.meta.url)));
+export const UI_DIR = path.join(RESOURCES, "dist", "ui");
+export const FIXTURES = path.join(RESOURCES, "fixtures", "replay");
+
+/** 0 asks the system for a free port; the desktop shell does that and reads the port back. */
 export const PORT = Number(process.env.STUDIO_PORT ?? 4310);
-/** The built UI, served by the engine outside development. */
-export const UI_DIR = path.resolve(process.env.STUDIO_UI_DIR ?? path.join(process.cwd(), "dist/ui"));
 
 /**
  * Idle timeouts (docs/IMPLEMENTATION_PLAN.md). Work keeps a Computer running; a question

@@ -11,10 +11,10 @@ create table if not exists dramas (
   language text not null,           -- zh | en
   look text not null,
   format text not null,             -- e.g. 9:16 480p
-  budget real,
   parallel integer not null,        -- episodes at work at once
   per_computer integer not null,    -- episodes per Computer at once (1-3)
   notes text not null default '',
+  mode text not null,               -- pine | replay: where its work runs, fixed at creation
   status text not null,             -- setup | production | done | stopped
   note text not null default '',    -- why it stopped
   continues integer not null default 0,
@@ -38,6 +38,7 @@ create table if not exists episodes (
   session_id text,
   note text not null default '',    -- why it stopped or failed
   resume integer not null default 0,
+  carry text not null default '',   -- the maker's last decision, for the session that resumes it
   continues integer not null default 0,
   updated_at text not null,
   unique (drama_id, number)
@@ -60,6 +61,7 @@ create table if not exists computers (
   state text not null,              -- starting | running | stopping | stopped | failed
   idle_timeout integer,
   last_error text,
+  failures integer not null default 0, -- starts that failed in a row
   created_at text not null,
   updated_at text not null
 );
@@ -97,6 +99,7 @@ create table if not exists turns (
   question text not null default '',
   summary text not null default '',
   files_saved integer not null default 0,
+  settled integer not null default 0, -- the flow has acted on how it ended
   save_error text,
   cost real,
   next_turn_id text,
@@ -157,13 +160,22 @@ const shared = globalThis as typeof globalThis & { __studioDb?: DatabaseSync };
 
 export function db(): DatabaseSync {
   if (!shared.__studioDb) {
-    mkdirSync(DATA_DIR, { recursive: true });
+    mkdirSync(DATA_DIR, { recursive: true, mode: 0o700 });
     const handle = new DatabaseSync(path.join(DATA_DIR, "studio.db"));
     handle.exec("pragma journal_mode = wal; pragma foreign_keys = on;");
     handle.exec(SCHEMA);
-    // Columns added after a data directory was first made.
-    const columns = (handle.prepare("pragma table_info(computers)").all() as { name: string }[]).map((column) => column.name);
-    if (!columns.includes("mode")) handle.exec("alter table computers add column mode text not null default 'replay'");
+    // Columns added after a data folder was first made.
+    const add = (table: string, column: string, definition: string, backfill?: string) => {
+      const columns = (handle.prepare(`pragma table_info(${table})`).all() as { name: string }[]).map((row) => row.name);
+      if (columns.includes(column)) return;
+      handle.exec(`alter table ${table} add column ${column} ${definition}`);
+      if (backfill) handle.exec(backfill);
+    };
+    add("computers", "mode", "text not null default 'replay'");
+    add("computers", "failures", "integer not null default 0");
+    add("dramas", "mode", "text not null default 'replay'");
+    add("turns", "settled", "integer not null default 0", "update turns set settled = files_saved");
+  add("episodes", "carry", "text not null default ''");
     shared.__studioDb = handle;
   }
   return shared.__studioDb;
@@ -180,6 +192,20 @@ export function get<T>(sql: string, ...params: SQLInputValue[]): T | undefined {
 export function run(sql: string, ...params: SQLInputValue[]): { changes: number; lastInsertRowid: number } {
   const result = db().prepare(sql).run(...params);
   return { changes: Number(result.changes), lastInsertRowid: Number(result.lastInsertRowid) };
+}
+
+/** Runs related writes all or none. */
+export function transaction<T>(work: () => T): T {
+  const handle = db();
+  handle.exec("begin");
+  try {
+    const result = work();
+    handle.exec("commit");
+    return result;
+  } catch (error) {
+    handle.exec("rollback");
+    throw error;
+  }
 }
 
 export function now(): string {

@@ -1,6 +1,6 @@
 // The Fleet on Pine's server SDK. Each call rebuilds its handle from the saved records,
 // as the starter does, so any request or a restarted engine picks up where the last left off.
-import { Binding, Client, Credentials, NotFoundError, type AgentTurn, type Computer, type Session } from "@pinesandbox/computer";
+import { Binding, Client, Credentials, NotFoundError, UnknownComputerError, type AgentTurn, type Computer, type Session } from "@pinesandbox/computer";
 import type { Attached, ComputerRef, Fleet, FleetEvent, SessionRef, TurnInfo } from "./fleet.ts";
 
 function turnInfo(turn: AgentTurn): TurnInfo {
@@ -54,8 +54,13 @@ export class PineFleet implements Fleet {
     return this.attached(computer);
   }
 
-  async startComputer(credentials: string, idleTimeoutSeconds: number) {
-    return this.attached(await this.client.startComputer(Credentials.parse(credentials), { idleTimeoutSeconds }));
+  async startComputer(credentials: string, label: string, idleTimeoutSeconds: number) {
+    try {
+      return this.attached(await this.client.startComputer(Credentials.parse(credentials), { idleTimeoutSeconds }));
+    } catch (error) {
+      if (!(error instanceof UnknownComputerError)) throw error;
+      return this.createComputer(credentials, label, idleTimeoutSeconds);
+    }
   }
 
   async status(ref: ComputerRef) {

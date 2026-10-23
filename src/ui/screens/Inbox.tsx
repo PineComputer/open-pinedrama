@@ -13,7 +13,7 @@ export function InboxList({ dramaId }: { dramaId?: string }) {
       {data.map((item) => (
         <Link key={item.id} to={`/r/${item.id}`} className={`ask ${item.state === "ended" ? "ended" : ""}`}>
           <div className="thumb" style={item.thumb ? { backgroundImage: `url(${item.thumb})` } : undefined} />
-          <div style={{ minWidth: 0 }}>
+          <div className="shrink">
             <div className="what">
               {t(`kind.${item.kind}` as TKey)}
               {item.episode && <span className="quiet"> · {item.episode}</span>}
@@ -25,7 +25,7 @@ export function InboxList({ dramaId }: { dramaId?: string }) {
           </div>
           <div className="when">
             {item.state === "ended" ? t("inbox.ended") : item.state === "saving" ? "…" : <span className="seal-text">●</span>}
-            <div className="num" style={{ marginTop: 4 }}>
+            <div className="num below">
               {ago(item.createdAt)}
             </div>
           </div>

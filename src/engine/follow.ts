@@ -3,7 +3,7 @@
 // anything else happens, because the next turn can change them (plan, rule 1).
 import { ENDED, type TurnInfo } from "./fleet.ts";
 import { computerRef, fleet, markStopped, sessionRef } from "./computers.ts";
-import { all, now, run } from "./db.ts";
+import { all, get, now, run, transaction } from "./db.ts";
 import { save } from "./library.ts";
 import { publish } from "./live.ts";
 import { onEnded } from "./flow.ts";
@@ -70,7 +70,8 @@ async function loop(sessionId: string, firstTurn: string): Promise<void> {
     }
     recordTurn(sessionId, info);
     if (info.state === "answered" && info.nextTurnId) {
-      // Someone answered it (another process, or the maker just now): follow what it opened.
+      // Someone answered it (the maker, just now): the flow has moved on; follow what it opened.
+      run("update turns set settled = 1 where id = ?", turnId);
       turnId = info.nextTurnId;
       continue;
     }
@@ -81,39 +82,49 @@ async function loop(sessionId: string, firstTurn: string): Promise<void> {
   }
 }
 
-/** A turn ended: save its files, then let the flow act on how it ended. */
+/**
+ * A turn ended: save its files, then let the flow act on how it ended. Each step is marked
+ * when done, so a turn the engine stopped halfway through is taken up again where it was.
+ */
 export async function settle(sessionId: string, info: TurnInfo): Promise<void> {
   const session = sessionRow(sessionId)!;
+  const turn = get<TurnRow>("select * from turns where id = ?", info.turnId);
+  if (turn?.settled) return;
   if (info.state === "needs_input") questionAsked(session, info.turnId, info.question);
-  const computer = computerRow(session.computer_id)!;
-  try {
-    for (const file of info.files) {
-      const body = await fleet().openFile(computerRef(computer), sessionRef(session), file.path);
-      await save(body, {
-        dramaId: session.drama_id,
-        episodeId: session.episode_id,
-        sessionId,
-        turnId: info.turnId,
-        relPath: file.path,
-        type: file.type,
-      });
+  if (!turn?.files_saved) {
+    const computer = computerRow(session.computer_id)!;
+    try {
+      for (const file of info.files) {
+        const body = await fleet().openFile(computerRef(computer), sessionRef(session), file.path);
+        await save(body, {
+          dramaId: session.drama_id,
+          episodeId: session.episode_id,
+          sessionId,
+          turnId: info.turnId,
+          relPath: file.path,
+          type: file.type,
+        });
+      }
+      run("update turns set files_saved = 1, save_error = null where id = ?", info.turnId);
+    } catch (error) {
+      // Kept for retry; the question stays "saving" until its files are in.
+      run("update turns set save_error = ? where id = ?", (error as Error).message, info.turnId);
+      publish(`drama:${session.drama_id}`);
+      return;
     }
-    run("update turns set files_saved = 1, save_error = null where id = ?", info.turnId);
-  } catch (error) {
-    // Kept for retry; the question stays "saving" until its files are in.
-    run("update turns set save_error = ? where id = ?", (error as Error).message, info.turnId);
-    publish(`drama:${session.drama_id}`);
-    return;
   }
-  if (info.state === "needs_input") questionReady(session, info.turnId);
+  transaction(() => {
+    if (info.state === "needs_input") questionReady(session, info.turnId);
+    run("update turns set settled = 1 where id = ?", info.turnId);
+  });
   await onEnded(sessionRow(sessionId)!, info);
   publish(`drama:${session.drama_id}`, "dramas", `session:${sessionId}`);
 }
 
-/** Ended turns of open sessions whose files aren't saved yet; following them again retries the save. */
-export function unsavedTurns(): TurnRow[] {
+/** Ended turns of open sessions that the flow hasn't acted on yet; following them again finishes the job. */
+export function unsettledTurns(): TurnRow[] {
   return all<TurnRow>(
-    "select t.* from turns t join sessions s on s.id = t.session_id where t.files_saved = 0 and t.ended_at is not null and s.state = 'open'",
+    "select t.* from turns t join sessions s on s.id = t.session_id where t.settled = 0 and t.ended_at is not null and s.state = 'open'",
   );
 }
 

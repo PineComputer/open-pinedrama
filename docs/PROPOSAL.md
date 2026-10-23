@@ -143,7 +143,7 @@ From pine-computer-starter and amongminds we reuse:
 4. **The evidence sits beside the decision.**
 5. **Film words** (cast, locations, storyboards, takes, cut, crew), not infrastructure words.
 6. **Vertical first.** Every player is a 9:16 phone frame.
-7. **Cost before commitment.**
+7. **Cost before commitment.** (Later: the first release shows no budget or spend.)
 8. **Fast hands.** Keyboard review, approve all, compare versions.
 9. **Chinese and English** from the first release.
 
@@ -312,7 +312,7 @@ Each session has "watch" (its live desktop) and "take control".
 ### 5.5 Library, money, security, skills
 
 - **Library.** Every file a turn returns is copied into a local library per drama, named by content hash, with what it is (episode, segment, version) taken from its path and the agent's words. Review, screening, delivery and the next sessions' attachments all come from it. It works offline and outlives every Computer.
-- **Money.** Before shooting an episode, the app shows an estimate (segments × seconds × the per-minute rate × a retake allowance). Each goal states the budget left for that episode, and the skill honours a spending limit it is given. Spend comes from each turn's usage and Pine's video charges.
+- **Money** (after the first release). Before shooting an episode, the app shows an estimate (segments × seconds × the per-minute rate × a retake allowance). Each goal states the budget left for that episode, and the skill honours a spending limit it is given. Spend comes from each turn's usage and Pine's video charges.
 - **Security.** One secret, the Pine project API key, stored with the OS keychain and held only by the engine. The interface receives two-minute desktop tokens and nothing that can drive a Computer.
 - **Skills.**
   - **Before the first run,** the app checks that Pine's drama skill is enabled on the Computer.

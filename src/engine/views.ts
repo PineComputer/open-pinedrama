@@ -6,7 +6,6 @@ import {
   type DramaCard,
   type DramaView,
   type EpisodeRow as EpisodeView,
-  type Money,
   type ReviewKind,
   type ReviewSummary,
   type ReviewView,
@@ -14,19 +13,11 @@ import {
   type Stage,
   type StageCell,
 } from "../shared/types.ts";
+import { START_ATTEMPTS } from "./computers.ts";
 import { all, get } from "./db.ts";
 import { type FileRow, fileUrl, filesOfTurn, toItem, versionNumber } from "./library.ts";
 import { type ComputerRow, type DramaRow, type EpisodeRow, type ReviewRow, type SessionRow, episodeCode, latestTurn, session as sessionRow } from "./records.ts";
 import { itemsOf } from "./reviews.ts";
-
-function money(drama: DramaRow): Money {
-  const row = get<{ agent: number | null; unpriced: number }>(
-    `select sum(t.cost) as agent, sum(case when t.cost is null and t.ended_at is not null then 1 else 0 end) as unpriced
-     from turns t join sessions s on s.id = t.session_id where s.drama_id = ?`,
-    drama.id,
-  );
-  return { agent: Math.round((row?.agent ?? 0) * 100) / 100, unpriced: row?.unpriced ?? 0, budget: drama.budget };
-}
 
 /** The first three characters' base looks, newest version each: the leads on the poster. */
 function castFaces(dramaId: string): string[] {
@@ -46,6 +37,7 @@ export function dramaCard(drama: DramaRow): DramaCard {
   const waiting = get<{ n: number }>("select count(*) as n from reviews where drama_id = ? and state in ('open', 'saving')", drama.id)?.n ?? 0;
   return {
     id: drama.id,
+    mode: drama.mode,
     title: drama.title,
     language: drama.language,
     look: drama.look,
@@ -54,7 +46,6 @@ export function dramaCard(drama: DramaRow): DramaCard {
     episodes: { total: counts.reduce((sum, row) => sum + row.n, 0), done: n("done"), waiting: n("waiting"), working: n("working") },
     computers: get<{ n: number }>("select count(*) as n from computers where drama_id = ? and state in ('running', 'starting')", drama.id)?.n ?? 0,
     waiting,
-    money: money(drama),
     cast: castFaces(drama.id),
     createdAt: drama.created_at,
   };
@@ -177,7 +168,21 @@ export function dramaView(drama: DramaRow): DramaView {
     },
     episodeRows: episodeViews(drama.id),
     crew: crew(drama.id),
+    stalled: stalled(drama),
   };
+}
+
+/** A Computer that failed to start too often to keep trying on its own, while none of the drama's runs. */
+function stalled(drama: DramaRow): DramaView["stalled"] {
+  const running = get<{ n: number }>("select count(*) as n from computers where drama_id = ? and mode = ? and state in ('starting', 'running')", drama.id, drama.mode)?.n ?? 0;
+  if (running) return undefined;
+  const failed = get<ComputerRow>(
+    "select * from computers where drama_id = ? and mode = ? and state = 'failed' and failures >= ? order by updated_at desc limit 1",
+    drama.id,
+    drama.mode,
+    START_ATTEMPTS,
+  );
+  return failed ? { computer: failed.label, error: failed.last_error ?? "" } : undefined;
 }
 
 export function castGroups(dramaId: string): CastGroup[] {
@@ -242,12 +247,22 @@ export function reviewView(review: ReviewRow): ReviewView {
 export function chatView(session: SessionRow): ChatView {
   const turn = latestTurn(session.id);
   const episode = session.episode_id ? get<EpisodeRow>("select * from episodes where id = ?", session.episode_id) : undefined;
+  const review = turn?.state === "needs_input" ? get<ReviewRow>("select * from reviews where turn_id = ?", turn.id) : undefined;
   const sends: ChatView["sends"] =
-    session.state !== "open" ? "none" : turn?.state === "needs_input" ? "answer" : turn && !turn.ended_at && turn.state !== "answered" ? "steer" : "run";
+    session.state !== "open"
+      ? "none"
+      : turn?.state === "needs_input"
+        ? review && review.kind !== "question"
+          ? "review"
+          : "answer"
+        : turn && !turn.ended_at && turn.state !== "answered"
+          ? "steer"
+          : "run";
   return {
     sessionId: session.id,
-    label: episode ? episodeCode(episode) : "Setup",
+    label: episode ? episodeCode(episode) : "",
     sends,
+    reviewId: review && review.state !== "ended" ? review.id : undefined,
     messages: all<{ id: number; kind: ChatView["messages"][number]["kind"]; text: string; at: string }>(
       "select id, kind, text, at from messages where session_id = ? order by id desc limit 200",
       session.id,

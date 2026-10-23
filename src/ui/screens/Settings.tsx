@@ -1,18 +1,17 @@
 import { useState } from "react";
 import type { AppInfo } from "../../shared/types.ts";
-import { api } from "../api.ts";
+import { api, useAction } from "../api.ts";
 import { setLang, useT } from "../i18n.ts";
+import { errorText } from "../labels.ts";
 import { ConnectForm } from "./Welcome.tsx";
 
 export function Settings({ app, onChange }: { app: AppInfo; onChange: () => void }) {
   const { t, lang } = useT();
   const [connecting, setConnecting] = useState(false);
-  const [busy, setBusy] = useState(false);
-  const disconnect = async () => {
-    setBusy(true);
-    await api("/api/connection", { method: "DELETE" }).finally(() => setBusy(false));
+  const disconnect = useAction(async () => {
+    await api("/api/connection", { method: "DELETE" });
     onChange();
-  };
+  });
   return (
     <main className="page">
       <div className="head">
@@ -21,7 +20,7 @@ export function Settings({ app, onChange }: { app: AppInfo; onChange: () => void
       <div className="settings">
         <section>
           <span className="label">{t("settings.project")}</span>
-          <div style={{ display: "grid", gap: 16 }}>
+          <div className="block wide">
             {app.mode === "pine" && app.project ? (
               <>
                 <dl>
@@ -33,14 +32,15 @@ export function Settings({ app, onChange }: { app: AppInfo; onChange: () => void
                 {app.project.fromEnvironment ? (
                   <span className="quiet">{t("settings.fromEnv")}</span>
                 ) : (
-                  <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
-                    <button className="btn" disabled={busy} onClick={disconnect}>
-                      {t("settings.disconnect")}
-                    </button>
-                    <span className="quiet" style={{ fontSize: 13 }}>
-                      {t("settings.disconnectHint")}
-                    </span>
-                  </div>
+                  <>
+                    <div className="inline">
+                      <button className="btn" disabled={disconnect.busy} onClick={() => void disconnect.run()}>
+                        {disconnect.busy ? t("settings.disconnecting") : t("settings.disconnect")}
+                      </button>
+                      <span className="quiet small">{t("settings.disconnectHint")}</span>
+                    </div>
+                    {disconnect.error !== undefined && <p className="error flush">{errorText(disconnect.error, t)}</p>}
+                  </>
                 )}
               </>
             ) : (
@@ -49,7 +49,7 @@ export function Settings({ app, onChange }: { app: AppInfo; onChange: () => void
                 {connecting ? (
                   <ConnectForm onDone={onChange} />
                 ) : (
-                  <button className="btn" style={{ justifySelf: "start" }} onClick={() => setConnecting(true)}>
+                  <button className="btn start" onClick={() => setConnecting(true)}>
                     {t("settings.connect")}
                   </button>
                 )}
@@ -60,21 +60,19 @@ export function Settings({ app, onChange }: { app: AppInfo; onChange: () => void
         <section>
           <span className="label">{t("settings.language")}</span>
           <div className="options">
-            <button className={lang === "zh" ? "on" : ""} onClick={() => setLang("zh")}>
+            <button aria-pressed={lang === "zh"} className={lang === "zh" ? "on" : ""} onClick={() => setLang("zh")}>
               中文
             </button>
-            <button className={lang === "en" ? "on" : ""} onClick={() => setLang("en")}>
+            <button aria-pressed={lang === "en"} className={lang === "en" ? "on" : ""} onClick={() => setLang("en")}>
               English
             </button>
           </div>
         </section>
         <section>
           <span className="label">{t("settings.data")}</span>
-          <div style={{ display: "grid", gap: 6 }}>
-            <span style={{ wordBreak: "break-all" }}>{app.dataDir}</span>
-            <span className="quiet" style={{ fontSize: 13 }}>
-              {t("settings.dataHint")}
-            </span>
+          <div className="block">
+            <span className="path">{app.dataDir}</span>
+            <span className="quiet small">{t("settings.dataHint")}</span>
           </div>
         </section>
       </div>

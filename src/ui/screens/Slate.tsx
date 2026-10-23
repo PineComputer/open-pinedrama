@@ -1,15 +1,24 @@
-import type { AppInfo, DramaCard } from "../../shared/types.ts";
-import { api, useResource } from "../api.ts";
+import type { AppInfo, DramaCard, Mode } from "../../shared/types.ts";
+import { api, useAction, useResource } from "../api.ts";
 import { useT } from "../i18n.ts";
-import { lookLabel } from "../labels.ts";
+import { errorText, lookLabel } from "../labels.ts";
 import { Link, navigate } from "../router.tsx";
 
 const CJK = /[㐀-鿿]/;
 
-/** A drama's poster: its title set as type with its seal, over its leads once the agent has drawn them. */
-function Poster({ drama }: { drama: DramaCard }) {
+/** A drama's poster: its title set as type, over its leads once the agent has drawn them. */
+function Poster({ drama, mode }: { drama: DramaCard; mode?: Mode | "none" }) {
   const { t } = useT();
-  const stamp = drama.status === "setup" ? t("drama.casting") : drama.status === "stopped" ? t("drama.stopped") : drama.status === "done" ? t("drama.finished") : undefined;
+  const elsewhere = mode !== undefined && mode !== "none" && mode !== drama.mode;
+  const stamp = elsewhere
+    ? t(drama.mode === "replay" ? "otherMode.replay" : "otherMode.pine")
+    : drama.status === "setup"
+      ? t("drama.casting")
+      : drama.status === "stopped"
+        ? t("drama.stopped")
+        : drama.status === "done"
+          ? t("drama.finished")
+          : undefined;
   return (
     <div className={`poster ${CJK.test(drama.title) ? "vertical" : ""} ${drama.cast.length ? "cast" : ""}`}>
       {drama.cast.length > 0 && (
@@ -19,7 +28,6 @@ function Poster({ drama }: { drama: DramaCard }) {
           ))}
         </div>
       )}
-      <span className="seal">{[...drama.title.trim()][0]}</span>
       <h3>{drama.title}</h3>
       <div className="foot">{stamp && <span className="stamp">{stamp}</span>}</div>
     </div>
@@ -30,6 +38,10 @@ export function Slate() {
   const { t, lang } = useT();
   const { data, error } = useResource<DramaCard[]>("/api/dramas", ["dramas", "inbox"]);
   const app = useResource<AppInfo>("/api/app", ["app"]);
+  const sample = useAction(async () => {
+    const { id } = await api<{ id: string }>("/api/dramas/sample", { method: "POST", json: { language: lang } });
+    navigate(`/d/${id}`);
+  });
   const dramas = data ?? [];
   const producing = dramas.filter((drama) => drama.status === "setup" || drama.status === "production").length;
   const waiting = dramas.reduce((sum, drama) => sum + drama.waiting, 0);
@@ -43,25 +55,24 @@ export function Slate() {
           {t("slate.new")}
         </Link>
       </div>
-      {error && <p className="error">{error}</p>}
+      {error !== undefined && <p className="error">{errorText(error, t)}</p>}
       {data && dramas.length === 0 && (
-        <div style={{ display: "grid", gap: 18, justifyItems: "start" }}>
-          <p className="empty-note" style={{ margin: 0 }}>
-            {t("slate.empty")}
-          </p>
+        <div className="first">
+          <p className="empty-note">{t("slate.empty")}</p>
           {app.data?.mode === "replay" && (
-            <button className="btn" onClick={() => void api<{ id: string }>("/api/dramas/sample", { method: "POST", json: { language: lang } }).then(({ id }) => navigate(`/d/${id}`))}>
+            <button className="btn" disabled={sample.busy} onClick={() => void sample.run()}>
               {t("slate.sample")}
             </button>
           )}
+          {sample.error !== undefined && <p className="error small">{errorText(sample.error, t)}</p>}
         </div>
       )}
-      <div className="shelf" style={{ marginTop: dramas.length ? 0 : 36 }}>
+      <div className={`shelf ${dramas.length ? "" : "empty"}`}>
         {dramas.map((drama) => {
           const { total, done } = drama.episodes;
           return (
             <Link key={drama.id} to={`/d/${drama.id}`} className="drama">
-              <Poster drama={drama} />
+              <Poster drama={drama} mode={app.data?.mode} />
               <div className="title">{drama.title}</div>
               <div className="line">
                 {total > 0 ? `${t("drama.episodes", { done, total })} · ` : ""}

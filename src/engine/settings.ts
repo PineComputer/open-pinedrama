@@ -3,6 +3,7 @@
 // environment (PINE_SANDBOX_*) still works, as a developer's override.
 import { Client } from "@pinesandbox/computer";
 import { get, run } from "./db.ts";
+import { StudioError } from "./errors.ts";
 import { seal, unseal } from "./seal.ts";
 
 export const DEFAULT_ENDPOINT = "https://pinesandbox.io";
@@ -49,23 +50,21 @@ export function keyHint(apiKey: string): string {
   return `${apiKey.slice(0, 3)}…${apiKey.slice(-4)}`;
 }
 
-export class SetupError extends Error {}
-
 /** Asks Pine whether the project accepts this key, without starting anything. */
 export async function checkProject(project: PineProject): Promise<{ maxComputers: number | null }> {
   let endpoint: URL;
   try {
     endpoint = new URL(project.endpoint);
   } catch {
-    throw new SetupError("That endpoint isn't a web address.");
+    throw new StudioError("endpoint-invalid", "That endpoint isn't a web address.");
   }
-  if (!project.apiKey.trim()) throw new SetupError("Paste your project's API key.");
+  if (!project.apiKey.trim()) throw new StudioError("key-missing", "Paste your project's API key.");
   try {
     const policy = await new Client({ endpoint: endpoint.toString().replace(/\/$/, ""), apiKey: project.apiKey.trim() }).projectPolicy();
     return { maxComputers: policy.maxConcurrentComputers };
   } catch (error) {
     const status = (error as { status?: number }).status;
-    if (status === 401 || status === 403) throw new SetupError("Pine didn't accept that key. Copy it again from the console: Project → API keys.");
-    throw new SetupError(`Couldn't reach Pine at ${endpoint.host}: ${(error as Error).message}`);
+    if (status === 401 || status === 403) throw new StudioError("key-rejected", "Pine didn't accept that key. Copy it again from the console: Project → API keys.");
+    throw new StudioError("pine-unreachable", `Couldn't reach Pine at ${endpoint.host}: ${(error as Error).message}`, 502, `${endpoint.host}: ${(error as Error).message}`);
   }
 }

@@ -1,7 +1,8 @@
 import { useState } from "react";
 import type { AppInfo } from "../../shared/types.ts";
-import { api } from "../api.ts";
+import { api, useAction } from "../api.ts";
 import { useT } from "../i18n.ts";
+import { errorText } from "../labels.ts";
 
 const DEFAULT_ENDPOINT = "https://pinesandbox.io";
 
@@ -11,25 +12,17 @@ export function ConnectForm({ onDone }: { onDone: () => void }) {
   const [apiKey, setApiKey] = useState("");
   const [endpoint, setEndpoint] = useState(DEFAULT_ENDPOINT);
   const [more, setMore] = useState(false);
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState<string>();
-  const connect = async () => {
-    setBusy(true);
-    setError(undefined);
-    try {
-      await api<AppInfo>("/api/connection/pine", { method: "POST", json: { endpoint, apiKey } });
-      onDone();
-    } catch (reason) {
-      setError((reason as Error).message);
-      setBusy(false);
-    }
-  };
+  const connect = useAction(async () => {
+    await api<AppInfo>("/api/connection/pine", { method: "POST", json: { endpoint, apiKey } });
+    onDone();
+  });
+  const { busy, error } = connect;
   return (
     <form
       className="connect"
       onSubmit={(event) => {
         event.preventDefault();
-        if (apiKey.trim() && !busy) void connect();
+        if (apiKey.trim() && !busy) void connect.run();
       }}
     >
       <h2>{t("connect.title")}</h2>
@@ -38,9 +31,7 @@ export function ConnectForm({ onDone }: { onDone: () => void }) {
           {t("connect.key")}
         </label>
         <input id="key" className="line-input" type="password" autoComplete="off" spellCheck={false} placeholder="pk_…" value={apiKey} onChange={(event) => setApiKey(event.target.value)} />
-        <span className="quiet" style={{ fontSize: 13 }}>
-          {t("connect.keyHint")}
-        </span>
+        <span className="quiet small">{t("connect.keyHint")}</span>
       </div>
       {more ? (
         <div className="field">
@@ -50,16 +41,16 @@ export function ConnectForm({ onDone }: { onDone: () => void }) {
           <input id="endpoint" className="line-input" value={endpoint} onChange={(event) => setEndpoint(event.target.value)} />
         </div>
       ) : (
-        <button type="button" className="link" style={{ justifySelf: "start", fontSize: 13 }} onClick={() => setMore(true)}>
+        <button type="button" className="link start small" onClick={() => setMore(true)}>
           {t("connect.endpoint")}: {endpoint}
         </button>
       )}
-      {error && <p className="error" style={{ margin: 0 }}>{error}</p>}
-      <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+      {error !== undefined && <p className="error flush">{errorText(error, t)}</p>}
+      <div className="inline">
         <button className="btn ink" type="submit" disabled={busy || !apiKey.trim()}>
           {busy ? t("connect.checking") : t("connect.go")}
         </button>
-        <span className="quiet" style={{ fontSize: 13 }}>
+        <span className="quiet small">
           {t("connect.stored")}
         </span>
       </div>
@@ -84,9 +75,9 @@ export function Welcome({ onReady }: { onReady: () => void }) {
           </h1>
           <p className="lede">{t("welcome.lede")}</p>
         </div>
-        <div style={{ display: "grid", gap: 18 }}>
+        <div className="block roomy">
           <ConnectForm onDone={onReady} />
-          <div className="quiet" style={{ display: "grid", gap: 6, padding: "0 4px" }}>
+          <div className="quiet block tight">
             <span>
               {t("connect.noProject")}{" "}
               <a className="link" href="https://pinecomputer.io/#access" target="_blank" rel="noreferrer">

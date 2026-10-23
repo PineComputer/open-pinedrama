@@ -92,11 +92,15 @@ export function storyboard(label: string, shots: string[], style: string, versio
 </svg>`;
 }
 
+/** A blocking frame, upright like the vertical drama it is for: where the actors stand in the shot. */
 export function blocking(label: string, version: string): string {
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="640" viewBox="0 0 1024 640">
-  <rect width="1024" height="640" fill="#ffffff"/>
-  <rect x="80" y="80" width="864" height="420" fill="none" stroke="#222" stroke-width="3"/>
-  ${figure(380, 230, 2, "none", "#222")}${figure(640, 250, 2, "none", "#222")}
-  <text x="80" y="590" fill="#333" font-family="sans-serif" font-size="26">${esc(label)} · blocking · ${version} — placeholder</text>
+  const h = hue(label);
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="576" height="1024" viewBox="0 0 576 1024">
+  <rect width="576" height="1024" fill="hsl(${h} 12% 90%)"/>
+  <rect x="0" y="640" width="576" height="384" fill="hsl(${h} 10% 82%)"/>
+  <rect x="330" y="250" width="170" height="300" fill="none" stroke="hsl(${h} 12% 55%)" stroke-width="3"/>
+  ${figure(190, 420, 3.2, "none", "#2a2420")}${figure(390, 470, 2.6, "none", "#2a2420")}
+  <text x="40" y="960" fill="#3a332e" font-family="sans-serif" font-size="24">${esc(label)} · blocking · ${version}</text>
+  <text x="40" y="992" fill="#6a625b" font-family="sans-serif" font-size="20">placeholder</text>
 </svg>`;
 }

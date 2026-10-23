@@ -55,7 +55,8 @@ export interface Fleet {
   /** New Computer credentials, to save before Create: they are the only way to start it again. */
   newCredentials(): Promise<{ id: string; credentials: string }>;
   createComputer(credentials: string, label: string, idleTimeoutSeconds: number): Promise<Attached>;
-  startComputer(credentials: string, idleTimeoutSeconds: number): Promise<Attached>;
+  /** Starts the Computer these credentials name; creates it if Pine never registered it (a Create whose answer was lost). */
+  startComputer(credentials: string, label: string, idleTimeoutSeconds: number): Promise<Attached>;
   /** running, paused, stopped, failed…; "stopped" when Pine no longer knows the sandbox. */
   status(computer: ComputerRef): Promise<string>;
   setIdleTimeout(computer: ComputerRef, seconds: number): Promise<void>;

@@ -1,25 +1,36 @@
-// Seals what the studio keeps about its Computers (credentials, bindings, session tokens)
-// with AES-256-GCM. The key is generated on first run, so the maker manages no second
-// secret; the desktop app passes one from the OS keychain as STUDIO_SECRET instead.
+// Seals what the studio keeps about its Computers and the maker's project key (credentials,
+// bindings, session tokens, the API key) with AES-256-GCM. The sealing key is made on first
+// run and kept apart from what it seals: in the system's credential store (keychain.ts),
+// or handed over by the desktop shell as STUDIO_SECRET. Only where neither exists does it
+// fall back to a file in the data folder, readable by the maker's account alone.
 import { createCipheriv, createDecipheriv, randomBytes } from "node:crypto";
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { DATA_DIR } from "./config.ts";
+import { readKey, writeKey } from "./keychain.ts";
 
 let cached: Buffer | undefined;
 
-function key(): Buffer {
-  if (cached) return cached;
-  if (process.env.STUDIO_SECRET) {
-    cached = Buffer.from(process.env.STUDIO_SECRET, "base64");
-  } else {
-    const file = path.join(DATA_DIR, "secret.key");
-    if (!existsSync(file)) {
-      mkdirSync(DATA_DIR, { recursive: true });
-      writeFileSync(file, randomBytes(32).toString("base64"), { mode: 0o600 });
-    }
-    cached = Buffer.from(readFileSync(file, "utf8").trim(), "base64");
+function sealingKey(): string {
+  if (process.env.STUDIO_SECRET) return process.env.STUDIO_SECRET;
+  const stored = readKey();
+  if (stored) return stored;
+  const file = path.join(DATA_DIR, "secret.key");
+  // A key from before the credential store: move it there, so the folder alone opens nothing.
+  const key = existsSync(file) ? readFileSync(file, "utf8").trim() : randomBytes(32).toString("base64");
+  if (writeKey(key)) {
+    rmSync(file, { force: true });
+    return key;
   }
+  if (!existsSync(file)) {
+    mkdirSync(DATA_DIR, { recursive: true, mode: 0o700 });
+    writeFileSync(file, key, { mode: 0o600 });
+  }
+  return key;
+}
+
+function key(): Buffer {
+  cached ??= Buffer.from(sealingKey(), "base64");
   if (cached.length !== 32) throw new Error("The sealing key must be 32 bytes, base64.");
   return cached;
 }

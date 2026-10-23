@@ -1,6 +1,7 @@
 import { type DragEvent, useRef, useState } from "react";
 import { api } from "../api.ts";
 import { useT } from "../i18n.ts";
+import { errorText } from "../labels.ts";
 import { navigate } from "../router.tsx";
 
 const LOOKS = [
@@ -17,12 +18,11 @@ export function NewDrama() {
   const [language, setLanguage] = useState<"zh" | "en">(lang);
   const [look, setLook] = useState<string>("live action");
   const [format, setFormat] = useState("9:16, 480p");
-  const [budget, setBudget] = useState("");
   const [parallel, setParallel] = useState(4);
   const [perComputer, setPerComputer] = useState(1);
   const [notes, setNotes] = useState("");
   const [busy, setBusy] = useState(false);
-  const [error, setError] = useState<string>();
+  const [error, setError] = useState<unknown>();
   const picker = useRef<HTMLInputElement>(null);
 
   const add = (list: FileList | null) => {
@@ -42,13 +42,13 @@ export function NewDrama() {
     setBusy(true);
     setError(undefined);
     const form = new FormData();
-    for (const [key, value] of Object.entries({ title, language, look, format, budget, notes, parallel: String(parallel), perComputer: String(perComputer) })) form.set(key, value);
+    for (const [key, value] of Object.entries({ title, language, look, format, notes, parallel: String(parallel), perComputer: String(perComputer) })) form.set(key, value);
     for (const file of files) form.append("files", file);
     try {
       const { id } = await api<{ id: string }>("/api/dramas", { method: "POST", body: form });
       navigate(`/d/${id}`);
     } catch (reason) {
-      setError((reason as Error).message);
+      setError(reason);
       setBusy(false);
     }
   };
@@ -79,10 +79,10 @@ export function NewDrama() {
               {files.map((file) => (
                 <div key={file.name + file.size} className="page-file">
                   <span className="name">{file.name}</span>
-                  <span className="quiet num" style={{ fontSize: 13 }}>
+                  <span className="quiet num small">
                     {Math.max(1, Math.round(file.size / 1024))} KB
                   </span>
-                  <button className="link" style={{ fontSize: 13 }} onClick={() => setFiles((current) => current.filter((c) => c !== file))}>
+                  <button className="link small" onClick={() => setFiles((current) => current.filter((c) => c !== file))}>
                     {t("new.remove")}
                   </button>
                 </div>
@@ -114,7 +114,7 @@ export function NewDrama() {
               <span className="label">{t("new.format")}</span>
               <div className="options">
                 {["9:16, 480p", "9:16, 720p"].map((value) => (
-                  <button key={value} className={format === value ? "on" : ""} onClick={() => setFormat(value)}>
+                  <button key={value} aria-pressed={format === value} className={format === value ? "on" : ""} onClick={() => setFormat(value)}>
                     {value}
                   </button>
                 ))}
@@ -125,7 +125,7 @@ export function NewDrama() {
             <span className="label">{t("new.look")}</span>
             <div className="options">
               {LOOKS.map(([key, value]) => (
-                <button key={value} className={look === value ? "on" : ""} onClick={() => setLook(value)}>
+                <button key={value} aria-pressed={look === value} className={look === value ? "on" : ""} onClick={() => setLook(value)}>
                   {t(key)}
                 </button>
               ))}
@@ -133,26 +133,20 @@ export function NewDrama() {
           </div>
           <div className="pair">
             <div className="field">
-              <label className="label" htmlFor="budget">
-                {t("new.budget")}
-              </label>
-              <input id="budget" className="line-input num" inputMode="decimal" placeholder="9000" value={budget} onChange={(event) => setBudget(event.target.value.replace(/[^\d.]/g, ""))} />
-            </div>
-            <div className="field">
               <label className="label" htmlFor="parallel">
                 {t("new.parallel")}
               </label>
               <input id="parallel" className="line-input num" type="number" min={1} max={50} value={parallel} onChange={(event) => setParallel(Number(event.target.value))} />
             </div>
-          </div>
-          <div className="field">
-            <span className="label">{t("new.perComputer")}</span>
-            <div className="options">
-              {[1, 2, 3].map((n) => (
-                <button key={n} className={perComputer === n ? "on" : ""} onClick={() => setPerComputer(n)}>
-                  {n}
-                </button>
-              ))}
+            <div className="field">
+              <span className="label">{t("new.perComputer")}</span>
+              <div className="options">
+                {[1, 2, 3].map((n) => (
+                  <button key={n} aria-pressed={perComputer === n} className={perComputer === n ? "on" : ""} onClick={() => setPerComputer(n)}>
+                    {n}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
           <div className="field">
@@ -161,12 +155,12 @@ export function NewDrama() {
             </label>
             <textarea id="notes" className="line-area" placeholder={t("new.notesHint")} value={notes} onChange={(event) => setNotes(event.target.value)} />
           </div>
-          {error && <p className="error" style={{ margin: 0 }}>{error}</p>}
+          {error !== undefined && <p className="error flush">{errorText(error, t)}</p>}
           <div className="actions">
             <button className="btn ink" disabled={busy || !files.length || !title.trim()} onClick={start}>
               {busy ? t("new.starting") : t("new.start")}
             </button>
-            <span className="quiet" style={{ fontSize: 13.5 }}>
+            <span className="quiet small">
               {t("new.after")}
             </span>
           </div>

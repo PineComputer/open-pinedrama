@@ -62,7 +62,7 @@ function cutAccepted(episodeId: string): boolean {
   const last = get<ReviewRow>("select * from reviews where episode_id = ? order by created_at desc limit 1", episodeId);
   if (!last || last.kind !== "cut" || last.state !== "answered" || !last.decision) return false;
   const decision = JSON.parse(last.decision) as { items: { verdict: string }[] };
-  return decision.items.every((item) => item.verdict === "approve");
+  return decision.items.length > 0 && decision.items.every((item) => item.verdict === "approve");
 }
 
 async function episodeEnded(session: SessionRow, info: TurnInfo) {

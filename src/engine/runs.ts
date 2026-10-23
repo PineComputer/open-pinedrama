@@ -4,7 +4,7 @@
 import path from "node:path";
 import { readFileSync } from "node:fs";
 import { MAX_ATTACHMENT } from "./config.ts";
-import { all, get, newId, now, run } from "./db.ts";
+import { all, get, newId, now, run, transaction } from "./db.ts";
 import { computerRef, fleet, sessionRef } from "./computers.ts";
 import { followEvents, followTurn, recordTurn } from "./follow.ts";
 import { blobPath, type FileRow } from "./library.ts";
@@ -102,11 +102,18 @@ export async function sendRun(key: string): Promise<void> {
   const computer = session && computerRow(session.computer_id);
   if (!session || session.state !== "open" || computer?.state !== "running") return;
   const info = await fleet().run(computerRef(computer), sessionRef(session), saved.goal, key);
-  run("update runs set turn_id = ? where key = ?", info.turnId, key);
-  recordTurn(session.id, info);
+  transaction(() => {
+    run("update runs set turn_id = ? where key = ?", info.turnId, key);
+    recordTurn(session.id, info);
+  });
   followTurn(session.id, info.turnId);
   followEvents(session.id);
   publish(`drama:${session.drama_id}`, `session:${session.id}`);
+}
+
+/** Whether the session has been given a run (sent or waiting to be resent): its start finished. */
+export function hasRun(sessionId: string): boolean {
+  return get<{ key: string }>("select key from runs where session_id = ? limit 1", sessionId) !== undefined;
 }
 
 /** Runs whose response never arrived, to resend with their saved keys. */

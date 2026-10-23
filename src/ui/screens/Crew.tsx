@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import type { AppInfo, DramaView, SessionView } from "../../shared/types.ts";
 import { api, useResource } from "../api.ts";
 import { useT } from "../i18n.ts";
+import { computerState, errorText } from "../labels.ts";
 
 function minutes(value: number): string {
   return value >= 60 && value % 60 === 0 ? `${value / 60} h` : `${value} min`;
@@ -13,24 +14,30 @@ function minutes(value: number): string {
 function Watch({ session, onClose }: { session: SessionView; onClose: () => void }) {
   const { t } = useT();
   const [url, setUrl] = useState<string>();
-  const [error, setError] = useState<string>();
+  const [error, setError] = useState<unknown>();
   const token = async () => connectionFromDelegation(await api<DelegatedConnection>(`/api/sessions/${session.id}/desktop`, { method: "POST" })).token;
   useEffect(() => {
     api<DelegatedConnection>(`/api/sessions/${session.id}/desktop`, { method: "POST" })
       .then((delegation) => setUrl(connectionFromDelegation(delegation).url))
-      .catch((reason: Error) => setError(reason.message));
+      .catch(setError);
   }, [session.id]);
   return (
     <div className="watch">
       <div className="watch-head">
-        <span style={{ font: "500 18px var(--serif)" }}>{session.episode ?? t("crew.setup")}</span>
-        <span style={{ color: "var(--on-room-2)" }}>{session.activity}</span>
-        <span style={{ flex: 1 }} />
-        <button className="link" style={{ color: "var(--on-room)" }} onClick={onClose}>
+        <span className="who">{session.episode ?? t("crew.setup")}</span>
+        <span className="doing">{session.activity}</span>
+        <span className="grow" />
+        <button className="link" onClick={onClose}>
           {t("crew.close")}
         </button>
       </div>
-      {error ? <p style={{ margin: 22 }}>{error}</p> : url ? <PineDesktop url={url} token={token} control="view" style={{ width: "100%", height: "100%" }} /> : <p style={{ margin: 22 }}>{t("loading")}</p>}
+      {error !== undefined ? (
+        <p className="watch-note">{errorText(error, t)}</p>
+      ) : url ? (
+        <PineDesktop url={url} token={token} control="view" style={{ width: "100%", height: "100%" }} />
+      ) : (
+        <p className="watch-note">{t("loading")}</p>
+      )}
     </div>
   );
 }
@@ -55,7 +62,7 @@ export function Crew({ drama }: { drama: DramaView }) {
                 <div>
                   <div className="name">{computer.label}</div>
                   <div className="state">
-                    {computer.state}
+                    {computerState(computer.state, t)}
                     {computer.idleTimeoutMinutes !== null && (
                       <>
                         <br />
@@ -63,7 +70,7 @@ export function Crew({ drama }: { drama: DramaView }) {
                       </>
                     )}
                   </div>
-                  {computer.lastError && <div className="error" style={{ fontSize: 13, marginTop: 4 }}>{computer.lastError}</div>}
+                  {computer.lastError && <div className="error small">{computer.lastError}</div>}
                 </div>
                 <div className="slots">
                   {Array.from({ length: slots }, (_, index) => {
@@ -73,7 +80,7 @@ export function Crew({ drama }: { drama: DramaView }) {
                       <div key={session.id} className="slot">
                         <span className="ep">{session.episode ?? t("crew.setup")}</span>
                         <span className="doing">
-                          {session.waiting ? <span className="seal-text" style={{ fontWeight: 600 }}>{t("crew.waiting")}</span> : session.activity ?? ""}
+                          {session.waiting ? <span className="seal-text strong">{t("crew.waiting")}</span> : session.activity ?? ""}
                         </span>
                         {app.data?.mode === "pine" ? (
                           <button className="link" onClick={() => setWatching(session)}>

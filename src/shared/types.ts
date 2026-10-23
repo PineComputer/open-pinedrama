@@ -2,6 +2,46 @@
 
 export type Mode = "pine" | "replay";
 
+/** What went wrong, for the UI to say in the maker's language (src/engine/errors.ts). */
+export type ErrorCode =
+  | "title-missing"
+  | "screenplay-missing"
+  | "file-too-large"
+  | "not-found"
+  | "episode-busy"
+  | "drama-not-stopped"
+  | "session-ended"
+  | "computer-not-running"
+  | "message-empty"
+  | "question-closed"
+  | "decide-in-review"
+  | "decision-sending"
+  | "review-saving"
+  | "review-closed"
+  | "answer-missing"
+  | "verdicts-missing"
+  | "send-failed"
+  | "review-not-ended"
+  | "setup-restarts"
+  | "endpoint-invalid"
+  | "key-missing"
+  | "key-rejected"
+  | "pine-unreachable"
+  | "disconnect-first"
+  | "stop-failed"
+  | "no-mode"
+  | "sample-replay-only"
+  | "signed-out"
+  | "offline"
+  | "internal";
+
+/** The body of every failed API call. */
+export interface ApiFailure {
+  error: string;
+  code: ErrorCode;
+  detail?: string;
+}
+
 /** Where a drama is: casting in its setup session, then episodes in production. */
 export type DramaStatus = "setup" | "production" | "done" | "stopped";
 
@@ -64,16 +104,10 @@ export interface FileItem {
   createdAt: string;
 }
 
-export interface Money {
-  /** Agent cost reported by Pine for the drama's turns, where priced. */
-  agent: number;
-  /** Turns Pine reported without a price. */
-  unpriced: number;
-  budget: number | null;
-}
-
 export interface DramaCard {
   id: string;
+  /** Where its work runs; a drama of the other mode waits until the studio is back in its mode. */
+  mode: Mode;
   title: string;
   language: string;
   look: string;
@@ -83,7 +117,6 @@ export interface DramaCard {
   /** Computers running for this drama. */
   computers: number;
   waiting: number;
-  money: Money;
   /** The leads' sheets, once drawn: the faces on the drama's poster. */
   cast: string[];
   createdAt: string;
@@ -142,6 +175,8 @@ export interface DramaView extends DramaCard {
   setup: { state: "working" | "waiting" | "done" | "stopped"; reviewId?: string; kind?: ReviewKind; hasCast: boolean; activity?: string; note?: string };
   episodeRows: EpisodeRow[];
   crew: ComputerView[];
+  /** Its Computers wouldn't start, several times: the line waits for the maker's "try again". */
+  stalled?: { computer: string; error: string };
 }
 
 export interface CastGroup {
@@ -210,9 +245,15 @@ export interface ChatMessage {
 
 export interface ChatView {
   sessionId: string;
+  /** The episode's code; empty for the drama's setup. */
   label: string;
-  /** What a message would do now: answer the waiting question, steer the running turn, or start a run. */
-  sends: "answer" | "steer" | "run" | "none";
+  /**
+   * What a message would do now: answer the waiting question, steer the running turn, or
+   * start a run. "review" when the agent waits on files the maker decides in their review.
+   */
+  sends: "answer" | "review" | "steer" | "run" | "none";
+  /** The review the agent waits on, if any. */
+  reviewId?: string;
   messages: ChatMessage[];
 }
 

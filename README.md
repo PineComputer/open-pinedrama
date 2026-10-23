@@ -18,10 +18,25 @@ npm install
 npm run dev          # the engine on 127.0.0.1:4310 and the UI on http://127.0.0.1:5173
 ```
 
+Open the link the engine prints (`Open http://127.0.0.1:5173/api/open?ticket=…`). The
+studio answers only windows that came in through it, so other programs and web pages on
+the machine can't use your project. In development the link stays the same across
+restarts; the desktop app will open it for you.
+
 On first run the studio asks for your Pine project's API key (Project → API keys in the
-Pine console). It checks the key with Pine, then keeps it sealed in the studio's data
-folder; nothing needs editing. The project needs Pine's drama skill. Settings changes or
-forgets the key.
+Pine console). It checks the key with Pine, then keeps it sealed; nothing needs editing.
+The project needs Pine's drama skill. Settings changes or forgets the key, and forgetting
+it first stops every Computer the project has running for the studio.
+
+Where things are kept:
+
+- **Data:** the system's place for app data: `~/Library/Application Support/Pine Drama Studio`
+  on macOS, `%APPDATA%\Pine Drama Studio` on Windows, `$XDG_DATA_HOME/pine-drama-studio` on
+  Linux. `npm run dev` uses the repository's `.data/` instead, so development never touches
+  an installed studio's data. One engine runs per data folder.
+- **The sealing key** for the API key and Computer credentials: the macOS Keychain, or the
+  Secret Service on Linux. Where neither is available (Windows, until the desktop app hands
+  it over from Electron's safeStorage), a file in the data folder only your account can read.
 
 Or choose **replay**: recorded turns and placeholder pictures and video, so every screen
 works with no project and no spend, and **Start the sample drama** sets one up in a click.
@@ -35,8 +50,10 @@ For development, these override what the app saves:
 | `PINE_SANDBOX_API_KEY`, `PINE_SANDBOX_ENDPOINT` | Use this project instead of the saved one. |
 | `STUDIO_MODE=replay` | Start in replay. |
 | `STUDIO_REPLAY_SPEED` | Play the replay faster, e.g. `4`. |
-| `STUDIO_DATA_DIR` | Records, library and sealing key. Default `.data/`. |
-| `STUDIO_PORT` | The engine's port on 127.0.0.1. Default 4310. |
+| `STUDIO_DATA_DIR` | Records and library. `npm run dev` sets `.data/`. |
+| `STUDIO_PORT` | The engine's port on 127.0.0.1. Default 4310; `0` takes any free port. |
+
+Put them in `.env.local` and `npm run dev` reads it.
 
 ## How it fits together
 

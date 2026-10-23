@@ -1,7 +1,8 @@
 import { useEffect } from "react";
 import type { AppInfo, ReviewSummary } from "../shared/types.ts";
-import { useResource } from "./api.ts";
+import { ApiError, useResource } from "./api.ts";
 import { setLang, useT } from "./i18n.ts";
+import { Mark } from "./Mark.tsx";
 import { Link, match, navigate, usePath } from "./router.tsx";
 import { Drama } from "./screens/Drama.tsx";
 import { InboxScreen } from "./screens/Inbox.tsx";
@@ -11,17 +12,17 @@ import { Settings } from "./screens/Settings.tsx";
 import { Slate } from "./screens/Slate.tsx";
 import { Welcome } from "./screens/Welcome.tsx";
 
-function Bar({ app, waiting }: { app: AppInfo; waiting: ReviewSummary[] }) {
+function Bar({ app, waiting }: { app?: AppInfo; waiting: ReviewSummary[] }) {
   const { t, lang } = useT();
   const { path } = usePath();
   // On a review, "next" means the one after it.
   const current = match("/r/:id", path)?.id;
   const others = waiting.filter((item) => item.id !== current);
-  const ready = app.mode !== "none";
+  const ready = app !== undefined && app.mode !== "none";
   return (
     <header className="bar">
       <Link to="/" className="wordmark">
-        <span className="seal">松</span>
+        <Mark />
         {t("app.name")}
       </Link>
       {ready && (
@@ -36,7 +37,7 @@ function Bar({ app, waiting }: { app: AppInfo; waiting: ReviewSummary[] }) {
       )}
       <span className="spacer" />
       <div className="meta">
-        {app.mode === "replay" && <span>{t("mode.replay")}</span>}
+        {app?.mode === "replay" && <span>{t("mode.replay")}</span>}
         <button className="link" onClick={() => setLang(lang === "zh" ? "en" : "zh")}>
           {lang === "zh" ? "English" : "中文"}
         </button>
@@ -56,6 +57,23 @@ function Bar({ app, waiting }: { app: AppInfo; waiting: ReviewSummary[] }) {
   );
 }
 
+/** Before the studio can be used: this window isn't the studio's, or the engine isn't answering. */
+function Gate({ error, onRetry }: { error: unknown; onRetry: () => void }) {
+  const { t } = useT();
+  const signedOut = error instanceof ApiError && error.code === "signed-out";
+  return (
+    <main className="page gate">
+      <h1>{t(signedOut ? "gate.signedOutTitle" : "gate.offlineTitle")}</h1>
+      <p className="empty-note">{t(signedOut ? "gate.signedOut" : "gate.offline")}</p>
+      {!signedOut && (
+        <button className="btn" onClick={onRetry}>
+          {t("gate.retry")}
+        </button>
+      )}
+    </main>
+  );
+}
+
 export function App() {
   const { path } = usePath();
   const app = useResource<AppInfo>("/api/app", ["app"]);
@@ -67,7 +85,14 @@ export function App() {
     document.title = waiting.length ? `(${waiting.length}) ${t("app.name")}` : t("app.name");
   }, [waiting.length, t]);
 
-  if (!app.data) return null;
+  if (!app.data) {
+    return app.error ? (
+      <>
+        <Bar waiting={[]} />
+        <Gate error={app.error} onRetry={app.reload} />
+      </>
+    ) : null;
+  }
   if (app.data.mode === "none") {
     return (
       <>

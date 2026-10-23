@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import type { ChatView } from "../../shared/types.ts";
 import { api, useResource } from "../api.ts";
 import { useT } from "../i18n.ts";
+import { errorText } from "../labels.ts";
+import { Link } from "../router.tsx";
 
 /** The agents' narration and questions, per session, and a line to answer, steer or ask. */
 export function Chat({ dramaId, onClose }: { dramaId: string; onClose: () => void }) {
@@ -11,7 +13,7 @@ export function Chat({ dramaId, onClose }: { dramaId: string; onClose: () => voi
   const active = selected ?? sessions.data?.[0]?.sessionId;
   const chat = useResource<ChatView>(active ? `/api/sessions/${active}/chat` : null, active ? [`session:${active}`] : []);
   const [text, setText] = useState("");
-  const [error, setError] = useState<string>();
+  const [error, setError] = useState<unknown>();
   const list = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -26,7 +28,7 @@ export function Chat({ dramaId, onClose }: { dramaId: string; onClose: () => voi
       setText("");
       chat.reload();
     } catch (reason) {
-      setError((reason as Error).message);
+      setError(reason);
     }
   };
 
@@ -36,7 +38,7 @@ export function Chat({ dramaId, onClose }: { dramaId: string; onClose: () => voi
     <aside className="talk">
       <div className="talk-head">
         <h2>{t("talk.title")}</h2>
-        <span style={{ flex: 1 }} />
+        <span className="grow" />
         <button className="link" onClick={onClose}>
           {t("talk.close")}
         </button>
@@ -44,8 +46,8 @@ export function Chat({ dramaId, onClose }: { dramaId: string; onClose: () => voi
       <div className="talk-tabs">
         {(sessions.data ?? []).map((session) => (
           <button key={session.sessionId} className={`${session.sessionId === active ? "on" : ""} ${session.sends === "answer" ? "asks" : ""}`} onClick={() => setSelected(session.sessionId)}>
-            {session.label}
-            {session.sends === "answer" ? " ●" : ""}
+            {session.label || t("talk.setup")}
+            {session.sends === "answer" || session.sends === "review" ? " ●" : ""}
           </button>
         ))}
       </div>
@@ -58,11 +60,15 @@ export function Chat({ dramaId, onClose }: { dramaId: string; onClose: () => voi
         ))}
       </div>
       <div className="talk-foot">
-        {error && <span className="error" style={{ fontSize: 13 }}>{error}</span>}
+        {error !== undefined && <span className="error small">{errorText(error, t)}</span>}
+        {chat.data?.sends === "review" && chat.data.reviewId ? (
+          <Link to={`/r/${chat.data.reviewId}`} className="btn small">
+            {t("talk.inReview")} →
+          </Link>
+        ) : (
         <div className="row">
           <textarea
             className="line-area"
-            style={{ minHeight: 44 }}
             value={text}
             disabled={!active || chat.data?.sends === "none"}
             placeholder={placeholder}
@@ -75,6 +81,7 @@ export function Chat({ dramaId, onClose }: { dramaId: string; onClose: () => voi
             {t("talk.send")}
           </button>
         </div>
+        )}
       </div>
     </aside>
   );

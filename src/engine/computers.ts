@@ -1,9 +1,11 @@
 // A drama's Computers and their sessions: create, start, stop, open and close, with the
 // records saved around each call the way Pine's best practices ask. Credentials are saved
-// before Create; one lifecycle action runs at a time per Computer.
+// before Create, and a Create or Start that fails is retried with the same credentials,
+// never with a new identity. One lifecycle action runs at a time per Computer, and each
+// reads the Computer's row afresh, since the action before it may have changed it.
 import { IDLE_WORKING_S } from "./config.ts";
 import { all, get, newId, now, run } from "./db.ts";
-import type { ComputerRef, Fleet, SessionRef } from "./fleet.ts";
+import type { Attached, ComputerRef, Fleet, SessionRef } from "./fleet.ts";
 import { publish } from "./live.ts";
 import { type ComputerRow, type SessionRow, computer as computerRow, openSessionsOf } from "./records.ts";
 import { seal, unseal } from "./seal.ts";
@@ -12,7 +14,7 @@ let fleetRef: Fleet | undefined;
 
 /**
  * Uses a fleet from now on. Computers another fleet made are out of its reach, so they
- * are marked stopped (replay's vanish anyway; the maker stops Pine's before switching).
+ * are marked stopped (replay's vanish anyway; disconnect stops Pine's before switching).
  */
 export function setFleet(fleet: Fleet | undefined): void {
   fleetRef = fleet;
@@ -56,6 +58,31 @@ function message(error: unknown): string {
   return error instanceof Error ? error.message : String(error);
 }
 
+/** After this many failed starts in a row, a Computer waits for the maker to say "try again". */
+export const START_ATTEMPTS = 3;
+
+/** Whether a stopped or failed Computer may be started now: failed ones back off, then wait for the maker. */
+export function startable(row: ComputerRow): boolean {
+  if (row.state === "stopped") return true;
+  if (row.state !== "failed" || row.failures >= START_ATTEMPTS) return false;
+  return Date.now() - Date.parse(row.updated_at) >= 15_000 * 2 ** (row.failures - 1);
+}
+
+function started(id: string, attached: Attached): void {
+  run(
+    "update computers set binding = ?, revision = ?, state = 'running', idle_timeout = ?, failures = 0, last_error = null, updated_at = ? where id = ?",
+    seal(attached.binding),
+    attached.revision,
+    IDLE_WORKING_S,
+    now(),
+    id,
+  );
+}
+
+function failedToStart(id: string, error: unknown): void {
+  run("update computers set state = 'failed', failures = failures + 1, last_error = ?, updated_at = ? where id = ?", message(error), now(), id);
+}
+
 /** A new Computer for a drama. Resolves once it runs; its row says "starting" meanwhile. */
 export async function provision(dramaId: string): Promise<void> {
   const count = get<{ n: number }>("select count(*) as n from computers where drama_id = ?", dramaId)?.n ?? 0;
@@ -75,35 +102,35 @@ export async function provision(dramaId: string): Promise<void> {
   publish(`drama:${dramaId}`);
   await serialized(id, async () => {
     try {
-      const attached = await fleet().createComputer(credentials, label, IDLE_WORKING_S);
-      run("update computers set binding = ?, revision = ?, state = 'running', last_error = null, updated_at = ? where id = ?", seal(attached.binding), attached.revision, now(), id);
+      started(id, await fleet().createComputer(credentials, label, IDLE_WORKING_S));
     } catch (error) {
-      run("update computers set state = 'failed', last_error = ?, updated_at = ? where id = ?", message(error), now(), id);
+      failedToStart(id, error);
     }
   });
-  publish(`drama:${dramaId}`);
+  publish(`drama:${dramaId}`, "dramas");
 }
 
-/** Starts a stopped Computer of the drama again, from its saved credentials. */
+/**
+ * Starts a stopped or failed Computer of the drama from its saved credentials. For one
+ * whose Create never answered, the fleet creates it with those same credentials.
+ */
 export async function restart(row: ComputerRow): Promise<void> {
   run("update computers set state = 'starting', updated_at = ? where id = ?", now(), row.id);
   publish(`drama:${row.drama_id}`);
   await serialized(row.id, async () => {
     try {
-      const attached = await fleet().startComputer(unseal(row.credentials), IDLE_WORKING_S);
-      run(
-        "update computers set binding = ?, revision = ?, state = 'running', idle_timeout = ?, last_error = null, updated_at = ? where id = ?",
-        seal(attached.binding),
-        attached.revision,
-        IDLE_WORKING_S,
-        now(),
-        row.id,
-      );
+      started(row.id, await fleet().startComputer(unseal(row.credentials), row.label, IDLE_WORKING_S));
     } catch (error) {
-      run("update computers set state = 'failed', last_error = ?, updated_at = ? where id = ?", message(error), now(), row.id);
+      failedToStart(row.id, error);
     }
   });
-  publish(`drama:${row.drama_id}`);
+  publish(`drama:${row.drama_id}`, "dramas");
+}
+
+/** The maker's "try again" after a drama's Computers wouldn't start. */
+export function retryStarts(dramaId: string): void {
+  run("update computers set failures = 0, updated_at = ? where drama_id = ? and state = 'failed'", new Date(0).toISOString(), dramaId);
+  publish(`drama:${dramaId}`, "dramas");
 }
 
 /**
@@ -128,14 +155,26 @@ export function markStopped(row: ComputerRow, why: string): void {
   publish(`drama:${row.drama_id}`, "inbox", "dramas");
 }
 
+/**
+ * Stops a Computer. It counts as stopped only once Pine says so: a stop that fails leaves it
+ * running (and says why), and one still shutting down stays "stopping" until reconcile sees
+ * it gone. Throws when the stop failed, so whoever asked can tell the maker.
+ */
 export async function stop(row: ComputerRow): Promise<void> {
   run("update computers set state = 'stopping', updated_at = ? where id = ?", now(), row.id);
   publish(`drama:${row.drama_id}`);
   await serialized(row.id, async () => {
+    const current = computerRow(row.id) ?? row;
+    if (!current.binding) {
+      markStopped(current, "Its Computer was stopped.");
+      return;
+    }
     try {
-      if (row.binding) await fleet().stop(computerRef(row));
-    } finally {
-      markStopped({ ...row, state: "stopping" }, "Its Computer was stopped.");
+      if (await fleet().stop(computerRef(current))) markStopped(current, "Its Computer was stopped.");
+    } catch (error) {
+      run("update computers set state = 'running', last_error = ?, updated_at = ? where id = ?", message(error), now(), row.id);
+      publish(`drama:${row.drama_id}`);
+      throw error;
     }
   });
 }

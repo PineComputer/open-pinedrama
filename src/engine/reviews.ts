@@ -5,7 +5,8 @@
 import type { Decision, FileItem, ReviewItem, ReviewKind } from "../shared/types.ts";
 import { computerRef, fleet, sessionRef } from "./computers.ts";
 import { answerText } from "./decisions.ts";
-import { all, newId, now, run } from "./db.ts";
+import { StudioError } from "./errors.ts";
+import { all, newId, now, run, transaction } from "./db.ts";
 import { followTurn, recordTurn } from "./follow.ts";
 import { type FileRow, filesOfTurn, toItem, versionNumber } from "./library.ts";
 import { publish } from "./live.ts";
@@ -91,20 +92,61 @@ function subject(review: ReviewRow): string {
   }
 }
 
-export class ReviewError extends Error {
-  constructor(
-    message: string,
-    readonly status: number,
-  ) {
-    super(message);
-  }
-}
+/** Reviews whose decision this process is sending right now. */
+const sending = new Set<string>();
 
 /** Sends the maker's decision as the answer to the turn that asked. */
 export async function decide(reviewId: string, decision: Decision): Promise<ReviewRow> {
+  if (sending.has(reviewId)) throw new StudioError("decision-sending", "This decision is being sent.", 409);
+  sending.add(reviewId);
+  try {
+    return await send(reviewId, decision);
+  } finally {
+    sending.delete(reviewId);
+  }
+}
+
+/** Pine took the answer: the turn, the review and the episode move on together. */
+function answered(review: ReviewRow, session: SessionRow, nextTurnId: string): void {
+  transaction(() => {
+    run("update turns set state = 'answered', next_turn_id = ?, settled = 1 where id = ?", nextTurnId, review.turn_id);
+    run("update reviews set state = 'answered' where id = ?", review.id);
+    if (session.episode_id) run("update episodes set state = 'working', updated_at = ? where id = ?", now(), session.episode_id);
+  });
+}
+
+/**
+ * Decisions the engine was sending when it stopped. Pine says whether the answer arrived:
+ * if it did, the work goes on; if not, the review opens again for the maker to send.
+ */
+export async function reconcileSending(): Promise<void> {
+  for (const review of all<ReviewRow>("select * from reviews where state = 'sending'")) {
+    if (sending.has(review.id)) continue;
+    const session = sessionRow(review.session_id);
+    const computer = session && computerRow(session.computer_id);
+    if (!session || session.state !== "open" || computer?.state !== "running") {
+      run("update reviews set state = 'ended' where id = ? and state = 'sending'", review.id);
+      continue;
+    }
+    try {
+      const info = await fleet().wait(computerRef(computer), sessionRef(session), review.turn_id, 1_000);
+      if (info.state === "answered" && info.nextTurnId) {
+        answered(review, session, info.nextTurnId);
+        followTurn(session.id, info.nextTurnId);
+      } else if (info.state === "needs_input") {
+        run("update reviews set state = 'open' where id = ? and state = 'sending'", review.id);
+      }
+    } catch (error) {
+      console.error(`review ${review.id}:`, (error as Error).message); // asked again at the next reconcile
+    }
+    publish(`drama:${review.drama_id}`, "inbox");
+  }
+}
+
+async function send(reviewId: string, decision: Decision): Promise<ReviewRow> {
   const review = reviewRow(reviewId);
-  if (!review) throw new ReviewError("No such review.", 404);
-  if (review.state !== "open") throw new ReviewError(review.state === "saving" ? "Its files are still being saved." : "This review is no longer open.", 409);
+  if (!review) throw new StudioError("not-found", "No such review.", 404);
+  if (review.state !== "open") throw review.state === "saving" ? new StudioError("review-saving", "Its files are still being saved.", 409) : new StudioError("review-closed", "This review is no longer open.", 409);
   const files = filesOfTurn(review.turn_id);
   const { items } = itemsOf(review.kind, files);
   const labels = new Map(items.map((item) => [item.key, item.label]));
@@ -120,8 +162,8 @@ export async function decide(reviewId: string, decision: Decision): Promise<Revi
         notes: (item.notes ?? []).map((note) => (note.fileId !== undefined && !itemFiles.get(item.key)!.has(note.fileId) ? { ...note, fileId: undefined } : note)),
       })),
   };
-  if (review.kind === "question" && !kept.words.trim()) throw new ReviewError("Write an answer first.", 400);
-  if (review.kind !== "question" && kept.items.length !== items.length) throw new ReviewError("Give every item a verdict first.", 400);
+  if (review.kind === "question" && !kept.words.trim()) throw new StudioError("answer-missing", "Write an answer first.");
+  if (review.kind !== "question" && kept.items.length !== items.length) throw new StudioError("verdicts-missing", "Give every item a verdict first.");
   const answer = answerText(kept, { kind: review.kind, subject: subject(review), labels, paths: new Map(files.map((file) => [file.id, file.rel_path])) });
 
   run("update reviews set state = 'sending', decision = ?, answer = ?, decided_at = ? where id = ?", JSON.stringify(kept), answer, now(), reviewId);
@@ -136,9 +178,7 @@ export async function decide(reviewId: string, decision: Decision): Promise<Revi
   }
   try {
     const next = await fleet().answer(computerRef(computer), sessionRef(session), review.turn_id, answer);
-    run("update turns set state = 'answered', next_turn_id = ? where id = ?", next.turnId, review.turn_id);
-    run("update reviews set state = 'answered' where id = ?", reviewId);
-    if (session.episode_id) run("update episodes set state = 'working', updated_at = ? where id = ?", now(), session.episode_id);
+    answered(review, session, next.turnId);
     recordTurn(session.id, next);
     followTurn(session.id, next.turnId);
   } catch (error) {
@@ -146,7 +186,7 @@ export async function decide(reviewId: string, decision: Decision): Promise<Revi
     // The turn can't take an answer any more: the session moved on or ended. Keep the decision.
     run("update reviews set state = ? where id = ?", status === 404 || status === 409 ? "ended" : "open", reviewId);
     publish(`drama:${review.drama_id}`, "inbox");
-    if (status !== 404 && status !== 409) throw new ReviewError(`Couldn't send the decision: ${(error as Error).message}`, 502);
+    if (status !== 404 && status !== 409) throw new StudioError("send-failed", `Couldn't send the decision: ${(error as Error).message}`, 502, (error as Error).message);
   }
   publish(`drama:${review.drama_id}`, "inbox", `session:${session.id}`);
   return reviewRow(reviewId)!;
@@ -155,11 +195,11 @@ export async function decide(reviewId: string, decision: Decision): Promise<Revi
 /** An ended review's decision, carried into a new session for its episode (rule 3: only on the maker's click). */
 export function resumeWithDecision(reviewId: string): void {
   const review = reviewRow(reviewId);
-  if (!review) throw new ReviewError("No such review.", 404);
-  if (review.state !== "ended") throw new ReviewError("This review hasn't ended.", 409);
-  if (!review.episode_id) throw new ReviewError("The drama's setup restarts on its own.", 409);
+  if (!review) throw new StudioError("not-found", "No such review.", 404);
+  if (review.state !== "ended") throw new StudioError("review-not-ended", "This review hasn't ended.", 409);
+  if (!review.episode_id) throw new StudioError("setup-restarts", "The drama's setup restarts on its own.", 409);
   run(
-    "update episodes set state = 'queued', resume = 1, note = ?, updated_at = ? where id = ? and state in ('stopped', 'failed', 'waiting', 'working')",
+    "update episodes set state = 'queued', resume = 1, carry = ?, updated_at = ? where id = ? and state in ('stopped', 'failed', 'waiting', 'working')",
     review.answer ?? "",
     now(),
     review.episode_id,

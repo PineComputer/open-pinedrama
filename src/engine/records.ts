@@ -1,5 +1,5 @@
 // The studio's rows, typed, and the small queries several modules share.
-import type { DramaStatus, EpisodeState, ReviewKind, ReviewState } from "../shared/types.ts";
+import type { DramaStatus, EpisodeState, Mode, ReviewKind, ReviewState } from "../shared/types.ts";
 import { all, get } from "./db.ts";
 
 export interface DramaRow {
@@ -8,10 +8,11 @@ export interface DramaRow {
   language: string;
   look: string;
   format: string;
-  budget: number | null;
   parallel: number;
   per_computer: number;
   notes: string;
+  /** Where its work runs: a replay drama never starts Pine Computers, and a Pine drama never plays in replay. */
+  mode: Mode;
   status: DramaStatus;
   note: string;
   continues: number;
@@ -28,6 +29,7 @@ export interface EpisodeRow {
   session_id: string | null;
   note: string;
   resume: number;
+  carry: string;
   continues: number;
   updated_at: string;
 }
@@ -35,6 +37,7 @@ export interface EpisodeRow {
 export interface ComputerRow {
   id: string;
   drama_id: string;
+  mode: Mode;
   label: string;
   credentials: string;
   binding: string | null;
@@ -42,6 +45,7 @@ export interface ComputerRow {
   state: "starting" | "running" | "stopping" | "stopped" | "failed";
   idle_timeout: number | null;
   last_error: string | null;
+  failures: number;
   created_at: string;
   updated_at: string;
 }
@@ -69,6 +73,7 @@ export interface TurnRow {
   question: string;
   summary: string;
   files_saved: number;
+  settled: number;
   save_error: string | null;
   cost: number | null;
   next_turn_id: string | null;

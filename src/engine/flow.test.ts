@@ -11,12 +11,14 @@ const DATA = mkdtempSync(path.join(tmpdir(), "studio-flow-"));
 process.env.STUDIO_DATA_DIR = DATA;
 process.env.STUDIO_MODE = "replay";
 process.env.STUDIO_REPLAY_SPEED = "40";
+process.env.STUDIO_TOKEN = "test-token";
+process.env.STUDIO_SECRET = Buffer.alloc(32, 7).toString("base64");
 
 let fetchApp: (request: Request) => Response | Promise<Response>;
 let stop: () => void;
 
 async function call<T>(method: string, url: string, body?: unknown): Promise<T> {
-  const init: RequestInit = { method, headers: { host: "127.0.0.1:4310" } };
+  const init: RequestInit = { method, headers: { host: "127.0.0.1:4310", origin: "http://127.0.0.1:4310", cookie: "studio=test-token" } };
   if (body instanceof FormData) init.body = body;
   else if (body !== undefined) {
     init.body = JSON.stringify(body);
@@ -72,7 +74,6 @@ describe("a drama in replay", () => {
     const form = new FormData();
     form.set("title", "Test drama");
     form.set("language", "en");
-    form.set("budget", "600");
     form.set("parallel", "2");
     form.set("perComputer", "1");
     form.append("files", new File(["EPISODE 1\nLin enters."], "screenplay.txt", { type: "text/plain" }));
@@ -124,6 +125,5 @@ describe("a drama in replay", () => {
       return rows.EP001.state === "done" && rows.EP003.state !== "queued" ? view : undefined;
     });
     expect(after.episodeRows.find((row) => row.code === "EP001")!.stages.cut.state).toBe("done");
-    expect(after.money.agent).toBeGreaterThan(0);
   }, 30_000);
 });

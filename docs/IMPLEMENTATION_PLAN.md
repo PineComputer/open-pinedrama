@@ -27,6 +27,15 @@ The restart path is checked by hand: lost Computers mark episodes stopped and en
 - No backend is needed for a maker with their own project; one would only serve makers without a Pine project, teams sharing a line, or a later "Sign in with Pine".
 - The screens moved to a paper-and-ink studio look: posters with the leads behind the title, a production sheet with each episode's newest frame, a dark viewing room for review.
 
+**Safety and desktop readiness, 23 October 2026,** after an independent review of the code:
+- Each drama belongs to the mode it was made in, so connecting Pine never starts paid Computers for a replay drama.
+- A Create or Start that fails is retried as the same Computer, with backoff; after three failures the drama says so and waits for "try again". A stop counts only once Pine confirms it, and disconnecting keeps the key if any Computer won't stop.
+- A turn's files and the flow's move after it are marked separately, and decisions in flight when the engine stopped are checked against Pine on start. Chat can't answer a review that has files to look at; a cut counts as accepted only with a verdict on it.
+- The API needs this launch's token (a cookie from the printed link) and the studio's own origin for changes; returned files can't run scripts in the studio's origin.
+- Data lives where each OS keeps app data, one engine per data folder; the sealing key moved to the Keychain or Secret Service; bundled files resolve from the code's location, not the working directory.
+- Errors reach the maker as codes the UI words in their language; review drafts survive leaving the page.
+- Budget and spend were taken out (rule 6).
+
 **Not yet verified:** anything against real Pine. Milestone 2's spike needs the maker's go-ahead, a spend cap and a project with the drama skill.
 
 ## Decisions carried in
@@ -61,7 +70,7 @@ From the plan review (Codex, 23 October), checked against Pine's docs:
 
    Run idempotency keys are saved before `run`. Lifecycle actions on one Computer are serialized.
 5. **Path labels are hints.** Pine guarantees each returned file's path, size, hash and type, not drama stages or segments. The library tags files from their paths when it can; every screen also works from the agent's own words and the plain file list. The spike checks what the drama skill actually returns.
-6. **Spend is labelled honestly.** Turn `usage.cost` is shown as agent cost. Video charges count only once we see where Pine reports them; until then they are an estimate, labelled as one. Unpriced values stay "unknown".
+6. **No spend figures yet.** Budgets and spend are left out of the first release: Pine's turn `usage.cost` is recorded, but nothing is shown or put in a goal until we know where video charges appear (the spike).
 
 ## Shape of the code
 
@@ -86,7 +95,7 @@ docs/
 |---|---|
 | `pine.ts` | A small interface over the SDK calls we use: create/start/stop Computers, sessions, `writeFile`, `run`/`wait`/`answer`/`steer`/`cancel`, `events`, `readFile`/`openFile`, `setIdleTimeout`, `delegateDesktop`, skills check. The real implementation wraps the SDK. |
 | `replay.ts` | Plays recorded turns (questions, summaries, placeholder files) through the same calls, for development, tests and demos without a key or any spend. It starts with a hand-written recording of the drama skill's stops and is replaced by real recordings from the spike. It is not a simulated agent. |
-| `store.ts` | SQLite: dramas, episodes, computers, sessions, runs, questions, files, spend. Credentials, bindings and session tokens are sealed with AES-GCM. The key is generated on first run (the OS keychain on desktop, a 0600 file in local web mode), so the maker manages no second secret. |
+| `store.ts` | SQLite: dramas, episodes, computers, sessions, runs, questions, files. The API key, credentials, bindings and session tokens are sealed with AES-GCM. The key is generated on first run and kept in the OS credential store (Keychain, Secret Service, or Electron's safeStorage from the desktop shell), so the maker manages no second secret. |
 | `goals.ts` | The plain-language goals: setup, episode up to storyboards, continue after a decision, apply notes, finish. |
 | `scheduler.ts` | Every few seconds: start the drama's setup; after approval, fill free slots from the episode queue (pool size, Computer limit, cap on episodes waiting for the maker); start and stop Computers; idle-timeout policy. |
 | `follow.ts` | Follows every running turn with `wait`; on `needs_input` records a question; on the end of a turn copies the returned files into the library; follows events for live progress; saves cursors. |
@@ -98,9 +107,9 @@ docs/
 
 Review throughput is the main navigation. With 80 episodes, the maker should rarely go Board → episode → Board.
 
-1. **Slate** and **New drama** (drop files, title, language, look, format, budget, episodes at once).
+1. **Slate** and **New drama** (drop files, title, language, look, format, episodes at once).
 2. **Inbox first.** A persistent "Next review (n)" control on every screen. Reviews open in the room for their kind and move to the next one when sent. A review ends with **Send review**, which shows a summary of the verdicts and notes before it goes. Plain questions are answered right in the inbox.
-3. **Drama** with tabs: **Board** (episodes × stages, "Now", Computer), **Cast & world**, **Crew**, **Spend**; a **Chat** drawer (narration, questions, steer).
+3. **Drama** with tabs: **Board** (a wall of the episodes in their 9:16 frames, or a sheet of episodes × stages), **Cast & world**, **Crew**, **To review**; a **Chat** drawer (narration, questions, steer).
 4. **Episode room:**
    - **Storyboards:** filmstrip of segments, the image at its own aspect ratio with notes pinned to a spot, the agent's words and the shot list, approve / note / send back, keyboard.
    - **Takes:** 9:16 player, take column, compare.

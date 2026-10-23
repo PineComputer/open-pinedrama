@@ -7,7 +7,6 @@ export interface DramaBrief {
   language: string;
   look: string;
   format: string;
-  budget: number | null;
   notes: string;
 }
 
@@ -32,7 +31,6 @@ export function setupGoal(drama: DramaBrief, attachments: string[]): string {
   return [
     `Use the drama-workflow skill to produce a vertical short drama from the attached screenplay (${attachments.join(", ")}).`,
     brief(drama),
-    drama.budget ? `Budget for the whole drama: $${drama.budget}.` : "",
     drama.notes ? `The maker's notes: ${drama.notes}` : "",
     "Read the screenplay and ask me for anything that is missing.",
     "Write the bible, then make the cast, the locations and the key props.",
@@ -46,11 +44,10 @@ export function setupGoal(drama: DramaBrief, attachments: string[]): string {
     .join("\n");
 }
 
-export function episodeGoal(drama: DramaBrief, code: string, budget: number | null, attachments: string[]): string {
+export function episodeGoal(drama: DramaBrief, code: string, attachments: string[]): string {
   return [
     `Use the drama-workflow skill to make episode ${code} of "${drama.title}" from the attached screenplay.`,
     brief(drama),
-    budget ? `Budget for this episode: $${budget}.` : "",
     `The attached bible and images are the approved references: ${attachments.join(", ")}. Use them as they are; do not redesign the cast, locations or props.`,
     "Stop and ask me to review the episode's storyboards, returning them with your question, with anything the observer found.",
     "After I approve, shoot the takes, check them, and ask me about any takes with dialogue that need my ears, returning those takes.",
@@ -62,11 +59,10 @@ export function episodeGoal(drama: DramaBrief, code: string, budget: number | nu
 }
 
 /** For an episode whose session ended: continue in a new session from what the studio kept. */
-export function resumeGoal(drama: DramaBrief, code: string, budget: number | null, attachments: string[], decision?: string): string {
+export function resumeGoal(drama: DramaBrief, code: string, attachments: string[], decision?: string): string {
   return [
     `Use the drama-workflow skill to continue episode ${code} of "${drama.title}" in this new session; the earlier session ended.`,
     brief(drama),
-    budget ? `Budget left for this episode: $${budget}.` : "",
     `Attached are the screenplay, the approved references and the episode's work so far: ${attachments.join(", ")}. Continue from them; redo only what is missing.`,
     decision ? `My last decision, made on the attached files:\n${decision}` : "",
     "Stop for my review of storyboards, takes with dialogue and the cut, as before, returning the files with each question. Finish when I accept the cut.",
