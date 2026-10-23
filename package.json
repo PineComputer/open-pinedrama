@@ -4,6 +4,8 @@
   "private": true,
   "license": "Apache-2.0",
   "type": "module",
+  "description": "A studio for makers of AI vertical short dramas, built on Pine Computer.",
+  "main": "dist/desktop/main.mjs",
   "scripts": {
     "dev": "node scripts/dev.mjs",
     "engine": "tsx src/engine/main.ts",
@@ -11,24 +13,27 @@
     "start": "NODE_ENV=production tsx src/engine/main.ts",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
-    "check": "tsc --noEmit && vitest run"
+    "check": "tsc --noEmit && vitest run",
+    "desktop": "node scripts/desktop.mjs && electron .",
+    "package": "node scripts/desktop.mjs && electron-builder"
   },
-  "dependencies": {
+  "devDependencies": {
     "@fontsource-variable/instrument-sans": "^5.3.0",
     "@fontsource-variable/newsreader": "^5.3.0",
     "@hono/node-server": "^2.1.5",
     "@pinesandbox/computer": "^0.3.4",
     "@pinesandbox/computer-web": "^0.3.8",
-    "hono": "^4.13.13",
-    "lucide-react": "^1.61.0",
-    "react": "^19.3.1",
-    "react-dom": "^19.3.1"
-  },
-  "devDependencies": {
     "@types/node": "^24.0.0",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.1.2",
+    "electron": "44.9.3",
+    "electron-builder": "26.17.0",
+    "esbuild": "0.28.2",
+    "hono": "^4.13.13",
+    "lucide-react": "^1.61.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2",
     "vite": "^8.3.5",
@@ -36,5 +41,40 @@
   },
   "engines": {
     "node": ">=24"
+  },
+  "build": {
+    "appId": "io.pinecomputer.drama-studio",
+    "productName": "Pine Drama Studio",
+    "directories": {
+      "output": "release",
+      "buildResources": "desktop/assets"
+    },
+    "files": [
+      "dist/ui/**",
+      "dist/desktop/**",
+      "fixtures/replay/**",
+      "package.json"
+    ],
+    "asarUnpack": [
+      "dist/ui/**",
+      "fixtures/replay/**"
+    ],
+    "mac": {
+      "category": "public.app-category.video",
+      "target": [
+        "dmg"
+      ]
+    },
+    "win": {
+      "target": [
+        "nsis"
+      ]
+    },
+    "linux": {
+      "target": [
+        "AppImage"
+      ],
+      "category": "AudioVideo"
+    }
   }
 }

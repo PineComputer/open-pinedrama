@@ -36,7 +36,13 @@ The restart path is checked by hand: lost Computers mark episodes stopped and en
 - Errors reach the maker as codes the UI words in their language; review drafts survive leaving the page.
 - Budget and spend were taken out (rule 6).
 
-**Not yet verified:** anything against real Pine. Milestone 2's spike needs the maker's go-ahead, a spend cap and a project with the drama skill.
+**Desktop app, 23 October 2026.** Electron 44 (Node 24, with `node:sqlite`) around the same engine and UI:
+- The engine runs in a utility process on a free port; the shell makes the launch token and opens the window through the engine's link. One copy runs at a time.
+- The data folder is the one the engine always uses; Chromium's files go in its `browser` folder. On Windows the sealing key is kept with safeStorage.
+- On macOS the bar is the title bar, the dock badge counts waiting reviews, and closing the window keeps the line running.
+- `npm run package` builds with electron-builder; the UI, the engine and the shell are bundled, so the app ships no `node_modules`. An unsigned macOS build was opened and ran the sample drama from its own bundled files.
+
+**Not yet verified:** anything against real Pine; Windows and Linux builds; signing and notarization. Milestone 2's spike needs the maker's go-ahead, a spend cap and a project with the drama skill.
 
 ## Decisions carried in
 

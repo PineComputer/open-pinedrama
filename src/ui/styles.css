@@ -38,6 +38,10 @@
 }
 
 * { box-sizing: border-box; }
+/* Scrollbars: thin, no track, an ink thumb (a light one in the dark rooms), so a long page
+   scrolls without a grey system bar down its side. */
+html { scrollbar-width: thin; scrollbar-color: color-mix(in oklch, var(--ink) 22%, transparent) transparent; }
+.viewing, .room, .watch, .reel { scrollbar-color: color-mix(in oklch, var(--on-room) 28%, transparent) transparent; }
 html, body { margin: 0; background: var(--paper); color: var(--ink); font: 450 14.5px/1.55 var(--sans); -webkit-font-smoothing: antialiased; font-feature-settings: "ss01", "cv11"; }
 a { color: inherit; text-decoration: none; }
 button, input, textarea, select { font: inherit; color: inherit; }
@@ -156,7 +160,7 @@ h1, h2, h3 { margin: 0; font-family: var(--serif); font-weight: 450; letter-spac
 .compose-form .actions { display: flex; align-items: center; gap: 18px; margin-top: 6px; }
 
 /* Onboarding */
-.welcome { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: clamp(32px, 6vw, 96px); align-items: center; min-height: calc(100vh - var(--bar) - 140px); }
+.welcome { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: clamp(32px, 6vw, 96px); align-items: center; min-height: calc(100vh - var(--bar) - 148px); }
 .welcome h1 { font-size: clamp(40px, 5.4vw, 68px); line-height: 1; letter-spacing: -0.025em; }
 .welcome h1 em { font-style: italic; color: var(--seal); }
 .welcome .lede { margin-top: 22px; max-width: 44ch; font: 400 19px/1.5 var(--serif); color: var(--ink-2); }
@@ -472,3 +476,8 @@ h1, h2, h3 { margin: 0; font-family: var(--serif); font-weight: 450; letter-spac
 .filters button.needs.on { border-color: var(--seal); }
 /* The screenplay's first lines, set on the manuscript once it is dropped in. */
 .manuscript .opening { margin: 26px 0 0; max-height: 380px; overflow: hidden; white-space: pre-wrap; font: 400 14.5px/32px var(--serif); color: var(--ink-2); -webkit-mask-image: linear-gradient(180deg, #000 70%, transparent); mask-image: linear-gradient(180deg, #000 70%, transparent); }
+
+/* In the desktop app on macOS the bar is the window's title bar: it makes room for the
+   window's buttons and moves the window, while its links and buttons stay clickable. */
+:root[data-shell="darwin"] .bar { padding-left: 92px; -webkit-app-region: drag; user-select: none; }
+:root[data-shell] .bar a, :root[data-shell] .bar button { -webkit-app-region: no-drag; }

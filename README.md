@@ -34,9 +34,9 @@ Where things are kept:
   on macOS, `%APPDATA%\Pine Drama Studio` on Windows, `$XDG_DATA_HOME/pine-drama-studio` on
   Linux. `npm run dev` uses the repository's `.data/` instead, so development never touches
   an installed studio's data. One engine runs per data folder.
-- **The sealing key** for the API key and Computer credentials: the macOS Keychain, or the
-  Secret Service on Linux. Where neither is available (Windows, until the desktop app hands
-  it over from Electron's safeStorage), a file in the data folder only your account can read.
+- **The sealing key** for the API key and Computer credentials: the macOS Keychain, the
+  Secret Service on Linux, or, in the desktop app on Windows, Electron's safeStorage. Where
+  none is available, a file in the data folder only your account can read.
 
 Or choose **replay**: recorded turns and placeholder pictures and video, so every screen
 works with no project and no spend, and **Start the sample drama** sets one up in a click.
@@ -54,6 +54,21 @@ For development, these override what the app saves:
 | `STUDIO_PORT` | The engine's port on 127.0.0.1. Default 4310; `0` takes any free port. |
 
 Put them in `.env.local` and `npm run dev` reads it.
+
+## Desktop app
+
+```sh
+npm run desktop      # builds the UI, the engine and the shell, then opens the app
+npm run package      # an installer in release/: dmg on macOS, NSIS on Windows, AppImage on Linux
+```
+
+The app is the same engine and UI in Electron (`desktop/main.ts`). The engine runs in a
+utility process on a free port with a token made for this launch, and the app opens its
+own window with it, so there is no link to open. One copy runs at a time. On macOS the
+studio's bar is the window's title bar, the dock badge counts the reviews waiting, and
+closing the window keeps the line running until you quit. Builds are not signed yet, so
+macOS asks you to allow the app the first time (System Settings → Privacy & Security).
+`python3 scripts/icon.py` draws the icon.
 
 ## How it fits together
 

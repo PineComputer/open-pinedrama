@@ -52,7 +52,10 @@ const server = serve({ fetch: app().fetch, port: PORT, hostname: "127.0.0.1" }, 
   setFleet(initialFleet());
   startClock();
   console.log(`Pine Drama Studio engine on 127.0.0.1:${info.port} — ${appInfo().mode}, data in ${DATA_DIR}`);
-  console.log(`Open ${openLink(process.env.STUDIO_OPEN_ORIGIN || `http://127.0.0.1:${info.port}`)}`);
+  // In the desktop app the shell opens the window itself; on its own, the engine prints the way in.
+  const shell = (process as { parentPort?: { postMessage(message: unknown): void } }).parentPort;
+  if (shell) shell.postMessage({ type: "ready", port: info.port });
+  else console.log(`Open ${openLink(process.env.STUDIO_OPEN_ORIGIN || `http://127.0.0.1:${info.port}`)}`);
 });
 server.on("error", (error: NodeJS.ErrnoException) => {
   if (error.code !== "EADDRINUSE") throw error;
