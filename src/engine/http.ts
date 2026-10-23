@@ -22,7 +22,7 @@ import { DEFAULT_ENDPOINT } from "./settings.ts";
 import { all } from "./db.ts";
 import { chat, createDrama, desktop, finishEpisode, rehearse, resumeEpisode, retrySetup, updateDrama } from "./dramas.ts";
 import { StudioError } from "./errors.ts";
-import { fileRow, openBlob } from "./library.ts";
+import { fileRow, openBlob, save, toItem } from "./library.ts";
 import { subscribe } from "./live.ts";
 import { drama as dramaRow, review as reviewRow, session as sessionRow, type SessionRow } from "./records.ts";
 import { decide, resumeWithDecision } from "./reviews.ts";
@@ -238,6 +238,22 @@ export function app(): Hono {
     const page = episodePage(c.req.param("id"), c.req.param("code"));
     return page ? c.json(page) : c.json(failure("not-found", "No such episode."), 404);
   });
+  // A picture the maker adds to a review note: a face to use, a costume, a place to match.
+  api.post("/api/dramas/:id/references", async (c) => {
+    try {
+      const drama = dramaRow(c.req.param("id"));
+      if (!drama) return c.json(failure("not-found", "No such drama."), 404);
+      const body = await c.req.parseBody();
+      const file = body.file;
+      if (!(file instanceof File) || !/^image\/(png|jpeg|webp)$/.test(file.type)) throw new StudioError("not-an-image", "Add a PNG, JPEG or WebP picture.");
+      if (file.size > 20 * 1024 * 1024) throw new StudioError("file-too-large", `${file.name} is over 20 MiB.`, 400, file.name);
+      const id = await save(new Uint8Array(await file.arrayBuffer()), { dramaId: drama.id, relPath: `references/${file.name}`, type: file.type, kind: "reference" });
+      return c.json(toItem(fileRow(id)!));
+    } catch (error) {
+      return fail(c, error);
+    }
+  });
+
   api.get("/api/dramas/:id/files", (c) => c.json(dramaFiles(c.req.param("id"), c.req.query("episode") || undefined)));
 
   api.get("/api/dramas/:id/sessions", (c) => {

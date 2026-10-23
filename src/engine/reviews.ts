@@ -11,7 +11,7 @@ import { followTurn, recordTurn } from "./follow.ts";
 import { decisionGoal } from "./goals.ts";
 import { type FileRow, filesOfTurn, toItem, versionNumber } from "./library.ts";
 import { publish } from "./live.ts";
-import { saveRun, sendRun } from "./runs.ts";
+import { attach, saveRun, sendRun } from "./runs.ts";
 import { type ReviewRow, type SessionRow, type TurnRow, computer as computerRow, episode as episodeRow, episodeCode, review as reviewRow, session as sessionRow } from "./records.ts";
 
 /**
@@ -170,6 +170,8 @@ async function send(reviewId: string, decision: Decision): Promise<ReviewRow> {
   const files = filesOfTurn(review.turn_id);
   const { items } = itemsOf(review.kind, files);
   const labels = new Map(items.map((item) => [item.key, item.label]));
+  // The pictures the maker added to this drama, which a note may carry.
+  const references = new Map(all<FileRow>("select * from files where drama_id = ? and kind = 'reference'", review.drama_id).map((file) => [file.id, file]));
   // Keep verdicts for this review's items only, and a note's file only if it belongs to that item.
   const itemFiles = new Map(items.map((item) => [item.key, new Set(item.files.map((file) => file.id))]));
   const kept: Decision = {
@@ -179,14 +181,20 @@ async function send(reviewId: string, decision: Decision): Promise<ReviewRow> {
       .map((item) => ({
         key: item.key,
         verdict: item.verdict === "revise" ? "revise" : "approve",
-        notes: (item.notes ?? []).map((note) => (note.fileId !== undefined && !itemFiles.get(item.key)!.has(note.fileId) ? { ...note, fileId: undefined } : note)),
+        notes: (item.notes ?? []).map((note) => ({
+          ...note,
+          fileId: note.fileId !== undefined && itemFiles.get(item.key)!.has(note.fileId) ? note.fileId : undefined,
+          image: note.image !== undefined && references.has(note.image) ? note.image : undefined,
+        })),
       })),
   };
   if (review.kind === "question" && !kept.words.trim()) throw new StudioError("answer-missing", "Write an answer first.");
   if (review.kind !== "question" && (!items.length || kept.items.length !== items.length)) throw new StudioError("verdicts-missing", "Give every item a verdict first.");
-  const answer = answerText(kept, { kind: review.kind, subject: subject(review), labels, paths: new Map(files.map((file) => [file.id, file.rel_path])) });
+  const context = { kind: review.kind, subject: subject(review), labels, paths: new Map(files.map((file) => [file.id, file.rel_path])) };
+  const pictures = [...new Set(kept.items.flatMap((item) => item.notes.flatMap((note) => (note.image !== undefined ? [note.image] : []))))].map((id) => references.get(id)!);
 
-  run("update reviews set state = 'sending', decision = ?, answer = ?, decided_at = ? where id = ?", JSON.stringify(kept), answer, now(), reviewId);
+  // Kept as written for a session that later resumes the work; said again below with where its pictures are.
+  run("update reviews set state = 'sending', decision = ?, answer = ?, decided_at = ? where id = ?", JSON.stringify(kept), answerText(kept, context), now(), reviewId);
   publish(`drama:${review.drama_id}`, "inbox");
 
   const session = sessionRow(review.session_id);
@@ -196,6 +204,17 @@ async function send(reviewId: string, decision: Decision): Promise<ReviewRow> {
     publish(`drama:${review.drama_id}`, "inbox");
     return reviewRow(reviewId)!;
   }
+  // The maker's pictures go into the session first, so the answer can say where they are.
+  let answer: string;
+  try {
+    const { sent } = await attach(session, pictures);
+    answer = answerText(kept, { ...context, images: new Map(pictures.map((file, index) => [file.id, sent[index]])) });
+  } catch (error) {
+    run("update reviews set state = 'open' where id = ?", reviewId);
+    publish(`drama:${review.drama_id}`, "inbox");
+    throw new StudioError("send-failed", `Couldn't send the decision: ${(error as Error).message}`, 502, (error as Error).message);
+  }
+  run("update reviews set answer = ? where id = ?", answer, reviewId);
   const turn = get<TurnRow>("select * from turns where id = ?", review.turn_id);
   if (turn && turn.state !== "needs_input") {
     // The agent ended its turn to stop for the maker: the decision is the session's next run,

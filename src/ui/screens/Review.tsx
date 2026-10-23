@@ -109,6 +109,32 @@ function Said({ review, className }: { review: ReviewView; className: string }) 
   return <Markdown text={review.question} links={new Map(files.map((file) => [file.path, file.url]))} className={`speech ${className}`} />;
 }
 
+/**
+ * What the agent said, above the room: a few lines, so the pictures keep the screen, and the
+ * whole of it a click away when it says more.
+ */
+function AgentSays({ review }: { review: ReviewView }) {
+  const { t } = useT();
+  const box = useRef<HTMLDivElement>(null);
+  const [long, setLong] = useState(false);
+  const [whole, setWhole] = useState(false);
+  useEffect(() => {
+    const said = box.current?.querySelector(".speech");
+    if (said) setLong(said.scrollHeight > said.clientHeight + 4);
+  }, [review.question]);
+  return (
+    <div ref={box} className={`agent-says ${whole ? "whole" : long ? "long" : ""}`}>
+      <span className="label">{t("review.agent")}</span>
+      <Said review={review} className="speech" />
+      {(long || whole) && (
+        <button className="link small more" onClick={() => setWhole((open) => !open)}>
+          {t(whole ? "review.saysLess" : "review.saysMore")}
+        </button>
+      )}
+    </div>
+  );
+}
+
 function QuestionRoom({ review, done }: { review: ReviewView; done: () => void }) {
   const { t } = useT();
   const [answer, setAnswer, forget] = useDraft(review.id, "answer", () => review.decision?.words ?? "");
@@ -194,12 +220,23 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
   const [words, setWords, forgetWords] = useDraft(review.id, "words", () => review.decision?.words ?? "");
   const [noteText, setNoteText] = useState("");
   const [pending, setPending] = useState<{ x?: number; y?: number; time?: number; fileId?: number }>();
+  // A picture for the note being written: a face to use, a costume, a place to match.
+  const [picture, setPicture] = useState<FileItem>();
+  const picker = useRef<HTMLInputElement>(null);
+  const upload = useAction(async (chosen: File) => {
+    const form = new FormData();
+    form.set("file", chosen);
+    setPicture(await api<FileItem>(`/api/dramas/${review.dramaId}/references`, { method: "POST", body: form }));
+    noteInput.current?.focus();
+  });
   const [confirming, setConfirming] = useState(false);
   const [comparing, setComparing] = useState(false);
   const [error, setError] = useState<unknown>();
   const [busy, setBusy] = useState(false);
   const noteInput = useRef<HTMLTextAreaElement>(null);
   const video = useRef<HTMLVideoElement>(null);
+  // Where the take or cut is, so "add a note at 0:02" says the time a note would get.
+  const [playhead, setPlayhead] = useState(0);
   const stage = useRef<HTMLDivElement>(null);
   const stageSize = useSize(stage);
 
@@ -231,11 +268,12 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
   };
 
   const addNote = () => {
-    if (!item || !noteText.trim()) return;
-    const note: Note = { text: noteText.trim(), ...pending };
+    if (!item || (!noteText.trim() && !picture)) return;
+    const note: Note = { text: noteText.trim(), ...pending, ...(picture ? { image: picture.id } : {}) };
     update(item.key, (value) => ({ verdict: value.verdict ?? "revise", notes: [...value.notes, note] }));
     setNoteText("");
     setPending(undefined);
+    setPicture(undefined);
   };
 
   const pin = (x: number, y: number) => {
@@ -335,10 +373,7 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
         )}
       </div>
 
-      <div className="agent-says">
-        <span className="label">{t("review.agent")}</span>
-        <Said review={review} className="speech" />
-      </div>
+      <AgentSays review={review} />
 
       <div className="room-body">
         <div className="viewing">
@@ -379,7 +414,17 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
               {file && isImage(file) && <Pinboard key={file.id} file={file} notes={draft?.notes ?? []} draft={pending?.fileId === file.id ? pending : undefined} space={space} onPin={pin} />}
               {file && isVideo(file) && (
                 <div className="screen">
-                  <video ref={video} key={file.url} src={file.url} controls playsInline preload="metadata" />
+                  <video
+                    ref={video}
+                    key={file.url}
+                    src={file.url}
+                    controls
+                    playsInline
+                    preload="metadata"
+                    onTimeUpdate={(event) => setPlayhead(event.currentTarget.currentTime)}
+                    onSeeked={(event) => setPlayhead(event.currentTarget.currentTime)}
+                    onLoadedMetadata={() => setPlayhead(0)}
+                  />
                 </div>
               )}
             </div>
@@ -460,6 +505,11 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
                       <div>
                         {note.time !== undefined && <div className="at">{clock(note.time)}</div>}
                         {note.text}
+                        {note.image !== undefined && (
+                          <a className="note-picture" href={`/api/files/${note.image}`} target="_blank" rel="noreferrer">
+                            <img src={`/api/files/${note.image}`} alt={t("review.picture")} />
+                          </a>
+                        )}
                       </div>
                       {open && (
                         <button className="remove" aria-label={t("review.removeNote")} onClick={() => item && update(item.key, (value) => ({ ...value, notes: value.notes.filter((_, k) => k !== n) }))}>
@@ -474,7 +524,7 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
                 <>
                   {file && isVideo(file) && (
                     <button className="link start" onClick={noteAtTime}>
-                      {t("review.noteAt", { time: clock(pending?.time ?? video.current?.currentTime ?? 0) })}
+                      {t("review.noteAt", { time: clock(pending?.time ?? playhead) })}
                     </button>
                   )}
                   <textarea
@@ -494,6 +544,37 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
                       }
                     }}
                   />
+                  <div className="note-tools">
+                    {picture ? (
+                      <span className="note-picture pending">
+                        <img src={picture.url} alt={picture.name} />
+                        <button className="link small" onClick={() => setPicture(undefined)}>
+                          {t("review.removePicture")}
+                        </button>
+                      </span>
+                    ) : (
+                      <button className="link small" disabled={upload.busy} onClick={() => picker.current?.click()}>
+                        {upload.busy ? t("review.addingPicture") : t("review.addPicture")}
+                      </button>
+                    )}
+                    {(noteText.trim() || picture) && (
+                      <button className="link small" onClick={addNote}>
+                        {t("review.addNote")}
+                      </button>
+                    )}
+                    <input
+                      ref={picker}
+                      type="file"
+                      accept="image/png,image/jpeg,image/webp"
+                      hidden
+                      onChange={(event) => {
+                        const chosen = event.target.files?.[0];
+                        event.target.value = "";
+                        if (chosen) void upload.run(chosen);
+                      }}
+                    />
+                  </div>
+                  {upload.error !== undefined && <span className="error small">{errorText(upload.error, t)}</span>}
                 </>
               )}
             </div>
@@ -508,7 +589,7 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
             <strong>{t("review.confirm")}</strong> {t("review.tally", { a: approved, r: revise, left })}
             {revisions.length > 0 && (
               <div className="detail">
-                {revisions.map((i) => `${labelOf(i)}: ${(drafts[i.key]?.notes ?? []).map((note) => note.text).join("; ") || "—"}`).join(" · ")}
+                {revisions.map((i) => `${labelOf(i)}: ${(drafts[i.key]?.notes ?? []).map((note) => [note.text, note.image !== undefined ? `[${t("review.picture")}]` : ""].filter(Boolean).join(" ")).join("; ") || "—"}`).join(" · ")}
               </div>
             )}
           </div>

@@ -39,6 +39,8 @@ export function attachmentName(row: FileRow): string {
         return ["breakdown", row.version];
       case "screenplay":
         return [path.posix.basename(row.name, ext)];
+      case "reference":
+        return ["reference", String(row.id), path.posix.basename(row.name, ext)];
       default:
         return [`file${row.id}`, path.posix.basename(row.name, ext)];
     }

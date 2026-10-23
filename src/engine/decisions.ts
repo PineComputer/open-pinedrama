@@ -11,6 +11,8 @@ export interface DecisionContext {
   labels: Map<string, string>;
   /** File id → its path in the session's working directory. */
   paths: Map<number, string>;
+  /** A note's own picture → the name it was attached under, in the session's attachments/. */
+  images?: Map<number, string>;
 }
 
 function percent(value: number): string {
@@ -22,12 +24,14 @@ function clock(seconds: number): string {
   return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
 }
 
-function where(note: Note, paths: Map<number, string>): string {
+function where(note: Note, paths: Map<number, string>, images?: Map<number, string>): string {
   const parts: string[] = [];
+  const image = note.image !== undefined ? images?.get(note.image) : undefined;
   const file = note.fileId !== undefined ? paths.get(note.fileId) : undefined;
   if (file) parts.push(`on ${file}`);
   if (note.x !== undefined && note.y !== undefined) parts.push(`at ${percent(note.x)} across and ${percent(note.y)} down`);
   if (note.time !== undefined) parts.push(`at ${clock(note.time)}`);
+  if (image) parts.push(`see the picture I attached: attachments/${image}`);
   return parts.length ? ` (${parts.join(", ")})` : "";
 }
 
@@ -46,15 +50,15 @@ export function answerText(decision: Decision, context: DecisionContext): string
   if (revise.length) {
     lines.push("Revise:");
     for (const item of revise) {
-      const notes = item.notes.filter((note) => note.text.trim());
+      const notes = item.notes.filter((note) => note.text.trim() || note.image !== undefined);
       if (!notes.length) lines.push(`- ${label(item.key)}: please redo it.`);
-      for (const note of notes) lines.push(`- ${label(item.key)}: ${note.text.trim()}${where(note, context.paths)}`);
+      for (const note of notes) lines.push(`- ${label(item.key)}: ${note.text.trim() || "use the picture I attached"}${where(note, context.paths, context.images)}`);
     }
   }
   // Notes on approved items are kept as remarks: approved, with something to know.
   for (const item of approved) {
-    for (const note of item.notes.filter((n) => n.text.trim())) {
-      lines.push(`Remark on ${label(item.key)}: ${note.text.trim()}${where(note, context.paths)}`);
+    for (const note of item.notes.filter((n) => n.text.trim() || n.image !== undefined)) {
+      lines.push(`Remark on ${label(item.key)}: ${note.text.trim() || "the picture I attached"}${where(note, context.paths, context.images)}`);
     }
   }
   if (words) lines.push(`In my own words: "${words}"`);

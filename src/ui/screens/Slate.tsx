@@ -59,7 +59,7 @@ export function Slate() {
         </Link>
       </div>
       {error !== undefined && <p className="error">{errorText(error, t)}</p>}
-      {data && (dramas.length === 0 || noSkill) && (
+      {data && dramas.length === 0 && (
         <div className="first">
           <p className="empty-note">{t(noSkill ? "slate.noSkill" : "slate.empty")}</p>
           {(app.data?.mode === "replay" || noSkill) && (
@@ -68,6 +68,17 @@ export function Slate() {
             </button>
           )}
           {sample.error !== undefined && <p className="error small">{errorText(sample.error, t)}</p>}
+        </div>
+      )}
+      {data && dramas.length > 0 && noSkill && (
+        <div className="notice quiet-notice">
+          <span>{t("slate.noSkill")}</span>
+          <span className="notice-actions">
+            {sample.error !== undefined && <span className="error small">{errorText(sample.error, t)}</span>}
+            <button className="btn small" disabled={sample.busy} onClick={() => void sample.run()}>
+              {t("slate.rehearseSample")}
+            </button>
+          </span>
         </div>
       )}
       <div className={`shelf ${dramas.length ? "" : "empty"}`}>

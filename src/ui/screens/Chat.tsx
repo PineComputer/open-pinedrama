@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import type { ChatMessage, ChatView } from "../../shared/types.ts";
 import { api, useResource } from "../api.ts";
 import { type TKey, useT } from "../i18n.ts";
 import { errorText } from "../labels.ts";
+import { Markdown } from "../Markdown.tsx";
 import { Link } from "../router.tsx";
 
 /** One line of a session: the agent's narration and steps, and what it was sent, each in its own form. */
@@ -25,6 +27,9 @@ function Said({ message, previous }: { message: ChatMessage; previous?: ChatMess
         <div>{message.text}</div>
       </details>
     );
+  }
+  if (message.kind === "result" || message.kind === "question" || message.kind === "progress") {
+    return <Markdown text={message.text} className={`said ${message.kind} speech`} />;
   }
   return <div className={`said ${message.kind}`}>{message.text}</div>;
 }
@@ -58,7 +63,8 @@ export function Chat({ dramaId, onClose }: { dramaId: string; onClose: () => voi
 
   const placeholder = chat.data?.sends === "answer" ? t("talk.answer") : chat.data?.sends === "steer" ? t("talk.steer") : t("talk.run");
 
-  return (
+  // On the page itself, but out of the drama page's flow: an ancestor's entrance animation would pin a fixed drawer inside the column.
+  return createPortal(
     <aside className="talk">
       <div className="talk-head">
         <h2>{t("talk.title")}</h2>
@@ -105,6 +111,7 @@ export function Chat({ dramaId, onClose }: { dramaId: string; onClose: () => voi
         </div>
         )}
       </div>
-    </aside>
+    </aside>,
+    document.body,
   );
 }

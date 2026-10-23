@@ -13,6 +13,7 @@ export type ErrorCode =
   | "drama-not-held"
   | "nothing-delivered"
   | "no-cut"
+  | "not-an-image"
   | "session-ended"
   | "computer-not-running"
   | "message-empty"
@@ -70,6 +71,8 @@ export type FileKind =
   | "observation"
   /** A part of a packed drama-cli project (the whole drama's, or one episode's), handed from session to session. */
   | "archive"
+  /** A picture the maker added to a note: a face to use, a costume, a place to match. */
+  | "reference"
   | "other";
 
 /** What a question asks the maker to decide, inferred from its words and its files. */
@@ -247,6 +250,8 @@ export interface Note {
   y?: number;
   time?: number;
   text: string;
+  /** A picture the maker added for the agent to use or match (a library file of kind "reference"). */
+  image?: number;
 }
 
 export interface ItemDecision {

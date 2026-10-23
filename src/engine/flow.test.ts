@@ -6,7 +6,7 @@ import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import type { CastCard, DeliveryRow, DramaView, EpisodePage, ReviewSummary, ReviewView, ScriptPage } from "../shared/types.ts";
+import type { CastCard, DeliveryRow, DramaView, EpisodePage, FileItem, ReviewSummary, ReviewView, ScriptPage } from "../shared/types.ts";
 
 const DATA = mkdtempSync(path.join(tmpdir(), "studio-flow-"));
 process.env.STUDIO_DATA_DIR = DATA;
@@ -90,15 +90,21 @@ async function scenario(title: string) {
   expect(looksView.reviewItems.map((item) => item.key)).toEqual(["lin", "wei"]);
   expect(looksView.otherFiles.map((file) => file.kind)).toEqual(["bible"]);
 
-  // Revising one look redraws only that one.
+  // Revising one look redraws only that one; the maker's own picture goes to the session with the note.
+  const picture = new FormData();
+  picture.set("file", new File([new Uint8Array([137, 80, 78, 71, 13, 10, 26, 10])], "jacket.png", { type: "image/png" }));
+  const reference = await call<FileItem>("POST", `/api/dramas/${id}/references`, picture);
+  await expect(call("POST", `/api/dramas/${id}/references`, new FormData())).rejects.toThrow(/picture/);
   const revised = await call<ReviewView>("POST", `/api/reviews/${looks.id}/decision`, {
     words: "Fix Wei's jacket.",
     items: [
       { key: "lin", verdict: "approve", notes: [] },
-      { key: "wei", verdict: "revise", notes: [{ fileId: looksView.reviewItems[1].files[0].id, x: 0.4, y: 0.6, text: "Lighter jacket." }] },
+      { key: "wei", verdict: "revise", notes: [{ fileId: looksView.reviewItems[1].files[0].id, x: 0.4, y: 0.6, text: "Lighter jacket.", image: reference.id }] },
     ],
   });
-  expect(revised.answer).toContain("- wei: Lighter jacket. (on drama/assets/characters/wei/v1/image-1.svg, at 40% across and 60% down)");
+  expect(revised.answer).toContain(
+    `- wei: Lighter jacket. (on drama/assets/characters/wei/v1/image-1.svg, at 40% across and 60% down, see the picture I attached: attachments/reference-${reference.id}-jacket.png)`,
+  );
   const again = await until("the redrawn look", openReview(id, (item) => item.kind === "looks" && item.id !== looks.id));
   const redrawn = await call<ReviewView>("GET", `/api/reviews/${again.id}`);
   expect(redrawn.reviewItems.map((item) => item.key)).toEqual(["wei"]);
