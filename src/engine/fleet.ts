@@ -50,8 +50,25 @@ export interface Attached {
   revision: string;
 }
 
+/** What the project allows, from Pine's project policy; null where it sets no limit. */
+export interface Limits {
+  /** Computers the project may run at once. */
+  maxComputers: number | null;
+  /** The longest idle timeout a start may ask for. */
+  maxIdleSeconds: number | null;
+}
+
+/**
+ * A call that failed because the project is busy, not because anything is wrong: it is at
+ * its limit of Computers, or of starts this minute. Retried later without counting as a failure.
+ */
+export function isBusy(error: unknown): boolean {
+  return (error as { retryLater?: boolean } | undefined)?.retryLater === true;
+}
+
 export interface Fleet {
   readonly mode: Mode;
+  limits(): Promise<Limits>;
   /** New Computer credentials, to save before Create: they are the only way to start it again. */
   newCredentials(): Promise<{ id: string; credentials: string }>;
   createComputer(credentials: string, label: string, idleTimeoutSeconds: number): Promise<Attached>;

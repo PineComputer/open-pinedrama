@@ -17,7 +17,8 @@ import {
   type Decision,
   type ReviewItem,
 } from "../shared/types.ts";
-import { START_ATTEMPTS } from "./computers.ts";
+import { START_ATTEMPTS, fleet, hasFleet, projectLimits } from "./computers.ts";
+import { atProjectLimit } from "./scheduler.ts";
 import { all, get } from "./db.ts";
 import { type FileRow, fileUrl, filesOfTurn, toItem, versionNumber } from "./library.ts";
 import { type ComputerRow, type DramaRow, type EpisodeRow, type ReviewRow, type SessionRow, episodeCode, latestTurn, session as sessionRow } from "./records.ts";
@@ -177,7 +178,16 @@ export function dramaView(drama: DramaRow): DramaView {
     episodeRows: episodeViews(drama.id),
     crew: crew(drama.id),
     stalled: stalled(drama),
+    atLimit: atLimit(drama),
   };
+}
+
+/** The project's limit, when this drama has work waiting that no Computer of its own can take. */
+function atLimit(drama: DramaRow): number | undefined {
+  if (!hasFleet() || fleet().mode !== drama.mode || !atProjectLimit()) return undefined;
+  const queued = get<{ n: number }>("select count(*) as n from episodes where drama_id = ? and state = 'queued'", drama.id)?.n ?? 0;
+  const setupWaits = drama.status === "setup" && !get("select id from sessions where drama_id = ? and role = 'setup' and state = 'open'", drama.id);
+  return queued || setupWaits ? projectLimits().maxComputers ?? undefined : undefined;
 }
 
 /** A Computer that failed to start too often to keep trying on its own, while none of the drama's runs. */

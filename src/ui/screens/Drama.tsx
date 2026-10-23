@@ -65,6 +65,7 @@ function Notices({ drama }: { drama: DramaView }) {
   return (
     <>
       {elsewhere && <p className="notice">{t(drama.mode === "replay" ? "otherMode.replayNote" : "otherMode.pineNote")}</p>}
+      {drama.atLimit !== undefined && !drama.stalled && <p className="notice">{t("limit.note", { n: drama.atLimit })}</p>}
       {drama.stalled && (
         <div className="notice trouble">
           <div>

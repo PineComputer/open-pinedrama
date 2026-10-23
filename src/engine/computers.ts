@@ -5,12 +5,31 @@
 // reads the Computer's row afresh, since the action before it may have changed it.
 import { IDLE_WORKING_S } from "./config.ts";
 import { all, get, newId, now, run } from "./db.ts";
-import type { Attached, ComputerRef, Fleet, SessionRef } from "./fleet.ts";
+import { type Attached, type ComputerRef, type Fleet, type Limits, type SessionRef, isBusy } from "./fleet.ts";
 import { publish } from "./live.ts";
 import { type ComputerRow, type SessionRow, computer as computerRow, openSessionsOf } from "./records.ts";
 import { seal, unseal } from "./seal.ts";
 
 let fleetRef: Fleet | undefined;
+let limits: Limits = { maxComputers: null, maxIdleSeconds: null };
+
+/** The project's limits as last read; none until they are known. */
+export function projectLimits(): Limits {
+  return limits;
+}
+
+/** Reads the project's limits again (on connecting, and at each reconcile). */
+export async function refreshLimits(): Promise<void> {
+  const current = fleetRef;
+  if (!current) return;
+  const read = await current.limits();
+  if (fleetRef === current) limits = read;
+}
+
+/** An idle timeout the project allows: no longer than its maximum, and at least Pine's minute. */
+export function allowedIdle(seconds: number): number {
+  return limits.maxIdleSeconds ? Math.max(60, Math.min(seconds, limits.maxIdleSeconds)) : seconds;
+}
 
 /**
  * Uses a fleet from now on. Computers another fleet made are out of its reach, so they
@@ -18,6 +37,8 @@ let fleetRef: Fleet | undefined;
  */
 export function setFleet(fleet: Fleet | undefined): void {
   fleetRef = fleet;
+  limits = { maxComputers: null, maxIdleSeconds: null };
+  void refreshLimits().catch((error) => console.error("project limits:", (error as Error).message));
   const others = all<ComputerRow>("select * from computers where state in ('starting', 'running', 'stopping') and mode != ?", fleet?.mode ?? "");
   for (const row of others) markStopped(row, fleet ? `The studio switched to ${fleet.mode === "pine" ? "your Pine project" : "replay"}.` : "The studio was disconnected from Pine.");
 }
@@ -68,19 +89,20 @@ export function startable(row: ComputerRow): boolean {
   return Date.now() - Date.parse(row.updated_at) >= 15_000 * 2 ** (row.failures - 1);
 }
 
-function started(id: string, attached: Attached): void {
+function started(id: string, attached: Attached, idle: number): void {
   run(
     "update computers set binding = ?, revision = ?, state = 'running', idle_timeout = ?, failures = 0, last_error = null, updated_at = ? where id = ?",
     seal(attached.binding),
     attached.revision,
-    IDLE_WORKING_S,
+    idle,
     now(),
     id,
   );
 }
 
+/** A start that didn't happen. A busy project (at its limit of Computers or starts) waits without counting against the Computer. */
 function failedToStart(id: string, error: unknown): void {
-  run("update computers set state = 'failed', failures = failures + 1, last_error = ?, updated_at = ? where id = ?", message(error), now(), id);
+  run("update computers set state = 'failed', failures = failures + ?, last_error = ?, updated_at = ? where id = ?", isBusy(error) ? 0 : 1, message(error), now(), id);
 }
 
 /** A new Computer for a drama. Resolves once it runs; its row says "starting" meanwhile. */
@@ -95,14 +117,15 @@ export async function provision(dramaId: string): Promise<void> {
     fleet().mode,
     label,
     seal(credentials),
-    IDLE_WORKING_S,
+    allowedIdle(IDLE_WORKING_S),
     now(),
     now(),
   );
   publish(`drama:${dramaId}`);
   await serialized(id, async () => {
+    const idle = allowedIdle(IDLE_WORKING_S);
     try {
-      started(id, await fleet().createComputer(credentials, label, IDLE_WORKING_S));
+      started(id, await fleet().createComputer(credentials, label, idle), idle);
     } catch (error) {
       failedToStart(id, error);
     }
@@ -118,8 +141,9 @@ export async function restart(row: ComputerRow): Promise<void> {
   run("update computers set state = 'starting', updated_at = ? where id = ?", now(), row.id);
   publish(`drama:${row.drama_id}`);
   await serialized(row.id, async () => {
+    const idle = allowedIdle(IDLE_WORKING_S);
     try {
-      started(row.id, await fleet().startComputer(unseal(row.credentials), row.label, IDLE_WORKING_S));
+      started(row.id, await fleet().startComputer(unseal(row.credentials), row.label, idle), idle);
     } catch (error) {
       failedToStart(row.id, error);
     }

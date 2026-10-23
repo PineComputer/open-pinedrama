@@ -221,6 +221,7 @@ const en = {
 
   "stalled.title": "Pine couldn't start a Computer for this drama.",
   "stalled.retry": "Try again",
+  "limit.note": "Your Pine project runs up to {n} Computers at once, and all are at work. The rest of this drama starts as one comes free.",
 
   "gate.signedOutTitle": "Open the studio from its own window",
   "gate.signedOut": "The studio answers only the window it opened, so other programs and web pages can't use your project. While developing, open the link the engine printed in the terminal.",
@@ -489,6 +490,7 @@ const zh: Record<Key, string> = {
 
   "stalled.title": "Pine 没能为这部剧启动电脑。",
   "stalled.retry": "再试一次",
+  "limit.note": "你的 Pine 项目最多同时运行 {n} 台电脑，现在都在工作。这部剧其余的部分会在有电脑空出来时开始。",
 
   "gate.signedOutTitle": "请从工作室自己的窗口打开",
   "gate.signedOut": "工作室只响应它自己打开的窗口，其他程序和网页无法使用你的项目。开发时，请打开引擎在终端里打印的链接。",

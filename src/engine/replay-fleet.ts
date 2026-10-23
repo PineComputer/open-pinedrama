@@ -7,7 +7,7 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { FIXTURES } from "./config.ts";
 import { revisedKeys } from "./decisions.ts";
-import type { Attached, ComputerRef, Fleet, FleetEvent, SessionRef, TurnFile, TurnInfo } from "./fleet.ts";
+import type { Attached, ComputerRef, Fleet, FleetEvent, Limits, SessionRef, TurnFile, TurnInfo } from "./fleet.ts";
 import { blocking, lookSheet, plate, prop, storyboard } from "./placeholders.ts";
 
 const SPEED = Number(process.env.STUDIO_REPLAY_SPEED ?? 1);
@@ -297,6 +297,10 @@ export class ReplayFleet implements Fleet {
     const found = this.machine(ref).sessions.get(session.name);
     if (!found || found.token !== session.token) throw Object.assign(new Error("No such session."), { status: 404 });
     return found;
+  }
+
+  async limits(): Promise<Limits> {
+    return { maxComputers: null, maxIdleSeconds: null };
   }
 
   async newCredentials() {

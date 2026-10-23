@@ -1,7 +1,26 @@
 // The Fleet on Pine's server SDK. Each call rebuilds its handle from the saved records,
 // as the starter does, so any request or a restarted engine picks up where the last left off.
-import { Binding, Client, Credentials, NotFoundError, UnknownComputerError, type AgentTurn, type Computer, type Session } from "@pinesandbox/computer";
+import {
+  Binding,
+  CapacityExceededError,
+  Client,
+  CreateRateLimitedError,
+  Credentials,
+  NotFoundError,
+  SandboxFailedError,
+  SandboxRetainedError,
+  UnknownComputerError,
+  type AgentTurn,
+  type Computer,
+  type Session,
+} from "@pinesandbox/computer";
 import type { Attached, ComputerRef, Fleet, FleetEvent, SessionRef, TurnInfo } from "./fleet.ts";
+
+/** Marks the errors that mean "the project is busy, try later" (fleet.ts, isBusy), and passes the error on. */
+function busyOr(error: unknown): never {
+  if (error instanceof CapacityExceededError || error instanceof CreateRateLimitedError) throw Object.assign(error, { retryLater: true });
+  throw error;
+}
 
 function turnInfo(turn: AgentTurn): TurnInfo {
   return {
@@ -40,26 +59,51 @@ export class PineFleet implements Fleet {
     return { binding: computer.binding().serialize(), revision: computer.bindingRevision.toString() };
   }
 
+  async limits() {
+    const policy = await this.client.projectPolicy();
+    return { maxComputers: policy.maxConcurrentComputers, maxIdleSeconds: policy.lifecycle?.maxIdleTimeoutSeconds ?? null };
+  }
+
   async newCredentials() {
     const credentials = await Credentials.generate();
     return { id: credentials.id, credentials: credentials.serialize() };
   }
 
   async createComputer(credentials: string, label: string, idleTimeoutSeconds: number) {
-    const computer = await this.client.createComputer({
-      credentials: Credentials.parse(credentials),
-      idleTimeoutSeconds,
-      metadata: { app: "pine-drama-studio", label },
-    });
-    return this.attached(computer);
+    try {
+      const computer = await this.client.createComputer({
+        credentials: Credentials.parse(credentials),
+        idleTimeoutSeconds,
+        metadata: { app: "pine-drama-studio", label },
+      });
+      return this.attached(computer);
+    } catch (error) {
+      return busyOr(error);
+    }
   }
 
+  /**
+   * Starts the Computer these credentials name, whatever state the studio lost track of it in:
+   * never registered (a Create whose answer was lost) creates it with the same identity; still
+   * running or paused with no binding left to reach it stops it by id first; failed is
+   * recovered from its saved state, as Pine's lifecycle guide says.
+   */
   async startComputer(credentials: string, label: string, idleTimeoutSeconds: number) {
+    const parsed = Credentials.parse(credentials);
     try {
-      return this.attached(await this.client.startComputer(Credentials.parse(credentials), { idleTimeoutSeconds }));
+      return this.attached(await this.client.startComputer(parsed, { idleTimeoutSeconds }));
     } catch (error) {
-      if (!(error instanceof UnknownComputerError)) throw error;
-      return this.createComputer(credentials, label, idleTimeoutSeconds);
+      if (error instanceof UnknownComputerError) return this.createComputer(credentials, label, idleTimeoutSeconds);
+      try {
+        if (error instanceof SandboxRetainedError) {
+          await this.client.stopComputer(parsed.id);
+          return this.attached(await this.client.startComputer(parsed, { idleTimeoutSeconds }));
+        }
+        if (error instanceof SandboxFailedError) return this.attached(await this.client.recoverComputer(parsed, { idleTimeoutSeconds }));
+      } catch (again) {
+        return busyOr(again);
+      }
+      return busyOr(error);
     }
   }
 

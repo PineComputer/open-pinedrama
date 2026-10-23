@@ -177,6 +177,8 @@ export interface DramaView extends DramaCard {
   crew: ComputerView[];
   /** Its Computers wouldn't start, several times: the line waits for the maker's "try again". */
   stalled?: { computer: string; error: string };
+  /** Work waits because the project runs as many Computers as it may: how many that is. */
+  atLimit?: number;
 }
 
 export interface CastGroup {

@@ -19,6 +19,7 @@ type Modules = {
   library: typeof import("./library.ts");
   replay: typeof import("./replay-fleet.ts");
   http: typeof import("./http.ts");
+  views: typeof import("./views.ts");
 };
 let m: Modules;
 
@@ -41,6 +42,12 @@ async function until<T>(what: string, probe: () => T | undefined, timeoutMs = 10
 
 const screenplay = { name: "screenplay.txt", type: "text/plain", bytes: new TextEncoder().encode("EPISODE 1\nLin enters.") };
 const newDrama = (title: string) => ({ title, language: "en", look: "", format: "", parallel: 1, perComputer: 1, notes: "", files: [screenplay] });
+/** Ends the earlier tests' dramas and Computers, so a test's own drama has the line to itself. */
+function quiet() {
+  m.db.run("update dramas set status = 'done' where status in ('setup', 'production')");
+  m.db.run("update computers set state = 'stopped', binding = null where state in ('starting', 'running', 'stopping', 'failed')");
+}
+
 const computersOf = (dramaId: string) => m.db.all<{ id: string; state: string; failures: number }>("select * from computers where drama_id = ? order by created_at", dramaId);
 
 beforeAll(async () => {
@@ -52,6 +59,7 @@ beforeAll(async () => {
     library: await import("./library.ts"),
     replay: await import("./replay-fleet.ts"),
     http: await import("./http.ts"),
+    views: await import("./views.ts"),
   };
   m.db.db();
 });
@@ -128,6 +136,45 @@ describe("the production line", () => {
     m.computers.retryStarts(id);
     await until("the same Computer running", () => computersOf(id).find((row) => row.state === "running"));
     expect(computersOf(id).map((row) => row.id)).toEqual([failed.id]);
+    m.scheduler.stopClock();
+  });
+
+  it("keeps within the project's limits: Computers at once, and idle time", async () => {
+    const fleet = new m.replay.ReplayFleet();
+    fleet.limits = async () => ({ maxComputers: 1, maxIdleSeconds: 1800 });
+    quiet();
+    m.computers.setFleet(fleet);
+    await m.computers.refreshLimits();
+    m.scheduler.startClock(20);
+    const first = await m.dramas.createDrama(newDrama("First in line"), "replay");
+    const second = await m.dramas.createDrama(newDrama("Second in line"), "replay");
+    const running = await until("one Computer", () => [...computersOf(first), ...computersOf(second)].find((row) => row.state === "running"));
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    const live = m.db.all<{ id: string; idle_timeout: number }>("select * from computers where drama_id in (?, ?) and state in ('starting', 'running')", first, second);
+    expect(live.map((row) => row.id)).toEqual([running.id]);
+    expect(live[0].idle_timeout).toBe(1800);
+    const waiting = m.views.dramaView(m.db.get("select * from dramas where id = ?", computersOf(first).length ? second : first)!);
+    expect(waiting.atLimit).toBe(1);
+    m.scheduler.stopClock();
+  });
+
+  it("waits out a busy project without counting it as a failure", async () => {
+    const fleet = new m.replay.ReplayFleet();
+    const create = fleet.createComputer.bind(fleet);
+    let busy = 1;
+    fleet.createComputer = async (...args) => {
+      if (busy-- > 0) throw Object.assign(new Error("The project runs as many Computers as it may."), { retryLater: true });
+      return create(...args);
+    };
+    quiet();
+    m.computers.setFleet(fleet);
+    m.scheduler.startClock(20);
+    const id = await m.dramas.createDrama(newDrama("Busy project"), "replay");
+    const waited = await until("the busy start", () => computersOf(id).find((row) => row.state === "failed"));
+    expect(waited.failures).toBe(0);
+    m.db.run("update computers set updated_at = ? where id = ?", new Date(0).toISOString(), waited.id);
+    await until("the same Computer running", () => computersOf(id).find((row) => row.state === "running"));
+    expect(computersOf(id).map((row) => row.id)).toEqual([waited.id]);
     m.scheduler.stopClock();
   });
 

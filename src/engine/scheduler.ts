@@ -3,7 +3,23 @@
 // and a cap on episodes waiting for the maker); keep idle timeouts long while a session
 // waits on the maker; stop Computers with nothing to do; retry what didn't go through.
 import { IDLE_WAITING_S, IDLE_WORKING_S, WAITING_CAP } from "./config.ts";
-import { closeSession, computerRef, fleet, hasFleet, markStopped, openSession, provision, restart, runningComputers, setIdle, startable, stop } from "./computers.ts";
+import {
+  allowedIdle,
+  closeSession,
+  computerRef,
+  fleet,
+  hasFleet,
+  markStopped,
+  openSession,
+  projectLimits,
+  provision,
+  refreshLimits,
+  restart,
+  runningComputers,
+  setIdle,
+  startable,
+  stop,
+} from "./computers.ts";
 import { all, get, now, run } from "./db.ts";
 import { followEvents, followTurn, isFollowed, unsettledTurns } from "./follow.ts";
 import { episodeGoal, resumeGoal, setupGoal } from "./goals.ts";
@@ -68,8 +84,20 @@ function freeComputer(drama: DramaRow): ComputerRow | undefined {
   return runningComputers(drama.id).find((computer) => load(computer.id) < Math.max(1, drama.per_computer));
 }
 
+/** New Computers asked for whose rows aren't saved yet (their credentials are being made): they count against the limit too. */
+let provisioning = 0;
+
+/** Whether the studio already has as many Computers going as the project allows. */
+export function atProjectLimit(): boolean {
+  const max = projectLimits().maxComputers;
+  if (max === null) return false;
+  const live = get<{ n: number }>("select count(*) as n from computers where mode = ? and state in ('starting', 'running', 'stopping')", fleet().mode)?.n ?? 0;
+  return live + provisioning >= max;
+}
+
 /**
- * A Computer the drama can use soon: a free running one, or one it starts now. A stopped or
+ * A Computer the drama can use soon: a free running one, or one it starts now (while the
+ * project allows another; otherwise the work waits its turn). A stopped or
  * failed one is started again before any new one is made, so a Create whose answer was
  * lost is retried as the same Computer; one that keeps failing waits for the maker.
  */
@@ -78,14 +106,16 @@ function claimComputer(drama: DramaRow): ComputerRow | undefined {
   if (free) return free;
   const pool = all<ComputerRow>("select * from computers where drama_id = ? and mode = ? and state in ('starting', 'running', 'stopping')", drama.id, drama.mode);
   if (pool.some((computer) => computer.state === "starting")) return undefined;
-  if (pool.length >= capacity(drama)) return undefined;
+  if (pool.length >= capacity(drama) || atProjectLimit()) return undefined;
   const idle = all<ComputerRow>("select * from computers where drama_id = ? and mode = ? and state in ('stopped', 'failed') order by created_at", drama.id, drama.mode);
   if (idle.length) {
     const next = idle.find(startable);
     if (next) once(`start:${drama.id}`, () => restart(next));
     return undefined;
   }
-  once(`start:${drama.id}`, () => provision(drama.id));
+  if (busy.has(`start:${drama.id}`)) return undefined;
+  provisioning += 1;
+  once(`start:${drama.id}`, () => provision(drama.id).finally(() => (provisioning -= 1)));
   return undefined;
 }
 
@@ -173,12 +203,25 @@ function fill(drama: DramaRow): void {
   }
 }
 
-/** A Computer waiting on the maker keeps running longer; one with nothing to do stops (and a stop that failed is tried again a minute later). */
+/** Computers whose idle timeout Pine refused to change, and when to ask again. */
+const idleRefused = new Map<string, number>();
+
+/**
+ * A Computer waiting on the maker keeps running longer, within what the project allows; one
+ * with nothing to do stops (and a stop that failed is tried again a minute later).
+ */
 function tend(computer: ComputerRow): void {
   const sessions = openSessionsOf(computer.id);
   const waiting = sessions.some((session) => latestTurn(session.id)?.state === "needs_input");
-  const desired = waiting ? IDLE_WAITING_S : IDLE_WORKING_S;
-  if (computer.idle_timeout !== desired) once(`idle:${computer.id}`, () => setIdle(computer, desired));
+  const desired = allowedIdle(waiting ? IDLE_WAITING_S : IDLE_WORKING_S);
+  if (computer.idle_timeout !== desired && (idleRefused.get(computer.id) ?? 0) < Date.now()) {
+    once(`idle:${computer.id}`, () =>
+      setIdle(computer, desired).catch((error) => {
+        idleRefused.set(computer.id, Date.now() + 10 * 60_000);
+        throw error;
+      }),
+    );
+  }
   if (!sessions.length) {
     const drama = get<DramaRow>("select * from dramas where id = ?", computer.drama_id);
     const queued = get<{ n: number }>("select count(*) as n from episodes where drama_id = ? and state = 'queued'", computer.drama_id)?.n ?? 0;
@@ -190,6 +233,7 @@ function tend(computer: ComputerRow): void {
 /** Every saved Computer against Pine: those that stopped are marked so; running turns are followed again. */
 export async function reconcile(): Promise<void> {
   if (!hasFleet()) return;
+  await refreshLimits().catch((error) => console.error("project limits:", (error as Error).message));
   for (const computer of all<ComputerRow>("select * from computers where state in ('running', 'starting', 'stopping') and mode = ?", fleet().mode)) {
     if (!computer.binding) {
       if (computer.state !== "running") markStopped(computer, "Its Computer didn't finish starting.");
