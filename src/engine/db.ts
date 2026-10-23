@@ -1,0 +1,181 @@
+// The studio's records: one SQLite file (Node's built-in driver), opened once per process.
+import { mkdirSync } from "node:fs";
+import path from "node:path";
+import { DatabaseSync, type SQLInputValue } from "node:sqlite";
+import { DATA_DIR } from "./config.ts";
+
+const SCHEMA = `
+create table if not exists dramas (
+  id text primary key,
+  title text not null,
+  language text not null,           -- zh | en
+  look text not null,
+  format text not null,             -- e.g. 9:16 480p
+  budget real,
+  parallel integer not null,        -- episodes at work at once
+  per_computer integer not null,    -- episodes per Computer at once (1-3)
+  notes text not null default '',
+  status text not null,             -- setup | production | done | stopped
+  note text not null default '',    -- why it stopped
+  continues integer not null default 0,
+  created_at text not null,
+  updated_at text not null
+);
+
+-- The maker's own files for a drama: the screenplay and notes.
+create table if not exists inputs (
+  drama_id text not null,
+  file_id integer not null,
+  primary key (drama_id, file_id)
+);
+
+create table if not exists episodes (
+  id text primary key,
+  drama_id text not null,
+  number integer not null,
+  title text not null default '',
+  state text not null,              -- queued | working | waiting | done | stopped | failed
+  session_id text,
+  note text not null default '',    -- why it stopped or failed
+  resume integer not null default 0,
+  continues integer not null default 0,
+  updated_at text not null,
+  unique (drama_id, number)
+);
+
+create table if not exists computers (
+  id text primary key,              -- Pine's Computer id
+  drama_id text not null,
+  label text not null,              -- PC-1, PC-2, ...
+  credentials text not null,        -- sealed
+  binding text,                     -- sealed; null while stopped
+  revision text,
+  state text not null,              -- starting | running | stopping | stopped | failed
+  idle_timeout integer,
+  last_error text,
+  created_at text not null,
+  updated_at text not null
+);
+
+create table if not exists sessions (
+  id text primary key,
+  computer_id text not null,
+  drama_id text not null,
+  name text not null,
+  token text,                       -- sealed
+  role text not null,               -- setup | episode
+  episode_id text,
+  state text not null,              -- open | closed | lost
+  task_id text,
+  cursor text,                      -- last applied event id, for task_id
+  activity text,
+  created_at text not null,
+  closed_at text
+);
+
+-- Every run sent to an agent, keyed by the idempotency key saved before sending.
+create table if not exists runs (
+  key text primary key,
+  session_id text not null,
+  kind text not null,               -- setup | episode | resume | continue | chat
+  goal text not null,
+  turn_id text,
+  created_at text not null
+);
+
+create table if not exists turns (
+  id text primary key,              -- Pine's turn id
+  session_id text not null,
+  state text not null,
+  question text not null default '',
+  summary text not null default '',
+  files_saved integer not null default 0,
+  save_error text,
+  cost real,
+  next_turn_id text,
+  created_at text not null,
+  ended_at text
+);
+
+create table if not exists reviews (
+  id text primary key,
+  drama_id text not null,
+  episode_id text,
+  session_id text not null,
+  turn_id text not null unique,
+  kind text not null,
+  state text not null,              -- saving | open | sending | answered | ended
+  question text not null,
+  decision text,                    -- JSON Decision
+  answer text,
+  created_at text not null,
+  decided_at text
+);
+
+-- The library's index. Bytes live under library/, named by SHA-256.
+create table if not exists files (
+  id integer primary key,
+  drama_id text not null,
+  episode_id text,
+  session_id text,
+  turn_id text,
+  sha text not null,
+  rel_path text not null,
+  name text not null,
+  type text not null,
+  size integer not null,
+  kind text not null,
+  subject text,
+  look text,
+  segment text,
+  style text,
+  version text,
+  created_at text not null,
+  unique (turn_id, rel_path)
+);
+
+create table if not exists messages (
+  id integer primary key,
+  session_id text not null,
+  turn_id text,
+  kind text not null,
+  text text not null,
+  ref text,                         -- activity id, to update a step in place
+  at text not null,
+  unique (session_id, ref)
+);
+`;
+
+const shared = globalThis as typeof globalThis & { __studioDb?: DatabaseSync };
+
+export function db(): DatabaseSync {
+  if (!shared.__studioDb) {
+    mkdirSync(DATA_DIR, { recursive: true });
+    const handle = new DatabaseSync(path.join(DATA_DIR, "studio.db"));
+    handle.exec("pragma journal_mode = wal; pragma foreign_keys = on;");
+    handle.exec(SCHEMA);
+    shared.__studioDb = handle;
+  }
+  return shared.__studioDb;
+}
+
+export function all<T>(sql: string, ...params: SQLInputValue[]): T[] {
+  return db().prepare(sql).all(...params) as T[];
+}
+
+export function get<T>(sql: string, ...params: SQLInputValue[]): T | undefined {
+  return db().prepare(sql).get(...params) as T | undefined;
+}
+
+export function run(sql: string, ...params: SQLInputValue[]): { changes: number; lastInsertRowid: number } {
+  const result = db().prepare(sql).run(...params);
+  return { changes: Number(result.changes), lastInsertRowid: Number(result.lastInsertRowid) };
+}
+
+export function now(): string {
+  return new Date().toISOString();
+}
+
+export function newId(prefix: string): string {
+  return `${prefix}_${crypto.randomUUID().replaceAll("-", "").slice(0, 16)}`;
+}

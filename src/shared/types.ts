@@ -1,0 +1,214 @@
+// What the engine and the UI agree on: the shapes the HTTP API returns and accepts.
+
+export type Mode = "pine" | "replay";
+
+/** Where a drama is: casting in its setup session, then episodes in production. */
+export type DramaStatus = "setup" | "production" | "done" | "stopped";
+
+export type EpisodeState = "queued" | "working" | "waiting" | "done" | "stopped" | "failed";
+
+/** The steps of an episode, in order, as the board shows them. */
+export const STAGES = ["breakdown", "blocking", "storyboards", "takes", "cut"] as const;
+export type Stage = (typeof STAGES)[number];
+
+export type FileKind =
+  | "screenplay"
+  | "bible"
+  | "look"
+  | "location"
+  | "prop"
+  | "breakdown"
+  | "blocking"
+  | "storyboard"
+  | "take"
+  | "cut"
+  | "observation"
+  | "other";
+
+/** What a question asks the maker to decide, inferred from its words and its files. */
+export type ReviewKind = "looks" | "storyboards" | "takes" | "cut" | "question";
+
+/**
+ * saving: the turn's files are still being copied; the question can't be answered yet.
+ * open: waiting for the maker. sending: the answer is on its way.
+ * answered: the agent has it. ended: the session that asked is gone.
+ */
+export type ReviewState = "saving" | "open" | "sending" | "answered" | "ended";
+
+export type Verdict = "approve" | "revise";
+
+export interface AppInfo {
+  mode: Mode;
+  version: string;
+  dataDir: string;
+}
+
+export interface FileItem {
+  id: number;
+  name: string;
+  path: string;
+  type: string;
+  size: number;
+  kind: FileKind;
+  episode?: string;
+  segment?: string;
+  /** The character, location or prop the file shows. */
+  subject?: string;
+  look?: string;
+  /** line-art or photoreal, for storyboards. */
+  style?: string;
+  version?: string;
+  url: string;
+  createdAt: string;
+}
+
+export interface Money {
+  /** Agent cost reported by Pine for the drama's turns, where priced. */
+  agent: number;
+  /** Turns Pine reported without a price. */
+  unpriced: number;
+  budget: number | null;
+}
+
+export interface DramaCard {
+  id: string;
+  title: string;
+  language: string;
+  look: string;
+  format: string;
+  status: DramaStatus;
+  episodes: { total: number; done: number; waiting: number; working: number };
+  /** Computers running for this drama. */
+  computers: number;
+  waiting: number;
+  money: Money;
+  cover?: string;
+  createdAt: string;
+}
+
+export interface StageCell {
+  state: "none" | "working" | "review" | "done";
+  count?: number;
+}
+
+export interface EpisodeRow {
+  id: string;
+  number: number;
+  code: string;
+  title: string;
+  state: EpisodeState;
+  stages: Record<Stage, StageCell>;
+  /** The agent's own words for what it is doing, while it works. */
+  activity?: string;
+  /** Why it stopped or failed, or what couldn't be handed over. */
+  note?: string;
+  /** Its place in the queue, from 1. */
+  position?: number;
+  /** What it waits for the maker on; "saving" while the review's files are saved. */
+  waitingFor?: ReviewKind | "saving";
+  computer?: string;
+  reviewId?: string;
+  updatedAt: string;
+}
+
+export interface SessionView {
+  id: string;
+  name: string;
+  role: "setup" | "episode";
+  episode?: string;
+  state: "open" | "closed" | "lost";
+  activity?: string;
+  waiting: boolean;
+}
+
+export interface ComputerView {
+  id: string;
+  label: string;
+  state: string;
+  idleTimeoutMinutes: number | null;
+  sessions: SessionView[];
+  lastError?: string;
+}
+
+export interface DramaView extends DramaCard {
+  notes: string;
+  parallel: number;
+  perComputer: number;
+  setup: { state: "working" | "waiting" | "done" | "stopped"; reviewId?: string; kind?: ReviewKind; hasCast: boolean; activity?: string; note?: string };
+  episodeRows: EpisodeRow[];
+  crew: ComputerView[];
+}
+
+export interface CastGroup {
+  kind: "look" | "location" | "prop";
+  subject: string;
+  /** Newest first. */
+  files: FileItem[];
+}
+
+export interface ReviewSummary {
+  id: string;
+  dramaId: string;
+  dramaTitle: string;
+  episode?: string;
+  kind: ReviewKind;
+  state: ReviewState;
+  question: string;
+  items: number;
+  thumb?: string;
+  createdAt: string;
+}
+
+/** One thing the maker gives a verdict on: a segment's storyboard, a character's look, a take, the cut. */
+export interface ReviewItem {
+  key: string;
+  label: string;
+  files: FileItem[];
+}
+
+/** A note pinned to a spot on an image (fractions of its width and height) or a time in a video. */
+export interface Note {
+  fileId?: number;
+  x?: number;
+  y?: number;
+  time?: number;
+  text: string;
+}
+
+export interface ItemDecision {
+  key: string;
+  verdict: Verdict;
+  notes: Note[];
+}
+
+export interface Decision {
+  items: ItemDecision[];
+  /** The maker's own words, quoted in the record of what they approved. */
+  words: string;
+}
+
+export interface ReviewView extends ReviewSummary {
+  reviewItems: ReviewItem[];
+  otherFiles: FileItem[];
+  decision?: Decision;
+  answer?: string;
+  /** The next review waiting, to move on to after this one. */
+  nextId?: string;
+}
+
+export interface ChatMessage {
+  id: number;
+  kind: "input" | "progress" | "activity" | "question" | "answer" | "result";
+  text: string;
+  at: string;
+}
+
+export interface ChatView {
+  sessionId: string;
+  label: string;
+  /** What a message would do now: answer the waiting question, steer the running turn, or start a run. */
+  sends: "answer" | "steer" | "run" | "none";
+  messages: ChatMessage[];
+}
+
+export type LiveMessage = { type: "changed"; scope: string } | { type: "hello" };
