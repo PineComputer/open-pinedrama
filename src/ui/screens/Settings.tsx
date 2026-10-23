@@ -3,11 +3,13 @@ import type { AppInfo } from "../../shared/types.ts";
 import { api, useAction } from "../api.ts";
 import { setLang, useT } from "../i18n.ts";
 import { errorText } from "../labels.ts";
+import { useNotifySetting } from "../notify.ts";
 import { ConnectForm } from "./Welcome.tsx";
 
 export function Settings({ app, onChange }: { app: AppInfo; onChange: () => void }) {
   const { t, lang } = useT();
   const [connecting, setConnecting] = useState(false);
+  const notify = useNotifySetting();
   const disconnect = useAction(async () => {
     await api("/api/connection", { method: "DELETE" });
     onChange();
@@ -68,6 +70,22 @@ export function Settings({ app, onChange }: { app: AppInfo; onChange: () => void
             </button>
           </div>
         </section>
+        {notify.supported && (
+          <section>
+            <span className="label">{t("settings.notify")}</span>
+            <div className="block">
+              <div className="options">
+                <button aria-pressed={notify.on} className={notify.on ? "on" : ""} onClick={() => void (notify.on || notify.toggle())}>
+                  {t("settings.notifyOn")}
+                </button>
+                <button aria-pressed={!notify.on} className={notify.on ? "" : "on"} onClick={() => void (notify.on && notify.toggle())}>
+                  {t("settings.notifyOff")}
+                </button>
+              </div>
+              <span className="quiet small">{notify.blocked ? t("settings.notifyBlocked") : t("settings.notifyHint")}</span>
+            </div>
+          </section>
+        )}
         <section>
           <span className="label">{t("settings.data")}</span>
           <div className="block">

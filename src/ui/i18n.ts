@@ -37,6 +37,11 @@ const en = {
   "settings.replayOn": "Replay: sample work, no project.",
   "settings.connect": "Connect a project",
   "settings.language": "Language",
+  "settings.notify": "Notifications",
+  "settings.notifyOn": "On",
+  "settings.notifyOff": "Off",
+  "settings.notifyHint": "When the studio is in the background, the system tells you as soon as something waits for your review.",
+  "settings.notifyBlocked": "This browser blocks the studio's notifications; allow them in its site settings.",
   "settings.data": "Data",
   "settings.dataHint": "The records, and the library of every file the agents returned.",
 
@@ -300,6 +305,11 @@ const zh: Record<Key, string> = {
   "settings.replayOn": "回放模式：示例素材，未连接项目。",
   "settings.connect": "连接项目",
   "settings.language": "语言",
+  "settings.notify": "通知",
+  "settings.notifyOn": "开",
+  "settings.notifyOff": "关",
+  "settings.notifyHint": "工作室在后台时，一有需要你审阅的内容，系统就会提醒你。",
+  "settings.notifyBlocked": "浏览器屏蔽了工作室的通知，请在网站设置里允许。",
   "settings.data": "数据",
   "settings.dataHint": "记录，以及智能体返回的所有文件。",
 

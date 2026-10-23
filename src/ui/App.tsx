@@ -3,6 +3,7 @@ import type { AppInfo, ReviewSummary } from "../shared/types.ts";
 import { ApiError, useResource } from "./api.ts";
 import { setLang, useT } from "./i18n.ts";
 import { Mark } from "./Mark.tsx";
+import { useReviewNotifications } from "./notify.ts";
 import { Link, match, navigate, usePath } from "./router.tsx";
 import { Drama } from "./screens/Drama.tsx";
 import { InboxScreen } from "./screens/Inbox.tsx";
@@ -80,6 +81,7 @@ export function App() {
   const inbox = useResource<ReviewSummary[]>(app.data && app.data.mode !== "none" ? "/api/inbox" : null, ["inbox"]);
   const waiting = (inbox.data ?? []).filter((item) => item.state === "open");
   const { t } = useT();
+  useReviewNotifications(inbox.data && waiting);
 
   useEffect(() => {
     document.title = waiting.length ? `(${waiting.length}) ${t("app.name")}` : t("app.name");
