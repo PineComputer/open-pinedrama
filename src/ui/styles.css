@@ -510,6 +510,7 @@ h1, h2, h3 { margin: 0; font-family: var(--serif); font-weight: 450; letter-spac
 .episode-nav button { display: grid; grid-template-columns: 30px minmax(0, 1fr) 8px; align-items: center; gap: 10px; padding: 6px 8px; border: 0; border-radius: var(--r); background: none; cursor: pointer; text-align: left; color: var(--ink-2); }
 .episode-nav button:hover { background: var(--paper-2); }
 .episode-nav button.on { background: var(--paper-3); color: var(--ink); }
+.episode-nav button.other { grid-template-columns: minmax(0, 1fr); padding-left: 48px; }
 .episode-nav .thumb { position: relative; display: block; width: 30px; aspect-ratio: 3 / 4; border-radius: 2px; overflow: hidden; background: var(--room-2); }
 .episode-nav .name { font: 500 15px/1.2 var(--serif); }
 .episode-nav .dot { width: 7px; height: 7px; border-radius: 50%; background: transparent; }
@@ -594,3 +595,7 @@ h1, h2, h3 { margin: 0; font-family: var(--serif); font-weight: 450; letter-spac
 .speech code { font: 0.86em/1 ui-monospace, "SF Mono", Menlo, monospace; font-style: normal; background: var(--paper-2); padding: 1px 4px; border-radius: 2px; overflow-wrap: anywhere; }
 .speech .named { border-bottom: 1px dotted var(--ink-4); }
 .speech .link { color: inherit; }
+
+/* A plain question's answer, and for an episode with a cut, the way to call it finished. */
+.question-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 22px; }
+.question-actions .finish { display: flex; align-items: center; gap: 12px; max-width: 60ch; }

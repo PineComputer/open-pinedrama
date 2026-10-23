@@ -396,7 +396,9 @@ export async function reconcile(): Promise<void> {
     for (const session of openSessionsOf(computer.id)) {
       followEvents(session.id);
       const turn = latestTurn(session.id);
-      if (turn && !turn.ended_at && turn.state !== "answered") followTurn(session.id, turn.id);
+      // Answered, but the turn the answer opened was never recorded (the engine stopped in between): follow that one.
+      if (turn?.state === "answered" && turn.next_turn_id) followTurn(session.id, turn.next_turn_id);
+      else if (turn && !turn.ended_at && turn.state !== "answered") followTurn(session.id, turn.id);
     }
   }
   await reconcileSending();

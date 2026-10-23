@@ -119,6 +119,11 @@ function QuestionRoom({ review, done }: { review: ReviewView; done: () => void }
     forget();
     done();
   });
+  const finish = useAction(async () => {
+    await api(`/api/episodes/${review.episodeId}/finish`, { method: "POST" });
+    forget();
+    done();
+  });
   return (
     <main className="question">
       <Link to={`/d/${review.dramaId}`} className="crumb">
@@ -154,11 +159,19 @@ function QuestionRoom({ review, done }: { review: ReviewView; done: () => void }
           }}
         />
       </div>
-      {send.error !== undefined && <p className="error">{errorText(send.error, t)}</p>}
-      <div>
+      {[send.error, finish.error].map((failed, n) => failed !== undefined && <p key={n} className="error">{errorText(failed, t)}</p>)}
+      <div className="question-actions">
         <button className="btn ink" disabled={!open || send.busy || !answer.trim()} onClick={() => void send.run()}>
           {t("review.sendAnswer")} <span className="key">⌘↵</span>
         </button>
+        {review.finishable && review.episode && (
+          <span className="finish">
+            <button className="btn" disabled={finish.busy} onClick={() => void finish.run()}>
+              {t("review.finish", { code: review.episode })}
+            </button>
+            <span className="quiet small">{t("review.finishHint")}</span>
+          </span>
+        )}
       </div>
     </main>
   );

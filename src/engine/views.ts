@@ -250,6 +250,7 @@ function summary(review: ReviewRow): ReviewSummary {
     dramaId: review.drama_id,
     dramaTitle: get<{ title: string }>("select title from dramas where id = ?", review.drama_id)?.title ?? "",
     episode: episode ? episodeCode(episode) : undefined,
+    episodeId: episode?.id,
     kind: review.kind,
     state: review.state,
     question: review.question,
@@ -325,6 +326,8 @@ export function reviewView(review: ReviewRow): ReviewView {
     decision: review.decision ? JSON.parse(review.decision) : undefined,
     answer: review.answer ?? undefined,
     nextId: next?.id,
+    finishable:
+      review.kind === "question" && review.state === "open" && review.episode_id !== null && get("select id from files where episode_id = ? and kind = 'cut' limit 1", review.episode_id) !== undefined,
   };
 }
 

@@ -12,6 +12,7 @@ export type ErrorCode =
   | "drama-not-stopped"
   | "drama-not-held"
   | "nothing-delivered"
+  | "no-cut"
   | "session-ended"
   | "computer-not-running"
   | "message-empty"
@@ -219,6 +220,7 @@ export interface ReviewSummary {
   dramaId: string;
   dramaTitle: string;
   episode?: string;
+  episodeId?: string;
   kind: ReviewKind;
   state: ReviewState;
   question: string;
@@ -268,6 +270,8 @@ export interface ReviewView extends ReviewSummary {
   answer?: string;
   /** The next review waiting, to move on to after this one. */
   nextId?: string;
+  /** An episode's plain question while it has a cut: the maker may call the episode finished instead of answering. */
+  finishable?: boolean;
 }
 
 export interface ChatMessage {

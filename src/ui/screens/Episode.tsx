@@ -204,7 +204,7 @@ export function Episode({ dramaId, code }: { dramaId: string; code: string }) {
             <span className={`dot ${mark(page.cuts[0]?.review)}`} />
           </button>
           {page.other.length > 0 && (
-            <button aria-current={selection?.kind === "other"} className={selection?.kind === "other" ? "on" : ""} onClick={() => setPicked({ kind: "other" })}>
+            <button aria-current={selection?.kind === "other"} className={`other ${selection?.kind === "other" ? "on" : ""}`} onClick={() => setPicked({ kind: "other" })}>
               <span className="name">
                 {t("episode.other")} <span className="quiet num">{page.other.length}</span>
               </span>

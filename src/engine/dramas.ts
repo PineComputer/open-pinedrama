@@ -1,6 +1,7 @@
 // What a maker does to a drama: start one, change how many episodes run at once, resume
 // an episode whose session ended, retry a stopped setup, talk to an agent.
-import { computerRef, fleet, sessionRef } from "./computers.ts";
+import { closeSession, computerRef, fleet, sessionRef } from "./computers.ts";
+import { stopEvents } from "./follow.ts";
 import type { Mode } from "../shared/types.ts";
 import { MAX_ATTACHMENT } from "./config.ts";
 import { get, newId, now, run, transaction } from "./db.ts";
@@ -87,6 +88,27 @@ export function resumeEpisode(id: string): void {
   if (episode.state !== "stopped" && episode.state !== "failed") throw new StudioError("episode-busy", "This episode is still going.", 409);
   run("update episodes set state = 'queued', resume = 1, carry = '', updated_at = ? where id = ?", now(), id);
   publish(`drama:${episode.drama_id}`);
+}
+
+/**
+ * The maker calls an episode finished with its latest cut: for an agent that keeps asking
+ * after the work is done, or one whose cut was approved in words rather than in its review.
+ * Its waiting question closes with that answer and its session is let go.
+ */
+export async function finishEpisode(id: string): Promise<void> {
+  const episode = episodeRow(id);
+  if (!episode) throw new StudioError("not-found", "No such episode.", 404);
+  if (!get("select id from files where episode_id = ? and kind = 'cut' limit 1", id)) throw new StudioError("no-cut", "This episode has no cut yet.", 409);
+  const session = episode.session_id ? sessionRow(episode.session_id) : undefined;
+  transaction(() => {
+    if (session) run("update reviews set state = 'answered', answer = ?, decided_at = ? where session_id = ? and state in ('saving', 'open')", "The maker finished the episode here.", now(), session.id);
+    run("update episodes set state = 'done', note = '', session_id = null, updated_at = ? where id = ?", now(), id);
+  });
+  if (session?.state === "open") {
+    stopEvents(session.id);
+    await closeSession(session);
+  }
+  publish(`drama:${episode.drama_id}`, "dramas", "inbox");
 }
 
 export function retrySetup(id: string): void {

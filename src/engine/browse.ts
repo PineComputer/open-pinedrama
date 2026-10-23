@@ -127,7 +127,8 @@ export function deliveryRows(dramaId: string): DeliveryRow[] {
             together: cuts.filter((cut) => cut.turn_id === latest.turn_id).length,
           }
         : undefined,
-      accepted: shown.length === 1 ? item(shown[0]) : undefined,
+      // An episode the maker finished without a cut review is delivered with its latest cut.
+      accepted: shown.length === 1 ? item(shown[0]) : !approved && episode.state === "done" && latest ? item(latest) : undefined,
       ambiguous: shown.length > 1 || undefined,
     };
   });

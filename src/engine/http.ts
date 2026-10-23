@@ -20,7 +20,7 @@ import { appInfo, connectPine, disconnect, useReplay } from "./connection.ts";
 import { retryStarts } from "./computers.ts";
 import { DEFAULT_ENDPOINT } from "./settings.ts";
 import { all } from "./db.ts";
-import { chat, createDrama, desktop, rehearse, resumeEpisode, retrySetup, updateDrama } from "./dramas.ts";
+import { chat, createDrama, desktop, finishEpisode, rehearse, resumeEpisode, retrySetup, updateDrama } from "./dramas.ts";
 import { StudioError } from "./errors.ts";
 import { fileRow, openBlob } from "./library.ts";
 import { subscribe } from "./live.ts";
@@ -243,6 +243,15 @@ export function app(): Hono {
   api.get("/api/dramas/:id/sessions", (c) => {
     const rows = all<SessionRow>("select * from sessions where drama_id = ? and state = 'open' order by created_at", c.req.param("id"));
     return c.json(rows.map(chatView));
+  });
+
+  api.post("/api/episodes/:id/finish", async (c) => {
+    try {
+      await finishEpisode(c.req.param("id"));
+      return c.json({ ok: true });
+    } catch (error) {
+      return fail(c, error);
+    }
   });
 
   api.post("/api/episodes/:id/resume", (c) => {

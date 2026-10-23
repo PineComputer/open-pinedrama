@@ -253,6 +253,32 @@ describe("the production line", () => {
     // Said in so many words, it is a stop from the start.
     expect(m.flow.stopsForMaker(session, { ...info, summary: "The storyboards are packed.\n\nPlease reply with approval or changes." })).toBe(true);
     expect(m.flow.stopsForMaker(session, { ...info, summary: "分镜已完成。\n\n请审阅后回复。" })).toBe(true);
+    // With a cut, the maker can call the episode finished instead; Delivery hands over that cut.
+    await expect(m.dramas.finishEpisode("ep-short")).rejects.toThrow(/no cut/);
+    m.db.run("insert into files (drama_id, episode_id, session_id, turn_id, sha, rel_path, name, type, size, kind, version, created_at) values (?, 'ep-short', 'ses-short', 'turn-short', 'ab', 'drama/episodes/EP001/edit/v1/cut.mp4', 'cut.mp4', 'video/mp4', 1, 'cut', 'v1', ?)", id, at);
+    await m.dramas.finishEpisode("ep-short");
+    expect(m.db.get<{ state: string }>("select state from episodes where id = 'ep-short'")?.state).toBe("done");
+    expect(m.db.get<{ state: string }>("select state from reviews where turn_id = 'turn-short'")?.state).toBe("answered");
+    expect(m.db.get<{ state: string }>("select state from sessions where id = 'ses-short'")?.state).toBe("closed");
+    expect((await import("./browse.ts")).deliveryRows(id)[0].accepted?.path).toBe("drama/episodes/EP001/edit/v1/cut.mp4");
+  });
+
+  it("follows the turn an answer opened when the engine stopped before recording it", async () => {
+    const fleet = new m.replay.ReplayFleet();
+    quiet();
+    m.computers.setFleet(fleet);
+    m.scheduler.startClock(20);
+    const id = await m.dramas.createDrama(newDrama("Answered, unrecorded"), "replay");
+    const asked = await until("the setup question", () => m.db.get<{ turn_id: string; session_id: string }>("select * from reviews where drama_id = ? and state = 'open'", id));
+    m.scheduler.stopClock();
+    // Pine took the answer; the engine stopped before saving the turn it opened.
+    const session = m.db.get<import("./records.ts").SessionRow>("select * from sessions where id = ?", asked.session_id)!;
+    const computer = m.db.get<import("./records.ts").ComputerRow>("select * from computers where id = ?", session.computer_id)!;
+    const next = await fleet.answer(m.computers.computerRef(computer), m.computers.sessionRef(session), asked.turn_id, "He is 32.");
+    m.db.run("update turns set state = 'answered', next_turn_id = ? where id = ?", next.turnId, asked.turn_id);
+    m.db.run("update reviews set state = 'answered' where turn_id = ?", asked.turn_id);
+    await m.scheduler.reconcile();
+    await until("the opened turn, followed to its end", () => m.db.get("select id from turns where id = ? and ended_at is not null", next.turnId));
   });
 
   it("starts again an episode whose start was cut short before its run", async () => {

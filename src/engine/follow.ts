@@ -103,8 +103,8 @@ const MADE = [...KINDS, "bible", "breakdown"];
 
 /**
  * Pictures, clips and documents the agent made in its own folders (an episode's; for the
- * setup, the drama's bible, assets and breakdowns) that the studio doesn't have: for a stop
- * whose question neither returned nor named what it asks about. Listed a folder at a time, a
+ * setup, the drama's bible, assets and breakdowns) that the studio doesn't have: for a stop,
+ * or a finished turn, that neither returned nor named any of it. Listed a folder at a time, a
  * few hundred at most.
  */
 async function made(session: SessionRow): Promise<string[]> {
@@ -156,8 +156,8 @@ export async function settle(sessionId: string, info: TurnInfo): Promise<void> {
       };
       const named = stop ? namedPaths(asked).filter((relPath) => !info.files.some((file) => file.path === relPath) && !known(session.drama_id, relPath)) : [];
       for (const relPath of named) await fetch(relPath);
-      // A stop that brought nothing to look at: what the agent made for it is in its folder.
-      if (stop && !get(`select id from files where turn_id = ? and kind in (${REVIEWED}) limit 1`, info.turnId)) {
+      // A stop, or a finished turn, that brought nothing to look at: what the agent made is in its folder.
+      if ((stop || info.state === "completed") && !get(`select id from files where turn_id = ? and kind in (${REVIEWED}) limit 1`, info.turnId)) {
         for (const relPath of await made(session)) await fetch(relPath);
       }
       run("update turns set files_saved = 1, save_error = null where id = ?", info.turnId);

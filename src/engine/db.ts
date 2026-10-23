@@ -206,10 +206,14 @@ export function run(sql: string, ...params: SQLInputValue[]): { changes: number;
   return { changes: Number(result.changes), lastInsertRowid: Number(result.lastInsertRowid) };
 }
 
-/** Runs related writes all or none. */
+let depth = 0;
+
+/** Runs related writes all or none; one inside another joins it. */
 export function transaction<T>(work: () => T): T {
+  if (depth > 0) return work();
   const handle = db();
   handle.exec("begin");
+  depth += 1;
   try {
     const result = work();
     handle.exec("commit");
@@ -217,6 +221,8 @@ export function transaction<T>(work: () => T): T {
   } catch (error) {
     handle.exec("rollback");
     throw error;
+  } finally {
+    depth -= 1;
   }
 }
 

@@ -213,8 +213,10 @@ async function send(reviewId: string, decision: Decision): Promise<ReviewRow> {
   }
   try {
     const next = await fleet().answer(computerRef(computer), sessionRef(session), review.turn_id, answer);
-    answered(review, session, next.turnId);
-    recordTurn(session.id, next);
+    transaction(() => {
+      answered(review, session, next.turnId);
+      recordTurn(session.id, next);
+    });
     followTurn(session.id, next.turnId);
   } catch (error) {
     const status = (error as { status?: number }).status;
