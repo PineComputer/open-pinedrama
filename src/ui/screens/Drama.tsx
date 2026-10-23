@@ -164,7 +164,7 @@ export function Drama({ id, tab, episode }: { id: string; tab: string; episode?:
       <section>
         <Notices drama={drama} />
         {tab === "board" && (drama.status === "setup" || (drama.status === "stopped" && !drama.episodeRows.length) ? <SetupPanel drama={drama} /> : <Board drama={drama} />)}
-        {tab === "episode" && episode && <Episode dramaId={id} code={episode} />}
+        {tab === "episode" && episode && <Episode key={`${id}/${episode}`} dramaId={id} code={episode} />}
         {tab === "script" && <Script dramaId={id} />}
         {tab === "cast" && <Cast dramaId={id} />}
         {tab === "delivery" && <Delivery dramaId={id} />}

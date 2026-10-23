@@ -339,7 +339,8 @@ export interface DeliveryRow {
   code: string;
   title: string;
   state?: EpisodeState;
-  latest?: { file: FileItem; review?: Judged };
+  /** together: how many cuts the review of this one showed; a verdict on several is on them as a group. */
+  latest?: { file: FileItem; review?: Judged; together: number };
   /** The cut the maker approved: the one cut its newest approved cut review showed. */
   accepted?: FileItem;
   /** That review showed several cuts, so which one was approved isn't known. */

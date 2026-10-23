@@ -10,8 +10,9 @@ import { Link } from "../router.tsx";
 function Look({ name, versions }: { name: string; versions: Receipt[] }) {
   const { t } = useT();
   const [index, setIndex] = useState(0);
+  const [part, setPart] = useState(0);
   const shown = versions[Math.min(index, versions.length - 1)];
-  const file = shown?.files[0];
+  const file = shown?.files[Math.min(part, shown.files.length - 1)];
   if (!file) return null;
   const verdict = shown.review?.verdict;
   return (
@@ -23,6 +24,15 @@ function Look({ name, versions }: { name: string; versions: Receipt[] }) {
         <div className="caption">
           <span className="who">{name}</span>
           <span className="quiet small">{file.version}</span>
+          {shown.files.length > 1 && (
+            <span className="parts">
+              {shown.files.map((candidate, n) => (
+                <button key={candidate.id} aria-pressed={candidate === file} className={candidate === file ? "on" : ""} onClick={() => setPart(n)} aria-label={candidate.name}>
+                  {n + 1}
+                </button>
+              ))}
+            </span>
+          )}
           {verdict === "approve" && <Check size={14} className="v-approve" aria-label={t("judged.approve")} />}
           {verdict === "revise" && <Pencil size={13} className="v-revise" aria-label={t("judged.revise")} />}
           {shown.review && (
@@ -34,7 +44,15 @@ function Look({ name, versions }: { name: string; versions: Receipt[] }) {
         {versions.length > 1 && (
           <div className="versions">
             {versions.map((version, i) => (
-              <button key={version.turnId} aria-pressed={i === index} className={`${i === index ? "on" : ""} ${version.review?.verdict ?? ""}`} onClick={() => setIndex(i)}>
+              <button
+                key={version.turnId}
+                aria-pressed={i === index}
+                className={`${i === index ? "on" : ""} ${version.review?.verdict ?? ""}`}
+                onClick={() => {
+                  setIndex(i);
+                  setPart(0);
+                }}
+              >
                 {version.files[0]?.version ?? i + 1}
               </button>
             ))}

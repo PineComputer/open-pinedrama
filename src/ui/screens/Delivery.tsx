@@ -41,6 +41,7 @@ export function Delivery({ dramaId }: { dramaId: string }) {
           <tbody>
             {data.map((row) => {
               const latest = status(row.latest?.review);
+              const group = (row.latest?.together ?? 1) > 1 && (latest === "approve" || latest === "revise");
               return (
                 <tr key={row.code}>
                   <td>
@@ -53,7 +54,9 @@ export function Delivery({ dramaId }: { dramaId: string }) {
                     {row.latest ? (
                       <div className="cut-line">
                         <span className="num">{row.latest.file.version ?? row.latest.file.name}</span>
-                        <span className={`chip ${latest}`}>{t(`delivery.status.${latest}`)}</span>
+                        <span className={`chip ${latest}`}>
+                          {group ? t(latest === "approve" ? "delivery.groupApproved" : "delivery.groupRevised", { n: row.latest!.together }) : t(`delivery.status.${latest}`)}
+                        </span>
                         <a className="link small" href={`${row.latest.file.url}&download=1`}>
                           {t("episode.download")}
                         </a>

@@ -564,3 +564,7 @@ h1, h2, h3 { margin: 0; font-family: var(--serif); font-weight: 450; letter-spac
   .episode-body, .segment-view, .script { grid-template-columns: 1fr; }
   .episode-nav, .script-nav { position: static; }
 }
+.script-page .download { float: right; }
+.figure .parts { display: inline-flex; gap: 4px; }
+.figure .parts button { border: 1px solid var(--rule); background: none; border-radius: 2px; font-size: 12px; padding: 0 5px; cursor: pointer; color: var(--ink-3); }
+.figure .parts button.on { border-color: var(--ink); color: var(--ink); }

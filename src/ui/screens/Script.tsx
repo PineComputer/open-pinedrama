@@ -24,7 +24,14 @@ function Document({ file }: { file: FileItem }) {
     );
   }
   if (text === undefined) return <p className="quiet">{t("loading")}</p>;
-  return /markdown/.test(file.type) || /\.(md|markdown)$/i.test(file.name) ? <Markdown text={text} /> : <pre className="document plain">{text}</pre>;
+  return (
+    <>
+      <a className="link small download" href={`${file.url}&download=1`}>
+        {t("episode.download")}
+      </a>
+      {/markdown/.test(file.type) || /\.(md|markdown)$/i.test(file.name) ? <Markdown text={text} /> : <pre className="document plain">{text}</pre>}
+    </>
+  );
 }
 
 /** The drama as text: the screenplay as given, the bible, and every episode's breakdown, read only. */

@@ -47,7 +47,7 @@ export function episodePage(dramaId: string, code: string): EpisodePage | undefi
   const item = itemIn(code);
 
   const breakdown = files.findLast((file) => file.kind === "breakdown" && file.type.startsWith("text/"));
-  const shown = new Set<number>(breakdown ? [breakdown.id] : []);
+  const shown = new Set<number>();
   const segments = new Map<string, SegmentPage>();
   const segment = (key: string) => segments.get(key) ?? segments.set(key, { key, boards: [], takes: [] }).get(key)!;
   const cuts: Receipt[] = [];
@@ -55,7 +55,7 @@ export function episodePage(dramaId: string, code: string): EpisodePage | undefi
     const review = reviews.get(turnId);
     for (const kind of ["storyboards", "takes", "cut"] as const satisfies ReviewKind[]) {
       for (const group of itemsOf(kind, turnFiles).items) {
-        const receipt: Receipt = { turnId, files: group.files, review: judged(review, group.key) };
+        const receipt: Receipt = { turnId, files: group.files, review: judged(review?.kind === kind ? review : undefined, group.key) };
         for (const file of group.files) shown.add(file.id);
         if (kind === "cut") cuts.push(receipt);
         else segment(group.key)[kind === "storyboards" ? "boards" : "takes"].push(receipt);
@@ -119,7 +119,13 @@ export function deliveryRows(dramaId: string): DeliveryRow[] {
       code,
       title: episode.title,
       state: episode.state,
-      latest: latest ? { file: item(latest), review: judged(reviews.find((review) => review.turn_id === latest.turn_id), "cut") } : undefined,
+      latest: latest
+        ? {
+            file: item(latest),
+            review: judged(reviews.find((review) => review.turn_id === latest.turn_id), "cut"),
+            together: cuts.filter((cut) => cut.turn_id === latest.turn_id).length,
+          }
+        : undefined,
       accepted: shown.length === 1 ? item(shown[0]) : undefined,
       ambiguous: shown.length > 1 || undefined,
     };
@@ -142,9 +148,11 @@ export function castCards(dramaId: string): CastCard[] {
       const card = cards.get(`${kind}|${subject}`) ?? cards.set(`${kind}|${subject}`, { kind, subject, looks: [] }).get(`${kind}|${subject}`)!;
       let entry = card.looks.find((candidate) => candidate.look === look);
       if (!entry) card.looks.push((entry = { look, versions: [] }));
+      // Only a review of looks or of the shared references judged these.
+      const looked = review && (review.kind === "looks" || review.kind === "references") ? review : undefined;
       const receipt = entry.versions.find((version) => version.turnId === turnId);
       if (receipt) receipt.files.push(toItem(file));
-      else entry.versions.push({ turnId, files: [toItem(file)], review: judged(review, review?.kind === "looks" ? subject : key) });
+      else entry.versions.push({ turnId, files: [toItem(file)], review: judged(looked, looked?.kind === "looks" ? subject : key) });
     }
   }
   const order = { look: 0, location: 1, prop: 2 };
