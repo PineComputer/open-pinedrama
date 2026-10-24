@@ -37,6 +37,11 @@ function lookKey(file: Pick<FileRow, "subject" | "look">): string {
 }
 
 /** Splits a turn's files into the things the maker gives a verdict on, and the rest. */
+/** A place or prop as an item of the shared references: a place at another time of day (Night) is an item of its own. */
+export function placeKey(file: Pick<FileRow, "kind" | "subject" | "look">): string {
+  return `${file.kind}:${file.subject}${file.look ? `/${file.look}` : ""}`;
+}
+
 export function itemsOf(kind: ReviewKind, files: FileRow[]): { items: ReviewItem[]; other: FileItem[] } {
   const groups = new Map<string, FileRow[]>();
   const other: FileRow[] = [];
@@ -45,14 +50,14 @@ export function itemsOf(kind: ReviewKind, files: FileRow[]): { items: ReviewItem
     if (file.kind === "archive") continue; // the handed-over project: for sessions, not for the maker's eyes
     if (kind === "looks" && file.kind === "look") add(lookKey(file), file);
     else if (kind === "references" && file.kind === "look") add(lookKey(file), file);
-    else if (kind === "references" && (file.kind === "location" || file.kind === "prop") && file.subject) add(`${file.kind}:${file.subject}`, file);
-    else if (kind === "storyboards" && (file.kind === "storyboard" || file.kind === "blocking") && file.segment) add(file.segment, file);
+    else if (kind === "references" && (file.kind === "location" || file.kind === "prop") && file.subject) add(placeKey(file), file);
+    else if (kind === "storyboards" && (file.kind === "storyboard" || file.kind === "blocking" || file.kind === "frame") && file.segment) add(file.segment, file);
     else if (kind === "takes" && file.kind === "take" && file.segment) add(file.segment, file);
     else if (kind === "cut" && file.kind === "cut") add("cut", file);
     else other.push(file);
   }
-  // Within an item: storyboards line-art first, then photoreal, then the blocking reference; newest versions first.
-  const order = (file: FileRow) => (file.kind === "blocking" ? 2 : file.style === "photoreal" ? 1 : 0);
+  // Within an item: storyboards line-art first, then photoreal, then the blocking reference and the first frame; newest versions first.
+  const order = (file: FileRow) => (file.kind === "frame" ? 3 : file.kind === "blocking" ? 2 : file.style === "photoreal" ? 1 : 0);
   // Characters first, then places, then props; within each, in natural order.
   const rank = (key: string) => (key.startsWith("location:") ? 1 : key.startsWith("prop:") ? 2 : 0);
   const items = [...groups.entries()]

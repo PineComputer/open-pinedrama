@@ -79,6 +79,8 @@ async function scenario(title: string) {
   form.set("language", "en");
   form.set("parallel", "2");
   form.set("perComputer", "1");
+  form.set("length", "90");
+  form.set("budget", "40");
   form.append("files", new File(["EPISODE 1\nLin enters."], "screenplay.txt", { type: "text/plain" }));
   const { id } = await call<{ id: string }>("POST", "/api/dramas", form);
 
@@ -140,7 +142,12 @@ async function scenario(title: string) {
   const { all } = await import("./db.ts");
   const goals = all<{ goal: string }>("select goal from runs where kind = 'episode'");
   expect(goals.length).toBeGreaterThanOrEqual(2);
-  for (const { goal } of goals) expect(goal).toContain("attachments/project.tar.part-*");
+  for (const { goal } of goals) {
+    expect(goal).toContain("attachments/project.tar.part-*");
+    // Each episode keeps to its own budget: episodes at once each count only their own copy's spending.
+    expect(goal).toContain("may spend up to $40 on generation");
+  }
+  expect(all<{ goal: string }>("select goal from runs where kind = 'setup'")[0].goal).toContain("(screenplay.txt, brief.md)");
   expect(drama.episodeRows.every((row) => row.stages.breakdown.state === "done")).toBe(true);
   const boards = await until("EP001 storyboards", openReview(id, (item) => item.episode === "EP001" && item.kind === "storyboards"));
   expect((await call<ReviewView>("GET", `/api/reviews/${boards.id}`)).breakdown?.path).toBe("drama/episodes/EP001/breakdown/v1/breakdown.md");
@@ -156,6 +163,15 @@ async function scenario(title: string) {
     return rows.EP001.state === "done" && rows.EP003.state !== "queued" ? view : undefined;
   });
   expect(after.episodeRows.find((row) => row.code === "EP001")!.stages.cut.state).toBe("done");
+  // What it cost: the takes' video is billed as it settles, after their turns, and counts toward the episode and the drama.
+  const billed = await until("EP001's video billed", async () => {
+    const view = await call<DramaView>("GET", `/api/dramas/${id}`);
+    return view.episodeRows.find((row) => row.code === "EP001")!.spent.media > 0 ? view : undefined;
+  });
+  const ep001 = billed.episodeRows.find((row) => row.code === "EP001")!;
+  expect(ep001.spent.total).toBeGreaterThan(ep001.spent.media);
+  expect(billed.spent.media).toBeGreaterThanOrEqual(ep001.spent.media);
+  expect(billed.spent.total).toBeGreaterThan(ep001.spent.total);
 
   // Browsing: the episode receipt by receipt, with the verdict on what each review showed.
   const episode = await call<EpisodePage>("GET", `/api/dramas/${id}/episodes/EP001`);
@@ -183,7 +199,12 @@ expect(archive.includes(Buffer.from(`${title}/EP002`))).toBe(false);
   const script = await call<ScriptPage>("GET", `/api/dramas/${id}/script`);
   expect(script.bible?.kind).toBe("bible");
   expect(script.breakdowns.map((entry) => entry.code)).toEqual(["EP001", "EP002", "EP003", "EP004", "EP005", "EP006"]);
-  expect(script.inputs.map((file) => file.name)).toEqual(["screenplay.txt"]);
+  expect(script.inputs.map((file) => file.name)).toEqual(["screenplay.txt", "brief.md"]);
+  // The brief, written from New drama in the form the drama skill reads.
+  const brief = await (await fetchApp(new Request(`http://127.0.0.1:4310${script.inputs[1].url}`, { headers: { host: "127.0.0.1:4310", cookie: "studio=test-token" } }))).text();
+  expect(brief).toContain(`- Title: ${title}\n`);
+  expect(brief).toContain("- Episode length: about a minute and a half (80 to 110 seconds).");
+  expect(brief).toContain("- Budget: $40 of generation for each episode.");
   const cast = await call<CastCard[]>("GET", `/api/dramas/${id}/cast`);
   const wei = cast.find((card) => card.subject === "wei")!;
   expect(wei.looks[0].versions.map((version) => [version.files[0].version, version.review?.verdict])).toEqual([

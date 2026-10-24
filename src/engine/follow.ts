@@ -9,7 +9,7 @@ import { publish } from "./live.ts";
 import { classify, namedPaths, typeOf } from "./classify.ts";
 import { onEnded, stopsForMaker } from "./flow.ts";
 import { questionAsked, questionReady } from "./reviews.ts";
-import { type SessionRow, type TurnRow, computer as computerRow, episode as episodeRow, episodeCode, session as sessionRow } from "./records.ts";
+import { type SessionRow, type TurnRow, computer as computerRow, costRaised, raiseCost, episode as episodeRow, episodeCode, session as sessionRow } from "./records.ts";
 
 const turnsFollowed = new Map<string, Promise<void>>();
 const eventsFollowed = new Map<string, AbortController>();
@@ -23,16 +23,17 @@ export function recordTurn(sessionId: string, info: TurnInfo): void {
   const ended = ENDED.has(info.state);
   if (!ended && !get("select id from turns where id = ?", info.turnId)) run("update sessions set activity = null where id = ?", sessionId);
   run(
-    `insert into turns (id, session_id, state, question, summary, cost, next_turn_id, created_at, ended_at)
-     values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `insert into turns (id, session_id, state, question, summary, cost, media, next_turn_id, created_at, ended_at)
+     values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
      on conflict(id) do update set state = excluded.state, question = excluded.question, summary = excluded.summary,
-       cost = excluded.cost, next_turn_id = excluded.next_turn_id, ended_at = coalesce(turns.ended_at, excluded.ended_at)`,
+       ${costRaised("excluded")}, next_turn_id = excluded.next_turn_id, ended_at = coalesce(turns.ended_at, excluded.ended_at)`,
     info.turnId,
     sessionId,
     info.state,
     info.question,
     info.summary,
     info.cost,
+    info.media,
     info.nextTurnId || null,
     now(),
     ended ? now() : null,
@@ -203,7 +204,9 @@ async function eventsLoop(sessionId: string, signal: AbortSignal): Promise<void>
     try {
       for await (const event of fleet().events(computerRef(computer), sessionRef(session), session.cursor ?? undefined, session.task_id ?? undefined, signal)) {
         failures = 0;
-        if (event.kind === "activity") {
+        if (event.kind === "usage") {
+          raiseCost(event.turnId, event.cost ?? null, event.media ?? null);
+        } else if (event.kind === "activity") {
           run(
             `insert into messages (session_id, turn_id, kind, text, ref, at) values (?, ?, 'activity', ?, ?, ?)
              on conflict(session_id, ref) do update set text = excluded.text`,

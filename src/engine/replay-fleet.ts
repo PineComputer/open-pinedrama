@@ -330,6 +330,10 @@ function scriptFor(goal: string, lang: Lang): Player {
 /** A decision on a stop that ended its turn, sent as a run (goals.ts, decisionGoal): the recording goes on. */
 const isDecision = (goal: string) => /from there as the goal says/.test(goal);
 
+/** What a replayed take is billed as: four seconds at Pine's 480p video rate. */
+const TAKE_SECONDS = 4;
+const VIDEO_PER_MINUTE = 39;
+
 export class ReplayFleet implements Fleet {
   readonly mode = "replay" as const;
   readonly project = "replay";
@@ -416,13 +420,13 @@ export class ReplayFleet implements Fleet {
     this.session(ref, session).files.set(`attachments/${name}`, { path: `attachments/${name}`, type: "application/octet-stream", bytes: content });
   }
 
-  private emit(session: Session, turnId: string, kind: FleetEvent["kind"], textValue: string, ref?: string, state?: string) {
-    session.events.push({ id: String(session.events.length + 1), taskId: session.taskId, turnId, kind, text: textValue, ref, state });
+  private emit(session: Session, turnId: string, kind: FleetEvent["kind"], textValue: string, ref?: string, state?: string, cost?: Pick<TurnInfo, "cost" | "media">) {
+    session.events.push({ id: String(session.events.length + 1), taskId: session.taskId, turnId, kind, text: textValue, ref, state, ...cost });
   }
 
   private begin(session: Session, answer: string): TurnInfo {
     const turnId = `turn-${crypto.randomUUID().slice(0, 12)}`;
-    const info: TurnInfo = { turnId, state: "running", question: "", summary: "", nextTurnId: "", files: [], cost: null };
+    const info: TurnInfo = { turnId, state: "running", question: "", summary: "", nextTurnId: "", files: [], cost: null, media: null };
     session.turns.set(turnId, { info, waiters: [] });
     session.latest = turnId;
     void this.play(session, turnId, answer);
@@ -453,9 +457,18 @@ export class ReplayFleet implements Fleet {
       summary: ask ?? step.summary ?? "",
       files: named || bare ? [] : files,
       cost: Math.round((0.15 + Math.random() * 0.4) * 100) / 100,
+      media: 0,
     };
     this.emit(session, turnId, "result", turn.info.summary);
     for (const wake of turn.waiters.splice(0)) wake();
+    // Each take is a few seconds of generated video, billed as it settles, after the turn's result.
+    const takes = files.filter((file) => /\/segments\/seg\d+\/t\d+\/[^/]+\.mp4$/.test(file.path)).length;
+    if (takes) {
+      await this.delay(1_500);
+      const media = Math.round(takes * TAKE_SECONDS * (VIDEO_PER_MINUTE / 60) * 100) / 100;
+      turn.info = { ...turn.info, cost: Math.round((turn.info.cost! + media) * 100) / 100, media };
+      this.emit(session, turnId, "usage", "", undefined, undefined, { cost: turn.info.cost, media });
+    }
   }
 
   async run(ref: ComputerRef, session: SessionRef, goal: string, key: string) {

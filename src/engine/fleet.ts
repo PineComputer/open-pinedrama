@@ -30,16 +30,25 @@ export interface TurnInfo {
   summary: string;
   nextTurnId: string;
   files: TurnFile[];
-  /** Pine's rated cost of the turn, or null where it couldn't price it. */
+  /**
+   * Pine's rated cost of the turn so far, or null where it couldn't price it: the agent's model
+   * use plus additional charges, generated video above all. Those can settle after the turn
+   * ends; a usage event then carries the turn's new total.
+   */
   cost: number | null;
+  /** The additional charges in cost (generated video), or null where they couldn't be priced. */
+  media: number | null;
 }
 
 export interface FleetEvent {
   id: string;
   taskId: string;
   turnId: string;
-  kind: "input" | "progress" | "activity" | "result";
+  kind: "input" | "progress" | "activity" | "result" | "usage";
   text: string;
+  /** For usage: the turn's cost and additional charges as of this event. */
+  cost?: number | null;
+  media?: number | null;
   /** For activity: the step's id, to update its row in place. */
   ref?: string;
   state?: string;

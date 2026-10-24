@@ -162,7 +162,7 @@ try {
     return { value: session, note: session.name };
   });
   const blob = randomBytes(3 * 1024 * 1024);
-  const events = { input: 0, progress: 0, activity: 0, result: 0 };
+  const events = { input: 0, progress: 0, activity: 0, result: 0, usage: 0 };
   const listening = new AbortController();
   let following: Promise<void> | undefined;
   /** The session's events, from its first run on (before that it has no task to follow), as the engine reads them. */

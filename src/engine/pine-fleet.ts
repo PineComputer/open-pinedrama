@@ -31,6 +31,18 @@ export function said(text: string): string {
   return text.replace(/(?<!\\)(?:\\r)?\\n/g, "\n").replace(/(?<!\\)\\t/g, "\t");
 }
 
+/**
+ * A turn's cost and the additional charges in it (generated video). Pine prices the total as
+ * the model use plus those charges, so where a release doesn't name them they are the rest.
+ */
+function priced(cost: { total?: unknown; llm?: unknown; additional?: unknown } | undefined): { cost: number | null; media: number | null } {
+  const number = (value: unknown) => (typeof value === "number" && Number.isFinite(value) ? value : null);
+  const total = number(cost?.total);
+  const llm = number(cost?.llm);
+  const additional = cost && "additional" in cost ? number(cost.additional) : total !== null && llm !== null ? Math.max(0, Math.round((total - llm) * 1e6) / 1e6) : null;
+  return { cost: total, media: additional };
+}
+
 function turnInfo(turn: AgentTurn): TurnInfo {
   return {
     turnId: turn.turnId,
@@ -44,7 +56,7 @@ function turnInfo(turn: AgentTurn): TurnInfo {
       sha256: file.sha256,
       type: file.contentType,
     })),
-    cost: turn.result?.usage.cost.total ?? null,
+    ...priced(turn.result?.usage.cost),
   };
 }
 
@@ -206,6 +218,9 @@ export class PineFleet implements Fleet {
       if (activity) yield { ...base, kind: "activity", text: activity.title, ref: activity.id, state: activity.state };
       const result = event.result();
       if (result) yield { ...base, kind: "result", text: said(result.summary) };
+      // The turn's usage as it settles, its additional charges included; it may come after the result.
+      const usage = event.type === "usage" ? (event.payload.usage as { cost?: Record<string, unknown> } | undefined) : undefined;
+      if (usage?.cost) yield { ...base, kind: "usage", text: "", ...priced(usage.cost) };
     }
   }
 

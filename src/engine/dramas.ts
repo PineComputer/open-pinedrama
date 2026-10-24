@@ -9,6 +9,7 @@ import { save } from "./library.ts";
 import { publish } from "./live.ts";
 import { type DramaRow, computer as computerRow, drama as dramaRow, episode as episodeRow, latestTurn, session as sessionRow } from "./records.ts";
 import { StudioError } from "./errors.ts";
+import { LENGTHS, briefFile } from "./goals.ts";
 import { decide, pendingReview } from "./reviews.ts";
 import { startRun } from "./runs.ts";
 
@@ -20,6 +21,10 @@ export interface NewDrama {
   parallel: number;
   perComputer: number;
   notes: string;
+  /** About this many seconds an episode: 60, 90 or 120. */
+  length?: string;
+  /** What each episode may spend on generation, in USD. */
+  budget?: number | null;
   files: { name: string; type: string; bytes: Uint8Array }[];
   /** Pine's agent stands in for the drama skill with placeholder files (goals.ts, rehearsed). */
   rehearsal?: boolean;
@@ -37,17 +42,33 @@ export async function createDrama(input: NewDrama, mode: Mode): Promise<string> 
   const large = input.files.find((file) => file.bytes.byteLength > MAX_ATTACHMENT);
   if (large) throw new StudioError("file-too-large", `${large.name} is over 64 MiB, more than a Computer can be handed.`, 400, large.name);
   const id = newId("drama");
+  const length = LENGTHS[input.length ?? ""] ? input.length! : "60";
+  const budget = input.budget === null || input.budget === undefined || !Number.isFinite(input.budget) ? null : Math.max(0, Math.round(input.budget * 100) / 100);
   const fileIds: number[] = [];
+  // The maker's own brief.md is the brief; without one, the studio writes it from what they chose here.
+  const isBrief = (name: string) => name.toLowerCase() === "brief.md";
+  const files = input.files.some((file) => isBrief(file.name))
+    ? input.files
+    : [
+        ...input.files,
+        {
+          name: "brief.md",
+          type: "text/markdown",
+          bytes: new TextEncoder().encode(
+            briefFile({ title: input.title.trim(), language: input.language === "en" ? "en" : "zh", look: input.look.trim() || "live action", format: input.format.trim() || "9:16, 480p", notes: input.notes.trim(), length, budget }),
+          ),
+        },
+      ];
   try {
-    for (const file of input.files) fileIds.push(await save(file.bytes, { dramaId: id, relPath: file.name, type: file.type, kind: "screenplay" }));
+    for (const file of files) fileIds.push(await save(file.bytes, { dramaId: id, relPath: file.name, type: file.type, kind: isBrief(file.name) ? "brief" : "screenplay" }));
   } catch (error) {
     run("delete from files where drama_id = ?", id);
     throw error;
   }
   transaction(() => {
     run(
-      `insert into dramas (id, title, language, look, format, parallel, per_computer, notes, mode, rehearsal, status, created_at, updated_at)
-       values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'setup', ?, ?)`,
+      `insert into dramas (id, title, language, look, format, parallel, per_computer, notes, length, budget, mode, rehearsal, status, created_at, updated_at)
+       values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'setup', ?, ?)`,
       id,
       input.title.trim(),
       input.language === "en" ? "en" : "zh",
@@ -56,6 +77,8 @@ export async function createDrama(input: NewDrama, mode: Mode): Promise<string> 
       clamp(input.parallel || 4, 1, 50),
       clamp(input.perComputer || 1, 1, 3),
       input.notes.trim(),
+      length,
+      budget,
       mode,
       input.rehearsal ? 1 : 0,
       now(),

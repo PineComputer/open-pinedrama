@@ -17,6 +17,7 @@ import {
   type ChatMessage,
   type Decision,
   type ReviewItem,
+  type Spend,
 } from "../shared/types.ts";
 import { START_ATTEMPTS, fleet, hasFleet, projectLimits } from "./computers.ts";
 import { atProjectLimit } from "./scheduler.ts";
@@ -41,6 +42,17 @@ function castFaces(dramaId: string): string[] {
   return [...newest.values()].slice(0, 3).map(fileUrl);
 }
 
+/** What the sessions of a drama or an episode have cost so far: every turn, its late charges included. */
+function spend(column: "drama_id" | "episode_id", id: string): Spend {
+  const row = get<{ total: number | null; media: number | null; unpriced: number | null }>(
+    `select sum(t.cost) as total, sum(t.media) as media, sum(t.cost is null and t.ended_at is not null) as unpriced
+     from turns t join sessions s on s.id = t.session_id where s.${column} = ?`,
+    id,
+  );
+  const cents = (value: number | null | undefined) => Math.round((value ?? 0) * 100) / 100;
+  return { total: cents(row?.total), media: cents(row?.media), partial: (row?.unpriced ?? 0) > 0 };
+}
+
 export function dramaCard(drama: DramaRow): DramaCard {
   const counts = all<{ state: string; n: number }>("select state, count(*) as n from episodes where drama_id = ? group by state", drama.id);
   const n = (state: string) => counts.find((row) => row.state === state)?.n ?? 0;
@@ -58,6 +70,7 @@ export function dramaCard(drama: DramaRow): DramaCard {
     computers: get<{ n: number }>("select count(*) as n from computers where drama_id = ? and state in ('running', 'starting')", drama.id)?.n ?? 0,
     waiting,
     cast: castFaces(drama.id),
+    spent: spend("drama_id", drama.id),
     createdAt: drama.created_at,
   };
 }
@@ -67,7 +80,7 @@ export function dramaCards(): DramaCard[] {
 }
 
 const REVIEW_STAGE: Partial<Record<ReviewKind, number>> = { storyboards: 2, takes: 3, cut: 4 };
-const FILE_STAGE: Partial<Record<string, number>> = { breakdown: 0, blocking: 1, storyboard: 2, take: 3, cut: 4 };
+const FILE_STAGE: Partial<Record<string, number>> = { breakdown: 0, blocking: 1, frame: 1, storyboard: 2, take: 3, cut: 4 };
 
 function stageCells(episode: EpisodeRow, files: FileRow[], reviews: ReviewRow[]): Record<Stage, StageCell> {
   const segments = (kind: string) => new Set(files.filter((file) => file.kind === kind).map((file) => file.segment)).size;
@@ -115,7 +128,7 @@ export function episodeViews(dramaId: string): EpisodeView[] {
     const open = reviews.find((review) => review.state === "open" || review.state === "saving");
     const session = episode.session_id ? sessionRow(episode.session_id) : undefined;
     const newest = (kind: FileRow["kind"]) => files.findLast((file) => file.kind === kind && /^(image|video)\//.test(file.type));
-    const frame = newest("cut") ?? newest("take") ?? newest("blocking") ?? newest("storyboard");
+    const frame = newest("cut") ?? newest("take") ?? newest("frame") ?? newest("blocking") ?? newest("storyboard");
     return {
       id: episode.id,
       number: episode.number,
@@ -131,6 +144,7 @@ export function episodeViews(dramaId: string): EpisodeView[] {
       waitingFor: episode.state === "waiting" ? (open?.state === "saving" ? "saving" : open?.kind ?? "question") : undefined,
       computer: computerLabel(session),
       reviewId: open?.id,
+      spent: spend("episode_id", episode.id),
       updatedAt: episode.updated_at,
     };
   });
@@ -169,6 +183,8 @@ export function dramaView(drama: DramaRow): DramaView {
   return {
     ...dramaCard(drama),
     notes: drama.notes,
+    length: drama.length,
+    budget: drama.budget,
     parallel: drama.parallel,
     perComputer: drama.per_computer,
     setup: {

@@ -1,5 +1,5 @@
 // Words for states the engine reports as data, in the maker's language.
-import type { EpisodeRow, FileKind } from "../shared/types.ts";
+import type { EpisodeRow, FileKind, Spend } from "../shared/types.ts";
 import { ApiError } from "./api.ts";
 import type { useT } from "./i18n.ts";
 
@@ -48,6 +48,13 @@ const LOOKS: Record<string, Parameters<T>[0]> = { "live action": "look.live", an
 export function lookLabel(value: string, t: T): string {
   const key = LOOKS[value];
   return key ? t(key) : value;
+}
+
+/** What work has cost, in US dollars as Pine prices it; "at least" where some turns couldn't be priced. */
+export function moneyText(spent: Spend | number, t: T, lang: string): string {
+  const total = typeof spent === "number" ? spent : spent.total;
+  const amount = new Intl.NumberFormat(lang === "zh" ? "zh-CN" : "en-US", { style: "currency", currency: "USD" }).format(total);
+  return typeof spent !== "number" && spent.partial ? t("spent.atLeast", { amount }) : amount;
 }
 
 /** A failure, said in the maker's language: the engine's code where there is one, else its message. */

@@ -612,3 +612,14 @@ h1, h2, h3 { margin: 0; font-family: var(--serif); font-weight: 450; letter-spac
 /* The episodes a character, place or prop appears in, by their breakdowns. */
 .appears { display: flex; flex-wrap: wrap; gap: 4px 10px; margin: -6px 0 12px; font-size: 13px; }
 .figures .appears { margin: 6px 0 0; }
+
+/* What work has cost so far: the rail's ledger, the sheet's last column, an episode's status line. */
+.ledger .spent { display: grid; gap: 6px; padding-bottom: 10px; border-bottom: 1px solid var(--rule); }
+.sheet th.spent, .sheet td.spent { text-align: right; white-space: nowrap; color: var(--ink-3); }
+.status-row .spent { color: var(--ink-3); font-size: 13px; }
+
+/* A sum of money typed in a line: the currency sign before it. */
+.field { align-content: start; }
+.money-input { display: flex; align-items: baseline; gap: 6px; }
+.money-input input { width: 7em; }
+.budget-hint { margin: -12px 0 0; }

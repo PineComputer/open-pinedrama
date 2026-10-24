@@ -2,7 +2,7 @@ import { useState } from "react";
 import type { AppInfo, DramaView } from "../../shared/types.ts";
 import { api, useAction, useResource } from "../api.ts";
 import { type TKey, useT } from "../i18n.ts";
-import { errorText, lookLabel } from "../labels.ts";
+import { errorText, lookLabel, moneyText } from "../labels.ts";
 import { Link } from "../router.tsx";
 import { Board, SetupPanel } from "./Board.tsx";
 import { Cast } from "./Cast.tsx";
@@ -114,7 +114,7 @@ function Notices({ drama }: { drama: DramaView }) {
 }
 
 export function Drama({ id, tab, episode }: { id: string; tab: string; episode?: string }) {
-  const { t } = useT();
+  const { t, lang } = useT();
   const { data: drama, error } = useResource<DramaView>(`/api/dramas/${id}`, [`drama:${id}`]);
   const [talking, setTalking] = useState(false);
   const [tuning, setTuning] = useState(false);
@@ -140,6 +140,8 @@ export function Drama({ id, tab, episode }: { id: string; tab: string; episode?:
           <h1>{drama.title}</h1>
           <div className="about">
             {drama.format} · {lookLabel(drama.look, t)}
+            {drama.length && ` · ${t(`new.length${drama.length}` as TKey)}`}
+            {drama.budget !== null && ` · ${t("about.budget", { amount: moneyText(drama.budget, t, lang) })}`}
             {drama.rehearsal && <span className="rehearsal-tag">{t("rehearsal.tag")}</span>}
           </div>
         </div>
@@ -153,6 +155,20 @@ export function Drama({ id, tab, episode }: { id: string; tab: string; episode?:
           ))}
         </nav>
         <div className="ledger">
+          {drama.spent.total > 0 && (
+            <div className="spent" title={t("spent.about")}>
+              <div className="row">
+                <span>{t("ledger.spent")}</span>
+                <span className="num">{moneyText(drama.spent, t, lang)}</span>
+              </div>
+              {drama.spent.media > 0 && (
+                <div className="row">
+                  <span>{t("ledger.video")}</span>
+                  <span className="num">{moneyText(drama.spent.media, t, lang)}</span>
+                </div>
+              )}
+            </div>
+          )}
           {episodes.total > 0 && (
             <>
               <div className="row">

@@ -24,13 +24,15 @@ export function attachmentName(row: FileRow): string {
       case "look":
         return ["look", row.subject, row.look, row.version];
       case "location":
-        return ["location", row.subject, row.version];
+        return ["location", row.subject, row.look, row.version];
       case "prop":
         return ["prop", row.subject, row.version];
       case "storyboard":
         return ["storyboard", row.segment, row.style, row.version];
       case "blocking":
         return ["blocking", row.segment, row.version];
+      case "frame":
+        return ["first-frame", row.segment, row.version];
       case "take":
         return ["take", row.segment, row.version];
       case "cut":
@@ -39,6 +41,10 @@ export function attachmentName(row: FileRow): string {
         return ["breakdown", row.version];
       case "screenplay":
         return [path.posix.basename(row.name, ext)];
+      case "brief":
+        return ["brief"];
+      case "subtitles":
+        return ["subtitles", row.version];
       case "reference":
         return ["reference", String(row.id), path.posix.basename(row.name, ext)];
       default:

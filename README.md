@@ -28,6 +28,12 @@ Pine console). It checks the key with Pine, then keeps it sealed; nothing needs 
 The project needs Pine's drama skill; until it has it, dramas can be rehearsed (see Develop). Settings changes or forgets the key, and forgetting
 it first stops every Computer the project has running for the studio.
 
+Pine bills the agents' turns and, separately, generated video by the minute. New drama
+asks for the episode length and a budget per episode: the studio writes them into the
+drama's brief (or uses the `brief.md` you add with the screenplay), and each episode works
+within its budget and asks you before going over it. The drama's page shows what it and
+each episode have spent so far.
+
 Where things are kept:
 
 - **Data:** the system's place for app data: `~/Library/Application Support/Pine Drama Studio`

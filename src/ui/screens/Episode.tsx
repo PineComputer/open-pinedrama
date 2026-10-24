@@ -3,7 +3,7 @@ import { useRef, useState } from "react";
 import { type EpisodePage, type Judged, type Receipt, STAGES } from "../../shared/types.ts";
 import { api, useAction, useResource } from "../api.ts";
 import { type TKey, useT } from "../i18n.ts";
-import { errorText, fileKind, nowText } from "../labels.ts";
+import { errorText, fileKind, moneyText, nowText } from "../labels.ts";
 import { Link } from "../router.tsx";
 import { Still } from "../Still.tsx";
 import { Pinboard, isImage, isVideo, useShotList, useSize, variantLabel } from "../viewing.tsx";
@@ -119,7 +119,7 @@ function Receipts({ receipts, empty }: { receipts: Receipt[]; empty: string }) {
 }
 
 export function Episode({ dramaId, code }: { dramaId: string; code: string }) {
-  const { t } = useT();
+  const { t, lang } = useT();
   const { data: page, error } = useResource<EpisodePage>(`/api/dramas/${dramaId}/episodes/${code}`, [`drama:${dramaId}`]);
   const [picked, setPicked] = useState<Selection>();
   const resume = useAction(() => api(`/api/episodes/${page?.row.id}/resume`, { method: "POST" }));
@@ -166,6 +166,11 @@ export function Episode({ dramaId, code }: { dramaId: string; code: string }) {
             ))}
           </div>
           <span className={`now ${row.state === "waiting" ? "waiting" : trouble ? "trouble" : ""}`}>{nowText(row, t)}</span>
+          {row.spent.total > 0 && (
+            <span className="spent num" title={t("spent.about")}>
+              {moneyText(row.spent, t, lang)}
+            </span>
+          )}
           {row.reviewId && (
             <Link to={`/r/${row.reviewId}`} className="btn small seal-btn">
               {t("episode.review")} →

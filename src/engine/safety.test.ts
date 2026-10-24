@@ -245,7 +245,7 @@ describe("the production line", () => {
     m.db.run("insert into episodes (id, drama_id, number, title, state, session_id, continues, updated_at) values ('ep-short', ?, 1, 'One', 'working', 'ses-short', 2, ?)", id, at);
     m.db.run("insert into turns (id, session_id, state, summary, settled, files_saved, created_at, ended_at) values ('turn-short', 'ses-short', 'completed', 'Waiting on your go-ahead for the storyboards.', 1, 1, ?, ?)", at, at);
     const session = m.db.get<import("./records.ts").SessionRow>("select * from sessions where id = 'ses-short'")!;
-    const info = { turnId: "turn-short", state: "completed", question: "", summary: "Waiting on your go-ahead for the storyboards.", nextTurnId: "", files: [], cost: null };
+    const info = { turnId: "turn-short", state: "completed", question: "", summary: "Waiting on your go-ahead for the storyboards.", nextTurnId: "", files: [], cost: null, media: null };
     expect(m.flow.stopsForMaker(session, info)).toBe(false);
     await m.flow.onEnded(session, info, false);
     expect(m.db.get("select kind, state from reviews where turn_id = 'turn-short'")).toMatchObject({ kind: "question", state: "open" });

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { type DramaView, type EpisodeRow, STAGES, type StageCell } from "../../shared/types.ts";
 import { api, useAction } from "../api.ts";
 import { type TKey, useT } from "../i18n.ts";
-import { errorText, nowText } from "../labels.ts";
+import { errorText, moneyText, nowText } from "../labels.ts";
 import { Link, navigate } from "../router.tsx";
 import { Still } from "../Still.tsx";
 import { Cast } from "./Cast.tsx";
@@ -35,7 +35,7 @@ function Mark({ cell }: { cell: StageCell }) {
 
 /** One episode's line on the sheet. The whole row opens its review; its code is the keyboard's way in. */
 function Row({ row, wide, dramaId }: { row: EpisodeRow; wide: boolean; dramaId: string }) {
-  const { t } = useT();
+  const { t, lang } = useT();
   const resume = useAction(() => api(`/api/episodes/${row.id}/resume`, { method: "POST" }));
   const trouble = row.state === "stopped" || row.state === "failed";
   return (
@@ -77,6 +77,7 @@ function Row({ row, wide, dramaId }: { row: EpisodeRow; wide: boolean; dramaId: 
         {resume.error !== undefined && <div className="error small">{errorText(resume.error, t)}</div>}
       </td>
       <td className="pc">{row.computer ?? ""}</td>
+      <td className="spent num">{row.spent.total > 0 ? moneyText(row.spent, t, lang) : ""}</td>
     </tr>
   );
 }
@@ -222,6 +223,7 @@ export function Board({ drama }: { drama: DramaView }) {
               ))}
               <th>{t("board.now")}</th>
               <th>{t("board.computer")}</th>
+              <th className="spent">{t("board.spent")}</th>
             </tr>
           </thead>
           <tbody>

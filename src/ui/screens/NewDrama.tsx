@@ -44,6 +44,8 @@ export function NewDrama() {
   const [parallel, setParallel] = useState(4);
   const [perComputer, setPerComputer] = useState(1);
   const [notes, setNotes] = useState("");
+  const [length, setLength] = useState("60");
+  const [budget, setBudget] = useState(60);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<unknown>();
   const picker = useRef<HTMLInputElement>(null);
@@ -70,7 +72,7 @@ export function NewDrama() {
     setBusy(true);
     setError(undefined);
     const form = new FormData();
-    for (const [key, value] of Object.entries({ title, language, look, format, notes, parallel: String(parallel), perComputer: String(perComputer), rehearsal: noSkill && rehearsal ? "1" : "0" })) form.set(key, value);
+    for (const [key, value] of Object.entries({ title, language, look, format, notes, length, budget: String(budget), parallel: String(parallel), perComputer: String(perComputer), rehearsal: noSkill && rehearsal ? "1" : "0" })) form.set(key, value);
     for (const file of files) form.append("files", file);
     try {
       const { id } = await api<{ id: string }>("/api/dramas", { method: "POST", body: form });
@@ -160,6 +162,30 @@ export function NewDrama() {
               ))}
             </div>
           </div>
+          <div className="pair">
+            <div className="field">
+              <span className="label">{t("new.length")}</span>
+              <div className="options">
+                {(["60", "90", "120"] as const).map((value) => (
+                  <button key={value} aria-pressed={length === value} className={length === value ? "on" : ""} onClick={() => setLength(value)}>
+                    {t(`new.length${value}`)}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="field">
+              <label className="label" htmlFor="budget">
+                {t("new.budget")}
+              </label>
+              <span className="money-input">
+                <span aria-hidden="true">$</span>
+                <input id="budget" className="line-input num" type="number" min={0} step={10} value={budget} aria-describedby="budget-hint" onChange={(event) => setBudget(Number(event.target.value))} />
+              </span>
+            </div>
+          </div>
+          <p id="budget-hint" className="quiet small budget-hint">
+            {t("new.budgetHint")}
+          </p>
           <div className="pair">
             <div className="field">
               <label className="label" htmlFor="parallel">

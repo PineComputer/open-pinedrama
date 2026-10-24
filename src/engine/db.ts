@@ -14,6 +14,8 @@ create table if not exists dramas (
   parallel integer not null,        -- episodes at work at once
   per_computer integer not null,    -- episodes per Computer at once (1-3)
   notes text not null default '',
+  length text not null default '',  -- each episode's length, about this many seconds (60, 90, 120); '' from before it was asked
+  budget real,                      -- what each episode may spend on generation, in USD; null from before it was asked
   mode text not null,               -- pine | replay: where its work runs, fixed at creation
   rehearsal integer not null default 0, -- 1: Pine's agent stands in for the drama skill (goals.ts, rehearsed)
   status text not null,             -- setup | production | done | stopped
@@ -105,6 +107,7 @@ create table if not exists turns (
   settled integer not null default 0, -- the flow has acted on how it ended
   save_error text,
   cost real,
+  media real,                       -- the additional charges in cost: generated video
   next_turn_id text,
   created_at text not null,
   ended_at text
@@ -188,6 +191,9 @@ export function db(): DatabaseSync {
     add("computers", "stop_by", "text");
     add("computers", "project", "text not null default ''");
     add("dramas", "rehearsal", "integer not null default 0");
+    add("turns", "media", "real");
+    add("dramas", "length", "text not null default ''");
+    add("dramas", "budget", "real");
     shared.__studioDb = handle;
   }
   return shared.__studioDb;

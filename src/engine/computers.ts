@@ -7,7 +7,7 @@ import { IDLE_WAITING_S, IDLE_WORKING_S } from "./config.ts";
 import { all, get, newId, now, run } from "./db.ts";
 import { type Attached, type ComputerRef, type Fleet, type Limits, type SessionRef, isBusy } from "./fleet.ts";
 import { publish } from "./live.ts";
-import { type ComputerRow, type SessionRow, computer as computerRow, openSessionsOf } from "./records.ts";
+import { type ComputerRow, type SessionRow, computer as computerRow, openSessionsOf, raiseCost } from "./records.ts";
 import { seal, unseal } from "./seal.ts";
 
 let fleetRef: Fleet | undefined;
@@ -247,10 +247,23 @@ export async function openSession(row: ComputerRow, role: "setup" | "episode", e
   });
 }
 
+/**
+ * Before a session closes, its turns are read once more: a charge that settled after its turn
+ * (generated video is billed when it is done) may not have reached the studio as an event.
+ */
+async function lastCosts(row: ComputerRow, session: SessionRow): Promise<void> {
+  const turns = all<{ id: string }>("select id from turns where session_id = ? and ended_at is not null order by created_at desc limit 30", session.id);
+  for (const turn of turns) {
+    const info = await fleet().wait(computerRef(row), sessionRef(session), turn.id, 0).catch(() => undefined);
+    if (info) raiseCost(turn.id, info.cost, info.media);
+  }
+}
+
 export async function closeSession(session: SessionRow): Promise<void> {
   run("update sessions set state = 'closed', closed_at = ? where id = ?", now(), session.id);
   const row = computerRow(session.computer_id);
   if (!row?.binding) return;
+  if (session.state === "open" && session.token) await lastCosts(row, session);
   await serialized(row.id, () => fleet().closeSession(computerRef(row), session.name)).catch(() => undefined);
 }
 

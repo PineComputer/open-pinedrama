@@ -10,7 +10,7 @@ import { readFileSync } from "node:fs";
 import { type FileRow, blobPath, itemIn, toItem } from "./library.ts";
 import type { ZipEntry } from "./zip.ts";
 import { type EpisodeRow, type ReviewRow, drama as dramaRow, episodeCode } from "./records.ts";
-import { itemsOf } from "./reviews.ts";
+import { itemsOf, placeKey } from "./reviews.ts";
 import { episodeViews } from "./views.ts";
 
 /** The decision a review recorded on one of the items it showed. */
@@ -189,9 +189,10 @@ export function castCards(dramaId: string): CastCard[] {
     for (const file of turnFiles) {
       const subject = file.subject ?? file.name;
       const kind = file.kind as CastCard["kind"];
-      const look = kind === "look" ? file.look ?? "base" : "";
+      // A character's look (base, S1…), or a place's time of day (Night), which is "" for its plate.
+      const look = kind === "look" ? file.look ?? "base" : file.look ?? "";
       // The key the review knew this item by: a character's look, or a place or prop.
-      const key = kind === "look" ? (look === "base" ? subject : `${subject}/${look}`) : `${kind}:${subject}`;
+      const key = kind === "look" ? (look === "base" ? subject : `${subject}/${look}`) : placeKey({ kind, subject, look });
       const card = cards.get(`${kind}|${subject}`) ?? cards.set(`${kind}|${subject}`, { kind, subject, looks: [], episodes: [] }).get(`${kind}|${subject}`)!;
       let entry = card.looks.find((candidate) => candidate.look === look);
       if (!entry) card.looks.push((entry = { look, versions: [] }));

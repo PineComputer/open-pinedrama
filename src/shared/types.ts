@@ -59,15 +59,21 @@ export type Stage = (typeof STAGES)[number];
 
 export type FileKind =
   | "screenplay"
+  /** What the maker asks of the drama: title, format, episode length, tone, budget (brief.md). */
+  | "brief"
   | "bible"
   | "look"
   | "location"
   | "prop"
   | "breakdown"
   | "blocking"
+  /** A photograph of the first frame of a segment's first shot, which its take starts from. */
+  | "frame"
   | "storyboard"
   | "take"
   | "cut"
+  /** A cut's subtitles: its lines and cards, timed, beside the picture (cut.srt). */
+  | "subtitles"
   | "observation"
   /** A part of a packed drama-cli project (the whole drama's, or one episode's), handed from session to session. */
   | "archive"
@@ -116,6 +122,15 @@ export interface FileItem {
   createdAt: string;
 }
 
+/** What work has cost so far at the project's rates: every turn of its agents, generated video included. */
+export interface Spend {
+  total: number;
+  /** The part of it that is generated video (Pine's additional charges). */
+  media: number;
+  /** Some turns couldn't be priced, so the total is at least this. */
+  partial: boolean;
+}
+
 export interface DramaCard {
   id: string;
   /** Where its work runs; a drama of the other mode waits until the studio is back in its mode. */
@@ -133,6 +148,7 @@ export interface DramaCard {
   waiting: number;
   /** The leads' sheets, once drawn: the faces on the drama's poster. */
   cast: string[];
+  spent: Spend;
   createdAt: string;
 }
 
@@ -160,6 +176,8 @@ export interface EpisodeRow {
   waitingFor?: ReviewKind | "saving";
   computer?: string;
   reviewId?: string;
+  /** What its sessions have cost so far, generated video included. */
+  spent: Spend;
   updatedAt: string;
 }
 
@@ -184,6 +202,10 @@ export interface ComputerView {
 
 export interface DramaView extends DramaCard {
   notes: string;
+  /** About this many seconds an episode (60, 90, 120); "" for a drama made before it was asked. */
+  length: string;
+  /** What each episode may spend on generation, in USD; null for a drama made before it was asked. */
+  budget: number | null;
   parallel: number;
   perComputer: number;
   setup: {

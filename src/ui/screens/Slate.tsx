@@ -1,7 +1,7 @@
 import type { AppInfo, DramaCard, Mode } from "../../shared/types.ts";
 import { api, useAction, useResource } from "../api.ts";
 import { useT } from "../i18n.ts";
-import { errorText, lookLabel } from "../labels.ts";
+import { errorText, lookLabel, moneyText } from "../labels.ts";
 import { Link, navigate } from "../router.tsx";
 
 const CJK = /[㐀-鿿]/;
@@ -91,6 +91,7 @@ export function Slate() {
               <div className="line">
                 {total > 0 ? `${t("drama.episodes", { done, total })} · ` : ""}
                 {drama.format.split(",")[0]} · {lookLabel(drama.look, t)}
+                {drama.spent.total > 0 && ` · ${moneyText(drama.spent, t, lang)}`}
               </div>
               {total > 0 && (
                 <div className="progress">

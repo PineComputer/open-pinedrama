@@ -142,7 +142,9 @@ export function Cast({ dramaId, compact = false }: { dramaId: string; compact?: 
                 <div className="figures">
                   {cards.map((card) => (
                     <div key={card.subject}>
-                      <Look name={subjectName(card.subject)} versions={card.looks[0]?.versions ?? []} />
+                      {card.looks.map((look) => (
+                        <Look key={look.look} name={subjectName(look.look ? `${card.subject}/${look.look}` : card.subject)} versions={look.versions} />
+                      ))}
                       <Appears card={card} dramaId={dramaId} />
                     </div>
                   ))}

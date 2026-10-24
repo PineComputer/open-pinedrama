@@ -34,6 +34,15 @@ describe("classify", () => {
     expect(classify("episodes/EP001/breakdown/v2/breakdown.md")).toMatchObject({ kind: "breakdown", episode: "EP001" });
   });
 
+  it("reads what the skill added: a place at night, first frames, subtitles, and the script beside a breakdown", () => {
+    expect(classify("drama/assets/scenes/office/times/Night/v2/image-1.png")).toMatchObject({ kind: "location", subject: "office", look: "Night", version: "v2" });
+    expect(classify("drama/assets/scenes/office/v1/image-1.png")).not.toHaveProperty("look");
+    expect(classify("drama/episodes/EP004/first_frame_reference/seg02/v1/image-1.jpg")).toMatchObject({ kind: "frame", episode: "EP004", segment: "seg02", version: "v1" });
+    expect(classify("drama/episodes/EP004/asr_align/v1/cut.srt")).toMatchObject({ kind: "subtitles", episode: "EP004", version: "v1" });
+    expect(classify("drama/episodes/EP004/breakdown/v1/script.md")).toEqual({ kind: "other" });
+    expect(classify("drama/episodes/EP004/breakdown/v1/breakdown.json")).toMatchObject({ kind: "breakdown" });
+  });
+
   it("calls anything else other", () => {
     expect(classify("notes/today.txt")).toEqual({ kind: "other" });
     expect(classify("episodes/EP001/segments/seg01/t01/spec.json")).toEqual({ kind: "other" });

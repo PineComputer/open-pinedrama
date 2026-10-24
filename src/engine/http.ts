@@ -149,6 +149,8 @@ export function app(): Hono {
         parallel: Number(field("parallel")) || 4,
         perComputer: Number(field("perComputer")) || 1,
         notes: field("notes"),
+        length: field("length"),
+        budget: field("budget") === "" ? null : Number(field("budget")),
         rehearsal: field("rehearsal") === "1",
         files: await Promise.all(uploads.map(async (file) => ({ name: file.name, type: file.type, bytes: new Uint8Array(await file.arrayBuffer()) }))),
       }, mode);
@@ -174,6 +176,8 @@ export function app(): Hono {
         parallel: 3,
         perComputer: 1,
         notes: "",
+        length: "60",
+        budget: 60,
         files: [{ name, type: "text/markdown", bytes: readFileSync(path.join(FIXTURES, name)) }],
         rehearsal: mode === "pine",
       }, mode);

@@ -28,12 +28,20 @@ const RULES: [RegExp, (m: RegExpMatchArray) => Hints][] = [
     (m) => ({ kind: "storyboard", episode: m[1], segment: m[2], style: m[3], version: m[4] }),
   ],
   [new RegExp(String.raw`episodes/(EP\d+)/blocking/${SEG}/${VER}/[^/]+${IMAGE}`, "i"), (m) => ({ kind: "blocking", episode: m[1], segment: m[2], version: m[3] })],
-  [new RegExp(String.raw`episodes/(EP\d+)/breakdown/${VER}/[^/]+\.(?:md|json)$`, "i"), (m) => ({ kind: "breakdown", episode: m[1], version: m[2] })],
+  [
+    new RegExp(String.raw`episodes/(EP\d+)/first_frame_reference/${SEG}/${VER}/[^/]+${IMAGE}`, "i"),
+    (m) => ({ kind: "frame", episode: m[1], segment: m[2], version: m[3] }),
+  ],
+  [new RegExp(String.raw`episodes/(EP\d+)/asr_align/${VER}/[^/]+\.srt$`, "i"), (m) => ({ kind: "subtitles", episode: m[1], version: m[2] })],
+  // The breakdown itself; script.md beside it is the episode's screenplay lines, copied.
+  [new RegExp(String.raw`episodes/(EP\d+)/breakdown/${VER}/breakdown\.(?:md|json)$`, "i"), (m) => ({ kind: "breakdown", episode: m[1], version: m[2] })],
   [
     new RegExp(String.raw`assets/characters/([^/]+)/states/([^/]+)/${VER}/[^/]+${IMAGE}`, "i"),
     (m) => ({ kind: "look", subject: m[1], look: m[2], version: m[3] }),
   ],
   [new RegExp(String.raw`assets/characters/([^/]+)/${VER}/[^/]+${IMAGE}`, "i"), (m) => ({ kind: "look", subject: m[1], look: "base", version: m[2] })],
+  // A place at another time of day (Night) is drawn from its plate and kept under times/.
+  [new RegExp(String.raw`assets/scenes/([^/]+)/times/([^/]+)/${VER}/[^/]+${IMAGE}`, "i"), (m) => ({ kind: "location", subject: m[1], look: m[2], version: m[3] })],
   [new RegExp(String.raw`assets/scenes/([^/]+)/(?:[^/]+/)?${VER}/[^/]+${IMAGE}`, "i"), (m) => ({ kind: "location", subject: m[1], version: m[2] })],
   [new RegExp(String.raw`assets/props/([^/]+)/${VER}/[^/]+${IMAGE}`, "i"), (m) => ({ kind: "prop", subject: m[1], version: m[2] })],
   [new RegExp(String.raw`(?:^|/)bible/${VER}/bible\.(?:md|json)$`, "i"), (m) => ({ kind: "bible", version: m[1] })],
@@ -109,6 +117,7 @@ const TYPES: Record<string, string> = {
   md: "text/markdown",
   json: "application/json",
   txt: "text/plain",
+  srt: "application/x-subrip",
 };
 
 /** A media type for a file the studio fetched by name, from its extension. */
