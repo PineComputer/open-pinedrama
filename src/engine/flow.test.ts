@@ -152,6 +152,8 @@ async function scenario(title: string) {
     expect(goal).toContain("attachments/project.tar.part-*");
     // Provider registrations belong to the session that made them: each episode registers its references again.
     expect(goal).toContain("register every reference the episode uses again from its local file in this session");
+    // A segment the video model won't take is split there and then, not put to the maker.
+    expect(goal).toMatch(/EP\d+'s own breakdown is yours to change when the video model won't take it/);
     costless(goal);
   }
   const setup = all<{ goal: string }>("select goal from runs where kind = 'setup'")[0].goal;
