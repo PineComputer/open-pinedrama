@@ -66,7 +66,7 @@ export function dramaCard(drama: DramaRow): DramaCard {
     look: drama.look,
     format: drama.format,
     status: drama.status,
-    episodes: { total: counts.reduce((sum, row) => sum + row.n, 0), done: n("done"), waiting: n("waiting"), working: n("working") },
+    episodes: { total: counts.reduce((sum, row) => sum + row.n, 0), done: n("done"), waiting: n("waiting") + n("stopped") + n("failed"), working: n("working") },
     computers: get<{ n: number }>("select count(*) as n from computers where drama_id = ? and state in ('running', 'starting')", drama.id)?.n ?? 0,
     waiting,
     cast: castFaces(drama.id),

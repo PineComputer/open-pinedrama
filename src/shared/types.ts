@@ -143,6 +143,7 @@ export interface DramaCard {
   look: string;
   format: string;
   status: DramaStatus;
+  /** waiting: episodes that need the maker, for an answer or to be resumed (the board's "Needs you"). */
   episodes: { total: number; done: number; waiting: number; working: number };
   /** Computers running for this drama. */
   computers: number;
