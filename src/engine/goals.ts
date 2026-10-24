@@ -89,6 +89,7 @@ function handedOver(code: string): string[] {
   return [
     "The attached project.tar.part-* files are the drama's drama-cli project, with its bible, every breakdown and every look, location and key prop accepted.",
     "Restore it into the work directory's drama/ folder (`mkdir -p drama && cat attachments/project.tar.part-* | tar -xf - -C drama`), point its config at that folder and its screenplay.md and brief.md with `drama-cli init`, keeping its settings and preset, and check it with `drama-cli status`.",
+    "Its asset-library registrations were made in another session and can't be used from this one: before you compile video prompts, set them aside and register every reference the episode uses again from its local file in this session.",
     `Work only on ${code}, inside drama/episodes/${code}. Use the accepted references as they are: never make a new version of the bible, a look, a location, a key prop or another episode's breakdown. If ${code} needs one that is not accepted, stop and ask me.`,
   ];
 }

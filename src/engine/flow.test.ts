@@ -143,6 +143,8 @@ async function scenario(title: string) {
   expect(goals.length).toBeGreaterThanOrEqual(2);
   for (const { goal } of goals) {
     expect(goal).toContain("attachments/project.tar.part-*");
+    // Provider registrations belong to the session that made them: each episode registers its references again.
+    expect(goal).toContain("register every reference the episode uses again from its local file in this session");
     // The agent is told nothing of cost: Pine bills it, and the studio shows what was spent.
     expect(goal).not.toMatch(/budget|spend|\$/i);
   }
