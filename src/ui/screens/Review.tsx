@@ -156,48 +156,61 @@ function QuestionRoom({ review, done }: { review: ReviewView; done: () => void }
         ← {review.dramaTitle}
         {review.episode ? ` · ${review.episode}` : ""}
       </Link>
-      <div className="block">
-        <span className="label">{t("review.agent")}</span>
-        <Said review={review} className="asked" />
-      </div>
-      <Status review={review} />
-      {files.some(isImage) && (
-        <div className="plates">
-          {files.filter(isImage).map((file) => (
-            <a key={file.id} href={file.url} target="_blank" rel="noreferrer" style={{ backgroundImage: `url(${file.url})` }} aria-label={file.name} />
-          ))}
+      <div className="question-body">
+        <div className="block">
+          <span className="label">{t("review.agent")}</span>
+          <Said review={review} className="asked" />
         </div>
-      )}
-      <Returned files={files.filter((file) => !isImage(file))} />
-      <div className="field">
-        <label className="label" htmlFor="answer">
-          {t("review.answer")}
-        </label>
-        <textarea
-          id="answer"
-          className="box-area"
-          autoFocus
-          disabled={!open}
-          value={open ? answer : review.answer ?? answer}
-          onChange={(event) => setAnswer(event.target.value)}
-          onKeyDown={(event) => {
-            if (event.key === "Enter" && (event.metaKey || event.ctrlKey) && answer.trim() && !send.busy) void send.run();
-          }}
-        />
-      </div>
-      {[send.error, finish.error].map((failed, n) => failed !== undefined && <p key={n} className="error">{errorText(failed, t)}</p>)}
-      <div className="question-actions">
-        <button className="btn ink" disabled={!open || send.busy || !answer.trim()} onClick={() => void send.run()}>
-          {t("review.sendAnswer")} <span className="key">⌘↵</span>
-        </button>
-        {review.finishable && review.episode && (
-          <span className="finish">
-            <button className="btn" disabled={finish.busy} onClick={() => void finish.run()}>
-              {t("review.finish", { code: review.episode })}
-            </button>
-            <span className="quiet small">{t("review.finishHint")}</span>
-          </span>
-        )}
+        {/* The pictures and the answer stay in view beside a long question. */}
+        <div className="question-side">
+          {files.some(isImage) && (
+            <div className="plates">
+              {files.filter(isImage).map((file) => (
+                <a key={file.id} href={file.url} target="_blank" rel="noreferrer" title={file.path}>
+                  <img src={file.url} alt={file.name} loading="lazy" />
+                  <span className="cap">
+                    {fileKind(file.kind, t)}
+                    {[file.subject, file.segment, file.version].filter(Boolean).length > 0 && ` · ${[file.subject, file.segment, file.version].filter(Boolean).join(" ")}`}
+                  </span>
+                </a>
+              ))}
+            </div>
+          )}
+          <Returned files={files.filter((file) => !isImage(file))} />
+          <Status review={review} />
+          <div className="field">
+            <label className="label" htmlFor="answer">
+              {t("review.answer")}
+            </label>
+            <textarea
+              id="answer"
+              className="box-area"
+              autoFocus
+              disabled={!open}
+              value={open ? answer : review.answer ?? answer}
+              onChange={(event) => setAnswer(event.target.value)}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" && (event.metaKey || event.ctrlKey) && answer.trim() && !send.busy) void send.run();
+              }}
+            />
+          </div>
+          {[send.error, finish.error].map((failed, n) => failed !== undefined && <p key={n} className="error">{errorText(failed, t)}</p>)}
+          <div className="question-actions">
+            {open && (
+              <button className="btn ink" disabled={send.busy || !answer.trim()} onClick={() => void send.run()}>
+                {t("review.sendAnswer")} <span className="key">⌘↵</span>
+              </button>
+            )}
+            {review.finishable && review.episode && (
+              <span className="finish">
+                <button className="btn" disabled={finish.busy} onClick={() => void finish.run()}>
+                  {t("review.finish", { code: review.episode })}
+                </button>
+                <span className="quiet small">{t("review.finishHint")}</span>
+              </span>
+            )}
+          </div>
+        </div>
       </div>
     </main>
   );

@@ -350,10 +350,16 @@ h1, h2, h3 { margin: 0; font-family: var(--serif); font-weight: 450; letter-spac
 .status-line.ended { border-color: var(--seal); color: var(--seal-deep); }
 
 /* A question */
-.question { max-width: 760px; margin: 0 auto; padding: 44px 28px 96px; display: grid; gap: 28px; animation: rise 0.45s var(--ease) both; }
-.question .asked { font: italic 400 clamp(22px, 2.4vw, 28px)/1.35 var(--serif); }
-.question .plates { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
-.question .plates a { aspect-ratio: 4 / 3; background: var(--paper-2) center / contain no-repeat; border: 1px solid var(--rule); }
+.question { max-width: 1180px; margin: 0 auto; padding: 36px 28px 96px; display: grid; gap: 22px; align-content: start; animation: rise 0.45s var(--ease) both; }
+.question-body { display: grid; grid-template-columns: minmax(0, 1fr) minmax(320px, 400px); gap: 48px; align-items: start; }
+.question-side { position: sticky; top: calc(var(--bar) + 20px); display: grid; gap: 18px; padding: 20px; background: var(--sheet); border: 1px solid var(--rule); }
+.question .asked { font: 400 17px/1.6 var(--serif); max-width: 68ch; }
+.question .plates { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 2px; }
+.question .plates a { flex: none; display: grid; gap: 6px; max-width: 220px; }
+.question .plates img { display: block; height: 180px; width: auto; max-width: 220px; object-fit: contain; background: var(--paper-2); border: 1px solid var(--rule); }
+.question .plates a:hover img { border-color: var(--ink-3); }
+.question .plates .cap { font-size: 12px; color: var(--ink-3); overflow-wrap: anywhere; }
+.question-side .box-area { min-height: 140px; }
 
 /* Talking to the agents */
 .talk { position: fixed; top: var(--bar); right: 0; bottom: 0; z-index: 30; width: min(420px, 100vw); display: grid; grid-template-rows: auto auto minmax(0, 1fr) auto; background: var(--sheet); border-left: 1px solid var(--rule-2); box-shadow: -30px 0 60px oklch(20% 0.01 60 / 0.08); animation: slide 0.35s var(--ease) both; }
@@ -396,7 +402,8 @@ h1, h2, h3 { margin: 0; font-family: var(--serif); font-weight: 450; letter-spac
 @media (max-width: 1000px) {
   .compose, .welcome, .setup, .drama-page { grid-template-columns: 1fr; }
   .rail { position: static; }
-  .room-body { grid-template-columns: 1fr; }
+  .room-body, .question-body { grid-template-columns: 1fr; }
+  .question-side { position: static; }
   .inspector { border-left: 0; border-top: 1px solid var(--rule); }
   .settings section { grid-template-columns: 1fr; }
 }
