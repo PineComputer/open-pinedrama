@@ -276,11 +276,24 @@ describe("a drama in replay", () => {
     await until("the setup question again", openReview(id, (item) => item.kind === "question"));
   }, 30_000);
 
-  // Or ask about files it neither returns nor names: the studio finds them in the agent's folder.
-  it("does the same when the agent's questions don't mention their files", async () => {
+  // Or ask about files it neither returns nor names. It may be asking something else entirely (a reference it
+  // couldn't make), so the studio asks the maker in words, with what it finds in the agent's folder beside the question.
+  it("asks in words, with the agent's pictures beside it, when a question points at no files", async () => {
     const { run } = await import("./db.ts");
     run("update dramas set status = 'done'");
     fleet.stops = "bare";
-    await scenario("Test drama, bare questions");
+    const form = new FormData();
+    for (const [key, value] of Object.entries({ title: "Test drama, bare questions", language: "en", parallel: "1", perComputer: "1" })) form.set(key, value);
+    form.append("files", new File(["EPISODE 1\nLin enters."], "screenplay.txt", { type: "text/plain" }));
+    const { id } = await call<{ id: string }>("POST", "/api/dramas", form);
+    const question = await until("the setup question", openReview(id, () => true));
+    await call("POST", `/api/reviews/${question.id}/decision`, { items: [], words: "He is 32." });
+    const looks = await until("the leads' looks, asked in words", openReview(id, (item) => item.id !== question.id));
+    expect(looks.kind).toBe("question");
+    const view = await call<ReviewView>("GET", `/api/reviews/${looks.id}`);
+    expect(view.reviewItems).toEqual([]);
+    expect(view.otherFiles.filter((file) => file.kind === "look").map((file) => file.subject)).toEqual(["lin", "wei"]);
+    await call("POST", `/api/reviews/${looks.id}/decision`, { items: [], words: "Approved." });
+    await until("the shared references, asked in words", openReview(id, (item) => item.id !== looks.id && item.id !== question.id));
   }, 30_000);
 });

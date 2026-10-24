@@ -136,6 +136,9 @@ export async function settle(sessionId: string, info: TurnInfo): Promise<void> {
   const fresh = info.files.filter((file) => !file.sha256 || !seenBefore(session.drama_id, file.path, file.sha256));
   const stop = stopsForMaker(session, { ...info, files: fresh });
   const asked = info.question || info.summary;
+  // A stop that neither returns nor names anything to review asks in words, whatever its folder holds:
+  // the pictures found there go beside the question, not into a verdict on each.
+  const pointed = [...info.files.map((file) => file.path), ...namedPaths(asked)].some((relPath) => KINDS.includes(classify(relPath).kind));
   if (stop) questionAsked(session, info.turnId, asked);
   if (!turn?.files_saved) {
     const computer = computerRow(session.computer_id)!;
@@ -174,7 +177,7 @@ export async function settle(sessionId: string, info: TurnInfo): Promise<void> {
     }
   }
   transaction(() => {
-    if (stop) questionReady(session, info.turnId);
+    if (stop) questionReady(session, info.turnId, !pointed);
     run("update turns set settled = 1 where id = ?", info.turnId);
   });
   await onEnded(sessionRow(sessionId)!, info, stop);

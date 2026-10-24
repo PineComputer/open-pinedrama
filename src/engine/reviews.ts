@@ -94,9 +94,10 @@ export function questionAsked(session: SessionRow, turnId: string, question: str
   publish(`drama:${session.drama_id}`, "inbox");
 }
 
-/** The question's files are saved: it can be answered now. */
-export function questionReady(session: SessionRow, turnId: string): void {
-  run("update reviews set kind = ?, state = 'open' where turn_id = ? and state = 'saving'", inferKind(session.role, filesOfTurn(turnId)), turnId);
+/** The question's files are saved: it can be answered now, in words when the agent asked in words. */
+export function questionReady(session: SessionRow, turnId: string, inWords = false): void {
+  const kind = inWords ? "question" : inferKind(session.role, filesOfTurn(turnId));
+  run("update reviews set kind = ?, state = 'open' where turn_id = ? and state = 'saving'", kind, turnId);
   publish(`drama:${session.drama_id}`, "inbox");
 }
 
