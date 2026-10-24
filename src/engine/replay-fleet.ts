@@ -180,8 +180,8 @@ const WORDS = {
   },
 };
 
-/** A part of a packed project, as the agent returns it (here a stand-in: replay has no drama-cli project). */
-const archive = (name: string): Out => ({ path: `handoff/${name}.tar.part-aa`, type: "application/octet-stream", bytes: text(`replay stand-in for ${name}.tar`) });
+/** A part of a packed project, as the agent returns it (here a stand-in: replay has no drama-cli project). Packed again at each stop, under the same name. */
+const archive = (name: string, stop = 1): Out => ({ path: `handoff/${name}.tar.part-aa`, type: "application/octet-stream", bytes: text(`replay stand-in for ${name}.tar, packed at stop ${stop}`) });
 
 const segmentsOf = (say: (typeof WORDS)[Lang]) => say.shots.map((shots, i) => ({ id: `seg0${i + 1}`, shots }));
 
@@ -309,9 +309,11 @@ function episodeScript(code: string, lang: Lang): Player {
     return { progress: say.accepting, files: [video(`${base}/edit/v${cut}/cut.mp4`, "cut")], summary: say.finished(code) };
   };
   // Each stop and the finish also hand back the episode's own folder, packed.
+  let stops = 0;
   return (answer) => {
     const step = play(answer);
-    return { ...step, files: [...step.files, archive(code)] };
+    stops += 1;
+    return { ...step, files: [...step.files, archive(code, stops)] };
   };
 }
 

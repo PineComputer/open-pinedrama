@@ -246,6 +246,15 @@ describe("a drama in replay", () => {
     run("update dramas set status = 'done'");
     fleet.stops = "name";
     await scenario("Test drama, named files");
+    // The episode's pack keeps its name at every stop: each stop's is fetched again, and a resume gets the last.
+    const { all } = await import("./db.ts");
+    const { episodeArchive } = await import("./runs.ts");
+    const [episode] = all<{ id: string }>("select e.id from episodes e join dramas d on d.id = e.drama_id where d.title = 'Test drama, named files' and e.number = 1");
+    const packs = all<{ turn_id: string }>("select turn_id from files where episode_id = ? and kind = 'archive' order by id", episode.id);
+    const naming = all<{ id: string }>("select t.id from turns t join sessions s on s.id = t.session_id where s.episode_id = ? and t.question like '%(handoff/EP001.tar.part-aa)%'", episode.id);
+    expect(naming.length).toBeGreaterThan(1);
+    expect(naming.filter((turn) => !packs.some((pack) => pack.turn_id === turn.id))).toEqual([]);
+    expect(episodeArchive(episode.id).map((pack) => pack.turn_id)).toEqual([packs.at(-1)!.turn_id]);
   }, 30_000);
 
   // The maker stops a drama: its Computers stop, nothing new starts, and Try again carries on.

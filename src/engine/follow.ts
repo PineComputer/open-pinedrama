@@ -140,8 +140,10 @@ export async function settle(sessionId: string, info: TurnInfo): Promise<void> {
   if (!turn?.files_saved) {
     const computer = computerRow(session.computer_id)!;
     const where = { dramaId: session.drama_id, episodeId: session.episode_id, sessionId, turnId: info.turnId };
+    // Packs keep their names and change at every stop: each stop's parts are all saved again.
+    const packs = info.files.filter((file) => !fresh.includes(file) && classify(file.path).kind === "archive");
     try {
-      for (const file of fresh) {
+      for (const file of [...fresh, ...packs]) {
         const body = await fleet().openFile(computerRef(computer), sessionRef(session), file.path);
         await save(body, { ...where, relPath: file.path, type: file.type });
       }
@@ -155,7 +157,9 @@ export async function settle(sessionId: string, info: TurnInfo): Promise<void> {
           });
         if (body) await save(body, { ...where, relPath, type: typeOf(relPath) });
       };
-      const named = stop ? namedPaths(asked).filter((relPath) => !info.files.some((file) => file.path === relPath) && !known(session.drama_id, relPath)) : [];
+      const named = stop
+        ? namedPaths(asked).filter((relPath) => !info.files.some((file) => file.path === relPath) && (!known(session.drama_id, relPath) || classify(relPath).kind === "archive"))
+        : [];
       for (const relPath of named) await fetch(relPath);
       // A stop, or a finished turn, that brought nothing to look at: what the agent made is in its folder.
       if ((stop || info.state === "completed") && !get(`select id from files where turn_id = ? and kind in (${REVIEWED}) limit 1`, info.turnId)) {

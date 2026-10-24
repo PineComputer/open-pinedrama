@@ -96,12 +96,13 @@ export async function save(body: ReadableStream<Uint8Array> | Uint8Array, origin
     if (existing) return existing.id;
   }
   const { sha, size } = await store(body);
-  if (origin.turnId) {
+  const hints = classify(origin.relPath);
+  const kind = origin.kind ?? hints.kind;
+  // A pack's parts are saved with every turn that returns them: the newest turn's set is whole on its own.
+  if (origin.turnId && kind !== "archive") {
     const earlier = get<{ id: number }>("select id from files where drama_id = ? and rel_path = ? and sha = ? order by id limit 1", origin.dramaId, origin.relPath, sha);
     if (earlier) return earlier.id;
   }
-  const hints = classify(origin.relPath);
-  const kind = origin.kind ?? hints.kind;
   const result = run(
     `insert into files (drama_id, episode_id, session_id, turn_id, sha, rel_path, name, type, size, kind, subject, look, segment, style, version, created_at)
      values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
