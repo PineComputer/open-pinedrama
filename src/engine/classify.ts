@@ -68,18 +68,23 @@ export function episodeCode(value: string | number): string {
 
 /**
  * The episodes a summary lists, one per line as "EP001: title" (the setup goal asks for
- * this form), or several on a line. Lines that don't match are ignored.
+ * this form), or several on a line. A code the summary only mentions in passing ("EP001
+ * breakdown v1, ...") names an episode only where it isn't listed. Lines that don't match
+ * are ignored.
  */
 export function listedEpisodes(text: string): { number: number; title: string }[] {
-  const found = new Map<number, string>();
+  const listed = new Map<number, string>();
+  const mentioned = new Map<number, string>();
   for (const line of text.split("\n").flatMap((row) => row.split(/(?<![\p{L}\p{N}])(?=EP\s*\d)/iu))) {
-    const match = line.match(/\bEP\s*0*(\d{1,4})\b\s*[:：.、\-–—]?\s*(.*)$/i);
+    const match = line.match(/\bEP\s*0*(\d{1,4})\b\s*([:：.、\-–—])?\s*(.*)$/i);
     if (match) {
       const number = Number(match[1]);
-      if (number > 0 && !found.has(number)) found.set(number, match[2].trim().replace(/^["“「]|["”」]$/g, ""));
+      const found = match[2] ? listed : mentioned;
+      if (number > 0 && !found.has(number)) found.set(number, match[3].trim().replace(/^["“「]|["”」]$/g, ""));
     }
   }
-  return [...found.entries()].sort((a, b) => a[0] - b[0]).map(([number, title]) => ({ number, title }));
+  for (const [number, title] of mentioned) if (!listed.has(number)) listed.set(number, title);
+  return [...listed.entries()].sort((a, b) => a[0] - b[0]).map(([number, title]) => ({ number, title }));
 }
 
 /**

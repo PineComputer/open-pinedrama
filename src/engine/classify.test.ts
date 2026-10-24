@@ -73,6 +73,17 @@ describe("episodes", () => {
       { number: 3, title: "Wedding" },
     ]);
   });
+
+  it("takes the listed title over a passing mention, as the drama skill's agent wrote one", () => {
+    const summary = [
+      "The Last Ferry project is complete and packed.",
+      "- Accepted: bible v2, EP001 breakdown v1, Nora and Elias lead looks, harbor-pier base/Night plates, and ferry-ticket prop.",
+      "[Download the handoff part](handoff/project.tar.part-aa)",
+      "EP001: One More Minute",
+    ].join("\n");
+    expect(listedEpisodes(summary)).toEqual([{ number: 1, title: "One More Minute" }]);
+    expect(listedEpisodes("Packed EP002 for you.")).toEqual([{ number: 2, title: "for you." }]);
+  });
 });
 
 describe("namedPaths", () => {
