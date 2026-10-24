@@ -25,8 +25,9 @@ restarts; the desktop app will open it for you.
 
 On first run the studio asks for your Pine project's API key (Project → API keys in the
 Pine console). It checks the key with Pine, then keeps it sealed; nothing needs editing.
-The project needs Pine's drama skill; until it has it, dramas can be rehearsed (see Develop). Settings changes or forgets the key, and forgetting
-it first stops every Computer the project has running for the studio.
+The project needs Pine's drama skill; until it has it, dramas can be rehearsed (see
+Develop). Settings changes or forgets the key, and forgetting it first stops every
+Computer the project has running for the studio.
 
 New drama asks for the episode length and writes it into the drama's brief, or uses the
 `brief.md` you add with the screenplay. Pine bills the agents' turns and, separately,

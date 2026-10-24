@@ -34,7 +34,7 @@ The restart path is checked by hand: lost Computers mark episodes stopped and en
 - The API needs this launch's token (a cookie from the printed link) and the studio's own origin for changes; returned files can't run scripts in the studio's origin.
 - Data lives where each OS keeps app data, one engine per data folder; the sealing key moved to the Keychain or Secret Service; bundled files resolve from the code's location, not the working directory.
 - Errors reach the maker as codes the UI words in their language; review drafts survive leaving the page.
-- Budget and spend were taken out (rule 6).
+- Budget and spend were taken out until we knew where video charges appear (rule 6).
 
 **Desktop app, 23 October 2026.** Electron 44 (Node 24, with `node:sqlite`) around the same engine and UI:
 - The engine runs in a utility process on a free port; the shell makes the launch token and opens the window through the engine's link. One copy runs at a time.
@@ -71,7 +71,20 @@ And, from Pine's limits and lifecycle docs: a turn that breaks off (the Computer
 - **The skill can go.** The skill is checked at every episode start, not only the setup, and a drama in production holds with a notice if it is gone.
 - **On screen:** questions as Markdown with links to their files, the agent's long messages kept to three lines in the review room, the chat drawer out of the page column, readable cast names, the setup's steps following what it made, a picture of the maker's own on any review note (used by the agent on staging), and the season's approved cuts as one ZIP64 download.
 
-**Not yet verified:** the drama skill on real Pine (whether its provider asset handles survive a restore on another Computer); a Computer actually reaching its running-time limit; Windows and Linux builds; signing and notarization. Milestone 2's spike needs the maker's go-ahead, a spend cap and a project with the drama skill.
+**The drama skill on staging, 24 October 2026.** With `drama-workflow` in the Computer image, one real drama ("The Last Ferry", one episode of about 28 seconds) went from screenplay to an accepted cut through the app: the bible and the leads, pre-production, storyboards, a take of each of its two segments, and the cut, for $19.77 ($18.20 of it video at $39 a minute, 480p). On Pine's side it found:
+- The provider sidecar pushed each Computer pod past GKE Autopilot's 10 GiB cap on ephemeral storage, so no new Computer could start until staging was changed.
+- Pine's video profile takes at most 15 seconds a request. The skill's breakdown made one 28-second segment; the agent split it in two when asked.
+- The profile first refused Seedance 2.5's `omni_reference_task_type`, which every shot with reference images sends.
+- Asset-library registrations belong to the session that made them. The episode restored the setup's project with its registrations, and Pine refused every video request (drama-cli reports any 400 or 403 at submission as `ModuleAdmission`). Registering the references again in the episode's session fixed it.
+
+And in the studio, now handled:
+- **Spend.** Pine bills generated video on the turn that made it, and the charge can arrive after the turn ends. The studio keeps each turn's highest reading, reads a Computer's last turns again before stopping it, and shows what each drama and episode spent. Agents are told nothing of cost (rule 6).
+- **The brief.** The skill wants a `brief.md` with the drama's title and the episode length; New drama writes it from the maker's choices, or uses the maker's own.
+- **Episodes.** The goal has each episode register its references again in its own session, and return its breakdown when it revises it.
+- **Reading what the skill returns.** A lead's face (a look state named `face`) counts with the base looks; an episode's title comes from its "EP001: title" line, not a passing mention; a long question reads at body size with its pictures and the answer beside it; a blocking diagram no longer stands for an episode on the board; names with underscores stay upright.
+- **Stopping.** The maker can stop a drama: its Computers stop and nothing new starts until they try again.
+
+**Not yet verified:** parallel episodes on the real skill (the rehearsals ran up to 20 at once on stand-ins); recording real turns as the replay; a Computer actually reaching its running-time limit; Windows and Linux builds; signing and notarization.
 
 ## Decisions carried in
 
@@ -89,7 +102,7 @@ Sessions on one Computer run concurrently (three at most) but share no files; Pi
 - **Default: one episode at a time per Computer.** When an episode is finished, its session closes and the same Computer takes the next one. The maker sets the pool size: "work on up to N episodes at once".
 - **Setting: episodes per Computer, 1–3**, for projects whose Computer limit is the bottleneck. When Pine's shared storage ships, packing episodes onto fewer Computers becomes worth it, because the cast is set up once per Computer. Then the default can change.
 - **Attachments:** the project's parts keep their names, so `cat project.tar.part-*` puts them back in order; other attachments get flat, collision-free names. A file over 64 MiB is never attached. A drama set up before pre-production existed still gets its references as loose files.
-- **Still to learn on real Pine:** whether a restored project's uploaded references (provider asset handles, which Pine's adapter scopes) are accepted on another Computer, or must be uploaded again.
+- **Provider registrations don't travel with the project.** Pine scopes asset-library registrations to the session that made them, so each episode session sets aside those in the restored project and registers its references again from their files before compiling video prompts (found on staging, 24 October).
 - **Idle timeout** is per Computer: 1 h while it works, 3 h while any of its sessions waits on the maker (`setIdleTimeout`). The 1 h base matters because a question can arrive while the app is closed, when nothing can raise the timeout. On a project without a lifetime policy the timeout is fixed at start, so its Computers start with 3 h. Near the end of a start's running time a Computer takes no new session (see Progress).
 
 ## Rules the flow depends on
@@ -107,7 +120,7 @@ From the plan review (Codex, 23 October), checked against Pine's docs:
 
    Run idempotency keys are saved before `run`. Lifecycle actions on one Computer are serialized.
 5. **Path labels are hints.** Pine guarantees each returned file's path, size, hash and type, not drama stages or segments. The library tags files from their paths when it can; every screen also works from the agent's own words and the plain file list. The spike checks what the drama skill actually returns.
-6. **No spend figures yet.** Budgets and spend are left out of the first release: Pine's turn `usage.cost` is recorded, but nothing is shown or put in a goal until we know where video charges appear (the spike).
+6. **Spend is shown, never put in a goal.** Pine bills the agent's turns and, separately, generated video by the minute on the turn that made it; the video charge can settle after the turn ends, as a usage event. The studio records each turn's highest reading and shows what each drama and episode spent. There is no budget: agents are told nothing of cost.
 
 ## Shape of the code
 
