@@ -120,7 +120,7 @@ From the plan review (Codex, 23 October), checked against Pine's docs:
 
    Run idempotency keys are saved before `run`. Lifecycle actions on one Computer are serialized.
 5. **Path labels are hints.** Pine guarantees each returned file's path, size, hash and type, not drama stages or segments. The library tags files from their paths when it can; every screen also works from the agent's own words and the plain file list. The spike checks what the drama skill actually returns.
-6. **Spend is shown, never put in a goal.** Pine bills the agent's turns and, separately, generated video by the minute on the turn that made it; the video charge can settle after the turn ends, as a usage event. The studio records each turn's highest reading and shows what each drama and episode spent. There is no budget: agents are told nothing of cost.
+6. **Spend is shown, never put in a goal.** Pine bills the agent's turns and, separately, generated video by the minute on the turn that made it; the video charge can settle after the turn ends, as a usage event. The studio records each turn's highest reading and shows what each drama and episode spent. There is no budget: agents are told nothing of cost but that there is no cap. drama-cli won't make a project without one (`init --budget` is required), and the skill asks the maker for it when the goal doesn't give it, so each goal gives 100000 USD and tells the agent never to ask about cost.
 
 ## Shape of the code
 

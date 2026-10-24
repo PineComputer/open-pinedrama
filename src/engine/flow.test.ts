@@ -139,18 +139,24 @@ async function scenario(title: string) {
   });
   // Each episode got the packed project, not loose references, and its breakdown came from pre-production.
   const { all } = await import("./db.ts");
+  const { NO_CAP } = await import("./goals.ts");
+  // The agent is told nothing of cost but that there is no cap, which drama-cli needs to make a project:
+  // Pine bills it, and the studio shows what was spent.
+  const costless = (goal: string) => {
+    expect(goal).toContain(NO_CAP);
+    expect(goal.replace(NO_CAP, "")).not.toMatch(/budget|spend|cost|\$/i);
+  };
   const goals = all<{ goal: string }>("select goal from runs where kind = 'episode'");
   expect(goals.length).toBeGreaterThanOrEqual(2);
   for (const { goal } of goals) {
     expect(goal).toContain("attachments/project.tar.part-*");
     // Provider registrations belong to the session that made them: each episode registers its references again.
     expect(goal).toContain("register every reference the episode uses again from its local file in this session");
-    // The agent is told nothing of cost: Pine bills it, and the studio shows what was spent.
-    expect(goal).not.toMatch(/budget|spend|\$/i);
+    costless(goal);
   }
   const setup = all<{ goal: string }>("select goal from runs where kind = 'setup'")[0].goal;
   expect(setup).toContain("(screenplay.txt, brief.md)");
-  expect(setup).not.toMatch(/budget|spend|\$/i);
+  costless(setup);
   expect(drama.episodeRows.every((row) => row.stages.breakdown.state === "done")).toBe(true);
   const boards = await until("EP001 storyboards", openReview(id, (item) => item.episode === "EP001" && item.kind === "storyboards"));
   expect((await call<ReviewView>("GET", `/api/reviews/${boards.id}`)).breakdown?.path).toBe("drama/episodes/EP001/breakdown/v1/breakdown.md");

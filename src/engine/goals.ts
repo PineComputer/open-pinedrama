@@ -70,6 +70,7 @@ export function setupGoal(drama: DramaBrief, attachments: string[]): string {
     brief(drama),
     drama.notes ? `The maker's notes: ${drama.notes}` : "",
     "Make the drama-cli project in the work directory's drama/ folder, with the screenplay and the brief in it as screenplay.md and brief.md.",
+    NO_CAP,
     "Read the screenplay and ask me for anything that is missing.",
     "Write the bible, then make each lead's face and base look. Stop and ask me to approve the leads' looks, returning their sheets with your question.",
     "After I approve, prepare every episode so that each can then be made in parallel in a session of its own: write and accept every episode's breakdown, then make every look, location and key prop that any breakdown uses. Stop and ask me to approve these shared references, returning their images with your question.",
@@ -84,11 +85,18 @@ export function setupGoal(drama: DramaBrief, attachments: string[]): string {
 
 const LIST_EPISODES = 'End with the list of episodes, one per line, as "EP001: <title>".';
 
+/**
+ * drama-cli won't make a project without a budget (`init --budget` is required), and the skill asks
+ * the maker for a missing one. The maker sets no cap: Pine bills, and the studio shows the spend.
+ */
+export const NO_CAP = "There is no spending cap: where drama-cli needs a budget, give it 100000 USD, and never ask me about cost.";
+
 /** How an episode session takes up the drama's project, and the bounds it keeps to. */
 function handedOver(code: string): string[] {
   return [
     "The attached project.tar.part-* files are the drama's drama-cli project, with its bible, every breakdown and every look, location and key prop accepted.",
     "Restore it into the work directory's drama/ folder (`mkdir -p drama && cat attachments/project.tar.part-* | tar -xf - -C drama`), point its config at that folder and its screenplay.md and brief.md with `drama-cli init`, keeping its settings and preset, and check it with `drama-cli status`.",
+    NO_CAP,
     "Its asset-library registrations were made in another session and can't be used from this one: before you compile video prompts, set them aside and register every reference the episode uses again from its local file in this session.",
     `Work only on ${code}, inside drama/episodes/${code}. Use the accepted references as they are: never make a new version of the bible, a look, a location, a key prop or another episode's breakdown. If ${code} needs one that is not accepted, stop and ask me.`,
   ];
