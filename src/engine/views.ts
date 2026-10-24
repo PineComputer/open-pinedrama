@@ -184,7 +184,6 @@ export function dramaView(drama: DramaRow): DramaView {
     ...dramaCard(drama),
     notes: drama.notes,
     length: drama.length,
-    budget: drama.budget,
     parallel: drama.parallel,
     perComputer: drama.per_computer,
     setup: {

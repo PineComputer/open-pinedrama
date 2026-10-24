@@ -1,6 +1,6 @@
 // What a maker does to a drama: start one, change how many episodes run at once, resume
-// an episode whose session ended, retry a stopped setup, talk to an agent.
-import { closeSession, computerRef, fleet, sessionRef } from "./computers.ts";
+// an episode whose session ended, stop the drama or retry it, talk to an agent.
+import { closeSession, computerRef, fleet, runningComputers, sessionRef, stop as stopComputer } from "./computers.ts";
 import { stopEvents } from "./follow.ts";
 import type { Mode } from "../shared/types.ts";
 import { MAX_ATTACHMENT } from "./config.ts";
@@ -23,8 +23,6 @@ export interface NewDrama {
   notes: string;
   /** About this many seconds an episode: 60, 90 or 120. */
   length?: string;
-  /** What each episode may spend on generation, in USD. */
-  budget?: number | null;
   files: { name: string; type: string; bytes: Uint8Array }[];
   /** Pine's agent stands in for the drama skill with placeholder files (goals.ts, rehearsed). */
   rehearsal?: boolean;
@@ -43,7 +41,6 @@ export async function createDrama(input: NewDrama, mode: Mode): Promise<string> 
   if (large) throw new StudioError("file-too-large", `${large.name} is over 64 MiB, more than a Computer can be handed.`, 400, large.name);
   const id = newId("drama");
   const length = LENGTHS[input.length ?? ""] ? input.length! : "60";
-  const budget = input.budget === null || input.budget === undefined || !Number.isFinite(input.budget) ? null : Math.max(0, Math.round(input.budget * 100) / 100);
   const fileIds: number[] = [];
   // The maker's own brief.md is the brief; without one, the studio writes it from what they chose here.
   const isBrief = (name: string) => name.toLowerCase() === "brief.md";
@@ -55,7 +52,7 @@ export async function createDrama(input: NewDrama, mode: Mode): Promise<string> 
           name: "brief.md",
           type: "text/markdown",
           bytes: new TextEncoder().encode(
-            briefFile({ title: input.title.trim(), language: input.language === "en" ? "en" : "zh", look: input.look.trim() || "live action", format: input.format.trim() || "9:16, 480p", notes: input.notes.trim(), length, budget }),
+            briefFile({ title: input.title.trim(), language: input.language === "en" ? "en" : "zh", look: input.look.trim() || "live action", format: input.format.trim() || "9:16, 480p", notes: input.notes.trim(), length }),
           ),
         },
       ];
@@ -67,8 +64,8 @@ export async function createDrama(input: NewDrama, mode: Mode): Promise<string> 
   }
   transaction(() => {
     run(
-      `insert into dramas (id, title, language, look, format, parallel, per_computer, notes, length, budget, mode, rehearsal, status, created_at, updated_at)
-       values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'setup', ?, ?)`,
+      `insert into dramas (id, title, language, look, format, parallel, per_computer, notes, length, mode, rehearsal, status, created_at, updated_at)
+       values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'setup', ?, ?)`,
       id,
       input.title.trim(),
       input.language === "en" ? "en" : "zh",
@@ -78,7 +75,6 @@ export async function createDrama(input: NewDrama, mode: Mode): Promise<string> 
       clamp(input.perComputer || 1, 1, 3),
       input.notes.trim(),
       length,
-      budget,
       mode,
       input.rehearsal ? 1 : 0,
       now(),
@@ -142,6 +138,21 @@ export function retrySetup(id: string): void {
   const hasEpisodes = (get<{ n: number }>("select count(*) as n from episodes where drama_id = ?", id)?.n ?? 0) > 0;
   run("update dramas set status = ?, note = '', reason = '', continues = 0, updated_at = ? where id = ?", hasEpisodes ? "production" : "setup", now(), id);
   publish(`drama:${id}`, "dramas");
+}
+
+/**
+ * The maker stops the drama: nothing new starts and its Computers stop, so nothing more is
+ * billed. What it made stays in the library, and Try again carries on from there.
+ */
+export async function stopDrama(id: string): Promise<void> {
+  const drama = dramaRow(id);
+  if (!drama) throw new StudioError("not-found", "No such drama.", 404);
+  if (drama.status === "done") throw new StudioError("drama-done", "The drama is finished.", 409);
+  run("update dramas set status = 'stopped', reason = 'by-maker', note = '', updated_at = ? where id = ?", now(), id);
+  publish(`drama:${id}`, "dramas");
+  const stops = await Promise.allSettled(runningComputers(id).map((row) => stopComputer(row)));
+  const failed = stops.find((result) => result.status === "rejected");
+  if (failed) throw failed.reason;
 }
 
 /**

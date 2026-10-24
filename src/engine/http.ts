@@ -20,7 +20,7 @@ import { appInfo, connectPine, disconnect, useReplay } from "./connection.ts";
 import { retryStarts } from "./computers.ts";
 import { DEFAULT_ENDPOINT } from "./settings.ts";
 import { all } from "./db.ts";
-import { chat, createDrama, desktop, finishEpisode, rehearse, resumeEpisode, retrySetup, updateDrama } from "./dramas.ts";
+import { chat, createDrama, desktop, finishEpisode, rehearse, resumeEpisode, retrySetup, stopDrama, updateDrama } from "./dramas.ts";
 import { StudioError } from "./errors.ts";
 import { fileRow, openBlob, save, toItem } from "./library.ts";
 import { subscribe } from "./live.ts";
@@ -150,7 +150,6 @@ export function app(): Hono {
         perComputer: Number(field("perComputer")) || 1,
         notes: field("notes"),
         length: field("length"),
-        budget: field("budget") === "" ? null : Number(field("budget")),
         rehearsal: field("rehearsal") === "1",
         files: await Promise.all(uploads.map(async (file) => ({ name: file.name, type: file.type, bytes: new Uint8Array(await file.arrayBuffer()) }))),
       }, mode);
@@ -177,7 +176,6 @@ export function app(): Hono {
         perComputer: 1,
         notes: "",
         length: "60",
-        budget: 60,
         files: [{ name, type: "text/markdown", bytes: readFileSync(path.join(FIXTURES, name)) }],
         rehearsal: mode === "pine",
       }, mode);
@@ -204,6 +202,15 @@ export function app(): Hono {
   api.post("/api/dramas/:id/retry", (c) => {
     try {
       retrySetup(c.req.param("id"));
+      return c.json({ ok: true });
+    } catch (error) {
+      return fail(c, error);
+    }
+  });
+
+  api.post("/api/dramas/:id/stop", async (c) => {
+    try {
+      await stopDrama(c.req.param("id"));
       return c.json({ ok: true });
     } catch (error) {
       return fail(c, error);

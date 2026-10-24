@@ -80,7 +80,6 @@ async function scenario(title: string) {
   form.set("parallel", "2");
   form.set("perComputer", "1");
   form.set("length", "90");
-  form.set("budget", "40");
   form.append("files", new File(["EPISODE 1\nLin enters."], "screenplay.txt", { type: "text/plain" }));
   const { id } = await call<{ id: string }>("POST", "/api/dramas", form);
 
@@ -144,10 +143,12 @@ async function scenario(title: string) {
   expect(goals.length).toBeGreaterThanOrEqual(2);
   for (const { goal } of goals) {
     expect(goal).toContain("attachments/project.tar.part-*");
-    // Each episode keeps to its own budget: episodes at once each count only their own copy's spending.
-    expect(goal).toContain("may spend up to $40 on generation");
+    // The agent is told nothing of cost: Pine bills it, and the studio shows what was spent.
+    expect(goal).not.toMatch(/budget|spend|\$/i);
   }
-  expect(all<{ goal: string }>("select goal from runs where kind = 'setup'")[0].goal).toContain("(screenplay.txt, brief.md)");
+  const setup = all<{ goal: string }>("select goal from runs where kind = 'setup'")[0].goal;
+  expect(setup).toContain("(screenplay.txt, brief.md)");
+  expect(setup).not.toMatch(/budget|spend|\$/i);
   expect(drama.episodeRows.every((row) => row.stages.breakdown.state === "done")).toBe(true);
   const boards = await until("EP001 storyboards", openReview(id, (item) => item.episode === "EP001" && item.kind === "storyboards"));
   expect((await call<ReviewView>("GET", `/api/reviews/${boards.id}`)).breakdown?.path).toBe("drama/episodes/EP001/breakdown/v1/breakdown.md");
@@ -204,7 +205,7 @@ expect(archive.includes(Buffer.from(`${title}/EP002`))).toBe(false);
   const brief = await (await fetchApp(new Request(`http://127.0.0.1:4310${script.inputs[1].url}`, { headers: { host: "127.0.0.1:4310", cookie: "studio=test-token" } }))).text();
   expect(brief).toContain(`- Title: ${title}\n`);
   expect(brief).toContain("- Episode length: about a minute and a half (80 to 110 seconds).");
-  expect(brief).toContain("- Budget: $40 of generation for each episode.");
+  expect(brief).not.toMatch(/budget/i);
   const cast = await call<CastCard[]>("GET", `/api/dramas/${id}/cast`);
   const wei = cast.find((card) => card.subject === "wei")!;
   expect(wei.looks[0].versions.map((version) => [version.files[0].version, version.review?.verdict])).toEqual([
@@ -237,6 +238,25 @@ describe("a drama in replay", () => {
     run("update dramas set status = 'done'");
     fleet.stops = "name";
     await scenario("Test drama, named files");
+  }, 30_000);
+
+  // The maker stops a drama: its Computers stop, nothing new starts, and Try again carries on.
+  it("stops when the maker says, and carries on when they try again", async () => {
+    const { all, run } = await import("./db.ts");
+    run("update dramas set status = 'done'");
+    fleet.stops = "ask";
+    const form = new FormData();
+    for (const [key, value] of Object.entries({ title: "Stopped drama", language: "en", parallel: "1", perComputer: "1" })) form.set(key, value);
+    form.append("files", new File(["EPISODE 1\nLin enters."], "screenplay.txt", { type: "text/plain" }));
+    const { id } = await call<{ id: string }>("POST", "/api/dramas", form);
+    await until("the setup question", openReview(id, (item) => item.kind === "question"));
+    await call("POST", `/api/dramas/${id}/stop`);
+    const stopped = await call<DramaView>("GET", `/api/dramas/${id}`);
+    expect([stopped.status, stopped.setup.reason]).toEqual(["stopped", "by-maker"]);
+    expect(all("select id from computers where drama_id = ? and state != 'stopped'", id)).toEqual([]);
+    expect(await openReview(id, () => true)()).toBeUndefined();
+    await call("POST", `/api/dramas/${id}/retry`);
+    await until("the setup question again", openReview(id, (item) => item.kind === "question"));
   }, 30_000);
 
   // Or ask about files it neither returns nor names: the studio finds them in the agent's folder.

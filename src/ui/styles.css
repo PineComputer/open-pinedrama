@@ -410,6 +410,8 @@ h1, h2, h3 { margin: 0; font-family: var(--serif); font-weight: 450; letter-spac
 .rail h1 { margin-top: 14px; }
 .rail-actions { display: grid; gap: 8px; justify-items: start; }
 .tune-actions { display: flex; gap: 14px; }
+.tune-stop { display: grid; gap: 10px; padding-top: 14px; border-top: 1px dashed var(--rule); }
+.tune-stop p { margin: 0; }
 .first { display: grid; gap: 18px; justify-items: start; margin-bottom: 36px; }
 .first .empty-note { margin: 0; }
 .shelf.empty { margin-top: 36px; }
@@ -620,6 +622,3 @@ h1, h2, h3 { margin: 0; font-family: var(--serif); font-weight: 450; letter-spac
 
 /* A sum of money typed in a line: the currency sign before it. */
 .field { align-content: start; }
-.money-input { display: flex; align-items: baseline; gap: 6px; }
-.money-input input { width: 7em; }
-.budget-hint { margin: -12px 0 0; }

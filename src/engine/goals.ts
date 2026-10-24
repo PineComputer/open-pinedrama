@@ -13,8 +13,6 @@ export interface DramaBrief {
   notes: string;
   /** About this many seconds an episode (60, 90, 120), or "" where the maker wasn't asked. */
   length: string;
-  /** What each episode may spend on generation, in USD, or null where the maker wasn't asked. */
-  budget: number | null;
 }
 
 /** The episode lengths the maker chooses among, in the words and guide range the skill's brief takes. */
@@ -24,13 +22,9 @@ export const LENGTHS: Record<string, string> = {
   "120": "about two minutes (100 to 140 seconds)",
 };
 
-function dollars(amount: number): string {
-  return `$${Number.isInteger(amount) ? amount : amount.toFixed(2)}`;
-}
-
 /**
  * The maker's brief as the drama skill reads it (brief.md): the title and the episode length
- * on lines of their own, then the format, the language, the budget and the maker's notes. It
+ * on lines of their own, then the format, the language and the maker's notes. It
  * is the maker's input, written from what they chose in New drama.
  */
 export function briefFile(drama: DramaBrief): string {
@@ -41,7 +35,6 @@ export function briefFile(drama: DramaBrief): string {
     `- Format: vertical ${drama.format.split(",")[0].trim()} ${drama.look} short drama, ${drama.format.split(",")[1]?.trim() || "480p"}.`,
     `- Language: ${languageName(drama.language)}; keep every line as the screenplay writes it.`,
     LENGTHS[drama.length] ? `- Episode length: ${LENGTHS[drama.length]}.` : "",
-    drama.budget !== null ? `- Budget: ${dollars(drama.budget)} of generation for each episode.` : "",
     drama.notes ? `- Notes: ${drama.notes.replace(/\s*\n\s*/g, " ")}` : "",
   ]
     .filter((line, index) => line || index === 1)
@@ -77,7 +70,6 @@ export function setupGoal(drama: DramaBrief, attachments: string[]): string {
     brief(drama),
     drama.notes ? `The maker's notes: ${drama.notes}` : "",
     "Make the drama-cli project in the work directory's drama/ folder, with the screenplay and the brief in it as screenplay.md and brief.md.",
-    drama.budget !== null ? `Give the project a budget of ${dollars(drama.budget)}, what one episode may spend: pre-production makes no video.` : "",
     "Read the screenplay and ask me for anything that is missing.",
     "Write the bible, then make each lead's face and base look. Stop and ask me to approve the leads' looks, returning their sheets with your question.",
     "After I approve, prepare every episode so that each can then be made in parallel in a session of its own: write and accept every episode's breakdown, then make every look, location and key prop that any breakdown uses. Stop and ask me to approve these shared references, returning their images with your question.",
@@ -92,17 +84,11 @@ export function setupGoal(drama: DramaBrief, attachments: string[]): string {
 
 const LIST_EPISODES = 'End with the list of episodes, one per line, as "EP001: <title>".';
 
-/**
- * How an episode session takes up the drama's project, and the bounds it keeps to. Its budget
- * is the episode's own: episodes run at once on copies of the project, so each copy keeps
- * count only of its own spending.
- */
-function handedOver(drama: DramaBrief, code: string): string[] {
+/** How an episode session takes up the drama's project, and the bounds it keeps to. */
+function handedOver(code: string): string[] {
   return [
     "The attached project.tar.part-* files are the drama's drama-cli project, with its bible, every breakdown and every look, location and key prop accepted.",
-    drama.budget !== null
-      ? `Restore it into the work directory's drama/ folder (\`mkdir -p drama && cat attachments/project.tar.part-* | tar -xf - -C drama\`), point its config at that folder and its screenplay.md and brief.md with \`drama-cli init\`, keeping its settings and preset, and check it with \`drama-cli status\`. ${code} may spend up to ${dollars(drama.budget)} on generation: set the project's budget to that plus what \`drama-cli cost\` says it has already spent.`
-      : "Restore it into the work directory's drama/ folder (`mkdir -p drama && cat attachments/project.tar.part-* | tar -xf - -C drama`), point its config at that folder with `drama-cli init`, keeping its settings, budget and preset, and check it with `drama-cli status`.",
+    "Restore it into the work directory's drama/ folder (`mkdir -p drama && cat attachments/project.tar.part-* | tar -xf - -C drama`), point its config at that folder and its screenplay.md and brief.md with `drama-cli init`, keeping its settings and preset, and check it with `drama-cli status`.",
     `Work only on ${code}, inside drama/episodes/${code}. Use the accepted references as they are: never make a new version of the bible, a look, a location, a key prop or another episode's breakdown. If ${code} needs one that is not accepted, stop and ask me.`,
   ];
 }
@@ -128,7 +114,7 @@ export function episodeGoal(drama: DramaBrief, code: string, attachments: string
     `Use the ${DRAMA_SKILL} skill to make episode ${code} of "${drama.title}".`,
     brief(drama),
     ...(handoff
-      ? handedOver(drama, code)
+      ? handedOver(code)
       : [`The attached bible and images are the approved references: ${attachments.join(", ")}. Use them as they are; do not redesign the cast, locations or props.`]),
     ...EPISODE_STOPS,
     handoff ? packEpisode(code) : "",
@@ -146,7 +132,7 @@ export function resumeGoal(drama: DramaBrief, code: string, attachments: string[
     brief(drama),
     ...(handoff
       ? [
-          ...handedOver(drama, code),
+          ...handedOver(code),
           ownFolder
             ? `The attached ${code}.tar.part-* files are ${code}'s folder as the earlier session left it: restore them into drama/episodes/${code} (\`mkdir -p drama/episodes/${code} && cat attachments/${code}.tar.part-* | tar -xf - -C drama/episodes/${code}\`) and carry on from there; redo only what is missing.`
             : `Nothing of ${code} was kept: start it from its accepted breakdown.`,

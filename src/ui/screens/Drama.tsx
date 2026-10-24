@@ -22,11 +22,16 @@ const SECTIONS: [string, TKey][] = [
   ["inbox", "section.inbox"],
 ];
 
-/** How many episodes run at once, and how many share a Computer: changed in place. */
+/** How many episodes run at once, and how many share a Computer: changed in place. Or the line stops. */
 function Tune({ drama, onDone }: { drama: DramaView; onDone: () => void }) {
   const { t } = useT();
   const [parallel, setParallel] = useState(drama.parallel);
   const [perComputer, setPerComputer] = useState(drama.perComputer);
+  const [stopping, setStopping] = useState(false);
+  const stop = useAction(async () => {
+    await api(`/api/dramas/${drama.id}/stop`, { method: "POST" });
+    onDone();
+  });
   const save = async () => {
     await api(`/api/dramas/${drama.id}`, { method: "PATCH", json: { parallel, perComputer } });
     onDone();
@@ -57,6 +62,28 @@ function Tune({ drama, onDone }: { drama: DramaView; onDone: () => void }) {
           {t("tune.cancel")}
         </button>
       </div>
+      {(drama.status === "setup" || drama.status === "production") && (
+        <div className="tune-stop">
+          {stopping ? (
+            <>
+              <p className="small">{t("stop.confirm")}</p>
+              <div className="tune-actions">
+                <button className="btn small" disabled={stop.busy} onClick={() => void stop.run()}>
+                  {t("stop.yes")}
+                </button>
+                <button className="link" onClick={() => setStopping(false)}>
+                  {t("tune.cancel")}
+                </button>
+              </div>
+              {stop.error !== undefined && <p className="error small">{errorText(stop.error, t)}</p>}
+            </>
+          ) : (
+            <button className="link quiet" onClick={() => setStopping(true)}>
+              {t("stop.drama")}
+            </button>
+          )}
+        </div>
+      )}
     </div>
   );
 }
@@ -140,9 +167,7 @@ export function Drama({ id, tab, episode }: { id: string; tab: string; episode?:
           <h1>{drama.title}</h1>
           <div className="about">
             {drama.format} · {lookLabel(drama.look, t)}
-            {drama.length && ` · ${t(`new.length${drama.length}` as TKey)}`}
-            {drama.budget !== null && ` · ${t("about.budget", { amount: moneyText(drama.budget, t, lang) })}`}
-            {drama.rehearsal && <span className="rehearsal-tag">{t("rehearsal.tag")}</span>}
+            {drama.length && ` · ${t(`new.length${drama.length}` as TKey)}`}            {drama.rehearsal && <span className="rehearsal-tag">{t("rehearsal.tag")}</span>}
           </div>
         </div>
         <nav className="sections">

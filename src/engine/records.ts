@@ -13,8 +13,6 @@ export interface DramaRow {
   notes: string;
   /** Each episode's length, about this many seconds (60, 90, 120); "" for a drama made before it was asked. */
   length: string;
-  /** What each episode may spend on generation, in USD; null for a drama made before it was asked. */
-  budget: number | null;
   /** Where its work runs: a replay drama never starts Pine Computers, and a Pine drama never plays in replay. */
   mode: Mode;
   /** 1 for a rehearsal: Pine's agent stands in for the drama skill with placeholder files. */

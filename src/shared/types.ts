@@ -10,6 +10,7 @@ export type ErrorCode =
   | "not-found"
   | "episode-busy"
   | "drama-not-stopped"
+  | "drama-done"
   | "drama-not-held"
   | "nothing-delivered"
   | "no-cut"
@@ -49,7 +50,7 @@ export interface ApiFailure {
 export type DramaStatus = "setup" | "production" | "done" | "stopped";
 
 /** Why the studio held a drama: its project's Computers don't offer Pine's drama skill. */
-export type HoldReason = "no-drama-skill";
+export type HoldReason = "no-drama-skill" | "by-maker";
 
 export type EpisodeState = "queued" | "working" | "waiting" | "done" | "stopped" | "failed";
 
@@ -59,7 +60,7 @@ export type Stage = (typeof STAGES)[number];
 
 export type FileKind =
   | "screenplay"
-  /** What the maker asks of the drama: title, format, episode length, tone, budget (brief.md). */
+  /** What the maker asks of the drama: title, format, episode length, tone (brief.md). */
   | "brief"
   | "bible"
   | "look"
@@ -204,8 +205,6 @@ export interface DramaView extends DramaCard {
   notes: string;
   /** About this many seconds an episode (60, 90, 120); "" for a drama made before it was asked. */
   length: string;
-  /** What each episode may spend on generation, in USD; null for a drama made before it was asked. */
-  budget: number | null;
   parallel: number;
   perComputer: number;
   setup: {
