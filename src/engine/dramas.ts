@@ -40,11 +40,12 @@ export async function createDrama(input: NewDrama, mode: Mode): Promise<string> 
   const large = input.files.find((file) => file.bytes.byteLength > MAX_ATTACHMENT);
   if (large) throw new StudioError("file-too-large", `${large.name} is over 64 MiB, more than a Computer can be handed.`, 400, large.name);
   const id = newId("drama");
-  const length = LENGTHS[input.length ?? ""] ? input.length! : "60";
   const fileIds: number[] = [];
-  // The maker's own brief.md is the brief; without one, the studio writes it from what they chose here.
+  // The maker's own brief.md is the brief, episode length included; without one, the studio writes it from what they chose here.
   const isBrief = (name: string) => name.toLowerCase() === "brief.md";
-  const files = input.files.some((file) => isBrief(file.name))
+  const ownBrief = input.files.some((file) => isBrief(file.name));
+  const length = ownBrief ? "" : LENGTHS[input.length ?? ""] ? input.length! : "60";
+  const files = ownBrief
     ? input.files
     : [
         ...input.files,
