@@ -6,12 +6,13 @@ import { Fragment, type ReactNode } from "react";
 const LIMIT = 200_000;
 
 /**
- * **bold**, *italic* or _italic_, `code` and [links], inside one line. A link opens only a
- * file the studio saved (`links`, by its path in the session); any other target is shown, not followed.
+ * **bold**, *italic* or _italic_, `code` and [links], inside one line. Underscores inside a
+ * word (omni_reference_task_type) are the word's own. A link opens only a file the studio
+ * saved (`links`, by its path in the session); any other target is shown, not followed.
  */
 function inline(text: string, links?: Map<string, string>): ReactNode[] {
   const out: ReactNode[] = [];
-  const pattern = /(\[[^\]\n]+\]\(\s*<?[^)\s>]+>?\s*\)|\*\*[^*]+\*\*|`[^`]+`|\*[^*\s][^*]*\*|_[^_\s][^_]*_)/g;
+  const pattern = /(\[[^\]\n]+\]\(\s*<?[^)\s>]+>?\s*\)|\*\*[^*]+\*\*|`[^`]+`|\*[^*\s][^*]*\*|(?<![\p{L}\p{N}_])_[^_\s][^_]*_(?![\p{L}\p{N}_]))/gu;
   let last = 0;
   for (const match of text.matchAll(pattern)) {
     if (match.index > last) out.push(text.slice(last, match.index));
