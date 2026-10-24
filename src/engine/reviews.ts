@@ -9,7 +9,7 @@ import { StudioError } from "./errors.ts";
 import { all, get, newId, now, run, transaction } from "./db.ts";
 import { followTurn, recordTurn } from "./follow.ts";
 import { decisionGoal } from "./goals.ts";
-import { type FileRow, filesOfTurn, toItem, versionNumber } from "./library.ts";
+import { type FileRow, filesOfStop, toItem, versionNumber } from "./library.ts";
 import { publish } from "./live.ts";
 import { attach, saveRun, sendRun } from "./runs.ts";
 import { type ReviewRow, type SessionRow, type TurnRow, computer as computerRow, episode as episodeRow, episodeCode, review as reviewRow, session as sessionRow } from "./records.ts";
@@ -96,7 +96,8 @@ export function questionAsked(session: SessionRow, turnId: string, question: str
 
 /** The question's files are saved: it can be answered now, in words when the agent asked in words. */
 export function questionReady(session: SessionRow, turnId: string, inWords = false): void {
-  const kind = inWords ? "question" : inferKind(session.role, filesOfTurn(turnId));
+  const stop = get<ReviewRow>("select * from reviews where turn_id = ?", turnId);
+  const kind = inWords || !stop ? "question" : inferKind(session.role, filesOfStop(stop));
   run("update reviews set kind = ?, state = 'open' where turn_id = ? and state = 'saving'", kind, turnId);
   publish(`drama:${session.drama_id}`, "inbox");
 }
@@ -175,7 +176,7 @@ async function send(reviewId: string, decision: Decision): Promise<ReviewRow> {
   const review = reviewRow(reviewId);
   if (!review) throw new StudioError("not-found", "No such review.", 404);
   if (review.state !== "open") throw review.state === "saving" ? new StudioError("review-saving", "Its files are still being saved.", 409) : new StudioError("review-closed", "This review is no longer open.", 409);
-  const files = filesOfTurn(review.turn_id);
+  const files = filesOfStop(review);
   const { items } = itemsOf(review.kind, files);
   const labels = new Map(items.map((item) => [item.key, item.label]));
   // The pictures the maker added to this drama, which a note may carry.

@@ -7,7 +7,7 @@ import path from "node:path";
 import { Readable } from "node:stream";
 import { pipeline } from "node:stream/promises";
 import type { FileItem, FileKind } from "../shared/types.ts";
-import { classify } from "./classify.ts";
+import { classify, namedPaths } from "./classify.ts";
 import { DATA_DIR } from "./config.ts";
 import { all, get, now, run } from "./db.ts";
 
@@ -170,6 +170,19 @@ function episodeLabel(episodeId: string): string | undefined {
 
 export function filesOfTurn(turnId: string): FileRow[] {
   return all<FileRow>("select * from files where turn_id = ? order by id", turnId);
+}
+
+/**
+ * What a stop puts before the maker: what its turn brought in, and what its question names that
+ * the drama already has, the newest at each path (storyboards a resumed session asks about again,
+ * unchanged, belong to the turn that first returned them).
+ */
+export function filesOfStop(stop: { turn_id: string; drama_id: string; question: string }): FileRow[] {
+  const own = filesOfTurn(stop.turn_id);
+  const earlier = namedPaths(stop.question)
+    .filter((relPath) => !own.some((file) => file.rel_path === relPath))
+    .flatMap((relPath) => get<FileRow>("select * from files where drama_id = ? and rel_path = ? order by id desc limit 1", stop.drama_id, relPath) ?? []);
+  return [...own, ...earlier];
 }
 
 /** Natural order for versions and takes: v2 before v10. */

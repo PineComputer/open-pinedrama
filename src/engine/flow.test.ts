@@ -257,6 +257,35 @@ describe("a drama in replay", () => {
     expect(episodeArchive(episode.id).map((pack) => pack.turn_id)).toEqual([packs.at(-1)!.turn_id]);
   }, 30_000);
 
+  // A Computer stops while its episode waits on the maker, who resumes the episode. The new session
+  // asks about the same storyboards, unchanged: they are still in front of the maker, as items.
+  it("shows a resumed episode's storyboards again when its new session asks about them unchanged", async () => {
+    const { get, run } = await import("./db.ts");
+    const { computerRef, markStopped } = await import("./computers.ts");
+    const { resumeEpisode } = await import("./dramas.ts");
+    run("update dramas set status = 'done'");
+    fleet.stops = "name";
+    const form = new FormData();
+    for (const [key, value] of Object.entries({ title: "Resumed drama", language: "en", parallel: "1", perComputer: "1" })) form.set(key, value);
+    form.append("files", new File(["EPISODE 1\nLin enters."], "screenplay.txt", { type: "text/plain" }));
+    const { id } = await call<{ id: string }>("POST", "/api/dramas", form);
+    const question = await until("the setup question", openReview(id, (item) => item.kind === "question"));
+    await call("POST", `/api/reviews/${question.id}/decision`, { items: [], words: "He is 32." });
+    await approveAll((await until("the looks", openReview(id, (item) => item.kind === "looks"))).id);
+    await approveAll((await until("the shared references", openReview(id, (item) => item.kind === "references"))).id);
+    const first = await until("EP001 storyboards", openReview(id, (item) => item.episode === "EP001" && item.kind === "storyboards"));
+    const episode = get<{ id: string; session_id: string }>("select id, session_id from episodes where drama_id = ? and number = 1", id)!;
+    const computer = get<import("./records.ts").ComputerRow>("select c.* from computers c join sessions s on s.computer_id = c.id where s.id = ?", episode.session_id)!;
+    await fleet.stop(computerRef(computer));
+    // Together, so the line doesn't hand the free place to the next episode first.
+    markStopped(computer, "Its Computer stopped.");
+    resumeEpisode(episode.id);
+    const again = await until("EP001 storyboards again", openReview(id, (item) => item.episode === "EP001" && item.id !== first.id));
+    expect(again.kind).toBe("storyboards");
+    const ids = (review: ReviewView) => review.reviewItems.flatMap((item) => item.files.map((file) => file.id));
+    expect(ids(await call<ReviewView>("GET", `/api/reviews/${again.id}`))).toEqual(ids(await call<ReviewView>("GET", `/api/reviews/${first.id}`)));
+  }, 30_000);
+
   // The maker stops a drama: its Computers stop, nothing new starts, and Try again carries on.
   it("stops when the maker says, and carries on when they try again", async () => {
     const { all, run } = await import("./db.ts");
