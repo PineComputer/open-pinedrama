@@ -99,7 +99,7 @@ function packEpisode(code: string): string {
 }
 
 const EPISODE_STOPS = [
-  "Stop and ask me to review the episode's storyboards, returning them with your question, with anything the observer found.",
+  "Stop and ask me to review the episode's storyboards, returning them with your question, with anything the observer found; if you made a new version of the episode's breakdown, return it too.",
   "After I approve, shoot the takes. I watch every take: each time takes are downloaded, stop and ask me to watch them, returning them with your question, and ask about the takes that are ready together rather than one at a time.",
   "Then build the cut and ask me to watch it, returning the cut. Finish when I accept the cut.",
 ];
