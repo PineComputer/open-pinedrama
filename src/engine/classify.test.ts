@@ -43,6 +43,16 @@ describe("classify", () => {
     expect(classify("drama/episodes/EP004/breakdown/v1/breakdown.json")).toMatchObject({ kind: "breakdown" });
   });
 
+  it("takes the leads' faces as part of their looks, and further looks as shared references", async () => {
+    const { inferKind } = await import("./reviews.ts");
+    const face = classify("drama/assets/characters/nora/states/face/v1/image-1.jpg");
+    expect(face).toMatchObject({ kind: "look", subject: "nora", look: "face" });
+    const base = classify("drama/assets/characters/nora/v1/image-1.jpg");
+    expect(inferKind("setup", [base, face])).toBe("looks");
+    expect(inferKind("setup", [base, face, classify("drama/assets/characters/nora/states/S2/v1/image-1.jpg")])).toBe("references");
+    expect(inferKind("setup", [base, classify("drama/assets/scenes/pier/times/Night/v1/image-1.png")])).toBe("references");
+  });
+
   it("calls anything else other", () => {
     expect(classify("notes/today.txt")).toEqual({ kind: "other" });
     expect(classify("episodes/EP001/segments/seg01/t01/spec.json")).toEqual({ kind: "other" });
