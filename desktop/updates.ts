@@ -23,6 +23,8 @@ function canInstall(): boolean {
 export function keepUpdated(): void {
   if (!app.isPackaged) return;
   const installs = canInstall();
+  // Its own logger prints a stack for every failed check (offline, no release yet); one line below says enough.
+  autoUpdater.logger = null;
   autoUpdater.autoDownload = installs;
   autoUpdater.autoInstallOnAppQuit = installs;
   // Each version is offered once a launch; a "Later" holds until the app starts again.
