@@ -50,9 +50,12 @@ export function NewDrama() {
   const picker = useRef<HTMLInputElement>(null);
   const opening = useOpening(files);
   const app = useResource<AppInfo>("/api/app", ["app"]);
-  // Without the drama skill, a drama on Pine can be rehearsed or wait for the skill.
-  const noSkill = app.data?.mode === "pine" && app.data.dramaSkill === "missing";
-  const [rehearsal, setRehearsal] = useState(true);
+  // On Pine a drama can be rehearsed: Pine's agent stands in for the drama skill with placeholders.
+  // Without the skill, a drama is rehearsed unless the maker would rather it waited for the skill.
+  const onPine = app.data?.mode === "pine";
+  const noSkill = onPine && app.data?.dramaSkill === "missing";
+  const [rehearsalChoice, setRehearsal] = useState<boolean>();
+  const rehearsal = rehearsalChoice ?? noSkill;
 
   const add = (list: FileList | null) => {
     if (!list) return;
@@ -70,7 +73,7 @@ export function NewDrama() {
     setBusy(true);
     setError(undefined);
     const form = new FormData();
-    for (const [key, value] of Object.entries({ title, language, look, format, notes, length, parallel: String(parallel), perComputer: String(perComputer), rehearsal: noSkill && rehearsal ? "1" : "0" })) form.set(key, value);
+    for (const [key, value] of Object.entries({ title, language, look, format, notes, length, parallel: String(parallel), perComputer: String(perComputer), rehearsal: onPine && rehearsal ? "1" : "0" })) form.set(key, value);
     for (const file of files) form.append("files", file);
     try {
       const { id } = await api<{ id: string }>("/api/dramas", { method: "POST", body: form });
@@ -194,12 +197,12 @@ export function NewDrama() {
             </label>
             <textarea id="notes" className="line-area" placeholder={t("new.notesHint")} value={notes} onChange={(event) => setNotes(event.target.value)} />
           </div>
-          {noSkill && (
+          {onPine && (
             <label className="rehearse-choice">
               <input type="checkbox" checked={rehearsal} onChange={(event) => setRehearsal(event.target.checked)} />
               <span>
                 <strong>{t("new.rehearse")}</strong>
-                <span className="quiet small">{t("new.noSkill")}</span>
+                <span className="quiet small">{t(noSkill ? "new.noSkill" : "new.rehearseHint")}</span>
               </span>
             </label>
           )}

@@ -195,6 +195,7 @@ const en = {
   "slate.rehearseSample": "Rehearse the sample drama",
   "slate.noSkill": "Your Pine project doesn't offer the drama skill yet. Meanwhile you can rehearse: Pine's agent stands in for it with placeholder pictures and clips, on real Computers.",
   "new.rehearse": "Rehearse it",
+  "new.rehearseHint": "Pine's agent stands in for the drama skill with placeholder pictures and clips, so you can try every step and review on real Computers without generating images or video. Pine bills the Computers and turns as usual.",
   "new.noSkill": "Your Pine project doesn't offer the drama skill yet. As a rehearsal, Pine's agent stands in for it with placeholder pictures and clips; otherwise the drama waits until Pine turns the skill on.",
 
   "kind.looks": "Leads' looks",
@@ -554,6 +555,7 @@ const zh: Record<Key, string> = {
   "slate.rehearseSample": "排练示例剧目",
   "slate.noSkill": "你的 Pine 项目还没有开通短剧技能。在此之前可以先排练：Pine 的智能体在真实电脑上用占位图片和片段代替它。",
   "new.rehearse": "排练",
+  "new.rehearseHint": "由 Pine 的智能体用占位图片和片段代替短剧技能，在真实电脑上试完每一步、每一次审阅，不生成图片或视频。电脑和轮次照常由 Pine 计费。",
   "new.noSkill": "你的 Pine 项目还没有开通短剧技能。排练时，Pine 的智能体用占位图片和片段代替它；不排练的话，剧目会等到 Pine 开通技能。",
 
   "kind.looks": "主角造型",

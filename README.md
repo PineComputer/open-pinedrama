@@ -25,9 +25,9 @@ restarts; the desktop app will open it for you.
 
 On first run the studio asks for your Pine project's API key (Project → API keys in the
 Pine console). It checks the key with Pine, then keeps it sealed; nothing needs editing.
-The project needs Pine's drama skill; until it has it, dramas can be rehearsed (see
-Develop). Settings changes or forgets the key, and forgetting it first stops every
-Computer the project has running for the studio.
+The project needs Pine's drama skill; any drama can instead be rehearsed (see Develop).
+Settings changes or forgets the key, and forgetting it first stops every Computer the
+project has running for the studio.
 
 What you drop on New drama is source material: the screenplay in any format, and any
 notes or brief of your own. The agent prepares the skill's inputs from it, and what you
@@ -118,15 +118,15 @@ Test in this order; each step costs more and catches what the one before can't:
    and Pine bills the turns, a few cents. It also reads the project's lifecycle (idle timeout
    and running time per start), sets the studio's idle timeouts and reads them back, and says
    whether the project offers the drama skill.
-4. **A rehearsal on your Pine project**, before the project has the drama skill. A drama
-   held for want of the skill offers **Rehearse instead**, New drama offers it once a
-   Computer has said the skill is missing, and the Slate rehearses the sample drama in a
-   click. The goals are the real ones, with Pine's agent standing in for the skill through
-   `fixtures/rehearsal/standin.py`, a small kit that draws placeholder looks, plates,
-   storyboards and 9:16 clips where the skill would. Everything else is real: Computers,
-   sessions, stops and reviews, decisions, the handoff between Computers, resumes, the
-   project's limits. Pine bills the Computers and turns; a 10-episode rehearsal costs about
-   a dollar of turns.
+4. **A rehearsal on your Pine project**, with or without the drama skill. New drama offers
+   it on any Pine project (checked when a Computer has said the skill is missing), a drama
+   held for want of the skill offers **Rehearse instead**, and the Slate rehearses the
+   sample drama in a click. The goals are the real ones, with Pine's agent standing in for
+   the skill through `fixtures/rehearsal/standin.py`, a small kit that draws placeholder
+   looks, plates, storyboards and 9:16 clips where the skill would. Everything else is
+   real: Computers, sessions, stops and reviews, decisions, the handoff between Computers,
+   resumes, the project's limits. Pine bills the Computers and turns; a 10-episode
+   rehearsal costs about a dollar of turns.
 5. **Your Pine project in `npm run dev`** with the drama skill: the real thing, billed at
    Pine's rates.
 
