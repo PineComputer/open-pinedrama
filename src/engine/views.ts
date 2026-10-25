@@ -22,7 +22,7 @@ import {
 import { START_ATTEMPTS, fleet, hasFleet, projectLimits } from "./computers.ts";
 import { atProjectLimit } from "./scheduler.ts";
 import { all, get } from "./db.ts";
-import { type FileRow, fileUrl, filesOfTurn, toItem, versionNumber } from "./library.ts";
+import { type FileRow, fileUrl, filesOfStop, toItem, versionNumber } from "./library.ts";
 import { type ComputerRow, type DramaRow, type EpisodeRow, type ReviewRow, type SessionRow, episodeCode, latestTurn, session as sessionRow } from "./records.ts";
 import { itemsOf, pendingReview } from "./reviews.ts";
 
@@ -66,7 +66,7 @@ export function dramaCard(drama: DramaRow): DramaCard {
     look: drama.look,
     format: drama.format,
     status: drama.status,
-    episodes: { total: counts.reduce((sum, row) => sum + row.n, 0), done: n("done"), waiting: n("waiting"), working: n("working") },
+    episodes: { total: counts.reduce((sum, row) => sum + row.n, 0), done: n("done"), waiting: n("waiting") + n("stopped") + n("failed"), working: n("working") },
     computers: get<{ n: number }>("select count(*) as n from computers where drama_id = ? and state in ('running', 'starting')", drama.id)?.n ?? 0,
     waiting,
     cast: castFaces(drama.id),
@@ -187,6 +187,7 @@ export function dramaView(drama: DramaRow): DramaView {
     length: drama.length,
     parallel: drama.parallel,
     perComputer: drama.per_computer,
+    reviewing: drama.reviewing,
     setup: {
       state: setupState,
       reviewId: setupReview?.id,
@@ -257,7 +258,7 @@ export function castGroups(dramaId: string): CastGroup[] {
 const PRIORITY: Record<ReviewKind, number> = { looks: 0, references: 0, storyboards: 1, takes: 2, cut: 3, question: 4 };
 
 function summary(review: ReviewRow): ReviewSummary {
-  const files = filesOfTurn(review.turn_id);
+  const files = filesOfStop(review);
   const { items } = itemsOf(review.kind, files);
   const image = files.find((file) => file.type.startsWith("image/")) ?? files.find((file) => file.type.startsWith("video/"));
   const episode = review.episode_id ? get<EpisodeRow>("select * from episodes where id = ?", review.episode_id) : undefined;
@@ -326,7 +327,7 @@ function previousOf(review: ReviewRow, item: ReviewItem, before: number): Pick<R
 }
 
 export function reviewView(review: ReviewRow): ReviewView {
-  const files = filesOfTurn(review.turn_id);
+  const files = filesOfStop(review);
   const { items, other } = itemsOf(review.kind, files);
   const first = Math.min(...files.map((file) => file.id));
   const next = inbox().find((item) => item.id !== review.id && item.state === "open");

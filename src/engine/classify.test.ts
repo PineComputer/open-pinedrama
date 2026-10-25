@@ -51,6 +51,10 @@ describe("classify", () => {
     expect(inferKind("setup", [base, face])).toBe("looks");
     expect(inferKind("setup", [base, face, classify("drama/assets/characters/nora/states/S2/v1/image-1.jpg")])).toBe("references");
     expect(inferKind("setup", [base, classify("drama/assets/scenes/pier/times/Night/v1/image-1.png")])).toBe("references");
+    // An episode made a look setup couldn't: the maker gives it a verdict, as in setup.
+    const stage = classify("drama/assets/characters/lena/states/S1/v4/image-1.jpg");
+    expect(inferKind("episode", [stage, classify("handoff/EP003.tar.part-aa")])).toBe("references");
+    expect(inferKind("episode", [stage, classify("drama/episodes/EP003/multi_panel_storyboard/seg01/line-art/v1/image-1.jpg")])).toBe("storyboards");
   });
 
   it("calls anything else other", () => {

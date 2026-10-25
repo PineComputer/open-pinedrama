@@ -139,18 +139,30 @@ async function scenario(title: string) {
   });
   // Each episode got the packed project, not loose references, and its breakdown came from pre-production.
   const { all } = await import("./db.ts");
+  const { NO_CAP } = await import("./goals.ts");
+  // The agent is told nothing of cost but that there is no cap, which drama-cli needs to make a project:
+  // Pine bills it, and the studio shows what was spent.
+  const costless = (goal: string) => {
+    expect(goal).toContain(NO_CAP);
+    expect(goal.replace(NO_CAP, "")).not.toMatch(/budget|spend|cost|\$/i);
+  };
   const goals = all<{ goal: string }>("select goal from runs where kind = 'episode'");
   expect(goals.length).toBeGreaterThanOrEqual(2);
   for (const { goal } of goals) {
     expect(goal).toContain("attachments/project.tar.part-*");
     // Provider registrations belong to the session that made them: each episode registers its references again.
     expect(goal).toContain("register every reference the episode uses again from its local file in this session");
-    // The agent is told nothing of cost: Pine bills it, and the studio shows what was spent.
-    expect(goal).not.toMatch(/budget|spend|\$/i);
+    // A segment the video model won't take is split there and then, not put to the maker.
+    expect(goal).toMatch(/EP\d+'s own breakdown is yours to change when the video model won't take it/);
+    costless(goal);
   }
   const setup = all<{ goal: string }>("select goal from runs where kind = 'setup'")[0].goal;
-  expect(setup).toContain("(screenplay.txt, brief.md)");
-  expect(setup).not.toMatch(/budget|spend|\$/i);
+  // The maker's files are sources the agent prepares the skill's inputs from; what they set in New drama is final.
+  expect(setup).toContain("from my sources, attached (screenplay.txt)");
+  expect(setup).toContain("My settings, which are final:");
+  expect(setup).toContain("Episode length: about a minute and a half (80 to 110 seconds).");
+  expect(setup).toContain("Where a source disagrees with my settings, follow my settings.");
+  costless(setup);
   expect(drama.episodeRows.every((row) => row.stages.breakdown.state === "done")).toBe(true);
   const boards = await until("EP001 storyboards", openReview(id, (item) => item.episode === "EP001" && item.kind === "storyboards"));
   expect((await call<ReviewView>("GET", `/api/reviews/${boards.id}`)).breakdown?.path).toBe("drama/episodes/EP001/breakdown/v1/breakdown.md");
@@ -202,12 +214,7 @@ expect(archive.includes(Buffer.from(`${title}/EP002`))).toBe(false);
   const script = await call<ScriptPage>("GET", `/api/dramas/${id}/script`);
   expect(script.bible?.kind).toBe("bible");
   expect(script.breakdowns.map((entry) => entry.code)).toEqual(["EP001", "EP002", "EP003", "EP004", "EP005", "EP006"]);
-  expect(script.inputs.map((file) => file.name)).toEqual(["screenplay.txt", "brief.md"]);
-  // The brief, written from New drama in the form the drama skill reads.
-  const brief = await (await fetchApp(new Request(`http://127.0.0.1:4310${script.inputs[1].url}`, { headers: { host: "127.0.0.1:4310", cookie: "studio=test-token" } }))).text();
-  expect(brief).toContain(`- Title: ${title}\n`);
-  expect(brief).toContain("- Episode length: about a minute and a half (80 to 110 seconds).");
-  expect(brief).not.toMatch(/budget/i);
+  expect(script.inputs.map((file) => file.name)).toEqual(["screenplay.txt"]);
   const cast = await call<CastCard[]>("GET", `/api/dramas/${id}/cast`);
   const wei = cast.find((card) => card.subject === "wei")!;
   expect(wei.looks[0].versions.map((version) => [version.files[0].version, version.review?.verdict])).toEqual([
@@ -240,7 +247,76 @@ describe("a drama in replay", () => {
     run("update dramas set status = 'done'");
     fleet.stops = "name";
     await scenario("Test drama, named files");
+    // The episode's pack keeps its name at every stop: each stop's is fetched again, and a resume gets the last.
+    const { all } = await import("./db.ts");
+    const { episodeArchive } = await import("./runs.ts");
+    const [episode] = all<{ id: string }>("select e.id from episodes e join dramas d on d.id = e.drama_id where d.title = 'Test drama, named files' and e.number = 1");
+    const packs = all<{ turn_id: string }>("select turn_id from files where episode_id = ? and kind = 'archive' order by id", episode.id);
+    const naming = all<{ id: string }>("select t.id from turns t join sessions s on s.id = t.session_id where s.episode_id = ? and t.question like '%(handoff/EP001.tar.part-aa)%'", episode.id);
+    expect(naming.length).toBeGreaterThan(1);
+    expect(naming.filter((turn) => !packs.some((pack) => pack.turn_id === turn.id))).toEqual([]);
+    expect(episodeArchive(episode.id).map((pack) => pack.turn_id)).toEqual([packs.at(-1)!.turn_id]);
   }, 30_000);
+
+  // A Computer stops while its episode waits on the maker, who resumes the episode. The new session
+  // asks about the same storyboards, unchanged: they are still in front of the maker, as items.
+  // Asked with the storyboards returned again, or only named.
+  it.each(["ask", "name"] as const)("shows a resumed episode's storyboards again when its new session asks about them unchanged (%s)", async (stops) => {
+    const { get, run } = await import("./db.ts");
+    const { computerRef, markStopped } = await import("./computers.ts");
+    const { resumeEpisode } = await import("./dramas.ts");
+    run("update dramas set status = 'done'");
+    fleet.stops = stops;
+    const form = new FormData();
+    for (const [key, value] of Object.entries({ title: "Resumed drama", language: "en", parallel: "1", perComputer: "1" })) form.set(key, value);
+    form.append("files", new File(["EPISODE 1\nLin enters."], "screenplay.txt", { type: "text/plain" }));
+    const { id } = await call<{ id: string }>("POST", "/api/dramas", form);
+    const question = await until("the setup question", openReview(id, (item) => item.kind === "question"));
+    await call("POST", `/api/reviews/${question.id}/decision`, { items: [], words: "He is 32." });
+    await approveAll((await until("the looks", openReview(id, (item) => item.kind === "looks"))).id);
+    await approveAll((await until("the shared references", openReview(id, (item) => item.kind === "references"))).id);
+    const first = await until("EP001 storyboards", openReview(id, (item) => item.episode === "EP001" && item.kind === "storyboards"));
+    const episode = get<{ id: string; session_id: string }>("select id, session_id from episodes where drama_id = ? and number = 1", id)!;
+    const computer = get<import("./records.ts").ComputerRow>("select c.* from computers c join sessions s on s.computer_id = c.id where s.id = ?", episode.session_id)!;
+    await fleet.stop(computerRef(computer));
+    // Together, so the line doesn't hand the free place to the next episode first.
+    markStopped(computer, "Its Computer stopped.");
+    resumeEpisode(episode.id);
+    const again = await until("EP001 storyboards again", openReview(id, (item) => item.episode === "EP001" && item.id !== first.id));
+    expect(again.kind).toBe("storyboards");
+    const ids = (review: ReviewView) => review.reviewItems.flatMap((item) => item.files.map((file) => file.id));
+    expect(ids(await call<ReviewView>("GET", `/api/reviews/${again.id}`))).toEqual(ids(await call<ReviewView>("GET", `/api/reviews/${first.id}`)));
+  }, 30_000);
+
+  // The maker reviews only the cast and the cuts, then nothing: the studio approves the rest as the agent stops for it.
+  it("approves on its own what the maker chose not to review", async () => {
+    const { all, run } = await import("./db.ts");
+    run("update dramas set status = 'done'");
+    fleet.stops = "ask";
+    const form = new FormData();
+    for (const [key, value] of Object.entries({ title: "Unreviewed drama", language: "en", parallel: "2", perComputer: "1", reviewing: "key" })) form.set(key, value);
+    form.append("files", new File(["EPISODE 1\nLin enters."], "screenplay.txt", { type: "text/plain" }));
+    const { id } = await call<{ id: string }>("POST", "/api/dramas", form);
+    // A question always waits for the maker, and so do the leads' looks.
+    const question = await until("the setup question", openReview(id, (item) => item.kind === "question"));
+    await call("POST", `/api/reviews/${question.id}/decision`, { items: [], words: "He is 32." });
+    await approveAll((await until("the looks", openReview(id, (item) => item.kind === "looks"))).id);
+    // The cut waits too; then the maker stops reviewing, and it goes on with everything after it.
+    await until("EP001's cut", openReview(id, (item) => item.episode === "EP001" && item.kind === "cut"));
+    await call("PATCH", `/api/dramas/${id}`, { reviewing: "none" });
+    await until(
+      "every episode finished",
+      async () => {
+        const view = await call<DramaView>("GET", `/api/dramas/${id}`);
+        return view.episodeRows.length > 0 && view.episodeRows.every((row) => row.state === "done") ? view : undefined;
+      },
+      30_000,
+    );
+    const answers = all<{ kind: string; answer: string }>("select kind, answer from reviews where drama_id = ? and state = 'answered'", id);
+    const unreviewed = (kind: string) => answers.filter((row) => row.kind === kind).every((row) => row.answer.includes("Approved without review"));
+    expect(["references", "storyboards", "takes", "cut"].map(unreviewed)).toEqual([true, true, true, true]);
+    expect(answers.filter((row) => row.kind === "looks").map((row) => row.answer.includes("Approved without review"))).toEqual([false]);
+  }, 60_000);
 
   // The maker stops a drama: its Computers stop, nothing new starts, and Try again carries on.
   it("stops when the maker says, and carries on when they try again", async () => {
@@ -261,11 +337,24 @@ describe("a drama in replay", () => {
     await until("the setup question again", openReview(id, (item) => item.kind === "question"));
   }, 30_000);
 
-  // Or ask about files it neither returns nor names: the studio finds them in the agent's folder.
-  it("does the same when the agent's questions don't mention their files", async () => {
+  // Or ask about files it neither returns nor names. It may be asking something else entirely (a reference it
+  // couldn't make), so the studio asks the maker in words, with what it finds in the agent's folder beside the question.
+  it("asks in words, with the agent's pictures beside it, when a question points at no files", async () => {
     const { run } = await import("./db.ts");
     run("update dramas set status = 'done'");
     fleet.stops = "bare";
-    await scenario("Test drama, bare questions");
+    const form = new FormData();
+    for (const [key, value] of Object.entries({ title: "Test drama, bare questions", language: "en", parallel: "1", perComputer: "1" })) form.set(key, value);
+    form.append("files", new File(["EPISODE 1\nLin enters."], "screenplay.txt", { type: "text/plain" }));
+    const { id } = await call<{ id: string }>("POST", "/api/dramas", form);
+    const question = await until("the setup question", openReview(id, () => true));
+    await call("POST", `/api/reviews/${question.id}/decision`, { items: [], words: "He is 32." });
+    const looks = await until("the leads' looks, asked in words", openReview(id, (item) => item.id !== question.id));
+    expect(looks.kind).toBe("question");
+    const view = await call<ReviewView>("GET", `/api/reviews/${looks.id}`);
+    expect(view.reviewItems).toEqual([]);
+    expect(view.otherFiles.filter((file) => file.kind === "look").map((file) => file.subject)).toEqual(["lin", "wei"]);
+    await call("POST", `/api/reviews/${looks.id}/decision`, { items: [], words: "Approved." });
+    await until("the shared references, asked in words", openReview(id, (item) => item.id !== looks.id && item.id !== question.id));
   }, 30_000);
 });

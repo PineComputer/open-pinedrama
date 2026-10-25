@@ -1,8 +1,9 @@
 import { type DragEvent, useEffect, useRef, useState } from "react";
-import type { AppInfo } from "../../shared/types.ts";
+import type { AppInfo, Reviewing } from "../../shared/types.ts";
 import { api, useResource } from "../api.ts";
 import { useT } from "../i18n.ts";
 import { errorText } from "../labels.ts";
+import { ReviewingChoice } from "../Reviewing.tsx";
 import { navigate } from "../router.tsx";
 
 /** Files whose text the page can show; PDFs and Word files are read by the agent on the Computer. */
@@ -45,22 +46,23 @@ export function NewDrama() {
   const [perComputer, setPerComputer] = useState(1);
   const [notes, setNotes] = useState("");
   const [length, setLength] = useState("60");
+  const [reviewing, setReviewing] = useState<Reviewing>("every");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<unknown>();
   const picker = useRef<HTMLInputElement>(null);
   const opening = useOpening(files);
   const app = useResource<AppInfo>("/api/app", ["app"]);
-  // Without the drama skill, a drama on Pine can be rehearsed or wait for the skill.
-  const noSkill = app.data?.mode === "pine" && app.data.dramaSkill === "missing";
-  const [rehearsal, setRehearsal] = useState(true);
-  // The maker's own brief says the episode length; the studio writes one only without it.
-  const ownBrief = files.some((file) => file.name.toLowerCase() === "brief.md");
+  // On Pine a drama can be rehearsed: Pine's agent stands in for the drama skill with placeholders.
+  // Without the skill, a drama is rehearsed unless the maker would rather it waited for the skill.
+  const onPine = app.data?.mode === "pine";
+  const noSkill = onPine && app.data?.dramaSkill === "missing";
+  const [rehearsalChoice, setRehearsal] = useState<boolean>();
+  const rehearsal = rehearsalChoice ?? noSkill;
 
   const add = (list: FileList | null) => {
     if (!list) return;
     const added = [...list];
     setFiles((current) => [...current, ...added.filter((file) => !current.some((c) => c.name === file.name && c.size === file.size))]);
-    if (!title && added[0]) setTitle(added[0].name.replace(/\.[^.]+$/, ""));
   };
 
   const onDrop = (event: DragEvent) => {
@@ -73,7 +75,7 @@ export function NewDrama() {
     setBusy(true);
     setError(undefined);
     const form = new FormData();
-    for (const [key, value] of Object.entries({ title, language, look, format, notes, length, parallel: String(parallel), perComputer: String(perComputer), rehearsal: noSkill && rehearsal ? "1" : "0" })) form.set(key, value);
+    for (const [key, value] of Object.entries({ title, language, look, format, notes, length, reviewing, parallel: String(parallel), perComputer: String(perComputer), rehearsal: onPine && rehearsal ? "1" : "0" })) form.set(key, value);
     for (const file of files) form.append("files", file);
     try {
       const { id } = await api<{ id: string }>("/api/dramas", { method: "POST", body: form });
@@ -165,18 +167,15 @@ export function NewDrama() {
           </div>
           <div className="field">
             <span className="label">{t("new.length")}</span>
-            {ownBrief ? (
-              <p className="quiet small">{t("new.lengthInBrief")}</p>
-            ) : (
-              <div className="options">
-                {(["60", "90", "120"] as const).map((value) => (
-                  <button key={value} aria-pressed={length === value} className={length === value ? "on" : ""} onClick={() => setLength(value)}>
-                    {t(`new.length${value}`)}
-                  </button>
-                ))}
-              </div>
-            )}
+            <div className="options">
+              {(["60", "90", "120"] as const).map((value) => (
+                <button key={value} aria-pressed={length === value} className={length === value ? "on" : ""} onClick={() => setLength(value)}>
+                  {t(`new.length${value}`)}
+                </button>
+              ))}
+            </div>
           </div>
+          <ReviewingChoice value={reviewing} onChange={setReviewing} />
           <div className="pair">
             <div className="field">
               <label className="label" htmlFor="parallel">
@@ -201,12 +200,12 @@ export function NewDrama() {
             </label>
             <textarea id="notes" className="line-area" placeholder={t("new.notesHint")} value={notes} onChange={(event) => setNotes(event.target.value)} />
           </div>
-          {noSkill && (
+          {onPine && (
             <label className="rehearse-choice">
               <input type="checkbox" checked={rehearsal} onChange={(event) => setRehearsal(event.target.checked)} />
               <span>
                 <strong>{t("new.rehearse")}</strong>
-                <span className="quiet small">{t("new.noSkill")}</span>
+                <span className="quiet small">{t(noSkill ? "new.noSkill" : "new.rehearseHint")}</span>
               </span>
             </label>
           )}

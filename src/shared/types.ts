@@ -86,6 +86,12 @@ export type FileKind =
 export type ReviewKind = "looks" | "references" | "storyboards" | "takes" | "cut" | "question";
 
 /**
+ * What the maker reviews: every step; the key ones, the leads' looks and each episode's cut;
+ * or none. The studio approves the rest as the agent stops for it; a question always waits.
+ */
+export type Reviewing = "every" | "key" | "none";
+
+/**
  * saving: the turn's files are still being copied; the question can't be answered yet.
  * open: waiting for the maker. sending: the answer is on its way.
  * answered: the agent has it. ended: the session that asked is gone.
@@ -143,6 +149,7 @@ export interface DramaCard {
   look: string;
   format: string;
   status: DramaStatus;
+  /** waiting: episodes that need the maker, for an answer or to be resumed (the board's "Needs you"). */
   episodes: { total: number; done: number; waiting: number; working: number };
   /** Computers running for this drama. */
   computers: number;
@@ -207,6 +214,7 @@ export interface DramaView extends DramaCard {
   length: string;
   parallel: number;
   perComputer: number;
+  reviewing: Reviewing;
   setup: {
     state: "working" | "waiting" | "done" | "stopped";
     reviewId?: string;

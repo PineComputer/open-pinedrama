@@ -4,8 +4,10 @@
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import packageJson from "../../package.json" with { type: "json" };
 
-export const VERSION = "0.1.0";
+/** The app's version, as the release and the updater know it. */
+export const VERSION: string = packageJson.version;
 const APP_NAME = "Pine Drama Studio";
 
 /** Where an installed app keeps its data on each system. */

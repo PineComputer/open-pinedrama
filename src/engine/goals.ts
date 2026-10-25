@@ -11,48 +11,32 @@ export interface DramaBrief {
   look: string;
   format: string;
   notes: string;
-  /** About this many seconds an episode (60, 90, 120), or "" where the maker wasn't asked. */
+  /** About this many seconds an episode (60, 90, 120), or "" for a drama made before New drama always asked. */
   length: string;
 }
 
-/** The episode lengths the maker chooses among, in the words and guide range the skill's brief takes. */
+/** The episode lengths the maker chooses among, in words with a guide range. */
 export const LENGTHS: Record<string, string> = {
   "60": "about a minute (50 to 70 seconds)",
   "90": "about a minute and a half (80 to 110 seconds)",
   "120": "about two minutes (100 to 140 seconds)",
 };
 
-/**
- * The maker's brief as the drama skill reads it (brief.md): the title and the episode length
- * on lines of their own, then the format, the language and the maker's notes. It
- * is the maker's input, written from what they chose in New drama.
- */
-export function briefFile(drama: DramaBrief): string {
-  return [
-    "# Brief",
-    "",
-    `- Title: ${drama.title}`,
-    `- Format: vertical ${drama.format.split(",")[0].trim()} ${drama.look} short drama, ${drama.format.split(",")[1]?.trim() || "480p"}.`,
-    `- Language: ${languageName(drama.language)}; keep every line as the screenplay writes it.`,
-    LENGTHS[drama.length] ? `- Episode length: ${LENGTHS[drama.length]}.` : "",
-    drama.notes ? `- Notes: ${drama.notes.replace(/\s*\n\s*/g, " ")}` : "",
-  ]
-    .filter((line, index) => line || index === 1)
-    .join("\n")
-    .concat("\n");
-}
-
 function languageName(code: string): string {
   return code === "zh" ? "Chinese" : "English";
 }
 
+/** What the maker set in New drama: final, whatever their files say. */
 function brief(drama: DramaBrief): string {
   return [
     `Title: ${drama.title}.`,
     `Language: ${languageName(drama.language)}.`,
     `Look: ${drama.look}.`,
     `Format: ${drama.format}.`,
-  ].join(" ");
+    LENGTHS[drama.length] ? `Episode length: ${LENGTHS[drama.length]}.` : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
 }
 
 function writeIn(drama: DramaBrief): string {
@@ -62,14 +46,16 @@ function writeIn(drama: DramaBrief): string {
 /**
  * The drama's setup and pre-production, in one session and one drama-cli project: the bible
  * and the leads, then everything every episode shares, approved by the maker, so episodes can
- * then run in parallel on copies of the same accepted project.
+ * then run in parallel on copies of the same accepted project. The maker's files are sources:
+ * the agent prepares the skill's inputs from them, and what the maker set is final.
  */
 export function setupGoal(drama: DramaBrief, attachments: string[]): string {
   return [
-    `Use the ${DRAMA_SKILL} skill to produce a vertical short drama from the attached screenplay and brief (${attachments.join(", ")}).`,
-    brief(drama),
-    drama.notes ? `The maker's notes: ${drama.notes}` : "",
-    "Make the drama-cli project in the work directory's drama/ folder, with the screenplay and the brief in it as screenplay.md and brief.md.",
+    `Use the ${DRAMA_SKILL} skill to produce a vertical short drama from my sources, attached (${attachments.join(", ")}): the screenplay and anything I gave with it.`,
+    `My settings, which are final: ${brief(drama)}`,
+    drama.notes ? `My notes: ${drama.notes}` : "",
+    "Make the drama-cli project in the work directory's drama/ folder, and prepare its inputs from my sources yourself: the screenplay as screenplay.md, every line as written, and brief.md as the skill needs it. Where a source disagrees with my settings, follow my settings.",
+    NO_CAP,
     "Read the screenplay and ask me for anything that is missing.",
     "Write the bible, then make each lead's face and base look. Stop and ask me to approve the leads' looks, returning their sheets with your question.",
     "After I approve, prepare every episode so that each can then be made in parallel in a session of its own: write and accept every episode's breakdown, then make every look, location and key prop that any breakdown uses. Stop and ask me to approve these shared references, returning their images with your question.",
@@ -84,13 +70,23 @@ export function setupGoal(drama: DramaBrief, attachments: string[]): string {
 
 const LIST_EPISODES = 'End with the list of episodes, one per line, as "EP001: <title>".';
 
+/**
+ * drama-cli takes a project cap if it is given one (`init --budget`), and the skill asks the maker
+ * whenever spending isn't authorized (it once asked for a budget, then to confirm a paid take). The
+ * maker sets no cap and authorizes the spend: Pine bills, and the studio shows it.
+ */
+export const NO_CAP =
+  "Spending is authorized and has no cap: leave drama-cli's budget unset, make every paid request the work needs without asking me first, and never ask me about cost.";
+
 /** How an episode session takes up the drama's project, and the bounds it keeps to. */
 function handedOver(code: string): string[] {
   return [
     "The attached project.tar.part-* files are the drama's drama-cli project, with its bible, every breakdown and every look, location and key prop accepted.",
     "Restore it into the work directory's drama/ folder (`mkdir -p drama && cat attachments/project.tar.part-* | tar -xf - -C drama`), point its config at that folder and its screenplay.md and brief.md with `drama-cli init`, keeping its settings and preset, and check it with `drama-cli status`.",
+    NO_CAP,
     "Its asset-library registrations were made in another session and can't be used from this one: before you compile video prompts, set them aside and register every reference the episode uses again from its local file in this session.",
     `Work only on ${code}, inside drama/episodes/${code}. Use the accepted references as they are: never make a new version of the bible, a look, a location, a key prop or another episode's breakdown. If ${code} needs one that is not accepted, stop and ask me.`,
+    `${code}'s own breakdown is yours to change when the video model won't take it as it is, such as a segment longer than the model accepts: make a new version that splits it, keeping every line, accept it, redo what depends on it, and tell me at your next stop.`,
   ];
 }
 
@@ -140,7 +136,7 @@ export function resumeGoal(drama: DramaBrief, code: string, attachments: string[
         ]
       : [`Attached are the screenplay, the approved references and the episode's work so far: ${attachments.join(", ")}. Continue from them; redo only what is missing.`]),
     decision ? `My last decision, made on the attached files:\n${decision}` : "",
-    "Stop for my review of storyboards, takes and the cut, as before, returning the files with each question. Finish when I accept the cut.",
+    "Stop for my review of storyboards, takes and the cut, as before, returning the files with each question, those the earlier session made included. Finish when I accept the cut.",
     handoff ? packEpisode(code) : "",
     writeIn(drama),
   ]

@@ -7,7 +7,7 @@ import path from "node:path";
 import { Readable } from "node:stream";
 import { pipeline } from "node:stream/promises";
 import type { FileItem, FileKind } from "../shared/types.ts";
-import { classify } from "./classify.ts";
+import { classify, namedPaths } from "./classify.ts";
 import { DATA_DIR } from "./config.ts";
 import { all, get, now, run } from "./db.ts";
 
@@ -96,12 +96,13 @@ export async function save(body: ReadableStream<Uint8Array> | Uint8Array, origin
     if (existing) return existing.id;
   }
   const { sha, size } = await store(body);
-  if (origin.turnId) {
+  const hints = classify(origin.relPath);
+  const kind = origin.kind ?? hints.kind;
+  // A pack's parts are saved with every turn that returns them: the newest turn's set is whole on its own.
+  if (origin.turnId && kind !== "archive") {
     const earlier = get<{ id: number }>("select id from files where drama_id = ? and rel_path = ? and sha = ? order by id limit 1", origin.dramaId, origin.relPath, sha);
     if (earlier) return earlier.id;
   }
-  const hints = classify(origin.relPath);
-  const kind = origin.kind ?? hints.kind;
   const result = run(
     `insert into files (drama_id, episode_id, session_id, turn_id, sha, rel_path, name, type, size, kind, subject, look, segment, style, version, created_at)
      values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
@@ -167,8 +168,27 @@ function episodeLabel(episodeId: string): string | undefined {
   return row ? `EP${String(row.number).padStart(3, "0")}` : undefined;
 }
 
+/** The kinds of file the maker gives a verdict on. */
+export const VERDICT_KINDS: FileKind[] = ["look", "location", "prop", "storyboard", "blocking", "take", "cut"];
+
 export function filesOfTurn(turnId: string): FileRow[] {
   return all<FileRow>("select * from files where turn_id = ? order by id", turnId);
+}
+
+/**
+ * What a stop puts before the maker: what its turn brought in and, when that is nothing to give a
+ * verdict on, what it returned again or its question names that the drama already has, the newest
+ * at each path (storyboards a resumed session asks about again, unchanged, belong to the turn that
+ * first returned them). Unchanged files beside new work keep the verdict they had.
+ */
+export function filesOfStop(stop: { turn_id: string; drama_id: string; question: string }): FileRow[] {
+  const own = filesOfTurn(stop.turn_id);
+  if (own.some((file) => VERDICT_KINDS.includes(file.kind))) return own;
+  const returned = JSON.parse(get<{ returned: string }>("select returned from turns where id = ?", stop.turn_id)?.returned ?? "[]") as string[];
+  const earlier = [...new Set([...returned, ...namedPaths(stop.question)])]
+    .filter((relPath) => !own.some((file) => file.rel_path === relPath))
+    .flatMap((relPath) => get<FileRow>("select * from files where drama_id = ? and rel_path = ? order by id desc limit 1", stop.drama_id, relPath) ?? []);
+  return [...own, ...earlier];
 }
 
 /** Natural order for versions and takes: v2 before v10. */

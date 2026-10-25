@@ -176,7 +176,6 @@ function QuestionRoom({ review, done }: { review: ReviewView; done: () => void }
               ))}
             </div>
           )}
-          <Returned files={files.filter((file) => !isImage(file))} />
           <Status review={review} />
           <div className="field">
             <label className="label" htmlFor="answer">
@@ -210,6 +209,8 @@ function QuestionRoom({ review, done }: { review: ReviewView; done: () => void }
               </span>
             )}
           </div>
+          {/* Documents last, so a long list doesn't push the answer out of view. */}
+          <Returned files={files.filter((file) => !isImage(file))} />
         </div>
       </div>
     </main>

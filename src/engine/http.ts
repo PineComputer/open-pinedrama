@@ -27,6 +27,7 @@ import { subscribe } from "./live.ts";
 import { drama as dramaRow, review as reviewRow, session as sessionRow, type SessionRow } from "./records.ts";
 import { decide, resumeWithDecision } from "./reviews.ts";
 import { castCards, deliveryRows, episodePage, scriptPage, seasonEntries } from "./browse.ts";
+import { diagnostics } from "./diagnostics.ts";
 import { zipLength, zipStream } from "./zip.ts";
 import { chatView, dramaCards, dramaFiles, dramaView, inbox, reviewView } from "./views.ts";
 
@@ -151,6 +152,7 @@ export function app(): Hono {
         notes: field("notes"),
         length: field("length"),
         rehearsal: field("rehearsal") === "1",
+        reviewing: field("reviewing"),
         files: await Promise.all(uploads.map(async (file) => ({ name: file.name, type: file.type, bytes: new Uint8Array(await file.arrayBuffer()) }))),
       }, mode);
       return c.json({ id });
@@ -236,6 +238,15 @@ export function app(): Hono {
   api.get("/api/dramas/:id/script", (c) => c.json(scriptPage(c.req.param("id"))));
   api.get("/api/dramas/:id/delivery", (c) => c.json(deliveryRows(c.req.param("id"))));
   // Every approved cut in one download, streamed as it is read.
+  // What a maker sends Pine when something goes wrong (diagnostics.ts).
+  api.get("/api/diagnostics", (c) => {
+    const stamp = new Date().toISOString().slice(0, 16).replace(/[-:]/g, "").replace("T", "-");
+    c.header("Content-Type", "application/json");
+    c.header("Content-Disposition", `attachment; filename="pine-drama-diagnostics-${stamp}.json"`);
+    c.header("Cache-Control", "no-store");
+    return c.body(JSON.stringify(diagnostics(), null, 2));
+  });
+
   api.get("/api/dramas/:id/season.zip", (c) => {
     const { title, entries } = seasonEntries(c.req.param("id"));
     if (!entries.length) return c.json(failure("nothing-delivered", "No cut is approved yet."), 404);

@@ -25,12 +25,18 @@ restarts; the desktop app will open it for you.
 
 On first run the studio asks for your Pine project's API key (Project → API keys in the
 Pine console). It checks the key with Pine, then keeps it sealed; nothing needs editing.
-The project needs Pine's drama skill; until it has it, dramas can be rehearsed (see
-Develop). Settings changes or forgets the key, and forgetting it first stops every
-Computer the project has running for the studio.
+The project needs Pine's drama skill; any drama can instead be rehearsed (see Develop).
+Settings changes or forgets the key, and forgetting it first stops every Computer the
+project has running for the studio. When something goes wrong, Settings → Troubleshooting
+saves a diagnostics file to send Pine: the engine's log (`logs/engine.log` in the data
+folder) and the state of your dramas with Pine's ids, never the key or your files.
 
-New drama asks for the episode length and writes it into the drama's brief, or uses the
-`brief.md` you add with the screenplay. Pine bills the agents' turns and, separately,
+What you drop on New drama is source material: the screenplay in any format, and any
+notes or brief of your own. The agent prepares the skill's inputs from it, and what you
+set in New drama (title, language, look, format, episode length) is final wherever your
+files say otherwise. **Your reviews** sets how much you approve yourself: every step, the
+cast and the cuts, or none; the studio approves the rest as the agent stops for it, and
+you can change it on the drama's page. Pine bills the agents' turns and, separately,
 generated video by the minute; the agents aren't told about cost, and the drama's page
 shows what it and each episode have spent so far.
 
@@ -65,16 +71,30 @@ Put them in `.env.local` and `npm run dev` reads it.
 
 ```sh
 npm run desktop      # builds the UI, the engine and the shell, then opens the app
-npm run package      # an installer in release/: dmg on macOS, NSIS on Windows, AppImage on Linux
+npm run package      # installers in release/: dmg and zip on macOS (Apple silicon and Intel), NSIS on Windows, AppImage on Linux
 ```
 
 The app is the same engine and UI in Electron (`desktop/main.ts`). The engine runs in a
 utility process on a free port with a token made for this launch, and the app opens its
 own window with it, so there is no link to open. One copy runs at a time. On macOS the
 studio's bar is the window's title bar, the dock badge counts the reviews waiting, and
-closing the window keeps the line running until you quit. Builds are not signed yet, so
-macOS asks you to allow the app the first time (System Settings → Privacy & Security).
+closing the window keeps the line running until you quit.
 `python3 scripts/icon.py` draws the icon.
+
+**Releases and updates.** `npm version minor` (or `patch`) and `git push --follow-tags`: the
+tag runs `.github/workflows/release.yml`, which checks, builds every platform and uploads it
+to a draft GitHub release. Publishing the draft releases it. The app checks those releases
+when it starts and every hour (`desktop/updates.ts`), downloads a new version in the
+background and offers to restart into it. It can only reach releases of a public repository.
+
+**Signing.** With a Developer ID Application certificate and an App Store Connect API key
+(the repository secrets listed in the workflow, or `CSC_LINK`/`CSC_NAME` and
+`APPLE_API_KEY`, `APPLE_API_KEY_ID`, `APPLE_API_ISSUER` locally), the macOS app is signed and
+notarized (`electron-builder.config.mjs`): it opens without a warning and installs its own
+updates. Without them it's signed ad hoc: a copy that was downloaded or sent through a chat
+app opens only once you allow it (open it, then System Settings → Privacy & Security → Open
+Anyway), and when a new version is out it says so and opens the download page, since macOS
+won't let an ad-hoc app replace itself.
 
 ## How it fits together
 
@@ -114,15 +134,15 @@ Test in this order; each step costs more and catches what the one before can't:
    and Pine bills the turns, a few cents. It also reads the project's lifecycle (idle timeout
    and running time per start), sets the studio's idle timeouts and reads them back, and says
    whether the project offers the drama skill.
-4. **A rehearsal on your Pine project**, before the project has the drama skill. A drama
-   held for want of the skill offers **Rehearse instead**, New drama offers it once a
-   Computer has said the skill is missing, and the Slate rehearses the sample drama in a
-   click. The goals are the real ones, with Pine's agent standing in for the skill through
-   `fixtures/rehearsal/standin.py`, a small kit that draws placeholder looks, plates,
-   storyboards and 9:16 clips where the skill would. Everything else is real: Computers,
-   sessions, stops and reviews, decisions, the handoff between Computers, resumes, the
-   project's limits. Pine bills the Computers and turns; a 10-episode rehearsal costs about
-   a dollar of turns.
+4. **A rehearsal on your Pine project**, with or without the drama skill. New drama offers
+   it on any Pine project (checked when a Computer has said the skill is missing), a drama
+   held for want of the skill offers **Rehearse instead**, and the Slate rehearses the
+   sample drama in a click. The goals are the real ones, with Pine's agent standing in for
+   the skill through `fixtures/rehearsal/standin.py`, a small kit that draws placeholder
+   looks, plates, storyboards and 9:16 clips where the skill would. Everything else is
+   real: Computers, sessions, stops and reviews, decisions, the handoff between Computers,
+   resumes, the project's limits. Pine bills the Computers and turns; a 10-episode
+   rehearsal costs about a dollar of turns.
 5. **Your Pine project in `npm run dev`** with the drama skill: the real thing, billed at
    Pine's rates.
 

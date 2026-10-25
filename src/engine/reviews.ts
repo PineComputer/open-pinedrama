@@ -2,14 +2,14 @@
 // a turn ends with a question and becomes answerable only once that turn's files are
 // saved; the maker's decision goes back as one answer to the turn that asked
 // (docs/IMPLEMENTATION_PLAN.md, rules 1 to 3).
-import type { Decision, FileItem, ReviewItem, ReviewKind } from "../shared/types.ts";
+import type { Decision, FileItem, ReviewItem, ReviewKind, Reviewing } from "../shared/types.ts";
 import { computerRef, fleet, sessionRef } from "./computers.ts";
 import { answerText } from "./decisions.ts";
 import { StudioError } from "./errors.ts";
 import { all, get, newId, now, run, transaction } from "./db.ts";
 import { followTurn, recordTurn } from "./follow.ts";
 import { decisionGoal } from "./goals.ts";
-import { type FileRow, filesOfTurn, toItem, versionNumber } from "./library.ts";
+import { type FileRow, filesOfStop, toItem, versionNumber } from "./library.ts";
 import { publish } from "./live.ts";
 import { attach, saveRun, sendRun } from "./runs.ts";
 import { type ReviewRow, type SessionRow, type TurnRow, computer as computerRow, episode as episodeRow, episodeCode, review as reviewRow, session as sessionRow } from "./records.ts";
@@ -18,20 +18,21 @@ import { type ReviewRow, type SessionRow, type TurnRow, computer as computerRow,
  * What a stop asks the maker for, from the files it returned. In the setup, looks alone are
  * the leads (each one's base look and face, which the skill keeps as a state named face);
  * with places, props or further looks, they are the shared references pre-production made
- * for every episode. With nothing to look at, it is a question answered in words, whatever
- * its words mention: a review with no items would send an empty decision.
+ * for every episode. An episode asks about its own work, or about a reference the maker let
+ * it make that setup didn't (a look the image model refused then). With nothing to look at,
+ * it is a question answered in words, whatever its words mention: a review with no items
+ * would send an empty decision.
  */
 export function inferKind(role: SessionRow["role"], files: (Pick<FileRow, "kind"> & { look?: string | null })[]): ReviewKind {
   const kinds = new Set(files.map((file) => file.kind));
-  if (role === "setup") {
-    const further = (look: string | null | undefined) => !!look && look !== "base" && look.toLowerCase() !== "face";
-    if (kinds.has("location") || kinds.has("prop") || files.some((file) => file.kind === "look" && further(file.look))) return "references";
-    return kinds.has("look") ? "looks" : "question";
+  if (role !== "setup") {
+    if (kinds.has("cut")) return "cut";
+    if (kinds.has("take")) return "takes";
+    if (kinds.has("storyboard")) return "storyboards";
   }
-  if (kinds.has("cut")) return "cut";
-  if (kinds.has("take")) return "takes";
-  if (kinds.has("storyboard")) return "storyboards";
-  return "question";
+  const further = (look: string | null | undefined) => !!look && look !== "base" && look.toLowerCase() !== "face";
+  if (kinds.has("location") || kinds.has("prop") || files.some((file) => file.kind === "look" && further(file.look))) return "references";
+  return kinds.has("look") ? "looks" : "question";
 }
 
 function lookKey(file: Pick<FileRow, "subject" | "look">): string {
@@ -94,9 +95,11 @@ export function questionAsked(session: SessionRow, turnId: string, question: str
   publish(`drama:${session.drama_id}`, "inbox");
 }
 
-/** The question's files are saved: it can be answered now. */
-export function questionReady(session: SessionRow, turnId: string): void {
-  run("update reviews set kind = ?, state = 'open' where turn_id = ? and state = 'saving'", inferKind(session.role, filesOfTurn(turnId)), turnId);
+/** The question's files are saved: it can be answered now, in words when the agent asked in words. */
+export function questionReady(session: SessionRow, turnId: string, inWords = false): void {
+  const stop = get<ReviewRow>("select * from reviews where turn_id = ?", turnId);
+  const kind = inWords || !stop ? "question" : inferKind(session.role, filesOfStop(stop));
+  run("update reviews set kind = ?, state = 'open' where turn_id = ? and state = 'saving'", kind, turnId);
   publish(`drama:${session.drama_id}`, "inbox");
 }
 
@@ -129,6 +132,34 @@ export async function decide(reviewId: string, decision: Decision): Promise<Revi
     return await send(reviewId, decision);
   } finally {
     sending.delete(reviewId);
+  }
+}
+
+/** The kinds of review the studio approves for the maker, by what they chose to review (Reviewing). */
+const LEFT: Record<Reviewing, ReviewKind[]> = {
+  every: [],
+  key: ["references", "storyboards", "takes"],
+  none: ["looks", "references", "storyboards", "takes", "cut"],
+};
+
+/** What the agent is told, and the record keeps, for a step the maker chose not to review. */
+const UNREVIEWED = "Approved without review: I chose not to review this step.";
+
+/**
+ * Approves every waiting review the maker left to the studio, as the agent stops for it or as
+ * they change what they review. A question in words always waits for them; a decision that
+ * can't be sent leaves the review open for them too.
+ */
+export async function approveUnreviewed(dramaId?: string): Promise<void> {
+  const waiting = all<ReviewRow & { reviewing: Reviewing }>(
+    `select r.*, d.reviewing from reviews r join dramas d on d.id = r.drama_id where r.state = 'open'${dramaId ? " and r.drama_id = ?" : ""} order by r.created_at`,
+    ...(dramaId ? [dramaId] : []),
+  );
+  for (const review of waiting.filter((row) => LEFT[row.reviewing]?.includes(row.kind))) {
+    const { items } = itemsOf(review.kind, filesOfStop(review));
+    await decide(review.id, { words: UNREVIEWED, items: items.map((item) => ({ key: item.key, verdict: "approve", notes: [] })) }).catch((error) =>
+      console.error(`review ${review.id}: not approved on its own:`, (error as Error).message),
+    );
   }
 }
 
@@ -174,7 +205,7 @@ async function send(reviewId: string, decision: Decision): Promise<ReviewRow> {
   const review = reviewRow(reviewId);
   if (!review) throw new StudioError("not-found", "No such review.", 404);
   if (review.state !== "open") throw review.state === "saving" ? new StudioError("review-saving", "Its files are still being saved.", 409) : new StudioError("review-closed", "This review is no longer open.", 409);
-  const files = filesOfTurn(review.turn_id);
+  const files = filesOfStop(review);
   const { items } = itemsOf(review.kind, files);
   const labels = new Map(items.map((item) => [item.key, item.label]));
   // The pictures the maker added to this drama, which a note may carry.

@@ -212,7 +212,7 @@ describe("the production line", () => {
     m.dramas.rehearse(id);
     const setup = await until("the rehearsed setup run", () => m.db.get<{ goal: string }>("select r.goal from runs r join sessions s on s.id = r.session_id where s.drama_id = ? and r.kind = 'setup'", id));
     expect(setup.goal).toMatch(/^This is a rehearsal/);
-    expect(setup.goal).toContain("vertical short drama from the attached screenplay");
+    expect(setup.goal).toContain("vertical short drama from my sources");
     expect(kits).toHaveLength(1);
     expect(m.db.get<{ status: string; rehearsal: number }>("select * from dramas where id = ?", id)).toMatchObject({ status: "setup", rehearsal: 1 });
     expect(() => m.dramas.rehearse(id)).toThrow(/held/);
@@ -406,5 +406,27 @@ describe("the production line", () => {
     expect(((await response.json()) as { code: string }).code).toBe("stop-failed");
     expect(computersOf(id).find((row) => row.id === computer.id)?.state).toBe("running");
     expect(m.computers.hasFleet()).toBe(true);
+  });
+});
+
+describe("diagnostics", () => {
+  it("carry the studio's state and log, and nothing sealed", async () => {
+    (await import("./log.ts")).keepLog();
+    console.warn("diagnostics: a line for the log");
+    const response = await request("GET", "/api/diagnostics", SIGNED_IN);
+    expect(response.headers.get("content-disposition")).toMatch(/^attachment; filename="pine-drama-diagnostics-/);
+    const text = await response.text();
+    const body = JSON.parse(text) as { computers: Record<string, unknown>[]; sessions: unknown[]; log: string[] };
+    expect(body.computers.length).toBeGreaterThan(0);
+    expect(body.sessions.length).toBeGreaterThan(0);
+    expect(body.log.some((line) => line.endsWith("warn diagnostics: a line for the log"))).toBe(true);
+    // Sealed values never leave: a Computer's credentials and binding, a session's token.
+    const sealed = [
+      ...m.db.all<{ credentials: string; binding: string | null }>("select credentials, binding from computers").flatMap((row) => [row.credentials, row.binding]),
+      ...m.db.all<{ token: string | null }>("select token from sessions").map((row) => row.token),
+    ].filter((value): value is string => Boolean(value));
+    expect(sealed.length).toBeGreaterThan(0);
+    for (const value of sealed) expect(text.includes(value)).toBe(false);
+    expect(Object.keys(body.computers[0])).not.toContain("credentials");
   });
 });
