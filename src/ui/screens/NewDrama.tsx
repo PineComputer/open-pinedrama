@@ -1,4 +1,5 @@
 import { type DragEvent, useEffect, useRef, useState } from "react";
+import { type BriefSeconds, briefSeconds, secondsText } from "../../shared/brief.ts";
 import type { AppInfo } from "../../shared/types.ts";
 import { api, useResource } from "../api.ts";
 import { useT } from "../i18n.ts";
@@ -30,24 +31,20 @@ function useOpening(files: File[]): string | undefined {
   return opening;
 }
 
-/**
- * The episode length the maker's own brief.md gives, from the line drama-cli reads
- * ("Episode length: about half a minute (25 to 35 seconds)"): "" where it gives none,
- * undefined while it is read or without a brief.
- */
-function useBriefLength(files: File[]): string | undefined {
-  const [length, setLength] = useState<string>();
+/** The seconds the maker's own brief.md gives an episode: null where it gives none, undefined while it is read. */
+function useBriefSeconds(files: File[]): BriefSeconds | null | undefined {
+  const [seconds, setSeconds] = useState<BriefSeconds | null>();
   const brief = files.find(isBrief);
   useEffect(() => {
-    setLength(undefined);
+    setSeconds(undefined);
     if (!brief) return;
     let current = true;
-    void brief.text().then((text) => current && setLength(/^\s*(?:[-*]\s*)?Episode length:\s*(.+?)\.?\s*$/im.exec(text)?.[1] ?? ""));
+    void brief.text().then((text) => current && setSeconds(briefSeconds(text) ?? null));
     return () => {
       current = false;
     };
   }, [brief]);
-  return length;
+  return seconds;
 }
 
 const LOOKS = [
@@ -78,7 +75,7 @@ export function NewDrama() {
   const [rehearsal, setRehearsal] = useState(true);
   // The maker's own brief says the episode length; the studio writes one only without it.
   const ownBrief = files.some(isBrief);
-  const briefLength = useBriefLength(files);
+  const ownLength = useBriefSeconds(files);
 
   const add = (list: FileList | null) => {
     if (!list) return;
@@ -193,7 +190,11 @@ export function NewDrama() {
             <span className="label">{t("new.length")}</span>
             {ownBrief ? (
               <p className="quiet small">
-                {briefLength === undefined ? t("new.lengthInBrief") : briefLength ? t("new.lengthFromBrief", { length: briefLength }) : t("new.lengthNotInBrief")}
+                {ownLength === undefined
+                  ? t("new.lengthInBrief")
+                  : ownLength
+                    ? t("new.lengthFromBrief", { seconds: secondsText(ownLength) })
+                    : t("new.lengthNotInBrief")}
               </p>
             ) : (
               <div className="options">

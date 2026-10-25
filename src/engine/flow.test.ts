@@ -6,6 +6,7 @@ import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { briefSeconds } from "../shared/brief.ts";
 import type { CastCard, DeliveryRow, DramaView, EpisodePage, FileItem, ReviewSummary, ReviewView, ScriptPage } from "../shared/types.ts";
 
 const DATA = mkdtempSync(path.join(tmpdir(), "studio-flow-"));
@@ -215,6 +216,7 @@ expect(archive.includes(Buffer.from(`${title}/EP002`))).toBe(false);
   const brief = await (await fetchApp(new Request(`http://127.0.0.1:4310${script.inputs[1].url}`, { headers: { host: "127.0.0.1:4310", cookie: "studio=test-token" } }))).text();
   expect(brief).toContain(`- Title: ${title}\n`);
   expect(brief).toContain("- Episode length: about a minute and a half (80 to 110 seconds).");
+  expect(briefSeconds(brief)).toEqual({ min: 80, max: 110 });
   expect(brief).not.toMatch(/budget/i);
   const cast = await call<CastCard[]>("GET", `/api/dramas/${id}/cast`);
   const wei = cast.find((card) => card.subject === "wei")!;
