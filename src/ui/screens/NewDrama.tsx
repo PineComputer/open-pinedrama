@@ -85,7 +85,8 @@ export function NewDrama() {
     const added = [...list];
     setFiles((current) => [...current, ...added.filter((file) => !current.some((c) => c.name === file.name && c.size === file.size))]);
     const named = added.find((file) => !isBrief(file));
-    if (!title && named) setTitle(named.name.replace(/\.[^.]+$/, ""));
+    // A file's name as a title: "Marcos_Day_San_Diego.pdf" reads "Marcos Day San Diego".
+    if (!title && named) setTitle(named.name.replace(/\.[^.]+$/, "").replace(/_+/g, " ").trim());
   };
 
   const onDrop = (event: DragEvent) => {
