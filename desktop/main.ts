@@ -10,6 +10,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { type UtilityProcess, BrowserWindow, app, dialog, safeStorage, shell, utilityProcess } from "electron";
 import { DATA_DIR } from "../src/engine/config.ts";
+import { keepUpdated } from "./updates.ts";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const PAPER = "#f7f4ef";
@@ -154,7 +155,10 @@ if (!app.requestSingleInstanceLock()) {
     if (window.isMinimized()) window.restore();
     window.focus();
   });
-  app.whenReady().then(open);
+  app.whenReady().then(async () => {
+    await open();
+    keepUpdated();
+  });
   // On macOS the studio keeps running with its window closed, so the line keeps going.
   app.on("activate", () => {
     if (window || !origin) return;
