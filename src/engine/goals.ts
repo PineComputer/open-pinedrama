@@ -149,7 +149,7 @@ export function resumeGoal(drama: DramaBrief, code: string, attachments: string[
         ]
       : [`Attached are the screenplay, the approved references and the episode's work so far: ${attachments.join(", ")}. Continue from them; redo only what is missing.`]),
     decision ? `My last decision, made on the attached files:\n${decision}` : "",
-    "Stop for my review of storyboards, takes and the cut, as before, returning the files with each question. Finish when I accept the cut.",
+    "Stop for my review of storyboards, takes and the cut, as before, returning the files with each question, those the earlier session made included. Finish when I accept the cut.",
     handoff ? packEpisode(code) : "",
     writeIn(drama),
   ]

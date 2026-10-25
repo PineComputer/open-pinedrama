@@ -261,12 +261,13 @@ describe("a drama in replay", () => {
 
   // A Computer stops while its episode waits on the maker, who resumes the episode. The new session
   // asks about the same storyboards, unchanged: they are still in front of the maker, as items.
-  it("shows a resumed episode's storyboards again when its new session asks about them unchanged", async () => {
+  // Asked with the storyboards returned again, or only named.
+  it.each(["ask", "name"] as const)("shows a resumed episode's storyboards again when its new session asks about them unchanged (%s)", async (stops) => {
     const { get, run } = await import("./db.ts");
     const { computerRef, markStopped } = await import("./computers.ts");
     const { resumeEpisode } = await import("./dramas.ts");
     run("update dramas set status = 'done'");
-    fleet.stops = "name";
+    fleet.stops = stops;
     const form = new FormData();
     for (const [key, value] of Object.entries({ title: "Resumed drama", language: "en", parallel: "1", perComputer: "1" })) form.set(key, value);
     form.append("files", new File(["EPISODE 1\nLin enters."], "screenplay.txt", { type: "text/plain" }));

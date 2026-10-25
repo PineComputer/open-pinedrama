@@ -83,6 +83,7 @@ export interface TurnRow {
   question: string;
   summary: string;
   files_saved: number;
+  returned: string;
   settled: number;
   save_error: string | null;
   cost: number | null;

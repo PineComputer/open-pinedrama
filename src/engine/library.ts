@@ -168,18 +168,24 @@ function episodeLabel(episodeId: string): string | undefined {
   return row ? `EP${String(row.number).padStart(3, "0")}` : undefined;
 }
 
+/** The kinds of file the maker gives a verdict on. */
+export const VERDICT_KINDS: FileKind[] = ["look", "location", "prop", "storyboard", "blocking", "take", "cut"];
+
 export function filesOfTurn(turnId: string): FileRow[] {
   return all<FileRow>("select * from files where turn_id = ? order by id", turnId);
 }
 
 /**
- * What a stop puts before the maker: what its turn brought in, and what its question names that
- * the drama already has, the newest at each path (storyboards a resumed session asks about again,
- * unchanged, belong to the turn that first returned them).
+ * What a stop puts before the maker: what its turn brought in and, when that is nothing to give a
+ * verdict on, what it returned again or its question names that the drama already has, the newest
+ * at each path (storyboards a resumed session asks about again, unchanged, belong to the turn that
+ * first returned them). Unchanged files beside new work keep the verdict they had.
  */
 export function filesOfStop(stop: { turn_id: string; drama_id: string; question: string }): FileRow[] {
   const own = filesOfTurn(stop.turn_id);
-  const earlier = namedPaths(stop.question)
+  if (own.some((file) => VERDICT_KINDS.includes(file.kind))) return own;
+  const returned = JSON.parse(get<{ returned: string }>("select returned from turns where id = ?", stop.turn_id)?.returned ?? "[]") as string[];
+  const earlier = [...new Set([...returned, ...namedPaths(stop.question)])]
     .filter((relPath) => !own.some((file) => file.rel_path === relPath))
     .flatMap((relPath) => get<FileRow>("select * from files where drama_id = ? and rel_path = ? order by id desc limit 1", stop.drama_id, relPath) ?? []);
   return [...own, ...earlier];

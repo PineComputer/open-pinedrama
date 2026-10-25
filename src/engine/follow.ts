@@ -1,10 +1,11 @@
 // Follows the agents' work: each turn to its end, and each open session's events for the
 // chat and the crew view. When a turn ends, its files are copied into the library before
 // anything else happens, because the next turn can change them (plan, rule 1).
+import type { FileKind } from "../shared/types.ts";
 import { ENDED, type TurnInfo } from "./fleet.ts";
 import { computerRef, fleet, markStopped, sessionRef } from "./computers.ts";
 import { all, get, now, run, transaction } from "./db.ts";
-import { save, seenBefore } from "./library.ts";
+import { VERDICT_KINDS, save, seenBefore } from "./library.ts";
 import { publish } from "./live.ts";
 import { classify, namedPaths, typeOf } from "./classify.ts";
 import { onEnded, stopsForMaker } from "./flow.ts";
@@ -85,22 +86,15 @@ async function loop(sessionId: string, firstTurn: string): Promise<void> {
   }
 }
 
-/**
- * A turn ended: save its files, then let the flow act on how it ended. Each step is marked
- * when done, so a turn the engine stopped halfway through is taken up again where it was. A
- * stop for the maker becomes a review; its files are the ones the turn returned and any its
- * question names but didn't return.
- */
-/** The kinds of file the maker gives a verdict on. */
-const KINDS = ["look", "location", "prop", "storyboard", "blocking", "take", "cut"];
-const REVIEWED = KINDS.map((kind) => `'${kind}'`).join(", ");
+/** The same kinds, as a list for SQL. */
+const REVIEWED = VERDICT_KINDS.map((kind) => `'${kind}'`).join(", ");
 
 function known(dramaId: string, relPath: string): boolean {
   return get("select id from files where drama_id = ? and rel_path = ? limit 1", dramaId, relPath) !== undefined;
 }
 
 /** What the walk below brings in: what the maker reviews, and the documents they read. */
-const MADE = [...KINDS, "bible", "breakdown"];
+const MADE: FileKind[] = [...VERDICT_KINDS, "bible", "breakdown"];
 
 /**
  * Pictures, clips and documents the agent made in its own folders (an episode's; for the
@@ -128,17 +122,24 @@ async function made(session: SessionRow): Promise<string[]> {
   return found;
 }
 
+/**
+ * A turn ended: save its files, then let the flow act on how it ended. Each step is marked
+ * when done, so a turn the engine stopped halfway through is taken up again where it was. A
+ * stop for the maker becomes a review; its files are the ones the turn returned and any its
+ * question names but didn't return.
+ */
 export async function settle(sessionId: string, info: TurnInfo): Promise<void> {
   const session = sessionRow(sessionId)!;
   const turn = get<TurnRow>("select * from turns where id = ?", info.turnId);
   if (turn?.settled) return;
+  run("update turns set returned = ? where id = ?", JSON.stringify(info.files.map((file) => file.path)), info.turnId);
   // What the turn returned that the drama doesn't have yet: an unchanged file returned again belongs to the turn that first returned it.
   const fresh = info.files.filter((file) => !file.sha256 || !seenBefore(session.drama_id, file.path, file.sha256));
   const stop = stopsForMaker(session, { ...info, files: fresh });
   const asked = info.question || info.summary;
   // A stop that neither returns nor names anything to review asks in words, whatever its folder holds:
   // the pictures found there go beside the question, not into a verdict on each.
-  const pointed = [...info.files.map((file) => file.path), ...namedPaths(asked)].some((relPath) => KINDS.includes(classify(relPath).kind));
+  const pointed = [...info.files.map((file) => file.path), ...namedPaths(asked)].some((relPath) => VERDICT_KINDS.includes(classify(relPath).kind));
   if (stop) questionAsked(session, info.turnId, asked);
   if (!turn?.files_saved) {
     const computer = computerRow(session.computer_id)!;

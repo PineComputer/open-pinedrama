@@ -103,6 +103,7 @@ create table if not exists turns (
   question text not null default '',
   summary text not null default '',
   files_saved integer not null default 0,
+  returned text not null default '[]', -- the paths the turn returned, saved before or not (JSON)
   settled integer not null default 0, -- the flow has acted on how it ended
   save_error text,
   cost real,
@@ -192,6 +193,7 @@ export function db(): DatabaseSync {
     add("dramas", "rehearsal", "integer not null default 0");
     add("turns", "media", "real");
     add("dramas", "length", "text not null default ''");
+    add("turns", "returned", "text not null default '[]'");
     shared.__studioDb = handle;
   }
   return shared.__studioDb;
