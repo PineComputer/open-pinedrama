@@ -85,9 +85,10 @@ And in the studio, now handled:
 - **Stopping.** The maker can stop a drama: its Computers stop and nothing new starts until they try again.
 
 **A second drama, the same day.** "Behind the Moth Mask" (three episodes of about 30 seconds) stalled where the first didn't:
-- drama-cli won't make a project without a budget (`init --budget` is required), so the skill asked the maker for one. Each goal now says there is no cap (rule 6).
-- The skill's `en-us-live-sfw` preset dresses every adult woman lead short, low-cut and cinched, whatever the screenplay says. The heroine's stage gown, written that way and drawn as an edit of her photoreal sheet, was refused by OpenAI's moderation. drama-cli's fallback for a refusal, Seedream, isn't a model Pine's provider runtime offers. Setup finished without the look, and the episode that needs it can't start.
-- Each breakdown is one segment of 25 to 30 seconds, inside Seedance 2.5's range, and Pine's profile refused every one after its storyboards were approved. The profile is Pine's to fix; an episode may now split its own segments when the model won't take them.
+- drama-cli wouldn't make a project without a budget (`init --budget` was required), so the skill asked the maker for one. Each goal now says there is no cap (rule 6), and drama-cli no longer requires one.
+- The skill's `en-us-live-sfw` preset dresses every adult woman lead short, low-cut and cinched, whatever the screenplay says. The heroine's stage gown, written that way and drawn as an edit of her photoreal sheet, was refused by OpenAI's moderation. drama-cli's fallback for a refusal, Seedream, wasn't a model Pine's provider runtime offered. Setup finished without the look, and the episode that needs it couldn't start.
+- Each breakdown is one segment of 25 to 30 seconds, inside Seedance 2.5's range, and Pine's profile refused every one after its storyboards were approved. An episode may now split its own segments when the model won't take them.
+- Pine fixed both profiles that evening (PineSandbox #892: Seedance 2.5 takes 4 to 30 seconds, and Seedream is offered), and the preset now keeps what the screenplay says a character wears.
 - Three questions waited three hours, and their Computers stopped, as designed.
 
 And in the studio, now handled:
@@ -131,7 +132,7 @@ From the plan review (Codex, 23 October), checked against Pine's docs:
 
    Run idempotency keys are saved before `run`. Lifecycle actions on one Computer are serialized.
 5. **Path labels are hints.** Pine guarantees each returned file's path, size, hash and type, not drama stages or segments. The library tags files from their paths when it can; every screen also works from the agent's own words and the plain file list. The spike checks what the drama skill actually returns.
-6. **Spend is shown, never put in a goal.** Pine bills the agent's turns and, separately, generated video by the minute on the turn that made it; the video charge can settle after the turn ends, as a usage event. The studio records each turn's highest reading and shows what each drama and episode spent. There is no budget: agents are told nothing of cost but that there is no cap. drama-cli won't make a project without one (`init --budget` is required), and the skill asks the maker for it when the goal doesn't give it, so each goal gives 100000 USD and tells the agent never to ask about cost.
+6. **Spend is shown, never put in a goal.** Pine bills the agent's turns and, separately, generated video by the minute on the turn that made it; the video charge can settle after the turn ends, as a usage event. The studio records each turn's highest reading and shows what each drama and episode spent. There is no budget: agents are told nothing of cost but that there is no cap. drama-cli used to require one (`init --budget`), and the skill asked the maker for it; it is optional since the package of 24 October, and each goal tells the agent to leave it unset and never to ask about cost.
 
 ## Shape of the code
 

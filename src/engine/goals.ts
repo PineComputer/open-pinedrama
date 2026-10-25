@@ -86,10 +86,10 @@ export function setupGoal(drama: DramaBrief, attachments: string[]): string {
 const LIST_EPISODES = 'End with the list of episodes, one per line, as "EP001: <title>".';
 
 /**
- * drama-cli won't make a project without a budget (`init --budget` is required), and the skill asks
- * the maker for a missing one. The maker sets no cap: Pine bills, and the studio shows the spend.
+ * drama-cli takes a project cap if it is given one (`init --budget`), and the skill once asked the
+ * maker for it. The maker sets no cap: Pine bills, and the studio shows the spend.
  */
-export const NO_CAP = "There is no spending cap: where drama-cli needs a budget, give it 100000 USD, and never ask me about cost.";
+export const NO_CAP = "There is no spending cap: leave drama-cli's budget unset, and never ask me about cost.";
 
 /** How an episode session takes up the drama's project, and the bounds it keeps to. */
 function handedOver(code: string): string[] {
