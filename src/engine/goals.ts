@@ -86,10 +86,12 @@ export function setupGoal(drama: DramaBrief, attachments: string[]): string {
 const LIST_EPISODES = 'End with the list of episodes, one per line, as "EP001: <title>".';
 
 /**
- * drama-cli takes a project cap if it is given one (`init --budget`), and the skill once asked the
- * maker for it. The maker sets no cap: Pine bills, and the studio shows the spend.
+ * drama-cli takes a project cap if it is given one (`init --budget`), and the skill asks the maker
+ * whenever spending isn't authorized (it once asked for a budget, then to confirm a paid take). The
+ * maker sets no cap and authorizes the spend: Pine bills, and the studio shows it.
  */
-export const NO_CAP = "There is no spending cap: leave drama-cli's budget unset, and never ask me about cost.";
+export const NO_CAP =
+  "Spending is authorized and has no cap: leave drama-cli's budget unset, make every paid request the work needs without asking me first, and never ask me about cost.";
 
 /** How an episode session takes up the drama's project, and the bounds it keeps to. */
 function handedOver(code: string): string[] {
