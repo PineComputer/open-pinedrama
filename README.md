@@ -67,18 +67,30 @@ Put them in `.env.local` and `npm run dev` reads it.
 
 ```sh
 npm run desktop      # builds the UI, the engine and the shell, then opens the app
-npm run package      # an installer in release/: dmg on macOS, NSIS on Windows, AppImage on Linux
+npm run package      # installers in release/: dmg and zip on macOS (Apple silicon and Intel), NSIS on Windows, AppImage on Linux
 ```
 
 The app is the same engine and UI in Electron (`desktop/main.ts`). The engine runs in a
 utility process on a free port with a token made for this launch, and the app opens its
 own window with it, so there is no link to open. One copy runs at a time. On macOS the
 studio's bar is the window's title bar, the dock badge counts the reviews waiting, and
-closing the window keeps the line running until you quit. The macOS build is signed ad hoc,
-not with a Developer ID, and isn't notarized: a copy that was downloaded or sent through a
-chat app opens only once you allow it (open it, then System Settings → Privacy & Security →
-Open Anyway).
+closing the window keeps the line running until you quit.
 `python3 scripts/icon.py` draws the icon.
+
+**Releases and updates.** `npm version minor` (or `patch`) and `git push --follow-tags`: the
+tag runs `.github/workflows/release.yml`, which checks, builds every platform and uploads it
+to a draft GitHub release. Publishing the draft releases it. The app checks those releases
+when it starts and every four hours (`desktop/updates.ts`), downloads a new version in the
+background and offers to restart into it. It can only reach releases of a public repository.
+
+**Signing.** With a Developer ID Application certificate and an App Store Connect API key
+(the repository secrets listed in the workflow, or `CSC_LINK`/`CSC_NAME` and
+`APPLE_API_KEY`, `APPLE_API_KEY_ID`, `APPLE_API_ISSUER` locally), the macOS app is signed and
+notarized (`electron-builder.config.mjs`): it opens without a warning and installs its own
+updates. Without them it's signed ad hoc: a copy that was downloaded or sent through a chat
+app opens only once you allow it (open it, then System Settings → Privacy & Security → Open
+Anyway), and when a new version is out it says so and opens the download page, since macOS
+won't let an ad-hoc app replace itself.
 
 ## How it fits together
 

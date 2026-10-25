@@ -16,7 +16,7 @@
     "check": "tsc --noEmit && vitest run",
     "pine:check": "tsx scripts/pine-check.ts",
     "desktop": "node scripts/desktop.mjs && electron .",
-    "package": "node scripts/desktop.mjs && electron-builder"
+    "package": "node scripts/desktop.mjs && electron-builder --config electron-builder.config.mjs"
   },
   "devDependencies": {
     "@fontsource-variable/instrument-sans": "^5.3.0",
@@ -30,6 +30,7 @@
     "@vitejs/plugin-react": "^6.1.2",
     "electron": "44.9.3",
     "electron-builder": "26.17.0",
+    "electron-updater": "6.8.10",
     "esbuild": "0.28.2",
     "hono": "^4.13.13",
     "lucide-react": "^1.61.0",
@@ -42,44 +43,5 @@
   },
   "engines": {
     "node": ">=24"
-  },
-  "build": {
-    "appId": "io.pinecomputer.drama-studio",
-    "productName": "Pine Drama Studio",
-    "directories": {
-      "output": "release",
-      "buildResources": "desktop/assets"
-    },
-    "files": [
-      "dist/ui/**",
-      "dist/desktop/**",
-      "fixtures/replay/**",
-      "fixtures/rehearsal/**",
-      "package.json"
-    ],
-    "asarUnpack": [
-      "dist/ui/**",
-      "fixtures/replay/**",
-      "fixtures/rehearsal/**"
-    ],
-    "mac": {
-      "category": "public.app-category.video",
-      "identity": "-",
-      "hardenedRuntime": false,
-      "target": [
-        "dmg"
-      ]
-    },
-    "win": {
-      "target": [
-        "nsis"
-      ]
-    },
-    "linux": {
-      "target": [
-        "AppImage"
-      ],
-      "category": "AudioVideo"
-    }
   }
 }
