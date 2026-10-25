@@ -8,10 +8,13 @@ import { navigate } from "../router.tsx";
 /** Files whose text the page can show; PDFs and Word files are read by the agent on the Computer. */
 const READABLE = /\.(txt|md|markdown|fountain|fdx)$/i;
 
+/** The maker's own brief, which the drama skill reads by this name: not the screenplay. */
+const isBrief = (file: File) => file.name.toLowerCase() === "brief.md";
+
 /** The opening of the first screenplay the page can read, to show on the manuscript. */
 function useOpening(files: File[]): string | undefined {
   const [opening, setOpening] = useState<string>();
-  const first = files.find((file) => READABLE.test(file.name) || file.type.startsWith("text/"));
+  const first = files.find((file) => !isBrief(file) && (READABLE.test(file.name) || file.type.startsWith("text/")));
   useEffect(() => {
     setOpening(undefined);
     if (!first) return;
@@ -25,6 +28,26 @@ function useOpening(files: File[]): string | undefined {
     };
   }, [first]);
   return opening;
+}
+
+/**
+ * The episode length the maker's own brief.md gives, from the line drama-cli reads
+ * ("Episode length: about half a minute (25 to 35 seconds)"): "" where it gives none,
+ * undefined while it is read or without a brief.
+ */
+function useBriefLength(files: File[]): string | undefined {
+  const [length, setLength] = useState<string>();
+  const brief = files.find(isBrief);
+  useEffect(() => {
+    setLength(undefined);
+    if (!brief) return;
+    let current = true;
+    void brief.text().then((text) => current && setLength(/^\s*(?:[-*]\s*)?Episode length:\s*(.+?)\.?\s*$/im.exec(text)?.[1] ?? ""));
+    return () => {
+      current = false;
+    };
+  }, [brief]);
+  return length;
 }
 
 const LOOKS = [
@@ -54,13 +77,15 @@ export function NewDrama() {
   const noSkill = app.data?.mode === "pine" && app.data.dramaSkill === "missing";
   const [rehearsal, setRehearsal] = useState(true);
   // The maker's own brief says the episode length; the studio writes one only without it.
-  const ownBrief = files.some((file) => file.name.toLowerCase() === "brief.md");
+  const ownBrief = files.some(isBrief);
+  const briefLength = useBriefLength(files);
 
   const add = (list: FileList | null) => {
     if (!list) return;
     const added = [...list];
     setFiles((current) => [...current, ...added.filter((file) => !current.some((c) => c.name === file.name && c.size === file.size))]);
-    if (!title && added[0]) setTitle(added[0].name.replace(/\.[^.]+$/, ""));
+    const named = added.find((file) => !isBrief(file));
+    if (!title && named) setTitle(named.name.replace(/\.[^.]+$/, ""));
   };
 
   const onDrop = (event: DragEvent) => {
@@ -166,7 +191,9 @@ export function NewDrama() {
           <div className="field">
             <span className="label">{t("new.length")}</span>
             {ownBrief ? (
-              <p className="quiet small">{t("new.lengthInBrief")}</p>
+              <p className="quiet small">
+                {briefLength === undefined ? t("new.lengthInBrief") : briefLength ? t("new.lengthFromBrief", { length: briefLength }) : t("new.lengthNotInBrief")}
+              </p>
             ) : (
               <div className="options">
                 {(["60", "90", "120"] as const).map((value) => (
