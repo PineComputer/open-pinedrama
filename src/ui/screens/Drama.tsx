@@ -218,7 +218,10 @@ export function Drama({ id, tab, episode }: { id: string; tab: string; episode?:
         ) : (
           <div className="rail-actions">
             <button className="link" onClick={() => setTuning(true)}>
-              {t("rail.tune")}: {t("rail.tuneValue", { p: drama.parallel, c: drama.perComputer })}
+              {t("rail.tune")}:{" "}
+              {episodes.total > 0 && drama.parallel >= episodes.total
+                ? t("rail.tuneAll", { n: episodes.total, c: drama.perComputer })
+                : t("rail.tuneValue", { p: drama.parallel, c: drama.perComputer })}
             </button>
             <button className="btn small" onClick={() => setTalking((open) => !open)}>
               {t("rail.talk")}
