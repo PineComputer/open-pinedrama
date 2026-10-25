@@ -157,7 +157,11 @@ async function scenario(title: string) {
     costless(goal);
   }
   const setup = all<{ goal: string }>("select goal from runs where kind = 'setup'")[0].goal;
-  expect(setup).toContain("(screenplay.txt, brief.md)");
+  // The maker's files are sources the agent prepares the skill's inputs from; what they set in New drama is final.
+  expect(setup).toContain("from my sources, attached (screenplay.txt)");
+  expect(setup).toContain("My settings, which are final:");
+  expect(setup).toContain("Episode length: about a minute and a half (80 to 110 seconds).");
+  expect(setup).toContain("Where a source disagrees with my settings, follow my settings.");
   costless(setup);
   expect(drama.episodeRows.every((row) => row.stages.breakdown.state === "done")).toBe(true);
   const boards = await until("EP001 storyboards", openReview(id, (item) => item.episode === "EP001" && item.kind === "storyboards"));
@@ -210,12 +214,7 @@ expect(archive.includes(Buffer.from(`${title}/EP002`))).toBe(false);
   const script = await call<ScriptPage>("GET", `/api/dramas/${id}/script`);
   expect(script.bible?.kind).toBe("bible");
   expect(script.breakdowns.map((entry) => entry.code)).toEqual(["EP001", "EP002", "EP003", "EP004", "EP005", "EP006"]);
-  expect(script.inputs.map((file) => file.name)).toEqual(["screenplay.txt", "brief.md"]);
-  // The brief, written from New drama in the form the drama skill reads.
-  const brief = await (await fetchApp(new Request(`http://127.0.0.1:4310${script.inputs[1].url}`, { headers: { host: "127.0.0.1:4310", cookie: "studio=test-token" } }))).text();
-  expect(brief).toContain(`- Title: ${title}\n`);
-  expect(brief).toContain("- Episode length: about a minute and a half (80 to 110 seconds).");
-  expect(brief).not.toMatch(/budget/i);
+  expect(script.inputs.map((file) => file.name)).toEqual(["screenplay.txt"]);
   const cast = await call<CastCard[]>("GET", `/api/dramas/${id}/cast`);
   const wei = cast.find((card) => card.subject === "wei")!;
   expect(wei.looks[0].versions.map((version) => [version.files[0].version, version.review?.verdict])).toEqual([

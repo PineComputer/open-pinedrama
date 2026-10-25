@@ -8,13 +8,10 @@ import { navigate } from "../router.tsx";
 /** Files whose text the page can show; PDFs and Word files are read by the agent on the Computer. */
 const READABLE = /\.(txt|md|markdown|fountain|fdx)$/i;
 
-/** The maker's own brief, which the drama skill reads by this name: not the screenplay. */
-const isBrief = (file: File) => file.name.toLowerCase() === "brief.md";
-
 /** The opening of the first screenplay the page can read, to show on the manuscript. */
 function useOpening(files: File[]): string | undefined {
   const [opening, setOpening] = useState<string>();
-  const first = files.find((file) => !isBrief(file) && (READABLE.test(file.name) || file.type.startsWith("text/")));
+  const first = files.find((file) => READABLE.test(file.name) || file.type.startsWith("text/"));
   useEffect(() => {
     setOpening(undefined);
     if (!first) return;
@@ -56,8 +53,6 @@ export function NewDrama() {
   // Without the drama skill, a drama on Pine can be rehearsed or wait for the skill.
   const noSkill = app.data?.mode === "pine" && app.data.dramaSkill === "missing";
   const [rehearsal, setRehearsal] = useState(true);
-  // The maker's own brief says the episode length; the studio writes one only without it.
-  const ownBrief = files.some(isBrief);
 
   const add = (list: FileList | null) => {
     if (!list) return;
@@ -167,17 +162,13 @@ export function NewDrama() {
           </div>
           <div className="field">
             <span className="label">{t("new.length")}</span>
-            {ownBrief ? (
-              <p className="quiet small">{t("new.lengthInBrief")}</p>
-            ) : (
-              <div className="options">
-                {(["60", "90", "120"] as const).map((value) => (
-                  <button key={value} aria-pressed={length === value} className={length === value ? "on" : ""} onClick={() => setLength(value)}>
-                    {t(`new.length${value}`)}
-                  </button>
-                ))}
-              </div>
-            )}
+            <div className="options">
+              {(["60", "90", "120"] as const).map((value) => (
+                <button key={value} aria-pressed={length === value} className={length === value ? "on" : ""} onClick={() => setLength(value)}>
+                  {t(`new.length${value}`)}
+                </button>
+              ))}
+            </div>
           </div>
           <div className="pair">
             <div className="field">

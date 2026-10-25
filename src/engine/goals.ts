@@ -11,48 +11,32 @@ export interface DramaBrief {
   look: string;
   format: string;
   notes: string;
-  /** About this many seconds an episode (60, 90, 120), or "" where the maker wasn't asked. */
+  /** About this many seconds an episode (60, 90, 120), or "" for a drama made before New drama always asked. */
   length: string;
 }
 
-/** The episode lengths the maker chooses among, in the words and guide range the skill's brief takes. */
+/** The episode lengths the maker chooses among, in words with a guide range. */
 export const LENGTHS: Record<string, string> = {
   "60": "about a minute (50 to 70 seconds)",
   "90": "about a minute and a half (80 to 110 seconds)",
   "120": "about two minutes (100 to 140 seconds)",
 };
 
-/**
- * The maker's brief as the drama skill reads it (brief.md): the title and the episode length
- * on lines of their own, then the format, the language and the maker's notes. It
- * is the maker's input, written from what they chose in New drama.
- */
-export function briefFile(drama: DramaBrief): string {
-  return [
-    "# Brief",
-    "",
-    `- Title: ${drama.title}`,
-    `- Format: vertical ${drama.format.split(",")[0].trim()} ${drama.look} short drama, ${drama.format.split(",")[1]?.trim() || "480p"}.`,
-    `- Language: ${languageName(drama.language)}; keep every line as the screenplay writes it.`,
-    LENGTHS[drama.length] ? `- Episode length: ${LENGTHS[drama.length]}.` : "",
-    drama.notes ? `- Notes: ${drama.notes.replace(/\s*\n\s*/g, " ")}` : "",
-  ]
-    .filter((line, index) => line || index === 1)
-    .join("\n")
-    .concat("\n");
-}
-
 function languageName(code: string): string {
   return code === "zh" ? "Chinese" : "English";
 }
 
+/** What the maker set in New drama: final, whatever their files say. */
 function brief(drama: DramaBrief): string {
   return [
     `Title: ${drama.title}.`,
     `Language: ${languageName(drama.language)}.`,
     `Look: ${drama.look}.`,
     `Format: ${drama.format}.`,
-  ].join(" ");
+    LENGTHS[drama.length] ? `Episode length: ${LENGTHS[drama.length]}.` : "",
+  ]
+    .filter(Boolean)
+    .join(" ");
 }
 
 function writeIn(drama: DramaBrief): string {
@@ -62,14 +46,15 @@ function writeIn(drama: DramaBrief): string {
 /**
  * The drama's setup and pre-production, in one session and one drama-cli project: the bible
  * and the leads, then everything every episode shares, approved by the maker, so episodes can
- * then run in parallel on copies of the same accepted project.
+ * then run in parallel on copies of the same accepted project. The maker's files are sources:
+ * the agent prepares the skill's inputs from them, and what the maker set is final.
  */
 export function setupGoal(drama: DramaBrief, attachments: string[]): string {
   return [
-    `Use the ${DRAMA_SKILL} skill to produce a vertical short drama from the attached screenplay and brief (${attachments.join(", ")}).`,
-    brief(drama),
-    drama.notes ? `The maker's notes: ${drama.notes}` : "",
-    "Make the drama-cli project in the work directory's drama/ folder, with the screenplay and the brief in it as screenplay.md and brief.md.",
+    `Use the ${DRAMA_SKILL} skill to produce a vertical short drama from my sources, attached (${attachments.join(", ")}): the screenplay and anything I gave with it.`,
+    `My settings, which are final: ${brief(drama)}`,
+    drama.notes ? `My notes: ${drama.notes}` : "",
+    "Make the drama-cli project in the work directory's drama/ folder, and prepare its inputs from my sources yourself: the screenplay as screenplay.md, every line as written, and brief.md as the skill needs it. Where a source disagrees with my settings, follow my settings.",
     NO_CAP,
     "Read the screenplay and ask me for anything that is missing.",
     "Write the bible, then make each lead's face and base look. Stop and ask me to approve the leads' looks, returning their sheets with your question.",

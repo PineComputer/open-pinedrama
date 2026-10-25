@@ -325,7 +325,7 @@ function chatScript(goal: string, lang: Lang): Player {
 function scriptFor(goal: string, lang: Lang): Player {
   const episode = goal.match(/\b(EP\d{3})\b/);
   if (/make episode|continue episode/i.test(goal) && episode) return episodeScript(episode[1], lang);
-  if (/vertical short drama from the attached screenplay/i.test(goal)) return setupScript(lang);
+  if (/vertical short drama from my sources/i.test(goal)) return setupScript(lang);
   return chatScript(goal, lang);
 }
 

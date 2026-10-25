@@ -79,7 +79,7 @@ And, from Pine's limits and lifecycle docs: a turn that breaks off (the Computer
 
 And in the studio, now handled:
 - **Spend.** Pine bills generated video on the turn that made it, and the charge can arrive after the turn ends. The studio keeps each turn's highest reading, reads a Computer's last turns again before stopping it, and shows what each drama and episode spent. Agents are told nothing of cost (rule 6).
-- **The brief.** The skill wants a `brief.md` with the drama's title and the episode length; New drama writes it from the maker's choices, or uses the maker's own.
+- **The brief.** The skill wants a `brief.md` with the drama's title and the episode length. The studio doesn't write it: the maker's files are sources, the setup goal gives what they set in New drama as final, and the agent prepares the skill's inputs.
 - **Episodes.** The goal has each episode register its references again in its own session, and return its breakdown when it revises it.
 - **Reading what the skill returns.** A lead's face (a look state named `face`) counts with the base looks; an episode's title comes from its "EP001: title" line, not a passing mention; a long question reads at body size with its pictures and the answer beside it; a blocking diagram no longer stands for an episode on the board; names with underscores stay upright.
 - **Stopping.** The maker can stop a drama: its Computers stop and nothing new starts until they try again.

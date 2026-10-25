@@ -9,7 +9,7 @@ import { save } from "./library.ts";
 import { publish } from "./live.ts";
 import { type DramaRow, computer as computerRow, drama as dramaRow, episode as episodeRow, latestTurn, session as sessionRow } from "./records.ts";
 import { StudioError } from "./errors.ts";
-import { LENGTHS, briefFile } from "./goals.ts";
+import { LENGTHS } from "./goals.ts";
 import { decide, pendingReview } from "./reviews.ts";
 import { startRun } from "./runs.ts";
 
@@ -41,24 +41,10 @@ export async function createDrama(input: NewDrama, mode: Mode): Promise<string> 
   if (large) throw new StudioError("file-too-large", `${large.name} is over 64 MiB, more than a Computer can be handed.`, 400, large.name);
   const id = newId("drama");
   const fileIds: number[] = [];
-  // The maker's own brief.md is the brief, episode length included; without one, the studio writes it from what they chose here.
-  const isBrief = (name: string) => name.toLowerCase() === "brief.md";
-  const ownBrief = input.files.some((file) => isBrief(file.name));
-  const length = ownBrief ? "" : LENGTHS[input.length ?? ""] ? input.length! : "60";
-  const files = ownBrief
-    ? input.files
-    : [
-        ...input.files,
-        {
-          name: "brief.md",
-          type: "text/markdown",
-          bytes: new TextEncoder().encode(
-            briefFile({ title: input.title.trim(), language: input.language === "en" ? "en" : "zh", look: input.look.trim() || "live action", format: input.format.trim() || "9:16, 480p", notes: input.notes.trim(), length }),
-          ),
-        },
-      ];
+  // The maker's files are kept as they are, as sources; the agent prepares the skill's inputs from them.
+  const length = LENGTHS[input.length ?? ""] ? input.length! : "60";
   try {
-    for (const file of files) fileIds.push(await save(file.bytes, { dramaId: id, relPath: file.name, type: file.type, kind: isBrief(file.name) ? "brief" : "screenplay" }));
+    for (const file of input.files) fileIds.push(await save(file.bytes, { dramaId: id, relPath: file.name, type: file.type, kind: file.name.toLowerCase() === "brief.md" ? "brief" : "screenplay" }));
   } catch (error) {
     run("delete from files where drama_id = ?", id);
     throw error;

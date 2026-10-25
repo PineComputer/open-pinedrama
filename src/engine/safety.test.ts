@@ -212,7 +212,7 @@ describe("the production line", () => {
     m.dramas.rehearse(id);
     const setup = await until("the rehearsed setup run", () => m.db.get<{ goal: string }>("select r.goal from runs r join sessions s on s.id = r.session_id where s.drama_id = ? and r.kind = 'setup'", id));
     expect(setup.goal).toMatch(/^This is a rehearsal/);
-    expect(setup.goal).toContain("vertical short drama from the attached screenplay");
+    expect(setup.goal).toContain("vertical short drama from my sources");
     expect(kits).toHaveLength(1);
     expect(m.db.get<{ status: string; rehearsal: number }>("select * from dramas where id = ?", id)).toMatchObject({ status: "setup", rehearsal: 1 });
     expect(() => m.dramas.rehearse(id)).toThrow(/held/);

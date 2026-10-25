@@ -29,8 +29,10 @@ The project needs Pine's drama skill; until it has it, dramas can be rehearsed (
 Develop). Settings changes or forgets the key, and forgetting it first stops every
 Computer the project has running for the studio.
 
-New drama asks for the episode length and writes it into the drama's brief, or uses the
-`brief.md` you add with the screenplay. Pine bills the agents' turns and, separately,
+What you drop on New drama is source material: the screenplay in any format, and any
+notes or brief of your own. The agent prepares the skill's inputs from it, and what you
+set in New drama (title, language, look, format, episode length) is final wherever your
+files say otherwise. Pine bills the agents' turns and, separately,
 generated video by the minute; the agents aren't told about cost, and the drama's page
 shows what it and each episode have spent so far.
 
