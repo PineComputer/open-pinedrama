@@ -1,8 +1,8 @@
 // What a maker sends Pine when the studio misbehaves (Settings, Troubleshooting): the app and
 // its Pine project, never the key; every drama down to its Computers, sessions, turns and
 // reviews, with Pine's ids and the errors they met; what the agents said lately; and the
-// engine's log. No files and no sealed values. Pine's ids are what match its own logs to
-// the studio's.
+// engine's and the desktop shell's logs, updates included. No files and no sealed values.
+// Pine's ids are what match its own logs to the studio's.
 import os from "node:os";
 import { appInfo } from "./connection.ts";
 import { all } from "./db.ts";
@@ -37,6 +37,6 @@ export function diagnostics() {
       ...message,
       text: clip(message.text, 400),
     })),
-    log: logTail(3000),
+    logs: { engine: logTail("engine", 3000), desktop: logTail("desktop", 1000) },
   };
 }

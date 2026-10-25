@@ -81,20 +81,31 @@ studio's bar is the window's title bar, the dock badge counts the reviews waitin
 closing the window keeps the line running until you quit.
 `python3 scripts/icon.py` draws the icon.
 
-**Releases and updates.** `npm version minor` (or `patch`) and `git push --follow-tags`: the
-tag runs `.github/workflows/release.yml`, which checks, builds every platform and uploads it
-to a draft GitHub release. Publishing the draft releases it. The app checks those releases
-when it starts and every hour (`desktop/updates.ts`), downloads a new version in the
-background and offers to restart into it. It can only reach releases of a public repository.
+**Checks and releases.** Every pull request runs the tests and starts the packaged app on
+Linux (`.github/workflows/ci.yml`). A release is a version bump: run
+`npm version minor --no-git-tag-version` (or `patch`) in a pull request, and merging it runs
+`.github/workflows/release.yml`. It checks again, makes a draft release `v<version>` pinned to
+the merged commit, builds macOS (signed and notarized, for Apple silicon and Intel), Windows
+and Linux into it, checks that every installer and update manifest is there and matches
+(`scripts/verify-release.mjs`), and publishes it. A merge that keeps a released version only
+runs the checks.
 
-**Signing.** With a Developer ID Application certificate and an App Store Connect API key
-(the repository secrets listed in the workflow, or `CSC_LINK`/`CSC_NAME` and
-`APPLE_API_KEY`, `APPLE_API_KEY_ID`, `APPLE_API_ISSUER` locally), the macOS app is signed and
-notarized (`electron-builder.config.mjs`): it opens without a warning and installs its own
-updates. Without them it's signed ad hoc: a copy that was downloaded or sent through a chat
-app opens only once you allow it (open it, then System Settings → Privacy & Security → Open
-Anyway), and when a new version is out it says so and opens the download page, since macOS
-won't let an ad-hoc app replace itself.
+**Updates.** The app checks the releases when it starts and every hour
+(`desktop/updates.ts`). It downloads a new version in the background and puts it in place
+when you quit; a notification says when it's ready, and clicking it restarts into it at
+once. On macOS it offers, at first start, to move itself to Applications, where it can
+replace itself. What the updater does goes to `logs/desktop.log`, which the diagnostics file
+includes.
+
+**Signing.** The release workflow signs and notarizes macOS with the repository secrets it
+lists, and fails without them. Locally, `npm run package` does the same given a Developer ID
+Application certificate (`CSC_LINK` and `CSC_KEY_PASSWORD`, or `CSC_NAME`) and an App Store
+Connect API key (`APPLE_API_KEY`, `APPLE_API_KEY_ID`, `APPLE_API_ISSUER`); without them it signs
+ad hoc (`electron-builder.config.mjs`). An ad-hoc copy that was downloaded or sent through a
+chat app opens only once you allow it (open it, then System Settings → Privacy & Security →
+Open Anyway), and when a new version is out it says so and opens the download page, since
+macOS won't let an ad-hoc app replace itself. Windows builds aren't signed yet, so
+SmartScreen warns on the first install; updates install without asking.
 
 ## How it fits together
 

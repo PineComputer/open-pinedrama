@@ -411,15 +411,15 @@ describe("the production line", () => {
 
 describe("diagnostics", () => {
   it("carry the studio's state and log, and nothing sealed", async () => {
-    (await import("./log.ts")).keepLog();
+    (await import("./log.ts")).keepLog("engine");
     console.warn("diagnostics: a line for the log");
     const response = await request("GET", "/api/diagnostics", SIGNED_IN);
     expect(response.headers.get("content-disposition")).toMatch(/^attachment; filename="pine-drama-diagnostics-/);
     const text = await response.text();
-    const body = JSON.parse(text) as { computers: Record<string, unknown>[]; sessions: unknown[]; log: string[] };
+    const body = JSON.parse(text) as { computers: Record<string, unknown>[]; sessions: unknown[]; logs: { engine: string[]; desktop: string[] } };
     expect(body.computers.length).toBeGreaterThan(0);
     expect(body.sessions.length).toBeGreaterThan(0);
-    expect(body.log.some((line) => line.endsWith("warn diagnostics: a line for the log"))).toBe(true);
+    expect(body.logs.engine.some((line) => line.endsWith("warn diagnostics: a line for the log"))).toBe(true);
     // Sealed values never leave: a Computer's credentials and binding, a session's token.
     const sealed = [
       ...m.db.all<{ credentials: string; binding: string | null }>("select credentials, binding from computers").flatMap((row) => [row.credentials, row.binding]),

@@ -1,11 +1,12 @@
 // Updates from the app's GitHub releases (electron-builder.config.mjs, publish), checked when
-// the app starts and every hour. A build that can install one (Windows, Linux, and a
-// macOS build signed with a Developer ID) downloads it quietly and offers to restart into it;
-// otherwise it's put in place the next time the app quits. An ad-hoc macOS build can't
-// install an update, so it says a new version is out and opens the download page.
+// the app starts and every hour. A build that can install one (Windows, Linux, and a macOS
+// build signed with a Developer ID) downloads it in the background and puts it in place when
+// the app quits; a notification says when it's ready, and clicking it restarts into it at once.
+// An ad-hoc macOS build can't install an update, so its notification opens the download page
+// instead. What the updater does goes to the desktop log (src/engine/log.ts).
 import { readFileSync } from "node:fs";
 import path from "node:path";
-import { app, dialog, shell } from "electron";
+import { Notification, app, autoUpdater as squirrel, shell } from "electron";
 // Named, not the default: bundled, the package's default export is undefined.
 import { autoUpdater } from "electron-updater";
 
@@ -20,45 +21,58 @@ function canInstall(): boolean {
   return distribution === "developer-id";
 }
 
+/** The notification on screen, held so its click still arrives. */
+let shown: Notification | undefined;
+
+/** A notification that acts when clicked. Where the system shows none, an update still goes in when the app quits. */
+function notify(title: string, body: string, onClick: () => void): void {
+  if (!Notification.isSupported()) return;
+  shown = new Notification({ title, body });
+  shown.on("click", onClick);
+  shown.show();
+}
+
 export function keepUpdated(): void {
   if (!app.isPackaged) return;
   const installs = canInstall();
-  // Its own logger prints a stack for every failed check (offline, no release yet); one line below says enough.
-  autoUpdater.logger = null;
+  autoUpdater.logger = console;
   autoUpdater.autoDownload = installs;
   autoUpdater.autoInstallOnAppQuit = installs;
-  // Each version is offered once a launch; a "Later" holds until the app starts again.
+  // Its logger has it already; an "error" event without a listener would throw.
+  autoUpdater.on("error", () => undefined);
+  // An hourly check finds the same version again: each one is offered once a launch.
   const offered = new Set<string>();
-  autoUpdater.on("update-available", (info) => {
-    if (installs || offered.has(info.version)) return;
-    offered.add(info.version);
-    void dialog
-      .showMessageBox({
-        type: "info",
-        message: `Pine Drama Studio ${info.version} is out.`,
-        detail: "This copy can't update itself on macOS. Download the new version and put it in Applications in place of this one; your dramas stay as they are.",
-        buttons: ["Download", "Later"],
-      })
-      .then(({ response }) => {
-        if (response === 0) void shell.openExternal(RELEASES);
-      });
-  });
-  autoUpdater.on("update-downloaded", (info) => {
-    if (offered.has(info.version)) return;
-    offered.add(info.version);
-    void dialog
-      .showMessageBox({
-        type: "info",
-        message: `Pine Drama Studio ${info.version} is ready.`,
-        detail: "Restart to use it. Computers at work carry on, and the studio picks them up where they are. Otherwise it's put in place the next time you quit.",
-        buttons: ["Restart now", "Later"],
-      })
-      .then(({ response }) => {
-        if (response === 0) autoUpdater.quitAndInstall();
-      });
-  });
-  autoUpdater.on("error", (error) => console.warn("update check:", error.message));
-  const check = () => void autoUpdater.checkForUpdates().catch(() => undefined);
+  const once = (version: string, offer: () => void) => {
+    if (offered.has(version)) return;
+    offered.add(version);
+    offer();
+  };
+  if (installs) {
+    const ready = (version: string) =>
+      once(version, () =>
+        notify(`Pine Drama Studio ${version} is ready`, "It's put in place when you quit. Click to restart into it now.", () => autoUpdater.quitAndInstall()),
+      );
+    let downloaded = "";
+    autoUpdater.on("update-downloaded", (info) => {
+      downloaded = info.version;
+      if (process.platform !== "darwin") ready(info.version);
+    });
+    // On macOS it's ready only once Squirrel has staged it, which follows electron-updater's download.
+    if (process.platform === "darwin") squirrel.on("update-downloaded", () => ready(downloaded));
+  } else {
+    autoUpdater.on("update-available", (info) =>
+      once(info.version, () =>
+        notify(`Pine Drama Studio ${info.version} is out`, "This copy can't update itself. Click to download the new version.", () => void shell.openExternal(RELEASES)),
+      ),
+    );
+  }
+  // A failed check or download is in the log; the next check comes in an hour. The download is a
+  // promise of its own, which would otherwise go unhandled when it fails.
+  const check = () =>
+    void autoUpdater
+      .checkForUpdates()
+      .then((result) => result?.downloadPromise)
+      .catch(() => undefined);
   check();
   setInterval(check, EVERY);
 }
