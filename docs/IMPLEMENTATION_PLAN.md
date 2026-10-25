@@ -96,7 +96,9 @@ And in the studio, now handled:
 - **Questions.** The agent's question about the missing look returned no files; the studio found the new references in its folder and offered them for approval, the maker approved them, and the question went unanswered. A stop that neither returns nor names anything to review is now asked in words, with what the folder holds beside it. A resumed session that asks about files the drama already has, such as the same storyboards unchanged, shows them again.
 - **Counts.** The board's "Needs you" and the drama's "Waiting for you" count the same episodes: those waiting on an answer and those stopped.
 
-**Not yet verified:** parallel episodes on the real skill (the rehearsals ran up to 20 at once on stand-ins); recording real turns as the replay; a Computer actually reaching its running-time limit; Windows and Linux builds; signing and notarization.
+**Desktop delivery.** macOS builds are signed with Pine's Developer ID and notarized; Gatekeeper accepts a downloaded copy. Updating itself was tested end to end on Apple silicon: two signed builds and a local feed, where the older found the newer, Squirrel staged it, a normal quit put it in place, and it started again as the new version. A failed download is logged, not left unhandled.
+
+**Not yet verified:** parallel episodes on the real skill (the rehearsals ran up to 20 at once on stand-ins); recording real turns as the replay; a Computer actually reaching its running-time limit; the first release run in CI; updating on an Intel Mac, on Windows (NSIS) and on Linux (AppImage), and the click on the "ready" notification.
 
 ## Decisions carried in
 
