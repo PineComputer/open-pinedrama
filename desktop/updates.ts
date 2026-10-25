@@ -1,5 +1,5 @@
 // Updates from the app's GitHub releases (electron-builder.config.mjs, publish), checked when
-// the app starts and every few hours. A build that can install one (Windows, Linux, and a
+// the app starts and every hour. A build that can install one (Windows, Linux, and a
 // macOS build signed with a Developer ID) downloads it quietly and offers to restart into it;
 // otherwise it's put in place the next time the app quits. An ad-hoc macOS build can't
 // install an update, so it says a new version is out and opens the download page.
@@ -11,7 +11,7 @@ import { autoUpdater } from "electron-updater";
 
 /** Where the releases are, for a build that can't install one itself. */
 const RELEASES = "https://github.com/PineComputer/open-pinedrama/releases/latest";
-const EVERY = 4 * 60 * 60 * 1000;
+const EVERY = 60 * 60 * 1000;
 
 /** Whether this build can put an update in place: macOS only takes one signed with the same Developer ID. */
 function canInstall(): boolean {

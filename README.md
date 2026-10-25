@@ -80,7 +80,7 @@ closing the window keeps the line running until you quit.
 **Releases and updates.** `npm version minor` (or `patch`) and `git push --follow-tags`: the
 tag runs `.github/workflows/release.yml`, which checks, builds every platform and uploads it
 to a draft GitHub release. Publishing the draft releases it. The app checks those releases
-when it starts and every four hours (`desktop/updates.ts`), downloads a new version in the
+when it starts and every hour (`desktop/updates.ts`), downloads a new version in the
 background and offers to restart into it. It can only reach releases of a public repository.
 
 **Signing.** With a Developer ID Application certificate and an App Store Connect API key
