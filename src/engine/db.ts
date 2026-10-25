@@ -17,6 +17,7 @@ create table if not exists dramas (
   length text not null default '',  -- each episode's length, about this many seconds (60, 90, 120); '' from before it was asked
   mode text not null,               -- pine | replay: where its work runs, fixed at creation
   rehearsal integer not null default 0, -- 1: Pine's agent stands in for the drama skill (goals.ts, rehearsed)
+  reviewing text not null default 'every', -- every | key | none: what the maker reviews (reviews.ts, LEFT)
   status text not null,             -- setup | production | done | stopped
   note text not null default '',    -- why it stopped
   continues integer not null default 0,
@@ -194,6 +195,7 @@ export function db(): DatabaseSync {
     add("turns", "media", "real");
     add("dramas", "length", "text not null default ''");
     add("turns", "returned", "text not null default '[]'");
+    add("dramas", "reviewing", "text not null default 'every'");
     shared.__studioDb = handle;
   }
   return shared.__studioDb;

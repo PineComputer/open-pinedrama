@@ -1,5 +1,5 @@
 // The studio's rows, typed, and the small queries several modules share.
-import type { DramaStatus, EpisodeState, Mode, ReviewKind, ReviewState } from "../shared/types.ts";
+import type { DramaStatus, EpisodeState, Mode, ReviewKind, ReviewState, Reviewing } from "../shared/types.ts";
 import { all, get, run } from "./db.ts";
 
 export interface DramaRow {
@@ -17,6 +17,7 @@ export interface DramaRow {
   mode: Mode;
   /** 1 for a rehearsal: Pine's agent stands in for the drama skill with placeholder files. */
   rehearsal: number;
+  reviewing: Reviewing;
   status: DramaStatus;
   note: string;
   /** Why the studio held it, as a code the app words (HoldReason); empty when it didn't. */

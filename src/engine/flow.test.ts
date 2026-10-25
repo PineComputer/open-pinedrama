@@ -288,6 +288,36 @@ describe("a drama in replay", () => {
     expect(ids(await call<ReviewView>("GET", `/api/reviews/${again.id}`))).toEqual(ids(await call<ReviewView>("GET", `/api/reviews/${first.id}`)));
   }, 30_000);
 
+  // The maker reviews only the cast and the cuts, then nothing: the studio approves the rest as the agent stops for it.
+  it("approves on its own what the maker chose not to review", async () => {
+    const { all, run } = await import("./db.ts");
+    run("update dramas set status = 'done'");
+    fleet.stops = "ask";
+    const form = new FormData();
+    for (const [key, value] of Object.entries({ title: "Unreviewed drama", language: "en", parallel: "2", perComputer: "1", reviewing: "key" })) form.set(key, value);
+    form.append("files", new File(["EPISODE 1\nLin enters."], "screenplay.txt", { type: "text/plain" }));
+    const { id } = await call<{ id: string }>("POST", "/api/dramas", form);
+    // A question always waits for the maker, and so do the leads' looks.
+    const question = await until("the setup question", openReview(id, (item) => item.kind === "question"));
+    await call("POST", `/api/reviews/${question.id}/decision`, { items: [], words: "He is 32." });
+    await approveAll((await until("the looks", openReview(id, (item) => item.kind === "looks"))).id);
+    // The cut waits too; then the maker stops reviewing, and it goes on with everything after it.
+    await until("EP001's cut", openReview(id, (item) => item.episode === "EP001" && item.kind === "cut"));
+    await call("PATCH", `/api/dramas/${id}`, { reviewing: "none" });
+    await until(
+      "every episode finished",
+      async () => {
+        const view = await call<DramaView>("GET", `/api/dramas/${id}`);
+        return view.episodeRows.length > 0 && view.episodeRows.every((row) => row.state === "done") ? view : undefined;
+      },
+      30_000,
+    );
+    const answers = all<{ kind: string; answer: string }>("select kind, answer from reviews where drama_id = ? and state = 'answered'", id);
+    const unreviewed = (kind: string) => answers.filter((row) => row.kind === kind).every((row) => row.answer.includes("Approved without review"));
+    expect(["references", "storyboards", "takes", "cut"].map(unreviewed)).toEqual([true, true, true, true]);
+    expect(answers.filter((row) => row.kind === "looks").map((row) => row.answer.includes("Approved without review"))).toEqual([false]);
+  }, 60_000);
+
   // The maker stops a drama: its Computers stop, nothing new starts, and Try again carries on.
   it("stops when the maker says, and carries on when they try again", async () => {
     const { all, run } = await import("./db.ts");

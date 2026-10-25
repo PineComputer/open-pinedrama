@@ -187,6 +187,7 @@ export function dramaView(drama: DramaRow): DramaView {
     length: drama.length,
     parallel: drama.parallel,
     perComputer: drama.per_computer,
+    reviewing: drama.reviewing,
     setup: {
       state: setupState,
       reviewId: setupReview?.id,
