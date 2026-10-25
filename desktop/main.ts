@@ -10,12 +10,14 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { type UtilityProcess, BrowserWindow, app, dialog, safeStorage, shell, utilityProcess } from "electron";
 import { DATA_DIR } from "../src/engine/config.ts";
+import { keepLog } from "../src/engine/log.ts";
 import { keepUpdated } from "./updates.ts";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const PAPER = "#f7f4ef";
 
 app.setPath("userData", path.join(DATA_DIR, "browser"));
+keepLog("desktop");
 
 let engine: UtilityProcess | undefined;
 let origin: string | undefined;
@@ -107,6 +109,30 @@ async function open(): Promise<void> {
   await window.loadURL(link);
 }
 
+/**
+ * A copy run from its disk image, or from Downloads (which macOS runs from a read-only place),
+ * can't put an update in place. Before anything starts, offer to move it to Applications;
+ * true when it moved, and this copy is quitting for the one there.
+ */
+async function movedToApplications(): Promise<boolean> {
+  if (process.platform !== "darwin" || !app.isPackaged || app.isInApplicationsFolder()) return false;
+  const { response } = await dialog.showMessageBox({
+    type: "question",
+    message: "Move Pine Drama Studio to Applications?",
+    detail: "It updates itself reliably only from there.",
+    buttons: ["Move to Applications", "Not Now"],
+    defaultId: 0,
+    cancelId: 1,
+  });
+  if (response !== 0) return false;
+  try {
+    return app.moveToApplicationsFolder();
+  } catch (error) {
+    console.warn("move to Applications:", (error as Error).message);
+    return false;
+  }
+}
+
 function createWindow(): BrowserWindow {
   const mac = process.platform === "darwin";
   const created = new BrowserWindow({
@@ -156,6 +182,7 @@ if (!app.requestSingleInstanceLock()) {
     window.focus();
   });
   app.whenReady().then(async () => {
+    if (await movedToApplications()) return;
     await open();
     keepUpdated();
   });

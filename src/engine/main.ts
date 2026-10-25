@@ -48,7 +48,7 @@ for (const signal of ["SIGINT", "SIGTERM"] as const) process.on(signal, () => pr
 
 // The log first, so a start that fails is in it; then the data folder is ours, then the port:
 // only then does the production line start.
-keepLog();
+keepLog("engine");
 claimDataDir();
 db();
 const server = serve({ fetch: app().fetch, port: PORT, hostname: "127.0.0.1" }, (info) => {
