@@ -32,7 +32,9 @@ project has running for the studio.
 What you drop on New drama is source material: the screenplay in any format, and any
 notes or brief of your own. The agent prepares the skill's inputs from it, and what you
 set in New drama (title, language, look, format, episode length) is final wherever your
-files say otherwise. Pine bills the agents' turns and, separately,
+files say otherwise. **Your reviews** sets how much you approve yourself: every step, the
+cast and the cuts, or none; the studio approves the rest as the agent stops for it, and
+you can change it on the drama's page. Pine bills the agents' turns and, separately,
 generated video by the minute; the agents aren't told about cost, and the drama's page
 shows what it and each episode have spent so far.
 

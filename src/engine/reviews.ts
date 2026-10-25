@@ -2,7 +2,7 @@
 // a turn ends with a question and becomes answerable only once that turn's files are
 // saved; the maker's decision goes back as one answer to the turn that asked
 // (docs/IMPLEMENTATION_PLAN.md, rules 1 to 3).
-import type { Decision, FileItem, ReviewItem, ReviewKind } from "../shared/types.ts";
+import type { Decision, FileItem, ReviewItem, ReviewKind, Reviewing } from "../shared/types.ts";
 import { computerRef, fleet, sessionRef } from "./computers.ts";
 import { answerText } from "./decisions.ts";
 import { StudioError } from "./errors.ts";
@@ -132,6 +132,34 @@ export async function decide(reviewId: string, decision: Decision): Promise<Revi
     return await send(reviewId, decision);
   } finally {
     sending.delete(reviewId);
+  }
+}
+
+/** The kinds of review the studio approves for the maker, by what they chose to review (Reviewing). */
+const LEFT: Record<Reviewing, ReviewKind[]> = {
+  every: [],
+  key: ["references", "storyboards", "takes"],
+  none: ["looks", "references", "storyboards", "takes", "cut"],
+};
+
+/** What the agent is told, and the record keeps, for a step the maker chose not to review. */
+const UNREVIEWED = "Approved without review: I chose not to review this step.";
+
+/**
+ * Approves every waiting review the maker left to the studio, as the agent stops for it or as
+ * they change what they review. A question in words always waits for them; a decision that
+ * can't be sent leaves the review open for them too.
+ */
+export async function approveUnreviewed(dramaId?: string): Promise<void> {
+  const waiting = all<ReviewRow & { reviewing: Reviewing }>(
+    `select r.*, d.reviewing from reviews r join dramas d on d.id = r.drama_id where r.state = 'open'${dramaId ? " and r.drama_id = ?" : ""} order by r.created_at`,
+    ...(dramaId ? [dramaId] : []),
+  );
+  for (const review of waiting.filter((row) => LEFT[row.reviewing]?.includes(row.kind))) {
+    const { items } = itemsOf(review.kind, filesOfStop(review));
+    await decide(review.id, { words: UNREVIEWED, items: items.map((item) => ({ key: item.key, verdict: "approve", notes: [] })) }).catch((error) =>
+      console.error(`review ${review.id}: not approved on its own:`, (error as Error).message),
+    );
   }
 }
 

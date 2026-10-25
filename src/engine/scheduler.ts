@@ -29,7 +29,7 @@ import { DRAMA_SKILL, episodeGoal, rehearsed, resumeGoal, setupGoal } from "./go
 import type { FileRow } from "./library.ts";
 import { publish } from "./live.ts";
 import { type ComputerRow, type DramaRow, type EpisodeRow, type SessionRow, computer as computerRow, episodeCode, latestTurn, openSessionsOf, session as sessionRow } from "./records.ts";
-import { reconcileSending } from "./reviews.ts";
+import { approveUnreviewed, reconcileSending } from "./reviews.ts";
 import { noteDramaSkill } from "./settings.ts";
 import { attach, attachKit, episodeArchive, hasRun, inputs, projectArchive, references, sendRun, startRun, unconfirmedRuns } from "./runs.ts";
 
@@ -402,6 +402,7 @@ export async function reconcile(): Promise<void> {
     }
   }
   await reconcileSending();
+  await approveUnreviewed();
   publish("dramas", "inbox");
 }
 

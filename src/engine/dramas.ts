@@ -2,7 +2,7 @@
 // an episode whose session ended, stop the drama or retry it, talk to an agent.
 import { closeSession, computerRef, fleet, runningComputers, sessionRef, stop as stopComputer } from "./computers.ts";
 import { stopEvents } from "./follow.ts";
-import type { Mode } from "../shared/types.ts";
+import type { Mode, Reviewing } from "../shared/types.ts";
 import { MAX_ATTACHMENT } from "./config.ts";
 import { get, newId, now, run, transaction } from "./db.ts";
 import { save } from "./library.ts";
@@ -10,7 +10,7 @@ import { publish } from "./live.ts";
 import { type DramaRow, computer as computerRow, drama as dramaRow, episode as episodeRow, latestTurn, session as sessionRow } from "./records.ts";
 import { StudioError } from "./errors.ts";
 import { LENGTHS } from "./goals.ts";
-import { decide, pendingReview } from "./reviews.ts";
+import { approveUnreviewed, decide, pendingReview } from "./reviews.ts";
 import { startRun } from "./runs.ts";
 
 export interface NewDrama {
@@ -26,9 +26,13 @@ export interface NewDrama {
   files: { name: string; type: string; bytes: Uint8Array }[];
   /** Pine's agent stands in for the drama skill with placeholder files (goals.ts, rehearsed). */
   rehearsal?: boolean;
+  /** What the maker reviews: every step (the default), the key ones, or none. */
+  reviewing?: string;
 }
 
 const clamp = (value: number, low: number, high: number) => Math.min(high, Math.max(low, Math.round(value)));
+
+const reviewingOf = (value: string | undefined, otherwise: Reviewing): Reviewing => (["every", "key", "none"].includes(value ?? "") ? (value as Reviewing) : otherwise);
 
 /**
  * A new drama, made for the mode the studio is in. Its screenplay is stored first; the
@@ -51,8 +55,8 @@ export async function createDrama(input: NewDrama, mode: Mode): Promise<string> 
   }
   transaction(() => {
     run(
-      `insert into dramas (id, title, language, look, format, parallel, per_computer, notes, length, mode, rehearsal, status, created_at, updated_at)
-       values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'setup', ?, ?)`,
+      `insert into dramas (id, title, language, look, format, parallel, per_computer, notes, length, mode, rehearsal, reviewing, status, created_at, updated_at)
+       values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'setup', ?, ?)`,
       id,
       input.title.trim(),
       input.language === "en" ? "en" : "zh",
@@ -64,6 +68,7 @@ export async function createDrama(input: NewDrama, mode: Mode): Promise<string> 
       length,
       mode,
       input.rehearsal ? 1 : 0,
+      reviewingOf(input.reviewing, "every"),
       now(),
       now(),
     );
@@ -73,17 +78,20 @@ export async function createDrama(input: NewDrama, mode: Mode): Promise<string> 
   return id;
 }
 
-export function updateDrama(id: string, patch: { parallel?: number; perComputer?: number }): DramaRow {
+export function updateDrama(id: string, patch: { parallel?: number; perComputer?: number; reviewing?: string }): DramaRow {
   const drama = dramaRow(id);
   if (!drama) throw new StudioError("not-found", "No such drama.", 404);
   run(
-    "update dramas set parallel = ?, per_computer = ?, updated_at = ? where id = ?",
+    "update dramas set parallel = ?, per_computer = ?, reviewing = ?, updated_at = ? where id = ?",
     patch.parallel !== undefined ? clamp(patch.parallel, 1, 50) : drama.parallel,
     patch.perComputer !== undefined ? clamp(patch.perComputer, 1, 3) : drama.per_computer,
+    reviewingOf(patch.reviewing, drama.reviewing),
     now(),
     id,
   );
   publish(`drama:${id}`, "dramas");
+  // What waits for the maker now and is no longer theirs to review goes on at once.
+  void approveUnreviewed(id);
   return dramaRow(id)!;
 }
 

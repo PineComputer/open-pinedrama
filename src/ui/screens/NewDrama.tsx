@@ -1,8 +1,9 @@
 import { type DragEvent, useEffect, useRef, useState } from "react";
-import type { AppInfo } from "../../shared/types.ts";
+import type { AppInfo, Reviewing } from "../../shared/types.ts";
 import { api, useResource } from "../api.ts";
 import { useT } from "../i18n.ts";
 import { errorText } from "../labels.ts";
+import { ReviewingChoice } from "../Reviewing.tsx";
 import { navigate } from "../router.tsx";
 
 /** Files whose text the page can show; PDFs and Word files are read by the agent on the Computer. */
@@ -45,6 +46,7 @@ export function NewDrama() {
   const [perComputer, setPerComputer] = useState(1);
   const [notes, setNotes] = useState("");
   const [length, setLength] = useState("60");
+  const [reviewing, setReviewing] = useState<Reviewing>("every");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<unknown>();
   const picker = useRef<HTMLInputElement>(null);
@@ -73,7 +75,7 @@ export function NewDrama() {
     setBusy(true);
     setError(undefined);
     const form = new FormData();
-    for (const [key, value] of Object.entries({ title, language, look, format, notes, length, parallel: String(parallel), perComputer: String(perComputer), rehearsal: onPine && rehearsal ? "1" : "0" })) form.set(key, value);
+    for (const [key, value] of Object.entries({ title, language, look, format, notes, length, reviewing, parallel: String(parallel), perComputer: String(perComputer), rehearsal: onPine && rehearsal ? "1" : "0" })) form.set(key, value);
     for (const file of files) form.append("files", file);
     try {
       const { id } = await api<{ id: string }>("/api/dramas", { method: "POST", body: form });
@@ -173,6 +175,7 @@ export function NewDrama() {
               ))}
             </div>
           </div>
+          <ReviewingChoice value={reviewing} onChange={setReviewing} />
           <div className="pair">
             <div className="field">
               <label className="label" htmlFor="parallel">

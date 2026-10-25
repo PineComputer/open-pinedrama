@@ -170,7 +170,7 @@ docs/
 Review throughput is the main navigation. With 80 episodes, the maker should rarely go Board → episode → Board.
 
 1. **Slate** and **New drama** (drop files, title, language, look, format, episodes at once).
-2. **Inbox first.** A persistent "Next review (n)" control on every screen. Reviews open in the room for their kind and move to the next one when sent. A review ends with **Send review**, which shows a summary of the verdicts and notes before it goes. Plain questions are answered right in the inbox.
+2. **Inbox first.** A persistent "Next review (n)" control on every screen. Reviews open in the room for their kind and move to the next one when sent. A review ends with **Send review**, which shows a summary of the verdicts and notes before it goes. Plain questions are answered right in the inbox. A maker who wants it fast reviews less: **Your reviews** (New drama, and the drama's production line) is every step, the cast and the cuts, or none, and the studio approves the rest as the agent stops for it, telling it "Approved without review". A question in words always waits for the maker.
 3. **Drama** with tabs: **Board** (a wall of the episodes in their 9:16 frames, or a sheet of episodes × stages), **Cast & world**, **Crew**, **To review**; a **Chat** drawer (narration, questions, steer).
 4. **Episode room:**
    - **Storyboards:** filmstrip of segments, the image at its own aspect ratio with notes pinned to a spot, the agent's words and the shot list, approve / note / send back, keyboard.

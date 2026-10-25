@@ -3,6 +3,7 @@ import type { AppInfo, DramaView } from "../../shared/types.ts";
 import { api, useAction, useResource } from "../api.ts";
 import { type TKey, useT } from "../i18n.ts";
 import { errorText, lookLabel, moneyText } from "../labels.ts";
+import { ReviewingChoice } from "../Reviewing.tsx";
 import { Link } from "../router.tsx";
 import { Board, SetupPanel } from "./Board.tsx";
 import { Cast } from "./Cast.tsx";
@@ -27,13 +28,14 @@ function Tune({ drama, onDone }: { drama: DramaView; onDone: () => void }) {
   const { t } = useT();
   const [parallel, setParallel] = useState(drama.parallel);
   const [perComputer, setPerComputer] = useState(drama.perComputer);
+  const [reviewing, setReviewing] = useState(drama.reviewing);
   const [stopping, setStopping] = useState(false);
   const stop = useAction(async () => {
     await api(`/api/dramas/${drama.id}/stop`, { method: "POST" });
     onDone();
   });
   const save = async () => {
-    await api(`/api/dramas/${drama.id}`, { method: "PATCH", json: { parallel, perComputer } });
+    await api(`/api/dramas/${drama.id}`, { method: "PATCH", json: { parallel, perComputer, reviewing } });
     onDone();
   };
   return (
@@ -54,6 +56,7 @@ function Tune({ drama, onDone }: { drama: DramaView; onDone: () => void }) {
           ))}
         </div>
       </div>
+      <ReviewingChoice value={reviewing} onChange={setReviewing} />
       <div className="tune-actions">
         <button className="btn ink small" onClick={save}>
           {t("tune.save")}

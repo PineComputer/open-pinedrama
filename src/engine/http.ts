@@ -151,6 +151,7 @@ export function app(): Hono {
         notes: field("notes"),
         length: field("length"),
         rehearsal: field("rehearsal") === "1",
+        reviewing: field("reviewing"),
         files: await Promise.all(uploads.map(async (file) => ({ name: file.name, type: file.type, bytes: new Uint8Array(await file.arrayBuffer()) }))),
       }, mode);
       return c.json({ id });

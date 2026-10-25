@@ -9,7 +9,7 @@ import { VERDICT_KINDS, save, seenBefore } from "./library.ts";
 import { publish } from "./live.ts";
 import { classify, namedPaths, typeOf } from "./classify.ts";
 import { onEnded, stopsForMaker } from "./flow.ts";
-import { questionAsked, questionReady } from "./reviews.ts";
+import { approveUnreviewed, questionAsked, questionReady } from "./reviews.ts";
 import { type SessionRow, type TurnRow, computer as computerRow, costRaised, raiseCost, episode as episodeRow, episodeCode, session as sessionRow } from "./records.ts";
 
 const turnsFollowed = new Map<string, Promise<void>>();
@@ -183,6 +183,7 @@ export async function settle(sessionId: string, info: TurnInfo): Promise<void> {
   });
   await onEnded(sessionRow(sessionId)!, info, stop);
   publish(`drama:${session.drama_id}`, "dramas", `session:${sessionId}`);
+  if (stop) await approveUnreviewed(session.drama_id);
 }
 
 /** Ended turns of open sessions that the flow hasn't acted on yet; following them again finishes the job. */
