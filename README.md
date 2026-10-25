@@ -72,8 +72,10 @@ The app is the same engine and UI in Electron (`desktop/main.ts`). The engine ru
 utility process on a free port with a token made for this launch, and the app opens its
 own window with it, so there is no link to open. One copy runs at a time. On macOS the
 studio's bar is the window's title bar, the dock badge counts the reviews waiting, and
-closing the window keeps the line running until you quit. Builds are not signed yet, so
-macOS asks you to allow the app the first time (System Settings → Privacy & Security).
+closing the window keeps the line running until you quit. The macOS build is signed ad hoc,
+not with a Developer ID, and isn't notarized: a copy that was downloaded or sent through a
+chat app opens only once you allow it (open it, then System Settings → Privacy & Security →
+Open Anyway).
 `python3 scripts/icon.py` draws the icon.
 
 ## How it fits together

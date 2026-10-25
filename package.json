@@ -64,6 +64,8 @@
     ],
     "mac": {
       "category": "public.app-category.video",
+      "identity": "-",
+      "hardenedRuntime": false,
       "target": [
         "dmg"
       ]
