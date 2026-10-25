@@ -8,6 +8,7 @@ import { setFleet } from "./computers.ts";
 import { appInfo, initialFleet } from "./connection.ts";
 import { db } from "./db.ts";
 import { app, openLink } from "./http.ts";
+import { keepLog } from "./log.ts";
 import { startClock } from "./scheduler.ts";
 
 /** One engine per data folder: two would drive the same Computers and spend twice. */
@@ -45,7 +46,9 @@ function running(pid: number): boolean {
 
 for (const signal of ["SIGINT", "SIGTERM"] as const) process.on(signal, () => process.exit(0));
 
-// The data folder is ours, then the port: only then does the production line start.
+// The log first, so a start that fails is in it; then the data folder is ours, then the port:
+// only then does the production line start.
+keepLog();
 claimDataDir();
 db();
 const server = serve({ fetch: app().fetch, port: PORT, hostname: "127.0.0.1" }, (info) => {
@@ -55,7 +58,8 @@ const server = serve({ fetch: app().fetch, port: PORT, hostname: "127.0.0.1" }, 
   // In the desktop app the shell opens the window itself; on its own, the engine prints the way in.
   const shell = (process as { parentPort?: { postMessage(message: unknown): void } }).parentPort;
   if (shell) shell.postMessage({ type: "ready", port: info.port });
-  else console.log(`Open ${openLink(process.env.STUDIO_OPEN_ORIGIN || `http://127.0.0.1:${info.port}`)}`);
+  // Printed, not logged: the link carries this launch's token, and the log goes into diagnostics.
+  else process.stdout.write(`Open ${openLink(process.env.STUDIO_OPEN_ORIGIN || `http://127.0.0.1:${info.port}`)}\n`);
 });
 server.on("error", (error: NodeJS.ErrnoException) => {
   if (error.code !== "EADDRINUSE") throw error;
