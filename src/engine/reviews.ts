@@ -18,20 +18,21 @@ import { type ReviewRow, type SessionRow, type TurnRow, computer as computerRow,
  * What a stop asks the maker for, from the files it returned. In the setup, looks alone are
  * the leads (each one's base look and face, which the skill keeps as a state named face);
  * with places, props or further looks, they are the shared references pre-production made
- * for every episode. With nothing to look at, it is a question answered in words, whatever
- * its words mention: a review with no items would send an empty decision.
+ * for every episode. An episode asks about its own work, or about a reference the maker let
+ * it make that setup didn't (a look the image model refused then). With nothing to look at,
+ * it is a question answered in words, whatever its words mention: a review with no items
+ * would send an empty decision.
  */
 export function inferKind(role: SessionRow["role"], files: (Pick<FileRow, "kind"> & { look?: string | null })[]): ReviewKind {
   const kinds = new Set(files.map((file) => file.kind));
-  if (role === "setup") {
-    const further = (look: string | null | undefined) => !!look && look !== "base" && look.toLowerCase() !== "face";
-    if (kinds.has("location") || kinds.has("prop") || files.some((file) => file.kind === "look" && further(file.look))) return "references";
-    return kinds.has("look") ? "looks" : "question";
+  if (role !== "setup") {
+    if (kinds.has("cut")) return "cut";
+    if (kinds.has("take")) return "takes";
+    if (kinds.has("storyboard")) return "storyboards";
   }
-  if (kinds.has("cut")) return "cut";
-  if (kinds.has("take")) return "takes";
-  if (kinds.has("storyboard")) return "storyboards";
-  return "question";
+  const further = (look: string | null | undefined) => !!look && look !== "base" && look.toLowerCase() !== "face";
+  if (kinds.has("location") || kinds.has("prop") || files.some((file) => file.kind === "look" && further(file.look))) return "references";
+  return kinds.has("look") ? "looks" : "question";
 }
 
 function lookKey(file: Pick<FileRow, "subject" | "look">): string {
