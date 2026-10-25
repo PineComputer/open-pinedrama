@@ -30,6 +30,6 @@ export default {
     ...(developerId ? { hardenedRuntime: true } : { identity: "-", hardenedRuntime: false }),
   },
   win: { target: ["nsis"] },
-  linux: { target: ["AppImage"], category: "AudioVideo" },
+  linux: { target: ["AppImage"], category: "AudioVideo", executableName: "pine-drama-studio" },
   publish: [{ provider: "github", owner: "PineComputer", repo: "open-pinedrama" }],
 };
