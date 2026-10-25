@@ -408,3 +408,25 @@ describe("the production line", () => {
     expect(m.computers.hasFleet()).toBe(true);
   });
 });
+
+describe("diagnostics", () => {
+  it("carry the studio's state and log, and nothing sealed", async () => {
+    (await import("./log.ts")).keepLog();
+    console.warn("diagnostics: a line for the log");
+    const response = await request("GET", "/api/diagnostics", SIGNED_IN);
+    expect(response.headers.get("content-disposition")).toMatch(/^attachment; filename="pine-drama-diagnostics-/);
+    const text = await response.text();
+    const body = JSON.parse(text) as { computers: Record<string, unknown>[]; sessions: unknown[]; log: string[] };
+    expect(body.computers.length).toBeGreaterThan(0);
+    expect(body.sessions.length).toBeGreaterThan(0);
+    expect(body.log.some((line) => line.endsWith("warn diagnostics: a line for the log"))).toBe(true);
+    // Sealed values never leave: a Computer's credentials and binding, a session's token.
+    const sealed = [
+      ...m.db.all<{ credentials: string; binding: string | null }>("select credentials, binding from computers").flatMap((row) => [row.credentials, row.binding]),
+      ...m.db.all<{ token: string | null }>("select token from sessions").map((row) => row.token),
+    ].filter((value): value is string => Boolean(value));
+    expect(sealed.length).toBeGreaterThan(0);
+    for (const value of sealed) expect(text.includes(value)).toBe(false);
+    expect(Object.keys(body.computers[0])).not.toContain("credentials");
+  });
+});

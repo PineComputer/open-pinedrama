@@ -48,6 +48,9 @@ const en = {
   "settings.notifyBlocked": "This browser blocks the studio's notifications; allow them in its site settings.",
   "settings.data": "Data",
   "settings.dataHint": "The records, and the library of every file the agents returned.",
+  "settings.troubleshooting": "Troubleshooting",
+  "settings.diagnostics": "Save diagnostics",
+  "settings.diagnosticsHint": "When something goes wrong, send this file to Pine. It holds the studio's log and the state of your dramas: their titles, the agents' recent messages, errors, and Pine's ids for your Computers and sessions. It never holds your API key or your files.",
 
   "slate.title": "Dramas",
   "slate.facts": "{a} in production · {b} waiting for you",
@@ -415,6 +418,9 @@ const zh: Record<Key, string> = {
   "settings.notifyBlocked": "浏览器屏蔽了工作室的通知，请在网站设置里允许。",
   "settings.data": "数据",
   "settings.dataHint": "记录，以及智能体返回的所有文件。",
+  "settings.troubleshooting": "故障排查",
+  "settings.diagnostics": "保存诊断文件",
+  "settings.diagnosticsHint": "出问题时，把这个文件发给 Pine。它包含工作室的日志和剧目状态：剧名、智能体最近的消息、错误，以及 Pine 为你的电脑和会话分配的 ID。不包含你的 API 密钥和任何文件。",
 
   "slate.title": "剧目",
   "slate.facts": "{a} 部制作中 · {b} 项等你审阅",

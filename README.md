@@ -27,7 +27,9 @@ On first run the studio asks for your Pine project's API key (Project → API ke
 Pine console). It checks the key with Pine, then keeps it sealed; nothing needs editing.
 The project needs Pine's drama skill; any drama can instead be rehearsed (see Develop).
 Settings changes or forgets the key, and forgetting it first stops every Computer the
-project has running for the studio.
+project has running for the studio. When something goes wrong, Settings → Troubleshooting
+saves a diagnostics file to send Pine: the engine's log (`logs/engine.log` in the data
+folder) and the state of your dramas with Pine's ids, never the key or your files.
 
 What you drop on New drama is source material: the screenplay in any format, and any
 notes or brief of your own. The agent prepares the skill's inputs from it, and what you

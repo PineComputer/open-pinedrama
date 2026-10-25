@@ -95,6 +95,17 @@ export function Settings({ app, onChange }: { app: AppInfo; onChange: () => void
             <span className="quiet small">{t("settings.dataHint")}</span>
           </div>
         </section>
+        <section>
+          <span className="label">{t("settings.troubleshooting")}</span>
+          <div className="block">
+            <div className="inline">
+              <a className="btn" href="/api/diagnostics" download>
+                {t("settings.diagnostics")}
+              </a>
+            </div>
+            <span className="quiet small">{t("settings.diagnosticsHint")}</span>
+          </div>
+        </section>
       </div>
     </main>
   );
