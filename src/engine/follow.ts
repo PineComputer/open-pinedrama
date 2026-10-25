@@ -86,7 +86,7 @@ async function loop(sessionId: string, firstTurn: string): Promise<void> {
   }
 }
 
-/** The same kinds, as a list for SQL. */
+/** VERDICT_KINDS as an SQL list. */
 const REVIEWED = VERDICT_KINDS.map((kind) => `'${kind}'`).join(", ");
 
 function known(dramaId: string, relPath: string): boolean {
