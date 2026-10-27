@@ -4,6 +4,8 @@
 import { Client } from "@pinesandbox/computer";
 import { get, run } from "./db.ts";
 import { StudioError } from "./errors.ts";
+import type { Limits } from "./fleet.ts";
+import { limitsOf } from "./pine-fleet.ts";
 import { seal, unseal } from "./seal.ts";
 
 export const DEFAULT_ENDPOINT = "https://pinesandbox.io";
@@ -67,8 +69,8 @@ export function keyHint(apiKey: string): string {
   return `${apiKey.slice(0, 3)}…${apiKey.slice(-4)}`;
 }
 
-/** Asks Pine whether the project accepts this key, without starting anything. */
-export async function checkProject(project: PineProject): Promise<{ maxComputers: number | null }> {
+/** Asks Pine whether the project accepts this key, without starting anything, and returns the project's limits. */
+export async function checkProject(project: PineProject): Promise<Limits> {
   let endpoint: URL;
   try {
     endpoint = new URL(project.endpoint);
@@ -77,8 +79,7 @@ export async function checkProject(project: PineProject): Promise<{ maxComputers
   }
   if (!project.apiKey.trim()) throw new StudioError("key-missing", "Paste your project's API key.");
   try {
-    const policy = await new Client({ endpoint: endpoint.toString().replace(/\/$/, ""), apiKey: project.apiKey.trim(), controlHost: project.controlHost }).projectPolicy();
-    return { maxComputers: policy.maxConcurrentComputers };
+    return limitsOf(await new Client({ endpoint: endpoint.toString().replace(/\/$/, ""), apiKey: project.apiKey.trim(), controlHost: project.controlHost }).projectPolicy());
   } catch (error) {
     const status = (error as { status?: number }).status;
     if (status === 401 || status === 403) throw new StudioError("key-rejected", "Pine didn't accept that key. Copy it again from the console: Project → API keys.");
