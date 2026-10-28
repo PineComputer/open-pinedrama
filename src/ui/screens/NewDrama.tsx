@@ -29,6 +29,32 @@ function useOpening(files: File[]): string | undefined {
   return opening;
 }
 
+/**
+ * A friendly tip on the screenplay's form: drama-cli reads Fountain (https://fountain.io/syntax)
+ * with a few rules of its own (`drama-cli init -h`), and the agent rewrites any other form into it,
+ * so this only helps a maker who would rather do it first, with a prompt for their own AI. The
+ * sample is cut down from `drama-cli screenplay sample` (short_drama 73aaf1c5), in the studio's language.
+ */
+function FormatTip() {
+  const { t } = useT();
+  const [copied, setCopied] = useState(false);
+  const copy = async () => {
+    await navigator.clipboard.writeText(t("new.formatPrompt"));
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+  return (
+    <details className="format-tip">
+      <summary>{t("new.formatTip")}</summary>
+      <p>{t("new.formatText")}</p>
+      <pre>{t("new.formatSample")}</pre>
+      <button className="link small" onClick={() => void copy()}>
+        {copied ? t("new.copied") : t("new.copyPrompt")}
+      </button>
+    </details>
+  );
+}
+
 /** The preset templates: those drama-cli has a preset for, and greyed, those not supported yet. */
 export function PresetChoice({ value, onChange }: { value: string; onChange: (preset: string) => void }) {
   const { t } = useT();
@@ -132,6 +158,7 @@ export function NewDrama() {
             {t("new.choose")}
           </button>
           <input ref={picker} type="file" multiple hidden onChange={(event) => add(event.target.files)} />
+          <FormatTip />
           {files.length > 0 && (
             <div className="pages">
               {files.map((file) => (
