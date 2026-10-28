@@ -116,9 +116,12 @@ export function NewDrama() {
     setFiles((current) => [...current, ...added.filter((file) => !current.some((c) => c.name === file.name && c.size === file.size))]);
   };
 
+  // A drag from an editor's file tree (VS Code's, say) carries the file's path, not the file: say so rather than do nothing.
+  const [notFiles, setNotFiles] = useState(false);
   const onDrop = (event: DragEvent) => {
     event.preventDefault();
     setOver(false);
+    setNotFiles(event.dataTransfer.files.length === 0);
     add(event.dataTransfer.files);
   };
 
@@ -158,6 +161,7 @@ export function NewDrama() {
             {t("new.choose")}
           </button>
           <input ref={picker} type="file" multiple hidden onChange={(event) => add(event.target.files)} />
+          {notFiles && <p className="error small">{t("new.notFiles")}</p>}
           <FormatTip />
           {files.length > 0 && (
             <div className="pages">
