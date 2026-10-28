@@ -219,9 +219,9 @@ describe("the production line", () => {
     m.scheduler.stopClock();
   });
 
-  it("holds a drama made before its project's presets were known, offers them but nsfw, and starts once the maker chooses", async () => {
+  it("holds a drama made before its project's presets were known, offers only the allowed ones, and starts once the maker chooses", async () => {
     const fleet = new m.replay.ReplayFleet();
-    fleet.presets = async () => ["zh-cn-live-sfw", "zh-cn-live-nsfw", "en-us-live-sfw"];
+    fleet.presets = async () => ["customer-xxcited", "zh-cn-live-sfw", "zh-cn-live-nsfw", "en-us-live-sfw"];
     quiet();
     // As for a project none of whose Computers has listed its presets yet.
     m.db.run("delete from settings where key like 'presets.%'");
@@ -235,6 +235,7 @@ describe("the production line", () => {
     // Known now, the presets bind New drama, and the maker chooses among them.
     await expect(m.dramas.createDrama({ ...newDrama("No preset"), preset: "" }, "replay")).rejects.toThrow(/Choose a preset/);
     await expect(m.dramas.createDrama({ ...newDrama("Hidden preset"), preset: "zh-cn-live-nsfw" }, "replay")).rejects.toThrow(/no preset zh-cn-live-nsfw/);
+    await expect(m.dramas.createDrama({ ...newDrama("Adult preset"), preset: "customer-xxcited" }, "replay")).rejects.toThrow(/no preset customer-xxcited/);
     const file = m.db.get<{ id: number }>("select f.id from files f join inputs i on i.file_id = f.id where i.drama_id = ? and f.kind = 'screenplay'", id)!;
     expect(() => m.dramas.chooseInputs(id, { preset: "zh-cn-live-sfw", screenplayLanguage: "zh", screenplay: 0 })).toThrow(/which file is the screenplay/);
     m.dramas.chooseInputs(id, { preset: "zh-cn-live-sfw", screenplayLanguage: "zh", screenplay: file.id });

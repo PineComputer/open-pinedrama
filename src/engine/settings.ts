@@ -63,11 +63,15 @@ export function noteDramaSkill(project: string, offered: boolean): boolean {
 }
 
 /**
- * Whether New drama offers a preset. Presets are named <language>-<form>-<rating>
- * (short_drama doc/drama-cli/presets.md); those rated nsfw aren't offered for now.
+ * The presets New drama may offer, named one by one: a preset drama-cli adds is offered only once
+ * it is added here. Adult presets aren't offered for now, and not every one says so in its name
+ * (customer-xxcited's preset.yaml sets min_character_age: 18).
  */
+const OFFERED = new Set(["en-us-live-sfw", "zh-cn-live-sfw"]);
+
+/** Whether New drama offers a preset the project's drama-cli lists. */
 export function offered(preset: string): boolean {
-  return !preset.split("-").includes("nsfw");
+  return OFFERED.has(preset);
 }
 
 /** The presets the project's drama-cli offers, as its Computers last listed them; unknown until one has. */
