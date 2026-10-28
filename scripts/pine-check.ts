@@ -161,10 +161,10 @@ try {
     sessions.push(session);
     return { value: session, note: session.name };
   });
-  // The presets New drama offers, listed by the Computer's drama-cli in the session's terminal.
-  if (a && skills?.includes(DRAMA_SKILL)) {
+  // The presets New drama offers, listed by Pine's agent with the Computer's drama-cli in a session of its own.
+  if (skills?.includes(DRAMA_SKILL)) {
     await step("presets", async () => {
-      const listed = await fleet.presets(computer, a);
+      const listed = await fleet.presets(computer);
       expect(listed.length > 0, "drama-cli lists no preset");
       return { value: listed, note: listed.join(", ") };
     });

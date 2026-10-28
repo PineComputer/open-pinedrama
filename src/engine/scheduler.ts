@@ -19,7 +19,6 @@ import {
   restart,
   retiring,
   runningComputers,
-  sessionRef,
   setIdle,
   startable,
   stop,
@@ -31,7 +30,7 @@ import type { FileRow } from "./library.ts";
 import { publish } from "./live.ts";
 import { type ComputerRow, type DramaRow, type EpisodeRow, type SessionRow, computer as computerRow, episodeCode, latestTurn, openSessionsOf, session as sessionRow } from "./records.ts";
 import { approveUnreviewed, reconcileSending } from "./reviews.ts";
-import { noteDramaSkill, notePresets } from "./settings.ts";
+import { noteDramaSkill, notePresets, presets } from "./settings.ts";
 import { attach, attachKit, episodeArchive, hasRun, inputs, projectArchive, references, sendRun, startRun, unconfirmedRuns } from "./runs.ts";
 
 /** Work the clock started and hasn't finished, so a slow call never starts twice. */
@@ -182,11 +181,13 @@ async function hold(drama: DramaRow, session: SessionRow, reason: "no-drama-skil
 
 /**
  * Lists the presets the Computer's drama-cli bundles, for New drama to offer, and remembers them
- * for the project: they come with drama-cli, which comes with the project.
+ * for the project: they come with drama-cli, which comes with the project. Once known, a drama
+ * that has its preset doesn't list them again.
  */
-async function listPresets(session: SessionRow): Promise<void> {
+async function listPresets(drama: DramaRow, session: SessionRow): Promise<void> {
+  if (drama.preset && presets(fleet().project)) return;
   const computer = computerRow(session.computer_id)!;
-  if (notePresets(fleet().project, await fleet().presets(computerRef(computer), sessionRef(session)))) publish("app");
+  if (notePresets(fleet().project, await fleet().presets(computerRef(computer)))) publish("app");
 }
 
 /** The drama's screenplay as its sessions name it in the project (goals.ts, projectScreenplay); undefined before the studio chose the inputs. */
@@ -210,7 +211,7 @@ async function beginSetup(drama: DramaRow, session: SessionRow): Promise<void> {
       await hold(drama, session, "no-drama-skill");
       return;
     }
-    await listPresets(session);
+    await listPresets(drama, session);
   }
   // A drama made before its project's presets were known, or before New drama asked for the inputs, waits for the maker to choose them.
   const files = inputs(drama.id);

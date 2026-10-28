@@ -15,7 +15,10 @@ import {
   type Computer,
   type Session,
 } from "@pinesandbox/computer";
-import type { Attached, ComputerRef, Fleet, FleetEvent, SessionRef, TurnInfo } from "./fleet.ts";
+import { type Attached, type ComputerRef, ENDED, type Fleet, type FleetEvent, type SessionRef, type TurnInfo } from "./fleet.ts";
+
+/** The one turn that lists the presets the Computer's drama-cli bundles (Fleet.presets). */
+const PRESETS_GOAL = "Run `drama-cli preset list` and reply with exactly what it prints, a single line of JSON, and nothing else. Make nothing else.";
 
 /** Marks the errors that mean "the project is busy, try later" (fleet.ts, isBusy), and passes the error on. */
 function busyOr(error: unknown): never {
@@ -156,10 +159,22 @@ export class PineFleet implements Fleet {
     return listed.filter((skill) => skill.enabled !== false).map((skill) => String(skill.name));
   }
 
-  async presets(ref: ComputerRef, session: SessionRef) {
-    const result = await this.session(ref, session).exec("drama-cli preset list", { timeoutMs: 60_000 });
-    if (result.exitCode !== 0) throw new Error(`drama-cli preset list exited ${result.exitCode ?? "without a status"}: ${(result.stderr || result.error).trim()}`);
-    return (JSON.parse(result.stdout) as { bundled: string[] }).bundled;
+  async presets(ref: ComputerRef) {
+    const computer = this.computer(ref);
+    const session = await computer.createSession({ label: "Presets" });
+    try {
+      let turn = await session.agent.run(PRESETS_GOAL, { idempotencyKey: `presets-${session.name}` });
+      while (!ENDED.has(turn.state)) turn = await session.agent.wait(turn.turnId, { timeoutMs: 60_000 });
+      const reply = said(turn.result?.summary ?? "");
+      const listed = /\{[\s\S]*\}/.exec(reply)?.[0];
+      const bundled = listed ? (JSON.parse(listed) as { bundled?: unknown }).bundled : undefined;
+      if (turn.state !== "completed" || !Array.isArray(bundled) || !bundled.every((name) => typeof name === "string")) {
+        throw new Error(`drama-cli preset list, run by the agent, ended ${turn.state} without its list: ${reply.slice(0, 300)}`);
+      }
+      return bundled as string[];
+    } finally {
+      await computer.destroySession(session.name, { clean: true });
+    }
   }
 
   async setIdleTimeout(ref: ComputerRef, seconds: number) {
