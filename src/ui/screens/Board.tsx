@@ -6,7 +6,9 @@ import { errorText, moneyText, nowText } from "../labels.ts";
 import { Link, navigate } from "../router.tsx";
 import { Still } from "../Still.tsx";
 import { Cast } from "./Cast.tsx";
-import { PresetChoice } from "./NewDrama.tsx";
+import { screenplayLanguageOf } from "../../shared/screenplay-language.ts";
+import { isDocument, useDocumentText } from "../viewing.tsx";
+import { PresetChoice, ScreenplayStructure } from "./NewDrama.tsx";
 
 function Mark({ cell }: { cell: StageCell }) {
   const { t } = useT();
@@ -243,13 +245,19 @@ export function Board({ drama }: { drama: DramaView }) {
  * maker chooses; the setup then starts.
  */
 function ChooseInputs({ drama }: { drama: DramaView }) {
-  const { t } = useT();
+  const { t, lang } = useT();
   const [preset, setPreset] = useState(drama.inputs.preset);
   const [screenplay, setScreenplay] = useState(drama.inputs.screenplay ?? (drama.inputs.files.length === 1 ? drama.inputs.files[0].id : null));
-  const [language, setLanguage] = useState(drama.inputs.screenplayLanguage);
   // A drama made before the studio wrote brief.md: the brief needs its episode length.
   const [length, setLength] = useState<string>();
-  const choose = useAction(() => api(`/api/dramas/${drama.id}/inputs`, { method: "POST", json: { preset, screenplay, screenplayLanguage: language, length } }));
+  // The screenplay language is read from the chosen screenplay, as New drama reads it.
+  const chosen = drama.inputs.files.find((file) => file.id === screenplay);
+  const stored = chosen && { url: `/api/files/${chosen.id}`, name: chosen.name, type: "" };
+  const { text, failed } = useDocumentText(stored);
+  // A file the page can't read shows no structure: the template's language then.
+  const unread = Boolean(stored && (!isDocument(stored) || failed));
+  const structure = text !== undefined || unread ? screenplayLanguageOf(text ?? "", drama.rehearsal ? "" : preset, lang) : undefined;
+  const choose = useAction(() => api(`/api/dramas/${drama.id}/inputs`, { method: "POST", json: { preset, screenplay, screenplayLanguage: structure?.language, length } }));
   return (
     <div className="compose-form">
       {!drama.rehearsal && <PresetChoice value={preset} onChange={setPreset} />}
@@ -262,17 +270,7 @@ function ChooseInputs({ drama }: { drama: DramaView }) {
             </button>
           ))}
         </div>
-      </div>
-      <div className="field">
-        <span className="label">{t("new.screenplayLanguage")}</span>
-        <div className="options">
-          {(["en", "zh"] as const).map((value) => (
-            <button key={value} aria-pressed={language === value} className={language === value ? "on" : ""} onClick={() => setLanguage(value)}>
-              {value === "zh" ? "中文" : "English"}
-            </button>
-          ))}
-        </div>
-        <span className="quiet small">{t("new.screenplayLanguageHint")}</span>
+        {structure && <ScreenplayStructure structure={structure} />}
       </div>
       {drama.inputs.needsLength && (
         <div className="field">
@@ -287,7 +285,7 @@ function ChooseInputs({ drama }: { drama: DramaView }) {
         </div>
       )}
       <div className="actions">
-        <button className="btn ink" disabled={choose.busy || screenplay === null || !language || (!drama.rehearsal && !preset) || (drama.inputs.needsLength && !length)} onClick={() => void choose.run()}>
+        <button className="btn ink" disabled={choose.busy || screenplay === null || !structure || (!drama.rehearsal && !preset) || (drama.inputs.needsLength && !length)} onClick={() => void choose.run()}>
           {t("setup.choose")}
         </button>
         {choose.error !== undefined && <span className="error small">{errorText(choose.error, t)}</span>}

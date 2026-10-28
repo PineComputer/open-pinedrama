@@ -89,22 +89,23 @@ export function listedEpisodes(text: string): { number: number; title: string }[
 
 /**
  * The working-directory files a text names: markdown links, backquoted or bare paths with a
- * folder and an extension. A question can name files it didn't return (Pine lists a turn's
- * files only when the agent returns them), so the studio fetches what the question names.
+ * folder and an extension of up to eight letters (fountain, markdown). A question can name files
+ * it didn't return (Pine lists a turn's files only when the agent returns them), so the studio
+ * fetches what the question names.
  */
 export function namedPaths(text: string): string[] {
   const found = new Set<string>();
   const candidates = [
     ...[...text.matchAll(/\]\(\s*<?([^)\s>]+)>?\s*\)/g)].map((m) => m[1]),
     ...[...text.matchAll(/`([^`\n]+)`/g)].map((m) => m[1]),
-    ...[...text.matchAll(/(?:^|[\s(（「“"'：:，,])((?:[^\s()（）\[\]`'"“”「」<>，,：:;；]+\/)+[^\s()（）\[\]`'"“”「」<>，,：:;；/]+\.(?:tar\.part-[a-z0-9]+|[A-Za-z0-9]{1,5}))(?=$|[\s)）」”"'，,。.;；:：!?！？])/g)].map((m) => m[1]),
+    ...[...text.matchAll(/(?:^|[\s(（「“"'：:，,])((?:[^\s()（）\[\]`'"“”「」<>，,：:;；]+\/)+[^\s()（）\[\]`'"“”「」<>，,：:;；/]+\.(?:tar\.part-[a-z0-9]+|[A-Za-z0-9]{1,8}))(?=$|[\s)）」”"'，,。.;；:：!?！？])/g)].map((m) => m[1]),
   ];
   for (const raw of candidates) {
     if (/^[a-z][\w+.-]*:\/\//i.test(raw)) continue; // a web address, not a file
     let file = raw.trim().replace(/^\.\//, "");
     // An absolute path inside the session's working directory: the part after files/.
     if (file.startsWith("/")) file = file.includes("/files/") ? file.slice(file.indexOf("/files/") + "/files/".length) : "";
-    if (!file || !file.includes("/") || !/\.(?:[A-Za-z0-9]{1,5}|tar\.part-[a-z0-9]+)$/.test(file) || file.split("/").some((part) => !part || part === "." || part === "..")) continue;
+    if (!file || !file.includes("/") || !/\.(?:[A-Za-z0-9]{1,8}|tar\.part-[a-z0-9]+)$/.test(file) || file.split("/").some((part) => !part || part === "." || part === "..")) continue;
     found.add(file);
   }
   return [...found];
@@ -120,8 +121,13 @@ const TYPES: Record<string, string> = {
   mov: "video/quicktime",
   webm: "video/webm",
   md: "text/markdown",
+  markdown: "text/markdown",
   json: "application/json",
   txt: "text/plain",
+  // Fountain is plain text (fountain.io/syntax); drama-cli writes a screenplay as screenplay.fountain.
+  fountain: "text/plain",
+  pdf: "application/pdf",
+  docx: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
   srt: "application/x-subrip",
 };
 

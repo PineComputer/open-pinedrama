@@ -7,7 +7,7 @@ import { errorText, fileKind, subjectName } from "../labels.ts";
 import { Markdown } from "../Markdown.tsx";
 import { Link, navigate } from "../router.tsx";
 import { Still } from "../Still.tsx";
-import { Pinboard, isImage, isVideo, useShotList, useSize, variantLabel } from "../viewing.tsx";
+import { DocumentView, Pinboard, isDocument, isImage, isVideo, useShotList, useSize, variantLabel } from "../viewing.tsx";
 
 type Drafts = Record<string, { verdict?: Verdict; notes: Note[] }>;
 
@@ -60,6 +60,23 @@ function Returned({ files }: { files: FileItem[] }) {
           </a>
         ))}
       </div>
+    </div>
+  );
+}
+
+/** The documents the agent returned or named (a rewritten screenplay, its review, a source), each readable in place. */
+function Documents({ files }: { files: FileItem[] }) {
+  const { t } = useT();
+  if (!files.length) return null;
+  return (
+    <div className="block documents">
+      <span className="label">{t("review.documents")}</span>
+      {files.map((file, index) => (
+        <details key={file.id} open={index === 0}>
+          <summary title={file.path}>{file.name}</summary>
+          <DocumentView file={file} />
+        </details>
+      ))}
     </div>
   );
 }
@@ -210,7 +227,8 @@ function QuestionRoom({ review, done }: { review: ReviewView; done: () => void }
             )}
           </div>
           {/* Documents last, so a long list doesn't push the answer out of view. */}
-          <Returned files={files.filter((file) => !isImage(file))} />
+          <Documents files={files.filter((file) => !isImage(file) && isDocument(file))} />
+          <Returned files={files.filter((file) => !isImage(file) && !isDocument(file))} />
         </div>
       </div>
     </main>

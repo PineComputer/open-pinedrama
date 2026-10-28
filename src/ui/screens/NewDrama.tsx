@@ -3,31 +3,45 @@ import type { AppInfo, Reviewing } from "../../shared/types.ts";
 import { api, useResource } from "../api.ts";
 import { type TKey, useT } from "../i18n.ts";
 import { TEMPLATES } from "../../shared/presets.ts";
+import { type ScreenplayLanguage, screenplayLanguageOf } from "../../shared/screenplay-language.ts";
+import { EXTRACTED, extractText, textName } from "../extract.ts";
 import { errorText } from "../labels.ts";
 import { ReviewingChoice } from "../Reviewing.tsx";
 import { navigate } from "../router.tsx";
 
-/** Files whose text the page can show; PDFs and Word files are read by the agent on the Computer. */
+/** Files whose text the page reads as it is; Word and PDF files are read with a parser (extract.ts). */
 const READABLE = /\.(txt|md|markdown|fountain|fdx)$/i;
 
-/** The opening of the first screenplay the page can read, to show on the manuscript. */
-function useOpening(files: File[]): string | undefined {
-  const [opening, setOpening] = useState<string>();
-  const first = files.find((file) => READABLE.test(file.name) || file.type.startsWith("text/"));
+/** A file's text as the page reads it: undefined while reading, "" when it holds none, null for a file it can't read. */
+type Text = string | null | undefined;
+
+/** The text of a screenplay file: as it is, or a Word or PDF file's extracted text. */
+function useFileText(file: File | undefined): Text {
+  const [text, setText] = useState<{ file?: File; text: Text }>({ text: undefined });
   useEffect(() => {
-    setOpening(undefined);
-    if (!first) return;
+    if (!file) return;
     let current = true;
-    void first
-      .slice(0, 6000)
-      .text()
-      .then((text) => current && setOpening(text.replace(/\r/g, "").split("\n").slice(0, 28).join("\n").trim()));
+    const read = EXTRACTED.test(file.name)
+      ? file.arrayBuffer().then((data) => extractText(file.name, data))
+      : READABLE.test(file.name) || file.type.startsWith("text/")
+        ? file.text()
+        : Promise.resolve(null);
+    read.then(
+      (value) => current && setText({ file, text: value }),
+      () => current && setText({ file, text: "" }),
+    );
     return () => {
       current = false;
     };
-  }, [first]);
-  return opening;
+  }, [file]);
+  return file && text.file === file ? text.text : undefined;
 }
+
+/** The first lines of a text, to show on the manuscript. */
+function openingOf(text: string): string {
+  return text.replace(/\r/g, "").split("\n").slice(0, 28).join("\n").trim();
+}
+
 
 /**
  * A friendly tip on the screenplay's form: drama-cli reads Fountain (https://fountain.io/syntax)
@@ -52,6 +66,16 @@ function FormatTip() {
         {copied ? t("new.copied") : t("new.copyPrompt")}
       </button>
     </details>
+  );
+}
+
+/** The screenplay language the studio set, shown as read: detected from the structure, or the template's. */
+export function ScreenplayStructure({ structure }: { structure: { language: ScreenplayLanguage; detected: boolean } }) {
+  const { t } = useT();
+  return (
+    <p className="quiet small">
+      {t(structure.detected ? "new.structureDetected" : "new.structureDefault", { language: t(`language.${structure.language}`) })}
+    </p>
   );
 }
 
@@ -90,14 +114,13 @@ export function NewDrama() {
   const [notes, setNotes] = useState("");
   const [length, setLength] = useState("60");
   const [reviewing, setReviewing] = useState<Reviewing>("every");
-  // drama-cli init's inputs, which the maker chooses: nothing is preselected but the only file there is.
+  // drama-cli init's inputs: the maker chooses the screenplay (the only file there is, or the one
+  // marked) and the preset; the screenplay language is read from the screenplay.
   const [screenplayChoice, setScreenplay] = useState<File>();
-  const [screenplayLanguage, setScreenplayLanguage] = useState<"zh" | "en">();
   const [preset, setPreset] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<unknown>();
   const picker = useRef<HTMLInputElement>(null);
-  const opening = useOpening(files);
   const app = useResource<AppInfo>("/api/app", ["app"]);
   // On Pine a drama can be rehearsed: Pine's agent stands in for the drama skill with placeholders.
   // Without the skill, a drama is rehearsed unless the maker would rather it waited for the skill.
@@ -107,9 +130,17 @@ export function NewDrama() {
   const rehearsal = rehearsalChoice ?? noSkill;
   // The marked file itself, not its name: two files may share one. The form sends its place among the files.
   const screenplay = files.length === 1 ? files[0] : screenplayChoice && files.includes(screenplayChoice) ? screenplayChoice : undefined;
+  const screenplayFile = screenplay;
+  const screenplayText = useFileText(screenplayFile ?? files.find((file) => READABLE.test(file.name) || EXTRACTED.test(file.name)));
+  const opening = screenplayText ? openingOf(screenplayText) : undefined;
+  // A Word or PDF screenplay goes as its text; one with no text (a scanned PDF) can't be the screenplay.
+  const extracted = screenplayFile && EXTRACTED.test(screenplayFile.name);
+  const noText = Boolean(extracted && screenplayText === "");
   // A rehearsal has no drama-cli, so no preset.
   const needsPreset = !(onPine && rehearsal);
-  const ready = Boolean(files.length && title.trim() && screenplay && screenplayLanguage && (!needsPreset || preset));
+  // Read once the screenplay's text is in; a file the page can't read shows no structure, so the template's language.
+  const structure = screenplayFile && screenplayText !== undefined && !noText ? screenplayLanguageOf(screenplayText ?? "", needsPreset ? preset : "", lang) : undefined;
+  const ready = Boolean(files.length && title.trim() && screenplay && structure && !noText && (!needsPreset || preset));
 
   const add = (list: FileList | null) => {
     if (!list) return;
@@ -130,8 +161,12 @@ export function NewDrama() {
     setBusy(true);
     setError(undefined);
     const form = new FormData();
-    for (const [key, value] of Object.entries({ title, language: lang, format, notes, length, reviewing, parallel: String(parallel), perComputer: String(perComputer), rehearsal: onPine && rehearsal ? "1" : "0", screenplay: screenplay ? String(files.indexOf(screenplay)) : "", screenplayLanguage: screenplayLanguage ?? "", preset: needsPreset ? preset : "" })) form.set(key, value);
-    for (const file of files) form.append("files", file);
+    // A Word or PDF screenplay is sent as its text, first, the file it came from kept beside it as a source.
+    const sent = extracted && screenplayText ? new File([screenplayText], textName(screenplayFile.name), { type: "text/plain" }) : undefined;
+    const sentFiles = sent ? [sent, ...files] : files;
+    const marked = sent ?? screenplay;
+    for (const [key, value] of Object.entries({ title, language: lang, format, notes, length, reviewing, parallel: String(parallel), perComputer: String(perComputer), rehearsal: onPine && rehearsal ? "1" : "0", screenplay: marked ? String(sentFiles.indexOf(marked)) : "", screenplayLanguage: structure?.language ?? "", preset: needsPreset ? preset : "" })) form.set(key, value);
+    for (const file of sentFiles) form.append("files", file);
     try {
       const { id } = await api<{ id: string }>("/api/dramas", { method: "POST", body: form });
       navigate(`/d/${id}`);
@@ -183,6 +218,9 @@ export function NewDrama() {
             </div>
           )}
           {files.length > 1 && <p className="quiet small">{t("new.screenplayHint")}</p>}
+          {extracted && screenplayText === undefined && <p className="quiet small">{t("new.extracting", { name: screenplayFile.name })}</p>}
+          {noText && <p className="error small">{t("new.noText", { name: screenplayFile!.name })}</p>}
+          {extracted && opening && <p className="quiet small">{t("new.extracted")}</p>}
           {opening && <pre className="opening">{opening}</pre>}
         </div>
 
@@ -205,17 +243,7 @@ export function NewDrama() {
               </div>
             </div>
           </div>
-          <div className="field">
-            <span className="label">{t("new.screenplayLanguage")}</span>
-            <div className="options">
-              {(["en", "zh"] as const).map((value) => (
-                <button key={value} aria-pressed={screenplayLanguage === value} className={screenplayLanguage === value ? "on" : ""} onClick={() => setScreenplayLanguage(value)}>
-                  {value === "zh" ? "中文" : "English"}
-                </button>
-              ))}
-            </div>
-            <span className="quiet small">{t("new.screenplayLanguageHint")}</span>
-          </div>
+          {structure && <ScreenplayStructure structure={structure} />}
           {needsPreset && <PresetChoice value={preset} onChange={setPreset} />}
           <div className="field">
             <span className="label">{t("new.length")}</span>

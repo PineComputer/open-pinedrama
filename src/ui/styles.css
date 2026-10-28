@@ -635,3 +635,9 @@ h1, h2, h3 { margin: 0; font-family: var(--serif); font-weight: 450; letter-spac
 
 /* A sum of money typed in a line: the currency sign before it. */
 .field { align-content: start; }
+
+/* Documents on a review page: each readable in place, the first open. */
+.documents details { border-top: 1px solid var(--rule); padding: 8px 0; }
+.documents summary { cursor: pointer; font: 500 14px/1.4 var(--sans); }
+.documents .document.plain { max-height: 60vh; overflow: auto; margin-top: 8px; }
+.document pre.fenced { font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--paper-2); padding: 10px 12px; border-radius: 2px; overflow-x: auto; white-space: pre; margin: 0 0 14px; }

@@ -1,5 +1,6 @@
-// The text the agent returns (bibles, breakdowns), set as a document: headings, lists,
-// emphasis, code and paragraphs, built as React elements, so nothing in the text can run.
+// The text the agent returns (bibles, breakdowns, a screenplay rewrite's review), set as a
+// document: headings, lists, emphasis, code, fenced blocks (kept line for line, as a
+// rewrite's line table is) and paragraphs, built as React elements, so nothing in the text can run.
 // Anything else stays readable as written. Very long text is cut short, with a note.
 import { Fragment, type ReactNode } from "react";
 
@@ -56,7 +57,23 @@ export function Markdown({ text, links, className = "document" }: { text: string
     }
     list = undefined;
   };
+  let fence: string[] | undefined;
   for (const line of lines) {
+    if (/^\s*(```|~~~)/.test(line)) {
+      // A fenced block (CommonMark, "Fenced code blocks"): its lines as written, in monospace.
+      if (fence) {
+        blocks.push(<pre key={blocks.length} className="fenced">{fence.join("\n")}</pre>);
+        fence = undefined;
+      } else {
+        flush();
+        fence = [];
+      }
+      continue;
+    }
+    if (fence) {
+      fence.push(line);
+      continue;
+    }
     const heading = line.match(/^(#{1,6})\s+(.*)$/);
     const bullet = line.match(/^\s*[-*+]\s+(.*)$/);
     const numbered = line.match(/^\s*\d+[.)]\s+(.*)$/);
@@ -81,6 +98,7 @@ export function Markdown({ text, links, className = "document" }: { text: string
       paragraph.push(line.trim());
     }
   }
+  if (fence) blocks.push(<pre key={blocks.length} className="fenced">{fence.join("\n")}</pre>);
   flush();
   return (
     <div className={className}>

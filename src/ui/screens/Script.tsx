@@ -1,38 +1,9 @@
 import { useState } from "react";
-import type { FileItem, ScriptPage } from "../../shared/types.ts";
+import type { ScriptPage } from "../../shared/types.ts";
 import { useResource } from "../api.ts";
 import { useT } from "../i18n.ts";
 import { errorText } from "../labels.ts";
-import { Markdown } from "../Markdown.tsx";
-import { useText } from "../viewing.tsx";
-
-const TEXT = /\.(md|markdown|txt|fountain)$/i;
-
-/** One document of the drama, set for reading; a file only the agent can read says so and downloads. */
-function Document({ file }: { file: FileItem }) {
-  const { t } = useT();
-  const readable = file.type.startsWith("text/") || TEXT.test(file.name);
-  const { text, failed } = useText(readable ? file : undefined);
-  if (!readable || failed) {
-    return (
-      <div className="block">
-        <p className="empty-note">{t("script.noPreview")}</p>
-        <a className="link start" href={`${file.url}&download=1`}>
-          {t("episode.download")} · {file.name}
-        </a>
-      </div>
-    );
-  }
-  if (text === undefined) return <p className="quiet">{t("loading")}</p>;
-  return (
-    <>
-      <a className="link small download" href={`${file.url}&download=1`}>
-        {t("episode.download")}
-      </a>
-      {/markdown/.test(file.type) || /\.(md|markdown)$/i.test(file.name) ? <Markdown text={text} /> : <pre className="document plain">{text}</pre>}
-    </>
-  );
-}
+import { DocumentView } from "../viewing.tsx";
 
 /** The drama as text: the screenplay as given, the bible, and every episode's breakdown, read only. */
 export function Script({ dramaId }: { dramaId: string }) {
@@ -75,7 +46,7 @@ export function Script({ dramaId }: { dramaId: string }) {
             );
           })}
         </nav>
-        <article className="script-page">{shown && <Document key={shown.file.id} file={shown.file} />}</article>
+        <article className="script-page">{shown && <DocumentView key={shown.file.id} file={shown.file} />}</article>
       </div>
     </>
   );

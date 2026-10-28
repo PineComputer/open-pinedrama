@@ -3,7 +3,9 @@
 import { type MouseEvent, type RefObject, useEffect, useState } from "react";
 import { shotListOf } from "../shared/shots.ts";
 import type { FileItem, Note } from "../shared/types.ts";
+import { EXTRACTED, extractText } from "./extract.ts";
 import { type TKey, useT } from "./i18n.ts";
+import { Markdown } from "./Markdown.tsx";
 
 type T = ReturnType<typeof useT>["t"];
 
@@ -92,6 +94,56 @@ export function useText(file: FileItem | undefined): { text?: string; failed: bo
     return () => controller.abort();
   }, [file?.url]);
   return state.url === file?.url ? { text: state.text, failed: state.failed } : { failed: false };
+}
+
+/** Files read as text as they are; Word and PDF files are read for their text (extract.ts). */
+const TEXT = /\.(md|markdown|txt|fountain)$/i;
+
+/** Whether the page can show a file as text: a text file, or a Word or PDF file's text. */
+export const isDocument = (file: { name: string; type: string }) => file.type.startsWith("text/") || TEXT.test(file.name) || EXTRACTED.test(file.name);
+
+/** A stored file's text: a text file as it is, a Word or PDF file's extracted text ("" when it holds none). */
+export function useDocumentText(file: { url: string; name: string; type: string } | undefined): { text?: string; failed: boolean } {
+  const [state, setState] = useState<{ url?: string; text?: string; failed: boolean }>({ failed: false });
+  useEffect(() => {
+    if (!file || !isDocument(file)) return;
+    const controller = new AbortController();
+    setState({ url: file.url, failed: false });
+    fetch(file.url, { signal: controller.signal })
+      .then((response) => (response.ok ? response : Promise.reject(new Error(String(response.status)))))
+      .then((response) => (EXTRACTED.test(file.name) ? response.arrayBuffer().then((data) => extractText(file.name, data)) : response.text()))
+      .then((text) => setState({ url: file.url, text, failed: false }))
+      .catch(() => controller.signal.aborted || setState({ url: file.url, failed: true }));
+    return () => controller.abort();
+  }, [file?.url]);
+  return state.url === file?.url ? { text: state.text, failed: state.failed } : { failed: false };
+}
+
+/** One document set for reading, with its download; a file the page can't read says so and downloads. */
+export function DocumentView({ file }: { file: FileItem }) {
+  const { t } = useT();
+  const readable = isDocument(file);
+  const { text, failed } = useDocumentText(readable ? file : undefined);
+  if (!readable || failed || text === "") {
+    return (
+      <div className="block">
+        <p className="empty-note">{t("script.noPreview")}</p>
+        <a className="link start" href={`${file.url}&download=1`}>
+          {t("episode.download")} · {file.name}
+        </a>
+      </div>
+    );
+  }
+  if (text === undefined) return <p className="quiet">{t("loading")}</p>;
+  return (
+    <>
+      <a className="link small download" href={`${file.url}&download=1`}>
+        {t("episode.download")}
+      </a>
+      {EXTRACTED.test(file.name) && <p className="quiet small">{t("script.extracted")}</p>}
+      {/markdown/.test(file.type) || /\.(md|markdown)$/i.test(file.name) ? <Markdown text={text} /> : <pre className="document plain">{text}</pre>}
+    </>
+  );
 }
 
 /** A segment's shot list from the episode's breakdown, when the breakdown names it (shared/shots.ts). */

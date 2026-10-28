@@ -13,3 +13,12 @@ export const TEMPLATES: readonly { key: string; preset?: string }[] = [
 
 /** The presets a drama may use. */
 export const PRESETS: readonly string[] = TEMPLATES.flatMap((template) => (template.preset ? [template.preset] : []));
+
+/**
+ * The language a preset writes in: its name's BCP 47 prefix (`<bcp47>-<form>-<rating>`, as
+ * zh-cn-live-sfw). The studio's screenplay language when the screenplay shows no structure.
+ */
+export function presetLanguage(preset: string): "zh" | "en" | undefined {
+  const prefix = preset.split("-")[0];
+  return prefix === "zh" || prefix === "en" ? prefix : undefined;
+}

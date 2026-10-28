@@ -31,10 +31,12 @@ project has running for the studio. When something goes wrong, Settings → Trou
 saves a diagnostics file to send Pine: the engine's log (`logs/engine.log` in the data
 folder) and the state of your dramas with Pine's ids, never the key or your files.
 
-What you drop on New drama is source material: the screenplay in any format, and any
-notes or brief of your own. The agent prepares the skill's inputs from it, and what you
-set in New drama (title, language, look, format, episode length) is final wherever your
-files say otherwise. **Your reviews** sets how much you approve yourself: every step, the
+What you drop on New drama is source material: the screenplay in any format (a Word or
+PDF screenplay goes to the agent as its text, with the file beside it), and any notes or
+brief of your own. You mark the screenplay and choose a preset template; the studio reads
+the screenplay's structure (its scene and episode headings, not its dialogue) to tell
+drama-cli whether it is written the Chinese or the English way. What you set in New drama
+(title, template, format, episode length) is final wherever your files say otherwise. **Your reviews** sets how much you approve yourself: every step, the
 cast and the cuts, or none; the studio approves the rest as the agent stops for it, and
 you can change it on the drama's page. Pine bills the agents' turns and, separately,
 generated video by the minute; the agents aren't told about cost, and the drama's page
