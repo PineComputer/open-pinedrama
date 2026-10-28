@@ -11,6 +11,9 @@ import { DRAMA_SKILL } from "./goals.ts";
 import type { Attached, ComputerRef, Fleet, FleetEvent, Limits, SessionRef, TurnFile, TurnInfo } from "./fleet.ts";
 import { blocking, lookSheet, plate, prop, storyboard } from "./placeholders.ts";
 
+/** What drama-cli's `preset list` printed (short_drama 86648122), for New drama's choice in replay. */
+const REPLAY_PRESETS = ["customer-xxcited", "en-us-live-sfw", "zh-cn-live-sfw"];
+
 const SPEED = Number(process.env.STUDIO_REPLAY_SPEED ?? 1);
 
 interface Out {
@@ -325,7 +328,7 @@ function chatScript(goal: string, lang: Lang): Player {
 function scriptFor(goal: string, lang: Lang): Player {
   const episode = goal.match(/\b(EP\d{3})\b/);
   if (/make episode|continue episode/i.test(goal) && episode) return episodeScript(episode[1], lang);
-  if (/vertical short drama from my sources/i.test(goal)) return setupScript(lang);
+  if (/vertical short drama from my screenplay/i.test(goal)) return setupScript(lang);
   return chatScript(goal, lang);
 }
 
@@ -395,6 +398,10 @@ export class ReplayFleet implements Fleet {
 
   async skills() {
     return [DRAMA_SKILL];
+  }
+
+  async presets() {
+    return REPLAY_PRESETS;
   }
 
   async setIdleTimeout(_ref: ComputerRef, seconds: number) {

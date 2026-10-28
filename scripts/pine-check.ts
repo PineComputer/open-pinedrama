@@ -29,7 +29,7 @@ type SessionRef = import("../src/engine/fleet.ts").SessionRef;
 type TurnInfo = import("../src/engine/fleet.ts").TurnInfo;
 
 /** The project to check: the developer's override, or the one the studio saved (read only; the engine may be running). */
-function project(): { endpoint: string; apiKey: string } {
+function project(): import("../src/engine/settings.ts").PineProject {
   const fromEnvironment = environmentProject();
   if (fromEnvironment) return fromEnvironment;
   const file = path.join(DATA_DIR, "studio.db");
@@ -137,7 +137,7 @@ try {
     return { value: stopBy, note: stopBy ? `Pine stops it from ${stopBy.toISOString()} (${((stopBy.getTime() - Date.now()) / 3_600_000).toFixed(1)}h from now)` : "no limit" };
   });
 
-  await step("skills", async () => {
+  const skills = await step("skills", async () => {
     const skills = await fleet.skills(computer);
     const drama = skills.includes(DRAMA_SKILL);
     return { value: skills, note: `${skills.length} offered; ${DRAMA_SKILL}: ${drama ? "yes" : "NOT OFFERED (the studio will hold dramas on this project)"}` };
@@ -161,6 +161,14 @@ try {
     sessions.push(session);
     return { value: session, note: session.name };
   });
+  // The presets New drama offers, listed by the Computer's drama-cli in the session's terminal.
+  if (a && skills?.includes(DRAMA_SKILL)) {
+    await step("presets", async () => {
+      const listed = await fleet.presets(computer, a);
+      expect(listed.length > 0, "drama-cli lists no preset");
+      return { value: listed, note: listed.join(", ") };
+    });
+  }
   const blob = randomBytes(3 * 1024 * 1024);
   const events = { input: 0, progress: 0, activity: 0, result: 0, usage: 0 };
   const listening = new AbortController();
@@ -314,7 +322,7 @@ try {
     // Leave nothing running: by the binding, else by id.
     const left = ref;
     const stopped = await fleet.stop(left).catch(async () => {
-      await new Client({ endpoint: pine.endpoint, apiKey: pine.apiKey }).stopComputer(left.id);
+      await new Client({ endpoint: pine.endpoint, apiKey: pine.apiKey, controlHost: pine.controlHost }).stopComputer(left.id);
       return true;
     });
     console.log(stopped ? "\n  The check's Computer is stopped." : `\n  The check's Computer ${left.id} is still stopping; it stops on its own within ${IDLE_S / 60} minutes.`);

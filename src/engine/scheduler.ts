@@ -19,18 +19,19 @@ import {
   restart,
   retiring,
   runningComputers,
+  sessionRef,
   setIdle,
   startable,
   stop,
 } from "./computers.ts";
 import { all, get, now, run } from "./db.ts";
 import { followEvents, followTurn, isFollowed, unsettledTurns } from "./follow.ts";
-import { DRAMA_SKILL, episodeGoal, rehearsed, resumeGoal, setupGoal } from "./goals.ts";
+import { DRAMA_SKILL, episodeGoal, projectScreenplay, rehearsed, resumeGoal, setupGoal } from "./goals.ts";
 import type { FileRow } from "./library.ts";
 import { publish } from "./live.ts";
 import { type ComputerRow, type DramaRow, type EpisodeRow, type SessionRow, computer as computerRow, episodeCode, latestTurn, openSessionsOf, session as sessionRow } from "./records.ts";
 import { approveUnreviewed, reconcileSending } from "./reviews.ts";
-import { noteDramaSkill } from "./settings.ts";
+import { noteDramaSkill, notePresets } from "./settings.ts";
 import { attach, attachKit, episodeArchive, hasRun, inputs, projectArchive, references, sendRun, startRun, unconfirmedRuns } from "./runs.ts";
 
 /** Work the clock started and hasn't finished, so a slow call never starts twice. */
@@ -169,11 +170,29 @@ async function offersDramaSkill(session: SessionRow): Promise<boolean> {
   }
 }
 
-/** Holds the drama for want of the drama skill: nothing new starts until the maker tries again or rehearses. */
-async function holdForSkill(drama: DramaRow, session: SessionRow): Promise<void> {
-  run("update dramas set status = 'stopped', reason = 'no-drama-skill', note = '', updated_at = ? where id = ?", now(), drama.id);
+/**
+ * Holds the drama: for want of the drama skill, nothing new starts until the maker tries again
+ * or rehearses; for want of its inputs (choose-inputs), until the maker chooses them.
+ */
+async function hold(drama: DramaRow, session: SessionRow, reason: "no-drama-skill" | "choose-inputs"): Promise<void> {
+  run("update dramas set status = 'stopped', reason = ?, note = '', updated_at = ? where id = ?", reason, now(), drama.id);
   await closeSession(session);
   publish(`drama:${drama.id}`, "dramas");
+}
+
+/**
+ * Lists the presets the Computer's drama-cli bundles, for New drama to offer, and remembers them
+ * for the project: they come with drama-cli, which comes with the project.
+ */
+async function listPresets(session: SessionRow): Promise<void> {
+  const computer = computerRow(session.computer_id)!;
+  if (notePresets(fleet().project, await fleet().presets(computerRef(computer), sessionRef(session)))) publish("app");
+}
+
+/** The drama's screenplay as its sessions name it in the project (goals.ts, projectScreenplay); undefined before the studio chose the inputs. */
+function screenplayOf(drama: DramaRow): string | undefined {
+  const file = drama.screenplay_file === null ? undefined : get<FileRow>("select * from files where id = ?", drama.screenplay_file);
+  return file && projectScreenplay(file.name);
 }
 
 /** A goal as the drama gives it: rehearsed, with the stand-in kit, when the drama is a rehearsal. */
@@ -186,13 +205,23 @@ function goalOf(drama: DramaRow, goal: string): string {
  * whose start didn't finish. A rehearsal needs no drama skill; it gets the stand-in kit.
  */
 async function beginSetup(drama: DramaRow, session: SessionRow): Promise<void> {
-  if (!(await offersDramaSkill(session)) && !drama.rehearsal) {
-    await holdForSkill(drama, session);
+  if (!drama.rehearsal) {
+    if (!(await offersDramaSkill(session))) {
+      await hold(drama, session, "no-drama-skill");
+      return;
+    }
+    await listPresets(session);
+  }
+  // A drama made before its project's presets were known, or before New drama asked for the inputs, waits for the maker to choose them.
+  const files = inputs(drama.id);
+  const brief = files.find((file) => file.kind === "brief");
+  if (!files.some((file) => file.id === drama.screenplay_file) || !brief || !drama.screenplay_language || (!drama.rehearsal && !drama.preset)) {
+    await hold(drama, session, "choose-inputs");
     return;
   }
-  const { sent } = await attach(session, inputs(drama.id));
+  const { sent, names } = await attach(session, files);
   if (drama.rehearsal) await attachKit(session);
-  await startRun(session, "setup", goalOf(drama, setupGoal(drama, sent)));
+  await startRun(session, "setup", goalOf(drama, setupGoal(drama, sent, { screenplay: names[drama.screenplay_file!], brief: names[brief.id] })));
 }
 
 /**
@@ -258,7 +287,7 @@ function startEpisode(drama: DramaRow, episode: EpisodeRow, computer: ComputerRo
       // A project can lose the skill after its setup: the drama waits rather than the agent improvising each episode.
       if (!drama.rehearsal && !(await offersDramaSkill(session))) {
         run("update episodes set state = 'queued', session_id = null, updated_at = ? where id = ?", now(), episode.id);
-        await holdForSkill(drama, session);
+        await hold(drama, session, "no-drama-skill");
         return;
       }
       run("update episodes set session_id = ?, updated_at = ? where id = ?", session.id, now(), episode.id);
@@ -275,8 +304,8 @@ function startEpisode(drama: DramaRow, episode: EpisodeRow, computer: ComputerRo
       if (skipped.length) console.warn(`${code}: too large to hand over (over 64 MiB): ${skipped.join(", ")}`);
       if (drama.rehearsal) await attachKit(session);
       const goal = episode.resume
-        ? resumeGoal(drama, code, sent, handoff, episode.carry || undefined)
-        : episodeGoal(drama, code, sent, handoff);
+        ? resumeGoal(drama, code, sent, handoff, episode.carry || undefined, screenplayOf(drama))
+        : episodeGoal(drama, code, sent, handoff, screenplayOf(drama));
       await startRun(session, episode.resume ? "resume" : "episode", goalOf(drama, goal));
       run("update episodes set resume = 0, carry = '', continues = 0, note = '', updated_at = ? where id = ?", now(), episode.id);
       failures.delete(episode.id);

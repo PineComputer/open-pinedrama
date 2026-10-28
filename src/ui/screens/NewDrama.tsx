@@ -47,6 +47,10 @@ export function NewDrama() {
   const [notes, setNotes] = useState("");
   const [length, setLength] = useState("60");
   const [reviewing, setReviewing] = useState<Reviewing>("every");
+  // drama-cli init's inputs, which the maker chooses: nothing is preselected but the only file there is.
+  const [screenplayChoice, setScreenplay] = useState<string>();
+  const [screenplayLanguage, setScreenplayLanguage] = useState<"zh" | "en">();
+  const [preset, setPreset] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<unknown>();
   const picker = useRef<HTMLInputElement>(null);
@@ -58,6 +62,11 @@ export function NewDrama() {
   const noSkill = onPine && app.data?.dramaSkill === "missing";
   const [rehearsalChoice, setRehearsal] = useState<boolean>();
   const rehearsal = rehearsalChoice ?? noSkill;
+  const screenplay = files.length === 1 ? files[0].name : files.some((file) => file.name === screenplayChoice) ? screenplayChoice : undefined;
+  // The presets the project's drama-cli listed; until a Computer has, the drama asks for its preset once one starts.
+  const presets = app.data?.presets;
+  const needsPreset = !(onPine && rehearsal) && Boolean(presets?.length);
+  const ready = Boolean(files.length && title.trim() && screenplay && screenplayLanguage && (!needsPreset || preset));
 
   const add = (list: FileList | null) => {
     if (!list) return;
@@ -75,7 +84,7 @@ export function NewDrama() {
     setBusy(true);
     setError(undefined);
     const form = new FormData();
-    for (const [key, value] of Object.entries({ title, language, look, format, notes, length, reviewing, parallel: String(parallel), perComputer: String(perComputer), rehearsal: onPine && rehearsal ? "1" : "0" })) form.set(key, value);
+    for (const [key, value] of Object.entries({ title, language, look, format, notes, length, reviewing, parallel: String(parallel), perComputer: String(perComputer), rehearsal: onPine && rehearsal ? "1" : "0", screenplay: screenplay ?? "", screenplayLanguage: screenplayLanguage ?? "", preset: needsPreset ? preset : "" })) form.set(key, value);
     for (const file of files) form.append("files", file);
     try {
       const { id } = await api<{ id: string }>("/api/dramas", { method: "POST", body: form });
@@ -111,6 +120,9 @@ export function NewDrama() {
             <div className="pages">
               {files.map((file) => (
                 <div key={file.name + file.size} className="page-file">
+                  {files.length > 1 && (
+                    <input type="radio" name="screenplay" aria-label={t("new.isScreenplay")} title={t("new.isScreenplay")} checked={screenplay === file.name} onChange={() => setScreenplay(file.name)} />
+                  )}
                   <span className="name">{file.name}</span>
                   <span className="quiet num small">
                     {Math.max(1, Math.round(file.size / 1024))} KB
@@ -122,6 +134,7 @@ export function NewDrama() {
               ))}
             </div>
           )}
+          {files.length > 1 && <p className="quiet small">{t("new.screenplayHint")}</p>}
           {opening && <pre className="opening">{opening}</pre>}
         </div>
 
@@ -155,6 +168,33 @@ export function NewDrama() {
               </div>
             </div>
           </div>
+          <div className="field">
+            <span className="label">{t("new.screenplayLanguage")}</span>
+            <div className="options">
+              {(["en", "zh"] as const).map((value) => (
+                <button key={value} aria-pressed={screenplayLanguage === value} className={screenplayLanguage === value ? "on" : ""} onClick={() => setScreenplayLanguage(value)}>
+                  {value === "zh" ? "中文" : "English"}
+                </button>
+              ))}
+            </div>
+            <span className="quiet small">{t("new.screenplayLanguageHint")}</span>
+          </div>
+          {!(onPine && rehearsal) && (
+            <div className="field">
+              <span className="label">{t("new.preset")}</span>
+              {presets?.length ? (
+                <div className="options">
+                  {presets.map((name) => (
+                    <button key={name} aria-pressed={preset === name} className={preset === name ? "on" : ""} onClick={() => setPreset(name)}>
+                      {name}
+                    </button>
+                  ))}
+                </div>
+              ) : (
+                <span className="quiet small">{t("new.presetUnknown")}</span>
+              )}
+            </div>
+          )}
           <div className="field">
             <span className="label">{t("new.look")}</span>
             <div className="options">
@@ -211,7 +251,7 @@ export function NewDrama() {
           )}
           {error !== undefined && <p className="error flush">{errorText(error, t)}</p>}
           <div className="actions">
-            <button className="btn ink" disabled={busy || !files.length || !title.trim()} onClick={start}>
+            <button className="btn ink" disabled={busy || !ready} onClick={start}>
               {busy ? t("new.starting") : t("new.start")}
             </button>
             <span className="quiet small">

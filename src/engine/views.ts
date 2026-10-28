@@ -188,6 +188,12 @@ export function dramaView(drama: DramaRow): DramaView {
     parallel: drama.parallel,
     perComputer: drama.per_computer,
     reviewing: drama.reviewing,
+    inputs: {
+      preset: drama.preset,
+      screenplayLanguage: drama.screenplay_language,
+      screenplay: drama.screenplay_file,
+      files: all<{ id: number; name: string }>("select f.id, f.name from files f join inputs i on i.file_id = f.id where i.drama_id = ? and f.kind = 'screenplay' order by f.id", drama.id),
+    },
     setup: {
       state: setupState,
       reviewId: setupReview?.id,

@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { type DramaView, type EpisodeRow, STAGES, type StageCell } from "../../shared/types.ts";
-import { api, useAction } from "../api.ts";
+import { type AppInfo, type DramaView, type EpisodeRow, STAGES, type StageCell } from "../../shared/types.ts";
+import { api, useAction, useResource } from "../api.ts";
 import { type TKey, useT } from "../i18n.ts";
 import { errorText, moneyText, nowText } from "../labels.ts";
 import { Link, navigate } from "../router.tsx";
@@ -237,6 +237,63 @@ export function Board({ drama }: { drama: DramaView }) {
   );
 }
 
+/**
+ * drama-cli init's inputs for a drama held for them: made before its project's presets were
+ * known, or before New drama asked. The maker chooses; the setup then starts.
+ */
+function ChooseInputs({ drama }: { drama: DramaView }) {
+  const { t } = useT();
+  const app = useResource<AppInfo>("/api/app", ["app"]);
+  const [preset, setPreset] = useState(drama.inputs.preset);
+  const [screenplay, setScreenplay] = useState(drama.inputs.screenplay ?? (drama.inputs.files.length === 1 ? drama.inputs.files[0].id : null));
+  const [language, setLanguage] = useState(drama.inputs.screenplayLanguage);
+  const choose = useAction(() => api(`/api/dramas/${drama.id}/inputs`, { method: "POST", json: { preset, screenplay, screenplayLanguage: language } }));
+  const presets = app.data?.presets ?? [];
+  return (
+    <div className="compose-form">
+      {!drama.rehearsal && (
+        <div className="field">
+          <span className="label">{t("new.preset")}</span>
+          <div className="options">
+            {presets.map((name) => (
+              <button key={name} aria-pressed={preset === name} className={preset === name ? "on" : ""} onClick={() => setPreset(name)}>
+                {name}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+      <div className="field">
+        <span className="label">{t("new.screenplay")}</span>
+        <div className="options">
+          {drama.inputs.files.map((file) => (
+            <button key={file.id} aria-pressed={screenplay === file.id} className={screenplay === file.id ? "on" : ""} onClick={() => setScreenplay(file.id)}>
+              {file.name}
+            </button>
+          ))}
+        </div>
+      </div>
+      <div className="field">
+        <span className="label">{t("new.screenplayLanguage")}</span>
+        <div className="options">
+          {(["en", "zh"] as const).map((value) => (
+            <button key={value} aria-pressed={language === value} className={language === value ? "on" : ""} onClick={() => setLanguage(value)}>
+              {value === "zh" ? "中文" : "English"}
+            </button>
+          ))}
+        </div>
+        <span className="quiet small">{t("new.screenplayLanguageHint")}</span>
+      </div>
+      <div className="actions">
+        <button className="btn ink" disabled={choose.busy || screenplay === null || !language || (!drama.rehearsal && !preset)} onClick={() => void choose.run()}>
+          {t("setup.choose")}
+        </button>
+        {choose.error !== undefined && <span className="error small">{errorText(choose.error, t)}</span>}
+      </div>
+    </div>
+  );
+}
+
 /** While the drama is being set up: where the setup stands, and the cast as it arrives. */
 export function SetupPanel({ drama }: { drama: DramaView }) {
   const { t } = useT();
@@ -301,7 +358,8 @@ export function SetupPanel({ drama }: { drama: DramaView }) {
               </div>
             );
           })}
-          {setup.state === "stopped" && (
+          {setup.state === "stopped" && setup.reason === "choose-inputs" && <ChooseInputs drama={drama} />}
+          {setup.state === "stopped" && setup.reason !== "choose-inputs" && (
             <div className="step-action">
               <button className="btn" disabled={retry.busy} onClick={() => void retry.run()}>
                 {t("setup.retry")}

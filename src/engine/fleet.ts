@@ -95,6 +95,8 @@ export interface Fleet {
   stopBy(computer: ComputerRef): Promise<Date | undefined>;
   /** The skills the Computer's agents are offered: Pine's that are switched on, and the project's own. */
   skills(computer: ComputerRef): Promise<string[]>;
+  /** The presets the Computer's drama-cli bundles (`drama-cli preset list`), run in the session's terminal. */
+  presets(computer: ComputerRef, session: SessionRef): Promise<string[]>;
   /** Changes the running Computer's idle timeout; resolves with the one Pine applied. */
   setIdleTimeout(computer: ComputerRef, seconds: number): Promise<number>;
   stop(computer: ComputerRef): Promise<boolean>;

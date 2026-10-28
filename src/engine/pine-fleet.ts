@@ -65,8 +65,8 @@ export class PineFleet implements Fleet {
   readonly project: string;
   private readonly client: Client;
 
-  constructor(project: { endpoint: string; apiKey: string }) {
-    this.client = new Client({ endpoint: project.endpoint, apiKey: project.apiKey });
+  constructor(project: { endpoint: string; apiKey: string; controlHost?: string }) {
+    this.client = new Client({ endpoint: project.endpoint, apiKey: project.apiKey, controlHost: project.controlHost });
     // A new key for the same project reads as another project: its Computers are made afresh.
     this.project = createHash("sha256").update(`${project.endpoint}\n${project.apiKey}`).digest("hex").slice(0, 16);
   }
@@ -154,6 +154,12 @@ export class PineFleet implements Fleet {
   async skills(ref: ComputerRef) {
     const listed = await this.computer(ref).skills.list();
     return listed.filter((skill) => skill.enabled !== false).map((skill) => String(skill.name));
+  }
+
+  async presets(ref: ComputerRef, session: SessionRef) {
+    const result = await this.session(ref, session).exec("drama-cli preset list", { timeoutMs: 60_000 });
+    if (result.exitCode !== 0) throw new Error(`drama-cli preset list exited ${result.exitCode ?? "without a status"}: ${(result.stderr || result.error).trim()}`);
+    return (JSON.parse(result.stdout) as { bundled: string[] }).bundled;
   }
 
   async setIdleTimeout(ref: ComputerRef, seconds: number) {

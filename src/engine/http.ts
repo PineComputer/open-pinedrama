@@ -20,7 +20,7 @@ import { appInfo, connectPine, disconnect, useReplay } from "./connection.ts";
 import { retryStarts } from "./computers.ts";
 import { DEFAULT_ENDPOINT } from "./settings.ts";
 import { all } from "./db.ts";
-import { chat, createDrama, desktop, finishEpisode, rehearse, resumeEpisode, retrySetup, stopDrama, updateDrama } from "./dramas.ts";
+import { chat, chooseInputs, createDrama, desktop, finishEpisode, rehearse, resumeEpisode, retrySetup, stopDrama, updateDrama } from "./dramas.ts";
 import { StudioError } from "./errors.ts";
 import { fileRow, openBlob, save, toItem } from "./library.ts";
 import { subscribe } from "./live.ts";
@@ -153,6 +153,9 @@ export function app(): Hono {
         length: field("length"),
         rehearsal: field("rehearsal") === "1",
         reviewing: field("reviewing"),
+        preset: field("preset"),
+        screenplayLanguage: field("screenplayLanguage"),
+        screenplay: field("screenplay"),
         files: await Promise.all(uploads.map(async (file) => ({ name: file.name, type: file.type, bytes: new Uint8Array(await file.arrayBuffer()) }))),
       }, mode);
       return c.json({ id });
@@ -180,6 +183,9 @@ export function app(): Hono {
         length: "60",
         files: [{ name, type: "text/markdown", bytes: readFileSync(path.join(FIXTURES, name)) }],
         rehearsal: mode === "pine",
+        preset: "",
+        screenplayLanguage: zh ? "zh" : "en",
+        screenplay: name,
       }, mode);
       return c.json({ id });
     } catch (error) {
@@ -214,6 +220,15 @@ export function app(): Hono {
     try {
       await stopDrama(c.req.param("id"));
       return c.json({ ok: true });
+    } catch (error) {
+      return fail(c, error);
+    }
+  });
+
+  api.post("/api/dramas/:id/inputs", async (c) => {
+    try {
+      chooseInputs(c.req.param("id"), await c.req.json());
+      return c.json(dramaView(dramaRow(c.req.param("id"))!));
     } catch (error) {
       return fail(c, error);
     }

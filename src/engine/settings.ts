@@ -11,6 +11,8 @@ export const DEFAULT_ENDPOINT = "https://pinesandbox.io";
 export interface PineProject {
   endpoint: string;
   apiKey: string;
+  /** The SDK's controlHost, for a Pine run locally (`./pine dev`); from the environment only. */
+  controlHost?: string;
 }
 
 function read(key: string): string | undefined {
@@ -24,7 +26,8 @@ function write(key: string, value: string | null): void {
 
 export function environmentProject(): PineProject | undefined {
   const apiKey = process.env.PINE_SANDBOX_API_KEY;
-  return apiKey ? { endpoint: process.env.PINE_SANDBOX_ENDPOINT || DEFAULT_ENDPOINT, apiKey } : undefined;
+  const controlHost = process.env.PINE_SANDBOX_CONTROL_HOST;
+  return apiKey ? { endpoint: process.env.PINE_SANDBOX_ENDPOINT || DEFAULT_ENDPOINT, apiKey, ...(controlHost ? { controlHost } : {}) } : undefined;
 }
 
 export function savedProject(): PineProject | undefined {
@@ -59,6 +62,28 @@ export function noteDramaSkill(project: string, offered: boolean): boolean {
   return true;
 }
 
+/**
+ * Whether New drama offers a preset. Presets are named <language>-<form>-<rating>
+ * (short_drama doc/drama-cli/presets.md); those rated nsfw aren't offered for now.
+ */
+export function offered(preset: string): boolean {
+  return !preset.split("-").includes("nsfw");
+}
+
+/** The presets the project's drama-cli offers, as its Computers last listed them; unknown until one has. */
+export function presets(project: string): string[] | undefined {
+  const value = read(`presets.${project}`);
+  return value === undefined ? undefined : (JSON.parse(value) as string[]);
+}
+
+/** Remembers the presets a Computer of the project listed, those New drama offers only; whether that changed what was known. */
+export function notePresets(project: string, listed: string[]): boolean {
+  const value = JSON.stringify(listed.filter(offered));
+  if (read(`presets.${project}`) === value) return false;
+  write(`presets.${project}`, value);
+  return true;
+}
+
 /** Enough of a key to recognise it, never enough to use it. */
 export function keyHint(apiKey: string): string {
   return `${apiKey.slice(0, 3)}…${apiKey.slice(-4)}`;
@@ -74,7 +99,7 @@ export async function checkProject(project: PineProject): Promise<{ maxComputers
   }
   if (!project.apiKey.trim()) throw new StudioError("key-missing", "Paste your project's API key.");
   try {
-    const policy = await new Client({ endpoint: endpoint.toString().replace(/\/$/, ""), apiKey: project.apiKey.trim() }).projectPolicy();
+    const policy = await new Client({ endpoint: endpoint.toString().replace(/\/$/, ""), apiKey: project.apiKey.trim(), controlHost: project.controlHost }).projectPolicy();
     return { maxComputers: policy.maxConcurrentComputers };
   } catch (error) {
     const status = (error as { status?: number }).status;

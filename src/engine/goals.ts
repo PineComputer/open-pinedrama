@@ -1,6 +1,7 @@
 // The goals the studio gives Pine's agent, in plain language. The drama skill on the
 // Computer knows how to do the work; these say what to do, what the maker has decided,
 // and what to hand back. Nothing here is a protocol the Computer must implement.
+import path from "node:path";
 
 /** Pine's drama skill, as a Computer lists it among the skills it serves. */
 export const DRAMA_SKILL = "drama-workflow";
@@ -13,6 +14,10 @@ export interface DramaBrief {
   notes: string;
   /** About this many seconds an episode (60, 90, 120), or "" for a drama made before New drama always asked. */
   length: string;
+  /** The drama-cli preset the maker chose (`drama-cli preset list`), or "" while it isn't chosen. */
+  preset: string;
+  /** The language of the screenplay's structural marks (en | zh), as `drama-cli init --screenplay-language` takes it; "" for a drama made before New drama asked. */
+  screenplay_language: string;
 }
 
 /** The episode lengths the maker chooses among, in words with a guide range. */
@@ -39,6 +44,48 @@ function brief(drama: DramaBrief): string {
     .join(" ");
 }
 
+/**
+ * brief.md, the brief `drama-cli init --inputs.brief` takes: free text that opens with the two
+ * lines `drama-cli init -h` names, "Title:" and "Episode length:", then what the maker set that
+ * the screenplay doesn't say.
+ */
+export function briefFile(drama: Omit<DramaBrief, "preset" | "screenplay_language">): string {
+  return [
+    `Title: ${drama.title}`,
+    `Episode length: ${LENGTHS[drama.length]}.`,
+    `Language: ${languageName(drama.language)}.`,
+    `Look: ${drama.look}.`,
+    `Format: ${drama.format}.`,
+    drama.notes ? `\nNotes: ${drama.notes}` : "",
+  ]
+    .filter(Boolean)
+    .join("\n") + "\n";
+}
+
+/**
+ * Where the project keeps its inputs, inside drama/ so they travel with it in every handoff:
+ * the screenplay as the maker gave it and the studio's brief.md.
+ */
+const INPUTS = "drama/inputs";
+
+/** The screenplay's name in the project: fixed, so every session names it alike; it keeps the maker's extension. */
+export function projectScreenplay(name: string): string {
+  return `screenplay${path.posix.extname(name)}`;
+}
+
+/**
+ * The one `drama-cli init` every session runs: in setup it writes the config; on a restored
+ * project it points the config at this session's folder and keeps every other setting.
+ */
+function init(drama: DramaBrief, screenplay: string): string {
+  return `drama-cli init drama --preset ${drama.preset} --inputs.screenplay ${INPUTS}/${screenplay} --inputs.brief ${INPUTS}/brief.md --screenplay-language ${drama.screenplay_language}`;
+}
+
+/** The resolution drama-cli renders at, from the format the maker chose ("9:16, 480p"). */
+function resolution(format: string): string {
+  return /(\d+p)$/.exec(format)?.[1] ?? "";
+}
+
 function writeIn(drama: DramaBrief): string {
   return `Write your questions and summaries in ${languageName(drama.language)}.`;
 }
@@ -46,15 +93,19 @@ function writeIn(drama: DramaBrief): string {
 /**
  * The drama's setup and pre-production, in one session and one drama-cli project: the bible
  * and the leads, then everything every episode shares, approved by the maker, so episodes can
- * then run in parallel on copies of the same accepted project. The maker's files are sources:
- * the agent prepares the skill's inputs from them, and what the maker set is final.
+ * then run in parallel on copies of the same accepted project. The maker chose the inputs in
+ * New drama (the screenplay, its language, the preset) and the studio wrote brief.md, so the
+ * agent runs init as given; the maker's other files are sources, and what the maker set is final.
+ * A rehearsal has no drama-cli and may have no preset: it copies the inputs and skips init.
  */
-export function setupGoal(drama: DramaBrief, attachments: string[]): string {
+export function setupGoal(drama: DramaBrief, attachments: string[], inputs: { screenplay: string; brief: string }): string {
+  const others = attachments.filter((name) => name !== inputs.screenplay && name !== inputs.brief);
   return [
-    `Use the ${DRAMA_SKILL} skill to produce a vertical short drama from my sources, attached (${attachments.join(", ")}): the screenplay and anything I gave with it.`,
+    `Use the ${DRAMA_SKILL} skill to produce a vertical short drama from my screenplay, attached as ${inputs.screenplay}${others.length ? `, with my other sources (${others.join(", ")})` : ""}.`,
     `My settings, which are final: ${brief(drama)}`,
     drama.notes ? `My notes: ${drama.notes}` : "",
-    "Make the drama-cli project in the work directory's drama/ folder, and prepare its inputs from my sources yourself: the screenplay as screenplay.md, every line as written, and brief.md as the skill needs it. Where a source disagrees with my settings, follow my settings.",
+    `Make the drama-cli project in the work directory's drama/ folder, with these inputs, which I chose: \`${[`mkdir -p ${INPUTS}`, `cp attachments/${inputs.screenplay} ${INPUTS}/${projectScreenplay(inputs.screenplay)}`, `cp attachments/${inputs.brief} ${INPUTS}/brief.md`, drama.preset ? init(drama, projectScreenplay(inputs.screenplay)) : ""].filter(Boolean).join(" && ")}\`. Where a source disagrees with my settings, follow my settings.`,
+    resolution(drama.format) ? `Then set defaults.resolution to ${resolution(drama.format)} in drama/drama-cli.cfg.yaml.` : "",
     NO_CAP,
     "Read the screenplay and ask me for anything that is missing.",
     "Write the bible, then make each lead's face and base look. Stop and ask me to approve the leads' looks, returning their sheets with your question.",
@@ -71,18 +122,22 @@ export function setupGoal(drama: DramaBrief, attachments: string[]): string {
 const LIST_EPISODES = 'End with the list of episodes, one per line, as "EP001: <title>".';
 
 /**
- * drama-cli takes a project cap if it is given one (`init --budget`), and the skill asks the maker
- * whenever spending isn't authorized (it once asked for a budget, then to confirm a paid take). The
- * maker sets no cap and authorizes the spend: Pine bills, and the studio shows it.
+ * drama-cli caps a project at its config's budget_usd, which init writes as 1000, and null
+ * means no cap; the skill asks the maker whenever spending isn't authorized (it once asked for
+ * a budget, then to confirm a paid take). The maker sets no cap and authorizes the spend: Pine
+ * bills, and the studio shows it.
  */
 export const NO_CAP =
-  "Spending is authorized and has no cap: leave drama-cli's budget unset, make every paid request the work needs without asking me first, and never ask me about cost.";
+  "Spending is authorized and has no cap: budget_usd in drama/drama-cli.cfg.yaml is null (set it so after init; a restored project keeps it), make every paid request the work needs without asking me first, and never ask me about cost.";
 
 /** How an episode session takes up the drama's project, and the bounds it keeps to. */
-function handedOver(code: string): string[] {
+function handedOver(drama: DramaBrief, code: string, screenplay: string | undefined): string[] {
+  // screenplay: its name in the project (projectScreenplay); undefined for a drama made before the studio chose the inputs.
   return [
     "The attached project.tar.part-* files are the drama's drama-cli project, with its bible, every breakdown and every look, location and key prop accepted.",
-    "Restore it into the work directory's drama/ folder (`mkdir -p drama && cat attachments/project.tar.part-* | tar -xf - -C drama`), point its config at that folder and its screenplay.md and brief.md with `drama-cli init`, keeping its settings and preset, and check it with `drama-cli status`.",
+    screenplay
+      ? `Restore it into the work directory's drama/ folder and point its config at that folder, keeping its settings: \`mkdir -p drama && cat attachments/project.tar.part-* | tar -xf - -C drama && ${init(drama, screenplay)}\`. Check it with \`drama-cli status --config drama/drama-cli.cfg.yaml\`.`
+      : "Restore it into the work directory's drama/ folder (`mkdir -p drama && cat attachments/project.tar.part-* | tar -xf - -C drama`), point its config at that folder and its screenplay.md and brief.md with `drama-cli init`, keeping its settings and preset, and check it with `drama-cli status`.",
     NO_CAP,
     "Its asset-library registrations were made in another session and can't be used from this one: before you compile video prompts, set them aside and register every reference the episode uses again from its local file in this session.",
     `Work only on ${code}, inside drama/episodes/${code}. Use the accepted references as they are: never make a new version of the bible, a look, a location, a key prop or another episode's breakdown. If ${code} needs one that is not accepted, stop and ask me.`,
@@ -106,12 +161,12 @@ const EPISODE_STOPS = [
  * it restores that project and works only in its own folder; without one (a drama set up
  * before pre-production existed), it gets the approved references as loose files.
  */
-export function episodeGoal(drama: DramaBrief, code: string, attachments: string[], handoff: boolean): string {
+export function episodeGoal(drama: DramaBrief, code: string, attachments: string[], handoff: boolean, screenplay?: string): string {
   return [
     `Use the ${DRAMA_SKILL} skill to make episode ${code} of "${drama.title}".`,
     brief(drama),
     ...(handoff
-      ? handedOver(code)
+      ? handedOver(drama, code, screenplay)
       : [`The attached bible and images are the approved references: ${attachments.join(", ")}. Use them as they are; do not redesign the cast, locations or props.`]),
     ...EPISODE_STOPS,
     handoff ? packEpisode(code) : "",
@@ -122,14 +177,14 @@ export function episodeGoal(drama: DramaBrief, code: string, attachments: string
 }
 
 /** For an episode whose session ended: continue in a new session from what the studio kept. */
-export function resumeGoal(drama: DramaBrief, code: string, attachments: string[], handoff: boolean, decision?: string): string {
+export function resumeGoal(drama: DramaBrief, code: string, attachments: string[], handoff: boolean, decision?: string, screenplay?: string): string {
   const ownFolder = attachments.some((name) => name.startsWith(`${code}.tar.part-`));
   return [
     `Use the ${DRAMA_SKILL} skill to continue episode ${code} of "${drama.title}" in this new session; the earlier session ended.`,
     brief(drama),
     ...(handoff
       ? [
-          ...handedOver(code),
+          ...handedOver(drama, code, screenplay),
           ownFolder
             ? `The attached ${code}.tar.part-* files are ${code}'s folder as the earlier session left it: restore them into drama/episodes/${code} (\`mkdir -p drama/episodes/${code} && cat attachments/${code}.tar.part-* | tar -xf - -C drama/episodes/${code}\`) and carry on from there; redo only what is missing.`
             : `Nothing of ${code} was kept: start it from its accepted breakdown.`,

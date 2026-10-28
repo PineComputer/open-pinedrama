@@ -42,7 +42,7 @@ async function until<T>(what: string, probe: () => T | undefined, timeoutMs = 10
 }
 
 const screenplay = { name: "screenplay.txt", type: "text/plain", bytes: new TextEncoder().encode("EPISODE 1\nLin enters.") };
-const newDrama = (title: string) => ({ title, language: "en", look: "", format: "", parallel: 1, perComputer: 1, notes: "", files: [screenplay] });
+const newDrama = (title: string) => ({ title, language: "en", look: "", format: "", parallel: 1, perComputer: 1, notes: "", files: [screenplay], preset: "en-us-live-sfw", screenplayLanguage: "en", screenplay: screenplay.name });
 /** Ends the earlier tests' dramas and Computers, so a test's own drama has the line to itself. */
 function quiet() {
   m.db.run("update dramas set status = 'done' where status in ('setup', 'production')");
@@ -212,11 +212,47 @@ describe("the production line", () => {
     m.dramas.rehearse(id);
     const setup = await until("the rehearsed setup run", () => m.db.get<{ goal: string }>("select r.goal from runs r join sessions s on s.id = r.session_id where s.drama_id = ? and r.kind = 'setup'", id));
     expect(setup.goal).toMatch(/^This is a rehearsal/);
-    expect(setup.goal).toContain("vertical short drama from my sources");
+    expect(setup.goal).toContain("vertical short drama from my screenplay");
     expect(kits).toHaveLength(1);
     expect(m.db.get<{ status: string; rehearsal: number }>("select * from dramas where id = ?", id)).toMatchObject({ status: "setup", rehearsal: 1 });
     expect(() => m.dramas.rehearse(id)).toThrow(/held/);
     m.scheduler.stopClock();
+  });
+
+  it("holds a drama made before its project's presets were known, offers them but nsfw, and starts once the maker chooses", async () => {
+    const fleet = new m.replay.ReplayFleet();
+    fleet.presets = async () => ["zh-cn-live-sfw", "zh-cn-live-nsfw", "en-us-live-sfw"];
+    quiet();
+    // As for a project none of whose Computers has listed its presets yet.
+    m.db.run("delete from settings where key like 'presets.%'");
+    m.computers.setFleet(fleet);
+    m.scheduler.startClock(20);
+    const settings = await import("./settings.ts");
+    const id = await m.dramas.createDrama({ ...newDrama("Unknown presets"), preset: "" }, "replay");
+    const held = await until("the hold", () => m.db.get<{ reason: string }>("select * from dramas where id = ? and status = 'stopped'", id));
+    expect(held.reason).toBe("choose-inputs");
+    expect(settings.presets(fleet.project)).toEqual(["zh-cn-live-sfw", "en-us-live-sfw"]);
+    // Known now, the presets bind New drama, and the maker chooses among them.
+    await expect(m.dramas.createDrama({ ...newDrama("No preset"), preset: "" }, "replay")).rejects.toThrow(/Choose a preset/);
+    await expect(m.dramas.createDrama({ ...newDrama("Hidden preset"), preset: "zh-cn-live-nsfw" }, "replay")).rejects.toThrow(/no preset zh-cn-live-nsfw/);
+    const file = m.db.get<{ id: number }>("select f.id from files f join inputs i on i.file_id = f.id where i.drama_id = ? and f.kind = 'screenplay'", id)!;
+    expect(() => m.dramas.chooseInputs(id, { preset: "zh-cn-live-sfw", screenplayLanguage: "zh", screenplay: 0 })).toThrow(/which file is the screenplay/);
+    m.dramas.chooseInputs(id, { preset: "zh-cn-live-sfw", screenplayLanguage: "zh", screenplay: file.id });
+    const setup = await until("the setup run", () => m.db.get<{ goal: string }>("select r.goal from runs r join sessions s on s.id = r.session_id where s.drama_id = ? and r.kind = 'setup'", id));
+    expect(setup.goal).toContain("drama-cli init drama --preset zh-cn-live-sfw --inputs.screenplay drama/inputs/screenplay.txt --inputs.brief drama/inputs/brief.md --screenplay-language zh");
+    m.scheduler.stopClock();
+  });
+
+  it("writes brief.md from New drama, opening with the two lines drama-cli init asks for", async () => {
+    quiet();
+    const id = await m.dramas.createDrama({ ...newDrama("The Night It Rained"), notes: "Fast and cruel.", look: "live action", format: "9:16, 720p" }, "replay");
+    const brief = m.db.get<{ sha: string }>("select f.sha from files f join inputs i on i.file_id = f.id where i.drama_id = ? and f.kind = 'brief'", id)!;
+    const text = (await import("node:fs")).readFileSync(m.library.blobPath(brief.sha), "utf8");
+    expect(text.split("\n").slice(0, 2)).toEqual(["Title: The Night It Rained", "Episode length: about a minute (50 to 70 seconds)."]);
+    expect(text).toContain("Format: 9:16, 720p.");
+    expect(text).toContain("Notes: Fast and cruel.");
+    await expect(m.dramas.createDrama({ ...newDrama("No screenplay marked"), screenplay: "" }, "replay")).rejects.toThrow(/which file is the screenplay/);
+    await expect(m.dramas.createDrama({ ...newDrama("No language"), screenplayLanguage: "" }, "replay")).rejects.toThrow(/screenplay's language/);
   });
 
   it("holds a drama in production whose project lost the drama skill, before the next episode runs", async () => {

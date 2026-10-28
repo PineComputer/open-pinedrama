@@ -6,6 +6,10 @@ export type Mode = "pine" | "replay";
 export type ErrorCode =
   | "title-missing"
   | "screenplay-missing"
+  | "screenplay-unchosen"
+  | "screenplay-language-missing"
+  | "preset-missing"
+  | "preset-unknown"
   | "file-too-large"
   | "not-found"
   | "episode-busy"
@@ -50,7 +54,7 @@ export interface ApiFailure {
 export type DramaStatus = "setup" | "production" | "done" | "stopped";
 
 /** Why the studio held a drama: its project's Computers don't offer Pine's drama skill. */
-export type HoldReason = "no-drama-skill" | "by-maker";
+export type HoldReason = "no-drama-skill" | "by-maker" | "choose-inputs";
 
 export type EpisodeState = "queued" | "working" | "waiting" | "done" | "stopped" | "failed";
 
@@ -108,6 +112,8 @@ export interface AppInfo {
   project?: { endpoint: string; keyHint: string; fromEnvironment: boolean };
   /** Whether the project offers Pine's drama skill, as its Computers last said; absent until one has. */
   dramaSkill?: "offered" | "missing";
+  /** The presets New drama offers, as the project's drama-cli last listed them; absent until a Computer has. */
+  presets?: string[];
 }
 
 export interface FileItem {
@@ -215,6 +221,8 @@ export interface DramaView extends DramaCard {
   parallel: number;
   perComputer: number;
   reviewing: Reviewing;
+  /** What drama-cli init takes that the maker chooses: "" or null until chosen; files are the maker's own, the screenplay among them. */
+  inputs: { preset: string; screenplayLanguage: string; screenplay: number | null; files: { id: number; name: string }[] };
   setup: {
     state: "working" | "waiting" | "done" | "stopped";
     reviewId?: string;

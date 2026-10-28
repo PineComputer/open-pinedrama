@@ -9,7 +9,8 @@ import { save } from "./library.ts";
 import { publish } from "./live.ts";
 import { type DramaRow, computer as computerRow, drama as dramaRow, episode as episodeRow, latestTurn, session as sessionRow } from "./records.ts";
 import { StudioError } from "./errors.ts";
-import { LENGTHS } from "./goals.ts";
+import { presets } from "./settings.ts";
+import { LENGTHS, briefFile } from "./goals.ts";
 import { approveUnreviewed, decide, pendingReview } from "./reviews.ts";
 import { startRun } from "./runs.ts";
 
@@ -28,6 +29,27 @@ export interface NewDrama {
   rehearsal?: boolean;
   /** What the maker reviews: every step (the default), the key ones, or none. */
   reviewing?: string;
+  /** The drama-cli preset the maker chose, or "" where the project's presets aren't known yet (the setup then waits for it). */
+  preset: string;
+  /** en | zh: the language of the screenplay's structural marks (drama-cli init --screenplay-language). */
+  screenplayLanguage: string;
+  /** Which of the files is the screenplay, by name. */
+  screenplay: string;
+}
+
+const SCREENPLAY_LANGUAGES = ["en", "zh"];
+
+/**
+ * The inputs drama-cli init takes that the maker chooses, checked: a screenplay language init
+ * accepts and, but for a rehearsal (no drama-cli), a preset the project offers once its presets
+ * are known; until then "" waits for the maker's choice at setup.
+ */
+function checkInputs(preset: string, screenplayLanguage: string, rehearsal: boolean): void {
+  if (!SCREENPLAY_LANGUAGES.includes(screenplayLanguage)) throw new StudioError("screenplay-language-missing", "Choose the screenplay's language: the language of its scene headings.");
+  if (rehearsal) return;
+  const known = presets(fleet().project);
+  if (preset && known && !known.includes(preset)) throw new StudioError("preset-unknown", `The project offers no preset ${preset}.`, 400, preset);
+  if (!preset && known?.length) throw new StudioError("preset-missing", "Choose a preset.");
 }
 
 const clamp = (value: number, low: number, high: number) => Math.min(high, Math.max(low, Math.round(value)));
@@ -43,25 +65,32 @@ export async function createDrama(input: NewDrama, mode: Mode): Promise<string> 
   if (!input.files.length) throw new StudioError("screenplay-missing", "Add the screenplay.");
   const large = input.files.find((file) => file.bytes.byteLength > MAX_ATTACHMENT);
   if (large) throw new StudioError("file-too-large", `${large.name} is over 64 MiB, more than a Computer can be handed.`, 400, large.name);
+  const screenplay = input.files.findIndex((file) => file.name === input.screenplay);
+  if (screenplay < 0) throw new StudioError("screenplay-unchosen", "Choose which file is the screenplay.");
+  checkInputs(input.preset, input.screenplayLanguage, Boolean(input.rehearsal));
   const id = newId("drama");
   const fileIds: number[] = [];
-  // The maker's files are kept as they are, as sources; the agent prepares the skill's inputs from them.
+  // The maker's files are kept as they are, as sources; the studio writes brief.md from what the maker set.
   const length = LENGTHS[input.length ?? ""] ? input.length! : "60";
+  const look = input.look.trim() || "live action";
+  const format = input.format.trim() || "9:16, 480p";
+  const brief = briefFile({ title: input.title.trim(), language: input.language === "en" ? "en" : "zh", look, format, notes: input.notes.trim(), length });
   try {
-    for (const file of input.files) fileIds.push(await save(file.bytes, { dramaId: id, relPath: file.name, type: file.type, kind: file.name.toLowerCase() === "brief.md" ? "brief" : "screenplay" }));
+    for (const file of input.files) fileIds.push(await save(file.bytes, { dramaId: id, relPath: file.name, type: file.type, kind: "screenplay" }));
+    fileIds.push(await save(new TextEncoder().encode(brief), { dramaId: id, relPath: "brief.md", type: "text/markdown", kind: "brief" }));
   } catch (error) {
     run("delete from files where drama_id = ?", id);
     throw error;
   }
   transaction(() => {
     run(
-      `insert into dramas (id, title, language, look, format, parallel, per_computer, notes, length, mode, rehearsal, reviewing, status, created_at, updated_at)
-       values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'setup', ?, ?)`,
+      `insert into dramas (id, title, language, look, format, parallel, per_computer, notes, length, mode, rehearsal, reviewing, preset, screenplay_language, screenplay_file, status, created_at, updated_at)
+       values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'setup', ?, ?)`,
       id,
       input.title.trim(),
       input.language === "en" ? "en" : "zh",
-      input.look.trim() || "live action",
-      input.format.trim() || "9:16, 480p",
+      look,
+      format,
       clamp(input.parallel || 4, 1, 50),
       clamp(input.perComputer || 1, 1, 3),
       input.notes.trim(),
@@ -69,6 +98,9 @@ export async function createDrama(input: NewDrama, mode: Mode): Promise<string> 
       mode,
       input.rehearsal ? 1 : 0,
       reviewingOf(input.reviewing, "every"),
+      input.preset,
+      input.screenplayLanguage,
+      fileIds[screenplay],
       now(),
       now(),
     );
@@ -76,6 +108,22 @@ export async function createDrama(input: NewDrama, mode: Mode): Promise<string> 
   });
   publish("dramas");
   return id;
+}
+
+/**
+ * The maker chooses the inputs of a drama held for them (choose-inputs): a preset once its project's
+ * presets are known, its screenplay among its files and the screenplay's language; its setup then
+ * starts again.
+ */
+export function chooseInputs(id: string, choice: { preset?: string; screenplayLanguage?: string; screenplay?: number }): void {
+  const drama = dramaRow(id);
+  if (!drama) throw new StudioError("not-found", "No such drama.", 404);
+  if (drama.status !== "stopped" || drama.reason !== "choose-inputs") throw new StudioError("drama-not-held", "Only a drama waiting for its inputs takes them.", 409);
+  if (!get("select 1 from inputs i join files f on f.id = i.file_id where i.drama_id = ? and f.id = ? and f.kind = 'screenplay'", id, choice.screenplay ?? -1)) throw new StudioError("screenplay-unchosen", "Choose which file is the screenplay.");
+  checkInputs(choice.preset ?? "", choice.screenplayLanguage ?? "", Boolean(drama.rehearsal));
+  if (!drama.rehearsal && !choice.preset) throw new StudioError("preset-missing", "Choose a preset.");
+  run("update dramas set preset = ?, screenplay_language = ?, screenplay_file = ?, updated_at = ? where id = ?", choice.preset ?? "", choice.screenplayLanguage ?? "", choice.screenplay ?? null, now(), id);
+  retrySetup(id);
 }
 
 export function updateDrama(id: string, patch: { parallel?: number; perComputer?: number; reviewing?: string }): DramaRow {
