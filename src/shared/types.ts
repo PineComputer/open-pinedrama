@@ -112,8 +112,6 @@ export interface AppInfo {
   project?: { endpoint: string; keyHint: string; fromEnvironment: boolean };
   /** Whether the project offers Pine's drama skill, as its Computers last said; absent until one has. */
   dramaSkill?: "offered" | "missing";
-  /** The presets New drama offers, as the project's drama-cli last listed them; absent until a Computer has. */
-  presets?: string[];
 }
 
 export interface FileItem {
@@ -152,7 +150,10 @@ export interface DramaCard {
   rehearsal: boolean;
   title: string;
   language: string;
+  /** What a drama made before New drama asked for a preset looks like; "" since. */
   look: string;
+  /** The drama-cli preset (shared/presets.ts); "" for a rehearsal or a drama made before New drama asked. */
+  preset: string;
   format: string;
   status: DramaStatus;
   /** waiting: episodes that need the maker, for an answer or to be resumed (the board's "Needs you"). */

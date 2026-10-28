@@ -30,7 +30,7 @@ import type { FileRow } from "./library.ts";
 import { publish } from "./live.ts";
 import { type ComputerRow, type DramaRow, type EpisodeRow, type SessionRow, computer as computerRow, episodeCode, latestTurn, openSessionsOf, session as sessionRow } from "./records.ts";
 import { approveUnreviewed, reconcileSending } from "./reviews.ts";
-import { noteDramaSkill, notePresets, presets } from "./settings.ts";
+import { noteDramaSkill } from "./settings.ts";
 import { attach, attachKit, episodeArchive, hasRun, inputs, projectArchive, references, sendRun, startRun, unconfirmedRuns } from "./runs.ts";
 
 /** Work the clock started and hasn't finished, so a slow call never starts twice. */
@@ -179,17 +179,6 @@ async function hold(drama: DramaRow, session: SessionRow, reason: "no-drama-skil
   publish(`drama:${drama.id}`, "dramas");
 }
 
-/**
- * Lists the presets the Computer's drama-cli bundles, for New drama to offer, and remembers them
- * for the project: they come with drama-cli, which comes with the project. Once known, a drama
- * that has its preset doesn't list them again.
- */
-async function listPresets(drama: DramaRow, session: SessionRow): Promise<void> {
-  if (drama.preset && presets(fleet().project)) return;
-  const computer = computerRow(session.computer_id)!;
-  if (notePresets(fleet().project, await fleet().presets(computerRef(computer)))) publish("app");
-}
-
 /** The drama's screenplay as its sessions name it in the project (goals.ts, projectScreenplay); undefined before the studio chose the inputs. */
 function screenplayOf(drama: DramaRow): string | undefined {
   const file = drama.screenplay_file === null ? undefined : get<FileRow>("select * from files where id = ?", drama.screenplay_file);
@@ -206,14 +195,11 @@ function goalOf(drama: DramaRow, goal: string): string {
  * whose start didn't finish. A rehearsal needs no drama skill; it gets the stand-in kit.
  */
 async function beginSetup(drama: DramaRow, session: SessionRow): Promise<void> {
-  if (!drama.rehearsal) {
-    if (!(await offersDramaSkill(session))) {
-      await hold(drama, session, "no-drama-skill");
-      return;
-    }
-    await listPresets(drama, session);
+  if (!(await offersDramaSkill(session)) && !drama.rehearsal) {
+    await hold(drama, session, "no-drama-skill");
+    return;
   }
-  // A drama made before its project's presets were known, or before New drama asked for the inputs, waits for the maker to choose them.
+  // A drama made before New drama asked for drama-cli init's inputs waits for the maker to choose them.
   const files = inputs(drama.id);
   const brief = files.find((file) => file.kind === "brief");
   if (!files.some((file) => file.id === drama.screenplay_file) || !brief || !drama.screenplay_language || (!drama.rehearsal && !drama.preset)) {

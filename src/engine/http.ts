@@ -145,7 +145,6 @@ export function app(): Hono {
       const id = await createDrama({
         title: field("title"),
         language: field("language"),
-        look: field("look"),
         format: field("format"),
         parallel: Number(field("parallel")) || 4,
         perComputer: Number(field("perComputer")) || 1,
@@ -175,7 +174,6 @@ export function app(): Hono {
       const id = await createDrama({
         title: zh ? "后妈来了" : "The Stepmother",
         language: zh ? "zh" : "en",
-        look: "live action",
         format: "9:16, 480p",
         parallel: 3,
         perComputer: 1,
@@ -183,7 +181,7 @@ export function app(): Hono {
         length: "60",
         files: [{ name, type: "text/markdown", bytes: readFileSync(path.join(FIXTURES, name)) }],
         rehearsal: mode === "pine",
-        preset: "",
+        preset: mode === "pine" ? "" : zh ? "zh-cn-live-sfw" : "en-us-live-sfw",
         screenplayLanguage: zh ? "zh" : "en",
         screenplay: name,
       }, mode);

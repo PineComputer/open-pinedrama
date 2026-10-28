@@ -1,7 +1,8 @@
 import { type DragEvent, useEffect, useRef, useState } from "react";
 import type { AppInfo, Reviewing } from "../../shared/types.ts";
 import { api, useResource } from "../api.ts";
-import { useT } from "../i18n.ts";
+import { type TKey, useT } from "../i18n.ts";
+import { TEMPLATES } from "../../shared/presets.ts";
 import { errorText } from "../labels.ts";
 import { ReviewingChoice } from "../Reviewing.tsx";
 import { navigate } from "../router.tsx";
@@ -28,19 +29,35 @@ function useOpening(files: File[]): string | undefined {
   return opening;
 }
 
-const LOOKS = [
-  ["look.live", "live action"],
-  ["look.anime", "anime"],
-  ["look.3d", "3D animation"],
-] as const;
+/** The preset templates: those drama-cli has a preset for, and greyed, those not supported yet. */
+export function PresetChoice({ value, onChange }: { value: string; onChange: (preset: string) => void }) {
+  const { t } = useT();
+  return (
+    <div className="field">
+      <span className="label">{t("new.template")}</span>
+      <div className="options">
+        {TEMPLATES.map(({ key, preset }) => (
+          <button
+            key={key}
+            aria-pressed={preset !== undefined && value === preset}
+            className={preset !== undefined && value === preset ? "on" : ""}
+            disabled={preset === undefined}
+            title={preset === undefined ? t("new.soon") : preset}
+            onClick={() => preset && onChange(preset)}
+          >
+            {t(`template.${key}` as TKey)}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export function NewDrama() {
   const { t, lang } = useT();
   const [files, setFiles] = useState<File[]>([]);
   const [over, setOver] = useState(false);
   const [title, setTitle] = useState("");
-  const [language, setLanguage] = useState<"zh" | "en">(lang);
-  const [look, setLook] = useState<string>("live action");
   const [format, setFormat] = useState("9:16, 480p");
   const [parallel, setParallel] = useState(4);
   const [perComputer, setPerComputer] = useState(1);
@@ -63,9 +80,8 @@ export function NewDrama() {
   const [rehearsalChoice, setRehearsal] = useState<boolean>();
   const rehearsal = rehearsalChoice ?? noSkill;
   const screenplay = files.length === 1 ? files[0].name : files.some((file) => file.name === screenplayChoice) ? screenplayChoice : undefined;
-  // The presets the project's drama-cli listed; until a Computer has, the drama asks for its preset once one starts.
-  const presets = app.data?.presets;
-  const needsPreset = !(onPine && rehearsal) && Boolean(presets?.length);
+  // A rehearsal has no drama-cli, so no preset.
+  const needsPreset = !(onPine && rehearsal);
   const ready = Boolean(files.length && title.trim() && screenplay && screenplayLanguage && (!needsPreset || preset));
 
   const add = (list: FileList | null) => {
@@ -84,7 +100,7 @@ export function NewDrama() {
     setBusy(true);
     setError(undefined);
     const form = new FormData();
-    for (const [key, value] of Object.entries({ title, language, look, format, notes, length, reviewing, parallel: String(parallel), perComputer: String(perComputer), rehearsal: onPine && rehearsal ? "1" : "0", screenplay: screenplay ?? "", screenplayLanguage: screenplayLanguage ?? "", preset: needsPreset ? preset : "" })) form.set(key, value);
+    for (const [key, value] of Object.entries({ title, language: lang, format, notes, length, reviewing, parallel: String(parallel), perComputer: String(perComputer), rehearsal: onPine && rehearsal ? "1" : "0", screenplay: screenplay ?? "", screenplayLanguage: screenplayLanguage ?? "", preset: needsPreset ? preset : "" })) form.set(key, value);
     for (const file of files) form.append("files", file);
     try {
       const { id } = await api<{ id: string }>("/api/dramas", { method: "POST", body: form });
@@ -147,17 +163,6 @@ export function NewDrama() {
           </div>
           <div className="pair">
             <div className="field">
-              <span className="label">{t("new.language")}</span>
-              <div className="options">
-                <button aria-pressed={language === "zh"} className={language === "zh" ? "on" : ""} onClick={() => setLanguage("zh")}>
-                  中文
-                </button>
-                <button aria-pressed={language === "en"} className={language === "en" ? "on" : ""} onClick={() => setLanguage("en")}>
-                  English
-                </button>
-              </div>
-            </div>
-            <div className="field">
               <span className="label">{t("new.format")}</span>
               <div className="options">
                 {["9:16, 480p", "9:16, 720p"].map((value) => (
@@ -179,32 +184,7 @@ export function NewDrama() {
             </div>
             <span className="quiet small">{t("new.screenplayLanguageHint")}</span>
           </div>
-          {!(onPine && rehearsal) && (
-            <div className="field">
-              <span className="label">{t("new.preset")}</span>
-              {presets?.length ? (
-                <div className="options">
-                  {presets.map((name) => (
-                    <button key={name} aria-pressed={preset === name} className={preset === name ? "on" : ""} onClick={() => setPreset(name)}>
-                      {name}
-                    </button>
-                  ))}
-                </div>
-              ) : (
-                <span className="quiet small">{t("new.presetUnknown")}</span>
-              )}
-            </div>
-          )}
-          <div className="field">
-            <span className="label">{t("new.look")}</span>
-            <div className="options">
-              {LOOKS.map(([key, value]) => (
-                <button key={value} aria-pressed={look === value} className={look === value ? "on" : ""} onClick={() => setLook(value)}>
-                  {t(key)}
-                </button>
-              ))}
-            </div>
-          </div>
+          {needsPreset && <PresetChoice value={preset} onChange={setPreset} />}
           <div className="field">
             <span className="label">{t("new.length")}</span>
             <div className="options">

@@ -145,6 +145,7 @@ h1, h2, h3 { margin: 0; font-family: var(--serif); font-weight: 450; letter-spac
 .options button { background: none; border: 0; padding: 4px 0; cursor: pointer; color: var(--ink-3); border-bottom: 1px solid transparent; }
 .options button:hover { color: var(--ink); }
 .options button.on { color: var(--ink); border-color: var(--ink); }
+.options button:disabled { opacity: 0.42; cursor: not-allowed; color: var(--ink-3); }
 .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
 
 /* New drama */

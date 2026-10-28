@@ -62,32 +62,6 @@ export function noteDramaSkill(project: string, offered: boolean): boolean {
   return true;
 }
 
-/**
- * The presets New drama may offer, named one by one: a preset drama-cli adds is offered only once
- * it is added here. Adult presets aren't offered for now, and not every one says so in its name
- * (customer-xxcited's preset.yaml sets min_character_age: 18).
- */
-const OFFERED = new Set(["en-us-live-sfw", "zh-cn-live-sfw"]);
-
-/** Whether New drama offers a preset the project's drama-cli lists. */
-export function offered(preset: string): boolean {
-  return OFFERED.has(preset);
-}
-
-/** The presets the project's drama-cli offers, as its Computers last listed them; unknown until one has. */
-export function presets(project: string): string[] | undefined {
-  const value = read(`presets.${project}`);
-  return value === undefined ? undefined : (JSON.parse(value) as string[]);
-}
-
-/** Remembers the presets a Computer of the project listed, those New drama offers only; whether that changed what was known. */
-export function notePresets(project: string, listed: string[]): boolean {
-  const value = JSON.stringify(listed.filter(offered));
-  if (read(`presets.${project}`) === value) return false;
-  write(`presets.${project}`, value);
-  return true;
-}
-
 /** Enough of a key to recognise it, never enough to use it. */
 export function keyHint(apiKey: string): string {
   return `${apiKey.slice(0, 3)}…${apiKey.slice(-4)}`;

@@ -64,6 +64,7 @@ export function dramaCard(drama: DramaRow): DramaCard {
     title: drama.title,
     language: drama.language,
     look: drama.look,
+    preset: drama.preset,
     format: drama.format,
     status: drama.status,
     episodes: { total: counts.reduce((sum, row) => sum + row.n, 0), done: n("done"), waiting: n("waiting") + n("stopped") + n("failed"), working: n("working") },

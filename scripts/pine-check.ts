@@ -137,7 +137,7 @@ try {
     return { value: stopBy, note: stopBy ? `Pine stops it from ${stopBy.toISOString()} (${((stopBy.getTime() - Date.now()) / 3_600_000).toFixed(1)}h from now)` : "no limit" };
   });
 
-  const skills = await step("skills", async () => {
+  await step("skills", async () => {
     const skills = await fleet.skills(computer);
     const drama = skills.includes(DRAMA_SKILL);
     return { value: skills, note: `${skills.length} offered; ${DRAMA_SKILL}: ${drama ? "yes" : "NOT OFFERED (the studio will hold dramas on this project)"}` };
@@ -161,14 +161,6 @@ try {
     sessions.push(session);
     return { value: session, note: session.name };
   });
-  // The presets New drama offers, listed by Pine's agent with the Computer's drama-cli in a session of its own.
-  if (skills?.includes(DRAMA_SKILL)) {
-    await step("presets", async () => {
-      const listed = await fleet.presets(computer);
-      expect(listed.length > 0, "drama-cli lists no preset");
-      return { value: listed, note: listed.join(", ") };
-    });
-  }
   const blob = randomBytes(3 * 1024 * 1024);
   const events = { input: 0, progress: 0, activity: 0, result: 0, usage: 0 };
   const listening = new AbortController();

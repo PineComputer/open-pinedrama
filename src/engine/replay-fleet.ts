@@ -11,9 +11,6 @@ import { DRAMA_SKILL } from "./goals.ts";
 import type { Attached, ComputerRef, Fleet, FleetEvent, Limits, SessionRef, TurnFile, TurnInfo } from "./fleet.ts";
 import { blocking, lookSheet, plate, prop, storyboard } from "./placeholders.ts";
 
-/** What drama-cli's `preset list` printed (short_drama 86648122), for New drama's choice in replay. */
-const REPLAY_PRESETS = ["customer-xxcited", "en-us-live-sfw", "zh-cn-live-sfw"];
-
 const SPEED = Number(process.env.STUDIO_REPLAY_SPEED ?? 1);
 
 interface Out {
@@ -63,7 +60,7 @@ type Lang = "zh" | "en";
 
 /** The drama's language, from the goal's brief ("Language: Chinese."), as the real agent would read it. */
 function languageOf(goal: string): Lang {
-  return /Language:\s*Chinese/i.test(goal) ? "zh" : "en";
+  return /summaries in Chinese/i.test(goal) ? "zh" : "en";
 }
 
 /** Everything the recorded agent says, in both languages. */
@@ -398,10 +395,6 @@ export class ReplayFleet implements Fleet {
 
   async skills() {
     return [DRAMA_SKILL];
-  }
-
-  async presets() {
-    return REPLAY_PRESETS;
   }
 
   async setIdleTimeout(_ref: ComputerRef, seconds: number) {

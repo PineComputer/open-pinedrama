@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { type AppInfo, type DramaView, type EpisodeRow, STAGES, type StageCell } from "../../shared/types.ts";
-import { api, useAction, useResource } from "../api.ts";
+import { type DramaView, type EpisodeRow, STAGES, type StageCell } from "../../shared/types.ts";
+import { api, useAction } from "../api.ts";
 import { type TKey, useT } from "../i18n.ts";
 import { errorText, moneyText, nowText } from "../labels.ts";
 import { Link, navigate } from "../router.tsx";
 import { Still } from "../Still.tsx";
 import { Cast } from "./Cast.tsx";
+import { PresetChoice } from "./NewDrama.tsx";
 
 function Mark({ cell }: { cell: StageCell }) {
   const { t } = useT();
@@ -238,31 +239,18 @@ export function Board({ drama }: { drama: DramaView }) {
 }
 
 /**
- * drama-cli init's inputs for a drama held for them: made before its project's presets were
- * known, or before New drama asked. The maker chooses; the setup then starts.
+ * drama-cli init's inputs for a drama held for them, made before New drama asked for them. The
+ * maker chooses; the setup then starts.
  */
 function ChooseInputs({ drama }: { drama: DramaView }) {
   const { t } = useT();
-  const app = useResource<AppInfo>("/api/app", ["app"]);
   const [preset, setPreset] = useState(drama.inputs.preset);
   const [screenplay, setScreenplay] = useState(drama.inputs.screenplay ?? (drama.inputs.files.length === 1 ? drama.inputs.files[0].id : null));
   const [language, setLanguage] = useState(drama.inputs.screenplayLanguage);
   const choose = useAction(() => api(`/api/dramas/${drama.id}/inputs`, { method: "POST", json: { preset, screenplay, screenplayLanguage: language } }));
-  const presets = app.data?.presets ?? [];
   return (
     <div className="compose-form">
-      {!drama.rehearsal && (
-        <div className="field">
-          <span className="label">{t("new.preset")}</span>
-          <div className="options">
-            {presets.map((name) => (
-              <button key={name} aria-pressed={preset === name} className={preset === name ? "on" : ""} onClick={() => setPreset(name)}>
-                {name}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
+      {!drama.rehearsal && <PresetChoice value={preset} onChange={setPreset} />}
       <div className="field">
         <span className="label">{t("new.screenplay")}</span>
         <div className="options">

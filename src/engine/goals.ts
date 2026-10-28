@@ -8,13 +8,15 @@ export const DRAMA_SKILL = "drama-workflow";
 
 export interface DramaBrief {
   title: string;
+  /** zh | en: the maker's language (the studio's), which the agent writes its questions and summaries in. */
   language: string;
+  /** "" for a drama made after New drama asked for a preset, which says what kind of drama it is. */
   look: string;
   format: string;
   notes: string;
   /** About this many seconds an episode (60, 90, 120), or "" for a drama made before New drama always asked. */
   length: string;
-  /** The drama-cli preset the maker chose (`drama-cli preset list`), or "" while it isn't chosen. */
+  /** The drama-cli preset the maker chose (shared/presets.ts), or "" while it isn't chosen. */
   preset: string;
   /** The language of the screenplay's structural marks (en | zh), as `drama-cli init --screenplay-language` takes it; "" for a drama made before New drama asked. */
   screenplay_language: string;
@@ -35,8 +37,9 @@ function languageName(code: string): string {
 function brief(drama: DramaBrief): string {
   return [
     `Title: ${drama.title}.`,
-    `Language: ${languageName(drama.language)}.`,
-    `Look: ${drama.look}.`,
+    // A drama made before New drama asked for drama-cli init's inputs gave its language and look here instead.
+    drama.screenplay_language ? "" : `Language: ${languageName(drama.language)}.`,
+    drama.look ? `Look: ${drama.look}.` : "",
     `Format: ${drama.format}.`,
     LENGTHS[drama.length] ? `Episode length: ${LENGTHS[drama.length]}.` : "",
   ]
@@ -46,16 +49,15 @@ function brief(drama: DramaBrief): string {
 
 /**
  * brief.md, the brief `drama-cli init --inputs.brief` takes: free text that opens with the two
- * lines `drama-cli init -h` names, "Title:" and "Episode length:", then what the maker set that
- * the screenplay doesn't say.
+ * lines `drama-cli init -h` names, "Title:" and "Episode length:", then the maker's notes, what
+ * the screenplay doesn't say. The preset gives the drama's kind and style (a Chinese or an English
+ * vertical drama, its casting and wardrobe), the config the format, and the dialogue's language is
+ * detected where subtitles are timed (short_drama D116).
  */
-export function briefFile(drama: Omit<DramaBrief, "preset" | "screenplay_language">): string {
+export function briefFile(drama: Pick<DramaBrief, "title" | "length" | "notes">): string {
   return [
     `Title: ${drama.title}`,
     `Episode length: ${LENGTHS[drama.length]}.`,
-    `Language: ${languageName(drama.language)}.`,
-    `Look: ${drama.look}.`,
-    `Format: ${drama.format}.`,
     drama.notes ? `\nNotes: ${drama.notes}` : "",
   ]
     .filter(Boolean)

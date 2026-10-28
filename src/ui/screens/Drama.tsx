@@ -2,7 +2,7 @@ import { useState } from "react";
 import type { AppInfo, DramaView } from "../../shared/types.ts";
 import { api, useAction, useResource } from "../api.ts";
 import { type TKey, useT } from "../i18n.ts";
-import { errorText, lookLabel, moneyText } from "../labels.ts";
+import { errorText, kindLabel, moneyText } from "../labels.ts";
 import { ReviewingChoice } from "../Reviewing.tsx";
 import { Link } from "../router.tsx";
 import { Board, SetupPanel } from "./Board.tsx";
@@ -169,7 +169,7 @@ export function Drama({ id, tab, episode }: { id: string; tab: string; episode?:
           </Link>
           <h1>{drama.title}</h1>
           <div className="about">
-            {drama.format} · {lookLabel(drama.look, t)}
+            {[drama.format, kindLabel(drama, t)].filter(Boolean).join(" · ")}
             {drama.length && ` · ${t(`new.length${drama.length}` as TKey)}`}            {drama.rehearsal && <span className="rehearsal-tag">{t("rehearsal.tag")}</span>}
           </div>
         </div>
