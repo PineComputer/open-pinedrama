@@ -369,8 +369,10 @@ export interface Receipt {
 
 export interface SegmentPage {
   key: string;
-  /** Storyboards with their blocking reference, newest receipt first. */
+  /** The line-art and photoreal storyboards, newest receipt first. */
   boards: Receipt[];
+  /** The blocking reference and the first-frame reference the storyboards and takes are drawn from, newest receipt first. */
+  stills: Receipt[];
   takes: Receipt[];
 }
 

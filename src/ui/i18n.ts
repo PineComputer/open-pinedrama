@@ -122,6 +122,7 @@ const en = {
   "episode.parts": "Parts of the episode",
   "episode.review": "Open its review",
   "episode.boards": "Storyboards",
+  "episode.stills": "Blocking",
   "episode.takes": "Takes",
   "episode.cut": "Cut",
   "episode.other": "Other files",
@@ -280,6 +281,7 @@ const en = {
   "review.variant.line-art": "Line art",
   "review.variant.photoreal": "Photoreal",
   "review.variant.blocking": "Blocking",
+  "review.variant.frame": "First frame",
 
   "inbox.title": "To review",
   "inbox.empty": "Nothing waits for you. When the agents need you next, it will be here.",
@@ -532,6 +534,7 @@ const zh: Record<Key, string> = {
   "episode.parts": "这一集的各部分",
   "episode.review": "去审阅",
   "episode.boards": "分镜",
+  "episode.stills": "站位",
   "episode.takes": "镜头",
   "episode.cut": "成片",
   "episode.other": "其他文件",
@@ -690,6 +693,7 @@ const zh: Record<Key, string> = {
   "review.variant.line-art": "线稿",
   "review.variant.photoreal": "写实",
   "review.variant.blocking": "站位",
+  "review.variant.frame": "首帧",
 
   "inbox.title": "待审",
   "inbox.empty": "暂时没有等你处理的事。智能体下一次需要你时，会出现在这里。",

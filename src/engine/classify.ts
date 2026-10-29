@@ -17,6 +17,11 @@ export interface Hints {
 const IMAGE = String.raw`\.(?:png|jpe?g|webp|svg)$`;
 const VIDEO = String.raw`\.(?:mp4|mov|webm)$`;
 const SEG = String.raw`(seg\d+[a-z]?)`;
+// A segment picture's version holds its output as image-1.<ext> (short_drama drama_cli/stages.py, `_image_file`), beside
+// the inputs drama-cli cropped for the request: a blocking reference's view.png, a panel edit's crop.png and
+// edited-panel.png (stages.py, VIEW, CROP and EDITED). Only the output is the picture; the rest is what it was made from.
+const OUTPUT = String.raw`image-1${IMAGE}`;
+
 const VER = String.raw`(v\d+)`;
 
 const RULES: [RegExp, (m: RegExpMatchArray) => Hints][] = [
@@ -24,12 +29,12 @@ const RULES: [RegExp, (m: RegExpMatchArray) => Hints][] = [
   [new RegExp(String.raw`episodes/(EP\d+)/edit/${VER}/[^/]+${VIDEO}`, "i"), (m) => ({ kind: "cut", episode: m[1], version: m[2] })],
   [new RegExp(String.raw`episodes/(EP\d+)/segments/${SEG}/(t\d+)/[^/]+${VIDEO}`, "i"), (m) => ({ kind: "take", episode: m[1], segment: m[2], version: m[3] })],
   [
-    new RegExp(String.raw`episodes/(EP\d+)/multi_panel_storyboard/${SEG}/([^/]+)/${VER}/[^/]+${IMAGE}`, "i"),
+    new RegExp(String.raw`episodes/(EP\d+)/multi_panel_storyboard/${SEG}/([^/]+)/${VER}/${OUTPUT}`, "i"),
     (m) => ({ kind: "storyboard", episode: m[1], segment: m[2], style: m[3], version: m[4] }),
   ],
-  [new RegExp(String.raw`episodes/(EP\d+)/blocking/${SEG}/${VER}/[^/]+${IMAGE}`, "i"), (m) => ({ kind: "blocking", episode: m[1], segment: m[2], version: m[3] })],
+  [new RegExp(String.raw`episodes/(EP\d+)/blocking/${SEG}/${VER}/${OUTPUT}`, "i"), (m) => ({ kind: "blocking", episode: m[1], segment: m[2], version: m[3] })],
   [
-    new RegExp(String.raw`episodes/(EP\d+)/first_frame_reference/${SEG}/${VER}/[^/]+${IMAGE}`, "i"),
+    new RegExp(String.raw`episodes/(EP\d+)/first_frame_reference/${SEG}/${VER}/${OUTPUT}`, "i"),
     (m) => ({ kind: "frame", episode: m[1], segment: m[2], version: m[3] }),
   ],
   [new RegExp(String.raw`episodes/(EP\d+)/asr_align/${VER}/[^/]+\.srt$`, "i"), (m) => ({ kind: "subtitles", episode: m[1], version: m[2] })],

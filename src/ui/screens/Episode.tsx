@@ -8,7 +8,7 @@ import { Link } from "../router.tsx";
 import { Still } from "../Still.tsx";
 import { Pinboard, isImage, isVideo, useShotList, useSize, variantLabel } from "../viewing.tsx";
 
-type Selection = { kind: "segment"; key: string; tab: "boards" | "takes" } | { kind: "cut" } | { kind: "other" };
+type Selection = { kind: "segment"; key: string; tab: "boards" | "stills" | "takes" } | { kind: "cut" } | { kind: "other" };
 
 /** What the maker decided on what a review showed, with the way back to that review. */
 function JudgedLine({ review }: { review?: Judged }) {
@@ -195,7 +195,7 @@ export function Episode({ dramaId, code }: { dramaId: string; code: string }) {
               onClick={() => setPicked({ kind: "segment", key: candidate.key, tab: selection?.kind === "segment" ? selection.tab : "boards" })}
             >
               <span className="thumb">
-                <Still still={candidate.boards[0]?.files[0] && { url: candidate.boards[0].files[0].url }} />
+                <Still still={(candidate.boards[0] ?? candidate.stills[0])?.files[0] && { url: (candidate.boards[0] ?? candidate.stills[0]).files[0].url }} />
               </span>
               <span className="name">{candidate.key}</span>
               <span className={`dot ${mark(candidate.takes[0]?.review ?? candidate.boards[0]?.review)}`} />
@@ -222,9 +222,9 @@ export function Episode({ dramaId, code }: { dramaId: string; code: string }) {
           {selection?.kind === "segment" && segment && (
             <>
               <div className="views" role="group">
-                {(["boards", "takes"] as const).map((tab) => (
+                {(["boards", "stills", "takes"] as const).map((tab) => (
                   <button key={tab} aria-pressed={selection.tab === tab} className={selection.tab === tab ? "on" : ""} onClick={() => setPicked({ ...selection, tab })}>
-                    {t(tab === "boards" ? "episode.boards" : "episode.takes")} <span className="num">{segment[tab].length}</span>
+                    {t(`episode.${tab}`)} <span className="num">{segment[tab].length}</span>
                   </button>
                 ))}
               </div>

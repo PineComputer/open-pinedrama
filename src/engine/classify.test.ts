@@ -64,6 +64,14 @@ describe("classify", () => {
     expect(inferKind("episode", [stage, classify("drama/episodes/EP003/multi_panel_storyboard/seg01/line-art/v1/image-1.jpg")])).toBe("storyboards");
   });
 
+  it("takes a segment picture's output, never the crops drama-cli made as its inputs", () => {
+    expect(classify("drama/episodes/EP001/blocking/seg01/v1/image-1.jpg")).toMatchObject({ kind: "blocking", segment: "seg01", version: "v1" });
+    expect(classify("drama/episodes/EP001/blocking/seg01/v1/view.png")).toEqual({ kind: "other" });
+    expect(classify("drama/episodes/EP001/multi_panel_storyboard/seg01/line-art/v2/crop.png")).toEqual({ kind: "other" });
+    expect(classify("drama/episodes/EP001/multi_panel_storyboard/seg01/line-art/v2/edited-panel.png")).toEqual({ kind: "other" });
+    expect(classify("drama/episodes/EP001/first_frame_reference/seg01/v1/view.png")).toEqual({ kind: "other" });
+  });
+
   it("calls anything else other", () => {
     expect(classify("notes/today.txt")).toEqual({ kind: "other" });
     expect(classify("episodes/EP001/segments/seg01/t01/spec.json")).toEqual({ kind: "other" });
