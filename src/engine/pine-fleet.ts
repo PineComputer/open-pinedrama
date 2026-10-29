@@ -13,9 +13,20 @@ import {
   UnknownComputerError,
   type AgentTurn,
   type Computer,
+  type ProjectPolicy,
   type Session,
 } from "@pinesandbox/computer";
-import type { Attached, ComputerRef, Fleet, FleetEvent, SessionRef, TurnInfo } from "./fleet.ts";
+import type { Attached, ComputerRef, Fleet, FleetEvent, Limits, SessionRef, TurnInfo } from "./fleet.ts";
+
+/** What the studio keeps of the project's policy. */
+export function limitsOf(policy: ProjectPolicy): Limits {
+  return {
+    maxComputers: policy.maxConcurrentComputers,
+    maxIdleSeconds: policy.lifecycle?.maxIdleTimeoutSeconds ?? null,
+    idleAdjustable: policy.lifecycle !== null,
+    maxRuntimeSeconds: policy.lifecycle?.maxRuntimeAgeSeconds ?? null,
+  };
+}
 
 /** Marks the errors that mean "the project is busy, try later" (fleet.ts, isBusy), and passes the error on. */
 function busyOr(error: unknown): never {
@@ -84,13 +95,7 @@ export class PineFleet implements Fleet {
   }
 
   async limits() {
-    const policy = await this.client.projectPolicy();
-    return {
-      maxComputers: policy.maxConcurrentComputers,
-      maxIdleSeconds: policy.lifecycle?.maxIdleTimeoutSeconds ?? null,
-      idleAdjustable: policy.lifecycle !== null,
-      maxRuntimeSeconds: policy.lifecycle?.maxRuntimeAgeSeconds ?? null,
-    };
+    return limitsOf(await this.client.projectPolicy());
   }
 
   async newCredentials() {

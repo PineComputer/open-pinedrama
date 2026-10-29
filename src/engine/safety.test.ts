@@ -3,7 +3,7 @@
 import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 
 const DATA = mkdtempSync(path.join(tmpdir(), "studio-safety-"));
 process.env.STUDIO_DATA_DIR = DATA;
@@ -143,10 +143,14 @@ describe("the production line", () => {
 
   it("keeps within the project's limits: Computers at once, and idle time", async () => {
     const fleet = new m.replay.ReplayFleet();
-    fleet.limits = async () => ({ maxComputers: 1, maxIdleSeconds: 1800, idleAdjustable: true, maxRuntimeSeconds: null });
+    let reads = 0;
+    fleet.limits = async () => {
+      reads += 1;
+      return { maxComputers: 1, maxIdleSeconds: 1800, idleAdjustable: true, maxRuntimeSeconds: null };
+    };
     quiet();
     m.computers.setFleet(fleet);
-    await m.computers.refreshLimits();
+    await m.computers.freshLimits();
     m.scheduler.startClock(20);
     const first = await m.dramas.createDrama(newDrama("First in line"), "replay");
     const second = await m.dramas.createDrama(newDrama("Second in line"), "replay");
@@ -157,6 +161,18 @@ describe("the production line", () => {
     expect(live[0].idle_timeout).toBe(1800);
     const waiting = m.views.dramaView(m.db.get("select * from dramas where id = ?", computersOf(first).length ? second : first)!);
     expect(waiting.atLimit).toBe(1);
+    // Read once on connecting: not again for the start, the reconcile, or the work waiting at the limit.
+    await m.scheduler.reconcile();
+    expect(reads).toBe(1);
+    // Ten minutes on, the waiting work reads the limit again, once.
+    vi.useFakeTimers({ toFake: ["Date"] });
+    try {
+      vi.setSystemTime(Date.now() + 11 * 60_000);
+      await new Promise((resolve) => setTimeout(resolve, 300));
+      expect(reads).toBe(2);
+    } finally {
+      vi.useRealTimers();
+    }
     m.scheduler.stopClock();
   });
 
@@ -411,7 +427,8 @@ describe("the production line", () => {
       starts += 1;
       return start(...args);
     };
-    // The first start has an hour left; a fresh one, a week.
+    // The project limits each start to a week: the first has an hour left; a fresh one, the week.
+    fleet.limits = async () => ({ maxComputers: null, maxIdleSeconds: null, idleAdjustable: true, maxRuntimeSeconds: 7 * 24 * 3_600 });
     fleet.stopBy = async () => new Date(Date.now() + (starts === 1 ? 60 * 60_000 : 7 * 24 * 3_600_000));
     let stops = 0;
     const stopComputer = fleet.stop.bind(fleet);

@@ -11,20 +11,51 @@ import { type ComputerRow, type SessionRow, computer as computerRow, openSession
 import { seal, unseal } from "./seal.ts";
 
 let fleetRef: Fleet | undefined;
-let limits: Limits | undefined;
 const UNKNOWN: Limits = { maxComputers: null, maxIdleSeconds: null, idleAdjustable: true, maxRuntimeSeconds: null };
+/** How long a read of the project's limits holds, and how soon one that failed is tried again. */
+const LIMITS_HOLD_MS = 10 * 60_000;
+const LIMITS_RETRY_MS = 60_000;
+/** The project's limits as last read, the read under way, and when they may be read again. */
+let limits: Limits | undefined;
+let reading: Promise<void> | undefined;
+let readAgainAt = 0;
+
+function keepLimits(value: Limits): void {
+  limits = value;
+  readAgainAt = Date.now() + LIMITS_HOLD_MS;
+}
 
 /** The project's limits as last read; none until they are known. */
 export function projectLimits(): Limits {
   return limits ?? UNKNOWN;
 }
 
-/** Reads the project's limits again (on connecting, and at each reconcile). */
-export async function refreshLimits(): Promise<void> {
+/**
+ * Reads the project's limits when the studio connects, and again when a decision rests on
+ * them (starting a Computer, or work waiting at the project's limit, which its owner may have
+ * raised) and the last read is ten minutes old. Nothing reads them on a timer: a studio with
+ * nothing to start asks Pine nothing.
+ */
+export function freshLimits(): Promise<void> {
   const current = fleetRef;
-  if (!current) return;
-  const read = await current.limits();
-  if (fleetRef === current) limits = read;
+  if (!current || Date.now() < readAgainAt) return Promise.resolve();
+  if (reading) return reading;
+  const read: Promise<void> = current
+    .limits()
+    .then(
+      (value) => {
+        if (fleetRef === current) keepLimits(value);
+      },
+      (error) => {
+        if (fleetRef === current) readAgainAt = Date.now() + LIMITS_RETRY_MS;
+        throw error;
+      },
+    )
+    .finally(() => {
+      if (reading === read) reading = undefined;
+    });
+  reading = read;
+  return read;
 }
 
 /** An idle timeout the project allows: no longer than its maximum, and at least Pine's minute. */
@@ -39,19 +70,22 @@ export function allowedIdle(seconds: number): number {
  * waiting one from the start, so a question still outlasts the maker's break.
  */
 async function startIdle(): Promise<number> {
-  if (!limits) await refreshLimits().catch((error) => console.error("project limits:", message(error)));
+  await freshLimits().catch((error) => console.error("project limits:", message(error)));
   return allowedIdle(projectLimits().idleAdjustable ? IDLE_WORKING_S : IDLE_WAITING_S);
 }
 
 /**
- * Uses a fleet from now on. Computers made in another mode or project are out of its reach,
- * so they are marked stopped (replay's vanish anyway; disconnect stops Pine's before
- * switching), and are never started again (claimComputer).
+ * Uses a fleet from now on, with its project's limits if they were just read. Computers made
+ * in another mode or project are out of its reach, so they are marked stopped (replay's vanish
+ * anyway; disconnect stops Pine's before switching), and are never started again (claimComputer).
  */
-export function setFleet(fleet: Fleet | undefined): void {
+export function setFleet(fleet: Fleet | undefined, known?: Limits): void {
   fleetRef = fleet;
   limits = undefined;
-  void refreshLimits().catch((error) => console.error("project limits:", (error as Error).message));
+  reading = undefined;
+  readAgainAt = 0;
+  if (known) keepLimits(known);
+  else void freshLimits().catch((error) => console.error("project limits:", message(error)));
   // Running from before projects were kept: disconnecting stops everything, so they are this project's.
   if (fleet) run("update computers set project = ? where project = '' and mode = ? and state in ('starting', 'running', 'stopping')", fleet.project, fleet.mode);
   const others = all<ComputerRow>(
@@ -272,10 +306,14 @@ export async function setIdle(row: ComputerRow, seconds: number): Promise<void> 
   run("update computers set idle_timeout = ?, updated_at = ? where id = ?", applied, now(), row.id);
 }
 
-/** Keeps when Pine will stop a running Computer for its running time; a Computer that can't say is taken to have no limit. */
+/**
+ * Keeps when Pine will stop a running Computer for its running time; a Computer that can't say
+ * is taken to have no limit. A project with no limit on running time has nothing to tell, so
+ * its Computers aren't asked (reconcile would otherwise ask each one every minute).
+ */
 export async function noteStopBy(id: string): Promise<void> {
   const row = computerRow(id);
-  if (row?.state !== "running" || !row.binding) return;
+  if (row?.state !== "running" || !row.binding || projectLimits().maxRuntimeSeconds === null) return;
   const stopBy = await fleet()
     .stopBy(computerRef(row))
     .catch((error) => void console.error(`${row.label} lifetime:`, message(error)));

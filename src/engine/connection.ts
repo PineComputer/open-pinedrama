@@ -5,7 +5,7 @@ import { DATA_DIR, VERSION } from "./config.ts";
 import { fleet, hasFleet, setFleet, stop } from "./computers.ts";
 import { all } from "./db.ts";
 import { StudioError } from "./errors.ts";
-import type { Fleet } from "./fleet.ts";
+import type { Fleet, Limits } from "./fleet.ts";
 import { publish } from "./live.ts";
 import { PineFleet } from "./pine-fleet.ts";
 import type { ComputerRow } from "./records.ts";
@@ -21,18 +21,19 @@ export function initialFleet(): Fleet | undefined {
   return savedMode() === "replay" ? new ReplayFleet() : undefined;
 }
 
-function use(next: Fleet | undefined): void {
-  setFleet(next);
+function use(next: Fleet | undefined, limits?: Limits): void {
+  setFleet(next, limits);
   void reconcile();
   publish("app", "dramas", "inbox");
 }
 
 export async function connectPine(project: PineProject): Promise<AppInfo> {
   const clean = { endpoint: project.endpoint.trim().replace(/\/$/, ""), apiKey: project.apiKey.trim() };
-  await checkProject(clean);
+  // Checking the key reads the project's limits, so connecting doesn't ask for them twice.
+  const limits = await checkProject(clean);
   saveProject(clean);
   saveMode(null);
-  use(new PineFleet(clean));
+  use(new PineFleet(clean), limits);
   return appInfo();
 }
 

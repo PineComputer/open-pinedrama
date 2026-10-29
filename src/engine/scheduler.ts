@@ -9,13 +9,13 @@ import {
   closeSession,
   computerRef,
   fleet,
+  freshLimits,
   hasFleet,
   markStopped,
   noteStopBy,
   openSession,
   projectLimits,
   provision,
-  refreshLimits,
   restart,
   retiring,
   runningComputers,
@@ -130,7 +130,12 @@ function claimComputer(drama: DramaRow): ComputerRow | undefined {
   if (free) return free;
   const pool = all<ComputerRow>("select * from computers where drama_id = ? and mode = ? and state in ('starting', 'running', 'stopping')", drama.id, drama.mode);
   if (pool.some((computer) => computer.state === "starting")) return undefined;
-  if (pool.length >= capacity(drama) || atProjectLimit()) return undefined;
+  if (pool.length >= capacity(drama)) return undefined;
+  if (atProjectLimit()) {
+    // The work waits; the limit is read again now and then, in case the project now allows more.
+    void freshLimits().catch((error) => console.error("project limits:", message(error)));
+    return undefined;
+  }
   // Only Computers made in this project can start here; one from another project is left alone.
   const idle = all<ComputerRow>(
     "select * from computers where drama_id = ? and mode = ? and project = ? and state in ('stopped', 'failed') order by created_at",
@@ -393,7 +398,6 @@ function tend(computer: ComputerRow): void {
 /** Every saved Computer against Pine: those that stopped are marked so; running turns are followed again. */
 export async function reconcile(): Promise<void> {
   if (!hasFleet()) return;
-  await refreshLimits().catch((error) => console.error("project limits:", (error as Error).message));
   for (const computer of all<ComputerRow>("select * from computers where state in ('running', 'starting', 'stopping') and mode = ?", fleet().mode)) {
     if (!computer.binding) {
       if (computer.state !== "running") markStopped(computer, "Its Computer didn't finish starting.");
