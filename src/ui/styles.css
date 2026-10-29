@@ -594,6 +594,11 @@ h1, h2, h3 { margin: 0; font-family: var(--serif); font-weight: 450; letter-spac
   .episode-nav, .script-nav { position: static; }
 }
 .script-page .download { float: right; }
+/* A rewrite beside the maker's original: the page widens to two columns, each scrolling on its own. */
+.script-page:has(.side-by-side) { max-width: none; }
+.side-by-side { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+.side-doc { min-width: 0; height: 75vh; overflow: auto; }
+@media (max-width: 900px) { .side-by-side { grid-template-columns: 1fr; } }
 .figure .parts { display: inline-flex; gap: 4px; }
 .figure .parts button { border: 1px solid var(--rule); background: none; border-radius: 2px; font-size: 12px; padding: 0 5px; cursor: pointer; color: var(--ink-3); }
 .figure .parts button.on { border-color: var(--ink); color: var(--ink); }
@@ -635,3 +640,9 @@ h1, h2, h3 { margin: 0; font-family: var(--serif); font-weight: 450; letter-spac
 
 /* A sum of money typed in a line: the currency sign before it. */
 .field { align-content: start; }
+
+/* Documents on a review page: each readable in place, the first open. */
+.documents details { border-top: 1px solid var(--rule); padding: 8px 0; }
+.documents summary { cursor: pointer; font: 500 14px/1.4 var(--sans); }
+.documents .document.plain { max-height: 60vh; overflow: auto; margin-top: 8px; }
+.document pre.fenced { font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--paper-2); padding: 10px 12px; border-radius: 2px; overflow-x: auto; white-space: pre; margin: 0 0 14px; }

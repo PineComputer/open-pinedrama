@@ -122,6 +122,26 @@ async function made(session: SessionRow): Promise<string[]> {
   return found;
 }
 
+/** The screenplay versions drama-cli recorded in the setup's project, and their reviews, that the studio doesn't have yet. */
+async function screenplayVersions(session: SessionRow): Promise<string[]> {
+  const computer = computerRow(session.computer_id)!;
+  const folders = ["drama/screenplay"];
+  const found: string[] = [];
+  while (folders.length) {
+    const entries = await fleet()
+      .listFiles(computerRef(computer), sessionRef(session), folders.shift()!)
+      .catch((error: { status?: number }) => {
+        if (error.status === 404) return []; // no screenplay validated yet
+        throw error;
+      });
+    for (const entry of entries) {
+      if (entry.folder) folders.push(entry.path);
+      else if (["screenplay-version", "screenplay-review"].includes(classify(entry.path).kind) && !known(session.drama_id, entry.path)) found.push(entry.path);
+    }
+  }
+  return found;
+}
+
 /**
  * A turn ended: save its files, then let the flow act on how it ended. Each step is marked
  * when done, so a turn the engine stopped halfway through is taken up again where it was. A
@@ -165,6 +185,8 @@ export async function settle(sessionId: string, info: TurnInfo): Promise<void> {
         ? namedPaths(asked).filter((relPath) => !info.files.some((file) => file.path === relPath) && (!known(session.drama_id, relPath) || classify(relPath).kind === "archive"))
         : [];
       for (const relPath of named) await fetch(relPath);
+      // The screenplay as drama-cli recorded it, the rewrite the maker is asked to accept included, whatever the turn named.
+      if (!session.episode_id && (stop || info.state === "completed")) for (const relPath of await screenplayVersions(session)) await fetch(relPath);
       // A stop, or a finished turn, that brought nothing to look at: what the agent made is in its folder.
       if ((stop || info.state === "completed") && !get(`select id from files where turn_id = ? and kind in (${REVIEWED}) limit 1`, info.turnId)) {
         for (const relPath of await made(session)) await fetch(relPath);

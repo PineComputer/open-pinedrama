@@ -1,5 +1,6 @@
-// The text the agent returns (bibles, breakdowns), set as a document: headings, lists,
-// emphasis, code and paragraphs, built as React elements, so nothing in the text can run.
+// The text the agent returns (bibles, breakdowns, a screenplay rewrite's review), set as a
+// document: headings, lists, emphasis, code, fenced blocks (kept line for line, as a
+// rewrite's line table is) and paragraphs, built as React elements, so nothing in the text can run.
 // Anything else stays readable as written. Very long text is cut short, with a note.
 import { Fragment, type ReactNode } from "react";
 
@@ -7,8 +8,8 @@ const LIMIT = 200_000;
 
 /**
  * **bold**, *italic* or _italic_, `code` and [links], inside one line. Underscores inside a
- * word (omni_reference_task_type) are the word's own. A link opens only a file the studio
- * saved (`links`, by its path in the session); any other target is shown, not followed.
+ * word (omni_reference_task_type) are the word's own. A link, or a backquoted path, opens only a file the
+ * studio saved (`links`, by its path in the session); any other target is shown, not followed.
  */
 function inline(text: string, links?: Map<string, string>): ReactNode[] {
   const out: ReactNode[] = [];
@@ -33,7 +34,18 @@ function inline(text: string, links?: Map<string, string>): ReactNode[] {
         ),
       );
     } else if (token.startsWith("**")) out.push(<strong key={key}>{token.slice(2, -2)}</strong>);
-    else if (token.startsWith("`")) out.push(<code key={key}>{token.slice(1, -1)}</code>);
+    else if (token.startsWith("`")) {
+      const url = links?.get(token.slice(1, -1).replace(/^\.\//, ""));
+      out.push(
+        url ? (
+          <a key={key} href={url} target="_blank" rel="noreferrer" className="link">
+            <code>{token.slice(1, -1)}</code>
+          </a>
+        ) : (
+          <code key={key}>{token.slice(1, -1)}</code>
+        ),
+      );
+    }
     else out.push(<em key={key}>{token.slice(1, -1)}</em>);
     last = match.index + token.length;
   }
@@ -56,7 +68,23 @@ export function Markdown({ text, links, className = "document" }: { text: string
     }
     list = undefined;
   };
+  let fence: string[] | undefined;
   for (const line of lines) {
+    if (/^\s*(```|~~~)/.test(line)) {
+      // A fenced block (CommonMark, "Fenced code blocks"): its lines as written, in monospace.
+      if (fence) {
+        blocks.push(<pre key={blocks.length} className="fenced">{fence.join("\n")}</pre>);
+        fence = undefined;
+      } else {
+        flush();
+        fence = [];
+      }
+      continue;
+    }
+    if (fence) {
+      fence.push(line);
+      continue;
+    }
     const heading = line.match(/^(#{1,6})\s+(.*)$/);
     const bullet = line.match(/^\s*[-*+]\s+(.*)$/);
     const numbered = line.match(/^\s*\d+[.)]\s+(.*)$/);
@@ -81,6 +109,7 @@ export function Markdown({ text, links, className = "document" }: { text: string
       paragraph.push(line.trim());
     }
   }
+  if (fence) blocks.push(<pre key={blocks.length} className="fenced">{fence.join("\n")}</pre>);
   flush();
   return (
     <div className={className}>

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import type { ChatMessage, ChatView } from "../../shared/types.ts";
+import type { ChatMessage, ChatView, FileItem } from "../../shared/types.ts";
 import { api, useResource } from "../api.ts";
 import { type TKey, useT } from "../i18n.ts";
 import { errorText } from "../labels.ts";
@@ -8,7 +8,7 @@ import { Markdown } from "../Markdown.tsx";
 import { Link } from "../router.tsx";
 
 /** One line of a session: the agent's narration and steps, and what it was sent, each in its own form. */
-function Said({ message, previous }: { message: ChatMessage; previous?: ChatMessage }) {
+function Said({ message, previous, links }: { message: ChatMessage; previous?: ChatMessage; links: Map<string, string> }) {
   const { t } = useT();
   // A step that only repeats the narration above it adds nothing.
   if (message.kind === "activity" && previous?.kind === "progress" && previous.text === message.text) return null;
@@ -29,7 +29,7 @@ function Said({ message, previous }: { message: ChatMessage; previous?: ChatMess
     );
   }
   if (message.kind === "result" || message.kind === "question" || message.kind === "progress") {
-    return <Markdown text={message.text} className={`said ${message.kind} speech`} />;
+    return <Markdown text={message.text} links={links} className={`said ${message.kind} speech`} />;
   }
   return <div className={`said ${message.kind}`}>{message.text}</div>;
 }
@@ -41,6 +41,9 @@ export function Chat({ dramaId, onClose }: { dramaId: string; onClose: () => voi
   const [selected, setSelected] = useState<string>();
   const active = selected ?? sessions.data?.[0]?.sessionId;
   const chat = useResource<ChatView>(active ? `/api/sessions/${active}/chat` : null, active ? [`session:${active}`] : []);
+  // The files the studio saved, by their path in the session, so a path the agent writes opens the saved file.
+  const files = useResource<FileItem[]>(`/api/dramas/${dramaId}/files`, [`drama:${dramaId}`]);
+  const links = new Map((files.data ?? []).map((file) => [file.path, file.url]));
   const [text, setText] = useState("");
   const [error, setError] = useState<unknown>();
   const list = useRef<HTMLDivElement>(null);
@@ -84,7 +87,7 @@ export function Chat({ dramaId, onClose }: { dramaId: string; onClose: () => voi
       <div className="lines" ref={list}>
         {!active && <p className="quiet">{t("talk.none")}</p>}
         {(chat.data?.messages ?? []).map((message, index, all) => (
-          <Said key={message.id} message={message} previous={all[index - 1]} />
+          <Said key={message.id} message={message} previous={all[index - 1]} links={links} />
         ))}
       </div>
       <div className="talk-foot">

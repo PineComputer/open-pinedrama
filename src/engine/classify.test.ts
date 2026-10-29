@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { classify, episodeCode, listedEpisodes, namedPaths } from "./classify.ts";
+import { classify, episodeCode, listedEpisodes, namedPaths, typeOf } from "./classify.ts";
 
 describe("classify", () => {
   it("reads a storyboard's episode, segment, style and version", () => {
@@ -32,6 +32,13 @@ describe("classify", () => {
     expect(classify("assets/props/letter/v1/image-1.webp")).toMatchObject({ kind: "prop", subject: "letter" });
     expect(classify("bible/v3/bible.md")).toMatchObject({ kind: "bible", version: "v3" });
     expect(classify("episodes/EP001/breakdown/v2/breakdown.md")).toMatchObject({ kind: "breakdown", episode: "EP001" });
+  });
+
+  it("reads the screenplay versions drama-cli records and a rewrite's review, but not the agent's working copy", () => {
+    expect(classify("drama/screenplay/v2/screenplay.fountain")).toMatchObject({ kind: "screenplay-version", version: "v2" });
+    expect(classify("drama/screenplay/v2/review.md")).toMatchObject({ kind: "screenplay-review", version: "v2" });
+    expect(classify("drama/screenplay/v2/validate.json").kind).toBe("other");
+    expect(classify("drama/inputs/screenplay.fountain.txt").kind).toBe("other");
   });
 
   it("reads what the skill added: a place at night, first frames, subtitles, and the script beside a breakdown", () => {
@@ -106,6 +113,22 @@ describe("namedPaths", () => {
       "handoff/EP001.tar.part-aa",
       "drama/assets/props/letter/v2/image-1.png",
     ]);
+  });
+
+  it("finds a rewritten screenplay and the file it came from, as the agent named them (28 October 2026)", () => {
+    // From the person's test: the .fountain link was missed while extensions stopped at five letters.
+    const question = "请查看：[screenplay.fountain](drama/inputs/screenplay.fountain)；原始文件副本：[screenplay-source.docx](drama/inputs/screenplay-source.docx)。";
+    expect(namedPaths(question)).toEqual(["drama/inputs/screenplay.fountain", "drama/inputs/screenplay-source.docx"]);
+    expect(namedPaths("see `drama/screenplay/v1/review.markdown`")).toEqual(["drama/screenplay/v1/review.markdown"]);
+  });
+});
+
+describe("typeOf", () => {
+  it("gives a screenplay, a Word file and a PDF their types, so the studio can show them", () => {
+    expect(typeOf("drama/inputs/screenplay.fountain")).toBe("text/plain");
+    expect(typeOf("a/b.docx")).toBe("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+    expect(typeOf("a/b.pdf")).toBe("application/pdf");
+    expect(typeOf("a/b.unknown")).toBe("application/octet-stream");
   });
 });
 
