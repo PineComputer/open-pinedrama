@@ -51,21 +51,29 @@ export function episodePage(dramaId: string, code: string): EpisodePage | undefi
   const breakdown = files.findLast((file) => file.kind === "breakdown" && file.type.startsWith("text/"));
   const shown = new Set<number>();
   const segments = new Map<string, SegmentPage>();
-  const segment = (key: string) => segments.get(key) ?? segments.set(key, { key, boards: [], takes: [] }).get(key)!;
+  const segment = (key: string) => segments.get(key) ?? segments.set(key, { key, boards: [], stills: [], takes: [] }).get(key)!;
   const cuts: Receipt[] = [];
   for (const [turnId, turnFiles] of byTurn(files)) {
     const review = reviews.get(turnId);
     for (const kind of ["storyboards", "takes", "cut"] as const satisfies ReviewKind[]) {
       for (const group of itemsOf(kind, turnFiles).items) {
-        const receipt: Receipt = { turnId, files: group.files, review: judged(review?.kind === kind ? review : undefined, group.key) };
+        const receipt = (files: Receipt["files"]): Receipt => ({ turnId, files, review: judged(review?.kind === kind ? review : undefined, group.key) });
         for (const file of group.files) shown.add(file.id);
-        if (kind === "cut") cuts.push(receipt);
-        else segment(group.key)[kind === "storyboards" ? "boards" : "takes"].push(receipt);
+        if (kind === "cut") cuts.push(receipt(group.files));
+        else if (kind === "takes") segment(group.key).takes.push(receipt(group.files));
+        else {
+          // The storyboards apart from the blocking and first-frame references they are drawn from, each in its own tab.
+          const boards = group.files.filter((file) => file.kind === "storyboard");
+          const stills = group.files.filter((file) => file.kind !== "storyboard");
+          if (boards.length) segment(group.key).boards.push(receipt(boards));
+          if (stills.length) segment(group.key).stills.push(receipt(stills));
+        }
       }
     }
   }
   for (const page of segments.values()) {
     newestFirst(page.boards);
+    newestFirst(page.stills);
     newestFirst(page.takes);
   }
   return {

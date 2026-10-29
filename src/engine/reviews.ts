@@ -2,7 +2,8 @@
 // a turn ends with a question and becomes answerable only once that turn's files are
 // saved; the maker's decision goes back as one answer to the turn that asked
 // (docs/IMPLEMENTATION_PLAN.md, rules 1 to 3).
-import type { Decision, FileItem, ReviewItem, ReviewKind, Reviewing } from "../shared/types.ts";
+import type { Decision, FileItem, FileKind, ReviewItem, ReviewKind, Reviewing } from "../shared/types.ts";
+import { classify } from "./classify.ts";
 import { computerRef, fleet, sessionRef } from "./computers.ts";
 import { answerText } from "./decisions.ts";
 import { StudioError } from "./errors.ts";
@@ -45,6 +46,8 @@ export function placeKey(file: Pick<FileRow, "kind" | "subject" | "look">): stri
   return `${file.kind}:${file.subject}${file.look ? `/${file.look}` : ""}`;
 }
 
+const SEGMENT_PICTURES: FileKind[] = ["storyboard", "blocking", "frame"];
+
 export function itemsOf(kind: ReviewKind, files: FileRow[]): { items: ReviewItem[]; other: FileItem[] } {
   const groups = new Map<string, FileRow[]>();
   const other: FileRow[] = [];
@@ -54,7 +57,8 @@ export function itemsOf(kind: ReviewKind, files: FileRow[]): { items: ReviewItem
     if (kind === "looks" && file.kind === "look") add(lookKey(file), file);
     else if (kind === "references" && file.kind === "look") add(lookKey(file), file);
     else if (kind === "references" && (file.kind === "location" || file.kind === "prop") && file.subject) add(placeKey(file), file);
-    else if (kind === "storyboards" && (file.kind === "storyboard" || file.kind === "blocking" || file.kind === "frame") && file.segment) add(file.segment, file);
+    // A segment's picture by its path, not the kind it was saved with, so an input crop saved as one before is left out (classify, OUTPUT).
+    else if (kind === "storyboards" && SEGMENT_PICTURES.includes(classify(file.rel_path).kind) && file.segment) add(file.segment, file);
     else if (kind === "takes" && file.kind === "take" && file.segment) add(file.segment, file);
     else if (kind === "cut" && file.kind === "cut") add("cut", file);
     else other.push(file);

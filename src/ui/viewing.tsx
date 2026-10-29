@@ -14,6 +14,7 @@ export const isVideo = (file: FileItem) => file.type.startsWith("video/");
 
 export function variantLabel(file: FileItem, t: T): string {
   if (file.kind === "blocking") return t("review.variant.blocking");
+  if (file.kind === "frame") return t("review.variant.frame");
   if (file.style === "line-art" || file.style === "photoreal") return t(`review.variant.${file.style}` as TKey);
   return file.version ?? file.name;
 }

@@ -207,8 +207,11 @@ async function scenario(title: string) {
   // Browsing: the episode receipt by receipt, with the verdict on what each review showed.
   const episode = await call<EpisodePage>("GET", `/api/dramas/${id}/episodes/EP001`);
   expect(episode.segments.map((segment) => segment.key)).toEqual(["seg01", "seg02", "seg03"]);
-  expect(episode.segments[0].boards[0].files.map((file) => file.kind).sort()).toEqual(["blocking", "storyboard", "storyboard"]);
+  // The storyboards in their tab, the blocking reference they were drawn from in its own; the storyboard review's verdict on both.
+  expect(episode.segments[0].boards[0].files.map((file) => file.style)).toEqual(["line-art", "photoreal"]);
+  expect(episode.segments[0].stills[0].files.map((file) => file.kind)).toEqual(["blocking"]);
   expect(episode.segments[0].boards[0].review?.verdict).toBe("approve");
+  expect(episode.segments[0].stills[0].review?.verdict).toBe("approve");
   expect(episode.segments[0].takes[0].review?.verdict).toBe("approve");
   expect(episode.cuts[0].review?.verdict).toBe("approve");
   expect(episode.breakdown?.path).toBe("drama/episodes/EP001/breakdown/v1/breakdown.md");
