@@ -278,6 +278,34 @@ describe("a drama in replay", () => {
     expect(episodeArchive(episode.id).map((pack) => pack.turn_id)).toEqual([packs.at(-1)!.turn_id]);
   }, 30_000);
 
+  // The Computer goes away while a turn's files are being saved: the parts saved before it went
+  // are not a pack to carry on from, and the last turn whose files were all saved still is.
+  it("never resumes from a pack whose turn's files were not all saved", async () => {
+    const { all, get, run } = await import("./db.ts");
+    const { episodeArchive, projectArchive } = await import("./runs.ts");
+    const drama = get<{ id: string }>("select id from dramas where title = 'Test drama, named files'")!;
+    const episode = get<{ id: string }>("select id from episodes where drama_id = ? and number = 1", drama.id)!;
+    const project = projectArchive(drama.id);
+    const own = episodeArchive(episode.id);
+    expect(project.length).toBeGreaterThan(0);
+    expect(own.length).toBeGreaterThan(0);
+    const at = new Date().toISOString();
+    for (const [session, episodeId, relPath] of [
+      [project[0].session_id!, null, "handoff/project.tar.part-ab"],
+      [own[0].session_id!, episode.id, "handoff/EP001.tar.part-ab"],
+    ] as const) {
+      const turn = `turn_partial_${session}`;
+      run("insert into turns (id, session_id, state, files_saved, save_error, created_at, ended_at) values (?, ?, 'completed', 0, ?, ?, ?)",
+        turn, session, "the Computer can't be reached", at, at);
+      run(`insert into files (drama_id, episode_id, session_id, turn_id, sha, rel_path, name, type, size, kind, created_at)
+           values (?, ?, ?, ?, 'partial', ?, ?, 'application/octet-stream', 1, 'archive', ?)`,
+        drama.id, episodeId, session, turn, relPath, path.posix.basename(relPath), at);
+    }
+    expect(all("select id from files where turn_id like 'turn_partial_%'").length).toBe(2);
+    expect(projectArchive(drama.id).map((pack) => pack.id)).toEqual(project.map((pack) => pack.id));
+    expect(episodeArchive(episode.id).map((pack) => pack.id)).toEqual(own.map((pack) => pack.id));
+  }, 30_000);
+
   // A Computer stops while its episode waits on the maker, who resumes the episode. The new session
   // asks about the same storyboards, unchanged: they are still in front of the maker, as items.
   // Asked with the storyboards returned again, or only named.
