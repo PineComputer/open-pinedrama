@@ -58,9 +58,16 @@ export function attachmentName(row: FileRow): string {
   return `${base}${ext}`;
 }
 
-/** The parts of the newest packed project a turn returned: the drama's (no episode) or one episode's. */
+/**
+ * The parts of the newest packed project a turn returned: the drama's (no episode) or one episode's.
+ * Only a turn whose files were all saved counts: parts saved before its Computer went away are no pack.
+ */
 function newestArchive(where: string, ...params: string[]): FileRow[] {
-  const newest = get<FileRow>(`select * from files where kind = 'archive' and ${where} order by id desc limit 1`, ...params);
+  const newest = get<FileRow>(
+    `select * from files where kind = 'archive' and ${where}
+     and turn_id in (select id from turns where files_saved = 1) order by id desc limit 1`,
+    ...params,
+  );
   return newest ? all<FileRow>(`select * from files where kind = 'archive' and turn_id = ? and ${where} order by rel_path`, newest.turn_id!, ...params) : [];
 }
 
