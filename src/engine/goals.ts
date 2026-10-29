@@ -111,7 +111,7 @@ export function setupGoal(drama: DramaBrief, attachments: string[], inputs: { sc
     NO_CAP,
     "Read the screenplay and ask me for anything that is missing.",
     "Write the bible, then make each lead's face and base look. Stop and ask me to approve the leads' looks, returning their sheets with your question.",
-    "After I approve, prepare every episode so that each can then be made in parallel in a session of its own: write and accept every episode's breakdown, then make every look, location and key prop that any breakdown uses. Stop and ask me to approve these shared references, returning their images with your question.",
+    "After I approve, prepare every episode so that each can then be made in parallel in a session of its own: write and accept every episode's breakdown, then make every reference `drama-cli status --config drama/drama-cli.cfg.yaml` lists as needed by the accepted breakdowns. Stop and ask me to approve these shared references, returning their images with your question.",
     `After I approve, pack the whole drama/ folder, records included, into parts of at most 60 MB (\`mkdir -p handoff && tar -cf - -C drama . | split -b 60m - handoff/project.tar.part-\`) and return the parts. ${LIST_EPISODES}`,
     "Do not make blocking references, first-frame references, storyboards or video in this session.",
     "Return every file you want me to see with your question or result.",

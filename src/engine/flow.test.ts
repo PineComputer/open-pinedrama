@@ -171,6 +171,10 @@ async function scenario(title: string) {
   expect(setup).toContain(
     "`mkdir -p drama/inputs && cp attachments/screenplay.txt drama/inputs/screenplay.txt && cp attachments/brief.md drama/inputs/brief.md && drama-cli init drama --preset en-us-live-sfw --inputs.screenplay drama/inputs/screenplay.txt --inputs.brief drama/inputs/brief.md --screenplay-language en`",
   );
+  // The shared references are what drama-cli's status lists the accepted breakdowns as needing, not the agent's own
+  // reading of "uses": a scene a heading sets at night needs its night plate (short_drama#634).
+  expect(setup).toContain("then make every reference `drama-cli status --config drama/drama-cli.cfg.yaml` lists as needed by the accepted breakdowns");
+  expect(setup).not.toMatch(/make every look, location and key prop that any breakdown uses/);
   expect(setup).toContain("My settings, which are final:");
   expect(setup).toContain("Episode length: about a minute and a half (80 to 110 seconds).");
   expect(setup).toContain("Where a source disagrees with my settings, follow my settings.");
