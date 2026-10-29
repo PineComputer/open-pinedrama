@@ -45,6 +45,10 @@ const RULES: [RegExp, (m: RegExpMatchArray) => Hints][] = [
   [new RegExp(String.raw`assets/scenes/([^/]+)/(?:[^/]+/)?${VER}/[^/]+${IMAGE}`, "i"), (m) => ({ kind: "location", subject: m[1], version: m[2] })],
   [new RegExp(String.raw`assets/props/([^/]+)/${VER}/[^/]+${IMAGE}`, "i"), (m) => ({ kind: "prop", subject: m[1], version: m[2] })],
   [new RegExp(String.raw`(?:^|/)bible/${VER}/bible\.(?:md|json)$`, "i"), (m) => ({ kind: "bible", version: m[1] })],
+  // A screenplay version as drama-cli's screenplay validate records it, and a rewrite's review beside it
+  // (short_drama drama_cli/stages.py, SCREENPLAY_FILE and REVIEW_FILE; D115, D158).
+  [new RegExp(String.raw`(?:^|/)screenplay/${VER}/screenplay\.fountain$`, "i"), (m) => ({ kind: "screenplay-version", version: m[1] })],
+  [new RegExp(String.raw`(?:^|/)screenplay/${VER}/review\.md$`, "i"), (m) => ({ kind: "screenplay-review", version: m[1] })],
   [/(?:^|\/)understanding\//i, () => ({ kind: "observation" })],
 ];
 

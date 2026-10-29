@@ -54,6 +54,14 @@ beforeAll(async () => {
     );
   review("r1", "t1", "takes", "seg01");
   review("r2", "t2", "cut", "cut");
+  // The setup checked the original (v1), then returned a rewrite (v2) and asks the maker to accept it.
+  file(5, "t3", "drama/screenplay/v1/screenplay.fountain", "other", null, "", "text/plain");
+  file(6, "t4", "drama/screenplay/v2/screenplay.fountain", "screenplay-version", null, "v2", "text/plain");
+  file(7, "t4", "drama/screenplay/v2/review.md", "screenplay-review", null, "v2", "text/markdown");
+  run(
+    "insert into reviews (id, drama_id, episode_id, session_id, turn_id, kind, state, question, decision, answer, created_at) values ('r3', 'd1', null, 's1', 't4', 'question', 'open', 'Accept the rewrite?', null, '', ?)",
+    at,
+  );
 });
 
 afterAll(() => rmSync(DATA, { recursive: true, force: true }));
@@ -70,5 +78,10 @@ describe("browsing", () => {
     expect(row.accepted).toBeUndefined();
     expect(row.ambiguous).toBe(true);
     expect(row.latest?.together).toBe(2);
+  });
+
+  it("shows the newest screenplay version and its review, waiting while its question is open", () => {
+    const current = browse.scriptPage("d1").screenplay!;
+    expect([current.version, current.file?.id, current.review?.id, current.pending]).toEqual(["v2", 6, 7, true]);
   });
 });

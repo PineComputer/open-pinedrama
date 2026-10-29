@@ -8,8 +8,8 @@ const LIMIT = 200_000;
 
 /**
  * **bold**, *italic* or _italic_, `code` and [links], inside one line. Underscores inside a
- * word (omni_reference_task_type) are the word's own. A link opens only a file the studio
- * saved (`links`, by its path in the session); any other target is shown, not followed.
+ * word (omni_reference_task_type) are the word's own. A link, or a backquoted path, opens only a file the
+ * studio saved (`links`, by its path in the session); any other target is shown, not followed.
  */
 function inline(text: string, links?: Map<string, string>): ReactNode[] {
   const out: ReactNode[] = [];
@@ -34,7 +34,18 @@ function inline(text: string, links?: Map<string, string>): ReactNode[] {
         ),
       );
     } else if (token.startsWith("**")) out.push(<strong key={key}>{token.slice(2, -2)}</strong>);
-    else if (token.startsWith("`")) out.push(<code key={key}>{token.slice(1, -1)}</code>);
+    else if (token.startsWith("`")) {
+      const url = links?.get(token.slice(1, -1).replace(/^\.\//, ""));
+      out.push(
+        url ? (
+          <a key={key} href={url} target="_blank" rel="noreferrer" className="link">
+            <code>{token.slice(1, -1)}</code>
+          </a>
+        ) : (
+          <code key={key}>{token.slice(1, -1)}</code>
+        ),
+      );
+    }
     else out.push(<em key={key}>{token.slice(1, -1)}</em>);
     last = match.index + token.length;
   }

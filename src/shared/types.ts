@@ -68,6 +68,10 @@ export type FileKind =
   /** What the maker asks of the drama: title, format, episode length, tone (brief.md). */
   | "brief"
   | "bible"
+  /** A screenplay version drama-cli recorded (screenplay/vN/screenplay.fountain): the original as checked, or the agent's Fountain rewrite. */
+  | "screenplay-version"
+  /** What a rewrite changed, beside its version (screenplay/vN/review.md), for the maker to read before accepting it. */
+  | "screenplay-review"
   | "look"
   | "location"
   | "prop"
@@ -387,6 +391,8 @@ export interface EpisodePage {
 
 export interface ScriptPage {
   inputs: FileItem[];
+  /** The newest screenplay version drama-cli recorded, its review when it is a rewrite, and whether a question still waits on it. */
+  screenplay?: { version: string; file?: FileItem; review?: FileItem; pending: boolean };
   bible?: FileItem;
   breakdowns: { code: string; title?: string; file: FileItem }[];
 }

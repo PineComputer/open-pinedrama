@@ -34,6 +34,13 @@ describe("classify", () => {
     expect(classify("episodes/EP001/breakdown/v2/breakdown.md")).toMatchObject({ kind: "breakdown", episode: "EP001" });
   });
 
+  it("reads the screenplay versions drama-cli records and a rewrite's review, but not the agent's working copy", () => {
+    expect(classify("drama/screenplay/v2/screenplay.fountain")).toMatchObject({ kind: "screenplay-version", version: "v2" });
+    expect(classify("drama/screenplay/v2/review.md")).toMatchObject({ kind: "screenplay-review", version: "v2" });
+    expect(classify("drama/screenplay/v2/validate.json").kind).toBe("other");
+    expect(classify("drama/inputs/screenplay.fountain.txt").kind).toBe("other");
+  });
+
   it("reads what the skill added: a place at night, first frames, subtitles, and the script beside a breakdown", () => {
     expect(classify("drama/assets/scenes/office/times/Night/v2/image-1.png")).toMatchObject({ kind: "location", subject: "office", look: "Night", version: "v2" });
     expect(classify("drama/assets/scenes/office/v1/image-1.png")).not.toHaveProperty("look");

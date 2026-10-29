@@ -1,24 +1,38 @@
 import { useState } from "react";
-import type { ScriptPage } from "../../shared/types.ts";
+import type { FileItem, ScriptPage } from "../../shared/types.ts";
 import { useResource } from "../api.ts";
 import { useT } from "../i18n.ts";
 import { errorText } from "../labels.ts";
-import { DocumentView } from "../viewing.tsx";
+import { DocumentView, isDocument } from "../viewing.tsx";
 
-/** The drama as text: the screenplay as given, the bible, and every episode's breakdown, read only. */
+/**
+ * The drama as text: the screenplay as drama-cli recorded it (a rewrite beside the maker's original, and what it
+ * changed), the screenplay as given, the bible, and every episode's breakdown, read only.
+ */
 export function Script({ dramaId }: { dramaId: string }) {
   const { t } = useT();
   const { data, error } = useResource<ScriptPage>(`/api/dramas/${dramaId}/script`, [`drama:${dramaId}`]);
   const [picked, setPicked] = useState<number>();
   if (error !== undefined && !data) return <p className="error">{errorText(error, t)}</p>;
   if (!data) return <p className="quiet">{t("loading")}</p>;
+  const current = data.screenplay;
   const docs = [
+    ...(current?.file
+      ? [{ group: "screenplay", label: t(current.pending ? "script.pending" : "script.version", { version: current.version }), file: current.file }]
+      : []),
+    ...(current?.review ? [{ group: "screenplay", label: t("script.review", { version: current.version }), file: current.review }] : []),
     ...data.inputs.map((file) => ({ group: "inputs", label: file.name, file })),
     ...(data.bible ? [{ group: "bible", label: t("script.bible"), file: data.bible }] : []),
     ...data.breakdowns.map((entry) => ({ group: "episodes", label: entry.title ? `${entry.code} · ${entry.title}` : entry.code, file: entry.file })),
   ];
-  const shown = docs.find((doc) => doc.file.id === picked) ?? docs.find((doc) => doc.group === "bible") ?? docs[0];
+  const fallback = current?.pending ? docs.find((doc) => doc.group === "screenplay") : undefined;
+  const shown =
+    docs.find((doc) => doc.file.id === picked) ?? fallback ?? docs.find((doc) => doc.group === "bible") ?? docs.find((doc) => doc.group === "screenplay") ?? docs[0];
+  // The maker's original, as text, to set beside a rewrite.
+  const original: FileItem | undefined = data.inputs.find((file) => file.kind === "screenplay" && isDocument(file));
+  const beside = shown?.file === current?.file && current?.file && original && original.id !== current.file.id;
   const groups: [string, string][] = [
+    ["screenplay", t("script.current")],
     ["inputs", t("script.inputs")],
     ["bible", t("script.bible")],
     ["episodes", t("script.episodes")],
@@ -46,7 +60,19 @@ export function Script({ dramaId }: { dramaId: string }) {
             );
           })}
         </nav>
-        <article className="script-page">{shown && <DocumentView key={shown.file.id} file={shown.file} />}</article>
+        <article className="script-page">
+          {shown && beside && original ? (
+            <>
+              <p className="label">{t("script.sideBySide")}</p>
+              <div className="side-by-side">
+                <DocumentView key={original.id} file={original} />
+                <DocumentView key={shown.file.id} file={shown.file} />
+              </div>
+            </>
+          ) : (
+            shown && <DocumentView key={shown.file.id} file={shown.file} />
+          )}
+        </article>
       </div>
     </>
   );

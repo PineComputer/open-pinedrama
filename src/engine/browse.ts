@@ -82,6 +82,26 @@ export function episodePage(dramaId: string, code: string): EpisodePage | undefi
   };
 }
 
+/**
+ * The newest screenplay version drama-cli recorded (the highest vN), with its rewrite review, and whether the
+ * question that brought it still waits for the maker. Read from each file's path, so files saved before these
+ * kinds existed count too.
+ */
+function currentScreenplay(dramaId: string): ScriptPage["screenplay"] {
+  const found = all<FileRow>("select * from files where drama_id = ? and type like 'text/%' order by id", dramaId)
+    .map((row) => ({ row, hints: classify(row.rel_path) }))
+    .filter(({ hints }) => hints.kind === "screenplay-version" || hints.kind === "screenplay-review");
+  const number = (version?: string) => Number(version?.slice(1) ?? 0);
+  const newest = Math.max(0, ...found.map(({ hints }) => number(hints.version)));
+  if (!newest) return undefined;
+  const of = (kind: string) => found.findLast(({ hints }) => hints.kind === kind && number(hints.version) === newest)?.row;
+  const file = of("screenplay-version");
+  const review = of("screenplay-review");
+  const turns = [file, review].flatMap((row) => (row?.turn_id ? [row.turn_id] : []));
+  const pending = turns.some((turnId) => all<ReviewRow>("select * from reviews where turn_id = ? and state in ('saving', 'open', 'sending')", turnId).length > 0);
+  return { version: `v${newest}`, file: file && toItem(file), review: review && toItem(review), pending };
+}
+
 /** The drama as text: what the maker gave, the newest bible, and each episode's newest breakdown, listed or not yet. */
 export function scriptPage(dramaId: string): ScriptPage {
   const inputs = all<FileRow>("select f.* from files f join inputs i on i.file_id = f.id where i.drama_id = ? order by f.id", dramaId);
@@ -95,6 +115,7 @@ export function scriptPage(dramaId: string): ScriptPage {
   const bible = texts.findLast((row) => row.kind === "bible");
   return {
     inputs: inputs.map(toItem),
+    screenplay: currentScreenplay(dramaId),
     bible: bible ? toItem(bible) : undefined,
     breakdowns: [...breakdowns.entries()]
       .sort(([a], [b]) => a.localeCompare(b, undefined, { numeric: true }))
