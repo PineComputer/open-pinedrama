@@ -82,7 +82,7 @@ async function scenario(title: string) {
   form.set("length", "90");
   form.set("preset", "en-us-live-sfw");
   form.set("screenplayLanguage", "en");
-  form.set("screenplay", "screenplay.txt");
+  form.set("screenplay", "0");
   form.append("files", new File(["EPISODE 1\nLin enters."], "screenplay.txt", { type: "text/plain" }));
   const { id } = await call<{ id: string }>("POST", "/api/dramas", form);
 
@@ -277,7 +277,7 @@ describe("a drama in replay", () => {
     run("update dramas set status = 'done'");
     fleet.stops = stops;
     const form = new FormData();
-    for (const [key, value] of Object.entries({ title: "Resumed drama", language: "en", preset: "en-us-live-sfw", screenplayLanguage: "en", screenplay: "screenplay.txt", parallel: "1", perComputer: "1" })) form.set(key, value);
+    for (const [key, value] of Object.entries({ title: "Resumed drama", language: "en", preset: "en-us-live-sfw", screenplayLanguage: "en", screenplay: "0", parallel: "1", perComputer: "1" })) form.set(key, value);
     form.append("files", new File(["EPISODE 1\nLin enters."], "screenplay.txt", { type: "text/plain" }));
     const { id } = await call<{ id: string }>("POST", "/api/dramas", form);
     const question = await until("the setup question", openReview(id, (item) => item.kind === "question"));
@@ -303,7 +303,7 @@ describe("a drama in replay", () => {
     run("update dramas set status = 'done'");
     fleet.stops = "ask";
     const form = new FormData();
-    for (const [key, value] of Object.entries({ title: "Unreviewed drama", language: "en", preset: "en-us-live-sfw", screenplayLanguage: "en", screenplay: "screenplay.txt", parallel: "2", perComputer: "1", reviewing: "key" })) form.set(key, value);
+    for (const [key, value] of Object.entries({ title: "Unreviewed drama", language: "en", preset: "en-us-live-sfw", screenplayLanguage: "en", screenplay: "0", parallel: "2", perComputer: "1", reviewing: "key" })) form.set(key, value);
     form.append("files", new File(["EPISODE 1\nLin enters."], "screenplay.txt", { type: "text/plain" }));
     const { id } = await call<{ id: string }>("POST", "/api/dramas", form);
     // A question always waits for the maker, and so do the leads' looks.
@@ -333,7 +333,7 @@ describe("a drama in replay", () => {
     run("update dramas set status = 'done'");
     fleet.stops = "ask";
     const form = new FormData();
-    for (const [key, value] of Object.entries({ title: "Stopped drama", language: "en", preset: "en-us-live-sfw", screenplayLanguage: "en", screenplay: "screenplay.txt", parallel: "1", perComputer: "1" })) form.set(key, value);
+    for (const [key, value] of Object.entries({ title: "Stopped drama", language: "en", preset: "en-us-live-sfw", screenplayLanguage: "en", screenplay: "0", parallel: "1", perComputer: "1" })) form.set(key, value);
     form.append("files", new File(["EPISODE 1\nLin enters."], "screenplay.txt", { type: "text/plain" }));
     const { id } = await call<{ id: string }>("POST", "/api/dramas", form);
     await until("the setup question", openReview(id, (item) => item.kind === "question"));
@@ -353,7 +353,7 @@ describe("a drama in replay", () => {
     run("update dramas set status = 'done'");
     fleet.stops = "bare";
     const form = new FormData();
-    for (const [key, value] of Object.entries({ title: "Test drama, bare questions", language: "en", preset: "en-us-live-sfw", screenplayLanguage: "en", screenplay: "screenplay.txt", parallel: "1", perComputer: "1" })) form.set(key, value);
+    for (const [key, value] of Object.entries({ title: "Test drama, bare questions", language: "en", preset: "en-us-live-sfw", screenplayLanguage: "en", screenplay: "0", parallel: "1", perComputer: "1" })) form.set(key, value);
     form.append("files", new File(["EPISODE 1\nLin enters."], "screenplay.txt", { type: "text/plain" }));
     const { id } = await call<{ id: string }>("POST", "/api/dramas", form);
     const question = await until("the setup question", openReview(id, () => true));

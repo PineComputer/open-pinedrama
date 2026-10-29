@@ -33,8 +33,8 @@ export interface NewDrama {
   preset: string;
   /** en | zh: the language of the screenplay's structural marks (drama-cli init --screenplay-language). */
   screenplayLanguage: string;
-  /** Which of the files is the screenplay, by name. */
-  screenplay: string;
+  /** Which of the files is the screenplay, by its place among them: two files may share a name. */
+  screenplay: number;
 }
 
 const SCREENPLAY_LANGUAGES = ["en", "zh"];
@@ -63,8 +63,8 @@ export async function createDrama(input: NewDrama, mode: Mode): Promise<string> 
   if (!input.files.length) throw new StudioError("screenplay-missing", "Add the screenplay.");
   const large = input.files.find((file) => file.bytes.byteLength > MAX_ATTACHMENT);
   if (large) throw new StudioError("file-too-large", `${large.name} is over 64 MiB, more than a Computer can be handed.`, 400, large.name);
-  const screenplay = input.files.findIndex((file) => file.name === input.screenplay);
-  if (screenplay < 0) throw new StudioError("screenplay-unchosen", "Choose which file is the screenplay.");
+  const screenplay = input.screenplay;
+  if (!Number.isInteger(screenplay) || screenplay < 0 || screenplay >= input.files.length) throw new StudioError("screenplay-unchosen", "Choose which file is the screenplay.");
   checkInputs(input.preset, input.screenplayLanguage, Boolean(input.rehearsal));
   const id = newId("drama");
   const fileIds: number[] = [];
@@ -109,16 +109,24 @@ export async function createDrama(input: NewDrama, mode: Mode): Promise<string> 
 
 /**
  * The maker chooses the inputs of a drama held for them (choose-inputs): a preset once its project's
- * presets are known, its screenplay among its files and the screenplay's language; its setup then
- * starts again.
+ * presets are known, its screenplay among its files and the screenplay's language; a drama made
+ * before the studio wrote brief.md gets one now, from its title, notes and episode length, which
+ * the maker gives when the drama has none. Its setup then starts again.
  */
-export function chooseInputs(id: string, choice: { preset?: string; screenplayLanguage?: string; screenplay?: number }): void {
+export async function chooseInputs(id: string, choice: { preset?: string; screenplayLanguage?: string; screenplay?: number; length?: string }): Promise<void> {
   const drama = dramaRow(id);
   if (!drama) throw new StudioError("not-found", "No such drama.", 404);
   if (drama.status !== "stopped" || drama.reason !== "choose-inputs") throw new StudioError("drama-not-held", "Only a drama waiting for its inputs takes them.", 409);
   if (!get("select 1 from inputs i join files f on f.id = i.file_id where i.drama_id = ? and f.id = ? and f.kind = 'screenplay'", id, choice.screenplay ?? -1)) throw new StudioError("screenplay-unchosen", "Choose which file is the screenplay.");
   checkInputs(choice.preset ?? "", choice.screenplayLanguage ?? "", Boolean(drama.rehearsal));
-  run("update dramas set preset = ?, screenplay_language = ?, screenplay_file = ?, updated_at = ? where id = ?", choice.preset ?? "", choice.screenplayLanguage ?? "", choice.screenplay ?? null, now(), id);
+  const hasBrief = get("select 1 from inputs i join files f on f.id = i.file_id where i.drama_id = ? and f.kind = 'brief'", id) !== undefined;
+  const length = LENGTHS[drama.length] ? drama.length : choice.length ?? "";
+  if (!hasBrief && !LENGTHS[length]) throw new StudioError("length-missing", "Choose the episode length: brief.md states it for drama-cli init.");
+  const brief = hasBrief ? undefined : await save(new TextEncoder().encode(briefFile({ title: drama.title, notes: drama.notes, length })), { dramaId: id, relPath: "brief.md", type: "text/markdown", kind: "brief" });
+  transaction(() => {
+    run("update dramas set preset = ?, screenplay_language = ?, screenplay_file = ?, length = ?, updated_at = ? where id = ?", choice.preset ?? "", choice.screenplayLanguage ?? "", choice.screenplay ?? null, length || drama.length, now(), id);
+    if (brief !== undefined) run("insert into inputs (drama_id, file_id) values (?, ?)", id, brief);
+  });
   retrySetup(id);
 }
 

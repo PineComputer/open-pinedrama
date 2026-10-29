@@ -10,6 +10,7 @@ export type ErrorCode =
   | "screenplay-language-missing"
   | "preset-missing"
   | "preset-unknown"
+  | "length-missing"
   | "file-too-large"
   | "not-found"
   | "episode-busy"
@@ -223,7 +224,7 @@ export interface DramaView extends DramaCard {
   perComputer: number;
   reviewing: Reviewing;
   /** What drama-cli init takes that the maker chooses: "" or null until chosen; files are the maker's own, the screenplay among them. */
-  inputs: { preset: string; screenplayLanguage: string; screenplay: number | null; files: { id: number; name: string }[] };
+  inputs: { preset: string; screenplayLanguage: string; screenplay: number | null; files: { id: number; name: string }[]; needsLength: boolean };
   setup: {
     state: "working" | "waiting" | "done" | "stopped";
     reviewId?: string;

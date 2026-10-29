@@ -91,7 +91,7 @@ export function NewDrama() {
   const [length, setLength] = useState("60");
   const [reviewing, setReviewing] = useState<Reviewing>("every");
   // drama-cli init's inputs, which the maker chooses: nothing is preselected but the only file there is.
-  const [screenplayChoice, setScreenplay] = useState<string>();
+  const [screenplayChoice, setScreenplay] = useState<File>();
   const [screenplayLanguage, setScreenplayLanguage] = useState<"zh" | "en">();
   const [preset, setPreset] = useState("");
   const [busy, setBusy] = useState(false);
@@ -105,7 +105,8 @@ export function NewDrama() {
   const noSkill = onPine && app.data?.dramaSkill === "missing";
   const [rehearsalChoice, setRehearsal] = useState<boolean>();
   const rehearsal = rehearsalChoice ?? noSkill;
-  const screenplay = files.length === 1 ? files[0].name : files.some((file) => file.name === screenplayChoice) ? screenplayChoice : undefined;
+  // The marked file itself, not its name: two files may share one. The form sends its place among the files.
+  const screenplay = files.length === 1 ? files[0] : screenplayChoice && files.includes(screenplayChoice) ? screenplayChoice : undefined;
   // A rehearsal has no drama-cli, so no preset.
   const needsPreset = !(onPine && rehearsal);
   const ready = Boolean(files.length && title.trim() && screenplay && screenplayLanguage && (!needsPreset || preset));
@@ -129,7 +130,7 @@ export function NewDrama() {
     setBusy(true);
     setError(undefined);
     const form = new FormData();
-    for (const [key, value] of Object.entries({ title, language: lang, format, notes, length, reviewing, parallel: String(parallel), perComputer: String(perComputer), rehearsal: onPine && rehearsal ? "1" : "0", screenplay: screenplay ?? "", screenplayLanguage: screenplayLanguage ?? "", preset: needsPreset ? preset : "" })) form.set(key, value);
+    for (const [key, value] of Object.entries({ title, language: lang, format, notes, length, reviewing, parallel: String(parallel), perComputer: String(perComputer), rehearsal: onPine && rehearsal ? "1" : "0", screenplay: screenplay ? String(files.indexOf(screenplay)) : "", screenplayLanguage: screenplayLanguage ?? "", preset: needsPreset ? preset : "" })) form.set(key, value);
     for (const file of files) form.append("files", file);
     try {
       const { id } = await api<{ id: string }>("/api/dramas", { method: "POST", body: form });
@@ -168,7 +169,7 @@ export function NewDrama() {
               {files.map((file) => (
                 <div key={file.name + file.size} className="page-file">
                   {files.length > 1 && (
-                    <input type="radio" name="screenplay" aria-label={t("new.isScreenplay")} title={t("new.isScreenplay")} checked={screenplay === file.name} onChange={() => setScreenplay(file.name)} />
+                    <input type="radio" name="screenplay" aria-label={t("new.isScreenplay")} title={t("new.isScreenplay")} checked={screenplay === file} onChange={() => setScreenplay(file)} />
                   )}
                   <span className="name">{file.name}</span>
                   <span className="quiet num small">

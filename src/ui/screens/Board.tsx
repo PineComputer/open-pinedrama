@@ -247,7 +247,9 @@ function ChooseInputs({ drama }: { drama: DramaView }) {
   const [preset, setPreset] = useState(drama.inputs.preset);
   const [screenplay, setScreenplay] = useState(drama.inputs.screenplay ?? (drama.inputs.files.length === 1 ? drama.inputs.files[0].id : null));
   const [language, setLanguage] = useState(drama.inputs.screenplayLanguage);
-  const choose = useAction(() => api(`/api/dramas/${drama.id}/inputs`, { method: "POST", json: { preset, screenplay, screenplayLanguage: language } }));
+  // A drama made before the studio wrote brief.md: the brief needs its episode length.
+  const [length, setLength] = useState<string>();
+  const choose = useAction(() => api(`/api/dramas/${drama.id}/inputs`, { method: "POST", json: { preset, screenplay, screenplayLanguage: language, length } }));
   return (
     <div className="compose-form">
       {!drama.rehearsal && <PresetChoice value={preset} onChange={setPreset} />}
@@ -272,8 +274,20 @@ function ChooseInputs({ drama }: { drama: DramaView }) {
         </div>
         <span className="quiet small">{t("new.screenplayLanguageHint")}</span>
       </div>
+      {drama.inputs.needsLength && (
+        <div className="field">
+          <span className="label">{t("new.length")}</span>
+          <div className="options">
+            {(["60", "90", "120"] as const).map((value) => (
+              <button key={value} aria-pressed={length === value} className={length === value ? "on" : ""} onClick={() => setLength(value)}>
+                {t(`new.length${value}`)}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
       <div className="actions">
-        <button className="btn ink" disabled={choose.busy || screenplay === null || !language || (!drama.rehearsal && !preset)} onClick={() => void choose.run()}>
+        <button className="btn ink" disabled={choose.busy || screenplay === null || !language || (!drama.rehearsal && !preset) || (drama.inputs.needsLength && !length)} onClick={() => void choose.run()}>
           {t("setup.choose")}
         </button>
         {choose.error !== undefined && <span className="error small">{errorText(choose.error, t)}</span>}

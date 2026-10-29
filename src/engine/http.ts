@@ -154,7 +154,8 @@ export function app(): Hono {
         reviewing: field("reviewing"),
         preset: field("preset"),
         screenplayLanguage: field("screenplayLanguage"),
-        screenplay: field("screenplay"),
+        // Its place among the files the form sends, as two files may share a name; "" is none.
+        screenplay: field("screenplay") === "" ? -1 : Number(field("screenplay")),
         files: await Promise.all(uploads.map(async (file) => ({ name: file.name, type: file.type, bytes: new Uint8Array(await file.arrayBuffer()) }))),
       }, mode);
       return c.json({ id });
@@ -183,7 +184,7 @@ export function app(): Hono {
         rehearsal: mode === "pine",
         preset: mode === "pine" ? "" : zh ? "zh-cn-live-sfw" : "en-us-live-sfw",
         screenplayLanguage: zh ? "zh" : "en",
-        screenplay: name,
+        screenplay: 0,
       }, mode);
       return c.json({ id });
     } catch (error) {
@@ -225,7 +226,7 @@ export function app(): Hono {
 
   api.post("/api/dramas/:id/inputs", async (c) => {
     try {
-      chooseInputs(c.req.param("id"), await c.req.json());
+      await chooseInputs(c.req.param("id"), await c.req.json());
       return c.json(dramaView(dramaRow(c.req.param("id"))!));
     } catch (error) {
       return fail(c, error);
