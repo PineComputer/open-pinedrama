@@ -159,6 +159,10 @@ async function scenario(title: string) {
     expect(goal).toContain("register every reference the episode uses again from its local file in this session");
     // A segment the video model won't take is split there and then, not put to the maker.
     expect(goal).toMatch(/EP\d+'s own breakdown is yours to change when the video model won't take it/);
+    // A reference not yet accepted stops the episode only where drama-cli refuses for it, never on the agent's own
+    // reading ahead: every step that doesn't read it goes on first.
+    expect(goal).toContain("Stop and ask me only when a drama-cli command refuses because a reference it reads is not accepted");
+    expect(goal).not.toMatch(/needs one that is not accepted, stop and ask me/);
     costless(goal);
   }
   const setup = all<{ goal: string }>("select goal from runs where kind = 'setup'")[0].goal;
@@ -167,6 +171,10 @@ async function scenario(title: string) {
   expect(setup).toContain(
     "`mkdir -p drama/inputs && cp attachments/screenplay.txt drama/inputs/screenplay.txt && cp attachments/brief.md drama/inputs/brief.md && drama-cli init drama --preset en-us-live-sfw --inputs.screenplay drama/inputs/screenplay.txt --inputs.brief drama/inputs/brief.md --screenplay-language en`",
   );
+  // The shared references are what drama-cli's status lists the accepted breakdowns as needing, not the agent's own
+  // reading of "uses": a scene a heading sets at night needs its night plate (short_drama#634).
+  expect(setup).toContain("then make every reference `drama-cli status --config drama/drama-cli.cfg.yaml` lists as needed by the accepted breakdowns");
+  expect(setup).not.toMatch(/make every look, location and key prop that any breakdown uses/);
   expect(setup).toContain("My settings, which are final:");
   expect(setup).toContain("Episode length: about a minute and a half (80 to 110 seconds).");
   expect(setup).toContain("Where a source disagrees with my settings, follow my settings.");

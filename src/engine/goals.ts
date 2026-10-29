@@ -111,7 +111,7 @@ export function setupGoal(drama: DramaBrief, attachments: string[], inputs: { sc
     NO_CAP,
     "Read the screenplay and ask me for anything that is missing.",
     "Write the bible, then make each lead's face and base look. Stop and ask me to approve the leads' looks, returning their sheets with your question.",
-    "After I approve, prepare every episode so that each can then be made in parallel in a session of its own: write and accept every episode's breakdown, then make every look, location and key prop that any breakdown uses. Stop and ask me to approve these shared references, returning their images with your question.",
+    "After I approve, prepare every episode so that each can then be made in parallel in a session of its own: write and accept every episode's breakdown, then make every reference `drama-cli status --config drama/drama-cli.cfg.yaml` lists as needed by the accepted breakdowns. Stop and ask me to approve these shared references, returning their images with your question.",
     `After I approve, pack the whole drama/ folder, records included, into parts of at most 60 MB (\`mkdir -p handoff && tar -cf - -C drama . | split -b 60m - handoff/project.tar.part-\`) and return the parts. ${LIST_EPISODES}`,
     "Do not make blocking references, first-frame references, storyboards or video in this session.",
     "Return every file you want me to see with your question or result.",
@@ -142,7 +142,7 @@ function handedOver(drama: DramaBrief, code: string, screenplay: string | undefi
       : "Restore it into the work directory's drama/ folder (`mkdir -p drama && cat attachments/project.tar.part-* | tar -xf - -C drama`), point its config at that folder and its screenplay.md and brief.md with `drama-cli init`, keeping its settings and preset, and check it with `drama-cli status`.",
     NO_CAP,
     "Its asset-library registrations were made in another session and can't be used from this one: before you compile video prompts, set them aside and register every reference the episode uses again from its local file in this session.",
-    `Work only on ${code}, inside drama/episodes/${code}. Use the accepted references as they are: never make a new version of the bible, a look, a location, a key prop or another episode's breakdown. If ${code} needs one that is not accepted, stop and ask me.`,
+    `Work only on ${code}, inside drama/episodes/${code}. Use the accepted references as they are: never make a new version of the bible, a look, a location, a key prop or another episode's breakdown. Stop and ask me only when a drama-cli command refuses because a reference it reads is not accepted, quoting its refusal; until then, go on with every step that doesn't read it.`,
     `${code}'s own breakdown is yours to change when the video model won't take it as it is, such as a segment longer than the model accepts: make a new version that splits it, keeping every line, accept it, redo what depends on it, and tell me at your next stop.`,
   ];
 }
