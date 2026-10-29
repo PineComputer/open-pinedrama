@@ -2,8 +2,8 @@
 // and episode headings), not of its dialogue (`drama-cli init -h`). The studio sets it from the
 // screenplay itself, so a maker never has to tell the two apart: our own design, the person's
 // decision. It counts the lines that carry a structural mark of each form and takes the form with
-// more; with neither (prose, or no structure at all) the preset's language, as the agent then
-// writes the screenplay in that preset's form.
+// more; with neither (prose, or no structure at all) the maker chooses: a guess from the preset
+// gave a structure the screenplay doesn't have, which drama-cli then refused (scene_setting).
 //
 // The marks are the ones drama-cli reads (short_drama drama_cli/screenplay.py, SETTINGS,
 // TIME_WORDS and ORIGINAL_SETTINGS, and `drama-cli screenplay sample` in each language):
@@ -12,12 +12,14 @@
 // (人物：, 出场人物：) and the action marks △/▲ are that same Chinese form's (drama-cli's skill
 // rewrites them, skills/drama-workflow/SKILL.md, screenplay step 2).
 
-import { presetLanguage } from "./presets.ts";
-
 export type ScreenplayLanguage = "en" | "zh";
 
+// A heading as Fountain reads one: it starts with INT, EXT, EST, INT./EXT, INT/EXT or I/E, "case
+// insensitive", followed by a dot or a space, or is forced with a leading period (fountain.io/syntax,
+// Scene Headings); drama-cli takes the parser's heading and reads its setting upper-cased
+// (short_drama drama_cli/screenplay.py, _slug).
 const ENGLISH: RegExp[] = [
-  /^(?:INT|EXT|INT\.?\/EXT|I\/E)[.\s]/,
+  /^\.?(?:INT\.?\/EXT|INT\/EXT|I\/E|INT|EXT|EST)[.\s]/i,
   /^#*\s*EPISODE\s+\d+\b/i,
 ];
 
@@ -50,11 +52,10 @@ export function detectScreenplayLanguage(text: string): Detected {
 }
 
 /**
- * drama-cli init's screenplay language for a screenplay: the form its structure is written in,
- * or, when it shows none, the preset's language. A rehearsal has no preset and runs no
- * drama-cli: there the caller's fallback, the studio's own language.
+ * drama-cli init's screenplay language for a screenplay: the form its structure is written in, or,
+ * when it shows none, what the maker chose (undefined until they do).
  */
-export function screenplayLanguageOf(text: string, preset: string, fallback: ScreenplayLanguage): { language: ScreenplayLanguage; detected: boolean } {
+export function screenplayLanguageOf(text: string, chosen?: ScreenplayLanguage): { language?: ScreenplayLanguage; detected: boolean } {
   const detected = detectScreenplayLanguage(text).language;
-  return detected ? { language: detected, detected: true } : { language: presetLanguage(preset) ?? fallback, detected: false };
+  return detected ? { language: detected, detected: true } : { language: chosen, detected: false };
 }

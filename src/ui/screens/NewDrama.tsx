@@ -69,13 +69,25 @@ function FormatTip() {
   );
 }
 
-/** The screenplay language the studio set, shown as read: detected from the structure, or the template's. */
-export function ScreenplayStructure({ structure }: { structure: { language: ScreenplayLanguage; detected: boolean } }) {
+/**
+ * The screenplay language: shown as read when the structure shows it; when it shows none, the one
+ * choice the maker makes, the language the scene and episode headings will be written in.
+ */
+export function ScreenplayStructure({ structure, onChoose }: { structure: { language?: ScreenplayLanguage; detected: boolean }; onChoose: (language: ScreenplayLanguage) => void }) {
   const { t } = useT();
+  if (structure.detected && structure.language) return <p className="quiet small">{t("new.structureDetected", { language: t(`language.${structure.language}`) })}</p>;
   return (
-    <p className="quiet small">
-      {t(structure.detected ? "new.structureDetected" : "new.structureDefault", { language: t(`language.${structure.language}`) })}
-    </p>
+    <div className="field">
+      <span className="label">{t("new.structureUnknown")}</span>
+      <div className="options">
+        {(["en", "zh"] as const).map((value) => (
+          <button key={value} aria-pressed={structure.language === value} className={structure.language === value ? "on" : ""} onClick={() => onChoose(value)}>
+            {t(`language.${value}`)}
+          </button>
+        ))}
+      </div>
+      <span className="quiet small">{t("new.structureUnknownHint")}</span>
+    </div>
   );
 }
 
@@ -117,6 +129,8 @@ export function NewDrama() {
   // drama-cli init's inputs: the maker chooses the screenplay (the only file there is, or the one
   // marked) and the preset; the screenplay language is read from the screenplay.
   const [screenplayChoice, setScreenplay] = useState<File>();
+  // Asked only when the screenplay shows no structure to read it from.
+  const [structureChoice, setStructureChoice] = useState<ScreenplayLanguage>();
   const [preset, setPreset] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<unknown>();
@@ -139,8 +153,8 @@ export function NewDrama() {
   // A rehearsal has no drama-cli, so no preset.
   const needsPreset = !(onPine && rehearsal);
   // Read once the screenplay's text is in; a file the page can't read shows no structure, so the template's language.
-  const structure = screenplayFile && screenplayText !== undefined && !noText ? screenplayLanguageOf(screenplayText ?? "", needsPreset ? preset : "", lang) : undefined;
-  const ready = Boolean(files.length && title.trim() && screenplay && structure && !noText && (!needsPreset || preset));
+  const structure = screenplayFile && screenplayText !== undefined && !noText ? screenplayLanguageOf(screenplayText ?? "", structureChoice) : undefined;
+  const ready = Boolean(files.length && title.trim() && screenplay && structure?.language && !noText && (!needsPreset || preset));
 
   const add = (list: FileList | null) => {
     if (!list) return;
@@ -243,7 +257,7 @@ export function NewDrama() {
               </div>
             </div>
           </div>
-          {structure && <ScreenplayStructure structure={structure} />}
+          {structure && <ScreenplayStructure structure={structure} onChoose={setStructureChoice} />}
           {needsPreset && <PresetChoice value={preset} onChange={setPreset} />}
           <div className="field">
             <span className="label">{t("new.length")}</span>

@@ -391,6 +391,8 @@ export interface EpisodePage {
 
 export interface ScriptPage {
   inputs: FileItem[];
+  /** The input the maker marked as the screenplay, the original a rewrite is set beside. */
+  screenplayFile: number | null;
   /** The newest screenplay version drama-cli recorded, its review when it is a rewrite, and whether a question still waits on it. */
   screenplay?: { version: string; file?: FileItem; review?: FileItem; pending: boolean };
   bible?: FileItem;

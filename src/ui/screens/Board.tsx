@@ -6,7 +6,7 @@ import { errorText, moneyText, nowText } from "../labels.ts";
 import { Link, navigate } from "../router.tsx";
 import { Still } from "../Still.tsx";
 import { Cast } from "./Cast.tsx";
-import { screenplayLanguageOf } from "../../shared/screenplay-language.ts";
+import { type ScreenplayLanguage, screenplayLanguageOf } from "../../shared/screenplay-language.ts";
 import { isDocument, useDocumentText } from "../viewing.tsx";
 import { PresetChoice, ScreenplayStructure } from "./NewDrama.tsx";
 
@@ -245,7 +245,7 @@ export function Board({ drama }: { drama: DramaView }) {
  * maker chooses; the setup then starts.
  */
 function ChooseInputs({ drama }: { drama: DramaView }) {
-  const { t, lang } = useT();
+  const { t } = useT();
   const [preset, setPreset] = useState(drama.inputs.preset);
   const [screenplay, setScreenplay] = useState(drama.inputs.screenplay ?? (drama.inputs.files.length === 1 ? drama.inputs.files[0].id : null));
   // A drama made before the studio wrote brief.md: the brief needs its episode length.
@@ -254,9 +254,10 @@ function ChooseInputs({ drama }: { drama: DramaView }) {
   const chosen = drama.inputs.files.find((file) => file.id === screenplay);
   const stored = chosen && { url: `/api/files/${chosen.id}`, name: chosen.name, type: "" };
   const { text, failed } = useDocumentText(stored);
-  // A file the page can't read shows no structure: the template's language then.
+  // A file the page can't read shows no structure: the maker chooses then, as on New drama.
   const unread = Boolean(stored && (!isDocument(stored) || failed));
-  const structure = text !== undefined || unread ? screenplayLanguageOf(text ?? "", drama.rehearsal ? "" : preset, lang) : undefined;
+  const [structureChoice, setStructureChoice] = useState<ScreenplayLanguage>();
+  const structure = text !== undefined || unread ? screenplayLanguageOf(text ?? "", structureChoice) : undefined;
   const choose = useAction(() => api(`/api/dramas/${drama.id}/inputs`, { method: "POST", json: { preset, screenplay, screenplayLanguage: structure?.language, length } }));
   return (
     <div className="compose-form">
@@ -270,7 +271,7 @@ function ChooseInputs({ drama }: { drama: DramaView }) {
             </button>
           ))}
         </div>
-        {structure && <ScreenplayStructure structure={structure} />}
+        {structure && <ScreenplayStructure structure={structure} onChoose={setStructureChoice} />}
       </div>
       {drama.inputs.needsLength && (
         <div className="field">
@@ -285,7 +286,7 @@ function ChooseInputs({ drama }: { drama: DramaView }) {
         </div>
       )}
       <div className="actions">
-        <button className="btn ink" disabled={choose.busy || screenplay === null || !structure || (!drama.rehearsal && !preset) || (drama.inputs.needsLength && !length)} onClick={() => void choose.run()}>
+        <button className="btn ink" disabled={choose.busy || screenplay === null || !structure?.language || (!drama.rehearsal && !preset) || (drama.inputs.needsLength && !length)} onClick={() => void choose.run()}>
           {t("setup.choose")}
         </button>
         {choose.error !== undefined && <span className="error small">{errorText(choose.error, t)}</span>}

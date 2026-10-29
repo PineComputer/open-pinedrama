@@ -3,7 +3,8 @@ import type { FileItem, ScriptPage } from "../../shared/types.ts";
 import { useResource } from "../api.ts";
 import { useT } from "../i18n.ts";
 import { errorText } from "../labels.ts";
-import { DocumentView, isDocument } from "../viewing.tsx";
+import { SideBySide } from "../SideBySide.tsx";
+import { DocumentView } from "../viewing.tsx";
 
 /**
  * The drama as text: the screenplay as drama-cli recorded it (a rewrite beside the maker's original, and what it
@@ -28,8 +29,8 @@ export function Script({ dramaId }: { dramaId: string }) {
   const fallback = current?.pending ? docs.find((doc) => doc.group === "screenplay") : undefined;
   const shown =
     docs.find((doc) => doc.file.id === picked) ?? fallback ?? docs.find((doc) => doc.group === "bible") ?? docs.find((doc) => doc.group === "screenplay") ?? docs[0];
-  // The maker's original, as text, to set beside a rewrite.
-  const original: FileItem | undefined = data.inputs.find((file) => file.kind === "screenplay" && isDocument(file));
+  // The screenplay the maker marked (a Word or PDF one as its text), to set beside a rewrite.
+  const original: FileItem | undefined = data.inputs.find((file) => file.id === data.screenplayFile);
   const beside = shown?.file === current?.file && current?.file && original && original.id !== current.file.id;
   const groups: [string, string][] = [
     ["screenplay", t("script.current")],
@@ -64,10 +65,7 @@ export function Script({ dramaId }: { dramaId: string }) {
           {shown && beside && original ? (
             <>
               <p className="label">{t("script.sideBySide")}</p>
-              <div className="side-by-side">
-                <DocumentView key={original.id} file={original} />
-                <DocumentView key={shown.file.id} file={shown.file} />
-              </div>
+              <SideBySide left={<DocumentView key={original.id} file={original} />} right={<DocumentView key={shown.file.id} file={shown.file} />} />
             </>
           ) : (
             shown && <DocumentView key={shown.file.id} file={shown.file} />

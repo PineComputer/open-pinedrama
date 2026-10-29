@@ -5,7 +5,7 @@
 // hints; whatever isn't recognised is still listed (docs/IMPLEMENTATION_PLAN.md, rule 5).
 import type { CastCard, Decision, DeliveryRow, EpisodePage, Judged, Receipt, ReviewKind, ScriptPage, SegmentPage } from "../shared/types.ts";
 import { classify } from "./classify.ts";
-import { all } from "./db.ts";
+import { all, get } from "./db.ts";
 import { readFileSync } from "node:fs";
 import { type FileRow, blobPath, itemIn, toItem } from "./library.ts";
 import type { ZipEntry } from "./zip.ts";
@@ -115,6 +115,7 @@ export function scriptPage(dramaId: string): ScriptPage {
   const bible = texts.findLast((row) => row.kind === "bible");
   return {
     inputs: inputs.map(toItem),
+    screenplayFile: get<{ screenplay_file: number | null }>("select screenplay_file from dramas where id = ?", dramaId)?.screenplay_file ?? null,
     screenplay: currentScreenplay(dramaId),
     bible: bible ? toItem(bible) : undefined,
     breakdowns: [...breakdowns.entries()]
