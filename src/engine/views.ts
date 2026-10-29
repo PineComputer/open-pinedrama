@@ -22,6 +22,7 @@ import {
 import { START_ATTEMPTS, fleet, hasFleet, projectLimits } from "./computers.ts";
 import { atProjectLimit } from "./scheduler.ts";
 import { all, get } from "./db.ts";
+import { LENGTHS } from "./goals.ts";
 import { type FileRow, fileUrl, filesOfStop, toItem, versionNumber } from "./library.ts";
 import { type ComputerRow, type DramaRow, type EpisodeRow, type ReviewRow, type SessionRow, episodeCode, latestTurn, session as sessionRow } from "./records.ts";
 import { itemsOf, pendingReview } from "./reviews.ts";
@@ -64,6 +65,7 @@ export function dramaCard(drama: DramaRow): DramaCard {
     title: drama.title,
     language: drama.language,
     look: drama.look,
+    preset: drama.preset,
     format: drama.format,
     status: drama.status,
     episodes: { total: counts.reduce((sum, row) => sum + row.n, 0), done: n("done"), waiting: n("waiting") + n("stopped") + n("failed"), working: n("working") },
@@ -188,6 +190,14 @@ export function dramaView(drama: DramaRow): DramaView {
     parallel: drama.parallel,
     perComputer: drama.per_computer,
     reviewing: drama.reviewing,
+    inputs: {
+      preset: drama.preset,
+      screenplayLanguage: drama.screenplay_language,
+      screenplay: drama.screenplay_file,
+      files: all<{ id: number; name: string }>("select f.id, f.name from files f join inputs i on i.file_id = f.id where i.drama_id = ? and f.kind = 'screenplay' order by f.id", drama.id),
+      // A drama made before the studio wrote brief.md, with no episode length to write it from.
+      needsLength: !LENGTHS[drama.length] && !get("select 1 from inputs i join files f on f.id = i.file_id where i.drama_id = ? and f.kind = 'brief'", drama.id),
+    },
     setup: {
       state: setupState,
       reviewId: setupReview?.id,

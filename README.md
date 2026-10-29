@@ -60,6 +60,7 @@ For development, these override what the app saves:
 | Variable | |
 | --- | --- |
 | `PINE_SANDBOX_API_KEY`, `PINE_SANDBOX_ENDPOINT` | Use this project instead of the saved one. |
+| `PINE_SANDBOX_CONTROL_HOST` | The SDK's `controlHost`, for a Pine run locally (PineSandbox's `./pine dev`). |
 | `STUDIO_MODE=replay` | Start in replay. |
 | `STUDIO_REPLAY_SPEED` | Play the replay faster, e.g. `4`. |
 | `STUDIO_DATA_DIR` | Records and library. `npm run dev` sets `.data/`. |

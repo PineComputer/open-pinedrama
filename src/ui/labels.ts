@@ -1,5 +1,6 @@
 // Words for states the engine reports as data, in the maker's language.
 import type { EpisodeRow, FileKind, Spend } from "../shared/types.ts";
+import { TEMPLATES } from "../shared/presets.ts";
 import { ApiError } from "./api.ts";
 import type { useT } from "./i18n.ts";
 
@@ -45,9 +46,15 @@ export function plainText(markdown: string): string {
 
 const LOOKS: Record<string, Parameters<T>[0]> = { "live action": "look.live", anime: "look.anime", "3D animation": "look.3d" };
 
-export function lookLabel(value: string, t: T): string {
+function lookLabel(value: string, t: T): string {
   const key = LOOKS[value];
   return key ? t(key) : value;
+}
+
+/** What a drama is: its preset template, or for one made before New drama asked for a preset, its look; "" for a rehearsal. */
+export function kindLabel(drama: { preset: string; look: string }, t: T): string {
+  const template = TEMPLATES.find((entry) => entry.preset !== undefined && entry.preset === drama.preset);
+  return template ? t(`template.${template.key}` as Parameters<T>[0]) : lookLabel(drama.look, t);
 }
 
 /** What work has cost, in US dollars as Pine prices it; "at least" where some turns couldn't be priced. */

@@ -60,7 +60,7 @@ type Lang = "zh" | "en";
 
 /** The drama's language, from the goal's brief ("Language: Chinese."), as the real agent would read it. */
 function languageOf(goal: string): Lang {
-  return /Language:\s*Chinese/i.test(goal) ? "zh" : "en";
+  return /summaries in Chinese/i.test(goal) ? "zh" : "en";
 }
 
 /** Everything the recorded agent says, in both languages. */
@@ -325,7 +325,7 @@ function chatScript(goal: string, lang: Lang): Player {
 function scriptFor(goal: string, lang: Lang): Player {
   const episode = goal.match(/\b(EP\d{3})\b/);
   if (/make episode|continue episode/i.test(goal) && episode) return episodeScript(episode[1], lang);
-  if (/vertical short drama from my sources/i.test(goal)) return setupScript(lang);
+  if (/vertical short drama from my screenplay/i.test(goal)) return setupScript(lang);
   return chatScript(goal, lang);
 }
 

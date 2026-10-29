@@ -11,6 +11,8 @@ export const DEFAULT_ENDPOINT = "https://pinesandbox.io";
 export interface PineProject {
   endpoint: string;
   apiKey: string;
+  /** The SDK's controlHost, for a Pine run locally (`./pine dev`); from the environment only. */
+  controlHost?: string;
 }
 
 function read(key: string): string | undefined {
@@ -24,7 +26,8 @@ function write(key: string, value: string | null): void {
 
 export function environmentProject(): PineProject | undefined {
   const apiKey = process.env.PINE_SANDBOX_API_KEY;
-  return apiKey ? { endpoint: process.env.PINE_SANDBOX_ENDPOINT || DEFAULT_ENDPOINT, apiKey } : undefined;
+  const controlHost = process.env.PINE_SANDBOX_CONTROL_HOST;
+  return apiKey ? { endpoint: process.env.PINE_SANDBOX_ENDPOINT || DEFAULT_ENDPOINT, apiKey, ...(controlHost ? { controlHost } : {}) } : undefined;
 }
 
 export function savedProject(): PineProject | undefined {
@@ -74,7 +77,7 @@ export async function checkProject(project: PineProject): Promise<{ maxComputers
   }
   if (!project.apiKey.trim()) throw new StudioError("key-missing", "Paste your project's API key.");
   try {
-    const policy = await new Client({ endpoint: endpoint.toString().replace(/\/$/, ""), apiKey: project.apiKey.trim() }).projectPolicy();
+    const policy = await new Client({ endpoint: endpoint.toString().replace(/\/$/, ""), apiKey: project.apiKey.trim(), controlHost: project.controlHost }).projectPolicy();
     return { maxComputers: policy.maxConcurrentComputers };
   } catch (error) {
     const status = (error as { status?: number }).status;

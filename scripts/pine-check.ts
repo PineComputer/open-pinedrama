@@ -29,7 +29,7 @@ type SessionRef = import("../src/engine/fleet.ts").SessionRef;
 type TurnInfo = import("../src/engine/fleet.ts").TurnInfo;
 
 /** The project to check: the developer's override, or the one the studio saved (read only; the engine may be running). */
-function project(): { endpoint: string; apiKey: string } {
+function project(): import("../src/engine/settings.ts").PineProject {
   const fromEnvironment = environmentProject();
   if (fromEnvironment) return fromEnvironment;
   const file = path.join(DATA_DIR, "studio.db");
@@ -314,7 +314,7 @@ try {
     // Leave nothing running: by the binding, else by id.
     const left = ref;
     const stopped = await fleet.stop(left).catch(async () => {
-      await new Client({ endpoint: pine.endpoint, apiKey: pine.apiKey }).stopComputer(left.id);
+      await new Client({ endpoint: pine.endpoint, apiKey: pine.apiKey, controlHost: pine.controlHost }).stopComputer(left.id);
       return true;
     });
     console.log(stopped ? "\n  The check's Computer is stopped." : `\n  The check's Computer ${left.id} is still stopping; it stops on its own within ${IDLE_S / 60} minutes.`);

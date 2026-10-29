@@ -18,6 +18,12 @@ export interface DramaRow {
   /** 1 for a rehearsal: Pine's agent stands in for the drama skill with placeholder files. */
   rehearsal: number;
   reviewing: Reviewing;
+  /** The drama-cli preset the maker chose; "" until chosen. */
+  preset: string;
+  /** en | zh, as drama-cli init --screenplay-language takes it; "" until chosen. */
+  screenplay_language: string;
+  /** The input file that is the screenplay; null until chosen. */
+  screenplay_file: number | null;
   status: DramaStatus;
   note: string;
   /** Why the studio held it, as a code the app words (HoldReason); empty when it didn't. */

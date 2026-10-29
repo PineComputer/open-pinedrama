@@ -145,6 +145,7 @@ h1, h2, h3 { margin: 0; font-family: var(--serif); font-weight: 450; letter-spac
 .options button { background: none; border: 0; padding: 4px 0; cursor: pointer; color: var(--ink-3); border-bottom: 1px solid transparent; }
 .options button:hover { color: var(--ink); }
 .options button.on { color: var(--ink); border-color: var(--ink); }
+.options button:disabled { opacity: 0.42; cursor: not-allowed; color: var(--ink-3); }
 .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
 
 /* New drama */
@@ -498,6 +499,10 @@ h1, h2, h3 { margin: 0; font-family: var(--serif); font-weight: 450; letter-spac
 .filters button.needs, .filters button.needs .num { color: var(--seal); }
 .filters button.needs.on { border-color: var(--seal); }
 /* The screenplay's first lines, set on the manuscript once it is dropped in. */
+.format-tip { margin-top: 22px; font-size: 13px; color: var(--ink-3); }
+.format-tip summary { cursor: pointer; width: fit-content; }
+.format-tip p { margin: 10px 0; max-width: 46ch; }
+.format-tip pre { margin: 0 0 10px; padding: 10px 12px; background: var(--paper-2); border-radius: var(--r); white-space: pre-wrap; font: 400 12.5px/1.55 ui-monospace, monospace; color: var(--ink-2); }
 .manuscript .opening { margin: 26px 0 0; max-height: 380px; overflow: hidden; white-space: pre-wrap; font: 400 14.5px/32px var(--serif); color: var(--ink-2); -webkit-mask-image: linear-gradient(180deg, #000 70%, transparent); mask-image: linear-gradient(180deg, #000 70%, transparent); }
 
 /* In the desktop app on macOS the bar is the window's title bar: it makes room for the

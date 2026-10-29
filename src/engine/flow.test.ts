@@ -80,6 +80,9 @@ async function scenario(title: string) {
   form.set("parallel", "2");
   form.set("perComputer", "1");
   form.set("length", "90");
+  form.set("preset", "en-us-live-sfw");
+  form.set("screenplayLanguage", "en");
+  form.set("screenplay", "0");
   form.append("files", new File(["EPISODE 1\nLin enters."], "screenplay.txt", { type: "text/plain" }));
   const { id } = await call<{ id: string }>("POST", "/api/dramas", form);
 
@@ -150,6 +153,8 @@ async function scenario(title: string) {
   expect(goals.length).toBeGreaterThanOrEqual(2);
   for (const { goal } of goals) {
     expect(goal).toContain("attachments/project.tar.part-*");
+    // A restored project's config is pointed at this session's folder by the same init, keeping its settings.
+    expect(goal).toContain("tar -xf - -C drama && drama-cli init drama --preset en-us-live-sfw --inputs.screenplay drama/inputs/screenplay.txt --inputs.brief drama/inputs/brief.md --screenplay-language en`");
     // Provider registrations belong to the session that made them: each episode registers its references again.
     expect(goal).toContain("register every reference the episode uses again from its local file in this session");
     // A segment the video model won't take is split there and then, not put to the maker.
@@ -157,8 +162,11 @@ async function scenario(title: string) {
     costless(goal);
   }
   const setup = all<{ goal: string }>("select goal from runs where kind = 'setup'")[0].goal;
-  // The maker's files are sources the agent prepares the skill's inputs from; what they set in New drama is final.
-  expect(setup).toContain("from my sources, attached (screenplay.txt)");
+  // The maker chose drama-cli init's inputs in New drama and the studio wrote brief.md: the agent runs init as given.
+  expect(setup).toContain("from my screenplay, attached as screenplay.txt.");
+  expect(setup).toContain(
+    "`mkdir -p drama/inputs && cp attachments/screenplay.txt drama/inputs/screenplay.txt && cp attachments/brief.md drama/inputs/brief.md && drama-cli init drama --preset en-us-live-sfw --inputs.screenplay drama/inputs/screenplay.txt --inputs.brief drama/inputs/brief.md --screenplay-language en`",
+  );
   expect(setup).toContain("My settings, which are final:");
   expect(setup).toContain("Episode length: about a minute and a half (80 to 110 seconds).");
   expect(setup).toContain("Where a source disagrees with my settings, follow my settings.");
@@ -214,7 +222,8 @@ expect(archive.includes(Buffer.from(`${title}/EP002`))).toBe(false);
   const script = await call<ScriptPage>("GET", `/api/dramas/${id}/script`);
   expect(script.bible?.kind).toBe("bible");
   expect(script.breakdowns.map((entry) => entry.code)).toEqual(["EP001", "EP002", "EP003", "EP004", "EP005", "EP006"]);
-  expect(script.inputs.map((file) => file.name)).toEqual(["screenplay.txt"]);
+  // The maker's screenplay, and the brief the studio wrote from New drama.
+  expect(script.inputs.map((file) => file.name)).toEqual(["screenplay.txt", "brief.md"]);
   const cast = await call<CastCard[]>("GET", `/api/dramas/${id}/cast`);
   const wei = cast.find((card) => card.subject === "wei")!;
   expect(wei.looks[0].versions.map((version) => [version.files[0].version, version.review?.verdict])).toEqual([
@@ -268,7 +277,7 @@ describe("a drama in replay", () => {
     run("update dramas set status = 'done'");
     fleet.stops = stops;
     const form = new FormData();
-    for (const [key, value] of Object.entries({ title: "Resumed drama", language: "en", parallel: "1", perComputer: "1" })) form.set(key, value);
+    for (const [key, value] of Object.entries({ title: "Resumed drama", language: "en", preset: "en-us-live-sfw", screenplayLanguage: "en", screenplay: "0", parallel: "1", perComputer: "1" })) form.set(key, value);
     form.append("files", new File(["EPISODE 1\nLin enters."], "screenplay.txt", { type: "text/plain" }));
     const { id } = await call<{ id: string }>("POST", "/api/dramas", form);
     const question = await until("the setup question", openReview(id, (item) => item.kind === "question"));
@@ -294,7 +303,7 @@ describe("a drama in replay", () => {
     run("update dramas set status = 'done'");
     fleet.stops = "ask";
     const form = new FormData();
-    for (const [key, value] of Object.entries({ title: "Unreviewed drama", language: "en", parallel: "2", perComputer: "1", reviewing: "key" })) form.set(key, value);
+    for (const [key, value] of Object.entries({ title: "Unreviewed drama", language: "en", preset: "en-us-live-sfw", screenplayLanguage: "en", screenplay: "0", parallel: "2", perComputer: "1", reviewing: "key" })) form.set(key, value);
     form.append("files", new File(["EPISODE 1\nLin enters."], "screenplay.txt", { type: "text/plain" }));
     const { id } = await call<{ id: string }>("POST", "/api/dramas", form);
     // A question always waits for the maker, and so do the leads' looks.
@@ -324,7 +333,7 @@ describe("a drama in replay", () => {
     run("update dramas set status = 'done'");
     fleet.stops = "ask";
     const form = new FormData();
-    for (const [key, value] of Object.entries({ title: "Stopped drama", language: "en", parallel: "1", perComputer: "1" })) form.set(key, value);
+    for (const [key, value] of Object.entries({ title: "Stopped drama", language: "en", preset: "en-us-live-sfw", screenplayLanguage: "en", screenplay: "0", parallel: "1", perComputer: "1" })) form.set(key, value);
     form.append("files", new File(["EPISODE 1\nLin enters."], "screenplay.txt", { type: "text/plain" }));
     const { id } = await call<{ id: string }>("POST", "/api/dramas", form);
     await until("the setup question", openReview(id, (item) => item.kind === "question"));
@@ -344,7 +353,7 @@ describe("a drama in replay", () => {
     run("update dramas set status = 'done'");
     fleet.stops = "bare";
     const form = new FormData();
-    for (const [key, value] of Object.entries({ title: "Test drama, bare questions", language: "en", parallel: "1", perComputer: "1" })) form.set(key, value);
+    for (const [key, value] of Object.entries({ title: "Test drama, bare questions", language: "en", preset: "en-us-live-sfw", screenplayLanguage: "en", screenplay: "0", parallel: "1", perComputer: "1" })) form.set(key, value);
     form.append("files", new File(["EPISODE 1\nLin enters."], "screenplay.txt", { type: "text/plain" }));
     const { id } = await call<{ id: string }>("POST", "/api/dramas", form);
     const question = await until("the setup question", openReview(id, () => true));

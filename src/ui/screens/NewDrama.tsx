@@ -1,7 +1,8 @@
 import { type DragEvent, useEffect, useRef, useState } from "react";
 import type { AppInfo, Reviewing } from "../../shared/types.ts";
 import { api, useResource } from "../api.ts";
-import { useT } from "../i18n.ts";
+import { type TKey, useT } from "../i18n.ts";
+import { TEMPLATES } from "../../shared/presets.ts";
 import { errorText } from "../labels.ts";
 import { ReviewingChoice } from "../Reviewing.tsx";
 import { navigate } from "../router.tsx";
@@ -28,25 +29,71 @@ function useOpening(files: File[]): string | undefined {
   return opening;
 }
 
-const LOOKS = [
-  ["look.live", "live action"],
-  ["look.anime", "anime"],
-  ["look.3d", "3D animation"],
-] as const;
+/**
+ * A friendly tip on the screenplay's form: drama-cli reads Fountain (https://fountain.io/syntax)
+ * with a few rules of its own (`drama-cli init -h`), and the agent rewrites any other form into it,
+ * so this only helps a maker who would rather do it first, with a prompt for their own AI. The
+ * sample is cut down from `drama-cli screenplay sample` (short_drama 73aaf1c5), in the studio's language.
+ */
+function FormatTip() {
+  const { t } = useT();
+  const [copied, setCopied] = useState(false);
+  const copy = async () => {
+    await navigator.clipboard.writeText(t("new.formatPrompt"));
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+  return (
+    <details className="format-tip">
+      <summary>{t("new.formatTip")}</summary>
+      <p>{t("new.formatText")}</p>
+      <pre>{t("new.formatSample")}</pre>
+      <button className="link small" onClick={() => void copy()}>
+        {copied ? t("new.copied") : t("new.copyPrompt")}
+      </button>
+    </details>
+  );
+}
+
+/** The preset templates: those drama-cli has a preset for, and greyed, those not supported yet. */
+export function PresetChoice({ value, onChange }: { value: string; onChange: (preset: string) => void }) {
+  const { t } = useT();
+  return (
+    <div className="field">
+      <span className="label">{t("new.template")}</span>
+      <div className="options">
+        {TEMPLATES.map(({ key, preset }) => (
+          <button
+            key={key}
+            aria-pressed={preset !== undefined && value === preset}
+            className={preset !== undefined && value === preset ? "on" : ""}
+            disabled={preset === undefined}
+            title={preset === undefined ? t("new.soon") : preset}
+            onClick={() => preset && onChange(preset)}
+          >
+            {t(`template.${key}` as TKey)}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export function NewDrama() {
   const { t, lang } = useT();
   const [files, setFiles] = useState<File[]>([]);
   const [over, setOver] = useState(false);
   const [title, setTitle] = useState("");
-  const [language, setLanguage] = useState<"zh" | "en">(lang);
-  const [look, setLook] = useState<string>("live action");
   const [format, setFormat] = useState("9:16, 480p");
   const [parallel, setParallel] = useState(4);
   const [perComputer, setPerComputer] = useState(1);
   const [notes, setNotes] = useState("");
   const [length, setLength] = useState("60");
   const [reviewing, setReviewing] = useState<Reviewing>("every");
+  // drama-cli init's inputs, which the maker chooses: nothing is preselected but the only file there is.
+  const [screenplayChoice, setScreenplay] = useState<File>();
+  const [screenplayLanguage, setScreenplayLanguage] = useState<"zh" | "en">();
+  const [preset, setPreset] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<unknown>();
   const picker = useRef<HTMLInputElement>(null);
@@ -58,6 +105,11 @@ export function NewDrama() {
   const noSkill = onPine && app.data?.dramaSkill === "missing";
   const [rehearsalChoice, setRehearsal] = useState<boolean>();
   const rehearsal = rehearsalChoice ?? noSkill;
+  // The marked file itself, not its name: two files may share one. The form sends its place among the files.
+  const screenplay = files.length === 1 ? files[0] : screenplayChoice && files.includes(screenplayChoice) ? screenplayChoice : undefined;
+  // A rehearsal has no drama-cli, so no preset.
+  const needsPreset = !(onPine && rehearsal);
+  const ready = Boolean(files.length && title.trim() && screenplay && screenplayLanguage && (!needsPreset || preset));
 
   const add = (list: FileList | null) => {
     if (!list) return;
@@ -65,9 +117,12 @@ export function NewDrama() {
     setFiles((current) => [...current, ...added.filter((file) => !current.some((c) => c.name === file.name && c.size === file.size))]);
   };
 
+  // A drag from an editor's file tree (VS Code's, say) carries the file's path, not the file: say so rather than do nothing.
+  const [notFiles, setNotFiles] = useState(false);
   const onDrop = (event: DragEvent) => {
     event.preventDefault();
     setOver(false);
+    setNotFiles(event.dataTransfer.files.length === 0);
     add(event.dataTransfer.files);
   };
 
@@ -75,7 +130,7 @@ export function NewDrama() {
     setBusy(true);
     setError(undefined);
     const form = new FormData();
-    for (const [key, value] of Object.entries({ title, language, look, format, notes, length, reviewing, parallel: String(parallel), perComputer: String(perComputer), rehearsal: onPine && rehearsal ? "1" : "0" })) form.set(key, value);
+    for (const [key, value] of Object.entries({ title, language: lang, format, notes, length, reviewing, parallel: String(parallel), perComputer: String(perComputer), rehearsal: onPine && rehearsal ? "1" : "0", screenplay: screenplay ? String(files.indexOf(screenplay)) : "", screenplayLanguage: screenplayLanguage ?? "", preset: needsPreset ? preset : "" })) form.set(key, value);
     for (const file of files) form.append("files", file);
     try {
       const { id } = await api<{ id: string }>("/api/dramas", { method: "POST", body: form });
@@ -107,10 +162,15 @@ export function NewDrama() {
             {t("new.choose")}
           </button>
           <input ref={picker} type="file" multiple hidden onChange={(event) => add(event.target.files)} />
+          {notFiles && <p className="error small">{t("new.notFiles")}</p>}
+          <FormatTip />
           {files.length > 0 && (
             <div className="pages">
               {files.map((file) => (
                 <div key={file.name + file.size} className="page-file">
+                  {files.length > 1 && (
+                    <input type="radio" name="screenplay" aria-label={t("new.isScreenplay")} title={t("new.isScreenplay")} checked={screenplay === file} onChange={() => setScreenplay(file)} />
+                  )}
                   <span className="name">{file.name}</span>
                   <span className="quiet num small">
                     {Math.max(1, Math.round(file.size / 1024))} KB
@@ -122,6 +182,7 @@ export function NewDrama() {
               ))}
             </div>
           )}
+          {files.length > 1 && <p className="quiet small">{t("new.screenplayHint")}</p>}
           {opening && <pre className="opening">{opening}</pre>}
         </div>
 
@@ -134,17 +195,6 @@ export function NewDrama() {
           </div>
           <div className="pair">
             <div className="field">
-              <span className="label">{t("new.language")}</span>
-              <div className="options">
-                <button aria-pressed={language === "zh"} className={language === "zh" ? "on" : ""} onClick={() => setLanguage("zh")}>
-                  中文
-                </button>
-                <button aria-pressed={language === "en"} className={language === "en" ? "on" : ""} onClick={() => setLanguage("en")}>
-                  English
-                </button>
-              </div>
-            </div>
-            <div className="field">
               <span className="label">{t("new.format")}</span>
               <div className="options">
                 {["9:16, 480p", "9:16, 720p"].map((value) => (
@@ -156,15 +206,17 @@ export function NewDrama() {
             </div>
           </div>
           <div className="field">
-            <span className="label">{t("new.look")}</span>
+            <span className="label">{t("new.screenplayLanguage")}</span>
             <div className="options">
-              {LOOKS.map(([key, value]) => (
-                <button key={value} aria-pressed={look === value} className={look === value ? "on" : ""} onClick={() => setLook(value)}>
-                  {t(key)}
+              {(["en", "zh"] as const).map((value) => (
+                <button key={value} aria-pressed={screenplayLanguage === value} className={screenplayLanguage === value ? "on" : ""} onClick={() => setScreenplayLanguage(value)}>
+                  {value === "zh" ? "中文" : "English"}
                 </button>
               ))}
             </div>
+            <span className="quiet small">{t("new.screenplayLanguageHint")}</span>
           </div>
+          {needsPreset && <PresetChoice value={preset} onChange={setPreset} />}
           <div className="field">
             <span className="label">{t("new.length")}</span>
             <div className="options">
@@ -211,7 +263,7 @@ export function NewDrama() {
           )}
           {error !== undefined && <p className="error flush">{errorText(error, t)}</p>}
           <div className="actions">
-            <button className="btn ink" disabled={busy || !files.length || !title.trim()} onClick={start}>
+            <button className="btn ink" disabled={busy || !ready} onClick={start}>
               {busy ? t("new.starting") : t("new.start")}
             </button>
             <span className="quiet small">

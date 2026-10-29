@@ -94,10 +94,11 @@ export function inputs(dramaId: string): FileRow[] {
   return all<FileRow>("select f.* from files f join inputs i on i.file_id = f.id where i.drama_id = ? order by f.id", dramaId);
 }
 
-/** Writes files into the session's attachments; returns the names it used and the ones too large to send. */
-export async function attach(session: SessionRow, files: FileRow[]): Promise<{ sent: string[]; skipped: string[] }> {
+/** Writes files into the session's attachments; returns the names it used (also by file id) and the ones too large to send. */
+export async function attach(session: SessionRow, files: FileRow[]): Promise<{ sent: string[]; names: Record<number, string>; skipped: string[] }> {
   const computer = computerRow(session.computer_id)!;
   const sent: string[] = [];
+  const names: Record<number, string> = {};
   const skipped: string[] = [];
   const used = new Set<string>();
   for (const file of files) {
@@ -110,8 +111,9 @@ export async function attach(session: SessionRow, files: FileRow[]): Promise<{ s
     }
     await fleet().writeFile(computerRef(computer), sessionRef(session), name, readFileSync(blobPath(file.sha)));
     sent.push(name);
+    names[file.id] = name;
   }
-  return { sent, skipped };
+  return { sent, names, skipped };
 }
 
 /** A rehearsal's kit, handed to each of its sessions with the drama's files. */
