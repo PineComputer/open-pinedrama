@@ -159,6 +159,10 @@ async function scenario(title: string) {
     expect(goal).toContain("register every reference the episode uses again from its local file in this session");
     // A segment the video model won't take is split there and then, not put to the maker.
     expect(goal).toMatch(/EP\d+'s own breakdown is yours to change when the video model won't take it/);
+    // A reference not yet accepted stops the episode only where drama-cli refuses for it, never on the agent's own
+    // reading ahead: every step that doesn't read it goes on first.
+    expect(goal).toContain("Stop and ask me only when a drama-cli command refuses because a reference it reads is not accepted");
+    expect(goal).not.toMatch(/needs one that is not accepted, stop and ask me/);
     costless(goal);
   }
   const setup = all<{ goal: string }>("select goal from runs where kind = 'setup'")[0].goal;
