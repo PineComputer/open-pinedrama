@@ -47,8 +47,10 @@
 .ds-seg button[aria-pressed="true"] { background: var(--surface-container-high); color: var(--text-primary); box-shadow: 0 0 0 1px var(--border-input); }
 .ds-seg .count, .ds-tabs .count { font: 500 11.5px var(--font-sans); color: var(--text-muted); font-variant-numeric: tabular-nums; }
 
-/* Tabs: underlined, 40 high. */
-.ds-tabs { display: flex; gap: 22px; border-bottom: 1px solid var(--border); }
+/* Tabs: underlined, 40 high; what stands at the row's end sits on the same rule. */
+.ds-tabs-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; border-bottom: 1px solid var(--border); margin-bottom: 18px; }
+.ds-tabs-row > :not(.ds-tabs) { margin-left: auto; }
+.ds-tabs { display: flex; gap: 22px; }
 .ds-tabs button { height: 40px; border: 0; background: none; padding: 0; margin-bottom: -1px; border-bottom: 2px solid transparent; color: var(--text-muted); font: 500 13px/1 var(--font-sans); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
 .ds-tabs button:hover { color: var(--text-secondary); }
 .ds-tabs button[aria-selected="true"] { color: var(--text-primary); font-weight: 600; border-bottom-color: var(--text-primary); }
