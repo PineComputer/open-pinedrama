@@ -14,7 +14,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "check": "tsc --noEmit && vitest run",
-    "e2e": "playwright test",
+    "e2e": "npm run build && playwright test",
     "pine:check": "tsx scripts/pine-check.ts",
     "desktop": "node scripts/desktop.mjs && electron .",
     "package": "node scripts/desktop.mjs && electron-builder --config electron-builder.config.mjs"
