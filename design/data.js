@@ -45,7 +45,12 @@ window.P = (() => {
     // EP006 on the canvas: scenes, segments, the references each one reads, its board and its latest take
     scenes: [
       { n: 1, place: "apartment", time: "Night", segs: [
-        { id: "seg01", s: 27, cast: ["luca", "ivy"], board: null, take: "t02", still: img("still-s1t2"), st: "you" },
+        { id: "seg01", s: 27, cast: ["luca", "ivy"], board: null, take: "t02", still: img("still-s1t2"), st: "you",
+          // What drama-cli's spec.json and request.json for t02 say: the take's prompt, its references in order (Image 1, 2, …), its settings, and the versions with what the person decided.
+          spec: { model: "sd25", ratio: "9:16", resolution: "480p", seconds: 27,
+            images: [img("board-seg02"), img("plate-apartment"), img("cast-luca"), img("cast-ivy")],
+            prompt: "Image 1: the storyboard, for the shot structure and camera rhythm; do not adopt its sketch style.\nImage 2: Luca's apartment at night, for the room's layout and the light's direction.\nImage 3: Luca Moreno, base look. Image 4: Ivy Bell, base look.\n[0-9s] Medium shot, Luca in the hallway with the blanket folded over his arm, as Image 3; behind him the living room of Image 2.\n[9-18s] He steps in; Ivy, as Image 4, looks up from the sofa. Dialogue (Luca): {I folded it the way you like.}\n[18-27s] Close-up on Ivy, a small smile.",
+            versions: [["t02", "you", ""], ["t01", "revise", "He should hold the blanket folded before he speaks."]] } },
         { id: "seg02", s: 15, cast: ["ivy"], board: img("board-seg02"), take: "t01", still: null, st: "accepted" } ] },
       { n: 2, place: "apartment", time: "Day", segs: [
         { id: "seg03", s: 28, cast: ["luca", "ethan"], board: img("board-seg03"), take: "t02", still: img("still-s3t2"), st: "you" },
