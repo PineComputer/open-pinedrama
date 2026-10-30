@@ -105,4 +105,13 @@ describe("the answers the UI reads", () => {
     expect(response.status).toBe(404);
     expect(await response.json()).toMatchObject({ code: "not-found" });
   });
+
+  it("says how many Computers are still stopping, for the desktop app to ask before it quits", async () => {
+    expect((await call("/api/connection/replay", { method: "POST" })).status).toBe(200);
+    expect(((await (await call("/api/app")).json()) as AppInfo).stopping).toBe(0);
+    const { run } = await import("./db.ts");
+    const at = new Date().toISOString();
+    run("insert into computers (id, drama_id, mode, label, credentials, state, created_at, updated_at) values ('c1', 'd1', 'replay', 'one', '', 'stopping', ?, ?), ('c2', 'd1', 'replay', 'two', '', 'running', ?, ?)", at, at, at, at);
+    expect(((await (await call("/api/app")).json()) as AppInfo).stopping).toBe(1);
+  });
 });

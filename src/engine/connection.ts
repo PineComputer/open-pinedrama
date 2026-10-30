@@ -3,7 +3,7 @@
 import type { AppInfo } from "../shared/types.ts";
 import { DATA_DIR, VERSION } from "./config.ts";
 import { fleet, hasFleet, setFleet, stop } from "./computers.ts";
-import { all } from "./db.ts";
+import { all, get } from "./db.ts";
 import { StudioError } from "./errors.ts";
 import type { Fleet, Limits } from "./fleet.ts";
 import { publish } from "./live.ts";
@@ -85,5 +85,6 @@ export function appInfo(): AppInfo {
     dataDir: DATA_DIR,
     project: mode === "pine" && project ? { endpoint: project.endpoint, keyHint: keyHint(project.apiKey), fromEnvironment: Boolean(fromEnvironment) } : undefined,
     dramaSkill: mode === "pine" ? dramaSkill(fleet().project) : undefined,
+    stopping: mode === "none" ? 0 : get<{ n: number }>("select count(*) as n from computers where mode = ? and state = 'stopping'", mode)?.n ?? 0,
   };
 }

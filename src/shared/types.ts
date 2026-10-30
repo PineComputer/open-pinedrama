@@ -122,6 +122,8 @@ export interface AppInfo {
   version: string;
   dataDir: string;
   project?: { endpoint: string; keyHint: string; fromEnvironment: boolean };
+  /** Computers still being stopped: quitting now would leave them running until the next start or Pine's idle timeout. */
+  stopping: number;
   /** Whether the project offers Pine's drama skill, as its Computers last said; absent until one has. */
   dramaSkill?: "offered" | "missing";
 }
