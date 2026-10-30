@@ -2,6 +2,7 @@
 // closes, focus goes back to what opened it).
 import * as Radix from "@radix-ui/react-dialog";
 import { type ReactNode, useEffect, useRef } from "react";
+import { useT } from "../i18n.ts";
 import { Button } from "./Button.tsx";
 
 export function Dialog({
@@ -10,7 +11,7 @@ export function Dialog({
   title,
   description,
   confirm,
-  cancel = "Cancel",
+  cancel,
   children,
 }: {
   open: boolean;
@@ -23,6 +24,7 @@ export function Dialog({
 }) {
   // A dialog opened by the screen rather than a trigger of its own gives focus back to whatever
   // had it when it opened.
+  const { t } = useT();
   const opener = useRef<HTMLElement | null>(null);
   useEffect(() => {
     if (open) opener.current = document.activeElement as HTMLElement | null;
@@ -43,7 +45,7 @@ export function Dialog({
           {children}
           <div className="acts">
             <Radix.Close asChild>
-              <Button>{cancel}</Button>
+              <Button>{cancel ?? t("dialog.cancel")}</Button>
             </Radix.Close>
             {confirm && (
               <Button

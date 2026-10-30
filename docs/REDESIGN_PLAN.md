@@ -82,7 +82,7 @@ collapsed and floating; NextChips.
 
 **P5 The flow (M4).** P5.1 Home and upload. P5.2 preset cards, none chosen for the maker.
 P5.3 analyzing, as named steps. P5.4 FountainDiff, with approval of a rewrite in the maker's
-words. P5.5 Story. P5.6 Episodes and the episode workspace. P5.7 ReviewRoom: the observer's
+words. P5.5 Story, naming people, places and props as the bible does (drama-cli's status has their ids only; the names are in bible.json), never by id. P5.6 Episodes and the episode workspace. P5.7 ReviewRoom: the observer's
 findings by severity, the storyboard beside each take, Accept in place of Approve, the maker
 deciding every take. P5.8 StopCard: red line, budget, cap.
 

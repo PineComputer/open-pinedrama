@@ -18,6 +18,7 @@ function row(number: number, state: EpisodeRow["state"]): EpisodeRow {
 
 const drama = {
   id: "d1",
+  mode: "pine",
   title: "The Stepmother",
   format: "9:16, 480p",
   preset: "en-us-live-sfw",
@@ -38,6 +39,12 @@ function at(path: string) {
 }
 
 describe("the top bar", () => {
+  it("marks a replay drama's spend as simulated", () => {
+    at("/d/d1");
+    render(<TopBar app={app} waiting={[]} drama={{ ...drama, mode: "replay" } as DramaView} />);
+    expect(screen.getByText("Simulated spend")).toBeInTheDocument();
+  });
+
   it("names the drama and its format and preset, and what it has spent", () => {
     at("/d/d1");
     render(<TopBar app={app} waiting={[]} drama={drama} />);
@@ -111,6 +118,14 @@ describe("the steps", () => {
 });
 
 describe("the status bar", () => {
+  it("while the drama is set up, says the setup's step, not empty episode counts", () => {
+    const settingUp = { ...drama, status: "setup", episodes: { total: 0, done: 0, waiting: 0, working: 0 }, setup: { state: "working", reached: 4 }, episodeRows: [] } as unknown as DramaView;
+    render(<StatusBar drama={settingUp} />);
+    const bar = screen.getByRole("status", { name: "Where the drama stands" });
+    expect(bar).toHaveTextContent("Setup · Preparing every episode: breakdowns, looks, places and props");
+    expect(bar).not.toHaveTextContent("0 of 0");
+  });
+
   it("says where the drama stands", () => {
     render(<StatusBar drama={drama} />);
     const bar = screen.getByRole("status", { name: "Where the drama stands" });

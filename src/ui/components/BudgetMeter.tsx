@@ -1,14 +1,18 @@
 // What was spent, against the budget when there is one: amber from 80%, seal red when spent. With
-// no cap there is nothing to fill, so it shows what was spent and no bar.
+// no cap there is nothing to fill, so it shows what was spent and no bar. In replay the figures are
+// the recording's, so they are marked simulated and never read as a charge.
+import { useT } from "../i18n.ts";
+
 const money = (usd: number) => `$${usd.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 const whole = (usd: number) => money(usd).replace(/\.00$/, "");
 
-export function BudgetMeter({ spentUsd, budgetUsd }: { spentUsd: number; budgetUsd: number | null }) {
+export function BudgetMeter({ spentUsd, budgetUsd, simulated = false }: { spentUsd: number; budgetUsd: number | null; simulated?: boolean }) {
+  const { t } = useT();
   if (budgetUsd === null) {
     return (
       <div className="ds-budget">
         <div className="row">
-          <span>Spent</span>
+          <span>{t(simulated ? "budget.simulated" : "budget.spent")}</span>
           <b>{money(spentUsd)}</b>
         </div>
       </div>
@@ -19,10 +23,10 @@ export function BudgetMeter({ spentUsd, budgetUsd }: { spentUsd: number; budgetU
   return (
     <div className={`ds-budget ${out ? "is-out" : warn ? "is-warn" : ""}`}>
       <div className="row">
-        <span>{out ? "Budget spent" : "Spent of budget"}</span>
-        <b>{`${money(spentUsd)} of ${whole(budgetUsd)}`}</b>
+        <span>{t(simulated ? "budget.simulated" : out ? "budget.out" : "budget.spentOf")}</span>
+        <b>{t("budget.of", { spent: money(spentUsd), budget: whole(budgetUsd) })}</b>
       </div>
-      <div className="bar" role="meter" aria-label="Spent of budget" aria-valuemin={0} aria-valuemax={budgetUsd} aria-valuenow={spentUsd}>
+      <div className="bar" role="meter" aria-label={t("budget.spentOf")} aria-valuemin={0} aria-valuemax={budgetUsd} aria-valuenow={spentUsd}>
         <i style={{ width: `${Math.min(100, (spentUsd / budgetUsd) * 100)}%` }} />
       </div>
     </div>
