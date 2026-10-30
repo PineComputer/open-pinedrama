@@ -212,6 +212,8 @@ export interface DramaCard {
     length?: string;
     /** The working bible's one-line hook. */
     logline?: string;
+    /** The genres the maker's notes state, on their "Genres:" ("类型:") line. */
+    genres?: string[];
     /** When the agent last said something, and what. */
     lastActivity?: string;
     lastLine?: string;

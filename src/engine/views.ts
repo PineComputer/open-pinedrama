@@ -99,12 +99,15 @@ function cardFacts(drama: DramaRow): DramaCard["facts"] {
     "select m.text, m.at from messages m join sessions s on s.id = m.session_id where s.drama_id = ? and m.kind in ('progress', 'activity', 'question', 'result') order by m.at desc limit 1",
     drama.id,
   );
+  // The genres only as the maker's notes state them, on a "Genres:" or "类型:" line (the brief's notes, goals.ts briefFile).
+  const genres = drama.notes.match(/^(?:Genres|类型)\s*[:：]\s*(.+)$/m)?.[1].split(/\s*[,，、]\s*/).filter(Boolean);
   // Before any breakdown, drama-cli lists no episodes: a scale of zeros says nothing, so it is left out.
   const scale = project.state ? scaleOf(project.state) : undefined;
   return {
     ...(scale?.episodes ? { scale } : {}),
     ...(drama.length ? { length: drama.length } : {}),
     ...(project.names?.logline ? { logline: project.names.logline } : {}),
+    ...(genres?.length ? { genres } : {}),
     ...(last ? { lastActivity: last.at, lastLine: last.text } : {}),
   };
 }

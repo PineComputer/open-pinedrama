@@ -816,3 +816,5 @@ a.ds-tag:hover { background: var(--hover); }
 .poster .work-pic::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, color-mix(in srgb, var(--shadow-base) 0%, transparent) 45%, color-mix(in srgb, var(--shadow-base) 78%, transparent)); }
 .poster.work > :not(.work-pic) { position: relative; }
 .poster.work h3 { align-self: end; color: var(--canvas); }
+.ds-dramacard .txt .tags { display: flex; flex-wrap: wrap; gap: 4px; }
+.ds-dramacard .txt .tags .ds-tag { height: 20px; font-size: 11px; }
