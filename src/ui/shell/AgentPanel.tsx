@@ -81,18 +81,15 @@ function Running({ drama, session, inView, inFlight, onPick }: { drama: DramaVie
   const row = drama.episodeRows.find((episode) => episode.code === session.episode);
   const label = session.episode ?? t("crew.setup");
   return (
-    <div className={`ds-arow ${inView ? "is-in-view" : ""}`}>
+    <div className={`ds-run${inView ? " is-in-view" : ""}`}>
+      <span className={`dot ${session.waiting ? "is-waiting" : "is-working"}`} aria-hidden="true">
+        {session.waiting ? <Icon name="seal-check" /> : <span className="spin" />}
+      </span>
       <button type="button" className="what" onClick={onPick} aria-pressed={inView}>
         <b>{label}</b> <span>{session.waiting ? t("crew.waiting") : (session.activity ?? t("board.atWork"))}</span>
       </button>
-      <button type="button" className="ds-btn is-ghost is-sm" onClick={() => setWatching(true)}>
-        {t("crew.watch")}
-      </button>
-      {row && (
-        <button type="button" className="ds-btn is-ghost is-sm" onClick={() => setAsking(true)}>
-          {t("agent.stop")}
-        </button>
-      )}
+      <IconButton label={t("agent.watch", { who: label })} icon="eye" onClick={() => setWatching(true)} />
+      {row ? <IconButton label={t("agent.stopOne", { who: label })} icon="stop" className="is-stop" onClick={() => setAsking(true)} /> : <span className="slot" />}
       {row && (
         <Dialog
           open={asking}
@@ -121,6 +118,8 @@ export function AgentPanel({ drama, episode, mode, onMode }: { drama: DramaView;
   const sessions = useResource<ChatView[]>(`/api/dramas/${id}/sessions`, [`drama:${id}`]);
   const running = drama.crew.flatMap((computer) => computer.sessions.filter((session) => session.state === "open"));
   const [picked, setPicked] = useState<string>();
+  const [runsOpen, setRunsOpen] = useState(true);
+  const [recentOpen, setRecentOpen] = useState(true);
   // The session in view: the one picked, else the episode's in view, else one that asks, else the first.
   const chats = sessions.data ?? [];
   const inView = chats.find((chat) => chat.sessionId === picked) ?? chats.find((chat) => episode && chat.label === episode) ?? chats.find((chat) => chat.sends === "answer") ?? chats[0];
@@ -134,6 +133,7 @@ export function AgentPanel({ drama, episode, mode, onMode }: { drama: DramaView;
   const steps = (chat.data?.messages ?? []).filter((message) => message.kind === "activity").slice(-7);
   const said = (chat.data?.messages ?? []).filter((message) => message.kind === "progress" || message.kind === "question" || message.kind === "result").slice(-2);
   const working = running.some((session) => !session.waiting);
+  const waitingRuns = running.filter((session) => session.waiting).length;
   return (
     <aside className={`ds-agent ${mode === "floating" ? "is-float" : ""}`} aria-label={t("agent.label")}>
       <div className="ds-agent-head">
@@ -143,17 +143,36 @@ export function AgentPanel({ drama, episode, mode, onMode }: { drama: DramaView;
         <IconButton label={t(mode === "floating" ? "agent.dock" : "agent.float")} icon={mode === "floating" ? "arrows-in" : "arrows-out"} onClick={() => onMode(mode === "floating" ? "docked" : "floating")} />
         <IconButton label={t("agent.collapse")} icon="x" onClick={() => onMode("collapsed")} />
       </div>
+      {inView && (
+        <div className="ds-agent-context">
+          <Icon name="crosshair-simple" />
+          {t("agent.context", { who: inView.label || t("talk.setup") })}
+        </div>
+      )}
       <div className="ds-agent-scroll">
         <Section title={t("agent.running")} count={running.length}>
           {running.length ? (
-            running.map((session) => <Running
-                key={session.id}
-                drama={drama}
-                session={session}
-                inView={session.id === inView?.sessionId}
-                inFlight={session.episode && state?.episodes[session.episode] ? takesInFlight(state.episodes[session.episode]) : 0}
-                onPick={() => setPicked(session.id)}
-              />)
+            <div className="ds-runs">
+              {running.length > 1 && (
+                <button type="button" className={`ds-runs-head${runsOpen ? " is-open" : ""}`} aria-expanded={runsOpen} onClick={() => setRunsOpen((open) => !open)}>
+                  {waitingRuns ? <Icon name="seal-check" /> : <span className="spin" aria-hidden="true" />}
+                  <span className="title">{t("agent.atWork", { n: running.length - waitingRuns })}</span>{" "}
+                  <span className="names">{waitingRuns ? t("agent.waitFor", { n: waitingRuns }) : ""}</span>
+                  <Icon name="caret-down" className={runsOpen ? "caret is-open" : "caret"} />
+                </button>
+              )}
+              {(running.length === 1 || runsOpen) &&
+                running.map((session) => (
+                  <Running
+                    key={session.id}
+                    drama={drama}
+                    session={session}
+                    inView={session.id === inView?.sessionId}
+                    inFlight={session.episode && state?.episodes[session.episode] ? takesInFlight(state.episodes[session.episode]) : 0}
+                    onPick={() => setPicked(session.id)}
+                  />
+                ))}
+            </div>
           ) : (
             <p className="quiet small">{t("talk.none")}</p>
           )}
@@ -205,18 +224,31 @@ export function AgentPanel({ drama, episode, mode, onMode }: { drama: DramaView;
           </Section>
         )}
         {recent.length > 0 && (
-          <Section title={t("agent.recent")}>
-            <ul className="ds-alist">
-              {recent.map((item) => (
-                <li key={`${item.at.join("/")}@${item.version}`}>
-                  <span>
-                    {t(`agent.kind.${item.kind}` as TKey)} · {workText(item, names)} <span className="mono">{item.version}</span>
-                  </span>
-                  <span className={`ds-tag is-${item.state}`}>{t(`agent.work.${item.state}` as TKey)}</span>
-                </li>
-              ))}
-            </ul>
-          </Section>
+          <section className="ds-changes" aria-label={t("agent.recent")}>
+            <button type="button" className={`ds-changes-head${recentOpen ? " is-open" : ""}`} aria-expanded={recentOpen} onClick={() => setRecentOpen((open) => !open)}>
+              <Icon name="clock" />
+              <span className="title">{t("agent.recentCount", { n: recent.length })}</span>
+              <Icon name={recentOpen ? "caret-up" : "caret-down"} />
+            </button>
+            {recentOpen && (
+              <ul className="ds-changes-body">
+                {recent.map((item) => (
+                  <li key={`${item.at.join("/")}@${item.version}`}>
+                    <Icon name={item.state === "accepted" ? "check-circle" : item.state === "review" ? "eye" : "arrow-counter-clockwise"} />
+                    <span className="main">
+                      <span className="t">
+                        {t(`agent.kind.${item.kind}` as TKey)} · {workText(item, names)}
+                      </span>
+                      <span className="sub">
+                        {item.version} · {ago(item.createdAt)}
+                      </span>
+                    </span>
+                    <span className={`ds-ctag is-${item.state}`}>{t(`agent.work.${item.state}` as TKey)}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </section>
         )}
       </div>
       <Composer chat={chat.data} onSent={chat.reload} />

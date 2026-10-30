@@ -89,11 +89,46 @@
 .ds-asec:last-child { border-bottom: 0; }
 .ds-asec h3 { margin: 0 0 8px; display: flex; align-items: center; gap: 8px; font: 600 11px/1.3 var(--font-sans); color: var(--text-muted); letter-spacing: 0.4px; text-transform: uppercase; }
 .ds-asec h3 .c { margin-left: auto; font-variant-numeric: tabular-nums; }
-.ds-arow { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; padding: 6px 6px 6px 10px; border-radius: var(--radius-large); background: var(--surface-container); margin-bottom: 6px; }
-.ds-arow.is-in-view { box-shadow: 0 0 0 1px var(--border-input); }
-.ds-arow .what { flex: 1; min-width: 0; display: grid; text-align: left; border: 0; background: none; padding: 0; cursor: pointer; color: inherit; }
-.ds-arow .what b { font: 600 12px var(--font-mono); }
-.ds-arow .what span { color: var(--text-muted); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* The agent's runs, as one card (after the reference's task strip): a summary that folds when more than one runs, then a row each with its dot, what it is doing, Watch and Stop. */
+.ds-agent-context { flex: none; display: flex; align-items: center; gap: 6px; padding: 6px 16px; border-bottom: 1px solid var(--border-subtle); font-size: 11.5px; color: var(--text-secondary); }
+.ds-agent-context .ds-icon { width: 13px; height: 13px; }
+.ds-runs { background: var(--surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-large); overflow: hidden; }
+.ds-runs-head { width: 100%; display: flex; align-items: center; gap: 8px; min-height: 32px; padding: 0 6px 0 10px; border: 0; background: none; color: inherit; cursor: pointer; text-align: left; }
+.ds-runs-head:hover { background: var(--hover); }
+.ds-runs-head.is-open { border-bottom: 1px solid var(--border-subtle); }
+.ds-runs-head .title { font: 500 13px/1.3 var(--font-sans); color: var(--text-secondary); }
+.ds-runs-head .names { flex: 1; min-width: 0; font-size: 12px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ds-runs-head .caret { color: var(--text-muted); transition: transform var(--d2) ease; }
+.ds-runs-head .caret.is-open { transform: rotate(180deg); }
+.ds-runs .spin { width: 14px; height: 14px; flex: none; margin: 0 1px; border: 1.8px solid color-mix(in srgb, var(--accent) 50%, transparent); border-top-color: var(--accent); border-radius: 50%; animation: ds-spin 0.7s linear infinite; }
+.ds-run { display: flex; align-items: center; gap: 6px; padding: 4px 4px 4px 10px; }
+.ds-run + .ds-run { border-top: 1px solid var(--border-subtle); }
+.ds-run.is-in-view { background: var(--surface-container); }
+.ds-run .dot { width: 16px; height: 16px; flex: none; display: grid; place-items: center; }
+.ds-run .dot.is-waiting { color: var(--warning-text); }
+.ds-run .dot .ds-icon { width: 14px; height: 14px; }
+.ds-run .what { flex: 1; min-width: 0; display: flex; align-items: baseline; gap: 6px; text-align: left; border: 0; background: none; padding: 4px 0; cursor: pointer; color: inherit; }
+.ds-run .what b { flex: none; font: 600 12px var(--font-mono); }
+.ds-run .what span { color: var(--text-secondary); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ds-run .ds-iconbtn { width: 28px; height: 28px; }
+.ds-run .ds-iconbtn .ds-icon { width: 15px; height: 15px; }
+.ds-run .ds-iconbtn.is-stop:hover { background: var(--deletion-bg); color: var(--deletion-border); }
+.ds-run .slot { width: 28px; flex: none; }
+/* Recent work, as a card that folds (after the reference's recent changes): each version, when, and where it stands. */
+.ds-changes { margin-top: 12px; background: var(--surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-large); overflow: hidden; box-shadow: 0 4px 12px color-mix(in srgb, var(--shadow-base) 6%, transparent); }
+.ds-changes-head { width: 100%; display: flex; align-items: center; gap: 8px; padding: 10px 12px; border: 0; background: var(--surface-dim); color: inherit; cursor: pointer; text-align: left; }
+.ds-changes-head.is-open { border-bottom: 1px solid var(--border-subtle); }
+.ds-changes-head .title { flex: 1; font: 600 13px/1.3 var(--font-sans); color: var(--text-primary); }
+.ds-changes-head .ds-icon { width: 15px; height: 15px; color: var(--text-secondary); }
+.ds-changes-body { list-style: none; margin: 0; padding: 4px 12px; }
+.ds-changes-body li { display: flex; align-items: center; gap: 10px; padding: 8px 0; }
+.ds-changes-body li + li { border-top: 1px solid var(--border-subtle); }
+.ds-changes-body li > .ds-icon { width: 17px; height: 17px; color: var(--text-secondary); }
+.ds-changes-body .main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
+.ds-changes-body .t { font: 500 13px/1.3 var(--font-sans); color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ds-changes-body .sub { font: 400 11px/1.3 var(--font-mono); color: var(--text-secondary); }
+.ds-ctag { flex: none; display: inline-flex; align-items: center; height: 18px; padding: 0 7px; border: 1px solid currentColor; border-radius: var(--radius-pill); font: 600 11px/1 var(--font-sans); color: var(--text-secondary); }
+.ds-ctag.is-review { color: var(--text-primary); }
 .ds-dec { display: grid; grid-template-columns: 34px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 7px; border-radius: var(--radius-large); color: inherit; }
 .ds-dec:hover { background: var(--hover); }
 .ds-dec .thumb { position: relative; width: 34px; height: 46px; border-radius: 6px; overflow: hidden; background: var(--surface-container); }
