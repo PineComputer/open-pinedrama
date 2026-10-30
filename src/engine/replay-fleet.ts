@@ -148,7 +148,8 @@ interface DramaData {
   cast: { id: string; name: Both<string>; short: Both<string>; looks?: string[] }[];
   places: { id: string; name: Both<string>; times?: string[] }[];
   props: { id: string; name: Both<string> }[];
-  episodes: { title: Both<string>; segments: { id: string; shots: Both<string[]> }[] }[];
+  /** An episode's sample cut, where it has one: each clip's segment and its in and out points in seconds, from the cut.json drama-cli wrote for it. */
+  episodes: { title: Both<string>; segments: { id: string; shots: Both<string[]> }[]; cut?: { segment: string; in: number; out: number }[] }[];
   /** The bible's red line, when the setup stops on one: drama-cli refuses the bible for it (RedLine). */
   redLine?: Both<string>;
 }
@@ -159,7 +160,7 @@ interface Story {
   cast: { id: string; name: string; short: string; looks: string[] }[];
   places: { id: string; name: string; times: string[] }[];
   props: { id: string; name: string }[];
-  episodes: { title: string; segments: { id: string; shots: string[] }[] }[];
+  episodes: { title: string; segments: { id: string; shots: string[] }[]; cut?: { segment: string; in: number; out: number }[] }[];
   redLine?: string;
 }
 
@@ -168,7 +169,7 @@ const inLanguage = (d: DramaData, lang: Lang): Story => ({
   cast: d.cast.map((c) => ({ id: c.id, name: c.name[lang], short: c.short[lang], looks: c.looks ?? [] })),
   places: d.places.map((p) => ({ id: p.id, name: p.name[lang], times: p.times ?? [] })),
   props: d.props.map((p) => ({ id: p.id, name: p.name[lang] })),
-  episodes: d.episodes.map((e) => ({ title: e.title[lang], segments: e.segments.map((s) => ({ id: s.id, shots: s.shots[lang] })) })),
+  episodes: d.episodes.map((e) => ({ title: e.title[lang], segments: e.segments.map((s) => ({ id: s.id, shots: s.shots[lang] })), ...(e.cut ? { cut: e.cut } : {}) })),
   ...(d.redLine ? { redLine: d.redLine[lang] } : {}),
 });
 
