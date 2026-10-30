@@ -809,3 +809,10 @@ a.ds-tag:hover { background: var(--hover); }
 /* A cover crops each lead's look sheet to its close-up, the face at the sheet's right end, as reveric's covers show
    faces; the sheet fills the cover's height. */
 .ds-dramacard .poster .leads span, .ds-hero .poster .leads span { background-size: auto 100%; background-position: 90% 0; }
+
+/* A poster of the drama's own work (its newest cut or photoreal storyboard), full-bleed, its title over a dark gradient. */
+.poster .work-pic { position: absolute; inset: 0; }
+.poster .work-pic .still { position: absolute; inset: 0; width: 100%; height: 100%; background: center / cover no-repeat; object-fit: cover; }
+.poster .work-pic::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, color-mix(in srgb, var(--shadow-base) 0%, transparent) 45%, color-mix(in srgb, var(--shadow-base) 78%, transparent)); }
+.poster.work > :not(.work-pic) { position: relative; }
+.poster.work h3 { align-self: end; color: var(--canvas); }

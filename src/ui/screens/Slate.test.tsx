@@ -42,6 +42,18 @@ describe("Home", () => {
     expect(other).not.toHaveTextContent(/scenes|segments|planned|ago/);
   });
 
+  it("makes a poster of the drama's own work when it has some, else of its leads' faces", async () => {
+    answer("/api/app", replay);
+    answer("/api/inbox", []);
+    answer("/api/dramas", [{ ...stepmother, cast: ["/api/files/7"], cover: { url: "/api/files/9" } }, { ...bride, cast: ["/api/files/8"] }]);
+    render(<Slate />);
+    const withWork = await screen.findByRole("link", { name: /^The Stepmother/ });
+    expect(withWork.querySelector(".poster .still")).toHaveStyle({ backgroundImage: "url(/api/files/9)" });
+    expect(withWork.querySelector(".poster .leads")).toBeNull();
+    const faces = screen.getByRole("link", { name: /^Bride on Bail/ });
+    expect(faces.querySelector(".poster .leads span")).toHaveStyle({ backgroundImage: "url(/api/files/8)" });
+  });
+
   it("greets the maker by the time of day, with what waits for them", async () => {
     answer("/api/app", replay);
     answer("/api/inbox", []);

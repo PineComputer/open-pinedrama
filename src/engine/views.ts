@@ -47,6 +47,15 @@ function castFaces(dramaId: string): string[] {
   return [...newest.values()].slice(0, 3).map(fileUrl);
 }
 
+/** The poster's picture from the drama's own work: its newest cut (a video, shown at its opening), else its newest
+ * photoreal storyboard, a scene with its people; none before either exists, and the poster shows the leads' faces. */
+function coverOf(dramaId: string): DramaCard["cover"] {
+  const row =
+    get<FileRow>("select * from files where drama_id = ? and kind = 'cut' and type like 'video/%' order by created_at desc, id desc limit 1", dramaId) ??
+    get<FileRow>("select * from files where drama_id = ? and kind = 'storyboard' and style = 'photoreal' and type like 'image/%' order by created_at desc, id desc limit 1", dramaId);
+  return row ? { url: fileUrl(row), video: row.type.startsWith("video/") } : undefined;
+}
+
 /** What the sessions of a drama or an episode have cost so far: every turn, its late charges included. */
 function spend(column: "drama_id" | "episode_id", id: string): Spend {
   const row = get<{ total: number | null; media: number | null; unpriced: number | null }>(
@@ -76,6 +85,7 @@ export function dramaCard(drama: DramaRow): DramaCard {
     computers: get<{ n: number }>("select count(*) as n from computers where drama_id = ? and state in ('running', 'starting')", drama.id)?.n ?? 0,
     waiting,
     cast: castFaces(drama.id),
+    cover: coverOf(drama.id),
     spent: spend("drama_id", drama.id),
     createdAt: drama.created_at,
     facts: cardFacts(drama),

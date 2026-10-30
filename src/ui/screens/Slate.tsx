@@ -20,8 +20,12 @@ function Poster({ drama, mode }: { drama: DramaCard; mode?: Mode | "none" }) {
   const stamp = elsewhere ? t(drama.mode === "replay" ? "otherMode.replay" : "otherMode.pine") : undefined;
   const stamps = [drama.rehearsal ? t("rehearsal.tag") : undefined, stamp].filter(Boolean).join(" · ");
   return (
-    <div className={`poster ${CJK.test(drama.title) ? "vertical" : ""} ${drama.cast.length ? "cast" : ""}`}>
-      {drama.cast.length > 0 && (
+    <div className={`poster ${CJK.test(drama.title) ? "vertical" : ""} ${drama.cover ? "work" : drama.cast.length ? "cast" : ""}`}>
+      {drama.cover ? (
+        <span className="work-pic">
+          <Still still={drama.cover} />
+        </span>
+      ) : drama.cast.length > 0 && (
         <div className="leads">
           {drama.cast.map((url) => (
             <span key={url} style={{ backgroundImage: `url(${url})` }} />

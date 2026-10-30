@@ -117,6 +117,25 @@ describe("the answers the UI reads", () => {
     expect(recent.filter((item) => item.dramaId === id && item.label === "")).toHaveLength(1);
   });
 
+  it("gives a card a cover from the drama's own work: its newest cut, else a photoreal storyboard, else none", async () => {
+    expect((await call("/api/connection/replay", { method: "POST" })).status).toBe(200);
+    const made = await call("/api/dramas/sample", { method: "POST", body: JSON.stringify({ language: "zh" }), headers: { "content-type": "application/json" } });
+    const { id } = (await made.json()) as { id: string };
+    const { run } = await import("./db.ts");
+    const card = async () => ((await (await call("/api/dramas")).json()) as DramaCard[])[0];
+    expect((await card()).cover).toBeUndefined();
+    const file = (name: string, kind: string, type: string, style: string | null, at: string) =>
+      run("insert into files (drama_id, rel_path, name, kind, type, size, sha, style, created_at) values (?, ?, ?, ?, ?, 1, 'x', ?, ?)", id, `drama/${name}`, name, kind, type, style, at);
+    file("board.png", "storyboard", "image/png", "line-art", "2099-01-01T00:00:00Z");
+    expect((await card()).cover).toBeUndefined();
+    file("photo.png", "storyboard", "image/png", "photoreal", "2099-01-01T00:01:00Z");
+    expect((await card()).cover).toMatchObject({ video: false });
+    file("cut.mp4", "cut", "video/mp4", null, "2099-01-01T00:02:00Z");
+    expect((await card()).cover).toMatchObject({ video: true });
+    // A Chinese drama's card names its own preset.
+    expect((await card()).preset).toBe("zh-cn-live-sfw");
+  });
+
   it("says plainly when a drama doesn't exist", async () => {
     const response = await call("/api/dramas/no-such-drama");
     expect(response.status).toBe(404);
