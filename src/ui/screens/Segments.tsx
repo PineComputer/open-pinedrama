@@ -6,7 +6,8 @@
 import { useState } from "react";
 import type { ProjectView } from "../../shared/project.ts";
 import { shotListOf } from "../../shared/shots.ts";
-import type { EpisodePage, SegmentPage } from "../../shared/types.ts";
+import { specBeside, specFacts } from "../../shared/spec.ts";
+import type { EpisodePage, FileItem, SegmentPage } from "../../shared/types.ts";
 import { useResource } from "../api.ts";
 import { IconButton } from "../components/Button.tsx";
 import { StatusChip } from "../components/StatusChip.tsx";
@@ -21,14 +22,17 @@ import { standing } from "./Canvas.tsx";
 type State = NonNullable<ProjectView["state"]>;
 type Episode = State["episodes"][string];
 
-function Row({ dramaId, code, n, segment, page, episode, shots, onOpen }: { dramaId: string; code: string; n: string; segment: string; page?: SegmentPage; episode?: Episode; shots?: string[]; onOpen: () => void }) {
+function Row({ dramaId, code, n, segment, page, episode, shots, others, selected, onSelect, onOpen }: { dramaId: string; code: string; n: string; segment: string; page?: SegmentPage; episode?: Episode; shots?: string[]; others: FileItem[]; selected: boolean; onSelect: () => void; onOpen: () => void }) {
   const { t } = useT();
   const [open, setOpen] = useState(true);
   const board = episode?.storyboards[segment]?.["line-art"];
   const take = episode?.segments[segment];
   const picture = page?.takes[0]?.files[0] ?? page?.boards[0]?.files[0];
+  // What drama-cli says the newest take (or board) was made from: its prompt, model, ratio and length (spec.json).
+  const spec = specFacts(useText(specBeside(picture, others)).text);
+  const facts = [spec?.model, spec?.ratio, spec?.seconds !== undefined ? t("segments.seconds", { n: spec.seconds }) : undefined].filter(Boolean).join(" · ");
   return (
-    <li className="ds-segrow">
+    <li className="ds-segrow rounded-lg px-2 data-[state=selected]:bg-selected" data-state={selected ? "selected" : undefined} aria-current={selected || undefined} onClickCapture={onSelect}>
       <div className="head">
         <IconButton label={t(open ? "segments.fold" : "segments.unfold", { n })} icon={open ? "caret-down" : "caret-right"} aria-expanded={open} onClick={() => setOpen((was) => !was)} />
         <span className="no">{n}</span>
@@ -38,6 +42,7 @@ function Row({ dramaId, code, n, segment, page, episode, shots, onOpen }: { dram
         <StatusChip status={standing(board)} label={`${t("segments.board")} · ${t(`status.${standing(board)}` as TKey)}`} />
         <StatusChip status={standing(take)} label={`${t("segments.take")} · ${t(`status.${standing(take)}` as TKey)}`} />
         <span className="grow" />
+        {facts && <span className="spec">{facts}</span>}
         <span className="spec num">{[board?.current, take?.current].filter(Boolean).join(" · ") || "—"}</span>
         <Link className="go" to={`/d/${dramaId}/canvas?item=${code}`}>
           {t("segments.onCanvas")}
@@ -51,7 +56,9 @@ function Row({ dramaId, code, n, segment, page, episode, shots, onOpen }: { dram
               <Still still={{ url: picture.url, video: isVideo(picture) }} />
             </button>
           )}
-          {shots?.length ? (
+          {spec?.prompt ? (
+            <p className="prompt">{spec.prompt}</p>
+          ) : shots?.length ? (
             <ol className="shots">
               {shots.map((shot) => (
                 <li key={shot}>{shot}</li>
@@ -80,6 +87,7 @@ export function Segments({ dramaId, page, onOpen }: { dramaId: string; page: Epi
   const scenes = [...chains.map((chain) => ({ heading: chain.sceneHeading as string | undefined, segments: chain.segments })), ...(loose.length ? [{ heading: undefined, segments: loose }] : [])];
   const all = scenes.flatMap((scene) => scene.segments);
   const accepted = (segment: string) => standing(episode?.segments[segment]) === "accepted";
+  const [selected, setSelected] = useState<string>();
   return (
     <div className="ds-seglist">
       {scenes.map((scene, s) => (
@@ -92,7 +100,7 @@ export function Segments({ dramaId, page, onOpen }: { dramaId: string; page: Epi
           </header>
           <ol>
             {scene.segments.map((segment, i) => (
-              <Row key={segment} dramaId={dramaId} code={code} n={`${s + 1}-${i + 1}`} segment={segment} page={pages.get(segment)} episode={episode} shots={shotListOf(text, segment)} onOpen={() => onOpen(segment)} />
+              <Row key={segment} dramaId={dramaId} code={code} n={`${s + 1}-${i + 1}`} segment={segment} page={pages.get(segment)} episode={episode} shots={shotListOf(text, segment)} others={page.other} selected={selected === segment} onSelect={() => setSelected(segment)} onOpen={() => onOpen(segment)} />
             ))}
           </ol>
         </section>

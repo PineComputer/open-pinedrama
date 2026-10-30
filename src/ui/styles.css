@@ -553,7 +553,8 @@ h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 700; lett
 .ds-note-input { width: 100%; min-height: 64px; border-radius: var(--radius-large); border: 1px solid var(--border-input); background: var(--surface); color: var(--text-primary); padding: 8px 10px; font: 13px/1.5 var(--font-sans); resize: vertical; outline: none; }
 .ds-note-input:focus { border-color: var(--text-primary); }
 .ds-verdict { flex: none; padding: 14px 16px 16px; border-top: 1px solid var(--border); background: var(--surface-container); display: grid; gap: 8px; }
-.ds-verdict .vrow { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+/* Three verdicts in a row while they fit, wrapping onto a second when the inspector is narrow. */
+.ds-verdict .vrow { display: grid; grid-template-columns: repeat(auto-fit, minmax(112px, 1fr)); gap: 8px; }
 .ds-verdict .vbtn { white-space: nowrap; padding: 0 8px; height: 38px; border-radius: var(--radius-pill); border: 1px solid var(--border-input); background: var(--surface); color: var(--text-secondary); font: 600 12.5px/1 var(--font-sans); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
 .ds-verdict .vbtn .ds-icon { width: 15px; height: 15px; }
 .ds-verdict .vbtn kbd { font: 600 10px var(--font-mono); color: var(--text-secondary); border: 1px solid var(--border-input); border-radius: 4px; padding: 0 4px; }
@@ -614,6 +615,8 @@ h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 700; lett
 .ds-segstatus span { display: inline-flex; align-items: center; gap: 5px; }
 .ds-segstatus .ds-icon { width: 12px; height: 12px; }
 .ds-segrow .shots li { margin: 0; padding: 0; line-height: 1.55; }
+/* The take's prompt as drama-cli sent it, line for line, as the reference's rows show a segment's shot text. */
+.ds-segrow .prompt { margin: 0; white-space: pre-wrap; font-size: 13px; line-height: 1.6; color: var(--text-primary); }
 
 /* The Story (the spec's CastCard and PlateCard): the cast as 16:9 sheets, the world as tall
    cards, each with where it stands, its versions and the way to its review. */
