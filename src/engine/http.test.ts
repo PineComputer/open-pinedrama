@@ -125,21 +125,32 @@ describe("the answers the UI reads", () => {
     expect(recent.filter((item) => item.dramaId === id && item.label === "")).toHaveLength(1);
   });
 
-  it("gives a card a cover from the drama's own work: its newest cut, else a photoreal storyboard, else none", async () => {
+  it("gives a card a cover from the drama's own work: its newest accepted take, else a photoreal storyboard, else none", async () => {
     expect((await call("/api/connection/replay", { method: "POST" })).status).toBe(200);
     const made = await call("/api/dramas/sample", { method: "POST", body: JSON.stringify({ language: "zh" }), headers: { "content-type": "application/json" } });
     const { id } = (await made.json()) as { id: string };
     const { run } = await import("./db.ts");
-    const card = async () => ((await (await call("/api/dramas")).json()) as DramaCard[])[0];
+    const card = async () => ((await (await call("/api/dramas")).json()) as DramaCard[]).find((item) => item.id === id)!;
     expect((await card()).cover).toBeUndefined();
-    const file = (name: string, kind: string, type: string, style: string | null, at: string) =>
-      run("insert into files (drama_id, rel_path, name, kind, type, size, sha, style, created_at) values (?, ?, ?, ?, ?, 1, 'x', ?, ?)", id, `drama/${name}`, name, kind, type, style, at);
+    const file = (name: string, kind: string, type: string, style: string | null, at: string, turn: string | null = null, segment: string | null = null) =>
+      run("insert into files (drama_id, rel_path, name, kind, type, size, sha, style, turn_id, segment, created_at) values (?, ?, ?, ?, ?, 1, 'x', ?, ?, ?, ?)", id, `drama/${name}`, name, kind, type, style, turn, segment, at);
     file("board.png", "storyboard", "image/png", "line-art", "2099-01-01T00:00:00Z");
     expect((await card()).cover).toBeUndefined();
     file("photo.png", "storyboard", "image/png", "photoreal", "2099-01-01T00:01:00Z");
     expect((await card()).cover).toMatchObject({ video: false });
-    file("cut.mp4", "cut", "video/mp4", null, "2099-01-01T00:02:00Z");
-    expect((await card()).cover).toMatchObject({ video: true });
+    // A take counts once the maker approved it in its takes review; one sent back doesn't.
+    file("seg01.mp4", "take", "video/mp4", null, "2099-01-01T00:02:00Z", "t1", "seg01");
+    file("seg02.mp4", "take", "video/mp4", null, "2099-01-01T00:03:00Z", "t1", "seg02");
+    run(
+      "insert into reviews (id, drama_id, session_id, turn_id, kind, state, question, decision, answer, created_at) values ('rt', ?, 's1', 't1', 'takes', 'answered', '', ?, '', '2099-01-01T00:04:00Z')",
+      id,
+      JSON.stringify({ items: [{ key: "seg01", verdict: "approve", notes: [] }, { key: "seg02", verdict: "revise", notes: [] }], words: "" }),
+    );
+    const { get } = await import("./db.ts");
+    const approved = get<{ id: number }>("select id from files where drama_id = ? and name = 'seg01.mp4'", id)!.id;
+    const cover = (await card()).cover!;
+    expect(cover.video).toBe(true);
+    expect(cover.url).toMatch(new RegExp(`^/api/files/${approved}\\?`));
     // A Chinese drama's card names its own preset.
     expect((await card()).preset).toBe("zh-cn-live-sfw");
   });

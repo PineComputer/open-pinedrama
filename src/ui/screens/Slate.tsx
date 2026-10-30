@@ -158,24 +158,25 @@ function Continue({ waiting, dramas }: { waiting: ReviewSummary[]; dramas: Drama
         </div>
       </div>
       <div className="right">
-        <h3 id="recent-title">{t("slate.recent")}</h3>
-        <ul aria-labelledby="recent-title">
-          {recent.slice(0, 4).map((item) => {
-            const state = standing(item);
-            return (
+        <h3 id="waiting-title">{t("slate.waiting")}</h3>
+        <ul aria-labelledby="waiting-title">
+          {[...waiting]
+            .sort((x, y) => y.createdAt.localeCompare(x.createdAt))
+            .slice(0, 4)
+            .map((item) => (
               <li key={item.id}>
-                <Link to={`/d/${item.id}`} className="wait">
-                  <span className="thumb cover">
-                    <Still still={coverOf(item)} />
+                <Link to={`/r/${item.id}`} className="wait">
+                  {/* A look's picture is a whole sheet: cropped to its close-up, as a cover of the leads is. */}
+                  <span className={item.thumb && item.kind !== "looks" ? "thumb" : "thumb cover"}>
+                    <Still still={item.thumb ?? coverOf(dramas.find((entry) => entry.id === item.dramaId))} />
                   </span>
                   <span>
-                    <b>{item.title}</b>
-                    <small>{[t(state.label, { n: item.waiting }), ago(item.facts.lastActivity ?? item.createdAt, lang)].join(" · ")}</small>
+                    <b>{[item.episode, t(`kind.${item.kind}` as TKey)].filter(Boolean).join(" · ")}</b>
+                    <small>{[t("slate.items", { n: item.items }), item.dramaTitle, ago(item.createdAt, lang)].join(" · ")}</small>
                   </span>
                 </Link>
               </li>
-            );
-          })}
+            ))}
         </ul>
       </div>
     </section>
@@ -228,7 +229,7 @@ export function Slate() {
       <div className="head">
         <div>
           <h1>{t(greeting())}</h1>
-          {dramas.length > 0 && <p className="facts">{t("slate.facts", { a: counts.work + counts.you, b: waiting.length })}</p>}
+          {dramas.length > 0 && <p className="facts">{waiting.length ? t("slate.decisions", { n: waiting.length }) : t("slate.facts", { a: counts.work + counts.you, b: 0 })}</p>}
         </div>
         <span className="spacer" />
         <Link to="/new" className={buttonVariants({ variant: "default", size: "lg" })}>

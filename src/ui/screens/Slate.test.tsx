@@ -71,13 +71,18 @@ describe("Home", () => {
     expect(await screen.findByRole("heading", { level: 1, name: greeting })).toBeInTheDocument();
   });
 
-  it("shows each recent drama by its cover, the face of its first lead", async () => {
+  it("shows a waiting item's own picture, else its drama's cover", async () => {
     answer("/api/app", replay);
-    answer("/api/inbox", []);
-    answer("/api/dramas", [{ ...stepmother, cast: ["/api/files/7"] }]);
+    answer("/api/inbox", [
+      { id: "r1", dramaId: "d1", dramaTitle: "The Stepmother", kind: "takes", state: "open", question: "", items: 1, thumb: { url: "/api/files/3", video: true }, createdAt: "2026-10-30T11:56:00Z" },
+      { id: "r2", dramaId: "d1", dramaTitle: "The Stepmother", kind: "question", state: "open", question: "How old?", items: 0, createdAt: "2026-10-30T11:50:00Z" },
+    ]);
+    answer("/api/dramas", [{ ...stepmother, waiting: 2, cast: ["/api/files/7"] }]);
     render(<Slate />);
-    const recent = await screen.findByRole("list", { name: "Recent" });
-    expect(within(recent).getByRole("link", { name: /^The Stepmother/ }).querySelector(".still")).toHaveStyle({ backgroundImage: "url(/api/files/7)" });
+    const waiting = await screen.findByRole("list", { name: "Waiting for you" });
+    const [take, question] = within(waiting).getAllByRole("link");
+    expect(take.querySelector("video")).toHaveAttribute("src", "/api/files/3#t=0.5");
+    expect(question.querySelector(".still")).toHaveStyle({ backgroundImage: "url(/api/files/7)" });
   });
 
   it("shows at most two genres on a card, and how many more", async () => {
@@ -92,20 +97,24 @@ describe("Home", () => {
     expect(within(tile).getByText("+1")).toBeInTheDocument();
   });
 
-  it("carries on with the drama worked on last, its waiting review first, beside the recent dramas", async () => {
+  it("carries on with the drama worked on last, its waiting review first, beside what waits, newest first", async () => {
     answer("/api/app", replay);
     // The older drama's review has waited longer; the newer drama is the one to carry on with.
     answer("/api/inbox", [
       { id: "r0", dramaId: "d2", dramaTitle: "Bride on Bail", kind: "question", state: "open", question: "Old question", items: 0, createdAt: "2026-10-27T11:00:00Z" },
-      { id: "r1", dramaId: "d1", dramaTitle: "The Stepmother", kind: "looks", state: "open", question: "The leads' looks are ready.", items: 2, createdAt: "2026-10-30T11:56:00Z" },
+      { id: "r1", dramaId: "d1", dramaTitle: "The Stepmother", episode: "EP001", kind: "takes", state: "open", question: "Two takes wait.", items: 2, createdAt: "2026-10-30T11:56:00Z" },
     ]);
     answer("/api/dramas", [{ ...bride, waiting: 1, facts: { lastActivity: "2026-10-27T11:00:00Z" } }, { ...stepmother, waiting: 1 }]);
     render(<Slate />);
     const hero = await screen.findByRole("region", { name: "The Stepmother" });
-    expect(hero).toHaveTextContent("The leads' looks are ready.");
-    expect(within(hero).getByRole("link", { name: /^Review Leads' looks/ })).toHaveAttribute("href", "/r/r1");
-    const recent = within(hero).getByRole("list", { name: "Recent" });
-    expect(within(recent).getAllByRole("link").map((link) => link.getAttribute("href"))).toEqual(["/d/d1", "/d/d2"]);
+    expect(hero).toHaveTextContent("Two takes wait.");
+    expect(within(hero).getByRole("link", { name: /^Review Takes/ })).toHaveAttribute("href", "/r/r1");
+    const waiting = within(hero).getByRole("list", { name: "Waiting for you" });
+    const rows = within(waiting).getAllByRole("link");
+    expect(rows.map((link) => link.getAttribute("href"))).toEqual(["/r/r1", "/r/r0"]);
+    expect(rows[0]).toHaveTextContent("EP001 · Takes");
+    expect(rows[0]).toHaveTextContent("2 items · The Stepmother · 4 minutes ago");
+    expect(screen.getByText("2 decisions wait for you across your dramas.")).toBeInTheDocument();
   });
 
   it("has a shelf for each state, with its count, Stopped among them", async () => {

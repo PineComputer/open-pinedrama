@@ -709,35 +709,38 @@ a.ds-tag:hover { background: var(--hover); }
 .ds-analyzing .peek { margin: 0; max-height: 60vh; overflow: auto; white-space: pre-wrap; font: 12.5px/1.6 var(--font-mono); color: var(--text-primary); }
 @media (max-width: 900px) { .ds-analyzing .grid { grid-template-columns: 1fr; } }
 
-/* Home's denser cards (P5.1): the logline on one line, ellipsized. */
-.ds-dramacard .txt .logline { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-
-/* Denser shelf (P5.1 pass 2), with work-04's measures after reveric's library: 180px columns, 16 gap, 2xl cards with
-   the card shadow, a 140px 3:4 hero cover; shorter card covers, so each card's facts sit above the fold. */
-.ds-shelf { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 16px; }
-.ds-dramacard { border-radius: var(--radius-2xl); box-shadow: var(--shadow-card); }
-.ds-dramacard .poster { aspect-ratio: 1 / 1; }
-.ds-dramacard .txt small { font-size: 11.5px; }
+/* Home after the approved pro prototype (studio-pro/studio.css .hero, .wait, .cards, .pcard): a 150px 9:16 hero
+   cover, a 320px side column of what waits with 38×52 thumbnails, and 190px cards with 3:4 covers. */
+.ds-hero { grid-template-columns: minmax(0, 1fr) 320px; margin-bottom: 0; }
+.ds-hero .left { padding: 24px; gap: 24px; }
+.ds-hero .cover { width: 150px; border-radius: 10px; }
+.ds-hero .cover .poster { aspect-ratio: 9 / 16; }
+.ds-hero .right { padding: 20px 18px; gap: 4px; }
+.ds-hero .right ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.ds-hero .wait { display: grid; grid-template-columns: 38px 1fr; gap: 10px; align-items: center; padding: 8px; border-radius: var(--radius-large); }
+.ds-hero .wait:hover { background: var(--hover); }
+.ds-hero .wait .thumb { width: 38px; height: 52px; border-radius: 6px; overflow: hidden; }
+.ds-hero .wait .thumb .still { width: 100%; height: 100%; background-size: cover; background-position: top; object-fit: cover; object-position: top; }
 .ds-hero .wait .thumb.cover .still { background-size: auto 100%; background-position: 90% 0; }
-.ds-hero .left { padding: 24px 20px 20px; gap: 20px; }
-.ds-hero .cover { width: 140px; }
-.ds-hero .cover .poster { aspect-ratio: 3 / 4; }
-.ds-hero { grid-template-columns: minmax(0, 1fr) 300px; box-shadow: var(--shadow-card); margin-bottom: 20px; }
-.ds-dramacard:hover { background: color-mix(in srgb, var(--surface) 92%, var(--text-primary)); }
-.ds-dramacard .txt { padding: 10px; }
-.ds-dramacard .txt b { font-size: 13px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.page .head h1 { font-size: 26px; }
-
-/* A cover crops each lead's look sheet to its close-up, the face at the sheet's right end, as reveric's covers show
-   faces; the sheet fills the cover's height. */
+.ds-hero .wait b { display: block; font-size: 13px; font-weight: 600; }
+.ds-hero .wait small { color: var(--text-secondary); font-size: 11.5px; }
+.ds-shelf { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 18px; }
+.ds-dramacard { border-radius: var(--radius-large); }
+.ds-dramacard .poster { aspect-ratio: 3 / 4; }
+.ds-dramacard .txt { padding: 12px 12px 14px; display: grid; gap: 4px; }
+.ds-dramacard .txt b { font-size: 14px; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ds-dramacard .txt small { font-size: 12px; }
+.ds-dramacard .txt .logline { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ds-dramacard .txt .tags { display: flex; gap: 6px; margin-top: 6px; overflow: hidden; }
+.ds-dramacard .txt .tags > * { flex: none; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+/* Before any take or photoreal board, a cover crops each lead's look sheet to its close-up, the face at its right end. */
 .ds-dramacard .poster .leads span, .ds-hero .poster .leads span { background-size: auto 100%; background-position: 90% 0; }
+.page .head h1 { font-size: 28px; }
+.ds-hero + .ds-tabs-wrap { margin-top: 36px; }
 
-/* A poster of the drama's own work (its newest cut or photoreal storyboard), full-bleed, its title over a dark gradient. */
+/* A poster of the drama's own work (its newest approved take or photoreal storyboard), full-bleed, its title over a dark gradient. */
 .poster .work-pic { position: absolute; inset: 0; }
 .poster .work-pic .still { position: absolute; inset: 0; width: 100%; height: 100%; background: center / cover no-repeat; object-fit: cover; }
 .poster .work-pic::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, color-mix(in srgb, var(--shadow-base) 0%, transparent) 45%, color-mix(in srgb, var(--shadow-base) 78%, transparent)); }
 .poster.work > :not(.work-pic) { position: relative; }
 .poster.work h3 { align-self: end; color: var(--canvas); }
-.ds-dramacard .txt .tags { display: flex; gap: 4px; overflow: hidden; }
-.ds-dramacard .txt .tags > * { flex: none; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
-.ds-hero .right ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }

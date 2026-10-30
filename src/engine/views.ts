@@ -47,11 +47,17 @@ function castFaces(dramaId: string): string[] {
   return [...newest.values()].slice(0, 3).map(fileUrl);
 }
 
-/** The poster's picture from the drama's own work: its newest cut (a video, shown at its opening), else its newest
- * photoreal storyboard, a scene with its people; none before either exists, and the poster shows the leads' faces. */
+/** The poster's picture from the drama's own work, a scene with its people: its newest take the maker approved in its
+ * takes review (a video, shown at its opening), else its newest photoreal storyboard; never a look sheet or line art.
+ * None before either exists, and the poster shows the leads' faces. */
 function coverOf(dramaId: string): DramaCard["cover"] {
   const row =
-    get<FileRow>("select * from files where drama_id = ? and kind = 'cut' and type like 'video/%' order by created_at desc, id desc limit 1", dramaId) ??
+    get<FileRow>(
+      `select f.* from files f join reviews r on r.turn_id = f.turn_id and r.kind = 'takes' and r.decision is not null
+       join json_each(r.decision, '$.items') item on json_extract(item.value, '$.key') = f.segment and json_extract(item.value, '$.verdict') = 'approve'
+       where f.drama_id = ? and f.kind = 'take' and f.type like 'video/%' order by f.created_at desc, f.id desc limit 1`,
+      dramaId,
+    ) ??
     get<FileRow>("select * from files where drama_id = ? and kind = 'storyboard' and style = 'photoreal' and type like 'image/%' order by created_at desc, id desc limit 1", dramaId);
   return row ? { url: fileUrl(row), video: row.type.startsWith("video/") } : undefined;
 }
