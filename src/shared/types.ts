@@ -427,7 +427,7 @@ export interface ScriptPage {
   /** The input the maker marked as the screenplay, the original a rewrite is set beside. */
   screenplayFile: number | null;
   /** The newest screenplay version drama-cli recorded, its review when it is a rewrite, and whether a question still waits on it. */
-  screenplay?: { version: string; file?: FileItem; review?: FileItem; pending: boolean };
+  screenplay?: { version: string; file?: FileItem; review?: FileItem; pending: boolean; /** The open review that asks about it, to answer beside the rewrite. */ reviewId?: string };
   bible?: FileItem;
   breakdowns: { code: string; title?: string; file: FileItem }[];
 }

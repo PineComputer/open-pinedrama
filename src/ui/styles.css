@@ -393,10 +393,7 @@ h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 700; lett
 }
 .script-page .download { float: right; }
 /* A rewrite beside the maker's original: the page widens to two columns, each scrolling on its own. */
-.script-page:has(.side-by-side) { max-width: none; }
-.side-by-side { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
-.side-doc { min-width: 0; height: 75vh; overflow: auto; }
-@media (max-width: 900px) { .side-by-side { grid-template-columns: 1fr; } }
+.script-page:has(.ds-rewrite) { max-width: none; }
 
 /* New drama, on a project without the drama skill: rehearse it, or let it wait for the skill. */
 .rehearse-choice { display: flex; gap: 12px; align-items: flex-start; padding: 12px 14px; margin: 4px 0 18px; border: 1px dashed var(--text-primary); border-radius: var(--radius-medium); cursor: pointer; }
@@ -679,3 +676,25 @@ a.ds-tag:hover { background: var(--hover); }
 .ds-preset small { display: block; color: var(--text-secondary); font-size: 12px; margin-top: 2px; }
 .ds-preset code { display: block; margin-top: 6px; font: 11px var(--font-mono); color: var(--text-secondary); }
 @media (max-width: 720px) { .ds-presets { grid-template-columns: 1fr; } }
+
+/* FountainDiff and AcceptInWords (P5.4), the spec's .fpanes and .faccept: the maker's file beside the Fountain. */
+.ds-rewrite { display: grid; gap: 16px; }
+.ds-rewrite .head h3 { margin: 0; font: 700 20px/1.3 var(--font-display); }
+.ds-rewrite .head p { margin: 4px 0 0; color: var(--text-secondary); }
+.ds-fountaindiff { display: grid; gap: 10px; }
+.ds-fountaindiff .facts { margin: 0; color: var(--text-secondary); font-size: 12.5px; }
+.ds-fpanes { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.ds-fpane { min-width: 0; border-radius: var(--radius-2xl); border: 1px solid var(--border); background: var(--surface); overflow: hidden; }
+.ds-fpane h4 { margin: 0; padding: 10px 14px; display: flex; align-items: center; gap: 8px; font-size: 12.5px; font-weight: 700; border-bottom: 1px solid var(--border); }
+.ds-fpane ol { list-style: none; margin: 0; padding: 6px 0; max-height: 62vh; overflow: auto; }
+.ds-fpane li button { width: 100%; display: grid; grid-template-columns: 36px minmax(0, 1fr); gap: 8px; padding: 2px 14px 2px 0; border: 0; background: none; color: var(--text-primary); text-align: left; font: 12.5px/1.6 var(--font-mono); cursor: pointer; }
+.ds-fpane li button .n { text-align: right; color: var(--text-secondary); font-variant-numeric: tabular-nums; }
+.ds-fpane li button .tx { white-space: pre-wrap; overflow-wrap: anywhere; }
+.ds-fpane li button.is-changed { background: var(--warning-bg); }
+.ds-fpane li button:hover { background: var(--hover); }
+.ds-fpane li button[aria-pressed="true"] { background: var(--selected); box-shadow: inset 2px 0 0 var(--text-primary); }
+.ds-faccept { display: grid; gap: 8px; }
+.ds-faccept textarea { min-height: 72px; padding: 10px 12px; border-radius: var(--radius-large); border: 1px solid var(--border-input); background: var(--surface); color: var(--text-primary); font: inherit; resize: vertical; }
+.ds-faccept .acts { display: flex; gap: 8px; justify-content: flex-end; }
+.ds-faccept .reason { color: var(--text-secondary); font-size: 12px; text-align: right; }
+@media (max-width: 900px) { .ds-fpanes { grid-template-columns: 1fr; } }

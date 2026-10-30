@@ -106,8 +106,9 @@ function currentScreenplay(dramaId: string): ScriptPage["screenplay"] {
   const file = of("screenplay-version");
   const review = of("screenplay-review");
   const turns = [file, review].flatMap((row) => (row?.turn_id ? [row.turn_id] : []));
-  const pending = turns.some((turnId) => all<ReviewRow>("select * from reviews where turn_id = ? and state in ('saving', 'open', 'sending')", turnId).length > 0);
-  return { version: `v${newest}`, file: file && toItem(file), review: review && toItem(review), pending };
+  const waiting = turns.flatMap((turnId) => all<ReviewRow>("select * from reviews where turn_id = ? and state in ('saving', 'open', 'sending')", turnId));
+  const reviewId = waiting.find((row) => row.state === "open")?.id;
+  return { version: `v${newest}`, file: file && toItem(file), review: review && toItem(review), pending: waiting.length > 0, reviewId };
 }
 
 /** The drama as text: what the maker gave, the newest bible, and each episode's newest breakdown, listed or not yet. */

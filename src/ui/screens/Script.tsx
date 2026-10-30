@@ -3,8 +3,27 @@ import type { FileItem, ScriptPage } from "../../shared/types.ts";
 import { useResource } from "../api.ts";
 import { useT } from "../i18n.ts";
 import { errorText } from "../labels.ts";
-import { SideBySide } from "../SideBySide.tsx";
-import { DocumentView } from "../viewing.tsx";
+import { AcceptInWords, FountainDiff } from "../FountainDiff.tsx";
+import { DocumentView, useDocumentText, useText } from "../viewing.tsx";
+
+/** A Fountain rewrite beside the maker's own file (P5.4), and, while the agent asks about it, the maker's answer. */
+function Rewrite({ original, rewrite, reviewId }: { original: FileItem; rewrite: FileItem; reviewId?: string }) {
+  const { t } = useT();
+  const mine = useDocumentText(original);
+  const fountain = useText(rewrite);
+  return (
+    <div className="ds-rewrite">
+      {reviewId && (
+        <div className="head">
+          <h3>{t("fountain.title")}</h3>
+          <p>{t("fountain.lede")}</p>
+        </div>
+      )}
+      {mine.text !== undefined && fountain.text !== undefined ? <FountainDiff original={mine.text} fountain={fountain.text} /> : <p className="quiet">{t("loading")}</p>}
+      {reviewId && <AcceptInWords reviewId={reviewId} />}
+    </div>
+  );
+}
 
 /**
  * The drama as text: the screenplay as drama-cli recorded it (a rewrite beside the maker's original, and what it
@@ -63,10 +82,7 @@ export function Script({ dramaId }: { dramaId: string }) {
         </nav>
         <article className="script-page">
           {shown && beside && original ? (
-            <>
-              <p className="label">{t("script.sideBySide")}</p>
-              <SideBySide left={<DocumentView key={original.id} file={original} />} right={<DocumentView key={shown.file.id} file={shown.file} />} />
-            </>
+            <Rewrite key={shown.file.id} original={original} rewrite={shown.file} reviewId={current?.reviewId} />
           ) : (
             shown && <DocumentView key={shown.file.id} file={shown.file} />
           )}
