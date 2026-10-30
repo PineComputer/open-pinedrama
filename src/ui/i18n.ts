@@ -364,7 +364,9 @@ const en = {
   "about.source": "Source code",
   "about.notices": "Notices",
 
-  "slate.title": "Dramas",
+  "slate.greet.morning": "Good morning",
+  "slate.greet.afternoon": "Good afternoon",
+  "slate.greet.evening": "Good evening",
   "slate.facts": "{a} in production · {b} waiting for you",
   "slate.new": "New drama",
   "slate.newHint": "Upload a screenplay: Fountain, Word, PDF or plain text",
@@ -1185,7 +1187,9 @@ const zh: Record<Key, string> = {
   "about.source": "源代码",
   "about.notices": "声明",
 
-  "slate.title": "剧目",
+  "slate.greet.morning": "早上好",
+  "slate.greet.afternoon": "下午好",
+  "slate.greet.evening": "晚上好",
   "slate.facts": "{a} 部制作中 · {b} 项等你审阅",
   "slate.new": "新建剧目",
   "slate.newHint": "上传剧本：Fountain、Word、PDF 或纯文本",

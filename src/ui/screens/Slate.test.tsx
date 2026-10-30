@@ -42,6 +42,25 @@ describe("Home", () => {
     expect(other).not.toHaveTextContent(/scenes|segments|planned|ago/);
   });
 
+  it("greets the maker by the time of day, with what waits for them", async () => {
+    answer("/api/app", replay);
+    answer("/api/inbox", []);
+    answer("/api/dramas", [stepmother, bride]);
+    render(<Slate />);
+    const hour = new Date().getHours();
+    const greeting = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
+    expect(await screen.findByRole("heading", { level: 1, name: greeting })).toBeInTheDocument();
+  });
+
+  it("shows a waiting item's drama cover when the item has no picture of its own", async () => {
+    answer("/api/app", replay);
+    answer("/api/inbox", [{ id: "r1", dramaId: "d1", dramaTitle: "The Stepmother", kind: "question", state: "open", question: "How old is he?", items: 0, createdAt: "2026-10-30T11:00:00Z" }]);
+    answer("/api/dramas", [{ ...stepmother, waiting: 1, cast: ["/api/files/7"] }]);
+    render(<Slate />);
+    const waiting = await screen.findByRole("link", { name: /^Question/ });
+    expect(waiting.querySelector(".still")).toHaveStyle({ backgroundImage: "url(/api/files/7)" });
+  });
+
   it("has a shelf for each state, with its count, Stopped among them", async () => {
     answer("/api/app", replay);
     answer("/api/inbox", []);

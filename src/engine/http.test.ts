@@ -106,11 +106,15 @@ describe("the answers the UI reads", () => {
     run("insert into sessions (id, computer_id, drama_id, name, role, episode_id, state, created_at) values ('s9', 'c9', ?, 'n', 'episode', 'e9', 'open', ?)", id, "2099-01-01T00:00:00Z");
     run("insert into messages (session_id, kind, text, at) values ('s8', 'question', 'How old is Wei Zhen?', '2099-01-01T00:01:00Z')");
     run("insert into messages (session_id, kind, text, at) values ('s9', 'progress', 'Drawing the storyboards', '2099-01-01T00:02:00Z')");
+    // A setup resumed in a new session continues the same conversation: one entry, its newest line.
+    run("insert into sessions (id, computer_id, drama_id, name, role, state, created_at) values ('s7', 'c9', ?, 'n', 'setup', 'closed', ?)", id, "2098-01-01T00:00:00Z");
+    run("insert into messages (session_id, kind, text, at) values ('s7', 'progress', 'An older setup line', '2098-01-01T00:01:00Z')");
     const recent = (await (await call("/api/sessions/recent")).json()) as RecentConversation[];
     expect(recent.slice(0, 2)).toEqual([
       { sessionId: "s9", dramaId: id, dramaTitle: "The Stepmother", label: "EP001", at: "2099-01-01T00:02:00Z", line: "Drawing the storyboards" },
       { sessionId: "s8", dramaId: id, dramaTitle: "The Stepmother", label: "", at: "2099-01-01T00:01:00Z", line: "How old is Wei Zhen?" },
     ]);
+    expect(recent.filter((item) => item.dramaId === id && item.label === "")).toHaveLength(1);
   });
 
   it("says plainly when a drama doesn't exist", async () => {
