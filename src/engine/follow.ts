@@ -9,6 +9,7 @@ import { VERDICT_KINDS, save, seenBefore } from "./library.ts";
 import { publish } from "./live.ts";
 import { classify, namedPaths, typeOf } from "./classify.ts";
 import { onEnded, stopsForMaker } from "./flow.ts";
+import { recordLineage } from "./lineage.ts";
 import { recordRefusals } from "./refusals.ts";
 import { recordStatus } from "./status.ts";
 import { approveUnreviewed, questionAsked, questionReady } from "./reviews.ts";
@@ -145,11 +146,12 @@ async function screenplayVersions(session: SessionRow): Promise<string[]> {
 }
 
 /** What each stop returns afresh under the same name. */
-const EVERY_STOP: FileKind[] = ["archive", "status", "refusal"];
+const EVERY_STOP: FileKind[] = ["archive", "status", "lineage", "refusal"];
 
 /** What the engine records from a stop's file besides saving it. */
 const RECORDED: Partial<Record<FileKind, (sessionId: string, turnId: string, bytes: Uint8Array) => void>> = {
   status: recordStatus,
+  lineage: recordLineage,
   refusal: recordRefusals,
 };
 
@@ -175,12 +177,12 @@ export async function settle(sessionId: string, info: TurnInfo): Promise<void> {
   if (!turn?.files_saved) {
     const computer = computerRow(session.computer_id)!;
     const where = { dramaId: session.drama_id, episodeId: session.episode_id, sessionId, turnId: info.turnId };
-    // Packs, the status report and the refusals keep their names and change at every stop: each stop's are all
+    // Packs, the status report, the lineage and the refusals keep their names and change at every stop: each stop's are all
     // saved again, so a report returned unchanged still belongs to this turn.
     const everyStop = (file: TurnFile) => EVERY_STOP.includes(classify(file.path).kind);
     const packs = info.files.filter((file) => !fresh.includes(file) && everyStop(file));
     try {
-      // A status report and the refusals are recorded as well as saved, whether the turn returned them or named them.
+      // A status report, the lineage and the refusals are recorded as well as saved, whether the turn returned them or named them.
       const keep = async (body: ReadableStream<Uint8Array>, relPath: string, type: string) => {
         const record = RECORDED[classify(relPath).kind];
         if (!record) return void (await save(body, { ...where, relPath, type }));

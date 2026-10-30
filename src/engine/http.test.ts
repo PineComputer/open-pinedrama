@@ -4,6 +4,7 @@ import { existsSync, mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import type { LineageView } from "../shared/lineage.ts";
 import type { ProjectView } from "../shared/project.ts";
 import type { AppInfo, DramaCard } from "../shared/types.ts";
 
@@ -92,6 +93,16 @@ describe("the answers the UI reads", () => {
     const response = await call(`/api/dramas/${id}/project`);
     expect(response.status).toBe(200);
     expect((await response.json()) as ProjectView).toEqual({ state: null, sessions: [], problems: [], names: null });
+  });
+
+  it("answers a drama's lineage, null before any stop returns one", async () => {
+    expect((await call("/api/connection/replay", { method: "POST" })).status).toBe(200);
+    const made = await call("/api/dramas/sample", { method: "POST", body: JSON.stringify({ language: "en" }), headers: { "content-type": "application/json" } });
+    const { id } = (await made.json()) as { id: string };
+    const response = await call(`/api/dramas/${id}/lineage`);
+    expect(response.status).toBe(200);
+    expect((await response.json()) as LineageView).toEqual({ lineage: null, problems: [] });
+    expect((await call("/api/dramas/no-such-drama/lineage")).status).toBe(404);
   });
 
   it("says plainly when the drama of a project doesn't exist", async () => {

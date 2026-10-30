@@ -992,7 +992,7 @@ const zh: Record<Key, string> = {
   "file.observation": "观察记录",
   "file.archive": "项目存档",
   "file.status": "项目状态",
-  "file.lineage": "项目血缘",
+  "file.lineage": "项目来历",
   "file.refusal": "拒绝记录",
   "file.other": "文件",
 

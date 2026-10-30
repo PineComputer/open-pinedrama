@@ -286,6 +286,13 @@ describe("a drama in replay", () => {
     const { projectView } = await import("./status.ts");
     const [drama] = all<{ id: string }>("select id from dramas where title = 'Test drama, named files'");
     expect(projectView(drama.id).state?.episodes.EP001.cut.accepted).toBe("v1");
+    // So does the lineage: every stop that names it has it recorded, and the drama's lineage ends at that cut.
+    const naming_lineage = all<{ id: string }>("select t.id from turns t join sessions s on s.id = t.session_id where s.episode_id = ? and t.question like '%(handoff/lineage.json)%'", episode.id);
+    expect(naming_lineage.length).toBeGreaterThan(1);
+    const kept = all<{ turn_id: string }>("select turn_id from lineages where export is not null");
+    expect(naming_lineage.filter((turn) => !kept.some((row) => row.turn_id === turn.id))).toEqual([]);
+    const { lineageView } = await import("./lineage.ts");
+    expect(lineageView(drama.id).lineage?.nodes.find((node) => node.id === "episodes/EP001/edit")?.accepted).toBe("v1");
   }, 30_000);
 
   // The Computer goes away while a turn's files are being saved: the parts saved before it went

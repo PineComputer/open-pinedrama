@@ -13,7 +13,8 @@ import { DRAMA_SKILL } from "./goals.ts";
 import type { Attached, ComputerRef, Fleet, FleetEvent, Limits, SessionRef, TurnFile, TurnInfo } from "./fleet.ts";
 import { blocking, lookSheet, plate, prop, storyboard } from "./placeholders.ts";
 import { samplesFrom } from "./replay-samples.ts";
-import { type EpisodeMade, type Made, replayStatus } from "./replay-status.ts";
+import { replayLineage } from "./replay-lineage.ts";
+import { type EpisodeMade, type Made, type ReplayProgress, replayStatus } from "./replay-status.ts";
 
 const SPEED = Number(process.env.STUDIO_REPLAY_SPEED ?? 1);
 
@@ -271,14 +272,13 @@ function setupScript(lang: Lang, preset: string): Player {
     for (const key of keys) if (!redo.includes(key)) accepted.set(key, versions.get(key)!);
   };
   const made = (key: string): Made => ({ current: `v${versions.get(key)}`, accepted: accepted.has(key) ? `v${accepted.get(key)}` : null });
-  const report = () =>
-    replayStatus({
-      preset,
-      bible: stage === "asked" ? null : "v1",
-      looks: Object.fromEntries(say.cast.filter((c) => versions.has(c.id)).map((c) => [c.id, made(c.id)])),
-      references: Object.fromEntries(Object.keys(shared).filter((key) => versions.has(key)).map((key) => [key, made(key)])),
-      episodes: stage === "references" || stage === "handed" ? Object.fromEntries(say.episodes.map((_, i) => [`EP00${i + 1}`, { segments: segmentsOf(say).map((seg) => seg.id) }])) : {},
-    });
+  const progress = (): ReplayProgress => ({
+    preset,
+    bible: stage === "asked" ? null : "v1",
+    looks: Object.fromEntries(say.cast.filter((c) => versions.has(c.id)).map((c) => [c.id, made(c.id)])),
+    references: Object.fromEntries(Object.keys(shared).filter((key) => versions.has(key)).map((key) => [key, made(key)])),
+    episodes: stage === "references" || stage === "handed" ? Object.fromEntries(say.episodes.map((_, i) => [`EP00${i + 1}`, { segments: segmentsOf(say).map((seg) => seg.id) }])) : {},
+  });
   const play = (answer: string): Step => {
     const redo = revisedKeys(answer);
     if (stage === "start") {
@@ -322,9 +322,12 @@ function setupScript(lang: Lang, preset: string): Player {
       summary: `${say.castDone}\n` + say.episodes.map((title, i) => `EP00${i + 1}: ${title}`).join("\n"),
     };
   };
+  // Each stop also hands back the status and the lineage, which shows the pictures the session's stops returned.
+  const returned: string[] = [];
   return (answer) => {
     const step = play(answer);
-    return { ...step, files: [...step.files, report()] };
+    returned.push(...step.files.map((file) => file.path));
+    return { ...step, files: [...step.files, replayStatus(progress()), replayLineage(progress(), returned)] };
   };
 }
 
@@ -398,7 +401,7 @@ function episodeScript(code: string, lang: Lang, preset: string): Player {
   };
   // What drama-cli's status would say at this stop: the project as handed over, every shared
   // reference approved, and this episode's items as far as the maker has accepted each.
-  const report = () => {
+  const progress = (): ReplayProgress => {
     const ids = segments.map((seg) => seg.id);
     const own: EpisodeMade = {
       segments: ids,
@@ -407,20 +410,22 @@ function episodeScript(code: string, lang: Lang, preset: string): Player {
     if (takes.size) own.takes = Object.fromEntries([...takes].map(([id, count]) => [id, { count, accepted: takeAccepted.has(id) }]));
     if (stage === "cut" || stage === "done") own.cut = { current: `v${cut}`, accepted: cutAccepted ? `v${cut}` : null };
     const approved: Made = { current: "v1", accepted: "v1" };
-    return replayStatus({
+    return {
       preset,
       bible: "v1",
       looks: Object.fromEntries(say.cast.map((c) => [c.id, approved])),
       references: Object.fromEntries(["lin/S1", "home", "office", "letter"].map((key) => [key, approved])),
       episodes: Object.fromEntries(say.episodes.map((_, i) => `EP00${i + 1}`).map((other) => [other, other === code ? own : { segments: ids }])),
-    });
+    };
   };
-  // Each stop and the finish also hand back the episode's own folder, packed, and the status.
+  // Each stop and the finish also hand back the episode's own folder, packed, the status and the lineage.
   let stops = 0;
+  const returned: string[] = [];
   return (answer) => {
     const step = play(answer);
     stops += 1;
-    return { ...step, files: [...step.files, archive(code, stops), report()] };
+    returned.push(...step.files.map((file) => file.path));
+    return { ...step, files: [...step.files, archive(code, stops), replayStatus(progress()), replayLineage(progress(), returned)] };
   };
 }
 

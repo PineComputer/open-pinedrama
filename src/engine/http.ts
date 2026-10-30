@@ -26,6 +26,7 @@ import { fileRow, openBlob, save, toItem } from "./library.ts";
 import { subscribe } from "./live.ts";
 import { drama as dramaRow, review as reviewRow, session as sessionRow, type SessionRow } from "./records.ts";
 import { decide, resumeWithDecision } from "./reviews.ts";
+import { lineageView } from "./lineage.ts";
 import { projectView, sessionStatus } from "./status.ts";
 import { castCards, deliveryRows, episodePage, scriptPage, seasonEntries } from "./browse.ts";
 import { diagnostics } from "./diagnostics.ts";
@@ -252,6 +253,11 @@ export function app(): Hono {
   api.get("/api/dramas/:id/project", (c) => {
     const id = c.req.param("id");
     return dramaRow(id) ? c.json(projectView(id)) : c.json(failure("not-found", "No such drama."), 404);
+  });
+  // Where each version of the drama's project came from, drama-cli's lineage merged from its sessions (lineage.ts).
+  api.get("/api/dramas/:id/lineage", (c) => {
+    const id = c.req.param("id");
+    return dramaRow(id) ? c.json(lineageView(id)) : c.json(failure("not-found", "No such drama."), 404);
   });
   // A session's newest status report as the engine read it: what the project view takes from it.
   api.get("/api/sessions/:id/status", (c) => {
