@@ -1,0 +1,26 @@
+{
+  "project": "/work/drama",
+  "preset": "zh-cn-live-sfw",
+  "bible": {
+    "current": null,
+    "candidate": null,
+    "accepted": null,
+    "usable": false,
+    "why": "bible: none is made",
+    "run": [
+      "drama-cli --env <env-file> bible --episodes EP001 --config /work/drama/drama-cli.cfg.yaml",
+      "review it as the skill says, then accept it: drama-cli accept /work/drama/bible <vN> --reason <why> --config /work/drama/drama-cli.cfg.yaml"
+    ]
+  },
+  "characters": {},
+  "scenes": {},
+  "props": {},
+  "episodes": {},
+  "budget": {
+    "budget_usd": 20.0,
+    "spent_usd": 0.0,
+    "reserved_usd": 0.0,
+    "remaining_usd": 20.0,
+    "cost_valuation": null
+  }
+}
