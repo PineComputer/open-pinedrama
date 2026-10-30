@@ -197,7 +197,7 @@ function breakdownOf(say: (typeof WORDS)[Lang], code: string): string {
  */
 function setupScript(lang: Lang, preset: string): Player {
   const say = WORDS[lang];
-  let stage: "start" | "asked" | "leads" | "references" = "start";
+  let stage: "start" | "asked" | "leads" | "references" | "handed" = "start";
   const versions = new Map<string, number>();
   const next = (key: string) => {
     const v = (versions.get(key) ?? 0) + 1;
@@ -211,15 +211,20 @@ function setupScript(lang: Lang, preset: string): Player {
     office: () => svg(`drama/assets/scenes/office/${next("office")}/image-1.svg`, plate("office", `v${versions.get("office")}`)),
     letter: () => svg(`drama/assets/props/letter/${next("letter")}/image-1.svg`, prop("letter", `v${versions.get("letter")}`)),
   } as Record<string, () => Out>;
-  // What drama-cli's status would say at this stop: the versions drawn, and what the maker approved.
-  const made = (key: string, approved: boolean): Made => ({ current: `v${versions.get(key)}`, accepted: approved ? `v${versions.get(key)}` : null });
-  const report = (leadsApproved: boolean, references: "none" | "drawn" | "approved") =>
+  // What drama-cli's status would say at this stop: each item's version drawn, and the one the
+  // maker accepted. A decision accepts every item of the review it doesn't send back.
+  const accepted = new Map<string, number>();
+  const decide = (keys: string[], redo: string[]) => {
+    for (const key of keys) if (!redo.includes(key)) accepted.set(key, versions.get(key)!);
+  };
+  const made = (key: string): Made => ({ current: `v${versions.get(key)}`, accepted: accepted.has(key) ? `v${accepted.get(key)}` : null });
+  const report = () =>
     replayStatus({
       preset,
       bible: stage === "asked" ? null : "v1",
-      looks: Object.fromEntries(say.cast.filter((c) => versions.has(c.id)).map((c) => [c.id, made(c.id, leadsApproved)])),
-      references: references === "none" ? {} : Object.fromEntries(Object.keys(shared).map((key) => [key, made(key, references === "approved")])),
-      episodes: references === "none" ? {} : Object.fromEntries(say.episodes.map((_, i) => [`EP00${i + 1}`, { segments: segmentsOf(say).map((seg) => seg.id) }])),
+      looks: Object.fromEntries(say.cast.filter((c) => versions.has(c.id)).map((c) => [c.id, made(c.id)])),
+      references: Object.fromEntries(Object.keys(shared).filter((key) => versions.has(key)).map((key) => [key, made(key)])),
+      episodes: stage === "references" || stage === "handed" ? Object.fromEntries(say.episodes.map((_, i) => [`EP00${i + 1}`, { segments: segmentsOf(say).map((seg) => seg.id) }])) : {},
     });
   const play = (answer: string): Step => {
     const redo = revisedKeys(answer);
@@ -235,6 +240,8 @@ function setupScript(lang: Lang, preset: string): Player {
         ask: say.askLooks,
       };
     }
+    // The maker names a lead to redo by name or id; every lead not named is accepted as drawn.
+    if (stage === "leads") decide(say.cast.filter((c) => !redo.includes(c.name)).map((c) => c.id), redo);
     if (stage === "leads" && redo.length) {
       const who = say.cast.filter((c) => redo.includes(c.name) || redo.includes(c.id));
       return { progress: who.map((c) => say.redrawLook(c.name)), files: who.map(leadSheet), ask: say.askRedrawn(who.map((c) => c.name)) };
@@ -250,10 +257,12 @@ function setupScript(lang: Lang, preset: string): Player {
         ask: say.askReferences(say.episodes.length),
       };
     }
+    decide(Object.keys(shared), redo);
     if (redo.length) {
       const which = redo.filter((key) => shared[key]);
       return { progress: which.map(say.redrawReference), files: which.map((key) => shared[key]()), ask: say.askReferencesAgain(which) };
     }
+    stage = "handed";
     return {
       progress: [...say.finishing, ...say.packing],
       files: [archive("project")],
@@ -262,8 +271,7 @@ function setupScript(lang: Lang, preset: string): Player {
   };
   return (answer) => {
     const step = play(answer);
-    const status = stage === "asked" || stage === "leads" ? report(false, "none") : step.files.some((file) => file.path.includes("tar.part")) ? report(true, "approved") : report(true, "drawn");
-    return { ...step, files: [...step.files, status] };
+    return { ...step, files: [...step.files, report()] };
   };
 }
 
@@ -271,15 +279,28 @@ function episodeScript(code: string, lang: Lang, preset: string): Player {
   const say = WORDS[lang];
   const segments = say.shots.map((shots, i) => ({ id: `seg0${i + 1}`, shots }));
   let stage: "boards" | "takes" | "cut" | "done" = "boards";
-  let boardVersion = 1;
-  let take = 1;
+  // Each segment's own storyboard version and takes, and what the maker accepted of each: a
+  // decision accepts every item of the review it doesn't send back.
+  const boardVersion = new Map(segments.map((seg) => [seg.id, 1]));
+  const boardAccepted = new Map<string, number>();
+  const takes = new Map<string, number>();
+  const takeAccepted = new Set<string>();
   let cut = 1;
+  let cutAccepted = false;
   const base = `drama/episodes/${code}`;
-  const boards = (which: typeof segments, v: number) =>
-    which.flatMap((seg) => [
-      svg(`${base}/multi_panel_storyboard/${seg.id}/line-art/v${v}/image-1.svg`, storyboard(`${code} ${seg.id}`, seg.shots, "line-art", `v${v}`, v === 1 && seg.id === "seg01" ? 3 : -1)),
-      svg(`${base}/multi_panel_storyboard/${seg.id}/photoreal/v${v}/image-1.svg`, storyboard(`${code} ${seg.id}`, seg.shots, "photoreal", `v${v}`, v === 1 && seg.id === "seg01" ? 3 : -1)),
-    ]);
+  const boards = (which: typeof segments) =>
+    which.flatMap((seg) => {
+      const v = boardVersion.get(seg.id)!;
+      return [
+        svg(`${base}/multi_panel_storyboard/${seg.id}/line-art/v${v}/image-1.svg`, storyboard(`${code} ${seg.id}`, seg.shots, "line-art", `v${v}`, v === 1 && seg.id === "seg01" ? 3 : -1)),
+        svg(`${base}/multi_panel_storyboard/${seg.id}/photoreal/v${v}/image-1.svg`, storyboard(`${code} ${seg.id}`, seg.shots, "photoreal", `v${v}`, v === 1 && seg.id === "seg01" ? 3 : -1)),
+      ];
+    });
+  const shoot = (which: typeof segments) =>
+    which.map((seg) => {
+      takes.set(seg.id, (takes.get(seg.id) ?? 0) + 1);
+      return video(`${base}/segments/${seg.id}/t${String(takes.get(seg.id)).padStart(2, "0")}/video.mp4`, "take");
+    });
   let started = false;
   const play = (answer: string): Step => {
     const redo = revisedKeys(answer);
@@ -287,30 +308,24 @@ function episodeScript(code: string, lang: Lang, preset: string): Player {
       started = true;
       return {
         progress: say.restoring(code),
-        files: [...segments.map((seg) => svg(`${base}/blocking/${seg.id}/v1/image-1.svg`, blocking(`${code} ${seg.id}`, "v1"))), ...boards(segments, 1)],
+        files: [...segments.map((seg) => svg(`${base}/blocking/${seg.id}/v1/image-1.svg`, blocking(`${code} ${seg.id}`, "v1"))), ...boards(segments)],
         ask: say.askBoards(code, segments.length),
       };
     }
+    if (stage === "boards") for (const seg of segments) if (!redo.includes(seg.id)) boardAccepted.set(seg.id, boardVersion.get(seg.id)!);
+    if (stage === "takes") for (const seg of segments) if (!redo.includes(seg.id)) takeAccepted.add(seg.id);
     if (stage === "boards" && redo.length) {
-      boardVersion += 1;
       const which = segments.filter((seg) => redo.includes(seg.id));
-      return { progress: which.map((seg) => say.redrawBoard(seg.id)), files: boards(which, boardVersion), ask: say.askBoardsAgain(which.map((seg) => seg.id)) };
+      for (const seg of which) boardVersion.set(seg.id, boardVersion.get(seg.id)! + 1);
+      return { progress: which.map((seg) => say.redrawBoard(seg.id)), files: boards(which), ask: say.askBoardsAgain(which.map((seg) => seg.id)) };
     }
     if (stage === "boards") {
       stage = "takes";
-      return {
-        progress: say.shooting(segments.map((seg) => seg.id)),
-        files: segments.map((seg) => video(`${base}/segments/${seg.id}/t01/video.mp4`, "take")),
-        ask: say.askTakes,
-      };
+      return { progress: say.shooting(segments.map((seg) => seg.id)), files: shoot(segments), ask: say.askTakes };
     }
     if (stage === "takes" && redo.length) {
-      take += 1;
-      return {
-        progress: redo.map(say.reshoot),
-        files: segments.filter((seg) => redo.includes(seg.id)).map((seg) => video(`${base}/segments/${seg.id}/t0${take}/video.mp4`, "take")),
-        ask: say.askTakesAgain(redo),
-      };
+      const which = segments.filter((seg) => redo.includes(seg.id));
+      return { progress: redo.map(say.reshoot), files: shoot(which), ask: say.askTakesAgain(redo) };
     }
     if (stage === "takes") {
       stage = "cut";
@@ -321,16 +336,20 @@ function episodeScript(code: string, lang: Lang, preset: string): Player {
       return { progress: say.recutting, files: [video(`${base}/edit/v${cut}/cut.mp4`, "cut")], ask: say.askCutAgain(code) };
     }
     stage = "done";
+    cutAccepted = true;
     // As Pine's agent does, the finished episode hands back its accepted cut again, unchanged.
     return { progress: say.accepting, files: [video(`${base}/edit/v${cut}/cut.mp4`, "cut")], summary: say.finished(code) };
   };
   // What drama-cli's status would say at this stop: the project as handed over, every shared
-  // reference approved, and this episode as far as the maker has approved it.
+  // reference approved, and this episode's items as far as the maker has accepted each.
   const report = () => {
     const ids = segments.map((seg) => seg.id);
-    const own: EpisodeMade = { segments: ids, boards: { current: `v${boardVersion}`, accepted: stage === "boards" ? null : `v${boardVersion}` } };
-    if (stage !== "boards") own.takes = { count: take, accepted: stage === "cut" || stage === "done" };
-    if (stage === "cut" || stage === "done") own.cut = { current: `v${cut}`, accepted: stage === "done" ? `v${cut}` : null };
+    const own: EpisodeMade = {
+      segments: ids,
+      boards: Object.fromEntries(ids.map((id) => [id, { current: `v${boardVersion.get(id)}`, accepted: boardAccepted.has(id) ? `v${boardAccepted.get(id)}` : null }])),
+    };
+    if (takes.size) own.takes = Object.fromEntries([...takes].map(([id, count]) => [id, { count, accepted: takeAccepted.has(id) }]));
+    if (stage === "cut" || stage === "done") own.cut = { current: `v${cut}`, accepted: cutAccepted ? `v${cut}` : null };
     const approved: Made = { current: "v1", accepted: "v1" };
     return replayStatus({
       preset,

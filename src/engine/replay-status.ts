@@ -12,10 +12,10 @@ export interface Made {
 
 export interface EpisodeMade {
   segments: string[];
-  /** Each segment's line-art storyboard, once drawn; its blocking reference is accepted with it. */
-  boards?: Made;
-  /** The takes made of every segment, t01 first, and whether the newest is accepted. */
-  takes?: { count: number; accepted: boolean };
+  /** Each segment's storyboards, once drawn, by segment: line-art and photoreal share a version; its blocking reference is accepted with them. */
+  boards?: Record<string, Made>;
+  /** The takes made of each segment, t01 first, and whether its newest is accepted. */
+  takes?: Record<string, { count: number; accepted: boolean }>;
   cut?: Made;
 }
 
@@ -29,6 +29,8 @@ export interface ReplayProgress {
 }
 
 const CONFIG = "/work/drama/drama-cli.cfg.yaml";
+/** The storyboard styles replay draws for each segment (replay-fleet.ts, boards). */
+const STYLES = ["line-art", "photoreal"];
 
 function stage(path: string, made: Made) {
   const usable = made.current !== null && made.current === made.accepted;
@@ -63,13 +65,16 @@ function episode(code: string, made: EpisodeMade, references: Record<string, Mad
     video_prompts: { current: takes ? "v1" : null, stale: [] },
     blocking: made.boards ? each((segment) => stage(`${base}/blocking/${segment}`, accepted("v1"))) : {},
     first_frame_reference: {},
-    multi_panel_storyboard: made.boards ? each((segment) => ({ "line-art": stage(`${base}/multi_panel_storyboard/${segment}/line-art`, made.boards!) })) : {},
+    multi_panel_storyboard: made.boards
+      ? each((segment) => Object.fromEntries(STYLES.map((style) => [style, stage(`${base}/multi_panel_storyboard/${segment}/${style}`, made.boards![segment])])))
+      : {},
     segments: each((segment) => {
-      const versions = Array.from({ length: takes?.count ?? 0 }, (_, n) => `t${String(n + 1).padStart(2, "0")}`);
+      const shot = takes?.[segment];
+      const versions = Array.from({ length: shot?.count ?? 0 }, (_, n) => `t${String(n + 1).padStart(2, "0")}`);
       const newest = versions.at(-1) ?? null;
       return {
-        ...stage(`${base}/segments/${segment}`, { current: newest, accepted: takes?.accepted ? newest : null }),
-        takes: versions.map((version) => ({ version, state: "downloaded", accepted: Boolean(takes?.accepted) && version === newest })),
+        ...stage(`${base}/segments/${segment}`, { current: newest, accepted: shot?.accepted ? newest : null }),
+        takes: versions.map((version) => ({ version, state: "downloaded", accepted: Boolean(shot?.accepted) && version === newest })),
       };
     }),
     scene_chains: made.segments.map((segment) => ({ scene_heading: `INT. HOME - DAY #${segment}#`, segments: [segment] })),

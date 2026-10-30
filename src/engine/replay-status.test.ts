@@ -37,16 +37,19 @@ describe("replay's status report", () => {
     expect(setupStep(approved)).toBe(5);
   });
 
-  it("through an episode: storyboards, then takes, then the cut", () => {
+  it("through an episode, item by item: storyboards in both styles, then takes, then the cut", () => {
     const episode = (made: ReplayProgress["episodes"][string]) => read({ preset: "", bible: "v1", looks: { lin: v1 }, references: { home: v1 }, episodes: { EP001: made } }).episodes.EP001;
-    expect(episode({ segments, boards: drawn }).storyboards.seg01["line-art"]).toMatchObject({ candidate: "v1", usable: false });
-    const takes = episode({ segments, boards: v1, takes: { count: 2, accepted: false } });
-    expect(takes.segments.seg02.takes).toEqual([
+    const boards = episode({ segments, boards: { seg01: { current: "v2", accepted: null }, seg02: v1 } });
+    expect(boards.storyboards.seg01["line-art"]).toMatchObject({ current: "v2", candidate: "v2", usable: false });
+    expect(boards.storyboards.seg01.photoreal).toMatchObject({ current: "v2", candidate: "v2", usable: false });
+    expect(boards.storyboards.seg02.photoreal).toMatchObject({ accepted: "v1", usable: true });
+    const takes = episode({ segments, boards: { seg01: v1, seg02: v1 }, takes: { seg01: { count: 2, accepted: false }, seg02: { count: 1, accepted: true } } });
+    expect(takes.segments.seg01.takes).toEqual([
       { version: "t01", state: "downloaded", accepted: false },
       { version: "t02", state: "downloaded", accepted: false },
     ]);
-    const cut = episode({ segments, boards: v1, takes: { count: 1, accepted: true }, cut: { current: "v1", accepted: "v1" } });
+    expect(takes.segments.seg02.takes).toEqual([{ version: "t01", state: "downloaded", accepted: true }]);
+    const cut = episode({ segments, boards: { seg01: v1, seg02: v1 }, takes: { seg01: { count: 1, accepted: true }, seg02: { count: 1, accepted: true } }, cut: { current: "v1", accepted: "v1" } });
     expect(cut.cut).toMatchObject({ accepted: "v1", usable: true });
-    expect(cut.segments.seg01.takes[0].accepted).toBe(true);
   });
 });

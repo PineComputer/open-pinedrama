@@ -26,7 +26,7 @@ import { fileRow, openBlob, save, toItem } from "./library.ts";
 import { subscribe } from "./live.ts";
 import { drama as dramaRow, review as reviewRow, session as sessionRow, type SessionRow } from "./records.ts";
 import { decide, resumeWithDecision } from "./reviews.ts";
-import { projectView } from "./status.ts";
+import { projectView, sessionStatus } from "./status.ts";
 import { castCards, deliveryRows, episodePage, scriptPage, seasonEntries } from "./browse.ts";
 import { diagnostics } from "./diagnostics.ts";
 import { zipLength, zipStream } from "./zip.ts";
@@ -252,6 +252,12 @@ export function app(): Hono {
   api.get("/api/dramas/:id/project", (c) => {
     const id = c.req.param("id");
     return dramaRow(id) ? c.json(projectView(id)) : c.json(failure("not-found", "No such drama."), 404);
+  });
+  // A session's newest status report as the engine read it: what the project view takes from it.
+  api.get("/api/sessions/:id/status", (c) => {
+    const id = c.req.param("id");
+    if (!sessionRow(id)) return c.json(failure("not-found", "No such session."), 404);
+    return c.json(sessionStatus(id) ?? null);
   });
   api.get("/api/dramas/:id/cast", (c) => c.json(castCards(c.req.param("id"))));
   api.get("/api/dramas/:id/script", (c) => c.json(scriptPage(c.req.param("id"))));
