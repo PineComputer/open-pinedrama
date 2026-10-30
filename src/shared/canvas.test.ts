@@ -64,6 +64,7 @@ describe("an episode's board", () => {
     for (const segment of segments) expect(inside(segment, bands.find((band) => band.id === segment.scene)!)).toBe(true);
     const first = segments.filter((node) => node.scene === bands[0].id);
     expect(first.map((node) => node.subject)).toEqual(["seg01", "seg02", "seg03", "seg04", "seg05", "seg06", "seg07", "seg08"]);
+    expect(segments.filter((node) => node.scene === bands[1].id).map((node) => node.place)).toEqual(["2-1", "2-2", "2-3", "2-4", "2-5", "2-6", "2-7", "2-8"]);
     for (let i = 1; i < first.length; i++) expect(first[i].x).toBeGreaterThan(first[i - 1].x);
     for (const reference of board.nodes.filter((node) => node.kind !== "segment")) for (const band of bands) expect(overlaps(reference, band)).toBe(false);
   });

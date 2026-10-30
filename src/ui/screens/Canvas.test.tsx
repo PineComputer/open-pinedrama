@@ -76,7 +76,7 @@ describe("the canvas", () => {
     engine(project());
     render(<Canvas drama={drama} />);
     expect(await screen.findByRole("group", { name: "Scene 1 · INT. OFFICE - DAY #1-1#" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /^seg01/ })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /^Seg 1-1 · / })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /^EP001 · x/ })).toBeInTheDocument();
     expect(await screen.findByRole("button", { name: /^林/ })).toBeInTheDocument();
   });

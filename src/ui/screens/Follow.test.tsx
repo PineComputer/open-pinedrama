@@ -56,7 +56,7 @@ describe("following the agent", () => {
     engine([look, board]);
     render(<Canvas drama={drama} />);
     expect(await screen.findByRole("button", { name: "Following the agent" })).toHaveAttribute("aria-pressed", "true");
-    await waitFor(() => expect(followed()?.textContent).toMatch(/^seg01/));
+    await waitFor(() => expect(followed()?.textContent).toMatch(/^Seg 1-1 · /));
   });
 
   it("moves on to the work the agent saves next", async () => {
@@ -65,7 +65,7 @@ describe("following the agent", () => {
     await waitFor(() => expect(followed()?.textContent).toMatch(/^林/));
     engine([look, board]);
     changed("drama:d1");
-    await waitFor(() => expect(followed()?.textContent).toMatch(/^seg01/));
+    await waitFor(() => expect(followed()?.textContent).toMatch(/^Seg 1-1 · /));
   });
 
   it("pauses when the maker picks an item, and resumes when asked", async () => {
@@ -80,6 +80,6 @@ describe("following the agent", () => {
     resume.focus();
     await user.keyboard("{Enter}");
     expect(screen.getByRole("button", { name: "Following the agent" })).toHaveAttribute("aria-pressed", "true");
-    await waitFor(() => expect(followed()?.textContent).toMatch(/^seg01/));
+    await waitFor(() => expect(followed()?.textContent).toMatch(/^Seg 1-1 · /));
   });
 });

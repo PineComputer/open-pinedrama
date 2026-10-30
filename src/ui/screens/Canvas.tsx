@@ -4,16 +4,18 @@
 // viewport for following the agent. Ours are the mapping from drama-cli's state, lineage and files
 // to nodes and edges (src/shared/canvas.ts), and the nodes' look. Where the maker moved items is
 // kept per episode as the studio's view state. Phase 1 only reads: nothing here makes or changes
-// an item; the SteerBar steers the agent.
+// an item; the SteerBar steers the agent, and the hand actions a node offers stand disabled.
 import { Background, BackgroundVariant, ControlButton, Controls, type Edge, Handle, MiniMap, type Node, type NodeProps, NodeToolbar, Panel, Position, ReactFlow, ReactFlowProvider, useNodesState, useReactFlow, useViewport } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, Fragment, useContext, useEffect, useMemo, useState } from "react";
+import { shotListOf } from "../../shared/shots.ts";
 import { type BoardNode, layoutEpisode } from "../../shared/canvas.ts";
 import { stageOfFile } from "../../shared/facts.ts";
 import type { LineageView } from "../../shared/lineage.ts";
 import type { ProjectView, StageStatus } from "../../shared/project.ts";
 import type { DramaView, FileItem } from "../../shared/types.ts";
 import { api, useResource } from "../api.ts";
+import { Button } from "../components/Button.tsx";
 import { EmptyState } from "../components/EmptyState.tsx";
 import { Menu } from "../components/Menu.tsx";
 import { type Status, StatusChip } from "../components/StatusChip.tsx";
@@ -21,6 +23,7 @@ import { type TKey, useT } from "../i18n.ts";
 import { Icon } from "../icons.tsx";
 import { subjectLabel } from "../labels.ts";
 import { Link, navigate, usePath } from "../router.tsx";
+import { useText } from "../viewing.tsx";
 import { SteerBar } from "./SteerBar.tsx";
 import { buttonVariants } from "@/components/ui/button";
 
@@ -73,16 +76,88 @@ function nodeIdOf(at: string[] | undefined): string | undefined {
   return at[0] === "episodes" && at[3] ? `segment:${at[1]}/${at[3]}` : undefined;
 }
 
+/**
+ * What a maker may do to an item by hand, as the reference's node bar and panel offer it. Phase 1
+ * makes nothing by hand (docs/REDESIGN_PLAN.md, P6.8): each stands disabled, and the canvas takes
+ * the handler that does nothing.
+ */
+export interface NodeActions {
+  generate: (id: string) => void;
+  upload: (id: string) => void;
+  useAsReference: (id: string) => void;
+}
+
+export const PHASE_ONE: NodeActions = { generate: () => {}, upload: () => {}, useAsReference: () => {} };
+
 interface ItemData extends Record<string, unknown> {
   item: BoardNode;
   label: string;
   status: Status;
   picture?: FileItem;
-  lines?: string[];
+  /** A segment's scene heading, its shots as the breakdown lists them, its storyboard and take versions. */
+  heading?: string;
+  shots?: string[];
+  storyboard?: string | null;
+  take?: string | null;
+  /** The references a segment uses or needs, in the board's order. */
+  refs?: { id: string; label: string; picture?: FileItem }[];
   followed: boolean;
 }
 
-const Board = createContext<{ drama: DramaView; episodeTitle?: string; pick: (id: string | null) => void } | null>(null);
+const Board = createContext<{ drama: DramaView; episodeTitle?: string; actions: NodeActions; pick: (id: string | null) => void } | null>(null);
+
+/** A shot's words, with each reference it names shown as a chip, as the reference's prompt shows them. */
+function withChips(line: string, refs: { label: string; picture?: FileItem }[]) {
+  const named = refs.filter((ref) => ref.label);
+  if (!named.length) return line;
+  const pattern = new RegExp(`(${named.map((ref) => ref.label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|")})`, "giu");
+  return line.split(pattern).map((part, n) => {
+    const ref = named.find((one) => one.label.toLowerCase() === part.toLowerCase());
+    return ref ? (
+      <span key={n} className="chip">
+        {ref.picture && <img src={ref.picture.url} alt="" />}
+        {part}
+      </span>
+    ) : (
+      <Fragment key={n}>{part}</Fragment>
+    );
+  });
+}
+
+/** Under a picked segment, as the reference's node panel: the pictures it is made from, its shots, its settings. The hand controls stand disabled. */
+function NodePanel({ id, data }: { id: string; data: ItemData }) {
+  const { t } = useT();
+  const board = useContext(Board)!;
+  const refs = data.refs ?? [];
+  return (
+    <section className="ds-npanel" aria-label={t("canvas.panel", { item: data.label })}>
+      {refs.length > 0 && (
+        <ol className="refs">
+          {refs.map((ref, n) => (
+            <li key={ref.id}>
+              {ref.picture ? <img src={ref.picture.url} alt="" /> : <span className="none" />}
+              <span>{t("canvas.image", { n: n + 1 })}</span>
+              <b>{ref.label}</b>
+            </li>
+          ))}
+        </ol>
+      )}
+      <div className="prompt">{data.shots ? data.shots.map((line) => <p key={line}>{withChips(line, refs)}</p>) : <p className="quiet">{t("segments.noShots")}</p>}</div>
+      <div className="foot">
+        <span>{board.drama.format}</span>
+        <span>{t("canvas.storyboard", { v: data.storyboard ?? "—" })}</span>
+        <span>{data.take ? t("canvas.take", { v: data.take }) : t("canvas.noTake")}</span>
+        <span className="grow" />
+        <Button variant="outline" size="sm" icon="upload" disabledReason={t("canvas.phase2")} onClick={() => board.actions.upload(id)}>
+          {t("canvas.upload")}
+        </Button>
+        <Button size="sm" icon="sparkle" disabledReason={t("canvas.phase2")} onClick={() => board.actions.generate(id)}>
+          {t("canvas.generate")}
+        </Button>
+      </div>
+    </section>
+  );
+}
 
 /** An item as a node: its picture is the node, its name and standing above it; picked, its SteerBar stands over it. */
 function ItemNode({ id, data, selected }: NodeProps<Node<ItemData>>) {
@@ -92,8 +167,13 @@ function ItemNode({ id, data, selected }: NodeProps<Node<ItemData>>) {
   return (
     <div className={`ds-cnode is-${data.item.kind}`} data-followed={data.followed || undefined}>
       <NodeToolbar isVisible={selected} position={Position.Top}>
-        <SteerBar drama={board.drama} node={data.item} label={data.label} episodeTitle={board.episodeTitle} onClose={() => board.pick(null)} />
+        <SteerBar drama={board.drama} node={data.item} label={data.label} status={data.status} picture={data.picture} episodeTitle={board.episodeTitle} actions={board.actions} onClose={() => board.pick(null)} />
       </NodeToolbar>
+      {data.item.kind === "segment" && (
+        <NodeToolbar isVisible={selected} position={Position.Bottom}>
+          <NodePanel id={id} data={data} />
+        </NodeToolbar>
+      )}
       <Handle type="target" position={Position.Left} isConnectable={false} />
       {/* Named by what it shows (WCAG 2.5.3): its name, then where it stands. A segment's card holds both, as the reference's does. */}
       <span
@@ -105,14 +185,15 @@ function ItemNode({ id, data, selected }: NodeProps<Node<ItemData>>) {
         onKeyDown={(event) => event.key === "Enter" && board.pick(id)}
       >
         <Icon name={icon[data.item.kind]} />
-        <span className="name">{data.label}</span>
+        <span className="name">{data.heading ? `${data.label} · ${data.heading}` : data.label}</span>
         {data.item.kind !== "segment" && <StatusChip status={data.status} label={t(`status.${data.status}` as TKey)} />}
       </span>
       <span className="card">
-        {data.picture && <img src={data.picture.url} alt="" draggable={false} />}
-        {data.lines && (
+        {data.picture ? <img src={data.picture.url} alt="" draggable={false} /> : data.item.kind === "segment" && <span className="thumb" />}
+        {data.item.kind === "segment" && (
           <span className="text">
-            {data.lines.map((line) => <span key={line}>{line}</span>)}
+            <span className="shots">{data.shots ? data.shots.join("\n") : t("segments.noShots")}</span>
+            <span className="foot">{[t("canvas.storyboard", { v: data.storyboard ?? "—" }), data.take ? t("canvas.take", { v: data.take }) : t("canvas.noTake"), board.drama.format].join(" · ")}</span>
             <span className={`state is-${data.status}`}><i aria-hidden="true" />{t(`status.${data.status}` as TKey)}</span>
           </span>
         )}
@@ -132,6 +213,9 @@ function SceneNode({ data }: NodeProps<Node<{ heading: string }>>) {
 }
 
 const NODE_TYPES = { item: ItemNode, scene: SceneNode };
+
+/** Where a board opens: at 100%, its top left clear of the episode switcher. */
+const START = { x: 48, y: 72, zoom: 1 };
 
 /** The zoom, as the reference's control cluster shows it. */
 function Zoom() {
@@ -168,12 +252,19 @@ function Plane({ drama }: { drama: DramaView }) {
   const positions = useResource<{ positions: Positions }>(code ? `/api/dramas/${drama.id}/canvas/${code}` : null, [`drama:${drama.id}`]);
   const [follow, setFollow] = useState(true);
   const target = nodeIdOf(newest);
+  // The episode's newest breakdown, for each segment's shots (shared/shots.ts).
+  const breakdown = (files.data ?? []).filter((file) => file.kind === "breakdown" && file.episode === code).sort((a, b) => b.createdAt.localeCompare(a.createdAt))[0];
+  const breakdownText = useText(breakdown).text;
 
   const mapped = useMemo(() => {
     if (!state || !code) return { nodes: [] as Node[], edges: [] as Edge[] };
     const board = layoutEpisode(state, code, lineage.data?.lineage ?? null);
     const moved = positions.data?.positions ?? {};
-    const label = (node: BoardNode) => (node.kind === "segment" ? node.subject : subjectLabel(names, node.kind === "character" ? node.subject : `${node.kind}:${node.subject}`));
+    const label = (node: BoardNode) => (node.kind === "segment" ? t("canvas.segment", { n: node.place! }) : subjectLabel(names, node.kind === "character" ? node.subject : `${node.kind}:${node.subject}`));
+    const pictureOf = (node: BoardNode) => {
+      const [first] = stageOf(state, node);
+      return picture(files.data ?? [], first.at, first.stage);
+    };
     const scenes: Node[] = board.groups.map((scene, n) => ({
       id: scene.id,
       type: "scene",
@@ -198,8 +289,18 @@ function Plane({ drama }: { drama: DramaView }) {
           item: node,
           label: label(node),
           status: node.kind === "segment" ? segmentStanding(stages) : standing(stages[0].stage),
-          picture: picture(files.data ?? [], stages[0].at, stages[0].stage),
-          lines: node.kind === "segment" ? [t("canvas.storyboard", { v: stages[0].stage?.current ?? "—" }), stages[1].stage?.current ? t("canvas.take", { v: stages[1].stage.current }) : t("canvas.noTake")] : undefined,
+          picture: pictureOf(node),
+          ...(node.kind === "segment" && {
+            heading: scene?.heading,
+            shots: shotListOf(breakdownText, node.subject),
+            storyboard: stages[0].stage?.current,
+            take: stages[1].stage?.current,
+            refs: board.edges
+              .filter((edge) => edge.to === node.id && edge.kind !== "order")
+              .flatMap((edge) => board.nodes.filter((one) => one.id === edge.from))
+              .filter((one, n, all) => all.indexOf(one) === n)
+              .map((one) => ({ id: one.id, label: label(one), picture: pictureOf(one) })),
+          }),
           followed: follow && target === node.id,
         },
       };
@@ -208,7 +309,7 @@ function Plane({ drama }: { drama: DramaView }) {
     return { nodes: [...scenes, ...items], edges };
     // t is made anew each render; the words change only with the language.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state, code, lineage.data, positions.data, files.data, names, follow, target, lang]);
+  }, [state, code, lineage.data, positions.data, files.data, breakdownText, names, follow, target, lang]);
 
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
   // New data keeps what the maker picked.
@@ -219,9 +320,18 @@ function Plane({ drama }: { drama: DramaView }) {
     const node = flow.getInternalNode(target);
     if (node) void flow.setCenter(node.internals.positionAbsolute.x + (node.width ?? 0) / 2, node.internals.positionAbsolute.y + (node.height ?? 0) / 2, { zoom: flow.getZoom(), duration: 500 });
   }, [follow, target, nodes.length]);
+  // A board opens at full size from its top left, as the reference's opens at its own scale; Fit shows it whole.
   useEffect(() => {
-    if (!(follow && target)) void flow.fitView({ maxZoom: 1.05, duration: 500 });
+    if (!(follow && target)) void flow.setViewport(START, { duration: 500 });
   }, [code]);
+  // Escape lets go of the picked item, and with it its bar and panel.
+  const picked = nodes.some((node) => node.selected);
+  useEffect(() => {
+    if (!picked) return;
+    const away = (event: KeyboardEvent) => event.key === "Escape" && setNodes((all) => all.map((node) => ({ ...node, selected: false })));
+    window.addEventListener("keydown", away);
+    return () => window.removeEventListener("keydown", away);
+  }, [picked, setNodes]);
 
   if (!state || !code) return <EmptyState title={t("canvas.emptyTitle")}>{t("canvas.emptyText")}</EmptyState>;
   const save = (all: Node[]) => void api(`/api/dramas/${drama.id}/canvas/${code}`, { method: "PUT", json: { positions: Object.fromEntries(all.map((node) => [node.id, node.position])) } });
@@ -229,7 +339,7 @@ function Plane({ drama }: { drama: DramaView }) {
   const at = codes.indexOf(code);
 
   return (
-    <Board.Provider value={{ drama, episodeTitle: names?.episodes[code], pick: (id) => { setFollow(false); setNodes((all) => all.map((node) => ({ ...node, selected: node.id === id }))); } }}>
+    <Board.Provider value={{ drama, episodeTitle: names?.episodes[code], actions: PHASE_ONE, pick: (id) => { setFollow(false); setNodes((all) => all.map((node) => ({ ...node, selected: node.id === id }))); } }}>
       <section className="ds-canvas" aria-label={t("surface.canvas")}>
         <ReactFlow
           nodes={nodes}
@@ -247,12 +357,11 @@ function Plane({ drama }: { drama: DramaView }) {
           maxZoom={4}
           nodesConnectable={false}
           deleteKeyCode={null}
-          fitView
-          fitViewOptions={{ maxZoom: 1.05 }}
+          defaultViewport={START}
           ariaLabelConfig={{ "controls.zoomIn.ariaLabel": t("canvas.zoomIn"), "controls.zoomOut.ariaLabel": t("canvas.zoomOut"), "controls.fitView.ariaLabel": t("canvas.fit"), "minimap.ariaLabel": t("canvas.minimap") }}
         >
           <Background variant={BackgroundVariant.Dots} gap={22} size={1.2} />
-          <Controls position="bottom-left" showInteractive={false}>
+          <Controls position="bottom-left" showInteractive={false} fitViewOptions={{ maxZoom: 1.05, duration: 500 }}>
             <Zoom />
             <ControlButton aria-label={t("canvas.layOut")} title={t("canvas.layOut")} onClick={() => void api(`/api/dramas/${drama.id}/canvas/${code}`, { method: "DELETE" }).then(() => positions.reload())}>
               <Icon name="tree-structure" />

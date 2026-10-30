@@ -4,15 +4,18 @@
 // as the bible does; for an item under review they open that review instead, so the canvas never
 // records a verdict. When no agent is running the item, the bar says so and offers Resume where
 // the episode or drama can be resumed: the words are never queued. Lineage opens Graph at it.
+// Open and Download show the item's picture; the hand actions stand disabled (Canvas, NodeActions).
 import { useEffect, useState } from "react";
 import type { BoardNode } from "../../shared/canvas.ts";
-import type { ChatView, DramaView, ReviewSummary, ReviewView } from "../../shared/types.ts";
+import type { ChatView, DramaView, FileItem, ReviewSummary, ReviewView } from "../../shared/types.ts";
 import { api, useAction, useResource } from "../api.ts";
 import { Button, IconButton } from "../components/Button.tsx";
-import { useT } from "../i18n.ts";
+import { type Status, StatusChip } from "../components/StatusChip.tsx";
+import { type TKey, useT } from "../i18n.ts";
 import { errorText, nowText } from "../labels.ts";
 import { Link, navigate } from "../router.tsx";
 import { buttonVariants } from "@/components/ui/button";
+import type { NodeActions } from "./Canvas.tsx";
 
 /** The key a review gives the item (src/engine/reviews.ts, itemsOf): a look by its character, a place or prop by its kind and id, a segment by its id. */
 function reviewKey(node: BoardNode): string {
@@ -42,7 +45,25 @@ function useOpenReview(drama: DramaView, node: BoardNode): ReviewView | undefine
   return found;
 }
 
-export function SteerBar({ drama, node, label, episodeTitle, onClose }: { drama: DramaView; node: BoardNode; label: string; episodeTitle?: string; onClose: () => void }) {
+export function SteerBar({
+  drama,
+  node,
+  label,
+  status,
+  picture,
+  episodeTitle,
+  actions,
+  onClose,
+}: {
+  drama: DramaView;
+  node: BoardNode;
+  label: string;
+  status: Status;
+  picture?: FileItem;
+  episodeTitle?: string;
+  actions: NodeActions;
+  onClose: () => void;
+}) {
   const { t } = useT();
   const review = useOpenReview(drama, node);
   const [mode, setMode] = useState<"back" | "note" | null>(null);
@@ -80,6 +101,7 @@ export function SteerBar({ drama, node, label, episodeTitle, onClose }: { drama:
     <div className="ds-steer" role="toolbar" aria-label={t("steer.label", { item: label })}>
       <div className="row">
         <b className="what">{label}</b>
+        <StatusChip status={status} label={t(`status.${status}` as TKey)} />
         <span className="acts">
           {reviewHref && (
             <Link to={reviewHref} className={buttonVariants({ variant: "default", size: "sm" })}>
@@ -102,6 +124,21 @@ export function SteerBar({ drama, node, label, episodeTitle, onClose }: { drama:
           )}
           <Button variant="outline" size="sm" icon="tree-structure" onClick={() => navigate(`/d/${drama.id}/graph?item=${encodeURIComponent(node.id)}`)}>
             {t("steer.lineage")}
+          </Button>
+          {picture && (
+            <>
+              <i className="sep" aria-hidden="true" />
+              <a className={buttonVariants({ variant: "outline", size: "sm" })} href={picture.url} target="_blank" rel="noreferrer">
+                {t("steer.open")}
+              </a>
+              <a className={buttonVariants({ variant: "outline", size: "sm" })} href={`${picture.url}&download=1`}>
+                {t("steer.download")}
+              </a>
+            </>
+          )}
+          <i className="sep" aria-hidden="true" />
+          <Button variant="outline" size="sm" icon="stack" disabledReason={t("canvas.phase2")} onClick={() => actions.useAsReference(node.id)}>
+            {t("steer.useAsReference")}
           </Button>
           <IconButton label={t("steer.close")} icon="x" onClick={onClose} />
         </span>

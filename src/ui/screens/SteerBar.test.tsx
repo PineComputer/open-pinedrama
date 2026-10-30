@@ -2,7 +2,7 @@
 // review is open, send it back or leave a note for the agent at work on it, or trace its lineage.
 // The canvas steers and never records a verdict: decisions stay in the review room.
 import "../test/flow.ts";
-import { render, screen, within } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { readFileSync } from "node:fs";
 import path from "node:path";
@@ -12,8 +12,9 @@ import { parseBibleNames } from "../../shared/names.ts";
 import { parseStatus, type ProjectView } from "../../shared/project.ts";
 import type { ChatView, DramaView, EpisodeRow, ReviewSummary } from "../../shared/types.ts";
 import { storyboardReview } from "../test/fixtures.ts";
-import { accept, answer, calls, sent } from "../test/server.ts";
-import { Canvas } from "./Canvas.tsx";
+import { http, HttpResponse } from "msw";
+import { accept, answer, calls, sent, server } from "../test/server.ts";
+import { Canvas, PHASE_ONE } from "./Canvas.tsx";
 
 const fixture = (name: string) => JSON.parse(readFileSync(path.resolve("fixtures/status", `${name}.json`), "utf8"));
 const lineageView = () => ({ lineage: parseLineage(JSON.parse(readFileSync(path.resolve("fixtures/lineage", "shot.json"), "utf8"))), problems: [] });
@@ -116,7 +117,7 @@ describe("the SteerBar", () => {
   it("sends a note on a segment to its episode's agent, by episode and segment number", async () => {
     engine();
     render(<Canvas drama={drama("working")} />);
-    const { user, bar } = await pick(/^seg01/);
+    const { user, bar } = await pick(/^Seg 1-1 · /);
     await user.click(within(bar).getByRole("button", { name: "Note" }));
     await user.type(within(bar).getByRole("textbox", { name: "Your note" }), "Keep the lamp lit.");
     await user.click(within(bar).getByRole("button", { name: "Send to the agent" }));
@@ -136,7 +137,7 @@ describe("the SteerBar", () => {
     const user = userEvent.setup();
     engine();
     render(<Canvas drama={drama("stopped")} />);
-    const { bar } = await pick(/^seg01/);
+    const { bar } = await pick(/^Seg 1-1 · /);
     await user.click(within(bar).getByRole("button", { name: "Send back" }));
     expect(within(bar).getByText(/EP001's agent isn't running: Its Computer stopped/)).toBeInTheDocument();
     expect(within(bar).queryByRole("textbox")).toBeNull();
@@ -149,7 +150,7 @@ describe("the SteerBar", () => {
     const user = userEvent.setup();
     engine();
     render(<Canvas drama={drama("queued")} />);
-    const { bar } = await pick(/^seg01/);
+    const { bar } = await pick(/^Seg 1-1 · /);
     await user.click(within(bar).getByRole("button", { name: "Note" }));
     expect(within(bar).getByText(/EP001's agent isn't running: In line/)).toBeInTheDocument();
     expect(within(bar).queryByRole("button", { name: /^Resume/ })).toBeNull();
@@ -159,7 +160,7 @@ describe("the SteerBar", () => {
     const user = userEvent.setup();
     engine([], "review", "r5");
     render(<Canvas drama={drama("working")} />);
-    const { bar } = await pick(/^seg01/);
+    const { bar } = await pick(/^Seg 1-1 · /);
     await user.click(within(bar).getByRole("button", { name: "Note" }));
     expect(await within(bar).findByText(/EP001's agent waits on your review/)).toBeInTheDocument();
     expect(within(bar).getByRole("link", { name: "Open the review it waits on" })).toHaveAttribute("href", "/r/r5");
@@ -195,5 +196,65 @@ describe("the SteerBar", () => {
     await user.click(within(bar).getByRole("button", { name: "Close" }));
     expect(sent.filter((request) => request.method === "POST" && /\/decision$/.test(request.path))).toEqual([]);
     expect(screen.queryByRole("button", { name: /^(Accept|Approve)/ })).toBeNull();
+  });
+});
+
+describe("a picked item's hand actions and panel (P6.8)", () => {
+  const breakdown = { id: 7, name: "breakdown.md", path: "/work/drama/episodes/EP001/breakdown/v1/breakdown.md", type: "text/markdown", size: 1, kind: "breakdown", episode: "EP001", url: "/f/7?v=1", createdAt: "2026-10-30T10:00:00Z" };
+  const sheet = { id: 8, name: "image-1.png", path: "/work/drama/episodes/EP001/multi_panel_storyboard/seg01/line-art/v1/image-1.png", type: "image/png", size: 1, kind: "storyboard", url: "/f/8?v=1", createdAt: "2026-10-30T10:00:00Z" };
+
+  function withBreakdown() {
+    engine();
+    answer("/api/dramas/d1/files", [breakdown, sheet]);
+    server.use(http.get("/f/7", () => HttpResponse.text("# EP001\n\n## seg01\n- Shot 1 (wide · static · 4s) 林 walks into the 办公室.\n- Shot 2 (close · 3s) She stops.\n\n## seg02\n- Shot 1 (wide) Elsewhere.")));
+  }
+
+  it("shows a segment's shots from the breakdown on its card", async () => {
+    withBreakdown();
+    render(<Canvas drama={drama("working")} />);
+    const card = (await screen.findByRole("button", { name: /^Seg 1-1 · / })).closest(".ds-cnode")!;
+    await waitFor(() => expect(card.textContent).toContain("Shot 1 (wide · static · 4s) 林 walks into the 办公室."));
+    expect(card.textContent).not.toContain("Elsewhere");
+  });
+
+  it("opens under a picked segment: the pictures it is made from, numbered, and its shots with each one named", async () => {
+    withBreakdown();
+    render(<Canvas drama={drama("working")} />);
+    await pick(/^Seg 1-1 · /);
+    const panel = await screen.findByRole("region", { name: /^Seg 1-1: what it is made from/ });
+    const refs = within(panel).getAllByRole("listitem");
+    expect(refs.map((ref) => ref.textContent)).toEqual(["Image 1林", "Image 2办公室"]);
+    await waitFor(() => expect(panel.querySelectorAll(".prompt .chip")).toHaveLength(2));
+  });
+
+  it("offers the hand actions disabled, saying why, and they do nothing", async () => {
+    withBreakdown();
+    render(<Canvas drama={drama("working")} />);
+    const { bar } = await pick(/^Seg 1-1 · /);
+    const panel = await screen.findByRole("region", { name: /what it is made from/ });
+    for (const button of [within(bar).getByRole("button", { name: "Use as reference" }), within(panel).getByRole("button", { name: "Generate" }), within(panel).getByRole("button", { name: "Upload" })]) {
+      expect(button).toBeDisabled();
+      expect(button).toHaveAccessibleDescription(/^Phase 2/);
+    }
+    expect([PHASE_ONE.generate("x"), PHASE_ONE.upload("x"), PHASE_ONE.useAsReference("x")]).toEqual([undefined, undefined, undefined]);
+    expect(sent.filter((request) => request.method !== "GET")).toEqual([]);
+  });
+
+  it("opens and downloads the item's picture", async () => {
+    withBreakdown();
+    render(<Canvas drama={drama("working")} />);
+    const { bar } = await pick(/^Seg 1-1 · /);
+    expect(within(bar).getByRole("link", { name: "Open" })).toHaveAttribute("href", "/f/8?v=1");
+    expect(within(bar).getByRole("link", { name: "Download" })).toHaveAttribute("href", "/f/8?v=1&download=1");
+  });
+
+  it("lets go of the item on Escape, with its bar and panel", async () => {
+    withBreakdown();
+    render(<Canvas drama={drama("working")} />);
+    const { user } = await pick(/^Seg 1-1 · /);
+    await screen.findByRole("region", { name: /what it is made from/ });
+    await user.keyboard("{Escape}");
+    await waitFor(() => expect(screen.queryByRole("region", { name: /what it is made from/ })).toBeNull());
+    expect(screen.queryByRole("toolbar", { name: /^Steer/ })).toBeNull();
   });
 });

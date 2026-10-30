@@ -26,6 +26,8 @@ export interface BoardNode extends Box {
   episode?: string;
   /** The scene band a segment stands in. */
   scene?: string;
+  /** A segment's place: its scene's number and its own within the scene, 2-1, as the reference's board numbers them. */
+  place?: string;
 }
 
 export interface BoardGroup extends Box {
@@ -56,7 +58,7 @@ export interface Board {
 /** Card sizes and gaps. A label stands above each card, inside the gap. */
 export const SIZE = {
   reference: { w: 240, h: 150 },
-  segment: { w: 380, h: 172 },
+  segment: { w: 420, h: 180 },
   /** Room above a card for its label. */
   label: 28,
   gap: 16,
@@ -133,11 +135,11 @@ export function layoutEpisode(state: State, code: string, lineage: Lineage | nul
   const left = refs.length ? SIZE.reference.w + SIZE.column : 0;
   let y = 0;
   let right = left;
-  for (const scene of scenes) {
+  for (const [s, scene] of scenes.entries()) {
     const top = y;
     const row = top + SIZE.bandHead + SIZE.label;
     scene.segments.forEach((segment, i) => {
-      nodes.push({ id: `segment:${code}/${segment}`, kind: "segment", subject: segment, episode: code, scene: scene.id, x: left + SIZE.pad + i * (SIZE.segment.w + SIZE.between), y: row, ...SIZE.segment });
+      nodes.push({ id: `segment:${code}/${segment}`, kind: "segment", subject: segment, episode: code, scene: scene.id, place: `${s + 1}-${i + 1}`, x: left + SIZE.pad + i * (SIZE.segment.w + SIZE.between), y: row, ...SIZE.segment });
       if (i > 0 && scene.id !== `scene:${code}/unlisted`) edges.push({ from: `segment:${code}/${scene.segments[i - 1]}`, to: `segment:${code}/${segment}`, kind: "order" });
     });
     const w = 2 * SIZE.pad + Math.max(1, scene.segments.length) * SIZE.segment.w + Math.max(0, scene.segments.length - 1) * SIZE.between;
