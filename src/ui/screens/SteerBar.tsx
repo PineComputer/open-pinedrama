@@ -13,6 +13,8 @@ import { Button, IconButton } from "../components/Button.tsx";
 import { type Status, StatusChip } from "../components/StatusChip.tsx";
 import { type TKey, useT } from "../i18n.ts";
 import { errorText, nowText } from "../labels.ts";
+import { Tooltip } from "../components/Tooltip.tsx";
+import { Icon } from "../icons.tsx";
 import { Link, navigate } from "../router.tsx";
 import { buttonVariants } from "@/components/ui/button";
 import type { NodeActions } from "./Canvas.tsx";
@@ -114,32 +116,28 @@ export function SteerBar({
             </Link>
           ) : (
             <>
-              <Button variant="outline" size="sm" icon="arrow-counter-clockwise" aria-pressed={mode === "back"} onClick={() => setMode(mode === "back" ? null : "back")}>
-                {t("steer.back")}
-              </Button>
-              <Button variant="outline" size="sm" icon="note-pencil" aria-pressed={mode === "note"} onClick={() => setMode(mode === "note" ? null : "note")}>
-                {t("steer.note")}
-              </Button>
+              <IconButton label={t("steer.back")} icon="arrow-counter-clockwise" on={mode === "back"} aria-pressed={mode === "back"} onClick={() => setMode(mode === "back" ? null : "back")} />
+              <IconButton label={t("steer.note")} icon="note-pencil" on={mode === "note"} aria-pressed={mode === "note"} onClick={() => setMode(mode === "note" ? null : "note")} />
             </>
           )}
-          <Button variant="outline" size="sm" icon="tree-structure" onClick={() => navigate(`/d/${drama.id}/graph?item=${encodeURIComponent(node.id)}`)}>
-            {t("steer.lineage")}
-          </Button>
+          <IconButton label={t("steer.lineage")} icon="tree-structure" onClick={() => navigate(`/d/${drama.id}/graph?item=${encodeURIComponent(node.id)}`)} />
           {picture && (
             <>
               <i className="sep" aria-hidden="true" />
-              <a className={buttonVariants({ variant: "outline", size: "sm" })} href={picture.url} target="_blank" rel="noreferrer">
-                {t("steer.open")}
-              </a>
-              <a className={buttonVariants({ variant: "outline", size: "sm" })} href={`${picture.url}&download=1`}>
-                {t("steer.download")}
-              </a>
+              <Tooltip text={t("steer.open")}>
+                <a className={buttonVariants({ variant: "ghost", size: "icon" })} href={picture.url} target="_blank" rel="noreferrer" aria-label={t("steer.open")}>
+                  <Icon name="arrow-square-out" />
+                </a>
+              </Tooltip>
+              <Tooltip text={t("steer.download")}>
+                <a className={buttonVariants({ variant: "ghost", size: "icon" })} href={`${picture.url}&download=1`} aria-label={t("steer.download")}>
+                  <Icon name="download-simple" />
+                </a>
+              </Tooltip>
             </>
           )}
           <i className="sep" aria-hidden="true" />
-          <Button variant="outline" size="sm" icon="stack" disabledReason={t("canvas.phase2")} onClick={() => actions.useAsReference(node.id)}>
-            {t("steer.useAsReference")}
-          </Button>
+          <Button variant="ghost" size="icon" icon="stack" aria-label={t("steer.useAsReference")} title={`${t("steer.useAsReference")} · ${t("canvas.phase2")}`} disabledReason={t("canvas.phase2")} onClick={() => actions.useAsReference(node.id)} />
           <IconButton label={t("steer.close")} icon="x" onClick={onClose} />
         </span>
       </div>

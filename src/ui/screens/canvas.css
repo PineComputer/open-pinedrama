@@ -31,7 +31,7 @@
 .ds-cnode .card { display: flex; gap: 10px; min-height: 0; padding: 0; border-radius: 10px; overflow: hidden; border: 1px solid var(--border); background: var(--surface-container); transition: border-color .12s, box-shadow .12s; }
 .ds-cnode .card img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
 .ds-cnode.is-segment { grid-template-rows: 1fr; }
-.ds-cnode.is-segment .ds-clabel { position: absolute; left: 136px; top: 10px; right: 10px; color: var(--text-primary); font-size: 13px; }
+.ds-cnode.is-segment .ds-clabel { position: absolute; left: 136px; top: 10px; right: 10px; color: var(--text-primary); font-size: 14px; }
 .ds-cnode.is-segment .card { padding: 8px; gap: 12px; background: var(--surface); box-shadow: 0 1px 2px rgba(0, 0, 0, .2); }
 .ds-cnode .text { display: grid; align-content: start; gap: 4px; padding-top: 4px; font: 12px/1.4 var(--font-sans); color: var(--text-secondary); }
 .react-flow__node:hover .ds-cnode .card { border-color: color-mix(in srgb, var(--accent) 55%, var(--border-input)); }
@@ -67,8 +67,8 @@
 .ds-cnode.is-segment .thumb img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
 .ds-cnode.is-segment .thumb .tag { position: absolute; left: 6px; top: 6px; padding: 2px 7px; border-radius: var(--radius-pill); border: 1px solid var(--border); background: var(--surface); color: var(--text-primary); font: 600 10.5px/1.4 var(--font-sans); }
 .ds-cnode.is-segment .text { display: flex; flex-direction: column; gap: 6px; padding-top: 26px; min-width: 0; }
-.ds-cnode.is-segment .shots { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 6; overflow: hidden; white-space: pre-line; font: 12px/1.5 var(--font-sans); color: var(--text-secondary); }
-.ds-cnode.is-segment .foot { display: inline-flex; align-items: center; gap: 6px; margin-top: auto; font: 12px var(--font-sans); color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ds-cnode.is-segment .shots { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 5; overflow: hidden; white-space: pre-line; font: 13px/1.45 var(--font-sans); color: var(--text-secondary); }
+.ds-cnode.is-segment .foot { display: inline-flex; align-items: center; gap: 6px; margin-top: auto; font: 12.5px var(--font-sans); color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .ds-cnode.is-segment .foot i { width: 6px; height: 6px; flex: none; border-radius: 50%; background: var(--text-subtle); }
 .ds-cnode.is-segment .foot.is-accepted i { background: var(--success); }
 .ds-cnode.is-segment .foot.is-you i { background: var(--warning-text); }

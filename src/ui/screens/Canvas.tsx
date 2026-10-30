@@ -5,9 +5,9 @@
 // to nodes and edges (src/shared/canvas.ts), and the nodes' look. Where the maker moved items is
 // kept per episode as the studio's view state. Phase 1 only reads: nothing here makes or changes
 // an item; the SteerBar steers the agent, and the hand actions a node offers stand disabled.
-import { Background, BackgroundVariant, ControlButton, Controls, type Edge, Handle, MiniMap, type Node, type NodeProps, NodeToolbar, Panel, Position, ReactFlow, ReactFlowProvider, useNodesState, useReactFlow, useViewport } from "@xyflow/react";
+import { Background, BackgroundVariant, ControlButton, Controls, type Edge, Handle, MiniMap, type Node, type NodeProps, NodeToolbar, Panel, Position, ReactFlow, ReactFlowProvider, useNodesInitialized, useNodesState, useReactFlow, useViewport } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { createContext, Fragment, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { shotListOf } from "../../shared/shots.ts";
 import { type BoardNode, layoutEpisode } from "../../shared/canvas.ts";
 import { stageOfFile } from "../../shared/facts.ts";
@@ -183,8 +183,8 @@ function SceneNode({ data }: NodeProps<Node<{ heading: string }>>) {
 
 const NODE_TYPES = { item: ItemNode, scene: SceneNode };
 
-/** A board opens fitted to the view, with room around it, never past the reference's scale. */
-const FIT = { padding: 0.08, maxZoom: 1.05 };
+/** Fitting leaves room for the panels over the board: the episode switcher and following at the top, the controls at the foot. Never past the reference's scale. */
+const FIT = { padding: { top: "76px", bottom: "56px", x: "56px" }, maxZoom: 1.05 } as const;
 
 /** Room a picked segment's panel takes below it (canvas.css, .ds-npanel), so framing the pick keeps the panel in view. */
 const PANEL_ROOM = 380;
@@ -290,14 +290,25 @@ function Plane({ drama }: { drama: DramaView }) {
   // New data keeps what the maker picked.
   useEffect(() => setNodes((before) => mapped.nodes.map((node) => ({ ...node, selected: before.find((one) => one.id === node.id)?.selected ?? false }))), [mapped.nodes, setNodes]);
   // Following: the agent's newest work stays centred at the maker's zoom, until they move the board themselves.
+  // A board opens on its cast, places and first scene, as the prototype's does; following then moves only to work saved after that.
+  const opened = useRef<string>(undefined);
+  const centred = useRef<string>(undefined);
+  // Fitted once React Flow has measured the nodes, so the bounds are the drawn ones.
+  const measured = useNodesInitialized();
   useEffect(() => {
-    if (!follow || !target) return;
+    if (!measured || !nodes.length || opened.current === code) return;
+    opened.current = code;
+    centred.current = target;
+    const first = nodes.find((node) => node.type === "scene")?.id;
+    void flow.fitView({ ...FIT, nodes: nodes.filter((node) => (node.type === "item" && !node.parentId) || node.id === first || node.parentId === first), duration: 300 });
+  }, [code, nodes, measured]);
+  useEffect(() => {
+    if (!follow || !target || opened.current !== code || centred.current === target) return;
     const node = flow.getInternalNode(target);
-    if (node) void flow.setCenter(node.internals.positionAbsolute.x + (node.width ?? 0) / 2, node.internals.positionAbsolute.y + (node.height ?? 0) / 2, { zoom: flow.getZoom(), duration: 500 });
-  }, [follow, target, nodes.length]);
-  useEffect(() => {
-    if (!(follow && target)) void flow.fitView({ ...FIT, duration: 500 });
-  }, [code]);
+    if (!node) return;
+    centred.current = target;
+    void flow.setCenter(node.internals.positionAbsolute.x + (node.width ?? 0) / 2, node.internals.positionAbsolute.y + (node.height ?? 0) / 2, { zoom: flow.getZoom(), duration: 500 });
+  }, [follow, target, nodes, code]);
   // Escape lets go of the picked item, and with it its bar and panel.
   const picked = nodes.some((node) => node.selected);
   useEffect(() => {
@@ -341,8 +352,6 @@ function Plane({ drama }: { drama: DramaView }) {
           maxZoom={4}
           nodesConnectable={false}
           deleteKeyCode={null}
-          fitView
-          fitViewOptions={FIT}
           ariaLabelConfig={{ "controls.zoomIn.ariaLabel": t("canvas.zoomIn"), "controls.zoomOut.ariaLabel": t("canvas.zoomOut"), "controls.fitView.ariaLabel": t("canvas.fit"), "minimap.ariaLabel": t("canvas.minimap") }}
         >
           <Background variant={BackgroundVariant.Dots} gap={22} size={1.2} />
@@ -363,7 +372,7 @@ function Plane({ drama }: { drama: DramaView }) {
             </button>
           </Panel>
           <Panel position="top-center" className="ds-followbar">
-            <button type="button" className={`ds-follow${follow ? " is-on" : ""}`} aria-pressed={follow} onClick={() => setFollow(true)}>
+            <button type="button" className={`ds-follow${follow ? " is-on" : ""}`} aria-pressed={follow} onClick={() => { centred.current = undefined; setFollow(true); }}>
               <span className={`ds-live${follow ? "" : " is-idle"}`} aria-hidden="true" />
               {t(follow ? "canvas.following" : "canvas.followPaused")}
             </button>
