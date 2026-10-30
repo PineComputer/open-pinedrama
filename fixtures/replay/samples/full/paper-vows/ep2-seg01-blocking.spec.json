@@ -1,0 +1,13 @@
+{
+  "provider": "openai",
+  "model": "gpt-image-2.5-sunburst",
+  "prompt": "A clean line-art blocking diagram of one scene of a live-action short drama, vertical composition: the place of Image 1 drawn in simple black outlines on white, with the segment's people in their places at its start, the way a master shot shows the whole scene before it is cut into shots. Keep Image 1's camera position, framing, walls, windows, doorways and furniture, traced in outline; only add the people.\nImage 1: the location Jail, a cell, the front view, with no people\nImage 2: the character sheet of Sebastian (30), look S0\nImage 3: the character sheet of Officer (50)\nDraw each person as a clean outline figure that can be told apart by hairstyle, build and the shape of their outfit, from their character sheet; no faces in detail. Do not copy a sheet's layout, white background or multiple views. Each person appears once, whole and at natural scale for the place, on the furniture and floor of Image 1, facing the way the start says.\nOnly two people appear: Sebastian and Officer. Nobody else is there.\nAt the start: Camera on the front-wall side of the cell, looking toward the back wall, the steel bunk along the left wall and the barred cell door in the right wall. Sebastian, in the orange prison-issue top and trousers, lies on his side on the thin grey mattress of the one steel bunk along the left wall, his back to the barred cell door, facing the wall, the folded grey blanket at his feet. Officer is walking up the dim corridor outside, toward the barred cell door in the right wall. The one barred high window is in the back wall; the steel toilet-sink unit stands in the back-right corner by the door.\n\nNo shading, colour or photographic rendering; no text, letters, numbers, arrows, labels or watermark.\n",
+  "aspect_ratio": "9:16",
+  "size": "1152x2048",
+  "quality": "high",
+  "images": [
+    "episodes/EP002/blocking/seg01/v1/view.png",
+    "assets/characters/sebastian/v2/image-1.jpg",
+    "assets/characters/officer/v1/image-1.jpg"
+  ]
+}

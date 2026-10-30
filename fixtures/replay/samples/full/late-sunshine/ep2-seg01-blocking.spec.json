@@ -1,0 +1,17 @@
+{
+  "provider": "openai",
+  "model": "gpt-image-2.5-sunburst",
+  "prompt": "A clean line-art blocking diagram of one scene of a live-action short drama, vertical composition: the place of Image 1 drawn in simple black outlines on white, with the segment's people in their places at its start, the way a master shot shows the whole scene before it is cut into shots. Keep Image 1's camera position, framing, walls, windows, doorways and furniture, traced in outline; only add the people.\nImage 1: the location JI RAN'S OFFICE, the front view, with no people\nImage 2: the character sheet of 纪然 (27), look S2\nImage 3: the character sheet of 许半夏 (24)\nImage 4: the character sheet of GREEN-SHIRT APPLICANT (26)\nImage 5: the character sheet of BLUE-TANK-TOP APPLICANT (27)\nImage 6: the character sheet of GRAY-SHIRT APPLICANT (25)\nImage 7: the character sheet of SHIRTLESS APPLICANT (28), look S0\nDraw each person as a clean outline figure that can be told apart by hairstyle, build and the shape of their outfit, from their character sheet; no faces in detail. Do not copy a sheet's layout, white background or multiple views. Each person appears once, whole and at natural scale for the place, on the furniture and floor of Image 1, facing the way the start says.\nOnly six people appear: 纪然, 许半夏, GREEN-SHIRT APPLICANT, BLUE-TANK-TOP APPLICANT, GRAY-SHIRT APPLICANT, and SHIRTLESS APPLICANT. Nobody else is there.\nAt the start: Ji Ran sits upright in the one black leather executive chair behind the one walnut desk. Her back is to the floor-to-ceiling windows, and she faces the open space in front of the desk. She wears the crimson sleeveless bodycon sheath dress. The desk holds architectural plans, wood samples and a metal figurine. The four applicants stand in one row in the open space in front of the desk, facing her. From the lounge end of the room they stand in this order: GREEN-SHIRT APPLICANT, who holds the small dumbbell at his side, then BLUE-TANK-TOP APPLICANT, then GRAY-SHIRT APPLICANT, then SHIRTLESS APPLICANT in his black T-shirt. Xu Banxia walks from the black leather sofas and the white marble coffee table of the lounge area toward the lounge end of the desk. The office door is in the wall facing the desk. It stands open and empty. The axis runs from the desk to the door wall, and the camera stays on the lounge side of it.\n\nNo shading, solid black areas, colour or photographic rendering: dark hair and clothes are outlines left white inside; no text, letters, numbers, arrows, labels or watermark.\n",
+  "aspect_ratio": "9:16",
+  "size": "1152x2048",
+  "quality": "high",
+  "images": [
+    "episodes/EP002/blocking/seg01/v1/view.png",
+    "assets/characters/ji_ran/states/S2/v2/image-1.jpg",
+    "assets/characters/xu_banxia/v1/image-1.jpg",
+    "assets/characters/green_shirt_applicant/v1/image-1.jpg",
+    "assets/characters/blue_tank_top_applicant/v1/image-1.jpg",
+    "assets/characters/gray_shirt_applicant/v1/image-1.jpg",
+    "assets/characters/shirtless_applicant/v1/image-1.jpg"
+  ]
+}

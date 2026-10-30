@@ -1,0 +1,629 @@
+{
+  "model": "sd25",
+  "content": [
+    {
+      "type": "text",
+      "text": "Image 1: Thirteen-panel storyboard reference, used for the overall shot structure, shot sizes, and camera-movement rhythm. Read it from left to right and from top to bottom; panel N is Shot N. It is a line-art sketch: do not adopt its sketch style, black outlines, white background, panel borders or drawn faces.\nImage 2: Reference of Sebastian's apartment, living room, the front view, the establishing view, facing the back wall, a rendered set, not live action. Use it only for the room's layout, the furniture's positions and the light's direction; do not reference its visual content. It contains no people.\nImage 3: Reference of Sebastian's apartment, living room, the back view, turned 180 degrees, facing the front wall, with the left wall at its right edge, a rendered set, used only for the room's layout; it contains no people.\nImage 4: Reference of Sebastian's apartment, living room, the left-side view, facing the left wall, with the back wall at its right edge, a rendered set, used only for the room's layout; it contains no people.\nImage 5: Reference of Sebastian's apartment, living room, the right-side view, facing the right wall, with the back wall at its left edge, a rendered set, used only for the room's layout; it contains no people.\nImage 6: Reference of Sebastian's apartment, living room, the floor plan seen from above: its top edge is the back wall, its bottom edge the front wall behind the front view's camera, and its left and right edges the left and right walls, a rendered set, used only for the room's layout; it contains no people.\nImage 7: Blocking reference of the segment's start: the same place with these people in their places, used only for where each person is and which way they face; take faces and outfits from each subject's own image. It is a line-art diagram: do not adopt its outlines or white background.\nImage 8: Subject 1 (Daniel) character appearance reference.\nImage 9: Subject 2 (Sebastian, look S4) character appearance reference.\nImage 10: Prop 1 (folder) maps to this image; use only structure, material, and color, and copy its writing and badges exactly from Image 10.\nImage 11: Prop 2 (hospital statement) maps to this image; use only structure, material, and color, and copy its writing and badges exactly from Image 11.\nImage 12: Prop 3 (two coins) maps to this image; use only structure, material, and color, and copy its writing and badges exactly from Image 12.\nImage 13: Prop 4 (Sebastian's phone) maps to this image; use only structure, material, and color, and copy its writing and badges exactly from Image 13.\nImage 14: Prop 5 (Daniel's phone) maps to this image; use only structure, material, and color, and copy its writing and badges exactly from Image 14.\n[Subject settings]\nSubject 1 (Daniel): Refer to Image 8. 30, Sebastian's loyal, efficient personal assistant and driver. Outfit: A navy-blue slim two-piece business suit over a white dress shirt, a forest-green silk tie, black leather oxfords and thin rimless glasses. Signature colour: green.\nSubject 2 (Sebastian): Refer to Image 9. 30, the hero; the scorned illegitimate son of the Klein family, jailed for three days for reckless driving and secretly a billionaire running a plan. Outfit: look S4: Day at home: a fitted black fine-knit crew-neck sweater with long sleeves pushed slightly up the forearms, slim charcoal-grey chinos, black leather loafers and the steel-and-black wristwatch. Signature colour: black.\nEnvironment (Sebastian's apartment, living room): Refer to Images 2 to 6. Day, soft bright sunlight through the floor-to-ceiling window. Soft bright daylight from the back-wall window and the glass pendant lamp over the dining table; quiet room tone, paper rustle, phone taps.\nDo not swap the characters' appearances, clothing, actions, positions or dialogue.\n[Subjects and relationships]\nOnly two people appear throughout: Daniel and Sebastian.\n[Blocking]\nRefer to Images 2 to 6 for the room and Image 7 for the people's places. Axis runs across the round dining table; the camera stays on the front-wall bookshelves side, in front of both. Sebastian sits in the dining chair on the couch side of the round dining table, facing the kitchenette. Daniel stands on the kitchenette side of the round dining table, facing Sebastian, holding a manila folder, his phone in his jacket. On the cleared table: Sebastian's phone face down with the two coins beside it.\n[Overall style]\nPhotorealistic live-action short drama with cinematic lighting. Each character keeps the face and the outfit with its main colour from their reference image throughout. Use each character sheet only for that character: the face from the close-up on the right, the body and outfit from the turnaround on the left; do not render the sheet's layout, white background or multiple views. This segment has 7 lines, in this order: Daniel, Daniel, Sebastian, Daniel, Sebastian, Daniel, Sebastian. Generate speech only from the lines in {} in the shot list, each spoken exactly once by its speaker; everyone else keeps their mouth naturally closed while listening, and a V.O. speaker keeps their mouth closed or is off screen. Follow the shot list below; do not add cuts or camera moves beyond it. Strictly adhere to the 180-degree rule: within a scene, characters keep their screen sides and the camera stays on one side of the axis. Seamless continuity of action, spatial matching and consistent actor blocking; cut on action. For dialogue prefer static shot-reverse-shot and over-the-shoulder shots, balanced with reaction shots and close-up inserts. Faces stable and clear, consistent with the reference images, with no resemblance to any real actor or actress. Normal human eyes. Natural anatomy and hands. Natural, fluid motion that follows the blocking; characters make subtle, natural movements. Characters, props and environment share one world with matched lighting. Each line ends naturally with breathing room and is never cut off. Authentic performances with micro-expressions. No BGM; generate only dialogue, environmental sounds and action sounds. No subtitles.\n[Continuity]\nMaintain continuity in the identities, number, appearance, clothing, relative heights, spatial positions, and eyelines of all the characters. The actions in the shot list occur strictly in sequence. Hands are anatomically correct.\n[Strictly exclude]\nadded or missing characters, spatial jumps. garbled text on the statement or phone. subtitles. Dialogue from the wrong character, multiple people speaking at once, repeated or missing lines, lip-sync errors and audio-visual desynchronization. The raw reference images (character sheets, setting plates) appearing as a frame of the video, and starting on a still frame of the setting reference. A fast zoom-in at the start, a fast pull-back at the end, unmotivated whip-pans, tilts, zooms and 360-degree orbits. Axis-crossing, jump cuts, frame skips, flicker and clipping. Face swaps, changes in age or clothing, sudden height shifts, added or missing characters, spatial jumps, and disordered action sequences; props popping in or vanishing, and duplicate characters except mirror reflections. Hand clipping, extra fingers, fused fingers, malformed hands. Subtitles, captions, watermarks and garbled writing; writing and logos other than those on a key prop's reference image, which are copied from it; a phone screen or paper that is not a key prop is shown from the back or out of focus. Black-and-white, monochrome, grayscale, desaturated visuals; hand-drawn, sketch, line art, illustration, comics, animation; storyboard frames, rough sketches, panel borders, gutters and grid layouts.\n[Shot list] (13 shots, approximately 28 seconds)\nWhen a previous-shot reference image is given, it is the moment this segment starts from: keep its people's positions, outfits, props and light, and continue from there. Shot 1 keeps its own camera, matching the image's framing only when it frames the same view; do not repeat that frame later.\nShot 1 (0-3s): [Wide shot, locked-off, eye-level, from the bookshelves side; Sebastian on frame left, Daniel on frame right] Daniel lays the manila folder on the round dining table in front of Sebastian, who sits in the dining chair. Dialogue (Daniel, in English, crisp report): {Her father left. Natalie and her mother got nothing.}\nShot 2 (3-5s): [Medium shot, locked-off, eye-level, on Sebastian at the table] Sebastian flips the folder open; a single creased sheet slides out onto the table. <Paper slides across wood>\nShot 3 (5-6s): [Close-up insert, overhead shot, locked-off, on the table top] The hospital statement lies on the table beside the open folder, its header and total legible.\nShot 4 (6-8s): [Medium shot, over-the-shoulder shot from behind Sebastian's shoulder toward Daniel, eye-level] Sebastian's shoulder at the frame edge; Daniel, across the table, adjusts his rimless glasses. Dialogue (Daniel, in English, even): {She's been paying for treatment alone.}\nShot 5 (8-10s): [Medium close-up, clean single, slow push in, eye-level, on Sebastian] Daniel is off screen. Sebastian picks up the hospital statement and reads it, his jaw tightening. Dialogue (Daniel, in English, even): {They offered help only if she took Cassie's place.}\nShot 6 (10-12s): [Close-up, locked-off, eye-level, on Sebastian's face] Sebastian lowers the sheet, his steel-grey eyes hard. Dialogue (Sebastian, in English, cold and quiet): {They sold her.}\nShot 7 (12-14s): [Medium shot, high angle, locked-off, over the table] Sebastian slips the statement back into the folder, shuts it and presses his palm flat on the cover; Daniel stands across the table. <Folder snaps shut>\nShot 8 (14-17s): [Medium shot, dirty single on Daniel with Sebastian's shoulder at the frame edge, eye-level] Daniel takes his phone out of his jacket. Dialogue (Daniel, in English, businesslike): {The fifty thousand arrived. It won't cover everything.}\nShot 9 (17-20s): [Medium close-up, low angle, locked-off, on Sebastian] Sebastian leans back in the dining chair, one hand still on the folder. Dialogue (Sebastian, in English, low order): {Pay the balance. Every future treatment, too.}\nShot 10 (20-22s): [Medium shot, locked-off, eye-level, on Daniel] Daniel nods once and taps quickly on his phone screen. <Screen taps>\nShot 11 (22-24s): [Close-up insert, locked-off, eye-level, on Daniel's phone screen] Daniel's phone shows the payment confirmation with a green check mark. <Soft confirmation chime>\nShot 12 (24-26s): [Medium shot, over-the-shoulder shot from behind Sebastian's shoulder toward Daniel, eye-level] Sebastian's shoulder at the frame edge; Daniel looks up from the phone at him. Dialogue (Daniel, in English, neutral): {What name do I give her?}\nShot 13 (26-28s): [Close-up, clean single, locked-off, eye-level, on Sebastian's face and shoulders] Sebastian shakes his head slightly. Dialogue (Sebastian, in English, flat): {Not mine.}\nAt the end: Sebastian sits in the dining chair on the couch side of the round dining table, facing the kitchenette, one hand on the closed folder. Daniel stands on the kitchenette side of the round dining table facing him, his phone in his hand. On the table: the closed folder, Sebastian's phone face down and the two coins beside it.\n\nImage 15 is the first frame.\n"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261023184802-tsjgl"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/sebastian_apartment/v1/front.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/sebastian_apartment/v1/back.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/sebastian_apartment/v1/left-side.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/sebastian_apartment/v1/right-side.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/sebastian_apartment/v1/floor-plan.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261023184522-9hk8c"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261022180001-crl6z"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261023183357-6bzpk"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/props/folder/v1/image-1.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/props/hospital_statement/v3/image-1.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/props/coins/v1/image-1.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/props/sebastian_phone/v1/image-1.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/props/daniel_phone/v1/image-1.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261024052332-rl7dz"
+      },
+      "role": "reference_image"
+    }
+  ],
+  "duration": 28,
+  "ratio": "9:16",
+  "resolution": "480p",
+  "generate_audio": true,
+  "watermark": false,
+  "return_last_frame": true,
+  "omni_reference_task_type": "reference",
+  "drama": {
+    "segment": {
+      "id": "seg03",
+      "duration": 28,
+      "location": "sebastian_apartment",
+      "scene_heading": "6-2 Day | Int. Sebastian's apartment, living room",
+      "time": "Day, soft bright sunlight through the floor-to-ceiling window",
+      "characters": [
+        "daniel",
+        "sebastian"
+      ],
+      "states": {
+        "sebastian": "S4"
+      },
+      "props": [
+        "folder",
+        "hospital_statement",
+        "coins",
+        "sebastian_phone",
+        "daniel_phone"
+      ],
+      "first_state": "Axis runs across the round dining table; the camera stays on the front-wall bookshelves side, in front of both. Sebastian sits in the dining chair on the couch side of the round dining table, facing the kitchenette. Daniel stands on the kitchenette side of the round dining table, facing Sebastian, holding a manila folder, his phone in his jacket. On the cleared table: Sebastian's phone face down with the two coins beside it.",
+      "shots": [
+        {
+          "time": "0-3s",
+          "size": "wide shot",
+          "angle": "eye level",
+          "camera": "Wide shot, locked-off, eye-level, from the bookshelves side; Sebastian on frame left, Daniel on frame right",
+          "visual": "Daniel lays the manila folder on the round dining table in front of Sebastian, who sits in the dining chair.",
+          "audio": "Dialogue (Daniel, in English, crisp report): {Her father left. Natalie and her mother got nothing.}",
+          "characters": [
+            "daniel",
+            "sebastian"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "3-5s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, locked-off, eye-level, on Sebastian at the table",
+          "visual": "Sebastian flips the folder open; a single creased sheet slides out onto the table.",
+          "audio": "<Paper slides across wood>",
+          "characters": [
+            "sebastian"
+          ],
+          "lines": []
+        },
+        {
+          "time": "5-6s",
+          "size": "close-up",
+          "angle": "overhead shot",
+          "camera": "Close-up insert, overhead shot, locked-off, on the table top",
+          "visual": "The hospital statement lies on the table beside the open folder, its header and total legible.",
+          "audio": "",
+          "characters": [],
+          "lines": []
+        },
+        {
+          "time": "6-8s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, over-the-shoulder shot from behind Sebastian's shoulder toward Daniel, eye-level",
+          "visual": "Sebastian's shoulder at the frame edge; Daniel, across the table, adjusts his rimless glasses.",
+          "audio": "Dialogue (Daniel, in English, even): {She's been paying for treatment alone.}",
+          "characters": [
+            "sebastian",
+            "daniel"
+          ],
+          "lines": [
+            1
+          ]
+        },
+        {
+          "time": "8-10s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up, clean single, slow push in, eye-level, on Sebastian",
+          "visual": "Daniel is off screen. Sebastian picks up the hospital statement and reads it, his jaw tightening.",
+          "audio": "Dialogue (Daniel, in English, even): {They offered help only if she took Cassie's place.}",
+          "characters": [
+            "sebastian"
+          ],
+          "lines": [
+            1
+          ]
+        },
+        {
+          "time": "10-12s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, locked-off, eye-level, on Sebastian's face",
+          "visual": "Sebastian lowers the sheet, his steel-grey eyes hard.",
+          "audio": "Dialogue (Sebastian, in English, cold and quiet): {They sold her.}",
+          "characters": [
+            "sebastian"
+          ],
+          "lines": [
+            2
+          ]
+        },
+        {
+          "time": "12-14s",
+          "size": "medium shot",
+          "angle": "high angle",
+          "camera": "Medium shot, high angle, locked-off, over the table",
+          "visual": "Sebastian slips the statement back into the folder, shuts it and presses his palm flat on the cover; Daniel stands across the table.",
+          "audio": "<Folder snaps shut>",
+          "characters": [
+            "sebastian",
+            "daniel"
+          ],
+          "lines": []
+        },
+        {
+          "time": "14-17s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, dirty single on Daniel with Sebastian's shoulder at the frame edge, eye-level",
+          "visual": "Daniel takes his phone out of his jacket.",
+          "audio": "Dialogue (Daniel, in English, businesslike): {The fifty thousand arrived. It won't cover everything.}",
+          "characters": [
+            "daniel",
+            "sebastian"
+          ],
+          "lines": [
+            3
+          ]
+        },
+        {
+          "time": "17-20s",
+          "size": "medium close-up",
+          "angle": "low angle",
+          "camera": "Medium close-up, low angle, locked-off, on Sebastian",
+          "visual": "Sebastian leans back in the dining chair, one hand still on the folder.",
+          "audio": "Dialogue (Sebastian, in English, low order): {Pay the balance. Every future treatment, too.}",
+          "characters": [
+            "sebastian"
+          ],
+          "lines": [
+            4
+          ]
+        },
+        {
+          "time": "20-22s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, locked-off, eye-level, on Daniel",
+          "visual": "Daniel nods once and taps quickly on his phone screen.",
+          "audio": "<Screen taps>",
+          "characters": [
+            "daniel"
+          ],
+          "lines": []
+        },
+        {
+          "time": "22-24s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up insert, locked-off, eye-level, on Daniel's phone screen",
+          "visual": "Daniel's phone shows the payment confirmation with a green check mark.",
+          "audio": "<Soft confirmation chime>",
+          "characters": [
+            "daniel"
+          ],
+          "lines": []
+        },
+        {
+          "time": "24-26s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, over-the-shoulder shot from behind Sebastian's shoulder toward Daniel, eye-level",
+          "visual": "Sebastian's shoulder at the frame edge; Daniel looks up from the phone at him.",
+          "audio": "Dialogue (Daniel, in English, neutral): {What name do I give her?}",
+          "characters": [
+            "sebastian",
+            "daniel"
+          ],
+          "lines": [
+            5
+          ]
+        },
+        {
+          "time": "26-28s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, clean single, locked-off, eye-level, on Sebastian's face and shoulders",
+          "visual": "Sebastian shakes his head slightly.",
+          "audio": "Dialogue (Sebastian, in English, flat): {Not mine.}",
+          "characters": [
+            "sebastian"
+          ],
+          "lines": [
+            6
+          ]
+        }
+      ],
+      "light_audio": "Soft bright daylight from the back-wall window and the glass pendant lamp over the dining table; quiet room tone, paper rustle, phone taps.",
+      "dialogue": [
+        {
+          "speaker": "daniel",
+          "line": "Her father left. Natalie and her mother got nothing."
+        },
+        {
+          "speaker": "daniel",
+          "line": "She's been paying for treatment alone. They offered help only if she took Cassie's place."
+        },
+        {
+          "speaker": "sebastian",
+          "line": "They sold her."
+        },
+        {
+          "speaker": "daniel",
+          "line": "The fifty thousand arrived. It won't cover everything."
+        },
+        {
+          "speaker": "sebastian",
+          "line": "Pay the balance. Every future treatment, too."
+        },
+        {
+          "speaker": "daniel",
+          "line": "What name do I give her?"
+        },
+        {
+          "speaker": "sebastian",
+          "line": "Not mine."
+        }
+      ],
+      "must_hit": [
+        "Daniel puts the folder in front of Sebastian and the hospital statement falls onto the table",
+        "Sebastian closes the folder",
+        "Daniel's phone shows the payment confirmation"
+      ],
+      "exit_state": "Sebastian sits in the dining chair on the couch side of the round dining table, facing the kitchenette, one hand on the closed folder. Daniel stands on the kitchenette side of the round dining table facing him, his phone in his hand. On the table: the closed folder, Sebastian's phone face down and the two coins beside it.",
+      "negative": [
+        "added or missing characters, spatial jumps",
+        "garbled text on the statement or phone",
+        "subtitles"
+      ]
+    },
+    "bible_version": "v3",
+    "breakdown_version": "v1",
+    "lineage": [
+      {
+        "path": "bible/v3/artifact.json",
+        "sha256": "cb13295a705376dcb690dc2f74e465bcdb36c2980582e868bcab7a2c31de8850"
+      },
+      {
+        "path": "bible/accepted.json",
+        "sha256": "394389dea6cf8cff61e544808987a91e6f3ef64be7219edd056c5400bc0d175f"
+      },
+      {
+        "path": "bible/current.json",
+        "sha256": "ce2b0860ea8918c0783c82c60449e0fdd5d54bfd64137c7ed4ed86742face717"
+      },
+      {
+        "path": "bible/v3/bible.json",
+        "sha256": "cf9df0f3d86d0268b88ca2cb91e6aa4d1e79fe9915ec2996652b564e1d8902b2"
+      },
+      {
+        "path": "bible/v3/input/screenplay.md",
+        "sha256": "dba468aa05d17e356606cdedf4dbd0fd929ebc47c0abe3db0924bdf73915a492"
+      },
+      {
+        "path": "episodes/EP006/breakdown/v1/artifact.json",
+        "sha256": "fb4dbde849b6ba24252987d669295998276702890f931ce975c18199fd153889"
+      },
+      {
+        "path": "episodes/EP006/breakdown/accepted.json",
+        "sha256": "c9969cc85b2acf8d8895fda949bb7e8472e07ffab0bb660bb9ac604d82a0b37c"
+      },
+      {
+        "path": "episodes/EP006/breakdown/current.json",
+        "sha256": "31801db1b80efc401ede500cfd802b0885101a67a6a590e8d4f2f38a5688e307"
+      },
+      {
+        "path": "episodes/EP006/breakdown/v1/breakdown.json",
+        "sha256": "713064460cbc0e4ab895e2d5afbd2dbb795782d70e9684d88debf0aa72a2ce28"
+      },
+      {
+        "path": "episodes/EP006/multi_panel_storyboard/seg03/line-art/v1/artifact.json",
+        "sha256": "cf569f5920b177c1ba42b6ad11dee3f11f90108d89d97ad11477d3c15581e086"
+      },
+      {
+        "path": "episodes/EP006/multi_panel_storyboard/seg03/line-art/accepted.json",
+        "sha256": "8c22e0a308a672172892a3e5fe895b48e11896b2c023c9fff4dce70e418ba366"
+      },
+      {
+        "path": "episodes/EP006/multi_panel_storyboard/seg03/line-art/current.json",
+        "sha256": "4684ef520ebfc02dcd4fea753aae1e7807175b02e3115aeac086e7ca438ab881"
+      },
+      {
+        "path": "episodes/EP006/multi_panel_storyboard/seg03/line-art/v1/image-1.jpg",
+        "sha256": "2b2392a9fcd0e9988590c83cfa139643d36184a1982af4ab11855c7f19bf0fef"
+      },
+      {
+        "path": "episodes/EP006/multi_panel_storyboard/seg03/line-art/v1/asset/job.json",
+        "sha256": "6748084f108edf69ba487ad7ce806e95df25351aa0b9389893059a990d77bbea"
+      },
+      {
+        "path": "assets/scenes/sebastian_apartment/v1/artifact.json",
+        "sha256": "607076719970b0c8dabe6546b51a5bdd69c47e832a9e822f10602cdc46e31c16"
+      },
+      {
+        "path": "assets/scenes/sebastian_apartment/accepted.json",
+        "sha256": "1f56dbbdc5fe90ad0d595d9c9df9cc77f44e500561b3a8cccdbbac205f9cd11c"
+      },
+      {
+        "path": "assets/scenes/sebastian_apartment/current.json",
+        "sha256": "945695ec929db987602f13aec0263b1dd13d16cd007c48048bc7645c19a1bb69"
+      },
+      {
+        "path": "assets/scenes/sebastian_apartment/v1/image-1.jpg",
+        "sha256": "f824b491016a6e117f283bdf1aa6304048edb8831024f0bf9f6a95322971846b"
+      },
+      {
+        "path": "assets/scenes/sebastian_apartment/v1/front.jpg",
+        "sha256": "e372037db0c546f4fdb3052f5de6dbfadf3ed140ef590c1ce134aa9c9dae99bf"
+      },
+      {
+        "path": "assets/scenes/sebastian_apartment/v1/back.jpg",
+        "sha256": "3bb892fd13d40c8bb31d08b25a33388c82c77ff1e5a17e346d9c5f6ddee851fa"
+      },
+      {
+        "path": "assets/scenes/sebastian_apartment/v1/left-side.jpg",
+        "sha256": "558239ee418f3f791b065c225fb2c7bb5aa56df402263e86df0817e2975f9f4b"
+      },
+      {
+        "path": "assets/scenes/sebastian_apartment/v1/right-side.jpg",
+        "sha256": "cb43a3c19cc154a569d50762cf2c2dad0609465d1cfd561b43ae6567e8e502a5"
+      },
+      {
+        "path": "assets/scenes/sebastian_apartment/v1/floor-plan.jpg",
+        "sha256": "8c2e8994c1059dc9eaa09afd596e16dc5f7f91c2c668717b943233ec1c93d430"
+      },
+      {
+        "path": "episodes/EP006/blocking/seg03/v1/artifact.json",
+        "sha256": "62000c9c823c9dec32de86f9bd3e98426bdf9d403c58b8a97fcfb0e9d6fdce51"
+      },
+      {
+        "path": "episodes/EP006/blocking/seg03/accepted.json",
+        "sha256": "b071e513109d83a6e3ee4958eb6fd9159b93049b2a58de7fb6338cc7d80b9893"
+      },
+      {
+        "path": "episodes/EP006/blocking/seg03/current.json",
+        "sha256": "5b31251b6c00e48bf40e51d4ca57f45c09839729a985fc0749732d34e7ed9951"
+      },
+      {
+        "path": "episodes/EP006/blocking/seg03/v1/image-1.jpg",
+        "sha256": "4a265a60457c7e1273e639141dc2e072229cda90ec7d2598b29d9e6adf18e2ab"
+      },
+      {
+        "path": "episodes/EP006/blocking/seg03/v1/asset/job.json",
+        "sha256": "555ac32e93b4f0f0f2713fcfaaaa5555403d5c8e5b9b95ea80f5137b8a97a67a"
+      },
+      {
+        "path": "assets/props/folder/v1/artifact.json",
+        "sha256": "1bdcb01564d5206c7ed5cd8d099c4552e52d32cfaa88335d4db122324e1931a3"
+      },
+      {
+        "path": "assets/props/folder/accepted.json",
+        "sha256": "b660e7aef1997adc40b090f96845b524a64f86b4071d22d2c626e080ec26931f"
+      },
+      {
+        "path": "assets/props/folder/current.json",
+        "sha256": "7d3b63a58a7e96c01e7301b68beb1c95573dcbe5adb2cab1cefcae132c781b34"
+      },
+      {
+        "path": "assets/props/folder/v1/image-1.jpg",
+        "sha256": "2f4914fa23e1ac2dffe1c4d9604c907faaf41df0d65cc0f70083efb70d1ed35e"
+      },
+      {
+        "path": "assets/props/hospital_statement/v3/artifact.json",
+        "sha256": "15e83b9bb7967f37122fc6412a559ef45e949769d976e5aa2f910fc9962a819c"
+      },
+      {
+        "path": "assets/props/hospital_statement/accepted.json",
+        "sha256": "e77a7fff13dfde6fa55fe2ab914ac6caaf9a83896d75af62d1d9b1316c6d9827"
+      },
+      {
+        "path": "assets/props/hospital_statement/current.json",
+        "sha256": "c7fab7b9bc8c74e951269b38b4f218d97fb8da456f5ea858e00a637b46960c89"
+      },
+      {
+        "path": "assets/props/hospital_statement/v3/image-1.jpg",
+        "sha256": "b3026929c5411c9f9887de883605eb11266ba99dc06fb27574dc7469c1350d32"
+      },
+      {
+        "path": "assets/props/coins/v1/artifact.json",
+        "sha256": "9524f47893e25db99c44e0cc34b2606f6c344ee8d540958450087b5f4645aa64"
+      },
+      {
+        "path": "assets/props/coins/accepted.json",
+        "sha256": "b2e5d01fa341afe3f62aa0d80fb17e19117684f113f56069c45ef372f4bd3e29"
+      },
+      {
+        "path": "assets/props/coins/current.json",
+        "sha256": "7d3b63a58a7e96c01e7301b68beb1c95573dcbe5adb2cab1cefcae132c781b34"
+      },
+      {
+        "path": "assets/props/coins/v1/image-1.jpg",
+        "sha256": "489d66662a2b07c9b7580fc10833c1f8d59357d5fc1b6dffed8f9358a8a00fbd"
+      },
+      {
+        "path": "assets/props/sebastian_phone/v1/artifact.json",
+        "sha256": "64efdb18441539900a029f725a1396ff4152c34510f807de68f3f6df3d01f08a"
+      },
+      {
+        "path": "assets/props/sebastian_phone/accepted.json",
+        "sha256": "66525a47968a7b038f558a4d8530f59ec2f987f5f4b8aaff009d00b10774c7cb"
+      },
+      {
+        "path": "assets/props/sebastian_phone/current.json",
+        "sha256": "1b3dd0cffc0f38e01b32f9074b39abd431261c1b30864f23bac577c45b703b06"
+      },
+      {
+        "path": "assets/props/sebastian_phone/v1/image-1.jpg",
+        "sha256": "7ce2567bb79b273e579d2f0e7607240fd54579a6bb88f7746fd8fba367402bcc"
+      },
+      {
+        "path": "assets/props/daniel_phone/v1/artifact.json",
+        "sha256": "ca9816379e9616f20c81f6b6aab13b63ff8c926b7ac602ec650f1d381ab4ac1f"
+      },
+      {
+        "path": "assets/props/daniel_phone/accepted.json",
+        "sha256": "5daa581fcb1263e71fa3e78909f444a5b0f5cc6256ffcab19476f729edc65a82"
+      },
+      {
+        "path": "assets/props/daniel_phone/current.json",
+        "sha256": "61871eb72568a4885dfc998dc3b1323a15239b9aad8246841c811a828b3876ec"
+      },
+      {
+        "path": "assets/props/daniel_phone/v1/image-1.jpg",
+        "sha256": "4e9dd59dc272f15345cb3b5515369687424b46948142f39451145737a21620c5"
+      },
+      {
+        "path": "assets/characters/daniel/v1/artifact.json",
+        "sha256": "5bc031432982dbf06fb3eef2ddf8ef5b5c38b4a80de83451bda0a8bbde1b3f3e"
+      },
+      {
+        "path": "assets/characters/daniel/accepted.json",
+        "sha256": "2676f2b28fb1dae9cbf224e370528e89714f020e11a79a88747be22626d3499a"
+      },
+      {
+        "path": "assets/characters/daniel/current.json",
+        "sha256": "db4956ac4fe1f4777dacd8da41cc07d4c5da488c6a5db1719e37de942d18f835"
+      },
+      {
+        "path": "assets/characters/daniel/v1/image-1.jpg",
+        "sha256": "44bfec11d9c16c8d584a3b4f1566410597ede396eed65de024a288c246709c2b"
+      },
+      {
+        "path": "assets/characters/daniel/v1/asset/job.json",
+        "sha256": "ae5a85160273d938318de0e3e00d6a2a44b67d61f15d682552a029fca958e3a7"
+      },
+      {
+        "path": "assets/characters/sebastian/states/S4/v1/artifact.json",
+        "sha256": "d321462a5fe1598762ec7881d735ceafaabb935e3d809c62d5391b0d9070b371"
+      },
+      {
+        "path": "assets/characters/sebastian/states/S4/accepted.json",
+        "sha256": "9fd483456e62a86b815ba9270256476c2c4a1391957bedd262f26068325d779e"
+      },
+      {
+        "path": "assets/characters/sebastian/states/S4/current.json",
+        "sha256": "e671ab71ff30e68e7a4d2864ffc44b823b8f1fb8a0ce424c8e78b234ddd38a8a"
+      },
+      {
+        "path": "assets/characters/sebastian/states/S4/v1/image-1.jpg",
+        "sha256": "b85a4f46ffd775613c6c77360e8975c6f363d50aa88a4b90173129e52e71a595"
+      },
+      {
+        "path": "assets/characters/sebastian/states/S4/v1/asset/job.json",
+        "sha256": "d3a12d39612650c7dff50887a897c2f03668f961222ca453ef4ebb22bf09cb4e"
+      },
+      {
+        "path": "episodes/EP006/video_prompts/v2/seg03.json",
+        "sha256": "387dcaccc381c82084013a5ac6852cd3d9af957b66f7d4837deb8074a30a87b8"
+      },
+      {
+        "path": "episodes/EP006/first_frame_reference/seg03/v1/artifact.json",
+        "sha256": "7e4ba5011576992c69db89821bf7ebfb600b4a133ce27150395bcabd86c886bb"
+      },
+      {
+        "path": "episodes/EP006/first_frame_reference/seg03/accepted.json",
+        "sha256": "3d5746d4206359d384bdfd8b01c7af35e5959a35dc59eac0fdf3f838d5ff4b84"
+      },
+      {
+        "path": "episodes/EP006/first_frame_reference/seg03/current.json",
+        "sha256": "c504f227026d6d145c8b07c754b94666369a1b39a3955c91d2d8542429d252b1"
+      },
+      {
+        "path": "episodes/EP006/first_frame_reference/seg03/v1/image-1.jpg",
+        "sha256": "790a8c5294cb1acf7ec41b0bfcf40e8b3037dc16742de97b5a7824bb84fa105a"
+      },
+      {
+        "path": "episodes/EP006/first_frame_reference/seg03/v1/asset/job.json",
+        "sha256": "8902df2e9ab871479db6b89375d603861d4fa2a695af9b6afab074c307dfeba9"
+      }
+    ],
+    "character_reference_mode": "asset_library",
+    "video_references": "storyboard",
+    "trusted_character_references": {},
+    "video_prompts_version": "v2",
+    "first_frame_reference": "v1"
+  }
+}

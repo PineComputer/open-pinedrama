@@ -1,0 +1,13 @@
+{
+  "model": "gpt-image-2.5-sunburst",
+  "prompt": "Edit this character reference sheet of 纪然 (a fictional 27-year-old). Change ONLY the outfit: the person now wears look S3, one outfit only: Night, returning home: a fitted ivory satin long-sleeve wrap blouse with a soft V neckline, tucked into a black leather high-waisted mini skirt. Red pointed stiletto heels. She carries the black handbag.. Keep everything else exactly as in the input image.\nThe new outfit is identical in every view and in the close-up: the same garments, accessories and details on the same side of the body, seen from that view's angle. Garments are plain, with no logo, brand mark, or printed letters or numbers.\nPreserve exactly: the face, facial features, skin and hair; the identity of the person; body shape, height and proportions; marks and scars as described (Strikingly beautiful East Asian woman in her late twenties who looks young and fresh. Small, delicate oval face with high cheekbones, a fine straight nose, a softly pointed chin and refined, elegant bone structure. Bright, intelligent, self-possessed almond eyes. Flawless, luminous, even fair complexion with no redness and natural skin texture. Full glamorous make-up: defined brows, long lashes, a glossy rose-nude lip. Long, glossy black hair falls past her shoulders in smooth, polished waves with a side part. About 174 cm tall with a small head and long legs, about eight heads tall, with elegant supermodel proportions. Curvy figure with full hips, a defined waist and an hourglass shape, and a full C-to-D-cup bust. Fashion-editorial poise. She wears small diamond stud earrings and a slim gold watch.); the pose and limb positions in every view; panel layout, scale, spacing and framing; plain background; studio lighting and colour balance.\n\nAvoid: changed face, different person, older or younger-looking face, changed body shape, changed pose, changed layout, changed background, changed lighting, clothing from the previous look left over, text, watermark.\n",
+  "n": 1,
+  "size": "2048x1152",
+  "quality": "high",
+  "output_format": "jpeg",
+  "output_compression": 100,
+  "moderation": "low",
+  "input_images": [
+    "assets/characters/ji_ran/v1/image-1.jpg"
+  ]
+}

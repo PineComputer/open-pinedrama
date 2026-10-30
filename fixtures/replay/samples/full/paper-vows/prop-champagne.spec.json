@@ -1,0 +1,8 @@
+{
+  "provider": "openai",
+  "model": "gpt-image-2.5-sunburst",
+  "prompt": "Prop reference image for a film, photorealistic still, vertical composition. One object alone, centred and seen whole, filling most of the frame, straight on and slightly from above, on a plain light grey seamless background, in soft even light at a neutral daylight white balance. No person, hand, figure or reflection of one. Prop: glasses of champagne. Tall, slim crystal champagne flutes filled with pale golden sparkling champagne, served from a round silver tray. It shows no readable text. Show it exactly as described, in its first state, with nothing else in the frame.\n\nAvoid: people or hands, other objects, logos, watermark, any writing other than the text given.\n",
+  "aspect_ratio": "9:16",
+  "size": "1152x2048",
+  "quality": "high"
+}

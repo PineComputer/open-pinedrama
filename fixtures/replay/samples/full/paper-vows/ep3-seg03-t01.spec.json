@@ -1,0 +1,534 @@
+{
+  "model": "sd25",
+  "content": [
+    {
+      "type": "text",
+      "text": "Image 1: Eight-panel storyboard reference, used for the overall shot structure, shot sizes, and camera-movement rhythm. Read it from left to right and from top to bottom; panel N is Shot N.\nImage 2: Live-action reference of Garden of the wedding venue, the front view, the establishing view, facing the back wall, used as the benchmark for environmental composition, lighting, and realistic live-action texture; it contains no people.\nImage 3: Live-action reference of Garden of the wedding venue, the back view, turned 180 degrees, facing the front wall, with the left wall at its right edge; it contains no people.\nImage 4: Live-action reference of Garden of the wedding venue, the left-side view, facing the left wall, with the back wall at its right edge; it contains no people.\nImage 5: Live-action reference of Garden of the wedding venue, the right-side view, facing the right wall, with the back wall at its left edge; it contains no people.\nImage 6: Live-action reference of Garden of the wedding venue, the floor plan seen from above: its top edge is the back wall, its bottom edge the front wall behind the front view's camera, and its left and right edges the left and right walls; it contains no people.\nImage 7: Blocking reference of the segment's start: the same place with these people in their places, used only for where each person is and which way they face; take faces and outfits from each subject's own image.\nImage 8: Subject 1 (Cassie, look S1) character appearance reference.\nImage 9: Subject 2 (Natalie, look S1) character appearance reference.\nImage 10: Subject 3 (George, look S1) character appearance reference.\nImage 11: Prop 1 (bouquet) maps to this image; use only structure, material, and color.\n[Subject settings]\nSubject 1 (Cassie): Refer to Image 8. 23, Natalie's spoiled stepsister, Lauren's daughter, who pushes Natalie into the marriage meant for her. Outfit: look S1: A scarlet-red satin bodycon cocktail dress with thin straps, a plunging neckline, a cinched waist and a high thigh slit on a short hem. Gold statement hoops, a gold cuff bracelet and gold strappy stilettos. No jacket. Signature colour: red.\nSubject 2 (Natalie): Refer to Image 9. 25, the heroine; George's daughter from his first marriage, who agrees to marry Sebastian Klein to pay for her mother's dialysis. Outfit: look S1: An elegant, figure-fitted ivory-white satin bridal gown with thin spaghetti straps and a low sweetheart neckline. The sculpted bodice is fitted, and the skirt hugs her hips before flaring softly into a floor-length hem. A narrow pale-blue satin sash, her 'something blue', cinches the waist. A short sheer tulle veil is pinned at the back of her curls. Ivory satin pointed-toe heels. No jewellery. Signature colour: blue.\nSubject 3 (George): Refer to Image 10. 55, Natalie's weak-willed father, head of the Quinn family, remarried to Lauren. Outfit: look S1: A charcoal-grey two-piece suit over a white dress shirt, a silver-grey silk tie, a pale-grey pocket square and black leather oxfords. Signature colour: grey.\nEnvironment (Garden of the wedding venue): Refer to Images 2 to 6. Day, bright warm sunlight from high on the right. Warm sunlight from high on the right, bright highlights on the ivory satin and the scarlet dress; birdsong, breeze, faint murmur of guests.\nDo not swap the characters' appearances, clothing, actions, positions or dialogue.\n[Subjects and relationships]\nOnly three people appear throughout: Cassie, Natalie, and George.\n[Blocking]\nRefer to Images 2 to 6 for the room and Image 7 for the people's places. Sunny day in the wedding garden. There is one white wooden wedding arch with sheer white drapes and white flower garlands at the far end of the aisle runner. Two short rows of white folding chairs face the arch, one row on each side of the aisle. There is one small round white cocktail table in front of the boxwood hedge, holding one silver tray of champagne flutes. Natalie stands under the centre of the arch, facing down the aisle, holding the bouquet at her waist in both hands. George stands beside her under the arch on the rose-bush side, facing down the aisle. The boxwood-hedge side of the arch beside Natalie is empty. Lauren stands at the head of the aisle beside the front row of chairs on the boxwood-hedge side, turned toward the arch. Guest 1 and Guest 2 stand at the cocktail table, Guest 1 on the arch side of it and Guest 2 on the aisle side, each holding a champagne flute. Cassie stands at the end of the front row of chairs on the rose-bush side, by the stone garden wall, arms crossed. Sebastian has not arrived. The camera is on the aisle in front of the arch, on the rose-bush side of the aisle.\n[Overall style]\nPhotorealistic live-action short drama with cinematic lighting. Each character keeps the face and the outfit with its main colour from their reference image throughout. Use each character sheet only for that character: the face from the close-up on the right, the body and outfit from the turnaround on the left; do not render the sheet's layout, white background or multiple views. This segment has 4 lines, in this order: Cassie, Cassie, Cassie, Natalie. Generate speech only from the lines in {} in the shot list, each spoken exactly once by its speaker; everyone else keeps their mouth naturally closed while listening, and a V.O. speaker keeps their mouth closed or is off screen. Follow the shot list below; do not add cuts or camera moves beyond it. Strictly adhere to the 180-degree rule: within a scene, characters keep their screen sides and the camera stays on one side of the axis. Seamless continuity of action, spatial matching and consistent actor blocking; cut on action. For dialogue prefer static shot-reverse-shot and over-the-shoulder shots, balanced with reaction shots and close-up inserts. Faces stable and clear, consistent with the reference images, with no resemblance to any real actor or actress. Normal human eyes. Natural anatomy and hands. Natural, fluid motion that follows the blocking; characters make subtle, natural movements. Characters, props and environment share one world with matched lighting. Each line ends naturally with breathing room and is never cut off. Authentic performances with micro-expressions. No BGM; generate only dialogue, environmental sounds and action sounds. No subtitles.\n[Continuity]\nMaintain continuity in the identities, number, appearance, clothing, relative heights, spatial positions, and eyelines of all the characters. The actions in the shot list occur strictly in sequence. Hands are anatomically correct.\n[Strictly exclude]\nadded or missing characters. spatial jumps, crossing the axis. subtitles or garbled text. Dialogue from the wrong character, multiple people speaking at once, repeated or missing lines, lip-sync errors and audio-visual desynchronization. The raw reference images (character sheets, setting plates) appearing as a frame of the video, and starting on a still frame of the setting reference. A fast zoom-in at the start, a fast pull-back at the end, unmotivated whip-pans, tilts, zooms and 360-degree orbits. Axis-crossing, jump cuts, frame skips, flicker and clipping. Face swaps, changes in age or clothing, sudden height shifts, added or missing characters, spatial jumps, and disordered action sequences; props popping in or vanishing, and duplicate characters except mirror reflections. Hand clipping, extra fingers, fused fingers, malformed hands. Readable text, numbers, logos and watermarks; phones and paper are shown from the back or out of focus. Black-and-white, monochrome, grayscale, desaturated visuals; hand-drawn, sketch, line art, illustration, comics, animation; storyboard frames, rough sketches, panel borders, gutters and grid layouts.\n[Shot list] (8 shots, approximately 22 seconds)\nWhen a previous-shot reference image is given, it is the moment this segment starts from: keep its people's positions, outfits, props and light, and continue from there. Shot 1 keeps its own camera, matching the image's framing only when it frames the same view; do not repeat that frame later.\nShot 1 (0-3s): [Medium shot, follow Cassie from the end of the front row by the stone wall to the head of the aisle, eye-level] Cassie struts from the stone garden wall to the head of the aisle, arms crossed, and stops a step in front of Natalie on the rose-bush side, facing her. Natalie's veil and shoulder appear at the frame edge. <Stiletto heels tap on the aisle runner>\nShot 2 (3-7s): [Medium shot, over-the-shoulder shot past Natalie's shoulder onto Cassie, eye-level] Cassie tilts her head with a sugary, mocking smile, her gold hoops swinging. Dialogue (Cassie, in English, sing-song and mocking): {Excited for your wedding? How does it feel to be marrying a bastard child?}\nShot 3 (7-10s): [Close-up, clean single of Natalie, tight on face and shoulders, eye-level] Natalie lowers her eyes to the bouquet and presses her lips together. Dialogue (Cassie, in English, sneering): {Not even his own family showed up for his wedding.}\nShot 4 (10-12s): [Medium close-up, clean single of Cassie, low angle] Cassie glances at the empty side of the arch and gives a fake pout. Dialogue (Cassie, in English, sneering): {I mean, clearly, they don't value him.}\nShot 5 (12-15s): [Close-up, push in on Cassie, eye-level] Cassie leans in toward Natalie's ear with a cruel, gleeful grin. Dialogue (Cassie, in English, whispered with relish): {Oh, I also heard he's ugly as fuck.}\nShot 6 (15-17s): [Medium shot, dirty single of George with Natalie's veiled shoulder at the frame edge, eye-level] George winces, opens his mouth, then closes it and looks away toward the guests.\nShot 7 (17-20s): [Medium shot, over-the-shoulder shot past Cassie's shoulder onto Natalie, eye-level] Natalie lifts her chin and looks straight at Cassie, holding the bouquet firmly. Dialogue (Natalie, in English, firm and steely): {Can you be quiet? At least show some respect.}\nShot 8 (20-22s): [Medium close-up, clean single of Cassie, eye-level] Cassie rolls her eyes and tightens her crossed arms with a smug smirk, staying in front of Natalie. <A scoffing breath>\nAt the end: Sunny day in the wedding garden. There is one white wooden wedding arch with sheer white drapes and white flower garlands at the far end of the aisle runner. Two short rows of white folding chairs face the arch, one row on each side of the aisle. There is one small round white cocktail table in front of the boxwood hedge, holding one silver tray of champagne flutes. Natalie stands under the centre of the arch, facing down the aisle, holding the bouquet at her waist in both hands. George stands beside her under the arch on the rose-bush side, facing down the aisle. The boxwood-hedge side of the arch beside Natalie is empty. Lauren stands at the head of the aisle beside the front row of chairs on the boxwood-hedge side, turned toward the arch. Guest 1 and Guest 2 stand at the cocktail table, Guest 1 on the arch side of it and Guest 2 on the aisle side, each holding a champagne flute. Cassie stands at the head of the aisle a step in front of Natalie, on the rose-bush side, arms crossed, facing her. Sebastian has not arrived. The camera is on the aisle in front of the arch, on the rose-bush side of the aisle.\n\n<Image 12> is the previous shot (seg02/t01 at 18.94s).\n"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261022181630-nb74n"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/wedding_garden/v1/front.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/wedding_garden/v1/back.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/wedding_garden/v1/left-side.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/wedding_garden/v1/right-side.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/wedding_garden/v1/floor-plan.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261022181342-pwtlk"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261022180343-nkrq6"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261022180012-k67g5"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261022180023-n7g45"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/props/bouquet/v1/image-1.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261022184455-mr6sj"
+      },
+      "role": "reference_image"
+    }
+  ],
+  "duration": 22,
+  "ratio": "9:16",
+  "resolution": "480p",
+  "generate_audio": true,
+  "watermark": false,
+  "return_last_frame": true,
+  "omni_reference_task_type": "reference",
+  "drama": {
+    "segment": {
+      "id": "seg03",
+      "duration": 22,
+      "location": "wedding_garden",
+      "scene_heading": "3-1 Day | Ext. Garden of the wedding venue",
+      "time": "Day, bright warm sunlight from high on the right",
+      "characters": [
+        "cassie",
+        "natalie",
+        "george"
+      ],
+      "states": {
+        "cassie": "S1",
+        "natalie": "S1",
+        "george": "S1"
+      },
+      "props": [
+        "bouquet"
+      ],
+      "first_state": "Sunny day in the wedding garden. There is one white wooden wedding arch with sheer white drapes and white flower garlands at the far end of the aisle runner. Two short rows of white folding chairs face the arch, one row on each side of the aisle. There is one small round white cocktail table in front of the boxwood hedge, holding one silver tray of champagne flutes. Natalie stands under the centre of the arch, facing down the aisle, holding the bouquet at her waist in both hands. George stands beside her under the arch on the rose-bush side, facing down the aisle. The boxwood-hedge side of the arch beside Natalie is empty. Lauren stands at the head of the aisle beside the front row of chairs on the boxwood-hedge side, turned toward the arch. Guest 1 and Guest 2 stand at the cocktail table, Guest 1 on the arch side of it and Guest 2 on the aisle side, each holding a champagne flute. Cassie stands at the end of the front row of chairs on the rose-bush side, by the stone garden wall, arms crossed. Sebastian has not arrived. The camera is on the aisle in front of the arch, on the rose-bush side of the aisle.",
+      "shots": [
+        {
+          "time": "0-3s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, follow Cassie from the end of the front row by the stone wall to the head of the aisle, eye-level",
+          "visual": "Cassie struts from the stone garden wall to the head of the aisle, arms crossed, and stops a step in front of Natalie on the rose-bush side, facing her. Natalie's veil and shoulder appear at the frame edge.",
+          "audio": "<Stiletto heels tap on the aisle runner>",
+          "characters": [
+            "cassie",
+            "natalie"
+          ],
+          "lines": []
+        },
+        {
+          "time": "3-7s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, over-the-shoulder shot past Natalie's shoulder onto Cassie, eye-level",
+          "visual": "Cassie tilts her head with a sugary, mocking smile, her gold hoops swinging.",
+          "audio": "Dialogue (Cassie, in English, sing-song and mocking): {Excited for your wedding? How does it feel to be marrying a bastard child?}",
+          "characters": [
+            "cassie",
+            "natalie"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "7-10s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, clean single of Natalie, tight on face and shoulders, eye-level",
+          "visual": "Natalie lowers her eyes to the bouquet and presses her lips together.",
+          "audio": "Dialogue (Cassie, in English, sneering): {Not even his own family showed up for his wedding.}",
+          "characters": [
+            "natalie"
+          ],
+          "lines": [
+            1
+          ]
+        },
+        {
+          "time": "10-12s",
+          "size": "medium close-up",
+          "angle": "low angle",
+          "camera": "Medium close-up, clean single of Cassie, low angle",
+          "visual": "Cassie glances at the empty side of the arch and gives a fake pout.",
+          "audio": "Dialogue (Cassie, in English, sneering): {I mean, clearly, they don't value him.}",
+          "characters": [
+            "cassie"
+          ],
+          "lines": [
+            1
+          ]
+        },
+        {
+          "time": "12-15s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, push in on Cassie, eye-level",
+          "visual": "Cassie leans in toward Natalie's ear with a cruel, gleeful grin.",
+          "audio": "Dialogue (Cassie, in English, whispered with relish): {Oh, I also heard he's ugly as fuck.}",
+          "characters": [
+            "cassie"
+          ],
+          "lines": [
+            2
+          ]
+        },
+        {
+          "time": "15-17s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, dirty single of George with Natalie's veiled shoulder at the frame edge, eye-level",
+          "visual": "George winces, opens his mouth, then closes it and looks away toward the guests.",
+          "audio": "",
+          "characters": [
+            "george",
+            "natalie"
+          ],
+          "lines": []
+        },
+        {
+          "time": "17-20s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, over-the-shoulder shot past Cassie's shoulder onto Natalie, eye-level",
+          "visual": "Natalie lifts her chin and looks straight at Cassie, holding the bouquet firmly.",
+          "audio": "Dialogue (Natalie, in English, firm and steely): {Can you be quiet? At least show some respect.}",
+          "characters": [
+            "natalie",
+            "cassie"
+          ],
+          "lines": [
+            3
+          ]
+        },
+        {
+          "time": "20-22s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up, clean single of Cassie, eye-level",
+          "visual": "Cassie rolls her eyes and tightens her crossed arms with a smug smirk, staying in front of Natalie.",
+          "audio": "<A scoffing breath>",
+          "characters": [
+            "cassie"
+          ],
+          "lines": []
+        }
+      ],
+      "light_audio": "Warm sunlight from high on the right, bright highlights on the ivory satin and the scarlet dress; birdsong, breeze, faint murmur of guests.",
+      "dialogue": [
+        {
+          "speaker": "cassie",
+          "line": "Excited for your wedding? How does it feel to be marrying a bastard child?"
+        },
+        {
+          "speaker": "cassie",
+          "line": "Not even his own family showed up for his wedding. I mean, clearly, they don't value him."
+        },
+        {
+          "speaker": "cassie",
+          "line": "Oh, I also heard he's ugly as fuck."
+        },
+        {
+          "speaker": "natalie",
+          "line": "Can you be quiet? At least show some respect."
+        }
+      ],
+      "must_hit": [
+        "Cassie walks up to Natalie with her arms crossed",
+        "Cassie mocks the absent groom",
+        "Natalie tells Cassie to be quiet"
+      ],
+      "exit_state": "Sunny day in the wedding garden. There is one white wooden wedding arch with sheer white drapes and white flower garlands at the far end of the aisle runner. Two short rows of white folding chairs face the arch, one row on each side of the aisle. There is one small round white cocktail table in front of the boxwood hedge, holding one silver tray of champagne flutes. Natalie stands under the centre of the arch, facing down the aisle, holding the bouquet at her waist in both hands. George stands beside her under the arch on the rose-bush side, facing down the aisle. The boxwood-hedge side of the arch beside Natalie is empty. Lauren stands at the head of the aisle beside the front row of chairs on the boxwood-hedge side, turned toward the arch. Guest 1 and Guest 2 stand at the cocktail table, Guest 1 on the arch side of it and Guest 2 on the aisle side, each holding a champagne flute. Cassie stands at the head of the aisle a step in front of Natalie, on the rose-bush side, arms crossed, facing her. Sebastian has not arrived. The camera is on the aisle in front of the arch, on the rose-bush side of the aisle.",
+      "negative": [
+        "added or missing characters",
+        "spatial jumps, crossing the axis",
+        "subtitles or garbled text"
+      ]
+    },
+    "bible_version": "v2",
+    "breakdown_version": "v2",
+    "lineage": [
+      {
+        "path": "bible/v2/artifact.json",
+        "sha256": "43a9a0df923881275f336813067654cac8bb0fc8322601eb704a559e2bde7609"
+      },
+      {
+        "path": "bible/accepted.json",
+        "sha256": "0d01227b17f639001c00e1fccb07e8dceb252aba112177790d599cae4e1e0cbd"
+      },
+      {
+        "path": "bible/current.json",
+        "sha256": "06cf9a01a94d514da311cce8b1bb37695e3ad05de6d67d78b74820c06a69fb3a"
+      },
+      {
+        "path": "bible/v2/bible.json",
+        "sha256": "a968d09d9298d5c64d340cac6ca885cfe1415115993aa36c03d370b352fd72a1"
+      },
+      {
+        "path": "bible/v2/input/screenplay.md",
+        "sha256": "9002401187c2b458ddbb8547e2e66be386d989f20f8427e59bd4977366f0837b"
+      },
+      {
+        "path": "episodes/EP003/breakdown/v2/artifact.json",
+        "sha256": "bdb440e9c4b4de004e2f5eb174bb33dee97a80c438f80d8da95f8233ada946dc"
+      },
+      {
+        "path": "episodes/EP003/breakdown/accepted.json",
+        "sha256": "35747e931c88aed06807f7e5ee281d2da0f0b35af114ed4a8ca6c708694ba3fe"
+      },
+      {
+        "path": "episodes/EP003/breakdown/current.json",
+        "sha256": "23fb7c0be42bba2d2e237058bba557747093f261a463ddecc4c196c9ed788ba0"
+      },
+      {
+        "path": "episodes/EP003/breakdown/v2/breakdown.json",
+        "sha256": "5789a3dcbf1ee65a6b0b7f066279981ee1e5a3d4fd5c502f37845b8e97ffb435"
+      },
+      {
+        "path": "episodes/EP003/multi_panel_storyboard/seg03/line-art/v1/artifact.json",
+        "sha256": "cdb9ff0db99f4e964962c116d1d2b080a24fb0de9ec52b88cf6a214490cdb600"
+      },
+      {
+        "path": "episodes/EP003/multi_panel_storyboard/seg03/line-art/accepted.json",
+        "sha256": "7c8ddfe84b734c162aeb100395c600abbb0a1bf388f5998a4e99869b084e231e"
+      },
+      {
+        "path": "episodes/EP003/multi_panel_storyboard/seg03/line-art/current.json",
+        "sha256": "8b9d6cec48d045e32426f59a181fd2deabb541e133e1e9a91006134d1bdce062"
+      },
+      {
+        "path": "episodes/EP003/multi_panel_storyboard/seg03/line-art/v1/image-1.jpg",
+        "sha256": "9ab0ce16092dbc790750ecd475f4f4161ab01d0582d8ab76079e2a6f046f46dc"
+      },
+      {
+        "path": "episodes/EP003/multi_panel_storyboard/seg03/line-art/v1/asset/job.json",
+        "sha256": "efb7e80a0f75fbfa84446e25be54c7b1dbe4a5c00a53f53a5ff02932b1eea5b7"
+      },
+      {
+        "path": "assets/scenes/wedding_garden/v1/artifact.json",
+        "sha256": "016ce52ca88e7f76f25d0ede9ee4f22e27d4e3304923f42560ea24cdb03b09c6"
+      },
+      {
+        "path": "assets/scenes/wedding_garden/accepted.json",
+        "sha256": "947a777d874ba2f6511f44bd1231fd7b7c745f689a8398bdef1257a560dd8286"
+      },
+      {
+        "path": "assets/scenes/wedding_garden/current.json",
+        "sha256": "16d98c5c181f64feaf272303241cb82fa150d9ec6e83c87cf3b7fe543a54549c"
+      },
+      {
+        "path": "assets/scenes/wedding_garden/v1/image-1.jpg",
+        "sha256": "f98d8061521f683af962b4dc1e384dd4937d3221c46f0b149d26a94eb726533e"
+      },
+      {
+        "path": "assets/scenes/wedding_garden/v1/front.jpg",
+        "sha256": "31af27a9b6878ebc482de1f2b4b09fa0d18eea0bf925fb96ae1f6da5185db3a5"
+      },
+      {
+        "path": "assets/scenes/wedding_garden/v1/back.jpg",
+        "sha256": "a251f6f516f4111cf76dd484f67f272ad59258ac35894ebb222e4c7312c6ffd1"
+      },
+      {
+        "path": "assets/scenes/wedding_garden/v1/left-side.jpg",
+        "sha256": "d85a7e47a7a564b061c5b93e4e789d9f477f0daed6093368d00fcb21179967f4"
+      },
+      {
+        "path": "assets/scenes/wedding_garden/v1/right-side.jpg",
+        "sha256": "28a3017217712607611c556ccafbad67d0bd2c70973f9649a08754c62b13eb17"
+      },
+      {
+        "path": "assets/scenes/wedding_garden/v1/floor-plan.jpg",
+        "sha256": "b6c0a86199d11e7e5b406413f653e2b3b3758563480dcc711907610cdc107200"
+      },
+      {
+        "path": "episodes/EP003/blocking/seg03/v1/artifact.json",
+        "sha256": "c55933643033e6626cf88e55916ebcdbc58de81e8b70a436831ae2b0d9a4f2a8"
+      },
+      {
+        "path": "episodes/EP003/blocking/seg03/accepted.json",
+        "sha256": "41882554bbf5595e8771428afd793bc232bc7ba810bfb5fb6801bf2797c9fc57"
+      },
+      {
+        "path": "episodes/EP003/blocking/seg03/current.json",
+        "sha256": "61bd2c15e1d7dcdc24047d320532fa4fc7f35d2655858c797355a206a8e91465"
+      },
+      {
+        "path": "episodes/EP003/blocking/seg03/v1/image-1.jpg",
+        "sha256": "dc81cc47702e50a0f615c7b1226879ba1ef95212e4abeaf1d37b507837541c24"
+      },
+      {
+        "path": "episodes/EP003/blocking/seg03/v1/asset/job.json",
+        "sha256": "c1639bbf8f07550eb1b6542d395d5ca069467fd5abef7041c0152927b0aeb6d3"
+      },
+      {
+        "path": "assets/props/bouquet/v1/artifact.json",
+        "sha256": "b19f307e52b19fb421d88d6f4b6a4971c981e5e7f1a5bf94b7806c8092110563"
+      },
+      {
+        "path": "assets/props/bouquet/accepted.json",
+        "sha256": "2289f76767bc659e8e95a6b45616d5d446936eb8a8e9d3914b08646bfc4fcd99"
+      },
+      {
+        "path": "assets/props/bouquet/current.json",
+        "sha256": "29be760dc167ed7ddc2874b5ba91d0777e1a4151849f033f2af15f92a43801c6"
+      },
+      {
+        "path": "assets/props/bouquet/v1/image-1.jpg",
+        "sha256": "efb040aae0550ad503d91eb4fd46dab56e0bba41b73962edecadc9b92156381f"
+      },
+      {
+        "path": "assets/characters/cassie/states/S1/v2/artifact.json",
+        "sha256": "3733b8d2d3d7dca96c4ee31e121e57f22a1726b06ef97fa6503c34b2df9f94df"
+      },
+      {
+        "path": "assets/characters/cassie/states/S1/accepted.json",
+        "sha256": "eebc7eb74f8ec1766f416a4dcd5fe04490ed2e6170fa0aa3671cdb9743d0a7c9"
+      },
+      {
+        "path": "assets/characters/cassie/states/S1/current.json",
+        "sha256": "b74d1ad76d5f00e892655abab0826731332e3aa384071f5d4280e44a167496a4"
+      },
+      {
+        "path": "assets/characters/cassie/states/S1/v2/image-1.jpg",
+        "sha256": "12d3955e9fdec31f994f9d5c680b8a46c33b38ed111915a8955cf592cd0e22e0"
+      },
+      {
+        "path": "assets/characters/cassie/states/S1/v2/asset/job.json",
+        "sha256": "0f28c341a53a4feab135766a41e94cd9b5da1b45fcf2cf79ea6738ceb6dcb235"
+      },
+      {
+        "path": "assets/characters/natalie/states/S1/v1/artifact.json",
+        "sha256": "677f74afac9d0826382e81009c91ec65e5f4e4dcec1e743e8aed0bbafaf1790a"
+      },
+      {
+        "path": "assets/characters/natalie/states/S1/accepted.json",
+        "sha256": "90b763427cb588117f1831ea6edbad966f5cc88f5851cbf810d1fb90e55019d3"
+      },
+      {
+        "path": "assets/characters/natalie/states/S1/current.json",
+        "sha256": "15d4c62afc3ea583764aadab1ed626d52a049d4097ea7bd1a1a84db9423dbe19"
+      },
+      {
+        "path": "assets/characters/natalie/states/S1/v1/image-1.jpg",
+        "sha256": "9eb26e977d72d459b7999cac7a0810ed12a5e56393c8413e4b60aa0b04a782cd"
+      },
+      {
+        "path": "assets/characters/natalie/states/S1/v1/asset/job.json",
+        "sha256": "05fd7e582765b1e61993ed65dce2df8f07b7e823d45e753b933ad81e84387b89"
+      },
+      {
+        "path": "assets/characters/george/states/S1/v1/artifact.json",
+        "sha256": "11a9ac1186ca651c05d27d5111899c6607483109d2262cea03649b852b6de458"
+      },
+      {
+        "path": "assets/characters/george/states/S1/accepted.json",
+        "sha256": "352c359efa1ab641db819371d52042ab2493f789bd02fba915fd3d7847c03f3e"
+      },
+      {
+        "path": "assets/characters/george/states/S1/current.json",
+        "sha256": "15d4c62afc3ea583764aadab1ed626d52a049d4097ea7bd1a1a84db9423dbe19"
+      },
+      {
+        "path": "assets/characters/george/states/S1/v1/image-1.jpg",
+        "sha256": "079b4d49d59034518dbb2f5490b8b212397a85ec1b0167580d7c3b3fdc21a5c8"
+      },
+      {
+        "path": "assets/characters/george/states/S1/v1/asset/job.json",
+        "sha256": "0d871f5092bd148d735081e5ec3a527687f912434dba8f748990cb47512682de"
+      },
+      {
+        "path": "episodes/EP003/video_prompts/v1/artifact.json",
+        "sha256": "7c7ad3ea368280992b36afd529ddda4fda52fa8a877787fd687ae223721680fe"
+      },
+      {
+        "path": "episodes/EP003/video_prompts/v1/seg03.json",
+        "sha256": "cc222b58f554db784dd2649b76cb6071d1fbf8e929f438cb1ea30444eec4d456"
+      },
+      {
+        "path": "episodes/EP003/video_prompts/current.json",
+        "sha256": "647848a3564bf4fa46144e2dcaf7da754ae415235ea8eeea451edefcddfc7b73"
+      },
+      {
+        "path": "episodes/EP003/segments/seg02/t01/video.mp4",
+        "sha256": "c13e623e3a83c8f7891a21a905f376daa229bdde13d1a942a0c54bfa10f05456"
+      },
+      {
+        "path": "episodes/EP003/segments/seg02/t01/continuation_18.94s.png",
+        "sha256": "c847c548ffeecb7b39953d7312a55f16f1cb87edb7b79d9ce8da48d77bc691a2"
+      },
+      {
+        "path": "episodes/EP003/segments/seg02/t01/artifact.json",
+        "sha256": "99ea0a9851cd7f2eb1766499eee009cd390da4f232495de62b37c29362525d76"
+      },
+      {
+        "path": "episodes/EP003/segments/seg02/accepted.json",
+        "sha256": "6d9fcf0982bc8e21689e82b1198c01e494b75ba1eca963564f3c21c49b2316d6"
+      },
+      {
+        "path": "episodes/EP003/segments/seg02/t01/reviews/review-0ef42877d4b2.json",
+        "sha256": "c76741b9312ff4a0d722be5be87acfc2816fbbbc32405b447e6881a91f1c136c"
+      },
+      {
+        "path": "episodes/EP003/segments/seg02/t01/continuation_18.94s.json",
+        "sha256": "83a409c165d6cb4b0e9da6741c00fa140117310f0a906018e2e1127de8a761e8"
+      },
+      {
+        "path": "episodes/EP003/segments/seg02/t01/continuation_18.94s_asset/job.json",
+        "sha256": "ade2f47e48bd8e76796ac683aa07668fac288d8f2ba6c0520d3e58973a724fd0"
+      }
+    ],
+    "character_reference_mode": "asset_library",
+    "video_references": "storyboard",
+    "trusted_character_references": {},
+    "video_prompts_version": "v1",
+    "continues_from": {
+      "source": {
+        "path": "episodes/EP003/segments/seg02/t01/video.mp4",
+        "sha256": "c13e623e3a83c8f7891a21a905f376daa229bdde13d1a942a0c54bfa10f05456"
+      },
+      "seconds": 18.939999999999998,
+      "frame": {
+        "path": "episodes/EP003/segments/seg02/t01/continuation_18.94s.png",
+        "sha256": "c847c548ffeecb7b39953d7312a55f16f1cb87edb7b79d9ce8da48d77bc691a2"
+      },
+      "segment": "seg02",
+      "take": "t01",
+      "manifest": {
+        "path": "episodes/EP003/segments/seg02/t01/artifact.json",
+        "sha256": "99ea0a9851cd7f2eb1766499eee009cd390da4f232495de62b37c29362525d76"
+      },
+      "acceptance": {
+        "path": "episodes/EP003/segments/seg02/accepted.json",
+        "sha256": "6d9fcf0982bc8e21689e82b1198c01e494b75ba1eca963564f3c21c49b2316d6"
+      },
+      "review": {
+        "path": "episodes/EP003/segments/seg02/t01/reviews/review-0ef42877d4b2.json",
+        "sha256": "c76741b9312ff4a0d722be5be87acfc2816fbbbc32405b447e6881a91f1c136c"
+      },
+      "frame_record": {
+        "path": "episodes/EP003/segments/seg02/t01/continuation_18.94s.json",
+        "sha256": "83a409c165d6cb4b0e9da6741c00fa140117310f0a906018e2e1127de8a761e8"
+      },
+      "upload": {
+        "path": "episodes/EP003/segments/seg02/t01/continuation_18.94s_asset/job.json",
+        "sha256": "ade2f47e48bd8e76796ac683aa07668fac288d8f2ba6c0520d3e58973a724fd0"
+      }
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "provider": "openai",
+  "model": "gpt-image-2.5-sunburst",
+  "prompt": "Edit this character reference sheet of 路少泽 (a fictional 28-year-old). Change ONLY the outfit: the person now wears look S1, one outfit only: Night, returned heir: a tailored navy-blue slim suit jacket over a crisp white open-collar dress shirt, matching navy trousers, polished black oxfords and a silver dress watch. Hair slicked back.. Keep everything else exactly as in the input image.\nThe new outfit is identical in every view and in the close-up: the same garments, accessories and details on the same side of the body, seen from that view's angle. Garments are plain, with no logo, brand mark, or printed letters or numbers.\nPreserve exactly: the face, facial features, skin and hair; the identity of the person; body shape, height and proportions; marks and scars as described (Handsome East Asian man in his late twenties. Angular face with a sharp jaw, narrow sharp eyes, a straight nose and thin lips that settle into a superior set. Healthy skin with natural texture. Black hair styled in a slicked-back, side-parted pompadour. About 182 cm tall with a fit, trim, average build. He wears a silver dress watch.); the pose and limb positions in every view; panel layout, scale, spacing and framing; plain background; studio lighting and colour balance.\n\nAvoid: changed face, different person, older or younger-looking face, changed body shape, changed pose, changed layout, changed background, changed lighting, clothing from the previous look left over, text, watermark.\n",
+  "aspect_ratio": "16:9",
+  "size": "2048x1152",
+  "quality": "high",
+  "images": [
+    "assets/characters/lu_shaoze/v1/image-1.jpg"
+  ]
+}

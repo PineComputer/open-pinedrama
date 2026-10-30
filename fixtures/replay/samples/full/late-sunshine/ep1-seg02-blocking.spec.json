@@ -1,0 +1,14 @@
+{
+  "provider": "openai",
+  "model": "gpt-image-2.5-sunburst",
+  "prompt": "A clean line-art blocking diagram of one scene of a live-action short drama, vertical composition: the place of Image 1 drawn in simple black outlines on white, with the segment's people in their places at its start, the way a master shot shows the whole scene before it is cut into shots. Keep Image 1's camera position, framing, walls, windows, doorways and furniture, traced in outline; only add the people.\nImage 1: the location JI FAMILY LIVING ROOM, the front view, with no people\nImage 2: the character sheet of 路少泽 (28), look S0\nImage 3: the character sheet of 纪宏远 (52)\nImage 4: the character sheet of 纪然 (27), look S1\nDraw each person as a clean outline figure that can be told apart by hairstyle, build and the shape of their outfit, from their character sheet; no faces in detail. Do not copy a sheet's layout, white background or multiple views. Each person appears once, whole and at natural scale for the place, on the furniture and floor of Image 1, facing the way the start says.\nOnly three people appear: 路少泽, 纪宏远, and 纪然. Nobody else is there.\nAt the start: Ji Hongyuan sits in the middle of the long beige sofa, facing the low marble-and-gold coffee table. Lu Shaoze stands with his head down on the ivory carpet, on the far side of the coffee table, facing the sofa. One kraft document envelope lies on the coffee table in front of Ji Hongyuan. The younger Ji Ran stands half hidden behind the marble column nearest the hallway, by the wall that runs behind the columns. Tall French windows show garden trees in the sun. The camera is on the French windows side of the room, looking across the coffee table toward the marble columns, and stays on that side.\n\nNo shading, solid black areas, colour or photographic rendering: dark hair and clothes are outlines left white inside; no text, letters, numbers, arrows, labels or watermark.\n",
+  "aspect_ratio": "9:16",
+  "size": "1152x2048",
+  "quality": "high",
+  "images": [
+    "episodes/EP001/blocking/seg02/v1/view.png",
+    "assets/characters/lu_shaoze/v1/image-1.jpg",
+    "assets/characters/ji_hongyuan/v1/image-1.jpg",
+    "assets/characters/ji_ran/states/S1/v2/image-1.jpg"
+  ]
+}

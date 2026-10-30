@@ -1,0 +1,14 @@
+{
+  "model": "gpt-image-2.5-sunburst",
+  "prompt": "A clean line-art blocking diagram of one scene of a live-action short drama, vertical composition: the place of Image 1 drawn in simple black outlines on white, with the segment's people in their places at its start, the way a master shot shows the whole scene before it is cut into shots. Keep Image 1's camera position, framing, walls, windows, doorways and furniture, traced in outline; only add the people.\nImage 1: the location SU YAQING'S DINING AREA, the front view, with no people\nImage 2: the character sheet of 林青羽 (21), look S0\nDraw each person as a clean outline figure that can be told apart by hairstyle, build and the shape of their outfit, from their character sheet; no faces in detail. Do not copy a sheet's layout, white background or multiple views. Each person appears once, whole and at natural scale for the place, on the furniture and floor of Image 1, facing the way the start says.\nOnly one person appears: 林青羽. Nobody else is there.\nAt the start: Lin Qingyu sits in the upholstered chair by the tall window at the round white marble table, facing into the room. One vase of daisies and one wine bottle stand in the middle of the table. He holds the black call phone in his hand on the table. The brass pendant lamp hangs above the table. The camera is across the marble table from him, on the room side, and stays on that side.\n\nNo shading, solid black areas, colour or photographic rendering: dark hair and clothes are outlines left white inside; no text, letters, numbers, arrows, labels or watermark.\n",
+  "n": 1,
+  "size": "1152x2048",
+  "quality": "high",
+  "output_format": "jpeg",
+  "output_compression": 100,
+  "moderation": "low",
+  "input_images": [
+    "episodes/EP001/blocking/seg07/v1/view.png",
+    "assets/characters/lin_qingyu/v1/image-1.jpg"
+  ]
+}

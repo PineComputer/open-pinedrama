@@ -1,0 +1,13 @@
+{
+  "model": "gpt-image-2.5-sunburst",
+  "prompt": "Edit this character reference sheet of George (a fictional 55-year-old). Change ONLY the outfit: the person now wears look S1, one outfit only: A charcoal-grey two-piece suit over a white dress shirt, a silver-grey silk tie, a pale-grey pocket square and black leather oxfords.. Keep everything else exactly as in the input image.\nThe new outfit is identical in every view and in the close-up: the same garments, accessories and details on the same side of the body, seen from that view's angle. Garments are plain, with no logo, brand mark, or printed letters or numbers.\nPreserve exactly: the face, facial features, skin and hair; the identity of the person; body shape, height and proportions; marks and scars as described (An ordinary-looking Caucasian man of 55, about 180 cm, of average build with a slight middle-age softness at the waist. He has a squarish face with soft jowls, mild lines across the forehead and at the eyes, tired kind brown eyes and a clean-shaven chin. Short salt-and-pepper grey hair is neatly combed back. He wears a thin gold wedding band.); the pose and limb positions in every view; panel layout, scale, spacing and framing; plain background; studio lighting and colour balance.\n\nAvoid: changed face, different person, older or younger-looking face, changed body shape, changed pose, changed layout, changed background, changed lighting, clothing from the previous look left over, text, watermark.\n",
+  "n": 1,
+  "size": "2048x1152",
+  "quality": "high",
+  "output_format": "jpeg",
+  "output_compression": 100,
+  "moderation": "low",
+  "input_images": [
+    "assets/characters/george/v1/image-1.jpg"
+  ]
+}

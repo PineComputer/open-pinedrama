@@ -1,0 +1,474 @@
+{
+  "model": "sd25",
+  "content": [
+    {
+      "type": "text",
+      "text": "Image 1: Six-panel storyboard reference, used for the overall shot structure, shot sizes, and camera-movement rhythm. Read it from left to right and from top to bottom; panel N is Shot N.\nImage 2: Live-action reference of Garden of the wedding venue, the front view, the establishing view, facing the back wall, used as the benchmark for environmental composition, lighting, and realistic live-action texture; it contains no people.\nImage 3: Live-action reference of Garden of the wedding venue, the back view, turned 180 degrees, facing the front wall, with the left wall at its right edge; it contains no people.\nImage 4: Live-action reference of Garden of the wedding venue, the left-side view, facing the left wall, with the back wall at its right edge; it contains no people.\nImage 5: Live-action reference of Garden of the wedding venue, the right-side view, facing the right wall, with the back wall at its left edge; it contains no people.\nImage 6: Live-action reference of Garden of the wedding venue, the floor plan seen from above: its top edge is the back wall, its bottom edge the front wall behind the front view's camera, and its left and right edges the left and right walls; it contains no people.\nImage 7: Blocking reference of the segment's start: the same place with these people in their places, used only for where each person is and which way they face; take faces and outfits from each subject's own image.\nImage 8: Subject 1 (Guest 2) character appearance reference.\nImage 9: Subject 2 (Guest 1) character appearance reference.\nImage 10: Prop 1 (glasses of champagne) maps to this image; use only structure, material, and color.\n[Subject settings]\nSubject 1 (Guest 2): Refer to Image 8. 25, a gossiping wedding guest. Outfit: A knee-length mustard-yellow sleeveless A-line sundress with a fitted bodice and a round neck, small gold studs, a woven straw clutch and tan sandals. Signature colour: yellow.\nSubject 2 (Guest 1): Refer to Image 9. 25, a gossiping wedding guest. Outfit: A knee-length blush-pink fitted cocktail dress with short sleeves and a square neckline, a silver clutch, small silver earrings and nude block heels. Signature colour: pink.\nEnvironment (Garden of the wedding venue): Refer to Images 2 to 6. Day, bright warm sunlight from high on the right. Warm sunlight from high on the right, leafy hedge behind the guests; birdsong, breeze, the clink of glass, hushed gossip.\nDo not swap the characters' appearances, clothing, actions, positions or dialogue.\n[Subjects and relationships]\nOnly two people appear throughout: Guest 2 and Guest 1.\n[Blocking]\nRefer to Images 2 to 6 for the room and Image 7 for the people's places. Sunny day in the wedding garden. There is one white wooden wedding arch with sheer white drapes and white flower garlands at the far end of the aisle runner. Two short rows of white folding chairs face the arch, one row on each side of the aisle. There is one small round white cocktail table in front of the boxwood hedge, holding one silver tray of champagne flutes. Natalie stands under the centre of the arch, facing down the aisle, holding the bouquet at her waist in both hands. George stands beside her under the arch on the rose-bush side, facing down the aisle. The boxwood-hedge side of the arch beside Natalie is empty. Lauren stands at the head of the aisle beside the front row of chairs on the boxwood-hedge side, turned toward the arch. Guest 1 and Guest 2 stand at the cocktail table, Guest 1 on the arch side of it and Guest 2 on the aisle side, each holding a champagne flute. Cassie stands at the end of the front row of chairs on the rose-bush side, by the stone garden wall, arms crossed. Sebastian has not arrived. The camera is on the aisle in front of the arch, on the rose-bush side of the aisle.\n[Overall style]\nPhotorealistic live-action short drama with cinematic lighting. Each character keeps the face and the outfit with its main colour from their reference image throughout. Use each character sheet only for that character: the face from the close-up on the right, the body and outfit from the turnaround on the left; do not render the sheet's layout, white background or multiple views. This segment has 4 lines, in this order: Guest 2, Guest 1, Guest 2, Guest 1. Generate speech only from the lines in {} in the shot list, each spoken exactly once by its speaker; everyone else keeps their mouth naturally closed while listening, and a V.O. speaker keeps their mouth closed or is off screen. Follow the shot list below; do not add cuts or camera moves beyond it. Strictly adhere to the 180-degree rule: within a scene, characters keep their screen sides and the camera stays on one side of the axis. Seamless continuity of action, spatial matching and consistent actor blocking; cut on action. For dialogue prefer static shot-reverse-shot and over-the-shoulder shots, balanced with reaction shots and close-up inserts. Faces stable and clear, consistent with the reference images, with no resemblance to any real actor or actress. Normal human eyes. Natural anatomy and hands. Natural, fluid motion that follows the blocking; characters make subtle, natural movements. Characters, props and environment share one world with matched lighting. Each line ends naturally with breathing room and is never cut off. Authentic performances with micro-expressions. No BGM; generate only dialogue, environmental sounds and action sounds. No subtitles.\n[Continuity]\nMaintain continuity in the identities, number, appearance, clothing, relative heights, spatial positions, and eyelines of all the characters. The actions in the shot list occur strictly in sequence. Hands are anatomically correct.\n[Strictly exclude]\nadded or missing characters. malformed hands on the champagne flutes. subtitles or garbled text. Dialogue from the wrong character, multiple people speaking at once, repeated or missing lines, lip-sync errors and audio-visual desynchronization. The raw reference images (character sheets, setting plates) appearing as a frame of the video, and starting on a still frame of the setting reference. A fast zoom-in at the start, a fast pull-back at the end, unmotivated whip-pans, tilts, zooms and 360-degree orbits. Axis-crossing, jump cuts, frame skips, flicker and clipping. Face swaps, changes in age or clothing, sudden height shifts, added or missing characters, spatial jumps, and disordered action sequences; props popping in or vanishing, and duplicate characters except mirror reflections. Hand clipping, extra fingers, fused fingers, malformed hands. Readable text, numbers, logos and watermarks; phones and paper are shown from the back or out of focus. Black-and-white, monochrome, grayscale, desaturated visuals; hand-drawn, sketch, line art, illustration, comics, animation; storyboard frames, rough sketches, panel borders, gutters and grid layouts.\n[Shot list] (6 shots, approximately 19 seconds)\nWhen a previous-shot reference image is given, it is the moment this segment starts from: keep its people's positions, outfits, props and light, and continue from there. Shot 1 keeps its own camera, matching the image's framing only when it frames the same view; do not repeat that frame later.\nShot 1 (0-2s): [Wide shot across the aisle toward the boxwood hedge, locked-off camera, eye-level] Guest 2 and Guest 1 stand at the round white cocktail table in front of the hedge, flutes in hand, and lean their heads together. <Glasses clink softly>\nShot 2 (2-5s): [Medium shot, dirty single of Guest 2 with Guest 1's shoulder at the frame edge, eye-level] Guest 2 shields her mouth with her flute and glances toward the arch, eyes wide. Dialogue (Guest 2, in English, hushed and scandalised): {I can't believe they're marrying their daughter off to Sebastian Klein.}\nShot 3 (5-9s): [Medium shot, dirty single of Guest 1 with Guest 2's shoulder at the frame edge, slight push in, eye-level] Guest 1 nods eagerly and rolls her eyes, swirling her champagne. Dialogue (Guest 1, in English, gossipy and catty): {I know, right? The Klein family is powerful, but Sebastian's a bastard and outcast.}\nShot 4 (9-14s): [Medium close-up, clean single of Guest 2, tight on face and shoulders, eye-level] Guest 2 leans closer, lowering her voice, her freckled face lit with relish. Dialogue (Guest 2, in English, fast conspiratorial whisper): {I heard that he hangs out with thugs all day and he can't keep a job.}\nShot 5 (14-17s): [Close-up, clean single of Guest 1, eye-level] Guest 1 takes a sip from her flute and smirks over its rim toward the empty side of the arch. Dialogue (Guest 1, in English, mocking with a knowing laugh): {Oh, he's late for his own wedding.}\nShot 6 (17-19s): [Medium two-shot, slight high angle] Guest 2 covers a giggle with her hand while Guest 1 clinks her flute against Guest 2's flute. <Flutes clink, a stifled giggle>\nAt the end: Sunny day in the wedding garden. There is one white wooden wedding arch with sheer white drapes and white flower garlands at the far end of the aisle runner. Two short rows of white folding chairs face the arch, one row on each side of the aisle. There is one small round white cocktail table in front of the boxwood hedge, holding one silver tray of champagne flutes. Natalie stands under the centre of the arch, facing down the aisle, holding the bouquet at her waist in both hands. George stands beside her under the arch on the rose-bush side, facing down the aisle. The boxwood-hedge side of the arch beside Natalie is empty. Lauren stands at the head of the aisle beside the front row of chairs on the boxwood-hedge side, turned toward the arch. Guest 1 and Guest 2 stand at the cocktail table, Guest 1 on the arch side of it and Guest 2 on the aisle side, each holding a champagne flute. Cassie stands at the end of the front row of chairs on the rose-bush side, by the stone garden wall, arms crossed. Sebastian has not arrived. The camera is on the aisle in front of the arch, on the rose-bush side of the aisle.\n\n<Image 11> is the previous shot (seg01/t01 at 22.97s).\n"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261022181634-k422k"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/wedding_garden/v1/front.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/wedding_garden/v1/back.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/wedding_garden/v1/left-side.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/wedding_garden/v1/right-side.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/wedding_garden/v1/floor-plan.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261022181342-96xq6"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261022180044-qzbqs"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261022180000-px8r4"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/props/champagne_glasses/v1/image-1.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261022183614-l49vt"
+      },
+      "role": "reference_image"
+    }
+  ],
+  "duration": 19,
+  "ratio": "9:16",
+  "resolution": "480p",
+  "generate_audio": true,
+  "watermark": false,
+  "return_last_frame": true,
+  "omni_reference_task_type": "reference",
+  "drama": {
+    "segment": {
+      "id": "seg02",
+      "duration": 19,
+      "location": "wedding_garden",
+      "scene_heading": "3-1 Day | Ext. Garden of the wedding venue",
+      "time": "Day, bright warm sunlight from high on the right",
+      "characters": [
+        "guest_2",
+        "guest_1"
+      ],
+      "props": [
+        "champagne_glasses"
+      ],
+      "first_state": "Sunny day in the wedding garden. There is one white wooden wedding arch with sheer white drapes and white flower garlands at the far end of the aisle runner. Two short rows of white folding chairs face the arch, one row on each side of the aisle. There is one small round white cocktail table in front of the boxwood hedge, holding one silver tray of champagne flutes. Natalie stands under the centre of the arch, facing down the aisle, holding the bouquet at her waist in both hands. George stands beside her under the arch on the rose-bush side, facing down the aisle. The boxwood-hedge side of the arch beside Natalie is empty. Lauren stands at the head of the aisle beside the front row of chairs on the boxwood-hedge side, turned toward the arch. Guest 1 and Guest 2 stand at the cocktail table, Guest 1 on the arch side of it and Guest 2 on the aisle side, each holding a champagne flute. Cassie stands at the end of the front row of chairs on the rose-bush side, by the stone garden wall, arms crossed. Sebastian has not arrived. The camera is on the aisle in front of the arch, on the rose-bush side of the aisle.",
+      "shots": [
+        {
+          "time": "0-2s",
+          "size": "wide shot",
+          "angle": "eye level",
+          "camera": "Wide shot across the aisle toward the boxwood hedge, locked-off camera, eye-level",
+          "visual": "Guest 2 and Guest 1 stand at the round white cocktail table in front of the hedge, flutes in hand, and lean their heads together.",
+          "audio": "<Glasses clink softly>",
+          "characters": [
+            "guest_2",
+            "guest_1"
+          ],
+          "lines": []
+        },
+        {
+          "time": "2-5s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, dirty single of Guest 2 with Guest 1's shoulder at the frame edge, eye-level",
+          "visual": "Guest 2 shields her mouth with her flute and glances toward the arch, eyes wide.",
+          "audio": "Dialogue (Guest 2, in English, hushed and scandalised): {I can't believe they're marrying their daughter off to Sebastian Klein.}",
+          "characters": [
+            "guest_2",
+            "guest_1"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "5-9s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, dirty single of Guest 1 with Guest 2's shoulder at the frame edge, slight push in, eye-level",
+          "visual": "Guest 1 nods eagerly and rolls her eyes, swirling her champagne.",
+          "audio": "Dialogue (Guest 1, in English, gossipy and catty): {I know, right? The Klein family is powerful, but Sebastian's a bastard and outcast.}",
+          "characters": [
+            "guest_1",
+            "guest_2"
+          ],
+          "lines": [
+            1
+          ]
+        },
+        {
+          "time": "9-14s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up, clean single of Guest 2, tight on face and shoulders, eye-level",
+          "visual": "Guest 2 leans closer, lowering her voice, her freckled face lit with relish.",
+          "audio": "Dialogue (Guest 2, in English, fast conspiratorial whisper): {I heard that he hangs out with thugs all day and he can't keep a job.}",
+          "characters": [
+            "guest_2"
+          ],
+          "lines": [
+            2
+          ]
+        },
+        {
+          "time": "14-17s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, clean single of Guest 1, eye-level",
+          "visual": "Guest 1 takes a sip from her flute and smirks over its rim toward the empty side of the arch.",
+          "audio": "Dialogue (Guest 1, in English, mocking with a knowing laugh): {Oh, he's late for his own wedding.}",
+          "characters": [
+            "guest_1"
+          ],
+          "lines": [
+            3
+          ]
+        },
+        {
+          "time": "17-19s",
+          "size": "medium shot",
+          "angle": "high angle",
+          "camera": "Medium two-shot, slight high angle",
+          "visual": "Guest 2 covers a giggle with her hand while Guest 1 clinks her flute against Guest 2's flute.",
+          "audio": "<Flutes clink, a stifled giggle>",
+          "characters": [
+            "guest_2",
+            "guest_1"
+          ],
+          "lines": []
+        }
+      ],
+      "light_audio": "Warm sunlight from high on the right, leafy hedge behind the guests; birdsong, breeze, the clink of glass, hushed gossip.",
+      "dialogue": [
+        {
+          "speaker": "guest_2",
+          "line": "I can't believe they're marrying their daughter off to Sebastian Klein."
+        },
+        {
+          "speaker": "guest_1",
+          "line": "I know, right? The Klein family is powerful, but Sebastian's a bastard and outcast."
+        },
+        {
+          "speaker": "guest_2",
+          "line": "I heard that he hangs out with thugs all day and he can't keep a job."
+        },
+        {
+          "speaker": "guest_1",
+          "line": "Oh, he's late for his own wedding."
+        }
+      ],
+      "must_hit": [
+        "Guest 1 and Guest 2 whisper over champagne flutes at the cocktail table",
+        "Guest 1 mocks the groom for being late"
+      ],
+      "exit_state": "Sunny day in the wedding garden. There is one white wooden wedding arch with sheer white drapes and white flower garlands at the far end of the aisle runner. Two short rows of white folding chairs face the arch, one row on each side of the aisle. There is one small round white cocktail table in front of the boxwood hedge, holding one silver tray of champagne flutes. Natalie stands under the centre of the arch, facing down the aisle, holding the bouquet at her waist in both hands. George stands beside her under the arch on the rose-bush side, facing down the aisle. The boxwood-hedge side of the arch beside Natalie is empty. Lauren stands at the head of the aisle beside the front row of chairs on the boxwood-hedge side, turned toward the arch. Guest 1 and Guest 2 stand at the cocktail table, Guest 1 on the arch side of it and Guest 2 on the aisle side, each holding a champagne flute. Cassie stands at the end of the front row of chairs on the rose-bush side, by the stone garden wall, arms crossed. Sebastian has not arrived. The camera is on the aisle in front of the arch, on the rose-bush side of the aisle.",
+      "negative": [
+        "added or missing characters",
+        "malformed hands on the champagne flutes",
+        "subtitles or garbled text"
+      ]
+    },
+    "bible_version": "v2",
+    "breakdown_version": "v2",
+    "lineage": [
+      {
+        "path": "bible/v2/artifact.json",
+        "sha256": "43a9a0df923881275f336813067654cac8bb0fc8322601eb704a559e2bde7609"
+      },
+      {
+        "path": "bible/accepted.json",
+        "sha256": "0d01227b17f639001c00e1fccb07e8dceb252aba112177790d599cae4e1e0cbd"
+      },
+      {
+        "path": "bible/current.json",
+        "sha256": "06cf9a01a94d514da311cce8b1bb37695e3ad05de6d67d78b74820c06a69fb3a"
+      },
+      {
+        "path": "bible/v2/bible.json",
+        "sha256": "a968d09d9298d5c64d340cac6ca885cfe1415115993aa36c03d370b352fd72a1"
+      },
+      {
+        "path": "bible/v2/input/screenplay.md",
+        "sha256": "9002401187c2b458ddbb8547e2e66be386d989f20f8427e59bd4977366f0837b"
+      },
+      {
+        "path": "episodes/EP003/breakdown/v2/artifact.json",
+        "sha256": "bdb440e9c4b4de004e2f5eb174bb33dee97a80c438f80d8da95f8233ada946dc"
+      },
+      {
+        "path": "episodes/EP003/breakdown/accepted.json",
+        "sha256": "35747e931c88aed06807f7e5ee281d2da0f0b35af114ed4a8ca6c708694ba3fe"
+      },
+      {
+        "path": "episodes/EP003/breakdown/current.json",
+        "sha256": "23fb7c0be42bba2d2e237058bba557747093f261a463ddecc4c196c9ed788ba0"
+      },
+      {
+        "path": "episodes/EP003/breakdown/v2/breakdown.json",
+        "sha256": "5789a3dcbf1ee65a6b0b7f066279981ee1e5a3d4fd5c502f37845b8e97ffb435"
+      },
+      {
+        "path": "episodes/EP003/multi_panel_storyboard/seg02/line-art/v1/artifact.json",
+        "sha256": "dcfb97954b78eb24db9b9aea47b63b46a3ab7c01e165417cc57f2a9cbef2e926"
+      },
+      {
+        "path": "episodes/EP003/multi_panel_storyboard/seg02/line-art/accepted.json",
+        "sha256": "067dcb3c51fdccad7a07517c486db06ea554c8b75c257cb8bfd6cf0ea1f17dc0"
+      },
+      {
+        "path": "episodes/EP003/multi_panel_storyboard/seg02/line-art/current.json",
+        "sha256": "0576f4de5b33b3ab9a2e158f15eb1e93a33e899a9bd19e5a3a9343a200d6de80"
+      },
+      {
+        "path": "episodes/EP003/multi_panel_storyboard/seg02/line-art/v1/image-1.jpg",
+        "sha256": "7159c73897ea81b8ac934a6053825082409126a420bfdaad7b03be6b8c648d39"
+      },
+      {
+        "path": "episodes/EP003/multi_panel_storyboard/seg02/line-art/v1/asset/job.json",
+        "sha256": "d32fa6e7446d8d68e31d9e3b21a7a8bc8daea6cc4a10e8b023843277dc53c9e4"
+      },
+      {
+        "path": "assets/scenes/wedding_garden/v1/artifact.json",
+        "sha256": "016ce52ca88e7f76f25d0ede9ee4f22e27d4e3304923f42560ea24cdb03b09c6"
+      },
+      {
+        "path": "assets/scenes/wedding_garden/accepted.json",
+        "sha256": "947a777d874ba2f6511f44bd1231fd7b7c745f689a8398bdef1257a560dd8286"
+      },
+      {
+        "path": "assets/scenes/wedding_garden/current.json",
+        "sha256": "16d98c5c181f64feaf272303241cb82fa150d9ec6e83c87cf3b7fe543a54549c"
+      },
+      {
+        "path": "assets/scenes/wedding_garden/v1/image-1.jpg",
+        "sha256": "f98d8061521f683af962b4dc1e384dd4937d3221c46f0b149d26a94eb726533e"
+      },
+      {
+        "path": "assets/scenes/wedding_garden/v1/front.jpg",
+        "sha256": "31af27a9b6878ebc482de1f2b4b09fa0d18eea0bf925fb96ae1f6da5185db3a5"
+      },
+      {
+        "path": "assets/scenes/wedding_garden/v1/back.jpg",
+        "sha256": "a251f6f516f4111cf76dd484f67f272ad59258ac35894ebb222e4c7312c6ffd1"
+      },
+      {
+        "path": "assets/scenes/wedding_garden/v1/left-side.jpg",
+        "sha256": "d85a7e47a7a564b061c5b93e4e789d9f477f0daed6093368d00fcb21179967f4"
+      },
+      {
+        "path": "assets/scenes/wedding_garden/v1/right-side.jpg",
+        "sha256": "28a3017217712607611c556ccafbad67d0bd2c70973f9649a08754c62b13eb17"
+      },
+      {
+        "path": "assets/scenes/wedding_garden/v1/floor-plan.jpg",
+        "sha256": "b6c0a86199d11e7e5b406413f653e2b3b3758563480dcc711907610cdc107200"
+      },
+      {
+        "path": "episodes/EP003/blocking/seg02/v1/artifact.json",
+        "sha256": "5479f8c8e3302cb8583bcdace320168f28c1924736eabfa1c76f74f1717774ed"
+      },
+      {
+        "path": "episodes/EP003/blocking/seg02/accepted.json",
+        "sha256": "2c1a5bbad92ebfc89a34121f8adf0d8b700c1c578442bb3320bd031cc3801c4c"
+      },
+      {
+        "path": "episodes/EP003/blocking/seg02/current.json",
+        "sha256": "d5b8e61b418579038226ea1e1a7c22a82f343edb13c882b6203f050844474354"
+      },
+      {
+        "path": "episodes/EP003/blocking/seg02/v1/image-1.jpg",
+        "sha256": "dca78cf388f0deb4266021b23f4642cf17c018aab5f10af9599fc07e94695e7e"
+      },
+      {
+        "path": "episodes/EP003/blocking/seg02/v1/asset/job.json",
+        "sha256": "170e8e57bb203c72351a27a13c0369314dd95d631e96d7efc1a5f33997f30d2a"
+      },
+      {
+        "path": "assets/props/champagne_glasses/v1/artifact.json",
+        "sha256": "62cde02936bdccf19ad836ba6921d003ee8d4aaf8399b3ef87f9b67d487b4546"
+      },
+      {
+        "path": "assets/props/champagne_glasses/accepted.json",
+        "sha256": "e9fbeaaf39131c040a98249a5230e27ea71c23ce3149e8ca27068f7890ebe099"
+      },
+      {
+        "path": "assets/props/champagne_glasses/current.json",
+        "sha256": "db4956ac4fe1f4777dacd8da41cc07d4c5da488c6a5db1719e37de942d18f835"
+      },
+      {
+        "path": "assets/props/champagne_glasses/v1/image-1.jpg",
+        "sha256": "19f8735eac1989519439ef71a19df771d3b65e2671b2cb2df8e01b3ee120c238"
+      },
+      {
+        "path": "assets/characters/guest_2/v1/artifact.json",
+        "sha256": "f184d7a2cc08959c1b10cab2d75ccbf62e539fa8bb6ed06b494260921fa51b72"
+      },
+      {
+        "path": "assets/characters/guest_2/accepted.json",
+        "sha256": "16b5bd4e27795b7b389725b20ec05ec4144fc0aa737efb1c96cf19f59e114b85"
+      },
+      {
+        "path": "assets/characters/guest_2/current.json",
+        "sha256": "a446ae8b534d9a0b76539fb67fb7227cce404d22e250f7462424ddfd7f2f50bf"
+      },
+      {
+        "path": "assets/characters/guest_2/v1/image-1.jpg",
+        "sha256": "cb94fccd3c8132e3c71f36cab6631b818ed4930f47859c7081846c31a250d498"
+      },
+      {
+        "path": "assets/characters/guest_2/v1/asset/job.json",
+        "sha256": "2b258ecad6eaf0c17799b6c509f339602d80fb6ca0dd8c733b5671edef988c7c"
+      },
+      {
+        "path": "assets/characters/guest_1/v1/artifact.json",
+        "sha256": "aadf6eca88d385714289c773085c194e255f12310afc0b0313c722391bdb7c59"
+      },
+      {
+        "path": "assets/characters/guest_1/accepted.json",
+        "sha256": "79befc1f2bed055ba7d1cf04143533c7d45e5d7afb45882608dbffd5fce7502c"
+      },
+      {
+        "path": "assets/characters/guest_1/current.json",
+        "sha256": "74cf0a55789c994e25d1114d994143d6aea7c1692b63f0c6b327aa2dfbf10e9e"
+      },
+      {
+        "path": "assets/characters/guest_1/v1/image-1.jpg",
+        "sha256": "6f9157ebf00a1c33d1bffd18c869d1c52cd24c42d2e57232d36e10939a217f02"
+      },
+      {
+        "path": "assets/characters/guest_1/v1/asset/job.json",
+        "sha256": "3fa2b5942c5c240636253371c6103723bac6a111082caeb9144fb30264798f5d"
+      },
+      {
+        "path": "episodes/EP003/video_prompts/v1/artifact.json",
+        "sha256": "7c7ad3ea368280992b36afd529ddda4fda52fa8a877787fd687ae223721680fe"
+      },
+      {
+        "path": "episodes/EP003/video_prompts/v1/seg02.json",
+        "sha256": "4154031e1b9cb5108dfbbbdab7bb15f24889e5896510ac1ee2cfb0a56e66a297"
+      },
+      {
+        "path": "episodes/EP003/video_prompts/current.json",
+        "sha256": "647848a3564bf4fa46144e2dcaf7da754ae415235ea8eeea451edefcddfc7b73"
+      },
+      {
+        "path": "episodes/EP003/segments/seg01/t01/video.mp4",
+        "sha256": "3391d48269f5c61769e97a7e798dc81bbb0d661c21a170473f943009e3594ff0"
+      },
+      {
+        "path": "episodes/EP003/segments/seg01/t01/continuation_22.97s.png",
+        "sha256": "44fe5d37776977d0796a87c0c92da29ac1f4b61cd031ec911598e32699580ed8"
+      },
+      {
+        "path": "episodes/EP003/segments/seg01/t01/artifact.json",
+        "sha256": "640c39e6ef19f78ca181be6c3a9a8744180f3efc2086249649ecd784bee36646"
+      },
+      {
+        "path": "episodes/EP003/segments/seg01/accepted.json",
+        "sha256": "60544ae71d62abc9bdfa04b5138cf5043983e58e5e98f19784f1c9f9a500bc74"
+      },
+      {
+        "path": "episodes/EP003/segments/seg01/t01/reviews/review-56155c0baf3c.json",
+        "sha256": "4920b0eb64e1d3d08bede9472c4d3772d867a8010b2491acc93ff1f53ed6113e"
+      },
+      {
+        "path": "episodes/EP003/segments/seg01/t01/continuation_22.97s.json",
+        "sha256": "ff489a3b3b8e97eade8a77bf61633d1a1c955f37eddbf689b5abab118ccf3490"
+      },
+      {
+        "path": "episodes/EP003/segments/seg01/t01/continuation_22.97s_asset/job.json",
+        "sha256": "c375b0d29dbba27b266b76a0f0cd7cd59ef982892016eb5090c6f71f875a86f3"
+      }
+    ],
+    "character_reference_mode": "asset_library",
+    "video_references": "storyboard",
+    "trusted_character_references": {},
+    "video_prompts_version": "v1",
+    "continues_from": {
+      "source": {
+        "path": "episodes/EP003/segments/seg01/t01/video.mp4",
+        "sha256": "3391d48269f5c61769e97a7e798dc81bbb0d661c21a170473f943009e3594ff0"
+      },
+      "seconds": 22.97,
+      "frame": {
+        "path": "episodes/EP003/segments/seg01/t01/continuation_22.97s.png",
+        "sha256": "44fe5d37776977d0796a87c0c92da29ac1f4b61cd031ec911598e32699580ed8"
+      },
+      "segment": "seg01",
+      "take": "t01",
+      "manifest": {
+        "path": "episodes/EP003/segments/seg01/t01/artifact.json",
+        "sha256": "640c39e6ef19f78ca181be6c3a9a8744180f3efc2086249649ecd784bee36646"
+      },
+      "acceptance": {
+        "path": "episodes/EP003/segments/seg01/accepted.json",
+        "sha256": "60544ae71d62abc9bdfa04b5138cf5043983e58e5e98f19784f1c9f9a500bc74"
+      },
+      "review": {
+        "path": "episodes/EP003/segments/seg01/t01/reviews/review-56155c0baf3c.json",
+        "sha256": "4920b0eb64e1d3d08bede9472c4d3772d867a8010b2491acc93ff1f53ed6113e"
+      },
+      "frame_record": {
+        "path": "episodes/EP003/segments/seg01/t01/continuation_22.97s.json",
+        "sha256": "ff489a3b3b8e97eade8a77bf61633d1a1c955f37eddbf689b5abab118ccf3490"
+      },
+      "upload": {
+        "path": "episodes/EP003/segments/seg01/t01/continuation_22.97s_asset/job.json",
+        "sha256": "c375b0d29dbba27b266b76a0f0cd7cd59ef982892016eb5090c6f71f875a86f3"
+      }
+    }
+  }
+}

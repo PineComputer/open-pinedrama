@@ -1,0 +1,98 @@
+{
+  "model": "ep-20260928175156-xn9xm",
+  "content": [
+    {
+      "type": "text",
+      "text": "Image 1: Six-panel storyboard reference, used for the overall shot structure, shot sizes, and camera-movement rhythm. Read it from left to right and from top to bottom; panel N is Shot N.\nImage 2: Live-action reference of Street outside the jail, the front view, the establishing view, facing the back wall, used as the benchmark for environmental composition, lighting, and realistic live-action texture; it contains no people.\nImage 3: Live-action reference of Street outside the jail, the back view, turned 180 degrees, facing the front wall, with the left wall at its right edge; it contains no people.\nImage 4: Live-action reference of Street outside the jail, the left-side view, facing the left wall, with the back wall at its right edge; it contains no people.\nImage 5: Live-action reference of Street outside the jail, the right-side view, facing the right wall, with the back wall at its left edge; it contains no people.\nImage 6: Live-action reference of Street outside the jail, the floor plan seen from above: its top edge is the back wall, its bottom edge the front wall behind the front view's camera, and its left and right edges the left and right walls; it contains no people.\nImage 7: Blocking reference of the segment's start: the same place with these people in their places, used only for where each person is and which way they face; take faces and outfits from each subject's own image.\nImage 8: Subject 1 (Sebastian, look S1) character appearance reference.\nImage 9: Subject 2 (Daniel) character appearance reference.\nImage 10: Prop 1 (expensive car) maps to this image; use only structure, material, and color.\n[Subject settings]\nSubject 1 (Sebastian): Refer to Image 8. 30, the hero; the scorned illegitimate son of the Klein family, jailed for three days for reckless driving and secretly a billionaire running a plan. Outfit: look S1: His own clothes: a fitted black collared dress shirt with the top button open, slim black tailored trousers, a black leather belt, black leather Chelsea boots and the steel-and-black luxury wristwatch. Signature colour: black.\nSubject 2 (Daniel): Refer to Image 9. 30, Sebastian's loyal, efficient personal assistant and driver. Outfit: A navy-blue slim two-piece business suit over a white dress shirt, a forest-green silk tie, black leather oxfords and thin rimless glasses. Signature colour: green.\nEnvironment (Street outside the jail): Refer to Images 2 to 6. Day, bright clear sunlight from high on the left. Bright sunlight from high on the left, short shadows falling to the right, glints on the black car's chrome. Live sound: light city traffic, wind in the young trees, a distant bird.\nDo not swap the characters' appearances, clothing, actions, positions or dialogue.\n[Subjects and relationships]\nOnly two people appear throughout: Sebastian and Daniel.\n[Blocking]\nRefer to Images 2 to 6 for the room and Image 7 for the people's places. Camera on the sidewalk at the bus-stop end, by the young trees, looking along the sidewalk toward the streetlamp, the razor-wire chain-link fence on one side and the curb on the other. Sebastian, in his black collared shirt, black trousers and wristwatch, steps out through the steel pedestrian gate in the fence. The one expensive black car is parked in the parking lane along the curb, its nose toward the streetlamp, its rear passenger door on the sidewalk side. Daniel, in his navy suit and rimless glasses, stands on the sidewalk beside the car's closed rear passenger door, facing the gate.\n[Overall style]\nPhotorealistic live-action short drama with cinematic lighting. Each character keeps the face and the outfit with its main colour from their reference image throughout. Use each character sheet only for that character: the face from the close-up on the right, the body and outfit from the turnaround on the left; do not render the sheet's layout, white background or multiple views. This segment has 4 lines, in this order: Sebastian, Daniel, Daniel, Daniel. Generate speech only from the lines in {} in the shot list, each spoken exactly once by its speaker; everyone else keeps their mouth naturally closed while listening, and a V.O. speaker keeps their mouth closed or is off screen. Follow the shot list below; do not add cuts or camera moves beyond it. Strictly adhere to the 180-degree rule: within a scene, characters keep their screen sides and the camera stays on one side of the axis. Seamless continuity of action, spatial matching and consistent actor blocking; cut on action. For dialogue prefer static shot-reverse-shot and over-the-shoulder shots, balanced with reaction shots and close-up inserts. Faces stable and clear, consistent with the reference images, with no resemblance to any real actor or actress. Normal human eyes. Natural anatomy and hands. Natural, fluid motion that follows the blocking; characters make subtle, natural movements. Characters, props and environment share one world with matched lighting. Each line ends naturally with breathing room and is never cut off. Authentic performances with micro-expressions. No BGM; generate only dialogue, environmental sounds and action sounds. No subtitles.\n[Continuity]\nMaintain continuity in the identities, number, appearance, clothing, relative heights, spatial positions, and eyelines of all the characters. The actions in the shot list occur strictly in sequence. Hands are anatomically correct.\n[Strictly exclude]\nadded or missing characters, spatial jumps. readable badges or license-plate text on the car. extra pedestrians. Dialogue from the wrong character, multiple people speaking at once, repeated or missing lines, lip-sync errors and audio-visual desynchronization. The raw reference images (character sheets, setting plates) appearing as a frame of the video, and starting on a still frame of the setting reference. A fast zoom-in at the start, a fast pull-back at the end, unmotivated whip-pans, tilts, zooms and 360-degree orbits. Axis-crossing, jump cuts, frame skips, flicker and clipping. Face swaps, changes in age or clothing, sudden height shifts, added or missing characters, spatial jumps, and disordered action sequences; props popping in or vanishing, and duplicate characters except mirror reflections. Hand clipping, extra fingers, fused fingers, malformed hands. Readable text, numbers, logos and watermarks; phones and paper are shown from the back or out of focus. Black-and-white, monochrome, grayscale, desaturated visuals; hand-drawn, sketch, line art, illustration, comics, animation; storyboard frames, rough sketches, panel borders, gutters and grid layouts.\n[Shot list] (6 shots, approximately 15 seconds)\nWhen a previous-shot reference image is given, it is the moment this segment starts from: keep its people's positions, outfits, props and light, and continue from there. Shot 1 keeps its own camera, matching the image's framing only when it frames the same view; do not repeat that frame later.\nShot 1 (0-3s): [Medium shot, clean single, follow camera on Sebastian, eye level from the bus-stop end of the sidewalk] Sebastian walks out through the steel pedestrian gate onto the sunny sidewalk, squints at the sky and straightens his shirt collar with both hands. <the steel gate clanks shut behind him>\nShot 2 (3-5s): [Wide shot, locked-off camera, eye level, looking along the sidewalk toward the streetlamp] The black expensive car waits at the curb with Daniel standing beside its rear passenger door, hands folded; Sebastian walks along the sidewalk toward him. <distant traffic>\nShot 3 (5-8s): [Medium shot, slow pan following Sebastian, eye level, both men in profile beside the car] Daniel opens the rear passenger door of the car; Sebastian stops at the open door, facing Daniel, one hand resting on the door frame. <car door clicks open> Dialogue (Sebastian, in English, low and smooth): {Daniel, everything going according to plan?}\nShot 4 (8-9s): [Close-up, clean single, eye level, tight on Daniel's face] Daniel gives a crisp nod behind his rimless glasses. Dialogue (Daniel, in English, brisk): {Yes, boss.}\nShot 5 (9-12s): [Medium shot, over-the-shoulder shot from behind Sebastian's shoulder onto Daniel, eye level] Daniel, holding the open car door, leans in slightly toward Sebastian and lowers his voice. Dialogue (Daniel, in English, quiet and businesslike): {You being in jail is the perfect alibi.}\nShot 6 (12-15s): [Medium close-up, clean single, slight low angle, tight on Sebastian's face and shoulders, sky behind] Sebastian adjusts his wristwatch and a slow, satisfied smirk spreads across his face; Daniel is off screen. Dialogue (Daniel, in English, quiet and assured): {Your father doesn't suspect a thing.}\nAt the end: The expensive black car is parked at the curb, nose toward the streetlamp, its rear passenger door open on the sidewalk side. Sebastian stands on the sidewalk at the open rear passenger door, one hand on the door frame, facing Daniel, smirking. Daniel stands on the sidewalk beside the open door, holding it, facing Sebastian. Camera on the sidewalk at the bus-stop end.\n"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261022183849-txp8k"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/jail_street/v1/front.jpg",
+        "path": "assets/scenes/jail_street/v1/front.jpg",
+        "sha256": "e36cc9344fb86da2b339e73938c205d9f1fa20b2c678fd73358ebc991c409921"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/jail_street/v1/back.jpg",
+        "path": "assets/scenes/jail_street/v1/back.jpg",
+        "sha256": "1d8ad539bd7766cee0252ccee7203b48c6081bf92502511fccf82434ae2e11f8"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/jail_street/v1/left-side.jpg",
+        "path": "assets/scenes/jail_street/v1/left-side.jpg",
+        "sha256": "d467d95b2c46fb475712b8b0eae6475336725d578954b3c7c46f152509ef2cc7"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/jail_street/v1/right-side.jpg",
+        "path": "assets/scenes/jail_street/v1/right-side.jpg",
+        "sha256": "3c64b4dcb58ed23ab5fcde072480be775c961de9b94c16b62dfad54da8d2d89b"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/jail_street/v1/floor-plan.jpg",
+        "path": "assets/scenes/jail_street/v1/floor-plan.jpg",
+        "sha256": "314e9186c9e4436c256890d15a0fae277f374adeb6a45df0ae7e1785cc579517"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261022181331-wv64f"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261022181218-ng85l"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261022180001-crl6z"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/props/expensive_car/v1/image-1.jpg",
+        "path": "assets/props/expensive_car/v1/image-1.jpg",
+        "sha256": "fb4da173126e74103a8e0aa0b7329d38f394535bb94a871dfb62979ce29e6c4c"
+      },
+      "role": "reference_image"
+    }
+  ],
+  "duration": 15,
+  "ratio": "9:16",
+  "resolution": "480p",
+  "generate_audio": true,
+  "watermark": false,
+  "return_last_frame": true,
+  "omni_reference_task_type": "reference"
+}

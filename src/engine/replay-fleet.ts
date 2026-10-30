@@ -67,6 +67,20 @@ const sample = samplesFrom(path.join(FIXTURES, "samples"));
 const art = (set: string, p: string, body: string): Out => sample(set, p) ?? svg(p, body);
 /** A clip: the sample for its path, else the take's or the cut's placeholder clip. */
 const clip = (set: string, p: string, name: "take" | "cut"): Out => sample(set, p) ?? video(p, name);
+/** A JSON file as replay returns it. */
+const json = (p: string, value: unknown): Out => ({ path: p, type: "application/json", bytes: text(JSON.stringify(value, null, 1)) });
+/**
+ * A picture's or take's spec.json and request.json in its version's folder, as drama-cli writes them: the sample's,
+ * copied from the run it comes from, where it has them; else a spec of drama-cli's shape for the placeholder.
+ */
+const specs = (set: string, dir: string, placeholder: Record<string, unknown>): Out[] => {
+  const request = sample(set, `${dir}/request.json`);
+  return [sample(set, `${dir}/spec.json`) ?? json(`${dir}/spec.json`, placeholder), ...(request ? [request] : [])];
+};
+/** A placeholder picture's spec: drama-cli's image spec, with the samples' model (fixtures/replay/samples/full). */
+const imageSpec = (prompt: string, aspect: "16:9" | "9:16") => ({ provider: "openai", model: "gpt-image-2.5-sunburst", prompt, aspect_ratio: aspect, size: aspect === "16:9" ? "2048x1152" : "1152x2048", quality: "high" });
+/** A placeholder take's spec: drama-cli's video spec, as long as replay bills a take (TAKE_SECONDS). */
+const takeSpec = (prompt: string) => ({ model: "sd25", content: [{ type: "text", text: prompt }], duration: TAKE_SECONDS, ratio: "9:16", resolution: "480p", generate_audio: true, watermark: false, return_last_frame: true });
 /** A story's pictures in samples.json: the first sample's by language, the others' by id. */
 const pictures = (id: string, lang: Lang) => (id === Object.keys(STORIES)[0] ? lang : id);
 
@@ -396,12 +410,16 @@ function setupScript(lang: Lang, preset: string, story: { id: string; story: Sto
     return `v${v}`;
   };
   const leads = say.cast.slice(0, 2);
-  const leadSheet = (c: { id: string; name: string }) => art(set, `drama/assets/characters/${c.id}/${next(c.id)}/image-1.svg`, lookSheet(c.name, "base", `v${versions.get(c.id)}`));
+  const leadSheet = (c: { id: string; name: string }) => {
+    const dir = `drama/assets/characters/${c.id}/${next(c.id)}`;
+    return [art(set, `${dir}/image-1.svg`, lookSheet(c.name, "base", `v${versions.get(c.id)}`)), ...specs(set, dir, imageSpec(`Character reference sheet of ${c.name}: base look.`, "16:9"))];
+  };
   const shared = new Map(sharedOf(story.story).map((reference) => [reference.key, reference]));
   const draw = (key: string) => {
     const reference = shared.get(key)!;
     const v = next(key);
-    return art(set, `drama/${reference.path}/${v}/image-1.svg`, reference.draw(v));
+    const dir = `drama/${reference.path}/${v}`;
+    return [art(set, `${dir}/image-1.svg`, reference.draw(v)), ...specs(set, dir, imageSpec(`Reference image of ${key}.`, reference.path.startsWith("assets/characters/") ? "16:9" : "9:16"))];
   };
   // What drama-cli's status would say at this stop: each item's version drawn, and the one the
   // maker accepted. A decision accepts every item of the review it doesn't send back.
@@ -437,7 +455,7 @@ function setupScript(lang: Lang, preset: string, story: { id: string; story: Sto
       stage = "leads";
       return {
         progress: say.drawing,
-        files: [{ path: "drama/bible/v1/bible.md", type: "text/markdown", bytes: text(say.bible) }, bibleJson(say), ...leads.map(leadSheet)],
+        files: [{ path: "drama/bible/v1/bible.md", type: "text/markdown", bytes: text(say.bible) }, bibleJson(say), ...leads.flatMap(leadSheet)],
         ask: say.askLooks,
       };
     }
@@ -445,7 +463,7 @@ function setupScript(lang: Lang, preset: string, story: { id: string; story: Sto
     if (stage === "leads") decide(leads.filter((c) => !redo.includes(c.name)).map((c) => c.id), redo);
     if (stage === "leads" && redo.length) {
       const who = leads.filter((c) => redo.includes(c.name) || redo.includes(c.id));
-      return { progress: who.map((c) => say.redrawLook(c.name)), files: who.map(leadSheet), ask: say.askRedrawn(who.map((c) => c.name)) };
+      return { progress: who.map((c) => say.redrawLook(c.name)), files: who.flatMap(leadSheet), ask: say.askRedrawn(who.map((c) => c.name)) };
     }
     if (stage === "leads") {
       stage = "references";
@@ -453,7 +471,7 @@ function setupScript(lang: Lang, preset: string, story: { id: string; story: Sto
         progress: say.preparing,
         files: [
           ...say.episodes.map((_, i) => ({ path: `drama/episodes/${codeOf(i)}/breakdown/v1/breakdown.md`, type: "text/markdown", bytes: text(breakdownOf(say, story.story, i)) })),
-          ...[...shared.keys()].map(draw),
+          ...[...shared.keys()].flatMap(draw),
         ],
         ask: say.askReferences(say.episodes.length),
       };
@@ -461,7 +479,7 @@ function setupScript(lang: Lang, preset: string, story: { id: string; story: Sto
     decide([...shared.keys()], redo);
     if (redo.length) {
       const which = redo.filter((key) => shared.has(key));
-      return { progress: which.map(say.redrawReference), files: which.map(draw), ask: say.askReferencesAgain(which) };
+      return { progress: which.map(say.redrawReference), files: which.flatMap(draw), ask: say.askReferencesAgain(which) };
     }
     stage = "handed";
     return {
@@ -498,10 +516,13 @@ function episodeScript(code: string, lang: Lang, preset: string, story: { id: st
   const boards = (which: typeof segments) =>
     which.flatMap((seg) => {
       const v = boardVersion.get(seg.id)!;
-      return [
-        art(set, `${base}/multi_panel_storyboard/${seg.id}/line-art/v${v}/image-1.svg`, storyboard(`${code} ${seg.id}`, seg.shots, "line-art", `v${v}`, v === 1 && seg.id === "seg01" ? 3 : -1)),
-        art(set, `${base}/multi_panel_storyboard/${seg.id}/photoreal/v${v}/image-1.svg`, storyboard(`${code} ${seg.id}`, seg.shots, "photoreal", `v${v}`, v === 1 && seg.id === "seg01" ? 3 : -1)),
-      ];
+      return ["line-art", "photoreal"].flatMap((style) => {
+        const dir = `${base}/multi_panel_storyboard/${seg.id}/${style}/v${v}`;
+        return [
+          art(set, `${dir}/image-1.svg`, storyboard(`${code} ${seg.id}`, seg.shots, style, `v${v}`, v === 1 && seg.id === "seg01" ? 3 : -1)),
+          ...specs(set, dir, imageSpec(`A ${style} multi-panel storyboard of ${code} ${seg.id}: ${seg.shots.join("; ")}.`, "9:16")),
+        ];
+      });
     });
   // A cut as replay returns it, with its plan beside it: each segment's newest take.
   const cutFiles = (version: number): Out[] => {
@@ -513,9 +534,10 @@ function episodeScript(code: string, lang: Lang, preset: string, story: { id: st
     return [made, cutPlan(`${base}/edit/v${version}/cut.json`, code, made, newest)];
   };
   const shoot = (which: typeof segments) =>
-    which.map((seg) => {
+    which.flatMap((seg) => {
       takes.set(seg.id, (takes.get(seg.id) ?? 0) + 1);
-      return clip(set, `${base}/segments/${seg.id}/t${String(takes.get(seg.id)).padStart(2, "0")}/video.mp4`, "take");
+      const dir = `${base}/segments/${seg.id}/t${String(takes.get(seg.id)).padStart(2, "0")}`;
+      return [clip(set, `${dir}/video.mp4`, "take"), ...specs(set, dir, takeSpec(seg.shots.join(" ")))];
     });
   let started = false;
   const play = (answer: string): Step => {
@@ -524,7 +546,10 @@ function episodeScript(code: string, lang: Lang, preset: string, story: { id: st
       started = true;
       return {
         progress: say.restoring(code),
-        files: [...segments.map((seg) => art(set, `${base}/blocking/${seg.id}/v1/image-1.svg`, blocking(`${code} ${seg.id}`, "v1"))), ...boards(segments)],
+        files: [
+          ...segments.flatMap((seg) => [art(set, `${base}/blocking/${seg.id}/v1/image-1.svg`, blocking(`${code} ${seg.id}`, "v1")), ...specs(set, `${base}/blocking/${seg.id}/v1`, imageSpec(`A line-art blocking diagram of ${code} ${seg.id}.`, "9:16"))]),
+          ...boards(segments),
+        ],
         ask: say.askBoards(code, segments.length),
       };
     }

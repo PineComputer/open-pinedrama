@@ -1,0 +1,13 @@
+{
+  "provider": "openai",
+  "model": "gpt-image-2.5-sunburst",
+  "prompt": "A clean line-art blocking diagram of one scene of a live-action short drama, vertical composition: the place of Image 1 drawn in simple black outlines on white, with the segment's people in their places at its start, the way a master shot shows the whole scene before it is cut into shots. Keep Image 1's camera position, framing, walls, windows, doorways and furniture, traced in outline; only add the people.\nImage 1: the location Street outside the jail, the front view, with no people\nImage 2: the character sheet of Sebastian (30), look S1\nImage 3: the character sheet of Daniel (30)\nDraw each person as a clean outline figure that can be told apart by hairstyle, build and the shape of their outfit, from their character sheet; no faces in detail. Do not copy a sheet's layout, white background or multiple views. Each person appears once, whole and at natural scale for the place, on the furniture and floor of Image 1, facing the way the start says.\nOnly two people appear: Sebastian and Daniel. Nobody else is there.\nAt the start: Camera on the sidewalk at the bus-stop end, by the young trees, looking along the sidewalk toward the streetlamp, the razor-wire chain-link fence on one side and the curb on the other. Sebastian, in his black collared shirt, black trousers and wristwatch, steps out through the steel pedestrian gate in the fence. The one expensive black car is parked in the parking lane along the curb, its nose toward the streetlamp, its rear passenger door on the sidewalk side. Daniel, in his navy suit and rimless glasses, stands on the sidewalk beside the car's closed rear passenger door, facing the gate.\n\nNo shading, colour or photographic rendering; no text, letters, numbers, arrows, labels or watermark.\n",
+  "aspect_ratio": "9:16",
+  "size": "1152x2048",
+  "quality": "high",
+  "images": [
+    "episodes/EP002/blocking/seg03/v1/view.png",
+    "assets/characters/sebastian/states/S1/v1/image-1.jpg",
+    "assets/characters/daniel/v1/image-1.jpg"
+  ]
+}

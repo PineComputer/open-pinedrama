@@ -1,0 +1,14 @@
+{
+  "provider": "openai",
+  "model": "gpt-image-2.5-sunburst",
+  "prompt": "A clean line-art blocking diagram of one scene of a live-action short drama, vertical composition: the place of Image 1 drawn in simple black outlines on white, with the segment's people in their places at its start, the way a master shot shows the whole scene before it is cut into shots. Keep Image 1's camera position, framing, walls, windows, doorways and furniture, traced in outline; only add the people.\nImage 1: the location APARTMENT CORRIDOR, the front view, with no people\nImage 2: the character sheet of 林青羽 (21), look S2\nImage 3: the character sheet of 纪然 (27), look S3\nImage 4: the character sheet of 路少泽 (28), look S1\nDraw each person as a clean outline figure that can be told apart by hairstyle, build and the shape of their outfit, from their character sheet; no faces in detail. Do not copy a sheet's layout, white background or multiple views. Each person appears once, whole and at natural scale for the place, on the furniture and floor of Image 1, facing the way the start says.\nOnly three people appear: 林青羽, 纪然, and 路少泽. Nobody else is there.\nAt the start: Ji Ran and Lin Qingyu stand side by side on the runner rug with their backs to Ji Ran's apartment door, his right arm around her waist and the grocery bag full of greens in his left hand; Ji Ran has the black handbag on her shoulder. Lu Shaoze stands on the runner rug one step in front of them, facing Ji Ran's apartment door, pointing angrily at Lin Qingyu. The camera stays on the side of the cream wall opposite Ji Ran's apartment door.\nRevision notes: Each person wears their own sheet's look: 林青羽 (Image 2) in the white pullover hoodie, black joggers and white sneakers, holding the grocery bag and with his arm around Ji Ran's waist; 路少泽 (Image 4) in the navy suit with slicked-back hair, standing in front of them. Lin Qingyu wears no shirt collar, blazer or dress shoes.\nNo shading, solid black areas, colour or photographic rendering: dark hair and clothes are outlines left white inside; no text, letters, numbers, arrows, labels or watermark.\n",
+  "aspect_ratio": "9:16",
+  "size": "1152x2048",
+  "quality": "high",
+  "images": [
+    "episodes/EP005/blocking/seg02/v2/view.png",
+    "assets/characters/lin_qingyu/states/S2/v1/image-1.jpg",
+    "assets/characters/ji_ran/states/S3/v1/image-1.jpg",
+    "assets/characters/lu_shaoze/states/S1/v1/image-1.jpg"
+  ]
+}

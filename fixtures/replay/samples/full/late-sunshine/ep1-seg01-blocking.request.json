@@ -1,0 +1,14 @@
+{
+  "model": "gpt-image-2.5-sunburst",
+  "prompt": "A clean line-art blocking diagram of one scene of a live-action short drama, vertical composition: the place of Image 1 drawn in simple black outlines on white, with the segment's people in their places at its start, the way a master shot shows the whole scene before it is cut into shots. Keep Image 1's camera position, framing, walls, windows, doorways and furniture, traced in outline; only add the people.\nImage 1: the location JI RAN'S OFFICE, the front view, with no people\nImage 2: the character sheet of 纪然 (27), look S0\nDraw each person as a clean outline figure that can be told apart by hairstyle, build and the shape of their outfit, from their character sheet; no faces in detail. Do not copy a sheet's layout, white background or multiple views. Each person appears once, whole and at natural scale for the place, on the furniture and floor of Image 1, facing the way the start says.\nOnly one person appears: 纪然. Nobody else is there.\nAt the start: Ji Ran stands behind the walnut desk, in front of the black leather executive chair, her back to the floor-to-ceiling windows and facing the office door. One hand is braced flat on the desk; the other holds the gooseneck kettle over the dripper. On the walnut desk lie architectural plans, wood samples and one metal figurine. The pour-over set (kettle, white cone dripper on a glass server) stands in the middle of the desk, with one white coffee cup beside the server. The camera is in front of the desk, on the office door side, and stays on that side.\n\nNo shading, solid black areas, colour or photographic rendering: dark hair and clothes are outlines left white inside; no text, letters, numbers, arrows, labels or watermark.\n",
+  "n": 1,
+  "size": "1152x2048",
+  "quality": "high",
+  "output_format": "jpeg",
+  "output_compression": 100,
+  "moderation": "low",
+  "input_images": [
+    "episodes/EP001/blocking/seg01/v1/view.png",
+    "assets/characters/ji_ran/v1/image-1.jpg"
+  ]
+}

@@ -1,0 +1,539 @@
+{
+  "model": "sd25",
+  "content": [
+    {
+      "type": "text",
+      "text": "Image 1: Nine-panel storyboard reference, used for the overall shot structure, shot sizes, and camera-movement rhythm. Read it from left to right and from top to bottom; panel N is Shot N.\nImage 2: Live-action reference of Street outside the jail, the front view, the establishing view, facing the back wall, used as the benchmark for environmental composition, lighting, and realistic live-action texture; it contains no people.\nImage 3: Live-action reference of Street outside the jail, the back view, turned 180 degrees, facing the front wall, with the left wall at its right edge; it contains no people.\nImage 4: Live-action reference of Street outside the jail, the left-side view, facing the left wall, with the back wall at its right edge; it contains no people.\nImage 5: Live-action reference of Street outside the jail, the right-side view, facing the right wall, with the back wall at its left edge; it contains no people.\nImage 6: Live-action reference of Street outside the jail, the floor plan seen from above: its top edge is the back wall, its bottom edge the front wall behind the front view's camera, and its left and right edges the left and right walls; it contains no people.\nImage 7: Blocking reference of the segment's start: the same place with these people in their places, used only for where each person is and which way they face; take faces and outfits from each subject's own image.\nImage 8: Subject 1 (Sebastian, look S1) character appearance reference.\nImage 9: Subject 2 (Daniel) character appearance reference.\nImage 10: Prop 1 (expensive car) maps to this image; use only structure, material, and color.\n[Subject settings]\nSubject 1 (Sebastian): Refer to Image 8. 30, the hero; the scorned illegitimate son of the Klein family, jailed for three days for reckless driving and secretly a billionaire running a plan. Outfit: look S1: His own clothes: a fitted black collared dress shirt with the top button open, slim black tailored trousers, a black leather belt, black leather Chelsea boots and the steel-and-black luxury wristwatch. Signature colour: black.\nSubject 2 (Daniel): Refer to Image 9. 30, Sebastian's loyal, efficient personal assistant and driver. Outfit: A navy-blue slim two-piece business suit over a white dress shirt, a forest-green silk tie, black leather oxfords and thin rimless glasses. Signature colour: green.\nEnvironment (Street outside the jail): Refer to Images 2 to 6. Day, bright clear sunlight from high on the left. Bright sunlight from high on the left, short shadows falling to the right, glints on the black car's chrome. Live sound: light city traffic, wind in the young trees, footsteps.\nDo not swap the characters' appearances, clothing, actions, positions or dialogue.\n[Subjects and relationships]\nOnly two people appear throughout: Sebastian and Daniel.\n[Blocking]\nRefer to Images 2 to 6 for the room and Image 7 for the people's places. The expensive black car is parked at the curb, nose toward the streetlamp, its rear passenger door open on the sidewalk side. Sebastian stands on the sidewalk at the open rear passenger door, one hand on the door frame, facing Daniel, smirking. Daniel stands on the sidewalk beside the open door, holding it, facing Sebastian. Camera on the sidewalk at the bus-stop end.\n[Overall style]\nPhotorealistic live-action short drama with cinematic lighting. Each character keeps the face and the outfit with its main colour from their reference image throughout. Use each character sheet only for that character: the face from the close-up on the right, the body and outfit from the turnaround on the left; do not render the sheet's layout, white background or multiple views. This segment has 8 lines, in this order: Sebastian, Daniel, Daniel, Sebastian, Sebastian, Daniel, Sebastian, Sebastian. Generate speech only from the lines in {} in the shot list, each spoken exactly once by its speaker; everyone else keeps their mouth naturally closed while listening, and a V.O. speaker keeps their mouth closed or is off screen. Follow the shot list below; do not add cuts or camera moves beyond it. Strictly adhere to the 180-degree rule: within a scene, characters keep their screen sides and the camera stays on one side of the axis. Seamless continuity of action, spatial matching and consistent actor blocking; cut on action. For dialogue prefer static shot-reverse-shot and over-the-shoulder shots, balanced with reaction shots and close-up inserts. Faces stable and clear, consistent with the reference images, with no resemblance to any real actor or actress. Normal human eyes. Natural anatomy and hands. Natural, fluid motion that follows the blocking; characters make subtle, natural movements. Characters, props and environment share one world with matched lighting. Each line ends naturally with breathing room and is never cut off. Authentic performances with micro-expressions. No BGM; generate only dialogue, environmental sounds and action sounds. No subtitles.\n[Continuity]\nMaintain continuity in the identities, number, appearance, clothing, relative heights, spatial positions, and eyelines of all the characters. The actions in the shot list occur strictly in sequence. Hands are anatomically correct.\n[Strictly exclude]\nadded or missing characters, spatial jumps. readable badges or license-plate text on the car. subtitles or on-screen text. Dialogue from the wrong character, multiple people speaking at once, repeated or missing lines, lip-sync errors and audio-visual desynchronization. The raw reference images (character sheets, setting plates) appearing as a frame of the video, and starting on a still frame of the setting reference. A fast zoom-in at the start, a fast pull-back at the end, unmotivated whip-pans, tilts, zooms and 360-degree orbits. Axis-crossing, jump cuts, frame skips, flicker and clipping. Face swaps, changes in age or clothing, sudden height shifts, added or missing characters, spatial jumps, and disordered action sequences; props popping in or vanishing, and duplicate characters except mirror reflections. Hand clipping, extra fingers, fused fingers, malformed hands. Readable text, numbers, logos and watermarks; phones and paper are shown from the back or out of focus. Black-and-white, monochrome, grayscale, desaturated visuals; hand-drawn, sketch, line art, illustration, comics, animation; storyboard frames, rough sketches, panel borders, gutters and grid layouts.\n[Shot list] (9 shots, approximately 18 seconds)\nWhen a previous-shot reference image is given, it is the moment this segment starts from: keep its people's positions, outfits, props and light, and continue from there. Shot 1 keeps its own camera, matching the image's framing only when it frames the same view; do not repeat that frame later.\nShot 1 (0-3s): [Medium shot, locked-off camera, eye level, both men in profile at the open car door] Sebastian taps the top of the open car door with his fingers and tilts his head at Daniel. Dialogue (Sebastian, in English, casual and probing): {Oh, and what about the Quinn family? Any issues there?}\nShot 2 (3-4s): [Close-up, clean single, eye level, tight on Daniel's face] Daniel shakes his head once. Dialogue (Daniel, in English, crisp): {No.}\nShot 3 (4-7s): [Medium shot, over-the-shoulder shot from behind Sebastian's shoulder onto Daniel, eye level] Daniel straightens his glasses, standing by the open car door, and looks Sebastian in the eye. Dialogue (Daniel, in English, matter-of-fact): {The Quinns have agreed to marry their daughter to you.}\nShot 4 (7-8s): [Close-up, clean single, eye level, tight on Sebastian's face] Sebastian raises one eyebrow, intrigued. Dialogue (Sebastian, in English, amused murmur): {Huh, interesting.}\nShot 5 (8-10s): [Medium close-up, dirty single with Daniel's shoulder at the frame edge, slight low angle on Sebastian] Sebastian looks off toward the jail fence and his smirk widens. Dialogue (Sebastian, in English, smooth and pleased): {They kept their end of the bargain.}\nShot 6 (10-13s): [Medium shot, slow push in on both men, eye level from the bus-stop end] Sebastian leans in close and whispers into Daniel's ear, a hand on Daniel's shoulder; Daniel listens with his eyes narrowing, then nods. <a low, indistinct whisper>\nShot 7 (13-14s): [Close-up, clean single, eye level, tight on Daniel's face] Daniel steps back from Sebastian with a firm, loyal nod. Dialogue (Daniel, in English, brisk and certain): {You got it, boss.}\nShot 8 (14-16s): [Medium close-up, clean single, low angle, tight on Sebastian's face and shoulders against the clear sky] Sebastian gazes into the distance, his eyes cold and sharp, the lazy smile gone. Dialogue (Sebastian, in English, quiet and confident): {This is the final puzzle piece.}\nShot 9 (16-18s): [Wide shot, locked-off camera, eye level, looking along the sidewalk toward the streetlamp] Daniel walks round the back of the car to the driver's door on the road side and puts his hand on the handle, while Sebastian stands at the open rear passenger door with a faint smile. Dialogue (Sebastian, in English, low murmur): {So it begins.} <footsteps on asphalt>\nAt the end: Sebastian stands on the sidewalk at the open rear passenger door of the expensive black car, facing along the street, a faint smile on his face. Daniel stands at the driver's door on the road side of the car, his hand on the handle. Camera on the sidewalk at the bus-stop end.\n\n<Image 11> is the previous shot (seg03/t02 at 14.97s).\n"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261022183941-5l6lv"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/jail_street/v1/front.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/jail_street/v1/back.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/jail_street/v1/left-side.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/jail_street/v1/right-side.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/jail_street/v1/floor-plan.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261022181335-4mlc5"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261022181218-ng85l"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261022180001-crl6z"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/props/expensive_car/v1/image-1.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261022185128-gmz2n"
+      },
+      "role": "reference_image"
+    }
+  ],
+  "duration": 18,
+  "ratio": "9:16",
+  "resolution": "480p",
+  "generate_audio": true,
+  "watermark": false,
+  "return_last_frame": true,
+  "omni_reference_task_type": "reference",
+  "drama": {
+    "segment": {
+      "id": "seg04",
+      "duration": 18,
+      "location": "jail_street",
+      "scene_heading": "2-3 Day | Ext. Street outside the jail",
+      "time": "Day, bright clear sunlight from high on the left",
+      "characters": [
+        "sebastian",
+        "daniel"
+      ],
+      "states": {
+        "sebastian": "S1"
+      },
+      "props": [
+        "expensive_car"
+      ],
+      "first_state": "The expensive black car is parked at the curb, nose toward the streetlamp, its rear passenger door open on the sidewalk side. Sebastian stands on the sidewalk at the open rear passenger door, one hand on the door frame, facing Daniel, smirking. Daniel stands on the sidewalk beside the open door, holding it, facing Sebastian. Camera on the sidewalk at the bus-stop end.",
+      "shots": [
+        {
+          "time": "0-3s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, locked-off camera, eye level, both men in profile at the open car door",
+          "visual": "Sebastian taps the top of the open car door with his fingers and tilts his head at Daniel.",
+          "audio": "Dialogue (Sebastian, in English, casual and probing): {Oh, and what about the Quinn family? Any issues there?}",
+          "characters": [
+            "sebastian",
+            "daniel"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "3-4s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, clean single, eye level, tight on Daniel's face",
+          "visual": "Daniel shakes his head once.",
+          "audio": "Dialogue (Daniel, in English, crisp): {No.}",
+          "characters": [
+            "daniel"
+          ],
+          "lines": [
+            1
+          ]
+        },
+        {
+          "time": "4-7s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, over-the-shoulder shot from behind Sebastian's shoulder onto Daniel, eye level",
+          "visual": "Daniel straightens his glasses, standing by the open car door, and looks Sebastian in the eye.",
+          "audio": "Dialogue (Daniel, in English, matter-of-fact): {The Quinns have agreed to marry their daughter to you.}",
+          "characters": [
+            "sebastian",
+            "daniel"
+          ],
+          "lines": [
+            2
+          ]
+        },
+        {
+          "time": "7-8s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, clean single, eye level, tight on Sebastian's face",
+          "visual": "Sebastian raises one eyebrow, intrigued.",
+          "audio": "Dialogue (Sebastian, in English, amused murmur): {Huh, interesting.}",
+          "characters": [
+            "sebastian"
+          ],
+          "lines": [
+            3
+          ]
+        },
+        {
+          "time": "8-10s",
+          "size": "medium close-up",
+          "angle": "low angle",
+          "camera": "Medium close-up, dirty single with Daniel's shoulder at the frame edge, slight low angle on Sebastian",
+          "visual": "Sebastian looks off toward the jail fence and his smirk widens.",
+          "audio": "Dialogue (Sebastian, in English, smooth and pleased): {They kept their end of the bargain.}",
+          "characters": [
+            "sebastian",
+            "daniel"
+          ],
+          "lines": [
+            4
+          ]
+        },
+        {
+          "time": "10-13s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, slow push in on both men, eye level from the bus-stop end",
+          "visual": "Sebastian leans in close and whispers into Daniel's ear, a hand on Daniel's shoulder; Daniel listens with his eyes narrowing, then nods.",
+          "audio": "<a low, indistinct whisper>",
+          "characters": [
+            "sebastian",
+            "daniel"
+          ],
+          "lines": []
+        },
+        {
+          "time": "13-14s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, clean single, eye level, tight on Daniel's face",
+          "visual": "Daniel steps back from Sebastian with a firm, loyal nod.",
+          "audio": "Dialogue (Daniel, in English, brisk and certain): {You got it, boss.}",
+          "characters": [
+            "daniel"
+          ],
+          "lines": [
+            5
+          ]
+        },
+        {
+          "time": "14-16s",
+          "size": "medium close-up",
+          "angle": "low angle",
+          "camera": "Medium close-up, clean single, low angle, tight on Sebastian's face and shoulders against the clear sky",
+          "visual": "Sebastian gazes into the distance, his eyes cold and sharp, the lazy smile gone.",
+          "audio": "Dialogue (Sebastian, in English, quiet and confident): {This is the final puzzle piece.}",
+          "characters": [
+            "sebastian"
+          ],
+          "lines": [
+            6
+          ]
+        },
+        {
+          "time": "16-18s",
+          "size": "wide shot",
+          "angle": "eye level",
+          "camera": "Wide shot, locked-off camera, eye level, looking along the sidewalk toward the streetlamp",
+          "visual": "Daniel walks round the back of the car to the driver's door on the road side and puts his hand on the handle, while Sebastian stands at the open rear passenger door with a faint smile.",
+          "audio": "Dialogue (Sebastian, in English, low murmur): {So it begins.} <footsteps on asphalt>",
+          "characters": [
+            "sebastian",
+            "daniel"
+          ],
+          "lines": [
+            7
+          ]
+        }
+      ],
+      "light_audio": "Bright sunlight from high on the left, short shadows falling to the right, glints on the black car's chrome. Live sound: light city traffic, wind in the young trees, footsteps.",
+      "dialogue": [
+        {
+          "speaker": "sebastian",
+          "line": "Oh, and what about the Quinn family? Any issues there?"
+        },
+        {
+          "speaker": "daniel",
+          "line": "No."
+        },
+        {
+          "speaker": "daniel",
+          "line": "The Quinns have agreed to marry their daughter to you."
+        },
+        {
+          "speaker": "sebastian",
+          "line": "Huh, interesting."
+        },
+        {
+          "speaker": "sebastian",
+          "line": "They kept their end of the bargain."
+        },
+        {
+          "speaker": "daniel",
+          "line": "You got it, boss."
+        },
+        {
+          "speaker": "sebastian",
+          "line": "This is the final puzzle piece."
+        },
+        {
+          "speaker": "sebastian",
+          "line": "So it begins."
+        }
+      ],
+      "must_hit": [
+        "Daniel tells Sebastian the Quinns agreed to the marriage",
+        "Sebastian leans in and whispers in Daniel's ear",
+        "Daniel walks round to the driver's door"
+      ],
+      "exit_state": "Sebastian stands on the sidewalk at the open rear passenger door of the expensive black car, facing along the street, a faint smile on his face. Daniel stands at the driver's door on the road side of the car, his hand on the handle. Camera on the sidewalk at the bus-stop end.",
+      "negative": [
+        "added or missing characters, spatial jumps",
+        "readable badges or license-plate text on the car",
+        "subtitles or on-screen text"
+      ]
+    },
+    "bible_version": "v2",
+    "breakdown_version": "v2",
+    "lineage": [
+      {
+        "path": "bible/v2/artifact.json",
+        "sha256": "43a9a0df923881275f336813067654cac8bb0fc8322601eb704a559e2bde7609"
+      },
+      {
+        "path": "bible/accepted.json",
+        "sha256": "0d01227b17f639001c00e1fccb07e8dceb252aba112177790d599cae4e1e0cbd"
+      },
+      {
+        "path": "bible/current.json",
+        "sha256": "06cf9a01a94d514da311cce8b1bb37695e3ad05de6d67d78b74820c06a69fb3a"
+      },
+      {
+        "path": "bible/v2/bible.json",
+        "sha256": "a968d09d9298d5c64d340cac6ca885cfe1415115993aa36c03d370b352fd72a1"
+      },
+      {
+        "path": "bible/v2/input/screenplay.md",
+        "sha256": "9002401187c2b458ddbb8547e2e66be386d989f20f8427e59bd4977366f0837b"
+      },
+      {
+        "path": "episodes/EP002/breakdown/v2/artifact.json",
+        "sha256": "24eeaae20a1992b0f7e499fe06abb7d9c2ce2d82fe1d9ad58ad8595a6cb955d0"
+      },
+      {
+        "path": "episodes/EP002/breakdown/accepted.json",
+        "sha256": "0062b14b79e3afe2b448e1fac51d63ccd62dd2fa6076e9efe2c6d2052dbe9b5e"
+      },
+      {
+        "path": "episodes/EP002/breakdown/current.json",
+        "sha256": "2d17800f8071c099170437e2f7762dab2ab410081f0f09b1d893f97ea4bc3243"
+      },
+      {
+        "path": "episodes/EP002/breakdown/v2/breakdown.json",
+        "sha256": "30abc8ad2964ed9bf075bd1e5284846fc217d835e0d88cb4c364c39e3f2e09fd"
+      },
+      {
+        "path": "episodes/EP002/multi_panel_storyboard/seg04/line-art/v4/artifact.json",
+        "sha256": "1d417f24009fe97eb141a56adb6038e9ce24507fb2bb999157f2871f51bb165f"
+      },
+      {
+        "path": "episodes/EP002/multi_panel_storyboard/seg04/line-art/accepted.json",
+        "sha256": "cebc59c105ec35131d54406419e0db97ac1cb747208fba8c68324739cbbc91ce"
+      },
+      {
+        "path": "episodes/EP002/multi_panel_storyboard/seg04/line-art/current.json",
+        "sha256": "9d5853c213ad816f766f9a03c576a0dbb9d8ba1083aceac4c7b20d7d53863008"
+      },
+      {
+        "path": "episodes/EP002/multi_panel_storyboard/seg04/line-art/v4/image-1.png",
+        "sha256": "9106ec58ff00b0dd4854de47b3880fecfd8b85210d1db8eeffd4b239c071defa"
+      },
+      {
+        "path": "episodes/EP002/multi_panel_storyboard/seg04/line-art/v4/asset/job.json",
+        "sha256": "59aba349527433d2cabe3a8690bb42371737ee6b027d8d459ceb2f9d72f744f3"
+      },
+      {
+        "path": "assets/scenes/jail_street/v1/artifact.json",
+        "sha256": "84f5232ff2657f1438784afdb14e5ca09a2fa0b77a2ceaf88848464163f1a16b"
+      },
+      {
+        "path": "assets/scenes/jail_street/accepted.json",
+        "sha256": "fec0ed98932dd6d2bd627983c354010a8947912535dfe378b4985d53fe619db9"
+      },
+      {
+        "path": "assets/scenes/jail_street/current.json",
+        "sha256": "39c645fb56b57ce1cc5417504243fdde950e180104c7534033c621a24b595943"
+      },
+      {
+        "path": "assets/scenes/jail_street/v1/image-1.jpg",
+        "sha256": "6efc8f70d2ba31e84763a19501ba6089f5c4190c1501d7722c8e70f94041fc14"
+      },
+      {
+        "path": "assets/scenes/jail_street/v1/front.jpg",
+        "sha256": "e36cc9344fb86da2b339e73938c205d9f1fa20b2c678fd73358ebc991c409921"
+      },
+      {
+        "path": "assets/scenes/jail_street/v1/back.jpg",
+        "sha256": "1d8ad539bd7766cee0252ccee7203b48c6081bf92502511fccf82434ae2e11f8"
+      },
+      {
+        "path": "assets/scenes/jail_street/v1/left-side.jpg",
+        "sha256": "d467d95b2c46fb475712b8b0eae6475336725d578954b3c7c46f152509ef2cc7"
+      },
+      {
+        "path": "assets/scenes/jail_street/v1/right-side.jpg",
+        "sha256": "3c64b4dcb58ed23ab5fcde072480be775c961de9b94c16b62dfad54da8d2d89b"
+      },
+      {
+        "path": "assets/scenes/jail_street/v1/floor-plan.jpg",
+        "sha256": "314e9186c9e4436c256890d15a0fae277f374adeb6a45df0ae7e1785cc579517"
+      },
+      {
+        "path": "episodes/EP002/blocking/seg04/v1/artifact.json",
+        "sha256": "c0ed3af19d8068409ea65ca56f0720bf7b756888e39578df13089be2838f051c"
+      },
+      {
+        "path": "episodes/EP002/blocking/seg04/accepted.json",
+        "sha256": "6bce09c7ea1974c499579245e39b24ba9f3f35da0d8be8667f3a083c944ff827"
+      },
+      {
+        "path": "episodes/EP002/blocking/seg04/current.json",
+        "sha256": "142d882d120f9fb8e15c33c2000dc444fc11eb0ed9cf13768a969d9c96f360ae"
+      },
+      {
+        "path": "episodes/EP002/blocking/seg04/v1/image-1.jpg",
+        "sha256": "3ac599aff57be9725a11d3b72791a697760d7ea83cbe2dab452b8505161803aa"
+      },
+      {
+        "path": "episodes/EP002/blocking/seg04/v1/asset/job.json",
+        "sha256": "aa23f6a35bebd03c6fa179d7eeb854a1b683d4de0d922bd64ce3fccc8076f5e1"
+      },
+      {
+        "path": "assets/props/expensive_car/v1/artifact.json",
+        "sha256": "ad4fc151515578bd3f8f57c1dc404e373d66d8e69b23a2743a31b70ad604a1c0"
+      },
+      {
+        "path": "assets/props/expensive_car/accepted.json",
+        "sha256": "ceee77e75d7d154485283a0ab2470f4149cf762ab0d6cd163657303798011611"
+      },
+      {
+        "path": "assets/props/expensive_car/current.json",
+        "sha256": "1fceb7793dd83c9abff92315753733716708d617bd5cb99fb81df46ecfca7678"
+      },
+      {
+        "path": "assets/props/expensive_car/v1/image-1.jpg",
+        "sha256": "fb4da173126e74103a8e0aa0b7329d38f394535bb94a871dfb62979ce29e6c4c"
+      },
+      {
+        "path": "assets/characters/sebastian/states/S1/v1/artifact.json",
+        "sha256": "7496d9278806de14f62b84edca6e07c9462f2f46091fe1c13645170a0714f5bd"
+      },
+      {
+        "path": "assets/characters/sebastian/states/S1/accepted.json",
+        "sha256": "fa19ea135343a7b82c78fa8d761febd35d6ee1e40c1dcfe69e9edc7c2f48b9e6"
+      },
+      {
+        "path": "assets/characters/sebastian/states/S1/current.json",
+        "sha256": "d2fa530f9d57772970227ed6350e4089770fcdc1ea1b577a656b9716428073ef"
+      },
+      {
+        "path": "assets/characters/sebastian/states/S1/v1/image-1.jpg",
+        "sha256": "3ed926ca34d0200fd3fb4cb6d5a6a0eecedcf8fe2e089b00f74d564bdba3ac07"
+      },
+      {
+        "path": "assets/characters/sebastian/states/S1/v1/asset/job.json",
+        "sha256": "3300a96a6c5cf6387d28e3422f9577a7eb97fe93ab6f1a1a56065239584b4516"
+      },
+      {
+        "path": "assets/characters/daniel/v1/artifact.json",
+        "sha256": "5bc031432982dbf06fb3eef2ddf8ef5b5c38b4a80de83451bda0a8bbde1b3f3e"
+      },
+      {
+        "path": "assets/characters/daniel/accepted.json",
+        "sha256": "2676f2b28fb1dae9cbf224e370528e89714f020e11a79a88747be22626d3499a"
+      },
+      {
+        "path": "assets/characters/daniel/current.json",
+        "sha256": "db4956ac4fe1f4777dacd8da41cc07d4c5da488c6a5db1719e37de942d18f835"
+      },
+      {
+        "path": "assets/characters/daniel/v1/image-1.jpg",
+        "sha256": "44bfec11d9c16c8d584a3b4f1566410597ede396eed65de024a288c246709c2b"
+      },
+      {
+        "path": "assets/characters/daniel/v1/asset/job.json",
+        "sha256": "ae5a85160273d938318de0e3e00d6a2a44b67d61f15d682552a029fca958e3a7"
+      },
+      {
+        "path": "episodes/EP002/video_prompts/v3/artifact.json",
+        "sha256": "1be1eb38fda0c258f2035f6ddfffda5fb83089ba0fc174e4dc7e97d6466eadaa"
+      },
+      {
+        "path": "episodes/EP002/video_prompts/v3/seg04.json",
+        "sha256": "a2579c454fd3b372a7faf5051c3dbb9667c623d64df5e57e6c4d5a4329821890"
+      },
+      {
+        "path": "episodes/EP002/video_prompts/current.json",
+        "sha256": "2a5f3ce5b0384cbbf85864c59dc931e12680416a5edbe3b7edfc2dec06ce199c"
+      },
+      {
+        "path": "episodes/EP002/segments/seg03/t02/video.mp4",
+        "sha256": "e3d65673d78e5efe8625d1294f83ef10398cca74ce84251ec23eb82234a52b9c"
+      },
+      {
+        "path": "episodes/EP002/segments/seg03/t02/continuation_14.97s.png",
+        "sha256": "e640844fea62d06342faea050f12f8830143ba770e3d8c9351635427f550f79e"
+      },
+      {
+        "path": "episodes/EP002/segments/seg03/t02/artifact.json",
+        "sha256": "660eb4249cba5fa09926587413600019ecb2fbc4df262717f7f969ff28b04452"
+      },
+      {
+        "path": "episodes/EP002/segments/seg03/accepted.json",
+        "sha256": "af68c899e70145e2b3118199e637f188e15318aa92aa83202f3355c5bab8d576"
+      },
+      {
+        "path": "episodes/EP002/segments/seg03/t02/reviews/review-a1c4be79ab16.json",
+        "sha256": "1ba9fd19fde0c709cd1c62fb3cd232e5935ccb5b5f96dd559a1b3067ad49f789"
+      },
+      {
+        "path": "episodes/EP002/segments/seg03/t02/continuation_14.97s.json",
+        "sha256": "94833d47c8c3a4abe9d9339817d41ee4010f524eedbe421e7e52547015883cb8"
+      },
+      {
+        "path": "episodes/EP002/segments/seg03/t02/continuation_14.97s_asset/job.json",
+        "sha256": "5a2556d4e5a7ffb89108a716d5bde2ad0fd81b2264019b43a2f940099fd9a31f"
+      }
+    ],
+    "character_reference_mode": "asset_library",
+    "video_references": "storyboard",
+    "trusted_character_references": {},
+    "video_prompts_version": "v3",
+    "continues_from": {
+      "source": {
+        "path": "episodes/EP002/segments/seg03/t02/video.mp4",
+        "sha256": "e3d65673d78e5efe8625d1294f83ef10398cca74ce84251ec23eb82234a52b9c"
+      },
+      "seconds": 14.97,
+      "frame": {
+        "path": "episodes/EP002/segments/seg03/t02/continuation_14.97s.png",
+        "sha256": "e640844fea62d06342faea050f12f8830143ba770e3d8c9351635427f550f79e"
+      },
+      "segment": "seg03",
+      "take": "t02",
+      "manifest": {
+        "path": "episodes/EP002/segments/seg03/t02/artifact.json",
+        "sha256": "660eb4249cba5fa09926587413600019ecb2fbc4df262717f7f969ff28b04452"
+      },
+      "acceptance": {
+        "path": "episodes/EP002/segments/seg03/accepted.json",
+        "sha256": "af68c899e70145e2b3118199e637f188e15318aa92aa83202f3355c5bab8d576"
+      },
+      "review": {
+        "path": "episodes/EP002/segments/seg03/t02/reviews/review-a1c4be79ab16.json",
+        "sha256": "1ba9fd19fde0c709cd1c62fb3cd232e5935ccb5b5f96dd559a1b3067ad49f789"
+      },
+      "frame_record": {
+        "path": "episodes/EP002/segments/seg03/t02/continuation_14.97s.json",
+        "sha256": "94833d47c8c3a4abe9d9339817d41ee4010f524eedbe421e7e52547015883cb8"
+      },
+      "upload": {
+        "path": "episodes/EP002/segments/seg03/t02/continuation_14.97s_asset/job.json",
+        "sha256": "5a2556d4e5a7ffb89108a716d5bde2ad0fd81b2264019b43a2f940099fd9a31f"
+      }
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "provider": "openai",
+  "model": "gpt-image-2.5-sunburst",
+  "prompt": "A clean line-art blocking diagram of one scene of a live-action short drama, vertical composition: the place of Image 1 drawn in simple black outlines on white, with the segment's people in their places at its start, the way a master shot shows the whole scene before it is cut into shots. Keep Image 1's camera position, framing, walls, windows, doorways and furniture, traced in outline; only add the people.\nImage 1: the location Sebastian's apartment, living room, the front view, with no people\nImage 2: the character sheet of Natalie (25), look S1\nImage 3: the character sheet of Sebastian (30), look S2\nDraw each person as a clean outline figure that can be told apart by hairstyle, build and the shape of their outfit, from their character sheet; no faces in detail. Do not copy a sheet's layout, white background or multiple views. Each person appears once, whole and at natural scale for the place, on the furniture and floor of Image 1, facing the way the start says.\nOnly two people appear: Natalie and Sebastian. Nobody else is there.\nAt the start: Axis and camera side for the whole scene: the camera stays on the kitchenette side of the room, by the right wall, looking across toward the front door on the left wall. The back wall, with the floor-to-ceiling window and the white bedroom door, runs along one side, and the charcoal couch is seen in profile. Natalie stands in the open bedroom doorway on the back wall in her ivory bridal gown and veil, with her pale-blue bag over her shoulder, facing into the bedroom. Sebastian, in his tuxedo, stands on the window side of the round coffee table, facing the couch. There is one charcoal three-seat couch facing the window, with the arc floor lamp at its front-door end. One round oak coffee table stands in front of the couch, between the couch and the window, with one blank white sheet of paper and one blue pen on it. One round dining table with two chairs stands between the couch and the kitchenette, near the bedroom door, and a white pillow lies on the dining chair nearer the couch.\n\nNo shading, solid black areas, colour or photographic rendering: dark hair and clothes are outlines left white inside; no text, letters, numbers, arrows, labels or watermark.\n",
+  "aspect_ratio": "9:16",
+  "size": "1152x2048",
+  "quality": "high",
+  "images": [
+    "episodes/EP005/blocking/seg01/v1/view.png",
+    "assets/characters/natalie/states/S1/v1/image-1.jpg",
+    "assets/characters/sebastian/states/S2/v1/image-1.jpg"
+  ]
+}

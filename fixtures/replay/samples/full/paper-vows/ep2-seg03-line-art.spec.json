@@ -1,0 +1,13 @@
+{
+  "provider": "openai",
+  "model": "gpt-image-2.5-sunburst",
+  "prompt": "Image 1 is one panel of a multi-panel storyboard. Redraw Image 1 so that: Shot 3: 'Daniel opens the rear passenger door of the car; Sebastian stops at the open door, facing Daniel, one hand resting on the door frame.' Daniel stands outside the door and holds the open rear door by its outer edge; Sebastian stands in the gap between the open door and the car body, facing Daniel across the top of the door, one hand on the door frame. Sebastian wears exactly one wristwatch.\nAfter the edit, the panel shows its shot: Medium shot, slow pan following Sebastian, eye level, both men in profile beside the car. Daniel opens the rear passenger door of the car; Sebastian stops at the open door, facing Daniel, one hand resting on the door frame.\nKeep Image 1's framing, camera angle, location, drawing style and border, and everyone and everything the change does not name, unchanged.\nImage 2: the character sheet of Sebastian (30), look S1\nImage 3: the character sheet of Daniel (30)\nAn image after Image 1 is the character sheet of a person in the panel: draw that person as in it (face, hairstyle, build and outfit), in Image 1's drawing style, and use it only for the person, not for its layout, background, colours or multiple views.\nNo text, letters, numbers, captions, speech bubbles, panel labels or watermark anywhere in the image.\n",
+  "aspect_ratio": "608:1088",
+  "size": "608x1088",
+  "quality": "high",
+  "images": [
+    "episodes/EP002/multi_panel_storyboard/seg03/line-art/v5/crop.png",
+    "assets/characters/sebastian/states/S1/v1/image-1.jpg",
+    "assets/characters/daniel/v1/image-1.jpg"
+  ]
+}

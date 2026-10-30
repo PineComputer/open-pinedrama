@@ -1,0 +1,385 @@
+{
+  "model": "sd25",
+  "content": [
+    {
+      "type": "text",
+      "text": "Image 1: Six-panel storyboard reference, used for the overall shot structure, shot sizes, and camera-movement rhythm. Read it from left to right and from top to bottom; panel N is Shot N. It is a line-art sketch: do not adopt its sketch style, black outlines, white background, panel borders or drawn faces.\nImage 2: Reference of JI RAN'S OFFICE, the front view, the establishing view, facing the back wall, a rendered set, not live action. Use it only for the room's layout, the furniture's positions and the light's direction; do not reference its visual content. It contains no people.\nImage 3: Reference of JI RAN'S OFFICE, the back view, turned 180 degrees, facing the front wall, with the left wall at its right edge, a rendered set, used only for the room's layout; it contains no people.\nImage 4: Reference of JI RAN'S OFFICE, the left-side view, facing the left wall, with the back wall at its right edge, a rendered set, used only for the room's layout; it contains no people.\nImage 5: Reference of JI RAN'S OFFICE, the right-side view, facing the right wall, with the back wall at its left edge, a rendered set, used only for the room's layout; it contains no people.\nImage 6: Reference of JI RAN'S OFFICE, the floor plan seen from above: its top edge is the back wall, its bottom edge the front wall behind the front view's camera, and its left and right edges the left and right walls, a rendered set, used only for the room's layout; it contains no people.\nImage 7: Blocking reference of the segment's start: the same place with these people in their places, used only for where each person is and which way they face; take faces and outfits from each subject's own image. It is a line-art diagram: do not adopt its outlines or white background.\nImage 8: Subject 1 (Ji Ran, look S0) character appearance reference.\nImage 9: Prop 1 (pour-over coffee equipment) maps to this image; copy its writing and badges exactly from Image 9.\nImage 10: Prop 2 (coffee) maps to this image; copy its writing and badges exactly from Image 10.\nFrom each prop's image, use only structure, material, and color.\n[Subject settings]\nSubject 1 (Ji Ran): Refer to Image 8. 27, Heroine; owner of Jiejian Company, daughter of Ji Hongyuan, and ex-girlfriend of Lu Shaoze. Outfit: look S0: Office, day one: a fitted dove-grey silk shirt with the top buttons open to a modest V, tucked into a black high-waisted bodycon pencil skirt that cinches the waist and ends just above the knee. Red pointed-toe stiletto pumps. Diamond studs and a slim gold watch. Signature colour: red.\nEnvironment (JI RAN'S OFFICE): Refer to Images 2 to 6. Day, bright soft daylight through floor-to-ceiling windows. Bright soft daylight from the floor-to-ceiling windows behind the desk, warm recessed ceiling spots and the brass desk lamp. Live sound: water trickling through the filter, quiet office hum.\nDo not swap the characters' appearances, clothing, actions, positions or dialogue.\n[Overall style]\nPhotorealistic live-action short drama with cinematic lighting. Each character keeps the face and the outfit with its main colour from their reference image throughout. Use each character sheet only for that character: the face from the close-up on the right, the body and outfit from the turnaround on the left; do not render the sheet's layout, white background or multiple views. This segment has 2 lines, in this order: Su Yaqing (V.O.), Ji Ran. Generate speech only from the lines in {} in the shot list, each spoken exactly once by its speaker; everyone else keeps their mouth naturally closed while listening, and a V.O. speaker keeps their mouth closed or is off screen. Follow the shot list below; do not add cuts or camera moves beyond it. Strictly adhere to the 180-degree rule: within a scene, characters keep their screen sides and the camera stays on one side of the axis. Seamless continuity of action, spatial matching and consistent actor blocking; cut on action. For dialogue prefer static shot-reverse-shot and over-the-shoulder shots, balanced with reaction shots and close-up inserts. Faces stable and clear, with no resemblance to any real actor or actress. Normal human eyes. Natural anatomy and hands. Natural, fluid motion that follows the blocking; characters make subtle, natural movements. Characters, props and environment share one world with matched lighting. Each line ends naturally with breathing room and is never cut off. Authentic performances with micro-expressions. No BGM; generate only dialogue, environmental sounds and action sounds. No subtitles.\n[Strictly exclude]\nsubtitles or on-screen text. Su Yaqing appearing in the office. a phone in Ji Ran's hand. Dialogue from the wrong character, multiple people speaking at once, repeated or missing lines, lip-sync errors and audio-visual desynchronization. The raw reference images (character sheets, setting plates) appearing as a frame of the video, and starting on a still frame of the setting reference. A fast zoom-in at the start, a fast pull-back at the end, unmotivated whip-pans, tilts, zooms and 360-degree orbits. Axis-crossing, jump cuts, frame skips, flicker and clipping. Characters or props popping in or vanishing, and duplicate characters except mirror reflections. Subtitles, captions, watermarks and garbled writing; writing and logos other than those on a key prop's reference image, which are copied from it; a phone screen or paper that is not a key prop is shown from the back or out of focus. Black-and-white, monochrome, grayscale, desaturated visuals; hand-drawn, sketch, line art, illustration, comics, animation; storyboard frames, rough sketches, panel borders, gutters and grid layouts.\n[Shot list] (6 shots, approximately 14 seconds)\nWhen a previous-shot reference image is given, it is the moment this segment starts from: keep its people's positions, outfits, props and light, and continue from there. Shot 1 keeps its own camera, matching the image's framing only when it frames the same view; do not repeat that frame later.\nAt the start: Ji Ran stands behind the walnut desk, in front of the black leather executive chair, her back to the floor-to-ceiling windows and facing the office door. One hand is braced flat on the desk; the other holds the gooseneck kettle over the dripper. On the walnut desk lie architectural plans, wood samples and one metal figurine. The pour-over set (kettle, white cone dripper on a glass server) stands in the middle of the desk, with one white coffee cup beside the server. The camera is in front of the desk, on the office door side, and stays on that side.\nShot 1 (0-2s): [Wide shot, slow push in from the office door side toward the walnut desk, eye-level] Ji Ran stands behind the walnut desk with the windows glowing behind her. One hand is braced on the desk while she pours water from the kettle into the dripper. Her face is cold. <water trickles through a paper filter>\nShot 2 (2-5s): [Extreme close-up insert, locked-off camera, high angle on the dripper] Water spirals from the kettle spout into the paper filter, and dark coffee drips into the glass server. Dialogue (Su Yaqing, V.O., in Chinese, teasing sing-song): {听说你爸想让你跟路少泽联姻，}\nShot 3 (5-7s): [Medium close-up, locked-off camera, eye-level, from the office door side] Ji Ran keeps pouring with her mouth closed, and her eyes lift coldly from the dripper. Dialogue (Su Yaqing, V.O., in Chinese, teasing): {你当年那么爱他，}\nShot 4 (7-10s): [Medium shot, low angle from in front of the desk, slight tilt up] Ji Ran sets the kettle down on the walnut desk and straightens, leaning on her braced hand with her mouth closed. Dialogue (Su Yaqing, V.O., in Chinese, gleeful rising lilt): {怎么样是不是很开心啊？}\nShot 5 (10-12s): [Close-up, locked-off camera, eye-level, on Ji Ran's face] Ji Ran gives a thin, icy smile. Dialogue (Ji Ran, in Chinese, deadpan, cutting): {开心，他死了我更开心。}\nShot 6 (12-14s): [Extreme close-up insert, high angle on her braced hand] Ji Ran's fingers press down hard on the architectural plans beside the white coffee cup.\nAt the end: Ji Ran stands behind the walnut desk, in front of the black leather executive chair, her back to the windows. One hand presses on the architectural plans, and her face is cold. The kettle is set down beside the dripper and the glass server, with the white coffee cup next to them.\n"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261027074939-cdfw9"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/ji_ran_office/times/Day/v1/front.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/ji_ran_office/times/Day/v1/back.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/ji_ran_office/times/Day/v1/left-side.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/ji_ran_office/times/Day/v1/right-side.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/ji_ran_office/times/Day/v1/floor-plan.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261027074420-fwcq6"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261027072535-hrccn"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/props/pour_over_set/v1/image-1.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/props/coffee_cup/v1/image-1.jpg"
+      },
+      "role": "reference_image"
+    }
+  ],
+  "duration": 14,
+  "ratio": "9:16",
+  "resolution": "480p",
+  "generate_audio": true,
+  "watermark": false,
+  "return_last_frame": true,
+  "omni_reference_task_type": "reference",
+  "drama": {
+    "segment": {
+      "id": "seg01",
+      "duration": 14,
+      "location": "ji_ran_office",
+      "scene_heading": "INT. JI RAN'S OFFICE - DAY #1-1#",
+      "time": "Day, bright soft daylight through floor-to-ceiling windows",
+      "characters": [
+        "ji_ran"
+      ],
+      "states": {
+        "ji_ran": "S0"
+      },
+      "props": [
+        "pour_over_set",
+        "coffee_cup"
+      ],
+      "first_state": "Ji Ran stands behind the walnut desk, in front of the black leather executive chair, her back to the floor-to-ceiling windows and facing the office door. One hand is braced flat on the desk; the other holds the gooseneck kettle over the dripper. On the walnut desk lie architectural plans, wood samples and one metal figurine. The pour-over set (kettle, white cone dripper on a glass server) stands in the middle of the desk, with one white coffee cup beside the server. The camera is in front of the desk, on the office door side, and stays on that side.",
+      "shots": [
+        {
+          "time": "0-2s",
+          "size": "wide shot",
+          "angle": "eye level",
+          "camera": "Wide shot, slow push in from the office door side toward the walnut desk, eye-level",
+          "visual": "Ji Ran stands behind the walnut desk with the windows glowing behind her. One hand is braced on the desk while she pours water from the kettle into the dripper. Her face is cold.",
+          "audio": "<water trickles through a paper filter>",
+          "characters": [
+            "ji_ran"
+          ],
+          "lines": []
+        },
+        {
+          "time": "2-5s",
+          "size": "extreme close-up",
+          "angle": "high angle",
+          "camera": "Extreme close-up insert, locked-off camera, high angle on the dripper",
+          "visual": "Water spirals from the kettle spout into the paper filter, and dark coffee drips into the glass server.",
+          "audio": "Dialogue (Su Yaqing, V.O., in Chinese, teasing sing-song): {听说你爸想让你跟路少泽联姻，}",
+          "characters": [],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "5-7s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up, locked-off camera, eye-level, from the office door side",
+          "visual": "Ji Ran keeps pouring with her mouth closed, and her eyes lift coldly from the dripper.",
+          "audio": "Dialogue (Su Yaqing, V.O., in Chinese, teasing): {你当年那么爱他，}",
+          "characters": [
+            "ji_ran"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "7-10s",
+          "size": "medium shot",
+          "angle": "low angle",
+          "camera": "Medium shot, low angle from in front of the desk, slight tilt up",
+          "visual": "Ji Ran sets the kettle down on the walnut desk and straightens, leaning on her braced hand with her mouth closed.",
+          "audio": "Dialogue (Su Yaqing, V.O., in Chinese, gleeful rising lilt): {怎么样是不是很开心啊？}",
+          "characters": [
+            "ji_ran"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "10-12s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, locked-off camera, eye-level, on Ji Ran's face",
+          "visual": "Ji Ran gives a thin, icy smile.",
+          "audio": "Dialogue (Ji Ran, in Chinese, deadpan, cutting): {开心，他死了我更开心。}",
+          "characters": [
+            "ji_ran"
+          ],
+          "lines": [
+            1
+          ]
+        },
+        {
+          "time": "12-14s",
+          "size": "extreme close-up",
+          "angle": "high angle",
+          "camera": "Extreme close-up insert, high angle on her braced hand",
+          "visual": "Ji Ran's fingers press down hard on the architectural plans beside the white coffee cup.",
+          "audio": "",
+          "characters": [
+            "ji_ran"
+          ],
+          "lines": []
+        }
+      ],
+      "light_audio": "Bright soft daylight from the floor-to-ceiling windows behind the desk, warm recessed ceiling spots and the brass desk lamp. Live sound: water trickling through the filter, quiet office hum.",
+      "dialogue": [
+        {
+          "speaker": "su_yaqing",
+          "line": "听说你爸想让你跟路少泽联姻，你当年那么爱他，怎么样是不是很开心啊？",
+          "offscreen": true
+        },
+        {
+          "speaker": "ji_ran",
+          "line": "开心，他死了我更开心。",
+          "offscreen": false
+        }
+      ],
+      "must_hit": [
+        "Ji Ran pours water through the pour-over filter with one hand braced on the desk",
+        "Ji Ran says the cold line with an icy smile"
+      ],
+      "exit_state": "Ji Ran stands behind the walnut desk, in front of the black leather executive chair, her back to the windows. One hand presses on the architectural plans, and her face is cold. The kettle is set down beside the dripper and the glass server, with the white coffee cup next to them.",
+      "negative": [
+        "subtitles or on-screen text",
+        "Su Yaqing appearing in the office",
+        "a phone in Ji Ran's hand"
+      ]
+    },
+    "bible_version": "v2",
+    "breakdown_version": "v2",
+    "lineage": [
+      {
+        "path": "bible/v2/artifact.json",
+        "sha256": "f5400f28e1edd9ccef571edd8420590ca4a9e72eb37b7ca444a66cfe777c7b91"
+      },
+      {
+        "path": "bible/accepted.json",
+        "sha256": "d964bcfb13d315e51ed18dba40bce44dbe8e8ad1fd06b96e8843e333e1d61a32"
+      },
+      {
+        "path": "bible/current.json",
+        "sha256": "2addb578f51de2dd02b1e8e33d5e141f23f16f02e61259b8cb42e64f67d2fcc3"
+      },
+      {
+        "path": "bible/v2/bible.json",
+        "sha256": "3d920d493ba887180838dafb80b72f72eb9f03f827829dba1965c3643feaf05d"
+      },
+      {
+        "path": "bible/v2/input/screenplay.md",
+        "sha256": "afbfe0f787d9c5565630e661e5667df671458c5aa581c242873ff1ab7de27669"
+      },
+      {
+        "path": "episodes/EP001/breakdown/v2/artifact.json",
+        "sha256": "0ded156484886c988e6a5b745904a2df9eb4184f310876d283c970e6c80c39e9"
+      },
+      {
+        "path": "episodes/EP001/breakdown/accepted.json",
+        "sha256": "de2773c04703c690c939a63da269805868284ae428b471e3bc96af8d18ec861e"
+      },
+      {
+        "path": "episodes/EP001/breakdown/current.json",
+        "sha256": "d816beccf54d78dc70ecc5f752ac2216ceaabfac5717aa249e53156ad4ff324a"
+      },
+      {
+        "path": "episodes/EP001/breakdown/v2/breakdown.json",
+        "sha256": "038b756ca25d30d37a10530bcb819e12cf3f85c4bfa33e54247a8c7db30f509f"
+      },
+      {
+        "path": "episodes/EP001/multi_panel_storyboard/seg01/line-art/v1/artifact.json",
+        "sha256": "42d44d7f8d2d60a4afa6f6c511f4f56b6e810034004fec5888dfda85e565f993"
+      },
+      {
+        "path": "episodes/EP001/multi_panel_storyboard/seg01/line-art/accepted.json",
+        "sha256": "04a40244373df1ca056c5655ecde0d3198f77651432b7c70b90282257d2799d3"
+      },
+      {
+        "path": "episodes/EP001/multi_panel_storyboard/seg01/line-art/current.json",
+        "sha256": "32e6f6229324851ce7817bd18cfb91d479a93454edcb3e1e0a4ad56b209344fe"
+      },
+      {
+        "path": "episodes/EP001/multi_panel_storyboard/seg01/line-art/v1/image-1.jpg",
+        "sha256": "cf2789453c68b60cbfd0ad9d02356aa1102148cf10a249c191eaf933e647da59"
+      },
+      {
+        "path": "episodes/EP001/multi_panel_storyboard/seg01/line-art/v1/asset/job.json",
+        "sha256": "548d7e6b89dc71113f883b362b39bf8b214b109523a3e5c98fe08ceb9e91c529"
+      },
+      {
+        "path": "assets/scenes/ji_ran_office/times/Day/v1/artifact.json",
+        "sha256": "0c925f394c9b3f9ad008432786bc8b6930fa180c91f2c1aba1a78aadcd8cfe61"
+      },
+      {
+        "path": "assets/scenes/ji_ran_office/times/Day/accepted.json",
+        "sha256": "c3227c8e146023d1d6da3af1cf35fed9f60eb131b759f3a62d4bd46470321553"
+      },
+      {
+        "path": "assets/scenes/ji_ran_office/times/Day/current.json",
+        "sha256": "2d97a333f041f05a574b1c624389a614748ccff56ef9676faad2332359a7cf70"
+      },
+      {
+        "path": "assets/scenes/ji_ran_office/times/Day/v1/image-1.jpg",
+        "sha256": "921a81f20aa498d00fdcb23b2c8d68ed8b12e7f1079addb5f4d60e35f4b30b06"
+      },
+      {
+        "path": "assets/scenes/ji_ran_office/times/Day/v1/front.jpg",
+        "sha256": "b27bdf8b3cae548ebf3183c0ce8c555a685cb414e20b659e467abde7c7e258d5"
+      },
+      {
+        "path": "assets/scenes/ji_ran_office/times/Day/v1/back.jpg",
+        "sha256": "35487300be0e146f14a1343abda005e13774fa7e1453edd97240d27deaed6269"
+      },
+      {
+        "path": "assets/scenes/ji_ran_office/times/Day/v1/left-side.jpg",
+        "sha256": "bad88ae0d22d80f08c234a74bc0c36aba15741a719e001c000853b5f86436b3e"
+      },
+      {
+        "path": "assets/scenes/ji_ran_office/times/Day/v1/right-side.jpg",
+        "sha256": "aaadcfb066d50e71c5f0f363a54d41eed2dbaa7c6ada46bca294a0f8cdc92b39"
+      },
+      {
+        "path": "assets/scenes/ji_ran_office/times/Day/v1/floor-plan.jpg",
+        "sha256": "dc3b205ee9732f33d7bb1ba637217d1eab58beb1a865c14440558a6c7c1ed63a"
+      },
+      {
+        "path": "episodes/EP001/blocking/seg01/v1/artifact.json",
+        "sha256": "09550dc74e75a298b4a4836477f7c5df874bfc51ad56a2ff310b39b6a4461dd6"
+      },
+      {
+        "path": "episodes/EP001/blocking/seg01/accepted.json",
+        "sha256": "3d79a7f644858ae3029a43032a4b5e4c9b19e42a3d0771abffc1561d055fdf4f"
+      },
+      {
+        "path": "episodes/EP001/blocking/seg01/current.json",
+        "sha256": "ec87a7911b3df8787c801e717a124de20d850a29d515a38509894f0e1b8107cf"
+      },
+      {
+        "path": "episodes/EP001/blocking/seg01/v1/image-1.jpg",
+        "sha256": "03d1580d73505fc2534fddb76d0f0c5bccbb8ca1d58dac87cc80013b5a8f34f4"
+      },
+      {
+        "path": "episodes/EP001/blocking/seg01/v1/asset/job.json",
+        "sha256": "c04d7b658f45566f8603f7b18eee88ebe4fe8026e84ce58fad03ca71e304990a"
+      },
+      {
+        "path": "assets/props/pour_over_set/v1/artifact.json",
+        "sha256": "72d17db6c57152e8ac7cfe4ae382659665d5afdf854496e2ce45400fdcb067fa"
+      },
+      {
+        "path": "assets/props/pour_over_set/accepted.json",
+        "sha256": "a92fe87d6b8c46b1b698f0d605647914eb70535f34c8c7652adc7829c016df4f"
+      },
+      {
+        "path": "assets/props/pour_over_set/current.json",
+        "sha256": "7d66530bd9e3521ee9ce5183b43a000bbb141c1c9e8637402f5eac15d345d7e1"
+      },
+      {
+        "path": "assets/props/pour_over_set/v1/image-1.jpg",
+        "sha256": "18a8349933fb422da768e1d68216b207a7144259fbeb6a276d2c74b62c9af8bc"
+      },
+      {
+        "path": "assets/props/coffee_cup/v1/artifact.json",
+        "sha256": "29bfd5abb75fa0c0ff9c9eb694acfa9ad4d5eaba5619eddb25b80853d15b3208"
+      },
+      {
+        "path": "assets/props/coffee_cup/accepted.json",
+        "sha256": "2943b413564fa2b0d75a09b1f35e815d42ac52b1b60d849af752b402777a697e"
+      },
+      {
+        "path": "assets/props/coffee_cup/current.json",
+        "sha256": "5a19ebdb5b3a8b53a571be7c38589b7168ea7e7868a0d0741b19db971a9ace1b"
+      },
+      {
+        "path": "assets/props/coffee_cup/v1/image-1.jpg",
+        "sha256": "9570fb5e3ddf5ae43d5fcf76cbb669d231ce1f8aeee8804699aff5c9174d4f73"
+      },
+      {
+        "path": "assets/characters/ji_ran/v1/artifact.json",
+        "sha256": "fb5fbc8f3c38447c1ee8851a856300f7c6adbf0518fbbffaddfa49cf4458246f"
+      },
+      {
+        "path": "assets/characters/ji_ran/accepted.json",
+        "sha256": "4acc764e61466d0361684b1c6be4efc4a64cf33506f6af1268b8e210f1c3151a"
+      },
+      {
+        "path": "assets/characters/ji_ran/current.json",
+        "sha256": "0f1d24fbd36ae80a757f51921956c96e304ef18362ddc38d00c1a8ef02e1bd6b"
+      },
+      {
+        "path": "assets/characters/ji_ran/v1/image-1.jpg",
+        "sha256": "104e979c022c7d88f877576da9b98bf485b1dbbd74951fbba43ae3586ae81da5"
+      },
+      {
+        "path": "assets/characters/ji_ran/v1/asset/job.json",
+        "sha256": "c0a02966fab0f9bff7a60ccbc2b32cf01b3d8dd6531ddf66f56d3c72011dbd88"
+      },
+      {
+        "path": "episodes/EP001/video_prompts/v1/seg01.json",
+        "sha256": "83a6bd02a03b04df7b30543d9e221f7cd77f56f80e787788dac7aad13b1b1245"
+      }
+    ],
+    "character_reference_mode": "asset_library",
+    "video_references": "storyboard",
+    "trusted_character_references": {},
+    "video_prompts_version": "v1"
+  }
+}

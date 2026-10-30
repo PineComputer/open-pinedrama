@@ -1,0 +1,13 @@
+{
+  "model": "gpt-image-2.5-sunburst",
+  "prompt": "Edit this character reference sheet of Sebastian (a fictional 30-year-old). Change ONLY the outfit: the person now wears look S3, one outfit only: Night at home: a fitted white ribbed sleeveless undershirt that shows his broad shoulders and athletic arms, loose black cotton lounge trousers, and bare feet. The wristwatch is still on.. Keep everything else exactly as in the input image.\nThe new outfit is identical in every view and in the close-up: the same garments, accessories and details on the same side of the body, seen from that view's angle. Garments are plain, with no logo, brand mark, or printed letters or numbers.\nPreserve exactly: the face, facial features, skin and hair; the identity of the person; body shape, height and proportions; marks and scars as described (A strikingly handsome Caucasian man of 30, tall at about 188 cm, athletic, with broad shoulders and a lean, muscular frame. He has a chiselled face with a sharply defined jaw, high cheekbones, a straight nose, a faint stubble shadow and piercing steel-grey eyes under dark straight brows. Short, thick black hair is textured and swept back. His skin is healthy and fair-olive. He wears a sleek steel-and-black luxury wristwatch whenever he is out of jail.); the pose and limb positions in every view; panel layout, scale, spacing and framing; plain background; studio lighting and colour balance.\n\nAvoid: changed face, different person, older or younger-looking face, changed body shape, changed pose, changed layout, changed background, changed lighting, clothing from the previous look left over, text, watermark.\n",
+  "n": 1,
+  "size": "2048x1152",
+  "quality": "high",
+  "output_format": "jpeg",
+  "output_compression": 100,
+  "moderation": "low",
+  "input_images": [
+    "assets/characters/sebastian/states/S1/v1/image-1.jpg"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "model": "gpt-image-2.5-sunburst",
+  "prompt": "Edit this character reference sheet of 林青羽 (a fictional 21-year-old). Change ONLY the outfit: the person now wears look S2, one outfit only: Night at Ji Ran's apartment: a white cotton pullover hoodie, slim black jogger trousers and white sneakers.. Keep everything else exactly as in the input image.\nThe new outfit is identical in every view and in the close-up: the same garments, accessories and details on the same side of the body, seen from that view's angle. Garments are plain, with no logo, brand mark, or printed letters or numbers.\nPreserve exactly: the face, facial features, skin and hair; the identity of the person; body shape, height and proportions; marks and scars as described (Strikingly handsome young East Asian man. Clean, defined jawline, high cheekbones, a straight nose, a youthful but strong face and bright, intelligent, slightly mischievous eyes. Healthy, natural skin with real texture. Soft black hair in a tousled, slightly long textured cut with a fringe brushed to one side. About 186 cm tall, with broad shoulders and a lean, athletic build, long legs and a visible six-pack beneath fitted shirts. No visible jewellery apart from a thin black-strap watch.); the pose and limb positions in every view; panel layout, scale, spacing and framing; plain background; studio lighting and colour balance.\n\nAvoid: changed face, different person, older or younger-looking face, changed body shape, changed pose, changed layout, changed background, changed lighting, clothing from the previous look left over, text, watermark.\n",
+  "n": 1,
+  "size": "2048x1152",
+  "quality": "high",
+  "output_format": "jpeg",
+  "output_compression": 100,
+  "moderation": "low",
+  "input_images": [
+    "assets/characters/lin_qingyu/v1/image-1.jpg"
+  ]
+}

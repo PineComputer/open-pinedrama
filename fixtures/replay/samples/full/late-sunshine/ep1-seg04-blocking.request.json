@@ -1,0 +1,14 @@
+{
+  "model": "gpt-image-2.5-sunburst",
+  "prompt": "A clean line-art blocking diagram of one scene of a live-action short drama, vertical composition: the place of Image 1 drawn in simple black outlines on white, with the segment's people in their places at its start, the way a master shot shows the whole scene before it is cut into shots. Keep Image 1's camera position, framing, walls, windows, doorways and furniture, traced in outline; only add the people.\nImage 1: the location SU YAQING'S LIVING ROOM, the front view, with no people\nImage 2: the character sheet of Su Yaqing (27)\nDraw each person as a clean outline figure that can be told apart by hairstyle, build and the shape of their outfit, from their character sheet; no faces in detail. Do not copy a sheet's layout, white background or multiple views. Each person appears once, whole and at natural scale for the place, on the furniture and floor of Image 1, facing the way the start says.\nOnly one person appears: Su Yaqing. Nobody else is there.\nAt the start: Su Yaqing sits in the middle of the cream bouclé sofa among pastel cushions, legs crossed, facing the low glass coffee table on the pale rug. She holds the video-calling phone up at face height. The kitchen doorway is at the back of the room behind the sofa, and it is empty. The large windows are on the side wall, and a floor lamp stands at each end of the sofa. The camera is in front of the sofa, beyond the glass coffee table, and stays on that side.\n\nNo shading, solid black areas, colour or photographic rendering: dark hair and clothes are outlines left white inside; no text, letters, numbers, arrows, labels or watermark.\n",
+  "n": 1,
+  "size": "1152x2048",
+  "quality": "high",
+  "output_format": "jpeg",
+  "output_compression": 100,
+  "moderation": "low",
+  "input_images": [
+    "episodes/EP001/blocking/seg04/v1/view.png",
+    "assets/characters/su_yaqing/v1/image-1.jpg"
+  ]
+}

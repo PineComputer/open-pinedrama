@@ -1,0 +1,544 @@
+{
+  "model": "sd25",
+  "content": [
+    {
+      "type": "text",
+      "text": "Image 1: Seven-panel storyboard reference, used for the overall shot structure, shot sizes, and camera-movement rhythm. Read it from left to right and from top to bottom; panel N is Shot N. It is a line-art sketch: do not adopt its sketch style, black outlines, white background, panel borders or drawn faces.\nImage 2: Reference of Sebastian's apartment, living room, the front view, the establishing view, facing the back wall, a rendered set, not live action. Use it only for the room's layout, the furniture's positions and the light's direction; do not reference its visual content. It contains no people.\nImage 3: Reference of Sebastian's apartment, living room, the back view, turned 180 degrees, facing the front wall, with the left wall at its right edge, a rendered set, used only for the room's layout; it contains no people.\nImage 4: Reference of Sebastian's apartment, living room, the left-side view, facing the left wall, with the back wall at its right edge, a rendered set, used only for the room's layout; it contains no people.\nImage 5: Reference of Sebastian's apartment, living room, the right-side view, facing the right wall, with the back wall at its left edge, a rendered set, used only for the room's layout; it contains no people.\nImage 6: Reference of Sebastian's apartment, living room, the floor plan seen from above: its top edge is the back wall, its bottom edge the front wall behind the front view's camera, and its left and right edges the left and right walls, a rendered set, used only for the room's layout; it contains no people.\nImage 7: Blocking reference of the segment's start: the same place with these people in their places, used only for where each person is and which way they face; take faces and outfits from each subject's own image. It is a line-art diagram: do not adopt its outlines or white background.\nImage 8: Subject 1 (Natalie, look S3) character appearance reference.\nImage 9: Subject 1 (Natalie, look S4) character appearance reference.\nImage 10: Subject 2 (Sebastian, look S4) character appearance reference.\nImage 11: Prop 1 (the bag containing her wedding dress) maps to this image; use only structure, material, and color, and copy its writing and badges exactly from Image 11.\nImage 12: Prop 2 (two coins) maps to this image; use only structure, material, and color, and copy its writing and badges exactly from Image 12.\nImage 13: Prop 3 (Sebastian's phone) maps to this image; use only structure, material, and color, and copy its writing and badges exactly from Image 13.\n[Subject settings]\nSubject 1 (Natalie): Refer to Image 8 (look S3) and Image 9 (look S4). 25, the heroine; George's daughter from his first marriage, who agrees to marry Sebastian Klein to pay for her mother's dialysis. Outfit: look S3: An opaque cornflower-blue sleeveless wrap dress in a fitted matte jersey. It crosses into a low V neckline, ties at the side to cinch the waist, and ends in a knee-skimming hem. Nude block-heel pumps and a small structured nude handbag. No jewellery; look S4: The cornflower-blue sleeveless wrap dress, nude block-heel pumps and small nude handbag, now with a cropped ivory-white bouclé jacket on top. The jacket has long sleeves and a collarless round neck, and it is worn open, ending just at the tied waist so that the cinched waist still shows. Signature colour: blue.\nSubject 2 (Sebastian): Refer to Image 10. 30, the hero; the scorned illegitimate son of the Klein family, jailed for three days for reckless driving and secretly a billionaire running a plan. Outfit: look S4: Day at home: a fitted black fine-knit crew-neck sweater with long sleeves pushed slightly up the forearms, slim charcoal-grey chinos, black leather loafers and the steel-and-black wristwatch. Signature colour: black.\nEnvironment (Sebastian's apartment, living room): Refer to Images 2 to 6. Day, soft bright sunlight through the floor-to-ceiling window. Soft bright daylight from the back-wall window; room tone, footsteps, the front door closing, a faint phone tone.\nDo not swap the characters' appearances, clothing, actions, positions or dialogue.\n[Subjects and relationships]\nOnly two people appear throughout: Natalie and Sebastian.\n[Blocking]\nRefer to Images 2 to 6 for the room and Image 7 for the people's places. Natalie stands in front of the round coffee table facing Sebastian, the dress bag over her left arm and her small nude handbag on her shoulder, in the cornflower-blue wrap dress. Sebastian stands between the charcoal couch and the round coffee table facing her, the two coins closed in his right hand. The folded blanket lies on the couch. Breakfast and Sebastian's phone, face down, are on the round dining table. The cropped ivory jacket hangs on the wall hooks beside the front door.\n[Overall style]\nPhotorealistic live-action short drama with cinematic lighting. Each character keeps the face and the outfit with its main colour from their reference image throughout. Use each character sheet only for that character: the face from the close-up on the right, the body and outfit from the turnaround on the left; do not render the sheet's layout, white background or multiple views. This segment has 2 lines, in this order: Sebastian, Daniel (V.O.). Generate speech only from the lines in {} in the shot list, each spoken exactly once by its speaker; everyone else keeps their mouth naturally closed while listening, and a V.O. speaker keeps their mouth closed or is off screen. Follow the shot list below; do not add cuts or camera moves beyond it. Strictly adhere to the 180-degree rule: within a scene, characters keep their screen sides and the camera stays on one side of the axis. Seamless continuity of action, spatial matching and consistent actor blocking; cut on action. For dialogue prefer static shot-reverse-shot and over-the-shoulder shots, balanced with reaction shots and close-up inserts. Faces stable and clear, consistent with the reference images, with no resemblance to any real actor or actress. Normal human eyes. Natural anatomy and hands. Natural, fluid motion that follows the blocking; characters make subtle, natural movements. Characters, props and environment share one world with matched lighting. Each line ends naturally with breathing room and is never cut off. Authentic performances with micro-expressions. No BGM; generate only dialogue, environmental sounds and action sounds. No subtitles.\n[Continuity]\nMaintain continuity in the identities, number, appearance, clothing, relative heights, spatial positions, and eyelines of all the characters. The actions in the shot list occur strictly in sequence. Hands are anatomically correct.\n[Strictly exclude]\nadded or missing characters, spatial jumps. jacket appearing before she puts it on. subtitles or garbled text. Dialogue from the wrong character, multiple people speaking at once, repeated or missing lines, lip-sync errors and audio-visual desynchronization. The raw reference images (character sheets, setting plates) appearing as a frame of the video, and starting on a still frame of the setting reference. A fast zoom-in at the start, a fast pull-back at the end, unmotivated whip-pans, tilts, zooms and 360-degree orbits. Axis-crossing, jump cuts, frame skips, flicker and clipping. Face swaps, changes in age or clothing, sudden height shifts, added or missing characters, spatial jumps, and disordered action sequences; props popping in or vanishing, and duplicate characters except mirror reflections. Hand clipping, extra fingers, fused fingers, malformed hands. Subtitles, captions, watermarks and garbled writing; writing and logos other than those on a key prop's reference image, which are copied from it; a phone screen or paper that is not a key prop is shown from the back or out of focus. Black-and-white, monochrome, grayscale, desaturated visuals; hand-drawn, sketch, line art, illustration, comics, animation; storyboard frames, rough sketches, panel borders, gutters and grid layouts.\n[Shot list] (7 shots, approximately 15 seconds)\nWhen a previous-shot reference image is given, it is the moment this segment starts from: keep its people's positions, outfits, props and light, and continue from there. Shot 1 keeps its own camera, matching the image's framing only when it frames the same view; do not repeat that frame later.\nShot 1 (0-3s): [Wide shot, slow pan following Natalie from the coffee table to the front door, eye-level, from the bookshelves side] Natalie walks to the front door on the left wall, takes the cropped ivory bouclé jacket off the wall hook and pulls it on over her dress, the dress bag still on her arm; Sebastian stays by the couch watching her. <Heels tap across the oak floor>\nShot 2 (3-5s): [Medium shot, locked-off, eye-level, on the front door] Natalie, now in the open cropped jacket, opens the dark-grey front door, glances back once, steps out and the door swings shut behind her. <Front door clicks shut>\nShot 3 (5-7s): [Medium shot, tracking with Sebastian from the couch to the dining table, eye-level] Sebastian walks to the round dining table and stops on its couch side, opening his hand over the table. <Footsteps on the oak floor>\nShot 4 (7-8s): [Close-up insert, high angle, locked-off, on the table top] Sebastian's fingers set the two coins down beside his face-down phone. <Coins tap on wood>\nShot 5 (8-10s): [Medium close-up, low angle, slow tilt up from the table to Sebastian's face] Sebastian picks up the phone, taps it and lifts it to his ear; his lazy smile drops into a cold, focused look. <Phone dial tone>\nShot 6 (10-13s): [Close-up, locked-off, eye-level, on Sebastian's face and the phone] Sebastian speaks low into the phone, eyes fixed on the closed front door. Dialogue (Sebastian, in English, low commanding murmur): {Find out what the Quinns have been doing to her.}\nShot 7 (13-15s): [Medium shot, locked-off, eye-level, from the bookshelves side] Daniel is off screen, his voice coming from the phone. Sebastian lowers the phone from his ear and stands at the dining table. Dialogue (Daniel, V.O., in English, brisk): {On it, boss.}\nAt the end: Natalie has left through the front door, which is closed. Sebastian stands at the couch side of the round dining table, his phone in his lowered right hand; the two coins lie on the table. The folded blanket lies on the couch.\n\n<Image 14> is the previous shot (seg01/t02 at 26.97s).\n"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261023184801-x866m"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/sebastian_apartment/v1/front.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/sebastian_apartment/v1/back.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/sebastian_apartment/v1/left-side.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/sebastian_apartment/v1/right-side.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/sebastian_apartment/v1/floor-plan.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261023184522-988f9"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261023183406-f2tpp"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261023184137-tnfrc"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261023183357-6bzpk"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/props/dress_bag/v1/image-1.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/props/coins/v1/image-1.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/props/sebastian_phone/v1/image-1.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261024035023-4b2cw"
+      },
+      "role": "reference_image"
+    }
+  ],
+  "duration": 15,
+  "ratio": "9:16",
+  "resolution": "480p",
+  "generate_audio": true,
+  "watermark": false,
+  "return_last_frame": true,
+  "omni_reference_task_type": "reference",
+  "drama": {
+    "segment": {
+      "id": "seg02",
+      "duration": 15,
+      "location": "sebastian_apartment",
+      "scene_heading": "6-1 Day | Int. Sebastian's apartment, living room",
+      "time": "Day, soft bright sunlight through the floor-to-ceiling window",
+      "characters": [
+        "natalie",
+        "sebastian"
+      ],
+      "states": {
+        "natalie": "S3>S4",
+        "sebastian": "S4"
+      },
+      "props": [
+        "dress_bag",
+        "coins",
+        "sebastian_phone"
+      ],
+      "first_state": "Natalie stands in front of the round coffee table facing Sebastian, the dress bag over her left arm and her small nude handbag on her shoulder, in the cornflower-blue wrap dress. Sebastian stands between the charcoal couch and the round coffee table facing her, the two coins closed in his right hand. The folded blanket lies on the couch. Breakfast and Sebastian's phone, face down, are on the round dining table. The cropped ivory jacket hangs on the wall hooks beside the front door.",
+      "shots": [
+        {
+          "time": "0-3s",
+          "size": "wide shot",
+          "angle": "eye level",
+          "camera": "Wide shot, slow pan following Natalie from the coffee table to the front door, eye-level, from the bookshelves side",
+          "visual": "Natalie walks to the front door on the left wall, takes the cropped ivory bouclé jacket off the wall hook and pulls it on over her dress, the dress bag still on her arm; Sebastian stays by the couch watching her.",
+          "audio": "<Heels tap across the oak floor>",
+          "characters": [
+            "natalie",
+            "sebastian"
+          ],
+          "lines": []
+        },
+        {
+          "time": "3-5s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, locked-off, eye-level, on the front door",
+          "visual": "Natalie, now in the open cropped jacket, opens the dark-grey front door, glances back once, steps out and the door swings shut behind her.",
+          "audio": "<Front door clicks shut>",
+          "characters": [
+            "natalie"
+          ],
+          "lines": []
+        },
+        {
+          "time": "5-7s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, tracking with Sebastian from the couch to the dining table, eye-level",
+          "visual": "Sebastian walks to the round dining table and stops on its couch side, opening his hand over the table.",
+          "audio": "<Footsteps on the oak floor>",
+          "characters": [
+            "sebastian"
+          ],
+          "lines": []
+        },
+        {
+          "time": "7-8s",
+          "size": "close-up",
+          "angle": "high angle",
+          "camera": "Close-up insert, high angle, locked-off, on the table top",
+          "visual": "Sebastian's fingers set the two coins down beside his face-down phone.",
+          "audio": "<Coins tap on wood>",
+          "characters": [
+            "sebastian"
+          ],
+          "lines": []
+        },
+        {
+          "time": "8-10s",
+          "size": "medium close-up",
+          "angle": "low angle",
+          "camera": "Medium close-up, low angle, slow tilt up from the table to Sebastian's face",
+          "visual": "Sebastian picks up the phone, taps it and lifts it to his ear; his lazy smile drops into a cold, focused look.",
+          "audio": "<Phone dial tone>",
+          "characters": [
+            "sebastian"
+          ],
+          "lines": []
+        },
+        {
+          "time": "10-13s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, locked-off, eye-level, on Sebastian's face and the phone",
+          "visual": "Sebastian speaks low into the phone, eyes fixed on the closed front door.",
+          "audio": "Dialogue (Sebastian, in English, low commanding murmur): {Find out what the Quinns have been doing to her.}",
+          "characters": [
+            "sebastian"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "13-15s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, locked-off, eye-level, from the bookshelves side",
+          "visual": "Daniel is off screen, his voice coming from the phone. Sebastian lowers the phone from his ear and stands at the dining table.",
+          "audio": "Dialogue (Daniel, V.O., in English, brisk): {On it, boss.}",
+          "characters": [
+            "sebastian"
+          ],
+          "lines": [
+            1
+          ]
+        }
+      ],
+      "light_audio": "Soft bright daylight from the back-wall window; room tone, footsteps, the front door closing, a faint phone tone.",
+      "dialogue": [
+        {
+          "speaker": "sebastian",
+          "line": "Find out what the Quinns have been doing to her."
+        },
+        {
+          "speaker": "daniel",
+          "line": "On it, boss.",
+          "offscreen": true
+        }
+      ],
+      "must_hit": [
+        "Natalie puts on the cropped ivory jacket and leaves through the front door",
+        "Sebastian sets the two coins beside his phone",
+        "Sebastian calls on the phone"
+      ],
+      "exit_state": "Natalie has left through the front door, which is closed. Sebastian stands at the couch side of the round dining table, his phone in his lowered right hand; the two coins lie on the table. The folded blanket lies on the couch.",
+      "negative": [
+        "added or missing characters, spatial jumps",
+        "jacket appearing before she puts it on",
+        "subtitles or garbled text"
+      ]
+    },
+    "bible_version": "v3",
+    "breakdown_version": "v1",
+    "lineage": [
+      {
+        "path": "bible/v3/artifact.json",
+        "sha256": "cb13295a705376dcb690dc2f74e465bcdb36c2980582e868bcab7a2c31de8850"
+      },
+      {
+        "path": "bible/accepted.json",
+        "sha256": "394389dea6cf8cff61e544808987a91e6f3ef64be7219edd056c5400bc0d175f"
+      },
+      {
+        "path": "bible/current.json",
+        "sha256": "ce2b0860ea8918c0783c82c60449e0fdd5d54bfd64137c7ed4ed86742face717"
+      },
+      {
+        "path": "bible/v3/bible.json",
+        "sha256": "cf9df0f3d86d0268b88ca2cb91e6aa4d1e79fe9915ec2996652b564e1d8902b2"
+      },
+      {
+        "path": "bible/v3/input/screenplay.md",
+        "sha256": "dba468aa05d17e356606cdedf4dbd0fd929ebc47c0abe3db0924bdf73915a492"
+      },
+      {
+        "path": "episodes/EP006/breakdown/v1/artifact.json",
+        "sha256": "fb4dbde849b6ba24252987d669295998276702890f931ce975c18199fd153889"
+      },
+      {
+        "path": "episodes/EP006/breakdown/accepted.json",
+        "sha256": "c9969cc85b2acf8d8895fda949bb7e8472e07ffab0bb660bb9ac604d82a0b37c"
+      },
+      {
+        "path": "episodes/EP006/breakdown/current.json",
+        "sha256": "31801db1b80efc401ede500cfd802b0885101a67a6a590e8d4f2f38a5688e307"
+      },
+      {
+        "path": "episodes/EP006/breakdown/v1/breakdown.json",
+        "sha256": "713064460cbc0e4ab895e2d5afbd2dbb795782d70e9684d88debf0aa72a2ce28"
+      },
+      {
+        "path": "episodes/EP006/multi_panel_storyboard/seg02/line-art/v1/artifact.json",
+        "sha256": "0c47dc83fb4be5af7da353afbf0c29f4a50ebc65354e1ac4e249cfc90c2c91a8"
+      },
+      {
+        "path": "episodes/EP006/multi_panel_storyboard/seg02/line-art/accepted.json",
+        "sha256": "441b80d889c4907e561860a2c14558cd88f76ba1c3dccb3f50aea97da65e5bd9"
+      },
+      {
+        "path": "episodes/EP006/multi_panel_storyboard/seg02/line-art/current.json",
+        "sha256": "c9e4b04187c45dc0a135b58c770e15ef9721832d601cbae724dbcf6c15229223"
+      },
+      {
+        "path": "episodes/EP006/multi_panel_storyboard/seg02/line-art/v1/image-1.jpg",
+        "sha256": "ec6d45c61300f7eac3c6f61238d97aaa68be9c69ed051467dcca100de761ca97"
+      },
+      {
+        "path": "episodes/EP006/multi_panel_storyboard/seg02/line-art/v1/asset/job.json",
+        "sha256": "b5e2479f1865a4f0fb01ed1cd9fdf224275dc282d1c676ddae168a13fb7aa21f"
+      },
+      {
+        "path": "assets/scenes/sebastian_apartment/v1/artifact.json",
+        "sha256": "607076719970b0c8dabe6546b51a5bdd69c47e832a9e822f10602cdc46e31c16"
+      },
+      {
+        "path": "assets/scenes/sebastian_apartment/accepted.json",
+        "sha256": "1f56dbbdc5fe90ad0d595d9c9df9cc77f44e500561b3a8cccdbbac205f9cd11c"
+      },
+      {
+        "path": "assets/scenes/sebastian_apartment/current.json",
+        "sha256": "945695ec929db987602f13aec0263b1dd13d16cd007c48048bc7645c19a1bb69"
+      },
+      {
+        "path": "assets/scenes/sebastian_apartment/v1/image-1.jpg",
+        "sha256": "f824b491016a6e117f283bdf1aa6304048edb8831024f0bf9f6a95322971846b"
+      },
+      {
+        "path": "assets/scenes/sebastian_apartment/v1/front.jpg",
+        "sha256": "e372037db0c546f4fdb3052f5de6dbfadf3ed140ef590c1ce134aa9c9dae99bf"
+      },
+      {
+        "path": "assets/scenes/sebastian_apartment/v1/back.jpg",
+        "sha256": "3bb892fd13d40c8bb31d08b25a33388c82c77ff1e5a17e346d9c5f6ddee851fa"
+      },
+      {
+        "path": "assets/scenes/sebastian_apartment/v1/left-side.jpg",
+        "sha256": "558239ee418f3f791b065c225fb2c7bb5aa56df402263e86df0817e2975f9f4b"
+      },
+      {
+        "path": "assets/scenes/sebastian_apartment/v1/right-side.jpg",
+        "sha256": "cb43a3c19cc154a569d50762cf2c2dad0609465d1cfd561b43ae6567e8e502a5"
+      },
+      {
+        "path": "assets/scenes/sebastian_apartment/v1/floor-plan.jpg",
+        "sha256": "8c2e8994c1059dc9eaa09afd596e16dc5f7f91c2c668717b943233ec1c93d430"
+      },
+      {
+        "path": "episodes/EP006/blocking/seg02/v1/artifact.json",
+        "sha256": "d2503fa3ba9761c69962980c9f6e84d820963e058d2fe96a09e386242e12c21a"
+      },
+      {
+        "path": "episodes/EP006/blocking/seg02/accepted.json",
+        "sha256": "2c881dbf711f3d1cdc2722c536287689e21e968113e5dbcd0a8d0073c78311e9"
+      },
+      {
+        "path": "episodes/EP006/blocking/seg02/current.json",
+        "sha256": "ba3ee0e8659065f688ee4ecc024ff9fd60bb2878e61ccd4624073f51a0c6e428"
+      },
+      {
+        "path": "episodes/EP006/blocking/seg02/v1/image-1.jpg",
+        "sha256": "b38b1cad7f890a3437de461d206b5ad60406b14b12f801b44ec93a50273ce895"
+      },
+      {
+        "path": "episodes/EP006/blocking/seg02/v1/asset/job.json",
+        "sha256": "396f50c4f71f8d179c79316ce5f78406f4ba8a0f2960b37ed5ac457101cdddc7"
+      },
+      {
+        "path": "assets/props/dress_bag/v1/artifact.json",
+        "sha256": "d2d0dd4fc296cbfcd936a87f6b4cd1ca55f5acd598bb105deb245f79ed158e82"
+      },
+      {
+        "path": "assets/props/dress_bag/accepted.json",
+        "sha256": "c52fec2720c748af8c8bc5b9ace77479d2689e001072bdfdabeff0a127786d11"
+      },
+      {
+        "path": "assets/props/dress_bag/current.json",
+        "sha256": "37f4be027b0ebc83c835775c128124708cd00198ef3900b975d050de7b551072"
+      },
+      {
+        "path": "assets/props/dress_bag/v1/image-1.jpg",
+        "sha256": "7406a1ec524d46b935ba096369dc270f498660875ddee85fc03556d1c2a7eb9f"
+      },
+      {
+        "path": "assets/props/coins/v1/artifact.json",
+        "sha256": "9524f47893e25db99c44e0cc34b2606f6c344ee8d540958450087b5f4645aa64"
+      },
+      {
+        "path": "assets/props/coins/accepted.json",
+        "sha256": "b2e5d01fa341afe3f62aa0d80fb17e19117684f113f56069c45ef372f4bd3e29"
+      },
+      {
+        "path": "assets/props/coins/current.json",
+        "sha256": "7d3b63a58a7e96c01e7301b68beb1c95573dcbe5adb2cab1cefcae132c781b34"
+      },
+      {
+        "path": "assets/props/coins/v1/image-1.jpg",
+        "sha256": "489d66662a2b07c9b7580fc10833c1f8d59357d5fc1b6dffed8f9358a8a00fbd"
+      },
+      {
+        "path": "assets/props/sebastian_phone/v1/artifact.json",
+        "sha256": "64efdb18441539900a029f725a1396ff4152c34510f807de68f3f6df3d01f08a"
+      },
+      {
+        "path": "assets/props/sebastian_phone/accepted.json",
+        "sha256": "66525a47968a7b038f558a4d8530f59ec2f987f5f4b8aaff009d00b10774c7cb"
+      },
+      {
+        "path": "assets/props/sebastian_phone/current.json",
+        "sha256": "1b3dd0cffc0f38e01b32f9074b39abd431261c1b30864f23bac577c45b703b06"
+      },
+      {
+        "path": "assets/props/sebastian_phone/v1/image-1.jpg",
+        "sha256": "7ce2567bb79b273e579d2f0e7607240fd54579a6bb88f7746fd8fba367402bcc"
+      },
+      {
+        "path": "assets/characters/natalie/states/S3/v1/artifact.json",
+        "sha256": "b956d067a6435bc2600c6f216e477454a79d8205a7b6ed94090d5d1c65c42d5c"
+      },
+      {
+        "path": "assets/characters/natalie/states/S3/accepted.json",
+        "sha256": "af5898602729b2737b3dfe00206c10f08ad52ea87180e3b52ee2e624b1dc8627"
+      },
+      {
+        "path": "assets/characters/natalie/states/S3/current.json",
+        "sha256": "e671ab71ff30e68e7a4d2864ffc44b823b8f1fb8a0ce424c8e78b234ddd38a8a"
+      },
+      {
+        "path": "assets/characters/natalie/states/S3/v1/image-1.jpg",
+        "sha256": "355cad42ce03d3a99c8588d96d9a50768b3c17dfae361f09a1acfc3cf9edcd60"
+      },
+      {
+        "path": "assets/characters/natalie/states/S3/v1/asset/job.json",
+        "sha256": "02ff3deea9f8b62f71d12187cadf445c6d9944ac86c7ff6e6fc385eb6ea94053"
+      },
+      {
+        "path": "assets/characters/natalie/states/S4/v1/artifact.json",
+        "sha256": "50d16537e39518ff6c432883f31d7b27fa086e36fd370e188f8f12831edab68d"
+      },
+      {
+        "path": "assets/characters/natalie/states/S4/accepted.json",
+        "sha256": "60305e057eb6711f1183a2cf5d30f281e9f578da2dba2758fce0691b8372001f"
+      },
+      {
+        "path": "assets/characters/natalie/states/S4/current.json",
+        "sha256": "f97c684c37e449ac20e8c47dd3609efd1585aebcf7b98394bf590384a46781ff"
+      },
+      {
+        "path": "assets/characters/natalie/states/S4/v1/image-1.jpg",
+        "sha256": "4d8dfcaba31fc649847861c5a07d4ae135c81d11ac91c7019cadd333ae1b6110"
+      },
+      {
+        "path": "assets/characters/natalie/states/S4/v1/asset/job.json",
+        "sha256": "a8a0b51c3db74f025ae9a479fb97dc9a7e99ed3521985ac49fe36facaeba34e8"
+      },
+      {
+        "path": "assets/characters/sebastian/states/S4/v1/artifact.json",
+        "sha256": "d321462a5fe1598762ec7881d735ceafaabb935e3d809c62d5391b0d9070b371"
+      },
+      {
+        "path": "assets/characters/sebastian/states/S4/accepted.json",
+        "sha256": "9fd483456e62a86b815ba9270256476c2c4a1391957bedd262f26068325d779e"
+      },
+      {
+        "path": "assets/characters/sebastian/states/S4/current.json",
+        "sha256": "e671ab71ff30e68e7a4d2864ffc44b823b8f1fb8a0ce424c8e78b234ddd38a8a"
+      },
+      {
+        "path": "assets/characters/sebastian/states/S4/v1/image-1.jpg",
+        "sha256": "b85a4f46ffd775613c6c77360e8975c6f363d50aa88a4b90173129e52e71a595"
+      },
+      {
+        "path": "assets/characters/sebastian/states/S4/v1/asset/job.json",
+        "sha256": "d3a12d39612650c7dff50887a897c2f03668f961222ca453ef4ebb22bf09cb4e"
+      },
+      {
+        "path": "episodes/EP006/video_prompts/v2/seg02.json",
+        "sha256": "48ed47e18c800028426612ac30f2aec853b2b07c6b625a1719ce1c3dee3e4f4e"
+      },
+      {
+        "path": "episodes/EP006/segments/seg01/t02/video.mp4",
+        "sha256": "943dfddddacd0cadb26d19122f14a4381aa869ca46cbf52f5078f1ccbe2b319a"
+      },
+      {
+        "path": "episodes/EP006/segments/seg01/t02/continuation_26.97s.png",
+        "sha256": "5c1a84ed2a8240e4809c71b3483070b68b95c3535ca27b18779a2d09868d90f3"
+      },
+      {
+        "path": "episodes/EP006/segments/seg01/t02/artifact.json",
+        "sha256": "d0b3b33711a0dbe9c5e404e83cce22b8f679cf50ed23fd8a379d088afac8bfdc"
+      },
+      {
+        "path": "episodes/EP006/segments/seg01/accepted.json",
+        "sha256": "a8f4dde77c0714bab7a107c80ee6ba56afee8baee4059274a867a1a7a757f6f6"
+      },
+      {
+        "path": "episodes/EP006/segments/seg01/t02/reviews/review-997ee946d496.json",
+        "sha256": "9c2376d26246f2b4c9e340d125816ce353f630c78ad32fec8f6eec8259a137a4"
+      },
+      {
+        "path": "episodes/EP006/segments/seg01/t02/continuation_26.97s.json",
+        "sha256": "37d2c3894d10df5c3c9791af3f947e24b661e4eae514c35b1c810bce09f6fda3"
+      },
+      {
+        "path": "episodes/EP006/segments/seg01/t02/continuation_26.97s_asset/job.json",
+        "sha256": "814689aef324ce69843960db9ce556ea606d3c11c4d20d629dfe7ff7cd1fe656"
+      }
+    ],
+    "character_reference_mode": "asset_library",
+    "video_references": "storyboard",
+    "trusted_character_references": {},
+    "video_prompts_version": "v2",
+    "continues_from": {
+      "source": {
+        "path": "episodes/EP006/segments/seg01/t02/video.mp4",
+        "sha256": "943dfddddacd0cadb26d19122f14a4381aa869ca46cbf52f5078f1ccbe2b319a"
+      },
+      "seconds": 26.97,
+      "frame": {
+        "path": "episodes/EP006/segments/seg01/t02/continuation_26.97s.png",
+        "sha256": "5c1a84ed2a8240e4809c71b3483070b68b95c3535ca27b18779a2d09868d90f3"
+      },
+      "segment": "seg01",
+      "take": "t02",
+      "manifest": {
+        "path": "episodes/EP006/segments/seg01/t02/artifact.json",
+        "sha256": "d0b3b33711a0dbe9c5e404e83cce22b8f679cf50ed23fd8a379d088afac8bfdc"
+      },
+      "acceptance": {
+        "path": "episodes/EP006/segments/seg01/accepted.json",
+        "sha256": "a8f4dde77c0714bab7a107c80ee6ba56afee8baee4059274a867a1a7a757f6f6"
+      },
+      "review": {
+        "path": "episodes/EP006/segments/seg01/t02/reviews/review-997ee946d496.json",
+        "sha256": "9c2376d26246f2b4c9e340d125816ce353f630c78ad32fec8f6eec8259a137a4"
+      },
+      "frame_record": {
+        "path": "episodes/EP006/segments/seg01/t02/continuation_26.97s.json",
+        "sha256": "37d2c3894d10df5c3c9791af3f947e24b661e4eae514c35b1c810bce09f6fda3"
+      },
+      "upload": {
+        "path": "episodes/EP006/segments/seg01/t02/continuation_26.97s_asset/job.json",
+        "sha256": "814689aef324ce69843960db9ce556ea606d3c11c4d20d629dfe7ff7cd1fe656"
+      }
+    }
+  }
+}

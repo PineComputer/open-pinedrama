@@ -1,0 +1,14 @@
+{
+  "provider": "openai",
+  "model": "gpt-image-2.5-sunburst",
+  "prompt": "A clean line-art blocking diagram of one scene of a live-action short drama, vertical composition: the place of Image 1 drawn in simple black outlines on white, with the segment's people in their places at its start, the way a master shot shows the whole scene before it is cut into shots. Keep Image 1's camera position, framing, walls, windows, doorways and furniture, traced in outline; only add the people.\nImage 1: the location Garden of the wedding venue, the front view, with no people\nImage 2: the character sheet of Cassie (23), look S1\nImage 3: the character sheet of Natalie (25), look S1\nImage 4: the character sheet of George (55), look S1\nDraw each person as a clean outline figure that can be told apart by hairstyle, build and the shape of their outfit, from their character sheet; no faces in detail. Do not copy a sheet's layout, white background or multiple views. Each person appears once, whole and at natural scale for the place, on the furniture and floor of Image 1, facing the way the start says.\nOnly three people appear: Cassie, Natalie, and George. Nobody else is there.\nAt the start: Sunny day in the wedding garden. There is one white wooden wedding arch with sheer white drapes and white flower garlands at the far end of the aisle runner. Two short rows of white folding chairs face the arch, one row on each side of the aisle. There is one small round white cocktail table in front of the boxwood hedge, holding one silver tray of champagne flutes. Natalie stands under the centre of the arch, facing down the aisle, holding the bouquet at her waist in both hands. George stands beside her under the arch on the rose-bush side, facing down the aisle. The boxwood-hedge side of the arch beside Natalie is empty. Lauren stands at the head of the aisle beside the front row of chairs on the boxwood-hedge side, turned toward the arch. Guest 1 and Guest 2 stand at the cocktail table, Guest 1 on the arch side of it and Guest 2 on the aisle side, each holding a champagne flute. Cassie stands at the end of the front row of chairs on the rose-bush side, by the stone garden wall, arms crossed. Sebastian has not arrived. The camera is on the aisle in front of the arch, on the rose-bush side of the aisle.\n\nNo shading, colour or photographic rendering; no text, letters, numbers, arrows, labels or watermark.\n",
+  "aspect_ratio": "9:16",
+  "size": "1152x2048",
+  "quality": "high",
+  "images": [
+    "episodes/EP003/blocking/seg03/v1/view.png",
+    "assets/characters/cassie/states/S1/v2/image-1.jpg",
+    "assets/characters/natalie/states/S1/v1/image-1.jpg",
+    "assets/characters/george/states/S1/v1/image-1.jpg"
+  ]
+}

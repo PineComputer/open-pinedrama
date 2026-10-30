@@ -1,0 +1,19 @@
+{
+  "provider": "openai",
+  "model": "gpt-image-2.5-sunburst",
+  "prompt": "A clean line-art blocking diagram of one scene of a live-action short drama, vertical composition: the place of Image 1 drawn in simple black outlines on white, with the segment's people in their places at its start, the way a master shot shows the whole scene before it is cut into shots. Keep Image 1's camera position, framing, walls, windows, doorways and furniture, traced in outline; only add the people.\nImage 1: the location Garden of the wedding venue, the front view, with no people\nImage 2: the character sheet of Cassie (23), look S1\nImage 3: the character sheet of Sebastian (30), look S2\nImage 4: the character sheet of Natalie (25), look S1\nImage 5: the character sheet of Officiant (58)\nImage 6: the character sheet of Guest 2 (25)\nImage 7: the character sheet of Guest 1 (25)\nImage 8: the character sheet of George (55), look S1\nImage 9: the character sheet of Lauren (50), look S1\nDraw each person as a clean outline figure that can be told apart by hairstyle, build and the shape of their outfit, from their character sheet; no faces in detail. Do not copy a sheet's layout, white background or multiple views. Each person appears once, whole and at natural scale for the place, on the furniture and floor of Image 1, facing the way the start says.\nOnly eight people appear: Cassie, Sebastian, Natalie, Officiant, Guest 2, Guest 1, George, and Lauren. Nobody else is there.\nAt the start: Natalie and Sebastian stand close together, face to face, under the centre of the wedding arch, Natalie's hands lowering from his lapels, Sebastian on the boxwood-hedge side. George stands beside Natalie under the arch on the rose-bush side, holding the bouquet. The Officiant stands just behind the couple at the centre of the arch, facing down the aisle. Cassie stands at the head of the aisle a step in front of Natalie on the rose-bush side, holding the empty gift box. Lauren stands at the head of the aisle against the front-row chair on the boxwood-hedge side, her handbag on her arm. Natalie's phone lies face up on the seat of the front-row chair on the rose-bush side. Guest 1 (arch side) and Guest 2 (aisle side) stand at the one small round white high cocktail table on the boxwood-hedge side, each holding a champagne flute, Guest 1's phone in the clutch under her arm.\n\nNo shading, solid black areas, colour or photographic rendering: dark hair and clothes are outlines left white inside; no text, letters, numbers, arrows, labels or watermark.\n",
+  "aspect_ratio": "9:16",
+  "size": "1152x2048",
+  "quality": "high",
+  "images": [
+    "episodes/EP004/blocking/seg02/v2/view.png",
+    "assets/characters/cassie/states/S1/v2/image-1.jpg",
+    "assets/characters/sebastian/states/S2/v1/image-1.jpg",
+    "assets/characters/natalie/states/S1/v1/image-1.jpg",
+    "assets/characters/officiant/v1/image-1.jpg",
+    "assets/characters/guest_2/v1/image-1.jpg",
+    "assets/characters/guest_1/v1/image-1.jpg",
+    "assets/characters/george/states/S1/v1/image-1.jpg",
+    "assets/characters/lauren/states/S1/v1/image-1.jpg"
+  ]
+}

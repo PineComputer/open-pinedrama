@@ -1,0 +1,132 @@
+{
+  "model": "ep-20260928175156-xn9xm",
+  "content": [
+    {
+      "type": "text",
+      "text": "Image 1: Thirteen-panel storyboard reference, used for the overall shot structure, shot sizes, and camera-movement rhythm. Read it from left to right and from top to bottom; panel N is Shot N. It is a line-art sketch: do not adopt its sketch style, black outlines, white background, panel borders or drawn faces.\nImage 2: Reference of Sebastian's apartment, living room, the front view, the establishing view, facing the back wall, a rendered set, not live action. Use it only for the room's layout, the furniture's positions and the light's direction; do not reference its visual content. It contains no people.\nImage 3: Reference of Sebastian's apartment, living room, the back view, turned 180 degrees, facing the front wall, with the left wall at its right edge, a rendered set, used only for the room's layout; it contains no people.\nImage 4: Reference of Sebastian's apartment, living room, the left-side view, facing the left wall, with the back wall at its right edge, a rendered set, used only for the room's layout; it contains no people.\nImage 5: Reference of Sebastian's apartment, living room, the right-side view, facing the right wall, with the back wall at its left edge, a rendered set, used only for the room's layout; it contains no people.\nImage 6: Reference of Sebastian's apartment, living room, the floor plan seen from above: its top edge is the back wall, its bottom edge the front wall behind the front view's camera, and its left and right edges the left and right walls, a rendered set, used only for the room's layout; it contains no people.\nImage 7: Blocking reference of the segment's start: the same place with these people in their places, used only for where each person is and which way they face; take faces and outfits from each subject's own image. It is a line-art diagram: do not adopt its outlines or white background.\nImage 8: Subject 1 (Natalie, look S3) character appearance reference.\nImage 9: Subject 2 (Sebastian, look S4) character appearance reference.\nImage 10: Prop 1 (breakfast) maps to this image; use only structure, material, and color, and copy its writing and badges exactly from Image 10.\nImage 11: Prop 2 (blanket) maps to this image; use only structure, material, and color, and copy its writing and badges exactly from Image 11.\nImage 12: Prop 3 (the bag containing her wedding dress) maps to this image; use only structure, material, and color, and copy its writing and badges exactly from Image 12.\nImage 13: Prop 4 (two coins) maps to this image; use only structure, material, and color, and copy its writing and badges exactly from Image 13.\n[Subject settings]\nSubject 1 (Natalie): Refer to Image 8. 25, the heroine; George's daughter from his first marriage, who agrees to marry Sebastian Klein to pay for her mother's dialysis. Outfit: look S3: An opaque cornflower-blue sleeveless wrap dress in a fitted matte jersey. It crosses into a low V neckline, ties at the side to cinch the waist, and ends in a knee-skimming hem. Nude block-heel pumps and a small structured nude handbag. No jewellery. Signature colour: blue.\nSubject 2 (Sebastian): Refer to Image 9. 30, the hero; the scorned illegitimate son of the Klein family, jailed for three days for reckless driving and secretly a billionaire running a plan. Outfit: look S4: Day at home: a fitted black fine-knit crew-neck sweater with long sleeves pushed slightly up the forearms, slim charcoal-grey chinos, black leather loafers and the steel-and-black wristwatch. Signature colour: black.\nEnvironment (Sebastian's apartment, living room): Refer to Images 2 to 6. Day, soft bright sunlight through the floor-to-ceiling window. Soft bright daylight from the floor-to-ceiling window on the back wall; quiet room tone, faint city hum through the glass, clink of dishes.\nDo not swap the characters' appearances, clothing, actions, positions or dialogue.\n[Subjects and relationships]\nOnly two people appear throughout: Natalie and Sebastian.\n[Blocking]\nRefer to Images 2 to 6 for the room and Image 7 for the people's places. Axis runs between the charcoal couch and the round dining table; the camera stays on the front-wall bookshelves side, in front of both. Natalie stands at the round dining table, on its couch side, in the cornflower-blue wrap dress, setting out breakfast: two white plates and two white mugs. Her small nude handbag lies on the round dining table with the two coins beside it. The long white dress bag hangs over the back of one of the two dining chairs. Sebastian stands between the charcoal couch and the round coffee table, facing the dining table, folding the oatmeal-grey knitted blanket. Sebastian's phone lies face down on the round dining table. Natalie's cropped ivory jacket hangs on the wall hooks beside the front door on the left wall.\n[Overall style]\nPhotorealistic live-action short drama with cinematic lighting. Each character keeps the face and the outfit with its main colour from their reference image throughout. Use each character sheet only for that character: the face from the close-up on the right, the body and outfit from the turnaround on the left; do not render the sheet's layout, white background or multiple views. This segment has 7 lines, in this order: Sebastian, Natalie, Sebastian, Natalie, Sebastian, Natalie, Natalie. Generate speech only from the lines in {} in the shot list, each spoken exactly once by its speaker; everyone else keeps their mouth naturally closed while listening, and a V.O. speaker keeps their mouth closed or is off screen. Follow the shot list below; do not add cuts or camera moves beyond it. Strictly adhere to the 180-degree rule: within a scene, characters keep their screen sides and the camera stays on one side of the axis. Seamless continuity of action, spatial matching and consistent actor blocking; cut on action. For dialogue prefer static shot-reverse-shot and over-the-shoulder shots, balanced with reaction shots and close-up inserts. Faces stable and clear, consistent with the reference images, with no resemblance to any real actor or actress. Normal human eyes. Natural anatomy and hands. Natural, fluid motion that follows the blocking; characters make subtle, natural movements. Characters, props and environment share one world with matched lighting. Each line ends naturally with breathing room and is never cut off. Authentic performances with micro-expressions. No BGM; generate only dialogue, environmental sounds and action sounds. No subtitles.\n[Continuity]\nMaintain continuity in the identities, number, appearance, clothing, relative heights, spatial positions, and eyelines of all the characters. The actions in the shot list occur strictly in sequence. Hands are anatomically correct.\n[Strictly exclude]\nadded or missing characters, spatial jumps. malformed hands or extra coins. subtitles or garbled text. Dialogue from the wrong character, multiple people speaking at once, repeated or missing lines, lip-sync errors and audio-visual desynchronization. The raw reference images (character sheets, setting plates) appearing as a frame of the video, and starting on a still frame of the setting reference. A fast zoom-in at the start, a fast pull-back at the end, unmotivated whip-pans, tilts, zooms and 360-degree orbits. Axis-crossing, jump cuts, frame skips, flicker and clipping. Face swaps, changes in age or clothing, sudden height shifts, added or missing characters, spatial jumps, and disordered action sequences; props popping in or vanishing, and duplicate characters except mirror reflections. Hand clipping, extra fingers, fused fingers, malformed hands. Subtitles, captions, watermarks and garbled writing; writing and logos other than those on a key prop's reference image, which are copied from it; a phone screen or paper that is not a key prop is shown from the back or out of focus. Black-and-white, monochrome, grayscale, desaturated visuals; hand-drawn, sketch, line art, illustration, comics, animation; storyboard frames, rough sketches, panel borders, gutters and grid layouts.\n[Shot list] (13 shots, approximately 27 seconds)\nWhen a previous-shot reference image is given, it is the moment this segment starts from: keep its people's positions, outfits, props and light, and continue from there. Shot 1 keeps its own camera, matching the image's framing only when it frames the same view; do not repeat that frame later.\nShot 1 (0-3s): [Wide shot, locked-off camera, eye-level, from the bookshelves side; couch on frame left, dining table on frame right] Sunlit living room. Natalie sets two plates of scrambled eggs, toast and strawberries on the round dining table. Sebastian, by the charcoal couch, shakes out the oatmeal-grey blanket and starts folding it. <Ceramic plates touch the wooden table>\nShot 2 (3-5s): [Medium shot, slight push in on Sebastian, eye-level, from the bookshelves side] Sebastian folds the blanket in half against his chest and looks across toward the dining table with a lazy half-smile. Dialogue (Sebastian, in English, teasing murmur): {Still want that divorce?}\nShot 3 (5-8s): [Medium shot, locked-off, eye-level, on Natalie at the dining table] Natalie sets a mug of black coffee beside a plate without looking up, her jaw set. Dialogue (Natalie, in English, cool and firm): {Eat. One kiss didn't change the contract.}\nShot 4 (8-10s): [Close-up, locked-off, eye-level, on Sebastian's face and shoulders] Sebastian's smile widens slightly; he drops the folded blanket onto the couch cushions. <Soft thump of the blanket on the couch>\nShot 5 (10-12s): [Medium shot, handheld, eye-level, following Natalie's hands] Natalie lifts the long white dress bag off the back of the dining chair and drapes it over her left arm. <Nylon garment bag rustles>\nShot 6 (12-14s): [Medium shot, over-the-shoulder shot from behind Natalie's shoulder toward Sebastian, eye-level] Natalie's shoulder and the dress bag fill the frame edge; Sebastian, beyond her by the couch, nods at the bag and raises an eyebrow. Dialogue (Sebastian, in English, amused): {Another wedding already?}\nShot 7 (14-16s): [Medium shot, reverse over-the-shoulder shot from behind Sebastian's shoulder toward Natalie, eye-level] Sebastian's shoulder at the frame edge; Natalie at the dining table smooths the dress bag on her arm, matter-of-fact. Dialogue (Natalie, in English, flat and practical): {Dress return. I need the deposit back.}\nShot 8 (16-18s): [Medium close-up, clean single, locked-off, eye-level, on Sebastian] Sebastian slides his hands into his chino pockets, relaxed and confident. Dialogue (Sebastian, in English, easy): {Keep it. I'll buy it.}\nShot 9 (18-20s): [Medium shot, locked-off, eye-level, on Natalie at the dining table] Natalie gives a short disbelieving laugh, slings her handbag on her shoulder and picks up the two coins from the table. Dialogue (Natalie, in English, dry sarcasm): {With what? Couch coins?}\nShot 10 (20-22s): [Medium two-shot, tracking with Natalie from the dining table to the couch, eye-level, from the bookshelves side] Natalie walks to Sebastian and ends standing in front of the round coffee table facing him; she takes his hand, turns it palm up and drops the two coins into it. <Two coins clink into a palm>\nShot 11 (22-23s): [Close-up insert, high angle, locked-off, on Sebastian's open palm] Two silver quarters lie in Sebastian's palm.\nShot 12 (23-25s): [Medium close-up, clean single, locked-off, eye-level, on Natalie] Natalie tilts her head with a small teasing smile, the dress bag over her arm. Dialogue (Natalie, in English, teasing): {Found those under my bag.}\nShot 13 (25-27s): [Close-up, clean single, slow push in, eye-level, on Sebastian's face and shoulders] Natalie is off screen. Sebastian looks down at the coins, a slow amused smile spreading, and closes his fingers around them. Dialogue (Natalie, in English, teasing): {Don't spend it all at once.}\nAt the end: Natalie stands in front of the round coffee table facing Sebastian, the dress bag over her left arm and her small nude handbag on her shoulder, in the cornflower-blue wrap dress. Sebastian stands between the charcoal couch and the round coffee table facing her, the two coins closed in his right hand. The folded blanket lies on the couch. Breakfast and Sebastian's phone, face down, are on the round dining table. The cropped ivory jacket hangs on the wall hooks beside the front door.\n\nImage 14 is the first frame.\n"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261023184801-ql8xg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/sebastian_apartment/v1/front.jpg",
+        "path": "assets/scenes/sebastian_apartment/v1/front.jpg",
+        "sha256": "e372037db0c546f4fdb3052f5de6dbfadf3ed140ef590c1ce134aa9c9dae99bf"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/sebastian_apartment/v1/back.jpg",
+        "path": "assets/scenes/sebastian_apartment/v1/back.jpg",
+        "sha256": "3bb892fd13d40c8bb31d08b25a33388c82c77ff1e5a17e346d9c5f6ddee851fa"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/sebastian_apartment/v1/left-side.jpg",
+        "path": "assets/scenes/sebastian_apartment/v1/left-side.jpg",
+        "sha256": "558239ee418f3f791b065c225fb2c7bb5aa56df402263e86df0817e2975f9f4b"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/sebastian_apartment/v1/right-side.jpg",
+        "path": "assets/scenes/sebastian_apartment/v1/right-side.jpg",
+        "sha256": "cb43a3c19cc154a569d50762cf2c2dad0609465d1cfd561b43ae6567e8e502a5"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/sebastian_apartment/v1/floor-plan.jpg",
+        "path": "assets/scenes/sebastian_apartment/v1/floor-plan.jpg",
+        "sha256": "8c2e8994c1059dc9eaa09afd596e16dc5f7f91c2c668717b943233ec1c93d430"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261023184522-49h6k"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261023183406-f2tpp"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261023183357-6bzpk"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/props/breakfast/v1/image-1.jpg",
+        "path": "assets/props/breakfast/v1/image-1.jpg",
+        "sha256": "6ed532fcb985a2a7937c22c381f292e83d5ceb2d0facfa28d3ebf80846d406da"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/props/blanket/v1/image-1.jpg",
+        "path": "assets/props/blanket/v1/image-1.jpg",
+        "sha256": "417e37df74314808ddefd3576eef6e09a634ddd664fce0245ea6cba878a66102"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/props/dress_bag/v1/image-1.jpg",
+        "path": "assets/props/dress_bag/v1/image-1.jpg",
+        "sha256": "7406a1ec524d46b935ba096369dc270f498660875ddee85fc03556d1c2a7eb9f"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/props/coins/v1/image-1.jpg",
+        "path": "assets/props/coins/v1/image-1.jpg",
+        "sha256": "489d66662a2b07c9b7580fc10833c1f8d59357d5fc1b6dffed8f9358a8a00fbd"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261024033752-gxjwp"
+      },
+      "role": "reference_image"
+    }
+  ],
+  "duration": 27,
+  "ratio": "9:16",
+  "resolution": "480p",
+  "generate_audio": true,
+  "watermark": false,
+  "return_last_frame": true,
+  "omni_reference_task_type": "reference"
+}

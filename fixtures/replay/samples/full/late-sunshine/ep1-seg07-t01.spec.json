@@ -1,0 +1,396 @@
+{
+  "model": "sd25",
+  "content": [
+    {
+      "type": "text",
+      "text": "Image 1: Eight-panel storyboard reference, used for the overall shot structure, shot sizes, and camera-movement rhythm. Read it from left to right and from top to bottom; panel N is Shot N. It is a line-art sketch: do not adopt its sketch style, black outlines, white background, panel borders or drawn faces.\nImage 2: Reference of SU YAQING'S DINING AREA, the front view, the establishing view, facing the back wall, a rendered set, not live action. Use it only for the room's layout, the furniture's positions and the light's direction; do not reference its visual content. It contains no people.\nImage 3: Reference of SU YAQING'S DINING AREA, the back view, turned 180 degrees, facing the front wall, with the left wall at its right edge, a rendered set, used only for the room's layout; it contains no people.\nImage 4: Reference of SU YAQING'S DINING AREA, the left-side view, facing the left wall, with the back wall at its right edge, a rendered set, used only for the room's layout; it contains no people.\nImage 5: Reference of SU YAQING'S DINING AREA, the right-side view, facing the right wall, with the back wall at its left edge, a rendered set, used only for the room's layout; it contains no people.\nImage 6: Reference of SU YAQING'S DINING AREA, the floor plan seen from above: its top edge is the back wall, its bottom edge the front wall behind the front view's camera, and its left and right edges the left and right walls, a rendered set, used only for the room's layout; it contains no people.\nImage 7: Blocking reference of the segment's start: the same place with these people in their places, used only for where each person is and which way they face; take faces and outfits from each subject's own image. It is a line-art diagram: do not adopt its outlines or white background.\nImage 8: Subject 1 (Lin Qingyu, look S0) character appearance reference.\nImage 9: Prop 1 (call phone) maps to this image; copy its writing and badges exactly from Image 9.\nFrom each prop's image, use only structure, material, and color.\n[Subject settings]\nSubject 1 (Lin Qingyu): Refer to Image 8. 21, Male lead; Su Yaqing's younger brother from her stepmother's family, secretly a powerful boss, posing as an ordinary college student to apply to be Ji Ran's husband. Outfit: look S0: At Su Yaqing's home: a white fitted fine-knit crew-neck long-sleeve sweater with the sleeves pushed up, slim light-grey tailored trousers and white leather sneakers. Signature colour: white.\nEnvironment (SU YAQING'S DINING AREA): Refer to Images 2 to 6. Day, soft daylight through the tall window. Soft side daylight through the tall window, warm glow from the brass pendant lamp. Live sound: quiet room, fingers tapping marble, a faint tinny voice from the phone.\nDo not swap the characters' appearances, clothing, actions, positions or dialogue.\n[Overall style]\nPhotorealistic live-action short drama with cinematic lighting. Each character keeps the face and the outfit with its main colour from their reference image throughout. Use each character sheet only for that character: the face from the close-up on the right, the body and outfit from the turnaround on the left; do not render the sheet's layout, white background or multiple views. This segment has 3 lines, in this order: Lin Qingyu, Ajie (V.O.), Lin Qingyu. Generate speech only from the lines in {} in the shot list, each spoken exactly once by its speaker; everyone else keeps their mouth naturally closed while listening, and a V.O. speaker keeps their mouth closed or is off screen. Follow the shot list below; do not add cuts or camera moves beyond it. Strictly adhere to the 180-degree rule: within a scene, characters keep their screen sides and the camera stays on one side of the axis. Seamless continuity of action, spatial matching and consistent actor blocking; cut on action. For dialogue prefer static shot-reverse-shot and over-the-shoulder shots, balanced with reaction shots and close-up inserts. Faces stable and clear, with no resemblance to any real actor or actress. Normal human eyes. Natural anatomy and hands. Natural, fluid motion that follows the blocking; characters make subtle, natural movements. Characters, props and environment share one world with matched lighting. Each line ends naturally with breathing room and is never cut off. Authentic performances with micro-expressions. No BGM; generate only dialogue, environmental sounds and action sounds. No subtitles.\n[Strictly exclude]\nsubtitles or on-screen text. Ajie appearing on screen. Su Yaqing entering the dining area. Dialogue from the wrong character, multiple people speaking at once, repeated or missing lines, lip-sync errors and audio-visual desynchronization. The raw reference images (character sheets, setting plates) appearing as a frame of the video, and starting on a still frame of the setting reference. A fast zoom-in at the start, a fast pull-back at the end, unmotivated whip-pans, tilts, zooms and 360-degree orbits. Axis-crossing, jump cuts, frame skips, flicker and clipping. Characters or props popping in or vanishing, and duplicate characters except mirror reflections. Subtitles, captions, watermarks and garbled writing; writing and logos other than those on a key prop's reference image, which are copied from it; a phone screen or paper that is not a key prop is shown from the back or out of focus. Black-and-white, monochrome, grayscale, desaturated visuals; hand-drawn, sketch, line art, illustration, comics, animation; storyboard frames, rough sketches, panel borders, gutters and grid layouts.\n[Shot list] (8 shots, approximately 27 seconds)\nWhen a previous-shot reference image is given, it is the moment this segment starts from: keep its people's positions, outfits, props and light, and continue from there. Shot 1 keeps its own camera, matching the image's framing only when it frames the same view; do not repeat that frame later.\nAt the start: Lin Qingyu sits in the upholstered chair by the tall window at the round white marble table, facing into the room. One vase of daisies and one wine bottle stand in the middle of the table. He holds the black call phone in his hand on the table. The brass pendant lamp hangs above the table. The camera is across the marble table from him, on the room side, and stays on that side.\nShot 1 (0-2s): [Wide shot, slow push in from across the marble table, eye-level] Lin Qingyu sits by the tall window behind the daisies and wine bottle. His smile fades as he raises the call phone to his ear. <a call connects with a short tone>\nShot 2 (2-6s): [Medium shot, locked-off camera across the table, eye-level] Lin Qingyu's expression turns serious and commanding, his elbow on the marble table. Dialogue (Lin Qingyu, in Chinese, crisp boss tone): {阿杰，给我准备一套最普通的大学生衣服，}\nShot 3 (6-9s): [Extreme close-up insert, high angle on the table] Lin Qingyu's fingers tap the marble tabletop beside the wine bottle. Dialogue (Lin Qingyu, in Chinese, crisp): {再帮我处理一下个人资料，}\nShot 4 (9-13s): [Medium close-up, low angle] Lin Qingyu leans forward, the daylight from the window edging his face. Dialogue (Lin Qingyu, in Chinese, decisive): {从明天开始，我就是一名普通的大学生。}\nShot 5 (13-17s): [Close-up, slow push in, eye-level] Lin Qingyu's eyes narrow and flick toward the room behind the camera. Dialogue (Lin Qingyu, in Chinese, low, stern): {另外，这件事，绝对不能让我姐知道。}\nShot 6 (17-22s): [Medium shot, high angle over the daisies] Lin Qingyu leans back in the chair with the phone at his ear, his mouth closed, brows lifting impatiently. Dialogue (Ajie, V.O., in Chinese, tinny over the phone, hurried, anxious): {老板，您明天要出席港城的行业高峰论坛，您...}\nShot 7 (22-25s): [Close-up, low angle, locked-off camera] Lin Qingyu cuts in with a confident half smile. Dialogue (Lin Qingyu, in Chinese, crisp, final): {推了，明天，我要去面试。}\nShot 8 (25-27s): [Wide shot, slow pull out from across the marble table, eye-level] Lin Qingyu lowers the phone onto the marble table and turns to look out of the tall window, smiling. <the phone clicks onto marble>\nAt the end: Lin Qingyu sits in the upholstered chair by the tall window at the marble table, the call phone lying on the table beside the daisies and wine bottle, looking out of the window with a confident smile.\n"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261027075144-xlnc5"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/su_dining_area/times/Day/v1/front.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/su_dining_area/times/Day/v1/back.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/su_dining_area/times/Day/v1/left-side.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/su_dining_area/times/Day/v1/right-side.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/su_dining_area/times/Day/v1/floor-plan.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261027074610-mxj7v"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261027072536-txqgs"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/props/lin_phone/v1/image-1.jpg"
+      },
+      "role": "reference_image"
+    }
+  ],
+  "duration": 27,
+  "ratio": "9:16",
+  "resolution": "480p",
+  "generate_audio": true,
+  "watermark": false,
+  "return_last_frame": true,
+  "omni_reference_task_type": "reference",
+  "drama": {
+    "segment": {
+      "id": "seg07",
+      "duration": 27,
+      "location": "su_dining_area",
+      "scene_heading": "INT. SU YAQING'S DINING AREA - DAY #1-5#",
+      "time": "Day, soft daylight through the tall window",
+      "characters": [
+        "lin_qingyu"
+      ],
+      "states": {
+        "lin_qingyu": "S0"
+      },
+      "props": [
+        "lin_phone"
+      ],
+      "first_state": "Lin Qingyu sits in the upholstered chair by the tall window at the round white marble table, facing into the room. One vase of daisies and one wine bottle stand in the middle of the table. He holds the black call phone in his hand on the table. The brass pendant lamp hangs above the table. The camera is across the marble table from him, on the room side, and stays on that side.",
+      "shots": [
+        {
+          "time": "0-2s",
+          "size": "wide shot",
+          "angle": "eye level",
+          "camera": "Wide shot, slow push in from across the marble table, eye-level",
+          "visual": "Lin Qingyu sits by the tall window behind the daisies and wine bottle. His smile fades as he raises the call phone to his ear.",
+          "audio": "<a call connects with a short tone>",
+          "characters": [
+            "lin_qingyu"
+          ],
+          "lines": []
+        },
+        {
+          "time": "2-6s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, locked-off camera across the table, eye-level",
+          "visual": "Lin Qingyu's expression turns serious and commanding, his elbow on the marble table.",
+          "audio": "Dialogue (Lin Qingyu, in Chinese, crisp boss tone): {阿杰，给我准备一套最普通的大学生衣服，}",
+          "characters": [
+            "lin_qingyu"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "6-9s",
+          "size": "extreme close-up",
+          "angle": "high angle",
+          "camera": "Extreme close-up insert, high angle on the table",
+          "visual": "Lin Qingyu's fingers tap the marble tabletop beside the wine bottle.",
+          "audio": "Dialogue (Lin Qingyu, in Chinese, crisp): {再帮我处理一下个人资料，}",
+          "characters": [
+            "lin_qingyu"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "9-13s",
+          "size": "medium close-up",
+          "angle": "low angle",
+          "camera": "Medium close-up, low angle",
+          "visual": "Lin Qingyu leans forward, the daylight from the window edging his face.",
+          "audio": "Dialogue (Lin Qingyu, in Chinese, decisive): {从明天开始，我就是一名普通的大学生。}",
+          "characters": [
+            "lin_qingyu"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "13-17s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, slow push in, eye-level",
+          "visual": "Lin Qingyu's eyes narrow and flick toward the room behind the camera.",
+          "audio": "Dialogue (Lin Qingyu, in Chinese, low, stern): {另外，这件事，绝对不能让我姐知道。}",
+          "characters": [
+            "lin_qingyu"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "17-22s",
+          "size": "medium shot",
+          "angle": "high angle",
+          "camera": "Medium shot, high angle over the daisies",
+          "visual": "Lin Qingyu leans back in the chair with the phone at his ear, his mouth closed, brows lifting impatiently.",
+          "audio": "Dialogue (Ajie, V.O., in Chinese, tinny over the phone, hurried, anxious): {老板，您明天要出席港城的行业高峰论坛，您...}",
+          "characters": [
+            "lin_qingyu"
+          ],
+          "lines": [
+            1
+          ]
+        },
+        {
+          "time": "22-25s",
+          "size": "close-up",
+          "angle": "low angle",
+          "camera": "Close-up, low angle, locked-off camera",
+          "visual": "Lin Qingyu cuts in with a confident half smile.",
+          "audio": "Dialogue (Lin Qingyu, in Chinese, crisp, final): {推了，明天，我要去面试。}",
+          "characters": [
+            "lin_qingyu"
+          ],
+          "lines": [
+            2
+          ]
+        },
+        {
+          "time": "25-27s",
+          "size": "wide shot",
+          "angle": "eye level",
+          "camera": "Wide shot, slow pull out from across the marble table, eye-level",
+          "visual": "Lin Qingyu lowers the phone onto the marble table and turns to look out of the tall window, smiling.",
+          "audio": "<the phone clicks onto marble>",
+          "characters": [
+            "lin_qingyu"
+          ],
+          "lines": []
+        }
+      ],
+      "light_audio": "Soft side daylight through the tall window, warm glow from the brass pendant lamp. Live sound: quiet room, fingers tapping marble, a faint tinny voice from the phone.",
+      "dialogue": [
+        {
+          "speaker": "lin_qingyu",
+          "line": "阿杰，给我准备一套最普通的大学生衣服，再帮我处理一下个人资料，从明天开始，我就是一名普通的大学生。另外，这件事，绝对不能让我姐知道。",
+          "offscreen": false
+        },
+        {
+          "speaker": "ajie",
+          "line": "老板，您明天要出席港城的行业高峰论坛，您...",
+          "offscreen": true
+        },
+        {
+          "speaker": "lin_qingyu",
+          "line": "推了，明天，我要去面试。",
+          "offscreen": false
+        }
+      ],
+      "must_hit": [
+        "Lin Qingyu's expression turns serious as he makes the phone call by the window",
+        "Lin Qingyu cuts off Ajie and says he is going to the interview"
+      ],
+      "exit_state": "Lin Qingyu sits in the upholstered chair by the tall window at the marble table, the call phone lying on the table beside the daisies and wine bottle, looking out of the window with a confident smile.",
+      "negative": [
+        "subtitles or on-screen text",
+        "Ajie appearing on screen",
+        "Su Yaqing entering the dining area"
+      ]
+    },
+    "bible_version": "v2",
+    "breakdown_version": "v2",
+    "lineage": [
+      {
+        "path": "bible/v2/artifact.json",
+        "sha256": "f5400f28e1edd9ccef571edd8420590ca4a9e72eb37b7ca444a66cfe777c7b91"
+      },
+      {
+        "path": "bible/accepted.json",
+        "sha256": "d964bcfb13d315e51ed18dba40bce44dbe8e8ad1fd06b96e8843e333e1d61a32"
+      },
+      {
+        "path": "bible/current.json",
+        "sha256": "2addb578f51de2dd02b1e8e33d5e141f23f16f02e61259b8cb42e64f67d2fcc3"
+      },
+      {
+        "path": "bible/v2/bible.json",
+        "sha256": "3d920d493ba887180838dafb80b72f72eb9f03f827829dba1965c3643feaf05d"
+      },
+      {
+        "path": "bible/v2/input/screenplay.md",
+        "sha256": "afbfe0f787d9c5565630e661e5667df671458c5aa581c242873ff1ab7de27669"
+      },
+      {
+        "path": "episodes/EP001/breakdown/v2/artifact.json",
+        "sha256": "0ded156484886c988e6a5b745904a2df9eb4184f310876d283c970e6c80c39e9"
+      },
+      {
+        "path": "episodes/EP001/breakdown/accepted.json",
+        "sha256": "de2773c04703c690c939a63da269805868284ae428b471e3bc96af8d18ec861e"
+      },
+      {
+        "path": "episodes/EP001/breakdown/current.json",
+        "sha256": "d816beccf54d78dc70ecc5f752ac2216ceaabfac5717aa249e53156ad4ff324a"
+      },
+      {
+        "path": "episodes/EP001/breakdown/v2/breakdown.json",
+        "sha256": "038b756ca25d30d37a10530bcb819e12cf3f85c4bfa33e54247a8c7db30f509f"
+      },
+      {
+        "path": "episodes/EP001/multi_panel_storyboard/seg07/line-art/v1/artifact.json",
+        "sha256": "a46092620d93c96954d1b35c4ecf5409d05660123af76ac565de605cf1879b68"
+      },
+      {
+        "path": "episodes/EP001/multi_panel_storyboard/seg07/line-art/accepted.json",
+        "sha256": "0d8c6eef28bf8483ca1ea4c5239574cf462c9485df790593829966a63faa73ca"
+      },
+      {
+        "path": "episodes/EP001/multi_panel_storyboard/seg07/line-art/current.json",
+        "sha256": "afb21559d29d25b6d9f838828eb7a1111127842fc4f5b298dc55f10c6b4e6e16"
+      },
+      {
+        "path": "episodes/EP001/multi_panel_storyboard/seg07/line-art/v1/image-1.jpg",
+        "sha256": "2ae6fb92ef4e15a9db5a4b32241e63d9f17050c7286be920f5a4d853db4953eb"
+      },
+      {
+        "path": "episodes/EP001/multi_panel_storyboard/seg07/line-art/v1/asset/job.json",
+        "sha256": "0db6d6f0003a8eceee4c81ddf53d43534504f439eb815db2393774eb99ebb4d1"
+      },
+      {
+        "path": "assets/scenes/su_dining_area/times/Day/v1/artifact.json",
+        "sha256": "ef904f834a3c1727fbd6bd5ab5ad172144dc6ff20affa142aabf0be6ea514446"
+      },
+      {
+        "path": "assets/scenes/su_dining_area/times/Day/accepted.json",
+        "sha256": "a8bea84867f03d8bff8a8d3203a24f28afa4faca947943b2ae8e18a52728d00b"
+      },
+      {
+        "path": "assets/scenes/su_dining_area/times/Day/current.json",
+        "sha256": "2d97a333f041f05a574b1c624389a614748ccff56ef9676faad2332359a7cf70"
+      },
+      {
+        "path": "assets/scenes/su_dining_area/times/Day/v1/image-1.jpg",
+        "sha256": "feec8762b24d4b27575583c3548b2784722775899fb3a85983c02281187e3428"
+      },
+      {
+        "path": "assets/scenes/su_dining_area/times/Day/v1/front.jpg",
+        "sha256": "88e78bb035f3b745af261c4a6a6fbe93406470f53d8e726e57df8e2cf5d51f69"
+      },
+      {
+        "path": "assets/scenes/su_dining_area/times/Day/v1/back.jpg",
+        "sha256": "b784728b9c2968db0f295589f5edcbbc6526aa06de4397fb118900d09d0c8b40"
+      },
+      {
+        "path": "assets/scenes/su_dining_area/times/Day/v1/left-side.jpg",
+        "sha256": "21bc073c4c46ebddc5a0f80b079ed4862fb99d2e42ed1d99f20b8971f46fbd35"
+      },
+      {
+        "path": "assets/scenes/su_dining_area/times/Day/v1/right-side.jpg",
+        "sha256": "91590fa04181a0c0516bd05716f04b94fa19da0a28e7cb46bee523a75847d86e"
+      },
+      {
+        "path": "assets/scenes/su_dining_area/times/Day/v1/floor-plan.jpg",
+        "sha256": "6be4416f961d528c8da58717accadc05af740a0f891204ed3afc986bccc25ab1"
+      },
+      {
+        "path": "episodes/EP001/blocking/seg07/v1/artifact.json",
+        "sha256": "885fe6e735d67c2dd3d522eedb91d09f19f0078d2847f922f277ef3b2094c719"
+      },
+      {
+        "path": "episodes/EP001/blocking/seg07/accepted.json",
+        "sha256": "8cc816137c704f7f11d81f2d5b96cf1574d79abc85e019a3415f3010ec34b73c"
+      },
+      {
+        "path": "episodes/EP001/blocking/seg07/current.json",
+        "sha256": "de2f3a234917c02ce80e9784c13db3e47acee7a1478453784ab8f37e69adbeb6"
+      },
+      {
+        "path": "episodes/EP001/blocking/seg07/v1/image-1.jpg",
+        "sha256": "61cd00d33ab3ad7098dab4263604a3e1430ac5ac9b79761f35d49c83ee7463a5"
+      },
+      {
+        "path": "episodes/EP001/blocking/seg07/v1/asset/job.json",
+        "sha256": "23701d4e99505077a662b01e426068a4b1113005e63916ce3497f673d6535894"
+      },
+      {
+        "path": "assets/props/lin_phone/v1/artifact.json",
+        "sha256": "1466e1f688dad6e10f0c1cff1d5879ad16b7856ec5b9b947383220098306077e"
+      },
+      {
+        "path": "assets/props/lin_phone/accepted.json",
+        "sha256": "9d86f71a7f6a951e8b58682e549dfe7e5b85fc6def388d4433505336f992ba69"
+      },
+      {
+        "path": "assets/props/lin_phone/current.json",
+        "sha256": "6b7815d949eb150adfcd8b5e2b5211d5709742fbc1a7edabfcdfbbd1e9d5cdae"
+      },
+      {
+        "path": "assets/props/lin_phone/v1/image-1.jpg",
+        "sha256": "f0c022d2c9a74c9222c4d760273e7c848e62b15df27eacd77399555fd52ca803"
+      },
+      {
+        "path": "assets/characters/lin_qingyu/v1/artifact.json",
+        "sha256": "dfa04c50882d114a2c31614f296de5c6a288f229cf4b5021bcec3031ae752ac5"
+      },
+      {
+        "path": "assets/characters/lin_qingyu/accepted.json",
+        "sha256": "d13dc0191c2db68f4e24e6fc063b8c73c02bcc8f8b9259f3be0249fd493cdbf4"
+      },
+      {
+        "path": "assets/characters/lin_qingyu/current.json",
+        "sha256": "7e48c8c99f958f6545b284c6fff34b6ae7528b4c7ddb8fec4ee53a1b1907d19d"
+      },
+      {
+        "path": "assets/characters/lin_qingyu/v1/image-1.jpg",
+        "sha256": "86f859ce3082fea64814e4f09285d86490a371ca77ef19fa690006b76e843eeb"
+      },
+      {
+        "path": "assets/characters/lin_qingyu/v1/asset/job.json",
+        "sha256": "ae8ba465cbc8845183870e3847093e10a3369201dd68911ba12bbe7c782bd755"
+      },
+      {
+        "path": "episodes/EP001/video_prompts/v1/seg07.json",
+        "sha256": "6d9d206301941b3094cfb3ae73383d231150b42fd02f296fc940e660d287e1a1"
+      }
+    ],
+    "character_reference_mode": "asset_library",
+    "video_references": "storyboard",
+    "trusted_character_references": {},
+    "video_prompts_version": "v1"
+  }
+}

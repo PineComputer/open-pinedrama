@@ -1,0 +1,11 @@
+{
+  "model": "gpt-image-2.5-sunburst",
+  "prompt": "Prop reference image for a film, photorealistic still, vertical composition. One object alone, centred and seen whole, filling most of the frame, straight on and slightly from above, on a plain light grey seamless background, in soft even light at a neutral daylight white balance. No person, hand, figure or reflection of one. Prop: hospital statement. A single US-letter sheet of white paper with a pale-blue hospital header band, rows of printed billing lines and a bold total at the bottom, slightly creased from folding. It shows exactly this text, clearly legible and spelt exactly: \"patient Jennifer Quinn, pay this amount $53,000\". Show it exactly as described, in its first state, with nothing else in the frame.\n\nAvoid: people or hands, other objects, logos, watermark, any writing other than the text given.\n",
+  "n": 1,
+  "size": "1152x2048",
+  "quality": "high",
+  "output_format": "jpeg",
+  "output_compression": 100,
+  "moderation": "low",
+  "input_images": []
+}

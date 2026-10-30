@@ -1,0 +1,141 @@
+{
+  "model": "ep-20260928175156-xn9xm",
+  "content": [
+    {
+      "type": "text",
+      "text": "Image 1: Thirteen-panel storyboard reference, used for the overall shot structure, shot sizes, and camera-movement rhythm. Read it from left to right and from top to bottom; panel N is Shot N. It is a line-art sketch: do not adopt its sketch style, black outlines, white background, panel borders or drawn faces.\nImage 2: Reference of Sebastian's apartment, living room, the front view, the establishing view, facing the back wall, a rendered set, not live action. Use it only for the room's layout, the furniture's positions and the light's direction; do not reference its visual content. It contains no people.\nImage 3: Reference of Sebastian's apartment, living room, the back view, turned 180 degrees, facing the front wall, with the left wall at its right edge, a rendered set, used only for the room's layout; it contains no people.\nImage 4: Reference of Sebastian's apartment, living room, the left-side view, facing the left wall, with the back wall at its right edge, a rendered set, used only for the room's layout; it contains no people.\nImage 5: Reference of Sebastian's apartment, living room, the right-side view, facing the right wall, with the back wall at its left edge, a rendered set, used only for the room's layout; it contains no people.\nImage 6: Reference of Sebastian's apartment, living room, the floor plan seen from above: its top edge is the back wall, its bottom edge the front wall behind the front view's camera, and its left and right edges the left and right walls, a rendered set, used only for the room's layout; it contains no people.\nImage 7: Blocking reference of the segment's start: the same place with these people in their places, used only for where each person is and which way they face; take faces and outfits from each subject's own image. It is a line-art diagram: do not adopt its outlines or white background.\nImage 8: Subject 1 (Daniel) character appearance reference.\nImage 9: Subject 2 (Sebastian, look S4) character appearance reference.\nImage 10: Prop 1 (folder) maps to this image; use only structure, material, and color, and copy its writing and badges exactly from Image 10.\nImage 11: Prop 2 (hospital statement) maps to this image; use only structure, material, and color, and copy its writing and badges exactly from Image 11.\nImage 12: Prop 3 (two coins) maps to this image; use only structure, material, and color, and copy its writing and badges exactly from Image 12.\nImage 13: Prop 4 (Sebastian's phone) maps to this image; use only structure, material, and color, and copy its writing and badges exactly from Image 13.\nImage 14: Prop 5 (Daniel's phone) maps to this image; use only structure, material, and color, and copy its writing and badges exactly from Image 14.\n[Subject settings]\nSubject 1 (Daniel): Refer to Image 8. 30, Sebastian's loyal, efficient personal assistant and driver. Outfit: A navy-blue slim two-piece business suit over a white dress shirt, a forest-green silk tie, black leather oxfords and thin rimless glasses. Signature colour: green.\nSubject 2 (Sebastian): Refer to Image 9. 30, the hero; the scorned illegitimate son of the Klein family, jailed for three days for reckless driving and secretly a billionaire running a plan. Outfit: look S4: Day at home: a fitted black fine-knit crew-neck sweater with long sleeves pushed slightly up the forearms, slim charcoal-grey chinos, black leather loafers and the steel-and-black wristwatch. Signature colour: black.\nEnvironment (Sebastian's apartment, living room): Refer to Images 2 to 6. Day, soft bright sunlight through the floor-to-ceiling window. Soft bright daylight from the back-wall window and the glass pendant lamp over the dining table; quiet room tone, paper rustle, phone taps.\nDo not swap the characters' appearances, clothing, actions, positions or dialogue.\n[Subjects and relationships]\nOnly two people appear throughout: Daniel and Sebastian.\n[Blocking]\nRefer to Images 2 to 6 for the room and Image 7 for the people's places. Axis runs across the round dining table; the camera stays on the front-wall bookshelves side, in front of both. Sebastian sits in the dining chair on the couch side of the round dining table, facing the kitchenette. Daniel stands on the kitchenette side of the round dining table, facing Sebastian, holding a manila folder, his phone in his jacket. On the cleared table: Sebastian's phone face down with the two coins beside it.\n[Overall style]\nPhotorealistic live-action short drama with cinematic lighting. Each character keeps the face and the outfit with its main colour from their reference image throughout. Use each character sheet only for that character: the face from the close-up on the right, the body and outfit from the turnaround on the left; do not render the sheet's layout, white background or multiple views. This segment has 7 lines, in this order: Daniel, Daniel, Sebastian, Daniel, Sebastian, Daniel, Sebastian. Generate speech only from the lines in {} in the shot list, each spoken exactly once by its speaker; everyone else keeps their mouth naturally closed while listening, and a V.O. speaker keeps their mouth closed or is off screen. Follow the shot list below; do not add cuts or camera moves beyond it. Strictly adhere to the 180-degree rule: within a scene, characters keep their screen sides and the camera stays on one side of the axis. Seamless continuity of action, spatial matching and consistent actor blocking; cut on action. For dialogue prefer static shot-reverse-shot and over-the-shoulder shots, balanced with reaction shots and close-up inserts. Faces stable and clear, consistent with the reference images, with no resemblance to any real actor or actress. Normal human eyes. Natural anatomy and hands. Natural, fluid motion that follows the blocking; characters make subtle, natural movements. Characters, props and environment share one world with matched lighting. Each line ends naturally with breathing room and is never cut off. Authentic performances with micro-expressions. No BGM; generate only dialogue, environmental sounds and action sounds. No subtitles.\n[Continuity]\nMaintain continuity in the identities, number, appearance, clothing, relative heights, spatial positions, and eyelines of all the characters. The actions in the shot list occur strictly in sequence. Hands are anatomically correct.\n[Strictly exclude]\nadded or missing characters, spatial jumps. garbled text on the statement or phone. subtitles. Dialogue from the wrong character, multiple people speaking at once, repeated or missing lines, lip-sync errors and audio-visual desynchronization. The raw reference images (character sheets, setting plates) appearing as a frame of the video, and starting on a still frame of the setting reference. A fast zoom-in at the start, a fast pull-back at the end, unmotivated whip-pans, tilts, zooms and 360-degree orbits. Axis-crossing, jump cuts, frame skips, flicker and clipping. Face swaps, changes in age or clothing, sudden height shifts, added or missing characters, spatial jumps, and disordered action sequences; props popping in or vanishing, and duplicate characters except mirror reflections. Hand clipping, extra fingers, fused fingers, malformed hands. Subtitles, captions, watermarks and garbled writing; writing and logos other than those on a key prop's reference image, which are copied from it; a phone screen or paper that is not a key prop is shown from the back or out of focus. Black-and-white, monochrome, grayscale, desaturated visuals; hand-drawn, sketch, line art, illustration, comics, animation; storyboard frames, rough sketches, panel borders, gutters and grid layouts.\n[Shot list] (13 shots, approximately 28 seconds)\nWhen a previous-shot reference image is given, it is the moment this segment starts from: keep its people's positions, outfits, props and light, and continue from there. Shot 1 keeps its own camera, matching the image's framing only when it frames the same view; do not repeat that frame later.\nShot 1 (0-3s): [Wide shot, locked-off, eye-level, from the bookshelves side; Sebastian on frame left, Daniel on frame right] Daniel lays the manila folder on the round dining table in front of Sebastian, who sits in the dining chair. Dialogue (Daniel, in English, crisp report): {Her father left. Natalie and her mother got nothing.}\nShot 2 (3-5s): [Medium shot, locked-off, eye-level, on Sebastian at the table] Sebastian flips the folder open; a single creased sheet slides out onto the table. <Paper slides across wood>\nShot 3 (5-6s): [Close-up insert, overhead shot, locked-off, on the table top] The hospital statement lies on the table beside the open folder, its header and total legible.\nShot 4 (6-8s): [Medium shot, over-the-shoulder shot from behind Sebastian's shoulder toward Daniel, eye-level] Sebastian's shoulder at the frame edge; Daniel, across the table, adjusts his rimless glasses. Dialogue (Daniel, in English, even): {She's been paying for treatment alone.}\nShot 5 (8-10s): [Medium close-up, clean single, slow push in, eye-level, on Sebastian] Daniel is off screen. Sebastian picks up the hospital statement and reads it, his jaw tightening. Dialogue (Daniel, in English, even): {They offered help only if she took Cassie's place.}\nShot 6 (10-12s): [Close-up, locked-off, eye-level, on Sebastian's face] Sebastian lowers the sheet, his steel-grey eyes hard. Dialogue (Sebastian, in English, cold and quiet): {They sold her.}\nShot 7 (12-14s): [Medium shot, high angle, locked-off, over the table] Sebastian slips the statement back into the folder, shuts it and presses his palm flat on the cover; Daniel stands across the table. <Folder snaps shut>\nShot 8 (14-17s): [Medium shot, dirty single on Daniel with Sebastian's shoulder at the frame edge, eye-level] Daniel takes his phone out of his jacket. Dialogue (Daniel, in English, businesslike): {The fifty thousand arrived. It won't cover everything.}\nShot 9 (17-20s): [Medium close-up, low angle, locked-off, on Sebastian] Sebastian leans back in the dining chair, one hand still on the folder. Dialogue (Sebastian, in English, low order): {Pay the balance. Every future treatment, too.}\nShot 10 (20-22s): [Medium shot, locked-off, eye-level, on Daniel] Daniel nods once and taps quickly on his phone screen. <Screen taps>\nShot 11 (22-24s): [Close-up insert, locked-off, eye-level, on Daniel's phone screen] Daniel's phone shows the payment confirmation with a green check mark. <Soft confirmation chime>\nShot 12 (24-26s): [Medium shot, over-the-shoulder shot from behind Sebastian's shoulder toward Daniel, eye-level] Sebastian's shoulder at the frame edge; Daniel looks up from the phone at him. Dialogue (Daniel, in English, neutral): {What name do I give her?}\nShot 13 (26-28s): [Close-up, clean single, locked-off, eye-level, on Sebastian's face and shoulders] Sebastian shakes his head slightly. Dialogue (Sebastian, in English, flat): {Not mine.}\nAt the end: Sebastian sits in the dining chair on the couch side of the round dining table, facing the kitchenette, one hand on the closed folder. Daniel stands on the kitchenette side of the round dining table facing him, his phone in his hand. On the table: the closed folder, Sebastian's phone face down and the two coins beside it.\n\nImage 15 is the first frame.\n"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261023184802-tsjgl"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/sebastian_apartment/v1/front.jpg",
+        "path": "assets/scenes/sebastian_apartment/v1/front.jpg",
+        "sha256": "e372037db0c546f4fdb3052f5de6dbfadf3ed140ef590c1ce134aa9c9dae99bf"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/sebastian_apartment/v1/back.jpg",
+        "path": "assets/scenes/sebastian_apartment/v1/back.jpg",
+        "sha256": "3bb892fd13d40c8bb31d08b25a33388c82c77ff1e5a17e346d9c5f6ddee851fa"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/sebastian_apartment/v1/left-side.jpg",
+        "path": "assets/scenes/sebastian_apartment/v1/left-side.jpg",
+        "sha256": "558239ee418f3f791b065c225fb2c7bb5aa56df402263e86df0817e2975f9f4b"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/sebastian_apartment/v1/right-side.jpg",
+        "path": "assets/scenes/sebastian_apartment/v1/right-side.jpg",
+        "sha256": "cb43a3c19cc154a569d50762cf2c2dad0609465d1cfd561b43ae6567e8e502a5"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/sebastian_apartment/v1/floor-plan.jpg",
+        "path": "assets/scenes/sebastian_apartment/v1/floor-plan.jpg",
+        "sha256": "8c2e8994c1059dc9eaa09afd596e16dc5f7f91c2c668717b943233ec1c93d430"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261023184522-9hk8c"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261022180001-crl6z"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261023183357-6bzpk"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/props/folder/v1/image-1.jpg",
+        "path": "assets/props/folder/v1/image-1.jpg",
+        "sha256": "2f4914fa23e1ac2dffe1c4d9604c907faaf41df0d65cc0f70083efb70d1ed35e"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/props/hospital_statement/v3/image-1.jpg",
+        "path": "assets/props/hospital_statement/v3/image-1.jpg",
+        "sha256": "b3026929c5411c9f9887de883605eb11266ba99dc06fb27574dc7469c1350d32"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/props/coins/v1/image-1.jpg",
+        "path": "assets/props/coins/v1/image-1.jpg",
+        "sha256": "489d66662a2b07c9b7580fc10833c1f8d59357d5fc1b6dffed8f9358a8a00fbd"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/props/sebastian_phone/v1/image-1.jpg",
+        "path": "assets/props/sebastian_phone/v1/image-1.jpg",
+        "sha256": "7ce2567bb79b273e579d2f0e7607240fd54579a6bb88f7746fd8fba367402bcc"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/props/daniel_phone/v1/image-1.jpg",
+        "path": "assets/props/daniel_phone/v1/image-1.jpg",
+        "sha256": "4e9dd59dc272f15345cb3b5515369687424b46948142f39451145737a21620c5"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261024052332-rl7dz"
+      },
+      "role": "reference_image"
+    }
+  ],
+  "duration": 28,
+  "ratio": "9:16",
+  "resolution": "480p",
+  "generate_audio": true,
+  "watermark": false,
+  "return_last_frame": true,
+  "omni_reference_task_type": "reference"
+}

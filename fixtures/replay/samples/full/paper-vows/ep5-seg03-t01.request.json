@@ -1,0 +1,137 @@
+{
+  "model": "ep-20260928175156-xn9xm",
+  "content": [
+    {
+      "type": "text",
+      "text": "Image 1: Thirteen-panel storyboard reference, used for the overall shot structure, shot sizes, and camera-movement rhythm. Read it from left to right and from top to bottom; panel N is Shot N. It is a line-art sketch: do not adopt its sketch style, black outlines, white background, panel borders or drawn faces.\nImage 2: Reference of Sebastian's apartment, living room, the front view, the establishing view, facing the back wall, a rendered set, not live action. Use it only for the room's layout, the furniture's positions and the light's direction; do not reference its visual content. It contains no people.\nImage 3: Reference of Sebastian's apartment, living room, the back view, turned 180 degrees, facing the front wall, with the left wall at its right edge, a rendered set, used only for the room's layout; it contains no people.\nImage 4: Reference of Sebastian's apartment, living room, the left-side view, facing the left wall, with the back wall at its right edge, a rendered set, used only for the room's layout; it contains no people.\nImage 5: Reference of Sebastian's apartment, living room, the right-side view, facing the right wall, with the back wall at its left edge, a rendered set, used only for the room's layout; it contains no people.\nImage 6: Reference of Sebastian's apartment, living room, the floor plan seen from above: its top edge is the back wall, its bottom edge the front wall behind the front view's camera, and its left and right edges the left and right walls, a rendered set, used only for the room's layout; it contains no people.\nImage 7: Blocking reference of the segment's start: the same place with these people in their places, used only for where each person is and which way they face; take faces and outfits from each subject's own image. It is a line-art diagram: do not adopt its outlines or white background.\nImage 8: Subject 1 (Sebastian, look S2) character appearance reference.\nImage 9: Subject 1 (Sebastian, look S3) character appearance reference.\nImage 10: Subject 2 (Natalie, look S1) character appearance reference.\nImage 11: Subject 2 (Natalie, look S2) character appearance reference.\nImage 12: Prop 1 (pillow) maps to this image; use only structure, material, and color, and copy its writing and badges exactly from Image 12.\nImage 13: Prop 2 (agreement) maps to this image; use only structure, material, and color, and copy its writing and badges exactly from Image 13.\nImage 14: Prop 3 (Sebastian's phone) maps to this image; use only structure, material, and color, and copy its writing and badges exactly from Image 14.\n[Subject settings]\nSubject 1 (Sebastian): Refer to Image 8 (look S2) and Image 9 (look S3). 30, the hero; the scorned illegitimate son of the Klein family, jailed for three days for reckless driving and secretly a billionaire running a plan. Outfit: look S2: A black slim-cut tuxedo jacket with satin lapels, a crisp white dress shirt, a black bow tie, black tuxedo trousers, black patent oxfords, a small white rose boutonnière and the steel-and-black wristwatch; look S3: Night at home: a fitted white ribbed sleeveless undershirt that shows his broad shoulders and athletic arms, loose black cotton lounge trousers, and bare feet. The wristwatch is still on. Signature colour: black.\nSubject 2 (Natalie): Refer to Image 10 (look S1) and Image 11 (look S2). 25, the heroine; George's daughter from his first marriage, who agrees to marry Sebastian Klein to pay for her mother's dialysis. Outfit: look S1: An elegant, figure-fitted ivory-white satin bridal gown with thin spaghetti straps and a low sweetheart neckline. The sculpted bodice is fitted, and the skirt hugs her hips before flaring softly into a floor-length hem. A narrow pale-blue satin sash, her 'something blue', cinches the waist. A short sheer tulle veil is pinned at the back of her curls. Ivory satin pointed-toe heels. No jewellery; look S2: Sleepwear: an opaque powder-blue silk camisole with thin straps, a modest V neckline trimmed in ivory lace and a softly fitted waist. Matching opaque powder-blue silk sleep shorts with lace-trimmed hems. Over them, an ivory-white satin knee-length robe with long sleeves, worn open, with its sash hanging loose. Barefoot. Hair loose in soft curls. Signature colour: blue.\nEnvironment (Sebastian's apartment, living room): Refer to Images 2 to 6. Night, warm lamplight indoors, city lights glowing through the window. Warm arc floor lamp at the couch's front-door end and the pendant over the dining table; soft city glow through the window. Quiet room tone.\nDo not swap the characters' appearances, clothing, actions, positions or dialogue.\n[Subjects and relationships]\nOnly two people appear throughout: Sebastian and Natalie.\n[Blocking]\nRefer to Images 2 to 6 for the room and Image 7 for the people's places. Natalie is inside the bedroom with her bag, behind the half-closed bedroom door on the back wall. Sebastian, in his tuxedo, stands at the kitchenette end of the couch. The white pillow lies at the front-door end of the couch; the signed agreement and the blue pen lie on the round coffee table.\n[Overall style]\nPhotorealistic live-action short drama with cinematic lighting. Each character keeps the face and the outfit with its main colour from their reference image throughout. Use each character sheet only for that character: the face from the close-up on the right, the body and outfit from the turnaround on the left; do not render the sheet's layout, white background or multiple views. This segment has 6 lines, in this order: Sebastian, Natalie, Sebastian, Natalie, Natalie, Sebastian. Generate speech only from the lines in {} in the shot list, each spoken exactly once by its speaker; everyone else keeps their mouth naturally closed while listening, and a V.O. speaker keeps their mouth closed or is off screen. Follow the shot list below; do not add cuts or camera moves beyond it. Strictly adhere to the 180-degree rule: within a scene, characters keep their screen sides and the camera stays on one side of the axis. Seamless continuity of action, spatial matching and consistent actor blocking; cut on action. For dialogue prefer static shot-reverse-shot and over-the-shoulder shots, balanced with reaction shots and close-up inserts. Faces stable and clear, consistent with the reference images, with no resemblance to any real actor or actress. Normal human eyes. Natural anatomy and hands. Natural, fluid motion that follows the blocking; characters make subtle, natural movements. Characters, props and environment share one world with matched lighting. Each line ends naturally with breathing room and is never cut off. Authentic performances with micro-expressions. No BGM; generate only dialogue, environmental sounds and action sounds. No subtitles.\n[Continuity]\nMaintain continuity in the identities, number, appearance, clothing, relative heights, spatial positions, and eyelines of all the characters. The actions in the shot list occur strictly in sequence. Hands are anatomically correct.\n[Strictly exclude]\nadded or missing characters, spatial jumps. nudity or sheer clothing. malformed hands or merged faces during the kiss. Dialogue from the wrong character, multiple people speaking at once, repeated or missing lines, lip-sync errors and audio-visual desynchronization. The raw reference images (character sheets, setting plates) appearing as a frame of the video, and starting on a still frame of the setting reference. A fast zoom-in at the start, a fast pull-back at the end, unmotivated whip-pans, tilts, zooms and 360-degree orbits. Axis-crossing, jump cuts, frame skips, flicker and clipping. Face swaps, changes in age or clothing, sudden height shifts, added or missing characters, spatial jumps, and disordered action sequences; props popping in or vanishing, and duplicate characters except mirror reflections. Hand clipping, extra fingers, fused fingers, malformed hands. Subtitles, captions, watermarks and garbled writing; writing and logos other than those on a key prop's reference image, which are copied from it; a phone screen or paper that is not a key prop is shown from the back or out of focus. Black-and-white, monochrome, grayscale, desaturated visuals; hand-drawn, sketch, line art, illustration, comics, animation; storyboard frames, rough sketches, panel borders, gutters and grid layouts.\n[Shot list] (13 shots, approximately 28 seconds)\nWhen a previous-shot reference image is given, it is the moment this segment starts from: keep its people's positions, outfits, props and light, and continue from there. Shot 1 keeps its own camera, matching the image's framing only when it frames the same view; do not repeat that frame later.\nShot 1 (0-2s): [Medium shot, eye-level, on Sebastian beside the couch, the half-closed bedroom door behind him] Sebastian pulls off his bow tie and tuxedo jacket and drops them over the couch arm. <Fabric rustles>\nShot 2 (2-5s): [Wide shot, high angle, from the kitchenette side over the dining table] Across the cut, Sebastian now wears a fitted white ribbed undershirt and black lounge trousers; he settles onto the couch at its kitchenette end and sets his black phone face down on the coffee table beside the agreement. <Couch cushions creak>\nShot 3 (5-7s): [Medium shot, eye-level, on the bedroom door] The bedroom door opens and Natalie steps into the doorway, barefoot, in the powder-blue camisole and sleep shorts with the ivory robe hanging open. <Door handle clicks>\nShot 4 (7-9s): [Medium close-up, low angle, on Sebastian on the couch] Sebastian looks up from the couch toward the doorway, one arm along the couch back. Dialogue (Sebastian, in English, lazy, curious): {Forget something?}\nShot 5 (9-12s): [Medium shot, eye-level, on Natalie in the doorway, hand on the door frame] Natalie holds the door frame, her eyes fixed on him, nervous and determined. Dialogue (Natalie, in English, soft, hesitant): {That kiss at the wedding. Was it just for them?}\nShot 6 (12-15s): [Wide shot, eye-level, both in profile, following Sebastian from the couch to the bedroom door] Sebastian rises and walks to the bedroom door, stopping one step in front of Natalie. <Bare footsteps on oak>\nShot 7 (15-17s): [Medium close-up, over-the-shoulder shot past Natalie, slight high angle on Sebastian] Sebastian looks down at her, a quiet smile tugging at his mouth. Dialogue (Sebastian, in English, low murmur): {What do you think?}\nShot 8 (17-19s): [Close-up insert, eye-level, on their hands between them] Natalie reaches out and takes Sebastian's hand.\nShot 9 (19-21s): [Medium close-up, over-the-shoulder shot past Sebastian, slight low angle on Natalie] Natalie holds his hand and lifts her eyes to his. Dialogue (Natalie, in English, breathless): {I want to find out.}\nShot 10 (21-23s): [Medium shot, eye-level, both in profile in the bedroom doorway] Natalie rises onto her toes and kisses Sebastian.\nShot 11 (23-25s): [Close-up, slow orbit around the couple's faces, staying on the kitchenette side] Sebastian kisses her back, his free hand settling at her waist over the robe.\nShot 12 (25-27s): [Medium shot, eye-level, on Natalie, Sebastian's shoulder at the frame edge] Natalie steps back into the doorway and lets go of his hand, catching her breath. Dialogue (Natalie, in English, soft, composed): {That's enough for tonight.}\nShot 13 (27-28s): [Medium close-up, eye-level, dirty single on Sebastian with Natalie's shoulder at the frame edge] Sebastian lifts both hands slightly and gives a small nod. Dialogue (Sebastian, in English, amused): {Your call.}\nAt the end: Natalie stands in the bedroom doorway on the back wall in her camisole, sleep shorts and open robe, one hand on the door. Sebastian, in his white undershirt, stands one step in front of her outside the bedroom door. His phone lies face down on the round coffee table beside the signed agreement; the pillow lies at the front-door end of the couch.\n\n<Image 15> is the previous shot (seg02/t03 at 22.97s).\n"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261023190644-zsdml"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/sebastian_apartment/times/Night/v1/front.jpg",
+        "path": "assets/scenes/sebastian_apartment/times/Night/v1/front.jpg",
+        "sha256": "0172ea2c220808edab793a5e5565815772e10639c8ee81439ad547f34a6c856c"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/sebastian_apartment/times/Night/v1/back.jpg",
+        "path": "assets/scenes/sebastian_apartment/times/Night/v1/back.jpg",
+        "sha256": "3c32943dfe6610fa9372191a385d1f4f9435b61301b219f3ad2295236d42976d"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/sebastian_apartment/times/Night/v1/left-side.jpg",
+        "path": "assets/scenes/sebastian_apartment/times/Night/v1/left-side.jpg",
+        "sha256": "39078a4dbbffc21e74ccfb08ed6f704a1174ff9ec21cdb6d36ae79d07d4a4995"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/sebastian_apartment/times/Night/v1/right-side.jpg",
+        "path": "assets/scenes/sebastian_apartment/times/Night/v1/right-side.jpg",
+        "sha256": "cd486d971a2426b044b2f83161b6fbf536d4abb2e3e5ea8fcdcfa620aaf0619a"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/sebastian_apartment/times/Night/v1/floor-plan.jpg",
+        "path": "assets/scenes/sebastian_apartment/times/Night/v1/floor-plan.jpg",
+        "sha256": "8c2e8994c1059dc9eaa09afd596e16dc5f7f91c2c668717b943233ec1c93d430"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261023190224-bhldk"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261022181210-r8drl"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261023183347-lfdth"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261022180012-k67g5"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261023190016-pxnxj"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/props/pillow/v1/image-1.jpg",
+        "path": "assets/props/pillow/v1/image-1.jpg",
+        "sha256": "451367e9268503aa0942122a2455131d74079a0ac72ce75c52321ef43af4985b"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/props/agreement/v1/image-1.jpg",
+        "path": "assets/props/agreement/v1/image-1.jpg",
+        "sha256": "fabf5c105aac8835dcde8f900e3fc3795d552556ab9d223df66269e95a5ce1a6"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/props/sebastian_phone/v1/image-1.jpg",
+        "path": "assets/props/sebastian_phone/v1/image-1.jpg",
+        "sha256": "7ce2567bb79b273e579d2f0e7607240fd54579a6bb88f7746fd8fba367402bcc"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261024062254-xh2ft"
+      },
+      "role": "reference_image"
+    }
+  ],
+  "duration": 28,
+  "ratio": "9:16",
+  "resolution": "480p",
+  "generate_audio": true,
+  "watermark": false,
+  "return_last_frame": true,
+  "omni_reference_task_type": "reference"
+}

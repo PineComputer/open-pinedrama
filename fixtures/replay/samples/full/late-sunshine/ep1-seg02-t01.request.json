@@ -1,0 +1,105 @@
+{
+  "model": "ep-20260928175156-xn9xm",
+  "content": [
+    {
+      "type": "text",
+      "text": "Image 1: Twelve-panel storyboard reference, used for the overall shot structure, shot sizes, and camera-movement rhythm. Read it from left to right and from top to bottom; panel N is Shot N. It is a line-art sketch: do not adopt its sketch style, black outlines, white background, panel borders or drawn faces.\nImage 2: Reference of JI FAMILY LIVING ROOM, the front view, the establishing view, facing the back wall, a rendered set, not live action. Use it only for the room's layout, the furniture's positions and the light's direction; do not reference its visual content. It contains no people.\nImage 3: Reference of JI FAMILY LIVING ROOM, the back view, turned 180 degrees, facing the front wall, with the left wall at its right edge, a rendered set, used only for the room's layout; it contains no people.\nImage 4: Reference of JI FAMILY LIVING ROOM, the left-side view, facing the left wall, with the back wall at its right edge, a rendered set, used only for the room's layout; it contains no people.\nImage 5: Reference of JI FAMILY LIVING ROOM, the right-side view, facing the right wall, with the back wall at its left edge, a rendered set, used only for the room's layout; it contains no people.\nImage 6: Reference of JI FAMILY LIVING ROOM, the floor plan seen from above: its top edge is the back wall, its bottom edge the front wall behind the front view's camera, and its left and right edges the left and right walls, a rendered set, used only for the room's layout; it contains no people.\nImage 7: Blocking reference of the segment's start: the same place with these people in their places, used only for where each person is and which way they face; take faces and outfits from each subject's own image. It is a line-art diagram: do not adopt its outlines or white background.\nImage 8: Subject 1 (Lu Shaoze, look S0) character appearance reference.\nImage 9: Subject 2 (Ji Hongyuan) character appearance reference.\nImage 10: Subject 3 (Ji Ran, look S1) character appearance reference.\nImage 11: Prop 1 (document envelope) maps to this image; copy its writing and badges exactly from Image 11.\nFrom each prop's image, use only structure, material, and color.\n[Subject settings]\nSubject 1 (Lu Shaoze): Refer to Image 8. 28, Ji Ran's ex-boyfriend of four years, driven off by Ji Hongyuan five years ago and now heir of the Lu Group returning as her arranged-marriage match. Outfit: look S0: Flashback, five years earlier, aged about 23: a plain light-blue cotton button-down long-sleeve shirt, grey slim chinos and brown loafers. Softer, un-styled hair. Signature colour: blue.\nSubject 2 (Ji Hongyuan): Refer to Image 9. 52, Ji Ran's father, a domineering businessman who arranges her marriages for profit. He appears only in the 'Five years earlier' flashback (scene 1-2). His age, appearance and wardrobe here are as he looks in that flashback. Outfit: In the flashback five years earlier, at the Ji family home: a tailored dark-brown wool suit jacket over a white dress shirt with no tie, matching dark-brown trousers and polished brown leather shoes. Signature colour: brown.\nSubject 3 (Ji Ran): Refer to Image 10. 27, Heroine; owner of Jiejian Company, daughter of Ji Hongyuan, and ex-girlfriend of Lu Shaoze. Outfit: look S1: Flashback, five years earlier, aged about 22, at home: a fitted blush-pink ribbed spaghetti-strap knit camisole tucked into a white high-waisted A-line mini skirt, with a red satin ribbon tied in her loose long hair and nude ballet-heel slingbacks. Lighter, fresher make-up. Signature colour: red.\nEnvironment (JI FAMILY LIVING ROOM): Refer to Images 2 to 6. Flashback, day, golden afternoon sun. Golden afternoon sun streaming through the French windows, leaf-dappled light, the crystal chandelier overhead. Live sound: rustling leaves, footsteps on marble, Ji Ran's ragged breathing.\nDo not swap the characters' appearances, clothing, actions, positions or dialogue.\n[Overall style]\nPhotorealistic live-action short drama with cinematic lighting. Each character keeps the face and the outfit with its main colour from their reference image throughout. Use each character sheet only for that character: the face from the close-up on the right, the body and outfit from the turnaround on the left; do not render the sheet's layout, white background or multiple views. This segment has 2 lines, in this order: Ji Hongyuan, Ji Hongyuan. Generate speech only from the lines in {} in the shot list, each spoken exactly once by its speaker; everyone else keeps their mouth naturally closed while listening, and a V.O. speaker keeps their mouth closed or is off screen. Follow the shot list below; do not add cuts or camera moves beyond it. Strictly adhere to the 180-degree rule: within a scene, characters keep their screen sides and the camera stays on one side of the axis. Seamless continuity of action, spatial matching and consistent actor blocking; cut on action. For dialogue prefer static shot-reverse-shot and over-the-shoulder shots, balanced with reaction shots and close-up inserts. Faces stable and clear, with no resemblance to any real actor or actress. Normal human eyes. Natural anatomy and hands. Natural, fluid motion that follows the blocking; characters make subtle, natural movements. Characters, props and environment share one world with matched lighting. Each line ends naturally with breathing room and is never cut off. Authentic performances with micro-expressions. No BGM; generate only dialogue, environmental sounds and action sounds. No subtitles.\n[Strictly exclude]\nsubtitles or on-screen text. Lu Shaoze looking at Ji Ran. writing on the envelope. Dialogue from the wrong character, multiple people speaking at once, repeated or missing lines, lip-sync errors and audio-visual desynchronization. The raw reference images (character sheets, setting plates) appearing as a frame of the video, and starting on a still frame of the setting reference. A fast zoom-in at the start, a fast pull-back at the end, unmotivated whip-pans, tilts, zooms and 360-degree orbits. Axis-crossing, jump cuts, frame skips, flicker and clipping. Characters or props popping in or vanishing, and duplicate characters except mirror reflections. Subtitles, captions, watermarks and garbled writing; writing and logos other than those on a key prop's reference image, which are copied from it; a phone screen or paper that is not a key prop is shown from the back or out of focus. Black-and-white, monochrome, grayscale, desaturated visuals; hand-drawn, sketch, line art, illustration, comics, animation; storyboard frames, rough sketches, panel borders, gutters and grid layouts.\n[Shot list] (12 shots, approximately 27 seconds)\nWhen a previous-shot reference image is given, it is the moment this segment starts from: keep its people's positions, outfits, props and light, and continue from there. Shot 1 keeps its own camera, matching the image's framing only when it frames the same view; do not repeat that frame later.\nAt the start: Ji Hongyuan sits in the middle of the long beige sofa, facing the low marble-and-gold coffee table. Lu Shaoze stands with his head down on the ivory carpet, on the far side of the coffee table, facing the sofa. One kraft document envelope lies on the coffee table in front of Ji Hongyuan. The younger Ji Ran stands half hidden behind the marble column nearest the hallway, by the wall that runs behind the columns. Tall French windows show garden trees in the sun. The camera is on the French windows side of the room, looking across the coffee table toward the marble columns, and stays on that side.\nShot 1 (0-2s): [Close-up, locked-off camera, eye-level through the French windows] Garden leaves sway in warm sunlight beyond the glass, casting dappled light. <leaves rustle, distant birdsong>\nShot 2 (2-4s): [Wide shot, high angle from the French windows side, slow pan from the windows to the sofa] Ji Hongyuan sits on the beige sofa. Lu Shaoze stands with his head bowed across the marble coffee table from him, and the document envelope lies between them.\nShot 3 (4-6s): [Medium close-up, high angle on the coffee table] Ji Hongyuan sweeps the document envelope off the marble table with the back of his hand, and it drops onto the ivory carpet at Lu Shaoze's feet. <a thick envelope thuds onto the carpet>\nShot 4 (6-11s): [Medium shot, over-the-shoulder shot from behind Lu Shaoze onto Ji Hongyuan, eye-level] Lu Shaoze's lowered head is in the foreground. Ji Hongyuan leans back on the sofa and stares at him with contempt. Dialogue (Ji Hongyuan, in Chinese, slow, cold, authoritative): {我已经给纪然安排好了联姻对象，是陈氏集团的公子，}\nShot 5 (11-14s): [Close-up, low angle up into Lu Shaoze's bowed face] Lu Shaoze keeps his eyes on the envelope on the carpet. His jaw tightens and his hands curl at his sides. Dialogue (Ji Hongyuan, in Chinese, clipped contempt): {也给你安排了国外的学校，}\nShot 6 (14-16s): [Medium close-up, low angle on Ji Hongyuan from the coffee table] Ji Hongyuan points a ringed finger at Lu Shaoze. Dialogue (Ji Hongyuan, in Chinese, final, cold): {以后，不要再来找纪然。}\nShot 7 (16-17s): [Close-up, locked-off camera, eye-level] Ji Hongyuan snorts and looks away. Dialogue (Ji Hongyuan, in Chinese, dismissive grunt): {嗯。}\nShot 8 (17-19s): [Medium shot, high angle over the coffee table] Lu Shaoze bends down and picks the document envelope up off the ivory carpet. <paper rustles>\nShot 9 (19-21s): [Wide shot, pan following Lu Shaoze from the coffee table to the marble columns, eye-level] Lu Shaoze walks with the envelope toward the hallway along the marble columns, eyes fixed ahead. <footsteps on marble>\nShot 10 (21-23s): [Medium close-up, locked-off camera on the column nearest the hallway, eye-level] The younger Ji Ran is half hidden behind the marble column with her eyes wet and fixed on Lu Shaoze, who walks past in the soft foreground without turning his head.\nShot 11 (23-24s): [Extreme close-up insert of her hand] Ji Ran's fist clenches tight against the marble column.\nShot 12 (24-27s): [Medium shot, handheld, high angle, pull out from Ji Ran] Ji Ran slumps back against the wall beside the column, her chest heaving as she struggles to breathe. <ragged, shaky breathing>\nAt the end: Ji Hongyuan sits on the beige sofa facing the empty marble coffee table. Lu Shaoze has gone down the hallway with the envelope. The younger Ji Ran leans slumped against the wall beside the marble column nearest the hallway, breathing hard.\n"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261027074940-b2c4c"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/ji_family_living_room/times/Day/v1/front.jpg",
+        "path": "assets/scenes/ji_family_living_room/times/Day/v1/front.jpg",
+        "sha256": "9becf55ebd5c23e127d64ed17d49cfa44fac1d98181eea0a403ed87846785e28"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/ji_family_living_room/times/Day/v1/back.jpg",
+        "path": "assets/scenes/ji_family_living_room/times/Day/v1/back.jpg",
+        "sha256": "e33623ecc808276ba05936b87bb44db0801a666d9d78f0a7b2f5907aad4b8f73"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/ji_family_living_room/times/Day/v1/left-side.jpg",
+        "path": "assets/scenes/ji_family_living_room/times/Day/v1/left-side.jpg",
+        "sha256": "4aa5c31d42e8cfa2dff3ce3e28e92838b21d7fb818685f5a36ad5800ad26d36d"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/ji_family_living_room/times/Day/v1/right-side.jpg",
+        "path": "assets/scenes/ji_family_living_room/times/Day/v1/right-side.jpg",
+        "sha256": "e254df56234055be3c1cf00dd4088b65ac73c9c552e4b590c2de3a3bc3d39b09"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/ji_family_living_room/times/Day/v1/floor-plan.jpg",
+        "path": "assets/scenes/ji_family_living_room/times/Day/v1/floor-plan.jpg",
+        "sha256": "852935dfd9da0df42f395706524745f0b1d7cfa9cf97639574b5ffcedf1e1569"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261027074420-sk7kd"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261027073126-9kzbd"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261027073126-jx28q"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261027074119-rvzmj"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/props/document_envelope/v1/image-1.jpg",
+        "path": "assets/props/document_envelope/v1/image-1.jpg",
+        "sha256": "e37ee14f5a025be85f76a7d50096c5d09cd3f0b60e2dae70b0ae292569959959"
+      },
+      "role": "reference_image"
+    }
+  ],
+  "duration": 27,
+  "ratio": "9:16",
+  "resolution": "480p",
+  "generate_audio": true,
+  "watermark": false,
+  "return_last_frame": true,
+  "omni_reference_task_type": "reference"
+}

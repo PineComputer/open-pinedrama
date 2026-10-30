@@ -1,0 +1,13 @@
+{
+  "provider": "openai",
+  "model": "gpt-image-2.5-sunburst",
+  "prompt": "A clean line-art blocking diagram of one scene of a live-action short drama, vertical composition: the place of Image 1 drawn in simple black outlines on white, with the segment's people in their places at its start, the way a master shot shows the whole scene before it is cut into shots. Keep Image 1's camera position, framing, walls, windows, doorways and furniture, traced in outline; only add the people.\nImage 1: the location Sebastian's apartment, living room, the front view, with no people\nImage 2: the character sheet of Natalie (25), look S3\nImage 3: the character sheet of Sebastian (30), look S4\nDraw each person as a clean outline figure that can be told apart by hairstyle, build and the shape of their outfit, from their character sheet; no faces in detail. Do not copy a sheet's layout, white background or multiple views. Each person appears once, whole and at natural scale for the place, on the furniture and floor of Image 1, facing the way the start says.\nOnly two people appear: Natalie and Sebastian. Nobody else is there.\nAt the start: Natalie stands in front of the round coffee table facing Sebastian, the dress bag over her left arm and her small nude handbag on her shoulder, in the cornflower-blue wrap dress. Sebastian stands between the charcoal couch and the round coffee table facing her, the two coins closed in his right hand. The folded blanket lies on the couch. Breakfast and Sebastian's phone, face down, are on the round dining table. The cropped ivory jacket hangs on the wall hooks beside the front door.\n\nNo shading, solid black areas, colour or photographic rendering: dark hair and clothes are outlines left white inside; no text, letters, numbers, arrows, labels or watermark.\n",
+  "aspect_ratio": "9:16",
+  "size": "1152x2048",
+  "quality": "high",
+  "images": [
+    "episodes/EP006/blocking/seg02/v1/view.png",
+    "assets/characters/natalie/states/S3/v1/image-1.jpg",
+    "assets/characters/sebastian/states/S4/v1/image-1.jpg"
+  ]
+}

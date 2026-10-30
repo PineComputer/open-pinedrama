@@ -1,0 +1,11 @@
+{
+  "model": "gpt-image-2.5-sunburst",
+  "prompt": "Prop reference image for a film, photorealistic still, vertical composition. One object alone, centred and seen whole, filling most of the frame, straight on and slightly from above, on a plain light grey seamless background, in soft even light at a neutral daylight white balance. No person, hand, figure or reflection of one. Prop: pour-over coffee equipment. Hario pour-over set: a matte-black Hario Buono gooseneck kettle (about 25 cm long) with the Hario logo on its base, a white ceramic Hario V60 dripper with a paper filter, and a clear glass Hario V60 range server beneath it. Any writing or badge a real one carries (a form's printed heading, field labels and filled-in lines, a maker's badge) is drawn crisp, legible and spelt correctly, as on the real thing. Show it exactly as described, in its first state, with nothing else in the frame.\n\nAvoid: people or hands, other objects, watermark, garbled or misspelt writing, placeholder lines or grey bars in place of writing, a badge removed or invented.\n",
+  "n": 1,
+  "size": "1152x2048",
+  "quality": "high",
+  "output_format": "jpeg",
+  "output_compression": 100,
+  "moderation": "low",
+  "input_images": []
+}

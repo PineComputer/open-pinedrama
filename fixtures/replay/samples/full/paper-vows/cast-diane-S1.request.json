@@ -1,0 +1,13 @@
+{
+  "model": "gpt-image-2.5-sunburst",
+  "prompt": "Edit this character reference sheet of Lauren (a fictional 50-year-old). Change ONLY the outfit: the person now wears look S1, one outfit only: A knee-length lilac-purple fitted sheath dress with short sleeves and a round neck, nude heels, a pearl necklace, pearl studs and the same slim gold wristwatch.. Keep everything else exactly as in the input image.\nThe new outfit is identical in every view and in the close-up: the same garments, accessories and details on the same side of the body, seen from that view's angle. Garments are plain, with no logo, brand mark, or printed letters or numbers.\nPreserve exactly: the face, facial features, skin and hair; the identity of the person; body shape, height and proportions; marks and scars as described (A well-kept, ordinary-looking Caucasian woman of 50, about 166 cm. Curvy figure, full hips, defined waist, hourglass shape. She has an oval face with sharp, arched brows, thin lips in a mauve lipstick, cool grey eyes and fine lines at the eyes and mouth. Shoulder-length honey-blonde hair is set in a smooth, polished blow-out. She wears pearl stud earrings, a large diamond solitaire ring and a slim gold wristwatch.); the pose and limb positions in every view; panel layout, scale, spacing and framing; plain background; studio lighting and colour balance.\n\nAvoid: changed face, different person, older or younger-looking face, changed body shape, changed pose, changed layout, changed background, changed lighting, clothing from the previous look left over, text, watermark.\n",
+  "n": 1,
+  "size": "2048x1152",
+  "quality": "high",
+  "output_format": "jpeg",
+  "output_compression": 100,
+  "moderation": "low",
+  "input_images": [
+    "assets/characters/lauren/v1/image-1.jpg"
+  ]
+}

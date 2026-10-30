@@ -1,0 +1,17 @@
+{
+  "model": "gpt-image-2.5-sunburst",
+  "prompt": "A clean line-art blocking diagram of one scene of a live-action short drama, vertical composition: the place of Image 1 drawn in simple black outlines on white, with the segment's people in their places at its start, the way a master shot shows the whole scene before it is cut into shots. Keep Image 1's camera position, framing, walls, windows, doorways and furniture, traced in outline; only add the people.\nImage 1: the location The Quinn family mansion, living room, the front view, with no people\nImage 2: the character sheet of Natalie (25), look S0\nImage 3: the character sheet of George (55), look S0\nImage 4: the character sheet of Lauren (50), look S0\nImage 5: the character sheet of Cassie (23), look S0\nDraw each person as a clean outline figure that can be told apart by hairstyle, build and the shape of their outfit, from their character sheet; no faces in detail. Do not copy a sheet's layout, white background or multiple views. Each person appears once, whole and at natural scale for the place, on the furniture and floor of Image 1, facing the way the start says.\nOnly four people appear: Natalie, George, Lauren, and Cassie. Nobody else is there.\nAt the start: Axis: the line from the single cream armchair to the long cream sofa. The camera stays on the front (bookshelf) wall side and looks toward the three tall arched French windows on the back wall; reverse singles on Natalie look toward the bookshelf wall. The one long cream sofa runs across the frame in front of the windows and faces the camera. The white marble fireplace is on the left wall at frame left. The open white double doorway is on the right wall at frame right. The one single cream armchair stands in the foreground centre with its back to the camera, facing the sofa across the one low glass-and-gold coffee table. Natalie sits in the armchair, three-quarter back to the camera, facing the sofa, hands clasped in her lap. George sits at the fireplace end of the sofa, frame left, eyes lowered. Lauren sits at the doorway end of the sofa, frame right, at the same depth as George, turned toward him. The one hospital statement lies flat on the coffee table. Cassie is not yet in the room; she waits out of sight in the marble entrance hall beyond the double doorway.\n\nNo shading, colour or photographic rendering; no text, letters, numbers, arrows, labels or watermark.\n",
+  "n": 1,
+  "size": "1152x2048",
+  "quality": "high",
+  "output_format": "jpeg",
+  "output_compression": 100,
+  "moderation": "low",
+  "input_images": [
+    "episodes/EP001/blocking/seg02/v6/view.png",
+    "assets/characters/natalie/v1/image-1.jpg",
+    "assets/characters/george/v1/image-1.jpg",
+    "assets/characters/lauren/v1/image-1.jpg",
+    "assets/characters/cassie/v1/image-1.jpg"
+  ]
+}

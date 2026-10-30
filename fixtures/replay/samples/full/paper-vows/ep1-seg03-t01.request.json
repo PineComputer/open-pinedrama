@@ -1,0 +1,119 @@
+{
+  "model": "ep-20260928175156-xn9xm",
+  "content": [
+    {
+      "type": "text",
+      "text": "Image 1: Fourteen-panel storyboard reference, used for the overall shot structure, shot sizes, and camera-movement rhythm. Read it from left to right and from top to bottom; panel N is Shot N.\nImage 2: Live-action reference of The Quinn family mansion, living room, the front view, the establishing view, facing the back wall, used as the benchmark for environmental composition, lighting, and realistic live-action texture; it contains no people.\nImage 3: Live-action reference of The Quinn family mansion, living room, the back view, turned 180 degrees, facing the front wall, with the left wall at its right edge; it contains no people.\nImage 4: Live-action reference of The Quinn family mansion, living room, the left-side view, facing the left wall, with the back wall at its right edge; it contains no people.\nImage 5: Live-action reference of The Quinn family mansion, living room, the right-side view, facing the right wall, with the back wall at its left edge; it contains no people.\nImage 6: Live-action reference of The Quinn family mansion, living room, the floor plan seen from above: its top edge is the back wall, its bottom edge the front wall behind the front view's camera, and its left and right edges the left and right walls; it contains no people.\nImage 7: Blocking reference of the segment's start: the same place with these people in their places, used only for where each person is and which way they face; take faces and outfits from each subject's own image.\nImage 8: Subject 1 (Natalie, look S0) character appearance reference.\nImage 9: Subject 2 (Cassie, look S0) character appearance reference.\nImage 10: Subject 3 (George, look S0) character appearance reference.\nImage 11: Subject 4 (Lauren, look S0) character appearance reference.\nImage 12: Prop 1 (hospital statement) maps to this image; use only structure, material, and color, and copy its text exactly from Image 12.\n[Subject settings]\nSubject 1 (Natalie): Refer to Image 8. 25, the heroine; George's daughter from his first marriage, who agrees to marry Sebastian Klein to pay for her mother's dialysis. Outfit: look S0: A powder-blue ribbed-knit mini dress in stretch knit that hugs her figure and is cut to cinch at the waist, with short sleeves, a low scoop neckline and a hem at mid-thigh. No belt. Nude pointed-toe heels and a small structured nude handbag. No jewellery, no coat. Signature colour: blue.\nSubject 2 (Cassie): Refer to Image 9. 23, Natalie's spoiled stepsister, Lauren's daughter, who pushes Natalie into the marriage meant for her. Outfit: look S0: A daring scarlet-red fitted top with thin straps and a low neckline, and a matching scarlet short miniskirt with a high side slit and a cinched high waist. Gold statement hoops, stacked gold bangles, a small gold chain-strap handbag and nude stiletto heels. No jacket. Signature colour: red.\nSubject 3 (George): Refer to Image 10. 55, Natalie's weak-willed father, head of the Quinn family, remarried to Lauren. Outfit: look S0: A charcoal-grey fine-knit button cardigan over a plain white collared shirt, grey wool trousers and brown leather loafers. Signature colour: grey.\nSubject 4 (Lauren): Refer to Image 11. 50, Natalie's controlling stepmother, George's wife and Cassie's mother, who holds the family purse. Outfit: look S0: A plum-purple silk long-sleeved blouse with a soft bow at the neck, tucked into high-waisted black tailored trousers, with black pointed-toe heels, pearl studs and a slim gold wristwatch. Signature colour: purple.\nEnvironment (The Quinn family mansion, living room): Refer to Images 2 to 6. Day, bright daylight through the arched French windows, warm chandelier fill. Daylight from the three arched French windows on the back wall behind the sofa, warm chandelier fill. Live sound: quiet room tone, paper crumpling, Cassie's bangles.\nDo not swap the characters' appearances, clothing, actions, positions or dialogue.\n[Subjects and relationships]\nOnly four people appear throughout: Natalie, Cassie, George, and Lauren.\n[Blocking]\nRefer to Images 2 to 6 for the room and Image 7 for the people's places. Axis: the line from the single cream armchair to the long cream sofa. The camera stays on the front (bookshelf) wall side and looks toward the three tall arched French windows on the back wall; reverse singles on Natalie look toward the bookshelf wall. The one long cream sofa runs across the frame in front of the windows and faces the camera. The white marble fireplace is on the left wall at frame left. The open white double doorway is on the right wall at frame right. The one single cream armchair stands in the foreground centre with its back to the camera, facing the sofa across the one low glass-and-gold coffee table, which now stands empty. Natalie stands beside the armchair on its doorway (frame-right) side, facing the sofa, holding the hospital statement at her side. Cassie stands next to her, nearer the doorway, facing her with a smirk. George sits at the fireplace end of the sofa, frame left, looking up. Lauren sits at the doorway end of the sofa, frame right, at the same depth as George, smiling.\n[Overall style]\nPhotorealistic live-action short drama with cinematic lighting. Each character keeps the face and the outfit with its main colour from their reference image throughout. Use each character sheet only for that character: the face from the close-up on the right, the body and outfit from the turnaround on the left; do not render the sheet's layout, white background or multiple views. This segment has 10 lines, in this order: Cassie, Cassie, Cassie, Lauren, Lauren, Lauren, Natalie, Cassie, Natalie, Natalie. Generate speech only from the lines in {} in the shot list, each spoken exactly once by its speaker; everyone else keeps their mouth naturally closed while listening, and a V.O. speaker keeps their mouth closed or is off screen. Follow the shot list below; do not add cuts or camera moves beyond it. Strictly adhere to the 180-degree rule: within a scene, characters keep their screen sides and the camera stays on one side of the axis. Seamless continuity of action, spatial matching and consistent actor blocking; cut on action. For dialogue prefer static shot-reverse-shot and over-the-shoulder shots, balanced with reaction shots and close-up inserts. Faces stable and clear, consistent with the reference images, with no resemblance to any real actor or actress. Normal human eyes. Natural anatomy and hands. Natural, fluid motion that follows the blocking; characters make subtle, natural movements. Characters, props and environment share one world with matched lighting. Each line ends naturally with breathing room and is never cut off. Authentic performances with micro-expressions. No BGM; generate only dialogue, environmental sounds and action sounds. No subtitles.\n[Continuity]\nMaintain continuity in the identities, number, appearance, clothing, relative heights, spatial positions, and eyelines of all the characters. The actions in the shot list occur strictly in sequence. Hands are anatomically correct.\n[Strictly exclude]\nadded or missing characters, spatial jumps across the axis. garbled or irrelevant text, subtitles. malformed hands. Dialogue from the wrong character, multiple people speaking at once, repeated or missing lines, lip-sync errors and audio-visual desynchronization. The raw reference images (character sheets, setting plates) appearing as a frame of the video, and starting on a still frame of the setting reference. A fast zoom-in at the start, a fast pull-back at the end, unmotivated whip-pans, tilts, zooms and 360-degree orbits. Axis-crossing, jump cuts, frame skips, flicker and clipping. Face swaps, changes in age or clothing, sudden height shifts, added or missing characters, spatial jumps, and disordered action sequences; props popping in or vanishing, and duplicate characters except mirror reflections. Hand clipping, extra fingers, fused fingers, malformed hands. Readable text, numbers, logos and watermarks; phones and paper are shown from the back or out of focus. Black-and-white, monochrome, grayscale, desaturated visuals; hand-drawn, sketch, line art, illustration, comics, animation; storyboard frames, rough sketches, panel borders, gutters and grid layouts.\n[Shot list] (14 shots, approximately 30 seconds)\nWhen a previous-shot reference image is given, it is the moment this segment starts from: keep its people's positions, outfits, props and light, and continue from there. Shot 1 keeps its own camera, matching the image's framing only when it frames the same view; do not repeat that frame later.\nShot 1 (0-1s): [Medium shot from the front, dirty single on Cassie with Natalie's shoulder at the frame-left edge] Cassie folds her arms and nods. Dialogue (Cassie, in English, breezy): {Yup.}\nShot 2 (1-4s): [Medium close-up, low angle, clean single on Cassie, slow push in] Only Cassie, framed on her face and shoulders; she wrinkles her nose in disgust and flicks her hair over her shoulder. Dialogue (Cassie, in English, contemptuous): {He's a dirt bag and a good for nothing loser.}\nShot 3 (4-6s): [Medium shot, reverse clean single on Natalie looking toward the bookshelf wall, locked-off camera] Only Natalie; her fingers tighten on the hospital statement as she stares at Cassie, who is off screen beside her toward the doorway. Dialogue (Cassie, in English, smug): {That's why I can't marry him.}\nShot 4 (6-7s): [Medium shot, two-shot of the sofa from the front] Lauren at frame right nods firmly beside George at frame left. Dialogue (Lauren, in English, crisp): {That's right.}\nShot 5 (7-9s): [Medium shot from the front, slight high angle, dirty single on Lauren with George's shoulder at the frame-left edge] Lauren turns left to George and pats his knee. Dialogue (Lauren, in English, sweetly cold): {Natalie is also your daughter.}\nShot 6 (9-12s): [Close-up from the front, clean single on Lauren] Only Lauren, framed tight on her face; she looks back toward Natalie with a thin mauve-lipped smile. Dialogue (Lauren, in English, drawling, mocking): {She can be the one who marries Sebastard De-Klein.}\nShot 7 (12-14s): [Medium shot, over-the-shoulder shot past Cassie's shoulder, from the front] Natalie shakes her head and takes a step back against the frame-right side of the armchair. Dialogue (Natalie, in English, firm): {No, I'm not going to.}\nShot 8 (14-18s): [Medium shot, low angle, dirty single on Cassie with Natalie's arm at the frame-left edge] Cassie leans left toward Natalie and taps the hospital statement in Natalie's hand with one fingernail. Dialogue (Cassie, in English, taunting): {Do you want us to pay for your mother's medical bills or not?}\nShot 9 (18-20s): [Medium close-up from the front, clean single on George] Only George, framed on his face and shoulders; he looks down at his hands and stays silent.\nShot 10 (20-22s): [Medium shot from the front, dirty single on Lauren with George's shoulder at the frame-left edge] Lauren crosses her legs and raises her eyebrows at Natalie, waiting.\nShot 11 (22-24s): [Medium shot, handheld, reverse single on Natalie standing by the armchair, looking toward the bookshelf wall] Natalie closes her eyes and her hand crumples the edge of the hospital statement. Dialogue (Natalie, in English, quiet, defeated): {Fine.}\nShot 12 (24-26s): [Close-up, reverse clean single, slow push in on Natalie's face] Only Natalie, framed tight on her face; she opens her eyes and lifts her chin, her gaze steady. Dialogue (Natalie, in English, steely): {I'll marry Sebastian Klein.}\nShot 13 (26-28s): [Close-up, low angle, clean single on Cassie] Only Cassie, framed tight on her face; she smirks and twirls a gold hoop earring.\nShot 14 (28-30s): [Medium shot, two-shot of the sofa from the front, slow pull out] Lauren at frame right smiles in satisfaction on the sofa while George at frame left keeps his eyes lowered beside her.\nAt the end: Axis: the line from the single cream armchair to the long cream sofa. The camera stays on the front (bookshelf) wall side and looks toward the three tall arched French windows on the back wall; reverse singles on Natalie look toward the bookshelf wall. The one long cream sofa runs across the frame in front of the windows and faces the camera. The white marble fireplace is on the left wall at frame left. The open white double doorway is on the right wall at frame right. The one single cream armchair stands in the foreground centre with its back to the camera, facing the sofa across the one low glass-and-gold coffee table, which stands empty. Natalie stands beside the armchair on its doorway (frame-right) side, chin raised, the crumpled hospital statement in her hand. Cassie stands next to her, nearer the doorway, smirking. George sits at the fireplace end of the sofa, frame left, eyes lowered. Lauren sits at the doorway end of the sofa, frame right, at the same depth as George, smiling.\n\n<Image 13> is the previous shot (seg02/t01 at 28.96s).\n"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261022142518-pwgxw"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/mansion_living_room/v4/front.jpg",
+        "path": "assets/scenes/mansion_living_room/v4/front.jpg",
+        "sha256": "2e9413d48e97875c5373d899d505cb6bdcb4d9db176471d837097e5cfacae3cd"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/mansion_living_room/v4/back.jpg",
+        "path": "assets/scenes/mansion_living_room/v4/back.jpg",
+        "sha256": "19c07a340c4c21cbce04f7d7581e1c68ee8d09802821d2f3639faeed77904ef9"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/mansion_living_room/v4/left-side.jpg",
+        "path": "assets/scenes/mansion_living_room/v4/left-side.jpg",
+        "sha256": "b558d094d72b0cbcf5d2ec3e0fdc0a4a4cf5889d76b9bd153511db3516fae2df"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/mansion_living_room/v4/right-side.jpg",
+        "path": "assets/scenes/mansion_living_room/v4/right-side.jpg",
+        "sha256": "f2517e2e778a923024295510986b507830c77053d204a82ef8847a0a5ca004f1"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/mansion_living_room/v4/floor-plan.jpg",
+        "path": "assets/scenes/mansion_living_room/v4/floor-plan.jpg",
+        "sha256": "ae487697b328cd4776b7655de3e4ba0fec34bf69d92473ac6c8960493059e51d"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261022140307-lqgx9"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261022121222-5xdhh"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261022121222-b8wwv"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261022121236-87d92"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261022121223-bghz8"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/props/hospital_statement/v3/image-1.jpg",
+        "path": "assets/props/hospital_statement/v3/image-1.jpg",
+        "sha256": "b3026929c5411c9f9887de883605eb11266ba99dc06fb27574dc7469c1350d32"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261022145300-mfb59"
+      },
+      "role": "reference_image"
+    }
+  ],
+  "duration": 30,
+  "ratio": "9:16",
+  "resolution": "480p",
+  "generate_audio": true,
+  "watermark": false,
+  "return_last_frame": true,
+  "omni_reference_task_type": "reference"
+}

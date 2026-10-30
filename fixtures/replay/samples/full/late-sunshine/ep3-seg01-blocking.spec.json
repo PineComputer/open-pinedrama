@@ -1,0 +1,14 @@
+{
+  "provider": "openai",
+  "model": "gpt-image-2.5-sunburst",
+  "prompt": "A clean line-art blocking diagram of one scene of a live-action short drama, vertical composition: the place of Image 1 drawn in simple black outlines on white, with the segment's people in their places at its start, the way a master shot shows the whole scene before it is cut into shots. Keep Image 1's camera position, framing, walls, windows, doorways and furniture, traced in outline; only add the people.\nImage 1: the location JI RAN'S OFFICE, the front view, with no people\nImage 2: the character sheet of 林青羽 (21), look S1\nImage 3: the character sheet of 许半夏 (24)\nImage 4: the character sheet of 纪然 (27), look S2\nDraw each person as a clean outline figure that can be told apart by hairstyle, build and the shape of their outfit, from their character sheet; no faces in detail. Do not copy a sheet's layout, white background or multiple views. Each person appears once, whole and at natural scale for the place, on the furniture and floor of Image 1, facing the way the start says.\nOnly three people appear: 林青羽, 许半夏, and 纪然. Nobody else is there.\nAt the start: There is one large walnut desk with one black leather executive chair behind it. The floor-to-ceiling windows stand behind the desk. The single office door is on the side wall facing the desk, with open floor between the door and the desk. The black leather sofas sit around the white marble coffee table in the lounge area to one side. Lin Qingyu stands just inside the office door, in the open space facing the desk. He is soaked, his hair dripping and his white T-shirt clinging under the open denim jacket, and he is out of breath. Xu Banxia holds the office door open beside him. Ji Ran stands in front of the walnut desk, facing Lin Qingyu. The axis runs from the office door to the desk, and the camera stays on the lounge-area side of it.\n\nNo shading, solid black areas, colour or photographic rendering: dark hair and clothes are outlines left white inside; no text, letters, numbers, arrows, labels or watermark.\n",
+  "aspect_ratio": "9:16",
+  "size": "1152x2048",
+  "quality": "high",
+  "images": [
+    "episodes/EP003/blocking/seg01/v1/view.png",
+    "assets/characters/lin_qingyu/states/S1/v1/image-1.jpg",
+    "assets/characters/xu_banxia/v1/image-1.jpg",
+    "assets/characters/ji_ran/states/S2/v2/image-1.jpg"
+  ]
+}

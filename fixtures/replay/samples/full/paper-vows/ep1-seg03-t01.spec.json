@@ -1,0 +1,672 @@
+{
+  "model": "sd25",
+  "content": [
+    {
+      "type": "text",
+      "text": "Image 1: Fourteen-panel storyboard reference, used for the overall shot structure, shot sizes, and camera-movement rhythm. Read it from left to right and from top to bottom; panel N is Shot N.\nImage 2: Live-action reference of The Quinn family mansion, living room, the front view, the establishing view, facing the back wall, used as the benchmark for environmental composition, lighting, and realistic live-action texture; it contains no people.\nImage 3: Live-action reference of The Quinn family mansion, living room, the back view, turned 180 degrees, facing the front wall, with the left wall at its right edge; it contains no people.\nImage 4: Live-action reference of The Quinn family mansion, living room, the left-side view, facing the left wall, with the back wall at its right edge; it contains no people.\nImage 5: Live-action reference of The Quinn family mansion, living room, the right-side view, facing the right wall, with the back wall at its left edge; it contains no people.\nImage 6: Live-action reference of The Quinn family mansion, living room, the floor plan seen from above: its top edge is the back wall, its bottom edge the front wall behind the front view's camera, and its left and right edges the left and right walls; it contains no people.\nImage 7: Blocking reference of the segment's start: the same place with these people in their places, used only for where each person is and which way they face; take faces and outfits from each subject's own image.\nImage 8: Subject 1 (Natalie, look S0) character appearance reference.\nImage 9: Subject 2 (Cassie, look S0) character appearance reference.\nImage 10: Subject 3 (George, look S0) character appearance reference.\nImage 11: Subject 4 (Lauren, look S0) character appearance reference.\nImage 12: Prop 1 (hospital statement) maps to this image; use only structure, material, and color, and copy its text exactly from Image 12.\n[Subject settings]\nSubject 1 (Natalie): Refer to Image 8. 25, the heroine; George's daughter from his first marriage, who agrees to marry Sebastian Klein to pay for her mother's dialysis. Outfit: look S0: A powder-blue ribbed-knit mini dress in stretch knit that hugs her figure and is cut to cinch at the waist, with short sleeves, a low scoop neckline and a hem at mid-thigh. No belt. Nude pointed-toe heels and a small structured nude handbag. No jewellery, no coat. Signature colour: blue.\nSubject 2 (Cassie): Refer to Image 9. 23, Natalie's spoiled stepsister, Lauren's daughter, who pushes Natalie into the marriage meant for her. Outfit: look S0: A daring scarlet-red fitted top with thin straps and a low neckline, and a matching scarlet short miniskirt with a high side slit and a cinched high waist. Gold statement hoops, stacked gold bangles, a small gold chain-strap handbag and nude stiletto heels. No jacket. Signature colour: red.\nSubject 3 (George): Refer to Image 10. 55, Natalie's weak-willed father, head of the Quinn family, remarried to Lauren. Outfit: look S0: A charcoal-grey fine-knit button cardigan over a plain white collared shirt, grey wool trousers and brown leather loafers. Signature colour: grey.\nSubject 4 (Lauren): Refer to Image 11. 50, Natalie's controlling stepmother, George's wife and Cassie's mother, who holds the family purse. Outfit: look S0: A plum-purple silk long-sleeved blouse with a soft bow at the neck, tucked into high-waisted black tailored trousers, with black pointed-toe heels, pearl studs and a slim gold wristwatch. Signature colour: purple.\nEnvironment (The Quinn family mansion, living room): Refer to Images 2 to 6. Day, bright daylight through the arched French windows, warm chandelier fill. Daylight from the three arched French windows on the back wall behind the sofa, warm chandelier fill. Live sound: quiet room tone, paper crumpling, Cassie's bangles.\nDo not swap the characters' appearances, clothing, actions, positions or dialogue.\n[Subjects and relationships]\nOnly four people appear throughout: Natalie, Cassie, George, and Lauren.\n[Blocking]\nRefer to Images 2 to 6 for the room and Image 7 for the people's places. Axis: the line from the single cream armchair to the long cream sofa. The camera stays on the front (bookshelf) wall side and looks toward the three tall arched French windows on the back wall; reverse singles on Natalie look toward the bookshelf wall. The one long cream sofa runs across the frame in front of the windows and faces the camera. The white marble fireplace is on the left wall at frame left. The open white double doorway is on the right wall at frame right. The one single cream armchair stands in the foreground centre with its back to the camera, facing the sofa across the one low glass-and-gold coffee table, which now stands empty. Natalie stands beside the armchair on its doorway (frame-right) side, facing the sofa, holding the hospital statement at her side. Cassie stands next to her, nearer the doorway, facing her with a smirk. George sits at the fireplace end of the sofa, frame left, looking up. Lauren sits at the doorway end of the sofa, frame right, at the same depth as George, smiling.\n[Overall style]\nPhotorealistic live-action short drama with cinematic lighting. Each character keeps the face and the outfit with its main colour from their reference image throughout. Use each character sheet only for that character: the face from the close-up on the right, the body and outfit from the turnaround on the left; do not render the sheet's layout, white background or multiple views. This segment has 10 lines, in this order: Cassie, Cassie, Cassie, Lauren, Lauren, Lauren, Natalie, Cassie, Natalie, Natalie. Generate speech only from the lines in {} in the shot list, each spoken exactly once by its speaker; everyone else keeps their mouth naturally closed while listening, and a V.O. speaker keeps their mouth closed or is off screen. Follow the shot list below; do not add cuts or camera moves beyond it. Strictly adhere to the 180-degree rule: within a scene, characters keep their screen sides and the camera stays on one side of the axis. Seamless continuity of action, spatial matching and consistent actor blocking; cut on action. For dialogue prefer static shot-reverse-shot and over-the-shoulder shots, balanced with reaction shots and close-up inserts. Faces stable and clear, consistent with the reference images, with no resemblance to any real actor or actress. Normal human eyes. Natural anatomy and hands. Natural, fluid motion that follows the blocking; characters make subtle, natural movements. Characters, props and environment share one world with matched lighting. Each line ends naturally with breathing room and is never cut off. Authentic performances with micro-expressions. No BGM; generate only dialogue, environmental sounds and action sounds. No subtitles.\n[Continuity]\nMaintain continuity in the identities, number, appearance, clothing, relative heights, spatial positions, and eyelines of all the characters. The actions in the shot list occur strictly in sequence. Hands are anatomically correct.\n[Strictly exclude]\nadded or missing characters, spatial jumps across the axis. garbled or irrelevant text, subtitles. malformed hands. Dialogue from the wrong character, multiple people speaking at once, repeated or missing lines, lip-sync errors and audio-visual desynchronization. The raw reference images (character sheets, setting plates) appearing as a frame of the video, and starting on a still frame of the setting reference. A fast zoom-in at the start, a fast pull-back at the end, unmotivated whip-pans, tilts, zooms and 360-degree orbits. Axis-crossing, jump cuts, frame skips, flicker and clipping. Face swaps, changes in age or clothing, sudden height shifts, added or missing characters, spatial jumps, and disordered action sequences; props popping in or vanishing, and duplicate characters except mirror reflections. Hand clipping, extra fingers, fused fingers, malformed hands. Readable text, numbers, logos and watermarks; phones and paper are shown from the back or out of focus. Black-and-white, monochrome, grayscale, desaturated visuals; hand-drawn, sketch, line art, illustration, comics, animation; storyboard frames, rough sketches, panel borders, gutters and grid layouts.\n[Shot list] (14 shots, approximately 30 seconds)\nWhen a previous-shot reference image is given, it is the moment this segment starts from: keep its people's positions, outfits, props and light, and continue from there. Shot 1 keeps its own camera, matching the image's framing only when it frames the same view; do not repeat that frame later.\nShot 1 (0-1s): [Medium shot from the front, dirty single on Cassie with Natalie's shoulder at the frame-left edge] Cassie folds her arms and nods. Dialogue (Cassie, in English, breezy): {Yup.}\nShot 2 (1-4s): [Medium close-up, low angle, clean single on Cassie, slow push in] Only Cassie, framed on her face and shoulders; she wrinkles her nose in disgust and flicks her hair over her shoulder. Dialogue (Cassie, in English, contemptuous): {He's a dirt bag and a good for nothing loser.}\nShot 3 (4-6s): [Medium shot, reverse clean single on Natalie looking toward the bookshelf wall, locked-off camera] Only Natalie; her fingers tighten on the hospital statement as she stares at Cassie, who is off screen beside her toward the doorway. Dialogue (Cassie, in English, smug): {That's why I can't marry him.}\nShot 4 (6-7s): [Medium shot, two-shot of the sofa from the front] Lauren at frame right nods firmly beside George at frame left. Dialogue (Lauren, in English, crisp): {That's right.}\nShot 5 (7-9s): [Medium shot from the front, slight high angle, dirty single on Lauren with George's shoulder at the frame-left edge] Lauren turns left to George and pats his knee. Dialogue (Lauren, in English, sweetly cold): {Natalie is also your daughter.}\nShot 6 (9-12s): [Close-up from the front, clean single on Lauren] Only Lauren, framed tight on her face; she looks back toward Natalie with a thin mauve-lipped smile. Dialogue (Lauren, in English, drawling, mocking): {She can be the one who marries Sebastard De-Klein.}\nShot 7 (12-14s): [Medium shot, over-the-shoulder shot past Cassie's shoulder, from the front] Natalie shakes her head and takes a step back against the frame-right side of the armchair. Dialogue (Natalie, in English, firm): {No, I'm not going to.}\nShot 8 (14-18s): [Medium shot, low angle, dirty single on Cassie with Natalie's arm at the frame-left edge] Cassie leans left toward Natalie and taps the hospital statement in Natalie's hand with one fingernail. Dialogue (Cassie, in English, taunting): {Do you want us to pay for your mother's medical bills or not?}\nShot 9 (18-20s): [Medium close-up from the front, clean single on George] Only George, framed on his face and shoulders; he looks down at his hands and stays silent.\nShot 10 (20-22s): [Medium shot from the front, dirty single on Lauren with George's shoulder at the frame-left edge] Lauren crosses her legs and raises her eyebrows at Natalie, waiting.\nShot 11 (22-24s): [Medium shot, handheld, reverse single on Natalie standing by the armchair, looking toward the bookshelf wall] Natalie closes her eyes and her hand crumples the edge of the hospital statement. Dialogue (Natalie, in English, quiet, defeated): {Fine.}\nShot 12 (24-26s): [Close-up, reverse clean single, slow push in on Natalie's face] Only Natalie, framed tight on her face; she opens her eyes and lifts her chin, her gaze steady. Dialogue (Natalie, in English, steely): {I'll marry Sebastian Klein.}\nShot 13 (26-28s): [Close-up, low angle, clean single on Cassie] Only Cassie, framed tight on her face; she smirks and twirls a gold hoop earring.\nShot 14 (28-30s): [Medium shot, two-shot of the sofa from the front, slow pull out] Lauren at frame right smiles in satisfaction on the sofa while George at frame left keeps his eyes lowered beside her.\nAt the end: Axis: the line from the single cream armchair to the long cream sofa. The camera stays on the front (bookshelf) wall side and looks toward the three tall arched French windows on the back wall; reverse singles on Natalie look toward the bookshelf wall. The one long cream sofa runs across the frame in front of the windows and faces the camera. The white marble fireplace is on the left wall at frame left. The open white double doorway is on the right wall at frame right. The one single cream armchair stands in the foreground centre with its back to the camera, facing the sofa across the one low glass-and-gold coffee table, which stands empty. Natalie stands beside the armchair on its doorway (frame-right) side, chin raised, the crumpled hospital statement in her hand. Cassie stands next to her, nearer the doorway, smirking. George sits at the fireplace end of the sofa, frame left, eyes lowered. Lauren sits at the doorway end of the sofa, frame right, at the same depth as George, smiling.\n\n<Image 13> is the previous shot (seg02/t01 at 28.96s).\n"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261022142518-pwgxw"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/mansion_living_room/v4/front.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/mansion_living_room/v4/back.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/mansion_living_room/v4/left-side.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/mansion_living_room/v4/right-side.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/mansion_living_room/v4/floor-plan.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261022140307-lqgx9"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261022121222-5xdhh"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261022121222-b8wwv"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261022121236-87d92"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261022121223-bghz8"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/props/hospital_statement/v3/image-1.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261022145300-mfb59"
+      },
+      "role": "reference_image"
+    }
+  ],
+  "duration": 30,
+  "ratio": "9:16",
+  "resolution": "480p",
+  "generate_audio": true,
+  "watermark": false,
+  "return_last_frame": true,
+  "omni_reference_task_type": "reference",
+  "drama": {
+    "segment": {
+      "id": "seg03",
+      "duration": 30,
+      "location": "mansion_living_room",
+      "scene_heading": "1-1 Day | Int. The Quinn family mansion, living room",
+      "time": "Day, bright daylight through the arched French windows, warm chandelier fill",
+      "characters": [
+        "natalie",
+        "cassie",
+        "george",
+        "lauren"
+      ],
+      "states": {
+        "natalie": "S0",
+        "george": "S0",
+        "lauren": "S0",
+        "cassie": "S0"
+      },
+      "props": [
+        "hospital_statement"
+      ],
+      "first_state": "Axis: the line from the single cream armchair to the long cream sofa. The camera stays on the front (bookshelf) wall side and looks toward the three tall arched French windows on the back wall; reverse singles on Natalie look toward the bookshelf wall. The one long cream sofa runs across the frame in front of the windows and faces the camera. The white marble fireplace is on the left wall at frame left. The open white double doorway is on the right wall at frame right. The one single cream armchair stands in the foreground centre with its back to the camera, facing the sofa across the one low glass-and-gold coffee table, which now stands empty. Natalie stands beside the armchair on its doorway (frame-right) side, facing the sofa, holding the hospital statement at her side. Cassie stands next to her, nearer the doorway, facing her with a smirk. George sits at the fireplace end of the sofa, frame left, looking up. Lauren sits at the doorway end of the sofa, frame right, at the same depth as George, smiling.",
+      "shots": [
+        {
+          "time": "0-1s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot from the front, dirty single on Cassie with Natalie's shoulder at the frame-left edge",
+          "visual": "Cassie folds her arms and nods.",
+          "audio": "Dialogue (Cassie, in English, breezy): {Yup.}",
+          "characters": [
+            "cassie",
+            "natalie"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "1-4s",
+          "size": "medium close-up",
+          "angle": "low angle",
+          "camera": "Medium close-up, low angle, clean single on Cassie, slow push in",
+          "visual": "Only Cassie, framed on her face and shoulders; she wrinkles her nose in disgust and flicks her hair over her shoulder.",
+          "audio": "Dialogue (Cassie, in English, contemptuous): {He's a dirt bag and a good for nothing loser.}",
+          "characters": [
+            "cassie"
+          ],
+          "lines": [
+            1
+          ]
+        },
+        {
+          "time": "4-6s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, reverse clean single on Natalie looking toward the bookshelf wall, locked-off camera",
+          "visual": "Only Natalie; her fingers tighten on the hospital statement as she stares at Cassie, who is off screen beside her toward the doorway.",
+          "audio": "Dialogue (Cassie, in English, smug): {That's why I can't marry him.}",
+          "characters": [
+            "natalie"
+          ],
+          "lines": [
+            2
+          ]
+        },
+        {
+          "time": "6-7s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, two-shot of the sofa from the front",
+          "visual": "Lauren at frame right nods firmly beside George at frame left.",
+          "audio": "Dialogue (Lauren, in English, crisp): {That's right.}",
+          "characters": [
+            "lauren",
+            "george"
+          ],
+          "lines": [
+            3
+          ]
+        },
+        {
+          "time": "7-9s",
+          "size": "medium shot",
+          "angle": "high angle",
+          "camera": "Medium shot from the front, slight high angle, dirty single on Lauren with George's shoulder at the frame-left edge",
+          "visual": "Lauren turns left to George and pats his knee.",
+          "audio": "Dialogue (Lauren, in English, sweetly cold): {Natalie is also your daughter.}",
+          "characters": [
+            "lauren",
+            "george"
+          ],
+          "lines": [
+            4
+          ]
+        },
+        {
+          "time": "9-12s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up from the front, clean single on Lauren",
+          "visual": "Only Lauren, framed tight on her face; she looks back toward Natalie with a thin mauve-lipped smile.",
+          "audio": "Dialogue (Lauren, in English, drawling, mocking): {She can be the one who marries Sebastard De-Klein.}",
+          "characters": [
+            "lauren"
+          ],
+          "lines": [
+            5
+          ]
+        },
+        {
+          "time": "12-14s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, over-the-shoulder shot past Cassie's shoulder, from the front",
+          "visual": "Natalie shakes her head and takes a step back against the frame-right side of the armchair.",
+          "audio": "Dialogue (Natalie, in English, firm): {No, I'm not going to.}",
+          "characters": [
+            "natalie",
+            "cassie"
+          ],
+          "lines": [
+            6
+          ]
+        },
+        {
+          "time": "14-18s",
+          "size": "medium shot",
+          "angle": "low angle",
+          "camera": "Medium shot, low angle, dirty single on Cassie with Natalie's arm at the frame-left edge",
+          "visual": "Cassie leans left toward Natalie and taps the hospital statement in Natalie's hand with one fingernail.",
+          "audio": "Dialogue (Cassie, in English, taunting): {Do you want us to pay for your mother's medical bills or not?}",
+          "characters": [
+            "cassie",
+            "natalie"
+          ],
+          "lines": [
+            7
+          ]
+        },
+        {
+          "time": "18-20s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up from the front, clean single on George",
+          "visual": "Only George, framed on his face and shoulders; he looks down at his hands and stays silent.",
+          "audio": "",
+          "characters": [
+            "george"
+          ],
+          "lines": []
+        },
+        {
+          "time": "20-22s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot from the front, dirty single on Lauren with George's shoulder at the frame-left edge",
+          "visual": "Lauren crosses her legs and raises her eyebrows at Natalie, waiting.",
+          "audio": "",
+          "characters": [
+            "lauren",
+            "george"
+          ],
+          "lines": []
+        },
+        {
+          "time": "22-24s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, handheld, reverse single on Natalie standing by the armchair, looking toward the bookshelf wall",
+          "visual": "Natalie closes her eyes and her hand crumples the edge of the hospital statement.",
+          "audio": "Dialogue (Natalie, in English, quiet, defeated): {Fine.}",
+          "characters": [
+            "natalie"
+          ],
+          "lines": [
+            8
+          ]
+        },
+        {
+          "time": "24-26s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, reverse clean single, slow push in on Natalie's face",
+          "visual": "Only Natalie, framed tight on her face; she opens her eyes and lifts her chin, her gaze steady.",
+          "audio": "Dialogue (Natalie, in English, steely): {I'll marry Sebastian Klein.}",
+          "characters": [
+            "natalie"
+          ],
+          "lines": [
+            9
+          ]
+        },
+        {
+          "time": "26-28s",
+          "size": "close-up",
+          "angle": "low angle",
+          "camera": "Close-up, low angle, clean single on Cassie",
+          "visual": "Only Cassie, framed tight on her face; she smirks and twirls a gold hoop earring.",
+          "audio": "",
+          "characters": [
+            "cassie"
+          ],
+          "lines": []
+        },
+        {
+          "time": "28-30s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, two-shot of the sofa from the front, slow pull out",
+          "visual": "Lauren at frame right smiles in satisfaction on the sofa while George at frame left keeps his eyes lowered beside her.",
+          "audio": "",
+          "characters": [
+            "lauren",
+            "george"
+          ],
+          "lines": []
+        }
+      ],
+      "light_audio": "Daylight from the three arched French windows on the back wall behind the sofa, warm chandelier fill. Live sound: quiet room tone, paper crumpling, Cassie's bangles.",
+      "dialogue": [
+        {
+          "speaker": "cassie",
+          "line": "Yup."
+        },
+        {
+          "speaker": "cassie",
+          "line": "He's a dirt bag and a good for nothing loser."
+        },
+        {
+          "speaker": "cassie",
+          "line": "That's why I can't marry him."
+        },
+        {
+          "speaker": "lauren",
+          "line": "That's right."
+        },
+        {
+          "speaker": "lauren",
+          "line": "Natalie is also your daughter."
+        },
+        {
+          "speaker": "lauren",
+          "line": "She can be the one who marries Sebastard De-Klein."
+        },
+        {
+          "speaker": "natalie",
+          "line": "No, I'm not going to."
+        },
+        {
+          "speaker": "cassie",
+          "line": "Do you want us to pay for your mother's medical bills or not?"
+        },
+        {
+          "speaker": "natalie",
+          "line": "Fine."
+        },
+        {
+          "speaker": "natalie",
+          "line": "I'll marry Sebastian Klein."
+        }
+      ],
+      "must_hit": [
+        "George stays silent while Lauren waits",
+        "Natalie agrees to marry Sebastian Klein",
+        "Cassie smirks and Lauren smiles"
+      ],
+      "exit_state": "Axis: the line from the single cream armchair to the long cream sofa. The camera stays on the front (bookshelf) wall side and looks toward the three tall arched French windows on the back wall; reverse singles on Natalie look toward the bookshelf wall. The one long cream sofa runs across the frame in front of the windows and faces the camera. The white marble fireplace is on the left wall at frame left. The open white double doorway is on the right wall at frame right. The one single cream armchair stands in the foreground centre with its back to the camera, facing the sofa across the one low glass-and-gold coffee table, which stands empty. Natalie stands beside the armchair on its doorway (frame-right) side, chin raised, the crumpled hospital statement in her hand. Cassie stands next to her, nearer the doorway, smirking. George sits at the fireplace end of the sofa, frame left, eyes lowered. Lauren sits at the doorway end of the sofa, frame right, at the same depth as George, smiling.",
+      "negative": [
+        "added or missing characters, spatial jumps across the axis",
+        "garbled or irrelevant text, subtitles",
+        "malformed hands"
+      ]
+    },
+    "bible_version": "v2",
+    "breakdown_version": "v2",
+    "lineage": [
+      {
+        "path": "bible/v2/artifact.json",
+        "sha256": "43a9a0df923881275f336813067654cac8bb0fc8322601eb704a559e2bde7609"
+      },
+      {
+        "path": "bible/accepted.json",
+        "sha256": "0d01227b17f639001c00e1fccb07e8dceb252aba112177790d599cae4e1e0cbd"
+      },
+      {
+        "path": "bible/current.json",
+        "sha256": "06cf9a01a94d514da311cce8b1bb37695e3ad05de6d67d78b74820c06a69fb3a"
+      },
+      {
+        "path": "bible/v2/bible.json",
+        "sha256": "a968d09d9298d5c64d340cac6ca885cfe1415115993aa36c03d370b352fd72a1"
+      },
+      {
+        "path": "bible/v2/input/screenplay.md",
+        "sha256": "9002401187c2b458ddbb8547e2e66be386d989f20f8427e59bd4977366f0837b"
+      },
+      {
+        "path": "episodes/EP001/breakdown/v2/artifact.json",
+        "sha256": "b87f0e5002ec79093a0715ec1fdbe279929468b174aed4a24467886403b68d55"
+      },
+      {
+        "path": "episodes/EP001/breakdown/accepted.json",
+        "sha256": "df0c13204cf698c6d7946d76fa67cc80631ebdede15e2bb1edcd5d01f11be5af"
+      },
+      {
+        "path": "episodes/EP001/breakdown/current.json",
+        "sha256": "6320dcfa99a9eaf90088b2b9f9a30de32fad8202fc5b9a1f591bd4fa848d0641"
+      },
+      {
+        "path": "episodes/EP001/breakdown/v2/breakdown.json",
+        "sha256": "b6e9a0f9685b7bad42a3314100d9ec3d178c3889346fc0194eabd3874864c834"
+      },
+      {
+        "path": "episodes/EP001/multi_panel_storyboard/seg03/line-art/v2/artifact.json",
+        "sha256": "b6ad59977e334f00aae9b011772511c90af98e0cb2c9e07ac332e1ae5e8e8cbe"
+      },
+      {
+        "path": "episodes/EP001/multi_panel_storyboard/seg03/line-art/accepted.json",
+        "sha256": "206ce1806beff8719541e95e9ca2a4766f7729555e0ac3362c8e3ea684c3795a"
+      },
+      {
+        "path": "episodes/EP001/multi_panel_storyboard/seg03/line-art/current.json",
+        "sha256": "005d17d26d19d94593bb5cda7639a02451d745c66b25564790a08dde306847a1"
+      },
+      {
+        "path": "episodes/EP001/multi_panel_storyboard/seg03/line-art/v2/image-1.jpg",
+        "sha256": "ba4d9708affee61dab131c2a55f0d6e3acfb5a48efc798fee9ac5b09fb8f66f4"
+      },
+      {
+        "path": "episodes/EP001/multi_panel_storyboard/seg03/line-art/v2/asset/job.json",
+        "sha256": "954f6900bd491129f723be6dbd51a5e896351d0c7b5a711c9b0feb660500ff62"
+      },
+      {
+        "path": "assets/scenes/mansion_living_room/v4/artifact.json",
+        "sha256": "778fe430e2a10ff46277913870808057027bc7aef60e3442ce1e41094b6892c2"
+      },
+      {
+        "path": "assets/scenes/mansion_living_room/accepted.json",
+        "sha256": "3aa63c738bbd5a2455bb76e519bb2089c504b80ec21957640256f039fe7405c8"
+      },
+      {
+        "path": "assets/scenes/mansion_living_room/current.json",
+        "sha256": "e1f3593f6a305124698eb0ceaddc7a6dfab2645bd226793756968e0fa59e0445"
+      },
+      {
+        "path": "assets/scenes/mansion_living_room/v4/image-1.jpg",
+        "sha256": "17dd50eb75c3f8dae3f783a5ee54f15a9fa20546052a4ad35b9f023fc4e97bbf"
+      },
+      {
+        "path": "assets/scenes/mansion_living_room/v4/front.jpg",
+        "sha256": "2e9413d48e97875c5373d899d505cb6bdcb4d9db176471d837097e5cfacae3cd"
+      },
+      {
+        "path": "assets/scenes/mansion_living_room/v4/back.jpg",
+        "sha256": "19c07a340c4c21cbce04f7d7581e1c68ee8d09802821d2f3639faeed77904ef9"
+      },
+      {
+        "path": "assets/scenes/mansion_living_room/v4/left-side.jpg",
+        "sha256": "b558d094d72b0cbcf5d2ec3e0fdc0a4a4cf5889d76b9bd153511db3516fae2df"
+      },
+      {
+        "path": "assets/scenes/mansion_living_room/v4/right-side.jpg",
+        "sha256": "f2517e2e778a923024295510986b507830c77053d204a82ef8847a0a5ca004f1"
+      },
+      {
+        "path": "assets/scenes/mansion_living_room/v4/floor-plan.jpg",
+        "sha256": "ae487697b328cd4776b7655de3e4ba0fec34bf69d92473ac6c8960493059e51d"
+      },
+      {
+        "path": "episodes/EP001/blocking/seg03/v8/artifact.json",
+        "sha256": "bddc1709f582a38d120a1b01578cdfec83d31eedcbb316c8f28385f857958622"
+      },
+      {
+        "path": "episodes/EP001/blocking/seg03/accepted.json",
+        "sha256": "b55a47ca7ae1124d2469477e6b077569d095aafb735f147b23cde5267f527f18"
+      },
+      {
+        "path": "episodes/EP001/blocking/seg03/current.json",
+        "sha256": "2c50e0cebfa3a960df11cb1b42e39fa563aa5866faeebf42aed98ef0e7a72b64"
+      },
+      {
+        "path": "episodes/EP001/blocking/seg03/v8/image-1.jpg",
+        "sha256": "6de7acdf6d154f52e26cdedbfbfe437f5d1670a308f17ecec1d34cb3e8543dc5"
+      },
+      {
+        "path": "episodes/EP001/blocking/seg03/v8/asset/job.json",
+        "sha256": "a02c99c92b57f9e2b2ee414cd350e31e95a944a38350b2cca6aef236c9678853"
+      },
+      {
+        "path": "assets/props/hospital_statement/v3/artifact.json",
+        "sha256": "15e83b9bb7967f37122fc6412a559ef45e949769d976e5aa2f910fc9962a819c"
+      },
+      {
+        "path": "assets/props/hospital_statement/accepted.json",
+        "sha256": "e77a7fff13dfde6fa55fe2ab914ac6caaf9a83896d75af62d1d9b1316c6d9827"
+      },
+      {
+        "path": "assets/props/hospital_statement/current.json",
+        "sha256": "c7fab7b9bc8c74e951269b38b4f218d97fb8da456f5ea858e00a637b46960c89"
+      },
+      {
+        "path": "assets/props/hospital_statement/v3/image-1.jpg",
+        "sha256": "b3026929c5411c9f9887de883605eb11266ba99dc06fb27574dc7469c1350d32"
+      },
+      {
+        "path": "assets/characters/natalie/v1/artifact.json",
+        "sha256": "54f43084a0a3efb1d7250dd32921f03be0725ac5498c709f52fc81344a8158f5"
+      },
+      {
+        "path": "assets/characters/natalie/accepted.json",
+        "sha256": "0245f0181227159321dd0369054c4fdafae02fb02c5c12154e21c10a18dc8952"
+      },
+      {
+        "path": "assets/characters/natalie/current.json",
+        "sha256": "c7d69cb49b59cc122f2e7e25b3d5b1497b9af2e9f93723246beac7a96cbb4e38"
+      },
+      {
+        "path": "assets/characters/natalie/v1/image-1.jpg",
+        "sha256": "1395add510f3280941b2e642c51d6ed7a1b63db2fb8ec2e471b41c0972706279"
+      },
+      {
+        "path": "assets/characters/natalie/v1/asset/job.json",
+        "sha256": "6f18e04ea751526ef224e518db87ed1859b2893e60fb53623f820811fc34f38a"
+      },
+      {
+        "path": "assets/characters/cassie/v1/artifact.json",
+        "sha256": "c86d88d42dc9cd6bb8e2e2b7b8031a3e684f59128c473e024494d688e6a880e2"
+      },
+      {
+        "path": "assets/characters/cassie/accepted.json",
+        "sha256": "110f76a3c21461501e6f83a2ce47db6b4661fc3695a81c3d32cff8c070124e1b"
+      },
+      {
+        "path": "assets/characters/cassie/current.json",
+        "sha256": "c7d69cb49b59cc122f2e7e25b3d5b1497b9af2e9f93723246beac7a96cbb4e38"
+      },
+      {
+        "path": "assets/characters/cassie/v1/image-1.jpg",
+        "sha256": "9d29ee831f967acaf3b086c63b110d2b7d9f3e1f6ad61b822922fcf8c092ad61"
+      },
+      {
+        "path": "assets/characters/cassie/v1/asset/job.json",
+        "sha256": "5bcd67561784f9c1beb9897dffc81b89ba7737754212c0f1be86db3533155f56"
+      },
+      {
+        "path": "assets/characters/george/v1/artifact.json",
+        "sha256": "c4211c94baad05bdb5fd4fb2f231ea90c31a5119f018d59da76aa3a0d51b536d"
+      },
+      {
+        "path": "assets/characters/george/accepted.json",
+        "sha256": "83792874cff23fc7a9cc76c013f2d2c06a3b0d115be3a0123404fa3536050e7a"
+      },
+      {
+        "path": "assets/characters/george/current.json",
+        "sha256": "2d20c6c3bca8d3d6c25b5b7fe826f39e4e483e7009ba695eaa7431be5d8a48f3"
+      },
+      {
+        "path": "assets/characters/george/v1/image-1.jpg",
+        "sha256": "29d64b0bc7ae6afdd5fca71fb4a6cc94022898104fb3f9fe637fd1b9d4efe13e"
+      },
+      {
+        "path": "assets/characters/george/v1/asset/job.json",
+        "sha256": "f149162bca56924df8eb64e04b95397f8a57f10e72236a26101611f3b28eabbb"
+      },
+      {
+        "path": "assets/characters/lauren/v1/artifact.json",
+        "sha256": "a511b830d7156f4cf3a08b682f9b66f6ab2f81f20688c85024c3ec5b2838a9f6"
+      },
+      {
+        "path": "assets/characters/lauren/accepted.json",
+        "sha256": "a3e332bddd9818f7260daf157f7347be0957e6fa45408bea4f5eab134fc4a4e0"
+      },
+      {
+        "path": "assets/characters/lauren/current.json",
+        "sha256": "2d20c6c3bca8d3d6c25b5b7fe826f39e4e483e7009ba695eaa7431be5d8a48f3"
+      },
+      {
+        "path": "assets/characters/lauren/v1/image-1.jpg",
+        "sha256": "b36b3885bff53c84dd9fff18791f9012661603486e951e2203effcbe8474c8dc"
+      },
+      {
+        "path": "assets/characters/lauren/v1/asset/job.json",
+        "sha256": "4134e2bcf8a518c5eef2c8174638c01142af0be1499e7bc31f1c5b6010fec743"
+      },
+      {
+        "path": "episodes/EP001/video_prompts/v1/artifact.json",
+        "sha256": "2946c1e0369c54cc5455ca2ee3fdeb208543bc5c4b1536efe70da6c4c25a6450"
+      },
+      {
+        "path": "episodes/EP001/video_prompts/v1/seg03.json",
+        "sha256": "cc76f284b13260711e3177032e8583668ba710a944252961ea9e183d459be57b"
+      },
+      {
+        "path": "episodes/EP001/video_prompts/current.json",
+        "sha256": "ef1b71a0626ae739db4428eeb9eadfe0b333882ba2a20a833d818a2d843d78fe"
+      },
+      {
+        "path": "episodes/EP001/segments/seg02/t01/video.mp4",
+        "sha256": "292ebe50adfbe48952d29748f1b359cd7500001ebb392716ade9226240062665"
+      },
+      {
+        "path": "episodes/EP001/segments/seg02/t01/continuation_28.96s.png",
+        "sha256": "19d6f7c1fb4317d220cdc1612f494ea6818f8a4e0f4d2041d4d2cef4c40f2043"
+      },
+      {
+        "path": "episodes/EP001/segments/seg02/t01/artifact.json",
+        "sha256": "dc5c2fc4f9b9105e4f61ae68a187a165ecdf7db36a79f3130faf1db821a4f236"
+      },
+      {
+        "path": "episodes/EP001/segments/seg02/accepted.json",
+        "sha256": "99616dd3e50323658825527373c9a4d312dc3db7e60f4a02f3bc2c72b81859e8"
+      },
+      {
+        "path": "episodes/EP001/segments/seg02/t01/reviews/review-3f6e18aee73b.json",
+        "sha256": "0ecb2f4a6123d516b1467ce5c548b1a3226d3e0db1d4cd9c7bdfadebf5ae7adc"
+      },
+      {
+        "path": "episodes/EP001/segments/seg02/t01/continuation_28.96s.json",
+        "sha256": "669dda13b6488511eaad45d5befe5becc2abb7e4153ca4a0fc16b3e44c58de56"
+      },
+      {
+        "path": "episodes/EP001/segments/seg02/t01/continuation_28.96s_asset/job.json",
+        "sha256": "acbd0b630919f65622d84eaeb98e506d8d3ddb933ed3ef85f5588d26e3cc6dcd"
+      }
+    ],
+    "character_reference_mode": "asset_library",
+    "video_references": "storyboard",
+    "trusted_character_references": {},
+    "video_prompts_version": "v1",
+    "continues_from": {
+      "source": {
+        "path": "episodes/EP001/segments/seg02/t01/video.mp4",
+        "sha256": "292ebe50adfbe48952d29748f1b359cd7500001ebb392716ade9226240062665"
+      },
+      "seconds": 28.959999999999997,
+      "frame": {
+        "path": "episodes/EP001/segments/seg02/t01/continuation_28.96s.png",
+        "sha256": "19d6f7c1fb4317d220cdc1612f494ea6818f8a4e0f4d2041d4d2cef4c40f2043"
+      },
+      "segment": "seg02",
+      "take": "t01",
+      "manifest": {
+        "path": "episodes/EP001/segments/seg02/t01/artifact.json",
+        "sha256": "dc5c2fc4f9b9105e4f61ae68a187a165ecdf7db36a79f3130faf1db821a4f236"
+      },
+      "acceptance": {
+        "path": "episodes/EP001/segments/seg02/accepted.json",
+        "sha256": "99616dd3e50323658825527373c9a4d312dc3db7e60f4a02f3bc2c72b81859e8"
+      },
+      "review": {
+        "path": "episodes/EP001/segments/seg02/t01/reviews/review-3f6e18aee73b.json",
+        "sha256": "0ecb2f4a6123d516b1467ce5c548b1a3226d3e0db1d4cd9c7bdfadebf5ae7adc"
+      },
+      "frame_record": {
+        "path": "episodes/EP001/segments/seg02/t01/continuation_28.96s.json",
+        "sha256": "669dda13b6488511eaad45d5befe5becc2abb7e4153ca4a0fc16b3e44c58de56"
+      },
+      "upload": {
+        "path": "episodes/EP001/segments/seg02/t01/continuation_28.96s_asset/job.json",
+        "sha256": "acbd0b630919f65622d84eaeb98e506d8d3ddb933ed3ef85f5588d26e3cc6dcd"
+      }
+    }
+  }
+}

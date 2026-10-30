@@ -1,0 +1,15 @@
+{
+  "model": "gpt-image-2.5-sunburst",
+  "prompt": "Image 1 is one panel of a multi-panel storyboard. Redraw Image 1 so that: Shot 5: 'Sebastian signs the release form on the clipboard with a flourish and a smile, while the Officer behind the desk shakes his head.' Dirty single with the Officer's shoulder at the frame edge: the camera is behind the desk, over the Officer's shoulder, looking out across the counter at Sebastian, who stands on the front side of the counter signing. Behind Sebastian is the room's exit-door wall, not the filing cabinets; the filing cabinets and the monitor are behind the camera on the Officer's side. Sebastian wears exactly one wristwatch.\nAfter the edit, the panel shows its shot: Medium shot, slow push in on Sebastian, dirty single with the Officer's shoulder at the frame edge, eye level from the exit-door side. Sebastian signs the release form on the clipboard with a flourish and a smile, while the Officer behind the desk shakes his head.\nKeep Image 1's framing, camera angle, location, drawing style and border, and everyone and everything the change does not name, unchanged.\nImage 2: the character sheet of Sebastian (30), look S1\nImage 3: the character sheet of Officer (50)\nAn image after Image 1 is the character sheet of a person in the panel: draw that person as in it (face, hairstyle, build and outfit), in Image 1's drawing style, and use it only for the person, not for its layout, background, colours or multiple views.\nNo text, letters, numbers, captions, speech bubbles, panel labels or watermark anywhere in the image.\n",
+  "n": 1,
+  "size": "608x1088",
+  "quality": "high",
+  "output_format": "jpeg",
+  "output_compression": 100,
+  "moderation": "low",
+  "input_images": [
+    "episodes/EP002/multi_panel_storyboard/seg02/line-art/v4/crop.png",
+    "assets/characters/sebastian/states/S1/v1/image-1.jpg",
+    "assets/characters/officer/v1/image-1.jpg"
+  ]
+}
