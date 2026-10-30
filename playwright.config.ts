@@ -21,6 +21,7 @@ const PROJECTS: { name: string; spec: string; colorScheme: "light" | "dark" }[] 
   { name: "shell", spec: "shell", colorScheme: "light" },
   { name: "gallery", spec: "gallery", colorScheme: "light" },
   { name: "gallery-dark", spec: "gallery", colorScheme: "dark" },
+  { name: "screenshots", spec: "screenshots", colorScheme: "light" },
 ];
 
 function engine(port: number) {

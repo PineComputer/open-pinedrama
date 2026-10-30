@@ -11,7 +11,7 @@ passes. No test reaches the network or Pine, and none costs anything.
 | Logic and the engine's API | Vitest, Hono's `app.request()` | Pure functions, the flow, reviews, and each HTTP route the UI calls, in process | `src/**/*.test.ts` | `npm run check` |
 | Components | Vitest, Testing Library, user-event, MSW | A screen or component rendered in jsdom, used the way a maker uses it, with the engine answered by MSW | `src/ui/**/*.test.tsx` | `npm run check` |
 | End to end | Playwright, axe | The built studio served by its engine in replay, in a browser, through a whole flow | `e2e/*.spec.ts` | `npm run e2e` |
-| Screenshots | Playwright | The design system's components and a few key screens, light and dark | `e2e/` (from P2 on) | `npm run e2e`, on Linux in CI |
+| Screenshots | Playwright | The design system's components and a few key screens, light and dark | `e2e/screenshots.spec.ts` and the pictures beside it | `npm run e2e`, on Linux in CI |
 
 Most tests belong in the first two layers: they are fast and point at the cause. An
 end-to-end test covers a flow a maker walks, not every branch of it.
@@ -31,6 +31,10 @@ end-to-end test covers a flow a maker walks, not every branch of it.
 - **Every state is a fixture**: empty, at work, waiting for the maker, a red line, the budget
   spent, a cap reached, an error. A table of fixtures drives one test per state.
 - **Test every state of a control**: enabled, disabled and why, busy, done.
+- **Screenshots are Linux's.** Fonts render differently on each system, so the pictures are
+  made and compared on Linux, as CI runs; other systems skip them. To make them again after a
+  deliberate change, run CI, download the failed run's `playwright-report` artifact, review the
+  new pictures, and commit them beside the spec.
 - **Fix time and motion.** Use `vi.useFakeTimers()` in component tests. End-to-end runs with
   reduced motion (`playwright.config.ts`), so text is never caught mid-fade by a contrast
   check or a screenshot. Replay runs at 20× speed.
