@@ -35,6 +35,8 @@ function engine(port: number) {
       STUDIO_DATA_DIR: mkdtempSync(path.join(tmpdir(), "studio-e2e-")),
       STUDIO_SECRET: Buffer.alloc(32, 7).toString("base64"),
       STUDIO_REPLAY_SPEED: "20",
+      // The UI and replay files scripts/e2e-build.mjs puts apart from dist/, which a running studio may be serving.
+      STUDIO_RESOURCES: path.resolve(".e2e"),
     },
   };
 }
