@@ -285,6 +285,9 @@ p { font-size: inherit; line-height: inherit; color: inherit; margin: 0; }
 .nbar .ibtn { width: 32px; height: 32px; border-radius: 999px; }
 .npanel { display: grid; gap: 10px; padding: 12px 14px; border-radius: var(--radius-2xl); }
 .npanel .nhead { display: flex; align-items: center; gap: 8px; font-size: 13.5px; }
+/* Docked right: the same panel, full height at the board's right edge. */
+.npanel.docked { right: 20px; top: 64px; bottom: 84px; width: 400px; grid-template-rows: auto auto 1fr auto; }
+.npanel.docked [role="tabpanel"] { max-height: none; min-height: 0; align-content: start; }
 .npanel .utabs { gap: 16px; border-bottom: 1px solid color-mix(in srgb, var(--text-primary) 10%, transparent); }
 .npanel .utabs button { height: 30px; font-size: 12px; }
 .npanel [role="tabpanel"] { display: grid; gap: 10px; max-height: 240px; overflow-y: auto; font-size: 12.5px; }
