@@ -732,3 +732,6 @@ a.ds-tag:hover { background: var(--hover); }
 .poster .work-pic::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, color-mix(in srgb, var(--shadow-base) 0%, transparent) 45%, color-mix(in srgb, var(--shadow-base) 78%, transparent)); }
 .poster.work > :not(.work-pic) { position: relative; }
 .poster.work h3 { align-self: end; color: var(--canvas); }
+/* The shelf's sort, the prototype's .select: 32 high, the input border, beside the search. */
+.ds-select { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 10px; border-radius: var(--radius-medium); border: 1px solid var(--border-input); background: var(--surface); color: var(--text-secondary); font: inherit; font-size: 12.5px; cursor: pointer; }
+.ds-select .ds-icon { width: 13px; height: 13px; }

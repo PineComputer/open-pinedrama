@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { AppInfo, DramaCard, Mode, ReviewSummary } from "../../shared/types.ts";
 import { ago, api, useAction, useResource } from "../api.ts";
 import { type Status, StatusChip } from "../components/StatusChip.tsx";
+import { Menu } from "../components/Menu.tsx";
 import { Tabs } from "../components/Tabs.tsx";
 import { Icon } from "../icons.tsx";
 import { type TKey, useT } from "../i18n.ts";
@@ -204,6 +205,7 @@ export function Slate() {
   const app = useResource<AppInfo>("/api/app", ["app"]);
   const [shelf, setShelf] = useState<Shelf>("all");
   const [find, setFind] = useState("");
+  const [sort, setSort] = useState<"edited" | "title">("edited");
   const sample = useAction(async () => {
     const { id } = await api<{ id: string }>("/api/dramas/sample", { method: "POST", json: { language: lang } });
     navigate(`/d/${id}`);
@@ -217,7 +219,8 @@ export function Slate() {
     const where = standing(drama).shelf;
     if (where !== "all") counts[where]++;
   }
-  const shown = dramas.filter((drama) => (shelf === "all" || standing(drama).shelf === shelf) && drama.title.toLowerCase().includes(find.trim().toLowerCase()));
+  const sorted = sort === "title" ? [...dramas].sort((a, b) => a.title.localeCompare(b.title, lang)) : byActivity(dramas);
+  const shown = sorted.filter((drama) => (shelf === "all" || standing(drama).shelf === shelf) && drama.title.toLowerCase().includes(find.trim().toLowerCase()));
   return (
     <div className="page">
       <div className="head">
@@ -262,10 +265,26 @@ export function Slate() {
           onChange={setShelf}
           tabs={(["all", "you", "work", "done", "stopped"] as const).map((key) => ({ value: key, label: t(`slate.shelf.${key}`), count: counts[key] }))}
           end={
+            <>
+            <Menu
+              label={t("slate.sort")}
+              wide="ds-select"
+              trigger={
+                <>
+                  {t(sort === "title" ? "slate.sort.title" : "slate.sort.edited")}
+                  <Icon name="caret-down" />
+                </>
+              }
+              items={[
+                { label: t("slate.sort.edited"), run: () => setSort("edited") },
+                { label: t("slate.sort.title"), run: () => setSort("title") },
+              ]}
+            />
             <label className="ds-search">
               <Icon name="magnifying-glass" />
               <input type="search" placeholder={t("slate.find")} aria-label={t("slate.find")} value={find} onChange={(event) => setFind(event.target.value)} />
             </label>
+            </>
           }
         >
           <Shelf dramas={shown} mode={app.data?.mode} adding={shelf === "all" && !find} />

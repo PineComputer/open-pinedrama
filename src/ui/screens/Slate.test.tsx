@@ -1,6 +1,7 @@
 // Home (P5.1): dense drama cards whose every fact comes from drama-cli's status, the bible or the engine's records,
 // a shelf for each state, and the drama to carry on with even when nothing waits for the maker.
 import { render, screen, within } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { DramaCard } from "../../shared/types.ts";
 import { answer } from "../test/server.ts";
@@ -118,6 +119,21 @@ describe("Home", () => {
     expect(rows[0]).toHaveTextContent("EP001 · Takes");
     expect(rows[0]).toHaveTextContent("2 items · The Stepmother · 4 minutes ago");
     expect(screen.getByText("2 decisions wait for you across your dramas.")).toBeInTheDocument();
+  });
+
+  it("sorts the shelf by when each drama was last worked on, or by title", async () => {
+    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+    answer("/api/app", replay);
+    answer("/api/inbox", []);
+    answer("/api/dramas", [{ ...bride, facts: { lastActivity: "2026-10-27T11:00:00Z" } }, stepmother]);
+    render(<Slate />);
+    const shelf = await screen.findByRole("tabpanel");
+    const titles = () => [...shelf.querySelectorAll(".ds-dramacard b")].map((title) => title.textContent);
+    expect(titles()).toEqual(["The Stepmother", "Bride on Bail"]);
+    await user.click(screen.getByRole("button", { name: /Last edited/ }));
+    await user.click(await screen.findByRole("menuitem", { name: "Title" }));
+    expect(titles()).toEqual(["Bride on Bail", "The Stepmother"]);
+    expect(screen.getByRole("button", { name: /Title/ })).toBeInTheDocument();
   });
 
   it("has a shelf for each state, with its count, Stopped among them", async () => {
