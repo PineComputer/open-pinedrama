@@ -1,6 +1,6 @@
 // The engine's HTTP API as the UI calls it, in process through Hono's app.request(): who may
 // call it, and the answers the UI reads, in the shared types (docs/TESTING.md).
-import { mkdtempSync, rmSync } from "node:fs";
+import { existsSync, mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -23,6 +23,11 @@ function call(route: string, init: RequestInit = {}, headers: Record<string, str
 beforeEach(async () => {
   data = mkdtempSync(path.join(tmpdir(), "studio-http-"));
   process.env.STUDIO_DATA_DIR = data;
+  // db.ts keeps its handle on globalThis, so it outlives a module reset: close it, so the next
+  // engine opens the database in this test's folder.
+  const shared = globalThis as { __studioDb?: { close(): void } };
+  shared.__studioDb?.close();
+  delete shared.__studioDb;
   vi.resetModules();
   const { app } = await import("./http.ts");
   api = app();
@@ -57,6 +62,7 @@ describe("the answers the UI reads", () => {
     const chosen = await call("/api/connection/replay", { method: "POST" });
     expect(chosen.status).toBe(200);
     expect(((await chosen.json()) as AppInfo).mode).toBe("replay");
+    expect(existsSync(path.join(data, "studio.db"))).toBe(true);
   });
 
   it("lists the sample drama once it is made, as a card", async () => {
