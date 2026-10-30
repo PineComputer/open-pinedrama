@@ -3,7 +3,7 @@ import { api, useAction, useResource } from "../api.ts";
 import { useT } from "../i18n.ts";
 import { errorText } from "../labels.ts";
 import { Icon } from "../icons.tsx";
-import { stillStopping } from "../shell/TopBar.tsx";
+import { DramaBar, stillStopping } from "../shell/TopBar.tsx";
 import { Analyzing } from "./Analyzing.tsx";
 import { Board, SetupPanel } from "./Board.tsx";
 import { Canvas } from "./Canvas.tsx";
@@ -82,6 +82,7 @@ export function Drama({ drama, tab, episode }: { drama: DramaView; tab: string; 
   const settingUp = drama.status === "setup" || (drama.status === "stopped" && !drama.episodeRows.length);
   return (
     <section className="ds-workin">
+      <DramaBar drama={drama} />
       <Notices drama={drama} />
       {tab === "board" && (settingUp ? <SetupPanel drama={drama} /> : <Board drama={drama} />)}
       {tab === "episode" && episode && <Episode key={`${id}/${episode}`} dramaId={id} code={episode} />}

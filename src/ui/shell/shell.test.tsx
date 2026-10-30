@@ -2,9 +2,6 @@
 // rail, the sidebar with the steps, the episode tree and where the drama stands, the top bar with
 // the breadcrumb and the next review, and the drama's bar with its surface and chips.
 import { act, render, screen, within } from "@testing-library/react";
-import { readFileSync } from "node:fs";
-import path from "node:path";
-import { parseStatus } from "../../shared/project.ts";
 import { answer } from "../test/server.ts";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
@@ -145,12 +142,15 @@ describe("the sidebar", () => {
     expect(screen.getByText("Replay · sample work, no spend")).toBeInTheDocument();
   });
 
-  it("marks the step in view and how many episodes need the maker", () => {
+  it("marks the step in view, and counts what waits for the maker under each step", async () => {
+    answer("/api/inbox", [review("r1"), { ...review("r2"), kind: "looks" }, { ...review("r3"), kind: "cut", state: "sent" }]);
     at("/d/d1");
-    render(<DramaSidebar drama={drama} tab="board" />);
+    render(<DramaSidebar drama={{ ...drama, setup: { ...drama.setup, reached: 2 } }} tab="board" />);
     const steps = screen.getByRole("navigation", { name: "Steps" });
     expect(within(steps).getByRole("link", { name: /^Episodes/ })).toHaveAttribute("aria-current", "page");
-    expect(within(steps).getByRole("link", { name: /^Episodes/ })).toHaveTextContent("1 need you");
+    expect(await within(steps).findByRole("link", { name: /^Episodes\s*1 need you$/ })).toBeInTheDocument();
+    expect(within(steps).getByRole("link", { name: /^Story\s*1 need you$/ })).toBeInTheDocument();
+    expect(within(steps).getByRole("link", { name: "Cut" })).toBeInTheDocument();
     expect(within(steps).getAllByRole("link", { name: /^(Script|Story|Episodes|Cut)/ }).map((link) => link.textContent?.split(/\d/)[0].trim())).toEqual(["Script", "Story", "Episodes", "Cut"]);
   });
 
@@ -184,13 +184,16 @@ describe("the sidebar", () => {
     expect(standing).not.toHaveTextContent("0 of 0");
   });
 
-  it("says at its foot what the drama spent and where it stands", () => {
+  it("says at its foot what the drama spent against its budget, what is in flight and how many are at work", async () => {
+    const budget = (reservedUsd: number) => ({ budgetUsd: 1000, spentUsd: 0, reservedUsd, remainingUsd: 1000 });
+    answer("/api/dramas/d1/project", { state: null, sessions: [{ budget: budget(4.8) }, { budget: budget(2.4) }], problems: [], names: null });
     render(<DramaSidebar drama={drama} tab="board" />);
-    expect(screen.getByText("$41.20")).toBeInTheDocument();
     const standing = screen.getByRole("status", { name: "Where the drama stands" });
-    expect(standing).toHaveTextContent("1 of 4 episodes finished");
+    expect(standing).toHaveTextContent("$41.20");
+    expect(await within(standing).findByText("/ $1,000")).toBeInTheDocument();
+    expect(standing).toHaveTextContent("$7.20 in flight");
     expect(standing).toHaveTextContent("1 at work");
-    expect(standing).toHaveTextContent("1 wait for you");
+    expect(standing).toHaveTextContent("Agent turns and video, priced when each turn ends.");
   });
 
   it("switches to another drama from its head", async () => {
@@ -203,12 +206,4 @@ describe("the sidebar", () => {
     expect(location.pathname).toBe("/d/d2");
   });
 
-  it("lists the scenes of the episode in view, as its breakdown chains them", async () => {
-    const report = JSON.parse(readFileSync(path.resolve("fixtures/status/boards.json"), "utf8"));
-    const { budget: _budget, ...state } = parseStatus(report);
-    answer("/api/dramas/d1/project", { state, sessions: [], problems: [], names: null });
-    render(<DramaSidebar drama={drama} tab="episode" episode="EP001" />);
-    const scenes = await screen.findByRole("list", { name: "EP001 · Scenes" });
-    expect(within(scenes).getAllByRole("listitem").map((scene) => scene.textContent)).toEqual(["1INT. OFFICE - DAY #1-1#1 segments"]);
-  });
 });

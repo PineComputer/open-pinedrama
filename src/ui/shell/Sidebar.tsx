@@ -5,8 +5,8 @@
 // beside the work talks to the agents), and at the foot
 // what it has spent and where it stands.
 import { useState } from "react";
-import type { ProjectView } from "../../shared/project.ts";
-import type { DramaCard, DramaView, EpisodeRow } from "../../shared/types.ts";
+import type { ProjectView, SessionReport } from "../../shared/project.ts";
+import type { DramaCard, DramaView, EpisodeRow, ReviewKind, ReviewSummary } from "../../shared/types.ts";
 import { api, useResource } from "../api.ts";
 import { Menu } from "../components/Menu.tsx";
 import { BudgetMeter } from "../components/BudgetMeter.tsx";
@@ -114,26 +114,23 @@ function Tune({ drama, onDone }: { drama: DramaView; onDone: () => void }) {
 }
 
 
-/** Where the drama stands, at the sidebar's foot: what it has spent, then its episodes, or the setup's step before there are any. */
-function Standing({ drama }: { drama: DramaView }) {
+/**
+ * The sidebar's foot, as the pro direction's (its spec, "BudgetMeter"): what the drama has spent
+ * against drama-cli's budget, what is in flight and how many episodes are at work, or the setup's
+ * step before there are any; and what Spent covers.
+ */
+function Standing({ drama, sessions }: { drama: DramaView; sessions: SessionReport[] }) {
   const { t } = useT();
   const { episodes } = drama;
+  // Every session's project carries the drama's one config, so its cap; what each has reserved for calls still out is its own.
+  const cap = sessions[0]?.budget.budgetUsd ?? null;
+  const inFlight = sessions.reduce((sum, session) => sum + session.budget.reservedUsd, 0);
   return (
-    <div className="ds-sidebar-foot">
-      <BudgetMeter spentUsd={drama.spent.total} budgetUsd={null} simulated={drama.mode === "replay"} />
+    <div className="ds-sidebar-foot" role="status" aria-label={t("statusbar.label")}>
+      <BudgetMeter spentUsd={drama.spent.total} budgetUsd={cap} inFlightUsd={inFlight} simulated={drama.mode === "replay"} />
+      <span>{episodes.total ? t("statusbar.atWork", { n: episodes.working }) : t("statusbar.setup", { step: t(SETUP_STEPS[Math.min(drama.setup.reached, SETUP_STEPS.length - 1)]) })}</span>
       {/* What Spent covers (docs/REDESIGN_PLAN.md, M3 notes): drama-cli's text and image calls are included at no charge, and the turn under way is priced when it ends. */}
       <small className="ds-caption">{t("spent.about")}</small>
-      <div role="status" aria-label={t("statusbar.label")} className="ds-standing">
-        {episodes.total ? (
-          <>
-            <span>{t("statusbar.finished", { done: episodes.done, total: episodes.total })}</span>
-            <span>{t("statusbar.atWork", { n: episodes.working })}</span>
-            <span>{t("statusbar.waiting", { n: episodes.waiting })}</span>
-          </>
-        ) : (
-          <span>{t("statusbar.setup", { step: t(SETUP_STEPS[Math.min(drama.setup.reached, SETUP_STEPS.length - 1)]) })}</span>
-        )}
-      </div>
     </div>
   );
 }
@@ -143,16 +140,15 @@ export function DramaSidebar({ drama, tab, episode }: { drama: DramaView; tab: s
   const { t } = useT();
   const others = useResource<DramaCard[]>("/api/dramas", ["dramas"]);
   const project = useResource<ProjectView>(`/api/dramas/${drama.id}/project`, [`project:${drama.id}`]);
-  // The scenes of the episode in view, as its breakdown's scene chains give them.
-  const scenes = episode ? (project.data?.state?.episodes[episode]?.sceneChains ?? []) : [];
   const [tuning, setTuning] = useState(false);
   const step = stepOf(drama, tab);
-  const needs: Record<Step, number> = {
-    script: 0,
-    story: drama.setup.state === "waiting" ? 1 : 0,
-    episodes: drama.episodeRows.filter((row) => markOf(row) === "you").length,
-    cut: 0,
-  };
+  // What waits for the maker under each step: the drama's open reviews, by the step their kind belongs to.
+  const reviews = useResource<ReviewSummary[]>(`/api/inbox?drama=${drama.id}`, ["inbox"]);
+  const STEP_OF: Record<ReviewKind, Step> = { question: "story", looks: "story", references: "story", storyboards: "episodes", takes: "episodes", cut: "cut" };
+  const needs: Record<Step, number> = { script: 0, story: 0, episodes: 0, cut: 0 };
+  for (const review of reviews.data ?? []) if (review.state === "open") needs[STEP_OF[review.kind]]++;
+  // The script is done once the setup has read it.
+  const scriptDone = drama.setup.reached > 0 || drama.episodeRows.length > 0;
   const { episodes } = drama;
   return (
     <aside className="ds-sidebar" aria-label={t("sidebar.label")}>
@@ -183,7 +179,12 @@ export function DramaSidebar({ drama, tab, episode }: { drama: DramaView; tab: s
               <Link to={`/d/${drama.id}${path ? `/${path}` : ""}`} className="ds-navi" aria-current={key === step ? "page" : undefined}>
                 <Icon name={icon} />
                 <span>{t(label)}</span>
-                {needs[key] > 0 && <> <span className="ds-navi-count">{t("rail.needYou", { n: needs[key] })}</span></>}
+                {needs[key] > 0 && (
+                  <span className="ds-navi-count" aria-label={t("rail.needYou", { n: needs[key] })}>
+                    {needs[key]}
+                  </span>
+                )}
+                {key === "script" && scriptDone && <Icon name="check" className="ds-navi-end" />}
               </Link>
               {key === "episodes" && drama.episodeRows.length > 0 && (
                 <ul className="ds-tree" aria-label={t("tree.label")}>
@@ -205,26 +206,7 @@ export function DramaSidebar({ drama, tab, episode }: { drama: DramaView; tab: s
             </div>
           ))}
         </nav>
-        {scenes.length > 0 && (
-          <>
-            <span className="ds-sidebar-sec">
-              {t("sidebar.scenes", { code: episode ?? "" })} <span className="count">{scenes.length}</span>
-            </span>
-            <ol className="ds-scenes" aria-label={t("sidebar.scenes", { code: episode ?? "" })}>
-              {scenes.map((scene, n) => (
-                <li key={n}>
-                  <span className="n">{n + 1}</span>
-                  <span className="what">
-                    <b>{scene.sceneHeading}</b>
-                    <small>{t("sidebar.segments", { n: scene.segments.length })}</small>
-                  </span>
-                </li>
-              ))}
-            </ol>
-          </>
-        )}
         <span className="ds-sidebar-sec">{t("sidebar.production")}</span>
-        <Item to={`/d/${drama.id}/inbox`} icon="list-checks" label={t("section.inbox")} current={tab === "inbox"} count={drama.waiting} />
         <Item to={`/d/${drama.id}/crew`} icon="cube" label={t("section.crew")} current={tab === "crew"} />
         {tuning ? (
           <Tune drama={drama} onDone={() => setTuning(false)} />
@@ -242,7 +224,7 @@ export function DramaSidebar({ drama, tab, episode }: { drama: DramaView; tab: s
           </button>
         )}
       </div>
-      <Standing drama={drama} />
+      <Standing drama={drama} sessions={project.data?.sessions ?? []} />
     </aside>
   );
 }

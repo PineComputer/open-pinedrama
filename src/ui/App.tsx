@@ -15,7 +15,7 @@ import { Welcome } from "./screens/Welcome.tsx";
 import { AgentBall, type AgentMode, AgentPanel, useAgentMode } from "./shell/AgentPanel.tsx";
 import { NavRail } from "./shell/NavRail.tsx";
 import { DramaSidebar, HomeSidebar } from "./shell/Sidebar.tsx";
-import { type Crumb, DramaBar, StopControl, TopBar } from "./shell/TopBar.tsx";
+import { type Crumb, StopControl, TopBar } from "./shell/TopBar.tsx";
 import { buttonVariants } from "@/components/ui/button";
 
 /** Before the studio can be used: this window isn't the studio's, or the engine isn't answering. */
@@ -157,7 +157,7 @@ export function App() {
       <NavRail path={path} dramaId={dramaId} sidebarOpen={sidebarOpen} onToggleSidebar={toggleSidebar} />
       {sidebarOpen && sidebar}
       <div className="ds-main">
-        <TopBar crumbs={crumbs} waiting={waiting} ready={ready} bar={page && drama.data ? <DramaBar drama={drama.data} /> : undefined}>
+        <TopBar crumbs={crumbs} waiting={waiting} ready={ready}>
           {drama.data && <StopControl drama={drama.data} />}
         </TopBar>
         <main className="ds-scroll">{screen}</main>

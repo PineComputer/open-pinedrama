@@ -8,15 +8,19 @@ import { useT } from "../i18n.ts";
 const money = (usd: number) => `$${usd.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 const whole = (usd: number) => money(usd).replace(/\.00$/, "");
 
-export function BudgetMeter({ spentUsd, budgetUsd, simulated = false }: { spentUsd: number; budgetUsd: number | null; simulated?: boolean }) {
+/** `inFlightUsd`: what drama-cli has reserved for calls still out (status.json's budget.reserved_usd). */
+export function BudgetMeter({ spentUsd, budgetUsd, inFlightUsd, simulated = false }: { spentUsd: number; budgetUsd: number | null; inFlightUsd?: number; simulated?: boolean }) {
   const { t } = useT();
   const out = budgetUsd !== null && spentUsd >= budgetUsd;
   const warn = budgetUsd !== null && !out && spentUsd >= budgetUsd * 0.8;
   return (
     <div className="grid min-w-37.5 gap-1.5">
       <div className="flex justify-between gap-2 text-xs text-muted-foreground">
-        <span>{t(simulated ? "budget.simulated" : budgetUsd === null ? "budget.spent" : out ? "budget.out" : "budget.spentOf")}</span>
-        <b className="font-mono font-semibold text-foreground">{budgetUsd === null ? money(spentUsd) : t("budget.of", { spent: money(spentUsd), budget: whole(budgetUsd) })}</b>
+        <span>{t(simulated ? "budget.simulated" : out ? "budget.out" : "budget.spent")}</span>
+        <b className="font-mono font-semibold text-foreground">
+          {money(spentUsd)}
+          {budgetUsd !== null && <span className="font-medium text-muted-foreground"> / {whole(budgetUsd)}</span>}
+        </b>
       </div>
       {budgetUsd !== null && (
         <Progress
@@ -25,6 +29,7 @@ export function BudgetMeter({ spentUsd, budgetUsd, simulated = false }: { spentU
           className={cn("bg-border", out ? "*:bg-destructive" : warn ? "*:bg-warning" : "*:bg-foreground")}
         />
       )}
+      {inFlightUsd !== undefined && inFlightUsd > 0 && <span className="text-xs text-muted-foreground">{t("budget.inFlight", { money: money(inFlightUsd) })}</span>}
     </div>
   );
 }
