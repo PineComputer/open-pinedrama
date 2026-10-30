@@ -22,6 +22,20 @@ const pageFetch: typeof fetch = (input, init) => nodeFetch(typeof input === "str
 
 Object.assign(globalThis, { EventSource: TestEventSource, ResizeObserver: StillResizeObserver, fetch: pageFetch, matchMedia });
 
+// The cut viewer's player, media-chrome, listens on a video's track lists (TextTrackList,
+// AudioTrackList, VideoTrackList), which are EventTargets in browsers (HTML, "Media resources with
+// multiple media tracks"); jsdom's are plain lists. Each video gets empty ones that take listeners and iterate.
+for (const name of ["textTracks", "audioTracks", "videoTracks"]) {
+  const lists = new WeakMap<HTMLMediaElement, EventTarget>();
+  Object.defineProperty(HTMLMediaElement.prototype, name, {
+    configurable: true,
+    get(this: HTMLMediaElement) {
+      if (!lists.has(this)) lists.set(this, Object.assign(new EventTarget(), { length: 0, *[Symbol.iterator]() {} }));
+      return lists.get(this);
+    },
+  });
+}
+
 beforeAll(() => server.listen({ onUnhandledFrame: "error" }));
 afterEach(() => {
   cleanup();

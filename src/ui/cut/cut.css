@@ -1,0 +1,69 @@
+/* The cut viewer: media-chrome's player and react-timeline-editor's timeline, themed to reveric's
+   editing page. The look is modified from reveric's designs/desktop/drama/editing.css (.ed-pv,
+   .ed-transport, .ed-play, .ed-tlbar, .ed-ruler, .ed-clip, .ed-playhead) and drama.css
+   (--dr-stage-*), AGPLv3, as docs/REUSED.md records: classes renamed ds-*, applied to the two
+   libraries' own parts, and letters kept to the colours the contrast guard allows. */
+
+:root {
+  --dr-stage-bg: #161c1a;
+  --dr-stage-text: #e4ece8;
+  --dr-stage-panel: rgba(22, 28, 26, 0.86);
+  --ed-black: #0e0c0a;
+  --ed-video: #8b7355;
+  --ed-playhead: var(--accent);
+}
+:root[data-theme="dark"] {
+  --ed-video: #c4a57e;
+  --ed-playhead: #f6ad55;
+}
+
+.ds-cut { display: flex; flex-direction: column; width: 100%; height: 100%; min-height: 0; }
+
+/* ---------------- player (media-chrome) ---------------- */
+.ds-cut-player {
+  flex: 1; min-height: 0; width: 100%; display: flex; flex-direction: column;
+  background: var(--dr-stage-bg);
+  --media-background-color: var(--dr-stage-bg);
+  --media-control-background: var(--surface-container);
+  --media-control-hover-background: var(--hover);
+  --media-primary-color: var(--text-primary);
+  --media-secondary-color: var(--surface-container);
+  --media-text-color: var(--text-muted);
+  --media-font-family: var(--font-mono);
+  --media-font-size: var(--type-ui-small-size);
+}
+.ds-cut-player video { flex: 1; min-height: 0; width: 100%; padding: var(--space-lg); box-sizing: border-box; object-fit: contain; }
+.ds-cut-transport { height: 44px; display: grid; grid-template-columns: minmax(0, 1fr) auto auto auto minmax(0, 1fr); align-items: center; gap: var(--space-xs); padding: 0 var(--space-lg); border-top: 1px solid var(--border-subtle); }
+.ds-cut-transport .label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: var(--type-ui-small-size) var(--font-mono); color: var(--text-muted); }
+.ds-cut-transport .tc { justify-self: end; }
+.ds-cut-play { width: 34px; height: 34px; padding: 9px; border-radius: var(--radius-pill); --media-control-background: var(--accent); --media-control-hover-background: var(--accent-warm); --media-primary-color: var(--on-accent); }
+
+/* ---------------- timeline (react-timeline-editor) ---------------- */
+.ds-tl { flex: none; display: flex; flex-direction: column; height: 150px; background: var(--surface-dim); border-top: 1px solid var(--border); }
+.ds-tl-bar { flex: none; height: 40px; display: flex; align-items: center; gap: 2px; padding: 0 var(--space-md); background: var(--surface-container); border-bottom: 1px solid var(--border-subtle); }
+.ds-tl-bar .grow { flex: 1; }
+.ds-tl-bar .note { font-size: var(--type-ui-small-size); color: var(--text-secondary); }
+.ds-tl-bar .ds-iconbtn { width: 28px; height: 28px; }
+.ds-tl-area { flex: 1; min-height: 0; }
+
+.ds-tl-area .timeline-editor { background: var(--surface-dim); font-family: var(--font-mono); }
+.ds-tl-area .timeline-editor-time-area { background: var(--surface-container); border-bottom: 1px solid var(--border-subtle); }
+.ds-tl-area .timeline-editor-time-unit { border-right-color: var(--border-input); }
+.ds-tl-area .timeline-editor-time-unit-scale { color: var(--text-muted); font: 500 10px var(--font-mono); }
+.ds-tl-area .timeline-editor-edit-row { background: var(--surface-container); border-bottom: 1px solid var(--border-subtle); background-image: none; }
+.ds-tl-area .timeline-editor-action { background: none; }
+.ds-tl-area .timeline-editor-cursor { border-left-color: var(--ed-playhead); }
+.ds-tl-area .timeline-editor-cursor-top path { fill: var(--ed-playhead); }
+
+.ds-tl-clip {
+  --c: var(--ed-video);
+  position: absolute; inset: 4px 0; display: flex; align-items: flex-start; gap: 4px; box-sizing: border-box; overflow: hidden; padding: 3px 6px;
+  border-radius: var(--radius-medium); border: 1px solid color-mix(in srgb, var(--c) 45%, var(--surface));
+  background: color-mix(in srgb, var(--c) 16%, var(--surface)); color: var(--text-primary);
+  font: 600 11px/13px var(--font-sans); cursor: pointer; text-align: left; white-space: nowrap; transition: border-color 0.12s;
+}
+.ds-tl-clip:hover { border-color: color-mix(in srgb, var(--c) 75%, var(--surface)); }
+.ds-tl-clip:focus-visible { outline: 2px solid var(--text-primary); outline-offset: 1px; }
+.ds-tl-clip .no { flex: none; padding: 0 4px; border-radius: 3px; background: var(--accent); color: var(--on-accent); font-size: 10px; }
+.ds-tl-clip .take { overflow: hidden; text-overflow: ellipsis; font-family: var(--font-mono); }
+.ds-tl-clip .dur { position: absolute; right: 6px; bottom: 3px; font: 500 10px/1 var(--font-mono); color: var(--text-secondary); }
