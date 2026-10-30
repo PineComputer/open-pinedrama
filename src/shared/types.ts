@@ -38,6 +38,7 @@ export type ErrorCode =
   | "review-not-ended"
   | "setup-restarts"
   | "endpoint-invalid"
+  | "invalid-positions"
   | "key-missing"
   | "key-rejected"
   | "pine-unreachable"

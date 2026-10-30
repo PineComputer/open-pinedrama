@@ -1,6 +1,7 @@
 // The canvas's SteerBar (P6.3), used as a maker uses it: pick an item, then Review it where its
 // review is open, send it back or leave a note for the agent at work on it, or trace its lineage.
 // The canvas steers and never records a verdict: decisions stay in the review room.
+import "../test/flow.ts";
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { readFileSync } from "node:fs";
@@ -52,6 +53,8 @@ function engine(inbox: ReviewSummary[] = [], sends: ChatView["sends"] = "steer",
   answer("/api/dramas/d1/project", project());
   answer("/api/dramas/d1/files", []);
   answer("/api/dramas/d1/lineage", lineageView());
+  answer("/api/dramas/d1/canvas/EP001", { positions: {} });
+  answer("/api/dramas/d1/canvas/EP002", { positions: {} });
   answer("/api/inbox", inbox);
   accept("/api/sessions/s0/chat");
   accept("/api/sessions/s1/chat");
@@ -62,7 +65,9 @@ const openLooks: ReviewSummary = { id: "r9", dramaId: "d1", dramaTitle: "The Ste
 
 async function pick(name: RegExp) {
   const user = userEvent.setup();
-  await user.click(await screen.findByRole("button", { name }));
+  // Picked from the keyboard: a mouse press on a node starts React Flow's drag, which jsdom can't drive.
+  (await screen.findByRole("button", { name })).focus();
+  await user.keyboard("{Enter}");
   return { user, bar: await screen.findByRole("toolbar", { name: /^Steer/ }) };
 }
 

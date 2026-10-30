@@ -105,6 +105,63 @@ describe("the answers the UI reads", () => {
     expect((await call("/api/dramas/no-such-drama/lineage")).status).toBe(404);
   });
 
+  describe("where the maker moved the canvas's nodes (view state, never production state)", () => {
+    async function sample() {
+      expect((await call("/api/connection/replay", { method: "POST" })).status).toBe(200);
+      const made = await call("/api/dramas/sample", { method: "POST", body: JSON.stringify({ language: "en" }), headers: { "content-type": "application/json" } });
+      return ((await made.json()) as { id: string }).id;
+    }
+    const put = (id: string, episode: string, body: unknown) => call(`/api/dramas/${id}/canvas/${episode}`, { method: "PUT", body: JSON.stringify(body), headers: { "content-type": "application/json" } });
+
+    it("keeps an episode's positions, and none before any were moved", async () => {
+      const id = await sample();
+      expect(await (await call(`/api/dramas/${id}/canvas/EP001`)).json()).toEqual({ positions: {} });
+      const positions = { "character:lin": { x: 10, y: -20.5 }, "scene:EP001/0": { x: 300, y: 0 }, "segment:EP001/seg01": { x: 16, y: 64 } };
+      expect((await put(id, "EP001", { positions })).status).toBe(200);
+      expect(await (await call(`/api/dramas/${id}/canvas/EP001`)).json()).toEqual({ positions });
+    });
+
+    it("replaces an episode's positions, and leaves another episode's alone", async () => {
+      const id = await sample();
+      await put(id, "EP001", { positions: { "character:lin": { x: 1, y: 2 } } });
+      await put(id, "EP002", { positions: { "segment:EP002/seg01": { x: 3, y: 4 } } });
+      await put(id, "EP001", { positions: { "location:home": { x: 5, y: 6 } } });
+      expect(await (await call(`/api/dramas/${id}/canvas/EP001`)).json()).toEqual({ positions: { "location:home": { x: 5, y: 6 } } });
+      expect(await (await call(`/api/dramas/${id}/canvas/EP002`)).json()).toEqual({ positions: { "segment:EP002/seg01": { x: 3, y: 4 } } });
+    });
+
+    it("lays an episode out again by forgetting its positions", async () => {
+      const id = await sample();
+      await put(id, "EP001", { positions: { "character:lin": { x: 1, y: 2 } } });
+      await put(id, "EP002", { positions: { "character:lin": { x: 7, y: 8 } } });
+      expect((await call(`/api/dramas/${id}/canvas/EP001`, { method: "DELETE" })).status).toBe(200);
+      expect(await (await call(`/api/dramas/${id}/canvas/EP001`)).json()).toEqual({ positions: {} });
+      expect(await (await call(`/api/dramas/${id}/canvas/EP002`)).json()).toEqual({ positions: { "character:lin": { x: 7, y: 8 } } });
+    });
+
+    it("refuses positions that aren't finite numbers for nodes the layout makes, naming the field", async () => {
+      const id = await sample();
+      for (const [positions, field] of [
+        [{ "character:lin": { x: "1", y: 2 } }, "positions.character:lin.x"],
+        [{ "character:lin": { x: 1 } }, "positions.character:lin.y"],
+        [{ "segment:EP002/seg01": { x: 1, y: 2 } }, "positions.segment:EP002/seg01"],
+        [{ "assets/characters/lin": { x: 1, y: 2 } }, "positions.assets/characters/lin"],
+      ] as const) {
+        const response = await put(id, "EP001", { positions });
+        expect(response.status).toBe(400);
+        expect(await response.json()).toMatchObject({ code: "invalid-positions", detail: field });
+      }
+      const huge = await put(id, "EP001", { positions: { "character:lin": { x: 1e400, y: 2 } } });
+      expect(await huge.json()).toMatchObject({ code: "invalid-positions" });
+      expect((await put(id, "EP001", {})).status).toBe(400);
+      expect(await (await call(`/api/dramas/${id}/canvas/EP001`)).json()).toEqual({ positions: {} });
+    });
+
+    it("says plainly when the drama doesn't exist", async () => {
+      expect((await call("/api/dramas/no-such-drama/canvas/EP001")).status).toBe(404);
+    });
+  });
+
   it("says plainly when the drama of a project doesn't exist", async () => {
     const response = await call("/api/dramas/no-such-drama/project");
     expect(response.status).toBe(404);

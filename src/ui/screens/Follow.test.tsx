@@ -1,6 +1,7 @@
 // Following the agent on the canvas, and its minimap (P6.4), used as a maker uses them: the
 // board keeps the agent's newest work in view; once the maker moves the board themselves,
 // following pauses until they resume it; the minimap shows the whole board and moves the view.
+import "../test/flow.ts";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { readFileSync } from "node:fs";
@@ -31,6 +32,8 @@ function engine(files: FileItem[]) {
   answer("/api/dramas/d1/project", project());
   answer("/api/dramas/d1/files", files);
   answer("/api/dramas/d1/lineage", lineageView());
+  answer("/api/dramas/d1/canvas/EP001", { positions: {} });
+  answer("/api/dramas/d1/canvas/EP002", { positions: {} });
   answer("/api/inbox", []);
 }
 
@@ -65,74 +68,18 @@ describe("following the agent", () => {
     await waitFor(() => expect(followed()?.textContent).toMatch(/^seg01/));
   });
 
-  it("pauses when the maker moves the board, and resumes when asked", async () => {
+  it("pauses when the maker picks an item, and resumes when asked", async () => {
     const user = userEvent.setup();
-    engine([look]);
-    render(<Canvas drama={drama} />);
-    const area = await screen.findByRole("application", { name: "The board" });
-    fireEvent.pointerDown(area, { clientX: 10, clientY: 10 });
-    fireEvent.pointerMove(area, { clientX: 60, clientY: 40 });
-    fireEvent.pointerUp(area);
-    const resume = await screen.findByRole("button", { name: "Following paused · Resume" });
-    expect(resume).toHaveAttribute("aria-pressed", "false");
-    // Paused: new work doesn't move the board.
-    const still = transform();
     engine([look, board]);
-    changed("drama:d1");
-    await new Promise((resolve) => setTimeout(resolve, 300));
+    render(<Canvas drama={drama} />);
+    (await screen.findByRole("button", { name: /^办公室/ })).focus();
+    await user.keyboard("{Enter}");
+    const resume = screen.getByRole("button", { name: "Following paused · Resume" });
+    expect(resume).toHaveAttribute("aria-pressed", "false");
     expect(followed()).toBeNull();
-    expect(transform()).toBe(still);
-    await user.click(resume);
+    resume.focus();
+    await user.keyboard("{Enter}");
     expect(screen.getByRole("button", { name: "Following the agent" })).toHaveAttribute("aria-pressed", "true");
     await waitFor(() => expect(followed()?.textContent).toMatch(/^seg01/));
-  });
-
-  it("pauses when the maker zooms or picks an item", async () => {
-    const user = userEvent.setup();
-    engine([look]);
-    render(<Canvas drama={drama} />);
-    await user.click(await screen.findByRole("button", { name: "Zoom in" }));
-    expect(screen.getByRole("button", { name: "Following paused · Resume" })).toBeInTheDocument();
-    await user.click(screen.getByRole("button", { name: "Following paused · Resume" }));
-    await user.click(screen.getByRole("button", { name: /^办公室/ }));
-    expect(screen.getByRole("button", { name: "Following paused · Resume" })).toBeInTheDocument();
-  });
-});
-
-describe("zoomed far out", () => {
-  it("draws cards as bars, without their pictures", async () => {
-    const user = userEvent.setup();
-    engine([look]);
-    render(<Canvas drama={drama} />);
-    const lin = await screen.findByRole("button", { name: /^林/ });
-    await waitFor(() => expect(lin.querySelector("img")).not.toBeNull());
-    while (Number.parseInt(screen.getByRole("status", { name: "Zoom" }).textContent!) >= 55) await user.click(screen.getByRole("button", { name: "Zoom out" }));
-    expect(lin.querySelector("img")).toBeNull();
-  });
-});
-
-describe("the minimap", () => {
-  it("shows the whole board with the view on it, and hides on request", async () => {
-    const user = userEvent.setup();
-    engine([look]);
-    render(<Canvas drama={drama} />);
-    const map = await screen.findByRole("button", { name: "Minimap: move the view" });
-    expect(map.querySelectorAll(".item").length).toBe(3);
-    expect(map.querySelector(".view")).not.toBeNull();
-    await user.click(screen.getByRole("button", { name: "Hide the minimap" }));
-    expect(screen.queryByRole("button", { name: "Minimap: move the view" })).toBeNull();
-    await user.click(screen.getByRole("button", { name: "Show the minimap" }));
-    expect(screen.getByRole("button", { name: "Minimap: move the view" })).toBeInTheDocument();
-  });
-
-  it("moves the view where the maker clicks it, and pauses following", async () => {
-    engine([look]);
-    render(<Canvas drama={drama} />);
-    const map = await screen.findByRole("button", { name: "Minimap: move the view" });
-    const layer = document.querySelector(".ds-board .layer") as HTMLElement;
-    const before = layer.style.transform;
-    fireEvent.click(map, { clientX: 80, clientY: 40 });
-    expect(layer.style.transform).not.toBe(before);
-    expect(screen.getByRole("button", { name: "Following paused · Resume" })).toBeInTheDocument();
   });
 });

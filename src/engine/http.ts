@@ -24,10 +24,11 @@ import { chat, chooseInputs, createDrama, desktop, finishEpisode, rehearse, resu
 import { StudioError } from "./errors.ts";
 import { STORIES } from "./replay-fleet.ts";
 import { fileRow, openBlob, save, toItem } from "./library.ts";
-import { subscribe } from "./live.ts";
+import { publish, subscribe } from "./live.ts";
 import { drama as dramaRow, review as reviewRow, session as sessionRow, type SessionRow } from "./records.ts";
 import { decide, resumeWithDecision } from "./reviews.ts";
 import { lineageView } from "./lineage.ts";
+import { forgetPositions, positionsOf, readPositions, replacePositions } from "./canvas.ts";
 import { projectView, sessionStatus } from "./status.ts";
 import { castCards, deliveryRows, episodePage, scriptPage, seasonEntries } from "./browse.ts";
 import { diagnostics } from "./diagnostics.ts";
@@ -296,6 +297,31 @@ export function app(): Hono {
     return page ? c.json(page) : c.json(failure("not-found", "No such episode."), 404);
   });
   // A picture the maker adds to a review note: a face to use, a costume, a place to match.
+  // Where the maker moved the canvas's nodes, per episode (canvas.ts): view state only.
+  api.get("/api/dramas/:id/canvas/:episode", (c) => {
+    const id = c.req.param("id");
+    return dramaRow(id) ? c.json({ positions: positionsOf(id, c.req.param("episode")) }) : c.json(failure("not-found", "No such drama."), 404);
+  });
+  api.put("/api/dramas/:id/canvas/:episode", async (c) => {
+    try {
+      const id = c.req.param("id");
+      if (!dramaRow(id)) return c.json(failure("not-found", "No such drama."), 404);
+      const episode = c.req.param("episode");
+      replacePositions(id, episode, readPositions(await c.req.json().catch(() => null), episode));
+      publish(`drama:${id}`);
+      return c.json({ ok: true });
+    } catch (error) {
+      return fail(c, error);
+    }
+  });
+  api.delete("/api/dramas/:id/canvas/:episode", (c) => {
+    const id = c.req.param("id");
+    if (!dramaRow(id)) return c.json(failure("not-found", "No such drama."), 404);
+    forgetPositions(id, c.req.param("episode"));
+    publish(`drama:${id}`);
+    return c.json({ ok: true });
+  });
+
   api.post("/api/dramas/:id/references", async (c) => {
     try {
       const drama = dramaRow(c.req.param("id"));

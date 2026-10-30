@@ -192,6 +192,17 @@ create table if not exists refusals (
   saved_at text not null
 );
 
+-- Where the maker moved the canvas's nodes (canvas.ts): view state, never production state.
+create table if not exists canvas_positions (
+  drama_id text not null,
+  episode text not null,
+  node_id text not null,
+  x real not null,
+  y real not null,
+  updated_at text not null,
+  primary key (drama_id, episode, node_id)
+);
+
 create index if not exists files_episode on files (episode_id, id);
 create index if not exists files_drama_kind on files (drama_id, kind, id);
 create index if not exists files_turn on files (turn_id);

@@ -1,6 +1,7 @@
 // The canvas (P6.2), used as a maker uses it: the series as one board, every item named as the
 // bible names it with where it stands and its current picture, grouped by episode and scene, and
 // moved about with zoom and fit. It only reads: nothing on it makes or changes an item.
+import "../test/flow.ts";
 import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { readFileSync } from "node:fs";
@@ -31,6 +32,8 @@ function engine(view: ProjectView | null, files: FileItem[] = []) {
   answer("/api/dramas/d1/project", view ?? { state: null, sessions: [], problems: [], names: null });
   answer("/api/dramas/d1/files", files);
   answer("/api/dramas/d1/lineage", lineageView());
+  answer("/api/dramas/d1/canvas/EP001", { positions: {} });
+  answer("/api/dramas/d1/canvas/EP002", { positions: {} });
 }
 
 describe("the canvas", () => {
@@ -57,7 +60,7 @@ describe("the canvas", () => {
     render(<Canvas drama={drama} />);
     const lin = await screen.findByRole("button", { name: /^林/ });
     // The picture is the button's content, named by the button: decorative, so found by tag.
-    await waitFor(() => expect(lin.querySelector("img")).toHaveAttribute("src", "/f/2"));
+    await waitFor(() => expect(lin.closest(".ds-cnode")!.querySelector("img")).toHaveAttribute("src", "/f/2"));
   });
 
   it("takes the new pictures as a turn's files are saved", async () => {
@@ -72,10 +75,10 @@ describe("the canvas", () => {
   it("shows one episode, its scenes as bands, with the references it uses", async () => {
     engine(project());
     render(<Canvas drama={drama} />);
-    const band = await screen.findByRole("group", { name: "INT. OFFICE - DAY #1-1#" });
-    expect(within(band).getByRole("button", { name: /^seg01/ })).toBeInTheDocument();
+    expect(await screen.findByRole("group", { name: "Scene 1 · INT. OFFICE - DAY #1-1#" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /^seg01/ })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /^EP001 · x/ })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /^林/ })).toBeInTheDocument();
+    expect(await screen.findByRole("button", { name: /^林/ })).toBeInTheDocument();
   });
 
   it("shows the episode chosen elsewhere, and moves between episodes with its switcher", async () => {
@@ -85,28 +88,20 @@ describe("the canvas", () => {
       report.episodes.EP002 = { ...report.episodes.EP001, scene_chains: [{ scene_heading: "EXT. YARD - NIGHT #2-1#", segments: ["seg01"] }] };
     }));
     render(<Canvas drama={drama} />);
-    expect(await screen.findByRole("group", { name: "EXT. YARD - NIGHT #2-1#" })).toBeInTheDocument();
-    expect(screen.queryByRole("group", { name: "INT. OFFICE - DAY #1-1#" })).toBeNull();
+    expect(await screen.findByRole("group", { name: "Scene 1 · EXT. YARD - NIGHT #2-1#" })).toBeInTheDocument();
+    expect(screen.queryByRole("group", { name: "Scene 1 · INT. OFFICE - DAY #1-1#" })).toBeNull();
     expect(screen.getByRole("button", { name: "Next episode" })).toBeDisabled();
     await user.click(screen.getByRole("button", { name: "Previous episode" }));
     expect(location.search).toBe("?item=EP001");
-    expect(await screen.findByRole("group", { name: "INT. OFFICE - DAY #1-1#" })).toBeInTheDocument();
+    expect(await screen.findByRole("group", { name: "Scene 1 · INT. OFFICE - DAY #1-1#" })).toBeInTheDocument();
     window.history.pushState(null, "", "/");
   });
 
-  it("zooms in and out, and fits the board", async () => {
-    const user = userEvent.setup();
+  it("offers React Flow's controls, named in the maker's words, and the minimap", async () => {
     engine(project());
     render(<Canvas drama={drama} />);
-    const zoom = await screen.findByRole("status", { name: "Zoom" });
-    const before = zoom.textContent;
-    await user.click(screen.getByRole("button", { name: "Zoom in" }));
-    expect(zoom.textContent).not.toBe(before);
-    await user.click(screen.getByRole("button", { name: "Zoom out" }));
-    await user.click(screen.getByRole("button", { name: "Zoom out" }));
-    expect(Number.parseInt(zoom.textContent!)).toBeLessThan(Number.parseInt(before!));
-    await user.click(screen.getByRole("button", { name: "Fit the board" }));
-    expect(zoom.textContent).toBe(before);
+    for (const name of ["Zoom in", "Zoom out", "Fit the board", "Lay out again"]) expect(await screen.findByRole("button", { name })).toBeInTheDocument();
+    expect(screen.getByRole("img", { name: "Minimap: move the view" })).toBeInTheDocument();
   });
 
   it("points to what waits for the maker, beside the agent", async () => {

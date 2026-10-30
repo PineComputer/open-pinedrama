@@ -1,81 +1,55 @@
-/* The canvas (P6.2): the pro direction's board. Every colour is a token (CONTRIBUTING.md). */
-.ds-canvas { position: relative; height: calc(100vh - 170px); min-height: 420px; border: 1px solid var(--border); border-radius: var(--radius-2xl); overflow: hidden; }
-.ds-board { position: absolute; inset: 0; overflow: hidden; background-color: var(--canvas); background-image: radial-gradient(color-mix(in srgb, var(--text-primary) 13%, transparent) 1px, transparent 1px); background-size: 22px 22px; cursor: grab; user-select: none; touch-action: none; }
-.ds-board.is-panning { cursor: grabbing; }
-.ds-board .layer { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
-.ds-board .wires { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; }
-.ds-board .wires path { fill: none; stroke: color-mix(in srgb, var(--text-primary) 35%, transparent); stroke-width: 1.4; }
-.ds-board .wires path.is-needs { stroke: var(--warning-text); stroke-dasharray: 5 4; }
-.ds-cgroup { position: absolute; border-radius: var(--radius-2xl); border: 1px solid var(--border); background: color-mix(in srgb, var(--surface) 70%, transparent); }
-.ds-cgroup.is-scene { border-radius: var(--radius-xl); background: var(--surface); }
-.ds-cgroup > .heading { position: absolute; left: 14px; top: 12px; right: 14px; font: 600 13px/1.3 var(--font-sans); color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.ds-cgroup.is-scene > .heading { top: 9px; font-size: 11.5px; }
-.ds-cnode { position: absolute; display: grid; gap: 6px; padding: 0; border: 0; background: none; color: var(--text-primary); text-align: left; cursor: pointer; }
-.ds-cnode .label { display: flex; align-items: center; gap: 6px; height: 22px; font: 600 12.5px/1 var(--font-sans); color: var(--text-secondary); white-space: nowrap; }
+/* The canvas on React Flow: its parts take our tokens through its own variables, and the nodes
+   take the pro direction's look. Every colour is a token (CONTRIBUTING.md). */
+.ds-canvas { position: relative; height: calc(100vh - 150px); min-height: 420px; margin: 0 -16px; border-top: 1px solid var(--border); }
+.ds-canvas .react-flow {
+  --xy-background-color: var(--canvas);
+  --xy-background-pattern-color: color-mix(in srgb, var(--text-primary) 18%, transparent);
+  --xy-node-border-radius: 10px;
+  --xy-edge-stroke: color-mix(in srgb, var(--text-primary) 30%, transparent);
+  --xy-edge-stroke-width: 1.4;
+  --xy-minimap-background-color: var(--surface);
+  --xy-minimap-mask-background-color: color-mix(in srgb, var(--canvas) 55%, transparent);
+  --xy-minimap-node-background-color: color-mix(in srgb, var(--text-secondary) 40%, transparent);
+  --xy-controls-button-background-color: var(--surface);
+  --xy-controls-button-background-color-hover: var(--hover);
+  --xy-controls-button-color: var(--text-secondary);
+  --xy-controls-button-color-hover: var(--text-primary);
+  --xy-controls-button-border-color: var(--border-subtle);
+  --xy-controls-box-shadow: 0 4px 12px color-mix(in srgb, var(--text-primary) 8%, transparent);
+}
+.ds-canvas .react-flow__edge.is-needs path { stroke: var(--warning-text); stroke-dasharray: 5 4; }
+.ds-canvas .react-flow__edge.is-uses path { stroke-dasharray: 3 4; }
+.ds-canvas .react-flow__handle { opacity: 0; pointer-events: none; }
+.ds-canvas .react-flow__minimap { right: 84px; border-radius: var(--radius-large); border: 1px solid var(--border); overflow: hidden; }
+.ds-canvas .react-flow__controls { border-radius: var(--radius-large); overflow: hidden; border: 1px solid var(--border); }
+.ds-canvas .react-flow__node-scene { border-radius: var(--radius-xl); border: 1px solid var(--border); background: color-mix(in srgb, var(--surface) 70%, transparent); }
+.ds-cscene { width: 100%; height: 100%; }
+.ds-cscene .heading { position: absolute; left: 14px; top: 10px; right: 14px; font: 600 11.5px/1.3 var(--font-sans); color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ds-cnode { display: grid; grid-template-rows: 22px 1fr; gap: 6px; width: 100%; height: 100%; color: var(--text-primary); }
+.ds-cnode .label { display: flex; align-items: center; gap: 6px; font: 600 12.5px/1 var(--font-sans); color: var(--text-secondary); white-space: nowrap; outline: none; }
 .ds-cnode .label .name { overflow: hidden; text-overflow: ellipsis; }
-.ds-cnode .card { display: flex; gap: 6px; padding: 0; border-radius: 10px; overflow: hidden; border: 1px solid var(--border); background: var(--surface-container); transition: border-color .12s; }
+.ds-cnode .card { display: flex; gap: 10px; min-height: 0; padding: 0; border-radius: 10px; overflow: hidden; border: 1px solid var(--border); background: var(--surface-container); transition: border-color .12s, box-shadow .12s; }
+.ds-cnode .card img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
 .ds-cnode.is-segment .card { padding: 6px; background: var(--surface); }
-.ds-cnode .card > img, .ds-cnode .card > video, .ds-cnode .card > .none { flex: 1; min-width: 0; height: 100%; object-fit: cover; object-position: top; border-radius: 6px; }
-.ds-cnode .card > .none { display: grid; place-items: center; font: 11.5px var(--font-sans); color: var(--text-muted); background: var(--surface-container); }
-.ds-cnode:hover .card { border-color: color-mix(in srgb, var(--text-primary) 45%, var(--border)); }
-.ds-cnode:focus-visible { outline: none; }
-.ds-cnode:focus-visible .card { box-shadow: 0 0 0 2px var(--accent); }
-.ds-cnode.is-chosen .card { border-color: var(--text-primary); box-shadow: 0 0 0 1px var(--text-primary); }
-.ds-steer .row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-.ds-steer .what { flex: 1; min-width: 0; font: 600 13px/1.3 var(--font-sans); color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.ds-steer .acts { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-.ds-steer .say { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: end; }
-.ds-steer textarea { min-height: 56px; border-radius: var(--radius-large); border: 1px solid var(--border-input); background: var(--surface); color: var(--text-primary); padding: 8px 10px; font: 13px/1.5 var(--font-sans); resize: vertical; outline: none; }
-.ds-steer textarea:focus { border-color: var(--text-primary); }
-.ds-steer .off { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 8px 10px; border-radius: var(--radius-medium); background: var(--surface-container); color: var(--text-secondary); font-size: 12.5px; }
-.ds-steer .done { margin: 0; font-size: 12.5px; color: var(--text-secondary); }
-
-/* P6.4, after Reveric's canvas (designs/desktop/canvas/board.jsx, canvas.css; drama/views.jsx,
-   drama.css): moves the studio makes glide, the maker's own don't; the zoom cluster and its
-   tools stack bottom-left; the minimap bottom-right, clear of the agent ball; cards turn to bars
-   when zoomed far out; the chosen item's connectors stand out and the rest fade. */
-.ds-board .layer.is-smooth { transition: transform .5s cubic-bezier(.2, .7, .3, 1); }
-@media (prefers-reduced-motion: reduce) { .ds-board .layer.is-smooth { transition: none; } }
-.ds-board .wires path.is-on { stroke: var(--text-primary); stroke-width: 2.2; }
-.ds-board .wires path.is-dim { opacity: .35; }
-.ds-cnode:hover .card { border-color: color-mix(in srgb, var(--accent) 55%, var(--border-input)); }
-.ds-cnode.is-chosen .card { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 26%, transparent); }
-.ds-cnode.is-lod .card { background: color-mix(in srgb, var(--text-primary) 14%, var(--surface)); }
-.ds-cnode.is-lod .label { font-size: 22px; height: 30px; }
-.ds-cstack { position: absolute; left: 16px; bottom: 16px; display: flex; flex-direction: column; gap: 8px; z-index: 5; }
-.ds-cluster { display: flex; flex-direction: column; overflow: hidden; border: 1px solid var(--border); border-radius: var(--radius-large); background: var(--surface); box-shadow: 0 4px 12px color-mix(in srgb, var(--text-primary) 8%, transparent); }
-.ds-cluster .ds-iconbtn { width: 40px; height: 38px; border-radius: 0; }
-.ds-cluster .ds-iconbtn.is-sep { border-top: 1px solid var(--border-subtle); }
-.ds-cluster .zoom { width: 40px; height: 30px; display: grid; place-items: center; font: 600 12px var(--font-sans); color: var(--text-secondary); font-variant-numeric: tabular-nums; }
-.ds-follow { position: absolute; left: 72px; bottom: 16px; z-index: 5; display: inline-flex; align-items: center; gap: 8px; height: 34px; padding: 0 14px; border-radius: var(--radius-pill); border: 1px solid var(--border); background: var(--surface); color: var(--text-secondary); font: 500 12.5px var(--font-sans); cursor: pointer; box-shadow: 0 4px 12px color-mix(in srgb, var(--text-primary) 8%, transparent); }
-.ds-follow.is-on { color: var(--text-primary); }
-.ds-follow:hover { border-color: var(--border-input); }
-.ds-minimap { position: absolute; right: 84px; bottom: 16px; z-index: 5; width: 172px; height: 116px; padding: 0; border-radius: var(--radius-large); border: 1px solid var(--border); background: color-mix(in srgb, var(--surface) 88%, transparent); box-shadow: 0 2px 6px color-mix(in srgb, var(--text-primary) 8%, transparent); overflow: hidden; cursor: pointer; }
-.ds-minimap .item { position: absolute; border-radius: 2px; background: color-mix(in srgb, var(--text-secondary) 45%, transparent); }
-.ds-minimap .item.is-segment { background: color-mix(in srgb, var(--text-secondary) 30%, transparent); }
-.ds-minimap .view { position: absolute; border: 1.5px solid var(--accent); border-radius: 3px; background: color-mix(in srgb, var(--accent) 8%, transparent); pointer-events: none; }
-/* The SteerBar as Reveric's node bar: above the chosen item, centred on it. */
-.ds-steer { position: absolute; z-index: 30; transform: translateX(-50%); display: grid; gap: 8px; padding: 4px; border: 1px solid var(--border); border-radius: var(--radius-xl); background: var(--surface); box-shadow: var(--shadow-dialog); white-space: nowrap; }
-.ds-steer:not([style]) { left: 50%; bottom: 16px; }
-.ds-steer .row { gap: 2px; }
-.ds-steer .what { padding: 0 8px; font-size: 12px; max-width: 18ch; }
+.ds-cnode.is-segment .card img { width: 72px; flex: none; border-radius: 6px; }
+.ds-cnode .text { display: grid; align-content: start; gap: 4px; padding-top: 4px; font: 12px/1.4 var(--font-sans); color: var(--text-secondary); }
+.react-flow__node:hover .ds-cnode .card { border-color: color-mix(in srgb, var(--accent) 55%, var(--border-input)); }
+.react-flow__node.selected .ds-cnode .card { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 26%, transparent); }
+.ds-epswitch { display: flex; align-items: center; gap: 2px; padding: 3px; border-radius: var(--radius-pill); border: 1px solid var(--border); background: var(--surface); }
+.ds-epswitch-pick { display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 10px; border: 0; border-radius: var(--radius-pill); background: transparent; color: var(--text-primary); font: 600 12.5px var(--font-sans); cursor: pointer; white-space: nowrap; }
+.ds-epswitch-pick:hover { background: var(--hover); }
+.ds-follow, .ds-waiting { display: inline-flex; align-items: center; gap: 8px; height: 34px; padding: 0 14px; margin: 0 4px; border-radius: var(--radius-pill); border: 1px solid var(--border); background: var(--surface); color: var(--text-secondary); font: 500 12.5px var(--font-sans); cursor: pointer; text-decoration: none; }
+.ds-follow.is-on, .ds-waiting { color: var(--text-primary); }
+/* The SteerBar in React Flow's node toolbar, as the reference's node bar. */
+.ds-steer { display: grid; gap: 8px; padding: 4px; border: 1px solid var(--border); border-radius: var(--radius-xl); background: var(--surface); box-shadow: var(--shadow-dialog); white-space: nowrap; }
+.ds-steer .row { display: flex; align-items: center; gap: 2px; }
+.ds-steer .what { padding: 0 8px; font: 600 12px var(--font-sans); color: var(--text-primary); max-width: 18ch; overflow: hidden; text-overflow: ellipsis; }
+.ds-steer .acts { display: flex; align-items: center; gap: 2px; }
 .ds-steer .acts .ds-btn { height: 28px; border-color: transparent; background: transparent; font-weight: 500; font-size: 12px; }
 .ds-steer .acts .ds-btn:hover { background: var(--hover); }
 .ds-steer .acts .ds-btn.is-primary { background: var(--accent); color: var(--on-accent); }
 .ds-steer .say, .ds-steer .off, .ds-steer .done { margin: 0 4px 4px; white-space: normal; width: 440px; }
-
-.ds-cnode.is-segment .card { display: grid; grid-template-columns: 72px 1fr; gap: 10px; padding: 6px; background: var(--surface); }
-.ds-cnode.is-segment .thumb { border-radius: 6px; overflow: hidden; background: color-mix(in srgb, var(--text-primary) 8%, var(--surface)); }
-.ds-cnode.is-segment .thumb img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
-.ds-cnode.is-segment .text { display: grid; align-content: start; gap: 4px; padding-top: 4px; font: 12px/1.4 var(--font-sans); color: var(--text-secondary); }
-.ds-cnode.is-segment .line { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.ds-canvas { height: calc(100vh - 150px); border: 0; border-top: 1px solid var(--border); border-radius: 0; margin: 0 -16px; }
-.ds-waiting { position: absolute; right: 84px; bottom: 140px; z-index: 5; display: inline-flex; align-items: center; gap: 6px; height: 34px; padding: 0 14px; border-radius: var(--radius-pill); border: 1px solid var(--border); background: var(--surface); color: var(--text-primary); font: 500 12.5px var(--font-sans); text-decoration: none; box-shadow: 0 4px 12px color-mix(in srgb, var(--text-primary) 8%, transparent); }
-.ds-waiting:hover { border-color: var(--border-input); }
-
-/* One episode per board: the switcher top-left over the board; scenes as bands. */
-.ds-epswitch { position: absolute; left: 16px; top: 14px; z-index: 5; display: flex; align-items: center; gap: 2px; padding: 3px; border-radius: var(--radius-pill); border: 1px solid var(--border); background: var(--surface); box-shadow: 0 4px 12px color-mix(in srgb, var(--text-primary) 8%, transparent); }
-.ds-epswitch-pick { display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 10px; border: 0; border-radius: var(--radius-pill); background: transparent; color: var(--text-primary); font: 600 12.5px var(--font-sans); cursor: pointer; white-space: nowrap; }
-.ds-epswitch-pick:hover { background: var(--hover); }
-.ds-epswitch .ds-iconbtn { width: 30px; height: 30px; border-radius: var(--radius-pill); }
-.ds-board .wires path.is-uses { stroke-dasharray: 3 4; stroke: color-mix(in srgb, var(--text-primary) 28%, transparent); stroke-width: 1.2; }
+.ds-steer .say { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: end; }
+.ds-steer textarea { min-height: 56px; border-radius: var(--radius-large); border: 1px solid var(--border-input); background: var(--surface); color: var(--text-primary); padding: 8px 10px; font: 13px/1.5 var(--font-sans); resize: vertical; outline: none; }
+.ds-steer .off { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 8px 10px; border-radius: var(--radius-medium); background: var(--surface-container); color: var(--text-secondary); font-size: 12.5px; }
+.ds-steer .done { margin: 0; font-size: 12.5px; color: var(--text-secondary); }
