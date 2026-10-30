@@ -143,7 +143,8 @@ export function Graph({ dramaId }: { dramaId: string }) {
   const { query } = usePath();
   const item = query.get("item") ?? undefined;
   const [groups, setGroups] = useState<Set<Group>>(new Set(GROUPS));
-  const [depth, setDepth] = useState(2);
+  // One link out by default: a version's own inputs and outputs, as uncrowded as Reveric's first view.
+  const [depth, setDepth] = useState(1);
   const [sent, setSent] = useState(false);
   const lineage = view.data?.lineage;
   const nodes = lineage?.nodes ?? [];
@@ -561,7 +562,7 @@ function Canvas({ lineage, center, kinds, depth, onFocus, onReset, name, fileOf,
       >
         <Background variant={BackgroundVariant.Dots} gap={22} size={1} />
         <Controls showInteractive={false} position="bottom-right" />
-        <MiniMap pannable zoomable position="bottom-left" nodeColor={(n) => colour((n.data as VersionData).node)} />
+        <MiniMap pannable zoomable position="bottom-left" style={{ width: 140, height: 90 }} nodeColor={(n) => colour((n.data as VersionData).node)} />
         <Panel position="top-right">
           <button type="button" className="eg-reset" onClick={onReset}>
             <Icon name="arrow-counter-clockwise" />
