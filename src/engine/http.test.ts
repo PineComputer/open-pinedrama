@@ -1,0 +1,75 @@
+// The engine's HTTP API as the UI calls it, in process through Hono's app.request(): who may
+// call it, and the answers the UI reads, in the shared types (docs/TESTING.md).
+import { mkdtempSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import path from "node:path";
+import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import type { AppInfo, DramaCard } from "../shared/types.ts";
+
+const DATA = mkdtempSync(path.join(tmpdir(), "studio-http-"));
+process.env.STUDIO_DATA_DIR = DATA;
+process.env.STUDIO_SECRET = Buffer.alloc(32, 1).toString("base64");
+process.env.STUDIO_TOKEN = "launch-token";
+
+const HOST = "127.0.0.1:4310";
+let api: ReturnType<typeof import("./http.ts").app>;
+
+/** A request from the studio's own window: loopback, this launch's cookie, its own origin. */
+function call(route: string, init: RequestInit = {}, headers: Record<string, string> = {}) {
+  return api.request(route, { ...init, headers: { host: HOST, cookie: "studio=launch-token", origin: `http://${HOST}`, ...headers, ...(init.headers as Record<string, string>) } });
+}
+
+beforeAll(async () => {
+  const { app } = await import("./http.ts");
+  api = app();
+});
+
+afterAll(() => rmSync(DATA, { recursive: true, force: true }));
+
+describe("who may call the engine", () => {
+  it("refuses a call without this launch's cookie", async () => {
+    const response = await call("/api/app", {}, { cookie: "" });
+    expect(response.status).toBe(401);
+    expect(await response.json()).toMatchObject({ code: "signed-out" });
+  });
+
+  it("refuses a change from another origin", async () => {
+    const response = await call("/api/connection/replay", { method: "POST" }, { origin: "http://example.com" });
+    expect(response.status).toBe(403);
+    expect(await response.json()).toMatchObject({ code: "signed-out" });
+  });
+
+  it("answers nothing on a host other than loopback", async () => {
+    const response = await call("/api/app", {}, { host: "studio.example.com" });
+    expect(response.status).toBe(404);
+  });
+});
+
+describe("the answers the UI reads", () => {
+  it("starts with no mode, and replay once chosen", async () => {
+    const before = (await (await call("/api/app")).json()) as AppInfo;
+    expect(before.mode).toBe("none");
+
+    const chosen = await call("/api/connection/replay", { method: "POST" });
+    expect(chosen.status).toBe(200);
+    expect(((await chosen.json()) as AppInfo).mode).toBe("replay");
+  });
+
+  it("lists the sample drama once it is made, as a card", async () => {
+    expect(await (await call("/api/dramas")).json()).toEqual([]);
+
+    const made = await call("/api/dramas/sample", { method: "POST", body: JSON.stringify({ language: "en" }), headers: { "content-type": "application/json" } });
+    expect(made.status).toBe(200);
+    const { id } = (await made.json()) as { id: string };
+
+    const cards = (await (await call("/api/dramas")).json()) as DramaCard[];
+    expect(cards).toHaveLength(1);
+    expect(cards[0]).toMatchObject({ id, title: "The Stepmother", mode: "replay", preset: "en-us-live-sfw", rehearsal: false });
+  });
+
+  it("says plainly when a drama doesn't exist", async () => {
+    const response = await call("/api/dramas/no-such-drama");
+    expect(response.status).toBe(404);
+    expect(await response.json()).toMatchObject({ code: "not-found" });
+  });
+});
