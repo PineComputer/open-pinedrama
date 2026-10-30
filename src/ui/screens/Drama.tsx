@@ -177,7 +177,7 @@ export function Drama({ id, tab, episode }: { id: string; tab: string; episode?:
               : t("rail.tuneValue", { p: drama.parallel, c: drama.perComputer })}
           </button>
         )}
-        <button className="ds-btn s32" onClick={() => setTalking((open) => !open)}>
+        <button className="ds-btn is-secondary is-s32" onClick={() => setTalking((open) => !open)}>
           {t("rail.talk")}
         </button>
       </StepRail>

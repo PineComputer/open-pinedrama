@@ -28,7 +28,7 @@ export function ToastProvider({ children, lasts = 6000 }: { children: ReactNode;
       {children}
       <div className="ds-toasts" role="status" aria-live="polite">
         {toasts.map((toast) => (
-          <div key={toast.id} className={`ds-toast ${toast.error ? "err" : ""}`}>
+          <div key={toast.id} className={`ds-toast ${toast.error ? "is-err" : ""}`}>
             <span>{toast.text}</span>
             {toast.action && (
               <button

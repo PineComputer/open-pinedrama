@@ -17,7 +17,7 @@ export function BudgetMeter({ spentUsd, budgetUsd }: { spentUsd: number; budgetU
   const out = spentUsd >= budgetUsd;
   const warn = !out && spentUsd >= budgetUsd * 0.8;
   return (
-    <div className={`ds-budget ${out ? "out" : warn ? "warn" : ""}`}>
+    <div className={`ds-budget ${out ? "is-out" : warn ? "is-warn" : ""}`}>
       <div className="row">
         <span>{out ? "Budget spent" : "Spent of budget"}</span>
         <b>{`${money(spentUsd)} of ${whole(budgetUsd)}`}</b>

@@ -58,9 +58,9 @@ describe("Button", () => {
         <Button variant="seal">Review now</Button>
       </>,
     );
-    expect(screen.getByRole("button", { name: "Primary" })).toHaveClass("ds-btn", "primary", "s40");
-    expect(screen.getByRole("button", { name: "Text" })).toHaveClass("text", "s32");
-    expect(screen.getByRole("button", { name: "Review now" })).toHaveClass("seal");
+    expect(screen.getByRole("button", { name: "Primary" })).toHaveClass("ds-btn", "is-primary", "is-s40");
+    expect(screen.getByRole("button", { name: "Text" })).toHaveClass("is-text", "is-s32");
+    expect(screen.getByRole("button", { name: "Review now" })).toHaveClass("is-seal");
   });
 });
 
@@ -83,7 +83,7 @@ describe("StatusChip", () => {
     ["failed", "Failed"],
   ] as const)("says %s as “%s”", (status, words) => {
     render(<StatusChip status={status} />);
-    expect(screen.getByText(words)).toHaveClass("ds-chip", status);
+    expect(screen.getByText(words)).toHaveClass("ds-chip", `is-${status}`);
   });
 
   it("counts an observer's findings by severity, and shows nothing for none", () => {
@@ -245,7 +245,7 @@ describe("Steps", () => {
     );
     const list = screen.getByRole("list", { name: "Analyzing" });
     const items = within(list).getAllByRole("listitem");
-    expect(items.map((item) => item.className)).toEqual(["done", "now", "later"]);
+    expect(items.map((item) => item.className)).toEqual(["is-done", "is-now", "is-later"]);
     expect(items[1]).toHaveAttribute("aria-current", "step");
     expect(items[1]).toHaveTextContent("1:42");
   });
@@ -262,9 +262,9 @@ describe("BudgetMeter", () => {
 
   it("warns from 80% and says when the budget is spent", () => {
     const { rerender, container } = render(<BudgetMeter spentUsd={250} budgetUsd={300} />);
-    expect(container.firstElementChild).toHaveClass("warn");
+    expect(container.firstElementChild).toHaveClass("is-warn");
     rerender(<BudgetMeter spentUsd={300} budgetUsd={300} />);
-    expect(container.firstElementChild).toHaveClass("out");
+    expect(container.firstElementChild).toHaveClass("is-out");
     expect(screen.getByText("Budget spent")).toBeInTheDocument();
   });
 

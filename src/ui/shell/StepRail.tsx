@@ -37,7 +37,7 @@ export function StepRail({ drama, step, episode, children }: { drama: DramaView;
           <div key={key}>
             <Link to={`/d/${drama.id}${path ? `/${path}` : ""}`} className="ds-stepbtn" aria-current={key === step ? "page" : undefined}>
               <span>{t(label)}</span>
-              {needs[key] > 0 && <span className="you">{t("rail.needYou", { n: needs[key] })}</span>}
+              {needs[key] > 0 && <span className="ds-needs">{t("rail.needYou", { n: needs[key] })}</span>}
             </Link>
             {key === "episodes" && drama.episodeRows.length > 0 && (
               <ul className="ds-tree" aria-label={t("tree.label")}>
@@ -47,9 +47,9 @@ export function StepRail({ drama, step, episode, children }: { drama: DramaView;
                     <li key={row.id}>
                       {/* The name is what the link shows, then where it stands, said rather than shown (WCAG 2.5.3). */}
                       <Link to={`/d/${drama.id}/e/${row.code}`} aria-current={row.code === episode ? "true" : undefined}>
-                        <span className="code">{row.code}</span> <span className="title">{row.title}</span>
+                        <span className="ds-tree-code">{row.code}</span> <span className="ds-tree-title">{row.title}</span>
                         <span className="sr">, {t(`tree.${mark}` as TKey)}</span>
-                        <span className={`mark ${mark}`} aria-hidden="true" />
+                        <span className={`ds-tree-mark is-${mark}`} aria-hidden="true" />
                       </Link>
                     </li>
                   );

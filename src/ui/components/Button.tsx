@@ -22,7 +22,7 @@ export function Button({ variant = "secondary", size = 36, busy = false, disable
       <button
         type="button"
         {...rest}
-        className={["ds-btn", variant, `s${size}`, className].filter(Boolean).join(" ")}
+        className={["ds-btn", `is-${variant}`, `is-s${size}`, className].filter(Boolean).join(" ")}
         disabled={disabled || busy || disabledReason !== undefined}
         aria-busy={busy || undefined}
         aria-describedby={disabledReason ? reason : rest["aria-describedby"]}
