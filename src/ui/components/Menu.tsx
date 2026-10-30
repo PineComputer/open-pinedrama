@@ -8,16 +8,17 @@ export interface MenuItem {
   disabled?: boolean;
 }
 
-export function Menu({ label, items, trigger }: { label: string; items: MenuItem[]; trigger?: ReactNode }) {
+/** `wide`: the trigger is its content, named by it (a picker such as the drama in view), not a ⋯ icon named by the label. */
+export function Menu({ label, items, trigger, wide }: { label: string; items: MenuItem[]; trigger?: ReactNode; wide?: string }) {
   return (
     <Radix.Root>
       <Radix.Trigger asChild>
-        <button type="button" className="ds-iconbtn" aria-label={label}>
+        <button type="button" className={wide ?? "ds-iconbtn"} aria-label={wide ? undefined : label} title={wide ? label : undefined}>
           {trigger ?? "⋯"}
         </button>
       </Radix.Trigger>
       <Radix.Portal>
-        <Radix.Content className="ds-menu" align="end" sideOffset={4}>
+        <Radix.Content className="ds-menu" align={wide ? "start" : "end"} sideOffset={4}>
           {items.map((item) => (
             <Radix.Item key={item.label} className="ds-menu-item" disabled={item.disabled} onSelect={item.run}>
               {item.label}

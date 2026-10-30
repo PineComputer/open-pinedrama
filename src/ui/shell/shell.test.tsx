@@ -2,6 +2,10 @@
 // rail, the sidebar with the steps, the episode tree and where the drama stands, the top bar with
 // the breadcrumb and the next review, and the drama's bar with its surface and chips.
 import { act, render, screen, within } from "@testing-library/react";
+import { readFileSync } from "node:fs";
+import path from "node:path";
+import { parseStatus } from "../../shared/project.ts";
+import { answer } from "../test/server.ts";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 import type { DramaView, EpisodeRow, ReviewSummary } from "../../shared/types.ts";
@@ -187,5 +191,24 @@ describe("the sidebar", () => {
     expect(standing).toHaveTextContent("1 of 4 episodes finished");
     expect(standing).toHaveTextContent("1 at work");
     expect(standing).toHaveTextContent("1 wait for you");
+  });
+
+  it("switches to another drama from its head", async () => {
+    const user = userEvent.setup();
+    answer("/api/dramas", [{ id: "d1", title: "The Stepmother" }, { id: "d2", title: "Night Class" }]);
+    at("/d/d1");
+    render(<DramaSidebar drama={drama} tab="board" />);
+    await user.click(screen.getByRole("button", { name: /^The Stepmother/ }));
+    await user.click(await screen.findByRole("menuitem", { name: "Night Class" }));
+    expect(location.pathname).toBe("/d/d2");
+  });
+
+  it("lists the scenes of the episode in view, as its breakdown chains them", async () => {
+    const report = JSON.parse(readFileSync(path.resolve("fixtures/status/boards.json"), "utf8"));
+    const { budget: _budget, ...state } = parseStatus(report);
+    answer("/api/dramas/d1/project", { state, sessions: [], problems: [], names: null });
+    render(<DramaSidebar drama={drama} tab="episode" episode="EP001" />);
+    const scenes = await screen.findByRole("list", { name: "EP001 · Scenes" });
+    expect(within(scenes).getAllByRole("listitem").map((scene) => scene.textContent)).toEqual(["1INT. OFFICE - DAY #1-1#1 segments"]);
   });
 });

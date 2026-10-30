@@ -5,15 +5,17 @@
 // beside the work talks to the agents), and at the foot
 // what it has spent and where it stands.
 import { useState } from "react";
-import type { DramaView, EpisodeRow } from "../../shared/types.ts";
-import { api } from "../api.ts";
+import type { ProjectView } from "../../shared/project.ts";
+import type { DramaCard, DramaView, EpisodeRow } from "../../shared/types.ts";
+import { api, useResource } from "../api.ts";
+import { Menu } from "../components/Menu.tsx";
 import { BudgetMeter } from "../components/BudgetMeter.tsx";
 import { Icon, type IconName } from "../icons.tsx";
 import { type TKey, useT } from "../i18n.ts";
 import { nowText, SETUP_STEPS } from "../labels.ts";
 import { Mark } from "../Mark.tsx";
 import { ReviewingChoice } from "../Reviewing.tsx";
-import { Link } from "../router.tsx";
+import { Link, navigate } from "../router.tsx";
 
 export type Step = "script" | "story" | "episodes" | "cut";
 
@@ -143,6 +145,10 @@ function Standing({ drama }: { drama: DramaView }) {
 /** A drama's sidebar. */
 export function DramaSidebar({ drama, tab, episode }: { drama: DramaView; tab: string; episode?: string }) {
   const { t } = useT();
+  const others = useResource<DramaCard[]>("/api/dramas", ["dramas"]);
+  const project = useResource<ProjectView>(`/api/dramas/${drama.id}/project`, [`project:${drama.id}`]);
+  // The scenes of the episode in view, as its breakdown's scene chains give them.
+  const scenes = episode ? (project.data?.state?.episodes[episode]?.sceneChains ?? []) : [];
   const [tuning, setTuning] = useState(false);
   const step = stepOf(drama, tab);
   const needs: Record<Step, number> = {
@@ -155,13 +161,24 @@ export function DramaSidebar({ drama, tab, episode }: { drama: DramaView; tab: s
   return (
     <aside className="ds-sidebar" aria-label={t("sidebar.label")}>
       <div className="ds-sidebar-head">
-        <Link to={`/d/${drama.id}`} className="ds-project">
-          {drama.cast[0] ? <img src={drama.cast[0]} alt="" /> : <span className="ds-project-blank" aria-hidden="true" />}
-          <span>
-            <b>{drama.title}</b>
-            <small>{[episodes.total ? t("sidebar.episodes", { n: episodes.total }) : "", drama.format].filter(Boolean).join(" · ")}</small>
-          </span>
-        </Link>
+        <Menu
+          label={t("sidebar.switch")}
+          wide="ds-project"
+          trigger={
+            <>
+              {drama.cast[0] ? <img src={drama.cast[0]} alt="" /> : <span className="ds-project-blank" aria-hidden="true" />}
+              <span>
+                <b>{drama.title}</b>
+                <small>{[episodes.total ? t("sidebar.episodes", { n: episodes.total }) : "", drama.format].filter(Boolean).join(" · ")}</small>
+              </span>
+              <Icon name="caret-down" />
+            </>
+          }
+          items={[
+            ...(others.data ?? []).filter((other) => other.id !== drama.id).map((other) => ({ label: other.title, run: () => navigate(`/d/${other.id}`) })),
+            { label: t("sidebar.allDramas"), run: () => navigate("/") },
+          ]}
+        />
       </div>
       <div className="ds-sidebar-scroll">
         <nav aria-label={t("rail.steps")}>
@@ -192,6 +209,24 @@ export function DramaSidebar({ drama, tab, episode }: { drama: DramaView; tab: s
             </div>
           ))}
         </nav>
+        {scenes.length > 0 && (
+          <>
+            <span className="ds-sidebar-sec">
+              {t("sidebar.scenes", { code: episode ?? "" })} <span className="count">{scenes.length}</span>
+            </span>
+            <ol className="ds-scenes" aria-label={t("sidebar.scenes", { code: episode ?? "" })}>
+              {scenes.map((scene, n) => (
+                <li key={n}>
+                  <span className="n">{n + 1}</span>
+                  <span className="what">
+                    <b>{scene.sceneHeading}</b>
+                    <small>{t("sidebar.segments", { n: scene.segments.length })}</small>
+                  </span>
+                </li>
+              ))}
+            </ol>
+          </>
+        )}
         <span className="ds-sidebar-sec">{t("sidebar.production")}</span>
         <Item to={`/d/${drama.id}/inbox`} icon="list-checks" label={t("section.inbox")} current={tab === "inbox"} count={drama.waiting} />
         <Item to={`/d/${drama.id}/crew`} icon="cube" label={t("section.crew")} current={tab === "crew"} />
