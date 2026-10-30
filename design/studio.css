@@ -509,6 +509,7 @@ p { font-size: inherit; line-height: inherit; color: inherit; margin: 0; }
 .ctxt { padding: 12px 14px 14px; display: grid; gap: 6px; }
 .ctxt b { font-size: 14px; font-weight: 700; }
 .aka { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-size: 11.5px; }
+.ctxt .desc { margin: 0; font-size: 12px; line-height: 1.5; color: var(--text-secondary); }
 .cardacts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 4px; }
 .mini { height: 30px; border-radius: 999px; border: 1px solid var(--border-input); background: var(--surface); color: var(--text-secondary); font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; justify-content: center; gap: 5px; cursor: pointer; white-space: nowrap; }
 .mini .ic { width: 13px; height: 13px; }

@@ -34,14 +34,14 @@ window.P = (() => {
       { id: "tess", name: "Tess Park", role: "Base look", ver: "S0 v1", st: "back", err: 1, sheet: img("cast-tess"), face: img("face-tess") },
     ],
     places: [
-      { id: "apartment", name: "Luca's apartment", time: "Night", ver: "v2", st: "accepted", pic: img("plate-apartment") },
-      { id: "house", name: "Cole house · living room", time: "Day", ver: "v5", st: "accepted", pic: img("plate-house") },
-      { id: "garden", name: "Garden wedding", time: "Day", ver: "v1", st: "you", pic: img("plate-garden") },
-      { id: "desk", name: "County jail · front desk", time: "Day", ver: "v1", st: "accepted", pic: img("plate-desk") },
-      { id: "cell", name: "County jail · cell", time: "Day", ver: "v1", st: "accepted", pic: img("plate-cell") },
-      { id: "street", name: "Jail street", time: "Day", ver: "v1", st: "accepted", pic: img("plate-street") },
+      { id: "apartment", name: "Luca's apartment", desc: "A one-bedroom walk-up over a laundromat: a sofa bed, a desk under the window, case files stacked by the door.", ver: "v2", st: "accepted", pic: img("plate-apartment"), views: ["floor plan", "front", "back", "left side", "right side"], times: [["Night", "v1"]] },
+      { id: "house", name: "Cole house · living room", desc: "The Coles' living room: a fireplace, family photographs on the mantel, a bay window onto the street.", ver: "v5", st: "accepted", pic: img("plate-house"), views: ["floor plan", "front", "back", "left side", "right side"], times: [["Day", "v2"], ["Night", "v1"]] },
+      { id: "garden", name: "Garden wedding", desc: "A rented garden set for a small wedding: white chairs in rows, an arch of roses, a string quartet's stands.", ver: "v1", st: "you", pic: img("plate-garden"), views: ["floor plan", "front", "back", "left side", "right side"], times: [["Day", "v1"]] },
+      { id: "desk", name: "County jail · front desk", desc: "The jail's front desk behind bulletproof glass, a bench for visitors, a clock over the door.", ver: "v1", st: "accepted", pic: img("plate-desk"), views: ["floor plan", "front", "back", "left side", "right side"], times: [["Day", "v1"]] },
+      { id: "cell", name: "County jail · cell", desc: "A two-bunk cell, a steel toilet, a slit window high in the back wall.", ver: "v1", st: "accepted", pic: img("plate-cell"), views: ["floor plan", "front", "back", "left side", "right side"], times: [["Day", "v1"]] },
+      { id: "street", name: "Jail street", desc: "The street outside the county jail: a bail bonds office, a bus stop, parked cruisers.", ver: "v1", st: "accepted", pic: img("plate-street"), views: ["floor plan", "front", "back", "left side", "right side"], times: [["Day", "v1"]] },
     ],
-    props: [{ id: "file", name: "Case file", ver: "v1", st: "accepted", pic: img("prop-folder") }],
+    props: [{ id: "file", name: "Case file", desc: "A worn manila folder, the case number in marker on its tab, papers sticking out.", ver: "v1", st: "accepted", pic: img("prop-folder") }],
     // EP006 on the canvas: scenes, segments, the references each one reads, its board and its latest take
     scenes: [
       { n: 1, place: "apartment", time: "Night", segs: [

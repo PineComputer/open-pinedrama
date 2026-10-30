@@ -132,7 +132,7 @@
       ${(v === "back" || v === "note") && html`<input class="why" placeholder=${v === "back" ? "Why it goes back (required)" : "Your note"} value=${S.cardWhy[id] || ""} onInput=${(e) => set({ cardWhy: { ...S.cardWhy, [id]: e.target.value } })}/>`}`;
   }
   function Story() {
-    const tabs = [["bible", "Bible"], ["cast", "Cast", P.cast.length], ["world", "World", P.places.length + P.props.length]];
+    const tabs = [["bible", "Bible"], ["cast", "Cast", P.cast.length], ["scenes", "Scenes", P.places.length], ["props", "Props", P.props.length]];
     const open = ["margaret", "garden"], decided = open.filter((k) => S.cards[k] && (S.cards[k] !== "back" || (S.cardWhy[k] || "").trim())).length;
     return html`<div class="main">
       <${TopBar} crumbs=${[P.project.title, "Story"]}/>
@@ -156,10 +156,15 @@
             ${c.st === "you" && html`<div class="finding warn">${I("warning")}<span>warn · The blouse reads as purple; the bible says plum.</span></div><${ReviewBtns} id=${c.id}/>`}
             ${c.st === "back" && html`<div class="finding err">${I("warning-circle")}<span>Sent back by the agent: the observer found an error (a third hand). Redrawing.</span></div>`}
           </div></article>`)}</div>`}
-        ${S.stab === "world" && html`<div class="worldgrid">${P.places.map((p) => html`<article class="placecard">
+        ${S.stab === "scenes" && html`<div class="worldgrid">${P.places.map((p) => html`<article class="placecard">
           <div class="pic"><img src=${p.pic} alt=""/>${p.st !== "accepted" && Status(p.st)}</div>
-          <div class="ctxt"><b>${p.name}</b><small class="muted">Plate · ${p.time} · ${p.ver}</small>${p.st === "you" && html`<${ReviewBtns} id=${p.id}/>`}</div></article>`)}
-          ${P.props.map((p) => html`<article class="placecard"><div class="pic"><img src=${p.pic} alt=""/></div><div class="ctxt"><b>${p.name}</b><small class="muted">Key prop · ${p.ver}</small></div></article>`)}</div>`}
+          <div class="ctxt"><div style="display:flex;align-items:baseline;gap:8px"><b class="grow">${p.name}</b><span class="mono subtle" style="font-size:11px">${p.ver}</span></div>
+            <p class="desc">${p.desc}</p>
+            <div class="aka"><span class="muted">Views</span>${p.views.map((v) => html`<span class="tag">${v}</span>`)}</div>
+            <div class="aka"><span class="muted">Times</span>${p.times.map(([t, v]) => html`<span class="tag">${t} · ${v}</span>`)}</div>
+            ${p.st === "you" && html`<${ReviewBtns} id=${p.id}/>`}</div></article>`)}</div>`}
+        ${S.stab === "props" && html`<div class="worldgrid">${P.props.map((p) => html`<article class="placecard"><div class="pic"><img src=${p.pic} alt=""/>${p.st !== "accepted" && Status(p.st)}</div>
+          <div class="ctxt"><div style="display:flex;align-items:baseline;gap:8px"><b class="grow">${p.name}</b><span class="mono subtle" style="font-size:11px">${p.ver}</span></div><small class="muted">Key prop</small><p class="desc">${p.desc}</p></div></article>`)}</div>`}
         ${S.stab !== "bible" && html`<div class="sendstrip"><span class="muted">Looks and plates · ${decided} of 2 decided</span><span class="grow"></span>
           <button class="btn primary sm" disabled=${decided < 2} onClick=${() => toast("Review sent: Margaret Cole and Garden wedding.")}>Send review</button></div>`}
       </div><${AgentPanel}/></div></div>`;
