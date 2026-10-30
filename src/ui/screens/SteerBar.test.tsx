@@ -6,6 +6,7 @@ import userEvent from "@testing-library/user-event";
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
+import { parseLineage } from "../../shared/lineage.ts";
 import { parseBibleNames } from "../../shared/names.ts";
 import { parseStatus, type ProjectView } from "../../shared/project.ts";
 import type { ChatView, DramaView, EpisodeRow, ReviewSummary } from "../../shared/types.ts";
@@ -14,6 +15,7 @@ import { accept, answer, calls, sent } from "../test/server.ts";
 import { Canvas } from "./Canvas.tsx";
 
 const fixture = (name: string) => JSON.parse(readFileSync(path.resolve("fixtures/status", `${name}.json`), "utf8"));
+const lineageView = () => ({ lineage: parseLineage(JSON.parse(readFileSync(path.resolve("fixtures/lineage", "shot.json"), "utf8"))), problems: [] });
 
 function row(state: EpisodeRow["state"]): EpisodeRow {
   return { id: "e1", number: 1, code: "EP001", title: "The stepmother arrives", state, stages: {} as EpisodeRow["stages"], spent: { total: 0, media: 0, partial: false }, updatedAt: "2026-10-30T10:00:00Z" };
@@ -49,6 +51,7 @@ function engine(inbox: ReviewSummary[] = [], sends: ChatView["sends"] = "steer",
   for (const id of ["s0", "s1"]) answer(`/api/sessions/${id}/chat`, { sessionId: id, label: id === "s1" ? "EP001" : "", sends, ...(reviewId ? { reviewId } : {}), messages: [] });
   answer("/api/dramas/d1/project", project());
   answer("/api/dramas/d1/files", []);
+  answer("/api/dramas/d1/lineage", lineageView());
   answer("/api/inbox", inbox);
   accept("/api/sessions/s0/chat");
   accept("/api/sessions/s1/chat");

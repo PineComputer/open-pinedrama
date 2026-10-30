@@ -13,7 +13,7 @@ ends with an acceptance by merecdesperez44323-lab, who asked for the redesign, b
   decides every take and cut. Canvas and Graph are read-only views with those actions.
   Editing an item's prompt and drawing it again by hand is phase 2 and not built now.
 - **One project, three surfaces.** Studio (the guided flow: Script, Story, Episodes, Cut),
-  Canvas (the whole series as one live board) and Graph (where each version came from) read
+  Canvas (an episode as one live board) and Graph (where each version came from) read
   the same project state and share one top bar.
 - **The state comes from drama-cli.** The studio reads `drama-cli status` instead of
   inferring what a turn's files mean. A screen adds a view, never a state of its own.
@@ -31,7 +31,7 @@ ends with an acceptance by merecdesperez44323-lab, who asked for the redesign, b
 | **M2** New shell | The new look and frame: top bar, step rail, episode tree, status bar, budget meter, light and dark. | Design tokens and components, each state shown in a development gallery; today's screens inside the new frame. | CI green, with component screenshots, axe and a contrast check. The person looks through the gallery and the sample drama in both themes. |
 | **M3** Control room | What N Computers are doing, what each episode still needs, and what waits for the maker, at a glance. | The agent panel: running, to do, decisions, grouped steps; docked, collapsed or floating; Crew and the inbox folded in. | CI green, with three episodes in parallel in replay. Watching that, merecdesperez44323-lab can say where each episode is and who it waits for from the panel alone. |
 | **M4** The new flow | A new maker goes from uploading a screenplay to the first episode's cut in the new screens. | Home, upload, preset, analyzing, Fountain review, Story, Episodes, the episode workspace, the review room and the stops (a red line in the screenplay, the budget spent, a cap reached) replace today's screens, which are deleted. | CI green, end to end from upload to cut in replay, with each stop. The person takes a real Pine project from upload to EP001's cut, within a stated spend, and every place they got stuck is fixed. |
-| **M5** Canvas | The series as one board, drawn as the agent works. | Layout, item cards, the steering bar, following the agent, a minimap. Read-only. | CI green, including a test that no way to generate exists and that 80 episodes don't overlap. The person watches the agent fill the board in replay, drags away, and resumes following. |
+| **M5** Canvas | An episode as one board, drawn as the agent works. | Layout, item cards, the steering bar, following the agent, a minimap. Read-only. | CI green, including a test that no way to generate exists and that an episode's scenes and segments don't overlap. The person watches the agent fill the board in replay, drags away, and resumes following. |
 | **M6** Cut viewer | Watch a cut and leave notes at a time for the agent. | Tracks for takes, subtitles and dialogue; notes at the playhead; the decision in the review room. | CI green. Two notes on a real cut, rebuilt by the agent and checked. |
 | **M7** Graph | For any take, where it came from and what makes it stale. | Versions as nodes with their inputs; stale marks. Read-only. Read from drama-cli's lineage as `drama-cli export comfyui` writes it. | CI green. A location's plate replaced: every storyboard and take made from it is marked stale. |
 
@@ -97,6 +97,10 @@ The canvas is built without React Flow: phase 1 only reads the board, and its pa
 and minimap are a few lines of our own, so the dependency isn't needed. The layout
 (`src/shared/canvas.ts`) draws only the connectors the state states: each scene's shot order
 and what an episode needs from a reference. What each segment uses waits for P8.0's export.
+The board shows one episode, as the reference's drama board does (merecdesperez44323-lab's
+decision): its scenes as bands with their segments in shot order, the shared references the
+episode uses (from P8.0's lineage links) or needs on the left, and a switcher to the other
+episodes. A whole-series overview isn't kept.
 
 **P7 Cut viewer (M6).** P7.1 tracks. P7.2 notes at the playhead.
 

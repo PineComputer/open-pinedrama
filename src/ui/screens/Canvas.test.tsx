@@ -6,6 +6,7 @@ import userEvent from "@testing-library/user-event";
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
+import { parseLineage } from "../../shared/lineage.ts";
 import { parseBibleNames } from "../../shared/names.ts";
 import { parseStatus, type ProjectView } from "../../shared/project.ts";
 import type { DramaView, FileItem } from "../../shared/types.ts";
@@ -14,6 +15,7 @@ import { answer, calls } from "../test/server.ts";
 import { Canvas } from "./Canvas.tsx";
 
 const fixture = (name: string) => JSON.parse(readFileSync(path.resolve("fixtures/status", `${name}.json`), "utf8"));
+const lineageView = () => ({ lineage: parseLineage(JSON.parse(readFileSync(path.resolve("fixtures/lineage", "shot.json"), "utf8"))), problems: [] });
 const drama = { id: "d1", title: "The Stepmother" } as unknown as DramaView;
 
 function project(change?: (report: Record<string, any>) => void, names = true): ProjectView {
@@ -28,6 +30,7 @@ const file = (id: number, filePath: string, createdAt = "2026-10-30T10:00:00Z") 
 function engine(view: ProjectView | null, files: FileItem[] = []) {
   answer("/api/dramas/d1/project", view ?? { state: null, sessions: [], problems: [], names: null });
   answer("/api/dramas/d1/files", files);
+  answer("/api/dramas/d1/lineage", lineageView());
 }
 
 describe("the canvas", () => {
@@ -66,19 +69,28 @@ describe("the canvas", () => {
     await waitFor(() => expect(calls("GET", "/api/dramas/d1/files")).toHaveLength(2));
   });
 
-  it("groups the segments by episode and scene, with the scene's heading", async () => {
+  it("shows one episode, its scenes as bands, with the references it uses", async () => {
     engine(project());
     render(<Canvas drama={drama} />);
-    const episode = await screen.findByRole("group", { name: /^EP001/ });
-    expect(within(episode).getByRole("group", { name: "INT. OFFICE - DAY #1-1#" })).toBeInTheDocument();
-    expect(within(episode).getByRole("button", { name: /^seg01/ })).toBeInTheDocument();
+    const band = await screen.findByRole("group", { name: "INT. OFFICE - DAY #1-1#" });
+    expect(within(band).getByRole("button", { name: /^seg01/ })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /^EP001 · x/ })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /^林/ })).toBeInTheDocument();
   });
 
-  it("keeps the episode chosen elsewhere chosen here", async () => {
-    window.history.pushState(null, "", "/d/d1/canvas?item=EP001");
-    engine(project());
+  it("shows the episode chosen elsewhere, and moves between episodes with its switcher", async () => {
+    const user = userEvent.setup();
+    window.history.pushState(null, "", "/d/d1/canvas?item=EP002");
+    engine(project((report) => {
+      report.episodes.EP002 = { ...report.episodes.EP001, scene_chains: [{ scene_heading: "EXT. YARD - NIGHT #2-1#", segments: ["seg01"] }] };
+    }));
     render(<Canvas drama={drama} />);
-    expect(await screen.findByRole("group", { name: /^EP001/ })).toHaveAttribute("aria-current", "true");
+    expect(await screen.findByRole("group", { name: "EXT. YARD - NIGHT #2-1#" })).toBeInTheDocument();
+    expect(screen.queryByRole("group", { name: "INT. OFFICE - DAY #1-1#" })).toBeNull();
+    expect(screen.getByRole("button", { name: "Next episode" })).toBeDisabled();
+    await user.click(screen.getByRole("button", { name: "Previous episode" }));
+    expect(location.search).toBe("?item=EP001");
+    expect(await screen.findByRole("group", { name: "INT. OFFICE - DAY #1-1#" })).toBeInTheDocument();
     window.history.pushState(null, "", "/");
   });
 

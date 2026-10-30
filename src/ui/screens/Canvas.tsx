@@ -1,12 +1,13 @@
-// The canvas (docs/REDESIGN_PLAN.md, P6.2): the whole series as one board, laid out from the
+// The canvas (docs/REDESIGN_PLAN.md, P6): one episode as one board, laid out from the
 // project's state (src/shared/canvas.ts). Each item is named as the bible names it, says where it
 // stands, and shows its current picture from the files the stops returned. The maker moves about
 // it with drag, wheel, zoom and fit. Phase 1 only reads: nothing here makes or changes an item.
 //
 // Modified from Reveric (AGPLv3, docs/REUSED.md): the camera's fit and wheel zoom and the minimap are
-// adapted from its designs/desktop/canvas/board.jsx, changed for a series-wide board (2026-10-30).
+// adapted from its designs/desktop/canvas/board.jsx, for the studio's episode board (2026-10-30).
 import { type MouseEvent, type PointerEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { type Board, type BoardNode, type Box, layoutBoard } from "../../shared/canvas.ts";
+import { type Board, type BoardNode, type Box, layoutEpisode } from "../../shared/canvas.ts";
+import type { LineageView } from "../../shared/lineage.ts";
 import { stageOfFile } from "../../shared/facts.ts";
 import type { ProjectView, StageStatus } from "../../shared/project.ts";
 import type { DramaView, FileItem } from "../../shared/types.ts";
@@ -17,7 +18,8 @@ import { type Status, StatusChip } from "../components/StatusChip.tsx";
 import { type TKey, useT } from "../i18n.ts";
 import { Icon } from "../icons.tsx";
 import { subjectLabel } from "../labels.ts";
-import { Link, usePath } from "../router.tsx";
+import { Link, navigate, usePath } from "../router.tsx";
+import { Menu } from "../components/Menu.tsx";
 import { SteerBar } from "./SteerBar.tsx";
 
 type State = NonNullable<ProjectView["state"]>;
@@ -50,9 +52,7 @@ function picture(files: FileItem[], at: string[], stage: StageStatus | undefined
 // Zoom range, button step, wheel rate and the scale below which cards are drawn as bars (level of
 // detail), as Reveric's canvas has them (designs/desktop/canvas/board.jsx, CV_ZOOM_*, CV_LOD_K;
 // drama/views.jsx, the zoom cluster's 1.25 step).
-// The level-of-detail scale is ours, lower than Reveric's 0.55: the series board is many episodes
-// wide, and a fitted board of a few episodes should still show its pictures.
-const ZOOM = { min: 0.2, max: 2.2, step: 1.25, start: 0.6, wheel: 0.0016, lod: 0.3, fitMax: 1.05, pad: 80 };
+const ZOOM = { min: 0.28, max: 2.2, step: 1.25, start: 0.6, wheel: 0.0016, lod: 0.55, fitMax: 1.05, pad: 80 };
 type Cam = { x: number; y: number; k: number };
 
 /** The camera that shows `box` whole in a view of `size`, centred (Reveric's cvFitView). */
@@ -61,6 +61,15 @@ function fitTo(box: Box, size: { w: number; h: number }): Cam | null {
   const b = { x: box.x - ZOOM.pad, y: box.y - ZOOM.pad, w: box.w + 2 * ZOOM.pad, h: box.h + 2 * ZOOM.pad };
   const k = Math.max(ZOOM.min, Math.min(ZOOM.fitMax, Math.min(size.w / b.w, size.h / b.h)));
   return { k, x: (size.w - b.w * k) / 2 - b.x * k, y: (size.h - b.h * k) / 2 - b.y * k };
+}
+
+/** The episode the newest saved file belongs to: where the agent is at work now. */
+function agentEpisode(files: FileItem[]): string | undefined {
+  for (const file of [...files].sort((a, b) => b.createdAt.localeCompare(a.createdAt))) {
+    const at = stageOfFile(file.path)?.at;
+    if (at?.[0] === "episodes") return at[1];
+  }
+  return undefined;
 }
 
 /** The node the newest saved file shows: where the agent is at work now. */
@@ -127,7 +136,13 @@ export function Canvas({ drama }: { drama: DramaView }) {
   const files = useResource<FileItem[]>(`/api/dramas/${drama.id}/files`, [`drama:${drama.id}`]);
   const state = project.data?.state ?? null;
   const names = project.data?.names ?? null;
-  const board: Board | null = useMemo(() => (state ? layoutBoard(state) : null), [state]);
+  const lineage = useResource<LineageView>(`/api/dramas/${drama.id}/lineage`, [`drama:${drama.id}`]);
+  const item = usePath().query.get("item");
+  // One episode per board: the one chosen (the tree, Studio, Graph or the switcher), else the one the agent last saved work for, else the first.
+  const codes = useMemo(() => (state ? Object.keys(state.episodes).sort((a, b) => a.localeCompare(b, "en", { numeric: true })) : []), [state]);
+  const working = agentEpisode(files.data ?? []);
+  const code = item && codes.includes(item) ? item : working && codes.includes(working) ? working : codes[0];
+  const board: Board | null = useMemo(() => (state && code ? layoutEpisode(state, code, lineage.data?.lineage ?? null) : null), [state, code, lineage.data]);
   const [cam, setCam] = useState<Cam>({ x: 24, y: 56, k: ZOOM.start });
   // A move the studio makes (fit, following) glides; the maker's own drag and wheel don't.
   const [smooth, setSmooth] = useState(false);
@@ -137,7 +152,6 @@ export function Canvas({ drama }: { drama: DramaView }) {
   const [follow, setFollow] = useState(true);
   const [minimap, setMinimap] = useState(true);
   const view = useRef<HTMLDivElement>(null);
-  const item = usePath().query.get("item");
   const target = board ? newestWork(files.data ?? [], board) : undefined;
 
   useEffect(() => {
@@ -164,11 +178,10 @@ export function Canvas({ drama }: { drama: DramaView }) {
     // Centred at the zoom the maker left it at, so following moves the view and never zooms it.
     if (node && size.w) glide({ k: cam.k, x: size.w / 2 - (node.x + node.w / 2) * cam.k, y: size.h / 2 - (node.y + node.h / 2) * cam.k });
   }, [follow, target, size.w, size.h, board]);
-  // The episode chosen elsewhere (the tree, Studio, Graph) stays chosen here, and in view.
+  // A new episode on the board is shown whole, unless the agent is being followed on it.
   useEffect(() => {
-    const group = board?.groups.find((candidate) => candidate.kind === "episode" && candidate.episode === item);
-    if (group && !follow) glide(fitTo(group, size));
-  }, [board, item, size.w, size.h]);
+    if (board && !(follow && target)) glide(fitTo({ x: 0, y: 0, w: board.width, h: board.height }, size));
+  }, [code, size.w > 0]);
   // Escape lets go of the chosen item, as on Reveric's canvas.
   useEffect(() => {
     const key = (event: KeyboardEvent) => {
@@ -255,31 +268,33 @@ export function Canvas({ drama }: { drama: DramaView }) {
               const a = nodeById.get(edge.from);
               const b = nodeById.get(edge.to);
               if (!a || !b) return null;
-              const [x1, y1, x2, y2] = edge.kind === "order" ? [a.x + a.w / 2, a.y + a.h, b.x + b.w / 2, b.y - 28] : [a.x + a.w, a.y + a.h / 2, b.x, b.y + b.h / 2];
+              // From the right side of one card to the left side of the next: shot order runs along a band, a reference's line into it.
+              const [x1, y1, x2, y2] = [a.x + a.w, a.y + a.h / 2, b.x, b.y + b.h / 2];
               const d = edge.kind === "order" ? `M${x1},${y1} L${x2},${y2}` : `M${x1},${y1} C${(x1 + x2) / 2},${y1} ${(x1 + x2) / 2},${y2} ${x2},${y2}`;
               // With an item chosen, its connectors stand out and the rest fade (Reveric's drama board).
               const on = chosen !== null && (edge.from === chosen || edge.to === chosen);
               return <path key={`${edge.from}>${edge.to}`} className={`is-${edge.kind}${on ? " is-on" : chosen ? " is-dim" : ""}`} d={d} />;
             })}
           </svg>
-          {board.groups.map((group) => {
-            if (group.kind === "scene") return null;
-            const heading = [group.episode, names?.episodes[group.episode]].filter(Boolean).join(" · ");
-            const members = board.groups.filter((scene) => scene.kind === "scene" && scene.episode === group.episode);
-            return (
-              <div key={group.id} role="group" aria-label={heading} aria-current={group.episode === item ? "true" : undefined} className={`ds-cgroup is-episode${group.episode === item ? " is-selected" : ""}`} style={{ left: group.x, top: group.y, width: group.w, height: group.h }}>
-                <span className="heading">{heading}</span>
-                {members.map((scene) => (
-                  <div key={scene.id} role="group" aria-label={scene.heading ?? t("canvas.unlisted")} className="ds-cgroup is-scene" style={{ left: scene.x - group.x, top: scene.y - group.y, width: scene.w, height: scene.h }}>
-                    <span className="heading">{scene.heading ?? t("canvas.unlisted")}</span>
-                    {board.nodes.filter((node) => node.scene === scene.id).map((node) => card(node, { ...node, x: node.x - scene.x, y: node.y - scene.y }))}
-                  </div>
-                ))}
-              </div>
-            );
-          })}
+          {board.groups.map((scene, n) => (
+            // A scene as a band, the reference's way: its number and heading, then its segments in shot order.
+            <div key={scene.id} role="group" aria-label={scene.heading ?? t("canvas.unlisted")} className="ds-cgroup is-scene" style={{ left: scene.x, top: scene.y, width: scene.w, height: scene.h }}>
+              <span className="heading">{scene.heading ? t("canvas.scene", { n: n + 1, heading: scene.heading }) : t("canvas.unlisted")}</span>
+              {board.nodes.filter((node) => node.scene === scene.id).map((node) => card(node, { ...node, x: node.x - scene.x, y: node.y - scene.y }))}
+            </div>
+          ))}
           {board.nodes.filter((node) => node.kind !== "segment").map((node) => card(node))}
         </div>
+      </div>
+      <div className="ds-epswitch">
+        <IconButton label={t("canvas.prevEpisode")} icon="caret-left" disabled={codes.indexOf(code!) <= 0} onClick={() => navigate(`/d/${drama.id}/canvas?item=${codes[codes.indexOf(code!) - 1]}`, { replace: true })} />
+        <Menu
+          label={t("canvas.episode")}
+          wide="ds-epswitch-pick"
+          trigger={<>{[code, names?.episodes[code!]].filter(Boolean).join(" · ")}<Icon name="caret-down" /></>}
+          items={codes.map((other) => ({ label: [other, names?.episodes[other]].filter(Boolean).join(" · "), run: () => navigate(`/d/${drama.id}/canvas?item=${other}`, { replace: true }) }))}
+        />
+        <IconButton label={t("canvas.nextEpisode")} icon="caret-right" disabled={codes.indexOf(code!) >= codes.length - 1} onClick={() => navigate(`/d/${drama.id}/canvas?item=${codes[codes.indexOf(code!) + 1]}`, { replace: true })} />
       </div>
       {chosenNode && (
         <SteerBar

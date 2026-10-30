@@ -6,6 +6,7 @@ import userEvent from "@testing-library/user-event";
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { parseLineage } from "../../shared/lineage.ts";
 import { parseBibleNames } from "../../shared/names.ts";
 import { parseStatus, type ProjectView } from "../../shared/project.ts";
 import type { DramaView, FileItem } from "../../shared/types.ts";
@@ -14,6 +15,7 @@ import { answer } from "../test/server.ts";
 import { Canvas } from "./Canvas.tsx";
 
 const fixture = (name: string) => JSON.parse(readFileSync(path.resolve("fixtures/status", `${name}.json`), "utf8"));
+const lineageView = () => ({ lineage: parseLineage(JSON.parse(readFileSync(path.resolve("fixtures/lineage", "shot.json"), "utf8"))), problems: [] });
 const drama = { id: "d1", title: "The Stepmother", status: "production", crew: [], episodeRows: [] } as unknown as DramaView;
 
 function project(): ProjectView {
@@ -28,6 +30,7 @@ const board = file(2, "/work/drama/episodes/EP001/multi_panel_storyboard/seg01/l
 function engine(files: FileItem[]) {
   answer("/api/dramas/d1/project", project());
   answer("/api/dramas/d1/files", files);
+  answer("/api/dramas/d1/lineage", lineageView());
   answer("/api/inbox", []);
 }
 
@@ -103,7 +106,7 @@ describe("zoomed far out", () => {
     render(<Canvas drama={drama} />);
     const lin = await screen.findByRole("button", { name: /^林/ });
     await waitFor(() => expect(lin.querySelector("img")).not.toBeNull());
-    while (Number.parseInt(screen.getByRole("status", { name: "Zoom" }).textContent!) >= 30) await user.click(screen.getByRole("button", { name: "Zoom out" }));
+    while (Number.parseInt(screen.getByRole("status", { name: "Zoom" }).textContent!) >= 55) await user.click(screen.getByRole("button", { name: "Zoom out" }));
     expect(lin.querySelector("img")).toBeNull();
   });
 });
