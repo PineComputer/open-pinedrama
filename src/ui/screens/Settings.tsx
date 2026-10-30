@@ -22,7 +22,7 @@ export function Settings({ app, onChange }: { app: AppInfo; onChange: () => void
     onChange();
   });
   return (
-    <main className="page">
+    <div className="page">
       <div className="head">
         <h1>{t("settings.title")}</h1>
       </div>
@@ -153,6 +153,6 @@ export function Settings({ app, onChange }: { app: AppInfo; onChange: () => void
           </div>
         </section>
       </div>
-    </main>
+    </div>
   );
 }

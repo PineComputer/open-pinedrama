@@ -136,7 +136,7 @@ describe("namedPaths", () => {
   });
 
   it("finds a rewritten screenplay and the file it came from, as the agent named them (28 October 2026)", () => {
-    // From the person's test: the .fountain link was missed while extensions stopped at five letters.
+    // From merecdesperez44323-lab's test: the .fountain link was missed while extensions stopped at five letters.
     const question = "请查看：[screenplay.fountain](drama/inputs/screenplay.fountain)；原始文件副本：[screenplay-source.docx](drama/inputs/screenplay-source.docx)。";
     expect(namedPaths(question)).toEqual(["drama/inputs/screenplay.fountain", "drama/inputs/screenplay-source.docx"]);
     expect(namedPaths("see `drama/screenplay/v1/review.markdown`")).toEqual(["drama/screenplay/v1/review.markdown"]);

@@ -1,13 +1,17 @@
 // The bar over the work, in the pro direction (its spec, "TopBar"): back, where you are as a
 // breadcrumb, and the next review. In a drama, the bar under it holds the surface (Studio, Canvas,
 // Graph) with the selection kept across them, and the drama's preset, format and spend.
+import { useState } from "react";
 import type { DramaView, ReviewSummary } from "../../shared/types.ts";
-import { IconButton } from "../components/Button.tsx";
+import { api, useAction } from "../api.ts";
+import { Button, IconButton } from "../components/Button.tsx";
+import { Dialog } from "../components/Dialog.tsx";
+import { StatusChip } from "../components/StatusChip.tsx";
 import { Segmented } from "../components/Segmented.tsx";
 import { Tooltip } from "../components/Tooltip.tsx";
 import { Icon } from "../icons.tsx";
 import { useT } from "../i18n.ts";
-import { moneyText } from "../labels.ts";
+import { errorText, moneyText } from "../labels.ts";
 import { Link, match, navigate, usePath } from "../router.tsx";
 
 type Surface = "studio" | "canvas" | "graph";
@@ -67,6 +71,59 @@ export function DramaBar({ drama }: { drama: DramaView }) {
         </span>
       </Tooltip>
     </div>
+  );
+}
+
+/** Whether the drama's Computers are still being stopped after the maker stopped it. */
+export function stillStopping(drama: DramaView): boolean {
+  return drama.status === "stopped" && drama.crew.some((computer) => computer.state === "stopping");
+}
+
+/**
+ * Stop in plain sight (the spec's StopControl): Stop drama, after a confirm; Stopping… while its
+ * Computers stop; then Stopped, with Resume.
+ */
+export function StopControl({ drama }: { drama: DramaView }) {
+  const { t } = useT();
+  const [asking, setAsking] = useState(false);
+  const stop = useAction(() => api(`/api/dramas/${drama.id}/stop`, { method: "POST" }));
+  const resume = useAction(() => api(`/api/dramas/${drama.id}/resume`, { method: "POST" }));
+  const error = stop.error ?? resume.error;
+  const failed = error !== undefined && <span className="error small">{errorText(error, t)}</span>;
+  if (drama.status === "setup" || drama.status === "production") {
+    return (
+      <>
+        {failed}
+        <Button variant="danger" size="sm" icon="stop" busy={stop.busy} onClick={() => setAsking(true)}>
+          {t("stop.drama")}
+        </Button>
+        <Dialog
+          open={asking}
+          onOpenChange={setAsking}
+          title={t("stop.title", { title: drama.title })}
+          description={t("stop.confirm")}
+          cancel={t("stop.keep")}
+          confirm={{ label: t("stop.yes"), danger: true, run: () => void stop.run() }}
+        />
+      </>
+    );
+  }
+  if (stillStopping(drama)) {
+    return (
+      <Button variant="danger" size="sm" busy>
+        {t("stop.stopping")}
+      </Button>
+    );
+  }
+  if (drama.status !== "stopped") return null;
+  return (
+    <>
+      {failed}
+      <StatusChip status="back" label={t("drama.stopped")} />
+      <Button variant="primary" size="sm" icon="play" busy={resume.busy} onClick={() => void resume.run()}>
+        {t("setup.retry")}
+      </Button>
+    </>
   );
 }
 

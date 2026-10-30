@@ -61,3 +61,14 @@ export function parseBibleNames(bible: unknown): Names {
     episodes: byId(raw.episodes, "episodes", (entry, at) => text(entry.title, `${at}.title`)),
   };
 }
+
+/**
+ * A character, location or prop as a person reads it: its name in the bible, then what follows
+ * its id in drama-cli's words (a look such as S1, a time such as Day). Before a bible names it,
+ * the id as drama-cli gives it.
+ */
+export function nameOf(names: Names | null, kind: "character" | "location" | "prop", subject: string): string {
+  const [id, ...rest] = subject.split(" ");
+  const name = kind === "character" ? names?.characters[id]?.name : kind === "location" ? names?.locations[id] : names?.props[id];
+  return [name ?? id, ...rest].join(" · ");
+}

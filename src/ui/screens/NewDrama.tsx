@@ -191,7 +191,7 @@ export function NewDrama() {
   };
 
   return (
-    <main className="page">
+    <div className="page">
       <div className="head">
         <h1>{t("new.title")}</h1>
       </div>
@@ -314,6 +314,6 @@ export function NewDrama() {
           </div>
         </div>
       </div>
-    </main>
+    </div>
   );
 }

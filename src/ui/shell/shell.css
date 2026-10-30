@@ -34,6 +34,7 @@
 .ds-navi[aria-current="page"] .ds-icon { color: var(--text-primary); }
 .ds-navi > span:not(.ds-navi-count) { min-width: 0; display: grid; }
 .ds-navi small { color: var(--text-muted); font-size: 11.5px; font-weight: 400; }
+.ds-navi:hover small, .ds-navi[aria-current="page"] small { color: var(--text-secondary); }
 .ds-navi-count { margin-left: auto; min-width: 18px; height: 18px; padding: 0 6px; border-radius: var(--radius-pill); background: var(--warning-text); color: var(--on-accent); font: 700 10.5px/18px var(--font-sans); text-align: center; white-space: nowrap; }
 .ds-sidebar .tune { padding: 8px 10px; display: grid; gap: 10px; }
 
@@ -73,6 +74,59 @@
 
 .ds-workin { padding: 16px 16px 40px; min-width: 0; }
 
+/* AgentPanel: 360 wide on the dimmed surface beside the work, or floating over it (380, the
+   dialog's shadow); its sections, rows, decisions, process, messages and composer. AgentBall:
+   the panel collapsed, a 52px circle with the decisions waiting and a ring while an agent works. */
+.ds-agent { width: var(--agent); flex: none; display: flex; flex-direction: column; min-height: 0; border-left: 1px solid var(--border); background: var(--surface-dim); }
+.ds-agent.is-float { position: fixed; right: 20px; bottom: 20px; z-index: 30; width: 380px; height: min(640px, calc(100vh - 120px)); border: 1px solid var(--border); border-radius: var(--radius-2xl); box-shadow: var(--shadow-dialog); overflow: hidden; }
+.ds-agent-head { height: var(--top); flex: none; display: flex; align-items: center; gap: 10px; padding: 0 10px 0 16px; border-bottom: 1px solid var(--border); }
+.ds-agent-head h2 { margin: 0; font: 700 13.5px/1 var(--font-sans); letter-spacing: 0; }
+.ds-agent-head .grow { flex: 1; }
+.ds-live { width: 8px; height: 8px; border-radius: 50%; background: var(--success); box-shadow: 0 0 0 3px color-mix(in srgb, var(--success) 25%, transparent); }
+.ds-live.is-idle { background: var(--text-subtle); box-shadow: none; }
+.ds-agent-scroll { flex: 1; overflow: auto; padding: 6px 14px 14px; }
+.ds-asec { padding: 12px 0; border-bottom: 1px solid var(--border-subtle); }
+.ds-asec:last-child { border-bottom: 0; }
+.ds-asec h3 { margin: 0 0 8px; display: flex; align-items: center; gap: 8px; font: 600 11px/1.3 var(--font-sans); color: var(--text-muted); letter-spacing: 0.4px; text-transform: uppercase; }
+.ds-asec h3 .c { margin-left: auto; font-variant-numeric: tabular-nums; }
+.ds-arow { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; padding: 6px 6px 6px 10px; border-radius: var(--radius-large); background: var(--surface-container); margin-bottom: 6px; }
+.ds-arow.is-in-view { box-shadow: 0 0 0 1px var(--border-input); }
+.ds-arow .what { flex: 1; min-width: 0; display: grid; text-align: left; border: 0; background: none; padding: 0; cursor: pointer; color: inherit; }
+.ds-arow .what b { font: 600 12px var(--font-mono); }
+.ds-arow .what span { color: var(--text-muted); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ds-dec { display: grid; grid-template-columns: 34px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 7px; border-radius: var(--radius-large); color: inherit; }
+.ds-dec:hover { background: var(--hover); }
+.ds-dec .thumb { position: relative; width: 34px; height: 46px; border-radius: 6px; overflow: hidden; background: var(--surface-container); }
+.ds-dec b { display: block; font-size: 12.5px; font-weight: 600; }
+.ds-dec small, .ds-dec .age { color: var(--text-muted); font-size: 11.5px; }
+.ds-dec:hover small, .ds-dec:hover .age { color: var(--text-secondary); }
+.ds-alist { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; font-size: 12.5px; color: var(--text-secondary); }
+.ds-alist li { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 26px; }
+.ds-alist li > span:first-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ds-alist .mono { font: 11px var(--font-mono); color: var(--text-muted); }
+.ds-tag { flex: none; display: inline-flex; align-items: center; height: 20px; padding: 0 7px; border-radius: var(--radius-small); background: var(--surface-container); color: var(--text-secondary); font-size: 11px; }
+.ds-tag.is-review, .ds-tag.is-make { box-shadow: inset 2px 0 0 var(--warning-text); }
+.ds-tag.is-stale { box-shadow: inset 2px 0 0 var(--error); }
+.ds-tag.is-accepted { box-shadow: inset 2px 0 0 var(--success); }
+.ds-asteps { list-style: none; margin: 0 0 8px; padding: 0; display: grid; gap: 2px; }
+.ds-asteps li { display: grid; grid-template-columns: 16px minmax(0, 1fr); gap: 8px; align-items: center; padding: 4px; font-size: 12.5px; color: var(--text-secondary); }
+.ds-asteps .ds-icon { width: 14px; height: 14px; color: var(--success); }
+.ds-asteps .is-now .ds-icon { color: var(--text-primary); animation: ds-spin 1.2s linear infinite; }
+.ds-msg { font-size: 13px; line-height: 1.6; color: var(--text-primary); padding: 10px 12px; border-radius: var(--radius-large); background: var(--surface-container); margin: 6px 0 0; overflow-wrap: anywhere; }
+.ds-msg p { margin: 0 0 6px; }
+.ds-msg p:last-child { margin-bottom: 0; }
+.ds-composer { flex: none; margin: 10px 12px 12px; border-radius: var(--radius-xl); border: 1px solid var(--border-input); background: var(--surface); padding: 10px 10px 8px 12px; display: grid; gap: 6px; }
+.ds-composer textarea { width: 100%; border: 0; background: none; resize: none; outline: none; color: var(--text-primary); font: 13px/1.5 var(--font-sans); min-height: 40px; }
+.ds-composer textarea::placeholder { color: var(--text-muted); }
+.ds-composer .row { display: flex; align-items: center; gap: 8px; font-size: 11.5px; color: var(--text-muted); }
+.ds-send { width: 30px; height: 30px; border-radius: 50%; border: 0; background: var(--accent); color: var(--on-accent); display: grid; place-items: center; cursor: pointer; margin-left: auto; }
+.ds-send:disabled { background: var(--surface-container-high); color: var(--text-muted); cursor: default; }
+.ds-send .ds-icon { width: 15px; height: 15px; }
+.ds-ball { position: fixed; right: 20px; bottom: 20px; z-index: 31; width: 52px; height: 52px; border-radius: 50%; border: 1px solid var(--border-input); background: var(--surface-container-high); color: var(--text-primary); display: grid; place-items: center; cursor: pointer; box-shadow: var(--shadow-overlay); }
+.ds-ball .ds-icon { width: 24px; height: 24px; }
+.ds-ball .badge { position: absolute; right: -2px; top: -2px; min-width: 20px; height: 20px; padding: 0 5px; border-radius: var(--radius-pill); background: var(--warning-text); color: var(--on-accent); font: 700 11px/20px var(--font-sans); border: 2px solid var(--canvas); }
+.ds-ball.is-busy::after { content: ""; position: absolute; inset: -4px; border-radius: 50%; border: 2px solid transparent; border-top-color: var(--text-primary); animation: ds-spin 1.2s linear infinite; }
+
 /* In the desktop app on macOS the top of the window is its title bar, with the traffic lights at
    18, 18 (desktop/main.ts) over the rail and the start of what follows it: room is made for them,
    and the bars drag the window, not their controls. */
@@ -81,9 +135,12 @@
 :root[data-shell="darwin"] .ds-sidebar-head, :root[data-shell="darwin"] .ds-navrail + .ds-main .ds-topbar { padding-left: 30px; }
 :root[data-shell] .ds-topbar a, :root[data-shell] .ds-topbar button, :root[data-shell] .ds-sidebar-head a, :root[data-shell] .ds-navrail button { -webkit-app-region: no-drag; }
 
+/* Too narrow for the panel beside the work: it floats over it. */
+@media (max-width: 1279px) { .ds-agent:not(.is-float) { position: fixed; right: 20px; bottom: 20px; z-index: 30; width: 380px; height: min(640px, calc(100vh - 120px)); border: 1px solid var(--border); border-radius: var(--radius-2xl); box-shadow: var(--shadow-dialog); overflow: hidden; } }
 @media (max-width: 1100px) { .ds-sidebar { display: none; } }
 @media (max-width: 760px) {
   .ds-navrail { display: none; }
   .ds-crumb > span:not(.is-here) { display: none; }
   .ds-dramabar .ds-projectchip { display: none; }
 }
+.ds-caption { color: var(--text-muted); font-size: 11.5px; line-height: 1.45; }

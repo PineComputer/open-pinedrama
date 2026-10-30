@@ -278,26 +278,7 @@ h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 700; lett
 .question-side .box-area { min-height: 140px; }
 
 /* Talking to the agents */
-.talk { position: fixed; top: var(--top); right: 0; bottom: 0; z-index: 30; width: min(420px, 100vw); display: grid; grid-template-rows: auto auto minmax(0, 1fr) auto; background: var(--surface); border-left: 1px solid var(--border-input); box-shadow: -30px 0 60px color-mix(in srgb, var(--shadow-base) 8%, transparent); animation: slide 0.35s var(--ease) both; }
 @keyframes slide { from { transform: translateX(24px); opacity: 0; } }
-.talk-head { display: flex; align-items: baseline; padding: 18px 22px 10px; }
-.talk-head h2 { font-size: 22px; }
-.talk-tabs { display: flex; gap: 18px; padding: 0 22px 10px; border-bottom: 1px solid var(--border); overflow-x: auto; }
-.talk-tabs button { background: none; border: 0; padding: 4px 0; cursor: pointer; color: var(--text-muted); border-bottom: 1px solid transparent; white-space: nowrap; }
-.talk-tabs button.on { color: var(--text-primary); border-color: var(--text-primary); }
-.talk-tabs .asks { color: var(--warning-text); }
-.lines { overflow-y: auto; padding: 18px 22px; display: grid; gap: 10px; align-content: start; }
-.said { color: var(--text-primary); overflow-wrap: anywhere; min-width: 0; }
-.said.activity { color: var(--text-muted); font-size: 13px; padding-left: 12px; border-left: 1px solid var(--border-input); }
-.said.input { justify-self: end; max-width: 86%; padding: 9px 12px; background: var(--surface-container); border-radius: var(--radius-medium); white-space: pre-wrap; font-size: 13.5px; }
-.said.decision { justify-self: end; max-width: 86%; padding: 8px 12px; border: 1px solid var(--border-input); border-radius: var(--radius-medium); font-size: 13.5px; color: var(--text-secondary); }
-.said.decision:hover { border-color: var(--text-muted); color: var(--text-primary); }
-.said.brief { font-size: 13px; color: var(--text-muted); }
-.said.brief summary { cursor: pointer; width: fit-content; }
-.said.brief[open] div { margin-top: 8px; padding: 10px 12px; background: var(--surface-container); border-radius: var(--radius-medium); white-space: pre-wrap; color: var(--text-secondary); max-height: 260px; overflow-y: auto; }
-.said.result { font: italic 400 16px/1.45 var(--font-sans); padding: 10px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-.talk-foot { display: grid; gap: 8px; padding: 12px 22px 18px; border-top: 1px solid var(--border); }
-.talk-foot .row { display: flex; gap: 10px; align-items: end; }
 
 /* Watching a Computer */
 .watch { position: fixed; inset: var(--top) 0 0 0; z-index: 40; display: grid; grid-template-rows: auto minmax(0, 1fr); background: var(--surface-dim); color: var(--text-primary); }
@@ -347,7 +328,6 @@ h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 700; lett
 .watch-head .link { color: var(--text-primary); }
 .watch-note { margin: 22px; }
 .strong { font-weight: 600; }
-.talk-foot .line-area { min-height: 44px; }
 .error.flush { margin: 0; }
 .btn.start { justify-self: start; }
 .inline { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
@@ -538,6 +518,7 @@ h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 700; lett
 .ds-hero .wait .thumb { position: relative; width: 38px; height: 52px; border-radius: 6px; overflow: hidden; background: var(--surface-container); }
 .ds-hero .wait b { display: block; font-size: 13px; font-weight: 600; }
 .ds-hero .wait small { color: var(--text-muted); font-size: 11.5px; }
+.ds-hero .wait:hover small { color: var(--text-secondary); }
 .ds-search { display: inline-flex; align-items: center; gap: 8px; height: 32px; width: 220px; padding: 0 12px; border-radius: var(--radius-medium); border: 1px solid var(--border-input); background: var(--surface); color: var(--text-muted); }
 .ds-search .ds-icon { width: 15px; height: 15px; }
 .ds-search input { flex: 1; min-width: 0; border: 0; background: none; outline: none; font-size: 12.5px; color: var(--text-primary); }
@@ -591,3 +572,12 @@ h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 700; lett
 .ds-epcard small .said { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .ds-epcard small .num { font-family: var(--font-mono); flex: none; }
 .ds-epcard.waiting .pic { border-color: var(--warning-text); }
+
+/* StopBanner: dashed while the drama's Computers stop, solid once it is stopped (the spec's StopBanner). */
+.ds-banner { margin: 0 0 16px; padding: 10px 14px; border-radius: var(--radius-large); border: 1px solid color-mix(in srgb, var(--error) 50%, transparent); background: var(--surface); display: flex; align-items: center; gap: 12px; font-size: 12.5px; flex-wrap: wrap; }
+.ds-banner.is-stopping { border-style: dashed; }
+.ds-banner.is-stopping .ds-icon { animation: ds-spin 1.2s linear infinite; }
+.ds-banner > div { flex: 1; min-width: 0; }
+.ds-banner b, .ds-banner strong { color: var(--text-primary); font-weight: 600; }
+.ds-banner .why { color: var(--text-secondary); }
+.character .aliases { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 4px 0 8px; font-size: 12px; }

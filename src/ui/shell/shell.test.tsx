@@ -143,7 +143,7 @@ describe("the sidebar", () => {
 
   it("marks the step in view and how many episodes need the maker", () => {
     at("/d/d1");
-    render(<DramaSidebar drama={drama} tab="board" onTalk={() => {}} />);
+    render(<DramaSidebar drama={drama} tab="board" />);
     const steps = screen.getByRole("navigation", { name: "Steps" });
     expect(within(steps).getByRole("link", { name: /^Episodes/ })).toHaveAttribute("aria-current", "page");
     expect(within(steps).getByRole("link", { name: /^Episodes/ })).toHaveTextContent("1 need you");
@@ -153,7 +153,7 @@ describe("the sidebar", () => {
   it("lists every episode with what it is doing and where it stands, and opens one", async () => {
     const user = userEvent.setup();
     at("/d/d1");
-    render(<DramaSidebar drama={drama} tab="board" onTalk={() => {}} />);
+    render(<DramaSidebar drama={drama} tab="board" />);
     const tree = screen.getByRole("list", { name: "Episodes" });
     // The name starts with what the link shows (WCAG 2.5.3), then where the episode stands.
     expect(within(tree).getAllByRole("link").map((link) => link.textContent)).toEqual([
@@ -168,20 +168,20 @@ describe("the sidebar", () => {
 
   it("marks the episode in view", () => {
     at("/d/d1/e/EP003");
-    render(<DramaSidebar drama={drama} tab="episode" episode="EP003" onTalk={() => {}} />);
+    render(<DramaSidebar drama={drama} tab="episode" episode="EP003" />);
     expect(within(screen.getByRole("list", { name: "Episodes" })).getAllByRole("link")[2]).toHaveAttribute("aria-current", "true");
   });
 
   it("while the drama is set up, says the setup's step at its foot, not empty episode counts", () => {
     const settingUp = { ...drama, status: "setup", episodes: { total: 0, done: 0, waiting: 0, working: 0 }, setup: { state: "working", reached: 4 }, episodeRows: [] } as unknown as DramaView;
-    render(<DramaSidebar drama={settingUp} tab="board" onTalk={() => {}} />);
+    render(<DramaSidebar drama={settingUp} tab="board" />);
     const standing = screen.getByRole("status", { name: "Where the drama stands" });
     expect(standing).toHaveTextContent("Setup · Preparing every episode: breakdowns, looks, places and props");
     expect(standing).not.toHaveTextContent("0 of 0");
   });
 
   it("says at its foot what the drama spent and where it stands", () => {
-    render(<DramaSidebar drama={drama} tab="board" onTalk={() => {}} />);
+    render(<DramaSidebar drama={drama} tab="board" />);
     expect(screen.getByText("$41.20")).toBeInTheDocument();
     const standing = screen.getByRole("status", { name: "Where the drama stands" });
     expect(standing).toHaveTextContent("1 of 4 episodes finished");
