@@ -163,6 +163,8 @@ interface DramaData {
   logline: Both<string>;
   /** Its genres, as the brief's notes give them. */
   genres: Both<string[]>;
+  /** The storyboard styles its segments are drawn in, where not both: a sample with real line-art only shows no photoreal placeholder beside it. */
+  styles?: string[];
   /** How many minutes ago a sample drama was started, so the studio's recent work shows them over hours and days. */
   ago: number;
   cast: { id: string; name: Both<string>; short: Both<string>; looks?: string[] }[];
@@ -180,6 +182,7 @@ interface Story {
   title: string;
   logline: string;
   genres: string[];
+  styles: string[];
   ago: number;
   cast: { id: string; name: string; short: string; looks: string[] }[];
   places: { id: string; name: string; times: string[] }[];
@@ -192,6 +195,7 @@ const inLanguage = (d: DramaData, lang: Lang): Story => ({
   title: d.title[lang],
   logline: d.logline[lang],
   genres: d.genres[lang],
+  styles: d.styles ?? ["line-art", "photoreal"],
   ago: d.ago,
   cast: d.cast.map((c) => ({ id: c.id, name: c.name[lang], short: c.short[lang], looks: c.looks ?? [] })),
   places: d.places.map((p) => ({ id: p.id, name: p.name[lang], times: p.times ?? [] })),
@@ -227,7 +231,7 @@ function sharedOf(s: Story): Shared[] {
 }
 
 /** An episode's segments and their scene headings, as drama-cli's status reports them (replay-status.ts, EpisodeMade). */
-const madeOf = (e: Story["episodes"][number]) => ({ segments: e.segments.map((seg) => seg.id), headings: Object.fromEntries(e.segments.map((seg) => [seg.id, seg.heading])) });
+const madeOf = (s: Story, e: Story["episodes"][number]) => ({ segments: e.segments.map((seg) => seg.id), headings: Object.fromEntries(e.segments.map((seg) => [seg.id, seg.heading])), styles: s.styles });
 
 /** "3 looks", "1 look": a count with its noun. */
 const count = (n: number, noun: string) => `${n} ${noun}${n === 1 ? "" : "s"}`;
@@ -437,7 +441,7 @@ function setupScript(lang: Lang, preset: string, story: { id: string; story: Sto
     bible: stage === "rewrite" || stage === "asked" || stage === "red-line" ? null : "v1",
     looks: Object.fromEntries(leads.filter((c) => versions.has(c.id)).map((c) => [c.id, made(c.id)])),
     references: Object.fromEntries([...shared.values()].filter((reference) => versions.has(reference.key)).map((reference) => [reference.key, { ...made(reference.key), path: reference.path }])),
-    episodes: stage === "references" || stage === "handed" ? Object.fromEntries(story.story.episodes.map((e, i) => [codeOf(i), madeOf(e)])) : {},
+    episodes: stage === "references" || stage === "handed" ? Object.fromEntries(story.story.episodes.map((e, i) => [codeOf(i), madeOf(story.story, e)])) : {},
   });
   const play = (answer: string): Step => {
     const redo = revisedKeys(answer);
@@ -520,7 +524,7 @@ function episodeScript(code: string, lang: Lang, preset: string, story: { id: st
   const boards = (which: typeof segments) =>
     which.flatMap((seg) => {
       const v = boardVersion.get(seg.id)!;
-      return ["line-art", "photoreal"].flatMap((style) => {
+      return story.story.styles.flatMap((style) => {
         const dir = `${base}/multi_panel_storyboard/${seg.id}/${style}/v${v}`;
         return [
           art(set, `${dir}/image-1.svg`, storyboard(`${code} ${seg.id}`, seg.shots, style, `v${v}`, v === 1 && seg.id === "seg01" ? 3 : -1)),
@@ -595,7 +599,7 @@ function episodeScript(code: string, lang: Lang, preset: string, story: { id: st
   const progress = (): ReplayProgress => {
     const ids = segments.map((seg) => seg.id);
     const own: EpisodeMade = {
-      ...madeOf(episode),
+      ...madeOf(story.story, episode),
       boards: Object.fromEntries(ids.map((id) => [id, { current: `v${boardVersion.get(id)}`, accepted: boardAccepted.has(id) ? `v${boardAccepted.get(id)}` : null }])),
     };
     if (takes.size) own.takes = Object.fromEntries([...takes].map(([id, count]) => [id, { count, accepted: takeAccepted.has(id) }]));
@@ -606,7 +610,7 @@ function episodeScript(code: string, lang: Lang, preset: string, story: { id: st
       bible: "v1",
       looks: Object.fromEntries(say.cast.slice(0, 2).map((c) => [c.id, approved])),
       references: Object.fromEntries(sharedOf(story.story).map((reference) => [reference.key, { ...approved, path: reference.path }])),
-      episodes: Object.fromEntries(story.story.episodes.map((e, i) => [codeOf(i), codeOf(i) === code ? own : madeOf(e)])),
+      episodes: Object.fromEntries(story.story.episodes.map((e, i) => [codeOf(i), codeOf(i) === code ? own : madeOf(story.story, e)])),
     };
   };
   // Each stop and the finish also hand back the episode's own folder, packed, the status and the lineage.

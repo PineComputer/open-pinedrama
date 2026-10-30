@@ -14,6 +14,8 @@ export interface EpisodeMade {
   segments: string[];
   /** Each segment's scene heading, as the screenplay heads its scene. */
   headings?: Record<string, string>;
+  /** The storyboard styles drawn for each segment, where not both (replay-fleet.ts, DramaData.styles). */
+  styles?: string[];
   /** Each segment's storyboards, once drawn, by segment: line-art and photoreal share a version; its blocking reference is accepted with them. */
   boards?: Record<string, Made>;
   /** The takes made of each segment, t01 first, and whether its newest is accepted. */
@@ -67,7 +69,7 @@ function episode(code: string, made: EpisodeMade, references: Record<string, Ref
     blocking: made.boards ? each((segment) => stage(`${base}/blocking/${segment}`, accepted("v1"))) : {},
     first_frame_reference: {},
     multi_panel_storyboard: made.boards
-      ? each((segment) => Object.fromEntries(STYLES.map((style) => [style, stage(`${base}/multi_panel_storyboard/${segment}/${style}`, made.boards![segment])])))
+      ? each((segment) => Object.fromEntries((made.styles ?? STYLES).map((style) => [style, stage(`${base}/multi_panel_storyboard/${segment}/${style}`, made.boards![segment])])))
       : {},
     segments: each((segment) => {
       const shot = takes?.[segment];
