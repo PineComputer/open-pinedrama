@@ -2,8 +2,6 @@ import type { AppInfo, DramaView } from "../../shared/types.ts";
 import { api, useAction, useResource } from "../api.ts";
 import { useT } from "../i18n.ts";
 import { errorText } from "../labels.ts";
-import { EmptyState } from "../components/EmptyState.tsx";
-import { usePath } from "../router.tsx";
 import { Icon } from "../icons.tsx";
 import { stillStopping } from "../shell/TopBar.tsx";
 import { Analyzing } from "./Analyzing.tsx";
@@ -12,6 +10,7 @@ import { Canvas } from "./Canvas.tsx";
 import { Cast } from "./Cast.tsx";
 import { Crew } from "./Crew.tsx";
 import { Delivery } from "./Delivery.tsx";
+import { Graph } from "../graph/Graph.tsx";
 import { Episode } from "./Episode.tsx";
 import { Script } from "./Script.tsx";
 import { InboxList } from "./Inbox.tsx";
@@ -91,7 +90,7 @@ export function Drama({ drama, tab, episode }: { drama: DramaView; tab: string; 
       {tab === "story" && (settingUp ? <SetupPanel drama={drama} /> : <Cast dramaId={id} />)}
       {tab === "cut" && <Delivery dramaId={id} />}
       {tab === "canvas" && <Canvas drama={drama} />}
-      {tab === "graph" && <GraphToCome />}
+      {tab === "graph" && <Graph dramaId={id} />}
       {tab === "crew" && <Crew drama={drama} />}
       {tab === "inbox" && (
         <>
@@ -102,18 +101,5 @@ export function Drama({ drama, tab, episode }: { drama: DramaView; tab: string; 
         </>
       )}
     </section>
-  );
-}
-
-/** Graph, not built yet: what it will show, and what is selected for it. */
-function GraphToCome() {
-  const { t } = useT();
-  const { query } = usePath();
-  const item = query.get("item");
-  return (
-    <EmptyState title={t("surface.graph")}>
-      {t("surface.graphSoon")}
-      {item && ` ${t("surface.selected", { item })}`}
-    </EmptyState>
   );
 }

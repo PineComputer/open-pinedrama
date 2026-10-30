@@ -112,8 +112,10 @@ stop returns the cut's cut.srt.
 **P8 Graph (M7).** P8.0 each stop also returns `drama-cli export comfyui`, drama-cli's own
 lineage (each stage's working and accepted version, whether it is fresh, the file it shows,
 and an edge from each picture it used); the engine reads its nodes' properties and links.
-P8.1 LineageNode and stale marks. Why a version is stale, and what redoing it would cost,
-are not in that export: each needs its own source first.
+P8.1 the Graph, in the look and interaction of Reveric's entity graph (a navigator, the versions
+around the one in focus out to a depth, pan and zoom, hover, an inspector), on drama-cli's
+lineage: its stale reasons as the export states them (`problems`), what was made from a stale
+version marked from its links, and one action, asking the agent to redo them. No cost is shown.
 
 **Before release.** Generate a public sample set for replay, on a budget merecdesperez44323-lab sets, to replace the sample pictures from our own test runs (fixtures/replay/).
 

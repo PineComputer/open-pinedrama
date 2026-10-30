@@ -588,6 +588,51 @@ h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 700; lett
   .ds-insp { border-left: 0; }
 }
 
+/* The Graph (src/ui/graph): Reveric's entity graph (graph/reveric-entity-graph.css) laid out in the
+   studio's work area, its version groups' colours, and the studio's stale marks and stale bar. The
+   six colours are Reveric's entity types' (designs/desktop/entity_graph_data.js), one per group;
+   in dark, the look's navy is lightened so its ring shows (our own). Marks only, never letters. */
+:root { --eg-text: #5B8DB8; --eg-look: #283C5F; --eg-place: #6BA07A; --eg-prop: #8897D1; --eg-board: #9B6FB0; --eg-take: #B07A5B; --eg-stale: var(--text-muted); }
+:root[data-theme="dark"] { --eg-look: #8EA4CC; }
+.eg-view { display: grid; grid-template-columns: 248px minmax(0, 1fr) 320px; height: calc(100vh - var(--top) - 96px); min-height: 560px; border: 1px solid var(--border); border-radius: var(--radius-large); overflow: hidden; background: var(--surface); }
+.eg-view .eg-rail, .eg-view .eg-inspector { width: auto; }
+.eg-view .ds-icon { width: 14px; height: 14px; flex: none; }
+/* On React Flow a node is a box the size of its ring (React Flow shows a node once it has a size), centred on its place (nodeOrigin); Reveric's node is a point with its ring around it. */
+.eg-node { position: relative; display: block; border: 0; padding: 0; background: none; color: inherit; font: inherit; }
+.eg-node .eg-node__ring { left: 50%; top: 50%; }
+.eg-node .eg-node__labels { left: 50%; }
+.eg-handle { opacity: 0; pointer-events: none; left: 50%; top: 50%; }
+/* React Flow's own parts, in the studio's tokens (its theme variables, @xyflow/react/dist/style.css). */
+.eg-canvas .react-flow { --xy-background-color: var(--surface-dim); --xy-background-pattern-color: var(--border); --xy-minimap-background-color: var(--surface-container-high); --xy-minimap-mask-background-color: color-mix(in srgb, var(--surface-dim) 70%, transparent); --xy-controls-button-background-color: var(--surface-container-high); --xy-controls-button-background-color-hover: var(--hover); --xy-controls-button-color: var(--text-secondary); --xy-controls-button-color-hover: var(--text-primary); --xy-controls-button-border-color: var(--border); --xy-attribution-background-color: transparent; }
+.eg-canvas .react-flow__attribution a { color: var(--text-secondary); }
+.eg-node:focus-visible .eg-node__ring { outline: 2px solid var(--text-primary); outline-offset: 3px; }
+.eg-node__ring { overflow: hidden; }
+.eg-node__ring img, .eg-node__ring video { width: 100%; height: 100%; object-fit: cover; object-position: center 30%; }
+.eg-view .eg-node__ring .ds-icon { width: 42%; height: 42%; color: var(--text-secondary); }
+.eg-node.is-stale .eg-node__ring { border-style: dashed; }
+.eg-node__labels { width: max-content; }
+.eg-edge { transition: opacity .2s; }
+.eg-legend__line.is-stale { background: none; border-top: 2px dashed var(--eg-stale); height: 0; }
+.eg-tab:focus-visible, .eg-rel:focus-visible, .eg-rail__row:focus-visible, .eg-chip:focus-visible, .eg-ddbtn:focus-visible { outline: 2px solid var(--text-primary); outline-offset: 1px; }
+.eg-menu__check[data-disabled] { opacity: .5; cursor: default; }
+.eg-menu__check[data-highlighted], .eg-menu__item[data-highlighted] { background: var(--hover); outline: none; }
+.eg-rel__label { color: var(--text-secondary); border-color: var(--border); }
+.eg-notice { margin: 8px 16px 0; }
+.ds-stalebar { margin: 10px 16px 0; display: flex; align-items: flex-start; gap: 10px; padding: 10px 14px; border-radius: var(--radius-large); border: 1px dashed var(--border-input); background: var(--surface); font-size: 12.5px; color: var(--text-secondary); }
+.ds-stalebar > .ds-icon { margin-top: 2px; color: var(--warning-text); }
+.ds-stalebar .grow { flex: 1; min-width: 0; display: grid; gap: 6px; max-height: 120px; overflow: auto; }
+.ds-stalebar b { color: var(--text-primary); font-weight: 600; }
+.ds-stalebar ul { margin: 0; padding-left: 16px; display: grid; gap: 2px; overflow-wrap: anywhere; }
+.ds-link { border: 0; padding: 0; background: none; color: var(--text-primary); font: inherit; font-weight: 600; text-decoration: underline; cursor: pointer; }
+.ds-problems { margin: 0; padding-left: 16px; display: grid; gap: 4px; overflow-wrap: anywhere; font-size: 12.5px; color: var(--text-secondary); }
+@media (max-width: 1280px) { .eg-view { grid-template-columns: 220px minmax(0, 1fr) 280px; } }
+@media (max-width: 1000px) {
+  .eg-view { grid-template-columns: minmax(0, 1fr); height: auto; }
+  .eg-view .eg-rail { max-height: 280px; border-right: 0; border-bottom: 1px solid var(--border); }
+  .eg-view .eg-canvas { min-height: 480px; }
+  .eg-view .eg-inspector { border-left: 0; border-top: 1px solid var(--border); }
+}
+
 /* An episode's segments, scene by scene (after the reference's segment list): scene headers with
    their count, a row per segment that folds, and a status bar along the foot. */
 .episode-page > .ds-seg { justify-self: start; }
