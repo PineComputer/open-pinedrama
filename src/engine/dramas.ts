@@ -127,7 +127,7 @@ export async function chooseInputs(id: string, choice: { preset?: string; screen
     run("update dramas set preset = ?, screenplay_language = ?, screenplay_file = ?, length = ?, updated_at = ? where id = ?", choice.preset ?? "", choice.screenplayLanguage ?? "", choice.screenplay ?? null, length || drama.length, now(), id);
     if (brief !== undefined) run("insert into inputs (drama_id, file_id) values (?, ?)", id, brief);
   });
-  retrySetup(id);
+  resumeDrama(id);
 }
 
 export function updateDrama(id: string, patch: { parallel?: number; perComputer?: number; reviewing?: string }): DramaRow {
@@ -200,19 +200,27 @@ export async function stopEpisode(id: string): Promise<void> {
   publish(`drama:${episode.drama_id}`, "dramas", "inbox");
 }
 
-export function retrySetup(id: string): void {
+/**
+ * The drama carries on: one the studio held, or one the maker stopped. With its episodes listed it
+ * goes back to production, and the episodes the stop left stopped go back in line, each to carry on
+ * from what the library holds; without episodes, the setup starts again. A failed episode stays as
+ * it is, for its own Resume.
+ */
+export function resumeDrama(id: string): void {
   const drama = dramaRow(id);
   if (!drama) throw new StudioError("not-found", "No such drama.", 404);
   if (drama.status !== "stopped") throw new StudioError("drama-not-stopped", "The drama isn't stopped.", 409);
-  // A drama that already has its episodes goes back to production; one without goes back to setup.
   const hasEpisodes = (get<{ n: number }>("select count(*) as n from episodes where drama_id = ?", id)?.n ?? 0) > 0;
-  run("update dramas set status = ?, note = '', reason = '', continues = 0, updated_at = ? where id = ?", hasEpisodes ? "production" : "setup", now(), id);
+  transaction(() => {
+    run("update dramas set status = ?, note = '', reason = '', continues = 0, updated_at = ? where id = ?", hasEpisodes ? "production" : "setup", now(), id);
+    run("update episodes set state = 'queued', resume = 1, carry = '', updated_at = ? where drama_id = ? and state = 'stopped'", now(), id);
+  });
   publish(`drama:${id}`, "dramas");
 }
 
 /**
  * The maker stops the drama: nothing new starts and its Computers stop, so nothing more is
- * billed. What it made stays in the library, and Try again carries on from there.
+ * billed. What it made stays in the library, and Resume carries on from there.
  */
 export async function stopDrama(id: string): Promise<void> {
   const drama = dramaRow(id);
@@ -234,7 +242,7 @@ export function rehearse(id: string): void {
   if (!drama) throw new StudioError("not-found", "No such drama.", 404);
   if (drama.status !== "stopped" || drama.reason !== "no-drama-skill") throw new StudioError("drama-not-held", "Only a drama held for want of the drama skill can be rehearsed.", 409);
   run("update dramas set rehearsal = 1 where id = ?", id);
-  retrySetup(id);
+  resumeDrama(id);
 }
 
 /**

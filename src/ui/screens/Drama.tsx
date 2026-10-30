@@ -90,7 +90,7 @@ function Notices({ drama }: { drama: DramaView }) {
   const { t } = useT();
   const app = useResource<AppInfo>("/api/app", ["app"]);
   const retry = useAction(() => api(`/api/dramas/${drama.id}/computers/retry`, { method: "POST" }));
-  const again = useAction(() => api(`/api/dramas/${drama.id}/retry`, { method: "POST" }));
+  const again = useAction(() => api(`/api/dramas/${drama.id}/resume`, { method: "POST" }));
   const rehearse = useAction(() => api(`/api/dramas/${drama.id}/rehearse`, { method: "POST" }));
   // Held during production (the setup panel says so before there are episodes).
   const held = drama.status === "stopped" && drama.episodeRows.length > 0;
