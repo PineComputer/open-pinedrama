@@ -25,7 +25,7 @@ function project(): ProjectView {
 }
 
 const file = (id: number, filePath: string, createdAt: string) => ({ id, name: "image-1.png", path: filePath, type: "image/png", size: 1, kind: "look", url: `/f/${id}`, createdAt }) as unknown as FileItem;
-const look = file(1, "/work/drama/assets/characters/lin/v1/image-1.png", "2026-10-30T10:00:00Z");
+const look = file(1, "/work/drama/assets/characters/lin/v1/image-1.jpg", "2026-10-30T10:00:00Z");
 const board = file(2, "/work/drama/episodes/EP001/multi_panel_storyboard/seg01/line-art/v1/image-1.png", "2026-10-30T10:05:00Z");
 
 function engine(files: FileItem[]) {
@@ -37,7 +37,7 @@ function engine(files: FileItem[]) {
   answer("/api/inbox", []);
 }
 
-const followed = () => document.querySelector(".ds-cnode[data-followed]");
+const followed = () => document.querySelector(".cnode[data-followed]");
 const transform = () => (document.querySelector(".ds-board .layer") as HTMLElement).style.transform;
 
 // jsdom lays nothing out: the board gets a size, so the camera has a view to fit.
@@ -56,7 +56,7 @@ describe("following the agent", () => {
     engine([look, board]);
     render(<Canvas drama={drama} />);
     expect(await screen.findByRole("button", { name: "Following the agent" })).toHaveAttribute("aria-pressed", "true");
-    await waitFor(() => expect(followed()?.textContent).toMatch(/^Seg 1-1 · /));
+    await waitFor(() => expect(followed()?.textContent).toMatch(/^Storyboard · line-art/));
   });
 
   it("moves on to the work the agent saves next", async () => {
@@ -65,21 +65,21 @@ describe("following the agent", () => {
     await waitFor(() => expect(followed()?.textContent).toMatch(/^林/));
     engine([look, board]);
     changed("drama:d1");
-    await waitFor(() => expect(followed()?.textContent).toMatch(/^Seg 1-1 · /));
+    await waitFor(() => expect(followed()?.textContent).toMatch(/^Storyboard · line-art/));
   });
 
   it("pauses when the maker picks an item, and resumes when asked", async () => {
     const user = userEvent.setup();
     engine([look, board]);
     render(<Canvas drama={drama} />);
-    (await screen.findByRole("button", { name: /^办公室/ })).focus();
+    (await screen.findAllByRole("button", { name: /^办公室/ }))[0].focus();
     await user.keyboard("{Enter}");
-    const resume = screen.getByRole("button", { name: "Following paused · Resume" });
+    const resume = screen.getByRole("button", { name: "Follow the agent" });
     expect(resume).toHaveAttribute("aria-pressed", "false");
     expect(followed()).toBeNull();
     resume.focus();
     await user.keyboard("{Enter}");
     expect(screen.getByRole("button", { name: "Following the agent" })).toHaveAttribute("aria-pressed", "true");
-    await waitFor(() => expect(followed()?.textContent).toMatch(/^Seg 1-1 · /));
+    await waitFor(() => expect(followed()?.textContent).toMatch(/^Storyboard · line-art/));
   });
 });

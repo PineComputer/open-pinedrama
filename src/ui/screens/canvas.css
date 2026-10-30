@@ -1,12 +1,13 @@
-/* The canvas on React Flow: its parts take our tokens through its own variables, and the nodes
-   take the pro direction's look. Every colour is a token (CONTRIBUTING.md). */
+/* The canvas on React Flow: its parts take our tokens through its own variables, and the nodes,
+   frames, pills and detail card are the pro prototype's (design-references/studio-pro/studio.css,
+   "canvas"), scoped to the canvas. Every colour is a token (CONTRIBUTING.md). */
 .ds-canvas { position: relative; height: calc(100vh - 150px); min-height: 420px; margin: 0 -16px; border-top: 1px solid var(--border); }
 .ds-canvas .react-flow {
   --xy-background-color: var(--canvas);
   --xy-background-pattern-color: color-mix(in srgb, var(--text-primary) 18%, transparent);
   --xy-node-border-radius: 10px;
   --xy-edge-stroke: color-mix(in srgb, var(--text-primary) 30%, transparent);
-  --xy-edge-stroke-width: 1.4;
+  --xy-edge-stroke-width: 1.2;
   --xy-minimap-background-color: var(--surface);
   --xy-minimap-mask-background-color: color-mix(in srgb, var(--canvas) 55%, transparent);
   --xy-minimap-node-background-color: color-mix(in srgb, var(--text-secondary) 40%, transparent);
@@ -17,76 +18,74 @@
   --xy-controls-button-border-color: var(--border-subtle);
   --xy-controls-box-shadow: 0 4px 12px color-mix(in srgb, var(--text-primary) 8%, transparent);
 }
-.ds-canvas .react-flow__edge.is-needs path { stroke: var(--warning-text); stroke-dasharray: 5 4; }
-.ds-canvas .react-flow__edge.is-uses path { stroke-dasharray: 3 4; }
 .ds-canvas .react-flow__handle { opacity: 0; pointer-events: none; }
 .ds-canvas .react-flow__minimap { margin-top: 12px; border-radius: var(--radius-large); border: 1px solid var(--border); overflow: hidden; }
-.ds-canvas .react-flow__controls { border-radius: var(--radius-large); overflow: hidden; border: 1px solid var(--border); }
-.ds-canvas .react-flow__node-scene { border-radius: var(--radius-xl); border: 1px solid var(--border); background: color-mix(in srgb, var(--surface) 70%, transparent); }
-.ds-cscene { width: 100%; height: 100%; }
-.ds-cscene .heading { position: absolute; left: 14px; top: 10px; right: 14px; font: 600 11.5px/1.3 var(--font-sans); color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.ds-cnode { position: relative; display: grid; grid-template-rows: 22px 1fr; gap: 6px; width: 100%; height: 100%; color: var(--text-primary); }
-.ds-cnode .ds-clabel { display: flex; align-items: center; gap: 6px; font: 600 12.5px/1 var(--font-sans); color: var(--text-secondary); white-space: nowrap; outline: none; }
-.ds-cnode .ds-clabel .name { overflow: hidden; text-overflow: ellipsis; }
-.ds-cnode .card { display: flex; gap: 10px; min-height: 0; padding: 0; border-radius: 10px; overflow: hidden; border: 1px solid var(--border); background: var(--surface-container); transition: border-color .12s, box-shadow .12s; }
-.ds-cnode .card img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
-.ds-cnode.is-segment { grid-template-rows: 1fr; }
-.ds-cnode.is-segment .ds-clabel { position: absolute; left: 136px; top: 10px; right: 10px; color: var(--text-primary); font-size: 14px; }
-.ds-cnode.is-segment .card { padding: 8px; gap: 12px; background: var(--surface); box-shadow: 0 1px 2px rgba(0, 0, 0, .2); }
-.ds-cnode .text { display: grid; align-content: start; gap: 4px; padding-top: 4px; font: 12px/1.4 var(--font-sans); color: var(--text-secondary); }
-.react-flow__node:hover .ds-cnode .card { border-color: color-mix(in srgb, var(--accent) 55%, var(--border-input)); }
-.react-flow__node.selected .ds-cnode .card { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 26%, transparent); }
 .ds-epswitch { display: flex; align-items: center; gap: 2px; padding: 3px; border-radius: var(--radius-pill); border: 1px solid var(--border); background: var(--surface); }
 .ds-epswitch-pick { display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 10px; border: 0; border-radius: var(--radius-pill); background: transparent; color: var(--text-primary); font: 600 12.5px var(--font-sans); cursor: pointer; white-space: nowrap; }
 .ds-epswitch-pick:hover { background: var(--hover); }
-.ds-follow, .ds-waiting { display: inline-flex; align-items: center; gap: 8px; height: 34px; padding: 0 14px; margin: 0 4px; border-radius: var(--radius-pill); border: 1px solid var(--border); background: var(--surface); color: var(--text-secondary); font: 500 12.5px var(--font-sans); cursor: pointer; text-decoration: none; }
-.ds-follow.is-on, .ds-waiting { color: var(--text-primary); }
 /* The SteerBar in React Flow's node toolbar, as the reference's node bar. */
-.ds-steer { display: grid; gap: 8px; padding: 4px; border: 1px solid var(--border); border-radius: var(--radius-xl); background: var(--surface); box-shadow: var(--shadow-dialog); white-space: nowrap; }
-.ds-steer .row { display: flex; align-items: center; gap: 2px; }
-.ds-steer .what { padding: 0 8px; font: 600 12px var(--font-sans); color: var(--text-primary); max-width: 18ch; overflow: hidden; text-overflow: ellipsis; }
+.ds-steer { display: grid; gap: 8px; order: -1; }
+.ds-steer .row { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+.ds-steer .what { flex: 1 0 100%; font: 700 14px var(--font-sans); color: var(--text-primary); overflow: hidden; text-overflow: ellipsis; }
 .ds-steer .acts { display: flex; align-items: center; gap: 2px; }
-.ds-steer .say, .ds-steer .off, .ds-steer .done { margin: 0 4px 4px; white-space: normal; width: 440px; }
 .ds-steer .say { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: end; }
 .ds-steer textarea { min-height: 56px; border-radius: var(--radius-large); border: 1px solid var(--border-input); background: var(--surface); color: var(--text-primary); padding: 8px 10px; font: 13px/1.5 var(--font-sans); resize: vertical; outline: none; }
 .ds-steer .off { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 8px 10px; border-radius: var(--radius-medium); background: var(--surface-container); color: var(--text-secondary); font-size: 12.5px; }
 .ds-steer .done { margin: 0; font-size: 12.5px; color: var(--text-secondary); }
-.ds-zoom { display: grid; place-items: center; height: 26px; font: 600 11.5px var(--font-sans); color: var(--text-secondary); font-variant-numeric: tabular-nums; background: var(--surface); border-bottom: 1px solid var(--border-subtle); }
 .ds-steer .row > .ds-chip { margin-right: 4px; }
 .ds-steer .sep { width: 1px; height: 18px; margin: 0 4px; background: var(--border); }
 .ds-steer .acts a { text-decoration: none; }
-/* The node panel under a picked segment, as the reference's: the pictures it is made from, its shots with each reference as a chip, its settings. */
-.ds-npanel { width: 480px; display: grid; gap: 12px; padding: 12px 14px; border: 1px solid var(--border); border-radius: var(--radius-xl); background: var(--surface); box-shadow: var(--shadow-dialog); color: var(--text-primary); font: 13px/1.6 var(--font-sans); }
-.ds-npanel .prompt { display: grid; gap: 4px; max-height: 180px; overflow-y: auto; }
-.ds-npanel .prompt p { margin: 0; }
-.ds-npanel .chip { display: inline-flex; align-items: center; gap: 4px; padding: 0 6px 0 2px; margin: 0 1px; border-radius: 6px; background: var(--surface-container); font-weight: 500; vertical-align: baseline; }
-.ds-npanel .chip img { width: 16px; height: 16px; border-radius: 4px; object-fit: cover; object-position: top; }
 .ds-npanel .foot { display: flex; align-items: center; gap: 10px; padding-top: 10px; border-top: 1px solid var(--border-subtle); font-size: 12px; color: var(--text-secondary); }
 .ds-npanel .foot .grow { flex: 1; }
-.ds-cnode.is-segment .thumb { position: relative; width: 112px; flex: none; border-radius: 6px; overflow: hidden; background: var(--surface-container); }
-.ds-cnode.is-segment .thumb img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
-.ds-cnode.is-segment .thumb .tag { position: absolute; left: 6px; top: 6px; padding: 2px 7px; border-radius: var(--radius-pill); border: 1px solid var(--border); background: var(--surface); color: var(--text-primary); font: 600 10.5px/1.4 var(--font-sans); }
-.ds-cnode.is-segment .text { display: flex; flex-direction: column; gap: 6px; padding-top: 26px; min-width: 0; }
-.ds-cnode.is-segment .shots { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 5; overflow: hidden; white-space: pre-line; font: 13px/1.45 var(--font-sans); color: var(--text-secondary); }
-.ds-cnode.is-segment .foot { display: inline-flex; align-items: center; gap: 6px; margin-top: auto; font: 12.5px var(--font-sans); color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.ds-cnode.is-segment .foot i { width: 6px; height: 6px; flex: none; border-radius: 50%; background: var(--text-subtle); }
-.ds-cnode.is-segment .foot.is-accepted i { background: var(--success); }
-.ds-cnode.is-segment .foot.is-you i { background: var(--warning-text); }
-.ds-cnode.is-segment .foot.is-stale i, .ds-cnode.is-segment .foot.is-back i { background: var(--error); }
-.ds-followbar { margin-top: 12px; }
 /* The node panel's tabs: settings as a key-value list (the inspector's dl), Made from and Versions as rows, the request as a JSON tree. */
 .ds-npanel [role="tabpanel"] { max-height: 260px; overflow-y: auto; }
 .ds-npanel .kv { display: grid; grid-template-columns: max-content 1fr; gap: 4px 16px; margin: 0; font-size: 12.5px; }
 .ds-npanel .kv dt { color: var(--text-secondary); }
 .ds-npanel .kv dd { margin: 0; color: var(--text-primary); font-variant-numeric: tabular-nums; }
-.ds-npanel .from, .ds-npanel .versions { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; font-size: 12.5px; }
-.ds-npanel .from li { display: grid; grid-template-columns: 40px 1fr auto; align-items: center; gap: 10px; }
-.ds-npanel .from img, .ds-npanel .from .none { width: 40px; height: 40px; border-radius: 6px; object-fit: cover; object-position: top; background: var(--surface-container); }
-.ds-npanel .from .link { padding: 0; border: 0; background: none; color: var(--text-primary); font: inherit; text-align: left; text-decoration: underline; text-underline-offset: 2px; cursor: pointer; }
 .ds-npanel .versions li { display: grid; gap: 2px; padding-bottom: 8px; border-bottom: 1px solid var(--border-subtle); }
 .ds-npanel .ds-json { background: transparent; font: 12px/1.5 var(--font-mono, ui-monospace, monospace); color: var(--text-primary); }
 .ds-npanel .ds-json-key { color: var(--text-secondary); }
 .ds-npanel .ds-json-string { color: var(--success); }
 .ds-npanel .ds-json-value { color: var(--warning-text); }
 .ds-npanel .ds-json-punctuation { color: var(--text-secondary); }
-.ds-beside { display: grid; gap: 8px; justify-items: start; }
+
+.ds-canvas .react-flow__edge path { stroke-dasharray: 4 4; }
+.ds-canvas .react-flow__edge.hot path { stroke: var(--text-primary); stroke-dasharray: none; stroke-width: 1.6; }
+.ds-canvas .react-flow__minimap { right: 84px; border-radius: var(--radius-large); border: 1px solid var(--border); overflow: hidden; }
+.ds-canvas .react-flow__node-frame { pointer-events: none; }
+.ds-canvas .group { position: absolute; inset: 0; border-radius: var(--radius-2xl); border: 1px solid var(--border); background: color-mix(in srgb, var(--surface) 70%, transparent); }
+.ds-canvas .group > .gl { position: absolute; left: 16px; top: 14px; right: 16px; font-size: 13px; font-weight: 600; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ds-canvas .cnode { display: flex; flex-direction: column; width: 100%; height: 100%; }
+.ds-canvas .cnode .lab { display: flex; align-items: center; gap: 5px; margin-bottom: 6px; font-size: 12.5px; font-weight: 600; color: var(--text-secondary); white-space: nowrap; outline: none; cursor: pointer; }
+.ds-canvas .cnode .lab .name { overflow: hidden; text-overflow: ellipsis; }
+.ds-canvas .cnode .lab .ds-icon { width: 13px; height: 13px; color: var(--text-muted); flex: none; }
+.ds-canvas .cnode .lab .ds-chip { margin-left: 4px; }
+.ds-canvas .cnode .card { position: relative; flex: 1; min-height: 0; border-radius: 10px; overflow: hidden; border: 1px solid var(--border); background: var(--surface); cursor: pointer; transition: border-color .12s, box-shadow .12s; }
+.ds-canvas .cnode .card:hover { border-color: color-mix(in srgb, var(--text-primary) 45%, var(--border)); }
+.ds-canvas .cnode.sel .card { border-color: var(--text-primary); box-shadow: 0 0 0 1px var(--text-primary); }
+.ds-canvas .cnode .card img, .ds-canvas .cnode .card .still { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; background-size: cover; background-position: top; }
+.ds-canvas .cnode .card.board-img { background: var(--surface-container); }
+.ds-canvas .cnode .card.board-img img { object-fit: contain; }
+.ds-canvas .cnode .card .none { display: grid; place-items: center; height: 100%; color: var(--text-muted); font-size: 11px; }
+.ds-canvas .cnode .play { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; }
+.ds-canvas .cnode .play i { width: 32px; height: 32px; border-radius: 50%; background: color-mix(in srgb, var(--canvas) 55%, transparent); display: grid; place-items: center; color: var(--text-primary); border: 1px solid color-mix(in srgb, var(--text-primary) 25%, transparent); }
+.ds-canvas .ctop { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 14px 16px; }
+.ds-canvas .follow { display: inline-flex; align-items: center; gap: 8px; height: 34px; padding: 0 14px; border-radius: 999px; background: var(--surface-container); border: 1px solid var(--border); font-size: 12.5px; color: var(--text-secondary); cursor: pointer; text-decoration: none; }
+.ds-canvas .follow[aria-pressed="true"] { color: var(--text-primary); border-color: var(--border-input); }
+.ds-canvas .follow .live { width: 7px; height: 7px; border-radius: 50%; background: var(--success); }
+.ds-canvas .ctool { display: flex; align-items: center; gap: 2px; padding: 4px; border-radius: var(--radius-pill); background: var(--surface-container); border: 1px solid var(--border); box-shadow: var(--shadow-overlay); }
+.ds-canvas .ctool .z { min-width: 52px; text-align: center; font: 600 12.5px var(--font-sans); color: var(--text-primary); font-variant-numeric: tabular-nums; }
+.ds-canvas .detail { position: absolute; right: 20px; top: 64px; bottom: 20px; width: 340px; display: flex; flex-direction: column; border-radius: var(--radius-2xl); border: 1px solid var(--border); background: var(--surface); box-shadow: var(--shadow-dialog); overflow: hidden; z-index: 20; }
+.ds-canvas .detail .dpic { position: relative; flex: none; aspect-ratio: 16/10; overflow: hidden; background: var(--surface-container); }
+.ds-canvas .detail .dpic img, .ds-canvas .detail .dpic .still { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; background-size: cover; background-position: top; }
+.ds-canvas .detail .dbody { padding: 14px 16px 16px; display: grid; gap: 10px; overflow-y: auto; }
+.ds-canvas .detail dl { margin: 0; display: grid; grid-template-columns: 76px 1fr; gap: 6px 10px; font-size: 12px; }
+.ds-canvas .detail dt { color: var(--text-muted); }
+.ds-canvas .detail dd { margin: 0; color: var(--text-secondary); }
+.ds-canvas .detail .subtle { font-size: 11.5px; color: var(--text-muted); }
+/* The picked item's data in the detail card: its tabs, settings as a key-value list, versions as rows, the request as a JSON tree. */
+.ds-npanel { display: grid; gap: 10px; }
+.ds-npanel .prompt { display: grid; gap: 4px; font-size: 12.5px; line-height: 1.55; }
+.ds-npanel .prompt p { margin: 0; }
+.ds-npanel .chip { display: inline-flex; align-items: center; gap: 4px; padding: 0 6px 0 2px; margin: 0 1px; border-radius: 6px; background: var(--surface-container); font-weight: 500; vertical-align: baseline; }
+.ds-npanel .chip img { width: 16px; height: 16px; border-radius: 4px; object-fit: cover; object-position: top; }

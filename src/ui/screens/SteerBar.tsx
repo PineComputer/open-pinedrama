@@ -6,7 +6,7 @@
 // the episode or drama can be resumed: the words are never queued. Lineage opens Graph at it.
 // Open and Download show the item's picture; the hand actions stand disabled (Canvas, NodeActions).
 import { useEffect, useState } from "react";
-import type { BoardNode } from "../../shared/canvas.ts";
+import type { Item } from "../../shared/pipeline.ts";
 import type { ChatView, DramaView, FileItem, ReviewSummary, ReviewView } from "../../shared/types.ts";
 import { api, useAction, useResource } from "../api.ts";
 import { Button, IconButton } from "../components/Button.tsx";
@@ -19,17 +19,18 @@ import { Link, navigate } from "../router.tsx";
 import { buttonVariants } from "@/components/ui/button";
 import type { NodeActions } from "./Canvas.tsx";
 
-/** The key a review gives the item (src/engine/reviews.ts, itemsOf): a look by its character, a place or prop by its kind and id, a segment by its id. */
-function reviewKey(node: BoardNode): string {
-  return node.kind === "character" ? node.subject : node.kind === "segment" ? node.subject : `${node.kind}:${node.subject}`;
+/** The key a review gives the item (src/engine/reviews.ts, itemsOf): a look by its character, a place or prop by its kind and id, a segment's stage by the segment's id, the cut as "cut". */
+function reviewKey(node: Item): string {
+  if (node.kind === "cut") return "cut";
+  return node.kind === "character" || node.episode ? node.subject : `${node.kind}:${node.subject}`;
 }
 
 /** The open review that holds the item, if one does. */
-function useOpenReview(drama: DramaView, node: BoardNode): ReviewView | undefined {
+function useOpenReview(drama: DramaView, node: Item): ReviewView | undefined {
   const inbox = useResource<ReviewSummary[]>("/api/inbox", ["inbox"]);
   const [found, setFound] = useState<ReviewView>();
-  const kinds = node.kind === "segment" ? ["storyboards", "takes"] : ["looks", "references"];
-  const candidates = (inbox.data ?? []).filter((review) => review.dramaId === drama.id && review.state === "open" && kinds.includes(review.kind) && (node.kind !== "segment" || review.episode === node.episode));
+  const kinds = node.kind === "cut" ? ["cut"] : node.episode ? ["storyboards", "takes"] : ["looks", "references"];
+  const candidates = (inbox.data ?? []).filter((review) => review.dramaId === drama.id && review.state === "open" && kinds.includes(review.kind) && (!node.episode || review.episode === node.episode));
   const ids = candidates.map((review) => review.id).join(",");
   useEffect(() => {
     let live = true;
@@ -58,7 +59,7 @@ export function SteerBar({
   onClose,
 }: {
   drama: DramaView;
-  node: BoardNode;
+  node: Item;
   label: string;
   status: Status;
   picture?: FileItem;
@@ -78,16 +79,18 @@ export function SteerBar({
   }, [node.id]);
 
   const sessions = drama.crew.flatMap((computer) => computer.sessions);
-  const session = sessions.find((candidate) => candidate.state === "open" && (node.kind === "segment" ? candidate.role === "episode" && candidate.episode === node.episode : candidate.role === "setup"));
-  const row = node.kind === "segment" ? drama.episodeRows.find((candidate) => candidate.code === node.episode) : undefined;
+  const session = sessions.find((candidate) => candidate.state === "open" && (node.episode ? candidate.role === "episode" && candidate.episode === node.episode : candidate.role === "setup"));
+  const row = node.episode ? drama.episodeRows.find((candidate) => candidate.code === node.episode) : undefined;
   // A message to a session that waits on an answer or a review would answer it (ChatView.sends): only a steer or a new run is safe.
   const chat = useResource<ChatView>(session ? `/api/sessions/${session.id}/chat` : null, session ? [`session:${session.id}`] : []);
   const waits = chat.data && (chat.data.sends === "answer" || chat.data.sends === "review" || chat.data.sends === "none") ? chat.data : undefined;
-  const who = node.kind === "segment" ? node.episode! : t("steer.setup");
+  const who = node.episode ?? t("steer.setup");
   const item =
-    node.kind === "segment"
-      ? t("steer.item.segment", { n: Number.parseInt(node.subject.replace(/\D/g, ""), 10), episode: node.episode!, title: episodeTitle ?? node.episode! })
-      : t(`steer.item.${node.kind}`, { name: label });
+    node.kind === "cut"
+      ? t("steer.item.cut", { episode: node.episode!, title: episodeTitle ?? node.episode! })
+      : node.episode
+        ? t("steer.item.segment", { n: Number.parseInt(node.subject.replace(/\D/g, ""), 10), episode: node.episode, title: episodeTitle ?? node.episode })
+        : t(`steer.item.${node.kind as "character" | "location" | "prop"}`, { name: label });
 
   const send = useAction(async () => {
     await api(`/api/sessions/${session!.id}/chat`, { method: "POST", json: { text: t(mode === "back" ? "steer.backText" : "steer.noteText", { item, words: words.trim() }) } });

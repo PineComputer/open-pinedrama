@@ -1,16 +1,17 @@
 // Where the maker moved the canvas's nodes, per drama and episode: the studio's own view state.
 // It never says anything about the work and is never read to decide anything about it; drama-cli's
-// status and lineage do that. A node is named as the canvas's layout names it (src/shared/canvas.ts).
+// status and lineage do that. A node is named as the canvas names it (src/ui/screens/Canvas.tsx): a
+// stage by its folder, drama-cli's lineage id, and one of drama-cli's layout groups by its title.
 import { StudioError } from "./errors.ts";
 import { all, now, run, transaction } from "./db.ts";
 
 export type Positions = Record<string, { x: number; y: number }>;
 
-/** A node id as the layout makes one: a character, location or prop by its id, or a scene or segment of this episode. */
+/** A node id as the canvas makes one: a shared stage's folder, or one of this episode's; a shared group, or one of this episode's. */
 function nodeOf(id: string, episode: string): boolean {
-  if (/^(character|location|prop):[^/:]+$/.test(id)) return true;
-  const own = id.match(/^(segment|scene):([^/]+)\/[^/:]+$/);
-  return own !== null && own[2] === episode;
+  if (/^assets\/[^:]+$/.test(id) || id.startsWith(`episodes/${episode}/`)) return true;
+  const group = id.match(/^group:(.+)$/);
+  return group !== null && (["Characters", "Locations", "Props"].includes(group[1]) || group[1].startsWith(`${episode} `));
 }
 
 /** The body of a PUT, read as positions, or refused naming the field that doesn't read. */

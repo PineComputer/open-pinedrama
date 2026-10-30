@@ -117,7 +117,7 @@ describe("the SteerBar", () => {
   it("sends a note on a segment to its episode's agent, by episode and segment number", async () => {
     engine();
     render(<Canvas drama={drama("working")} />);
-    const { user, bar } = await pick(/^Seg 1-1 · /);
+    const { user, bar } = await pick(/^Storyboard · line-art/);
     await user.click(within(bar).getByRole("button", { name: "Note" }));
     await user.type(within(bar).getByRole("textbox", { name: "Your note" }), "Keep the lamp lit.");
     await user.click(within(bar).getByRole("button", { name: "Send to the agent" }));
@@ -137,7 +137,7 @@ describe("the SteerBar", () => {
     const user = userEvent.setup();
     engine();
     render(<Canvas drama={drama("stopped")} />);
-    const { bar } = await pick(/^Seg 1-1 · /);
+    const { bar } = await pick(/^Storyboard · line-art/);
     await user.click(within(bar).getByRole("button", { name: "Send back" }));
     expect(within(bar).getByText(/EP001's agent isn't running: Its Computer stopped/)).toBeInTheDocument();
     expect(within(bar).queryByRole("textbox")).toBeNull();
@@ -150,7 +150,7 @@ describe("the SteerBar", () => {
     const user = userEvent.setup();
     engine();
     render(<Canvas drama={drama("queued")} />);
-    const { bar } = await pick(/^Seg 1-1 · /);
+    const { bar } = await pick(/^Storyboard · line-art/);
     await user.click(within(bar).getByRole("button", { name: "Note" }));
     expect(within(bar).getByText(/EP001's agent isn't running: In line/)).toBeInTheDocument();
     expect(within(bar).queryByRole("button", { name: /^Resume/ })).toBeNull();
@@ -160,7 +160,7 @@ describe("the SteerBar", () => {
     const user = userEvent.setup();
     engine([], "review", "r5");
     render(<Canvas drama={drama("working")} />);
-    const { bar } = await pick(/^Seg 1-1 · /);
+    const { bar } = await pick(/^Storyboard · line-art/);
     await user.click(within(bar).getByRole("button", { name: "Note" }));
     expect(await within(bar).findByText(/EP001's agent waits on your review/)).toBeInTheDocument();
     expect(within(bar).getByRole("link", { name: "Open the review it waits on" })).toHaveAttribute("href", "/r/r5");
@@ -209,16 +209,9 @@ describe("a picked item's hand actions and panel (P6.8)", () => {
     server.use(http.get("/f/7", () => HttpResponse.text("# EP001\n\n## seg01\n- Shot 1 (wide · static · 4s) 林 walks into the 办公室.\n- Shot 2 (close · 3s) She stops.\n\n## seg02\n- Shot 1 (wide) Elsewhere.")));
   }
 
-  it("shows a segment's shots from the breakdown on its card", async () => {
-    withBreakdown();
-    render(<Canvas drama={drama("working")} />);
-    const card = (await screen.findByRole("button", { name: /^Seg 1-1 · / })).closest(".ds-cnode")!;
-    await waitFor(() => expect(card.textContent).toContain("Shot 1 (wide · static · 4s) 林 walks into the 办公室."));
-    expect(card.textContent).not.toContain("Elsewhere");
-  });
 
   const folder = "/work/drama/episodes/EP001/multi_panel_storyboard/seg01/line-art/v1";
-  const look = { id: 9, name: "image-1.png", path: "/work/drama/assets/characters/lin/v1/image-1.png", type: "image/png", size: 1, kind: "look", url: "/f/9?v=1", createdAt: "2026-10-30T09:00:00Z" };
+  const look = { id: 9, name: "image-1.png", path: "/work/drama/assets/characters/lin/v1/image-1.jpg", type: "image/png", size: 1, kind: "look", url: "/f/9?v=1", createdAt: "2026-10-30T09:00:00Z" };
   const spec = { id: 10, name: "spec.json", path: `${folder}/spec.json`, type: "application/json", size: 1, kind: "spec", url: "/f/10?v=1", createdAt: "2026-10-30T10:00:00Z" };
   const request = { id: 11, name: "request.json", path: `${folder}/request.json`, type: "application/json", size: 1, kind: "request", url: "/f/11?v=1", createdAt: "2026-10-30T10:00:00Z" };
 
@@ -227,7 +220,7 @@ describe("a picked item's hand actions and panel (P6.8)", () => {
     answer("/api/dramas/d1/files", [breakdown, sheet, look, spec, request]);
     const content = [
       { type: "text", text: "Image 1: 林's look.\nShe walks in, as in Image 1, past Image 2." },
-      { type: "image_url", image_url: { url: "@/Users/maker/drama/assets/characters/lin/v1/image-1.png" }, role: "reference_image" },
+      { type: "image_url", image_url: { url: "@/Users/maker/drama/assets/characters/lin/v1/image-1.jpg" }, role: "reference_image" },
       { type: "image_url", image_url: { url: "asset://asset-1" }, role: "reference_image" },
     ];
     server.use(http.get("/f/10", () => HttpResponse.text(JSON.stringify({ model: "sd25", content, duration: 12, ratio: "9:16", resolution: "480p", seed: 42 }))));
@@ -242,7 +235,7 @@ describe("a picked item's hand actions and panel (P6.8)", () => {
   it("shows the prompt drama-cli sent, each Image N as a chip with the picture it names", async () => {
     withSpec();
     render(<Canvas drama={drama("working")} />);
-    const { panel } = await panelOf(/^Seg 1-1 · /);
+    const { panel } = await panelOf(/^Storyboard · line-art/);
     await waitFor(() => expect(within(panel).getByRole("tabpanel").textContent).toContain("She walks in, as in Image 1, past Image 2."));
     const chips = [...panel.querySelectorAll(".prompt .chip")];
     expect(chips.map((chip) => chip.textContent)).toEqual(["Image 1", "Image 1", "Image 2"]);
@@ -266,7 +259,7 @@ describe("a picked item's hand actions and panel (P6.8)", () => {
   it("lists the settings the spec states, and nothing it doesn't", async () => {
     withSpec();
     render(<Canvas drama={drama("working")} />);
-    const { user, panel } = await panelOf(/^Seg 1-1 · /);
+    const { user, panel } = await panelOf(/^Storyboard · line-art/);
     await user.click(within(panel).getByRole("tab", { name: "Settings" }));
     await waitFor(() => expect(within(panel).getByRole("tabpanel").textContent).toBe("Modelsd25Ratio9:16Resolution480pDuration12sSeed42"));
   });
@@ -274,33 +267,31 @@ describe("a picked item's hand actions and panel (P6.8)", () => {
   it("shows the request as a JSON tree", async () => {
     withSpec();
     render(<Canvas drama={drama("working")} />);
-    const { user, panel } = await panelOf(/^Seg 1-1 · /);
+    const { user, panel } = await panelOf(/^Storyboard · line-art/);
     await user.click(within(panel).getByRole("tab", { name: "Request" }));
     expect(await within(panel).findByRole("tree", { name: "Request" })).toHaveTextContent(/"sd25"/);
   });
 
-  it("shows the breakdown's shots until a spec comes back, and says so", async () => {
+  it("says so until the agent returns the version's spec", async () => {
     withBreakdown();
     render(<Canvas drama={drama("working")} />);
-    const { panel } = await panelOf(/^Seg 1-1 · /);
-    await waitFor(() => expect(within(panel).getByRole("tabpanel").textContent).toContain("Shot 2 (close · 3s) She stops."));
-    expect(within(panel).getByRole("tabpanel").textContent).toContain("until the agent returns this version's spec.json");
+    const { panel } = await panelOf(/^Storyboard · line-art/);
+    expect(within(panel).getByRole("tabpanel")).toHaveTextContent("The agent hasn't returned this version's spec.json and request.json.");
   });
 
-  it("lists what drama-cli's lineage made it from, and picks one on the board", async () => {
+  it("says what drama-cli's lineage made it from and what uses it, in the detail card", async () => {
     withBreakdown();
     render(<Canvas drama={drama("working")} />);
-    const { user, panel } = await panelOf(/^Seg 1-1 · /);
-    await user.click(within(panel).getByRole("tab", { name: "Made from" }));
-    await user.click(within(panel).getByRole("button", { name: "lin" }));
-    expect(await screen.findByRole("toolbar", { name: /林/ })).toBeInTheDocument();
+    await pick(/^Take · t01/);
+    const card = await screen.findByRole("dialog", { name: /^Take · t01/ });
+    expect(card).toHaveTextContent(/Used by—Reads.*Storyboard · line-art · v1.*林/);
   });
 
   it("lists the segment's versions, each with what the maker decided", async () => {
     withBreakdown();
     answer("/api/dramas/d1/episodes/EP001", { segments: [{ key: "seg01", boards: [{ turnId: "u1", files: [{ ...sheet, version: "v1" }], review: { reviewId: "r1", kind: "storyboards", state: "answered", verdict: "revise", notes: [{ text: "Brighter lamp." }] } }], stills: [], takes: [] }] });
     render(<Canvas drama={drama("working")} />);
-    const { user, panel } = await panelOf(/^Seg 1-1 · /);
+    const { user, panel } = await panelOf(/^Storyboard · line-art/);
     await user.click(within(panel).getByRole("tab", { name: "Versions" }));
     await waitFor(() => expect(panel.querySelector(".versions > li")).not.toBeNull());
     const version = panel.querySelector(".versions > li")!;
@@ -312,7 +303,7 @@ describe("a picked item's hand actions and panel (P6.8)", () => {
   it("offers the hand actions disabled, saying why, and they do nothing", async () => {
     withBreakdown();
     render(<Canvas drama={drama("working")} />);
-    const { bar } = await pick(/^Seg 1-1 · /);
+    const { bar } = await pick(/^Storyboard · line-art/);
     const panel = await screen.findByRole("region", { name: /what it is made from/ });
     for (const button of [within(bar).getByRole("button", { name: "Use as reference" }), within(panel).getByRole("button", { name: "Generate" }), within(panel).getByRole("button", { name: "Upload" })]) {
       expect(button).toBeDisabled();
@@ -325,7 +316,7 @@ describe("a picked item's hand actions and panel (P6.8)", () => {
   it("opens and downloads the item's picture", async () => {
     withBreakdown();
     render(<Canvas drama={drama("working")} />);
-    const { bar } = await pick(/^Seg 1-1 · /);
+    const { bar } = await pick(/^Storyboard · line-art/);
     expect(within(bar).getByRole("link", { name: "Open" })).toHaveAttribute("href", "/f/8?v=1");
     expect(within(bar).getByRole("link", { name: "Download" })).toHaveAttribute("href", "/f/8?v=1&download=1");
   });
@@ -333,7 +324,7 @@ describe("a picked item's hand actions and panel (P6.8)", () => {
   it("lets go of the item on Escape, with its bar and panel", async () => {
     withBreakdown();
     render(<Canvas drama={drama("working")} />);
-    const { user } = await pick(/^Seg 1-1 · /);
+    const { user } = await pick(/^Storyboard · line-art/);
     await screen.findByRole("region", { name: /what it is made from/ });
     await user.keyboard("{Escape}");
     await waitFor(() => expect(screen.queryByRole("region", { name: /what it is made from/ })).toBeNull());

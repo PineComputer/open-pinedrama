@@ -1,14 +1,12 @@
-// The panel under a picked item on the canvas (docs/REDESIGN_PLAN.md, P6.8), as the reference's
-// node composer stands under its node: the item's structured data, read only, in shadcn's Tabs.
-// Prompt and Settings are what drama-cli's spec.json for the working version says (shared/spec.ts);
-// Made from is drama-cli's lineage of it; Versions are the receipts the episode page lists, each
-// with the maker's verdict; Request is the request.json drama-cli sent, in react-json-view-lite's
-// tree. Every hand control stands disabled (NodeActions).
+// The picked item's data in the canvas's inspector (docs/REDESIGN_PLAN.md, P6.8), read only, in
+// shadcn's Tabs. Prompt and Settings are what drama-cli's spec.json for the working version says
+// (shared/spec.ts); Versions are the receipts the episode page lists, each with the maker's verdict;
+// Request is the request.json drama-cli sent, in react-json-view-lite's tree. What it was made from
+// is the inspector's Reads. Every hand control stands disabled (NodeActions).
 import { Fragment, useContext, useMemo } from "react";
 import { collapseAllNested, defaultStyles, JsonView } from "react-json-view-lite";
 import "react-json-view-lite/dist/index.css";
-import { type BoardNode, referenceNode } from "../../shared/canvas.ts";
-import type { Lineage } from "../../shared/lineage.ts";
+import type { Item } from "../../shared/pipeline.ts";
 import { specBeside, specFacts } from "../../shared/spec.ts";
 import type { EpisodePage, FileItem, Receipt } from "../../shared/types.ts";
 import { useResource } from "../api.ts";
@@ -18,17 +16,6 @@ import { useT } from "../i18n.ts";
 import { useText } from "../viewing.tsx";
 import { JudgedLine } from "./Episode.tsx";
 import type { NodeActions } from "./Canvas.tsx";
-
-export interface PanelItem {
-  item: BoardNode;
-  label: string;
-  /** The file the working version made: a segment's take when it has one, else the picture shown. */
-  work?: FileItem;
-  /** A segment's shots as the breakdown lists them, for its prompt until a spec says it. */
-  shots?: string[];
-  /** The references a segment uses or needs, in the board's order. */
-  refs?: { id: string; label: string; picture?: FileItem }[];
-}
 
 /** The JSON tree in our tokens: react-json-view-lite's own layout classes, with ours for the colours (canvas.css). */
 const JSON_STYLE = {
@@ -105,7 +92,7 @@ function Prompt({ text, pictures }: { text: string; pictures: (FileItem | undefi
 }
 
 /** The versions of a segment the stops returned, newest first, each with what the maker decided. */
-function Versions({ dramaId, item }: { dramaId: string; item: BoardNode }) {
+function Versions({ dramaId, item }: { dramaId: string; item: Item }) {
   const { t } = useT();
   const page = useResource<EpisodePage>(`/api/dramas/${dramaId}/episodes/${item.episode}`, [`drama:${dramaId}`]);
   const segment = page.data?.segments.find((one) => one.key === item.subject);
@@ -125,20 +112,14 @@ function Versions({ dramaId, item }: { dramaId: string; item: BoardNode }) {
   );
 }
 
-export function NodePanel({ dramaId, data, files, lineage, onBoard, actions, pick }: { dramaId: string; data: PanelItem; files: FileItem[]; lineage: Lineage | null; onBoard: Set<string>; actions: NodeActions; pick: (id: string) => void }) {
+export function NodePanel({ dramaId, item, label, work, files, actions }: { dramaId: string; item: Item; label: string; work?: FileItem; files: FileItem[]; actions: NodeActions }) {
   const { t } = useT();
-  const node = data.item;
-  const specFile = specBeside(data.work, files);
-  const specText = useText(specFile).text;
-  const facts = specFacts(specText);
+  const specFile = specBeside(work, files);
+  const facts = specFacts(useText(specFile).text);
   const spec = useJson(specFile);
-  const request = useJson(beside(data.work, files, "request.json"));
+  const request = useJson(beside(work, files, "request.json"));
   const pictures = sentPictures(spec, files);
-
-  // Made from: what drama-cli's lineage links into this item's stages.
-  const mine = (lineage?.nodes ?? []).filter((one) => (node.kind === "segment" ? one.where.episode === node.episode && one.where.segment === node.subject : referenceNode(one.id) === node.id));
-  const ids = new Set(mine.map((one) => one.id));
-  const upstream = [...new Set((lineage?.links ?? []).filter((link) => ids.has(link.to) && !ids.has(link.from)).map((link) => link.from))].flatMap((id) => lineage!.nodes.filter((one) => one.id === id));
+  const segment = item.episode !== undefined && item.kind !== "cut";
 
   const settings = [
     [t("canvas.model"), facts?.model],
@@ -149,26 +130,16 @@ export function NodePanel({ dramaId, data, files, lineage, onBoard, actions, pic
   ].filter((row): row is [string, string] => row[1] !== undefined);
 
   return (
-    <section className="ds-npanel nodrag nowheel" aria-label={t("canvas.panel", { item: data.label })}>
+    <section className="ds-npanel nodrag nowheel" aria-label={t("canvas.panel", { item: label })}>
       <Tabs defaultValue="prompt">
         <TabsList variant="line">
           <TabsTrigger value="prompt">{t("canvas.tab.prompt")}</TabsTrigger>
           <TabsTrigger value="settings">{t("canvas.tab.settings")}</TabsTrigger>
-          <TabsTrigger value="from">{t("canvas.tab.from")}</TabsTrigger>
-          {node.kind === "segment" && <TabsTrigger value="versions">{t("canvas.tab.versions")}</TabsTrigger>}
+          {segment && <TabsTrigger value="versions">{t("canvas.tab.versions")}</TabsTrigger>}
           <TabsTrigger value="request">{t("canvas.tab.request")}</TabsTrigger>
         </TabsList>
         <TabsContent value="prompt" className="prompt">
-          {facts?.prompt ? (
-            <Prompt text={facts.prompt} pictures={pictures} />
-          ) : data.shots ? (
-            <>
-              <p className="quiet small">{t("canvas.fromBreakdown")}</p>
-              {data.shots.map((line) => <p key={line}>{line}</p>)}
-            </>
-          ) : (
-            <p className="quiet">{t("canvas.noSpec")}</p>
-          )}
+          {facts?.prompt ? <Prompt text={facts.prompt} pictures={pictures} /> : <p className="quiet">{t("canvas.noSpec")}</p>}
         </TabsContent>
         <TabsContent value="settings">
           {settings.length ? (
@@ -184,34 +155,9 @@ export function NodePanel({ dramaId, data, files, lineage, onBoard, actions, pic
             <p className="quiet">{t("canvas.noSpec")}</p>
           )}
         </TabsContent>
-        <TabsContent value="from">
-          {upstream.length ? (
-            <ol className="from">
-              {upstream.map((one) => {
-                const picture = one.shows ? files.find((file) => file.path.endsWith(`/${one.shows}`)) : undefined;
-                const id = referenceNode(one.id);
-                return (
-                  <li key={one.id}>
-                    {picture ? <img src={picture.url} alt="" /> : <span className="none" />}
-                    {id && onBoard.has(id) ? (
-                      <button type="button" className="link" onClick={() => pick(id)}>
-                        {one.label}
-                      </button>
-                    ) : (
-                      <span>{one.label}</span>
-                    )}
-                    <span className="quiet small">{one.version ?? "—"}</span>
-                  </li>
-                );
-              })}
-            </ol>
-          ) : (
-            <p className="quiet">{t("canvas.noLineage")}</p>
-          )}
-        </TabsContent>
-        {node.kind === "segment" && (
+        {segment && (
           <TabsContent value="versions">
-            <Versions dramaId={dramaId} item={node} />
+            <Versions dramaId={dramaId} item={item} />
           </TabsContent>
         )}
         <TabsContent value="request" className="request">
@@ -220,14 +166,13 @@ export function NodePanel({ dramaId, data, files, lineage, onBoard, actions, pic
       </Tabs>
       <div className="foot">
         <span className="grow" />
-        <Button variant="outline" size="sm" icon="upload" disabledReason={t("canvas.phase2")} onClick={() => actions.upload(node.id)}>
+        <Button variant="outline" size="sm" icon="upload" disabledReason={t("canvas.phase2")} onClick={() => actions.upload(item.id)}>
           {t("canvas.upload")}
         </Button>
-        <Button variant="outline" size="sm" icon="sparkle" disabledReason={t("canvas.phase2")} onClick={() => actions.generate(node.id)}>
+        <Button variant="outline" size="sm" icon="sparkle" disabledReason={t("canvas.phase2")} onClick={() => actions.generate(item.id)}>
           {t("canvas.generate")}
         </Button>
       </div>
     </section>
   );
 }
-

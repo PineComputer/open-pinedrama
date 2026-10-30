@@ -41,39 +41,38 @@ describe("the canvas", () => {
     engine(project());
     render(<Canvas drama={drama} />);
     const board = await screen.findByRole("region", { name: "Canvas" });
-    expect(within(board).getByRole("button", { name: /^林/ })).toBeInTheDocument();
-    expect(within(board).getByRole("button", { name: /^办公室/ })).toBeInTheDocument();
+    expect(await within(board).findByRole("button", { name: /^林/ })).toBeInTheDocument();
+    expect(within(board).getByRole("button", { name: /^办公室 · Day/ })).toBeInTheDocument();
     expect(within(board).queryByRole("button", { name: /^lin\b/ })).toBeNull();
   });
 
-  it("says where each item stands", async () => {
-    engine(project((report) => {
-      report.characters.lin = { ...report.characters.lin, current: "v2", candidate: "v2", usable: false, why: "not accepted" };
-    }));
+  it("says where each item stands, by drama-cli's lineage", async () => {
+    engine(project());
     render(<Canvas drama={drama} />);
-    expect(await screen.findByRole("button", { name: /^林.*Waiting for you/ })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /^办公室.*Accepted/ })).toBeInTheDocument();
+    // The take's t01 isn't accepted: it waits for the maker. An accepted item carries no chip, as the prototype's.
+    expect(await screen.findByRole("button", { name: /^Take · t01.*Waiting for you/ })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /^林$/ })).toBeInTheDocument();
   });
 
   it("shows each item's current picture, not an older one", async () => {
-    engine(project(), [file(1, "/work/drama/assets/characters/lin/v0/image-1.png", "2026-10-30T09:00:00Z"), file(2, "/work/drama/assets/characters/lin/v1/image-1.png")]);
+    engine(project(), [file(1, "/work/drama/assets/characters/lin/v0/image-1.png", "2026-10-30T09:00:00Z"), file(2, "/work/drama/assets/characters/lin/v1/image-1.jpg")]);
     render(<Canvas drama={drama} />);
     const lin = await screen.findByRole("button", { name: /^林/ });
     // The picture is the button's content, named by the button: decorative, so found by tag.
-    await waitFor(() => expect(lin.closest(".ds-cnode")!.querySelector("img")).toHaveAttribute("src", "/f/2"));
+    await waitFor(() => expect(lin.closest(".cnode")!.querySelector("img")).toHaveAttribute("src", "/f/2"));
   });
 
-  it("shows the version's picture, never the spec.json or request.json in its folder", async () => {
+  it("shows the file drama-cli's lineage shows for the version, never the spec.json or request.json beside it", async () => {
     const at = (id: number, name: string, kind: string, type: string) => ({ ...file(id, `/work/drama/assets/characters/lin/v1/${name}`, `2026-10-30T10:0${id}:00Z`), name, kind, type }) as unknown as FileItem;
     // Saved after the picture, so neither newest-first nor any file of the version would find it.
-    engine(project(), [at(1, "image-1.png", "look", "image/png"), at(2, "spec.json", "spec", "application/json"), at(3, "request.json", "request", "application/json")]);
+    engine(project(), [at(1, "image-1.jpg", "look", "image/jpeg"), at(2, "spec.json", "spec", "application/json"), at(3, "request.json", "request", "application/json")]);
     render(<Canvas drama={drama} />);
     const lin = await screen.findByRole("button", { name: /^林/ });
-    await waitFor(() => expect(lin.closest(".ds-cnode")!.querySelector("img")).toHaveAttribute("src", "/f/1"));
+    await waitFor(() => expect(lin.closest(".cnode")!.querySelector("img")).toHaveAttribute("src", "/f/1"));
   });
 
   it("takes the new pictures as a turn's files are saved", async () => {
-    engine(project(), [file(1, "/work/drama/assets/characters/lin/v1/image-1.png")]);
+    engine(project(), [file(1, "/work/drama/assets/characters/lin/v1/image-1.jpg")]);
     render(<Canvas drama={drama} />);
     await screen.findByRole("button", { name: /^林/ });
     await waitFor(() => expect(calls("GET", "/api/dramas/d1/files")).toHaveLength(1));
@@ -81,11 +80,24 @@ describe("the canvas", () => {
     await waitFor(() => expect(calls("GET", "/api/dramas/d1/files")).toHaveLength(2));
   });
 
-  it("shows one episode, its scenes as bands, with the references it uses", async () => {
+  it("shows of the shared looks, plates and props only those the episode's stages were made from, where drama-cli put them", async () => {
     engine(project());
     render(<Canvas drama={drama} />);
-    expect(await screen.findByRole("group", { name: "Scene 1 · INT. OFFICE - DAY #1-1#" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /^Seg 1-1 · / })).toBeInTheDocument();
+    const board = await screen.findByRole("region", { name: "Canvas" });
+    // The office's Day plate went into the take; its base plate went into nothing of EP001's.
+    expect(await within(board).findByRole("button", { name: /^办公室 · Day/ })).toBeInTheDocument();
+    expect(within(board).queryByRole("button", { name: /^办公室$/ })).toBeNull();
+  });
+
+  it("shows one episode in drama-cli's groups: the cast, the places, and its segments, each with its scene", async () => {
+    engine(project());
+    render(<Canvas drama={drama} />);
+    expect(await screen.findByRole("group", { name: "EP001 seg01 · INT. OFFICE - DAY #1-1#" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /^Storyboard · line-art/ })).toBeInTheDocument();
+    expect(screen.getByRole("group", { name: "Cast" })).toBeInTheDocument();
+    expect(screen.getByRole("group", { name: "Places" })).toBeInTheDocument();
+    // drama-cli's Text group, the bible and the breakdowns, stays off the board.
+    expect(screen.queryByRole("group", { name: "Text" })).toBeNull();
     expect(screen.getByRole("button", { name: /^EP001 · x/ })).toBeInTheDocument();
     expect(await screen.findByRole("button", { name: /^林/ })).toBeInTheDocument();
   });
@@ -97,19 +109,25 @@ describe("the canvas", () => {
       report.episodes.EP002 = { ...report.episodes.EP001, scene_chains: [{ scene_heading: "EXT. YARD - NIGHT #2-1#", segments: ["seg01"] }] };
     }));
     render(<Canvas drama={drama} />);
-    expect(await screen.findByRole("group", { name: "Scene 1 · EXT. YARD - NIGHT #2-1#" })).toBeInTheDocument();
-    expect(screen.queryByRole("group", { name: "Scene 1 · INT. OFFICE - DAY #1-1#" })).toBeNull();
-    expect(screen.getByRole("button", { name: "Next episode" })).toBeDisabled();
+    // EP002 has made nothing yet, so nothing of EP001's, nor the references EP001 used, stands on its board.
+    expect(await screen.findByRole("button", { name: "Next episode" })).toBeDisabled();
+    expect(screen.queryByRole("group", { name: "EP001 seg01 · INT. OFFICE - DAY #1-1#" })).toBeNull();
+    expect(screen.queryByRole("group", { name: "Cast" })).toBeNull();
     await user.click(screen.getByRole("button", { name: "Previous episode" }));
     expect(location.search).toBe("?item=EP001");
-    expect(await screen.findByRole("group", { name: "Scene 1 · INT. OFFICE - DAY #1-1#" })).toBeInTheDocument();
+    expect(await screen.findByRole("group", { name: "EP001 seg01 · INT. OFFICE - DAY #1-1#" })).toBeInTheDocument();
     window.history.pushState(null, "", "/");
   });
 
-  it("offers React Flow's controls, named in the maker's words, and the minimap", async () => {
+  it("offers the prototype's zoom pill, named in the maker's words, and the minimap on asking", async () => {
+    const user = userEvent.setup();
     engine(project());
     render(<Canvas drama={drama} />);
-    for (const name of ["Zoom in", "Zoom out", "Fit the board", "Lay out again"]) expect(await screen.findByRole("button", { name })).toBeInTheDocument();
+    const pill = await screen.findByRole("toolbar", { name: "Canvas" });
+    for (const name of ["Zoom in", "Zoom out", "Fit the board", "Lay out again"]) expect(within(pill).getByRole("button", { name })).toBeInTheDocument();
+    expect(within(pill).getByRole("status", { name: "Zoom" })).toHaveTextContent(/%$/);
+    expect(screen.queryByRole("img", { name: "Minimap: move the view" })).toBeNull();
+    await user.click(within(pill).getByRole("button", { name: "Minimap: move the view" }));
     expect(screen.getByRole("img", { name: "Minimap: move the view" })).toBeInTheDocument();
   });
 

@@ -3,7 +3,7 @@
 // pipeline: the script, the cast, places and props, then per segment blocking, storyboard and
 // take, then the cut), its name and its tone; and the one map from a stage's folder (drama-cli's
 // lineage id, short_drama drama_cli/lineage.py) to the canvas item that shows it.
-import type { LineageKind } from "./lineage.ts";
+import type { LineageKind, LineageNode } from "./lineage.ts";
 
 export interface Lane {
   column: number;
@@ -32,16 +32,17 @@ export const PIPELINE: Record<LineageKind, Lane> = {
 };
 
 /** A canvas item's kind: a shared reference, one of a segment's stages (its storyboard is its card), or the episode's cut. */
-export type ItemKind = "character" | "location" | "prop" | "blocking" | "segment" | "take" | "cut";
+export type ItemKind = "character" | "location" | "prop" | "blocking" | "frame" | "segment" | "take" | "cut";
 
 /** The stage kind each canvas item shows, so the canvas takes its lanes from PIPELINE. */
-export const SHOWS: Record<ItemKind, LineageKind> = { character: "look", location: "plate", prop: "prop", blocking: "blocking", segment: "storyboard", take: "take", cut: "cut" };
+export const SHOWS: Record<ItemKind, LineageKind> = { character: "look", location: "plate", prop: "prop", blocking: "blocking", frame: "first_frame_reference", segment: "storyboard", take: "take", cut: "cut" };
 
 const RULES: [RegExp, (m: RegExpMatchArray) => string][] = [
   [/^assets\/characters\/([^/]+)/, (m) => `character:${m[1]}`],
   [/^assets\/scenes\/([^/]+)/, (m) => `location:${m[1]}`],
   [/^assets\/props\/([^/]+)/, (m) => `prop:${m[1]}`],
   [/^episodes\/(EP\d+)\/blocking\/([^/]+)/, (m) => `blocking:${m[1]}/${m[2]}`],
+  [/^episodes\/(EP\d+)\/first_frame_reference\/([^/]+)/, (m) => `frame:${m[1]}/${m[2]}`],
   [/^episodes\/(EP\d+)\/multi_panel_storyboard\/([^/]+)/, (m) => `segment:${m[1]}/${m[2]}`],
   [/^episodes\/(EP\d+)\/segments\/([^/]+)/, (m) => `take:${m[1]}/${m[2]}`],
   [/^episodes\/(EP\d+)\/edit$/, (m) => `cut:${m[1]}`],
@@ -58,4 +59,22 @@ export function boardIdOf(stage: string): string | undefined {
     if (m) return id(m);
   }
   return undefined;
+}
+
+/** What the canvas's bar and inspector speak about: the item a stage is shown by, who or what it is of, and its episode. */
+export interface Item {
+  /** The board item (boardIdOf), so a review, Graph and the agent name it as they do. */
+  id: string;
+  kind: ItemKind;
+  /** The character, location or prop id, the segment's id, or the episode's code for its cut. */
+  subject: string;
+  episode?: string;
+}
+
+/** The item a lineage stage is shown by, or undefined for a stage no canvas item shows. */
+export function itemOf(stage: LineageNode): Item | undefined {
+  const id = boardIdOf(stage.id);
+  if (!id) return undefined;
+  const { subject, segment, episode } = stage.where;
+  return { id, kind: id.slice(0, id.indexOf(":")) as ItemKind, subject: subject ?? segment ?? episode!, ...(episode ? { episode } : {}) };
 }
