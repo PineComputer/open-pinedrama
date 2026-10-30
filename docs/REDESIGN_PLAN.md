@@ -33,7 +33,7 @@ ends with an acceptance by the person who asked for the redesign before the next
 | **M4** The new flow | A new maker goes from uploading a screenplay to the first episode's cut in the new screens. | Home, upload, preset, analyzing, Fountain review, Story, Episodes, the episode workspace, the review room and the stops (a red line in the screenplay, the budget spent, a cap reached) replace today's screens, which are deleted. | CI green, end to end from upload to cut in replay, with each stop. The person takes a real Pine project from upload to EP001's cut, within a stated spend, and every place they got stuck is fixed. |
 | **M5** Canvas | The series as one board, drawn as the agent works. | Layout, item cards, the steering bar, following the agent, a minimap. Read-only. | CI green, including a test that no way to generate exists and that 80 episodes don't overlap. The person watches the agent fill the board in replay, drags away, and resumes following. |
 | **M6** Cut viewer | Watch a cut and leave notes at a time for the agent. | Tracks for takes, subtitles and dialogue; notes at the playhead; the decision in the review room. | CI green. Two notes on a real cut, rebuilt by the agent and checked. |
-| **M7** Graph | For any take, where it came from and what makes it stale. | Versions as nodes with their inputs; stale marks and the cost to redo. Read-only. Needs drama-cli to report each version's inputs. | CI green in both repositories. A location's plate replaced: every storyboard and take made from it is marked stale, with the right cost. |
+| **M7** Graph | For any take, where it came from and what makes it stale. | Versions as nodes with their inputs; stale marks. Read-only. Read from drama-cli's lineage as `drama-cli export comfyui` writes it. | CI green. A location's plate replaced: every storyboard and take made from it is marked stale. |
 
 ## Items
 
@@ -73,8 +73,11 @@ SteerBar: Review, Send back with a reason, Note, Lineage. P6.4 following the age
 
 **P7 Cut viewer (M6).** P7.1 tracks. P7.2 notes at the playhead.
 
-**P8 Graph (M7).** P8.0 each version's inputs from drama-cli. P8.1 LineageNode, stale marks
-and the cost to redo.
+**P8 Graph (M7).** P8.0 each stop also returns `drama-cli export comfyui`, drama-cli's own
+lineage (each stage's working and accepted version, whether it is fresh, the file it shows,
+and an edge from each picture it used); the engine reads its nodes' properties and links.
+P8.1 LineageNode and stale marks. Why a version is stale, and what redoing it would cost,
+are not in that export: each needs its own source first.
 
 ## Every item is done when
 
