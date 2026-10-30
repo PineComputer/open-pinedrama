@@ -97,6 +97,12 @@ describe("the canvas", () => {
     expect(zoom.textContent).toBe(before);
   });
 
+  it("points to what waits for the maker, beside the agent", async () => {
+    engine(project());
+    render(<Canvas drama={{ ...drama, waiting: 3 } as DramaView} />);
+    expect(await screen.findByRole("link", { name: "3 waiting for you" })).toHaveAttribute("href", "/d/d1/inbox");
+  });
+
   it("offers no way to make, change or draw an item", async () => {
     engine(project());
     render(<Canvas drama={drama} />);

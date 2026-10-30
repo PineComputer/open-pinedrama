@@ -11,11 +11,12 @@ Settings, under About, and in the desktop app's About panel, and marks each Reve
 | `src/ui/theme/reveric-themes.css` | Reveric `designs/themes.css` | AGPLv3 (Reveric) | None, copied verbatim. The studio uses its `classic` palette, light and dark. |
 | `src/ui/theme/reveric-tokens.css` | Reveric `designs/desktop/colors_and_type.css` | AGPLv3 (Reveric) | Its `@import` of `../themes.css` removed, since the studio loads the themes itself; marked at the top of the file. |
 | `src/ui/icons.tsx` | Phosphor Icons, regular weight, as the SVG copies in Reveric's `designs/desktop/assets/icons/phosphor/` | MIT (Phosphor Icons, [phosphoricons.com](https://phosphoricons.com)) | Each SVG's inner markup packed into one map, without its empty bounding `<rect>`. |
+| `src/ui/screens/Canvas.tsx` (the camera's fit and wheel zoom, the minimap) | Reveric `designs/desktop/canvas/board.jsx` (`cvFitView`, `CvMinimap`, the wheel handler) and `designs/desktop/drama/views.jsx` (the zoom cluster) | AGPLv3 (Reveric) | Rewritten in TypeScript for the studio's series board, keeping the formulas and values: the wheel rate 0.0016, fit's 80 px margin and its 1.05 ceiling, the 1.25 button step, and the 172 × 116 minimap whose world is the board together with the view. Changed: the zoom floor is 0.2 rather than 0.28, and cards turn to bars below 0.3 rather than 0.55, since the board holds a whole series. Marked in the file. |
 
 ## Not reused
 
 No Reveric code, images, cover art, logo, brand mark, illustrations or copy text: every
-component, screen and stylesheet besides the two above is the studio's own. They follow Reveric's
+component, screen and stylesheet besides those above is the studio's own. They follow Reveric's
 layout and measurements, as its screenshots and design docs show them.
 
 ## Replay's sample media

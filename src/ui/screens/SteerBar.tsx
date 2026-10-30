@@ -41,7 +41,8 @@ function useOpenReview(drama: DramaView, node: BoardNode): ReviewView | undefine
   return found;
 }
 
-export function SteerBar({ drama, node, label, episodeTitle, onClose }: { drama: DramaView; node: BoardNode; label: string; episodeTitle?: string; onClose: () => void }) {
+/** `at`: where on the board the bar stands, above the chosen item and centred on it (Reveric's node bar). */
+export function SteerBar({ drama, node, label, episodeTitle, at, onClose }: { drama: DramaView; node: BoardNode; label: string; episodeTitle?: string; at?: { left: number; top: number }; onClose: () => void }) {
   const { t } = useT();
   const review = useOpenReview(drama, node);
   const [mode, setMode] = useState<"back" | "note" | null>(null);
@@ -76,7 +77,7 @@ export function SteerBar({ drama, node, label, episodeTitle, onClose }: { drama:
   const reviewHref = review ? `/r/${review.id}?item=${encodeURIComponent(reviewKey(node))}` : undefined;
 
   return (
-    <div className="ds-steer" role="toolbar" aria-label={t("steer.label", { item: label })}>
+    <div className="ds-steer" role="toolbar" aria-label={t("steer.label", { item: label })} style={at}>
       <div className="row">
         <b className="what">{label}</b>
         <span className="acts">
