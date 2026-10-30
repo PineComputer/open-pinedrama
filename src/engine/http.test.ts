@@ -99,4 +99,10 @@ describe("the answers the UI reads", () => {
     expect(response.status).toBe(404);
     expect(await response.json()).toMatchObject({ code: "not-found" });
   });
+
+  it("says plainly when a session doesn't exist", async () => {
+    const response = await call("/api/sessions/no-such-session/status");
+    expect(response.status).toBe(404);
+    expect(await response.json()).toMatchObject({ code: "not-found" });
+  });
 });
