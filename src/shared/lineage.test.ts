@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { LineageError, madeFromStale, mergeLineage, parseLineage, trace, type Lineage } from "./lineage.ts";
 
@@ -125,5 +126,28 @@ describe("one drama's lineage from its sessions", () => {
     const merged = mergeLineage(setup, { EP001: own });
     expect(merged.links).not.toContainEqual({ from: PLATE, to: TAKE });
     expect(merged.links).toContainEqual({ from: BOARD, to: TAKE });
+  });
+});
+
+describe("real exports of drama-cli's (fixtures/lineage)", () => {
+  const real = (name: string) => parseLineage(JSON.parse(readFileSync(new URL(`../../fixtures/lineage/${name}.json`, import.meta.url), "utf8")));
+
+  it("read, every stage fresh once a take is shot", () => {
+    const lineage = real("shot");
+    expect(lineage.nodes.every((node) => node.fresh === true)).toBe(true);
+    expect(trace(lineage, TAKE).up).toContain(PLATE);
+  });
+
+  it("say the take is stale, and why, once its plate at Day is replaced", () => {
+    const take = real("time-plate-replaced").nodes.find((node) => node.id === TAKE)!;
+    expect(take.fresh).toBe(false);
+    expect(take.problems).toContain(`Changed selection: ${PLATE}/accepted.json`);
+  });
+
+  it("keep a take fresh when its location's plate is replaced, and the studio marks it made from a stale version", () => {
+    const lineage = real("location-plate-replaced");
+    expect(lineage.nodes.find((node) => node.id === PLATE)!.fresh).toBe(false);
+    expect(lineage.nodes.find((node) => node.id === TAKE)!.fresh).toBe(true);
+    expect(madeFromStale(lineage)).toContain(TAKE);
   });
 });
