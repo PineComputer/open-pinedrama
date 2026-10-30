@@ -434,14 +434,14 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
   let pinNumber = 0;
 
   return (
-    <div className="ds-room">
-      <nav className="ds-reel" aria-label={t("review.items")}>
+    <div className="room">
+      <nav className="reel" aria-label={t("review.items")}>
         <h3>
           {review.episode ? `${review.episode} · ` : ""}
           {t(`kind.${review.kind}` as TKey)}
         </h3>
         {items.map((i, n) => (
-          <button key={i.key} type="button" className="ds-ritem" aria-current={n === index} onClick={() => go(n)}>
+          <button key={i.key} type="button" className="ritem" aria-current={n === index} onClick={() => go(n)}>
             <span className="thumb">
               <Still still={thumbOf(i)} />
             </span>
@@ -459,7 +459,7 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
         )}
       </nav>
 
-      <section className="ds-stage" aria-label={t("review.stage")}>
+      <section className="stage" aria-label={t("review.stage")}>
         {(variants.length > 1 || before) && (
           <div className="ds-stage-bar">
             {variants.length > 1 && (
@@ -478,10 +478,10 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
             )}
           </div>
         )}
-        <div className="ds-screen" ref={stage}>
+        <div className="screen" ref={stage}>
           {file && isImage(file) && <Pinboard key={file.id} file={file} notes={earlier ? (item?.asked ?? []) : (draft?.notes ?? [])} draft={!earlier && pending?.fileId === file.id ? pending : undefined} space={space} onPin={pin} />}
           {file && isVideo(file) && (
-            <div className="screen">
+            <div className="player">
               <video
                 ref={video}
                 key={file.url}
@@ -499,18 +499,20 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
         </div>
       </section>
 
-      <aside className="ds-insp" aria-label={t("review.inspector")}>
-        <div className="ds-insp-head">
-          <h2>{item && labelOf(item)}</h2>
+      <aside className="insp" aria-label={t("review.inspector")}>
+        <div className="ihead">
+          <b role="heading" aria-level={2}>
+            {item && labelOf(item)}
+          </b>
           <small>
             {[file?.version, earlier ? t("review.earlierShown") : ""].filter(Boolean).join(" · ")}
           </small>
         </div>
-        <div className="ds-insp-scroll">
+        <div className="iscroll">
           <Status review={review} />
           <AgentSays review={review} />
           {item?.asked && (
-            <div className="ds-isec asked-before">
+            <div className="isec asked-before">
               <h4>{t("review.askedBefore")}</h4>
               <ol className="ds-shots">
                 {item.asked.map((note, n) => (
@@ -528,7 +530,7 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
             </div>
           )}
           {spec && (spec.seconds !== undefined || spec.ratio || spec.model) && (
-            <div className="ds-isec">
+            <div className="isec">
               <h4>{t(takes ? "review.take" : "review.image")}</h4>
               <dl className="ds-kv">
                 {spec.seconds !== undefined && (
@@ -553,7 +555,7 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
             </div>
           )}
           {board && (
-            <div className="ds-isec">
+            <div className="isec">
               <h4>{t("review.storyboard")}</h4>
               <a href={board.url} target="_blank" rel="noreferrer" className="ds-board-thumb">
                 <img src={board.url} alt={t("review.storyboardOf", { segment: item?.key ?? "" })} />
@@ -561,7 +563,7 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
             </div>
           )}
           {shots && (
-            <div className="ds-isec">
+            <div className="isec">
               <h4>{t("review.shotList")}</h4>
               <ol className="ds-shots">
                 {shots.map((shot) => (
@@ -570,7 +572,7 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
               </ol>
             </div>
           )}
-          <div className="ds-isec">
+          <div className="isec">
             <h4>{t("review.notes")}</h4>
             {(draft?.notes ?? []).length === 0 && <span className="quiet small">{file && isVideo(file) ? t("review.noNotesVideo") : t("review.noNotes")}</span>}
             <div className="notes">
@@ -658,24 +660,24 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
             )}
           </div>
           {takes && (
-            <div className="ds-isec">
+            <div className="isec">
               <h4>{t("review.whoDecides")}</h4>
               <p className="quiet small">{t("review.whoDecidesTakes")}</p>
             </div>
           )}
           <Returned files={review.otherFiles} />
         </div>
-        <div className="ds-verdict">
+        <div className="verdict">
           <div className="vrow">
-            <button type="button" className="vbtn is-accept" aria-pressed={draft?.verdict === "approve"} disabled={!open || mustWatch} aria-describedby={mustWatch ? "must-watch" : undefined} onClick={accept}>
+            <button type="button" className="vbtn acc" aria-pressed={draft?.verdict === "approve"} disabled={!open || mustWatch} aria-describedby={mustWatch ? "must-watch" : undefined} onClick={accept}>
               <Icon name="check" />
               {t("review.accept")} <kbd>A</kbd>
             </button>
-            <button type="button" className="vbtn is-back" aria-pressed={draft?.verdict === "revise"} disabled={!open} onClick={sendBack}>
+            <button type="button" className="vbtn back" aria-pressed={draft?.verdict === "revise"} disabled={!open} onClick={sendBack}>
               <Icon name="arrow-counter-clockwise" />
               {t("review.sendBack")} <kbd>B</kbd>
             </button>
-            <button type="button" className="vbtn is-note" disabled={!open} onClick={() => noteInput.current?.focus()}>
+            <button type="button" className="vbtn note" disabled={!open} onClick={() => noteInput.current?.focus()}>
               <Icon name="note-pencil" />
               {t("review.note")} <kbd>N</kbd>
             </button>
@@ -689,40 +691,43 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
           {draft?.verdict === "revise" && !draft.notes.length && <span className="hint">{t("review.reasonFirst")}</span>}
           <span className="hint keys">{t("review.keys")}</span>
         </div>
-      </aside>
-
-      {confirming ? (
-        <div className="ds-sendbar is-confirming">
-          <div className="summary">
-            <strong>{t("review.confirm")}</strong> {t("review.tally", { a: approved, r: revise, left: items.length - count })}
-            {revisions.length > 0 && (
-              <div className="detail">
-                {revisions.map((i) => `${labelOf(i)}: ${(drafts[i.key]?.notes ?? []).map((note) => [note.text, note.image !== undefined ? `[${t("review.picture")}]` : ""].filter(Boolean).join(" ")).join("; ") || "—"}`).join(" · ")}
-              </div>
-            )}
+        {confirming ? (
+          <div className="sendbar is-confirming">
+            <div className="summary">
+              <strong>{t("review.confirm")}</strong> {t("review.tally", { a: approved, r: revise, left: items.length - count })}
+              {revisions.length > 0 && (
+                <div className="detail">
+                  {revisions.map((i) => `${labelOf(i)}: ${(drafts[i.key]?.notes ?? []).map((note) => [note.text, note.image !== undefined ? `[${t("review.picture")}]` : ""].filter(Boolean).join(" ")).join("; ") || "—"}`).join(" · ")}
+                </div>
+              )}
+            </div>
+            <button className={buttonVariants({ variant: "ghost" })} onClick={() => setConfirming(false)}>
+              {t("review.keep")}
+            </button>
+            <button className={buttonVariants({ variant: "default" })} disabled={busy} onClick={send}>
+              {t("review.sendNow")} <span className="key">⌘↵</span>
+            </button>
           </div>
-          <button className={buttonVariants({ variant: "ghost" })} onClick={() => setConfirming(false)}>
-            {t("review.keep")}
-          </button>
-          <button className={buttonVariants({ variant: "default" })} disabled={busy} onClick={send}>
-            {t("review.sendNow")} <span className="key">⌘↵</span>
-          </button>
-        </div>
-      ) : (
-        <div className="ds-sendbar">
-          <span className="pips" aria-hidden="true">
-            {items.map((i) => (
-              <i key={i.key} className={drafts[i.key]?.verdict === "approve" ? "a" : decided(i) ? "b" : ""} />
-            ))}
-          </span>
-          <span className="num">{t("review.decided", { n: count, m: items.length })}</span>
-          <input className="ds-words" disabled={!open} value={words} placeholder={t("review.wordsHint")} aria-label={t("review.words")} onChange={(event) => setWords(event.target.value)} />
-          {error !== undefined && <span className="error">{errorText(error, t)}</span>}
-          <Button variant="default" disabled={!open || !complete || busy} disabledReason={open && !complete ? t("review.needVerdicts") : undefined} onClick={() => setConfirming(true)}>
-            {t("review.send")} <span className="key">⌘↵</span>
-          </Button>
-        </div>
-      )}
+        ) : (
+          <>
+          <div style={{ padding: "10px 16px 0", borderTop: "1px solid var(--border)", background: "var(--surface-dim)" }}>
+            <input className="ds-words" style={{ width: "100%" }} disabled={!open} value={words} placeholder={t("review.wordsHint")} aria-label={t("review.words")} onChange={(event) => setWords(event.target.value)} />
+          </div>
+          <div className="sendbar">
+            <span className="pips" aria-hidden="true">
+              {items.map((i) => (
+                <i key={i.key} className={drafts[i.key]?.verdict === "approve" ? "a" : decided(i) ? "b" : ""} />
+              ))}
+            </span>
+            <span className="num">{t("review.decided", { n: count, m: items.length })}</span>
+            {error !== undefined && <span className="error">{errorText(error, t)}</span>}
+            <Button variant="default" disabled={!open || !complete || busy} disabledReason={open && !complete ? t("review.needVerdicts") : undefined} onClick={() => setConfirming(true)}>
+              {t("review.send")} <span className="key">⌘↵</span>
+            </Button>
+          </div>
+          </>
+        )}
+      </aside>
     </div>
   );
 }

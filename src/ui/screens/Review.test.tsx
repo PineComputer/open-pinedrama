@@ -64,7 +64,7 @@ describe("the review room for storyboards", () => {
 
     await user.click(screen.getByRole("button", { name: /^Send review/ }));
     expect(calls("POST", `/api/reviews/${review.id}/decision`)).toHaveLength(0);
-    const sendNow = within(screen.getByText("Send to the agent:").closest(".ds-sendbar") as HTMLElement).getByRole("button", { name: /^Send\b/ });
+    const sendNow = within(screen.getByText("Send to the agent:").closest(".sendbar") as HTMLElement).getByRole("button", { name: /^Send\b/ });
     await user.click(sendNow);
 
     const sent = calls("POST", `/api/reviews/${review.id}/decision`);
