@@ -25,6 +25,9 @@ test("three episodes at once: each shows its own session's newest report, decide
   await expect.poll(async () => (await project()).state?.characters.wei?.current ?? null, { timeout: 30_000 }).toBe("v2");
   expect((await project()).state?.characters.lin).toMatchObject({ accepted: "v1", usable: true });
   expect((await project()).state?.characters.wei).toMatchObject({ accepted: null, candidate: "v2" });
+  // The bible came back with the leads: screens name them as it does, not by id.
+  expect((await project()).names?.characters.lin.name).toBe("Lin Xiaoyu");
+  expect((await project()).names?.locations.office).toBe("Factory office");
   await decide(page, await review(page, id, "looks"));
 
   // The shared references, accepted; every episode then needs nothing more.

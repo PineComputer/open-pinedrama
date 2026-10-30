@@ -26,6 +26,7 @@ function view(accepted: string | null): ProjectView {
     },
     sessions: [],
     problems: [],
+    names: null,
   };
 }
 
@@ -45,7 +46,7 @@ const fetched = () => calls("GET", "/api/dramas/d1/project").length;
 
 describe("the drama's project on a page", () => {
   it("is fetched again when the engine says the project changed", async () => {
-    answers({ value: { state: null, sessions: [], problems: [] } }, { value: view("v1") });
+    answers({ value: { state: null, sessions: [], problems: [], names: null } }, { value: view("v1") });
     render(<Project />);
     await screen.findByText("no report yet");
     changed("project:d1");

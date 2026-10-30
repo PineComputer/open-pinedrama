@@ -91,7 +91,7 @@ describe("the answers the UI reads", () => {
     const { id } = (await made.json()) as { id: string };
     const response = await call(`/api/dramas/${id}/project`);
     expect(response.status).toBe(200);
-    expect((await response.json()) as ProjectView).toEqual({ state: null, sessions: [], problems: [] });
+    expect((await response.json()) as ProjectView).toEqual({ state: null, sessions: [], problems: [], names: null });
   });
 
   it("says plainly when the drama of a project doesn't exist", async () => {

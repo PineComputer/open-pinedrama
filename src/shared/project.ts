@@ -1,3 +1,5 @@
+import type { Names } from "./names.ts";
+
 // Where a drama's project stands, as drama-cli's own status report says (each stop returns it
 // as handoff/status.json, goals.ts RETURN_STATUS). The studio reads the work's state from here
 // and never works it out again from file names: the report is drama-cli's, so is every fact in
@@ -278,6 +280,8 @@ export interface ProjectView {
   sessions: SessionReport[];
   /** Reports newer than their session's current one that didn't read. */
   problems: { sessionId: string; turnId: string; error: string }[];
+  /** The names of the working bible's people, places, props and episodes, from the bible.json a stop returned; null before one has. */
+  names: Names | null;
 }
 
 /**
