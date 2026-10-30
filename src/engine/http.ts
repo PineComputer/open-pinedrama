@@ -20,7 +20,7 @@ import { appInfo, connectPine, disconnect, useReplay } from "./connection.ts";
 import { retryStarts } from "./computers.ts";
 import { DEFAULT_ENDPOINT } from "./settings.ts";
 import { all } from "./db.ts";
-import { chat, chooseInputs, createDrama, desktop, finishEpisode, rehearse, resumeEpisode, retrySetup, stopDrama, updateDrama } from "./dramas.ts";
+import { chat, chooseInputs, createDrama, desktop, finishEpisode, rehearse, resumeEpisode, retrySetup, stopDrama, updateDrama, stopEpisode } from "./dramas.ts";
 import { StudioError } from "./errors.ts";
 import { fileRow, openBlob, save, toItem } from "./library.ts";
 import { subscribe } from "./live.ts";
@@ -311,6 +311,15 @@ export function app(): Hono {
   api.post("/api/episodes/:id/finish", async (c) => {
     try {
       await finishEpisode(c.req.param("id"));
+      return c.json({ ok: true });
+    } catch (error) {
+      return fail(c, error);
+    }
+  });
+
+  api.post("/api/episodes/:id/stop", async (c) => {
+    try {
+      await stopEpisode(c.req.param("id"));
       return c.json({ ok: true });
     } catch (error) {
       return fail(c, error);

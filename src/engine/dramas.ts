@@ -177,6 +177,29 @@ export async function finishEpisode(id: string): Promise<void> {
   publish(`drama:${episode.drama_id}`, "dramas", "inbox");
 }
 
+/**
+ * The maker stops one episode while the others go on: its session ends, so its Computer does no
+ * more for it, and its open review ends with it. It waits, stopped, until Resume puts it back in
+ * line to carry on from what the library holds. Paid work already sent isn't sent again: drama-cli
+ * records it, and the session that resumes the episode waits for it ("Takes in flight ... must be
+ * waited on, never resubmitted", short_drama skills/drama-workflow/SKILL.md, v0.7.4).
+ */
+export async function stopEpisode(id: string): Promise<void> {
+  const episode = episodeRow(id);
+  if (!episode) throw new StudioError("not-found", "No such episode.", 404);
+  if (!["queued", "working", "waiting"].includes(episode.state)) throw new StudioError("episode-not-running", "This episode isn't running, so there's nothing to stop.", 409);
+  const session = episode.session_id ? sessionRow(episode.session_id) : undefined;
+  transaction(() => {
+    if (session) run("update reviews set state = 'ended' where session_id = ? and state in ('saving', 'open')", session.id);
+    run("update episodes set state = 'stopped', note = '', session_id = null, updated_at = ? where id = ?", now(), id);
+  });
+  if (session?.state === "open") {
+    stopEvents(session.id);
+    await closeSession(session);
+  }
+  publish(`drama:${episode.drama_id}`, "dramas", "inbox");
+}
+
 export function retrySetup(id: string): void {
   const drama = dramaRow(id);
   if (!drama) throw new StudioError("not-found", "No such drama.", 404);

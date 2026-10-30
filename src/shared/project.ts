@@ -294,3 +294,14 @@ export function setupStep(state: Omit<ProjectState, "budget">): number | undefin
   if (leads.some((lead) => lead.accepted === null)) return 3;
   return 4;
 }
+
+/**
+ * A video job's states while its outcome isn't known yet: drama-cli's IN_FLIGHT
+ * (short_drama drama_cli/records.py:30, v0.7.4). Such a take is waited on, never sent again.
+ */
+const IN_FLIGHT = new Set(["submitting", "submitted", "queued", "running", "unknown", "verifying"]);
+
+/** How many of an episode's takes are still generating, by the report. */
+export function takesInFlight(episode: EpisodeStatus): number {
+  return Object.values(episode.segments).reduce((n, segment) => n + segment.takes.filter((take) => IN_FLIGHT.has(take.state)).length, 0);
+}
