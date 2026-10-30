@@ -28,7 +28,10 @@ test("a maker starts the sample drama, answers the agent and reviews the leads",
   // Then the leads' looks, approved together, opened from the review queue: the bar's count
   // still includes the answered question until the agent's next turn begins.
   await page.getByRole("banner").getByRole("link", { name: "To review" }).click();
-  await page.getByRole("link", { name: /^Leads' looks/ }).click({ timeout: 30_000 });
+  const looks = page.getByRole("link", { name: /^Leads' looks/ });
+  await expect(looks).toBeVisible({ timeout: 30_000 });
+  expect(await newProblems(page)).toEqual([]);
+  await looks.click();
   await expect(page.getByRole("heading", { level: 1, name: /Leads' looks/ })).toBeVisible();
   expect(await newProblems(page)).toEqual([]);
   await page.getByRole("button", { name: "Approve all" }).click();
@@ -36,4 +39,5 @@ test("a maker starts the sample drama, answers the agent and reviews the leads",
   await page.getByRole("button", { name: /^Send\b/ }).last().click();
 
   await expect(page.getByText("Nothing to review")).toBeVisible({ timeout: 30_000 });
+  expect(await newProblems(page)).toEqual([]);
 });
