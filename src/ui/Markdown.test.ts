@@ -21,7 +21,7 @@ describe("a returned Markdown document", () => {
       "None.",
     ].join("\n");
     const html = renderToStaticMarkup(createElement(Markdown, { text }));
-    expect(html).toContain('<pre class="fenced">    1 | 第一集 | episode\n    2 | 1-1  夜  内  华丽宴会厅 | heading</pre>');
+    expect(html).toContain('<pre class="fenced"><code>    1 | 第一集 | episode\n    2 | 1-1  夜  内  华丽宴会厅 | heading\n</code></pre>');
     expect(html).toContain("<h3>Added by the rewrite</h3>");
     expect(html).toContain("<p>None.</p>");
   });
