@@ -229,21 +229,30 @@
     P.scenes.forEach((sc) => sc.segs.forEach((s) => { s.cast.forEach((c) => e.push([c, s.id])); e.push(["apartment", s.id]); if (s.id === "seg03") e.push(["file", s.id]); }));
     return e;
   })();
-  /* The picked item's data in the detail card: drama-cli's spec.json (its prompt with each Image N as a chip of that picture,
-     its settings), the versions with what the person decided, and request.json. Read-only; the hand controls wait for phase 2. */
-  function DetailTabs({ spec }) {
+  /* The picked node's panel, directly under it, as infinite-canvas's prompt panel and astorie's node panel stand (glass): the prompt
+     with each Image N as a chip of that picture and the pictures it names, the versions with what the person decided, request.json,
+     and what the node is; a pill row of drama-cli's settings; the hand controls disabled until phase 2. Read-only. */
+  function NodePanel({ node, style, uses, reads }) {
+    const spec = node.seg && node.seg.spec;
     const tab = S.dtab || "prompt";
-    const tabs = [["prompt", "Prompt"], ["settings", "Settings"], ["versions", "Versions"], ["request", "Request"]];
+    const tabs = [["prompt", "Prompt"], ...(spec ? [["versions", "Versions"], ["request", "Request"]] : []), ["details", "Details"]];
     const chips = (line) => line.split(/(Image \d+)/).map((part) => { const m = part.match(/^Image (\d+)$/); return m ? html`<span class="pchip"><img src=${spec.images[m[1] - 1]} alt=""/>${part}</span>` : part; });
-    return html`<div class="dtabs">
+    return html`<div class="npanel" role="dialog" aria-label=${node.label} style=${style}>
+      <div class="nhead"><b class="grow">${node.label}</b>${Status(node.st)}<button class="ibtn" aria-label="Close" onClick=${() => set({ sel: null })}>${I("x")}</button></div>
       <div class="utabs" role="tablist">${tabs.map(([k, l]) => html`<button role="tab" aria-selected=${String(tab === k)} onClick=${() => set({ dtab: k })}>${l}</button>`)}</div>
       <div role="tabpanel">
-        ${tab === "prompt" && html`<div class="prompt">${spec.prompt.split("\n").map((line) => html`<p>${chips(line)}</p>`)}</div>`}
-        ${tab === "settings" && html`<dl><dt>Model</dt><dd class="mono">${spec.model}</dd><dt>Ratio</dt><dd>${spec.ratio}</dd><dt>Resolution</dt><dd>${spec.resolution}</dd><dt>Duration</dt><dd>${spec.seconds} s</dd></dl>`}
+        ${tab === "prompt" && (spec ? html`<div class="prompt">${spec.prompt.split("\n").map((line) => html`<p>${chips(line)}</p>`)}</div>
+          <ol class="refs">${spec.images.map((u, i) => html`<li><img src=${u} alt=""/><span>Image ${i + 1}</span></li>`)}</ol>` : html`<p class="subtle">The agent hasn't returned this version's spec.json and request.json.</p>`)}
         ${tab === "versions" && html`<ol class="versions">${spec.versions.map(([v, st, said]) => html`<li><b class="mono">${v}</b>${Status(st)}${said && html`<span class="subtle">${said}</span>`}</li>`)}</ol>`}
         ${tab === "request" && html`<pre class="mono">${JSON.stringify({ model: spec.model, content: [{ type: "text", text: spec.prompt.slice(0, 60) + "…" }, ...spec.images.map((u) => ({ type: "image_url", image_url: { url: "@" + u }, role: "reference_image" }))], duration: spec.seconds, ratio: spec.ratio, resolution: spec.resolution }, null, 2)}</pre>`}
+        ${tab === "details" && html`<dl><dt>Kind</dt><dd>${node.role}</dd><dt>Version</dt><dd class="mono">${node.ver}</dd><dt>Used by</dt><dd>${uses || "—"}</dd><dt>Reads</dt><dd>${reads || "—"}</dd></dl>`}
       </div>
-      <div class="acts"><button class="btn sm" disabled title="Phase 2: the agent makes every item for now">${I("upload")}Upload</button><button class="btn sm" disabled title="Phase 2: the agent makes every item for now">${I("sparkle")}Generate</button></div>
+      <div class="nfoot">
+        ${spec && [spec.model, spec.ratio, spec.resolution, spec.seconds + " s"].map((v) => html`<span class="pill mono">${v}</span>`)}
+        <span class="grow"></span>
+        <button class="btn sm" disabled title="Phase 2: the agent makes every item for now">${I("upload")}Upload</button>
+        <button class="btn sm" disabled title="Phase 2: the agent makes every item for now">${I("sparkle")}Generate</button>
+      </div>
     </div>`;
   }
 
@@ -288,14 +297,20 @@
         <div class="ctop"><${SurfaceSwitch}/><button class="follow" aria-pressed=${String(S.follow)} onClick=${() => set({ follow: !S.follow })}>${S.follow && html`<span class="live"></span>`}${S.follow ? "Following the agent" : "Follow the agent"}</button>
           <span class="grow"></span><${ProjectChips}/></div>
         ${S.dramaStop && html`<div style="position:absolute;left:0;right:0;top:60px"><${StopBanner}/></div>`}
-        ${sel && html`<div class="detail" role="dialog" aria-label=${sel.label}>
-          <div class="dpic"><img src=${sel.pic || sel.seg.still || sel.seg.board} alt=""/></div>
-          <div class="dbody"><div style="display:flex;align-items:center;gap:8px"><h3 class="grow">${sel.label}</h3>${Status(sel.st)}<button class="ibtn" aria-label="Close" onClick=${() => set({ sel: null })}>${I("x")}</button></div>
-            <dl><dt>Kind</dt><dd>${sel.role}</dd><dt>Version</dt><dd class="mono">${sel.ver}</dd><dt>Used by</dt><dd>${EDGES.filter((e) => e[0] === sel.id).map((e) => e[1]).join(", ") || "—"}</dd><dt>Reads</dt><dd>${EDGES.filter((e) => e[1] === sel.id).map((e) => byId[e[0]].label).join(", ") || "—"}</dd></dl>
-            <div class="acts">${sel.st === "you" ? html`<button class="btn sm primary" onClick=${() => sel.kind === "seg" ? go("review") : toast("Opens the looks review.")}>Review</button>` : null}
-              <button class="btn sm" onClick=${() => toast("Lineage: where this version comes from and what is made from it.")}>${I("tree-structure")}Lineage</button></div>
-            ${sel.seg && sel.seg.spec && html`<${DetailTabs} spec=${sel.seg.spec}/>`}
-            <span class="subtle" style="font-size:11.5px">Read-only. Changes go through the agent: review, send back, or message it.</span></div></div>`}
+        ${sel && (() => {
+          // Above the node its action bar; under it its panel, 560 px wide, kept inside the board.
+          const W = 560, bw = ref.current ? ref.current.clientWidth : 1100, bh = ref.current ? ref.current.clientHeight : 800;
+          const cx = x + (sel.x + (sel.w || 300) / 2) * k, top = y + (sel.y - 26) * k, bottom = y + (sel.y + (sel.h || 196)) * k;
+          const left = Math.max(12, Math.min(bw - W - 12, cx - W / 2));
+          const uses = EDGES.filter((e) => e[0] === sel.id).map((e) => e[1]).join(", "), reads = EDGES.filter((e) => e[1] === sel.id).map((e) => byId[e[0]].label).join(", ");
+          return html`<div class="nbar" role="toolbar" aria-label=${"Act on " + sel.label} style=${`left:${Math.max(12, cx - 150)}px;top:${Math.max(64, top - 46)}px`}>
+              ${sel.st === "you" ? html`<button class="btn sm primary" onClick=${() => sel.kind === "seg" ? go("review") : toast("Opens the looks review.")}>Review</button>` : null}
+              <button class="ibtn" title="Send back" aria-label="Send back" onClick=${() => toast("Send back: say why, and the agent redoes it.")}>${I("arrow-counter-clockwise")}</button>
+              <button class="ibtn" title="Note" aria-label="Note" onClick=${() => toast("A note for the agent at work on it.")}>${I("note-pencil")}</button>
+              <button class="ibtn" title="Lineage" aria-label="Lineage" onClick=${() => toast("Lineage: where this version comes from and what is made from it.")}>${I("tree-structure")}</button>
+              <button class="ibtn" title="Download" aria-label="Download" onClick=${() => toast("Downloads the picture.")}>${I("download-simple")}</button></div>
+            <${NodePanel} node=${sel} uses=${uses} reads=${reads} style=${`left:${left}px;top:${Math.min(bottom + 10, bh - 300)}px;width:${W}px`}/>`;
+        })()}
         ${S.minimap && html`<div class="minimap" aria-hidden="true">${NODES.filter((n) => n.kind !== "group").map((n) => html`<i style=${`left:${8 + n.x * 0.11}px;top:${8 + n.y * 0.08}px;width:${n.w * 0.11}px;height:${n.h * 0.08}px`}></i>`)}
           <b style=${`left:${8 - x * 0.11 / k}px;top:${8 - y * 0.08 / k}px;width:${(ref.current ? ref.current.clientWidth : 900) * 0.11 / k}px;height:${(ref.current ? ref.current.clientHeight : 600) * 0.08 / k}px`}></b></div>`}
         <div class="ctool" role="toolbar" aria-label="Canvas">
