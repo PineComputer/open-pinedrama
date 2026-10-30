@@ -4,7 +4,12 @@
 import AxeBuilder from "@axe-core/playwright";
 import type { Page } from "@playwright/test";
 
-const KNOWN: { rule: string; target: RegExp; fixedBy: string }[] = [];
+const KNOWN: { rule: string; target: RegExp; fixedBy: string }[] = [
+  // The cut viewer's libraries: react-timeline-editor lays its rows out in react-virtualized's grid, whose
+  // row holds the actions with no cells; media-chrome's time display names itself apart from the time it shows.
+  { rule: "aria-required-children", target: /ReactVirtualized__Grid/, fixedBy: "react-timeline-editor upstream (its rows in react-virtualized's grid)" },
+  { rule: "label-content-name-mismatch", target: /^media-time-display$/, fixedBy: "media-chrome upstream (media-time-display's name)" },
+];
 
 /**
  * Each serious or critical problem not yet known, as "rule target :: why". With `within`, only

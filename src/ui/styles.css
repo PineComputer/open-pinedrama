@@ -302,7 +302,7 @@ h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 700; lett
 .sheet .frame, .queue .thumb, .reel .frame { position: relative; overflow: hidden; }
 .ended-asks { margin-top: 48px; display: grid; gap: 12px; }
 .ended-asks .queue { opacity: 0.8; }
-.asked-before .ds-shots li { color: var(--error); }
+.asked-before .ds-shots li { color: var(--text-primary); }
 .asked-before .at { color: var(--text-muted); font-variant-numeric: tabular-nums; }
 /* The screenplay's first lines, set on the manuscript once it is dropped in. */
 .format-tip { margin-top: 22px; font-size: 13px; color: var(--text-muted); }

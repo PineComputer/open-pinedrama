@@ -22,6 +22,8 @@ const PROJECTS: { name: string; spec: string; colorScheme: "light" | "dark" }[] 
   { name: "stop-episode", spec: "stop-episode", colorScheme: "light" },
   { name: "graph", spec: "graph", colorScheme: "light" },
   { name: "graph-dark", spec: "graph", colorScheme: "dark" },
+  { name: "cut-review", spec: "cut-review", colorScheme: "light" },
+  { name: "cut-review-dark", spec: "cut-review", colorScheme: "dark" },
   { name: "gallery", spec: "gallery", colorScheme: "light" },
   { name: "gallery-dark", spec: "gallery", colorScheme: "dark" },
   { name: "upload", spec: "upload", colorScheme: "light" },

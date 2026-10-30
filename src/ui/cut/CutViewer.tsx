@@ -149,18 +149,18 @@ export function CutViewer({ file, notes = [], onTime, videoRef, actions = WATCH_
               if (action.effectId === "note") {
                 const note = notes[Number(action.id.slice("note-".length))];
                 return (
-                  <button type="button" className="ds-tl-note" title={note.text} aria-label={t("cut.pin", { time: clock(action.start), text: note.text })} onClick={() => seek(action.start)}>
+                  <button type="button" className="ds-tl-note" title={note.text} onClick={() => seek(action.start)}>
                     {note.text}
+                    <span className="sr">{t("cut.pin", { time: clock(action.start) })}</span>
                   </button>
                 );
               }
               const clip = clips[Number(action.id)];
               const seconds = `${(clip.end - clip.start).toFixed(1)}s`;
               return (
-                <button type="button" className="ds-tl-clip" aria-label={t("cut.clip", { segment: clip.segment, take: clip.take, from: clock(clip.start), length: seconds })} onClick={() => seek(clip.start)}>
-                  <span className="no">{clip.segment}</span>
-                  <span className="take">{clip.take}</span>
-                  <span className="dur">{seconds}</span>
+                <button type="button" className="ds-tl-clip" onClick={() => seek(clip.start)}>
+                  <span className="no">{clip.segment}</span> <span className="take">{clip.take}</span> <span className="dur">{seconds}</span>
+                  <span className="sr">{t("cut.from", { from: clock(clip.start) })}</span>
                 </button>
               );
             }}
