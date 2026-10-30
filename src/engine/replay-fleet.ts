@@ -4,7 +4,9 @@
 // redraw of what it names. It lives in memory, so a restarted engine finds its Computers
 // gone, as it would after a real stop.
 import { readFileSync } from "node:fs";
+import type { Refusal } from "../shared/refusal.ts";
 import path from "node:path";
+import { typeOf } from "./classify.ts";
 import { FIXTURES } from "./config.ts";
 import { revisedKeys } from "./decisions.ts";
 import { DRAMA_SKILL } from "./goals.ts";
@@ -57,6 +59,23 @@ const text = (s: string) => new TextEncoder().encode(s);
 const svg = (p: string, body: string): Out => ({ path: p, type: "image/svg+xml", bytes: text(body) });
 const video = (p: string, name: "take" | "cut"): Out => ({ path: p, type: "video/mp4", bytes: readFileSync(path.join(FIXTURES, `${name}.mp4`)) });
 
+/** The refusals a stop asks about, one JSON line each, as drama-cli prints them (goals.ts RETURN_REFUSALS). */
+const refusals = (list: Refusal[]): Out => ({ path: "handoff/refusals.jsonl", type: typeOf("refusals.jsonl"), bytes: text(list.map((error) => `${JSON.stringify({ error })}\n`).join("")) });
+
+/** The replayed project's shoot.max_new_takes: the new takes of a segment past its first that drama-cli shoots. */
+const MAX_NEW_TAKES = 2;
+
+/**
+ * The take cap's refusal, as drama-cli words it, with the code it should have (short_drama #664;
+ * drama-cli v0.7.4 refuses it as a bare Refused).
+ */
+const takeCap = (seg: string): Refusal => ({
+  code: "SetLimitExceeded.max_new_takes",
+  message: `${seg} has had ${MAX_NEW_TAKES} new paid takes, the limit shoot.max_new_takes (${MAX_NEW_TAKES}); ask the person before shooting it again`,
+  param: "shoot.max_new_takes",
+  action: "ask_person",
+});
+
 type Lang = "zh" | "en";
 
 /** The drama's language, from the goal's brief ("Language: Chinese."), as the real agent would read it. */
@@ -99,6 +118,8 @@ const WORDS = {
     askTakes: "Takes are in for every segment. seg02 and seg03 have dialogue the observer couldn't hear; please check them.",
     reshoot: (seg: string) => `Shooting another take of ${seg}`,
     askTakesAgain: (segs: string[]) => `New takes for ${segs.join(", ")}. Please check them.`,
+    askTakeCap: (segs: string[]) =>
+      `drama-cli won't shoot another take of ${segs.join(" or ")}: each has had ${MAX_NEW_TAKES} new takes, the limit shoot.max_new_takes. Shall I raise the limit for ${segs.length > 1 ? "them" : "it"}, or will you choose from the takes you have?`,
     cutting: ["Planning the cut", "Building the cut", "Checking the cut"],
     askCut: (code: string) => `The cut of ${code} is ready. Please watch it.`,
     recutting: ["Revising the cut"],
@@ -158,6 +179,7 @@ const WORDS = {
     askTakes: "每一段的镜头都已拍好。seg02 和 seg03 有观察员听不清的台词，请你检查。",
     reshoot: (seg: string) => `重拍 ${seg}`,
     askTakesAgain: (segs: string[]) => `${segs.join("、")} 的新镜头已拍好，请检查。`,
+    askTakeCap: (segs: string[]) => `drama-cli 不再给 ${segs.join("、")} 拍新镜头：每段已重拍 ${MAX_NEW_TAKES} 次，到了上限 shoot.max_new_takes。要我为它们调高上限，还是你从已有的镜头里选？`,
     cutting: ["规划剪辑", "剪辑成片", "检查成片"],
     askCut: (code: string) => `${code} 的成片已完成，请观看。`,
     recutting: ["修改成片"],
@@ -349,6 +371,9 @@ function episodeScript(code: string, lang: Lang, preset: string): Player {
     }
     if (stage === "takes" && redo.length) {
       const which = segments.filter((seg) => redo.includes(seg.id));
+      // As drama-cli's take cap does, past the limit nothing is shot: the agent asks the maker, returning the refusal.
+      const capped = which.filter((seg) => takes.get(seg.id)! > MAX_NEW_TAKES);
+      if (capped.length) return { progress: [], files: [refusals(capped.map((seg) => takeCap(seg.id)))], ask: say.askTakeCap(capped.map((seg) => seg.id)) };
       return { progress: redo.map(say.reshoot), files: shoot(which), ask: say.askTakesAgain(redo) };
     }
     if (stage === "takes") {

@@ -9,6 +9,7 @@ import { VERDICT_KINDS, save, seenBefore } from "./library.ts";
 import { publish } from "./live.ts";
 import { classify, namedPaths, typeOf } from "./classify.ts";
 import { onEnded, stopsForMaker } from "./flow.ts";
+import { recordRefusals } from "./refusals.ts";
 import { recordStatus } from "./status.ts";
 import { approveUnreviewed, questionAsked, questionReady } from "./reviews.ts";
 import { type SessionRow, type TurnRow, computer as computerRow, costRaised, raiseCost, episode as episodeRow, episodeCode, session as sessionRow } from "./records.ts";
@@ -143,6 +144,15 @@ async function screenplayVersions(session: SessionRow): Promise<string[]> {
   return found;
 }
 
+/** What each stop returns afresh under the same name. */
+const EVERY_STOP: FileKind[] = ["archive", "status", "refusal"];
+
+/** What the engine records from a stop's file besides saving it. */
+const RECORDED: Partial<Record<FileKind, (sessionId: string, turnId: string, bytes: Uint8Array) => void>> = {
+  status: recordStatus,
+  refusal: recordRefusals,
+};
+
 /**
  * A turn ended: save its files, then let the flow act on how it ended. Each step is marked
  * when done, so a turn the engine stopped halfway through is taken up again where it was. A
@@ -165,17 +175,18 @@ export async function settle(sessionId: string, info: TurnInfo): Promise<void> {
   if (!turn?.files_saved) {
     const computer = computerRow(session.computer_id)!;
     const where = { dramaId: session.drama_id, episodeId: session.episode_id, sessionId, turnId: info.turnId };
-    // Packs and the status report keep their names and change at every stop: each stop's are all saved again, so
-    // a report returned unchanged still belongs to this turn.
-    const everyStop = (file: TurnFile) => ["archive", "status"].includes(classify(file.path).kind);
+    // Packs, the status report and the refusals keep their names and change at every stop: each stop's are all
+    // saved again, so a report returned unchanged still belongs to this turn.
+    const everyStop = (file: TurnFile) => EVERY_STOP.includes(classify(file.path).kind);
     const packs = info.files.filter((file) => !fresh.includes(file) && everyStop(file));
     try {
-      // A status report is recorded as well as saved, whether the turn returned it or named it.
+      // A status report and the refusals are recorded as well as saved, whether the turn returned them or named them.
       const keep = async (body: ReadableStream<Uint8Array>, relPath: string, type: string) => {
-        if (classify(relPath).kind !== "status") return void (await save(body, { ...where, relPath, type }));
+        const record = RECORDED[classify(relPath).kind];
+        if (!record) return void (await save(body, { ...where, relPath, type }));
         const bytes = new Uint8Array(await new Response(body).arrayBuffer());
         await save(bytes, { ...where, relPath, type });
-        recordStatus(sessionId, info.turnId, bytes);
+        record(sessionId, info.turnId, bytes);
       };
       for (const file of [...fresh, ...packs]) {
         await keep(await fleet().openFile(computerRef(computer), sessionRef(session), file.path), file.path, file.type);
@@ -191,7 +202,7 @@ export async function settle(sessionId: string, info: TurnInfo): Promise<void> {
         if (body) await keep(body, relPath, typeOf(relPath));
       };
       const named = stop
-        ? namedPaths(asked).filter((relPath) => !info.files.some((file) => file.path === relPath) && (!known(session.drama_id, relPath) || ["archive", "status"].includes(classify(relPath).kind)))
+        ? namedPaths(asked).filter((relPath) => !info.files.some((file) => file.path === relPath) && (!known(session.drama_id, relPath) || EVERY_STOP.includes(classify(relPath).kind)))
         : [];
       for (const relPath of named) await fetch(relPath);
       // The screenplay as drama-cli recorded it, the rewrite the maker is asked to accept included, whatever the turn named.

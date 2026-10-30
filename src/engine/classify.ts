@@ -134,6 +134,8 @@ const TYPES: Record<string, string> = {
   md: "text/markdown",
   markdown: "text/markdown",
   json: "application/json",
+  // JSON Lines: "MIME type may be application/jsonl, but this is not yet standardized" (jsonlines.org); a stop's refusals come as handoff/refusals.jsonl.
+  jsonl: "application/jsonl",
   txt: "text/plain",
   // Fountain is plain text (fountain.io/syntax); drama-cli writes a screenplay as screenplay.fountain.
   fountain: "text/plain",

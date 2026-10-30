@@ -31,5 +31,6 @@ export function storyboardReview(...segments: string[]): ReviewView {
     createdAt: "2026-10-29T10:00:00Z",
     reviewItems: segments.map(storyboard),
     otherFiles: [],
+    refusals: [],
   };
 }
