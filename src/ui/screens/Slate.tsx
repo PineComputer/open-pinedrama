@@ -1,24 +1,22 @@
-import type { AppInfo, DramaCard, Mode } from "../../shared/types.ts";
-import { api, useAction, useResource } from "../api.ts";
-import { useT } from "../i18n.ts";
-import { errorText, kindLabel, moneyText } from "../labels.ts";
+import { useState } from "react";
+import type { AppInfo, DramaCard, Mode, ReviewSummary } from "../../shared/types.ts";
+import { ago, api, useAction, useResource } from "../api.ts";
+import { type Status, StatusChip } from "../components/StatusChip.tsx";
+import { Tabs } from "../components/Tabs.tsx";
+import { Icon } from "../icons.tsx";
+import { type TKey, useT } from "../i18n.ts";
+import { errorText, kindLabel, moneyText, plainText } from "../labels.ts";
 import { Link, navigate } from "../router.tsx";
+import { Still } from "../Still.tsx";
 
 const CJK = /[㐀-鿿]/;
 
-/** A drama's poster: its title set as type, over its leads once the agent has drawn them. */
+/** A drama's cover: its title set as type, over its leads once the agent has drawn them. */
 function Poster({ drama, mode }: { drama: DramaCard; mode?: Mode | "none" }) {
   const { t } = useT();
   const elsewhere = mode !== undefined && mode !== "none" && mode !== drama.mode;
-  const stamp = elsewhere
-    ? t(drama.mode === "replay" ? "otherMode.replay" : "otherMode.pine")
-    : drama.status === "setup"
-      ? t("drama.casting")
-      : drama.status === "stopped"
-        ? t("drama.stopped")
-        : drama.status === "done"
-          ? t("drama.finished")
-          : undefined;
+  // Where it stands is on the card's chip; the poster says only what else to know: another mode's, a rehearsal.
+  const stamp = elsewhere ? t(drama.mode === "replay" ? "otherMode.replay" : "otherMode.pine") : undefined;
   const stamps = [drama.rehearsal ? t("rehearsal.tag") : undefined, stamp].filter(Boolean).join(" · ");
   return (
     <div className={`poster ${CJK.test(drama.title) ? "vertical" : ""} ${drama.cast.length ? "cast" : ""}`}>
@@ -35,10 +33,128 @@ function Poster({ drama, mode }: { drama: DramaCard; mode?: Mode | "none" }) {
   );
 }
 
+type Shelf = "all" | "you" | "work" | "done";
+
+/** Where a drama stands, as its card's chip says it. */
+function standing(drama: DramaCard): { status: Status; label: TKey; shelf: Shelf } {
+  if (drama.waiting > 0) return { status: "you", label: "drama.needs", shelf: "you" };
+  if (drama.status === "done") return { status: "accepted", label: "drama.finished", shelf: "done" };
+  if (drama.status === "stopped") return { status: "back", label: "drama.stopped", shelf: "all" };
+  return { status: "work", label: drama.status === "setup" ? "drama.casting" : "drama.atWork", shelf: "work" };
+}
+
+/** A drama on the shelf: its cover, where it stands, its progress, title and facts (the spec's DramaCard). */
+export function DramaTile({ drama, mode }: { drama: DramaCard; mode?: Mode | "none" }) {
+  const { t, lang } = useT();
+  const { total, done } = drama.episodes;
+  const where = standing(drama);
+  return (
+    <Link to={`/d/${drama.id}`} className="ds-dramacard">
+      <span className="pic">
+        <Poster drama={drama} mode={mode} />
+        <span className="chip">
+          <StatusChip status={where.status} label={t(where.label, { n: drama.waiting })} over />
+        </span>
+        {total > 0 && (
+          <span className="bar" aria-hidden="true">
+            <i style={{ width: `${(done / total) * 100}%` }} />
+          </span>
+        )}
+      </span>
+      <span className="txt">
+        <b>{drama.title}</b>
+        <small>
+          {total > 0 ? `${t("drama.episodes", { done, total })} · ` : ""}
+          {[drama.format.split(",")[0], kindLabel(drama, t)].filter(Boolean).join(" · ")}
+        </small>
+        {drama.spent.total > 0 && <small className="num">{moneyText(drama.spent, t, lang)}</small>}
+      </span>
+    </Link>
+  );
+}
+
+/** The drama whose review waits longest at the top, to carry on with: its cover, the agent's question, and the review. */
+function Continue({ waiting, dramas }: { waiting: ReviewSummary[]; dramas: DramaCard[] }) {
+  const { t, lang } = useT();
+  const first = waiting[0];
+  const drama = first && dramas.find((item) => item.id === first.dramaId);
+  if (!first || !drama) return null;
+  return (
+    <section className="ds-hero" aria-labelledby="continue-title">
+      <div className="left">
+        <span className="cover">
+          <Poster drama={drama} />
+          <span className="chip">
+            <StatusChip status="you" label={t("drama.needs", { n: drama.waiting })} over />
+          </span>
+        </span>
+        <div className="info">
+          <span className="kicker">{t("slate.continue")}</span>
+          <h2 id="continue-title">{drama.title}</h2>
+          <span className="where">
+            <Icon name="map-pin" />
+            {[first.episode, t("slate.waitsKind", { kind: t(`kind.${first.kind}` as TKey) })].filter(Boolean).join(" · ")}
+          </span>
+          {first.question && <blockquote>{plainText(first.question)}</blockquote>}
+          <span className="row">
+            {[drama.episodes.total ? t("drama.episodes", { done: drama.episodes.done, total: drama.episodes.total }) : "", drama.spent.total > 0 ? moneyText(drama.spent, t, lang) : ""].filter(Boolean).join(" · ")}
+          </span>
+          <span className="acts">
+            <Link to={`/r/${first.id}`} className="ds-btn is-primary is-lg">
+              <Icon name="play" />
+              {t("slate.review", { kind: t(`kind.${first.kind}` as TKey) })}
+            </Link>
+            <Link to={`/d/${drama.id}`} className="ds-btn is-secondary">
+              {t("slate.openDrama")}
+            </Link>
+          </span>
+        </div>
+      </div>
+      <div className="right">
+        <h3>{t("slate.waiting")}</h3>
+        {waiting.slice(0, 4).map((item) => (
+          <Link key={item.id} to={`/r/${item.id}`} className="wait">
+            <span className="thumb">
+              <Still still={item.thumb} />
+            </span>
+            <span>
+              <b>{[item.episode, t(`kind.${item.kind}` as TKey)].filter(Boolean).join(" · ")}</b>
+              <small>{[item.dramaTitle, ago(item.createdAt)].join(" · ")}</small>
+            </span>
+          </Link>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function Shelf({ dramas, mode, adding }: { dramas: DramaCard[]; mode?: Mode | "none"; adding: boolean }) {
+  const { t } = useT();
+  return (
+    <div className="ds-shelf">
+      {dramas.map((drama) => (
+        <DramaTile key={drama.id} drama={drama} mode={mode} />
+      ))}
+      {adding && (
+        <Link to="/new" className="ds-newcard">
+          <span className="plus">
+            <Icon name="plus" />
+          </span>
+          <b>{t("slate.new")}</b>
+          <small>{t("slate.newHint")}</small>
+        </Link>
+      )}
+    </div>
+  );
+}
+
 export function Slate() {
   const { t, lang } = useT();
   const { data, error } = useResource<DramaCard[]>("/api/dramas", ["dramas", "inbox"]);
+  const inbox = useResource<ReviewSummary[]>("/api/inbox", ["inbox"]);
   const app = useResource<AppInfo>("/api/app", ["app"]);
+  const [shelf, setShelf] = useState<Shelf>("all");
+  const [find, setFind] = useState("");
   const sample = useAction(async () => {
     const { id } = await api<{ id: string }>("/api/dramas/sample", { method: "POST", json: { language: lang } });
     navigate(`/d/${id}`);
@@ -46,16 +162,24 @@ export function Slate() {
   const dramas = data ?? [];
   // On a project without the drama skill, the way to try the studio on Pine is a rehearsal.
   const noSkill = app.data?.mode === "pine" && app.data.dramaSkill === "missing";
-  const producing = dramas.filter((drama) => drama.status === "setup" || drama.status === "production").length;
-  const waiting = dramas.reduce((sum, drama) => sum + drama.waiting, 0);
+  const waiting = (inbox.data ?? []).filter((item) => item.state === "open").sort((a, b) => a.createdAt.localeCompare(b.createdAt));
+  const counts = { all: dramas.length, you: 0, work: 0, done: 0 };
+  for (const drama of dramas) {
+    const where = standing(drama).shelf;
+    if (where !== "all") counts[where]++;
+  }
+  const shown = dramas.filter((drama) => (shelf === "all" || standing(drama).shelf === shelf) && drama.title.toLowerCase().includes(find.trim().toLowerCase()));
   return (
-    <main className="page">
+    <div className="page">
       <div className="head">
-        <h1>{t("slate.title")}</h1>
-        {dramas.length > 0 && <span className="facts">{t("slate.facts", { a: producing, b: waiting })}</span>}
+        <div>
+          <h1>{t("slate.title")}</h1>
+          {dramas.length > 0 && <p className="facts">{t("slate.facts", { a: counts.work + counts.you, b: waiting.length })}</p>}
+        </div>
         <span className="spacer" />
-        <Link to="/new" className="btn ink">
-          {t("slate.new")}
+        <Link to="/new" className="ds-btn is-primary is-lg">
+          <Icon name="upload" />
+          {t("slate.upload")}
         </Link>
       </div>
       {error !== undefined && <p className="error">{errorText(error, t)}</p>}
@@ -81,34 +205,25 @@ export function Slate() {
           </span>
         </div>
       )}
-      <div className={`shelf ${dramas.length ? "" : "empty"}`}>
-        {dramas.map((drama) => {
-          const { total, done } = drama.episodes;
-          return (
-            <Link key={drama.id} to={`/d/${drama.id}`} className="drama">
-              <Poster drama={drama} mode={app.data?.mode} />
-              <div className="title">{drama.title}</div>
-              <div className="line">
-                {total > 0 ? `${t("drama.episodes", { done, total })} · ` : ""}
-                {[drama.format.split(",")[0], kindLabel(drama, t)].filter(Boolean).join(" · ")}
-                {drama.spent.total > 0 && ` · ${moneyText(drama.spent, t, lang)}`}
-              </div>
-              {total > 0 && (
-                <div className="progress">
-                  <span style={{ width: `${(done / total) * 100}%` }} />
-                </div>
-              )}
-              {drama.waiting > 0 && <div className="needs">{t("drama.needs", { n: drama.waiting })}</div>}
-            </Link>
-          );
-        })}
-        <Link to="/new" className="add-drama">
-          <div>
-            <div className="plus">+</div>
-            {t("slate.new")}
-          </div>
-        </Link>
-      </div>
-    </main>
+      <Continue waiting={waiting} dramas={dramas} />
+      {dramas.length > 0 ? (
+        <Tabs
+          label={t("slate.shelves")}
+          value={shelf}
+          onChange={setShelf}
+          tabs={(["all", "you", "work", "done"] as const).map((key) => ({ value: key, label: t(`slate.shelf.${key}`), count: counts[key] }))}
+          end={
+            <label className="ds-search">
+              <Icon name="magnifying-glass" />
+              <input type="search" placeholder={t("slate.find")} aria-label={t("slate.find")} value={find} onChange={(event) => setFind(event.target.value)} />
+            </label>
+          }
+        >
+          <Shelf dramas={shown} mode={app.data?.mode} adding={shelf === "all" && !find} />
+        </Tabs>
+      ) : (
+        <Shelf dramas={[]} adding />
+      )}
+    </div>
   );
 }

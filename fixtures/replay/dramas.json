@@ -1,0 +1,3206 @@
+{
+ "stepmother": {
+  "title": {
+   "en": "The Stepmother",
+   "zh": "后妈来了"
+  },
+  "cast": [
+   {
+    "id": "lin",
+    "name": {
+     "en": "Lin Xiaoyu",
+     "zh": "林晓雨"
+    },
+    "short": {
+     "en": "Lin",
+     "zh": "林晓雨"
+    },
+    "looks": [
+     "S1"
+    ]
+   },
+   {
+    "id": "wei",
+    "name": {
+     "en": "Wei Zhen",
+     "zh": "魏振"
+    },
+    "short": {
+     "en": "Wei",
+     "zh": "魏振"
+    }
+   }
+  ],
+  "places": [
+   {
+    "id": "home",
+    "name": {
+     "en": "Courtyard house",
+     "zh": "四合院"
+    }
+   },
+   {
+    "id": "office",
+    "name": {
+     "en": "Factory office",
+     "zh": "工厂办公室"
+    }
+   }
+  ],
+  "props": [
+   {
+    "id": "letter",
+    "name": {
+     "en": "Torn letter",
+     "zh": "撕破的信"
+    }
+   }
+  ],
+  "episodes": [
+   {
+    "title": {
+     "en": "The stepmother arrives",
+     "zh": "后妈进门"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "shots": {
+       "en": [
+        "Lin enters the yard",
+        "Wei: You're late.",
+        "Lin hides the torn letter",
+        "Close on the torn letter",
+        "Wei turns away",
+        "Lin alone"
+       ],
+       "zh": [
+        "林晓雨走进院子",
+        "魏振：你来晚了。",
+        "林晓雨藏起撕破的信",
+        "特写：撕破的信",
+        "魏振转身离开",
+        "林晓雨独自站着"
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "shots": {
+       "en": [
+        "The family at dinner",
+        "Mother: Eat.",
+        "Lin watches Wei",
+        "Wei pushes the bowl away"
+       ],
+       "zh": [
+        "一家人吃晚饭",
+        "母亲：吃饭。",
+        "林晓雨看着魏振",
+        "魏振推开饭碗"
+       ]
+      }
+     },
+     {
+      "id": "seg03",
+      "shots": {
+       "en": [
+        "Night, the yard",
+        "Lin reads the torn letter",
+        "Wei at the window",
+        "Their eyes meet",
+        "Lin burns the torn letter"
+       ],
+       "zh": [
+        "夜，院子里",
+        "林晓雨看着撕破的信",
+        "魏振站在窗边",
+        "两人对视",
+        "林晓雨烧掉撕破的信"
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "title": {
+     "en": "The letter",
+     "zh": "一封信"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "shots": {
+       "en": [
+        "Lin enters the yard",
+        "Wei: You're late.",
+        "Lin hides the torn letter",
+        "Close on the torn letter",
+        "Wei turns away",
+        "Lin alone"
+       ],
+       "zh": [
+        "林晓雨走进院子",
+        "魏振：你来晚了。",
+        "林晓雨藏起撕破的信",
+        "特写：撕破的信",
+        "魏振转身离开",
+        "林晓雨独自站着"
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "shots": {
+       "en": [
+        "The family at dinner",
+        "Mother: Eat.",
+        "Lin watches Wei",
+        "Wei pushes the bowl away"
+       ],
+       "zh": [
+        "一家人吃晚饭",
+        "母亲：吃饭。",
+        "林晓雨看着魏振",
+        "魏振推开饭碗"
+       ]
+      }
+     },
+     {
+      "id": "seg03",
+      "shots": {
+       "en": [
+        "Night, the yard",
+        "Lin reads the torn letter",
+        "Wei at the window",
+        "Their eyes meet",
+        "Lin burns the torn letter"
+       ],
+       "zh": [
+        "夜，院子里",
+        "林晓雨看着撕破的信",
+        "魏振站在窗边",
+        "两人对视",
+        "林晓雨烧掉撕破的信"
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "title": {
+     "en": "Dinner",
+     "zh": "晚饭"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "shots": {
+       "en": [
+        "Lin enters the yard",
+        "Wei: You're late.",
+        "Lin hides the torn letter",
+        "Close on the torn letter",
+        "Wei turns away",
+        "Lin alone"
+       ],
+       "zh": [
+        "林晓雨走进院子",
+        "魏振：你来晚了。",
+        "林晓雨藏起撕破的信",
+        "特写：撕破的信",
+        "魏振转身离开",
+        "林晓雨独自站着"
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "shots": {
+       "en": [
+        "The family at dinner",
+        "Mother: Eat.",
+        "Lin watches Wei",
+        "Wei pushes the bowl away"
+       ],
+       "zh": [
+        "一家人吃晚饭",
+        "母亲：吃饭。",
+        "林晓雨看着魏振",
+        "魏振推开饭碗"
+       ]
+      }
+     },
+     {
+      "id": "seg03",
+      "shots": {
+       "en": [
+        "Night, the yard",
+        "Lin reads the torn letter",
+        "Wei at the window",
+        "Their eyes meet",
+        "Lin burns the torn letter"
+       ],
+       "zh": [
+        "夜，院子里",
+        "林晓雨看着撕破的信",
+        "魏振站在窗边",
+        "两人对视",
+        "林晓雨烧掉撕破的信"
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "title": {
+     "en": "The wedding dress",
+     "zh": "嫁衣"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "shots": {
+       "en": [
+        "Lin enters the yard",
+        "Wei: You're late.",
+        "Lin hides the torn letter",
+        "Close on the torn letter",
+        "Wei turns away",
+        "Lin alone"
+       ],
+       "zh": [
+        "林晓雨走进院子",
+        "魏振：你来晚了。",
+        "林晓雨藏起撕破的信",
+        "特写：撕破的信",
+        "魏振转身离开",
+        "林晓雨独自站着"
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "shots": {
+       "en": [
+        "The family at dinner",
+        "Mother: Eat.",
+        "Lin watches Wei",
+        "Wei pushes the bowl away"
+       ],
+       "zh": [
+        "一家人吃晚饭",
+        "母亲：吃饭。",
+        "林晓雨看着魏振",
+        "魏振推开饭碗"
+       ]
+      }
+     },
+     {
+      "id": "seg03",
+      "shots": {
+       "en": [
+        "Night, the yard",
+        "Lin reads the torn letter",
+        "Wei at the window",
+        "Their eyes meet",
+        "Lin burns the torn letter"
+       ],
+       "zh": [
+        "夜，院子里",
+        "林晓雨看着撕破的信",
+        "魏振站在窗边",
+        "两人对视",
+        "林晓雨烧掉撕破的信"
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "title": {
+     "en": "Night market",
+     "zh": "夜市"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "shots": {
+       "en": [
+        "Lin enters the yard",
+        "Wei: You're late.",
+        "Lin hides the torn letter",
+        "Close on the torn letter",
+        "Wei turns away",
+        "Lin alone"
+       ],
+       "zh": [
+        "林晓雨走进院子",
+        "魏振：你来晚了。",
+        "林晓雨藏起撕破的信",
+        "特写：撕破的信",
+        "魏振转身离开",
+        "林晓雨独自站着"
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "shots": {
+       "en": [
+        "The family at dinner",
+        "Mother: Eat.",
+        "Lin watches Wei",
+        "Wei pushes the bowl away"
+       ],
+       "zh": [
+        "一家人吃晚饭",
+        "母亲：吃饭。",
+        "林晓雨看着魏振",
+        "魏振推开饭碗"
+       ]
+      }
+     },
+     {
+      "id": "seg03",
+      "shots": {
+       "en": [
+        "Night, the yard",
+        "Lin reads the torn letter",
+        "Wei at the window",
+        "Their eyes meet",
+        "Lin burns the torn letter"
+       ],
+       "zh": [
+        "夜，院子里",
+        "林晓雨看着撕破的信",
+        "魏振站在窗边",
+        "两人对视",
+        "林晓雨烧掉撕破的信"
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "title": {
+     "en": "The truth",
+     "zh": "真相"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "shots": {
+       "en": [
+        "Lin enters the yard",
+        "Wei: You're late.",
+        "Lin hides the torn letter",
+        "Close on the torn letter",
+        "Wei turns away",
+        "Lin alone"
+       ],
+       "zh": [
+        "林晓雨走进院子",
+        "魏振：你来晚了。",
+        "林晓雨藏起撕破的信",
+        "特写：撕破的信",
+        "魏振转身离开",
+        "林晓雨独自站着"
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "shots": {
+       "en": [
+        "The family at dinner",
+        "Mother: Eat.",
+        "Lin watches Wei",
+        "Wei pushes the bowl away"
+       ],
+       "zh": [
+        "一家人吃晚饭",
+        "母亲：吃饭。",
+        "林晓雨看着魏振",
+        "魏振推开饭碗"
+       ]
+      }
+     },
+     {
+      "id": "seg03",
+      "shots": {
+       "en": [
+        "Night, the yard",
+        "Lin reads the torn letter",
+        "Wei at the window",
+        "Their eyes meet",
+        "Lin burns the torn letter"
+       ],
+       "zh": [
+        "夜，院子里",
+        "林晓雨看着撕破的信",
+        "魏振站在窗边",
+        "两人对视",
+        "林晓雨烧掉撕破的信"
+       ]
+      }
+     }
+    ]
+   }
+  ]
+ },
+ "night-class": {
+  "title": {
+   "en": "Night Class",
+   "zh": "夜校"
+  },
+  "cast": [
+   {
+    "id": "lin",
+    "name": {
+     "en": "Tang Wen",
+     "zh": "唐雯"
+    },
+    "short": {
+     "en": "Tang",
+     "zh": "唐雯"
+    },
+    "looks": [
+     "S1"
+    ]
+   },
+   {
+    "id": "wei",
+    "name": {
+     "en": "Bao Jun",
+     "zh": "鲍军"
+    },
+    "short": {
+     "en": "Bao",
+     "zh": "鲍军"
+    }
+   }
+  ],
+  "places": [
+   {
+    "id": "home",
+    "name": {
+     "en": "Teachers' office",
+     "zh": "教师办公室"
+    }
+   },
+   {
+    "id": "office",
+    "name": {
+     "en": "Evening classroom",
+     "zh": "夜间教室"
+    }
+   }
+  ],
+  "props": [
+   {
+    "id": "letter",
+    "name": {
+     "en": "Exam paper",
+     "zh": "试卷"
+    }
+   }
+  ],
+  "episodes": [
+   {
+    "title": {
+     "en": "First night",
+     "zh": "第一夜"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "shots": {
+       "en": [
+        "Tang enters the yard",
+        "Bao: You're late.",
+        "Tang hides the exam paper",
+        "Close on the exam paper",
+        "Bao turns away",
+        "Tang alone"
+       ],
+       "zh": [
+        "唐雯走进院子",
+        "鲍军：你来晚了。",
+        "唐雯藏起试卷",
+        "特写：试卷",
+        "鲍军转身离开",
+        "唐雯独自站着"
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "shots": {
+       "en": [
+        "The family at dinner",
+        "Mother: Eat.",
+        "Tang watches Bao",
+        "Bao pushes the bowl away"
+       ],
+       "zh": [
+        "一家人吃晚饭",
+        "母亲：吃饭。",
+        "唐雯看着鲍军",
+        "鲍军推开饭碗"
+       ]
+      }
+     },
+     {
+      "id": "seg03",
+      "shots": {
+       "en": [
+        "Night, the yard",
+        "Tang reads the exam paper",
+        "Bao at the window",
+        "Their eyes meet",
+        "Tang burns the exam paper"
+       ],
+       "zh": [
+        "夜，院子里",
+        "唐雯看着试卷",
+        "鲍军站在窗边",
+        "两人对视",
+        "唐雯烧掉试卷"
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "title": {
+     "en": "The roll call",
+     "zh": "点名"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "shots": {
+       "en": [
+        "Tang enters the yard",
+        "Bao: You're late.",
+        "Tang hides the exam paper",
+        "Close on the exam paper",
+        "Bao turns away",
+        "Tang alone"
+       ],
+       "zh": [
+        "唐雯走进院子",
+        "鲍军：你来晚了。",
+        "唐雯藏起试卷",
+        "特写：试卷",
+        "鲍军转身离开",
+        "唐雯独自站着"
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "shots": {
+       "en": [
+        "The family at dinner",
+        "Mother: Eat.",
+        "Tang watches Bao",
+        "Bao pushes the bowl away"
+       ],
+       "zh": [
+        "一家人吃晚饭",
+        "母亲：吃饭。",
+        "唐雯看着鲍军",
+        "鲍军推开饭碗"
+       ]
+      }
+     },
+     {
+      "id": "seg03",
+      "shots": {
+       "en": [
+        "Night, the yard",
+        "Tang reads the exam paper",
+        "Bao at the window",
+        "Their eyes meet",
+        "Tang burns the exam paper"
+       ],
+       "zh": [
+        "夜，院子里",
+        "唐雯看着试卷",
+        "鲍军站在窗边",
+        "两人对视",
+        "唐雯烧掉试卷"
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "title": {
+     "en": "Chalk dust",
+     "zh": "粉笔灰"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "shots": {
+       "en": [
+        "Tang enters the yard",
+        "Bao: You're late.",
+        "Tang hides the exam paper",
+        "Close on the exam paper",
+        "Bao turns away",
+        "Tang alone"
+       ],
+       "zh": [
+        "唐雯走进院子",
+        "鲍军：你来晚了。",
+        "唐雯藏起试卷",
+        "特写：试卷",
+        "鲍军转身离开",
+        "唐雯独自站着"
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "shots": {
+       "en": [
+        "The family at dinner",
+        "Mother: Eat.",
+        "Tang watches Bao",
+        "Bao pushes the bowl away"
+       ],
+       "zh": [
+        "一家人吃晚饭",
+        "母亲：吃饭。",
+        "唐雯看着鲍军",
+        "鲍军推开饭碗"
+       ]
+      }
+     },
+     {
+      "id": "seg03",
+      "shots": {
+       "en": [
+        "Night, the yard",
+        "Tang reads the exam paper",
+        "Bao at the window",
+        "Their eyes meet",
+        "Tang burns the exam paper"
+       ],
+       "zh": [
+        "夜，院子里",
+        "唐雯看着试卷",
+        "鲍军站在窗边",
+        "两人对视",
+        "唐雯烧掉试卷"
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "title": {
+     "en": "The exam",
+     "zh": "考试"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "shots": {
+       "en": [
+        "Tang enters the yard",
+        "Bao: You're late.",
+        "Tang hides the exam paper",
+        "Close on the exam paper",
+        "Bao turns away",
+        "Tang alone"
+       ],
+       "zh": [
+        "唐雯走进院子",
+        "鲍军：你来晚了。",
+        "唐雯藏起试卷",
+        "特写：试卷",
+        "鲍军转身离开",
+        "唐雯独自站着"
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "shots": {
+       "en": [
+        "The family at dinner",
+        "Mother: Eat.",
+        "Tang watches Bao",
+        "Bao pushes the bowl away"
+       ],
+       "zh": [
+        "一家人吃晚饭",
+        "母亲：吃饭。",
+        "唐雯看着鲍军",
+        "鲍军推开饭碗"
+       ]
+      }
+     },
+     {
+      "id": "seg03",
+      "shots": {
+       "en": [
+        "Night, the yard",
+        "Tang reads the exam paper",
+        "Bao at the window",
+        "Their eyes meet",
+        "Tang burns the exam paper"
+       ],
+       "zh": [
+        "夜，院子里",
+        "唐雯看着试卷",
+        "鲍军站在窗边",
+        "两人对视",
+        "唐雯烧掉试卷"
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "title": {
+     "en": "After class",
+     "zh": "下课后"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "shots": {
+       "en": [
+        "Tang enters the yard",
+        "Bao: You're late.",
+        "Tang hides the exam paper",
+        "Close on the exam paper",
+        "Bao turns away",
+        "Tang alone"
+       ],
+       "zh": [
+        "唐雯走进院子",
+        "鲍军：你来晚了。",
+        "唐雯藏起试卷",
+        "特写：试卷",
+        "鲍军转身离开",
+        "唐雯独自站着"
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "shots": {
+       "en": [
+        "The family at dinner",
+        "Mother: Eat.",
+        "Tang watches Bao",
+        "Bao pushes the bowl away"
+       ],
+       "zh": [
+        "一家人吃晚饭",
+        "母亲：吃饭。",
+        "唐雯看着鲍军",
+        "鲍军推开饭碗"
+       ]
+      }
+     },
+     {
+      "id": "seg03",
+      "shots": {
+       "en": [
+        "Night, the yard",
+        "Tang reads the exam paper",
+        "Bao at the window",
+        "Their eyes meet",
+        "Tang burns the exam paper"
+       ],
+       "zh": [
+        "夜，院子里",
+        "唐雯看着试卷",
+        "鲍军站在窗边",
+        "两人对视",
+        "唐雯烧掉试卷"
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "title": {
+     "en": "Graduation",
+     "zh": "毕业"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "shots": {
+       "en": [
+        "Tang enters the yard",
+        "Bao: You're late.",
+        "Tang hides the exam paper",
+        "Close on the exam paper",
+        "Bao turns away",
+        "Tang alone"
+       ],
+       "zh": [
+        "唐雯走进院子",
+        "鲍军：你来晚了。",
+        "唐雯藏起试卷",
+        "特写：试卷",
+        "鲍军转身离开",
+        "唐雯独自站着"
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "shots": {
+       "en": [
+        "The family at dinner",
+        "Mother: Eat.",
+        "Tang watches Bao",
+        "Bao pushes the bowl away"
+       ],
+       "zh": [
+        "一家人吃晚饭",
+        "母亲：吃饭。",
+        "唐雯看着鲍军",
+        "鲍军推开饭碗"
+       ]
+      }
+     },
+     {
+      "id": "seg03",
+      "shots": {
+       "en": [
+        "Night, the yard",
+        "Tang reads the exam paper",
+        "Bao at the window",
+        "Their eyes meet",
+        "Tang burns the exam paper"
+       ],
+       "zh": [
+        "夜，院子里",
+        "唐雯看着试卷",
+        "鲍军站在窗边",
+        "两人对视",
+        "唐雯烧掉试卷"
+       ]
+      }
+     }
+    ]
+   }
+  ]
+ },
+ "corner-office": {
+  "title": {
+   "en": "Corner Office",
+   "zh": "顶层办公室"
+  },
+  "cast": [
+   {
+    "id": "lin",
+    "name": {
+     "en": "Vivian Shen",
+     "zh": "沈薇"
+    },
+    "short": {
+     "en": "Vivian",
+     "zh": "沈薇"
+    },
+    "looks": [
+     "S1"
+    ]
+   },
+   {
+    "id": "wei",
+    "name": {
+     "en": "Leo Lu",
+     "zh": "陆屿"
+    },
+    "short": {
+     "en": "Leo",
+     "zh": "陆屿"
+    }
+   }
+  ],
+  "places": [
+   {
+    "id": "home",
+    "name": {
+     "en": "The corner office",
+     "zh": "顶层办公室"
+    }
+   },
+   {
+    "id": "office",
+    "name": {
+     "en": "Board room",
+     "zh": "会议室"
+    }
+   }
+  ],
+  "props": [
+   {
+    "id": "letter",
+    "name": {
+     "en": "Signed contract",
+     "zh": "签好的合同"
+    }
+   }
+  ],
+  "episodes": [
+   {
+    "title": {
+     "en": "Day one",
+     "zh": "第一天"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "shots": {
+       "en": [
+        "Vivian enters the yard",
+        "Leo: You're late.",
+        "Vivian hides the signed contract",
+        "Close on the signed contract",
+        "Leo turns away",
+        "Vivian alone"
+       ],
+       "zh": [
+        "沈薇走进院子",
+        "陆屿：你来晚了。",
+        "沈薇藏起签好的合同",
+        "特写：签好的合同",
+        "陆屿转身离开",
+        "沈薇独自站着"
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "shots": {
+       "en": [
+        "The family at dinner",
+        "Mother: Eat.",
+        "Vivian watches Leo",
+        "Leo pushes the bowl away"
+       ],
+       "zh": [
+        "一家人吃晚饭",
+        "母亲：吃饭。",
+        "沈薇看着陆屿",
+        "陆屿推开饭碗"
+       ]
+      }
+     },
+     {
+      "id": "seg03",
+      "shots": {
+       "en": [
+        "Night, the yard",
+        "Vivian reads the signed contract",
+        "Leo at the window",
+        "Their eyes meet",
+        "Vivian burns the signed contract"
+       ],
+       "zh": [
+        "夜，院子里",
+        "沈薇看着签好的合同",
+        "陆屿站在窗边",
+        "两人对视",
+        "沈薇烧掉签好的合同"
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "title": {
+     "en": "The pitch",
+     "zh": "提案"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "shots": {
+       "en": [
+        "Vivian enters the yard",
+        "Leo: You're late.",
+        "Vivian hides the signed contract",
+        "Close on the signed contract",
+        "Leo turns away",
+        "Vivian alone"
+       ],
+       "zh": [
+        "沈薇走进院子",
+        "陆屿：你来晚了。",
+        "沈薇藏起签好的合同",
+        "特写：签好的合同",
+        "陆屿转身离开",
+        "沈薇独自站着"
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "shots": {
+       "en": [
+        "The family at dinner",
+        "Mother: Eat.",
+        "Vivian watches Leo",
+        "Leo pushes the bowl away"
+       ],
+       "zh": [
+        "一家人吃晚饭",
+        "母亲：吃饭。",
+        "沈薇看着陆屿",
+        "陆屿推开饭碗"
+       ]
+      }
+     },
+     {
+      "id": "seg03",
+      "shots": {
+       "en": [
+        "Night, the yard",
+        "Vivian reads the signed contract",
+        "Leo at the window",
+        "Their eyes meet",
+        "Vivian burns the signed contract"
+       ],
+       "zh": [
+        "夜，院子里",
+        "沈薇看着签好的合同",
+        "陆屿站在窗边",
+        "两人对视",
+        "沈薇烧掉签好的合同"
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "title": {
+     "en": "Overtime",
+     "zh": "加班"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "shots": {
+       "en": [
+        "Vivian enters the yard",
+        "Leo: You're late.",
+        "Vivian hides the signed contract",
+        "Close on the signed contract",
+        "Leo turns away",
+        "Vivian alone"
+       ],
+       "zh": [
+        "沈薇走进院子",
+        "陆屿：你来晚了。",
+        "沈薇藏起签好的合同",
+        "特写：签好的合同",
+        "陆屿转身离开",
+        "沈薇独自站着"
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "shots": {
+       "en": [
+        "The family at dinner",
+        "Mother: Eat.",
+        "Vivian watches Leo",
+        "Leo pushes the bowl away"
+       ],
+       "zh": [
+        "一家人吃晚饭",
+        "母亲：吃饭。",
+        "沈薇看着陆屿",
+        "陆屿推开饭碗"
+       ]
+      }
+     },
+     {
+      "id": "seg03",
+      "shots": {
+       "en": [
+        "Night, the yard",
+        "Vivian reads the signed contract",
+        "Leo at the window",
+        "Their eyes meet",
+        "Vivian burns the signed contract"
+       ],
+       "zh": [
+        "夜，院子里",
+        "沈薇看着签好的合同",
+        "陆屿站在窗边",
+        "两人对视",
+        "沈薇烧掉签好的合同"
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "title": {
+     "en": "The board",
+     "zh": "董事会"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "shots": {
+       "en": [
+        "Vivian enters the yard",
+        "Leo: You're late.",
+        "Vivian hides the signed contract",
+        "Close on the signed contract",
+        "Leo turns away",
+        "Vivian alone"
+       ],
+       "zh": [
+        "沈薇走进院子",
+        "陆屿：你来晚了。",
+        "沈薇藏起签好的合同",
+        "特写：签好的合同",
+        "陆屿转身离开",
+        "沈薇独自站着"
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "shots": {
+       "en": [
+        "The family at dinner",
+        "Mother: Eat.",
+        "Vivian watches Leo",
+        "Leo pushes the bowl away"
+       ],
+       "zh": [
+        "一家人吃晚饭",
+        "母亲：吃饭。",
+        "沈薇看着陆屿",
+        "陆屿推开饭碗"
+       ]
+      }
+     },
+     {
+      "id": "seg03",
+      "shots": {
+       "en": [
+        "Night, the yard",
+        "Vivian reads the signed contract",
+        "Leo at the window",
+        "Their eyes meet",
+        "Vivian burns the signed contract"
+       ],
+       "zh": [
+        "夜，院子里",
+        "沈薇看着签好的合同",
+        "陆屿站在窗边",
+        "两人对视",
+        "沈薇烧掉签好的合同"
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "title": {
+     "en": "The leak",
+     "zh": "泄密"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "shots": {
+       "en": [
+        "Vivian enters the yard",
+        "Leo: You're late.",
+        "Vivian hides the signed contract",
+        "Close on the signed contract",
+        "Leo turns away",
+        "Vivian alone"
+       ],
+       "zh": [
+        "沈薇走进院子",
+        "陆屿：你来晚了。",
+        "沈薇藏起签好的合同",
+        "特写：签好的合同",
+        "陆屿转身离开",
+        "沈薇独自站着"
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "shots": {
+       "en": [
+        "The family at dinner",
+        "Mother: Eat.",
+        "Vivian watches Leo",
+        "Leo pushes the bowl away"
+       ],
+       "zh": [
+        "一家人吃晚饭",
+        "母亲：吃饭。",
+        "沈薇看着陆屿",
+        "陆屿推开饭碗"
+       ]
+      }
+     },
+     {
+      "id": "seg03",
+      "shots": {
+       "en": [
+        "Night, the yard",
+        "Vivian reads the signed contract",
+        "Leo at the window",
+        "Their eyes meet",
+        "Vivian burns the signed contract"
+       ],
+       "zh": [
+        "夜，院子里",
+        "沈薇看着签好的合同",
+        "陆屿站在窗边",
+        "两人对视",
+        "沈薇烧掉签好的合同"
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "title": {
+     "en": "Promotion",
+     "zh": "升职"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "shots": {
+       "en": [
+        "Vivian enters the yard",
+        "Leo: You're late.",
+        "Vivian hides the signed contract",
+        "Close on the signed contract",
+        "Leo turns away",
+        "Vivian alone"
+       ],
+       "zh": [
+        "沈薇走进院子",
+        "陆屿：你来晚了。",
+        "沈薇藏起签好的合同",
+        "特写：签好的合同",
+        "陆屿转身离开",
+        "沈薇独自站着"
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "shots": {
+       "en": [
+        "The family at dinner",
+        "Mother: Eat.",
+        "Vivian watches Leo",
+        "Leo pushes the bowl away"
+       ],
+       "zh": [
+        "一家人吃晚饭",
+        "母亲：吃饭。",
+        "沈薇看着陆屿",
+        "陆屿推开饭碗"
+       ]
+      }
+     },
+     {
+      "id": "seg03",
+      "shots": {
+       "en": [
+        "Night, the yard",
+        "Vivian reads the signed contract",
+        "Leo at the window",
+        "Their eyes meet",
+        "Vivian burns the signed contract"
+       ],
+       "zh": [
+        "夜，院子里",
+        "沈薇看着签好的合同",
+        "陆屿站在窗边",
+        "两人对视",
+        "沈薇烧掉签好的合同"
+       ]
+      }
+     }
+    ]
+   }
+  ]
+ },
+ "bride-on-bail": {
+  "title": {
+   "en": "Bride on Bail",
+   "zh": "保释新娘"
+  },
+  "cast": [
+   {
+    "id": "lin",
+    "name": {
+     "en": "Ivy Bell",
+     "zh": "艾薇"
+    },
+    "short": {
+     "en": "Ivy",
+     "zh": "艾薇"
+    },
+    "looks": [
+     "S1"
+    ]
+   },
+   {
+    "id": "wei",
+    "name": {
+     "en": "Luca Moreno",
+     "zh": "卢卡"
+    },
+    "short": {
+     "en": "Luca",
+     "zh": "卢卡"
+    }
+   }
+  ],
+  "places": [
+   {
+    "id": "home",
+    "name": {
+     "en": "Garden wedding",
+     "zh": "花园婚礼"
+    }
+   },
+   {
+    "id": "office",
+    "name": {
+     "en": "Holding cell",
+     "zh": "拘留室"
+    }
+   }
+  ],
+  "props": [
+   {
+    "id": "letter",
+    "name": {
+     "en": "Bail papers",
+     "zh": "保释文件"
+    }
+   }
+  ],
+  "episodes": [
+   {
+    "title": {
+     "en": "The arrest",
+     "zh": "被捕"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "shots": {
+       "en": [
+        "Ivy enters the yard",
+        "Luca: You're late.",
+        "Ivy hides the bail papers",
+        "Close on the bail papers",
+        "Luca turns away",
+        "Ivy alone"
+       ],
+       "zh": [
+        "艾薇走进院子",
+        "卢卡：你来晚了。",
+        "艾薇藏起保释文件",
+        "特写：保释文件",
+        "卢卡转身离开",
+        "艾薇独自站着"
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "shots": {
+       "en": [
+        "The family at dinner",
+        "Mother: Eat.",
+        "Ivy watches Luca",
+        "Luca pushes the bowl away"
+       ],
+       "zh": [
+        "一家人吃晚饭",
+        "母亲：吃饭。",
+        "艾薇看着卢卡",
+        "卢卡推开饭碗"
+       ]
+      }
+     },
+     {
+      "id": "seg03",
+      "shots": {
+       "en": [
+        "Night, the yard",
+        "Ivy reads the bail papers",
+        "Luca at the window",
+        "Their eyes meet",
+        "Ivy burns the bail papers"
+       ],
+       "zh": [
+        "夜，院子里",
+        "艾薇看着保释文件",
+        "卢卡站在窗边",
+        "两人对视",
+        "艾薇烧掉保释文件"
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "title": {
+     "en": "The ring",
+     "zh": "戒指"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "shots": {
+       "en": [
+        "Ivy enters the yard",
+        "Luca: You're late.",
+        "Ivy hides the bail papers",
+        "Close on the bail papers",
+        "Luca turns away",
+        "Ivy alone"
+       ],
+       "zh": [
+        "艾薇走进院子",
+        "卢卡：你来晚了。",
+        "艾薇藏起保释文件",
+        "特写：保释文件",
+        "卢卡转身离开",
+        "艾薇独自站着"
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "shots": {
+       "en": [
+        "The family at dinner",
+        "Mother: Eat.",
+        "Ivy watches Luca",
+        "Luca pushes the bowl away"
+       ],
+       "zh": [
+        "一家人吃晚饭",
+        "母亲：吃饭。",
+        "艾薇看着卢卡",
+        "卢卡推开饭碗"
+       ]
+      }
+     },
+     {
+      "id": "seg03",
+      "shots": {
+       "en": [
+        "Night, the yard",
+        "Ivy reads the bail papers",
+        "Luca at the window",
+        "Their eyes meet",
+        "Ivy burns the bail papers"
+       ],
+       "zh": [
+        "夜，院子里",
+        "艾薇看着保释文件",
+        "卢卡站在窗边",
+        "两人对视",
+        "艾薇烧掉保释文件"
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "title": {
+     "en": "Bail",
+     "zh": "保释"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "shots": {
+       "en": [
+        "Ivy enters the yard",
+        "Luca: You're late.",
+        "Ivy hides the bail papers",
+        "Close on the bail papers",
+        "Luca turns away",
+        "Ivy alone"
+       ],
+       "zh": [
+        "艾薇走进院子",
+        "卢卡：你来晚了。",
+        "艾薇藏起保释文件",
+        "特写：保释文件",
+        "卢卡转身离开",
+        "艾薇独自站着"
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "shots": {
+       "en": [
+        "The family at dinner",
+        "Mother: Eat.",
+        "Ivy watches Luca",
+        "Luca pushes the bowl away"
+       ],
+       "zh": [
+        "一家人吃晚饭",
+        "母亲：吃饭。",
+        "艾薇看着卢卡",
+        "卢卡推开饭碗"
+       ]
+      }
+     },
+     {
+      "id": "seg03",
+      "shots": {
+       "en": [
+        "Night, the yard",
+        "Ivy reads the bail papers",
+        "Luca at the window",
+        "Their eyes meet",
+        "Ivy burns the bail papers"
+       ],
+       "zh": [
+        "夜，院子里",
+        "艾薇看着保释文件",
+        "卢卡站在窗边",
+        "两人对视",
+        "艾薇烧掉保释文件"
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "title": {
+     "en": "The rehearsal",
+     "zh": "彩排"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "shots": {
+       "en": [
+        "Ivy enters the yard",
+        "Luca: You're late.",
+        "Ivy hides the bail papers",
+        "Close on the bail papers",
+        "Luca turns away",
+        "Ivy alone"
+       ],
+       "zh": [
+        "艾薇走进院子",
+        "卢卡：你来晚了。",
+        "艾薇藏起保释文件",
+        "特写：保释文件",
+        "卢卡转身离开",
+        "艾薇独自站着"
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "shots": {
+       "en": [
+        "The family at dinner",
+        "Mother: Eat.",
+        "Ivy watches Luca",
+        "Luca pushes the bowl away"
+       ],
+       "zh": [
+        "一家人吃晚饭",
+        "母亲：吃饭。",
+        "艾薇看着卢卡",
+        "卢卡推开饭碗"
+       ]
+      }
+     },
+     {
+      "id": "seg03",
+      "shots": {
+       "en": [
+        "Night, the yard",
+        "Ivy reads the bail papers",
+        "Luca at the window",
+        "Their eyes meet",
+        "Ivy burns the bail papers"
+       ],
+       "zh": [
+        "夜，院子里",
+        "艾薇看着保释文件",
+        "卢卡站在窗边",
+        "两人对视",
+        "艾薇烧掉保释文件"
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "title": {
+     "en": "The vows",
+     "zh": "誓言"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "shots": {
+       "en": [
+        "Ivy enters the yard",
+        "Luca: You're late.",
+        "Ivy hides the bail papers",
+        "Close on the bail papers",
+        "Luca turns away",
+        "Ivy alone"
+       ],
+       "zh": [
+        "艾薇走进院子",
+        "卢卡：你来晚了。",
+        "艾薇藏起保释文件",
+        "特写：保释文件",
+        "卢卡转身离开",
+        "艾薇独自站着"
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "shots": {
+       "en": [
+        "The family at dinner",
+        "Mother: Eat.",
+        "Ivy watches Luca",
+        "Luca pushes the bowl away"
+       ],
+       "zh": [
+        "一家人吃晚饭",
+        "母亲：吃饭。",
+        "艾薇看着卢卡",
+        "卢卡推开饭碗"
+       ]
+      }
+     },
+     {
+      "id": "seg03",
+      "shots": {
+       "en": [
+        "Night, the yard",
+        "Ivy reads the bail papers",
+        "Luca at the window",
+        "Their eyes meet",
+        "Ivy burns the bail papers"
+       ],
+       "zh": [
+        "夜，院子里",
+        "艾薇看着保释文件",
+        "卢卡站在窗边",
+        "两人对视",
+        "艾薇烧掉保释文件"
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "title": {
+     "en": "The verdict",
+     "zh": "判决"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "shots": {
+       "en": [
+        "Ivy enters the yard",
+        "Luca: You're late.",
+        "Ivy hides the bail papers",
+        "Close on the bail papers",
+        "Luca turns away",
+        "Ivy alone"
+       ],
+       "zh": [
+        "艾薇走进院子",
+        "卢卡：你来晚了。",
+        "艾薇藏起保释文件",
+        "特写：保释文件",
+        "卢卡转身离开",
+        "艾薇独自站着"
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "shots": {
+       "en": [
+        "The family at dinner",
+        "Mother: Eat.",
+        "Ivy watches Luca",
+        "Luca pushes the bowl away"
+       ],
+       "zh": [
+        "一家人吃晚饭",
+        "母亲：吃饭。",
+        "艾薇看着卢卡",
+        "卢卡推开饭碗"
+       ]
+      }
+     },
+     {
+      "id": "seg03",
+      "shots": {
+       "en": [
+        "Night, the yard",
+        "Ivy reads the bail papers",
+        "Luca at the window",
+        "Their eyes meet",
+        "Ivy burns the bail papers"
+       ],
+       "zh": [
+        "夜，院子里",
+        "艾薇看着保释文件",
+        "卢卡站在窗边",
+        "两人对视",
+        "艾薇烧掉保释文件"
+       ]
+      }
+     }
+    ]
+   }
+  ],
+  "redLine": {
+   "en": "instructions someone could follow to make a weapon (EP003, scene 2)",
+   "zh": "可以照着做出武器的步骤（第 3 集第 2 场）"
+  }
+ },
+ "paper-vows": {
+  "title": {
+   "en": "Paper Vows",
+   "zh": "纸上婚约"
+  },
+  "cast": [
+   {
+    "id": "nora",
+    "name": {
+     "en": "Nora Vance",
+     "zh": "诺拉·万斯"
+    },
+    "short": {
+     "en": "Nora",
+     "zh": "诺拉"
+    },
+    "looks": [
+     "S1",
+     "S2",
+     "S3",
+     "S4"
+    ]
+   },
+   {
+    "id": "rhys",
+    "name": {
+     "en": "Rhys Calder",
+     "zh": "里斯·考尔德"
+    },
+    "short": {
+     "en": "Rhys",
+     "zh": "里斯"
+    },
+    "looks": [
+     "S1",
+     "S2",
+     "S3",
+     "S4"
+    ]
+   },
+   {
+    "id": "blair",
+    "name": {
+     "en": "Blair Monroe",
+     "zh": "布莱尔·门罗"
+    },
+    "short": {
+     "en": "Blair",
+     "zh": "布莱尔"
+    },
+    "looks": [
+     "S1"
+    ]
+   },
+   {
+    "id": "walt",
+    "name": {
+     "en": "Walter Vance",
+     "zh": "沃尔特·万斯"
+    },
+    "short": {
+     "en": "Walter",
+     "zh": "沃尔特"
+    },
+    "looks": [
+     "S1"
+    ]
+   },
+   {
+    "id": "diane",
+    "name": {
+     "en": "Diane Vance",
+     "zh": "黛安·万斯"
+    },
+    "short": {
+     "en": "Diane",
+     "zh": "黛安"
+    },
+    "looks": [
+     "S1"
+    ]
+   },
+   {
+    "id": "owen",
+    "name": {
+     "en": "Owen Pike",
+     "zh": "欧文·派克"
+    },
+    "short": {
+     "en": "Owen",
+     "zh": "欧文"
+    }
+   },
+   {
+    "id": "guard",
+    "name": {
+     "en": "Officer Hale",
+     "zh": "黑尔警官"
+    },
+    "short": {
+     "en": "Hale",
+     "zh": "黑尔警官"
+    }
+   },
+   {
+    "id": "officiant",
+    "name": {
+     "en": "Elias Brook",
+     "zh": "伊莱亚斯·布鲁克"
+    },
+    "short": {
+     "en": "Elias",
+     "zh": "伊莱亚斯"
+    }
+   },
+   {
+    "id": "guest_a",
+    "name": {
+     "en": "June Park",
+     "zh": "朴琼"
+    },
+    "short": {
+     "en": "June",
+     "zh": "朴琼"
+    }
+   },
+   {
+    "id": "guest_b",
+    "name": {
+     "en": "Molly Reed",
+     "zh": "莫莉·里德"
+    },
+    "short": {
+     "en": "Molly",
+     "zh": "莫莉"
+    }
+   }
+  ],
+  "places": [
+   {
+    "id": "cell",
+    "name": {
+     "en": "Holding cell",
+     "zh": "拘留室"
+    }
+   },
+   {
+    "id": "front_desk",
+    "name": {
+     "en": "Release desk",
+     "zh": "释放登记处"
+    }
+   },
+   {
+    "id": "gate",
+    "name": {
+     "en": "Outside the gate",
+     "zh": "看守所门外"
+    }
+   },
+   {
+    "id": "parlor",
+    "name": {
+     "en": "The Vance parlor",
+     "zh": "万斯家客厅"
+    }
+   },
+   {
+    "id": "loft",
+    "name": {
+     "en": "Rhys's loft",
+     "zh": "里斯的公寓"
+    },
+    "times": [
+     "Night"
+    ]
+   },
+   {
+    "id": "garden",
+    "name": {
+     "en": "Garden wedding",
+     "zh": "花园婚礼"
+    }
+   }
+  ],
+  "props": [
+   {
+    "id": "agreement",
+    "name": {
+     "en": "The agreement",
+     "zh": "协议"
+    }
+   },
+   {
+    "id": "blanket",
+    "name": {
+     "en": "Knit blanket",
+     "zh": "针织毯"
+    }
+   },
+   {
+    "id": "bouquet",
+    "name": {
+     "en": "Bridal bouquet",
+     "zh": "新娘捧花"
+    }
+   },
+   {
+    "id": "breakfast",
+    "name": {
+     "en": "Breakfast for two",
+     "zh": "双人早餐"
+    }
+   },
+   {
+    "id": "car_key",
+    "name": {
+     "en": "Car key",
+     "zh": "车钥匙"
+    }
+   },
+   {
+    "id": "champagne",
+    "name": {
+     "en": "Champagne tray",
+     "zh": "香槟托盘"
+    }
+   },
+   {
+    "id": "coins",
+    "name": {
+     "en": "Two quarters",
+     "zh": "两枚硬币"
+    }
+   },
+   {
+    "id": "lawyer_phone",
+    "name": {
+     "en": "Owen's phone",
+     "zh": "欧文的手机"
+    }
+   },
+   {
+    "id": "dress_bag",
+    "name": {
+     "en": "Dress bag",
+     "zh": "婚纱袋"
+    }
+   },
+   {
+    "id": "car",
+    "name": {
+     "en": "Black sedan",
+     "zh": "黑色轿车"
+    }
+   },
+   {
+    "id": "folder",
+    "name": {
+     "en": "Folder",
+     "zh": "文件夹"
+    }
+   },
+   {
+    "id": "door_key",
+    "name": {
+     "en": "Front door key",
+     "zh": "大门钥匙"
+    }
+   },
+   {
+    "id": "gift_box",
+    "name": {
+     "en": "Gift box",
+     "zh": "礼盒"
+    }
+   },
+   {
+    "id": "guest_phone",
+    "name": {
+     "en": "June's phone",
+     "zh": "朴琼的手机"
+    }
+   },
+   {
+    "id": "bill",
+    "name": {
+     "en": "Hospital bill",
+     "zh": "医院账单"
+    }
+   },
+   {
+    "id": "lingerie",
+    "name": {
+     "en": "Lace lingerie",
+     "zh": "蕾丝内衣"
+    }
+   },
+   {
+    "id": "mother_phone",
+    "name": {
+     "en": "Diane's phone",
+     "zh": "黛安的手机"
+    }
+   },
+   {
+    "id": "handbag",
+    "name": {
+     "en": "Nora's handbag",
+     "zh": "诺拉的手提包"
+    }
+   },
+   {
+    "id": "phone_alert",
+    "name": {
+     "en": "Nora's phone",
+     "zh": "诺拉的手机"
+    }
+   },
+   {
+    "id": "pillow",
+    "name": {
+     "en": "Pillow",
+     "zh": "枕头"
+    }
+   },
+   {
+    "id": "release_form",
+    "name": {
+     "en": "Release form",
+     "zh": "释放单"
+    }
+   },
+   {
+    "id": "phone_bank",
+    "name": {
+     "en": "Rhys's phone",
+     "zh": "里斯的手机"
+    }
+   }
+  ],
+  "episodes": [
+   {
+    "title": {
+     "en": "The family meeting",
+     "zh": "家庭会议"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "shots": {
+       "en": [
+        "Nora faces her parents in the parlor",
+        "Walter avoids her eyes",
+        "Diane speaks for both of them",
+        "Nora: You can't be serious.",
+        "Walter rubs his hands"
+       ],
+       "zh": [
+        "诺拉在客厅面对父母",
+        "沃尔特避开她的目光",
+        "黛安替两人开口",
+        "诺拉：你们是认真的？",
+        "沃尔特搓着双手"
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "shots": {
+       "en": [
+        "Blair walks in",
+        "Blair smiles at Nora",
+        "Nora holds a sheet of paper",
+        "Diane beams at Blair"
+       ],
+       "zh": [
+        "布莱尔走进来",
+        "布莱尔冲诺拉笑",
+        "诺拉手里拿着一张纸",
+        "黛安对布莱尔满脸笑容"
+       ]
+      }
+     },
+     {
+      "id": "seg03",
+      "shots": {
+       "en": [
+        "Blair folds her arms",
+        "Diane makes her case",
+        "Nora reads the paper",
+        "Walter looks down"
+       ],
+       "zh": [
+        "布莱尔抱着胳膊",
+        "黛安讲她的道理",
+        "诺拉看那张纸",
+        "沃尔特低下头"
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "title": {
+     "en": "Released",
+     "zh": "出狱"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "shots": {
+       "en": [
+        "Outside the gate",
+        "Rhys asleep in the cell",
+        "Officer Hale rattles his keys",
+        "Rhys sits up"
+       ],
+       "zh": [
+        "看守所门外",
+        "里斯在拘留室里睡着",
+        "黑尔警官晃着钥匙",
+        "里斯坐起来"
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "shots": {
+       "en": [
+        "The release desk",
+        "Hale slides the form over",
+        "Rhys signs out"
+       ],
+       "zh": [
+        "释放登记处",
+        "黑尔把表格推过来",
+        "里斯签字离开"
+       ]
+      }
+     },
+     {
+      "id": "seg03",
+      "shots": {
+       "en": [
+        "Rhys walks out of the gate",
+        "Owen waits by the car",
+        "Owen opens the door"
+       ],
+       "zh": [
+        "里斯走出大门",
+        "欧文在车边等",
+        "欧文拉开车门"
+       ]
+      }
+     },
+     {
+      "id": "seg04",
+      "shots": {
+       "en": [
+        "Owen sighs",
+        "Rhys leans close to Owen",
+        "Rhys looks up at the sky"
+       ],
+       "zh": [
+        "欧文叹气",
+        "里斯凑近欧文",
+        "里斯抬头看天"
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "title": {
+     "en": "Garden whispers",
+     "zh": "花园私语"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "shots": {
+       "en": [
+        "Champagne on a tray",
+        "Walter walks Nora down the aisle",
+        "Diane checks her watch"
+       ],
+       "zh": [
+        "托盘上的香槟",
+        "沃尔特挽着诺拉走过红毯",
+        "黛安看表"
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "shots": {
+       "en": [
+        "Two guests whisper",
+        "June laughs into her glass",
+        "Molly hides her smile"
+       ],
+       "zh": [
+        "两位宾客窃窃私语",
+        "朴琼端着杯子笑",
+        "莫莉忍住笑"
+       ]
+      }
+     },
+     {
+      "id": "seg03",
+      "shots": {
+       "en": [
+        "Blair in red by the arch",
+        "Blair whispers to Nora",
+        "Nora looks down"
+       ],
+       "zh": [
+        "一身红裙的布莱尔站在拱门边",
+        "布莱尔凑到诺拉耳边",
+        "诺拉低下头"
+       ]
+      }
+     },
+     {
+      "id": "seg04",
+      "shots": {
+       "en": [
+        "Rhys walks up the aisle",
+        "Rhys takes his place",
+        "Blair gasps",
+        "Nora looks up"
+       ],
+       "zh": [
+        "里斯走上红毯",
+        "里斯站到位置上",
+        "布莱尔倒吸一口气",
+        "诺拉抬起头"
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "title": {
+     "en": "The vows",
+     "zh": "誓言"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "shots": {
+       "en": [
+        "Guests take their seats",
+        "Rhys smiles at Nora",
+        "Blair arrives with a gift"
+       ],
+       "zh": [
+        "宾客落座",
+        "里斯冲诺拉微笑",
+        "布莱尔带着礼物来了"
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "shots": {
+       "en": [
+        "Blair holds out the gift box",
+        "Elias begins",
+        "Diane steps between them"
+       ],
+       "zh": [
+        "布莱尔递上礼盒",
+        "伊莱亚斯开始主持",
+        "黛安挡在中间"
+       ]
+      }
+     },
+     {
+      "id": "seg03",
+      "shots": {
+       "en": [
+        "June takes a photo",
+        "Diane checks her phone",
+        "A phone lights up on a chair"
+       ],
+       "zh": [
+        "朴琼拍照",
+        "黛安看手机",
+        "椅子上的手机亮了"
+       ]
+      }
+     },
+     {
+      "id": "seg04",
+      "shots": {
+       "en": [
+        "Blair crushes the ribbon",
+        "Diane walks off",
+        "Rhys hands Nora a key",
+        "Nora closes her hand"
+       ],
+       "zh": [
+        "布莱尔攥紧丝带",
+        "黛安走开",
+        "里斯把钥匙交给诺拉",
+        "诺拉握紧手"
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "title": {
+     "en": "Wedding night terms",
+     "zh": "新婚约法"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "shots": {
+       "en": [
+        "Nora at the loft door",
+        "Rhys in his tuxedo",
+        "Rhys writes something down",
+        "Nora signs"
+       ],
+       "zh": [
+        "诺拉站在公寓门口",
+        "穿着礼服的里斯",
+        "里斯写下几行字",
+        "诺拉签名"
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "shots": {
+       "en": [
+        "Rhys watches her sign",
+        "Nora opens her bag",
+        "Rhys carries a pillow to the sofa"
+       ],
+       "zh": [
+        "里斯看着她签字",
+        "诺拉打开包",
+        "里斯把枕头抱到沙发上"
+       ]
+      }
+     },
+     {
+      "id": "seg03",
+      "shots": {
+       "en": [
+        "Rhys in the doorway",
+        "Rhys on the sofa",
+        "Nora in her robe",
+        "A kiss"
+       ],
+       "zh": [
+        "里斯站在门口",
+        "里斯靠在沙发上",
+        "穿着睡袍的诺拉",
+        "一个吻"
+       ]
+      }
+     },
+     {
+      "id": "seg04",
+      "shots": {
+       "en": [
+        "Rhys reads his phone",
+        "Rhys looks at the door"
+       ],
+       "zh": [
+        "里斯看手机",
+        "里斯望向门口"
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "title": {
+     "en": "Morning after",
+     "zh": "第二天早上"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "shots": {
+       "en": [
+        "Morning in the loft",
+        "Rhys holds a blanket",
+        "Nora carries the dress bag",
+        "Two coins in his hand"
+       ],
+       "zh": [
+        "公寓里的早晨",
+        "里斯抱着毯子",
+        "诺拉提着婚纱袋",
+        "他手里的两枚硬币"
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "shots": {
+       "en": [
+        "Nora leaves",
+        "Rhys picks up the coins",
+        "A call comes in"
+       ],
+       "zh": [
+        "诺拉出门",
+        "里斯捡起硬币",
+        "来了一个电话"
+       ]
+      }
+     },
+     {
+      "id": "seg03",
+      "shots": {
+       "en": [
+        "Owen arrives",
+        "Rhys reads the papers",
+        "A payment confirmed",
+        "Rhys looks out the window"
+       ],
+       "zh": [
+        "欧文来了",
+        "里斯看文件",
+        "付款成功",
+        "里斯望向窗外"
+       ]
+      }
+     },
+     {
+      "id": "seg04",
+      "shots": {
+       "en": [
+        "Owen waits",
+        "Rhys smiles",
+        "Owen sees him out"
+       ],
+       "zh": [
+        "欧文等着",
+        "里斯笑了",
+        "欧文送他出门"
+       ]
+      }
+     }
+    ]
+   }
+  ]
+ },
+ "late-sunshine": {
+  "title": {
+   "en": "Late Sunshine",
+   "zh": "晚来的晴天"
+  },
+  "cast": [
+   {
+    "id": "qiao",
+    "name": {
+     "en": "Qiao An",
+     "zh": "乔安"
+    },
+    "short": {
+     "en": "Qiao",
+     "zh": "乔安"
+    },
+    "looks": [
+     "S1",
+     "S2",
+     "S3"
+    ]
+   },
+   {
+    "id": "cheng",
+    "name": {
+     "en": "Cheng Ye",
+     "zh": "程野"
+    },
+    "short": {
+     "en": "Cheng",
+     "zh": "程野"
+    },
+    "looks": [
+     "S1",
+     "S2"
+    ]
+   },
+   {
+    "id": "zhou",
+    "name": {
+     "en": "Zhou Jingchuan",
+     "zh": "周景川"
+    },
+    "short": {
+     "en": "Zhou",
+     "zh": "周景川"
+    },
+    "looks": [
+     "S1"
+    ]
+   },
+   {
+    "id": "qiao_father",
+    "name": {
+     "en": "Qiao Zhendong",
+     "zh": "乔振东"
+    },
+    "short": {
+     "en": "Zhendong",
+     "zh": "乔振东"
+    }
+   },
+   {
+    "id": "bai",
+    "name": {
+     "en": "Bai Lu",
+     "zh": "白露"
+    },
+    "short": {
+     "en": "Bai",
+     "zh": "白露"
+    }
+   },
+   {
+    "id": "fang",
+    "name": {
+     "en": "Fang Yuan",
+     "zh": "方圆"
+    },
+    "short": {
+     "en": "Fang",
+     "zh": "方圆"
+    }
+   },
+   {
+    "id": "applicant_a",
+    "name": {
+     "en": "Applicant A",
+     "zh": "应聘者甲"
+    },
+    "short": {
+     "en": "Applicant A",
+     "zh": "应聘者甲"
+    }
+   },
+   {
+    "id": "applicant_b",
+    "name": {
+     "en": "Applicant B",
+     "zh": "应聘者乙"
+    },
+    "short": {
+     "en": "Applicant B",
+     "zh": "应聘者乙"
+    }
+   },
+   {
+    "id": "applicant_c",
+    "name": {
+     "en": "Applicant C",
+     "zh": "应聘者丙"
+    },
+    "short": {
+     "en": "Applicant C",
+     "zh": "应聘者丙"
+    }
+   },
+   {
+    "id": "applicant_d",
+    "name": {
+     "en": "Applicant D",
+     "zh": "应聘者丁"
+    },
+    "short": {
+     "en": "Applicant D",
+     "zh": "应聘者丁"
+    },
+    "looks": [
+     "S1"
+    ]
+   }
+  ],
+  "places": [
+   {
+    "id": "corridor",
+    "name": {
+     "en": "Apartment corridor",
+     "zh": "公寓走廊"
+    },
+    "times": [
+     "Night"
+    ]
+   },
+   {
+    "id": "lobby",
+    "name": {
+     "en": "Elevator lobby",
+     "zh": "电梯厅"
+    },
+    "times": [
+     "Night"
+    ]
+   },
+   {
+    "id": "avenue",
+    "name": {
+     "en": "City avenue",
+     "zh": "城市大道"
+    },
+    "times": [
+     "Night"
+    ]
+   },
+   {
+    "id": "family_hall",
+    "name": {
+     "en": "The Qiao family hall",
+     "zh": "乔家客厅"
+    },
+    "times": [
+     "Day"
+    ]
+   },
+   {
+    "id": "penthouse",
+    "name": {
+     "en": "Qiao's penthouse",
+     "zh": "乔安的客厅"
+    },
+    "times": [
+     "Night"
+    ]
+   },
+   {
+    "id": "office",
+    "name": {
+     "en": "Qiao's office",
+     "zh": "乔安的办公室"
+    },
+    "times": [
+     "Day"
+    ]
+   },
+   {
+    "id": "dining",
+    "name": {
+     "en": "Bai's dining room",
+     "zh": "白露家的餐厅"
+    },
+    "times": [
+     "Day"
+    ]
+   },
+   {
+    "id": "flat",
+    "name": {
+     "en": "Bai's living room",
+     "zh": "白露家的客厅"
+    },
+    "times": [
+     "Day"
+    ]
+   }
+  ],
+  "props": [
+   {
+    "id": "handbag",
+    "name": {
+     "en": "Black handbag",
+     "zh": "黑色手提包"
+    }
+   },
+   {
+    "id": "coffee",
+    "name": {
+     "en": "Coffee cup",
+     "zh": "咖啡杯"
+    }
+   },
+   {
+    "id": "envelope",
+    "name": {
+     "en": "Kraft envelope",
+     "zh": "牛皮纸信封"
+    }
+   },
+   {
+    "id": "dumbbell",
+    "name": {
+     "en": "Dumbbell",
+     "zh": "哑铃"
+    }
+   },
+   {
+    "id": "groceries",
+    "name": {
+     "en": "Grocery bag",
+     "zh": "购物袋"
+    }
+   },
+   {
+    "id": "glass",
+    "name": {
+     "en": "Water glass",
+     "zh": "水杯"
+    }
+   },
+   {
+    "id": "cheng_phone",
+    "name": {
+     "en": "Cheng's phone",
+     "zh": "程野的手机"
+    }
+   },
+   {
+    "id": "pour_over",
+    "name": {
+     "en": "Pour-over set",
+     "zh": "手冲咖啡壶"
+    }
+   },
+   {
+    "id": "video_call",
+    "name": {
+     "en": "Video call",
+     "zh": "视频通话"
+    }
+   }
+  ],
+  "episodes": [
+   {
+    "title": {
+     "en": "Morning coffee",
+     "zh": "清晨的咖啡"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "shots": {
+       "en": [
+        "Qiao pours coffee in her office",
+        "Coffee drips",
+        "Qiao looks out the window",
+        "Her hand on the plans"
+       ],
+       "zh": [
+        "乔安在办公室冲咖啡",
+        "咖啡滴落",
+        "乔安看向窗外",
+        "她的手按在图纸上"
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "shots": {
+       "en": [
+        "The Qiao family hall",
+        "Zhendong on the sofa",
+        "Cheng stands, head down",
+        "Zhendong points at him",
+        "Cheng picks up the envelope",
+        "Qiao listens behind the door"
+       ],
+       "zh": [
+        "乔家客厅",
+        "乔振东坐在沙发上",
+        "程野低头站着",
+        "乔振东指着他",
+        "程野捡起信封",
+        "乔安在门后偷听"
+       ]
+      }
+     },
+     {
+      "id": "seg03",
+      "shots": {
+       "en": [
+        "Qiao sips her coffee",
+        "She sets the cup down",
+        "Close on Qiao"
+       ],
+       "zh": [
+        "乔安喝咖啡",
+        "她放下杯子",
+        "特写：乔安"
+       ]
+      }
+     },
+     {
+      "id": "seg04",
+      "shots": {
+       "en": [
+        "Bai curls up on the sofa",
+        "Bai reads her phone",
+        "Bai is startled",
+        "Bai laughs"
+       ],
+       "zh": [
+        "白露窝在沙发上",
+        "白露看手机",
+        "白露吓了一跳",
+        "白露笑出声"
+       ]
+      }
+     },
+     {
+      "id": "seg05",
+      "shots": {
+       "en": [
+        "Bai with her phone",
+        "Bai rolls her eyes",
+        "A video call"
+       ],
+       "zh": [
+        "白露对着手机",
+        "白露翻了个白眼",
+        "视频通话"
+       ]
+      }
+     },
+     {
+      "id": "seg06",
+      "shots": {
+       "en": [
+        "Bai waves",
+        "Cheng comes in with a glass",
+        "Bai looks up"
+       ],
+       "zh": [
+        "白露挥手",
+        "程野端着水杯进来",
+        "白露抬起头"
+       ]
+      }
+     },
+     {
+      "id": "seg07",
+      "shots": {
+       "en": [
+        "Cheng on the phone in the dining room",
+        "Wine on the table",
+        "Cheng smiles"
+       ],
+       "zh": [
+        "程野在餐厅打电话",
+        "桌上的红酒",
+        "程野笑了"
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "title": {
+     "en": "The interviews",
+     "zh": "面试"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "shots": {
+       "en": [
+        "The applicants line up",
+        "Qiao behind the desk",
+        "Applicant A shows off",
+        "Qiao rests her chin"
+       ],
+       "zh": [
+        "应聘者排成一排",
+        "乔安坐在桌后",
+        "应聘者甲展示肌肉",
+        "乔安托着下巴"
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "shots": {
+       "en": [
+        "The applicants try too hard",
+        "Qiao covers her face",
+        "Fang holds back a laugh",
+        "Someone pushes the door"
+       ],
+       "zh": [
+        "应聘者们争相表现",
+        "乔安扶额",
+        "方圆忍住笑",
+        "有人推开门"
+       ]
+      }
+     },
+     {
+      "id": "seg03",
+      "shots": {
+       "en": [
+        "The empty office",
+        "Sun on the desk"
+       ],
+       "zh": [
+        "空荡的办公室",
+        "桌上的阳光"
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "title": {
+     "en": "Caught in the rain",
+     "zh": "雨中来客"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "shots": {
+       "en": [
+        "Cheng, soaked through",
+        "Qiao folds her arms",
+        "Fang opens the door",
+        "Qiao pokes his chest"
+       ],
+       "zh": [
+        "浑身湿透的程野",
+        "乔安抱着胳膊",
+        "方圆开门",
+        "乔安戳他的胸口"
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "shots": {
+       "en": [
+        "Cheng wipes off the rain",
+        "Qiao looks him over",
+        "Qiao points at the door"
+       ],
+       "zh": [
+        "程野抹去雨水",
+        "乔安打量他",
+        "乔安指向门口"
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "title": {
+     "en": "At the elevator",
+     "zh": "电梯口"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "shots": {
+       "en": [
+        "Zhou waits at the elevator",
+        "Qiao steps out",
+        "Zhou fixes his jacket"
+       ],
+       "zh": [
+        "周景川在电梯口等",
+        "乔安走出电梯",
+        "周景川整理外套"
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "shots": {
+       "en": [
+        "Zhou leans in",
+        "Qiao grips her bag",
+        "Qiao's cold look"
+       ],
+       "zh": [
+        "周景川凑近",
+        "乔安攥紧包带",
+        "乔安冷冷看他"
+       ]
+      }
+     },
+     {
+      "id": "seg03",
+      "shots": {
+       "en": [
+        "Zhou spreads his hands",
+        "Qiao looks away"
+       ],
+       "zh": [
+        "周景川摊开手",
+        "乔安转开脸"
+       ]
+      }
+     },
+     {
+      "id": "seg04",
+      "shots": {
+       "en": [
+        "Cheng comes back with groceries",
+        "Cheng puts an arm around Qiao",
+        "Zhou freezes"
+       ],
+       "zh": [
+        "程野拎着菜回来",
+        "程野搂住乔安",
+        "周景川愣住"
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "title": {
+     "en": "Standoff in the hall",
+     "zh": "走廊对峙"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "shots": {
+       "en": [
+        "Three in the corridor",
+        "Cheng offers his hand",
+        "Zhou ignores it"
+       ],
+       "zh": [
+        "走廊里的三个人",
+        "程野伸出手",
+        "周景川不理他"
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "shots": {
+       "en": [
+        "Zhou sneers",
+        "Qiao leans on Cheng"
+       ],
+       "zh": [
+        "周景川冷笑",
+        "乔安靠向程野"
+       ]
+      }
+     },
+     {
+      "id": "seg03",
+      "shots": {
+       "en": [
+        "Cheng pats Zhou's shoulder",
+        "Zhou walks away",
+        "Cheng lifts the groceries"
+       ],
+       "zh": [
+        "程野拍拍周景川的肩",
+        "周景川离开",
+        "程野举起菜袋"
+       ]
+      }
+     },
+     {
+      "id": "seg04",
+      "shots": {
+       "en": [
+        "Night traffic"
+       ],
+       "zh": [
+        "夜晚的车流"
+       ]
+      }
+     },
+     {
+      "id": "seg05",
+      "shots": {
+       "en": [
+        "Qiao's living room",
+        "Qiao stands, arms folded",
+        "Cheng on the sofa"
+       ],
+       "zh": [
+        "乔安的客厅",
+        "乔安抱着胳膊站着",
+        "程野坐在沙发上"
+       ]
+      }
+     }
+    ]
+   }
+  ]
+ }
+}

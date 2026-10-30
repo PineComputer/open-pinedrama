@@ -7,5 +7,11 @@ dist/
 .env.local
 .data/
 
+# End-to-end build and results
+.e2e/
+test-results/
+playwright-report/
+
 # Desktop builds
 release/
+.DS_Store

@@ -1,10 +1,12 @@
-import { Check, Pencil } from "lucide-react";
 import { useRef, useState } from "react";
 import { type EpisodePage, type Judged, type Receipt, STAGES } from "../../shared/types.ts";
 import { api, useAction, useResource } from "../api.ts";
 import { type TKey, useT } from "../i18n.ts";
 import { errorText, fileKind, moneyText, nowText } from "../labels.ts";
+import { Segmented } from "../components/Segmented.tsx";
+import { Icon } from "../icons.tsx";
 import { Link } from "../router.tsx";
+import { Segments } from "./Segments.tsx";
 import { Still } from "../Still.tsx";
 import { Pinboard, isImage, isVideo, useShotList, useSize, variantLabel } from "../viewing.tsx";
 
@@ -29,7 +31,7 @@ function JudgedLine({ review }: { review?: Judged }) {
   if (review.verdict === "approve") {
     return (
       <div className="judged approved">
-        <Check size={14} /> {t("judged.approve")} · {link}
+        <Icon name="check" /> {t("judged.approve")} · {link}
       </div>
     );
   }
@@ -37,7 +39,7 @@ function JudgedLine({ review }: { review?: Judged }) {
     return (
       <div className="judged revised">
         <div>
-          <Pencil size={13} /> {t("judged.revise")} · {link}
+          <Icon name="note-pencil" /> {t("judged.revise")} · {link}
         </div>
         {review.notes.length > 0 && (
           <ol className="judged-notes">
@@ -108,8 +110,8 @@ function Receipts({ receipts, empty }: { receipts: Receipt[]; empty: string }) {
                 <Still still={receipt.files[0] && { url: receipt.files[0].url, video: isVideo(receipt.files[0]) }} />
               </span>
               <span className="num">{receipt.files[0]?.version ?? "—"}</span>
-              {receipt.review?.verdict === "approve" && <Check size={13} className="v-approve" />}
-              {receipt.review?.verdict === "revise" && <Pencil size={12} className="v-revise" />}
+              {receipt.review?.verdict === "approve" && <Icon name="check" className="v-approve" />}
+              {receipt.review?.verdict === "revise" && <Icon name="note-pencil" className="v-revise" />}
             </button>
           ))}
         </div>
@@ -122,6 +124,8 @@ export function Episode({ dramaId, code }: { dramaId: string; code: string }) {
   const { t, lang } = useT();
   const { data: page, error } = useResource<EpisodePage>(`/api/dramas/${dramaId}/episodes/${code}`, [`drama:${dramaId}`]);
   const [picked, setPicked] = useState<Selection>();
+  // The segments, scene by scene, first; their pictures one click away.
+  const [view, setView] = useState<"segments" | "pictures">("segments");
   const resume = useAction(() => api(`/api/episodes/${page?.row.id}/resume`, { method: "POST" }));
   const selection: Selection | undefined =
     picked ?? (page?.cuts.length ? { kind: "cut" } : page?.segments[0] ? { kind: "segment", key: page.segments[0].key, tab: "boards" } : undefined);
@@ -185,6 +189,25 @@ export function Episode({ dramaId, code }: { dramaId: string; code: string }) {
         </div>
       </div>
 
+      <Segmented
+        label={t("episode.view")}
+        value={view}
+        onChange={setView}
+        options={[
+          { value: "segments", label: t("segments.view"), icon: "list" },
+          { value: "pictures", label: t("segments.pictures"), icon: "image" },
+        ]}
+      />
+      {view === "segments" ? (
+        <Segments
+          dramaId={dramaId}
+          page={page}
+          onOpen={(key) => {
+            setPicked({ kind: "segment", key, tab: "boards" });
+            setView("pictures");
+          }}
+        />
+      ) : (
       <div className="episode-body">
         <nav className="episode-nav" aria-label={t("episode.parts")}>
           {page.segments.map((candidate) => (
@@ -256,6 +279,7 @@ export function Episode({ dramaId, code }: { dramaId: string; code: string }) {
           )}
         </section>
       </div>
+      )}
     </div>
   );
 }

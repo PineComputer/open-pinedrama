@@ -1,0 +1,72 @@
+{
+  "title": "T",
+  "logline": "l",
+  "tone": "t",
+  "red_line_issues": [],
+  "characters": [
+    {
+      "id": "lin",
+      "name": "林",
+      "aliases": [],
+      "age": 28,
+      "observable": true,
+      "gender": "female",
+      "role": "teacher",
+      "personality": "calm",
+      "appearance": "black bob",
+      "hair": {
+        "length": "chin",
+        "colour": "black"
+      },
+      "build": "slim",
+      "wardrobe": "cream cardigan",
+      "signature_color": "white",
+      "voice": "soft",
+      "looks": {
+        "base": {
+          "garments": [
+            {
+              "class": "long sleeve outwear",
+              "colour": "white"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "locations": [
+    {
+      "id": "office",
+      "name": "办公室",
+      "description": "desks",
+      "setting": "interior",
+      "period": "contemporary",
+      "furnishings": [
+        "desks"
+      ]
+    }
+  ],
+  "beats": [
+    {
+      "lines": [
+        1,
+        7
+      ],
+      "seconds": 10,
+      "event": "greeting"
+    }
+  ],
+  "episodes": [
+    {
+      "id": "EP001",
+      "title": "x",
+      "summary": "s",
+      "est_seconds": 10,
+      "end_hook": "h",
+      "lines": [
+        1,
+        7
+      ]
+    }
+  ]
+}

@@ -15,7 +15,8 @@ export default {
   appId: "io.pinecomputer.drama-studio",
   productName: "Pine Drama Studio",
   directories: { output: "release", buildResources: "desktop/assets" },
-  files: ["dist/ui/**", "dist/desktop/**", "fixtures/replay/**", "fixtures/rehearsal/**", "package.json"],
+  // The full sample dramas (fixtures/replay/samples/full/) stay out of the installer: tens of MB that only development and review builds play.
+  files: ["dist/ui/**", "dist/desktop/**", "fixtures/replay/**", "!fixtures/replay/samples/full/**", "fixtures/rehearsal/**", "package.json"],
   asarUnpack: ["dist/ui/**", "fixtures/replay/**", "fixtures/rehearsal/**"],
   // Read by the updater: an ad-hoc macOS build can't install an update.
   extraMetadata: { distribution: developerId ? "developer-id" : "ad-hoc" },

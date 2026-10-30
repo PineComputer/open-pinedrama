@@ -40,6 +40,11 @@ describe("classify", () => {
     expect(classify("episodes/EP010/edit/v3/cut.mp4")).toMatchObject({ kind: "cut", episode: "EP010", version: "v3" });
   });
 
+  it("reads a cut's plan beside it, and only that file of the folder", () => {
+    expect(classify("drama/episodes/EP010/edit/v3/cut.json")).toMatchObject({ kind: "cut-plan", episode: "EP010", version: "v3" });
+    expect(classify("drama/episodes/EP010/edit/v3/artifact.json").kind).toBe("other");
+  });
+
   it("reads character looks, base and named", () => {
     expect(classify("assets/characters/lin/v2/image-1.png")).toMatchObject({ kind: "look", subject: "lin", look: "base", version: "v2" });
     expect(classify("assets/characters/lin/states/S1/v1/image-1.png")).toMatchObject({ kind: "look", subject: "lin", look: "S1" });
@@ -142,7 +147,7 @@ describe("namedPaths", () => {
   });
 
   it("finds a rewritten screenplay and the file it came from, as the agent named them (28 October 2026)", () => {
-    // From the person's test: the .fountain link was missed while extensions stopped at five letters.
+    // From merecdesperez44323-lab's test: the .fountain link was missed while extensions stopped at five letters.
     const question = "请查看：[screenplay.fountain](drama/inputs/screenplay.fountain)；原始文件副本：[screenplay-source.docx](drama/inputs/screenplay-source.docx)。";
     expect(namedPaths(question)).toEqual(["drama/inputs/screenplay.fountain", "drama/inputs/screenplay-source.docx"]);
     expect(namedPaths("see `drama/screenplay/v1/review.markdown`")).toEqual(["drama/screenplay/v1/review.markdown"]);

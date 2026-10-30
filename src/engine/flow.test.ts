@@ -92,7 +92,8 @@ async function scenario(title: string) {
   const looks = await until("the looks review", openReview(id, (item) => item.kind === "looks"));
   const looksView = await call<ReviewView>("GET", `/api/reviews/${looks.id}`);
   expect(looksView.reviewItems.map((item) => item.key)).toEqual(["lin", "wei"]);
-  expect(looksView.otherFiles.map((file) => file.kind)).toEqual(["bible"]);
+  // The bible comes back as Markdown and as its bible.json, as a real stop returns them.
+  expect(looksView.otherFiles.map((file) => file.name)).toEqual(["bible.md", "bible.json"]);
 
   // Revising one look redraws only that one; the maker's own picture goes to the session with the note.
   const picture = new FormData();
@@ -107,7 +108,7 @@ async function scenario(title: string) {
     ],
   });
   expect(revised.answer).toContain(
-    `- wei: Lighter jacket. (on drama/assets/characters/wei/v1/image-1.svg, at 40% across and 60% down, see the picture I attached: attachments/reference-${reference.id}-jacket.png)`,
+    `- wei: Lighter jacket. (on ${looksView.reviewItems[1].files[0].path}, at 40% across and 60% down, see the picture I attached: attachments/reference-${reference.id}-jacket.png)`,
   );
   const again = await until("the redrawn look", openReview(id, (item) => item.kind === "looks" && item.id !== looks.id));
   const redrawn = await call<ReviewView>("GET", `/api/reviews/${again.id}`);
@@ -276,6 +277,22 @@ describe("a drama in replay", () => {
     expect(naming.length).toBeGreaterThan(1);
     expect(naming.filter((turn) => !packs.some((pack) => pack.turn_id === turn.id))).toEqual([]);
     expect(episodeArchive(episode.id).map((pack) => pack.turn_id)).toEqual([packs.at(-1)!.turn_id]);
+    // The status report keeps its name too: every stop that names it has it recorded, and the
+    // project stands where the last one says (EP001's cut accepted).
+    const naming_status = all<{ id: string }>("select t.id from turns t join sessions s on s.id = t.session_id where s.episode_id = ? and t.question like '%(handoff/status.json)%'", episode.id);
+    expect(naming_status.length).toBeGreaterThan(1);
+    const recorded = all<{ turn_id: string }>("select turn_id from statuses where report is not null");
+    expect(naming_status.filter((turn) => !recorded.some((row) => row.turn_id === turn.id))).toEqual([]);
+    const { projectView } = await import("./status.ts");
+    const [drama] = all<{ id: string }>("select id from dramas where title = 'Test drama, named files'");
+    expect(projectView(drama.id).state?.episodes.EP001.cut.accepted).toBe("v1");
+    // So does the lineage: every stop that names it has it recorded, and the drama's lineage ends at that cut.
+    const naming_lineage = all<{ id: string }>("select t.id from turns t join sessions s on s.id = t.session_id where s.episode_id = ? and t.question like '%(handoff/lineage.json)%'", episode.id);
+    expect(naming_lineage.length).toBeGreaterThan(1);
+    const kept = all<{ turn_id: string }>("select turn_id from lineages where export is not null");
+    expect(naming_lineage.filter((turn) => !kept.some((row) => row.turn_id === turn.id))).toEqual([]);
+    const { lineageView } = await import("./lineage.ts");
+    expect(lineageView(drama.id).lineage?.nodes.find((node) => node.id === "episodes/EP001/edit")?.accepted).toBe("v1");
   }, 30_000);
 
   // The Computer goes away while a turn's files are being saved: the parts saved before it went
@@ -381,7 +398,7 @@ describe("a drama in replay", () => {
     expect([stopped.status, stopped.setup.reason]).toEqual(["stopped", "by-maker"]);
     expect(all("select id from computers where drama_id = ? and state != 'stopped'", id)).toEqual([]);
     expect(await openReview(id, () => true)()).toBeUndefined();
-    await call("POST", `/api/dramas/${id}/retry`);
+    await call("POST", `/api/dramas/${id}/resume`);
     await until("the setup question again", openReview(id, (item) => item.kind === "question"));
   }, 30_000);
 
@@ -404,5 +421,78 @@ describe("a drama in replay", () => {
     expect(view.otherFiles.filter((file) => file.kind === "look").map((file) => file.subject)).toEqual(["lin", "wei"]);
     await call("POST", `/api/reviews/${looks.id}/decision`, { items: [], words: "Approved." });
     await until("the shared references, asked in words", openReview(id, (item) => item.id !== looks.id && item.id !== question.id));
+  }, 30_000);
+
+  // Replay's other sample dramas tell their own names: Bride on Bail's setup stops on its screenplay's red line, as
+  // drama-cli refuses the bible for one, and goes on with its own leads once the maker has decided.
+  it("plays another sample drama with its own names, stopping on its red line", async () => {
+    const { run } = await import("./db.ts");
+    run("update dramas set status = 'done'");
+    fleet.stops = "ask";
+    const { id } = await call<{ id: string }>("POST", "/api/dramas/sample", { language: "en", sample: "bride-on-bail" });
+    const drama = await call<DramaView>("GET", `/api/dramas/${id}`);
+    expect(drama.title).toBe("Bride on Bail");
+    const age = await until("the setup question", openReview(id, (item) => item.kind === "question"));
+    await call("POST", `/api/reviews/${age.id}/decision`, { items: [], words: "He is 32." });
+    const stop = await until("the red line", openReview(id, (item) => item.kind === "question" && item.id !== age.id));
+    const view = await call<ReviewView>("GET", `/api/reviews/${stop.id}`);
+    expect(view.refusals.map((refusal) => refusal.code)).toEqual(["RedLine"]);
+    expect(view.question).toContain("red line");
+    await call("POST", `/api/reviews/${stop.id}/decision`, { items: [], words: "Write it without those steps." });
+    const looks = await until("the leads' looks", openReview(id, (item) => item.kind === "looks"));
+    expect((await call<ReviewView>("GET", `/api/reviews/${looks.id}`)).question).toContain("Ivy Bell and Luca Moreno");
+    const { projectView } = await import("./status.ts");
+    expect(Object.values(projectView(id).names?.characters ?? {}).map((character) => character.name)).toEqual(["Ivy Bell", "Luca Moreno"]);
+  }, 30_000);
+
+  it("refuses a sample drama it doesn't have", async () => {
+    await expect(call("POST", "/api/dramas/sample", { language: "en", sample: "nope" })).rejects.toThrow(/sample-unknown|No sample drama/);
+  });
+
+  // A take sent back past the take cap isn't shot: the agent asks the maker, returning drama-cli's refusal, or
+  // naming it, which the stop carries for its card, and no review shows it as a file.
+  it.each(["ask", "name"] as const)("asks about the take cap with drama-cli's refusal (%s)", async (stops) => {
+    const { run } = await import("./db.ts");
+    run("update dramas set status = 'done'");
+    fleet.stops = stops;
+    const form = new FormData();
+    for (const [key, value] of Object.entries({ title: `Capped drama, ${stops}`, language: "en", preset: "en-us-live-sfw", screenplayLanguage: "en", screenplay: "0", parallel: "1", perComputer: "1" })) form.set(key, value);
+    form.append("files", new File(["EPISODE 1\nLin enters."], "screenplay.txt", { type: "text/plain" }));
+    const { id } = await call<{ id: string }>("POST", "/api/dramas", form);
+    const question = await until("the setup question", openReview(id, (item) => item.kind === "question"));
+    await call("POST", `/api/reviews/${question.id}/decision`, { items: [], words: "He is 32." });
+    for (const kind of ["looks", "references"] as const) await approveAll((await until(kind, openReview(id, (item) => item.kind === kind))).id);
+    await approveAll((await until("EP001 storyboards", openReview(id, (item) => item.episode === "EP001" && item.kind === "storyboards"))).id);
+    const sendBack = async (review: ReviewSummary) => {
+      const view = await call<ReviewView>("GET", `/api/reviews/${review.id}`);
+      expect(view.refusals).toEqual([]);
+      const items = view.reviewItems.map((item) => ({ key: item.key, verdict: item.key === "seg01" ? "revise" : "approve", notes: item.key === "seg01" ? [{ text: "Try again." }] : [] }));
+      await call("POST", `/api/reviews/${review.id}/decision`, { words: "seg01 again.", items });
+    };
+    // t01, then two new takes, shoot.max_new_takes in the replayed project.
+    let seen: string[] = [];
+    for (let n = 0; n < 3; n++) {
+      const takes = await until(`EP001 takes ${n + 1}`, openReview(id, (item) => item.episode === "EP001" && item.kind === "takes" && !seen.includes(item.id)));
+      seen = [...seen, takes.id];
+      await sendBack(takes);
+    }
+    const capped = await until("the take cap's question", openReview(id, (item) => item.episode === "EP001" && item.kind === "question"));
+    const view = await call<ReviewView>("GET", `/api/reviews/${capped.id}`);
+    expect(view.refusals).toEqual([
+      {
+        code: "SetLimitExceeded.max_new_takes",
+        message: "seg01 has had 2 new paid takes, the limit shoot.max_new_takes (2); ask the person before shooting it again",
+        param: "shoot.max_new_takes",
+        action: "ask_person",
+      },
+    ]);
+    expect(view.refusalsError).toBeUndefined();
+    expect(view.otherFiles.filter((file) => file.kind === "refusal")).toEqual([]);
+    const { stopKind } = await import("../shared/refusal.ts");
+    expect(stopKind(view.refusals[0])).toEqual({ kind: "cap", key: "shoot.max_new_takes" });
+    // Sent back again without the limit raised, the same refusal comes back, the same file afresh: this stop has it too.
+    await call("POST", `/api/reviews/${capped.id}/decision`, { items: [], words: "Revise:\n- seg01: once more" });
+    const again = await until("the take cap's question again", openReview(id, (item) => item.episode === "EP001" && item.kind === "question" && item.id !== capped.id));
+    expect((await call<ReviewView>("GET", `/api/reviews/${again.id}`)).refusals).toEqual(view.refusals);
   }, 30_000);
 });

@@ -1,0 +1,105 @@
+{
+  "project": "/work/drama",
+  "preset": "zh-cn-live-sfw",
+  "bible": {
+    "current": "v1",
+    "candidate": null,
+    "accepted": "v1",
+    "usable": true,
+    "requests": [],
+    "accepted_file": "/work/drama/bible/v1/bible.json",
+    "coverage": {
+      "episodes": 1
+    }
+  },
+  "characters": {
+    "lin": {
+      "current": "v1",
+      "candidate": null,
+      "accepted": "v1",
+      "usable": true,
+      "requests": []
+    }
+  },
+  "scenes": {
+    "office": {
+      "current": "v1",
+      "candidate": null,
+      "accepted": "v1",
+      "usable": true,
+      "requests": []
+    }
+  },
+  "props": {},
+  "episodes": {
+    "EP001": {
+      "breakdown": {
+        "current": "v1",
+        "candidate": null,
+        "accepted": "v1",
+        "usable": true,
+        "requests": [],
+        "accepted_file": "/work/drama/episodes/EP001/breakdown/v1/breakdown.json"
+      },
+      "edit": {
+        "current": null,
+        "candidate": null,
+        "accepted": null,
+        "usable": false,
+        "why": "episodes/EP001/edit: none is made",
+        "run": [
+          "show it to the person as the skill says, then accept it with their words: drama-cli accept /work/drama/episodes/EP001/edit <vN> --reason <why> --person <the person's words> --config /work/drama/drama-cli.cfg.yaml"
+        ]
+      },
+      "video_prompts": {
+        "current": null,
+        "stale": []
+      },
+      "blocking": {},
+      "first_frame_reference": {},
+      "multi_panel_storyboard": {},
+      "segments": {
+        "seg01": {
+          "current": null,
+          "candidate": null,
+          "accepted": null,
+          "usable": false,
+          "why": "episodes/EP001/segments/seg01: none is made",
+          "run": [
+            "show it to the person as the skill says, then accept it with their words: drama-cli accept /work/drama/episodes/EP001/segments/seg01 <vN> --reason <why> --person <the person's words> --config /work/drama/drama-cli.cfg.yaml"
+          ],
+          "takes": []
+        }
+      },
+      "scene_chains": [
+        {
+          "scene_heading": "INT. OFFICE - DAY #1-1#",
+          "segments": [
+            "seg01"
+          ]
+        }
+      ],
+      "needs": [
+        {
+          "reference": "location office plate at Day",
+          "path": "/work/drama/assets/scenes/office/times/Day",
+          "why": "location office plate at Day: none is made",
+          "run": [
+            "drama-cli --env <env-file> scenes office --time Day --config /work/drama/drama-cli.cfg.yaml",
+            "review it with understand image-scenes --location office --time Day as the skill says, then accept it: drama-cli accept /work/drama/assets/scenes/office/times/Day <vN> --understanding <understanding.json> --reason <why> --config /work/drama/drama-cli.cfg.yaml"
+          ],
+          "segments": [
+            "seg01"
+          ]
+        }
+      ]
+    }
+  },
+  "budget": {
+    "budget_usd": 20.0,
+    "spent_usd": 0.0,
+    "reserved_usd": 0.0,
+    "remaining_usd": 20.0,
+    "cost_valuation": "provider"
+  }
+}

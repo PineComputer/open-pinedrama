@@ -19,6 +19,8 @@ const PAPER = "#f7f4ef";
 app.setPath("userData", path.join(DATA_DIR, "browser"));
 keepLog("desktop");
 
+/** This launch's token, which the shell also uses to ask the engine before quitting. */
+let token = "";
 let engine: UtilityProcess | undefined;
 let origin: string | undefined;
 let window: BrowserWindow | undefined;
@@ -45,7 +47,7 @@ function windowsSealingKey(): string | undefined {
 
 /** Starts the engine and resolves with the link that lets a window in. */
 function startEngine(): Promise<string> {
-  const token = randomBytes(24).toString("base64url");
+  token = randomBytes(24).toString("base64url");
   const secret = windowsSealingKey();
   const child = utilityProcess.fork(path.join(HERE, "engine.mjs"), [], {
     serviceName: "Pine Drama Studio engine",
@@ -77,6 +79,16 @@ function startEngine(): Promise<string> {
       if (!quitting && origin) void engineStopped();
     });
   });
+}
+
+/** How many Computers the engine is still stopping; 0 when it can't say, as there is then nothing it could finish. */
+async function stillStopping(): Promise<number> {
+  try {
+    const response = await fetch(`${origin}/api/app`, { headers: { cookie: `studio=${token}` } });
+    return ((await response.json()) as { stopping?: number }).stopping ?? 0;
+  } catch {
+    return 0;
+  }
 }
 
 /** The engine went away while the window was open: say so, and start it again if the maker wants. */
@@ -182,6 +194,8 @@ if (!app.requestSingleInstanceLock()) {
     window.focus();
   });
   app.whenReady().then(async () => {
+    // Reveric's notice and link in the app's About panel, as its NOTICES ask (AGPLv3 section 7(b); docs/REUSED.md).
+    app.setAboutPanelOptions({ credits: "Based on Reveric by looplj.\nhttps://github.com/looplj/reveric\n\nGNU AGPLv3. Source: https://github.com/PineComputer/open-pinedrama" });
     if (await movedToApplications()) return;
     await open();
     keepUpdated();
@@ -195,8 +209,29 @@ if (!app.requestSingleInstanceLock()) {
   app.on("window-all-closed", () => {
     if (process.platform !== "darwin") app.quit();
   });
-  app.on("before-quit", () => {
-    quitting = true;
-    engine?.kill();
+  // Computers still being stopped keep running if the studio quits now: ask first.
+  let quitAsked = false;
+  app.on("before-quit", (event) => {
+    if (quitAsked || !origin) {
+      quitting = true;
+      engine?.kill();
+      return;
+    }
+    event.preventDefault();
+    void stillStopping().then(async (n) => {
+      if (n > 0) {
+        const { response } = await dialog.showMessageBox({
+          type: "warning",
+          message: n === 1 ? "The studio is still stopping a Computer." : `The studio is still stopping ${n} Computers.`,
+          detail: "If you quit now, they keep running until you open the studio again or Pine stops them when they're idle.",
+          buttons: ["Keep the studio open", "Quit anyway"],
+          defaultId: 0,
+          cancelId: 0,
+        });
+        if (response === 0) return;
+      }
+      quitAsked = true;
+      app.quit();
+    });
   });
 }

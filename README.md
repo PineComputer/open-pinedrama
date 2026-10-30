@@ -127,8 +127,13 @@ UI (React, Vite)  ── HTTP + one event stream ──▶  engine (Node, 127.0.
 
 ## Develop
 
+Replay's sample pictures and clips (`fixtures/replay/samples/`) are stored with Git LFS: run
+`git lfs install` once, before cloning, to see them. Without it the checkout has pointer files
+and replay draws placeholders instead.
+
 ```sh
 npm run check        # typecheck and tests, including the whole flow in replay mode
+npm run e2e          # the built studio walked in a browser, in replay (docs/TESTING.md)
 npm run pine:check   # the studio's Pine calls against your real project (see below)
 npm run build        # the UI into dist/ui, which the engine then serves itself
 ```
@@ -137,8 +142,11 @@ Test in this order; each step costs more and catches what the one before can't:
 
 1. **`npm run check`**, on every change. The scheduler, reviews and flow run against the
    replay, with failures injected (lost Creates, a busy project, turns that break off).
-2. **Replay in `npm run dev`**, for screens and the flow by hand, at no cost.
-3. **`npm run pine:check`**, after changing how the studio talks to Pine, after an SDK
+2. **`npm run e2e`**, after changing a screen: the built studio in a browser, in replay, as a
+   maker walks it, with axe checking each page. Locally it uses your installed Chrome; CI
+   installs Playwright's Chromium.
+3. **Replay in `npm run dev`**, for screens and the flow by hand, at no cost.
+4. **`npm run pine:check`**, after changing how the studio talks to Pine, after an SDK
    upgrade, and against a new project or endpoint. It goes through the engine's own Pine
    layer: it creates a Computer, gives two sessions files (with Chinese names), runs three
    small plain-language turns (one asks a question and gets an answer), hands a folder packed
@@ -148,7 +156,7 @@ Test in this order; each step costs more and catches what the one before can't:
    and Pine bills the turns, a few cents. It also reads the project's lifecycle (idle timeout
    and running time per start), sets the studio's idle timeouts and reads them back, and says
    whether the project offers the drama skill.
-4. **A rehearsal on your Pine project**, with or without the drama skill. New drama offers
+5. **A rehearsal on your Pine project**, with or without the drama skill. New drama offers
    it on any Pine project (checked when a Computer has said the skill is missing), a drama
    held for want of the skill offers **Rehearse instead**, and the Slate rehearses the
    sample drama in a click. The goals are the real ones, with Pine's agent standing in for
@@ -157,9 +165,9 @@ Test in this order; each step costs more and catches what the one before can't:
    real: Computers, sessions, stops and reviews, decisions, the handoff between Computers,
    resumes, the project's limits. Pine bills the Computers and turns; a 10-episode
    rehearsal costs about a dollar of turns.
-5. **Your Pine project in `npm run dev`** with the drama skill: the real thing, billed at
+6. **Your Pine project in `npm run dev`** with the drama skill: the real thing, billed at
    Pine's rates.
 
 ## License
 
-[Apache-2.0](LICENSE), like Pine's SDKs.
+[AGPLv3](LICENSE). The studio's design system is based on [Reveric](https://github.com/looplj/reveric) by looplj, under the AGPLv3: see [NOTICES](NOTICES) for its notice and additional terms, and [docs/REUSED.md](docs/REUSED.md) for what the studio takes from it.

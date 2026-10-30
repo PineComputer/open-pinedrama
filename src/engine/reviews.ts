@@ -55,6 +55,8 @@ export function itemsOf(kind: ReviewKind, files: FileRow[]): { items: ReviewItem
   for (const file of files) {
     // The handed-over project, its status and lineage, and the refusals a stop asks about: for sessions and the studio, not for the maker's eyes.
     if (file.kind === "archive" || file.kind === "status" || file.kind === "lineage" || file.kind === "refusal") continue;
+    // A cut's plan goes with the cut, as its clips (library.cutPlanOf).
+    if (file.kind === "cut-plan") continue;
     if (kind === "looks" && file.kind === "look") add(lookKey(file), file);
     else if (kind === "references" && file.kind === "look") add(lookKey(file), file);
     else if (kind === "references" && (file.kind === "location" || file.kind === "prop") && file.subject) add(placeKey(file), file);

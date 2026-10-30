@@ -191,7 +191,7 @@ function packEpisode(code: string): string {
 const EPISODE_STOPS = [
   "Stop and ask me to review the episode's storyboards, returning them with your question, with anything the observer found; if you made a new version of the episode's breakdown, return it too.",
   "After I approve, shoot the takes. I watch every take: each time takes are downloaded, stop and ask me to watch them, returning them with your question, and ask about the takes that are ready together rather than one at a time.",
-  "Then build the cut and ask me to watch it, returning the cut. Finish when I accept the cut.",
+  "Then build the cut and ask me to watch it, returning the cut (cut.mp4) with its cut.json. Finish when I accept the cut.",
 ];
 
 /**
@@ -229,7 +229,7 @@ export function resumeGoal(drama: DramaBrief, code: string, attachments: string[
         ]
       : [`Attached are the screenplay, the approved references and the episode's work so far: ${attachments.join(", ")}. Continue from them; redo only what is missing.`]),
     decision ? `My last decision, made on the attached files:\n${decision}` : "",
-    "Stop for my review of storyboards, takes and the cut, as before, returning the files with each question, those the earlier session made included. Finish when I accept the cut.",
+    "Stop for my review of storyboards, takes and the cut, as before, returning the files with each question, those the earlier session made included, and returning the cut (cut.mp4) with its cut.json. Finish when I accept the cut.",
     handoff ? packEpisode(code) : "",
     writeIn(drama),
   ]

@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { type DramaView, type EpisodeRow, STAGES, type StageCell } from "../../shared/types.ts";
 import { api, useAction } from "../api.ts";
+import { Segmented } from "../components/Segmented.tsx";
+import { type Status, StatusChip } from "../components/StatusChip.tsx";
 import { type TKey, useT } from "../i18n.ts";
-import { errorText, moneyText, nowText } from "../labels.ts";
+import { errorText, moneyText, nowText, SETUP_STEPS } from "../labels.ts";
 import { Link, navigate } from "../router.tsx";
 import { Still } from "../Still.tsx";
 import { Cast } from "./Cast.tsx";
@@ -85,58 +87,64 @@ function Row({ row, wide, dramaId }: { row: EpisodeRow; wide: boolean; dramaId: 
   );
 }
 
+/** Where an episode stands, as its card's chip says it. */
+function chipOf(row: EpisodeRow): { status: Status; label: TKey } {
+  switch (row.state) {
+    case "waiting":
+      return { status: "you", label: "board.filter.you" };
+    case "working":
+      return { status: "work", label: "board.filter.working" };
+    case "queued":
+      return { status: "line", label: "board.filter.queued" };
+    case "done":
+      return { status: "accepted", label: "board.done" };
+    case "stopped":
+      return { status: "back", label: "drama.stopped" };
+    default:
+      return { status: "failed", label: "status.failed" };
+  }
+}
+
 /**
- * One episode on the wall: its newest picture in the drama's own frame (a phone screen for
- * a vertical drama), its five stages as a strip, and what is happening now. An episode
- * waiting for the maker is marked in seal red and opens its review.
+ * One episode on the wall (the spec's EpisodeCard): its newest picture in the drama's own frame
+ * (a phone screen for a vertical drama) with its code, where it stands and its five stages as a
+ * strip, then its title, what is happening now and what it has spent. One waiting for the maker
+ * also has its own way straight to the review.
  */
 function Card({ row, wide, dramaId }: { row: EpisodeRow; wide: boolean; dramaId: string }) {
-  const { t } = useT();
+  const { t, lang } = useT();
   const resume = useAction(() => api(`/api/episodes/${row.id}/resume`, { method: "POST" }));
   const trouble = row.state === "stopped" || row.state === "failed";
-  const picture = (
-    <span className={`shot ${wide ? "wide" : ""} ${row.frame ? "" : "blank"}`}>
-      <Still still={row.frame} live />
-      {!row.frame && <span className="number">{String(row.number).padStart(2, "0")}</span>}
-      {row.state === "done" && <span className="flag done">{t("board.done")}</span>}
-    </span>
-  );
+  const chip = chipOf(row);
   return (
-    <div className={`episode ${row.state}`}>
-      {/* The card opens the episode; a waiting one also has its own way straight to the review. */}
-      <div className="shot-wrap">
-        <Link to={`/d/${dramaId}/e/${row.code}`} className="shot-link" aria-label={row.title ? `${row.code} · ${row.title}` : row.code}>
-          {picture}
-        </Link>
-        {row.state === "waiting" && row.reviewId && (
-          <Link to={`/r/${row.reviewId}`} className="flag">
-            {t("board.review")} →
-          </Link>
-        )}
-      </div>
-      <div className="caption">
+    <div className={`ds-epcard ${row.state}`}>
+      <Link to={`/d/${dramaId}/e/${row.code}`} className={`pic ${wide ? "wide" : ""}`} aria-label={row.title ? `${row.code} · ${row.title}` : row.code}>
+        <Still still={row.frame} live />
+        {!row.frame && <span className="empty">{String(row.number).padStart(2, "0")}</span>}
         <span className="code">{row.code}</span>
-        {row.title && <span className="title">{row.title}</span>}
-      </div>
-      <div className="strip" aria-hidden="true">
-        {STAGES.map((stage) => (
-          <span key={stage} className={row.stages[stage].state} title={t(`stage.${stage}` as TKey)} />
-        ))}
-      </div>
-      <div className={`now ${row.state === "waiting" ? "waiting" : trouble ? "trouble" : ""}`}>
-        {row.state === "working" && (
-          <span className="dots">
-            <i />
-            <i />
-            <i />
-          </span>
-        )}
+        <span className="chip">
+          <StatusChip status={chip.status} label={t(chip.label)} over />
+        </span>
+        <span className="strip" aria-hidden="true">
+          {STAGES.map((stage) => (
+            <i key={stage} className={STRIP[row.stages[stage].state]} title={t(`stage.${stage}` as TKey)} />
+          ))}
+        </span>
+      </Link>
+      <b>{row.title || row.code}</b>
+      <small>
         <span className="said" title={nowText(row, t)}>
           {nowText(row, t)}
         </span>
-      </div>
+        {row.spent.total > 0 && <span className="num">{moneyText(row.spent, t, lang)}</span>}
+      </small>
+      {row.state === "waiting" && row.reviewId && (
+        <Link to={`/r/${row.reviewId}`} className="ds-btn is-primary is-sm">
+          {t("board.review")}
+        </Link>
+      )}
       {trouble && (
-        <button className="link row-action" disabled={resume.busy} onClick={() => void resume.run()}>
+        <button className="ds-btn is-secondary is-sm" disabled={resume.busy} onClick={() => void resume.run()}>
           {t("board.resume")}
         </button>
       )}
@@ -144,6 +152,9 @@ function Card({ row, wide, dramaId }: { row: EpisodeRow; wide: boolean; dramaId:
     </div>
   );
 }
+
+/** A stage on the card's strip: done is solid, at work dashed, waiting for the maker in the warning's colour. */
+const STRIP: Record<StageCell["state"], string> = { done: "d", working: "w", review: "y", none: "" };
 
 type View = "wall" | "sheet";
 
@@ -183,35 +194,33 @@ export function Board({ drama }: { drama: DramaView }) {
   return (
     <>
       <div className="work-head">
-        <h2>{t("section.board")}</h2>
+        <h2>{t("step.episodes")}</h2>
         {rows.length > 0 && (
-          <div className="filters" role="group" aria-label={t("board.filter")}>
-            {(Object.keys(FILTERS) as Filter[]).map((key) => {
-              const n = rows.filter(FILTERS[key]).length;
-              return (
-                <button key={key} aria-pressed={filter === key} className={`${filter === key ? "on" : ""} ${key === "you" && n ? "needs" : ""}`} onClick={() => setFilter(key)}>
-                  {t(`board.filter.${key}` as TKey)} <span className="num">{n}</span>
-                </button>
-              );
-            })}
+          <div className="ds-fchips" role="group" aria-label={t("board.filter")}>
+            {(Object.keys(FILTERS) as Filter[]).map((key) => (
+              <button key={key} type="button" className="ds-fchip" aria-pressed={filter === key} onClick={() => setFilter(key)}>
+                {t(`board.filter.${key}` as TKey)} <small className="num">{rows.filter(FILTERS[key]).length}</small>
+              </button>
+            ))}
           </div>
         )}
         <span className="grow" />
         {rows.length > 0 && (
-          <div className="views" role="group" aria-label={t("board.view")}>
-            <button aria-pressed={view === "wall"} className={view === "wall" ? "on" : ""} onClick={() => choose("wall")}>
-              {t("board.wall")}
-            </button>
-            <button aria-pressed={view === "sheet"} className={view === "sheet" ? "on" : ""} onClick={() => choose("sheet")}>
-              {t("board.sheet")}
-            </button>
-          </div>
+          <Segmented
+            label={t("board.view")}
+            value={view}
+            onChange={choose}
+            options={[
+              { value: "wall", label: t("board.wall"), icon: "squares-four" },
+              { value: "sheet", label: t("board.sheet"), icon: "list" },
+            ]}
+          />
         )}
       </div>
       {!rows.length ? (
         <p className="empty-note">{t("board.empty")}</p>
       ) : view === "wall" ? (
-        <div className={`wall ${wide ? "wide" : ""}`}>
+        <div className={`ds-epgrid ${wide ? "wide" : ""}`}>
           {shown.map((row) => (
             <Card key={row.id} row={row} wide={wide} dramaId={drama.id} />
           ))}
@@ -299,7 +308,7 @@ function ChooseInputs({ drama }: { drama: DramaView }) {
 export function SetupPanel({ drama }: { drama: DramaView }) {
   const { t } = useT();
   const { setup } = drama;
-  const retry = useAction(() => api(`/api/dramas/${drama.id}/retry`, { method: "POST" }));
+  const retry = useAction(() => api(`/api/dramas/${drama.id}/resume`, { method: "POST" }));
   const rehearse = useAction(() => api(`/api/dramas/${drama.id}/rehearse`, { method: "POST" }));
   // Reading, answering, drawing the leads, approving them; then pre-production: preparing every
   // episode (breakdowns and shared references), and approving the shared references. A plain
@@ -314,7 +323,7 @@ export function SetupPanel({ drama }: { drama: DramaView }) {
       : setup.reached === 3 || setup.reached === 1
         ? setup.reached + 1
         : setup.reached;
-  const steps: TKey[] = ["setup.reading", "setup.answers", "setup.cast", "setup.approval", "setup.preparing", "setup.references"];
+  const steps = SETUP_STEPS;
   const detail =
     setup.state === "stopped"
       ? setup.reason

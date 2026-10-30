@@ -20,12 +20,16 @@ import { appInfo, connectPine, disconnect, useReplay } from "./connection.ts";
 import { retryStarts } from "./computers.ts";
 import { DEFAULT_ENDPOINT } from "./settings.ts";
 import { all } from "./db.ts";
-import { chat, chooseInputs, createDrama, desktop, finishEpisode, rehearse, resumeEpisode, retrySetup, stopDrama, updateDrama } from "./dramas.ts";
+import { chat, chooseInputs, createDrama, desktop, finishEpisode, rehearse, resumeEpisode, stopDrama, updateDrama, resumeDrama, stopEpisode } from "./dramas.ts";
 import { StudioError } from "./errors.ts";
+import { STORIES } from "./replay-fleet.ts";
 import { fileRow, openBlob, save, toItem } from "./library.ts";
-import { subscribe } from "./live.ts";
+import { publish, subscribe } from "./live.ts";
 import { drama as dramaRow, review as reviewRow, session as sessionRow, type SessionRow } from "./records.ts";
 import { decide, resumeWithDecision } from "./reviews.ts";
+import { lineageView } from "./lineage.ts";
+import { forgetPositions, positionsOf, readPositions, replacePositions } from "./canvas.ts";
+import { projectView, sessionStatus } from "./status.ts";
 import { castCards, deliveryRows, episodePage, scriptPage, seasonEntries } from "./browse.ts";
 import { diagnostics } from "./diagnostics.ts";
 import { zipLength, zipStream } from "./zip.ts";
@@ -164,16 +168,19 @@ export function app(): Hono {
     }
   });
 
-  // A drama from the bundled sample screenplay, so the studio can be tried in one click: played
+  // A drama from the bundled sample screenplay, so the studio can be tried in one click (`sample`
+  // picks another of replay's sample dramas, replay-fleet.ts STORIES, by id): played
   // back in replay, and on a Pine project rehearsed, with Pine's agent standing in for the skill.
   api.post("/api/dramas/sample", async (c) => {
     try {
       const mode = currentMode();
-      const { language } = (await c.req.json().catch(() => ({}))) as { language?: string };
+      const { language, sample = Object.keys(STORIES)[0] } = (await c.req.json().catch(() => ({}))) as { language?: string; sample?: string };
       const zh = language !== "en";
+      const story = STORIES[sample];
+      if (!story) throw new StudioError("sample-unknown", `No sample drama "${sample}"; there are ${Object.keys(STORIES).join(", ")}.`);
       const name = `sample-screenplay.${zh ? "zh" : "en"}.md`;
       const id = await createDrama({
-        title: zh ? "后妈来了" : "The Stepmother",
+        title: story[zh ? "zh" : "en"].title,
         language: zh ? "zh" : "en",
         format: "9:16, 480p",
         parallel: 3,
@@ -206,9 +213,9 @@ export function app(): Hono {
     }
   });
 
-  api.post("/api/dramas/:id/retry", (c) => {
+  api.post("/api/dramas/:id/resume", (c) => {
     try {
-      retrySetup(c.req.param("id"));
+      resumeDrama(c.req.param("id"));
       return c.json({ ok: true });
     } catch (error) {
       return fail(c, error);
@@ -248,6 +255,21 @@ export function app(): Hono {
     return c.json({ ok: true });
   });
 
+  api.get("/api/dramas/:id/project", (c) => {
+    const id = c.req.param("id");
+    return dramaRow(id) ? c.json(projectView(id)) : c.json(failure("not-found", "No such drama."), 404);
+  });
+  // Where each version of the drama's project came from, drama-cli's lineage merged from its sessions (lineage.ts).
+  api.get("/api/dramas/:id/lineage", (c) => {
+    const id = c.req.param("id");
+    return dramaRow(id) ? c.json(lineageView(id)) : c.json(failure("not-found", "No such drama."), 404);
+  });
+  // A session's newest status report as the engine read it: what the project view takes from it.
+  api.get("/api/sessions/:id/status", (c) => {
+    const id = c.req.param("id");
+    if (!sessionRow(id)) return c.json(failure("not-found", "No such session."), 404);
+    return c.json(sessionStatus(id) ?? null);
+  });
   api.get("/api/dramas/:id/cast", (c) => c.json(castCards(c.req.param("id"))));
   api.get("/api/dramas/:id/script", (c) => c.json(scriptPage(c.req.param("id"))));
   api.get("/api/dramas/:id/delivery", (c) => c.json(deliveryRows(c.req.param("id"))));
@@ -275,6 +297,31 @@ export function app(): Hono {
     return page ? c.json(page) : c.json(failure("not-found", "No such episode."), 404);
   });
   // A picture the maker adds to a review note: a face to use, a costume, a place to match.
+  // Where the maker moved the canvas's nodes, per episode (canvas.ts): view state only.
+  api.get("/api/dramas/:id/canvas/:episode", (c) => {
+    const id = c.req.param("id");
+    return dramaRow(id) ? c.json({ positions: positionsOf(id, c.req.param("episode")) }) : c.json(failure("not-found", "No such drama."), 404);
+  });
+  api.put("/api/dramas/:id/canvas/:episode", async (c) => {
+    try {
+      const id = c.req.param("id");
+      if (!dramaRow(id)) return c.json(failure("not-found", "No such drama."), 404);
+      const episode = c.req.param("episode");
+      replacePositions(id, episode, readPositions(await c.req.json().catch(() => null), episode));
+      publish(`drama:${id}`);
+      return c.json({ ok: true });
+    } catch (error) {
+      return fail(c, error);
+    }
+  });
+  api.delete("/api/dramas/:id/canvas/:episode", (c) => {
+    const id = c.req.param("id");
+    if (!dramaRow(id)) return c.json(failure("not-found", "No such drama."), 404);
+    forgetPositions(id, c.req.param("episode"));
+    publish(`drama:${id}`);
+    return c.json({ ok: true });
+  });
+
   api.post("/api/dramas/:id/references", async (c) => {
     try {
       const drama = dramaRow(c.req.param("id"));
@@ -300,6 +347,15 @@ export function app(): Hono {
   api.post("/api/episodes/:id/finish", async (c) => {
     try {
       await finishEpisode(c.req.param("id"));
+      return c.json({ ok: true });
+    } catch (error) {
+      return fail(c, error);
+    }
+  });
+
+  api.post("/api/episodes/:id/stop", async (c) => {
+    try {
+      await stopEpisode(c.req.param("id"));
       return c.json({ ok: true });
     } catch (error) {
       return fail(c, error);

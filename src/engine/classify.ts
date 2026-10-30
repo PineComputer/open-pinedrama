@@ -30,6 +30,8 @@ const RULES: [RegExp, (m: RegExpMatchArray) => Hints][] = [
   [/(?:^|\/)handoff\/lineage\.json$/i, () => ({ kind: "lineage" })],
   [/(?:^|\/)handoff\/refusals\.jsonl$/i, () => ({ kind: "refusal" })],
   [new RegExp(String.raw`episodes/(EP\d+)/edit/${VER}/[^/]+${VIDEO}`, "i"), (m) => ({ kind: "cut", episode: m[1], version: m[2] })],
+  // The plan drama-cli builds a cut from, written beside it (short_drama drama_cli/edit.py, `build`).
+  [new RegExp(String.raw`episodes/(EP\d+)/edit/${VER}/cut\.json$`, "i"), (m) => ({ kind: "cut-plan", episode: m[1], version: m[2] })],
   [new RegExp(String.raw`episodes/(EP\d+)/segments/${SEG}/(t\d+)/[^/]+${VIDEO}`, "i"), (m) => ({ kind: "take", episode: m[1], segment: m[2], version: m[3] })],
   [
     new RegExp(String.raw`episodes/(EP\d+)/multi_panel_storyboard/${SEG}/([^/]+)/${VER}/${OUTPUT}`, "i"),
@@ -135,6 +137,8 @@ const TYPES: Record<string, string> = {
   md: "text/markdown",
   markdown: "text/markdown",
   json: "application/json",
+  // JSON Lines: "MIME type may be application/jsonl, but this is not yet standardized" (jsonlines.org); a stop's refusals come as handoff/refusals.jsonl.
+  jsonl: "application/jsonl",
   txt: "text/plain",
   // Fountain is plain text (fountain.io/syntax); drama-cli writes a screenplay as screenplay.fountain.
   fountain: "text/plain",

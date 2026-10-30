@@ -108,6 +108,8 @@ describe("browsing", () => {
   it("shows the newest screenplay version and its review, waiting while its question is open", () => {
     const current = browse.scriptPage("d1").screenplay!;
     expect([current.version, current.file?.id, current.review?.id, current.pending]).toEqual(["v2", 6, 7, true]);
+    // The open review that asks about it, for the maker to answer beside the rewrite (P5.4).
+    expect(current.reviewId).toBe("r3");
   });
 
   it("names the screenplay the maker marked, for the rewrite to be set beside it", () => {

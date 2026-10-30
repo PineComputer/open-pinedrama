@@ -165,6 +165,44 @@ create table if not exists messages (
   unique (session_id, ref)
 );
 
+-- drama-cli's status report each stop returns (status.ts): the report as it came, or why it didn't read.
+create table if not exists statuses (
+  turn_id text primary key,
+  session_id text not null,
+  report text,
+  error text,
+  saved_at text not null
+);
+
+-- drama-cli's lineage each stop returns (lineage.ts): the export as it came, or why it didn't read.
+create table if not exists lineages (
+  turn_id text primary key,
+  session_id text not null,
+  export text,
+  error text,
+  saved_at text not null
+);
+
+-- The drama-cli refusals a stop asks about (refusals.ts): the file as it came, or why it didn't read.
+create table if not exists refusals (
+  turn_id text primary key,
+  session_id text not null,
+  lines text,
+  error text,
+  saved_at text not null
+);
+
+-- Where the maker moved the canvas's nodes (canvas.ts): view state, never production state.
+create table if not exists canvas_positions (
+  drama_id text not null,
+  episode text not null,
+  node_id text not null,
+  x real not null,
+  y real not null,
+  updated_at text not null,
+  primary key (drama_id, episode, node_id)
+);
+
 create index if not exists files_episode on files (episode_id, id);
 create index if not exists files_drama_kind on files (drama_id, kind, id);
 create index if not exists files_turn on files (turn_id);

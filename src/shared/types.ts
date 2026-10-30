@@ -1,5 +1,7 @@
 // What the engine and the UI agree on: the shapes the HTTP API returns and accepts.
 
+import type { Refusal } from "./refusal.ts";
+
 export type Mode = "pine" | "replay";
 
 /** What went wrong, for the UI to say in the maker's language (src/engine/errors.ts). */
@@ -10,10 +12,12 @@ export type ErrorCode =
   | "screenplay-language-missing"
   | "preset-missing"
   | "preset-unknown"
+  | "sample-unknown"
   | "length-missing"
   | "file-too-large"
   | "not-found"
   | "episode-busy"
+  | "episode-not-running"
   | "drama-not-stopped"
   | "drama-done"
   | "drama-not-held"
@@ -34,6 +38,7 @@ export type ErrorCode =
   | "review-not-ended"
   | "setup-restarts"
   | "endpoint-invalid"
+  | "invalid-positions"
   | "key-missing"
   | "key-rejected"
   | "pine-unreachable"
@@ -82,6 +87,8 @@ export type FileKind =
   | "storyboard"
   | "take"
   | "cut"
+  /** drama-cli's plan of a cut, beside it (edit/vN/cut.json): each clip's take, with its in and out. */
+  | "cut-plan"
   /** A cut's subtitles: its lines and cards, timed, beside the picture (cut.srt). */
   | "subtitles"
   | "observation"
@@ -121,6 +128,8 @@ export interface AppInfo {
   version: string;
   dataDir: string;
   project?: { endpoint: string; keyHint: string; fromEnvironment: boolean };
+  /** Computers still being stopped: quitting now would leave them running until the next start or Pine's idle timeout. */
+  stopping: number;
   /** Whether the project offers Pine's drama skill, as its Computers last said; absent until one has. */
   dramaSkill?: "offered" | "missing";
 }
@@ -142,7 +151,20 @@ export interface FileItem {
   version?: string;
   url: string;
   createdAt: string;
+  /** A cut's clips, from the cut.json beside it; none when no cut.json came with the cut. */
+  cutPlan?: CutPlan;
 }
+
+/** One clip of a cut: a segment's take, and where it starts and ends in the cut, in seconds. */
+export interface CutClip {
+  segment: string;
+  take: string;
+  start: number;
+  end: number;
+}
+
+/** A cut's clips as drama-cli's plan of it lists them, with the cut's frame rate, or why that plan doesn't read. */
+export type CutPlan = { clips: CutClip[]; fps: number } | { error: string };
 
 /** What work has cost so far at the project's rates: every turn of its agents, generated video included. */
 export interface Spend {
@@ -326,6 +348,10 @@ export interface ReviewView extends ReviewSummary {
   nextId?: string;
   /** An episode's plain question while it has a cut: the maker may call the episode finished instead of answering. */
   finishable?: boolean;
+  /** The drama-cli refusals the stop asks about, as the stop returned them; none for a stop that isn't about one. */
+  refusals: Refusal[];
+  /** Why the stop's refusals didn't read, when they didn't. */
+  refusalsError?: string;
 }
 
 export interface ChatMessage {
@@ -402,7 +428,7 @@ export interface ScriptPage {
   /** The input the maker marked as the screenplay, the original a rewrite is set beside. */
   screenplayFile: number | null;
   /** The newest screenplay version drama-cli recorded, its review when it is a rewrite, and whether a question still waits on it. */
-  screenplay?: { version: string; file?: FileItem; review?: FileItem; pending: boolean };
+  screenplay?: { version: string; file?: FileItem; review?: FileItem; pending: boolean; /** The open review that asks about it, to answer beside the rewrite. */ reviewId?: string };
   bible?: FileItem;
   breakdowns: { code: string; title?: string; file: FileItem }[];
 }

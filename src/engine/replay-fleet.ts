@@ -3,13 +3,19 @@
 // answer plays the next recorded turn, and an answer that asks for revisions replays the
 // redraw of what it names. It lives in memory, so a restarted engine finds its Computers
 // gone, as it would after a real stop.
+import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
+import type { Refusal } from "../shared/refusal.ts";
 import path from "node:path";
+import { typeOf } from "./classify.ts";
 import { FIXTURES } from "./config.ts";
 import { revisedKeys } from "./decisions.ts";
 import { DRAMA_SKILL } from "./goals.ts";
 import type { Attached, ComputerRef, Fleet, FleetEvent, Limits, SessionRef, TurnFile, TurnInfo } from "./fleet.ts";
 import { blocking, lookSheet, plate, prop, storyboard } from "./placeholders.ts";
+import { samplesFrom } from "./replay-samples.ts";
+import { replayLineage } from "./replay-lineage.ts";
+import { type EpisodeMade, type Made, type ReplayProgress, replayStatus } from "./replay-status.ts";
 
 const SPEED = Number(process.env.STUDIO_REPLAY_SPEED ?? 1);
 
@@ -56,6 +62,71 @@ const text = (s: string) => new TextEncoder().encode(s);
 const svg = (p: string, body: string): Out => ({ path: p, type: "image/svg+xml", bytes: text(body) });
 const video = (p: string, name: "take" | "cut"): Out => ({ path: p, type: "video/mp4", bytes: readFileSync(path.join(FIXTURES, `${name}.mp4`)) });
 
+const sample = samplesFrom(path.join(FIXTURES, "samples"));
+/** A picture: the sample for its path, where there is one, else the placeholder drawn for it. */
+const art = (set: string, p: string, body: string): Out => sample(set, p) ?? svg(p, body);
+/** A clip: the sample for its path, else the take's or the cut's placeholder clip. */
+const clip = (set: string, p: string, name: "take" | "cut"): Out => sample(set, p) ?? video(p, name);
+/** A story's pictures in samples.json: the first sample's by language, the others' by id. */
+const pictures = (id: string, lang: Lang) => (id === Object.keys(STORIES)[0] ? lang : id);
+
+/**
+ * How long an MP4 plays, in seconds, from its movie header: duration over timescale, 32-bit fields
+ * in a version 0 box and 64-bit in a version 1 (ISO/IEC 14496-12, 8.2.2, MovieHeaderBox).
+ */
+export function mp4Seconds(bytes: Uint8Array): number {
+  const at = Buffer.from(bytes.buffer, bytes.byteOffset, bytes.byteLength).indexOf("mvhd");
+  if (at < 4) throw new Error("This MP4 has no movie header (mvhd).");
+  const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+  const box = at + 4;
+  return view.getUint8(box) === 1
+    ? Number(view.getBigUint64(box + 24)) / view.getUint32(box + 20)
+    : view.getUint32(box + 16) / view.getUint32(box + 12);
+}
+
+/**
+ * A replayed cut's plan, in drama-cli's form (short_drama drama_cli/edit.py, `build`): each segment's
+ * newest take, in order, as replay returned it, each trimmed to an equal share of the cut replay returns.
+ */
+export function cutPlan(p: string, code: string, cut: Out, takes: { segment: string; take: string; bytes: Uint8Array }[]): Out {
+  const share = mp4Seconds(cut.bytes) / takes.length;
+  const clips = takes.map(({ segment, take, bytes }) => ({
+    path: `episodes/${code}/segments/${segment}/${take}/video.mp4`,
+    sha256: createHash("sha256").update(bytes).digest("hex"),
+    in: 0,
+    out: share,
+    audio: "source",
+  }));
+  // Replay's clips, the placeholders and the samples alike, are 24 frames a second; the size is the samples' (the studio reads only the rate).
+  const output = { width: 480, height: 854, fps: 24 };
+  return { path: p, type: typeOf("cut.json"), bytes: text(JSON.stringify({ schema_version: 1, episode: code, output, clips })) };
+}
+
+/** The refusals a stop asks about, one JSON line each, as drama-cli prints them (goals.ts RETURN_REFUSALS). */
+const refusals = (list: Refusal[]): Out => ({ path: "handoff/refusals.jsonl", type: typeOf("refusals.jsonl"), bytes: text(list.map((error) => `${JSON.stringify({ error })}\n`).join("")) });
+
+/** The bible's red line, as drama-cli refuses a bible for one (stages.py, RedLine; drama-cli v0.7.4). */
+const redLine = (line: string): Refusal => ({
+  code: "RedLine",
+  message: `Bible v1 is not usable: red line: ${line}; report it to the person and pass their decision back with drama-cli bible --config drama/drama-cli.cfg.yaml --episodes EP001-EP006 --feedback "<their decision>"`,
+  param: null,
+  action: "ask_person",
+});
+
+/** The replayed project's shoot.max_new_takes: the new takes of a segment past its first that drama-cli shoots. */
+const MAX_NEW_TAKES = 2;
+
+/**
+ * The take cap's refusal, as drama-cli words it, with the code it should have (short_drama #664;
+ * drama-cli v0.7.4 refuses it as a bare Refused).
+ */
+const takeCap = (seg: string): Refusal => ({
+  code: "SetLimitExceeded.max_new_takes",
+  message: `${seg} has had ${MAX_NEW_TAKES} new paid takes, the limit shoot.max_new_takes (${MAX_NEW_TAKES}); ask the person before shooting it again`,
+  param: "shoot.max_new_takes",
+  action: "ask_person",
+});
+
 type Lang = "zh" | "en";
 
 /** The drama's language, from the goal's brief ("Language: Chinese."), as the real agent would read it. */
@@ -63,29 +134,95 @@ function languageOf(goal: string): Lang {
   return /summaries in Chinese/i.test(goal) ? "zh" : "en";
 }
 
-/** Everything the recorded agent says, in both languages. */
-const WORDS = {
+/** A word or line in both languages, as fixtures/replay/dramas.json gives it. */
+type Both<T> = Record<Lang, T>;
+
+/**
+ * A sample drama as fixtures/replay/dramas.json states it: its title; its cast, the first two its
+ * leads, each with its further looks; its places, each with the times of day drawn apart; its
+ * props; and its episodes, each with its segments' shots. Every replayed drama plays the same
+ * recording; only these and its pictures (fixtures/replay/samples/samples.json) differ.
+ */
+interface DramaData {
+  title: Both<string>;
+  cast: { id: string; name: Both<string>; short: Both<string>; looks?: string[] }[];
+  places: { id: string; name: Both<string>; times?: string[] }[];
+  props: { id: string; name: Both<string> }[];
+  episodes: { title: Both<string>; segments: { id: string; shots: Both<string[]> }[] }[];
+  /** The bible's red line, when the setup stops on one: drama-cli refuses the bible for it (RedLine). */
+  redLine?: Both<string>;
+}
+
+/** A sample drama in one language. */
+interface Story {
+  title: string;
+  cast: { id: string; name: string; short: string; looks: string[] }[];
+  places: { id: string; name: string; times: string[] }[];
+  props: { id: string; name: string }[];
+  episodes: { title: string; segments: { id: string; shots: string[] }[] }[];
+  redLine?: string;
+}
+
+const inLanguage = (d: DramaData, lang: Lang): Story => ({
+  title: d.title[lang],
+  cast: d.cast.map((c) => ({ id: c.id, name: c.name[lang], short: c.short[lang], looks: c.looks ?? [] })),
+  places: d.places.map((p) => ({ id: p.id, name: p.name[lang], times: p.times ?? [] })),
+  props: d.props.map((p) => ({ id: p.id, name: p.name[lang] })),
+  episodes: d.episodes.map((e) => ({ title: e.title[lang], segments: e.segments.map((s) => ({ id: s.id, shots: s.shots[lang] })) })),
+  ...(d.redLine ? { redLine: d.redLine[lang] } : {}),
+});
+
+/** An episode's code by its place in the drama, as drama-cli numbers them. */
+const codeOf = (i: number) => `EP${String(i + 1).padStart(3, "0")}`;
+
+/**
+ * The shared references the setup draws after the leads, by the key the maker names each by:
+ * every other character's base look, every further look, every place and its other times, and
+ * every prop, each with its asset path and its placeholder.
+ */
+interface Shared {
+  key: string;
+  path: string;
+  draw: (version: string) => string;
+}
+
+function sharedOf(s: Story): Shared[] {
+  return [
+    ...s.cast.slice(2).map((c) => ({ key: c.id, path: `assets/characters/${c.id}`, draw: (v: string) => lookSheet(c.name, "base", v) })),
+    ...s.cast.flatMap((c) => c.looks.map((look) => ({ key: `${c.id}/${look}`, path: `assets/characters/${c.id}/states/${look}`, draw: (v: string) => lookSheet(c.name, look, v) }))),
+    ...s.places.flatMap((place) => [
+      { key: place.id, path: `assets/scenes/${place.id}`, draw: (v: string) => plate(place.id, v) },
+      ...place.times.map((time) => ({ key: `${place.id}/${time}`, path: `assets/scenes/${place.id}/times/${time}`, draw: (v: string) => plate(`${place.id} ${time}`, v) })),
+    ]),
+    ...s.props.map((item) => ({ key: item.id, path: `assets/props/${item.id}`, draw: (v: string) => prop(item.id, v) })),
+  ];
+}
+
+/** "3 looks", "1 look": a count with its noun. */
+const count = (n: number, noun: string) => `${n} ${noun}${n === 1 ? "" : "s"}`;
+
+type Say = ReturnType<typeof words>["en"];
+
+/** What the recording says, in the drama's language, with its story's names. */
+const words = (s: Story) => {
+  // The leads, and how many shared references of each kind the setup draws after them.
+  const [a, b] = s.cast;
+  const looks = s.cast.length - 2 + s.cast.reduce((n, c) => n + c.looks.length, 0);
+  const plates = s.places.reduce((n, place) => n + 1 + place.times.length, 0);
+  return {
   en: {
-    cast: [
-      { id: "lin", name: "Lin Xiaoyu" },
-      { id: "wei", name: "Wei Zhen" },
-    ],
-    shots: [
-      ["Lin enters the yard", "Wei: You're late.", "Lin hides the letter", "Close on the torn letter", "Wei turns away", "Lin alone"],
-      ["The family at dinner", "Mother: Eat.", "Lin watches Wei", "Wei pushes the bowl away"],
-      ["Night, the yard", "Lin reads the letter", "Wei at the window", "Their eyes meet", "Lin burns the letter"],
-    ],
-    episodes: ["The stepmother arrives", "The letter", "Dinner", "The wedding dress", "Night market", "The truth"],
+    cast: s.cast.map((c) => ({ id: c.id, name: c.name })),
+    episodes: s.episodes.map((e) => e.title),
     reading: ["Reading the screenplay and the notes", "Checking every character's age and gender"],
-    askAge: "The screenplay doesn't give Wei Zhen's age. How old is he, and should he read older than Lin Xiaoyu?",
-    drawing: ["Writing the bible", "Drawing Lin Xiaoyu's face and base look", "Drawing Wei Zhen's face and base look"],
+    askAge: `The screenplay doesn't give ${b.name}'s age. How old is he, and should he read older than ${a.name}?`,
+    drawing: ["Writing the bible", `Drawing ${a.name}'s face and base look`, `Drawing ${b.name}'s face and base look`],
     redrawLook: (name: string) => `Redrawing ${name}'s look`,
-    askLooks: "The leads' looks are ready for your approval: Lin Xiaoyu and Wei Zhen. The observer noted that Wei Zhen's jacket reads darker than the bible describes.",
+    askLooks: `The leads' looks are ready for your approval: ${a.name} and ${b.name}. The observer noted that ${b.name}'s jacket reads darker than the bible describes.`,
     askRedrawn: (names: string[]) => `I redrew ${names.join(" and ")}. Please look again.`,
     finishing: ["Recording your approval of the leads' looks", "Finishing the shared references"],
-    preparing: ["Writing every episode's breakdown", "Drawing Lin Xiaoyu's wedding look", "Drawing the location plates", "Drawing the key prop", "Checking the shared references"],
+    preparing: ["Writing every episode's breakdown", "Drawing the other characters and every further look", "Drawing the location plates", "Drawing the key props", "Checking the shared references"],
     askReferences: (n: number) =>
-      `Every episode is prepared: ${n} breakdowns are accepted. These shared references are ready for your approval: Lin Xiaoyu's wedding look, two locations and the letter.`,
+      `Every episode is prepared: ${n} breakdowns are accepted. These shared references are ready for your approval: ${count(looks, "look")}, ${count(plates, "location plate")} and ${count(s.props.length, "prop")}.`,
     redrawReference: (key: string) => `Redrawing ${key}`,
     askReferencesAgain: (keys: string[]) => `I redrew ${keys.join(", ")}. Please look again.`,
     packing: ["Packing the project for the episodes"],
@@ -98,6 +235,8 @@ const WORDS = {
     askTakes: "Takes are in for every segment. seg02 and seg03 have dialogue the observer couldn't hear; please check them.",
     reshoot: (seg: string) => `Shooting another take of ${seg}`,
     askTakesAgain: (segs: string[]) => `New takes for ${segs.join(", ")}. Please check them.`,
+    askTakeCap: (segs: string[]) =>
+      `drama-cli won't shoot another take of ${segs.join(" or ")}: each has had ${MAX_NEW_TAKES} new takes, the limit shoot.max_new_takes. Shall I raise the limit for ${segs.length > 1 ? "them" : "it"}, or will you choose from the takes you have?`,
     cutting: ["Planning the cut", "Building the cut", "Checking the cut"],
     askCut: (code: string) => `The cut of ${code} is ready. Please watch it.`,
     recutting: ["Revising the cut"],
@@ -106,42 +245,34 @@ const WORDS = {
     finished: (code: string) => `${code} is finished: the cut is accepted.`,
     readingMessage: ["Reading your message"],
     noted: (goal: string) => `Noted: ${goal.slice(0, 200)}`,
-    bible: `# Stepmother in the 80s — bible (placeholder)
-
-## Characters
-- **Lin Xiaoyu**, 26, female — the new stepmother. Looks: S0 everyday, S1 wedding.
-- **Wei Zhen**, 32, male — the eldest son. Looks: S0 everyday.
-
-## Locations
-- **home** — a courtyard house, 1983.
-- **office** — the factory office.
-
-## Key props
-- **letter** — the torn letter Lin hides.
-`,
+    title: s.title,
+    places: Object.fromEntries(s.places.map((place) => [place.id, place.name])),
+    props: Object.fromEntries(s.props.map((item) => [item.id, item.name])),
+    bible: [
+      `# ${s.title} — bible (placeholder)`,
+      "\n## Characters",
+      ...s.cast.map((c, i) => `- **${c.name}**${i < 2 ? ", a lead" : ""}. Looks: S0 everyday${c.looks.map((look) => `, ${look}`).join("")}.`),
+      "\n## Locations",
+      ...s.places.map((place) => `- **${place.id}** — ${place.name}.`),
+      "\n## Key props",
+      ...s.props.map((item) => `- **${item.id}** — ${item.name}.`),
+    ].join("\n") + "\n",
+    askRedLine: (line: string) => `drama-cli won't accept the bible: the screenplay has a red line, ${line}. It's yours to decide: shall I write the bible without it, or stop here?`,
     breakdownTitle: (code: string) => `# ${code} — breakdown (placeholder)`,
     shot: (n: number, text: string) => `- Shot ${n}: ${text}`,
   },
   zh: {
-    cast: [
-      { id: "lin", name: "林晓雨" },
-      { id: "wei", name: "魏振" },
-    ],
-    shots: [
-      ["林晓雨走进院子", "魏振：你来晚了。", "林晓雨藏起那封信", "特写：撕破的信", "魏振转身离开", "林晓雨独自站着"],
-      ["一家人吃晚饭", "母亲：吃饭。", "林晓雨看着魏振", "魏振推开饭碗"],
-      ["夜，院子里", "林晓雨读信", "魏振站在窗边", "两人对视", "林晓雨烧掉那封信"],
-    ],
-    episodes: ["后妈进门", "一封信", "晚饭", "嫁衣", "夜市", "真相"],
+    cast: s.cast.map((c) => ({ id: c.id, name: c.name })),
+    episodes: s.episodes.map((e) => e.title),
     reading: ["阅读剧本和备注", "核对每个角色的年龄和性别"],
-    askAge: "剧本里没有写魏振的年龄。他多大？要不要显得比林晓雨年长？",
-    drawing: ["编写设定集", "绘制林晓雨的面部和基础造型", "绘制魏振的面部和基础造型"],
+    askAge: `剧本里没有写${b.name}的年龄。他多大？要不要显得比${a.name}年长？`,
+    drawing: ["编写设定集", `绘制${a.name}的面部和基础造型`, `绘制${b.name}的面部和基础造型`],
     redrawLook: (name: string) => `重新绘制${name}的造型`,
-    askLooks: "主角造型已完成，请审定：林晓雨和魏振。观察员注意到，魏振的外套比设定集里描述的颜色更深。",
+    askLooks: `主角造型已完成，请审定：${a.name}和${b.name}。观察员注意到，${b.name}的外套比设定集里描述的颜色更深。`,
     askRedrawn: (names: string[]) => `我重新绘制了${names.join("和")}，请再看一下。`,
     finishing: ["记录你对主角造型的确认", "完成共用参考"],
-    preparing: ["撰写每一集的拆分", "绘制林晓雨的婚礼造型", "绘制场景", "绘制关键道具", "检查共用参考"],
-    askReferences: (n: number) => `每一集都已准备好：${n} 集拆分已确认。以下共用参考请你审定：林晓雨的婚礼造型、两个场景和那封信。`,
+    preparing: ["撰写每一集的拆分", "绘制其他角色和每一套造型", "绘制场景", "绘制关键道具", "检查共用参考"],
+    askReferences: (n: number) => `每一集都已准备好：${n} 集拆分已确认。以下共用参考请你审定：${looks} 套造型、${plates} 个场景和 ${s.props.length} 个道具。`,
     redrawReference: (key: string) => `重画 ${key}`,
     askReferencesAgain: (keys: string[]) => `我重画了 ${keys.join("、")}，请再看一下。`,
     packing: ["打包项目，交给各集"],
@@ -154,6 +285,7 @@ const WORDS = {
     askTakes: "每一段的镜头都已拍好。seg02 和 seg03 有观察员听不清的台词，请你检查。",
     reshoot: (seg: string) => `重拍 ${seg}`,
     askTakesAgain: (segs: string[]) => `${segs.join("、")} 的新镜头已拍好，请检查。`,
+    askTakeCap: (segs: string[]) => `drama-cli 不再给 ${segs.join("、")} 拍新镜头：每段已重拍 ${MAX_NEW_TAKES} 次，到了上限 shoot.max_new_takes。要我为它们调高上限，还是你从已有的镜头里选？`,
     cutting: ["规划剪辑", "剪辑成片", "检查成片"],
     askCut: (code: string) => `${code} 的成片已完成，请观看。`,
     recutting: ["修改成片"],
@@ -162,31 +294,61 @@ const WORDS = {
     finished: (code: string) => `${code} 已完成：成片已通过。`,
     readingMessage: ["阅读你的消息"],
     noted: (goal: string) => `收到：${goal.slice(0, 200)}`,
-    bible: `# 后妈来了 · 设定集（示例）
-
-## 角色
-- **林晓雨**，26 岁，女，新来的后妈。造型：S0 日常，S1 婚礼。
-- **魏振**，32 岁，男，家中长子。造型：S0 日常。
-
-## 场景
-- **home**：1983 年的四合院。
-- **office**：工厂办公室。
-
-## 关键道具
-- **letter**：林晓雨藏起的那封撕破的信。
-`,
+    title: s.title,
+    places: Object.fromEntries(s.places.map((place) => [place.id, place.name])),
+    props: Object.fromEntries(s.props.map((item) => [item.id, item.name])),
+    bible: [
+      `# ${s.title} · 设定集（示例）`,
+      "\n## 角色",
+      ...s.cast.map((c, i) => `- **${c.name}**${i < 2 ? "，主角" : ""}。造型：S0 日常${c.looks.map((look) => `，${look}`).join("")}。`),
+      "\n## 场景",
+      ...s.places.map((place) => `- **${place.id}**：${place.name}。`),
+      "\n## 关键道具",
+      ...s.props.map((item) => `- **${item.id}**：${item.name}。`),
+    ].join("\n") + "\n",
+    askRedLine: (line: string) => `drama-cli 不接受这版设定集：剧本里有一条红线，${line}。这由你决定：我把它去掉后再写设定集，还是就此停下？`,
     breakdownTitle: (code: string) => `# ${code} 拆分（示例）`,
     shot: (n: number, text: string) => `- 镜头 ${n}：${text}`,
   },
+  };
 };
+
+/** The sample dramas replay plays, by id (fixtures/replay/dramas.json); the first is the one New drama's sample starts. Names are invented. */
+export const STORIES: Record<string, Record<Lang, Story>> = Object.fromEntries(
+  Object.entries(JSON.parse(readFileSync(path.join(FIXTURES, "dramas.json"), "utf8")) as Record<string, DramaData>).map(([id, d]) => [id, { en: inLanguage(d, "en"), zh: inLanguage(d, "zh") }]),
+);
+
+/** The story a goal's drama tells, by the title its brief gives (goals.ts brief: "Title: …."); the first sample's for any other. */
+function storyOf(goal: string, lang: Lang): { id: string; story: Story } {
+  const title = goal.match(/Title: (.+?)\.(?: |\n|$)/)?.[1];
+  const found = Object.entries(STORIES).find(([, story]) => story[lang].title === title);
+  const [id, story] = found ?? Object.entries(STORIES)[0];
+  return { id, story: story[lang] };
+}
+
+/**
+ * The bible.json a stop returns with the bible, for the names a screen reads (shared/names.ts):
+ * replay keeps only those of drama-cli's Bible fields, as its bible.md is a placeholder too.
+ */
+const bibleJson = (say: Say): Out => ({
+  path: "drama/bible/v1/bible.json",
+  type: "application/json",
+  bytes: text(
+    JSON.stringify({
+      title: say.title,
+      characters: say.cast.map((c) => ({ id: c.id, name: c.name, aliases: [] })),
+      locations: Object.entries(say.places).map(([id, name]) => ({ id, name })),
+      props: Object.entries(say.props).map(([id, name]) => ({ id, name })),
+      episodes: say.episodes.map((title, i) => ({ id: codeOf(i), title })),
+    }),
+  ),
+});
 
 /** A part of a packed project, as the agent returns it (here a stand-in: replay has no drama-cli project). Packed again at each stop, under the same name. */
 const archive = (name: string, stop = 1): Out => ({ path: `handoff/${name}.tar.part-aa`, type: "application/octet-stream", bytes: text(`replay stand-in for ${name}.tar, packed at stop ${stop}`) });
 
-const segmentsOf = (say: (typeof WORDS)[Lang]) => say.shots.map((shots, i) => ({ id: `seg0${i + 1}`, shots }));
-
-function breakdownOf(say: (typeof WORDS)[Lang], code: string): string {
-  return [say.breakdownTitle(code), ...segmentsOf(say).flatMap((seg) => [`\n## ${seg.id}`, ...seg.shots.map((shot, i) => say.shot(i + 1, shot))])].join("\n");
+function breakdownOf(say: Say, story: Story, i: number): string {
+  return [say.breakdownTitle(codeOf(i)), ...story.episodes[i].segments.flatMap((seg) => [`\n## ${seg.id}`, ...seg.shots.map((shot, n) => say.shot(n + 1, shot))])].join("\n");
 }
 
 /**
@@ -194,38 +356,61 @@ function breakdownOf(say: (typeof WORDS)[Lang], code: string): string {
  * maker approves), every breakdown and the shared references (the maker approves), then the
  * project packed for the episodes.
  */
-function setupScript(lang: Lang): Player {
-  const say = WORDS[lang];
-  let stage: "start" | "asked" | "leads" | "references" = "start";
+function setupScript(lang: Lang, preset: string, story: { id: string; story: Story }): Player {
+  const say = words(story.story)[lang];
+  const set = pictures(story.id, lang);
+  let stage: "start" | "asked" | "red-line" | "leads" | "references" | "handed" = "start";
   const versions = new Map<string, number>();
   const next = (key: string) => {
     const v = (versions.get(key) ?? 0) + 1;
     versions.set(key, v);
     return `v${v}`;
   };
-  const leadSheet = (c: { id: string; name: string }) => svg(`drama/assets/characters/${c.id}/${next(c.id)}/image-1.svg`, lookSheet(c.name, "base", `v${versions.get(c.id)}`));
-  const shared = {
-    "lin/S1": () => svg(`drama/assets/characters/lin/states/S1/${next("lin/S1")}/image-1.svg`, lookSheet(say.cast[0].name, "S1", `v${versions.get("lin/S1")}`)),
-    home: () => svg(`drama/assets/scenes/home/${next("home")}/image-1.svg`, plate("home", `v${versions.get("home")}`)),
-    office: () => svg(`drama/assets/scenes/office/${next("office")}/image-1.svg`, plate("office", `v${versions.get("office")}`)),
-    letter: () => svg(`drama/assets/props/letter/${next("letter")}/image-1.svg`, prop("letter", `v${versions.get("letter")}`)),
-  } as Record<string, () => Out>;
-  return (answer) => {
+  const leads = say.cast.slice(0, 2);
+  const leadSheet = (c: { id: string; name: string }) => art(set, `drama/assets/characters/${c.id}/${next(c.id)}/image-1.svg`, lookSheet(c.name, "base", `v${versions.get(c.id)}`));
+  const shared = new Map(sharedOf(story.story).map((reference) => [reference.key, reference]));
+  const draw = (key: string) => {
+    const reference = shared.get(key)!;
+    const v = next(key);
+    return art(set, `drama/${reference.path}/${v}/image-1.svg`, reference.draw(v));
+  };
+  // What drama-cli's status would say at this stop: each item's version drawn, and the one the
+  // maker accepted. A decision accepts every item of the review it doesn't send back.
+  const accepted = new Map<string, number>();
+  const decide = (keys: string[], redo: string[]) => {
+    for (const key of keys) if (!redo.includes(key)) accepted.set(key, versions.get(key)!);
+  };
+  const made = (key: string): Made => ({ current: `v${versions.get(key)}`, accepted: accepted.has(key) ? `v${accepted.get(key)}` : null });
+  const progress = (): ReplayProgress => ({
+    preset,
+    bible: stage === "asked" || stage === "red-line" ? null : "v1",
+    looks: Object.fromEntries(leads.filter((c) => versions.has(c.id)).map((c) => [c.id, made(c.id)])),
+    references: Object.fromEntries([...shared.values()].filter((reference) => versions.has(reference.key)).map((reference) => [reference.key, { ...made(reference.key), path: reference.path }])),
+    episodes: stage === "references" || stage === "handed" ? Object.fromEntries(story.story.episodes.map((e, i) => [codeOf(i), { segments: e.segments.map((seg) => seg.id) }])) : {},
+  });
+  const play = (answer: string): Step => {
     const redo = revisedKeys(answer);
     if (stage === "start") {
       stage = "asked";
       return { progress: say.reading, files: [], ask: say.askAge };
     }
-    if (stage === "asked") {
+    // A story with a red line stops here, as drama-cli refuses the bible for it, and asks the maker; their answer is passed back.
+    if (stage === "asked" && story.story.redLine) {
+      stage = "red-line";
+      return { progress: say.drawing.slice(0, 1), files: [refusals([redLine(story.story.redLine)])], ask: say.askRedLine(story.story.redLine) };
+    }
+    if (stage === "asked" || stage === "red-line") {
       stage = "leads";
       return {
         progress: say.drawing,
-        files: [{ path: "drama/bible/v1/bible.md", type: "text/markdown", bytes: text(say.bible) }, ...say.cast.map(leadSheet)],
+        files: [{ path: "drama/bible/v1/bible.md", type: "text/markdown", bytes: text(say.bible) }, bibleJson(say), ...leads.map(leadSheet)],
         ask: say.askLooks,
       };
     }
+    // The maker names a lead to redo by name or id; every lead not named is accepted as drawn.
+    if (stage === "leads") decide(leads.filter((c) => !redo.includes(c.name)).map((c) => c.id), redo);
     if (stage === "leads" && redo.length) {
-      const who = say.cast.filter((c) => redo.includes(c.name) || redo.includes(c.id));
+      const who = leads.filter((c) => redo.includes(c.name) || redo.includes(c.id));
       return { progress: who.map((c) => say.redrawLook(c.name)), files: who.map(leadSheet), ask: say.askRedrawn(who.map((c) => c.name)) };
     }
     if (stage === "leads") {
@@ -233,37 +418,71 @@ function setupScript(lang: Lang): Player {
       return {
         progress: say.preparing,
         files: [
-          ...say.episodes.map((_, i) => ({ path: `drama/episodes/EP00${i + 1}/breakdown/v1/breakdown.md`, type: "text/markdown", bytes: text(breakdownOf(say, `EP00${i + 1}`)) })),
-          ...Object.values(shared).map((draw) => draw()),
+          ...say.episodes.map((_, i) => ({ path: `drama/episodes/${codeOf(i)}/breakdown/v1/breakdown.md`, type: "text/markdown", bytes: text(breakdownOf(say, story.story, i)) })),
+          ...[...shared.keys()].map(draw),
         ],
         ask: say.askReferences(say.episodes.length),
       };
     }
+    decide([...shared.keys()], redo);
     if (redo.length) {
-      const which = redo.filter((key) => shared[key]);
-      return { progress: which.map(say.redrawReference), files: which.map((key) => shared[key]()), ask: say.askReferencesAgain(which) };
+      const which = redo.filter((key) => shared.has(key));
+      return { progress: which.map(say.redrawReference), files: which.map(draw), ask: say.askReferencesAgain(which) };
     }
+    stage = "handed";
     return {
       progress: [...say.finishing, ...say.packing],
       files: [archive("project")],
-      summary: `${say.castDone}\n` + say.episodes.map((title, i) => `EP00${i + 1}: ${title}`).join("\n"),
+      summary: `${say.castDone}\n` + say.episodes.map((title, i) => `${codeOf(i)}: ${title}`).join("\n"),
     };
+  };
+  // Each stop also hands back the status and the lineage, which shows the pictures the session's stops returned.
+  const returned: string[] = [];
+  return (answer) => {
+    const step = play(answer);
+    returned.push(...step.files.map((file) => file.path));
+    return { ...step, files: [...step.files, replayStatus(progress()), replayLineage(progress(), returned)] };
   };
 }
 
-function episodeScript(code: string, lang: Lang): Player {
-  const say = WORDS[lang];
-  const segments = say.shots.map((shots, i) => ({ id: `seg0${i + 1}`, shots }));
+function episodeScript(code: string, lang: Lang, preset: string, story: { id: string; story: Story }): Player {
+  const say = words(story.story)[lang];
+  const set = pictures(story.id, lang);
+  const episode = story.story.episodes[Number(code.slice(2)) - 1];
+  if (!episode) throw new Error(`The sample drama ${story.story.title} has no ${code}.`);
+  const segments = episode.segments;
   let stage: "boards" | "takes" | "cut" | "done" = "boards";
-  let boardVersion = 1;
-  let take = 1;
+  // Each segment's own storyboard version and takes, and what the maker accepted of each: a
+  // decision accepts every item of the review it doesn't send back.
+  const boardVersion = new Map(segments.map((seg) => [seg.id, 1]));
+  const boardAccepted = new Map<string, number>();
+  const takes = new Map<string, number>();
+  const takeAccepted = new Set<string>();
   let cut = 1;
+  let cutAccepted = false;
   const base = `drama/episodes/${code}`;
-  const boards = (which: typeof segments, v: number) =>
-    which.flatMap((seg) => [
-      svg(`${base}/multi_panel_storyboard/${seg.id}/line-art/v${v}/image-1.svg`, storyboard(`${code} ${seg.id}`, seg.shots, "line-art", `v${v}`, v === 1 && seg.id === "seg01" ? 3 : -1)),
-      svg(`${base}/multi_panel_storyboard/${seg.id}/photoreal/v${v}/image-1.svg`, storyboard(`${code} ${seg.id}`, seg.shots, "photoreal", `v${v}`, v === 1 && seg.id === "seg01" ? 3 : -1)),
-    ]);
+  const boards = (which: typeof segments) =>
+    which.flatMap((seg) => {
+      const v = boardVersion.get(seg.id)!;
+      return [
+        art(set, `${base}/multi_panel_storyboard/${seg.id}/line-art/v${v}/image-1.svg`, storyboard(`${code} ${seg.id}`, seg.shots, "line-art", `v${v}`, v === 1 && seg.id === "seg01" ? 3 : -1)),
+        art(set, `${base}/multi_panel_storyboard/${seg.id}/photoreal/v${v}/image-1.svg`, storyboard(`${code} ${seg.id}`, seg.shots, "photoreal", `v${v}`, v === 1 && seg.id === "seg01" ? 3 : -1)),
+      ];
+    });
+  // A cut as replay returns it, with its plan beside it: each segment's newest take.
+  const cutFiles = (version: number): Out[] => {
+    const made = clip(set, `${base}/edit/v${version}/cut.mp4`, "cut");
+    const newest = segments.map((seg) => {
+      const take = `t${String(takes.get(seg.id)).padStart(2, "0")}`;
+      return { segment: seg.id, take, bytes: clip(set, `${base}/segments/${seg.id}/${take}/video.mp4`, "take").bytes };
+    });
+    return [made, cutPlan(`${base}/edit/v${version}/cut.json`, code, made, newest)];
+  };
+  const shoot = (which: typeof segments) =>
+    which.map((seg) => {
+      takes.set(seg.id, (takes.get(seg.id) ?? 0) + 1);
+      return clip(set, `${base}/segments/${seg.id}/t${String(takes.get(seg.id)).padStart(2, "0")}/video.mp4`, "take");
+    });
   let started = false;
   const play = (answer: string): Step => {
     const redo = revisedKeys(answer);
@@ -271,61 +490,84 @@ function episodeScript(code: string, lang: Lang): Player {
       started = true;
       return {
         progress: say.restoring(code),
-        files: [...segments.map((seg) => svg(`${base}/blocking/${seg.id}/v1/image-1.svg`, blocking(`${code} ${seg.id}`, "v1"))), ...boards(segments, 1)],
+        files: [...segments.map((seg) => art(set, `${base}/blocking/${seg.id}/v1/image-1.svg`, blocking(`${code} ${seg.id}`, "v1"))), ...boards(segments)],
         ask: say.askBoards(code, segments.length),
       };
     }
+    if (stage === "boards") for (const seg of segments) if (!redo.includes(seg.id)) boardAccepted.set(seg.id, boardVersion.get(seg.id)!);
+    if (stage === "takes") for (const seg of segments) if (!redo.includes(seg.id)) takeAccepted.add(seg.id);
     if (stage === "boards" && redo.length) {
-      boardVersion += 1;
       const which = segments.filter((seg) => redo.includes(seg.id));
-      return { progress: which.map((seg) => say.redrawBoard(seg.id)), files: boards(which, boardVersion), ask: say.askBoardsAgain(which.map((seg) => seg.id)) };
+      for (const seg of which) boardVersion.set(seg.id, boardVersion.get(seg.id)! + 1);
+      return { progress: which.map((seg) => say.redrawBoard(seg.id)), files: boards(which), ask: say.askBoardsAgain(which.map((seg) => seg.id)) };
     }
     if (stage === "boards") {
       stage = "takes";
-      return {
-        progress: say.shooting(segments.map((seg) => seg.id)),
-        files: segments.map((seg) => video(`${base}/segments/${seg.id}/t01/video.mp4`, "take")),
-        ask: say.askTakes,
-      };
+      return { progress: say.shooting(segments.map((seg) => seg.id)), files: shoot(segments), ask: say.askTakes };
     }
     if (stage === "takes" && redo.length) {
-      take += 1;
-      return {
-        progress: redo.map(say.reshoot),
-        files: segments.filter((seg) => redo.includes(seg.id)).map((seg) => video(`${base}/segments/${seg.id}/t0${take}/video.mp4`, "take")),
-        ask: say.askTakesAgain(redo),
-      };
+      const which = segments.filter((seg) => redo.includes(seg.id));
+      // As drama-cli's take cap does, past the limit nothing is shot: the agent asks the maker, returning the refusal.
+      const capped = which.filter((seg) => takes.get(seg.id)! > MAX_NEW_TAKES);
+      if (capped.length) return { progress: [], files: [refusals(capped.map((seg) => takeCap(seg.id)))], ask: say.askTakeCap(capped.map((seg) => seg.id)) };
+      return { progress: redo.map(say.reshoot), files: shoot(which), ask: say.askTakesAgain(redo) };
     }
     if (stage === "takes") {
       stage = "cut";
-      return { progress: say.cutting, files: [video(`${base}/edit/v1/cut.mp4`, "cut")], ask: say.askCut(code) };
+      return { progress: say.cutting, files: cutFiles(1), ask: say.askCut(code) };
     }
     if (stage === "cut" && redo.length) {
       cut += 1;
-      return { progress: say.recutting, files: [video(`${base}/edit/v${cut}/cut.mp4`, "cut")], ask: say.askCutAgain(code) };
+      return { progress: say.recutting, files: cutFiles(cut), ask: say.askCutAgain(code) };
     }
     stage = "done";
+    cutAccepted = true;
     // As Pine's agent does, the finished episode hands back its accepted cut again, unchanged.
-    return { progress: say.accepting, files: [video(`${base}/edit/v${cut}/cut.mp4`, "cut")], summary: say.finished(code) };
+    return { progress: say.accepting, files: cutFiles(cut), summary: say.finished(code) };
   };
-  // Each stop and the finish also hand back the episode's own folder, packed.
+  // What drama-cli's status would say at this stop: the project as handed over, every shared
+  // reference approved, and this episode's items as far as the maker has accepted each.
+  const progress = (): ReplayProgress => {
+    const ids = segments.map((seg) => seg.id);
+    const own: EpisodeMade = {
+      segments: ids,
+      boards: Object.fromEntries(ids.map((id) => [id, { current: `v${boardVersion.get(id)}`, accepted: boardAccepted.has(id) ? `v${boardAccepted.get(id)}` : null }])),
+    };
+    if (takes.size) own.takes = Object.fromEntries([...takes].map(([id, count]) => [id, { count, accepted: takeAccepted.has(id) }]));
+    if (stage === "cut" || stage === "done") own.cut = { current: `v${cut}`, accepted: cutAccepted ? `v${cut}` : null };
+    const approved: Made = { current: "v1", accepted: "v1" };
+    return {
+      preset,
+      bible: "v1",
+      looks: Object.fromEntries(say.cast.slice(0, 2).map((c) => [c.id, approved])),
+      references: Object.fromEntries(sharedOf(story.story).map((reference) => [reference.key, { ...approved, path: reference.path }])),
+      episodes: Object.fromEntries(story.story.episodes.map((e, i) => [codeOf(i), codeOf(i) === code ? own : { segments: e.segments.map((seg) => seg.id) }])),
+    };
+  };
+  // Each stop and the finish also hand back the episode's own folder, packed, the status and the lineage.
   let stops = 0;
+  const returned: string[] = [];
   return (answer) => {
     const step = play(answer);
     stops += 1;
-    return { ...step, files: [...step.files, archive(code, stops)] };
+    returned.push(...step.files.map((file) => file.path));
+    return { ...step, files: [...step.files, archive(code, stops), replayStatus(progress()), replayLineage(progress(), returned)] };
   };
 }
 
 function chatScript(goal: string, lang: Lang): Player {
-  return () => ({ progress: WORDS[lang].readingMessage, files: [], summary: WORDS[lang].noted(goal) });
+  const say = words(Object.values(STORIES)[0][lang])[lang];
+  return () => ({ progress: say.readingMessage, files: [], summary: say.noted(goal) });
 }
 
 /** The recording a run's goal starts; a session keeps the language its first goal set. */
 function scriptFor(goal: string, lang: Lang): Player {
   const episode = goal.match(/\b(EP\d{3})\b/);
-  if (/make episode|continue episode/i.test(goal) && episode) return episodeScript(episode[1], lang);
-  if (/vertical short drama from my screenplay/i.test(goal)) return setupScript(lang);
+  // The preset the goal's drama-cli init names, as the report says it.
+  const preset = goal.match(/--preset (\S+)/)?.[1] ?? "";
+  const story = storyOf(goal, lang);
+  if (/make episode|continue episode/i.test(goal) && episode) return episodeScript(episode[1], lang, preset, story);
+  if (/vertical short drama from my screenplay/i.test(goal)) return setupScript(lang, preset, story);
   return chatScript(goal, lang);
 }
 
