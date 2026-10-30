@@ -360,6 +360,7 @@
             <span class="hint">${I(watched ? "check-circle" : "clock")}${watched ? "Watched to the end." : `Watched ${Math.round(seen)}% · Accept unlocks at the end.`}${v === "back" && " Sending back may shoot a new take."}</span>
             <span class="hint subtle">Keys: Space play · A accept · B send back · N note · ↑↓ next take</span>
           </div>
+          <div style="padding:10px 16px 0;border-top:1px solid var(--border);background:var(--surface-dim)"><input class="search" style="width:100%;height:32px" placeholder="Your words for the record, e.g. Approved. seg03 opens on Luca." value=${S.words || ""} onInput=${(e) => set({ words: e.target.value })}/></div>
           <div class="sendbar"><span class="pips">${P.takes.map((t) => html`<i class=${S.verdict[t.id] === "accept" ? "a" : S.verdict[t.id] === "back" ? "b" : S.verdict[t.id] === "note" ? "n" : ""}></i>`)}</span>
             <span class="muted grow" style="font-size:12px">${done} of ${P.takes.length} decided</span>
             <button class="btn primary sm" disabled=${done < P.takes.length || S.sent} onClick=${() => set({ dialog: { title: "Send your review?", body: P.takes.map((t) => `${t.seg} ${t.take}: ${S.verdict[t.id] === "accept" ? "Accept" : S.verdict[t.id] === "note" ? "Accept with a note" : "Send back — “" + (S.reason[t.id] || "").trim() + "”"}`).join("\n"), ok: "Send review", cancel: "Keep reviewing", run: () => { set({ sent: true }); toast("Review sent to EP006's agent."); } } })}>Send review</button></div>
