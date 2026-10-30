@@ -619,6 +619,8 @@ h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 700; lett
 /* One short label under each ring, at 11px, cut with an ellipsis. */
 .eg-node__name { font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .eg-node.is-center .eg-node__name { font-size: 13px; }
+/* A name sits over the links that reach its ring, on a backing of the canvas. */
+.eg-node__name { padding: 0 4px; border-radius: var(--radius-small); background: color-mix(in srgb, var(--surface-dim) 88%, transparent); }
 .eg-notice { margin: 8px 16px 0; }
 .eg-reset { white-space: nowrap; }
 .ds-stalebar { margin: 10px 16px 0; display: flex; align-items: flex-start; gap: 10px; padding: 10px 14px; border-radius: var(--radius-large); border: 1px dashed var(--border-input); background: var(--surface); font-size: 12.5px; color: var(--text-secondary); }

@@ -118,8 +118,15 @@ function standingOf(node: LineageNode, fromStale: boolean, t: T): Standing {
   return { status: "you", label: t("graph.notAccepted") };
 }
 
-function Avatar({ node, file, size }: { node: LineageNode; file?: FileItem; size: number }) {
-  const picture = file?.type.startsWith("image/") ? <img src={file.url} alt="" /> : file?.type.startsWith("video/") ? <video src={`${file.url}#t=0.1`} muted preload="metadata" aria-hidden="true" /> : null;
+/** A version's ring: its picture, a video's first frame over the poster given (a take's storyboard), or its kind's icon. */
+function Avatar({ node, file, poster, size }: { node: LineageNode; file?: FileItem; poster?: FileItem; size: number }) {
+  const picture = file?.type.startsWith("image/") ? (
+    <img src={file.url} alt="" />
+  ) : file?.type.startsWith("video/") ? (
+    <video src={`${file.url}#t=0.1`} poster={poster?.url} muted preload="metadata" aria-hidden="true" />
+  ) : poster ? (
+    <img src={poster.url} alt="" />
+  ) : null;
   return (
     <span className="eg-node__ring" style={{ width: size, height: size, borderColor: colour(node) }}>
       {picture ?? <Icon name={ICONS[node.kind]} />}
@@ -178,6 +185,12 @@ export function Graph({ dramaId }: { dramaId: string }) {
   const marked = madeFromStale(lineage);
   const name = (node: LineageNode) => stageName(node, names, t);
   const fileOf = (node: LineageNode) => (node.shows ? files.data?.find((file) => file.path === `drama/${node.shows}`) : undefined);
+  // A take's poster: the picture of the storyboard it was shot from, shown until the video's first frame loads, or instead of a take not yet made.
+  const posterOf = (node: LineageNode) => {
+    if (node.kind !== "take") return undefined;
+    const board = lineage.links.map((link) => link.to === node.id && byId.get(link.from)).find((from) => from && from.kind === "storyboard");
+    return board ? fileOf(board) : undefined;
+  };
   const focus = (id: string) => navigate(`/d/${dramaId}/graph?item=${encodeURIComponent(id)}`, { replace: true });
   const node = byId.get(center)!;
   const standing = (n: LineageNode) => standingOf(n, marked.has(n.id), t);
@@ -280,7 +293,7 @@ export function Graph({ dramaId }: { dramaId: string }) {
             </Button>
           </section>
         )}
-        <Canvas lineage={lineage} center={center} kinds={KINDS_OF(groups)} depth={depth} onFocus={focus} onReset={() => focus(fallback)} name={name} fileOf={fileOf} marked={marked} standing={standing} t={t} />
+        <Canvas lineage={lineage} center={center} kinds={KINDS_OF(groups)} depth={depth} onFocus={focus} onReset={() => focus(fallback)} name={name} fileOf={fileOf} posterOf={posterOf} marked={marked} standing={standing} t={t} />
         <div className="eg-legend">
           <span className="eg-legend__title">{t("graph.legend")}</span>
           {GROUPS.map((group) => (
@@ -295,7 +308,7 @@ export function Graph({ dramaId }: { dramaId: string }) {
           </span>
         </div>
       </div>
-      <Inspector lineage={lineage} node={node} onFocus={focus} name={name} file={fileOf(node)} marked={marked} standing={standing} t={t} />
+      <Inspector lineage={lineage} node={node} onFocus={focus} name={name} file={fileOf(node)} poster={posterOf(node)} marked={marked} standing={standing} t={t} />
     </div>
   );
 }
@@ -426,6 +439,7 @@ interface CanvasProps {
   onReset: () => void;
   name: (node: LineageNode) => string;
   fileOf: (node: LineageNode) => FileItem | undefined;
+  posterOf: (node: LineageNode) => FileItem | undefined;
   marked: Set<string>;
   standing: (node: LineageNode) => Standing;
   t: T;
@@ -434,12 +448,12 @@ interface CanvasProps {
 interface VersionData extends Record<string, unknown> {
   node: LineageNode;
   file?: FileItem;
+  poster?: FileItem;
   name: string;
   state: string;
   center: boolean;
   dim: boolean;
   stale: boolean;
-  stats?: [string, string];
   onHover: (on: boolean) => void;
 }
 
@@ -458,19 +472,13 @@ function VersionNode({ data }: NodeProps<Node<VersionData>>) {
     >
       <Handle type="target" position={Position.Top} isConnectable={false} className="eg-handle" />
       <Handle type="source" position={Position.Bottom} isConnectable={false} className="eg-handle" />
-      <Avatar node={data.node} file={data.file} size={size} />
-      <span className="eg-node__labels" style={{ top: size + 6 }}>
+      <Avatar node={data.node} file={data.file} poster={data.poster} size={size} />
+      <span className="eg-node__labels" style={{ top: size + (data.center ? 10 : 6) }}>
         <span className="eg-node__name" style={{ maxWidth: data.center ? 140 : 96 }}>
           {data.name}
         </span>{" "}
         {/* The version and its state, for a screen reader; on the plane they are in the hover card. */}
         <span className="sr">{data.state}</span>
-        {data.stats && (
-          <span className="eg-node__stats">
-            {" "}
-            <span className="eg-stat">{data.stats[0]}</span> <span className="eg-stat">{data.stats[1]}</span>
-          </span>
-        )}
       </span>
     </button>
   );
@@ -506,7 +514,7 @@ const NODE_TYPES = { version: VersionNode };
 const EDGE_TYPES = { link: LinkEdge };
 
 /** The versions around the one in focus on React Flow: pan, zoom, fit, and a version's neighbours brought forward on hover or keyboard focus, as Reveric's canvas does. */
-function Canvas({ lineage, center, kinds, depth, onFocus, onReset, name, fileOf, marked, standing, t }: CanvasProps) {
+function Canvas({ lineage, center, kinds, depth, onFocus, onReset, name, fileOf, posterOf, marked, standing, t }: CanvasProps) {
   const [hovered, setHovered] = useState<string | null>(null);
   const kindKey = [...kinds].sort().join(",");
   // kindKey stands for kinds, a new Set at each render.
@@ -529,12 +537,12 @@ function Canvas({ lineage, center, kinds, depth, onFocus, onReset, name, fileOf,
       data: {
         node,
         file: fileOf(node),
+        poster: posterOf(node),
         name: name(node),
         state: `${node.version ?? t("graph.noVersion")} · ${state.label ?? t(`status.${state.status}` as TKey)}`,
         center: id === center,
         dim: connected !== null && !connected.has(id),
         stale: isStale(id),
-        stats: id === center ? [t("graph.statUp", { n: graph.links.filter((l) => l.to === id).length }), t("graph.statDown", { n: graph.links.filter((l) => l.from === id).length })] : undefined,
         onHover: (on) => setHovered(on ? id : null),
       },
     };
@@ -552,12 +560,14 @@ function Canvas({ lineage, center, kinds, depth, onFocus, onReset, name, fileOf,
     const on = link.from === lit || link.to === lit;
     const stroke = dashed ? "var(--eg-stale)" : on ? colour(byId.get(link.from)!) : "var(--border-input)";
     const text = GROUP_OF[byId.get(link.from)!.kind] === "text";
+    // The pill's place on the curve: 60% of the way out from the focus toward the other version, clear of the focus's arrowheads and name.
+    const along = (k: number) => ({ x: (1 - k) ** 2 * ax + 2 * k * (1 - k) * cx + k ** 2 * bx, y: (1 - k) ** 2 * ay + 2 * k * (1 - k) * cy + k ** 2 * by });
     return {
       id: `${link.from}>${link.to}`,
       source: link.from,
       target: link.to,
       type: "link",
-      data: { path: `M${ax},${ay} Q${cx},${cy} ${bx},${by}`, at: { x: 0.25 * ax + 0.5 * cx + 0.25 * bx, y: 0.25 * ay + 0.5 * cy + 0.25 * by }, pill: depth === 1 ? t(text ? "graph.pillRead" : "graph.pillUsed") : undefined },
+      data: { path: `M${ax},${ay} Q${cx},${cy} ${bx},${by}`, at: along(link.to === center ? 0.4 : link.from === center ? 0.6 : 0.5), pill: depth === 1 ? t(text ? "graph.pillRead" : "graph.pillUsed") : undefined },
       markerEnd: { type: MarkerType.ArrowClosed, color: stroke, width: 12, height: 12 },
       style: { stroke, strokeWidth: on ? 1.6 : 1, strokeOpacity: connected && !(connected.has(link.from) && connected.has(link.to)) ? 0.12 : 1, strokeDasharray: dashed ? "5 4" : undefined },
     };
@@ -601,7 +611,7 @@ function Canvas({ lineage, center, kinds, depth, onFocus, onReset, name, fileOf,
           <Panel position="top-left">
             <div className="eg-hovercard" role="tooltip">
               <div className="eg-hovercard__head">
-                <Avatar node={hoveredNode} file={fileOf(hoveredNode)} size={40} />
+                <Avatar node={hoveredNode} file={fileOf(hoveredNode)} poster={posterOf(hoveredNode)} size={40} />
                 <div>
                   <div className="eg-hovercard__name">{name(hoveredNode)}</div>
                   <div className="eg-hovercard__en">{hoveredNode.version ?? t("graph.noVersion")}</div>
@@ -626,13 +636,14 @@ interface InspectorProps {
   onFocus: (id: string) => void;
   name: (node: LineageNode) => string;
   file?: FileItem;
+  poster?: FileItem;
   marked: Set<string>;
   standing: (node: LineageNode) => Standing;
   t: T;
 }
 
 /** Reveric's inspector: the version in focus, its links by direction, and its details as drama-cli records them. */
-function Inspector({ lineage, node, onFocus, name, file, marked, standing, t }: InspectorProps) {
+function Inspector({ lineage, node, onFocus, name, file, poster, marked, standing, t }: InspectorProps) {
   const [tab, setTab] = useState<"links" | "details">("links");
   useEffect(() => setTab("links"), [node.id]);
   const byId = new Map(lineage.nodes.map((n) => [n.id, n]));
@@ -660,10 +671,12 @@ function Inspector({ lineage, node, onFocus, name, file, marked, standing, t }: 
   return (
     <aside className="eg-inspector" aria-label={name(node)}>
       <div className="eg-inspector__hero">
-        <Avatar node={node} file={file} size={48} />
+        <Avatar node={node} file={file} poster={poster} size={48} />
         <div className="eg-inspector__herobody">
           <h2 className="eg-inspector__name">{name(node)}</h2>
-          <div className="eg-inspector__en">{node.version ?? t("graph.noVersion")}</div>
+          <div className="eg-inspector__en">
+            {node.version ?? t("graph.noVersion")} · {t("graph.statUp", { n: from.length })} · {t("graph.statDown", { n: into.length })}
+          </div>
         </div>
         <div className="eg-inspector__tags">
           <KindBadge node={node} t={t} />
