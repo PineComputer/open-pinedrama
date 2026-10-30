@@ -15,6 +15,7 @@ import { type TKey, useT } from "../i18n.ts";
 import { Icon } from "../icons.tsx";
 import { subjectLabel } from "../labels.ts";
 import { usePath } from "../router.tsx";
+import { SteerBar } from "./SteerBar.tsx";
 
 type State = NonNullable<ProjectView["state"]>;
 
@@ -45,14 +46,14 @@ function picture(files: FileItem[], at: string[], stage: StageStatus | undefined
 
 const ZOOM = { min: 0.2, max: 1.6, step: 1.2, start: 0.6 };
 
-function Node({ node, state, files, label }: { node: BoardNode; state: State; files: FileItem[]; label: string }) {
+function Node({ node, state, files, label, chosen, onChoose }: { node: BoardNode; state: State; files: FileItem[]; label: string; chosen: boolean; onChoose: () => void }) {
   const { t } = useT();
   const stages = stageOf(state, node);
   const status = node.kind === "segment" ? segmentStanding(stages) : standing(stages[0].stage);
   const icon = { character: "user", location: "image", prop: "cube", segment: "film-strip" } as const;
   return (
     // Named by what it shows (WCAG 2.5.3): its name, then where it stands, said aloud even where the chip isn't drawn.
-    <button type="button" className={`ds-cnode is-${node.kind}`} style={{ left: node.x, top: node.y - 28, width: node.w }}>
+    <button type="button" className={`ds-cnode is-${node.kind}${chosen ? " is-chosen" : ""}`} style={{ left: node.x, top: node.y - 28, width: node.w }} aria-pressed={chosen} onClick={onChoose}>
       <span className="label">
         <Icon name={icon[node.kind]} />
         <span className="name">{label}</span>
@@ -88,6 +89,7 @@ export function Canvas({ drama }: { drama: DramaView }) {
   const board: Board | null = useMemo(() => (state ? layoutBoard(state) : null), [state]);
   const [cam, setCam] = useState({ x: 24, y: 56, k: ZOOM.start });
   const drag = useRef<{ x: number; y: number; cx: number; cy: number } | null>(null);
+  const [chosen, choose] = useState<string | null>(null);
   const view = useRef<HTMLDivElement>(null);
   // The episode chosen elsewhere (the tree, Studio, Graph) stays chosen here, and in view.
   const item = usePath().query.get("item");
@@ -157,7 +159,7 @@ export function Canvas({ drama }: { drama: DramaView }) {
                     {board.nodes
                       .filter((node) => node.scene === scene.id)
                       .map((node) => (
-                        <Node key={node.id} node={{ ...node, x: node.x - scene.x, y: node.y - scene.y }} state={state} files={files.data ?? []} label={label(node)} />
+                        <Node key={node.id} node={{ ...node, x: node.x - scene.x, y: node.y - scene.y }} state={state} files={files.data ?? []} label={label(node)} chosen={chosen === node.id} onChoose={() => choose(node.id)} />
                       ))}
                   </div>
                 ))}
@@ -167,10 +169,13 @@ export function Canvas({ drama }: { drama: DramaView }) {
           {board.nodes
             .filter((node) => node.kind !== "segment")
             .map((node) => (
-              <Node key={node.id} node={node} state={state} files={files.data ?? []} label={label(node)} />
+              <Node key={node.id} node={node} state={state} files={files.data ?? []} label={label(node)} chosen={chosen === node.id} onChoose={() => choose(node.id)} />
             ))}
         </div>
       </div>
+      {chosen && nodeById.get(chosen) && (
+        <SteerBar drama={drama} node={nodeById.get(chosen)!} label={label(nodeById.get(chosen)!)} episodeTitle={names?.episodes[nodeById.get(chosen)!.episode ?? ""]} onClose={() => choose(null)} />
+      )}
       <div className="ds-ctool" role="toolbar" aria-label={t("canvas.tools")}>
         <IconButton label={t("canvas.fit")} icon="frame-corners" onClick={fit} />
         <IconButton label={t("canvas.zoomOut")} icon="minus" onClick={() => zoomTo(cam.k / ZOOM.step)} />
