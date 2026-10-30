@@ -195,7 +195,8 @@ export function Board({ drama }: { drama: DramaView }) {
   return (
     <>
       <div className="work-head">
-        <h2>{t("step.episodes")}</h2>
+        {/* The filters start the page, as the pro direction's Episodes has it; the heading is for assistive technology. */}
+        <h2 className="sr-only">{t("step.episodes")}</h2>
         {rows.length > 0 && (
           <div className="ds-fchips" role="group" aria-label={t("board.filter")}>
             {(Object.keys(FILTERS) as Filter[]).map((key) => (
