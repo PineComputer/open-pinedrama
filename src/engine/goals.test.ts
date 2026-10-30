@@ -65,6 +65,24 @@ describe("a stop that asks about a drama-cli refusal returns the refusal", () =>
 
   it("but not in a rehearsal, which has no drama-cli to refuse", () => {
     const goal = rehearsed(episodeGoal(drama, "EP002", ["project.tar.part-aa"], true, "screenplay.md"));
-    expect(goal).toContain("return no handoff/status.json or handoff/refusals.jsonl");
+    expect(goal).toContain("return no handoff/status.json, handoff/lineage.json or handoff/refusals.jsonl");
+  });
+});
+
+const LINEAGE = "drama-cli export comfyui --config drama/drama-cli.cfg.yaml --out handoff/lineage.json";
+
+describe("each stop returns drama-cli's lineage", () => {
+  it.each([
+    ["the setup session", setupGoal(drama, ["screenplay.md", "brief.md"], { screenplay: "screenplay.md", brief: "brief.md" })],
+    ["an episode's session", episodeGoal(drama, "EP002", ["project.tar.part-aa"], true, "screenplay.md")],
+    ["a session that carries an episode on", resumeGoal(drama, "EP002", ["project.tar.part-aa", "EP002.tar.part-aa"], true, undefined, "screenplay.md")],
+  ])("in %s, written outside the project, as drama-cli's export requires", (_where, goal) => {
+    expect(times(goal, LINEAGE)).toBe(1);
+    expect(goal).toContain("return handoff/lineage.json");
+  });
+
+  it("but not in a rehearsal, which has no drama-cli to ask", () => {
+    const goal = rehearsed(episodeGoal(drama, "EP002", ["project.tar.part-aa"], true, "screenplay.md"));
+    expect(goal).toContain("return no handoff/status.json, handoff/lineage.json or handoff/refusals.jsonl");
   });
 });

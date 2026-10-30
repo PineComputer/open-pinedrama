@@ -23,6 +23,12 @@ describe("classify", () => {
     expect(classify("drama/status.json").kind).not.toBe("status");
   });
 
+  it("reads the lineage of the project each stop returns", () => {
+    expect(classify("handoff/lineage.json")).toEqual({ kind: "lineage" });
+    expect(classify("work/handoff/lineage.json")).toEqual({ kind: "lineage" });
+    expect(classify("drama/lineage.json").kind).not.toBe("lineage");
+  });
+
   it("reads the refusals a stop asks about", () => {
     expect(classify("handoff/refusals.jsonl")).toEqual({ kind: "refusal" });
     expect(classify("work/handoff/refusals.jsonl")).toEqual({ kind: "refusal" });

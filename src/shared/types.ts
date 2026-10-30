@@ -89,6 +89,8 @@ export type FileKind =
   | "archive"
   /** drama-cli's status of the project, which each stop returns for the studio (handoff/status.json). */
   | "status"
+  /** drama-cli's lineage of the project, which each stop returns for the studio's Graph (handoff/lineage.json). */
+  | "lineage"
   /** The drama-cli refusals a stop asks the maker about, as drama-cli printed them (handoff/refusals.jsonl). */
   | "refusal"
   /** A picture the maker added to a note: a face to use, a costume, a place to match. */

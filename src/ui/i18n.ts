@@ -338,6 +338,7 @@ const en = {
   "file.observation": "Notes",
   "file.archive": "Project archive",
   "file.status": "Project status",
+  "file.lineage": "Project lineage",
   "file.refusal": "Refusals",
   "file.other": "File",
 
@@ -752,6 +753,7 @@ const zh: Record<Key, string> = {
   "file.observation": "观察记录",
   "file.archive": "项目存档",
   "file.status": "项目状态",
+  "file.lineage": "项目血缘",
   "file.refusal": "拒绝记录",
   "file.other": "文件",
 
