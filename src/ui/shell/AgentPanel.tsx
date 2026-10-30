@@ -9,7 +9,7 @@ import { nameOf, type Names } from "../../shared/names.ts";
 import { type ProjectView, takesInFlight } from "../../shared/project.ts";
 import type { ChatView, DramaView, FileItem, ReviewSummary, SessionView } from "../../shared/types.ts";
 import { ago, api, useResource } from "../api.ts";
-import { IconButton } from "../components/Button.tsx";
+import { Button, IconButton } from "../components/Button.tsx";
 import { Dialog } from "../components/Dialog.tsx";
 import { Icon } from "../icons.tsx";
 import { type TKey, useT } from "../i18n.ts";
@@ -89,8 +89,17 @@ function Running({ drama, session, inView, inFlight, onPick }: { drama: DramaVie
       <button type="button" className="what" onClick={onPick} aria-pressed={inView}>
         <b>{label}</b> <span>{session.waiting ? t("crew.waiting") : (session.activity ?? t("board.atWork"))}</span>
       </button>
-      <IconButton label={t("agent.watch", { who: label })} icon="eye" onClick={() => setWatching(true)} />
-      {row ? <IconButton label={t("agent.stopOne", { who: label })} icon="stop" className="is-stop" onClick={() => setAsking(true)} /> : <span className="slot" />}
+      {/* Watch and Stop in words, as the pro direction's running rows have them. */}
+      <Button variant="ghost" size="sm" aria-label={t("agent.watch", { who: label })} onClick={() => setWatching(true)}>
+        {t("agent.watchShort")}
+      </Button>
+      {row ? (
+        <Button variant="ghost" size="sm" aria-label={t("agent.stopOne", { who: label })} onClick={() => setAsking(true)}>
+          {t("agent.stopShort")}
+        </Button>
+      ) : (
+        <span className="slot" />
+      )}
       {row && (
         <Dialog
           open={asking}
@@ -119,7 +128,6 @@ export function AgentPanel({ drama, episode, mode, onMode }: { drama: DramaView;
   const sessions = useResource<ChatView[]>(`/api/dramas/${id}/sessions`, [`drama:${id}`]);
   const running = drama.crew.flatMap((computer) => computer.sessions.filter((session) => session.state === "open"));
   const [picked, setPicked] = useState<string>();
-  const [runsOpen, setRunsOpen] = useState(true);
   const [recentOpen, setRecentOpen] = useState(true);
   // The session in view: the one picked, else the episode's in view, else one that asks, else the first.
   const chats = sessions.data ?? [];
@@ -134,7 +142,6 @@ export function AgentPanel({ drama, episode, mode, onMode }: { drama: DramaView;
   const steps = (chat.data?.messages ?? []).filter((message) => message.kind === "activity").slice(-7);
   const said = (chat.data?.messages ?? []).filter((message) => message.kind === "progress" || message.kind === "question" || message.kind === "result").slice(-2);
   const working = running.some((session) => !session.waiting);
-  const waitingRuns = running.filter((session) => session.waiting).length;
   return (
     <aside className={`ds-agent ${mode === "floating" ? "is-float" : ""}`} aria-label={t("agent.label")}>
       <div className="ds-agent-head">
@@ -154,16 +161,7 @@ export function AgentPanel({ drama, episode, mode, onMode }: { drama: DramaView;
         <Section title={t("agent.running")} count={running.length}>
           {running.length ? (
             <div className="ds-runs">
-              {running.length > 1 && (
-                <button type="button" className={`ds-runs-head${runsOpen ? " is-open" : ""}`} aria-expanded={runsOpen} onClick={() => setRunsOpen((open) => !open)}>
-                  {waitingRuns ? <Icon name="seal-check" /> : <span className="spin" aria-hidden="true" />}
-                  <span className="title">{t("agent.atWork", { n: running.length - waitingRuns })}</span>{" "}
-                  <span className="names">{waitingRuns ? t("agent.waitFor", { n: waitingRuns }) : ""}</span>
-                  <Icon name="caret-down" className={runsOpen ? "caret is-open" : "caret"} />
-                </button>
-              )}
-              {(running.length === 1 || runsOpen) &&
-                running.map((session) => (
+              {running.map((session) => (
                   <Running
                     key={session.id}
                     drama={drama}

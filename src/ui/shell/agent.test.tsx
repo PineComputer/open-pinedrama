@@ -91,17 +91,6 @@ describe("the agent panel", () => {
     await waitFor(() => expect(within(recent).getAllByRole("listitem").map((item) => item.textContent?.replace(/ · \d+ \w+ ago/, ""))).toEqual(["Look · 林v2In review", "Look · 林v1Accepted"]));
   });
 
-  it("sums up its runs in one line, which folds them", async () => {
-    const user = userEvent.setup();
-    engine();
-    render(<AgentPanel drama={drama} mode="docked" onMode={() => {}} />);
-    const summary = screen.getByRole("button", { name: "1 at work · 1 wait for you" });
-    expect(summary).toHaveAttribute("aria-expanded", "true");
-    await user.click(summary);
-    expect(summary).toHaveAttribute("aria-expanded", "false");
-    expect(screen.queryByRole("button", { name: "Stop EP001" })).toBeNull();
-  });
-
   it("says whose session it follows", async () => {
     engine();
     render(<AgentPanel drama={drama} episode="EP001" mode="docked" onMode={() => {}} />);

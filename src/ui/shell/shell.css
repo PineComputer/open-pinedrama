@@ -104,13 +104,6 @@ button.ds-project { border: 0; background: none; color: inherit; text-align: lef
 .ds-agent-context { flex: none; display: flex; align-items: center; gap: 6px; padding: 6px 16px; border-bottom: 1px solid var(--border-subtle); font-size: 11.5px; color: var(--text-secondary); }
 .ds-agent-context .ds-icon { width: 13px; height: 13px; }
 .ds-runs { background: var(--surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-large); overflow: hidden; }
-.ds-runs-head { width: 100%; display: flex; align-items: center; gap: 8px; min-height: 32px; padding: 0 6px 0 10px; border: 0; background: none; color: inherit; cursor: pointer; text-align: left; }
-.ds-runs-head:hover { background: var(--hover); }
-.ds-runs-head.is-open { border-bottom: 1px solid var(--border-subtle); }
-.ds-runs-head .title { font: 500 13px/1.3 var(--font-sans); color: var(--text-secondary); }
-.ds-runs-head .names { flex: 1; min-width: 0; font-size: 12px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.ds-runs-head .caret { color: var(--text-muted); transition: transform var(--d2) ease; }
-.ds-runs-head .caret.is-open { transform: rotate(180deg); }
 .ds-runs .spin { width: 14px; height: 14px; flex: none; margin: 0 1px; border: 1.8px solid color-mix(in srgb, var(--accent) 50%, transparent); border-top-color: var(--accent); border-radius: 50%; animation: ds-spin 0.7s linear infinite; }
 .ds-run { display: flex; align-items: center; gap: 6px; padding: 4px 4px 4px 10px; }
 .ds-run + .ds-run { border-top: 1px solid var(--border-subtle); }
@@ -121,9 +114,6 @@ button.ds-project { border: 0; background: none; color: inherit; text-align: lef
 .ds-run .what { flex: 1; min-width: 0; display: flex; align-items: baseline; gap: 6px; text-align: left; border: 0; background: none; padding: 4px 0; cursor: pointer; color: inherit; }
 .ds-run .what b { flex: none; font: 600 12px var(--font-mono); }
 .ds-run .what span { color: var(--text-secondary); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.ds-run .ds-iconbtn { width: 28px; height: 28px; }
-.ds-run .ds-iconbtn .ds-icon { width: 15px; height: 15px; }
-.ds-run .ds-iconbtn.is-stop:hover { background: var(--deletion-bg); color: var(--deletion-border); }
 .ds-run .slot { width: 28px; flex: none; }
 /* Recent work, as a card that folds (after the reference's recent changes): each version, when, and where it stands. */
 .ds-changes { margin-top: 12px; background: var(--surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-large); overflow: hidden; box-shadow: 0 4px 12px color-mix(in srgb, var(--shadow-base) 6%, transparent); }
