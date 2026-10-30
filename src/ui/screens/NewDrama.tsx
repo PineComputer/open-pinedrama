@@ -8,8 +8,6 @@ import { EXTRACTED, extractText, textName } from "../extract.ts";
 import { errorText } from "../labels.ts";
 import { ReviewingChoice } from "../Reviewing.tsx";
 import { navigate } from "../router.tsx";
-import * as RadioGroup from "@radix-ui/react-radio-group";
-import { Button } from "../components/Button.tsx";
 import { Dropzone } from "../components/Dropzone.tsx";
 import { Icon, type IconName } from "../icons.tsx";
 
@@ -73,48 +71,56 @@ function FormatTip() {
   );
 }
 
+/** The design's `.seg`: one choice among a few, each a pressed or unpressed button. */
+function Seg<V extends string>({ label, value, options, onChange }: { label: string; value: V | undefined; options: { value: V; label: string }[]; onChange: (value: V) => void }) {
+  return (
+    <div className="seg" role="group" aria-label={label}>
+      {options.map((option) => (
+        <button key={option.value} type="button" aria-pressed={value === option.value} onClick={() => onChange(option.value)}>
+          {option.label}
+        </button>
+      ))}
+    </div>
+  );
+}
+
 /**
  * The screenplay language: shown as read when the structure shows it; when it shows none, the one
  * choice the maker makes, the language the scene and episode headings will be written in.
  */
 export function ScreenplayStructure({ structure, onChoose }: { structure: { language?: ScreenplayLanguage; detected: boolean }; onChoose: (language: ScreenplayLanguage) => void }) {
   const { t } = useT();
-  if (structure.detected && structure.language) return <p className="quiet small">{t("new.structureDetected", { language: t(`language.${structure.language}`) })}</p>;
+  if (structure.detected && structure.language) return <p className="muted">{t("new.structureDetected", { language: t(`language.${structure.language}`) })}</p>;
   return (
-    <div className="field">
-      <span className="label">{t("new.structureUnknown")}</span>
-      <div className="options">
-        {(["en", "zh"] as const).map((value) => (
-          <button key={value} aria-pressed={structure.language === value} className={structure.language === value ? "on" : ""} onClick={() => onChoose(value)}>
-            {t(`language.${value}`)}
-          </button>
-        ))}
-      </div>
-      <span className="quiet small">{t("new.structureUnknownHint")}</span>
+    <div className="fields">
+      <label>
+        <span>{t("new.structureUnknown")}</span>
+        <Seg label={t("new.structureUnknown")} value={structure.language} options={(["en", "zh"] as const).map((value) => ({ value, label: t(`language.${value}`) }))} onChange={onChoose} />
+        <small className="muted">{t("new.structureUnknownHint")}</small>
+      </label>
     </div>
   );
 }
 
 /**
- * The preset cards (P5.2): radio cards on Radix's RadioGroup, one per template; a template drama-cli has a preset for
- * can be chosen, the others show greyed. None is chosen for the maker.
+ * The design's preset cards (`.presets`, `.preset`): one per template, pressed when chosen; a template drama-cli has
+ * no preset for is shown, greyed and not choosable. None is chosen for the maker.
  */
 export function PresetChoice({ value, onChange }: { value: string; onChange: (preset: string) => void }) {
   const { t } = useT();
   return (
-    <RadioGroup.Root className="ds-presets" aria-label={t("new.template")} value={value} onValueChange={onChange}>
+    <div className="presets" role="group" aria-label={t("new.template")}>
       {TEMPLATES.map(({ key, preset }) => (
-        <RadioGroup.Item key={key} className="ds-preset" value={preset ?? key} disabled={preset === undefined} aria-describedby={`preset-${key}`}>
-          <span className="radio" aria-hidden="true" />
+        <button key={key} type="button" className="preset" aria-pressed={preset !== undefined && value === preset} disabled={preset === undefined} onClick={() => preset && onChange(preset)}>
+          <span className="radio" />
           <span className="grow">
             <b>{t(`template.${key}` as TKey)}</b>
-            <small id={`preset-${key}`}>
-              {t(`template.${key}.hint` as TKey)} <code>{preset ?? t("new.soon")}</code>
-            </small>
+            <small>{t(`template.${key}.hint` as TKey)}</small>
+            <code>{preset ?? t("new.soon")}</code>
           </span>
-        </RadioGroup.Item>
+        </button>
       ))}
-    </RadioGroup.Root>
+    </div>
   );
 }
 
@@ -209,46 +215,49 @@ export function NewDrama() {
   };
 
   const panel = (id: string, icon: IconName, heading: string, body: ReactNode) => (
-    <section className="ds-panel" aria-labelledby={id}>
-      <h3 id={id}>
-        <Icon name={icon} />
-        {heading}
+    <section className="panel" aria-labelledby={id}>
+      <h3>
+        <Icon name={icon} className="ic" />
+        <span id={id}>{heading}</span>
       </h3>
       {body}
     </section>
   );
 
+  // Upload, ported from the design (design/screens.js Upload): its DOM and classes, on real data.
   return (
-    <div className="page ds-upload">
-      <div className="ds-greet">
-        <h1>{t("new.title")}</h1>
-        <p>{t("new.lede")}</p>
+    <div className="wrap" style={{ maxWidth: 1040 }}>
+      <div className="greet">
+        <div className="grow">
+          <h1>{t("new.title")}</h1>
+          <p>{t("new.lede")}</p>
+        </div>
       </div>
-      <div className="ds-formgrid">
-        <div className="col">
+      <div className="formgrid">
+        <div className="fcol">
           {panel(
             "upload-screenplay",
             "file-text",
             t("new.screenplay"),
             <>
               {file ? (
-                <div className="ds-filerow">
-                  <Icon name="file-text" />
+                <div className="filerow">
+                  <Icon name="file-text" className="ic" />
                   <span className="grow">
                     <b>{file.name}</b>
-                    <small className="num">{Math.max(1, Math.round(file.size / 1024))} KB</small>
+                    <small>{Math.max(1, Math.round(file.size / 1024))} KB</small>
                   </span>
-                  <Button variant="ghost" size="sm" onClick={() => setFile(undefined)}>
+                  <button type="button" className="btn sm ghost" onClick={() => setFile(undefined)}>
                     {t("new.replace")}
-                  </Button>
+                  </button>
                 </div>
               ) : (
                 <Dropzone title={t("new.drop")} hint={t("new.dropHint")} choose={t("new.choose")} onFile={choose} onNoFile={() => setNotFile(true)} />
               )}
               {notFile && <p className="error small">{t("new.notFiles")}</p>}
-              {extracted && text === undefined && <p className="quiet small">{t("new.extracting", { name: file!.name })}</p>}
+              {extracted && text === undefined && <p className="muted">{t("new.extracting", { name: file!.name })}</p>}
               {noText && <p className="error small">{t("new.noText", { name: file!.name })}</p>}
-              {extracted && opening && <p className="quiet small">{t("new.extracted")}</p>}
+              {extracted && opening && <p className="muted">{t("new.extracted")}</p>}
               {opening && <pre className="opening">{opening}</pre>}
               {structure && <ScreenplayStructure structure={structure} onChoose={setStructureChoice} />}
               <FormatTip />
@@ -260,72 +269,52 @@ export function NewDrama() {
               "sliders-horizontal",
               t("new.template"),
               <>
-                <p className="hint">{t("new.templateHint")}</p>
+                <p className="muted" style={{ marginBottom: 10 }}>
+                  {t("new.templateHint")}
+                </p>
                 <PresetChoice value={preset} onChange={setPreset} />
               </>,
             )}
           {panel(
             "upload-episodes",
-            "film-strip",
+            "clock",
             t("new.episodesPanel"),
-            <>
-              <div className="field">
-                <label className="label" htmlFor="title">
-                  {t("new.titleLabel")}
-                </label>
-                <input id="title" className="line-input big" value={title} onChange={(event) => setTitle(event.target.value)} />
-              </div>
-              <div className="field">
-                <span className="label">{t("new.format")}</span>
-                <div className="options">
-                  {["9:16, 480p", "9:16, 720p"].map((value) => (
-                    <button key={value} aria-pressed={format === value} className={format === value ? "on" : ""} onClick={() => setFormat(value)}>
-                      {value}
-                    </button>
-                  ))}
-                </div>
-              </div>
-              <div className="field">
-                <span className="label">{t("new.length")}</span>
-                <div className="options">
-                  {(["60", "90", "120"] as const).map((value) => (
-                    <button key={value} aria-pressed={length === value} className={length === value ? "on" : ""} onClick={() => setLength(value)}>
-                      {t(`new.length${value}`)}
-                    </button>
-                  ))}
-                </div>
-              </div>
+            <div className="fields">
+              <label>
+                <span>{t("new.titleLabel")}</span>
+                <span className="inputwrap wide">
+                  <input value={title} onChange={(event) => setTitle(event.target.value)} />
+                </span>
+              </label>
+              <label>
+                <span>{t("new.length")}</span>
+                <Seg label={t("new.length")} value={length} options={(["60", "90", "120"] as const).map((value) => ({ value, label: t(`new.length${value}`) }))} onChange={setLength} />
+              </label>
+              <label>
+                <span>{t("new.format")}</span>
+                <Seg label={t("new.format")} value={format} options={["9:16, 480p", "9:16, 720p"].map((value) => ({ value, label: value }))} onChange={setFormat} />
+              </label>
               <ReviewingChoice value={reviewing} onChange={setReviewing} />
-              <div className="pair">
-                <div className="field">
-                  <label className="label" htmlFor="parallel">
-                    {t("new.parallel")}
-                  </label>
-                  <input id="parallel" className="line-input num" type="number" min={1} max={50} value={parallel} onChange={(event) => setParallel(Number(event.target.value))} />
-                </div>
-                <div className="field">
-                  <span className="label">{t("new.perComputer")}</span>
-                  <div className="options">
-                    {[1, 2, 3].map((n) => (
-                      <button key={n} aria-pressed={perComputer === n} className={perComputer === n ? "on" : ""} onClick={() => setPerComputer(n)}>
-                        {n}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
-              <div className="field">
-                <label className="label" htmlFor="notes">
-                  {t("new.notes")}
-                </label>
-                <textarea id="notes" className="line-area" placeholder={t("new.notesHint")} value={notes} onChange={(event) => setNotes(event.target.value)} />
-              </div>
-            </>,
+              <label>
+                <span>{t("new.parallel")}</span>
+                <span className="inputwrap">
+                  <input type="number" min={1} max={50} value={parallel} onChange={(event) => setParallel(Number(event.target.value))} />
+                </span>
+              </label>
+              <label>
+                <span>{t("new.perComputer")}</span>
+                <Seg label={t("new.perComputer")} value={String(perComputer)} options={["1", "2", "3"].map((value) => ({ value, label: value }))} onChange={(value) => setPerComputer(Number(value))} />
+              </label>
+              <label>
+                <span>{t("new.notes")}</span>
+                <textarea className="notes" placeholder={t("new.notesHint")} value={notes} onChange={(event) => setNotes(event.target.value)} />
+              </label>
+            </div>,
           )}
         </div>
-        <aside className="ds-panel ds-next" aria-labelledby="upload-next">
+        <aside className="panel next" aria-labelledby="upload-next">
           <h3 id="upload-next">{t("new.next")}</h3>
-          <ol>
+          <ol className="nextsteps">
             {(["1", "2", "3", "4"] as const).map((n) => (
               <li key={n}>
                 <b>{t(`new.next${n}`)}</b>
@@ -338,15 +327,15 @@ export function NewDrama() {
               <input type="checkbox" checked={rehearsal} onChange={(event) => setRehearsal(event.target.checked)} />
               <span>
                 <strong>{t("new.rehearse")}</strong>
-                <span className="quiet small">{t(noSkill ? "new.noSkill" : "new.rehearseHint")}</span>
+                <span className="muted">{t(noSkill ? "new.noSkill" : "new.rehearseHint")}</span>
               </span>
             </label>
           )}
           {error !== undefined && <p className="error flush">{errorText(error, t)}</p>}
-          <Button variant="default" size="lg" busy={busy} disabled={missing !== undefined} aria-describedby={reasonId} onClick={() => void start()}>
+          <button type="button" className="btn lg primary" style={{ width: "100%" }} disabled={missing !== undefined || busy} aria-busy={busy || undefined} aria-describedby={reasonId} onClick={() => void start()}>
             {busy ? t("new.starting") : t("new.start")}
-          </Button>
-          <small id={reasonId} className="reason">
+          </button>
+          <small id={reasonId} className="muted">
             {t(missing ?? "new.ready")}
           </small>
         </aside>

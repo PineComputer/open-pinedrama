@@ -420,14 +420,14 @@ p { font-size: inherit; line-height: inherit; color: inherit; margin: 0; }
 .preset[aria-pressed="true"] { border-color: var(--text-primary); box-shadow: 0 0 0 1px var(--text-primary); }
 .preset .radio { width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid var(--border-input); margin-top: 2px; flex: none; }
 .preset[aria-pressed="true"] .radio { border: 5px solid var(--text-primary); }
-.preset b { display: block; font-size: 13px; } .preset small { display: block; color: var(--text-muted); font-size: 12px; margin: 2px 0 6px; }
-.preset code { font: 11px var(--font-mono); color: var(--text-subtle); }
+.preset b { display: block; font-size: 13px; } .preset small { display: block; color: var(--text-secondary); font-size: 12px; margin: 2px 0 6px; }
+.preset code { font: 11px var(--font-mono); color: var(--text-secondary); }
 .fields { display: grid; gap: 14px; }
 .fields label { display: grid; gap: 6px; font-size: 12px; color: var(--text-muted); }
 .inputwrap { display: inline-flex; align-items: center; gap: 4px; height: 36px; width: 180px; padding: 0 12px; border-radius: var(--radius-large); border: 1px solid var(--border-input); background: var(--surface); color: var(--text-muted); font: 13px var(--font-mono); }
 .inputwrap input { border: 0; outline: none; background: none; color: var(--text-primary); font: inherit; width: 100%; }
 .next { position: sticky; top: 16px; display: grid; gap: 14px; }
-.nextsteps { margin: 0; padding: 0 0 0 18px; display: grid; gap: 12px; font-size: 13px; }
+.nextsteps { margin: 0; padding: 0 0 0 18px; list-style: decimal; display: grid; gap: 12px; font-size: 13px; }
 .nextsteps b { display: block; font-weight: 600; } .nextsteps small { color: var(--text-muted); font-size: 12px; }
 
 /* ── analyzing ── */

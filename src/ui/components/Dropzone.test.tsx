@@ -6,9 +6,7 @@ import { Dropzone } from "./Dropzone.tsx";
 
 const zone = (onFile = vi.fn(), onNoFile = vi.fn()) => {
   render(<Dropzone title="Drop your screenplay" hint="or click to choose" choose="Choose a screenplay" onFile={onFile} onNoFile={onNoFile} />);
-  const button = screen.getByRole("button", { name: /^Drop your screenplay/ });
-  // The drop target is the zone around the button.
-  return { onFile, onNoFile, button: button.parentElement! };
+  return { onFile, onNoFile, button: screen.getByRole("button", { name: /^Drop your screenplay/ }) };
 };
 
 describe("Dropzone", () => {
@@ -25,10 +23,10 @@ describe("Dropzone", () => {
     const file = new File(["x"], "a.fountain");
     const dataTransfer = { files: [file], items: [{ kind: "file", type: "", getAsFile: () => file }], types: ["Files"] };
     fireEvent.dragEnter(button, { dataTransfer });
-    await waitFor(() => expect(button).toHaveClass("is-over"));
+    await waitFor(() => expect(button).toHaveClass("over"));
     fireEvent.drop(button, { dataTransfer });
     await waitFor(() => expect(onFile).toHaveBeenCalledExactlyOnceWith(file));
-    expect(button).not.toHaveClass("is-over");
+    expect(button).not.toHaveClass("over");
   });
 
   it("says so when a drop brings no file", async () => {

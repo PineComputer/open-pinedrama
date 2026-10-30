@@ -15,8 +15,7 @@ export function Dropzone({ title, hint, choose, accept, onFile, onNoFile }: {
   /** A drop that brought no file: a drag from an editor's file tree carries only the file's path. */
   onNoFile?: () => void;
 }) {
-  // The root is only where a file may land; choosing is a real button calling react-dropzone's open(), as its
-  // docs show for a dialog opened from a button (noClick, noKeyboard), so no control sits inside another.
+  // Choosing calls react-dropzone's open(), as its docs show for a dialog opened from a button (noClick, noKeyboard).
   const { getRootProps, getInputProps, isDragActive, open } = useDropzone({
     multiple: false,
     accept,
@@ -24,24 +23,29 @@ export function Dropzone({ title, hint, choose, accept, onFile, onNoFile }: {
     noKeyboard: true,
     onDrop: (files) => files[0] && onFile(files[0]),
   });
+  // The design's `button.dropzone` is the drop target, and choosing opens react-dropzone's dialog from it; the file
+  // input sits beside it, so no control is inside another.
   return (
-    <div
-      {...getRootProps({
-        className: ["ds-dropzone", isDragActive && "is-over"].filter(Boolean).join(" "),
-        // react-dropzone passes over a drop with no files in it; a handler given to getRootProps still sees it.
-        onDrop: (event) => {
-          if (event.dataTransfer.files.length === 0) onNoFile?.();
-        },
-      })}
-    >
+    <>
       <input {...getInputProps({ "aria-label": choose })} />
-      <button type="button" onClick={open}>
+      <button
+        type="button"
+        {...getRootProps({
+          className: ["dropzone", isDragActive && "over"].filter(Boolean).join(" "),
+          role: "button",
+          onClick: open,
+          // react-dropzone passes over a drop with no files in it; a handler given to getRootProps still sees it.
+          onDrop: (event) => {
+            if (event.dataTransfer.files.length === 0) onNoFile?.();
+          },
+        })}
+      >
         <span className="plus">
-          <Icon name="upload" />
+          <Icon name="upload" className="ic" />
         </span>
         <b>{title}</b>
         <small>{hint}</small>
       </button>
-    </div>
+    </>
   );
 }

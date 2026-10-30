@@ -54,12 +54,3 @@
 .ds-gallery-row > .ds-empty, .ds-gallery-row > .ds-steps, .ds-gallery-row > .ds-tabs-wrap { flex: 1 1 100%; }
 .ds-gallery-note { color: var(--text-secondary); margin: 12px 0 0; }
 
-/* Dropzone: dashed on the container; selected while a file is over it or the pointer is. */
-.ds-dropzone { border-radius: var(--radius-large); border: 1px dashed var(--border-input); background: var(--surface-container); color: var(--text-secondary); }
-.ds-dropzone:hover, .ds-dropzone.is-over { border-color: var(--text-primary); background: var(--selected); }
-.ds-dropzone > button { width: 100%; display: grid; place-items: center; gap: 8px; padding: 34px 16px; border: 0; border-radius: inherit; background: none; color: inherit; cursor: pointer; text-align: center; font: inherit; }
-.ds-dropzone > button:focus-visible { outline: 2px solid var(--text-primary); outline-offset: 2px; }
-.ds-dropzone .plus { width: 44px; height: 44px; border-radius: 50%; background: var(--surface-container-high); display: grid; place-items: center; color: var(--text-primary); }
-.ds-dropzone .plus .ds-icon { width: 18px; height: 18px; }
-.ds-dropzone b { color: var(--text-primary); font-size: 13.5px; }
-.ds-dropzone small { font-size: 12px; }
