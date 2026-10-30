@@ -8,6 +8,7 @@ import { EXTRACTED, extractText, textName } from "../extract.ts";
 import { errorText } from "../labels.ts";
 import { ReviewingChoice } from "../Reviewing.tsx";
 import { navigate } from "../router.tsx";
+import * as RadioGroup from "@radix-ui/react-radio-group";
 import { Button } from "../components/Button.tsx";
 import { Dropzone } from "../components/Dropzone.tsx";
 import { Icon, type IconName } from "../icons.tsx";
@@ -94,27 +95,26 @@ export function ScreenplayStructure({ structure, onChoose }: { structure: { lang
   );
 }
 
-/** The preset templates: those drama-cli has a preset for, and greyed, those not supported yet. */
+/**
+ * The preset cards (P5.2): radio cards on Radix's RadioGroup, one per template; a template drama-cli has a preset for
+ * can be chosen, the others show greyed. None is chosen for the maker.
+ */
 export function PresetChoice({ value, onChange }: { value: string; onChange: (preset: string) => void }) {
   const { t } = useT();
   return (
-    <div className="field">
-      <span className="label">{t("new.template")}</span>
-      <div className="options">
-        {TEMPLATES.map(({ key, preset }) => (
-          <button
-            key={key}
-            aria-pressed={preset !== undefined && value === preset}
-            className={preset !== undefined && value === preset ? "on" : ""}
-            disabled={preset === undefined}
-            title={preset === undefined ? t("new.soon") : preset}
-            onClick={() => preset && onChange(preset)}
-          >
-            {t(`template.${key}` as TKey)}
-          </button>
-        ))}
-      </div>
-    </div>
+    <RadioGroup.Root className="ds-presets" aria-label={t("new.template")} value={value} onValueChange={onChange}>
+      {TEMPLATES.map(({ key, preset }) => (
+        <RadioGroup.Item key={key} className="ds-preset" value={preset ?? key} disabled={preset === undefined} aria-describedby={`preset-${key}`}>
+          <span className="radio" aria-hidden="true" />
+          <span className="grow">
+            <b>{t(`template.${key}` as TKey)}</b>
+            <small id={`preset-${key}`}>
+              {t(`template.${key}.hint` as TKey)} <code>{preset ?? t("new.soon")}</code>
+            </small>
+          </span>
+        </RadioGroup.Item>
+      ))}
+    </RadioGroup.Root>
   );
 }
 
@@ -241,7 +241,16 @@ export function NewDrama() {
               <FormatTip />
             </>,
           )}
-          {needsPreset && panel("upload-preset", "sliders-horizontal", t("new.template"), <PresetChoice value={preset} onChange={setPreset} />)}
+          {needsPreset &&
+            panel(
+              "upload-preset",
+              "sliders-horizontal",
+              t("new.template"),
+              <>
+                <p className="hint">{t("new.templateHint")}</p>
+                <PresetChoice value={preset} onChange={setPreset} />
+              </>,
+            )}
           {panel(
             "upload-episodes",
             "film-strip",

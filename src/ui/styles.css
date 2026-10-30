@@ -663,3 +663,19 @@ a.ds-tag:hover { background: var(--hover); }
 .ds-next li small { color: var(--text-secondary); font-size: 12px; }
 .ds-next .ds-btn { width: 100%; }
 .ds-next .reason { color: var(--text-secondary); font-size: 12px; }
+
+/* The preset cards (P5.2): two columns of radio cards, the pro direction's PresetPicker. */
+.ds-upload .hint { margin: 0; color: var(--text-secondary); font-size: 12.5px; }
+.ds-presets { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.ds-preset { display: flex; gap: 10px; align-items: flex-start; padding: 12px; border-radius: var(--radius-large); border: 1px solid var(--border); background: var(--surface); text-align: left; color: var(--text-primary); font: inherit; cursor: pointer; }
+.ds-preset:hover:not(:disabled) { background: var(--hover); }
+.ds-preset:focus-visible { outline: 2px solid var(--text-primary); outline-offset: 2px; }
+.ds-preset[data-state="checked"] { border-color: var(--text-primary); box-shadow: 0 0 0 1px var(--text-primary); }
+.ds-preset:disabled { cursor: not-allowed; opacity: 0.55; }
+.ds-preset .radio { width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid var(--border-input); margin-top: 2px; flex: none; }
+.ds-preset[data-state="checked"] .radio { border: 5px solid var(--text-primary); }
+.ds-preset .grow { min-width: 0; }
+.ds-preset b { display: block; font-size: 13px; }
+.ds-preset small { display: block; color: var(--text-secondary); font-size: 12px; margin-top: 2px; }
+.ds-preset code { display: block; margin-top: 6px; font: 11px var(--font-mono); color: var(--text-secondary); }
+@media (max-width: 720px) { .ds-presets { grid-template-columns: 1fr; } }

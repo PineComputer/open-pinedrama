@@ -19,7 +19,7 @@ test("a maker uploads one screenplay, chooses a preset and starts", async ({ pag
   await expect(page.getByRole("region", { name: "Screenplay" }).getByText("stepmother.fountain")).toBeVisible();
   await page.getByRole("textbox", { name: "Title" }).fill("The Stepmother");
   await expect(next.getByText("Choose a preset to start.")).toBeVisible();
-  await page.getByRole("button", { name: "English vertical drama" }).click();
+  await page.getByRole("radio", { name: /English vertical drama/ }).click();
   await expect(next.getByText("Starts the setup session.")).toBeVisible();
   expect(await newProblems(page)).toEqual([]);
 
