@@ -50,7 +50,7 @@ function project(): ProjectView {
   return { state, sessions: [], problems: [], names: parseBibleNames(fixture("bible")) };
 }
 
-const decision: ReviewSummary = { id: "r2", dramaId: "d1", dramaTitle: "The Stepmother", episode: "EP002", kind: "storyboards", state: "open", question: "Ready.", items: 3, createdAt: new Date().toISOString() };
+const decision: ReviewSummary = { id: "r2", dramaId: "d1", dramaTitle: "The Stepmother", episode: "EP002", kind: "storyboards", state: "open", question: "Ready.", items: 3, subjects: ["seg01", "seg02", "seg03"], createdAt: new Date().toISOString() };
 const file = (path: string, createdAt: string) => ({ id: 1, name: "image-1.png", path, type: "image/png", size: 1, kind: "look", url: "/f/1", createdAt }) as unknown as FileItem;
 
 function chat(sessionId: string, label: string, sends: ChatView["sends"]): ChatView {

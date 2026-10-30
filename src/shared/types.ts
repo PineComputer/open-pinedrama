@@ -1,6 +1,6 @@
 // What the engine and the UI agree on: the shapes the HTTP API returns and accepts.
 
-import type { Refusal } from "./refusal.ts";
+import type { Refusal, StopKind } from "./refusal.ts";
 
 export type Mode = "pine" | "replay";
 
@@ -321,6 +321,10 @@ export interface ReviewSummary {
   state: ReviewState;
   question: string;
   items: number;
+  /** What the items are, as the review names them (a segment, a character, a place). */
+  subjects: string[];
+  /** What the stop is about when it asks about a drama-cli refusal: a red line, a limit, or another refusal. */
+  stop?: StopKind;
   thumb?: Still;
   createdAt: string;
 }

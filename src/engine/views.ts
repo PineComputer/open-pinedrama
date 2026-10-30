@@ -29,6 +29,7 @@ import { turnRefusals } from "./refusals.ts";
 import { itemsOf, pendingReview } from "./reviews.ts";
 import { projectView } from "./status.ts";
 import { scaleOf } from "../shared/facts.ts";
+import { stopKind } from "../shared/refusal.ts";
 import { setupStep } from "../shared/project.ts";
 
 function still(file: FileRow): Still {
@@ -316,6 +317,7 @@ const PRIORITY: Record<ReviewKind, number> = { looks: 0, references: 0, storyboa
 function summary(review: ReviewRow): ReviewSummary {
   const files = filesOfStop(review);
   const { items } = itemsOf(review.kind, files);
+  const [refusal] = turnRefusals(review.turn_id).refusals;
   const image = files.find((file) => file.type.startsWith("image/")) ?? files.find((file) => file.type.startsWith("video/"));
   const episode = review.episode_id ? get<EpisodeRow>("select * from episodes where id = ?", review.episode_id) : undefined;
   return {
@@ -328,6 +330,8 @@ function summary(review: ReviewRow): ReviewSummary {
     state: review.state,
     question: review.question,
     items: items.length,
+    subjects: items.map((item) => item.label),
+    stop: refusal ? stopKind(refusal) : undefined,
     thumb: image ? still(image) : undefined,
     createdAt: review.created_at,
   };

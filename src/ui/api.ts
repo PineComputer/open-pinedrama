@@ -2,7 +2,7 @@
 // its scope changed (one shared event stream; after a reconnect everything refetches).
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { ApiFailure, ErrorCode, LiveMessage } from "../shared/types.ts";
-import { formatDistanceToNowStrict } from "date-fns";
+import { formatDistanceToNowStrict, intervalToDuration } from "date-fns";
 import type { Lang } from "./i18n.ts";
 import { enUS, zhCN } from "date-fns/locale";
 
@@ -129,6 +129,14 @@ export function useResource<T>(path: string | null, scopes: string[]): { data: T
 /** How long ago, in the studio's language (date-fns). */
 export function ago(iso: string, lang: Lang): string {
   return formatDistanceToNowStrict(Date.parse(iso), { addSuffix: true, locale: lang === "zh" ? zhCN : enUS });
+}
+
+/** How long since, short, as the prototype's lists put it ("4 min"): the largest whole unit (date-fns), in Intl.DurationFormat's short style. */
+export function since(iso: string, lang: Lang): string {
+  const span = intervalToDuration({ start: Date.parse(iso), end: Date.now() });
+  const units = ["years", "months", "days", "hours", "minutes"] as const;
+  const unit = units.find((key) => span[key]) ?? "seconds";
+  return new Intl.DurationFormat(lang === "zh" ? "zh-CN" : "en", { style: "short" }).format({ [unit]: span[unit] ?? 0 });
 }
 
 export function clock(seconds: number): string {

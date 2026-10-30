@@ -62,7 +62,7 @@ function engine(inbox: ReviewSummary[] = [], sends: ChatView["sends"] = "steer",
   accept("/api/episodes/e1/resume");
 }
 
-const openLooks: ReviewSummary = { id: "r9", dramaId: "d1", dramaTitle: "The Stepmother", kind: "looks", state: "open", question: "Ready.", items: 1, createdAt: "2026-10-30T10:00:00Z" };
+const openLooks: ReviewSummary = { id: "r9", dramaId: "d1", dramaTitle: "The Stepmother", kind: "looks", state: "open", question: "Ready.", items: 1, subjects: ["Lin Xiaoyu"], createdAt: "2026-10-30T10:00:00Z" };
 
 async function pick(name: RegExp) {
   const user = userEvent.setup();

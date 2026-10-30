@@ -34,7 +34,7 @@ const drama = {
 } as unknown as DramaView;
 
 function review(id: string): ReviewSummary {
-  return { id, dramaId: "d1", dramaTitle: "The Stepmother", kind: "storyboards", state: "open", question: "", items: 1, createdAt: "2026-10-30T10:00:00Z" };
+  return { id, dramaId: "d1", dramaTitle: "The Stepmother", kind: "storyboards", state: "open", question: "", items: 1, subjects: ["seg01"], createdAt: "2026-10-30T10:00:00Z" };
 }
 
 function at(path: string) {

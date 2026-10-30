@@ -28,6 +28,7 @@ export function storyboardReview(...segments: string[]): ReviewView {
     state: "open",
     question: "EP002's storyboards are ready for your review.",
     items: segments.length,
+    subjects: segments,
     createdAt: "2026-10-29T10:00:00Z",
     reviewItems: segments.map(storyboard),
     otherFiles: [],

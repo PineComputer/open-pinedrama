@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useDropzone } from "react-dropzone";
 import type { AppInfo, DramaCard, ReviewSummary, Still as StillData } from "../../shared/types.ts";
-import { ago, api, useAction, useResource } from "../api.ts";
+import { ago, api, since, useAction, useResource } from "../api.ts";
 import { Menu } from "../components/Menu.tsx";
 import { Icon } from "../icons.tsx";
 import { type TKey, useT } from "../i18n.ts";
@@ -11,8 +11,8 @@ import { errorText, kindLabel, moneyText, plainText } from "../labels.ts";
 import { Link, navigate } from "../router.tsx";
 import { dropScreenplay } from "./NewDrama.tsx";
 
-type St = "you" | "work" | "accepted" | "back";
-type Shelf = "all" | "you" | "work" | "done" | "stopped";
+type St = "you" | "redline" | "work" | "accepted" | "back";
+type Shelf = "all" | "you" | "work" | "done";
 
 /** The prototype's Status: a dot and a word, `span.st.<state>`. */
 function Status({ st, label }: { st: St; label: string }) {
@@ -24,12 +24,26 @@ function Status({ st, label }: { st: St; label: string }) {
   );
 }
 
-/** Where a drama stands, as its card's chip says it, and the shelf it sits on. */
-function standing(drama: DramaCard): { st: St; label: TKey; shelf: Shelf } {
+/**
+ * Where a drama stands, as its card's chip says it, and the prototype's shelf it sits on: a red line waiting on the
+ * maker is its own state under Needs you; a stopped drama is under All only.
+ */
+function standing(drama: DramaCard, redLine: boolean): { st: St; label: TKey; shelf?: Shelf } {
+  if (redLine) return { st: "redline", label: "drama.redLine", shelf: "you" };
   if (drama.waiting > 0) return { st: "you", label: "drama.needs", shelf: "you" };
   if (drama.status === "done") return { st: "accepted", label: "drama.finished", shelf: "done" };
-  if (drama.status === "stopped") return { st: "back", label: "drama.stopped", shelf: "stopped" };
+  if (drama.status === "stopped") return { st: "back", label: "drama.stopped" };
   return { st: "work", label: drama.status === "setup" ? "drama.casting" : "drama.atWork", shelf: "work" };
+}
+
+const isRedLine = (item: ReviewSummary) => item.stop?.kind === "red-line";
+
+/** A waiting review as the prototype's rows name it: its episode and what it is; how many, which, and how long it has waited. */
+function rowOf(item: ReviewSummary, t: ReturnType<typeof useT>["t"], lang: ReturnType<typeof useT>["lang"]): { title: string; detail: string } {
+  const title = item.episode ? `${item.episode} · ${t(isRedLine(item) ? "slate.row.redLine" : `slate.row.${item.kind}`)}` : t(isRedLine(item) ? "drama.redLine" : `kind.${item.kind}`);
+  const one = item.items === 1;
+  const count = item.items ? t(item.kind === "takes" ? (one ? "slate.take" : "slate.takes") : one ? "slate.item" : "slate.items", { n: item.items }) : "";
+  return { title, detail: [count, item.subjects.join(", "), since(item.createdAt, lang)].filter(Boolean).join(" · ") };
 }
 
 /** A picture as the prototype's `img`: an image, or a video's opening frame. `face` crops a look sheet to its close-up. */
@@ -64,7 +78,7 @@ function Hero({ waiting, dramas }: { waiting: ReviewSummary[]; dramas: DramaCard
   const drama = byActivity(dramas)[0];
   if (!drama) return null;
   const review = waiting.find((item) => item.dramaId === drama.id);
-  const where = standing(drama);
+  const where = standing(drama, waiting.some((item) => item.dramaId === drama.id && isRedLine(item)));
   const line = review?.question || drama.facts.lastLine;
   const { total, done } = drama.episodes;
   return (
@@ -81,13 +95,13 @@ function Hero({ waiting, dramas }: { waiting: ReviewSummary[]; dramas: DramaCard
             <Icon name="map-pin" className="ic" />
             {review ? [review.episode, t("slate.waitsKind", { kind: t(`kind.${review.kind}` as TKey) })].filter(Boolean).join(" · ") : t(where.label, { n: drama.waiting })}
           </span>
-          {line && <blockquote>{plainText(line)}</blockquote>}
+          {line && <blockquote>“{plainText(line)}”</blockquote>}
           <div className="row">
             <span>
               {[
                 total ? t("drama.episodes", { done, total }) : "",
                 drama.spent.total > 0 ? t("slate.spent", { amount: moneyText(drama.spent, t, lang) }) : "",
-                drama.facts.lastActivity ? ago(drama.facts.lastActivity, lang) : "",
+                drama.facts.lastActivity ? t("slate.updated", { when: since(drama.facts.lastActivity, lang) }) : "",
               ]
                 .filter(Boolean)
                 .join(" · ")}
@@ -121,13 +135,14 @@ function Hero({ waiting, dramas }: { waiting: ReviewSummary[]; dramas: DramaCard
               const own = dramas.find((entry) => entry.id === item.dramaId);
               // The item's own picture (a look's is a whole sheet, cropped to its close-up), else its drama's cover.
               const pic = item.thumb ?? own?.cover;
+              const row = rowOf(item, t, lang);
               return (
                 <li key={item.id}>
                   <Link to={`/r/${item.id}`} className="wait">
                     {pic ? <Pic still={pic} face={Boolean(item.thumb) && item.kind === "looks"} /> : <span className="emptythumb" />}
                     <span>
-                      <b>{[item.episode, t(`kind.${item.kind}` as TKey)].filter(Boolean).join(" · ")}</b>
-                      <small>{[t("slate.items", { n: item.items }), item.dramaTitle, ago(item.createdAt, lang)].join(" · ")}</small>
+                      <b>{row.title}</b>
+                      <small>{row.detail}</small>
                     </span>
                   </Link>
                 </li>
@@ -140,9 +155,9 @@ function Hero({ waiting, dramas }: { waiting: ReviewSummary[]; dramas: DramaCard
 }
 
 /** The prototype's .pcard: the cover with its status and progress, then the title, what it is, its spend and two tags. */
-function Card({ drama }: { drama: DramaCard }) {
+function Card({ drama, redLine }: { drama: DramaCard; redLine: boolean }) {
   const { t, lang } = useT();
-  const where = standing(drama);
+  const where = standing(drama, redLine);
   const { total, done } = drama.episodes;
   const { facts } = drama;
   // Planned: the episodes drama-cli lists, at the length the maker asked; neither guessed.
@@ -223,10 +238,14 @@ export function Slate() {
   // On a project without the drama skill, the way to try the studio on Pine is a rehearsal.
   const noSkill = app.data?.mode === "pine" && app.data.dramaSkill === "missing";
   const waiting = (inbox.data ?? []).filter((item) => item.state === "open");
-  const counts: Record<Shelf, number> = { all: dramas.length, you: 0, work: 0, done: 0, stopped: 0 };
-  for (const drama of dramas) counts[standing(drama).shelf]++;
+  const redLines = new Set(waiting.filter(isRedLine).map((item) => item.dramaId));
+  const counts: Record<Shelf, number> = { all: dramas.length, you: 0, work: 0, done: 0 };
+  for (const drama of dramas) {
+    const { shelf } = standing(drama, redLines.has(drama.id));
+    if (shelf) counts[shelf]++;
+  }
   const sorted = sort === "title" ? [...dramas].sort((a, b) => a.title.localeCompare(b.title, lang)) : byActivity(dramas);
-  const shown = sorted.filter((drama) => (shelf === "all" || standing(drama).shelf === shelf) && drama.title.toLowerCase().includes(find.trim().toLowerCase()));
+  const shown = sorted.filter((drama) => (shelf === "all" || standing(drama, redLines.has(drama.id)).shelf === shelf) && drama.title.toLowerCase().includes(find.trim().toLowerCase()));
   return (
     <div className="wrap">
       <div className="greet">
@@ -263,7 +282,7 @@ export function Slate() {
       {dramas.length > 0 && (
         <div className="tabsrow">
           <div className="utabs" role="tablist" aria-label={t("slate.shelves")}>
-            {(["all", "you", "work", "done", "stopped"] as const).map((key) => (
+            {(["all", "you", "work", "done"] as const).map((key) => (
               <button key={key} type="button" role="tab" aria-selected={shelf === key} onClick={() => setShelf(key)}>
                 {t(`slate.shelf.${key}`)}
                 <small>{counts[key]}</small>
@@ -293,7 +312,7 @@ export function Slate() {
       )}
       <div className="cards" role="tabpanel" aria-label={t("slate.shelves")}>
         {shown.map((drama) => (
-          <Card key={drama.id} drama={drama} />
+          <Card key={drama.id} drama={drama} redLine={redLines.has(drama.id)} />
         ))}
         {(shelf === "all" && !find) || dramas.length === 0 ? <NewCard /> : null}
       </div>

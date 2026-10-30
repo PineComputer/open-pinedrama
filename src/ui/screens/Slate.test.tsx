@@ -77,8 +77,8 @@ describe("Home", () => {
   it("shows a waiting item's own picture, else its drama's cover", async () => {
     answer("/api/app", replay);
     answer("/api/inbox", [
-      { id: "r1", dramaId: "d1", dramaTitle: "The Stepmother", kind: "takes", state: "open", question: "", items: 1, thumb: { url: "/api/files/3", video: true }, createdAt: "2026-10-30T11:56:00Z" },
-      { id: "r2", dramaId: "d1", dramaTitle: "The Stepmother", kind: "question", state: "open", question: "How old?", items: 0, createdAt: "2026-10-30T11:50:00Z" },
+      { id: "r1", dramaId: "d1", dramaTitle: "The Stepmother", kind: "takes", state: "open", question: "", items: 1, subjects: ["seg01"], thumb: { url: "/api/files/3", video: true }, createdAt: "2026-10-30T11:56:00Z" },
+      { id: "r2", dramaId: "d1", dramaTitle: "The Stepmother", kind: "question", state: "open", question: "How old?", items: 0, subjects: [], createdAt: "2026-10-30T11:50:00Z" },
     ]);
     answer("/api/dramas", [{ ...stepmother, waiting: 2, cover: { url: "/api/files/9" } }]);
     render(<Slate />);
@@ -105,19 +105,20 @@ describe("Home", () => {
     answer("/api/app", replay);
     // The older drama's review has waited longer; the newer drama is the one to carry on with.
     answer("/api/inbox", [
-      { id: "r0", dramaId: "d2", dramaTitle: "Bride on Bail", kind: "question", state: "open", question: "Old question", items: 0, createdAt: "2026-10-27T11:00:00Z" },
-      { id: "r1", dramaId: "d1", dramaTitle: "The Stepmother", episode: "EP001", kind: "takes", state: "open", question: "Two takes wait.", items: 2, createdAt: "2026-10-30T11:56:00Z" },
+      { id: "r0", dramaId: "d2", dramaTitle: "Bride on Bail", kind: "question", state: "open", question: "Old question", items: 0, subjects: [], createdAt: "2026-10-27T11:00:00Z" },
+      { id: "r1", dramaId: "d1", dramaTitle: "The Stepmother", episode: "EP001", kind: "takes", state: "open", question: "Two takes wait.", items: 2, subjects: ["seg01", "seg03"], createdAt: "2026-10-30T11:56:00Z" },
     ]);
     answer("/api/dramas", [{ ...bride, waiting: 1, facts: { lastActivity: "2026-10-27T11:00:00Z" } }, { ...stepmother, waiting: 1 }]);
     render(<Slate />);
     const hero = await screen.findByRole("region", { name: "The Stepmother" });
-    expect(hero).toHaveTextContent("Two takes wait.");
+    expect(within(hero).getByText("“Two takes wait.”", { selector: "blockquote" })).toBeInTheDocument();
     expect(within(hero).getByRole("link", { name: /^Review Takes/ })).toHaveAttribute("href", "/r/r1");
     const waiting = within(hero).getByRole("list", { name: "Waiting for you" });
     const rows = within(waiting).getAllByRole("link");
     expect(rows.map((link) => link.getAttribute("href"))).toEqual(["/r/r1", "/r/r0"]);
-    expect(rows[0]).toHaveTextContent("EP001 · Takes");
-    expect(rows[0]).toHaveTextContent("2 items · The Stepmother · 4 minutes ago");
+    // As the prototype's rows read: what it is in the episode, then how many, which, and how long it has waited.
+    expect(rows[0]).toHaveTextContent("EP001 · takes2 takes · seg01, seg03 · 4 min");
+    expect(rows[1]).toHaveTextContent("Question3 days");
     expect(screen.getByText("2 decisions wait for you across your dramas.")).toBeInTheDocument();
   });
 
@@ -151,13 +152,13 @@ describe("Home", () => {
     expect(takeDroppedScreenplay()).toBeUndefined();
   });
 
-  it("has a shelf for each state, with its count, Stopped among them", async () => {
+  it("has the prototype's shelves, a stopped drama under All only", async () => {
     answer("/api/app", replay);
     answer("/api/inbox", []);
     answer("/api/dramas", [stepmother, bride]);
     render(<Slate />);
     const tabs = await screen.findByRole("tablist");
-    expect(within(tabs).getAllByRole("tab").map((tab) => tab.textContent)).toEqual(["All2", "Needs you0", "At work1", "Finished0", "Stopped1"]);
+    expect(within(tabs).getAllByRole("tab").map((tab) => tab.textContent)).toEqual(["All2", "Needs you0", "At work1", "Finished0"]);
   });
 
   it("offers the latest drama to carry on with, and the agent's last line, when nothing waits", async () => {
@@ -167,6 +168,20 @@ describe("Home", () => {
     render(<Slate />);
     const hero = await screen.findByRole("region", { name: "The Stepmother" });
     expect(hero).toHaveTextContent("Drawing the storyboards for EP001");
+    expect(hero).toHaveTextContent(/updated \d+ \w+ ago/);
     expect(within(hero).getByRole("link", { name: /Open drama/ })).toHaveAttribute("href", "/d/d1");
+  });
+
+  it("shows a red line waiting on the maker as its own state, under Needs you", async () => {
+    answer("/api/app", replay);
+    answer("/api/inbox", [
+      { id: "r7", dramaId: "d2", dramaTitle: "Bride on Bail", episode: "EP007", kind: "question", state: "open", question: "A red line.", items: 0, subjects: [], stop: { kind: "red-line" }, createdAt: "2026-10-30T11:58:00Z" },
+    ]);
+    answer("/api/dramas", [stepmother, { ...bride, status: "production", waiting: 1 }]);
+    render(<Slate />);
+    const waiting = await screen.findByRole("list", { name: "Waiting for you" });
+    expect(within(waiting).getByRole("link")).toHaveTextContent("EP007 · red line2 min");
+    expect((await tileOf(/Bride on Bail/)).querySelector(".st.redline")).toHaveTextContent("Red line");
+    expect(within(screen.getByRole("tablist")).getByRole("tab", { name: /Needs you/ })).toHaveTextContent("1");
   });
 });
