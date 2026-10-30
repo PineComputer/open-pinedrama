@@ -71,6 +71,12 @@ export interface Lineage {
   links: LineageLink[];
 }
 
+/** The drama's lineage as the engine serves it, and each session's newer export that didn't read. */
+export interface LineageView {
+  lineage: Lineage | null;
+  problems: { sessionId: string; turnId: string; error: string }[];
+}
+
 export class LineageError extends Error {
   constructor(readonly field: string, expected: string) {
     super(`drama-cli's lineage: ${field || "the export"} should be ${expected}.`);

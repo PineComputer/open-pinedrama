@@ -174,6 +174,15 @@ create table if not exists statuses (
   saved_at text not null
 );
 
+-- drama-cli's lineage each stop returns (lineage.ts): the export as it came, or why it didn't read.
+create table if not exists lineages (
+  turn_id text primary key,
+  session_id text not null,
+  export text,
+  error text,
+  saved_at text not null
+);
+
 -- The drama-cli refusals a stop asks about (refusals.ts): the file as it came, or why it didn't read.
 create table if not exists refusals (
   turn_id text primary key,
