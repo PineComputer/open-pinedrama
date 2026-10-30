@@ -253,7 +253,7 @@
     return html`<div class="main">
       <${TopBar} crumbs=${[P.project.title, "EP006", "Canvas"]}/>
       <div class="body" style="position:relative">
-        <div class=${"board " + (S.panning ? "panning" : "")} ref=${ref} onPointerDown=${down} onPointerMove=${move} onPointerUp=${up} onPointerLeave=${up} onWheel=${wheel}>
+        <div class=${"board " + (S.panning ? "panning" : "")} style=${`--grid:${48 * k}px;--gx:${x % (48 * k)}px;--gy:${y % (48 * k)}px;--dot:${k < 0.12 ? 0.8 : 1.15}px`} ref=${ref} onPointerDown=${down} onPointerMove=${move} onPointerUp=${up} onPointerLeave=${up} onWheel=${wheel}>
           <div class="layer" style=${`transform:translate(${x}px,${y}px) scale(${k})`}>
             <svg class="wires" width="1" height="1">${EDGES.map(wire)}</svg>
             ${NODES.filter((n) => n.kind === "group").map((g) => html`<div class="group" style=${`left:${g.x}px;top:${g.y}px;width:${g.w}px;height:${g.h}px`}><span class="gl">${g.label}</span></div>`)}
