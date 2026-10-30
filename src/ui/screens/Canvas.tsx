@@ -6,7 +6,7 @@
 // this episode's segment groups and cut. React Flow gives the plane, dragging, selection and the
 // viewport; where the maker moved items is kept per episode as the studio's view state. Phase 1
 // only reads: the inspector steers the agent, and the hand actions stand disabled.
-import { Background, BackgroundVariant, type Edge, Handle, MiniMap, type Node, type NodeProps, Panel, Position, ReactFlow, ReactFlowProvider, useNodesInitialized, useNodesState, useReactFlow, useViewport } from "@xyflow/react";
+import { Background, BackgroundVariant, type Edge, Handle, MiniMap, type Node, type NodeProps, Position, ReactFlow, ReactFlowProvider, useNodesInitialized, useNodesState, useReactFlow, useViewport } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
 import type { LineageNode, LineageView } from "../../shared/lineage.ts";
@@ -304,7 +304,8 @@ function Plane({ drama }: { drama: DramaView }) {
         >
           <Background variant={BackgroundVariant.Dots} gap={22} size={1.2} />
           {minimap && <MiniMap position="bottom-right" pannable zoomable className="ds-minimap" />}
-          <Panel position="top-left" className="ctop">
+        </ReactFlow>
+        <div className="ctop">
             <div className="ds-epswitch">
               <button type="button" className={buttonVariants({ variant: "ghost", size: "icon" })} aria-label={t("canvas.prevEpisode")} disabled={at <= 0} onClick={() => go(codes[at - 1])}>
                 <Icon name="caret-left" />
@@ -325,11 +326,8 @@ function Plane({ drama }: { drama: DramaView }) {
                 {t("canvas.waiting", { n: drama.waiting })}
               </Link>
             )}
-          </Panel>
-          <Panel position="bottom-left">
-            <ZoomPill minimap={minimap} onMinimap={() => setMinimap(!minimap)} onLayOut={() => void api(`/api/dramas/${drama.id}/canvas/${code}`, { method: "DELETE" }).then(() => positions.reload())} />
-          </Panel>
-        </ReactFlow>
+        </div>
+        <ZoomPill minimap={minimap} onMinimap={() => setMinimap(!minimap)} onLayOut={() => void api(`/api/dramas/${drama.id}/canvas/${code}`, { method: "DELETE" }).then(() => positions.reload())} />
         {picked && (
           // The prototype's detail card: the picked stage's picture, what it is, what uses it and what it reads, and the ways to act on it.
           <div className="detail nowheel" role="dialog" aria-label={picked.data.label}>
