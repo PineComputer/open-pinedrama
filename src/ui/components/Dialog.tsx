@@ -1,5 +1,6 @@
 // A question the maker answers before anything happens: shadcn/ui's AlertDialog (focus kept inside,
-// Escape closes, focus goes back to what opened it).
+// Escape closes, focus goes back to what opened it). A danger is filled in the error's colour: outlined,
+// it falls under 4.5:1 on the dialog's footer (axe).
 import { type ReactNode, useEffect, useRef } from "react";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { useT } from "../i18n.ts";
@@ -44,7 +45,7 @@ export function Dialog({
         <AlertDialogFooter>
           <AlertDialogCancel>{cancel ?? t("dialog.cancel")}</AlertDialogCancel>
           {confirm && (
-            <AlertDialogAction variant={confirm.danger ? "destructive" : "default"} onClick={confirm.run}>
+            <AlertDialogAction className={confirm.danger ? "bg-destructive text-primary-foreground hover:bg-destructive/90" : undefined} onClick={confirm.run}>
               {confirm.label}
             </AlertDialogAction>
           )}
