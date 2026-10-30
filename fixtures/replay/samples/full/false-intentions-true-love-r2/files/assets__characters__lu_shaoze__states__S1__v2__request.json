@@ -1,0 +1,13 @@
+{
+  "model": "gpt-image-2.5-sunburst",
+  "prompt": "Edit this character reference sheet of Lu Shaoze (a fictional 28-year-old). Change ONLY the outfit: the person now wears look S1, one outfit only: Present, night: a sharp, slim-tailored navy-blue double-breasted suit jacket with peaked lapels and a navy silk pocket square, over a black silk dress shirt open at the collar. Matching navy suit trousers with a crisp crease, and polished black leather Oxford shoes.. Keep everything else exactly as in the input image.\nThe new outfit is identical in every view and in the close-up: the same garments, accessories and details on the same side of the body, seen from that view's angle. Garments are plain, with no logo, brand mark, or printed letters or numbers.\nPreserve exactly: the face, facial features, skin and hair; the identity of the person; body shape, height and proportions; marks and scars as described (Handsome, mature-looking East Asian man of 28 who reads clearly as a grown man rather than a boy. He has a long, angular face with sharp, chiselled cheekbones, a strong square defined jaw and a firm chin, a straight high nose and narrow, slightly hooded, cool eyes under straight, thick dark brows. A faint, neatly groomed shadow of stubble along his jaw adds to his mature look. His skin is healthy and natural, with real texture. His black hair is short at the sides and styled up and back off his forehead in a glossy, polished pompadour sweep, with no fringe. He is about 183 cm, tall and athletic with broad shoulders and a strong chest. In the present he wears a heavy silver steel watch and a silver signet ring. In the flashback at 23 he is recognisably the same man: the same angular face and swept-back hair, worn slightly looser and less glossy, with a clean-shaven jaw and a touch less hardness in the face.); the pose and limb positions in every view; panel layout, scale, spacing and framing; plain background; studio lighting and colour balance.\n\nAvoid: changed face, different person, older or younger-looking face, changed body shape, changed pose, changed layout, changed background, changed lighting, clothing from the previous look left over, text, watermark.\n",
+  "n": 1,
+  "size": "2048x1152",
+  "quality": "high",
+  "output_format": "jpeg",
+  "output_compression": 100,
+  "moderation": "low",
+  "input_images": [
+    "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/characters/lu_shaoze/v2/image-1.jpg"
+  ]
+}

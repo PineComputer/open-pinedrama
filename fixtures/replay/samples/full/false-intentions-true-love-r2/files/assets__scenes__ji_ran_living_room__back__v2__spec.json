@@ -1,0 +1,12 @@
+{
+  "provider": "openai",
+  "model": "gpt-image-2.5-sunburst",
+  "prompt": "Image 1 is the floor plan of a room seen from above: its bottom edge is the front wall, its top edge the back wall, its left edge the left wall and its right edge the right wall. Image 2 is the front view of the same room (the establishing view), taken from the centre of the front wall facing the back wall. Generate one photorealistic cinematic still of this same room, empty of people, from a new camera position: the back view: the camera stands at the centre of the back wall, at eye level, facing the front wall, turned 180 degrees from Image 2, so the left wall is at the right edge of the frame and the right wall at its left edge. Turn the camera for real: this view must not show the back wall's furniture head-on unless it is the wall being faced. Keep every wall, door, window, piece of furniture, material, colour and light exactly as Image 1 and Image 2 show them, seen from this new side; the room layout and furniture placement exactly match Image 1. Location: INT. JI RAN'S LIVING ROOM. A spacious, stylish contemporary downtown apartment living room at night, in pale stone, warm oak and glass. Back wall: floor-to-ceiling windows with sheer curtains and a glittering night city view, which gives a cool glow from behind. Left wall: the opening to the entrance hallway, the way in, and a large abstract canvas. Right wall: an open-plan kitchen with white cabinetry and a long marble island with three bar stools, lit by a pendant above. In the middle of the room, on a large patterned rug, a long pale-oatmeal sofa stands with its back to the left wall, facing the open kitchen on the right wall. In front of it is a low marble-and-glass coffee table, with open floor between the coffee table and the kitchen island. Front wall, behind the camera: a low TV console. Warm light also comes from a brass arc floor lamp beside the sofa and soft cove lighting in the ceiling.\n\nAvoid: people, readable text, logos, watermark, any door or window the description does not name.\n",
+  "aspect_ratio": "9:16",
+  "size": "1152x2048",
+  "quality": "high",
+  "images": [
+    "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/ji_ran_living_room/floor-plan/v2/image-1.jpg",
+    "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/ji_ran_living_room/front/v2/image-1.jpg"
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "model": "ep-20260928175156-xn9xm",
+  "content": [
+    {
+      "type": "text",
+      "text": "Image 1: Thirteen-panel storyboard reference, used for the overall shot structure, shot sizes, and camera-movement rhythm. Read it from left to right and from top to bottom; panel N is Shot N.\nImage 2: Live-action reference of Funeral Hall, used as the benchmark for environmental composition, lighting, and realistic live-action texture; it contains no people.\nImage 3: Subject 1 (Si Xin) character appearance reference.\nImage 4: Subject 2 (Zhang Cuimei) character appearance reference.\nImage 5: Subject 3 (Si Nian, look S0) character appearance reference.\n[Subject settings]\nSubject 1 (Si Xin): Refer to Image 3. 50, Si Nian's adoptive father and deputy head of a state-owned chemical plant. He is a respected local official.. Outfit: Mid-grey wool Zhongshan (Mao) suit: a buttoned four-pocket jacket and matching grey trousers. Underneath is a plain white shirt collar. He wears a black mourning armband on his left sleeve, polished black leather shoes, black-rimmed glasses and a steel watch. Signature colour: grey.\nSubject 2 (Zhang Cuimei): Refer to Image 4. 55, Si Nian's adoptive mother and Si Xin's wife.. Outfit: Plum-purple knitted long-sleeved cardigan buttoned over a plain black high-neck blouse, straight black trousers and black low-heeled leather shoes. She wears a black mourning armband on her left sleeve, gold stud earrings and a jade bangle. Signature colour: purple.\nSubject 3 (Si Nian): Refer to Image 5. 18, Protagonist. Si Nian is the Si family's adopted daughter, swapped at birth. She is presumed dead and wakes at her own funeral with the mind of a fearless modern woman.. Outfit: look S0: Funeral burial clothes (shou yi): a high-collared, long-sleeved, dark navy-blue satin jacket with cloth frog fastenings and a subtle tonal cloud pattern, matching loose dark navy satin trousers, plain black cloth slippers and the red string bracelet on her left wrist. Her hair is loose. Signature colour: red.\nEnvironment (Funeral Hall): Refer to Image 2. Day, cool daylight through the tall left windows and a flat fluorescent wash. Cool diagonal daylight from the tall left windows, flat pale fluorescent overhead light. Live sound: quiet hall, rustle of bowing clothes, a dry cough, then screams and scattering feet.\nDo not swap the characters' appearances, clothing, actions, positions or dialogue.\n[Overall style]\nPhotorealistic live-action short drama with cinematic lighting. Each character keeps the face and the outfit with its main colour from their reference image throughout. Use each character sheet only for that character: the face from the close-up on the right, the body and outfit from the turnaround on the left; do not render the sheet's layout, white background or multiple views. This segment has 7 lines, in this order: Si Yi (V.O.), Si Xin, Zhang Cuimei, Si Yi (V.O.), Si Xin, Si Yi (V.O.), Si Nian. Generate speech only from the lines in {} in the shot list, each spoken exactly once by its speaker; everyone else keeps their mouth naturally closed while listening, and a V.O. speaker keeps their mouth closed or is off screen. Follow the shot list below; do not add cuts or camera moves beyond it. Strictly adhere to the 180-degree rule: within a scene, characters keep their screen sides and the camera stays on one side of the axis. Seamless continuity of action, spatial matching and consistent actor blocking; cut on action. For dialogue prefer static shot-reverse-shot and over-the-shoulder shots, balanced with reaction shots and close-up inserts. Faces stable and clear, consistent with the reference images, with no resemblance to any real actor or actress. Normal human eyes. Natural anatomy and hands. Natural, fluid motion that follows the blocking; characters make subtle, natural movements. Characters, props and environment share one world with matched lighting. Each line ends naturally with breathing room and is never cut off. Authentic performances with micro-expressions. No BGM; generate only dialogue, environmental sounds and action sounds. No subtitles.\n[Strictly exclude]\nSi Nian opening her eyes before she sits up. the camera crossing to the bier's far side. subtitles. Dialogue from the wrong character, multiple people speaking at once, repeated or missing lines, lip-sync errors and audio-visual desynchronization. The raw reference images (character sheets, setting plates) appearing as a frame of the video, and starting on a still frame of the setting reference. A fast zoom-in at the start, a fast pull-back at the end, unmotivated whip-pans, tilts, zooms and 360-degree orbits. Axis-crossing, jump cuts, frame skips, flicker and clipping. Characters or props popping in or vanishing, and duplicate characters except mirror reflections. Readable text, numbers, logos and watermarks; phones and paper are shown from the back or out of focus. Storyboard frames, panel borders, gutters and grid layouts.\n[Shot list] (13 shots, approximately 28 seconds)\nWhen a previous-shot reference image is given, Shot 1 matches its camera position, shot size and blocking and continues from that moment; do not repeat that frame later.\nAt the start: Funeral hall. The axis runs from the mourners to the bier. The camera stays on the window side, the bier at screen right, the mourners facing screen right. There is one bier at the screen-right end under one white cloth, with one framed portrait above it. Paper wreaths stand along both walls and the double wooden doors are behind the mourners at screen left. Si Yi stands at the head of the bier facing screen left, off frame in this segment. Si Nian lies still under the white cloth in burial clothes, feet toward the mourners. Si Xin stands in the front row nearest the camera with Zhang Cuimei at his far side, both facing the bier, ready to bow. Bin Ke Jia and Bin Ke Yi stand in the back row, off frame.\nShot 1 (0-2s): [Medium shot, locked-off camera, eye-level from the window side] Si Xin and Zhang Cuimei stand in the front row facing the bier at screen right and begin to bow; Si Yi is off screen. Dialogue (Si Yi, V.O., in Mandarin, slow and ceremonial): {一鞠躬。}\nShot 2 (2-4s): [Close-up insert, locked-off camera, eye-level at the foot of the bier] Si Nian's foot in a black cloth slipper, at the edge of the white cloth, twitches once.\nShot 3 (4-6s): [Close-up, low angle from the window side] Si Xin freezes halfway into his bow, his eyes widening behind his glasses, fixed on the bier.\nShot 4 (6-8s): [Medium two-shot, handheld, eye-level from the window side] Si Xin grabs Zhang Cuimei's sleeve in panic and pulls her toward him. Dialogue (Si Xin, in Mandarin, panicked whisper): {她好像动了一下。}\nShot 5 (8-10s): [Medium close-up, locked-off camera, eye-level from the window side] Zhang Cuimei shakes his hand off her sleeve and rolls her eyes. Dialogue (Zhang Cuimei, in Mandarin, impatient hiss): {你看错了。}\nShot 6 (10-12s): [Wide shot, high angle from the window side, bier at screen right] The front row bows again toward the white-draped bier where Si Nian lies; Si Yi is off screen. Dialogue (Si Yi, V.O., in Mandarin, slow and ceremonial): {二鞠躬。}\nShot 7 (12-14s): [Extreme close-up insert, high angle on the bier] The back of Si Nian's hand with the red string bracelet rests on the white cloth, and her fingers flex.\nShot 8 (14-16s): [Medium shot, handheld, eye-level from the window side] Si Xin jolts upright with a shudder and slaps Zhang Cuimei's arm with his palm.\nShot 9 (16-18s): [Close-up, quick push in, eye-level from the window side] Si Xin's face is pale and sweating, his glasses slipping down his nose. Dialogue (Si Xin, in Mandarin, voice cracking in panic): {她这回真的动了！}\nShot 10 (18-20s): [Medium close-up, low angle from the window side] Zhang Cuimei glances back at the staring guests, flushes and tugs at her black armband. <A dry cough from off screen>\nShot 11 (20-22s): [Medium shot, locked-off camera, eye-level from the window side] Si Xin and Zhang Cuimei stiffly bend into the third bow toward the bier; Si Yi is off screen. Dialogue (Si Yi, V.O., in Mandarin, slow and ceremonial): {三鞠……}\nShot 12 (22-25s): [Medium shot, low angle from the foot of the bier, window side] Si Nian sits bolt upright on the bier with her eyes still shut, the white cloth sliding to her waist, and she frowns in annoyance. Dialogue (Si Nian, in Mandarin, groggy and irritated): {埃，吵死了！}\nShot 13 (25-28s): [Wide shot, handheld, high angle from the window side, bier at screen right] Mourners scatter toward the walls, Zhang Cuimei falls backward onto the terrazzo floor, and Si Xin stumbles back a step while Si Nian sits upright on the bier. <Screams fill the hall, a body thuds onto the floor>\nAt the end: Funeral hall, same axis, camera on the window side, the bier at screen right. Si Nian sits upright on the bier in burial clothes, the white cloth at her waist, eyes half shut, frowning. Zhang Cuimei sits on the floor in the front row where she fell, and Si Xin stands half a step back at her side, both facing the bier. Unnamed mourners and Si Yi have fled toward the walls. Paper wreaths line both walls and the double wooden doors are at screen left.\n"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261019103842-5lcmp"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@/Users/yurun/RunVid/short-drama-runs/houma-ep001-v2/assets/scenes/funeral_hall/v3/image-1.jpg",
+        "path": "/Users/yurun/RunVid/short-drama-runs/houma-ep001-v2/assets/scenes/funeral_hall/v3/image-1.jpg",
+        "sha256": "4bc979bb1ede6c7b613679048595139d8b14b7e224c6f53cb548db289deb0061"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261019091047-ppqp2"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261019092510-g6xgz"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261019091912-fzk84"
+      },
+      "role": "reference_image"
+    }
+  ],
+  "duration": 28,
+  "ratio": "9:16",
+  "resolution": "480p",
+  "generate_audio": true,
+  "watermark": false,
+  "return_last_frame": true
+}

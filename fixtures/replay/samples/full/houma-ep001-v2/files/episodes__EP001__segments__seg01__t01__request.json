@@ -1,0 +1,52 @@
+{
+  "model": "ep-20260928175156-xn9xm",
+  "content": [
+    {
+      "type": "text",
+      "text": "Image 1: Nine-panel storyboard reference, used for the overall shot structure, shot sizes, and camera-movement rhythm. Read it from left to right and from top to bottom; panel N is Shot N.\nImage 2: Live-action reference of Funeral Hall, used as the benchmark for environmental composition, lighting, and realistic live-action texture; it contains no people.\nImage 3: Subject 1 (Si Yi) character appearance reference.\nImage 4: Subject 2 (Bin Ke Jia) character appearance reference.\nImage 5: Subject 3 (Bin Ke Yi) character appearance reference.\n[Subject settings]\nSubject 1 (Si Yi): Refer to Image 3. 45, Funeral master of ceremonies at the funeral home.. Outfit: Plain black buttoned Zhongshan jacket with matching black trousers, a small white paper mourning flower pinned to the left breast, and black cloth shoes. Signature colour: black.\nSubject 2 (Bin Ke Jia): Refer to Image 4. 22, A young female funeral guest who gossips about the Si family.. Outfit: Navy-blue long-sleeved buttoned cotton jacket over a plain white blouse, straight black trousers and black cloth shoes. Signature colour: blue.\nSubject 3 (Bin Ke Yi): Refer to Image 5. 23, A young male funeral guest who knows the scandal behind the death.. Outfit: Brown corduroy long-sleeved zip jacket over a plain grey sweater, dark grey trousers and black leather shoes. Signature colour: brown.\nEnvironment (Funeral Hall): Refer to Image 2. Day, cool daylight through the tall left windows and a flat fluorescent wash. Cool diagonal daylight from the tall left windows, flat pale fluorescent overhead light. Live sound: hushed hall, shuffling feet, soft murmurs.\nDo not swap the characters' appearances, clothing, actions, positions or dialogue.\n[Overall style]\nPhotorealistic live-action short drama with cinematic lighting. Each character keeps the face and the outfit with its main colour from their reference image throughout. Use each character sheet only for that character: the face from the close-up on the right, the body and outfit from the turnaround on the left; do not render the sheet's layout, white background or multiple views. This segment has 3 lines, in this order: Si Yi, Bin Ke Jia, Bin Ke Yi. Generate speech only from the lines in {} in the shot list, each spoken exactly once by its speaker; everyone else keeps their mouth naturally closed while listening, and a V.O. speaker keeps their mouth closed or is off screen. Follow the shot list below; do not add cuts or camera moves beyond it. Strictly adhere to the 180-degree rule: within a scene, characters keep their screen sides and the camera stays on one side of the axis. Seamless continuity of action, spatial matching and consistent actor blocking; cut on action. For dialogue prefer static shot-reverse-shot and over-the-shoulder shots, balanced with reaction shots and close-up inserts. Faces stable and clear, consistent with the reference images, with no resemblance to any real actor or actress. Normal human eyes. Natural anatomy and hands. Natural, fluid motion that follows the blocking; characters make subtle, natural movements. Characters, props and environment share one world with matched lighting. Each line ends naturally with breathing room and is never cut off. Authentic performances with micro-expressions. No BGM; generate only dialogue, environmental sounds and action sounds. No subtitles.\n[Strictly exclude]\nSi Nian's face or movement visible in this segment. readable text on wreath ribbons or portrait. subtitles. Dialogue from the wrong character, multiple people speaking at once, repeated or missing lines, lip-sync errors and audio-visual desynchronization. The raw reference images (character sheets, setting plates) appearing as a frame of the video, and starting on a still frame of the setting reference. A fast zoom-in at the start, a fast pull-back at the end, unmotivated whip-pans, tilts, zooms and 360-degree orbits. Axis-crossing, jump cuts, frame skips, flicker and clipping. Characters or props popping in or vanishing, and duplicate characters except mirror reflections. Readable text, numbers, logos and watermarks; phones and paper are shown from the back or out of focus. Storyboard frames, panel borders, gutters and grid layouts.\n[Shot list] (9 shots, approximately 30 seconds)\nWhen a previous-shot reference image is given, Shot 1 matches its camera position, shot size and blocking and continues from that moment; do not repeat that frame later.\nAt the start: Funeral hall. The axis runs from the mourners to the bier. The camera stays on the window side, so the bier is always at screen right and the mourners face screen right. There is one bier at the screen-right end, covered with one white cloth, with one framed black-and-white portrait above it. Paper wreaths stand on wooden stands along both walls. The one pair of double wooden doors is behind the mourners at screen left. Si Yi stands at the head of the bier, facing screen left toward the mourners, hands folded. Si Nian lies still under the white cloth on the bier in burial clothes, feet toward the mourners, out of view in this segment. Si Xin stands in the front row nearest the camera and Zhang Cuimei stands at his far side, both facing the bier and off frame in this segment. Bin Ke Jia and Bin Ke Yi stand side by side in the back row among unnamed mourners, Bin Ke Jia nearer the camera, both facing the bier.\nShot 1 (0-3s): [Wide shot, high angle from the window side, slow push in toward the bier at screen right] The funeral hall in cool daylight shafts. Rows of mourners face the white-draped bier and the framed portrait at screen right, and Si Yi stands at the head of the bier facing them. Dialogue (Si Yi, in Mandarin, slow and ceremonial): {请所有来宾全体肃立，}\nShot 2 (3-5s): [Medium shot, locked-off camera, low angle on the window side] Si Yi stands beside the bier with his hands folded and slowly lowers his head. Dialogue (Si Yi, in Mandarin, slow and ceremonial): {为司家的长女默哀。}\nShot 3 (5-9s): [Medium close-up two-shot, handheld, eye-level from the window side, back row] In the back row, Bin Ke Jia leans toward Bin Ke Yi and whispers behind her hand, both still facing the bier. Dialogue (Bin Ke Jia, in Mandarin, curious whisper): {这司先生可是国营化工厂的二把手，}\nShot 4 (9-11s): [Close-up, locked-off camera, eye-level from the window side] Bin Ke Yi raises one eyebrow and gives a knowing smirk. Dialogue (Bin Ke Jia, in Mandarin, curious whisper): {是城里有头有脸的人物，}\nShot 5 (11-14s): [Close-up, slight push in, eye-level from the window side] Bin Ke Jia glances toward the bier and shakes her head in pity. Dialogue (Bin Ke Jia, in Mandarin, curious whisper): {怎么女儿这么年轻就……}\nShot 6 (14-19s): [Medium shot, over-the-shoulder shot past Bin Ke Jia's shoulder onto Bin Ke Yi, eye-level, window side] Bin Ke Yi leans close to Bin Ke Jia's ear and keeps his eyes on the bier. Dialogue (Bin Ke Yi, in Mandarin, smug low murmur): {你没听说啊，司家跟一个农村种地的抱错了孩子，}\nShot 7 (19-21s): [Close-up, locked-off camera, eye-level from the window side] Bin Ke Jia's eyes widen and she covers her mouth with her hand. Dialogue (Bin Ke Yi, in Mandarin, smug low murmur): {现在亲生女儿找回来了。}\nShot 8 (21-27s): [Medium close-up, handheld, eye-level from the window side] Bin Ke Yi tips his chin toward the bier and then toward the front row, lowering his voice further. Dialogue (Bin Ke Yi, in Mandarin, smug low murmur): {死的这个听说要替真千金嫁给乡下离过婚的老男人，}\nShot 9 (27-30s): [Medium shot, high angle, slow push in on the bier at screen right] Insert of the bier: the still white cloth over the body and the black-and-white portrait frame above it, with paper wreaths on both sides. Dialogue (Bin Ke Yi, in Mandarin, smug low murmur): {活活让养母给逼死了！}\nAt the end: Funeral hall. The axis runs from the mourners to the bier. The camera stays on the window side, the bier at screen right, the mourners facing screen right. There is one bier at the screen-right end under one white cloth, with one framed portrait above it. Paper wreaths stand along both walls and the double wooden doors are behind the mourners at screen left. Si Yi stands at the head of the bier facing screen left. Si Nian lies still under the white cloth in burial clothes, feet toward the mourners. Si Xin stands in the front row nearest the camera with Zhang Cuimei at his far side, both facing the bier, ready to bow. Bin Ke Jia and Bin Ke Yi stand in the back row, having finished whispering.\n"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261019110254-kwsl9"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@/Users/yurun/RunVid/short-drama-runs/houma-ep001-v2/assets/scenes/funeral_hall/v3/image-1.jpg",
+        "path": "/Users/yurun/RunVid/short-drama-runs/houma-ep001-v2/assets/scenes/funeral_hall/v3/image-1.jpg",
+        "sha256": "4bc979bb1ede6c7b613679048595139d8b14b7e224c6f53cb548db289deb0061"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261019092209-knq4c"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261019091351-krdvl"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261019091337-cm9r2"
+      },
+      "role": "reference_image"
+    }
+  ],
+  "duration": 30,
+  "ratio": "9:16",
+  "resolution": "480p",
+  "generate_audio": true,
+  "watermark": false,
+  "return_last_frame": true
+}

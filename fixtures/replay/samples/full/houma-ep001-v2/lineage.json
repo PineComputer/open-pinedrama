@@ -1,0 +1,2214 @@
+{
+ "last_node_id": 22,
+ "last_link_id": 69,
+ "nodes": [
+  {
+   "id": 1,
+   "type": "DramaCliStep",
+   "title": "bin_ke_jia",
+   "pos": [
+    0,
+    500
+   ],
+   "size": [
+    300,
+    340
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "file",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "links": [
+      6,
+      23,
+      28,
+      37,
+      47,
+      60
+     ]
+    }
+   ],
+   "properties": {
+    "id": "assets/characters/bin_ke_jia",
+    "kind": "look",
+    "column": 1,
+    "version": "v1",
+    "accepted": null,
+    "fresh": false,
+    "shows": "assets/characters/bin_ke_jia/v1/image-1.jpg",
+    "reads": [
+     "bible"
+    ],
+    "problems": [
+     "assets/characters/bin_ke_jia/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "Invalid pointer bible/accepted.json: bible/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted"
+    ],
+    "label": "bin_ke_jia",
+    "section": "Characters"
+   }
+  },
+  {
+   "id": 2,
+   "type": "DramaCliStep",
+   "title": "bin_ke_yi",
+   "pos": [
+    360,
+    500
+   ],
+   "size": [
+    300,
+    340
+   ],
+   "flags": {},
+   "order": 1,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "file",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "links": [
+      7,
+      24,
+      29,
+      38,
+      48,
+      61
+     ]
+    }
+   ],
+   "properties": {
+    "id": "assets/characters/bin_ke_yi",
+    "kind": "look",
+    "column": 1,
+    "version": "v1",
+    "accepted": null,
+    "fresh": false,
+    "shows": "assets/characters/bin_ke_yi/v1/image-1.jpg",
+    "reads": [
+     "bible"
+    ],
+    "problems": [
+     "assets/characters/bin_ke_yi/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "Invalid pointer bible/accepted.json: bible/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted"
+    ],
+    "label": "bin_ke_yi",
+    "section": "Characters"
+   }
+  },
+  {
+   "id": 3,
+   "type": "DramaCliStep",
+   "title": "liu_sisi",
+   "pos": [
+    0,
+    900
+   ],
+   "size": [
+    300,
+    340
+   ],
+   "flags": {},
+   "order": 2,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "file",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "links": []
+    }
+   ],
+   "properties": {
+    "id": "assets/characters/liu_sisi",
+    "kind": "look",
+    "column": 1,
+    "version": "v3",
+    "accepted": null,
+    "fresh": false,
+    "shows": "assets/characters/liu_sisi/v3/image-1.jpg",
+    "reads": [
+     "bible"
+    ],
+    "problems": [
+     "assets/characters/liu_sisi/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "Invalid pointer bible/accepted.json: bible/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted"
+    ],
+    "label": "liu_sisi",
+    "section": "Characters"
+   }
+  },
+  {
+   "id": 4,
+   "type": "DramaCliStep",
+   "title": "lu_ren_jia",
+   "pos": [
+    360,
+    900
+   ],
+   "size": [
+    300,
+    340
+   ],
+   "flags": {},
+   "order": 3,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "file",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "links": [
+      18,
+      56,
+      69
+     ]
+    }
+   ],
+   "properties": {
+    "id": "assets/characters/lu_ren_jia",
+    "kind": "look",
+    "column": 1,
+    "version": "v1",
+    "accepted": null,
+    "fresh": false,
+    "shows": "assets/characters/lu_ren_jia/v1/image-1.jpg",
+    "reads": [
+     "bible"
+    ],
+    "problems": [
+     "assets/characters/lu_ren_jia/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "Invalid pointer bible/accepted.json: bible/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted"
+    ],
+    "label": "lu_ren_jia",
+    "section": "Characters"
+   }
+  },
+  {
+   "id": 5,
+   "type": "DramaCliStep",
+   "title": "si_nian",
+   "pos": [
+    0,
+    1300
+   ],
+   "size": [
+    300,
+    340
+   ],
+   "flags": {},
+   "order": 4,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "file",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "links": [
+      11,
+      13,
+      17,
+      33,
+      42,
+      52,
+      65
+     ]
+    }
+   ],
+   "properties": {
+    "id": "assets/characters/si_nian",
+    "kind": "look",
+    "column": 1,
+    "version": "v2",
+    "accepted": null,
+    "fresh": false,
+    "shows": "assets/characters/si_nian/v2/image-1.jpg",
+    "reads": [
+     "bible"
+    ],
+    "problems": [
+     "assets/characters/si_nian/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "Invalid pointer bible/accepted.json: bible/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted"
+    ],
+    "label": "si_nian",
+    "section": "Characters"
+   }
+  },
+  {
+   "id": 6,
+   "type": "DramaCliStep",
+   "title": "si_xin",
+   "pos": [
+    360,
+    1300
+   ],
+   "size": [
+    300,
+    340
+   ],
+   "flags": {},
+   "order": 5,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "file",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "links": [
+      9,
+      14,
+      31,
+      40,
+      50,
+      63
+     ]
+    }
+   ],
+   "properties": {
+    "id": "assets/characters/si_xin",
+    "kind": "look",
+    "column": 1,
+    "version": "v1",
+    "accepted": null,
+    "fresh": false,
+    "shows": "assets/characters/si_xin/v1/image-1.jpg",
+    "reads": [
+     "bible"
+    ],
+    "problems": [
+     "assets/characters/si_xin/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "Invalid pointer bible/accepted.json: bible/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted"
+    ],
+    "label": "si_xin",
+    "section": "Characters"
+   }
+  },
+  {
+   "id": 7,
+   "type": "DramaCliStep",
+   "title": "si_yi",
+   "pos": [
+    0,
+    1700
+   ],
+   "size": [
+    300,
+    340
+   ],
+   "flags": {},
+   "order": 6,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "file",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "links": [
+      5,
+      22,
+      27,
+      36,
+      46,
+      59
+     ]
+    }
+   ],
+   "properties": {
+    "id": "assets/characters/si_yi",
+    "kind": "look",
+    "column": 1,
+    "version": "v2",
+    "accepted": null,
+    "fresh": false,
+    "shows": "assets/characters/si_yi/v2/image-1.jpg",
+    "reads": [
+     "bible"
+    ],
+    "problems": [
+     "assets/characters/si_yi/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "Invalid pointer bible/accepted.json: bible/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted"
+    ],
+    "label": "si_yi",
+    "section": "Characters"
+   }
+  },
+  {
+   "id": 8,
+   "type": "DramaCliStep",
+   "title": "zhang_cuimei",
+   "pos": [
+    360,
+    1700
+   ],
+   "size": [
+    300,
+    340
+   ],
+   "flags": {},
+   "order": 7,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "file",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "links": [
+      10,
+      15,
+      32,
+      41,
+      51,
+      64
+     ]
+    }
+   ],
+   "properties": {
+    "id": "assets/characters/zhang_cuimei",
+    "kind": "look",
+    "column": 1,
+    "version": "v2",
+    "accepted": null,
+    "fresh": false,
+    "shows": "assets/characters/zhang_cuimei/v2/image-1.jpg",
+    "reads": [
+     "bible"
+    ],
+    "problems": [
+     "assets/characters/zhang_cuimei/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "Invalid pointer bible/accepted.json: bible/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted"
+    ],
+    "label": "zhang_cuimei",
+    "section": "Characters"
+   }
+  },
+  {
+   "id": 9,
+   "type": "DramaCliStep",
+   "title": "funeral_hall",
+   "pos": [
+    0,
+    2260
+   ],
+   "size": [
+    300,
+    340
+   ],
+   "flags": {},
+   "order": 8,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "file",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "links": [
+      8,
+      12,
+      16,
+      21,
+      26,
+      35,
+      45,
+      58
+     ]
+    }
+   ],
+   "properties": {
+    "id": "assets/scenes/funeral_hall",
+    "kind": "plate",
+    "column": 1,
+    "version": "v3",
+    "accepted": null,
+    "fresh": false,
+    "shows": "assets/scenes/funeral_hall/v3/image-1.jpg",
+    "reads": [
+     "bible"
+    ],
+    "problems": [
+     "assets/scenes/funeral_hall/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "Invalid pointer bible/accepted.json: bible/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted"
+    ],
+    "label": "funeral_hall",
+    "section": "Locations"
+   }
+  },
+  {
+   "id": 10,
+   "type": "DramaCliStep",
+   "title": "funeral_home_entrance",
+   "pos": [
+    360,
+    2260
+   ],
+   "size": [
+    300,
+    340
+   ],
+   "flags": {},
+   "order": 9,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "file",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "links": [
+      19,
+      55,
+      68
+     ]
+    }
+   ],
+   "properties": {
+    "id": "assets/scenes/funeral_home_entrance",
+    "kind": "plate",
+    "column": 1,
+    "version": "v3",
+    "accepted": null,
+    "fresh": false,
+    "shows": "assets/scenes/funeral_home_entrance/v3/image-1.jpg",
+    "reads": [
+     "bible"
+    ],
+    "problems": [
+     "assets/scenes/funeral_home_entrance/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "Invalid pointer bible/accepted.json: bible/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted"
+    ],
+    "label": "funeral_home_entrance",
+    "section": "Locations"
+   }
+  },
+  {
+   "id": 11,
+   "type": "DramaCliStep",
+   "title": "bible",
+   "pos": [
+    0,
+    70
+   ],
+   "size": [
+    300,
+    340
+   ],
+   "flags": {
+    "collapsed": true
+   },
+   "order": 10,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "file",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "links": []
+    }
+   ],
+   "properties": {
+    "id": "bible",
+    "kind": "bible",
+    "column": 0,
+    "version": "v1",
+    "accepted": null,
+    "fresh": true,
+    "shows": "bible/v1/bible.md",
+    "reads": [],
+    "problems": [
+     "bible/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted"
+    ],
+    "label": "bible",
+    "section": "Text"
+   }
+  },
+  {
+   "id": 12,
+   "type": "DramaCliStep",
+   "title": "EP001 breakdown",
+   "pos": [
+    0,
+    160
+   ],
+   "size": [
+    300,
+    340
+   ],
+   "flags": {
+    "collapsed": true
+   },
+   "order": 11,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "file",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "links": []
+    }
+   ],
+   "properties": {
+    "id": "episodes/EP001/breakdown",
+    "kind": "breakdown",
+    "column": 2,
+    "version": "v3",
+    "accepted": null,
+    "fresh": true,
+    "shows": "episodes/EP001/breakdown/v3/breakdown.md",
+    "reads": [
+     "bible"
+    ],
+    "problems": [
+     "episodes/EP001/breakdown/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted"
+    ],
+    "label": "EP001 breakdown",
+    "section": "Text"
+   }
+  },
+  {
+   "id": 13,
+   "type": "DramaCliStep",
+   "title": "EP001 cut",
+   "pos": [
+    2360,
+    70
+   ],
+   "size": [
+    300,
+    340
+   ],
+   "flags": {},
+   "order": 12,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "episodes/EP001/segments/seg01",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 1
+    },
+    {
+     "name": "episodes/EP001/segments/seg02",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 2
+    },
+    {
+     "name": "episodes/EP001/segments/seg03",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 3
+    },
+    {
+     "name": "episodes/EP001/segments/seg04",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 4
+    }
+   ],
+   "outputs": [
+    {
+     "name": "file",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "links": []
+    }
+   ],
+   "properties": {
+    "id": "episodes/EP001/edit",
+    "kind": "cut",
+    "column": 7,
+    "version": "v1",
+    "accepted": null,
+    "fresh": true,
+    "shows": "episodes/EP001/edit/v1/cut.mp4",
+    "reads": [],
+    "problems": [],
+    "label": "EP001 cut",
+    "section": "EP001 cut"
+   }
+  },
+  {
+   "id": 14,
+   "type": "DramaCliStep",
+   "title": "EP001 seg01 line-art",
+   "pos": [
+    820,
+    70
+   ],
+   "size": [
+    300,
+    340
+   ],
+   "flags": {},
+   "order": 13,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "assets/characters/si_yi",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 5
+    },
+    {
+     "name": "assets/characters/bin_ke_jia",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 6
+    },
+    {
+     "name": "assets/characters/bin_ke_yi",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 7
+    },
+    {
+     "name": "assets/scenes/funeral_hall",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 8
+    }
+   ],
+   "outputs": [
+    {
+     "name": "file",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "links": [
+      20,
+      25,
+      34,
+      44,
+      57
+     ]
+    }
+   ],
+   "properties": {
+    "id": "episodes/EP001/multi_panel_storyboard/seg01/line-art",
+    "kind": "storyboard",
+    "column": 4,
+    "version": "v4",
+    "accepted": null,
+    "fresh": false,
+    "shows": "episodes/EP001/multi_panel_storyboard/seg01/line-art/v4/image-1.jpg",
+    "reads": [
+     "bible",
+     "episodes/EP001/breakdown"
+    ],
+    "problems": [
+     "episodes/EP001/multi_panel_storyboard/seg01/line-art/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "Invalid pointer bible/accepted.json: bible/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "Invalid pointer episodes/EP001/breakdown/accepted.json: episodes/EP001/breakdown/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted"
+    ],
+    "label": "EP001 seg01 line-art",
+    "section": "EP001 seg01"
+   }
+  },
+  {
+   "id": 15,
+   "type": "DramaCliStep",
+   "title": "EP001 seg02 line-art",
+   "pos": [
+    820,
+    630
+   ],
+   "size": [
+    300,
+    340
+   ],
+   "flags": {},
+   "order": 14,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "assets/characters/si_xin",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 9
+    },
+    {
+     "name": "assets/characters/zhang_cuimei",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 10
+    },
+    {
+     "name": "assets/characters/si_nian",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 11
+    },
+    {
+     "name": "assets/scenes/funeral_hall",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 12
+    }
+   ],
+   "outputs": [
+    {
+     "name": "file",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "links": [
+      30,
+      39,
+      49,
+      62
+     ]
+    }
+   ],
+   "properties": {
+    "id": "episodes/EP001/multi_panel_storyboard/seg02/line-art",
+    "kind": "storyboard",
+    "column": 4,
+    "version": "v1",
+    "accepted": null,
+    "fresh": false,
+    "shows": "episodes/EP001/multi_panel_storyboard/seg02/line-art/v1/image-1.jpg",
+    "reads": [
+     "bible",
+     "episodes/EP001/breakdown"
+    ],
+    "problems": [
+     "episodes/EP001/multi_panel_storyboard/seg02/line-art/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "Invalid pointer bible/accepted.json: bible/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "Invalid pointer episodes/EP001/breakdown/accepted.json: episodes/EP001/breakdown/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted"
+    ],
+    "label": "EP001 seg02 line-art",
+    "section": "EP001 seg02"
+   }
+  },
+  {
+   "id": 16,
+   "type": "DramaCliStep",
+   "title": "EP001 seg03 line-art",
+   "pos": [
+    820,
+    1190
+   ],
+   "size": [
+    300,
+    340
+   ],
+   "flags": {},
+   "order": 15,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "assets/characters/si_nian",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 13
+    },
+    {
+     "name": "assets/characters/si_xin",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 14
+    },
+    {
+     "name": "assets/characters/zhang_cuimei",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 15
+    },
+    {
+     "name": "assets/scenes/funeral_hall",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 16
+    }
+   ],
+   "outputs": [
+    {
+     "name": "file",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "links": [
+      43,
+      53,
+      66
+     ]
+    }
+   ],
+   "properties": {
+    "id": "episodes/EP001/multi_panel_storyboard/seg03/line-art",
+    "kind": "storyboard",
+    "column": 4,
+    "version": "v2",
+    "accepted": null,
+    "fresh": false,
+    "shows": "episodes/EP001/multi_panel_storyboard/seg03/line-art/v2/image-1.jpg",
+    "reads": [
+     "bible",
+     "episodes/EP001/breakdown"
+    ],
+    "problems": [
+     "episodes/EP001/multi_panel_storyboard/seg03/line-art/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "Invalid pointer bible/accepted.json: bible/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "Invalid pointer episodes/EP001/breakdown/accepted.json: episodes/EP001/breakdown/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted"
+    ],
+    "label": "EP001 seg03 line-art",
+    "section": "EP001 seg03"
+   }
+  },
+  {
+   "id": 17,
+   "type": "DramaCliStep",
+   "title": "EP001 seg04 line-art",
+   "pos": [
+    820,
+    1750
+   ],
+   "size": [
+    300,
+    340
+   ],
+   "flags": {},
+   "order": 16,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "assets/characters/si_nian",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 17
+    },
+    {
+     "name": "assets/characters/lu_ren_jia",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 18
+    },
+    {
+     "name": "assets/scenes/funeral_home_entrance",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 19
+    }
+   ],
+   "outputs": [
+    {
+     "name": "file",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "links": [
+      54,
+      67
+     ]
+    }
+   ],
+   "properties": {
+    "id": "episodes/EP001/multi_panel_storyboard/seg04/line-art",
+    "kind": "storyboard",
+    "column": 4,
+    "version": "v1",
+    "accepted": null,
+    "fresh": false,
+    "shows": "episodes/EP001/multi_panel_storyboard/seg04/line-art/v1/image-1.jpg",
+    "reads": [
+     "bible",
+     "episodes/EP001/breakdown"
+    ],
+    "problems": [
+     "episodes/EP001/multi_panel_storyboard/seg04/line-art/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "Invalid pointer bible/accepted.json: bible/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "Invalid pointer episodes/EP001/breakdown/accepted.json: episodes/EP001/breakdown/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted"
+    ],
+    "label": "EP001 seg04 line-art",
+    "section": "EP001 seg04"
+   }
+  },
+  {
+   "id": 18,
+   "type": "DramaCliStep",
+   "title": "EP001 seg01 take",
+   "pos": [
+    1180,
+    70
+   ],
+   "size": [
+    300,
+    340
+   ],
+   "flags": {},
+   "order": 17,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "episodes/EP001/multi_panel_storyboard/seg01/line-art",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 20
+    },
+    {
+     "name": "assets/scenes/funeral_hall",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 21
+    },
+    {
+     "name": "assets/characters/si_yi",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 22
+    },
+    {
+     "name": "assets/characters/bin_ke_jia",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 23
+    },
+    {
+     "name": "assets/characters/bin_ke_yi",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 24
+    }
+   ],
+   "outputs": [
+    {
+     "name": "file",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "links": [
+      1
+     ]
+    }
+   ],
+   "properties": {
+    "id": "episodes/EP001/segments/seg01",
+    "kind": "take",
+    "column": 6,
+    "version": "t01",
+    "accepted": null,
+    "fresh": false,
+    "shows": "episodes/EP001/segments/seg01/t01/video.mp4",
+    "reads": [
+     "bible",
+     "episodes/EP001/breakdown",
+     "episodes/EP001/video_prompts"
+    ],
+    "problems": [
+     "Invalid pointer bible/accepted.json: bible/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "Invalid pointer episodes/EP001/breakdown/accepted.json: episodes/EP001/breakdown/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "Invalid pointer episodes/EP001/multi_panel_storyboard/seg01/line-art/accepted.json: episodes/EP001/multi_panel_storyboard/seg01/line-art/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "Invalid pointer assets/scenes/funeral_hall/accepted.json: assets/scenes/funeral_hall/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "Invalid pointer assets/characters/si_yi/accepted.json: assets/characters/si_yi/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "Invalid pointer assets/characters/bin_ke_jia/accepted.json: assets/characters/bin_ke_jia/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "Invalid pointer assets/characters/bin_ke_yi/accepted.json: assets/characters/bin_ke_yi/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted"
+    ],
+    "label": "EP001 seg01 take",
+    "section": "EP001 seg01"
+   }
+  },
+  {
+   "id": 19,
+   "type": "DramaCliStep",
+   "title": "EP001 seg02 take",
+   "pos": [
+    1180,
+    630
+   ],
+   "size": [
+    300,
+    340
+   ],
+   "flags": {},
+   "order": 18,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "episodes/EP001/multi_panel_storyboard/seg01/line-art",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 25
+    },
+    {
+     "name": "assets/scenes/funeral_hall",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 26
+    },
+    {
+     "name": "assets/characters/si_yi",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 27
+    },
+    {
+     "name": "assets/characters/bin_ke_jia",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 28
+    },
+    {
+     "name": "assets/characters/bin_ke_yi",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 29
+    },
+    {
+     "name": "episodes/EP001/multi_panel_storyboard/seg02/line-art",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 30
+    },
+    {
+     "name": "assets/characters/si_xin",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 31
+    },
+    {
+     "name": "assets/characters/zhang_cuimei",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 32
+    },
+    {
+     "name": "assets/characters/si_nian",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 33
+    }
+   ],
+   "outputs": [
+    {
+     "name": "file",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "links": [
+      2
+     ]
+    }
+   ],
+   "properties": {
+    "id": "episodes/EP001/segments/seg02",
+    "kind": "take",
+    "column": 6,
+    "version": "t01",
+    "accepted": null,
+    "fresh": false,
+    "shows": "episodes/EP001/segments/seg02/t01/video.mp4",
+    "reads": [
+     "bible",
+     "episodes/EP001/breakdown",
+     "episodes/EP001/video_prompts"
+    ],
+    "problems": [
+     "Invalid pointer bible/accepted.json: bible/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "Invalid pointer episodes/EP001/breakdown/accepted.json: episodes/EP001/breakdown/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "Invalid pointer episodes/EP001/multi_panel_storyboard/seg01/line-art/accepted.json: episodes/EP001/multi_panel_storyboard/seg01/line-art/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "Invalid pointer assets/scenes/funeral_hall/accepted.json: assets/scenes/funeral_hall/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "Invalid pointer assets/characters/si_yi/accepted.json: assets/characters/si_yi/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "Invalid pointer assets/characters/bin_ke_jia/accepted.json: assets/characters/bin_ke_jia/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "Invalid pointer assets/characters/bin_ke_yi/accepted.json: assets/characters/bin_ke_yi/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "Invalid pointer episodes/EP001/multi_panel_storyboard/seg02/line-art/accepted.json: episodes/EP001/multi_panel_storyboard/seg02/line-art/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "Invalid pointer assets/characters/si_xin/accepted.json: assets/characters/si_xin/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "Invalid pointer assets/characters/zhang_cuimei/accepted.json: assets/characters/zhang_cuimei/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "Invalid pointer assets/characters/si_nian/accepted.json: assets/characters/si_nian/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted"
+    ],
+    "label": "EP001 seg02 take",
+    "section": "EP001 seg02"
+   }
+  },
+  {
+   "id": 20,
+   "type": "DramaCliStep",
+   "title": "EP001 seg03 take",
+   "pos": [
+    1180,
+    1190
+   ],
+   "size": [
+    300,
+    340
+   ],
+   "flags": {},
+   "order": 19,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "episodes/EP001/multi_panel_storyboard/seg01/line-art",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 34
+    },
+    {
+     "name": "assets/scenes/funeral_hall",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 35
+    },
+    {
+     "name": "assets/characters/si_yi",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 36
+    },
+    {
+     "name": "assets/characters/bin_ke_jia",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 37
+    },
+    {
+     "name": "assets/characters/bin_ke_yi",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 38
+    },
+    {
+     "name": "episodes/EP001/multi_panel_storyboard/seg02/line-art",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 39
+    },
+    {
+     "name": "assets/characters/si_xin",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 40
+    },
+    {
+     "name": "assets/characters/zhang_cuimei",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 41
+    },
+    {
+     "name": "assets/characters/si_nian",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 42
+    },
+    {
+     "name": "episodes/EP001/multi_panel_storyboard/seg03/line-art",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 43
+    }
+   ],
+   "outputs": [
+    {
+     "name": "file",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "links": [
+      3
+     ]
+    }
+   ],
+   "properties": {
+    "id": "episodes/EP001/segments/seg03",
+    "kind": "take",
+    "column": 6,
+    "version": "t01",
+    "accepted": null,
+    "fresh": false,
+    "shows": "episodes/EP001/segments/seg03/t01/video.mp4",
+    "reads": [
+     "bible",
+     "episodes/EP001/breakdown",
+     "episodes/EP001/video_prompts"
+    ],
+    "problems": [
+     "Invalid pointer bible/accepted.json: bible/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "Invalid pointer episodes/EP001/breakdown/accepted.json: episodes/EP001/breakdown/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "Invalid pointer episodes/EP001/multi_panel_storyboard/seg01/line-art/accepted.json: episodes/EP001/multi_panel_storyboard/seg01/line-art/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "Invalid pointer assets/scenes/funeral_hall/accepted.json: assets/scenes/funeral_hall/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "Invalid pointer assets/characters/si_yi/accepted.json: assets/characters/si_yi/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "Invalid pointer assets/characters/bin_ke_jia/accepted.json: assets/characters/bin_ke_jia/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "Invalid pointer assets/characters/bin_ke_yi/accepted.json: assets/characters/bin_ke_yi/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "Invalid pointer episodes/EP001/multi_panel_storyboard/seg02/line-art/accepted.json: episodes/EP001/multi_panel_storyboard/seg02/line-art/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "Invalid pointer assets/characters/si_xin/accepted.json: assets/characters/si_xin/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "Invalid pointer assets/characters/zhang_cuimei/accepted.json: assets/characters/zhang_cuimei/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "Invalid pointer assets/characters/si_nian/accepted.json: assets/characters/si_nian/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "Invalid pointer episodes/EP001/multi_panel_storyboard/seg03/line-art/accepted.json: episodes/EP001/multi_panel_storyboard/seg03/line-art/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted"
+    ],
+    "label": "EP001 seg03 take",
+    "section": "EP001 seg03"
+   }
+  },
+  {
+   "id": 21,
+   "type": "DramaCliStep",
+   "title": "EP001 seg04 take",
+   "pos": [
+    1180,
+    1750
+   ],
+   "size": [
+    300,
+    340
+   ],
+   "flags": {},
+   "order": 20,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "episodes/EP001/multi_panel_storyboard/seg01/line-art",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 44
+    },
+    {
+     "name": "assets/scenes/funeral_hall",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 45
+    },
+    {
+     "name": "assets/characters/si_yi",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 46
+    },
+    {
+     "name": "assets/characters/bin_ke_jia",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 47
+    },
+    {
+     "name": "assets/characters/bin_ke_yi",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 48
+    },
+    {
+     "name": "episodes/EP001/multi_panel_storyboard/seg02/line-art",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 49
+    },
+    {
+     "name": "assets/characters/si_xin",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 50
+    },
+    {
+     "name": "assets/characters/zhang_cuimei",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 51
+    },
+    {
+     "name": "assets/characters/si_nian",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 52
+    },
+    {
+     "name": "episodes/EP001/multi_panel_storyboard/seg03/line-art",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 53
+    },
+    {
+     "name": "episodes/EP001/multi_panel_storyboard/seg04/line-art",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 54
+    },
+    {
+     "name": "assets/scenes/funeral_home_entrance",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 55
+    },
+    {
+     "name": "assets/characters/lu_ren_jia",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 56
+    }
+   ],
+   "outputs": [
+    {
+     "name": "file",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "links": [
+      4
+     ]
+    }
+   ],
+   "properties": {
+    "id": "episodes/EP001/segments/seg04",
+    "kind": "take",
+    "column": 6,
+    "version": "t01",
+    "accepted": null,
+    "fresh": false,
+    "shows": "episodes/EP001/segments/seg04/t01/video.mp4",
+    "reads": [
+     "bible",
+     "episodes/EP001/breakdown",
+     "episodes/EP001/video_prompts"
+    ],
+    "problems": [
+     "Invalid pointer bible/accepted.json: bible/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "Invalid pointer episodes/EP001/breakdown/accepted.json: episodes/EP001/breakdown/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "Invalid pointer episodes/EP001/multi_panel_storyboard/seg01/line-art/accepted.json: episodes/EP001/multi_panel_storyboard/seg01/line-art/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "Invalid pointer assets/scenes/funeral_hall/accepted.json: assets/scenes/funeral_hall/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "Invalid pointer assets/characters/si_yi/accepted.json: assets/characters/si_yi/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "Invalid pointer assets/characters/bin_ke_jia/accepted.json: assets/characters/bin_ke_jia/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "Invalid pointer assets/characters/bin_ke_yi/accepted.json: assets/characters/bin_ke_yi/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "Invalid pointer episodes/EP001/multi_panel_storyboard/seg02/line-art/accepted.json: episodes/EP001/multi_panel_storyboard/seg02/line-art/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "Invalid pointer assets/characters/si_xin/accepted.json: assets/characters/si_xin/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "Invalid pointer assets/characters/zhang_cuimei/accepted.json: assets/characters/zhang_cuimei/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "Invalid pointer assets/characters/si_nian/accepted.json: assets/characters/si_nian/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "Invalid pointer episodes/EP001/multi_panel_storyboard/seg03/line-art/accepted.json: episodes/EP001/multi_panel_storyboard/seg03/line-art/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "Invalid pointer episodes/EP001/multi_panel_storyboard/seg04/line-art/accepted.json: episodes/EP001/multi_panel_storyboard/seg04/line-art/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "Invalid pointer assets/scenes/funeral_home_entrance/accepted.json: assets/scenes/funeral_home_entrance/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "Invalid pointer assets/characters/lu_ren_jia/accepted.json: assets/characters/lu_ren_jia/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted"
+    ],
+    "label": "EP001 seg04 take",
+    "section": "EP001 seg04"
+   }
+  },
+  {
+   "id": 22,
+   "type": "DramaCliStep",
+   "title": "EP001 video prompts",
+   "pos": [
+    0,
+    250
+   ],
+   "size": [
+    300,
+    340
+   ],
+   "flags": {
+    "collapsed": true
+   },
+   "order": 21,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "episodes/EP001/multi_panel_storyboard/seg01/line-art",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 57
+    },
+    {
+     "name": "assets/scenes/funeral_hall",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 58
+    },
+    {
+     "name": "assets/characters/si_yi",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 59
+    },
+    {
+     "name": "assets/characters/bin_ke_jia",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 60
+    },
+    {
+     "name": "assets/characters/bin_ke_yi",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 61
+    },
+    {
+     "name": "episodes/EP001/multi_panel_storyboard/seg02/line-art",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 62
+    },
+    {
+     "name": "assets/characters/si_xin",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 63
+    },
+    {
+     "name": "assets/characters/zhang_cuimei",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 64
+    },
+    {
+     "name": "assets/characters/si_nian",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 65
+    },
+    {
+     "name": "episodes/EP001/multi_panel_storyboard/seg03/line-art",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 66
+    },
+    {
+     "name": "episodes/EP001/multi_panel_storyboard/seg04/line-art",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 67
+    },
+    {
+     "name": "assets/scenes/funeral_home_entrance",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 68
+    },
+    {
+     "name": "assets/characters/lu_ren_jia",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 69
+    }
+   ],
+   "outputs": [
+    {
+     "name": "file",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "links": []
+    }
+   ],
+   "properties": {
+    "id": "episodes/EP001/video_prompts",
+    "kind": "video_prompts",
+    "column": 5,
+    "version": "v1",
+    "accepted": null,
+    "fresh": false,
+    "shows": "episodes/EP001/video_prompts/v1/prompts.md",
+    "reads": [
+     "bible",
+     "episodes/EP001/breakdown"
+    ],
+    "problems": [
+     "seg01: Invalid pointer bible/accepted.json: bible/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "seg01: Invalid pointer episodes/EP001/breakdown/accepted.json: episodes/EP001/breakdown/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "seg01: Invalid pointer episodes/EP001/multi_panel_storyboard/seg01/line-art/accepted.json: episodes/EP001/multi_panel_storyboard/seg01/line-art/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "seg01: Invalid pointer assets/scenes/funeral_hall/accepted.json: assets/scenes/funeral_hall/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "seg01: Invalid pointer assets/characters/si_yi/accepted.json: assets/characters/si_yi/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "seg01: Invalid pointer assets/characters/bin_ke_jia/accepted.json: assets/characters/bin_ke_jia/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "seg01: Invalid pointer assets/characters/bin_ke_yi/accepted.json: assets/characters/bin_ke_yi/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "seg02: Invalid pointer bible/accepted.json: bible/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "seg02: Invalid pointer episodes/EP001/breakdown/accepted.json: episodes/EP001/breakdown/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "seg02: Invalid pointer episodes/EP001/multi_panel_storyboard/seg01/line-art/accepted.json: episodes/EP001/multi_panel_storyboard/seg01/line-art/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "seg02: Invalid pointer assets/scenes/funeral_hall/accepted.json: assets/scenes/funeral_hall/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "seg02: Invalid pointer assets/characters/si_yi/accepted.json: assets/characters/si_yi/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "seg02: Invalid pointer assets/characters/bin_ke_jia/accepted.json: assets/characters/bin_ke_jia/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "seg02: Invalid pointer assets/characters/bin_ke_yi/accepted.json: assets/characters/bin_ke_yi/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "seg02: Invalid pointer episodes/EP001/multi_panel_storyboard/seg02/line-art/accepted.json: episodes/EP001/multi_panel_storyboard/seg02/line-art/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "seg02: Invalid pointer assets/characters/si_xin/accepted.json: assets/characters/si_xin/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "seg02: Invalid pointer assets/characters/zhang_cuimei/accepted.json: assets/characters/zhang_cuimei/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "seg02: Invalid pointer assets/characters/si_nian/accepted.json: assets/characters/si_nian/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "seg03: Invalid pointer bible/accepted.json: bible/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "seg03: Invalid pointer episodes/EP001/breakdown/accepted.json: episodes/EP001/breakdown/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "seg03: Invalid pointer episodes/EP001/multi_panel_storyboard/seg01/line-art/accepted.json: episodes/EP001/multi_panel_storyboard/seg01/line-art/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "seg03: Invalid pointer assets/scenes/funeral_hall/accepted.json: assets/scenes/funeral_hall/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "seg03: Invalid pointer assets/characters/si_yi/accepted.json: assets/characters/si_yi/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "seg03: Invalid pointer assets/characters/bin_ke_jia/accepted.json: assets/characters/bin_ke_jia/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "seg03: Invalid pointer assets/characters/bin_ke_yi/accepted.json: assets/characters/bin_ke_yi/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "seg03: Invalid pointer episodes/EP001/multi_panel_storyboard/seg02/line-art/accepted.json: episodes/EP001/multi_panel_storyboard/seg02/line-art/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "seg03: Invalid pointer assets/characters/si_xin/accepted.json: assets/characters/si_xin/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "seg03: Invalid pointer assets/characters/zhang_cuimei/accepted.json: assets/characters/zhang_cuimei/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "seg03: Invalid pointer assets/characters/si_nian/accepted.json: assets/characters/si_nian/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "seg03: Invalid pointer episodes/EP001/multi_panel_storyboard/seg03/line-art/accepted.json: episodes/EP001/multi_panel_storyboard/seg03/line-art/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "seg04: Invalid pointer bible/accepted.json: bible/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "seg04: Invalid pointer episodes/EP001/breakdown/accepted.json: episodes/EP001/breakdown/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "seg04: Invalid pointer episodes/EP001/multi_panel_storyboard/seg01/line-art/accepted.json: episodes/EP001/multi_panel_storyboard/seg01/line-art/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "seg04: Invalid pointer assets/scenes/funeral_hall/accepted.json: assets/scenes/funeral_hall/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "seg04: Invalid pointer assets/characters/si_yi/accepted.json: assets/characters/si_yi/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "seg04: Invalid pointer assets/characters/bin_ke_jia/accepted.json: assets/characters/bin_ke_jia/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "seg04: Invalid pointer assets/characters/bin_ke_yi/accepted.json: assets/characters/bin_ke_yi/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "seg04: Invalid pointer episodes/EP001/multi_panel_storyboard/seg02/line-art/accepted.json: episodes/EP001/multi_panel_storyboard/seg02/line-art/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "seg04: Invalid pointer assets/characters/si_xin/accepted.json: assets/characters/si_xin/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "seg04: Invalid pointer assets/characters/zhang_cuimei/accepted.json: assets/characters/zhang_cuimei/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "seg04: Invalid pointer assets/characters/si_nian/accepted.json: assets/characters/si_nian/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "seg04: Invalid pointer episodes/EP001/multi_panel_storyboard/seg03/line-art/accepted.json: episodes/EP001/multi_panel_storyboard/seg03/line-art/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "seg04: Invalid pointer episodes/EP001/multi_panel_storyboard/seg04/line-art/accepted.json: episodes/EP001/multi_panel_storyboard/seg04/line-art/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "seg04: Invalid pointer assets/scenes/funeral_home_entrance/accepted.json: assets/scenes/funeral_home_entrance/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted",
+     "seg04: Invalid pointer assets/characters/lu_ren_jia/accepted.json: assets/characters/lu_ren_jia/accepted.json is not a valid Accepted (drama_cli/schemas/): review.path: a required key is missing; review.sha256: a required key is missing; evaluation: Extra inputs are not permitted"
+    ],
+    "label": "EP001 video prompts",
+    "section": "Text"
+   }
+  }
+ ],
+ "links": [
+  [
+   1,
+   18,
+   0,
+   13,
+   0,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   2,
+   19,
+   0,
+   13,
+   1,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   3,
+   20,
+   0,
+   13,
+   2,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   4,
+   21,
+   0,
+   13,
+   3,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   5,
+   7,
+   0,
+   14,
+   0,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   6,
+   1,
+   0,
+   14,
+   1,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   7,
+   2,
+   0,
+   14,
+   2,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   8,
+   9,
+   0,
+   14,
+   3,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   9,
+   6,
+   0,
+   15,
+   0,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   10,
+   8,
+   0,
+   15,
+   1,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   11,
+   5,
+   0,
+   15,
+   2,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   12,
+   9,
+   0,
+   15,
+   3,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   13,
+   5,
+   0,
+   16,
+   0,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   14,
+   6,
+   0,
+   16,
+   1,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   15,
+   8,
+   0,
+   16,
+   2,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   16,
+   9,
+   0,
+   16,
+   3,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   17,
+   5,
+   0,
+   17,
+   0,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   18,
+   4,
+   0,
+   17,
+   1,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   19,
+   10,
+   0,
+   17,
+   2,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   20,
+   14,
+   0,
+   18,
+   0,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   21,
+   9,
+   0,
+   18,
+   1,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   22,
+   7,
+   0,
+   18,
+   2,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   23,
+   1,
+   0,
+   18,
+   3,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   24,
+   2,
+   0,
+   18,
+   4,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   25,
+   14,
+   0,
+   19,
+   0,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   26,
+   9,
+   0,
+   19,
+   1,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   27,
+   7,
+   0,
+   19,
+   2,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   28,
+   1,
+   0,
+   19,
+   3,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   29,
+   2,
+   0,
+   19,
+   4,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   30,
+   15,
+   0,
+   19,
+   5,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   31,
+   6,
+   0,
+   19,
+   6,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   32,
+   8,
+   0,
+   19,
+   7,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   33,
+   5,
+   0,
+   19,
+   8,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   34,
+   14,
+   0,
+   20,
+   0,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   35,
+   9,
+   0,
+   20,
+   1,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   36,
+   7,
+   0,
+   20,
+   2,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   37,
+   1,
+   0,
+   20,
+   3,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   38,
+   2,
+   0,
+   20,
+   4,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   39,
+   15,
+   0,
+   20,
+   5,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   40,
+   6,
+   0,
+   20,
+   6,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   41,
+   8,
+   0,
+   20,
+   7,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   42,
+   5,
+   0,
+   20,
+   8,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   43,
+   16,
+   0,
+   20,
+   9,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   44,
+   14,
+   0,
+   21,
+   0,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   45,
+   9,
+   0,
+   21,
+   1,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   46,
+   7,
+   0,
+   21,
+   2,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   47,
+   1,
+   0,
+   21,
+   3,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   48,
+   2,
+   0,
+   21,
+   4,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   49,
+   15,
+   0,
+   21,
+   5,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   50,
+   6,
+   0,
+   21,
+   6,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   51,
+   8,
+   0,
+   21,
+   7,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   52,
+   5,
+   0,
+   21,
+   8,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   53,
+   16,
+   0,
+   21,
+   9,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   54,
+   17,
+   0,
+   21,
+   10,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   55,
+   10,
+   0,
+   21,
+   11,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   56,
+   4,
+   0,
+   21,
+   12,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   57,
+   14,
+   0,
+   22,
+   0,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   58,
+   9,
+   0,
+   22,
+   1,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   59,
+   7,
+   0,
+   22,
+   2,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   60,
+   1,
+   0,
+   22,
+   3,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   61,
+   2,
+   0,
+   22,
+   4,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   62,
+   15,
+   0,
+   22,
+   5,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   63,
+   6,
+   0,
+   22,
+   6,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   64,
+   8,
+   0,
+   22,
+   7,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   65,
+   5,
+   0,
+   22,
+   8,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   66,
+   16,
+   0,
+   22,
+   9,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   67,
+   17,
+   0,
+   22,
+   10,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   68,
+   10,
+   0,
+   22,
+   11,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   69,
+   4,
+   0,
+   22,
+   12,
+   "DRAMA_CLI_FILE"
+  ]
+ ],
+ "groups": [
+  {
+   "id": 1,
+   "title": "Text",
+   "font_size": 24,
+   "bounding": [
+    -20,
+    0,
+    340,
+    300
+   ]
+  },
+  {
+   "id": 2,
+   "title": "Characters",
+   "font_size": 24,
+   "bounding": [
+    -20,
+    430,
+    700,
+    1630
+   ]
+  },
+  {
+   "id": 3,
+   "title": "Locations",
+   "font_size": 24,
+   "bounding": [
+    -20,
+    2190,
+    700,
+    430
+   ]
+  },
+  {
+   "id": 4,
+   "title": "EP001 seg01",
+   "font_size": 24,
+   "bounding": [
+    800,
+    0,
+    700,
+    430
+   ]
+  },
+  {
+   "id": 5,
+   "title": "EP001 seg02",
+   "font_size": 24,
+   "bounding": [
+    800,
+    560,
+    700,
+    430
+   ]
+  },
+  {
+   "id": 6,
+   "title": "EP001 seg03",
+   "font_size": 24,
+   "bounding": [
+    800,
+    1120,
+    700,
+    430
+   ]
+  },
+  {
+   "id": 7,
+   "title": "EP001 seg04",
+   "font_size": 24,
+   "bounding": [
+    800,
+    1680,
+    700,
+    430
+   ]
+  },
+  {
+   "id": 8,
+   "title": "EP001 cut",
+   "font_size": 24,
+   "bounding": [
+    2340,
+    0,
+    340,
+    430
+   ]
+  }
+ ],
+ "config": {},
+ "extra": {
+  "ds": {
+   "scale": 0.75,
+   "offset": [
+    80,
+    80
+   ]
+  },
+  "drama_cli": {
+   "project": "."
+  }
+ },
+ "version": 0.4
+}

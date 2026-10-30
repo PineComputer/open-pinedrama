@@ -1,0 +1,11 @@
+{
+  "provider": "openai",
+  "model": "gpt-image-2.5-sunburst",
+  "prompt": "Image 1 is the front view, the establishing view, facing the back wall of a room. Edit it into the same view of the same room at this time of day: Night. Keep the camera position, framing, lens, walls, doors, windows, furniture, materials and colours exactly as in Image 1; change only the light. Outside every window and doorway, show what that place looks like at Night, with the sky, light and lit windows of that time, never the daylight scene of Image 1 darkened. Inside, light the room as the description says it is lit at that time, with only the lamps it names turned on. The place stays completely empty of people: no person, figure, silhouette or reflection of a person anywhere. Location: EXT. CITY ARTERIAL ROAD. A wide, multi-lane contemporary city arterial road at dusk, seen from a raised vantage. Back side: the road runs straight away from the camera to a vanishing point between glass office towers, under a deep blue and orange dusk sky. Left side: a row of tall glass office towers with lit windows above a tree-lined sidewalk and a line of streetlights. Right side: a matching row of towers and streetlights. Front side, behind the camera: the overpass the view is taken from. The lanes are packed with traffic, white headlights coming towards the camera and red tail-lights going away. Light comes from the dusk sky, the streetlamps flickering on along both sides, and the headlights.\n\nAvoid: people or silhouettes, a darkened copy of Image 1's daylight, readable text, labels, signs with letters or numbers, logos, watermark.\n",
+  "aspect_ratio": "9:16",
+  "size": "1152x2048",
+  "quality": "high",
+  "images": [
+    "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/city_road/v2/front.jpg"
+  ]
+}

@@ -1,0 +1,241 @@
+{
+  "title": "The Double Life of My Billionaire Husband",
+  "logline": "To pay for her mother's kidney dialysis, Natalie begs her father George for $50,000 in the Quinn family mansion, and her stepmother Lauren and stepsister Cassie name their price: she must marry the jailed outcast Sebastian Klein in Cassie's place.",
+  "tone": "Present-day vertical family-revenge romance melodrama, live action, glossy and high-contrast. Sharp, cruel family confrontations with fast cuts and a cliffhanger at the end. Wealthy home interiors, heightened emotion and clear villains. No sexual content and no violence, suitable for a mass mobile audience.",
+  "characters": [
+    {
+      "id": "natalie",
+      "name": "Natalie",
+      "aliases": [],
+      "age": 25,
+      "observable": true,
+      "gender": "female",
+      "role": "George's daughter from his first marriage, struggling to pay for her sick mother's dialysis; the drama's heroine",
+      "personality": "Proud but cornered, gentle and dutiful. She is ashamed to beg and quick to walk away when humiliated, but she will sacrifice herself for her mother. She is quietly resilient under her stepfamily's cruelty.",
+      "appearance": "Young woman of 25 with a soft oval face, high cheekbones, a delicate straight nose and large dark-brown almond eyes that look tired from worry. She has natural brows and almost no makeup. Long straight dark-brown hair falls past her shoulders, loose with a centre parting. She is slim and of average height, about 165 cm, with a modest posture. She wears small plain silver stud earrings and no other jewellery.",
+      "hair": {
+        "length": "long",
+        "colour": "brown"
+      },
+      "build": "slim",
+      "wardrobe": "A worn light-blue knit cardigan, open, over a plain white crew-neck short-sleeve cotton T-shirt. Faded mid-blue straight-leg jeans and plain white canvas sneakers. She carries a simple brown canvas shoulder bag. Everything is plain, with no logos or prints.",
+      "signature_color": "blue",
+      "voice": "Soft, clear young mezzo. Earnest and slightly trembling when she pleads, then low and resolved when she gives in.",
+      "looks": {
+        "base": {
+          "garments": [
+            {
+              "class": "long sleeve outwear",
+              "colour": "blue"
+            },
+            {
+              "class": "short sleeve top",
+              "colour": "white"
+            },
+            {
+              "class": "trousers",
+              "colour": "blue"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "george",
+      "name": "George",
+      "aliases": [],
+      "age": 55,
+      "observable": true,
+      "gender": "male",
+      "role": "Natalie's father, head of the Quinn family, remarried to Lauren",
+      "personality": "Weak-willed and conflict-averse. He feels some guilt toward Natalie and his ex-wife but is dominated by Lauren, who controls the money. He hedges, mumbles and ends up saying nothing.",
+      "appearance": "Man of 55 with a broad square face, softening jawline, deep forehead lines and slightly hooded brown eyes. He has a neatly trimmed short salt-and-pepper beard. Short dark-brown hair, greying at the temples, is combed back. He is average build with a slight paunch and about 178 cm tall. He wears a plain steel wristwatch and a gold wedding band.",
+      "hair": {
+        "length": "short",
+        "colour": "brown"
+      },
+      "build": "average",
+      "wardrobe": "A camel-brown fine-knit quarter-zip long-sleeve sweater over a white collared shirt. Charcoal-grey tailored wool trousers and dark-brown leather loafers. All plain, with no logos.",
+      "signature_color": "brown",
+      "voice": "Deep, gravelly baritone, hesitant and placating. He trails off mid-sentence and backpedals quickly.",
+      "looks": {
+        "base": {
+          "garments": [
+            {
+              "class": "long sleeve top",
+              "colour": "brown"
+            },
+            {
+              "class": "trousers",
+              "colour": "grey"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "lauren",
+      "name": "Lauren",
+      "aliases": [],
+      "age": 50,
+      "observable": true,
+      "gender": "female",
+      "role": "George's second wife and Natalie's stepmother, Cassie's mother; the controlling matriarch of the Quinn mansion",
+      "personality": "Cold, domineering and status-obsessed. She is contemptuous of Natalie and jealous of George's ex-wife. She reminds George that he owes everything to her, and she delights in her daughter's schemes.",
+      "appearance": "Polished woman of 50 with a sharp heart-shaped face, a pronounced jaw, arched pencil brows and narrow grey-green eyes. She wears full makeup with bold red lipstick. Shoulder-length honey-blonde hair is set in a sleek, voluminous blow-out. She is slim and upright, about 168 cm. Her jewellery is a large pearl necklace, pearl drop earrings and a diamond wedding ring.",
+      "hair": {
+        "length": "shoulder",
+        "colour": "yellow"
+      },
+      "build": "slim",
+      "wardrobe": "A fitted crimson-red long-sleeve knee-length sheath dress with a round neckline, a thin gold belt at the waist, nude pointed-toe high heels and a pearl necklace. All plain, with no logos.",
+      "signature_color": "red",
+      "voice": "Crisp, cutting alto with a haughty, clipped delivery. Her sarcasm is sharp and her voice rises in mock outrage.",
+      "looks": {
+        "base": {
+          "garments": [
+            {
+              "class": "long sleeve dress",
+              "colour": "red"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "cassie",
+      "name": "Cassie",
+      "aliases": [],
+      "age": 23,
+      "observable": true,
+      "gender": "female",
+      "role": "Lauren's daughter and Natalie's spoiled stepsister, who schemes to send Natalie into the marriage meant for her",
+      "personality": "Spoiled, mocking and calculating. She enjoys humiliating Natalie, wants to escape her arranged marriage to Sebastian Klein, and smirks when her plan works.",
+      "appearance": "Young woman of 23 with a small V-shaped face, a pointed chin, a small upturned nose and wide blue eyes. She wears heavy lashes, glossy pink lips and contoured cheeks. Long wavy platinum-blonde hair falls to mid-back, styled in loose curls. She is slim and petite, about 162 cm. She wears a thin gold chain necklace, gold hoop earrings and long pink manicured nails.",
+      "hair": {
+        "length": "long",
+        "colour": "yellow"
+      },
+      "build": "slim",
+      "wardrobe": "A pale-pink silk slip dress with thin straps, falling to mid-thigh, under a cropped white tweed-texture long-sleeve jacket worn open. Pink strappy heeled sandals. All plain, with no logos.",
+      "signature_color": "pink",
+      "voice": "Bright, sing-song high soprano. Saccharine, drawn-out sarcasm and a mocking lilt.",
+      "looks": {
+        "base": {
+          "garments": [
+            {
+              "class": "sling dress",
+              "colour": "pink"
+            },
+            {
+              "class": "long sleeve outwear",
+              "colour": "white"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "locations": [
+    {
+      "id": "quinn_living_room",
+      "name": "The Quinn family mansion, living room",
+      "description": "A large, contemporary luxury living room in a wealthy suburban mansion, in daytime. The ceiling is high, the floors are polished cream marble, and the walls are pale grey with white crown moulding. At the centre, a low rectangular glass-and-gold coffee table sits on a large ivory rug. A long white tufted three-seat sofa faces two cream armchairs across the table. A crystal chandelier hangs overhead, with a fireplace with a white marble mantel behind the sofa and an abstract framed canvas above it. Tall potted fiddle-leaf figs flank the arched doorway the family enters through. Soft natural daylight pours from tall floor-to-ceiling windows with sheer white curtains along the left wall, casting warm side light across the seating. The chandelier is unlit and there are faint warm wall sconces.",
+      "setting": "interior",
+      "period": "contemporary",
+      "furnishings": [
+        "coffee table",
+        "white sofa",
+        "armchairs",
+        "ivory rug",
+        "chandelier",
+        "marble fireplace",
+        "floor-to-ceiling windows",
+        "sheer curtains",
+        "potted plants",
+        "framed painting",
+        "hospital statement"
+      ]
+    }
+  ],
+  "beats": [
+    {
+      "lines": [
+        1,
+        8
+      ],
+      "seconds": 7,
+      "event": "In the Quinn family mansion, a hospital statement for Jennifer Quinn lies on the coffee table; Natalie, facing George and Lauren, asks to borrow $50,000 for her mom's kidney dialysis."
+    },
+    {
+      "lines": [
+        9,
+        11
+      ],
+      "seconds": 6.6,
+      "event": "George hesitates; Lauren calls Natalie shameless for begging; Natalie promises to pay them back."
+    },
+    {
+      "lines": [
+        12,
+        17
+      ],
+      "seconds": 11.7,
+      "event": "George suggests lending the money; Lauren accuses him of still thinking about his ex-wife and reminds him that without her he'd have nothing."
+    },
+    {
+      "lines": [
+        18,
+        21
+      ],
+      "seconds": 8.3,
+      "event": "Cassie walks in, stands over Natalie and mocks her as a loser sister begging for money; Natalie lowers her eyes."
+    },
+    {
+      "lines": [
+        22,
+        26
+      ],
+      "seconds": 8.1,
+      "event": "Natalie picks up the statement and gets up to leave, calling this a mistake; Cassie stops her, saying they'll give her the money; Lauren is surprised."
+    },
+    {
+      "lines": [
+        27,
+        30
+      ],
+      "seconds": 9.1,
+      "event": "Cassie's condition: Natalie must marry Sebastian Klein in her place; Lauren praises the idea; Natalie is stunned that he is the illegitimate Klein son who is in jail."
+    },
+    {
+      "lines": [
+        31,
+        36
+      ],
+      "seconds": 9.4,
+      "event": "Cassie calls Sebastian a dirt bag she can't marry; Lauren tells George that Natalie is also his daughter and can marry Sebastard De-Klein."
+    },
+    {
+      "lines": [
+        37,
+        42
+      ],
+      "seconds": 14.6,
+      "event": "Natalie refuses; Cassie asks whether she wants her mother's bills paid; George stays silent while Lauren waits; Natalie agrees to marry Sebastian Klein; Cassie smirks and Lauren smiles."
+    }
+  ],
+  "episodes": [
+    {
+      "id": "EP001",
+      "title": "Natalie's Price",
+      "summary": "In the Quinn family mansion, Natalie begs her father George for money for her mother's dialysis. Her stepmother Lauren humiliates her and George caves. Her stepsister Cassie offers the money only if Natalie marries the jailed, illegitimate Sebastian Klein in Cassie's place. Cornered, with George silent, Natalie agrees.",
+      "est_seconds": 74.8,
+      "end_hook": "Natalie says, 'I'll marry Sebastian Klein,' as Cassie smirks and Lauren smiles.",
+      "lines": [
+        1,
+        42
+      ]
+    }
+  ],
+  "red_line_issues": []
+}

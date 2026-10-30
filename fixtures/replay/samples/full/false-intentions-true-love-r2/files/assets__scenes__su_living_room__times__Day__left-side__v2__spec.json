@@ -1,0 +1,11 @@
+{
+  "provider": "openai",
+  "model": "gpt-image-2.5-sunburst",
+  "prompt": "Image 1 is the left-side view, facing the left wall, with the back wall at its right edge of a room. Edit it into the same view of the same room at this time of day: Day. Keep the camera position, framing, lens, walls, doors, windows, furniture, materials and colours exactly as in Image 1; change only the light. Outside every window and doorway, show what that place looks like at Day, with the sky, light and lit windows of that time, never the daylight scene of Image 1 darkened. Inside, light the room as the description says it is lit at that time, with only the lamps it names turned on. The place stays completely empty of people: no person, figure, silhouette or reflection of a person anywhere. Location: INT. SU YAQING'S LIVING ROOM. A bright, spacious, stylish contemporary downtown penthouse living room in cream, gold and soft grey. Back wall: wide windows with sheer white curtains letting in soft daylight from behind. A plush cream bouclé sofa stands in the middle of the room with its back to these windows, facing the camera, with silk cushions. In front of it is a round travertine coffee table holding flowers and a tablet stand on a pale rug. Right wall: an open doorway into the kitchen, framed in brushed brass, with a glimpse of white marble counters. Left wall: the opening to the entrance hallway, the way in, beside a low gold-legged console with a mirror. Front wall, behind the camera: a TV wall. Light comes from the window daylight and a modern brass floor lamp beside the sofa.\n\nAvoid: people or silhouettes, a darkened copy of Image 1's daylight, readable text, labels, signs with letters or numbers, logos, watermark.\n",
+  "aspect_ratio": "9:16",
+  "size": "1152x2048",
+  "quality": "high",
+  "images": [
+    "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/su_living_room/v2/left-side.jpg"
+  ]
+}

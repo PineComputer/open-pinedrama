@@ -1,0 +1,52 @@
+{
+  "model": "ep-20260928175156-xn9xm",
+  "content": [
+    {
+      "type": "text",
+      "text": "Image 1: Eleven-panel storyboard reference, used for the overall shot structure, shot sizes, and camera-movement rhythm. Read it from left to right and from top to bottom; panel N is Shot N.\nImage 2: Live-action reference of Funeral Hall, used as the benchmark for environmental composition, lighting, and realistic live-action texture; it contains no people.\nImage 3: Subject 1 (Si Nian, look S0) character appearance reference.\nImage 4: Subject 2 (Si Xin) character appearance reference.\nImage 5: Subject 3 (Zhang Cuimei) character appearance reference.\n[Subject settings]\nSubject 1 (Si Nian): Refer to Image 3. 18, Protagonist. Si Nian is the Si family's adopted daughter, swapped at birth. She is presumed dead and wakes at her own funeral with the mind of a fearless modern woman.. Outfit: look S0: Funeral burial clothes (shou yi): a high-collared, long-sleeved, dark navy-blue satin jacket with cloth frog fastenings and a subtle tonal cloud pattern, matching loose dark navy satin trousers, plain black cloth slippers and the red string bracelet on her left wrist. Her hair is loose. Signature colour: red.\nSubject 2 (Si Xin): Refer to Image 4. 50, Si Nian's adoptive father and deputy head of a state-owned chemical plant. He is a respected local official.. Outfit: Mid-grey wool Zhongshan (Mao) suit: a buttoned four-pocket jacket and matching grey trousers. Underneath is a plain white shirt collar. He wears a black mourning armband on his left sleeve, polished black leather shoes, black-rimmed glasses and a steel watch. Signature colour: grey.\nSubject 3 (Zhang Cuimei): Refer to Image 5. 55, Si Nian's adoptive mother and Si Xin's wife.. Outfit: Plum-purple knitted long-sleeved cardigan buttoned over a plain black high-neck blouse, straight black trousers and black low-heeled leather shoes. She wears a black mourning armband on her left sleeve, gold stud earrings and a jade bangle. Signature colour: purple.\nEnvironment (Funeral Hall): Refer to Image 2. Day, cool daylight through the tall left windows and a flat fluorescent wash. Cool diagonal daylight from the tall left windows, flat pale fluorescent overhead light, then bright daylight bursting through the opened door. Live sound: frightened murmurs, shuffling, a creaking door.\nDo not swap the characters' appearances, clothing, actions, positions or dialogue.\n[Overall style]\nPhotorealistic live-action short drama with cinematic lighting. Each character keeps the face and the outfit with its main colour from their reference image throughout. Use each character sheet only for that character: the face from the close-up on the right, the body and outfit from the turnaround on the left; do not render the sheet's layout, white background or multiple views. This segment has 5 lines, in this order: Si Nian, Si Xin, Si Nian, Zhang Cuimei, Si Nian. Generate speech only from the lines in {} in the shot list, each spoken exactly once by its speaker; everyone else keeps their mouth naturally closed while listening, and a V.O. speaker keeps their mouth closed or is off screen. Follow the shot list below; do not add cuts or camera moves beyond it. Strictly adhere to the 180-degree rule: within a scene, characters keep their screen sides and the camera stays on one side of the axis. Seamless continuity of action, spatial matching and consistent actor blocking; cut on action. For dialogue prefer static shot-reverse-shot and over-the-shoulder shots, balanced with reaction shots and close-up inserts. Faces stable and clear, consistent with the reference images, with no resemblance to any real actor or actress. Normal human eyes. Natural anatomy and hands. Natural, fluid motion that follows the blocking; characters make subtle, natural movements. Characters, props and environment share one world with matched lighting. Each line ends naturally with breathing room and is never cut off. Authentic performances with micro-expressions. No BGM; generate only dialogue, environmental sounds and action sounds. No subtitles.\n[Strictly exclude]\nreadable text on the wreath ribbon. Si Nian changing out of the burial clothes. subtitles. Dialogue from the wrong character, multiple people speaking at once, repeated or missing lines, lip-sync errors and audio-visual desynchronization. The raw reference images (character sheets, setting plates) appearing as a frame of the video, and starting on a still frame of the setting reference. A fast zoom-in at the start, a fast pull-back at the end, unmotivated whip-pans, tilts, zooms and 360-degree orbits. Axis-crossing, jump cuts, frame skips, flicker and clipping. Characters or props popping in or vanishing, and duplicate characters except mirror reflections. Readable text, numbers, logos and watermarks; phones and paper are shown from the back or out of focus. Storyboard frames, panel borders, gutters and grid layouts.\n[Shot list] (11 shots, approximately 26 seconds)\nWhen a previous-shot reference image is given, Shot 1 matches its camera position, shot size and blocking and continues from that moment; do not repeat that frame later.\nAt the start: Funeral hall, same axis, camera on the window side, the bier at screen right. Si Nian sits upright on the bier in burial clothes, the white cloth at her waist, eyes half shut, frowning. Zhang Cuimei sits on the floor in the front row where she fell, and Si Xin stands half a step back at her side, both facing the bier. Unnamed mourners and Si Yi have fled toward the walls. Paper wreaths line both walls and the one pair of double wooden doors is at screen left.\nShot 1 (0-3s): [Medium shot, locked-off camera, eye-level from the window side] Si Nian rubs her eyes with one hand and pats the white cloth beside her, searching for something. Dialogue (Si Nian, in Mandarin, sleepy mumble): {今天有课吗？我手机呢。}\nShot 2 (3-5s): [Wide shot, low angle from the window side, bier at screen right] Si Nian swings her legs off the bier and stands beside it in her burial clothes.\nShot 3 (5-7s): [Close-up, fast push in on her face, eye-level] Si Nian's eyes snap fully open and her mouth falls open in shock as she takes in the hall.\nShot 4 (7-9s): [Medium close-up, handheld, eye-level from the window side] Si Xin points a trembling finger at her, backing away, his glasses crooked. Dialogue (Si Xin, in Mandarin, stammering terror): {你是人是鬼！}\nShot 5 (9-12s): [Medium shot, locked-off camera, eye-level from the window side] Si Nian looks Si Xin up and down, staring at his grey suit and armband, and points at him. Dialogue (Si Nian, in Mandarin, baffled and cheeky): {你，你们怎么穿成这样啊！}\nShot 6 (12-15s): [Close-up, low angle from the window side] Si Xin swallows hard and takes another step back, clutching his jacket front. Dialogue (Si Nian, in Mandarin, baffled and cheeky): {这是什么整蛊节目吗？}\nShot 7 (15-17s): [Wide shot, high angle, pan following Si Nian toward screen left] Si Nian walks along the paper wreaths toward the mourners, peering around and fingering a white ribbon.\nShot 8 (17-19s): [Medium shot, high angle from the window side] Zhang Cuimei scoots backward on the floor on her hands, one hand raised to ward Si Nian off. Dialogue (Zhang Cuimei, in Mandarin, shrieking in fear): {你别过来！}\nShot 9 (19-21s): [Close-up, rack focus: the focus shifts from the paper flowers in the foreground to Si Nian's face] Si Nian leans close to a paper wreath on its stand and studies its white ribbon.\nShot 10 (21-23s): [Extreme close-up on her eyes, locked-off camera, eye-level] Si Nian's eyes widen in disbelief. Dialogue (Si Nian, in Mandarin, stunned): {一九八七？}\nShot 11 (23-26s): [Wide shot, eye-level from the window side, track following Si Nian to the doors at screen left] Si Nian strides in her burial clothes past Si Xin and Zhang Cuimei to the double wooden doors and yanks one open, and daylight floods in as the two turn to stare. <The heavy wooden door creaks open>\nAt the end: Funeral hall, same axis, camera on the window side. Si Nian stands in the open doorway at screen left in burial clothes, her back to the hall, daylight pouring in. Si Xin stands and Zhang Cuimei sits on the floor in the front row, both turned toward the doors.\n"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261019105135-rk6bp"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@/Users/yurun/RunVid/short-drama-runs/houma-ep001-v2/assets/scenes/funeral_hall/v3/image-1.jpg",
+        "path": "/Users/yurun/RunVid/short-drama-runs/houma-ep001-v2/assets/scenes/funeral_hall/v3/image-1.jpg",
+        "sha256": "4bc979bb1ede6c7b613679048595139d8b14b7e224c6f53cb548db289deb0061"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261019091912-fzk84"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261019091047-ppqp2"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261019092510-g6xgz"
+      },
+      "role": "reference_image"
+    }
+  ],
+  "duration": 26,
+  "ratio": "9:16",
+  "resolution": "480p",
+  "generate_audio": true,
+  "watermark": false,
+  "return_last_frame": true
+}

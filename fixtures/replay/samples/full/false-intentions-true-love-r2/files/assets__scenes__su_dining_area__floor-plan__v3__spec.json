@@ -1,0 +1,8 @@
+{
+  "provider": "openai",
+  "model": "gpt-image-2.5-sunburst",
+  "prompt": "Architectural floor plan of one room, drawn straight from above as a clean top-down orthographic plan view in the style of a set designer's ground plan: white background, thick dark walls with gaps for doors and windows, door swings drawn as arcs, windows as thin double lines, and every piece of furniture as a simple outline from above, to scale. In the plan, its bottom edge is the front wall, its top edge the back wall, its left edge the left wall and its right edge the right wall, as the establishing view names them. Draw only the doors, windows and openings the description names. Location: INT. SU YAQING'S DINING AREA. The elegant dining area of the same contemporary penthouse. A rectangular white marble dining table stands in the middle of the room, running from the left wall towards the right wall, with upholstered grey chairs around it. On the table are a glass vase of white daisies and a bottle of red wine. Left wall: a large window with sheer curtains, the main light source, casting daylight across the table from the left; one chair stands at the window end of the table. Back wall: a low walnut sideboard with decanters and a large framed print. Right wall: an open archway back to the living room, the way in. Front wall, behind the camera: a tall plant and a wine cabinet. A brass linear pendant lamp hangs over the table.\n\nAvoid: people, text, labels, numbers, letters, dimensions, compass, logos, watermark, a door or window the description does not name.\n",
+  "aspect_ratio": "1:1",
+  "size": "1536x1536",
+  "quality": "high"
+}

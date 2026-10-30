@@ -1,0 +1,12 @@
+{
+  "provider": "openai",
+  "model": "gpt-image-2.5-sunburst",
+  "prompt": "Image 1 is the floor plan of a room seen from above: its bottom edge is the front wall, its top edge the back wall, its left edge the left wall and its right edge the right wall. Image 2 is the front view of the same room (the establishing view), taken from the centre of the front wall facing the back wall. Generate one photorealistic cinematic still of this same room, empty of people, from a new camera position: the left-side view: the camera stands at the centre of the right wall, at eye level, facing the left wall, so the back wall is at the right edge of the frame and the front wall at its left edge. Turn the camera for real: this view must not show the back wall's furniture head-on unless it is the wall being faced. Keep every wall, door, window, piece of furniture, material, colour and light exactly as Image 1 and Image 2 show them, seen from this new side; the room layout and furniture placement exactly match Image 1. Location: EXT. CITY ARTERIAL ROAD. A wide, multi-lane contemporary city arterial road at dusk, seen from a raised vantage. Back side: the road runs straight away from the camera to a vanishing point between glass office towers, under a deep blue and orange dusk sky. Left side: a row of tall glass office towers with lit windows above a tree-lined sidewalk and a line of streetlights. Right side: a matching row of towers and streetlights. Front side, behind the camera: the overpass the view is taken from. The lanes are packed with traffic, white headlights coming towards the camera and red tail-lights going away. Light comes from the dusk sky, the streetlamps flickering on along both sides, and the headlights.\n\nAvoid: people, readable text, logos, watermark, any door or window the description does not name.\n",
+  "aspect_ratio": "9:16",
+  "size": "1152x2048",
+  "quality": "high",
+  "images": [
+    "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/city_road/floor-plan/v2/image-1.jpg",
+    "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/city_road/front/v2/image-1.jpg"
+  ]
+}

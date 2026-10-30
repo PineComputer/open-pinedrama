@@ -1,0 +1,131 @@
+{
+  "model": "ep-20260928175156-xn9xm",
+  "content": [
+    {
+      "type": "text",
+      "text": "Image 1: Twelve-panel storyboard reference, used for the overall shot structure, shot sizes, and camera-movement rhythm. Read it from left to right and from top to bottom; panel N is Shot N. It is a line-art sketch: do not adopt its sketch style, black outlines, white background, panel borders or drawn faces.\nImage 2: Reference of INT. JI RAN'S OFFICE, the front view, the establishing view, facing the back wall, a rendered set, not live action. Use it only for the room's layout, the furniture's positions and the light's direction; do not reference its visual content. It contains no people.\nImage 3: Reference of INT. JI RAN'S OFFICE, the back view, turned 180 degrees, facing the front wall, with the left wall at its right edge, a rendered set, used only for the room's layout; it contains no people.\nImage 4: Reference of INT. JI RAN'S OFFICE, the left-side view, facing the left wall, with the back wall at its right edge, a rendered set, used only for the room's layout; it contains no people.\nImage 5: Reference of INT. JI RAN'S OFFICE, the right-side view, facing the right wall, with the back wall at its left edge, a rendered set, used only for the room's layout; it contains no people.\nImage 6: Reference of INT. JI RAN'S OFFICE, the floor plan seen from above: its top edge is the back wall, its bottom edge the front wall behind the front view's camera, and its left and right edges the left and right walls, a rendered set, used only for the room's layout; it contains no people.\nImage 7: Blocking reference of the segment's start: the same place with these people in their places, used only for where each person is and which way they face; take faces and outfits from each subject's own image. It is a line-art diagram: do not adopt its outlines or white background.\nImage 8: Subject 1 (Xu Banxia) character appearance reference.\nImage 9: Subject 2 (Ji Ran, look S2) character appearance reference.\nImage 10: Subject 3 (GREEN-SHIRT APPLICANT) character appearance reference.\nImage 11: Subject 4 (BLUE-TANK-TOP APPLICANT) character appearance reference.\nImage 12: Subject 5 (GRAY-SHIRT APPLICANT) character appearance reference.\nImage 13: Subject 6 (SHIRTLESS APPLICANT, look S0) character appearance reference.\nImage 14: Prop 1 (small dumbbell) maps to this image; copy its writing and badges exactly from Image 14.\nFrom each prop's image, use only structure, material, and color.\n[Subject settings]\nSubject 1 (Xu Banxia): Refer to Image 8. 24, Ji Ran's secretary at Jiejian Company. Outfit: A fitted blush-pink long-sleeved blouse with a soft bow at the collar, tucked into a grey high-waisted pencil skirt to the knee, with nude block-heel pumps. Signature colour: pink.\nSubject 2 (Ji Ran): Refer to Image 9. 27, heroine; owner of Jiejian Company, an architecture and interior design firm; daughter of Ji Hongyuan. Outfit: look S2: Interview day at the office: a black tailored, fitted blazer with a deep V, nipped at the waist with a black belt. Under it an ivory silk spaghetti-strap camisole. A matching black bodycon mini skirt and black stiletto pumps. Signature colour: black.\nSubject 3 (GREEN-SHIRT APPLICANT): Refer to Image 10. 25, husband-interview applicant. Outfit: A plain grass-green short-sleeved cotton polo shirt, khaki chinos and brown casual shoes. Signature colour: green.\nSubject 4 (BLUE-TANK-TOP APPLICANT): Refer to Image 11. 27, husband-interview applicant. Outfit: A plain royal-blue cotton tank top, black track trousers and white sports sneakers. Signature colour: blue.\nSubject 5 (GRAY-SHIRT APPLICANT): Refer to Image 12. 26, husband-interview applicant. Outfit: A plain light-grey long-sleeved button-up cotton shirt, tucked into navy slacks, with black leather shoes. Signature colour: grey.\nSubject 6 (SHIRTLESS APPLICANT): Refer to Image 13. 28, husband-interview applicant. Outfit: look S0: A tight mustard-yellow short-sleeved T-shirt, brown slim trousers with a black belt, and brown loafers. Signature colour: brown.\nEnvironment (INT. JI RAN'S OFFICE): Refer to Images 2 to 6. Day, soft daylight through the floor-to-ceiling windows behind the desk. Soft daylight from the floor-to-ceiling windows behind the desk, warm recessed ceiling spots, black task lamp on the desk. Quiet office room tone, faint city hum through the glass.\nDo not swap the characters' appearances, clothing, actions, positions or dialogue.\n[Subjects and relationships]\nOnly six people appear throughout: Xu Banxia, Ji Ran, GREEN-SHIRT APPLICANT, BLUE-TANK-TOP APPLICANT, GRAY-SHIRT APPLICANT, and SHIRTLESS APPLICANT.\n[Blocking]\nRefer to Images 2 to 6 for the room and Image 7 for the people's places. Ji Ran sits upright in the one high-backed black leather chair behind the walnut executive desk, her back to the floor-to-ceiling windows, facing the open floor. Four applicants stand in one row on the open pale-oak floor in front of the desk, facing her. From the seating-area end to the walnut-door end of the row they are GREEN-SHIRT APPLICANT, holding the small dumbbell at his side; BLUE-TANK-TOP APPLICANT; GRAY-SHIRT APPLICANT; and SHIRTLESS APPLICANT, still in his yellow T-shirt and nearest the walnut door on the right wall. Xu Banxia walks from the walnut door toward the door-side corner of the desk. The tan leather sofa, two armchairs and the marble coffee table stand at the left-wall shelving. The camera stays on the seating-area side of the axis between the desk and the row of applicants.\n[Overall style]\nPhotorealistic live-action short drama with cinematic lighting. Each character keeps the face and the outfit with its main colour from their reference image throughout. Use each character sheet only for that character: the face from the close-up on the right, the body and outfit from the turnaround on the left; do not render the sheet's layout, white background or multiple views. This segment has 10 lines, in this order: Xu Banxia, Ji Ran, GREEN-SHIRT APPLICANT, Ji Ran, BLUE-TANK-TOP APPLICANT, Ji Ran, GRAY-SHIRT APPLICANT, Ji Ran, APPLICANTS, Ji Ran. Generate speech only from the lines in {} in the shot list, each spoken exactly once by its speaker; everyone else keeps their mouth naturally closed while listening, and a V.O. speaker keeps their mouth closed or is off screen. Follow the shot list below; do not add cuts or camera moves beyond it. Strictly adhere to the 180-degree rule: within a scene, characters keep their screen sides and the camera stays on one side of the axis. Seamless continuity of action; cut on action. For dialogue prefer static shot-reverse-shot and over-the-shoulder shots, balanced with reaction shots and close-up inserts. Faces stable and clear, with no resemblance to any real actor or actress. Normal human eyes. Natural anatomy. Natural, fluid motion that follows the blocking; characters make subtle, natural movements. Characters, props and environment share one world with matched lighting. Each line ends naturally with breathing room and is never cut off. Authentic performances with micro-expressions. No BGM; generate only dialogue, environmental sounds and action sounds. No subtitles.\n[Continuity]\nMaintain continuity in the identities, number, appearance, clothing, relative heights, spatial positions, and eyelines of all the characters. The actions in the shot list occur strictly in sequence. Hands are anatomically correct.\n[Strictly exclude]\nadded or missing characters, spatial jumps. subtitles or garbled text. malformed hands. Dialogue from the wrong character, multiple people speaking at once, repeated or missing lines, lip-sync errors and audio-visual desynchronization. The raw reference images (character sheets, setting plates) appearing as a frame of the video, and starting on a still frame of the setting reference. A fast zoom-in at the start, a fast pull-back at the end, unmotivated whip-pans, tilts, zooms and 360-degree orbits. Axis-crossing, jump cuts, frame skips, flicker and clipping. Face swaps, changes in age or clothing, sudden height shifts, added or missing characters, spatial jumps, and disordered action sequences; props popping in or vanishing, and duplicate characters except mirror reflections. Hand clipping, extra fingers, fused fingers, malformed hands. Subtitles, captions, watermarks and garbled writing; writing and logos other than those on a key prop's reference image, which are copied from it; a phone screen or paper that is not a key prop is shown from the back or out of focus. Black-and-white, monochrome, grayscale, desaturated visuals; hand-drawn, sketch, line art, illustration, comics, animation; storyboard frames, rough sketches, panel borders, gutters and grid layouts.\n[Shot list] (12 shots, approximately 26 seconds)\nWhen a previous-shot reference image is given, it is the moment this segment starts from: keep its people's positions, outfits, props and light, and continue from there. Shot 1 keeps its own camera, matching the image's framing only when it frames the same view; do not repeat that frame later.\nShot 1 (0-2s): [Wide shot, slow push in, high angle, from the seating-area side by the marble coffee table, facing across the desk toward the walnut door] The office in daylight. Ji Ran sits in the black leather chair behind the walnut desk. The four applicants stand in a row on the open floor facing her. Xu Banxia walks briskly from the walnut door to the door-side corner of the desk. <Heels click on the oak floor>\nShot 2 (2-5s): [Medium shot, locked-off camera, eye level, from the seating-area side, facing the door-side corner of the desk] Xu Banxia stops at the door-side corner of the desk and leans toward Ji Ran with a polite, nervous smile. Ji Ran sits at the edge of the frame in the leather chair. Dialogue (Xu Banxia, in Chinese, soft and polite): {纪总，候选人都已经到了。}\nShot 3 (5-7s): [Medium close-up, locked-off camera, eye level, from the seating-area side, facing the desk] Ji Ran crosses her legs in the leather chair and runs a cool look along the row of applicants. Dialogue (Ji Ran, in Chinese, cool and clipped): {身高？}\nShot 4 (7-9s): [Medium shot, locked-off camera, eye level, from the seating-area side, facing the seating-area end of the row] GREEN-SHIRT APPLICANT straightens his back with the small dumbbell at his side and grins eagerly at the desk. BLUE-TANK-TOP APPLICANT stands beside him. Dialogue (GREEN-SHIRT APPLICANT, in Chinese, loud and eager): {一米七九。}\nShot 5 (9-11s): [Medium shot, locked-off camera, low angle, from the seating-area side, facing the desk] Ji Ran leans back in the leather chair and rests her elbows on its padded arms. Dialogue (Ji Ran, in Chinese, deadpan): {体重？}\nShot 6 (11-13s): [Medium shot, slow push in, eye level, from the seating-area side, facing the middle of the row] BLUE-TANK-TOP APPLICANT puffs out his chest and stiffens like a recruit. GRAY-SHIRT APPLICANT stands beside him. Dialogue (BLUE-TANK-TOP APPLICANT, in Chinese, gruff bark): {七十五公斤。}\nShot 7 (13-15s): [Close-up, locked-off camera, eye level, from the seating-area side, facing the desk] Ji Ran's eyes narrow slightly and her chin tilts up. Dialogue (Ji Ran, in Chinese, dry): {有腹肌？}\nShot 8 (15-17s): [Medium shot, locked-off camera, eye level, from the seating-area side, facing the door end of the row] GRAY-SHIRT APPLICANT pushes up his glasses and pats his stomach proudly. SHIRTLESS APPLICANT stands beside him in his yellow T-shirt. Dialogue (GRAY-SHIRT APPLICANT, in Chinese, smug and nasal): {八块。}\nShot 9 (17-19s): [Close-up, slow push in, eye level, from the seating-area side, facing the desk] Ji Ran presses her lips together, the corner of her mouth twitching as she holds back a smile.\nShot 10 (19-21s): [Medium shot, locked-off camera, eye level, dirty single from the seating-area side, facing the desk, the edge of Xu Banxia's shoulder at the door-side corner] Ji Ran leans forward over the walnut desk and folds her hands on the plans. Xu Banxia's shoulder shows at the door-side corner of the desk. Dialogue (Ji Ran, in Chinese, flat and teasing): {能干吗？}\nShot 11 (21-24s): [Wide shot, handheld camera, eye level, from the seating-area side, facing the row of applicants with the walnut door behind them] The four applicants glance at each other in a panic, then all nod hard at the desk at once. Dialogue (APPLICANTS, in Chinese, flustered ragged chorus): {啊？呃能能能。}\nShot 12 (24-26s): [Medium shot, locked-off camera, low angle, from the seating-area side, facing the desk] Ji Ran sits back in the leather chair and flicks her open hand toward the applicants. Dialogue (Ji Ran, in Chinese, cool command): {来吧，展示。}\nAt the end: Ji Ran sits back in the one high-backed black leather chair behind the walnut executive desk, her hand flicked toward the open floor. The four applicants stand in one row on the open pale-oak floor in front of the desk, facing her: GREEN-SHIRT APPLICANT with the small dumbbell at the seating-area end, BLUE-TANK-TOP APPLICANT, GRAY-SHIRT APPLICANT, and SHIRTLESS APPLICANT, still in his yellow T-shirt, nearest the walnut door on the right wall. Xu Banxia stands at the door-side corner of the desk. The tan leather sofa, two armchairs and the marble coffee table stand at the left-wall shelving. The camera stays on the seating-area side of the axis between the desk and the row of applicants.\n\nImage 15 is the first frame.\n"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261027203012-j5djb"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/ji_ran_office/times/Day/v2/front.jpg",
+        "path": "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/ji_ran_office/times/Day/v2/front.jpg",
+        "sha256": "029d961f695a00ffbfb87108677f126cd1bba357edaa0d5aeeace7b0c7c6f11d"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/ji_ran_office/times/Day/v2/back.jpg",
+        "path": "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/ji_ran_office/times/Day/v2/back.jpg",
+        "sha256": "1211c5ba726acaff0eb3102b9e27e6d7d524e610071d45b9577fa1acf3be14fa"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/ji_ran_office/times/Day/v2/left-side.jpg",
+        "path": "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/ji_ran_office/times/Day/v2/left-side.jpg",
+        "sha256": "b847858303f47b59973f4e0cecce89f85f17f5bc03cab87e6d758ed736ed91b3"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/ji_ran_office/times/Day/v2/right-side.jpg",
+        "path": "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/ji_ran_office/times/Day/v2/right-side.jpg",
+        "sha256": "88d5f45b1dbe30a4345ce8c8d1872638f4bf9870db2713dfb07e1f502f6f99f9"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/ji_ran_office/times/Day/v2/floor-plan.jpg",
+        "path": "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/ji_ran_office/times/Day/v2/floor-plan.jpg",
+        "sha256": "6d810023ae2bf6b156475c7eaa8b61c195ac5b2a199aa70739c3ba4faf74c8bc"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261027190358-2zc2v"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261027183154-6fvpp"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261027185604-p5nzm"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261027183408-9rt8s"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261027183627-smsnt"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261027183843-2gfzz"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261027185105-dj26k"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261027183216-wfjbv"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261027202655-n8mj2"
+      },
+      "role": "reference_image"
+    }
+  ],
+  "duration": 26,
+  "ratio": "9:16",
+  "resolution": "480p",
+  "generate_audio": true,
+  "watermark": false,
+  "return_last_frame": true,
+  "omni_reference_task_type": "reference"
+}

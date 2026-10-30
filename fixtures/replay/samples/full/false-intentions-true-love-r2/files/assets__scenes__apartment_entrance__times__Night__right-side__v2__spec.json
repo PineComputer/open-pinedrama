@@ -1,0 +1,11 @@
+{
+  "provider": "openai",
+  "model": "gpt-image-2.5-sunburst",
+  "prompt": "Image 1 is the right-side view, facing the right wall, with the back wall at its left edge of a room. Edit it into the same view of the same room at this time of day: Night. Keep the camera position, framing, lens, walls, doors, windows, furniture, materials and colours exactly as in Image 1; change only the light. Outside every window and doorway, show what that place looks like at Night, with the sky, light and lit windows of that time, never the daylight scene of Image 1 darkened. Inside, light the room as the description says it is lit at that time, with only the lamps it names turned on. The place stays completely empty of people: no person, figure, silhouette or reflection of a person anywhere. Location: INT. JI RAN'S APARTMENT ENTRANCE. The private elevator landing and entrance hall outside Ji Ran's apartment in a luxury contemporary downtown building at night, in warm beige stone and dark wood. It is used by both the APARTMENT ENTRANCE and APARTMENT CORRIDOR scene headings as one continuous place. Left wall: brushed-steel elevator doors, the way in from the building. Right wall, directly opposite the elevator: the apartment's tall dark walnut front door with a black smart lock and brass handle. Back wall, facing the camera: a large framed autumn landscape painting of golden trees, hung above a slim dark-wood console table and lit by two brass wall sconces on either side of it. Front wall, behind the camera: a continuation of the stone corridor. The floor is polished pale stone, with clear open floor between the elevator doors and the front door. Light comes from the warm sconces on the back wall and soft downlights in the ceiling.\n\nAvoid: people or silhouettes, a darkened copy of Image 1's daylight, readable text, labels, signs with letters or numbers, logos, watermark.\n",
+  "aspect_ratio": "9:16",
+  "size": "1152x2048",
+  "quality": "high",
+  "images": [
+    "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/apartment_entrance/v2/right-side.jpg"
+  ]
+}

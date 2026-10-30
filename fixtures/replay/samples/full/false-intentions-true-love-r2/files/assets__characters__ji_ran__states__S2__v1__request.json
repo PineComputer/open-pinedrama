@@ -1,0 +1,13 @@
+{
+  "model": "gpt-image-2.5-sunburst",
+  "prompt": "Edit this character reference sheet of Ji Ran (a fictional 27-year-old). Change ONLY the outfit: the person now wears look S2, one outfit only: Interview day at the office: a black tailored, fitted blazer with a deep V, nipped at the waist with a black belt. Under it an ivory silk spaghetti-strap camisole. A matching black bodycon mini skirt and black stiletto pumps.. Keep everything else exactly as in the input image.\nThe new outfit is identical in every view and in the close-up: the same garments, accessories and details on the same side of the body, seen from that view's angle. Garments are plain, with no logo, brand mark, or printed letters or numbers.\nPreserve exactly: the face, facial features, skin and hair; the identity of the person; body shape, height and proportions; marks and scars as described (Strikingly beautiful East Asian woman in her late twenties who looks young and fresh. She has a small oval face with high cheekbones, a delicate tapered jaw and a fine straight nose. Her almond eyes are bright, intelligent and self-possessed under defined, softly arched brows with long lashes. Her complexion is flawless, luminous and even, with no redness and with natural skin texture. She wears full glamorous make-up with a glossy nude-rose lip. Her hair is long, glossy and jet black, falling to mid-back in sleek loose waves with a soft side part. She is tall at about 175 cm and about eight heads tall, with a small face, long legs and elegant supermodel proportions. Her figure is curvy: full C-to-D-cup bust, defined waist, full hips, hourglass shape. Accessories are small diamond stud earrings and a slim gold bracelet watch. In the flashback at 22 she has the same face, slightly softer and fuller-cheeked, with her hair long and straight.); the pose and limb positions in every view; panel layout, scale, spacing and framing; plain background; studio lighting and colour balance.\n\nAvoid: changed face, different person, older or younger-looking face, changed body shape, changed pose, changed layout, changed background, changed lighting, clothing from the previous look left over, text, watermark.\n",
+  "n": 1,
+  "size": "2048x1152",
+  "quality": "high",
+  "output_format": "jpeg",
+  "output_compression": 100,
+  "moderation": "low",
+  "input_images": [
+    "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/characters/ji_ran/v3/image-1.jpg"
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "model": "ep-20260928175156-xn9xm",
+  "content": [
+    {
+      "type": "text",
+      "text": "Image 1: Two-panel storyboard reference, used for the overall shot structure, shot sizes, and camera-movement rhythm. Read it from left to right and from top to bottom; panel N is Shot N. It is a line-art sketch: do not adopt its sketch style, black outlines, white background, panel borders or drawn faces.\nImage 2: Reference of EXT. CITY ARTERIAL ROAD, the front view, the establishing view, facing the back side, a rendered set, not live action. Use it only for the place's layout, the positions of its fixed things and the light's direction; do not reference its visual content. It contains no people.\nImage 3: Reference of EXT. CITY ARTERIAL ROAD, the back view, turned 180 degrees, facing the front side, with the left side at its right edge, a rendered set, used only for the place's layout; it contains no people.\nImage 4: Reference of EXT. CITY ARTERIAL ROAD, the left-side view, facing the left side, with the back side at its right edge, a rendered set, used only for the place's layout; it contains no people.\nImage 5: Reference of EXT. CITY ARTERIAL ROAD, the right-side view, facing the right side, with the back side at its left edge, a rendered set, used only for the place's layout; it contains no people.\nImage 6: Reference of EXT. CITY ARTERIAL ROAD, the floor plan seen from above: its top edge is the back side, its bottom edge the front side behind the front view's camera, and its left and right edges the left and right sides, a rendered set, used only for the place's layout; it contains no people.\n[Subject settings]\nEnvironment (EXT. CITY ARTERIAL ROAD): Refer to Images 2 to 6. Dusk turning to night, deep blue and orange sky. Dusk sky glow, streetlamps flickering on, white headlights and red tail-lights; city traffic rumble.\nDo not swap the characters' appearances, clothing, actions, positions or dialogue.\n[Subjects and relationships]\nNobody appears in this segment.\n[Blocking]\nRefer to Images 2 to 6. Camera on the overpass at the front side, facing down the multi-lane road toward its vanishing point between the two rows of glass office towers. The lanes are packed with traffic, white headlights coming toward the camera and red tail-lights going away. The rows of streetlights along both sidewalks are still dark.\n[Overall style]\nPhotorealistic live-action short drama with cinematic lighting. Each character keeps the face and the outfit with its main colour from their reference image throughout. Use each character sheet only for that character: the face from the close-up on the right, the body and outfit from the turnaround on the left; do not render the sheet's layout, white background or multiple views. This segment has no dialogue; nobody speaks. Generate speech only from the lines in {} in the shot list, each spoken exactly once by its speaker; everyone else keeps their mouth naturally closed while listening, and a V.O. speaker keeps their mouth closed or is off screen. Follow the shot list below; do not add cuts or camera moves beyond it. Strictly adhere to the 180-degree rule: within a scene, characters keep their screen sides and the camera stays on one side of the axis. Seamless continuity of action; cut on action. For dialogue prefer static shot-reverse-shot and over-the-shoulder shots, balanced with reaction shots and close-up inserts. Faces stable and clear, with no resemblance to any real actor or actress. Normal human eyes. Natural anatomy. Natural, fluid motion that follows the blocking; characters make subtle, natural movements. Characters, props and environment share one world with matched lighting. Each line ends naturally with breathing room and is never cut off. Authentic performances with micro-expressions. No BGM; generate only dialogue, environmental sounds and action sounds. No subtitles.\n[Continuity]\nMaintain continuity in the identities, number, appearance, clothing, relative heights, spatial positions, and eyelines of all the characters. The actions in the shot list occur strictly in sequence. Hands are anatomically correct.\n[Strictly exclude]\npeople or characters in close view. subtitles or garbled text on buildings. Dialogue from the wrong character, multiple people speaking at once, repeated or missing lines, lip-sync errors and audio-visual desynchronization. The raw reference images (character sheets, setting plates) appearing as a frame of the video, and starting on a still frame of the setting reference. A fast zoom-in at the start, a fast pull-back at the end, unmotivated whip-pans, tilts, zooms and 360-degree orbits. Axis-crossing, jump cuts, frame skips, flicker and clipping. Face swaps, changes in age or clothing, sudden height shifts, added or missing characters, spatial jumps, and disordered action sequences; props popping in or vanishing, and duplicate characters except mirror reflections. Hand clipping, extra fingers, fused fingers, malformed hands. Subtitles, captions, watermarks and garbled writing; writing and logos other than those on a key prop's reference image, which are copied from it; a phone screen or paper that is not a key prop is shown from the back or out of focus. Black-and-white, monochrome, grayscale, desaturated visuals; hand-drawn, sketch, line art, illustration, comics, animation; storyboard frames, rough sketches, panel borders, gutters and grid layouts.\n[Shot list] (2 shots, approximately 4 seconds)\nWhen a previous-shot reference image is given, it is the moment this segment starts from: keep its people's positions, outfits, props and light, and continue from there. Shot 1 keeps its own camera, matching the image's framing only when it frames the same view; do not repeat that frame later.\nShot 1 (0-2s): [Extreme wide shot, high angle from the overpass, slow push in toward the vanishing point between the towers] Dense traffic streams along the multi-lane road between glass office towers with lit windows, under a dusk sky. <Distant traffic rumble, faint horns>\nShot 2 (2-4s): [Wide shot, high angle, slow pan along the tree-lined sidewalk from the overpass] The streetlights flicker on one after another along both sidewalks as the sky darkens over the headlights. <Traffic hum>\nAt the end: Camera on the overpass facing down the road; the streetlights along both sidewalks are lit, the traffic still packed, the sky darkened to night blue.\n"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261028055626-m74qw"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/city_road/times/Night/v2/front.jpg",
+        "path": "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/city_road/times/Night/v2/front.jpg",
+        "sha256": "82a7de580d01208de36b33d5a8425c323310dc2861ff1c4ae7d18fabb73f7d78"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/city_road/times/Night/v2/back.jpg",
+        "path": "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/city_road/times/Night/v2/back.jpg",
+        "sha256": "29c82a1a1c5b3dc670a520dfe17f2a2111c20244c4b3a94ea218f7c0df3cb3f8"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/city_road/times/Night/v2/left-side.jpg",
+        "path": "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/city_road/times/Night/v2/left-side.jpg",
+        "sha256": "c0b26b2f6bd83f3a9565259ff5b421f6cdd93162d20ecdb71c132d93e59422fe"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/city_road/times/Night/v2/right-side.jpg",
+        "path": "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/city_road/times/Night/v2/right-side.jpg",
+        "sha256": "288dea04f8cd68faf547b2c800e43e5ad2f87872442b7d0aff85ebe0b34de815"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/city_road/times/Night/v2/floor-plan.jpg",
+        "path": "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/city_road/times/Night/v2/floor-plan.jpg",
+        "sha256": "abc7ab64c66131440427f0e9b1f9cfd65a5d7d8d8a216ff8e41060d5d83b17df"
+      },
+      "role": "reference_image"
+    }
+  ],
+  "duration": 4,
+  "ratio": "9:16",
+  "resolution": "480p",
+  "generate_audio": true,
+  "watermark": false,
+  "return_last_frame": true,
+  "omni_reference_task_type": "reference"
+}

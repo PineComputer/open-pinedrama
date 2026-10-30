@@ -1,0 +1,11 @@
+{
+  "provider": "openai",
+  "model": "gpt-image-2.5-sunburst",
+  "prompt": "Image 1 is the back view, turned 180 degrees, facing the front wall, with the left wall at its right edge of a room. Edit it into the same view of the same room at this time of day: Night. Keep the camera position, framing, lens, walls, doors, windows, furniture, materials and colours exactly as in Image 1; change only the light. Outside every window and doorway, show what that place looks like at Night, with the sky, light and lit windows of that time, never the daylight scene of Image 1 darkened. Inside, light the room as the description says it is lit at that time, with only the lamps it names turned on. The place stays completely empty of people: no person, figure, silhouette or reflection of a person anywhere. Location: INT. JI RAN'S LIVING ROOM. A spacious, stylish contemporary downtown apartment living room at night, in pale stone, warm oak and glass. Back wall: floor-to-ceiling windows with sheer curtains and a glittering night city view, which gives a cool glow from behind. Left wall: the opening to the entrance hallway, the way in, and a large abstract canvas. Right wall: an open-plan kitchen with white cabinetry and a long marble island with three bar stools, lit by a pendant above. In the middle of the room, on a large patterned rug, a long pale-oatmeal sofa stands with its back to the left wall, facing the open kitchen on the right wall. In front of it is a low marble-and-glass coffee table, with open floor between the coffee table and the kitchen island. Front wall, behind the camera: a low TV console. Warm light also comes from a brass arc floor lamp beside the sofa and soft cove lighting in the ceiling.\n\nAvoid: people or silhouettes, a darkened copy of Image 1's daylight, readable text, labels, signs with letters or numbers, logos, watermark.\n",
+  "aspect_ratio": "9:16",
+  "size": "1152x2048",
+  "quality": "high",
+  "images": [
+    "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/ji_ran_living_room/v2/back.jpg"
+  ]
+}

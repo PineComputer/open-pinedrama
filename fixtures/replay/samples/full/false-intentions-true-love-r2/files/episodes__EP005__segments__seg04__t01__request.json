@@ -1,0 +1,96 @@
+{
+  "model": "ep-20260928175156-xn9xm",
+  "content": [
+    {
+      "type": "text",
+      "text": "Image 1: Five-panel storyboard reference, used for the overall shot structure, shot sizes, and camera-movement rhythm. Read it from left to right and from top to bottom; panel N is Shot N. It is a line-art sketch: do not adopt its sketch style, black outlines, white background, panel borders or drawn faces.\nImage 2: Reference of INT. JI RAN'S LIVING ROOM, the front view, the establishing view, facing the back wall, a rendered set, not live action. Use it only for the room's layout, the furniture's positions and the light's direction; do not reference its visual content. It contains no people.\nImage 3: Reference of INT. JI RAN'S LIVING ROOM, the back view, turned 180 degrees, facing the front wall, with the left wall at its right edge, a rendered set, used only for the room's layout; it contains no people.\nImage 4: Reference of INT. JI RAN'S LIVING ROOM, the left-side view, facing the left wall, with the back wall at its right edge, a rendered set, used only for the room's layout; it contains no people.\nImage 5: Reference of INT. JI RAN'S LIVING ROOM, the right-side view, facing the right wall, with the back wall at its left edge, a rendered set, used only for the room's layout; it contains no people.\nImage 6: Reference of INT. JI RAN'S LIVING ROOM, the floor plan seen from above: its top edge is the back wall, its bottom edge the front wall behind the front view's camera, and its left and right edges the left and right walls, a rendered set, used only for the room's layout; it contains no people.\nImage 7: Blocking reference of the segment's start: the same place with these people in their places, used only for where each person is and which way they face; take faces and outfits from each subject's own image. It is a line-art diagram: do not adopt its outlines or white background.\nImage 8: Subject 1 (Lin Qingyu, look S2) character appearance reference.\nImage 9: Subject 2 (Ji Ran, look S3) character appearance reference.\n[Subject settings]\nSubject 1 (Lin Qingyu): Refer to Image 8. 21, hero; Su Yaqing's younger stepbrother, secretly a wealthy young boss with his own assistant, posing as an ordinary college student to win Ji Ran. Outfit: look S2: Night at the apartment: a plain white crew-neck T-shirt under an open black cotton bomber jacket, with slim grey jogger trousers and white sneakers. Signature colour: white.\nSubject 2 (Ji Ran): Refer to Image 9. 27, heroine; owner of Jiejian Company, an architecture and interior design firm; daughter of Ji Hongyuan. Outfit: look S3: Night, coming home: a black satin spaghetti-strap bodycon midi slip dress with a draped cowl neckline, cinched at the waist. Black strappy stiletto sandals and a fine gold pendant necklace. Signature colour: black.\nEnvironment (INT. JI RAN'S LIVING ROOM): Refer to Images 2 to 6. Night, warm lamp light against the cool city glow. Cool night city glow through the floor-to-ceiling windows, warm brass arc floor lamp, ceiling cove light and the kitchen pendant; quiet room tone and distant city hum.\nDo not swap the characters' appearances, clothing, actions, positions or dialogue.\n[Subjects and relationships]\nOnly two people appear throughout: Lin Qingyu and Ji Ran.\n[Blocking]\nRefer to Images 2 to 6 for the room and Image 7 for the people's places. Camera on the front-wall side by the low TV console, facing the floor-to-ceiling windows on the back wall; the axis runs from the pale sofa to the marble island of the open kitchen. Lin Qingyu sits slouched on the long pale-oatmeal sofa, which stands on the patterned rug with its back to the left wall, facing the kitchen. Ji Ran, in her black satin slip dress, stands on the open floor between the marble-and-glass coffee table and the marble island, facing him, arms folded. There is one marble-and-glass coffee table in front of the sofa, one brass arc floor lamp beside the sofa and three bar stools at the island.\n[Overall style]\nPhotorealistic live-action short drama with cinematic lighting. Each character keeps the face and the outfit with its main colour from their reference image throughout. Use each character sheet only for that character: the face from the close-up on the right, the body and outfit from the turnaround on the left; do not render the sheet's layout, white background or multiple views. This segment has 2 lines, in this order: Ji Ran, Lin Qingyu. Generate speech only from the lines in {} in the shot list, each spoken exactly once by its speaker; everyone else keeps their mouth naturally closed while listening, and a V.O. speaker keeps their mouth closed or is off screen. Follow the shot list below; do not add cuts or camera moves beyond it. Strictly adhere to the 180-degree rule: within a scene, characters keep their screen sides and the camera stays on one side of the axis. Seamless continuity of action; cut on action. For dialogue prefer static shot-reverse-shot and over-the-shoulder shots, balanced with reaction shots and close-up inserts. Faces stable and clear, with no resemblance to any real actor or actress. Normal human eyes. Natural anatomy. Natural, fluid motion that follows the blocking; characters make subtle, natural movements. Characters, props and environment share one world with matched lighting. Each line ends naturally with breathing room and is never cut off. Authentic performances with micro-expressions. No BGM; generate only dialogue, environmental sounds and action sounds. No subtitles.\n[Continuity]\nMaintain continuity in the identities, number, appearance, clothing, relative heights, spatial positions, and eyelines of all the characters. The actions in the shot list occur strictly in sequence. Hands are anatomically correct.\n[Strictly exclude]\nadded or missing characters, spatial jumps. subtitles or garbled text. malformed hands. Dialogue from the wrong character, multiple people speaking at once, repeated or missing lines, lip-sync errors and audio-visual desynchronization. The raw reference images (character sheets, setting plates) appearing as a frame of the video, and starting on a still frame of the setting reference. A fast zoom-in at the start, a fast pull-back at the end, unmotivated whip-pans, tilts, zooms and 360-degree orbits. Axis-crossing, jump cuts, frame skips, flicker and clipping. Face swaps, changes in age or clothing, sudden height shifts, added or missing characters, spatial jumps, and disordered action sequences; props popping in or vanishing, and duplicate characters except mirror reflections. Hand clipping, extra fingers, fused fingers, malformed hands. Subtitles, captions, watermarks and garbled writing; writing and logos other than those on a key prop's reference image, which are copied from it; a phone screen or paper that is not a key prop is shown from the back or out of focus. Black-and-white, monochrome, grayscale, desaturated visuals; hand-drawn, sketch, line art, illustration, comics, animation; storyboard frames, rough sketches, panel borders, gutters and grid layouts.\n[Shot list] (5 shots, approximately 14 seconds)\nWhen a previous-shot reference image is given, it is the moment this segment starts from: keep its people's positions, outfits, props and light, and continue from there. Shot 1 keeps its own camera, matching the image's framing only when it frames the same view; do not repeat that frame later.\nShot 1 (0-2s): [Wide shot, locked-off camera, eye level, from the TV console facing the windows] Lin Qingyu leans back on the pale sofa. Ji Ran, arms folded, faces him across the marble-and-glass coffee table from the kitchen side, the night city glittering behind the windows. <Quiet room tone, distant city hum>\nShot 2 (2-6s): [Medium shot, dirty single, high angle over Lin Qingyu's shoulder from the sofa toward the kitchen island] Ji Ran looks down at Lin Qingyu with her arms folded and one eyebrow raised, the back of his head at the frame edge. Dialogue (Ji Ran, in Mandarin, cool, skeptical): {你面试都没通过，这次来想干嘛？}\nShot 3 (6-8s): [Medium shot, locked-off camera, eye level, from the TV console side angled toward the sofa] Lin Qingyu sits up straight on the sofa, rests his forearms on his knees and lifts his eyes to meet Ji Ran's.\nShot 4 (8-11s): [Medium close-up, low angle, slow push in on Lin Qingyu, from the kitchen side of the coffee table] Lin Qingyu holds Ji Ran's gaze with a calm, earnest look and a hint of a smile. Dialogue (Lin Qingyu, in Mandarin, warm, firm): {我来争取一个试用期。}\nShot 5 (11-14s): [Close-up, clean single on Ji Ran's face, slow push in, eye level, from the sofa side] Ji Ran's lips part slightly and her folded arms loosen as soft light and snowlike flecks drift across the image.\nAt the end: Camera on the front-wall side by the TV console. Lin Qingyu sits upright on the pale-oatmeal sofa, forearms on his knees, looking up at Ji Ran. Ji Ran stands on the open floor between the coffee table and the marble island, facing him, her arms loosening, soft snowlike flecks drifting over the image.\n\nImage 10 is the first frame.\n"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261028055754-9plnj"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/ji_ran_living_room/times/Night/v2/front.jpg",
+        "path": "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/ji_ran_living_room/times/Night/v2/front.jpg",
+        "sha256": "c4be37ec33b8f99ebd6d17ea419bfbe662db3d5870a4750907e88710ccdc068a"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/ji_ran_living_room/times/Night/v2/back.jpg",
+        "path": "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/ji_ran_living_room/times/Night/v2/back.jpg",
+        "sha256": "7152601b34f448fe4e1d0f7654dbdbd1533be25e5d7937df9ac604fff65bc809"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/ji_ran_living_room/times/Night/v2/left-side.jpg",
+        "path": "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/ji_ran_living_room/times/Night/v2/left-side.jpg",
+        "sha256": "85271539e6708cdf70196ae89ed54612c6c7df602009f20784bd7fdf4cfaecfb"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/ji_ran_living_room/times/Night/v2/right-side.jpg",
+        "path": "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/ji_ran_living_room/times/Night/v2/right-side.jpg",
+        "sha256": "4aa069cbd686e637b558433f87699cee3a9f0994b725eff7e2e206120ac90966"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/ji_ran_living_room/times/Night/v2/floor-plan.jpg",
+        "path": "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/ji_ran_living_room/times/Night/v2/floor-plan.jpg",
+        "sha256": "b8c7c0b6a75fb48e58fee7dd66c61334b81eaed16a59e1a980accef4006fb9b9"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261028054541-xwvmb"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261027185623-zqmc7"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261027190041-npvm6"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261028055141-g594m"
+      },
+      "role": "reference_image"
+    }
+  ],
+  "duration": 14,
+  "ratio": "9:16",
+  "resolution": "480p",
+  "generate_audio": true,
+  "watermark": false,
+  "return_last_frame": true,
+  "omni_reference_task_type": "reference"
+}

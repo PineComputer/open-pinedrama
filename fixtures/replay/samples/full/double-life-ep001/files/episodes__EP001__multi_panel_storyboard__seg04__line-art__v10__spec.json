@@ -1,0 +1,12 @@
+{
+  "provider": "seedream",
+  "model": "dola-seedream-5-0-pro-260628",
+  "prompt": "Image 1 is one panel of a multi-panel storyboard. Redraw Image 1 so that: Two separate people on one white tufted sofa: George (his sheet: 55, beard, quarter-zip sweater) slumped on the left end and Lauren (her sheet: 50, blonde bob, pearl necklace, sheath dress) on the right end, turned toward George with a cold smile. Remove the standing person at the top right and the second sofa; only the arched fireplace alcove with the painting behind the sofa. Same black-and-white line-art style.\nAfter the edit, the panel shows its shot: Medium shot, two-shot, eye-level, locked-off, facing the back wall from just beyond the coffee table's far edge, so Cassie stands behind the camera. Framed from the seat cushions up, with the arched fireplace alcove and the framed painting behind the two of them; the right-wall doorway and Natalie lie beyond frame right. George is on frame left and Lauren on frame right, both facing camera. Lauren turns on the sofa toward George and leans in with a cold smile, her hands still in her lap. George sits slumped, his hands on his knees.\nKeep Image 1's framing, camera angle, location, drawing style and border, and everyone and everything the change does not name, unchanged.\nImage 2: the character sheet of Lauren (50)\nImage 3: the character sheet of George (55)\nAn image after Image 1 is the character sheet of a person in the panel: draw that person as in it (face, hairstyle, build and outfit), in Image 1's drawing style, and use it only for the person, not for its layout, background, colours or multiple views.\nNo text, letters, numbers, captions, speech bubbles, panel labels or watermark anywhere in the image.\n",
+  "aspect_ratio": "721:1280",
+  "size": "721x1280",
+  "images": [
+    "/Users/yurun/RunVid/short_drama/outputs/projects/double-life-ep001/episodes/EP001/multi_panel_storyboard/seg04/line-art/v10/crop.png",
+    "/Users/yurun/RunVid/short_drama/outputs/projects/double-life-ep001/assets/characters/lauren/v1/image-1.jpg",
+    "/Users/yurun/RunVid/short_drama/outputs/projects/double-life-ep001/assets/characters/george/v1/image-1.jpg"
+  ]
+}

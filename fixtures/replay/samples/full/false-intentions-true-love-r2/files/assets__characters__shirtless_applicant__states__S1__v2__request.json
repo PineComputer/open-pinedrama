@@ -1,0 +1,13 @@
+{
+  "model": "gpt-image-2.5-sunburst",
+  "prompt": "Edit this character reference sheet of SHIRTLESS APPLICANT (a fictional 28-year-old). Change ONLY the outfit: the person now wears look S1, one outfit only: Top pulled off: bare-chested, wearing only the brown slim trousers with the black belt and brown loafers.. Keep everything else exactly as in the input image.\nThe new outfit is identical in every view and in the close-up: the same garments, accessories and details on the same side of the body, seen from that view's angle. Garments are plain, with no logo, brand mark, or printed letters or numbers.\nPreserve exactly: the face, facial features, skin and hair; the identity of the person; body shape, height and proportions; marks and scars as described (Ordinary East Asian man of 28. He has an oval face with heavy-lidded eyes and a thin moustache. His black hair is short and gelled into spikes. He is about 176 cm, with a pumped, oiled, gym-built torso and a tan.); the pose and limb positions in every view; panel layout, scale, spacing and framing; plain background; studio lighting and colour balance.\n\nAvoid: changed face, different person, older or younger-looking face, changed body shape, changed pose, changed layout, changed background, changed lighting, clothing from the previous look left over, text, watermark.\n",
+  "n": 1,
+  "size": "2048x1152",
+  "quality": "high",
+  "output_format": "jpeg",
+  "output_compression": 100,
+  "moderation": "low",
+  "input_images": [
+    "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/characters/shirtless_applicant/v3/image-1.jpg"
+  ]
+}

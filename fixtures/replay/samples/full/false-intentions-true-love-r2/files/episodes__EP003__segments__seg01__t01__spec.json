@@ -1,0 +1,482 @@
+{
+  "model": "sd25",
+  "content": [
+    {
+      "type": "text",
+      "text": "Image 1: Nine-panel storyboard reference, used for the overall shot structure, shot sizes, and camera-movement rhythm. Read it from left to right and from top to bottom; panel N is Shot N. It is a line-art sketch: do not adopt its sketch style, black outlines, white background, panel borders or drawn faces.\nImage 2: Reference of INT. JI RAN'S OFFICE, the front view, the establishing view, facing the back wall, a rendered set, not live action. Use it only for the room's layout, the furniture's positions and the light's direction; do not reference its visual content. It contains no people.\nImage 3: Reference of INT. JI RAN'S OFFICE, the back view, turned 180 degrees, facing the front wall, with the left wall at its right edge, a rendered set, used only for the room's layout; it contains no people.\nImage 4: Reference of INT. JI RAN'S OFFICE, the left-side view, facing the left wall, with the back wall at its right edge, a rendered set, used only for the room's layout; it contains no people.\nImage 5: Reference of INT. JI RAN'S OFFICE, the right-side view, facing the right wall, with the back wall at its left edge, a rendered set, used only for the room's layout; it contains no people.\nImage 6: Reference of INT. JI RAN'S OFFICE, the floor plan seen from above: its top edge is the back wall, its bottom edge the front wall behind the front view's camera, and its left and right edges the left and right walls, a rendered set, used only for the room's layout; it contains no people.\nImage 7: Blocking reference of the segment's start: the same place with these people in their places, used only for where each person is and which way they face; take faces and outfits from each subject's own image. It is a line-art diagram: do not adopt its outlines or white background.\nImage 8: Subject 1 (Lin Qingyu, look S1) character appearance reference.\nImage 9: Subject 2 (Ji Ran, look S2) character appearance reference.\nImage 10: Subject 3 (Xu Banxia) character appearance reference.\n[Subject settings]\nSubject 1 (Lin Qingyu): Refer to Image 8. 21, hero; Su Yaqing's younger stepbrother, secretly a wealthy young boss with his own assistant, posing as an ordinary college student to win Ji Ran. Outfit: look S1: Interview disguise, rain-soaked: a plain white crew-neck fitted T-shirt clinging damply to his chest under an open light-blue denim jacket, with straight blue jeans and worn white canvas sneakers. His hair is wet and his face beaded with rain and sweat. Signature colour: white.\nSubject 2 (Ji Ran): Refer to Image 9. 27, heroine; owner of Jiejian Company, an architecture and interior design firm; daughter of Ji Hongyuan. Outfit: look S2: Interview day at the office: a black tailored, fitted blazer with a deep V, nipped at the waist with a black belt. Under it an ivory silk spaghetti-strap camisole. A matching black bodycon mini skirt and black stiletto pumps. Signature colour: black.\nSubject 3 (Xu Banxia): Refer to Image 10. 24, Ji Ran's secretary at Jiejian Company. Outfit: A fitted blush-pink long-sleeved blouse with a soft bow at the collar, tucked into a grey high-waisted pencil skirt to the knee, with nude block-heel pumps. Signature colour: pink.\nEnvironment (INT. JI RAN'S OFFICE): Refer to Images 2 to 6. Day, grey rainy daylight through the floor-to-ceiling windows, warm ceiling spots. Grey rainy daylight from the floor-to-ceiling windows behind the desk, warm recessed ceiling spots, the black desk lamp; heavy rain on the glass, heel clicks on oak, a door shutting, cartoon boing effects on the pokes.\nDo not swap the characters' appearances, clothing, actions, positions or dialogue.\n[Subjects and relationships]\nOnly three people appear throughout: Lin Qingyu, Ji Ran, and Xu Banxia.\n[Blocking]\nRefer to Images 2 to 6 for the room and Image 7 for the people's places. Camera on the front-wall side, by the pin-up wall, facing the walnut desk and the walnut door on the right wall; the camera stays on this side throughout. Lin Qingyu stands at the open walnut door on the right wall, just inside it on the pale oak floor, soaked, breathless, hair dripping, facing into the room. Ji Ran stands on the open oak floor a step from the walnut door, facing Lin Qingyu. Xu Banxia stands at the door-side corner of the walnut desk, facing them. There is one walnut desk in front of the floor-to-ceiling windows, one high-backed black leather chair behind it and one walnut door.\n[Overall style]\nPhotorealistic live-action short drama with cinematic lighting. Each character keeps the face and the outfit with its main colour from their reference image throughout. Use each character sheet only for that character: the face from the close-up on the right, the body and outfit from the turnaround on the left; do not render the sheet's layout, white background or multiple views. This segment has 4 lines, in this order: Lin Qingyu, Ji Ran (V.O.), Ji Ran, Lin Qingyu. Generate speech only from the lines in {} in the shot list, each spoken exactly once by its speaker; everyone else keeps their mouth naturally closed while listening, and a V.O. speaker keeps their mouth closed or is off screen. Follow the shot list below; do not add cuts or camera moves beyond it. Strictly adhere to the 180-degree rule: within a scene, characters keep their screen sides and the camera stays on one side of the axis. Seamless continuity of action; cut on action. For dialogue prefer static shot-reverse-shot and over-the-shoulder shots, balanced with reaction shots and close-up inserts. Faces stable and clear, with no resemblance to any real actor or actress. Normal human eyes. Natural anatomy. Natural, fluid motion that follows the blocking; characters make subtle, natural movements. Characters, props and environment share one world with matched lighting. Each line ends naturally with breathing room and is never cut off. Authentic performances with micro-expressions. No BGM; generate only dialogue, environmental sounds and action sounds. No subtitles.\n[Continuity]\nMaintain continuity in the identities, number, appearance, clothing, relative heights, spatial positions, and eyelines of all the characters. The actions in the shot list occur strictly in sequence. Hands are anatomically correct.\n[Strictly exclude]\nadded or missing characters, spatial jumps. malformed hands and fingers. subtitles or garbled text. Dialogue from the wrong character, multiple people speaking at once, repeated or missing lines, lip-sync errors and audio-visual desynchronization. The raw reference images (character sheets, setting plates) appearing as a frame of the video, and starting on a still frame of the setting reference. A fast zoom-in at the start, a fast pull-back at the end, unmotivated whip-pans, tilts, zooms and 360-degree orbits. Axis-crossing, jump cuts, frame skips, flicker and clipping. Face swaps, changes in age or clothing, sudden height shifts, added or missing characters, spatial jumps, and disordered action sequences; props popping in or vanishing, and duplicate characters except mirror reflections. Hand clipping, extra fingers, fused fingers, malformed hands. Subtitles, captions, watermarks and garbled writing; writing and logos other than those on a key prop's reference image, which are copied from it; a phone screen or paper that is not a key prop is shown from the back or out of focus. Black-and-white, monochrome, grayscale, desaturated visuals; hand-drawn, sketch, line art, illustration, comics, animation; storyboard frames, rough sketches, panel borders, gutters and grid layouts.\n[Shot list] (9 shots, approximately 27 seconds)\nWhen a previous-shot reference image is given, it is the moment this segment starts from: keep its people's positions, outfits, props and light, and continue from there. Shot 1 keeps its own camera, matching the image's framing only when it frames the same view; do not repeat that frame later.\nShot 1 (0-2s): [Wide shot, locked-off camera, eye level, from the pin-up wall facing the walnut desk and the walnut door] Rain streaks the floor-to-ceiling windows. Lin Qingyu stands dripping just inside the open walnut door, Ji Ran stands on the oak floor a step from the door facing him, and Xu Banxia stands at the door-side corner of the desk. <Heavy rain drums on the window glass>\nShot 2 (2-6s): [Medium front shot, handheld, eye level, from the pin-up wall side angled toward the walnut door, dirty single of Lin Qingyu with Ji Ran's shoulder at the frame edge] Lin Qingyu, chest heaving, wet T-shirt clinging to him, pushes his wet fringe back and bows his head apologetically, Ji Ran's shoulder at the frame edge. Dialogue (Lin Qingyu, in Chinese, breathless and apologetic): {抱歉，我来晚了。 没想到今天下这么大雨，}\nShot 3 (6-10s): [Medium close-up, slow push in on Ji Ran, eye level, from the pin-up wall side angled toward the desk, clean single framed on face and shoulders] Ji Ran lets her eyes travel slowly from Lin Qingyu's face down his soaked body. Dialogue (Lin Qingyu, in Chinese, panting, quick): {我自行车链子掉了，一路跑过来的。}\nShot 4 (10-14s): [Close-up, locked-off camera, eye level, clean single of Ji Ran framed tight on face and shoulders] Ji Ran's mouth stays closed; one corner of her lips lifts in a cool, appraising half-smile. Dialogue (Ji Ran, V.O., in Chinese, cool and amused inner voice): {脸长得好，身材也不错，带出去够有面。}\nShot 5 (14-17s): [Medium shot, follow Xu Banxia from the desk corner to the walnut door, eye level, from the pin-up wall side] Xu Banxia presses her lips together to hold in a laugh, walks from the desk corner past Ji Ran and Lin Qingyu, steps out through the walnut door and pulls it shut behind her. <Door clicks shut>\nShot 6 (17-20s): [Medium shot, follow Ji Ran around Lin Qingyu, eye level, camera on the pin-up wall side] Ji Ran folds her arms and walks slowly around Lin Qingyu, inspecting him, ending in front of him on the desk side, facing him, while he stands just inside the closed door. <Stiletto heels click on the oak floor>\nShot 7 (20-23s): [Close-up insert, locked-off camera, eye level, on Lin Qingyu's stomach] Ji Ran's finger pokes Lin Qingyu's abdomen through the wet white T-shirt, the fabric denting with each poke. Dialogue (Ji Ran, in Chinese, deadpan counting): {一、二、三、四。 } <Cartoon boing with each poke>\nShot 8 (23-25s): [Medium close-up, handheld, low angle on Lin Qingyu, dirty single with Ji Ran's shoulder at the frame edge] Lin Qingyu stands stiffly with his arms at his sides, a bead of sweat sliding down his forehead, eyes darting down to her hand. Dialogue (Ji Ran, in Chinese, crisp): {你叫什么名字？}\nShot 9 (25-27s): [Medium shot, over-the-shoulder from behind Ji Ran, eye level, angled toward the walnut door] Over Ji Ran's shoulder, Lin Qingyu swallows, a shy flush on his face. Dialogue (Lin Qingyu, in Chinese, stammering): {林、林青羽。}\nAt the end: Camera on the front-wall side, by the pin-up wall, facing the walnut desk and the walnut door on the right wall. Lin Qingyu stands on the pale oak floor just inside the closed walnut door, soaked, sweating, facing the desk. Ji Ran stands in front of him on the desk side, arms folded, facing him. Xu Banxia has left through the walnut door, which is shut. The walnut desk and black leather chair stay in front of the floor-to-ceiling windows.\n\nImage 11 is the first frame.\n"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261027204114-b2gtx"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/ji_ran_office/times/Day/v2/front.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/ji_ran_office/times/Day/v2/back.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/ji_ran_office/times/Day/v2/left-side.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/ji_ran_office/times/Day/v2/right-side.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/ji_ran_office/times/Day/v2/floor-plan.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261027203457-bfzz4"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261027185425-zd4f4"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261027185604-p5nzm"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261027183154-6fvpp"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261027203801-vwpmw"
+      },
+      "role": "reference_image"
+    }
+  ],
+  "duration": 27,
+  "ratio": "9:16",
+  "resolution": "480p",
+  "generate_audio": true,
+  "watermark": false,
+  "return_last_frame": true,
+  "omni_reference_task_type": "reference",
+  "drama": {
+    "segment": {
+      "id": "seg01",
+      "duration": 27,
+      "location": "ji_ran_office",
+      "scene_heading": "INT. JI RAN'S OFFICE - DAY #3-1#",
+      "time": "Day, grey rainy daylight through the floor-to-ceiling windows, warm ceiling spots",
+      "characters": [
+        "lin_qingyu",
+        "ji_ran",
+        "xu_banxia"
+      ],
+      "states": {
+        "lin_qingyu": "S1",
+        "ji_ran": "S2"
+      },
+      "first_state": "Camera on the front-wall side, by the pin-up wall, facing the walnut desk and the walnut door on the right wall; the camera stays on this side throughout. Lin Qingyu stands at the open walnut door on the right wall, just inside it on the pale oak floor, soaked, breathless, hair dripping, facing into the room. Ji Ran stands on the open oak floor a step from the walnut door, facing Lin Qingyu. Xu Banxia stands at the door-side corner of the walnut desk, facing them. There is one walnut desk in front of the floor-to-ceiling windows, one high-backed black leather chair behind it and one walnut door.",
+      "shots": [
+        {
+          "time": "0-2s",
+          "size": "wide shot",
+          "angle": "eye level",
+          "camera": "Wide shot, locked-off camera, eye level, from the pin-up wall facing the walnut desk and the walnut door",
+          "visual": "Rain streaks the floor-to-ceiling windows. Lin Qingyu stands dripping just inside the open walnut door, Ji Ran stands on the oak floor a step from the door facing him, and Xu Banxia stands at the door-side corner of the desk.",
+          "audio": "<Heavy rain drums on the window glass>",
+          "characters": [
+            "lin_qingyu",
+            "ji_ran",
+            "xu_banxia"
+          ],
+          "lines": []
+        },
+        {
+          "time": "2-6s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium front shot, handheld, eye level, from the pin-up wall side angled toward the walnut door, dirty single of Lin Qingyu with Ji Ran's shoulder at the frame edge",
+          "visual": "Lin Qingyu, chest heaving, wet T-shirt clinging to him, pushes his wet fringe back and bows his head apologetically, Ji Ran's shoulder at the frame edge.",
+          "audio": "Dialogue (Lin Qingyu, in Chinese, breathless and apologetic): {抱歉，我来晚了。 没想到今天下这么大雨，}",
+          "characters": [
+            "lin_qingyu",
+            "ji_ran"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "6-10s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up, slow push in on Ji Ran, eye level, from the pin-up wall side angled toward the desk, clean single framed on face and shoulders",
+          "visual": "Ji Ran lets her eyes travel slowly from Lin Qingyu's face down his soaked body.",
+          "audio": "Dialogue (Lin Qingyu, in Chinese, panting, quick): {我自行车链子掉了，一路跑过来的。}",
+          "characters": [
+            "ji_ran"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "10-14s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, locked-off camera, eye level, clean single of Ji Ran framed tight on face and shoulders",
+          "visual": "Ji Ran's mouth stays closed; one corner of her lips lifts in a cool, appraising half-smile.",
+          "audio": "Dialogue (Ji Ran, V.O., in Chinese, cool and amused inner voice): {脸长得好，身材也不错，带出去够有面。}",
+          "characters": [
+            "ji_ran"
+          ],
+          "lines": [
+            1
+          ]
+        },
+        {
+          "time": "14-17s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, follow Xu Banxia from the desk corner to the walnut door, eye level, from the pin-up wall side",
+          "visual": "Xu Banxia presses her lips together to hold in a laugh, walks from the desk corner past Ji Ran and Lin Qingyu, steps out through the walnut door and pulls it shut behind her.",
+          "audio": "<Door clicks shut>",
+          "characters": [
+            "xu_banxia",
+            "ji_ran",
+            "lin_qingyu"
+          ],
+          "lines": []
+        },
+        {
+          "time": "17-20s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, follow Ji Ran around Lin Qingyu, eye level, camera on the pin-up wall side",
+          "visual": "Ji Ran folds her arms and walks slowly around Lin Qingyu, inspecting him, ending in front of him on the desk side, facing him, while he stands just inside the closed door.",
+          "audio": "<Stiletto heels click on the oak floor>",
+          "characters": [
+            "ji_ran",
+            "lin_qingyu"
+          ],
+          "lines": []
+        },
+        {
+          "time": "20-23s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up insert, locked-off camera, eye level, on Lin Qingyu's stomach",
+          "visual": "Ji Ran's finger pokes Lin Qingyu's abdomen through the wet white T-shirt, the fabric denting with each poke.",
+          "audio": "Dialogue (Ji Ran, in Chinese, deadpan counting): {一、二、三、四。 } <Cartoon boing with each poke>",
+          "characters": [
+            "ji_ran",
+            "lin_qingyu"
+          ],
+          "lines": [
+            2
+          ]
+        },
+        {
+          "time": "23-25s",
+          "size": "medium close-up",
+          "angle": "low angle",
+          "camera": "Medium close-up, handheld, low angle on Lin Qingyu, dirty single with Ji Ran's shoulder at the frame edge",
+          "visual": "Lin Qingyu stands stiffly with his arms at his sides, a bead of sweat sliding down his forehead, eyes darting down to her hand.",
+          "audio": "Dialogue (Ji Ran, in Chinese, crisp): {你叫什么名字？}",
+          "characters": [
+            "lin_qingyu",
+            "ji_ran"
+          ],
+          "lines": [
+            2
+          ]
+        },
+        {
+          "time": "25-27s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, over-the-shoulder from behind Ji Ran, eye level, angled toward the walnut door",
+          "visual": "Over Ji Ran's shoulder, Lin Qingyu swallows, a shy flush on his face.",
+          "audio": "Dialogue (Lin Qingyu, in Chinese, stammering): {林、林青羽。}",
+          "characters": [
+            "ji_ran",
+            "lin_qingyu"
+          ],
+          "lines": [
+            3
+          ]
+        }
+      ],
+      "light_audio": "Grey rainy daylight from the floor-to-ceiling windows behind the desk, warm recessed ceiling spots, the black desk lamp; heavy rain on the glass, heel clicks on oak, a door shutting, cartoon boing effects on the pokes.",
+      "dialogue": [
+        {
+          "speaker": "lin_qingyu",
+          "line": "抱歉，我来晚了。 没想到今天下这么大雨，我自行车链子掉了，一路跑过来的。",
+          "offscreen": false
+        },
+        {
+          "speaker": "ji_ran",
+          "line": "脸长得好，身材也不错，带出去够有面。",
+          "offscreen": true
+        },
+        {
+          "speaker": "ji_ran",
+          "line": "一、二、三、四。 你叫什么名字？",
+          "offscreen": false
+        },
+        {
+          "speaker": "lin_qingyu",
+          "line": "林、林青羽。",
+          "offscreen": false
+        }
+      ],
+      "must_hit": [
+        "Soaked Lin Qingyu apologises at the door",
+        "Xu Banxia holds in a laugh, crosses from the desk and shuts the door behind her",
+        "Ji Ran circles Lin Qingyu and pokes his stomach four times"
+      ],
+      "exit_state": "Camera on the front-wall side, by the pin-up wall, facing the walnut desk and the walnut door on the right wall. Lin Qingyu stands on the pale oak floor just inside the closed walnut door, soaked, sweating, facing the desk. Ji Ran stands in front of him on the desk side, arms folded, facing him. Xu Banxia has left through the walnut door, which is shut. The walnut desk and black leather chair stay in front of the floor-to-ceiling windows.",
+      "negative": [
+        "added or missing characters, spatial jumps",
+        "malformed hands and fingers",
+        "subtitles or garbled text"
+      ]
+    },
+    "bible_version": "v3",
+    "breakdown_version": "v3",
+    "lineage": [
+      {
+        "path": "bible/v3/artifact.json",
+        "sha256": "e8858c85afa019570fd8a0a6ecfdb5756c10ad794a7e2ba1d7d31b8eac97a31f"
+      },
+      {
+        "path": "bible/accepted.json",
+        "sha256": "f18c28d8a31313564bf7219b491d83139c2073c85e4cf3603e35847dd05828a1"
+      },
+      {
+        "path": "bible/current.json",
+        "sha256": "b04068c483638a978207df0bf4b8b06fbbf13e176372ee8c8d3670c257353fd3"
+      },
+      {
+        "path": "bible/v3/bible.json",
+        "sha256": "0825400d343b1d4cbe400069f4187009f4b6d7e7d30e6e1467ab5cece53f1e7e"
+      },
+      {
+        "path": "bible/v3/input/screenplay.md",
+        "sha256": "afbfe0f787d9c5565630e661e5667df671458c5aa581c242873ff1ab7de27669"
+      },
+      {
+        "path": "episodes/EP003/breakdown/v3/artifact.json",
+        "sha256": "e01ea6bb4796732c5000258420ae6a3634bf87bea7a888419ed437f446ad9e0d"
+      },
+      {
+        "path": "episodes/EP003/breakdown/accepted.json",
+        "sha256": "eb0982a756d9c25c9d7c0a05f163188f573ee80e35908a16c395ecc2049f35ae"
+      },
+      {
+        "path": "episodes/EP003/breakdown/current.json",
+        "sha256": "09767bd55c52acdf78a5119ce1edd04277954c9bffa777dae359f0e9ff7b2e7e"
+      },
+      {
+        "path": "episodes/EP003/breakdown/v3/breakdown.json",
+        "sha256": "a3fc390157e36b9a78813038f428131a470ac5aa8e4ed6b641c0a56961e744d6"
+      },
+      {
+        "path": "episodes/EP003/multi_panel_storyboard/seg01/line-art/v1/artifact.json",
+        "sha256": "46b98d46ff155179fba20c22164b055195caed24f7f43df5c53bea7a91ab1be3"
+      },
+      {
+        "path": "episodes/EP003/multi_panel_storyboard/seg01/line-art/accepted.json",
+        "sha256": "aed5a38da80b3de7872068d1571945834183be5c39cae93764a8c6ea739e184e"
+      },
+      {
+        "path": "episodes/EP003/multi_panel_storyboard/seg01/line-art/current.json",
+        "sha256": "29fd0e0a3f47a6fd5dbb4439443291c7622a4c92b425f799c61ac7cf09ce37b2"
+      },
+      {
+        "path": "episodes/EP003/multi_panel_storyboard/seg01/line-art/v1/image-1.jpg",
+        "sha256": "3d52a1adfe68df71a9c0c4bdb8da027f2944e61dbe9432e8a714888375128af5"
+      },
+      {
+        "path": "episodes/EP003/multi_panel_storyboard/seg01/line-art/v1/asset/job.json",
+        "sha256": "54776e2f54e39d85a034070f9b7412b07046863c1be128900ee54119591503e3"
+      },
+      {
+        "path": "assets/scenes/ji_ran_office/times/Day/v2/artifact.json",
+        "sha256": "a8216cae0cf94cc8da27d4a9956f3e3112fa3869cf81886a6d9b6edad0b23562"
+      },
+      {
+        "path": "assets/scenes/ji_ran_office/times/Day/accepted.json",
+        "sha256": "21d70fbbbfbffe0f1dfc6789378dd313e2977b80902cdb958ad283ae1ae0d437"
+      },
+      {
+        "path": "assets/scenes/ji_ran_office/times/Day/current.json",
+        "sha256": "fb3e51d5951424907c010e687e234b2fd24b9398ea7d95d5b45f0c6d89cabaa9"
+      },
+      {
+        "path": "assets/scenes/ji_ran_office/times/Day/v2/image-1.jpg",
+        "sha256": "2df8fb11d43b9de55acdd87769ded31451ebb0c6639f8a22adb6618d713a3cbf"
+      },
+      {
+        "path": "assets/scenes/ji_ran_office/times/Day/v2/front.jpg",
+        "sha256": "029d961f695a00ffbfb87108677f126cd1bba357edaa0d5aeeace7b0c7c6f11d"
+      },
+      {
+        "path": "assets/scenes/ji_ran_office/times/Day/v2/back.jpg",
+        "sha256": "1211c5ba726acaff0eb3102b9e27e6d7d524e610071d45b9577fa1acf3be14fa"
+      },
+      {
+        "path": "assets/scenes/ji_ran_office/times/Day/v2/left-side.jpg",
+        "sha256": "b847858303f47b59973f4e0cecce89f85f17f5bc03cab87e6d758ed736ed91b3"
+      },
+      {
+        "path": "assets/scenes/ji_ran_office/times/Day/v2/right-side.jpg",
+        "sha256": "88d5f45b1dbe30a4345ce8c8d1872638f4bf9870db2713dfb07e1f502f6f99f9"
+      },
+      {
+        "path": "assets/scenes/ji_ran_office/times/Day/v2/floor-plan.jpg",
+        "sha256": "6d810023ae2bf6b156475c7eaa8b61c195ac5b2a199aa70739c3ba4faf74c8bc"
+      },
+      {
+        "path": "episodes/EP003/blocking/seg01/v1/artifact.json",
+        "sha256": "6bd3ffdc72ca7ff7a362478c631c62876c967506e9498e9b0c5ef660d752d3a1"
+      },
+      {
+        "path": "episodes/EP003/blocking/seg01/accepted.json",
+        "sha256": "c7f2cab6dbab26df95b50a9cc3693fe06dccc2074ffc9e289c4f08f148779b0b"
+      },
+      {
+        "path": "episodes/EP003/blocking/seg01/current.json",
+        "sha256": "49c33522cd23e33a3e93ade090322afc650ee75217766fc42721be84e5f16d9f"
+      },
+      {
+        "path": "episodes/EP003/blocking/seg01/v1/image-1.jpg",
+        "sha256": "b35f1a36fe4f785d57829418a7ecef3dd3a10dddf4ef32c8b65edb1ca3b0f1bc"
+      },
+      {
+        "path": "episodes/EP003/blocking/seg01/v1/asset/job.json",
+        "sha256": "2dbd99f016add4662950fc02d598bbf31067f34c5003ac6be2aee47bb1ad046c"
+      },
+      {
+        "path": "assets/characters/lin_qingyu/states/S1/v1/artifact.json",
+        "sha256": "085a124b8456ba9d8715fdf998139ba5a425d2f020e1c0d79cc3158e47be17c6"
+      },
+      {
+        "path": "assets/characters/lin_qingyu/states/S1/accepted.json",
+        "sha256": "e2e1975168984ff864a1e4216c9fd4c5045490a040588d2237cd2871ef69e023"
+      },
+      {
+        "path": "assets/characters/lin_qingyu/states/S1/current.json",
+        "sha256": "45fa3271902e1cc802445dc6afb85b887a01d3cb24f48389a2308e4450eb6008"
+      },
+      {
+        "path": "assets/characters/lin_qingyu/states/S1/v1/image-1.jpg",
+        "sha256": "1df1284f5375d1b59254e6fa416acf57c39bbe133779cb0a3dac75a67c86e24e"
+      },
+      {
+        "path": "assets/characters/lin_qingyu/states/S1/v1/asset/job.json",
+        "sha256": "52b6a7e564cc1ee92697fd8cd4ba55bca68f61ebe10db0be4feea0686d836d50"
+      },
+      {
+        "path": "assets/characters/ji_ran/states/S2/v1/artifact.json",
+        "sha256": "f7cc8d78ed2c05472f3ceebb9253060ae1d4947818b4229c7c42806930a70fec"
+      },
+      {
+        "path": "assets/characters/ji_ran/states/S2/accepted.json",
+        "sha256": "d10d8f0a892df676711fcfd408e7ab946a0dd1e96407e8b19518ff3df7fc99e6"
+      },
+      {
+        "path": "assets/characters/ji_ran/states/S2/current.json",
+        "sha256": "b4d9a859537e383c4599d6d38e1674f558452a6e207976556cbd0b7c41e783bd"
+      },
+      {
+        "path": "assets/characters/ji_ran/states/S2/v1/image-1.jpg",
+        "sha256": "ddc9a8b31ed4cd0a8203cc40e63fc2a9d040b21e93d12bf37a41038411647333"
+      },
+      {
+        "path": "assets/characters/ji_ran/states/S2/v1/asset/job.json",
+        "sha256": "0e128d058c8422082bc162ac1bd4ed176b262f621ea5812b19c1bfbdca24a5e0"
+      },
+      {
+        "path": "assets/characters/xu_banxia/v2/artifact.json",
+        "sha256": "9c1caa51211ec3d7711609519849f24eeed926572cd6eb796f870a47100c1e77"
+      },
+      {
+        "path": "assets/characters/xu_banxia/accepted.json",
+        "sha256": "d391d135c6526951c157bf02aa9fe93eaf7e0323b204492cb007d35aeffa9871"
+      },
+      {
+        "path": "assets/characters/xu_banxia/current.json",
+        "sha256": "b3a8d0a6206fdcc2f7c02010a6475a879aa9dc80713e1333521628d59ccff5f8"
+      },
+      {
+        "path": "assets/characters/xu_banxia/v2/image-1.jpg",
+        "sha256": "d7c20d951f62c5f81d7d3d32bbf9ac8933ced83fbe8faaa9d5c2d14f8bbbaeac"
+      },
+      {
+        "path": "assets/characters/xu_banxia/v2/asset/job.json",
+        "sha256": "8b78296ec27d8d9cfe9a9fbf76f106a0e71d6ef0baacda9a931ab46b04e9b9af"
+      },
+      {
+        "path": "episodes/EP003/video_prompts/v1/seg01.json",
+        "sha256": "740e0acc7fad90a979aaecb451f3ff1d1f77d9a3cfe9991fe869af0cea1316af"
+      },
+      {
+        "path": "episodes/EP003/first_frame_reference/seg01/v1/artifact.json",
+        "sha256": "73e9c6cfea190675bae58164c5411f05e9ffd9aef1c321af2ac9c939260d0f18"
+      },
+      {
+        "path": "episodes/EP003/first_frame_reference/seg01/accepted.json",
+        "sha256": "20738059c55cc7c3219bc19c16fd329d8a5fdc00094c3ac4d707e9f3c9c85e90"
+      },
+      {
+        "path": "episodes/EP003/first_frame_reference/seg01/current.json",
+        "sha256": "e45fc29836fb993c2f77aa661623b04ffe2abf8234e08e0e53f208dbfc085ffa"
+      },
+      {
+        "path": "episodes/EP003/first_frame_reference/seg01/v1/image-1.jpg",
+        "sha256": "0dcb654ac421b0d520cdc99be21b2a94ec68ef4b20af44aadfeb613aa8bd68f0"
+      },
+      {
+        "path": "episodes/EP003/first_frame_reference/seg01/v1/asset/job.json",
+        "sha256": "c466c0ae38aa4f5345a9a3c23868e44f8cdd6a04f5b6e364be81b4308114b218"
+      }
+    ],
+    "character_reference_mode": "asset_library",
+    "video_references": "storyboard",
+    "trusted_character_references": {},
+    "video_prompts_version": "v1",
+    "first_frame_reference": "v1"
+  }
+}

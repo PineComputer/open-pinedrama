@@ -1,0 +1,449 @@
+{
+  "model": "sd25",
+  "content": [
+    {
+      "type": "text",
+      "text": "Image 1: Twelve-panel storyboard reference, used for the overall shot structure, shot sizes, and camera-movement rhythm. Read it from left to right and from top to bottom; panel N is Shot N.\nImage 2: Live-action reference of The Quinn family mansion, living room, used as the benchmark for environmental composition, lighting, and realistic live-action texture; it contains no people.\nImage 3: Subject 1 (Natalie) character appearance reference.\nImage 4: Subject 2 (George) character appearance reference.\nImage 5: Subject 3 (Lauren) character appearance reference.\n[Subject settings]\nSubject 1 (Natalie): Refer to Image 3. 25, George's daughter from his first marriage, struggling to pay for her sick mother's dialysis; the drama's heroine. Outfit: A worn light-blue knit cardigan, open, over a plain white crew-neck short-sleeve cotton T-shirt. Faded mid-blue straight-leg jeans and plain white canvas sneakers. She carries a simple brown canvas shoulder bag. Everything is plain, with no logos or prints. Signature colour: blue.\nSubject 2 (George): Refer to Image 4. 55, Natalie's father, head of the Quinn family, remarried to Lauren. Outfit: A camel-brown fine-knit quarter-zip long-sleeve sweater over a white collared shirt. Charcoal-grey tailored wool trousers and dark-brown leather loafers. All plain, with no logos. Signature colour: brown.\nSubject 3 (Lauren): Refer to Image 5. 50, George's second wife and Natalie's stepmother, Cassie's mother; the controlling matriarch of the Quinn mansion. Outfit: A fitted crimson-red long-sleeve knee-length sheath dress with a round neckline, a thin gold belt at the waist, nude pointed-toe high heels and a pearl necklace. All plain, with no logos. Signature colour: red.\nEnvironment (The Quinn family mansion, living room): Refer to Image 2. Day, soft natural daylight from the tall windows. Soft natural daylight comes through the sheer white curtains of the windows on the left wall at frame left and gives warm side light on the seating. The crystal chandelier is unlit and faint warm wall sconces glow. Live sound is the quiet hum of a large room and fabric rustling on the sofa.\nDo not swap the characters' appearances, clothing, actions, positions or dialogue.\n[Overall style]\nPhotorealistic live-action short drama with cinematic lighting. Each character keeps the face and the outfit with its main colour from their reference image throughout. Use each character sheet only for that character: the face from the close-up on the right, the body and outfit from the turnaround on the left; do not render the sheet's layout, white background or multiple views. This segment has 11 lines, in this order: Natalie, Natalie, George, Lauren, Natalie, George, George, Lauren, George, Lauren, Lauren. Generate speech only from the lines in {} in the shot list, each spoken exactly once by its speaker; everyone else keeps their mouth naturally closed while listening, and a V.O. speaker keeps their mouth closed or is off screen. Follow the shot list below; do not add cuts or camera moves beyond it. Strictly adhere to the 180-degree rule: within a scene, characters keep their screen sides and the camera stays on one side of the axis. Seamless continuity of action, spatial matching and consistent actor blocking; cut on action. For dialogue prefer static shot-reverse-shot and over-the-shoulder shots, balanced with reaction shots and close-up inserts. Faces stable and clear, consistent with the reference images, with no resemblance to any real actor or actress. Normal human eyes. Natural anatomy and hands. Natural, fluid motion that follows the blocking; characters make subtle, natural movements. Characters, props and environment share one world with matched lighting. Each line ends naturally with breathing room and is never cut off. Authentic performances with micro-expressions. No BGM; generate only dialogue, environmental sounds and action sounds. No subtitles.\n[Strictly exclude]\nhands clasped, gripping, rubbing or overlapping each other or an object. readable text on the hospital statement. subtitles or captions. Cassie or any other person in the room. Dialogue from the wrong character, multiple people speaking at once, repeated or missing lines, lip-sync errors and audio-visual desynchronization. The raw reference images (character sheets, setting plates) appearing as a frame of the video, and starting on a still frame of the setting reference. A fast zoom-in at the start, a fast pull-back at the end, unmotivated whip-pans, tilts, zooms and 360-degree orbits. Axis-crossing, jump cuts, frame skips, flicker and clipping. Characters or props popping in or vanishing, and duplicate characters except mirror reflections. Readable text, numbers, logos and watermarks; phones and paper are shown from the back or out of focus. Black-and-white, monochrome, grayscale, desaturated visuals; hand-drawn, sketch, line art, illustration, comics, animation; storyboard frames, rough sketches, panel borders, gutters and grid layouts.\n[Shot list] (12 shots, approximately 28 seconds)\nWhen a previous-shot reference image is given, Shot 1 matches its camera position, shot size and blocking and continues from that moment; do not repeat that frame later.\nAt the start: The master camera is on the near side of the one glass-and-gold coffee table and faces the back wall. Floor-to-ceiling windows with sheer white curtains run along the left wall at frame left. The only entrance, an open rectangular doorway, is in the right wall at frame right. The one white tufted sofa stands against the back wall and faces camera. Directly behind it is an arched alcove holding the marble fireplace and the framed painting; the alcove is not a doorway. One potted fiddle-leaf fig stands on each side of the arch. George sits on the sofa's left end and Lauren sits on the sofa's right end. Both face camera, and their hands rest apart and still on their knees and lap. The two cream armchairs face each other in the foreground, front-left and front-right, with the coffee table between them in front of the sofa. Natalie sits in the front-left armchair, angled toward the sofa, in her blue cardigan, white T-shirt and jeans. Her brown canvas shoulder bag hangs from her shoulder at her side, and her hands rest apart on her knees. The front-right armchair is empty. One flat, uncrumpled hospital statement lies on the coffee table at the end nearest Natalie.\nShot 1 (0-2s): [Close-up, high angle over Natalie's shoulder on the near side, slow push in from her shoulder onto the coffee table. The camera looks down at the glass tabletop, so behind the statement there is only the glass and the ivory rug under it; the sofa lies above frame.] Natalie leans forward in the front-left armchair and looks down at the single hospital statement lying flat on the glass-and-gold coffee table. Her hands rest on her knees out of frame.\nShot 2 (2-4s): [Wide shot, eye-level, slow push in from the near side of the coffee table toward the sofa, facing the back wall. Behind the sofa are the arched fireplace alcove, the framed painting and the two potted figs. Natalie's front-left armchair is in the foreground at frame left.] Natalie sits in the front-left armchair and leans toward the coffee table, her bag hanging from her shoulder. George sits on the left end of the white sofa and Lauren on its right end, both facing camera in the background. Dialogue (Natalie, in English, hesitant and pleading): {Hey, Dad can I borrow $50,000?}\nShot 3 (4-7s): [Medium shot, eye-level, locked-off from the near side beside the empty front-right armchair, aimed toward the front-left armchair. Natalie is in three-quarter profile in the foreground. Behind her is the sofa's left end with George seated out of focus, and the edge of the left-wall windows. The frame stops short of the sofa's right half, so Lauren lies beyond frame right.] Natalie leans forward in the front-left armchair, her hands resting apart on her knees below frame. She looks across the coffee table at her father with glassy eyes. George sits soft-focused on the sofa's left end behind her. Dialogue (Natalie, in English, trembling, earnest): {Mom needs kidney dialysis and we really don't have any money.}\nShot 4 (7-9s): [Medium shot, eye-level, handheld from the near side facing the back wall, framed tight on George's chest and face on the sofa's left end. Behind him are the white tufted sofa back and the left edge of the fireplace alcove. The sofa's right end, with Lauren, lies beyond frame right.] George shifts uneasily on the sofa, his hands still on his knees, and glances sideways toward Lauren beside him. Dialogue (George, in English, hesitant, trailing off): {Natalie, the thing is}\nShot 5 (9-12s): [Medium close-up, eye-level, quick push in from the near side facing the back wall on Lauren at the sofa's right end, framed tight on her face and shoulders. Behind her are the sofa back and the potted fig on the right of the arch. The sofa's left end, with George, lies beyond frame left.] Lauren sits upright, her hands still in her lap. She raises one arched brow and looks down toward Natalie's front-left armchair with contempt. Dialogue (Lauren, in English, cutting, mock outrage): {How shameless of you to come here and beg us for money?}\nShot 6 (12-14s): [Close-up, eye-level, locked-off from the near side by the front-right armchair on Natalie's face in three-quarter profile. The camera faces the left wall, so only the sheer-curtained windows are soft behind her and the sofa lies beyond frame right.] Natalie nods quickly toward the sofa and swallows. Her eyes are glassy but no tears fall. Dialogue (Natalie, in English, urgent, earnest): {I'll pay you guys back, I promise.}\nShot 7 (14-17s): [Medium shot, two-shot, eye-level, locked-off from the near side facing the back wall on the sofa, George on frame left and Lauren on frame right, both facing camera. Behind them are the arched fireplace alcove and the framed painting. Natalie's armchair lies below and beyond frame left.] George turns his head toward Lauren and nods timidly toward Natalie's armchair, his hands still on his knees. Lauren sits upright beside him. Dialogue (George, in English, placating, soft): {Lauren, maybe we can let her borrow the money.}\nShot 8 (17-19s): [Medium shot, eye-level, slight pan from the near side facing the back wall, ending tight on Lauren's chest and face at the sofa's right end. Behind her are the sofa back, the right side of the back wall and the potted fig. The sofa's left end, with George, lies beyond frame left.] Lauren's jaw tightens. She turns her face slowly toward George, her red lips pressed thin, her hands still in her lap. Dialogue (George, in English, mumbling): {I mean, it's her mother that's sick.}\nShot 9 (19-21s): [Medium close-up, low angle, locked-off from the near side facing the back wall on Lauren, framed on her face and shoulders. Behind her are the upper back wall and the edge of the framed painting. The sofa's left end, with George, lies beyond frame left.] Lauren narrows her grey-green eyes and leans toward George at her side. Dialogue (Lauren, in English, jealous, sharp): {You're still thinking about your ex-wife?}\nShot 10 (21-22s): [Medium shot, eye-level, quick handheld from the near side facing the back wall, framed tight on George's chest and face. Behind him are the sofa back and the marble mantel at the left of the alcove. The sofa's right end, with Lauren, lies beyond frame right.] George shakes his head fast and leans back away from Lauren, his hands still on his knees. Dialogue (George, in English, flustered): {No, no.}\nShot 11 (22-25s): [Medium shot, two-shot, eye-level, locked-off from the near side facing the back wall, angled slightly from frame right. Lauren is in the foreground at the sofa's right end and George beside her at frame left. Behind them are the arched fireplace alcove and the framed painting.] Lauren leans close to George and stares him down with a cold, fixed gaze, her hands resting still in her lap. George shrinks back on the sofa's left end. Dialogue (Lauren, in English, cold, clipped): {Do I need to remind you this is your family now?}\nShot 12 (25-28s): [Medium shot, high angle from the near side looking down on George at the sofa's left end, slow push in, framed on his chest and face. Behind him are only the sofa cushion and the ivory rug. The sofa's right end, with Lauren, lies beyond frame right.] George lowers his eyes to the ivory rug and his shoulders sag. His hands lie still on his knees. Dialogue (Lauren, in English, icy, final): {George, without me you'd have nothing.}\nAt the end: The camera stays on the near side of the coffee table, facing the back wall, with the windows at frame left and the right-wall doorway at frame right. Natalie sits in the front-left armchair, angled toward the sofa, eyes downcast and glassy but without tears. Her bag hangs from her shoulder and her hands rest apart on her knees. The front-right armchair is empty. George sits slumped on the sofa's left end, facing camera, hands still on his knees. Lauren sits upright on the sofa's right end, facing camera, hands resting still in her lap. The one flat hospital statement lies on the coffee table at the end nearest Natalie.\n"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261021102751-b5z5z"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@/Users/yurun/RunVid/short_drama/outputs/projects/double-life-ep001/assets/scenes/quinn_living_room/v1/image-1.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261021071730-hmn2z"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261021071739-j4lf7"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261021071732-rj8gz"
+      },
+      "role": "reference_image"
+    }
+  ],
+  "duration": 28,
+  "ratio": "9:16",
+  "resolution": "480p",
+  "generate_audio": true,
+  "watermark": false,
+  "return_last_frame": true,
+  "omni_reference_task_type": "reference",
+  "drama": {
+    "segment": {
+      "id": "seg01",
+      "duration": 28,
+      "location": "quinn_living_room",
+      "time": "Day, soft natural daylight from the tall windows",
+      "characters": [
+        "natalie",
+        "george",
+        "lauren"
+      ],
+      "first_state": "The master camera is on the near side of the one glass-and-gold coffee table and faces the back wall. Floor-to-ceiling windows with sheer white curtains run along the left wall at frame left. The only entrance, an open rectangular doorway, is in the right wall at frame right. The one white tufted sofa stands against the back wall and faces camera. Directly behind it is an arched alcove holding the marble fireplace and the framed painting; the alcove is not a doorway. One potted fiddle-leaf fig stands on each side of the arch. George sits on the sofa's left end and Lauren sits on the sofa's right end. Both face camera, and their hands rest apart and still on their knees and lap. The two cream armchairs face each other in the foreground, front-left and front-right, with the coffee table between them in front of the sofa. Natalie sits in the front-left armchair, angled toward the sofa, in her blue cardigan, white T-shirt and jeans. Her brown canvas shoulder bag hangs from her shoulder at her side, and her hands rest apart on her knees. The front-right armchair is empty. One flat, uncrumpled hospital statement lies on the coffee table at the end nearest Natalie.",
+      "shots": [
+        {
+          "time": "0-2s",
+          "size": "close-up",
+          "angle": "high angle",
+          "camera": "Close-up, high angle over Natalie's shoulder on the near side, slow push in from her shoulder onto the coffee table. The camera looks down at the glass tabletop, so behind the statement there is only the glass and the ivory rug under it; the sofa lies above frame.",
+          "visual": "Natalie leans forward in the front-left armchair and looks down at the single hospital statement lying flat on the glass-and-gold coffee table. Her hands rest on her knees out of frame.",
+          "audio": "",
+          "characters": [
+            "natalie"
+          ],
+          "lines": []
+        },
+        {
+          "time": "2-4s",
+          "size": "wide shot",
+          "angle": "eye level",
+          "camera": "Wide shot, eye-level, slow push in from the near side of the coffee table toward the sofa, facing the back wall. Behind the sofa are the arched fireplace alcove, the framed painting and the two potted figs. Natalie's front-left armchair is in the foreground at frame left.",
+          "visual": "Natalie sits in the front-left armchair and leans toward the coffee table, her bag hanging from her shoulder. George sits on the left end of the white sofa and Lauren on its right end, both facing camera in the background.",
+          "audio": "Dialogue (Natalie, in English, hesitant and pleading): {Hey, Dad can I borrow $50,000?}",
+          "characters": [
+            "natalie",
+            "george",
+            "lauren"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "4-7s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, eye-level, locked-off from the near side beside the empty front-right armchair, aimed toward the front-left armchair. Natalie is in three-quarter profile in the foreground. Behind her is the sofa's left end with George seated out of focus, and the edge of the left-wall windows. The frame stops short of the sofa's right half, so Lauren lies beyond frame right.",
+          "visual": "Natalie leans forward in the front-left armchair, her hands resting apart on her knees below frame. She looks across the coffee table at her father with glassy eyes. George sits soft-focused on the sofa's left end behind her.",
+          "audio": "Dialogue (Natalie, in English, trembling, earnest): {Mom needs kidney dialysis and we really don't have any money.}",
+          "characters": [
+            "natalie",
+            "george"
+          ],
+          "lines": [
+            1
+          ]
+        },
+        {
+          "time": "7-9s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, eye-level, handheld from the near side facing the back wall, framed tight on George's chest and face on the sofa's left end. Behind him are the white tufted sofa back and the left edge of the fireplace alcove. The sofa's right end, with Lauren, lies beyond frame right.",
+          "visual": "George shifts uneasily on the sofa, his hands still on his knees, and glances sideways toward Lauren beside him.",
+          "audio": "Dialogue (George, in English, hesitant, trailing off): {Natalie, the thing is}",
+          "characters": [
+            "george"
+          ],
+          "lines": [
+            2
+          ]
+        },
+        {
+          "time": "9-12s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up, eye-level, quick push in from the near side facing the back wall on Lauren at the sofa's right end, framed tight on her face and shoulders. Behind her are the sofa back and the potted fig on the right of the arch. The sofa's left end, with George, lies beyond frame left.",
+          "visual": "Lauren sits upright, her hands still in her lap. She raises one arched brow and looks down toward Natalie's front-left armchair with contempt.",
+          "audio": "Dialogue (Lauren, in English, cutting, mock outrage): {How shameless of you to come here and beg us for money?}",
+          "characters": [
+            "lauren"
+          ],
+          "lines": [
+            3
+          ]
+        },
+        {
+          "time": "12-14s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, eye-level, locked-off from the near side by the front-right armchair on Natalie's face in three-quarter profile. The camera faces the left wall, so only the sheer-curtained windows are soft behind her and the sofa lies beyond frame right.",
+          "visual": "Natalie nods quickly toward the sofa and swallows. Her eyes are glassy but no tears fall.",
+          "audio": "Dialogue (Natalie, in English, urgent, earnest): {I'll pay you guys back, I promise.}",
+          "characters": [
+            "natalie"
+          ],
+          "lines": [
+            4
+          ]
+        },
+        {
+          "time": "14-17s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, two-shot, eye-level, locked-off from the near side facing the back wall on the sofa, George on frame left and Lauren on frame right, both facing camera. Behind them are the arched fireplace alcove and the framed painting. Natalie's armchair lies below and beyond frame left.",
+          "visual": "George turns his head toward Lauren and nods timidly toward Natalie's armchair, his hands still on his knees. Lauren sits upright beside him.",
+          "audio": "Dialogue (George, in English, placating, soft): {Lauren, maybe we can let her borrow the money.}",
+          "characters": [
+            "george",
+            "lauren"
+          ],
+          "lines": [
+            5
+          ]
+        },
+        {
+          "time": "17-19s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, eye-level, slight pan from the near side facing the back wall, ending tight on Lauren's chest and face at the sofa's right end. Behind her are the sofa back, the right side of the back wall and the potted fig. The sofa's left end, with George, lies beyond frame left.",
+          "visual": "Lauren's jaw tightens. She turns her face slowly toward George, her red lips pressed thin, her hands still in her lap.",
+          "audio": "Dialogue (George, in English, mumbling): {I mean, it's her mother that's sick.}",
+          "characters": [
+            "lauren"
+          ],
+          "lines": [
+            6
+          ]
+        },
+        {
+          "time": "19-21s",
+          "size": "medium close-up",
+          "angle": "low angle",
+          "camera": "Medium close-up, low angle, locked-off from the near side facing the back wall on Lauren, framed on her face and shoulders. Behind her are the upper back wall and the edge of the framed painting. The sofa's left end, with George, lies beyond frame left.",
+          "visual": "Lauren narrows her grey-green eyes and leans toward George at her side.",
+          "audio": "Dialogue (Lauren, in English, jealous, sharp): {You're still thinking about your ex-wife?}",
+          "characters": [
+            "lauren"
+          ],
+          "lines": [
+            7
+          ]
+        },
+        {
+          "time": "21-22s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, eye-level, quick handheld from the near side facing the back wall, framed tight on George's chest and face. Behind him are the sofa back and the marble mantel at the left of the alcove. The sofa's right end, with Lauren, lies beyond frame right.",
+          "visual": "George shakes his head fast and leans back away from Lauren, his hands still on his knees.",
+          "audio": "Dialogue (George, in English, flustered): {No, no.}",
+          "characters": [
+            "george"
+          ],
+          "lines": [
+            8
+          ]
+        },
+        {
+          "time": "22-25s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, two-shot, eye-level, locked-off from the near side facing the back wall, angled slightly from frame right. Lauren is in the foreground at the sofa's right end and George beside her at frame left. Behind them are the arched fireplace alcove and the framed painting.",
+          "visual": "Lauren leans close to George and stares him down with a cold, fixed gaze, her hands resting still in her lap. George shrinks back on the sofa's left end.",
+          "audio": "Dialogue (Lauren, in English, cold, clipped): {Do I need to remind you this is your family now?}",
+          "characters": [
+            "george",
+            "lauren"
+          ],
+          "lines": [
+            9
+          ]
+        },
+        {
+          "time": "25-28s",
+          "size": "medium shot",
+          "angle": "high angle",
+          "camera": "Medium shot, high angle from the near side looking down on George at the sofa's left end, slow push in, framed on his chest and face. Behind him are only the sofa cushion and the ivory rug. The sofa's right end, with Lauren, lies beyond frame right.",
+          "visual": "George lowers his eyes to the ivory rug and his shoulders sag. His hands lie still on his knees.",
+          "audio": "Dialogue (Lauren, in English, icy, final): {George, without me you'd have nothing.}",
+          "characters": [
+            "george"
+          ],
+          "lines": [
+            10
+          ]
+        }
+      ],
+      "light_audio": "Soft natural daylight comes through the sheer white curtains of the windows on the left wall at frame left and gives warm side light on the seating. The crystal chandelier is unlit and faint warm wall sconces glow. Live sound is the quiet hum of a large room and fabric rustling on the sofa.",
+      "dialogue": [
+        {
+          "speaker": "natalie",
+          "line": "Hey, Dad can I borrow $50,000?"
+        },
+        {
+          "speaker": "natalie",
+          "line": "Mom needs kidney dialysis and we really don't have any money."
+        },
+        {
+          "speaker": "george",
+          "line": "Natalie, the thing is"
+        },
+        {
+          "speaker": "lauren",
+          "line": "How shameless of you to come here and beg us for money?"
+        },
+        {
+          "speaker": "natalie",
+          "line": "I'll pay you guys back, I promise."
+        },
+        {
+          "speaker": "george",
+          "line": "Lauren, maybe we can let her borrow the money."
+        },
+        {
+          "speaker": "george",
+          "line": "I mean, it's her mother that's sick."
+        },
+        {
+          "speaker": "lauren",
+          "line": "You're still thinking about your ex-wife?"
+        },
+        {
+          "speaker": "george",
+          "line": "No, no."
+        },
+        {
+          "speaker": "lauren",
+          "line": "Do I need to remind you this is your family now?"
+        },
+        {
+          "speaker": "lauren",
+          "line": "George, without me you'd have nothing."
+        }
+      ],
+      "must_hit": [
+        "Natalie, in the front-left armchair, asks George and Lauren on the sofa to borrow money, with the hospital statement on the coffee table",
+        "George timidly suggests lending the money and Lauren shuts him down with a cold stare",
+        "George drops his eyes and sags after Lauren says he'd have nothing without her"
+      ],
+      "exit_state": "The camera stays on the near side of the coffee table, facing the back wall, with the windows at frame left and the right-wall doorway at frame right. Natalie sits in the front-left armchair, angled toward the sofa, eyes downcast and glassy but without tears. Her bag hangs from her shoulder and her hands rest apart on her knees. The front-right armchair is empty. George sits slumped on the sofa's left end, facing camera, hands still on his knees. Lauren sits upright on the sofa's right end, facing camera, hands resting still in her lap. The one flat hospital statement lies on the coffee table at the end nearest Natalie.",
+      "negative": [
+        "hands clasped, gripping, rubbing or overlapping each other or an object",
+        "readable text on the hospital statement",
+        "subtitles or captions",
+        "Cassie or any other person in the room"
+      ]
+    },
+    "bible_version": "v1",
+    "breakdown_version": "v4",
+    "lineage": [
+      {
+        "path": "bible/v1/artifact.json",
+        "sha256": "d1c7ed60daf836b3bb8227419bd271e1200d6720d2a138b4cda16c56416ce043"
+      },
+      {
+        "path": "bible/accepted.json",
+        "sha256": "8a968168cd0588f785d8497f91f2b067257efcd9580696b7bb1ac3f048cb5651"
+      },
+      {
+        "path": "bible/current.json",
+        "sha256": "099e01369d3bedb18e63dc96e33bb5627774458e167759b55c33289258a27483"
+      },
+      {
+        "path": "bible/v1/bible.json",
+        "sha256": "d3fe48578c18e20af8f975bd5fd6c420c44394e3a18c8dcc867c24d322700e98"
+      },
+      {
+        "path": "bible/v1/input/screenplay.md",
+        "sha256": "b496be5346f16d666a47f0a4c89ac0e49e3bf46d6cc2e35824f911940b9035f1"
+      },
+      {
+        "path": "episodes/EP001/breakdown/v4/artifact.json",
+        "sha256": "e98247910e2fc1be561b74b6b59be7c370930078fc9f3c4b5f16c7598f6268fc"
+      },
+      {
+        "path": "episodes/EP001/breakdown/accepted.json",
+        "sha256": "14189f1ba752ce60e7e92e4924316031572964779a5014a382e8d12cc9f7c599"
+      },
+      {
+        "path": "episodes/EP001/breakdown/current.json",
+        "sha256": "710c8c306369575a42e30e6fd05d05343855449a677f08f2f2e0d778ba419e01"
+      },
+      {
+        "path": "episodes/EP001/breakdown/v4/breakdown.json",
+        "sha256": "2ba953ecc67915de0cb17ad1e427d7ab6c47f8764d898b9df5b916a4e8ef294e"
+      },
+      {
+        "path": "episodes/EP001/multi_panel_storyboard/seg01/line-art/v10/artifact.json",
+        "sha256": "ba180aa464780355eb469c1801d0e0fb2d87a382116759adca58e7244d0833cc"
+      },
+      {
+        "path": "episodes/EP001/multi_panel_storyboard/seg01/line-art/accepted.json",
+        "sha256": "1f609e6ffacace80dfbf6af133e1dc293e56efac602aec73d97f03df2216077c"
+      },
+      {
+        "path": "episodes/EP001/multi_panel_storyboard/seg01/line-art/current.json",
+        "sha256": "4cb6e83a0202fa070a573028fcc76ae3a1e9c9d8171ea1d8b628eeac38fe9c9c"
+      },
+      {
+        "path": "episodes/EP001/multi_panel_storyboard/seg01/line-art/v10/image-1.png",
+        "sha256": "90a7231ade1877ec8460c03506cf388c4193cfd9f8e9d11e352ceb41c05abeb1"
+      },
+      {
+        "path": "episodes/EP001/multi_panel_storyboard/seg01/line-art/v10/asset/job.json",
+        "sha256": "d6b56721cf1326b977836de7fa33123b30b08fc390a9e635df8d6e34d639aa10"
+      },
+      {
+        "path": "assets/scenes/quinn_living_room/v1/artifact.json",
+        "sha256": "78c8fdf4052ba1de6c03628efb07b86eea54fa530a31407952deb483c870581c"
+      },
+      {
+        "path": "assets/scenes/quinn_living_room/accepted.json",
+        "sha256": "2979dbe46dcc8e4a21942e5abb2adb3d1e23065ad4e1b3709939b9a6abb0c2b0"
+      },
+      {
+        "path": "assets/scenes/quinn_living_room/current.json",
+        "sha256": "449f45d0be9620015879447dc56dbfac17d3c667530425d4d9d3159acb00b2b1"
+      },
+      {
+        "path": "assets/scenes/quinn_living_room/v1/image-1.jpg",
+        "sha256": "4e798dddc77751cfaa5c834a788c0d7d467df67546107f85c5dc9697dc928c8c"
+      },
+      {
+        "path": "assets/characters/natalie/v1/artifact.json",
+        "sha256": "364b91a9739d2d22e61ca44a1967fb427375165925fc6580ef998468963c01e3"
+      },
+      {
+        "path": "assets/characters/natalie/accepted.json",
+        "sha256": "b584e57ffae12c8bfb949752c218f7eb70eb48022da11391814676e6898b88f7"
+      },
+      {
+        "path": "assets/characters/natalie/current.json",
+        "sha256": "639f81f8358c5d15b3df430b1f9f10c8f5c52aa87752e360311efac42b470ec1"
+      },
+      {
+        "path": "assets/characters/natalie/v1/image-1.jpg",
+        "sha256": "89d28ba7b899d2fed007b10de83084abd01a84b35ec70275736f4acfb753c822"
+      },
+      {
+        "path": "assets/characters/natalie/v1/asset/job.json",
+        "sha256": "91ecebdf8cf2896142fa4e4d36328b88e6f4273377c7606b872d8878f9afa3d8"
+      },
+      {
+        "path": "assets/characters/george/v1/artifact.json",
+        "sha256": "8214455d1343bd670a02f62946a57ebe72dd2e1219a41927d14ca37476b30627"
+      },
+      {
+        "path": "assets/characters/george/accepted.json",
+        "sha256": "d8ef12e8679535539faffe77274d489bfbce86aaf8ba4720199a742da7c86c59"
+      },
+      {
+        "path": "assets/characters/george/current.json",
+        "sha256": "2a849b43714887bf0252051edaf80c7e65cfb2cc2d289879b018b00dfc908ba9"
+      },
+      {
+        "path": "assets/characters/george/v1/image-1.jpg",
+        "sha256": "a5e231fbeb41df62b7f4a18e694512a54832d3f4dbb9679b1dd3b11d96c0b086"
+      },
+      {
+        "path": "assets/characters/george/v1/asset/job.json",
+        "sha256": "51aacb1c393e76db0ddfa49d2d272b99005c729d622a6dc18343311c23927a6e"
+      },
+      {
+        "path": "assets/characters/lauren/v1/artifact.json",
+        "sha256": "9a9c525d4f37fba8e1037a1fb2e04228c8b5a0bcffc739e4565c38cd6eb03e6b"
+      },
+      {
+        "path": "assets/characters/lauren/accepted.json",
+        "sha256": "6932c71e44b12dad254f353c251e7178066cadd981a6e9e710ebc02dce32b173"
+      },
+      {
+        "path": "assets/characters/lauren/current.json",
+        "sha256": "35c65c7a0223e365137b653e0f07c0da340cc6ff953054125e4a421c0e06ae61"
+      },
+      {
+        "path": "assets/characters/lauren/v1/image-1.jpg",
+        "sha256": "031cdd28aec65a62f928ff173ce6356f409174fa1c6f3d475bfc924cdae45d80"
+      },
+      {
+        "path": "assets/characters/lauren/v1/asset/job.json",
+        "sha256": "00ac6a7778bb5009aef426004798cbe29807ff032357f1efc7e61303a451cdec"
+      },
+      {
+        "path": "episodes/EP001/video_prompts/v2/artifact.json",
+        "sha256": "f4dac67c6f8a03685ea384fcc70d238112362e970b32e1c86ed84afaf4c00e32"
+      },
+      {
+        "path": "episodes/EP001/video_prompts/v2/seg01.json",
+        "sha256": "a384eb922f6cd7c8687c14521463afe3e1da4e928c5e6e333c345d399f850690"
+      },
+      {
+        "path": "episodes/EP001/video_prompts/current.json",
+        "sha256": "560dafb7afb356b2db5b84abdcc048336d6ce674e279f861538c9b1a011c4bf6"
+      }
+    ],
+    "character_reference_mode": "asset_library",
+    "video_references": "storyboard",
+    "trusted_character_references": {},
+    "video_prompts_version": "v2"
+  }
+}

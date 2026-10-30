@@ -1,0 +1,588 @@
+{
+  "title": "第一集",
+  "logline": "1987年，司家抱错的养女司念在自己的葬礼上坐了起来，醒来的却是一个无所畏惧的现代女孩。她扇了真千金刘思思一巴掌，从司辛手里拿走路费，搬空了整个卧室，连灯泡都没留下。",
+  "tone": "Bright, punchy 1980s Chinese period comedy-drama in vertical 9:16 live action. It opens on a solemn, grey funeral and snaps into shock humour and face-slapping revenge comedy. Fast cuts, exaggerated reactions and freeze-frame cliffhangers. The only violence is a single comic slap and a light bump from a swinging lamp. No sexual content.",
+  "characters": [
+    {
+      "id": "si_nian",
+      "name": "司念",
+      "aliases": [
+        "司年",
+        "念念",
+        "念念姐",
+        "司家的长女"
+      ],
+      "age": 18,
+      "observable": true,
+      "gender": "female",
+      "role": "Protagonist. Si Nian is the Si family's adopted daughter, swapped at birth. She is presumed dead and wakes at her own funeral with the mind of a fearless modern woman.",
+      "personality": "Sharp-tongued, shameless in a cheerful way, quick-witted and practical. She refuses to be a victim and treats the 1987 world as a game she intends to win. She takes everything she is owed and enjoys puncturing hypocrisy with modern slang.",
+      "appearance": "Young woman of 18 with a delicate oval face, a softly pointed chin and smooth youthful skin. She has large bright almond eyes, straight dark brows, a small straight nose and full lips with a mischievous curve. Her long straight black hair falls past her shoulder blades. She is slim and about 163 cm tall, with an upright, energetic posture. She always wears a thin red string bracelet on her left wrist. She has no visible scars.",
+      "hair": {
+        "length": "long",
+        "colour": "black"
+      },
+      "build": "slim",
+      "wardrobe": "Funeral burial clothes (shou yi): a high-collared, long-sleeved, dark navy-blue satin jacket with cloth frog fastenings and a subtle tonal cloud pattern, matching loose dark navy satin trousers, plain black cloth slippers and the red string bracelet on her left wrist. Her hair is loose and spread as if laid out.",
+      "wardrobe_states": {
+        "S0": "Funeral burial clothes (shou yi): a high-collared, long-sleeved, dark navy-blue satin jacket with cloth frog fastenings and a subtle tonal cloud pattern, matching loose dark navy satin trousers, plain black cloth slippers and the red string bracelet on her left wrist. Her hair is loose.",
+        "S1": "Her own clothes at the Si home: a bright red knitted long-sleeved cardigan buttoned over a plain white round-neck blouse, high-waisted straight dark-blue trousers, white canvas sneakers and the red string bracelet. Her long hair is tied in a high ponytail with a red elastic."
+      },
+      "signature_color": "red",
+      "voice": "Clear, bright young female voice at a fast clip. It is crisp and cheeky with a teasing lilt and modern slang delivery, rising sharply when she mocks someone.",
+      "looks": {
+        "S0": {
+          "garments": [
+            {
+              "class": "long sleeve top",
+              "colour": "blue"
+            },
+            {
+              "class": "trousers",
+              "colour": "blue"
+            }
+          ]
+        },
+        "S1": {
+          "garments": [
+            {
+              "class": "long sleeve outwear",
+              "colour": "red"
+            },
+            {
+              "class": "long sleeve top",
+              "colour": "white"
+            },
+            {
+              "class": "trousers",
+              "colour": "blue"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "si_xin",
+      "name": "司辛",
+      "aliases": [
+        "司先生"
+      ],
+      "age": 50,
+      "observable": true,
+      "gender": "male",
+      "role": "Si Nian's adoptive father and deputy head of a state-owned chemical plant. He is a respected local official.",
+      "personality": "Pompous and image-conscious, easily rattled and superstitious. He dotes on his newly found biological daughter and is cold toward the adopted one. He blusters when challenged.",
+      "appearance": "Man of 50 with a square face, heavy jaw and slightly sagging cheeks. He has thick brows, a creased forehead and a prominent nose. His short black hair is combed back neatly and greying at the temples. He is of average build with a slight paunch and stands about 172 cm. He wears black-rimmed square glasses and a steel wristwatch on his left wrist.",
+      "hair": {
+        "length": "short",
+        "colour": "black"
+      },
+      "build": "average",
+      "wardrobe": "Mid-grey wool Zhongshan (Mao) suit: a buttoned four-pocket jacket and matching grey trousers. Underneath is a plain white shirt collar. He wears a black mourning armband on his left sleeve, polished black leather shoes, black-rimmed glasses and a steel watch.",
+      "signature_color": "grey",
+      "voice": "Deep, slightly hoarse middle-aged male voice with an official, lecturing cadence. It cracks into a panicked stammer when frightened.",
+      "looks": {
+        "base": {
+          "garments": [
+            {
+              "class": "long sleeve outwear",
+              "colour": "grey"
+            },
+            {
+              "class": "trousers",
+              "colour": "grey"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "zhang_cuimei",
+      "name": "张翠梅",
+      "aliases": [],
+      "age": 55,
+      "observable": true,
+      "gender": "female",
+      "role": "Si Nian's adoptive mother and Si Xin's wife.",
+      "personality": "Sharp, snobbish and impatient. She fusses over appearances and family face, smothers her biological daughter with affection and is openly scornful of the adopted daughter she drove to despair.",
+      "appearance": "Woman of 55 with a round face, high cheekbones and thin, sharply drawn brows. Her narrow eyes have crow's feet and her lips are thin and downturned. Her chin-length black hair is in a tight 1980s perm. She is of average build, solid, and about 158 cm tall. She wears small gold stud earrings and a jade bangle on her right wrist.",
+      "hair": {
+        "length": "chin",
+        "colour": "black"
+      },
+      "build": "average",
+      "wardrobe": "Plum-purple knitted long-sleeved cardigan buttoned over a plain black high-neck blouse, straight black trousers and black low-heeled leather shoes. She wears a black mourning armband on her left sleeve, gold stud earrings and a jade bangle.",
+      "signature_color": "purple",
+      "voice": "Shrill, nasal middle-aged female voice. It is fast and scolding, turning syrupy and doting toward Liu Sisi and shrieking when scared.",
+      "looks": {
+        "base": {
+          "garments": [
+            {
+              "class": "long sleeve outwear",
+              "colour": "purple"
+            },
+            {
+              "class": "long sleeve top",
+              "colour": "black"
+            },
+            {
+              "class": "trousers",
+              "colour": "black"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "liu_sisi",
+      "name": "刘思思",
+      "aliases": [
+        "妹妹",
+        "思思"
+      ],
+      "age": 18,
+      "observable": true,
+      "gender": "female",
+      "role": "The Si family's biological daughter, raised in the countryside and newly brought home. She is Si Nian's scheming rival.",
+      "personality": "A 'green tea' schemer who puts on sweetness, timidity and false modesty while plotting to take everything Si Nian had. She is greedy, vain and quick to play the victim.",
+      "appearance": "Young woman of 18 with a small heart-shaped face, round cheeks and a pointed chin. She has big doe eyes, softly arched brows and a small rosebud mouth that she often purses innocently. Her long black hair is worn in two neat braids over her shoulders. She is slim, slightly shorter than Si Nian at about 158 cm, and stands in a demure, hunched posture. She has no jewellery.",
+      "hair": {
+        "length": "long",
+        "colour": "black"
+      },
+      "build": "slim",
+      "wardrobe": "Pale green long-sleeved cotton blouse with a rounded Peter Pan collar and small white buttons, a knee-length dark green pleated skirt, white ankle socks and black cloth Mary Jane shoes. Green ribbons tie the ends of her two braids.",
+      "signature_color": "green",
+      "voice": "Soft, breathy, sugary young female voice with a timid hesitant tremble. It snaps into a shrill, nasty tone when she is alone or angry.",
+      "looks": {
+        "base": {
+          "garments": [
+            {
+              "class": "long sleeve top",
+              "colour": "green"
+            },
+            {
+              "class": "skirt",
+              "colour": "green"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "si_yi",
+      "name": "司仪",
+      "aliases": [],
+      "age": 45,
+      "observable": true,
+      "gender": "male",
+      "role": "Funeral master of ceremonies at the funeral home.",
+      "personality": "Solemn, rigidly professional and keen to keep the ritual on track. He becomes flustered when it collapses.",
+      "appearance": "Man of 45 with a long, narrow face, hollow cheeks and a thin mouth. His expression is grave and his eyelids droop. His short black hair is neatly parted and oiled flat. He is slim, about 175 cm tall, and stands very straight.",
+      "hair": {
+        "length": "short",
+        "colour": "black"
+      },
+      "build": "slim",
+      "wardrobe": "Plain black buttoned Zhongshan jacket with matching black trousers, a small white paper mourning flower pinned to the left breast, and black cloth shoes.",
+      "signature_color": "black",
+      "voice": "Slow, sonorous, ceremonial male baritone, drawn out and resonant. He gives a dry cough when he is annoyed.",
+      "looks": {
+        "base": {
+          "garments": [
+            {
+              "class": "long sleeve outwear",
+              "colour": "black"
+            },
+            {
+              "class": "trousers",
+              "colour": "black"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "bin_ke_jia",
+      "name": "宾客甲",
+      "aliases": [],
+      "age": 22,
+      "observable": true,
+      "gender": "female",
+      "role": "A young female funeral guest who gossips about the Si family.",
+      "personality": "Curious, nosy and impressed by status.",
+      "appearance": "Young woman of 22 with a round face, rosy cheeks and wide curious eyes. Her shoulder-length straight black hair has blunt bangs. She is of average build and about 160 cm tall.",
+      "hair": {
+        "length": "shoulder",
+        "colour": "black"
+      },
+      "build": "average",
+      "wardrobe": "Navy-blue long-sleeved buttoned cotton jacket over a plain white blouse, straight black trousers and black cloth shoes.",
+      "signature_color": "blue",
+      "voice": "Light, chirpy young female whisper, quick and wondering.",
+      "looks": {
+        "base": {
+          "garments": [
+            {
+              "class": "long sleeve outwear",
+              "colour": "blue"
+            },
+            {
+              "class": "trousers",
+              "colour": "black"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "bin_ke_yi",
+      "name": "宾客乙",
+      "aliases": [],
+      "age": 23,
+      "observable": true,
+      "gender": "male",
+      "role": "A young male funeral guest who knows the scandal behind the death.",
+      "personality": "A know-it-all gossip who relishes sharing scandal.",
+      "appearance": "Young man of 23 with a lean angular face, high cheekbones and narrow knowing eyes. His short black hair has a side part. He is slim and about 174 cm tall.",
+      "hair": {
+        "length": "short",
+        "colour": "black"
+      },
+      "build": "slim",
+      "wardrobe": "Brown corduroy long-sleeved zip jacket over a plain grey sweater, dark grey trousers and black leather shoes.",
+      "signature_color": "brown",
+      "voice": "Low, conspiratorial young male murmur, fast and smug.",
+      "looks": {
+        "base": {
+          "garments": [
+            {
+              "class": "long sleeve outwear",
+              "colour": "brown"
+            },
+            {
+              "class": "trousers",
+              "colour": "grey"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "lu_ren_jia",
+      "name": "路人甲",
+      "aliases": [],
+      "age": 40,
+      "observable": true,
+      "gender": "male",
+      "role": "A passer-by on a bicycle who crashes in fright at the sight of Si Nian in burial clothes.",
+      "personality": "An ordinary, easily startled worker.",
+      "appearance": "Man of 40 with a broad sun-tanned face, a wide nose and thick lips. His short black crew-cut hair sits under a faded blue worker's cap. He is of average, sturdy build and about 170 cm tall.",
+      "hair": {
+        "length": "short",
+        "colour": "black"
+      },
+      "build": "average",
+      "wardrobe": "Faded blue long-sleeved cotton worker's jacket with chest pockets, a matching blue cap, dark grey trousers and black cloth shoes.",
+      "signature_color": "blue",
+      "voice": "Rough, startled male yelp; he has no full lines.",
+      "looks": {
+        "base": {
+          "garments": [
+            {
+              "class": "long sleeve outwear",
+              "colour": "blue"
+            },
+            {
+              "class": "trousers",
+              "colour": "grey"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "locations": [
+    {
+      "id": "funeral_hall",
+      "name": "灵堂",
+      "description": "A mourning hall inside a 1987 state funeral home. It is a long rectangular room with whitewashed walls and a grey terrazzo floor. At the far end a bier draped in white cloth holds the body, with a framed black-and-white portrait and a black-and-white silk flower above it. Paper wreaths of white and yellow flowers stand along both sides on wooden stands, with white elegiac couplet ribbons. Wooden benches line the walls and white and black drapes hang from the ceiling. Daylight comes in from tall side windows on the left and falls in cool diagonal shafts. Dim overhead fluorescent tubes give a flat, pale wash. The double wooden doors to the street are behind the mourners.",
+      "setting": "interior",
+      "period": "1970s-90s",
+      "furnishings": [
+        "bier",
+        "white drapes",
+        "paper wreaths",
+        "portrait frame",
+        "wooden benches",
+        "double doors"
+      ]
+    },
+    {
+      "id": "funeral_home_entrance",
+      "name": "殡仪馆门前",
+      "description": "The street outside the funeral home's entrance on a bright day in 1987. Grey concrete steps lead down from heavy double wooden doors in a plain grey-brick building. The street is busy in 1980s style, with plane trees, painted propaganda-style walls without legible text, bicycle lanes, a few old buses and carts, and pedestrians in blue and grey clothing. Strong natural daylight comes from high front-right and casts short shadows on the asphalt.",
+      "setting": "exterior",
+      "period": "1970s-90s",
+      "furnishings": [
+        "concrete steps",
+        "double wooden doors",
+        "plane trees",
+        "bicycles",
+        "street"
+      ]
+    },
+    {
+      "id": "si_bedroom",
+      "name": "司念卧室",
+      "description": "Si Nian's bedroom in the Si family's well-off 1987 work-unit apartment, also called the Si family bedroom. It has cream-painted walls and a red-brown wooden floor. A single bed has a floral quilt and embroidered pillows. There is a wooden vanity with an oval mirror crowded with jewellery boxes, cream jars and perfume bottles, a tall wooden wardrobe and a desk with a cassette radio. A beaded curtain hangs in the doorway beside the door to the living room. A single bare bulb hangs on a cord from the ceiling centre. Soft daylight comes through a window on the right with lace curtains.",
+      "setting": "interior",
+      "period": "1970s-90s",
+      "furnishings": [
+        "single bed",
+        "vanity mirror",
+        "wardrobe",
+        "jewellery boxes",
+        "hanging bulb",
+        "beaded curtain"
+      ]
+    },
+    {
+      "id": "si_living_room",
+      "name": "司家客厅",
+      "description": "The Si family living room in a 1987 cadre apartment. It has pale green lower-wall paint with white upper walls and a polished wooden floor. A wooden-frame sofa with crocheted white antimacassars faces a low glass-topped coffee table with a fruit plate and thermos. A cabinet holds a small television with a lace cover, and a wall clock hangs above it. The front door is on the left, and the bedroom doorway with its beaded curtain is at the back right. Daylight comes from a large window on the right, and a ceiling lamp gives a warm fill.",
+      "setting": "interior",
+      "period": "1970s-90s",
+      "furnishings": [
+        "wooden sofa",
+        "coffee table",
+        "fruit plate",
+        "television cabinet",
+        "wall clock",
+        "front door"
+      ]
+    }
+  ],
+  "beats": [
+    {
+      "lines": [
+        1,
+        5
+      ],
+      "seconds": 5,
+      "event": "The caption reads 1987. In the 灵堂, the 司仪 asks all guests to stand in silence for the Si family's eldest daughter."
+    },
+    {
+      "lines": [
+        6,
+        9
+      ],
+      "seconds": 23,
+      "event": "宾客甲 and 宾客乙 gossip that 司念 was a swapped child who was driven to death by her adoptive mother over an arranged marriage."
+    },
+    {
+      "lines": [
+        10,
+        13
+      ],
+      "seconds": 9,
+      "event": "At the first bow, 司念's foot twitches. 司辛 grabs 张翠梅, who dismisses him."
+    },
+    {
+      "lines": [
+        14,
+        19
+      ],
+      "seconds": 14.5,
+      "event": "At the second bow, 司念's hand moves. 司辛 panics and the 司仪 coughs a warning."
+    },
+    {
+      "lines": [
+        20,
+        22
+      ],
+      "seconds": 11,
+      "event": "司念 sits up complaining about the noise. Everyone screams and 张翠梅 falls to the floor while 司念 asks for her phone."
+    },
+    {
+      "lines": [
+        23,
+        29
+      ],
+      "seconds": 20,
+      "event": "司念 stands, stunned. She asks if this is a prank show, explores the hall and reads 一九八七 on a wreath."
+    },
+    {
+      "lines": [
+        30,
+        36
+      ],
+      "seconds": 20.5,
+      "event": "司念 throws open the doors onto the 1980s street. 路人甲 crashes his bicycle in fright, and 司念 kneels, crying with joy that she has time-travelled."
+    },
+    {
+      "lines": [
+        37,
+        42
+      ],
+      "seconds": 14,
+      "event": "In her bedroom 司念 surveys the jewellery and cosmetics and decides she would gladly marry the rural man."
+    },
+    {
+      "lines": [
+        43,
+        45
+      ],
+      "seconds": 5,
+      "event": "司辛 and 张翠梅 are heard arriving with 思思. 司念 turns to the door, alert."
+    },
+    {
+      "lines": [
+        46,
+        51
+      ],
+      "seconds": 22,
+      "event": "The parents welcome 刘思思 home and give her 傅炀 as a fiancé. 刘思思 feigns worry about 念念姐."
+    },
+    {
+      "lines": [
+        52,
+        54
+      ],
+      "seconds": 10.5,
+      "event": "司念 eavesdrops from the beaded curtain as 张翠梅 calls her an outsider who is better off dead."
+    },
+    {
+      "lines": [
+        55,
+        57
+      ],
+      "seconds": 6.5,
+      "event": "司念 quietly closes the door, disgusted at her cold adoptive parents."
+    },
+    {
+      "lines": [
+        58,
+        63
+      ],
+      "seconds": 19,
+      "event": "张翠梅 dotes on 思思. 刘思思 hints about taking her sister's room, and 司辛 agrees to clear it out."
+    },
+    {
+      "lines": [
+        64,
+        65
+      ],
+      "seconds": 6,
+      "event": "司念 drags out two big suitcases, determined to take everything."
+    },
+    {
+      "lines": [
+        66,
+        69
+      ],
+      "seconds": 7.5,
+      "event": "司辛 fawns over 刘思思 with fruit."
+    },
+    {
+      "lines": [
+        70,
+        74
+      ],
+      "seconds": 17.5,
+      "event": "司念 walks out with her suitcases. 刘思思 offers to let her hit her to vent, and 司念 slaps her. Freeze frame."
+    },
+    {
+      "lines": [
+        75,
+        81
+      ],
+      "seconds": 11,
+      "event": "刘思思 is outraged that she was really hit. 司辛 is aghast, and 张翠梅 helps 刘思思 up and calls 司念 crazy."
+    },
+    {
+      "lines": [
+        82,
+        86
+      ],
+      "seconds": 14.5,
+      "event": "司念 mocks them with her phobias of schemers and giant idiots, leaving 司辛 and 张翠梅 speechless."
+    },
+    {
+      "lines": [
+        87,
+        90
+      ],
+      "seconds": 22.5,
+      "event": "司念 calls out the green-tea tricks and their IQ. 司辛 rants that she should be content and asks whether she wants travel money too."
+    },
+    {
+      "lines": [
+        91,
+        94
+      ],
+      "seconds": 8,
+      "event": "司念 accepts, calling him 老登, then thanks him. 司辛 reaches trembling into his pocket."
+    },
+    {
+      "lines": [
+        95,
+        99
+      ],
+      "seconds": 23,
+      "event": "张翠梅 calls her an ingrate and 司念 mocks their looks. She snatches the money and leaves with her suitcases."
+    },
+    {
+      "lines": [
+        100,
+        103
+      ],
+      "seconds": 9,
+      "event": "The parents fume while 刘思思 soothes them, and 司辛 sits and orders that 思思 be settled first."
+    },
+    {
+      "lines": [
+        104,
+        110
+      ],
+      "seconds": 26.5,
+      "event": "刘思思 smirks, imagining the clothes and jewellery are hers, but finds the bedroom stripped bare. She slaps the lamp, the bulb is gone, and the swinging lamp hits her forehead. Freeze frame."
+    }
+  ],
+  "episodes": [
+    {
+      "id": "EP001",
+      "title": "The Corpse Sits Up",
+      "summary": "At the 1987 funeral in the 灵堂, guests gossip that 司念 was driven to death by her adoptive mother. During the bows 司念 twitches, then sits up, terrifying everyone. She reads the year on a wreath and runs out past the 殡仪馆 doors, where 路人甲 crashes his bicycle and she realises she has time-travelled.",
+      "est_seconds": 103,
+      "end_hook": "司念 kneels in the street in her burial clothes and cries out with joy: 我穿越了！",
+      "lines": [
+        1,
+        36
+      ]
+    },
+    {
+      "id": "EP002",
+      "title": "One Slap for the Green Tea",
+      "summary": "司念 admires her well-stocked bedroom just as 司辛 and 张翠梅 bring 刘思思 home and hand her 司念's fiancé 傅炀 and her room. Overhearing their cruelty, 司念 packs everything into two suitcases. When 刘思思 sweetly invites her to hit her, 司念 slaps her.",
+      "est_seconds": 108,
+      "end_hook": "司念 slaps 刘思思 with a cheerful 行嘞, and the stunned 刘思思 freezes.",
+      "lines": [
+        37,
+        74
+      ]
+    },
+    {
+      "id": "EP003",
+      "title": "Not Even the Light Bulb",
+      "summary": "The family explodes. 司念 roasts their stupidity and 刘思思's tricks, and calls 司辛 老登 when he offers travel money. She snatches the cash and sweeps out with her suitcases. 刘思思 gloats over the room she has inherited, only to find it stripped bare.",
+      "est_seconds": 114.5,
+      "end_hook": "刘思思 slaps the lamp, finds the bulb gone, and the lamp swings back to hit her forehead as she freezes in fury.",
+      "lines": [
+        75,
+        110
+      ]
+    }
+  ],
+  "red_line_issues": []
+}

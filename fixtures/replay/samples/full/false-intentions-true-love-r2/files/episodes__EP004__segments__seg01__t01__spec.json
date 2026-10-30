@@ -1,0 +1,436 @@
+{
+  "model": "sd25",
+  "content": [
+    {
+      "type": "text",
+      "text": "Image 1: Seven-panel storyboard reference, used for the overall shot structure, shot sizes, and camera-movement rhythm. Read it from left to right and from top to bottom; panel N is Shot N. It is a line-art sketch: do not adopt its sketch style, black outlines, white background, panel borders or drawn faces.\nImage 2: Reference of INT. JI RAN'S APARTMENT ENTRANCE, the front view, the establishing view, facing the back wall, a rendered set, not live action. Use it only for the room's layout, the furniture's positions and the light's direction; do not reference its visual content. It contains no people.\nImage 3: Reference of INT. JI RAN'S APARTMENT ENTRANCE, the back view, turned 180 degrees, facing the front wall, with the left wall at its right edge, a rendered set, used only for the room's layout; it contains no people.\nImage 4: Reference of INT. JI RAN'S APARTMENT ENTRANCE, the left-side view, facing the left wall, with the back wall at its right edge, a rendered set, used only for the room's layout; it contains no people.\nImage 5: Reference of INT. JI RAN'S APARTMENT ENTRANCE, the right-side view, facing the right wall, with the back wall at its left edge, a rendered set, used only for the room's layout; it contains no people.\nImage 6: Reference of INT. JI RAN'S APARTMENT ENTRANCE, the floor plan seen from above: its top edge is the back wall, its bottom edge the front wall behind the front view's camera, and its left and right edges the left and right walls, a rendered set, used only for the room's layout; it contains no people.\nImage 7: Blocking reference of the segment's start: the same place with these people in their places, used only for where each person is and which way they face; take faces and outfits from each subject's own image. It is a line-art diagram: do not adopt its outlines or white background.\nImage 8: Subject 1 (Lu Shaoze, look S1) character appearance reference.\nImage 9: Subject 2 (Ji Ran, look S3) character appearance reference.\nImage 10: Prop 1 (black handbag) maps to this image; copy its writing and badges exactly from Image 10.\nFrom each prop's image, use only structure, material, and color.\n[Subject settings]\nSubject 1 (Lu Shaoze): Refer to Image 8. 28, Ji Ran's ex-boyfriend of four years, driven away by Ji Hongyuan five years ago; now the arrogant heir of the Lu Group and Ji Ran's arranged fiancé. Outfit: look S1: Present, night: a sharp, slim-tailored navy-blue double-breasted suit jacket with peaked lapels and a navy silk pocket square, over a black silk dress shirt open at the collar. Matching navy suit trousers with a crisp crease, and polished black leather Oxford shoes. Signature colour: blue.\nSubject 2 (Ji Ran): Refer to Image 9. 27, heroine; owner of Jiejian Company, an architecture and interior design firm; daughter of Ji Hongyuan. Outfit: look S3: Night, coming home: a black satin spaghetti-strap bodycon midi slip dress with a draped cowl neckline, cinched at the waist. Black strappy stiletto sandals and a fine gold pendant necklace. Signature colour: black.\nEnvironment (INT. JI RAN'S APARTMENT ENTRANCE): Refer to Images 2 to 6. Night, warm interior light from brass sconces and ceiling downlights. Warm brass sconces on either side of the painting and soft ceiling downlights; quiet building hum, elevator chime, heels on stone.\nDo not swap the characters' appearances, clothing, actions, positions or dialogue.\n[Subjects and relationships]\nOnly two people appear throughout: Lu Shaoze and Ji Ran.\n[Blocking]\nRefer to Images 2 to 6 for the room and Image 7 for the people's places. Camera at the corridor end of the landing, facing the autumn landscape painting on the back wall. The landing has one pair of brushed-steel elevator doors on the left wall, closed. One tall walnut front door with a black smart lock stands on the right wall. One autumn landscape painting hangs above one slim console table on the back wall, between two brass wall sconces. Lu Shaoze, in his navy double-breasted suit over a black silk shirt, stands at the walnut front door, facing it, with his back to the elevator doors. Ji Ran is inside the closed elevator, about to arrive. She wears her black satin slip dress and carries the black handbag.\n[Overall style]\nPhotorealistic live-action short drama with cinematic lighting. Each character keeps the face and the outfit with its main colour from their reference image throughout. Use each character sheet only for that character: the face from the close-up on the right, the body and outfit from the turnaround on the left; do not render the sheet's layout, white background or multiple views. This segment has 2 lines, in this order: Lu Shaoze, Ji Ran. Generate speech only from the lines in {} in the shot list, each spoken exactly once by its speaker; everyone else keeps their mouth naturally closed while listening, and a V.O. speaker keeps their mouth closed or is off screen. Follow the shot list below; do not add cuts or camera moves beyond it. Strictly adhere to the 180-degree rule: within a scene, characters keep their screen sides and the camera stays on one side of the axis. Seamless continuity of action; cut on action. For dialogue prefer static shot-reverse-shot and over-the-shoulder shots, balanced with reaction shots and close-up inserts. Faces stable and clear, with no resemblance to any real actor or actress. Normal human eyes. Natural anatomy. Natural, fluid motion that follows the blocking; characters make subtle, natural movements. Characters, props and environment share one world with matched lighting. Each line ends naturally with breathing room and is never cut off. Authentic performances with micro-expressions. No BGM; generate only dialogue, environmental sounds and action sounds. No subtitles.\n[Continuity]\nMaintain continuity in the identities, number, appearance, clothing, relative heights, spatial positions, and eyelines of all the characters. The actions in the shot list occur strictly in sequence. Hands are anatomically correct.\n[Strictly exclude]\nadded or missing characters, spatial jumps. subtitles or garbled text. malformed hands. Dialogue from the wrong character, multiple people speaking at once, repeated or missing lines, lip-sync errors and audio-visual desynchronization. The raw reference images (character sheets, setting plates) appearing as a frame of the video, and starting on a still frame of the setting reference. A fast zoom-in at the start, a fast pull-back at the end, unmotivated whip-pans, tilts, zooms and 360-degree orbits. Axis-crossing, jump cuts, frame skips, flicker and clipping. Face swaps, changes in age or clothing, sudden height shifts, added or missing characters, spatial jumps, and disordered action sequences; props popping in or vanishing, and duplicate characters except mirror reflections. Hand clipping, extra fingers, fused fingers, malformed hands. Subtitles, captions, watermarks and garbled writing; writing and logos other than those on a key prop's reference image, which are copied from it; a phone screen or paper that is not a key prop is shown from the back or out of focus. Black-and-white, monochrome, grayscale, desaturated visuals; hand-drawn, sketch, line art, illustration, comics, animation; storyboard frames, rough sketches, panel borders, gutters and grid layouts.\n[Shot list] (7 shots, approximately 25 seconds)\nWhen a previous-shot reference image is given, it is the moment this segment starts from: keep its people's positions, outfits, props and light, and continue from there. Shot 1 keeps its own camera, matching the image's framing only when it frames the same view; do not repeat that frame later.\nShot 1 (0-2s): [Wide shot, locked-off camera, eye level, from the corridor end facing the painting] Lu Shaoze stands at the walnut front door and smooths his swept-back hair with one hand. The elevator doors behind him across the landing are closed.\nShot 2 (2-4s): [Medium shot, handheld camera, eye level, from the corridor end near the elevator doors, facing the walnut front door] Lu Shaoze raises his knuckles and knocks on the walnut front door, smiling confidently. <Knuckles knock on wood>\nShot 3 (4-6s): [Medium shot, quick pan from the walnut front door to the elevator doors, eye level, from the corridor end] The elevator doors slide open and Ji Ran steps out holding the black handbag. Lu Shaoze spins around, startled, and collides with her in the middle of the landing. <Elevator chime, doors slide open, a soft bump>\nShot 4 (6-8s): [Medium close-up two-shot, locked-off camera, eye level, from the corridor end facing the painting] The two step apart and stop beneath the autumn landscape painting, Ji Ran on the elevator side and Lu Shaoze on the front-door side. Ji Ran steadies the black handbag on her arm and glares at him. <Heels click on stone>\nShot 5 (8-14s): [Medium shot, over-the-shoulder shot past Ji Ran's shoulder, from the corridor end on the elevator side, facing Lu Shaoze] Lu Shaoze tilts his head with a mocking grin and spreads one hand toward Ji Ran. Dialogue (Lu Shaoze, in Mandarin, sneering drawl): {呀，好久不见呀，纪大小姐，您真是贵人事多，这么晚才回家呀。}\nShot 6 (14-20s): [Medium close-up, slow push in on Ji Ran, eye level, from the corridor end on the front-door side] Ji Ran raises one brow and gives a cool, thin smile, her hand resting on the handbag strap. Dialogue (Ji Ran, in Mandarin, dry and cutting): {比不上路少爷您清闲，都有空在别人家门口当门神了。}\nShot 7 (20-25s): [Close-up, clean single on Lu Shaoze, tight on his face and shoulders, locked-off camera, eye level, from the corridor end on the elevator side] Lu Shaoze's grin stiffens and his jaw tightens. Dialogue (Ji Ran, in Mandarin, deadpan): {怎么，路少爷这是刚回国，都找不到自己家门口在哪了？}\nAt the end: Ji Ran stands beneath the autumn landscape painting on the elevator side of the console table, holding the black handbag, facing Lu Shaoze. Lu Shaoze stands beneath the painting on the front-door side, facing her and the elevator doors, his grin stiff. The elevator doors are closed. Camera on the corridor side, facing the painting.\n\nImage 11 is the first frame.\n"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261028053703-wqvnm"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/apartment_entrance/times/Night/v2/front.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/apartment_entrance/times/Night/v2/back.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/apartment_entrance/times/Night/v2/left-side.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/apartment_entrance/times/Night/v2/right-side.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/apartment_entrance/times/Night/v2/floor-plan.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261027204432-xm67s"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261027185335-n2z8z"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261027190041-npvm6"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261027183215-9vh9g"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261028053046-4jpc4"
+      },
+      "role": "reference_image"
+    }
+  ],
+  "duration": 25,
+  "ratio": "9:16",
+  "resolution": "480p",
+  "generate_audio": true,
+  "watermark": false,
+  "return_last_frame": true,
+  "omni_reference_task_type": "reference",
+  "drama": {
+    "segment": {
+      "id": "seg01",
+      "duration": 25,
+      "location": "apartment_entrance",
+      "scene_heading": "INT. JI RAN'S APARTMENT ENTRANCE - NIGHT #4-1#",
+      "time": "Night, warm interior light from brass sconces and ceiling downlights",
+      "characters": [
+        "lu_shaoze",
+        "ji_ran"
+      ],
+      "states": {
+        "lu_shaoze": "S1",
+        "ji_ran": "S3"
+      },
+      "props": [
+        "handbag"
+      ],
+      "first_state": "Camera at the corridor end of the landing, facing the autumn landscape painting on the back wall. The landing has one pair of brushed-steel elevator doors on the left wall, closed. One tall walnut front door with a black smart lock stands on the right wall. One autumn landscape painting hangs above one slim console table on the back wall, between two brass wall sconces. Lu Shaoze, in his navy double-breasted suit over a black silk shirt, stands at the walnut front door, facing it, with his back to the elevator doors. Ji Ran is inside the closed elevator, about to arrive. She wears her black satin slip dress and carries the black handbag.",
+      "shots": [
+        {
+          "time": "0-2s",
+          "size": "wide shot",
+          "angle": "eye level",
+          "camera": "Wide shot, locked-off camera, eye level, from the corridor end facing the painting",
+          "visual": "Lu Shaoze stands at the walnut front door and smooths his swept-back hair with one hand. The elevator doors behind him across the landing are closed.",
+          "audio": "",
+          "characters": [
+            "lu_shaoze"
+          ],
+          "lines": []
+        },
+        {
+          "time": "2-4s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, handheld camera, eye level, from the corridor end near the elevator doors, facing the walnut front door",
+          "visual": "Lu Shaoze raises his knuckles and knocks on the walnut front door, smiling confidently.",
+          "audio": "<Knuckles knock on wood>",
+          "characters": [
+            "lu_shaoze"
+          ],
+          "lines": []
+        },
+        {
+          "time": "4-6s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, quick pan from the walnut front door to the elevator doors, eye level, from the corridor end",
+          "visual": "The elevator doors slide open and Ji Ran steps out holding the black handbag. Lu Shaoze spins around, startled, and collides with her in the middle of the landing.",
+          "audio": "<Elevator chime, doors slide open, a soft bump>",
+          "characters": [
+            "lu_shaoze",
+            "ji_ran"
+          ],
+          "lines": []
+        },
+        {
+          "time": "6-8s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up two-shot, locked-off camera, eye level, from the corridor end facing the painting",
+          "visual": "The two step apart and stop beneath the autumn landscape painting, Ji Ran on the elevator side and Lu Shaoze on the front-door side. Ji Ran steadies the black handbag on her arm and glares at him.",
+          "audio": "<Heels click on stone>",
+          "characters": [
+            "ji_ran",
+            "lu_shaoze"
+          ],
+          "lines": []
+        },
+        {
+          "time": "8-14s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, over-the-shoulder shot past Ji Ran's shoulder, from the corridor end on the elevator side, facing Lu Shaoze",
+          "visual": "Lu Shaoze tilts his head with a mocking grin and spreads one hand toward Ji Ran.",
+          "audio": "Dialogue (Lu Shaoze, in Mandarin, sneering drawl): {呀，好久不见呀，纪大小姐，您真是贵人事多，这么晚才回家呀。}",
+          "characters": [
+            "ji_ran",
+            "lu_shaoze"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "14-20s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up, slow push in on Ji Ran, eye level, from the corridor end on the front-door side",
+          "visual": "Ji Ran raises one brow and gives a cool, thin smile, her hand resting on the handbag strap.",
+          "audio": "Dialogue (Ji Ran, in Mandarin, dry and cutting): {比不上路少爷您清闲，都有空在别人家门口当门神了。}",
+          "characters": [
+            "ji_ran"
+          ],
+          "lines": [
+            1
+          ]
+        },
+        {
+          "time": "20-25s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, clean single on Lu Shaoze, tight on his face and shoulders, locked-off camera, eye level, from the corridor end on the elevator side",
+          "visual": "Lu Shaoze's grin stiffens and his jaw tightens.",
+          "audio": "Dialogue (Ji Ran, in Mandarin, deadpan): {怎么，路少爷这是刚回国，都找不到自己家门口在哪了？}",
+          "characters": [
+            "lu_shaoze"
+          ],
+          "lines": [
+            1
+          ]
+        }
+      ],
+      "light_audio": "Warm brass sconces on either side of the painting and soft ceiling downlights; quiet building hum, elevator chime, heels on stone.",
+      "dialogue": [
+        {
+          "speaker": "lu_shaoze",
+          "line": "呀，好久不见呀，纪大小姐，您真是贵人事多，这么晚才回家呀。"
+        },
+        {
+          "speaker": "ji_ran",
+          "line": "比不上路少爷您清闲，都有空在别人家门口当门神了。怎么，路少爷这是刚回国，都找不到自己家门口在哪了？"
+        }
+      ],
+      "must_hit": [
+        "Lu Shaoze knocks on the walnut front door",
+        "Ji Ran steps out of the elevator and collides with Lu Shaoze",
+        "They face off beneath the autumn landscape painting"
+      ],
+      "exit_state": "Ji Ran stands beneath the autumn landscape painting on the elevator side of the console table, holding the black handbag, facing Lu Shaoze. Lu Shaoze stands beneath the painting on the front-door side, facing her and the elevator doors, his grin stiff. The elevator doors are closed. Camera on the corridor side, facing the painting.",
+      "negative": [
+        "added or missing characters, spatial jumps",
+        "subtitles or garbled text",
+        "malformed hands"
+      ]
+    },
+    "bible_version": "v3",
+    "breakdown_version": "v3",
+    "lineage": [
+      {
+        "path": "bible/v3/artifact.json",
+        "sha256": "e8858c85afa019570fd8a0a6ecfdb5756c10ad794a7e2ba1d7d31b8eac97a31f"
+      },
+      {
+        "path": "bible/accepted.json",
+        "sha256": "f18c28d8a31313564bf7219b491d83139c2073c85e4cf3603e35847dd05828a1"
+      },
+      {
+        "path": "bible/current.json",
+        "sha256": "b04068c483638a978207df0bf4b8b06fbbf13e176372ee8c8d3670c257353fd3"
+      },
+      {
+        "path": "bible/v3/bible.json",
+        "sha256": "0825400d343b1d4cbe400069f4187009f4b6d7e7d30e6e1467ab5cece53f1e7e"
+      },
+      {
+        "path": "bible/v3/input/screenplay.md",
+        "sha256": "afbfe0f787d9c5565630e661e5667df671458c5aa581c242873ff1ab7de27669"
+      },
+      {
+        "path": "episodes/EP004/breakdown/v3/artifact.json",
+        "sha256": "2101bf4c19b81c3e5097dc2a94c381bc36da9ad99e5288db0ffc2a8098a3df19"
+      },
+      {
+        "path": "episodes/EP004/breakdown/accepted.json",
+        "sha256": "b8fcccc0f5a51e479a36a2b46406e2a158cdab6a85ee9ad9889ff6de77404e0c"
+      },
+      {
+        "path": "episodes/EP004/breakdown/current.json",
+        "sha256": "8f73e08301279a66eb6f7b5aa7cef67ac9508640179e0e51df779daacec39c40"
+      },
+      {
+        "path": "episodes/EP004/breakdown/v3/breakdown.json",
+        "sha256": "0b16ac9d949deafcff98746f6f88373399025a1190670805f0974d1c3679f8e6"
+      },
+      {
+        "path": "episodes/EP004/multi_panel_storyboard/seg01/line-art/v1/artifact.json",
+        "sha256": "33152f8119968a42272771eda64edf7856ac26671081fa089e7009a8f8bf8b3b"
+      },
+      {
+        "path": "episodes/EP004/multi_panel_storyboard/seg01/line-art/accepted.json",
+        "sha256": "c08621faaa645cf93a0e6dba890bd3ce83b19093ac4a04b157653faf15cadbc9"
+      },
+      {
+        "path": "episodes/EP004/multi_panel_storyboard/seg01/line-art/current.json",
+        "sha256": "ba7419571be8c62dae7da63653c9611ec55636cdf147227ac04be685727cff90"
+      },
+      {
+        "path": "episodes/EP004/multi_panel_storyboard/seg01/line-art/v1/image-1.jpg",
+        "sha256": "88a6691600535fcec745cb4fa44064ac4f50d2687a46986fcbedffe579b0cd78"
+      },
+      {
+        "path": "episodes/EP004/multi_panel_storyboard/seg01/line-art/v1/asset/job.json",
+        "sha256": "d2974429079a2089945ac6821b1b20dc08f4e6168eb410619299ef1669faf913"
+      },
+      {
+        "path": "assets/scenes/apartment_entrance/times/Night/v2/artifact.json",
+        "sha256": "eb591f15edf9c65b669fc81c4e4973259cc8bc3632f2e6f2391b667201ffb017"
+      },
+      {
+        "path": "assets/scenes/apartment_entrance/times/Night/accepted.json",
+        "sha256": "f68beb66d31105269c698f52dc26732e7676ec115f45ebdfb653b7bfa0051348"
+      },
+      {
+        "path": "assets/scenes/apartment_entrance/times/Night/current.json",
+        "sha256": "c3fc7cfce5aa15e9de768b26a37b94ad76aa57f30d594d4c50bce5ad789532f9"
+      },
+      {
+        "path": "assets/scenes/apartment_entrance/times/Night/v2/image-1.jpg",
+        "sha256": "40ead7b8b2890730e96ed600019dbc7ceed7ed57fb3e6b2343fdccd6fb231af4"
+      },
+      {
+        "path": "assets/scenes/apartment_entrance/times/Night/v2/front.jpg",
+        "sha256": "1485ce53720cd317ef00435f348e6e1ac496b73df00b96fd0746590caef14a10"
+      },
+      {
+        "path": "assets/scenes/apartment_entrance/times/Night/v2/back.jpg",
+        "sha256": "f40e4261115a90051384e05d696dc3b15ac5a30ac4c0626bf45c4a43fafa6a1c"
+      },
+      {
+        "path": "assets/scenes/apartment_entrance/times/Night/v2/left-side.jpg",
+        "sha256": "0b28e7c31f6fef7f053d22383416719cce9a4e23fde05f99c396272ff060db8f"
+      },
+      {
+        "path": "assets/scenes/apartment_entrance/times/Night/v2/right-side.jpg",
+        "sha256": "feceedc1d84511446afade553fc733c752383fa8d41bd5e340b7f7d07d4f6837"
+      },
+      {
+        "path": "assets/scenes/apartment_entrance/times/Night/v2/floor-plan.jpg",
+        "sha256": "32f669bbfc17de172f46713352fe42d5f5dc61c2da77cd580fcea9655f8802c1"
+      },
+      {
+        "path": "episodes/EP004/blocking/seg01/v1/artifact.json",
+        "sha256": "44fb326d5e779c951f6e778f77287126b0a122179117447a0ee4a294634c3db3"
+      },
+      {
+        "path": "episodes/EP004/blocking/seg01/accepted.json",
+        "sha256": "3ddaf4130199f7751fd18c1d05cefbda83bda5485a6bcfb90c69161d129b2df6"
+      },
+      {
+        "path": "episodes/EP004/blocking/seg01/current.json",
+        "sha256": "048b7005508869b5895bf4d561237b84235146fc8b462c0d38dc653f0fe75645"
+      },
+      {
+        "path": "episodes/EP004/blocking/seg01/v1/image-1.jpg",
+        "sha256": "2fabdde9c0ff59bcc57a5df042f68bf82326e13e1588a1b062c18c6438db37a1"
+      },
+      {
+        "path": "episodes/EP004/blocking/seg01/v1/asset/job.json",
+        "sha256": "590947340ed39da0763f8ffd92b83cf7a05fd1f463507dbda9458bc7802c8454"
+      },
+      {
+        "path": "assets/props/handbag/v2/artifact.json",
+        "sha256": "f2849617a1d372263d9bee5a1584decb8033bb38c5a2ca3b8aaabff19aec79e4"
+      },
+      {
+        "path": "assets/props/handbag/accepted.json",
+        "sha256": "1d5fed7fcadc2fe106d94dc4c20d76ece85fe7367b28a3876b48a5f102a05ef0"
+      },
+      {
+        "path": "assets/props/handbag/current.json",
+        "sha256": "9ec2faf9277c124d704b17cb3e57dc953e67e5ca9cbcc78ca050cddabe25a959"
+      },
+      {
+        "path": "assets/props/handbag/v2/image-1.jpg",
+        "sha256": "26d1d7c0e117e4d83ce2acb493ef78fd58d3c488e47c0ff4b1386140e88a7456"
+      },
+      {
+        "path": "assets/props/handbag/v2/asset/job.json",
+        "sha256": "d4867feebbe46529c5f37776a66cf5217cdec564f59dd29d569394edf63b3b7f"
+      },
+      {
+        "path": "assets/characters/lu_shaoze/states/S1/v2/artifact.json",
+        "sha256": "3d22cbed11ab0287da685aff23d47ed4a7896784cbfd29bca0aaa00cafba84f0"
+      },
+      {
+        "path": "assets/characters/lu_shaoze/states/S1/accepted.json",
+        "sha256": "f9d91d582dd8b90c117a4198b0cd19259a832f979b384a6650f36464363be6d1"
+      },
+      {
+        "path": "assets/characters/lu_shaoze/states/S1/current.json",
+        "sha256": "c98c7e20ddab6a4248a4c863088aef99de2ea08261d42c12619bfbc56c625ea8"
+      },
+      {
+        "path": "assets/characters/lu_shaoze/states/S1/v2/image-1.jpg",
+        "sha256": "9c523ab6da295d1f441fd563d2a47619b2a08b2117975b480991452f01176b03"
+      },
+      {
+        "path": "assets/characters/lu_shaoze/states/S1/v2/asset/job.json",
+        "sha256": "e7dbff77006f3023f98d3c876f2a7ee12b438f0c1117811991c6e3bd6cbdb525"
+      },
+      {
+        "path": "assets/characters/ji_ran/states/S3/v2/artifact.json",
+        "sha256": "adeba3d7fbf3448ed34aadf4331a80fee558c88f93dfeb3414286dd090e41e2a"
+      },
+      {
+        "path": "assets/characters/ji_ran/states/S3/accepted.json",
+        "sha256": "0578c9144b41ab45498275f54579f04f227faf05245b7cf7c0b00b101808d4bd"
+      },
+      {
+        "path": "assets/characters/ji_ran/states/S3/current.json",
+        "sha256": "d3a7369a0af884e0fe00bbe7bbab662bdaa0188d0f584876307faa496c78f262"
+      },
+      {
+        "path": "assets/characters/ji_ran/states/S3/v2/image-1.jpg",
+        "sha256": "8f8cee2a920804c4bdb6af582c0f391d1f667b0b8b925879e6c569a103053579"
+      },
+      {
+        "path": "assets/characters/ji_ran/states/S3/v2/asset/job.json",
+        "sha256": "014e8206f656cb9858b745fc863b25c2a6f8e2b78be299ff9259442fbedeb220"
+      },
+      {
+        "path": "episodes/EP004/video_prompts/v1/seg01.json",
+        "sha256": "4b9133a38cd94fffd815156839f5ca556375f8e4ec8bd10b0bcb762e631a04a4"
+      },
+      {
+        "path": "episodes/EP004/first_frame_reference/seg01/v1/artifact.json",
+        "sha256": "78694b053c944a4718e02fdf4ed6daf0755358e8d53e49a795995e00d61d2290"
+      },
+      {
+        "path": "episodes/EP004/first_frame_reference/seg01/accepted.json",
+        "sha256": "d3f850fac0c976fea8b4c73203b369f0aab79aa08f0cfecef9b614843f219855"
+      },
+      {
+        "path": "episodes/EP004/first_frame_reference/seg01/current.json",
+        "sha256": "a7ba41f6ed74cb74f68a69ce1e261dd38f2d1fda55387ea6463d087f1e5fe9df"
+      },
+      {
+        "path": "episodes/EP004/first_frame_reference/seg01/v1/image-1.jpg",
+        "sha256": "4c71a4ccdab252501d2878865ac26254e222d10d92526d1b8e94518483044d57"
+      },
+      {
+        "path": "episodes/EP004/first_frame_reference/seg01/v1/asset/job.json",
+        "sha256": "b736c085740ab3dfa1f047f89348165231fc62d4a884a9bbd7b138455294fb4d"
+      }
+    ],
+    "character_reference_mode": "asset_library",
+    "video_references": "storyboard",
+    "trusted_character_references": {},
+    "video_prompts_version": "v1",
+    "first_frame_reference": "v1"
+  }
+}

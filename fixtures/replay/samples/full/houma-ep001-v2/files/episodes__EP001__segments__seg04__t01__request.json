@@ -1,0 +1,45 @@
+{
+  "model": "ep-20260928175156-xn9xm",
+  "content": [
+    {
+      "type": "text",
+      "text": "Image 1: Seven-panel storyboard reference, used for the overall shot structure, shot sizes, and camera-movement rhythm. Read it from left to right and from top to bottom; panel N is Shot N.\nImage 2: Live-action reference of Funeral Home Entrance, used as the benchmark for environmental composition, lighting, and realistic live-action texture; it contains no people.\nImage 3: Subject 1 (Si Nian, look S0) character appearance reference.\nImage 4: Subject 2 (Lu Ren Jia) character appearance reference.\n[Subject settings]\nSubject 1 (Si Nian): Refer to Image 3. 18, Protagonist. Si Nian is the Si family's adopted daughter, swapped at birth. She is presumed dead and wakes at her own funeral with the mind of a fearless modern woman.. Outfit: look S0: Funeral burial clothes (shou yi): a high-collared, long-sleeved, dark navy-blue satin jacket with cloth frog fastenings and a subtle tonal cloud pattern, matching loose dark navy satin trousers, plain black cloth slippers and the red string bracelet on her left wrist. Her hair is loose. Signature colour: red.\nSubject 2 (Lu Ren Jia): Refer to Image 4. 40, A passer-by on a bicycle who crashes in fright at the sight of Si Nian in burial clothes.. Outfit: Faded blue long-sleeved cotton worker's jacket with chest pockets, a matching blue cap, dark grey trousers and black cloth shoes. Signature colour: blue.\nEnvironment (Funeral Home Entrance): Refer to Image 2. Bright day, strong sun from high front-right. Strong natural daylight from high front-right, short hard shadows on the asphalt. Live sound: 1980s street bustle, bicycle bells, footsteps, a distant bus engine.\nDo not swap the characters' appearances, clothing, actions, positions or dialogue.\n[Overall style]\nPhotorealistic live-action short drama with cinematic lighting. Each character keeps the face and the outfit with its main colour from their reference image throughout. Use each character sheet only for that character: the face from the close-up on the right, the body and outfit from the turnaround on the left; do not render the sheet's layout, white background or multiple views. This segment has 1 line, in this order: Si Nian. Generate speech only from the lines in {} in the shot list, each spoken exactly once by its speaker; everyone else keeps their mouth naturally closed while listening, and a V.O. speaker keeps their mouth closed or is off screen. Follow the shot list below; do not add cuts or camera moves beyond it. Strictly adhere to the 180-degree rule: within a scene, characters keep their screen sides and the camera stays on one side of the axis. Seamless continuity of action, spatial matching and consistent actor blocking; cut on action. For dialogue prefer static shot-reverse-shot and over-the-shoulder shots, balanced with reaction shots and close-up inserts. Faces stable and clear, consistent with the reference images, with no resemblance to any real actor or actress. Normal human eyes. Natural anatomy and hands. Natural, fluid motion that follows the blocking; characters make subtle, natural movements. Characters, props and environment share one world with matched lighting. Each line ends naturally with breathing room and is never cut off. Authentic performances with micro-expressions. No BGM; generate only dialogue, environmental sounds and action sounds. No subtitles.\n[Strictly exclude]\nmodern cars or modern signage. readable text on walls. subtitles. Dialogue from the wrong character, multiple people speaking at once, repeated or missing lines, lip-sync errors and audio-visual desynchronization. The raw reference images (character sheets, setting plates) appearing as a frame of the video, and starting on a still frame of the setting reference. A fast zoom-in at the start, a fast pull-back at the end, unmotivated whip-pans, tilts, zooms and 360-degree orbits. Axis-crossing, jump cuts, frame skips, flicker and clipping. Characters or props popping in or vanishing, and duplicate characters except mirror reflections. Readable text, numbers, logos and watermarks; phones and paper are shown from the back or out of focus. Storyboard frames, panel borders, gutters and grid layouts.\n[Shot list] (7 shots, approximately 15 seconds)\nWhen a previous-shot reference image is given, Shot 1 matches its camera position, shot size and blocking and continues from that moment; do not repeat that frame later.\nAt the start: Outside the funeral home. The camera stays on the street side facing the building. The grey-brick building with its one pair of heavy double wooden doors is at frame back, and one flight of grey concrete steps leads down toward the camera. The street with a bicycle lane runs across the foreground; cyclists ride from screen right to screen left. Plane trees line the curb, and pedestrians in blue and grey walk past with an old bus in the distance. Si Nian stands in the open doorway at the top of the steps in burial clothes. Lu Ren Jia is off frame at screen right on his bicycle.\nShot 1 (0-3s): [Wide shot, low angle from the street side, locked-off camera] Si Nian steps out of the double wooden doors in her burial clothes and walks down the concrete steps to the street edge, dazed. <Street bustle, bicycle bells>\nShot 2 (3-5s): [Medium close-up, handheld, eye-level, slow orbit around Si Nian on the street side] Si Nian turns her head, staring at the bicycles, the old bus and the people in blue and grey clothes.\nShot 3 (5-7s): [Medium shot, track following Lu Ren Jia from screen right to screen left, eye-level] Lu Ren Jia rides his bicycle along the lane past the steps, turns his head and sees Si Nian in burial clothes, and his jaw drops.\nShot 4 (7-9s): [Wide shot, locked-off camera, eye-level from the street side] Lu Ren Jia's front wheel twists and he topples sideways onto the asphalt with his bicycle, his blue cap flying off, while Si Nian stands at the foot of the steps. <A startled yelp, metal clatters on asphalt, a bicycle bell rings>\nShot 5 (9-11s): [Medium shot, low angle, push in on Si Nian] Si Nian drops to her knees on the asphalt and throws both arms up to the sky, tears running down her face.\nShot 6 (11-13s): [Close-up, low angle on Si Nian's face against the sky] Si Nian laughs through her tears, her face bright with joy. Dialogue (Si Nian, in Mandarin, ecstatic shout): {我穿越了！}\nShot 7 (13-15s): [Wide shot, high angle from the street side, crane up and pull out] Si Nian kneels in the street with her arms raised, Lu Ren Jia sprawls behind his fallen bicycle staring at her, and the 1980s traffic flows around them. <Bicycle bells, distant bus engine>\nAt the end: Si Nian kneels on the asphalt at the foot of the funeral home steps in burial clothes, both arms raised to the sky, laughing through tears; Lu Ren Jia sprawls beside his fallen bicycle at screen left, staring at her; the camera is on the street side facing the building.\n"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261019104551-7dtrg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@/Users/yurun/RunVid/short-drama-runs/houma-ep001-v2/assets/scenes/funeral_home_entrance/v3/image-1.jpg",
+        "path": "/Users/yurun/RunVid/short-drama-runs/houma-ep001-v2/assets/scenes/funeral_home_entrance/v3/image-1.jpg",
+        "sha256": "0fe68c63e8104c281fb9fa44b25b14feafaf8ebe0fe15658cd483b57c15e824e"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261019091912-fzk84"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261019091355-fhp4h"
+      },
+      "role": "reference_image"
+    }
+  ],
+  "duration": 15,
+  "ratio": "9:16",
+  "resolution": "480p",
+  "generate_audio": true,
+  "watermark": false,
+  "return_last_frame": true
+}

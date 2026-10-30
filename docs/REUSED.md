@@ -22,8 +22,8 @@ layout and measurements, as its screenshots and design docs show them.
 ## Replay's sample media
 
 `fixtures/replay/samples/` holds pictures and short muted clips for replay's sample dramas (The
-Stepmother in English and Chinese; the lead sheets and a place for Night Class, Corner Office and
-Bride on Bail), with `samples.json` naming the path each one stands for. They come from our
-own test runs, made with drama-cli; the dramas' names and characters in them are invented for the
-sample. They are placeholders: a generated public sample set replaces them before release
+Stepmother in English and Chinese; Bride on Bail, the pro prototype's pictures; and five of our own
+drama-cli productions under `full/<sample>/`: double-life-r4, double-life-ep001, false-intentions-true-love
+(r1 and r2) and houma-ep001-v2), with `samples.json` naming the path each one stands for. The productions'
+files keep drama-cli's own ids, paths and versions, with their lineage from `drama-cli export comfyui`. They are placeholders: a generated public sample set replaces them before release
 ([REDESIGN_PLAN.md](REDESIGN_PLAN.md)). They are stored with Git LFS.

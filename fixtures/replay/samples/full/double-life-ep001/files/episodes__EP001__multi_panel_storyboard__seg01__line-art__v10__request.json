@@ -1,0 +1,11 @@
+{
+  "model": "dola-seedream-5-0-pro-260628",
+  "prompt": "Image 1 is one panel of a multi-panel storyboard. Redraw Image 1 so that: Add George (the man on his sheet: 55, salt-and-pepper beard, camel-brown quarter-zip sweater) seated soft-focused on the left end of the white sofa in the background behind Natalie. Keep Natalie in the foreground armchair exactly as drawn, glassy eyes with NO tears. Keep the same black-and-white line-art style as the rest of the board; no colour.\nAfter the edit, the panel shows its shot: Medium shot, eye-level, locked-off from the near side beside the empty front-right armchair, aimed toward the front-left armchair. Natalie is in three-quarter profile in the foreground. Behind her is the sofa's left end with George seated out of focus, and the edge of the left-wall windows. The frame stops short of the sofa's right half, so Lauren lies beyond frame right. Natalie leans forward in the front-left armchair, her hands resting apart on her knees below frame. She looks across the coffee table at her father with glassy eyes. George sits soft-focused on the sofa's left end behind her.\nKeep Image 1's framing, camera angle, location, drawing style and border, and everyone and everything the change does not name, unchanged.\nImage 2: the character sheet of George (55)\nAn image after Image 1 is the character sheet of a person in the panel: draw that person as in it (face, hairstyle, build and outfit), in Image 1's drawing style, and use it only for the person, not for its layout, background, colours or multiple views.\nNo text, letters, numbers, captions, speech bubbles, panel labels or watermark anywhere in the image.\n",
+  "size": "702x1315",
+  "response_format": "url",
+  "watermark": false,
+  "input_images": [
+    "/Users/yurun/RunVid/short_drama/outputs/projects/double-life-ep001/episodes/EP001/multi_panel_storyboard/seg01/line-art/v10/crop.png",
+    "/Users/yurun/RunVid/short_drama/outputs/projects/double-life-ep001/assets/characters/george/v1/image-1.jpg"
+  ]
+}

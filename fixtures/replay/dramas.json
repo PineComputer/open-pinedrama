@@ -536,1080 +536,6 @@
    }
   ]
  },
- "night-class": {
-  "title": {
-   "en": "Night Class",
-   "zh": "夜校"
-  },
-  "logline": {
-   "en": "A night-school teacher and her most stubborn student push each other toward the exam that could change both their lives.",
-   "zh": "夜校老师和最倔的学生互不服气，一起冲向能改变两人命运的那场考试。"
-  },
-  "genres": {
-   "en": [
-    "Romance",
-    "Coming of age"
-   ],
-   "zh": [
-    "爱情",
-    "成长"
-   ]
-  },
-  "ago": 4320,
-  "cast": [
-   {
-    "id": "lin",
-    "name": {
-     "en": "Tang Wen",
-     "zh": "唐雯"
-    },
-    "short": {
-     "en": "Tang",
-     "zh": "唐雯"
-    },
-    "looks": [
-     "S1"
-    ]
-   },
-   {
-    "id": "wei",
-    "name": {
-     "en": "Bao Jun",
-     "zh": "鲍军"
-    },
-    "short": {
-     "en": "Bao",
-     "zh": "鲍军"
-    }
-   }
-  ],
-  "places": [
-   {
-    "id": "home",
-    "name": {
-     "en": "Teachers' office",
-     "zh": "教师办公室"
-    }
-   },
-   {
-    "id": "office",
-    "name": {
-     "en": "Evening classroom",
-     "zh": "夜间教室"
-    }
-   }
-  ],
-  "props": [
-   {
-    "id": "letter",
-    "name": {
-     "en": "Exam paper",
-     "zh": "试卷"
-    }
-   }
-  ],
-  "episodes": [
-   {
-    "title": {
-     "en": "First night",
-     "zh": "第一夜"
-    },
-    "segments": [
-     {
-      "id": "seg01",
-      "shots": {
-       "en": [
-        "Tang enters the yard",
-        "Bao: You're late.",
-        "Tang hides the exam paper",
-        "Close on the exam paper",
-        "Bao turns away",
-        "Tang alone"
-       ],
-       "zh": [
-        "唐雯走进院子",
-        "鲍军：你来晚了。",
-        "唐雯藏起试卷",
-        "特写：试卷",
-        "鲍军转身离开",
-        "唐雯独自站着"
-       ]
-      },
-      "heading": {
-       "en": "INT. EVENING CLASSROOM - NIGHT",
-       "zh": "内景 夜间教室 夜"
-      }
-     },
-     {
-      "id": "seg02",
-      "shots": {
-       "en": [
-        "The family at dinner",
-        "Mother: Eat.",
-        "Tang watches Bao",
-        "Bao pushes the bowl away"
-       ],
-       "zh": [
-        "一家人吃晚饭",
-        "母亲：吃饭。",
-        "唐雯看着鲍军",
-        "鲍军推开饭碗"
-       ]
-      },
-      "heading": {
-       "en": "INT. TEACHERS' OFFICE - NIGHT",
-       "zh": "内景 教师办公室 夜"
-      }
-     },
-     {
-      "id": "seg03",
-      "shots": {
-       "en": [
-        "Night, the yard",
-        "Tang reads the exam paper",
-        "Bao at the window",
-        "Their eyes meet",
-        "Tang burns the exam paper"
-       ],
-       "zh": [
-        "夜，院子里",
-        "唐雯看着试卷",
-        "鲍军站在窗边",
-        "两人对视",
-        "唐雯烧掉试卷"
-       ]
-      },
-      "heading": {
-       "en": "EXT. SCHOOL YARD - NIGHT",
-       "zh": "外景 校园 夜"
-      }
-     }
-    ]
-   },
-   {
-    "title": {
-     "en": "The roll call",
-     "zh": "点名"
-    },
-    "segments": [
-     {
-      "id": "seg01",
-      "shots": {
-       "en": [
-        "Tang enters the yard",
-        "Bao: You're late.",
-        "Tang hides the exam paper",
-        "Close on the exam paper",
-        "Bao turns away",
-        "Tang alone"
-       ],
-       "zh": [
-        "唐雯走进院子",
-        "鲍军：你来晚了。",
-        "唐雯藏起试卷",
-        "特写：试卷",
-        "鲍军转身离开",
-        "唐雯独自站着"
-       ]
-      },
-      "heading": {
-       "en": "INT. EVENING CLASSROOM - NIGHT",
-       "zh": "内景 夜间教室 夜"
-      }
-     },
-     {
-      "id": "seg02",
-      "shots": {
-       "en": [
-        "The family at dinner",
-        "Mother: Eat.",
-        "Tang watches Bao",
-        "Bao pushes the bowl away"
-       ],
-       "zh": [
-        "一家人吃晚饭",
-        "母亲：吃饭。",
-        "唐雯看着鲍军",
-        "鲍军推开饭碗"
-       ]
-      },
-      "heading": {
-       "en": "INT. TEACHERS' OFFICE - NIGHT",
-       "zh": "内景 教师办公室 夜"
-      }
-     },
-     {
-      "id": "seg03",
-      "shots": {
-       "en": [
-        "Night, the yard",
-        "Tang reads the exam paper",
-        "Bao at the window",
-        "Their eyes meet",
-        "Tang burns the exam paper"
-       ],
-       "zh": [
-        "夜，院子里",
-        "唐雯看着试卷",
-        "鲍军站在窗边",
-        "两人对视",
-        "唐雯烧掉试卷"
-       ]
-      },
-      "heading": {
-       "en": "EXT. SCHOOL YARD - NIGHT",
-       "zh": "外景 校园 夜"
-      }
-     }
-    ]
-   },
-   {
-    "title": {
-     "en": "Chalk dust",
-     "zh": "粉笔灰"
-    },
-    "segments": [
-     {
-      "id": "seg01",
-      "shots": {
-       "en": [
-        "Tang enters the yard",
-        "Bao: You're late.",
-        "Tang hides the exam paper",
-        "Close on the exam paper",
-        "Bao turns away",
-        "Tang alone"
-       ],
-       "zh": [
-        "唐雯走进院子",
-        "鲍军：你来晚了。",
-        "唐雯藏起试卷",
-        "特写：试卷",
-        "鲍军转身离开",
-        "唐雯独自站着"
-       ]
-      },
-      "heading": {
-       "en": "INT. EVENING CLASSROOM - NIGHT",
-       "zh": "内景 夜间教室 夜"
-      }
-     },
-     {
-      "id": "seg02",
-      "shots": {
-       "en": [
-        "The family at dinner",
-        "Mother: Eat.",
-        "Tang watches Bao",
-        "Bao pushes the bowl away"
-       ],
-       "zh": [
-        "一家人吃晚饭",
-        "母亲：吃饭。",
-        "唐雯看着鲍军",
-        "鲍军推开饭碗"
-       ]
-      },
-      "heading": {
-       "en": "INT. TEACHERS' OFFICE - NIGHT",
-       "zh": "内景 教师办公室 夜"
-      }
-     },
-     {
-      "id": "seg03",
-      "shots": {
-       "en": [
-        "Night, the yard",
-        "Tang reads the exam paper",
-        "Bao at the window",
-        "Their eyes meet",
-        "Tang burns the exam paper"
-       ],
-       "zh": [
-        "夜，院子里",
-        "唐雯看着试卷",
-        "鲍军站在窗边",
-        "两人对视",
-        "唐雯烧掉试卷"
-       ]
-      },
-      "heading": {
-       "en": "EXT. SCHOOL YARD - NIGHT",
-       "zh": "外景 校园 夜"
-      }
-     }
-    ]
-   },
-   {
-    "title": {
-     "en": "The exam",
-     "zh": "考试"
-    },
-    "segments": [
-     {
-      "id": "seg01",
-      "shots": {
-       "en": [
-        "Tang enters the yard",
-        "Bao: You're late.",
-        "Tang hides the exam paper",
-        "Close on the exam paper",
-        "Bao turns away",
-        "Tang alone"
-       ],
-       "zh": [
-        "唐雯走进院子",
-        "鲍军：你来晚了。",
-        "唐雯藏起试卷",
-        "特写：试卷",
-        "鲍军转身离开",
-        "唐雯独自站着"
-       ]
-      },
-      "heading": {
-       "en": "INT. EVENING CLASSROOM - NIGHT",
-       "zh": "内景 夜间教室 夜"
-      }
-     },
-     {
-      "id": "seg02",
-      "shots": {
-       "en": [
-        "The family at dinner",
-        "Mother: Eat.",
-        "Tang watches Bao",
-        "Bao pushes the bowl away"
-       ],
-       "zh": [
-        "一家人吃晚饭",
-        "母亲：吃饭。",
-        "唐雯看着鲍军",
-        "鲍军推开饭碗"
-       ]
-      },
-      "heading": {
-       "en": "INT. TEACHERS' OFFICE - NIGHT",
-       "zh": "内景 教师办公室 夜"
-      }
-     },
-     {
-      "id": "seg03",
-      "shots": {
-       "en": [
-        "Night, the yard",
-        "Tang reads the exam paper",
-        "Bao at the window",
-        "Their eyes meet",
-        "Tang burns the exam paper"
-       ],
-       "zh": [
-        "夜，院子里",
-        "唐雯看着试卷",
-        "鲍军站在窗边",
-        "两人对视",
-        "唐雯烧掉试卷"
-       ]
-      },
-      "heading": {
-       "en": "EXT. SCHOOL YARD - NIGHT",
-       "zh": "外景 校园 夜"
-      }
-     }
-    ]
-   },
-   {
-    "title": {
-     "en": "After class",
-     "zh": "下课后"
-    },
-    "segments": [
-     {
-      "id": "seg01",
-      "shots": {
-       "en": [
-        "Tang enters the yard",
-        "Bao: You're late.",
-        "Tang hides the exam paper",
-        "Close on the exam paper",
-        "Bao turns away",
-        "Tang alone"
-       ],
-       "zh": [
-        "唐雯走进院子",
-        "鲍军：你来晚了。",
-        "唐雯藏起试卷",
-        "特写：试卷",
-        "鲍军转身离开",
-        "唐雯独自站着"
-       ]
-      },
-      "heading": {
-       "en": "INT. EVENING CLASSROOM - NIGHT",
-       "zh": "内景 夜间教室 夜"
-      }
-     },
-     {
-      "id": "seg02",
-      "shots": {
-       "en": [
-        "The family at dinner",
-        "Mother: Eat.",
-        "Tang watches Bao",
-        "Bao pushes the bowl away"
-       ],
-       "zh": [
-        "一家人吃晚饭",
-        "母亲：吃饭。",
-        "唐雯看着鲍军",
-        "鲍军推开饭碗"
-       ]
-      },
-      "heading": {
-       "en": "INT. TEACHERS' OFFICE - NIGHT",
-       "zh": "内景 教师办公室 夜"
-      }
-     },
-     {
-      "id": "seg03",
-      "shots": {
-       "en": [
-        "Night, the yard",
-        "Tang reads the exam paper",
-        "Bao at the window",
-        "Their eyes meet",
-        "Tang burns the exam paper"
-       ],
-       "zh": [
-        "夜，院子里",
-        "唐雯看着试卷",
-        "鲍军站在窗边",
-        "两人对视",
-        "唐雯烧掉试卷"
-       ]
-      },
-      "heading": {
-       "en": "EXT. SCHOOL YARD - NIGHT",
-       "zh": "外景 校园 夜"
-      }
-     }
-    ]
-   },
-   {
-    "title": {
-     "en": "Graduation",
-     "zh": "毕业"
-    },
-    "segments": [
-     {
-      "id": "seg01",
-      "shots": {
-       "en": [
-        "Tang enters the yard",
-        "Bao: You're late.",
-        "Tang hides the exam paper",
-        "Close on the exam paper",
-        "Bao turns away",
-        "Tang alone"
-       ],
-       "zh": [
-        "唐雯走进院子",
-        "鲍军：你来晚了。",
-        "唐雯藏起试卷",
-        "特写：试卷",
-        "鲍军转身离开",
-        "唐雯独自站着"
-       ]
-      },
-      "heading": {
-       "en": "INT. EVENING CLASSROOM - NIGHT",
-       "zh": "内景 夜间教室 夜"
-      }
-     },
-     {
-      "id": "seg02",
-      "shots": {
-       "en": [
-        "The family at dinner",
-        "Mother: Eat.",
-        "Tang watches Bao",
-        "Bao pushes the bowl away"
-       ],
-       "zh": [
-        "一家人吃晚饭",
-        "母亲：吃饭。",
-        "唐雯看着鲍军",
-        "鲍军推开饭碗"
-       ]
-      },
-      "heading": {
-       "en": "INT. TEACHERS' OFFICE - NIGHT",
-       "zh": "内景 教师办公室 夜"
-      }
-     },
-     {
-      "id": "seg03",
-      "shots": {
-       "en": [
-        "Night, the yard",
-        "Tang reads the exam paper",
-        "Bao at the window",
-        "Their eyes meet",
-        "Tang burns the exam paper"
-       ],
-       "zh": [
-        "夜，院子里",
-        "唐雯看着试卷",
-        "鲍军站在窗边",
-        "两人对视",
-        "唐雯烧掉试卷"
-       ]
-      },
-      "heading": {
-       "en": "EXT. SCHOOL YARD - NIGHT",
-       "zh": "外景 校园 夜"
-      }
-     }
-    ]
-   }
-  ]
- },
- "corner-office": {
-  "title": {
-   "en": "Corner Office",
-   "zh": "顶层办公室"
-  },
-  "logline": {
-   "en": "A new executive fights her way to the top floor, and the rival who doubts her most turns out to be her only ally.",
-   "zh": "新上任的女高管一路杀上顶楼，那个最看不起她的对手却成了唯一的盟友。"
-  },
-  "genres": {
-   "en": [
-    "Office",
-    "Romance"
-   ],
-   "zh": [
-    "职场",
-    "爱情"
-   ]
-  },
-  "ago": 1560,
-  "cast": [
-   {
-    "id": "lin",
-    "name": {
-     "en": "Vivian Shen",
-     "zh": "沈薇"
-    },
-    "short": {
-     "en": "Vivian",
-     "zh": "沈薇"
-    },
-    "looks": [
-     "S1"
-    ]
-   },
-   {
-    "id": "wei",
-    "name": {
-     "en": "Leo Lu",
-     "zh": "陆屿"
-    },
-    "short": {
-     "en": "Leo",
-     "zh": "陆屿"
-    }
-   }
-  ],
-  "places": [
-   {
-    "id": "home",
-    "name": {
-     "en": "The corner office",
-     "zh": "顶层办公室"
-    }
-   },
-   {
-    "id": "office",
-    "name": {
-     "en": "Board room",
-     "zh": "会议室"
-    }
-   }
-  ],
-  "props": [
-   {
-    "id": "letter",
-    "name": {
-     "en": "Signed contract",
-     "zh": "签好的合同"
-    }
-   }
-  ],
-  "episodes": [
-   {
-    "title": {
-     "en": "Day one",
-     "zh": "第一天"
-    },
-    "segments": [
-     {
-      "id": "seg01",
-      "shots": {
-       "en": [
-        "Vivian enters the yard",
-        "Leo: You're late.",
-        "Vivian hides the signed contract",
-        "Close on the signed contract",
-        "Leo turns away",
-        "Vivian alone"
-       ],
-       "zh": [
-        "沈薇走进院子",
-        "陆屿：你来晚了。",
-        "沈薇藏起签好的合同",
-        "特写：签好的合同",
-        "陆屿转身离开",
-        "沈薇独自站着"
-       ]
-      },
-      "heading": {
-       "en": "INT. THE CORNER OFFICE - DAY",
-       "zh": "内景 顶层办公室 日"
-      }
-     },
-     {
-      "id": "seg02",
-      "shots": {
-       "en": [
-        "The family at dinner",
-        "Mother: Eat.",
-        "Vivian watches Leo",
-        "Leo pushes the bowl away"
-       ],
-       "zh": [
-        "一家人吃晚饭",
-        "母亲：吃饭。",
-        "沈薇看着陆屿",
-        "陆屿推开饭碗"
-       ]
-      },
-      "heading": {
-       "en": "INT. BOARD ROOM - DAY",
-       "zh": "内景 会议室 日"
-      }
-     },
-     {
-      "id": "seg03",
-      "shots": {
-       "en": [
-        "Night, the yard",
-        "Vivian reads the signed contract",
-        "Leo at the window",
-        "Their eyes meet",
-        "Vivian burns the signed contract"
-       ],
-       "zh": [
-        "夜，院子里",
-        "沈薇看着签好的合同",
-        "陆屿站在窗边",
-        "两人对视",
-        "沈薇烧掉签好的合同"
-       ]
-      },
-      "heading": {
-       "en": "INT. THE CORNER OFFICE - NIGHT",
-       "zh": "内景 顶层办公室 夜"
-      }
-     }
-    ]
-   },
-   {
-    "title": {
-     "en": "The pitch",
-     "zh": "提案"
-    },
-    "segments": [
-     {
-      "id": "seg01",
-      "shots": {
-       "en": [
-        "Vivian enters the yard",
-        "Leo: You're late.",
-        "Vivian hides the signed contract",
-        "Close on the signed contract",
-        "Leo turns away",
-        "Vivian alone"
-       ],
-       "zh": [
-        "沈薇走进院子",
-        "陆屿：你来晚了。",
-        "沈薇藏起签好的合同",
-        "特写：签好的合同",
-        "陆屿转身离开",
-        "沈薇独自站着"
-       ]
-      },
-      "heading": {
-       "en": "INT. THE CORNER OFFICE - DAY",
-       "zh": "内景 顶层办公室 日"
-      }
-     },
-     {
-      "id": "seg02",
-      "shots": {
-       "en": [
-        "The family at dinner",
-        "Mother: Eat.",
-        "Vivian watches Leo",
-        "Leo pushes the bowl away"
-       ],
-       "zh": [
-        "一家人吃晚饭",
-        "母亲：吃饭。",
-        "沈薇看着陆屿",
-        "陆屿推开饭碗"
-       ]
-      },
-      "heading": {
-       "en": "INT. BOARD ROOM - DAY",
-       "zh": "内景 会议室 日"
-      }
-     },
-     {
-      "id": "seg03",
-      "shots": {
-       "en": [
-        "Night, the yard",
-        "Vivian reads the signed contract",
-        "Leo at the window",
-        "Their eyes meet",
-        "Vivian burns the signed contract"
-       ],
-       "zh": [
-        "夜，院子里",
-        "沈薇看着签好的合同",
-        "陆屿站在窗边",
-        "两人对视",
-        "沈薇烧掉签好的合同"
-       ]
-      },
-      "heading": {
-       "en": "INT. THE CORNER OFFICE - NIGHT",
-       "zh": "内景 顶层办公室 夜"
-      }
-     }
-    ]
-   },
-   {
-    "title": {
-     "en": "Overtime",
-     "zh": "加班"
-    },
-    "segments": [
-     {
-      "id": "seg01",
-      "shots": {
-       "en": [
-        "Vivian enters the yard",
-        "Leo: You're late.",
-        "Vivian hides the signed contract",
-        "Close on the signed contract",
-        "Leo turns away",
-        "Vivian alone"
-       ],
-       "zh": [
-        "沈薇走进院子",
-        "陆屿：你来晚了。",
-        "沈薇藏起签好的合同",
-        "特写：签好的合同",
-        "陆屿转身离开",
-        "沈薇独自站着"
-       ]
-      },
-      "heading": {
-       "en": "INT. THE CORNER OFFICE - DAY",
-       "zh": "内景 顶层办公室 日"
-      }
-     },
-     {
-      "id": "seg02",
-      "shots": {
-       "en": [
-        "The family at dinner",
-        "Mother: Eat.",
-        "Vivian watches Leo",
-        "Leo pushes the bowl away"
-       ],
-       "zh": [
-        "一家人吃晚饭",
-        "母亲：吃饭。",
-        "沈薇看着陆屿",
-        "陆屿推开饭碗"
-       ]
-      },
-      "heading": {
-       "en": "INT. BOARD ROOM - DAY",
-       "zh": "内景 会议室 日"
-      }
-     },
-     {
-      "id": "seg03",
-      "shots": {
-       "en": [
-        "Night, the yard",
-        "Vivian reads the signed contract",
-        "Leo at the window",
-        "Their eyes meet",
-        "Vivian burns the signed contract"
-       ],
-       "zh": [
-        "夜，院子里",
-        "沈薇看着签好的合同",
-        "陆屿站在窗边",
-        "两人对视",
-        "沈薇烧掉签好的合同"
-       ]
-      },
-      "heading": {
-       "en": "INT. THE CORNER OFFICE - NIGHT",
-       "zh": "内景 顶层办公室 夜"
-      }
-     }
-    ]
-   },
-   {
-    "title": {
-     "en": "The board",
-     "zh": "董事会"
-    },
-    "segments": [
-     {
-      "id": "seg01",
-      "shots": {
-       "en": [
-        "Vivian enters the yard",
-        "Leo: You're late.",
-        "Vivian hides the signed contract",
-        "Close on the signed contract",
-        "Leo turns away",
-        "Vivian alone"
-       ],
-       "zh": [
-        "沈薇走进院子",
-        "陆屿：你来晚了。",
-        "沈薇藏起签好的合同",
-        "特写：签好的合同",
-        "陆屿转身离开",
-        "沈薇独自站着"
-       ]
-      },
-      "heading": {
-       "en": "INT. THE CORNER OFFICE - DAY",
-       "zh": "内景 顶层办公室 日"
-      }
-     },
-     {
-      "id": "seg02",
-      "shots": {
-       "en": [
-        "The family at dinner",
-        "Mother: Eat.",
-        "Vivian watches Leo",
-        "Leo pushes the bowl away"
-       ],
-       "zh": [
-        "一家人吃晚饭",
-        "母亲：吃饭。",
-        "沈薇看着陆屿",
-        "陆屿推开饭碗"
-       ]
-      },
-      "heading": {
-       "en": "INT. BOARD ROOM - DAY",
-       "zh": "内景 会议室 日"
-      }
-     },
-     {
-      "id": "seg03",
-      "shots": {
-       "en": [
-        "Night, the yard",
-        "Vivian reads the signed contract",
-        "Leo at the window",
-        "Their eyes meet",
-        "Vivian burns the signed contract"
-       ],
-       "zh": [
-        "夜，院子里",
-        "沈薇看着签好的合同",
-        "陆屿站在窗边",
-        "两人对视",
-        "沈薇烧掉签好的合同"
-       ]
-      },
-      "heading": {
-       "en": "INT. THE CORNER OFFICE - NIGHT",
-       "zh": "内景 顶层办公室 夜"
-      }
-     }
-    ]
-   },
-   {
-    "title": {
-     "en": "The leak",
-     "zh": "泄密"
-    },
-    "segments": [
-     {
-      "id": "seg01",
-      "shots": {
-       "en": [
-        "Vivian enters the yard",
-        "Leo: You're late.",
-        "Vivian hides the signed contract",
-        "Close on the signed contract",
-        "Leo turns away",
-        "Vivian alone"
-       ],
-       "zh": [
-        "沈薇走进院子",
-        "陆屿：你来晚了。",
-        "沈薇藏起签好的合同",
-        "特写：签好的合同",
-        "陆屿转身离开",
-        "沈薇独自站着"
-       ]
-      },
-      "heading": {
-       "en": "INT. THE CORNER OFFICE - DAY",
-       "zh": "内景 顶层办公室 日"
-      }
-     },
-     {
-      "id": "seg02",
-      "shots": {
-       "en": [
-        "The family at dinner",
-        "Mother: Eat.",
-        "Vivian watches Leo",
-        "Leo pushes the bowl away"
-       ],
-       "zh": [
-        "一家人吃晚饭",
-        "母亲：吃饭。",
-        "沈薇看着陆屿",
-        "陆屿推开饭碗"
-       ]
-      },
-      "heading": {
-       "en": "INT. BOARD ROOM - DAY",
-       "zh": "内景 会议室 日"
-      }
-     },
-     {
-      "id": "seg03",
-      "shots": {
-       "en": [
-        "Night, the yard",
-        "Vivian reads the signed contract",
-        "Leo at the window",
-        "Their eyes meet",
-        "Vivian burns the signed contract"
-       ],
-       "zh": [
-        "夜，院子里",
-        "沈薇看着签好的合同",
-        "陆屿站在窗边",
-        "两人对视",
-        "沈薇烧掉签好的合同"
-       ]
-      },
-      "heading": {
-       "en": "INT. THE CORNER OFFICE - NIGHT",
-       "zh": "内景 顶层办公室 夜"
-      }
-     }
-    ]
-   },
-   {
-    "title": {
-     "en": "Promotion",
-     "zh": "升职"
-    },
-    "segments": [
-     {
-      "id": "seg01",
-      "shots": {
-       "en": [
-        "Vivian enters the yard",
-        "Leo: You're late.",
-        "Vivian hides the signed contract",
-        "Close on the signed contract",
-        "Leo turns away",
-        "Vivian alone"
-       ],
-       "zh": [
-        "沈薇走进院子",
-        "陆屿：你来晚了。",
-        "沈薇藏起签好的合同",
-        "特写：签好的合同",
-        "陆屿转身离开",
-        "沈薇独自站着"
-       ]
-      },
-      "heading": {
-       "en": "INT. THE CORNER OFFICE - DAY",
-       "zh": "内景 顶层办公室 日"
-      }
-     },
-     {
-      "id": "seg02",
-      "shots": {
-       "en": [
-        "The family at dinner",
-        "Mother: Eat.",
-        "Vivian watches Leo",
-        "Leo pushes the bowl away"
-       ],
-       "zh": [
-        "一家人吃晚饭",
-        "母亲：吃饭。",
-        "沈薇看着陆屿",
-        "陆屿推开饭碗"
-       ]
-      },
-      "heading": {
-       "en": "INT. BOARD ROOM - DAY",
-       "zh": "内景 会议室 日"
-      }
-     },
-     {
-      "id": "seg03",
-      "shots": {
-       "en": [
-        "Night, the yard",
-        "Vivian reads the signed contract",
-        "Leo at the window",
-        "Their eyes meet",
-        "Vivian burns the signed contract"
-       ],
-       "zh": [
-        "夜，院子里",
-        "沈薇看着签好的合同",
-        "陆屿站在窗边",
-        "两人对视",
-        "沈薇烧掉签好的合同"
-       ]
-      },
-      "heading": {
-       "en": "INT. THE CORNER OFFICE - NIGHT",
-       "zh": "内景 顶层办公室 夜"
-      }
-     }
-    ]
-   }
-  ]
- },
  "bride-on-bail": {
   "title": {
    "en": "Bride on Bail",
@@ -5879,5 +4805,1619 @@
     "episodes/EP003/first_frame_reference/seg01/v1/image-1.jpg"
    ]
   }
+ },
+ "double-life-ep001": {
+  "title": {
+   "en": "The Double Life of My Billionaire Husband",
+   "zh": "The Double Life of My Billionaire Husband"
+  },
+  "logline": {
+   "en": "To pay for her mother's kidney dialysis, Natalie begs her father George for $50,000 in the Quinn family mansion, and her stepmother Lauren and stepsister Cassie name their price: she must marry the jailed outcast Sebastian Klein in Cassie's place.",
+   "zh": "To pay for her mother's kidney dialysis, Natalie begs her father George for $50,000 in the Quinn family mansion, and her stepmother Lauren and stepsister Cassie name their price: she must marry the jailed outcast Sebastian Klein in Cassie's place."
+  },
+  "genres": {
+   "en": [
+    "Romance",
+    "Contract marriage",
+    "Revenge"
+   ],
+   "zh": [
+    "爱情",
+    "契约婚姻",
+    "复仇"
+   ]
+  },
+  "styles": [
+   "line-art"
+  ],
+  "versions": {
+   "assets/characters/cassie": "v1",
+   "assets/characters/george": "v1",
+   "assets/characters/lauren": "v1",
+   "assets/characters/natalie": "v1",
+   "assets/scenes/quinn_living_room": "v1",
+   "bible": "v1",
+   "episodes/EP001/breakdown": "v4",
+   "episodes/EP001/edit": "v2",
+   "episodes/EP001/multi_panel_storyboard/seg01/line-art": "v10",
+   "episodes/EP001/multi_panel_storyboard/seg02/line-art": "v9",
+   "episodes/EP001/multi_panel_storyboard/seg03/line-art": "v6",
+   "episodes/EP001/multi_panel_storyboard/seg04/line-art": "v10",
+   "episodes/EP001/multi_panel_storyboard/seg05/line-art": "v6",
+   "episodes/EP001/segments/seg01": "t04",
+   "episodes/EP001/segments/seg02": "t03",
+   "episodes/EP001/segments/seg03": "t03",
+   "episodes/EP001/segments/seg04": "t04",
+   "episodes/EP001/segments/seg05": "t02",
+   "episodes/EP001/video_prompts": "v2"
+  },
+  "extras": {},
+  "ago": 4320,
+  "cast": [
+   {
+    "id": "natalie",
+    "name": {
+     "en": "Natalie",
+     "zh": "Natalie"
+    },
+    "short": {
+     "en": "Natalie",
+     "zh": "Natalie"
+    }
+   },
+   {
+    "id": "george",
+    "name": {
+     "en": "George",
+     "zh": "George"
+    },
+    "short": {
+     "en": "George",
+     "zh": "George"
+    }
+   },
+   {
+    "id": "lauren",
+    "name": {
+     "en": "Lauren",
+     "zh": "Lauren"
+    },
+    "short": {
+     "en": "Lauren",
+     "zh": "Lauren"
+    }
+   },
+   {
+    "id": "cassie",
+    "name": {
+     "en": "Cassie",
+     "zh": "Cassie"
+    },
+    "short": {
+     "en": "Cassie",
+     "zh": "Cassie"
+    }
+   }
+  ],
+  "places": [
+   {
+    "id": "quinn_living_room",
+    "name": {
+     "en": "The Quinn family mansion, living room",
+     "zh": "The Quinn family mansion, living room"
+    }
+   }
+  ],
+  "props": [],
+  "episodes": [
+   {
+    "title": {
+     "en": "Natalie's Price",
+     "zh": "Natalie's Price"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "heading": {
+       "en": "INT. The Quinn family mansion, living room - DAY",
+       "zh": "INT. The Quinn family mansion, living room - DAY"
+      },
+      "shots": {
+       "en": [
+        "Natalie leans forward in the front-left armchair and looks down at the single hospital statement lying flat on the glass-and-gold coffee table. Her hands rest on her knees out of frame.",
+        "Natalie sits in the front-left armchair and leans toward the coffee table, her bag hanging from her shoulder. George sits on the left end of the white sofa and Lauren on its right end, both facing camera in the background.",
+        "Natalie leans forward in the front-left armchair, her hands resting apart on her knees below frame. She looks across the coffee table at her father with glassy eyes. George sits soft-focused on the sofa's left end behind her.",
+        "George shifts uneasily on the sofa, his hands still on his knees, and glances sideways toward Lauren beside him.",
+        "Lauren sits upright, her hands still in her lap. She raises one arched brow and looks down toward Natalie's front-left armchair with contempt.",
+        "Natalie nods quickly toward the sofa and swallows. Her eyes are glassy but no tears fall."
+       ],
+       "zh": [
+        "Natalie leans forward in the front-left armchair and looks down at the single hospital statement lying flat on the glass-and-gold coffee table. Her hands rest on her knees out of frame.",
+        "Natalie sits in the front-left armchair and leans toward the coffee table, her bag hanging from her shoulder. George sits on the left end of the white sofa and Lauren on its right end, both facing camera in the background.",
+        "Natalie leans forward in the front-left armchair, her hands resting apart on her knees below frame. She looks across the coffee table at her father with glassy eyes. George sits soft-focused on the sofa's left end behind her.",
+        "George shifts uneasily on the sofa, his hands still on his knees, and glances sideways toward Lauren beside him.",
+        "Lauren sits upright, her hands still in her lap. She raises one arched brow and looks down toward Natalie's front-left armchair with contempt.",
+        "Natalie nods quickly toward the sofa and swallows. Her eyes are glassy but no tears fall."
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "heading": {
+       "en": "INT. The Quinn family mansion, living room - DAY",
+       "zh": "INT. The Quinn family mansion, living room - DAY"
+      },
+      "shots": {
+       "en": [
+        "Cassie walks in through the open doorway in the right wall. The empty front-right armchair stands in the mid-ground, and Natalie's shoulder and bag strap fill the foreground at frame left.",
+        "Cassie stops at the right side of Natalie's armchair, on the coffee-table side, her arms hanging relaxed at her sides. She looks down at Natalie with a smirk.",
+        "Natalie lowers her eyes and her lips tremble. Her eyes are glassy, with no tears.",
+        "Natalie bends toward the coffee table, takes up the hospital statement below frame and rises from the front-left armchair. Her bag hangs from her shoulder.",
+        "Natalie walks away from the front-left armchair along the near edge of the coffee table toward the doorway. Her face is set and pale, and her hands hang at her sides below frame. Cassie stands out of focus behind her by the armchair.",
+        "Cassie turns her head toward frame right after Natalie and lifts her chin, a scheming glint in her eyes, her hands still at her sides."
+       ],
+       "zh": [
+        "Cassie walks in through the open doorway in the right wall. The empty front-right armchair stands in the mid-ground, and Natalie's shoulder and bag strap fill the foreground at frame left.",
+        "Cassie stops at the right side of Natalie's armchair, on the coffee-table side, her arms hanging relaxed at her sides. She looks down at Natalie with a smirk.",
+        "Natalie lowers her eyes and her lips tremble. Her eyes are glassy, with no tears.",
+        "Natalie bends toward the coffee table, takes up the hospital statement below frame and rises from the front-left armchair. Her bag hangs from her shoulder.",
+        "Natalie walks away from the front-left armchair along the near edge of the coffee table toward the doorway. Her face is set and pale, and her hands hang at her sides below frame. Cassie stands out of focus behind her by the armchair.",
+        "Cassie turns her head toward frame right after Natalie and lifts her chin, a scheming glint in her eyes, her hands still at her sides."
+       ]
+      }
+     },
+     {
+      "id": "seg03",
+      "heading": {
+       "en": "INT. The Quinn family mansion, living room - DAY",
+       "zh": "INT. The Quinn family mansion, living room - DAY"
+      },
+      "shots": {
+       "en": [
+        "Cassie takes a slow half step toward Natalie and tilts her head with a sweet, poisonous smile, her hands at her sides. Natalie faces her with a wary frown, no smile.",
+        "Lauren sits up straighter and beams proudly toward Cassie, her hands resting still in her lap.",
+        "Natalie's eyes widen in disbelief and she draws her head back, her lips parted in shock, no smile. Her hands and the statement stay below frame.",
+        "Natalie shakes her head slightly and frowns at Cassie, no smile. Cassie's shoulder and curls fill the foreground.",
+        "Cassie shrugs one shoulder and pops her glossy lips.",
+        "Cassie wrinkles her nose in disgust and tosses her head so her platinum curls swing over her shoulder, her hands at her sides."
+       ],
+       "zh": [
+        "Cassie takes a slow half step toward Natalie and tilts her head with a sweet, poisonous smile, her hands at her sides. Natalie faces her with a wary frown, no smile.",
+        "Lauren sits up straighter and beams proudly toward Cassie, her hands resting still in her lap.",
+        "Natalie's eyes widen in disbelief and she draws her head back, her lips parted in shock, no smile. Her hands and the statement stay below frame.",
+        "Natalie shakes her head slightly and frowns at Cassie, no smile. Cassie's shoulder and curls fill the foreground.",
+        "Cassie shrugs one shoulder and pops her glossy lips.",
+        "Cassie wrinkles her nose in disgust and tosses her head so her platinum curls swing over her shoulder, her hands at her sides."
+       ]
+      }
+     },
+     {
+      "id": "seg04",
+      "heading": {
+       "en": "INT. The Quinn family mansion, living room - DAY",
+       "zh": "INT. The Quinn family mansion, living room - DAY"
+      },
+      "shots": {
+       "en": [
+        "Lauren turns on the sofa toward George and leans in with a cold smile, her hands still in her lap. George sits slumped, his hands on his knees.",
+        "Lauren tips her head toward frame right, toward Natalie by the right-wall doorway, and smirks with contempt.",
+        "Natalie shakes her head and takes a half step back toward the right-wall doorway, her eyes glassy, no smile. Her hands hang apart at her sides below frame.",
+        "Natalie looks down toward the hospital statement at her side. Her eyes fill with tears that spill down her cheeks, and her mouth stays closed. Cassie is off screen.",
+        "George keeps his lips pressed shut, turns his eyes away from Natalie and stares at the ivory rug, his hands still on his knees.",
+        "Lauren crosses her legs, leans back and lifts her chin expectantly toward Natalie beyond frame right, her hands resting still in her lap."
+       ],
+       "zh": [
+        "Lauren turns on the sofa toward George and leans in with a cold smile, her hands still in her lap. George sits slumped, his hands on his knees.",
+        "Lauren tips her head toward frame right, toward Natalie by the right-wall doorway, and smirks with contempt.",
+        "Natalie shakes her head and takes a half step back toward the right-wall doorway, her eyes glassy, no smile. Her hands hang apart at her sides below frame.",
+        "Natalie looks down toward the hospital statement at her side. Her eyes fill with tears that spill down her cheeks, and her mouth stays closed. Cassie is off screen.",
+        "George keeps his lips pressed shut, turns his eyes away from Natalie and stares at the ivory rug, his hands still on his knees.",
+        "Lauren crosses her legs, leans back and lifts her chin expectantly toward Natalie beyond frame right, her hands resting still in her lap."
+       ]
+      }
+     },
+     {
+      "id": "seg05",
+      "heading": {
+       "en": "INT. The Quinn family mansion, living room - DAY",
+       "zh": "INT. The Quinn family mansion, living room - DAY"
+      },
+      "shots": {
+       "en": [
+        "Natalie opens her wet eyes and lifts her chin, tear streaks still on her cheeks. Her gaze is steady and resolved, with no smile.",
+        "Cassie's glossy pink lips curl into a slow smirk as she looks toward Natalie at frame right.",
+        "Lauren leans back into the sofa and smiles, satisfied, her hands resting still in her lap."
+       ],
+       "zh": [
+        "Natalie opens her wet eyes and lifts her chin, tear streaks still on her cheeks. Her gaze is steady and resolved, with no smile.",
+        "Cassie's glossy pink lips curl into a slow smirk as she looks toward Natalie at frame right.",
+        "Lauren leans back into the sofa and smiles, satisfied, her hands resting still in her lap."
+       ]
+      }
+     }
+    ],
+    "cut": [
+     {
+      "segment": "seg01",
+      "in": 0,
+      "out": 28.041667
+     },
+     {
+      "segment": "seg02",
+      "in": 0,
+      "out": 17.041667
+     },
+     {
+      "segment": "seg03",
+      "in": 0,
+      "out": 18.041667
+     },
+     {
+      "segment": "seg04",
+      "in": 0,
+      "out": 17.041667
+     },
+     {
+      "segment": "seg05",
+      "in": 0,
+      "out": 7.041667
+     }
+    ]
+   }
+  ]
+ },
+ "houma-ep001-v2": {
+  "title": {
+   "en": "我在八零年代当后妈",
+   "zh": "我在八零年代当后妈"
+  },
+  "logline": {
+   "en": "1987年，司家抱错的养女司念在自己的葬礼上坐了起来，醒来的却是一个无所畏惧的现代女孩。她扇了真千金刘思思一巴掌，从司辛手里拿走路费，搬空了整个卧室，连灯泡都没留下。",
+   "zh": "1987年，司家抱错的养女司念在自己的葬礼上坐了起来，醒来的却是一个无所畏惧的现代女孩。她扇了真千金刘思思一巴掌，从司辛手里拿走路费，搬空了整个卧室，连灯泡都没留下。"
+  },
+  "genres": {
+   "en": [
+    "Period",
+    "Comedy",
+    "Family"
+   ],
+   "zh": [
+    "年代",
+    "喜剧",
+    "家庭"
+   ]
+  },
+  "styles": [
+   "line-art"
+  ],
+  "versions": {
+   "assets/characters/bin_ke_jia": "v1",
+   "assets/characters/bin_ke_yi": "v1",
+   "assets/characters/liu_sisi": "v3",
+   "assets/characters/lu_ren_jia": "v1",
+   "assets/characters/si_nian": "v2",
+   "assets/characters/si_xin": "v1",
+   "assets/characters/si_yi": "v2",
+   "assets/characters/zhang_cuimei": "v2",
+   "assets/scenes/funeral_hall": "v3",
+   "assets/scenes/funeral_home_entrance": "v3",
+   "bible": "v1",
+   "episodes/EP001/breakdown": "v3",
+   "episodes/EP001/edit": "v1",
+   "episodes/EP001/multi_panel_storyboard/seg01/line-art": "v4",
+   "episodes/EP001/multi_panel_storyboard/seg02/line-art": "v1",
+   "episodes/EP001/multi_panel_storyboard/seg03/line-art": "v2",
+   "episodes/EP001/multi_panel_storyboard/seg04/line-art": "v1",
+   "episodes/EP001/segments/seg01": "t01",
+   "episodes/EP001/segments/seg02": "t01",
+   "episodes/EP001/segments/seg03": "t01",
+   "episodes/EP001/segments/seg04": "t01",
+   "episodes/EP001/video_prompts": "v1"
+  },
+  "extras": {},
+  "ago": 1560,
+  "cast": [
+   {
+    "id": "si_nian",
+    "name": {
+     "en": "司念",
+     "zh": "司念"
+    },
+    "short": {
+     "en": "司念",
+     "zh": "司念"
+    }
+   },
+   {
+    "id": "si_xin",
+    "name": {
+     "en": "司辛",
+     "zh": "司辛"
+    },
+    "short": {
+     "en": "司辛",
+     "zh": "司辛"
+    }
+   },
+   {
+    "id": "zhang_cuimei",
+    "name": {
+     "en": "张翠梅",
+     "zh": "张翠梅"
+    },
+    "short": {
+     "en": "张翠梅",
+     "zh": "张翠梅"
+    }
+   },
+   {
+    "id": "liu_sisi",
+    "name": {
+     "en": "刘思思",
+     "zh": "刘思思"
+    },
+    "short": {
+     "en": "刘思思",
+     "zh": "刘思思"
+    }
+   },
+   {
+    "id": "si_yi",
+    "name": {
+     "en": "司仪",
+     "zh": "司仪"
+    },
+    "short": {
+     "en": "司仪",
+     "zh": "司仪"
+    }
+   },
+   {
+    "id": "bin_ke_jia",
+    "name": {
+     "en": "宾客甲",
+     "zh": "宾客甲"
+    },
+    "short": {
+     "en": "宾客甲",
+     "zh": "宾客甲"
+    }
+   },
+   {
+    "id": "bin_ke_yi",
+    "name": {
+     "en": "宾客乙",
+     "zh": "宾客乙"
+    },
+    "short": {
+     "en": "宾客乙",
+     "zh": "宾客乙"
+    }
+   },
+   {
+    "id": "lu_ren_jia",
+    "name": {
+     "en": "路人甲",
+     "zh": "路人甲"
+    },
+    "short": {
+     "en": "路人甲",
+     "zh": "路人甲"
+    }
+   }
+  ],
+  "places": [
+   {
+    "id": "funeral_hall",
+    "name": {
+     "en": "灵堂",
+     "zh": "灵堂"
+    }
+   },
+   {
+    "id": "funeral_home_entrance",
+    "name": {
+     "en": "殡仪馆门前",
+     "zh": "殡仪馆门前"
+    }
+   }
+  ],
+  "props": [],
+  "episodes": [
+   {
+    "title": {
+     "en": "The Corpse Sits Up",
+     "zh": "The Corpse Sits Up"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "heading": {
+       "en": "INT. 灵堂 - DAY",
+       "zh": "INT. 灵堂 - DAY"
+      },
+      "shots": {
+       "en": [
+        "The funeral hall in cool daylight shafts. Rows of mourners face the white-draped bier and the framed portrait at screen right, and Si Yi stands at the head of the bier facing them.",
+        "Si Yi stands beside the bier with his hands folded and slowly lowers his head.",
+        "In the back row, Bin Ke Jia leans toward Bin Ke Yi and whispers behind her hand, both still facing the bier.",
+        "Bin Ke Yi raises one eyebrow and gives a knowing smirk.",
+        "Bin Ke Jia glances toward the bier and shakes her head in pity.",
+        "Bin Ke Yi leans close to Bin Ke Jia's ear and keeps his eyes on the bier."
+       ],
+       "zh": [
+        "The funeral hall in cool daylight shafts. Rows of mourners face the white-draped bier and the framed portrait at screen right, and Si Yi stands at the head of the bier facing them.",
+        "Si Yi stands beside the bier with his hands folded and slowly lowers his head.",
+        "In the back row, Bin Ke Jia leans toward Bin Ke Yi and whispers behind her hand, both still facing the bier.",
+        "Bin Ke Yi raises one eyebrow and gives a knowing smirk.",
+        "Bin Ke Jia glances toward the bier and shakes her head in pity.",
+        "Bin Ke Yi leans close to Bin Ke Jia's ear and keeps his eyes on the bier."
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "heading": {
+       "en": "INT. 灵堂 - DAY",
+       "zh": "INT. 灵堂 - DAY"
+      },
+      "shots": {
+       "en": [
+        "Si Xin and Zhang Cuimei stand in the front row facing the bier at screen right and begin to bow; Si Yi is off screen.",
+        "Si Nian's foot in a black cloth slipper, at the edge of the white cloth, twitches once.",
+        "Si Xin freezes halfway into his bow, his eyes widening behind his glasses, fixed on the bier.",
+        "Si Xin grabs Zhang Cuimei's sleeve in panic and pulls her toward him.",
+        "Zhang Cuimei shakes his hand off her sleeve and rolls her eyes.",
+        "The front row bows again toward the white-draped bier where Si Nian lies; Si Yi is off screen."
+       ],
+       "zh": [
+        "Si Xin and Zhang Cuimei stand in the front row facing the bier at screen right and begin to bow; Si Yi is off screen.",
+        "Si Nian's foot in a black cloth slipper, at the edge of the white cloth, twitches once.",
+        "Si Xin freezes halfway into his bow, his eyes widening behind his glasses, fixed on the bier.",
+        "Si Xin grabs Zhang Cuimei's sleeve in panic and pulls her toward him.",
+        "Zhang Cuimei shakes his hand off her sleeve and rolls her eyes.",
+        "The front row bows again toward the white-draped bier where Si Nian lies; Si Yi is off screen."
+       ]
+      }
+     },
+     {
+      "id": "seg03",
+      "heading": {
+       "en": "INT. 灵堂 - DAY",
+       "zh": "INT. 灵堂 - DAY"
+      },
+      "shots": {
+       "en": [
+        "Si Nian rubs her eyes with one hand and pats the white cloth beside her, searching for something.",
+        "Si Nian swings her legs off the bier and stands beside it in her burial clothes.",
+        "Si Nian's eyes snap fully open and her mouth falls open in shock as she takes in the hall.",
+        "Si Xin points a trembling finger at her, backing away, his glasses crooked.",
+        "Si Nian looks Si Xin up and down, staring at his grey suit and armband, and points at him.",
+        "Si Xin swallows hard and takes another step back, clutching his jacket front."
+       ],
+       "zh": [
+        "Si Nian rubs her eyes with one hand and pats the white cloth beside her, searching for something.",
+        "Si Nian swings her legs off the bier and stands beside it in her burial clothes.",
+        "Si Nian's eyes snap fully open and her mouth falls open in shock as she takes in the hall.",
+        "Si Xin points a trembling finger at her, backing away, his glasses crooked.",
+        "Si Nian looks Si Xin up and down, staring at his grey suit and armband, and points at him.",
+        "Si Xin swallows hard and takes another step back, clutching his jacket front."
+       ]
+      }
+     },
+     {
+      "id": "seg04",
+      "heading": {
+       "en": "EXT. 殡仪馆门前 - BRIGHT DAY",
+       "zh": "EXT. 殡仪馆门前 - BRIGHT DAY"
+      },
+      "shots": {
+       "en": [
+        "Si Nian steps out of the double wooden doors in her burial clothes and walks down the concrete steps to the street edge, dazed.",
+        "Si Nian turns her head, staring at the bicycles, the old bus and the people in blue and grey clothes.",
+        "Lu Ren Jia rides his bicycle along the lane past the steps, turns his head and sees Si Nian in burial clothes, and his jaw drops.",
+        "Lu Ren Jia's front wheel twists and he topples sideways onto the asphalt with his bicycle, his blue cap flying off, while Si Nian stands at the foot of the steps.",
+        "Si Nian drops to her knees on the asphalt and throws both arms up to the sky, tears running down her face.",
+        "Si Nian laughs through her tears, her face bright with joy."
+       ],
+       "zh": [
+        "Si Nian steps out of the double wooden doors in her burial clothes and walks down the concrete steps to the street edge, dazed.",
+        "Si Nian turns her head, staring at the bicycles, the old bus and the people in blue and grey clothes.",
+        "Lu Ren Jia rides his bicycle along the lane past the steps, turns his head and sees Si Nian in burial clothes, and his jaw drops.",
+        "Lu Ren Jia's front wheel twists and he topples sideways onto the asphalt with his bicycle, his blue cap flying off, while Si Nian stands at the foot of the steps.",
+        "Si Nian drops to her knees on the asphalt and throws both arms up to the sky, tears running down her face.",
+        "Si Nian laughs through her tears, her face bright with joy."
+       ]
+      }
+     }
+    ],
+    "cut": [
+     {
+      "segment": "seg01",
+      "in": 0,
+      "out": 30.041667
+     },
+     {
+      "segment": "seg02",
+      "in": 0,
+      "out": 28.041667
+     },
+     {
+      "segment": "seg03",
+      "in": 0,
+      "out": 26.041667
+     },
+     {
+      "segment": "seg04",
+      "in": 0,
+      "out": 15.041667
+     }
+    ]
+   }
+  ]
+ },
+ "false-intentions-true-love-r2": {
+  "title": {
+   "en": "False Intentions, True Love",
+   "zh": "False Intentions, True Love"
+  },
+  "logline": {
+   "en": "Pushed by her father into a marriage with Lu Shaoze, the ex he once drove away, Ji Ran holds a public interview to pick a husband for herself. The late, soaked \"college student\" Lin Qingyu is secretly a rich young boss and Su Yaqing's stepbrother, and he will not take no for an answer.",
+   "zh": "Pushed by her father into a marriage with Lu Shaoze, the ex he once drove away, Ji Ran holds a public interview to pick a husband for herself. The late, soaked \"college student\" Lin Qingyu is secretly a rich young boss and Su Yaqing's stepbrother, and he will not take no for an answer."
+  },
+  "genres": {
+   "en": [
+    "Romance",
+    "CEO",
+    "Office"
+   ],
+   "zh": [
+    "爱情",
+    "霸总",
+    "职场"
+   ]
+  },
+  "versions": {
+   "assets/characters/blue_tank_top_applicant": "v2",
+   "assets/characters/gray_shirt_applicant": "v2",
+   "assets/characters/green_shirt_applicant": "v2",
+   "assets/characters/ji_hongyuan": "v2",
+   "assets/characters/ji_ran": "v3",
+   "assets/characters/ji_ran/states/S1": "v1",
+   "assets/characters/ji_ran/states/S2": "v1",
+   "assets/characters/ji_ran/states/S3": "v2",
+   "assets/characters/lin_qingyu": "v3",
+   "assets/characters/lin_qingyu/states/S1": "v1",
+   "assets/characters/lin_qingyu/states/S2": "v1",
+   "assets/characters/lu_shaoze": "v2",
+   "assets/characters/lu_shaoze/states/S1": "v2",
+   "assets/characters/shirtless_applicant": "v3",
+   "assets/characters/shirtless_applicant/states/S1": "v2",
+   "assets/characters/su_yaqing": "v3",
+   "assets/characters/xu_banxia": "v2",
+   "assets/props/document_envelope": "v2",
+   "assets/props/dumbbell": "v2",
+   "assets/props/glass": "v2",
+   "assets/props/grocery_bag": "v2",
+   "assets/props/handbag": "v2",
+   "assets/props/lin_phone": "v2",
+   "assets/props/pour_over_set": "v2",
+   "assets/props/su_phone": "v2",
+   "assets/scenes/apartment_entrance": "v2",
+   "assets/scenes/apartment_entrance/back": "v2",
+   "assets/scenes/apartment_entrance/floor-plan": "v2",
+   "assets/scenes/apartment_entrance/front": "v2",
+   "assets/scenes/apartment_entrance/left-side": "v2",
+   "assets/scenes/apartment_entrance/right-side": "v2",
+   "assets/scenes/apartment_entrance/times/Night": "v2",
+   "assets/scenes/apartment_entrance/times/Night/back": "v2",
+   "assets/scenes/apartment_entrance/times/Night/front": "v2",
+   "assets/scenes/apartment_entrance/times/Night/left-side": "v2",
+   "assets/scenes/apartment_entrance/times/Night/right-side": "v2",
+   "assets/scenes/city_road": "v2",
+   "assets/scenes/city_road/back": "v2",
+   "assets/scenes/city_road/floor-plan": "v2",
+   "assets/scenes/city_road/front": "v2",
+   "assets/scenes/city_road/left-side": "v2",
+   "assets/scenes/city_road/right-side": "v2",
+   "assets/scenes/city_road/times/Night": "v2",
+   "assets/scenes/city_road/times/Night/back": "v2",
+   "assets/scenes/city_road/times/Night/front": "v2",
+   "assets/scenes/city_road/times/Night/left-side": "v2",
+   "assets/scenes/city_road/times/Night/right-side": "v2",
+   "assets/scenes/ji_family_living_room": "v2",
+   "assets/scenes/ji_family_living_room/back": "v2",
+   "assets/scenes/ji_family_living_room/floor-plan": "v3",
+   "assets/scenes/ji_family_living_room/front": "v3",
+   "assets/scenes/ji_family_living_room/left-side": "v2",
+   "assets/scenes/ji_family_living_room/right-side": "v2",
+   "assets/scenes/ji_family_living_room/times/Day": "v2",
+   "assets/scenes/ji_family_living_room/times/Day/back": "v2",
+   "assets/scenes/ji_family_living_room/times/Day/front": "v2",
+   "assets/scenes/ji_family_living_room/times/Day/left-side": "v2",
+   "assets/scenes/ji_family_living_room/times/Day/right-side": "v2",
+   "assets/scenes/ji_ran_living_room": "v2",
+   "assets/scenes/ji_ran_living_room/back": "v2",
+   "assets/scenes/ji_ran_living_room/floor-plan": "v2",
+   "assets/scenes/ji_ran_living_room/front": "v2",
+   "assets/scenes/ji_ran_living_room/left-side": "v2",
+   "assets/scenes/ji_ran_living_room/right-side": "v2",
+   "assets/scenes/ji_ran_living_room/times/Night": "v2",
+   "assets/scenes/ji_ran_living_room/times/Night/back": "v2",
+   "assets/scenes/ji_ran_living_room/times/Night/front": "v2",
+   "assets/scenes/ji_ran_living_room/times/Night/left-side": "v2",
+   "assets/scenes/ji_ran_living_room/times/Night/right-side": "v2",
+   "assets/scenes/ji_ran_office": "v2",
+   "assets/scenes/ji_ran_office/back": "v2",
+   "assets/scenes/ji_ran_office/floor-plan": "v3",
+   "assets/scenes/ji_ran_office/front": "v3",
+   "assets/scenes/ji_ran_office/left-side": "v2",
+   "assets/scenes/ji_ran_office/right-side": "v2",
+   "assets/scenes/ji_ran_office/times/Day": "v2",
+   "assets/scenes/ji_ran_office/times/Day/back": "v2",
+   "assets/scenes/ji_ran_office/times/Day/front": "v2",
+   "assets/scenes/ji_ran_office/times/Day/left-side": "v2",
+   "assets/scenes/ji_ran_office/times/Day/right-side": "v2",
+   "assets/scenes/su_dining_area": "v2",
+   "assets/scenes/su_dining_area/back": "v2",
+   "assets/scenes/su_dining_area/floor-plan": "v3",
+   "assets/scenes/su_dining_area/front": "v3",
+   "assets/scenes/su_dining_area/left-side": "v2",
+   "assets/scenes/su_dining_area/right-side": "v2",
+   "assets/scenes/su_dining_area/times/Day": "v2",
+   "assets/scenes/su_dining_area/times/Day/back": "v2",
+   "assets/scenes/su_dining_area/times/Day/front": "v2",
+   "assets/scenes/su_dining_area/times/Day/left-side": "v2",
+   "assets/scenes/su_dining_area/times/Day/right-side": "v2",
+   "assets/scenes/su_living_room": "v2",
+   "assets/scenes/su_living_room/back": "v2",
+   "assets/scenes/su_living_room/floor-plan": "v3",
+   "assets/scenes/su_living_room/front": "v3",
+   "assets/scenes/su_living_room/left-side": "v2",
+   "assets/scenes/su_living_room/right-side": "v2",
+   "assets/scenes/su_living_room/times/Day": "v2",
+   "assets/scenes/su_living_room/times/Day/back": "v2",
+   "assets/scenes/su_living_room/times/Day/front": "v2",
+   "assets/scenes/su_living_room/times/Day/left-side": "v2",
+   "assets/scenes/su_living_room/times/Day/right-side": "v2",
+   "bible": "v3",
+   "episodes/EP001/blocking/seg01": "v1",
+   "episodes/EP001/blocking/seg02": "v1",
+   "episodes/EP001/blocking/seg03": "v1",
+   "episodes/EP001/blocking/seg04": "v1",
+   "episodes/EP001/blocking/seg05": "v1",
+   "episodes/EP001/blocking/seg06": "v1",
+   "episodes/EP001/breakdown": "v3",
+   "episodes/EP001/first_frame_reference/seg01": "v1",
+   "episodes/EP001/first_frame_reference/seg02": "v1",
+   "episodes/EP001/first_frame_reference/seg03": "v1",
+   "episodes/EP001/first_frame_reference/seg04": "v1",
+   "episodes/EP001/first_frame_reference/seg05": "v2",
+   "episodes/EP001/first_frame_reference/seg06": "v1",
+   "episodes/EP001/multi_panel_storyboard/seg01/line-art": "v1",
+   "episodes/EP001/multi_panel_storyboard/seg01/photoreal": "v1",
+   "episodes/EP001/multi_panel_storyboard/seg02/line-art": "v1",
+   "episodes/EP001/multi_panel_storyboard/seg02/photoreal": "v1",
+   "episodes/EP001/multi_panel_storyboard/seg03/line-art": "v1",
+   "episodes/EP001/multi_panel_storyboard/seg03/photoreal": "v1",
+   "episodes/EP001/multi_panel_storyboard/seg04/line-art": "v1",
+   "episodes/EP001/multi_panel_storyboard/seg04/photoreal": "v2",
+   "episodes/EP001/multi_panel_storyboard/seg05/line-art": "v1",
+   "episodes/EP001/multi_panel_storyboard/seg05/photoreal": "v1",
+   "episodes/EP001/multi_panel_storyboard/seg06/line-art": "v1",
+   "episodes/EP001/multi_panel_storyboard/seg06/photoreal": "v1",
+   "episodes/EP001/segments/seg01": "t01",
+   "episodes/EP001/segments/seg02": "t01",
+   "episodes/EP001/segments/seg03": "t01",
+   "episodes/EP001/segments/seg04": "t01",
+   "episodes/EP001/segments/seg06": "t01",
+   "episodes/EP001/video_prompts": "v2",
+   "episodes/EP002/blocking/seg01": "v1",
+   "episodes/EP002/blocking/seg02": "v1",
+   "episodes/EP002/breakdown": "v3",
+   "episodes/EP002/first_frame_reference/seg01": "v1",
+   "episodes/EP002/first_frame_reference/seg02": "v1",
+   "episodes/EP002/multi_panel_storyboard/seg01/line-art": "v2",
+   "episodes/EP002/multi_panel_storyboard/seg01/photoreal": "v1",
+   "episodes/EP002/multi_panel_storyboard/seg02/line-art": "v1",
+   "episodes/EP002/multi_panel_storyboard/seg02/photoreal": "v1",
+   "episodes/EP002/multi_panel_storyboard/seg03/line-art": "v1",
+   "episodes/EP002/multi_panel_storyboard/seg03/photoreal": "v1",
+   "episodes/EP002/segments/seg01": "t01",
+   "episodes/EP002/segments/seg03": "t01",
+   "episodes/EP002/video_prompts": "v1",
+   "episodes/EP003/blocking/seg01": "v1",
+   "episodes/EP003/blocking/seg02": "v1",
+   "episodes/EP003/breakdown": "v3",
+   "episodes/EP003/first_frame_reference/seg01": "v1",
+   "episodes/EP003/first_frame_reference/seg02": "v1",
+   "episodes/EP003/multi_panel_storyboard/seg01/line-art": "v1",
+   "episodes/EP003/multi_panel_storyboard/seg01/photoreal": "v1",
+   "episodes/EP003/multi_panel_storyboard/seg02/line-art": "v1",
+   "episodes/EP003/multi_panel_storyboard/seg02/photoreal": "v1",
+   "episodes/EP003/segments/seg01": "t01",
+   "episodes/EP003/video_prompts": "v1",
+   "episodes/EP004/blocking/seg01": "v1",
+   "episodes/EP004/blocking/seg02": "v1",
+   "episodes/EP004/blocking/seg03": "v1",
+   "episodes/EP004/blocking/seg04": "v1",
+   "episodes/EP004/breakdown": "v3",
+   "episodes/EP004/first_frame_reference/seg01": "v1",
+   "episodes/EP004/first_frame_reference/seg02": "v1",
+   "episodes/EP004/first_frame_reference/seg03": "v1",
+   "episodes/EP004/first_frame_reference/seg04": "v1",
+   "episodes/EP004/multi_panel_storyboard/seg01/line-art": "v1",
+   "episodes/EP004/multi_panel_storyboard/seg01/photoreal": "v1",
+   "episodes/EP004/multi_panel_storyboard/seg02/line-art": "v2",
+   "episodes/EP004/multi_panel_storyboard/seg02/photoreal": "v1",
+   "episodes/EP004/multi_panel_storyboard/seg03/line-art": "v1",
+   "episodes/EP004/multi_panel_storyboard/seg03/photoreal": "v1",
+   "episodes/EP004/multi_panel_storyboard/seg04/line-art": "v1",
+   "episodes/EP004/multi_panel_storyboard/seg04/photoreal": "v1",
+   "episodes/EP004/segments/seg01": "t01",
+   "episodes/EP004/video_prompts": "v1",
+   "episodes/EP005/blocking/seg01": "v1",
+   "episodes/EP005/blocking/seg02": "v1",
+   "episodes/EP005/blocking/seg04": "v1",
+   "episodes/EP005/breakdown": "v3",
+   "episodes/EP005/first_frame_reference/seg01": "v1",
+   "episodes/EP005/first_frame_reference/seg02": "v1",
+   "episodes/EP005/first_frame_reference/seg04": "v1",
+   "episodes/EP005/multi_panel_storyboard/seg01/line-art": "v1",
+   "episodes/EP005/multi_panel_storyboard/seg01/photoreal": "v1",
+   "episodes/EP005/multi_panel_storyboard/seg02/line-art": "v1",
+   "episodes/EP005/multi_panel_storyboard/seg02/photoreal": "v1",
+   "episodes/EP005/multi_panel_storyboard/seg03/line-art": "v1",
+   "episodes/EP005/multi_panel_storyboard/seg03/photoreal": "v1",
+   "episodes/EP005/multi_panel_storyboard/seg04/line-art": "v1",
+   "episodes/EP005/multi_panel_storyboard/seg04/photoreal": "v1",
+   "episodes/EP005/segments/seg03": "t01",
+   "episodes/EP005/segments/seg04": "t01",
+   "episodes/EP005/video_prompts": "v1",
+   "screenplay": "v1"
+  },
+  "extras": {
+   "setup": [
+    "assets/scenes/apartment_entrance/back/v2/image-1.jpg",
+    "assets/scenes/apartment_entrance/floor-plan/v2/image-1.jpg",
+    "assets/scenes/apartment_entrance/front/v2/image-1.jpg",
+    "assets/scenes/apartment_entrance/left-side/v2/image-1.jpg",
+    "assets/scenes/apartment_entrance/right-side/v2/image-1.jpg",
+    "assets/scenes/apartment_entrance/times/Night/back/v2/image-1.jpg",
+    "assets/scenes/apartment_entrance/times/Night/front/v2/image-1.jpg",
+    "assets/scenes/apartment_entrance/times/Night/left-side/v2/image-1.jpg",
+    "assets/scenes/apartment_entrance/times/Night/right-side/v2/image-1.jpg",
+    "assets/scenes/city_road/back/v2/image-1.jpg",
+    "assets/scenes/city_road/floor-plan/v2/image-1.jpg",
+    "assets/scenes/city_road/front/v2/image-1.jpg",
+    "assets/scenes/city_road/left-side/v2/image-1.jpg",
+    "assets/scenes/city_road/right-side/v2/image-1.jpg",
+    "assets/scenes/city_road/times/Night/back/v2/image-1.jpg",
+    "assets/scenes/city_road/times/Night/front/v2/image-1.jpg",
+    "assets/scenes/city_road/times/Night/left-side/v2/image-1.jpg",
+    "assets/scenes/city_road/times/Night/right-side/v2/image-1.jpg",
+    "assets/scenes/ji_family_living_room/back/v2/image-1.jpg",
+    "assets/scenes/ji_family_living_room/floor-plan/v3/image-1.jpg",
+    "assets/scenes/ji_family_living_room/front/v3/image-1.jpg",
+    "assets/scenes/ji_family_living_room/left-side/v2/image-1.jpg",
+    "assets/scenes/ji_family_living_room/right-side/v2/image-1.jpg",
+    "assets/scenes/ji_family_living_room/times/Day/back/v2/image-1.jpg",
+    "assets/scenes/ji_family_living_room/times/Day/front/v2/image-1.jpg",
+    "assets/scenes/ji_family_living_room/times/Day/left-side/v2/image-1.jpg",
+    "assets/scenes/ji_family_living_room/times/Day/right-side/v2/image-1.jpg",
+    "assets/scenes/ji_ran_living_room/back/v2/image-1.jpg",
+    "assets/scenes/ji_ran_living_room/floor-plan/v2/image-1.jpg",
+    "assets/scenes/ji_ran_living_room/front/v2/image-1.jpg",
+    "assets/scenes/ji_ran_living_room/left-side/v2/image-1.jpg",
+    "assets/scenes/ji_ran_living_room/right-side/v2/image-1.jpg",
+    "assets/scenes/ji_ran_living_room/times/Night/back/v2/image-1.jpg",
+    "assets/scenes/ji_ran_living_room/times/Night/front/v2/image-1.jpg",
+    "assets/scenes/ji_ran_living_room/times/Night/left-side/v2/image-1.jpg",
+    "assets/scenes/ji_ran_living_room/times/Night/right-side/v2/image-1.jpg",
+    "assets/scenes/ji_ran_office/back/v2/image-1.jpg",
+    "assets/scenes/ji_ran_office/floor-plan/v3/image-1.jpg",
+    "assets/scenes/ji_ran_office/front/v3/image-1.jpg",
+    "assets/scenes/ji_ran_office/left-side/v2/image-1.jpg",
+    "assets/scenes/ji_ran_office/right-side/v2/image-1.jpg",
+    "assets/scenes/ji_ran_office/times/Day/back/v2/image-1.jpg",
+    "assets/scenes/ji_ran_office/times/Day/front/v2/image-1.jpg",
+    "assets/scenes/ji_ran_office/times/Day/left-side/v2/image-1.jpg",
+    "assets/scenes/ji_ran_office/times/Day/right-side/v2/image-1.jpg",
+    "assets/scenes/su_dining_area/back/v2/image-1.jpg",
+    "assets/scenes/su_dining_area/floor-plan/v3/image-1.jpg",
+    "assets/scenes/su_dining_area/front/v3/image-1.jpg",
+    "assets/scenes/su_dining_area/left-side/v2/image-1.jpg",
+    "assets/scenes/su_dining_area/right-side/v2/image-1.jpg",
+    "assets/scenes/su_dining_area/times/Day/back/v2/image-1.jpg",
+    "assets/scenes/su_dining_area/times/Day/front/v2/image-1.jpg",
+    "assets/scenes/su_dining_area/times/Day/left-side/v2/image-1.jpg",
+    "assets/scenes/su_dining_area/times/Day/right-side/v2/image-1.jpg",
+    "assets/scenes/su_living_room/back/v2/image-1.jpg",
+    "assets/scenes/su_living_room/floor-plan/v3/image-1.jpg",
+    "assets/scenes/su_living_room/front/v3/image-1.jpg",
+    "assets/scenes/su_living_room/left-side/v2/image-1.jpg",
+    "assets/scenes/su_living_room/right-side/v2/image-1.jpg",
+    "assets/scenes/su_living_room/times/Day/back/v2/image-1.jpg",
+    "assets/scenes/su_living_room/times/Day/front/v2/image-1.jpg",
+    "assets/scenes/su_living_room/times/Day/left-side/v2/image-1.jpg",
+    "assets/scenes/su_living_room/times/Day/right-side/v2/image-1.jpg"
+   ],
+   "EP001": [
+    "episodes/EP001/first_frame_reference/seg01/v1/image-1.jpg",
+    "episodes/EP001/first_frame_reference/seg02/v1/image-1.jpg",
+    "episodes/EP001/first_frame_reference/seg03/v1/image-1.jpg",
+    "episodes/EP001/first_frame_reference/seg04/v1/image-1.jpg",
+    "episodes/EP001/first_frame_reference/seg05/v2/image-1.jpg",
+    "episodes/EP001/first_frame_reference/seg06/v1/image-1.jpg"
+   ],
+   "EP002": [
+    "episodes/EP002/first_frame_reference/seg01/v1/image-1.jpg",
+    "episodes/EP002/first_frame_reference/seg02/v1/image-1.jpg"
+   ],
+   "EP003": [
+    "episodes/EP003/first_frame_reference/seg01/v1/image-1.jpg",
+    "episodes/EP003/first_frame_reference/seg02/v1/image-1.jpg"
+   ],
+   "EP004": [
+    "episodes/EP004/first_frame_reference/seg01/v1/image-1.jpg",
+    "episodes/EP004/first_frame_reference/seg02/v1/image-1.jpg",
+    "episodes/EP004/first_frame_reference/seg03/v1/image-1.jpg",
+    "episodes/EP004/first_frame_reference/seg04/v1/image-1.jpg"
+   ],
+   "EP005": [
+    "episodes/EP005/first_frame_reference/seg01/v1/image-1.jpg",
+    "episodes/EP005/first_frame_reference/seg02/v1/image-1.jpg",
+    "episodes/EP005/first_frame_reference/seg04/v1/image-1.jpg"
+   ]
+  },
+  "ago": 720,
+  "cast": [
+   {
+    "id": "ji_ran",
+    "name": {
+     "en": "Ji Ran",
+     "zh": "Ji Ran"
+    },
+    "short": {
+     "en": "Ji Ran",
+     "zh": "Ji Ran"
+    },
+    "looks": [
+     "S1",
+     "S2",
+     "S3"
+    ]
+   },
+   {
+    "id": "su_yaqing",
+    "name": {
+     "en": "Su Yaqing",
+     "zh": "Su Yaqing"
+    },
+    "short": {
+     "en": "Su Yaqing",
+     "zh": "Su Yaqing"
+    }
+   },
+   {
+    "id": "ji_hongyuan",
+    "name": {
+     "en": "Ji Hongyuan",
+     "zh": "Ji Hongyuan"
+    },
+    "short": {
+     "en": "Ji Hongyuan",
+     "zh": "Ji Hongyuan"
+    }
+   },
+   {
+    "id": "lu_shaoze",
+    "name": {
+     "en": "Lu Shaoze",
+     "zh": "Lu Shaoze"
+    },
+    "short": {
+     "en": "Lu Shaoze",
+     "zh": "Lu Shaoze"
+    },
+    "looks": [
+     "S1"
+    ]
+   },
+   {
+    "id": "lin_qingyu",
+    "name": {
+     "en": "Lin Qingyu",
+     "zh": "Lin Qingyu"
+    },
+    "short": {
+     "en": "Lin Qingyu",
+     "zh": "Lin Qingyu"
+    },
+    "looks": [
+     "S1",
+     "S2"
+    ]
+   },
+   {
+    "id": "xu_banxia",
+    "name": {
+     "en": "Xu Banxia",
+     "zh": "Xu Banxia"
+    },
+    "short": {
+     "en": "Xu Banxia",
+     "zh": "Xu Banxia"
+    }
+   },
+   {
+    "id": "green_shirt_applicant",
+    "name": {
+     "en": "GREEN-SHIRT APPLICANT",
+     "zh": "GREEN-SHIRT APPLICANT"
+    },
+    "short": {
+     "en": "GREEN-SHIRT APPLICANT",
+     "zh": "GREEN-SHIRT APPLICANT"
+    }
+   },
+   {
+    "id": "blue_tank_top_applicant",
+    "name": {
+     "en": "BLUE-TANK-TOP APPLICANT",
+     "zh": "BLUE-TANK-TOP APPLICANT"
+    },
+    "short": {
+     "en": "BLUE-TANK-TOP APPLICANT",
+     "zh": "BLUE-TANK-TOP APPLICANT"
+    }
+   },
+   {
+    "id": "gray_shirt_applicant",
+    "name": {
+     "en": "GRAY-SHIRT APPLICANT",
+     "zh": "GRAY-SHIRT APPLICANT"
+    },
+    "short": {
+     "en": "GRAY-SHIRT APPLICANT",
+     "zh": "GRAY-SHIRT APPLICANT"
+    }
+   },
+   {
+    "id": "shirtless_applicant",
+    "name": {
+     "en": "SHIRTLESS APPLICANT",
+     "zh": "SHIRTLESS APPLICANT"
+    },
+    "short": {
+     "en": "SHIRTLESS APPLICANT",
+     "zh": "SHIRTLESS APPLICANT"
+    },
+    "looks": [
+     "S1"
+    ]
+   }
+  ],
+  "places": [
+   {
+    "id": "apartment_entrance",
+    "name": {
+     "en": "INT. JI RAN'S APARTMENT ENTRANCE",
+     "zh": "INT. JI RAN'S APARTMENT ENTRANCE"
+    },
+    "times": [
+     "Night"
+    ]
+   },
+   {
+    "id": "city_road",
+    "name": {
+     "en": "EXT. CITY ARTERIAL ROAD",
+     "zh": "EXT. CITY ARTERIAL ROAD"
+    },
+    "times": [
+     "Night"
+    ]
+   },
+   {
+    "id": "ji_family_living_room",
+    "name": {
+     "en": "INT. JI FAMILY LIVING ROOM",
+     "zh": "INT. JI FAMILY LIVING ROOM"
+    },
+    "times": [
+     "Day"
+    ]
+   },
+   {
+    "id": "ji_ran_living_room",
+    "name": {
+     "en": "INT. JI RAN'S LIVING ROOM",
+     "zh": "INT. JI RAN'S LIVING ROOM"
+    },
+    "times": [
+     "Night"
+    ]
+   },
+   {
+    "id": "ji_ran_office",
+    "name": {
+     "en": "INT. JI RAN'S OFFICE",
+     "zh": "INT. JI RAN'S OFFICE"
+    },
+    "times": [
+     "Day"
+    ]
+   },
+   {
+    "id": "su_dining_area",
+    "name": {
+     "en": "INT. SU YAQING'S DINING AREA",
+     "zh": "INT. SU YAQING'S DINING AREA"
+    },
+    "times": [
+     "Day"
+    ]
+   },
+   {
+    "id": "su_living_room",
+    "name": {
+     "en": "INT. SU YAQING'S LIVING ROOM",
+     "zh": "INT. SU YAQING'S LIVING ROOM"
+    },
+    "times": [
+     "Day"
+    ]
+   }
+  ],
+  "props": [
+   {
+    "id": "document_envelope",
+    "name": {
+     "en": "document envelope",
+     "zh": "document envelope"
+    }
+   },
+   {
+    "id": "dumbbell",
+    "name": {
+     "en": "small dumbbell",
+     "zh": "small dumbbell"
+    }
+   },
+   {
+    "id": "glass",
+    "name": {
+     "en": "glass",
+     "zh": "glass"
+    }
+   },
+   {
+    "id": "grocery_bag",
+    "name": {
+     "en": "grocery bag full of greens",
+     "zh": "grocery bag full of greens"
+    }
+   },
+   {
+    "id": "handbag",
+    "name": {
+     "en": "black handbag",
+     "zh": "black handbag"
+    }
+   },
+   {
+    "id": "lin_phone",
+    "name": {
+     "en": "call phone",
+     "zh": "call phone"
+    }
+   },
+   {
+    "id": "pour_over_set",
+    "name": {
+     "en": "pour-over coffee equipment",
+     "zh": "pour-over coffee equipment"
+    }
+   },
+   {
+    "id": "su_phone",
+    "name": {
+     "en": "phone",
+     "zh": "phone"
+    }
+   }
+  ],
+  "episodes": [
+   {
+    "title": {
+     "en": "I Choose My Own Man",
+     "zh": "I Choose My Own Man"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "heading": {
+       "en": "INT. JI RAN'S OFFICE - DAY",
+       "zh": "INT. JI RAN'S OFFICE - DAY"
+      },
+      "shots": {
+       "en": [
+        "The sleek office with the city skyline behind the glass. Ji Ran stands behind the walnut desk among the plans and wood samples, pouring a thin stream from the black kettle into the dripper. Her lips stay closed.",
+        "Ji Ran's hand circles the gooseneck kettle, and the water spirals over the coffee grounds in the glass dripper.",
+        "Ji Ran sets the kettle down and braces one hand flat on the desk beside the plans. Her mouth stays closed and her expression turns cold.",
+        "Ji Ran lifts her eyes toward the pin-up wall with a flat, icy half-smile, her hand still braced on the desk."
+       ],
+       "zh": [
+        "The sleek office with the city skyline behind the glass. Ji Ran stands behind the walnut desk among the plans and wood samples, pouring a thin stream from the black kettle into the dripper. Her lips stay closed.",
+        "Ji Ran's hand circles the gooseneck kettle, and the water spirals over the coffee grounds in the glass dripper.",
+        "Ji Ran sets the kettle down and braces one hand flat on the desk beside the plans. Her mouth stays closed and her expression turns cold.",
+        "Ji Ran lifts her eyes toward the pin-up wall with a flat, icy half-smile, her hand still braced on the desk."
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "heading": {
+       "en": "INT. JI FAMILY LIVING ROOM - DAY",
+       "zh": "INT. JI FAMILY LIVING ROOM - DAY"
+      },
+      "shots": {
+       "en": [
+        "Leaves sway outside the sunlit French windows. Ji Hongyuan, on the cream sofa, sweeps the document envelope off the marble table with the back of his hand. It drops onto the carpet at the feet of Lu Shaoze, who keeps his head bowed. Ji Ran peers from behind the marble column by the archway.",
+        "Ji Hongyuan leans back on the cream sofa with his arms spread and looks at Lu Shaoze with contempt. Lu Shaoze's shoulder and the back of his head fill the foreground.",
+        "Only Lu Shaoze, framed on the face and shoulders. He keeps his head down, swallows hard and clenches his jaw.",
+        "Ji Hongyuan's narrow eyes stay hard behind his gold-rimmed glasses.",
+        "Ji Hongyuan snorts and turns his face away toward the fireplace.",
+        "Lu Shaoze stoops, picks up the envelope from the carpet and walks toward the archway by the left wall. He passes the marble column without noticing Ji Ran, who stays hidden behind it with her fists clenched."
+       ],
+       "zh": [
+        "Leaves sway outside the sunlit French windows. Ji Hongyuan, on the cream sofa, sweeps the document envelope off the marble table with the back of his hand. It drops onto the carpet at the feet of Lu Shaoze, who keeps his head bowed. Ji Ran peers from behind the marble column by the archway.",
+        "Ji Hongyuan leans back on the cream sofa with his arms spread and looks at Lu Shaoze with contempt. Lu Shaoze's shoulder and the back of his head fill the foreground.",
+        "Only Lu Shaoze, framed on the face and shoulders. He keeps his head down, swallows hard and clenches his jaw.",
+        "Ji Hongyuan's narrow eyes stay hard behind his gold-rimmed glasses.",
+        "Ji Hongyuan snorts and turns his face away toward the fireplace.",
+        "Lu Shaoze stoops, picks up the envelope from the carpet and walks toward the archway by the left wall. He passes the marble column without noticing Ji Ran, who stays hidden behind it with her fists clenched."
+       ]
+      }
+     },
+     {
+      "id": "seg03",
+      "heading": {
+       "en": "INT. JI RAN'S OFFICE - DAY",
+       "zh": "INT. JI RAN'S OFFICE - DAY"
+      },
+      "shots": {
+       "en": [
+        "Ji Ran lifts the white cup and sips, her eyes distant and her lips on the rim.",
+        "Ji Ran's hand sets the cup back down firmly on its saucer.",
+        "Ji Ran turns from the desk toward the floor-to-ceiling windows and the city skyline, her mouth closed.",
+        "Ji Ran turns back toward the pin-up wall and plants both hands on the desk beside the plans.",
+        "Ji Ran's gaze hardens into steely resolve, her lips pressed shut."
+       ],
+       "zh": [
+        "Ji Ran lifts the white cup and sips, her eyes distant and her lips on the rim.",
+        "Ji Ran's hand sets the cup back down firmly on its saucer.",
+        "Ji Ran turns from the desk toward the floor-to-ceiling windows and the city skyline, her mouth closed.",
+        "Ji Ran turns back toward the pin-up wall and plants both hands on the desk beside the plans.",
+        "Ji Ran's gaze hardens into steely resolve, her lips pressed shut."
+       ]
+      }
+     },
+     {
+      "id": "seg04",
+      "heading": {
+       "en": "INT. SU YAQING'S LIVING ROOM - DAY",
+       "zh": "INT. SU YAQING'S LIVING ROOM - DAY"
+      },
+      "shots": {
+       "en": [
+        "The bright penthouse living room. Su Yaqing lounges on the cream sofa with her legs tucked up, holding the phone at arm's length and smiling at the call.",
+        "Su Yaqing's eyebrows rise and a delighted grin spreads across her face as she looks at the phone screen.",
+        "Su Yaqing sits up straight on the sofa and pulls the phone closer to her face.",
+        "Su Yaqing blinks in amused disbelief and cocks her head.",
+        "Su Yaqing's jaw drops, and she clutches a silk cushion to her chest while staring at the phone.",
+        "Su Yaqing bursts out laughing, flops back against the cushions and waves her free hand at the phone."
+       ],
+       "zh": [
+        "The bright penthouse living room. Su Yaqing lounges on the cream sofa with her legs tucked up, holding the phone at arm's length and smiling at the call.",
+        "Su Yaqing's eyebrows rise and a delighted grin spreads across her face as she looks at the phone screen.",
+        "Su Yaqing sits up straight on the sofa and pulls the phone closer to her face.",
+        "Su Yaqing blinks in amused disbelief and cocks her head.",
+        "Su Yaqing's jaw drops, and she clutches a silk cushion to her chest while staring at the phone.",
+        "Su Yaqing bursts out laughing, flops back against the cushions and waves her free hand at the phone."
+       ]
+      }
+     },
+     {
+      "id": "seg05",
+      "heading": {
+       "en": "INT. SU YAQING'S LIVING ROOM - DAY",
+       "zh": "INT. SU YAQING'S LIVING ROOM - DAY"
+      },
+      "shots": {
+       "en": [
+        "Su Yaqing sits forward on the edge of the sofa toward the phone on the stand, her eyes lighting up with an idea.",
+        "Su Yaqing gives a sly matchmaker's grin and counts the points off on her fingers beside her face.",
+        "Su Yaqing pouts at the phone on the stand.",
+        "Su Yaqing leans in and lifts the phone off the tablet stand into both hands.",
+        "Su Yaqing makes a mock-sulky face at the phone screen.",
+        "Su Yaqing's teasing smile fades. She nods slowly and settles back into the cushions with a sympathetic frown."
+       ],
+       "zh": [
+        "Su Yaqing sits forward on the edge of the sofa toward the phone on the stand, her eyes lighting up with an idea.",
+        "Su Yaqing gives a sly matchmaker's grin and counts the points off on her fingers beside her face.",
+        "Su Yaqing pouts at the phone on the stand.",
+        "Su Yaqing leans in and lifts the phone off the tablet stand into both hands.",
+        "Su Yaqing makes a mock-sulky face at the phone screen.",
+        "Su Yaqing's teasing smile fades. She nods slowly and settles back into the cushions with a sympathetic frown."
+       ]
+      }
+     },
+     {
+      "id": "seg06",
+      "heading": {
+       "en": "INT. SU YAQING'S DINING AREA - DAY",
+       "zh": "INT. SU YAQING'S DINING AREA - DAY"
+      },
+      "shots": {
+       "en": [
+        "The sunlit dining area with daisies and red wine on the marble table. Lin Qingyu sits at the window end and raises the phone to his ear, and his smile fades.",
+        "Lin Qingyu glances toward the archway on the right wall, his expression serious, the phone at his ear.",
+        "Lin Qingyu's eyes narrow with quiet determination.",
+        "Lin Qingyu leans forward and lays his free hand flat on the marble table beside the vase of daisies.",
+        "Lin Qingyu keeps his lips closed while he listens. His brow tightens and his fingers tap the marble once.",
+        "Lin Qingyu cuts in without hesitation, and a faint confident smile touches his lips."
+       ],
+       "zh": [
+        "The sunlit dining area with daisies and red wine on the marble table. Lin Qingyu sits at the window end and raises the phone to his ear, and his smile fades.",
+        "Lin Qingyu glances toward the archway on the right wall, his expression serious, the phone at his ear.",
+        "Lin Qingyu's eyes narrow with quiet determination.",
+        "Lin Qingyu leans forward and lays his free hand flat on the marble table beside the vase of daisies.",
+        "Lin Qingyu keeps his lips closed while he listens. His brow tightens and his fingers tap the marble once.",
+        "Lin Qingyu cuts in without hesitation, and a faint confident smile touches his lips."
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "title": {
+     "en": "The Husband Audition",
+     "zh": "The Husband Audition"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "heading": {
+       "en": "INT. JI RAN'S OFFICE - DAY",
+       "zh": "INT. JI RAN'S OFFICE - DAY"
+      },
+      "shots": {
+       "en": [
+        "The office in daylight. Ji Ran sits in the black leather chair behind the walnut desk. The four applicants stand in a row on the open floor facing her. Xu Banxia walks briskly from the walnut door to the door-side corner of the desk.",
+        "Xu Banxia stops at the door-side corner of the desk and leans toward Ji Ran with a polite, nervous smile. Ji Ran sits at the edge of the frame in the leather chair.",
+        "Ji Ran crosses her legs in the leather chair and runs a cool look along the row of applicants.",
+        "GREEN-SHIRT APPLICANT straightens his back with the small dumbbell at his side and grins eagerly at the desk. BLUE-TANK-TOP APPLICANT stands beside him.",
+        "Ji Ran leans back in the leather chair and rests her elbows on its padded arms.",
+        "BLUE-TANK-TOP APPLICANT puffs out his chest and stiffens like a recruit. GRAY-SHIRT APPLICANT stands beside him."
+       ],
+       "zh": [
+        "The office in daylight. Ji Ran sits in the black leather chair behind the walnut desk. The four applicants stand in a row on the open floor facing her. Xu Banxia walks briskly from the walnut door to the door-side corner of the desk.",
+        "Xu Banxia stops at the door-side corner of the desk and leans toward Ji Ran with a polite, nervous smile. Ji Ran sits at the edge of the frame in the leather chair.",
+        "Ji Ran crosses her legs in the leather chair and runs a cool look along the row of applicants.",
+        "GREEN-SHIRT APPLICANT straightens his back with the small dumbbell at his side and grins eagerly at the desk. BLUE-TANK-TOP APPLICANT stands beside him.",
+        "Ji Ran leans back in the leather chair and rests her elbows on its padded arms.",
+        "BLUE-TANK-TOP APPLICANT puffs out his chest and stiffens like a recruit. GRAY-SHIRT APPLICANT stands beside him."
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "heading": {
+       "en": "INT. JI RAN'S OFFICE - DAY",
+       "zh": "INT. JI RAN'S OFFICE - DAY"
+      },
+      "shots": {
+       "en": [
+        "GREEN-SHIRT APPLICANT curls the small lilac dumbbell with both hands, his face red and straining theatrically. BLUE-TANK-TOP APPLICANT stands beside him.",
+        "BLUE-TANK-TOP APPLICANT throws a stiff, awkward punch at the air toward the desk and wobbles.",
+        "GRAY-SHIRT APPLICANT wrestles his tucked-in grey shirt up out of his slacks to bare his thin stomach. SHIRTLESS APPLICANT stands beside him.",
+        "SHIRTLESS APPLICANT pulls his yellow T-shirt off over his head and drops it on the floor at his feet, now bare-chested with an oiled torso.",
+        "Bare-chested SHIRTLESS APPLICANT flexes both biceps, rolls his eyes half shut and licks his lips at the desk.",
+        "Ji Ran's hands clench the padded arms of the leather chair, knuckles tightening."
+       ],
+       "zh": [
+        "GREEN-SHIRT APPLICANT curls the small lilac dumbbell with both hands, his face red and straining theatrically. BLUE-TANK-TOP APPLICANT stands beside him.",
+        "BLUE-TANK-TOP APPLICANT throws a stiff, awkward punch at the air toward the desk and wobbles.",
+        "GRAY-SHIRT APPLICANT wrestles his tucked-in grey shirt up out of his slacks to bare his thin stomach. SHIRTLESS APPLICANT stands beside him.",
+        "SHIRTLESS APPLICANT pulls his yellow T-shirt off over his head and drops it on the floor at his feet, now bare-chested with an oiled torso.",
+        "Bare-chested SHIRTLESS APPLICANT flexes both biceps, rolls his eyes half shut and licks his lips at the desk.",
+        "Ji Ran's hands clench the padded arms of the leather chair, knuckles tightening."
+       ]
+      }
+     },
+     {
+      "id": "seg03",
+      "heading": {
+       "en": "INT. JI RAN'S OFFICE - DAY",
+       "zh": "INT. JI RAN'S OFFICE - DAY"
+      },
+      "shots": {
+       "en": [
+        "Soft golden points of out-of-focus light drift slowly across the blurred daylight of the windows."
+       ],
+       "zh": [
+        "Soft golden points of out-of-focus light drift slowly across the blurred daylight of the windows."
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "title": {
+     "en": "Too Young to Marry",
+     "zh": "Too Young to Marry"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "heading": {
+       "en": "INT. JI RAN'S OFFICE - DAY",
+       "zh": "INT. JI RAN'S OFFICE - DAY"
+      },
+      "shots": {
+       "en": [
+        "Rain streaks the floor-to-ceiling windows. Lin Qingyu stands dripping just inside the open walnut door, Ji Ran stands on the oak floor a step from the door facing him, and Xu Banxia stands at the door-side corner of the desk.",
+        "Lin Qingyu, chest heaving, wet T-shirt clinging to him, pushes his wet fringe back and bows his head apologetically, Ji Ran's shoulder at the frame edge.",
+        "Ji Ran lets her eyes travel slowly from Lin Qingyu's face down his soaked body.",
+        "Ji Ran's mouth stays closed; one corner of her lips lifts in a cool, appraising half-smile.",
+        "Xu Banxia presses her lips together to hold in a laugh, walks from the desk corner past Ji Ran and Lin Qingyu, steps out through the walnut door and pulls it shut behind her.",
+        "Ji Ran folds her arms and walks slowly around Lin Qingyu, inspecting him, ending in front of him on the desk side, facing him, while he stands just inside the closed door."
+       ],
+       "zh": [
+        "Rain streaks the floor-to-ceiling windows. Lin Qingyu stands dripping just inside the open walnut door, Ji Ran stands on the oak floor a step from the door facing him, and Xu Banxia stands at the door-side corner of the desk.",
+        "Lin Qingyu, chest heaving, wet T-shirt clinging to him, pushes his wet fringe back and bows his head apologetically, Ji Ran's shoulder at the frame edge.",
+        "Ji Ran lets her eyes travel slowly from Lin Qingyu's face down his soaked body.",
+        "Ji Ran's mouth stays closed; one corner of her lips lifts in a cool, appraising half-smile.",
+        "Xu Banxia presses her lips together to hold in a laugh, walks from the desk corner past Ji Ran and Lin Qingyu, steps out through the walnut door and pulls it shut behind her.",
+        "Ji Ran folds her arms and walks slowly around Lin Qingyu, inspecting him, ending in front of him on the desk side, facing him, while he stands just inside the closed door."
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "heading": {
+       "en": "INT. JI RAN'S OFFICE - DAY",
+       "zh": "INT. JI RAN'S OFFICE - DAY"
+      },
+      "shots": {
+       "en": [
+        "Over Lin Qingyu's wet shoulder, Ji Ran tilts her head, arms folded, sizing him up.",
+        "Lin Qingyu straightens up to his full height and squares his shoulders.",
+        "Ji Ran glances down at his waist, one brow raised.",
+        "Lin Qingyu nods quickly, water dripping from his fringe onto his denim jacket.",
+        "Ji Ran unfolds one hand and taps her chin, eyes narrowing.",
+        "Lin Qingyu flashes a bright, boyish, dimpled smile."
+       ],
+       "zh": [
+        "Over Lin Qingyu's wet shoulder, Ji Ran tilts her head, arms folded, sizing him up.",
+        "Lin Qingyu straightens up to his full height and squares his shoulders.",
+        "Ji Ran glances down at his waist, one brow raised.",
+        "Lin Qingyu nods quickly, water dripping from his fringe onto his denim jacket.",
+        "Ji Ran unfolds one hand and taps her chin, eyes narrowing.",
+        "Lin Qingyu flashes a bright, boyish, dimpled smile."
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "title": {
+     "en": "The Ex at the Door",
+     "zh": "The Ex at the Door"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "heading": {
+       "en": "INT. JI RAN'S APARTMENT ENTRANCE - NIGHT",
+       "zh": "INT. JI RAN'S APARTMENT ENTRANCE - NIGHT"
+      },
+      "shots": {
+       "en": [
+        "Lu Shaoze stands at the walnut front door and smooths his swept-back hair with one hand. The elevator doors behind him across the landing are closed.",
+        "Lu Shaoze raises his knuckles and knocks on the walnut front door, smiling confidently.",
+        "The elevator doors slide open and Ji Ran steps out holding the black handbag. Lu Shaoze spins around, startled, and collides with her in the middle of the landing.",
+        "The two step apart and stop beneath the autumn landscape painting, Ji Ran on the elevator side and Lu Shaoze on the front-door side. Ji Ran steadies the black handbag on her arm and glares at him.",
+        "Lu Shaoze tilts his head with a mocking grin and spreads one hand toward Ji Ran.",
+        "Ji Ran raises one brow and gives a cool, thin smile, her hand resting on the handbag strap."
+       ],
+       "zh": [
+        "Lu Shaoze stands at the walnut front door and smooths his swept-back hair with one hand. The elevator doors behind him across the landing are closed.",
+        "Lu Shaoze raises his knuckles and knocks on the walnut front door, smiling confidently.",
+        "The elevator doors slide open and Ji Ran steps out holding the black handbag. Lu Shaoze spins around, startled, and collides with her in the middle of the landing.",
+        "The two step apart and stop beneath the autumn landscape painting, Ji Ran on the elevator side and Lu Shaoze on the front-door side. Ji Ran steadies the black handbag on her arm and glares at him.",
+        "Lu Shaoze tilts his head with a mocking grin and spreads one hand toward Ji Ran.",
+        "Ji Ran raises one brow and gives a cool, thin smile, her hand resting on the handbag strap."
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "heading": {
+       "en": "INT. JI RAN'S APARTMENT ENTRANCE - NIGHT",
+       "zh": "INT. JI RAN'S APARTMENT ENTRANCE - NIGHT"
+      },
+      "shots": {
+       "en": [
+        "Lu Shaoze recovers his smirk, slides a hand into his trouser pocket and leans toward Ji Ran.",
+        "Ji Ran's fingers tighten hard around the handle of the black handbag, her knuckles going pale.",
+        "Ji Ran's eyes redden and glisten. She presses her lips together and holds her anger in.",
+        "Ji Ran lifts her chin and stares straight at Lu Shaoze.",
+        "Ji Ran takes one step toward Lu Shaoze and gives a bitter half smile.",
+        "Lu Shaoze's smirk falters and he narrows his eyes."
+       ],
+       "zh": [
+        "Lu Shaoze recovers his smirk, slides a hand into his trouser pocket and leans toward Ji Ran.",
+        "Ji Ran's fingers tighten hard around the handle of the black handbag, her knuckles going pale.",
+        "Ji Ran's eyes redden and glisten. She presses her lips together and holds her anger in.",
+        "Ji Ran lifts her chin and stares straight at Lu Shaoze.",
+        "Ji Ran takes one step toward Lu Shaoze and gives a bitter half smile.",
+        "Lu Shaoze's smirk falters and he narrows his eyes."
+       ]
+      }
+     },
+     {
+      "id": "seg03",
+      "heading": {
+       "en": "INT. JI RAN'S APARTMENT ENTRANCE - NIGHT",
+       "zh": "INT. JI RAN'S APARTMENT ENTRANCE - NIGHT"
+      },
+      "shots": {
+       "en": [
+        "Lu Shaoze barks a scornful laugh and shakes his head.",
+        "Lu Shaoze leans toward Ji Ran beneath the painting. She holds her ground, the black handbag on her arm.",
+        "Ji Ran narrows her eyes and draws a slow breath through her nose.",
+        "Lu Shaoze takes a step closer to Ji Ran, gesturing with an open palm.",
+        "Lu Shaoze ticks a finger in the air with a smug smile.",
+        "Lu Shaoze spreads both arms wide toward the landing around them."
+       ],
+       "zh": [
+        "Lu Shaoze barks a scornful laugh and shakes his head.",
+        "Lu Shaoze leans toward Ji Ran beneath the painting. She holds her ground, the black handbag on her arm.",
+        "Ji Ran narrows her eyes and draws a slow breath through her nose.",
+        "Lu Shaoze takes a step closer to Ji Ran, gesturing with an open palm.",
+        "Lu Shaoze ticks a finger in the air with a smug smile.",
+        "Lu Shaoze spreads both arms wide toward the landing around them."
+       ]
+      }
+     },
+     {
+      "id": "seg04",
+      "heading": {
+       "en": "INT. JI RAN'S APARTMENT ENTRANCE - NIGHT",
+       "zh": "INT. JI RAN'S APARTMENT ENTRANCE - NIGHT"
+      },
+      "shots": {
+       "en": [
+        "Lu Shaoze taps his own chest proudly with two fingers, facing Ji Ran beneath the painting.",
+        "Lu Shaoze raises his chin and adjusts the peaked lapel of his navy double-breasted suit jacket with a self-satisfied smile.",
+        "Lu Shaoze leans in with a smirk and gives a short smug snort.",
+        "Lu Shaoze reaches a hand toward Ji Ran's shoulder and she stiffens. Behind her, the elevator doors on the left wall slide open.",
+        "Lin Qingyu's white sneakers stride out of the elevator across the pale stone floor toward Ji Ran, the grocery bag full of greens swinging from one hand, bok choy and spring onions spilling from its top.",
+        "Lin Qingyu steps in beside Ji Ran on the elevator side, slips his free arm protectively around her waist and faces Lu Shaoze, the grocery bag full of greens held in his other hand. Lu Shaoze's reaching hand freezes in midair."
+       ],
+       "zh": [
+        "Lu Shaoze taps his own chest proudly with two fingers, facing Ji Ran beneath the painting.",
+        "Lu Shaoze raises his chin and adjusts the peaked lapel of his navy double-breasted suit jacket with a self-satisfied smile.",
+        "Lu Shaoze leans in with a smirk and gives a short smug snort.",
+        "Lu Shaoze reaches a hand toward Ji Ran's shoulder and she stiffens. Behind her, the elevator doors on the left wall slide open.",
+        "Lin Qingyu's white sneakers stride out of the elevator across the pale stone floor toward Ji Ran, the grocery bag full of greens swinging from one hand, bok choy and spring onions spilling from its top.",
+        "Lin Qingyu steps in beside Ji Ran on the elevator side, slips his free arm protectively around her waist and faces Lu Shaoze, the grocery bag full of greens held in his other hand. Lu Shaoze's reaching hand freezes in midair."
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "title": {
+     "en": "A Probation Period",
+     "zh": "A Probation Period"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "heading": {
+       "en": "INT. APARTMENT CORRIDOR - NIGHT",
+       "zh": "INT. APARTMENT CORRIDOR - NIGHT"
+      },
+      "shots": {
+       "en": [
+        "Beneath the autumn landscape painting, Lin Qingyu holds Ji Ran by the waist with the grocery bag of greens in his other hand. Lu Shaoze, on the front-door side, glares across the stone floor at his arm.",
+        "Lu Shaoze, in front of the walnut front door, jabs a finger at Lin Qingyu's arm around Ji Ran's waist, his face hard.",
+        "Under the painting, Lin Qingyu smiles brightly, slides his right arm off Ji Ran's waist and holds his right hand out toward the front door, the grocery bag still in his left hand. Ji Ran stays beside him.",
+        "Lin Qingyu keeps his hand extended toward Lu Shaoze's place by the front door, with a sunny, innocent grin.",
+        "Over Lin Qingyu's shoulder, Lu Shaoze stares down at the offered hand and folds his arms without taking it.",
+        "Lin Qingyu lowers his unshaken hand, turns his head to Ji Ran beside him under the painting and nudges her playfully. Ji Ran keeps her cool face toward the front door."
+       ],
+       "zh": [
+        "Beneath the autumn landscape painting, Lin Qingyu holds Ji Ran by the waist with the grocery bag of greens in his other hand. Lu Shaoze, on the front-door side, glares across the stone floor at his arm.",
+        "Lu Shaoze, in front of the walnut front door, jabs a finger at Lin Qingyu's arm around Ji Ran's waist, his face hard.",
+        "Under the painting, Lin Qingyu smiles brightly, slides his right arm off Ji Ran's waist and holds his right hand out toward the front door, the grocery bag still in his left hand. Ji Ran stays beside him.",
+        "Lin Qingyu keeps his hand extended toward Lu Shaoze's place by the front door, with a sunny, innocent grin.",
+        "Over Lin Qingyu's shoulder, Lu Shaoze stares down at the offered hand and folds his arms without taking it.",
+        "Lin Qingyu lowers his unshaken hand, turns his head to Ji Ran beside him under the painting and nudges her playfully. Ji Ran keeps her cool face toward the front door."
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "heading": {
+       "en": "INT. APARTMENT CORRIDOR - NIGHT",
+       "zh": "INT. APARTMENT CORRIDOR - NIGHT"
+      },
+      "shots": {
+       "en": [
+        "Lu Shaoze shakes his head hard and thumps his own chest, glaring at Ji Ran.",
+        "Ji Ran rolls her eyes and tilts her head beneath the painting, arms still folded, a sliver of Lin Qingyu's shoulder at the frame edge.",
+        "Ji Ran lifts her chin and gives a dry, provoking half-smile toward the front door.",
+        "Lin Qingyu steps across the stone floor until he stands in front of Lu Shaoze and peers at his face with fake concern, the grocery bag in his left hand.",
+        "Lin Qingyu pats Lu Shaoze's shoulder twice with his right hand, smiling innocently. Lu Shaoze stiffens, his back to the front door.",
+        "Lu Shaoze knocks Lin Qingyu's hand off his shoulder with a swipe."
+       ],
+       "zh": [
+        "Lu Shaoze shakes his head hard and thumps his own chest, glaring at Ji Ran.",
+        "Ji Ran rolls her eyes and tilts her head beneath the painting, arms still folded, a sliver of Lin Qingyu's shoulder at the frame edge.",
+        "Ji Ran lifts her chin and gives a dry, provoking half-smile toward the front door.",
+        "Lin Qingyu steps across the stone floor until he stands in front of Lu Shaoze and peers at his face with fake concern, the grocery bag in his left hand.",
+        "Lin Qingyu pats Lu Shaoze's shoulder twice with his right hand, smiling innocently. Lu Shaoze stiffens, his back to the front door.",
+        "Lu Shaoze knocks Lin Qingyu's hand off his shoulder with a swipe."
+       ]
+      }
+     },
+     {
+      "id": "seg03",
+      "heading": {
+       "en": "EXT. CITY ARTERIAL ROAD - NIGHT",
+       "zh": "EXT. CITY ARTERIAL ROAD - NIGHT"
+      },
+      "shots": {
+       "en": [
+        "Dense traffic streams along the multi-lane road between glass office towers with lit windows, under a dusk sky.",
+        "The streetlights flicker on one after another along both sidewalks as the sky darkens over the headlights."
+       ],
+       "zh": [
+        "Dense traffic streams along the multi-lane road between glass office towers with lit windows, under a dusk sky.",
+        "The streetlights flicker on one after another along both sidewalks as the sky darkens over the headlights."
+       ]
+      }
+     },
+     {
+      "id": "seg04",
+      "heading": {
+       "en": "INT. JI RAN'S LIVING ROOM - NIGHT",
+       "zh": "INT. JI RAN'S LIVING ROOM - NIGHT"
+      },
+      "shots": {
+       "en": [
+        "Lin Qingyu leans back on the pale sofa. Ji Ran, arms folded, faces him across the marble-and-glass coffee table from the kitchen side, the night city glittering behind the windows.",
+        "Ji Ran looks down at Lin Qingyu with her arms folded and one eyebrow raised, the back of his head at the frame edge.",
+        "Lin Qingyu sits up straight on the sofa, rests his forearms on his knees and lifts his eyes to meet Ji Ran's.",
+        "Lin Qingyu holds Ji Ran's gaze with a calm, earnest look and a hint of a smile.",
+        "Ji Ran's lips part slightly and her folded arms loosen as soft light and snowlike flecks drift across the image."
+       ],
+       "zh": [
+        "Lin Qingyu leans back on the pale sofa. Ji Ran, arms folded, faces him across the marble-and-glass coffee table from the kitchen side, the night city glittering behind the windows.",
+        "Ji Ran looks down at Lin Qingyu with her arms folded and one eyebrow raised, the back of his head at the frame edge.",
+        "Lin Qingyu sits up straight on the sofa, rests his forearms on his knees and lifts his eyes to meet Ji Ran's.",
+        "Lin Qingyu holds Ji Ran's gaze with a calm, earnest look and a hint of a smile.",
+        "Ji Ran's lips part slightly and her folded arms loosen as soft light and snowlike flecks drift across the image."
+       ]
+      }
+     }
+    ]
+   }
+  ]
  }
 }

@@ -1,0 +1,369 @@
+{
+  "model": "sd25",
+  "content": [
+    {
+      "type": "text",
+      "text": "Image 1: Nine-panel storyboard reference, used for the overall shot structure, shot sizes, and camera-movement rhythm. Read it from left to right and from top to bottom; panel N is Shot N.\nImage 2: Live-action reference of Funeral Hall, used as the benchmark for environmental composition, lighting, and realistic live-action texture; it contains no people.\nImage 3: Subject 1 (Si Yi) character appearance reference.\nImage 4: Subject 2 (Bin Ke Jia) character appearance reference.\nImage 5: Subject 3 (Bin Ke Yi) character appearance reference.\n[Subject settings]\nSubject 1 (Si Yi): Refer to Image 3. 45, Funeral master of ceremonies at the funeral home.. Outfit: Plain black buttoned Zhongshan jacket with matching black trousers, a small white paper mourning flower pinned to the left breast, and black cloth shoes. Signature colour: black.\nSubject 2 (Bin Ke Jia): Refer to Image 4. 22, A young female funeral guest who gossips about the Si family.. Outfit: Navy-blue long-sleeved buttoned cotton jacket over a plain white blouse, straight black trousers and black cloth shoes. Signature colour: blue.\nSubject 3 (Bin Ke Yi): Refer to Image 5. 23, A young male funeral guest who knows the scandal behind the death.. Outfit: Brown corduroy long-sleeved zip jacket over a plain grey sweater, dark grey trousers and black leather shoes. Signature colour: brown.\nEnvironment (Funeral Hall): Refer to Image 2. Day, cool daylight through the tall left windows and a flat fluorescent wash. Cool diagonal daylight from the tall left windows, flat pale fluorescent overhead light. Live sound: hushed hall, shuffling feet, soft murmurs.\nDo not swap the characters' appearances, clothing, actions, positions or dialogue.\n[Overall style]\nPhotorealistic live-action short drama with cinematic lighting. Each character keeps the face and the outfit with its main colour from their reference image throughout. Use each character sheet only for that character: the face from the close-up on the right, the body and outfit from the turnaround on the left; do not render the sheet's layout, white background or multiple views. This segment has 3 lines, in this order: Si Yi, Bin Ke Jia, Bin Ke Yi. Generate speech only from the lines in {} in the shot list, each spoken exactly once by its speaker; everyone else keeps their mouth naturally closed while listening, and a V.O. speaker keeps their mouth closed or is off screen. Follow the shot list below; do not add cuts or camera moves beyond it. Strictly adhere to the 180-degree rule: within a scene, characters keep their screen sides and the camera stays on one side of the axis. Seamless continuity of action, spatial matching and consistent actor blocking; cut on action. For dialogue prefer static shot-reverse-shot and over-the-shoulder shots, balanced with reaction shots and close-up inserts. Faces stable and clear, consistent with the reference images, with no resemblance to any real actor or actress. Normal human eyes. Natural anatomy and hands. Natural, fluid motion that follows the blocking; characters make subtle, natural movements. Characters, props and environment share one world with matched lighting. Each line ends naturally with breathing room and is never cut off. Authentic performances with micro-expressions. No BGM; generate only dialogue, environmental sounds and action sounds. No subtitles.\n[Strictly exclude]\nSi Nian's face or movement visible in this segment. readable text on wreath ribbons or portrait. subtitles. Dialogue from the wrong character, multiple people speaking at once, repeated or missing lines, lip-sync errors and audio-visual desynchronization. The raw reference images (character sheets, setting plates) appearing as a frame of the video, and starting on a still frame of the setting reference. A fast zoom-in at the start, a fast pull-back at the end, unmotivated whip-pans, tilts, zooms and 360-degree orbits. Axis-crossing, jump cuts, frame skips, flicker and clipping. Characters or props popping in or vanishing, and duplicate characters except mirror reflections. Readable text, numbers, logos and watermarks; phones and paper are shown from the back or out of focus. Storyboard frames, panel borders, gutters and grid layouts.\n[Shot list] (9 shots, approximately 30 seconds)\nWhen a previous-shot reference image is given, Shot 1 matches its camera position, shot size and blocking and continues from that moment; do not repeat that frame later.\nAt the start: Funeral hall. The axis runs from the mourners to the bier. The camera stays on the window side, so the bier is always at screen right and the mourners face screen right. There is one bier at the screen-right end, covered with one white cloth, with one framed black-and-white portrait above it. Paper wreaths stand on wooden stands along both walls. The one pair of double wooden doors is behind the mourners at screen left. Si Yi stands at the head of the bier, facing screen left toward the mourners, hands folded. Si Nian lies still under the white cloth on the bier in burial clothes, feet toward the mourners, out of view in this segment. Si Xin stands in the front row nearest the camera and Zhang Cuimei stands at his far side, both facing the bier and off frame in this segment. Bin Ke Jia and Bin Ke Yi stand side by side in the back row among unnamed mourners, Bin Ke Jia nearer the camera, both facing the bier.\nShot 1 (0-3s): [Wide shot, high angle from the window side, slow push in toward the bier at screen right] The funeral hall in cool daylight shafts. Rows of mourners face the white-draped bier and the framed portrait at screen right, and Si Yi stands at the head of the bier facing them. Dialogue (Si Yi, in Mandarin, slow and ceremonial): {请所有来宾全体肃立，}\nShot 2 (3-5s): [Medium shot, locked-off camera, low angle on the window side] Si Yi stands beside the bier with his hands folded and slowly lowers his head. Dialogue (Si Yi, in Mandarin, slow and ceremonial): {为司家的长女默哀。}\nShot 3 (5-9s): [Medium close-up two-shot, handheld, eye-level from the window side, back row] In the back row, Bin Ke Jia leans toward Bin Ke Yi and whispers behind her hand, both still facing the bier. Dialogue (Bin Ke Jia, in Mandarin, curious whisper): {这司先生可是国营化工厂的二把手，}\nShot 4 (9-11s): [Close-up, locked-off camera, eye-level from the window side] Bin Ke Yi raises one eyebrow and gives a knowing smirk. Dialogue (Bin Ke Jia, in Mandarin, curious whisper): {是城里有头有脸的人物，}\nShot 5 (11-14s): [Close-up, slight push in, eye-level from the window side] Bin Ke Jia glances toward the bier and shakes her head in pity. Dialogue (Bin Ke Jia, in Mandarin, curious whisper): {怎么女儿这么年轻就……}\nShot 6 (14-19s): [Medium shot, over-the-shoulder shot past Bin Ke Jia's shoulder onto Bin Ke Yi, eye-level, window side] Bin Ke Yi leans close to Bin Ke Jia's ear and keeps his eyes on the bier. Dialogue (Bin Ke Yi, in Mandarin, smug low murmur): {你没听说啊，司家跟一个农村种地的抱错了孩子，}\nShot 7 (19-21s): [Close-up, locked-off camera, eye-level from the window side] Bin Ke Jia's eyes widen and she covers her mouth with her hand. Dialogue (Bin Ke Yi, in Mandarin, smug low murmur): {现在亲生女儿找回来了。}\nShot 8 (21-27s): [Medium close-up, handheld, eye-level from the window side] Bin Ke Yi tips his chin toward the bier and then toward the front row, lowering his voice further. Dialogue (Bin Ke Yi, in Mandarin, smug low murmur): {死的这个听说要替真千金嫁给乡下离过婚的老男人，}\nShot 9 (27-30s): [Medium shot, high angle, slow push in on the bier at screen right] Insert of the bier: the still white cloth over the body and the black-and-white portrait frame above it, with paper wreaths on both sides. Dialogue (Bin Ke Yi, in Mandarin, smug low murmur): {活活让养母给逼死了！}\nAt the end: Funeral hall. The axis runs from the mourners to the bier. The camera stays on the window side, the bier at screen right, the mourners facing screen right. There is one bier at the screen-right end under one white cloth, with one framed portrait above it. Paper wreaths stand along both walls and the double wooden doors are behind the mourners at screen left. Si Yi stands at the head of the bier facing screen left. Si Nian lies still under the white cloth in burial clothes, feet toward the mourners. Si Xin stands in the front row nearest the camera with Zhang Cuimei at his far side, both facing the bier, ready to bow. Bin Ke Jia and Bin Ke Yi stand in the back row, having finished whispering.\n"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261019110254-kwsl9"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@/Users/yurun/RunVid/short-drama-runs/houma-ep001-v2/assets/scenes/funeral_hall/v3/image-1.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261019092209-knq4c"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261019091351-krdvl"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261019091337-cm9r2"
+      },
+      "role": "reference_image"
+    }
+  ],
+  "duration": 30,
+  "ratio": "9:16",
+  "resolution": "480p",
+  "generate_audio": true,
+  "watermark": false,
+  "return_last_frame": true,
+  "drama": {
+    "segment": {
+      "id": "seg01",
+      "duration": 30,
+      "location": "funeral_hall",
+      "time": "Day, cool daylight through the tall left windows and a flat fluorescent wash",
+      "characters": [
+        "si_yi",
+        "bin_ke_jia",
+        "bin_ke_yi"
+      ],
+      "first_state": "Funeral hall. The axis runs from the mourners to the bier. The camera stays on the window side, so the bier is always at screen right and the mourners face screen right. There is one bier at the screen-right end, covered with one white cloth, with one framed black-and-white portrait above it. Paper wreaths stand on wooden stands along both walls. The one pair of double wooden doors is behind the mourners at screen left. Si Yi stands at the head of the bier, facing screen left toward the mourners, hands folded. Si Nian lies still under the white cloth on the bier in burial clothes, feet toward the mourners, out of view in this segment. Si Xin stands in the front row nearest the camera and Zhang Cuimei stands at his far side, both facing the bier and off frame in this segment. Bin Ke Jia and Bin Ke Yi stand side by side in the back row among unnamed mourners, Bin Ke Jia nearer the camera, both facing the bier.",
+      "shots": [
+        {
+          "time": "0-3s",
+          "size": "wide shot",
+          "angle": "high angle",
+          "camera": "Wide shot, high angle from the window side, slow push in toward the bier at screen right",
+          "visual": "The funeral hall in cool daylight shafts. Rows of mourners face the white-draped bier and the framed portrait at screen right, and Si Yi stands at the head of the bier facing them.",
+          "audio": "Dialogue (Si Yi, in Mandarin, slow and ceremonial): {请所有来宾全体肃立，}",
+          "characters": [
+            "si_yi"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "3-5s",
+          "size": "medium shot",
+          "angle": "low angle",
+          "camera": "Medium shot, locked-off camera, low angle on the window side",
+          "visual": "Si Yi stands beside the bier with his hands folded and slowly lowers his head.",
+          "audio": "Dialogue (Si Yi, in Mandarin, slow and ceremonial): {为司家的长女默哀。}",
+          "characters": [
+            "si_yi"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "5-9s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up two-shot, handheld, eye-level from the window side, back row",
+          "visual": "In the back row, Bin Ke Jia leans toward Bin Ke Yi and whispers behind her hand, both still facing the bier.",
+          "audio": "Dialogue (Bin Ke Jia, in Mandarin, curious whisper): {这司先生可是国营化工厂的二把手，}",
+          "characters": [
+            "bin_ke_jia",
+            "bin_ke_yi"
+          ],
+          "lines": [
+            1
+          ]
+        },
+        {
+          "time": "9-11s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, locked-off camera, eye-level from the window side",
+          "visual": "Bin Ke Yi raises one eyebrow and gives a knowing smirk.",
+          "audio": "Dialogue (Bin Ke Jia, in Mandarin, curious whisper): {是城里有头有脸的人物，}",
+          "characters": [
+            "bin_ke_yi"
+          ],
+          "lines": [
+            1
+          ]
+        },
+        {
+          "time": "11-14s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, slight push in, eye-level from the window side",
+          "visual": "Bin Ke Jia glances toward the bier and shakes her head in pity.",
+          "audio": "Dialogue (Bin Ke Jia, in Mandarin, curious whisper): {怎么女儿这么年轻就……}",
+          "characters": [
+            "bin_ke_jia"
+          ],
+          "lines": [
+            1
+          ]
+        },
+        {
+          "time": "14-19s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, over-the-shoulder shot past Bin Ke Jia's shoulder onto Bin Ke Yi, eye-level, window side",
+          "visual": "Bin Ke Yi leans close to Bin Ke Jia's ear and keeps his eyes on the bier.",
+          "audio": "Dialogue (Bin Ke Yi, in Mandarin, smug low murmur): {你没听说啊，司家跟一个农村种地的抱错了孩子，}",
+          "characters": [
+            "bin_ke_jia",
+            "bin_ke_yi"
+          ],
+          "lines": [
+            2
+          ]
+        },
+        {
+          "time": "19-21s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, locked-off camera, eye-level from the window side",
+          "visual": "Bin Ke Jia's eyes widen and she covers her mouth with her hand.",
+          "audio": "Dialogue (Bin Ke Yi, in Mandarin, smug low murmur): {现在亲生女儿找回来了。}",
+          "characters": [
+            "bin_ke_jia"
+          ],
+          "lines": [
+            2
+          ]
+        },
+        {
+          "time": "21-27s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up, handheld, eye-level from the window side",
+          "visual": "Bin Ke Yi tips his chin toward the bier and then toward the front row, lowering his voice further.",
+          "audio": "Dialogue (Bin Ke Yi, in Mandarin, smug low murmur): {死的这个听说要替真千金嫁给乡下离过婚的老男人，}",
+          "characters": [
+            "bin_ke_yi"
+          ],
+          "lines": [
+            2
+          ]
+        },
+        {
+          "time": "27-30s",
+          "size": "medium shot",
+          "angle": "high angle",
+          "camera": "Medium shot, high angle, slow push in on the bier at screen right",
+          "visual": "Insert of the bier: the still white cloth over the body and the black-and-white portrait frame above it, with paper wreaths on both sides.",
+          "audio": "Dialogue (Bin Ke Yi, in Mandarin, smug low murmur): {活活让养母给逼死了！}",
+          "characters": [],
+          "lines": [
+            2
+          ]
+        }
+      ],
+      "light_audio": "Cool diagonal daylight from the tall left windows, flat pale fluorescent overhead light. Live sound: hushed hall, shuffling feet, soft murmurs.",
+      "dialogue": [
+        {
+          "speaker": "si_yi",
+          "line": "请所有来宾全体肃立，为司家的长女默哀。"
+        },
+        {
+          "speaker": "bin_ke_jia",
+          "line": "这司先生可是国营化工厂的二把手，是城里有头有脸的人物，怎么女儿这么年轻就……"
+        },
+        {
+          "speaker": "bin_ke_yi",
+          "line": "你没听说啊，司家跟一个农村种地的抱错了孩子，现在亲生女儿找回来了。死的这个听说要替真千金嫁给乡下离过婚的老男人，活活让养母给逼死了！"
+        }
+      ],
+      "must_hit": [
+        "Si Yi calls the mourners to stand in silence beside the bier",
+        "Bin Ke Jia and Bin Ke Yi whisper the gossip in the back row",
+        "The white-draped bier with the portrait is shown"
+      ],
+      "exit_state": "Funeral hall. The axis runs from the mourners to the bier. The camera stays on the window side, the bier at screen right, the mourners facing screen right. There is one bier at the screen-right end under one white cloth, with one framed portrait above it. Paper wreaths stand along both walls and the double wooden doors are behind the mourners at screen left. Si Yi stands at the head of the bier facing screen left. Si Nian lies still under the white cloth in burial clothes, feet toward the mourners. Si Xin stands in the front row nearest the camera with Zhang Cuimei at his far side, both facing the bier, ready to bow. Bin Ke Jia and Bin Ke Yi stand in the back row, having finished whispering.",
+      "negative": [
+        "Si Nian's face or movement visible in this segment",
+        "readable text on wreath ribbons or portrait",
+        "subtitles"
+      ]
+    },
+    "bible_version": "v1",
+    "breakdown_version": "v3",
+    "lineage": [
+      {
+        "path": "bible/v1/artifact.json",
+        "sha256": "35e51429aa8e03ae73388c125868f382db131eada5aee94f17d9b42e4beac78f"
+      },
+      {
+        "path": "bible/accepted.json",
+        "sha256": "4cc3f8ef4d214640967bb64913e6f0af711afe949f494c9a7909688aa7d6b619"
+      },
+      {
+        "path": "bible/current.json",
+        "sha256": "e1b41dbbf8dedbc6ff07725432d61e16b33e1ff36254d26e4348d7e241841d06"
+      },
+      {
+        "path": "bible/v1/bible.json",
+        "sha256": "5f5313d84251ffcc48f018baa2ce028418a5c097b19b7bcdb0baf33cfbe66918"
+      },
+      {
+        "path": "bible/v1/input/screenplay.md",
+        "sha256": "0f23a3f7a0e64c2913e207a16e22ded9f9e4a085c65394caa70b35f63b3ec45c"
+      },
+      {
+        "path": "episodes/EP001/breakdown/v3/artifact.json",
+        "sha256": "edaf9cd53e2153f3004089f5264ec35125069ee9e49646fd190bf5197ed95829"
+      },
+      {
+        "path": "episodes/EP001/breakdown/accepted.json",
+        "sha256": "89cc46ef0fffeedc90982709a5056389620d03118aafbb7995a20c56543031df"
+      },
+      {
+        "path": "episodes/EP001/breakdown/current.json",
+        "sha256": "40a726dcb40894c0ddca118ad81e3ec22f82e4731c21c30295a0714e3a9a1aae"
+      },
+      {
+        "path": "episodes/EP001/breakdown/v3/breakdown.json",
+        "sha256": "1249acc96b16ce233ef2a2041fc0dec0bce96fd1a15ba383f4a0e6c2f60c309b"
+      },
+      {
+        "path": "episodes/EP001/multi_panel_storyboard/seg01/line-art/v4/artifact.json",
+        "sha256": "cd21787a9a0bb08848013c05cbaec705ba85337ecf2c52b815fd05d1687be7cd"
+      },
+      {
+        "path": "episodes/EP001/multi_panel_storyboard/seg01/line-art/accepted.json",
+        "sha256": "f1b99eaaaf3480e6219fc58d2c8450448c54921822144e4b3f5aa6a4bbf95120"
+      },
+      {
+        "path": "episodes/EP001/multi_panel_storyboard/seg01/line-art/current.json",
+        "sha256": "7ed96bbb0be72db955720b030fd55988b829f543252bae7a6bdcd13f963aa6f3"
+      },
+      {
+        "path": "episodes/EP001/multi_panel_storyboard/seg01/line-art/v4/image-1.jpg",
+        "sha256": "5b5a7c3add9574172528d436d33193cfcee6513ed8539e0be1c98244bb82fc83"
+      },
+      {
+        "path": "episodes/EP001/multi_panel_storyboard/seg01/line-art/v4/asset/job.json",
+        "sha256": "e5863eddba27b4e7e3154eaeace851eea8a4d4a59e56b1c6093bbacc733ccb5a"
+      },
+      {
+        "path": "assets/scenes/funeral_hall/v3/artifact.json",
+        "sha256": "ff245c07925b60b90487c667d886b8b2ef2b66f34a7b9af415d4850dfa27305e"
+      },
+      {
+        "path": "assets/scenes/funeral_hall/accepted.json",
+        "sha256": "ef9cf60f57ce28cd683b37ffee5f89739a727fa7ab39fb65ed59d202e1007897"
+      },
+      {
+        "path": "assets/scenes/funeral_hall/current.json",
+        "sha256": "09c9865ad8d2c07dbbb24dcf2a136ab065e2dc8d356c554d02b68aa2bfd986f3"
+      },
+      {
+        "path": "assets/scenes/funeral_hall/v3/image-1.jpg",
+        "sha256": "4bc979bb1ede6c7b613679048595139d8b14b7e224c6f53cb548db289deb0061"
+      },
+      {
+        "path": "assets/characters/si_yi/v2/artifact.json",
+        "sha256": "0bb431f506e2217a2b976010eabf4b159098070d1f61810a6f1f5071011aa0ca"
+      },
+      {
+        "path": "assets/characters/si_yi/accepted.json",
+        "sha256": "9fa5c5e408863ef050983944bb82e57aff40c1316500f09cab1145f70f2bd5f2"
+      },
+      {
+        "path": "assets/characters/si_yi/current.json",
+        "sha256": "aa436b30a503bee078de0e9e77fda90f15a91b9599ae8f9659c493dbce956e54"
+      },
+      {
+        "path": "assets/characters/si_yi/v2/image-1.jpg",
+        "sha256": "e17102eca830951ac6aa5afbda05bdc5ee92575979c1665afcb0686d314b5417"
+      },
+      {
+        "path": "assets/characters/si_yi/v2/asset/job.json",
+        "sha256": "f934b6835bec79fd89b7fdedcef7a9670a24c5824359aba2d61e32d1f19a15bc"
+      },
+      {
+        "path": "assets/characters/bin_ke_jia/v1/artifact.json",
+        "sha256": "990b684b4520c1eb8db6acdff29b85eb4d3a39f9e2be8b6e8f0eaa0329cb51fb"
+      },
+      {
+        "path": "assets/characters/bin_ke_jia/accepted.json",
+        "sha256": "438b7bfb2a1f3568aec014f074a129d082cfb93658de38179166abfd84cd3a98"
+      },
+      {
+        "path": "assets/characters/bin_ke_jia/current.json",
+        "sha256": "ca6fd17cbabf7a9b87bd001d27df4c52cc8763b49e11a1ae285d191a9f4ca3d3"
+      },
+      {
+        "path": "assets/characters/bin_ke_jia/v1/image-1.jpg",
+        "sha256": "c5995d1d1b81ca101e2b6adb419b1647ac86cc9a410158ee23d884d230f995b1"
+      },
+      {
+        "path": "assets/characters/bin_ke_jia/v1/asset/job.json",
+        "sha256": "4028eb78cc4eada031f27b18ee98522e783a927df5d00c884291b623dd9edd3c"
+      },
+      {
+        "path": "assets/characters/bin_ke_yi/v1/artifact.json",
+        "sha256": "979edca2ff21df147cdfb90e2a6a058ea0febe6b4f86f9e8318221b5154ce028"
+      },
+      {
+        "path": "assets/characters/bin_ke_yi/accepted.json",
+        "sha256": "32636c7695cce9de966c2e4b2f436d52afcca54c9a23986570d06a3c3bc28639"
+      },
+      {
+        "path": "assets/characters/bin_ke_yi/current.json",
+        "sha256": "c4878698ad0588eedc4eba79df6798bd900d549a08688b06dc6d0473ff2d0043"
+      },
+      {
+        "path": "assets/characters/bin_ke_yi/v1/image-1.jpg",
+        "sha256": "0a99beba95556b92b1b3e7458aa656cbffbaaeca46752d1db4ef0138e9dfb2b8"
+      },
+      {
+        "path": "assets/characters/bin_ke_yi/v1/asset/job.json",
+        "sha256": "dd6cba58bb66e4075d4b307b7eff15c6bc255212f7c173fd3d97073c9d71dc44"
+      },
+      {
+        "path": "episodes/EP001/video_prompts/v1/artifact.json",
+        "sha256": "abd1d3b3f031125e91df4b57928b3a38d52c9b9d01f9aad91b9b12f3be75c63d"
+      },
+      {
+        "path": "episodes/EP001/video_prompts/v1/seg01.json",
+        "sha256": "91d1bfe50c8a0b0e0cae232db22d7bbef2b8280967cff749d2a48151e3e61e51"
+      },
+      {
+        "path": "episodes/EP001/video_prompts/current.json",
+        "sha256": "2b5dcad1cbd475c8b6314cec0ed9c78eec25e666c519dd3714a100668ebaf59d"
+      }
+    ],
+    "character_reference_mode": "asset_library",
+    "trusted_character_references": {},
+    "video_prompts_version": "v1"
+  }
+}

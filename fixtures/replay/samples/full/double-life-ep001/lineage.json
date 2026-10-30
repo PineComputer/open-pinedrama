@@ -1,0 +1,1902 @@
+{
+ "last_node_id": 19,
+ "last_link_id": 65,
+ "nodes": [
+  {
+   "id": 1,
+   "type": "DramaCliStep",
+   "title": "cassie",
+   "pos": [
+    0,
+    500
+   ],
+   "size": [
+    300,
+    340
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "file",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "links": [
+      7,
+      14,
+      28,
+      35,
+      43,
+      52,
+      62
+     ]
+    }
+   ],
+   "properties": {
+    "id": "assets/characters/cassie",
+    "kind": "look",
+    "column": 1,
+    "version": "v1",
+    "accepted": "v1",
+    "fresh": true,
+    "shows": "assets/characters/cassie/v1/image-1.jpg",
+    "reads": [
+     "bible"
+    ],
+    "problems": [],
+    "label": "cassie",
+    "section": "Characters"
+   }
+  },
+  {
+   "id": 2,
+   "type": "DramaCliStep",
+   "title": "george",
+   "pos": [
+    360,
+    500
+   ],
+   "size": [
+    300,
+    340
+   ],
+   "flags": {},
+   "order": 1,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "file",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "links": [
+      6,
+      12,
+      20,
+      25,
+      32,
+      40,
+      49,
+      59
+     ]
+    }
+   ],
+   "properties": {
+    "id": "assets/characters/george",
+    "kind": "look",
+    "column": 1,
+    "version": "v1",
+    "accepted": "v1",
+    "fresh": true,
+    "shows": "assets/characters/george/v1/image-1.jpg",
+    "reads": [
+     "bible"
+    ],
+    "problems": [],
+    "label": "george",
+    "section": "Characters"
+   }
+  },
+  {
+   "id": 3,
+   "type": "DramaCliStep",
+   "title": "lauren",
+   "pos": [
+    0,
+    900
+   ],
+   "size": [
+    300,
+    340
+   ],
+   "flags": {},
+   "order": 2,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "file",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "links": [
+      9,
+      11,
+      15,
+      21,
+      26,
+      33,
+      41,
+      50,
+      60
+     ]
+    }
+   ],
+   "properties": {
+    "id": "assets/characters/lauren",
+    "kind": "look",
+    "column": 1,
+    "version": "v1",
+    "accepted": "v1",
+    "fresh": true,
+    "shows": "assets/characters/lauren/v1/image-1.jpg",
+    "reads": [
+     "bible"
+    ],
+    "problems": [],
+    "label": "lauren",
+    "section": "Characters"
+   }
+  },
+  {
+   "id": 4,
+   "type": "DramaCliStep",
+   "title": "natalie",
+   "pos": [
+    360,
+    900
+   ],
+   "size": [
+    300,
+    340
+   ],
+   "flags": {},
+   "order": 3,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "file",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "links": [
+      8,
+      13,
+      19,
+      24,
+      31,
+      39,
+      48,
+      58
+     ]
+    }
+   ],
+   "properties": {
+    "id": "assets/characters/natalie",
+    "kind": "look",
+    "column": 1,
+    "version": "v1",
+    "accepted": "v1",
+    "fresh": true,
+    "shows": "assets/characters/natalie/v1/image-1.jpg",
+    "reads": [
+     "bible"
+    ],
+    "problems": [],
+    "label": "natalie",
+    "section": "Characters"
+   }
+  },
+  {
+   "id": 5,
+   "type": "DramaCliStep",
+   "title": "quinn_living_room",
+   "pos": [
+    0,
+    1460
+   ],
+   "size": [
+    300,
+    340
+   ],
+   "flags": {},
+   "order": 4,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "file",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "links": [
+      10,
+      16,
+      18,
+      23,
+      30,
+      38,
+      47,
+      57
+     ]
+    }
+   ],
+   "properties": {
+    "id": "assets/scenes/quinn_living_room",
+    "kind": "plate",
+    "column": 1,
+    "version": "v1",
+    "accepted": "v1",
+    "fresh": true,
+    "shows": "assets/scenes/quinn_living_room/v1/image-1.jpg",
+    "reads": [
+     "bible"
+    ],
+    "problems": [],
+    "label": "quinn_living_room",
+    "section": "Locations"
+   }
+  },
+  {
+   "id": 6,
+   "type": "DramaCliStep",
+   "title": "bible",
+   "pos": [
+    0,
+    70
+   ],
+   "size": [
+    300,
+    340
+   ],
+   "flags": {
+    "collapsed": true
+   },
+   "order": 5,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "file",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "links": []
+    }
+   ],
+   "properties": {
+    "id": "bible",
+    "kind": "bible",
+    "column": 0,
+    "version": "v1",
+    "accepted": "v1",
+    "fresh": true,
+    "shows": "bible/v1/bible.md",
+    "reads": [],
+    "problems": [],
+    "label": "bible",
+    "section": "Text"
+   }
+  },
+  {
+   "id": 7,
+   "type": "DramaCliStep",
+   "title": "EP001 breakdown",
+   "pos": [
+    0,
+    160
+   ],
+   "size": [
+    300,
+    340
+   ],
+   "flags": {
+    "collapsed": true
+   },
+   "order": 6,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "file",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "links": []
+    }
+   ],
+   "properties": {
+    "id": "episodes/EP001/breakdown",
+    "kind": "breakdown",
+    "column": 2,
+    "version": "v4",
+    "accepted": "v4",
+    "fresh": true,
+    "shows": "episodes/EP001/breakdown/v4/breakdown.md",
+    "reads": [
+     "bible"
+    ],
+    "problems": [],
+    "label": "EP001 breakdown",
+    "section": "Text"
+   }
+  },
+  {
+   "id": 8,
+   "type": "DramaCliStep",
+   "title": "EP001 cut",
+   "pos": [
+    2360,
+    70
+   ],
+   "size": [
+    300,
+    340
+   ],
+   "flags": {},
+   "order": 7,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "episodes/EP001/segments/seg01",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 1
+    },
+    {
+     "name": "episodes/EP001/segments/seg02",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 2
+    },
+    {
+     "name": "episodes/EP001/segments/seg03",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 3
+    },
+    {
+     "name": "episodes/EP001/segments/seg04",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 4
+    },
+    {
+     "name": "episodes/EP001/segments/seg05",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 5
+    }
+   ],
+   "outputs": [
+    {
+     "name": "file",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "links": []
+    }
+   ],
+   "properties": {
+    "id": "episodes/EP001/edit",
+    "kind": "cut",
+    "column": 7,
+    "version": "v2",
+    "accepted": null,
+    "fresh": true,
+    "shows": "episodes/EP001/edit/v2/cut.mp4",
+    "reads": [],
+    "problems": [],
+    "label": "EP001 cut",
+    "section": "EP001 cut"
+   }
+  },
+  {
+   "id": 9,
+   "type": "DramaCliStep",
+   "title": "EP001 seg01 line-art",
+   "pos": [
+    820,
+    70
+   ],
+   "size": [
+    300,
+    340
+   ],
+   "flags": {},
+   "order": 8,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "assets/characters/george",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 6
+    }
+   ],
+   "outputs": [
+    {
+     "name": "file",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "links": [
+      17,
+      22,
+      29,
+      37,
+      46,
+      56
+     ]
+    }
+   ],
+   "properties": {
+    "id": "episodes/EP001/multi_panel_storyboard/seg01/line-art",
+    "kind": "storyboard",
+    "column": 4,
+    "version": "v10",
+    "accepted": "v10",
+    "fresh": true,
+    "shows": "episodes/EP001/multi_panel_storyboard/seg01/line-art/v10/image-1.png",
+    "reads": [
+     "bible",
+     "episodes/EP001/breakdown"
+    ],
+    "problems": [],
+    "label": "EP001 seg01 line-art",
+    "section": "EP001 seg01"
+   }
+  },
+  {
+   "id": 10,
+   "type": "DramaCliStep",
+   "title": "EP001 seg02 line-art",
+   "pos": [
+    820,
+    630
+   ],
+   "size": [
+    300,
+    340
+   ],
+   "flags": {},
+   "order": 9,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "file",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "links": [
+      27,
+      34,
+      42,
+      51,
+      61
+     ]
+    }
+   ],
+   "properties": {
+    "id": "episodes/EP001/multi_panel_storyboard/seg02/line-art",
+    "kind": "storyboard",
+    "column": 4,
+    "version": "v9",
+    "accepted": "v9",
+    "fresh": true,
+    "shows": "episodes/EP001/multi_panel_storyboard/seg02/line-art/v9/image-1.png",
+    "reads": [
+     "bible",
+     "episodes/EP001/breakdown"
+    ],
+    "problems": [],
+    "label": "EP001 seg02 line-art",
+    "section": "EP001 seg02"
+   }
+  },
+  {
+   "id": 11,
+   "type": "DramaCliStep",
+   "title": "EP001 seg03 line-art",
+   "pos": [
+    820,
+    1190
+   ],
+   "size": [
+    300,
+    340
+   ],
+   "flags": {},
+   "order": 10,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "assets/characters/cassie",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 7
+    },
+    {
+     "name": "assets/characters/natalie",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 8
+    },
+    {
+     "name": "assets/characters/lauren",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 9
+    },
+    {
+     "name": "assets/scenes/quinn_living_room",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 10
+    }
+   ],
+   "outputs": [
+    {
+     "name": "file",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "links": [
+      36,
+      44,
+      53,
+      63
+     ]
+    }
+   ],
+   "properties": {
+    "id": "episodes/EP001/multi_panel_storyboard/seg03/line-art",
+    "kind": "storyboard",
+    "column": 4,
+    "version": "v6",
+    "accepted": "v6",
+    "fresh": true,
+    "shows": "episodes/EP001/multi_panel_storyboard/seg03/line-art/v6/image-1.jpg",
+    "reads": [
+     "bible",
+     "episodes/EP001/breakdown"
+    ],
+    "problems": [],
+    "label": "EP001 seg03 line-art",
+    "section": "EP001 seg03"
+   }
+  },
+  {
+   "id": 12,
+   "type": "DramaCliStep",
+   "title": "EP001 seg04 line-art",
+   "pos": [
+    820,
+    1750
+   ],
+   "size": [
+    300,
+    340
+   ],
+   "flags": {},
+   "order": 11,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "assets/characters/lauren",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 11
+    },
+    {
+     "name": "assets/characters/george",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 12
+    }
+   ],
+   "outputs": [
+    {
+     "name": "file",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "links": [
+      45,
+      54,
+      64
+     ]
+    }
+   ],
+   "properties": {
+    "id": "episodes/EP001/multi_panel_storyboard/seg04/line-art",
+    "kind": "storyboard",
+    "column": 4,
+    "version": "v10",
+    "accepted": "v10",
+    "fresh": true,
+    "shows": "episodes/EP001/multi_panel_storyboard/seg04/line-art/v10/image-1.png",
+    "reads": [
+     "bible",
+     "episodes/EP001/breakdown"
+    ],
+    "problems": [],
+    "label": "EP001 seg04 line-art",
+    "section": "EP001 seg04"
+   }
+  },
+  {
+   "id": 13,
+   "type": "DramaCliStep",
+   "title": "EP001 seg05 line-art",
+   "pos": [
+    820,
+    2310
+   ],
+   "size": [
+    300,
+    340
+   ],
+   "flags": {},
+   "order": 12,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "assets/characters/natalie",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 13
+    },
+    {
+     "name": "assets/characters/cassie",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 14
+    },
+    {
+     "name": "assets/characters/lauren",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 15
+    },
+    {
+     "name": "assets/scenes/quinn_living_room",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 16
+    }
+   ],
+   "outputs": [
+    {
+     "name": "file",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "links": [
+      55,
+      65
+     ]
+    }
+   ],
+   "properties": {
+    "id": "episodes/EP001/multi_panel_storyboard/seg05/line-art",
+    "kind": "storyboard",
+    "column": 4,
+    "version": "v6",
+    "accepted": "v6",
+    "fresh": true,
+    "shows": "episodes/EP001/multi_panel_storyboard/seg05/line-art/v6/image-1.jpg",
+    "reads": [
+     "bible",
+     "episodes/EP001/breakdown"
+    ],
+    "problems": [],
+    "label": "EP001 seg05 line-art",
+    "section": "EP001 seg05"
+   }
+  },
+  {
+   "id": 14,
+   "type": "DramaCliStep",
+   "title": "EP001 seg01 take",
+   "pos": [
+    1180,
+    70
+   ],
+   "size": [
+    300,
+    340
+   ],
+   "flags": {},
+   "order": 13,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "episodes/EP001/multi_panel_storyboard/seg01/line-art",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 17
+    },
+    {
+     "name": "assets/scenes/quinn_living_room",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 18
+    },
+    {
+     "name": "assets/characters/natalie",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 19
+    },
+    {
+     "name": "assets/characters/george",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 20
+    },
+    {
+     "name": "assets/characters/lauren",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 21
+    }
+   ],
+   "outputs": [
+    {
+     "name": "file",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "links": [
+      1
+     ]
+    }
+   ],
+   "properties": {
+    "id": "episodes/EP001/segments/seg01",
+    "kind": "take",
+    "column": 6,
+    "version": "t04",
+    "accepted": null,
+    "fresh": true,
+    "shows": "episodes/EP001/segments/seg01/t04/video.mp4",
+    "reads": [
+     "bible",
+     "episodes/EP001/breakdown",
+     "episodes/EP001/video_prompts"
+    ],
+    "problems": [],
+    "label": "EP001 seg01 take",
+    "section": "EP001 seg01"
+   }
+  },
+  {
+   "id": 15,
+   "type": "DramaCliStep",
+   "title": "EP001 seg02 take",
+   "pos": [
+    1180,
+    630
+   ],
+   "size": [
+    300,
+    340
+   ],
+   "flags": {},
+   "order": 14,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "episodes/EP001/multi_panel_storyboard/seg01/line-art",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 22
+    },
+    {
+     "name": "assets/scenes/quinn_living_room",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 23
+    },
+    {
+     "name": "assets/characters/natalie",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 24
+    },
+    {
+     "name": "assets/characters/george",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 25
+    },
+    {
+     "name": "assets/characters/lauren",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 26
+    },
+    {
+     "name": "episodes/EP001/multi_panel_storyboard/seg02/line-art",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 27
+    },
+    {
+     "name": "assets/characters/cassie",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 28
+    }
+   ],
+   "outputs": [
+    {
+     "name": "file",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "links": [
+      2
+     ]
+    }
+   ],
+   "properties": {
+    "id": "episodes/EP001/segments/seg02",
+    "kind": "take",
+    "column": 6,
+    "version": "t03",
+    "accepted": "t03",
+    "fresh": true,
+    "shows": "episodes/EP001/segments/seg02/t03/video.mp4",
+    "reads": [
+     "bible",
+     "episodes/EP001/breakdown",
+     "episodes/EP001/video_prompts"
+    ],
+    "problems": [],
+    "label": "EP001 seg02 take",
+    "section": "EP001 seg02"
+   }
+  },
+  {
+   "id": 16,
+   "type": "DramaCliStep",
+   "title": "EP001 seg03 take",
+   "pos": [
+    1180,
+    1190
+   ],
+   "size": [
+    300,
+    340
+   ],
+   "flags": {},
+   "order": 15,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "episodes/EP001/multi_panel_storyboard/seg01/line-art",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 29
+    },
+    {
+     "name": "assets/scenes/quinn_living_room",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 30
+    },
+    {
+     "name": "assets/characters/natalie",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 31
+    },
+    {
+     "name": "assets/characters/george",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 32
+    },
+    {
+     "name": "assets/characters/lauren",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 33
+    },
+    {
+     "name": "episodes/EP001/multi_panel_storyboard/seg02/line-art",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 34
+    },
+    {
+     "name": "assets/characters/cassie",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 35
+    },
+    {
+     "name": "episodes/EP001/multi_panel_storyboard/seg03/line-art",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 36
+    }
+   ],
+   "outputs": [
+    {
+     "name": "file",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "links": [
+      3
+     ]
+    }
+   ],
+   "properties": {
+    "id": "episodes/EP001/segments/seg03",
+    "kind": "take",
+    "column": 6,
+    "version": "t03",
+    "accepted": "t03",
+    "fresh": true,
+    "shows": "episodes/EP001/segments/seg03/t03/video.mp4",
+    "reads": [
+     "bible",
+     "episodes/EP001/breakdown",
+     "episodes/EP001/video_prompts"
+    ],
+    "problems": [],
+    "label": "EP001 seg03 take",
+    "section": "EP001 seg03"
+   }
+  },
+  {
+   "id": 17,
+   "type": "DramaCliStep",
+   "title": "EP001 seg04 take",
+   "pos": [
+    1180,
+    1750
+   ],
+   "size": [
+    300,
+    340
+   ],
+   "flags": {},
+   "order": 16,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "episodes/EP001/multi_panel_storyboard/seg01/line-art",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 37
+    },
+    {
+     "name": "assets/scenes/quinn_living_room",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 38
+    },
+    {
+     "name": "assets/characters/natalie",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 39
+    },
+    {
+     "name": "assets/characters/george",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 40
+    },
+    {
+     "name": "assets/characters/lauren",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 41
+    },
+    {
+     "name": "episodes/EP001/multi_panel_storyboard/seg02/line-art",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 42
+    },
+    {
+     "name": "assets/characters/cassie",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 43
+    },
+    {
+     "name": "episodes/EP001/multi_panel_storyboard/seg03/line-art",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 44
+    },
+    {
+     "name": "episodes/EP001/multi_panel_storyboard/seg04/line-art",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 45
+    }
+   ],
+   "outputs": [
+    {
+     "name": "file",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "links": [
+      4
+     ]
+    }
+   ],
+   "properties": {
+    "id": "episodes/EP001/segments/seg04",
+    "kind": "take",
+    "column": 6,
+    "version": "t04",
+    "accepted": "t04",
+    "fresh": true,
+    "shows": "episodes/EP001/segments/seg04/t04/video.mp4",
+    "reads": [
+     "bible",
+     "episodes/EP001/breakdown",
+     "episodes/EP001/video_prompts"
+    ],
+    "problems": [],
+    "label": "EP001 seg04 take",
+    "section": "EP001 seg04"
+   }
+  },
+  {
+   "id": 18,
+   "type": "DramaCliStep",
+   "title": "EP001 seg05 take",
+   "pos": [
+    1180,
+    2310
+   ],
+   "size": [
+    300,
+    340
+   ],
+   "flags": {},
+   "order": 17,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "episodes/EP001/multi_panel_storyboard/seg01/line-art",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 46
+    },
+    {
+     "name": "assets/scenes/quinn_living_room",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 47
+    },
+    {
+     "name": "assets/characters/natalie",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 48
+    },
+    {
+     "name": "assets/characters/george",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 49
+    },
+    {
+     "name": "assets/characters/lauren",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 50
+    },
+    {
+     "name": "episodes/EP001/multi_panel_storyboard/seg02/line-art",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 51
+    },
+    {
+     "name": "assets/characters/cassie",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 52
+    },
+    {
+     "name": "episodes/EP001/multi_panel_storyboard/seg03/line-art",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 53
+    },
+    {
+     "name": "episodes/EP001/multi_panel_storyboard/seg04/line-art",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 54
+    },
+    {
+     "name": "episodes/EP001/multi_panel_storyboard/seg05/line-art",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 55
+    }
+   ],
+   "outputs": [
+    {
+     "name": "file",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "links": [
+      5
+     ]
+    }
+   ],
+   "properties": {
+    "id": "episodes/EP001/segments/seg05",
+    "kind": "take",
+    "column": 6,
+    "version": "t02",
+    "accepted": "t02",
+    "fresh": true,
+    "shows": "episodes/EP001/segments/seg05/t02/video.mp4",
+    "reads": [
+     "bible",
+     "episodes/EP001/breakdown",
+     "episodes/EP001/video_prompts"
+    ],
+    "problems": [],
+    "label": "EP001 seg05 take",
+    "section": "EP001 seg05"
+   }
+  },
+  {
+   "id": 19,
+   "type": "DramaCliStep",
+   "title": "EP001 video prompts",
+   "pos": [
+    0,
+    250
+   ],
+   "size": [
+    300,
+    340
+   ],
+   "flags": {
+    "collapsed": true
+   },
+   "order": 18,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "episodes/EP001/multi_panel_storyboard/seg01/line-art",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 56
+    },
+    {
+     "name": "assets/scenes/quinn_living_room",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 57
+    },
+    {
+     "name": "assets/characters/natalie",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 58
+    },
+    {
+     "name": "assets/characters/george",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 59
+    },
+    {
+     "name": "assets/characters/lauren",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 60
+    },
+    {
+     "name": "episodes/EP001/multi_panel_storyboard/seg02/line-art",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 61
+    },
+    {
+     "name": "assets/characters/cassie",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 62
+    },
+    {
+     "name": "episodes/EP001/multi_panel_storyboard/seg03/line-art",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 63
+    },
+    {
+     "name": "episodes/EP001/multi_panel_storyboard/seg04/line-art",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 64
+    },
+    {
+     "name": "episodes/EP001/multi_panel_storyboard/seg05/line-art",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 65
+    }
+   ],
+   "outputs": [
+    {
+     "name": "file",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "links": []
+    }
+   ],
+   "properties": {
+    "id": "episodes/EP001/video_prompts",
+    "kind": "video_prompts",
+    "column": 5,
+    "version": "v2",
+    "accepted": null,
+    "fresh": true,
+    "shows": "episodes/EP001/video_prompts/v2/prompts.md",
+    "reads": [
+     "bible",
+     "episodes/EP001/breakdown"
+    ],
+    "problems": [],
+    "label": "EP001 video prompts",
+    "section": "Text"
+   }
+  }
+ ],
+ "links": [
+  [
+   1,
+   14,
+   0,
+   8,
+   0,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   2,
+   15,
+   0,
+   8,
+   1,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   3,
+   16,
+   0,
+   8,
+   2,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   4,
+   17,
+   0,
+   8,
+   3,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   5,
+   18,
+   0,
+   8,
+   4,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   6,
+   2,
+   0,
+   9,
+   0,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   7,
+   1,
+   0,
+   11,
+   0,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   8,
+   4,
+   0,
+   11,
+   1,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   9,
+   3,
+   0,
+   11,
+   2,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   10,
+   5,
+   0,
+   11,
+   3,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   11,
+   3,
+   0,
+   12,
+   0,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   12,
+   2,
+   0,
+   12,
+   1,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   13,
+   4,
+   0,
+   13,
+   0,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   14,
+   1,
+   0,
+   13,
+   1,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   15,
+   3,
+   0,
+   13,
+   2,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   16,
+   5,
+   0,
+   13,
+   3,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   17,
+   9,
+   0,
+   14,
+   0,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   18,
+   5,
+   0,
+   14,
+   1,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   19,
+   4,
+   0,
+   14,
+   2,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   20,
+   2,
+   0,
+   14,
+   3,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   21,
+   3,
+   0,
+   14,
+   4,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   22,
+   9,
+   0,
+   15,
+   0,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   23,
+   5,
+   0,
+   15,
+   1,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   24,
+   4,
+   0,
+   15,
+   2,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   25,
+   2,
+   0,
+   15,
+   3,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   26,
+   3,
+   0,
+   15,
+   4,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   27,
+   10,
+   0,
+   15,
+   5,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   28,
+   1,
+   0,
+   15,
+   6,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   29,
+   9,
+   0,
+   16,
+   0,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   30,
+   5,
+   0,
+   16,
+   1,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   31,
+   4,
+   0,
+   16,
+   2,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   32,
+   2,
+   0,
+   16,
+   3,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   33,
+   3,
+   0,
+   16,
+   4,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   34,
+   10,
+   0,
+   16,
+   5,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   35,
+   1,
+   0,
+   16,
+   6,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   36,
+   11,
+   0,
+   16,
+   7,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   37,
+   9,
+   0,
+   17,
+   0,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   38,
+   5,
+   0,
+   17,
+   1,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   39,
+   4,
+   0,
+   17,
+   2,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   40,
+   2,
+   0,
+   17,
+   3,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   41,
+   3,
+   0,
+   17,
+   4,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   42,
+   10,
+   0,
+   17,
+   5,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   43,
+   1,
+   0,
+   17,
+   6,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   44,
+   11,
+   0,
+   17,
+   7,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   45,
+   12,
+   0,
+   17,
+   8,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   46,
+   9,
+   0,
+   18,
+   0,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   47,
+   5,
+   0,
+   18,
+   1,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   48,
+   4,
+   0,
+   18,
+   2,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   49,
+   2,
+   0,
+   18,
+   3,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   50,
+   3,
+   0,
+   18,
+   4,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   51,
+   10,
+   0,
+   18,
+   5,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   52,
+   1,
+   0,
+   18,
+   6,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   53,
+   11,
+   0,
+   18,
+   7,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   54,
+   12,
+   0,
+   18,
+   8,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   55,
+   13,
+   0,
+   18,
+   9,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   56,
+   9,
+   0,
+   19,
+   0,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   57,
+   5,
+   0,
+   19,
+   1,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   58,
+   4,
+   0,
+   19,
+   2,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   59,
+   2,
+   0,
+   19,
+   3,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   60,
+   3,
+   0,
+   19,
+   4,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   61,
+   10,
+   0,
+   19,
+   5,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   62,
+   1,
+   0,
+   19,
+   6,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   63,
+   11,
+   0,
+   19,
+   7,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   64,
+   12,
+   0,
+   19,
+   8,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   65,
+   13,
+   0,
+   19,
+   9,
+   "DRAMA_CLI_FILE"
+  ]
+ ],
+ "groups": [
+  {
+   "id": 1,
+   "title": "Text",
+   "font_size": 24,
+   "bounding": [
+    -20,
+    0,
+    340,
+    300
+   ]
+  },
+  {
+   "id": 2,
+   "title": "Characters",
+   "font_size": 24,
+   "bounding": [
+    -20,
+    430,
+    700,
+    830
+   ]
+  },
+  {
+   "id": 3,
+   "title": "Locations",
+   "font_size": 24,
+   "bounding": [
+    -20,
+    1390,
+    340,
+    430
+   ]
+  },
+  {
+   "id": 4,
+   "title": "EP001 seg01",
+   "font_size": 24,
+   "bounding": [
+    800,
+    0,
+    700,
+    430
+   ]
+  },
+  {
+   "id": 5,
+   "title": "EP001 seg02",
+   "font_size": 24,
+   "bounding": [
+    800,
+    560,
+    700,
+    430
+   ]
+  },
+  {
+   "id": 6,
+   "title": "EP001 seg03",
+   "font_size": 24,
+   "bounding": [
+    800,
+    1120,
+    700,
+    430
+   ]
+  },
+  {
+   "id": 7,
+   "title": "EP001 seg04",
+   "font_size": 24,
+   "bounding": [
+    800,
+    1680,
+    700,
+    430
+   ]
+  },
+  {
+   "id": 8,
+   "title": "EP001 seg05",
+   "font_size": 24,
+   "bounding": [
+    800,
+    2240,
+    700,
+    430
+   ]
+  },
+  {
+   "id": 9,
+   "title": "EP001 cut",
+   "font_size": 24,
+   "bounding": [
+    2340,
+    0,
+    340,
+    430
+   ]
+  }
+ ],
+ "config": {},
+ "extra": {
+  "ds": {
+   "scale": 0.75,
+   "offset": [
+    80,
+    80
+   ]
+  },
+  "drama_cli": {
+   "project": "."
+  }
+ },
+ "version": 0.4
+}

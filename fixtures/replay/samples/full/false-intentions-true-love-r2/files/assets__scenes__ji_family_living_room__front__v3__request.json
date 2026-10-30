@@ -1,0 +1,13 @@
+{
+  "model": "gpt-image-2.5-sunburst",
+  "prompt": "Image 1 is the floor plan of this room seen from above: its bottom edge is the front wall, its top edge the back wall, its left edge the left wall and its right edge the right wall. Generate one photorealistic cinematic still of this room, the front view (the establishing view): the camera stands at the centre of the front wall, at eye level, facing the back wall, with a 35mm lens and natural textures. The room layout and furniture placement should exactly match Image 1. The place is completely empty of people: no person, figure, silhouette, mannequin or reflection of a person anywhere, including behind glass, through doorways and in the distance. Location: INT. JI FAMILY LIVING ROOM. A grand, contemporary villa living room in cream, gold and white marble. Back wall: tall French windows onto a garden of leafy trees, flooding the room with warm afternoon sunlight from the back and slightly from the left, with leaves swaying outside. Centred before these windows is a long cream leather sofa with its back to them, facing the camera. In front of it is a low marble-and-gilt coffee table on a large beige patterned carpet. Left wall: a fat white marble column stands in front of it near the back corner, with an open archway to the entrance hall behind it, the way in and out. Right wall: a marble fireplace with a large abstract painting above it, flanked by a cream armchair. Front wall, behind the camera: built-in display cabinets. Light comes from the sunlight through the back windows and a crystal chandelier overhead. Show only this place as described: the doors, windows and openings it names lead nowhere new, with no other exit, courtyard, corridor or outdoor view added. Light it with the sources the description names, from their direction, at a neutral daylight white balance so that whites are white; only lamps the description names may glow warm.\n\nAvoid: people or silhouettes, readable text, labels, signs with letters or numbers, logos, watermark.\n",
+  "n": 1,
+  "size": "1152x2048",
+  "quality": "high",
+  "output_format": "jpeg",
+  "output_compression": 100,
+  "moderation": "low",
+  "input_images": [
+    "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/ji_family_living_room/floor-plan/v3/image-1.jpg"
+  ]
+}

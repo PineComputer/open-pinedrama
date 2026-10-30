@@ -1,0 +1,10 @@
+{
+  "model": "dola-seedream-5-0-pro-260628",
+  "prompt": "Image 1 is one panel of a multi-panel storyboard. Redraw Image 1 so that: Reframe as a medium close-up tight on Lauren's face and shoulders, sitting forward in surprise, so no empty part of the sofa shows beside her. One single picture, same line-art style.\nAfter the edit, the panel shows its shot: Medium close-up, eye-level, whip pan from the near side leftward from the doorway, landing tight on Lauren's face and shoulders at the sofa's right end, facing the back wall. Behind her are the sofa back and the potted fig at the right of the arch. The sofa's left end lies beyond frame left and the right-wall doorway beyond frame right. Lauren snaps her head toward Cassie at the front-left armchair and sits forward in surprise, eyes wide, her hands still in her lap.\nKeep Image 1's framing, camera angle, location, drawing style and border, and everyone and everything the change does not name, unchanged.\n\nAn image after Image 1 is the character sheet of a person in the panel: draw that person as in it (face, hairstyle, build and outfit), in Image 1's drawing style, and use it only for the person, not for its layout, background, colours or multiple views.\nNo text, letters, numbers, captions, speech bubbles, panel labels or watermark anywhere in the image.\n",
+  "size": "720x1281",
+  "response_format": "url",
+  "watermark": false,
+  "input_images": [
+    "/Users/yurun/RunVid/short_drama/outputs/projects/double-life-ep001/episodes/EP001/multi_panel_storyboard/seg02/line-art/v9/crop.png"
+  ]
+}

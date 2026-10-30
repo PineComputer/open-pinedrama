@@ -1,0 +1,96 @@
+{
+  "model": "ep-20260928175156-xn9xm",
+  "content": [
+    {
+      "type": "text",
+      "text": "Image 1: Six-panel storyboard reference, used for the overall shot structure, shot sizes, and camera-movement rhythm. Read it from left to right and from top to bottom; panel N is Shot N. It is a line-art sketch: do not adopt its sketch style, black outlines, white background, panel borders or drawn faces.\nImage 2: Reference of INT. SU YAQING'S DINING AREA, the front view, the establishing view, facing the back wall, a rendered set, not live action. Use it only for the room's layout, the furniture's positions and the light's direction; do not reference its visual content. It contains no people.\nImage 3: Reference of INT. SU YAQING'S DINING AREA, the back view, turned 180 degrees, facing the front wall, with the left wall at its right edge, a rendered set, used only for the room's layout; it contains no people.\nImage 4: Reference of INT. SU YAQING'S DINING AREA, the left-side view, facing the left wall, with the back wall at its right edge, a rendered set, used only for the room's layout; it contains no people.\nImage 5: Reference of INT. SU YAQING'S DINING AREA, the right-side view, facing the right wall, with the back wall at its left edge, a rendered set, used only for the room's layout; it contains no people.\nImage 6: Reference of INT. SU YAQING'S DINING AREA, the floor plan seen from above: its top edge is the back wall, its bottom edge the front wall behind the front view's camera, and its left and right edges the left and right walls, a rendered set, used only for the room's layout; it contains no people.\nImage 7: Blocking reference of the segment's start: the same place with these people in their places, used only for where each person is and which way they face; take faces and outfits from each subject's own image. It is a line-art diagram: do not adopt its outlines or white background.\nImage 8: Subject 1 (Lin Qingyu, look S0) character appearance reference.\nImage 9: Prop 1 (call phone) maps to this image; copy its writing and badges exactly from Image 9.\nFrom each prop's image, use only structure, material, and color.\n[Subject settings]\nSubject 1 (Lin Qingyu): Refer to Image 8. 21, hero; Su Yaqing's younger stepbrother, secretly a wealthy young boss with his own assistant, posing as an ordinary college student to win Ji Ran. Outfit: look S0: At his sister's home: a soft white cotton pullover hoodie with a kangaroo pocket and drawstrings, its sleeves pushed up to the forearm, over light beige drawstring cotton jogger trousers cuffed at the ankle, with clean white low-top sneakers and white crew socks. A relaxed, youthful college look. Signature colour: white.\nEnvironment (INT. SU YAQING'S DINING AREA): Refer to Images 2 to 6. Day, daylight through the window on the left wall. Daylight through the sheer curtains of the window on the left wall falling across the table, and the brass pendant lamp. Quiet room and a thin phone speaker voice.\nDo not swap the characters' appearances, clothing, actions, positions or dialogue.\n[Subjects and relationships]\nOnly one person appears throughout: Lin Qingyu.\n[Blocking]\nRefer to Images 2 to 6 for the room and Image 7 for the people's places. Lin Qingyu sits in the grey upholstered chair at the window end of the white marble dining table, beside the large window on the left wall. He wears the white cotton hoodie with its sleeves pushed up, the beige drawstring joggers and white sneakers. He holds the black call phone in one hand. On the table are one glass vase of white daisies and one bottle of red wine. The walnut sideboard stands against the back wall, and the open archway to the living room is on the right wall. Camera side: in front of the table, on the plant and wine cabinet side, facing the sideboard.\n[Overall style]\nPhotorealistic live-action short drama with cinematic lighting. Each character keeps the face and the outfit with its main colour from their reference image throughout. Use each character sheet only for that character: the face from the close-up on the right, the body and outfit from the turnaround on the left; do not render the sheet's layout, white background or multiple views. This segment has 3 lines, in this order: Lin Qingyu, AJIE (V.O.), Lin Qingyu. Generate speech only from the lines in {} in the shot list, each spoken exactly once by its speaker; everyone else keeps their mouth naturally closed while listening, and a V.O. speaker keeps their mouth closed or is off screen. Follow the shot list below; do not add cuts or camera moves beyond it. Strictly adhere to the 180-degree rule: within a scene, characters keep their screen sides and the camera stays on one side of the axis. Seamless continuity of action; cut on action. For dialogue prefer static shot-reverse-shot and over-the-shoulder shots, balanced with reaction shots and close-up inserts. Faces stable and clear, with no resemblance to any real actor or actress. Normal human eyes. Natural anatomy. Natural, fluid motion that follows the blocking; characters make subtle, natural movements. Characters, props and environment share one world with matched lighting. Each line ends naturally with breathing room and is never cut off. Authentic performances with micro-expressions. No BGM; generate only dialogue, environmental sounds and action sounds. No subtitles.\n[Continuity]\nMaintain continuity in the identities, number, appearance, clothing, relative heights, spatial positions, and eyelines of all the characters. The actions in the shot list occur strictly in sequence. Hands are anatomically correct.\n[Strictly exclude]\nadded characters. garbled phone screen text. subtitles. Dialogue from the wrong character, multiple people speaking at once, repeated or missing lines, lip-sync errors and audio-visual desynchronization. The raw reference images (character sheets, setting plates) appearing as a frame of the video, and starting on a still frame of the setting reference. A fast zoom-in at the start, a fast pull-back at the end, unmotivated whip-pans, tilts, zooms and 360-degree orbits. Axis-crossing, jump cuts, frame skips, flicker and clipping. Face swaps, changes in age or clothing, sudden height shifts, added or missing characters, spatial jumps, and disordered action sequences; props popping in or vanishing, and duplicate characters except mirror reflections. Hand clipping, extra fingers, fused fingers, malformed hands. Subtitles, captions, watermarks and garbled writing; writing and logos other than those on a key prop's reference image, which are copied from it; a phone screen or paper that is not a key prop is shown from the back or out of focus. Black-and-white, monochrome, grayscale, desaturated visuals; hand-drawn, sketch, line art, illustration, comics, animation; storyboard frames, rough sketches, panel borders, gutters and grid layouts.\n[Shot list] (6 shots, approximately 20 seconds)\nWhen a previous-shot reference image is given, it is the moment this segment starts from: keep its people's positions, outfits, props and light, and continue from there. Shot 1 keeps its own camera, matching the image's framing only when it frames the same view; do not repeat that frame later.\nShot 1 (0-4s): [Wide shot, fast push in, eye level, from the wine cabinet facing the table and the sideboard] The sunlit dining area with daisies and red wine on the marble table. Lin Qingyu sits at the window end and raises the phone to his ear, and his smile fades. Dialogue (Lin Qingyu, in Chinese, cool and commanding): {阿杰，给我准备一套最普通的大学生衣服，}\nShot 2 (4-7s): [Medium close-up, locked-off camera, eye level, from the table's near side] Lin Qingyu glances toward the archway on the right wall, his expression serious, the phone at his ear. Dialogue (Lin Qingyu, in Chinese, low and precise): {再帮我处理一下个人资料，从明天开始，}\nShot 3 (7-9s): [Close-up, slow push in, eye level, from the table's near side] Lin Qingyu's eyes narrow with quiet determination. Dialogue (Lin Qingyu, in Chinese, firm): {我就是一名普通的大学生。}\nShot 4 (9-13s): [Medium shot, locked-off camera, low angle, from the near side of the marble table past the daisies] Lin Qingyu leans forward and lays his free hand flat on the marble table beside the vase of daisies. Dialogue (Lin Qingyu, in Chinese, lowered and stern): {另外，这件事，绝对不能让我姐知道。}\nShot 5 (13-17s): [Medium close-up, locked-off camera, high angle, from the wine cabinet side] Lin Qingyu keeps his lips closed while he listens. His brow tightens and his fingers tap the marble once. Dialogue (AJIE, V.O., in Chinese, anxious and quick through a phone speaker): {老板，您明天要出席港城的行业高峰论坛，您...}\nShot 6 (17-20s): [Close-up, locked-off camera, low angle, from the table's near side] Lin Qingyu cuts in without hesitation, and a faint confident smile touches his lips. Dialogue (Lin Qingyu, in Chinese, cool and final): {推了，明天，我要去面试。}\nAt the end: Lin Qingyu sits in the chair at the window end of the white marble dining table beside the window on the left wall, the phone at his ear and a faint confident smile on his face. The vase of daisies and the wine bottle stand on the table, and the archway to the living room is on the right wall.\n\nImage 10 is the first frame.\n"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261027202518-wz548"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/su_dining_area/times/Day/v2/front.jpg",
+        "path": "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/su_dining_area/times/Day/v2/front.jpg",
+        "sha256": "437f81467bc9255e00775446d563e94c32d0b272ae8bfffa1bd467928a662264"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/su_dining_area/times/Day/v2/back.jpg",
+        "path": "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/su_dining_area/times/Day/v2/back.jpg",
+        "sha256": "94c616b77abdd1aa26693a6c1da8057e4cdf90d99795b02741daa881ec3adc49"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/su_dining_area/times/Day/v2/left-side.jpg",
+        "path": "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/su_dining_area/times/Day/v2/left-side.jpg",
+        "sha256": "077eea75cedca8d696292752e56975e1f14efd0ff8625c93261e8bd06e596c51"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/su_dining_area/times/Day/v2/right-side.jpg",
+        "path": "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/su_dining_area/times/Day/v2/right-side.jpg",
+        "sha256": "c2c6dcbdbaf873ad650232a3fc20e882228da4777b01d8e24eea19e4fab7b9a5"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/su_dining_area/times/Day/v2/floor-plan.jpg",
+        "path": "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/su_dining_area/times/Day/v2/floor-plan.jpg",
+        "sha256": "5308985f28920c206f44a5207752ae9d2b0589cd4ead0049d04088292a11ad9f"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261027200804-xnfxr"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261027182105-cm86r"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261027183216-58rjr"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261027201644-cswkm"
+      },
+      "role": "reference_image"
+    }
+  ],
+  "duration": 20,
+  "ratio": "9:16",
+  "resolution": "480p",
+  "generate_audio": true,
+  "watermark": false,
+  "return_last_frame": true,
+  "omni_reference_task_type": "reference"
+}

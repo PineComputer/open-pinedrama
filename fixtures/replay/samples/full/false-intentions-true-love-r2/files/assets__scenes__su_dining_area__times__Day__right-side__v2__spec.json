@@ -1,0 +1,11 @@
+{
+  "provider": "openai",
+  "model": "gpt-image-2.5-sunburst",
+  "prompt": "Image 1 is the right-side view, facing the right wall, with the back wall at its left edge of a room. Edit it into the same view of the same room at this time of day: Day. Keep the camera position, framing, lens, walls, doors, windows, furniture, materials and colours exactly as in Image 1; change only the light. Outside every window and doorway, show what that place looks like at Day, with the sky, light and lit windows of that time, never the daylight scene of Image 1 darkened. Inside, light the room as the description says it is lit at that time, with only the lamps it names turned on. The place stays completely empty of people: no person, figure, silhouette or reflection of a person anywhere. Location: INT. SU YAQING'S DINING AREA. The elegant dining area of the same contemporary penthouse. A rectangular white marble dining table stands in the middle of the room, running from the left wall towards the right wall, with upholstered grey chairs around it. On the table are a glass vase of white daisies and a bottle of red wine. Left wall: a large window with sheer curtains, the main light source, casting daylight across the table from the left; one chair stands at the window end of the table. Back wall: a low walnut sideboard with decanters and a large framed print. Right wall: an open archway back to the living room, the way in. Front wall, behind the camera: a tall plant and a wine cabinet. A brass linear pendant lamp hangs over the table.\n\nAvoid: people or silhouettes, a darkened copy of Image 1's daylight, readable text, labels, signs with letters or numbers, logos, watermark.\n",
+  "aspect_ratio": "9:16",
+  "size": "1152x2048",
+  "quality": "high",
+  "images": [
+    "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/su_dining_area/v2/right-side.jpg"
+  ]
+}

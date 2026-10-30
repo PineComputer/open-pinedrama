@@ -1,0 +1,14 @@
+{
+  "model": "gpt-image-2.5-sunburst",
+  "prompt": "Image 1 is the floor plan of a room seen from above: its bottom edge is the front wall, its top edge the back wall, its left edge the left wall and its right edge the right wall. Image 2 is the front view of the same room (the establishing view), taken from the centre of the front wall facing the back wall. Generate one photorealistic cinematic still of this same room, empty of people, from a new camera position: the left-side view: the camera stands at the centre of the right wall, at eye level, facing the left wall, so the back wall is at the right edge of the frame and the front wall at its left edge. Turn the camera for real: this view must not show the back wall's furniture head-on unless it is the wall being faced. Keep every wall, door, window, piece of furniture, material, colour and light exactly as Image 1 and Image 2 show them, seen from this new side; the room layout and furniture placement exactly match Image 1. Location: INT. JI RAN'S APARTMENT ENTRANCE. The private elevator landing and entrance hall outside Ji Ran's apartment in a luxury contemporary downtown building at night, in warm beige stone and dark wood. It is used by both the APARTMENT ENTRANCE and APARTMENT CORRIDOR scene headings as one continuous place. Left wall: brushed-steel elevator doors, the way in from the building. Right wall, directly opposite the elevator: the apartment's tall dark walnut front door with a black smart lock and brass handle. Back wall, facing the camera: a large framed autumn landscape painting of golden trees, hung above a slim dark-wood console table and lit by two brass wall sconces on either side of it. Front wall, behind the camera: a continuation of the stone corridor. The floor is polished pale stone, with clear open floor between the elevator doors and the front door. Light comes from the warm sconces on the back wall and soft downlights in the ceiling.\n\nAvoid: people, readable text, logos, watermark, any door or window the description does not name.\n",
+  "n": 1,
+  "size": "1152x2048",
+  "quality": "high",
+  "output_format": "jpeg",
+  "output_compression": 100,
+  "moderation": "low",
+  "input_images": [
+    "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/apartment_entrance/floor-plan/v2/image-1.jpg",
+    "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/apartment_entrance/front/v2/image-1.jpg"
+  ]
+}

@@ -1,0 +1,500 @@
+{
+  "model": "sd25",
+  "content": [
+    {
+      "type": "text",
+      "text": "Image 1: Eleven-panel storyboard reference, used for the overall shot structure, shot sizes, and camera-movement rhythm. Read it from left to right and from top to bottom; panel N is Shot N.\nImage 2: Live-action reference of Funeral Hall, used as the benchmark for environmental composition, lighting, and realistic live-action texture; it contains no people.\nImage 3: Subject 1 (Si Nian, look S0) character appearance reference.\nImage 4: Subject 2 (Si Xin) character appearance reference.\nImage 5: Subject 3 (Zhang Cuimei) character appearance reference.\n[Subject settings]\nSubject 1 (Si Nian): Refer to Image 3. 18, Protagonist. Si Nian is the Si family's adopted daughter, swapped at birth. She is presumed dead and wakes at her own funeral with the mind of a fearless modern woman.. Outfit: look S0: Funeral burial clothes (shou yi): a high-collared, long-sleeved, dark navy-blue satin jacket with cloth frog fastenings and a subtle tonal cloud pattern, matching loose dark navy satin trousers, plain black cloth slippers and the red string bracelet on her left wrist. Her hair is loose. Signature colour: red.\nSubject 2 (Si Xin): Refer to Image 4. 50, Si Nian's adoptive father and deputy head of a state-owned chemical plant. He is a respected local official.. Outfit: Mid-grey wool Zhongshan (Mao) suit: a buttoned four-pocket jacket and matching grey trousers. Underneath is a plain white shirt collar. He wears a black mourning armband on his left sleeve, polished black leather shoes, black-rimmed glasses and a steel watch. Signature colour: grey.\nSubject 3 (Zhang Cuimei): Refer to Image 5. 55, Si Nian's adoptive mother and Si Xin's wife.. Outfit: Plum-purple knitted long-sleeved cardigan buttoned over a plain black high-neck blouse, straight black trousers and black low-heeled leather shoes. She wears a black mourning armband on her left sleeve, gold stud earrings and a jade bangle. Signature colour: purple.\nEnvironment (Funeral Hall): Refer to Image 2. Day, cool daylight through the tall left windows and a flat fluorescent wash. Cool diagonal daylight from the tall left windows, flat pale fluorescent overhead light, then bright daylight bursting through the opened door. Live sound: frightened murmurs, shuffling, a creaking door.\nDo not swap the characters' appearances, clothing, actions, positions or dialogue.\n[Overall style]\nPhotorealistic live-action short drama with cinematic lighting. Each character keeps the face and the outfit with its main colour from their reference image throughout. Use each character sheet only for that character: the face from the close-up on the right, the body and outfit from the turnaround on the left; do not render the sheet's layout, white background or multiple views. This segment has 5 lines, in this order: Si Nian, Si Xin, Si Nian, Zhang Cuimei, Si Nian. Generate speech only from the lines in {} in the shot list, each spoken exactly once by its speaker; everyone else keeps their mouth naturally closed while listening, and a V.O. speaker keeps their mouth closed or is off screen. Follow the shot list below; do not add cuts or camera moves beyond it. Strictly adhere to the 180-degree rule: within a scene, characters keep their screen sides and the camera stays on one side of the axis. Seamless continuity of action, spatial matching and consistent actor blocking; cut on action. For dialogue prefer static shot-reverse-shot and over-the-shoulder shots, balanced with reaction shots and close-up inserts. Faces stable and clear, consistent with the reference images, with no resemblance to any real actor or actress. Normal human eyes. Natural anatomy and hands. Natural, fluid motion that follows the blocking; characters make subtle, natural movements. Characters, props and environment share one world with matched lighting. Each line ends naturally with breathing room and is never cut off. Authentic performances with micro-expressions. No BGM; generate only dialogue, environmental sounds and action sounds. No subtitles.\n[Strictly exclude]\nreadable text on the wreath ribbon. Si Nian changing out of the burial clothes. subtitles. Dialogue from the wrong character, multiple people speaking at once, repeated or missing lines, lip-sync errors and audio-visual desynchronization. The raw reference images (character sheets, setting plates) appearing as a frame of the video, and starting on a still frame of the setting reference. A fast zoom-in at the start, a fast pull-back at the end, unmotivated whip-pans, tilts, zooms and 360-degree orbits. Axis-crossing, jump cuts, frame skips, flicker and clipping. Characters or props popping in or vanishing, and duplicate characters except mirror reflections. Readable text, numbers, logos and watermarks; phones and paper are shown from the back or out of focus. Storyboard frames, panel borders, gutters and grid layouts.\n[Shot list] (11 shots, approximately 26 seconds)\nWhen a previous-shot reference image is given, Shot 1 matches its camera position, shot size and blocking and continues from that moment; do not repeat that frame later.\nAt the start: Funeral hall, same axis, camera on the window side, the bier at screen right. Si Nian sits upright on the bier in burial clothes, the white cloth at her waist, eyes half shut, frowning. Zhang Cuimei sits on the floor in the front row where she fell, and Si Xin stands half a step back at her side, both facing the bier. Unnamed mourners and Si Yi have fled toward the walls. Paper wreaths line both walls and the one pair of double wooden doors is at screen left.\nShot 1 (0-3s): [Medium shot, locked-off camera, eye-level from the window side] Si Nian rubs her eyes with one hand and pats the white cloth beside her, searching for something. Dialogue (Si Nian, in Mandarin, sleepy mumble): {今天有课吗？我手机呢。}\nShot 2 (3-5s): [Wide shot, low angle from the window side, bier at screen right] Si Nian swings her legs off the bier and stands beside it in her burial clothes.\nShot 3 (5-7s): [Close-up, fast push in on her face, eye-level] Si Nian's eyes snap fully open and her mouth falls open in shock as she takes in the hall.\nShot 4 (7-9s): [Medium close-up, handheld, eye-level from the window side] Si Xin points a trembling finger at her, backing away, his glasses crooked. Dialogue (Si Xin, in Mandarin, stammering terror): {你是人是鬼！}\nShot 5 (9-12s): [Medium shot, locked-off camera, eye-level from the window side] Si Nian looks Si Xin up and down, staring at his grey suit and armband, and points at him. Dialogue (Si Nian, in Mandarin, baffled and cheeky): {你，你们怎么穿成这样啊！}\nShot 6 (12-15s): [Close-up, low angle from the window side] Si Xin swallows hard and takes another step back, clutching his jacket front. Dialogue (Si Nian, in Mandarin, baffled and cheeky): {这是什么整蛊节目吗？}\nShot 7 (15-17s): [Wide shot, high angle, pan following Si Nian toward screen left] Si Nian walks along the paper wreaths toward the mourners, peering around and fingering a white ribbon.\nShot 8 (17-19s): [Medium shot, high angle from the window side] Zhang Cuimei scoots backward on the floor on her hands, one hand raised to ward Si Nian off. Dialogue (Zhang Cuimei, in Mandarin, shrieking in fear): {你别过来！}\nShot 9 (19-21s): [Close-up, rack focus: the focus shifts from the paper flowers in the foreground to Si Nian's face] Si Nian leans close to a paper wreath on its stand and studies its white ribbon.\nShot 10 (21-23s): [Extreme close-up on her eyes, locked-off camera, eye-level] Si Nian's eyes widen in disbelief. Dialogue (Si Nian, in Mandarin, stunned): {一九八七？}\nShot 11 (23-26s): [Wide shot, eye-level from the window side, track following Si Nian to the doors at screen left] Si Nian strides in her burial clothes past Si Xin and Zhang Cuimei to the double wooden doors and yanks one open, and daylight floods in as the two turn to stare. <The heavy wooden door creaks open>\nAt the end: Funeral hall, same axis, camera on the window side. Si Nian stands in the open doorway at screen left in burial clothes, her back to the hall, daylight pouring in. Si Xin stands and Zhang Cuimei sits on the floor in the front row, both turned toward the doors.\n"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261019105135-rk6bp"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@/Users/yurun/RunVid/short-drama-runs/houma-ep001-v2/assets/scenes/funeral_hall/v3/image-1.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261019091912-fzk84"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261019091047-ppqp2"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261019092510-g6xgz"
+      },
+      "role": "reference_image"
+    }
+  ],
+  "duration": 26,
+  "ratio": "9:16",
+  "resolution": "480p",
+  "generate_audio": true,
+  "watermark": false,
+  "return_last_frame": true,
+  "drama": {
+    "segment": {
+      "id": "seg03",
+      "duration": 26,
+      "location": "funeral_hall",
+      "time": "Day, cool daylight through the tall left windows and a flat fluorescent wash",
+      "characters": [
+        "si_nian",
+        "si_xin",
+        "zhang_cuimei"
+      ],
+      "states": {
+        "si_nian": "S0"
+      },
+      "first_state": "Funeral hall, same axis, camera on the window side, the bier at screen right. Si Nian sits upright on the bier in burial clothes, the white cloth at her waist, eyes half shut, frowning. Zhang Cuimei sits on the floor in the front row where she fell, and Si Xin stands half a step back at her side, both facing the bier. Unnamed mourners and Si Yi have fled toward the walls. Paper wreaths line both walls and the one pair of double wooden doors is at screen left.",
+      "shots": [
+        {
+          "time": "0-3s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, locked-off camera, eye-level from the window side",
+          "visual": "Si Nian rubs her eyes with one hand and pats the white cloth beside her, searching for something.",
+          "audio": "Dialogue (Si Nian, in Mandarin, sleepy mumble): {今天有课吗？我手机呢。}",
+          "characters": [
+            "si_nian"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "3-5s",
+          "size": "wide shot",
+          "angle": "low angle",
+          "camera": "Wide shot, low angle from the window side, bier at screen right",
+          "visual": "Si Nian swings her legs off the bier and stands beside it in her burial clothes.",
+          "audio": "",
+          "characters": [
+            "si_nian"
+          ],
+          "lines": []
+        },
+        {
+          "time": "5-7s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, fast push in on her face, eye-level",
+          "visual": "Si Nian's eyes snap fully open and her mouth falls open in shock as she takes in the hall.",
+          "audio": "",
+          "characters": [
+            "si_nian"
+          ],
+          "lines": []
+        },
+        {
+          "time": "7-9s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up, handheld, eye-level from the window side",
+          "visual": "Si Xin points a trembling finger at her, backing away, his glasses crooked.",
+          "audio": "Dialogue (Si Xin, in Mandarin, stammering terror): {你是人是鬼！}",
+          "characters": [
+            "si_xin"
+          ],
+          "lines": [
+            1
+          ]
+        },
+        {
+          "time": "9-12s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, locked-off camera, eye-level from the window side",
+          "visual": "Si Nian looks Si Xin up and down, staring at his grey suit and armband, and points at him.",
+          "audio": "Dialogue (Si Nian, in Mandarin, baffled and cheeky): {你，你们怎么穿成这样啊！}",
+          "characters": [
+            "si_nian"
+          ],
+          "lines": [
+            2
+          ]
+        },
+        {
+          "time": "12-15s",
+          "size": "close-up",
+          "angle": "low angle",
+          "camera": "Close-up, low angle from the window side",
+          "visual": "Si Xin swallows hard and takes another step back, clutching his jacket front.",
+          "audio": "Dialogue (Si Nian, in Mandarin, baffled and cheeky): {这是什么整蛊节目吗？}",
+          "characters": [
+            "si_xin"
+          ],
+          "lines": [
+            2
+          ]
+        },
+        {
+          "time": "15-17s",
+          "size": "wide shot",
+          "angle": "high angle",
+          "camera": "Wide shot, high angle, pan following Si Nian toward screen left",
+          "visual": "Si Nian walks along the paper wreaths toward the mourners, peering around and fingering a white ribbon.",
+          "audio": "",
+          "characters": [
+            "si_nian"
+          ],
+          "lines": []
+        },
+        {
+          "time": "17-19s",
+          "size": "medium shot",
+          "angle": "high angle",
+          "camera": "Medium shot, high angle from the window side",
+          "visual": "Zhang Cuimei scoots backward on the floor on her hands, one hand raised to ward Si Nian off.",
+          "audio": "Dialogue (Zhang Cuimei, in Mandarin, shrieking in fear): {你别过来！}",
+          "characters": [
+            "zhang_cuimei"
+          ],
+          "lines": [
+            3
+          ]
+        },
+        {
+          "time": "19-21s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, rack focus: the focus shifts from the paper flowers in the foreground to Si Nian's face",
+          "visual": "Si Nian leans close to a paper wreath on its stand and studies its white ribbon.",
+          "audio": "",
+          "characters": [
+            "si_nian"
+          ],
+          "lines": []
+        },
+        {
+          "time": "21-23s",
+          "size": "extreme close-up",
+          "angle": "eye level",
+          "camera": "Extreme close-up on her eyes, locked-off camera, eye-level",
+          "visual": "Si Nian's eyes widen in disbelief.",
+          "audio": "Dialogue (Si Nian, in Mandarin, stunned): {一九八七？}",
+          "characters": [
+            "si_nian"
+          ],
+          "lines": [
+            4
+          ]
+        },
+        {
+          "time": "23-26s",
+          "size": "wide shot",
+          "angle": "eye level",
+          "camera": "Wide shot, eye-level from the window side, track following Si Nian to the doors at screen left",
+          "visual": "Si Nian strides in her burial clothes past Si Xin and Zhang Cuimei to the double wooden doors and yanks one open, and daylight floods in as the two turn to stare.",
+          "audio": "<The heavy wooden door creaks open>",
+          "characters": [
+            "si_nian",
+            "si_xin",
+            "zhang_cuimei"
+          ],
+          "lines": []
+        }
+      ],
+      "light_audio": "Cool diagonal daylight from the tall left windows, flat pale fluorescent overhead light, then bright daylight bursting through the opened door. Live sound: frightened murmurs, shuffling, a creaking door.",
+      "dialogue": [
+        {
+          "speaker": "si_nian",
+          "line": "今天有课吗？我手机呢。"
+        },
+        {
+          "speaker": "si_xin",
+          "line": "你是人是鬼！"
+        },
+        {
+          "speaker": "si_nian",
+          "line": "你，你们怎么穿成这样啊！这是什么整蛊节目吗？"
+        },
+        {
+          "speaker": "zhang_cuimei",
+          "line": "你别过来！"
+        },
+        {
+          "speaker": "si_nian",
+          "line": "一九八七？"
+        }
+      ],
+      "must_hit": [
+        "Si Nian stands up beside the bier and opens her eyes in shock",
+        "Si Nian studies a paper wreath",
+        "Si Nian in burial clothes pulls open the double doors"
+      ],
+      "exit_state": "Funeral hall, same axis, camera on the window side. Si Nian stands in the open doorway at screen left in burial clothes, her back to the hall, daylight pouring in. Si Xin stands and Zhang Cuimei sits on the floor in the front row, both turned toward the doors.",
+      "negative": [
+        "readable text on the wreath ribbon",
+        "Si Nian changing out of the burial clothes",
+        "subtitles"
+      ]
+    },
+    "bible_version": "v1",
+    "breakdown_version": "v3",
+    "lineage": [
+      {
+        "path": "bible/v1/artifact.json",
+        "sha256": "35e51429aa8e03ae73388c125868f382db131eada5aee94f17d9b42e4beac78f"
+      },
+      {
+        "path": "bible/accepted.json",
+        "sha256": "4cc3f8ef4d214640967bb64913e6f0af711afe949f494c9a7909688aa7d6b619"
+      },
+      {
+        "path": "bible/current.json",
+        "sha256": "e1b41dbbf8dedbc6ff07725432d61e16b33e1ff36254d26e4348d7e241841d06"
+      },
+      {
+        "path": "bible/v1/bible.json",
+        "sha256": "5f5313d84251ffcc48f018baa2ce028418a5c097b19b7bcdb0baf33cfbe66918"
+      },
+      {
+        "path": "bible/v1/input/screenplay.md",
+        "sha256": "0f23a3f7a0e64c2913e207a16e22ded9f9e4a085c65394caa70b35f63b3ec45c"
+      },
+      {
+        "path": "episodes/EP001/breakdown/v3/artifact.json",
+        "sha256": "edaf9cd53e2153f3004089f5264ec35125069ee9e49646fd190bf5197ed95829"
+      },
+      {
+        "path": "episodes/EP001/breakdown/accepted.json",
+        "sha256": "89cc46ef0fffeedc90982709a5056389620d03118aafbb7995a20c56543031df"
+      },
+      {
+        "path": "episodes/EP001/breakdown/current.json",
+        "sha256": "40a726dcb40894c0ddca118ad81e3ec22f82e4731c21c30295a0714e3a9a1aae"
+      },
+      {
+        "path": "episodes/EP001/breakdown/v3/breakdown.json",
+        "sha256": "1249acc96b16ce233ef2a2041fc0dec0bce96fd1a15ba383f4a0e6c2f60c309b"
+      },
+      {
+        "path": "episodes/EP001/multi_panel_storyboard/seg01/line-art/v4/artifact.json",
+        "sha256": "cd21787a9a0bb08848013c05cbaec705ba85337ecf2c52b815fd05d1687be7cd"
+      },
+      {
+        "path": "episodes/EP001/multi_panel_storyboard/seg01/line-art/accepted.json",
+        "sha256": "f1b99eaaaf3480e6219fc58d2c8450448c54921822144e4b3f5aa6a4bbf95120"
+      },
+      {
+        "path": "episodes/EP001/multi_panel_storyboard/seg01/line-art/current.json",
+        "sha256": "7ed96bbb0be72db955720b030fd55988b829f543252bae7a6bdcd13f963aa6f3"
+      },
+      {
+        "path": "episodes/EP001/multi_panel_storyboard/seg01/line-art/v4/image-1.jpg",
+        "sha256": "5b5a7c3add9574172528d436d33193cfcee6513ed8539e0be1c98244bb82fc83"
+      },
+      {
+        "path": "episodes/EP001/multi_panel_storyboard/seg01/line-art/v4/asset/job.json",
+        "sha256": "e5863eddba27b4e7e3154eaeace851eea8a4d4a59e56b1c6093bbacc733ccb5a"
+      },
+      {
+        "path": "assets/scenes/funeral_hall/v3/artifact.json",
+        "sha256": "ff245c07925b60b90487c667d886b8b2ef2b66f34a7b9af415d4850dfa27305e"
+      },
+      {
+        "path": "assets/scenes/funeral_hall/accepted.json",
+        "sha256": "ef9cf60f57ce28cd683b37ffee5f89739a727fa7ab39fb65ed59d202e1007897"
+      },
+      {
+        "path": "assets/scenes/funeral_hall/current.json",
+        "sha256": "09c9865ad8d2c07dbbb24dcf2a136ab065e2dc8d356c554d02b68aa2bfd986f3"
+      },
+      {
+        "path": "assets/scenes/funeral_hall/v3/image-1.jpg",
+        "sha256": "4bc979bb1ede6c7b613679048595139d8b14b7e224c6f53cb548db289deb0061"
+      },
+      {
+        "path": "assets/characters/si_yi/v2/artifact.json",
+        "sha256": "0bb431f506e2217a2b976010eabf4b159098070d1f61810a6f1f5071011aa0ca"
+      },
+      {
+        "path": "assets/characters/si_yi/accepted.json",
+        "sha256": "9fa5c5e408863ef050983944bb82e57aff40c1316500f09cab1145f70f2bd5f2"
+      },
+      {
+        "path": "assets/characters/si_yi/current.json",
+        "sha256": "aa436b30a503bee078de0e9e77fda90f15a91b9599ae8f9659c493dbce956e54"
+      },
+      {
+        "path": "assets/characters/si_yi/v2/image-1.jpg",
+        "sha256": "e17102eca830951ac6aa5afbda05bdc5ee92575979c1665afcb0686d314b5417"
+      },
+      {
+        "path": "assets/characters/si_yi/v2/asset/job.json",
+        "sha256": "f934b6835bec79fd89b7fdedcef7a9670a24c5824359aba2d61e32d1f19a15bc"
+      },
+      {
+        "path": "assets/characters/bin_ke_jia/v1/artifact.json",
+        "sha256": "990b684b4520c1eb8db6acdff29b85eb4d3a39f9e2be8b6e8f0eaa0329cb51fb"
+      },
+      {
+        "path": "assets/characters/bin_ke_jia/accepted.json",
+        "sha256": "438b7bfb2a1f3568aec014f074a129d082cfb93658de38179166abfd84cd3a98"
+      },
+      {
+        "path": "assets/characters/bin_ke_jia/current.json",
+        "sha256": "ca6fd17cbabf7a9b87bd001d27df4c52cc8763b49e11a1ae285d191a9f4ca3d3"
+      },
+      {
+        "path": "assets/characters/bin_ke_jia/v1/image-1.jpg",
+        "sha256": "c5995d1d1b81ca101e2b6adb419b1647ac86cc9a410158ee23d884d230f995b1"
+      },
+      {
+        "path": "assets/characters/bin_ke_jia/v1/asset/job.json",
+        "sha256": "4028eb78cc4eada031f27b18ee98522e783a927df5d00c884291b623dd9edd3c"
+      },
+      {
+        "path": "assets/characters/bin_ke_yi/v1/artifact.json",
+        "sha256": "979edca2ff21df147cdfb90e2a6a058ea0febe6b4f86f9e8318221b5154ce028"
+      },
+      {
+        "path": "assets/characters/bin_ke_yi/accepted.json",
+        "sha256": "32636c7695cce9de966c2e4b2f436d52afcca54c9a23986570d06a3c3bc28639"
+      },
+      {
+        "path": "assets/characters/bin_ke_yi/current.json",
+        "sha256": "c4878698ad0588eedc4eba79df6798bd900d549a08688b06dc6d0473ff2d0043"
+      },
+      {
+        "path": "assets/characters/bin_ke_yi/v1/image-1.jpg",
+        "sha256": "0a99beba95556b92b1b3e7458aa656cbffbaaeca46752d1db4ef0138e9dfb2b8"
+      },
+      {
+        "path": "assets/characters/bin_ke_yi/v1/asset/job.json",
+        "sha256": "dd6cba58bb66e4075d4b307b7eff15c6bc255212f7c173fd3d97073c9d71dc44"
+      },
+      {
+        "path": "episodes/EP001/multi_panel_storyboard/seg02/line-art/v1/artifact.json",
+        "sha256": "3dff183ccc8ea55fc57a94ead51615b93677b6c414ed3c96a5c86c89a9c46a7a"
+      },
+      {
+        "path": "episodes/EP001/multi_panel_storyboard/seg02/line-art/accepted.json",
+        "sha256": "2ac60390e1cf729d2b192ca3cf4799d6baa4ae0629e68a6a9a798d30240da55b"
+      },
+      {
+        "path": "episodes/EP001/multi_panel_storyboard/seg02/line-art/current.json",
+        "sha256": "83f5c05583f3f1b6e9b589188418c6f6999aaf8ccfb49f64318a9ac67a2ab249"
+      },
+      {
+        "path": "episodes/EP001/multi_panel_storyboard/seg02/line-art/v1/image-1.jpg",
+        "sha256": "fc7ecec9fc5da7a5d2862f945bfb324f2ead93c8fdcfe656522e5012465838b9"
+      },
+      {
+        "path": "episodes/EP001/multi_panel_storyboard/seg02/line-art/v1/asset/job.json",
+        "sha256": "0ffb54a2fdb1b680cca5388a5a36f880adbd409bd91d2465d24bcffdc783b9fa"
+      },
+      {
+        "path": "assets/characters/si_xin/v1/artifact.json",
+        "sha256": "c6792d9e55a9376872eefdfae8a27f856eb6438c44847baae8acbde8138764dd"
+      },
+      {
+        "path": "assets/characters/si_xin/accepted.json",
+        "sha256": "74c929219c8884c4ca554eb183ea6cfa13a506b308836fa922f327912eefa6dd"
+      },
+      {
+        "path": "assets/characters/si_xin/current.json",
+        "sha256": "2d5d78e0a58accf5d804c3d3e7df2964532117e549c06454365f9ccf243b292d"
+      },
+      {
+        "path": "assets/characters/si_xin/v1/image-1.jpg",
+        "sha256": "56485cbfe13b66cfafc6930c98f43b9da3b877a391f1b086111fc370c4071f98"
+      },
+      {
+        "path": "assets/characters/si_xin/v1/asset/job.json",
+        "sha256": "7dc2656c11ad504d72187f03d8092c7cf75b9e3402e150b83ef7ac660656dcda"
+      },
+      {
+        "path": "assets/characters/zhang_cuimei/v2/artifact.json",
+        "sha256": "d9d19413a1800b389b94d84d36ec2f2bf3ff5c7046755c7b41386de8aa9cb794"
+      },
+      {
+        "path": "assets/characters/zhang_cuimei/accepted.json",
+        "sha256": "d93529366fb3c708ffaa8032c6d89efac872a87294e8c62d9ffb7fe3a281cf4d"
+      },
+      {
+        "path": "assets/characters/zhang_cuimei/current.json",
+        "sha256": "dfa27f077985da19c797ef3a3087b015d438526d8987e6cddfda6be39ae75617"
+      },
+      {
+        "path": "assets/characters/zhang_cuimei/v2/image-1.jpg",
+        "sha256": "dceea4fe7e66ce4eb837da42878fb0673cdc5002214fcdd1080702d2cfe99026"
+      },
+      {
+        "path": "assets/characters/zhang_cuimei/v2/asset/job.json",
+        "sha256": "29fa1962149a8d70264e27507c4e038fd186663ad8c673d1d2db74c39779c29f"
+      },
+      {
+        "path": "assets/characters/si_nian/v2/artifact.json",
+        "sha256": "dce2dc7d6f72a1b93d9426070f373e21838620487bfd69bbcf5bf6b608e42068"
+      },
+      {
+        "path": "assets/characters/si_nian/accepted.json",
+        "sha256": "7b2018ecc136afdbbedcfe052c57081b518d80b3c7c90f2622fd9794c498a2ba"
+      },
+      {
+        "path": "assets/characters/si_nian/current.json",
+        "sha256": "77e8472227bcb03769b8ca4af968909cd425677205890dfc2fb472b42d7ec0f2"
+      },
+      {
+        "path": "assets/characters/si_nian/v2/image-1.jpg",
+        "sha256": "cdca2def62eb8558a322dada0f8e227d15ffb87247fdeef301e0b7efa1d6c37d"
+      },
+      {
+        "path": "assets/characters/si_nian/v2/asset/job.json",
+        "sha256": "2b34f45a60b8395f662c887b7420dea246376a6b97ce9499527e655a328acc8f"
+      },
+      {
+        "path": "episodes/EP001/multi_panel_storyboard/seg03/line-art/v2/artifact.json",
+        "sha256": "0446365a89595adfefb6c9a36f3f8e36f18fa0f812d402a338f1479a1db97076"
+      },
+      {
+        "path": "episodes/EP001/multi_panel_storyboard/seg03/line-art/accepted.json",
+        "sha256": "bcbf0c1d2a44a4cb4e86abeef151e9927f62a2a813fe51fea3d2c7881c9426a3"
+      },
+      {
+        "path": "episodes/EP001/multi_panel_storyboard/seg03/line-art/current.json",
+        "sha256": "1a6ba5a138ebc3beb986986eae2004d3220d6596c58e0514e8c10478896f2e67"
+      },
+      {
+        "path": "episodes/EP001/multi_panel_storyboard/seg03/line-art/v2/image-1.jpg",
+        "sha256": "d7779d4a89a119b723661c2bd7afe67223011a4c793227e892ac289194970860"
+      },
+      {
+        "path": "episodes/EP001/multi_panel_storyboard/seg03/line-art/v2/asset/job.json",
+        "sha256": "2401f34bac84bba5541e32ef2541f4d61469a31fe9e9125b3309ba38c996896a"
+      },
+      {
+        "path": "episodes/EP001/video_prompts/v1/artifact.json",
+        "sha256": "abd1d3b3f031125e91df4b57928b3a38d52c9b9d01f9aad91b9b12f3be75c63d"
+      },
+      {
+        "path": "episodes/EP001/video_prompts/v1/seg03.json",
+        "sha256": "f4dbe306c6d8469e7e0260ce9d397eeb091a155836c5e5323b761c3144cdfe29"
+      },
+      {
+        "path": "episodes/EP001/video_prompts/current.json",
+        "sha256": "2b5dcad1cbd475c8b6314cec0ed9c78eec25e666c519dd3714a100668ebaf59d"
+      }
+    ],
+    "character_reference_mode": "asset_library",
+    "trusted_character_references": {},
+    "video_prompts_version": "v1"
+  }
+}
