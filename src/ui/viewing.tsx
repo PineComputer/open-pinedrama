@@ -142,7 +142,7 @@ export function DocumentView({ file }: { file: FileItem }) {
         {t("episode.download")}
       </a>
       {EXTRACTED.test(file.name) && <p className="quiet small">{t("script.extracted")}</p>}
-      {/markdown/.test(file.type) || /\.(md|markdown)$/i.test(file.name) ? <Markdown text={text} /> : <pre className="document plain">{text}</pre>}
+      {/markdown/.test(file.type) || /\.(md|markdown)$/i.test(file.name) ? <Markdown text={text} /> : <pre className="document plain" tabIndex={0}>{text}</pre>}
     </>
   );
 }

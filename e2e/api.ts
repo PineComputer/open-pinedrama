@@ -33,3 +33,9 @@ export async function decide(page: Page, view: ReviewView, sendBack: string[] = 
   await call(page, `/api/reviews/${view.id}/decision`, { items, words: view.kind === "question" ? "He is 32." : "Reviewed." });
 }
 
+/** The setup's first stop: the screenplay rewritten into drama-cli's Fountain, accepted in the maker's words. */
+export async function acceptRewrite(page: Page, drama: string) {
+  const rewrite = await review(page, drama, "question");
+  expect(rewrite.question).toContain("Fountain");
+  await call(page, `/api/reviews/${rewrite.id}/decision`, { items: [], words: "Yes, this is my script." });
+}

@@ -45,6 +45,13 @@ async function until<T>(what: string, probe: () => Promise<T | undefined>, timeo
 const openReview = (dramaId: string, filter: (review: ReviewSummary) => boolean) => () =>
   call<ReviewSummary[]>("GET", `/api/inbox?drama=${dramaId}`).then((items) => items.find((item) => item.state === "open" && filter(item)));
 
+/** The setup's first stop: the screenplay rewritten into drama-cli's Fountain, accepted in the maker's words. */
+async function acceptRewrite(dramaId: string) {
+  const rewrite = await until("the screenplay rewrite", openReview(dramaId, () => true));
+  await call("POST", `/api/reviews/${rewrite.id}/decision`, { items: [], words: "Yes, this is my script." });
+  return rewrite;
+}
+
 async function approveAll(id: string, words = "Approved.") {
   const review = await call<ReviewView>("GET", `/api/reviews/${id}`);
   return call<ReviewView>("POST", `/api/reviews/${id}/decision`, {
@@ -87,6 +94,7 @@ async function scenario(title: string) {
   const { id } = await call<{ id: string }>("POST", "/api/dramas", form);
 
   // The setup asks a question, then for the leads' looks, with their sheets saved first.
+  await acceptRewrite(id);
   const question = await until("the setup question", openReview(id, (item) => item.kind === "question"));
   await call("POST", `/api/reviews/${question.id}/decision`, { items: [], words: "He is 32." });
   const looks = await until("the looks review", openReview(id, (item) => item.kind === "looks"));
@@ -336,6 +344,7 @@ describe("a drama in replay", () => {
     for (const [key, value] of Object.entries({ title: "Resumed drama", language: "en", preset: "en-us-live-sfw", screenplayLanguage: "en", screenplay: "0", parallel: "1", perComputer: "1" })) form.set(key, value);
     form.append("files", new File(["EPISODE 1\nLin enters."], "screenplay.txt", { type: "text/plain" }));
     const { id } = await call<{ id: string }>("POST", "/api/dramas", form);
+    await acceptRewrite(id);
     const question = await until("the setup question", openReview(id, (item) => item.kind === "question"));
     await call("POST", `/api/reviews/${question.id}/decision`, { items: [], words: "He is 32." });
     await approveAll((await until("the looks", openReview(id, (item) => item.kind === "looks"))).id);
@@ -363,6 +372,7 @@ describe("a drama in replay", () => {
     form.append("files", new File(["EPISODE 1\nLin enters."], "screenplay.txt", { type: "text/plain" }));
     const { id } = await call<{ id: string }>("POST", "/api/dramas", form);
     // A question always waits for the maker, and so do the leads' looks.
+    await acceptRewrite(id);
     const question = await until("the setup question", openReview(id, (item) => item.kind === "question"));
     await call("POST", `/api/reviews/${question.id}/decision`, { items: [], words: "He is 32." });
     await approveAll((await until("the looks", openReview(id, (item) => item.kind === "looks"))).id);
@@ -392,6 +402,7 @@ describe("a drama in replay", () => {
     for (const [key, value] of Object.entries({ title: "Stopped drama", language: "en", preset: "en-us-live-sfw", screenplayLanguage: "en", screenplay: "0", parallel: "1", perComputer: "1" })) form.set(key, value);
     form.append("files", new File(["EPISODE 1\nLin enters."], "screenplay.txt", { type: "text/plain" }));
     const { id } = await call<{ id: string }>("POST", "/api/dramas", form);
+    await acceptRewrite(id);
     await until("the setup question", openReview(id, (item) => item.kind === "question"));
     await call("POST", `/api/dramas/${id}/stop`);
     const stopped = await call<DramaView>("GET", `/api/dramas/${id}`);
@@ -412,6 +423,7 @@ describe("a drama in replay", () => {
     for (const [key, value] of Object.entries({ title: "Test drama, bare questions", language: "en", preset: "en-us-live-sfw", screenplayLanguage: "en", screenplay: "0", parallel: "1", perComputer: "1" })) form.set(key, value);
     form.append("files", new File(["EPISODE 1\nLin enters."], "screenplay.txt", { type: "text/plain" }));
     const { id } = await call<{ id: string }>("POST", "/api/dramas", form);
+    await acceptRewrite(id);
     const question = await until("the setup question", openReview(id, () => true));
     await call("POST", `/api/reviews/${question.id}/decision`, { items: [], words: "He is 32." });
     const looks = await until("the leads' looks, asked in words", openReview(id, (item) => item.id !== question.id));
@@ -432,6 +444,7 @@ describe("a drama in replay", () => {
     const { id } = await call<{ id: string }>("POST", "/api/dramas/sample", { language: "en", sample: "bride-on-bail" });
     const drama = await call<DramaView>("GET", `/api/dramas/${id}`);
     expect(drama.title).toBe("Bride on Bail");
+    await acceptRewrite(id);
     const age = await until("the setup question", openReview(id, (item) => item.kind === "question"));
     await call("POST", `/api/reviews/${age.id}/decision`, { items: [], words: "He is 32." });
     const stop = await until("the red line", openReview(id, (item) => item.kind === "question" && item.id !== age.id));
@@ -459,6 +472,7 @@ describe("a drama in replay", () => {
     for (const [key, value] of Object.entries({ title: `Capped drama, ${stops}`, language: "en", preset: "en-us-live-sfw", screenplayLanguage: "en", screenplay: "0", parallel: "1", perComputer: "1" })) form.set(key, value);
     form.append("files", new File(["EPISODE 1\nLin enters."], "screenplay.txt", { type: "text/plain" }));
     const { id } = await call<{ id: string }>("POST", "/api/dramas", form);
+    await acceptRewrite(id);
     const question = await until("the setup question", openReview(id, (item) => item.kind === "question"));
     await call("POST", `/api/reviews/${question.id}/decision`, { items: [], words: "He is 32." });
     for (const kind of ["looks", "references"] as const) await approveAll((await until(kind, openReview(id, (item) => item.kind === kind))).id);

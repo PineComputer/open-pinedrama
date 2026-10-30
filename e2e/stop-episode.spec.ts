@@ -2,13 +2,14 @@
 import { expect, test } from "@playwright/test";
 import type { ChatView, DramaView, ReviewSummary } from "../src/shared/types.ts";
 import { TOKEN } from "../playwright.config.ts";
-import { call, decide, review } from "./api.ts";
+import { call, decide, review, acceptRewrite } from "./api.ts";
 
 test("stopping one episode leaves the others going, and Resume puts it back in line", async ({ page }) => {
   await page.goto(`/api/open?ticket=${TOKEN}`);
   await page.getByRole("button", { name: "Start the sample drama" }).click();
   await expect(page).toHaveURL(/\/d\/[^/]+/);
   const id = new URL(page.url()).pathname.split("/")[2];
+  await acceptRewrite(page, id);
   await decide(page, await review(page, id, "question"));
   await decide(page, await review(page, id, "looks"));
   await decide(page, await review(page, id, "references"));
@@ -34,6 +35,7 @@ test("a drama the maker stops mid-run resumes to where it was, carrying on from 
   await page.goto(`/api/open?ticket=${TOKEN}`);
   // A second drama on this engine: made through the API, as the empty shelf's button is gone.
   const { id } = await call<{ id: string }>(page, "/api/dramas/sample", { language: "en" });
+  await acceptRewrite(page, id);
   await decide(page, await review(page, id, "question"));
   await decide(page, await review(page, id, "looks"));
   await decide(page, await review(page, id, "references"));

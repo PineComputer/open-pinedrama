@@ -6,7 +6,7 @@ import { expect, test } from "@playwright/test";
 import type { ProjectView } from "../src/shared/project.ts";
 import type { SessionStatus } from "../src/engine/status.ts";
 import { TOKEN } from "../playwright.config.ts";
-import { call, decide, review } from "./api.ts";
+import { call, decide, review, acceptRewrite } from "./api.ts";
 
 test("three episodes at once: each shows its own session's newest report, decided item by item", async ({ page }) => {
   await page.goto(`/api/open?ticket=${TOKEN}`);
@@ -16,6 +16,7 @@ test("three episodes at once: each shows its own session's newest report, decide
   const project = () => call<ProjectView>(page, `/api/dramas/${id}/project`);
 
   // The first stop, a question: the bible isn't made.
+  await acceptRewrite(page, id);
   await decide(page, await review(page, id, "question"));
 
   // The leads: Lin accepted, Wei sent back; then Wei's redraw accepted.

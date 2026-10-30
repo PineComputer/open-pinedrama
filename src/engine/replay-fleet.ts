@@ -213,7 +213,9 @@ const words = (s: Story) => {
   en: {
     cast: s.cast.map((c) => ({ id: c.id, name: c.name })),
     episodes: s.episodes.map((e) => e.title),
-    reading: ["Reading the screenplay and the notes", "Checking every character's age and gender"],
+    rewriting: ["Reading the screenplay and the notes", "Rewriting the screenplay into Fountain", "Checking the rewrite with drama-cli"],
+    askRewrite: "I rewrote your screenplay into Fountain, the form drama-cli reads, and drama-cli checked it: 2 episodes, 2 scenes, ready. Its words are unchanged, but two headings changed form: drama-cli takes DAY or NIGHT, so MORNING became DAY and DUSK became NIGHT, and the title line went. Please read screenplay/v1/review.md, then accept the rewrite in your own words, or tell me what to change. Do you accept the rewrite?",
+    reading: ["Checking every character's age and gender"],
     askAge: `The screenplay doesn't give ${b.name}'s age. How old is he, and should he read older than ${a.name}?`,
     drawing: ["Writing the bible", `Drawing ${a.name}'s face and base look`, `Drawing ${b.name}'s face and base look`],
     redrawLook: (name: string) => `Redrawing ${name}'s look`,
@@ -264,7 +266,9 @@ const words = (s: Story) => {
   zh: {
     cast: s.cast.map((c) => ({ id: c.id, name: c.name })),
     episodes: s.episodes.map((e) => e.title),
-    reading: ["阅读剧本和备注", "核对每个角色的年龄和性别"],
+    rewriting: ["阅读剧本和备注", "把剧本改写成 Fountain", "用 drama-cli 检查改写"],
+    askRewrite: "我把你的剧本改写成了 drama-cli 读的 Fountain 格式，drama-cli 检查通过：2 集、2 场，可以开始。台词和动作一字没改，但有两处场景标题改了格式：drama-cli 只认日或夜，所以“清晨”写成了日，“傍晚”写成了夜，标题行也去掉了。请看 screenplay/v1/review.md，然后用你自己的话确认改写，或者告诉我要改什么。你接受这个改写吗？",
+    reading: ["核对每个角色的年龄和性别"],
     askAge: `剧本里没有写${b.name}的年龄。他多大？要不要显得比${a.name}年长？`,
     drawing: ["编写设定集", `绘制${a.name}的面部和基础造型`, `绘制${b.name}的面部和基础造型`],
     redrawLook: (name: string) => `重新绘制${name}的造型`,
@@ -344,6 +348,13 @@ const bibleJson = (say: Say): Out => ({
   ),
 });
 
+/**
+ * The sample screenplay (fixtures/replay/sample-screenplay.<lang>.md) as drama-cli's screenplay
+ * rewrite returns it: the Fountain and its review (fixtures/replay/rewrite/<lang>/), as version v1.
+ */
+const rewriteFiles = (lang: Lang): Out[] =>
+  ["screenplay.fountain", "review.md"].map((name) => ({ path: `drama/screenplay/v1/${name}`, type: typeOf(name), bytes: readFileSync(path.join(FIXTURES, "rewrite", lang, name)) }));
+
 /** A part of a packed project, as the agent returns it (here a stand-in: replay has no drama-cli project). Packed again at each stop, under the same name. */
 const archive = (name: string, stop = 1): Out => ({ path: `handoff/${name}.tar.part-aa`, type: "application/octet-stream", bytes: text(`replay stand-in for ${name}.tar, packed at stop ${stop}`) });
 
@@ -359,7 +370,7 @@ function breakdownOf(say: Say, story: Story, i: number): string {
 function setupScript(lang: Lang, preset: string, story: { id: string; story: Story }): Player {
   const say = words(story.story)[lang];
   const set = pictures(story.id, lang);
-  let stage: "start" | "asked" | "red-line" | "leads" | "references" | "handed" = "start";
+  let stage: "start" | "rewrite" | "asked" | "red-line" | "leads" | "references" | "handed" = "start";
   const versions = new Map<string, number>();
   const next = (key: string) => {
     const v = (versions.get(key) ?? 0) + 1;
@@ -383,14 +394,19 @@ function setupScript(lang: Lang, preset: string, story: { id: string; story: Sto
   const made = (key: string): Made => ({ current: `v${versions.get(key)}`, accepted: accepted.has(key) ? `v${accepted.get(key)}` : null });
   const progress = (): ReplayProgress => ({
     preset,
-    bible: stage === "asked" || stage === "red-line" ? null : "v1",
+    bible: stage === "rewrite" || stage === "asked" || stage === "red-line" ? null : "v1",
     looks: Object.fromEntries(leads.filter((c) => versions.has(c.id)).map((c) => [c.id, made(c.id)])),
     references: Object.fromEntries([...shared.values()].filter((reference) => versions.has(reference.key)).map((reference) => [reference.key, { ...made(reference.key), path: reference.path }])),
     episodes: stage === "references" || stage === "handed" ? Object.fromEntries(story.story.episodes.map((e, i) => [codeOf(i), { segments: e.segments.map((seg) => seg.id) }])) : {},
   });
   const play = (answer: string): Step => {
     const redo = revisedKeys(answer);
+    // The first stop: the screenplay rewritten into drama-cli's Fountain, with its review, for the maker to accept; any answer goes on.
     if (stage === "start") {
+      stage = "rewrite";
+      return { progress: say.rewriting, files: rewriteFiles(lang), ask: say.askRewrite };
+    }
+    if (stage === "rewrite") {
       stage = "asked";
       return { progress: say.reading, files: [], ask: say.askAge };
     }

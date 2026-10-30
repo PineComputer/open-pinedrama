@@ -15,10 +15,22 @@ test("a maker starts the sample drama, answers the agent and reviews the leads",
   await expect(page.getByRole("navigation", { name: "Steps" }).getByRole("link", { name: /^Story/ })).toHaveAttribute("aria-current", "page");
   expect(await newProblems(page)).toEqual([]);
 
-  // The agent's first stop is a question: the screenplay leaves a lead's age open.
-  const next = page.getByRole("button", { name: "Next review, 1 waiting" });
-  await expect(next).toBeVisible({ timeout: 30_000 });
-  await next.click();
+  // The agent's first stop is its rewrite of the screenplay into Fountain, for the maker to accept in their words.
+  const rewrite = page.getByRole("button", { name: "Next review, 1 waiting" });
+  await expect(rewrite).toBeVisible({ timeout: 30_000 });
+  await rewrite.click();
+  await expect(page.getByRole("main").getByText(/I rewrote your screenplay into Fountain/)).toBeVisible();
+  expect(await newProblems(page)).toEqual([]);
+  await page.getByRole("textbox", { name: "Your answer" }).fill("Yes, this is my script.");
+  const rewriteQuestion = page.url();
+  await page.getByRole("button", { name: /^Send answer/ }).click();
+  await expect(page).not.toHaveURL(rewriteQuestion);
+
+  // Then a question, opened from the drama's review queue once the agent asks it: the screenplay leaves a lead's age open.
+  await page.getByRole("complementary").getByRole("link", { name: /^To review/ }).click();
+  const age = page.getByRole("main").getByRole("link", { name: /Wei Zhen's age/ });
+  await expect(age).toBeVisible({ timeout: 30_000 });
+  await age.click();
   await expect(page.getByRole("main").getByText("The screenplay doesn't give Wei Zhen's age.")).toBeVisible();
   expect(await newProblems(page)).toEqual([]);
   await page.getByRole("textbox", { name: "Your answer" }).fill("He is 32, and should read older than her.");

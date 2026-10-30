@@ -3,13 +3,14 @@
 import { expect, test } from "@playwright/test";
 import { TOKEN } from "../playwright.config.ts";
 import { newProblems } from "./axe.ts";
-import { decide, review } from "./api.ts";
+import { decide, review, acceptRewrite } from "./api.ts";
 
 test("an episode chosen in the tree stays selected across the surfaces", async ({ page }) => {
   await page.goto(`/api/open?ticket=${TOKEN}`);
   await page.getByRole("button", { name: "Start the sample drama" }).click();
   await expect(page).toHaveURL(/\/d\/[^/]+/);
   const id = new URL(page.url()).pathname.split("/")[2];
+  await acceptRewrite(page, id);
   await decide(page, await review(page, id, "question"));
   await decide(page, await review(page, id, "looks"));
   await decide(page, await review(page, id, "references"));
