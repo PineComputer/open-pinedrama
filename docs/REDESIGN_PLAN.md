@@ -68,6 +68,18 @@ surface.
 Decisions, the inbox grouped by drama and episode. P4.4 ProcessGroup. P4.5 docked,
 collapsed and floating; NextChips.
 
+**M3 notes, from the M1 live check and the design.**
+- **Each section's source:**
+  - Running: the drama's Computers and sessions, `crew`.
+  - To do: each episode's `needs` and the stages that aren't usable, from the project state (P1). These are worded for the maker from drama-cli's `why`, never its `run` commands.
+  - Decisions: the inbox.
+  - Process: the session's activity messages.
+  - Recent work: each new version and its review state. There is no price per item, since nothing prices one.
+- **Stop is in plain sight:** in the drama's header and in Running, each with its confirm. Today it is a link inside the pace panel, where the maker didn't find it.
+  - **Engine gap:** stopping one episode, not only the whole drama, needs an engine action that doesn't exist yet.
+- **Quitting during a stop:** quitting the app while a stop is under way left its Computer "stopping". The studio must either finish stopping before it quits, or say so.
+- **What Spent covers:** agent turns and video, as Pine prices them when each turn ends. It leaves out the turn under way, and drama-cli's text and image calls, which Pine includes at no charge.
+
 **P5 The flow (M4).** P5.1 Home and upload. P5.2 preset cards, none chosen for the maker.
 P5.3 analyzing, as named steps. P5.4 FountainDiff, with approval of a rewrite in the maker's
 words. P5.5 Story. P5.6 Episodes and the episode workspace. P5.7 ReviewRoom: the observer's
