@@ -74,7 +74,8 @@ function useSidebar(): [boolean, () => void] {
 
 /**
  * The agent panel for the drama in view, as the maker left it. On Canvas and Graph the board
- * needs the room: a docked panel shows as the ball there, and opens floating over the board.
+ * needs the room, and the review room its stage, as the pro direction's Review room has it: a
+ * docked panel shows as the ball there, and opens floating over the work.
  */
 function Agent({ drama, episode, mode, onMode, canvas }: { drama: DramaView; episode?: string; mode: AgentMode; onMode: (mode: AgentMode) => void; canvas: boolean }) {
   const shown = canvas && mode === "docked" ? "collapsed" : mode;
@@ -162,7 +163,7 @@ export function App() {
         </TopBar>
         <main className="ds-scroll">{screen}</main>
       </div>
-      {drama.data && dramaId && <Agent drama={drama.data} episode={match("/d/:id/e/:code", path)?.code ?? reviewed?.episode} mode={agentMode} onMode={setAgentMode} canvas={tab === "canvas" || tab === "graph"} />}
+      {drama.data && dramaId && <Agent drama={drama.data} episode={match("/d/:id/e/:code", path)?.code ?? reviewed?.episode} mode={agentMode} onMode={setAgentMode} canvas={tab === "canvas" || tab === "graph" || Boolean(review)} />}
     </div>
   );
 }
