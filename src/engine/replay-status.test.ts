@@ -26,19 +26,39 @@ describe("replay's status report", () => {
     expect(setupStep(state)).toBe(3);
   });
 
+  it("files each shared reference by its asset: another character, a further look, a place's time, a prop", () => {
+    const state = read({
+      preset: "",
+      bible: "v1",
+      looks: { lin: v1 },
+      references: {
+        "office/Night": { ...drawn, path: "assets/scenes/office/times/Night" },
+        office: { ...v1, path: "assets/scenes/office" },
+        "blair/S1": { ...v1, path: "assets/characters/blair/states/S1" },
+        blair: { ...v1, path: "assets/characters/blair" },
+        letter: { ...v1, path: "assets/props/letter" },
+      },
+      episodes: {},
+    });
+    expect(state.characters.blair).toMatchObject({ accepted: "v1", usable: true });
+    expect(state.characters.blair.looks.S1).toMatchObject({ accepted: "v1" });
+    expect(state.locations.office.times.Night).toMatchObject({ current: "v1", accepted: null, usable: false });
+    expect(state.props.letter).toMatchObject({ usable: true });
+  });
+
   it("with the shared references drawn: each episode needs them until they are approved", () => {
-    const drawnReferences = read({ preset: "", bible: "v1", looks: { lin: v1 }, references: { "lin/S1": drawn, home: drawn, letter: drawn }, episodes: { EP001: { segments } } });
+    const drawnReferences = read({ preset: "", bible: "v1", looks: { lin: v1 }, references: { "lin/S1": { ...drawn, path: "assets/characters/lin/states/S1" }, home: { ...drawn, path: "assets/scenes/home" }, letter: { ...drawn, path: "assets/props/letter" } }, episodes: { EP001: { segments } } });
     expect(drawnReferences.characters.lin.looks.S1.candidate).toBe("v1");
     expect(drawnReferences.props.letter.candidate).toBe("v1");
     expect(drawnReferences.episodes.EP001.needs?.map((need) => need.reference)).toEqual(["lin/S1", "home", "letter"]);
     expect(setupStep(drawnReferences)).toBe(4);
-    const approved = read({ preset: "", bible: "v1", looks: { lin: v1 }, references: { "lin/S1": v1, home: v1, letter: v1 }, episodes: { EP001: { segments } } });
+    const approved = read({ preset: "", bible: "v1", looks: { lin: v1 }, references: { "lin/S1": { ...v1, path: "assets/characters/lin/states/S1" }, home: { ...v1, path: "assets/scenes/home" }, letter: { ...v1, path: "assets/props/letter" } }, episodes: { EP001: { segments } } });
     expect(approved.episodes.EP001.needs).toEqual([]);
     expect(setupStep(approved)).toBe(5);
   });
 
   it("through an episode, item by item: storyboards in both styles, then takes, then the cut", () => {
-    const episode = (made: ReplayProgress["episodes"][string]) => read({ preset: "", bible: "v1", looks: { lin: v1 }, references: { home: v1 }, episodes: { EP001: made } }).episodes.EP001;
+    const episode = (made: ReplayProgress["episodes"][string]) => read({ preset: "", bible: "v1", looks: { lin: v1 }, references: { home: { ...v1, path: "assets/scenes/home" } }, episodes: { EP001: made } }).episodes.EP001;
     const boards = episode({ segments, boards: { seg01: { current: "v2", accepted: null }, seg02: v1 } });
     expect(boards.storyboards.seg01["line-art"]).toMatchObject({ current: "v2", candidate: "v2", usable: false });
     expect(boards.storyboards.seg01.photoreal).toMatchObject({ current: "v2", candidate: "v2", usable: false });

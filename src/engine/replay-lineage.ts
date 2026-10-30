@@ -21,11 +21,8 @@ const COLUMN: Record<string, number> = { bible: 0, look: 1, plate: 1, prop: 1, b
 const STYLES = ["line-art", "photoreal"];
 const PLACE = "assets/scenes/home";
 
-function referenceStage(key: string): { id: string; kind: string } {
-  const [id, look] = key.split("/");
-  if (look) return { id: `assets/characters/${id}/states/${look}`, kind: "look" };
-  return key === "letter" ? { id: `assets/props/${key}`, kind: "prop" } : { id: `assets/scenes/${key}`, kind: "plate" };
-}
+/** A shared reference's kind, from its asset path (replay-status.ts, Reference). */
+const kindOf = (path: string) => (path.startsWith("assets/characters/") ? "look" : path.startsWith("assets/scenes/") ? "plate" : "prop");
 
 function stages(progress: ReplayProgress): Stage[] {
   const stage = (id: string, kind: string, made: { current: string | null; accepted: string | null }, reads: string[] = [], from: string[] = []): Stage => ({
@@ -40,10 +37,7 @@ function stages(progress: ReplayProgress): Stage[] {
   const bible = progress.bible ? [stage("bible", "bible", { current: progress.bible, accepted: progress.bible })] : [];
   const reads = bible.length ? ["bible"] : [];
   const leads = Object.entries(progress.looks).map(([id, made]) => stage(`assets/characters/${id}`, "look", made, reads));
-  const references = Object.entries(progress.references).map(([key, made]) => {
-    const { id, kind } = referenceStage(key);
-    return stage(id, kind, made, reads);
-  });
+  const references = Object.values(progress.references).map((reference) => stage(reference.path, kindOf(reference.path), reference, reads));
   const place = references.some((reference) => reference.id === PLACE) ? [PLACE] : [];
   const looks = leads.map((lead) => lead.id);
   const episodes = Object.entries(progress.episodes).flatMap(([code, made]) => {

@@ -38,7 +38,8 @@ export function samplesFrom(root: string): (set: string, relPath: string) => Sam
     }
     const key = sampleKey(relPath);
     const name = key && table?.[set]?.[key];
-    if (!name) return undefined;
+    // The installer leaves the full sample dramas out (electron-builder.config.mjs): a packaged app draws their placeholders.
+    if (!name || !existsSync(path.join(root, name))) return undefined;
     const bytes = readFileSync(path.join(root, name));
     if (new TextDecoder().decode(bytes.subarray(0, POINTER.length)) === POINTER) {
       if (!warned) console.warn(`Replay's sample pictures are Git LFS pointers (${root}); run \`git lfs install && git lfs pull\` to see them. Placeholders are drawn meanwhile.`);

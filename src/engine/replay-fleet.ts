@@ -134,48 +134,95 @@ function languageOf(goal: string): Lang {
   return /summaries in Chinese/i.test(goal) ? "zh" : "en";
 }
 
-/** Everything the recorded agent says, in both languages. */
+/** A word or line in both languages, as fixtures/replay/dramas.json gives it. */
+type Both<T> = Record<Lang, T>;
+
 /**
- * A replayed drama's own names: its title, its two leads (a has the wedding look), its two places
- * and its prop, and its episodes' titles. Every replayed drama plays the same recording; only
- * these and its pictures differ (STORIES; fixtures/replay/samples/samples.json).
+ * A sample drama as fixtures/replay/dramas.json states it: its title; its cast, the first two its
+ * leads, each with its further looks; its places, each with the times of day drawn apart; its
+ * props; and its episodes, each with its segments' shots. Every replayed drama plays the same
+ * recording; only these and its pictures (fixtures/replay/samples/samples.json) differ.
  */
+interface DramaData {
+  title: Both<string>;
+  cast: { id: string; name: Both<string>; short: Both<string>; looks?: string[] }[];
+  places: { id: string; name: Both<string>; times?: string[] }[];
+  props: { id: string; name: Both<string> }[];
+  episodes: { title: Both<string>; segments: { id: string; shots: Both<string[]> }[] }[];
+  /** The bible's red line, when the setup stops on one: drama-cli refuses the bible for it (RedLine). */
+  redLine?: Both<string>;
+}
+
+/** A sample drama in one language. */
 interface Story {
   title: string;
-  a: { name: string; short: string };
-  b: { name: string; short: string };
-  places: { home: string; office: string };
-  prop: string;
-  episodes: string[];
-  /** The bible's red line, when the setup stops on one: drama-cli refuses the bible for it (RedLine). */
+  cast: { id: string; name: string; short: string; looks: string[] }[];
+  places: { id: string; name: string; times: string[] }[];
+  props: { id: string; name: string }[];
+  episodes: { title: string; segments: { id: string; shots: string[] }[] }[];
   redLine?: string;
 }
+
+const inLanguage = (d: DramaData, lang: Lang): Story => ({
+  title: d.title[lang],
+  cast: d.cast.map((c) => ({ id: c.id, name: c.name[lang], short: c.short[lang], looks: c.looks ?? [] })),
+  places: d.places.map((p) => ({ id: p.id, name: p.name[lang], times: p.times ?? [] })),
+  props: d.props.map((p) => ({ id: p.id, name: p.name[lang] })),
+  episodes: d.episodes.map((e) => ({ title: e.title[lang], segments: e.segments.map((s) => ({ id: s.id, shots: s.shots[lang] })) })),
+  ...(d.redLine ? { redLine: d.redLine[lang] } : {}),
+});
+
+/** An episode's code by its place in the drama, as drama-cli numbers them. */
+const codeOf = (i: number) => `EP${String(i + 1).padStart(3, "0")}`;
+
+/**
+ * The shared references the setup draws after the leads, by the key the maker names each by:
+ * every other character's base look, every further look, every place and its other times, and
+ * every prop, each with its asset path and its placeholder.
+ */
+interface Shared {
+  key: string;
+  path: string;
+  draw: (version: string) => string;
+}
+
+function sharedOf(s: Story): Shared[] {
+  return [
+    ...s.cast.slice(2).map((c) => ({ key: c.id, path: `assets/characters/${c.id}`, draw: (v: string) => lookSheet(c.name, "base", v) })),
+    ...s.cast.flatMap((c) => c.looks.map((look) => ({ key: `${c.id}/${look}`, path: `assets/characters/${c.id}/states/${look}`, draw: (v: string) => lookSheet(c.name, look, v) }))),
+    ...s.places.flatMap((place) => [
+      { key: place.id, path: `assets/scenes/${place.id}`, draw: (v: string) => plate(place.id, v) },
+      ...place.times.map((time) => ({ key: `${place.id}/${time}`, path: `assets/scenes/${place.id}/times/${time}`, draw: (v: string) => plate(`${place.id} ${time}`, v) })),
+    ]),
+    ...s.props.map((item) => ({ key: item.id, path: `assets/props/${item.id}`, draw: (v: string) => prop(item.id, v) })),
+  ];
+}
+
+/** "3 looks", "1 look": a count with its noun. */
+const count = (n: number, noun: string) => `${n} ${noun}${n === 1 ? "" : "s"}`;
 
 type Say = ReturnType<typeof words>["en"];
 
 /** What the recording says, in the drama's language, with its story's names. */
-const words = (s: Story) => ({
+const words = (s: Story) => {
+  // The leads, and how many shared references of each kind the setup draws after them.
+  const [a, b] = s.cast;
+  const looks = s.cast.length - 2 + s.cast.reduce((n, c) => n + c.looks.length, 0);
+  const plates = s.places.reduce((n, place) => n + 1 + place.times.length, 0);
+  return {
   en: {
-    cast: [
-      { id: "lin", name: s.a.name },
-      { id: "wei", name: s.b.name },
-    ],
-    shots: [
-      [`${s.a.short} enters the yard`, `${s.b.short}: You're late.`, `${s.a.short} hides the ${s.prop.toLowerCase()}`, `Close on the ${s.prop.toLowerCase()}`, `${s.b.short} turns away`, `${s.a.short} alone`],
-      ["The family at dinner", "Mother: Eat.", `${s.a.short} watches ${s.b.short}`, `${s.b.short} pushes the bowl away`],
-      ["Night, the yard", `${s.a.short} reads the ${s.prop.toLowerCase()}`, `${s.b.short} at the window`, "Their eyes meet", `${s.a.short} burns the ${s.prop.toLowerCase()}`],
-    ],
-    episodes: s.episodes,
+    cast: s.cast.map((c) => ({ id: c.id, name: c.name })),
+    episodes: s.episodes.map((e) => e.title),
     reading: ["Reading the screenplay and the notes", "Checking every character's age and gender"],
-    askAge: `The screenplay doesn't give ${s.b.name}'s age. How old is he, and should he read older than ${s.a.name}?`,
-    drawing: ["Writing the bible", `Drawing ${s.a.name}'s face and base look`, `Drawing ${s.b.name}'s face and base look`],
+    askAge: `The screenplay doesn't give ${b.name}'s age. How old is he, and should he read older than ${a.name}?`,
+    drawing: ["Writing the bible", `Drawing ${a.name}'s face and base look`, `Drawing ${b.name}'s face and base look`],
     redrawLook: (name: string) => `Redrawing ${name}'s look`,
-    askLooks: `The leads' looks are ready for your approval: ${s.a.name} and ${s.b.name}. The observer noted that ${s.b.name}'s jacket reads darker than the bible describes.`,
+    askLooks: `The leads' looks are ready for your approval: ${a.name} and ${b.name}. The observer noted that ${b.name}'s jacket reads darker than the bible describes.`,
     askRedrawn: (names: string[]) => `I redrew ${names.join(" and ")}. Please look again.`,
     finishing: ["Recording your approval of the leads' looks", "Finishing the shared references"],
-    preparing: ["Writing every episode's breakdown", `Drawing ${s.a.name}'s wedding look`, "Drawing the location plates", "Drawing the key prop", "Checking the shared references"],
+    preparing: ["Writing every episode's breakdown", "Drawing the other characters and every further look", "Drawing the location plates", "Drawing the key props", "Checking the shared references"],
     askReferences: (n: number) =>
-      `Every episode is prepared: ${n} breakdowns are accepted. These shared references are ready for your approval: ${s.a.name}'s wedding look, two locations and the ${s.prop.toLowerCase()}.`,
+      `Every episode is prepared: ${n} breakdowns are accepted. These shared references are ready for your approval: ${count(looks, "look")}, ${count(plates, "location plate")} and ${count(s.props.length, "prop")}.`,
     redrawReference: (key: string) => `Redrawing ${key}`,
     askReferencesAgain: (keys: string[]) => `I redrew ${keys.join(", ")}. Please look again.`,
     packing: ["Packing the project for the episodes"],
@@ -199,45 +246,33 @@ const words = (s: Story) => ({
     readingMessage: ["Reading your message"],
     noted: (goal: string) => `Noted: ${goal.slice(0, 200)}`,
     title: s.title,
-    places: s.places,
-    props: { letter: s.prop },
-    bible: `# ${s.title} — bible (placeholder)
-
-## Characters
-- **${s.a.name}**, 26, female — the lead. Looks: S0 everyday, S1 wedding.
-- **${s.b.name}**, 32, male — the second lead. Looks: S0 everyday.
-
-## Locations
-- **home** — ${s.places.home}.
-- **office** — ${s.places.office}.
-
-## Key props
-- **letter** — ${s.prop}.
-`,
+    places: Object.fromEntries(s.places.map((place) => [place.id, place.name])),
+    props: Object.fromEntries(s.props.map((item) => [item.id, item.name])),
+    bible: [
+      `# ${s.title} — bible (placeholder)`,
+      "\n## Characters",
+      ...s.cast.map((c, i) => `- **${c.name}**${i < 2 ? ", a lead" : ""}. Looks: S0 everyday${c.looks.map((look) => `, ${look}`).join("")}.`),
+      "\n## Locations",
+      ...s.places.map((place) => `- **${place.id}** — ${place.name}.`),
+      "\n## Key props",
+      ...s.props.map((item) => `- **${item.id}** — ${item.name}.`),
+    ].join("\n") + "\n",
     askRedLine: (line: string) => `drama-cli won't accept the bible: the screenplay has a red line, ${line}. It's yours to decide: shall I write the bible without it, or stop here?`,
     breakdownTitle: (code: string) => `# ${code} — breakdown (placeholder)`,
     shot: (n: number, text: string) => `- Shot ${n}: ${text}`,
   },
   zh: {
-    cast: [
-      { id: "lin", name: s.a.name },
-      { id: "wei", name: s.b.name },
-    ],
-    shots: [
-      [`${s.a.name}走进院子`, `${s.b.name}：你来晚了。`, `${s.a.name}藏起${s.prop}`, `特写：${s.prop}`, `${s.b.name}转身离开`, `${s.a.name}独自站着`],
-      ["一家人吃晚饭", "母亲：吃饭。", `${s.a.name}看着${s.b.name}`, `${s.b.name}推开饭碗`],
-      ["夜，院子里", `${s.a.name}看着${s.prop}`, `${s.b.name}站在窗边`, "两人对视", `${s.a.name}烧掉${s.prop}`],
-    ],
-    episodes: s.episodes,
+    cast: s.cast.map((c) => ({ id: c.id, name: c.name })),
+    episodes: s.episodes.map((e) => e.title),
     reading: ["阅读剧本和备注", "核对每个角色的年龄和性别"],
-    askAge: `剧本里没有写${s.b.name}的年龄。他多大？要不要显得比${s.a.name}年长？`,
-    drawing: ["编写设定集", `绘制${s.a.name}的面部和基础造型`, `绘制${s.b.name}的面部和基础造型`],
+    askAge: `剧本里没有写${b.name}的年龄。他多大？要不要显得比${a.name}年长？`,
+    drawing: ["编写设定集", `绘制${a.name}的面部和基础造型`, `绘制${b.name}的面部和基础造型`],
     redrawLook: (name: string) => `重新绘制${name}的造型`,
-    askLooks: `主角造型已完成，请审定：${s.a.name}和${s.b.name}。观察员注意到，${s.b.name}的外套比设定集里描述的颜色更深。`,
+    askLooks: `主角造型已完成，请审定：${a.name}和${b.name}。观察员注意到，${b.name}的外套比设定集里描述的颜色更深。`,
     askRedrawn: (names: string[]) => `我重新绘制了${names.join("和")}，请再看一下。`,
     finishing: ["记录你对主角造型的确认", "完成共用参考"],
-    preparing: ["撰写每一集的拆分", `绘制${s.a.name}的婚礼造型`, "绘制场景", "绘制关键道具", "检查共用参考"],
-    askReferences: (n: number) => `每一集都已准备好：${n} 集拆分已确认。以下共用参考请你审定：${s.a.name}的婚礼造型、两个场景和${s.prop}。`,
+    preparing: ["撰写每一集的拆分", "绘制其他角色和每一套造型", "绘制场景", "绘制关键道具", "检查共用参考"],
+    askReferences: (n: number) => `每一集都已准备好：${n} 集拆分已确认。以下共用参考请你审定：${looks} 套造型、${plates} 个场景和 ${s.props.length} 个道具。`,
     redrawReference: (key: string) => `重画 ${key}`,
     askReferencesAgain: (keys: string[]) => `我重画了 ${keys.join("、")}，请再看一下。`,
     packing: ["打包项目，交给各集"],
@@ -260,46 +295,28 @@ const words = (s: Story) => ({
     readingMessage: ["阅读你的消息"],
     noted: (goal: string) => `收到：${goal.slice(0, 200)}`,
     title: s.title,
-    places: s.places,
-    props: { letter: s.prop },
-    bible: `# ${s.title} · 设定集（示例）
-
-## 角色
-- **${s.a.name}**，26 岁，女，主角。造型：S0 日常，S1 婚礼。
-- **${s.b.name}**，32 岁，男，第二主角。造型：S0 日常。
-
-## 场景
-- **home**：${s.places.home}。
-- **office**：${s.places.office}。
-
-## 关键道具
-- **letter**：${s.prop}。
-`,
+    places: Object.fromEntries(s.places.map((place) => [place.id, place.name])),
+    props: Object.fromEntries(s.props.map((item) => [item.id, item.name])),
+    bible: [
+      `# ${s.title} · 设定集（示例）`,
+      "\n## 角色",
+      ...s.cast.map((c, i) => `- **${c.name}**${i < 2 ? "，主角" : ""}。造型：S0 日常${c.looks.map((look) => `，${look}`).join("")}。`),
+      "\n## 场景",
+      ...s.places.map((place) => `- **${place.id}**：${place.name}。`),
+      "\n## 关键道具",
+      ...s.props.map((item) => `- **${item.id}**：${item.name}。`),
+    ].join("\n") + "\n",
     askRedLine: (line: string) => `drama-cli 不接受这版设定集：剧本里有一条红线，${line}。这由你决定：我把它去掉后再写设定集，还是就此停下？`,
     breakdownTitle: (code: string) => `# ${code} 拆分（示例）`,
     shot: (n: number, text: string) => `- 镜头 ${n}：${text}`,
   },
-});
-
-/** The sample dramas replay plays, by id; the first is the one New drama's sample starts. Names are invented. */
-export const STORIES: Record<string, Record<Lang, Story>> = {
-  stepmother: {
-    en: { title: "The Stepmother", a: { name: "Lin Xiaoyu", short: "Lin" }, b: { name: "Wei Zhen", short: "Wei" }, places: { home: "Courtyard house", office: "Factory office" }, prop: "Torn letter", episodes: ["The stepmother arrives", "The letter", "Dinner", "The wedding dress", "Night market", "The truth"] },
-    zh: { title: "后妈来了", a: { name: "林晓雨", short: "林晓雨" }, b: { name: "魏振", short: "魏振" }, places: { home: "四合院", office: "工厂办公室" }, prop: "撕破的信", episodes: ["后妈进门", "一封信", "晚饭", "嫁衣", "夜市", "真相"] },
-  },
-  "night-class": {
-    en: { title: "Night Class", a: { name: "Tang Wen", short: "Tang" }, b: { name: "Bao Jun", short: "Bao" }, places: { home: "Teachers' office", office: "Evening classroom" }, prop: "Exam paper", episodes: ["First night", "The roll call", "Chalk dust", "The exam", "After class", "Graduation"] },
-    zh: { title: "夜校", a: { name: "唐雯", short: "唐雯" }, b: { name: "鲍军", short: "鲍军" }, places: { home: "教师办公室", office: "夜间教室" }, prop: "试卷", episodes: ["第一夜", "点名", "粉笔灰", "考试", "下课后", "毕业"] },
-  },
-  "corner-office": {
-    en: { title: "Corner Office", a: { name: "Vivian Shen", short: "Vivian" }, b: { name: "Leo Lu", short: "Leo" }, places: { home: "The corner office", office: "Board room" }, prop: "Signed contract", episodes: ["Day one", "The pitch", "Overtime", "The board", "The leak", "Promotion"] },
-    zh: { title: "顶层办公室", a: { name: "沈薇", short: "沈薇" }, b: { name: "陆屿", short: "陆屿" }, places: { home: "顶层办公室", office: "会议室" }, prop: "签好的合同", episodes: ["第一天", "提案", "加班", "董事会", "泄密", "升职"] },
-  },
-  "bride-on-bail": {
-    en: { title: "Bride on Bail", a: { name: "Ivy Bell", short: "Ivy" }, b: { name: "Luca Moreno", short: "Luca" }, places: { home: "Garden wedding", office: "Holding cell" }, prop: "Bail papers", episodes: ["The arrest", "The ring", "Bail", "The rehearsal", "The vows", "The verdict"], redLine: "instructions someone could follow to make a weapon (EP003, scene 2)" },
-    zh: { title: "保释新娘", a: { name: "艾薇", short: "艾薇" }, b: { name: "卢卡", short: "卢卡" }, places: { home: "花园婚礼", office: "拘留室" }, prop: "保释文件", episodes: ["被捕", "戒指", "保释", "彩排", "誓言", "判决"], redLine: "可以照着做出武器的步骤（第 3 集第 2 场）" },
-  },
+  };
 };
+
+/** The sample dramas replay plays, by id (fixtures/replay/dramas.json); the first is the one New drama's sample starts. Names are invented. */
+export const STORIES: Record<string, Record<Lang, Story>> = Object.fromEntries(
+  Object.entries(JSON.parse(readFileSync(path.join(FIXTURES, "dramas.json"), "utf8")) as Record<string, DramaData>).map(([id, d]) => [id, { en: inLanguage(d, "en"), zh: inLanguage(d, "zh") }]),
+);
 
 /** The story a goal's drama tells, by the title its brief gives (goals.ts brief: "Title: …."); the first sample's for any other. */
 function storyOf(goal: string, lang: Lang): { id: string; story: Story } {
@@ -322,7 +339,7 @@ const bibleJson = (say: Say): Out => ({
       characters: say.cast.map((c) => ({ id: c.id, name: c.name, aliases: [] })),
       locations: Object.entries(say.places).map(([id, name]) => ({ id, name })),
       props: Object.entries(say.props).map(([id, name]) => ({ id, name })),
-      episodes: say.episodes.map((title, i) => ({ id: `EP00${i + 1}`, title })),
+      episodes: say.episodes.map((title, i) => ({ id: codeOf(i), title })),
     }),
   ),
 });
@@ -330,10 +347,8 @@ const bibleJson = (say: Say): Out => ({
 /** A part of a packed project, as the agent returns it (here a stand-in: replay has no drama-cli project). Packed again at each stop, under the same name. */
 const archive = (name: string, stop = 1): Out => ({ path: `handoff/${name}.tar.part-aa`, type: "application/octet-stream", bytes: text(`replay stand-in for ${name}.tar, packed at stop ${stop}`) });
 
-const segmentsOf = (say: Say) => say.shots.map((shots, i) => ({ id: `seg0${i + 1}`, shots }));
-
-function breakdownOf(say: Say, code: string): string {
-  return [say.breakdownTitle(code), ...segmentsOf(say).flatMap((seg) => [`\n## ${seg.id}`, ...seg.shots.map((shot, i) => say.shot(i + 1, shot))])].join("\n");
+function breakdownOf(say: Say, story: Story, i: number): string {
+  return [say.breakdownTitle(codeOf(i)), ...story.episodes[i].segments.flatMap((seg) => [`\n## ${seg.id}`, ...seg.shots.map((shot, n) => say.shot(n + 1, shot))])].join("\n");
 }
 
 /**
@@ -351,13 +366,14 @@ function setupScript(lang: Lang, preset: string, story: { id: string; story: Sto
     versions.set(key, v);
     return `v${v}`;
   };
+  const leads = say.cast.slice(0, 2);
   const leadSheet = (c: { id: string; name: string }) => art(set, `drama/assets/characters/${c.id}/${next(c.id)}/image-1.svg`, lookSheet(c.name, "base", `v${versions.get(c.id)}`));
-  const shared = {
-    "lin/S1": () => art(set, `drama/assets/characters/lin/states/S1/${next("lin/S1")}/image-1.svg`, lookSheet(say.cast[0].name, "S1", `v${versions.get("lin/S1")}`)),
-    home: () => art(set, `drama/assets/scenes/home/${next("home")}/image-1.svg`, plate("home", `v${versions.get("home")}`)),
-    office: () => art(set, `drama/assets/scenes/office/${next("office")}/image-1.svg`, plate("office", `v${versions.get("office")}`)),
-    letter: () => art(set, `drama/assets/props/letter/${next("letter")}/image-1.svg`, prop("letter", `v${versions.get("letter")}`)),
-  } as Record<string, () => Out>;
+  const shared = new Map(sharedOf(story.story).map((reference) => [reference.key, reference]));
+  const draw = (key: string) => {
+    const reference = shared.get(key)!;
+    const v = next(key);
+    return art(set, `drama/${reference.path}/${v}/image-1.svg`, reference.draw(v));
+  };
   // What drama-cli's status would say at this stop: each item's version drawn, and the one the
   // maker accepted. A decision accepts every item of the review it doesn't send back.
   const accepted = new Map<string, number>();
@@ -368,9 +384,9 @@ function setupScript(lang: Lang, preset: string, story: { id: string; story: Sto
   const progress = (): ReplayProgress => ({
     preset,
     bible: stage === "asked" || stage === "red-line" ? null : "v1",
-    looks: Object.fromEntries(say.cast.filter((c) => versions.has(c.id)).map((c) => [c.id, made(c.id)])),
-    references: Object.fromEntries(Object.keys(shared).filter((key) => versions.has(key)).map((key) => [key, made(key)])),
-    episodes: stage === "references" || stage === "handed" ? Object.fromEntries(say.episodes.map((_, i) => [`EP00${i + 1}`, { segments: segmentsOf(say).map((seg) => seg.id) }])) : {},
+    looks: Object.fromEntries(leads.filter((c) => versions.has(c.id)).map((c) => [c.id, made(c.id)])),
+    references: Object.fromEntries([...shared.values()].filter((reference) => versions.has(reference.key)).map((reference) => [reference.key, { ...made(reference.key), path: reference.path }])),
+    episodes: stage === "references" || stage === "handed" ? Object.fromEntries(story.story.episodes.map((e, i) => [codeOf(i), { segments: e.segments.map((seg) => seg.id) }])) : {},
   });
   const play = (answer: string): Step => {
     const redo = revisedKeys(answer);
@@ -387,14 +403,14 @@ function setupScript(lang: Lang, preset: string, story: { id: string; story: Sto
       stage = "leads";
       return {
         progress: say.drawing,
-        files: [{ path: "drama/bible/v1/bible.md", type: "text/markdown", bytes: text(say.bible) }, bibleJson(say), ...say.cast.map(leadSheet)],
+        files: [{ path: "drama/bible/v1/bible.md", type: "text/markdown", bytes: text(say.bible) }, bibleJson(say), ...leads.map(leadSheet)],
         ask: say.askLooks,
       };
     }
     // The maker names a lead to redo by name or id; every lead not named is accepted as drawn.
-    if (stage === "leads") decide(say.cast.filter((c) => !redo.includes(c.name)).map((c) => c.id), redo);
+    if (stage === "leads") decide(leads.filter((c) => !redo.includes(c.name)).map((c) => c.id), redo);
     if (stage === "leads" && redo.length) {
-      const who = say.cast.filter((c) => redo.includes(c.name) || redo.includes(c.id));
+      const who = leads.filter((c) => redo.includes(c.name) || redo.includes(c.id));
       return { progress: who.map((c) => say.redrawLook(c.name)), files: who.map(leadSheet), ask: say.askRedrawn(who.map((c) => c.name)) };
     }
     if (stage === "leads") {
@@ -402,22 +418,22 @@ function setupScript(lang: Lang, preset: string, story: { id: string; story: Sto
       return {
         progress: say.preparing,
         files: [
-          ...say.episodes.map((_, i) => ({ path: `drama/episodes/EP00${i + 1}/breakdown/v1/breakdown.md`, type: "text/markdown", bytes: text(breakdownOf(say, `EP00${i + 1}`)) })),
-          ...Object.values(shared).map((draw) => draw()),
+          ...say.episodes.map((_, i) => ({ path: `drama/episodes/${codeOf(i)}/breakdown/v1/breakdown.md`, type: "text/markdown", bytes: text(breakdownOf(say, story.story, i)) })),
+          ...[...shared.keys()].map(draw),
         ],
         ask: say.askReferences(say.episodes.length),
       };
     }
-    decide(Object.keys(shared), redo);
+    decide([...shared.keys()], redo);
     if (redo.length) {
-      const which = redo.filter((key) => shared[key]);
-      return { progress: which.map(say.redrawReference), files: which.map((key) => shared[key]()), ask: say.askReferencesAgain(which) };
+      const which = redo.filter((key) => shared.has(key));
+      return { progress: which.map(say.redrawReference), files: which.map(draw), ask: say.askReferencesAgain(which) };
     }
     stage = "handed";
     return {
       progress: [...say.finishing, ...say.packing],
       files: [archive("project")],
-      summary: `${say.castDone}\n` + say.episodes.map((title, i) => `EP00${i + 1}: ${title}`).join("\n"),
+      summary: `${say.castDone}\n` + say.episodes.map((title, i) => `${codeOf(i)}: ${title}`).join("\n"),
     };
   };
   // Each stop also hands back the status and the lineage, which shows the pictures the session's stops returned.
@@ -432,7 +448,9 @@ function setupScript(lang: Lang, preset: string, story: { id: string; story: Sto
 function episodeScript(code: string, lang: Lang, preset: string, story: { id: string; story: Story }): Player {
   const say = words(story.story)[lang];
   const set = pictures(story.id, lang);
-  const segments = say.shots.map((shots, i) => ({ id: `seg0${i + 1}`, shots }));
+  const episode = story.story.episodes[Number(code.slice(2)) - 1];
+  if (!episode) throw new Error(`The sample drama ${story.story.title} has no ${code}.`);
+  const segments = episode.segments;
   let stage: "boards" | "takes" | "cut" | "done" = "boards";
   // Each segment's own storyboard version and takes, and what the maker accepted of each: a
   // decision accepts every item of the review it doesn't send back.
@@ -521,9 +539,9 @@ function episodeScript(code: string, lang: Lang, preset: string, story: { id: st
     return {
       preset,
       bible: "v1",
-      looks: Object.fromEntries(say.cast.map((c) => [c.id, approved])),
-      references: Object.fromEntries(["lin/S1", "home", "office", "letter"].map((key) => [key, approved])),
-      episodes: Object.fromEntries(say.episodes.map((_, i) => `EP00${i + 1}`).map((other) => [other, other === code ? own : { segments: ids }])),
+      looks: Object.fromEntries(say.cast.slice(0, 2).map((c) => [c.id, approved])),
+      references: Object.fromEntries(sharedOf(story.story).map((reference) => [reference.key, { ...approved, path: reference.path }])),
+      episodes: Object.fromEntries(story.story.episodes.map((e, i) => [codeOf(i), codeOf(i) === code ? own : { segments: e.segments.map((seg) => seg.id) }])),
     };
   };
   // Each stop and the finish also hand back the episode's own folder, packed, the status and the lineage.
@@ -538,7 +556,7 @@ function episodeScript(code: string, lang: Lang, preset: string, story: { id: st
 }
 
 function chatScript(goal: string, lang: Lang): Player {
-  const say = words(STORIES.stepmother[lang])[lang];
+  const say = words(Object.values(STORIES)[0][lang])[lang];
   return () => ({ progress: say.readingMessage, files: [], summary: say.noted(goal) });
 }
 

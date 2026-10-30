@@ -11,7 +11,7 @@ const progress: ReplayProgress = {
   preset: "en-us-live-sfw",
   bible: "v1",
   looks: { lin: v1 },
-  references: { "lin/S1": v1, home: v1, letter: v1 },
+  references: { "lin/S1": { ...v1, path: "assets/characters/lin/states/S1" }, home: { ...v1, path: "assets/scenes/home" }, letter: { ...v1, path: "assets/props/letter" } },
   episodes: { EP001: { segments: ["seg01"], boards: { seg01: { current: "v2", accepted: "v2" } }, takes: { seg01: { count: 2, accepted: true } }, cut: { current: "v1", accepted: null } } },
 };
 const returned = [

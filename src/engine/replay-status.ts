@@ -19,12 +19,17 @@ export interface EpisodeMade {
   cut?: Made;
 }
 
+/** A shared reference and the asset it is: assets/characters/<id>[/states/<look>], assets/scenes/<id>[/times/<time>] or assets/props/<id>. */
+export interface Reference extends Made {
+  path: string;
+}
+
 export interface ReplayProgress {
   preset: string;
   bible: Version;
-  /** A lead's base look, and the shared references (a further look as id/look, a location, a prop), by id. */
+  /** A lead's base look, by id, and the shared references by the key the maker names each by (a further look as id/look). */
   looks: Record<string, Made>;
-  references: Record<string, Made>;
+  references: Record<string, Reference>;
   episodes: Record<string, EpisodeMade>;
 }
 
@@ -48,13 +53,7 @@ function stage(path: string, made: Made) {
 const accepted = (version: string): Made => ({ current: version, accepted: version });
 const none: Made = { current: null, accepted: null };
 
-function referencePath(key: string): string {
-  const [id, look] = key.split("/");
-  if (look) return `assets/characters/${id}/states/${look}`;
-  return key === "letter" ? `assets/props/${key}` : `assets/scenes/${key}`;
-}
-
-function episode(code: string, made: EpisodeMade, references: Record<string, Made>) {
+function episode(code: string, made: EpisodeMade, references: Record<string, Reference>) {
   const base = `episodes/${code}`;
   const each = <T>(read: (segment: string) => T) => Object.fromEntries(made.segments.map((segment) => [segment, read(segment)]));
   const takes = made.takes;
@@ -79,9 +78,8 @@ function episode(code: string, made: EpisodeMade, references: Record<string, Mad
     }),
     scene_chains: made.segments.map((segment) => ({ scene_heading: `INT. HOME - DAY #${segment}#`, segments: [segment] })),
     needs: missing.map(([key, reference]) => {
-      const path = referencePath(key);
-      const state = stage(path, reference);
-      return { reference: key, path: `/work/drama/${path}`, why: state.why ?? "", run: state.run ?? [], segments: made.segments };
+      const state = stage(reference.path, reference);
+      return { reference: key, path: `/work/drama/${reference.path}`, why: state.why ?? "", run: state.run ?? [], segments: made.segments };
     }),
   };
 }
@@ -89,14 +87,18 @@ function episode(code: string, made: EpisodeMade, references: Record<string, Mad
 /** The report, as the bytes of handoff/status.json. */
 export function replayStatus(progress: ReplayProgress): { path: string; type: string; bytes: Uint8Array } {
   const characters: Record<string, ReturnType<typeof stage> & { states?: Record<string, ReturnType<typeof stage>> }> = {};
-  const scenes: Record<string, ReturnType<typeof stage>> = {};
+  const scenes: Record<string, ReturnType<typeof stage> & { times?: Record<string, ReturnType<typeof stage>> }> = {};
   const props: Record<string, ReturnType<typeof stage>> = {};
   for (const [id, made] of Object.entries(progress.looks)) characters[id] = stage(`assets/characters/${id}`, made);
-  for (const [key, made] of Object.entries(progress.references)) {
-    const [id, look] = key.split("/");
-    if (look) (characters[id].states ??= {})[look] = stage(referencePath(key), made);
-    else if (key === "letter") props[key] = stage(referencePath(key), made);
-    else scenes[key] = stage(referencePath(key), made);
+  // A base before its further looks and times: its path is the shorter.
+  for (const reference of Object.values(progress.references).sort((x, y) => x.path.length - y.path.length)) {
+    const [, kind, id, , inner] = reference.path.split("/");
+    const state = stage(reference.path, reference);
+    if (kind === "characters" && inner) (characters[id].states ??= {})[inner] = state;
+    else if (kind === "characters") characters[id] = state;
+    else if (kind === "scenes" && inner) (scenes[id].times ??= {})[inner] = state;
+    else if (kind === "scenes") scenes[id] = state;
+    else props[id] = state;
   }
   const report = {
     project: "/work/drama",

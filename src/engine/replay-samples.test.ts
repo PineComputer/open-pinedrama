@@ -57,4 +57,8 @@ describe("replay's samples", () => {
     const sample = samplesFrom(folder({ "samples.json": JSON.stringify({ en: { "drama/assets/characters/lin/vN/image-1": "en/lin.webp" } }), "en/lin.webp": JPEG }));
     expect(() => sample("en", "drama/assets/characters/lin/v1/image-1.svg")).toThrow(/lin\.webp/);
   });
+  it("draw the placeholder for a file the installer left out (fixtures/replay/samples/full/)", () => {
+    const sample = samplesFrom(folder({ "samples.json": JSON.stringify({ "paper-vows": { "drama/assets/characters/nora/vN/image-1": "full/paper-vows/cast-nora.jpg" } }) }));
+    expect(sample("paper-vows", "drama/assets/characters/nora/v1/image-1.svg")).toBeUndefined();
+  });
 });
