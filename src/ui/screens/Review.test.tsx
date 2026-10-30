@@ -69,6 +69,22 @@ describe("the review room for storyboards", () => {
   });
 });
 
+describe("a link into the review room", () => {
+  it("opens at the item it names", async () => {
+    window.history.pushState(null, "", "/r/r1?item=seg02");
+    open();
+    expect(await screen.findByRole("heading", { level: 2, name: "seg02" })).toBeInTheDocument();
+    window.history.pushState(null, "", "/");
+  });
+
+  it("opens at the first item when it names none it has", async () => {
+    window.history.pushState(null, "", "/r/r1?item=seg09");
+    open();
+    expect(await screen.findByRole("heading", { level: 2, name: "seg01" })).toBeInTheDocument();
+    window.history.pushState(null, "", "/");
+  });
+});
+
 describe("the review room for takes", () => {
   function takes() {
     const review = storyboardReview("seg01");

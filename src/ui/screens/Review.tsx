@@ -9,7 +9,7 @@ import { StatusChip } from "../components/StatusChip.tsx";
 import { StopCard } from "../components/StopCard.tsx";
 import { Icon } from "../icons.tsx";
 import { Markdown } from "../Markdown.tsx";
-import { Link, navigate } from "../router.tsx";
+import { Link, navigate, usePath } from "../router.tsx";
 import { Still } from "../Still.tsx";
 import { DocumentView, Pinboard, isDocument, isImage, isVideo, useShotList, useSize, variantLabel } from "../viewing.tsx";
 
@@ -252,7 +252,9 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
   const items = review.reviewItems;
   const open = review.state === "open";
   const takes = review.kind === "takes";
-  const [index, setIndex] = useState(0);
+  // A link may name the item to open at (?item=, as the Canvas's Review does); else the first.
+  const asked = usePath().query.get("item");
+  const [index, setIndex] = useState(() => Math.max(0, items.findIndex((i) => i.key === asked)));
   const [variant, setVariant] = useState(0);
   const [drafts, setDrafts, forgetDrafts] = useDraft<Drafts>(review.id, "items", () =>
     Object.fromEntries(

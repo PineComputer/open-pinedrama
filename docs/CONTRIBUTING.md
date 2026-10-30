@@ -56,6 +56,11 @@ Classes are `ds-*`, and a variant or state is `is-*`. The older screens' global 
   name starts with what it shows (WCAG 2.5.3).
 - **One main landmark:** the shell's work area. A screen inside the shell is a `div`.
 - **No new dependency** without agreement on #15.
+- **Your own e2e ports.** Several builders run `npm run e2e` on this machine at once. Give yours a
+  first port of its own (`STUDIO_E2E_PORT=4700 npm run e2e`; work-04 4700, work-05 4800,
+  work-06 4791, work-07 4391), so one run's engines don't meet another's.
+- **Fast-forward merges.** A pull request into redesign/studio is rebased onto its head and taken
+  as a fast-forward, so every commit keeps its own author. No merge commits.
 - **Light and dark:** check both, and the gallery's pictures if you change a component. CI makes
   the pictures on Linux; [TESTING.md](TESTING.md) says how to update them.
 
