@@ -4,6 +4,31 @@ The studio's redesign, built on one branch, `redesign/studio`, step by step. Eac
 starts with a test that fails ([TESTING.md](TESTING.md)) and is one commit. Each milestone
 ends with an acceptance by merecdesperez44323-lab, who asked for the redesign, before the next one starts.
 
+## Differentiation
+
+**A production line, not a workshop.** Node-by-node canvas tools make a person the engine:
+they pick a node, write its prompt, press generate, and repeat for every shot. Here the agent
+runs drama-cli on many Pine Computers at once, an episode on each, and the maker's work is
+deciding what the line made. The look can borrow from the best canvas tools; the product's hero
+is the line and its review queue, and Canvas and Graph are views for overview and tracing.
+
+What we would show, from data the studio already keeps:
+
+| Measure | What it is | Where it comes from |
+|---|---|---|
+| Episodes reviewed per person-day | Episodes taken to an accepted cut, per day the maker spent deciding | the decisions the review room records |
+| Cost per finished minute | What Pine charged, over the minutes of accepted cuts | spend per episode, the cut's length |
+| Rework rate | Versions sent back, over versions made | each review's verdicts |
+
+| Differentiator | The screen that carries it |
+|---|---|
+| Parallel episodes on Pine Computers | The control room (the drama's first view): each Computer, its episode, what it is doing now |
+| Upload tonight, review in the morning | The review queue, which fills while the maker is away, with how long each episode has left |
+| Consistency checks as facts | The review room's findings, as drama-cli's observer reports them, by severity |
+| Stale and redo, with the reason | Graph and the review room: what lineage marks stale, and why |
+| Refusals word for word | The StopCard on the stop that asks about one |
+| No keys to set up | Welcome: a Pine project, or the replay; the providers are Pine's |
+
 ## Direction
 
 - **The agent makes every item; the maker decides.** drama-cli on Pine Computers writes the
@@ -71,7 +96,10 @@ surface.
 
 **P4 Agent panel (M3).** P4.1 Running, with Stop and Watch. P4.2 ToDo, from status. P4.3
 Decisions, the inbox grouped by drama and episode. P4.4 ProcessGroup. P4.5 docked,
-collapsed and floating; NextChips.
+collapsed and floating; NextChips. P4.6 The control room,
+the drama's first view: each Computer with its episode and what it is doing now, each episode's
+progress and what it still needs, one queue of what waits for the maker with Next review and how
+long each episode has left, and the spend.
 
 **M3 notes, from the M1 live check and the design.**
 - **Each section's source:**
