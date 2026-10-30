@@ -3,6 +3,7 @@ import type { AppInfo } from "../../shared/types.ts";
 import { api, useAction } from "../api.ts";
 import { useT } from "../i18n.ts";
 import { errorText } from "../labels.ts";
+import { buttonVariants } from "@/components/ui/button";
 
 const DEFAULT_ENDPOINT = "https://pinesandbox.io";
 
@@ -47,7 +48,7 @@ export function ConnectForm({ onDone }: { onDone: () => void }) {
       )}
       {error !== undefined && <p className="error flush">{errorText(error, t)}</p>}
       <div className="inline">
-        <button className="btn ink" type="submit" disabled={busy || !apiKey.trim()}>
+        <button className={buttonVariants({ variant: "default" })} type="submit" disabled={busy || !apiKey.trim()}>
           {busy ? t("connect.checking") : t("connect.go")}
         </button>
         <span className="quiet small">

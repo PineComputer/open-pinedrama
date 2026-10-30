@@ -50,7 +50,7 @@ function Notices({ drama }: { drama: DramaView }) {
               {t("setup.retry")}
             </button>
             {drama.setup.reason === "no-drama-skill" && (
-              <button className="btn small" disabled={rehearse.busy} onClick={() => void rehearse.run()}>
+              <button className={buttonVariants({ variant: "outline", size: "sm" })} disabled={rehearse.busy} onClick={() => void rehearse.run()}>
                 {t("setup.rehearse")}
               </button>
             )}
@@ -66,7 +66,7 @@ function Notices({ drama }: { drama: DramaView }) {
             </div>
             {retry.error !== undefined && <div className="error small">{errorText(retry.error, t)}</div>}
           </div>
-          <button className="btn small" disabled={retry.busy} onClick={() => void retry.run()}>
+          <button className={buttonVariants({ variant: "outline", size: "sm" })} disabled={retry.busy} onClick={() => void retry.run()}>
             {t("stalled.retry")}
           </button>
         </div>

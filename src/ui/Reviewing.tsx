@@ -1,5 +1,6 @@
 import type { Reviewing } from "../shared/types.ts";
 import { useT } from "./i18n.ts";
+import { Segmented } from "./components/Segmented.tsx";
 
 const CHOICES: Reviewing[] = ["every", "key", "none"];
 
@@ -9,13 +10,7 @@ export function ReviewingChoice({ value, onChange }: { value: Reviewing; onChang
   return (
     <div className="field">
       <span className="label">{t("reviewing.label")}</span>
-      <div className="options">
-        {CHOICES.map((choice) => (
-          <button key={choice} aria-pressed={value === choice} className={value === choice ? "on" : ""} onClick={() => onChange(choice)}>
-            {t(`reviewing.${choice}`)}
-          </button>
-        ))}
-      </div>
+      <Segmented label={t("reviewing.label")} value={value} onChange={onChange} options={CHOICES.map((choice) => ({ value: choice, label: t(`reviewing.${choice}`) }))} />
       <p className="quiet small">{t(`reviewing.${value}Hint`)}</p>
     </div>
   );

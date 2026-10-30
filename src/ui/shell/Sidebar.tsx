@@ -16,6 +16,8 @@ import { nowText, SETUP_STEPS } from "../labels.ts";
 import { Mark } from "../Mark.tsx";
 import { ReviewingChoice } from "../Reviewing.tsx";
 import { Link, navigate } from "../router.tsx";
+import { buttonVariants } from "@/components/ui/button";
+import { Segmented } from "../components/Segmented.tsx";
 
 export type Step = "script" | "story" | "episodes" | "cut";
 
@@ -96,17 +98,11 @@ function Tune({ drama, onDone }: { drama: DramaView; onDone: () => void }) {
       </div>
       <div className="field">
         <span className="label">{t("new.perComputer")}</span>
-        <div className="options">
-          {[1, 2, 3].map((n) => (
-            <button key={n} aria-pressed={perComputer === n} className={perComputer === n ? "on" : ""} onClick={() => setPerComputer(n)}>
-              {n}
-            </button>
-          ))}
-        </div>
+        <Segmented label={t("new.perComputer")} value={String(perComputer)} onChange={(n) => setPerComputer(Number(n))} options={["1", "2", "3"].map((n) => ({ value: n, label: n }))} />
       </div>
       <ReviewingChoice value={reviewing} onChange={setReviewing} />
       <div className="tune-actions">
-        <button className="btn ink small" onClick={save}>
+        <button className={buttonVariants({ variant: "default", size: "sm" })} onClick={save}>
           {t("tune.save")}
         </button>
         <button className="link" onClick={onDone}>

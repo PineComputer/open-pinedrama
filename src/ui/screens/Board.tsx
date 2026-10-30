@@ -274,29 +274,17 @@ function ChooseInputs({ drama }: { drama: DramaView }) {
       {!drama.rehearsal && <PresetChoice value={preset} onChange={setPreset} />}
       <div className="field">
         <span className="label">{t("new.screenplay")}</span>
-        <div className="options">
-          {drama.inputs.files.map((file) => (
-            <button key={file.id} aria-pressed={screenplay === file.id} className={screenplay === file.id ? "on" : ""} onClick={() => setScreenplay(file.id)}>
-              {file.name}
-            </button>
-          ))}
-        </div>
+        <Segmented label={t("new.screenplay")} value={screenplay === null ? "" : String(screenplay)} onChange={(id) => setScreenplay(Number(id))} options={drama.inputs.files.map((file) => ({ value: String(file.id), label: file.name }))} />
         {structure && <ScreenplayStructure structure={structure} onChoose={setStructureChoice} />}
       </div>
       {drama.inputs.needsLength && (
         <div className="field">
           <span className="label">{t("new.length")}</span>
-          <div className="options">
-            {(["60", "90", "120"] as const).map((value) => (
-              <button key={value} aria-pressed={length === value} className={length === value ? "on" : ""} onClick={() => setLength(value)}>
-                {t(`new.length${value}`)}
-              </button>
-            ))}
-          </div>
+          <Segmented label={t("new.length")} value={length ?? ""} onChange={setLength} options={(["60", "90", "120"] as const).map((value) => ({ value, label: t(`new.length${value}`) }))} />
         </div>
       )}
       <div className="actions">
-        <button className="btn ink" disabled={choose.busy || screenplay === null || !structure?.language || (!drama.rehearsal && !preset) || (drama.inputs.needsLength && !length)} onClick={() => void choose.run()}>
+        <button className={buttonVariants({ variant: "default" })} disabled={choose.busy || screenplay === null || !structure?.language || (!drama.rehearsal && !preset) || (drama.inputs.needsLength && !length)} onClick={() => void choose.run()}>
           {t("setup.choose")}
         </button>
         {choose.error !== undefined && <span className="error small">{errorText(choose.error, t)}</span>}
@@ -372,11 +360,11 @@ export function SetupPanel({ drama }: { drama: DramaView }) {
           {setup.state === "stopped" && setup.reason === "choose-inputs" && <ChooseInputs drama={drama} />}
           {setup.state === "stopped" && setup.reason !== "choose-inputs" && (
             <div className="step-action">
-              <button className="btn" disabled={retry.busy} onClick={() => void retry.run()}>
+              <button className={buttonVariants({ variant: "outline" })} disabled={retry.busy} onClick={() => void retry.run()}>
                 {t("setup.retry")}
               </button>
               {setup.reason === "no-drama-skill" && (
-                <button className="btn" disabled={rehearse.busy} onClick={() => void rehearse.run()}>
+                <button className={buttonVariants({ variant: "outline" })} disabled={rehearse.busy} onClick={() => void rehearse.run()}>
                   {t("setup.rehearse")}
                 </button>
               )}

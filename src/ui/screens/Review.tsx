@@ -222,13 +222,13 @@ function QuestionRoom({ review, done }: { review: ReviewView; done: () => void }
           {[send.error, finish.error].map((failed, n) => failed !== undefined && <p key={n} className="error">{errorText(failed, t)}</p>)}
           <div className="question-actions">
             {open && (
-              <button className="btn ink" disabled={send.busy || !answer.trim()} onClick={() => void send.run()}>
+              <button className={buttonVariants({ variant: "default" })} disabled={send.busy || !answer.trim()} onClick={() => void send.run()}>
                 {t("review.sendAnswer")} <span className="key">⌘↵</span>
               </button>
             )}
             {review.finishable && review.episode && (
               <span className="finish">
-                <button className="btn" disabled={finish.busy} onClick={() => void finish.run()}>
+                <button className={buttonVariants({ variant: "outline" })} disabled={finish.busy} onClick={() => void finish.run()}>
                   {t("review.finish", { code: review.episode })}
                 </button>
                 <span className="quiet small">{t("review.finishHint")}</span>

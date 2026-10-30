@@ -16,6 +16,7 @@ import { AgentBall, type AgentMode, AgentPanel, useAgentMode } from "./shell/Age
 import { NavRail } from "./shell/NavRail.tsx";
 import { DramaSidebar, HomeSidebar } from "./shell/Sidebar.tsx";
 import { type Crumb, DramaBar, StopControl, TopBar } from "./shell/TopBar.tsx";
+import { buttonVariants } from "@/components/ui/button";
 
 /** Before the studio can be used: this window isn't the studio's, or the engine isn't answering. */
 function Gate({ error, onRetry }: { error: unknown; onRetry: () => void }) {
@@ -26,7 +27,7 @@ function Gate({ error, onRetry }: { error: unknown; onRetry: () => void }) {
       <h1>{t(signedOut ? "gate.signedOutTitle" : "gate.offlineTitle")}</h1>
       <p className="empty-note">{t(signedOut ? "gate.signedOut" : "gate.offline")}</p>
       {!signedOut && (
-        <button className="btn" onClick={onRetry}>
+        <button className={buttonVariants({ variant: "outline" })} onClick={onRetry}>
           {t("gate.retry")}
         </button>
       )}
