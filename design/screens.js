@@ -252,6 +252,28 @@
         </aside></div></div>`;
   }
 
-  window.EXTRA = { upload: Upload, analyzing: Analyzing, fountain: Fountain, story: Story, graph: Graph, cut: Cut, StopCard, SetupSteps };
+  /* ───── Episode: its segments scene by scene, the take beside its shot text (reveric's 分镜 list) ───── */
+  function Episode() {
+    const ep = P.eps[5];
+    const place = (id) => (P.places.find((p) => p.id === id) || {}).name || id;
+    return html`<div class="main">
+      <${TopBar} crumbs=${[P.project.title, "Episodes", ep.code]}/>
+      <div class="body"><div class="scrollmain">
+        <div class="bar2"><${SurfaceSwitch}/><span class="grow"></span><${ProjectChips}/></div>
+        <${StopBanner}/>
+        <div class="ephead"><h2>${ep.code}<span class="muted"> · ${ep.title}</span></h2><span class="muted">${ep.now}</span><span class="grow"></span><span class="mono muted">${money(ep.spent)}</span></div>
+        ${P.scenes.map((sc) => html`<section class="panel segscene"><h3>${I("film-strip")}Scene ${sc.n} · ${place(sc.place)} · ${sc.time}<span class="grow"></span>
+            <span class="muted" style="font-size:11.5px;font-weight:500">${sc.segs.filter((g) => g.st === "accepted").length} of ${sc.segs.length} accepted</span></h3>
+          ${sc.segs.map((g) => html`<div class="segrow">
+            <img src=${g.still || g.board} alt=""/>
+            <div class="segtext">
+              <div class="seghead"><b>${g.id}</b>${Status(g.st, g.st === "you" ? "Take waits for you" : undefined)}<span class="grow"></span>
+                <span class="mono muted">sd25 · 9:16 · ${g.s} s · ${g.take}</span>
+                <button class="btn sm ghost" onClick=${() => go("canvas")}>On Canvas ${I("arrow-right")}</button></div>
+              <p class="shottext">${g.text}</p></div></div>`)}</section>`)}
+      </div><${AgentPanel}/></div></div>`;
+  }
+
+  window.EXTRA = { upload: Upload, analyzing: Analyzing, fountain: Fountain, story: Story, graph: Graph, cut: Cut, episode: Episode, StopCard, SetupSteps };
   window.PD.draw();
 })();

@@ -4,7 +4,7 @@
   const { html, render, useEffect, useRef } = window.htmPreact;
   const root = document.getElementById("root");
   const SPENT_COVERS = "Agent turns and video, priced when each turn ends.";
-  const SCREENS = ["home", "upload", "analyzing", "fountain", "story", "episodes", "canvas", "graph", "review", "cut"];
+  const SCREENS = ["home", "upload", "analyzing", "fountain", "story", "episodes", "episode", "canvas", "graph", "review", "cut"];
   const SETUP = ["analyzing", "fountain"];
   const hash = (location.hash || "").slice(1);
   const S = {
@@ -59,7 +59,7 @@
       </div>
       <div class="foot"><div class="who"><span class="av">Y</span><span class="grow">Your studio</span>${I("caret-right")}</div></div>
     </aside>`;
-    const cur = { episodes: null, canvas: "EP006", review: "EP006", cut: "EP006" }[S.screen];
+    const cur = { episodes: null, episode: "EP006", canvas: "EP006", review: "EP006", cut: "EP006" }[S.screen];
     if (SETUP.includes(S.screen)) return html`<aside class=${"side " + (S.side ? "" : "closed")} aria-label="Project">
       <div class="head"><button class="proj" onClick=${() => go("home")} title="All dramas"><span class="newthumb">${I("file-text")}</span><span class="grow"><b>${P.project.title}</b><small>Setup · 1 session</small></span>${I("caret-down", "subtle")}</button></div>
       <div class="scroll"><div class="sec">SETUP</div>${window.EXTRA.SetupSteps()}</div>
@@ -71,7 +71,7 @@
         <button class="navi" onClick=${() => go("fountain")}>${I("file-text")}Script<span class="end">${I("check")}</span></button>
         <button class="navi" aria-current=${S.screen === "story" ? "page" : "false"} onClick=${() => go("story")}>${I("users")}Story<span class="cnt">2</span></button>
         <button class="navi" aria-current=${S.screen === "episodes" ? "page" : "false"} onClick=${() => go("episodes")}>${I("film-strip")}Episodes<span class="cnt">4</span></button>
-        <ul class="tree">${P.eps.slice(0, 8).map((e) => html`<li><button aria-current=${String(cur === e.code)} onClick=${() => e.code === "EP006" ? go("review") : go("episodes")}>
+        <ul class="tree">${P.eps.slice(0, 8).map((e) => html`<li><button aria-current=${String(cur === e.code)} onClick=${() => e.code === "EP006" ? go("episode") : go("episodes")}>
           <span class="code">${e.code}</span><span class="now">${e.now}</span><span class=${"dot " + e.status}></span></button></li>`)}
           <li style="padding:6px 8px;color:var(--text-subtle);font-size:11.5px">EP009–EP024 · 16 in line</li></ul>
         <button class="navi" aria-current=${S.screen === "cut" ? "page" : "false"} onClick=${() => go("cut")}>${I("scissors")}Cut<span class="cnt">1</span></button>
@@ -193,7 +193,7 @@
   function Episodes() {
     const f = [["all", "All", 24], ["you", "Needs you", 3], ["work", "At work", 2], ["line", "In line", 18], ["done", "Done", 0]];
     const list = P.eps.filter((e) => S.filter === "all" || e.status === S.filter);
-    const open = (e) => e.code === "EP006" ? go("review") : toast(e.code + ": only EP006 opens in this direction.");
+    const open = (e) => e.code === "EP006" ? go("episode") : toast(e.code + ": only EP006 opens in this direction.");
     return html`<div class="main">
       <${TopBar} crumbs=${[P.project.title, "Episodes"]}/>
       <div class="body"><div class="scrollmain">
@@ -382,7 +382,7 @@
   function Proto() {
     return html`<div class="proto" role="navigation" aria-label="Prototype">
       <b>Pine Drama Studio · pro direction</b><span class="sep"></span>
-      <div class="seg" role="group" aria-label="Screen">${[["home", "Home"], ["upload", "Upload"], ["analyzing", "Analyzing"], ["fountain", "Fountain"], ["story", "Story"], ["episodes", "Episodes"], ["canvas", "Canvas"], ["graph", "Graph"], ["review", "Review"], ["cut", "Cut"]].map(([k, l]) => html`<button aria-pressed=${String(S.screen === k)} onClick=${() => go(k)}>${l}</button>`)}</div>
+      <div class="seg" role="group" aria-label="Screen">${[["home", "Home"], ["upload", "Upload"], ["analyzing", "Analyzing"], ["fountain", "Fountain"], ["story", "Story"], ["episodes", "Episodes"], ["episode", "Episode"], ["canvas", "Canvas"], ["graph", "Graph"], ["review", "Review"], ["cut", "Cut"]].map(([k, l]) => html`<button aria-pressed=${String(S.screen === k)} onClick=${() => go(k)}>${l}</button>`)}</div>
       <span class="sep"></span>
       <label class="select" style="gap:8px">State<select aria-label="State" value=${S.state} onChange=${(e) => { const v = e.target.value; set({ state: v, dramaStop: v === "stopping" ? "stopping" : v === "stopped" ? "stopped" : null }); }}>
         ${[["normal", "Normal"], ["stopping", "Stopping"], ["stopped", "Stopped"], ["redline", "Red line"], ["budget", "Budget spent"], ["cap", "Cap reached"], ["env", "Credentials refused"]].map(([k, l]) => html`<option value=${k}>${l}</option>`)}</select></label>

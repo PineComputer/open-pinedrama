@@ -45,11 +45,11 @@ window.P = (() => {
     // EP006 on the canvas: scenes, segments, the references each one reads, its board and its latest take
     scenes: [
       { n: 1, place: "apartment", time: "Night", segs: [
-        { id: "seg01", s: 27, cast: ["luca", "ivy"], board: null, take: "t02", still: img("still-s1t2"), st: "you" },
-        { id: "seg02", s: 15, cast: ["ivy"], board: img("board-seg02"), take: "t01", still: null, st: "accepted" } ] },
+        { id: "seg01", s: 27, cast: ["luca", "ivy"], board: null, take: "t02", still: img("still-s1t2"), st: "you", text: "[0-5s] MS: Luca in the hallway, the blanket folded over his arm.\n[5-12s] MS: he folds it again as he talks: {I said the couch is fine.}\n[12-27s] WS: the living room behind him, Ivy at the window." },
+        { id: "seg02", s: 15, cast: ["ivy"], board: img("board-seg02"), take: "t01", still: null, st: "accepted", text: "[0-6s] CU: Ivy turns from the window.\n[6-15s] MS: she crosses to the couch and takes the blanket from him." } ] },
       { n: 2, place: "apartment", time: "Day", segs: [
-        { id: "seg03", s: 28, cast: ["luca", "ethan"], board: img("board-seg03"), take: "t02", still: img("still-s3t2"), st: "you" },
-        { id: "seg04", s: 22, cast: ["luca", "ethan"], board: img("board-seg04"), take: "t02", still: null, st: "accepted" } ] },
+        { id: "seg03", s: 28, cast: ["luca", "ethan"], board: img("board-seg03"), take: "t02", still: img("still-s3t2"), st: "you", text: "[0-8s] CU: Luca's face as the door opens.\n[8-20s] OTS: Ethan sets the case file on the table.\n[20-28s] MS: neither of them sits." },
+        { id: "seg04", s: 22, cast: ["luca", "ethan"], board: img("board-seg04"), take: "t02", still: null, st: "accepted", text: "[0-10s] WS: the kitchen, morning light.\n[10-22s] MS: Ethan reads the terms aloud; Luca does not look up." } ] },
     ],
     // The take review: the person watches every take and decides.
     takes: [
