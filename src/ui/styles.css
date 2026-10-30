@@ -323,7 +323,8 @@ h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 700; lett
 .episode-head h2 { font-size: 20px; }
 .episode-head h2 .quiet { font-size: 16px; }
 .episode-head .status-row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
-.strip.big { display: grid; grid-template-columns: repeat(5, minmax(56px, 1fr)); gap: 4px; min-width: 300px; }
+/* Each stage as wide as its name, so a long one (Storyboards) never runs into the next. */
+.strip.big { display: grid; grid-template-columns: repeat(5, minmax(max-content, 1fr)); gap: 10px; min-width: 300px; }
 .strip.big span { padding-top: 5px; border-top: 2px solid var(--border); font-size: 11.5px; color: var(--text-muted); }
 .strip.big .done { border-color: var(--text-secondary); color: var(--text-secondary); }
 .strip.big .working { border-color: var(--text-primary); color: var(--text-primary); }
