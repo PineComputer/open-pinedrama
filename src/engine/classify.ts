@@ -58,6 +58,8 @@ const RULES: [RegExp, (m: RegExpMatchArray) => Hints][] = [
   [new RegExp(String.raw`(?:^|/)screenplay/${VER}/screenplay\.fountain$`, "i"), (m) => ({ kind: "screenplay-version", version: m[1] })],
   [new RegExp(String.raw`(?:^|/)screenplay/${VER}/review\.md$`, "i"), (m) => ({ kind: "screenplay-review", version: m[1] })],
   [/(?:^|\/)understanding\//i, () => ({ kind: "observation" })],
+  // A version's spec.json and request.json beside its output (short_drama drama_cli/stages.py; doc/drama-cli/cli.md, each stage's outputs). After understanding/, whose records hold their own request.json.
+  [/\/(v\d+|t\d+)\/(spec|request)\.json$/i, (m) => ({ kind: m[2].toLowerCase() as "spec" | "request", version: m[1] })],
 ];
 
 export function classify(relPath: string): Hints {

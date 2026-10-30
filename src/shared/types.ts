@@ -93,6 +93,10 @@ export type FileKind =
   | "lineage"
   /** The drama-cli refusals a stop asks the maker about, as drama-cli printed them (handoff/refusals.jsonl). */
   | "refusal"
+  /** drama-cli's statement of a version's job, in its folder (spec.json): the prompt, references and settings it made it from. */
+  | "spec"
+  /** What drama-cli sent the provider for a version (request.json). */
+  | "request"
   /** A picture the maker added to a note: a face to use, a costume, a place to match. */
   | "reference"
   | "other";
