@@ -49,7 +49,7 @@ export function Dialog({
             </Radix.Close>
             {confirm && (
               <Button
-                variant={confirm.danger ? "seal" : "primary"}
+                variant={confirm.danger ? "danger" : "primary"}
                 onClick={() => {
                   onOpenChange(false);
                   confirm.run();

@@ -58,6 +58,11 @@ export default defineConfig({
     // Pages rise in on load; mid-fade text fails contrast checks and screenshots differ.
     reducedMotion: "reduce",
   },
-  projects: PROJECTS.map((project, n) => ({ name: project.name, testMatch: `${project.spec}.spec.ts`, use: { baseURL: `http://127.0.0.1:${FIRST_PORT + n}`, colorScheme: project.colorScheme } })),
+  projects: PROJECTS.map((project, n) => {
+    const baseURL = `http://127.0.0.1:${FIRST_PORT + n}`;
+    // The studio's theme follows the system here (src/ui/theme/theme.ts), so each project's scheme is the one shown.
+    const storageState = { cookies: [], origins: [{ origin: baseURL, localStorage: [{ name: "studio.theme", value: "system" }] }] };
+    return { name: project.name, testMatch: `${project.spec}.spec.ts`, use: { baseURL, colorScheme: project.colorScheme, storageState } };
+  }),
   webServer: PROJECTS.map((_, n) => engine(FIRST_PORT + n)),
 });

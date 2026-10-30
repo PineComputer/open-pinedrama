@@ -1,0 +1,34 @@
+/* The studio's own base, on Reveric's tokens (reveric-themes.css, reveric-tokens.css; docs/REUSED.md):
+   the layout sizes and motion Reveric has no token for, from the pro direction's spec, and the
+   element defaults the studio needs. Every colour is one of Reveric's tokens or a mix of them.
+   Text takes --text-primary, --text-secondary or --text-muted; --text-subtle is for marks, rules
+   and icons only (contrast.test.ts). */
+
+:root {
+  --rail: 52px;
+  --side: 248px;
+  --agent: 360px;
+  --insp: 380px;
+  --top: 52px;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --d1: 120ms;
+  --d2: 180ms;
+  --d3: 320ms;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+html { scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+a { color: inherit; text-decoration: none; }
+button, input, textarea, select { font: inherit; color: inherit; }
+img, video { display: block; max-width: 100%; }
+::selection { background: var(--selected); }
+:focus-visible { outline: 2px solid var(--text-primary); outline-offset: 2px; }
+/* Reveric sets prose in Georgia for a manuscript; the studio has none, so every paragraph and title is sans. */
+p, h1, h2, h3, h4 { font-family: var(--font-sans); }
+p { font-size: inherit; line-height: inherit; color: inherit; }
+h3, h4 { margin: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+}

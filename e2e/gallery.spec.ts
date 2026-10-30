@@ -16,9 +16,14 @@ test("the gallery shows every component, and axe finds nothing", async ({ page }
 test("its theme switch sets the theme the tokens read", async ({ page }) => {
   await page.goto(`/api/open?ticket=${TOKEN}`);
   await page.goto("/dev/gallery");
+  await expect(page.locator("html")).toHaveAttribute("data-palette", "classic");
+  // The classic palette's canvas: black in dark, white in light (src/ui/theme/reveric-themes.css).
   await page.getByRole("group", { name: "Theme" }).getByRole("button", { name: "Dark" }).click();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
-  await expect(page.locator("body")).toHaveCSS("background-color", "oklch(0.175 0.006 65)");
+  await expect(page.locator("body")).toHaveCSS("background-color", "rgb(0, 0, 0)");
+  await page.getByRole("group", { name: "Theme" }).getByRole("button", { name: "Light" }).click();
+  await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
+  await expect(page.locator("body")).toHaveCSS("background-color", "rgb(255, 255, 255)");
 });
 
 test("its dialog and menu work by keyboard", async ({ page }) => {

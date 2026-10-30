@@ -5,11 +5,12 @@ import { type TKey, useT } from "../i18n.ts";
 
 export type Status = "work" | "line" | "you" | "accepted" | "back" | "stale" | "redline" | "failed";
 
-export function StatusChip({ status, label }: { status: Status; label?: string }) {
+/** `over`: laid on a picture, so it stands on the blurred canvas. */
+export function StatusChip({ status, label, over = false }: { status: Status; label?: string; over?: boolean }) {
   const { t } = useT();
   return (
-    <span className={`ds-chip is-${status}`}>
-      {(status === "work" || status === "redline") && <span className="dot" aria-hidden="true" />}
+    <span className={`ds-chip is-${status}${over ? " is-over" : ""}`}>
+      <span className="dot" aria-hidden="true" />
       {label ?? t(`status.${status}` as TKey)}
     </span>
   );
@@ -19,5 +20,10 @@ export function StatusChip({ status, label }: { status: Status; label?: string }
 export function FindingCount({ severity, count }: { severity: "error" | "warn"; count: number }) {
   const { t } = useT();
   if (!count) return null;
-  return <span className={`ds-chip is-${severity}`}>{t("finding.count", { n: count, severity })}</span>;
+  return (
+    <span className={`ds-chip is-${severity}`}>
+      <span className="dot" aria-hidden="true" />
+      {t("finding.count", { n: count, severity })}
+    </span>
+  );
 }

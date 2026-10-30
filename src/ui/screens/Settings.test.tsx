@@ -1,6 +1,7 @@
 // Settings, About: Reveric's notice, word for word and linking to Reveric, as its NOTICES ask
 // (AGPLv3 section 7(b)), and the studio's licence with its source.
 import { render, screen, within } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 import { setLang } from "../i18n.ts";
 import { REVERIC, Settings, SOURCE } from "./Settings.tsx";
@@ -16,5 +17,21 @@ describe("Settings, About", () => {
     expect(REVERIC).toBe("https://github.com/looplj/reveric");
     expect(within(about).getByRole("link", { name: lang === "en" ? "Source code" : "源代码" })).toHaveAttribute("href", SOURCE);
     setLang("en");
+  });
+});
+
+describe("Settings, Theme", () => {
+  it("is dark at first, the look the person chose, and keeps the maker's choice", async () => {
+    const user = userEvent.setup();
+    localStorage.removeItem("studio.theme");
+    render(<Settings app={replay} onChange={() => {}} />);
+    expect(screen.getByRole("button", { name: "Dark" })).toHaveAttribute("aria-pressed", "true");
+    await user.click(screen.getByRole("button", { name: "Light" }));
+    expect(document.documentElement.dataset.theme).toBe("light");
+    expect(document.documentElement.dataset.palette).toBe("classic");
+    expect(localStorage.getItem("studio.theme")).toBe("light");
+    await user.click(screen.getByRole("button", { name: "As the system" }));
+    expect(screen.getByRole("button", { name: "As the system" })).toHaveAttribute("aria-pressed", "true");
+    localStorage.removeItem("studio.theme");
   });
 });
