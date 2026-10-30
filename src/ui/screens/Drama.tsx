@@ -15,6 +15,7 @@ import { Delivery } from "./Delivery.tsx";
 import { Episode } from "./Episode.tsx";
 import { Script } from "./Script.tsx";
 import { InboxList } from "./Inbox.tsx";
+import { buttonVariants } from "@/components/ui/button";
 
 /** What holds the drama up that the maker should know: it belongs to the other mode, or its Computers won't start. */
 function Notices({ drama }: { drama: DramaView }) {
@@ -45,7 +46,7 @@ function Notices({ drama }: { drama: DramaView }) {
             {[again.error, rehearse.error].map((failed, n) => failed !== undefined && <div key={n} className="error small">{errorText(failed, t)}</div>)}
           </div>
           <span className="notice-actions">
-            <button className="ds-btn is-primary is-sm" disabled={again.busy} onClick={() => void again.run()}>
+            <button className={buttonVariants({ variant: "default", size: "sm" })} disabled={again.busy} onClick={() => void again.run()}>
               {t("setup.retry")}
             </button>
             {drama.setup.reason === "no-drama-skill" && (

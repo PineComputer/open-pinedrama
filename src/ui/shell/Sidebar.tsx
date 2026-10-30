@@ -198,7 +198,7 @@ export function DramaSidebar({ drama, tab, episode }: { drama: DramaView; tab: s
                         {/* The name is what the link shows, then where it stands, said rather than shown (WCAG 2.5.3). */}
                         <Link to={`/d/${drama.id}/e/${row.code}`} aria-current={row.code === episode ? "true" : undefined}>
                           <span className="ds-tree-code">{row.code}</span> <span className="ds-tree-now">{nowText(row, t)}</span>
-                          <span className="sr">, {t(`tree.${mark}` as TKey)}</span>
+                          <span className="sr-only">, {t(`tree.${mark}` as TKey)}</span>
                           <span className={`ds-tree-mark is-${mark}`} aria-hidden="true" />
                         </Link>
                       </li>

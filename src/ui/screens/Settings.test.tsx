@@ -25,13 +25,13 @@ describe("Settings, Theme", () => {
     const user = userEvent.setup();
     localStorage.removeItem("studio.theme");
     render(<Settings app={replay} onChange={() => {}} />);
-    expect(screen.getByRole("button", { name: "Dark" })).toHaveAttribute("aria-pressed", "true");
-    await user.click(screen.getByRole("button", { name: "Light" }));
+    expect(screen.getByRole("radio", { name: "Dark" })).toBeChecked();
+    await user.click(screen.getByRole("radio", { name: "Light" }));
     expect(document.documentElement.dataset.theme).toBe("light");
     expect(document.documentElement.dataset.palette).toBe("classic");
     expect(localStorage.getItem("studio.theme")).toBe("light");
-    await user.click(screen.getByRole("button", { name: "As the system" }));
-    expect(screen.getByRole("button", { name: "As the system" })).toHaveAttribute("aria-pressed", "true");
+    await user.click(screen.getByRole("radio", { name: "As the system" }));
+    expect(screen.getByRole("radio", { name: "As the system" })).toBeChecked();
     localStorage.removeItem("studio.theme");
   });
 });

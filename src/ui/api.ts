@@ -2,6 +2,9 @@
 // its scope changed (one shared event stream; after a reconnect everything refetches).
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { ApiFailure, ErrorCode, LiveMessage } from "../shared/types.ts";
+import { formatDistanceToNowStrict } from "date-fns";
+import type { Lang } from "./i18n.ts";
+import { enUS, zhCN } from "date-fns/locale";
 
 /** A failed call: the engine's code for it (labels.ts words it), and its English. */
 export class ApiError extends Error {
@@ -123,12 +126,9 @@ export function useResource<T>(path: string | null, scopes: string[]): { data: T
   return { data, error, reload: load };
 }
 
-export function ago(iso: string): string {
-  const seconds = Math.max(0, (Date.now() - Date.parse(iso)) / 1000);
-  if (seconds < 60) return "now";
-  if (seconds < 3600) return `${Math.floor(seconds / 60)}m`;
-  if (seconds < 86400) return `${Math.floor(seconds / 3600)}h`;
-  return `${Math.floor(seconds / 86400)}d`;
+/** How long ago, in the studio's language (date-fns). */
+export function ago(iso: string, lang: Lang): string {
+  return formatDistanceToNowStrict(Date.parse(iso), { addSuffix: true, locale: lang === "zh" ? zhCN : enUS });
 }
 
 export function clock(seconds: number): string {

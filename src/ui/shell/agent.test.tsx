@@ -88,7 +88,7 @@ describe("the agent panel", () => {
     expect(within(todo).getByText("林")).toBeInTheDocument();
     // Recent work needs the files as well as the project.
     const recent = await screen.findByRole("region", { name: "Recent work" });
-    await waitFor(() => expect(within(recent).getAllByRole("listitem").map((item) => item.textContent?.replace(/ · \d+[mhd]|now/, ""))).toEqual(["Look · 林v2In review", "Look · 林v1Accepted"]));
+    await waitFor(() => expect(within(recent).getAllByRole("listitem").map((item) => item.textContent?.replace(/ · \d+ \w+ ago/, ""))).toEqual(["Look · 林v2In review", "Look · 林v1Accepted"]));
   });
 
   it("sums up its runs in one line, which folds them", async () => {
@@ -136,11 +136,11 @@ describe("the agent panel", () => {
     accept("/api/episodes/e1/stop");
     render(<AgentPanel drama={drama} mode="docked" onMode={() => {}} />);
     await user.click(screen.getByRole("button", { name: "Stop EP001" }));
-    const dialog = screen.getByRole("dialog", { name: "Stop EP001?" });
+    const dialog = screen.getByRole("alertdialog", { name: "Stop EP001?" });
     await user.click(within(dialog).getByRole("button", { name: "Cancel" }));
     expect(calls("POST", "/api/episodes/e1/stop")).toEqual([]);
     await user.click(screen.getByRole("button", { name: "Stop EP001" }));
-    await user.click(within(screen.getByRole("dialog", { name: "Stop EP001?" })).getByRole("button", { name: "Stop the episode" }));
+    await user.click(within(screen.getByRole("alertdialog", { name: "Stop EP001?" })).getByRole("button", { name: "Stop the episode" }));
     expect(calls("POST", "/api/episodes/e1/stop")).toHaveLength(1);
   });
 
@@ -177,11 +177,11 @@ describe("Stop drama", () => {
     accept("/api/dramas/d1/stop");
     render(<StopControl drama={drama} />);
     await user.click(screen.getByRole("button", { name: "Stop drama" }));
-    const dialog = screen.getByRole("dialog", { name: "Stop The Stepmother?" });
+    const dialog = screen.getByRole("alertdialog", { name: "Stop The Stepmother?" });
     await user.click(within(dialog).getByRole("button", { name: "Keep running" }));
     expect(calls("POST", "/api/dramas/d1/stop")).toEqual([]);
     await user.click(screen.getByRole("button", { name: "Stop drama" }));
-    await user.click(within(screen.getByRole("dialog", { name: "Stop The Stepmother?" })).getByRole("button", { name: "Stop drama" }));
+    await user.click(within(screen.getByRole("alertdialog", { name: "Stop The Stepmother?" })).getByRole("button", { name: "Stop drama" }));
     expect(calls("POST", "/api/dramas/d1/stop")).toHaveLength(1);
   });
 

@@ -12,6 +12,7 @@ import { Button, IconButton } from "../components/Button.tsx";
 import { useT } from "../i18n.ts";
 import { errorText, nowText } from "../labels.ts";
 import { Link, navigate } from "../router.tsx";
+import { buttonVariants } from "@/components/ui/button";
 
 /** The key a review gives the item (src/engine/reviews.ts, itemsOf): a look by its character, a place or prop by its kind and id, a segment by its id. */
 function reviewKey(node: BoardNode): string {
@@ -81,25 +82,25 @@ export function SteerBar({ drama, node, label, episodeTitle, onClose }: { drama:
         <b className="what">{label}</b>
         <span className="acts">
           {reviewHref && (
-            <Link to={reviewHref} className="ds-btn is-primary is-sm">
+            <Link to={reviewHref} className={buttonVariants({ variant: "default", size: "sm" })}>
               {t("steer.review")}
             </Link>
           )}
           {reviewHref ? (
-            <Link to={reviewHref} className="ds-btn is-secondary is-sm">
+            <Link to={reviewHref} className={buttonVariants({ variant: "outline", size: "sm" })}>
               {t("steer.backInReview")}
             </Link>
           ) : (
             <>
-              <Button size="sm" icon="arrow-counter-clockwise" aria-pressed={mode === "back"} onClick={() => setMode(mode === "back" ? null : "back")}>
+              <Button variant="outline" size="sm" icon="arrow-counter-clockwise" aria-pressed={mode === "back"} onClick={() => setMode(mode === "back" ? null : "back")}>
                 {t("steer.back")}
               </Button>
-              <Button size="sm" icon="note-pencil" aria-pressed={mode === "note"} onClick={() => setMode(mode === "note" ? null : "note")}>
+              <Button variant="outline" size="sm" icon="note-pencil" aria-pressed={mode === "note"} onClick={() => setMode(mode === "note" ? null : "note")}>
                 {t("steer.note")}
               </Button>
             </>
           )}
-          <Button size="sm" icon="tree-structure" onClick={() => navigate(`/d/${drama.id}/graph?item=${encodeURIComponent(node.id)}`)}>
+          <Button variant="outline" size="sm" icon="tree-structure" onClick={() => navigate(`/d/${drama.id}/graph?item=${encodeURIComponent(node.id)}`)}>
             {t("steer.lineage")}
           </Button>
           <IconButton label={t("steer.close")} icon="x" onClick={onClose} />
@@ -111,7 +112,7 @@ export function SteerBar({ drama, node, label, episodeTitle, onClose }: { drama:
           <div className="off" role="status">
             <span>{t(waits.sends === "review" ? "steer.waitsReview" : waits.sends === "answer" ? "steer.waitsAnswer" : "steer.waitsNone", { who })}</span>
             {waits.sends === "review" && waits.reviewId && (
-              <Link to={`/r/${waits.reviewId}`} className="ds-btn is-secondary is-sm">
+              <Link to={`/r/${waits.reviewId}`} className={buttonVariants({ variant: "outline", size: "sm" })}>
                 {t("steer.openWaiting")}
               </Link>
             )}
@@ -119,7 +120,7 @@ export function SteerBar({ drama, node, label, episodeTitle, onClose }: { drama:
         ) : session && chat.data ? (
           <div className="say">
             <textarea aria-label={t(mode === "back" ? "steer.why" : "steer.yourNote")} placeholder={t(mode === "back" ? "steer.whyHint" : "steer.noteHint", { item })} value={words} onChange={(event) => setWords(event.target.value)} />
-            <Button variant="primary" size="sm" busy={send.busy} disabled={!words.trim()} onClick={() => void send.run()}>
+            <Button variant="default" size="sm" busy={send.busy} disabled={!words.trim()} onClick={() => void send.run()}>
               {t("steer.send")}
             </Button>
             {send.error !== undefined && <span className="error small">{errorText(send.error, t)}</span>}
@@ -128,12 +129,12 @@ export function SteerBar({ drama, node, label, episodeTitle, onClose }: { drama:
           <div className="off" role="status">
             <span>{t("steer.notRunning", { who, state: row ? nowText(row, t) : drama.status === "stopped" ? t("board.stopped") : t("talk.none") })}</span>
             {row && (row.state === "stopped" || row.state === "failed") && (
-              <Button size="sm" busy={resumeEpisode.busy} onClick={() => void resumeEpisode.run()}>
+              <Button variant="outline" size="sm" busy={resumeEpisode.busy} onClick={() => void resumeEpisode.run()}>
                 {t("steer.resume", { who })}
               </Button>
             )}
             {!row && drama.status === "stopped" && (
-              <Button size="sm" busy={resumeDrama.busy} onClick={() => void resumeDrama.run()}>
+              <Button variant="outline" size="sm" busy={resumeDrama.busy} onClick={() => void resumeDrama.run()}>
                 {t("steer.resume", { who: drama.title })}
               </Button>
             )}

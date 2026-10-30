@@ -8,6 +8,7 @@ import { type TKey, useT } from "../i18n.ts";
 import { errorText, kindLabel, moneyText, plainText } from "../labels.ts";
 import { Link, navigate } from "../router.tsx";
 import { Still } from "../Still.tsx";
+import { buttonVariants } from "@/components/ui/button";
 
 const CJK = /[㐀-鿿]/;
 
@@ -100,11 +101,11 @@ function Continue({ waiting, dramas }: { waiting: ReviewSummary[]; dramas: Drama
             {[drama.episodes.total ? t("drama.episodes", { done: drama.episodes.done, total: drama.episodes.total }) : "", drama.spent.total > 0 ? moneyText(drama.spent, t, lang) : ""].filter(Boolean).join(" · ")}
           </span>
           <span className="acts">
-            <Link to={`/r/${first.id}`} className="ds-btn is-primary is-lg">
+            <Link to={`/r/${first.id}`} className={buttonVariants({ variant: "default", size: "lg" })}>
               <Icon name="play" />
               {t("slate.review", { kind: t(`kind.${first.kind}` as TKey) })}
             </Link>
-            <Link to={`/d/${drama.id}`} className="ds-btn is-secondary">
+            <Link to={`/d/${drama.id}`} className={buttonVariants({ variant: "outline" })}>
               {t("slate.openDrama")}
             </Link>
           </span>
@@ -119,7 +120,7 @@ function Continue({ waiting, dramas }: { waiting: ReviewSummary[]; dramas: Drama
             </span>
             <span>
               <b>{[item.episode, t(`kind.${item.kind}` as TKey)].filter(Boolean).join(" · ")}</b>
-              <small>{[item.dramaTitle, ago(item.createdAt)].join(" · ")}</small>
+              <small>{[item.dramaTitle, ago(item.createdAt, lang)].join(" · ")}</small>
             </span>
           </Link>
         ))}
@@ -177,7 +178,7 @@ export function Slate() {
           {dramas.length > 0 && <p className="facts">{t("slate.facts", { a: counts.work + counts.you, b: waiting.length })}</p>}
         </div>
         <span className="spacer" />
-        <Link to="/new" className="ds-btn is-primary is-lg">
+        <Link to="/new" className={buttonVariants({ variant: "default", size: "lg" })}>
           <Icon name="upload" />
           {t("slate.upload")}
         </Link>

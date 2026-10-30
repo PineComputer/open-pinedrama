@@ -13,9 +13,10 @@ import { Steps } from "../components/Steps.tsx";
 import { StopCard } from "../components/StopCard.tsx";
 import type { Refusal } from "../../shared/refusal.ts";
 import { Tabs } from "../components/Tabs.tsx";
-import { useToast } from "../components/Toast.tsx";
+import { toast } from "sonner";
 import { Tooltip } from "../components/Tooltip.tsx";
 import { applyTheme, type ThemeChoice, themeChoice } from "../theme/theme.ts";
+import { buttonVariants } from "@/components/ui/button";
 
 // The three kinds of stop, in drama-cli's words (shared/refusal.ts).
 const STOPS: Refusal[] = [
@@ -40,7 +41,6 @@ export default function Gallery() {
   const [surface, setSurface] = useState("studio");
   const [tab, setTab] = useState("boards");
   const [dialog, setDialog] = useState(false);
-  const toast = useToast();
   // For this page only: the maker's own choice, in Settings, stays as it was.
   useEffect(() => applyTheme(theme), [theme]);
   return (
@@ -51,14 +51,14 @@ export default function Gallery() {
       </header>
 
       <Section title="Button">
-        <Button variant="primary">Primary</Button>
-        <Button>Secondary</Button>
+        <Button variant="default">Primary</Button>
+        <Button variant="outline">Secondary</Button>
         <Button variant="ghost">Ghost</Button>
-        <Button variant="danger" size="sm" icon="stop">Stop drama</Button>
-        <Button variant="primary" size="lg" icon="upload">Upload script</Button>
-        <Button size="sm">Small</Button>
-        <Button busy>Sending</Button>
-        <Button disabledReason="Give every item a verdict first">Send review</Button>
+        <Button variant="destructive" size="sm" icon="stop">Stop drama</Button>
+        <Button variant="default" size="lg" icon="upload">Upload script</Button>
+        <Button variant="outline" size="sm">Small</Button>
+        <Button variant="outline" busy>Sending</Button>
+        <Button variant="outline" disabledReason="Give every item a verdict first">Send review</Button>
         <IconButton label="Fit the board" icon="frame-corners" />
         <IconButton label="Sidebar" icon="list" on />
       </Section>
@@ -82,17 +82,17 @@ export default function Gallery() {
       </Section>
 
       <Section title="Dialog, Menu, Tooltip, Toast">
-        <Button onClick={() => setDialog(true)}>Open a dialog</Button>
+        <Button variant="outline" onClick={() => setDialog(true)}>Open a dialog</Button>
         <Dialog open={dialog} onOpenChange={setDialog} title="Stop the drama?" description="Every Computer it has running stops. What they made stays." confirm={{ label: "Stop it", danger: true, run: () => toast("Stopped.") }} />
         <Menu label="More" items={[{ label: "Lineage", run: () => toast("Lineage.") }, { label: "Download", run: () => toast("Downloaded.") }, { label: "Not now", run: () => undefined, disabled: true }]} />
         <Tooltip text="Spent of budget">
-          <button type="button" className="ds-btn is-secondary is-s32">Hover or focus me</button>
+          <button type="button" className={buttonVariants({ variant: "outline" })}>Hover or focus me</button>
         </Tooltip>
-        <Button onClick={() => toast("Review sent. Everything you accepted is recorded.", { label: "Next review", run: () => undefined })}>Show a toast</Button>
+        <Button variant="outline" onClick={() => toast("Review sent. Everything you accepted is recorded.", { action: { label: "Next review", onClick: () => undefined } })}>Show a toast</Button>
       </Section>
 
       <Section title="EmptyState">
-        <EmptyState title="No dramas yet" action={<Button variant="primary">Upload script</Button>}>
+        <EmptyState title="No dramas yet" action={<Button variant="default">Upload script</Button>}>
           Upload a screenplay in any format; the agent turns it into a correct Fountain screenplay and takes it from there.
         </EmptyState>
       </Section>

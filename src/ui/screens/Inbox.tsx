@@ -6,7 +6,7 @@ import { Link } from "../router.tsx";
 import { Still } from "../Still.tsx";
 
 function Asks({ items, dramaId }: { items: ReviewSummary[]; dramaId?: string }) {
-  const { t } = useT();
+  const { t, lang } = useT();
   return (
     <div className="queue">
       {items.map((item) => (
@@ -27,7 +27,7 @@ function Asks({ items, dramaId }: { items: ReviewSummary[]; dramaId?: string }) 
           <div className="when">
             {item.state === "ended" ? t("inbox.ended") : item.state === "saving" ? "…" : <span className="seal-text">●</span>}
             <div className="num below">
-              {ago(item.createdAt)}
+              {ago(item.createdAt, lang)}
             </div>
           </div>
         </Link>

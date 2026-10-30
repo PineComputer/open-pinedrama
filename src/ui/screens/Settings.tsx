@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { AppInfo } from "../../shared/types.ts";
 import { api, useAction } from "../api.ts";
+import { Segmented } from "../components/Segmented.tsx";
 import { setLang, useT } from "../i18n.ts";
 import { errorText } from "../labels.ts";
 import { useNotifySetting } from "../notify.ts";
@@ -70,45 +71,33 @@ export function Settings({ app, onChange }: { app: AppInfo; onChange: () => void
         </section>
         <section>
           <span className="label">{t("settings.language")}</span>
-          <div className="options">
-            <button aria-pressed={lang === "zh"} className={lang === "zh" ? "on" : ""} onClick={() => setLang("zh")}>
-              中文
-            </button>
-            <button aria-pressed={lang === "en"} className={lang === "en" ? "on" : ""} onClick={() => setLang("en")}>
-              English
-            </button>
-          </div>
+          <Segmented label={t("settings.language")} value={lang} onChange={setLang} options={[{ value: "zh", label: "中文" }, { value: "en", label: "English" }]} />
         </section>
         <section>
           <span className="label">{t("settings.theme")}</span>
-          <div className="options">
-            {(["dark", "light", "system"] as const).map((choice) => (
-              <button
-                key={choice}
-                aria-pressed={theme === choice}
-                className={theme === choice ? "on" : ""}
-                onClick={() => {
-                  setTheme(choice);
-                  chooseTheme(choice);
-                }}
-              >
-                {t(`settings.theme.${choice}`)}
-              </button>
-            ))}
-          </div>
+          <Segmented
+            label={t("settings.theme")}
+            value={theme}
+            onChange={(choice) => {
+              setTheme(choice);
+              chooseTheme(choice);
+            }}
+            options={(["dark", "light", "system"] as const).map((choice) => ({ value: choice, label: t(`settings.theme.${choice}`) }))}
+          />
         </section>
         {notify.supported && (
           <section>
             <span className="label">{t("settings.notify")}</span>
             <div className="block">
-              <div className="options">
-                <button aria-pressed={notify.on} className={notify.on ? "on" : ""} onClick={() => void (notify.on || notify.toggle())}>
-                  {t("settings.notifyOn")}
-                </button>
-                <button aria-pressed={!notify.on} className={notify.on ? "" : "on"} onClick={() => void (notify.on && notify.toggle())}>
-                  {t("settings.notifyOff")}
-                </button>
-              </div>
+              <Segmented
+                label={t("settings.notify")}
+                value={notify.on ? "on" : "off"}
+                onChange={(choice) => void ((choice === "on") !== notify.on && notify.toggle())}
+                options={[
+                  { value: "on", label: t("settings.notifyOn") },
+                  { value: "off", label: t("settings.notifyOff") },
+                ]}
+              />
               <span className="quiet small">{notify.blocked ? t("settings.notifyBlocked") : t("settings.notifyHint")}</span>
             </div>
           </section>

@@ -29,20 +29,52 @@ milestone is accepted by merecdesperez44323-lab, as [REDESIGN_PLAN.md](REDESIGN_
 
 ## Components to use
 
-Use these rather than writing your own, and add to them, with their tests, when a state is
-missing. The pro direction's spec gives each component's measurements.
+Use a mature library for every job one covers, and write only the glue: drama-cli's data, the
+steering actions, our tokens. Writing a component or layout a library covers needs
+merecdesperez44323-lab's approval first; adding a library doesn't. Pin it exactly, and give a
+one-line reason in the PR. When a library replaces our code, delete ours in the same PR, and
+report the lines added and deleted.
 
-- **Button** (`variant`: `primary`, `secondary`, `ghost`, `danger`; `size`: `sm`, `md`, `lg`; `icon`,
-  `busy`, `disabledReason`) and **IconButton** (`label`, `icon`, `on`).
-- **StatusChip**: `work`, `line`, `you`, `accepted`, `back`, `stale`, `redline`, `failed`. Pass `over`
-  when it lies on a picture. Also **FindingCount**.
-- **Segmented**: options take an `icon` and a `count`. **Tabs**: `end` is what stands at the
-  row's end.
-- **Dialog**: `confirm.danger` gives a filled error button. **Menu**, **Tooltip**, **Toast**,
-  **EmptyState**, **Steps**, **BudgetMeter**.
+**shadcn/ui** is the component kit. Its components live in `src/ui/components/ui/`, imported
+as `@/components/ui/...`, and themed with Reveric's tokens in `src/ui/index.css`. Add one with
+`npx shadcn@4.23.0 add <name>`, never as a second copy. Our own wrappers in
+`src/ui/components/` add only what the studio needs:
+- **Button**: adds `icon`, `busy` and `disabledReason`. A link that looks like a button takes
+  `buttonVariants`.
+- **IconButton**: `label` and `on`.
+- **StatusChip** and **FindingCount**: a Badge with the status's dot.
+- **Segmented**: a single-choice ToggleGroup, read as radios.
+- **Tabs**: the line variant.
+- **Dialog**: an AlertDialog.
+- **Menu**, **Tooltip**, **EmptyState** and **BudgetMeter**: Progress.
+- **Toasts**: sonner's `toast()`.
+- **Relative times**: `ago()` on date-fns.
 
-Classes are `ds-*`, and a variant or state is `is-*`. The older screens' global classes (`.seal`,
-`.now`, `.btn`, ...) must not catch yours.
+Our stylesheets sit in Tailwind's `base` and `components` layers (`index.css`), so a utility
+on a component wins over them.
+
+### Building blocks
+
+For each job, our pick must be at least as mature as Reveric's. Weekly downloads are npm's,
+for 2026-10-23..29.
+
+| Job | Ours (pinned) | Weekly downloads | Replaces |
+|---|---|---|---|
+| Components | shadcn/ui 4.23.0 on radix-ui 1.8.1, Tailwind CSS 4.3.3, class-variance-authority 0.7.1 | radix-ui 24.9 M, tailwindcss 167.7 M, cva 77.6 M | Reveric's Material plus skin; our hand-written Button, Chip, Segmented, Tabs, Dialog, Menu, Tooltip, EmptyState, BudgetMeter |
+| Toasts | sonner 2.0.8 | 54.5 M | our Toast |
+| Relative times | date-fns 4.4.0 | 118.6 M | our `ago` |
+| Icons | @phosphor-icons/react 2.1.10 | 7.4 M | Reveric's SVG copies (the switch from `icons.tsx` comes next) |
+| Node canvas | @xyflow/react 12.12.0 | 19.5 M | Reveric's vendored vyuh_node_flow; our camera, zoom and minimap |
+| Graph layout | d3-force 3.0.0 | 34.8 M | our column layout |
+| Long lists | @tanstack/react-virtual 3.14.21 | 39.2 M | none |
+| File drop | react-dropzone 20.1.3 | 19.4 M | Reveric's file_selector and super_drag_and_drop; our drop handlers |
+| Diff | diff (jsdiff) | 186.9 M | Reveric's diffutil_dart |
+| Video | media-chrome | 5.5 M | Reveric's video_player and fvp |
+| Edit timeline | @xzdarcy/react-timeline-editor | 15 k | Reveric's ~5,000 hand-written lines. It's the least used here, though still more than hand-written. |
+
+**Still hand-written, awaiting merecdesperez44323-lab's approval:**
+- **Steps** (`components/Steps.tsx`): shadcn/ui has no stepper.
+- **StopCard**: a refusal's facts laid out; it's glue.
 
 ## Rules the tests keep
 

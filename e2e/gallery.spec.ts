@@ -18,10 +18,10 @@ test("its theme switch sets the theme the tokens read", async ({ page }) => {
   await page.goto("/dev/gallery");
   await expect(page.locator("html")).toHaveAttribute("data-palette", "classic");
   // The classic palette's canvas: black in dark, white in light (src/ui/theme/reveric-themes.css).
-  await page.getByRole("group", { name: "Theme" }).getByRole("button", { name: "Dark" }).click();
+  await page.getByRole("radiogroup", { name: "Theme" }).getByRole("radio", { name: "Dark" }).click();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
   await expect(page.locator("body")).toHaveCSS("background-color", "rgb(0, 0, 0)");
-  await page.getByRole("group", { name: "Theme" }).getByRole("button", { name: "Light" }).click();
+  await page.getByRole("radiogroup", { name: "Theme" }).getByRole("radio", { name: "Light" }).click();
   await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
   await expect(page.locator("body")).toHaveCSS("background-color", "rgb(255, 255, 255)");
 });
@@ -30,9 +30,9 @@ test("its dialog and menu work by keyboard", async ({ page }) => {
   await page.goto(`/api/open?ticket=${TOKEN}`);
   await page.goto("/dev/gallery");
   await page.getByRole("button", { name: "Open a dialog" }).click();
-  const dialog = page.getByRole("dialog", { name: "Stop the drama?" });
+  const dialog = page.getByRole("alertdialog", { name: "Stop the drama?" });
   await expect(dialog).toBeVisible();
-  expect(await newProblems(page, ".ds-dialog")).toEqual([]);
+  expect(await newProblems(page, "[data-slot=alert-dialog-content]")).toEqual([]);
   await page.keyboard.press("Escape");
   await expect(dialog).toBeHidden();
   // Closing gives the focus back to what opened it; only then is it moved on, or the return lands after the move.
@@ -41,8 +41,8 @@ test("its dialog and menu work by keyboard", async ({ page }) => {
   await expect(page.getByRole("button", { name: "More" })).toBeFocused();
   await page.keyboard.press("Enter");
   await expect(page.getByRole("menu")).toBeVisible();
-  expect(await newProblems(page, ".ds-menu")).toEqual([]);
+  expect(await newProblems(page, "[data-slot=dropdown-menu-content]")).toEqual([]);
   await page.keyboard.press("ArrowDown");
   await page.keyboard.press("Enter");
-  await expect(page.getByRole("status")).toContainText("Downloaded.");
+  await expect(page.getByText("Downloaded.")).toBeVisible();
 });

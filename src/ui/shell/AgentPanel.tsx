@@ -18,6 +18,7 @@ import { Markdown } from "../Markdown.tsx";
 import { Link } from "../router.tsx";
 import { Watch } from "../screens/Crew.tsx";
 import { Still } from "../Still.tsx";
+import { buttonVariants } from "@/components/ui/button";
 
 export type AgentMode = "docked" | "floating" | "collapsed";
 
@@ -110,7 +111,7 @@ function Running({ drama, session, inView, inFlight, onPick }: { drama: DramaVie
 }
 
 export function AgentPanel({ drama, episode, mode, onMode }: { drama: DramaView; episode?: string; mode: Exclude<AgentMode, "collapsed">; onMode: (mode: AgentMode) => void }) {
-  const { t } = useT();
+  const { t, lang } = useT();
   const id = drama.id;
   const project = useResource<ProjectView>(`/api/dramas/${id}/project`, [`project:${id}`]);
   const inbox = useResource<ReviewSummary[]>(`/api/inbox?drama=${id}`, ["inbox"]);
@@ -188,7 +189,7 @@ export function AgentPanel({ drama, episode, mode, onMode }: { drama: DramaView;
                   <b>{[item.episode, t(`kind.${item.kind}` as TKey)].filter(Boolean).join(" · ")}</b>
                   <small>{t("agent.items", { n: item.items })}</small>
                 </span>
-                <span className="age">{ago(item.createdAt)}</span>
+                <span className="age">{ago(item.createdAt, lang)}</span>
               </Link>
             ))
           ) : (
@@ -240,7 +241,7 @@ export function AgentPanel({ drama, episode, mode, onMode }: { drama: DramaView;
                         {t(`agent.kind.${item.kind}` as TKey)} · {workText(item, names)}
                       </span>
                       <span className="sub">
-                        {item.version} · {ago(item.createdAt)}
+                        {item.version} · {ago(item.createdAt, lang)}
                       </span>
                     </span>
                     <span className={`ds-ctag is-${item.state}`}>{t(`agent.work.${item.state}` as TKey)}</span>
@@ -275,7 +276,7 @@ function Composer({ chat, onSent }: { chat?: ChatView; onSent: () => void }) {
   if (chat?.sends === "review" && chat.reviewId) {
     return (
       <div className="ds-composer">
-        <Link to={`/r/${chat.reviewId}`} className="ds-btn is-primary is-sm">
+        <Link to={`/r/${chat.reviewId}`} className={buttonVariants({ variant: "default", size: "sm" })}>
           {t("talk.inReview")}
         </Link>
       </div>

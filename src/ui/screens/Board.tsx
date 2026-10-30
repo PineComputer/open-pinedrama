@@ -11,6 +11,7 @@ import { Cast } from "./Cast.tsx";
 import { type ScreenplayLanguage, screenplayLanguageOf } from "../../shared/screenplay-language.ts";
 import { isDocument, useDocumentText } from "../viewing.tsx";
 import { PresetChoice, ScreenplayStructure } from "./NewDrama.tsx";
+import { buttonVariants } from "@/components/ui/button";
 
 function Mark({ cell }: { cell: StageCell }) {
   const { t } = useT();
@@ -139,12 +140,12 @@ function Card({ row, wide, dramaId }: { row: EpisodeRow; wide: boolean; dramaId:
         {row.spent.total > 0 && <span className="num">{moneyText(row.spent, t, lang)}</span>}
       </small>
       {row.state === "waiting" && row.reviewId && (
-        <Link to={`/r/${row.reviewId}`} className="ds-btn is-primary is-sm">
+        <Link to={`/r/${row.reviewId}`} className={buttonVariants({ variant: "default", size: "sm" })}>
           {t("board.review")}
         </Link>
       )}
       {trouble && (
-        <button className="ds-btn is-secondary is-sm" disabled={resume.busy} onClick={() => void resume.run()}>
+        <button className={buttonVariants({ variant: "outline", size: "sm" })} disabled={resume.busy} onClick={() => void resume.run()}>
           {t("board.resume")}
         </button>
       )}

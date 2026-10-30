@@ -12,6 +12,7 @@ import { Icon } from "../icons.tsx";
 import { useT } from "../i18n.ts";
 import { errorText, subjectLabel, useNames } from "../labels.ts";
 import { Link } from "../router.tsx";
+import { buttonVariants } from "@/components/ui/button";
 
 type Shelf = "bible" | "cast" | "world";
 
@@ -83,7 +84,7 @@ function Card({ card, look, names, dramaId, wide }: { card: CastCard; look: Cast
           )}
           <span className="grow" />
           {shown.review && (
-            <Link to={`/r/${shown.review.reviewId}`} className={`ds-btn ${status === "you" ? "is-primary" : "is-ghost"} is-sm`}>
+            <Link to={`/r/${shown.review.reviewId}`} className={buttonVariants({ variant: status === "you" ? "default" : "ghost", size: "sm" })}>
               {status === "you" ? t("cast.review") : t("judged.open")}
             </Link>
           )}
@@ -141,7 +142,7 @@ export function Cast({ dramaId, compact = false }: { dramaId: string; compact?: 
                   </li>
                 ))}
               </ol>
-              <Link to={`/d/${dramaId}/script`} className="ds-btn is-secondary is-sm">
+              <Link to={`/d/${dramaId}/script`} className={buttonVariants({ variant: "outline", size: "sm" })}>
                 <Icon name="book-open" />
                 {t("cast.openBible")}
               </Link>

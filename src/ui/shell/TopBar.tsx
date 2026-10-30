@@ -13,6 +13,8 @@ import { Icon } from "../icons.tsx";
 import { useT } from "../i18n.ts";
 import { errorText, moneyText } from "../labels.ts";
 import { Link, match, navigate, usePath } from "../router.tsx";
+import { cn } from "cn";
+import { buttonVariants } from "@/components/ui/button";
 
 type Surface = "studio" | "canvas" | "graph";
 
@@ -94,7 +96,7 @@ export function StopControl({ drama }: { drama: DramaView }) {
     return (
       <>
         {failed}
-        <Button variant="danger" size="sm" icon="stop" busy={stop.busy} onClick={() => setAsking(true)}>
+        <Button variant="destructive" size="sm" icon="stop" busy={stop.busy} onClick={() => setAsking(true)}>
           {t("stop.drama")}
         </Button>
         <Dialog
@@ -110,7 +112,7 @@ export function StopControl({ drama }: { drama: DramaView }) {
   }
   if (stillStopping(drama)) {
     return (
-      <Button variant="danger" size="sm" busy>
+      <Button variant="destructive" size="sm" busy>
         {t("stop.stopping")}
       </Button>
     );
@@ -120,7 +122,7 @@ export function StopControl({ drama }: { drama: DramaView }) {
     <>
       {failed}
       <StatusChip status="back" label={t("drama.stopped")} />
-      <Button variant="primary" size="sm" icon="play" busy={resume.busy} onClick={() => void resume.run()}>
+      <Button variant="default" size="sm" icon="play" busy={resume.busy} onClick={() => void resume.run()}>
         {t("setup.retry")}
       </Button>
     </>
@@ -136,7 +138,7 @@ function NextReview({ waiting }: { waiting: ReviewSummary[] }) {
   return (
     <button
       type="button"
-      className="ds-btn is-primary is-sm ds-nextreview"
+      className={cn(buttonVariants({ variant: "default", size: "sm" }), "ds-nextreview")}
       disabled={!others.length}
       aria-label={`${t("next.label")}, ${t("next.waiting", { n: others.length })}`}
       onClick={() => navigate(`/r/${others[0].id}`)}

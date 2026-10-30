@@ -53,9 +53,6 @@
 .ds-steer .row { display: flex; align-items: center; gap: 2px; }
 .ds-steer .what { padding: 0 8px; font: 600 12px var(--font-sans); color: var(--text-primary); max-width: 18ch; overflow: hidden; text-overflow: ellipsis; }
 .ds-steer .acts { display: flex; align-items: center; gap: 2px; }
-.ds-steer .acts .ds-btn { height: 28px; border-color: transparent; background: transparent; font-weight: 500; font-size: 12px; }
-.ds-steer .acts .ds-btn:hover { background: var(--hover); }
-.ds-steer .acts .ds-btn.is-primary { background: var(--accent); color: var(--on-accent); }
 .ds-steer .say, .ds-steer .off, .ds-steer .done { margin: 0 4px 4px; white-space: normal; width: 440px; }
 .ds-steer .say { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: end; }
 .ds-steer textarea { min-height: 56px; border-radius: var(--radius-large); border: 1px solid var(--border-input); background: var(--surface); color: var(--text-primary); padding: 8px 10px; font: 13px/1.5 var(--font-sans); resize: vertical; outline: none; }

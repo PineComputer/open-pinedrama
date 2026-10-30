@@ -12,6 +12,7 @@ import { Markdown } from "../Markdown.tsx";
 import { Link, navigate, usePath } from "../router.tsx";
 import { Still } from "../Still.tsx";
 import { DocumentView, Pinboard, isDocument, isImage, isVideo, useShotList, useSize, variantLabel } from "../viewing.tsx";
+import { buttonVariants } from "@/components/ui/button";
 
 type Drafts = Record<string, { verdict?: Verdict; notes: Note[] }>;
 
@@ -448,7 +449,7 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
           </button>
         ))}
         {open && (
-          <button type="button" className="ds-btn is-ghost is-sm" onClick={() => setDrafts((current) => Object.fromEntries(items.map((i) => [i.key, { ...current[i.key], verdict: "approve" }])))} disabled={takes}>
+          <button type="button" className={buttonVariants({ variant: "ghost", size: "sm" })} onClick={() => setDrafts((current) => Object.fromEntries(items.map((i) => [i.key, { ...current[i.key], verdict: "approve" }])))} disabled={takes}>
             {t("review.approveAll")}
           </button>
         )}
@@ -671,10 +672,10 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
               </div>
             )}
           </div>
-          <button className="ds-btn is-ghost" onClick={() => setConfirming(false)}>
+          <button className={buttonVariants({ variant: "ghost" })} onClick={() => setConfirming(false)}>
             {t("review.keep")}
           </button>
-          <button className="ds-btn is-primary" disabled={busy} onClick={send}>
+          <button className={buttonVariants({ variant: "default" })} disabled={busy} onClick={send}>
             {t("review.sendNow")} <span className="key">⌘↵</span>
           </button>
         </div>
@@ -688,7 +689,7 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
           <span className="num">{t("review.decided", { n: count, m: items.length })}</span>
           <input className="ds-words" disabled={!open} value={words} placeholder={t("review.wordsHint")} aria-label={t("review.words")} onChange={(event) => setWords(event.target.value)} />
           {error !== undefined && <span className="error">{errorText(error, t)}</span>}
-          <Button variant="primary" disabled={!open || !complete || busy} disabledReason={open && !complete ? t("review.needVerdicts") : undefined} onClick={() => setConfirming(true)}>
+          <Button variant="default" disabled={!open || !complete || busy} disabledReason={open && !complete ? t("review.needVerdicts") : undefined} onClick={() => setConfirming(true)}>
             {t("review.send")} <span className="key">⌘↵</span>
           </Button>
         </div>

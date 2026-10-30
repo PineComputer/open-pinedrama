@@ -1,22 +1,15 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { App } from "./App.tsx";
-import { ToastProvider } from "./components/Toast.tsx";
+import { Toaster } from "@/components/ui/sonner";
 import { applyTheme } from "./theme/theme.ts";
-import "./theme/reveric-themes.css";
-import "./theme/reveric-tokens.css";
-import "./theme/base.css";
-import "./styles.css";
-import "./components/components.css";
-import "./shell/shell.css";
-import "./screens/canvas.css";
+import "./index.css";
 
 applyTheme();
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <ToastProvider>
-      <App />
-    </ToastProvider>
+    <App />
+    <Toaster position="bottom-center" duration={6000} />
   </StrictMode>,
 );

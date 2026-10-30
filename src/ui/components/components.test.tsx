@@ -13,7 +13,8 @@ import { Segmented } from "./Segmented.tsx";
 import { FindingCount, StatusChip } from "./StatusChip.tsx";
 import { Steps } from "./Steps.tsx";
 import { Tabs } from "./Tabs.tsx";
-import { ToastProvider, useToast } from "./Toast.tsx";
+import { toast } from "sonner";
+import { Toaster } from "@/components/ui/sonner";
 import type { Refusal } from "../../shared/refusal.ts";
 import { StopCard } from "./StopCard.tsx";
 import { Tooltip } from "./Tooltip.tsx";
@@ -22,7 +23,7 @@ describe("Button", () => {
   it("runs its action on click and on Enter", async () => {
     const user = userEvent.setup();
     const run = vi.fn();
-    render(<Button onClick={run}>Upload script</Button>);
+    render(<Button variant="outline" onClick={run}>Upload script</Button>);
     await user.click(screen.getByRole("button", { name: "Upload script" }));
     screen.getByRole("button", { name: "Upload script" }).focus();
     await user.keyboard("{Enter}");
@@ -32,7 +33,7 @@ describe("Button", () => {
   it("does nothing while disabled, and says why", async () => {
     const user = userEvent.setup();
     const run = vi.fn();
-    render(<Button onClick={run} disabledReason="Give every item a verdict first">Send review</Button>);
+    render(<Button variant="outline" onClick={run} disabledReason="Give every item a verdict first">Send review</Button>);
     const button = screen.getByRole("button", { name: "Send review" });
     expect(button).toBeDisabled();
     expect(button).toHaveAccessibleDescription("Give every item a verdict first");
@@ -43,7 +44,7 @@ describe("Button", () => {
   it("is busy while its action runs: announced, and not pressed twice", async () => {
     const user = userEvent.setup();
     const run = vi.fn();
-    render(<Button onClick={run} busy>Send review</Button>);
+    render(<Button variant="outline" onClick={run} busy>Send review</Button>);
     const button = screen.getByRole("button", { name: "Send review" });
     expect(button).toHaveAttribute("aria-busy", "true");
     await user.click(button);
@@ -53,16 +54,17 @@ describe("Button", () => {
   it("comes in the variants and sizes the design names", () => {
     render(
       <>
-        <Button variant="primary" size="lg">Primary</Button>
-        <Button variant="secondary">Secondary</Button>
+        <Button variant="default" size="lg">Primary</Button>
+        <Button variant="outline">Secondary</Button>
         <Button variant="ghost" size="sm">Ghost</Button>
-        <Button variant="danger" size="sm">Stop drama</Button>
+        <Button variant="destructive" size="sm">Stop drama</Button>
       </>,
     );
-    expect(screen.getByRole("button", { name: "Primary" })).toHaveClass("ds-btn", "is-primary", "is-lg");
-    expect(screen.getByRole("button", { name: "Secondary" })).toHaveClass("is-secondary", "is-md");
-    expect(screen.getByRole("button", { name: "Ghost" })).toHaveClass("is-ghost", "is-sm");
-    expect(screen.getByRole("button", { name: "Stop drama" })).toHaveClass("is-danger", "is-sm");
+    const shape = (name: string) => [screen.getByRole("button", { name }).dataset.variant, screen.getByRole("button", { name }).dataset.size];
+    expect(shape("Primary")).toEqual(["default", "lg"]);
+    expect(shape("Secondary")).toEqual(["outline", "default"]);
+    expect(shape("Ghost")).toEqual(["ghost", "sm"]);
+    expect(shape("Stop drama")).toEqual(["destructive", "sm"]);
   });
 });
 
@@ -74,7 +76,7 @@ describe("IconButton", () => {
 
   it("says when it is on, as the rail's current place is", () => {
     render(<IconButton label="Sidebar" icon="list" on />);
-    expect(screen.getByRole("button", { name: "Sidebar" })).toHaveClass("ds-iconbtn", "is-on");
+    expect(screen.getByRole("button", { name: "Sidebar" })).toHaveClass("bg-selected");
   });
 });
 
@@ -90,7 +92,7 @@ describe("StatusChip", () => {
     ["failed", "Failed"],
   ] as const)("says %s as “%s”", (status, words) => {
     render(<StatusChip status={status} />);
-    expect(screen.getByText(words)).toHaveClass("ds-chip", `is-${status}`);
+    expect(screen.getByText(words)).toHaveAttribute("data-status", status);
   });
 
   it("counts an observer's findings by severity, and shows nothing for none", () => {
@@ -103,7 +105,7 @@ describe("StatusChip", () => {
     );
     expect(screen.getByText("1 error")).toBeInTheDocument();
     expect(screen.getByText("3 warn")).toBeInTheDocument();
-    expect(container.querySelectorAll(".ds-chip")).toHaveLength(2);
+    expect(container.querySelectorAll("[data-slot=badge]")).toHaveLength(2);
   });
 });
 
@@ -116,10 +118,10 @@ describe("Segmented", () => {
   it("presses the option chosen, and only that one", async () => {
     const user = userEvent.setup();
     render(<Surfaces />);
-    const group = screen.getByRole("group", { name: "Surface" });
-    await user.click(within(group).getByRole("button", { name: "Canvas" }));
-    expect(within(group).getByRole("button", { name: "Canvas" })).toHaveAttribute("aria-pressed", "true");
-    expect(within(group).getByRole("button", { name: "Studio" })).toHaveAttribute("aria-pressed", "false");
+    const group = screen.getByRole("radiogroup", { name: "Surface" });
+    await user.click(within(group).getByRole("radio", { name: "Canvas" }));
+    expect(within(group).getByRole("radio", { name: "Canvas" })).toBeChecked();
+    expect(within(group).getByRole("radio", { name: "Studio" })).not.toBeChecked();
   });
 });
 
@@ -153,7 +155,7 @@ describe("Dialog", () => {
     const [open, setOpen] = useState(false);
     return (
       <>
-        <Button onClick={() => setOpen(true)}>Stop the drama</Button>
+        <Button variant="outline" onClick={() => setOpen(true)}>Stop the drama</Button>
         <Dialog open={open} onOpenChange={setOpen} title="Stop the drama?" description="Every Computer it has running stops." confirm={{ label: "Stop it", danger: true, run: onConfirm }} />
       </>
     );
@@ -164,11 +166,11 @@ describe("Dialog", () => {
     const stop = vi.fn();
     render(<Confirm onConfirm={stop} />);
     await user.click(screen.getByRole("button", { name: "Stop the drama" }));
-    const dialog = screen.getByRole("dialog", { name: "Stop the drama?" });
+    const dialog = screen.getByRole("alertdialog", { name: "Stop the drama?" });
     expect(dialog).toHaveAccessibleDescription("Every Computer it has running stops.");
     await user.click(within(dialog).getByRole("button", { name: "Stop it" }));
     expect(stop).toHaveBeenCalledOnce();
-    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    expect(screen.queryByRole("alertdialog")).not.toBeInTheDocument();
   });
 
   it("closes on Escape without running, and gives focus back", async () => {
@@ -179,7 +181,7 @@ describe("Dialog", () => {
     await user.click(opener);
     await user.keyboard("{Escape}");
     expect(stop).not.toHaveBeenCalled();
-    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    expect(screen.queryByRole("alertdialog")).not.toBeInTheDocument();
     expect(opener).toHaveFocus();
   });
 });
@@ -211,22 +213,20 @@ describe("Tooltip", () => {
 });
 
 describe("Toast", () => {
-  function Sender() {
-    const toast = useToast();
-    return <Button onClick={() => toast("Review sent.", { label: "Undo", run: () => undefined })}>Send</Button>;
-  }
-
   it("is announced politely, with its action", async () => {
     const user = userEvent.setup();
     render(
-      <ToastProvider>
-        <Sender />
-      </ToastProvider>,
+      <>
+        <Toaster />
+        <Button variant="outline" onClick={() => toast("Review sent.", { action: { label: "Undo", onClick: () => undefined } })}>
+          Send
+        </Button>
+      </>,
     );
     await user.click(screen.getByRole("button", { name: "Send" }));
-    const region = screen.getByRole("status");
-    expect(region).toHaveTextContent("Review sent.");
-    expect(within(region).getByRole("button", { name: "Undo" })).toBeInTheDocument();
+    const shown = await screen.findByText("Review sent.");
+    expect(shown.closest("[aria-live=polite]")).not.toBeNull();
+    expect(await screen.findByRole("button", { name: "Undo" })).toBeInTheDocument();
   });
 });
 
@@ -261,23 +261,22 @@ describe("Steps", () => {
 describe("BudgetMeter", () => {
   it("shows what was spent of the budget", () => {
     render(<BudgetMeter spentUsd={41.2} budgetUsd={300} />);
-    const meter = screen.getByRole("meter", { name: "Spent of budget" });
-    expect(meter).toHaveAttribute("aria-valuenow", "41.2");
-    expect(meter).toHaveAttribute("aria-valuemax", "300");
+    const bar = screen.getByRole("progressbar", { name: "Spent of budget" });
+    expect(Number(bar.getAttribute("aria-valuenow"))).toBeCloseTo((41.2 / 300) * 100);
     expect(screen.getByText("$41.20 of $300")).toBeInTheDocument();
   });
 
   it("warns from 80% and says when the budget is spent", () => {
-    const { rerender, container } = render(<BudgetMeter spentUsd={250} budgetUsd={300} />);
-    expect(container.firstElementChild).toHaveClass("is-warn");
+    const { rerender } = render(<BudgetMeter spentUsd={250} budgetUsd={300} />);
+    expect(screen.getByRole("progressbar")).toHaveClass("*:bg-warning");
     rerender(<BudgetMeter spentUsd={300} budgetUsd={300} />);
-    expect(container.firstElementChild).toHaveClass("is-out");
+    expect(screen.getByRole("progressbar")).toHaveClass("*:bg-destructive");
     expect(screen.getByText("Budget spent")).toBeInTheDocument();
   });
 
   it("with no cap, shows only what was spent, with no bar to fill", () => {
     render(<BudgetMeter spentUsd={12.5} budgetUsd={null} />);
-    expect(screen.queryByRole("meter")).not.toBeInTheDocument();
+    expect(screen.queryByRole("progressbar")).not.toBeInTheDocument();
     expect(screen.getByText("Spent")).toBeInTheDocument();
     expect(screen.getByText("$12.50")).toBeInTheDocument();
   });

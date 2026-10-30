@@ -63,12 +63,12 @@ describe("the drama's bar", () => {
     const user = userEvent.setup();
     at("/d/d1/e/EP002");
     render(<DramaBar drama={drama} />);
-    const surfaces = screen.getByRole("group", { name: "Surface" });
-    expect(within(surfaces).getByRole("button", { name: "Studio" })).toHaveAttribute("aria-pressed", "true");
-    await user.click(within(surfaces).getByRole("button", { name: "Canvas" }));
+    const surfaces = screen.getByRole("radiogroup", { name: "Surface" });
+    expect(within(surfaces).getByRole("radio", { name: "Studio" })).toBeChecked();
+    await user.click(within(surfaces).getByRole("radio", { name: "Canvas" }));
     expect(location.pathname + location.search).toBe("/d/d1/canvas?item=EP002");
-    expect(within(surfaces).getByRole("button", { name: "Canvas" })).toHaveAttribute("aria-pressed", "true");
-    await user.click(within(surfaces).getByRole("button", { name: "Studio" }));
+    expect(within(surfaces).getByRole("radio", { name: "Canvas" })).toBeChecked();
+    await user.click(within(surfaces).getByRole("radio", { name: "Studio" }));
     expect(location.pathname).toBe("/d/d1/e/EP002");
   });
 });

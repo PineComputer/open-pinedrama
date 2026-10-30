@@ -1,0 +1,54 @@
+/* Tailwind CSS and shadcn/ui (components.json), themed with Reveric's tokens (theme/reveric-themes.css,
+   theme/reveric-tokens.css): each shadcn/ui colour and radius names the Reveric token for the same job, so
+   both palettes and both brightnesses come from Reveric and shadcn/ui's own palette is never loaded
+   (ui.shadcn.com/docs/theming). */
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+/* The studio's own stylesheets go into Tailwind's layers, so a utility on a shadcn/ui component wins
+   over them, as Tailwind's docs place custom styles (tailwindcss.com/docs/adding-custom-styles). Reveric's
+   tokens sit in base, after Tailwind's theme, so where both name a variable (--font-sans) Reveric's holds. */
+@import "./theme/reveric-themes.css" layer(base);
+@import "./theme/reveric-tokens.css" layer(base);
+@import "./theme/base.css" layer(base);
+@import "./styles.css" layer(components);
+@import "./components/components.css" layer(components);
+@import "./shell/shell.css" layer(components);
+@import "./screens/canvas.css" layer(components);
+
+/* Dark mode follows data-theme on <html> (theme/theme.ts), as Tailwind's docs set a data attribute. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+@theme inline {
+  --color-background: var(--canvas);
+  --color-foreground: var(--text-primary);
+  --color-card: var(--surface);
+  --color-card-foreground: var(--text-primary);
+  --color-popover: var(--surface);
+  --color-popover-foreground: var(--text-primary);
+  --color-primary: var(--accent);
+  --color-primary-foreground: var(--on-accent);
+  --color-secondary: var(--surface-container);
+  --color-secondary-foreground: var(--text-primary);
+  --color-muted: var(--hover);
+  --color-muted-foreground: var(--text-muted);
+  --color-accent: var(--hover);
+  --color-accent-foreground: var(--text-primary);
+  --color-destructive: var(--error);
+  --color-border: var(--border);
+  --color-input: var(--border-input);
+  --color-ring: var(--text-primary);
+  /* The studio's own: a chosen control, and where an item stands (components/StatusChip.tsx). */
+  --color-selected: var(--selected);
+  --color-success: var(--success);
+  --color-warning: var(--warning-text);
+  --radius-sm: var(--radius-small);
+  --radius-md: var(--radius-medium);
+  --radius-lg: var(--radius-large);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+}
