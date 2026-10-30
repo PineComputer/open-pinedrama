@@ -56,7 +56,7 @@ export interface Board {
 /** Card sizes and gaps. A label stands above each card, inside the gap. */
 export const SIZE = {
   reference: { w: 240, h: 150 },
-  segment: { w: 300, h: 132 },
+  segment: { w: 380, h: 172 },
   /** Room above a card for its label. */
   label: 28,
   gap: 16,

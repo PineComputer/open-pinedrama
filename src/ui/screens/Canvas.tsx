@@ -5,7 +5,7 @@
 // to nodes and edges (src/shared/canvas.ts), and the nodes' look. Where the maker moved items is
 // kept per episode as the studio's view state. Phase 1 only reads: nothing here makes or changes
 // an item; the SteerBar steers the agent.
-import { Background, BackgroundVariant, ControlButton, Controls, type Edge, Handle, MiniMap, type Node, type NodeProps, NodeToolbar, Panel, Position, ReactFlow, ReactFlowProvider, useNodesState, useReactFlow } from "@xyflow/react";
+import { Background, BackgroundVariant, ControlButton, Controls, type Edge, Handle, MiniMap, type Node, type NodeProps, NodeToolbar, Panel, Position, ReactFlow, ReactFlowProvider, useNodesState, useReactFlow, useViewport } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { type BoardNode, layoutEpisode } from "../../shared/canvas.ts";
@@ -94,9 +94,9 @@ function ItemNode({ id, data, selected }: NodeProps<Node<ItemData>>) {
         <SteerBar drama={board.drama} node={data.item} label={data.label} episodeTitle={board.episodeTitle} onClose={() => board.pick(null)} />
       </NodeToolbar>
       <Handle type="target" position={Position.Left} isConnectable={false} />
-      {/* Named by what it shows (WCAG 2.5.3): its name, then where it stands. */}
+      {/* Named by what it shows (WCAG 2.5.3): its name, then where it stands. A segment's card holds both, as the reference's does. */}
       <span
-        className="label"
+        className="ds-clabel"
         role="button"
         tabIndex={0}
         aria-pressed={selected}
@@ -105,11 +105,16 @@ function ItemNode({ id, data, selected }: NodeProps<Node<ItemData>>) {
       >
         <Icon name={icon[data.item.kind]} />
         <span className="name">{data.label}</span>
-        <StatusChip status={data.status} label={t(`status.${data.status}` as TKey)} />
+        {data.item.kind !== "segment" && <StatusChip status={data.status} label={t(`status.${data.status}` as TKey)} />}
       </span>
       <span className="card">
         {data.picture && <img src={data.picture.url} alt="" draggable={false} />}
-        {data.lines && <span className="text">{data.lines.map((line) => <span key={line}>{line}</span>)}</span>}
+        {data.lines && (
+          <span className="text">
+            {data.lines.map((line) => <span key={line}>{line}</span>)}
+            <span className={`state is-${data.status}`}><i aria-hidden="true" />{t(`status.${data.status}` as TKey)}</span>
+          </span>
+        )}
       </span>
       <Handle type="source" position={Position.Right} isConnectable={false} />
     </div>
@@ -126,6 +131,16 @@ function SceneNode({ data }: NodeProps<Node<{ heading: string }>>) {
 }
 
 const NODE_TYPES = { item: ItemNode, scene: SceneNode };
+
+/** The zoom, as the reference's control cluster shows it. */
+function Zoom() {
+  const { t } = useT();
+  return (
+    <span className="ds-zoom" role="status" aria-label={t("canvas.zoom")}>
+      {Math.round(useViewport().zoom * 100)}%
+    </span>
+  );
+}
 
 export function Canvas({ drama }: { drama: DramaView }) {
   return (
@@ -176,7 +191,8 @@ function Plane({ drama }: { drama: DramaView }) {
         ...(scene ? { parentId: scene.id, expandParent: true } : {}),
         position: moved[node.id] ?? (scene ? { x: node.x - scene.x, y: node.y - scene.y } : { x: node.x, y: node.y }),
         width: node.w,
-        height: node.h + 28,
+        // A reference's name stands above its picture; a segment's is inside its card.
+        height: node.kind === "segment" ? node.h : node.h + 28,
         data: {
           item: node,
           label: label(node),
@@ -236,6 +252,7 @@ function Plane({ drama }: { drama: DramaView }) {
         >
           <Background variant={BackgroundVariant.Dots} gap={22} size={1.2} />
           <Controls position="bottom-left" showInteractive={false}>
+            <Zoom />
             <ControlButton aria-label={t("canvas.layOut")} title={t("canvas.layOut")} onClick={() => void api(`/api/dramas/${drama.id}/canvas/${code}`, { method: "DELETE" }).then(() => positions.reload())}>
               <Icon name="tree-structure" />
             </ControlButton>
