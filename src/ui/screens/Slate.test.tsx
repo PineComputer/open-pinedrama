@@ -112,7 +112,8 @@ describe("Home", () => {
     render(<Slate />);
     const hero = await screen.findByRole("region", { name: "The Stepmother" });
     expect(within(hero).getByText("“Two takes wait.”", { selector: "blockquote" })).toBeInTheDocument();
-    expect(within(hero).getByRole("link", { name: /^Review Takes/ })).toHaveAttribute("href", "/r/r1");
+    expect(hero).toHaveTextContent("EP001 · 2 takes wait for you");
+    expect(within(hero).getByRole("link", { name: "Review takes" })).toHaveAttribute("href", "/r/r1");
     const waiting = within(hero).getByRole("list", { name: "Waiting for you" });
     const rows = within(waiting).getAllByRole("link");
     expect(rows.map((link) => link.getAttribute("href"))).toEqual(["/r/r1", "/r/r0"]);

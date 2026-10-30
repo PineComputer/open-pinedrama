@@ -38,12 +38,28 @@ function standing(drama: DramaCard, redLine: boolean): { st: St; label: TKey; sh
 
 const isRedLine = (item: ReviewSummary) => item.stop?.kind === "red-line";
 
-/** A waiting review as the prototype's rows name it: its episode and what it is; how many, which, and how long it has waited. */
-function rowOf(item: ReviewSummary, t: ReturnType<typeof useT>["t"], lang: ReturnType<typeof useT>["lang"]): { title: string; detail: string } {
-  const title = item.episode ? `${item.episode} · ${t(isRedLine(item) ? "slate.row.redLine" : `slate.row.${item.kind}`)}` : t(isRedLine(item) ? "drama.redLine" : `kind.${item.kind}`);
+type T = ReturnType<typeof useT>["t"];
+
+/** How many items wait, in what they are: "2 takes", "1 item"; nothing for a question. */
+function countOf(item: ReviewSummary, t: T): string {
   const one = item.items === 1;
-  const count = item.items ? t(item.kind === "takes" ? (one ? "slate.take" : "slate.takes") : one ? "slate.item" : "slate.items", { n: item.items }) : "";
-  return { title, detail: [count, item.subjects.join(", "), since(item.createdAt, lang)].filter(Boolean).join(" · ") };
+  return item.items ? t(item.kind === "takes" ? (one ? "slate.take" : "slate.takes") : one ? "slate.item" : "slate.items", { n: item.items }) : "";
+}
+
+/** What a review is, as the prototype's rows and buttons say it in a line: "takes", "red line". */
+const whatOf = (item: ReviewSummary): TKey => (isRedLine(item) ? "slate.row.redLine" : `slate.row.${item.kind}`);
+
+/** A waiting review as the prototype's rows name it: its episode and what it is; how many, which, and how long it has waited. */
+function rowOf(item: ReviewSummary, t: T, lang: ReturnType<typeof useT>["lang"]): { title: string; detail: string } {
+  const title = item.episode ? `${item.episode} · ${t(whatOf(item))}` : t(isRedLine(item) ? "drama.redLine" : `kind.${item.kind}`);
+  return { title, detail: [countOf(item, t), item.subjects.join(", "), since(item.createdAt, lang)].filter(Boolean).join(" · ") };
+}
+
+/** What waits in Continue's line, as the prototype says it: "2 takes wait for you", a question or a red line. */
+function waitsOf(item: ReviewSummary, t: T): string {
+  if (isRedLine(item)) return t("slate.waitsRedLine");
+  const count = countOf(item, t);
+  return count ? t(item.items === 1 ? "slate.waitsOne" : "slate.waitsMany", { what: count }) : t("slate.waitsQuestion");
 }
 
 /** A picture as the prototype's `img`: an image, or a video's opening frame. `face` crops a look sheet to its close-up. */
@@ -93,7 +109,7 @@ function Hero({ waiting, dramas }: { waiting: ReviewSummary[]; dramas: DramaCard
           <h2 id="continue-title">{drama.title}</h2>
           <span className="where">
             <Icon name="map-pin" className="ic" />
-            {review ? [review.episode, t("slate.waitsKind", { kind: t(`kind.${review.kind}` as TKey) })].filter(Boolean).join(" · ") : t(where.label, { n: drama.waiting })}
+            {review ? [review.episode, waitsOf(review, t)].filter(Boolean).join(" · ") : t(where.label, { n: drama.waiting })}
           </span>
           {line && <blockquote>“{plainText(line)}”</blockquote>}
           <div className="row">
@@ -114,7 +130,7 @@ function Hero({ waiting, dramas }: { waiting: ReviewSummary[]; dramas: DramaCard
                 </Link>
                 <Link to={`/r/${review.id}`} className="btn lg primary">
                   <Icon name="play" className="ic" />
-                  {t("slate.review", { kind: t(`kind.${review.kind}` as TKey) })}
+                  {t("slate.review", { kind: t(whatOf(review)) })}
                 </Link>
               </>
             ) : (
