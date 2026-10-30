@@ -119,10 +119,10 @@ export function cutPlan(p: string, code: string, cut: Out, takes: { segment: str
 /** The refusals a stop asks about, one JSON line each, as drama-cli prints them (goals.ts RETURN_REFUSALS). */
 const refusals = (list: Refusal[]): Out => ({ path: "handoff/refusals.jsonl", type: typeOf("refusals.jsonl"), bytes: text(list.map((error) => `${JSON.stringify({ error })}\n`).join("")) });
 
-/** The bible's red line, as drama-cli refuses a bible for one (stages.py, RedLine; drama-cli v0.7.4). */
-const redLine = (line: string): Refusal => ({
+/** A bible range's red line, as drama-cli refuses the bible for it (stages.py, RedLine): the range from the episode it stops, six episodes. */
+const redLine = (line: string, code: string): Refusal => ({
   code: "RedLine",
-  message: `Bible v1 is not usable: red line: ${line}; report it to the person and pass their decision back with drama-cli bible --config drama/drama-cli.cfg.yaml --episodes EP001-EP006 --feedback "<their decision>"`,
+  message: `Bible v1 is not usable: red line: ${line}; report it to the person and pass their decision back with drama-cli bible --config drama/drama-cli.cfg.yaml --episodes ${code}-${codeOf(Number(code.slice(2)) + 4)} --feedback "<their decision>"`,
   param: null,
   action: "ask_person",
 });
@@ -165,6 +165,8 @@ interface DramaData {
   genres: Both<string[]>;
   /** The storyboard styles its segments are drawn in, where not both: a sample with real line-art only shows no photoreal placeholder beside it. */
   styles?: string[];
+  /** How many episodes a sample drama works on at once, where not New drama's 3. */
+  parallel?: number;
   /** How many minutes ago a sample drama was started, so the studio's recent work shows them over hours and days. */
   ago: number;
   cast: { id: string; name: Both<string>; short: Both<string>; looks?: string[] }[];
@@ -173,8 +175,8 @@ interface DramaData {
   /** An episode's sample cut, where it has one: each clip's segment and its in and out points in seconds, from the cut.json drama-cli wrote for it. */
   /** Each segment's scene heading, in the screenplay's form (INT./EXT. place - DAY/NIGHT), its shots, and the episode's sample cut. */
   episodes: { title: Both<string>; segments: { id: string; heading: Both<string>; shots: Both<string[]> }[]; cut?: { segment: string; in: number; out: number }[] }[];
-  /** The bible's red line, when the setup stops on one: drama-cli refuses the bible for it (RedLine). */
-  redLine?: Both<string>;
+  /** A red line in the screenplay: the episode whose bible range names it stops on drama-cli's refusal (RedLine) and asks the maker. */
+  redLine?: { episode: string; line: Both<string> };
 }
 
 /** A sample drama in one language. */
@@ -183,12 +185,13 @@ interface Story {
   logline: string;
   genres: string[];
   styles: string[];
+  parallel?: number;
   ago: number;
   cast: { id: string; name: string; short: string; looks: string[] }[];
   places: { id: string; name: string; times: string[] }[];
   props: { id: string; name: string }[];
   episodes: { title: string; segments: { id: string; heading: string; shots: string[] }[]; cut?: { segment: string; in: number; out: number }[] }[];
-  redLine?: string;
+  redLine?: { episode: string; line: string };
 }
 
 const inLanguage = (d: DramaData, lang: Lang): Story => ({
@@ -196,12 +199,13 @@ const inLanguage = (d: DramaData, lang: Lang): Story => ({
   logline: d.logline[lang],
   genres: d.genres[lang],
   styles: d.styles ?? ["line-art", "photoreal"],
+  ...(d.parallel ? { parallel: d.parallel } : {}),
   ago: d.ago,
   cast: d.cast.map((c) => ({ id: c.id, name: c.name[lang], short: c.short[lang], looks: c.looks ?? [] })),
   places: d.places.map((p) => ({ id: p.id, name: p.name[lang], times: p.times ?? [] })),
   props: d.props.map((p) => ({ id: p.id, name: p.name[lang] })),
   episodes: d.episodes.map((e) => ({ title: e.title[lang], segments: e.segments.map((s) => ({ id: s.id, heading: s.heading[lang], shots: s.shots[lang] })), ...(e.cut ? { cut: e.cut } : {}) })),
-  ...(d.redLine ? { redLine: d.redLine[lang] } : {}),
+  ...(d.redLine ? { redLine: { episode: d.redLine.episode, line: d.redLine.line[lang] } } : {}),
 });
 
 /** An episode's code by its place in the drama, as drama-cli numbers them. */
@@ -296,7 +300,7 @@ const words = (s: Story) => {
       "\n## Key props",
       ...s.props.map((item) => `- **${item.id}** — ${item.name}.`),
     ].join("\n") + "\n",
-    askRedLine: (line: string) => `drama-cli won't accept the bible: the screenplay has a red line, ${line}. It's yours to decide: shall I write the bible without it, or stop here?`,
+    askRedLine: (code: string, line: string) => `drama-cli won't accept ${code}'s bible range: the screenplay has a red line, ${line}. It's yours to decide: shall I write it without that, or stop here? Other episodes carry on.`,
     breakdownTitle: (code: string) => `# ${code} — breakdown (placeholder)`,
     shot: (n: number, text: string) => `- Shot ${n}: ${text}`,
   },
@@ -349,7 +353,7 @@ const words = (s: Story) => {
       "\n## 关键道具",
       ...s.props.map((item) => `- **${item.id}**：${item.name}。`),
     ].join("\n") + "\n",
-    askRedLine: (line: string) => `drama-cli 不接受这版设定集：剧本里有一条红线，${line}。这由你决定：我把它去掉后再写设定集，还是就此停下？`,
+    askRedLine: (code: string, line: string) => `drama-cli 不接受 ${code} 这一段的设定集：剧本里有一条红线，${line}。这由你决定：我把它去掉后再写，还是就此停下？其他集照常进行。`,
     breakdownTitle: (code: string) => `# ${code} 拆分（示例）`,
     shot: (n: number, text: string) => `- 镜头 ${n}：${text}`,
   },
@@ -416,7 +420,7 @@ function breakdownOf(say: Say, story: Story, i: number): string {
 function setupScript(lang: Lang, preset: string, story: { id: string; story: Story }): Player {
   const say = words(story.story)[lang];
   const set = pictures(story.id, lang);
-  let stage: "start" | "rewrite" | "asked" | "red-line" | "leads" | "references" | "handed" = "start";
+  let stage: "start" | "rewrite" | "asked" | "leads" | "references" | "handed" = "start";
   const versions = new Map<string, number>();
   const next = (key: string) => {
     const v = (versions.get(key) ?? 0) + 1;
@@ -444,7 +448,7 @@ function setupScript(lang: Lang, preset: string, story: { id: string; story: Sto
   const made = (key: string): Made => ({ current: `v${versions.get(key)}`, accepted: accepted.has(key) ? `v${accepted.get(key)}` : null });
   const progress = (): ReplayProgress => ({
     preset,
-    bible: stage === "rewrite" || stage === "asked" || stage === "red-line" ? null : "v1",
+    bible: stage === "rewrite" || stage === "asked" ? null : "v1",
     looks: Object.fromEntries(leads.filter((c) => versions.has(c.id)).map((c) => [c.id, made(c.id)])),
     references: Object.fromEntries([...shared.values()].filter((reference) => versions.has(reference.key)).map((reference) => [reference.key, { ...made(reference.key), path: reference.path }])),
     episodes: stage === "references" || stage === "handed" ? Object.fromEntries(story.story.episodes.map((e, i) => [codeOf(i), madeOf(story.story, e)])) : {},
@@ -460,12 +464,7 @@ function setupScript(lang: Lang, preset: string, story: { id: string; story: Sto
       stage = "asked";
       return { progress: say.reading, files: [], ask: say.askAge };
     }
-    // A story with a red line stops here, as drama-cli refuses the bible for it, and asks the maker; their answer is passed back.
-    if (stage === "asked" && story.story.redLine) {
-      stage = "red-line";
-      return { progress: say.drawing.slice(0, 1), files: [refusals([redLine(story.story.redLine)])], ask: say.askRedLine(story.story.redLine) };
-    }
-    if (stage === "asked" || stage === "red-line") {
+    if (stage === "asked") {
       stage = "leads";
       return {
         progress: say.drawing,
@@ -556,8 +555,15 @@ function episodeScript(code: string, lang: Lang, preset: string, story: { id: st
       return [clip(set, `${dir}/video.mp4`, "take"), ...(still ? [still] : []), ...specs(set, dir, takeSpec(seg.shots.join(" ")))];
     });
   let started = false;
+  // An episode whose bible range names the screenplay's red line stops first on drama-cli's refusal, and asks the maker; their answer is passed back.
+  let redLineAsked = story.story.redLine?.episode !== code;
   const play = (answer: string): Step => {
     const redo = revisedKeys(answer);
+    if (!redLineAsked) {
+      redLineAsked = true;
+      const { line } = story.story.redLine!;
+      return { progress: say.drawing.slice(0, 1), files: [refusals([redLine(line, code)])], ask: say.askRedLine(code, line) };
+    }
     if (!started) {
       started = true;
       return {

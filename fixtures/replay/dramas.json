@@ -18,7 +18,7 @@
     "年代"
    ]
   },
-  "ago": 0,
+  "ago": 25,
   "cast": [
    {
     "id": "lin",
@@ -1616,540 +1616,1501 @@
    "zh": "保释新娘"
   },
   "logline": {
-   "en": "A bride bails her fiancé out of a holding cell on the morning of the wedding, and has until the vows to learn the truth.",
-   "zh": "婚礼当天一早，新娘把未婚夫从拘留室保释出来，誓言之前她必须查清真相。"
+   "en": "To keep her inheritance, a florist marries the stranger she bailed out of county jail, and his lawyer brother wants the marriage annulled before the trust pays out.",
+   "zh": "为了保住遗产，花店老板娘嫁给了她从县看守所保释出来的陌生人，而他当律师的哥哥想在信托放款前宣布婚姻无效。"
   },
   "genres": {
    "en": [
     "Romance",
-    "Suspense"
+    "Legal"
    ],
    "zh": [
     "爱情",
-    "悬疑"
+    "律政"
    ]
   },
-  "ago": 50,
+  "styles": [
+   "line-art"
+  ],
+  "ago": 2,
   "cast": [
    {
-    "id": "lin",
+    "id": "ivy",
     "name": {
      "en": "Ivy Bell",
-     "zh": "艾薇"
+     "zh": "艾薇·贝尔"
     },
     "short": {
      "en": "Ivy",
      "zh": "艾薇"
-    },
-    "looks": [
-     "S1"
-    ]
+    }
    },
    {
-    "id": "wei",
+    "id": "luca",
     "name": {
      "en": "Luca Moreno",
-     "zh": "卢卡"
+     "zh": "卢卡·莫雷诺"
     },
     "short": {
      "en": "Luca",
      "zh": "卢卡"
     }
+   },
+   {
+    "id": "ethan",
+    "name": {
+     "en": "Ethan Cole",
+     "zh": "伊森·科尔"
+    },
+    "short": {
+     "en": "Ethan",
+     "zh": "伊森"
+    }
+   },
+   {
+    "id": "margaret",
+    "name": {
+     "en": "Margaret Cole",
+     "zh": "玛格丽特·科尔"
+    },
+    "short": {
+     "en": "Margaret",
+     "zh": "玛格丽特"
+    }
+   },
+   {
+    "id": "walter",
+    "name": {
+     "en": "Walter Cole",
+     "zh": "沃尔特·科尔"
+    },
+    "short": {
+     "en": "Walter",
+     "zh": "沃尔特"
+    }
+   },
+   {
+    "id": "dunn",
+    "name": {
+     "en": "Sgt. Ray Dunn",
+     "zh": "雷·邓恩警佐"
+    },
+    "short": {
+     "en": "Dunn",
+     "zh": "邓恩"
+    }
+   },
+   {
+    "id": "hale",
+    "name": {
+     "en": "Reverend Hale",
+     "zh": "黑尔牧师"
+    },
+    "short": {
+     "en": "Hale",
+     "zh": "黑尔"
+    }
+   },
+   {
+    "id": "tess",
+    "name": {
+     "en": "Tess Park",
+     "zh": "泰丝·朴"
+    },
+    "short": {
+     "en": "Tess",
+     "zh": "泰丝"
+    }
    }
   ],
   "places": [
    {
-    "id": "home",
+    "id": "apartment",
+    "name": {
+     "en": "Luca's apartment",
+     "zh": "卢卡的公寓"
+    }
+   },
+   {
+    "id": "house",
+    "name": {
+     "en": "Cole house · living room",
+     "zh": "科尔家 · 客厅"
+    }
+   },
+   {
+    "id": "garden",
     "name": {
      "en": "Garden wedding",
      "zh": "花园婚礼"
     }
    },
    {
-    "id": "office",
+    "id": "desk",
     "name": {
-     "en": "Holding cell",
-     "zh": "拘留室"
+     "en": "County jail · front desk",
+     "zh": "县看守所 · 前台"
+    }
+   },
+   {
+    "id": "cell",
+    "name": {
+     "en": "County jail · cell",
+     "zh": "县看守所 · 牢房"
+    }
+   },
+   {
+    "id": "street",
+    "name": {
+     "en": "Jail street",
+     "zh": "看守所外街道"
     }
    }
   ],
   "props": [
    {
-    "id": "letter",
+    "id": "file",
     "name": {
-     "en": "Bail papers",
-     "zh": "保释文件"
+     "en": "Case file",
+     "zh": "案卷"
     }
    }
   ],
   "episodes": [
    {
     "title": {
-     "en": "The arrest",
-     "zh": "被捕"
+     "en": "The Wedding",
+     "zh": "婚礼"
     },
     "segments": [
      {
       "id": "seg01",
+      "heading": {
+       "en": "EXT. GARDEN WEDDING - DAY",
+       "zh": "外景 花园婚礼 日"
+      },
       "shots": {
        "en": [
-        "Ivy enters the yard",
-        "Luca: You're late.",
-        "Ivy hides the bail papers",
-        "Close on the bail papers",
-        "Luca turns away",
-        "Ivy alone"
+        "Ivy at the end of the aisle",
+        "Walter gives her away",
+        "Luca waits under the arch"
        ],
        "zh": [
-        "艾薇走进院子",
-        "卢卡：你来晚了。",
-        "艾薇藏起保释文件",
-        "特写：保释文件",
-        "卢卡转身离开",
-        "艾薇独自站着"
+        "艾薇站在红毯尽头",
+        "沃尔特把她交出去",
+        "卢卡在拱门下等着"
        ]
-      },
-      "heading": {
-       "en": "INT. HOLDING CELL - DAY",
-       "zh": "内景 拘留室 日"
       }
      },
      {
       "id": "seg02",
-      "shots": {
-       "en": [
-        "The family at dinner",
-        "Mother: Eat.",
-        "Ivy watches Luca",
-        "Luca pushes the bowl away"
-       ],
-       "zh": [
-        "一家人吃晚饭",
-        "母亲：吃饭。",
-        "艾薇看着卢卡",
-        "卢卡推开饭碗"
-       ]
-      },
       "heading": {
        "en": "EXT. GARDEN WEDDING - DAY",
        "zh": "外景 花园婚礼 日"
+      },
+      "shots": {
+       "en": [
+        "Reverend Hale opens the book",
+        "Margaret watches, unsmiling"
+       ],
+       "zh": [
+        "黑尔牧师翻开经书",
+        "玛格丽特看着，没有笑"
+       ]
       }
      },
      {
       "id": "seg03",
+      "heading": {
+       "en": "EXT. GARDEN WEDDING - DAY",
+       "zh": "外景 花园婚礼 日"
+      },
       "shots": {
        "en": [
-        "Night, the yard",
-        "Ivy reads the bail papers",
-        "Luca at the window",
-        "Their eyes meet",
-        "Ivy burns the bail papers"
+        "The rings",
+        "Ivy says I do"
        ],
        "zh": [
-        "夜，院子里",
-        "艾薇看着保释文件",
-        "卢卡站在窗边",
-        "两人对视",
-        "艾薇烧掉保释文件"
+        "交换戒指",
+        "艾薇说我愿意"
        ]
-      },
-      "heading": {
-       "en": "EXT. GARDEN WEDDING - NIGHT",
-       "zh": "外景 花园婚礼 夜"
       }
      }
     ]
    },
    {
     "title": {
-     "en": "The ring",
-     "zh": "戒指"
+     "en": "Booked",
+     "zh": "登记入所"
     },
     "segments": [
      {
       "id": "seg01",
+      "heading": {
+       "en": "INT. COUNTY JAIL - FRONT DESK - DAY",
+       "zh": "内景 县看守所前台 日"
+      },
       "shots": {
        "en": [
-        "Ivy enters the yard",
-        "Luca: You're late.",
-        "Ivy hides the bail papers",
-        "Close on the bail papers",
-        "Luca turns away",
-        "Ivy alone"
+        "Sgt. Dunn behind the desk",
+        "Luca empties his pockets"
        ],
        "zh": [
-        "艾薇走进院子",
-        "卢卡：你来晚了。",
-        "艾薇藏起保释文件",
-        "特写：保释文件",
-        "卢卡转身离开",
-        "艾薇独自站着"
+        "邓恩警佐坐在前台后",
+        "卢卡掏空口袋"
        ]
-      },
-      "heading": {
-       "en": "INT. HOLDING CELL - DAY",
-       "zh": "内景 拘留室 日"
       }
      },
      {
       "id": "seg02",
+      "heading": {
+       "en": "INT. COUNTY JAIL - CELL - DAY",
+       "zh": "内景 县看守所牢房 日"
+      },
       "shots": {
        "en": [
-        "The family at dinner",
-        "Mother: Eat.",
-        "Ivy watches Luca",
-        "Luca pushes the bowl away"
+        "The cell door shuts",
+        "Luca sits on the bunk"
        ],
        "zh": [
-        "一家人吃晚饭",
-        "母亲：吃饭。",
-        "艾薇看着卢卡",
-        "卢卡推开饭碗"
+        "牢门关上",
+        "卢卡坐在铺上"
        ]
-      },
-      "heading": {
-       "en": "EXT. GARDEN WEDDING - DAY",
-       "zh": "外景 花园婚礼 日"
       }
      },
      {
       "id": "seg03",
+      "heading": {
+       "en": "INT. COUNTY JAIL - FRONT DESK - DAY",
+       "zh": "内景 县看守所前台 日"
+      },
       "shots": {
        "en": [
-        "Night, the yard",
-        "Ivy reads the bail papers",
-        "Luca at the window",
-        "Their eyes meet",
-        "Ivy burns the bail papers"
+        "Ivy pays the bail",
+        "Dunn counts the money"
        ],
        "zh": [
-        "夜，院子里",
-        "艾薇看着保释文件",
-        "卢卡站在窗边",
-        "两人对视",
-        "艾薇烧掉保释文件"
+        "艾薇交了保释金",
+        "邓恩点钱"
        ]
-      },
-      "heading": {
-       "en": "EXT. GARDEN WEDDING - NIGHT",
-       "zh": "外景 花园婚礼 夜"
       }
      }
     ]
    },
    {
     "title": {
-     "en": "Bail",
-     "zh": "保释"
+     "en": "Out on Bail",
+     "zh": "保释出狱"
     },
     "segments": [
      {
       "id": "seg01",
+      "heading": {
+       "en": "EXT. JAIL STREET - DAY",
+       "zh": "外景 看守所外街道 日"
+      },
       "shots": {
        "en": [
-        "Ivy enters the yard",
-        "Luca: You're late.",
-        "Ivy hides the bail papers",
-        "Close on the bail papers",
-        "Luca turns away",
-        "Ivy alone"
+        "Luca walks out of county",
+        "Ivy waits by the car"
        ],
        "zh": [
-        "艾薇走进院子",
-        "卢卡：你来晚了。",
-        "艾薇藏起保释文件",
-        "特写：保释文件",
-        "卢卡转身离开",
-        "艾薇独自站着"
+        "卢卡走出看守所",
+        "艾薇在车边等"
        ]
-      },
-      "heading": {
-       "en": "INT. HOLDING CELL - DAY",
-       "zh": "内景 拘留室 日"
       }
      },
      {
       "id": "seg02",
+      "heading": {
+       "en": "EXT. JAIL STREET - DAY",
+       "zh": "外景 看守所外街道 日"
+      },
       "shots": {
        "en": [
-        "The family at dinner",
-        "Mother: Eat.",
-        "Ivy watches Luca",
-        "Luca pushes the bowl away"
+        "Ethan steps out of his car",
+        "He hands Luca a card"
        ],
        "zh": [
-        "一家人吃晚饭",
-        "母亲：吃饭。",
-        "艾薇看着卢卡",
-        "卢卡推开饭碗"
+        "伊森下车",
+        "他递给卢卡一张名片"
        ]
-      },
-      "heading": {
-       "en": "EXT. GARDEN WEDDING - DAY",
-       "zh": "外景 花园婚礼 日"
       }
      },
      {
       "id": "seg03",
+      "heading": {
+       "en": "EXT. JAIL STREET - DAY",
+       "zh": "外景 看守所外街道 日"
+      },
       "shots": {
        "en": [
-        "Night, the yard",
-        "Ivy reads the bail papers",
-        "Luca at the window",
-        "Their eyes meet",
-        "Ivy burns the bail papers"
+        "They drive off"
        ],
        "zh": [
-        "夜，院子里",
-        "艾薇看着保释文件",
-        "卢卡站在窗边",
-        "两人对视",
-        "艾薇烧掉保释文件"
+        "他们开车离开"
        ]
-      },
-      "heading": {
-       "en": "EXT. GARDEN WEDDING - NIGHT",
-       "zh": "外景 花园婚礼 夜"
       }
      }
     ]
    },
    {
     "title": {
-     "en": "The rehearsal",
-     "zh": "彩排"
+     "en": "The Contract",
+     "zh": "契约"
     },
     "segments": [
      {
       "id": "seg01",
+      "heading": {
+       "en": "INT. COLE HOUSE - LIVING ROOM - DAY",
+       "zh": "内景 科尔家客厅 日"
+      },
       "shots": {
        "en": [
-        "Ivy enters the yard",
-        "Luca: You're late.",
-        "Ivy hides the bail papers",
-        "Close on the bail papers",
-        "Luca turns away",
-        "Ivy alone"
+        "Three lines on a page",
+        "Ivy signs"
        ],
        "zh": [
-        "艾薇走进院子",
-        "卢卡：你来晚了。",
-        "艾薇藏起保释文件",
-        "特写：保释文件",
-        "卢卡转身离开",
-        "艾薇独自站着"
+        "一页纸上三行字",
+        "艾薇签名"
        ]
-      },
-      "heading": {
-       "en": "INT. HOLDING CELL - DAY",
-       "zh": "内景 拘留室 日"
       }
      },
      {
       "id": "seg02",
+      "heading": {
+       "en": "INT. COLE HOUSE - LIVING ROOM - DAY",
+       "zh": "内景 科尔家客厅 日"
+      },
       "shots": {
        "en": [
-        "The family at dinner",
-        "Mother: Eat.",
-        "Ivy watches Luca",
-        "Luca pushes the bowl away"
+        "Ethan reads over their shoulders",
+        "Margaret pours tea"
        ],
        "zh": [
-        "一家人吃晚饭",
-        "母亲：吃饭。",
-        "艾薇看着卢卡",
-        "卢卡推开饭碗"
+        "伊森在他们身后看",
+        "玛格丽特倒茶"
        ]
-      },
-      "heading": {
-       "en": "EXT. GARDEN WEDDING - DAY",
-       "zh": "外景 花园婚礼 日"
       }
      },
      {
       "id": "seg03",
+      "heading": {
+       "en": "INT. COLE HOUSE - LIVING ROOM - DAY",
+       "zh": "内景 科尔家客厅 日"
+      },
       "shots": {
        "en": [
-        "Night, the yard",
-        "Ivy reads the bail papers",
-        "Luca at the window",
-        "Their eyes meet",
-        "Ivy burns the bail papers"
+        "Walter folds the contract"
        ],
        "zh": [
-        "夜，院子里",
-        "艾薇看着保释文件",
-        "卢卡站在窗边",
-        "两人对视",
-        "艾薇烧掉保释文件"
+        "沃尔特把契约折起来"
        ]
-      },
-      "heading": {
-       "en": "EXT. GARDEN WEDDING - NIGHT",
-       "zh": "外景 花园婚礼 夜"
       }
      }
     ]
    },
    {
     "title": {
-     "en": "The vows",
-     "zh": "誓言"
+     "en": "Separate Rooms",
+     "zh": "分房睡"
     },
     "segments": [
      {
       "id": "seg01",
+      "heading": {
+       "en": "INT. LUCA'S APARTMENT - NIGHT",
+       "zh": "内景 卢卡的公寓 夜"
+      },
       "shots": {
        "en": [
-        "Ivy enters the yard",
-        "Luca: You're late.",
-        "Ivy hides the bail papers",
-        "Close on the bail papers",
-        "Luca turns away",
-        "Ivy alone"
+        "Luca brings a blanket",
+        "Ivy at the counter"
        ],
        "zh": [
-        "艾薇走进院子",
-        "卢卡：你来晚了。",
-        "艾薇藏起保释文件",
-        "特写：保释文件",
-        "卢卡转身离开",
-        "艾薇独自站着"
+        "卢卡拿来一条毯子",
+        "艾薇站在吧台边"
        ]
-      },
-      "heading": {
-       "en": "INT. HOLDING CELL - DAY",
-       "zh": "内景 拘留室 日"
       }
      },
      {
       "id": "seg02",
+      "heading": {
+       "en": "INT. LUCA'S APARTMENT - NIGHT",
+       "zh": "内景 卢卡的公寓 夜"
+      },
       "shots": {
        "en": [
-        "The family at dinner",
-        "Mother: Eat.",
-        "Ivy watches Luca",
-        "Luca pushes the bowl away"
+        "The couch made up",
+        "The light goes out"
        ],
        "zh": [
-        "一家人吃晚饭",
-        "母亲：吃饭。",
-        "艾薇看着卢卡",
-        "卢卡推开饭碗"
+        "沙发铺好",
+        "灯灭了"
        ]
-      },
-      "heading": {
-       "en": "EXT. GARDEN WEDDING - DAY",
-       "zh": "外景 花园婚礼 日"
       }
      },
      {
       "id": "seg03",
+      "heading": {
+       "en": "INT. LUCA'S APARTMENT - DAY",
+       "zh": "内景 卢卡的公寓 日"
+      },
       "shots": {
        "en": [
-        "Night, the yard",
-        "Ivy reads the bail papers",
-        "Luca at the window",
-        "Their eyes meet",
-        "Ivy burns the bail papers"
+        "Morning, two cups of coffee"
        ],
        "zh": [
-        "夜，院子里",
-        "艾薇看着保释文件",
-        "卢卡站在窗边",
-        "两人对视",
-        "艾薇烧掉保释文件"
+        "早上，两杯咖啡"
        ]
-      },
-      "heading": {
-       "en": "EXT. GARDEN WEDDING - NIGHT",
-       "zh": "外景 花园婚礼 夜"
       }
      }
     ]
    },
    {
     "title": {
-     "en": "The verdict",
+     "en": "Night Shift",
+     "zh": "夜班"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "heading": {
+       "en": "INT. LUCA'S APARTMENT - NIGHT",
+       "zh": "内景 卢卡的公寓 夜"
+      },
+      "shots": {
+       "en": [
+        "MS Luca in the hallway, the blanket over his arm",
+        "MS he folds it as he talks",
+        "WS the living room behind him"
+       ],
+       "zh": [
+        "中景：卢卡在走廊，胳膊上搭着毯子",
+        "中景：他边说边叠",
+        "全景：身后的客厅"
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "heading": {
+       "en": "INT. LUCA'S APARTMENT - NIGHT",
+       "zh": "内景 卢卡的公寓 夜"
+      },
+      "shots": {
+       "en": [
+        "Ivy at the counter",
+        "She doesn't turn"
+       ],
+       "zh": [
+        "艾薇在吧台边",
+        "她没有回头"
+       ]
+      }
+     },
+     {
+      "id": "seg03",
+      "heading": {
+       "en": "INT. LUCA'S APARTMENT - DAY",
+       "zh": "内景 卢卡的公寓 日"
+      },
+      "shots": {
+       "en": [
+        "WS Ethan at the table, Luca standing",
+        "MS Luca reads the page",
+        "CU the case file"
+       ],
+       "zh": [
+        "全景：伊森坐在桌边，卢卡站着",
+        "中景：卢卡看那页纸",
+        "特写：案卷"
+       ]
+      }
+     },
+     {
+      "id": "seg04",
+      "heading": {
+       "en": "INT. LUCA'S APARTMENT - DAY",
+       "zh": "内景 卢卡的公寓 日"
+      },
+      "shots": {
+       "en": [
+        "Ethan: Read it before you sign.",
+        "Luca sets the file down"
+       ],
+       "zh": [
+        "伊森：签之前先读。",
+        "卢卡把案卷放下"
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "title": {
+     "en": "Visiting Hours",
+     "zh": "探视时间"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "heading": {
+       "en": "INT. COLE HOUSE - LIVING ROOM - DAY",
+       "zh": "内景 科尔家客厅 日"
+      },
+      "shots": {
+       "en": [
+        "Visiting Hours: scene 1"
+       ],
+       "zh": [
+        "探视时间：第 1 场"
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "heading": {
+       "en": "EXT. JAIL STREET - DAY",
+       "zh": "外景 看守所外街道 日"
+      },
+      "shots": {
+       "en": [
+        "Visiting Hours: scene 2"
+       ],
+       "zh": [
+        "探视时间：第 2 场"
+       ]
+      }
+     },
+     {
+      "id": "seg03",
+      "heading": {
+       "en": "INT. COUNTY JAIL - FRONT DESK - NIGHT",
+       "zh": "内景 县看守所前台 夜"
+      },
+      "shots": {
+       "en": [
+        "Visiting Hours: scene 3"
+       ],
+       "zh": [
+        "探视时间：第 3 场"
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "title": {
+     "en": "The Lawyer",
+     "zh": "律师"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "heading": {
+       "en": "EXT. JAIL STREET - DAY",
+       "zh": "外景 看守所外街道 日"
+      },
+      "shots": {
+       "en": [
+        "The Lawyer: scene 1"
+       ],
+       "zh": [
+        "律师：第 1 场"
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "heading": {
+       "en": "INT. COUNTY JAIL - FRONT DESK - DAY",
+       "zh": "内景 县看守所前台 日"
+      },
+      "shots": {
+       "en": [
+        "The Lawyer: scene 2"
+       ],
+       "zh": [
+        "律师：第 2 场"
+       ]
+      }
+     },
+     {
+      "id": "seg03",
+      "heading": {
+       "en": "INT. COUNTY JAIL - CELL - NIGHT",
+       "zh": "内景 县看守所牢房 夜"
+      },
+      "shots": {
+       "en": [
+        "The Lawyer: scene 3"
+       ],
+       "zh": [
+        "律师：第 3 场"
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "title": {
+     "en": "Character Witness",
+     "zh": "品格证人"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "heading": {
+       "en": "INT. COUNTY JAIL - FRONT DESK - DAY",
+       "zh": "内景 县看守所前台 日"
+      },
+      "shots": {
+       "en": [
+        "Character Witness: scene 1"
+       ],
+       "zh": [
+        "品格证人：第 1 场"
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "heading": {
+       "en": "INT. COUNTY JAIL - CELL - DAY",
+       "zh": "内景 县看守所牢房 日"
+      },
+      "shots": {
+       "en": [
+        "Character Witness: scene 2"
+       ],
+       "zh": [
+        "品格证人：第 2 场"
+       ]
+      }
+     },
+     {
+      "id": "seg03",
+      "heading": {
+       "en": "EXT. GARDEN WEDDING - NIGHT",
+       "zh": "外景 花园婚礼 夜"
+      },
+      "shots": {
+       "en": [
+        "Character Witness: scene 3"
+       ],
+       "zh": [
+        "品格证人：第 3 场"
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "title": {
+     "en": "Plea",
+     "zh": "认罪"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "heading": {
+       "en": "INT. COUNTY JAIL - CELL - DAY",
+       "zh": "内景 县看守所牢房 日"
+      },
+      "shots": {
+       "en": [
+        "Plea: scene 1"
+       ],
+       "zh": [
+        "认罪：第 1 场"
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "heading": {
+       "en": "EXT. GARDEN WEDDING - DAY",
+       "zh": "外景 花园婚礼 日"
+      },
+      "shots": {
+       "en": [
+        "Plea: scene 2"
+       ],
+       "zh": [
+        "认罪：第 2 场"
+       ]
+      }
+     },
+     {
+      "id": "seg03",
+      "heading": {
+       "en": "INT. LUCA'S APARTMENT - NIGHT",
+       "zh": "内景 卢卡的公寓 夜"
+      },
+      "shots": {
+       "en": [
+        "Plea: scene 3"
+       ],
+       "zh": [
+        "认罪：第 3 场"
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "title": {
+     "en": "The Ring Returned",
+     "zh": "退回的戒指"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "heading": {
+       "en": "EXT. GARDEN WEDDING - DAY",
+       "zh": "外景 花园婚礼 日"
+      },
+      "shots": {
+       "en": [
+        "The Ring Returned: scene 1"
+       ],
+       "zh": [
+        "退回的戒指：第 1 场"
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "heading": {
+       "en": "INT. LUCA'S APARTMENT - DAY",
+       "zh": "内景 卢卡的公寓 日"
+      },
+      "shots": {
+       "en": [
+        "The Ring Returned: scene 2"
+       ],
+       "zh": [
+        "退回的戒指：第 2 场"
+       ]
+      }
+     },
+     {
+      "id": "seg03",
+      "heading": {
+       "en": "INT. COLE HOUSE - LIVING ROOM - NIGHT",
+       "zh": "内景 科尔家客厅 夜"
+      },
+      "shots": {
+       "en": [
+        "The Ring Returned: scene 3"
+       ],
+       "zh": [
+        "退回的戒指：第 3 场"
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "title": {
+     "en": "Cold Coffee",
+     "zh": "冷咖啡"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "heading": {
+       "en": "INT. LUCA'S APARTMENT - DAY",
+       "zh": "内景 卢卡的公寓 日"
+      },
+      "shots": {
+       "en": [
+        "Cold Coffee: scene 1"
+       ],
+       "zh": [
+        "冷咖啡：第 1 场"
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "heading": {
+       "en": "INT. COLE HOUSE - LIVING ROOM - DAY",
+       "zh": "内景 科尔家客厅 日"
+      },
+      "shots": {
+       "en": [
+        "Cold Coffee: scene 2"
+       ],
+       "zh": [
+        "冷咖啡：第 2 场"
+       ]
+      }
+     },
+     {
+      "id": "seg03",
+      "heading": {
+       "en": "EXT. JAIL STREET - NIGHT",
+       "zh": "外景 看守所外街道 夜"
+      },
+      "shots": {
+       "en": [
+        "Cold Coffee: scene 3"
+       ],
+       "zh": [
+        "冷咖啡：第 3 场"
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "title": {
+     "en": "The Hearing",
+     "zh": "听证"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "heading": {
+       "en": "INT. COLE HOUSE - LIVING ROOM - DAY",
+       "zh": "内景 科尔家客厅 日"
+      },
+      "shots": {
+       "en": [
+        "The Hearing: scene 1"
+       ],
+       "zh": [
+        "听证：第 1 场"
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "heading": {
+       "en": "EXT. JAIL STREET - DAY",
+       "zh": "外景 看守所外街道 日"
+      },
+      "shots": {
+       "en": [
+        "The Hearing: scene 2"
+       ],
+       "zh": [
+        "听证：第 2 场"
+       ]
+      }
+     },
+     {
+      "id": "seg03",
+      "heading": {
+       "en": "INT. COUNTY JAIL - FRONT DESK - NIGHT",
+       "zh": "内景 县看守所前台 夜"
+      },
+      "shots": {
+       "en": [
+        "The Hearing: scene 3"
+       ],
+       "zh": [
+        "听证：第 3 场"
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "title": {
+     "en": "Margaret's Offer",
+     "zh": "玛格丽特的条件"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "heading": {
+       "en": "EXT. JAIL STREET - DAY",
+       "zh": "外景 看守所外街道 日"
+      },
+      "shots": {
+       "en": [
+        "Margaret's Offer: scene 1"
+       ],
+       "zh": [
+        "玛格丽特的条件：第 1 场"
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "heading": {
+       "en": "INT. COUNTY JAIL - FRONT DESK - DAY",
+       "zh": "内景 县看守所前台 日"
+      },
+      "shots": {
+       "en": [
+        "Margaret's Offer: scene 2"
+       ],
+       "zh": [
+        "玛格丽特的条件：第 2 场"
+       ]
+      }
+     },
+     {
+      "id": "seg03",
+      "heading": {
+       "en": "INT. COUNTY JAIL - CELL - NIGHT",
+       "zh": "内景 县看守所牢房 夜"
+      },
+      "shots": {
+       "en": [
+        "Margaret's Offer: scene 3"
+       ],
+       "zh": [
+        "玛格丽特的条件：第 3 场"
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "title": {
+     "en": "Second Ceremony",
+     "zh": "第二次婚礼"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "heading": {
+       "en": "INT. COUNTY JAIL - FRONT DESK - DAY",
+       "zh": "内景 县看守所前台 日"
+      },
+      "shots": {
+       "en": [
+        "Second Ceremony: scene 1"
+       ],
+       "zh": [
+        "第二次婚礼：第 1 场"
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "heading": {
+       "en": "INT. COUNTY JAIL - CELL - DAY",
+       "zh": "内景 县看守所牢房 日"
+      },
+      "shots": {
+       "en": [
+        "Second Ceremony: scene 2"
+       ],
+       "zh": [
+        "第二次婚礼：第 2 场"
+       ]
+      }
+     },
+     {
+      "id": "seg03",
+      "heading": {
+       "en": "EXT. GARDEN WEDDING - NIGHT",
+       "zh": "外景 花园婚礼 夜"
+      },
+      "shots": {
+       "en": [
+        "Second Ceremony: scene 3"
+       ],
+       "zh": [
+        "第二次婚礼：第 3 场"
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "title": {
+     "en": "House Arrest",
+     "zh": "软禁"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "heading": {
+       "en": "INT. COUNTY JAIL - CELL - DAY",
+       "zh": "内景 县看守所牢房 日"
+      },
+      "shots": {
+       "en": [
+        "House Arrest: scene 1"
+       ],
+       "zh": [
+        "软禁：第 1 场"
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "heading": {
+       "en": "EXT. GARDEN WEDDING - DAY",
+       "zh": "外景 花园婚礼 日"
+      },
+      "shots": {
+       "en": [
+        "House Arrest: scene 2"
+       ],
+       "zh": [
+        "软禁：第 2 场"
+       ]
+      }
+     },
+     {
+      "id": "seg03",
+      "heading": {
+       "en": "INT. LUCA'S APARTMENT - NIGHT",
+       "zh": "内景 卢卡的公寓 夜"
+      },
+      "shots": {
+       "en": [
+        "House Arrest: scene 3"
+       ],
+       "zh": [
+        "软禁：第 3 场"
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "title": {
+     "en": "The Alibi",
+     "zh": "不在场证明"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "heading": {
+       "en": "EXT. GARDEN WEDDING - DAY",
+       "zh": "外景 花园婚礼 日"
+      },
+      "shots": {
+       "en": [
+        "The Alibi: scene 1"
+       ],
+       "zh": [
+        "不在场证明：第 1 场"
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "heading": {
+       "en": "INT. LUCA'S APARTMENT - DAY",
+       "zh": "内景 卢卡的公寓 日"
+      },
+      "shots": {
+       "en": [
+        "The Alibi: scene 2"
+       ],
+       "zh": [
+        "不在场证明：第 2 场"
+       ]
+      }
+     },
+     {
+      "id": "seg03",
+      "heading": {
+       "en": "INT. COLE HOUSE - LIVING ROOM - NIGHT",
+       "zh": "内景 科尔家客厅 夜"
+      },
+      "shots": {
+       "en": [
+        "The Alibi: scene 3"
+       ],
+       "zh": [
+        "不在场证明：第 3 场"
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "title": {
+     "en": "Walter Knows",
+     "zh": "沃尔特知道了"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "heading": {
+       "en": "INT. LUCA'S APARTMENT - DAY",
+       "zh": "内景 卢卡的公寓 日"
+      },
+      "shots": {
+       "en": [
+        "Walter Knows: scene 1"
+       ],
+       "zh": [
+        "沃尔特知道了：第 1 场"
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "heading": {
+       "en": "INT. COLE HOUSE - LIVING ROOM - DAY",
+       "zh": "内景 科尔家客厅 日"
+      },
+      "shots": {
+       "en": [
+        "Walter Knows: scene 2"
+       ],
+       "zh": [
+        "沃尔特知道了：第 2 场"
+       ]
+      }
+     },
+     {
+      "id": "seg03",
+      "heading": {
+       "en": "EXT. JAIL STREET - NIGHT",
+       "zh": "外景 看守所外街道 夜"
+      },
+      "shots": {
+       "en": [
+        "Walter Knows: scene 3"
+       ],
+       "zh": [
+        "沃尔特知道了：第 3 场"
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "title": {
+     "en": "Parole",
+     "zh": "假释"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "heading": {
+       "en": "INT. COLE HOUSE - LIVING ROOM - DAY",
+       "zh": "内景 科尔家客厅 日"
+      },
+      "shots": {
+       "en": [
+        "Parole: scene 1"
+       ],
+       "zh": [
+        "假释：第 1 场"
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "heading": {
+       "en": "EXT. JAIL STREET - DAY",
+       "zh": "外景 看守所外街道 日"
+      },
+      "shots": {
+       "en": [
+        "Parole: scene 2"
+       ],
+       "zh": [
+        "假释：第 2 场"
+       ]
+      }
+     },
+     {
+      "id": "seg03",
+      "heading": {
+       "en": "INT. COUNTY JAIL - FRONT DESK - NIGHT",
+       "zh": "内景 县看守所前台 夜"
+      },
+      "shots": {
+       "en": [
+        "Parole: scene 3"
+       ],
+       "zh": [
+        "假释：第 3 场"
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "title": {
+     "en": "The Toast",
+     "zh": "祝酒"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "heading": {
+       "en": "EXT. JAIL STREET - DAY",
+       "zh": "外景 看守所外街道 日"
+      },
+      "shots": {
+       "en": [
+        "The Toast: scene 1"
+       ],
+       "zh": [
+        "祝酒：第 1 场"
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "heading": {
+       "en": "INT. COUNTY JAIL - FRONT DESK - DAY",
+       "zh": "内景 县看守所前台 日"
+      },
+      "shots": {
+       "en": [
+        "The Toast: scene 2"
+       ],
+       "zh": [
+        "祝酒：第 2 场"
+       ]
+      }
+     },
+     {
+      "id": "seg03",
+      "heading": {
+       "en": "INT. COUNTY JAIL - CELL - NIGHT",
+       "zh": "内景 县看守所牢房 夜"
+      },
+      "shots": {
+       "en": [
+        "The Toast: scene 3"
+       ],
+       "zh": [
+        "祝酒：第 3 场"
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "title": {
+     "en": "Two Keys",
+     "zh": "两把钥匙"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "heading": {
+       "en": "INT. COUNTY JAIL - FRONT DESK - DAY",
+       "zh": "内景 县看守所前台 日"
+      },
+      "shots": {
+       "en": [
+        "Two Keys: scene 1"
+       ],
+       "zh": [
+        "两把钥匙：第 1 场"
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "heading": {
+       "en": "INT. COUNTY JAIL - CELL - DAY",
+       "zh": "内景 县看守所牢房 日"
+      },
+      "shots": {
+       "en": [
+        "Two Keys: scene 2"
+       ],
+       "zh": [
+        "两把钥匙：第 2 场"
+       ]
+      }
+     },
+     {
+      "id": "seg03",
+      "heading": {
+       "en": "EXT. GARDEN WEDDING - NIGHT",
+       "zh": "外景 花园婚礼 夜"
+      },
+      "shots": {
+       "en": [
+        "Two Keys: scene 3"
+       ],
+       "zh": [
+        "两把钥匙：第 3 场"
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "title": {
+     "en": "Open Court",
+     "zh": "公开审理"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "heading": {
+       "en": "INT. COUNTY JAIL - CELL - DAY",
+       "zh": "内景 县看守所牢房 日"
+      },
+      "shots": {
+       "en": [
+        "Open Court: scene 1"
+       ],
+       "zh": [
+        "公开审理：第 1 场"
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "heading": {
+       "en": "EXT. GARDEN WEDDING - DAY",
+       "zh": "外景 花园婚礼 日"
+      },
+      "shots": {
+       "en": [
+        "Open Court: scene 2"
+       ],
+       "zh": [
+        "公开审理：第 2 场"
+       ]
+      }
+     },
+     {
+      "id": "seg03",
+      "heading": {
+       "en": "INT. LUCA'S APARTMENT - NIGHT",
+       "zh": "内景 卢卡的公寓 夜"
+      },
+      "shots": {
+       "en": [
+        "Open Court: scene 3"
+       ],
+       "zh": [
+        "公开审理：第 3 场"
+       ]
+      }
+     }
+    ]
+   },
+   {
+    "title": {
+     "en": "Verdict",
      "zh": "判决"
     },
     "segments": [
      {
       "id": "seg01",
+      "heading": {
+       "en": "EXT. GARDEN WEDDING - DAY",
+       "zh": "外景 花园婚礼 日"
+      },
       "shots": {
        "en": [
-        "Ivy enters the yard",
-        "Luca: You're late.",
-        "Ivy hides the bail papers",
-        "Close on the bail papers",
-        "Luca turns away",
-        "Ivy alone"
+        "Verdict: scene 1"
        ],
        "zh": [
-        "艾薇走进院子",
-        "卢卡：你来晚了。",
-        "艾薇藏起保释文件",
-        "特写：保释文件",
-        "卢卡转身离开",
-        "艾薇独自站着"
+        "判决：第 1 场"
        ]
-      },
-      "heading": {
-       "en": "INT. HOLDING CELL - DAY",
-       "zh": "内景 拘留室 日"
       }
      },
      {
       "id": "seg02",
+      "heading": {
+       "en": "INT. LUCA'S APARTMENT - DAY",
+       "zh": "内景 卢卡的公寓 日"
+      },
       "shots": {
        "en": [
-        "The family at dinner",
-        "Mother: Eat.",
-        "Ivy watches Luca",
-        "Luca pushes the bowl away"
+        "Verdict: scene 2"
        ],
        "zh": [
-        "一家人吃晚饭",
-        "母亲：吃饭。",
-        "艾薇看着卢卡",
-        "卢卡推开饭碗"
+        "判决：第 2 场"
        ]
-      },
-      "heading": {
-       "en": "EXT. GARDEN WEDDING - DAY",
-       "zh": "外景 花园婚礼 日"
       }
      },
      {
       "id": "seg03",
+      "heading": {
+       "en": "INT. COLE HOUSE - LIVING ROOM - NIGHT",
+       "zh": "内景 科尔家客厅 夜"
+      },
       "shots": {
        "en": [
-        "Night, the yard",
-        "Ivy reads the bail papers",
-        "Luca at the window",
-        "Their eyes meet",
-        "Ivy burns the bail papers"
+        "Verdict: scene 3"
        ],
        "zh": [
-        "夜，院子里",
-        "艾薇看着保释文件",
-        "卢卡站在窗边",
-        "两人对视",
-        "艾薇烧掉保释文件"
+        "判决：第 3 场"
        ]
-      },
+      }
+     }
+    ]
+   },
+   {
+    "title": {
+     "en": "Bride on Bail",
+     "zh": "保释新娘"
+    },
+    "segments": [
+     {
+      "id": "seg01",
       "heading": {
-       "en": "EXT. GARDEN WEDDING - NIGHT",
-       "zh": "外景 花园婚礼 夜"
+       "en": "INT. LUCA'S APARTMENT - DAY",
+       "zh": "内景 卢卡的公寓 日"
+      },
+      "shots": {
+       "en": [
+        "Bride on Bail: scene 1"
+       ],
+       "zh": [
+        "保释新娘：第 1 场"
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "heading": {
+       "en": "INT. COLE HOUSE - LIVING ROOM - DAY",
+       "zh": "内景 科尔家客厅 日"
+      },
+      "shots": {
+       "en": [
+        "Bride on Bail: scene 2"
+       ],
+       "zh": [
+        "保释新娘：第 2 场"
+       ]
+      }
+     },
+     {
+      "id": "seg03",
+      "heading": {
+       "en": "EXT. JAIL STREET - NIGHT",
+       "zh": "外景 看守所外街道 夜"
+      },
+      "shots": {
+       "en": [
+        "Bride on Bail: scene 3"
+       ],
+       "zh": [
+        "保释新娘：第 3 场"
+       ]
       }
      }
     ]
    }
   ],
   "redLine": {
-   "en": "instructions someone could follow to make a weapon (EP003, scene 2)",
-   "zh": "可以照着做出武器的步骤（第 3 集第 2 场）"
-  }
+   "episode": "EP007",
+   "line": {
+    "en": "EP007 scene 4, a guard strikes Luca in the cell on screen",
+    "zh": "第 7 集第 4 场，狱警在牢房里当面殴打卢卡"
+   }
+  },
+  "parallel": 7
  },
  "paper-vows": {
   "title": {

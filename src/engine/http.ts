@@ -183,7 +183,7 @@ export function app(): Hono {
         title: story[zh ? "zh" : "en"].title,
         language: zh ? "zh" : "en",
         format: "9:16, 480p",
-        parallel: 3,
+        parallel: story.en.parallel ?? 3,
         perComputer: 1,
         notes: `${zh ? "类型" : "Genres"}: ${story[zh ? "zh" : "en"].genres.join(zh ? "、" : ", ")}`,
         length: "60",

@@ -437,31 +437,26 @@ describe("a drama in replay", () => {
 
   // Replay's other sample dramas tell their own names: Bride on Bail's setup stops on its screenplay's red line, as
   // drama-cli refuses the bible for one, and goes on with its own leads once the maker has decided.
-  it("plays another sample drama with its own names, stopping on its red line", async () => {
+  it("plays another sample drama with its own names, started as long ago as its data says", async () => {
     const { run } = await import("./db.ts");
     run("update dramas set status = 'done'");
     fleet.stops = "ask";
     const { id } = await call<{ id: string }>("POST", "/api/dramas/sample", { language: "en", sample: "bride-on-bail" });
     const drama = await call<DramaView>("GET", `/api/dramas/${id}`);
     expect(drama.title).toBe("Bride on Bail");
-    // Started as long ago as its data says (50 minutes): its start, messages and questions are stamped then.
+    // Started 2 minutes ago (fixtures/replay/dramas.json): its start, messages and questions are stamped then.
     const { get: row } = await import("./db.ts");
     const ago = (at: string) => (Date.now() - Date.parse(at)) / 60_000;
-    expect(ago(row<{ created_at: string }>("select created_at from dramas where id = ?", id)!.created_at)).toBeGreaterThan(49);
+    expect(ago(row<{ created_at: string }>("select created_at from dramas where id = ?", id)!.created_at)).toBeGreaterThan(1.9);
     await acceptRewrite(id);
     const age = await until("the setup question", openReview(id, (item) => item.kind === "question"));
     await call("POST", `/api/reviews/${age.id}/decision`, { items: [], words: "He is 32." });
-    const stop = await until("the red line", openReview(id, (item) => item.kind === "question" && item.id !== age.id));
-    expect(ago(row<{ created_at: string }>("select created_at from reviews where id = ?", stop.id)!.created_at)).toBeGreaterThan(49);
-    expect(ago(row<{ at: string }>("select max(m.at) at from messages m join sessions s on s.id = m.session_id where s.drama_id = ?", id)!.at)).toBeGreaterThan(49);
-    const view = await call<ReviewView>("GET", `/api/reviews/${stop.id}`);
-    expect(view.refusals.map((refusal) => refusal.code)).toEqual(["RedLine"]);
-    expect(view.question).toContain("red line");
-    await call("POST", `/api/reviews/${stop.id}/decision`, { items: [], words: "Write it without those steps." });
     const looks = await until("the leads' looks", openReview(id, (item) => item.kind === "looks"));
+    expect(ago(row<{ created_at: string }>("select created_at from reviews where id = ?", age.id)!.created_at)).toBeGreaterThan(1.9);
+    expect(ago(row<{ at: string }>("select max(m.at) at from messages m join sessions s on s.id = m.session_id where s.drama_id = ?", id)!.at)).toBeGreaterThan(1.9);
     expect((await call<ReviewView>("GET", `/api/reviews/${looks.id}`)).question).toContain("Ivy Bell and Luca Moreno");
     const { projectView } = await import("./status.ts");
-    expect(Object.values(projectView(id).names?.characters ?? {}).map((character) => character.name)).toEqual(["Ivy Bell", "Luca Moreno"]);
+    expect(Object.values(projectView(id).names?.characters ?? {}).map((character) => character.name)).toEqual(["Ivy Bell", "Luca Moreno", "Ethan Cole", "Margaret Cole", "Walter Cole", "Sgt. Ray Dunn", "Reverend Hale", "Tess Park"]);
   }, 30_000);
 
   it("refuses a sample drama it doesn't have", async () => {
