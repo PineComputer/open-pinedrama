@@ -11,6 +11,7 @@ import { navigate } from "../router.tsx";
 import * as RadioGroup from "@radix-ui/react-radio-group";
 import { Button } from "../components/Button.tsx";
 import { Dropzone } from "../components/Dropzone.tsx";
+import { Segmented } from "../components/Segmented.tsx";
 import { Icon, type IconName } from "../icons.tsx";
 
 /** Files whose text the page reads as it is; Word and PDF files are read with a parser (extract.ts). */
@@ -83,13 +84,12 @@ export function ScreenplayStructure({ structure, onChoose }: { structure: { lang
   return (
     <div className="field">
       <span className="label">{t("new.structureUnknown")}</span>
-      <div className="options">
-        {(["en", "zh"] as const).map((value) => (
-          <button key={value} aria-pressed={structure.language === value} className={structure.language === value ? "on" : ""} onClick={() => onChoose(value)}>
-            {t(`language.${value}`)}
-          </button>
-        ))}
-      </div>
+      <Segmented<ScreenplayLanguage | "">
+        label={t("new.structureUnknown")}
+        value={structure.language ?? ""}
+        options={(["en", "zh"] as const).map((value) => ({ value, label: t(`language.${value}`) }))}
+        onChange={(value) => value && onChoose(value)}
+      />
       <span className="quiet small">{t("new.structureUnknownHint")}</span>
     </div>
   );
@@ -264,23 +264,11 @@ export function NewDrama() {
               </div>
               <div className="field">
                 <span className="label">{t("new.format")}</span>
-                <div className="options">
-                  {["9:16, 480p", "9:16, 720p"].map((value) => (
-                    <button key={value} aria-pressed={format === value} className={format === value ? "on" : ""} onClick={() => setFormat(value)}>
-                      {value}
-                    </button>
-                  ))}
-                </div>
+                <Segmented label={t("new.format")} value={format} options={["9:16, 480p", "9:16, 720p"].map((value) => ({ value, label: value }))} onChange={setFormat} />
               </div>
               <div className="field">
                 <span className="label">{t("new.length")}</span>
-                <div className="options">
-                  {(["60", "90", "120"] as const).map((value) => (
-                    <button key={value} aria-pressed={length === value} className={length === value ? "on" : ""} onClick={() => setLength(value)}>
-                      {t(`new.length${value}`)}
-                    </button>
-                  ))}
-                </div>
+                <Segmented label={t("new.length")} value={length} options={(["60", "90", "120"] as const).map((value) => ({ value, label: t(`new.length${value}`) }))} onChange={setLength} />
               </div>
               <ReviewingChoice value={reviewing} onChange={setReviewing} />
               <div className="pair">
@@ -292,13 +280,7 @@ export function NewDrama() {
                 </div>
                 <div className="field">
                   <span className="label">{t("new.perComputer")}</span>
-                  <div className="options">
-                    {[1, 2, 3].map((n) => (
-                      <button key={n} aria-pressed={perComputer === n} className={perComputer === n ? "on" : ""} onClick={() => setPerComputer(n)}>
-                        {n}
-                      </button>
-                    ))}
-                  </div>
+                  <Segmented label={t("new.perComputer")} value={String(perComputer)} options={["1", "2", "3"].map((value) => ({ value, label: value }))} onChange={(value) => setPerComputer(Number(value))} />
                 </div>
               </div>
               <div className="field">
