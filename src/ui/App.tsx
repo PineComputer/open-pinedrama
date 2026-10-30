@@ -39,6 +39,7 @@ const Gallery = import.meta.env.DEV || import.meta.env.VITE_GALLERY === "1" ? la
 
 const TABS: Record<string, TKey> = {
   script: "step.script",
+  analyzing: "step.script",
   story: "step.story",
   cut: "step.cut",
   canvas: "surface.canvas",

@@ -37,7 +37,7 @@ function markOf(row: EpisodeRow): Mark {
 /** The step a drama's page is on: before there are episodes, its board is the story being made. */
 export function stepOf(drama: DramaView, tab: string): Step | undefined {
   const settingUp = drama.status === "setup" || (drama.status === "stopped" && !drama.episodeRows.length);
-  if (tab === "script") return "script";
+  if (tab === "script" || tab === "analyzing") return "script";
   if (tab === "story" || (tab === "board" && settingUp)) return "story";
   if (tab === "cut") return "cut";
   return tab === "board" || tab === "episode" ? "episodes" : undefined;

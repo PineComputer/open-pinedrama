@@ -698,3 +698,13 @@ a.ds-tag:hover { background: var(--hover); }
 .ds-faccept .acts { display: flex; gap: 8px; justify-content: flex-end; }
 .ds-faccept .reason { color: var(--text-secondary); font-size: 12px; text-align: right; }
 @media (max-width: 900px) { .ds-fpanes { grid-template-columns: 1fr; } }
+
+/* Analyzing (P5.3): the process beside the Fountain so far, as the pro direction lays them out. */
+.ds-analyzing .ds-greet { display: grid; gap: 4px; justify-items: start; }
+.ds-analyzing .ds-greet .ds-btn { margin-top: 12px; }
+.ds-analyzing .kick { font-size: 11.5px; font-weight: 600; color: var(--text-secondary); }
+.ds-analyzing .grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+.ds-analyzing .ds-panel { justify-items: stretch; min-width: 0; }
+.ds-analyzing .hint { margin: 0; color: var(--text-secondary); font-size: 12px; }
+.ds-analyzing .peek { margin: 0; max-height: 60vh; overflow: auto; white-space: pre-wrap; font: 12.5px/1.6 var(--font-mono); color: var(--text-primary); }
+@media (max-width: 900px) { .ds-analyzing .grid { grid-template-columns: 1fr; } }

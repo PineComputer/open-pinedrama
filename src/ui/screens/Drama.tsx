@@ -6,6 +6,7 @@ import { EmptyState } from "../components/EmptyState.tsx";
 import { usePath } from "../router.tsx";
 import { Icon } from "../icons.tsx";
 import { DramaBar, stillStopping } from "../shell/TopBar.tsx";
+import { Analyzing } from "./Analyzing.tsx";
 import { Board, SetupPanel } from "./Board.tsx";
 import { Canvas } from "./Canvas.tsx";
 import { Cast } from "./Cast.tsx";
@@ -86,6 +87,7 @@ export function Drama({ drama, tab, episode }: { drama: DramaView; tab: string; 
       {tab === "board" && (settingUp ? <SetupPanel drama={drama} /> : <Board drama={drama} />)}
       {tab === "episode" && episode && <Episode key={`${id}/${episode}`} dramaId={id} code={episode} />}
       {tab === "script" && <Script dramaId={id} />}
+      {tab === "analyzing" && <Analyzing dramaId={id} />}
       {tab === "story" && (settingUp ? <SetupPanel drama={drama} /> : <Cast dramaId={id} />)}
       {tab === "cut" && <Delivery dramaId={id} />}
       {tab === "canvas" && <Canvas drama={drama} />}

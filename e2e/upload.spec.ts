@@ -24,5 +24,7 @@ test("a maker uploads one screenplay, chooses a preset and starts", async ({ pag
   expect(await newProblems(page)).toEqual([]);
 
   await next.getByRole("button", { name: "Start" }).click();
-  await expect(page).toHaveURL(/\/d\/[^/]+/);
+  await expect(page).toHaveURL(/\/d\/[^/]+\/analyzing$/);
+  await expect(page.getByRole("heading", { name: /Analyzing your script|Your Fountain is ready/ })).toBeVisible();
+  expect(await newProblems(page)).toEqual([]);
 });
