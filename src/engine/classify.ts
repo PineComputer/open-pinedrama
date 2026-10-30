@@ -52,9 +52,14 @@ const RULES: [RegExp, (m: RegExpMatchArray) => Hints][] = [
     (m) => ({ kind: "look", subject: m[1], look: m[2], version: m[3] }),
   ],
   [new RegExp(String.raw`assets/characters/([^/]+)/${VER}/[^/]+${IMAGE}`, "i"), (m) => ({ kind: "look", subject: m[1], look: "base", version: m[2] })],
-  // A place at another time of day (Night) is drawn from its plate and kept under times/.
-  [new RegExp(String.raw`assets/scenes/([^/]+)/times/([^/]+)/${VER}/[^/]+${IMAGE}`, "i"), (m) => ({ kind: "location", subject: m[1], look: m[2], version: m[3] })],
-  [new RegExp(String.raw`assets/scenes/([^/]+)/(?:[^/]+/)?${VER}/[^/]+${IMAGE}`, "i"), (m) => ({ kind: "location", subject: m[1], version: m[2] })],
+  // A place's plate is drama-cli's sheet of its views (assets/scenes/<id>/vN); each view (floor-plan, front, back,
+  // left-side, right-side: drama-cli's LOCATION_STEPS) is a stage of its own beside it, <id>/<view>/vN, kept here as
+  // the file's style. Another time of day (Night) is drawn from the plate under times/<time>, view by view the same way.
+  [
+    new RegExp(String.raw`assets/scenes/([^/]+)/times/([^/]+)/(?:([^/]+)/)?${VER}/[^/]+${IMAGE}`, "i"),
+    (m) => ({ kind: "location", subject: m[1], look: m[2], ...(m[3] ? { style: m[3] } : {}), version: m[4] }),
+  ],
+  [new RegExp(String.raw`assets/scenes/([^/]+)/(?:([^/]+)/)?${VER}/[^/]+${IMAGE}`, "i"), (m) => ({ kind: "location", subject: m[1], ...(m[2] ? { style: m[2] } : {}), version: m[3] })],
   [new RegExp(String.raw`assets/props/([^/]+)/${VER}/[^/]+${IMAGE}`, "i"), (m) => ({ kind: "prop", subject: m[1], version: m[2] })],
   [new RegExp(String.raw`(?:^|/)bible/${VER}/bible\.(?:md|json)$`, "i"), (m) => ({ kind: "bible", version: m[1] })],
   // A screenplay version as drama-cli's screenplay validate records it, and a rewrite's review beside it

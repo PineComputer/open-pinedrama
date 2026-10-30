@@ -4,7 +4,7 @@
 // bible's. Decisions are made in the review room: a card waiting for one links there.
 import { useState } from "react";
 import type { Names } from "../../shared/names.ts";
-import type { CastCard, DramaView, Receipt } from "../../shared/types.ts";
+import type { CastCard, DramaView, FileItem, Receipt } from "../../shared/types.ts";
 import { useResource } from "../api.ts";
 import { type Status, StatusChip } from "../components/StatusChip.tsx";
 import { Tabs as TabsPrimitive } from "radix-ui";
@@ -15,7 +15,7 @@ import { errorText, subjectLabel, useNames } from "../labels.ts";
 import { Link } from "../router.tsx";
 import { buttonVariants } from "@/components/ui/button";
 
-type Shelf = "bible" | "cast" | "world";
+type Shelf = "bible" | "cast" | "scenes" | "props";
 
 /** Where a version stands, by what the maker decided on the review that showed it. */
 function standing(receipt: Receipt | undefined): Status | undefined {
@@ -26,8 +26,8 @@ function standing(receipt: Receipt | undefined): Status | undefined {
   return review.verdict === "revise" ? "back" : undefined;
 }
 
-/** One look, place or prop: its newest version's picture, where it stands, and the versions before it. */
-function Card({ card, look, names, dramaId, wide }: { card: CastCard; look: CastCard["looks"][number]; names: Names | null; dramaId: string; wide: boolean }) {
+/** One character's look: its newest version's picture, where it stands, and the versions before it. */
+function Card({ card, look, names, dramaId }: { card: CastCard; look: CastCard["looks"][number]; names: Names | null; dramaId: string }) {
   const { t } = useT();
   const [index, setIndex] = useState(0);
   const shown = look.versions[Math.min(index, look.versions.length - 1)];
@@ -35,10 +35,10 @@ function Card({ card, look, names, dramaId, wide }: { card: CastCard; look: Cast
   if (!file) return null;
   const status = standing(shown);
   const name = subjectLabel(names, look.look && look.look !== "base" ? `${card.subject}/${look.look}` : card.subject, card.kind);
-  const aliases = card.kind === "look" ? (names?.characters[card.subject]?.aliases ?? []) : [];
-  const kind = card.kind === "look" ? (look.look === "base" || !look.look ? t("cast.base") : look.look) : card.kind === "location" ? t("cast.plate") : t("cast.keyProp");
+  const aliases = names?.characters[card.subject]?.aliases ?? [];
+  const kind = look.look === "base" || !look.look ? t("cast.base") : look.look;
   return (
-    <article className={wide ? "ds-castcard" : "ds-placecard"} aria-label={name}>
+    <article className="ds-castcard" aria-label={name}>
       <a className="pic" href={file.url} target="_blank" rel="noreferrer">
         <img src={file.url} alt="" loading="lazy" />
         {status && (
@@ -95,6 +95,86 @@ function Card({ card, look, names, dramaId, wide }: { card: CastCard; look: Cast
   );
 }
 
+/** The newest version of an entry, the one accepted last, and the picture each shows: the plate's sheet, not one of its views. */
+function versionsOf(entry: CastCard["looks"][number] | undefined) {
+  const sheet = (receipt: Receipt | undefined) => receipt?.files.find((file) => !file.style) ?? receipt?.files[0];
+  const newest = entry?.versions[0];
+  const accepted = entry?.versions.find((version) => standing(version) === "accepted");
+  return { newest, file: sheet(newest), accepted: sheet(accepted)?.version };
+}
+
+/**
+ * A place as drama-cli scenes draws it, or a key prop as drama-cli props does (the design's .placecard): its plate or
+ * picture, where its newest version stands, the bible's name and description, its views and its times of day.
+ */
+function PlaceCard({ card, names, dramaId }: { card: CastCard; names: Names | null; dramaId: string }) {
+  const { t } = useT();
+  const place = card.kind === "location";
+  const plate = card.looks.find((entry) => !entry.look);
+  const { newest, file, accepted } = versionsOf(plate ?? card.looks[0]);
+  if (!file) return null;
+  const status = standing(newest);
+  const name = subjectLabel(names, card.subject, card.kind);
+  const description = (place ? names?.descriptions.locations : names?.descriptions.props)?.[card.subject];
+  // Each view's newest picture (drama-cli's location steps), and each other time of day's newest sheet.
+  const views = new Map<string, FileItem>();
+  for (const version of plate?.versions ?? []) for (const view of version.files) if (view.style && !views.has(view.style)) views.set(view.style, view);
+  const times = card.looks.filter((entry) => entry.look).map((entry) => ({ time: entry.look, file: versionsOf(entry).file }));
+  return (
+    <article className="placecard" aria-label={name}>
+      <a className="pic" href={file.url} target="_blank" rel="noreferrer" style={{ display: "block" }}>
+        <img src={file.url} alt="" loading="lazy" />
+        {status && status !== "accepted" && <StatusChip status={status} />}
+      </a>
+      <div className="ctxt">
+        <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
+          <b className="grow">{name}</b>
+          <span className="mono subtle" style={{ fontSize: 11 }}>
+            {file.version}
+          </span>
+        </div>
+        <small className="muted">{[place ? t("cast.plate") : t("cast.keyProp"), accepted && accepted !== file.version ? t("cast.acceptedVersion", { v: accepted }) : ""].filter(Boolean).join(" · ")}</small>
+        {description && <p className="desc">{description}</p>}
+        {views.size > 0 && (
+          <div className="aka">
+            <span className="muted">{t("cast.views")}</span>
+            {[...views].map(([view, picture]) => (
+              <a key={view} className="tag" href={picture.url} target="_blank" rel="noreferrer">
+                {view.replace(/-/g, " ")}
+              </a>
+            ))}
+          </div>
+        )}
+        {times.length > 0 && (
+          <div className="aka">
+            <span className="muted">{t("cast.times")}</span>
+            {times.map(({ time, file: sheet }) => (
+              <a key={time} className="tag" href={sheet?.url} target="_blank" rel="noreferrer">
+                {[time, sheet?.version].filter(Boolean).join(" · ")}
+              </a>
+            ))}
+          </div>
+        )}
+        {card.episodes.length > 0 && (
+          <div className="aka">
+            <span className="muted">{t("cast.in")}</span>
+            {card.episodes.map((code) => (
+              <Link key={code} to={`/d/${dramaId}/e/${code}`} className="tag">
+                {code}
+              </Link>
+            ))}
+          </div>
+        )}
+        {newest?.review && status === "you" && (
+          <Link to={`/r/${newest.review.reviewId}`} className="btn primary sm">
+            {t("cast.review")}
+          </Link>
+        )}
+      </div>
+    </article>
+  );
+}
+
 export function Cast({ dramaId, compact = false }: { dramaId: string; compact?: boolean }) {
   const { t } = useT();
   const { data, error } = useResource<CastCard[]>(`/api/dramas/${dramaId}/cast`, [`drama:${dramaId}`]);
@@ -104,10 +184,11 @@ export function Cast({ dramaId, compact = false }: { dramaId: string; compact?: 
   // The Story opens on the bible, as the pro direction's does.
   const [shelf, setShelf] = useState<Shelf>("bible");
   const characters = (data ?? []).filter((card) => card.kind === "look");
-  const world = (data ?? []).filter((card) => card.kind !== "look");
+  const places = (data ?? []).filter((card) => card.kind === "location");
+  const props = (data ?? []).filter((card) => card.kind === "prop");
   const castGrid = (
     <div className="ds-castgrid">
-      {characters.flatMap((card) => card.looks.map((look) => <Card key={`${card.subject}/${look.look}`} card={card} look={look} names={names} dramaId={dramaId} wide />))}
+      {characters.flatMap((card) => card.looks.map((look) => <Card key={`${card.subject}/${look.look}`} card={card} look={look} names={names} dramaId={dramaId} />))}
     </div>
   );
   if (!data) return <p className={error === undefined ? "quiet" : "error"}>{error === undefined ? t("loading") : errorText(error, t)}</p>;
@@ -127,7 +208,8 @@ export function Cast({ dramaId, compact = false }: { dramaId: string; compact?: 
   const tabs: [Shelf, string, number | undefined][] = [
     ["bible", t("cast.bible"), undefined],
     ["cast", t("cast.cast"), characters.length],
-    ["world", t("cast.world"), world.length],
+    ["scenes", t("cast.scenes"), places.length],
+    ["props", t("cast.props"), props.length],
   ];
   // The design's Story (design/screens.js, Story): underlined tabs with the bible's state at their end, then the shelf.
   return (
@@ -215,11 +297,16 @@ export function Cast({ dramaId, compact = false }: { dramaId: string; compact?: 
         )}
       </TabsPrimitive.Content>
       <TabsPrimitive.Content value="cast">{castGrid}</TabsPrimitive.Content>
-      <TabsPrimitive.Content value="world">
-        <div className="ds-worldgrid">
-          {world.flatMap((card) => card.looks.map((look) => <Card key={`${card.kind}:${card.subject}/${look.look}`} card={card} look={look} names={names} dramaId={dramaId} wide={false} />))}
-        </div>
-      </TabsPrimitive.Content>
+      {/* drama-cli's own two stages, as yurun decided: scenes (assets/scenes/<id>) and props (assets/props/<id>). */}
+      {(["scenes", "props"] as const).map((shelf) => (
+        <TabsPrimitive.Content key={shelf} value={shelf}>
+          <div className="worldgrid">
+            {(shelf === "scenes" ? places : props).map((card) => (
+              <PlaceCard key={card.subject} card={card} names={names} dramaId={dramaId} />
+            ))}
+          </div>
+        </TabsPrimitive.Content>
+      ))}
     </TabsPrimitive.Root>
   );
 }

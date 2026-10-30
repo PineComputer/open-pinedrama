@@ -60,7 +60,8 @@ describe("classify", () => {
   });
 
   it("reads locations with a view folder, props, the bible and breakdowns", () => {
-    expect(classify("assets/scenes/office/front/v1/image-1.png")).toMatchObject({ kind: "location", subject: "office" });
+    expect(classify("assets/scenes/office/front/v1/image-1.png")).toMatchObject({ kind: "location", subject: "office", style: "front", version: "v1" });
+    expect(classify("assets/scenes/office/times/Night/left-side/v2/image-1.png")).toMatchObject({ kind: "location", subject: "office", look: "Night", style: "left-side", version: "v2" });
     expect(classify("assets/props/letter/v1/image-1.webp")).toMatchObject({ kind: "prop", subject: "letter" });
     expect(classify("bible/v3/bible.md")).toMatchObject({ kind: "bible", version: "v3" });
     expect(classify("episodes/EP001/breakdown/v2/breakdown.md")).toMatchObject({ kind: "breakdown", episode: "EP001" });
@@ -76,6 +77,7 @@ describe("classify", () => {
   it("reads what the skill added: a place at night, first frames, subtitles, and the script beside a breakdown", () => {
     expect(classify("drama/assets/scenes/office/times/Night/v2/image-1.png")).toMatchObject({ kind: "location", subject: "office", look: "Night", version: "v2" });
     expect(classify("drama/assets/scenes/office/v1/image-1.png")).not.toHaveProperty("look");
+    expect(classify("drama/assets/scenes/office/v1/image-1.png")).not.toHaveProperty("style");
     expect(classify("drama/episodes/EP004/first_frame_reference/seg02/v1/image-1.jpg")).toMatchObject({ kind: "frame", episode: "EP004", segment: "seg02", version: "v1" });
     expect(classify("drama/episodes/EP004/asr_align/v1/cut.srt")).toMatchObject({ kind: "subtitles", episode: "EP004", version: "v1" });
     expect(classify("drama/episodes/EP004/breakdown/v1/script.md")).toEqual({ kind: "other" });

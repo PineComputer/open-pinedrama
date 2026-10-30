@@ -18,6 +18,8 @@ export interface Names {
   beats: string[];
   /** Each episode's summary, by its id, where the bible gives one. */
   summaries: Record<string, string>;
+  /** Each place's and key prop's description, by its id, where the bible gives one (bible.py's Location and Prop). */
+  descriptions: { locations: Record<string, string>; props: Record<string, string> };
 }
 
 export class NamesError extends Error {
@@ -54,6 +56,9 @@ function byId<T>(value: unknown, field: string, read: (entry: Raw, at: string) =
   );
 }
 
+/** The entries a field gives, without those it leaves out. */
+const given = (entries: Record<string, string | undefined>) => Object.fromEntries(Object.entries(entries).filter((pair): pair is [string, string] => pair[1] !== undefined));
+
 export function parseBibleNames(bible: unknown): Names {
   const raw = object(bible, "");
   return {
@@ -68,9 +73,11 @@ export function parseBibleNames(bible: unknown): Names {
     episodes: byId(raw.episodes, "episodes", (entry, at) => text(entry.title, `${at}.title`)),
     logline: raw.logline === undefined ? undefined : text(raw.logline, "logline"),
     beats: raw.beats === undefined ? [] : list(raw.beats, "beats").map((beat, n) => text(object(beat, `beats.${n}`).event, `beats.${n}.event`)),
-    summaries: Object.fromEntries(
-      Object.entries(byId(raw.episodes, "episodes", (entry, at) => (entry.summary === undefined ? undefined : text(entry.summary, `${at}.summary`)))).filter((pair): pair is [string, string] => pair[1] !== undefined),
-    ),
+    summaries: given(byId(raw.episodes, "episodes", (entry, at) => (entry.summary === undefined ? undefined : text(entry.summary, `${at}.summary`)))),
+    descriptions: {
+      locations: given(byId(raw.locations, "locations", (entry, at) => (entry.description === undefined ? undefined : text(entry.description, `${at}.description`)))),
+      props: raw.props === undefined ? {} : given(byId(raw.props, "props", (entry, at) => (entry.description === undefined ? undefined : text(entry.description, `${at}.description`)))),
+    },
   };
 }
 

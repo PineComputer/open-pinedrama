@@ -24,9 +24,18 @@ const cast: CastCard[] = [
       },
     ],
   },
-  { kind: "location", subject: "office", episodes: [], looks: [{ look: "", versions: [{ turnId: "t3", files: [file(3, "v1")] as never }] }] },
+  {
+    kind: "location",
+    subject: "office",
+    episodes: [],
+    looks: [
+      { look: "", versions: [{ turnId: "t3", files: [file(3, "v1"), { ...file(4, "v1"), style: "left-side" }] as never }] },
+      { look: "Night", versions: [{ turnId: "t5", files: [file(5, "v2")] as never }] },
+    ],
+  },
+  { kind: "prop", subject: "letter", episodes: [], looks: [{ look: "", versions: [{ turnId: "t6", files: [file(6, "v1")] as never }] }] },
 ];
-const names = { title: "T", characters: { lin: { name: "Lin Xiaoyu", aliases: ["Xiaoyu"] } }, locations: { office: "Factory office" }, props: {}, episodes: { EP001: "The stepmother arrives" }, logline: "A stepmother wins the house.", beats: ["She arrives."], summaries: { EP001: "She meets the family." } };
+const names = { title: "T", characters: { lin: { name: "Lin Xiaoyu", aliases: ["Xiaoyu"] } }, locations: { office: "Factory office" }, props: { letter: "The letter" }, episodes: { EP001: "The stepmother arrives" }, logline: "A stepmother wins the house.", beats: ["She arrives."], summaries: { EP001: "She meets the family." }, descriptions: { locations: { office: "Desks under strip lights." }, props: { letter: "A folded letter." } } };
 
 function engine() {
   answer("/api/dramas/d1/cast", cast);
@@ -56,12 +65,18 @@ describe("the Story", () => {
     expect(within(lin).getByText("Sent back")).toBeInTheDocument();
   });
 
-  it("keeps places and props in the world, and the episodes in the bible", async () => {
+  it("keeps places in Scenes with their description, views and times, props in Props, and the episodes in the bible", async () => {
     const user = userEvent.setup();
     engine();
     render(<Cast dramaId="d1" />);
-    await user.click(await screen.findByRole("tab", { name: /World/ }));
-    expect(screen.getByRole("article", { name: "Factory office" })).toBeInTheDocument();
+    await user.click(await screen.findByRole("tab", { name: /Scenes/ }));
+    const office = screen.getByRole("article", { name: "Factory office" });
+    expect(within(office).getByText("Desks under strip lights.")).toBeInTheDocument();
+    expect(within(office).getByRole("link", { name: "left side" })).toHaveAttribute("href", "/f/4");
+    expect(within(office).getByRole("link", { name: "Night · v2" })).toHaveAttribute("href", "/f/5");
+    expect(within(office).getAllByRole("link")[0]).toHaveAttribute("href", "/f/3");
+    await user.click(screen.getByRole("tab", { name: /Props/ }));
+    expect(within(screen.getByRole("article", { name: "The letter" })).getByText("A folded letter.")).toBeInTheDocument();
     await user.click(screen.getByRole("tab", { name: /Bible/ }));
     expect(screen.getByRole("link", { name: /EP001\s*The stepmother arrives/ })).toHaveAttribute("href", "/d/d1/e/EP001");
   });

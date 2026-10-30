@@ -19,6 +19,7 @@ describe("a bible's names", () => {
       logline: "l",
       beats: ["greeting"],
       summaries: { EP001: "s" },
+      descriptions: { locations: { office: "desks" }, props: {} },
     });
   });
 
