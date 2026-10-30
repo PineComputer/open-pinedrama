@@ -237,9 +237,13 @@
             <div class="controls" style="border-top:0;padding:0 0 8px"><button class="pp" aria-label=${S.cutPlaying ? "Pause" : "Play"} onClick=${() => set({ cutPlaying: !S.cutPlaying })}>${I(S.cutPlaying ? "pause" : "play")}</button>
               <span class="t">${S.cutT.toFixed(1)}s <small>/ ${c.dur.toFixed(1)}s</small></span><span class="grow"></span><span class="muted" style="font-size:11.5px">9:16 · 480p · subtitles from the screenplay · muted in this prototype</span></div>
             <div class="tl" onClick=${(e) => { const r = e.currentTarget.getBoundingClientRect(); seek(Math.max(0, Math.min(c.dur, ((e.clientX - r.left) / r.width) * c.dur))); }}>
-              <div class="tlsegs">${c.segs.map(([s, t, d, pic]) => { const left = acc; acc += d; return html`<div class="tlseg" style=${`left:${(left / c.dur) * 100}%;width:${(d / c.dur) * 100}%;background-image:url(${pic})`}><span>${s} · ${t}</span></div>`; })}</div>
+              <div class="tlsegs">${c.segs.map(([s, t, d, pic], i) => { const left = acc; acc += d; return html`<button class=${"tlseg" + (S.cutSel === i ? " on" : "")} style=${`left:${(left / c.dur) * 100}%;width:${(d / c.dur) * 100}%;background-image:url(${pic})`} onClick=${(e) => { e.stopPropagation(); set({ cutSel: i }); seek(left); }}><span>${s} · ${t}</span></button>`; })}</div>
               ${notes.map((n) => html`<span class="pin" style=${`left:${(n.t / c.dur) * 100}%`} title=${n.text}>${I("note-pencil")}</span>`)}
               <span class="head" style=${`left:${(S.cutT / c.dur) * 100}%`}></span></div>
+            <div class="tracks">
+              <div class="trk"><span class="trk-h">Sound</span><div class="trk-lane wave">${Array.from({ length: 96 }, (_, i) => html`<i style=${`height:${18 + Math.round(70 * Math.abs(Math.sin(i * 0.37) * Math.cos(i * 0.11)))}%`}></i>`)}</div></div>
+              <div class="trk"><span class="trk-h">${I("chats")}Lines</span><div class="trk-lane">${c.lines.map(([t, d, text]) => html`<button class="line" style=${`left:${(t / c.dur) * 100}%;width:${(d / c.dur) * 100}%`} title=${text} onClick=${() => seek(t)}>${text}</button>`)}</div></div>
+            </div>
           </div>
         </section>
         <aside class="insp"><div class="ihead"><b>EP006 · cut v1</b><small>${c.dur} s of 90 s planned · 2 of 4 segments in this sample</small></div>
@@ -248,6 +252,12 @@
               ${notes.map((n, i) => html`<div class="noterow"><button class="mono tbtn" onClick=${() => seek(n.t)}>${fmt(n.t)}</button><span class="grow">${n.text}</span><button class="ibtn" aria-label="Remove note" onClick=${() => set({ cutNotes: notes.filter((_, j) => j !== i) })}>${I("x")}</button></div>`)}
               <div class="addnote"><span class="mono">${fmt(S.cutT)}</span><input placeholder="Add a note at the playhead…" value=${S.noteDraft} onInput=${(e) => set({ noteDraft: e.target.value })}
                 onKeyDown=${(e) => { if (e.key === "Enter" && S.noteDraft.trim()) set({ cutNotes: [...notes, { t: S.cutT, text: S.noteDraft.trim() }].sort((a, b) => a.t - b.t), noteDraft: "" }); }}/></div></div>
+            ${S.cutSel != null && c.segs[S.cutSel] && (() => { const [seg, take, d] = c.segs[S.cutSel]; return html`<div class="isec"><h4>Properties <span class="muted">${seg}</span></h4>
+              <dl class="kv"><dt>Segment</dt><dd>${seg}</dd><dt>Take</dt><dd>${take}</dd><dt>Model</dt><dd>${c.spec.model}</dd><dt>Duration</dt><dd class="mono">${d} s</dd><dt>Picture</dt><dd>${c.spec.ratio} · ${c.spec.resolution} · ${c.spec.fps} fps</dd></dl>
+              <div class="propoff"><span class="muted">Speed</span><div class="seg" aria-disabled="true">${["0.5×", "1×", "1.5×", "2×"].map((x) => html`<button disabled aria-pressed=${String(x === "1×")}>${x}</button>`)}</div>
+                <span class="muted">Volume</span><input type="range" disabled value="80" aria-label="Volume"/>
+                <p class="muted">drama-cli makes every cut; editing here comes later.</p></div>
+              <button class="btn sm" onClick=${() => go("canvas")}>${I("flow-arrow")}Open on Canvas</button></div>`; })()}
             <div class="isec"><h4>Made from</h4>${c.segs.map(([s, t, d]) => html`<div class="lrow static">${s} · take ${t}<span class="mono muted">${d} s</span></div>`)}</div>
             <div class="isec" style="border-bottom:0"><h4>What happens</h4><p class="muted" style="font-size:12.5px;line-height:1.55">Send back with your notes and the agent plans the cut again; building a cut is free. Accept, and EP006 is delivered.</p></div>
           </div>
