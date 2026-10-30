@@ -3,18 +3,8 @@
 import "@testing-library/jest-dom/vitest";
 import { cleanup } from "@testing-library/react";
 import { afterAll, afterEach, beforeAll } from "vitest";
+import { TestEventSource } from "./live.ts";
 import { sent, server } from "./server.ts";
-
-// The live stream (api.ts): a test refreshes data by answering again, not through events.
-class QuietEventSource {
-  static readonly CLOSED = 2;
-  readyState = 0;
-  onmessage: ((event: MessageEvent) => void) | null = null;
-  onerror: (() => void) | null = null;
-  close() {
-    this.readyState = QuietEventSource.CLOSED;
-  }
-}
 
 // The review stage measures itself to fit a picture (viewing.tsx); jsdom has no layout.
 class StillResizeObserver {
@@ -27,7 +17,7 @@ class StillResizeObserver {
 const nodeFetch = globalThis.fetch;
 const pageFetch: typeof fetch = (input, init) => nodeFetch(typeof input === "string" ? new URL(input, location.href) : input, init);
 
-Object.assign(globalThis, { EventSource: QuietEventSource, ResizeObserver: StillResizeObserver, fetch: pageFetch });
+Object.assign(globalThis, { EventSource: TestEventSource, ResizeObserver: StillResizeObserver, fetch: pageFetch });
 
 beforeAll(() => server.listen({ onUnhandledFrame: "error" }));
 afterEach(() => {
