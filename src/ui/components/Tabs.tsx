@@ -2,7 +2,8 @@
 import { type ReactNode, useId, useRef } from "react";
 import type { Option } from "./Segmented.tsx";
 
-export function Tabs<V extends string>({ label, value, tabs, onChange, children }: { label: string; value: V; tabs: Option<V>[]; onChange: (value: V) => void; children: ReactNode }) {
+/** `end`: what stands at the end of the tabs' row, such as a search box; it is not a tab. */
+export function Tabs<V extends string>({ label, value, tabs, onChange, end, children }: { label: string; value: V; tabs: Option<V>[]; onChange: (value: V) => void; end?: ReactNode; children: ReactNode }) {
   const id = useId();
   const list = useRef<HTMLDivElement>(null);
   const move = (by: number) => {
@@ -13,6 +14,7 @@ export function Tabs<V extends string>({ label, value, tabs, onChange, children 
   };
   return (
     <div className="ds-tabs-wrap">
+      <div className="ds-tabs-row">
       <div
         ref={list}
         className="ds-tabs"
@@ -41,6 +43,8 @@ export function Tabs<V extends string>({ label, value, tabs, onChange, children 
             {tab.count !== undefined && <span className="count">{tab.count}</span>}
           </button>
         ))}
+      </div>
+      {end}
       </div>
       <div role="tabpanel" id={`${id}-panel`} aria-labelledby={`${id}-${value}`}>
         {children}
