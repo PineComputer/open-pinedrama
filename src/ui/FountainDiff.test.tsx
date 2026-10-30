@@ -5,7 +5,7 @@ import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 import { accept, calls } from "./test/server.ts";
-import { AcceptInWords, FountainDiff } from "./FountainDiff.tsx";
+import { AcceptInWords, FountainDiff, FountainReview } from "./FountainDiff.tsx";
 
 const ORIGINAL = "EPISODE 1\nTENEMENT FLAT, MORNING\nLin stands in the doorway.\nLIN: I run this house now.\n";
 const FOUNTAIN = "# Episode 1\nINT. TENEMENT FLAT - DAY #1-1#\nLin stands in the doorway.\nLIN\nI run this house now.\n";
@@ -20,10 +20,28 @@ describe("FountainDiff", () => {
     expect(within(fountain).getByText("INT. TENEMENT FLAT - DAY #1-1#")).toBeInTheDocument();
   });
 
-  it("says how much the rewrite changed, as jsdiff counts it", () => {
-    render(<FountainDiff original={ORIGINAL} fountain={FOUNTAIN} />);
-    // Three of the file's lines changed form (one became two); one came back as it was.
-    expect(screen.getByText("3 lines changed form, 1 kept as it was.")).toBeInTheDocument();
+  it("prints the Fountain as screenplay lines, each marking the line of the file it came from", async () => {
+    const user = userEvent.setup();
+    const fountain = "# Episode 1\n\nINT. TENEMENT FLAT - DAY #1-1#\n\nLin stands in the doorway.\n\nLIN\nI run this house now.\n";
+    render(<FountainDiff original={ORIGINAL} fountain={fountain} />);
+    const yours = screen.getByRole("region", { name: "Your file" });
+    const rewrite = screen.getByRole("region", { name: /Fountain/ });
+    expect(within(rewrite).getByRole("button", { name: "LIN" })).toHaveClass("fl", "character");
+    await user.click(within(rewrite).getByRole("button", { name: "Lin stands in the doorway." }));
+    expect(within(yours).getByRole("button", { name: /Lin stands in the doorway/ })).toHaveAttribute("aria-pressed", "true");
+    expect(within(yours).getByRole("button", { name: /TENEMENT FLAT, MORNING/ })).toHaveAttribute("aria-pressed", "false");
+  });
+});
+
+describe("FountainReview", () => {
+  it("says how much the rewrite changed, as jsdiff counts it, and its episodes and scenes", () => {
+    render(<FountainReview original={ORIGINAL} fountain={"# Episode 1\n\nINT. TENEMENT FLAT - DAY #1-1#\n\nLin stands in the doorway.\n"} reviewId="r1" />);
+    expect(screen.getByRole("heading", { name: "Check what the rewrite changed" })).toBeInTheDocument();
+    // Three of the file's lines changed form (two became four); one came back as it was.
+    expect(screen.getByText(/^3 lines changed form, 1 kept as it was\./)).toBeInTheDocument();
+    expect(screen.getByText("episode").parentElement).toHaveTextContent("1 episode");
+    expect(screen.getByText("scene").parentElement).toHaveTextContent("1 scene");
+    expect(screen.getByRole("textbox", { name: "Your words" })).toBeInTheDocument();
   });
 
   it("marks a changed line and what it became, on both sides", async () => {

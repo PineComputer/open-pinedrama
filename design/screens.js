@@ -105,12 +105,14 @@
           <p class="muted">7 lines changed form, nothing was removed, and 1 question waits. Click a line to see where it came from.</p></div>
           <div class="facts"><span><b>24</b> episodes</span><span><b>212</b> scenes</span><span><b>0</b> red lines</span></div></div>
         <div class="fpanes">
-          <section class="fpane"><h4>Your file</h4><ol class="orig">${P.orig.map((l, i) => html`<li class=${S.fsel === i + 1 ? "on" : ""} onClick=${() => set({ fsel: i + 1 })}><span>${i + 1}</span>${l}</li>`)}</ol></section>
+          <section class="fpane"><h4>Your file</h4><ol class="orig">${P.orig.map((l, i) => html`<li><button type="button" class=${S.fsel === i + 1 ? "on" : ""} aria-pressed=${String(S.fsel === i + 1)} onClick=${() => set({ fsel: i + 1 })}><span>${i + 1}</span>${l}</button></li>`)}</ol></section>
           <section class="fpane fnt"><h4>Fountain <span class="tag">screenplay.md</span></h4>
-            <div class="fdoc">${P.fountain.map((l) => l.gap ? html`<div class="gap"></div>` : html`<div class=${"fl " + l.el + (hit(l) ? " on" : "") + (l.ask ? " ask" : "")} onClick=${() => l.from && set({ fsel: l.from[0] })}>
-              ${l.ask ? html`INT. LUCA'S APARTMENT - <span class="q">${S.tod ? S.tod.toUpperCase() : "?"}</span> #6-2#` : l.tx}
-              ${(hit(l) || l.ask) && l.why && html`<span class="why">${l.why}</span>`}
-              ${l.ask && html`<span class="seg ask" role="group" aria-label="Time of day">${["Day", "Night"].map((v) => html`<button aria-pressed=${String(S.tod === v)} onClick=${(e) => { e.stopPropagation(); set({ tod: v }); }}>${v}</button>`)}</span>`}</div>`)}</div></section>
+            <div class="fdoc">${P.fountain.map((l) => l.gap ? html`<div class="gap"></div>`
+              : l.ask ? html`<div class=${"fl " + l.el + " ask"}>INT. LUCA'S APARTMENT - <span class="q">${S.tod ? S.tod.toUpperCase() : "?"}</span> #6-2#
+                  ${l.why && html`<span class="why">${l.why}</span>`}
+                  <span class="seg ask" role="group" aria-label="Time of day">${["Day", "Night"].map((v) => html`<button aria-pressed=${String(S.tod === v)} onClick=${() => set({ tod: v })}>${v}</button>`)}</span></div>`
+              : html`<button type="button" class=${"fl " + l.el + (hit(l) ? " on" : "")} aria-pressed=${String(Boolean(hit(l)))} onClick=${() => l.from && set({ fsel: l.from[0] })}>${l.tx}
+                  ${hit(l) && l.why && html`<span class="why">${l.why}</span>`}</button>`)}</div></section>
         </div>
         <div class="faccept">
           <textarea placeholder="Accept the rewrite in your own words, e.g. “Yes, this is my script.” (required)" value=${S.words} onInput=${(e) => set({ words: e.target.value })}></textarea>

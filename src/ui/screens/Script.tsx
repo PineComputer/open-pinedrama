@@ -3,26 +3,16 @@ import type { FileItem, ScriptPage } from "../../shared/types.ts";
 import { useResource } from "../api.ts";
 import { useT } from "../i18n.ts";
 import { errorText } from "../labels.ts";
-import { AcceptInWords, FountainDiff } from "../FountainDiff.tsx";
+import { FountainDiff, FountainReview } from "../FountainDiff.tsx";
 import { DocumentView, useDocumentText, useText } from "../viewing.tsx";
 
-/** A Fountain rewrite beside the maker's own file (P5.4), and, while the agent asks about it, the maker's answer. */
+/** A Fountain rewrite beside the maker's own file (P5.4): while the agent asks about it, the review that answers it. */
 function Rewrite({ original, rewrite, reviewId }: { original: FileItem; rewrite: FileItem; reviewId?: string }) {
   const { t } = useT();
   const mine = useDocumentText(original);
   const fountain = useText(rewrite);
-  return (
-    <div className="ds-rewrite">
-      {reviewId && (
-        <div className="head">
-          <h3>{t("fountain.title")}</h3>
-          <p>{t("fountain.lede")}</p>
-        </div>
-      )}
-      {mine.text !== undefined && fountain.text !== undefined ? <FountainDiff original={mine.text} fountain={fountain.text} /> : <p className="quiet">{t("loading")}</p>}
-      {reviewId && <AcceptInWords reviewId={reviewId} />}
-    </div>
-  );
+  if (mine.text === undefined || fountain.text === undefined) return <p className="quiet">{t("loading")}</p>;
+  return reviewId ? <FountainReview original={mine.text} fountain={fountain.text} reviewId={reviewId} /> : <FountainDiff original={mine.text} fountain={fountain.text} />;
 }
 
 /**
@@ -45,12 +35,11 @@ export function Script({ dramaId }: { dramaId: string }) {
     ...(data.bible ? [{ group: "bible", label: t("script.bible"), file: data.bible }] : []),
     ...data.breakdowns.map((entry) => ({ group: "episodes", label: entry.title ? `${entry.code} · ${entry.title}` : entry.code, file: entry.file })),
   ];
-  const fallback = current?.pending ? docs.find((doc) => doc.group === "screenplay") : undefined;
-  const shown =
-    docs.find((doc) => doc.file.id === picked) ?? fallback ?? docs.find((doc) => doc.group === "bible") ?? docs.find((doc) => doc.group === "screenplay") ?? docs[0];
   // The screenplay the maker marked (a Word or PDF one as its text), to set beside a rewrite.
   const original: FileItem | undefined = data.inputs.find((file) => file.id === data.screenplayFile);
-  const beside = shown?.file === current?.file && current?.file && original && original.id !== current.file.id;
+  const rewritten = current?.file && original && original.id !== current.file.id ? current.file : undefined;
+  if (rewritten && original && current?.reviewId) return <Rewrite key={rewritten.id} original={original} rewrite={rewritten} reviewId={current.reviewId} />;
+  const shown = docs.find((doc) => doc.file.id === picked) ?? docs.find((doc) => doc.group === "bible") ?? docs.find((doc) => doc.group === "screenplay") ?? docs[0];
   const groups: [string, string][] = [
     ["screenplay", t("script.current")],
     ["inputs", t("script.inputs")],
@@ -81,8 +70,8 @@ export function Script({ dramaId }: { dramaId: string }) {
           })}
         </nav>
         <article className="script-page">
-          {shown && beside && original ? (
-            <Rewrite key={shown.file.id} original={original} rewrite={shown.file} reviewId={current?.reviewId} />
+          {shown && rewritten && original && shown.file === rewritten ? (
+            <Rewrite key={shown.file.id} original={original} rewrite={shown.file} />
           ) : (
             shown && <DocumentView key={shown.file.id} file={shown.file} />
           )}

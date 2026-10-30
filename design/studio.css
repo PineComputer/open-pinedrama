@@ -452,13 +452,14 @@ p { font-size: inherit; line-height: inherit; color: inherit; margin: 0; }
 .fpane { min-height: 0; overflow: auto; border-radius: var(--radius-2xl); border: 1px solid var(--border); background: var(--surface); padding: 14px 16px; }
 .fpane h4 { margin: 0 0 10px; display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 600; color: var(--text-muted); letter-spacing: .4px; text-transform: uppercase; }
 .orig { list-style: none; margin: 0; padding: 0; font: 13px/1.6 var(--font-sans); color: var(--text-secondary); }
-.orig li { display: grid; grid-template-columns: 26px 1fr; gap: 6px; padding: 3px 6px; border-radius: 6px; cursor: pointer; }
-.orig li span { font: 11px var(--font-mono); color: var(--text-subtle); padding-top: 3px; }
-.orig li:hover { background: var(--hover); } .orig li.on { background: var(--selected); color: var(--text-primary); }
+.orig li button { width: 100%; display: grid; grid-template-columns: 26px 1fr; gap: 6px; padding: 3px 6px; border: 0; border-radius: 6px; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.orig li button span { font: 11px var(--font-mono); color: var(--text-subtle); padding-top: 3px; }
+.orig li button:hover { background: var(--hover); } .orig li button.on { background: var(--selected); color: var(--text-primary); }
 .fdoc .fl { border-radius: 6px; padding: 2px 6px; cursor: pointer; position: relative; }
+.fdoc button.fl { display: block; width: 100%; border: 0; background: none; color: inherit; font-family: inherit; font-size: inherit; line-height: inherit; text-align: left; }
 .fdoc .fl.character { padding-left: 38%; } .fdoc .fl.dialogue { padding-left: 18%; padding-right: 18%; } .fdoc .fl.paren { padding-left: 32%; } .fdoc .fl.transition { text-align: right; }
 .fdoc .fl:hover { background: var(--hover); } .fdoc .fl.on { background: var(--selected); }
-.fdoc .fl.ask { background: var(--warning-bg); }
+.fdoc .fl.ask { background: var(--warning-bg); cursor: default; }
 .fdoc .q { padding: 0 4px; border-radius: 4px; background: var(--warning-text); color: var(--on-accent); }
 .fdoc .why { display: block; margin: 4px 0 2px; font: 12px/1.45 var(--font-sans); color: var(--text-muted); font-weight: 400; }
 .seg.ask { margin: 6px 0 4px; }
