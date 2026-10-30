@@ -87,6 +87,8 @@ export type FileKind =
   | "observation"
   /** A part of a packed drama-cli project (the whole drama's, or one episode's), handed from session to session. */
   | "archive"
+  /** drama-cli's status of the project, which each stop returns for the studio (handoff/status.json). */
+  | "status"
   /** A picture the maker added to a note: a face to use, a costume, a place to match. */
   | "reference"
   | "other";
