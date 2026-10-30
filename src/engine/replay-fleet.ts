@@ -175,6 +175,11 @@ interface DramaData {
    * `episodes/EP002/segments/seg01`: `t03`): replay draws an item first at that version, so its files, lineage and specs agree.
    */
   versions?: Record<string, string>;
+  /**
+   * Files of the sample's project that replay doesn't draw by itself (a plate's views, the first-frame references), by the stop
+   * that returns them: `setup` with the shared references, an episode's code with its storyboards.
+   */
+  extras?: Record<string, string[]>;
   /** How many episodes a sample drama works on at once, where not New drama's 3. */
   parallel?: number;
   /** How many minutes ago a sample drama was started, so the studio's recent work shows them over hours and days. */
@@ -197,6 +202,7 @@ interface Story {
   styles: string[];
   parallel?: number;
   versions: Record<string, string>;
+  extras: Record<string, string[]>;
   ago: number;
   cast: { id: string; name: string; short: string; looks: string[] }[];
   places: { id: string; name: string; times: string[] }[];
@@ -212,6 +218,7 @@ const inLanguage = (d: DramaData, lang: Lang): Story => ({
   styles: d.styles ?? ["line-art", "photoreal"],
   ...(d.parallel ? { parallel: d.parallel } : {}),
   versions: d.versions ?? {},
+  extras: d.extras ?? {},
   ago: d.ago,
   cast: d.cast.map((c) => ({ id: c.id, name: c.name[lang], short: c.short[lang], looks: c.looks ?? [] })),
   places: d.places.map((p) => ({ id: p.id, name: p.name[lang], times: p.times ?? [] })),
@@ -222,6 +229,9 @@ const inLanguage = (d: DramaData, lang: Lang): Story => ({
 
 /** The number an item is first drawn at: its version in the project the sample comes from, else 1 (v1, t01). */
 const firstOf = (s: Story, path: string) => Number((s.versions[path] ?? "v1").slice(1));
+
+/** The sample's own files a stop returns beside what replay draws (DramaData.extras). */
+const extrasOf = (s: Story, set: string, stop: string): Out[] => (s.extras[stop] ?? []).flatMap((rel) => sample(set, `drama/${rel}`) ?? []);
 
 /** An episode's code by its place in the drama, as drama-cli numbers them. */
 const codeOf = (i: number) => `EP${String(i + 1).padStart(3, "0")}`;
@@ -502,6 +512,7 @@ function setupScript(lang: Lang, preset: string, story: { id: string; story: Sto
         files: [
           ...say.episodes.map((_, i) => ({ path: `drama/episodes/${codeOf(i)}/breakdown/v1/breakdown.md`, type: "text/markdown", bytes: text(breakdownOf(say, story.story, i)) })),
           ...[...shared.keys()].flatMap(draw),
+          ...extrasOf(story.story, set, "setup"),
         ],
         ask: say.askReferences(say.episodes.length),
       };
@@ -595,6 +606,7 @@ function episodeScript(code: string, lang: Lang, preset: string, story: { id: st
             return [art(set, `${base}/blocking/${seg.id}/${v}/image-1.svg`, blocking(`${code} ${seg.id}`, v)), ...specs(set, `${base}/blocking/${seg.id}/${v}`, imageSpec(`A line-art blocking diagram of ${code} ${seg.id}.`, "9:16"))];
           }),
           ...boards(segments),
+          ...extrasOf(story.story, set, code),
         ],
         ask: say.askBoards(code, segments.length),
       };

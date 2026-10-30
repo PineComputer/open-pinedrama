@@ -1,0 +1,13 @@
+{
+  "model": "gpt-image-2.5-sunburst",
+  "prompt": "Image 1 is the front view, the establishing view, facing the back wall of a room. Edit it into the same view of the same room at this time of day: Day. Keep the camera position, framing, lens, walls, doors, windows, furniture, materials and colours exactly as in Image 1; change only the light. Outside every window and doorway, show what that place looks like at Day, with the sky, light and lit windows of that time, never the daylight scene of Image 1 darkened. Inside, light the room as the description says it is lit at that time, with only the lamps it names turned on. The place stays completely empty of people: no person, figure, silhouette or reflection of a person anywhere. Location: SU YAQING'S LIVING ROOM. Spacious, stylish living room of an heiress's luxury apartment. A cream bouclé sofa with pastel cushions faces a low glass coffee table on a soft pale rug. A doorway at the back opens to the kitchen. Bright daylight falls from large windows on the left, and warm floor lamps glow softly at the sofa's ends.\n\nAvoid: people or silhouettes, a darkened copy of Image 1's daylight, readable text, labels, signs with letters or numbers, logos, watermark.\n",
+  "n": 1,
+  "size": "1152x2048",
+  "quality": "high",
+  "output_format": "jpeg",
+  "output_compression": 100,
+  "moderation": "low",
+  "input_images": [
+    "assets/scenes/su_living_room/v1/front.jpg"
+  ]
+}

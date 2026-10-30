@@ -1,0 +1,14 @@
+{
+  "model": "gpt-image-2.5-sunburst",
+  "prompt": "Image 1 is the floor plan of a room seen from above: its bottom edge is the front wall, its top edge the back wall, its left edge the left wall and its right edge the right wall. Image 2 is the front view of the same room (the establishing view), taken from the centre of the front wall facing the back wall. Generate one photorealistic cinematic still of this same room, empty of people, from a new camera position: the back view: the camera stands at the centre of the back wall, at eye level, facing the front wall, turned 180 degrees from Image 2, so the left wall is at the right edge of the frame and the right wall at its left edge. Turn the camera for real: this view must not show the back wall's furniture head-on unless it is the wall being faced. Keep every wall, door, window, piece of furniture, material, colour and light exactly as Image 1 and Image 2 show them, seen from this new side; the room layout and furniture placement exactly match Image 1. Location: APARTMENT CORRIDOR. Short, elegant residential corridor outside Ji Ran's door at night. Cream wall panels with a wood trim line it, with a runner rug on a stone floor and doors set at intervals. Warm recessed downlights run overhead, with soft side-glow from wall sconces.\n\nAvoid: people, readable text, logos, watermark, any door or window the description does not name.\n",
+  "n": 1,
+  "size": "1152x2048",
+  "quality": "high",
+  "output_format": "jpeg",
+  "output_compression": 100,
+  "moderation": "low",
+  "input_images": [
+    "assets/scenes/apartment_corridor/floor-plan/v1/image-1.jpg",
+    "assets/scenes/apartment_corridor/front/v1/image-1.jpg"
+  ]
+}

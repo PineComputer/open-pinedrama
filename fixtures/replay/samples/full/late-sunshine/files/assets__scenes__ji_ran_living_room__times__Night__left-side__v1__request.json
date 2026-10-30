@@ -1,0 +1,13 @@
+{
+  "model": "gpt-image-2.5-sunburst",
+  "prompt": "Image 1 is the left-side view, facing the left wall, with the back wall at its right edge of a room. Edit it into the same view of the same room at this time of day: Night. Keep the camera position, framing, lens, walls, doors, windows, furniture, materials and colours exactly as in Image 1; change only the light. Outside every window and doorway, show what that place looks like at Night, with the sky, light and lit windows of that time, never the daylight scene of Image 1 darkened. Inside, light the room as the description says it is lit at that time, with only the lamps it names turned on. The place stays completely empty of people: no person, figure, silhouette or reflection of a person anywhere. Location: JI RAN'S LIVING ROOM. Spacious, stylish downtown apartment living room at night. A pale linen sofa sits on a patterned geometric rug, before a marble-and-glass coffee table. Behind it is an open kitchen with a white island and pendant lights. Floor-to-ceiling windows show city lights behind. Warm light comes from the pendants over the kitchen island, a floor lamp beside the sofa on the left and soft cove lighting in the ceiling.\n\nAvoid: people or silhouettes, a darkened copy of Image 1's daylight, readable text, labels, signs with letters or numbers, logos, watermark.\n",
+  "n": 1,
+  "size": "1152x2048",
+  "quality": "high",
+  "output_format": "jpeg",
+  "output_compression": 100,
+  "moderation": "low",
+  "input_images": [
+    "assets/scenes/ji_ran_living_room/v1/left-side.jpg"
+  ]
+}

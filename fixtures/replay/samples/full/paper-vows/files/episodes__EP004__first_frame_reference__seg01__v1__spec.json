@@ -1,0 +1,20 @@
+{
+  "provider": "openai",
+  "model": "gpt-image-2.5-sunburst",
+  "prompt": "A live-action photograph: the first frame of one scene of a short drama, vertical composition, as a cinema camera records it on set. The people of the segment stand in their places at its start, in the place of Image 1, where Image 2 puts them and facing the way it shows. Take the camera position, framing, walls, windows, doorways, furniture and light from Image 1, and only the layout of the room from it, not its rendering.\nImage 1: the location Garden of the wedding venue, the front view, with no people\nImage 2: the blocking reference of the segment's start, a line-art diagram\nImage 3: the character sheet of Natalie (25), look S1\nImage 4: the character sheet of Sebastian (30), look S2\nImage 5: the character sheet of George (55), look S1\nImage 6: the character sheet of Officiant (58)\nImage 7: the character sheet of Cassie (23), look S1\nImage 8: the character sheet of Lauren (50), look S1\nImage 9: the character sheet of Guest 1 (25)\nImage 10: the character sheet of Guest 2 (25)\nKeep each person's face, hairstyle, body and outfit exactly as in their character sheet; use the sheets only for the people, not for their layout, white background or multiple views. Use Image 2 only for where each person is and which way they face, not for its outlines or white background. Each person appears once, whole and at natural scale for the place.\nOnly eight people appear: Natalie, Sebastian, George, Officiant, Cassie, Lauren, Guest 1, and Guest 2. Nobody else is there.\nAt the start: Camera on the aisle in front of the white wooden wedding arch, on the rose-bush side. Natalie, in her ivory bridal gown and short veil, stands under the centre of the arch, holding the one bouquet loosely at her waist and staring at Sebastian. Sebastian, in his black tuxedo, stands beside her under the arch on the boxwood-hedge side, facing her. George, in his charcoal suit, stands beside Natalie under the arch on the rose-bush side, facing down the aisle. The Officiant stands at the centre of the arch just behind the couple, hands clasped, facing down the aisle. Cassie, in her scarlet satin cocktail dress, stands at the head of the aisle a step in front of Natalie on the rose-bush side, holding the one empty white gift box with its lid off. Lauren, in her lilac sheath dress with a small handbag on her arm, stands at the head of the aisle against the front-row chair on the boxwood-hedge side. Two short rows of white folding chairs flank the petal aisle. Natalie's phone lies face up on the seat of the front-row chair on the rose-bush side. On the boxwood-hedge side of the lawn stands one small round white high cocktail table with one silver tray; Guest 1 stands at it on the arch side and Guest 2 on the aisle side, each holding a champagne flute, and Guest 1's pink phone is in the silver clutch under her arm.\n\nReal adult faces with natural skin texture and pores, real fabric, natural light falloff and shadows, a slight film grain and the depth of field of a real lens, as in a frame of a live-action film. Not a 3D render, an interior-design visualisation, an illustration or a painting; no text, letters, numbers, labels or watermark.\n",
+  "aspect_ratio": "9:16",
+  "size": "1152x2048",
+  "quality": "high",
+  "images": [
+    "episodes/EP004/first_frame_reference/seg01/v1/view.png",
+    "episodes/EP004/blocking/seg01/v2/image-1.jpg",
+    "assets/characters/natalie/states/S1/v1/image-1.jpg",
+    "assets/characters/sebastian/states/S2/v1/image-1.jpg",
+    "assets/characters/george/states/S1/v1/image-1.jpg",
+    "assets/characters/officiant/v1/image-1.jpg",
+    "assets/characters/cassie/states/S1/v2/image-1.jpg",
+    "assets/characters/lauren/states/S1/v1/image-1.jpg",
+    "assets/characters/guest_1/v1/image-1.jpg",
+    "assets/characters/guest_2/v1/image-1.jpg"
+  ]
+}

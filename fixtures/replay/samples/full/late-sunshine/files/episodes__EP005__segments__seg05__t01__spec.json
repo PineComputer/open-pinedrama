@@ -1,0 +1,363 @@
+{
+  "model": "sd25",
+  "content": [
+    {
+      "type": "text",
+      "text": "Image 1: Six-panel storyboard reference, used for the overall shot structure, shot sizes, and camera-movement rhythm. Read it from left to right and from top to bottom; panel N is Shot N. It is a line-art sketch: do not adopt its sketch style, black outlines, white background, panel borders or drawn faces.\nImage 2: Reference of JI RAN'S LIVING ROOM, the front view, the establishing view, facing the back wall, a rendered set, not live action. Use it only for the room's layout, the furniture's positions and the light's direction; do not reference its visual content. It contains no people.\nImage 3: Reference of JI RAN'S LIVING ROOM, the back view, turned 180 degrees, facing the front wall, with the left wall at its right edge, a rendered set, used only for the room's layout; it contains no people.\nImage 4: Reference of JI RAN'S LIVING ROOM, the left-side view, facing the left wall, with the back wall at its right edge, a rendered set, used only for the room's layout; it contains no people.\nImage 5: Reference of JI RAN'S LIVING ROOM, the right-side view, facing the right wall, with the back wall at its left edge, a rendered set, used only for the room's layout; it contains no people.\nImage 6: Reference of JI RAN'S LIVING ROOM, the floor plan seen from above: its top edge is the back wall, its bottom edge the front wall behind the front view's camera, and its left and right edges the left and right walls, a rendered set, used only for the room's layout; it contains no people.\nImage 7: Blocking reference of the segment's start: the same place with these people in their places, used only for where each person is and which way they face; take faces and outfits from each subject's own image. It is a line-art diagram: do not adopt its outlines or white background.\nImage 8: Subject 1 (Lin Qingyu, look S2) character appearance reference.\nImage 9: Subject 2 (Ji Ran, look S3) character appearance reference.\n[Subject settings]\nSubject 1 (Lin Qingyu): Refer to Image 8. 21, Male lead; Su Yaqing's younger brother from her stepmother's family, secretly a powerful boss, posing as an ordinary college student to apply to be Ji Ran's husband. Outfit: look S2: Night at Ji Ran's apartment: a white cotton pullover hoodie, slim black jogger trousers and white sneakers. Signature colour: white.\nSubject 2 (Ji Ran): Refer to Image 9. 27, Heroine; owner of Jiejian Company, daughter of Ji Hongyuan, and ex-girlfriend of Lu Shaoze. Outfit: look S3: Night, returning home: a fitted ivory satin long-sleeve wrap blouse with a soft V neckline, tucked into a black leather high-waisted mini skirt. Red pointed stiletto heels. She carries the black handbag. Signature colour: red.\nEnvironment (JI RAN'S LIVING ROOM): Refer to Images 2 to 6. Night, warm lamp and pendant light. Warm pendant lights over the kitchen island, the floor lamp beside the sofa and soft ceiling cove light, with city lights beyond the windows; quiet room tone.\nDo not swap the characters' appearances, clothing, actions, positions or dialogue.\n[Overall style]\nPhotorealistic live-action short drama with cinematic lighting. Each character keeps the face and the outfit with its main colour from their reference image throughout. Use each character sheet only for that character: the face from the close-up on the right, the body and outfit from the turnaround on the left; do not render the sheet's layout, white background or multiple views. This segment has 2 lines, in this order: Ji Ran, Lin Qingyu. Generate speech only from the lines in {} in the shot list, each spoken exactly once by its speaker; everyone else keeps their mouth naturally closed while listening, and a V.O. speaker keeps their mouth closed or is off screen. Follow the shot list below; do not add cuts or camera moves beyond it. Strictly adhere to the 180-degree rule: within a scene, characters keep their screen sides and the camera stays on one side of the axis. Seamless continuity of action, spatial matching and consistent actor blocking; cut on action. For dialogue prefer static shot-reverse-shot and over-the-shoulder shots, balanced with reaction shots and close-up inserts. Faces stable and clear, with no resemblance to any real actor or actress. Normal human eyes. Natural anatomy and hands. Natural, fluid motion that follows the blocking; characters make subtle, natural movements. Characters, props and environment share one world with matched lighting. Each line ends naturally with breathing room and is never cut off. Authentic performances with micro-expressions. No BGM; generate only dialogue, environmental sounds and action sounds. No subtitles.\n[Strictly exclude]\nsubtitles or garbled text. Ji Ran sitting down. camera crossing behind the sofa. Dialogue from the wrong character, multiple people speaking at once, repeated or missing lines, lip-sync errors and audio-visual desynchronization. The raw reference images (character sheets, setting plates) appearing as a frame of the video, and starting on a still frame of the setting reference. A fast zoom-in at the start, a fast pull-back at the end, unmotivated whip-pans, tilts, zooms and 360-degree orbits. Axis-crossing, jump cuts, frame skips, flicker and clipping. Characters or props popping in or vanishing, and duplicate characters except mirror reflections. Subtitles, captions, watermarks and garbled writing; writing and logos other than those on a key prop's reference image, which are copied from it; a phone screen or paper that is not a key prop is shown from the back or out of focus. Black-and-white, monochrome, grayscale, desaturated visuals; hand-drawn, sketch, line art, illustration, comics, animation; storyboard frames, rough sketches, panel borders, gutters and grid layouts.\n[Shot list] (6 shots, approximately 17 seconds)\nWhen a previous-shot reference image is given, it is the moment this segment starts from: keep its people's positions, outfits, props and light, and continue from there. Shot 1 keeps its own camera, matching the image's framing only when it frames the same view; do not repeat that frame later.\nAt the start: The pale linen sofa sits on the patterned rug in front of the single marble-and-glass coffee table, with the open kitchen and its white island behind and the floor lamp beside the sofa. Lin Qingyu sits slouched on the pale sofa. Ji Ran stands on the far side of the marble-and-glass coffee table, opposite him and facing the sofa, with her arms folded. The camera stays at the floor-lamp end of the sofa, seeing both across the coffee table.\nShot 1 (0-3s): [Wide shot, slow push in, eye-level, from the floor-lamp end of the sofa] Lin Qingyu sits slouched on the pale sofa, and Ji Ran stands across the marble-and-glass coffee table from him with her arms folded and city lights in the windows behind. <Quiet room tone>\nShot 2 (3-7s): [Medium shot, low angle from sofa height, locked-off camera, on Ji Ran] Ji Ran looks down at Lin Qingyu with her arms folded and one eyebrow raised. Dialogue (Ji Ran, in Mandarin, cool and skeptical): {你面试都没通过，这次来想干嘛？}\nShot 3 (7-9s): [Medium shot, slight high angle, handheld, on Lin Qingyu on the sofa] Lin Qingyu sits up straight on the sofa and lifts his eyes to meet Ji Ran's.\nShot 4 (9-12s): [Close-up, slow push in on Lin Qingyu, eye-level] Lin Qingyu holds Ji Ran's gaze with a sincere, steady look and a hint of a smile. Dialogue (Lin Qingyu, in Mandarin, earnest and warm): {我来争取一个试用期。}\nShot 5 (12-14s): [Close-up, locked-off camera, eye-level, on Ji Ran] Ji Ran's lips part slightly, and her folded arms loosen a little.\nShot 6 (14-17s): [Wide shot, slow pull out, eye-level, from the floor-lamp end of the sofa] Soft glowing light and snowlike flecks drift across the image as Ji Ran and Lin Qingyu look at each other across the coffee table.\nAt the end: Lin Qingyu sits upright on the pale sofa looking up at Ji Ran; Ji Ran stands on the far side of the marble-and-glass coffee table facing him, arms loosely folded, as soft snowlike flecks drift across the image. The camera stays at the floor-lamp end of the sofa.\n"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261027080617-m7qlk"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/ji_ran_living_room/times/Night/v1/front.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/ji_ran_living_room/times/Night/v1/back.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/ji_ran_living_room/times/Night/v1/left-side.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/ji_ran_living_room/times/Night/v1/right-side.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/ji_ran_living_room/times/Night/v1/floor-plan.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261027080034-b6t7v"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261027073858-qtdpv"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261027073859-bxzf9"
+      },
+      "role": "reference_image"
+    }
+  ],
+  "duration": 17,
+  "ratio": "9:16",
+  "resolution": "480p",
+  "generate_audio": true,
+  "watermark": false,
+  "return_last_frame": true,
+  "omni_reference_task_type": "reference",
+  "drama": {
+    "segment": {
+      "id": "seg05",
+      "duration": 17,
+      "location": "ji_ran_living_room",
+      "scene_heading": "INT. JI RAN'S LIVING ROOM - NIGHT #5-3#",
+      "time": "Night, warm lamp and pendant light",
+      "characters": [
+        "lin_qingyu",
+        "ji_ran"
+      ],
+      "states": {
+        "lin_qingyu": "S2",
+        "ji_ran": "S3"
+      },
+      "first_state": "The pale linen sofa sits on the patterned rug in front of the single marble-and-glass coffee table, with the open kitchen and its white island behind and the floor lamp beside the sofa. Lin Qingyu sits slouched on the pale sofa. Ji Ran stands on the far side of the marble-and-glass coffee table, opposite him and facing the sofa, with her arms folded. The camera stays at the floor-lamp end of the sofa, seeing both across the coffee table.",
+      "shots": [
+        {
+          "time": "0-3s",
+          "size": "wide shot",
+          "angle": "eye level",
+          "camera": "Wide shot, slow push in, eye-level, from the floor-lamp end of the sofa",
+          "visual": "Lin Qingyu sits slouched on the pale sofa, and Ji Ran stands across the marble-and-glass coffee table from him with her arms folded and city lights in the windows behind.",
+          "audio": "<Quiet room tone>",
+          "characters": [
+            "lin_qingyu",
+            "ji_ran"
+          ],
+          "lines": []
+        },
+        {
+          "time": "3-7s",
+          "size": "medium shot",
+          "angle": "low angle",
+          "camera": "Medium shot, low angle from sofa height, locked-off camera, on Ji Ran",
+          "visual": "Ji Ran looks down at Lin Qingyu with her arms folded and one eyebrow raised.",
+          "audio": "Dialogue (Ji Ran, in Mandarin, cool and skeptical): {你面试都没通过，这次来想干嘛？}",
+          "characters": [
+            "ji_ran"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "7-9s",
+          "size": "medium shot",
+          "angle": "high angle",
+          "camera": "Medium shot, slight high angle, handheld, on Lin Qingyu on the sofa",
+          "visual": "Lin Qingyu sits up straight on the sofa and lifts his eyes to meet Ji Ran's.",
+          "audio": "",
+          "characters": [
+            "lin_qingyu"
+          ],
+          "lines": []
+        },
+        {
+          "time": "9-12s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, slow push in on Lin Qingyu, eye-level",
+          "visual": "Lin Qingyu holds Ji Ran's gaze with a sincere, steady look and a hint of a smile.",
+          "audio": "Dialogue (Lin Qingyu, in Mandarin, earnest and warm): {我来争取一个试用期。}",
+          "characters": [
+            "lin_qingyu"
+          ],
+          "lines": [
+            1
+          ]
+        },
+        {
+          "time": "12-14s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, locked-off camera, eye-level, on Ji Ran",
+          "visual": "Ji Ran's lips part slightly, and her folded arms loosen a little.",
+          "audio": "",
+          "characters": [
+            "ji_ran"
+          ],
+          "lines": []
+        },
+        {
+          "time": "14-17s",
+          "size": "wide shot",
+          "angle": "eye level",
+          "camera": "Wide shot, slow pull out, eye-level, from the floor-lamp end of the sofa",
+          "visual": "Soft glowing light and snowlike flecks drift across the image as Ji Ran and Lin Qingyu look at each other across the coffee table.",
+          "audio": "",
+          "characters": [
+            "ji_ran",
+            "lin_qingyu"
+          ],
+          "lines": []
+        }
+      ],
+      "light_audio": "Warm pendant lights over the kitchen island, the floor lamp beside the sofa and soft ceiling cove light, with city lights beyond the windows; quiet room tone.",
+      "dialogue": [
+        {
+          "speaker": "ji_ran",
+          "line": "你面试都没通过，这次来想干嘛？"
+        },
+        {
+          "speaker": "lin_qingyu",
+          "line": "我来争取一个试用期。"
+        }
+      ],
+      "must_hit": [
+        "Ji Ran stands with arms folded opposite Lin Qingyu on the sofa",
+        "Lin Qingyu sits up and meets her eyes",
+        "Soft light and snowlike flecks drift across the final image"
+      ],
+      "exit_state": "Lin Qingyu sits upright on the pale sofa looking up at Ji Ran; Ji Ran stands on the far side of the marble-and-glass coffee table facing him, arms loosely folded, as soft snowlike flecks drift across the image. The camera stays at the floor-lamp end of the sofa.",
+      "negative": [
+        "subtitles or garbled text",
+        "Ji Ran sitting down",
+        "camera crossing behind the sofa"
+      ]
+    },
+    "bible_version": "v2",
+    "breakdown_version": "v3",
+    "lineage": [
+      {
+        "path": "bible/v2/artifact.json",
+        "sha256": "f5400f28e1edd9ccef571edd8420590ca4a9e72eb37b7ca444a66cfe777c7b91"
+      },
+      {
+        "path": "bible/accepted.json",
+        "sha256": "d964bcfb13d315e51ed18dba40bce44dbe8e8ad1fd06b96e8843e333e1d61a32"
+      },
+      {
+        "path": "bible/current.json",
+        "sha256": "2addb578f51de2dd02b1e8e33d5e141f23f16f02e61259b8cb42e64f67d2fcc3"
+      },
+      {
+        "path": "bible/v2/bible.json",
+        "sha256": "3d920d493ba887180838dafb80b72f72eb9f03f827829dba1965c3643feaf05d"
+      },
+      {
+        "path": "bible/v2/input/screenplay.md",
+        "sha256": "afbfe0f787d9c5565630e661e5667df671458c5aa581c242873ff1ab7de27669"
+      },
+      {
+        "path": "episodes/EP005/breakdown/v3/artifact.json",
+        "sha256": "9452069d45bc125311337a054d2b535a9edf2aa964a57f7e925ea898c105ca57"
+      },
+      {
+        "path": "episodes/EP005/breakdown/accepted.json",
+        "sha256": "7698d6233dba6a2c78948e8951cf62e34b7044135413c92b35d32a52fa78e2fc"
+      },
+      {
+        "path": "episodes/EP005/breakdown/current.json",
+        "sha256": "931ffa5988bd9f3d1355b82df2c3a0d80ce0d5d659d2c1d0ebc3601c0685c82f"
+      },
+      {
+        "path": "episodes/EP005/breakdown/v3/breakdown.json",
+        "sha256": "4d1931158b61a1e9d8f64926d51f745a188ed65fd5fa85de321004efab990f38"
+      },
+      {
+        "path": "episodes/EP005/multi_panel_storyboard/seg05/line-art/v1/artifact.json",
+        "sha256": "5a779a70cc334a505cff2e87e7466f8796476951086c5def659ce3694fbd424a"
+      },
+      {
+        "path": "episodes/EP005/multi_panel_storyboard/seg05/line-art/accepted.json",
+        "sha256": "e84dd873617dd9e1bc37e9cd5add8b23629113c442b524fa94271394c6b261a7"
+      },
+      {
+        "path": "episodes/EP005/multi_panel_storyboard/seg05/line-art/current.json",
+        "sha256": "2e9cf46439f00e9fe30d1f25dd6bda2cff1e330ac4435825382f4f3b89585a03"
+      },
+      {
+        "path": "episodes/EP005/multi_panel_storyboard/seg05/line-art/v1/image-1.jpg",
+        "sha256": "17b3dfd2bbda3378768a7ee3d257a3a57df5395f0bcbbe9861f233913dd42be6"
+      },
+      {
+        "path": "episodes/EP005/multi_panel_storyboard/seg05/line-art/v1/asset/job.json",
+        "sha256": "9dfffce0a13015e5b654e1114d22492202dc130b9b6c558d926eadbc9309c28c"
+      },
+      {
+        "path": "assets/scenes/ji_ran_living_room/times/Night/v1/artifact.json",
+        "sha256": "fdd9766b6d7d650c0834b5ee9d7efee6eac8fdb5be816f9b9a3677ee32b28c79"
+      },
+      {
+        "path": "assets/scenes/ji_ran_living_room/times/Night/accepted.json",
+        "sha256": "feccb2e719b353471bf2938efe61ec5a2dbf1c9a2e6fa791105668591b8bfecd"
+      },
+      {
+        "path": "assets/scenes/ji_ran_living_room/times/Night/current.json",
+        "sha256": "2d97a333f041f05a574b1c624389a614748ccff56ef9676faad2332359a7cf70"
+      },
+      {
+        "path": "assets/scenes/ji_ran_living_room/times/Night/v1/image-1.jpg",
+        "sha256": "0562edc695f1ec3d7c22e8d651dcb8c648c65b0db27c68f4e18bb7a885a2e5ef"
+      },
+      {
+        "path": "assets/scenes/ji_ran_living_room/times/Night/v1/front.jpg",
+        "sha256": "8e809ade0032e078cca0659d2c9ba9859ece967138681174726a2eb4dec8baa9"
+      },
+      {
+        "path": "assets/scenes/ji_ran_living_room/times/Night/v1/back.jpg",
+        "sha256": "4e835d47197adae3440a56201556d9fb0d69f22a6d266d76c1a54e9d404ce4eb"
+      },
+      {
+        "path": "assets/scenes/ji_ran_living_room/times/Night/v1/left-side.jpg",
+        "sha256": "cf82e97b842b773649f51e09198005287c29df4eac62e8479b84b21519232324"
+      },
+      {
+        "path": "assets/scenes/ji_ran_living_room/times/Night/v1/right-side.jpg",
+        "sha256": "fd9c940f6fc04f87d742f2b38d9c924ba1b0a4d7a6417656032bee200b56bdb4"
+      },
+      {
+        "path": "assets/scenes/ji_ran_living_room/times/Night/v1/floor-plan.jpg",
+        "sha256": "e2456a8f96c0e824e9c6211b3ecd18c2ef642c33f10a40fc6ce0f33f571661ab"
+      },
+      {
+        "path": "episodes/EP005/blocking/seg05/v1/artifact.json",
+        "sha256": "8bc6d7f6af22ab7606c04b89be1a766fb2e501e1e64a691d27bc4cbfc6c2f796"
+      },
+      {
+        "path": "episodes/EP005/blocking/seg05/accepted.json",
+        "sha256": "76ba347597f1699b18df9cf634d41059b613cd950557d0cfce1c405aece466b0"
+      },
+      {
+        "path": "episodes/EP005/blocking/seg05/current.json",
+        "sha256": "61422ebc700d8fe9b1268b89ac6816f22135002e8f271dd14c50c060786e03c9"
+      },
+      {
+        "path": "episodes/EP005/blocking/seg05/v1/image-1.jpg",
+        "sha256": "89d06c616c1f8a0cec0c854ee1884cfc9f7cadb3e5a82557c193af19d61aa82c"
+      },
+      {
+        "path": "episodes/EP005/blocking/seg05/v1/asset/job.json",
+        "sha256": "ea95c8e895c6cd99e47a358b805c24684b138e045b2f2aaf47f89d76838b98d7"
+      },
+      {
+        "path": "assets/characters/lin_qingyu/states/S2/v1/artifact.json",
+        "sha256": "d05f49e370974bdf860b8c54bf7bee508055c977d59a1ebfa014a98ae3a560e8"
+      },
+      {
+        "path": "assets/characters/lin_qingyu/states/S2/accepted.json",
+        "sha256": "2d1b87eaa3b5a799b61e2325a1d378a2e88c938a4378d61e06f59410044745e9"
+      },
+      {
+        "path": "assets/characters/lin_qingyu/states/S2/current.json",
+        "sha256": "953ee12656858c4c0eda2587c9917c04edb1a1094e23daa26c458818bddfc52f"
+      },
+      {
+        "path": "assets/characters/lin_qingyu/states/S2/v1/image-1.jpg",
+        "sha256": "b305b157c163a4a828bcdd323dd512ee02f8f16a777225230b37846a75b730ce"
+      },
+      {
+        "path": "assets/characters/lin_qingyu/states/S2/v1/asset/job.json",
+        "sha256": "3b7eee70326e97388137979ff6f8875b73ae1d630463e729bb974876b94ecbea"
+      },
+      {
+        "path": "assets/characters/ji_ran/states/S3/v1/artifact.json",
+        "sha256": "d5dbee73d4e87660a5a7c7e04b85a0f205c7522549bef83325fc55b820b3783b"
+      },
+      {
+        "path": "assets/characters/ji_ran/states/S3/accepted.json",
+        "sha256": "1568cce5aefef497f926989ee0e27ac44a9ecdc01c4fca5007b96c14402ddf33"
+      },
+      {
+        "path": "assets/characters/ji_ran/states/S3/current.json",
+        "sha256": "11cd27ca217fb81c2e53ec3ac256f1d651b017818e2ed3fc65b45739677655f9"
+      },
+      {
+        "path": "assets/characters/ji_ran/states/S3/v1/image-1.jpg",
+        "sha256": "406884ed8ca649d36821d06254e4d716369f57182c7c33167aa2579ca8d9661b"
+      },
+      {
+        "path": "assets/characters/ji_ran/states/S3/v1/asset/job.json",
+        "sha256": "54084e96df55fdb5f4fcaf923edbde70b0f6a851b1b94344ba6c8b17f2bf5f34"
+      },
+      {
+        "path": "episodes/EP005/video_prompts/v1/seg05.json",
+        "sha256": "b636ff3ee0c08eb1442ed665369966bab45b96383334ef18e96968acb9014df7"
+      }
+    ],
+    "character_reference_mode": "asset_library",
+    "video_references": "storyboard",
+    "trusted_character_references": {},
+    "video_prompts_version": "v1"
+  }
+}

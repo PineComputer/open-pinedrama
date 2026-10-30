@@ -1,0 +1,14 @@
+{
+  "model": "gpt-image-2.5-sunburst",
+  "prompt": "Image 1 is the floor plan of a room seen from above: its bottom edge is the front wall, its top edge the back wall, its left edge the left wall and its right edge the right wall. Image 2 is the front view of the same room (the establishing view), taken from the centre of the front wall facing the back wall. Generate one photorealistic cinematic still of this same room, empty of people, from a new camera position: the right-side view: the camera stands at the centre of the left wall, at eye level, facing the right wall, so the front wall is at the right edge of the frame and the back wall at its left edge. Turn the camera for real: this view must not show the back wall's furniture head-on unless it is the wall being faced. Keep every wall, door, window, piece of furniture, material, colour and light exactly as Image 1 and Image 2 show them, seen from this new side; the room layout and furniture placement exactly match Image 1. Location: Jail, front desk. A present-day jail processing and release area with beige walls and a grey linoleum floor. A chest-high grey laminate front desk runs across the room, parallel to the back wall and a few steps in front of it, with a computer monitor and a tray on its top. Back wall: grey metal filing cabinets, a plain round wall clock and, at the back wall's left end, a heavy steel security door with a small wire-glass pane, which leads back to the cells. Right wall: a heavy steel exit door with a push bar and a small wire-glass window, the way out to the street. Left wall: a row of small grey steel property lockers and a steel bench bolted to the floor beneath them. Front wall (behind the camera): a cork notice board. Rectangular fluorescent ceiling panels give cool, even top light, and daylight comes in faintly through the exit door's small window on the right wall.\n\nAvoid: people, readable text, logos, watermark, any door or window the description does not name.\n",
+  "n": 1,
+  "size": "1152x2048",
+  "quality": "high",
+  "output_format": "jpeg",
+  "output_compression": 100,
+  "moderation": "low",
+  "input_images": [
+    "assets/scenes/jail_front_desk/floor-plan/v1/image-1.jpg",
+    "assets/scenes/jail_front_desk/front/v1/image-1.jpg"
+  ]
+}

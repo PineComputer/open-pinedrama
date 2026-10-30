@@ -1,0 +1,96 @@
+{
+  "model": "ep-20260928175156-xn9xm",
+  "content": [
+    {
+      "type": "text",
+      "text": "Image 1: Seven-panel storyboard reference, used for the overall shot structure, shot sizes, and camera-movement rhythm. Read it from left to right and from top to bottom; panel N is Shot N. It is a line-art sketch: do not adopt its sketch style, black outlines, white background, panel borders or drawn faces.\nImage 2: Reference of SU YAQING'S LIVING ROOM, the front view, the establishing view, facing the back wall, a rendered set, not live action. Use it only for the room's layout, the furniture's positions and the light's direction; do not reference its visual content. It contains no people.\nImage 3: Reference of SU YAQING'S LIVING ROOM, the back view, turned 180 degrees, facing the front wall, with the left wall at its right edge, a rendered set, used only for the room's layout; it contains no people.\nImage 4: Reference of SU YAQING'S LIVING ROOM, the left-side view, facing the left wall, with the back wall at its right edge, a rendered set, used only for the room's layout; it contains no people.\nImage 5: Reference of SU YAQING'S LIVING ROOM, the right-side view, facing the right wall, with the back wall at its left edge, a rendered set, used only for the room's layout; it contains no people.\nImage 6: Reference of SU YAQING'S LIVING ROOM, the floor plan seen from above: its top edge is the back wall, its bottom edge the front wall behind the front view's camera, and its left and right edges the left and right walls, a rendered set, used only for the room's layout; it contains no people.\nImage 7: Blocking reference of the segment's start: the same place with these people in their places, used only for where each person is and which way they face; take faces and outfits from each subject's own image. It is a line-art diagram: do not adopt its outlines or white background.\nImage 8: Subject 1 (Su Yaqing) character appearance reference.\nImage 9: Prop 1 (video-calling phone) maps to this image; copy its writing and badges exactly from Image 9.\nFrom each prop's image, use only structure, material, and color.\n[Subject settings]\nSubject 1 (Su Yaqing): Refer to Image 8. 27, Heiress of the Su family, Ji Ran's best friend and Lin Qingyu's older stepsister. Outfit: At home: a blush-pink satin spaghetti-strap bodycon midi slip dress that hugs her waist and hips, with pink velvet low-heeled mules, pearl drop earrings and a diamond tennis bracelet. Signature colour: pink.\nEnvironment (SU YAQING'S LIVING ROOM): Refer to Images 2 to 6. Day, bright daylight from large windows. Bright daylight from the large windows, warm glow from the floor lamps at the sofa ends. Live sound: a quiet apartment, a cushion thump, Su Yaqing's laughter.\nDo not swap the characters' appearances, clothing, actions, positions or dialogue.\n[Subjects and relationships]\nOnly one person appears throughout: Su Yaqing.\n[Blocking]\nRefer to Images 2 to 6 for the room and Image 7 for the people's places. Su Yaqing sits in the middle of the cream bouclé sofa among pastel cushions, legs crossed, facing the low glass coffee table on the pale rug. She holds the video-calling phone up at face height. The kitchen doorway is at the back of the room behind the sofa, and it is empty. The large windows are on the side wall, and a floor lamp stands at each end of the sofa. The camera is in front of the sofa, beyond the glass coffee table, and stays on that side.\n[Overall style]\nPhotorealistic live-action short drama with cinematic lighting. Each character keeps the face and the outfit with its main colour from their reference image throughout. Use each character sheet only for that character: the face from the close-up on the right, the body and outfit from the turnaround on the left; do not render the sheet's layout, white background or multiple views. This segment has 4 lines, in this order: Ji Ran (V.O.), Su Yaqing, Ji Ran (V.O.), Su Yaqing. Generate speech only from the lines in {} in the shot list, each spoken exactly once by its speaker; everyone else keeps their mouth naturally closed while listening, and a V.O. speaker keeps their mouth closed or is off screen. Follow the shot list below; do not add cuts or camera moves beyond it. Strictly adhere to the 180-degree rule: within a scene, characters keep their screen sides and the camera stays on one side of the axis. Seamless continuity of action; cut on action. For dialogue prefer static shot-reverse-shot and over-the-shoulder shots, balanced with reaction shots and close-up inserts. Faces stable and clear, with no resemblance to any real actor or actress. Normal human eyes. Natural anatomy. Natural, fluid motion that follows the blocking; characters make subtle, natural movements. Characters, props and environment share one world with matched lighting. Each line ends naturally with breathing room and is never cut off. Authentic performances with micro-expressions. No BGM; generate only dialogue, environmental sounds and action sounds. No subtitles.\n[Continuity]\nMaintain continuity in the identities, number, appearance, clothing, relative heights, spatial positions, and eyelines of all the characters. The actions in the shot list occur strictly in sequence. Hands are anatomically correct.\n[Strictly exclude]\nsubtitles or on-screen text. Ji Ran in the room. readable text on the phone screen. Dialogue from the wrong character, multiple people speaking at once, repeated or missing lines, lip-sync errors and audio-visual desynchronization. The raw reference images (character sheets, setting plates) appearing as a frame of the video, and starting on a still frame of the setting reference. A fast zoom-in at the start, a fast pull-back at the end, unmotivated whip-pans, tilts, zooms and 360-degree orbits. Axis-crossing, jump cuts, frame skips, flicker and clipping. Face swaps, changes in age or clothing, sudden height shifts, added or missing characters, spatial jumps, and disordered action sequences; props popping in or vanishing, and duplicate characters except mirror reflections. Hand clipping, extra fingers, fused fingers, malformed hands. Subtitles, captions, watermarks and garbled writing; writing and logos other than those on a key prop's reference image, which are copied from it; a phone screen or paper that is not a key prop is shown from the back or out of focus. Black-and-white, monochrome, grayscale, desaturated visuals; hand-drawn, sketch, line art, illustration, comics, animation; storyboard frames, rough sketches, panel borders, gutters and grid layouts.\n[Shot list] (7 shots, approximately 23 seconds)\nWhen a previous-shot reference image is given, it is the moment this segment starts from: keep its people's positions, outfits, props and light, and continue from there. Shot 1 keeps its own camera, matching the image's framing only when it frames the same view; do not repeat that frame later.\nShot 1 (0-4s): [Wide shot, slow push in from beyond the glass coffee table, eye-level, full-length framing of the sofa] Su Yaqing lounges on the cream sofa with her long legs crossed, smiling at the phone she holds up, mouth closed. Dialogue (Ji Ran, V.O., in Chinese, cool, firm): {可惜，现在的纪然，已经不会再任人摆布了。}\nShot 2 (4-8s): [Medium close-up, locked-off camera, eye-level] Su Yaqing's eyebrows rise and she stops smiling, mouth closed. Dialogue (Ji Ran, V.O., in Chinese, cool): {无论是路少泽也好，还是其他人也罢，}\nShot 3 (8-11s): [Close-up, low angle, quick push in] Su Yaqing leans forward toward the phone, her mouth falling open in surprise. Dialogue (Ji Ran, V.O., in Chinese, decisive): {我的男人，我自己选，我要。}\nShot 4 (11-13s): [Medium shot, over-the-shoulder shot from behind Su Yaqing onto the phone screen, eye-level] Su Yaqing's shoulder and curls fill the foreground, and the phone screen shows the video call. Dialogue (Su Yaqing, in Chinese, incredulous rising tone): {嗯？还选老公？}\nShot 5 (13-17s): [Close-up, handheld, eye-level] Su Yaqing blinks twice, mouth closed, then her lips press against a laugh. Dialogue (Ji Ran, V.O., in Chinese, matter-of-fact): {对，我要公开招聘面试，海选。}\nShot 6 (17-20s): [Medium shot, high angle over the glass coffee table] Su Yaqing bursts out laughing and slaps a pastel cushion beside her. Dialogue (Su Yaqing, in Chinese, laughing, teasing): {纪然，亏你想得出来啊，}\nShot 7 (20-23s): [Medium close-up, locked-off camera, eye-level] Su Yaqing shakes her head at the phone, still laughing. Dialogue (Su Yaqing, in Chinese, bubbly, mocking): {你当这是选秀呢，还海选。}\nAt the end: Su Yaqing sits in the middle of the cream sofa among the pastel cushions, leaning toward the glass coffee table, holding the video-calling phone up at face height and laughing. The kitchen doorway at the back of the room behind the sofa is empty.\n\nImage 10 is the first frame.\n"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261027074939-fq4m4"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/su_living_room/times/Day/v1/front.jpg",
+        "path": "assets/scenes/su_living_room/times/Day/v1/front.jpg",
+        "sha256": "191c7041821660987a709e46a8043ae20b35c8c290f981ed5b8f5cd63baeb112"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/su_living_room/times/Day/v1/back.jpg",
+        "path": "assets/scenes/su_living_room/times/Day/v1/back.jpg",
+        "sha256": "1a7622ecfcfa877b5dc1a68c2399e2162270d5bae98ed45689bf4f962480db19"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/su_living_room/times/Day/v1/left-side.jpg",
+        "path": "assets/scenes/su_living_room/times/Day/v1/left-side.jpg",
+        "sha256": "bde37548d3629306daf13dd1c4b3df3ea60f797668e1fbe848bef210d6b18f42"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/su_living_room/times/Day/v1/right-side.jpg",
+        "path": "assets/scenes/su_living_room/times/Day/v1/right-side.jpg",
+        "sha256": "f305b909d2baf326b0a30bd1380ccb4a7aaa0d942016b363a5d16d5b44129b8f"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/su_living_room/times/Day/v1/floor-plan.jpg",
+        "path": "assets/scenes/su_living_room/times/Day/v1/floor-plan.jpg",
+        "sha256": "084142c1de5910c57eb14ff4dcccb6c3c459659da952c6aa3452440acb1cad4c"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261027074420-rw57c"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261027073126-ks4k6"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261027143829-bnwpl"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261027143016-nr5rk"
+      },
+      "role": "reference_image"
+    }
+  ],
+  "duration": 23,
+  "ratio": "9:16",
+  "resolution": "480p",
+  "generate_audio": true,
+  "watermark": false,
+  "return_last_frame": true,
+  "omni_reference_task_type": "reference"
+}

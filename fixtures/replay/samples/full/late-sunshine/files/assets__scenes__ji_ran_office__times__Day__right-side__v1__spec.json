@@ -1,0 +1,11 @@
+{
+  "provider": "openai",
+  "model": "gpt-image-2.5-sunburst",
+  "prompt": "Image 1 is the right-side view, facing the right wall, with the back wall at its left edge of a room. Edit it into the same view of the same room at this time of day: Day. Keep the camera position, framing, lens, walls, doors, windows, furniture, materials and colours exactly as in Image 1; change only the light. Outside every window and doorway, show what that place looks like at Day, with the sky, light and lit windows of that time, never the daylight scene of Image 1 darkened. Inside, light the room as the description says it is lit at that time, with only the lamps it names turned on. The place stays completely empty of people: no person, figure, silhouette or reflection of a person anywhere. Location: JI RAN'S OFFICE. Sleek, spacious contemporary executive office of a design company, in warm walnut, white and grey. A large walnut desk is covered with architectural plans, wood samples, a metal figurine and a pour-over coffee station. Behind it stands a black leather executive chair. To one side are a lounge area of black leather sofas and armchairs around a white marble coffee table, and a wall sign reading 'JUST DO IT'. The door is on the side wall facing the desk, with open space in front of the desk for standing visitors. Floor-to-ceiling windows behind the desk let in bright, soft daylight from behind and to the left of the desk. Warm recessed ceiling spots and a brass desk lamp fill in from above.\n\nAvoid: people or silhouettes, a darkened copy of Image 1's daylight, readable text, labels, signs with letters or numbers, logos, watermark.\n",
+  "aspect_ratio": "9:16",
+  "size": "1152x2048",
+  "quality": "high",
+  "images": [
+    "assets/scenes/ji_ran_office/v1/right-side.jpg"
+  ]
+}

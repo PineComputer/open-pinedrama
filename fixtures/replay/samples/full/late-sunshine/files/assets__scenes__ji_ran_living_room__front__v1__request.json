@@ -1,0 +1,13 @@
+{
+  "model": "gpt-image-2.5-sunburst",
+  "prompt": "Image 1 is the floor plan of this room seen from above: its bottom edge is the front wall, its top edge the back wall, its left edge the left wall and its right edge the right wall. Generate one photorealistic cinematic still of this room, the front view (the establishing view): the camera stands at the centre of the front wall, at eye level, facing the back wall, with a 35mm lens and natural textures. The room layout and furniture placement should exactly match Image 1. The place is completely empty of people: no person, figure, silhouette, mannequin or reflection of a person anywhere, including behind glass, through doorways and in the distance. Location: JI RAN'S LIVING ROOM. Spacious, stylish downtown apartment living room at night. A pale linen sofa sits on a patterned geometric rug, before a marble-and-glass coffee table. Behind it is an open kitchen with a white island and pendant lights. Floor-to-ceiling windows show city lights behind. Warm light comes from the pendants over the kitchen island, a floor lamp beside the sofa on the left and soft cove lighting in the ceiling. Show only this place as described: the doors, windows and openings it names lead nowhere new, with no other exit, courtyard, corridor or outdoor view added. Light it with the sources the description names, from their direction, at a neutral daylight white balance so that whites are white; only lamps the description names may glow warm.\n\nAvoid: people or silhouettes, readable text, labels, signs with letters or numbers, logos, watermark.\n",
+  "n": 1,
+  "size": "1152x2048",
+  "quality": "high",
+  "output_format": "jpeg",
+  "output_compression": 100,
+  "moderation": "low",
+  "input_images": [
+    "assets/scenes/ji_ran_living_room/floor-plan/v1/image-1.jpg"
+  ]
+}

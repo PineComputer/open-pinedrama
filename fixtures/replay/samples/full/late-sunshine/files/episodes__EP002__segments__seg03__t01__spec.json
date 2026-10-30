@@ -1,0 +1,205 @@
+{
+  "model": "sd25",
+  "content": [
+    {
+      "type": "text",
+      "text": "Image 1: Two-panel storyboard reference, used for the overall shot structure, shot sizes, and camera-movement rhythm. Read it from left to right and from top to bottom; panel N is Shot N. It is a line-art sketch: do not adopt its sketch style, black outlines, white background, panel borders or drawn faces.\nImage 2: Reference of JI RAN'S OFFICE, the front view, the establishing view, facing the back wall, a rendered set, not live action. Use it only for the room's layout, the furniture's positions and the light's direction; do not reference its visual content. It contains no people.\nImage 3: Reference of JI RAN'S OFFICE, the back view, turned 180 degrees, facing the front wall, with the left wall at its right edge, a rendered set, used only for the room's layout; it contains no people.\nImage 4: Reference of JI RAN'S OFFICE, the left-side view, facing the left wall, with the back wall at its right edge, a rendered set, used only for the room's layout; it contains no people.\nImage 5: Reference of JI RAN'S OFFICE, the right-side view, facing the right wall, with the back wall at its left edge, a rendered set, used only for the room's layout; it contains no people.\nImage 6: Reference of JI RAN'S OFFICE, the floor plan seen from above: its top edge is the back wall, its bottom edge the front wall behind the front view's camera, and its left and right edges the left and right walls, a rendered set, used only for the room's layout; it contains no people.\n[Subject settings]\nEnvironment (JI RAN'S OFFICE): Refer to Images 2 to 6. Day, soft hazy daylight. Soft daylight from the floor-to-ceiling windows and bokeh light points. Live sound: faint room tone.\nDo not swap the characters' appearances, clothing, actions, positions or dialogue.\n[Overall style]\nPhotorealistic live-action short drama with cinematic lighting. Each character keeps the face and the outfit with its main colour from their reference image throughout. Use each character sheet only for that character: the face from the close-up on the right, the body and outfit from the turnaround on the left; do not render the sheet's layout, white background or multiple views. This segment has no dialogue; nobody speaks. Generate speech only from the lines in {} in the shot list, each spoken exactly once by its speaker; everyone else keeps their mouth naturally closed while listening, and a V.O. speaker keeps their mouth closed or is off screen. Follow the shot list below; do not add cuts or camera moves beyond it. Strictly adhere to the 180-degree rule: within a scene, characters keep their screen sides and the camera stays on one side of the axis. Seamless continuity of action, spatial matching and consistent actor blocking; cut on action. For dialogue prefer static shot-reverse-shot and over-the-shoulder shots, balanced with reaction shots and close-up inserts. Faces stable and clear, with no resemblance to any real actor or actress. Normal human eyes. Natural anatomy and hands. Natural, fluid motion that follows the blocking; characters make subtle, natural movements. Characters, props and environment share one world with matched lighting. Each line ends naturally with breathing room and is never cut off. Authentic performances with micro-expressions. No BGM; generate only dialogue, environmental sounds and action sounds. No subtitles.\n[Strictly exclude]\nsubtitles or garbled text. any person in frame. Dialogue from the wrong character, multiple people speaking at once, repeated or missing lines, lip-sync errors and audio-visual desynchronization. The raw reference images (character sheets, setting plates) appearing as a frame of the video, and starting on a still frame of the setting reference. A fast zoom-in at the start, a fast pull-back at the end, unmotivated whip-pans, tilts, zooms and 360-degree orbits. Axis-crossing, jump cuts, frame skips, flicker and clipping. Characters or props popping in or vanishing, and duplicate characters except mirror reflections. Subtitles, captions, watermarks and garbled writing; writing and logos other than those on a key prop's reference image, which are copied from it; a phone screen or paper that is not a key prop is shown from the back or out of focus. Black-and-white, monochrome, grayscale, desaturated visuals; hand-drawn, sketch, line art, illustration, comics, animation; storyboard frames, rough sketches, panel borders, gutters and grid layouts.\n[Shot list] (2 shots, approximately 4 seconds)\nWhen a previous-shot reference image is given, it is the moment this segment starts from: keep its people's positions, outfits, props and light, and continue from there. Shot 1 keeps its own camera, matching the image's framing only when it frames the same view; do not repeat that frame later.\nAt the start: The office is seen out of focus, with no person in frame. The one walnut desk stands before the floor-to-ceiling windows, which glow with soft daylight.\nShot 1 (0-2s): [Wide shot, slow drift across the room, eye-level, shallow focus.] The blurred office glows. Soft round points of light drift slowly across the image in front of the floor-to-ceiling windows.\nShot 2 (2-4s): [Medium shot, slow push in toward the walnut desk, eye-level, shallow focus.] The points of light swell and brighten as they float across the hazy walnut desk, until the frame turns bright.\nAt the end: The frame is bright and blurred with drifting light points, and no person is in frame.\n"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261027080402-z9fbj"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/ji_ran_office/times/Day/v1/front.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/ji_ran_office/times/Day/v1/back.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/ji_ran_office/times/Day/v1/left-side.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/ji_ran_office/times/Day/v1/right-side.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/ji_ran_office/times/Day/v1/floor-plan.jpg"
+      },
+      "role": "reference_image"
+    }
+  ],
+  "duration": 4,
+  "ratio": "9:16",
+  "resolution": "480p",
+  "generate_audio": true,
+  "watermark": false,
+  "return_last_frame": true,
+  "omni_reference_task_type": "reference",
+  "drama": {
+    "segment": {
+      "id": "seg03",
+      "duration": 4,
+      "location": "ji_ran_office",
+      "scene_heading": "INT. JI RAN'S OFFICE - DAY #2-2#",
+      "time": "Day, soft hazy daylight",
+      "characters": [],
+      "first_state": "The office is seen out of focus, with no person in frame. The one walnut desk stands before the floor-to-ceiling windows, which glow with soft daylight.",
+      "shots": [
+        {
+          "time": "0-2s",
+          "size": "wide shot",
+          "angle": "eye level",
+          "camera": "Wide shot, slow drift across the room, eye-level, shallow focus.",
+          "visual": "The blurred office glows. Soft round points of light drift slowly across the image in front of the floor-to-ceiling windows.",
+          "audio": "",
+          "characters": [],
+          "lines": []
+        },
+        {
+          "time": "2-4s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, slow push in toward the walnut desk, eye-level, shallow focus.",
+          "visual": "The points of light swell and brighten as they float across the hazy walnut desk, until the frame turns bright.",
+          "audio": "",
+          "characters": [],
+          "lines": []
+        }
+      ],
+      "light_audio": "Soft daylight from the floor-to-ceiling windows and bokeh light points. Live sound: faint room tone.",
+      "dialogue": [],
+      "must_hit": [
+        "Soft points of light drift across the blurred office"
+      ],
+      "exit_state": "The frame is bright and blurred with drifting light points, and no person is in frame.",
+      "negative": [
+        "subtitles or garbled text",
+        "any person in frame"
+      ]
+    },
+    "bible_version": "v2",
+    "breakdown_version": "v4",
+    "lineage": [
+      {
+        "path": "bible/v2/artifact.json",
+        "sha256": "f5400f28e1edd9ccef571edd8420590ca4a9e72eb37b7ca444a66cfe777c7b91"
+      },
+      {
+        "path": "bible/accepted.json",
+        "sha256": "d964bcfb13d315e51ed18dba40bce44dbe8e8ad1fd06b96e8843e333e1d61a32"
+      },
+      {
+        "path": "bible/current.json",
+        "sha256": "2addb578f51de2dd02b1e8e33d5e141f23f16f02e61259b8cb42e64f67d2fcc3"
+      },
+      {
+        "path": "bible/v2/bible.json",
+        "sha256": "3d920d493ba887180838dafb80b72f72eb9f03f827829dba1965c3643feaf05d"
+      },
+      {
+        "path": "bible/v2/input/screenplay.md",
+        "sha256": "afbfe0f787d9c5565630e661e5667df671458c5aa581c242873ff1ab7de27669"
+      },
+      {
+        "path": "episodes/EP002/breakdown/v4/artifact.json",
+        "sha256": "1120393a8abd9cb8732a95168efcc74083004db0950310efccc7e210795677c2"
+      },
+      {
+        "path": "episodes/EP002/breakdown/accepted.json",
+        "sha256": "a6b7d8be54066681ca20a6ea38ceedd1581cd1685c6d5177dc8b67a3c00955b6"
+      },
+      {
+        "path": "episodes/EP002/breakdown/current.json",
+        "sha256": "85c8b196557357ca9b646e6ee185acbe7b42dbdd2157895771c1c26293cd75ad"
+      },
+      {
+        "path": "episodes/EP002/breakdown/v4/breakdown.json",
+        "sha256": "74ca4cc09dffcd68269e3f58bffce077b7280d6c981f1aed564277169fef4086"
+      },
+      {
+        "path": "episodes/EP002/multi_panel_storyboard/seg03/line-art/v1/artifact.json",
+        "sha256": "b0b4f4ce31de6bbbf8fe753961aa1dadd852d9b147bacc8b0d96aa9147533f01"
+      },
+      {
+        "path": "episodes/EP002/multi_panel_storyboard/seg03/line-art/accepted.json",
+        "sha256": "938796efbfd69180340aa37f787523bdec882301d7b64c6eb33c9ac8e03e6e68"
+      },
+      {
+        "path": "episodes/EP002/multi_panel_storyboard/seg03/line-art/current.json",
+        "sha256": "5da153bbfeb3af0db4b4cd0d2a66d472aa5919f45ab88f9091366fc441d1c65e"
+      },
+      {
+        "path": "episodes/EP002/multi_panel_storyboard/seg03/line-art/v1/image-1.jpg",
+        "sha256": "8600b89b240a66759d05657219290fd16ec7e9818904c8e7332cf334aa7e8693"
+      },
+      {
+        "path": "episodes/EP002/multi_panel_storyboard/seg03/line-art/v1/asset/job.json",
+        "sha256": "74685ef3169c57e35672d89e061272f36929ef96723ec340d7611f35af6dca4f"
+      },
+      {
+        "path": "assets/scenes/ji_ran_office/times/Day/v1/artifact.json",
+        "sha256": "0c925f394c9b3f9ad008432786bc8b6930fa180c91f2c1aba1a78aadcd8cfe61"
+      },
+      {
+        "path": "assets/scenes/ji_ran_office/times/Day/accepted.json",
+        "sha256": "c3227c8e146023d1d6da3af1cf35fed9f60eb131b759f3a62d4bd46470321553"
+      },
+      {
+        "path": "assets/scenes/ji_ran_office/times/Day/current.json",
+        "sha256": "2d97a333f041f05a574b1c624389a614748ccff56ef9676faad2332359a7cf70"
+      },
+      {
+        "path": "assets/scenes/ji_ran_office/times/Day/v1/image-1.jpg",
+        "sha256": "921a81f20aa498d00fdcb23b2c8d68ed8b12e7f1079addb5f4d60e35f4b30b06"
+      },
+      {
+        "path": "assets/scenes/ji_ran_office/times/Day/v1/front.jpg",
+        "sha256": "b27bdf8b3cae548ebf3183c0ce8c555a685cb414e20b659e467abde7c7e258d5"
+      },
+      {
+        "path": "assets/scenes/ji_ran_office/times/Day/v1/back.jpg",
+        "sha256": "35487300be0e146f14a1343abda005e13774fa7e1453edd97240d27deaed6269"
+      },
+      {
+        "path": "assets/scenes/ji_ran_office/times/Day/v1/left-side.jpg",
+        "sha256": "bad88ae0d22d80f08c234a74bc0c36aba15741a719e001c000853b5f86436b3e"
+      },
+      {
+        "path": "assets/scenes/ji_ran_office/times/Day/v1/right-side.jpg",
+        "sha256": "aaadcfb066d50e71c5f0f363a54d41eed2dbaa7c6ada46bca294a0f8cdc92b39"
+      },
+      {
+        "path": "assets/scenes/ji_ran_office/times/Day/v1/floor-plan.jpg",
+        "sha256": "dc3b205ee9732f33d7bb1ba637217d1eab58beb1a865c14440558a6c7c1ed63a"
+      },
+      {
+        "path": "episodes/EP002/video_prompts/v1/seg03.json",
+        "sha256": "4215c81a0f23f72e9210960119aeaea1a9a2f54c1f01b3fb9ddda8d6a1c9e801"
+      }
+    ],
+    "character_reference_mode": "asset_library",
+    "video_references": "storyboard",
+    "trusted_character_references": {},
+    "video_prompts_version": "v1"
+  }
+}

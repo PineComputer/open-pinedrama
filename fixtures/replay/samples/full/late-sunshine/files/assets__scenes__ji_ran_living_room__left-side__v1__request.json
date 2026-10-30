@@ -1,0 +1,14 @@
+{
+  "model": "gpt-image-2.5-sunburst",
+  "prompt": "Image 1 is the floor plan of a room seen from above: its bottom edge is the front wall, its top edge the back wall, its left edge the left wall and its right edge the right wall. Image 2 is the front view of the same room (the establishing view), taken from the centre of the front wall facing the back wall. Generate one photorealistic cinematic still of this same room, empty of people, from a new camera position: the left-side view: the camera stands at the centre of the right wall, at eye level, facing the left wall, so the back wall is at the right edge of the frame and the front wall at its left edge. Turn the camera for real: this view must not show the back wall's furniture head-on unless it is the wall being faced. Keep every wall, door, window, piece of furniture, material, colour and light exactly as Image 1 and Image 2 show them, seen from this new side; the room layout and furniture placement exactly match Image 1. Location: JI RAN'S LIVING ROOM. Spacious, stylish downtown apartment living room at night. A pale linen sofa sits on a patterned geometric rug, before a marble-and-glass coffee table. Behind it is an open kitchen with a white island and pendant lights. Floor-to-ceiling windows show city lights behind. Warm light comes from the pendants over the kitchen island, a floor lamp beside the sofa on the left and soft cove lighting in the ceiling.\n\nAvoid: people, readable text, logos, watermark, any door or window the description does not name.\n",
+  "n": 1,
+  "size": "1152x2048",
+  "quality": "high",
+  "output_format": "jpeg",
+  "output_compression": 100,
+  "moderation": "low",
+  "input_images": [
+    "assets/scenes/ji_ran_living_room/floor-plan/v1/image-1.jpg",
+    "assets/scenes/ji_ran_living_room/front/v1/image-1.jpg"
+  ]
+}

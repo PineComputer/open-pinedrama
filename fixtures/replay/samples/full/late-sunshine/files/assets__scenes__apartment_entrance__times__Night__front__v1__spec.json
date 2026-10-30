@@ -1,0 +1,11 @@
+{
+  "provider": "openai",
+  "model": "gpt-image-2.5-sunburst",
+  "prompt": "Image 1 is the front view, the establishing view, facing the back wall of a room. Edit it into the same view of the same room at this time of day: Night. Keep the camera position, framing, lens, walls, doors, windows, furniture, materials and colours exactly as in Image 1; change only the light. Outside every window and doorway, show what that place looks like at Night, with the sky, light and lit windows of that time, never the daylight scene of Image 1 darkened. Inside, light the room as the description says it is lit at that time, with only the lamps it names turned on. The place stays completely empty of people: no person, figure, silhouette or reflection of a person anywhere. Location: JI RAN'S APARTMENT ENTRANCE. Upscale downtown apartment lobby landing on Ji Ran's floor at night. Brushed-steel elevator doors stand opposite a heavy walnut front door with a smart lock. The floor is polished stone, and a framed autumn landscape painting in amber tones hangs on the wall. Warm ceiling downlights fall from above, a soft wall sconce glows beside the painting and cooler light spills from the elevator when it opens.\n\nAvoid: people or silhouettes, a darkened copy of Image 1's daylight, readable text, labels, signs with letters or numbers, logos, watermark.\n",
+  "aspect_ratio": "9:16",
+  "size": "1152x2048",
+  "quality": "high",
+  "images": [
+    "assets/scenes/apartment_entrance/v1/front.jpg"
+  ]
+}

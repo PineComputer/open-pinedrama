@@ -1,0 +1,411 @@
+{
+  "model": "sd25",
+  "content": [
+    {
+      "type": "text",
+      "text": "Image 1: Five-panel storyboard reference, used for the overall shot structure, shot sizes, and camera-movement rhythm. Read it from left to right and from top to bottom; panel N is Shot N. It is a line-art sketch: do not adopt its sketch style, black outlines, white background, panel borders or drawn faces.\nImage 2: Reference of Jail, front desk, the front view, the establishing view, facing the back wall, a rendered set, not live action. Use it only for the room's layout, the furniture's positions and the light's direction; do not reference its visual content. It contains no people.\nImage 3: Reference of Jail, front desk, the back view, turned 180 degrees, facing the front wall, with the left wall at its right edge, a rendered set, used only for the room's layout; it contains no people.\nImage 4: Reference of Jail, front desk, the left-side view, facing the left wall, with the back wall at its right edge, a rendered set, used only for the room's layout; it contains no people.\nImage 5: Reference of Jail, front desk, the right-side view, facing the right wall, with the back wall at its left edge, a rendered set, used only for the room's layout; it contains no people.\nImage 6: Reference of Jail, front desk, the floor plan seen from above: its top edge is the back wall, its bottom edge the front wall behind the front view's camera, and its left and right edges the left and right walls, a rendered set, used only for the room's layout; it contains no people.\nImage 7: Blocking reference of the segment's start: the same place with these people in their places, used only for where each person is and which way they face; take faces and outfits from each subject's own image. It is a line-art diagram: do not adopt its outlines or white background.\nImage 8: Subject 1 (Sebastian, look S1) character appearance reference.\nImage 9: Subject 2 (Officer) character appearance reference.\nImage 10: Prop 1 (release form on a clipboard) maps to this image; use only structure, material, and color, and copy its writing and badges exactly from Image 10.\n[Subject settings]\nSubject 1 (Sebastian): Refer to Image 8. 30, the hero; the scorned illegitimate son of the Klein family, jailed for three days for reckless driving and secretly a billionaire running a plan. Outfit: look S1: His own clothes: a fitted black collared dress shirt with the top button open, slim black tailored trousers, a black leather belt, black leather Chelsea boots and the steel-and-black luxury wristwatch. Signature colour: black.\nSubject 2 (Officer): Refer to Image 9. 50, a gruff jail corrections officer who releases Sebastian. Outfit: A dark-navy long-sleeved corrections uniform shirt with plain cloth shoulder patches and no lettering, a plain metal badge, dark-navy uniform trousers, a wide brown leather duty belt with pouches and a key ring, and black work boots. Signature colour: brown.\nEnvironment (Jail, front desk): Refer to Images 2 to 6. Day, cool even fluorescent top light. Rectangular fluorescent ceiling panels give cool even top light; faint daylight through the small window of the steel exit door on the right wall. Live sound: fluorescent hum, the wall clock ticking, a distant door buzzer.\nDo not swap the characters' appearances, clothing, actions, positions or dialogue.\n[Subjects and relationships]\nOnly two people appear throughout: Sebastian and Officer.\n[Blocking]\nRefer to Images 2 to 6 for the room and Image 7 for the people's places. Camera on the exit-door side of the room, near the right-wall end of the chest-high grey front desk, seeing both men in three-quarter view across the desk. Officer stands behind the one front desk, on its back-wall side, by the computer monitor, the release form on a clipboard lying on the desk top in front of him. Sebastian, in his own black collared shirt and black trousers, stands on the front side of the desk facing the Officer, holding his steel-and-black wristwatch. The grey filing cabinets and the round wall clock are on the back wall behind the Officer.\n[Overall style]\nPhotorealistic live-action short drama with cinematic lighting. Each character keeps the face and the outfit with its main colour from their reference image throughout. Use each character sheet only for that character: the face from the close-up on the right, the body and outfit from the turnaround on the left; do not render the sheet's layout, white background or multiple views. This segment has 3 lines, in this order: Officer, Officer, Sebastian. Generate speech only from the lines in {} in the shot list, each spoken exactly once by its speaker; everyone else keeps their mouth naturally closed while listening, and a V.O. speaker keeps their mouth closed or is off screen. Follow the shot list below; do not add cuts or camera moves beyond it. Strictly adhere to the 180-degree rule: within a scene, characters keep their screen sides and the camera stays on one side of the axis. Seamless continuity of action, spatial matching and consistent actor blocking; cut on action. For dialogue prefer static shot-reverse-shot and over-the-shoulder shots, balanced with reaction shots and close-up inserts. Faces stable and clear, consistent with the reference images, with no resemblance to any real actor or actress. Normal human eyes. Natural anatomy and hands. Natural, fluid motion that follows the blocking; characters make subtle, natural movements. Characters, props and environment share one world with matched lighting. Each line ends naturally with breathing room and is never cut off. Authentic performances with micro-expressions. No BGM; generate only dialogue, environmental sounds and action sounds. No subtitles.\n[Continuity]\nMaintain continuity in the identities, number, appearance, clothing, relative heights, spatial positions, and eyelines of all the characters. The actions in the shot list occur strictly in sequence. Hands are anatomically correct.\n[Strictly exclude]\nadded or missing characters, spatial jumps. garbled or readable text on the form or uniform. malformed hands holding the pen. Dialogue from the wrong character, multiple people speaking at once, repeated or missing lines, lip-sync errors and audio-visual desynchronization. The raw reference images (character sheets, setting plates) appearing as a frame of the video, and starting on a still frame of the setting reference. A fast zoom-in at the start, a fast pull-back at the end, unmotivated whip-pans, tilts, zooms and 360-degree orbits. Axis-crossing, jump cuts, frame skips, flicker and clipping. Face swaps, changes in age or clothing, sudden height shifts, added or missing characters, spatial jumps, and disordered action sequences; props popping in or vanishing, and duplicate characters except mirror reflections. Hand clipping, extra fingers, fused fingers, malformed hands. Subtitles, captions, watermarks and garbled writing; writing and logos other than those on a key prop's reference image, which are copied from it; a phone screen or paper that is not a key prop is shown from the back or out of focus. Black-and-white, monochrome, grayscale, desaturated visuals; hand-drawn, sketch, line art, illustration, comics, animation; storyboard frames, rough sketches, panel borders, gutters and grid layouts.\n[Shot list] (5 shots, approximately 13 seconds)\nWhen a previous-shot reference image is given, it is the moment this segment starts from: keep its people's positions, outfits, props and light, and continue from there. Shot 1 keeps its own camera, matching the image's framing only when it frames the same view; do not repeat that frame later.\nShot 1 (0-3s): [Medium shot, locked-off camera, eye level from the exit-door side, both men across the front desk] Sebastian fastens the steel-and-black wristwatch around his wrist while the Officer picks up the release form on a clipboard from the desk and holds it out to him over the counter. <the watch clasp clicks shut>\nShot 2 (3-5s): [Medium close-up, clean single, eye level, tight on the Officer behind the desk, the filing cabinets behind him] Officer points the ballpoint pen at Sebastian, frowning under his bushy moustache. Dialogue (Officer, in English, gruff warning): {Don't drive recklessly again.}\nShot 3 (5-8s): [Close-up insert, high angle onto the desk top] Sebastian's hand, the wristwatch now on it, takes the release form on a clipboard and the black ballpoint pen; the Officer is off screen. Dialogue (Officer, in English, grumbling): {Next time, it won't be just three days.}\nShot 4 (8-10s): [Medium close-up, clean single, slight low angle, tight on Sebastian's face and shoulders] Sebastian raises his eyes from the clipboard to the Officer with a cocky smirk. Dialogue (Sebastian, in English, smooth and teasing): {I can't make any promises, officer.}\nShot 5 (10-13s): [Medium shot, slow push in on Sebastian, dirty single with the Officer's shoulder at the frame edge, eye level from the exit-door side] Sebastian signs the release form on the clipboard with a flourish and a smile, while the Officer behind the desk shakes his head. <pen scratches on paper>\nAt the end: Officer stands behind the front desk on its back-wall side, by the computer monitor, shaking his head. Sebastian stands on the front side of the desk facing him, the steel-and-black wristwatch on his wrist, holding the signed release form on a clipboard, smiling. Camera on the exit-door side.\n\nImage 11 is the first frame.\n"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261024090457-pk2w5"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/jail_front_desk/v1/front.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/jail_front_desk/v1/back.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/jail_front_desk/v1/left-side.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/jail_front_desk/v1/right-side.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/jail_front_desk/v1/floor-plan.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261022181329-dbnpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261022181218-ng85l"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261022180000-6s8cf"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/props/release_form/v2/image-1.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261024090646-9gd5l"
+      },
+      "role": "reference_image"
+    }
+  ],
+  "duration": 13,
+  "ratio": "9:16",
+  "resolution": "480p",
+  "generate_audio": true,
+  "watermark": false,
+  "return_last_frame": true,
+  "omni_reference_task_type": "reference",
+  "drama": {
+    "segment": {
+      "id": "seg02",
+      "duration": 13,
+      "location": "jail_front_desk",
+      "scene_heading": "2-2 Day | Int. Jail, front desk",
+      "time": "Day, cool even fluorescent top light",
+      "characters": [
+        "sebastian",
+        "officer"
+      ],
+      "states": {
+        "sebastian": "S1"
+      },
+      "props": [
+        "release_form"
+      ],
+      "first_state": "Camera on the exit-door side of the room, near the right-wall end of the chest-high grey front desk, seeing both men in three-quarter view across the desk. Officer stands behind the one front desk, on its back-wall side, by the computer monitor, the release form on a clipboard lying on the desk top in front of him. Sebastian, in his own black collared shirt and black trousers, stands on the front side of the desk facing the Officer, holding his steel-and-black wristwatch. The grey filing cabinets and the round wall clock are on the back wall behind the Officer.",
+      "shots": [
+        {
+          "time": "0-3s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, locked-off camera, eye level from the exit-door side, both men across the front desk",
+          "visual": "Sebastian fastens the steel-and-black wristwatch around his wrist while the Officer picks up the release form on a clipboard from the desk and holds it out to him over the counter.",
+          "audio": "<the watch clasp clicks shut>",
+          "characters": [
+            "sebastian",
+            "officer"
+          ],
+          "lines": []
+        },
+        {
+          "time": "3-5s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up, clean single, eye level, tight on the Officer behind the desk, the filing cabinets behind him",
+          "visual": "Officer points the ballpoint pen at Sebastian, frowning under his bushy moustache.",
+          "audio": "Dialogue (Officer, in English, gruff warning): {Don't drive recklessly again.}",
+          "characters": [
+            "officer"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "5-8s",
+          "size": "close-up",
+          "angle": "high angle",
+          "camera": "Close-up insert, high angle onto the desk top",
+          "visual": "Sebastian's hand, the wristwatch now on it, takes the release form on a clipboard and the black ballpoint pen; the Officer is off screen.",
+          "audio": "Dialogue (Officer, in English, grumbling): {Next time, it won't be just three days.}",
+          "characters": [
+            "sebastian"
+          ],
+          "lines": [
+            1
+          ]
+        },
+        {
+          "time": "8-10s",
+          "size": "medium close-up",
+          "angle": "low angle",
+          "camera": "Medium close-up, clean single, slight low angle, tight on Sebastian's face and shoulders",
+          "visual": "Sebastian raises his eyes from the clipboard to the Officer with a cocky smirk.",
+          "audio": "Dialogue (Sebastian, in English, smooth and teasing): {I can't make any promises, officer.}",
+          "characters": [
+            "sebastian"
+          ],
+          "lines": [
+            2
+          ]
+        },
+        {
+          "time": "10-13s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, slow push in on Sebastian, dirty single with the Officer's shoulder at the frame edge, eye level from the exit-door side",
+          "visual": "Sebastian signs the release form on the clipboard with a flourish and a smile, while the Officer behind the desk shakes his head.",
+          "audio": "<pen scratches on paper>",
+          "characters": [
+            "sebastian",
+            "officer"
+          ],
+          "lines": []
+        }
+      ],
+      "light_audio": "Rectangular fluorescent ceiling panels give cool even top light; faint daylight through the small window of the steel exit door on the right wall. Live sound: fluorescent hum, the wall clock ticking, a distant door buzzer.",
+      "dialogue": [
+        {
+          "speaker": "officer",
+          "line": "Don't drive recklessly again."
+        },
+        {
+          "speaker": "officer",
+          "line": "Next time, it won't be just three days.",
+          "offscreen": false
+        },
+        {
+          "speaker": "sebastian",
+          "line": "I can't make any promises, officer."
+        }
+      ],
+      "must_hit": [
+        "Sebastian, in his own clothes, puts his watch back on",
+        "Officer hands him the release form on a clipboard",
+        "Sebastian signs the form with a smile"
+      ],
+      "exit_state": "Officer stands behind the front desk on its back-wall side, by the computer monitor, shaking his head. Sebastian stands on the front side of the desk facing him, the steel-and-black wristwatch on his wrist, holding the signed release form on a clipboard, smiling. Camera on the exit-door side.",
+      "negative": [
+        "added or missing characters, spatial jumps",
+        "garbled or readable text on the form or uniform",
+        "malformed hands holding the pen"
+      ]
+    },
+    "bible_version": "v3",
+    "breakdown_version": "v2",
+    "lineage": [
+      {
+        "path": "bible/v3/artifact.json",
+        "sha256": "cb13295a705376dcb690dc2f74e465bcdb36c2980582e868bcab7a2c31de8850"
+      },
+      {
+        "path": "bible/accepted.json",
+        "sha256": "394389dea6cf8cff61e544808987a91e6f3ef64be7219edd056c5400bc0d175f"
+      },
+      {
+        "path": "bible/current.json",
+        "sha256": "ce2b0860ea8918c0783c82c60449e0fdd5d54bfd64137c7ed4ed86742face717"
+      },
+      {
+        "path": "bible/v3/bible.json",
+        "sha256": "cf9df0f3d86d0268b88ca2cb91e6aa4d1e79fe9915ec2996652b564e1d8902b2"
+      },
+      {
+        "path": "bible/v3/input/screenplay.md",
+        "sha256": "dba468aa05d17e356606cdedf4dbd0fd929ebc47c0abe3db0924bdf73915a492"
+      },
+      {
+        "path": "episodes/EP002/breakdown/v2/artifact.json",
+        "sha256": "24eeaae20a1992b0f7e499fe06abb7d9c2ce2d82fe1d9ad58ad8595a6cb955d0"
+      },
+      {
+        "path": "episodes/EP002/breakdown/accepted.json",
+        "sha256": "0062b14b79e3afe2b448e1fac51d63ccd62dd2fa6076e9efe2c6d2052dbe9b5e"
+      },
+      {
+        "path": "episodes/EP002/breakdown/current.json",
+        "sha256": "2d17800f8071c099170437e2f7762dab2ab410081f0f09b1d893f97ea4bc3243"
+      },
+      {
+        "path": "episodes/EP002/breakdown/v2/breakdown.json",
+        "sha256": "30abc8ad2964ed9bf075bd1e5284846fc217d835e0d88cb4c364c39e3f2e09fd"
+      },
+      {
+        "path": "episodes/EP002/multi_panel_storyboard/seg02/line-art/v4/artifact.json",
+        "sha256": "9ed206384f082f26f8ced7ddbac0b178aa888253d8517a81a40e637cf21b27aa"
+      },
+      {
+        "path": "episodes/EP002/multi_panel_storyboard/seg02/line-art/accepted.json",
+        "sha256": "c22a6256e9c33e151a672e9084e8f592f32900455bf6681f39b714b3f71aae5f"
+      },
+      {
+        "path": "episodes/EP002/multi_panel_storyboard/seg02/line-art/current.json",
+        "sha256": "087ce0d35cc99df6aaa8ba0da72f512b91c020421c2a8989939490f1cec3543b"
+      },
+      {
+        "path": "episodes/EP002/multi_panel_storyboard/seg02/line-art/v4/image-1.png",
+        "sha256": "fb4897513c0402a415af113c172b64e030ca3b0e1133fb9c2080ac532f9ac6f7"
+      },
+      {
+        "path": "episodes/EP002/multi_panel_storyboard/seg02/line-art/v4/asset/job.json",
+        "sha256": "427f409f9bcc646cdc0c2bb3cbd0f0daafac8a5990ed6a68024d281ee323dcc3"
+      },
+      {
+        "path": "assets/scenes/jail_front_desk/v1/artifact.json",
+        "sha256": "4348c59fd4870137326cc4a1e45dd0e23b4c098fd36a2068d7fb43f98437ce94"
+      },
+      {
+        "path": "assets/scenes/jail_front_desk/accepted.json",
+        "sha256": "13f124501fc8cc98e01a46bf7bdea4027623d15216715b9ec97fcf202379eda7"
+      },
+      {
+        "path": "assets/scenes/jail_front_desk/current.json",
+        "sha256": "63657ace2c9dc121d0a2f39b2d3e8e1ab427afdb868c91cee436383fa0b516c0"
+      },
+      {
+        "path": "assets/scenes/jail_front_desk/v1/image-1.jpg",
+        "sha256": "67dcf7794ab55655a5439e671e49c16a31d2632247a7163e12e8e79cc7a46eab"
+      },
+      {
+        "path": "assets/scenes/jail_front_desk/v1/front.jpg",
+        "sha256": "271c608f4d50a327f027dbb2caaa13d9b33af636598d32a52bb1c0234ae44256"
+      },
+      {
+        "path": "assets/scenes/jail_front_desk/v1/back.jpg",
+        "sha256": "4ded8266bdddd64a42e8b72d158e1639528a140871e37abf3f8aca83271d9813"
+      },
+      {
+        "path": "assets/scenes/jail_front_desk/v1/left-side.jpg",
+        "sha256": "387ab47bdc16dddf8e17c80a8693e8618583206a89aa00d653f04fd5e009fcbc"
+      },
+      {
+        "path": "assets/scenes/jail_front_desk/v1/right-side.jpg",
+        "sha256": "18fd47e6d56c7096583ac132eb1f6f780e610225476ca9d514f69471fdcfa5a7"
+      },
+      {
+        "path": "assets/scenes/jail_front_desk/v1/floor-plan.jpg",
+        "sha256": "643d2232a3373707f93a3d213c8ec8d814a6baea75e1214d284510af784e9923"
+      },
+      {
+        "path": "episodes/EP002/blocking/seg02/v1/artifact.json",
+        "sha256": "86799681e26569b855495be3671f5bae8e9f65bfb4dfb6c9f37e927f17c1f710"
+      },
+      {
+        "path": "episodes/EP002/blocking/seg02/accepted.json",
+        "sha256": "2b28f1e8e89cddadb50ca1f67f1da6ca0d87337d2f1067b0513173d35b8b1fd7"
+      },
+      {
+        "path": "episodes/EP002/blocking/seg02/current.json",
+        "sha256": "36b54dccb62d9e0de59dde15a7cdfed2f1794c2fc95717129dacf2ba6374cb9c"
+      },
+      {
+        "path": "episodes/EP002/blocking/seg02/v1/image-1.jpg",
+        "sha256": "035188b2139d76c6cc258a4868bfbf845f139cffa22d98325218babeb964344c"
+      },
+      {
+        "path": "episodes/EP002/blocking/seg02/v1/asset/job.json",
+        "sha256": "5843e20bce387c31e6a91294adfcc45767efb13f778ba3391166000c1726df70"
+      },
+      {
+        "path": "assets/props/release_form/v2/artifact.json",
+        "sha256": "fceaf4d022ff11dc58386171e1e41e19aa210dcda60da8e44e7bc9f66e4e709a"
+      },
+      {
+        "path": "assets/props/release_form/accepted.json",
+        "sha256": "16010ab635dd2a1c176fd6c24523e67916ff5b5e1b6c2b2e76360f0219d120be"
+      },
+      {
+        "path": "assets/props/release_form/current.json",
+        "sha256": "fa0a4c3391991f4f74bd63c2bfd5ff12030c2d8c68024fda2449904b93d36399"
+      },
+      {
+        "path": "assets/props/release_form/v2/image-1.jpg",
+        "sha256": "15563bc51edfe1ec217be6d6fd33c37da22418c604e7066f3962bb1c08812989"
+      },
+      {
+        "path": "assets/characters/sebastian/states/S1/v1/artifact.json",
+        "sha256": "7496d9278806de14f62b84edca6e07c9462f2f46091fe1c13645170a0714f5bd"
+      },
+      {
+        "path": "assets/characters/sebastian/states/S1/accepted.json",
+        "sha256": "fa19ea135343a7b82c78fa8d761febd35d6ee1e40c1dcfe69e9edc7c2f48b9e6"
+      },
+      {
+        "path": "assets/characters/sebastian/states/S1/current.json",
+        "sha256": "d2fa530f9d57772970227ed6350e4089770fcdc1ea1b577a656b9716428073ef"
+      },
+      {
+        "path": "assets/characters/sebastian/states/S1/v1/image-1.jpg",
+        "sha256": "3ed926ca34d0200fd3fb4cb6d5a6a0eecedcf8fe2e089b00f74d564bdba3ac07"
+      },
+      {
+        "path": "assets/characters/sebastian/states/S1/v1/asset/job.json",
+        "sha256": "3300a96a6c5cf6387d28e3422f9577a7eb97fe93ab6f1a1a56065239584b4516"
+      },
+      {
+        "path": "assets/characters/officer/v1/artifact.json",
+        "sha256": "e0e29c5729d3b1c68b551b00f50cdb8e6bfd329f5be1205206b8bcd4d4fc4663"
+      },
+      {
+        "path": "assets/characters/officer/accepted.json",
+        "sha256": "a9308178f2c49edf20137706e290a1c89fb1f4c21d2233b5c881441939e7b370"
+      },
+      {
+        "path": "assets/characters/officer/current.json",
+        "sha256": "74cf0a55789c994e25d1114d994143d6aea7c1692b63f0c6b327aa2dfbf10e9e"
+      },
+      {
+        "path": "assets/characters/officer/v1/image-1.jpg",
+        "sha256": "e2aa7deb9ed81d72529f306d7220e99d390718a8b53b4e30114d1e687773eaac"
+      },
+      {
+        "path": "assets/characters/officer/v1/asset/job.json",
+        "sha256": "24280ca129bcd1925d50d8bdf613d3f8ec3bf51bb81d36c02ec3f2cf652f9620"
+      },
+      {
+        "path": "episodes/EP002/video_prompts/v5/seg02.json",
+        "sha256": "c1f64ccd14e8e66b300f696768a9a79e1daa18830e1a5a0230648c24e3d3602e"
+      },
+      {
+        "path": "episodes/EP002/first_frame_reference/seg02/v1/artifact.json",
+        "sha256": "ddd20863d781bfd1b4cbac4a8b2013bc0eb756530061519010dc9d4ef3e527b2"
+      },
+      {
+        "path": "episodes/EP002/first_frame_reference/seg02/accepted.json",
+        "sha256": "ad8a06ccecd74e202347c705af15e3b3206b9cc9160e78c2bdf6dad1cf3556b4"
+      },
+      {
+        "path": "episodes/EP002/first_frame_reference/seg02/current.json",
+        "sha256": "09fb7ce43d82c5fef0f8039ffb07d596c43e31d782bf19e35cd9c05f3a7fbcd9"
+      },
+      {
+        "path": "episodes/EP002/first_frame_reference/seg02/v1/image-1.jpg",
+        "sha256": "4ab6d798c392ed52d55e2d78e79868f90127fca73aedb4859657c7af90de7408"
+      },
+      {
+        "path": "episodes/EP002/first_frame_reference/seg02/v1/asset/job.json",
+        "sha256": "9d0f46d8fe3403a4b6a6a500f7c155fd945ab0e57d9c2f762ed0c75446beb70e"
+      }
+    ],
+    "character_reference_mode": "asset_library",
+    "video_references": "storyboard",
+    "trusted_character_references": {},
+    "video_prompts_version": "v5",
+    "first_frame_reference": "v1"
+  }
+}

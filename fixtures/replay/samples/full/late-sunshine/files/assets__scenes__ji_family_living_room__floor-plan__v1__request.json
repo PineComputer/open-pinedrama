@@ -1,0 +1,11 @@
+{
+  "model": "gpt-image-2.5-sunburst",
+  "prompt": "Architectural floor plan of one room, drawn straight from above as a clean top-down orthographic plan view in the style of a set designer's ground plan: white background, thick dark walls with gaps for doors and windows, door swings drawn as arcs, windows as thin double lines, and every piece of furniture as a simple outline from above, to scale. In the plan, its bottom edge is the front wall, its top edge the back wall, its left edge the left wall and its right edge the right wall, as the establishing view names them. Draw only the doors, windows and openings the description names. Location: JI FAMILY LIVING ROOM. Grand living room of a contemporary luxury mansion, seen five years earlier. The floors are polished cream marble, white marble columns stand along one side and a wall runs behind them. A long beige sofa faces a low marble-and-gold coffee table on a thick ivory carpet. Tall French windows look out on garden trees whose leaves sway in warm sunlight. Golden afternoon sun streams through the windows from the right, casting warm leaf-dappled light. A crystal chandelier hangs overhead.\n\nAvoid: people, text, labels, numbers, letters, dimensions, compass, logos, watermark, a door or window the description does not name.\n",
+  "n": 1,
+  "size": "1536x1536",
+  "quality": "high",
+  "output_format": "jpeg",
+  "output_compression": 100,
+  "moderation": "low",
+  "input_images": []
+}

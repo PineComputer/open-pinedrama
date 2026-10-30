@@ -1,0 +1,12 @@
+{
+  "provider": "openai",
+  "model": "gpt-image-2.5-sunburst",
+  "prompt": "Image 1 is the floor plan of a room seen from above: its bottom edge is the front wall, its top edge the back wall, its left edge the left wall and its right edge the right wall. Image 2 is the front view of the same room (the establishing view), taken from the centre of the front wall facing the back wall. Generate one photorealistic cinematic still of this same room, empty of people, from a new camera position: the left-side view: the camera stands at the centre of the right wall, at eye level, facing the left wall, so the back wall is at the right edge of the frame and the front wall at its left edge. Turn the camera for real: this view must not show the back wall's furniture head-on unless it is the wall being faced. Keep every wall, door, window, piece of furniture, material, colour and light exactly as Image 1 and Image 2 show them, seen from this new side; the room layout and furniture placement exactly match Image 1. Location: Street outside the jail. A quiet present-day city street outside a jail, in bright daylight. Back side: a tall chain-link fence topped with coils of razor wire, and behind it the blocky grey concrete jail building with narrow slit windows. A steel pedestrian gate in the fence, opposite the camera, is the way out of the jail. A wide grey concrete sidewalk runs along the fence, and the curb runs parallel to it across the frame, with an empty parking lane of dark asphalt in front of it. Left side: the road and the fence stretch away into the distance, with a streetlamp at the curb. Right side: the sidewalk continues past a row of young trees and a bus-stop pole. Front side (behind the camera): the far lane of the road and low buildings opposite. Sunlight falls from high on the left and casts short shadows to the right; the sky is clear.\n\nAvoid: people, readable text, logos, watermark, any door or window the description does not name.\n",
+  "aspect_ratio": "9:16",
+  "size": "1152x2048",
+  "quality": "high",
+  "images": [
+    "assets/scenes/jail_street/floor-plan/v1/image-1.jpg",
+    "assets/scenes/jail_street/front/v1/image-1.jpg"
+  ]
+}

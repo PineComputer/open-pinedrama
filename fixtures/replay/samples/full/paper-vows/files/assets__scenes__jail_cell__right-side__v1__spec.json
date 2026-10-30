@@ -1,0 +1,12 @@
+{
+  "provider": "openai",
+  "model": "gpt-image-2.5-sunburst",
+  "prompt": "Image 1 is the floor plan of a room seen from above: its bottom edge is the front wall, its top edge the back wall, its left edge the left wall and its right edge the right wall. Image 2 is the front view of the same room (the establishing view), taken from the centre of the front wall facing the back wall. Generate one photorealistic cinematic still of this same room, empty of people, from a new camera position: the right-side view: the camera stands at the centre of the left wall, at eye level, facing the right wall, so the front wall is at the right edge of the frame and the back wall at its left edge. Turn the camera for real: this view must not show the back wall's furniture head-on unless it is the wall being faced. Keep every wall, door, window, piece of furniture, material, colour and light exactly as Image 1 and Image 2 show them, seen from this new side; the room layout and furniture placement exactly match Image 1. Location: Jail, a cell. A narrow, present-day concrete jail cell painted dull grey-green, with a scuffed grey concrete floor. Back wall: a small high rectangular window with steel bars, through which a pale shaft of daylight slants down into the cell. Left wall: a steel bunk bolted lengthwise along the wall, with a thin grey mattress, a folded grey wool blanket and a flat pillow. Right wall: the barred steel cell door, the only way in, which opens onto a dim corridor; beside it in the back-right corner stands a stainless-steel toilet-sink unit. Front wall (behind the camera): bare concrete with a small steel shelf. A caged fluorescent tube on the ceiling gives a flat, cold white top light.\n\nAvoid: people, readable text, logos, watermark, any door or window the description does not name.\n",
+  "aspect_ratio": "9:16",
+  "size": "1152x2048",
+  "quality": "high",
+  "images": [
+    "assets/scenes/jail_cell/floor-plan/v1/image-1.jpg",
+    "assets/scenes/jail_cell/front/v1/image-1.jpg"
+  ]
+}

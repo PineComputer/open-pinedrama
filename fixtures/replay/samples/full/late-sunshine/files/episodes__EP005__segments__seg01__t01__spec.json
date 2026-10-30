@@ -1,0 +1,495 @@
+{
+  "model": "sd25",
+  "content": [
+    {
+      "type": "text",
+      "text": "Image 1: Nine-panel storyboard reference, used for the overall shot structure, shot sizes, and camera-movement rhythm. Read it from left to right and from top to bottom; panel N is Shot N. It is a line-art sketch: do not adopt its sketch style, black outlines, white background, panel borders or drawn faces.\nImage 2: Reference of APARTMENT CORRIDOR, the front view, the establishing view, facing the back wall, a rendered set, not live action. Use it only for the room's layout, the furniture's positions and the light's direction; do not reference its visual content. It contains no people.\nImage 3: Reference of APARTMENT CORRIDOR, the back view, turned 180 degrees, facing the front wall, with the left wall at its right edge, a rendered set, used only for the room's layout; it contains no people.\nImage 4: Reference of APARTMENT CORRIDOR, the left-side view, facing the left wall, with the back wall at its right edge, a rendered set, used only for the room's layout; it contains no people.\nImage 5: Reference of APARTMENT CORRIDOR, the right-side view, facing the right wall, with the back wall at its left edge, a rendered set, used only for the room's layout; it contains no people.\nImage 6: Reference of APARTMENT CORRIDOR, the floor plan seen from above: its top edge is the back wall, its bottom edge the front wall behind the front view's camera, and its left and right edges the left and right walls, a rendered set, used only for the room's layout; it contains no people.\nImage 7: Blocking reference of the segment's start: the same place with these people in their places, used only for where each person is and which way they face; take faces and outfits from each subject's own image. It is a line-art diagram: do not adopt its outlines or white background.\nImage 8: Subject 1 (Lu Shaoze, look S1) character appearance reference.\nImage 9: Subject 2 (Lin Qingyu, look S2) character appearance reference.\nImage 10: Subject 3 (Ji Ran, look S3) character appearance reference.\nImage 11: Prop 1 (grocery bag full of greens) maps to this image; copy its writing and badges exactly from Image 11.\nImage 12: Prop 2 (black handbag) maps to this image; copy its writing and badges exactly from Image 12.\nFrom each prop's image, use only structure, material, and color.\n[Subject settings]\nSubject 1 (Lu Shaoze): Refer to Image 8. 28, Ji Ran's ex-boyfriend of four years, driven off by Ji Hongyuan five years ago and now heir of the Lu Group returning as her arranged-marriage match. Outfit: look S1: Night, returned heir: a tailored navy-blue slim suit jacket over a crisp white open-collar dress shirt, matching navy trousers, polished black oxfords and a silver dress watch. Hair slicked back. Signature colour: blue.\nSubject 2 (Lin Qingyu): Refer to Image 9. 21, Male lead; Su Yaqing's younger brother from her stepmother's family, secretly a powerful boss, posing as an ordinary college student to apply to be Ji Ran's husband. Outfit: look S2: Night at Ji Ran's apartment: a white cotton pullover hoodie, slim black jogger trousers and white sneakers. Signature colour: white.\nSubject 3 (Ji Ran): Refer to Image 10. 27, Heroine; owner of Jiejian Company, daughter of Ji Hongyuan, and ex-girlfriend of Lu Shaoze. Outfit: look S3: Night, returning home: a fitted ivory satin long-sleeve wrap blouse with a soft V neckline, tucked into a black leather high-waisted mini skirt. Red pointed stiletto heels. She carries the black handbag. Signature colour: red.\nEnvironment (APARTMENT CORRIDOR): Refer to Images 2 to 6. Night, warm interior corridor light. Warm recessed downlights overhead and soft side-glow from the wall sconces; quiet corridor hum and the rustle of the grocery bag.\nDo not swap the characters' appearances, clothing, actions, positions or dialogue.\n[Overall style]\nPhotorealistic live-action short drama with cinematic lighting. Each character keeps the face and the outfit with its main colour from their reference image throughout. Use each character sheet only for that character: the face from the close-up on the right, the body and outfit from the turnaround on the left; do not render the sheet's layout, white background or multiple views. This segment has 3 lines, in this order: Lu Shaoze, Lin Qingyu, Lu Shaoze. Generate speech only from the lines in {} in the shot list, each spoken exactly once by its speaker; everyone else keeps their mouth naturally closed while listening, and a V.O. speaker keeps their mouth closed or is off screen. Follow the shot list below; do not add cuts or camera moves beyond it. Strictly adhere to the 180-degree rule: within a scene, characters keep their screen sides and the camera stays on one side of the axis. Seamless continuity of action, spatial matching and consistent actor blocking; cut on action. For dialogue prefer static shot-reverse-shot and over-the-shoulder shots, balanced with reaction shots and close-up inserts. Faces stable and clear, with no resemblance to any real actor or actress. Normal human eyes. Natural anatomy and hands. Natural, fluid motion that follows the blocking; characters make subtle, natural movements. Characters, props and environment share one world with matched lighting. Each line ends naturally with breathing room and is never cut off. Authentic performances with micro-expressions. No BGM; generate only dialogue, environmental sounds and action sounds. No subtitles.\n[Strictly exclude]\nsubtitles or garbled text. Lu Shaoze shaking Lin Qingyu's hand. camera crossing to the door side of the corridor. Dialogue from the wrong character, multiple people speaking at once, repeated or missing lines, lip-sync errors and audio-visual desynchronization. The raw reference images (character sheets, setting plates) appearing as a frame of the video, and starting on a still frame of the setting reference. A fast zoom-in at the start, a fast pull-back at the end, unmotivated whip-pans, tilts, zooms and 360-degree orbits. Axis-crossing, jump cuts, frame skips, flicker and clipping. Characters or props popping in or vanishing, and duplicate characters except mirror reflections. Subtitles, captions, watermarks and garbled writing; writing and logos other than those on a key prop's reference image, which are copied from it; a phone screen or paper that is not a key prop is shown from the back or out of focus. Black-and-white, monochrome, grayscale, desaturated visuals; hand-drawn, sketch, line art, illustration, comics, animation; storyboard frames, rough sketches, panel borders, gutters and grid layouts.\n[Shot list] (9 shots, approximately 25 seconds)\nWhen a previous-shot reference image is given, it is the moment this segment starts from: keep its people's positions, outfits, props and light, and continue from there. Shot 1 keeps its own camera, matching the image's framing only when it frames the same view; do not repeat that frame later.\nAt the start: In the short corridor there is one walnut apartment door, Ji Ran's, set in the cream wall panels, with a runner rug along the stone floor and wall sconces glowing on both walls. Ji Ran and Lin Qingyu stand side by side on the runner rug with their backs to Ji Ran's apartment door. Lin Qingyu's right arm is around Ji Ran's waist, and the grocery bag full of greens hangs from his left hand. Ji Ran holds the black handbag on her shoulder. Lu Shaoze stands on the runner rug one step in front of them, facing Ji Ran's apartment door, and glares at Lin Qingyu's arm. The camera stays on the side of the cream wall opposite Ji Ran's apartment door and sees the three in profile.\nShot 1 (0-3s): [Wide shot, slow push in, eye-level, camera on the wall opposite Ji Ran's door, the three in profile] Ji Ran and Lin Qingyu stand in front of Ji Ran's apartment door, his arm around her waist and the grocery bag full of greens in his other hand. Lu Shaoze faces them on the runner rug and fixes his eyes on Lin Qingyu's arm. <Soft hum of the corridor lights>\nShot 2 (3-5s): [Medium close-up, locked-off camera, eye-level, over Lin Qingyu's shoulder onto Lu Shaoze] Lu Shaoze jerks his chin at the arm around Ji Ran, and his mouth twists with contempt. Dialogue (Lu Shaoze, in Mandarin, sneering and cold): {你谁啊，手拿开。}\nShot 3 (5-7s): [Medium shot, handheld, eye-level, framing Lin Qingyu and Ji Ran in front of her door] Lin Qingyu smiles brightly, takes his right arm from Ji Ran's waist and holds his right hand out toward Lu Shaoze.\nShot 4 (7-11s): [Medium close-up, slow push in on Lin Qingyu, eye-level] Lin Qingyu keeps his hand extended and smiles sweetly at Lu Shaoze, with the grocery bag full of greens swinging at his side. Dialogue (Lin Qingyu, in Mandarin, sweet and cheerful): {哟，你好。我是纪然男朋友，林青羽。}\nShot 5 (11-14s): [Close-up, locked-off camera, eye-level, on Ji Ran] Ji Ran slides her eyes sideways toward Lin Qingyu, and the corner of her mouth twitches as she holds back a smile. Dialogue (Lin Qingyu, in Mandarin, teasing whine): {哎呀姐姐也真是的，有客人来了，}\nShot 6 (14-17s): [Medium shot, slight low angle, handheld, on Lin Qingyu] Lin Qingyu tilts his head with mock innocence and waves his free hand toward Ji Ran's apartment door. Dialogue (Lin Qingyu, in Mandarin, teasing whine): {怎么不让进家门呢，站在门口说话呢。}\nShot 7 (17-19s): [Close-up, quick push in, eye-level, on Lu Shaoze] Lu Shaoze stares at the offered hand without taking it, and his jaw clenches. Out of focus behind him, Lin Qingyu lowers the hand and puts his arm back around Ji Ran's waist.\nShot 8 (19-22s): [Medium close-up, over-the-shoulder shot past Ji Ran onto Lu Shaoze, eye-level] Lu Shaoze leans toward Ji Ran and presses a hand to his own chest. Dialogue (Lu Shaoze, in Mandarin, indignant and drawling): {纪然，我才是你的联姻对象，}\nShot 9 (22-25s): [Medium shot, locked-off camera, eye-level, two-shot of Ji Ran and Lin Qingyu with Lu Shaoze's pointing arm in the foreground] Lu Shaoze jabs a finger at Lin Qingyu, who stays close beside Ji Ran in front of her door with his arm around her waist. Dialogue (Lu Shaoze, in Mandarin, sputtering): {旁边这男的怎么回事啊？}\nAt the end: Ji Ran and Lin Qingyu stand side by side on the runner rug with their backs to Ji Ran's apartment door, his right arm around her waist and the grocery bag full of greens in his left hand; Ji Ran has the black handbag on her shoulder. Lu Shaoze stands on the runner rug one step in front of them, facing Ji Ran's apartment door, pointing angrily at Lin Qingyu. The camera stays on the side of the cream wall opposite Ji Ran's apartment door.\n"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261027080404-cnsns"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/apartment_corridor/times/Night/v1/front.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/apartment_corridor/times/Night/v1/back.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/apartment_corridor/times/Night/v1/left-side.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/apartment_corridor/times/Night/v1/right-side.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/apartment_corridor/times/Night/v1/floor-plan.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261027080034-krfgx"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261027073859-mmlhl"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261027073858-qtdpv"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261027073859-bxzf9"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/props/grocery_bag/v1/image-1.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/props/black_handbag/v1/image-1.jpg"
+      },
+      "role": "reference_image"
+    }
+  ],
+  "duration": 25,
+  "ratio": "9:16",
+  "resolution": "480p",
+  "generate_audio": true,
+  "watermark": false,
+  "return_last_frame": true,
+  "omni_reference_task_type": "reference",
+  "drama": {
+    "segment": {
+      "id": "seg01",
+      "duration": 25,
+      "location": "apartment_corridor",
+      "scene_heading": "INT. APARTMENT CORRIDOR - NIGHT #5-1#",
+      "time": "Night, warm interior corridor light",
+      "characters": [
+        "lu_shaoze",
+        "lin_qingyu",
+        "ji_ran"
+      ],
+      "states": {
+        "lu_shaoze": "S1",
+        "lin_qingyu": "S2",
+        "ji_ran": "S3"
+      },
+      "props": [
+        "grocery_bag",
+        "black_handbag"
+      ],
+      "first_state": "In the short corridor there is one walnut apartment door, Ji Ran's, set in the cream wall panels, with a runner rug along the stone floor and wall sconces glowing on both walls. Ji Ran and Lin Qingyu stand side by side on the runner rug with their backs to Ji Ran's apartment door. Lin Qingyu's right arm is around Ji Ran's waist, and the grocery bag full of greens hangs from his left hand. Ji Ran holds the black handbag on her shoulder. Lu Shaoze stands on the runner rug one step in front of them, facing Ji Ran's apartment door, and glares at Lin Qingyu's arm. The camera stays on the side of the cream wall opposite Ji Ran's apartment door and sees the three in profile.",
+      "shots": [
+        {
+          "time": "0-3s",
+          "size": "wide shot",
+          "angle": "eye level",
+          "camera": "Wide shot, slow push in, eye-level, camera on the wall opposite Ji Ran's door, the three in profile",
+          "visual": "Ji Ran and Lin Qingyu stand in front of Ji Ran's apartment door, his arm around her waist and the grocery bag full of greens in his other hand. Lu Shaoze faces them on the runner rug and fixes his eyes on Lin Qingyu's arm.",
+          "audio": "<Soft hum of the corridor lights>",
+          "characters": [
+            "ji_ran",
+            "lin_qingyu",
+            "lu_shaoze"
+          ],
+          "lines": []
+        },
+        {
+          "time": "3-5s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up, locked-off camera, eye-level, over Lin Qingyu's shoulder onto Lu Shaoze",
+          "visual": "Lu Shaoze jerks his chin at the arm around Ji Ran, and his mouth twists with contempt.",
+          "audio": "Dialogue (Lu Shaoze, in Mandarin, sneering and cold): {你谁啊，手拿开。}",
+          "characters": [
+            "lu_shaoze",
+            "lin_qingyu"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "5-7s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, handheld, eye-level, framing Lin Qingyu and Ji Ran in front of her door",
+          "visual": "Lin Qingyu smiles brightly, takes his right arm from Ji Ran's waist and holds his right hand out toward Lu Shaoze.",
+          "audio": "",
+          "characters": [
+            "lin_qingyu",
+            "ji_ran"
+          ],
+          "lines": []
+        },
+        {
+          "time": "7-11s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up, slow push in on Lin Qingyu, eye-level",
+          "visual": "Lin Qingyu keeps his hand extended and smiles sweetly at Lu Shaoze, with the grocery bag full of greens swinging at his side.",
+          "audio": "Dialogue (Lin Qingyu, in Mandarin, sweet and cheerful): {哟，你好。我是纪然男朋友，林青羽。}",
+          "characters": [
+            "lin_qingyu"
+          ],
+          "lines": [
+            1
+          ]
+        },
+        {
+          "time": "11-14s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, locked-off camera, eye-level, on Ji Ran",
+          "visual": "Ji Ran slides her eyes sideways toward Lin Qingyu, and the corner of her mouth twitches as she holds back a smile.",
+          "audio": "Dialogue (Lin Qingyu, in Mandarin, teasing whine): {哎呀姐姐也真是的，有客人来了，}",
+          "characters": [
+            "ji_ran"
+          ],
+          "lines": [
+            1
+          ]
+        },
+        {
+          "time": "14-17s",
+          "size": "medium shot",
+          "angle": "low angle",
+          "camera": "Medium shot, slight low angle, handheld, on Lin Qingyu",
+          "visual": "Lin Qingyu tilts his head with mock innocence and waves his free hand toward Ji Ran's apartment door.",
+          "audio": "Dialogue (Lin Qingyu, in Mandarin, teasing whine): {怎么不让进家门呢，站在门口说话呢。}",
+          "characters": [
+            "lin_qingyu"
+          ],
+          "lines": [
+            1
+          ]
+        },
+        {
+          "time": "17-19s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, quick push in, eye-level, on Lu Shaoze",
+          "visual": "Lu Shaoze stares at the offered hand without taking it, and his jaw clenches. Out of focus behind him, Lin Qingyu lowers the hand and puts his arm back around Ji Ran's waist.",
+          "audio": "",
+          "characters": [
+            "lu_shaoze"
+          ],
+          "lines": []
+        },
+        {
+          "time": "19-22s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up, over-the-shoulder shot past Ji Ran onto Lu Shaoze, eye-level",
+          "visual": "Lu Shaoze leans toward Ji Ran and presses a hand to his own chest.",
+          "audio": "Dialogue (Lu Shaoze, in Mandarin, indignant and drawling): {纪然，我才是你的联姻对象，}",
+          "characters": [
+            "lu_shaoze",
+            "ji_ran"
+          ],
+          "lines": [
+            2
+          ]
+        },
+        {
+          "time": "22-25s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, locked-off camera, eye-level, two-shot of Ji Ran and Lin Qingyu with Lu Shaoze's pointing arm in the foreground",
+          "visual": "Lu Shaoze jabs a finger at Lin Qingyu, who stays close beside Ji Ran in front of her door with his arm around her waist.",
+          "audio": "Dialogue (Lu Shaoze, in Mandarin, sputtering): {旁边这男的怎么回事啊？}",
+          "characters": [
+            "lu_shaoze",
+            "lin_qingyu",
+            "ji_ran"
+          ],
+          "lines": [
+            2
+          ]
+        }
+      ],
+      "light_audio": "Warm recessed downlights overhead and soft side-glow from the wall sconces; quiet corridor hum and the rustle of the grocery bag.",
+      "dialogue": [
+        {
+          "speaker": "lu_shaoze",
+          "line": "你谁啊，手拿开。"
+        },
+        {
+          "speaker": "lin_qingyu",
+          "line": "哟，你好。我是纪然男朋友，林青羽。 哎呀姐姐也真是的，有客人来了，怎么不让进家门呢，站在门口说话呢。"
+        },
+        {
+          "speaker": "lu_shaoze",
+          "line": "纪然，我才是你的联姻对象，旁边这男的怎么回事啊？"
+        }
+      ],
+      "must_hit": [
+        "Lu Shaoze glares at Lin Qingyu's arm around Ji Ran",
+        "Lin Qingyu smiles and offers his right hand to Lu Shaoze",
+        "Lu Shaoze points at Lin Qingyu"
+      ],
+      "exit_state": "Ji Ran and Lin Qingyu stand side by side on the runner rug with their backs to Ji Ran's apartment door, his right arm around her waist and the grocery bag full of greens in his left hand; Ji Ran has the black handbag on her shoulder. Lu Shaoze stands on the runner rug one step in front of them, facing Ji Ran's apartment door, pointing angrily at Lin Qingyu. The camera stays on the side of the cream wall opposite Ji Ran's apartment door.",
+      "negative": [
+        "subtitles or garbled text",
+        "Lu Shaoze shaking Lin Qingyu's hand",
+        "camera crossing to the door side of the corridor"
+      ]
+    },
+    "bible_version": "v2",
+    "breakdown_version": "v3",
+    "lineage": [
+      {
+        "path": "bible/v2/artifact.json",
+        "sha256": "f5400f28e1edd9ccef571edd8420590ca4a9e72eb37b7ca444a66cfe777c7b91"
+      },
+      {
+        "path": "bible/accepted.json",
+        "sha256": "d964bcfb13d315e51ed18dba40bce44dbe8e8ad1fd06b96e8843e333e1d61a32"
+      },
+      {
+        "path": "bible/current.json",
+        "sha256": "2addb578f51de2dd02b1e8e33d5e141f23f16f02e61259b8cb42e64f67d2fcc3"
+      },
+      {
+        "path": "bible/v2/bible.json",
+        "sha256": "3d920d493ba887180838dafb80b72f72eb9f03f827829dba1965c3643feaf05d"
+      },
+      {
+        "path": "bible/v2/input/screenplay.md",
+        "sha256": "afbfe0f787d9c5565630e661e5667df671458c5aa581c242873ff1ab7de27669"
+      },
+      {
+        "path": "episodes/EP005/breakdown/v3/artifact.json",
+        "sha256": "9452069d45bc125311337a054d2b535a9edf2aa964a57f7e925ea898c105ca57"
+      },
+      {
+        "path": "episodes/EP005/breakdown/accepted.json",
+        "sha256": "7698d6233dba6a2c78948e8951cf62e34b7044135413c92b35d32a52fa78e2fc"
+      },
+      {
+        "path": "episodes/EP005/breakdown/current.json",
+        "sha256": "931ffa5988bd9f3d1355b82df2c3a0d80ce0d5d659d2c1d0ebc3601c0685c82f"
+      },
+      {
+        "path": "episodes/EP005/breakdown/v3/breakdown.json",
+        "sha256": "4d1931158b61a1e9d8f64926d51f745a188ed65fd5fa85de321004efab990f38"
+      },
+      {
+        "path": "episodes/EP005/multi_panel_storyboard/seg01/line-art/v1/artifact.json",
+        "sha256": "227ae59e0eed84bc2e1a3977fca83f41ecc60d02d6c5eb0b66f1363d609bb822"
+      },
+      {
+        "path": "episodes/EP005/multi_panel_storyboard/seg01/line-art/accepted.json",
+        "sha256": "e54dd2ed3ca7fd25c6713c2b4d1343f11653732922dea91b9c4217d48c2b58b2"
+      },
+      {
+        "path": "episodes/EP005/multi_panel_storyboard/seg01/line-art/current.json",
+        "sha256": "edb6acb5e2919b671fa630fa59f3a33705ec84221d59ae46849ac93e540b5a93"
+      },
+      {
+        "path": "episodes/EP005/multi_panel_storyboard/seg01/line-art/v1/image-1.jpg",
+        "sha256": "4cce8943e6af439a0fefac90093cdb66d56c01609a96429c95b291f0a5d33a2f"
+      },
+      {
+        "path": "episodes/EP005/multi_panel_storyboard/seg01/line-art/v1/asset/job.json",
+        "sha256": "ab503c65a55868807a090b3e83c11f85cb6662caafa374ffeb53f05f6ad4a680"
+      },
+      {
+        "path": "assets/scenes/apartment_corridor/times/Night/v1/artifact.json",
+        "sha256": "0f55eb5e1f34dc113ba2ef7594f0158036601fe48adf44deef08a9e40505d389"
+      },
+      {
+        "path": "assets/scenes/apartment_corridor/times/Night/accepted.json",
+        "sha256": "634702947921bca3ac74ce1eb154f76716e6eae8cc7001b099cb50f7f6f3af21"
+      },
+      {
+        "path": "assets/scenes/apartment_corridor/times/Night/current.json",
+        "sha256": "84adb6f170d1f1861677800beb569990e6f0f3c775a2b0547452b1100dc7bd80"
+      },
+      {
+        "path": "assets/scenes/apartment_corridor/times/Night/v1/image-1.jpg",
+        "sha256": "20d113af8041562cdf3bf927c5c059ddabd4245ea83feaca30c079d190bbf8c1"
+      },
+      {
+        "path": "assets/scenes/apartment_corridor/times/Night/v1/front.jpg",
+        "sha256": "44665fc0c44f8d64ec0be994d78ba32635e4b103f92144a2c550c5beab857944"
+      },
+      {
+        "path": "assets/scenes/apartment_corridor/times/Night/v1/back.jpg",
+        "sha256": "9a3894cf5843875e4af0cb259a776213f1fa96a141adae5402cf488fc9b0e1e0"
+      },
+      {
+        "path": "assets/scenes/apartment_corridor/times/Night/v1/left-side.jpg",
+        "sha256": "8231c05bd502793a1ab4369115f9c4b221efa9a857d0611e754fc434b734e551"
+      },
+      {
+        "path": "assets/scenes/apartment_corridor/times/Night/v1/right-side.jpg",
+        "sha256": "ea325aad56caacb86099b2d2724052fe8f4b93410dd261f26531598573d50034"
+      },
+      {
+        "path": "assets/scenes/apartment_corridor/times/Night/v1/floor-plan.jpg",
+        "sha256": "073632fbe102ddee7db460a24ec857cff169b5e7ef88dd42f13a380333a9bf11"
+      },
+      {
+        "path": "episodes/EP005/blocking/seg01/v1/artifact.json",
+        "sha256": "5990e990ee4fc6129fce250a94aa955788052f15cde2bbd62a06241ef30a8544"
+      },
+      {
+        "path": "episodes/EP005/blocking/seg01/accepted.json",
+        "sha256": "e68afa0091969bc70e3f344fb36822df1079a17e6e4de1d84aa732aa0ce124c4"
+      },
+      {
+        "path": "episodes/EP005/blocking/seg01/current.json",
+        "sha256": "bd29a8aefd6819aced3f72c45b6a3e6948477652f7e9936daa9d571968cfc72a"
+      },
+      {
+        "path": "episodes/EP005/blocking/seg01/v1/image-1.jpg",
+        "sha256": "9182c4663f0f4e4b77dbc1b6a3cb5c5a4079ef58688165e989016dfdb3cf07fe"
+      },
+      {
+        "path": "episodes/EP005/blocking/seg01/v1/asset/job.json",
+        "sha256": "4636b3c4f36909dd26eee9435db67ae72b01dfcd5551885674407804193fc2d9"
+      },
+      {
+        "path": "assets/props/grocery_bag/v1/artifact.json",
+        "sha256": "55d2db4d387e3f039c4b06cb698552b4e127ead84c1f8fde6c8ad3cfc2748ba6"
+      },
+      {
+        "path": "assets/props/grocery_bag/accepted.json",
+        "sha256": "362adbe17b619b12e34a3e42298ce113bda9bb8c2d4a6300f72575b4118e6121"
+      },
+      {
+        "path": "assets/props/grocery_bag/current.json",
+        "sha256": "ce57134dca56153b892cd7c9e38662cc1595667b66bff774528eff0eb1ad0c5a"
+      },
+      {
+        "path": "assets/props/grocery_bag/v1/image-1.jpg",
+        "sha256": "282d3e845bea1beadc1a0d6974b0d729a460cf4b7afafbff46daffcb58e18e87"
+      },
+      {
+        "path": "assets/props/black_handbag/v1/artifact.json",
+        "sha256": "42e1ca484fe49489fd4ea636c59150098f013aba4eb3113c3136ac3e773b5ea0"
+      },
+      {
+        "path": "assets/props/black_handbag/accepted.json",
+        "sha256": "f9ef33b82c59122f7aae345edfdcd89057582c7ebd787c8be10aec61a60fd767"
+      },
+      {
+        "path": "assets/props/black_handbag/current.json",
+        "sha256": "b5880f63ef35104615711e5af3359156326da592dd98637daedb67c1a445d213"
+      },
+      {
+        "path": "assets/props/black_handbag/v1/image-1.jpg",
+        "sha256": "f1c1dcb76f785ade01c0e4393dd911cc85a9c9712cc1b626d4b57191fb1a598f"
+      },
+      {
+        "path": "assets/characters/lu_shaoze/states/S1/v1/artifact.json",
+        "sha256": "fd92d540c2c73b9f09e684a92375ba032c9f3268519754c2a210bf0f52d63204"
+      },
+      {
+        "path": "assets/characters/lu_shaoze/states/S1/accepted.json",
+        "sha256": "5be34b34d098181ca0c1424a7f51a2c76386d6cfde511d044781cce5638767fe"
+      },
+      {
+        "path": "assets/characters/lu_shaoze/states/S1/current.json",
+        "sha256": "5663d980e7ebd3dfae57cf6c857454a2b84f15790bdbcb175cec91e47fc1b4bf"
+      },
+      {
+        "path": "assets/characters/lu_shaoze/states/S1/v1/image-1.jpg",
+        "sha256": "71daf694cfdb92a43c781d8eee260c611211d8e70be778eeaa02fae82f1f4492"
+      },
+      {
+        "path": "assets/characters/lu_shaoze/states/S1/v1/asset/job.json",
+        "sha256": "b640c334e85024526a8275b6a7c52cbf93b0baeffef6d973894f737fc0d9b835"
+      },
+      {
+        "path": "assets/characters/lin_qingyu/states/S2/v1/artifact.json",
+        "sha256": "d05f49e370974bdf860b8c54bf7bee508055c977d59a1ebfa014a98ae3a560e8"
+      },
+      {
+        "path": "assets/characters/lin_qingyu/states/S2/accepted.json",
+        "sha256": "2d1b87eaa3b5a799b61e2325a1d378a2e88c938a4378d61e06f59410044745e9"
+      },
+      {
+        "path": "assets/characters/lin_qingyu/states/S2/current.json",
+        "sha256": "953ee12656858c4c0eda2587c9917c04edb1a1094e23daa26c458818bddfc52f"
+      },
+      {
+        "path": "assets/characters/lin_qingyu/states/S2/v1/image-1.jpg",
+        "sha256": "b305b157c163a4a828bcdd323dd512ee02f8f16a777225230b37846a75b730ce"
+      },
+      {
+        "path": "assets/characters/lin_qingyu/states/S2/v1/asset/job.json",
+        "sha256": "3b7eee70326e97388137979ff6f8875b73ae1d630463e729bb974876b94ecbea"
+      },
+      {
+        "path": "assets/characters/ji_ran/states/S3/v1/artifact.json",
+        "sha256": "d5dbee73d4e87660a5a7c7e04b85a0f205c7522549bef83325fc55b820b3783b"
+      },
+      {
+        "path": "assets/characters/ji_ran/states/S3/accepted.json",
+        "sha256": "1568cce5aefef497f926989ee0e27ac44a9ecdc01c4fca5007b96c14402ddf33"
+      },
+      {
+        "path": "assets/characters/ji_ran/states/S3/current.json",
+        "sha256": "11cd27ca217fb81c2e53ec3ac256f1d651b017818e2ed3fc65b45739677655f9"
+      },
+      {
+        "path": "assets/characters/ji_ran/states/S3/v1/image-1.jpg",
+        "sha256": "406884ed8ca649d36821d06254e4d716369f57182c7c33167aa2579ca8d9661b"
+      },
+      {
+        "path": "assets/characters/ji_ran/states/S3/v1/asset/job.json",
+        "sha256": "54084e96df55fdb5f4fcaf923edbde70b0f6a851b1b94344ba6c8b17f2bf5f34"
+      },
+      {
+        "path": "episodes/EP005/video_prompts/v1/seg01.json",
+        "sha256": "5352146101dfda337c9862adb1aa266ad9e638d75dabedd882807f5a491f9791"
+      }
+    ],
+    "character_reference_mode": "asset_library",
+    "video_references": "storyboard",
+    "trusted_character_references": {},
+    "video_prompts_version": "v1"
+  }
+}

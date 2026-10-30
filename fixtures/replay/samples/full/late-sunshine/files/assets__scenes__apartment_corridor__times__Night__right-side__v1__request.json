@@ -1,0 +1,13 @@
+{
+  "model": "gpt-image-2.5-sunburst",
+  "prompt": "Image 1 is the right-side view, facing the right wall, with the back wall at its left edge of a room. Edit it into the same view of the same room at this time of day: Night. Keep the camera position, framing, lens, walls, doors, windows, furniture, materials and colours exactly as in Image 1; change only the light. Outside every window and doorway, show what that place looks like at Night, with the sky, light and lit windows of that time, never the daylight scene of Image 1 darkened. Inside, light the room as the description says it is lit at that time, with only the lamps it names turned on. The place stays completely empty of people: no person, figure, silhouette or reflection of a person anywhere. Location: APARTMENT CORRIDOR. Short, elegant residential corridor outside Ji Ran's door at night. Cream wall panels with a wood trim line it, with a runner rug on a stone floor and doors set at intervals. Warm recessed downlights run overhead, with soft side-glow from wall sconces.\n\nAvoid: people or silhouettes, a darkened copy of Image 1's daylight, readable text, labels, signs with letters or numbers, logos, watermark.\n",
+  "n": 1,
+  "size": "1152x2048",
+  "quality": "high",
+  "output_format": "jpeg",
+  "output_compression": 100,
+  "moderation": "low",
+  "input_images": [
+    "assets/scenes/apartment_corridor/v1/right-side.jpg"
+  ]
+}

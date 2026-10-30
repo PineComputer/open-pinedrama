@@ -1,0 +1,18 @@
+{
+  "provider": "openai",
+  "model": "gpt-image-2.5-sunburst",
+  "prompt": "A live-action photograph: the first frame of Shot 1 of a scene of a short drama, vertical composition, as a cinema camera records it on set. Shot size: wide shot; angle: eye level; camera: Wide shot, slow push in, eye-level, from the lounge side of the room. The desk is at frame right and the row of applicants is at frame left. It shows: Xu Banxia walks past the marble coffee table to the lounge end of the walnut desk and bends slightly toward Ji Ran. Ji Ran sits in the leather executive chair, and the four applicants stand in a row in front of the desk.\nFrame it exactly as the shot says, at that shot size and angle: a close-up fills the frame with the face, a wide shot shows the whole place.\nImage 1: the location JI RAN'S OFFICE, the front view, with no people: take the place's layout, walls, furniture and light from it, not its rendering or its camera\nImage 2: the blocking reference of the segment's start, a line-art diagram: take only where each person stands and which way they face, not its outlines or white background\nImage 3: the character sheet of Ji Ran (27), look S2: take this person's face, hair, body and outfit, not the sheet's layout or background\nImage 4: the character sheet of Xu Banxia (24): take this person's face, hair, body and outfit, not the sheet's layout or background\nImage 5: the character sheet of GREEN-SHIRT APPLICANT (26): take this person's face, hair, body and outfit, not the sheet's layout or background\nImage 6: the character sheet of BLUE-TANK-TOP APPLICANT (27): take this person's face, hair, body and outfit, not the sheet's layout or background\nImage 7: the character sheet of GRAY-SHIRT APPLICANT (25): take this person's face, hair, body and outfit, not the sheet's layout or background\nImage 8: the character sheet of SHIRTLESS APPLICANT (28), look S0: take this person's face, hair, body and outfit, not the sheet's layout or background\nOnly six people appear: Ji Ran, Xu Banxia, GREEN-SHIRT APPLICANT, BLUE-TANK-TOP APPLICANT, GRAY-SHIRT APPLICANT, and SHIRTLESS APPLICANT. Nobody else is in frame. Each person appears once, at natural scale, with the face, hair, body and outfit of their character sheet.\n\nReal adult faces with natural skin texture and pores, real fabric, natural light falloff and shadows, a slight film grain and the depth of field of a real lens, as in a frame of a live-action film. Not a 3D render, an interior-design visualisation, an illustration or a painting; no text, letters, numbers, labels or watermark.\n",
+  "aspect_ratio": "9:16",
+  "size": "1152x2048",
+  "quality": "high",
+  "images": [
+    "episodes/EP002/first_frame_reference/seg01/v1/view.png",
+    "episodes/EP002/blocking/seg01/v1/image-1.jpg",
+    "assets/characters/ji_ran/states/S2/v2/image-1.jpg",
+    "assets/characters/xu_banxia/v1/image-1.jpg",
+    "assets/characters/green_shirt_applicant/v1/image-1.jpg",
+    "assets/characters/blue_tank_top_applicant/v1/image-1.jpg",
+    "assets/characters/gray_shirt_applicant/v1/image-1.jpg",
+    "assets/characters/shirtless_applicant/v1/image-1.jpg"
+  ]
+}

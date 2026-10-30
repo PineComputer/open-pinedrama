@@ -1,0 +1,13 @@
+{
+  "provider": "openai",
+  "model": "gpt-image-2.5-sunburst",
+  "prompt": "A live-action photograph: the first frame of Shot 1 of a scene of a short drama, vertical composition, as a cinema camera records it on set. Shot size: wide shot; angle: eye level; camera: Wide shot, slow push in from beyond the glass coffee table, eye-level, full-length framing of the sofa. It shows: Su Yaqing lounges on the cream sofa with her long legs crossed, smiling at the phone she holds up, mouth closed.\nFrame it exactly as the shot says, at that shot size and angle: a close-up fills the frame with the face, a wide shot shows the whole place.\nImage 1: the location SU YAQING'S LIVING ROOM, the front view, with no people: take the place's layout, walls, furniture and light from it, not its rendering or its camera\nImage 2: the blocking reference of the segment's start, a line-art diagram: take only where each person stands and which way they face, not its outlines or white background\nImage 3: the character sheet of Su Yaqing (27): take this person's face, hair, body and outfit, not the sheet's layout or background\nOnly one person appears: Su Yaqing. Nobody else is in frame. Each person appears once, at natural scale, with the face, hair, body and outfit of their character sheet.\n\nReal adult faces with natural skin texture and pores, real fabric, natural light falloff and shadows, a slight film grain and the depth of field of a real lens, as in a frame of a live-action film. Not a 3D render, an interior-design visualisation, an illustration or a painting; no text, letters, numbers, labels or watermark.\n",
+  "aspect_ratio": "9:16",
+  "size": "1152x2048",
+  "quality": "high",
+  "images": [
+    "episodes/EP001/first_frame_reference/seg04/v1/view.png",
+    "episodes/EP001/blocking/seg04/v1/image-1.jpg",
+    "assets/characters/su_yaqing/v1/image-1.jpg"
+  ]
+}

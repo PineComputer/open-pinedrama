@@ -1,0 +1,12 @@
+{
+  "provider": "openai",
+  "model": "gpt-image-2.5-sunburst",
+  "prompt": "Image 1 is the floor plan of a room seen from above: its bottom edge is the front wall, its top edge the back wall, its left edge the left wall and its right edge the right wall. Image 2 is the front view of the same room (the establishing view), taken from the centre of the front wall facing the back wall. Generate one photorealistic cinematic still of this same room, empty of people, from a new camera position: the left-side view: the camera stands at the centre of the right wall, at eye level, facing the left wall, so the back wall is at the right edge of the frame and the front wall at its left edge. Turn the camera for real: this view must not show the back wall's furniture head-on unless it is the wall being faced. Keep every wall, door, window, piece of furniture, material, colour and light exactly as Image 1 and Image 2 show them, seen from this new side; the room layout and furniture placement exactly match Image 1. Location: JI FAMILY LIVING ROOM. Grand living room of a contemporary luxury mansion, seen five years earlier. The floors are polished cream marble, white marble columns stand along one side and a wall runs behind them. A long beige sofa faces a low marble-and-gold coffee table on a thick ivory carpet. Tall French windows look out on garden trees whose leaves sway in warm sunlight. Golden afternoon sun streams through the windows from the right, casting warm leaf-dappled light. A crystal chandelier hangs overhead.\n\nAvoid: people, readable text, logos, watermark, any door or window the description does not name.\n",
+  "aspect_ratio": "9:16",
+  "size": "1152x2048",
+  "quality": "high",
+  "images": [
+    "assets/scenes/ji_family_living_room/floor-plan/v1/image-1.jpg",
+    "assets/scenes/ji_family_living_room/front/v1/image-1.jpg"
+  ]
+}

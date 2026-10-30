@@ -1,0 +1,15 @@
+{
+  "provider": "openai",
+  "model": "gpt-image-2.5-sunburst",
+  "prompt": "A live-action photograph: the first frame of Shot 1 of a scene of a short drama, vertical composition, as a cinema camera records it on set. Shot size: wide shot; angle: eye level; camera: Wide shot, locked-off camera, eye-level, from the lounge-area side; office door on frame left, walnut desk on frame right. It shows: Lin Qingyu stands soaked and panting just inside the office door. Xu Banxia holds the door beside him. Ji Ran stands in front of the walnut desk facing him.\nFrame it exactly as the shot says, at that shot size and angle: a close-up fills the frame with the face, a wide shot shows the whole place.\nImage 1: the location JI RAN'S OFFICE, the front view, with no people: take the place's layout, walls, furniture and light from it, not its rendering or its camera\nImage 2: the blocking reference of the segment's start, a line-art diagram: take only where each person stands and which way they face, not its outlines or white background\nImage 3: the character sheet of Lin Qingyu (21), look S1: take this person's face, hair, body and outfit, not the sheet's layout or background\nImage 4: the character sheet of Xu Banxia (24): take this person's face, hair, body and outfit, not the sheet's layout or background\nImage 5: the character sheet of Ji Ran (27), look S2: take this person's face, hair, body and outfit, not the sheet's layout or background\nOnly three people appear: Lin Qingyu, Xu Banxia, and Ji Ran. Nobody else is in frame. Each person appears once, at natural scale, with the face, hair, body and outfit of their character sheet.\n\nReal adult faces with natural skin texture and pores, real fabric, natural light falloff and shadows, a slight film grain and the depth of field of a real lens, as in a frame of a live-action film. Not a 3D render, an interior-design visualisation, an illustration or a painting; no text, letters, numbers, labels or watermark.\n",
+  "aspect_ratio": "9:16",
+  "size": "1152x2048",
+  "quality": "high",
+  "images": [
+    "episodes/EP003/first_frame_reference/seg01/v1/view.png",
+    "episodes/EP003/blocking/seg01/v1/image-1.jpg",
+    "assets/characters/lin_qingyu/states/S1/v1/image-1.jpg",
+    "assets/characters/xu_banxia/v1/image-1.jpg",
+    "assets/characters/ji_ran/states/S2/v2/image-1.jpg"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "provider": "openai",
+  "model": "gpt-image-2.5-sunburst",
+  "prompt": "Image 1 is the floor plan of this room seen from above: its bottom edge is the front wall, its top edge the back wall, its left edge the left wall and its right edge the right wall. Generate one photorealistic cinematic still of this room, the front view (the establishing view): the camera stands at the centre of the front wall, at eye level, facing the back wall, with a 35mm lens and natural textures. The room layout and furniture placement should exactly match Image 1. The place is completely empty of people: no person, figure, silhouette, mannequin or reflection of a person anywhere, including behind glass, through doorways and in the distance. Location: Garden of the wedding venue. A small, elegant present-day outdoor wedding garden on a manicured green lawn, in sunny daylight. Back side: a white wooden wedding arch at the end of the aisle, hung with sheer white drapes and garlands of white roses, peonies and greenery, with a tall clipped hedge and leafy trees behind it. A straight aisle of white petals on a pale runner runs down the middle of the lawn from the camera to the arch, between two short rows of white folding chairs that face the arch. Left side: a clipped boxwood hedge and, in front of it, a small round white high cocktail table holding a silver tray. Right side: white rose bushes along a low cream stone garden wall. Front side (behind the camera): a gravel path from the venue's terrace, the way in, where the aisle begins. Sunlight comes from high on the right and gives warm, soft highlights. Show only this place as described: the doors, windows and openings it names lead nowhere new, with no other exit, courtyard, corridor or outdoor view added. Light it with the sources the description names, from their direction, at a neutral daylight white balance so that whites are white; only lamps the description names may glow warm.\n\nAvoid: people or silhouettes, readable text, labels, signs with letters or numbers, logos, watermark.\n",
+  "aspect_ratio": "9:16",
+  "size": "1152x2048",
+  "quality": "high",
+  "images": [
+    "assets/scenes/wedding_garden/floor-plan/v1/image-1.jpg"
+  ]
+}

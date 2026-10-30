@@ -1,0 +1,420 @@
+{
+  "model": "sd25",
+  "content": [
+    {
+      "type": "text",
+      "text": "Image 1: Seven-panel storyboard reference, used for the overall shot structure, shot sizes, and camera-movement rhythm. Read it from left to right and from top to bottom; panel N is Shot N. It is a line-art sketch: do not adopt its sketch style, black outlines, white background, panel borders or drawn faces.\nImage 2: Reference of SU YAQING'S LIVING ROOM, the front view, the establishing view, facing the back wall, a rendered set, not live action. Use it only for the room's layout, the furniture's positions and the light's direction; do not reference its visual content. It contains no people.\nImage 3: Reference of SU YAQING'S LIVING ROOM, the back view, turned 180 degrees, facing the front wall, with the left wall at its right edge, a rendered set, used only for the room's layout; it contains no people.\nImage 4: Reference of SU YAQING'S LIVING ROOM, the left-side view, facing the left wall, with the back wall at its right edge, a rendered set, used only for the room's layout; it contains no people.\nImage 5: Reference of SU YAQING'S LIVING ROOM, the right-side view, facing the right wall, with the back wall at its left edge, a rendered set, used only for the room's layout; it contains no people.\nImage 6: Reference of SU YAQING'S LIVING ROOM, the floor plan seen from above: its top edge is the back wall, its bottom edge the front wall behind the front view's camera, and its left and right edges the left and right walls, a rendered set, used only for the room's layout; it contains no people.\nImage 7: Blocking reference of the segment's start: the same place with these people in their places, used only for where each person is and which way they face; take faces and outfits from each subject's own image. It is a line-art diagram: do not adopt its outlines or white background.\nImage 8: Subject 1 (Su Yaqing) character appearance reference.\nImage 9: Prop 1 (video-calling phone) maps to this image; copy its writing and badges exactly from Image 9.\nFrom each prop's image, use only structure, material, and color.\n[Subject settings]\nSubject 1 (Su Yaqing): Refer to Image 8. 27, Heiress of the Su family, Ji Ran's best friend and Lin Qingyu's older stepsister. Outfit: At home: a blush-pink satin spaghetti-strap bodycon midi slip dress that hugs her waist and hips, with pink velvet low-heeled mules, pearl drop earrings and a diamond tennis bracelet. Signature colour: pink.\nEnvironment (SU YAQING'S LIVING ROOM): Refer to Images 2 to 6. Day, bright daylight from large windows. Bright daylight from the large windows, warm glow from the floor lamps at the sofa ends. Live sound: a quiet apartment, a cushion thump, Su Yaqing's laughter.\nDo not swap the characters' appearances, clothing, actions, positions or dialogue.\n[Subjects and relationships]\nOnly one person appears throughout: Su Yaqing.\n[Blocking]\nRefer to Images 2 to 6 for the room and Image 7 for the people's places. Su Yaqing sits in the middle of the cream bouclé sofa among pastel cushions, legs crossed, facing the low glass coffee table on the pale rug. She holds the video-calling phone up at face height. The kitchen doorway is at the back of the room behind the sofa, and it is empty. The large windows are on the side wall, and a floor lamp stands at each end of the sofa. The camera is in front of the sofa, beyond the glass coffee table, and stays on that side.\n[Overall style]\nPhotorealistic live-action short drama with cinematic lighting. Each character keeps the face and the outfit with its main colour from their reference image throughout. Use each character sheet only for that character: the face from the close-up on the right, the body and outfit from the turnaround on the left; do not render the sheet's layout, white background or multiple views. This segment has 4 lines, in this order: Ji Ran (V.O.), Su Yaqing, Ji Ran (V.O.), Su Yaqing. Generate speech only from the lines in {} in the shot list, each spoken exactly once by its speaker; everyone else keeps their mouth naturally closed while listening, and a V.O. speaker keeps their mouth closed or is off screen. Follow the shot list below; do not add cuts or camera moves beyond it. Strictly adhere to the 180-degree rule: within a scene, characters keep their screen sides and the camera stays on one side of the axis. Seamless continuity of action; cut on action. For dialogue prefer static shot-reverse-shot and over-the-shoulder shots, balanced with reaction shots and close-up inserts. Faces stable and clear, with no resemblance to any real actor or actress. Normal human eyes. Natural anatomy. Natural, fluid motion that follows the blocking; characters make subtle, natural movements. Characters, props and environment share one world with matched lighting. Each line ends naturally with breathing room and is never cut off. Authentic performances with micro-expressions. No BGM; generate only dialogue, environmental sounds and action sounds. No subtitles.\n[Continuity]\nMaintain continuity in the identities, number, appearance, clothing, relative heights, spatial positions, and eyelines of all the characters. The actions in the shot list occur strictly in sequence. Hands are anatomically correct.\n[Strictly exclude]\nsubtitles or on-screen text. Ji Ran in the room. readable text on the phone screen. Dialogue from the wrong character, multiple people speaking at once, repeated or missing lines, lip-sync errors and audio-visual desynchronization. The raw reference images (character sheets, setting plates) appearing as a frame of the video, and starting on a still frame of the setting reference. A fast zoom-in at the start, a fast pull-back at the end, unmotivated whip-pans, tilts, zooms and 360-degree orbits. Axis-crossing, jump cuts, frame skips, flicker and clipping. Face swaps, changes in age or clothing, sudden height shifts, added or missing characters, spatial jumps, and disordered action sequences; props popping in or vanishing, and duplicate characters except mirror reflections. Hand clipping, extra fingers, fused fingers, malformed hands. Subtitles, captions, watermarks and garbled writing; writing and logos other than those on a key prop's reference image, which are copied from it; a phone screen or paper that is not a key prop is shown from the back or out of focus. Black-and-white, monochrome, grayscale, desaturated visuals; hand-drawn, sketch, line art, illustration, comics, animation; storyboard frames, rough sketches, panel borders, gutters and grid layouts.\n[Shot list] (7 shots, approximately 23 seconds)\nWhen a previous-shot reference image is given, it is the moment this segment starts from: keep its people's positions, outfits, props and light, and continue from there. Shot 1 keeps its own camera, matching the image's framing only when it frames the same view; do not repeat that frame later.\nShot 1 (0-4s): [Wide shot, slow push in from beyond the glass coffee table, eye-level, full-length framing of the sofa] Su Yaqing lounges on the cream sofa with her long legs crossed, smiling at the phone she holds up, mouth closed. Dialogue (Ji Ran, V.O., in Chinese, cool, firm): {可惜，现在的纪然，已经不会再任人摆布了。}\nShot 2 (4-8s): [Medium close-up, locked-off camera, eye-level] Su Yaqing's eyebrows rise and she stops smiling, mouth closed. Dialogue (Ji Ran, V.O., in Chinese, cool): {无论是路少泽也好，还是其他人也罢，}\nShot 3 (8-11s): [Close-up, low angle, quick push in] Su Yaqing leans forward toward the phone, her mouth falling open in surprise. Dialogue (Ji Ran, V.O., in Chinese, decisive): {我的男人，我自己选，我要。}\nShot 4 (11-13s): [Medium shot, over-the-shoulder shot from behind Su Yaqing onto the phone screen, eye-level] Su Yaqing's shoulder and curls fill the foreground, and the phone screen shows the video call. Dialogue (Su Yaqing, in Chinese, incredulous rising tone): {嗯？还选老公？}\nShot 5 (13-17s): [Close-up, handheld, eye-level] Su Yaqing blinks twice, mouth closed, then her lips press against a laugh. Dialogue (Ji Ran, V.O., in Chinese, matter-of-fact): {对，我要公开招聘面试，海选。}\nShot 6 (17-20s): [Medium shot, high angle over the glass coffee table] Su Yaqing bursts out laughing and slaps a pastel cushion beside her. Dialogue (Su Yaqing, in Chinese, laughing, teasing): {纪然，亏你想得出来啊，}\nShot 7 (20-23s): [Medium close-up, locked-off camera, eye-level] Su Yaqing shakes her head at the phone, still laughing. Dialogue (Su Yaqing, in Chinese, bubbly, mocking): {你当这是选秀呢，还海选。}\nAt the end: Su Yaqing sits in the middle of the cream sofa among the pastel cushions, leaning toward the glass coffee table, holding the video-calling phone up at face height and laughing. The kitchen doorway at the back of the room behind the sofa is empty.\n\nImage 10 is the first frame.\n"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261027074939-fq4m4"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/su_living_room/times/Day/v1/front.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/su_living_room/times/Day/v1/back.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/su_living_room/times/Day/v1/left-side.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/su_living_room/times/Day/v1/right-side.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "@assets/scenes/su_living_room/times/Day/v1/floor-plan.jpg"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261027074420-rw57c"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261027073126-ks4k6"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261027143829-bnwpl"
+      },
+      "role": "reference_image"
+    },
+    {
+      "type": "image_url",
+      "image_url": {
+        "url": "asset://asset-20261027143016-nr5rk"
+      },
+      "role": "reference_image"
+    }
+  ],
+  "duration": 23,
+  "ratio": "9:16",
+  "resolution": "480p",
+  "generate_audio": true,
+  "watermark": false,
+  "return_last_frame": true,
+  "omni_reference_task_type": "reference",
+  "drama": {
+    "segment": {
+      "id": "seg04",
+      "duration": 23,
+      "location": "su_living_room",
+      "scene_heading": "INT. SU YAQING'S LIVING ROOM - DAY #1-4#",
+      "time": "Day, bright daylight from large windows",
+      "characters": [
+        "su_yaqing"
+      ],
+      "props": [
+        "su_phone"
+      ],
+      "first_state": "Su Yaqing sits in the middle of the cream bouclé sofa among pastel cushions, legs crossed, facing the low glass coffee table on the pale rug. She holds the video-calling phone up at face height. The kitchen doorway is at the back of the room behind the sofa, and it is empty. The large windows are on the side wall, and a floor lamp stands at each end of the sofa. The camera is in front of the sofa, beyond the glass coffee table, and stays on that side.",
+      "shots": [
+        {
+          "time": "0-4s",
+          "size": "wide shot",
+          "angle": "eye level",
+          "camera": "Wide shot, slow push in from beyond the glass coffee table, eye-level, full-length framing of the sofa",
+          "visual": "Su Yaqing lounges on the cream sofa with her long legs crossed, smiling at the phone she holds up, mouth closed.",
+          "audio": "Dialogue (Ji Ran, V.O., in Chinese, cool, firm): {可惜，现在的纪然，已经不会再任人摆布了。}",
+          "characters": [
+            "su_yaqing"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "4-8s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up, locked-off camera, eye-level",
+          "visual": "Su Yaqing's eyebrows rise and she stops smiling, mouth closed.",
+          "audio": "Dialogue (Ji Ran, V.O., in Chinese, cool): {无论是路少泽也好，还是其他人也罢，}",
+          "characters": [
+            "su_yaqing"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "8-11s",
+          "size": "close-up",
+          "angle": "low angle",
+          "camera": "Close-up, low angle, quick push in",
+          "visual": "Su Yaqing leans forward toward the phone, her mouth falling open in surprise.",
+          "audio": "Dialogue (Ji Ran, V.O., in Chinese, decisive): {我的男人，我自己选，我要。}",
+          "characters": [
+            "su_yaqing"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "11-13s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, over-the-shoulder shot from behind Su Yaqing onto the phone screen, eye-level",
+          "visual": "Su Yaqing's shoulder and curls fill the foreground, and the phone screen shows the video call.",
+          "audio": "Dialogue (Su Yaqing, in Chinese, incredulous rising tone): {嗯？还选老公？}",
+          "characters": [
+            "su_yaqing"
+          ],
+          "lines": [
+            1
+          ]
+        },
+        {
+          "time": "13-17s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, handheld, eye-level",
+          "visual": "Su Yaqing blinks twice, mouth closed, then her lips press against a laugh.",
+          "audio": "Dialogue (Ji Ran, V.O., in Chinese, matter-of-fact): {对，我要公开招聘面试，海选。}",
+          "characters": [
+            "su_yaqing"
+          ],
+          "lines": [
+            2
+          ]
+        },
+        {
+          "time": "17-20s",
+          "size": "medium shot",
+          "angle": "high angle",
+          "camera": "Medium shot, high angle over the glass coffee table",
+          "visual": "Su Yaqing bursts out laughing and slaps a pastel cushion beside her.",
+          "audio": "Dialogue (Su Yaqing, in Chinese, laughing, teasing): {纪然，亏你想得出来啊，}",
+          "characters": [
+            "su_yaqing"
+          ],
+          "lines": [
+            3
+          ]
+        },
+        {
+          "time": "20-23s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up, locked-off camera, eye-level",
+          "visual": "Su Yaqing shakes her head at the phone, still laughing.",
+          "audio": "Dialogue (Su Yaqing, in Chinese, bubbly, mocking): {你当这是选秀呢，还海选。}",
+          "characters": [
+            "su_yaqing"
+          ],
+          "lines": [
+            3
+          ]
+        }
+      ],
+      "light_audio": "Bright daylight from the large windows, warm glow from the floor lamps at the sofa ends. Live sound: a quiet apartment, a cushion thump, Su Yaqing's laughter.",
+      "dialogue": [
+        {
+          "speaker": "ji_ran",
+          "line": "可惜，现在的纪然，已经不会再任人摆布了。无论是路少泽也好，还是其他人也罢，我的男人，我自己选，我要。",
+          "offscreen": true
+        },
+        {
+          "speaker": "su_yaqing",
+          "line": "嗯？还选老公？",
+          "offscreen": false
+        },
+        {
+          "speaker": "ji_ran",
+          "line": "对，我要公开招聘面试，海选。",
+          "offscreen": true
+        },
+        {
+          "speaker": "su_yaqing",
+          "line": "纪然，亏你想得出来啊，你当这是选秀呢，还海选。",
+          "offscreen": false
+        }
+      ],
+      "must_hit": [
+        "Su Yaqing on the cream sofa video-calling on the phone",
+        "Su Yaqing laughs and slaps a cushion at the idea of a public audition"
+      ],
+      "exit_state": "Su Yaqing sits in the middle of the cream sofa among the pastel cushions, leaning toward the glass coffee table, holding the video-calling phone up at face height and laughing. The kitchen doorway at the back of the room behind the sofa is empty.",
+      "negative": [
+        "subtitles or on-screen text",
+        "Ji Ran in the room",
+        "readable text on the phone screen"
+      ]
+    },
+    "bible_version": "v2",
+    "breakdown_version": "v2",
+    "lineage": [
+      {
+        "path": "bible/v2/artifact.json",
+        "sha256": "f5400f28e1edd9ccef571edd8420590ca4a9e72eb37b7ca444a66cfe777c7b91"
+      },
+      {
+        "path": "bible/accepted.json",
+        "sha256": "d964bcfb13d315e51ed18dba40bce44dbe8e8ad1fd06b96e8843e333e1d61a32"
+      },
+      {
+        "path": "bible/current.json",
+        "sha256": "2addb578f51de2dd02b1e8e33d5e141f23f16f02e61259b8cb42e64f67d2fcc3"
+      },
+      {
+        "path": "bible/v2/bible.json",
+        "sha256": "3d920d493ba887180838dafb80b72f72eb9f03f827829dba1965c3643feaf05d"
+      },
+      {
+        "path": "bible/v2/input/screenplay.md",
+        "sha256": "afbfe0f787d9c5565630e661e5667df671458c5aa581c242873ff1ab7de27669"
+      },
+      {
+        "path": "episodes/EP001/breakdown/v2/artifact.json",
+        "sha256": "0ded156484886c988e6a5b745904a2df9eb4184f310876d283c970e6c80c39e9"
+      },
+      {
+        "path": "episodes/EP001/breakdown/accepted.json",
+        "sha256": "de2773c04703c690c939a63da269805868284ae428b471e3bc96af8d18ec861e"
+      },
+      {
+        "path": "episodes/EP001/breakdown/current.json",
+        "sha256": "d816beccf54d78dc70ecc5f752ac2216ceaabfac5717aa249e53156ad4ff324a"
+      },
+      {
+        "path": "episodes/EP001/breakdown/v2/breakdown.json",
+        "sha256": "038b756ca25d30d37a10530bcb819e12cf3f85c4bfa33e54247a8c7db30f509f"
+      },
+      {
+        "path": "episodes/EP001/multi_panel_storyboard/seg04/line-art/v1/artifact.json",
+        "sha256": "2ea3c184db9deb78cf4c0166b0631088803531b478de1895ba54a9ccb981b36e"
+      },
+      {
+        "path": "episodes/EP001/multi_panel_storyboard/seg04/line-art/accepted.json",
+        "sha256": "f6de347b6031cee9af141b0033204a6d6aa08173516218374882eef0dd058acb"
+      },
+      {
+        "path": "episodes/EP001/multi_panel_storyboard/seg04/line-art/current.json",
+        "sha256": "28e92aa6da9036443580d7b4c0b551bc3cb4f26bd56a8f86a9e79a9182491498"
+      },
+      {
+        "path": "episodes/EP001/multi_panel_storyboard/seg04/line-art/v1/image-1.jpg",
+        "sha256": "96a7fcf83459571630310856aa53d0d788297f27fa8298c85edbcb9bcc6a4e83"
+      },
+      {
+        "path": "episodes/EP001/multi_panel_storyboard/seg04/line-art/v1/asset/job.json",
+        "sha256": "237a36dec665f0d49e48f150b095cad2b4c553adab42ca6972b2d078b3e8c8f4"
+      },
+      {
+        "path": "assets/scenes/su_living_room/times/Day/v1/artifact.json",
+        "sha256": "05e7844b23121fce255aa1c42a7f0e6d226cb4b536d537a6509b4db69864ed44"
+      },
+      {
+        "path": "assets/scenes/su_living_room/times/Day/accepted.json",
+        "sha256": "3c9672733fbde88559c8dbda6fb4c411cfeaa3d1e685771d1f02bb4ea98caeb1"
+      },
+      {
+        "path": "assets/scenes/su_living_room/times/Day/current.json",
+        "sha256": "db6b842dd8185a50752489ffbe526f5343b921cad9ead2e8ec1a4edfa9e033f8"
+      },
+      {
+        "path": "assets/scenes/su_living_room/times/Day/v1/image-1.jpg",
+        "sha256": "c51ec3172803b3449b4fab2674615e39dc5b5aaeb8f8197fe2cc8891ad1c3ab8"
+      },
+      {
+        "path": "assets/scenes/su_living_room/times/Day/v1/front.jpg",
+        "sha256": "191c7041821660987a709e46a8043ae20b35c8c290f981ed5b8f5cd63baeb112"
+      },
+      {
+        "path": "assets/scenes/su_living_room/times/Day/v1/back.jpg",
+        "sha256": "1a7622ecfcfa877b5dc1a68c2399e2162270d5bae98ed45689bf4f962480db19"
+      },
+      {
+        "path": "assets/scenes/su_living_room/times/Day/v1/left-side.jpg",
+        "sha256": "bde37548d3629306daf13dd1c4b3df3ea60f797668e1fbe848bef210d6b18f42"
+      },
+      {
+        "path": "assets/scenes/su_living_room/times/Day/v1/right-side.jpg",
+        "sha256": "f305b909d2baf326b0a30bd1380ccb4a7aaa0d942016b363a5d16d5b44129b8f"
+      },
+      {
+        "path": "assets/scenes/su_living_room/times/Day/v1/floor-plan.jpg",
+        "sha256": "084142c1de5910c57eb14ff4dcccb6c3c459659da952c6aa3452440acb1cad4c"
+      },
+      {
+        "path": "episodes/EP001/blocking/seg04/v1/artifact.json",
+        "sha256": "6f6ede55e2c30d52cfe71f4cb699e37b1c6c32a8594b4f263cf2813559213d81"
+      },
+      {
+        "path": "episodes/EP001/blocking/seg04/accepted.json",
+        "sha256": "46ffd6ea959d76a9628e3b907f4690032d75c13180c5ab4df752d923a58613b6"
+      },
+      {
+        "path": "episodes/EP001/blocking/seg04/current.json",
+        "sha256": "93e0b6cc182f828c743bfcd484f55ecd6012fb6b5926e7a9210d66636500808a"
+      },
+      {
+        "path": "episodes/EP001/blocking/seg04/v1/image-1.jpg",
+        "sha256": "31a6d37947c89b89ef09b73c081150d2121f6761afbd21d65905ca8f96d5b78a"
+      },
+      {
+        "path": "episodes/EP001/blocking/seg04/v1/asset/job.json",
+        "sha256": "60fe500e13572f0966ad315a1f09079bee425358da170c18f0e5cd44d48df5d9"
+      },
+      {
+        "path": "assets/props/su_phone/v1/artifact.json",
+        "sha256": "bdeccee05ffb11e31c3305098eb918b995f2a0158de8d34a258feea7c9b00fc6"
+      },
+      {
+        "path": "assets/props/su_phone/accepted.json",
+        "sha256": "dd5c3ee6bb7f468eacade2cb01b2cc8438a5b9bf690796b40982960c5b060ed5"
+      },
+      {
+        "path": "assets/props/su_phone/current.json",
+        "sha256": "7d66530bd9e3521ee9ce5183b43a000bbb141c1c9e8637402f5eac15d345d7e1"
+      },
+      {
+        "path": "assets/props/su_phone/v1/image-1.jpg",
+        "sha256": "bcdd8e909d9303cab92c484a0aa9436fbfa06a53046bcde82b358a798a00b4c4"
+      },
+      {
+        "path": "assets/props/su_phone/v1/asset/job.json",
+        "sha256": "0406981fafc642315cbe199923179c8f8b2048dd9ca4cbada0ac37192fb4fe47"
+      },
+      {
+        "path": "assets/characters/su_yaqing/v1/artifact.json",
+        "sha256": "7ab2edcd3c233548d328c67cd0385c215a48cce9829b5faded103107a422e702"
+      },
+      {
+        "path": "assets/characters/su_yaqing/accepted.json",
+        "sha256": "fa35715982468a0616a2c540220cef63674018818bd692d3e033f9afd6f0f90b"
+      },
+      {
+        "path": "assets/characters/su_yaqing/current.json",
+        "sha256": "cf13dcf1fa8d87d13af3f0bfb68fd4878e06d739522378920adce83d1331e5b7"
+      },
+      {
+        "path": "assets/characters/su_yaqing/v1/image-1.jpg",
+        "sha256": "2746c06ba9dc23d6b1d6b58120c7a110facf0eaef0abdb8ae8962455fe4eb952"
+      },
+      {
+        "path": "assets/characters/su_yaqing/v1/asset/job.json",
+        "sha256": "0d6c2635d57079cd0a40a04062b5395fc99a069d3f90a60efd673fdc7fb76c3b"
+      },
+      {
+        "path": "episodes/EP001/video_prompts/v2/seg04.json",
+        "sha256": "b67d09c278e5d9f23fb3c5c09a7417dfa4495e53a1947847d5530c8afb59ec7b"
+      },
+      {
+        "path": "episodes/EP001/first_frame_reference/seg04/v1/artifact.json",
+        "sha256": "e4945148a6fbb0dc78d4daa7d9047d2d885f87859450913ca56c3799cbcda2ee"
+      },
+      {
+        "path": "episodes/EP001/first_frame_reference/seg04/accepted.json",
+        "sha256": "6b518695ddbfd9d373918bdc9f60abcdc04989d6079dab5a719cd82d70425614"
+      },
+      {
+        "path": "episodes/EP001/first_frame_reference/seg04/current.json",
+        "sha256": "fa2f7ea7990232305454b070391f0b5d351ecf544a8d92998f7920c1293c07e1"
+      },
+      {
+        "path": "episodes/EP001/first_frame_reference/seg04/v1/image-1.jpg",
+        "sha256": "e92fb22f089edd9703e34bcbc22d20ea84f18477136823fa48b7792eec3f053b"
+      },
+      {
+        "path": "episodes/EP001/first_frame_reference/seg04/v1/asset/job.json",
+        "sha256": "dce0b55fa81fd59ed59c4f61c5ab779f231336bff0f4997f4321d4946f585e0a"
+      }
+    ],
+    "character_reference_mode": "asset_library",
+    "video_references": "storyboard",
+    "trusted_character_references": {},
+    "video_prompts_version": "v2",
+    "first_frame_reference": "v1"
+  }
+}
