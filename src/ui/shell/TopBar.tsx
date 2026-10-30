@@ -1,6 +1,7 @@
-// The bar over the work, in the pro direction (its spec, "TopBar"): back, where you are as a
-// breadcrumb, and the next review. In a drama, the bar under it holds the surface (Studio, Canvas,
-// Graph) with the selection kept across them, and the drama's preset, format and spend.
+// The bar over the work, in the pro direction (its spec, "TopBar"): back, where you are, and the
+// next review. On a drama's own pages, as on the reference's drama board (drama/app.jsx, its top
+// bar), where you are is the surface switch (Studio, Canvas, Graph), with the selection kept across
+// them, and the drama's preset, format and spend; elsewhere it is a breadcrumb.
 import { useState } from "react";
 import type { DramaView, ReviewSummary } from "../../shared/types.ts";
 import { api, useAction } from "../api.ts";
@@ -54,7 +55,6 @@ export function DramaBar({ drama }: { drama: DramaView }) {
   return (
     <div className="ds-dramabar">
       <SurfaceSwitch drama={drama} />
-      <span className="ds-dramabar-gap" />
       {drama.preset && (
         <span className="ds-projectchip">
           <Icon name="sparkle" />
@@ -168,13 +168,14 @@ export function Breadcrumb({ crumbs }: { crumbs: Crumb[] }) {
   );
 }
 
-export function TopBar({ crumbs, waiting, ready, children }: { crumbs: Crumb[]; waiting: ReviewSummary[]; ready: boolean; children?: React.ReactNode }) {
+/** `bar`: what stands in the breadcrumb's place on a drama's own pages (DramaBar). */
+export function TopBar({ crumbs, waiting, ready, bar, children }: { crumbs: Crumb[]; waiting: ReviewSummary[]; ready: boolean; bar?: React.ReactNode; children?: React.ReactNode }) {
   const { t } = useT();
   const back = crumbs.length > 1 ? crumbs[crumbs.length - 2].to : undefined;
   return (
     <header className="ds-topbar">
       {back && <IconButton label={t("crumb.back")} icon="caret-left" onClick={() => navigate(back)} />}
-      <Breadcrumb crumbs={crumbs} />
+      {bar ?? <Breadcrumb crumbs={crumbs} />}
       <span className="ds-topbar-gap" />
       {children}
       {ready && <NextReview waiting={waiting} />}

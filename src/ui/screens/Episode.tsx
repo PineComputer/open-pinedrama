@@ -9,6 +9,7 @@ import { Link } from "../router.tsx";
 import { Segments } from "./Segments.tsx";
 import { Still } from "../Still.tsx";
 import { Pinboard, isImage, isVideo, useShotList, useSize, variantLabel } from "../viewing.tsx";
+import { buttonVariants } from "@/components/ui/button";
 
 type Selection = { kind: "segment"; key: string; tab: "boards" | "stills" | "takes" } | { kind: "cut" } | { kind: "other" };
 
@@ -176,12 +177,12 @@ export function Episode({ dramaId, code }: { dramaId: string; code: string }) {
             </span>
           )}
           {row.reviewId && (
-            <Link to={`/r/${row.reviewId}`} className="btn small seal-btn">
+            <Link to={`/r/${row.reviewId}`} className={buttonVariants({ variant: "default", size: "sm" })}>
               {t("episode.review")} →
             </Link>
           )}
           {trouble && (
-            <button className="btn small" disabled={resume.busy} onClick={() => void resume.run()}>
+            <button className={buttonVariants({ variant: "outline", size: "sm" })} disabled={resume.busy} onClick={() => void resume.run()}>
               {t("board.resume")}
             </button>
           )}
