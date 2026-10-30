@@ -152,7 +152,7 @@ docs/
 
 - **Local web:** `npm run dev` starts the engine on 127.0.0.1 and serves the UI through Vite. This is the same model as the starter: loopback only, and the API answers only its own pages.
 - **Desktop:** Electron's main process starts the engine in a `utilityProcess`, waits for its port, and loads the same UI. The engine and the UI use the same HTTP + SSE API in both hosts, with a per-launch token in desktop mode. That keeps one transport.
-- **Libraries:** Hono (HTTP and SSE), node:sqlite, the Pine SDKs, React 19, react-router, lucide-react icons, plain CSS with tokens (as the starter), vitest. Nothing else unless a screen needs it.
+- **Libraries:** Hono (HTTP and SSE), node:sqlite, the Pine SDKs, React 19, react-router, Phosphor icons (src/ui/icons.tsx), plain CSS on Reveric's tokens (src/ui/theme/), vitest. Nothing else unless a screen needs it.
 
 ## Engine
 

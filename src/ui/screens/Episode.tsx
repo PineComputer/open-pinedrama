@@ -1,10 +1,10 @@
-import { Check, Pencil } from "lucide-react";
 import { useRef, useState } from "react";
 import { type EpisodePage, type Judged, type Receipt, STAGES } from "../../shared/types.ts";
 import { api, useAction, useResource } from "../api.ts";
 import { type TKey, useT } from "../i18n.ts";
 import { errorText, fileKind, moneyText, nowText } from "../labels.ts";
 import { Segmented } from "../components/Segmented.tsx";
+import { Icon } from "../icons.tsx";
 import { Link } from "../router.tsx";
 import { Segments } from "./Segments.tsx";
 import { Still } from "../Still.tsx";
@@ -31,7 +31,7 @@ function JudgedLine({ review }: { review?: Judged }) {
   if (review.verdict === "approve") {
     return (
       <div className="judged approved">
-        <Check size={14} /> {t("judged.approve")} · {link}
+        <Icon name="check" /> {t("judged.approve")} · {link}
       </div>
     );
   }
@@ -39,7 +39,7 @@ function JudgedLine({ review }: { review?: Judged }) {
     return (
       <div className="judged revised">
         <div>
-          <Pencil size={13} /> {t("judged.revise")} · {link}
+          <Icon name="note-pencil" /> {t("judged.revise")} · {link}
         </div>
         {review.notes.length > 0 && (
           <ol className="judged-notes">
@@ -110,8 +110,8 @@ function Receipts({ receipts, empty }: { receipts: Receipt[]; empty: string }) {
                 <Still still={receipt.files[0] && { url: receipt.files[0].url, video: isVideo(receipt.files[0]) }} />
               </span>
               <span className="num">{receipt.files[0]?.version ?? "—"}</span>
-              {receipt.review?.verdict === "approve" && <Check size={13} className="v-approve" />}
-              {receipt.review?.verdict === "revise" && <Pencil size={12} className="v-revise" />}
+              {receipt.review?.verdict === "approve" && <Icon name="check" className="v-approve" />}
+              {receipt.review?.verdict === "revise" && <Icon name="note-pencil" className="v-revise" />}
             </button>
           ))}
         </div>
