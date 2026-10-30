@@ -1,82 +1,30 @@
-/* The cut viewer: media-chrome's player and react-timeline-editor's timeline, themed to reveric's
-   editing page. The look is modified from reveric's designs/desktop/drama/editing.css (.ed-pv,
-   .ed-transport, .ed-play, .ed-tlbar, .ed-ruler, .ed-clip, .ed-playhead) and drama.css
-   (--dr-stage-*), AGPLv3, as docs/REUSED.md records: classes renamed ds-*, applied to the two
-   libraries' own parts, and letters kept to the colours the contrast guard allows. */
+/* The cut's two libraries inside the pro prototype's classes (theme/studio.css: .player, .bigplay,
+   .controls .pp, .tl, .tlseg, .pin, .head). media-chrome's buttons take the prototype's look through
+   its custom properties; react-timeline-editor's parts are laid out as the prototype's timeline: no
+   ruler, the pins' row over the segments' row, its cursor as the prototype's playhead. */
 
-:root {
-  --dr-stage-bg: #161c1a;
-  --dr-stage-text: #e4ece8;
-  --dr-stage-panel: rgba(22, 28, 26, 0.86);
-  --ed-black: #0e0c0a;
-  --ed-video: #8b7355;
-  --ed-playhead: var(--accent);
-}
-:root[data-theme="dark"] {
-  --ed-video: #c4a57e;
-  --ed-playhead: #f6ad55;
-}
+/* The room fills the shell's work area under the top bar, as the prototype's fills its main column. */
+.room.is-cut { height: calc(100vh - var(--top)); }
+/* The older screens' global .stage, .screen and .verdict (styles.css) catch the prototype's: back to its values. */
+.room.is-cut .stage { position: static; display: flex; place-items: normal; padding: 0; overflow: visible; }
+.room.is-cut .screen { height: auto; max-height: none; aspect-ratio: auto; background: none; border-radius: 0; overflow: visible; box-shadow: none; }
+.room.is-cut .verdict { grid-template-columns: none; }
+/* The agent's ball sits over the inspector's foot: Send review keeps above it. */
+.room.is-cut .verdict { padding-bottom: 84px; }
 
-.ds-cut { display: flex; flex-direction: column; width: 100%; height: 100%; min-height: 0; }
+.player { display: block; --media-control-background: transparent; --media-control-hover-background: transparent; --media-primary-color: #000; }
+.player video { display: block; }
+.player .bigplay { padding: 0; }
+.controls .pp { padding: 0; --media-control-background: var(--accent); --media-control-hover-background: var(--accent); --media-primary-color: var(--on-accent); }
+.controls .pp .ic { color: var(--on-accent); }
 
-/* ---------------- player (media-chrome) ---------------- */
-.ds-cut {
-  --media-background-color: var(--dr-stage-bg);
-  --media-control-background: var(--surface-container);
-  --media-control-hover-background: var(--hover);
-  --media-primary-color: var(--text-primary);
-  --media-secondary-color: var(--surface-container);
-  --media-text-color: var(--text-muted);
-  --media-font-family: var(--font-mono);
-  --media-font-size: var(--type-ui-small-size);
-}
-.ds-cut-player { flex: 1; min-height: 0; width: 100%; display: flex; flex-direction: column; background: var(--dr-stage-bg); }
-.ds-cut-player video { flex: 1; min-height: 0; width: 100%; padding: var(--space-lg); box-sizing: border-box; object-fit: contain; }
-.ds-cut-transport { flex: none; width: 100%; box-sizing: border-box; background: var(--surface-container); height: 44px; display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: var(--space-md); padding: 0 var(--space-lg); border-top: 1px solid var(--border-subtle); }
-.ds-cut-transport .btns { display: flex; align-items: center; gap: var(--space-xs); }
-.ds-cut-transport .seg { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: var(--type-ui-small-size) var(--font-mono); color: var(--text-muted); }
-.ds-cut-transport .tc { justify-self: end; --media-control-background: transparent; --media-control-hover-background: transparent; }
-.ds-cut-play { width: 34px; height: 34px; padding: 9px; border-radius: var(--radius-pill); --media-control-background: var(--accent); --media-control-hover-background: var(--accent-warm); --media-primary-color: var(--on-accent); }
-
-/* ---------------- timeline (react-timeline-editor) ---------------- */
-.ds-tl { flex: none; display: flex; flex-direction: column; height: 196px; background: var(--surface-dim); border-top: 1px solid var(--border); }
-.ds-tl-bar { flex: none; height: 40px; display: flex; align-items: center; gap: 2px; padding: 0 var(--space-md); background: var(--surface-container); border-bottom: 1px solid var(--border-subtle); }
-.ds-tl-bar .grow { flex: 1; }
-.ds-tl-bar .note { font-size: var(--type-ui-small-size); color: var(--text-secondary); }
-.ds-tl-bar .ds-iconbtn { width: 28px; height: 28px; }
-.ds-tl-body { flex: 1; min-height: 0; display: flex; }
-.ds-tl-heads { flex: none; width: 150px; display: flex; flex-direction: column; border-right: 1px solid var(--border); background: var(--surface); }
-.ds-tl-corner { height: 32px; flex: none; background: var(--surface-container); border-bottom: 1px solid var(--border-subtle); }
-.ds-tl-head { height: 44px; flex: none; box-sizing: border-box; display: flex; align-items: center; gap: 5px; padding: 0 var(--space-md); border-bottom: 1px solid var(--border-subtle); font-size: var(--type-ui-small-size); font-weight: 600; color: var(--text-secondary); white-space: nowrap; }
-.ds-tl-head.is-main { background: var(--surface-container-high); }
-.ds-tl-head .ds-icon { width: 13px; height: 13px; }
-.ds-tl-heads .id { font: 500 10px/1 var(--font-mono); color: var(--text-secondary); }
-.ds-tl-area { flex: 1; min-width: 0; min-height: 0; }
-
-.ds-tl-area .timeline-editor { background: var(--surface-dim); font-family: var(--font-mono); }
-.ds-tl-area .timeline-editor-time-area { background: var(--surface-container); border-bottom: 1px solid var(--border-subtle); }
-.ds-tl-area .timeline-editor-time-unit { border-right-color: var(--border-input); }
-.ds-tl-area .timeline-editor-time-unit-scale { color: var(--text-muted); font: 500 10px var(--font-mono); }
-.ds-tl-area .timeline-editor-edit-row { background: var(--surface-container); border-bottom: 1px solid var(--border-subtle); background-image: none; }
-.ds-tl-area .timeline-editor-action { background: none; }
-.ds-tl-area .timeline-editor-cursor { border-left-color: var(--ed-playhead); }
-.ds-tl-area .timeline-editor-cursor-top path { fill: var(--ed-playhead); }
-
-.ds-tl-clip {
-  --c: var(--ed-video);
-  position: absolute; inset: 4px 0; display: flex; align-items: flex-start; gap: 4px; box-sizing: border-box; overflow: hidden; padding: 3px 6px;
-  border-radius: var(--radius-medium); border: 1px solid color-mix(in srgb, var(--c) 45%, var(--surface));
-  background: color-mix(in srgb, var(--c) 16%, var(--surface)); color: var(--text-primary);
-  font: 600 11px/13px var(--font-sans); cursor: pointer; text-align: left; white-space: nowrap; transition: border-color 0.12s;
-}
-.ds-tl-clip:hover { border-color: color-mix(in srgb, var(--c) 75%, var(--surface)); }
-.ds-tl-clip:focus-visible { outline: 2px solid var(--text-primary); outline-offset: 1px; }
-.ds-tl-clip .no { flex: none; padding: 0 4px; border-radius: 3px; background: var(--accent); color: var(--on-accent); font-size: 10px; }
-.ds-tl-clip .take { overflow: hidden; text-overflow: ellipsis; font-family: var(--font-mono); }
-.ds-tl-clip .dur { position: absolute; right: 6px; bottom: 3px; font: 500 10px/1 var(--font-mono); color: var(--text-secondary); }
-.ds-tl-note { position: absolute; inset: 4px 0; box-sizing: border-box; overflow: hidden; padding: 0 6px; border-radius: var(--radius-medium); border: 1px solid var(--warning-text); background: var(--surface); color: var(--text-primary); font: 500 11px/22px var(--font-sans); text-align: left; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; }
-.ds-tl-note:focus-visible { outline: 2px solid var(--text-primary); outline-offset: 1px; }
-
-/* ---------------- the cut's review room: the viewer on the stage, no reel ---------------- */
-.ds-room.is-cut { grid-template-columns: minmax(0, 1fr) var(--insp); }
-.ds-room.is-cut .ds-screen { display: flex; padding: 0; }
+/* The library's stylesheet is unlayered, so it wins over these layered rules unless they are important. */
+.tl .timeline-editor { width: 100% !important; height: 100% !important; background: none !important; font-family: var(--font-sans) !important; overflow: visible !important; }
+.tl .timeline-editor-time-area { display: none !important; }
+.tl .timeline-editor-edit-area, .tl .timeline-editor-edit-area .ReactVirtualized__Grid { overflow: visible !important; }
+.tl .timeline-editor-edit-row { background: none !important; border: 0 !important; }
+.tl .timeline-editor-action { background: none !important; overflow: visible !important; }
+.tl .timeline-editor-cursor { top: 8px !important; height: calc(100% - 8px) !important; width: 2px !important; border: 0 !important; background: var(--text-primary) !important; transform: translateX(-1px) !important; }
+.tl .timeline-editor-cursor-top { display: none !important; }
+.tl .tlseg { left: 0; right: 0; width: 100%; padding: 0; color: inherit; font: inherit; cursor: pointer; text-align: left; }
+.tl .pin { border: 0; padding: 0; cursor: pointer; }

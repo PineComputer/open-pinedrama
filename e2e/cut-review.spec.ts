@@ -13,7 +13,7 @@ async function at(page: Page, seconds: number) {
   await page.locator("media-controller video").evaluate((video: HTMLVideoElement, s) => {
     video.currentTime = s;
   }, seconds);
-  await expect(page.getByRole("button", { name: `Note at 0:0${seconds}` })).toBeVisible();
+  await expect(page.getByRole("textbox", { name: `Add a note at 0:0${seconds}` })).toBeVisible();
 }
 
 test("a cut sent back with two notes at their times, recut, and accepted", async ({ page }) => {
@@ -33,22 +33,21 @@ test("a cut sent back with two notes at their times, recut, and accepted", async
   await page.goto(`/r/${first.id}`);
   await expect(page.locator("media-controller video")).toHaveAttribute("src", first.reviewItems[0].files[0].url);
   const segments = page.getByRole("group", { name: "Segments" });
-  await expect(segments.getByRole("button", { name: /^seg0\d/ })).toHaveCount(3);
+  await expect(segments.getByRole("button", { name: /^seg0\d · t0\d$/ })).toHaveCount(3);
   expect(await newProblems(page)).toEqual([]);
 
-  const note = page.getByRole("textbox", { name: "A note for the agent" });
   for (const [seconds, text] of [[1, "Cut in sooner"], [3, "Hold on her face"]] as const) {
     await at(page, seconds);
-    await page.getByRole("button", { name: `Note at 0:0${seconds}` }).click();
-    await note.fill(text);
-    await note.press("Enter");
+    const box = page.getByRole("textbox", { name: `Add a note at 0:0${seconds}` });
+    await box.fill(text);
+    await box.press("Enter");
   }
-  await expect(segments.getByRole("button", { name: /, note at \d/ })).toHaveCount(2);
+  await expect(segments.getByRole("button", { name: /^Note at/ })).toHaveCount(2);
   expect(await newProblems(page)).toEqual([]);
 
-  await page.getByRole("button", { name: "Send back B" }).click();
-  await page.getByRole("button", { name: /^Send review/ }).click();
-  await page.getByRole("button", { name: /^Send\b/ }).last().click();
+  await page.getByRole("button", { name: "Send back" }).click();
+  await page.getByRole("textbox", { name: "Why it goes back" }).fill("It starts too slowly.");
+  await page.getByRole("button", { name: "Send review" }).click();
   await expect(page).not.toHaveURL(new RegExp(`/r/${first.id}$`));
 
   const sent = await call<ReviewView>(page, `/api/reviews/${first.id}`);
@@ -58,6 +57,7 @@ test("a cut sent back with two notes at their times, recut, and accepted", async
       key: "cut",
       verdict: "revise",
       notes: [
+        { fileId: cut, text: "It starts too slowly." },
         { fileId: cut, time: expect.closeTo(1, 1), text: "Cut in sooner" },
         { fileId: cut, time: expect.closeTo(3, 1), text: "Hold on her face" },
       ],
@@ -69,10 +69,9 @@ test("a cut sent back with two notes at their times, recut, and accepted", async
   expect(recut.version).toBe("v2");
   expect(recut.cutPlan && "clips" in recut.cutPlan ? recut.cutPlan.clips.map((clip) => clip.segment) : []).toEqual(["seg01", "seg02", "seg03"]);
   await page.goto(`/r/${second.id}`);
-  await expect(page.getByRole("button", { name: "Accept cut A" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Accept cut" })).toBeVisible();
   expect(await newProblems(page)).toEqual([]);
-  await page.getByRole("button", { name: "Accept cut A" }).click();
-  await page.getByRole("button", { name: /^Send review/ }).click();
-  await page.getByRole("button", { name: /^Send\b/ }).last().click();
+  await page.getByRole("button", { name: "Accept cut" }).click();
+  await page.getByRole("button", { name: "Send review" }).click();
   await expect(page).not.toHaveURL(new RegExp(`/r/${second.id}$`));
 });

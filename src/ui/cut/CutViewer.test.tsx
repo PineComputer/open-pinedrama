@@ -33,7 +33,7 @@ const PLAN = {
 
 /** The viewer rendered, its queries kept to its own part of the page. */
 function view(file: FileItem, onTime?: (seconds: number) => void) {
-  const { container } = render(<CutViewer file={file} onTime={onTime} />);
+  const { container } = render(<CutViewer file={file} tag="EP001 · cut v2" onTime={onTime} />);
   return { page: within(container), video: container.querySelector("video")!, container };
 }
 
@@ -44,34 +44,32 @@ beforeEach(() => {
 afterEach(() => vi.restoreAllMocks());
 
 describe("cutRows", () => {
-  it("is the picture row, a clip for each segment's take at its time in the cut, named by its place in the plan", () => {
+  it("is the pins' row above the segments' row: a strip for each segment's take at its time in the cut, named by its place in the plan", () => {
     expect(cutRows(PLAN.clips)).toEqual([
+      { id: "notes", rowHeight: 14, actions: [] },
       {
         id: "picture",
+        rowHeight: 52,
         actions: [
           { id: "0", start: 0, end: 4, effectId: "clip", movable: false, flexible: false },
           { id: "1", start: 4, end: 6, effectId: "clip", movable: false, flexible: false },
           { id: "2", start: 6, end: 8, effectId: "clip", movable: false, flexible: false },
         ],
       },
-      { id: "notes", actions: [] },
     ]);
   });
 
-  it("puts each of the maker's notes at its time on the notes row: those on this cut, with a time", () => {
+  it("pins each of the maker's notes at its time: those on this cut, with a time", () => {
     const notes = [
       { fileId: 7, time: 6, text: "Too dark" },
       { fileId: 8, time: 3, text: "On the earlier cut" },
       { fileId: 7, text: "Overall: faster" },
       { time: 2, text: "Cut in sooner" },
     ];
-    expect(cutRows(PLAN.clips, notes, 7)[1]).toEqual({
-      id: "notes",
-      actions: [
-        { id: "note-0", start: 6, end: 7, effectId: "note", movable: false, flexible: false },
-        { id: "note-3", start: 2, end: 3, effectId: "note", movable: false, flexible: false },
-      ],
-    });
+    expect(cutRows(PLAN.clips, notes, 7)[0].actions).toEqual([
+      { id: "note-0", start: 6, end: 6, effectId: "note", movable: false, flexible: false },
+      { id: "note-3", start: 2, end: 2, effectId: "note", movable: false, flexible: false },
+    ]);
   });
 });
 
@@ -99,19 +97,14 @@ describe("CutViewer", () => {
     expect(controller.getAttribute("keyboardbackwardseekoffset")).toBe(String(1 / 24));
   });
 
-  it("names the segment in view, and goes to the previous and next cut point", async () => {
-    const user = userEvent.setup();
+  it("shows the prototype's player: its tag, a big Play over the picture, and the time below", () => {
     const { page, video } = view(cut(PLAN));
-    await user.click(page.getByRole("button", { name: "Next cut point" }));
-    expect(video.currentTime).toBe(4);
-    expect(page.getByText("seg02 · t01")).toBeInTheDocument();
-    await user.click(page.getByRole("button", { name: "Next cut point" }));
-    expect(video.currentTime).toBe(6);
-    await user.click(page.getByRole("button", { name: "Previous cut point" }));
-    expect(video.currentTime).toBe(4);
-    video.currentTime = 7;
+    expect(page.getByText("EP001 · cut v2")).toBeInTheDocument();
+    expect(video.closest(".player")).not.toBeNull();
+    video.currentTime = 4.5;
     fireEvent.timeUpdate(video);
-    expect(page.getByText("seg03 · t01")).toBeInTheDocument();
+    expect(page.getByText("4.5s")).toBeInTheDocument();
+    expect(page.getByText("/ 8.0s")).toBeInTheDocument();
   });
 
   it("tells the caller where the cut is", () => {

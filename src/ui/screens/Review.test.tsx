@@ -166,35 +166,78 @@ describe("the review room for a cut", () => {
   });
   afterEach(() => vi.restoreAllMocks());
 
-  it("plays the cut in the cut viewer on the stage, with no reel, and is decided by Accept cut or Send back", async () => {
+  async function at(seconds: number) {
+    const video = (await screen.findByRole("region", { name: "The work in view" })).querySelector("video") as HTMLVideoElement;
+    video.currentTime = seconds;
+    fireEvent.timeUpdate(video);
+    return video;
+  }
+
+  it("is the prototype's Cut: the cut on the stage, notes at a time, what it is made from, and the verdict", async () => {
     const review = open(cutReview());
     const stage = await screen.findByRole("region", { name: "The work in view" });
     expect(stage.querySelector("media-controller video")).toHaveAttribute("src", review.reviewItems[0].files[0].url);
-    expect(screen.queryByRole("navigation", { name: "To decide" })).toBeNull();
-    expect(screen.getByRole("button", { name: "Accept cut A" })).toHaveAttribute("aria-pressed", "false");
-    expect(screen.getByRole("button", { name: "Send back B" })).toBeInTheDocument();
+    expect(screen.getByText("Notes at a time")).toBeInTheDocument();
+    expect(screen.getAllByText(/^seg0\d · take t0\d$/)).toHaveLength(3);
+    expect(screen.getByRole("button", { name: "Accept cut" })).toHaveAttribute("aria-pressed", "false");
+    expect(screen.getByRole("button", { name: "Send back" })).toHaveAttribute("aria-pressed", "false");
+    expect(screen.getByRole("button", { name: "Send review" })).toHaveAccessibleDescription("Choose Accept cut or Send back first.");
   });
 
-  it("sends the cut back once with the maker's notes, each at its time on the cut", async () => {
+  it("sends the cut back once with the maker's reason and every note at its time", async () => {
     const user = userEvent.setup();
     const review = open(cutReview());
-    const stage = await screen.findByRole("region", { name: "The work in view" });
-    const video = stage.querySelector("video") as HTMLVideoElement;
     const fileId = review.reviewItems[0].files[0].id;
-    for (const [seconds, text] of [[2, "Cut in sooner"], [6, "Too dark"]] as const) {
-      video.currentTime = seconds;
-      fireEvent.timeUpdate(video);
-      await user.click(screen.getByRole("button", { name: `Note at 0:0${seconds}` }));
-      await user.type(screen.getByRole("textbox", { name: "A note for the agent" }), `${text}{Enter}`);
+    for (const [seconds, text] of [[6, "Too dark"], [2, "Cut in sooner"]] as const) {
+      await at(seconds);
+      await user.type(screen.getByRole("textbox", { name: `Add a note at 0:0${seconds}` }), `${text}{Enter}`);
     }
-    await user.click(screen.getByRole("button", { name: "Send back B" }));
-    await user.click(screen.getByRole("button", { name: /^Send review/ }));
-    await user.click(within(screen.getByText("Send to the agent:").closest(".ds-sendbar") as HTMLElement).getByRole("button", { name: /^Send\b/ }));
+    expect(screen.getAllByRole("button", { name: /, go to this note$/ }).map((button) => button.textContent)).toEqual(["0:02", "0:06"]);
+    await user.click(screen.getByRole("button", { name: "Send back" }));
+    expect(screen.getByRole("button", { name: "Send review" })).toHaveAccessibleDescription("Say why it goes back.");
+    await user.type(screen.getByRole("textbox", { name: "Why it goes back" }), "The middle drags.");
+    await user.dblClick(screen.getByRole("button", { name: "Send review" }));
     const sent = calls("POST", `/api/reviews/${review.id}/decision`);
     expect(sent).toHaveLength(1);
     expect(sent[0].body).toEqual({
       words: "",
-      items: [{ key: "cut", verdict: "revise", notes: [{ fileId, time: 2, text: "Cut in sooner" }, { fileId, time: 6, text: "Too dark" }] }],
+      items: [
+        {
+          key: "cut",
+          verdict: "revise",
+          notes: [
+            { fileId, text: "The middle drags." },
+            { fileId, time: 6, text: "Too dark" },
+            { fileId, time: 2, text: "Cut in sooner" },
+          ],
+        },
+      ],
+    });
+  });
+
+  it("moves the cut to a note's time from the list, and removes a note", async () => {
+    const user = userEvent.setup();
+    open(cutReview());
+    const video = await at(5);
+    await user.type(screen.getByRole("textbox", { name: "Add a note at 0:05" }), "Hold here{Enter}");
+    await at(0);
+    await user.click(screen.getByRole("button", { name: "0:05, go to this note" }));
+    expect(video.currentTime).toBe(5);
+    await user.click(screen.getByRole("button", { name: "Remove the note at 0:05" }));
+    expect(screen.queryByRole("button", { name: "0:05, go to this note" })).toBeNull();
+  });
+
+  it("accepts the cut with its notes as remarks", async () => {
+    const user = userEvent.setup();
+    const review = open(cutReview());
+    await at(1);
+    await user.type(screen.getByRole("textbox", { name: "Add a note at 0:01" }), "Lovely open{Enter}");
+    await user.click(screen.getByRole("button", { name: "Accept cut" }));
+    expect(screen.queryByRole("textbox", { name: "Why it goes back" })).toBeNull();
+    await user.click(screen.getByRole("button", { name: "Send review" }));
+    expect(calls("POST", `/api/reviews/${review.id}/decision`)[0].body).toEqual({
+      words: "",
+      items: [{ key: "cut", verdict: "approve", notes: [{ fileId: review.reviewItems[0].files[0].id, time: 1, text: "Lovely open" }] }],
     });
   });
 });

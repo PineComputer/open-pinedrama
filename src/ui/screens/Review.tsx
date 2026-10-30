@@ -7,7 +7,7 @@ import { Button } from "../components/Button.tsx";
 import { Segmented } from "../components/Segmented.tsx";
 import { StatusChip } from "../components/StatusChip.tsx";
 import { StopCard } from "../components/StopCard.tsx";
-import { CutViewer } from "../cut/CutViewer.tsx";
+import { CutViewer, fmt } from "../cut/CutViewer.tsx";
 import { Icon } from "../icons.tsx";
 import { Markdown } from "../Markdown.tsx";
 import { Link, navigate, usePath } from "../router.tsx";
@@ -255,8 +255,6 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
   const items = review.reviewItems;
   const open = review.state === "open";
   const takes = review.kind === "takes";
-  // A cut plays in the cut viewer, its segments and notes on its timeline, with no reel: a cut review has one item (M6).
-  const cut = review.kind === "cut";
   // A link may name the item to open at (?item=, as the Canvas's Review does); else the first.
   const asked = usePath().query.get("item");
   const [index, setIndex] = useState(() => Math.max(0, items.findIndex((i) => i.key === asked)));
@@ -436,8 +434,8 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
   let pinNumber = 0;
 
   return (
-    <div className={cut ? "ds-room is-cut" : "ds-room"}>
-      <nav className="ds-reel" aria-label={t("review.items")} hidden={cut}>
+    <div className="ds-room">
+      <nav className="ds-reel" aria-label={t("review.items")}>
         <h3>
           {review.episode ? `${review.episode} · ` : ""}
           {t(`kind.${review.kind}` as TKey)}
@@ -482,8 +480,7 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
         )}
         <div className="ds-screen" ref={stage}>
           {file && isImage(file) && <Pinboard key={file.id} file={file} notes={earlier ? (item?.asked ?? []) : (draft?.notes ?? [])} draft={!earlier && pending?.fileId === file.id ? pending : undefined} space={space} onPin={pin} />}
-          {file && isVideo(file) && cut && <CutViewer key={file.id} file={file} notes={earlier ? (item?.asked ?? []) : (draft?.notes ?? [])} videoRef={video} onTime={setPlayhead} />}
-          {file && isVideo(file) && !cut && (
+          {file && isVideo(file) && (
             <div className="screen">
               <video
                 ref={video}
@@ -672,7 +669,7 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
           <div className="vrow">
             <button type="button" className="vbtn is-accept" aria-pressed={draft?.verdict === "approve"} disabled={!open || mustWatch} aria-describedby={mustWatch ? "must-watch" : undefined} onClick={accept}>
               <Icon name="check" />
-              {t(cut ? "cut.accept" : "review.accept")} <kbd>A</kbd>
+              {t("review.accept")} <kbd>A</kbd>
             </button>
             <button type="button" className="vbtn is-back" aria-pressed={draft?.verdict === "revise"} disabled={!open} onClick={sendBack}>
               <Icon name="arrow-counter-clockwise" />
@@ -730,6 +727,133 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
   );
 }
 
+/**
+ * A cut's review, ported from the pro prototype's Cut screen (design-references/studio-pro, screens.js
+ * `Cut`): the cut on the stage with its timeline, and the inspector's notes at a time, what the cut is
+ * made from, what happens next, and the verdict. Send back needs the maker's reason; the reason and every
+ * note at its time go to the agent through the review's one decision. The maker decides: nothing is
+ * sent without Accept cut or Send back.
+ */
+function CutRoom({ review, done }: { review: ReviewView; done: () => void }) {
+  const { t } = useT();
+  const item = review.reviewItems[0];
+  const file = item.files.find(isVideo) ?? item.files[0];
+  const open = review.state === "open";
+  const saved = review.decision?.items.find((decision) => decision.key === item.key);
+  const [verdict, setVerdict, forgetVerdict] = useDraft<Verdict | undefined>(review.id, "cut.verdict", () => saved?.verdict);
+  const [notes, setNotes, forgetNotes] = useDraft<Note[]>(review.id, "cut.notes", () => saved?.notes.filter((note) => note.time !== undefined) ?? []);
+  const [reason, setReason, forgetReason] = useDraft(review.id, "cut.reason", () => saved?.notes.find((note) => note.time === undefined)?.text ?? "");
+  const [draft, setDraft] = useState("");
+  const [playhead, setPlayhead] = useState(0);
+  const video = useRef<HTMLVideoElement>(null);
+  const plan = file.cutPlan && "clips" in file.cutPlan ? file.cutPlan : undefined;
+  const length = plan?.clips.at(-1)?.end ?? 0;
+  const timed = notes.map((note, n) => ({ note, n })).sort((a, b) => (a.note.time ?? 0) - (b.note.time ?? 0));
+  const send = useAction(async () => {
+    const why: Note[] = verdict === "revise" ? [{ fileId: file.id, text: reason.trim() }] : [];
+    const decision: { items: ItemDecision[]; words: string } = { words: "", items: [{ key: item.key, verdict: verdict!, notes: [...why, ...notes] }] };
+    await api(`/api/reviews/${review.id}/decision`, { method: "POST", json: decision });
+    forgetVerdict();
+    forgetNotes();
+    forgetReason();
+    done();
+  });
+  const seek = (seconds: number) => {
+    if (video.current) video.current.currentTime = seconds;
+    setPlayhead(seconds);
+  };
+  const why = !verdict ? t("cut.chooseFirst") : verdict === "revise" && !reason.trim() ? t("cut.sayWhy") : undefined;
+  const code = review.episode ?? "";
+
+  return (
+    <div className="room is-cut">
+      <CutViewer file={file} tag={`${code} · ${t("kind.cut").toLowerCase()} ${file.version ?? ""}`.trim()} notes={notes} videoRef={video} onTime={setPlayhead} />
+      <aside className="insp" aria-label={t("review.inspector")}>
+        <div className="ihead">
+          <b>
+            {code} · {t("kind.cut").toLowerCase()} {file.version}
+          </b>
+          {plan && <small>{t("cut.length", { length: length.toFixed(1), n: plan.clips.length })}</small>}
+        </div>
+        <div className="iscroll">
+          <Status review={review} />
+          <div className="isec">
+            <h4>
+              {t("cut.notesAt")} <span className="muted">{notes.length}</span>
+            </h4>
+            {timed.map(({ note, n }) => (
+              <div key={n} className="noterow">
+                <button type="button" className="mono tbtn" aria-label={t("cut.goTo", { time: fmt(note.time ?? 0) })} onClick={() => seek(note.time ?? 0)}>
+                  {fmt(note.time ?? 0)}
+                </button>
+                <span className="grow">{note.text}</span>
+                {open && (
+                  <button type="button" className="ibtn" aria-label={t("cut.remove", { time: fmt(note.time ?? 0) })} onClick={() => setNotes((current) => current.filter((_, k) => k !== n))}>
+                    <Icon name="x" className="ic" />
+                  </button>
+                )}
+              </div>
+            ))}
+            {open && (
+              <div className="addnote">
+                <span className="mono">{fmt(playhead)}</span>
+                <input
+                  aria-label={t("cut.addAtLabel", { time: fmt(playhead) })}
+                  placeholder={t("cut.addAt")}
+                  value={draft}
+                  onFocus={() => video.current?.pause()}
+                  onChange={(event) => setDraft(event.target.value)}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter" && draft.trim()) {
+                      setNotes((current) => [...current, { fileId: file.id, time: playhead, text: draft.trim() }]);
+                      setDraft("");
+                    }
+                  }}
+                />
+              </div>
+            )}
+          </div>
+          {plan && (
+            <div className="isec">
+              <h4>{t("cut.madeFrom")}</h4>
+              {plan.clips.map((clip) => (
+                <div key={`${clip.segment}/${clip.start}`} className="lrow static">
+                  {t("cut.take", { segment: clip.segment, take: clip.take })}
+                  <span className="mono muted">{(clip.end - clip.start).toFixed(1)} s</span>
+                </div>
+              ))}
+            </div>
+          )}
+          <div className="isec" style={{ borderBottom: 0 }}>
+            <h4>{t("cut.whatHappens")}</h4>
+            <p className="muted">{t("cut.whatHappensText", { code })}</p>
+          </div>
+        </div>
+        <div className="verdict">
+          <div className="vrow" style={{ gridTemplateColumns: "1fr 1fr" }}>
+            <button type="button" className="vbtn acc" aria-pressed={verdict === "approve"} disabled={!open} onClick={() => setVerdict(verdict === "approve" ? undefined : "approve")}>
+              <Icon name="check" className="ic" />
+              {t("cut.accept")}
+            </button>
+            <button type="button" className="vbtn back" aria-pressed={verdict === "revise"} disabled={!open} onClick={() => setVerdict(verdict === "revise" ? undefined : "revise")}>
+              <Icon name="arrow-counter-clockwise" className="ic" />
+              {t("cut.sendBack")}
+            </button>
+          </div>
+          {verdict === "revise" && open && <textarea aria-label={t("cut.why")} placeholder={t("cut.whyHint")} value={reason} onChange={(event) => setReason(event.target.value)} />}
+          {verdict === "revise" && !open && reason && <p className="muted">{reason}</p>}
+          {send.error !== undefined && <span className="error">{errorText(send.error, t)}</span>}
+          {open && (
+            <Button className="btn primary" busy={send.busy} disabledReason={why} onClick={() => void send.run()}>
+              {t("review.send")}
+            </Button>
+          )}
+        </div>
+      </aside>
+    </div>
+  );
+}
+
 export function Review({ id }: { id: string }) {
   const { t } = useT();
   const { data, error } = useResource<ReviewView>(`/api/reviews/${id}`, ["inbox"]);
@@ -748,5 +872,6 @@ export function Review({ id }: { id: string }) {
     );
   }
   if (!data) return <div className="page quiet">{t("loading")}</div>;
-  return data.kind === "question" || data.reviewItems.length === 0 ? <QuestionRoom review={data} done={done} /> : <MediaRoom review={data} done={done} />;
+  if (data.kind === "question" || data.reviewItems.length === 0) return <QuestionRoom review={data} done={done} />;
+  return data.kind === "cut" ? <CutRoom review={data} done={done} /> : <MediaRoom review={data} done={done} />;
 }
