@@ -616,7 +616,11 @@ h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 700; lett
 .eg-tab:focus-visible, .eg-rel:focus-visible, .eg-rail__row:focus-visible, .eg-chip:focus-visible, .eg-ddbtn:focus-visible { outline: 2px solid var(--text-primary); outline-offset: 1px; }
 .eg-menu__check[data-disabled] { opacity: .5; cursor: default; }
 .eg-menu__check[data-highlighted], .eg-menu__item[data-highlighted] { background: var(--hover); outline: none; }
-.eg-rel__label { color: var(--text-secondary); border-color: var(--border); }
+/* Reveric's relation pill, coloured by the other version's group: the colour on the border and a tint; the letters stay text-primary, which the tint keeps in contrast. */
+.eg-rel__label { color: var(--text-primary); border-color: var(--c); background: color-mix(in srgb, var(--c) 14%, var(--surface-container)); }
+/* One short label under each ring, at 11px, cut with an ellipsis. */
+.eg-node__name { font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.eg-node.is-center .eg-node__name { font-size: 13px; }
 .eg-notice { margin: 8px 16px 0; }
 .eg-reset { white-space: nowrap; }
 .ds-stalebar { margin: 10px 16px 0; display: flex; align-items: flex-start; gap: 10px; padding: 10px 14px; border-radius: var(--radius-large); border: 1px dashed var(--border-input); background: var(--surface); font-size: 12.5px; color: var(--text-secondary); }

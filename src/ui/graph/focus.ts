@@ -5,7 +5,9 @@
 import { forceCollide, forceLink, forceManyBody, forceRadial, forceSimulation, type SimulationNodeDatum } from "d3-force";
 import type { Lineage, LineageKind, LineageLink } from "../../shared/lineage.ts";
 
-export const RING = 150;
+// A ring per link out (Reveric's spacing is 150; 160 here), and room around each version for its ring and its label.
+export const RING = 160;
+const ROOM = 62;
 
 export interface Point {
   x: number;
@@ -31,7 +33,7 @@ export function focusGraph(lineage: Lineage, center: string, kinds: Set<LineageK
   forceSimulation(nodes)
     .force("link", forceLink<Node, { source: string; target: string }>(links.map((link) => ({ source: link.from, target: link.to }))).id((node) => node.id).distance(RING))
     .force("charge", forceManyBody().strength(-600))
-    .force("collide", forceCollide(RING / 2))
+    .force("collide", forceCollide(ROOM))
     .force("radial", forceRadial<Node>((node) => node.hops * RING, 0, 0).strength(0.9))
     .stop()
     .tick(300);

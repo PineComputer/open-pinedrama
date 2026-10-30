@@ -17,7 +17,7 @@
 // keyboard focus; the kind and depth menus are Radix menus; Reveric's relation detail card, its
 // invented strength and evidence, and its label toggle are left out.
 import * as Radix from "@radix-ui/react-dropdown-menu";
-import { Background, BackgroundVariant, BaseEdge, Controls, type Edge, type EdgeProps, Handle, MarkerType, MiniMap, type Node, type NodeProps, Panel, Position, ReactFlow } from "@xyflow/react";
+import { Background, BackgroundVariant, BaseEdge, Controls, type Edge, type EdgeProps, Handle, MarkerType, type Node, type NodeProps, Panel, Position, ReactFlow } from "@xyflow/react";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { type CSSProperties, useEffect, useMemo, useRef, useState } from "react";
 import { madeFromStale, trace, type Lineage, type LineageKind, type LineageNode, type LineageView } from "../../shared/lineage.ts";
@@ -31,7 +31,7 @@ import { type TKey, useT } from "../i18n.ts";
 import { Icon, type IconName } from "../icons.tsx";
 import { errorText, useNames } from "../labels.ts";
 import { navigate, usePath } from "../router.tsx";
-import { focusGraph } from "./focus.ts";
+import { focusGraph, type Point } from "./focus.ts";
 
 type T = ReturnType<typeof useT>["t"];
 
@@ -70,7 +70,9 @@ const ICONS: Record<LineageKind, IconName> = {
   take: "video-camera",
   cut: "film-strip",
 };
-const NODE_R = 30;
+// Ring sizes: the focus larger, as Reveric's (76 and 58 there; smaller here, since our labels are longer).
+const RING_SIZE = 44;
+const FOCUS_SIZE = 64;
 
 /** A version's name for the maker: the bible's names for people, places and props, and the episode's code and segment for the rest. */
 export function stageName(node: LineageNode, names: Names | null, t: T): string {
@@ -441,14 +443,16 @@ interface VersionData extends Record<string, unknown> {
   onHover: (on: boolean) => void;
 }
 
-/** A version on the canvas: Reveric's ring with its name and state under it, a button so the keyboard reaches it. */
+/** A version on the canvas: Reveric's ring with one short name under it; its version and state are in its accessible name, the hover card and the inspector. A button, so the keyboard reaches it. */
 function VersionNode({ data }: NodeProps<Node<VersionData>>) {
-  const size = data.center ? 76 : 58;
+  const size = data.center ? FOCUS_SIZE : RING_SIZE;
   return (
     <button
       type="button"
       className={`eg-node nopan${data.center ? " is-center" : ""}${data.dim ? " is-dim" : ""}${data.stale ? " is-stale" : ""}`}
       style={{ width: size, height: size }}
+      // The name a screen reader says holds every word the node shows (WCAG 2.5.3).
+      aria-label={[data.name, data.state, ...(data.stats ?? [])].join(" ")}
       aria-current={data.center || undefined}
       // Pointer hover and clicks are React Flow's (onNodeMouseEnter, onNodeClick); a keyboard's focus is the button's, and its Enter clicks.
       onFocus={() => data.onHover(true)}
@@ -457,11 +461,10 @@ function VersionNode({ data }: NodeProps<Node<VersionData>>) {
       <Handle type="target" position={Position.Top} isConnectable={false} className="eg-handle" />
       <Handle type="source" position={Position.Bottom} isConnectable={false} className="eg-handle" />
       <Avatar node={data.node} file={data.file} size={size} />
-      <span className="eg-node__labels" style={{ top: size + 7 }}>
-        <span className="eg-node__name" style={{ maxWidth: data.center ? 132 : 100 }}>
+      <span className="eg-node__labels" style={{ top: size + 6 }} aria-hidden="true">
+        <span className="eg-node__name" style={{ maxWidth: data.center ? 140 : 96 }}>
           {data.name}
-        </span>{" "}
-        <span className="eg-node__type">{data.state}</span>
+        </span>
         {data.stats && (
           <span className="eg-node__stats">
             {" "}
@@ -473,15 +476,36 @@ function VersionNode({ data }: NodeProps<Node<VersionData>>) {
   );
 }
 
-/** A link from the version used to the version made from it, ring to ring, with an arrow at the one made. */
-function LinkEdge({ data, markerEnd, style }: EdgeProps<Edge<{ path: string }>>) {
-  return <BaseEdge path={data!.path} markerEnd={markerEnd} style={style} />;
+interface LinkData extends Record<string, unknown> {
+  path: string;
+  /** Where the pill sits, mid-curve, and what it says (Reveric's relation label). */
+  at: Point;
+  pill?: string;
+}
+
+/** A link from the version used to the version made from it, ring to ring, with an arrow at the one made and the link's kind as a pill. */
+function LinkEdge({ data, markerEnd, style }: EdgeProps<Edge<LinkData>>) {
+  return (
+    <BaseEdge
+      path={data!.path}
+      markerEnd={markerEnd}
+      style={style}
+      label={data!.pill}
+      labelX={data!.at.x}
+      labelY={data!.at.y}
+      labelShowBg
+      labelBgPadding={[6, 2]}
+      labelBgBorderRadius={9}
+      labelStyle={{ font: "600 10px var(--font-sans)", fill: "var(--text-secondary)" }}
+      labelBgStyle={{ fill: "var(--surface)", stroke: "var(--border)" }}
+    />
+  );
 }
 
 const NODE_TYPES = { version: VersionNode };
 const EDGE_TYPES = { link: LinkEdge };
 
-/** The versions around the one in focus on React Flow: pan, zoom, fit, a minimap, and a version's neighbours brought forward on hover or keyboard focus, as Reveric's canvas does. */
+/** The versions around the one in focus on React Flow: pan, zoom, fit, and a version's neighbours brought forward on hover or keyboard focus, as Reveric's canvas does. */
 function Canvas({ lineage, center, kinds, depth, onFocus, onReset, name, fileOf, marked, standing, t }: CanvasProps) {
   const [hovered, setHovered] = useState<string | null>(null);
   const kindKey = [...kinds].sort().join(",");
@@ -490,11 +514,11 @@ function Canvas({ lineage, center, kinds, depth, onFocus, onReset, name, fileOf,
   const byId = new Map(lineage.nodes.map((node) => [node.id, node]));
   const connected = hovered ? new Set([hovered, ...graph.links.flatMap((l) => (l.from === hovered ? [l.to] : l.to === hovered ? [l.from] : []))]) : null;
   const isStale = (id: string) => byId.get(id)?.fresh === false || marked.has(id);
-  const radius = (id: string) => (id === center ? 38 : NODE_R);
+  const radius = (id: string) => (id === center ? FOCUS_SIZE : RING_SIZE) / 2;
   const nodes: Node<VersionData>[] = graph.ids.map((id) => {
     const node = byId.get(id)!;
     const state = standing(node);
-    const size = id === center ? 76 : 58;
+    const size = id === center ? FOCUS_SIZE : RING_SIZE;
     return {
       id,
       type: "version",
@@ -515,22 +539,27 @@ function Canvas({ lineage, center, kinds, depth, onFocus, onReset, name, fileOf,
       },
     };
   });
-  const edges: Edge<{ path: string }>[] = graph.links.map((link) => {
+  // Thin grey curves, as Reveric's read: only the links of the version hovered, or else of the focus, take their colour.
+  const lit = hovered ?? center;
+  const edges: Edge<LinkData>[] = graph.links.map((link) => {
     const [a, b] = [graph.places.get(link.from)!, graph.places.get(link.to)!];
     const len = Math.hypot(b.x - a.x, b.y - a.y) || 1;
     const [ux, uy] = [(b.x - a.x) / len, (b.y - a.y) / len];
-    const [ax, ay, bx, by] = [a.x + ux * radius(link.from), a.y + uy * radius(link.from), b.x - ux * (radius(link.to) + 4), b.y - uy * (radius(link.to) + 4)];
+    const [ax, ay, bx, by] = [a.x + ux * radius(link.from), a.y + uy * radius(link.from), b.x - ux * (radius(link.to) + 3), b.y - uy * (radius(link.to) + 3)];
+    // A slight bend, as Reveric's quadratic curves have.
+    const [cx, cy] = [(ax + bx) / 2 - uy * 14, (ay + by) / 2 + ux * 14];
     const dashed = isStale(link.from) && isStale(link.to);
-    const stroke = dashed ? "var(--eg-stale)" : colour(byId.get(link.from)!);
-    const hot = hovered !== null && (link.from === hovered || link.to === hovered);
+    const on = link.from === lit || link.to === lit;
+    const stroke = dashed ? "var(--eg-stale)" : on ? colour(byId.get(link.from)!) : "var(--border-input)";
+    const text = GROUP_OF[byId.get(link.from)!.kind] === "text";
     return {
       id: `${link.from}>${link.to}`,
       source: link.from,
       target: link.to,
       type: "link",
-      data: { path: `M${ax},${ay} L${bx},${by}` },
-      markerEnd: { type: MarkerType.ArrowClosed, color: stroke, width: 14, height: 14 },
-      style: { stroke, strokeWidth: hot ? 2.4 : 1.6, strokeOpacity: connected && !(connected.has(link.from) && connected.has(link.to)) ? 0.12 : hot ? 0.95 : 0.6, strokeDasharray: dashed ? "5 4" : undefined },
+      data: { path: `M${ax},${ay} Q${cx},${cy} ${bx},${by}`, at: { x: 0.25 * ax + 0.5 * cx + 0.25 * bx, y: 0.25 * ay + 0.5 * cy + 0.25 * by }, pill: depth === 1 ? t(text ? "graph.pillRead" : "graph.pillUsed") : undefined },
+      markerEnd: { type: MarkerType.ArrowClosed, color: stroke, width: 12, height: 12 },
+      style: { stroke, strokeWidth: on ? 1.6 : 1, strokeOpacity: connected && !(connected.has(link.from) && connected.has(link.to)) ? 0.12 : 1, strokeDasharray: dashed ? "5 4" : undefined },
     };
   });
   const hoveredNode = hovered ? byId.get(hovered) : undefined;
@@ -562,7 +591,6 @@ function Canvas({ lineage, center, kinds, depth, onFocus, onReset, name, fileOf,
       >
         <Background variant={BackgroundVariant.Dots} gap={22} size={1} />
         <Controls showInteractive={false} position="bottom-right" />
-        <MiniMap pannable zoomable position="bottom-left" style={{ width: 140, height: 90 }} nodeColor={(n) => colour((n.data as VersionData).node)} />
         <Panel position="top-right">
           <button type="button" className="eg-reset" onClick={onReset}>
             <Icon name="arrow-counter-clockwise" />
@@ -619,7 +647,9 @@ function Inspector({ lineage, node, onFocus, name, file, marked, standing, t }: 
         <span className="eg-rel__main">
           <span className="eg-rel__row1">
             <span className="eg-rel__other-name">{name(other)}</span>{" "}
-            <span className="eg-rel__label">{t(direction === "from" ? "graph.usedBy" : "graph.usedIn")}</span>
+            <span className="eg-rel__label" style={{ "--c": colour(other) } as CSSProperties}>
+              {t(direction === "from" ? "graph.usedBy" : "graph.usedIn")}
+            </span>
           </span>{" "}
           <span className="eg-rel__meta">
             {other.version ?? t("graph.noVersion")} · {standing(other).label ?? t(`status.${standing(other).status}` as TKey)}

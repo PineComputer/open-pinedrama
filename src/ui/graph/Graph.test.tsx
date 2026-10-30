@@ -111,14 +111,14 @@ describe("the Graph", () => {
     const bar = await screen.findByRole("region", { name: /stale/i });
     const row = within(bar).getByRole("button", { name: /^EP001 seg01 take t01/ }).closest("li")!;
     expect(row).toHaveTextContent("Changed selection: assets/scenes/office/times/Day/accepted.json");
-    expect(await node(/^EP001 seg01 take t01/)).toHaveTextContent("t01 · Stale");
+    expect(await node(/^EP001 seg01 take t01/)).toHaveAccessibleName("EP001 seg01 take t01 · Stale");
   });
 
   it("marks what was made from a stale version, which drama-cli calls fresh, apart from what drama-cli calls stale", async () => {
     engine("location-plate-replaced");
     render(<Graph dramaId="d1" />);
-    expect(await node(/^办公室 · Day v1/)).toHaveTextContent("v1 · Stale");
-    expect(await node(/^EP001 seg01 take t01/)).toHaveTextContent("t01 · Made from a stale version");
+    expect(await node(/^办公室 · Day v1/)).toHaveAccessibleName("办公室 · Day v1 · Stale");
+    expect(await node(/^EP001 seg01 take t01/)).toHaveAccessibleName("EP001 seg01 take t01 · Made from a stale version");
   });
 
   it("asks the agent to redo them, each in the session that may: an episode's own in its session, a shared one in the setup's", async () => {
