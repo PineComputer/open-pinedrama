@@ -26,6 +26,7 @@ import { fileRow, openBlob, save, toItem } from "./library.ts";
 import { subscribe } from "./live.ts";
 import { drama as dramaRow, review as reviewRow, session as sessionRow, type SessionRow } from "./records.ts";
 import { decide, resumeWithDecision } from "./reviews.ts";
+import { projectView } from "./status.ts";
 import { castCards, deliveryRows, episodePage, scriptPage, seasonEntries } from "./browse.ts";
 import { diagnostics } from "./diagnostics.ts";
 import { zipLength, zipStream } from "./zip.ts";
@@ -248,6 +249,10 @@ export function app(): Hono {
     return c.json({ ok: true });
   });
 
+  api.get("/api/dramas/:id/project", (c) => {
+    const id = c.req.param("id");
+    return dramaRow(id) ? c.json(projectView(id)) : c.json(failure("not-found", "No such drama."), 404);
+  });
   api.get("/api/dramas/:id/cast", (c) => c.json(castCards(c.req.param("id"))));
   api.get("/api/dramas/:id/script", (c) => c.json(scriptPage(c.req.param("id"))));
   api.get("/api/dramas/:id/delivery", (c) => c.json(deliveryRows(c.req.param("id"))));

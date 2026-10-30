@@ -4,6 +4,7 @@ import { existsSync, mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import type { ProjectView } from "../shared/project.ts";
 import type { AppInfo, DramaCard } from "../shared/types.ts";
 
 process.env.STUDIO_SECRET = Buffer.alloc(32, 1).toString("base64");
@@ -80,6 +81,21 @@ describe("the answers the UI reads", () => {
 
   it("says plainly when a drama doesn't exist", async () => {
     const response = await call("/api/dramas/no-such-drama");
+    expect(response.status).toBe(404);
+    expect(await response.json()).toMatchObject({ code: "not-found" });
+  });
+
+  it("serves a drama's project, null until a session has reported", async () => {
+    expect((await call("/api/connection/replay", { method: "POST" })).status).toBe(200);
+    const made = await call("/api/dramas/sample", { method: "POST", body: JSON.stringify({ language: "en" }), headers: { "content-type": "application/json" } });
+    const { id } = (await made.json()) as { id: string };
+    const response = await call(`/api/dramas/${id}/project`);
+    expect(response.status).toBe(200);
+    expect((await response.json()) as ProjectView).toEqual({ state: null, sessions: [], problems: [] });
+  });
+
+  it("says plainly when the drama of a project doesn't exist", async () => {
+    const response = await call("/api/dramas/no-such-drama/project");
     expect(response.status).toBe(404);
     expect(await response.json()).toMatchObject({ code: "not-found" });
   });
