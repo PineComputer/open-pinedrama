@@ -166,4 +166,4 @@ Test in this order; each step costs more and catches what the one before can't:
 
 ## License
 
-[Apache-2.0](LICENSE), like Pine's SDKs.
+[AGPLv3](LICENSE). The studio's design system is based on [Reveric](https://github.com/looplj/reveric) by looplj, under the AGPLv3: see [NOTICES](NOTICES) for its notice and additional terms, and [docs/REUSED.md](docs/REUSED.md) for what the studio takes from it.

@@ -2,7 +2,7 @@
   "name": "open-pinedrama",
   "version": "0.3.0",
   "private": true,
-  "license": "Apache-2.0",
+  "license": "AGPL-3.0-only",
   "type": "module",
   "description": "A studio for makers of AI vertical short dramas, built on Pine Computer.",
   "main": "dist/desktop/main.mjs",

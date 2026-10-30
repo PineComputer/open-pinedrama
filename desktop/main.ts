@@ -194,6 +194,8 @@ if (!app.requestSingleInstanceLock()) {
     window.focus();
   });
   app.whenReady().then(async () => {
+    // Reveric's notice and link in the app's About panel, as its NOTICES ask (AGPLv3 section 7(b); docs/REUSED.md).
+    app.setAboutPanelOptions({ credits: "Based on Reveric by looplj.\nhttps://github.com/looplj/reveric\n\nGNU AGPLv3. Source: https://github.com/PineComputer/open-pinedrama" });
     if (await movedToApplications()) return;
     await open();
     keepUpdated();
