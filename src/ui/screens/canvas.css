@@ -57,10 +57,6 @@
 .ds-steer .acts a { text-decoration: none; }
 /* The node panel under a picked segment, as the reference's: the pictures it is made from, its shots with each reference as a chip, its settings. */
 .ds-npanel { width: 480px; display: grid; gap: 12px; padding: 12px 14px; border: 1px solid var(--border); border-radius: var(--radius-xl); background: var(--surface); box-shadow: var(--shadow-dialog); color: var(--text-primary); font: 13px/1.6 var(--font-sans); }
-.ds-npanel .refs { display: flex; gap: 8px; margin: 0; padding: 0; list-style: none; overflow-x: auto; }
-.ds-npanel .refs li { display: grid; gap: 2px; width: 64px; flex: none; font-size: 11px; line-height: 1.3; color: var(--text-secondary); }
-.ds-npanel .refs img, .ds-npanel .refs .none { width: 64px; height: 80px; border-radius: 8px; object-fit: cover; object-position: top; background: var(--surface-container); }
-.ds-npanel .refs b { font-weight: 600; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .ds-npanel .prompt { display: grid; gap: 4px; max-height: 180px; overflow-y: auto; }
 .ds-npanel .prompt p { margin: 0; }
 .ds-npanel .chip { display: inline-flex; align-items: center; gap: 4px; padding: 0 6px 0 2px; margin: 0 1px; border-radius: 6px; background: var(--surface-container); font-weight: 500; vertical-align: baseline; }
@@ -78,3 +74,19 @@
 .ds-cnode.is-segment .foot.is-you i { background: var(--warning-text); }
 .ds-cnode.is-segment .foot.is-stale i, .ds-cnode.is-segment .foot.is-back i { background: var(--error); }
 .ds-followbar { margin-top: 12px; }
+/* The node panel's tabs: settings as a key-value list (the inspector's dl), Made from and Versions as rows, the request as a JSON tree. */
+.ds-npanel [role="tabpanel"] { max-height: 260px; overflow-y: auto; }
+.ds-npanel .kv { display: grid; grid-template-columns: max-content 1fr; gap: 4px 16px; margin: 0; font-size: 12.5px; }
+.ds-npanel .kv dt { color: var(--text-secondary); }
+.ds-npanel .kv dd { margin: 0; color: var(--text-primary); font-variant-numeric: tabular-nums; }
+.ds-npanel .from, .ds-npanel .versions { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; font-size: 12.5px; }
+.ds-npanel .from li { display: grid; grid-template-columns: 40px 1fr auto; align-items: center; gap: 10px; }
+.ds-npanel .from img, .ds-npanel .from .none { width: 40px; height: 40px; border-radius: 6px; object-fit: cover; object-position: top; background: var(--surface-container); }
+.ds-npanel .from .link { padding: 0; border: 0; background: none; color: var(--text-primary); font: inherit; text-align: left; text-decoration: underline; text-underline-offset: 2px; cursor: pointer; }
+.ds-npanel .versions li { display: grid; gap: 2px; padding-bottom: 8px; border-bottom: 1px solid var(--border-subtle); }
+.ds-npanel .ds-json { background: transparent; font: 12px/1.5 var(--font-mono, ui-monospace, monospace); color: var(--text-primary); }
+.ds-npanel .ds-json-key { color: var(--text-secondary); }
+.ds-npanel .ds-json-string { color: var(--success); }
+.ds-npanel .ds-json-value { color: var(--warning-text); }
+.ds-npanel .ds-json-punctuation { color: var(--text-secondary); }
+.ds-beside { display: grid; gap: 8px; justify-items: start; }

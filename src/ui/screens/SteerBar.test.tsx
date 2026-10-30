@@ -251,6 +251,18 @@ describe("a picked item's hand actions and panel (P6.8)", () => {
     expect(chips[2].querySelector("img")).toBeNull();
   });
 
+  it("shows a look's prompt and model too, beside it in the cast column", async () => {
+    engine();
+    const lookSpec = { ...spec, id: 12, path: "/work/drama/assets/characters/lin/v1/spec.json", url: "/f/12?v=1" };
+    answer("/api/dramas/d1/files", [look, lookSpec]);
+    server.use(http.get("/f/12", () => HttpResponse.text(JSON.stringify({ provider: "openai", model: "gpt-image-2", prompt: "A full-body turnaround of 林.", aspect_ratio: "16:9", size: "2K" }))));
+    render(<Canvas drama={drama("working")} />);
+    const { user, panel } = await panelOf(/^林/);
+    await waitFor(() => expect(within(panel).getByRole("tabpanel")).toHaveTextContent("A full-body turnaround of 林."));
+    await user.click(within(panel).getByRole("tab", { name: "Settings" }));
+    expect(within(panel).getByRole("tabpanel")).toHaveTextContent("Modelgpt-image-2Ratio16:9Resolution2K");
+  });
+
   it("lists the settings the spec states, and nothing it doesn't", async () => {
     withSpec();
     render(<Canvas drama={drama("working")} />);

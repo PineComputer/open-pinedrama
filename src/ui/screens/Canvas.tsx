@@ -115,14 +115,26 @@ function ItemNode({ id, data, selected }: NodeProps<Node<ItemData>>) {
   const { t } = useT();
   const board = useContext(Board)!;
   const icon = { character: "user", location: "image", prop: "cube", segment: "film-strip" } as const;
+  const bar = <SteerBar drama={board.drama} node={data.item} label={data.label} status={data.status} picture={data.picture} episodeTitle={board.episodeTitle} actions={board.actions} onClose={() => board.pick(null)} />;
+  const panel = <NodePanel dramaId={board.drama.id} data={data} files={board.files} lineage={board.lineage} onBoard={board.onBoard} actions={board.actions} pick={board.pick} />;
   return (
     <div className={`ds-cnode is-${data.item.kind}`} data-followed={data.followed || undefined}>
-      <NodeToolbar isVisible={selected} position={Position.Top}>
-        <SteerBar drama={board.drama} node={data.item} label={data.label} status={data.status} picture={data.picture} episodeTitle={board.episodeTitle} actions={board.actions} onClose={() => board.pick(null)} />
-      </NodeToolbar>
-      <NodeToolbar isVisible={selected} position={Position.Bottom}>
-        <NodePanel dramaId={board.drama.id} data={data} files={board.files} lineage={board.lineage} onBoard={board.onBoard} actions={board.actions} pick={board.pick} />
-      </NodeToolbar>
+      {data.item.kind === "segment" ? (
+        <>
+          <NodeToolbar isVisible={selected} position={Position.Top}>
+            {bar}
+          </NodeToolbar>
+          <NodeToolbar isVisible={selected} position={Position.Bottom}>
+            {panel}
+          </NodeToolbar>
+        </>
+      ) : (
+        // A reference stands in a column of them: its bar and panel open beside it, so they cover none of its neighbours.
+        <NodeToolbar isVisible={selected} position={Position.Right} align="start" className="ds-beside">
+          {bar}
+          {panel}
+        </NodeToolbar>
+      )}
       <Handle type="target" position={Position.Left} isConnectable={false} />
       {/* Named by what it shows (WCAG 2.5.3): its name, then where it stands. A segment's card holds both, as the reference's does. */}
       <span
@@ -176,6 +188,8 @@ const FIT = { padding: 0.08, maxZoom: 1.05 };
 
 /** Room a picked segment's panel takes below it (canvas.css, .ds-npanel), so framing the pick keeps the panel in view. */
 const PANEL_ROOM = 380;
+/** The panel's width with its gap (canvas.css, .ds-npanel), beside a reference. */
+const PANEL_WIDTH = 500;
 
 /** The zoom, as the reference's control cluster shows it. */
 function Zoom() {
@@ -306,8 +320,8 @@ function Plane({ drama }: { drama: DramaView }) {
           const node = id ? flow.getInternalNode(id) : undefined;
           if (node) {
             const { x, y } = node.internals.positionAbsolute;
-            const below = id!.startsWith("segment:") ? PANEL_ROOM : 0;
-            void flow.setCenter(x + (node.width ?? 0) / 2, y - 72 + ((node.height ?? 0) + 72 + below) / 2, { zoom: flow.getZoom(), duration: 400 });
+            if (id!.startsWith("segment:")) void flow.setCenter(x + (node.width ?? 0) / 2, y - 72 + ((node.height ?? 0) + 72 + PANEL_ROOM) / 2, { zoom: flow.getZoom(), duration: 400 });
+            else void flow.setCenter(x + ((node.width ?? 0) + PANEL_WIDTH) / 2, y + PANEL_ROOM / 2, { zoom: flow.getZoom(), duration: 400 });
           }
         } }}>
       <section className="ds-canvas" aria-label={t("surface.canvas")}>

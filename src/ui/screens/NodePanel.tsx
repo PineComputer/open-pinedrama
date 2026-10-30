@@ -30,6 +30,18 @@ export interface PanelItem {
   refs?: { id: string; label: string; picture?: FileItem }[];
 }
 
+/** The JSON tree in our tokens: react-json-view-lite's own layout classes, with ours for the colours (canvas.css). */
+const JSON_STYLE = {
+  ...defaultStyles,
+  container: `${defaultStyles.container} ds-json`,
+  label: `${defaultStyles.label} ds-json-key`,
+  stringValue: `${defaultStyles.stringValue} ds-json-string`,
+  numberValue: `${defaultStyles.numberValue} ds-json-value`,
+  booleanValue: `${defaultStyles.booleanValue} ds-json-value`,
+  nullValue: `${defaultStyles.nullValue} ds-json-value`,
+  punctuation: `${defaultStyles.punctuation} ds-json-punctuation`,
+};
+
 /** The file beside `file` in its version's folder, by name. */
 function beside(file: FileItem | undefined, files: FileItem[], name: string): FileItem | undefined {
   if (!file) return undefined;
@@ -203,7 +215,7 @@ export function NodePanel({ dramaId, data, files, lineage, onBoard, actions, pic
           </TabsContent>
         )}
         <TabsContent value="request" className="request">
-          {request && typeof request === "object" ? <JsonView data={request as object} shouldExpandNode={collapseAllNested} style={defaultStyles} aria-label={t("canvas.tab.request")} /> : <p className="quiet">{t("canvas.noSpec")}</p>}
+          {request && typeof request === "object" ? <JsonView data={request as object} shouldExpandNode={collapseAllNested} style={JSON_STYLE} aria-label={t("canvas.tab.request")} /> : <p className="quiet">{t("canvas.noSpec")}</p>}
         </TabsContent>
       </Tabs>
       <div className="foot">
@@ -211,7 +223,7 @@ export function NodePanel({ dramaId, data, files, lineage, onBoard, actions, pic
         <Button variant="outline" size="sm" icon="upload" disabledReason={t("canvas.phase2")} onClick={() => actions.upload(node.id)}>
           {t("canvas.upload")}
         </Button>
-        <Button size="sm" icon="sparkle" disabledReason={t("canvas.phase2")} onClick={() => actions.generate(node.id)}>
+        <Button variant="outline" size="sm" icon="sparkle" disabledReason={t("canvas.phase2")} onClick={() => actions.generate(node.id)}>
           {t("canvas.generate")}
         </Button>
       </div>
