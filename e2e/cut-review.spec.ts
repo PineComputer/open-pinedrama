@@ -5,7 +5,7 @@
 import { expect, test, type Page } from "@playwright/test";
 import type { ReviewView } from "../src/shared/types.ts";
 import { TOKEN } from "../playwright.config.ts";
-import { call, decide, review } from "./api.ts";
+import { acceptRewrite, call, decide, review } from "./api.ts";
 import { newProblems } from "./axe.ts";
 
 /** The cut at a time, as the maker would put it there. */
@@ -22,6 +22,7 @@ test("a cut sent back with two notes at their times, recut, and accepted", async
   await expect(page).toHaveURL(/\/d\/[^/]+/);
   const id = new URL(page.url()).pathname.split("/")[2];
 
+  await acceptRewrite(page, id);
   await decide(page, await review(page, id, "question"));
   await decide(page, await review(page, id, "looks"));
   await decide(page, await review(page, id, "references"));
