@@ -7,8 +7,6 @@
 
 export interface Names {
   title: string;
-  /** The one-line hook, as the bible writes it (Bible.logline); a bible may leave it out (bible.py, optional). */
-  logline?: string;
   characters: Record<string, { name: string; aliases: string[] }>;
   locations: Record<string, string>;
   props: Record<string, string>;
@@ -60,7 +58,6 @@ export function parseBibleNames(bible: unknown): Names {
   const raw = object(bible, "");
   return {
     title: text(raw.title, "title"),
-    ...(raw.logline === undefined ? {} : { logline: text(raw.logline, "logline") }),
     characters: byId(raw.characters, "characters", (entry, at) => ({
       name: text(entry.name, `${at}.name`),
       aliases: list(entry.aliases, `${at}.aliases`).map((alias, n) => text(alias, `${at}.aliases.${n}`)),

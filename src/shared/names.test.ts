@@ -12,7 +12,6 @@ describe("a bible's names", () => {
   it("are its people, places, props and episodes by id, in the screenplay's script", () => {
     expect(parseBibleNames(bible())).toEqual({
       title: "T",
-      logline: "l",
       characters: { lin: { name: "林", aliases: [] } },
       locations: { office: "办公室" },
       props: {},
