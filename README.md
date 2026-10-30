@@ -127,6 +127,10 @@ UI (React, Vite)  ── HTTP + one event stream ──▶  engine (Node, 127.0.
 
 ## Develop
 
+Replay's sample pictures and clips (`fixtures/replay/samples/`) are stored with Git LFS: run
+`git lfs install` once, before cloning, to see them. Without it the checkout has pointer files
+and replay draws placeholders instead.
+
 ```sh
 npm run check        # typecheck and tests, including the whole flow in replay mode
 npm run e2e          # the built studio walked in a browser, in replay (docs/TESTING.md)

@@ -17,3 +17,11 @@ Settings, under About, and in the desktop app's About panel, and marks each Reve
 No Reveric code, images, cover art, logo, brand mark, illustrations or copy text: every
 component, screen and stylesheet besides the two above is the studio's own. They follow Reveric's
 layout and measurements, as its screenshots and design docs show them.
+
+## Replay's sample media
+
+`fixtures/replay/samples/` holds pictures and short muted clips for replay's sample drama, in
+English and Chinese, with `samples.json` naming the path each one stands for. They come from our
+own test runs, made with drama-cli; the dramas' names and characters in them are invented for the
+sample. They are placeholders: a generated public sample set replaces them before release
+([REDESIGN_PLAN.md](REDESIGN_PLAN.md)). They are stored with Git LFS.
