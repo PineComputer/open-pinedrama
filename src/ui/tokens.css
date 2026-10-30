@@ -1,0 +1,149 @@
+/* The studio's design tokens: colour (light, dark, and the system's choice), type, space, radius,
+   elevation and motion. Every screen and component styles itself from these. Text takes --ink,
+   --ink-2 or --ink-3 on the paper grounds, and --on-room or --on-room-2 in the viewing room; each
+   such pair reads at 4.5:1 or more in both themes (contrast.test.ts). --ink-4 and --on-room-3 are
+   for marks, rules and icons, never for text. */
+
+:root {
+  /* Ground and ink */
+  --paper: oklch(97.2% 0.005 85);
+  --paper-2: oklch(94.6% 0.007 82);
+  --paper-3: oklch(91.8% 0.009 80);
+  --sheet: oklch(99.3% 0.003 85);
+  --rule: oklch(89.5% 0.009 78);
+  --rule-2: oklch(81% 0.012 74);
+  --ink: oklch(22% 0.012 55);
+  --ink-2: oklch(36% 0.012 55);
+  --ink-3: oklch(49% 0.012 60);
+  --ink-4: oklch(64% 0.011 66);
+
+  /* Meaning: seal needs the maker; work is at work; done is accepted; warn is an observer's
+     warn; stale was made from an input that changed. Each has a wash to stand on. */
+  --seal: oklch(51% 0.175 29);
+  --seal-deep: oklch(43% 0.15 29);
+  --seal-wash: oklch(94.8% 0.026 35);
+  --on-seal: oklch(99% 0.004 85);
+  --work: oklch(47% 0.09 248);
+  --work-wash: oklch(94.6% 0.022 248);
+  --done: oklch(48% 0.085 152);
+  --done-wash: oklch(94.8% 0.03 152);
+  --warn: oklch(52% 0.11 70);
+  --warn-wash: oklch(95.2% 0.04 80);
+  --stale: oklch(48% 0.06 300);
+  --stale-wash: oklch(95% 0.02 300);
+
+  /* The viewing room, dark in both themes, for pictures and video */
+  --room: oklch(18.5% 0.008 62);
+  --room-2: oklch(23.5% 0.009 62);
+  --room-3: oklch(31% 0.01 62);
+  --on-room: oklch(93% 0.008 80);
+  --on-room-2: oklch(74% 0.011 76);
+  --on-room-3: oklch(58% 0.012 70);
+
+  /* Type */
+  --serif: "Newsreader Variable", "Songti SC", "Noto Serif SC", "Source Han Serif SC", Georgia, serif;
+  --sans: "Instrument Sans Variable", "PingFang SC", "Hiragino Sans GB", "Noto Sans SC", system-ui, sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, monospace;
+  --t-xs: 11.5px;
+  --t-s: 13px;
+  --t-m: 14.5px;
+  --t-l: 16px;
+  --t-xl: 19px;
+  --t-2xl: 24px;
+  --t-3xl: 32px;
+  --t-4xl: 44px;
+
+  /* Space (4-based), radius, elevation, motion */
+  --s1: 4px;
+  --s2: 8px;
+  --s3: 12px;
+  --s4: 16px;
+  --s5: 20px;
+  --s6: 24px;
+  --s8: 32px;
+  --s10: 40px;
+  --s12: 48px;
+  --r1: 3px;
+  --r2: 6px;
+  --r3: 10px;
+  --pill: 999px;
+  --e1: 0 1px 0 oklch(0% 0 0 / 0.04), 0 1px 3px oklch(30% 0.02 60 / 0.08);
+  --e2: 0 2px 6px oklch(30% 0.02 60 / 0.08), 0 8px 24px oklch(30% 0.02 60 / 0.1);
+  --e3: 0 12px 40px oklch(20% 0.02 60 / 0.22), 0 2px 8px oklch(20% 0.02 60 / 0.1);
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --d1: 120ms;
+  --d2: 180ms;
+  --d3: 320ms;
+  --d4: 560ms;
+
+  /* The screens written before these tokens name the radius and the bar's height so. */
+  --r: var(--r1);
+  --bar: 52px;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: oklch(17.5% 0.006 65);
+    --paper-2: oklch(21% 0.007 65);
+    --paper-3: oklch(25% 0.008 65);
+    --sheet: oklch(20.5% 0.007 65);
+    --rule: oklch(29% 0.008 65);
+    --rule-2: oklch(38% 0.01 65);
+    --ink: oklch(93% 0.007 80);
+    --ink-2: oklch(82% 0.008 78);
+    --ink-3: oklch(68% 0.01 74);
+    --ink-4: oklch(55% 0.01 70);
+    --seal: oklch(66% 0.16 29);
+    --seal-deep: oklch(74% 0.13 29);
+    --seal-wash: oklch(28% 0.06 29);
+    --on-seal: oklch(16% 0.01 30);
+    --work: oklch(72% 0.1 248);
+    --work-wash: oklch(27% 0.04 248);
+    --done: oklch(72% 0.1 152);
+    --done-wash: oklch(26% 0.04 152);
+    --warn: oklch(76% 0.11 75);
+    --warn-wash: oklch(28% 0.045 75);
+    --stale: oklch(72% 0.07 300);
+    --stale-wash: oklch(27% 0.035 300);
+    --room: oklch(13% 0.006 62);
+    --room-2: oklch(18% 0.007 62);
+    --room-3: oklch(25% 0.008 62);
+    --e1: 0 0 0 1px oklch(100% 0 0 / 0.04);
+    --e2: 0 0 0 1px oklch(100% 0 0 / 0.06), 0 8px 24px oklch(0% 0 0 / 0.4);
+    --e3: 0 0 0 1px oklch(100% 0 0 / 0.07), 0 16px 48px oklch(0% 0 0 / 0.55);
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --paper: oklch(17.5% 0.006 65);
+  --paper-2: oklch(21% 0.007 65);
+  --paper-3: oklch(25% 0.008 65);
+  --sheet: oklch(20.5% 0.007 65);
+  --rule: oklch(29% 0.008 65);
+  --rule-2: oklch(38% 0.01 65);
+  --ink: oklch(93% 0.007 80);
+  --ink-2: oklch(82% 0.008 78);
+  --ink-3: oklch(68% 0.01 74);
+  --ink-4: oklch(55% 0.01 70);
+  --seal: oklch(66% 0.16 29);
+  --seal-deep: oklch(74% 0.13 29);
+  --seal-wash: oklch(28% 0.06 29);
+  --on-seal: oklch(16% 0.01 30);
+  --work: oklch(72% 0.1 248);
+  --work-wash: oklch(27% 0.04 248);
+  --done: oklch(72% 0.1 152);
+  --done-wash: oklch(26% 0.04 152);
+  --warn: oklch(76% 0.11 75);
+  --warn-wash: oklch(28% 0.045 75);
+  --stale: oklch(72% 0.07 300);
+  --stale-wash: oklch(27% 0.035 300);
+  --room: oklch(13% 0.006 62);
+  --room-2: oklch(18% 0.007 62);
+  --room-3: oklch(25% 0.008 62);
+  --e1: 0 0 0 1px oklch(100% 0 0 / 0.04);
+  --e2: 0 0 0 1px oklch(100% 0 0 / 0.06), 0 8px 24px oklch(0% 0 0 / 0.4);
+  --e3: 0 0 0 1px oklch(100% 0 0 / 0.07), 0 16px 48px oklch(0% 0 0 / 0.55);
+  color-scheme: dark;
+}

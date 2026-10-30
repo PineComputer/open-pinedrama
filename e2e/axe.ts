@@ -4,12 +4,7 @@
 import AxeBuilder from "@axe-core/playwright";
 import type { Page } from "@playwright/test";
 
-const KNOWN: { rule: string; target: RegExp; fixedBy: string }[] = [
-  // The setup panel's steps not reached yet: muted ink on paper, 2.62:1 against 4.5:1.
-  { rule: "color-contrast", target: /^\.step:nth-child\(\d+\) > \.what$/, fixedBy: "P2.1 design tokens" },
-  // The top bar's "Nothing to review", in the same muted ink.
-  { rule: "color-contrast", target: /^\.next$/, fixedBy: "P2.1 design tokens" },
-];
+const KNOWN: { rule: string; target: RegExp; fixedBy: string }[] = [];
 
 /** Each serious or critical problem not yet known, as "rule target :: why". */
 export async function newProblems(page: Page): Promise<string[]> {
