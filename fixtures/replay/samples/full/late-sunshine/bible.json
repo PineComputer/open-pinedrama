@@ -1,0 +1,986 @@
+{
+  "title": "False Intentions, True Love",
+  "logline": "Five years after 纪宏远 drove away her first love, 纪然 refuses to be traded into a marriage with 路少泽 and holds an open audition for a husband. The late, rain-soaked 'college student' 林青羽 who walks in is secretly a boss in disguise, and the younger brother of her best friend Su Yaqing.",
+  "tone": "Glossy, fast-cut contemporary urban romantic comedy, a wish-fulfilment vertical short drama (爽剧). It plays snappy banter, cold-queen heroine energy, comic audition gags with cartoon sound effects, and a sweet, teasing younger-man romance. Interiors are luxurious, the cast is glamorous and the cutting is fast and hard. Flirtatious but fully safe for work: no explicit content. The only skin shown is a comic shirtless applicant flexing.",
+  "characters": [
+    {
+      "id": "ji_ran",
+      "name": "纪然",
+      "aliases": [
+        "JI RAN",
+        "Ji Ran",
+        "然然",
+        "纪总",
+        "纪大小姐",
+        "姐姐",
+        "老板"
+      ],
+      "age": 27,
+      "observable": true,
+      "gender": "female",
+      "role": "Heroine; owner of Jiejian Company, daughter of Ji Hongyuan, and ex-girlfriend of Lu Shaoze",
+      "personality": "Cool, sharp-tongued and fiercely independent. She is scarred by a father who treats her as a bargaining chip and by the first love he drove away. She is determined to choose her own man on her own efficient terms. Underneath she has a dry sense of humour and a soft heart she guards closely.",
+      "appearance": "Strikingly beautiful East Asian woman in her late twenties who looks young and fresh. Small, delicate oval face with high cheekbones, a fine straight nose, a softly pointed chin and refined, elegant bone structure. Bright, intelligent, self-possessed almond eyes. Flawless, luminous, even fair complexion with no redness and natural skin texture. Full glamorous make-up: defined brows, long lashes, a glossy rose-nude lip. Long, glossy black hair falls past her shoulders in smooth, polished waves with a side part. About 174 cm tall with a small head and long legs, about eight heads tall, with elegant supermodel proportions. Curvy figure with full hips, a defined waist and an hourglass shape, and a full C-to-D-cup bust. Fashion-editorial poise. She wears small diamond stud earrings and a slim gold watch.",
+      "hair": {
+        "length": "long",
+        "colour": "black"
+      },
+      "build": "curvy",
+      "wardrobe": "Office, day one: a fitted dove-grey silk shirt with the top buttons open to a modest V, tucked into a black high-waisted bodycon pencil skirt that cinches the waist and ends just above the knee. Red pointed-toe stiletto pumps. Diamond studs and a slim gold watch.",
+      "wardrobe_states": {
+        "S0": "Office, day one: a fitted dove-grey silk shirt with the top buttons open to a modest V, tucked into a black high-waisted bodycon pencil skirt that cinches the waist and ends just above the knee. Red pointed-toe stiletto pumps. Diamond studs and a slim gold watch.",
+        "S1": "Flashback, five years earlier, aged about 22, at home: a fitted blush-pink ribbed spaghetti-strap knit camisole tucked into a white high-waisted A-line mini skirt, with a red satin ribbon tied in her loose long hair and nude ballet-heel slingbacks. Lighter, fresher make-up.",
+        "S2": "Interview day at the office: a crimson sleeveless bodycon sheath dress with a square neckline and a cinched waist, hemmed at mid-thigh. Black patent stiletto pumps, diamond studs and a gold watch.",
+        "S3": "Night, returning home: a fitted ivory satin long-sleeve wrap blouse with a soft V neckline, tucked into a black leather high-waisted mini skirt. Red pointed stiletto heels. She carries the black handbag."
+      },
+      "signature_color": "red",
+      "voice": "A low, cool mezzo with crisp, clipped diction. Deadpan and cutting when sarcastic, flat with exasperation in the comic moments, and only rarely softened. In voice-over it turns intimate and bitter.",
+      "looks": {
+        "S0": {
+          "garments": [
+            {
+              "class": "long sleeve top",
+              "colour": "grey"
+            },
+            {
+              "class": "skirt",
+              "colour": "black"
+            }
+          ]
+        },
+        "S1": {
+          "garments": [
+            {
+              "class": "sling",
+              "colour": "pink"
+            },
+            {
+              "class": "skirt",
+              "colour": "white"
+            }
+          ]
+        },
+        "S2": {
+          "garments": [
+            {
+              "class": "vest dress",
+              "colour": "red"
+            }
+          ]
+        },
+        "S3": {
+          "garments": [
+            {
+              "class": "long sleeve top",
+              "colour": "white"
+            },
+            {
+              "class": "skirt",
+              "colour": "black"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "lin_qingyu",
+      "name": "林青羽",
+      "aliases": [
+        "LIN QINGYU",
+        "Lin Qingyu",
+        "我弟",
+        "老板"
+      ],
+      "age": 21,
+      "observable": true,
+      "gender": "male",
+      "role": "Male lead; Su Yaqing's younger brother from her stepmother's family, secretly a powerful boss, posing as an ordinary college student to apply to be Ji Ran's husband",
+      "personality": "Playful, quick-witted and quietly calculating. He has long had his eye on Ji Ran and will drop a business summit to chase her. He plays the sweet, harmless younger man while hiding real power and a steely resolve. He is protective, teasing and delighted to needle a rival.",
+      "appearance": "Strikingly handsome young East Asian man. Clean, defined jawline, high cheekbones, a straight nose, a youthful but strong face and bright, intelligent, slightly mischievous eyes. Healthy, natural skin with real texture. Soft black hair in a tousled, slightly long textured cut with a fringe brushed to one side. About 186 cm tall, with broad shoulders and a lean, athletic build, long legs and a visible six-pack beneath fitted shirts. No visible jewellery apart from a thin black-strap watch.",
+      "hair": {
+        "length": "short",
+        "colour": "black"
+      },
+      "build": "athletic",
+      "wardrobe": "At Su Yaqing's home: a white fitted fine-knit crew-neck long-sleeve sweater with the sleeves pushed up, slim light-grey tailored trousers and white leather sneakers.",
+      "wardrobe_states": {
+        "S0": "At Su Yaqing's home: a white fitted fine-knit crew-neck long-sleeve sweater with the sleeves pushed up, slim light-grey tailored trousers and white leather sneakers.",
+        "S1": "Interview disguise, rain-soaked: an open mid-blue denim jacket over a plain white crew-neck T-shirt that clings damply to his chest, straight blue jeans and worn white canvas sneakers. His hair is wet and sweat beads on his forehead.",
+        "S2": "Night at Ji Ran's apartment: a white cotton pullover hoodie, slim black jogger trousers and white sneakers."
+      },
+      "signature_color": "white",
+      "voice": "Warm, light tenor that is youthful and bright. He switches easily between a crisp, commanding boss tone on the phone and a sweet, slightly whiny, teasing 'little brother' lilt with Ji Ran.",
+      "looks": {
+        "S0": {
+          "garments": [
+            {
+              "class": "long sleeve top",
+              "colour": "white"
+            },
+            {
+              "class": "trousers",
+              "colour": "grey"
+            }
+          ]
+        },
+        "S1": {
+          "garments": [
+            {
+              "class": "long sleeve outwear",
+              "colour": "blue"
+            },
+            {
+              "class": "short sleeve top",
+              "colour": "white"
+            },
+            {
+              "class": "trousers",
+              "colour": "blue"
+            }
+          ]
+        },
+        "S2": {
+          "garments": [
+            {
+              "class": "long sleeve top",
+              "colour": "white"
+            },
+            {
+              "class": "trousers",
+              "colour": "black"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "su_yaqing",
+      "name": "Su Yaqing",
+      "aliases": [
+        "SU YAQING",
+        "我姐"
+      ],
+      "age": 27,
+      "observable": true,
+      "gender": "female",
+      "role": "Heiress of the Su family, Ji Ran's best friend and Lin Qingyu's older stepsister",
+      "personality": "Bubbly, teasing and fiercely loyal. She loves gossip and playing matchmaker, and backs Ji Ran whatever she decides.",
+      "appearance": "Strikingly beautiful East Asian heiress in her late twenties who looks young and fresh. Small heart-shaped face with delicate, refined features, large sparkling bright eyes and a small nose. Flawless, luminous, even complexion with no redness and natural texture. Full glamorous make-up: defined brows, fluttery lashes, a glossy pink-nude lip. Glossy chestnut-brown hair falls to mid-back in big bouncy curls. About 171 cm tall with long legs and elegant eight-heads-tall proportions. Curvy figure with full hips, a defined waist and an hourglass shape, and a full C-cup bust. She wears pearl drop earrings and a delicate diamond tennis bracelet.",
+      "hair": {
+        "length": "long",
+        "colour": "brown"
+      },
+      "build": "curvy",
+      "wardrobe": "At home: a blush-pink satin spaghetti-strap bodycon midi slip dress that hugs her waist and hips, with pink velvet low-heeled mules, pearl drop earrings and a diamond tennis bracelet.",
+      "signature_color": "pink",
+      "voice": "Bright, bubbly soprano with a playful, sing-song teasing rise. Fast and gossipy, with warm laughter in it.",
+      "looks": {
+        "base": {
+          "garments": [
+            {
+              "class": "sling dress",
+              "colour": "pink"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "lu_shaoze",
+      "name": "路少泽",
+      "aliases": [
+        "LU SHAOZE",
+        "Lu Shaoze",
+        "路少爷",
+        "本少"
+      ],
+      "age": 28,
+      "observable": true,
+      "gender": "male",
+      "role": "Ji Ran's ex-boyfriend of four years, driven off by Ji Hongyuan five years ago and now heir of the Lu Group returning as her arranged-marriage match",
+      "personality": "Once a meek, humiliated young man, he is now smug, arrogant and possessive. He flaunts his wealth and assumes Ji Ran still loves him. He is easily provoked into speechless fury.",
+      "appearance": "Handsome East Asian man in his late twenties. Angular face with a sharp jaw, narrow sharp eyes, a straight nose and thin lips that settle into a superior set. Healthy skin with natural texture. Black hair styled in a slicked-back, side-parted pompadour. About 182 cm tall with a fit, trim, average build. He wears a silver dress watch.",
+      "hair": {
+        "length": "short",
+        "colour": "black"
+      },
+      "build": "average",
+      "wardrobe": "Flashback, five years earlier, aged about 23: a plain light-blue cotton button-down long-sleeve shirt, grey slim chinos and brown loafers. Softer, un-styled hair.",
+      "wardrobe_states": {
+        "S0": "Flashback, five years earlier, aged about 23: a plain light-blue cotton button-down long-sleeve shirt, grey slim chinos and brown loafers. Softer, un-styled hair.",
+        "S1": "Night, returned heir: a tailored navy-blue slim suit jacket over a crisp white open-collar dress shirt, matching navy trousers, polished black oxfords and a silver dress watch. Hair slicked back."
+      },
+      "signature_color": "blue",
+      "voice": "Smooth baritone with a sneering, drawling, nasal lilt. He drags out his vowels mockingly, then rises into sputtering indignation.",
+      "looks": {
+        "S0": {
+          "garments": [
+            {
+              "class": "long sleeve top",
+              "colour": "blue"
+            },
+            {
+              "class": "trousers",
+              "colour": "grey"
+            }
+          ]
+        },
+        "S1": {
+          "garments": [
+            {
+              "class": "long sleeve outwear",
+              "colour": "blue"
+            },
+            {
+              "class": "long sleeve top",
+              "colour": "white"
+            },
+            {
+              "class": "trousers",
+              "colour": "blue"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "ji_hongyuan",
+      "name": "纪宏远",
+      "aliases": [
+        "JI HONGYUAN",
+        "你爸",
+        "我爸"
+      ],
+      "age": 52,
+      "observable": true,
+      "gender": "male",
+      "role": "Ji Ran's father, a domineering businessman who arranges her marriages for profit. He appears only in the 'Five years earlier' flashback (scene 1-2). His age, appearance and wardrobe here are as he looks in that flashback.",
+      "personality": "Cold, imperious and mercenary. He treats his daughter as an asset and anyone beneath him with contempt.",
+      "appearance": "As seen in the flashback five years before the present: an East Asian man of 52 with a broad, square face, heavy brows, deep nasolabial lines and a stern mouth. Short black hair, lightly greying at the temples, combed back neatly. About 175 cm tall with a solid, slightly thick-set build. He wears a gold signet ring and a gold watch.",
+      "hair": {
+        "length": "short",
+        "colour": "black"
+      },
+      "build": "large",
+      "wardrobe": "In the flashback five years earlier, at the Ji family home: a tailored dark-brown wool suit jacket over a white dress shirt with no tie, matching dark-brown trousers and polished brown leather shoes.",
+      "signature_color": "brown",
+      "voice": "Deep, gravelly bass that is slow and authoritative, clipped with contempt, with a dismissive grunt.",
+      "looks": {
+        "base": {
+          "garments": [
+            {
+              "class": "long sleeve outwear",
+              "colour": "brown"
+            },
+            {
+              "class": "long sleeve top",
+              "colour": "white"
+            },
+            {
+              "class": "trousers",
+              "colour": "brown"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "xu_banxia",
+      "name": "许半夏",
+      "aliases": [
+        "XU BANXIA",
+        "Xu Banxia"
+      ],
+      "age": 24,
+      "observable": true,
+      "gender": "female",
+      "role": "Ji Ran's secretary at Jiejian Company",
+      "personality": "Efficient and loyal, easily embarrassed and quick to giggle at her boss's antics.",
+      "appearance": "Pretty, ordinary-looking East Asian woman in her mid-twenties. Round, friendly face, bright eyes behind thin gold-rimmed glasses and light, natural make-up with a peach lip. Healthy skin with natural texture. Shoulder-length straight black hair with neat bangs. About 163 cm tall with a curvy figure, full hips, a defined waist and an hourglass shape.",
+      "hair": {
+        "length": "shoulder",
+        "colour": "black"
+      },
+      "build": "curvy",
+      "wardrobe": "A fitted white long-sleeve blouse tucked into a mustard-yellow high-waisted pencil skirt, nude block-heel pumps and a lanyard-free slim staff badge clip. Gold-rimmed glasses.",
+      "signature_color": "yellow",
+      "voice": "Light, polite, slightly breathy alto. Brisk and professional, squeaking into embarrassed giggles.",
+      "looks": {
+        "base": {
+          "garments": [
+            {
+              "class": "long sleeve top",
+              "colour": "white"
+            },
+            {
+              "class": "skirt",
+              "colour": "yellow"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "ajie",
+      "name": "阿杰",
+      "aliases": [
+        "AJIE"
+      ],
+      "age": 30,
+      "observable": false,
+      "reason": "Heard only as a voice-over on Lin Qingyu's phone call. No action line shows him.",
+      "role": "Lin Qingyu's assistant",
+      "personality": "Dutiful and slightly anxious, he worries about his boss's schedule.",
+      "appearance": "Never seen on screen; heard only over the phone.",
+      "wardrobe": "Never seen on screen.",
+      "voice": "Earnest male mid-range voice, slightly tinny over the phone, hurried and deferential."
+    },
+    {
+      "id": "applicants",
+      "name": "APPLICANTS",
+      "aliases": [],
+      "age": 26,
+      "observable": false,
+      "reason": "A group cue: the four husband-audition applicants (green-shirt, blue-tank-top, gray-shirt and shirtless) answering together. Each is drawn individually under his own entry, so the group has no sheet of its own.",
+      "role": "The four husband-audition applicants speaking in unison",
+      "personality": "Flustered and over-eager, scrambling to say yes.",
+      "appearance": "Not drawn as one person; see the four individual applicant entries.",
+      "wardrobe": "Not drawn as one person; each applicant wears his own outfit.",
+      "voice": "Four overlapping male voices, a ragged, startled chorus tumbling over each other."
+    },
+    {
+      "id": "green_shirt_applicant",
+      "name": "GREEN-SHIRT APPLICANT",
+      "aliases": [],
+      "age": 26,
+      "observable": true,
+      "gender": "male",
+      "role": "Husband-audition applicant who shows off with a dumbbell",
+      "personality": "Eager, showy and over-theatrical.",
+      "appearance": "Ordinary East Asian man in his mid-twenties with a long face, a short neat crew cut and an eager grin. About 179 cm tall with a slim build. Healthy skin with natural texture.",
+      "hair": {
+        "length": "short",
+        "colour": "black"
+      },
+      "build": "slim",
+      "wardrobe": "A fitted kelly-green short-sleeve polo-style shirt, black slim trousers and black sneakers.",
+      "signature_color": "green",
+      "voice": "Reedy tenor that grunts and strains comically.",
+      "looks": {
+        "base": {
+          "garments": [
+            {
+              "class": "short sleeve top",
+              "colour": "green"
+            },
+            {
+              "class": "trousers",
+              "colour": "black"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "blue_tank_top_applicant",
+      "name": "BLUE-TANK-TOP APPLICANT",
+      "aliases": [],
+      "age": 27,
+      "observable": true,
+      "gender": "male",
+      "role": "Husband-audition applicant who throws an awkward punch",
+      "personality": "Earnest, clumsy and trying too hard.",
+      "appearance": "Ordinary East Asian man in his late twenties with a broad face, a buzz cut and thick brows. About 176 cm tall with a stocky, average build. Healthy skin with natural texture.",
+      "hair": {
+        "length": "short",
+        "colour": "black"
+      },
+      "build": "average",
+      "wardrobe": "A royal-blue athletic tank top, grey jogger trousers and white sneakers.",
+      "signature_color": "blue",
+      "voice": "Gruff, hearty baritone with a punchy 'huo' exhale.",
+      "looks": {
+        "base": {
+          "garments": [
+            {
+              "class": "vest",
+              "colour": "blue"
+            },
+            {
+              "class": "trousers",
+              "colour": "grey"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "gray_shirt_applicant",
+      "name": "GRAY-SHIRT APPLICANT",
+      "aliases": [],
+      "age": 25,
+      "observable": true,
+      "gender": "male",
+      "role": "Husband-audition applicant who claims eight-pack abs",
+      "personality": "Proud and awkward, fighting with his own shirt.",
+      "appearance": "Ordinary East Asian man in his mid-twenties with an oval face, short side-parted hair and a smug smile. About 178 cm tall with an average build. Healthy skin with natural texture.",
+      "hair": {
+        "length": "short",
+        "colour": "black"
+      },
+      "build": "average",
+      "wardrobe": "A tight heather-grey short-sleeve T-shirt, black slim trousers and black sneakers.",
+      "signature_color": "grey",
+      "voice": "Flat, confident mid-range voice that answers in short boasts.",
+      "looks": {
+        "base": {
+          "garments": [
+            {
+              "class": "short sleeve top",
+              "colour": "grey"
+            },
+            {
+              "class": "trousers",
+              "colour": "black"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "shirtless_applicant",
+      "name": "SHIRTLESS APPLICANT",
+      "aliases": [],
+      "age": 28,
+      "observable": true,
+      "gender": "male",
+      "role": "The fourth husband-audition applicant, who strips off his top and flexes",
+      "personality": "Brash, cheesy and shamelessly self-admiring.",
+      "appearance": "Ordinary East Asian man in his late twenties with a square face, a short spiky undercut and a cocky smirk. About 180 cm tall with a gym-bulked, muscular athletic build. Healthy, slightly tanned skin.",
+      "hair": {
+        "length": "short",
+        "colour": "black"
+      },
+      "build": "athletic",
+      "wardrobe": "A tight black short-sleeve T-shirt, bright orange track trousers and white sneakers.",
+      "wardrobe_states": {
+        "S0": "A tight black short-sleeve T-shirt, bright orange track trousers and white sneakers.",
+        "S1": "Top removed and bare-chested, still in the bright orange track trousers and white sneakers."
+      },
+      "signature_color": "orange",
+      "voice": "Husky, exaggerated baritone with a cheesy drawn-out 'ah~ yeah'.",
+      "looks": {
+        "S0": {
+          "garments": [
+            {
+              "class": "short sleeve top",
+              "colour": "black"
+            },
+            {
+              "class": "trousers",
+              "colour": "orange"
+            }
+          ]
+        },
+        "S1": {
+          "garments": [
+            {
+              "class": "trousers",
+              "colour": "orange"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "locations": [
+    {
+      "id": "ji_ran_office",
+      "name": "JI RAN'S OFFICE",
+      "description": "Sleek, spacious contemporary executive office of a design company, in warm walnut, white and grey. A large walnut desk is covered with architectural plans, wood samples, a metal figurine and a pour-over coffee station. Behind it stands a black leather executive chair. To one side are a lounge area of black leather sofas and armchairs around a white marble coffee table, and a wall sign reading 'JUST DO IT'. The door is on the side wall facing the desk, with open space in front of the desk for standing visitors. Floor-to-ceiling windows behind the desk let in bright, soft daylight from behind and to the left of the desk. Warm recessed ceiling spots and a brass desk lamp fill in from above.",
+      "setting": "interior",
+      "period": "contemporary",
+      "furnishings": [
+        "walnut desk",
+        "leather executive chair",
+        "architectural plans",
+        "wood samples",
+        "metal figurine",
+        "leather sofas",
+        "marble coffee table",
+        "JUST DO IT wall sign",
+        "floor-to-ceiling windows",
+        "office door"
+      ]
+    },
+    {
+      "id": "ji_family_living_room",
+      "name": "JI FAMILY LIVING ROOM",
+      "description": "Grand living room of a contemporary luxury mansion, seen five years earlier. The floors are polished cream marble, white marble columns stand along one side and a wall runs behind them. A long beige sofa faces a low marble-and-gold coffee table on a thick ivory carpet. Tall French windows look out on garden trees whose leaves sway in warm sunlight. Golden afternoon sun streams through the windows from the right, casting warm leaf-dappled light. A crystal chandelier hangs overhead.",
+      "setting": "interior",
+      "period": "contemporary",
+      "furnishings": [
+        "beige sofa",
+        "marble coffee table",
+        "ivory carpet",
+        "marble columns",
+        "French windows",
+        "crystal chandelier"
+      ]
+    },
+    {
+      "id": "su_living_room",
+      "name": "SU YAQING'S LIVING ROOM",
+      "description": "Spacious, stylish living room of an heiress's luxury apartment. A cream bouclé sofa with pastel cushions faces a low glass coffee table on a soft pale rug. A doorway at the back opens to the kitchen. Bright daylight falls from large windows on the left, and warm floor lamps glow softly at the sofa's ends.",
+      "setting": "interior",
+      "period": "contemporary",
+      "furnishings": [
+        "cream sofa",
+        "pastel cushions",
+        "glass coffee table",
+        "pale rug",
+        "kitchen doorway",
+        "floor lamps",
+        "large windows"
+      ]
+    },
+    {
+      "id": "su_dining_area",
+      "name": "SU YAQING'S DINING AREA",
+      "description": "Elegant dining nook in the same luxury apartment. A round white marble table holds a vase of daisies and a wine bottle, with upholstered dining chairs around it. A chair beside it stands by a tall window. Soft daylight comes through the window from the side, and a modern brass pendant lamp hangs above the table.",
+      "setting": "interior",
+      "period": "contemporary",
+      "furnishings": [
+        "marble dining table",
+        "vase of daisies",
+        "wine bottle",
+        "upholstered chairs",
+        "tall window",
+        "brass pendant lamp"
+      ]
+    },
+    {
+      "id": "apartment_entrance",
+      "name": "JI RAN'S APARTMENT ENTRANCE",
+      "description": "Upscale downtown apartment lobby landing on Ji Ran's floor at night. Brushed-steel elevator doors stand opposite a heavy walnut front door with a smart lock. The floor is polished stone, and a framed autumn landscape painting in amber tones hangs on the wall. Warm ceiling downlights fall from above, a soft wall sconce glows beside the painting and cooler light spills from the elevator when it opens.",
+      "setting": "interior",
+      "period": "contemporary",
+      "furnishings": [
+        "elevator doors",
+        "walnut front door",
+        "smart lock",
+        "autumn landscape painting",
+        "stone floor",
+        "wall sconce"
+      ]
+    },
+    {
+      "id": "apartment_corridor",
+      "name": "APARTMENT CORRIDOR",
+      "description": "Short, elegant residential corridor outside Ji Ran's door at night. Cream wall panels with a wood trim line it, with a runner rug on a stone floor and doors set at intervals. Warm recessed downlights run overhead, with soft side-glow from wall sconces.",
+      "setting": "interior",
+      "period": "contemporary",
+      "furnishings": [
+        "cream wall panels",
+        "runner rug",
+        "apartment doors",
+        "wall sconces",
+        "recessed downlights"
+      ]
+    },
+    {
+      "id": "city_road",
+      "name": "CITY ARTERIAL ROAD",
+      "description": "Wide multi-lane arterial road in a modern Chinese city at dusk, lined with glass office towers. Traffic packs the lanes with headlights and taillights. The sky darkens from blue to indigo, streetlights flicker on along the median and lit office windows glow from above.",
+      "setting": "exterior",
+      "period": "contemporary",
+      "furnishings": [
+        "multi-lane road",
+        "car traffic",
+        "office towers",
+        "streetlights",
+        "median"
+      ]
+    },
+    {
+      "id": "ji_ran_living_room",
+      "name": "JI RAN'S LIVING ROOM",
+      "description": "Spacious, stylish downtown apartment living room at night. A pale linen sofa sits on a patterned geometric rug, before a marble-and-glass coffee table. Behind it is an open kitchen with a white island and pendant lights. Floor-to-ceiling windows show city lights behind. Warm light comes from the pendants over the kitchen island, a floor lamp beside the sofa on the left and soft cove lighting in the ceiling.",
+      "setting": "interior",
+      "period": "contemporary",
+      "furnishings": [
+        "pale sofa",
+        "patterned rug",
+        "marble-and-glass coffee table",
+        "open kitchen",
+        "kitchen island",
+        "pendant lights",
+        "floor lamp",
+        "floor-to-ceiling windows"
+      ]
+    }
+  ],
+  "props": [
+    {
+      "id": "pour_over_set",
+      "name": "pour-over coffee equipment",
+      "description": "Hario pour-over set: a matte-black Hario Buono gooseneck kettle (about 25 cm long) with the Hario logo on its base, a white ceramic Hario V60 dripper with a paper filter, and a clear glass Hario V60 range server beneath it."
+    },
+    {
+      "id": "coffee_cup",
+      "name": "coffee",
+      "description": "Small handleless white porcelain coffee cup, about 8 cm tall, filled with black pour-over coffee."
+    },
+    {
+      "id": "document_envelope",
+      "name": "document envelope",
+      "description": "Thick A4 kraft-brown paper document envelope with a string-and-button closure, about 32 x 23 cm, bulging with papers. It has no visible writing."
+    },
+    {
+      "id": "su_phone",
+      "name": "video-calling phone",
+      "description": "Apple iPhone 15 Pro in natural titanium with a clear case and the Apple logo on the back. Its screen shows a video call with Ji Ran's face."
+    },
+    {
+      "id": "lin_glass",
+      "name": "glass",
+      "description": "Tall clear crystal tumbler, about 14 cm high, half full of water."
+    },
+    {
+      "id": "lin_phone",
+      "name": "call phone",
+      "description": "Apple iPhone 15 Pro Max in black titanium with the Apple logo on the back, held to the ear for a call."
+    },
+    {
+      "id": "dumbbell",
+      "name": "small dumbbell",
+      "description": "Small 2 kg hexagonal hand dumbbell from Decathlon Domyos, black rubber heads on a chrome knurled handle, about 20 cm long, with the Domyos mark embossed on one head."
+    },
+    {
+      "id": "black_handbag",
+      "name": "black handbag",
+      "description": "Chanel Classic Flap bag, medium, in black quilted lambskin with a gold interlocking CC turn-lock and a gold chain-and-leather strap. About 25 x 15 x 6 cm."
+    },
+    {
+      "id": "grocery_bag",
+      "name": "grocery bag full of greens",
+      "description": "Reusable off-white canvas tote grocery bag, about 40 x 35 cm, overflowing with leafy green vegetables (bok choy, spring onions, celery)."
+    }
+  ],
+  "beats": [
+    {
+      "lines": [
+        1,
+        3
+      ],
+      "seconds": 3,
+      "event": "In JI RAN'S OFFICE, 纪然 coldly pours water through the coffee filter; a super introduces her as owner of Jiejian Company."
+    },
+    {
+      "lines": [
+        4,
+        5
+      ],
+      "seconds": 10,
+      "event": "Su Yaqing's voice teases 纪然 about the arranged marriage with 路少泽; 纪然 says she'd be happier if he were dead."
+    },
+    {
+      "lines": [
+        6,
+        8
+      ],
+      "seconds": 2,
+      "event": "Flashback, five years earlier: leaves sway in sunlight outside the JI FAMILY LIVING ROOM."
+    },
+    {
+      "lines": [
+        9,
+        12
+      ],
+      "seconds": 13,
+      "event": "纪宏远 pushes an envelope onto the carpet and tells 路少泽 that 纪然 will marry the Chen heir; he is being sent abroad and must never see her again."
+    },
+    {
+      "lines": [
+        13,
+        13
+      ],
+      "seconds": 9,
+      "event": "路少泽 picks up the envelope and leaves; the young 纪然 watches from behind a column, fists clenched, then slumps breathless against the wall."
+    },
+    {
+      "lines": [
+        14,
+        16
+      ],
+      "seconds": 15,
+      "event": "Back in the office, 纪然 sips her coffee while her voice-over says her father now wants to trade her to the newly rich 路少泽."
+    },
+    {
+      "lines": [
+        17,
+        20
+      ],
+      "seconds": 11,
+      "event": "In SU YAQING'S LIVING ROOM, Su Yaqing video-calls 纪然, who vows she will choose her own man."
+    },
+    {
+      "lines": [
+        21,
+        24
+      ],
+      "seconds": 19,
+      "event": "纪然 announces a public audition for a husband; Su Yaqing laughs that it's a talent show, and 纪然 insists it is the most efficient way."
+    },
+    {
+      "lines": [
+        25,
+        27
+      ],
+      "seconds": 28,
+      "event": "Su Yaqing suggests her newly returned brother; 纪然 refuses a rich family and wants an ordinary man; Su Yaqing promises her support."
+    },
+    {
+      "lines": [
+        28,
+        29
+      ],
+      "seconds": 3,
+      "event": "林青羽, introduced as a college student, listens by the kitchen door with a glass, smiling."
+    },
+    {
+      "lines": [
+        30,
+        35
+      ],
+      "seconds": 23,
+      "event": "In the dining area, 林青羽 calls 阿杰 to fake an ordinary student identity and hide it from his sister, then cancels a summit to attend the interview."
+    },
+    {
+      "lines": [
+        36,
+        39
+      ],
+      "seconds": 4.5,
+      "event": "Next day in the office, 许半夏 reports that the candidates have arrived."
+    },
+    {
+      "lines": [
+        40,
+        50
+      ],
+      "seconds": 12,
+      "event": "纪然 grills four applicants on height, weight and abs, then asks if they are capable; the APPLICANTS stammer yes, and she tells them to show her."
+    },
+    {
+      "lines": [
+        51,
+        56
+      ],
+      "seconds": 13,
+      "event": "The applicants show off: a struggling dumbbell lift, an awkward punch, a shirt yanked up, and a shirtless flex with a lip lick and 'ah~yeah'."
+    },
+    {
+      "lines": [
+        57,
+        62
+      ],
+      "seconds": 12.5,
+      "event": "纪然 covers her forehead in despair; 许半夏 hides her face; 纪然 calls it off, though the last candidate is late."
+    },
+    {
+      "lines": [
+        63,
+        67
+      ],
+      "seconds": 8.5,
+      "event": "As 纪然 heads for the door, 林青羽 appears panting in the doorway: 'Sorry I'm late.'"
+    },
+    {
+      "lines": [
+        68,
+        70
+      ],
+      "seconds": 9.5,
+      "event": "Soaked, 林青羽 explains that his bike chain came off in the rain and he ran all the way."
+    },
+    {
+      "lines": [
+        71,
+        74
+      ],
+      "seconds": 14,
+      "event": "纪然 approves of his looks in voice-over; 许半夏 leaves; 纪然 circles him, counting his abs with pokes, and asks his name."
+    },
+    {
+      "lines": [
+        75,
+        81
+      ],
+      "seconds": 6,
+      "event": "林青羽 stammers his name and gives his height of 186, weight of 64 kg and age of 21."
+    },
+    {
+      "lines": [
+        82,
+        86
+      ],
+      "seconds": 8,
+      "event": "Disappointed, 纪然 says he is below the legal marriage age and shows him out; 林青羽 is stunned."
+    },
+    {
+      "lines": [
+        87,
+        88
+      ],
+      "seconds": 9,
+      "event": "At night 路少泽 knocks at 纪然's door, startles as the elevator opens and collides with 纪然 under the autumn painting."
+    },
+    {
+      "lines": [
+        89,
+        91
+      ],
+      "seconds": 26,
+      "event": "路少泽 and 纪然 trade barbs; he mocks her broken engagement to the Chen family."
+    },
+    {
+      "lines": [
+        92,
+        93
+      ],
+      "seconds": 17.5,
+      "event": "Holding back her anger, 纪然 says she now has a steady boyfriend and is about to marry."
+    },
+    {
+      "lines": [
+        94,
+        94
+      ],
+      "seconds": 31.75,
+      "event": "路少泽 scoffs at her lie, insults her father and boasts that only the Lu heir can take on her family."
+    },
+    {
+      "lines": [
+        95,
+        98
+      ],
+      "seconds": 9.75,
+      "event": "As he reaches for her, 林青羽 wraps an arm around 纪然's waist: 'Sis, let's go home, I'm hungry.'"
+    },
+    {
+      "lines": [
+        99,
+        101
+      ],
+      "seconds": 3.5,
+      "event": "In the corridor, 路少泽 glares at 林青羽's arm and orders him to let go."
+    },
+    {
+      "lines": [
+        102,
+        103
+      ],
+      "seconds": 12.25,
+      "event": "林青羽 cheerfully offers his hand, introduces himself as 纪然's boyfriend, and chides her for not inviting the guest in."
+    },
+    {
+      "lines": [
+        104,
+        107
+      ],
+      "seconds": 21,
+      "event": "路少泽 insists he is her marriage match and that she loved him for four years; 纪然 dares him to do something about it."
+    },
+    {
+      "lines": [
+        108,
+        109
+      ],
+      "seconds": 20.75,
+      "event": "林青羽 mockingly advises the 'older' 路少泽 to mind his health; 路少泽 storms off speechless; 纪然 and 林青羽 exchange a look and he grins."
+    },
+    {
+      "lines": [
+        110,
+        113
+      ],
+      "seconds": 5,
+      "event": "Dusk traffic on the CITY ARTERIAL ROAD as streetlights come on; a super labels 纪然's home."
+    },
+    {
+      "lines": [
+        114,
+        117
+      ],
+      "seconds": 9.5,
+      "event": "In JI RAN'S LIVING ROOM, 纪然 demands why he came after failing the interview; 林青羽 says he wants a probation period."
+    },
+    {
+      "lines": [
+        118,
+        119
+      ],
+      "seconds": 2,
+      "event": "Light flecks drift; to be continued."
+    }
+  ],
+  "episodes": [
+    {
+      "id": "EP001",
+      "title": "I Choose My Own Man",
+      "summary": "纪然, owner of Jiejian Company, learns that her father 纪宏远 now wants her to marry 路少泽, the first love he drove away five years ago. Refusing to be a bargaining chip, she tells Su Yaqing she will hold a public audition for a husband. Su Yaqing's brother 林青羽 overhears and orders 阿杰 to fake him an ordinary student identity, skipping a summit to apply.",
+      "est_seconds": 136,
+      "end_hook": "林青羽 cancels his Hong Kong summit: 'Tomorrow I'm going to an interview.'",
+      "lines": [
+        1,
+        35
+      ]
+    },
+    {
+      "id": "EP002",
+      "title": "The Husband Audition",
+      "summary": "In JI RAN'S OFFICE, 许半夏 brings in four applicants whose ridiculous displays (a dumbbell, a punch, abs and a shirtless flex) make 纪然 give up. Just as she leaves, the last candidate, 林青羽, arrives panting in the doorway.",
+      "est_seconds": 50.5,
+      "end_hook": "林青羽 appears in the doorway, breathless: 'Sorry, I'm late.'",
+      "lines": [
+        36,
+        67
+      ]
+    },
+    {
+      "id": "EP003",
+      "title": "Too Young to Marry",
+      "summary": "The rain-soaked 林青羽 charms 纪然 with his looks and abs, but when he says he is 21 she rejects him as under the legal marriage age.",
+      "est_seconds": 37.5,
+      "end_hook": "纪然 shows him the door ('turn left on your way out'), leaving 林青羽 stunned.",
+      "lines": [
+        68,
+        86
+      ]
+    },
+    {
+      "id": "EP004",
+      "title": "The Ex at the Door",
+      "summary": "路少泽 ambushes 纪然 outside her apartment, mocking her failed engagement and boasting of his status. She claims a fiancé he refuses to believe, until 林青羽 steps in and claims her.",
+      "est_seconds": 94,
+      "end_hook": "林青羽 puts his arm around 纪然's waist: 'Sis, let's go home, I'm hungry.'",
+      "lines": [
+        87,
+        98
+      ]
+    },
+    {
+      "id": "EP005",
+      "title": "Boyfriend on Probation",
+      "summary": "林青羽 introduces himself to 路少泽 as 纪然's boyfriend and needles him until he storms off. Back in her living room, 纪然 demands to know what he wants, and he asks for a probation period.",
+      "est_seconds": 74,
+      "end_hook": "林青羽 meets her eyes: 'I came to win a probation period.'",
+      "lines": [
+        99,
+        119
+      ]
+    }
+  ],
+  "red_line_issues": []
+}

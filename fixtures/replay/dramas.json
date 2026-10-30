@@ -3114,12 +3114,12 @@
  },
  "paper-vows": {
   "title": {
-   "en": "Paper Vows",
-   "zh": "纸上婚约"
+   "en": "The Double Life of My Billionaire Husband",
+   "zh": "The Double Life of My Billionaire Husband"
   },
   "logline": {
-   "en": "To pay her mother's hospital bill, Nora marries a man fresh out of a holding cell, on paper only, until the terms start to slip.",
-   "zh": "为了付清母亲的医药费，诺拉和刚出拘留室的男人签下纸上婚约，可约定渐渐守不住了。"
+   "en": "To pay for her mother's dialysis, Natalie agrees to marry the jailed Klein outcast Sebastian Klein in Cassie's place, but the 'loser' who walks out of jail is a man running a secret plan, and the Quinn wedding is its final puzzle piece.",
+   "zh": "To pay for her mother's dialysis, Natalie agrees to marry the jailed Klein outcast Sebastian Klein in Cassie's place, but the 'loser' who walks out of jail is a man running a secret plan, and the Quinn wedding is its final puzzle piece."
   },
   "genres": {
    "en": [
@@ -3139,14 +3139,14 @@
   "ago": 135,
   "cast": [
    {
-    "id": "nora",
+    "id": "natalie",
     "name": {
-     "en": "Nora Vance",
-     "zh": "诺拉·万斯"
+     "en": "Natalie",
+     "zh": "Natalie"
     },
     "short": {
-     "en": "Nora",
-     "zh": "诺拉"
+     "en": "Natalie",
+     "zh": "Natalie"
     },
     "looks": [
      "S1",
@@ -3156,14 +3156,14 @@
     ]
    },
    {
-    "id": "rhys",
+    "id": "sebastian",
     "name": {
-     "en": "Rhys Calder",
-     "zh": "里斯·考尔德"
+     "en": "Sebastian",
+     "zh": "Sebastian"
     },
     "short": {
-     "en": "Rhys",
-     "zh": "里斯"
+     "en": "Sebastian",
+     "zh": "Sebastian"
     },
     "looks": [
      "S1",
@@ -3173,147 +3173,147 @@
     ]
    },
    {
-    "id": "blair",
+    "id": "cassie",
     "name": {
-     "en": "Blair Monroe",
-     "zh": "布莱尔·门罗"
+     "en": "Cassie",
+     "zh": "Cassie"
     },
     "short": {
-     "en": "Blair",
-     "zh": "布莱尔"
+     "en": "Cassie",
+     "zh": "Cassie"
     },
     "looks": [
      "S1"
     ]
    },
    {
-    "id": "walt",
+    "id": "daniel",
     "name": {
-     "en": "Walter Vance",
-     "zh": "沃尔特·万斯"
+     "en": "Daniel",
+     "zh": "Daniel"
     },
     "short": {
-     "en": "Walter",
-     "zh": "沃尔特"
-    },
-    "looks": [
-     "S1"
-    ]
-   },
-   {
-    "id": "diane",
-    "name": {
-     "en": "Diane Vance",
-     "zh": "黛安·万斯"
-    },
-    "short": {
-     "en": "Diane",
-     "zh": "黛安"
-    },
-    "looks": [
-     "S1"
-    ]
-   },
-   {
-    "id": "owen",
-    "name": {
-     "en": "Owen Pike",
-     "zh": "欧文·派克"
-    },
-    "short": {
-     "en": "Owen",
-     "zh": "欧文"
+     "en": "Daniel",
+     "zh": "Daniel"
     }
    },
    {
-    "id": "guard",
+    "id": "george",
     "name": {
-     "en": "Officer Hale",
-     "zh": "黑尔警官"
+     "en": "George",
+     "zh": "George"
     },
     "short": {
-     "en": "Hale",
-     "zh": "黑尔警官"
+     "en": "George",
+     "zh": "George"
+    },
+    "looks": [
+     "S1"
+    ]
+   },
+   {
+    "id": "guest_1",
+    "name": {
+     "en": "Guest 1",
+     "zh": "Guest 1"
+    },
+    "short": {
+     "en": "Guest 1",
+     "zh": "Guest 1"
+    }
+   },
+   {
+    "id": "guest_2",
+    "name": {
+     "en": "Guest 2",
+     "zh": "Guest 2"
+    },
+    "short": {
+     "en": "Guest 2",
+     "zh": "Guest 2"
+    }
+   },
+   {
+    "id": "lauren",
+    "name": {
+     "en": "Lauren",
+     "zh": "Lauren"
+    },
+    "short": {
+     "en": "Lauren",
+     "zh": "Lauren"
+    },
+    "looks": [
+     "S1"
+    ]
+   },
+   {
+    "id": "officer",
+    "name": {
+     "en": "Officer",
+     "zh": "Officer"
+    },
+    "short": {
+     "en": "Officer",
+     "zh": "Officer"
     }
    },
    {
     "id": "officiant",
     "name": {
-     "en": "Elias Brook",
-     "zh": "伊莱亚斯·布鲁克"
+     "en": "Officiant",
+     "zh": "Officiant"
     },
     "short": {
-     "en": "Elias",
-     "zh": "伊莱亚斯"
-    }
-   },
-   {
-    "id": "guest_a",
-    "name": {
-     "en": "June Park",
-     "zh": "朴琼"
-    },
-    "short": {
-     "en": "June",
-     "zh": "朴琼"
-    }
-   },
-   {
-    "id": "guest_b",
-    "name": {
-     "en": "Molly Reed",
-     "zh": "莫莉·里德"
-    },
-    "short": {
-     "en": "Molly",
-     "zh": "莫莉"
+     "en": "Officiant",
+     "zh": "Officiant"
     }
    }
   ],
   "places": [
    {
-    "id": "cell",
+    "id": "jail_cell",
     "name": {
-     "en": "Holding cell",
-     "zh": "拘留室"
+     "en": "Jail, a cell",
+     "zh": "Jail, a cell"
     }
    },
    {
-    "id": "front_desk",
+    "id": "jail_front_desk",
     "name": {
-     "en": "Release desk",
-     "zh": "释放登记处"
+     "en": "Jail, front desk",
+     "zh": "Jail, front desk"
     }
    },
    {
-    "id": "gate",
+    "id": "jail_street",
     "name": {
-     "en": "Outside the gate",
-     "zh": "看守所门外"
+     "en": "Street outside the jail",
+     "zh": "Street outside the jail"
     }
    },
    {
-    "id": "parlor",
+    "id": "mansion_living_room",
     "name": {
-     "en": "The Vance parlor",
-     "zh": "万斯家客厅"
+     "en": "The Quinn family mansion, living room",
+     "zh": "The Quinn family mansion, living room"
     }
    },
    {
-    "id": "loft",
+    "id": "sebastian_apartment",
     "name": {
-     "en": "Rhys's loft",
-     "zh": "里斯的公寓"
+     "en": "Sebastian's apartment, living room",
+     "zh": "Sebastian's apartment, living room"
     },
     "times": [
      "Night"
     ]
    },
    {
-    "id": "garden",
+    "id": "wedding_garden",
     "name": {
-     "en": "Garden wedding",
-     "zh": "花园婚礼"
+     "en": "Garden of the wedding venue",
+     "zh": "Garden of the wedding venue"
     }
    }
   ],
@@ -3321,400 +3321,452 @@
    {
     "id": "agreement",
     "name": {
-     "en": "The agreement",
-     "zh": "协议"
+     "en": "agreement",
+     "zh": "agreement"
     }
    },
    {
     "id": "blanket",
     "name": {
-     "en": "Knit blanket",
-     "zh": "针织毯"
+     "en": "blanket",
+     "zh": "blanket"
     }
    },
    {
     "id": "bouquet",
     "name": {
-     "en": "Bridal bouquet",
-     "zh": "新娘捧花"
+     "en": "bouquet",
+     "zh": "bouquet"
     }
    },
    {
     "id": "breakfast",
     "name": {
-     "en": "Breakfast for two",
-     "zh": "双人早餐"
+     "en": "breakfast",
+     "zh": "breakfast"
     }
    },
    {
     "id": "car_key",
     "name": {
-     "en": "Car key",
-     "zh": "车钥匙"
+     "en": "car key",
+     "zh": "car key"
     }
    },
    {
-    "id": "champagne",
+    "id": "champagne_glasses",
     "name": {
-     "en": "Champagne tray",
-     "zh": "香槟托盘"
+     "en": "glasses of champagne",
+     "zh": "glasses of champagne"
     }
    },
    {
     "id": "coins",
     "name": {
-     "en": "Two quarters",
-     "zh": "两枚硬币"
+     "en": "two coins",
+     "zh": "two coins"
     }
    },
    {
-    "id": "lawyer_phone",
+    "id": "daniel_phone",
     "name": {
-     "en": "Owen's phone",
-     "zh": "欧文的手机"
+     "en": "Daniel's phone",
+     "zh": "Daniel's phone"
     }
    },
    {
     "id": "dress_bag",
     "name": {
-     "en": "Dress bag",
-     "zh": "婚纱袋"
+     "en": "the bag containing her wedding dress",
+     "zh": "the bag containing her wedding dress"
     }
    },
    {
-    "id": "car",
+    "id": "expensive_car",
     "name": {
-     "en": "Black sedan",
-     "zh": "黑色轿车"
+     "en": "expensive car",
+     "zh": "expensive car"
     }
    },
    {
     "id": "folder",
     "name": {
-     "en": "Folder",
-     "zh": "文件夹"
+     "en": "folder",
+     "zh": "folder"
     }
    },
    {
-    "id": "door_key",
+    "id": "front_door_key",
     "name": {
-     "en": "Front door key",
-     "zh": "大门钥匙"
+     "en": "key",
+     "zh": "key"
     }
    },
    {
     "id": "gift_box",
     "name": {
-     "en": "Gift box",
-     "zh": "礼盒"
+     "en": "wedding-gift box",
+     "zh": "wedding-gift box"
     }
    },
    {
     "id": "guest_phone",
     "name": {
-     "en": "June's phone",
-     "zh": "朴琼的手机"
+     "en": "Guest 1's phone",
+     "zh": "Guest 1's phone"
     }
    },
    {
-    "id": "bill",
+    "id": "hospital_statement",
     "name": {
-     "en": "Hospital bill",
-     "zh": "医院账单"
+     "en": "hospital statement",
+     "zh": "hospital statement"
     }
    },
    {
-    "id": "lingerie",
+    "id": "lace_bra",
     "name": {
-     "en": "Lace lingerie",
-     "zh": "蕾丝内衣"
+     "en": "lace bra",
+     "zh": "lace bra"
     }
    },
    {
-    "id": "mother_phone",
+    "id": "lauren_phone",
     "name": {
-     "en": "Diane's phone",
-     "zh": "黛安的手机"
+     "en": "Lauren's phone",
+     "zh": "Lauren's phone"
     }
    },
    {
-    "id": "handbag",
+    "id": "natalie_bag",
     "name": {
-     "en": "Nora's handbag",
-     "zh": "诺拉的手提包"
+     "en": "bag",
+     "zh": "bag"
     }
    },
    {
-    "id": "phone_alert",
+    "id": "natalie_phone",
     "name": {
-     "en": "Nora's phone",
-     "zh": "诺拉的手机"
+     "en": "Natalie's phone",
+     "zh": "Natalie's phone"
     }
    },
    {
     "id": "pillow",
     "name": {
-     "en": "Pillow",
-     "zh": "枕头"
+     "en": "pillow",
+     "zh": "pillow"
     }
    },
    {
     "id": "release_form",
     "name": {
-     "en": "Release form",
-     "zh": "释放单"
+     "en": "release form on a clipboard",
+     "zh": "release form on a clipboard"
     }
    },
    {
-    "id": "phone_bank",
+    "id": "sebastian_phone",
     "name": {
-     "en": "Rhys's phone",
-     "zh": "里斯的手机"
+     "en": "Sebastian's phone",
+     "zh": "Sebastian's phone"
     }
    }
   ],
   "episodes": [
    {
     "title": {
-     "en": "The family meeting",
-     "zh": "家庭会议"
+     "en": "Sold to the Outcast",
+     "zh": "Sold to the Outcast"
     },
     "segments": [
      {
       "id": "seg01",
+      "heading": {
+       "en": "1-1 Day | Int. The Quinn family mansion, living room",
+       "zh": "1-1 Day | Int. The Quinn family mansion, living room"
+      },
       "shots": {
        "en": [
-        "Nora faces her parents in the parlor",
-        "Walter avoids her eyes",
-        "Diane speaks for both of them",
-        "Nora: You can't be serious.",
-        "Walter rubs his hands"
+        "The cream-and-gold living room in daylight. Natalie sits in the armchair in the foreground centre with her back to the camera. George sits at frame left and Lauren at frame right on the cream sofa in front of the arched windows, with the glass coffee table between them and Natalie.",
+        "The hospital statement lies on the glass coffee table, its bold total at the bottom.",
+        "Lauren's shoulder and hair fill the foreground edge. Natalie in the armchair leans slightly forward toward her father, hands clasped, eyes hopeful.",
+        "Only Natalie, framed tight on her face and shoulders; her eyes glisten as she pleads.",
+        "George at the fireplace end of the sofa, frame left, rubs his hands together and glances right at Lauren beside him at frame right.",
+        "Lauren uncrosses her legs and fixes Natalie, toward the camera, with a cold stare, lip curled."
        ],
        "zh": [
-        "诺拉在客厅面对父母",
-        "沃尔特避开她的目光",
-        "黛安替两人开口",
-        "诺拉：你们是认真的？",
-        "沃尔特搓着双手"
+        "The cream-and-gold living room in daylight. Natalie sits in the armchair in the foreground centre with her back to the camera. George sits at frame left and Lauren at frame right on the cream sofa in front of the arched windows, with the glass coffee table between them and Natalie.",
+        "The hospital statement lies on the glass coffee table, its bold total at the bottom.",
+        "Lauren's shoulder and hair fill the foreground edge. Natalie in the armchair leans slightly forward toward her father, hands clasped, eyes hopeful.",
+        "Only Natalie, framed tight on her face and shoulders; her eyes glisten as she pleads.",
+        "George at the fireplace end of the sofa, frame left, rubs his hands together and glances right at Lauren beside him at frame right.",
+        "Lauren uncrosses her legs and fixes Natalie, toward the camera, with a cold stare, lip curled."
        ]
-      },
-      "heading": {
-       "en": "INT. VANCE PARLOR - DAY",
-       "zh": "内景 万斯家客厅 日"
       }
      },
      {
       "id": "seg02",
+      "heading": {
+       "en": "1-1 Day | Int. The Quinn family mansion, living room",
+       "zh": "1-1 Day | Int. The Quinn family mansion, living room"
+      },
       "shots": {
        "en": [
-        "Blair walks in",
-        "Blair smiles at Nora",
-        "Nora holds a sheet of paper",
-        "Diane beams at Blair"
+        "Cassie appears in the open double doorway at frame right with a mocking pout. Natalie in the foreground armchair, and George and Lauren on the sofa, all turn their heads right toward her.",
+        "Cassie strolls across the rug from the doorway and stops beside the armchair on its doorway side, frame right of Natalie, standing over the seated Natalie.",
+        "Cassie looks down at Natalie with a smirk, one hand on her hip.",
+        "Only Natalie, framed tight on her face; she lowers her eyes, her jaw tightening.",
+        "Natalie picks up the hospital statement from the coffee table and rises from the armchair; Cassie, at the armchair's frame-right side, steps back half a pace toward the doorway.",
+        "Natalie walks past Cassie toward the double doorway, the statement in her hand, and stops a few steps short of the doorway."
        ],
        "zh": [
-        "布莱尔走进来",
-        "布莱尔冲诺拉笑",
-        "诺拉手里拿着一张纸",
-        "黛安对布莱尔满脸笑容"
+        "Cassie appears in the open double doorway at frame right with a mocking pout. Natalie in the foreground armchair, and George and Lauren on the sofa, all turn their heads right toward her.",
+        "Cassie strolls across the rug from the doorway and stops beside the armchair on its doorway side, frame right of Natalie, standing over the seated Natalie.",
+        "Cassie looks down at Natalie with a smirk, one hand on her hip.",
+        "Only Natalie, framed tight on her face; she lowers her eyes, her jaw tightening.",
+        "Natalie picks up the hospital statement from the coffee table and rises from the armchair; Cassie, at the armchair's frame-right side, steps back half a pace toward the doorway.",
+        "Natalie walks past Cassie toward the double doorway, the statement in her hand, and stops a few steps short of the doorway."
        ]
-      },
-      "heading": {
-       "en": "INT. VANCE PARLOR - DAY",
-       "zh": "内景 万斯家客厅 日"
       }
      },
      {
       "id": "seg03",
+      "heading": {
+       "en": "1-1 Day | Int. The Quinn family mansion, living room",
+       "zh": "1-1 Day | Int. The Quinn family mansion, living room"
+      },
       "shots": {
        "en": [
-        "Blair folds her arms",
-        "Diane makes her case",
-        "Nora reads the paper",
-        "Walter looks down"
+        "Cassie folds her arms and nods.",
+        "Only Cassie, framed on her face and shoulders; she wrinkles her nose in disgust and flicks her hair over her shoulder.",
+        "Only Natalie; her fingers tighten on the hospital statement as she stares at Cassie, who is off screen beside her toward the doorway.",
+        "Lauren at frame right nods firmly beside George at frame left.",
+        "Lauren turns left to George and pats his knee.",
+        "Only Lauren, framed tight on her face; she looks back toward Natalie with a thin mauve-lipped smile."
        ],
        "zh": [
-        "布莱尔抱着胳膊",
-        "黛安讲她的道理",
-        "诺拉看那张纸",
-        "沃尔特低下头"
+        "Cassie folds her arms and nods.",
+        "Only Cassie, framed on her face and shoulders; she wrinkles her nose in disgust and flicks her hair over her shoulder.",
+        "Only Natalie; her fingers tighten on the hospital statement as she stares at Cassie, who is off screen beside her toward the doorway.",
+        "Lauren at frame right nods firmly beside George at frame left.",
+        "Lauren turns left to George and pats his knee.",
+        "Only Lauren, framed tight on her face; she looks back toward Natalie with a thin mauve-lipped smile."
        ]
-      },
-      "heading": {
-       "en": "INT. VANCE PARLOR - DAY",
-       "zh": "内景 万斯家客厅 日"
       }
      }
     ]
    },
    {
     "title": {
-     "en": "Released",
-     "zh": "出狱"
+     "en": "The Perfect Alibi",
+     "zh": "The Perfect Alibi"
     },
     "segments": [
      {
       "id": "seg01",
+      "heading": {
+       "en": "2-1 Day | Int. Jail, a cell",
+       "zh": "2-1 Day | Int. Jail, a cell"
+      },
       "shots": {
        "en": [
-        "Outside the gate",
-        "Rhys asleep in the cell",
-        "Officer Hale rattles his keys",
-        "Rhys sits up"
+        "The blocky grey concrete jail building behind a tall chain-link fence topped with coils of razor wire, under a clear sky.",
+        "Sebastian lies on the steel bunk along the left wall, his back to the barred cell door, facing the grey-green wall, a shaft of daylight slanting down from the barred high window.",
+        "Officer steps up to the barred cell door from the dim corridor, grips a steel bar with one hand and glares toward the bunk.",
+        "Sebastian lies facing the wall with his eyes open, calm, and does not turn around; the Officer is off screen.",
+        "Officer bangs his key ring hard against the steel bars of the cell door, his face red and furious.",
+        "Sebastian rolls over toward the barred cell door and slowly sits up on the edge of the steel bunk, his feet in the white slip-on canvas shoes on the floor, while the Officer stands at the barred door with his hand on the bars."
        ],
        "zh": [
-        "看守所门外",
-        "里斯在拘留室里睡着",
-        "黑尔警官晃着钥匙",
-        "里斯坐起来"
+        "The blocky grey concrete jail building behind a tall chain-link fence topped with coils of razor wire, under a clear sky.",
+        "Sebastian lies on the steel bunk along the left wall, his back to the barred cell door, facing the grey-green wall, a shaft of daylight slanting down from the barred high window.",
+        "Officer steps up to the barred cell door from the dim corridor, grips a steel bar with one hand and glares toward the bunk.",
+        "Sebastian lies facing the wall with his eyes open, calm, and does not turn around; the Officer is off screen.",
+        "Officer bangs his key ring hard against the steel bars of the cell door, his face red and furious.",
+        "Sebastian rolls over toward the barred cell door and slowly sits up on the edge of the steel bunk, his feet in the white slip-on canvas shoes on the floor, while the Officer stands at the barred door with his hand on the bars."
        ]
-      },
-      "heading": {
-       "en": "INT. HOLDING CELL - DAY",
-       "zh": "内景 拘留室 日"
       }
      },
      {
       "id": "seg02",
+      "heading": {
+       "en": "2-2 Day | Int. Jail, front desk",
+       "zh": "2-2 Day | Int. Jail, front desk"
+      },
       "shots": {
        "en": [
-        "The release desk",
-        "Hale slides the form over",
-        "Rhys signs out"
+        "Sebastian fastens the steel-and-black wristwatch around his wrist while the Officer picks up the release form on a clipboard from the desk and holds it out to him over the counter.",
+        "Officer points the ballpoint pen at Sebastian, frowning under his bushy moustache.",
+        "Sebastian's hand, the wristwatch now on it, takes the release form on a clipboard and the black ballpoint pen; the Officer is off screen.",
+        "Sebastian raises his eyes from the clipboard to the Officer with a cocky smirk.",
+        "Sebastian signs the release form on the clipboard with a flourish and a smile, while the Officer behind the desk shakes his head."
        ],
        "zh": [
-        "释放登记处",
-        "黑尔把表格推过来",
-        "里斯签字离开"
+        "Sebastian fastens the steel-and-black wristwatch around his wrist while the Officer picks up the release form on a clipboard from the desk and holds it out to him over the counter.",
+        "Officer points the ballpoint pen at Sebastian, frowning under his bushy moustache.",
+        "Sebastian's hand, the wristwatch now on it, takes the release form on a clipboard and the black ballpoint pen; the Officer is off screen.",
+        "Sebastian raises his eyes from the clipboard to the Officer with a cocky smirk.",
+        "Sebastian signs the release form on the clipboard with a flourish and a smile, while the Officer behind the desk shakes his head."
        ]
-      },
-      "heading": {
-       "en": "INT. RELEASE DESK - DAY",
-       "zh": "内景 释放登记处 日"
       }
      },
      {
       "id": "seg03",
+      "heading": {
+       "en": "2-3 Day | Ext. Street outside the jail",
+       "zh": "2-3 Day | Ext. Street outside the jail"
+      },
       "shots": {
        "en": [
-        "Rhys walks out of the gate",
-        "Owen waits by the car",
-        "Owen opens the door"
+        "Sebastian walks out through the steel pedestrian gate onto the sunny sidewalk, squints at the sky and straightens his shirt collar with both hands.",
+        "The black expensive car waits at the curb with Daniel standing beside its rear passenger door, hands folded; Sebastian walks along the sidewalk toward him.",
+        "Daniel opens the rear passenger door of the car; Sebastian stops at the open door, facing Daniel, one hand resting on the door frame.",
+        "Daniel gives a crisp nod behind his rimless glasses.",
+        "Daniel, holding the open car door, leans in slightly toward Sebastian and lowers his voice.",
+        "Sebastian adjusts his wristwatch and a slow, satisfied smirk spreads across his face; Daniel is off screen."
        ],
        "zh": [
-        "里斯走出大门",
-        "欧文在车边等",
-        "欧文拉开车门"
+        "Sebastian walks out through the steel pedestrian gate onto the sunny sidewalk, squints at the sky and straightens his shirt collar with both hands.",
+        "The black expensive car waits at the curb with Daniel standing beside its rear passenger door, hands folded; Sebastian walks along the sidewalk toward him.",
+        "Daniel opens the rear passenger door of the car; Sebastian stops at the open door, facing Daniel, one hand resting on the door frame.",
+        "Daniel gives a crisp nod behind his rimless glasses.",
+        "Daniel, holding the open car door, leans in slightly toward Sebastian and lowers his voice.",
+        "Sebastian adjusts his wristwatch and a slow, satisfied smirk spreads across his face; Daniel is off screen."
        ]
-      },
-      "heading": {
-       "en": "EXT. OUTSIDE THE GATE - DAY",
-       "zh": "外景 看守所门外 日"
       }
      },
      {
       "id": "seg04",
+      "heading": {
+       "en": "2-3 Day | Ext. Street outside the jail",
+       "zh": "2-3 Day | Ext. Street outside the jail"
+      },
       "shots": {
        "en": [
-        "Owen sighs",
-        "Rhys leans close to Owen",
-        "Rhys looks up at the sky"
+        "Sebastian taps the top of the open car door with his fingers and tilts his head at Daniel.",
+        "Daniel shakes his head once.",
+        "Daniel straightens his glasses, standing by the open car door, and looks Sebastian in the eye.",
+        "Sebastian raises one eyebrow, intrigued.",
+        "Sebastian looks off toward the jail fence and his smirk widens.",
+        "Sebastian leans in close and whispers into Daniel's ear, a hand on Daniel's shoulder; Daniel listens with his eyes narrowing, then nods."
        ],
        "zh": [
-        "欧文叹气",
-        "里斯凑近欧文",
-        "里斯抬头看天"
+        "Sebastian taps the top of the open car door with his fingers and tilts his head at Daniel.",
+        "Daniel shakes his head once.",
+        "Daniel straightens his glasses, standing by the open car door, and looks Sebastian in the eye.",
+        "Sebastian raises one eyebrow, intrigued.",
+        "Sebastian looks off toward the jail fence and his smirk widens.",
+        "Sebastian leans in close and whispers into Daniel's ear, a hand on Daniel's shoulder; Daniel listens with his eyes narrowing, then nods."
        ]
-      },
-      "heading": {
-       "en": "EXT. OUTSIDE THE GATE - DAY",
-       "zh": "外景 看守所门外 日"
       }
      }
     ]
    },
    {
     "title": {
-     "en": "Garden whispers",
-     "zh": "花园私语"
+     "en": "The Groom Arrives",
+     "zh": "The Groom Arrives"
     },
     "segments": [
      {
       "id": "seg01",
+      "heading": {
+       "en": "3-1 Day | Ext. Garden of the wedding venue",
+       "zh": "3-1 Day | Ext. Garden of the wedding venue"
+      },
       "shots": {
        "en": [
-        "Champagne on a tray",
-        "Walter walks Nora down the aisle",
-        "Diane checks her watch"
+        "Tall crystal flutes of pale golden champagne stand on the silver tray on the white cocktail table, catching the sunlight, with the boxwood hedge out of focus behind them.",
+        "Natalie stands under the flower-hung arch with the bouquet and George stands beside her on the rose-bush side. The space on her other side is empty. Lauren stands at the front row of chairs in the foreground, turned toward them.",
+        "Under the arch, George turns toward Natalie with a nervous, placating smile and pats her arm once.",
+        "Natalie turns her face to George, her eyes steady and serious above the veil.",
+        "George drops his gaze and glances toward Lauren at the front row, avoiding his daughter's eyes.",
+        "Lauren turns her wrist and checks her slim gold wristwatch with an impatient tap of one finger."
        ],
        "zh": [
-        "托盘上的香槟",
-        "沃尔特挽着诺拉走过红毯",
-        "黛安看表"
+        "Tall crystal flutes of pale golden champagne stand on the silver tray on the white cocktail table, catching the sunlight, with the boxwood hedge out of focus behind them.",
+        "Natalie stands under the flower-hung arch with the bouquet and George stands beside her on the rose-bush side. The space on her other side is empty. Lauren stands at the front row of chairs in the foreground, turned toward them.",
+        "Under the arch, George turns toward Natalie with a nervous, placating smile and pats her arm once.",
+        "Natalie turns her face to George, her eyes steady and serious above the veil.",
+        "George drops his gaze and glances toward Lauren at the front row, avoiding his daughter's eyes.",
+        "Lauren turns her wrist and checks her slim gold wristwatch with an impatient tap of one finger."
        ]
-      },
-      "heading": {
-       "en": "EXT. GARDEN WEDDING - DAY",
-       "zh": "外景 花园婚礼 日"
       }
      },
      {
       "id": "seg02",
+      "heading": {
+       "en": "3-1 Day | Ext. Garden of the wedding venue",
+       "zh": "3-1 Day | Ext. Garden of the wedding venue"
+      },
       "shots": {
        "en": [
-        "Two guests whisper",
-        "June laughs into her glass",
-        "Molly hides her smile"
+        "Guest 2 and Guest 1 stand at the round white cocktail table in front of the hedge, flutes in hand, and lean their heads together.",
+        "Guest 2 shields her mouth with her flute and glances toward the arch, eyes wide.",
+        "Guest 1 nods eagerly and rolls her eyes, swirling her champagne.",
+        "Guest 2 leans closer, lowering her voice, her freckled face lit with relish.",
+        "Guest 1 takes a sip from her flute and smirks over its rim toward the empty side of the arch.",
+        "Guest 2 covers a giggle with her hand while Guest 1 clinks her flute against Guest 2's flute."
        ],
        "zh": [
-        "两位宾客窃窃私语",
-        "朴琼端着杯子笑",
-        "莫莉忍住笑"
+        "Guest 2 and Guest 1 stand at the round white cocktail table in front of the hedge, flutes in hand, and lean their heads together.",
+        "Guest 2 shields her mouth with her flute and glances toward the arch, eyes wide.",
+        "Guest 1 nods eagerly and rolls her eyes, swirling her champagne.",
+        "Guest 2 leans closer, lowering her voice, her freckled face lit with relish.",
+        "Guest 1 takes a sip from her flute and smirks over its rim toward the empty side of the arch.",
+        "Guest 2 covers a giggle with her hand while Guest 1 clinks her flute against Guest 2's flute."
        ]
-      },
-      "heading": {
-       "en": "EXT. GARDEN WEDDING - DAY",
-       "zh": "外景 花园婚礼 日"
       }
      },
      {
       "id": "seg03",
+      "heading": {
+       "en": "3-1 Day | Ext. Garden of the wedding venue",
+       "zh": "3-1 Day | Ext. Garden of the wedding venue"
+      },
       "shots": {
        "en": [
-        "Blair in red by the arch",
-        "Blair whispers to Nora",
-        "Nora looks down"
+        "Cassie struts from the stone garden wall to the head of the aisle, arms crossed, and stops a step in front of Natalie on the rose-bush side, facing her. Natalie's veil and shoulder appear at the frame edge.",
+        "Cassie tilts her head with a sugary, mocking smile, her gold hoops swinging.",
+        "Natalie lowers her eyes to the bouquet and presses her lips together.",
+        "Cassie glances at the empty side of the arch and gives a fake pout.",
+        "Cassie leans in toward Natalie's ear with a cruel, gleeful grin.",
+        "George winces, opens his mouth, then closes it and looks away toward the guests."
        ],
        "zh": [
-        "一身红裙的布莱尔站在拱门边",
-        "布莱尔凑到诺拉耳边",
-        "诺拉低下头"
+        "Cassie struts from the stone garden wall to the head of the aisle, arms crossed, and stops a step in front of Natalie on the rose-bush side, facing her. Natalie's veil and shoulder appear at the frame edge.",
+        "Cassie tilts her head with a sugary, mocking smile, her gold hoops swinging.",
+        "Natalie lowers her eyes to the bouquet and presses her lips together.",
+        "Cassie glances at the empty side of the arch and gives a fake pout.",
+        "Cassie leans in toward Natalie's ear with a cruel, gleeful grin.",
+        "George winces, opens his mouth, then closes it and looks away toward the guests."
        ]
-      },
-      "heading": {
-       "en": "EXT. GARDEN WEDDING - DAY",
-       "zh": "外景 花园婚礼 日"
       }
      },
      {
       "id": "seg04",
+      "heading": {
+       "en": "3-1 Day | Ext. Garden of the wedding venue",
+       "zh": "3-1 Day | Ext. Garden of the wedding venue"
+      },
       "shots": {
        "en": [
-        "Rhys walks up the aisle",
-        "Rhys takes his place",
-        "Blair gasps",
-        "Nora looks up"
+        "Sebastian's black patent oxfords step off the gravel path onto the start of the petal-strewn aisle runner.",
+        "At the cocktail table, Guest 1 and Guest 2 turn their heads toward the start of the aisle, and Guest 2 lowers her flute mid-sip.",
+        "Sebastian walks up the aisle between the white chairs toward the arch with an unhurried stride, straightening his shirt cuff, a calm half-smile on his face. He ends halfway up the aisle.",
+        "Guest 1's mouth falls open and her eyes follow Sebastian along the aisle.",
+        "Sebastian reaches the front row of chairs on the boxwood-hedge side, where Lauren stands in his path, and gives her a polite, lazy nod.",
+        "Lauren steps back against the front-row chair, her eyes widening as she looks him up and down, one hand rising to her pearl necklace."
        ],
        "zh": [
-        "里斯走上红毯",
-        "里斯站到位置上",
-        "布莱尔倒吸一口气",
-        "诺拉抬起头"
+        "Sebastian's black patent oxfords step off the gravel path onto the start of the petal-strewn aisle runner.",
+        "At the cocktail table, Guest 1 and Guest 2 turn their heads toward the start of the aisle, and Guest 2 lowers her flute mid-sip.",
+        "Sebastian walks up the aisle between the white chairs toward the arch with an unhurried stride, straightening his shirt cuff, a calm half-smile on his face. He ends halfway up the aisle.",
+        "Guest 1's mouth falls open and her eyes follow Sebastian along the aisle.",
+        "Sebastian reaches the front row of chairs on the boxwood-hedge side, where Lauren stands in his path, and gives her a polite, lazy nod.",
+        "Lauren steps back against the front-row chair, her eyes widening as she looks him up and down, one hand rising to her pearl necklace."
        ]
-      },
-      "heading": {
-       "en": "EXT. GARDEN WEDDING - DAY",
-       "zh": "外景 花园婚礼 日"
       }
      }
     ],
@@ -3743,86 +3795,108 @@
    },
    {
     "title": {
-     "en": "The vows",
-     "zh": "誓言"
+     "en": "Pay Her",
+     "zh": "Pay Her"
     },
     "segments": [
      {
       "id": "seg01",
+      "heading": {
+       "en": "4-1 Day | Ext. Garden of the wedding venue",
+       "zh": "4-1 Day | Ext. Garden of the wedding venue"
+      },
       "shots": {
        "en": [
-        "Guests take their seats",
-        "Rhys smiles at Nora",
-        "Blair arrives with a gift"
+        "Natalie, bouquet at her waist, faces Sebastian under the flower-hung arch, with George beside her on the rose-bush side and the Officiant behind them. Cassie, a step in front of Natalie, tips the empty white gift box toward her with a smirk; Lauren stands against the front-row chair on the hedge side, and Guest 1 and Guest 2 watch from the cocktail table by the hedge with their flutes.",
+        "Lauren, leaning against the front-row chair on the hedge side, looks Natalie up and down and arches a brow; behind her, out of focus, Guest 1 and Guest 2 stand at the cocktail table with their flutes.",
+        "Natalie, under the arch, turns her head toward Lauren and holds her stepmother's eyes with a level, cold gaze.",
+        "Sebastian, on the hedge side of the arch, leans slightly toward Natalie with a lazy, amused half-smile, the back of Natalie's veil in the foreground.",
+        "Natalie, bouquet still at her waist, looks up at Sebastian and a small smile breaks across her face.",
+        "The Officiant, hands clasped, looks from Natalie to Sebastian; their shoulders show at both frame edges."
        ],
        "zh": [
-        "宾客落座",
-        "里斯冲诺拉微笑",
-        "布莱尔带着礼物来了"
+        "Natalie, bouquet at her waist, faces Sebastian under the flower-hung arch, with George beside her on the rose-bush side and the Officiant behind them. Cassie, a step in front of Natalie, tips the empty white gift box toward her with a smirk; Lauren stands against the front-row chair on the hedge side, and Guest 1 and Guest 2 watch from the cocktail table by the hedge with their flutes.",
+        "Lauren, leaning against the front-row chair on the hedge side, looks Natalie up and down and arches a brow; behind her, out of focus, Guest 1 and Guest 2 stand at the cocktail table with their flutes.",
+        "Natalie, under the arch, turns her head toward Lauren and holds her stepmother's eyes with a level, cold gaze.",
+        "Sebastian, on the hedge side of the arch, leans slightly toward Natalie with a lazy, amused half-smile, the back of Natalie's veil in the foreground.",
+        "Natalie, bouquet still at her waist, looks up at Sebastian and a small smile breaks across her face.",
+        "The Officiant, hands clasped, looks from Natalie to Sebastian; their shoulders show at both frame edges."
        ]
-      },
-      "heading": {
-       "en": "EXT. GARDEN WEDDING - DAY",
-       "zh": "外景 花园婚礼 日"
       }
      },
      {
       "id": "seg02",
+      "heading": {
+       "en": "4-1 Day | Ext. Garden of the wedding venue",
+       "zh": "4-1 Day | Ext. Garden of the wedding venue"
+      },
       "shots": {
        "en": [
-        "Blair holds out the gift box",
-        "Elias begins",
-        "Diane steps between them"
+        "Cassie steps past the front of Natalie to Sebastian's hedge side under the arch and reaches for his arm with a seductive smile, the empty gift box in her other hand; Natalie and the Officiant stand behind them.",
+        "Sebastian steps back out of Cassie's reach to Natalie's side and glances at Natalie; Cassie's hand closes on air and she backs off toward Lauren at the front-row chair on the hedge side.",
+        "At the cocktail table by the hedge, Guest 2 laughs into her champagne glass while Guest 1 beside her, flute in hand, covers a grin.",
+        "Cassie's smile drops; she flushes and glares toward the cocktail table, her fingers tightening on the gift box.",
+        "Natalie, under the arch, turns toward Lauren at the front-row chair on the hedge side and holds out her palm; George beside her grips the bouquet.",
+        "Lauren's hands clutch her small handbag tight against her hip, her diamond ring flashing."
        ],
        "zh": [
-        "布莱尔递上礼盒",
-        "伊莱亚斯开始主持",
-        "黛安挡在中间"
+        "Cassie steps past the front of Natalie to Sebastian's hedge side under the arch and reaches for his arm with a seductive smile, the empty gift box in her other hand; Natalie and the Officiant stand behind them.",
+        "Sebastian steps back out of Cassie's reach to Natalie's side and glances at Natalie; Cassie's hand closes on air and she backs off toward Lauren at the front-row chair on the hedge side.",
+        "At the cocktail table by the hedge, Guest 2 laughs into her champagne glass while Guest 1 beside her, flute in hand, covers a grin.",
+        "Cassie's smile drops; she flushes and glares toward the cocktail table, her fingers tightening on the gift box.",
+        "Natalie, under the arch, turns toward Lauren at the front-row chair on the hedge side and holds out her palm; George beside her grips the bouquet.",
+        "Lauren's hands clutch her small handbag tight against her hip, her diamond ring flashing."
        ]
-      },
-      "heading": {
-       "en": "EXT. GARDEN WEDDING - DAY",
-       "zh": "外景 花园婚礼 日"
       }
      },
      {
       "id": "seg03",
+      "heading": {
+       "en": "4-1 Day | Ext. Garden of the wedding venue",
+       "zh": "4-1 Day | Ext. Garden of the wedding venue"
+      },
       "shots": {
        "en": [
-        "June takes a photo",
-        "Diane checks her phone",
-        "A phone lights up on a chair"
+        "At the cocktail table by the hedge, Guest 1 sets her flute on the silver tray, pulls her pink phone from her clutch and raises it vertically toward the family to record, and Guest 2 leans in beside her with her champagne glass.",
+        "Lauren, at the front-row chair on the hedge side, spins toward the cocktail table and jabs a finger at Guest 1, Cassie beside her.",
+        "Sebastian, beside Natalie under the arch, spreads one hand toward the raised phone with a cool smile, his eyes on Lauren.",
+        "Natalie's eyes glisten and her jaw sets as she looks at Lauren.",
+        "George crosses from beside Natalie under the arch to Lauren's aisle side at the front-row chair, the bouquet in one hand, and grips her arm with the other, his face set.",
+        "Lauren pulls her phone in its lilac case from her handbag and stabs furiously at the banking transfer page with her thumb."
        ],
        "zh": [
-        "朴琼拍照",
-        "黛安看手机",
-        "椅子上的手机亮了"
+        "At the cocktail table by the hedge, Guest 1 sets her flute on the silver tray, pulls her pink phone from her clutch and raises it vertically toward the family to record, and Guest 2 leans in beside her with her champagne glass.",
+        "Lauren, at the front-row chair on the hedge side, spins toward the cocktail table and jabs a finger at Guest 1, Cassie beside her.",
+        "Sebastian, beside Natalie under the arch, spreads one hand toward the raised phone with a cool smile, his eyes on Lauren.",
+        "Natalie's eyes glisten and her jaw sets as she looks at Lauren.",
+        "George crosses from beside Natalie under the arch to Lauren's aisle side at the front-row chair, the bouquet in one hand, and grips her arm with the other, his face set.",
+        "Lauren pulls her phone in its lilac case from her handbag and stabs furiously at the banking transfer page with her thumb."
        ]
-      },
-      "heading": {
-       "en": "EXT. GARDEN WEDDING - DAY",
-       "zh": "外景 花园婚礼 日"
       }
      },
      {
       "id": "seg04",
+      "heading": {
+       "en": "4-1 Day | Ext. Garden of the wedding venue",
+       "zh": "4-1 Day | Ext. Garden of the wedding venue"
+      },
       "shots": {
        "en": [
-        "Blair crushes the ribbon",
-        "Diane walks off",
-        "Rhys hands Nora a key",
-        "Nora closes her hand"
+        "Cassie's hands crush the empty white gift box into a crumpled shape, its ribbon twisting.",
+        "Lauren turns on her heel from the front-row chair and marches down the petal aisle toward the gravel path, her face rigid.",
+        "George lays the bouquet on the front-row chair on the boxwood-hedge side, and he, Cassie with the crumpled box, Guest 1 and Guest 2 hurry down the aisle after Lauren and out onto the gravel path, leaving Natalie, Sebastian and the Officiant alone under the arch.",
+        "Sebastian places the brass house key into Natalie's open palm.",
+        "Natalie, at the rose-bush end of the arch, looks from the key up to Sebastian with a puzzled frown.",
+        "Sebastian leans closer to Natalie with a slow, confident smile."
        ],
        "zh": [
-        "布莱尔攥紧丝带",
-        "黛安走开",
-        "里斯把钥匙交给诺拉",
-        "诺拉握紧手"
+        "Cassie's hands crush the empty white gift box into a crumpled shape, its ribbon twisting.",
+        "Lauren turns on her heel from the front-row chair and marches down the petal aisle toward the gravel path, her face rigid.",
+        "George lays the bouquet on the front-row chair on the boxwood-hedge side, and he, Cassie with the crumpled box, Guest 1 and Guest 2 hurry down the aisle after Lauren and out onto the gravel path, leaving Natalie, Sebastian and the Officiant alone under the arch.",
+        "Sebastian places the brass house key into Natalie's open palm.",
+        "Natalie, at the rose-bush end of the arch, looks from the key up to Sebastian with a puzzled frown.",
+        "Sebastian leans closer to Natalie with a slow, confident smile."
        ]
-      },
-      "heading": {
-       "en": "EXT. GARDEN WEDDING - DAY",
-       "zh": "外景 花园婚礼 日"
       }
      }
     ],
@@ -3851,174 +3925,216 @@
    },
    {
     "title": {
-     "en": "Wedding night terms",
-     "zh": "新婚约法"
+     "en": "The Contract Bedroom",
+     "zh": "The Contract Bedroom"
     },
     "segments": [
      {
       "id": "seg01",
+      "heading": {
+       "en": "5-1 Night | Int. Sebastian's apartment, living room",
+       "zh": "5-1 Night | Int. Sebastian's apartment, living room"
+      },
       "shots": {
        "en": [
-        "Nora at the loft door",
-        "Rhys in his tuxedo",
-        "Rhys writes something down",
-        "Nora signs"
+        "Natalie stops in the bedroom doorway in her wedding gown and looks into the single bedroom. Sebastian stands on the window side of the coffee table, watching her.",
+        "Natalie turns her head from the bedroom toward Sebastian, her brows raised.",
+        "Sebastian stands by the coffee table and tips his head toward the couch with a relaxed look.",
+        "Natalie folds her arms across her bodice and lifts her chin.",
+        "Sebastian picks up the blank sheet of paper and the blue pen from the coffee table and holds them out toward Natalie.",
+        "Natalie walks from the doorway to the couch, sets her bag on the floor at the kitchenette end, sits there, takes the paper and pen from Sebastian and leans over the coffee table. Sebastian stays on the window side of the table."
        ],
        "zh": [
-        "诺拉站在公寓门口",
-        "穿着礼服的里斯",
-        "里斯写下几行字",
-        "诺拉签名"
+        "Natalie stops in the bedroom doorway in her wedding gown and looks into the single bedroom. Sebastian stands on the window side of the coffee table, watching her.",
+        "Natalie turns her head from the bedroom toward Sebastian, her brows raised.",
+        "Sebastian stands by the coffee table and tips his head toward the couch with a relaxed look.",
+        "Natalie folds her arms across her bodice and lifts her chin.",
+        "Sebastian picks up the blank sheet of paper and the blue pen from the coffee table and holds them out toward Natalie.",
+        "Natalie walks from the doorway to the couch, sets her bag on the floor at the kitchenette end, sits there, takes the paper and pen from Sebastian and leans over the coffee table. Sebastian stays on the window side of the table."
        ]
-      },
-      "heading": {
-       "en": "INT. RHYS'S LOFT - NIGHT",
-       "zh": "内景 里斯的公寓 夜"
       }
      },
      {
       "id": "seg02",
+      "heading": {
+       "en": "5-1 Night | Int. Sebastian's apartment, living room",
+       "zh": "5-1 Night | Int. Sebastian's apartment, living room"
+      },
       "shots": {
        "en": [
-        "Rhys watches her sign",
-        "Nora opens her bag",
-        "Rhys carries a pillow to the sofa"
+        "Sebastian holds up two fingers, then lowers his hand to the coffee table.",
+        "Natalie's hand signs her name at the bottom of the handwritten agreement.",
+        "Sebastian takes the pen from Natalie, bends over the coffee table and signs beneath her name while she watches.",
+        "Natalie lifts her unfastened pale-blue bag from the floor and sets it on the coffee table, its top gaping open.",
+        "A folded pale-blush lace bra slips out of the open bag and lands on the signed agreement.",
+        "Natalie, cheeks flushing, quickly scoops the lace bra back into her bag."
        ],
        "zh": [
-        "里斯看着她签字",
-        "诺拉打开包",
-        "里斯把枕头抱到沙发上"
+        "Sebastian holds up two fingers, then lowers his hand to the coffee table.",
+        "Natalie's hand signs her name at the bottom of the handwritten agreement.",
+        "Sebastian takes the pen from Natalie, bends over the coffee table and signs beneath her name while she watches.",
+        "Natalie lifts her unfastened pale-blue bag from the floor and sets it on the coffee table, its top gaping open.",
+        "A folded pale-blush lace bra slips out of the open bag and lands on the signed agreement.",
+        "Natalie, cheeks flushing, quickly scoops the lace bra back into her bag."
        ]
-      },
-      "heading": {
-       "en": "INT. RHYS'S LOFT - NIGHT",
-       "zh": "内景 里斯的公寓 夜"
       }
      },
      {
       "id": "seg03",
+      "heading": {
+       "en": "5-1 Night | Int. Sebastian's apartment, living room",
+       "zh": "5-1 Night | Int. Sebastian's apartment, living room"
+      },
       "shots": {
        "en": [
-        "Rhys in the doorway",
-        "Rhys on the sofa",
-        "Nora in her robe",
-        "A kiss"
+        "Sebastian pulls off his bow tie and tuxedo jacket and drops them over the couch arm.",
+        "Across the cut, Sebastian now wears a fitted white ribbed undershirt and black lounge trousers; he settles onto the couch at its kitchenette end and sets his black phone face down on the coffee table beside the agreement.",
+        "The bedroom door opens and Natalie steps into the doorway, barefoot, in the powder-blue camisole and sleep shorts with the ivory robe hanging open.",
+        "Sebastian looks up from the couch toward the doorway, one arm along the couch back.",
+        "Natalie holds the door frame, her eyes fixed on him, nervous and determined.",
+        "Sebastian rises and walks to the bedroom door, stopping one step in front of Natalie."
        ],
        "zh": [
-        "里斯站在门口",
-        "里斯靠在沙发上",
-        "穿着睡袍的诺拉",
-        "一个吻"
+        "Sebastian pulls off his bow tie and tuxedo jacket and drops them over the couch arm.",
+        "Across the cut, Sebastian now wears a fitted white ribbed undershirt and black lounge trousers; he settles onto the couch at its kitchenette end and sets his black phone face down on the coffee table beside the agreement.",
+        "The bedroom door opens and Natalie steps into the doorway, barefoot, in the powder-blue camisole and sleep shorts with the ivory robe hanging open.",
+        "Sebastian looks up from the couch toward the doorway, one arm along the couch back.",
+        "Natalie holds the door frame, her eyes fixed on him, nervous and determined.",
+        "Sebastian rises and walks to the bedroom door, stopping one step in front of Natalie."
        ]
-      },
-      "heading": {
-       "en": "INT. RHYS'S LOFT - NIGHT",
-       "zh": "内景 里斯的公寓 夜"
       }
      },
      {
       "id": "seg04",
+      "heading": {
+       "en": "5-1 Night | Int. Sebastian's apartment, living room",
+       "zh": "5-1 Night | Int. Sebastian's apartment, living room"
+      },
       "shots": {
        "en": [
-        "Rhys reads his phone",
-        "Rhys looks at the door"
+        "Natalie gives him a last look and closes the bedroom door between them.",
+        "Sebastian walks from the closed bedroom door back to the couch and sits at its kitchenette end.",
+        "Sebastian's black phone lights up on the coffee table beside the signed agreement.",
+        "Sebastian picks up the phone and taps open the notification, his face turning calm and focused in its glow.",
+        "The phone screen shows the private-banking notification on its dark background, as in the prop reference.",
+        "Sebastian's hand slides the phone face down beneath the signed agreement."
        ],
        "zh": [
-        "里斯看手机",
-        "里斯望向门口"
+        "Natalie gives him a last look and closes the bedroom door between them.",
+        "Sebastian walks from the closed bedroom door back to the couch and sits at its kitchenette end.",
+        "Sebastian's black phone lights up on the coffee table beside the signed agreement.",
+        "Sebastian picks up the phone and taps open the notification, his face turning calm and focused in its glow.",
+        "The phone screen shows the private-banking notification on its dark background, as in the prop reference.",
+        "Sebastian's hand slides the phone face down beneath the signed agreement."
        ]
-      },
-      "heading": {
-       "en": "INT. RHYS'S LOFT - NIGHT",
-       "zh": "内景 里斯的公寓 夜"
       }
      }
     ]
    },
    {
     "title": {
-     "en": "Morning after",
-     "zh": "第二天早上"
+     "en": "Couch Coins",
+     "zh": "Couch Coins"
     },
     "segments": [
      {
       "id": "seg01",
+      "heading": {
+       "en": "6-1 Day | Int. Sebastian's apartment, living room",
+       "zh": "6-1 Day | Int. Sebastian's apartment, living room"
+      },
       "shots": {
        "en": [
-        "Morning in the loft",
-        "Rhys holds a blanket",
-        "Nora carries the dress bag",
-        "Two coins in his hand"
+        "Sunlit living room. Natalie sets two plates of scrambled eggs, toast and strawberries on the round dining table. Sebastian, by the charcoal couch, shakes out the oatmeal-grey blanket and starts folding it.",
+        "Sebastian folds the blanket in half against his chest and looks across toward the dining table with a lazy half-smile.",
+        "Natalie sets a mug of black coffee beside a plate without looking up, her jaw set.",
+        "Sebastian's smile widens slightly; he drops the folded blanket onto the couch cushions.",
+        "Natalie lifts the long white dress bag off the back of the dining chair and drapes it over her left arm.",
+        "Natalie's shoulder and the dress bag fill the frame edge; Sebastian, beyond her by the couch, nods at the bag and raises an eyebrow."
        ],
        "zh": [
-        "公寓里的早晨",
-        "里斯抱着毯子",
-        "诺拉提着婚纱袋",
-        "他手里的两枚硬币"
+        "Sunlit living room. Natalie sets two plates of scrambled eggs, toast and strawberries on the round dining table. Sebastian, by the charcoal couch, shakes out the oatmeal-grey blanket and starts folding it.",
+        "Sebastian folds the blanket in half against his chest and looks across toward the dining table with a lazy half-smile.",
+        "Natalie sets a mug of black coffee beside a plate without looking up, her jaw set.",
+        "Sebastian's smile widens slightly; he drops the folded blanket onto the couch cushions.",
+        "Natalie lifts the long white dress bag off the back of the dining chair and drapes it over her left arm.",
+        "Natalie's shoulder and the dress bag fill the frame edge; Sebastian, beyond her by the couch, nods at the bag and raises an eyebrow."
        ]
-      },
-      "heading": {
-       "en": "INT. RHYS'S LOFT - DAY",
-       "zh": "内景 里斯的公寓 日"
       }
      },
      {
       "id": "seg02",
+      "heading": {
+       "en": "6-1 Day | Int. Sebastian's apartment, living room",
+       "zh": "6-1 Day | Int. Sebastian's apartment, living room"
+      },
       "shots": {
        "en": [
-        "Nora leaves",
-        "Rhys picks up the coins",
-        "A call comes in"
+        "Natalie walks to the front door on the left wall, takes the cropped ivory bouclé jacket off the wall hook and pulls it on over her dress, the dress bag still on her arm; Sebastian stays by the couch watching her.",
+        "Natalie, now in the open cropped jacket, opens the dark-grey front door, glances back once, steps out and the door swings shut behind her.",
+        "Sebastian walks to the round dining table and stops on its couch side, opening his hand over the table.",
+        "Sebastian's fingers set the two coins down beside his face-down phone.",
+        "Sebastian picks up the phone, taps it and lifts it to his ear; his lazy smile drops into a cold, focused look.",
+        "Sebastian speaks low into the phone, eyes fixed on the closed front door."
        ],
        "zh": [
-        "诺拉出门",
-        "里斯捡起硬币",
-        "来了一个电话"
+        "Natalie walks to the front door on the left wall, takes the cropped ivory bouclé jacket off the wall hook and pulls it on over her dress, the dress bag still on her arm; Sebastian stays by the couch watching her.",
+        "Natalie, now in the open cropped jacket, opens the dark-grey front door, glances back once, steps out and the door swings shut behind her.",
+        "Sebastian walks to the round dining table and stops on its couch side, opening his hand over the table.",
+        "Sebastian's fingers set the two coins down beside his face-down phone.",
+        "Sebastian picks up the phone, taps it and lifts it to his ear; his lazy smile drops into a cold, focused look.",
+        "Sebastian speaks low into the phone, eyes fixed on the closed front door."
        ]
-      },
-      "heading": {
-       "en": "INT. RHYS'S LOFT - DAY",
-       "zh": "内景 里斯的公寓 日"
       }
      },
      {
       "id": "seg03",
+      "heading": {
+       "en": "6-2 Day | Int. Sebastian's apartment, living room",
+       "zh": "6-2 Day | Int. Sebastian's apartment, living room"
+      },
       "shots": {
        "en": [
-        "Owen arrives",
-        "Rhys reads the papers",
-        "A payment confirmed",
-        "Rhys looks out the window"
+        "Daniel lays the manila folder on the round dining table in front of Sebastian, who sits in the dining chair.",
+        "Sebastian flips the folder open; a single creased sheet slides out onto the table.",
+        "The hospital statement lies on the table beside the open folder, its header and total legible.",
+        "Sebastian's shoulder at the frame edge; Daniel, across the table, adjusts his rimless glasses.",
+        "Daniel is off screen. Sebastian picks up the hospital statement and reads it, his jaw tightening.",
+        "Sebastian lowers the sheet, his steel-grey eyes hard."
        ],
        "zh": [
-        "欧文来了",
-        "里斯看文件",
-        "付款成功",
-        "里斯望向窗外"
+        "Daniel lays the manila folder on the round dining table in front of Sebastian, who sits in the dining chair.",
+        "Sebastian flips the folder open; a single creased sheet slides out onto the table.",
+        "The hospital statement lies on the table beside the open folder, its header and total legible.",
+        "Sebastian's shoulder at the frame edge; Daniel, across the table, adjusts his rimless glasses.",
+        "Daniel is off screen. Sebastian picks up the hospital statement and reads it, his jaw tightening.",
+        "Sebastian lowers the sheet, his steel-grey eyes hard."
        ]
-      },
-      "heading": {
-       "en": "INT. RHYS'S LOFT - DAY",
-       "zh": "内景 里斯的公寓 日"
       }
      },
      {
       "id": "seg04",
+      "heading": {
+       "en": "6-2 Day | Int. Sebastian's apartment, living room",
+       "zh": "6-2 Day | Int. Sebastian's apartment, living room"
+      },
       "shots": {
        "en": [
-        "Owen waits",
-        "Rhys smiles",
-        "Owen sees him out"
+        "Sebastian sits at the dining table; Daniel slips his phone away, takes a black car key fob from his pocket and sets it beside the two coins.",
+        "The black car key fob lies next to the two silver quarters.",
+        "Sebastian picks up the car key and turns it once between his fingers.",
+        "Daniel folds his hands in front of him, a faint doubtful look behind his glasses.",
+        "Sebastian gives a slow, private smile.",
+        "Sebastian's hand scoops the two coins off the table and slides them into his chino pocket."
        ],
        "zh": [
-        "欧文等着",
-        "里斯笑了",
-        "欧文送他出门"
+        "Sebastian sits at the dining table; Daniel slips his phone away, takes a black car key fob from his pocket and sets it beside the two coins.",
+        "The black car key fob lies next to the two silver quarters.",
+        "Sebastian picks up the car key and turns it once between his fingers.",
+        "Daniel folds his hands in front of him, a faint doubtful look behind his glasses.",
+        "Sebastian gives a slow, private smile.",
+        "Sebastian's hand scoops the two coins off the table and slides them into his chino pocket."
        ]
-      },
-      "heading": {
-       "en": "INT. RHYS'S LOFT - DAY",
-       "zh": "内景 里斯的公寓 日"
       }
      }
     ],
@@ -4045,16 +4161,155 @@
      }
     ]
    }
-  ]
+  ],
+  "versions": {
+   "assets/characters/cassie": "v1",
+   "assets/characters/cassie/states/S1": "v2",
+   "assets/characters/daniel": "v1",
+   "assets/characters/george": "v1",
+   "assets/characters/george/states/S1": "v1",
+   "assets/characters/guest_1": "v1",
+   "assets/characters/guest_2": "v1",
+   "assets/characters/lauren": "v1",
+   "assets/characters/lauren/states/S1": "v1",
+   "assets/characters/natalie": "v1",
+   "assets/characters/natalie/states/S1": "v1",
+   "assets/characters/natalie/states/S2": "v3",
+   "assets/characters/natalie/states/S3": "v1",
+   "assets/characters/natalie/states/S4": "v1",
+   "assets/characters/officer": "v1",
+   "assets/characters/officiant": "v1",
+   "assets/characters/sebastian": "v2",
+   "assets/characters/sebastian/states/S1": "v1",
+   "assets/characters/sebastian/states/S2": "v1",
+   "assets/characters/sebastian/states/S3": "v1",
+   "assets/characters/sebastian/states/S4": "v1",
+   "assets/props/agreement": "v1",
+   "assets/props/blanket": "v1",
+   "assets/props/bouquet": "v1",
+   "assets/props/breakfast": "v1",
+   "assets/props/car_key": "v1",
+   "assets/props/champagne_glasses": "v1",
+   "assets/props/coins": "v1",
+   "assets/props/daniel_phone": "v1",
+   "assets/props/dress_bag": "v1",
+   "assets/props/expensive_car": "v1",
+   "assets/props/folder": "v1",
+   "assets/props/front_door_key": "v1",
+   "assets/props/gift_box": "v1",
+   "assets/props/guest_phone": "v1",
+   "assets/props/hospital_statement": "v3",
+   "assets/props/lace_bra": "v1",
+   "assets/props/lauren_phone": "v1",
+   "assets/props/natalie_bag": "v1",
+   "assets/props/natalie_phone": "v1",
+   "assets/props/pillow": "v1",
+   "assets/props/release_form": "v2",
+   "assets/props/sebastian_phone": "v1",
+   "assets/scenes/jail_cell": "v1",
+   "assets/scenes/jail_front_desk": "v1",
+   "assets/scenes/jail_street": "v1",
+   "assets/scenes/mansion_living_room": "v4",
+   "assets/scenes/sebastian_apartment": "v1",
+   "assets/scenes/sebastian_apartment/times/Night": "v1",
+   "assets/scenes/wedding_garden": "v1",
+   "bible": "v3",
+   "episodes/EP001/blocking/seg01": "v6",
+   "episodes/EP001/blocking/seg02": "v6",
+   "episodes/EP001/blocking/seg03": "v8",
+   "episodes/EP001/breakdown": "v2",
+   "episodes/EP001/first_frame_reference/seg01": "v1",
+   "episodes/EP001/multi_panel_storyboard/seg01/line-art": "v4",
+   "episodes/EP001/multi_panel_storyboard/seg02/line-art": "v7",
+   "episodes/EP001/multi_panel_storyboard/seg03/line-art": "v2",
+   "episodes/EP001/segments/seg01": "t02",
+   "episodes/EP001/segments/seg02": "t01",
+   "episodes/EP001/segments/seg03": "t01",
+   "episodes/EP002/blocking/seg01": "v1",
+   "episodes/EP002/blocking/seg02": "v1",
+   "episodes/EP002/blocking/seg03": "v1",
+   "episodes/EP002/blocking/seg04": "v1",
+   "episodes/EP002/breakdown": "v2",
+   "episodes/EP002/first_frame_reference/seg01": "v2",
+   "episodes/EP002/first_frame_reference/seg02": "v1",
+   "episodes/EP002/first_frame_reference/seg03": "v2",
+   "episodes/EP002/multi_panel_storyboard/seg01/line-art": "v1",
+   "episodes/EP002/multi_panel_storyboard/seg02/line-art": "v4",
+   "episodes/EP002/multi_panel_storyboard/seg03/line-art": "v5",
+   "episodes/EP002/multi_panel_storyboard/seg04/line-art": "v6",
+   "episodes/EP002/segments/seg01": "t03",
+   "episodes/EP002/segments/seg02": "t02",
+   "episodes/EP002/segments/seg03": "t02",
+   "episodes/EP002/segments/seg04": "t01",
+   "episodes/EP003/blocking/seg01": "v1",
+   "episodes/EP003/blocking/seg02": "v1",
+   "episodes/EP003/blocking/seg03": "v1",
+   "episodes/EP003/blocking/seg04": "v1",
+   "episodes/EP003/breakdown": "v2",
+   "episodes/EP003/edit": "v1",
+   "episodes/EP003/multi_panel_storyboard/seg01/line-art": "v1",
+   "episodes/EP003/multi_panel_storyboard/seg02/line-art": "v1",
+   "episodes/EP003/multi_panel_storyboard/seg03/line-art": "v1",
+   "episodes/EP003/multi_panel_storyboard/seg04/line-art": "v1",
+   "episodes/EP003/segments/seg01": "t01",
+   "episodes/EP003/segments/seg02": "t01",
+   "episodes/EP003/segments/seg03": "t01",
+   "episodes/EP003/segments/seg04": "t01",
+   "episodes/EP004/blocking/seg01": "v2",
+   "episodes/EP004/blocking/seg02": "v2",
+   "episodes/EP004/blocking/seg03": "v2",
+   "episodes/EP004/blocking/seg04": "v2",
+   "episodes/EP004/breakdown": "v3",
+   "episodes/EP004/edit": "v1",
+   "episodes/EP004/first_frame_reference/seg01": "v1",
+   "episodes/EP004/multi_panel_storyboard/seg01/line-art": "v1",
+   "episodes/EP004/multi_panel_storyboard/seg02/line-art": "v1",
+   "episodes/EP004/multi_panel_storyboard/seg03/line-art": "v1",
+   "episodes/EP004/multi_panel_storyboard/seg04/line-art": "v1",
+   "episodes/EP004/segments/seg01": "t02",
+   "episodes/EP004/segments/seg02": "t01",
+   "episodes/EP004/segments/seg03": "t01",
+   "episodes/EP004/segments/seg04": "t01",
+   "episodes/EP005/blocking/seg01": "v1",
+   "episodes/EP005/blocking/seg02": "v1",
+   "episodes/EP005/blocking/seg03": "v2",
+   "episodes/EP005/blocking/seg04": "v2",
+   "episodes/EP005/breakdown": "v1",
+   "episodes/EP005/first_frame_reference/seg01": "v1",
+   "episodes/EP005/multi_panel_storyboard/seg01/line-art": "v1",
+   "episodes/EP005/multi_panel_storyboard/seg02/line-art": "v1",
+   "episodes/EP005/multi_panel_storyboard/seg03/line-art": "v3",
+   "episodes/EP005/multi_panel_storyboard/seg04/line-art": "v2",
+   "episodes/EP005/segments/seg01": "t02",
+   "episodes/EP005/segments/seg02": "t03",
+   "episodes/EP005/segments/seg03": "t02",
+   "episodes/EP005/segments/seg04": "t01",
+   "episodes/EP006/blocking/seg01": "v1",
+   "episodes/EP006/blocking/seg02": "v1",
+   "episodes/EP006/blocking/seg03": "v1",
+   "episodes/EP006/blocking/seg04": "v1",
+   "episodes/EP006/breakdown": "v1",
+   "episodes/EP006/edit": "v2",
+   "episodes/EP006/first_frame_reference/seg01": "v1",
+   "episodes/EP006/first_frame_reference/seg03": "v1",
+   "episodes/EP006/multi_panel_storyboard/seg01/line-art": "v1",
+   "episodes/EP006/multi_panel_storyboard/seg02/line-art": "v1",
+   "episodes/EP006/multi_panel_storyboard/seg03/line-art": "v1",
+   "episodes/EP006/multi_panel_storyboard/seg04/line-art": "v1",
+   "episodes/EP006/segments/seg01": "t02",
+   "episodes/EP006/segments/seg02": "t01",
+   "episodes/EP006/segments/seg03": "t02",
+   "episodes/EP006/segments/seg04": "t02"
+  }
  },
  "late-sunshine": {
   "title": {
-   "en": "Late Sunshine",
-   "zh": "晚来的晴天"
+   "en": "False Intentions, True Love",
+   "zh": "False Intentions, True Love"
   },
   "logline": {
-   "en": "A CEO hires a broke young man to play her boyfriend in front of her family, and the act soon stops being one.",
-   "zh": "女总裁雇了个穷小子在家人面前扮男友，戏演着演着就成了真。"
+   "en": "Five years after 纪宏远 drove away her first love, 纪然 refuses to be traded into a marriage with 路少泽 and holds an open audition for a husband. The late, rain-soaked 'college student' 林青羽 who walks in is secretly a boss in disguise, and the younger brother of her best friend Su Yaqing.",
+   "zh": "Five years after 纪宏远 drove away her first love, 纪然 refuses to be traded into a marriage with 路少泽 and holds an open audition for a husband. The late, rain-soaked 'college student' 林青羽 who walks in is secretly a boss in disguise, and the younger brother of her best friend Su Yaqing."
   },
   "genres": {
    "en": [
@@ -4071,14 +4326,14 @@
   "ago": 380,
   "cast": [
    {
-    "id": "qiao",
+    "id": "ji_ran",
     "name": {
-     "en": "Qiao An",
-     "zh": "乔安"
+     "en": "纪然",
+     "zh": "纪然"
     },
     "short": {
-     "en": "Qiao",
-     "zh": "乔安"
+     "en": "纪然",
+     "zh": "纪然"
     },
     "looks": [
      "S1",
@@ -4087,14 +4342,14 @@
     ]
    },
    {
-    "id": "cheng",
+    "id": "lin_qingyu",
     "name": {
-     "en": "Cheng Ye",
-     "zh": "程野"
+     "en": "林青羽",
+     "zh": "林青羽"
     },
     "short": {
-     "en": "Cheng",
-     "zh": "程野"
+     "en": "林青羽",
+     "zh": "林青羽"
     },
     "looks": [
      "S1",
@@ -4102,176 +4357,176 @@
     ]
    },
    {
-    "id": "zhou",
+    "id": "blue_tank_top_applicant",
     "name": {
-     "en": "Zhou Jingchuan",
-     "zh": "周景川"
+     "en": "BLUE-TANK-TOP APPLICANT",
+     "zh": "BLUE-TANK-TOP APPLICANT"
     },
     "short": {
-     "en": "Zhou",
-     "zh": "周景川"
+     "en": "BLUE-TANK-TOP APPLICANT",
+     "zh": "BLUE-TANK-TOP APPLICANT"
+    }
+   },
+   {
+    "id": "gray_shirt_applicant",
+    "name": {
+     "en": "GRAY-SHIRT APPLICANT",
+     "zh": "GRAY-SHIRT APPLICANT"
+    },
+    "short": {
+     "en": "GRAY-SHIRT APPLICANT",
+     "zh": "GRAY-SHIRT APPLICANT"
+    }
+   },
+   {
+    "id": "green_shirt_applicant",
+    "name": {
+     "en": "GREEN-SHIRT APPLICANT",
+     "zh": "GREEN-SHIRT APPLICANT"
+    },
+    "short": {
+     "en": "GREEN-SHIRT APPLICANT",
+     "zh": "GREEN-SHIRT APPLICANT"
+    }
+   },
+   {
+    "id": "ji_hongyuan",
+    "name": {
+     "en": "纪宏远",
+     "zh": "纪宏远"
+    },
+    "short": {
+     "en": "纪宏远",
+     "zh": "纪宏远"
+    }
+   },
+   {
+    "id": "lu_shaoze",
+    "name": {
+     "en": "路少泽",
+     "zh": "路少泽"
+    },
+    "short": {
+     "en": "路少泽",
+     "zh": "路少泽"
     },
     "looks": [
      "S1"
     ]
    },
    {
-    "id": "qiao_father",
+    "id": "shirtless_applicant",
     "name": {
-     "en": "Qiao Zhendong",
-     "zh": "乔振东"
+     "en": "SHIRTLESS APPLICANT",
+     "zh": "SHIRTLESS APPLICANT"
     },
     "short": {
-     "en": "Zhendong",
-     "zh": "乔振东"
-    }
-   },
-   {
-    "id": "bai",
-    "name": {
-     "en": "Bai Lu",
-     "zh": "白露"
-    },
-    "short": {
-     "en": "Bai",
-     "zh": "白露"
-    }
-   },
-   {
-    "id": "fang",
-    "name": {
-     "en": "Fang Yuan",
-     "zh": "方圆"
-    },
-    "short": {
-     "en": "Fang",
-     "zh": "方圆"
-    }
-   },
-   {
-    "id": "applicant_a",
-    "name": {
-     "en": "Applicant A",
-     "zh": "应聘者甲"
-    },
-    "short": {
-     "en": "Applicant A",
-     "zh": "应聘者甲"
-    }
-   },
-   {
-    "id": "applicant_b",
-    "name": {
-     "en": "Applicant B",
-     "zh": "应聘者乙"
-    },
-    "short": {
-     "en": "Applicant B",
-     "zh": "应聘者乙"
-    }
-   },
-   {
-    "id": "applicant_c",
-    "name": {
-     "en": "Applicant C",
-     "zh": "应聘者丙"
-    },
-    "short": {
-     "en": "Applicant C",
-     "zh": "应聘者丙"
-    }
-   },
-   {
-    "id": "applicant_d",
-    "name": {
-     "en": "Applicant D",
-     "zh": "应聘者丁"
-    },
-    "short": {
-     "en": "Applicant D",
-     "zh": "应聘者丁"
+     "en": "SHIRTLESS APPLICANT",
+     "zh": "SHIRTLESS APPLICANT"
     },
     "looks": [
      "S1"
     ]
+   },
+   {
+    "id": "su_yaqing",
+    "name": {
+     "en": "Su Yaqing",
+     "zh": "Su Yaqing"
+    },
+    "short": {
+     "en": "Su Yaqing",
+     "zh": "Su Yaqing"
+    }
+   },
+   {
+    "id": "xu_banxia",
+    "name": {
+     "en": "许半夏",
+     "zh": "许半夏"
+    },
+    "short": {
+     "en": "许半夏",
+     "zh": "许半夏"
+    }
    }
   ],
   "places": [
    {
-    "id": "corridor",
+    "id": "apartment_corridor",
     "name": {
-     "en": "Apartment corridor",
-     "zh": "公寓走廊"
+     "en": "APARTMENT CORRIDOR",
+     "zh": "APARTMENT CORRIDOR"
     },
     "times": [
      "Night"
     ]
    },
    {
-    "id": "lobby",
+    "id": "apartment_entrance",
     "name": {
-     "en": "Elevator lobby",
-     "zh": "电梯厅"
+     "en": "JI RAN'S APARTMENT ENTRANCE",
+     "zh": "JI RAN'S APARTMENT ENTRANCE"
     },
     "times": [
      "Night"
     ]
    },
    {
-    "id": "avenue",
+    "id": "city_road",
     "name": {
-     "en": "City avenue",
-     "zh": "城市大道"
+     "en": "CITY ARTERIAL ROAD",
+     "zh": "CITY ARTERIAL ROAD"
     },
     "times": [
      "Night"
     ]
    },
    {
-    "id": "family_hall",
+    "id": "ji_family_living_room",
     "name": {
-     "en": "The Qiao family hall",
-     "zh": "乔家客厅"
+     "en": "JI FAMILY LIVING ROOM",
+     "zh": "JI FAMILY LIVING ROOM"
     },
     "times": [
      "Day"
     ]
    },
    {
-    "id": "penthouse",
+    "id": "ji_ran_living_room",
     "name": {
-     "en": "Qiao's penthouse",
-     "zh": "乔安的客厅"
+     "en": "JI RAN'S LIVING ROOM",
+     "zh": "JI RAN'S LIVING ROOM"
     },
     "times": [
      "Night"
     ]
    },
    {
-    "id": "office",
+    "id": "ji_ran_office",
     "name": {
-     "en": "Qiao's office",
-     "zh": "乔安的办公室"
+     "en": "JI RAN'S OFFICE",
+     "zh": "JI RAN'S OFFICE"
     },
     "times": [
      "Day"
     ]
    },
    {
-    "id": "dining",
+    "id": "su_dining_area",
     "name": {
-     "en": "Bai's dining room",
-     "zh": "白露家的餐厅"
+     "en": "SU YAQING'S DINING AREA",
+     "zh": "SU YAQING'S DINING AREA"
     },
     "times": [
      "Day"
     ]
    },
    {
-    "id": "flat",
+    "id": "su_living_room",
     "name": {
-     "en": "Bai's living room",
-     "zh": "白露家的客厅"
+     "en": "SU YAQING'S LIVING ROOM",
+     "zh": "SU YAQING'S LIVING ROOM"
     },
     "times": [
      "Day"
@@ -4280,515 +4535,736 @@
   ],
   "props": [
    {
-    "id": "handbag",
+    "id": "black_handbag",
     "name": {
-     "en": "Black handbag",
-     "zh": "黑色手提包"
+     "en": "black handbag",
+     "zh": "black handbag"
     }
    },
    {
-    "id": "coffee",
+    "id": "coffee_cup",
     "name": {
-     "en": "Coffee cup",
-     "zh": "咖啡杯"
+     "en": "coffee",
+     "zh": "coffee"
     }
    },
    {
-    "id": "envelope",
+    "id": "document_envelope",
     "name": {
-     "en": "Kraft envelope",
-     "zh": "牛皮纸信封"
+     "en": "document envelope",
+     "zh": "document envelope"
     }
    },
    {
     "id": "dumbbell",
     "name": {
-     "en": "Dumbbell",
-     "zh": "哑铃"
+     "en": "small dumbbell",
+     "zh": "small dumbbell"
     }
    },
    {
-    "id": "groceries",
+    "id": "grocery_bag",
     "name": {
-     "en": "Grocery bag",
-     "zh": "购物袋"
+     "en": "grocery bag full of greens",
+     "zh": "grocery bag full of greens"
     }
    },
    {
-    "id": "glass",
+    "id": "lin_glass",
     "name": {
-     "en": "Water glass",
-     "zh": "水杯"
+     "en": "glass",
+     "zh": "glass"
     }
    },
    {
-    "id": "cheng_phone",
+    "id": "lin_phone",
     "name": {
-     "en": "Cheng's phone",
-     "zh": "程野的手机"
+     "en": "call phone",
+     "zh": "call phone"
     }
    },
    {
-    "id": "pour_over",
+    "id": "pour_over_set",
     "name": {
-     "en": "Pour-over set",
-     "zh": "手冲咖啡壶"
+     "en": "pour-over coffee equipment",
+     "zh": "pour-over coffee equipment"
     }
    },
    {
-    "id": "video_call",
+    "id": "su_phone",
     "name": {
-     "en": "Video call",
-     "zh": "视频通话"
+     "en": "video-calling phone",
+     "zh": "video-calling phone"
     }
    }
   ],
   "episodes": [
    {
     "title": {
-     "en": "Morning coffee",
-     "zh": "清晨的咖啡"
+     "en": "I Choose My Own Man",
+     "zh": "I Choose My Own Man"
     },
     "segments": [
      {
       "id": "seg01",
+      "heading": {
+       "en": "INT. JI RAN'S OFFICE - DAY",
+       "zh": "INT. JI RAN'S OFFICE - DAY"
+      },
       "shots": {
        "en": [
-        "Qiao pours coffee in her office",
-        "Coffee drips",
-        "Qiao looks out the window",
-        "Her hand on the plans"
+        "Ji Ran stands behind the walnut desk with the windows glowing behind her. One hand is braced on the desk while she pours water from the kettle into the dripper. Her face is cold.",
+        "Water spirals from the kettle spout into the paper filter, and dark coffee drips into the glass server.",
+        "Ji Ran keeps pouring with her mouth closed, and her eyes lift coldly from the dripper.",
+        "Ji Ran sets the kettle down on the walnut desk and straightens, leaning on her braced hand with her mouth closed.",
+        "Ji Ran gives a thin, icy smile.",
+        "Ji Ran's fingers press down hard on the architectural plans beside the white coffee cup."
        ],
        "zh": [
-        "乔安在办公室冲咖啡",
-        "咖啡滴落",
-        "乔安看向窗外",
-        "她的手按在图纸上"
+        "Ji Ran stands behind the walnut desk with the windows glowing behind her. One hand is braced on the desk while she pours water from the kettle into the dripper. Her face is cold.",
+        "Water spirals from the kettle spout into the paper filter, and dark coffee drips into the glass server.",
+        "Ji Ran keeps pouring with her mouth closed, and her eyes lift coldly from the dripper.",
+        "Ji Ran sets the kettle down on the walnut desk and straightens, leaning on her braced hand with her mouth closed.",
+        "Ji Ran gives a thin, icy smile.",
+        "Ji Ran's fingers press down hard on the architectural plans beside the white coffee cup."
        ]
-      },
-      "heading": {
-       "en": "INT. QIAO'S OFFICE - DAY",
-       "zh": "内景 乔安的办公室 日"
       }
      },
      {
       "id": "seg02",
+      "heading": {
+       "en": "INT. JI FAMILY LIVING ROOM - DAY",
+       "zh": "INT. JI FAMILY LIVING ROOM - DAY"
+      },
       "shots": {
        "en": [
-        "The Qiao family hall",
-        "Zhendong on the sofa",
-        "Cheng stands, head down",
-        "Zhendong points at him",
-        "Cheng picks up the envelope",
-        "Qiao listens behind the door"
+        "Garden leaves sway in warm sunlight beyond the glass, casting dappled light.",
+        "Ji Hongyuan sits on the beige sofa. Lu Shaoze stands with his head bowed across the marble coffee table from him, and the document envelope lies between them.",
+        "Ji Hongyuan sweeps the document envelope off the marble table with the back of his hand, and it drops onto the ivory carpet at Lu Shaoze's feet.",
+        "Lu Shaoze's lowered head is in the foreground. Ji Hongyuan leans back on the sofa and stares at him with contempt.",
+        "Lu Shaoze keeps his eyes on the envelope on the carpet. His jaw tightens and his hands curl at his sides.",
+        "Ji Hongyuan points a ringed finger at Lu Shaoze."
        ],
        "zh": [
-        "乔家客厅",
-        "乔振东坐在沙发上",
-        "程野低头站着",
-        "乔振东指着他",
-        "程野捡起信封",
-        "乔安在门后偷听"
+        "Garden leaves sway in warm sunlight beyond the glass, casting dappled light.",
+        "Ji Hongyuan sits on the beige sofa. Lu Shaoze stands with his head bowed across the marble coffee table from him, and the document envelope lies between them.",
+        "Ji Hongyuan sweeps the document envelope off the marble table with the back of his hand, and it drops onto the ivory carpet at Lu Shaoze's feet.",
+        "Lu Shaoze's lowered head is in the foreground. Ji Hongyuan leans back on the sofa and stares at him with contempt.",
+        "Lu Shaoze keeps his eyes on the envelope on the carpet. His jaw tightens and his hands curl at his sides.",
+        "Ji Hongyuan points a ringed finger at Lu Shaoze."
        ]
-      },
-      "heading": {
-       "en": "INT. QIAO FAMILY HALL - DAY",
-       "zh": "内景 乔家客厅 日"
       }
      },
      {
       "id": "seg03",
+      "heading": {
+       "en": "INT. JI RAN'S OFFICE - DAY",
+       "zh": "INT. JI RAN'S OFFICE - DAY"
+      },
       "shots": {
        "en": [
-        "Qiao sips her coffee",
-        "She sets the cup down",
-        "Close on Qiao"
+        "Ji Ran raises the white coffee cup to her lips and sips.",
+        "Ji Ran lowers the cup with her mouth closed, staring past the office door with the windows bright behind her.",
+        "Ji Ran sets the white coffee cup down hard beside the glass server, and the coffee ripples.",
+        "Ji Ran's eyes narrow with her mouth closed, and her hand stays on the cup.",
+        "Ji Ran's gaze hardens into cold resolve, her mouth firmly closed."
        ],
        "zh": [
-        "乔安喝咖啡",
-        "她放下杯子",
-        "特写：乔安"
+        "Ji Ran raises the white coffee cup to her lips and sips.",
+        "Ji Ran lowers the cup with her mouth closed, staring past the office door with the windows bright behind her.",
+        "Ji Ran sets the white coffee cup down hard beside the glass server, and the coffee ripples.",
+        "Ji Ran's eyes narrow with her mouth closed, and her hand stays on the cup.",
+        "Ji Ran's gaze hardens into cold resolve, her mouth firmly closed."
        ]
-      },
-      "heading": {
-       "en": "INT. QIAO'S OFFICE - DAY",
-       "zh": "内景 乔安的办公室 日"
       }
      },
      {
       "id": "seg04",
+      "heading": {
+       "en": "INT. SU YAQING'S LIVING ROOM - DAY",
+       "zh": "INT. SU YAQING'S LIVING ROOM - DAY"
+      },
       "shots": {
        "en": [
-        "Bai curls up on the sofa",
-        "Bai reads her phone",
-        "Bai is startled",
-        "Bai laughs"
+        "Su Yaqing lounges on the cream sofa with her long legs crossed, smiling at the phone she holds up, mouth closed.",
+        "Su Yaqing's eyebrows rise and she stops smiling, mouth closed.",
+        "Su Yaqing leans forward toward the phone, her mouth falling open in surprise.",
+        "Su Yaqing's shoulder and curls fill the foreground, and the phone screen shows the video call.",
+        "Su Yaqing blinks twice, mouth closed, then her lips press against a laugh.",
+        "Su Yaqing bursts out laughing and slaps a pastel cushion beside her."
        ],
        "zh": [
-        "白露窝在沙发上",
-        "白露看手机",
-        "白露吓了一跳",
-        "白露笑出声"
+        "Su Yaqing lounges on the cream sofa with her long legs crossed, smiling at the phone she holds up, mouth closed.",
+        "Su Yaqing's eyebrows rise and she stops smiling, mouth closed.",
+        "Su Yaqing leans forward toward the phone, her mouth falling open in surprise.",
+        "Su Yaqing's shoulder and curls fill the foreground, and the phone screen shows the video call.",
+        "Su Yaqing blinks twice, mouth closed, then her lips press against a laugh.",
+        "Su Yaqing bursts out laughing and slaps a pastel cushion beside her."
        ]
-      },
-      "heading": {
-       "en": "INT. BAI'S LIVING ROOM - DAY",
-       "zh": "内景 白露家的客厅 日"
       }
      },
      {
       "id": "seg05",
+      "heading": {
+       "en": "INT. SU YAQING'S LIVING ROOM - DAY",
+       "zh": "INT. SU YAQING'S LIVING ROOM - DAY"
+      },
       "shots": {
        "en": [
-        "Bai with her phone",
-        "Bai rolls her eyes",
-        "A video call"
+        "Su Yaqing's laughter fades. She nods slowly at the phone with her mouth closed.",
+        "Su Yaqing rolls her eyes with her mouth closed.",
+        "Su Yaqing tosses a pastel cushion aside and leans back, mouth closed.",
+        "Su Yaqing sits up straight, her eyes lighting up with an idea.",
+        "Su Yaqing tilts the phone closer to her face with a sly smile.",
+        "Su Yaqing wiggles her shoulders playfully in the foreground, and the video call glows on the phone screen."
        ],
        "zh": [
-        "白露对着手机",
-        "白露翻了个白眼",
-        "视频通话"
+        "Su Yaqing's laughter fades. She nods slowly at the phone with her mouth closed.",
+        "Su Yaqing rolls her eyes with her mouth closed.",
+        "Su Yaqing tosses a pastel cushion aside and leans back, mouth closed.",
+        "Su Yaqing sits up straight, her eyes lighting up with an idea.",
+        "Su Yaqing tilts the phone closer to her face with a sly smile.",
+        "Su Yaqing wiggles her shoulders playfully in the foreground, and the video call glows on the phone screen."
        ]
-      },
-      "heading": {
-       "en": "INT. BAI'S LIVING ROOM - DAY",
-       "zh": "内景 白露家的客厅 日"
       }
      },
      {
       "id": "seg06",
+      "heading": {
+       "en": "INT. SU YAQING'S LIVING ROOM - DAY",
+       "zh": "INT. SU YAQING'S LIVING ROOM - DAY"
+      },
       "shots": {
        "en": [
-        "Bai waves",
-        "Cheng comes in with a glass",
-        "Bai looks up"
+        "Su Yaqing's sly smile drops into a pout, her mouth closed.",
+        "Su Yaqing flops back into the pastel cushions with a sigh, mouth closed.",
+        "Su Yaqing purses her lips and shrugs, mouth closed.",
+        "Su Yaqing raises her free palm in mock surrender.",
+        "Su Yaqing's face softens and she nods slowly.",
+        "Su Yaqing's hand tightens around the phone in the foreground."
        ],
        "zh": [
-        "白露挥手",
-        "程野端着水杯进来",
-        "白露抬起头"
+        "Su Yaqing's sly smile drops into a pout, her mouth closed.",
+        "Su Yaqing flops back into the pastel cushions with a sigh, mouth closed.",
+        "Su Yaqing purses her lips and shrugs, mouth closed.",
+        "Su Yaqing raises her free palm in mock surrender.",
+        "Su Yaqing's face softens and she nods slowly.",
+        "Su Yaqing's hand tightens around the phone in the foreground."
        ]
-      },
-      "heading": {
-       "en": "INT. BAI'S LIVING ROOM - DAY",
-       "zh": "内景 白露家的客厅 日"
       }
      },
      {
       "id": "seg07",
+      "heading": {
+       "en": "INT. SU YAQING'S DINING AREA - DAY",
+       "zh": "INT. SU YAQING'S DINING AREA - DAY"
+      },
       "shots": {
        "en": [
-        "Cheng on the phone in the dining room",
-        "Wine on the table",
-        "Cheng smiles"
+        "Lin Qingyu sits by the tall window behind the daisies and wine bottle. His smile fades as he raises the call phone to his ear.",
+        "Lin Qingyu's expression turns serious and commanding, his elbow on the marble table.",
+        "Lin Qingyu's fingers tap the marble tabletop beside the wine bottle.",
+        "Lin Qingyu leans forward, the daylight from the window edging his face.",
+        "Lin Qingyu's eyes narrow and flick toward the room behind the camera.",
+        "Lin Qingyu leans back in the chair with the phone at his ear, his mouth closed, brows lifting impatiently."
        ],
        "zh": [
-        "程野在餐厅打电话",
-        "桌上的红酒",
-        "程野笑了"
+        "Lin Qingyu sits by the tall window behind the daisies and wine bottle. His smile fades as he raises the call phone to his ear.",
+        "Lin Qingyu's expression turns serious and commanding, his elbow on the marble table.",
+        "Lin Qingyu's fingers tap the marble tabletop beside the wine bottle.",
+        "Lin Qingyu leans forward, the daylight from the window edging his face.",
+        "Lin Qingyu's eyes narrow and flick toward the room behind the camera.",
+        "Lin Qingyu leans back in the chair with the phone at his ear, his mouth closed, brows lifting impatiently."
        ]
-      },
-      "heading": {
-       "en": "INT. BAI'S DINING ROOM - DAY",
-       "zh": "内景 白露家的餐厅 日"
       }
      }
     ]
    },
    {
     "title": {
-     "en": "The interviews",
-     "zh": "面试"
+     "en": "The Husband Audition",
+     "zh": "The Husband Audition"
     },
     "segments": [
      {
       "id": "seg01",
+      "heading": {
+       "en": "INT. JI RAN'S OFFICE - DAY",
+       "zh": "INT. JI RAN'S OFFICE - DAY"
+      },
       "shots": {
        "en": [
-        "The applicants line up",
-        "Qiao behind the desk",
-        "Applicant A shows off",
-        "Qiao rests her chin"
+        "Xu Banxia walks past the marble coffee table to the lounge end of the walnut desk and bends slightly toward Ji Ran. Ji Ran sits in the leather executive chair, and the four applicants stand in a row in front of the desk.",
+        "Ji Ran leans back in the leather chair with her long legs crossed. Her eyes sweep coolly along the row of men.",
+        "GREEN-SHIRT APPLICANT, at the lounge end of the row, straightens his back and grins eagerly. The small dumbbell hangs in his hand.",
+        "Ji Ran's gaze slides one place along the row, and she taps one finger on the walnut desk.",
+        "BLUE-TANK-TOP APPLICANT, second in the row, puffs out his chest and plants his fists on his hips.",
+        "Ji Ran raises one eyebrow and rests her chin on her hand."
        ],
        "zh": [
-        "应聘者排成一排",
-        "乔安坐在桌后",
-        "应聘者甲展示肌肉",
-        "乔安托着下巴"
+        "Xu Banxia walks past the marble coffee table to the lounge end of the walnut desk and bends slightly toward Ji Ran. Ji Ran sits in the leather executive chair, and the four applicants stand in a row in front of the desk.",
+        "Ji Ran leans back in the leather chair with her long legs crossed. Her eyes sweep coolly along the row of men.",
+        "GREEN-SHIRT APPLICANT, at the lounge end of the row, straightens his back and grins eagerly. The small dumbbell hangs in his hand.",
+        "Ji Ran's gaze slides one place along the row, and she taps one finger on the walnut desk.",
+        "BLUE-TANK-TOP APPLICANT, second in the row, puffs out his chest and plants his fists on his hips.",
+        "Ji Ran raises one eyebrow and rests her chin on her hand."
        ]
-      },
-      "heading": {
-       "en": "INT. QIAO'S OFFICE - DAY",
-       "zh": "内景 乔安的办公室 日"
       }
      },
      {
       "id": "seg02",
+      "heading": {
+       "en": "INT. JI RAN'S OFFICE - DAY",
+       "zh": "INT. JI RAN'S OFFICE - DAY"
+      },
       "shots": {
        "en": [
-        "The applicants try too hard",
-        "Qiao covers her face",
-        "Fang holds back a laugh",
-        "Someone pushes the door"
+        "GREEN-SHIRT APPLICANT curls the small dumbbell with both hands. His face is screwed up and his arms shake theatrically.",
+        "BLUE-TANK-TOP APPLICANT throws a stiff, awkward punch toward the desk and wobbles off balance.",
+        "GRAY-SHIRT APPLICANT wrestles his tight grey T-shirt up over his stomach, and the fabric gets stuck at his chest.",
+        "SHIRTLESS APPLICANT pulls off his black T-shirt and tosses it aside. He is now bare-chested in orange track trousers. He flexes both biceps and licks his lips.",
+        "Ji Ran's hands clench the arms of the black leather executive chair.",
+        "Ji Ran covers her forehead with one hand and shuts her eyes."
        ],
        "zh": [
-        "应聘者们争相表现",
-        "乔安扶额",
-        "方圆忍住笑",
-        "有人推开门"
+        "GREEN-SHIRT APPLICANT curls the small dumbbell with both hands. His face is screwed up and his arms shake theatrically.",
+        "BLUE-TANK-TOP APPLICANT throws a stiff, awkward punch toward the desk and wobbles off balance.",
+        "GRAY-SHIRT APPLICANT wrestles his tight grey T-shirt up over his stomach, and the fabric gets stuck at his chest.",
+        "SHIRTLESS APPLICANT pulls off his black T-shirt and tosses it aside. He is now bare-chested in orange track trousers. He flexes both biceps and licks his lips.",
+        "Ji Ran's hands clench the arms of the black leather executive chair.",
+        "Ji Ran covers her forehead with one hand and shuts her eyes."
        ]
-      },
-      "heading": {
-       "en": "INT. QIAO'S OFFICE - DAY",
-       "zh": "内景 乔安的办公室 日"
       }
      },
      {
       "id": "seg03",
+      "heading": {
+       "en": "INT. JI RAN'S OFFICE - DAY",
+       "zh": "INT. JI RAN'S OFFICE - DAY"
+      },
       "shots": {
        "en": [
-        "The empty office",
-        "Sun on the desk"
+        "The blurred office glows. Soft round points of light drift slowly across the image in front of the floor-to-ceiling windows.",
+        "The points of light swell and brighten as they float across the hazy walnut desk, until the frame turns bright."
        ],
        "zh": [
-        "空荡的办公室",
-        "桌上的阳光"
+        "The blurred office glows. Soft round points of light drift slowly across the image in front of the floor-to-ceiling windows.",
+        "The points of light swell and brighten as they float across the hazy walnut desk, until the frame turns bright."
        ]
-      },
-      "heading": {
-       "en": "INT. QIAO'S OFFICE - DAY",
-       "zh": "内景 乔安的办公室 日"
       }
      }
     ]
    },
    {
     "title": {
-     "en": "Caught in the rain",
-     "zh": "雨中来客"
+     "en": "Too Young to Marry",
+     "zh": "Too Young to Marry"
     },
     "segments": [
      {
       "id": "seg01",
+      "heading": {
+       "en": "INT. JI RAN'S OFFICE - DAY",
+       "zh": "INT. JI RAN'S OFFICE - DAY"
+      },
       "shots": {
        "en": [
-        "Cheng, soaked through",
-        "Qiao folds her arms",
-        "Fang opens the door",
-        "Qiao pokes his chest"
+        "Lin Qingyu stands soaked and panting just inside the office door. Xu Banxia holds the door beside him. Ji Ran stands in front of the walnut desk facing him.",
+        "Lin Qingyu pushes wet hair off his forehead. Water drips from his chin as he catches his breath.",
+        "Ji Ran stands in front of the walnut desk. Her eyes travel slowly from his face down his clinging wet T-shirt.",
+        "Ji Ran keeps her mouth closed and gives a faint, appraising half-smile. One brow lifts.",
+        "Xu Banxia presses her lips together to hold back a laugh and steps out. She pulls the office door shut behind Lin Qingyu.",
+        "Ji Ran folds her arms and walks a slow half circle around Lin Qingyu, inspecting him from head to toe. He stands stiffly in the open space in front of the desk."
        ],
        "zh": [
-        "浑身湿透的程野",
-        "乔安抱着胳膊",
-        "方圆开门",
-        "乔安戳他的胸口"
+        "Lin Qingyu stands soaked and panting just inside the office door. Xu Banxia holds the door beside him. Ji Ran stands in front of the walnut desk facing him.",
+        "Lin Qingyu pushes wet hair off his forehead. Water drips from his chin as he catches his breath.",
+        "Ji Ran stands in front of the walnut desk. Her eyes travel slowly from his face down his clinging wet T-shirt.",
+        "Ji Ran keeps her mouth closed and gives a faint, appraising half-smile. One brow lifts.",
+        "Xu Banxia presses her lips together to hold back a laugh and steps out. She pulls the office door shut behind Lin Qingyu.",
+        "Ji Ran folds her arms and walks a slow half circle around Lin Qingyu, inspecting him from head to toe. He stands stiffly in the open space in front of the desk."
        ]
-      },
-      "heading": {
-       "en": "INT. QIAO'S OFFICE - DAY",
-       "zh": "内景 乔安的办公室 日"
       }
      },
      {
       "id": "seg02",
+      "heading": {
+       "en": "INT. JI RAN'S OFFICE - DAY",
+       "zh": "INT. JI RAN'S OFFICE - DAY"
+      },
       "shots": {
        "en": [
-        "Cheng wipes off the rain",
-        "Qiao looks him over",
-        "Qiao points at the door"
+        "Past Lin Qingyu's wet shoulder, Ji Ran stands in front of the walnut desk with her arms folded and nods once.",
+        "Lin Qingyu straightens up to his full height and squares his shoulders.",
+        "Ji Ran's eyes flick up and down his body.",
+        "Lin Qingyu wipes the sweat from his forehead with the back of his hand.",
+        "Ji Ran tilts her head and narrows her eyes.",
+        "Lin Qingyu flashes a hopeful, boyish smile."
        ],
        "zh": [
-        "程野抹去雨水",
-        "乔安打量他",
-        "乔安指向门口"
+        "Past Lin Qingyu's wet shoulder, Ji Ran stands in front of the walnut desk with her arms folded and nods once.",
+        "Lin Qingyu straightens up to his full height and squares his shoulders.",
+        "Ji Ran's eyes flick up and down his body.",
+        "Lin Qingyu wipes the sweat from his forehead with the back of his hand.",
+        "Ji Ran tilts her head and narrows her eyes.",
+        "Lin Qingyu flashes a hopeful, boyish smile."
        ]
-      },
-      "heading": {
-       "en": "INT. QIAO'S OFFICE - DAY",
-       "zh": "内景 乔安的办公室 日"
       }
      }
     ]
    },
    {
     "title": {
-     "en": "At the elevator",
-     "zh": "电梯口"
+     "en": "The Ex at the Door",
+     "zh": "The Ex at the Door"
     },
     "segments": [
      {
       "id": "seg01",
+      "heading": {
+       "en": "INT. JI RAN'S APARTMENT ENTRANCE - NIGHT",
+       "zh": "INT. JI RAN'S APARTMENT ENTRANCE - NIGHT"
+      },
       "shots": {
        "en": [
-        "Zhou waits at the elevator",
-        "Qiao steps out",
-        "Zhou fixes his jacket"
+        "Lu Shaoze stands at the walnut front door, smooths his slicked-back hair with one hand and raps on the door with his knuckles.",
+        "The elevator doors slide open and cool light spills out. Ji Ran steps out with the black handbag on her arm, her red heels striking the stone floor.",
+        "Lu Shaoze startles, spins and bumps shoulder-first into Ji Ran. Both stagger and come to a stop beneath the autumn landscape painting, Lu Shaoze at its elevator end and Ji Ran at its front-door end.",
+        "Lu Shaoze straightens his jacket, then drawls with a smug, lopsided smile, looking her up and down.",
+        "Ji Ran rolls her eyes and lifts her chin coolly, her grip settling on the black handbag strap.",
+        "Ji Ran answers with a thin, cutting smile, her head tilted."
        ],
        "zh": [
-        "周景川在电梯口等",
-        "乔安走出电梯",
-        "周景川整理外套"
+        "Lu Shaoze stands at the walnut front door, smooths his slicked-back hair with one hand and raps on the door with his knuckles.",
+        "The elevator doors slide open and cool light spills out. Ji Ran steps out with the black handbag on her arm, her red heels striking the stone floor.",
+        "Lu Shaoze startles, spins and bumps shoulder-first into Ji Ran. Both stagger and come to a stop beneath the autumn landscape painting, Lu Shaoze at its elevator end and Ji Ran at its front-door end.",
+        "Lu Shaoze straightens his jacket, then drawls with a smug, lopsided smile, looking her up and down.",
+        "Ji Ran rolls her eyes and lifts her chin coolly, her grip settling on the black handbag strap.",
+        "Ji Ran answers with a thin, cutting smile, her head tilted."
        ]
-      },
-      "heading": {
-       "en": "INT. ELEVATOR LOBBY - NIGHT",
-       "zh": "内景 电梯厅 夜"
       }
      },
      {
       "id": "seg02",
+      "heading": {
+       "en": "INT. JI RAN'S APARTMENT ENTRANCE - NIGHT",
+       "zh": "INT. JI RAN'S APARTMENT ENTRANCE - NIGHT"
+      },
       "shots": {
        "en": [
-        "Zhou leans in",
-        "Qiao grips her bag",
-        "Qiao's cold look"
+        "Lu Shaoze recovers his grin and leans in toward Ji Ran, hands in his trouser pockets.",
+        "Ji Ran's smirk drops and her jaw sets.",
+        "Lu Shaoze tilts his head with a mocking, superior look.",
+        "Ji Ran's fingers tighten hard around the strap of the black handbag, her knuckles going pale.",
+        "Ji Ran's eyes redden and glisten. She draws a sharp breath and swallows her anger.",
+        "Ji Ran looks straight at him, her voice steady."
        ],
        "zh": [
-        "周景川凑近",
-        "乔安攥紧包带",
-        "乔安冷冷看他"
+        "Lu Shaoze recovers his grin and leans in toward Ji Ran, hands in his trouser pockets.",
+        "Ji Ran's smirk drops and her jaw sets.",
+        "Lu Shaoze tilts his head with a mocking, superior look.",
+        "Ji Ran's fingers tighten hard around the strap of the black handbag, her knuckles going pale.",
+        "Ji Ran's eyes redden and glisten. She draws a sharp breath and swallows her anger.",
+        "Ji Ran looks straight at him, her voice steady."
        ]
-      },
-      "heading": {
-       "en": "INT. ELEVATOR LOBBY - NIGHT",
-       "zh": "内景 电梯厅 夜"
       }
      },
      {
       "id": "seg03",
+      "heading": {
+       "en": "INT. JI RAN'S APARTMENT ENTRANCE - NIGHT",
+       "zh": "INT. JI RAN'S APARTMENT ENTRANCE - NIGHT"
+      },
       "shots": {
        "en": [
-        "Zhou spreads his hands",
-        "Qiao looks away"
+        "Lu Shaoze breaks into a scoffing laugh.",
+        "Lu Shaoze shakes his head and wags a finger at her.",
+        "Ji Ran presses her lips together and keeps her gaze on him.",
+        "Lu Shaoze leans toward her and ticks the points off on his fingers.",
+        "Lu Shaoze spreads his hands wide in mock disbelief.",
+        "Ji Ran turns her face slightly away, her jaw clenched."
        ],
        "zh": [
-        "周景川摊开手",
-        "乔安转开脸"
+        "Lu Shaoze breaks into a scoffing laugh.",
+        "Lu Shaoze shakes his head and wags a finger at her.",
+        "Ji Ran presses her lips together and keeps her gaze on him.",
+        "Lu Shaoze leans toward her and ticks the points off on his fingers.",
+        "Lu Shaoze spreads his hands wide in mock disbelief.",
+        "Ji Ran turns her face slightly away, her jaw clenched."
        ]
-      },
-      "heading": {
-       "en": "INT. ELEVATOR LOBBY - NIGHT",
-       "zh": "内景 电梯厅 夜"
       }
      },
      {
       "id": "seg04",
+      "heading": {
+       "en": "INT. JI RAN'S APARTMENT ENTRANCE - NIGHT",
+       "zh": "INT. JI RAN'S APARTMENT ENTRANCE - NIGHT"
+      },
       "shots": {
        "en": [
-        "Cheng comes back with groceries",
-        "Cheng puts an arm around Qiao",
-        "Zhou freezes"
+        "Lu Shaoze straightens up, tugs his navy lapels and taps his own chest proudly.",
+        "Ji Ran gives him a cold, disgusted look.",
+        "Lu Shaoze steps nearer and looks down at her with a possessive smile.",
+        "Lu Shaoze raises an eyebrow and smirks.",
+        "Lu Shaoze reaches his hand toward Ji Ran's shoulder, and she stiffens.",
+        "The elevator doors behind Lu Shaoze slide open in cool light, and Lin Qingyu steps out in his white hoodie, carrying the grocery bag full of greens in one hand. The walnut front door stays closed."
        ],
        "zh": [
-        "程野拎着菜回来",
-        "程野搂住乔安",
-        "周景川愣住"
+        "Lu Shaoze straightens up, tugs his navy lapels and taps his own chest proudly.",
+        "Ji Ran gives him a cold, disgusted look.",
+        "Lu Shaoze steps nearer and looks down at her with a possessive smile.",
+        "Lu Shaoze raises an eyebrow and smirks.",
+        "Lu Shaoze reaches his hand toward Ji Ran's shoulder, and she stiffens.",
+        "The elevator doors behind Lu Shaoze slide open in cool light, and Lin Qingyu steps out in his white hoodie, carrying the grocery bag full of greens in one hand. The walnut front door stays closed."
        ]
-      },
-      "heading": {
-       "en": "INT. ELEVATOR LOBBY - NIGHT",
-       "zh": "内景 电梯厅 夜"
       }
      }
     ]
    },
    {
     "title": {
-     "en": "Standoff in the hall",
-     "zh": "走廊对峙"
+     "en": "Boyfriend on Probation",
+     "zh": "Boyfriend on Probation"
     },
     "segments": [
      {
       "id": "seg01",
-      "shots": {
-       "en": [
-        "Three in the corridor",
-        "Cheng offers his hand",
-        "Zhou ignores it"
-       ],
-       "zh": [
-        "走廊里的三个人",
-        "程野伸出手",
-        "周景川不理他"
-       ]
-      },
       "heading": {
        "en": "INT. APARTMENT CORRIDOR - NIGHT",
-       "zh": "内景 公寓走廊 夜"
+       "zh": "INT. APARTMENT CORRIDOR - NIGHT"
+      },
+      "shots": {
+       "en": [
+        "Ji Ran and Lin Qingyu stand in front of Ji Ran's apartment door, his arm around her waist and the grocery bag full of greens in his other hand. Lu Shaoze faces them on the runner rug and fixes his eyes on Lin Qingyu's arm.",
+        "Lu Shaoze jerks his chin at the arm around Ji Ran, and his mouth twists with contempt.",
+        "Lin Qingyu smiles brightly, takes his right arm from Ji Ran's waist and holds his right hand out toward Lu Shaoze.",
+        "Lin Qingyu keeps his hand extended and smiles sweetly at Lu Shaoze, with the grocery bag full of greens swinging at his side.",
+        "Ji Ran slides her eyes sideways toward Lin Qingyu, and the corner of her mouth twitches as she holds back a smile.",
+        "Lin Qingyu tilts his head with mock innocence and waves his free hand toward Ji Ran's apartment door."
+       ],
+       "zh": [
+        "Ji Ran and Lin Qingyu stand in front of Ji Ran's apartment door, his arm around her waist and the grocery bag full of greens in his other hand. Lu Shaoze faces them on the runner rug and fixes his eyes on Lin Qingyu's arm.",
+        "Lu Shaoze jerks his chin at the arm around Ji Ran, and his mouth twists with contempt.",
+        "Lin Qingyu smiles brightly, takes his right arm from Ji Ran's waist and holds his right hand out toward Lu Shaoze.",
+        "Lin Qingyu keeps his hand extended and smiles sweetly at Lu Shaoze, with the grocery bag full of greens swinging at his side.",
+        "Ji Ran slides her eyes sideways toward Lin Qingyu, and the corner of her mouth twitches as she holds back a smile.",
+        "Lin Qingyu tilts his head with mock innocence and waves his free hand toward Ji Ran's apartment door."
+       ]
       }
      },
      {
       "id": "seg02",
-      "shots": {
-       "en": [
-        "Zhou sneers",
-        "Qiao leans on Cheng"
-       ],
-       "zh": [
-        "周景川冷笑",
-        "乔安靠向程野"
-       ]
-      },
       "heading": {
        "en": "INT. APARTMENT CORRIDOR - NIGHT",
-       "zh": "内景 公寓走廊 夜"
+       "zh": "INT. APARTMENT CORRIDOR - NIGHT"
+      },
+      "shots": {
+       "en": [
+        "Ji Ran folds her arms and rolls her eyes at Lu Shaoze, while Lin Qingyu keeps his arm around her waist.",
+        "Ji Ran leans her head toward Lin Qingyu's shoulder and gives Lu Shaoze a cool, steady look.",
+        "Lu Shaoze's eyes widen, and he takes a sharp step forward on the runner rug.",
+        "Lu Shaoze throws both hands out in disbelief.",
+        "Lu Shaoze smirks smugly at Ji Ran and taps his own chest.",
+        "Ji Ran lifts her chin, and Lin Qingyu bites back a grin beside her."
+       ],
+       "zh": [
+        "Ji Ran folds her arms and rolls her eyes at Lu Shaoze, while Lin Qingyu keeps his arm around her waist.",
+        "Ji Ran leans her head toward Lin Qingyu's shoulder and gives Lu Shaoze a cool, steady look.",
+        "Lu Shaoze's eyes widen, and he takes a sharp step forward on the runner rug.",
+        "Lu Shaoze throws both hands out in disbelief.",
+        "Lu Shaoze smirks smugly at Ji Ran and taps his own chest.",
+        "Ji Ran lifts her chin, and Lin Qingyu bites back a grin beside her."
+       ]
       }
      },
      {
       "id": "seg03",
-      "shots": {
-       "en": [
-        "Cheng pats Zhou's shoulder",
-        "Zhou walks away",
-        "Cheng lifts the groceries"
-       ],
-       "zh": [
-        "程野拍拍周景川的肩",
-        "周景川离开",
-        "程野举起菜袋"
-       ]
-      },
       "heading": {
        "en": "INT. APARTMENT CORRIDOR - NIGHT",
-       "zh": "内景 公寓走廊 夜"
+       "zh": "INT. APARTMENT CORRIDOR - NIGHT"
+      },
+      "shots": {
+       "en": [
+        "Lin Qingyu lets go of Ji Ran and leans toward Lu Shaoze with an exaggerated, concerned frown.",
+        "Lu Shaoze's face reddens, and a vein tightens at his temple.",
+        "Lin Qingyu gives Lu Shaoze an innocent, wide-eyed smile.",
+        "Lin Qingyu's hand pats Lu Shaoze's navy suit shoulder twice.",
+        "Lu Shaoze slaps Lin Qingyu's hand off his shoulder.",
+        "Lu Shaoze jabs his finger back and forth between Ji Ran and Lin Qingyu, his mouth opening and closing without a word, shaking with fury."
+       ],
+       "zh": [
+        "Lin Qingyu lets go of Ji Ran and leans toward Lu Shaoze with an exaggerated, concerned frown.",
+        "Lu Shaoze's face reddens, and a vein tightens at his temple.",
+        "Lin Qingyu gives Lu Shaoze an innocent, wide-eyed smile.",
+        "Lin Qingyu's hand pats Lu Shaoze's navy suit shoulder twice.",
+        "Lu Shaoze slaps Lin Qingyu's hand off his shoulder.",
+        "Lu Shaoze jabs his finger back and forth between Ji Ran and Lin Qingyu, his mouth opening and closing without a word, shaking with fury."
+       ]
       }
      },
      {
       "id": "seg04",
+      "heading": {
+       "en": "EXT. CITY ARTERIAL ROAD - NIGHT",
+       "zh": "EXT. CITY ARTERIAL ROAD - NIGHT"
+      },
       "shots": {
        "en": [
-        "Night traffic"
+        "Headlights and taillights pack every lane between the glass office towers under a blue dusk sky.",
+        "The streetlights along the median flicker on one after another.",
+        "The sky darkens to indigo, and office windows light up above the stream of traffic."
        ],
        "zh": [
-        "夜晚的车流"
+        "Headlights and taillights pack every lane between the glass office towers under a blue dusk sky.",
+        "The streetlights along the median flicker on one after another.",
+        "The sky darkens to indigo, and office windows light up above the stream of traffic."
        ]
-      },
-      "heading": {
-       "en": "EXT. CITY AVENUE - NIGHT",
-       "zh": "外景 城市大道 夜"
       }
      },
      {
       "id": "seg05",
+      "heading": {
+       "en": "INT. JI RAN'S LIVING ROOM - NIGHT",
+       "zh": "INT. JI RAN'S LIVING ROOM - NIGHT"
+      },
       "shots": {
        "en": [
-        "Qiao's living room",
-        "Qiao stands, arms folded",
-        "Cheng on the sofa"
+        "Lin Qingyu sits slouched on the pale sofa, and Ji Ran stands across the marble-and-glass coffee table from him with her arms folded and city lights in the windows behind.",
+        "Ji Ran looks down at Lin Qingyu with her arms folded and one eyebrow raised.",
+        "Lin Qingyu sits up straight on the sofa and lifts his eyes to meet Ji Ran's.",
+        "Lin Qingyu holds Ji Ran's gaze with a sincere, steady look and a hint of a smile.",
+        "Ji Ran's lips part slightly, and her folded arms loosen a little.",
+        "Soft glowing light and snowlike flecks drift across the image as Ji Ran and Lin Qingyu look at each other across the coffee table."
        ],
        "zh": [
-        "乔安的客厅",
-        "乔安抱着胳膊站着",
-        "程野坐在沙发上"
+        "Lin Qingyu sits slouched on the pale sofa, and Ji Ran stands across the marble-and-glass coffee table from him with her arms folded and city lights in the windows behind.",
+        "Ji Ran looks down at Lin Qingyu with her arms folded and one eyebrow raised.",
+        "Lin Qingyu sits up straight on the sofa and lifts his eyes to meet Ji Ran's.",
+        "Lin Qingyu holds Ji Ran's gaze with a sincere, steady look and a hint of a smile.",
+        "Ji Ran's lips part slightly, and her folded arms loosen a little.",
+        "Soft glowing light and snowlike flecks drift across the image as Ji Ran and Lin Qingyu look at each other across the coffee table."
        ]
-      },
-      "heading": {
-       "en": "INT. QIAO'S PENTHOUSE - NIGHT",
-       "zh": "内景 乔安的客厅 夜"
       }
      }
     ]
    }
-  ]
+  ],
+  "versions": {
+   "assets/characters/blue_tank_top_applicant": "v1",
+   "assets/characters/gray_shirt_applicant": "v1",
+   "assets/characters/green_shirt_applicant": "v1",
+   "assets/characters/ji_hongyuan": "v1",
+   "assets/characters/ji_ran": "v1",
+   "assets/characters/ji_ran/states/S1": "v2",
+   "assets/characters/ji_ran/states/S2": "v2",
+   "assets/characters/ji_ran/states/S3": "v1",
+   "assets/characters/lin_qingyu": "v1",
+   "assets/characters/lin_qingyu/states/S1": "v1",
+   "assets/characters/lin_qingyu/states/S2": "v1",
+   "assets/characters/lu_shaoze": "v1",
+   "assets/characters/lu_shaoze/states/S1": "v1",
+   "assets/characters/shirtless_applicant": "v1",
+   "assets/characters/shirtless_applicant/states/S1": "v1",
+   "assets/characters/su_yaqing": "v1",
+   "assets/characters/xu_banxia": "v1",
+   "assets/props/black_handbag": "v1",
+   "assets/props/coffee_cup": "v1",
+   "assets/props/document_envelope": "v1",
+   "assets/props/dumbbell": "v1",
+   "assets/props/grocery_bag": "v1",
+   "assets/props/lin_glass": "v1",
+   "assets/props/lin_phone": "v1",
+   "assets/props/pour_over_set": "v1",
+   "assets/props/su_phone": "v1",
+   "assets/scenes/apartment_corridor": "v1",
+   "assets/scenes/apartment_corridor/times/Night": "v1",
+   "assets/scenes/apartment_entrance": "v1",
+   "assets/scenes/apartment_entrance/times/Night": "v1",
+   "assets/scenes/city_road": "v1",
+   "assets/scenes/city_road/times/Night": "v1",
+   "assets/scenes/ji_family_living_room": "v1",
+   "assets/scenes/ji_family_living_room/times/Day": "v1",
+   "assets/scenes/ji_ran_living_room": "v1",
+   "assets/scenes/ji_ran_living_room/times/Night": "v1",
+   "assets/scenes/ji_ran_office": "v1",
+   "assets/scenes/ji_ran_office/times/Day": "v1",
+   "assets/scenes/su_dining_area": "v1",
+   "assets/scenes/su_dining_area/times/Day": "v1",
+   "assets/scenes/su_living_room": "v1",
+   "assets/scenes/su_living_room/times/Day": "v1",
+   "bible": "v2",
+   "episodes/EP001/blocking/seg01": "v1",
+   "episodes/EP001/blocking/seg02": "v1",
+   "episodes/EP001/blocking/seg03": "v1",
+   "episodes/EP001/blocking/seg04": "v1",
+   "episodes/EP001/blocking/seg05": "v1",
+   "episodes/EP001/blocking/seg06": "v1",
+   "episodes/EP001/blocking/seg07": "v1",
+   "episodes/EP001/breakdown": "v2",
+   "episodes/EP001/first_frame_reference/seg04": "v1",
+   "episodes/EP001/multi_panel_storyboard/seg01/line-art": "v1",
+   "episodes/EP001/multi_panel_storyboard/seg01/photoreal": "v1",
+   "episodes/EP001/multi_panel_storyboard/seg02/line-art": "v1",
+   "episodes/EP001/multi_panel_storyboard/seg02/photoreal": "v1",
+   "episodes/EP001/multi_panel_storyboard/seg03/line-art": "v1",
+   "episodes/EP001/multi_panel_storyboard/seg03/photoreal": "v1",
+   "episodes/EP001/multi_panel_storyboard/seg04/line-art": "v1",
+   "episodes/EP001/multi_panel_storyboard/seg04/photoreal": "v2",
+   "episodes/EP001/multi_panel_storyboard/seg05/line-art": "v1",
+   "episodes/EP001/multi_panel_storyboard/seg05/photoreal": "v2",
+   "episodes/EP001/multi_panel_storyboard/seg06/line-art": "v1",
+   "episodes/EP001/multi_panel_storyboard/seg06/photoreal": "v1",
+   "episodes/EP001/multi_panel_storyboard/seg07/line-art": "v1",
+   "episodes/EP001/multi_panel_storyboard/seg07/photoreal": "v1",
+   "episodes/EP001/segments/seg01": "t01",
+   "episodes/EP001/segments/seg02": "t01",
+   "episodes/EP001/segments/seg03": "t01",
+   "episodes/EP001/segments/seg07": "t01",
+   "episodes/EP002/blocking/seg01": "v1",
+   "episodes/EP002/blocking/seg02": "v1",
+   "episodes/EP002/breakdown": "v4",
+   "episodes/EP002/multi_panel_storyboard/seg01/line-art": "v1",
+   "episodes/EP002/multi_panel_storyboard/seg01/photoreal": "v1",
+   "episodes/EP002/multi_panel_storyboard/seg02/line-art": "v1",
+   "episodes/EP002/multi_panel_storyboard/seg02/photoreal": "v1",
+   "episodes/EP002/multi_panel_storyboard/seg03/line-art": "v1",
+   "episodes/EP002/multi_panel_storyboard/seg03/photoreal": "v1",
+   "episodes/EP003/blocking/seg01": "v1",
+   "episodes/EP003/blocking/seg02": "v1",
+   "episodes/EP003/breakdown": "v2",
+   "episodes/EP003/first_frame_reference/seg01": "v1",
+   "episodes/EP003/multi_panel_storyboard/seg01/line-art": "v1",
+   "episodes/EP003/multi_panel_storyboard/seg01/photoreal": "v1",
+   "episodes/EP003/multi_panel_storyboard/seg02/line-art": "v1",
+   "episodes/EP003/multi_panel_storyboard/seg02/photoreal": "v1",
+   "episodes/EP004/blocking/seg01": "v1",
+   "episodes/EP004/blocking/seg02": "v1",
+   "episodes/EP004/blocking/seg03": "v1",
+   "episodes/EP004/blocking/seg04": "v1",
+   "episodes/EP004/breakdown": "v3",
+   "episodes/EP004/multi_panel_storyboard/seg01/line-art": "v1",
+   "episodes/EP004/multi_panel_storyboard/seg01/photoreal": "v1",
+   "episodes/EP004/multi_panel_storyboard/seg02/line-art": "v1",
+   "episodes/EP004/multi_panel_storyboard/seg02/photoreal": "v1",
+   "episodes/EP004/multi_panel_storyboard/seg03/line-art": "v1",
+   "episodes/EP004/multi_panel_storyboard/seg03/photoreal": "v1",
+   "episodes/EP004/multi_panel_storyboard/seg04/line-art": "v1",
+   "episodes/EP004/multi_panel_storyboard/seg04/photoreal": "v1",
+   "episodes/EP005/blocking/seg01": "v1",
+   "episodes/EP005/blocking/seg02": "v2",
+   "episodes/EP005/blocking/seg03": "v2",
+   "episodes/EP005/blocking/seg05": "v1",
+   "episodes/EP005/breakdown": "v3",
+   "episodes/EP005/multi_panel_storyboard/seg01/line-art": "v1",
+   "episodes/EP005/multi_panel_storyboard/seg01/photoreal": "v1",
+   "episodes/EP005/multi_panel_storyboard/seg02/line-art": "v2",
+   "episodes/EP005/multi_panel_storyboard/seg02/photoreal": "v2",
+   "episodes/EP005/multi_panel_storyboard/seg03/line-art": "v3",
+   "episodes/EP005/multi_panel_storyboard/seg03/photoreal": "v3",
+   "episodes/EP005/multi_panel_storyboard/seg04/line-art": "v1",
+   "episodes/EP005/multi_panel_storyboard/seg04/photoreal": "v1",
+   "episodes/EP005/multi_panel_storyboard/seg05/line-art": "v1",
+   "episodes/EP005/multi_panel_storyboard/seg05/photoreal": "v1"
+  }
  }
 }

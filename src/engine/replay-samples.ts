@@ -36,8 +36,9 @@ export function samplesFrom(root: string): (set: string, relPath: string) => Sam
       const file = path.join(root, "samples.json");
       table = existsSync(file) ? JSON.parse(readFileSync(file, "utf8")) : null;
     }
+    // A sample at its own version (a project's real v3 or t02) by its path without the extension; else a first version's, as vN.
     const key = sampleKey(relPath);
-    const name = key && table?.[set]?.[key];
+    const name = table?.[set]?.[relPath.replace(/\.[a-z0-9]+$/i, "")] ?? (key && table?.[set]?.[key]);
     // The installer leaves the full sample dramas out (electron-builder.config.mjs): a packaged app draws their placeholders.
     if (!name || !existsSync(path.join(root, name))) return undefined;
     const bytes = readFileSync(path.join(root, name));

@@ -1,0 +1,1224 @@
+{
+  "title": "The Double Life of My Billionaire Husband",
+  "logline": "To pay for her mother's dialysis, Natalie agrees to marry the jailed Klein outcast Sebastian Klein in Cassie's place, but the 'loser' who walks out of jail is a man running a secret plan, and the Quinn wedding is its final puzzle piece.",
+  "tone": "Fast, glossy, crowd-pleasing family-revenge romance (爽剧) in present-day America. Bright, polished commercial lighting and beautiful leads. Sharp, cruel stepfamily dialogue and smug villains set up a reversal, with a cliffhanger at the end of each episode. Mild profanity. No sexual content, no nudity, no violence beyond a guard's shouting.",
+  "characters": [
+    {
+      "id": "natalie",
+      "name": "Natalie",
+      "aliases": [],
+      "age": 25,
+      "observable": true,
+      "gender": "female",
+      "role": "the heroine; George's daughter from his first marriage, who agrees to marry Sebastian Klein to pay for her mother's dialysis",
+      "personality": "Gentle and quietly captivating on the surface. Kind-hearted and vulnerable, and bullied by her stepfamily, but resilient and strong-willed underneath. She will swallow her pride for her sick mother, but she demands they keep their word and she defends a groom she has never met.",
+      "appearance": "A breathtakingly beautiful Caucasian American woman of 25 who looks young and fresh. She has a small, delicate oval face with high, softly sculpted cheekbones, a refined straight nose, a gently tapered jaw and large, bright, intelligent blue-green eyes under softly defined light-brown brows. Her very fair, luminous, even skin has healthy natural texture and no redness. Long golden-blonde hair falls well past her shoulders in soft, glossy, glamorous curls with a side part. Her make-up is soft, natural and glamorous: defined brows, long fluttery lashes and a glossy natural-rose lip. She is tall, about 175 cm, with long legs and elegant supermodel proportions, about eight heads tall. Curvy figure, full hips, defined waist, hourglass shape: a glamorous hourglass silhouette with a Hollywood-glamour editorial poise. Her gaze is self-possessed. No marks. She wears no jewellery in daily life.",
+      "hair": {
+        "length": "long",
+        "colour": "yellow"
+      },
+      "build": "curvy",
+      "wardrobe": "A powder-blue ribbed-knit mini dress in stretch knit that hugs her figure and is cut to cinch at the waist, with short sleeves, a low scoop neckline and a hem at mid-thigh. No belt. Nude pointed-toe heels and a small structured nude handbag. No jewellery, no coat.",
+      "wardrobe_states": {
+        "S0": "A powder-blue ribbed-knit mini dress in stretch knit that hugs her figure and is cut to cinch at the waist, with short sleeves, a low scoop neckline and a hem at mid-thigh. No belt. Nude pointed-toe heels and a small structured nude handbag. No jewellery, no coat.",
+        "S1": "An elegant, figure-fitted ivory-white satin bridal gown with thin spaghetti straps and a low sweetheart neckline. The sculpted bodice is fitted, and the skirt hugs her hips before flaring softly into a floor-length hem. A narrow pale-blue satin sash, her 'something blue', cinches the waist. A short sheer tulle veil is pinned at the back of her curls. Ivory satin pointed-toe heels. No jewellery.",
+        "S2": "Sleepwear: an opaque powder-blue silk camisole with thin straps, a modest V neckline trimmed in ivory lace and a softly fitted waist. Matching opaque powder-blue silk sleep shorts with lace-trimmed hems. Over them, an ivory-white satin knee-length robe with long sleeves, worn open, with its sash hanging loose. Barefoot. Hair loose in soft curls.",
+        "S3": "An opaque cornflower-blue sleeveless wrap dress in a fitted matte jersey. It crosses into a low V neckline, ties at the side to cinch the waist, and ends in a knee-skimming hem. Nude block-heel pumps and a small structured nude handbag. No jewellery.",
+        "S4": "The cornflower-blue sleeveless wrap dress, nude block-heel pumps and small nude handbag, now with a cropped ivory-white bouclé jacket on top. The jacket has long sleeves and a collarless round neck, and it is worn open, ending just at the tied waist so that the cinched waist still shows."
+      },
+      "signature_color": "blue",
+      "voice": "Soft, warm, clear mezzo-soprano. Pleading and gentle, then firm and steely when cornered; a quiet American accent.",
+      "looks": {
+        "S0": {
+          "garments": [
+            {
+              "class": "short sleeve dress",
+              "colour": "blue"
+            }
+          ]
+        },
+        "S1": {
+          "garments": [
+            {
+              "class": "sling dress",
+              "colour": "white"
+            }
+          ]
+        },
+        "S2": {
+          "garments": [
+            {
+              "class": "sling",
+              "colour": "blue"
+            },
+            {
+              "class": "shorts",
+              "colour": "blue"
+            },
+            {
+              "class": "long sleeve outwear",
+              "colour": "white"
+            }
+          ]
+        },
+        "S3": {
+          "garments": [
+            {
+              "class": "vest dress",
+              "colour": "blue"
+            }
+          ]
+        },
+        "S4": {
+          "garments": [
+            {
+              "class": "vest dress",
+              "colour": "blue"
+            },
+            {
+              "class": "long sleeve outwear",
+              "colour": "white"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "george",
+      "name": "George",
+      "aliases": [
+        "Dad"
+      ],
+      "age": 55,
+      "observable": true,
+      "gender": "male",
+      "role": "Natalie's weak-willed father, head of the Quinn family, remarried to Lauren",
+      "personality": "Conflict-avoidant and henpecked. He still feels for his ex-wife and his daughter, but he always gives in to Lauren, because he owes his comfortable life to her.",
+      "appearance": "An ordinary-looking Caucasian man of 55, about 180 cm, of average build with a slight middle-age softness at the waist. He has a squarish face with soft jowls, mild lines across the forehead and at the eyes, tired kind brown eyes and a clean-shaven chin. Short salt-and-pepper grey hair is neatly combed back. He wears a thin gold wedding band.",
+      "hair": {
+        "length": "short",
+        "colour": "grey"
+      },
+      "build": "average",
+      "wardrobe": "A charcoal-grey fine-knit button cardigan over a plain white collared shirt, grey wool trousers and brown leather loafers.",
+      "wardrobe_states": {
+        "S0": "A charcoal-grey fine-knit button cardigan over a plain white collared shirt, grey wool trousers and brown leather loafers.",
+        "S1": "A charcoal-grey two-piece suit over a white dress shirt, a silver-grey silk tie, a pale-grey pocket square and black leather oxfords."
+      },
+      "signature_color": "grey",
+      "voice": "A mild, hesitant baritone that trails off mid-sentence; apologetic and placating.",
+      "looks": {
+        "S0": {
+          "garments": [
+            {
+              "class": "long sleeve outwear",
+              "colour": "grey"
+            },
+            {
+              "class": "long sleeve top",
+              "colour": "white"
+            },
+            {
+              "class": "trousers",
+              "colour": "grey"
+            }
+          ]
+        },
+        "S1": {
+          "garments": [
+            {
+              "class": "long sleeve outwear",
+              "colour": "grey"
+            },
+            {
+              "class": "long sleeve top",
+              "colour": "white"
+            },
+            {
+              "class": "trousers",
+              "colour": "grey"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "lauren",
+      "name": "Lauren",
+      "aliases": [],
+      "age": 50,
+      "observable": true,
+      "gender": "female",
+      "role": "Natalie's controlling stepmother, George's wife and Cassie's mother, who holds the family purse",
+      "personality": "Cold, possessive and contemptuous. She reminds George that everything he has is hers, dotes on Cassie, and enjoys trading Natalie away for Cassie's benefit.",
+      "appearance": "A well-kept, ordinary-looking Caucasian woman of 50, about 166 cm. Curvy figure, full hips, defined waist, hourglass shape. She has an oval face with sharp, arched brows, thin lips in a mauve lipstick, cool grey eyes and fine lines at the eyes and mouth. Shoulder-length honey-blonde hair is set in a smooth, polished blow-out. She wears pearl stud earrings, a large diamond solitaire ring and a slim gold wristwatch.",
+      "hair": {
+        "length": "shoulder",
+        "colour": "yellow"
+      },
+      "build": "curvy",
+      "wardrobe": "A plum-purple silk long-sleeved blouse with a soft bow at the neck, tucked into high-waisted black tailored trousers, with black pointed-toe heels, pearl studs and a slim gold wristwatch.",
+      "wardrobe_states": {
+        "S0": "A plum-purple silk long-sleeved blouse with a soft bow at the neck, tucked into high-waisted black tailored trousers, with black pointed-toe heels, pearl studs and a slim gold wristwatch.",
+        "S1": "A knee-length lilac-purple fitted sheath dress with short sleeves and a round neck, nude heels, a pearl necklace, pearl studs and the same slim gold wristwatch."
+      },
+      "signature_color": "purple",
+      "voice": "A crisp, clipped alto with icy condescension; she drawls sarcastic words and snaps orders at George.",
+      "looks": {
+        "S0": {
+          "garments": [
+            {
+              "class": "long sleeve top",
+              "colour": "purple"
+            },
+            {
+              "class": "trousers",
+              "colour": "black"
+            }
+          ]
+        },
+        "S1": {
+          "garments": [
+            {
+              "class": "short sleeve dress",
+              "colour": "purple"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "cassie",
+      "name": "Cassie",
+      "aliases": [],
+      "age": 23,
+      "observable": true,
+      "gender": "female",
+      "role": "Natalie's spoiled stepsister, Lauren's daughter, who pushes Natalie into the marriage meant for her",
+      "personality": "Spoiled, arrogant, manipulative and cruel. She loves humiliating Natalie and flaunting her wealth and beauty, and she is smug about dodging the marriage to Sebastian Klein.",
+      "appearance": "A strikingly glamorous Caucasian American woman of 23 who looks young and fresh. She has a small, delicate heart-shaped face with sharp high cheekbones, a small refined nose, a pointed chin and bright, intelligent, catlike hazel eyes. Her flawless fair skin is luminous and even, with natural texture and no redness. Long, glossy, sleek platinum-tinged blonde hair falls straight to mid-back, with a centre part. Her make-up is dramatic: smoky eye make-up, thick lashes, sculpted brows and glossy nude-rose lips. She is tall and leggy, about 174 cm, with supermodel proportions, about eight heads tall. Curvy figure, full hips, defined waist, hourglass shape: a voluptuous hourglass silhouette with a confident, seductive, spoiled-rich-girl pose. She wears statement gold hoop earrings and stacked gold bangles.",
+      "hair": {
+        "length": "long",
+        "colour": "yellow"
+      },
+      "build": "curvy",
+      "wardrobe": "A daring scarlet-red fitted top with thin straps and a low neckline, and a matching scarlet short miniskirt with a high side slit and a cinched high waist. Gold statement hoops, stacked gold bangles, a small gold chain-strap handbag and nude stiletto heels. No jacket.",
+      "wardrobe_states": {
+        "S0": "A daring scarlet-red fitted top with thin straps and a low neckline, and a matching scarlet short miniskirt with a high side slit and a cinched high waist. Gold statement hoops, stacked gold bangles, a small gold chain-strap handbag and nude stiletto heels. No jacket.",
+        "S1": "A scarlet-red satin bodycon cocktail dress with thin straps, a plunging neckline, a cinched waist and a high thigh slit on a short hem. Gold statement hoops, a gold cuff bracelet and gold strappy stilettos. No jacket."
+      },
+      "signature_color": "red",
+      "voice": "A bright, sugary, mocking soprano that drips sarcasm; she lets out a sing-song 'Aww' and sneers with a valley-girl lilt.",
+      "looks": {
+        "S0": {
+          "garments": [
+            {
+              "class": "sling",
+              "colour": "red"
+            },
+            {
+              "class": "skirt",
+              "colour": "red"
+            }
+          ]
+        },
+        "S1": {
+          "garments": [
+            {
+              "class": "sling dress",
+              "colour": "red"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "sebastian",
+      "name": "Sebastian",
+      "aliases": [
+        "Sebastian Klein",
+        "Klein",
+        "Sebastard De-Klein",
+        "boss"
+      ],
+      "age": 30,
+      "observable": true,
+      "gender": "male",
+      "role": "the hero; the scorned illegitimate son of the Klein family, jailed for three days for reckless driving and secretly a billionaire running a plan",
+      "personality": "Languid, amused and unhurried in public, letting the world think he is a loser. In truth he is calculating and in control: his jail stay is an alibi, and the Quinn marriage is the final piece of his plan.",
+      "appearance": "A strikingly handsome Caucasian man of 30, tall at about 188 cm, athletic, with broad shoulders and a lean, muscular frame. He has a chiselled face with a sharply defined jaw, high cheekbones, a straight nose, a faint stubble shadow and piercing steel-grey eyes under dark straight brows. Short, thick black hair is textured and swept back. His skin is healthy and fair-olive. He wears a sleek steel-and-black luxury wristwatch whenever he is out of jail.",
+      "hair": {
+        "length": "short",
+        "colour": "black"
+      },
+      "build": "athletic",
+      "wardrobe": "An orange short-sleeved prison-issue top that fits his athletic frame closely across the broad shoulders and chest, over a fitted black long-sleeved thermal undershirt, well-fitted orange prison-issue drawstring trousers that sit neatly on his hips and legs, and plain white slip-on canvas shoes. No watch.",
+      "wardrobe_states": {
+        "S0": "An orange short-sleeved prison-issue top that fits his athletic frame closely across the broad shoulders and chest, over a fitted black long-sleeved thermal undershirt, well-fitted orange prison-issue drawstring trousers that sit neatly on his hips and legs, and plain white slip-on canvas shoes. No watch.",
+        "S1": "His own clothes: a fitted black collared dress shirt with the top button open, slim black tailored trousers, a black leather belt, black leather Chelsea boots and the steel-and-black luxury wristwatch.",
+        "S2": "A black slim-cut tuxedo jacket with satin lapels, a crisp white dress shirt, a black bow tie, black tuxedo trousers, black patent oxfords, a small white rose boutonnière and the steel-and-black wristwatch.",
+        "S3": "Night at home: a fitted white ribbed sleeveless undershirt that shows his broad shoulders and athletic arms, loose black cotton lounge trousers, and bare feet. The wristwatch is still on.",
+        "S4": "Day at home: a fitted black fine-knit crew-neck sweater with long sleeves pushed slightly up the forearms, slim charcoal-grey chinos, black leather loafers and the steel-and-black wristwatch."
+      },
+      "signature_color": "black",
+      "voice": "A low, smooth, lazy baritone with a teasing edge; he speaks unhurried and drops to a confident murmur when he gives orders.",
+      "looks": {
+        "S0": {
+          "garments": [
+            {
+              "class": "short sleeve top",
+              "colour": "orange"
+            },
+            {
+              "class": "long sleeve top",
+              "colour": "black"
+            },
+            {
+              "class": "trousers",
+              "colour": "orange"
+            }
+          ]
+        },
+        "S1": {
+          "garments": [
+            {
+              "class": "long sleeve top",
+              "colour": "black"
+            },
+            {
+              "class": "trousers",
+              "colour": "black"
+            }
+          ]
+        },
+        "S2": {
+          "garments": [
+            {
+              "class": "long sleeve outwear",
+              "colour": "black"
+            },
+            {
+              "class": "long sleeve top",
+              "colour": "white"
+            },
+            {
+              "class": "trousers",
+              "colour": "black"
+            }
+          ]
+        },
+        "S3": {
+          "garments": [
+            {
+              "class": "vest",
+              "colour": "white"
+            },
+            {
+              "class": "trousers",
+              "colour": "black"
+            }
+          ]
+        },
+        "S4": {
+          "garments": [
+            {
+              "class": "long sleeve top",
+              "colour": "black"
+            },
+            {
+              "class": "trousers",
+              "colour": "grey"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "daniel",
+      "name": "Daniel",
+      "aliases": [
+        "Daniel (V.O.)"
+      ],
+      "age": 30,
+      "observable": true,
+      "gender": "male",
+      "role": "Sebastian's loyal, efficient personal assistant and driver",
+      "personality": "Discreet, loyal and businesslike. He reports crisply and carries out Sebastian's whispered orders without question.",
+      "appearance": "An ordinary, neat-looking Caucasian man of 30, about 180 cm, of slim build. He has a narrow, clean-shaven face, attentive brown eyes and thin rimless glasses. Short brown hair is in a tidy side-part.",
+      "hair": {
+        "length": "short",
+        "colour": "brown"
+      },
+      "build": "slim",
+      "wardrobe": "A navy-blue slim two-piece business suit over a white dress shirt, a forest-green silk tie, black leather oxfords and thin rimless glasses.",
+      "signature_color": "green",
+      "voice": "A clear, even, efficient tenor; brisk and respectful, with short answers.",
+      "looks": {
+        "base": {
+          "garments": [
+            {
+              "class": "long sleeve outwear",
+              "colour": "blue"
+            },
+            {
+              "class": "long sleeve top",
+              "colour": "white"
+            },
+            {
+              "class": "trousers",
+              "colour": "blue"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "officer",
+      "name": "Officer",
+      "aliases": [],
+      "age": 50,
+      "observable": true,
+      "gender": "male",
+      "role": "a gruff jail corrections officer who releases Sebastian",
+      "personality": "Impatient, foul-mouthed and world-weary, but he gives a grudging warning out of habit.",
+      "appearance": "An ordinary Caucasian man of 50, about 178 cm, of heavy-set large build with a thick neck and a paunch. He has a broad, ruddy-cheeked face with deep frown lines, a bushy grey-brown moustache and small sharp eyes. Short-cropped brown hair is greying at the temples.",
+      "hair": {
+        "length": "short",
+        "colour": "brown"
+      },
+      "build": "large",
+      "wardrobe": "A dark-navy long-sleeved corrections uniform shirt with plain cloth shoulder patches and no lettering, a plain metal badge, dark-navy uniform trousers, a wide brown leather duty belt with pouches and a key ring, and black work boots.",
+      "signature_color": "brown",
+      "voice": "A gravelly, loud, barking bass with a rough working-class accent; he shouts when ignored.",
+      "looks": {
+        "base": {
+          "garments": [
+            {
+              "class": "long sleeve top",
+              "colour": "blue"
+            },
+            {
+              "class": "trousers",
+              "colour": "blue"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "guest_1",
+      "name": "Guest 1",
+      "aliases": [],
+      "age": 25,
+      "observable": true,
+      "gender": "female",
+      "role": "a gossiping wedding guest",
+      "personality": "Nosy and catty; she enjoys a scandal and sneers at Sebastian Klein's lateness.",
+      "appearance": "An ordinary, pretty Caucasian woman of 25, about 165 cm. Curvy figure, full hips, defined waist, hourglass shape. She has a round face, brown eyes and light everyday make-up with a pink lip. Shoulder-length brown hair is styled in loose waves. She wears small silver earrings.",
+      "hair": {
+        "length": "shoulder",
+        "colour": "brown"
+      },
+      "build": "curvy",
+      "wardrobe": "A knee-length blush-pink fitted cocktail dress with short sleeves and a square neckline, a silver clutch, small silver earrings and nude block heels.",
+      "signature_color": "pink",
+      "voice": "A chirpy, breathy, gossipy mid-pitch voice with a knowing laugh in it.",
+      "looks": {
+        "base": {
+          "garments": [
+            {
+              "class": "short sleeve dress",
+              "colour": "pink"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "guest_2",
+      "name": "Guest 2",
+      "aliases": [],
+      "age": 25,
+      "observable": true,
+      "gender": "female",
+      "role": "a gossiping wedding guest",
+      "personality": "Scandalised and eager to share rumours; she spreads talk about Sebastian Klein's thugs and joblessness.",
+      "appearance": "An ordinary, pleasant-looking Caucasian woman of 25, about 168 cm. Curvy figure, full hips, defined waist, hourglass shape. She has a long oval face, freckles across the nose, green eyes and light make-up with a coral lip. Long auburn hair is in a low side ponytail. She wears small gold studs.",
+      "hair": {
+        "length": "long",
+        "colour": "red"
+      },
+      "build": "curvy",
+      "wardrobe": "A knee-length mustard-yellow sleeveless A-line sundress with a fitted bodice and a round neck, small gold studs, a woven straw clutch and tan sandals.",
+      "signature_color": "yellow",
+      "voice": "A slightly nasal, hushed, conspiratorial alto that speeds up as she gossips.",
+      "looks": {
+        "base": {
+          "garments": [
+            {
+              "class": "vest dress",
+              "colour": "yellow"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "officiant",
+      "name": "Officiant",
+      "aliases": [],
+      "age": 58,
+      "observable": true,
+      "gender": "male",
+      "role": "the wedding officiant who marries Natalie and Sebastian",
+      "personality": "Brisk and professional. He keeps the ceremony short and ignores the family's tension.",
+      "appearance": "An ordinary, dignified Caucasian man of 58, about 175 cm, of average build. He has a long, lined face with a neatly trimmed short white beard, gentle pale-blue eyes and reading glasses with thin gold frames. His short, thinning white hair is combed neatly to the side.",
+      "hair": {
+        "length": "short",
+        "colour": "white"
+      },
+      "build": "average",
+      "wardrobe": "A dark charcoal-black two-piece suit over a pale-blue dress shirt with a plain dark tie, a long cream-white satin officiant's stole draped over his shoulders and hanging down the front of the jacket, black leather oxfords and thin gold-framed reading glasses. He holds his hands clasped in front of him.",
+      "signature_color": "white",
+      "voice": "A warm, measured, resonant bass-baritone with a ceremonial cadence.",
+      "looks": {
+        "base": {
+          "garments": [
+            {
+              "class": "long sleeve outwear",
+              "colour": "black"
+            },
+            {
+              "class": "long sleeve top",
+              "colour": "blue"
+            },
+            {
+              "class": "trousers",
+              "colour": "black"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "locations": [
+    {
+      "id": "mansion_living_room",
+      "name": "The Quinn family mansion, living room",
+      "description": "A spacious, luxurious present-day living room in a wealthy suburban mansion, in cream, white and gold. Back wall: three tall arched French windows with sheer white curtains and gold tie-backs, through which daylight floods in from behind and slightly above, the main light source. Left wall: a white marble fireplace with a large gilt-framed mirror above it and two tall vases of white orchids on the mantel. Right wall: a wide open double doorway with white panelled doors, the way in from the marble entrance hall, and a gold console table beside it. Front wall (behind the camera): built-in white bookshelves. A crystal chandelier hangs from the centre of the ceiling and adds warm fill light. A long cream tufted three-seat sofa stands in the middle of the room with its back to the windows on the back wall, facing the camera. A low rectangular glass-and-gold coffee table stands in front of the sofa. A single cream upholstered armchair stands across the coffee table from the sofa, nearer the camera, its back to the camera and facing the sofa. A pale-grey patterned rug lies under the sofa, the table and the armchair, on a polished light wood floor.",
+      "setting": "interior",
+      "period": "contemporary",
+      "furnishings": [
+        "cream sofa",
+        "glass coffee table",
+        "armchair",
+        "marble fireplace",
+        "gilt mirror",
+        "arched French windows",
+        "crystal chandelier",
+        "double doorway",
+        "console table",
+        "rug",
+        "bookshelves"
+      ]
+    },
+    {
+      "id": "jail_cell",
+      "name": "Jail, a cell",
+      "description": "A narrow, present-day concrete jail cell painted dull grey-green, with a scuffed grey concrete floor. Back wall: a small high rectangular window with steel bars, through which a pale shaft of daylight slants down into the cell. Left wall: a steel bunk bolted lengthwise along the wall, with a thin grey mattress, a folded grey wool blanket and a flat pillow. Right wall: the barred steel cell door, the only way in, which opens onto a dim corridor; beside it in the back-right corner stands a stainless-steel toilet-sink unit. Front wall (behind the camera): bare concrete with a small steel shelf. A caged fluorescent tube on the ceiling gives a flat, cold white top light.",
+      "setting": "interior",
+      "period": "contemporary",
+      "furnishings": [
+        "steel bunk",
+        "thin mattress",
+        "grey blanket",
+        "barred cell door",
+        "barred high window",
+        "steel toilet-sink unit",
+        "steel shelf",
+        "caged fluorescent light"
+      ]
+    },
+    {
+      "id": "jail_front_desk",
+      "name": "Jail, front desk",
+      "description": "A present-day jail processing and release area with beige walls and a grey linoleum floor. A chest-high grey laminate front desk runs across the room, parallel to the back wall and a few steps in front of it, with a computer monitor and a tray on its top. Back wall: grey metal filing cabinets, a plain round wall clock and, at the back wall's left end, a heavy steel security door with a small wire-glass pane, which leads back to the cells. Right wall: a heavy steel exit door with a push bar and a small wire-glass window, the way out to the street. Left wall: a row of small grey steel property lockers and a steel bench bolted to the floor beneath them. Front wall (behind the camera): a cork notice board. Rectangular fluorescent ceiling panels give cool, even top light, and daylight comes in faintly through the exit door's small window on the right wall.",
+      "setting": "interior",
+      "period": "contemporary",
+      "furnishings": [
+        "front desk counter",
+        "computer monitor",
+        "filing cabinets",
+        "wall clock",
+        "steel security door",
+        "steel exit door",
+        "property lockers",
+        "steel bench",
+        "notice board",
+        "fluorescent ceiling panels"
+      ]
+    },
+    {
+      "id": "jail_street",
+      "name": "Street outside the jail",
+      "description": "A quiet present-day city street outside a jail, in bright daylight. Back side: a tall chain-link fence topped with coils of razor wire, and behind it the blocky grey concrete jail building with narrow slit windows. A steel pedestrian gate in the fence, opposite the camera, is the way out of the jail. A wide grey concrete sidewalk runs along the fence, and the curb runs parallel to it across the frame, with an empty parking lane of dark asphalt in front of it. Left side: the road and the fence stretch away into the distance, with a streetlamp at the curb. Right side: the sidewalk continues past a row of young trees and a bus-stop pole. Front side (behind the camera): the far lane of the road and low buildings opposite. Sunlight falls from high on the left and casts short shadows to the right; the sky is clear.",
+      "setting": "exterior",
+      "period": "contemporary",
+      "furnishings": [
+        "razor-wire chain-link fence",
+        "concrete jail building",
+        "pedestrian gate",
+        "sidewalk",
+        "curb",
+        "streetlamp",
+        "young trees",
+        "bus-stop pole"
+      ]
+    },
+    {
+      "id": "wedding_garden",
+      "name": "Garden of the wedding venue",
+      "description": "A small, elegant present-day outdoor wedding garden on a manicured green lawn, in sunny daylight. Back side: a white wooden wedding arch at the end of the aisle, hung with sheer white drapes and garlands of white roses, peonies and greenery, with a tall clipped hedge and leafy trees behind it. A straight aisle of white petals on a pale runner runs down the middle of the lawn from the camera to the arch, between two short rows of white folding chairs that face the arch. Left side: a clipped boxwood hedge and, in front of it, a small round white high cocktail table holding a silver tray. Right side: white rose bushes along a low cream stone garden wall. Front side (behind the camera): a gravel path from the venue's terrace, the way in, where the aisle begins. Sunlight comes from high on the right and gives warm, soft highlights.",
+      "setting": "exterior",
+      "period": "contemporary",
+      "furnishings": [
+        "wedding arch",
+        "white drapes",
+        "flower garlands",
+        "aisle runner",
+        "white folding chairs",
+        "cocktail table",
+        "silver tray",
+        "boxwood hedge",
+        "rose bushes",
+        "stone garden wall",
+        "lawn"
+      ]
+    },
+    {
+      "id": "sebastian_apartment",
+      "name": "Sebastian's apartment, living room",
+      "description": "The living room of a small but bright, clean and stylish present-day one-bedroom downtown apartment, with white walls, a pale oak floor and warm modern-minimalist décor. Back wall: on its left half, a large floor-to-ceiling window with sheer linen curtains looking out over the city skyline; by day, sunlight streams in through it from behind, and by night the city lights glow through it. On the right half of the back wall is the white panelled bedroom door, the only bedroom. Left wall: the apartment's front door, a dark-grey panelled door with a brass handle, which is the way in, with wall hooks and a slim oak shoe bench beside it. Right wall: a compact open kitchenette with white flat-front cabinets, a pale stone counter and two oak stools tucked under the counter's overhang. Front wall (behind the camera): low oak bookshelves. A charcoal-grey linen three-seat couch stands in the middle of the room, slightly left of centre, its back to the camera, facing the back wall's window, with a brass arc floor lamp at its left end and a low round oak coffee table in front of it. A small round light-oak dining table with two upholstered chairs stands in the right half of the room, between the couch and the kitchenette, nearer the bedroom door. A glass globe pendant lamp hangs over the dining table. At night the warm floor lamp from the left and the pendant over the table are the light sources; by day the window on the back wall gives soft, bright light.",
+      "setting": "interior",
+      "period": "contemporary",
+      "furnishings": [
+        "charcoal couch",
+        "round coffee table",
+        "round dining table",
+        "two dining chairs",
+        "arc floor lamp",
+        "pendant lamp",
+        "floor-to-ceiling window",
+        "bedroom door",
+        "front door",
+        "kitchenette",
+        "bar stools",
+        "bookshelves"
+      ]
+    }
+  ],
+  "props": [
+    {
+      "id": "hospital_statement",
+      "name": "hospital statement",
+      "description": "A single US-letter sheet of white paper with a pale-blue hospital header band, rows of printed billing lines and a bold total at the bottom, slightly creased from folding.",
+      "text": "patient Jennifer Quinn, pay this amount $53,000"
+    },
+    {
+      "id": "release_form",
+      "name": "release form on a clipboard",
+      "description": "A brown hardboard clipboard with a silver metal clip holding a white printed form with signature lines, and a cheap black ballpoint pen clipped beside it."
+    },
+    {
+      "id": "expensive_car",
+      "name": "expensive car",
+      "description": "A sleek, polished black luxury sedan with tinted windows, chrome trim, dark alloy wheels and no visible badges or plates text."
+    },
+    {
+      "id": "bouquet",
+      "name": "bouquet",
+      "description": "A modest round bridal bouquet of white roses and baby's breath with a little greenery, its stems wrapped in ivory satin ribbon, about 25 cm across."
+    },
+    {
+      "id": "champagne_glasses",
+      "name": "glasses of champagne",
+      "description": "Tall, slim crystal champagne flutes filled with pale golden sparkling champagne, served from a round silver tray."
+    },
+    {
+      "id": "gift_box",
+      "name": "wedding-gift box",
+      "description": "An empty square white cardboard gift box, about 25 by 25 by 12 cm, with its lid off. A loose white satin ribbon and bow hang from it, and the inside is lined with white tissue paper. Cassie later crushes it into a crumpled shape."
+    },
+    {
+      "id": "lauren_phone",
+      "name": "Lauren's phone",
+      "description": "An Apple iPhone 15 Pro Max in natural titanium in a lilac-purple leather case, with the Apple logo visible on the back. Its screen shows a banking app's transfer page."
+    },
+    {
+      "id": "guest_phone",
+      "name": "Guest 1's phone",
+      "description": "An Apple iPhone 15 in pink with the Apple logo on the back, held up vertically to record video, the camera app open on screen with a red record button."
+    },
+    {
+      "id": "natalie_phone",
+      "name": "Natalie's phone",
+      "description": "An Apple iPhone 13 in blue in a clear case, with the Apple logo on the back. Its lock screen shows a bank notification banner.",
+      "text": "Transfer received: $50,000."
+    },
+    {
+      "id": "front_door_key",
+      "name": "key",
+      "description": "A single brass Schlage house key, about 6 cm long, with the Schlage name stamped on its bow, on a plain silver split ring."
+    },
+    {
+      "id": "agreement",
+      "name": "agreement",
+      "description": "A single white US-letter sheet of paper, handwritten in blue ink in Natalie's neat cursive. It is headed 'Agreement' and lists three numbered rules, with Natalie's signature and Sebastian's signature beneath it. It is later called their divorce agreement.",
+      "text": "Separate rooms. No other partners. Divorce after trust-fund release."
+    },
+    {
+      "id": "natalie_bag",
+      "name": "bag",
+      "description": "Natalie's soft pale-blue pebbled-leather Coach shoulder tote, about 35 cm wide, with its small leather Coach logo tag on the front. Its magnetic top is left unfastened."
+    },
+    {
+      "id": "lace_bra",
+      "name": "lace bra",
+      "description": "A folded pale-blush lace bra, small and light, that falls out of Natalie's bag. It is shown only briefly and in passing."
+    },
+    {
+      "id": "pillow",
+      "name": "pillow",
+      "description": "A plump white bed pillow in a crisp white cotton case, about 50 by 70 cm."
+    },
+    {
+      "id": "blanket",
+      "name": "blanket",
+      "description": "A soft oatmeal-grey knitted throw blanket, about 130 by 170 cm, with a chunky cable-knit texture."
+    },
+    {
+      "id": "sebastian_phone",
+      "name": "Sebastian's phone",
+      "description": "An Apple iPhone 15 Pro in black titanium with the Apple logo on the back. Its screen shows a private-banking notification on a dark background.",
+      "text": "Private banking — Total assets: $2,400,000,000."
+    },
+    {
+      "id": "breakfast",
+      "name": "breakfast",
+      "description": "Two white ceramic plates of scrambled eggs, buttered toast and sliced strawberries, with two white mugs of black coffee and cutlery, set out on the dining table."
+    },
+    {
+      "id": "dress_bag",
+      "name": "the bag containing her wedding dress",
+      "description": "A long white zippered garment bag of matte nylon, about 150 cm long, on a wooden hanger, with the ivory satin of the wedding dress faintly visible through it."
+    },
+    {
+      "id": "coins",
+      "name": "two coins",
+      "description": "Two silver US quarter-dollar coins, about 24 mm across, with George Washington's profile on the face."
+    },
+    {
+      "id": "folder",
+      "name": "folder",
+      "description": "A plain manila card folder, letter size, holding typed report pages, photographs and a copy of the hospital statement."
+    },
+    {
+      "id": "daniel_phone",
+      "name": "Daniel's phone",
+      "description": "A Samsung Galaxy S24 Ultra in titanium black with the Samsung wordmark on the back. Its screen shows a payment confirmation with a green check mark.",
+      "text": "Hospital payment confirmed."
+    },
+    {
+      "id": "car_key",
+      "name": "car key",
+      "description": "A sleek black Mercedes-Benz smart key fob with chrome edging and the silver three-pointed-star logo, about 7 cm long, the key to the black Mercedes-Maybach."
+    }
+  ],
+  "beats": [
+    {
+      "lines": [
+        1,
+        6
+      ],
+      "seconds": 4,
+      "event": "The Quinn family mansion: a hospital statement for patient Jennifer Quinn, $53,000, lies on the coffee table; Natalie sits facing George and Lauren."
+    },
+    {
+      "lines": [
+        7,
+        8
+      ],
+      "seconds": 4.9,
+      "event": "Natalie asks her Dad to lend her $50,000 for her Mom's kidney dialysis."
+    },
+    {
+      "lines": [
+        9,
+        11
+      ],
+      "seconds": 6.6,
+      "event": "George hesitates; Lauren calls Natalie shameless; Natalie promises to pay them back."
+    },
+    {
+      "lines": [
+        12,
+        17
+      ],
+      "seconds": 11.7,
+      "event": "George suggests lending the money; Lauren accuses him of still caring about his ex-wife and reminds him he would have nothing without her."
+    },
+    {
+      "lines": [
+        18,
+        21
+      ],
+      "seconds": 8.3,
+      "event": "Cassie walks in, stands over Natalie and mocks her as a beggar; Natalie lowers her eyes."
+    },
+    {
+      "lines": [
+        22,
+        26
+      ],
+      "seconds": 8.1,
+      "event": "Natalie takes the statement and gets up to leave; Cassie stops her: they'll give her the money; Lauren is surprised."
+    },
+    {
+      "lines": [
+        27,
+        36
+      ],
+      "seconds": 18.6,
+      "event": "Cassie's condition: Natalie must marry Sebastian Klein, the jailed illegitimate Klein son, in her place; Lauren praises the idea and mocks 'Sebastard De-Klein'."
+    },
+    {
+      "lines": [
+        37,
+        42
+      ],
+      "seconds": 11.6,
+      "event": "Natalie refuses; Cassie dangles her mother's medical bills; George stays silent; Natalie agrees to marry Sebastian Klein; Cassie smirks and Lauren smiles."
+    },
+    {
+      "lines": [
+        43,
+        48
+      ],
+      "seconds": 6,
+      "event": "The jail behind razor wire; Sebastian Klein lies on his bunk with his back to the door; an officer comes to the cell door."
+    },
+    {
+      "lines": [
+        49,
+        52
+      ],
+      "seconds": 6.6,
+      "event": "The Officer orders Klein up; Sebastian doesn't move; the Officer yells at him to move."
+    },
+    {
+      "lines": [
+        53,
+        55
+      ],
+      "seconds": 7,
+      "event": "Sebastian slowly sits up and asks what the rush is; the Officer says most people want out faster."
+    },
+    {
+      "lines": [
+        56,
+        62
+      ],
+      "seconds": 11.1,
+      "event": "At the front desk Sebastian, in his own clothes, puts his watch on; the Officer hands him the release form and warns him off reckless driving; Sebastian makes no promises and signs with a smile."
+    },
+    {
+      "lines": [
+        63,
+        67
+      ],
+      "seconds": 8,
+      "event": "Sebastian walks out onto the street and straightens his collar; an expensive car waits with his assistant Daniel, who opens the door."
+    },
+    {
+      "lines": [
+        68,
+        76
+      ],
+      "seconds": 14.9,
+      "event": "Daniel reports the plan is on track: jail is the perfect alibi, his father suspects nothing, and the Quinns agreed to the marriage; Sebastian finds it interesting."
+    },
+    {
+      "lines": [
+        77,
+        81
+      ],
+      "seconds": 8.7,
+      "event": "Sebastian whispers an order in Daniel's ear; 'This is the final puzzle piece. So it begins.' Daniel goes to the driver's door."
+    },
+    {
+      "lines": [
+        82,
+        87
+      ],
+      "seconds": 5,
+      "event": "3 Weeks Later, the wedding garden: Natalie in her wedding dress waits under the arch with her bouquet beside George; there is no groom."
+    },
+    {
+      "lines": [
+        88,
+        92
+      ],
+      "seconds": 15.4,
+      "event": "George assures her the groom is coming; Natalie confirms the money deal; Lauren checks her watch and says yes; Natalie warns them to keep their word."
+    },
+    {
+      "lines": [
+        93,
+        97
+      ],
+      "seconds": 15.7,
+      "event": "Guest 1 and Guest 2 gossip over champagne that Sebastian Klein is a bastard outcast who hangs with thugs, and late for his own wedding."
+    },
+    {
+      "lines": [
+        98,
+        102
+      ],
+      "seconds": 15.7,
+      "event": "Cassie taunts Natalie about marrying an unwanted, ugly bastard; Natalie tells her to be quiet and show respect."
+    },
+    {
+      "lines": [
+        103,
+        106
+      ],
+      "seconds": 7.9,
+      "event": "Sebastian walks up the aisle as the guests turn; he passes Lauren with 'Excuse me' and she gasps 'Ooh'."
+    },
+    {
+      "lines": [
+        107,
+        111
+      ],
+      "seconds": 10,
+      "event": "Sebastian takes his place beside Natalie and introduces himself as her groom, Sebastian Klein; Natalie is stunned and Cassie stares."
+    },
+    {
+      "lines": [
+        112,
+        117
+      ],
+      "seconds": 7.1,
+      "event": "Cassie tips an empty wedding-gift box toward Natalie, mocking the husband's bank account; Lauren sneers at the rented dress and the broke groom."
+    },
+    {
+      "lines": [
+        118,
+        120
+      ],
+      "seconds": 4.9,
+      "event": "Natalie reminds them they picked him; Sebastian says his family doesn't like him either; Natalie: one less family to impress."
+    },
+    {
+      "lines": [
+        121,
+        124
+      ],
+      "seconds": 5.7,
+      "event": "The Officiant asks if they are ready; Natalie says yes, Sebastian says 'Let's give them something to hate', and they are pronounced married."
+    },
+    {
+      "lines": [
+        125,
+        127
+      ],
+      "seconds": 8,
+      "event": "Sebastian offers his hand; Natalie pulls him closer by his lapels and they share a brief kiss."
+    },
+    {
+      "lines": [
+        128,
+        132
+      ],
+      "seconds": 10.6,
+      "event": "Cassie reaches for Sebastian and offers 'the prettier sister'; he steps away: 'I already did.' Guest 2 laughs into her champagne."
+    },
+    {
+      "lines": [
+        133,
+        136
+      ],
+      "seconds": 6.5,
+      "event": "Natalie demands the money; Lauren grips her handbag and stalls; Sebastian tells her to pay the fifty thousand she promised."
+    },
+    {
+      "lines": [
+        137,
+        142
+      ],
+      "seconds": 13.7,
+      "event": "Cassie mocks them as beggars; Sebastian says the Quinns can't afford to keep their word; Guest 1 starts filming; Sebastian exposes the hospital-bill trick and George orders Lauren to pay."
+    },
+    {
+      "lines": [
+        143,
+        147
+      ],
+      "seconds": 9.4,
+      "event": "Lauren furiously taps her phone; Natalie's phone chimes: Transfer received: $50,000; Sebastian quips they can now afford to look generous."
+    },
+    {
+      "lines": [
+        148,
+        150
+      ],
+      "seconds": 6.5,
+      "event": "Cassie crushes the gift box; Lauren marches away, followed by George, Cassie and the guests."
+    },
+    {
+      "lines": [
+        151,
+        155
+      ],
+      "seconds": 10,
+      "event": "Sebastian puts a key in Natalie's hand: she's coming home with him tonight; Natalie closes her fingers around it and asks whose bed she's sleeping in."
+    },
+    {
+      "lines": [
+        156,
+        160
+      ],
+      "seconds": 3.1,
+      "event": "Night in Sebastian's apartment: Natalie, still in her wedding dress, stops at the bedroom door: 'One bedroom?'"
+    },
+    {
+      "lines": [
+        161,
+        163
+      ],
+      "seconds": 3.7,
+      "event": "Sebastian gives her the bedroom and takes the couch; Natalie says a wedding isn't permission; he tells her to set the rules."
+    },
+    {
+      "lines": [
+        164,
+        168
+      ],
+      "seconds": 9.4,
+      "event": "Natalie writes an agreement as they trade terms: married outside, separate lives inside, no other dates, knock first."
+    },
+    {
+      "lines": [
+        169,
+        173
+      ],
+      "seconds": 8.9,
+      "event": "They agree to divorce when his trust fund clears, with Sebastian paying both lawyers; the rules appear on the page."
+    },
+    {
+      "lines": [
+        174,
+        175
+      ],
+      "seconds": 5,
+      "event": "Natalie signs the agreement and Sebastian signs beneath her name."
+    },
+    {
+      "lines": [
+        176,
+        180
+      ],
+      "seconds": 8,
+      "event": "Natalie lifts her open bag onto the table and a lace bra falls onto the agreement; she scoops it up; 'New clause?' 'No. And not an invitation.'"
+    },
+    {
+      "lines": [
+        181,
+        183
+      ],
+      "seconds": 7,
+      "event": "Sebastian drops a pillow on the couch; Natalie goes into the bedroom; Sebastian settles on the couch in an undershirt."
+    },
+    {
+      "lines": [
+        184,
+        188
+      ],
+      "seconds": 9.6,
+      "event": "Natalie returns to the doorway in her sleepwear and open robe and asks if the wedding kiss was just for them; Sebastian steps close: 'What do you think?'"
+    },
+    {
+      "lines": [
+        189,
+        195
+      ],
+      "seconds": 13.1,
+      "event": "Natalie takes his hand, wants to find out, and kisses him; he kisses her back; she steps back: 'That's enough for tonight.' 'Your call.'"
+    },
+    {
+      "lines": [
+        196,
+        200
+      ],
+      "seconds": 10.5,
+      "event": "Natalie closes the bedroom door; Sebastian's phone lights up with a private-banking notification of $2,400,000,000 in total assets, and he slips it beneath the divorce agreement."
+    },
+    {
+      "lines": [
+        201,
+        205
+      ],
+      "seconds": 4.5,
+      "event": "Morning: Natalie, in a wrap dress, sets breakfast on the table while Sebastian folds his blanket on the couch."
+    },
+    {
+      "lines": [
+        206,
+        207
+      ],
+      "seconds": 3.1,
+      "event": "Sebastian asks if she still wants the divorce; Natalie says one kiss didn't change the contract."
+    },
+    {
+      "lines": [
+        208,
+        212
+      ],
+      "seconds": 7.4,
+      "event": "Natalie picks up the bag with her wedding dress to return it for the deposit; Sebastian offers to buy it; she mocks his 'couch coins'."
+    },
+    {
+      "lines": [
+        213,
+        214
+      ],
+      "seconds": 5.6,
+      "event": "Natalie drops two coins into his palm, found under her bag: 'Don't spend it all at once.'"
+    },
+    {
+      "lines": [
+        215,
+        216
+      ],
+      "seconds": 5,
+      "event": "Natalie puts on a cropped jacket and leaves the apartment."
+    },
+    {
+      "lines": [
+        217,
+        220
+      ],
+      "seconds": 7.8,
+      "event": "Sebastian sets the coins beside his phone and calls Daniel to find out what the Quinns have done to her; Daniel (V.O.): 'On it, boss.'"
+    },
+    {
+      "lines": [
+        221,
+        224
+      ],
+      "seconds": 5.1,
+      "event": "Later, Daniel puts a folder in front of Sebastian: her father left, and Natalie and her mother got nothing."
+    },
+    {
+      "lines": [
+        225,
+        228
+      ],
+      "seconds": 9.2,
+      "event": "Sebastian opens the folder and Jennifer Quinn's hospital statement falls out; Daniel explains that the Quinns offered help only if she took Cassie's place; 'They sold her.'"
+    },
+    {
+      "lines": [
+        229,
+        233
+      ],
+      "seconds": 10.3,
+      "event": "Sebastian closes the folder and orders the balance and all future treatment paid; Daniel enters the payment: Hospital payment confirmed."
+    },
+    {
+      "lines": [
+        234,
+        240
+      ],
+      "seconds": 9.7,
+      "event": "Sebastian keeps his name off the payment; Daniel sets a car key beside Natalie's coins; Sebastian picks it up; she still thinks he's broke: 'Let her.'"
+    },
+    {
+      "lines": [
+        241,
+        244
+      ],
+      "seconds": 9,
+      "event": "Sebastian pockets the two coins: 'To my wife. Her family had their fun. Now it's my turn.' He leaves the apartment."
+    }
+  ],
+  "episodes": [
+    {
+      "id": "EP001",
+      "title": "Sold to the Outcast",
+      "summary": "In The Quinn family mansion, Natalie begs George for money for her mother's dialysis. Lauren humiliates her and George gives in, until Cassie offers the money on one condition: Natalie must marry the jailed Klein bastard, Sebastian Klein, in Cassie's place. Cornered, Natalie agrees.",
+      "est_seconds": 73.8,
+      "end_hook": "Natalie agrees to marry Sebastian Klein as Cassie smirks and Lauren smiles.",
+      "lines": [
+        1,
+        42
+      ]
+    },
+    {
+      "id": "EP002",
+      "title": "The Perfect Alibi",
+      "summary": "Sebastian Klein is roused from his cell and released after three days for reckless driving. Outside the jail his assistant Daniel waits with an expensive car and reveals that the jail stay was an alibi, his father suspects nothing, and the Quinns agreed to the marriage. Sebastian whispers a secret order.",
+      "est_seconds": 62.3,
+      "end_hook": "Sebastian calls the marriage the final puzzle piece: 'So it begins.'",
+      "lines": [
+        43,
+        81
+      ]
+    },
+    {
+      "id": "EP003",
+      "title": "The Groom Arrives",
+      "summary": "Three weeks later in the wedding garden, Natalie waits at the arch with no groom. She makes George and Lauren promise the money, guests gossip about Sebastian Klein, and Cassie mocks him as ugly before Natalie silences her. Then a strikingly handsome Sebastian strides up the aisle.",
+      "est_seconds": 69.7,
+      "end_hook": "Sebastian introduces himself as Natalie's groom, Sebastian Klein; Natalie is stunned and Cassie stares.",
+      "lines": [
+        82,
+        111
+      ]
+    },
+    {
+      "id": "EP004",
+      "title": "Pay Her",
+      "summary": "In the Garden of the wedding venue, Cassie and Lauren mock the broke groom. The Officiant marries Natalie and Sebastian, sealed with a brief kiss, and Sebastian snubs Cassie's flirting. When Lauren stalls on the money, Sebastian shames her in front of Guest 1's camera, George orders her to pay, and Natalie receives $50,000. The Quinns storm off, and Sebastian hands Natalie the key to his home.",
+      "est_seconds": 82.4,
+      "end_hook": "Natalie takes Sebastian's key and asks: 'But whose bed am I sleeping in?'",
+      "lines": [
+        112,
+        155
+      ]
+    },
+    {
+      "id": "EP005",
+      "title": "The Contract Bedroom",
+      "summary": "In Sebastian's apartment Natalie finds only one bedroom. They write and sign a contract of separate lives, no other partners, and a divorce once his trust fund clears. After an awkward moment with her bag, Natalie returns in her sleepwear to test the wedding kiss, kisses him, then shuts her door. Alone, Sebastian reads a banking alert: $2.4 billion in assets.",
+      "est_seconds": 78.3,
+      "end_hook": "Sebastian's phone shows total assets of $2,400,000,000, and he hides it under their divorce agreement.",
+      "lines": [
+        156,
+        200
+      ]
+    },
+    {
+      "id": "EP006",
+      "title": "Couch Coins",
+      "summary": "Over breakfast in Sebastian's apartment, Natalie insists the contract stands, teases her 'broke' husband with two couch coins and leaves to return her dress. Sebastian has Daniel investigate the Quinns, learns they sold Natalie, secretly pays all of Jennifer Quinn's treatment without giving his name, and takes the key to his luxury car.",
+      "est_seconds": 76.7,
+      "end_hook": "Sebastian pockets Natalie's coins and leaves: 'Her family had their fun. Now it's my turn.'",
+      "lines": [
+        201,
+        244
+      ]
+    }
+  ],
+  "red_line_issues": []
+}
