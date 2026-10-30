@@ -13,7 +13,7 @@ import { buttonVariants } from "@/components/ui/button";
 
 const CJK = /[㐀-鿿]/;
 
-/** A drama's cover: its title set as type, over its leads once the agent has drawn them. */
+/** A drama's poster: a frame of its own work, its title over it; before any, the designed empty cover, its title as type. */
 function Poster({ drama, mode }: { drama: DramaCard; mode?: Mode | "none" }) {
   const { t } = useT();
   const elsewhere = mode !== undefined && mode !== "none" && mode !== drama.mode;
@@ -21,17 +21,11 @@ function Poster({ drama, mode }: { drama: DramaCard; mode?: Mode | "none" }) {
   const stamp = elsewhere ? t(drama.mode === "replay" ? "otherMode.replay" : "otherMode.pine") : undefined;
   const stamps = [drama.rehearsal ? t("rehearsal.tag") : undefined, stamp].filter(Boolean).join(" · ");
   return (
-    <div className={`poster ${CJK.test(drama.title) ? "vertical" : ""} ${drama.cover ? "work" : drama.cast.length ? "cast" : ""}`}>
-      {drama.cover ? (
+    <div className={`poster ${CJK.test(drama.title) ? "vertical" : ""} ${drama.cover ? "work" : ""}`}>
+      {drama.cover && (
         <span className="work-pic">
           <Still still={drama.cover} />
         </span>
-      ) : drama.cast.length > 0 && (
-        <div className="leads">
-          {drama.cast.map((url) => (
-            <span key={url} style={{ backgroundImage: `url(${url})` }} />
-          ))}
-        </div>
       )}
       <h3>{drama.title}</h3>
       <div className="foot">{stamps && <span className="stamp">{stamps}</span>}</div>

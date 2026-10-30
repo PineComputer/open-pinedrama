@@ -49,7 +49,7 @@ describe("Home", () => {
     expect(other).not.toHaveTextContent(/scenes|segments|planned|ago/);
   });
 
-  it("makes a poster of the drama's own work when it has some, else of its leads' faces", async () => {
+  it("makes a poster of the drama's own work when it has some, else the empty cover, never its leads' sheets", async () => {
     answer("/api/app", replay);
     answer("/api/inbox", []);
     answer("/api/dramas", [{ ...stepmother, cast: ["/api/files/7"], cover: { url: "/api/files/9" } }, { ...bride, cast: ["/api/files/8"] }]);
@@ -57,8 +57,11 @@ describe("Home", () => {
     const withWork = await tileOf(/^The Stepmother/);
     expect(withWork.querySelector(".poster .still")).toHaveStyle({ backgroundImage: "url(/api/files/9)" });
     expect(withWork.querySelector(".poster .leads")).toBeNull();
-    const faces = await tileOf(/^Bride on Bail/);
-    expect(faces.querySelector(".poster .leads span")).toHaveStyle({ backgroundImage: "url(/api/files/8)" });
+    const empty = await tileOf(/^Bride on Bail/);
+    expect(empty.querySelector(".poster .still")).toBeNull();
+    expect(empty.querySelector(".poster .leads")).toBeNull();
+    expect(empty.querySelector('[style*="/api/files/8"]')).toBeNull();
+    expect(within(empty).getByRole("heading", { name: "Bride on Bail" })).toBeInTheDocument();
   });
 
   it("greets the maker by the time of day, with what waits for them", async () => {

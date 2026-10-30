@@ -200,7 +200,7 @@ export interface DramaCard {
   waiting: number;
   /** The leads' sheets, once drawn: the faces on the drama's poster. */
   cast: string[];
-  /** A picture of the drama's own work for its poster: its newest approved take, else its newest photoreal storyboard. */
+  /** A picture of the drama's own work for its poster: its newest take's last frame, else its newest photoreal storyboard. */
   cover?: Still;
   spent: Spend;
   createdAt: string;

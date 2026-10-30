@@ -47,21 +47,11 @@ h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 700; lett
 .gate .empty-note { margin: 0; }
 
 /* Slate: the drama shelf */
-/* A drama's poster: a title card in the viewing room's ink, its leads behind the title once drawn. */
+/* A drama's poster: a frame of its own work behind the title, or the title card alone before any (the designed empty cover). */
 .poster { position: relative; aspect-ratio: 2 / 3; display: grid; grid-template-rows: 1fr auto; gap: 14px; padding: 18px 16px 16px; color: var(--text-primary); background: radial-gradient(120% 70% at 30% 18%, var(--border), transparent 70%), linear-gradient(180deg, var(--surface-container), var(--surface-dim)); border-radius: var(--radius-medium); overflow: hidden; transition: transform 0.35s var(--ease), box-shadow 0.35s var(--ease); }
 .poster h3 { align-self: start; font-size: 25px; line-height: 1.08; overflow: hidden; overflow-wrap: normal; word-break: keep-all; color: var(--text-primary); }
 .poster.vertical h3 { writing-mode: vertical-rl; justify-self: end; font-size: 28px; letter-spacing: 0.14em; max-height: 100%; }
 .poster .foot { display: flex; align-items: flex-end; justify-content: flex-end; min-height: 26px; }
-/* Once the leads are drawn, they stand side by side behind the title, as on a short drama's poster. */
-.poster .leads { position: absolute; inset: 0; display: flex; background: var(--surface-dim); }
-.poster .leads span { flex: 1; background: center 32% / cover no-repeat; filter: saturate(0.88); transition: transform 0.6s var(--ease); }
-.poster .leads span + span { border-left: 1px solid color-mix(in srgb, var(--shadow-base) 70%, transparent); }
-.ds-dramacard:hover .poster .leads span { transform: scale(1.03); }
-.poster .leads::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, color-mix(in srgb, var(--shadow-base) 62%, transparent), color-mix(in srgb, var(--shadow-base) 0%, transparent) 42%, color-mix(in srgb, var(--shadow-base) 0%, transparent) 60%, color-mix(in srgb, var(--shadow-base) 70%, transparent)); }
-.poster.vertical .leads::after { background: linear-gradient(270deg, color-mix(in srgb, var(--shadow-base) 62%, transparent), color-mix(in srgb, var(--shadow-base) 0%, transparent) 45%), linear-gradient(180deg, color-mix(in srgb, var(--shadow-base) 0%, transparent) 62%, color-mix(in srgb, var(--shadow-base) 70%, transparent)); }
-.poster.cast > :not(.leads) { position: relative; }
-/* Once the leads are drawn the cover is theirs; the title is under it. */
-.poster.cast h3 { display: none; }
 .poster .stamp { font: 600 12.5px/1 var(--font-sans); font-variant-caps: all-small-caps; letter-spacing: 0.08em; padding: 5px 7px; border-radius: 2px; color: var(--text-primary); background: color-mix(in srgb, var(--surface-dim) 70%, transparent); border: 1px solid var(--border); }
 :lang(zh) .poster .stamp { font-variant-caps: normal; letter-spacing: 0.04em; }
 
@@ -733,8 +723,6 @@ a.ds-tag:hover { background: var(--hover); }
 .ds-dramacard .txt .logline { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .ds-dramacard .txt .tags { display: flex; gap: 6px; margin-top: 6px; overflow: hidden; }
 .ds-dramacard .txt .tags > * { flex: none; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
-/* Before any take or photoreal board, a cover crops each lead's look sheet to its close-up, the face at its right end. */
-.ds-dramacard .poster .leads span, .ds-hero .poster .leads span { background-size: auto 100%; background-position: 90% 0; }
 .page .head h1 { font-size: 28px; }
 .ds-hero + .ds-tabs-wrap { margin-top: 36px; }
 
