@@ -87,10 +87,10 @@ export function AcceptInWords({ reviewId, onSent }: { reviewId: string; onSent?:
       </label>
       <textarea id="fountain-words" placeholder={t("fountain.wordsHint")} value={words} onChange={(event) => setWords(event.target.value)} />
       <div className="acts">
-        <Button icon="arrow-counter-clockwise" disabled={!ready} onClick={() => void send.run()}>
+        <Button variant="outline" icon="arrow-counter-clockwise" disabled={!ready} onClick={() => void send.run()}>
           {t("fountain.sendBack")}
         </Button>
-        <Button variant="primary" icon="check" disabled={!ready} onClick={() => void send.run()}>
+        <Button variant="default" icon="check" disabled={!ready} onClick={() => void send.run()}>
           {t("fountain.accept")}
         </Button>
       </div>

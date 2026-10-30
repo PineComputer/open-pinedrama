@@ -330,7 +330,7 @@ export function NewDrama() {
             </label>
           )}
           {error !== undefined && <p className="error flush">{errorText(error, t)}</p>}
-          <Button variant="primary" size="lg" busy={busy} disabled={missing !== undefined} aria-describedby={reasonId} onClick={() => void start()}>
+          <Button variant="default" size="lg" busy={busy} disabled={missing !== undefined} aria-describedby={reasonId} onClick={() => void start()}>
             {busy ? t("new.starting") : t("new.start")}
           </Button>
           <small id={reasonId} className="reason">
