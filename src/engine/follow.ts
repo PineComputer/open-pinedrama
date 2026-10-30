@@ -2,13 +2,14 @@
 // chat and the crew view. When a turn ends, its files are copied into the library before
 // anything else happens, because the next turn can change them (plan, rule 1).
 import type { FileKind } from "../shared/types.ts";
-import { ENDED, type TurnInfo } from "./fleet.ts";
+import { ENDED, type TurnFile, type TurnInfo } from "./fleet.ts";
 import { computerRef, fleet, markStopped, sessionRef } from "./computers.ts";
 import { all, get, now, run, transaction } from "./db.ts";
 import { VERDICT_KINDS, save, seenBefore } from "./library.ts";
 import { publish } from "./live.ts";
 import { classify, namedPaths, typeOf } from "./classify.ts";
 import { onEnded, stopsForMaker } from "./flow.ts";
+import { recordStatus } from "./status.ts";
 import { approveUnreviewed, questionAsked, questionReady } from "./reviews.ts";
 import { type SessionRow, type TurnRow, computer as computerRow, costRaised, raiseCost, episode as episodeRow, episodeCode, session as sessionRow } from "./records.ts";
 
@@ -164,12 +165,18 @@ export async function settle(sessionId: string, info: TurnInfo): Promise<void> {
   if (!turn?.files_saved) {
     const computer = computerRow(session.computer_id)!;
     const where = { dramaId: session.drama_id, episodeId: session.episode_id, sessionId, turnId: info.turnId };
-    // Packs keep their names and change at every stop: each stop's parts are all saved again.
-    const packs = info.files.filter((file) => !fresh.includes(file) && classify(file.path).kind === "archive");
+    // Packs and the status report keep their names and change at every stop: each stop's are all saved again, so
+    // a report returned unchanged still belongs to this turn.
+    const everyStop = (file: TurnFile) => ["archive", "status"].includes(classify(file.path).kind);
+    const packs = info.files.filter((file) => !fresh.includes(file) && everyStop(file));
     try {
       for (const file of [...fresh, ...packs]) {
         const body = await fleet().openFile(computerRef(computer), sessionRef(session), file.path);
-        await save(body, { ...where, relPath: file.path, type: file.type });
+        if (classify(file.path).kind === "status") {
+          const bytes = new Uint8Array(await new Response(body).arrayBuffer());
+          await save(bytes, { ...where, relPath: file.path, type: file.type });
+          recordStatus(sessionId, info.turnId, bytes);
+        } else await save(body, { ...where, relPath: file.path, type: file.type });
       }
       // Named but not returned: fetched, unless the drama has that file already.
       const fetch = async (relPath: string) => {
