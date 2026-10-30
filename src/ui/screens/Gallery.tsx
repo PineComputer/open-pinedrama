@@ -13,8 +13,7 @@ import { Steps } from "../components/Steps.tsx";
 import { Tabs } from "../components/Tabs.tsx";
 import { useToast } from "../components/Toast.tsx";
 import { Tooltip } from "../components/Tooltip.tsx";
-
-type Theme = "system" | "light" | "dark";
+import { applyTheme, type ThemeChoice, themeChoice } from "../theme/theme.ts";
 
 const STATUSES: Status[] = ["work", "line", "you", "accepted", "back", "stale", "redline", "failed"];
 
@@ -28,16 +27,13 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 }
 
 export default function Gallery() {
-  const [theme, setTheme] = useState<Theme>(() => (document.documentElement.dataset.theme as Theme | undefined) ?? "system");
+  const [theme, setTheme] = useState<ThemeChoice>(themeChoice);
   const [surface, setSurface] = useState("studio");
   const [tab, setTab] = useState("boards");
   const [dialog, setDialog] = useState(false);
   const toast = useToast();
-  // System: no theme set, so the tokens follow the system's choice (tokens.css).
-  useEffect(() => {
-    if (theme === "system") delete document.documentElement.dataset.theme;
-    else document.documentElement.dataset.theme = theme;
-  }, [theme]);
+  // For this page only: the maker's own choice, in Settings, stays as it was.
+  useEffect(() => applyTheme(theme), [theme]);
   return (
     <main className="ds-gallery">
       <header className="ds-gallery-head">
@@ -48,14 +44,14 @@ export default function Gallery() {
       <Section title="Button">
         <Button variant="primary">Primary</Button>
         <Button>Secondary</Button>
-        <Button variant="text">Text</Button>
-        <Button variant="danger">Stop the drama</Button>
-        <Button variant="seal">Review now</Button>
-        <Button variant="primary" size={40}>Upload script</Button>
-        <Button size={32}>Small</Button>
+        <Button variant="ghost">Ghost</Button>
+        <Button variant="danger" size="sm" icon="stop">Stop drama</Button>
+        <Button variant="primary" size="lg" icon="upload">Upload script</Button>
+        <Button size="sm">Small</Button>
         <Button busy>Sending</Button>
         <Button disabledReason="Give every item a verdict first">Send review</Button>
-        <IconButton label="Fit the board" icon={<span aria-hidden="true">⤢</span>} />
+        <IconButton label="Fit the board" icon="frame-corners" />
+        <IconButton label="Sidebar" icon="list" on />
       </Section>
 
       <Section title="StatusChip">

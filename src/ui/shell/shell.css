@@ -1,54 +1,89 @@
-/* The project shell (TopBar, StepRail, StatusBar), from the hi-fi design. Every value is a token. */
+/* The shell (NavRail, Sidebar, TopBar, DramaBar), in the pro direction's measurements (its spec,
+   "NavRail", "Sidebar", "Breadcrumb", "TopBar", "SurfaceSwitch", "ProjectChip"). Colours are
+   Reveric's tokens; sizes are base.css's. */
 
-.ds-topbar { position: sticky; top: 0; z-index: 20; height: var(--bar); display: flex; align-items: center; gap: var(--s4); padding-inline: var(--s4); border-bottom: 1px solid var(--rule); background: color-mix(in oklch, var(--paper) 94%, transparent); backdrop-filter: blur(8px); min-width: 0; }
-.ds-wordmark { display: flex; align-items: center; gap: 8px; font: 500 17px/1 var(--serif); white-space: nowrap; color: var(--ink); text-decoration: none; }
-.ds-crumb { display: flex; align-items: center; gap: 8px; min-width: 0; font-size: 14px; color: var(--ink-2); }
-.ds-crumb b { color: var(--ink); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.ds-crumb .ds-slash { color: var(--ink-3); }
-.ds-surface { margin-inline: auto; }
-.ds-mainnav { display: flex; gap: var(--s5); }
-.ds-mainnav a { color: var(--ink-3); padding: 4px 0; border-bottom: 1px solid transparent; text-decoration: none; }
-.ds-mainnav a:hover { color: var(--ink); }
-.ds-mainnav a[aria-current="page"] { color: var(--ink); border-color: var(--ink); }
-.ds-specchip { font: 500 12px var(--mono); color: var(--ink-3); border: 1px solid var(--rule); border-radius: var(--r1); padding: 3px 7px; white-space: nowrap; }
-.ds-meta { display: flex; align-items: center; gap: var(--s3); color: var(--ink-3); font-size: 13px; white-space: nowrap; }
-.ds-nextreview { display: inline-flex; align-items: center; gap: 8px; height: 34px; padding: 0 6px 0 12px; border-radius: var(--r2); border: 0; background: var(--seal); color: var(--on-seal); font: 600 14px/1 var(--sans); cursor: pointer; white-space: nowrap; }
-.ds-nextreview .ds-count { background: var(--on-seal); color: var(--seal); font: 700 12px/1 var(--mono); border-radius: 4px; padding: 5px 6px; }
-.ds-nextreview:hover:not(:disabled) { background: var(--seal-deep); }
-.ds-nextreview.is-none { background: var(--paper-2); color: var(--ink-3); cursor: default; }
-.ds-nextreview.is-none .ds-count { background: var(--paper-3); color: var(--ink-3); }
-@media (max-width: 1100px) { .ds-topbar .ds-specchip, .ds-topbar .ds-budget, .ds-meta > span { display: none; } }
-@media (max-width: 720px) { .ds-crumb { display: none; } .ds-topbar { gap: 8px; } }
-:root[data-shell="darwin"] .ds-topbar { padding-left: 92px; -webkit-app-region: drag; user-select: none; }
-:root[data-shell] .ds-topbar a, :root[data-shell] .ds-topbar button { -webkit-app-region: no-drag; }
+.ds-app { display: flex; height: 100vh; min-height: 0; background: var(--canvas); color: var(--text-primary); }
+.ds-main { flex: 1; min-width: 0; display: flex; flex-direction: column; min-height: 0; }
+.ds-scroll { flex: 1; min-height: 0; overflow: auto; }
 
-.ds-shell { display: grid; grid-template-columns: 224px minmax(0, 1fr); min-height: calc(100vh - var(--bar)); }
-@media (max-width: 900px) { .ds-shell { grid-template-columns: minmax(0, 1fr); } .ds-rail { border-right: 0; border-bottom: 1px solid var(--rule); position: static; max-height: none; } }
+/* NavRail: 52 wide on the dimmed surface; 36px places, the current one selected; settings and the mark at the foot. */
+.ds-navrail { width: var(--rail); flex: none; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 10px 0; background: var(--surface-dim); border-right: 1px solid var(--border); }
+.ds-navrail .ds-iconbtn { width: 36px; height: 36px; color: var(--text-muted); }
+.ds-navrail .ds-iconbtn:hover { color: var(--text-primary); }
+.ds-navrail .ds-iconbtn.is-on { color: var(--text-primary); }
+.ds-navrail hr { width: 24px; border: 0; border-top: 1px solid var(--border); margin: 6px 0; }
+.ds-navrail-gap { flex: 1; }
+.ds-navrail-mark { margin-top: 8px; display: grid; place-items: center; width: 30px; height: 30px; }
 
-.ds-rail { border-right: 1px solid var(--rule); padding: var(--s4) var(--s3); display: flex; flex-direction: column; gap: 2px; background: var(--paper); position: sticky; top: var(--bar); align-self: start; max-height: calc(100vh - var(--bar)); overflow-y: auto; }
-.ds-rail nav { display: grid; gap: 2px; }
-.ds-stepbtn { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: var(--r2); color: var(--ink-2); font-weight: 550; text-decoration: none; }
-.ds-stepbtn:hover { background: var(--paper-2); color: var(--ink); }
-.ds-stepbtn[aria-current="page"] { background: var(--sheet); color: var(--ink); box-shadow: var(--e1); }
-.ds-stepbtn .ds-needs { margin-left: auto; background: var(--seal); color: var(--on-seal); font: 700 11px/1.2 var(--mono); padding: 3px 5px; border-radius: 4px; white-space: nowrap; }
-.ds-tree { list-style: none; margin: 2px 0 6px 18px; padding: 0 0 0 10px; border-left: 1px solid var(--rule); display: grid; gap: 1px; }
-.ds-tree a { display: grid; grid-template-columns: 52px minmax(0, 1fr) 0 auto; gap: 8px; align-items: center; padding: 5px 8px; border-radius: 4px; font-size: 13px; color: var(--ink-2); text-decoration: none; }
-.ds-tree a:hover { background: var(--paper-2); }
-.ds-tree a[aria-current="true"] { background: var(--paper-3); color: var(--ink); }
-.ds-tree .ds-tree-code { font: 500 12px var(--mono); }
-.ds-tree .ds-tree-title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--ink-3); font-size: 12px; }
-.ds-tree .ds-tree-mark { width: 8px; height: 8px; border-radius: 50%; }
-.ds-tree .ds-tree-mark.is-you { background: var(--seal); }
-.ds-tree .ds-tree-mark.is-work { background: var(--work); animation: ds-breathe 1.4s infinite; }
-.ds-tree .ds-tree-mark.is-done { background: var(--done); }
-.ds-tree .ds-tree-mark.is-line { border: 1.5px solid var(--rule-2); }
-.ds-rail-foot { margin-top: var(--s4); padding: var(--s3) 10px 0; border-top: 1px solid var(--rule); display: grid; gap: 8px; justify-items: start; font-size: 13px; }
-.ds-rail-foot a { color: var(--ink-2); text-decoration: none; display: inline-flex; gap: 6px; align-items: center; }
-.ds-rail-foot a:hover, .ds-rail-foot a[aria-current="page"] { color: var(--ink); }
-.ds-rail-foot .count { color: var(--seal); font-weight: 600; }
+/* Sidebar: 248 wide; the project at its head, places as 36-high rows, the episode tree, and what was spent at its foot. */
+.ds-sidebar { width: var(--side); flex: none; display: flex; flex-direction: column; min-height: 0; background: var(--surface-dim); border-right: 1px solid var(--border); }
+.ds-sidebar-head { height: var(--top); flex: none; display: flex; align-items: center; gap: 10px; padding: 0 10px 0 12px; border-bottom: 1px solid var(--border); }
+.ds-brand { display: flex; align-items: center; gap: 10px; font-size: 14px; }
+.ds-project { display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1; padding: 4px; border-radius: var(--radius-medium); }
+.ds-project:hover { background: var(--hover); }
+.ds-project img, .ds-project-blank { width: 30px; height: 40px; flex: none; border-radius: var(--radius-small); object-fit: cover; object-position: top; background: var(--surface-container); }
+.ds-project > span { min-width: 0; display: grid; }
+.ds-project b { font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ds-project small { color: var(--text-muted); font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ds-sidebar-scroll { flex: 1; overflow: auto; padding: 10px 8px; display: flex; flex-direction: column; gap: 2px; }
+.ds-sidebar-sec { padding: 14px 10px 6px; font: 600 var(--type-ui-tiny-size)/1.3 var(--font-sans); letter-spacing: 0.5px; text-transform: uppercase; color: var(--text-muted); }
+.ds-navi { width: 100%; display: flex; align-items: center; gap: 10px; min-height: 36px; padding: 0 10px; border: 0; border-radius: var(--radius-medium); background: transparent; color: var(--text-secondary); font-size: 13px; text-align: left; cursor: pointer; }
+.ds-navi .ds-icon { color: var(--text-muted); }
+.ds-navi:hover { background: var(--hover); }
+.ds-navi[aria-current="page"] { background: var(--selected); color: var(--text-primary); font-weight: 600; }
+.ds-navi[aria-current="page"] .ds-icon { color: var(--text-primary); }
+.ds-navi > span:not(.ds-navi-count) { min-width: 0; display: grid; }
+.ds-navi small { color: var(--text-muted); font-size: 11.5px; font-weight: 400; }
+.ds-navi-count { margin-left: auto; min-width: 18px; height: 18px; padding: 0 6px; border-radius: var(--radius-pill); background: var(--warning-text); color: var(--on-accent); font: 700 10.5px/18px var(--font-sans); text-align: center; white-space: nowrap; }
+.ds-sidebar .tune { padding: 8px 10px; display: grid; gap: 10px; }
 
-.ds-work { min-width: 0; display: flex; flex-direction: column; }
-.ds-workin { flex: 1; padding: var(--s6) clamp(16px, 3vw, var(--s8)) var(--s10); min-width: 0; }
-.ds-statusbar { border-top: 1px solid var(--rule); padding: 7px clamp(16px, 3vw, var(--s8)); display: flex; gap: var(--s5); flex-wrap: wrap; font: 500 12px var(--mono); color: var(--ink-3); background: var(--paper); position: sticky; bottom: 0; }
+/* The episode tree: 28-high rows of code, what it is doing and a dot. */
+.ds-tree { list-style: none; margin: 2px 0 4px 18px; padding: 0 0 0 8px; border-left: 1px solid var(--border); display: grid; gap: 1px; }
+.ds-tree a { display: grid; grid-template-columns: 50px minmax(0, 1fr) 0 8px; align-items: center; gap: 6px; min-height: 28px; padding: 0 8px; border-radius: var(--radius-small); color: var(--text-secondary); font-size: 12px; }
+.ds-tree a:hover { background: var(--hover); color: var(--text-primary); }
+.ds-tree a[aria-current="true"] { background: var(--selected); color: var(--text-primary); }
+.ds-tree .ds-tree-code { font: 500 11px var(--font-mono); }
+.ds-tree .ds-tree-now { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ds-tree .ds-tree-mark { width: 6px; height: 6px; border-radius: 50%; background: var(--text-subtle); }
+.ds-tree .ds-tree-mark.is-you { background: var(--warning-text); }
+.ds-tree .ds-tree-mark.is-work { background: var(--text-primary); }
+.ds-tree .ds-tree-mark.is-done { background: var(--success); }
+.ds-tree .ds-tree-mark.is-line { background: transparent; border: 1px solid var(--text-subtle); }
+.ds-sidebar-foot { padding: 12px 14px; border-top: 1px solid var(--border); display: grid; gap: 8px; font-size: 12px; color: var(--text-muted); }
+.ds-standing { display: flex; flex-wrap: wrap; gap: 4px 10px; }
 
-@media (prefers-reduced-motion: reduce) { .ds-tree .ds-tree-mark.is-work { animation: none; } }
+/* TopBar: 52 high: back, the breadcrumb, then the stop control and the next review. */
+.ds-topbar { height: var(--top); flex: none; display: flex; align-items: center; gap: 10px; padding: 0 16px 0 10px; border-bottom: 1px solid var(--border); background: var(--canvas); min-width: 0; }
+.ds-topbar-gap { flex: 1; }
+.ds-crumb { display: flex; align-items: center; min-width: 0; font-size: 13px; color: var(--text-muted); white-space: nowrap; padding-left: 6px; }
+.ds-crumb > span { display: inline-flex; align-items: center; gap: 6px; min-width: 0; }
+.ds-crumb > span + span { margin-left: 6px; }
+.ds-crumb a:hover { color: var(--text-primary); }
+.ds-crumb b { color: var(--text-primary); font-weight: 600; overflow: hidden; text-overflow: ellipsis; }
+.ds-crumb .ds-icon { width: 12px; height: 12px; color: var(--text-subtle); }
+.ds-nextreview .ds-count { min-width: 18px; height: 18px; padding: 0 5px; border-radius: var(--radius-pill); background: var(--on-accent); color: var(--accent); font-size: 11px; display: inline-grid; place-items: center; }
+
+/* The drama's bar: the surface switch, then its chips. */
+.ds-dramabar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 18px; }
+.ds-dramabar-gap { flex: 1; }
+.ds-projectchip { display: inline-flex; align-items: center; gap: 8px; height: 34px; padding: 0 12px; border-radius: var(--radius-pill); border: 1px solid var(--border); background: var(--surface-container); color: var(--text-primary); font-size: 12.5px; font-weight: 600; white-space: nowrap; }
+.ds-projectchip .ds-icon { width: 15px; height: 15px; color: var(--text-muted); }
+.ds-projectchip .num { font-family: var(--font-mono); }
+.ds-projectchip .quiet { font-weight: 500; }
+
+.ds-workin { padding: 16px 16px 40px; min-width: 0; }
+
+/* In the desktop app on macOS the top of the window is its title bar, with the traffic lights at
+   18, 18 (desktop/main.ts) over the rail and the start of what follows it: room is made for them,
+   and the bars drag the window, not their controls. */
+:root[data-shell="darwin"] .ds-topbar, :root[data-shell="darwin"] .ds-sidebar-head { -webkit-app-region: drag; user-select: none; }
+:root[data-shell="darwin"] .ds-navrail { padding-top: 44px; -webkit-app-region: drag; }
+:root[data-shell="darwin"] .ds-sidebar-head, :root[data-shell="darwin"] .ds-navrail + .ds-main .ds-topbar { padding-left: 30px; }
+:root[data-shell] .ds-topbar a, :root[data-shell] .ds-topbar button, :root[data-shell] .ds-sidebar-head a, :root[data-shell] .ds-navrail button { -webkit-app-region: no-drag; }
+
+@media (max-width: 1100px) { .ds-sidebar { display: none; } }
+@media (max-width: 760px) {
+  .ds-navrail { display: none; }
+  .ds-crumb > span:not(.is-here) { display: none; }
+  .ds-dramabar .ds-projectchip { display: none; }
+}

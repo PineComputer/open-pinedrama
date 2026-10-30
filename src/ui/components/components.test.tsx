@@ -51,23 +51,28 @@ describe("Button", () => {
   it("comes in the variants and sizes the design names", () => {
     render(
       <>
-        <Button variant="primary" size={40}>Primary</Button>
-        <Button variant="secondary" size={36}>Secondary</Button>
-        <Button variant="text" size={32}>Text</Button>
-        <Button variant="danger">Danger</Button>
-        <Button variant="seal">Review now</Button>
+        <Button variant="primary" size="lg">Primary</Button>
+        <Button variant="secondary">Secondary</Button>
+        <Button variant="ghost" size="sm">Ghost</Button>
+        <Button variant="danger" size="sm">Stop drama</Button>
       </>,
     );
-    expect(screen.getByRole("button", { name: "Primary" })).toHaveClass("ds-btn", "is-primary", "is-s40");
-    expect(screen.getByRole("button", { name: "Text" })).toHaveClass("is-text", "is-s32");
-    expect(screen.getByRole("button", { name: "Review now" })).toHaveClass("is-seal");
+    expect(screen.getByRole("button", { name: "Primary" })).toHaveClass("ds-btn", "is-primary", "is-lg");
+    expect(screen.getByRole("button", { name: "Secondary" })).toHaveClass("is-secondary", "is-md");
+    expect(screen.getByRole("button", { name: "Ghost" })).toHaveClass("is-ghost", "is-sm");
+    expect(screen.getByRole("button", { name: "Stop drama" })).toHaveClass("is-danger", "is-sm");
   });
 });
 
 describe("IconButton", () => {
   it("is named by its label, which it shows as a tooltip too", () => {
-    render(<IconButton label="Fit the board" icon={<svg />} />);
+    render(<IconButton label="Fit the board" icon="frame-corners" />);
     expect(screen.getByRole("button", { name: "Fit the board" })).toBeInTheDocument();
+  });
+
+  it("says when it is on, as the rail's current place is", () => {
+    render(<IconButton label="Sidebar" icon="list" on />);
+    expect(screen.getByRole("button", { name: "Sidebar" })).toHaveClass("ds-iconbtn", "is-on");
   });
 });
 

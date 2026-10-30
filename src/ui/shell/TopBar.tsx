@@ -1,11 +1,13 @@
-// The bar over every screen. In a drama: where you are, the surface (Studio, Canvas, Graph) with
-// the selection kept across them, the drama's format and preset, what it has spent, and the next
-// review. Elsewhere: the dramas, the review queue and settings.
-import type { AppInfo, DramaView, ReviewSummary } from "../../shared/types.ts";
-import { BudgetMeter } from "../components/BudgetMeter.tsx";
+// The bar over the work, in the pro direction (its spec, "TopBar"): back, where you are as a
+// breadcrumb, and the next review. In a drama, the bar under it holds the surface (Studio, Canvas,
+// Graph) with the selection kept across them, and the drama's preset, format and spend.
+import type { DramaView, ReviewSummary } from "../../shared/types.ts";
+import { IconButton } from "../components/Button.tsx";
 import { Segmented } from "../components/Segmented.tsx";
-import { setLang, useT } from "../i18n.ts";
-import { Mark } from "../Mark.tsx";
+import { Tooltip } from "../components/Tooltip.tsx";
+import { Icon } from "../icons.tsx";
+import { useT } from "../i18n.ts";
+import { moneyText } from "../labels.ts";
 import { Link, match, navigate, usePath } from "../router.tsx";
 
 type Surface = "studio" | "canvas" | "graph";
@@ -32,11 +34,39 @@ function SurfaceSwitch({ drama }: { drama: DramaView }) {
       value={surface}
       onChange={go}
       options={[
-        { value: "studio", label: t("surface.studio") },
-        { value: "canvas", label: t("surface.canvas") },
-        { value: "graph", label: t("surface.graph") },
+        { value: "studio", label: t("surface.studio"), icon: "squares-four" },
+        { value: "canvas", label: t("surface.canvas"), icon: "flow-arrow" },
+        { value: "graph", label: t("surface.graph"), icon: "tree-structure" },
       ]}
     />
+  );
+}
+
+/** The drama's surface switch and its chips: preset, format, and what it has spent. */
+export function DramaBar({ drama }: { drama: DramaView }) {
+  const { t, lang } = useT();
+  return (
+    <div className="ds-dramabar">
+      <SurfaceSwitch drama={drama} />
+      <span className="ds-dramabar-gap" />
+      {drama.preset && (
+        <span className="ds-projectchip">
+          <Icon name="sparkle" />
+          {drama.preset}
+        </span>
+      )}
+      <span className="ds-projectchip">
+        <Icon name="frame-corners" />
+        {drama.format}
+      </span>
+      <Tooltip text={t("spent.about")}>
+        <span className="ds-projectchip" tabIndex={0}>
+          <Icon name="coins" />
+          <span className="num">{moneyText(drama.spent, t, lang)}</span>
+          {drama.mode === "replay" && <span className="quiet">{t("budget.simulated")}</span>}
+        </span>
+      </Tooltip>
+    </div>
   );
 }
 
@@ -49,7 +79,7 @@ function NextReview({ waiting }: { waiting: ReviewSummary[] }) {
   return (
     <button
       type="button"
-      className={`ds-nextreview ${others.length ? "" : "is-none"}`}
+      className="ds-btn is-primary is-sm ds-nextreview"
       disabled={!others.length}
       aria-label={`${t("next.label")}, ${t("next.waiting", { n: others.length })}`}
       onClick={() => navigate(`/r/${others[0].id}`)}
@@ -59,49 +89,35 @@ function NextReview({ waiting }: { waiting: ReviewSummary[] }) {
   );
 }
 
-export function TopBar({ app, waiting, drama }: { app?: AppInfo; waiting: ReviewSummary[]; drama?: DramaView }) {
-  const { t, lang } = useT();
-  const { path } = usePath();
-  const ready = app !== undefined && app.mode !== "none";
+export interface Crumb {
+  label: string;
+  to?: string;
+}
+
+/** Where you are: each step back a link, the last the page itself. */
+export function Breadcrumb({ crumbs }: { crumbs: Crumb[] }) {
+  const { t } = useT();
+  return (
+    <nav className="ds-crumb" aria-label={t("crumb.label")}>
+      {crumbs.map((crumb, n) => (
+        <span key={n} className={n === crumbs.length - 1 ? "is-here" : undefined}>
+          {n > 0 && <Icon name="caret-right" />}
+          {crumb.to && n < crumbs.length - 1 ? <Link to={crumb.to}>{crumb.label}</Link> : <b aria-current="page">{crumb.label}</b>}
+        </span>
+      ))}
+    </nav>
+  );
+}
+
+export function TopBar({ crumbs, waiting, ready, children }: { crumbs: Crumb[]; waiting: ReviewSummary[]; ready: boolean; children?: React.ReactNode }) {
+  const { t } = useT();
+  const back = crumbs.length > 1 ? crumbs[crumbs.length - 2].to : undefined;
   return (
     <header className="ds-topbar">
-      <Link to="/" className="ds-wordmark">
-        <Mark />
-        {t("app.name")}
-      </Link>
-      {drama ? (
-        <>
-          <div className="ds-crumb">
-            <span className="ds-slash">/</span>
-            <b>{drama.title}</b>
-          </div>
-          <span className="ds-surface">
-            <SurfaceSwitch drama={drama} />
-          </span>
-          <span className="ds-specchip">{[drama.format, drama.preset].filter(Boolean).join(" · ")}</span>
-          <BudgetMeter spentUsd={drama.spent.total} budgetUsd={null} simulated={drama.mode === "replay"} />
-        </>
-      ) : (
-        ready && (
-          <nav className="ds-surface ds-mainnav">
-            <Link to="/" aria-current={path === "/" || path === "/new" ? "page" : undefined}>
-              {t("nav.dramas")}
-            </Link>
-            <Link to="/inbox" aria-current={path === "/inbox" ? "page" : undefined}>
-              {t("nav.inbox")}
-            </Link>
-            <Link to="/settings" aria-current={path === "/settings" ? "page" : undefined}>
-              {t("nav.settings")}
-            </Link>
-          </nav>
-        )
-      )}
-      <span className="ds-meta">
-        {app?.mode === "replay" && <span>{t("mode.replay")}</span>}
-        <button type="button" className="ds-btn is-text is-s32" onClick={() => setLang(lang === "zh" ? "en" : "zh")}>
-          {lang === "zh" ? "English" : "中文"}
-        </button>
-      </span>
+      {back && <IconButton label={t("crumb.back")} icon="caret-left" onClick={() => navigate(back)} />}
+      <Breadcrumb crumbs={crumbs} />
+      <span className="ds-topbar-gap" />
+      {children}
       {ready && <NextReview waiting={waiting} />}
     </header>
   );

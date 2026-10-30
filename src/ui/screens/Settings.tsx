@@ -4,6 +4,7 @@ import { api, useAction } from "../api.ts";
 import { setLang, useT } from "../i18n.ts";
 import { errorText } from "../labels.ts";
 import { useNotifySetting } from "../notify.ts";
+import { setTheme, type ThemeChoice, themeChoice } from "../theme/theme.ts";
 import { ConnectForm } from "./Welcome.tsx";
 
 /** Reveric's notice links to it, as its NOTICES ask (AGPLv3 section 7(b); docs/REUSED.md). */
@@ -14,6 +15,7 @@ export const SOURCE = "https://github.com/PineComputer/open-pinedrama";
 export function Settings({ app, onChange }: { app: AppInfo; onChange: () => void }) {
   const { t, lang } = useT();
   const [connecting, setConnecting] = useState(false);
+  const [theme, chooseTheme] = useState<ThemeChoice>(themeChoice);
   const notify = useNotifySetting();
   const disconnect = useAction(async () => {
     await api("/api/connection", { method: "DELETE" });
@@ -75,6 +77,24 @@ export function Settings({ app, onChange }: { app: AppInfo; onChange: () => void
             <button aria-pressed={lang === "en"} className={lang === "en" ? "on" : ""} onClick={() => setLang("en")}>
               English
             </button>
+          </div>
+        </section>
+        <section>
+          <span className="label">{t("settings.theme")}</span>
+          <div className="options">
+            {(["dark", "light", "system"] as const).map((choice) => (
+              <button
+                key={choice}
+                aria-pressed={theme === choice}
+                className={theme === choice ? "on" : ""}
+                onClick={() => {
+                  setTheme(choice);
+                  chooseTheme(choice);
+                }}
+              >
+                {t(`settings.theme.${choice}`)}
+              </button>
+            ))}
           </div>
         </section>
         {notify.supported && (
