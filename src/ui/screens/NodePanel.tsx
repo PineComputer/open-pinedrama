@@ -1,8 +1,9 @@
-// The picked item's data in the canvas's inspector (docs/REDESIGN_PLAN.md, P6.8), read only, in
-// shadcn's Tabs. Prompt and Settings are what drama-cli's spec.json for the working version says
+// The picked node's panel, directly under it (design/app.js NodePanel; infinite-canvas's prompt
+// panel and astorie's node panel stand there), read only, in Radix's Tabs with the design's classes.
+// The prompt and the pill row are what drama-cli's spec.json for the working version says
 // (shared/spec.ts); Versions are the receipts the episode page lists, each with the maker's verdict;
-// Request is the request.json drama-cli sent, in react-json-view-lite's tree. What it was made from
-// is the inspector's Reads. Every hand control stands disabled (NodeActions).
+// Request is the request.json drama-cli sent, in react-json-view-lite's tree; Details are what the
+// node is, what uses it and what it reads. Every hand control stands disabled (NodeActions).
 import { Fragment, useContext, useMemo } from "react";
 import { collapseAllNested, defaultStyles, JsonView } from "react-json-view-lite";
 import "react-json-view-lite/dist/index.css";
@@ -10,9 +11,10 @@ import type { Item } from "../../shared/pipeline.ts";
 import { specBeside, specFacts } from "../../shared/spec.ts";
 import type { EpisodePage, FileItem, Receipt } from "../../shared/types.ts";
 import { useResource } from "../api.ts";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button } from "../components/Button.tsx";
-import { useT } from "../i18n.ts";
+import { Tabs } from "radix-ui";
+import { Button, IconButton } from "../components/Button.tsx";
+import { type Status, StatusChip } from "../components/StatusChip.tsx";
+import { type TKey, useT } from "../i18n.ts";
 import { useText } from "../viewing.tsx";
 import { JudgedLine } from "./Episode.tsx";
 import type { NodeActions } from "./Canvas.tsx";
@@ -79,7 +81,7 @@ function Prompt({ text, pictures }: { text: string; pictures: (FileItem | undefi
             if (!named) return <Fragment key={i}>{part}</Fragment>;
             const picture = pictures[Number(named[1]) - 1];
             return (
-              <span key={i} className="chip">
+              <span key={i} className="pchip">
                 {picture && <img src={picture.url} alt="" />}
                 {part}
               </span>
@@ -112,59 +114,109 @@ function Versions({ dramaId, item }: { dramaId: string; item: Item }) {
   );
 }
 
-export function NodePanel({ dramaId, item, label, work, files, actions }: { dramaId: string; item: Item; label: string; work?: FileItem; files: FileItem[]; actions: NodeActions }) {
+export interface PanelFacts {
+  label: string;
+  status: Status;
+  kind: string;
+  version: string;
+  usedBy: string;
+  reads: string;
+}
+
+export function NodePanel({
+  dramaId,
+  item,
+  work,
+  files,
+  facts,
+  dock,
+  onDock,
+  actions,
+  onClose,
+}: {
+  dramaId: string;
+  item: Item;
+  work?: FileItem;
+  files: FileItem[];
+  facts: PanelFacts;
+  /** Under the node, the default, or docked at the board's right (design/app.js NodePanel). */
+  dock: "under" | "right";
+  onDock: (to: "under" | "right") => void;
+  actions: NodeActions;
+  onClose: () => void;
+}) {
   const { t } = useT();
   const specFile = specBeside(work, files);
-  const facts = specFacts(useText(specFile).text);
-  const spec = useJson(specFile);
+  const spec = specFacts(useText(specFile).text);
+  const raw = useJson(specFile);
   const request = useJson(beside(work, files, "request.json"));
-  const pictures = sentPictures(spec, files);
+  const pictures = sentPictures(raw, files);
   const segment = item.episode !== undefined && item.kind !== "cut";
-
-  const settings = [
-    [t("canvas.model"), facts?.model],
-    [t("canvas.ratio"), facts?.ratio],
-    [t("canvas.resolution"), facts?.resolution],
-    [t("canvas.duration"), facts?.seconds !== undefined ? t("canvas.seconds", { n: facts.seconds }) : undefined],
-    [t("canvas.seed"), facts?.seed !== undefined ? String(facts.seed) : undefined],
-  ].filter((row): row is [string, string] => row[1] !== undefined);
+  const pills = [spec?.model, spec?.ratio, spec?.resolution, spec?.seconds !== undefined ? t("canvas.seconds", { n: spec.seconds }) : undefined, spec?.seed !== undefined ? t("canvas.seedPill", { n: spec.seed }) : undefined].filter((pill): pill is string => pill !== undefined);
 
   return (
-    <section className="ds-npanel nodrag nowheel" aria-label={t("canvas.panel", { item: label })}>
-      <Tabs defaultValue="prompt">
-        <TabsList variant="line">
-          <TabsTrigger value="prompt">{t("canvas.tab.prompt")}</TabsTrigger>
-          <TabsTrigger value="settings">{t("canvas.tab.settings")}</TabsTrigger>
-          {segment && <TabsTrigger value="versions">{t("canvas.tab.versions")}</TabsTrigger>}
-          <TabsTrigger value="request">{t("canvas.tab.request")}</TabsTrigger>
-        </TabsList>
-        <TabsContent value="prompt" className="prompt">
-          {facts?.prompt ? <Prompt text={facts.prompt} pictures={pictures} /> : <p className="quiet">{t("canvas.noSpec")}</p>}
-        </TabsContent>
-        <TabsContent value="settings">
-          {settings.length ? (
-            <dl className="kv">
-              {settings.map(([key, value]) => (
-                <Fragment key={key}>
-                  <dt>{key}</dt>
-                  <dd>{value}</dd>
-                </Fragment>
-              ))}
-            </dl>
+    <section className={`npanel nodrag nowheel${dock === "right" ? " docked" : ""}`} aria-label={t("canvas.panel", { item: facts.label })}>
+      <div className="nhead">
+        <b className="grow">{facts.label}</b>
+        <StatusChip status={facts.status} label={t(`status.${facts.status}` as TKey)} />
+        {dock === "right" ? <IconButton label={t("canvas.dockUnder")} icon="square-half-bottom" onClick={() => onDock("under")} /> : <IconButton label={t("canvas.dockRight")} icon="square-half" onClick={() => onDock("right")} />}
+        <IconButton label={t("steer.close")} icon="x" onClick={onClose} />
+      </div>
+      <Tabs.Root defaultValue="prompt" className="ntabs">
+        <Tabs.List className="utabs">
+          <Tabs.Trigger value="prompt">{t("canvas.tab.prompt")}</Tabs.Trigger>
+          {segment && <Tabs.Trigger value="versions">{t("canvas.tab.versions")}</Tabs.Trigger>}
+          <Tabs.Trigger value="request">{t("canvas.tab.request")}</Tabs.Trigger>
+          <Tabs.Trigger value="details">{t("canvas.tab.details")}</Tabs.Trigger>
+        </Tabs.List>
+        <Tabs.Content value="prompt">
+          {spec?.prompt ? (
+            <>
+              <div className="prompt">
+                <Prompt text={spec.prompt} pictures={pictures} />
+              </div>
+              {pictures.length > 0 && (
+                <ol className="refs">
+                  {pictures.map((picture, n) => (
+                    <li key={n}>
+                      {picture ? <img src={picture.url} alt="" /> : <span className="none" />}
+                      <span>{t("canvas.image", { n: n + 1 })}</span>
+                    </li>
+                  ))}
+                </ol>
+              )}
+            </>
           ) : (
-            <p className="quiet">{t("canvas.noSpec")}</p>
+            <p className="subtle">{t("canvas.noSpec")}</p>
           )}
-        </TabsContent>
+        </Tabs.Content>
         {segment && (
-          <TabsContent value="versions">
+          <Tabs.Content value="versions">
             <Versions dramaId={dramaId} item={item} />
-          </TabsContent>
+          </Tabs.Content>
         )}
-        <TabsContent value="request" className="request">
-          {request && typeof request === "object" ? <JsonView data={request as object} shouldExpandNode={collapseAllNested} style={JSON_STYLE} aria-label={t("canvas.tab.request")} /> : <p className="quiet">{t("canvas.noSpec")}</p>}
-        </TabsContent>
-      </Tabs>
-      <div className="foot">
+        <Tabs.Content value="request">
+          {request && typeof request === "object" ? <JsonView data={request as object} shouldExpandNode={collapseAllNested} style={JSON_STYLE} aria-label={t("canvas.tab.request")} /> : <p className="subtle">{t("canvas.noSpec")}</p>}
+        </Tabs.Content>
+        <Tabs.Content value="details">
+          <dl>
+            <dt>{t("canvas.kind")}</dt>
+            <dd>{facts.kind}</dd>
+            <dt>{t("canvas.version")}</dt>
+            <dd className="mono">{facts.version}</dd>
+            <dt>{t("canvas.usedBy")}</dt>
+            <dd>{facts.usedBy || "—"}</dd>
+            <dt>{t("canvas.reads")}</dt>
+            <dd>{facts.reads || "—"}</dd>
+          </dl>
+        </Tabs.Content>
+      </Tabs.Root>
+      <div className="nfoot">
+        {pills.map((pill) => (
+          <span key={pill} className="pill mono">
+            {pill}
+          </span>
+        ))}
         <span className="grow" />
         <Button variant="outline" size="sm" icon="upload" disabledReason={t("canvas.phase2")} onClick={() => actions.upload(item.id)}>
           {t("canvas.upload")}

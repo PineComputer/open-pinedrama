@@ -6,9 +6,9 @@
 // this episode's segment groups and cut. React Flow gives the plane, dragging, selection and the
 // viewport; where the maker moved items is kept per episode as the studio's view state. Phase 1
 // only reads: the inspector steers the agent, and the hand actions stand disabled.
-import { Background, BackgroundVariant, type Edge, Handle, MiniMap, type Node, type NodeProps, Position, ReactFlow, ReactFlowProvider, useNodesInitialized, useNodesState, useReactFlow, useViewport } from "@xyflow/react";
+import { Background, BackgroundVariant, type Edge, Handle, MiniMap, type Node, type NodeProps, NodeToolbar, Position, ReactFlow, ReactFlowProvider, useNodesInitialized, useNodesState, useReactFlow, useStore, useViewport } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { createContext, type ReactNode, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { HEIGHT, layout, WIDTH } from "../../shared/layout.ts";
 import type { LineageNode, LineageView } from "../../shared/lineage.ts";
 import { type Item, itemOf, PIPELINE } from "../../shared/pipeline.ts";
@@ -55,10 +55,9 @@ function standingOf(stage: LineageNode): Status {
 export interface NodeActions {
   generate: (id: string) => void;
   upload: (id: string) => void;
-  useAsReference: (id: string) => void;
 }
 
-export const PHASE_ONE: NodeActions = { generate: () => {}, upload: () => {}, useAsReference: () => {} };
+export const PHASE_ONE: NodeActions = { generate: () => {}, upload: () => {} };
 
 interface ItemData extends Record<string, unknown> {
   stage: LineageNode;
@@ -70,17 +69,46 @@ interface ItemData extends Record<string, unknown> {
   followed: boolean;
 }
 
-const Board = createContext<{ pick: (id: string | null) => void } | null>(null);
+/** Where the picked node's panel stands: under the node, the industry's convention, or docked at the board's right (design/app.js NodePanel). */
+type Dock = "under" | "right";
+const DOCK_KEY = "studio.canvas.dock";
+
+/** The panel width under a node (design/studio.css, the canvas's node panel). */
+const PANEL = 560;
+
+interface BoardContext {
+  pick: (id: string | null) => void;
+  dock: Dock;
+  /** The bar above the picked node and its panel, as the canvas renders them for it. */
+  bar: (node: Node<ItemData>) => ReactNode;
+  panel: (node: Node<ItemData>) => ReactNode;
+}
+
+const Board = createContext<BoardContext | null>(null);
 
 const ICON = { character: "user", location: "image", prop: "cube", blocking: "squares-four", frame: "image-square", segment: "grid-nine", take: "film-strip", cut: "scissors" } as const;
 
 /** A stage as the prototype's node: its label above (kind icon, name, where it stands), its picture filling the card. */
-function ItemNode({ id, data, selected }: NodeProps<Node<ItemData>>) {
+function ItemNode(props: NodeProps<Node<ItemData>>) {
+  const { id, data, selected, positionAbsoluteX, width = 0 } = props;
   const { t } = useT();
   const board = useContext(Board)!;
   const video = data.work?.type.startsWith("video/");
+  // The panel under the node stays inside the board: aligned to the node's side where centring would cross the board's edge.
+  const { x, zoom } = useViewport();
+  const paneWidth = useStore((store) => store.width);
+  const centre = x + (positionAbsoluteX + width / 2) * zoom;
+  const align = centre - PANEL / 2 < 0 ? "start" : centre + PANEL / 2 > paneWidth ? "end" : "center";
   return (
     <div className={`cnode is-${data.stage.kind}${selected ? " sel" : ""}`} data-followed={data.followed || undefined}>
+      <NodeToolbar isVisible={selected} position={Position.Top} align={align}>
+        {board.bar(props as unknown as Node<ItemData>)}
+      </NodeToolbar>
+      {board.dock === "under" && (
+        <NodeToolbar isVisible={selected} position={Position.Bottom} align={align}>
+          {board.panel(props as unknown as Node<ItemData>)}
+        </NodeToolbar>
+      )}
       <Handle type="target" position={Position.Left} isConnectable={false} />
       {/* Named by what it shows (WCAG 2.5.3): its name, then where it stands. */}
       <div className="lab" role="button" tabIndex={0} aria-pressed={selected} onClick={() => board.pick(id)} onKeyDown={(event) => event.key === "Enter" && board.pick(id)}>
@@ -119,6 +147,16 @@ const FIT = { padding: { top: "72px", bottom: "72px", left: "40px", right: "40px
 
 /** Where a board opens: its top left clear of the pills, at the prototype's readable scale (design/app.js, the canvas's camera, 0.62), a little under it for drama-cli's larger nodes. */
 const OPEN = { x: 40, y: 72, zoom: 0.55 };
+
+/**
+ * The board's dot grid, as infinite-canvas draws it (web/src/components/canvas/infinite-canvas.tsx, CanvasGrid): a 48 px grid
+ * scaled by the zoom, dots 1.15 px across the screen (0.8 px below zoom 0.12) in --board-dot, the layer at .4. React Flow's
+ * Background scales a dot's radius with the zoom (size × zoom / 2), so the size it is given is divided by the zoom.
+ */
+function Dots() {
+  const { zoom } = useViewport();
+  return <Background variant={BackgroundVariant.Dots} gap={48} size={(2 * (zoom < 0.12 ? 0.8 : 1.15)) / zoom} color="var(--board-dot)" style={{ opacity: 0.4 }} />;
+}
 
 export function Canvas({ drama }: { drama: DramaView }) {
   return (
@@ -167,7 +205,22 @@ function Plane({ drama }: { drama: DramaView }) {
   const code = item && codes.includes(item) ? item : newest?.where.episode && codes.includes(newest.where.episode) ? newest.where.episode : codes[0];
   const positions = useResource<{ positions: Positions }>(code ? `/api/dramas/${drama.id}/canvas/${code}` : null, [`drama:${drama.id}`]);
   const [follow, setFollow] = useState(true);
-  const [minimap, setMinimap] = useState(false);
+  const [minimap, setMinimap] = useState(true);
+  const [dock, setDock] = useState<Dock>(() => {
+    try {
+      return localStorage.getItem(DOCK_KEY) === "right" ? "right" : "under";
+    } catch {
+      return "under";
+    }
+  });
+  const dockTo = (to: Dock) => {
+    setDock(to);
+    try {
+      localStorage.setItem(DOCK_KEY, to);
+    } catch {
+      // The placement is a convenience; without storage it holds for this visit.
+    }
+  };
   const target = newest?.id;
 
   const mapped = useMemo(() => {
@@ -270,11 +323,32 @@ function Plane({ drama }: { drama: DramaView }) {
   const at = codes.indexOf(code);
   const byId = new Map(mapped.nodes.map((node) => [node.id, node]));
   const labelOf = (id: string) => (byId.get(id)?.data as ItemData | undefined)?.label ?? id;
+  const bar = (node: Node<ItemData>) => <SteerBar drama={drama} node={node.data.item} label={node.data.label} picture={node.data.work} episodeTitle={names?.episodes[code]} />;
+  const panel = (node: Node<ItemData>) => (
+    <NodePanel
+      dramaId={drama.id}
+      item={node.data.item}
+      work={node.data.work}
+      files={files.data ?? []}
+      facts={{
+        label: node.data.label,
+        status: node.data.status,
+        kind: t(PIPELINE[node.data.stage.kind].label),
+        version: node.data.stage.version ?? "—",
+        usedBy: mapped.edges.filter((edge) => edge.source === node.id).map((edge) => labelOf(edge.target)).join(", "),
+        reads: mapped.edges.filter((edge) => edge.target === node.id).map((edge) => labelOf(edge.source)).join(", "),
+      }}
+      dock={dock}
+      onDock={dockTo}
+      actions={PHASE_ONE}
+      onClose={() => pick(null)}
+    />
+  );
   // The picked stage's links, drawn hot as the prototype draws them.
   const edges = picked ? mapped.edges.map((edge) => (edge.source === picked.id || edge.target === picked.id ? { ...edge, className: "hot" } : edge)) : mapped.edges;
 
   return (
-    <Board.Provider value={{ pick }}>
+    <Board.Provider value={{ pick, dock, bar, panel }}>
       <section className="ds-canvas" aria-label={t("surface.canvas")}>
         <ReactFlow
           nodes={nodes}
@@ -294,8 +368,9 @@ function Plane({ drama }: { drama: DramaView }) {
           deleteKeyCode={null}
           ariaLabelConfig={{ "minimap.ariaLabel": t("canvas.minimap") }}
         >
-          <Background variant={BackgroundVariant.Dots} gap={22} size={1.2} />
-          {minimap && <MiniMap position="bottom-right" pannable zoomable className="ds-minimap" />}
+          <Dots />
+          {/* React Flow draws node toolbars under its panels: the minimap steps aside while a node's panel is open, so it covers none of it. */}
+          {minimap && !(picked && dock === "under") && <MiniMap position="bottom-right" pannable zoomable className="ds-minimap" />}
         </ReactFlow>
         <div className="ctop">
             <div className="ds-epswitch">
@@ -320,27 +395,7 @@ function Plane({ drama }: { drama: DramaView }) {
             )}
         </div>
         <ZoomPill minimap={minimap} onMinimap={() => setMinimap(!minimap)} onLayOut={() => void api(`/api/dramas/${drama.id}/canvas/${code}`, { method: "DELETE" }).then(() => positions.reload())} />
-        {picked && (
-          // The prototype's detail card: the picked stage's picture, what it is, what uses it and what it reads, and the ways to act on it.
-          <div className="detail nowheel" role="dialog" aria-label={picked.data.label}>
-            <div className="dpic">{picked.data.work?.type.startsWith("video/") ? <Still still={{ url: picked.data.work.url, video: true }} live /> : picked.data.work && <img src={picked.data.work.url} alt="" />}</div>
-            <div className="dbody">
-              <dl>
-                <dt>{t("canvas.kind")}</dt>
-                <dd>{t(PIPELINE[picked.data.stage.kind].label)}</dd>
-                <dt>{t("canvas.version")}</dt>
-                <dd className="mono">{picked.data.stage.version ?? "—"}</dd>
-                <dt>{t("canvas.usedBy")}</dt>
-                <dd>{mapped.edges.filter((edge) => edge.source === picked.id).map((edge) => labelOf(edge.target)).join(", ") || "—"}</dd>
-                <dt>{t("canvas.reads")}</dt>
-                <dd>{mapped.edges.filter((edge) => edge.target === picked.id).map((edge) => labelOf(edge.source)).join(", ") || "—"}</dd>
-              </dl>
-              <SteerBar drama={drama} node={picked.data.item} label={picked.data.label} status={picked.data.status} picture={picked.data.work} episodeTitle={names?.episodes[code]} actions={PHASE_ONE} onClose={() => pick(null)} />
-              <NodePanel dramaId={drama.id} item={picked.data.item} label={picked.data.label} work={picked.data.work} files={files.data ?? []} actions={PHASE_ONE} />
-              <span className="subtle">{t("canvas.readOnly")}</span>
-            </div>
-          </div>
-        )}
+        {picked && dock === "right" && panel(picked)}
       </section>
     </Board.Provider>
   );

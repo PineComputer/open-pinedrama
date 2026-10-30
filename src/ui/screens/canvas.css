@@ -1,5 +1,5 @@
 /* The canvas on React Flow: its parts take our tokens through its own variables, and the nodes,
-   frames, pills and detail card are the pro prototype's (design-references/studio-pro/studio.css,
+   frames and pills are the pro prototype's (design-references/studio-pro/studio.css,
    "canvas"), scoped to the canvas. Every colour is a token (CONTRIBUTING.md). */
 .ds-canvas { position: relative; height: calc(100vh - 150px); min-height: 420px; margin: 0 -16px; border-top: 1px solid var(--border); }
 .ds-canvas .react-flow {
@@ -24,30 +24,15 @@
 .ds-epswitch-pick { display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 10px; border: 0; border-radius: var(--radius-pill); background: transparent; color: var(--text-primary); font: 600 12.5px var(--font-sans); cursor: pointer; white-space: nowrap; }
 .ds-epswitch-pick:hover { background: var(--hover); }
 /* The SteerBar in React Flow's node toolbar, as the reference's node bar. */
-.ds-steer { display: grid; gap: 8px; order: -1; }
-.ds-steer .row { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
-.ds-steer .what { flex: 1 0 100%; font: 700 14px var(--font-sans); color: var(--text-primary); overflow: hidden; text-overflow: ellipsis; }
-.ds-steer .acts { display: flex; align-items: center; gap: 2px; }
 .ds-steer .say { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: end; }
 .ds-steer textarea { min-height: 56px; border-radius: var(--radius-large); border: 1px solid var(--border-input); background: var(--surface); color: var(--text-primary); padding: 8px 10px; font: 13px/1.5 var(--font-sans); resize: vertical; outline: none; }
 .ds-steer .off { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 8px 10px; border-radius: var(--radius-medium); background: var(--surface-container); color: var(--text-secondary); font-size: 12.5px; }
 .ds-steer .done { margin: 0; font-size: 12.5px; color: var(--text-secondary); }
-.ds-steer .row > .ds-chip { margin-right: 4px; }
-.ds-steer .sep { width: 1px; height: 18px; margin: 0 4px; background: var(--border); }
-.ds-steer .acts a { text-decoration: none; }
-.ds-npanel .foot { display: flex; align-items: center; gap: 10px; padding-top: 10px; border-top: 1px solid var(--border-subtle); font-size: 12px; color: var(--text-secondary); }
-.ds-npanel .foot .grow { flex: 1; }
-/* The node panel's tabs: settings as a key-value list (the inspector's dl), Made from and Versions as rows, the request as a JSON tree. */
-.ds-npanel [role="tabpanel"] { max-height: 260px; overflow-y: auto; }
-.ds-npanel .kv { display: grid; grid-template-columns: max-content 1fr; gap: 4px 16px; margin: 0; font-size: 12.5px; }
-.ds-npanel .kv dt { color: var(--text-secondary); }
-.ds-npanel .kv dd { margin: 0; color: var(--text-primary); font-variant-numeric: tabular-nums; }
-.ds-npanel .versions li { display: grid; gap: 2px; padding-bottom: 8px; border-bottom: 1px solid var(--border-subtle); }
-.ds-npanel .ds-json { background: transparent; font: 12px/1.5 var(--font-mono, ui-monospace, monospace); color: var(--text-primary); }
-.ds-npanel .ds-json-key { color: var(--text-secondary); }
-.ds-npanel .ds-json-string { color: var(--success); }
-.ds-npanel .ds-json-value { color: var(--warning-text); }
-.ds-npanel .ds-json-punctuation { color: var(--text-secondary); }
+.npanel .ds-json { background: transparent; font: 12px/1.5 var(--font-mono, ui-monospace, monospace); color: var(--text-primary); }
+.npanel .ds-json-key { color: var(--text-secondary); }
+.npanel .ds-json-string { color: var(--success); }
+.npanel .ds-json-value { color: var(--warning-text); }
+.npanel .ds-json-punctuation { color: var(--text-secondary); }
 
 /* What studio.css's canvas rules need on React Flow: its nodes fill React Flow's node boxes, wires are React Flow's edges. */
 .ds-canvas .react-flow__edge path { stroke-dasharray: 4 4; }
@@ -66,15 +51,14 @@
 .ds-canvas .cnode .card .none { display: grid; place-items: center; height: 100%; color: var(--text-muted); font-size: 11px; }
 .ds-canvas .cnode .play { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; }
 .ds-canvas .cnode .play i { width: 32px; height: 32px; border-radius: 50%; background: color-mix(in srgb, var(--canvas) 55%, transparent); display: grid; place-items: center; color: var(--text-primary); border: 1px solid color-mix(in srgb, var(--text-primary) 25%, transparent); }
-.ds-canvas .ctop, .ds-canvas .ctool, .ds-canvas .detail { z-index: 5; }
-/* The detail card holds the picked item's data too: full height, its body scrolling. */
-.ds-canvas .detail { bottom: 20px; width: 340px; display: flex; flex-direction: column; }
-.ds-canvas .detail .dpic { position: relative; flex: none; overflow: hidden; }
-.ds-canvas .detail .dbody { overflow-y: auto; }
-.ds-canvas .detail .subtle { font-size: 11.5px; }
-/* The picked item's data in the detail card: its tabs, settings as a key-value list, versions as rows, the request as a JSON tree. */
-.ds-npanel { display: grid; gap: 10px; }
-.ds-npanel .prompt { display: grid; gap: 4px; font-size: 12.5px; line-height: 1.55; }
-.ds-npanel .prompt p { margin: 0; }
-.ds-npanel .chip { display: inline-flex; align-items: center; gap: 4px; padding: 0 6px 0 2px; margin: 0 1px; border-radius: 6px; background: var(--surface-container); font-weight: 500; vertical-align: baseline; }
-.ds-npanel .chip img { width: 16px; height: 16px; border-radius: 4px; object-fit: cover; object-position: top; }
+.ds-canvas .ctop, .ds-canvas .ctool, .ds-canvas .npanel.docked { z-index: 5; }
+/* The design's node bar and panel (design/studio.css .nbar, .npanel) stand in React Flow's node toolbars, which place them: above the node and under it. */
+.react-flow__node-toolbar .nbar, .react-flow__node-toolbar .npanel { position: static; }
+.react-flow__node-toolbar .npanel { width: 560px; }
+.npanel { grid-template-columns: minmax(0, 1fr); white-space: normal; }
+/* Radix's Tabs root stands between the panel and its tab list and panel: it is the row that scrolls when the panel is docked. */
+.npanel .ntabs { display: grid; gap: 10px; min-height: 0; grid-template-rows: auto minmax(0, 1fr); }
+.npanel .ntabs, .npanel [role="tabpanel"], .npanel .prompt { grid-template-columns: minmax(0, 1fr); }
+.npanel.docked [role="tabpanel"] { overflow-y: auto; }
+.ds-steer { display: grid; gap: 8px; justify-items: center; }
+.ds-steer .say, .ds-steer .off, .ds-steer .done { width: 420px; padding: 10px 12px; border-radius: var(--radius-xl); border: 1px solid color-mix(in srgb, var(--text-primary) 12%, transparent); background: var(--glass); backdrop-filter: blur(18px); }

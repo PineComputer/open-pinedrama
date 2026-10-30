@@ -69,7 +69,8 @@ async function pick(name: RegExp) {
   // Picked from the keyboard: a mouse press on a node starts React Flow's drag, which jsdom can't drive.
   (await screen.findByRole("button", { name })).focus();
   await user.keyboard("{Enter}");
-  return { user, bar: await screen.findByRole("toolbar", { name: /^Steer/ }) };
+  // The bar's buttons and, under them, what a send-back or note asks for.
+  return { user, bar: (await screen.findByRole("toolbar", { name: /^Steer/ })).closest(".ds-steer") as HTMLElement };
 }
 
 describe("the SteerBar", () => {
@@ -193,7 +194,7 @@ describe("the SteerBar", () => {
     render(<Canvas drama={drama("working")} />);
     const { user, bar } = await pick(/^林/);
     await within(bar).findByRole("link", { name: "Review" });
-    await user.click(within(bar).getByRole("button", { name: "Close" }));
+    await user.click(within(await screen.findByRole("region", { name: /what it is made from/ })).getByRole("button", { name: "Close" }));
     expect(sent.filter((request) => request.method === "POST" && /\/decision$/.test(request.path))).toEqual([]);
     expect(screen.queryByRole("button", { name: /^(Accept|Approve)/ })).toBeNull();
   });
@@ -237,31 +238,29 @@ describe("a picked item's hand actions and panel (P6.8)", () => {
     render(<Canvas drama={drama("working")} />);
     const { panel } = await panelOf(/^Storyboard · line-art/);
     await waitFor(() => expect(within(panel).getByRole("tabpanel").textContent).toContain("She walks in, as in Image 1, past Image 2."));
-    const chips = [...panel.querySelectorAll(".prompt .chip")];
+    const chips = [...panel.querySelectorAll(".prompt .pchip")];
     expect(chips.map((chip) => chip.textContent)).toEqual(["Image 1", "Image 1", "Image 2"]);
     // A picture sent from the project is the returned file at that path; one from the asset library has none here.
     expect(chips[0].querySelector("img")).toHaveAttribute("src", "/f/9?v=1");
     expect(chips[2].querySelector("img")).toBeNull();
   });
 
-  it("shows a look's prompt and model too, beside it in the cast column", async () => {
+  it("shows a look's prompt and model too", async () => {
     engine();
     const lookSpec = { ...spec, id: 12, path: "/work/drama/assets/characters/lin/v1/spec.json", url: "/f/12?v=1" };
     answer("/api/dramas/d1/files", [look, lookSpec]);
     server.use(http.get("/f/12", () => HttpResponse.text(JSON.stringify({ provider: "openai", model: "gpt-image-2", prompt: "A full-body turnaround of 林.", aspect_ratio: "16:9", size: "2K" }))));
     render(<Canvas drama={drama("working")} />);
-    const { user, panel } = await panelOf(/^林/);
+    const { panel } = await panelOf(/^林/);
     await waitFor(() => expect(within(panel).getByRole("tabpanel")).toHaveTextContent("A full-body turnaround of 林."));
-    await user.click(within(panel).getByRole("tab", { name: "Settings" }));
-    expect(within(panel).getByRole("tabpanel")).toHaveTextContent("Modelgpt-image-2Ratio16:9Resolution2K");
+    expect([...panel.querySelectorAll(".nfoot .pill")].map((pill) => pill.textContent)).toEqual(["gpt-image-2", "16:9", "2K"]);
   });
 
-  it("lists the settings the spec states, and nothing it doesn't", async () => {
+  it("lists the settings the spec states as the panel's pills, and nothing it doesn't", async () => {
     withSpec();
     render(<Canvas drama={drama("working")} />);
-    const { user, panel } = await panelOf(/^Storyboard · line-art/);
-    await user.click(within(panel).getByRole("tab", { name: "Settings" }));
-    await waitFor(() => expect(within(panel).getByRole("tabpanel").textContent).toBe("Modelsd25Ratio9:16Resolution480pDuration12sSeed42"));
+    const { panel } = await panelOf(/^Storyboard · line-art/);
+    await waitFor(() => expect([...panel.querySelectorAll(".nfoot .pill")].map((pill) => pill.textContent)).toEqual(["sd25", "9:16", "480p", "12s", "seed 42"]));
   });
 
   it("shows the request as a JSON tree", async () => {
@@ -279,12 +278,12 @@ describe("a picked item's hand actions and panel (P6.8)", () => {
     expect(within(panel).getByRole("tabpanel")).toHaveTextContent("The agent hasn't returned this version's spec.json and request.json.");
   });
 
-  it("says what drama-cli's lineage made it from and what uses it, in the detail card", async () => {
+  it("says what drama-cli's lineage made it from and what uses it, in the panel's Details", async () => {
     withBreakdown();
     render(<Canvas drama={drama("working")} />);
-    await pick(/^Take · t01/);
-    const card = await screen.findByRole("dialog", { name: /^Take · t01/ });
-    expect(card).toHaveTextContent(/Used by—Reads.*Storyboard · line-art · v1.*林/);
+    const { user, panel } = await panelOf(/^Take · t01/);
+    await user.click(within(panel).getByRole("tab", { name: "Details" }));
+    expect(within(panel).getByRole("tabpanel")).toHaveTextContent(/Used by—Reads.*Storyboard · line-art · v1.*林/);
   });
 
   it("lists the segment's versions, each with what the maker decided", async () => {
@@ -305,20 +304,44 @@ describe("a picked item's hand actions and panel (P6.8)", () => {
     render(<Canvas drama={drama("working")} />);
     const { bar } = await pick(/^Storyboard · line-art/);
     const panel = await screen.findByRole("region", { name: /what it is made from/ });
-    for (const button of [within(bar).getByRole("button", { name: "Use as reference" }), within(panel).getByRole("button", { name: "Generate" }), within(panel).getByRole("button", { name: "Upload" })]) {
+    for (const button of [within(panel).getByRole("button", { name: "Generate" }), within(panel).getByRole("button", { name: "Upload" })]) {
       expect(button).toBeDisabled();
       expect(button).toHaveAccessibleDescription(/^Phase 2/);
     }
-    expect([PHASE_ONE.generate("x"), PHASE_ONE.upload("x"), PHASE_ONE.useAsReference("x")]).toEqual([undefined, undefined, undefined]);
+    expect([PHASE_ONE.generate("x"), PHASE_ONE.upload("x")]).toEqual([undefined, undefined]);
     expect(sent.filter((request) => request.method !== "GET")).toEqual([]);
   });
 
-  it("opens and downloads the item's picture", async () => {
+  it("downloads the item's picture from its bar", async () => {
     withBreakdown();
     render(<Canvas drama={drama("working")} />);
     const { bar } = await pick(/^Storyboard · line-art/);
-    expect(within(bar).getByRole("link", { name: "Open" })).toHaveAttribute("href", "/f/8?v=1");
     expect(within(bar).getByRole("link", { name: "Download" })).toHaveAttribute("href", "/f/8?v=1&download=1");
+  });
+
+  it("moves the minimap aside while a panel is open under its node", async () => {
+    withBreakdown();
+    render(<Canvas drama={drama("working")} />);
+    expect(await screen.findByRole("img", { name: "Minimap: move the view" })).toBeInTheDocument();
+    await panelOf(/^Storyboard · line-art/);
+    expect(screen.queryByRole("img", { name: "Minimap: move the view" })).toBeNull();
+  });
+
+  it("opens the panel under the node, or docked right on asking, and keeps the maker's choice", async () => {
+    withBreakdown();
+    const { unmount } = render(<Canvas drama={drama("working")} />);
+    const { user, panel } = await panelOf(/^Storyboard · line-art/);
+    expect(panel.closest(".react-flow__node-toolbar")).not.toBeNull();
+    await user.click(within(panel).getByRole("button", { name: "Dock right" }));
+    const docked = await screen.findByRole("region", { name: /what it is made from/ });
+    expect(docked).toHaveClass("docked");
+    expect(docked.closest(".react-flow__node-toolbar")).toBeNull();
+    expect(localStorage.getItem("studio.canvas.dock")).toBe("right");
+    unmount();
+    render(<Canvas drama={drama("working")} />);
+    await pick(/^Storyboard · line-art/);
+    expect(await screen.findByRole("region", { name: /what it is made from/ })).toHaveClass("docked");
+    localStorage.removeItem("studio.canvas.dock");
   });
 
   it("lets go of the item on Escape, with its bar and panel", async () => {

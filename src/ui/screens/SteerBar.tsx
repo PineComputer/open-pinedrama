@@ -4,20 +4,18 @@
 // as the bible does; for an item under review they open that review instead, so the canvas never
 // records a verdict. When no agent is running the item, the bar says so and offers Resume where
 // the episode or drama can be resumed: the words are never queued. Lineage opens Graph at it.
-// Open and Download show the item's picture; the hand actions stand disabled (Canvas, NodeActions).
+// Download saves the item's picture.
 import { useEffect, useState } from "react";
 import type { Item } from "../../shared/pipeline.ts";
 import type { ChatView, DramaView, FileItem, ReviewSummary, ReviewView } from "../../shared/types.ts";
 import { api, useAction, useResource } from "../api.ts";
 import { Button, IconButton } from "../components/Button.tsx";
-import { type Status, StatusChip } from "../components/StatusChip.tsx";
-import { type TKey, useT } from "../i18n.ts";
+import { useT } from "../i18n.ts";
 import { errorText, nowText } from "../labels.ts";
 import { Tooltip } from "../components/Tooltip.tsx";
 import { Icon } from "../icons.tsx";
 import { Link, navigate } from "../router.tsx";
 import { buttonVariants } from "@/components/ui/button";
-import type { NodeActions } from "./Canvas.tsx";
 
 /** The key a review gives the item (src/engine/reviews.ts, itemsOf): a look by its character, a place or prop by its kind and id, a segment's stage by the segment's id, the cut as "cut". */
 function reviewKey(node: Item): string {
@@ -52,20 +50,14 @@ export function SteerBar({
   drama,
   node,
   label,
-  status,
   picture,
   episodeTitle,
-  actions,
-  onClose,
 }: {
   drama: DramaView;
   node: Item;
   label: string;
-  status: Status;
   picture?: FileItem;
   episodeTitle?: string;
-  actions: NodeActions;
-  onClose: () => void;
 }) {
   const { t } = useT();
   const review = useOpenReview(drama, node);
@@ -103,46 +95,34 @@ export function SteerBar({
   const reviewHref = review ? `/r/${review.id}?item=${encodeURIComponent(reviewKey(node))}` : undefined;
 
   return (
-    <div className="ds-steer" role="toolbar" aria-label={t("steer.label", { item: label })}>
-      <div className="row">
-        <b className="what">{label}</b>
-        <StatusChip status={status} label={t(`status.${status}` as TKey)} />
-        <span className="acts">
-          {reviewHref && (
+    <div className="ds-steer">
+      {/* The design's node bar (design/app.js, the picked node's bar): Review where it waits, the steering, Lineage and Download. */}
+      <div className="nbar" role="toolbar" aria-label={t("steer.label", { item: label })}>
+        {reviewHref ? (
+          <>
             <Link to={reviewHref} className={buttonVariants({ variant: "default", size: "sm" })}>
               {t("steer.review")}
             </Link>
-          )}
-          {reviewHref ? (
-            <Link to={reviewHref} className={buttonVariants({ variant: "outline", size: "sm" })}>
-              {t("steer.backInReview")}
-            </Link>
-          ) : (
-            <>
-              <IconButton label={t("steer.back")} icon="arrow-counter-clockwise" on={mode === "back"} aria-pressed={mode === "back"} onClick={() => setMode(mode === "back" ? null : "back")} />
-              <IconButton label={t("steer.note")} icon="note-pencil" on={mode === "note"} aria-pressed={mode === "note"} onClick={() => setMode(mode === "note" ? null : "note")} />
-            </>
-          )}
-          <IconButton label={t("steer.lineage")} icon="tree-structure" onClick={() => navigate(`/d/${drama.id}/graph?item=${encodeURIComponent(node.id)}`)} />
-          {picture && (
-            <>
-              <i className="sep" aria-hidden="true" />
-              <Tooltip text={t("steer.open")}>
-                <a className={buttonVariants({ variant: "ghost", size: "icon" })} href={picture.url} target="_blank" rel="noreferrer" aria-label={t("steer.open")}>
-                  <Icon name="arrow-square-out" />
-                </a>
-              </Tooltip>
-              <Tooltip text={t("steer.download")}>
-                <a className={buttonVariants({ variant: "ghost", size: "icon" })} href={`${picture.url}&download=1`} aria-label={t("steer.download")}>
-                  <Icon name="download-simple" />
-                </a>
-              </Tooltip>
-            </>
-          )}
-          <i className="sep" aria-hidden="true" />
-          <Button variant="ghost" size="icon" icon="stack" aria-label={t("steer.useAsReference")} title={`${t("steer.useAsReference")} · ${t("canvas.phase2")}`} disabledReason={t("canvas.phase2")} onClick={() => actions.useAsReference(node.id)} />
-          <IconButton label={t("steer.close")} icon="x" onClick={onClose} />
-        </span>
+            <Tooltip text={t("steer.backInReview")}>
+              <Link to={reviewHref} className={buttonVariants({ variant: "ghost", size: "icon" })} aria-label={t("steer.backInReview")}>
+                <Icon name="arrow-counter-clockwise" />
+              </Link>
+            </Tooltip>
+          </>
+        ) : (
+          <>
+            <IconButton label={t("steer.back")} icon="arrow-counter-clockwise" on={mode === "back"} aria-pressed={mode === "back"} onClick={() => setMode(mode === "back" ? null : "back")} />
+            <IconButton label={t("steer.note")} icon="note-pencil" on={mode === "note"} aria-pressed={mode === "note"} onClick={() => setMode(mode === "note" ? null : "note")} />
+          </>
+        )}
+        <IconButton label={t("steer.lineage")} icon="tree-structure" onClick={() => navigate(`/d/${drama.id}/graph?item=${encodeURIComponent(node.id)}`)} />
+        {picture && (
+          <Tooltip text={t("steer.download")}>
+            <a className={buttonVariants({ variant: "ghost", size: "icon" })} href={`${picture.url}&download=1`} aria-label={t("steer.download")}>
+              <Icon name="download-simple" />
+            </a>
+          </Tooltip>
+        )}
       </div>
       {sentTo && !mode && <p className="done" role="status">{t("steer.sent", { who: sentTo })}</p>}
       {mode &&

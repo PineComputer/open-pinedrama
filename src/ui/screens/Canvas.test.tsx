@@ -119,16 +119,17 @@ describe("the canvas", () => {
     window.history.pushState(null, "", "/");
   });
 
-  it("offers the prototype's zoom pill, named in the maker's words, and the minimap on asking", async () => {
+  it("offers the prototype's zoom pill, named in the maker's words, and the minimap it can hide", async () => {
     const user = userEvent.setup();
     engine(project());
     render(<Canvas drama={drama} />);
     const pill = await screen.findByRole("toolbar", { name: "Canvas" });
     for (const name of ["Zoom in", "Zoom out", "Fit the board", "Lay out again"]) expect(within(pill).getByRole("button", { name })).toBeInTheDocument();
     expect(within(pill).getByRole("status", { name: "Zoom" })).toHaveTextContent(/%$/);
-    expect(screen.queryByRole("img", { name: "Minimap: move the view" })).toBeNull();
-    await user.click(within(pill).getByRole("button", { name: "Minimap: move the view" }));
+    // Shown, as the design shows it; the pill hides it.
     expect(screen.getByRole("img", { name: "Minimap: move the view" })).toBeInTheDocument();
+    await user.click(within(pill).getByRole("button", { name: "Minimap: move the view" }));
+    expect(screen.queryByRole("img", { name: "Minimap: move the view" })).toBeNull();
   });
 
   it("points to what waits for the maker, beside the agent", async () => {
