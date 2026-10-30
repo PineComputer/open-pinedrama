@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { MediaController, MediaPlayButton, MediaTimeRange } from "media-chrome/react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 import type { FileItem, ItemDecision, Note, ReviewItem, ReviewView, Verdict } from "../../shared/types.ts";
 import { api, clock, useAction, useResource } from "../api.ts";
 import { type TKey, useT } from "../i18n.ts";
@@ -318,6 +319,22 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
   );
   const board = takes && item ? (episodeFiles.data ?? []).filter((f) => f.kind === "storyboard" && f.segment === item.key && f.style === "line-art").at(-1) : undefined;
   const seen = latest ? (watched[latest.id] ?? 0) : 0;
+  const playing = file && isVideo(file) ? file : undefined;
+  // The transport sits under the picture, outside the controller, joined to it by its id (media-chrome's mediacontroller).
+  const controller = `take-${useId().replace(/:/g, "")}`;
+  const joined = { mediacontroller: controller } as Record<string, string>;
+  const [length, setLength] = useState(0);
+  // The new version and the one sent back, as the design's .seg: in the transport for a take, over the stage for a picture.
+  const compare = before && latest && (
+    <div className="seg" role="group" aria-label={t("review.compare")}>
+      <button type="button" aria-pressed={!earlier} onClick={() => setEarlier(false)}>
+        {t("review.newVersion", { v: latest.version ?? "" })}
+      </button>
+      <button type="button" aria-pressed={earlier} onClick={() => setEarlier(true)}>
+        {t("review.earlierVersion", { v: before.version ?? "" })}
+      </button>
+    </div>
+  );
   const mustWatch = takes && open && latest !== undefined && isVideo(latest) && seen < WATCHED;
   // An item is decided with a verdict, and one sent back also with its reason.
   const decided = (i: ReviewItem) => {
@@ -468,43 +485,66 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
       </nav>
 
       <section className="stage" aria-label={t("review.stage")}>
-        {(variants.length > 1 || before) && (
+        {(variants.length > 1 || (compare && !playing)) && (
           <div className="ds-stage-bar">
             {variants.length > 1 && (
               <Segmented label={t("review.variants")} value={String(variant)} onChange={(value) => setVariant(Number(value))} options={variants.map((f, n) => ({ value: String(n), label: variantLabel(f, t) }))} />
             )}
-            {before && latest && (
-              <Segmented
-                label={t("review.compare")}
-                value={earlier ? "earlier" : "new"}
-                onChange={(value) => setEarlier(value === "earlier")}
-                options={[
-                  { value: "new", label: t("review.newVersion", { v: latest.version ?? "" }) },
-                  { value: "earlier", label: t("review.earlierVersion", { v: before.version ?? "" }) },
-                ]}
-              />
-            )}
+            {!playing && compare}
           </div>
         )}
         <div className="screen" ref={stage}>
           {file && isImage(file) && <Pinboard key={file.id} file={file} notes={earlier ? (item?.asked ?? []) : (draft?.notes ?? [])} draft={!earlier && pending?.fileId === file.id ? pending : undefined} space={space} onPin={pin} />}
-          {file && isVideo(file) && (
-            <div className="player">
+          {playing && (
+            <MediaController id={controller} className="player">
               <video
+                slot="media"
                 ref={video}
-                key={file.url}
-                src={file.url}
-                controls
+                key={playing.url}
+                src={playing.url}
                 playsInline
                 preload="metadata"
                 onTimeUpdate={(event) => track(event.currentTarget)}
                 onSeeked={(event) => track(event.currentTarget)}
                 onEnded={(event) => track(event.currentTarget, true)}
-                onLoadedMetadata={() => setPlayhead(0)}
+                onLoadedMetadata={(event) => {
+                  setPlayhead(0);
+                  setLength(event.currentTarget.duration);
+                }}
               />
-            </div>
+              <span className="tag2">{[item && labelOf(item), playing.version, earlier ? t("review.earlierTag") : ""].filter(Boolean).join(" · ")}</span>
+              <MediaPlayButton {...joined} className="bigplay" noTooltip>
+                <i slot="play">
+                  <Icon name="play" className="ic" />
+                </i>
+                <span slot="pause" />
+              </MediaPlayButton>
+            </MediaController>
           )}
         </div>
+        {playing && (
+          // The design's transport under the stage (design/app.js, Review): play, the time, the playhead over how far
+          // the new version has been watched, and the new and earlier versions; media-chrome drives the video.
+          <div className="controls">
+            <MediaPlayButton {...joined} className="pp" noTooltip>
+              <span slot="play">
+                <Icon name="play" className="ic" />
+              </span>
+              <span slot="pause">
+                <Icon name="pause" className="ic" />
+              </span>
+            </MediaPlayButton>
+            <span className="t">
+              {playhead.toFixed(1)}s <small>/ {length.toFixed(1)}s</small>
+            </span>
+            <div className="track">
+              <span className="rail2" />
+              {!earlier && <span className="seen" style={{ width: `${seen * 100}%` }} />}
+              <MediaTimeRange {...joined} aria-label={t("review.playhead")} />
+            </div>
+            {compare}
+          </div>
+        )}
       </section>
 
       <aside className="insp" aria-label={t("review.inspector")}>

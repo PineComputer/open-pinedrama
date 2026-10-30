@@ -167,21 +167,14 @@ h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 700; lett
 .viewing .variants { display: flex; gap: 22px; padding: 14px 22px 0; }
 .viewing .variants button { background: none; border: 0; padding: 4px 0; cursor: pointer; color: var(--text-secondary); border-bottom: 1px solid transparent; }
 .viewing .variants button.on { color: var(--text-primary); border-color: var(--text-primary); }
-.stage { position: relative; display: grid; place-items: center; padding: 20px; min-height: 0; overflow: hidden; }
-.stage .pane { position: relative; display: grid; place-items: center; min-width: 0; min-height: 0; height: 100%; }
-.stage.compare { grid-template-columns: 1fr 1fr; gap: 24px; padding-top: 48px; }
-.stage .pane .tag { position: absolute; top: -32px; left: 0; font: 600 12px/1 var(--font-sans); letter-spacing: 0.04em; color: var(--text-secondary); }
-.stage .pane .tag.now { color: var(--text-primary); }
-.stage .pane.before .pinboard { cursor: default; opacity: 0.92; }
+.viewing .stage { position: relative; display: grid; place-items: center; padding: 20px; min-height: 0; overflow: hidden; }
 .pinboard { position: relative; cursor: crosshair; }
 .pinboard img { box-shadow: 0 18px 60px color-mix(in srgb, var(--shadow-base) 55%, transparent); user-select: none; }
 .pin { position: absolute; transform: translate(-50%, -50%); width: 24px; height: 24px; border-radius: 50%; background: var(--warning-text); color: var(--surface); font: 700 12px/24px var(--font-sans); text-align: center; box-shadow: 0 0 0 3px color-mix(in srgb, var(--shadow-base) 70%, transparent); pointer-events: none; animation: drop 0.35s var(--ease) both; }
 .pin.draft { background: transparent; border: 2px dashed var(--surface); }
 @keyframes drop { from { opacity: 0; transform: translate(-50%, -70%); } }
-.screen { height: 100%; max-height: 780px; aspect-ratio: 9 / 16; background: #000; border-radius: 12px; overflow: hidden; box-shadow: 0 0 0 1px var(--border), 0 24px 70px color-mix(in srgb, var(--shadow-base) 60%, transparent); }
-.screen video { width: 100%; height: 100%; object-fit: contain; }
-.verdict { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.verdict .btn { height: 40px; }
+.viewing .screen { height: 100%; max-height: 780px; aspect-ratio: 9 / 16; background: #000; border-radius: 12px; overflow: hidden; box-shadow: 0 0 0 1px var(--border), 0 24px 70px color-mix(in srgb, var(--shadow-base) 60%, transparent); }
+.viewing .screen video { width: 100%; height: 100%; object-fit: contain; }
 .ds-shots { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; font: 400 15px/1.45 var(--font-sans); color: var(--text-secondary); }
 .notes { display: grid; gap: 10px; }
 .note { display: grid; grid-template-columns: 24px minmax(0, 1fr) auto; gap: 10px; align-items: start; }
@@ -428,6 +421,9 @@ h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 700; lett
 .insp .agent-says .speech { font-size: 13.5px; }
 .insp .agent-says .more { grid-column: 1; margin-top: 0; }
 .ds-stage-bar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 12px 18px 0; }
+/* media-chrome's time range drawn as the design's .track (design/studio.css: .rail2, .pos, .knob): its own track
+   transparent over the design's rail and the watched (.seen) bar. */
+.track media-time-range { position: absolute; inset: 0; width: 100%; height: 26px; background: none; --media-control-background: transparent; --media-control-hover-background: transparent; --media-range-padding: 0; --media-range-track-height: 4px; --media-range-track-border-radius: 999px; --media-range-track-background: transparent; --media-range-bar-color: var(--text-primary); --media-time-range-buffered-color: transparent; --media-range-thumb-width: 12px; --media-range-thumb-height: 12px; --media-range-thumb-background: var(--text-primary); --media-preview-time-text-shadow: none; }
 /* A version's facts as label and value, as the pro direction's inspector lists a take's (.kv). */
 .ds-kv { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 6px 10px; margin: 0; font-size: 12.5px; }
 .ds-kv dt { color: var(--text-muted); }
