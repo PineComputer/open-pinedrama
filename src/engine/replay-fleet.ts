@@ -553,6 +553,8 @@ function episodeScript(code: string, lang: Lang, preset: string, story: { id: st
   const takes = new Map<string, number>();
   const takeAccepted = new Set<string>();
   let cut = at("edit");
+  // The cut's first version: the sample drama's own (a project's real v2), else v1.
+  const firstCut = cut;
   let cutAccepted = false;
   const base = `drama/episodes/${code}`;
   const boards = (which: typeof segments) =>
@@ -568,10 +570,11 @@ function episodeScript(code: string, lang: Lang, preset: string, story: { id: st
       });
     });
   // A cut as replay returns it, with its plan beside it: each segment's newest take. A recut plays the
-  // episode's sample cut again, at its own version's path: replay has one cut of each episode to show.
+  // episode's sample cut (its first version's) again, at its own version's path: replay has one cut of
+  // each episode to show.
   const cutFiles = (version: number): Out[] => {
-    const first = clip(set, `${base}/edit/v1/cut.mp4`, "cut");
-    const made = { ...first, path: first.path.replace("/edit/v1/", `/edit/v${version}/`) };
+    const first = clip(set, `${base}/edit/v${firstCut}/cut.mp4`, "cut");
+    const made = { ...first, path: first.path.replace(`/edit/v${firstCut}/`, `/edit/v${version}/`) };
     const newest = segments.map((seg) => {
       const take = `t${String(takes.get(seg.id)).padStart(2, "0")}`;
       return { segment: seg.id, take, bytes: clip(set, `${base}/segments/${seg.id}/${take}/video.mp4`, "take").bytes };
@@ -631,7 +634,7 @@ function episodeScript(code: string, lang: Lang, preset: string, story: { id: st
     }
     if (stage === "takes") {
       stage = "cut";
-      return { progress: say.cutting, files: cutFiles(1), ask: say.askCut(code) };
+      return { progress: say.cutting, files: cutFiles(cut), ask: say.askCut(code) };
     }
     if (stage === "cut" && redo.length) {
       cut += 1;
