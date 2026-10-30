@@ -31,6 +31,14 @@ describe("the graph around a version", () => {
     expect(focusGraph(real("shot"), TAKE, ALL, 2).ids).toContain("assets/scenes/office");
   });
 
+  it("draws only the links it walks out from the focus, never one between two versions as far out", () => {
+    const near = focusGraph(real("shot"), TAKE, ALL, 1);
+    expect(near.links.every((link) => link.from === TAKE || link.to === TAKE)).toBe(true);
+    const ring = new Set(near.ids.filter((id) => id !== TAKE));
+    const { links } = focusGraph(real("shot"), TAKE, ALL, 2);
+    expect(links.filter((link) => ring.has(link.from) && ring.has(link.to))).toEqual([]);
+  });
+
   it("shows only the kinds chosen, and always the version in focus", () => {
     const { ids } = focusGraph(real("shot"), TAKE, new Set<LineageKind>(["look"]), 2);
     expect(ids.sort()).toEqual(["assets/characters/lin", TAKE]);

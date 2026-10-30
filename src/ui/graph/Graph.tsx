@@ -119,7 +119,7 @@ function standingOf(node: LineageNode, fromStale: boolean, t: T): Standing {
 }
 
 function Avatar({ node, file, size }: { node: LineageNode; file?: FileItem; size: number }) {
-  const picture = file?.type.startsWith("image/") ? <img src={file.url} alt="" /> : file?.type.startsWith("video/") ? <video src={file.url} muted preload="metadata" aria-hidden="true" /> : null;
+  const picture = file?.type.startsWith("image/") ? <img src={file.url} alt="" /> : file?.type.startsWith("video/") ? <video src={`${file.url}#t=0.1`} muted preload="metadata" aria-hidden="true" /> : null;
   return (
     <span className="eg-node__ring" style={{ width: size, height: size, borderColor: colour(node) }}>
       {picture ?? <Icon name={ICONS[node.kind]} />}
@@ -443,7 +443,7 @@ interface VersionData extends Record<string, unknown> {
   onHover: (on: boolean) => void;
 }
 
-/** A version on the canvas: Reveric's ring with one short name under it; its version and state are in its accessible name, the hover card and the inspector. A button, so the keyboard reaches it. */
+/** A version on the canvas: Reveric's ring with one short name under it; its version and state are read out with its name, and shown in the hover card and the inspector. A button, so the keyboard reaches it. */
 function VersionNode({ data }: NodeProps<Node<VersionData>>) {
   const size = data.center ? FOCUS_SIZE : RING_SIZE;
   return (
@@ -451,8 +451,6 @@ function VersionNode({ data }: NodeProps<Node<VersionData>>) {
       type="button"
       className={`eg-node nopan${data.center ? " is-center" : ""}${data.dim ? " is-dim" : ""}${data.stale ? " is-stale" : ""}`}
       style={{ width: size, height: size }}
-      // The name a screen reader says holds every word the node shows (WCAG 2.5.3).
-      aria-label={[data.name, data.state, ...(data.stats ?? [])].join(" ")}
       aria-current={data.center || undefined}
       // Pointer hover and clicks are React Flow's (onNodeMouseEnter, onNodeClick); a keyboard's focus is the button's, and its Enter clicks.
       onFocus={() => data.onHover(true)}
@@ -461,10 +459,12 @@ function VersionNode({ data }: NodeProps<Node<VersionData>>) {
       <Handle type="target" position={Position.Top} isConnectable={false} className="eg-handle" />
       <Handle type="source" position={Position.Bottom} isConnectable={false} className="eg-handle" />
       <Avatar node={data.node} file={data.file} size={size} />
-      <span className="eg-node__labels" style={{ top: size + 6 }} aria-hidden="true">
+      <span className="eg-node__labels" style={{ top: size + 6 }}>
         <span className="eg-node__name" style={{ maxWidth: data.center ? 140 : 96 }}>
           {data.name}
-        </span>
+        </span>{" "}
+        {/* The version and its state, for a screen reader; on the plane they are in the hover card. */}
+        <span className="sr">{data.state}</span>
         {data.stats && (
           <span className="eg-node__stats">
             {" "}
@@ -574,7 +574,7 @@ function Canvas({ lineage, center, kinds, depth, onFocus, onReset, name, fileOf,
         edgeTypes={EDGE_TYPES}
         nodeOrigin={[0.5, 0.5]}
         fitView
-        fitViewOptions={{ padding: 0.15, minZoom: 0.42, maxZoom: 1.6 }}
+        fitViewOptions={{ padding: 0.2, minZoom: 0.42, maxZoom: 1 }}
         minZoom={0.3}
         maxZoom={2.6}
         nodesDraggable={false}

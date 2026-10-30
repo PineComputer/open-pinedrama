@@ -598,7 +598,7 @@ h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 700; lett
 .eg-view .eg-rail, .eg-view .eg-inspector { width: auto; }
 .eg-view .ds-icon { width: 14px; height: 14px; flex: none; }
 /* On React Flow a node is a box the size of its ring (React Flow shows a node once it has a size), centred on its place (nodeOrigin); Reveric's node is a point with its ring around it. */
-.eg-node { position: relative; display: block; border: 0; padding: 0; background: none; color: inherit; font: inherit; }
+.eg-node { display: block; border: 0; padding: 0; background: none; color: inherit; font: inherit; }
 .eg-node .eg-node__ring { left: 50%; top: 50%; }
 .eg-node .eg-node__labels { left: 50%; }
 .eg-handle { opacity: 0; pointer-events: none; left: 50%; top: 50%; }
@@ -616,8 +616,6 @@ h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 700; lett
 .eg-tab:focus-visible, .eg-rel:focus-visible, .eg-rail__row:focus-visible, .eg-chip:focus-visible, .eg-ddbtn:focus-visible { outline: 2px solid var(--text-primary); outline-offset: 1px; }
 .eg-menu__check[data-disabled] { opacity: .5; cursor: default; }
 .eg-menu__check[data-highlighted], .eg-menu__item[data-highlighted] { background: var(--hover); outline: none; }
-/* Reveric's relation pill, coloured by the other version's group: the colour on the border and a tint; the letters stay text-primary, which the tint keeps in contrast. */
-.eg-rel__label { color: var(--text-primary); border-color: var(--c); background: color-mix(in srgb, var(--c) 14%, var(--surface-container)); }
 /* One short label under each ring, at 11px, cut with an ellipsis. */
 .eg-node__name { font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .eg-node.is-center .eg-node__name { font-size: 13px; }

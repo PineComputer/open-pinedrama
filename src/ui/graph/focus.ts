@@ -18,16 +18,20 @@ export function focusGraph(lineage: Lineage, center: string, kinds: Set<LineageK
   const kindOf = new Map(lineage.nodes.map((node) => [node.id, node.kind]));
   const shown = (id: string) => id === center || kinds.has(kindOf.get(id)!);
   const candidates = lineage.links.filter((link) => shown(link.from) && shown(link.to));
+  // The links walked out from the focus, a ring at a time: a link between two versions of the same ring is not one (Reveric's egPrepGraph keeps the edges its walk crosses).
   const hops = new Map([[center, 0]]);
+  const links: LineageLink[] = [];
   for (let d = 1; d <= depth; d++) {
     for (const link of candidates) {
-      for (const [a, b] of [[link.from, link.to], [link.to, link.from]]) {
-        if (hops.get(a) === d - 1 && !hops.has(b)) hops.set(b, d);
-      }
+      const [a, b] = [hops.get(link.from), hops.get(link.to)];
+      if (a !== d - 1 && b !== d - 1) continue;
+      if (a !== undefined && b !== undefined && a === b) continue;
+      if (a === undefined) hops.set(link.from, d);
+      if (b === undefined) hops.set(link.to, d);
+      if (!links.includes(link)) links.push(link);
     }
   }
   const ids = [...hops.keys()];
-  const links = candidates.filter((link) => hops.has(link.from) && hops.has(link.to));
   type Node = SimulationNodeDatum & { id: string; hops: number };
   const nodes: Node[] = ids.map((id) => ({ id, hops: hops.get(id)!, ...(id === center ? { fx: 0, fy: 0 } : {}) }));
   forceSimulation(nodes)

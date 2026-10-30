@@ -86,8 +86,9 @@
 }
 
 /* ---- Node ---- */
+/* Studio: a box the size of its ring, which React Flow measures and centres (Reveric's was a point). */
 .eg-node {
-  position: absolute; width: 0; height: 0;
+  position: relative;
   cursor: pointer; transition: opacity .2s;
 }
 .eg-node.is-dim { opacity: 0.2; }
@@ -282,10 +283,12 @@
   background: transparent; cursor: pointer; text-align: left; width: 100%;
 }
 .eg-rel:hover { background: var(--hover); }
+/* Studio: coloured by the other version's group (--c), its letters in --text-primary. */
 .eg-rel__label {
   flex: none; min-width: 56px;
   padding: 2px 8px; border-radius: var(--radius-small);
-  border: 1px solid; background: color-mix(in srgb, currentColor 9%, transparent);
+  border: 1px solid var(--c); background: color-mix(in srgb, var(--c) 14%, var(--surface-container));
+  color: var(--text-primary);
   font: 600 var(--type-ui-tiny-size)/1.4 var(--font-sans);
   text-align: center;
 }
