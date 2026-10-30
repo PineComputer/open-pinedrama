@@ -94,6 +94,12 @@ describe("the answers the UI reads", () => {
     run("insert into messages (session_id, kind, text, at) values ('s9', 'input', 'Start the drama.', '2099-01-01T00:00:30Z')");
     const [card] = (await (await call("/api/dramas")).json()) as DramaCard[];
     expect(card.facts).toMatchObject({ lastLine: "Rewriting it into Fountain", lastActivity: "2099-01-01T00:01:00Z" });
+    expect(card.facts.genres).toBeUndefined();
+    // Genres only as the maker's notes state them, in the brief's "Genres:" line (or "类型：").
+    run("update dramas set notes = ? where id = ?", "Selling point: the slap.\nGenres: Family, Period", id);
+    expect((((await (await call("/api/dramas")).json()) as DramaCard[])[0]).facts.genres).toEqual(["Family", "Period"]);
+    run("update dramas set notes = ? where id = ?", "类型：家庭、年代", id);
+    expect((((await (await call("/api/dramas")).json()) as DramaCard[])[0]).facts.genres).toEqual(["家庭", "年代"]);
   });
 
   it("lists the latest conversations with the agent, newest first, each with its drama and last line", async () => {

@@ -19,7 +19,7 @@ function card(fields: Partial<DramaCard> & Pick<DramaCard, "id" | "title">): Dra
 const stepmother = card({
   id: "d1",
   title: "The Stepmother",
-  facts: { scale: { episodes: 2, scenes: 5, segments: 12 }, length: "60", logline: "A stepmother takes over a house that doesn't want her.", lastActivity: "2026-10-30T11:55:00Z", lastLine: "Drawing the storyboards for EP001" },
+  facts: { scale: { episodes: 2, scenes: 5, segments: 12 }, length: "60", genres: ["Family", "Period"], logline: "A stepmother takes over a house that doesn't want her.", lastActivity: "2026-10-30T11:55:00Z", lastLine: "Drawing the storyboards for EP001" },
 });
 const bride = card({ id: "d2", title: "Bride on Bail", status: "stopped", facts: {} });
 
@@ -38,6 +38,8 @@ describe("Home", () => {
     expect(tile).toHaveTextContent("about 2 min planned");
     expect(tile).toHaveTextContent("English vertical drama");
     expect(tile).toHaveTextContent("5 minutes ago");
+    expect(within(tile).getByText("Family")).toHaveClass("ds-tag");
+    expect(within(tile).getByText("Period")).toHaveClass("ds-tag");
     const other = screen.getByRole("link", { name: /^Bride on Bail/ });
     expect(other).not.toHaveTextContent(/scenes|segments|planned|ago/);
   });

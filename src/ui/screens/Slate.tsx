@@ -83,6 +83,15 @@ export function DramaTile({ drama, mode }: { drama: DramaCard; mode?: Mode | "no
       <span className="txt">
         <b>{drama.title}</b>
         {facts.logline && <small className="logline">{facts.logline}</small>}
+        {facts.genres && (
+          <span className="tags">
+            {facts.genres.map((genre) => (
+              <span key={genre} className="ds-tag">
+                {genre}
+              </span>
+            ))}
+          </span>
+        )}
         {facts.scale && <small>{t("drama.scale", facts.scale)}</small>}
         <small>
           {total > 0 ? `${t("drama.episodes", { done, total })} · ` : ""}
