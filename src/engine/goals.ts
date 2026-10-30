@@ -109,6 +109,7 @@ export function setupGoal(drama: DramaBrief, attachments: string[], inputs: { sc
     `Make the drama-cli project in the work directory's drama/ folder, with these inputs, which I chose: \`${[`mkdir -p ${INPUTS}`, `cp attachments/${inputs.screenplay} ${INPUTS}/${projectScreenplay(inputs.screenplay)}`, `cp attachments/${inputs.brief} ${INPUTS}/brief.md`, drama.preset ? init(drama, projectScreenplay(inputs.screenplay)) : ""].filter(Boolean).join(" && ")}\`. Where a source disagrees with my settings, follow my settings.`,
     resolution(drama.format) ? `Then set defaults.resolution to ${resolution(drama.format)} in drama/drama-cli.cfg.yaml.` : "",
     NO_CAP,
+    RETURN_STATUS,
     "Read the screenplay and ask me for anything that is missing.",
     "Write the bible, then make each lead's face and base look. Stop and ask me to approve the leads' looks, returning their sheets with your question.",
     "After I approve, prepare every episode so that each can then be made in parallel in a session of its own: write and accept every episode's breakdown, then make every reference `drama-cli status --config drama/drama-cli.cfg.yaml` lists as needed by the accepted breakdowns. Stop and ask me to approve these shared references, returning their images with your question.",
@@ -132,6 +133,15 @@ const LIST_EPISODES = 'End with the list of episodes, one per line, as "EP001: <
 export const NO_CAP =
   "Spending is authorized and has no cap: budget_usd in drama/drama-cli.cfg.yaml is null (set it so after init; a restored project keeps it), make every paid request the work needs without asking me first, and never ask me about cost.";
 
+/**
+ * drama-cli's status of the project at each stop, which the skill calls the source of truth for
+ * versions, takes, verdicts and budget (short_drama skills/drama-workflow/SKILL.md, "Start or
+ * resume", v0.7.4): the studio reads where the work stands from it rather than from the files'
+ * names. It is saved beside the packs, outside the project, so no pack carries it.
+ */
+export const RETURN_STATUS =
+  "Each time you stop for me or finish, also save drama-cli's status of the project (`mkdir -p handoff && drama-cli status --config drama/drama-cli.cfg.yaml > handoff/status.json`) and return handoff/status.json with your other files. It is for the studio; don't ask me about it.";
+
 /** How an episode session takes up the drama's project, and the bounds it keeps to. */
 function handedOver(drama: DramaBrief, code: string, screenplay: string | undefined): string[] {
   // screenplay: its name in the project (projectScreenplay); undefined for a drama made before the studio chose the inputs.
@@ -141,6 +151,7 @@ function handedOver(drama: DramaBrief, code: string, screenplay: string | undefi
       ? `Restore it into the work directory's drama/ folder and point its config at that folder, keeping its settings: \`mkdir -p drama && cat attachments/project.tar.part-* | tar -xf - -C drama && ${init(drama, screenplay)}\`. Check it with \`drama-cli status --config drama/drama-cli.cfg.yaml\`.`
       : "Restore it into the work directory's drama/ folder (`mkdir -p drama && cat attachments/project.tar.part-* | tar -xf - -C drama`), point its config at that folder and its screenplay.md and brief.md with `drama-cli init`, keeping its settings and preset, and check it with `drama-cli status`.",
     NO_CAP,
+    RETURN_STATUS,
     "Its asset-library registrations were made in another session and can't be used from this one: before you compile video prompts, set them aside and register every reference the episode uses again from its local file in this session.",
     `Work only on ${code}, inside drama/episodes/${code}. Use the accepted references as they are: never make a new version of the bible, a look, a location, a key prop or another episode's breakdown. Stop and ask me only when a drama-cli command refuses because a reference it reads is not accepted, quoting its refusal; until then, go on with every step that doesn't read it.`,
     `${code}'s own breakdown is yours to change when the video model won't take it as it is, such as a segment longer than the model accepts: make a new version that splits it, keeping every line, accept it, redo what depends on it, and tell me at your next stop.`,
@@ -223,7 +234,7 @@ export function rehearsed(goal: string): string {
     "This is a rehearsal of the studio's flow. Pine's drama skill (drama-workflow) and drama-cli are not on this Computer, and that is expected.",
     `Wherever the goal below says to use them, stand in with the attached kit, \`${kit}\` (\`${kit} --help\` lists its commands). It writes placeholder looks, locations, props, blocking references, storyboards, takes and cuts where the skill would, and prints each path it wrote.`,
     'Write the bible and the breakdowns yourself, short, in Markdown: drama/bible/v1/bible.md, and drama/episodes/EP001/breakdown/v1/breakdown.md for EP001 and so on, two or three segments each, with a "## seg01" heading for each segment followed by its shots as a list, one of them a line of dialogue.',
-    `For an episode, draw each segment's blocking and storyboards, then shoot one take per segment (give a segment with dialogue its line with --line), then build the cut, stopping for me where the goal says. Skip \`drama-cli init\` and \`drama-cli status\`; check a restored project with \`${kit} status\`.`,
+    `For an episode, draw each segment's blocking and storyboards, then shoot one take per segment (give a segment with dialogue its line with --line), then build the cut, stopping for me where the goal says. Skip \`drama-cli init\` and \`drama-cli status\`, and return no handoff/status.json; check a restored project with \`${kit} status\`.`,
     "When I ask for changes, make a new version only of what I named. Everything else exactly as the goal says: the questions, the stops, packing and returning files, the list of episodes.",
     "",
     goal,

@@ -1,0 +1,51 @@
+// What the goals ask the agent to hand back at each stop besides the files under review:
+// drama-cli's own status of the project, which the skill calls the source of truth.
+import { describe, expect, it } from "vitest";
+import { episodeGoal, rehearsed, resumeGoal, setupGoal, type DramaBrief } from "./goals.ts";
+
+const drama: DramaBrief = {
+  title: "The Stepmother",
+  language: "en",
+  look: "",
+  format: "9:16, 480p",
+  notes: "",
+  length: "60",
+  preset: "en-us-live-sfw",
+  screenplay_language: "en",
+};
+
+const STATUS = "drama-cli status --config drama/drama-cli.cfg.yaml > handoff/status.json";
+
+function times(text: string, part: string): number {
+  return text.split(part).length - 1;
+}
+
+describe("each stop returns drama-cli's status", () => {
+  it("in the setup session", () => {
+    const goal = setupGoal(drama, ["screenplay.md", "brief.md"], { screenplay: "screenplay.md", brief: "brief.md" });
+    expect(times(goal, STATUS)).toBe(1);
+    expect(goal).toContain("return handoff/status.json");
+  });
+
+  it("in an episode's session", () => {
+    const goal = episodeGoal(drama, "EP002", ["project.tar.part-aa"], true, "screenplay.md");
+    expect(times(goal, STATUS)).toBe(1);
+    expect(goal).toContain("return handoff/status.json");
+  });
+
+  it("in a session that carries an episode on", () => {
+    const goal = resumeGoal(drama, "EP002", ["project.tar.part-aa", "EP002.tar.part-aa"], true, undefined, "screenplay.md");
+    expect(times(goal, STATUS)).toBe(1);
+  });
+
+  it("with the config the session's own init writes, the one every other command in the goal names", () => {
+    const goal = episodeGoal(drama, "EP002", ["project.tar.part-aa"], true, "screenplay.md");
+    expect(goal).toContain("drama-cli status --config drama/drama-cli.cfg.yaml`.");
+    expect(goal).toContain("drama-cli init drama ");
+  });
+
+  it("but not in a rehearsal, which has no drama-cli to ask", () => {
+    const goal = rehearsed(episodeGoal(drama, "EP002", ["project.tar.part-aa"], true, "screenplay.md"));
+    expect(goal).toContain("return no handoff/status.json");
+  });
+});

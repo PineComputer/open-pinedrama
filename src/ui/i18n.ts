@@ -337,6 +337,7 @@ const en = {
   "file.cut": "Cut",
   "file.observation": "Notes",
   "file.archive": "Project archive",
+  "file.status": "Project status",
   "file.other": "File",
 
   "otherMode.replay": "Replay sample",
@@ -749,6 +750,7 @@ const zh: Record<Key, string> = {
   "file.cut": "成片",
   "file.observation": "观察记录",
   "file.archive": "项目存档",
+  "file.status": "项目状态",
   "file.other": "文件",
 
   "otherMode.replay": "回放示例",
