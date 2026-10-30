@@ -105,7 +105,7 @@ export function Cast({ dramaId, compact = false }: { dramaId: string; compact?: 
     <div>
       {!compact && (
         <div className="work-head">
-          <h2>{t("section.cast")}</h2>
+          <h2>{t("step.story")}</h2>
         </div>
       )}
       {!data ? (

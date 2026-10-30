@@ -24,7 +24,7 @@ export function Delivery({ dramaId }: { dramaId: string }) {
   return (
     <>
       <div className="work-head">
-        <h2>{t("section.delivery")}</h2>
+        <h2>{t("step.cut")}</h2>
         {data.length > 0 && <span className="facts">{t("delivery.ready", { n: ready, total: data.length })}</span>}
         {ready > 0 && (
           <>

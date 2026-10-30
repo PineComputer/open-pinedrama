@@ -2,41 +2,11 @@
 // episodes at once. Decisions mix accepting and sending back, item by item; the episodes move on
 // differently; and each episode the project shows is its own session's newest report, never a
 // copy another session handed in.
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 import type { ProjectView } from "../src/shared/project.ts";
 import type { SessionStatus } from "../src/engine/status.ts";
-import type { ReviewSummary, ReviewView } from "../src/shared/types.ts";
 import { TOKEN } from "../playwright.config.ts";
-
-/** The engine's API, called from the studio's own page, as its screens call it. */
-async function call<T>(page: Page, path: string, json?: unknown): Promise<T> {
-  return page.evaluate(
-    async ({ path, json }) => {
-      const response = await fetch(path, json === undefined ? undefined : { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(json) });
-      if (!response.ok) throw new Error(`${path}: ${response.status} ${await response.text()}`);
-      return response.json();
-    },
-    { path, json },
-  ) as Promise<T>;
-}
-
-/** Waits for the drama's open review of this kind (of this episode, if given). */
-async function review(page: Page, drama: string, kind: ReviewSummary["kind"], episode?: string): Promise<ReviewView> {
-  let found: ReviewSummary | undefined;
-  await expect
-    .poll(async () => {
-      found = (await call<ReviewSummary[]>(page, "/api/inbox")).find((item) => item.dramaId === drama && item.kind === kind && item.state === "open" && (!episode || item.episode === episode));
-      return Boolean(found);
-    }, { timeout: 30_000 })
-    .toBe(true);
-  return call<ReviewView>(page, `/api/reviews/${found!.id}`);
-}
-
-/** Accepts every item of the review but those named, which go back with a reason. */
-async function decide(page: Page, view: ReviewView, sendBack: string[] = []) {
-  const items = view.reviewItems.map((item) => ({ key: item.key, verdict: sendBack.includes(item.key) ? "revise" : "approve", notes: sendBack.includes(item.key) ? [{ text: "Try again." }] : [] }));
-  await call(page, `/api/reviews/${view.id}/decision`, { items, words: view.kind === "question" ? "He is 32." : "Reviewed." });
-}
+import { call, decide, review } from "./api.ts";
 
 test("three episodes at once: each shows its own session's newest report, decided item by item", async ({ page }) => {
   await page.goto(`/api/open?ticket=${TOKEN}`);
