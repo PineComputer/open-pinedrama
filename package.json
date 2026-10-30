@@ -14,7 +14,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "check": "tsc --noEmit && vitest run",
-    "e2e": "VITE_GALLERY=1 vite build && playwright test",
+    "e2e": "node scripts/e2e-build.mjs && playwright test",
     "pine:check": "tsx scripts/pine-check.ts",
     "desktop": "node scripts/desktop.mjs && electron .",
     "package": "node scripts/desktop.mjs && electron-builder --config electron-builder.config.mjs"

@@ -7,7 +7,8 @@ dist/
 .env.local
 .data/
 
-# End-to-end results
+# End-to-end build and results
+.e2e/
 test-results/
 playwright-report/
 
