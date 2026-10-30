@@ -170,13 +170,15 @@ export async function settle(sessionId: string, info: TurnInfo): Promise<void> {
     const everyStop = (file: TurnFile) => ["archive", "status"].includes(classify(file.path).kind);
     const packs = info.files.filter((file) => !fresh.includes(file) && everyStop(file));
     try {
+      // A status report is recorded as well as saved, whether the turn returned it or named it.
+      const keep = async (body: ReadableStream<Uint8Array>, relPath: string, type: string) => {
+        if (classify(relPath).kind !== "status") return void (await save(body, { ...where, relPath, type }));
+        const bytes = new Uint8Array(await new Response(body).arrayBuffer());
+        await save(bytes, { ...where, relPath, type });
+        recordStatus(sessionId, info.turnId, bytes);
+      };
       for (const file of [...fresh, ...packs]) {
-        const body = await fleet().openFile(computerRef(computer), sessionRef(session), file.path);
-        if (classify(file.path).kind === "status") {
-          const bytes = new Uint8Array(await new Response(body).arrayBuffer());
-          await save(bytes, { ...where, relPath: file.path, type: file.type });
-          recordStatus(sessionId, info.turnId, bytes);
-        } else await save(body, { ...where, relPath: file.path, type: file.type });
+        await keep(await fleet().openFile(computerRef(computer), sessionRef(session), file.path), file.path, file.type);
       }
       // Named but not returned: fetched, unless the drama has that file already.
       const fetch = async (relPath: string) => {
@@ -186,10 +188,10 @@ export async function settle(sessionId: string, info: TurnInfo): Promise<void> {
             if (error.status === 404) return undefined; // named, but not there
             throw error;
           });
-        if (body) await save(body, { ...where, relPath, type: typeOf(relPath) });
+        if (body) await keep(body, relPath, typeOf(relPath));
       };
       const named = stop
-        ? namedPaths(asked).filter((relPath) => !info.files.some((file) => file.path === relPath) && (!known(session.drama_id, relPath) || classify(relPath).kind === "archive"))
+        ? namedPaths(asked).filter((relPath) => !info.files.some((file) => file.path === relPath) && (!known(session.drama_id, relPath) || ["archive", "status"].includes(classify(relPath).kind)))
         : [];
       for (const relPath of named) await fetch(relPath);
       // The screenplay as drama-cli recorded it, the rewrite the maker is asked to accept included, whatever the turn named.
