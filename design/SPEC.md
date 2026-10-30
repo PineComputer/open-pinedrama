@@ -54,6 +54,7 @@ Phosphor regular, 70 names (icons.js). Sizes: 16 default, 18 in IconButton and N
 | PlateCard | .placecard | 9:14 picture. |
 | Finding | .finding | warn (warning-bg) / err (deletion-bg), 14px icon. |
 | LineageGraph | .graph | Columns: Screenplay · Bible · Looks, plates, props · Storyboards · Takes · Cut. Nodes 156×112. Upstream and downstream wires turn solid text-primary; stale is dashed; unrelated nodes drop to 40% opacity. |
+| ExportMenu | .exportmenu, .menu, .mi | In the drama's top bar, before Stop. Two downloads: ComfyUI workflow (.json, the lineage each stop returns) and infinite-canvas (.zip, with the hint "Open infinite-canvas → Import → choose this file"). Each is disabled, saying why, until a stop has returned its file. |
 | StaleBar | .stalebar | Dashed. Gives the reason from the export; never a cost. One action: "Ask the agent to redo them", sent as a steering note. No "Keep as is": drama-cli has no action for keeping a stale item. |
 | CutTimeline | .tl | Segment strips by length, NotePins (18px warning circles) at their times, and a playhead. |
 | NoteList | .noterow / .addnote | Times in a warning-bg mono button that seeks; adds at the playhead with Enter. |

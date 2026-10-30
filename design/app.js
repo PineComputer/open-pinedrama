@@ -91,6 +91,23 @@
   }
   function stopDrama() { set({ dramaStop: "stopping" }); setTimeout(() => { if (S.dramaStop === "stopping") { set({ dramaStop: "stopped" }); toast(P.project.title + " stopped.", { label: "Resume", run: resume }); } }, 5000); }
   function resume() { set({ dramaStop: null }); toast(P.project.title + " resumed."); }
+  /* Export: the drama as other tools read it, downloaded from what the agent's stops return (handoff/lineage.json,
+     handoff/infinite-canvas.zip, written by drama-cli export). Disabled, with why, until a stop has returned them. */
+  function ExportMenu() {
+    if (["home", "upload"].includes(S.screen)) return null;
+    const none = S.state === "nostop";
+    const why = "Ready after the agent's next stop returns it.";
+    const item = (label, ext, hint, file) => html`<button class="mi" role="menuitem" aria-disabled=${String(none)} title=${none ? why : ""}
+        onClick=${() => { if (none) return; set({ exportOpen: false }); toast("Downloaded " + file + "."); }}>
+      <b>${label} <span class="mono muted">${ext}</span></b><small>${none ? why : hint}</small></button>`;
+    return html`<div class="exportmenu">
+      <button class="btn sm" aria-haspopup="menu" aria-expanded=${String(!!S.exportOpen)} onClick=${() => set({ exportOpen: !S.exportOpen })}>${I("download-simple")}Export${I("caret-down")}</button>
+      ${S.exportOpen && html`<div class="menu" role="menu" aria-label="Export">
+        ${item("ComfyUI workflow", ".json", "The project's lineage, as drama-cli exports it.", "bride-on-bail-lineage.json")}
+        ${item("infinite-canvas", ".zip", "Open infinite-canvas → Import → choose this file.", "bride-on-bail-infinite-canvas.zip")}
+      </div>`}
+    </div>`;
+  }
   function TopBar({ crumbs, right }) {
     const n = decisions().length;
     return html`<header class="top">
@@ -98,6 +115,7 @@
       <div class="crumb">${crumbs.map((c, i) => html`${i > 0 && I("caret-right")}${i === crumbs.length - 1 ? html`<b>${c}</b>` : html`<span>${c}</span>`}`)}</div>
       <span class="grow"></span>
       ${right}
+      <${ExportMenu}/>
       <${StopControl}/>
       <button class="btn primary sm" onClick=${() => go("review")} aria-label=${"Next review, " + n + " waiting"}>Next review <span class="n">${n}</span></button>
     </header>`;
@@ -424,7 +442,7 @@
       <div class="seg" role="group" aria-label="Screen">${[["home", "Home"], ["upload", "Upload"], ["analyzing", "Analyzing"], ["fountain", "Fountain"], ["story", "Story"], ["episodes", "Episodes"], ["episode", "Episode"], ["canvas", "Canvas"], ["graph", "Graph"], ["review", "Review"], ["cut", "Cut"]].map(([k, l]) => html`<button aria-pressed=${String(S.screen === k)} onClick=${() => go(k)}>${l}</button>`)}</div>
       <span class="sep"></span>
       <label class="select" style="gap:8px">State<select aria-label="State" value=${S.state} onChange=${(e) => { const v = e.target.value; set({ state: v, dramaStop: v === "stopping" ? "stopping" : v === "stopped" ? "stopped" : null }); }}>
-        ${[["normal", "Normal"], ["stopping", "Stopping"], ["stopped", "Stopped"], ["redline", "Red line"], ["budget", "Budget spent"], ["cap", "Cap reached"], ["env", "Credentials refused"]].map(([k, l]) => html`<option value=${k}>${l}</option>`)}</select></label>
+        ${[["normal", "Normal"], ["nostop", "No stop yet"], ["stopping", "Stopping"], ["stopped", "Stopped"], ["redline", "Red line"], ["budget", "Budget spent"], ["cap", "Cap reached"], ["env", "Credentials refused"]].map(([k, l]) => html`<option value=${k}>${l}</option>`)}</select></label>
       <span class="sep"></span>
       <div class="seg" role="group" aria-label="Theme">${[["dark", "Dark", "moon-stars"], ["light", "Light", "sun-dim"]].map(([k, l, ic]) => html`<button aria-pressed=${String(S.theme === k)} onClick=${() => set({ theme: k })}>${I(ic)}${l}</button>`)}</div>
       <span class="sep"></span><span>Steering only · Canvas and Graph read-only · sample project, our own test pictures</span>
