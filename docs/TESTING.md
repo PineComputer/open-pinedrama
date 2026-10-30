@@ -65,3 +65,7 @@ npx playwright test --ui # end to end, step by step, with the trace viewer
 sees another's dramas. A new spec file is added to `PROJECTS` in `playwright.config.ts`; the maker's walk runs in
 the light and the dark theme. Locally it drives the installed Chrome; CI installs
 Playwright's Chromium. A failed run keeps its trace in `test-results/`; CI uploads it.
+
+No test needs replay's sample media (`fixtures/replay/samples/`, Git LFS): CI checks out without
+it, and replay then draws its placeholders. A test reads a returned file's path from the file
+(`FileItem.path`), never a fixed extension, so it holds with the samples or without.

@@ -108,7 +108,7 @@ async function scenario(title: string) {
     ],
   });
   expect(revised.answer).toContain(
-    `- wei: Lighter jacket. (on drama/assets/characters/wei/v1/image-1.svg, at 40% across and 60% down, see the picture I attached: attachments/reference-${reference.id}-jacket.png)`,
+    `- wei: Lighter jacket. (on ${looksView.reviewItems[1].files[0].path}, at 40% across and 60% down, see the picture I attached: attachments/reference-${reference.id}-jacket.png)`,
   );
   const again = await until("the redrawn look", openReview(id, (item) => item.kind === "looks" && item.id !== looks.id));
   const redrawn = await call<ReviewView>("GET", `/api/reviews/${again.id}`);

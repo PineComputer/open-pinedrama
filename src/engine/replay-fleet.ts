@@ -12,6 +12,7 @@ import { revisedKeys } from "./decisions.ts";
 import { DRAMA_SKILL } from "./goals.ts";
 import type { Attached, ComputerRef, Fleet, FleetEvent, Limits, SessionRef, TurnFile, TurnInfo } from "./fleet.ts";
 import { blocking, lookSheet, plate, prop, storyboard } from "./placeholders.ts";
+import { samplesFrom } from "./replay-samples.ts";
 import { type EpisodeMade, type Made, replayStatus } from "./replay-status.ts";
 
 const SPEED = Number(process.env.STUDIO_REPLAY_SPEED ?? 1);
@@ -58,6 +59,12 @@ type Player = (answer: string) => Step;
 const text = (s: string) => new TextEncoder().encode(s);
 const svg = (p: string, body: string): Out => ({ path: p, type: "image/svg+xml", bytes: text(body) });
 const video = (p: string, name: "take" | "cut"): Out => ({ path: p, type: "video/mp4", bytes: readFileSync(path.join(FIXTURES, `${name}.mp4`)) });
+
+const sample = samplesFrom(path.join(FIXTURES, "samples"));
+/** A picture: the sample for its path, where there is one, else the placeholder drawn for it. */
+const art = (lang: Lang, p: string, body: string): Out => sample(lang, p) ?? svg(p, body);
+/** A clip: the sample for its path, else the take's or the cut's placeholder clip. */
+const clip = (lang: Lang, p: string, name: "take" | "cut"): Out => sample(lang, p) ?? video(p, name);
 
 /** The refusals a stop asks about, one JSON line each, as drama-cli prints them (goals.ts RETURN_REFUSALS). */
 const refusals = (list: Refusal[]): Out => ({ path: "handoff/refusals.jsonl", type: typeOf("refusals.jsonl"), bytes: text(list.map((error) => `${JSON.stringify({ error })}\n`).join("")) });
@@ -250,12 +257,12 @@ function setupScript(lang: Lang, preset: string): Player {
     versions.set(key, v);
     return `v${v}`;
   };
-  const leadSheet = (c: { id: string; name: string }) => svg(`drama/assets/characters/${c.id}/${next(c.id)}/image-1.svg`, lookSheet(c.name, "base", `v${versions.get(c.id)}`));
+  const leadSheet = (c: { id: string; name: string }) => art(lang, `drama/assets/characters/${c.id}/${next(c.id)}/image-1.svg`, lookSheet(c.name, "base", `v${versions.get(c.id)}`));
   const shared = {
-    "lin/S1": () => svg(`drama/assets/characters/lin/states/S1/${next("lin/S1")}/image-1.svg`, lookSheet(say.cast[0].name, "S1", `v${versions.get("lin/S1")}`)),
-    home: () => svg(`drama/assets/scenes/home/${next("home")}/image-1.svg`, plate("home", `v${versions.get("home")}`)),
-    office: () => svg(`drama/assets/scenes/office/${next("office")}/image-1.svg`, plate("office", `v${versions.get("office")}`)),
-    letter: () => svg(`drama/assets/props/letter/${next("letter")}/image-1.svg`, prop("letter", `v${versions.get("letter")}`)),
+    "lin/S1": () => art(lang, `drama/assets/characters/lin/states/S1/${next("lin/S1")}/image-1.svg`, lookSheet(say.cast[0].name, "S1", `v${versions.get("lin/S1")}`)),
+    home: () => art(lang, `drama/assets/scenes/home/${next("home")}/image-1.svg`, plate("home", `v${versions.get("home")}`)),
+    office: () => art(lang, `drama/assets/scenes/office/${next("office")}/image-1.svg`, plate("office", `v${versions.get("office")}`)),
+    letter: () => art(lang, `drama/assets/props/letter/${next("letter")}/image-1.svg`, prop("letter", `v${versions.get("letter")}`)),
   } as Record<string, () => Out>;
   // What drama-cli's status would say at this stop: each item's version drawn, and the one the
   // maker accepted. A decision accepts every item of the review it doesn't send back.
@@ -338,14 +345,14 @@ function episodeScript(code: string, lang: Lang, preset: string): Player {
     which.flatMap((seg) => {
       const v = boardVersion.get(seg.id)!;
       return [
-        svg(`${base}/multi_panel_storyboard/${seg.id}/line-art/v${v}/image-1.svg`, storyboard(`${code} ${seg.id}`, seg.shots, "line-art", `v${v}`, v === 1 && seg.id === "seg01" ? 3 : -1)),
-        svg(`${base}/multi_panel_storyboard/${seg.id}/photoreal/v${v}/image-1.svg`, storyboard(`${code} ${seg.id}`, seg.shots, "photoreal", `v${v}`, v === 1 && seg.id === "seg01" ? 3 : -1)),
+        art(lang, `${base}/multi_panel_storyboard/${seg.id}/line-art/v${v}/image-1.svg`, storyboard(`${code} ${seg.id}`, seg.shots, "line-art", `v${v}`, v === 1 && seg.id === "seg01" ? 3 : -1)),
+        art(lang, `${base}/multi_panel_storyboard/${seg.id}/photoreal/v${v}/image-1.svg`, storyboard(`${code} ${seg.id}`, seg.shots, "photoreal", `v${v}`, v === 1 && seg.id === "seg01" ? 3 : -1)),
       ];
     });
   const shoot = (which: typeof segments) =>
     which.map((seg) => {
       takes.set(seg.id, (takes.get(seg.id) ?? 0) + 1);
-      return video(`${base}/segments/${seg.id}/t${String(takes.get(seg.id)).padStart(2, "0")}/video.mp4`, "take");
+      return clip(lang, `${base}/segments/${seg.id}/t${String(takes.get(seg.id)).padStart(2, "0")}/video.mp4`, "take");
     });
   let started = false;
   const play = (answer: string): Step => {
@@ -354,7 +361,7 @@ function episodeScript(code: string, lang: Lang, preset: string): Player {
       started = true;
       return {
         progress: say.restoring(code),
-        files: [...segments.map((seg) => svg(`${base}/blocking/${seg.id}/v1/image-1.svg`, blocking(`${code} ${seg.id}`, "v1"))), ...boards(segments)],
+        files: [...segments.map((seg) => art(lang, `${base}/blocking/${seg.id}/v1/image-1.svg`, blocking(`${code} ${seg.id}`, "v1"))), ...boards(segments)],
         ask: say.askBoards(code, segments.length),
       };
     }
@@ -378,16 +385,16 @@ function episodeScript(code: string, lang: Lang, preset: string): Player {
     }
     if (stage === "takes") {
       stage = "cut";
-      return { progress: say.cutting, files: [video(`${base}/edit/v1/cut.mp4`, "cut")], ask: say.askCut(code) };
+      return { progress: say.cutting, files: [clip(lang, `${base}/edit/v1/cut.mp4`, "cut")], ask: say.askCut(code) };
     }
     if (stage === "cut" && redo.length) {
       cut += 1;
-      return { progress: say.recutting, files: [video(`${base}/edit/v${cut}/cut.mp4`, "cut")], ask: say.askCutAgain(code) };
+      return { progress: say.recutting, files: [clip(lang, `${base}/edit/v${cut}/cut.mp4`, "cut")], ask: say.askCutAgain(code) };
     }
     stage = "done";
     cutAccepted = true;
     // As Pine's agent does, the finished episode hands back its accepted cut again, unchanged.
-    return { progress: say.accepting, files: [video(`${base}/edit/v${cut}/cut.mp4`, "cut")], summary: say.finished(code) };
+    return { progress: say.accepting, files: [clip(lang, `${base}/edit/v${cut}/cut.mp4`, "cut")], summary: say.finished(code) };
   };
   // What drama-cli's status would say at this stop: the project as handed over, every shared
   // reference approved, and this episode's items as far as the maker has accepted each.
