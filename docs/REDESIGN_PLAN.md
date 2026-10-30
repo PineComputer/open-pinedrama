@@ -93,6 +93,10 @@ deciding every take. P5.8 StopCard: red line, budget, cap.
 
 **P6 Canvas (M5).** P6.1 a pure layout function. P6.2 CanvasNode and ItemCard. P6.3
 SteerBar: Review, Send back with a reason, Note, Lineage. P6.4 following the agent, minimap.
+The canvas is built without React Flow: phase 1 only reads the board, and its pan, zoom, fit
+and minimap are a few lines of our own, so the dependency isn't needed. The layout
+(`src/shared/canvas.ts`) draws only the connectors the state states: each scene's shot order
+and what an episode needs from a reference. What each segment uses waits for P8.0's export.
 
 **P7 Cut viewer (M6).** P7.1 tracks. P7.2 notes at the playhead.
 
@@ -121,5 +125,5 @@ All dev-only, all MIT or Apache-2.0:
 - `@playwright/test`: end-to-end tests and screenshots in a real browser.
 - `@axe-core/playwright`: accessibility checks on each page an end-to-end test visits.
 
-Later items add `@radix-ui/*` (P2: dialogs, menus, popovers with focus handled) and
-`@xyflow/react` (P6: the canvas), each with its own reason in its commit.
+Later items add `@radix-ui/*` (P2: dialogs, menus, popovers with focus handled), with its
+reason in its commit. P6 (the canvas) adds no dependency.
