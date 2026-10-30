@@ -63,6 +63,15 @@ describe("the canvas", () => {
     await waitFor(() => expect(lin.closest(".ds-cnode")!.querySelector("img")).toHaveAttribute("src", "/f/2"));
   });
 
+  it("shows the version's picture, never the spec.json or request.json in its folder", async () => {
+    const at = (id: number, name: string, kind: string, type: string) => ({ ...file(id, `/work/drama/assets/characters/lin/v1/${name}`, `2026-10-30T10:0${id}:00Z`), name, kind, type }) as unknown as FileItem;
+    // Saved after the picture, so neither newest-first nor any file of the version would find it.
+    engine(project(), [at(1, "image-1.png", "look", "image/png"), at(2, "spec.json", "spec", "application/json"), at(3, "request.json", "request", "application/json")]);
+    render(<Canvas drama={drama} />);
+    const lin = await screen.findByRole("button", { name: /^林/ });
+    await waitFor(() => expect(lin.closest(".ds-cnode")!.querySelector("img")).toHaveAttribute("src", "/f/1"));
+  });
+
   it("takes the new pictures as a turn's files are saved", async () => {
     engine(project(), [file(1, "/work/drama/assets/characters/lin/v1/image-1.png")]);
     render(<Canvas drama={drama} />);

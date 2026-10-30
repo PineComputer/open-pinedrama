@@ -13,7 +13,7 @@ import { type BoardNode, layoutEpisode } from "../../shared/canvas.ts";
 import { stageOfFile } from "../../shared/facts.ts";
 import type { LineageView } from "../../shared/lineage.ts";
 import type { ProjectView, StageStatus } from "../../shared/project.ts";
-import type { DramaView, FileItem } from "../../shared/types.ts";
+import type { DramaView, FileItem, FileKind } from "../../shared/types.ts";
 import { api, useResource } from "../api.ts";
 import { Button } from "../components/Button.tsx";
 import { EmptyState } from "../components/EmptyState.tsx";
@@ -49,9 +49,12 @@ function stageOf(state: State, node: BoardNode): { at: string[]; stage: StageSta
   ];
 }
 
-/** The picture of a stage's working version among the files the stops returned; the newest when the version isn't there; never a video, which is watched in its review. */
+/** The kinds of file that are a stage's picture (engine/classify.ts); a version's folder also holds its spec.json, request.json and the inputs drama-cli cropped. */
+const PICTURES = new Set<FileKind>(["look", "location", "prop", "storyboard", "blocking", "frame"]);
+
+/** The picture of a stage's working version among the files the stops returned, by its kind; the newest when the version isn't there; never a take, which is watched in its review. */
 function picture(files: FileItem[], at: string[], stage: StageStatus | undefined): FileItem | undefined {
-  const mine = files.filter((file) => !file.type.startsWith("video/") && stageOfFile(file.path)?.at.join("/") === at.join("/")).sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+  const mine = files.filter((file) => PICTURES.has(file.kind) && stageOfFile(file.path)?.at.join("/") === at.join("/")).sort((a, b) => b.createdAt.localeCompare(a.createdAt));
   return mine.find((file) => stageOfFile(file.path)!.version === stage?.current) ?? mine[0];
 }
 
