@@ -153,7 +153,7 @@ export const RETURN_STATUS =
  * the project, so it goes to handoff/, beside the status.
  */
 export const RETURN_LINEAGE =
-  "Each time you stop for me or finish, also save drama-cli's lineage of the project (`mkdir -p handoff && drama-cli export comfyui --config drama/drama-cli.cfg.yaml --out handoff/lineage.json`) and return handoff/lineage.json with your other files. It is for the studio; don't ask me about it.";
+  "Each time you stop for me or finish, also save drama-cli's lineage of the project and the project as infinite-canvas's import reads it (`mkdir -p handoff && drama-cli export comfyui --config drama/drama-cli.cfg.yaml --out handoff/lineage.json && drama-cli export infinite-canvas --config drama/drama-cli.cfg.yaml --out handoff/infinite-canvas.zip`) and return handoff/lineage.json and handoff/infinite-canvas.zip with your other files. They are for the studio; don't ask me about them.";
 
 /**
  * What drama-cli asked of the model for each version it made, in the version's own folder:
@@ -272,7 +272,7 @@ export function rehearsed(goal: string): string {
     "This is a rehearsal of the studio's flow. Pine's drama skill (drama-workflow) and drama-cli are not on this Computer, and that is expected.",
     `Wherever the goal below says to use them, stand in with the attached kit, \`${kit}\` (\`${kit} --help\` lists its commands). It writes placeholder looks, locations, props, blocking references, storyboards, takes and cuts where the skill would, and prints each path it wrote.`,
     'Write the bible and the breakdowns yourself, short, in Markdown: drama/bible/v1/bible.md, and drama/episodes/EP001/breakdown/v1/breakdown.md for EP001 and so on, two or three segments each, with a "## seg01" heading for each segment followed by its shots as a list, one of them a line of dialogue.',
-    `For an episode, draw each segment's blocking and storyboards, then shoot one take per segment (give a segment with dialogue its line with --line), then build the cut, stopping for me where the goal says. Skip \`drama-cli init\` and \`drama-cli status\`, and return no handoff/status.json, handoff/lineage.json or handoff/refusals.jsonl, and no spec.json or request.json; check a restored project with \`${kit} status\`.`,
+    `For an episode, draw each segment's blocking and storyboards, then shoot one take per segment (give a segment with dialogue its line with --line), then build the cut, stopping for me where the goal says. Skip \`drama-cli init\` and \`drama-cli status\`, and return no handoff/status.json, handoff/lineage.json, handoff/infinite-canvas.zip or handoff/refusals.jsonl, and no spec.json or request.json; check a restored project with \`${kit} status\`.`,
     "When I ask for changes, make a new version only of what I named. Everything else exactly as the goal says: the questions, the stops, packing and returning files, the list of episodes.",
     "",
     goal,

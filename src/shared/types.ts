@@ -98,6 +98,8 @@ export type FileKind =
   | "status"
   /** drama-cli's lineage of the project, which each stop returns for the studio's Graph (handoff/lineage.json). */
   | "lineage"
+  /** The project as infinite-canvas's import reads it, written by drama-cli export infinite-canvas, which each stop returns for the studio's Export menu (handoff/infinite-canvas.zip). */
+  | "infinite-canvas"
   /** The drama-cli refusals a stop asks the maker about, as drama-cli printed them (handoff/refusals.jsonl). */
   | "refusal"
   /** drama-cli's statement of a version's job, in its folder (spec.json): the prompt, references and settings it made it from. */
