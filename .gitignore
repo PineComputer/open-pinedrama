@@ -14,3 +14,4 @@ playwright-report/
 
 # Desktop builds
 release/
+.DS_Store
