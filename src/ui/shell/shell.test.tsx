@@ -9,7 +9,7 @@ import { StatusBar } from "./StatusBar.tsx";
 import { StepRail } from "./StepRail.tsx";
 import { TopBar } from "./TopBar.tsx";
 
-const app: AppInfo = { mode: "replay", version: "0.3.0", dataDir: "/tmp" };
+const app: AppInfo = { mode: "replay", version: "0.3.0", dataDir: "/tmp", stopping: 0 };
 
 function row(number: number, state: EpisodeRow["state"]): EpisodeRow {
   const code = `EP00${number}`;
