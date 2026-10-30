@@ -50,7 +50,7 @@ function stages(progress: ReplayProgress): Stage[] {
     return [
       stage(`${base}/breakdown`, "breakdown", { current: "v1", accepted: "v1" }, reads),
       ...segments.map((segment) => stage(`${base}/blocking/${segment}`, "blocking", { current: "v1", accepted: "v1" }, texts, place)),
-      ...segments.flatMap((segment) => STYLES.map((style) => stage(`${base}/multi_panel_storyboard/${segment}/${style}`, "storyboard", made.boards![segment], texts, [...looks, ...place, `${base}/blocking/${segment}`]))),
+      ...segments.flatMap((segment) => (made.styles ?? STYLES).map((style) => stage(`${base}/multi_panel_storyboard/${segment}/${style}`, "storyboard", made.boards![segment], texts, [...looks, ...place, `${base}/blocking/${segment}`]))),
       ...Object.entries(made.takes ?? {}).map(([segment, shot]) => {
         const newest = `t${String(shot.count).padStart(2, "0")}`;
         return stage(`${base}/segments/${segment}`, "take", { current: newest, accepted: shot.accepted ? newest : null }, texts, [`${base}/multi_panel_storyboard/${segment}/line-art`, ...looks, ...place]);
