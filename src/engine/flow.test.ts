@@ -423,6 +423,32 @@ describe("a drama in replay", () => {
     await until("the shared references, asked in words", openReview(id, (item) => item.id !== looks.id && item.id !== question.id));
   }, 30_000);
 
+  // Replay's other sample dramas tell their own names: Bride on Bail's setup stops on its screenplay's red line, as
+  // drama-cli refuses the bible for one, and goes on with its own leads once the maker has decided.
+  it("plays another sample drama with its own names, stopping on its red line", async () => {
+    const { run } = await import("./db.ts");
+    run("update dramas set status = 'done'");
+    fleet.stops = "ask";
+    const { id } = await call<{ id: string }>("POST", "/api/dramas/sample", { language: "en", sample: "bride-on-bail" });
+    const drama = await call<DramaView>("GET", `/api/dramas/${id}`);
+    expect(drama.title).toBe("Bride on Bail");
+    const age = await until("the setup question", openReview(id, (item) => item.kind === "question"));
+    await call("POST", `/api/reviews/${age.id}/decision`, { items: [], words: "He is 32." });
+    const stop = await until("the red line", openReview(id, (item) => item.kind === "question" && item.id !== age.id));
+    const view = await call<ReviewView>("GET", `/api/reviews/${stop.id}`);
+    expect(view.refusals.map((refusal) => refusal.code)).toEqual(["RedLine"]);
+    expect(view.question).toContain("red line");
+    await call("POST", `/api/reviews/${stop.id}/decision`, { items: [], words: "Write it without those steps." });
+    const looks = await until("the leads' looks", openReview(id, (item) => item.kind === "looks"));
+    expect((await call<ReviewView>("GET", `/api/reviews/${looks.id}`)).question).toContain("Ivy Bell and Luca Moreno");
+    const { projectView } = await import("./status.ts");
+    expect(Object.values(projectView(id).names?.characters ?? {}).map((character) => character.name)).toEqual(["Ivy Bell", "Luca Moreno"]);
+  }, 30_000);
+
+  it("refuses a sample drama it doesn't have", async () => {
+    await expect(call("POST", "/api/dramas/sample", { language: "en", sample: "nope" })).rejects.toThrow(/sample-unknown|No sample drama/);
+  });
+
   // A take sent back past the take cap isn't shot: the agent asks the maker, returning drama-cli's refusal, or
   // naming it, which the stop carries for its card, and no review shows it as a file.
   it.each(["ask", "name"] as const)("asks about the take cap with drama-cli's refusal (%s)", async (stops) => {

@@ -12,8 +12,6 @@ export interface Sample {
   bytes: Uint8Array;
 }
 
-type Lang = "en" | "zh";
-
 /** A file Git LFS stands in for until it is fetched (git-lfs's pointer format, spec v1). */
 const POINTER = "version https://git-lfs.github.com/spec/";
 
@@ -27,19 +25,19 @@ export function sampleKey(relPath: string): string | undefined {
 }
 
 /**
- * Samples from a folder: for a language and the path replay would return, the sample file and
+ * Samples from a folder: for a set (a sample drama's pictures, by language or id) and the path replay would return, the sample file and
  * the path to return it at (its own extension in place of the placeholder's), or undefined.
  */
-export function samplesFrom(root: string): (lang: Lang, relPath: string) => Sample | undefined {
+export function samplesFrom(root: string): (set: string, relPath: string) => Sample | undefined {
   let table: Record<string, Record<string, string>> | null | undefined;
   let warned = false;
-  return (lang, relPath) => {
+  return (set, relPath) => {
     if (table === undefined) {
       const file = path.join(root, "samples.json");
       table = existsSync(file) ? JSON.parse(readFileSync(file, "utf8")) : null;
     }
     const key = sampleKey(relPath);
-    const name = key && table?.[lang]?.[key];
+    const name = key && table?.[set]?.[key];
     if (!name) return undefined;
     const bytes = readFileSync(path.join(root, name));
     if (new TextDecoder().decode(bytes.subarray(0, POINTER.length)) === POINTER) {

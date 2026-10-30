@@ -22,6 +22,7 @@ import { DEFAULT_ENDPOINT } from "./settings.ts";
 import { all } from "./db.ts";
 import { chat, chooseInputs, createDrama, desktop, finishEpisode, rehearse, resumeEpisode, stopDrama, updateDrama, resumeDrama, stopEpisode } from "./dramas.ts";
 import { StudioError } from "./errors.ts";
+import { STORIES } from "./replay-fleet.ts";
 import { fileRow, openBlob, save, toItem } from "./library.ts";
 import { subscribe } from "./live.ts";
 import { drama as dramaRow, review as reviewRow, session as sessionRow, type SessionRow } from "./records.ts";
@@ -166,16 +167,19 @@ export function app(): Hono {
     }
   });
 
-  // A drama from the bundled sample screenplay, so the studio can be tried in one click: played
+  // A drama from the bundled sample screenplay, so the studio can be tried in one click (`sample`
+  // picks another of replay's sample dramas, replay-fleet.ts STORIES, by id): played
   // back in replay, and on a Pine project rehearsed, with Pine's agent standing in for the skill.
   api.post("/api/dramas/sample", async (c) => {
     try {
       const mode = currentMode();
-      const { language } = (await c.req.json().catch(() => ({}))) as { language?: string };
+      const { language, sample = Object.keys(STORIES)[0] } = (await c.req.json().catch(() => ({}))) as { language?: string; sample?: string };
       const zh = language !== "en";
+      const story = STORIES[sample];
+      if (!story) throw new StudioError("sample-unknown", `No sample drama "${sample}"; there are ${Object.keys(STORIES).join(", ")}.`);
       const name = `sample-screenplay.${zh ? "zh" : "en"}.md`;
       const id = await createDrama({
-        title: zh ? "后妈来了" : "The Stepmother",
+        title: story[zh ? "zh" : "en"].title,
         language: zh ? "zh" : "en",
         format: "9:16, 480p",
         parallel: 3,

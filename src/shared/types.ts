@@ -12,6 +12,7 @@ export type ErrorCode =
   | "screenplay-language-missing"
   | "preset-missing"
   | "preset-unknown"
+  | "sample-unknown"
   | "length-missing"
   | "file-too-large"
   | "not-found"

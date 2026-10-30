@@ -1,5 +1,5 @@
 {
- "about": "Replay's sample pictures and clips, by the path replay returns them at with its version as vN and no extension (src/engine/replay-samples.ts). Placeholders from our own test runs, to be replaced by a generated public sample set before release (docs/REDESIGN_PLAN.md).",
+ "about": "Replay's sample pictures and clips, by sample (en and zh for The Stepmother; the Home samples by id) and by the path replay returns them at, with its version as vN and no extension (src/engine/replay-samples.ts). Placeholders from our own test runs, to be replaced by a generated public sample set before release (docs/REDESIGN_PLAN.md).",
  "en": {
   "drama/assets/characters/lin/vN/image-1": "en/lin.jpg",
   "drama/assets/characters/lin/states/S1/vN/image-1": "en/lin.jpg",
@@ -105,5 +105,20 @@
   "drama/episodes/EP006/segments/seg02/t01/video.mp4": "zh/seg02-t01.mp4",
   "drama/episodes/EP006/segments/seg03/t01/video.mp4": "zh/seg03-t01.mp4",
   "drama/episodes/EP006/edit/vN/cut.mp4": "zh/cut.mp4"
+ },
+ "night-class": {
+  "drama/assets/characters/lin/vN/image-1": "home/night-class-tang-wen.jpg",
+  "drama/assets/characters/wei/vN/image-1": "home/night-class-bao-jun.jpg",
+  "drama/assets/scenes/home/vN/image-1": "home/night-class-place.jpg"
+ },
+ "corner-office": {
+  "drama/assets/characters/lin/vN/image-1": "home/corner-office-vivian-shen.jpg",
+  "drama/assets/characters/wei/vN/image-1": "home/corner-office-leo-lu.jpg",
+  "drama/assets/scenes/home/vN/image-1": "home/corner-office-place.jpg"
+ },
+ "bride-on-bail": {
+  "drama/assets/characters/lin/vN/image-1": "home/bride-on-bail-ivy-bell.jpg",
+  "drama/assets/characters/wei/vN/image-1": "home/bride-on-bail-luca-moreno.jpg",
+  "drama/assets/scenes/home/vN/image-1": "home/bride-on-bail-place.jpg"
  }
 }
