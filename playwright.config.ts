@@ -10,10 +10,15 @@ export const TOKEN = "e2e-launch-token";
 const FIRST_PORT = Number(process.env.STUDIO_E2E_PORT ?? 4391);
 
 /**
- * Each spec file gets an engine of its own, on its own port and an empty data folder, so no
- * spec sees another's dramas. The UI is built once before the run (npm run e2e).
+ * Each project runs one spec file on an engine of its own, on its own port and an empty data
+ * folder, so no run sees another's dramas. The maker's walk runs in both themes. The UI is built
+ * once before the run (npm run e2e).
  */
-const SPECS = ["sample-drama", "project-state"];
+const PROJECTS: { name: string; spec: string; colorScheme: "light" | "dark" }[] = [
+  { name: "sample-drama", spec: "sample-drama", colorScheme: "light" },
+  { name: "sample-drama-dark", spec: "sample-drama", colorScheme: "dark" },
+  { name: "project-state", spec: "project-state", colorScheme: "light" },
+];
 
 function engine(port: number) {
   return {
@@ -46,6 +51,6 @@ export default defineConfig({
     // Pages rise in on load; mid-fade text fails contrast checks and screenshots differ.
     reducedMotion: "reduce",
   },
-  projects: SPECS.map((name, n) => ({ name, testMatch: `${name}.spec.ts`, use: { baseURL: `http://127.0.0.1:${FIRST_PORT + n}` } })),
-  webServer: SPECS.map((_, n) => engine(FIRST_PORT + n)),
+  projects: PROJECTS.map((project, n) => ({ name: project.name, testMatch: `${project.spec}.spec.ts`, use: { baseURL: `http://127.0.0.1:${FIRST_PORT + n}`, colorScheme: project.colorScheme } })),
+  webServer: PROJECTS.map((_, n) => engine(FIRST_PORT + n)),
 });

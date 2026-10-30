@@ -58,5 +58,6 @@ npx playwright test --ui # end to end, step by step, with the trace viewer
 
 `npm run e2e` builds the UI, then starts an engine in replay for each spec file, on ports from
 4391 up (`STUDIO_E2E_PORT` changes the first), each with a new, empty data folder, so no spec
-sees another's dramas. A new spec file is added to `SPECS` in `playwright.config.ts`. Locally it drives the installed Chrome; CI installs
+sees another's dramas. A new spec file is added to `PROJECTS` in `playwright.config.ts`; the maker's walk runs in
+the light and the dark theme. Locally it drives the installed Chrome; CI installs
 Playwright's Chromium. A failed run keeps its trace in `test-results/`; CI uploads it.
