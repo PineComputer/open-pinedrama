@@ -2,181 +2,52 @@
    "NavRail", "Sidebar", "Breadcrumb", "TopBar", "SurfaceSwitch", "ProjectChip"). Colours are
    Reveric's tokens; sizes are base.css's. */
 
-.ds-app { display: flex; height: 100vh; min-height: 0; background: var(--canvas); color: var(--text-primary); }
-.ds-main { flex: 1; min-width: 0; display: flex; flex-direction: column; min-height: 0; }
-.ds-scroll { flex: 1; min-height: 0; overflow: auto; }
 
 /* NavRail: 52 wide on the dimmed surface; 36px places, the current one selected; settings and the mark at the foot. */
-.ds-navrail { width: var(--rail); flex: none; display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 10px 0; background: var(--surface-dim); border-right: 1px solid var(--border); }
-.ds-navrail .ds-iconbtn { width: 36px; height: 36px; color: var(--text-muted); }
-.ds-navrail .ds-iconbtn:hover { color: var(--text-primary); }
-.ds-navrail .ds-iconbtn.is-on { color: var(--text-primary); }
-.ds-navrail hr { width: 24px; border: 0; border-top: 1px solid var(--border); margin: 6px 0; }
-.ds-navrail-gap { flex: 1; }
-.ds-navrail-mark { margin-top: 8px; display: grid; place-items: center; width: 30px; height: 30px; }
 
 /* Sidebar: 248 wide; the project at its head, places as 36-high rows, the episode tree, and what was spent at its foot. */
-.ds-sidebar { width: var(--side); flex: none; display: flex; flex-direction: column; min-height: 0; background: var(--surface-dim); border-right: 1px solid var(--border); }
-.ds-sidebar-head { height: var(--top); flex: none; display: flex; align-items: center; gap: 10px; padding: 0 10px 0 12px; border-bottom: 1px solid var(--border); }
-.ds-brand { display: flex; align-items: center; gap: 10px; font-size: 14px; }
-.ds-project { display: flex; align-items: center; gap: 10px; min-width: 0; flex: 1; padding: 4px; border-radius: var(--radius-medium); }
-.ds-project:hover { background: var(--hover); }
-button.ds-project { border: 0; background: none; color: inherit; text-align: left; cursor: pointer; font: inherit; }
-.ds-project > .ds-icon { margin-left: auto; color: var(--text-secondary); }
-.ds-sidebar-sec .count { margin-left: 4px; font-weight: 500; }
 /* The scenes of the episode in view (after the reference's scene list): number, heading, segments. */
-.ds-scenes { list-style: none; margin: 0 0 4px; padding: 0 4px; display: grid; gap: 2px; }
-.ds-scenes li { display: grid; grid-template-columns: 20px minmax(0, 1fr); gap: 6px; padding: 6px; border-radius: var(--radius-medium); }
-.ds-scenes .n { font: 500 12px var(--font-mono); color: var(--text-secondary); padding-top: 1px; }
-.ds-scenes .what { display: grid; min-width: 0; }
-.ds-scenes b { font: 500 12.5px/1.35 var(--font-sans); color: var(--text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.ds-scenes small { font-size: 11.5px; color: var(--text-secondary); }
-.ds-project img, .ds-project-blank { width: 30px; height: 40px; flex: none; border-radius: var(--radius-small); object-fit: cover; object-position: top; background: var(--surface-container); }
-.ds-project > span { min-width: 0; display: grid; }
-.ds-project b { font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.ds-project small { color: var(--text-muted); font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.ds-sidebar-scroll { flex: 1; overflow: auto; padding: 10px 8px; display: flex; flex-direction: column; gap: 2px; }
-.ds-sidebar-sec { padding: 14px 10px 6px; font: 600 var(--type-ui-tiny-size)/1.3 var(--font-sans); letter-spacing: 0.5px; text-transform: uppercase; color: var(--text-muted); }
-.ds-navi { width: 100%; display: flex; align-items: center; gap: 10px; min-height: 36px; padding: 0 10px; border: 0; border-radius: var(--radius-medium); background: transparent; color: var(--text-secondary); font-size: 13px; text-align: left; cursor: pointer; }
-.ds-navi .ds-icon { color: var(--text-muted); }
-.ds-navi:hover { background: var(--hover); }
-.ds-navi[aria-current="page"] { background: var(--selected); color: var(--text-primary); font-weight: 600; }
-.ds-navi[aria-current="page"] .ds-icon { color: var(--text-primary); }
-.ds-navi > span:not(.ds-navi-count) { min-width: 0; display: grid; }
-.ds-navi small { color: var(--text-muted); font-size: 11.5px; font-weight: 400; }
-.ds-navi:hover small, .ds-navi[aria-current="page"] small { color: var(--text-secondary); }
-.ds-navi-end.ds-icon { margin-left: auto; color: var(--text-subtle); }
-.ds-navi-count { margin-left: auto; min-width: 18px; height: 18px; padding: 0 6px; border-radius: var(--radius-pill); background: var(--warning-text); color: var(--on-accent); font: 700 10.5px/18px var(--font-sans); text-align: center; white-space: nowrap; }
-.ds-sidebar .tune { padding: 8px 10px; display: grid; gap: 10px; }
 
 /* The episode tree: 28-high rows of code, what it is doing and a dot. */
-.ds-tree { list-style: none; margin: 2px 0 4px 18px; padding: 0 0 0 8px; border-left: 1px solid var(--border); display: grid; gap: 1px; }
-.ds-tree a { display: grid; grid-template-columns: 50px minmax(0, 1fr) 0 8px; align-items: center; gap: 6px; min-height: 28px; padding: 0 8px; border-radius: var(--radius-small); color: var(--text-secondary); font-size: 12px; }
-.ds-tree a:hover { background: var(--hover); color: var(--text-primary); }
-.ds-tree a[aria-current="true"] { background: var(--selected); color: var(--text-primary); }
-.ds-tree .ds-tree-code { font: 500 11px var(--font-mono); }
-.ds-tree .ds-tree-now { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.ds-tree .ds-tree-mark { width: 6px; height: 6px; border-radius: 50%; background: var(--text-subtle); }
-.ds-tree .ds-tree-mark.is-you { background: var(--warning-text); }
-.ds-tree .ds-tree-mark.is-work { background: var(--text-primary); }
-.ds-tree .ds-tree-mark.is-done { background: var(--success); }
-.ds-tree .ds-tree-mark.is-line { background: transparent; border: 1px solid var(--text-subtle); }
-.ds-sidebar-foot { padding: 12px 14px; border-top: 1px solid var(--border); display: grid; gap: 8px; font-size: 12px; color: var(--text-muted); }
-.ds-standing { display: flex; flex-wrap: wrap; gap: 4px 10px; }
 
 /* TopBar: 52 high: back, the breadcrumb, then the stop control and the next review. */
-.ds-topbar { height: var(--top); flex: none; display: flex; align-items: center; gap: 10px; padding: 0 16px 0 10px; border-bottom: 1px solid var(--border); background: var(--canvas); min-width: 0; }
-.ds-topbar-gap { flex: 1; }
-.ds-crumb { display: flex; align-items: center; min-width: 0; font-size: 13px; color: var(--text-muted); white-space: nowrap; padding-left: 6px; }
-.ds-crumb > span { display: inline-flex; align-items: center; gap: 6px; min-width: 0; }
-.ds-crumb > span + span { margin-left: 6px; }
-.ds-crumb a:hover { color: var(--text-primary); }
-.ds-crumb b { color: var(--text-primary); font-weight: 600; overflow: hidden; text-overflow: ellipsis; }
-.ds-crumb .ds-icon { width: 12px; height: 12px; color: var(--text-subtle); }
-.ds-nextreview .ds-count { min-width: 18px; height: 18px; padding: 0 5px; border-radius: var(--radius-pill); background: var(--on-accent); color: var(--accent); font-size: 11px; display: inline-grid; place-items: center; }
 
 /* The drama's bar: the surface switch, then its chips. */
-.ds-dramabar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
-.ds-dramabar-gap { flex: 1; }
-.ds-projectchip { display: inline-flex; align-items: center; gap: 8px; height: 34px; padding: 0 12px; border-radius: var(--radius-pill); border: 1px solid var(--border); background: var(--surface-container); color: var(--text-primary); font-size: 12.5px; font-weight: 600; white-space: nowrap; }
-.ds-projectchip .ds-icon { width: 15px; height: 15px; color: var(--text-muted); }
-.ds-projectchip .num { font-family: var(--font-mono); }
-.ds-projectchip .quiet { font-weight: 500; }
 
 .ds-workin { padding: 16px 16px 40px; min-width: 0; }
 
 /* AgentPanel: 360 wide on the dimmed surface beside the work, or floating over it (380, the
    dialog's shadow); its sections, rows, decisions, process, messages and composer. AgentBall:
    the panel collapsed, a 52px circle with the decisions waiting and a ring while an agent works. */
-.ds-agent { width: var(--agent); flex: none; display: flex; flex-direction: column; min-height: 0; border-left: 1px solid var(--border); background: var(--surface-dim); }
-.ds-agent.is-float { position: fixed; right: 20px; bottom: 20px; z-index: 30; width: 380px; height: min(640px, calc(100vh - 120px)); border: 1px solid var(--border); border-radius: var(--radius-2xl); box-shadow: var(--shadow-dialog); overflow: hidden; }
-.ds-agent-head { height: var(--top); flex: none; display: flex; align-items: center; gap: 10px; padding: 0 10px 0 16px; border-bottom: 1px solid var(--border); }
-.ds-agent-head h2 { margin: 0; font: 700 13.5px/1 var(--font-sans); letter-spacing: 0; }
-.ds-agent-head .grow { flex: 1; }
-.ds-live { width: 8px; height: 8px; border-radius: 50%; background: var(--success); box-shadow: 0 0 0 3px color-mix(in srgb, var(--success) 25%, transparent); }
-.ds-live.is-idle { background: var(--text-subtle); box-shadow: none; }
-.ds-agent-scroll { flex: 1; overflow: auto; padding: 6px 14px 14px; }
 .ds-asec { padding: 12px 0; border-bottom: 1px solid var(--border-subtle); }
 .ds-asec:last-child { border-bottom: 0; }
 .ds-asec h3 { margin: 0 0 8px; display: flex; align-items: center; gap: 8px; font: 600 11px/1.3 var(--font-sans); color: var(--text-muted); letter-spacing: 0.4px; text-transform: uppercase; }
 .ds-asec h3 .c { margin-left: auto; font-variant-numeric: tabular-nums; }
 /* The agent's runs, as one card (after the reference's task strip): a summary that folds when more than one runs, then a row each with its dot, what it is doing, Watch and Stop. */
-.ds-agent-context { flex: none; display: flex; align-items: center; gap: 6px; padding: 6px 16px; border-bottom: 1px solid var(--border-subtle); font-size: 11.5px; color: var(--text-secondary); }
-.ds-agent-context .ds-icon { width: 13px; height: 13px; }
-.ds-runs { background: var(--surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-large); overflow: hidden; }
-.ds-runs .spin { width: 14px; height: 14px; flex: none; margin: 0 1px; border: 1.8px solid color-mix(in srgb, var(--accent) 50%, transparent); border-top-color: var(--accent); border-radius: 50%; animation: ds-spin 0.7s linear infinite; }
-.ds-run { display: flex; align-items: center; gap: 6px; padding: 4px 4px 4px 10px; }
-.ds-run + .ds-run { border-top: 1px solid var(--border-subtle); }
-.ds-run.is-in-view { background: var(--surface-container); }
-.ds-run .dot { width: 16px; height: 16px; flex: none; display: grid; place-items: center; }
-.ds-run .dot.is-waiting { color: var(--warning-text); }
-.ds-run .dot .ds-icon { width: 14px; height: 14px; }
-.ds-run .what { flex: 1; min-width: 0; display: flex; align-items: baseline; gap: 6px; text-align: left; border: 0; background: none; padding: 4px 0; cursor: pointer; color: inherit; }
-.ds-run .what b { flex: none; font: 600 12px var(--font-mono); }
-.ds-run .what span { color: var(--text-secondary); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.ds-run .slot { width: 28px; flex: none; }
 /* Recent work, as a card that folds (after the reference's recent changes): each version, when, and where it stands. */
-.ds-changes { margin-top: 12px; background: var(--surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-large); overflow: hidden; box-shadow: 0 4px 12px color-mix(in srgb, var(--shadow-base) 6%, transparent); }
-.ds-changes-head { width: 100%; display: flex; align-items: center; gap: 8px; padding: 10px 12px; border: 0; background: var(--surface-dim); color: inherit; cursor: pointer; text-align: left; }
-.ds-changes-head.is-open { border-bottom: 1px solid var(--border-subtle); }
-.ds-changes-head .title { flex: 1; font: 600 13px/1.3 var(--font-sans); color: var(--text-primary); }
-.ds-changes-head .ds-icon { width: 15px; height: 15px; color: var(--text-secondary); }
-.ds-changes-body { list-style: none; margin: 0; padding: 4px 12px; }
-.ds-changes-body li { display: flex; align-items: center; gap: 10px; padding: 8px 0; }
-.ds-changes-body li + li { border-top: 1px solid var(--border-subtle); }
-.ds-changes-body li > .ds-icon { width: 17px; height: 17px; color: var(--text-secondary); }
-.ds-changes-body .main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; }
-.ds-changes-body .t { font: 500 13px/1.3 var(--font-sans); color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.ds-changes-body .sub { font: 400 11px/1.3 var(--font-mono); color: var(--text-secondary); }
-.ds-ctag { flex: none; display: inline-flex; align-items: center; height: 18px; padding: 0 7px; border: 1px solid currentColor; border-radius: var(--radius-pill); font: 600 11px/1 var(--font-sans); color: var(--text-secondary); }
-.ds-ctag.is-review { color: var(--text-primary); }
-.ds-dec { display: grid; grid-template-columns: 34px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 7px; border-radius: var(--radius-large); color: inherit; }
-.ds-dec:hover { background: var(--hover); }
-.ds-dec .thumb { position: relative; width: 34px; height: 46px; border-radius: 6px; overflow: hidden; background: var(--surface-container); }
-.ds-dec b { display: block; font-size: 12.5px; font-weight: 600; }
-.ds-dec small, .ds-dec .age { color: var(--text-muted); font-size: 11.5px; }
-.ds-dec:hover small, .ds-dec:hover .age { color: var(--text-secondary); }
-.ds-alist { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; font-size: 12.5px; color: var(--text-secondary); }
-.ds-alist li { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 26px; }
-.ds-alist li > span:first-child { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.ds-alist .mono { font: 11px var(--font-mono); color: var(--text-muted); }
 .ds-tag { flex: none; display: inline-flex; align-items: center; height: 20px; padding: 0 7px; border-radius: var(--radius-small); background: var(--surface-container); color: var(--text-secondary); font-size: 11px; }
 .ds-tag.is-review, .ds-tag.is-make { box-shadow: inset 2px 0 0 var(--warning-text); }
 .ds-tag.is-stale { box-shadow: inset 2px 0 0 var(--error); }
 .ds-tag.is-accepted { box-shadow: inset 2px 0 0 var(--success); }
-.ds-asteps { list-style: none; margin: 0 0 8px; padding: 0; display: grid; gap: 2px; }
-.ds-asteps li { display: grid; grid-template-columns: 16px minmax(0, 1fr); gap: 8px; align-items: center; padding: 4px; font-size: 12.5px; color: var(--text-secondary); }
-.ds-asteps .ds-icon { width: 14px; height: 14px; color: var(--success); }
-.ds-asteps .is-now .ds-icon { color: var(--text-primary); animation: ds-spin 1.2s linear infinite; }
-.ds-msg { font-size: 13px; line-height: 1.6; color: var(--text-primary); padding: 10px 12px; border-radius: var(--radius-large); background: var(--surface-container); margin: 6px 0 0; overflow-wrap: anywhere; }
-.ds-msg p { margin: 0 0 6px; }
-.ds-msg p:last-child { margin-bottom: 0; }
-.ds-composer { flex: none; margin: 10px 12px 12px; border-radius: var(--radius-xl); border: 1px solid var(--border-input); background: var(--surface); padding: 10px 10px 8px 12px; display: grid; gap: 6px; }
-.ds-composer textarea { width: 100%; border: 0; background: none; resize: none; outline: none; color: var(--text-primary); font: 13px/1.5 var(--font-sans); min-height: 40px; }
-.ds-composer textarea::placeholder { color: var(--text-muted); }
-.ds-composer .row { display: flex; align-items: center; gap: 8px; font-size: 11.5px; color: var(--text-muted); }
-.ds-send { width: 30px; height: 30px; border-radius: 50%; border: 0; background: var(--accent); color: var(--on-accent); display: grid; place-items: center; cursor: pointer; margin-left: auto; }
-.ds-send:disabled { background: var(--surface-container); color: var(--text-muted); cursor: default; }
-.ds-send .ds-icon { width: 15px; height: 15px; }
-.ds-ball { position: fixed; right: 20px; bottom: 20px; z-index: 31; width: 52px; height: 52px; border-radius: 50%; border: 1px solid var(--border-input); background: var(--surface-container-high); color: var(--text-primary); display: grid; place-items: center; cursor: pointer; box-shadow: var(--shadow-overlay); }
-.ds-ball .ds-icon { width: 24px; height: 24px; }
-.ds-ball .badge { position: absolute; right: -2px; top: -2px; min-width: 20px; height: 20px; padding: 0 5px; border-radius: var(--radius-pill); background: var(--warning-text); color: var(--on-accent); font: 700 11px/20px var(--font-sans); border: 2px solid var(--canvas); }
-.ds-ball.is-busy::after { content: ""; position: absolute; inset: -4px; border-radius: 50%; border: 2px solid transparent; border-top-color: var(--text-primary); animation: ds-spin 1.2s linear infinite; }
 
 /* In the desktop app on macOS the top of the window is its title bar, with the traffic lights at
    18, 18 (desktop/main.ts) over the rail and the start of what follows it: room is made for them,
    and the bars drag the window, not their controls. */
-:root[data-shell="darwin"] .ds-topbar, :root[data-shell="darwin"] .ds-sidebar-head { -webkit-app-region: drag; user-select: none; }
-:root[data-shell="darwin"] .ds-navrail { padding-top: 44px; -webkit-app-region: drag; }
-:root[data-shell="darwin"] .ds-sidebar-head, :root[data-shell="darwin"] .ds-navrail + .ds-main .ds-topbar { padding-left: 30px; }
-:root[data-shell] .ds-topbar a, :root[data-shell] .ds-topbar button, :root[data-shell] .ds-sidebar-head a, :root[data-shell] .ds-navrail button { -webkit-app-region: no-drag; }
+:root[data-shell="darwin"] .top, :root[data-shell="darwin"] .side .head { -webkit-app-region: drag; user-select: none; }
+:root[data-shell="darwin"] .rail { padding-top: 44px; -webkit-app-region: drag; }
+:root[data-shell="darwin"] .side .head, :root[data-shell="darwin"] .rail + .main .top { padding-left: 30px; }
+:root[data-shell] .top a, :root[data-shell] .top button, :root[data-shell] .side .head a, :root[data-shell] .side .head button, :root[data-shell] .rail button { -webkit-app-region: no-drag; }
+/* The design's frame leaves room for its own preview bar (--proto); the studio has none. */
+:root { --proto: 0px; }
 
 /* Too narrow for the panel beside the work: it floats over it. */
-@media (max-width: 1279px) { .ds-agent:not(.is-float) { position: fixed; right: 20px; bottom: 20px; z-index: 30; width: 380px; height: min(640px, calc(100vh - 120px)); border: 1px solid var(--border); border-radius: var(--radius-2xl); box-shadow: var(--shadow-dialog); overflow: hidden; } }
-@media (max-width: 1100px) { .ds-sidebar { display: none; } }
+@media (max-width: 1279px) { .agent:not(.float) { position: fixed; right: 20px; bottom: 20px; z-index: 30; width: 380px; height: min(640px, calc(100vh - 120px)); border: 1px solid var(--border); border-radius: var(--radius-2xl); box-shadow: var(--shadow-dialog); overflow: hidden; } }
+@media (max-width: 1100px) { .side { display: none; } }
 @media (max-width: 760px) {
-  .ds-navrail { display: none; }
-  .ds-crumb > span:not(.is-here) { display: none; }
-  .ds-dramabar .ds-projectchip { display: none; }
+  .rail { display: none; }
+  .bar2 .chip { display: none; }
 }
 .ds-caption { color: var(--text-muted); font-size: 11.5px; line-height: 1.45; }
+/* Canvas's follow dot (screens/Canvas.tsx), until the Canvas is ported to the design's .live. */
+.ds-live { width: 8px; height: 8px; border-radius: 50%; background: var(--success); box-shadow: 0 0 0 3px color-mix(in srgb, var(--success) 25%, transparent); }
+.ds-live.is-idle { background: var(--text-subtle); box-shadow: none; }

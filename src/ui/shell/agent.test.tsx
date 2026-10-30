@@ -76,35 +76,33 @@ function engine() {
 }
 
 describe("the agent panel", () => {
-  it("shows what runs, the decisions waiting, and what is to do and was made, named as the bible names them", async () => {
+  it("shows what runs, the decisions waiting, and what was made, named as the bible names them", async () => {
     engine();
     render(<AgentPanel drama={drama} mode="docked" onMode={() => {}} />);
     const running = screen.getByRole("region", { name: "Running" });
-    expect(within(running).getByRole("button", { name: /EP001 Shooting seg01/ })).toBeInTheDocument();
-    expect(within(running).getByRole("button", { name: /EP002 waits for you/ })).toBeInTheDocument();
+    expect(within(running).getByRole("button", { name: /EP001\s*Shooting seg01/ })).toBeInTheDocument();
+    expect(within(running).getByRole("button", { name: /EP002\s*waits for you/ })).toBeInTheDocument();
     const decisions = screen.getByRole("region", { name: "Decisions" });
     expect(await within(decisions).findByRole("link", { name: /EP002 · Storyboards/ })).toHaveAttribute("href", "/r/r2");
-    const todo = await screen.findByRole("region", { name: "To do" });
-    expect(within(todo).getByText("林")).toBeInTheDocument();
     // Recent work needs the files as well as the project.
     const recent = await screen.findByRole("region", { name: "Recent work" });
-    await waitFor(() => expect(within(recent).getAllByRole("listitem").map((item) => item.textContent?.replace(/ · \d+ \w+ ago/, ""))).toEqual(["Look · 林v2In review", "Look · 林v1Accepted"]));
+    await waitFor(() => expect(within(recent).getAllByText(/^Look · 林/).map((line) => line.textContent)).toEqual(["Look · 林 v2", "Look · 林 v1"]));
   });
 
   it("says whose session it follows", async () => {
     engine();
     render(<AgentPanel drama={drama} episode="EP001" mode="docked" onMode={() => {}} />);
-    expect(await screen.findByText("In view: EP001's session")).toBeInTheDocument();
+    expect(await screen.findByText(/^To EP001's session/)).toBeInTheDocument();
   });
 
   it("follows the session in view: its steps, what it said, and a line to it", async () => {
     const user = userEvent.setup();
     engine();
     render(<AgentPanel drama={drama} episode="EP001" mode="docked" onMode={() => {}} />);
-    const process = await screen.findByRole("region", { name: "EP001 · Process" });
-    // The section shows once the sessions are in; its steps once the session's chat is.
-    expect((await within(process).findAllByRole("listitem")).map((item) => item.textContent)).toEqual(["Compiled the video prompts", "Shooting seg01"]);
-    expect(within(process).getByText("Shooting the first take now.")).toBeInTheDocument();
+    const process = (await screen.findByRole("button", { name: /EP001 · Process/ })).parentElement as HTMLElement;
+    // The process shows once the sessions are in, with its steps once the session's chat is.
+    expect(within(process).getAllByRole("listitem").map((item) => item.textContent)).toEqual(["Compiled the video prompts", "Shooting seg01"]);
+    expect(screen.getByText("Shooting the first take now.")).toBeInTheDocument();
     accept("/api/sessions/s1/chat");
     await user.type(screen.getByRole("textbox", { name: "Message the agent" }), "Keep the letter in her left hand.");
     await user.click(screen.getByRole("button", { name: "Send" }));
@@ -115,8 +113,9 @@ describe("the agent panel", () => {
     const user = userEvent.setup();
     engine();
     render(<AgentPanel drama={drama} mode="docked" onMode={() => {}} />);
-    await user.click(within(screen.getByRole("region", { name: "Running" })).getByRole("button", { name: /^EP002 waits for you/ }));
-    expect(await screen.findByRole("link", { name: "It waits for your review" })).toHaveAttribute("href", "/r/r2");
+    await user.click(within(screen.getByRole("region", { name: "Running" })).getByRole("button", { name: /^EP002\s*waits for you/ }));
+    expect(await screen.findByRole("link", { name: "Open the review it waits on" })).toHaveAttribute("href", "/r/r2");
+    expect(screen.getByRole("textbox", { name: "Message the agent" })).toBeDisabled();
   });
 
   it("stops one episode after the maker confirms, and only then", async () => {
@@ -140,7 +139,7 @@ describe("the agent panel", () => {
     const { rerender } = render(<AgentPanel drama={drama} mode="docked" onMode={(mode) => chosen.push(mode)} />);
     await user.click(screen.getByRole("button", { name: "Float the panel" }));
     rerender(<AgentPanel drama={drama} mode="floating" onMode={(mode) => chosen.push(mode)} />);
-    expect(screen.getByRole("complementary", { name: "Agent" })).toHaveClass("is-float");
+    expect(screen.getByRole("complementary", { name: "Agent" })).toHaveClass("float");
     await user.click(screen.getByRole("button", { name: "Dock the panel" }));
     await user.click(screen.getByRole("button", { name: "Close the panel" }));
     expect(chosen).toEqual(["floating", "docked", "collapsed"]);
@@ -153,7 +152,7 @@ describe("the agent ball", () => {
     let opened = 0;
     render(<AgentBall waiting={4} busy onOpen={() => opened++} />);
     const ball = screen.getByRole("button", { name: "Open the agent panel, 4 decisions waiting" });
-    expect(ball).toHaveClass("is-busy");
+    expect(ball).toHaveClass("busy");
     expect(ball).toHaveTextContent("4");
     await user.click(ball);
     expect(opened).toBe(1);

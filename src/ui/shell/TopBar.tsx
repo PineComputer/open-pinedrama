@@ -1,20 +1,16 @@
-// The bar over the work, in the pro direction (its spec, "TopBar"): back, where you are as a
-// breadcrumb, and the next review. In a drama, the bar under it holds the surface (Studio, Canvas,
-// Graph) with the selection kept across them, and the drama's preset, format and spend.
+// The bar over the work, ported from the pro prototype (studio-pro/app.js, TopBar, StopControl,
+// SurfaceSwitch, ProjectChips) with its markup and classes (studio.css .top, .crumb, .btn, .bar2,
+// .chip): back, where you are as a breadcrumb, Stop drama and the next review. In a drama, the bar
+// under it holds the surface (Studio, Canvas, Graph) with the selection kept across them, and the
+// drama's preset, format and spend.
 import { useState } from "react";
 import type { DramaView, ReviewSummary } from "../../shared/types.ts";
 import { api, useAction } from "../api.ts";
-import { Button, IconButton } from "../components/Button.tsx";
 import { Dialog } from "../components/Dialog.tsx";
-import { StatusChip } from "../components/StatusChip.tsx";
-import { Segmented } from "../components/Segmented.tsx";
-import { Tooltip } from "../components/Tooltip.tsx";
-import { Icon } from "../icons.tsx";
-import { useT } from "../i18n.ts";
+import { Icon, type IconName } from "../icons.tsx";
+import { type TKey, useT } from "../i18n.ts";
 import { errorText, moneyText } from "../labels.ts";
 import { Link, match, navigate, usePath } from "../router.tsx";
-import { cn } from "cn";
-import { buttonVariants } from "@/components/ui/button";
 
 type Surface = "studio" | "canvas" | "graph";
 
@@ -34,17 +30,21 @@ function SurfaceSwitch({ drama }: { drama: DramaView }) {
     if (next === "studio") navigate(item ? `/d/${drama.id}/e/${item}` : `/d/${drama.id}`);
     else navigate(`/d/${drama.id}/${next}${item ? `?item=${encodeURIComponent(item)}` : ""}`);
   };
+  const options: [Surface, TKey, IconName][] = [
+    ["studio", "surface.studio", "squares-four"],
+    ["canvas", "surface.canvas", "flow-arrow"],
+    ["graph", "surface.graph", "tree-structure"],
+  ];
+  // The design's SurfaceSwitch (design/app.js): one pressed button among three.
   return (
-    <Segmented
-      label={t("surface.label")}
-      value={surface}
-      onChange={go}
-      options={[
-        { value: "studio", label: t("surface.studio"), icon: "squares-four" },
-        { value: "canvas", label: t("surface.canvas"), icon: "flow-arrow" },
-        { value: "graph", label: t("surface.graph"), icon: "tree-structure" },
-      ]}
-    />
+    <div className="seg" role="group" aria-label={t("surface.label")}>
+      {options.map(([value, label, icon]) => (
+        <button key={value} type="button" aria-pressed={value === surface} onClick={() => go(value)}>
+          <Icon name={icon} className="ic" />
+          {t(label)}
+        </button>
+      ))}
+    </div>
   );
 }
 
@@ -52,26 +52,24 @@ function SurfaceSwitch({ drama }: { drama: DramaView }) {
 export function DramaBar({ drama }: { drama: DramaView }) {
   const { t, lang } = useT();
   return (
-    <div className="ds-dramabar">
+    <div className="bar2">
       <SurfaceSwitch drama={drama} />
-      <span className="ds-dramabar-gap" />
+      <span className="grow" />
       {drama.preset && (
-        <span className="ds-projectchip">
-          <Icon name="sparkle" />
+        <span className="chip plain" title={t("chip.preset")}>
+          <Icon name="sparkle" className="ic" />
           {drama.preset}
         </span>
       )}
-      <span className="ds-projectchip">
-        <Icon name="frame-corners" />
+      <span className="chip plain">
+        <Icon name="frame-corners" className="ic" />
         {drama.format}
       </span>
-      <Tooltip text={t("spent.about")}>
-        <span className="ds-projectchip" tabIndex={0}>
-          <Icon name="coins" />
-          <span className="num">{moneyText(drama.spent, t, lang)}</span>
-          {drama.mode === "replay" && <span className="quiet">{t("budget.simulated")}</span>}
-        </span>
-      </Tooltip>
+      <span className="chip plain" title={t("spent.about")}>
+        <Icon name="coins" className="ic" />
+        <span className="mono">{moneyText(drama.spent, t, lang)}</span>
+        {drama.mode === "replay" && <span className="muted">{t("budget.simulated")}</span>}
+      </span>
     </div>
   );
 }
@@ -96,9 +94,10 @@ export function StopControl({ drama }: { drama: DramaView }) {
     return (
       <>
         {failed}
-        <Button variant="destructive" size="sm" icon="stop" busy={stop.busy} onClick={() => setAsking(true)}>
+        <button type="button" className="btn sm danger" disabled={stop.busy} onClick={() => setAsking(true)}>
+          <Icon name="stop" className="ic" />
           {t("stop.drama")}
-        </Button>
+        </button>
         <Dialog
           open={asking}
           onOpenChange={setAsking}
@@ -112,19 +111,23 @@ export function StopControl({ drama }: { drama: DramaView }) {
   }
   if (stillStopping(drama)) {
     return (
-      <Button variant="destructive" size="sm" busy>
+      <button type="button" className="btn sm" disabled aria-busy="true">
+        <Icon name="circle-notch" className="ic" />
         {t("stop.stopping")}
-      </Button>
+      </button>
     );
   }
   if (drama.status !== "stopped") return null;
   return (
     <>
       {failed}
-      <StatusChip status="back" label={t("drama.stopped")} />
-      <Button variant="default" size="sm" icon="play" busy={resume.busy} onClick={() => void resume.run()}>
+      <span className="stopped-chip">
+        <Icon name="stop" className="ic" />
+        {t("drama.stopped")}
+      </span>
+      <button type="button" className="btn sm" disabled={resume.busy} onClick={() => void resume.run()}>
         {t("setup.retry")}
-      </Button>
+      </button>
     </>
   );
 }
@@ -138,12 +141,12 @@ function NextReview({ waiting }: { waiting: ReviewSummary[] }) {
   return (
     <button
       type="button"
-      className={cn(buttonVariants({ variant: "default", size: "sm" }), "ds-nextreview")}
+      className="btn primary sm"
       disabled={!others.length}
       aria-label={`${t("next.label")}, ${t("next.waiting", { n: others.length })}`}
       onClick={() => navigate(`/r/${others[0].id}`)}
     >
-      {t("next.label")} <span className="ds-count">{others.length}</span>
+      {t("next.label")} <span className="n">{others.length}</span>
     </button>
   );
 }
@@ -157,11 +160,17 @@ export interface Crumb {
 export function Breadcrumb({ crumbs }: { crumbs: Crumb[] }) {
   const { t } = useT();
   return (
-    <nav className="ds-crumb" aria-label={t("crumb.label")}>
+    <nav className="crumb" aria-label={t("crumb.label")}>
       {crumbs.map((crumb, n) => (
-        <span key={n} className={n === crumbs.length - 1 ? "is-here" : undefined}>
-          {n > 0 && <Icon name="caret-right" />}
-          {crumb.to && n < crumbs.length - 1 ? <Link to={crumb.to}>{crumb.label}</Link> : <b aria-current="page">{crumb.label}</b>}
+        <span key={n} className="contents">
+          {n > 0 && <Icon name="caret-right" className="ic" />}
+          {crumb.to && n < crumbs.length - 1 ? (
+            <Link to={crumb.to}>{crumb.label}</Link>
+          ) : n === crumbs.length - 1 ? (
+            <b aria-current="page">{crumb.label}</b>
+          ) : (
+            <span>{crumb.label}</span>
+          )}
         </span>
       ))}
     </nav>
@@ -172,10 +181,14 @@ export function TopBar({ crumbs, waiting, ready, children }: { crumbs: Crumb[]; 
   const { t } = useT();
   const back = crumbs.length > 1 ? crumbs[crumbs.length - 2].to : undefined;
   return (
-    <header className="ds-topbar">
-      {back && <IconButton label={t("crumb.back")} icon="caret-left" onClick={() => navigate(back)} />}
+    <header className="top">
+      {back && (
+        <button type="button" className="ibtn" aria-label={t("crumb.back")} title={t("crumb.back")} onClick={() => navigate(back)}>
+          <Icon name="caret-left" className="ic" />
+        </button>
+      )}
       <Breadcrumb crumbs={crumbs} />
-      <span className="ds-topbar-gap" />
+      <span className="grow" />
       {children}
       {ready && <NextReview waiting={waiting} />}
     </header>

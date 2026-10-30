@@ -12,7 +12,7 @@ test("a maker starts the sample drama, answers the agent and reviews the leads",
   await page.getByRole("button", { name: "Start the sample drama" }).click();
   await expect(page).toHaveURL(/\/d\/[^/]+/);
   // The drama in its shell: setting up, so its story is the step in view.
-  await expect(page.getByRole("navigation", { name: "Steps" }).getByRole("link", { name: /^Story/ })).toHaveAttribute("aria-current", "page");
+  await expect(page.getByRole("list", { name: "Steps" }).getByRole("button", { name: /Story/ })).toHaveAttribute("aria-current", "true");
   expect(await newProblems(page)).toEqual([]);
 
   // The agent's first stop is its rewrite of the screenplay into Fountain, for the maker to accept in their words.

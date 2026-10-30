@@ -60,12 +60,12 @@ describe("the drama's bar", () => {
     const user = userEvent.setup();
     at("/d/d1/e/EP002");
     render(<DramaBar drama={drama} />);
-    const surfaces = screen.getByRole("radiogroup", { name: "Surface" });
-    expect(within(surfaces).getByRole("radio", { name: "Studio" })).toBeChecked();
-    await user.click(within(surfaces).getByRole("radio", { name: "Canvas" }));
+    const surfaces = screen.getByRole("group", { name: "Surface" });
+    expect(within(surfaces).getByRole("button", { name: "Studio" })).toHaveAttribute("aria-pressed", "true");
+    await user.click(within(surfaces).getByRole("button", { name: "Canvas" }));
     expect(location.pathname + location.search).toBe("/d/d1/canvas?item=EP002");
-    expect(within(surfaces).getByRole("radio", { name: "Canvas" })).toBeChecked();
-    await user.click(within(surfaces).getByRole("radio", { name: "Studio" }));
+    expect(within(surfaces).getByRole("button", { name: "Canvas" })).toHaveAttribute("aria-pressed", "true");
+    await user.click(within(surfaces).getByRole("button", { name: "Studio" }));
     expect(location.pathname).toBe("/d/d1/e/EP002");
   });
 });
@@ -104,12 +104,14 @@ describe("the top bar", () => {
 });
 
 describe("the rail", () => {
-  it("outside a drama, offers the dramas and the queue, with settings at its foot", () => {
+  it("outside a drama, shows every place, the drama's own disabled, with settings at its foot", () => {
     at("/");
     render(<NavRail path="/" sidebarOpen onToggleSidebar={() => {}} />);
     const rail = screen.getByRole("navigation", { name: "Places" });
-    expect(within(rail).getAllByRole("button").map((button) => button.getAttribute("aria-label"))).toEqual(["Hide the sidebar", "Dramas", "To review", "Settings"]);
+    expect(within(rail).getAllByRole("button").map((button) => button.getAttribute("aria-label"))).toEqual(["Hide the sidebar", "Dramas", "Script", "Story", "Episodes", "Canvas", "Graph", "To review", "Cut", "Settings"]);
     expect(within(rail).getByRole("button", { name: "Dramas" })).toHaveAttribute("aria-current", "page");
+    expect(within(rail).getByRole("button", { name: "Story" })).toBeDisabled();
+    expect(within(rail).getByRole("button", { name: "To review" })).toBeEnabled();
   });
 
   it("in a drama, adds its steps and surfaces in the pro direction's order, and goes to one", async () => {
@@ -135,10 +137,12 @@ describe("the rail", () => {
 });
 
 describe("the sidebar", () => {
-  it("on the studio's pages, offers its places with what waits", () => {
-    render(<HomeSidebar path="/inbox" waiting={3} replay />);
-    expect(screen.getByRole("link", { name: "To review 3" })).toHaveAttribute("aria-current", "page");
-    expect(screen.getByRole("link", { name: "Settings" })).toBeInTheDocument();
+  it("on the studio's pages, offers its places as the design does, Computers and Usage for phase 2", () => {
+    render(<HomeSidebar path="/settings" replay />);
+    expect(screen.getByRole("link", { name: "Settings" })).toHaveAttribute("aria-current", "page");
+    expect(screen.getByRole("link", { name: "Dramas" })).toHaveAttribute("aria-current", "false");
+    expect(screen.getByRole("button", { name: "Computers" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Usage" })).toBeDisabled();
     expect(screen.getByText("Replay · sample work, no spend")).toBeInTheDocument();
   });
 
@@ -159,21 +163,21 @@ describe("the sidebar", () => {
     at("/d/d1");
     render(<DramaSidebar drama={drama} tab="board" />);
     const tree = screen.getByRole("list", { name: "Episodes" });
-    // The name starts with what the link shows (WCAG 2.5.3), then where the episode stands.
-    expect(within(tree).getAllByRole("link").map((link) => link.textContent)).toEqual([
+    // The name starts with what the button shows (WCAG 2.5.3), then where the episode stands.
+    expect(within(tree).getAllByRole("button").map((button) => button.textContent)).toEqual([
       "EP001 Waits for you: Storyboards, needs you",
       "EP002 Starting, at work",
       "EP003 Done, finished",
       "EP004 In line, #1, in line",
     ]);
-    await user.click(within(tree).getAllByRole("link")[1]);
+    await user.click(within(tree).getAllByRole("button")[1]);
     expect(location.pathname).toBe("/d/d1/e/EP002");
   });
 
   it("marks the episode in view", () => {
     at("/d/d1/e/EP003");
     render(<DramaSidebar drama={drama} tab="episode" episode="EP003" />);
-    expect(within(screen.getByRole("list", { name: "Episodes" })).getAllByRole("link")[2]).toHaveAttribute("aria-current", "true");
+    expect(within(screen.getByRole("list", { name: "Episodes" })).getAllByRole("button")[2]).toHaveAttribute("aria-current", "true");
   });
 
   it("while the drama is set up, says the setup's step at its foot, not empty episode counts", () => {

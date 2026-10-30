@@ -151,19 +151,23 @@ export function App() {
     drama.data && dramaId ? (
       <DramaSidebar drama={drama.data} tab={review ? "review" : tab} episode={match("/d/:id/e/:code", path)?.code ?? reviewed?.episode} />
     ) : (
-      <HomeSidebar path={path} waiting={waiting.length} replay={app.data.mode === "replay"} />
+      <HomeSidebar path={path} replay={app.data.mode === "replay"} />
     );
   return (
-    <div className="ds-app">
+    // The design's frame (design/app.js, App and each screen): the rail, the sidebar, then the main column, its
+    // top bar over a body that holds the work beside the agent's panel.
+    <div className="app">
       <NavRail path={path} dramaId={dramaId} sidebarOpen={sidebarOpen} onToggleSidebar={toggleSidebar} />
       {sidebarOpen && sidebar}
-      <div className="ds-main">
+      <div className="main">
         <TopBar crumbs={crumbs} waiting={waiting} ready={ready}>
           {drama.data && <StopControl drama={drama.data} />}
         </TopBar>
-        <main className="ds-scroll">{screen}</main>
+        <div className="body" style={{ position: "relative" }}>
+          <main className="scrollmain ds-scroll">{screen}</main>
+          {drama.data && dramaId && <Agent drama={drama.data} episode={match("/d/:id/e/:code", path)?.code ?? reviewed?.episode} mode={agentMode} onMode={setAgentMode} canvas={tab === "canvas" || tab === "graph" || Boolean(review)} />}
+        </div>
       </div>
-      {drama.data && dramaId && <Agent drama={drama.data} episode={match("/d/:id/e/:code", path)?.code ?? reviewed?.episode} mode={agentMode} onMode={setAgentMode} canvas={tab === "canvas" || tab === "graph" || Boolean(review)} />}
     </div>
   );
 }

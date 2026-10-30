@@ -1,7 +1,6 @@
-// The rail down the left of every screen, in the pro direction (its spec, "NavRail"): the sidebar's
-// toggle, then the places, the drama's own while one is open; settings and the mark at the foot.
-import { IconButton } from "../components/Button.tsx";
-import { type IconName } from "../icons.tsx";
+// The rail down the left of every screen, ported from the design (design/app.js, Rail): the sidebar's
+// toggle, then every place, the drama's own disabled while none is open; settings and the mark at the foot.
+import { Icon, type IconName } from "../icons.tsx";
 import { type TKey, useT } from "../i18n.ts";
 import { Mark } from "../Mark.tsx";
 import { navigate } from "../router.tsx";
@@ -11,6 +10,8 @@ export interface Place {
   label: TKey;
   icon: IconName;
   current: boolean;
+  /** A drama's place while no drama is open. */
+  disabled?: boolean;
 }
 
 /** The places the rail offers: the studio's, and the open drama's surfaces and steps. */
@@ -20,35 +21,42 @@ export function placesOf(path: string, dramaId?: string): Place[] {
     { to: "/", label: "nav.dramas", icon: "house", current: path === "/" || path === "/new" },
     { to: "/inbox", label: "nav.inbox", icon: "video-camera", current: at("/inbox") || path.startsWith("/r/") },
   ];
-  if (!dramaId) return studio;
-  const base = `/d/${dramaId}`;
-  // In the pro direction's order (its NavRail): the drama's steps, its surfaces, the review room, the cut.
+  const base = `/d/${dramaId ?? ""}`;
+  const drama = (to: string, label: TKey, icon: IconName, current: boolean): Place => (dramaId ? { to, label, icon, current } : { to, label, icon, current: false, disabled: true });
+  // In the design's order (its Rail): home, the drama's steps and surfaces, the review room, the cut.
   return [
     studio[0],
-    { to: `${base}/script`, label: "step.script", icon: "file-text", current: at(`${base}/script`) || at(`${base}/analyzing`) },
-    { to: `${base}/story`, label: "step.story", icon: "users", current: at(`${base}/story`) },
-    { to: base, label: "step.episodes", icon: "film-strip", current: path === base || path.startsWith(`${base}/e/`) },
-    { to: `${base}/canvas`, label: "surface.canvas", icon: "flow-arrow", current: at(`${base}/canvas`) },
-    { to: `${base}/graph`, label: "surface.graph", icon: "tree-structure", current: at(`${base}/graph`) },
+    drama(`${base}/script`, "step.script", "file-text", at(`${base}/script`) || at(`${base}/analyzing`)),
+    drama(`${base}/story`, "step.story", "users", at(`${base}/story`)),
+    drama(base, "step.episodes", "film-strip", path === base || path.startsWith(`${base}/e/`)),
+    drama(`${base}/canvas`, "surface.canvas", "flow-arrow", at(`${base}/canvas`)),
+    drama(`${base}/graph`, "surface.graph", "tree-structure", at(`${base}/graph`)),
     studio[1],
-    { to: `${base}/cut`, label: "step.cut", icon: "scissors", current: at(`${base}/cut`) },
+    drama(`${base}/cut`, "step.cut", "scissors", at(`${base}/cut`)),
   ];
 }
 
 export function NavRail({ path, dramaId, sidebarOpen, onToggleSidebar }: { path: string; dramaId?: string; sidebarOpen: boolean; onToggleSidebar: () => void }) {
   const { t } = useT();
+  // The design's rail (design/app.js, Rail): the sidebar's toggle, a rule, the places, settings and the mark at the foot.
   return (
-    <nav className="ds-navrail" aria-label={t("rail.label")}>
-      <IconButton label={t(sidebarOpen ? "rail.hideSidebar" : "rail.showSidebar")} icon="list" on={sidebarOpen} aria-expanded={sidebarOpen} onClick={onToggleSidebar} />
+    <nav className="rail" aria-label={t("rail.label")}>
+      <button type="button" className="ibtn" aria-label={t(sidebarOpen ? "rail.hideSidebar" : "rail.showSidebar")} aria-expanded={sidebarOpen} onClick={onToggleSidebar}>
+        <Icon name="list" className="ic" />
+      </button>
       <hr />
       {placesOf(path, dramaId).map((place) => (
-        <IconButton key={place.to} label={t(place.label)} icon={place.icon} on={place.current} aria-current={place.current ? "page" : undefined} onClick={() => navigate(place.to)} />
+        <button key={place.label} type="button" className="ibtn" title={t(place.label)} aria-label={t(place.label)} aria-current={place.current ? "page" : "false"} disabled={place.disabled} onClick={() => navigate(place.to)}>
+          <Icon name={place.icon} className="ic" />
+        </button>
       ))}
-      <span className="ds-navrail-gap" />
-      <IconButton label={t("nav.settings")} icon="gear-six" on={path === "/settings"} aria-current={path === "/settings" ? "page" : undefined} onClick={() => navigate("/settings")} />
-      <span className="ds-navrail-mark">
+      <span className="grow" />
+      <button type="button" className="ibtn" title={t("nav.settings")} aria-label={t("nav.settings")} aria-current={path === "/settings" ? "page" : "false"} onClick={() => navigate("/settings")}>
+        <Icon name="gear-six" className="ic" />
+      </button>
+      <div style={{ marginTop: 6 }}>
         <Mark size={20} />
-      </span>
+      </div>
     </nav>
   );
 }

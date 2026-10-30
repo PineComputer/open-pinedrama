@@ -16,23 +16,23 @@ test("an episode chosen in the tree stays selected across the surfaces", async (
   await decide(page, await review(page, id, "references"));
 
   const tree = page.getByRole("list", { name: "Episodes" });
-  await expect(tree.getByRole("link", { name: /^EP001 / })).toBeVisible({ timeout: 30_000 });
-  await tree.getByRole("link", { name: /^EP001 / }).click();
+  await expect(tree.getByRole("button", { name: /^EP001 / })).toBeVisible({ timeout: 30_000 });
+  await tree.getByRole("button", { name: /^EP001 / }).click();
   await expect(page).toHaveURL(new RegExp(`/d/${id}/e/EP001$`));
-  await expect(tree.getByRole("link", { name: /^EP001 / })).toHaveAttribute("aria-current", "true");
+  await expect(tree.getByRole("button", { name: /^EP001 / })).toHaveAttribute("aria-current", "true");
   await expect(page.getByRole("navigation", { name: "Steps" }).getByRole("link", { name: /^Episodes/ })).toHaveAttribute("aria-current", "page");
 
-  const surfaces = page.getByRole("radiogroup", { name: "Surface" });
-  await surfaces.getByRole("radio", { name: "Canvas" }).click();
+  const surfaces = page.getByRole("group", { name: "Surface" });
+  await surfaces.getByRole("button", { name: "Canvas" }).click();
   await expect(page).toHaveURL(new RegExp(`/d/${id}/canvas\\?item=EP001$`));
   await expect(page.getByRole("region", { name: "Canvas" }).getByRole("button", { name: /^EP001 · / })).toBeVisible();
   expect(await newProblems(page)).toEqual([]);
-  await surfaces.getByRole("radio", { name: "Graph" }).click();
+  await surfaces.getByRole("button", { name: "Graph" }).click();
   await expect(page).toHaveURL(new RegExp(`/d/${id}/graph\\?item=EP001$`));
-  await surfaces.getByRole("radio", { name: "Studio" }).click();
+  await surfaces.getByRole("button", { name: "Studio" }).click();
   await expect(page).toHaveURL(new RegExp(`/d/${id}/e/EP001$`));
 
   await page.goBack();
   await expect(page).toHaveURL(new RegExp(`/d/${id}/graph\\?item=EP001$`));
-  await expect(surfaces.getByRole("radio", { name: "Graph" })).toBeChecked();
+  await expect(surfaces.getByRole("button", { name: "Graph" })).toHaveAttribute("aria-pressed", "true");
 });
