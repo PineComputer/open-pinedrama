@@ -393,7 +393,7 @@ p { font-size: inherit; line-height: inherit; color: inherit; margin: 0; }
 .setup .n { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font: 600 11.5px var(--font-mono); border: 1px solid var(--border-input); color: var(--text-muted); }
 .setup .you .n { background: var(--warning-text); border-color: var(--warning-text); color: var(--on-accent); }
 .setup .work .n { border-color: var(--text-primary); color: var(--text-primary); animation: pulse 1.6s infinite; }
-.setup b { display: block; font-size: 13px; } .setup small { color: var(--text-muted); font-size: 11.5px; }
+.setup b { display: block; font-size: 13px; } .setup small { color: var(--text-secondary); font-size: 11.5px; }
 
 /* ── stop cards ── */
 .stopcard { margin: 0 16px 14px; border-radius: var(--radius-2xl); border: 1px solid var(--border); background: var(--surface); overflow: hidden; }
@@ -440,7 +440,7 @@ p { font-size: inherit; line-height: inherit; color: inherit; margin: 0; }
 .steps.big li.later { color: var(--text-subtle); } .steps.big li.later .ic { color: var(--text-subtle); }
 .fpeek, .fdoc { font: 13px/1.55 "Courier Prime", ui-monospace, Menlo, monospace; color: var(--text-primary); }
 .fpeek { max-height: 380px; overflow: auto; padding: 14px 16px; border-radius: var(--radius-large); background: var(--surface-container); }
-.fl { padding: 1px 0; } .gap { height: 12px; }
+.fl { padding: 1px 0; white-space: pre-wrap; overflow-wrap: anywhere; } .gap { height: 12px; }
 .fl.heading, .fl.section { font-weight: 700; } .fl.character { padding-left: 38%; } .fl.dialogue { padding: 0 18%; } .fl.paren { padding-left: 32%; } .fl.transition { text-align: right; }
 
 /* ── fountain review ── */

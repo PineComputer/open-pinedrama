@@ -517,13 +517,6 @@ a.ds-tag:hover { background: var(--hover); }
 .ds-castcard .versions, .ds-placecard .versions { display: inline-flex; gap: 2px; padding: 2px; border-radius: var(--radius-pill); background: var(--surface-container); border: 1px solid var(--border); }
 .ds-castcard .versions button, .ds-placecard .versions button { height: 22px; padding: 0 8px; border: 0; border-radius: var(--radius-pill); background: none; color: var(--text-secondary); font: 600 11px var(--font-mono); cursor: pointer; }
 .ds-castcard .versions button[aria-pressed="true"], .ds-placecard .versions button[aria-pressed="true"] { background: var(--surface); color: var(--text-primary); box-shadow: 0 0 0 1px var(--border-input); }
-.ds-panel { border-radius: var(--radius-2xl); border: 1px solid var(--border); background: var(--surface); padding: 16px; display: grid; gap: 12px; justify-items: start; }
-.ds-panel h3 { margin: 0; display: flex; align-items: center; gap: 8px; font: 700 14px/1.3 var(--font-sans); }
-
-.ds-greet { margin-bottom: 26px; }
-.ds-greet h1 { margin: 0; font: 700 28px/1.3 var(--font-display); letter-spacing: -0.5px; color: var(--text-primary); }
-.ds-greet p { margin: 4px 0 0; color: var(--text-secondary); }
-
 
 /* FountainDiff and AcceptInWords (P5.4), the spec's .fpanes and .faccept: the maker's file beside the Fountain. */
 .ds-rewrite { display: grid; gap: 16px; }
@@ -546,16 +539,6 @@ a.ds-tag:hover { background: var(--hover); }
 .ds-faccept .acts { display: flex; gap: 8px; justify-content: flex-end; }
 .ds-faccept .reason { color: var(--text-secondary); font-size: 12px; text-align: right; }
 @media (max-width: 900px) { .ds-fpanes { grid-template-columns: 1fr; } }
-
-/* Analyzing (P5.3): the process beside the Fountain so far, as the pro direction lays them out. */
-.ds-analyzing .ds-greet { display: grid; gap: 4px; justify-items: start; }
-.ds-analyzing .ds-greet .ds-btn { margin-top: 12px; }
-.ds-analyzing .kick { font-size: 11.5px; font-weight: 600; color: var(--text-secondary); }
-.ds-analyzing .grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; align-items: start; }
-.ds-analyzing .ds-panel { justify-items: stretch; min-width: 0; }
-.ds-analyzing .hint { margin: 0; color: var(--text-secondary); font-size: 12px; }
-.ds-analyzing .peek { margin: 0; max-height: 60vh; overflow: auto; white-space: pre-wrap; font: 12.5px/1.6 var(--font-mono); color: var(--text-primary); }
-@media (max-width: 900px) { .ds-analyzing .grid { grid-template-columns: 1fr; } }
 
 /* Home, ported from the pro prototype: what studio.css doesn't have for real data. A drama with no take or photoreal
    board yet has the designed empty cover, its title as type; a look's thumbnail is cropped to the sheet's close-up;

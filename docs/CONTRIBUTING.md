@@ -78,6 +78,7 @@ for 2026-10-23..29.
 | Long lists | @tanstack/react-virtual 3.14.21 | 39.2 M | none |
 | File drop | react-dropzone 20.1.3 | 19.4 M | Reveric's file_selector and super_drag_and_drop; our drop handlers |
 | Diff | diff (jsdiff) | 186.9 M | Reveric's diffutil_dart |
+| Fountain lines | fountain-js 1.2.4 | 15.5 k | none; the alternative is a Fountain parser of our own |
 | Video | media-chrome | 5.5 M | Reveric's video_player and fvp |
 | Edit timeline | @xzdarcy/react-timeline-editor | 15 k | Reveric's ~5,000 hand-written lines. It's the least used here, though still more than hand-written. |
 
