@@ -28,6 +28,7 @@ import { type ComputerRow, type DramaRow, type EpisodeRow, type ReviewRow, type 
 import { turnRefusals } from "./refusals.ts";
 import { itemsOf, pendingReview } from "./reviews.ts";
 import { projectView } from "./status.ts";
+import { scaleOf } from "../shared/facts.ts";
 import { setupStep } from "../shared/project.ts";
 
 function still(file: FileRow): Still {
@@ -44,6 +45,16 @@ function castFaces(dramaId: string): string[] {
   const newest = new Map<string, FileRow>();
   for (const row of rows) newest.set(row.subject ?? row.name, row);
   return [...newest.values()].slice(0, 3).map(fileUrl);
+}
+
+/** The poster's picture from the drama's own work, a scene with its people: the last frame drama-cli saved beside its
+ * newest take (kind last-frame), else its newest photoreal storyboard; never a look sheet or line art. None before
+ * either exists, and the poster is the designed empty cover. */
+function coverOf(dramaId: string): DramaCard["cover"] {
+  const row =
+    get<FileRow>("select * from files where drama_id = ? and kind = 'last-frame' and type like 'image/%' order by created_at desc, id desc limit 1", dramaId) ??
+    get<FileRow>("select * from files where drama_id = ? and kind = 'storyboard' and style = 'photoreal' and type like 'image/%' order by created_at desc, id desc limit 1", dramaId);
+  return row ? { url: fileUrl(row) } : undefined;
 }
 
 /** What the sessions of a drama or an episode have cost so far: every turn, its late charges included. */
@@ -75,8 +86,30 @@ export function dramaCard(drama: DramaRow): DramaCard {
     computers: get<{ n: number }>("select count(*) as n from computers where drama_id = ? and state in ('running', 'starting')", drama.id)?.n ?? 0,
     waiting,
     cast: castFaces(drama.id),
+    cover: coverOf(drama.id),
     spent: spend("drama_id", drama.id),
     createdAt: drama.created_at,
+    facts: cardFacts(drama),
+  };
+}
+
+/** A card's facts: the scale and logline once drama-cli has reported them, and the agent's latest line. */
+function cardFacts(drama: DramaRow): DramaCard["facts"] {
+  const project = projectView(drama.id);
+  const last = get<{ text: string; at: string }>(
+    "select m.text, m.at from messages m join sessions s on s.id = m.session_id where s.drama_id = ? and m.kind in ('progress', 'activity', 'question', 'result') order by m.at desc limit 1",
+    drama.id,
+  );
+  // The genres only as the maker's notes state them, on a "Genres:" or "类型:" line (the brief's notes, goals.ts briefFile).
+  const genres = drama.notes.match(/^(?:Genres|类型)\s*[:：]\s*(.+)$/m)?.[1].split(/\s*[,，、]\s*/).filter(Boolean);
+  // Before any breakdown, drama-cli lists no episodes: a scale of zeros says nothing, so it is left out.
+  const scale = project.state ? scaleOf(project.state) : undefined;
+  return {
+    ...(scale?.episodes ? { scale } : {}),
+    ...(drama.length ? { length: drama.length } : {}),
+    ...(project.names?.logline ? { logline: project.names.logline } : {}),
+    ...(genres?.length ? { genres } : {}),
+    ...(last ? { lastActivity: last.at, lastLine: last.text } : {}),
   };
 }
 

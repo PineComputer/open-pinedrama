@@ -118,6 +118,19 @@ export function PresetChoice({ value, onChange }: { value: string; onChange: (pr
   );
 }
 
+/** A screenplay dropped on Home's New drama card, handed to Upload as it opens; taken once. */
+let dropped: File | undefined;
+
+export function dropScreenplay(file: File): void {
+  dropped = file;
+}
+
+export function takeDroppedScreenplay(): File | undefined {
+  const file = dropped;
+  dropped = undefined;
+  return file;
+}
+
 /** What Start still needs, one thing at a time, in the order the maker meets them; undefined when it is ready. */
 type Missing = "new.needFile" | "new.needText" | "new.needTitle" | "new.needLanguage" | "new.needPreset";
 
@@ -127,7 +140,7 @@ type Missing = "new.needFile" | "new.needText" | "new.needTitle" | "new.needLang
  */
 export function NewDrama() {
   const { t, lang } = useT();
-  const [file, setFile] = useState<File>();
+  const [file, setFile] = useState<File | undefined>(takeDroppedScreenplay);
   const [notFile, setNotFile] = useState(false);
   const [title, setTitle] = useState("");
   const [format, setFormat] = useState("9:16, 480p");

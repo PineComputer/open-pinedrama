@@ -200,8 +200,24 @@ export interface DramaCard {
   waiting: number;
   /** The leads' sheets, once drawn: the faces on the drama's poster. */
   cast: string[];
+  /** A picture of the drama's own work for its poster: its newest take's last frame, else its newest photoreal storyboard. */
+  cover?: Still;
   spent: Spend;
   createdAt: string;
+  /** What the shelf says about it, from drama-cli's status, its bible and the engine's own records; a fact not known is left out. */
+  facts: {
+    /** Episodes, scenes and segments as drama-cli's status lists them, once a stop has reported one. */
+    scale?: { episodes: number; scenes: number; segments: number };
+    /** About this many seconds an episode (60, 90, 120), as the maker asked. */
+    length?: string;
+    /** The working bible's one-line hook. */
+    logline?: string;
+    /** The genres the maker's notes state, on their "Genres:" ("类型:") line. */
+    genres?: string[];
+    /** When the agent last said something, and what. */
+    lastActivity?: string;
+    lastLine?: string;
+  };
 }
 
 export interface StageCell {

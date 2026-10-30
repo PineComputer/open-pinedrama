@@ -80,6 +80,56 @@ describe("the answers the UI reads", () => {
     expect(cards[0]).toMatchObject({ id, title: "The Stepmother", mode: "replay", preset: "en-us-live-sfw", rehearsal: false });
   });
 
+  it("says on a card what the agent last said and when, leaving out a fact not known yet", async () => {
+    expect((await call("/api/connection/replay", { method: "POST" })).status).toBe(200);
+    const made = await call("/api/dramas/sample", { method: "POST", body: JSON.stringify({ language: "en" }), headers: { "content-type": "application/json" } });
+    const { id } = (await made.json()) as { id: string };
+    // No status report yet: no scale and no logline, rather than zeros or a guess.
+    const [fresh] = (await (await call("/api/dramas")).json()) as DramaCard[];
+    expect(fresh.facts.scale).toBeUndefined();
+    expect(fresh.facts.logline).toBeUndefined();
+    const { run } = await import("./db.ts");
+    run("insert into sessions (id, computer_id, drama_id, name, role, state, created_at) values ('s9', 'c9', ?, 'n', 'setup', 'open', ?)", id, "2099-01-01T00:00:00Z");
+    run("insert into messages (session_id, kind, text, at) values ('s9', 'progress', 'Rewriting it into Fountain', '2099-01-01T00:01:00Z')");
+    run("insert into messages (session_id, kind, text, at) values ('s9', 'input', 'Start the drama.', '2099-01-01T00:00:30Z')");
+    const [card] = (await (await call("/api/dramas")).json()) as DramaCard[];
+    expect(card.facts).toMatchObject({ lastLine: "Rewriting it into Fountain", lastActivity: "2099-01-01T00:01:00Z" });
+    // Genres only as the maker's notes state them: none when they state none.
+    run("update dramas set notes = ? where id = ?", "Selling point: the slap.", id);
+    expect((((await (await call("/api/dramas")).json()) as DramaCard[])[0]).facts.genres).toBeUndefined();
+    // On their "Genres:" line, in the brief's "Genres:" line (or "类型：").
+    run("update dramas set notes = ? where id = ?", "Selling point: the slap.\nGenres: Family, Period", id);
+    expect((((await (await call("/api/dramas")).json()) as DramaCard[])[0]).facts.genres).toEqual(["Family", "Period"]);
+    run("update dramas set notes = ? where id = ?", "类型：家庭、年代", id);
+    expect((((await (await call("/api/dramas")).json()) as DramaCard[])[0]).facts.genres).toEqual(["家庭", "年代"]);
+  });
+
+  it("gives a card a cover from the drama's own work: its newest take's last frame, else a photoreal storyboard, else none", async () => {
+    expect((await call("/api/connection/replay", { method: "POST" })).status).toBe(200);
+    const made = await call("/api/dramas/sample", { method: "POST", body: JSON.stringify({ language: "zh" }), headers: { "content-type": "application/json" } });
+    const { id } = (await made.json()) as { id: string };
+    const { get, run } = await import("./db.ts");
+    const card = async () => ((await (await call("/api/dramas")).json()) as DramaCard[]).find((item) => item.id === id)!;
+    const file = (name: string, kind: string, type: string, style: string | null, at: string) => {
+      run("insert into files (drama_id, rel_path, name, kind, type, size, sha, style, created_at) values (?, ?, ?, ?, ?, 1, ?, ?, ?)", id, `drama/${name}`, name, kind, type, `sha-${name}`, style, at);
+      return get<{ id: number }>("select id from files where drama_id = ? and name = ?", id, name)!.id;
+    };
+    const coverId = async () => (await card()).cover?.url.match(/^\/api\/files\/(\d+)\?/)?.[1];
+    // Nothing yet, and never a look sheet or line art: the designed empty cover.
+    file("lin.jpg", "look", "image/jpeg", null, "2099-01-01T00:00:00Z");
+    file("board.png", "storyboard", "image/png", "line-art", "2099-01-01T00:00:30Z");
+    expect((await card()).cover).toBeUndefined();
+    const photo = file("photo.png", "storyboard", "image/png", "photoreal", "2099-01-01T00:01:00Z");
+    expect(await coverId()).toBe(String(photo));
+    // Any take's last frame, the newest, over a photoreal board.
+    file("seg01-last_frame.jpg", "last-frame", "image/jpeg", null, "2099-01-01T00:02:00Z");
+    const newest = file("seg02-last_frame.jpg", "last-frame", "image/jpeg", null, "2099-01-01T00:03:00Z");
+    expect(await coverId()).toBe(String(newest));
+    expect((await card()).cover?.video).toBeFalsy();
+    // A Chinese drama's card names its own preset.
+    expect((await card()).preset).toBe("zh-cn-live-sfw");
+  });
+
   it("says plainly when a drama doesn't exist", async () => {
     const response = await call("/api/dramas/no-such-drama");
     expect(response.status).toBe(404);
