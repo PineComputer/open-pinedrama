@@ -4,6 +4,7 @@ import type { FileItem, ItemDecision, Note, ReviewItem, ReviewView, Verdict } fr
 import { api, clock, useAction, useResource } from "../api.ts";
 import { type TKey, useT } from "../i18n.ts";
 import { errorText, fileKind, subjectLabel, useNames } from "../labels.ts";
+import { StopCard } from "../components/StopCard.tsx";
 import { Markdown } from "../Markdown.tsx";
 import { Link, navigate } from "../router.tsx";
 import { Still } from "../Still.tsx";
@@ -175,6 +176,10 @@ function QuestionRoom({ review, done }: { review: ReviewView; done: () => void }
       </Link>
       <div className="question-body">
         <div className="block">
+          {review.refusals.map((refusal, n) => (
+            <StopCard key={n} refusal={refusal} />
+          ))}
+          {review.refusalsError && <p className="error small">{t("stopcard.unread", { error: review.refusalsError })}</p>}
           <span className="label">{t("review.agent")}</span>
           <Said review={review} className="asked" />
         </div>

@@ -37,6 +37,8 @@ const TEXT_ON_GROUND: [string, string][] = [
     ["error", ground],
   ]),
   ["on-accent", "accent"],
+  // A red line's StopCard header and an error toast.
+  ["on-accent", "error"],
 ];
 
 describe("text on its ground", () => {

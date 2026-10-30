@@ -50,7 +50,8 @@ Classes are `ds-*`, and a variant or state is `is-*`. The older screens' global 
   `--text-muted` is allowed on the canvas, surface, surface-dim and surface-container only, never
   on `--surface-container-high` or a hover or selected row. `--text-subtle` and `--success` are for
   marks and icons, never for letters. `src/ui/theme/contrast.test.ts` lists the allowed pairs,
-  and axe checks every page the end-to-end tests visit.
+  `stylesheets.test.ts` checks every rule in our stylesheets against them, and axe checks every
+  page the end-to-end tests visit.
 - **Find by role and name** in tests, the way a maker's screen reader does. A link's or button's
   name starts with what it shows (WCAG 2.5.3).
 - **One main landmark:** the shell's work area. A screen inside the shell is a `div`.
