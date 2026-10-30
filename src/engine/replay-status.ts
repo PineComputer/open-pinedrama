@@ -12,6 +12,8 @@ export interface Made {
 
 export interface EpisodeMade {
   segments: string[];
+  /** Each segment's scene heading, as the screenplay heads its scene. */
+  headings?: Record<string, string>;
   /** Each segment's storyboards, once drawn, by segment: line-art and photoreal share a version; its blocking reference is accepted with them. */
   boards?: Record<string, Made>;
   /** The takes made of each segment, t01 first, and whether its newest is accepted. */
@@ -76,7 +78,8 @@ function episode(code: string, made: EpisodeMade, references: Record<string, Ref
         takes: versions.map((version) => ({ version, state: "downloaded", accepted: Boolean(shot?.accepted) && version === newest })),
       };
     }),
-    scene_chains: made.segments.map((segment) => ({ scene_heading: `INT. HOME - DAY #${segment}#`, segments: [segment] })),
+    // Each segment its own scene, numbered as drama-cli numbers them (#episode-scene#).
+    scene_chains: made.segments.map((segment, i) => ({ scene_heading: `${made.headings?.[segment] ?? "INT. HOME - DAY"} #${Number(code.slice(2))}-${i + 1}#`, segments: [segment] })),
     needs: missing.map(([key, reference]) => {
       const state = stage(reference.path, reference);
       return { reference: key, path: `/work/drama/${reference.path}`, why: state.why ?? "", run: state.run ?? [], segments: made.segments };

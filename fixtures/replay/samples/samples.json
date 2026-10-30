@@ -467,7 +467,30 @@
   "drama/episodes/EP006/segments/seg03/t01/request": "full/paper-vows/ep6-seg03-t01.request.json",
   "drama/episodes/EP006/segments/seg03/t01/spec": "full/paper-vows/ep6-seg03-t01.spec.json",
   "drama/episodes/EP006/segments/seg04/t01/request": "full/paper-vows/ep6-seg04-t01.request.json",
-  "drama/episodes/EP006/segments/seg04/t01/spec": "full/paper-vows/ep6-seg04-t01.spec.json"
+  "drama/episodes/EP006/segments/seg04/t01/spec": "full/paper-vows/ep6-seg04-t01.spec.json",
+  "drama/episodes/EP001/segments/seg01/t01/last_frame": "full/paper-vows/ep1-seg01-t01-last-frame.jpg",
+  "drama/episodes/EP001/segments/seg02/t01/last_frame": "full/paper-vows/ep1-seg02-t01-last-frame.jpg",
+  "drama/episodes/EP001/segments/seg03/t01/last_frame": "full/paper-vows/ep1-seg03-t01-last-frame.jpg",
+  "drama/episodes/EP002/segments/seg01/t01/last_frame": "full/paper-vows/ep2-seg01-t01-last-frame.jpg",
+  "drama/episodes/EP002/segments/seg02/t01/last_frame": "full/paper-vows/ep2-seg02-t01-last-frame.jpg",
+  "drama/episodes/EP002/segments/seg03/t01/last_frame": "full/paper-vows/ep2-seg03-t01-last-frame.jpg",
+  "drama/episodes/EP002/segments/seg04/t01/last_frame": "full/paper-vows/ep2-seg04-t01-last-frame.jpg",
+  "drama/episodes/EP003/segments/seg01/t01/last_frame": "full/paper-vows/ep3-seg01-t01-last-frame.jpg",
+  "drama/episodes/EP003/segments/seg02/t01/last_frame": "full/paper-vows/ep3-seg02-t01-last-frame.jpg",
+  "drama/episodes/EP003/segments/seg03/t01/last_frame": "full/paper-vows/ep3-seg03-t01-last-frame.jpg",
+  "drama/episodes/EP003/segments/seg04/t01/last_frame": "full/paper-vows/ep3-seg04-t01-last-frame.jpg",
+  "drama/episodes/EP004/segments/seg01/t01/last_frame": "full/paper-vows/ep4-seg01-t01-last-frame.jpg",
+  "drama/episodes/EP004/segments/seg02/t01/last_frame": "full/paper-vows/ep4-seg02-t01-last-frame.jpg",
+  "drama/episodes/EP004/segments/seg03/t01/last_frame": "full/paper-vows/ep4-seg03-t01-last-frame.jpg",
+  "drama/episodes/EP004/segments/seg04/t01/last_frame": "full/paper-vows/ep4-seg04-t01-last-frame.jpg",
+  "drama/episodes/EP005/segments/seg01/t01/last_frame": "full/paper-vows/ep5-seg01-t01-last-frame.jpg",
+  "drama/episodes/EP005/segments/seg02/t01/last_frame": "full/paper-vows/ep5-seg02-t01-last-frame.jpg",
+  "drama/episodes/EP005/segments/seg03/t01/last_frame": "full/paper-vows/ep5-seg03-t01-last-frame.jpg",
+  "drama/episodes/EP005/segments/seg04/t01/last_frame": "full/paper-vows/ep5-seg04-t01-last-frame.jpg",
+  "drama/episodes/EP006/segments/seg01/t01/last_frame": "full/paper-vows/ep6-seg01-t01-last-frame.jpg",
+  "drama/episodes/EP006/segments/seg02/t01/last_frame": "full/paper-vows/ep6-seg02-t01-last-frame.jpg",
+  "drama/episodes/EP006/segments/seg03/t01/last_frame": "full/paper-vows/ep6-seg03-t01-last-frame.jpg",
+  "drama/episodes/EP006/segments/seg04/t01/last_frame": "full/paper-vows/ep6-seg04-t01-last-frame.jpg"
  },
  "late-sunshine": {
   "drama/assets/characters/applicant_a/vN/image-1": "full/late-sunshine/cast-applicant_a.jpg",
@@ -758,6 +781,10 @@
   "drama/episodes/EP005/multi_panel_storyboard/seg05/line-art/vN/request": "full/late-sunshine/ep5-seg05-line-art.request.json",
   "drama/episodes/EP005/multi_panel_storyboard/seg05/line-art/vN/spec": "full/late-sunshine/ep5-seg05-line-art.spec.json",
   "drama/episodes/EP005/multi_panel_storyboard/seg05/photoreal/vN/request": "full/late-sunshine/ep5-seg05-photoreal.request.json",
-  "drama/episodes/EP005/multi_panel_storyboard/seg05/photoreal/vN/spec": "full/late-sunshine/ep5-seg05-photoreal.spec.json"
+  "drama/episodes/EP005/multi_panel_storyboard/seg05/photoreal/vN/spec": "full/late-sunshine/ep5-seg05-photoreal.spec.json",
+  "drama/episodes/EP001/segments/seg01/t01/last_frame": "full/late-sunshine/ep1-seg01-t01-last-frame.jpg",
+  "drama/episodes/EP001/segments/seg02/t01/last_frame": "full/late-sunshine/ep1-seg02-t01-last-frame.jpg",
+  "drama/episodes/EP001/segments/seg03/t01/last_frame": "full/late-sunshine/ep1-seg03-t01-last-frame.jpg",
+  "drama/episodes/EP001/segments/seg07/t01/last_frame": "full/late-sunshine/ep1-seg07-t01-last-frame.jpg"
  }
 }

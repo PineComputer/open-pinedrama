@@ -45,6 +45,7 @@ describe("classify", () => {
 
   it("reads takes and cuts", () => {
     expect(classify("episodes/EP010/segments/seg01b/t02/video.mp4")).toMatchObject({ kind: "take", episode: "EP010", segment: "seg01b", version: "t02" });
+    expect(classify("drama/episodes/EP003/segments/seg02/t01/last_frame.jpg")).toEqual({ kind: "last-frame", episode: "EP003", segment: "seg02", version: "t01" });
     expect(classify("episodes/EP010/edit/v3/cut.mp4")).toMatchObject({ kind: "cut", episode: "EP010", version: "v3" });
   });
 
