@@ -14,7 +14,8 @@
 
 /* The drama's bar: the surface switch, then its chips. */
 
-.ds-workin { padding: 16px 16px 40px; min-width: 0; }
+/* Each block of a drama's page brings its own padding, as the design's do (.bar2, .filters, .epgrid…). */
+.ds-workin { min-width: 0; }
 
 /* AgentPanel: 360 wide on the dimmed surface beside the work, or floating over it (380, the
    dialog's shadow); its sections, rows, decisions, process, messages and composer. AgentBall:

@@ -423,33 +423,6 @@ h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 700; lett
 
 
 /* The episodes board (the spec's FilterChip and EpisodeCard). */
-.ds-fchips { display: flex; flex-wrap: wrap; gap: 8px; }
-.ds-fchip { height: 30px; padding: 0 12px; border-radius: var(--radius-pill); border: 1px solid var(--border); background: var(--surface); color: var(--text-muted); font-size: 12.5px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
-.ds-fchip small { color: var(--text-muted); font-size: 11.5px; }
-.ds-fchip:hover { color: var(--text-primary); }
-.ds-fchip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
-.ds-fchip[aria-pressed="true"] small { color: var(--on-accent); }
-.ds-epgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(168px, 1fr)); gap: 16px; }
-.ds-epgrid.wide { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
-.ds-epcard { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; min-width: 0; }
-.ds-epcard .pic { position: relative; display: block; width: 100%; aspect-ratio: 9 / 16; border-radius: var(--radius-large); overflow: hidden; background: var(--surface-container); border: 1px solid var(--border); }
-.ds-epcard .pic.wide { aspect-ratio: 16 / 9; }
-.ds-epcard .pic .still { transition: transform 0.3s; }
-.ds-epcard:hover .pic .still { transform: scale(1.02); }
-.ds-epcard .pic::after { content: ""; position: absolute; inset: auto 0 0 0; height: 40%; background: linear-gradient(transparent, color-mix(in srgb, var(--canvas) 70%, transparent)); pointer-events: none; }
-.ds-epcard .pic .empty { position: absolute; inset: 0; display: grid; place-items: center; color: var(--text-muted); font: 300 40px/1 var(--font-sans); font-variant-numeric: tabular-nums; }
-.ds-epcard .pic .code { position: absolute; left: 8px; top: 8px; z-index: 1; font: 600 11px var(--font-mono); padding: 3px 6px; border-radius: var(--radius-small); background: color-mix(in srgb, var(--canvas) 70%, transparent); color: var(--text-primary); }
-.ds-epcard .pic .ds-chipslot { position: absolute; right: 8px; top: 8px; z-index: 1; }
-.ds-epcard .pic .strip { position: absolute; left: 8px; right: 8px; bottom: 8px; z-index: 1; display: grid; grid-template-columns: repeat(5, 1fr); gap: 3px; }
-.ds-epcard .pic .strip i { height: 3px; border-radius: 2px; background: color-mix(in srgb, var(--text-primary) 22%, transparent); }
-.ds-epcard .pic .strip i.d { background: var(--text-primary); }
-.ds-epcard .pic .strip i.w { background: repeating-linear-gradient(90deg, var(--text-primary) 0 3px, transparent 3px 5px); }
-.ds-epcard .pic .strip i.y { background: var(--warning-text); }
-.ds-epcard b { font-size: 13px; font-weight: 600; max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.ds-epcard small { width: 100%; color: var(--text-muted); font-size: 12px; display: flex; justify-content: space-between; gap: 8px; }
-.ds-epcard small .said { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.ds-epcard small .num { font-family: var(--font-mono); flex: none; }
-.ds-epcard.waiting .pic { border-color: var(--warning-text); }
 
 /* StopBanner: dashed while the drama's Computers stop, solid once it is stopped (the spec's StopBanner). */
 .ds-banner { margin: 0 0 16px; padding: 10px 14px; border-radius: var(--radius-large); border: 1px solid color-mix(in srgb, var(--error) 50%, transparent); background: var(--surface); display: flex; align-items: center; gap: 12px; font-size: 12.5px; flex-wrap: wrap; }

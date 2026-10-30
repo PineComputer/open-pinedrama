@@ -105,7 +105,7 @@ describe("StatusChip", () => {
     );
     expect(screen.getByText("1 error")).toBeInTheDocument();
     expect(screen.getByText("3 warn")).toBeInTheDocument();
-    expect(container.querySelectorAll("[data-slot=badge]")).toHaveLength(2);
+    expect(container.querySelectorAll(".st")).toHaveLength(2);
   });
 });
 

@@ -12,6 +12,7 @@ import { type ScreenplayLanguage, screenplayLanguageOf } from "../../shared/scre
 import { isDocument, useDocumentText } from "../viewing.tsx";
 import { PresetChoice, ScreenplayStructure } from "./NewDrama.tsx";
 import { buttonVariants } from "@/components/ui/button";
+import { Icon } from "../icons.tsx";
 
 function Mark({ cell }: { cell: StageCell }) {
   const { t } = useT();
@@ -117,35 +118,29 @@ function Card({ row, wide, dramaId }: { row: EpisodeRow; wide: boolean; dramaId:
   const resume = useAction(() => api(`/api/episodes/${row.id}/resume`, { method: "POST" }));
   const trouble = row.state === "stopped" || row.state === "failed";
   const chip = chipOf(row);
+  // The design's EpisodeCard (design/app.js, Episodes): the card opens the episode, or the review it waits on.
+  const to = row.state === "waiting" && row.reviewId ? `/r/${row.reviewId}` : `/d/${dramaId}/e/${row.code}`;
   return (
-    <div className={`ds-epcard ${row.state}`}>
-      <Link to={`/d/${dramaId}/e/${row.code}`} className={`pic ${wide ? "wide" : ""}`} aria-label={row.title ? `${row.code} · ${row.title}` : row.code}>
-        <Still still={row.frame} live />
-        {!row.frame && <span className="empty">{String(row.number).padStart(2, "0")}</span>}
-        <span className="code">{row.code}</span>
-        <span className="ds-chipslot">
-          <StatusChip status={chip.status} label={t(chip.label)} over />
-        </span>
-        <span className="strip" aria-hidden="true">
-          {STAGES.map((stage) => (
-            <i key={stage} className={STRIP[row.stages[stage].state]} title={t(`stage.${stage}` as TKey)} />
-          ))}
-        </span>
+    <div style={{ display: "grid", gap: 6 }}>
+      <Link to={to} className="epcard" aria-label={row.title ? `${row.code} · ${row.title}` : row.code}>
+        <div className="pic" style={wide ? { aspectRatio: "16 / 9" } : undefined}>
+          {row.frame ? <Still still={row.frame} live /> : <span className="empty">{t(row.stages.breakdown.state === "done" ? "board.breakdownDone" : "board.notStarted")}</span>}
+          <span className="code">{row.code}</span>
+          {row.state !== "queued" && <StatusChip status={chip.status} label={t(chip.label)} />}
+          <span className="strip" aria-hidden="true">
+            {STAGES.map((stage) => (
+              <i key={stage} className={STRIP[row.stages[stage].state]} title={t(`stage.${stage}` as TKey)} />
+            ))}
+          </span>
+        </div>
+        <b>{row.title || row.code}</b>
+        <small>
+          <span>{nowText(row, t)}</span>
+          <span className="mono">{row.spent.total > 0 ? moneyText(row.spent, t, lang) : ""}</span>
+        </small>
       </Link>
-      <b>{row.title || row.code}</b>
-      <small>
-        <span className="said" title={nowText(row, t)}>
-          {nowText(row, t)}
-        </span>
-        {row.spent.total > 0 && <span className="num">{moneyText(row.spent, t, lang)}</span>}
-      </small>
-      {row.state === "waiting" && row.reviewId && (
-        <Link to={`/r/${row.reviewId}`} className={buttonVariants({ variant: "default", size: "sm" })}>
-          {t("board.review")}
-        </Link>
-      )}
       {trouble && (
-        <button className={buttonVariants({ variant: "outline", size: "sm" })} disabled={resume.busy} onClick={() => void resume.run()}>
+        <button type="button" className="btn sm" disabled={resume.busy} onClick={() => void resume.run()}>
           {t("board.resume")}
         </button>
       )}
@@ -182,7 +177,8 @@ export function Board({ drama }: { drama: DramaView }) {
   const rows = drama.episodeRows;
   const [view, setView] = useState<View>(savedView);
   const [filter, setFilter] = useState<Filter>("all");
-  const shown = rows.filter(FILTERS[filter]);
+  const [find, setFind] = useState("");
+  const shown = rows.filter(FILTERS[filter]).filter((row) => `${row.code} ${row.title}`.toLowerCase().includes(find.trim().toLowerCase()));
   const choose = (next: View) => {
     setView(next);
     try {
@@ -194,35 +190,35 @@ export function Board({ drama }: { drama: DramaView }) {
   const wide = /^\s*16\s*:\s*9/.test(drama.format);
   return (
     <>
-      <div className="work-head">
-        {/* The filters start the page, as the pro direction's Episodes has it; the heading is for assistive technology. */}
-        <h2 className="sr-only">{t("step.episodes")}</h2>
-        {rows.length > 0 && (
-          <div className="ds-fchips" role="group" aria-label={t("board.filter")}>
-            {(Object.keys(FILTERS) as Filter[]).map((key) => (
-              <button key={key} type="button" className="ds-fchip" aria-pressed={filter === key} onClick={() => setFilter(key)}>
-                {t(`board.filter.${key}` as TKey)} <small className="num">{rows.filter(FILTERS[key]).length}</small>
+      <h2 className="sr-only">{t("step.episodes")}</h2>
+      {rows.length > 0 && (
+        // The design's filters (design/app.js, Episodes): a pressed chip per condition, a search, and the wall's view.
+        <div className="filters">
+          {(Object.keys(FILTERS) as Filter[]).map((key) => (
+            <button key={key} type="button" className="fchip" aria-pressed={filter === key} onClick={() => setFilter(key)}>
+              {t(`board.filter.${key}` as TKey)}
+              <small> {rows.filter(FILTERS[key]).length}</small>
+            </button>
+          ))}
+          <span className="grow" />
+          <label className="search" style={{ width: 200 }}>
+            <Icon name="magnifying-glass" className="ic" />
+            <input type="search" value={find} placeholder={t("board.find")} aria-label={t("board.find")} onChange={(event) => setFind(event.target.value)} style={{ border: 0, background: "none", outline: "none", color: "inherit", font: "inherit", minWidth: 0, flex: 1 }} />
+          </label>
+          <div className="seg" role="group" aria-label={t("board.view")}>
+            {(["wall", "sheet"] as const).map((value) => (
+              <button key={value} type="button" aria-pressed={view === value} onClick={() => choose(value)}>
+                <Icon name={value === "wall" ? "squares-four" : "list"} className="ic" />
+                {t(`board.${value}`)}
               </button>
             ))}
           </div>
-        )}
-        <span className="grow" />
-        {rows.length > 0 && (
-          <Segmented
-            label={t("board.view")}
-            value={view}
-            onChange={choose}
-            options={[
-              { value: "wall", label: t("board.wall"), icon: "squares-four" },
-              { value: "sheet", label: t("board.sheet"), icon: "list" },
-            ]}
-          />
-        )}
-      </div>
+        </div>
+      )}
       {!rows.length ? (
         <p className="empty-note">{t("board.empty")}</p>
       ) : view === "wall" ? (
-        <div className={`ds-epgrid ${wide ? "wide" : ""}`}>
+        <div className="epgrid">
           {shown.map((row) => (
             <Card key={row.id} row={row} wide={wide} dramaId={drama.id} />
           ))}
