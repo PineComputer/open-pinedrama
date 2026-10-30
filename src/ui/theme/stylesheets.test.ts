@@ -2,10 +2,14 @@
 // letters in --text-subtle, and no muted letters on the high container or a hover or selected
 // ground. A rule is read on its own; what one rule inherits from another is axe's to catch on
 // the pages the end-to-end tests visit.
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 
-const SHEETS = ["../styles.css", "../components/components.css", "../shell/shell.css", "../screens/canvas.css", "./base.css"];
+// Every stylesheet of the studio's own under src/ui, a new screen's included; Reveric's two are its palette and tokens.
+const UI = fileURLToPath(new URL("..", import.meta.url));
+const SHEETS = (readdirSync(UI, { recursive: true }) as string[]).filter((name) => name.endsWith(".css") && !path.basename(name).startsWith("reveric-")).map((name) => path.join(UI, name));
 
 interface Rule {
   sheet: string;
@@ -15,8 +19,8 @@ interface Rule {
 
 function rules(): Rule[] {
   return SHEETS.flatMap((sheet) => {
-    const css = readFileSync(new URL(sheet, import.meta.url), "utf8").replace(/\/\*[\s\S]*?\*\//g, "");
-    return [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)].map((m) => ({ sheet, selector: m[1].trim(), body: m[2] }));
+    const css = readFileSync(sheet, "utf8").replace(/\/\*[\s\S]*?\*\//g, "");
+    return [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)].map((m) => ({ sheet: path.relative(UI, sheet), selector: m[1].trim(), body: m[2] }));
   });
 }
 
@@ -26,7 +30,8 @@ const ground = (body: string) => body.match(/(?:^|;)\s*background(?:-color)?:\s*
 const isIcon = (selector: string) => /\.ds-icon\b|\bsvg\b/.test(selector.split(",").at(-1) ?? "");
 
 describe("the stylesheets", () => {
-  it("are read, rule by rule", () => {
+  it("are read, rule by rule, every one of the studio's own", () => {
+    expect(SHEETS.map((sheet) => path.relative(UI, sheet)).sort()).toEqual(expect.arrayContaining(["components/components.css", "screens/canvas.css", "shell/shell.css", "styles.css", "theme/base.css"]));
     expect(rules().length).toBeGreaterThan(200);
   });
 
