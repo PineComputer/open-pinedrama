@@ -564,5 +564,6 @@ a.ds-tag:hover { background: var(--hover); }
 
 /* The room fills the work's scroller, as the design's fills its main column (studio.css .room is a flex item there). */
 .ds-scroll:has(> .room) { display: flex; }
-.room .sendbar { padding-right: 88px; }
+/* In the room the agent's ball stands above the inspector's send bar, so the bar keeps the design's layout. */
+.body:has(.room) .ball { bottom: 64px; }
 .sendbar .ds-words { min-width: 0; }
