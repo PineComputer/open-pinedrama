@@ -708,3 +708,6 @@ a.ds-tag:hover { background: var(--hover); }
 .ds-analyzing .hint { margin: 0; color: var(--text-secondary); font-size: 12px; }
 .ds-analyzing .peek { margin: 0; max-height: 60vh; overflow: auto; white-space: pre-wrap; font: 12.5px/1.6 var(--font-mono); color: var(--text-primary); }
 @media (max-width: 900px) { .ds-analyzing .grid { grid-template-columns: 1fr; } }
+
+/* Home's denser cards (P5.1): the logline on one line, ellipsized. */
+.ds-dramacard .txt .logline { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

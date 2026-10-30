@@ -202,6 +202,18 @@ export interface DramaCard {
   cast: string[];
   spent: Spend;
   createdAt: string;
+  /** What the shelf says about it, from drama-cli's status, its bible and the engine's own records; a fact not known is left out. */
+  facts: {
+    /** Episodes, scenes and segments as drama-cli's status lists them, once a stop has reported one. */
+    scale?: { episodes: number; scenes: number; segments: number };
+    /** About this many seconds an episode (60, 90, 120), as the maker asked. */
+    length?: string;
+    /** The working bible's one-line hook. */
+    logline?: string;
+    /** When the agent last said something, and what. */
+    lastActivity?: string;
+    lastLine?: string;
+  };
 }
 
 export interface StageCell {
@@ -367,6 +379,16 @@ export interface ChatMessage {
   brief?: boolean;
   /** An input that was the maker's decision on a review, sent in the agent's terms. */
   decision?: { reviewId: string; kind: ReviewKind; approved: number; revised: number };
+}
+
+/** A conversation with the agent, for the sidebar's recent list: its drama, its episode ("" for the setup), and its last line. */
+export interface RecentConversation {
+  sessionId: string;
+  dramaId: string;
+  dramaTitle: string;
+  label: string;
+  at: string;
+  line: string;
 }
 
 export interface ChatView {

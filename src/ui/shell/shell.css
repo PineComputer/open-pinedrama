@@ -189,3 +189,9 @@ button.ds-project { border: 0; background: none; color: inherit; text-align: lef
   .ds-dramabar .ds-projectchip { display: none; }
 }
 .ds-caption { color: var(--text-muted); font-size: 11.5px; line-height: 1.45; }
+
+/* Home's recent conversations: a nav row with the drama and episode, and when the agent last spoke. */
+.ds-recent .txt { display: grid; min-width: 0; line-height: 1.25; }
+.ds-recent .txt > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ds-recent .txt small { font-size: 11.5px; color: var(--text-secondary); }
+.ds-recent { height: auto; min-height: 36px; padding-top: 4px; padding-bottom: 4px; }

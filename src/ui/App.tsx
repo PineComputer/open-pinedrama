@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect, useState } from "react";
-import type { AppInfo, DramaView, ReviewSummary } from "../shared/types.ts";
+import type { AppInfo, DramaView, RecentConversation, ReviewSummary } from "../shared/types.ts";
 import { ApiError, useResource } from "./api.ts";
 import { type TKey, useT } from "./i18n.ts";
 import { errorText } from "./labels.ts";
@@ -90,6 +90,8 @@ export function App() {
   const ready = app.data !== undefined && app.data.mode !== "none";
   const inbox = useResource<ReviewSummary[]>(ready ? "/api/inbox" : null, ["inbox"]);
   const waiting = (inbox.data ?? []).filter((item) => item.state === "open");
+  // The sidebar's recent conversations: refetched whenever a drama changes, which every new message of the agent does.
+  const recent = useResource<RecentConversation[]>(ready ? "/api/sessions/recent" : null, ["dramas", "inbox"]);
   const review = match("/r/:id", path);
   const reviewed = review ? inbox.data?.find((item) => item.id === review.id) : undefined;
   // The drama in view: its page's, or the one the review in view belongs to.
@@ -149,7 +151,7 @@ export function App() {
     drama.data && dramaId ? (
       <DramaSidebar drama={drama.data} tab={review ? "review" : tab} episode={match("/d/:id/e/:code", path)?.code ?? reviewed?.episode} />
     ) : (
-      <HomeSidebar path={path} waiting={waiting.length} replay={app.data.mode === "replay"} />
+      <HomeSidebar path={path} waiting={waiting.length} replay={app.data.mode === "replay"} recent={recent.data} />
     );
   return (
     <div className="ds-app">
