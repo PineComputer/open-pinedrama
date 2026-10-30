@@ -18,17 +18,25 @@ export function focusGraph(lineage: Lineage, center: string, kinds: Set<LineageK
   const kindOf = new Map(lineage.nodes.map((node) => [node.id, node.kind]));
   const shown = (id: string) => id === center || kinds.has(kindOf.get(id)!);
   const candidates = lineage.links.filter((link) => shown(link.from) && shown(link.to));
-  // The links walked out from the focus, a ring at a time: a link between two versions of the same ring is not one (Reveric's egPrepGraph keeps the edges its walk crosses).
+  // The links walked out from the focus, a ring at a time, each way keeping its direction: up through what a version
+  // was made from, down through what was made from it. Its siblings (what else a shared input made) are not its
+  // lineage, and on a long series they are hundreds; Reveric's walk (egPrepGraph) has no direction to keep.
   const hops = new Map([[center, 0]]);
   const links: LineageLink[] = [];
-  for (let d = 1; d <= depth; d++) {
-    for (const link of candidates) {
-      const [a, b] = [hops.get(link.from), hops.get(link.to)];
-      if (a !== d - 1 && b !== d - 1) continue;
-      if (a !== undefined && b !== undefined && a === b) continue;
-      if (a === undefined) hops.set(link.from, d);
-      if (b === undefined) hops.set(link.to, d);
-      if (!links.includes(link)) links.push(link);
+  for (const [toward, back] of [["from", "to"], ["to", "from"]] as const) {
+    let frontier = new Set([center]);
+    for (let d = 1; d <= depth && frontier.size; d++) {
+      const next = new Set<string>();
+      for (const link of candidates) {
+        if (!frontier.has(link[back])) continue;
+        const reached = link[toward];
+        if (!hops.has(reached)) {
+          hops.set(reached, d);
+          next.add(reached);
+        }
+        if (!links.includes(link)) links.push(link);
+      }
+      frontier = next;
     }
   }
   const ids = [...hops.keys()];

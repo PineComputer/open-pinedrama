@@ -612,10 +612,9 @@ h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 700; lett
 .eg-node.is-stale .eg-node__ring { border-style: dashed; }
 .eg-node__labels { width: max-content; }
 .eg-edge { transition: opacity .2s; }
+.eg-legend__line.is-other { background: var(--border-input); height: 1px; }
 .eg-legend__line.is-stale { background: none; border-top: 2px dashed var(--eg-stale); height: 0; }
-.eg-tab:focus-visible, .eg-rel:focus-visible, .eg-rail__row:focus-visible, .eg-chip:focus-visible, .eg-ddbtn:focus-visible { outline: 2px solid var(--text-primary); outline-offset: 1px; }
-.eg-menu__check[data-disabled] { opacity: .5; cursor: default; }
-.eg-menu__check[data-highlighted], .eg-menu__item[data-highlighted] { background: var(--hover); outline: none; }
+.eg-rel:focus-visible, .eg-rail__row:focus-visible, .eg-chip:focus-visible, .eg-ddbtn:focus-visible { outline: 2px solid var(--text-primary); outline-offset: 1px; }
 /* One short label under each ring, at 11px, cut with an ellipsis. */
 .eg-node__name { font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .eg-node.is-center .eg-node__name { font-size: 13px; }

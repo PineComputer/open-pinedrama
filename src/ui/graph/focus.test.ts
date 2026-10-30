@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import { parseLineage, type Lineage, type LineageKind } from "../../shared/lineage.ts";
+import { parseLineage, trace, type Lineage, type LineageKind } from "../../shared/lineage.ts";
 import { focusGraph, RING } from "./focus.ts";
 
 const real = (name: string): Lineage => parseLineage(JSON.parse(readFileSync(path.resolve("fixtures/lineage", `${name}.json`), "utf8")));
@@ -31,12 +31,15 @@ describe("the graph around a version", () => {
     expect(focusGraph(real("shot"), TAKE, ALL, 2).ids).toContain("assets/scenes/office");
   });
 
-  it("draws only the links it walks out from the focus, never one between two versions as far out", () => {
-    const near = focusGraph(real("shot"), TAKE, ALL, 1);
-    expect(near.links.every((link) => link.from === TAKE || link.to === TAKE)).toBe(true);
-    const ring = new Set(near.ids.filter((id) => id !== TAKE));
-    const { links } = focusGraph(real("shot"), TAKE, ALL, 2);
-    expect(links.filter((link) => ring.has(link.from) && ring.has(link.to))).toEqual([]);
+  it("shows only the focus's lineage, what it was made from and what was made from it, never a sibling", () => {
+    const lineage = real("shot");
+    const { up, down } = trace(lineage, TAKE);
+    const { ids } = focusGraph(lineage, TAKE, ALL, 3);
+    expect(ids.filter((id) => id !== TAKE && !up.has(id) && !down.has(id))).toEqual([]);
+    const plate = focusGraph(lineage, "assets/scenes/office/times/Day", ALL, 2);
+    // The plate's users are its lineage; what else they used (the take's look) is not.
+    expect(plate.ids).toContain(TAKE);
+    expect(plate.ids).not.toContain("assets/characters/lin");
   });
 
   it("shows only the kinds chosen, and always the version in focus", () => {

@@ -16,7 +16,9 @@
 // layout d3-force (focus.ts) in place of Reveric's hand-written ones; nodes are buttons that take
 // keyboard focus; the kind and depth menus are Radix menus; Reveric's relation detail card, its
 // invented strength and evidence, and its label toggle are left out.
-import * as Radix from "@radix-ui/react-dropdown-menu";
+import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuLabel, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Background, BackgroundVariant, BaseEdge, Controls, type Edge, type EdgeProps, Handle, MarkerType, type Node, type NodeProps, Panel, Position, ReactFlow } from "@xyflow/react";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { type CSSProperties, useEffect, useMemo, useRef, useState } from "react";
@@ -152,8 +154,8 @@ export function Graph({ dramaId }: { dramaId: string }) {
   const { query } = usePath();
   const item = query.get("item") ?? undefined;
   const [groups, setGroups] = useState<Set<Group>>(new Set(GROUPS));
-  // One link out by default: a version's own inputs and outputs, as uncrowded as Reveric's first view.
-  const [depth, setDepth] = useState(1);
+  // The depth the maker chose; until then two links out for a take or a cut (take, storyboard, look, bible) and one for the rest.
+  const [chosenDepth, setDepth] = useState<number>();
   const [sent, setSent] = useState(false);
   const lineage = view.data?.lineage;
   const nodes = lineage?.nodes ?? [];
@@ -193,6 +195,7 @@ export function Graph({ dramaId }: { dramaId: string }) {
   };
   const focus = (id: string) => navigate(`/d/${dramaId}/graph?item=${encodeURIComponent(id)}`, { replace: true });
   const node = byId.get(center)!;
+  const depth = chosenDepth ?? (node.kind === "take" || node.kind === "cut" ? 2 : 1);
   const standing = (n: LineageNode) => standingOf(n, marked.has(n.id), t);
 
   return (
@@ -207,8 +210,8 @@ export function Graph({ dramaId }: { dramaId: string }) {
             <span className="eg-toolbar__center">{name(node)}</span>
           </div>
           <div className="eg-toolbar__spacer" />
-          <Radix.Root>
-            <Radix.Trigger asChild>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
               <button type="button" className="eg-ddbtn">
                 <Icon name="sliders-horizontal" />
                 <span>{t("graph.kinds")}</span>
@@ -217,53 +220,44 @@ export function Graph({ dramaId }: { dramaId: string }) {
                 </span>
                 <Icon name="caret-down" />
               </button>
-            </Radix.Trigger>
-            <Radix.Portal>
-              <Radix.Content className="eg-menu" align="end" sideOffset={6} style={{ width: 220 }}>
-                <Radix.Label className="eg-menu__head">{t("graph.kindsShown")}</Radix.Label>
-                {GROUPS.map((group) => (
-                  <Radix.CheckboxItem
-                    key={group}
-                    className="eg-menu__check"
-                    checked={groups.has(group)}
-                    // The last group shown stays, as Reveric's filter keeps one type.
-                    disabled={groups.has(group) && groups.size === 1}
-                    onSelect={(event) => event.preventDefault()}
-                    onCheckedChange={(on) => setGroups((prev) => (on ? new Set([...prev, group]) : new Set([...prev].filter((g) => g !== group))))}
-                  >
-                    <span className={`eg-check${groups.has(group) ? " is-on" : ""}`} style={{ "--c": `var(--eg-${group})` } as CSSProperties}>
-                      {groups.has(group) && <Icon name="check" />}
-                    </span>
-                    <span className="eg-menu__dot" style={{ background: `var(--eg-${group})` }} />
-                    <span className="eg-menu__label">{t(`graph.group.${group}`)}</span>
-                    <span className="eg-menu__n">{nodes.filter((n) => GROUP_OF[n.kind] === group).length}</span>
-                  </Radix.CheckboxItem>
-                ))}
-              </Radix.Content>
-            </Radix.Portal>
-          </Radix.Root>
-          <Radix.Root>
-            <Radix.Trigger asChild>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56">
+              <DropdownMenuLabel>{t("graph.kindsShown")}</DropdownMenuLabel>
+              {GROUPS.map((group) => (
+                <DropdownMenuCheckboxItem
+                  key={group}
+                  checked={groups.has(group)}
+                  // The last group shown stays, as Reveric's filter keeps one type; the menu stays open for another choice, as Reveric's does.
+                  disabled={groups.has(group) && groups.size === 1}
+                  onSelect={(event) => event.preventDefault()}
+                  onCheckedChange={(on) => setGroups((prev) => (on ? new Set([...prev, group]) : new Set([...prev].filter((g) => g !== group))))}
+                >
+                  <span className="eg-menu__dot" style={{ background: `var(--eg-${group})` }} />
+                  <span className="eg-menu__label">{t(`graph.group.${group}`)}</span>
+                  <span className="eg-menu__n">{nodes.filter((n) => GROUP_OF[n.kind] === group).length}</span>
+                </DropdownMenuCheckboxItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
               <button type="button" className="eg-ddbtn">
                 <span>{t("graph.depth")}</span>
                 <span className="eg-ddbtn__sum">{t("graph.hops", { n: depth })}</span>
                 <Icon name="caret-down" />
               </button>
-            </Radix.Trigger>
-            <Radix.Portal>
-              <Radix.Content className="eg-menu" align="end" sideOffset={6} style={{ width: 170 }}>
-                <Radix.Label className="eg-menu__head">{t("graph.depthFrom")}</Radix.Label>
-                <Radix.RadioGroup value={String(depth)} onValueChange={(value) => setDepth(Number(value))}>
-                  {[1, 2, 3].map((d) => (
-                    <Radix.RadioItem key={d} value={String(d)} className={`eg-menu__item${depth === d ? " is-on" : ""}`}>
-                      <span className="eg-menu__label">{t("graph.hopsLinks", { n: d })}</span>
-                      {depth === d && <Icon name="check" />}
-                    </Radix.RadioItem>
-                  ))}
-                </Radix.RadioGroup>
-              </Radix.Content>
-            </Radix.Portal>
-          </Radix.Root>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-44">
+              <DropdownMenuLabel>{t("graph.depthFrom")}</DropdownMenuLabel>
+              <DropdownMenuRadioGroup value={String(depth)} onValueChange={(value) => setDepth(Number(value))}>
+                {[1, 2, 3].map((d) => (
+                  <DropdownMenuRadioItem key={d} value={String(d)}>
+                    {t("graph.hopsLinks", { n: d })}
+                  </DropdownMenuRadioItem>
+                ))}
+              </DropdownMenuRadioGroup>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
         {view.data.problems.map((problem) => (
           <p key={problem.turnId} className="notice eg-notice">
@@ -288,7 +282,7 @@ export function Graph({ dramaId }: { dramaId: string }) {
               {redo.error !== undefined && <div className="error small">{errorText(redo.error, t)}</div>}
               {sent && <div role="status">{t("graph.redoSent")}</div>}
             </div>
-            <Button variant="primary" size="sm" icon="arrow-counter-clockwise" busy={redo.busy} disabled={!sessions.data} disabledReason={blocked} onClick={() => void redo.run()}>
+            <Button size="sm" icon="arrow-counter-clockwise" busy={redo.busy} disabled={!sessions.data} disabledReason={blocked} onClick={() => void redo.run()}>
               {t("graph.redo")}
             </Button>
           </section>
@@ -302,6 +296,10 @@ export function Graph({ dramaId }: { dramaId: string }) {
               {t(`graph.group.${group}`)}
             </span>
           ))}
+          <span className="eg-legend__item">
+            <span className="eg-legend__line is-other" />
+            {t("graph.legendOther")}
+          </span>
           <span className="eg-legend__item">
             <span className="eg-legend__line is-stale" />
             {t("graph.legendStale")}
@@ -326,15 +324,6 @@ function Navigator({ lineage, center, onFocus, name, marked, t }: { lineage: Lin
   const rows: { group: Group; node?: LineageNode }[] = listed.flatMap(({ group, items }) => [{ group }, ...items.map((node) => ({ group, node }))]);
   const scroller = useRef<HTMLDivElement>(null);
   const virtual = useVirtualizer({ count: rows.length, getScrollElement: () => scroller.current, estimateSize: (i) => (rows[i].node ? 32 : 26), overscan: 8, initialRect: { width: 248, height: 600 } });
-  const toggle = (group: Group) =>
-    setShown((prev) => {
-      if (all) return new Set([group]);
-      const next = new Set(prev);
-      if (next.has(group)) {
-        if (next.size > 1) next.delete(group);
-      } else next.add(group);
-      return next;
-    });
   // The versions by state: the overview's donut (Reveric's relation overview), drama-cli's states for its categories.
   const states = [
     { key: "accepted", colour: "var(--success)", n: lineage.nodes.filter((n) => n.fresh !== false && !marked.has(n.id) && n.version !== null && n.accepted === n.version).length },
@@ -364,19 +353,16 @@ function Navigator({ lineage, center, onFocus, name, marked, t }: { lineage: Lin
           </button>
         )}
       </div>
-      <div className="eg-chips">
-        <button type="button" className={`eg-chip eg-chip--all${all ? " is-on" : ""}`} aria-pressed={all} onClick={() => setShown(new Set(GROUPS))}>
-          {t("graph.all")}
-          <span className="eg-chip__n">{total}</span>
-        </button>
+      {/* Which groups the list shows: none chosen is all of them. */}
+      <ToggleGroup type="multiple" className="eg-chips" aria-label={t("graph.kinds")} value={all ? [] : [...shown]} onValueChange={(value: string[]) => setShown(value.length ? new Set(value as Group[]) : new Set(GROUPS))}>
         {GROUPS.map((group) => (
-          <button key={group} type="button" className={`eg-chip${!all && shown.has(group) ? " is-on" : ""}`} aria-pressed={!all && shown.has(group)} style={{ "--c": `var(--eg-${group})` } as CSSProperties} onClick={() => toggle(group)}>
+          <ToggleGroupItem key={group} value={group} className="eg-chip" style={{ "--c": `var(--eg-${group})` } as CSSProperties}>
             <span className="eg-chip__dot" />
             {t(`graph.group.${group}`)}
             <span className="eg-chip__n">{lineage.nodes.filter((node) => GROUP_OF[node.kind] === group).length}</span>
-          </button>
+          </ToggleGroupItem>
         ))}
-      </div>
+      </ToggleGroup>
       <div className="eg-rail__list" ref={scroller}>
         <div style={{ height: virtual.getTotalSize(), position: "relative" }}>
           {virtual.getVirtualItems().map((item) => {
@@ -478,7 +464,7 @@ function VersionNode({ data }: NodeProps<Node<VersionData>>) {
           {data.name}
         </span>{" "}
         {/* The version and its state, for a screen reader; on the plane they are in the hover card. */}
-        <span className="sr">{data.state}</span>
+        <span className="sr-only">{data.state}</span>
       </span>
     </button>
   );
@@ -683,16 +669,12 @@ function Inspector({ lineage, node, onFocus, name, file, poster, marked, standin
           <StatusChip status={state.status} label={state.label} />
         </div>
       </div>
-      <div className="eg-tabs" role="tablist">
-        <button type="button" role="tab" aria-selected={tab === "links"} className={`eg-tab${tab === "links" ? " is-on" : ""}`} onClick={() => setTab("links")}>
-          {t("graph.tabLinks")}
-        </button>
-        <button type="button" role="tab" aria-selected={tab === "details"} className={`eg-tab${tab === "details" ? " is-on" : ""}`} onClick={() => setTab("details")}>
-          {t("graph.tabDetails")}
-        </button>
-      </div>
-      {tab === "links" ? (
-        <div className="eg-inspector__body" role="tabpanel">
+      <Tabs value={tab} onValueChange={(value) => setTab(value as "links" | "details")} className="eg-inspector__tabs">
+        <TabsList variant="line" className="eg-tabs">
+          <TabsTrigger value="links">{t("graph.tabLinks")}</TabsTrigger>
+          <TabsTrigger value="details">{t("graph.tabDetails")}</TabsTrigger>
+        </TabsList>
+        <TabsContent value="links" className="eg-inspector__body">
           <section aria-labelledby="eg-from">
             <div className="eg-inspector__subhead" id="eg-from">
               <span>
@@ -709,9 +691,8 @@ function Inspector({ lineage, node, onFocus, name, file, poster, marked, standin
             </div>
             <div className="eg-rels">{into.length ? rows(into, "into") : <div className="eg-rail__empty">{t("graph.nothing")}</div>}</div>
           </section>
-        </div>
-      ) : (
-        <div className="eg-inspector__body" role="tabpanel">
+        </TabsContent>
+        <TabsContent value="details" className="eg-inspector__body">
           <section className="eg-sec" aria-labelledby="eg-state">
             <div className="eg-sec__head" id="eg-state">
               {t("graph.state")}
@@ -764,8 +745,8 @@ function Inspector({ lineage, node, onFocus, name, file, poster, marked, standin
               </div>
             </div>
           </section>
-        </div>
-      )}
+        </TabsContent>
+      </Tabs>
     </aside>
   );
 }

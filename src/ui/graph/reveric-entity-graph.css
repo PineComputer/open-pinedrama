@@ -50,35 +50,9 @@
   background: var(--surface-container-high); border: 1px solid var(--border-subtle);
   color: var(--text-secondary); font-variant-numeric: tabular-nums;
 }
-.eg-menu {
-  position: absolute; top: calc(100% + 6px); right: 0; z-index: 50;
-  padding: var(--space-xs);
-  background: var(--surface-container-high);
-  border: 1px solid var(--card-border); border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-dialog);
-}
-.eg-menu__head {
-  padding: var(--space-xs) var(--space-sm) var(--space-xxs);
-  font: 600 var(--type-ui-tiny-size)/1.3 var(--font-sans);
-  color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.4px;
-}
-.eg-menu__item, .eg-menu__check {
-  display: flex; align-items: center; gap: var(--space-sm); width: 100%;
-  padding: var(--space-xs) var(--space-sm); border: 0; border-radius: var(--radius-medium);
-  background: transparent; cursor: pointer; text-align: left;
-  font: 500 var(--type-ui-small-size)/1.3 var(--font-sans); color: var(--text-secondary);
-}
-.eg-menu__item:hover, .eg-menu__check:hover { background: var(--hover); }
-.eg-menu__item.is-on { color: var(--text-primary); }
 .eg-menu__label { flex: 1; }
 .eg-menu__dot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
 .eg-menu__n { color: var(--text-muted); font: 500 var(--type-ui-tiny-size)/1 var(--font-mono); }
-.eg-check {
-  width: 16px; height: 16px; flex: none; border-radius: var(--radius-small);
-  border: 1.5px solid var(--border-input); background: var(--surface);
-  display: flex; align-items: center; justify-content: center; color: var(--on-accent);
-}
-.eg-check.is-on { background: var(--c); border-color: var(--c); }
 
 /* ---- Canvas ---- */
 .eg-canvas {
@@ -118,10 +92,6 @@
   text-wrap: balance;
 }
 .eg-node.is-center .eg-node__name { font-size: 15px; }
-.eg-node__type {
-  font: 500 var(--type-ui-tiny-size)/1 var(--font-sans);
-  color: var(--text-muted);
-}
 
 /* ---- Hover card ---- */
 .eg-hovercard {
@@ -306,18 +276,6 @@
   padding: 0 var(--space-lg);
   border-bottom: 1px solid var(--border-subtle);
 }
-.eg-tab {
-  position: relative; padding: var(--space-sm) var(--space-md);
-  border: 0; background: transparent; cursor: pointer;
-  font: 500 var(--type-ui-small-size)/1.3 var(--font-sans);
-  color: var(--text-muted);
-}
-.eg-tab:hover { color: var(--text-secondary); }
-.eg-tab.is-on { color: var(--text-primary); font-weight: 600; }
-.eg-tab.is-on::after {
-  content: ""; position: absolute; left: var(--space-md); right: var(--space-md); bottom: -1px;
-  height: 2px; background: var(--accent); border-radius: 2px 2px 0 0;
-}
 
 /* Body — the single scroll container below hero + tabs. */
 .eg-inspector__body { flex: 1; min-height: 0; overflow: auto; }
@@ -377,15 +335,12 @@
   background: var(--surface-dim); color: var(--text-muted);
   font: 500 var(--type-ui-tiny-size)/1 var(--font-mono); font-variant-numeric: tabular-nums;
 }
-.eg-chip.is-on {
+.eg-chip[data-state="on"] {
   background: color-mix(in srgb, var(--c) 12%, var(--surface-container-high));
   border-color: color-mix(in srgb, var(--c) 45%, transparent);
   color: var(--text-primary);
 }
-.eg-chip.is-on .eg-chip__dot { opacity: 1; }
-.eg-chip--all.is-on {
-  background: var(--selected); border-color: var(--accent); color: var(--text-primary);
-}
+.eg-chip[data-state="on"] .eg-chip__dot { opacity: 1; }
 
 /* Relation overview donut — pinned at the rail bottom. */
 .eg-overview {
@@ -415,15 +370,6 @@
 /* ============ Canvas: center-node stats + reset button ============ */
 
 /* Center-node stat line — lives inside the world transform, scales with zoom. */
-.eg-node__stats {
-  display: flex; align-items: center; gap: var(--space-xs); margin-top: 4px;
-}
-.eg-stat {
-  padding: 1px 6px; border-radius: var(--radius-pill);
-  background: var(--surface-container-high);
-  font: 500 var(--type-ui-tiny-size)/1.3 var(--font-mono);
-  color: var(--text-secondary); font-variant-numeric: tabular-nums;
-}
 
 /* Reset view — top-right of the canvas. */
 .eg-reset {

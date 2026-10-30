@@ -65,11 +65,12 @@ describe("the Graph", () => {
   it("reaches as many links out as the depth chosen", async () => {
     engine("shot");
     render(<Graph dramaId="d1" />);
-    await node(/^办公室 · Day v1/);
-    expect(canvasHas(/^办公室 v1/)).toBe(false);
+    // A take opens two links out: from the take back to its place's own plate.
+    await node(/^办公室 v1/);
     await userEvent.click(screen.getByRole("button", { name: /^Depth/ }));
-    await userEvent.click(await screen.findByRole("menuitemradio", { name: "2 links out" }));
-    await waitFor(() => expect(canvasHas(/^办公室 v1/)).toBe(true));
+    await userEvent.click(await screen.findByRole("menuitemradio", { name: "1 links out" }));
+    await waitFor(() => expect(canvasHas(/^办公室 v1/)).toBe(false));
+    expect(canvasHas(/^办公室 · Day v1/)).toBe(true);
   });
 
   it("shows only the kinds chosen", async () => {
