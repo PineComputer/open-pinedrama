@@ -257,7 +257,7 @@ export function Episode({ dramaId, code }: { dramaId: string; code: string }) {
                 {shots && (
                   <div className="block">
                     <span className="label">{t("review.shotList")}</span>
-                    <ol className="shots">
+                    <ol className="ds-shots">
                       {shots.map((shot) => (
                         <li key={shot}>{shot}</li>
                       ))}

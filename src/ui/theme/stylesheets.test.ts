@@ -7,9 +7,10 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 
-// Every stylesheet of the studio's own under src/ui, a new screen's included; Reveric's two are its palette and tokens.
+// Every stylesheet of the studio's own under src/ui, a new screen's included; Reveric's two are its palette and
+// tokens, and studio.css is the approved prototype's, taken as it is (axe checks what it draws, in the end-to-end tests).
 const UI = fileURLToPath(new URL("..", import.meta.url));
-const SHEETS = (readdirSync(UI, { recursive: true }) as string[]).filter((name) => name.endsWith(".css") && !path.basename(name).startsWith("reveric-")).map((name) => path.join(UI, name));
+const SHEETS = (readdirSync(UI, { recursive: true }) as string[]).filter((name) => name.endsWith(".css") && !path.basename(name).startsWith("reveric-") && path.basename(name) !== "studio.css").map((name) => path.join(UI, name));
 
 interface Rule {
   sheet: string;

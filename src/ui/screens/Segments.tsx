@@ -50,7 +50,7 @@ function Row({ dramaId, code, n, segment, page, episode, shots, others, selected
         </Link>
       </div>
       {open && (
-        <div className="body">
+        <div className="ds-segbody">
           {picture && (
             <button type="button" className="pic" onClick={onOpen} aria-label={t("segments.open", { segment })}>
               <Still still={{ url: picture.url, video: isVideo(picture) }} />
@@ -59,7 +59,7 @@ function Row({ dramaId, code, n, segment, page, episode, shots, others, selected
           {spec?.prompt ? (
             <p className="prompt">{spec.prompt}</p>
           ) : shots?.length ? (
-            <ol className="shots">
+            <ol className="ds-shots">
               {shots.map((shot) => (
                 <li key={shot}>{shot}</li>
               ))}

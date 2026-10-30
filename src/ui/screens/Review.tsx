@@ -511,7 +511,7 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
           {item?.asked && (
             <div className="ds-isec asked-before">
               <h4>{t("review.askedBefore")}</h4>
-              <ol className="shots">
+              <ol className="ds-shots">
                 {item.asked.map((note, n) => (
                   <li key={n}>
                     {note.time !== undefined && <span className="at">{clock(note.time)} </span>}
@@ -562,7 +562,7 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
           {shots && (
             <div className="ds-isec">
               <h4>{t("review.shotList")}</h4>
-              <ol className="shots">
+              <ol className="ds-shots">
                 {shots.map((shot) => (
                   <li key={shot}>{shot}</li>
                 ))}

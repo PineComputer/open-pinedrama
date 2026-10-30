@@ -123,7 +123,7 @@ function Card({ row, wide, dramaId }: { row: EpisodeRow; wide: boolean; dramaId:
         <Still still={row.frame} live />
         {!row.frame && <span className="empty">{String(row.number).padStart(2, "0")}</span>}
         <span className="code">{row.code}</span>
-        <span className="chip">
+        <span className="ds-chipslot">
           <StatusChip status={chip.status} label={t(chip.label)} over />
         </span>
         <span className="strip" aria-hidden="true">

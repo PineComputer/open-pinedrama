@@ -204,7 +204,7 @@ h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 700; lett
 .screen video { width: 100%; height: 100%; object-fit: contain; }
 .verdict { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .verdict .btn { height: 40px; }
-.shots { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; font: 400 15px/1.45 var(--font-sans); color: var(--text-secondary); }
+.ds-shots { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; font: 400 15px/1.45 var(--font-sans); color: var(--text-secondary); }
 .notes { display: grid; gap: 10px; }
 .note { display: grid; grid-template-columns: 24px minmax(0, 1fr) auto; gap: 10px; align-items: start; }
 .note .dot { width: 22px; height: 22px; border-radius: 50%; background: var(--warning-text); color: var(--surface); font: 700 11.5px/22px var(--font-sans); text-align: center; }
@@ -302,7 +302,7 @@ h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 700; lett
 .sheet .frame, .queue .thumb, .reel .frame { position: relative; overflow: hidden; }
 .ended-asks { margin-top: 48px; display: grid; gap: 12px; }
 .ended-asks .queue { opacity: 0.8; }
-.asked-before .shots li { color: var(--error); }
+.asked-before .ds-shots li { color: var(--error); }
 .asked-before .at { color: var(--text-muted); font-variant-numeric: tabular-nums; }
 /* The screenplay's first lines, set on the manuscript once it is dropped in. */
 .format-tip { margin-top: 22px; font-size: 13px; color: var(--text-muted); }
@@ -443,7 +443,7 @@ h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 700; lett
 .ds-hero .left { display: flex; gap: 24px; padding: 24px; min-width: 0; }
 .ds-hero .cover { position: relative; width: 150px; flex: none; border-radius: 10px; overflow: hidden; }
 .ds-hero .cover .poster { aspect-ratio: 9 / 16; }
-.ds-hero .chip, .ds-dramacard .chip { position: absolute; left: 8px; top: 8px; }
+.ds-hero .ds-chipslot, .ds-dramacard .ds-chipslot { position: absolute; left: 8px; top: 8px; }
 .ds-hero .info { min-width: 0; display: flex; flex-direction: column; align-items: flex-start; }
 .ds-hero .kicker { font-size: 11.5px; font-weight: 600; color: var(--text-muted); }
 .ds-hero h2 { margin: 8px 0 6px; font: 700 26px/1.25 var(--font-display); letter-spacing: -0.4px; }
@@ -504,7 +504,7 @@ h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 700; lett
 .ds-epcard .pic::after { content: ""; position: absolute; inset: auto 0 0 0; height: 40%; background: linear-gradient(transparent, color-mix(in srgb, var(--canvas) 70%, transparent)); pointer-events: none; }
 .ds-epcard .pic .empty { position: absolute; inset: 0; display: grid; place-items: center; color: var(--text-muted); font: 300 40px/1 var(--font-sans); font-variant-numeric: tabular-nums; }
 .ds-epcard .pic .code { position: absolute; left: 8px; top: 8px; z-index: 1; font: 600 11px var(--font-mono); padding: 3px 6px; border-radius: var(--radius-small); background: color-mix(in srgb, var(--canvas) 70%, transparent); color: var(--text-primary); }
-.ds-epcard .pic .chip { position: absolute; right: 8px; top: 8px; z-index: 1; }
+.ds-epcard .pic .ds-chipslot { position: absolute; right: 8px; top: 8px; z-index: 1; }
 .ds-epcard .pic .strip { position: absolute; left: 8px; right: 8px; bottom: 8px; z-index: 1; display: grid; grid-template-columns: repeat(5, 1fr); gap: 3px; }
 .ds-epcard .pic .strip i { height: 3px; border-radius: 2px; background: color-mix(in srgb, var(--text-primary) 22%, transparent); }
 .ds-epcard .pic .strip i.d { background: var(--text-primary); }
@@ -667,13 +667,13 @@ h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 700; lett
 .ds-segrow .spec { font: 500 12px var(--font-mono); color: var(--text-secondary); }
 .ds-segrow .go { display: inline-flex; align-items: center; gap: 4px; font-size: 12.5px; font-weight: 600; color: var(--text-primary); }
 .ds-segrow .go .ds-icon { width: 12px; height: 12px; }
-.ds-segrow .body { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: start; gap: 14px; padding: 2px 0 8px 40px; }
+.ds-segrow .ds-segbody { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: start; gap: 14px; padding: 2px 0 8px 40px; }
 .ds-segrow .pic { position: relative; width: 64px; aspect-ratio: 9 / 16; border: 1px solid var(--border); border-radius: var(--radius-medium); overflow: hidden; padding: 0; background: var(--surface-container); cursor: pointer; }
-.ds-segrow .shots { margin: 0; padding-left: 18px; display: grid; gap: 2px; font-size: 13px; line-height: 1.6; color: var(--text-primary); }
+.ds-segrow .ds-shots { margin: 0; padding-left: 18px; display: grid; gap: 2px; font-size: 13px; line-height: 1.6; color: var(--text-primary); }
 .ds-segstatus { position: sticky; bottom: 0; display: flex; flex-wrap: wrap; gap: 6px 18px; padding: 8px 2px; border-top: 1px solid var(--border); background: var(--canvas); font-size: 12px; color: var(--text-secondary); }
 .ds-segstatus span { display: inline-flex; align-items: center; gap: 5px; }
 .ds-segstatus .ds-icon { width: 12px; height: 12px; }
-.ds-segrow .shots li { margin: 0; padding: 0; line-height: 1.55; }
+.ds-segrow .ds-shots li { margin: 0; padding: 0; line-height: 1.55; }
 /* The take's prompt as drama-cli sent it, line for line, as the reference's rows show a segment's shot text. */
 .ds-segrow .prompt { margin: 0; white-space: pre-wrap; font-size: 13px; line-height: 1.6; color: var(--text-primary); display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 6; line-clamp: 6; overflow: hidden; }
 
@@ -687,7 +687,7 @@ h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 700; lett
 .ds-castcard .pic { aspect-ratio: 16 / 9; }
 .ds-placecard .pic { aspect-ratio: 9 / 14; }
 .ds-castcard .pic img, .ds-placecard .pic img { width: 100%; height: 100%; object-fit: cover; }
-.ds-castcard .pic .chip, .ds-placecard .pic .chip { position: absolute; left: 8px; top: 8px; }
+.ds-castcard .pic .ds-chipslot, .ds-placecard .pic .ds-chipslot { position: absolute; left: 8px; top: 8px; }
 .ds-castcard .txt, .ds-placecard .txt { padding: 12px 14px 14px; display: grid; gap: 6px; }
 .ds-castcard .line, .ds-placecard .line { display: flex; align-items: baseline; gap: 8px; }
 .ds-castcard .line b, .ds-placecard .line b { flex: 1; min-width: 0; font-size: 14px; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

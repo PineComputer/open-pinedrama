@@ -11,6 +11,10 @@
 @import "./theme/reveric-themes.css" layer(base);
 @import "./theme/reveric-tokens.css" layer(base);
 @import "./theme/base.css" layer(base);
+/* The pro prototype's own stylesheet, verbatim (design-references/studio-pro/studio.css): the screens are
+   ported from its markup and use its classes. It comes first among the components, so the studio's
+   older styles still hold until each screen is ported and its old rules are deleted. */
+@import "./theme/studio.css" layer(components);
 @import "./styles.css" layer(components);
 @import "./components/components.css" layer(components);
 @import "./shell/shell.css" layer(components);

@@ -42,7 +42,7 @@ function Card({ card, look, names, dramaId, wide }: { card: CastCard; look: Cast
       <a className="pic" href={file.url} target="_blank" rel="noreferrer">
         <img src={file.url} alt="" loading="lazy" />
         {status && (
-          <span className="chip">
+          <span className="ds-chipslot">
             <StatusChip status={status} over />
           </span>
         )}

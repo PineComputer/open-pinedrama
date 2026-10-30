@@ -53,7 +53,7 @@ export function DramaTile({ drama, mode }: { drama: DramaCard; mode?: Mode | "no
     <Link to={`/d/${drama.id}`} className="ds-dramacard">
       <span className="pic">
         <Poster drama={drama} mode={mode} />
-        <span className="chip">
+        <span className="ds-chipslot">
           <StatusChip status={where.status} label={t(where.label, { n: drama.waiting })} over />
         </span>
         {total > 0 && (
@@ -85,7 +85,7 @@ function Continue({ waiting, dramas }: { waiting: ReviewSummary[]; dramas: Drama
       <div className="left">
         <span className="cover">
           <Poster drama={drama} />
-          <span className="chip">
+          <span className="ds-chipslot">
             <StatusChip status="you" label={t("drama.needs", { n: drama.waiting })} over />
           </span>
         </span>
