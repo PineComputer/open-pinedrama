@@ -1,13 +1,13 @@
 // The text-on-ground pairs the studio's stylesheets may use, and only those, read at WCAG AA
 // (4.5:1) in the light and the dark theme of the classic palette, computed from the values in
-// reveric-themes.css (sRGB relative luminance, WCAG 2). The pairs left out are why the rules in
+// design/themes.css (sRGB relative luminance, WCAG 2). The pairs left out are why the rules in
 // base.css hold: --text-subtle and --success mark, they never letter; muted text never sits on
 // --surface-container-high or a hover or selected row; warnings and errors are lettered on the
 // canvas and the surface only.
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
-const css = readFileSync(new URL("./reveric-themes.css", import.meta.url), "utf8");
+const css = readFileSync(new URL("../../../design/themes.css", import.meta.url), "utf8");
 
 function palette(selector: string): Record<string, string> {
   const start = css.indexOf("{", css.indexOf(selector)) + 1;

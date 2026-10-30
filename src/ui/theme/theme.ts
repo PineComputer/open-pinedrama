@@ -1,6 +1,6 @@
 // The maker's theme: Dark (the look merecdesperez44323-lab chose, and the first run's), Light, or the
 // system's choice. Reveric's tokens switch on <html data-palette data-theme>, data-theme being
-// the brightness resolved (reveric-themes.css); the studio uses the classic palette.
+// the brightness resolved (design/themes.css); the studio uses the classic palette.
 
 export type ThemeChoice = "dark" | "light" | "system";
 

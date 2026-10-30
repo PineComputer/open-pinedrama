@@ -17,7 +17,8 @@
     "e2e": "node scripts/e2e-build.mjs && playwright test",
     "pine:check": "tsx scripts/pine-check.ts",
     "desktop": "node scripts/desktop.mjs && electron .",
-    "package": "node scripts/desktop.mjs && electron-builder --config electron-builder.config.mjs"
+    "package": "node scripts/desktop.mjs && electron-builder --config electron-builder.config.mjs",
+    "design": "vite design --host 127.0.0.1 --port 5180 --strictPort"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.14.0",

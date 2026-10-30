@@ -1,4 +1,4 @@
-/* The screens' own styles, on Reveric's tokens (theme/reveric-themes.css, theme/reveric-tokens.css)
+/* The screens' own styles, on the design's tokens (design/themes.css, design/tokens.css)
    and the studio's base (theme/base.css). Pictures and video sit on a black screen in both themes. */
 
 html, body { margin: 0; background: var(--canvas); color: var(--text-primary); font: var(--type-ui-weight) var(--type-ui-size)/1.5 var(--font-sans); -webkit-font-smoothing: antialiased; }

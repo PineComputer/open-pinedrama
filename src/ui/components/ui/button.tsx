@@ -1,4 +1,4 @@
-// shadcn/ui's button, as pills: every button in the pro direction is one (reveric-tokens.css, --radius-button).
+// shadcn/ui's button, as pills: every button in the pro direction is one (design/tokens.css, --radius-button).
 // Destructive is outlined, not tinted: the tint under Reveric's error colour falls below 4.5:1 (axe, e2e).
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"

@@ -1,5 +1,5 @@
-/* Tailwind CSS and shadcn/ui (components.json), themed with Reveric's tokens (theme/reveric-themes.css,
-   theme/reveric-tokens.css): each shadcn/ui colour and radius names the Reveric token for the same job, so
+/* Tailwind CSS and shadcn/ui (components.json), themed with the design's tokens (design/themes.css,
+   design/tokens.css): each shadcn/ui colour and radius names the design's token for the same job, so
    both palettes and both brightnesses come from Reveric and shadcn/ui's own palette is never loaded
    (ui.shadcn.com/docs/theming). */
 @import "tailwindcss";
@@ -8,13 +8,13 @@
 /* The studio's own stylesheets go into Tailwind's layers, so a utility on a shadcn/ui component wins
    over them, as Tailwind's docs place custom styles (tailwindcss.com/docs/adding-custom-styles). Reveric's
    tokens sit in base, after Tailwind's theme, so where both name a variable (--font-sans) Reveric's holds. */
-@import "./theme/reveric-themes.css" layer(base);
-@import "./theme/reveric-tokens.css" layer(base);
+@import "../../design/themes.css" layer(base);
+@import "../../design/tokens.css" layer(base);
 @import "./theme/base.css" layer(base);
-/* The pro prototype's own stylesheet, verbatim (design-references/studio-pro/studio.css): the screens are
-   ported from its markup and use its classes. It comes first among the components, so the studio's
-   older styles still hold until each screen is ported and its old rules are deleted. */
-@import "./theme/studio.css" layer(components);
+/* The design's stylesheet (design/, the one source of the UI): the screens are ported from its markup
+   and use its classes. It comes first among the components, so the studio's older styles still hold
+   until each screen is ported and its old rules are deleted. */
+@import "../../design/studio.css" layer(components);
 @import "./styles.css" layer(components);
 @import "./components/components.css" layer(components);
 @import "./shell/shell.css" layer(components);

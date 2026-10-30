@@ -17,7 +17,7 @@ milestone is accepted by merecdesperez44323-lab, as [REDESIGN_PLAN.md](REDESIGN_
 
 | What | Where |
 |---|---|
-| Colours, type, space, radii | `src/ui/theme/reveric-themes.css` and `reveric-tokens.css` (Reveric's, see below), `src/ui/theme/base.css` (our layout sizes and motion) |
+| Colours, type, space, radii | `design/themes.css` and `design/tokens.css`, `src/ui/theme/base.css` (our layout sizes and motion) |
 | Theme switching | `src/ui/theme/theme.ts`: `data-palette="classic"` and `data-theme` (`light` or `dark`) on `<html>` |
 | Icons | `src/ui/icons.tsx`: `<Icon name="film-strip" />`, @phosphor-icons/react by the studio's names. Add an icon by adding its Phosphor component to the table there |
 | Components | `src/ui/components/` and `components.css` |
@@ -26,6 +26,15 @@ milestone is accepted by merecdesperez44323-lab, as [REDESIGN_PLAN.md](REDESIGN_
 | Words | `src/ui/i18n.ts`, English and Chinese, every key in both |
 | The project's state | `src/shared/project.ts` (drama-cli's status, merged by the engine) and `src/shared/facts.ts` (to do, recent work); names via `useNames` and `subjectLabel` in `src/ui/labels.ts` |
 | The component gallery | `/dev/gallery` (`src/ui/screens/Gallery.tsx`) |
+
+## The design comes first
+
+`design/` is the one source of the studio's UI: the approved pro prototype's markup (index.html,
+app.js, screens.js, data.js) and its stylesheets (themes.css, tokens.css, studio.css), which the
+app imports as they are. `npm run design` serves it on 127.0.0.1:5180. A change to the UI is made
+there first, approved, then ported to the screens with the same DOM and class names. A PR that
+only brings a screen in line with `design/` needs no design step; no PR adds UI that `design/`
+doesn't have.
 
 ## Components to use
 
