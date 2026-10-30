@@ -32,8 +32,8 @@ describe("the review room for storyboards", () => {
     await user.keyboard("a");
 
     const reel = screen.getByRole("navigation", { name: "To decide" });
-    expect(within(reel).getAllByRole("button", { name: /^seg0/ }).map((item) => item.textContent)).toEqual(["seg01v1Accepted", "seg02v1Not decided"]);
-    expect(screen.getByRole("heading", { level: 2, name: "seg02" })).toBeInTheDocument();
+    expect(within(reel).getAllByRole("button", { name: /^seg0/ }).map((item) => item.textContent)).toEqual(["seg01 · v1Accepted", "seg02 · v1Not decided"]);
+    expect(screen.getByRole("heading", { level: 2, name: /\bseg02\b/ })).toBeInTheDocument();
   });
 
   it("keeps Send review disabled until every item has a verdict, and one sent back its reason", async () => {
@@ -83,14 +83,14 @@ describe("a link into the review room", () => {
   it("opens at the item it names", async () => {
     window.history.pushState(null, "", "/r/r1?item=seg02");
     open();
-    expect(await screen.findByRole("heading", { level: 2, name: "seg02" })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { level: 2, name: /\bseg02\b/ })).toBeInTheDocument();
     window.history.pushState(null, "", "/");
   });
 
   it("opens at the first item when it names none it has", async () => {
     window.history.pushState(null, "", "/r/r1?item=seg09");
     open();
-    expect(await screen.findByRole("heading", { level: 2, name: "seg01" })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { level: 2, name: /\bseg01\b/ })).toBeInTheDocument();
     window.history.pushState(null, "", "/");
   });
 });

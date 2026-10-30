@@ -15,6 +15,7 @@ import { Still } from "../Still.tsx";
 import { DocumentView, Pinboard, isDocument, isImage, isVideo, useShotList, useSize, useText, variantLabel } from "../viewing.tsx";
 import { buttonVariants } from "@/components/ui/button";
 import { specBeside, specFacts } from "../../shared/spec.ts";
+import type { ProjectView } from "../../shared/project.ts";
 
 type Drafts = Record<string, { verdict?: Verdict; notes: Note[] }>;
 
@@ -292,6 +293,13 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
   const [watched, setWatched] = useState<Record<number, number>>({});
   const stage = useRef<HTMLDivElement>(null);
   const stageSize = useSize(stage);
+  // Each segment's scene, as the episode's breakdown chains them (drama-cli's status), for the room's headings.
+  const project = useResource<ProjectView>(`/api/dramas/${review.dramaId}/project`, [`project:${review.dramaId}`]);
+  const chains = review.episode ? (project.data?.state?.episodes[review.episode]?.sceneChains ?? []) : [];
+  const sceneOf = (key: string) => {
+    const n = chains.findIndex((chain) => chain.segments.includes(key));
+    return n < 0 ? undefined : t("review.sceneLine", { n: n + 1, heading: chains[n].sceneHeading });
+  };
   // The storyboards beside each take: the episode's files, read once.
   const episodeFiles = useResource<FileItem[]>(review.episode ? `/api/dramas/${review.dramaId}/files?episode=${review.episode}` : null, [`drama:${review.dramaId}`]);
 
@@ -446,8 +454,8 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
               <Still still={thumbOf(i)} />
             </span>
             <span className="what">
-              <b>{labelOf(i)}</b>
-              {i.files[0]?.version && <small className="num">{i.files[0].version}</small>}
+              <b>{[labelOf(i), i.files[0]?.version].filter(Boolean).join(" · ")}</b>
+              <small>{sceneOf(i.key) ?? ""}</small>
               {standing(i)}
             </span>
           </button>
@@ -501,12 +509,12 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
 
       <aside className="insp" aria-label={t("review.inspector")}>
         <div className="ihead">
+          {/* As the design's inspector names it: the episode, the item and its version; the scene under it. */}
           <b role="heading" aria-level={2}>
-            {item && labelOf(item)}
+            {item && [review.episode, labelOf(item)].filter(Boolean).join(" ")}
+            {file?.version && ` · ${t(takes ? "review.takeVersion" : "review.version", { v: file.version })}`}
           </b>
-          <small>
-            {[file?.version, earlier ? t("review.earlierShown") : ""].filter(Boolean).join(" · ")}
-          </small>
+          <small>{[item ? sceneOf(item.key) : undefined, earlier ? t("review.earlierShown") : ""].filter(Boolean).join(" · ")}</small>
         </div>
         <div className="iscroll">
           <Status review={review} />
@@ -514,19 +522,32 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
           {item?.asked && (
             <div className="isec asked-before">
               <h4>{t("review.askedBefore")}</h4>
-              <ol className="ds-shots">
-                {item.asked.map((note, n) => (
-                  <li key={n}>
-                    {note.time !== undefined && <span className="at">{clock(note.time)} </span>}
-                    {note.text}
-                    {note.image !== undefined && (
-                      <a className="note-picture" href={`/api/files/${note.image}`} target="_blank" rel="noreferrer">
-                        <img src={`/api/files/${note.image}`} alt={t("review.picture")} />
-                      </a>
-                    )}
-                  </li>
-                ))}
-              </ol>
+              {item.asked.map((note, n) => (
+                <div key={n} className="asked">
+                  {note.time !== undefined && <span className="at">{clock(note.time)} </span>}“{note.text}”
+                  {note.image !== undefined && (
+                    <a className="note-picture" href={`/api/files/${note.image}`} target="_blank" rel="noreferrer">
+                      <img src={`/api/files/${note.image}`} alt={t("review.picture")} />
+                    </a>
+                  )}
+                </div>
+              ))}
+              {before && (
+                // The version sent back, to play on the stage beside the new one (the design's .prevtake).
+                <button type="button" className="prevtake" aria-pressed={earlier} onClick={() => setEarlier((was) => !was)}>
+                  <span style={{ position: "relative", width: 46, height: 82, borderRadius: 5, overflow: "hidden", display: "block" }}>
+                    <Still still={{ url: before.url, video: isVideo(before) }} />
+                  </span>
+                  <span>
+                    <b className="mono" style={{ fontSize: 12 }}>
+                      {t("review.sentBackBy", { v: before.version ?? "" })}
+                    </b>
+                    <small className="muted" style={{ display: "block", fontSize: 11.5 }}>
+                      {t(earlier ? "review.showingEarlier" : "review.playEarlier")}
+                    </small>
+                  </span>
+                </button>
+              )}
             </div>
           )}
           {spec && (spec.seconds !== undefined || spec.ratio || spec.model) && (
