@@ -7,6 +7,7 @@ import { usePath } from "../router.tsx";
 import { Icon } from "../icons.tsx";
 import { DramaBar, stillStopping } from "../shell/TopBar.tsx";
 import { Board, SetupPanel } from "./Board.tsx";
+import { Canvas } from "./Canvas.tsx";
 import { Cast } from "./Cast.tsx";
 import { Crew } from "./Crew.tsx";
 import { Delivery } from "./Delivery.tsx";
@@ -87,7 +88,8 @@ export function Drama({ drama, tab, episode }: { drama: DramaView; tab: string; 
       {tab === "script" && <Script dramaId={id} />}
       {tab === "story" && (settingUp ? <SetupPanel drama={drama} /> : <Cast dramaId={id} />)}
       {tab === "cut" && <Delivery dramaId={id} />}
-      {(tab === "canvas" || tab === "graph") && <SurfaceToCome surface={tab} />}
+      {tab === "canvas" && <Canvas drama={drama} />}
+      {tab === "graph" && <GraphToCome />}
       {tab === "crew" && <Crew drama={drama} />}
       {tab === "inbox" && (
         <>
@@ -101,14 +103,14 @@ export function Drama({ drama, tab, episode }: { drama: DramaView; tab: string; 
   );
 }
 
-/** Canvas and Graph, not built yet: what they will show, and what is selected for them. */
-function SurfaceToCome({ surface }: { surface: "canvas" | "graph" }) {
+/** Graph, not built yet: what it will show, and what is selected for it. */
+function GraphToCome() {
   const { t } = useT();
   const { query } = usePath();
   const item = query.get("item");
   return (
-    <EmptyState title={t(surface === "canvas" ? "surface.canvas" : "surface.graph")}>
-      {t(surface === "canvas" ? "surface.canvasSoon" : "surface.graphSoon")}
+    <EmptyState title={t("surface.graph")}>
+      {t("surface.graphSoon")}
       {item && ` ${t("surface.selected", { item })}`}
     </EmptyState>
   );

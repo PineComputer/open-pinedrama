@@ -5,7 +5,7 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
-const SHEETS = ["../styles.css", "../components/components.css", "../shell/shell.css", "./base.css"];
+const SHEETS = ["../styles.css", "../components/components.css", "../shell/shell.css", "../screens/canvas.css", "./base.css"];
 
 interface Rule {
   sheet: string;

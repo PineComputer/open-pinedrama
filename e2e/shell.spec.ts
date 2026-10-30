@@ -24,7 +24,7 @@ test("an episode chosen in the tree stays selected across the surfaces", async (
   const surfaces = page.getByRole("group", { name: "Surface" });
   await surfaces.getByRole("button", { name: "Canvas" }).click();
   await expect(page).toHaveURL(new RegExp(`/d/${id}/canvas\\?item=EP001$`));
-  await expect(page.getByText("Selected: EP001")).toBeVisible();
+  await expect(page.getByRole("group", { name: /^EP001/ })).toHaveAttribute("aria-current", "true");
   expect(await newProblems(page)).toEqual([]);
   await surfaces.getByRole("button", { name: "Graph" }).click();
   await expect(page).toHaveURL(new RegExp(`/d/${id}/graph\\?item=EP001$`));

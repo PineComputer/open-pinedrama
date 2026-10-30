@@ -9,6 +9,7 @@ import "./theme/base.css";
 import "./styles.css";
 import "./components/components.css";
 import "./shell/shell.css";
+import "./screens/canvas.css";
 
 applyTheme();
 
