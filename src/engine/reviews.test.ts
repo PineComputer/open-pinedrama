@@ -39,4 +39,11 @@ describe("a stop's files in its review", () => {
     expect(items.map((item) => item.key)).toEqual(["seg01"]);
     expect(other).toEqual([]);
   });
+
+  it("leave out the lineage of the project", () => {
+    const look = row("drama/assets/characters/lin/v1/image-1.png", "look", { type: "image/png", subject: "lin", version: "v1" });
+    const { items, other } = reviews.itemsOf("looks", [look, row("handoff/lineage.json", "lineage")]);
+    expect(items).toHaveLength(1);
+    expect(other).toEqual([]);
+  });
 });

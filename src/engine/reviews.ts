@@ -53,8 +53,8 @@ export function itemsOf(kind: ReviewKind, files: FileRow[]): { items: ReviewItem
   const other: FileRow[] = [];
   const add = (key: string, file: FileRow) => groups.set(key, [...(groups.get(key) ?? []), file]);
   for (const file of files) {
-    // The handed-over project, the status of it and the refusals a stop asks about: for sessions and the studio, not for the maker's eyes.
-    if (file.kind === "archive" || file.kind === "status" || file.kind === "refusal") continue;
+    // The handed-over project, its status and lineage, and the refusals a stop asks about: for sessions and the studio, not for the maker's eyes.
+    if (file.kind === "archive" || file.kind === "status" || file.kind === "lineage" || file.kind === "refusal") continue;
     if (kind === "looks" && file.kind === "look") add(lookKey(file), file);
     else if (kind === "references" && file.kind === "look") add(lookKey(file), file);
     else if (kind === "references" && (file.kind === "location" || file.kind === "prop") && file.subject) add(placeKey(file), file);
