@@ -17,7 +17,7 @@ export function StopCard({ refusal }: { refusal: Refusal }) {
         <Icon name={kind.kind === "red-line" ? "warning" : kind.kind === "cap" ? "lock-simple" : "info"} />
         {t(`stopcard.kind.${kind.kind}`)}
       </header>
-      <div className="body">
+      <div className="ds-stopcard-body">
         <h3>{title}</h3>
         <dl>
           <dt>{t("stopcard.code")}</dt>
@@ -29,9 +29,9 @@ export function StopCard({ refusal }: { refusal: Refusal }) {
             </>
           )}
         </dl>
-        <span className="said-label">{t("stopcard.said")}</span>
-        <p className="said">{refusal.message}</p>
-        <p className="note">{t(`stopcard.note.${kind.kind}`)}</p>
+        <span className="ds-stopcard-label">{t("stopcard.said")}</span>
+        <p className="ds-stopcard-words">{refusal.message}</p>
+        <p className="ds-stopcard-note">{t(`stopcard.note.${kind.kind}`)}</p>
       </div>
     </section>
   );
