@@ -174,7 +174,7 @@ export function CutViewer({ file, notes = [], onTime, videoRef, actions = WATCH_
                 return (
                   <button type="button" className="ds-tl-note" title={note.text} onClick={() => seek(action.start)}>
                     {note.text}
-                    <span className="sr">{t("cut.pin", { time: clock(action.start) })}</span>
+                    <span className="sr-only">{t("cut.pin", { time: clock(action.start) })}</span>
                   </button>
                 );
               }
@@ -183,7 +183,7 @@ export function CutViewer({ file, notes = [], onTime, videoRef, actions = WATCH_
               return (
                 <button type="button" className="ds-tl-clip" onClick={() => seek(clip.start)}>
                   <span className="no">{clip.segment}</span> <span className="take">{clip.take}</span> <span className="dur">{seconds}</span>
-                  <span className="sr">{t("cut.from", { from: clock(clip.start) })}</span>
+                  <span className="sr-only">{t("cut.from", { from: clock(clip.start) })}</span>
                 </button>
               );
             }}
