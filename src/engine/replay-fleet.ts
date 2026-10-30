@@ -10,6 +10,7 @@ import { revisedKeys } from "./decisions.ts";
 import { DRAMA_SKILL } from "./goals.ts";
 import type { Attached, ComputerRef, Fleet, FleetEvent, Limits, SessionRef, TurnFile, TurnInfo } from "./fleet.ts";
 import { blocking, lookSheet, plate, prop, storyboard } from "./placeholders.ts";
+import { type EpisodeMade, type Made, replayStatus } from "./replay-status.ts";
 
 const SPEED = Number(process.env.STUDIO_REPLAY_SPEED ?? 1);
 
@@ -194,7 +195,7 @@ function breakdownOf(say: (typeof WORDS)[Lang], code: string): string {
  * maker approves), every breakdown and the shared references (the maker approves), then the
  * project packed for the episodes.
  */
-function setupScript(lang: Lang): Player {
+function setupScript(lang: Lang, preset: string): Player {
   const say = WORDS[lang];
   let stage: "start" | "asked" | "leads" | "references" = "start";
   const versions = new Map<string, number>();
@@ -210,7 +211,17 @@ function setupScript(lang: Lang): Player {
     office: () => svg(`drama/assets/scenes/office/${next("office")}/image-1.svg`, plate("office", `v${versions.get("office")}`)),
     letter: () => svg(`drama/assets/props/letter/${next("letter")}/image-1.svg`, prop("letter", `v${versions.get("letter")}`)),
   } as Record<string, () => Out>;
-  return (answer) => {
+  // What drama-cli's status would say at this stop: the versions drawn, and what the maker approved.
+  const made = (key: string, approved: boolean): Made => ({ current: `v${versions.get(key)}`, accepted: approved ? `v${versions.get(key)}` : null });
+  const report = (leadsApproved: boolean, references: "none" | "drawn" | "approved") =>
+    replayStatus({
+      preset,
+      bible: stage === "asked" ? null : "v1",
+      looks: Object.fromEntries(say.cast.filter((c) => versions.has(c.id)).map((c) => [c.id, made(c.id, leadsApproved)])),
+      references: references === "none" ? {} : Object.fromEntries(Object.keys(shared).map((key) => [key, made(key, references === "approved")])),
+      episodes: references === "none" ? {} : Object.fromEntries(say.episodes.map((_, i) => [`EP00${i + 1}`, { segments: segmentsOf(say).map((seg) => seg.id) }])),
+    });
+  const play = (answer: string): Step => {
     const redo = revisedKeys(answer);
     if (stage === "start") {
       stage = "asked";
@@ -249,9 +260,14 @@ function setupScript(lang: Lang): Player {
       summary: `${say.castDone}\n` + say.episodes.map((title, i) => `EP00${i + 1}: ${title}`).join("\n"),
     };
   };
+  return (answer) => {
+    const step = play(answer);
+    const status = stage === "asked" || stage === "leads" ? report(false, "none") : step.files.some((file) => file.path.includes("tar.part")) ? report(true, "approved") : report(true, "drawn");
+    return { ...step, files: [...step.files, status] };
+  };
 }
 
-function episodeScript(code: string, lang: Lang): Player {
+function episodeScript(code: string, lang: Lang, preset: string): Player {
   const say = WORDS[lang];
   const segments = say.shots.map((shots, i) => ({ id: `seg0${i + 1}`, shots }));
   let stage: "boards" | "takes" | "cut" | "done" = "boards";
@@ -308,12 +324,28 @@ function episodeScript(code: string, lang: Lang): Player {
     // As Pine's agent does, the finished episode hands back its accepted cut again, unchanged.
     return { progress: say.accepting, files: [video(`${base}/edit/v${cut}/cut.mp4`, "cut")], summary: say.finished(code) };
   };
-  // Each stop and the finish also hand back the episode's own folder, packed.
+  // What drama-cli's status would say at this stop: the project as handed over, every shared
+  // reference approved, and this episode as far as the maker has approved it.
+  const report = () => {
+    const ids = segments.map((seg) => seg.id);
+    const own: EpisodeMade = { segments: ids, boards: { current: `v${boardVersion}`, accepted: stage === "boards" ? null : `v${boardVersion}` } };
+    if (stage !== "boards") own.takes = { count: take, accepted: stage === "cut" || stage === "done" };
+    if (stage === "cut" || stage === "done") own.cut = { current: `v${cut}`, accepted: stage === "done" ? `v${cut}` : null };
+    const approved: Made = { current: "v1", accepted: "v1" };
+    return replayStatus({
+      preset,
+      bible: "v1",
+      looks: Object.fromEntries(say.cast.map((c) => [c.id, approved])),
+      references: Object.fromEntries(["lin/S1", "home", "office", "letter"].map((key) => [key, approved])),
+      episodes: Object.fromEntries(say.episodes.map((_, i) => `EP00${i + 1}`).map((other) => [other, other === code ? own : { segments: ids }])),
+    });
+  };
+  // Each stop and the finish also hand back the episode's own folder, packed, and the status.
   let stops = 0;
   return (answer) => {
     const step = play(answer);
     stops += 1;
-    return { ...step, files: [...step.files, archive(code, stops)] };
+    return { ...step, files: [...step.files, archive(code, stops), report()] };
   };
 }
 
@@ -324,8 +356,10 @@ function chatScript(goal: string, lang: Lang): Player {
 /** The recording a run's goal starts; a session keeps the language its first goal set. */
 function scriptFor(goal: string, lang: Lang): Player {
   const episode = goal.match(/\b(EP\d{3})\b/);
-  if (/make episode|continue episode/i.test(goal) && episode) return episodeScript(episode[1], lang);
-  if (/vertical short drama from my screenplay/i.test(goal)) return setupScript(lang);
+  // The preset the goal's drama-cli init names, as the report says it.
+  const preset = goal.match(/--preset (\S+)/)?.[1] ?? "";
+  if (/make episode|continue episode/i.test(goal) && episode) return episodeScript(episode[1], lang, preset);
+  if (/vertical short drama from my screenplay/i.test(goal)) return setupScript(lang, preset);
   return chatScript(goal, lang);
 }
 
