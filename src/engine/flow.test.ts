@@ -416,14 +416,14 @@ describe("a drama in replay", () => {
     await until("the shared references, asked in words", openReview(id, (item) => item.id !== looks.id && item.id !== question.id));
   }, 30_000);
 
-  // A take sent back past the take cap isn't shot: the agent asks the maker, returning drama-cli's refusal, which
-  // the stop carries for its card, and no review shows it as a file.
-  it("asks about the take cap with drama-cli's refusal", async () => {
+  // A take sent back past the take cap isn't shot: the agent asks the maker, returning drama-cli's refusal, or
+  // naming it, which the stop carries for its card, and no review shows it as a file.
+  it.each(["ask", "name"] as const)("asks about the take cap with drama-cli's refusal (%s)", async (stops) => {
     const { run } = await import("./db.ts");
     run("update dramas set status = 'done'");
-    fleet.stops = "ask";
+    fleet.stops = stops;
     const form = new FormData();
-    for (const [key, value] of Object.entries({ title: "Capped drama", language: "en", preset: "en-us-live-sfw", screenplayLanguage: "en", screenplay: "0", parallel: "1", perComputer: "1" })) form.set(key, value);
+    for (const [key, value] of Object.entries({ title: `Capped drama, ${stops}`, language: "en", preset: "en-us-live-sfw", screenplayLanguage: "en", screenplay: "0", parallel: "1", perComputer: "1" })) form.set(key, value);
     form.append("files", new File(["EPISODE 1\nLin enters."], "screenplay.txt", { type: "text/plain" }));
     const { id } = await call<{ id: string }>("POST", "/api/dramas", form);
     const question = await until("the setup question", openReview(id, (item) => item.kind === "question"));
@@ -457,5 +457,9 @@ describe("a drama in replay", () => {
     expect(view.otherFiles.filter((file) => file.kind === "refusal")).toEqual([]);
     const { stopKind } = await import("../shared/refusal.ts");
     expect(stopKind(view.refusals[0])).toEqual({ kind: "cap", key: "shoot.max_new_takes" });
+    // Sent back again without the limit raised, the same refusal comes back, the same file afresh: this stop has it too.
+    await call("POST", `/api/reviews/${capped.id}/decision`, { items: [], words: "Revise:\n- seg01: once more" });
+    const again = await until("the take cap's question again", openReview(id, (item) => item.episode === "EP001" && item.kind === "question" && item.id !== capped.id));
+    expect((await call<ReviewView>("GET", `/api/reviews/${again.id}`)).refusals).toEqual(view.refusals);
   }, 30_000);
 });

@@ -51,9 +51,14 @@ conversation's, and a rehearsal has no drama-cli); a review's kind stays with th
 returned, since the review is of those files. P1.6 replay returns
 snapshots. P1.7 parallel episodes merge into one state.
 
-A stop's refusal (a cap's `SetLimitExceeded`; a take cap's plain `Refused`, as drama-cli words it
-today) is not in the status report: the StopCard's facts need the stop to return the refusal
-itself, a change to the goals in its own pull request, with P5.8.
+A stop's refusal is not in the status report, so a stop that asks about one returns it as
+drama-cli printed it, in handoff/refusals.jsonl (the goals' change is its own pull request, #18).
+The engine serves it on the stop's review, and `stopKind` (src/shared/refusal.ts) tells the
+StopCard which kind of stop it is from the code: `RedLine` is a red line, and
+`SetLimitExceeded.<key>` is a cap, whose param is the config key to raise. Anything else is a
+question whose message the maker reads, a bare `Refused` included. Two refusals are bare today:
+the take cap (short_drama #664) and an upload the environment blocks (#666). A budget is
+never a refusal, since the goals set no cap.
 
 **P2 Design system (M2).** P2.1 tokens: colour (light, dark, system), type, spacing, radii,
 motion, reduced motion. P2.2 components: Button, IconButton, StatusChip, Segmented, Tabs,
