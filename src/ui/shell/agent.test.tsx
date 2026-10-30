@@ -2,7 +2,7 @@
 // work and one waiting: what runs, with Watch and Stop; the decisions waiting; what is to do and
 // the recent work named as the bible names them; the session in view and a line to it; the panel
 // docked, floated and collapsed to its ball; and Stop drama through to Resume.
-import { render, screen, within } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { readFileSync } from "node:fs";
 import path from "node:path";
@@ -86,8 +86,9 @@ describe("the agent panel", () => {
     expect(await within(decisions).findByRole("link", { name: /EP002 · Storyboards/ })).toHaveAttribute("href", "/r/r2");
     const todo = await screen.findByRole("region", { name: "To do" });
     expect(within(todo).getByText("林")).toBeInTheDocument();
-    const recent = screen.getByRole("region", { name: "Recent work" });
-    expect(within(recent).getAllByRole("listitem").map((item) => item.textContent)).toEqual(["Look · 林 v2In review", "Look · 林 v1Accepted"]);
+    // Recent work needs the files as well as the project.
+    const recent = await screen.findByRole("region", { name: "Recent work" });
+    await waitFor(() => expect(within(recent).getAllByRole("listitem").map((item) => item.textContent)).toEqual(["Look · 林 v2In review", "Look · 林 v1Accepted"]));
   });
 
   it("follows the session in view: its steps, what it said, and a line to it", async () => {
@@ -95,7 +96,8 @@ describe("the agent panel", () => {
     engine();
     render(<AgentPanel drama={drama} episode="EP001" mode="docked" onMode={() => {}} />);
     const process = await screen.findByRole("region", { name: "EP001 · Process" });
-    expect(within(process).getAllByRole("listitem").map((item) => item.textContent)).toEqual(["Compiled the video prompts", "Shooting seg01"]);
+    // The section shows once the sessions are in; its steps once the session's chat is.
+    expect((await within(process).findAllByRole("listitem")).map((item) => item.textContent)).toEqual(["Compiled the video prompts", "Shooting seg01"]);
     expect(within(process).getByText("Shooting the first take now.")).toBeInTheDocument();
     accept("/api/sessions/s1/chat");
     await user.type(screen.getByRole("textbox", { name: "Message the agent" }), "Keep the letter in her left hand.");

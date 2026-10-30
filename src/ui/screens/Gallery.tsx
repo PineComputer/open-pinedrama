@@ -112,7 +112,7 @@ export default function Gallery() {
 
       <Section title="StopCard">
         {STOPS.map((refusal) => (
-          <div key={refusal.code} style={{ flex: "1 1 320px" }}>
+          <div key={refusal.code} style={{ flex: "1 1 320px", alignSelf: "flex-start" }}>
             <StopCard refusal={refusal} />
           </div>
         ))}
