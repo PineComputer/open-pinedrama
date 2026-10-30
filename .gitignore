@@ -7,5 +7,9 @@ dist/
 .env.local
 .data/
 
+# End-to-end results
+test-results/
+playwright-report/
+
 # Desktop builds
 release/
