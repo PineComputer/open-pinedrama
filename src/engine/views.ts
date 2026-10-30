@@ -26,6 +26,8 @@ import { LENGTHS } from "./goals.ts";
 import { type FileRow, fileUrl, filesOfStop, toItem, versionNumber } from "./library.ts";
 import { type ComputerRow, type DramaRow, type EpisodeRow, type ReviewRow, type SessionRow, episodeCode, latestTurn, session as sessionRow } from "./records.ts";
 import { itemsOf, pendingReview } from "./reviews.ts";
+import { projectView } from "./status.ts";
+import { setupStep } from "../shared/project.ts";
 
 function still(file: FileRow): Still {
   return file.type.startsWith("video/") ? { url: fileUrl(file), video: true } : { url: fileUrl(file) };
@@ -219,7 +221,14 @@ export function dramaView(drama: DramaRow): DramaView {
  * approve the leads by a plain question, or skip one): 0 reading, 1 asking, 2 drawing the
  * leads, 3 their approval, 4 preparing every episode, 5 the shared references' approval.
  */
-function setupReached(dramaId: string): number {
+/**
+ * The setup panel's step. Once the bible is accepted, drama-cli's report says (setupStep); before
+ * it, and in a rehearsal, which has no drama-cli, the turns' files and the reviews do.
+ */
+export function setupReached(dramaId: string): number {
+  const state = projectView(dramaId).state;
+  const step = state ? setupStep(state) : undefined;
+  if (step !== undefined) return step;
   const made = new Set(all<{ kind: string; look: string | null }>("select kind, look from files where drama_id = ? and episode_id is null", dramaId).map((file) => (file.kind === "look" && file.look && file.look !== "base" ? "state" : file.kind)));
   const reviews = all<{ kind: string; state: string }>("select r.kind, r.state from reviews r join sessions s on s.id = r.session_id where r.drama_id = ? and s.role = 'setup'", dramaId);
   if (reviews.some((review) => review.kind === "references")) return 5;

@@ -27,7 +27,7 @@ ends with an acceptance by the person who asked for the redesign before the next
 | | Goal | Done when | Acceptance |
 |---|---|---|---|
 | **M0** Test foundation | Every later item can start with a failing test. | Component, engine API and end-to-end tests run; CI has an `e2e` job; the screens are unchanged. | CI green. A deliberately broken button (Send review posting twice) turns a test red, and the fix turns it green. |
-| **M1** State foundation | The studio reads drama-cli's own status, not guesses; parallel episodes don't overwrite each other. | Each stop returns a status snapshot; the engine keeps it and serves it (`/api/dramas/:id/project`, live updates); review kinds and setup steps come from it; replay returns snapshots; three episodes in parallel merge cleanly. Screens unchanged. | CI green with fixtures for a whole project, a new one, a partial bible, a missing reference, a budget nearly spent and spent, a malformed snapshot, and a stop's refusal (a cap's `SetLimitExceeded`, and a take cap's plain `Refused` as drama-cli words it today); with tests that live updates reach the UI, that a snapshot arriving out of order never replaces a newer one, and that the state the API serves always matches the newest snapshot of each session. On a real Pine project, one episode to its first storyboard review, with the API's state checked item by item against `drama-cli status`. |
+| **M1** State foundation | The studio reads drama-cli's own status, not guesses; parallel episodes don't overwrite each other. | Each stop returns a status snapshot; the engine keeps it and serves it (`/api/dramas/:id/project`, live updates); setup steps come from it; replay returns snapshots; three episodes in parallel merge cleanly. Screens unchanged. | CI green with fixtures for a whole project, a new one, a partial bible, a missing reference, a budget nearly spent and spent, and a malformed snapshot; with tests that live updates reach the UI, that a snapshot arriving out of order never replaces a newer one, and that the state the API serves always matches the newest snapshot of each session. On a real Pine project, one episode to its first storyboard review, with the API's state checked item by item against `drama-cli status`. |
 | **M2** New shell | The new look and frame: top bar, step rail, episode tree, status bar, budget meter, light and dark. | Design tokens and components, each state shown in a development gallery; today's screens inside the new frame. | CI green, with component screenshots, axe and a contrast check. The person looks through the gallery and the sample drama in both themes. |
 | **M3** Control room | What N Computers are doing, what each episode still needs, and what waits for the maker, at a glance. | The agent panel: running, to do, decisions, grouped steps; docked, collapsed or floating; Crew and the inbox folded in. | CI green, with three episodes in parallel in replay. Watching that, the person can say where each episode is and who it waits for from the panel alone. |
 | **M4** The new flow | A new maker goes from uploading a screenplay to the first episode's cut in the new screens. | Home, upload, preset, analyzing, Fountain review, Story, Episodes, the episode workspace, the review room and the stops (a red line in the screenplay, the budget spent, a cap reached) replace today's screens, which are deleted. | CI green, end to end from upload to cut in replay, with each stop. The person takes a real Pine project from upload to EP001's cut, within a stated spend, and every place they got stuck is fixed. |
@@ -46,8 +46,14 @@ axe, and a CI job.
 teaches it (its own pull request, for the skill's maintainers to review). P1.2 a pure parser
 from status to the project state in `src/shared/`. P1.3 the engine keeps every snapshot and
 the latest is current. P1.4 `GET /api/dramas/:id/project` and a `project` live scope. P1.5
-review kinds and setup steps read the state instead of inferring them. P1.6 replay returns
+the setup's steps read the state once the bible is accepted (reading and answering are the
+conversation's, and a rehearsal has no drama-cli); a review's kind stays with the files the stop
+returned, since the review is of those files. P1.6 replay returns
 snapshots. P1.7 parallel episodes merge into one state.
+
+A stop's refusal (a cap's `SetLimitExceeded`; a take cap's plain `Refused`, as drama-cli words it
+today) is not in the status report: the StopCard's facts need the stop to return the refusal
+itself, a change to the goals in its own pull request, with P5.8.
 
 **P2 Design system (M2).** P2.1 tokens: colour (light, dark, system), type, spacing, radii,
 motion, reduced motion. P2.2 components: Button, IconButton, StatusChip, Segmented, Tabs,

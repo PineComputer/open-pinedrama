@@ -139,3 +139,19 @@ describe("a report recorded", () => {
     expect(heard).toEqual([{ type: "changed", scope: "project:d1" }]);
   });
 });
+
+describe("the setup panel's step", () => {
+  it("comes from the setup's report once the bible is accepted", async () => {
+    const { setupReached } = await import("./views.ts");
+    status.recordStatus("setup", turn("setup"), bytes(report("story")));
+    expect(setupReached("d1")).toBe(4);
+    status.recordStatus("setup", turn("setup"), bytes(twoEpisodes("boards")));
+    expect(setupReached("d1")).toBe(5);
+  });
+
+  it("comes from the conversation before that", async () => {
+    const { setupReached } = await import("./views.ts");
+    status.recordStatus("setup", turn("setup"), bytes(report("new")));
+    expect(setupReached("d1")).toBe(0);
+  });
+});
