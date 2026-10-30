@@ -102,6 +102,8 @@ and an edge from each picture it used); the engine reads its nodes' properties a
 P8.1 LineageNode and stale marks. Why a version is stale, and what redoing it would cost,
 are not in that export: each needs its own source first.
 
+**Before release.** Generate a public sample set for replay, on a budget merecdesperez44323-lab sets, to replace the sample pictures from our own test runs (fixtures/replay/).
+
 ## Every item is done when
 
 1. Its test failed before the change and passes after it.

@@ -49,7 +49,7 @@ h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 700; lett
 /* Slate: the drama shelf */
 /* A drama's poster: a title card in the viewing room's ink, its leads behind the title once drawn. */
 .poster { position: relative; aspect-ratio: 2 / 3; display: grid; grid-template-rows: 1fr auto; gap: 14px; padding: 18px 16px 16px; color: var(--text-primary); background: radial-gradient(120% 70% at 30% 18%, var(--border), transparent 70%), linear-gradient(180deg, var(--surface-container), var(--surface-dim)); border-radius: var(--radius-medium); overflow: hidden; transition: transform 0.35s var(--ease), box-shadow 0.35s var(--ease); }
-.poster h3 { align-self: start; font-size: 25px; line-height: 1.08; overflow: hidden; overflow-wrap: anywhere; color: var(--text-primary); }
+.poster h3 { align-self: start; font-size: 25px; line-height: 1.08; overflow: hidden; overflow-wrap: normal; word-break: keep-all; color: var(--text-primary); }
 .poster.vertical h3 { writing-mode: vertical-rl; justify-self: end; font-size: 28px; letter-spacing: 0.14em; max-height: 100%; }
 .poster .foot { display: flex; align-items: flex-end; justify-content: flex-end; min-height: 26px; }
 /* Once the leads are drawn, they stand side by side behind the title, as on a short drama's poster. */
@@ -528,7 +528,9 @@ h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 700; lett
 .ds-dramacard:hover { border-color: var(--border-input); transform: translateY(-1px); }
 .ds-dramacard .pic { position: relative; display: block; background: var(--surface-container); }
 .ds-dramacard .poster, .ds-hero .poster { border-radius: 0; }
-.ds-dramacard .poster h3, .ds-hero .poster h3 { font-size: 20px; overflow-wrap: break-word; hyphens: auto; }
+/* On a card the chip stands at the cover's top, so the title sits at its foot; a word is never broken. */
+.ds-dramacard .poster h3, .ds-hero .poster h3 { align-self: end; font-size: 20px; overflow-wrap: normal; word-break: keep-all; hyphens: manual; text-wrap: balance; }
+.ds-dramacard .poster.vertical h3, .ds-hero .poster.vertical h3 { align-self: start; margin-top: 32px; }
 .ds-dramacard .poster { aspect-ratio: 3 / 4; }
 .ds-dramacard .bar { position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: color-mix(in srgb, var(--canvas) 60%, transparent); }
 .ds-dramacard .bar i { display: block; height: 100%; background: var(--text-primary); }
