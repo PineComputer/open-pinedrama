@@ -1,5 +1,5 @@
 // Phosphor Icons (@phosphor-icons/react), regular weight, by the names the studio uses for them.
-import { type Icon as PhosphorIcon, ArrowCounterClockwiseIcon, ArrowLeftIcon, ArrowRightIcon, ArrowUpIcon, ArrowsInIcon, ArrowsOutIcon, BookOpenIcon, CaretDownIcon, CaretLeftIcon, CaretRightIcon, CaretUpIcon, ChatCenteredIcon, ChatsIcon, CheckCircleIcon, CheckIcon, CircleNotchIcon, ClockIcon, CoinsIcon, CrosshairSimpleIcon, CubeIcon, CursorIcon, DotsThreeIcon, EyeIcon, FileTextIcon, FilmStripIcon, FlowArrowIcon, FolderIcon, FrameCornersIcon, GearSixIcon, GridNineIcon, HouseIcon, ImageIcon, ImageSquareIcon, InfoIcon, ListBulletsIcon, ListChecksIcon, ListIcon, LockSimpleIcon, MagnifyingGlassIcon, MapPinIcon, MinusIcon, MoonStarsIcon, NotePencilIcon, PaperPlaneTiltIcon, PathIcon, PauseIcon, PlayIcon, PlusIcon, RobotIcon, ScissorsIcon, SealCheckIcon, SkipBackIcon, SkipForwardIcon, SlidersHorizontalIcon, SparkleIcon, SpeakerSlashIcon, SquaresFourIcon, StackIcon, StopIcon, SubtitlesIcon, SunDimIcon, TreeStructureIcon, UploadIcon, UserIcon, UsersIcon, VideoCameraIcon, WarningCircleIcon, WarningIcon, XCircleIcon, XIcon } from "@phosphor-icons/react";
+import { type Icon as PhosphorIcon, ArrowCounterClockwiseIcon, ArrowLeftIcon, ArrowRightIcon, ArrowUpIcon, ArrowsInIcon, ArrowsOutIcon, BookOpenIcon, CaretDownIcon, CaretLeftIcon, CaretRightIcon, CaretUpIcon, ChatCenteredIcon, ChatsIcon, CheckCircleIcon, CheckIcon, CircleNotchIcon, ClockIcon, CoinsIcon, CrosshairSimpleIcon, CubeIcon, CursorIcon, DotsThreeIcon, EyeIcon, FileTextIcon, FilmStripIcon, FlowArrowIcon, FolderIcon, FrameCornersIcon, GearSixIcon, GridNineIcon, HouseIcon, ImageIcon, ImageSquareIcon, InfoIcon, ListBulletsIcon, ListChecksIcon, ListNumbersIcon, ListIcon, LockSimpleIcon, MagnifyingGlassIcon, MapPinIcon, MinusIcon, MoonStarsIcon, NotePencilIcon, PaperPlaneTiltIcon, PathIcon, PauseIcon, PlayIcon, PlusIcon, RobotIcon, ScissorsIcon, SealCheckIcon, SkipBackIcon, SkipForwardIcon, SlidersHorizontalIcon, SparkleIcon, SpeakerSlashIcon, SquaresFourIcon, StackIcon, StopIcon, SubtitlesIcon, SunDimIcon, TreeStructureIcon, UploadIcon, UserIcon, UsersIcon, VideoCameraIcon, WarningCircleIcon, WarningIcon, XCircleIcon, XIcon } from "@phosphor-icons/react";
 
 const ICONS = {
   "arrow-counter-clockwise": ArrowCounterClockwiseIcon,
@@ -39,6 +39,7 @@ const ICONS = {
   list: ListIcon,
   "list-bullets": ListBulletsIcon,
   "list-checks": ListChecksIcon,
+  "list-numbers": ListNumbersIcon,
   "lock-simple": LockSimpleIcon,
   "magnifying-glass": MagnifyingGlassIcon,
   "map-pin": MapPinIcon,

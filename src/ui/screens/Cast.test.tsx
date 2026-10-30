@@ -26,7 +26,7 @@ const cast: CastCard[] = [
   },
   { kind: "location", subject: "office", episodes: [], looks: [{ look: "", versions: [{ turnId: "t3", files: [file(3, "v1")] as never }] }] },
 ];
-const names = { title: "T", characters: { lin: { name: "Lin Xiaoyu", aliases: ["Xiaoyu"] } }, locations: { office: "Factory office" }, props: {}, episodes: { EP001: "The stepmother arrives" } };
+const names = { title: "T", characters: { lin: { name: "Lin Xiaoyu", aliases: ["Xiaoyu"] } }, locations: { office: "Factory office" }, props: {}, episodes: { EP001: "The stepmother arrives" }, logline: "A stepmother wins the house.", beats: ["She arrives."], summaries: { EP001: "She meets the family." } };
 
 function engine() {
   answer("/api/dramas/d1/cast", cast);
@@ -35,8 +35,10 @@ function engine() {
 
 describe("the Story", () => {
   it("shows the cast named as the bible names them, with their other names and the episodes they are in", async () => {
+    const user = userEvent.setup();
     engine();
     render(<Cast dramaId="d1" />);
+    await user.click(await screen.findByRole("tab", { name: /Cast/ }));
     const lin = await screen.findByRole("article", { name: "Lin Xiaoyu" });
     expect(within(lin).getByText("Xiaoyu")).toBeInTheDocument();
     expect(within(lin).getByRole("link", { name: "EP001" })).toHaveAttribute("href", "/d/d1/e/EP001");
@@ -46,6 +48,7 @@ describe("the Story", () => {
     const user = userEvent.setup();
     engine();
     render(<Cast dramaId="d1" />);
+    await user.click(await screen.findByRole("tab", { name: /Cast/ }));
     const lin = await screen.findByRole("article", { name: "Lin Xiaoyu" });
     expect(within(lin).getByText("Waiting for you")).toBeInTheDocument();
     expect(within(lin).getByRole("link", { name: "Review" })).toHaveAttribute("href", "/r/r2");
@@ -61,5 +64,13 @@ describe("the Story", () => {
     expect(screen.getByRole("article", { name: "Factory office" })).toBeInTheDocument();
     await user.click(screen.getByRole("tab", { name: /Bible/ }));
     expect(screen.getByRole("link", { name: /EP001\s*The stepmother arrives/ })).toHaveAttribute("href", "/d/d1/e/EP001");
+  });
+
+  it("opens on the bible: the logline, the beats and each episode's summary", async () => {
+    engine();
+    render(<Cast dramaId="d1" />);
+    expect(await screen.findByText("A stepmother wins the house.")).toBeInTheDocument();
+    expect(within(screen.getByRole("region", { name: "Beats" })).getByText("She arrives.")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /EP001\s*The stepmother arrives\s*She meets the family\./ })).toBeInTheDocument();
   });
 });

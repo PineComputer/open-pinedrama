@@ -16,6 +16,9 @@ describe("a bible's names", () => {
       locations: { office: "办公室" },
       props: {},
       episodes: { EP001: "x" },
+      logline: "l",
+      beats: ["greeting"],
+      summaries: { EP001: "s" },
     });
   });
 

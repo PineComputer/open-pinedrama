@@ -1,6 +1,7 @@
 // The names a person reads, from the drama's bible.json (drama-cli's Bible, drama_cli/schemas/
 // bible.py, v0.7.4): its title, its people with their other names, its places and props as the
-// screenplay writes them, in its own script (AGENTS.md design rule 12), and its episodes' titles.
+// screenplay writes them, in its own script (AGENTS.md design rule 12), its episodes' titles, and
+// the story a person reads on the Story page: the logline, the beats' events and each episode's summary.
 // drama-cli's status report names things by id only; a screen shows these instead. A bible that
 // doesn't read this way is refused, naming the field.
 
@@ -11,6 +12,12 @@ export interface Names {
   props: Record<string, string>;
   /** Each episode's title, by its id (EP001). */
   episodes: Record<string, string>;
+  /** The story in a sentence; none where the bible has no logline. */
+  logline?: string;
+  /** What happens, beat by beat (each beat's event). */
+  beats: string[];
+  /** Each episode's summary, by its id, where the bible gives one. */
+  summaries: Record<string, string>;
 }
 
 export class NamesError extends Error {
@@ -59,6 +66,11 @@ export function parseBibleNames(bible: unknown): Names {
     // A bible lists props only when the screenplay has any.
     props: raw.props === undefined ? {} : byId(raw.props, "props", (entry, at) => text(entry.name, `${at}.name`)),
     episodes: byId(raw.episodes, "episodes", (entry, at) => text(entry.title, `${at}.title`)),
+    logline: raw.logline === undefined ? undefined : text(raw.logline, "logline"),
+    beats: raw.beats === undefined ? [] : list(raw.beats, "beats").map((beat, n) => text(object(beat, `beats.${n}`).event, `beats.${n}.event`)),
+    summaries: Object.fromEntries(
+      Object.entries(byId(raw.episodes, "episodes", (entry, at) => (entry.summary === undefined ? undefined : text(entry.summary, `${at}.summary`)))).filter((pair): pair is [string, string] => pair[1] !== undefined),
+    ),
   };
 }
 
