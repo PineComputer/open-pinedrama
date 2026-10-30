@@ -65,7 +65,7 @@ describe("a stop that asks about a drama-cli refusal returns the refusal", () =>
 
   it("but not in a rehearsal, which has no drama-cli to refuse", () => {
     const goal = rehearsed(episodeGoal(drama, "EP002", ["project.tar.part-aa"], true, "screenplay.md"));
-    expect(goal).toContain("return no handoff/status.json, handoff/lineage.json or handoff/refusals.jsonl");
+    expect(goal).toContain("return no handoff/status.json, handoff/lineage.json, handoff/infinite-canvas.zip or handoff/refusals.jsonl");
   });
 });
 
@@ -83,7 +83,7 @@ describe("each stop returns drama-cli's lineage", () => {
 
   it("but not in a rehearsal, which has no drama-cli to ask", () => {
     const goal = rehearsed(episodeGoal(drama, "EP002", ["project.tar.part-aa"], true, "screenplay.md"));
-    expect(goal).toContain("return no handoff/status.json, handoff/lineage.json or handoff/refusals.jsonl");
+    expect(goal).toContain("return no handoff/status.json, handoff/lineage.json, handoff/infinite-canvas.zip or handoff/refusals.jsonl");
   });
 });
 
@@ -115,5 +115,24 @@ describe("each picture, take or cut comes with drama-cli's statement of the job"
   it("but not in a rehearsal, whose stand-in writes none", () => {
     const goal = rehearsed(episodeGoal(drama, "EP002", ["project.tar.part-aa"], true, "screenplay.md"));
     expect(goal).toContain("and no spec.json or request.json");
+  });
+});
+
+const CANVAS = "drama-cli export infinite-canvas --config drama/drama-cli.cfg.yaml --out handoff/infinite-canvas.zip";
+
+describe("each stop returns the project as infinite-canvas's import reads it", () => {
+  it.each([
+    ["the setup session", setupGoal(drama, ["screenplay.md", "brief.md"], { screenplay: "screenplay.md", brief: "brief.md" })],
+    ["an episode's session", episodeGoal(drama, "EP002", ["project.tar.part-aa"], true, "screenplay.md")],
+    ["a session that carries an episode on", resumeGoal(drama, "EP002", ["project.tar.part-aa", "EP002.tar.part-aa"], true, undefined, "screenplay.md")],
+  ])("in %s, beside the lineage, outside the project", (_where, goal) => {
+    expect(times(goal, CANVAS)).toBe(1);
+    expect(goal).toContain("return handoff/lineage.json and handoff/infinite-canvas.zip");
+  });
+
+  it("but not in a rehearsal, which has no drama-cli to ask", () => {
+    const goal = rehearsed(episodeGoal(drama, "EP002", ["project.tar.part-aa"], true, "screenplay.md"));
+    expect(goal).toContain("handoff/infinite-canvas.zip");
+    expect(goal).toContain("return no handoff/status.json, handoff/lineage.json, handoff/infinite-canvas.zip or handoff/refusals.jsonl");
   });
 });

@@ -23,6 +23,11 @@ describe("classify", () => {
     expect(classify("drama/status.json").kind).not.toBe("status");
   });
 
+  it("reads the project as infinite-canvas's import reads it, which each stop returns", () => {
+    expect(classify("handoff/infinite-canvas.zip")).toEqual({ kind: "infinite-canvas" });
+    expect(classify("drama/infinite-canvas.zip").kind).not.toBe("infinite-canvas");
+  });
+
   it("reads the lineage of the project each stop returns", () => {
     expect(classify("handoff/lineage.json")).toEqual({ kind: "lineage" });
     expect(classify("work/handoff/lineage.json")).toEqual({ kind: "lineage" });

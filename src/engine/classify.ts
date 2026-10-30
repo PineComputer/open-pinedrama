@@ -28,6 +28,7 @@ const RULES: [RegExp, (m: RegExpMatchArray) => Hints][] = [
   [/(?:^|\/)handoff\/(EP\d+|project)\.tar\.part-[a-z0-9]+$/i, (m) => ({ kind: "archive", episode: /^EP/i.test(m[1]) ? m[1] : undefined })],
   [/(?:^|\/)handoff\/status\.json$/i, () => ({ kind: "status" })],
   [/(?:^|\/)handoff\/lineage\.json$/i, () => ({ kind: "lineage" })],
+  [/(?:^|\/)handoff\/infinite-canvas\.zip$/i, () => ({ kind: "infinite-canvas" })],
   [/(?:^|\/)handoff\/refusals\.jsonl$/i, () => ({ kind: "refusal" })],
   [new RegExp(String.raw`episodes/(EP\d+)/edit/${VER}/[^/]+${VIDEO}`, "i"), (m) => ({ kind: "cut", episode: m[1], version: m[2] })],
   // The plan drama-cli builds a cut from, written beside it (short_drama drama_cli/edit.py, `build`).
