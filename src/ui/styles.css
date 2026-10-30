@@ -538,8 +538,6 @@ h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 700; lett
 .graph-screen .graph .react-flow { position: absolute; inset: 0; background: transparent; }
 .graph-screen .graph .gnode { position: relative; }
 .graph-screen .ghandle { opacity: 0; pointer-events: none; }
-/* The prototype letters a row's version in --text-subtle, below 4.5:1 on a row's hover ground (axe); reported for design/. */
-.graph-screen .lrow .subtle { color: var(--text-secondary); }
 .graph-screen .react-flow__edge-path { fill: none; stroke: var(--border-input); stroke-width: 1.4; }
 .graph-screen .react-flow__edge.on .react-flow__edge-path { stroke: var(--text-primary); stroke-width: 1.8; }
 .graph-screen .react-flow__edge.stale .react-flow__edge-path { stroke-dasharray: 5 4; }
