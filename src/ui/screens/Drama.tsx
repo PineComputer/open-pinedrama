@@ -4,7 +4,8 @@ import { useT } from "../i18n.ts";
 import { errorText } from "../labels.ts";
 import { EmptyState } from "../components/EmptyState.tsx";
 import { usePath } from "../router.tsx";
-import { DramaBar } from "../shell/TopBar.tsx";
+import { Icon } from "../icons.tsx";
+import { DramaBar, stillStopping } from "../shell/TopBar.tsx";
 import { Board, SetupPanel } from "./Board.tsx";
 import { Cast } from "./Cast.tsx";
 import { Crew } from "./Crew.tsx";
@@ -28,15 +29,21 @@ function Notices({ drama }: { drama: DramaView }) {
       {elsewhere && <p className="notice">{t(drama.mode === "replay" ? "otherMode.replayNote" : "otherMode.pineNote")}</p>}
       {drama.rehearsal && !elsewhere && <p className="notice quiet-notice">{t("rehearsal.note")}</p>}
       {drama.atLimit !== undefined && !drama.stalled && <p className="notice">{t("limit.note", { n: drama.atLimit })}</p>}
-      {held && (
-        <div className="notice trouble">
+      {stillStopping(drama) && (
+        <div className="ds-banner is-stopping" role="status">
+          <Icon name="circle-notch" />
+          <b>{t("stop.banner")}</b>
+        </div>
+      )}
+      {held && !stillStopping(drama) && (
+        <div className="ds-banner">
           <div>
             <strong>{drama.setup.reason ? t(`setup.held.${drama.setup.reason}`) : drama.setup.note ?? t("board.stopped")}</strong>
             {drama.setup.reason === "no-drama-skill" && <div className="why">{t("setup.rehearseHint")}</div>}
             {[again.error, rehearse.error].map((failed, n) => failed !== undefined && <div key={n} className="error small">{errorText(failed, t)}</div>)}
           </div>
           <span className="notice-actions">
-            <button className="btn small" disabled={again.busy} onClick={() => void again.run()}>
+            <button className="ds-btn is-primary is-sm" disabled={again.busy} onClick={() => void again.run()}>
               {t("setup.retry")}
             </button>
             {drama.setup.reason === "no-drama-skill" && (

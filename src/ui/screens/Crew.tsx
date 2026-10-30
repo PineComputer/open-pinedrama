@@ -11,7 +11,7 @@ function minutes(value: number): string {
 }
 
 /** A session's live desktop, view only, with a fresh two-minute token on every (re)connect. */
-function Watch({ session, onClose }: { session: SessionView; onClose: () => void }) {
+export function Watch({ session, onClose }: { session: SessionView; onClose: () => void }) {
   const { t } = useT();
   const [url, setUrl] = useState<string>();
   const [error, setError] = useState<unknown>();

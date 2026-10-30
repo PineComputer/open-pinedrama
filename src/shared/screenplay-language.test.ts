@@ -27,7 +27,7 @@ EXT. HOSPITAL ENTRANCE - NIGHT #1-2#`;
   });
 
   it("is Chinese for the industry form with English dialogue", () => {
-    // The form of the person's test upload (28 October 2026): Chinese structure, English lines.
+    // The form of merecdesperez44323-lab's test upload (28 October 2026): Chinese structure, English lines.
     const text = `第一集
 1-1  夜  内  华丽宴会厅
 出场人物：Sabrina Donovan、Nathan Hardwick

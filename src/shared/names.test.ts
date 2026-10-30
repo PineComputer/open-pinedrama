@@ -2,7 +2,7 @@
 // them (the screenplay's own script), and its episodes' titles, keyed by id.
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { NamesError, parseBibleNames } from "./names.ts";
+import { nameOf, NamesError, parseBibleNames } from "./names.ts";
 
 function bible(): Record<string, any> {
   return JSON.parse(readFileSync(new URL("../../fixtures/status/bible.json", import.meta.url), "utf8"));
@@ -34,5 +34,20 @@ describe("a bible's names", () => {
     expect(() => parseBibleNames(value)).toThrow(NamesError);
     expect(() => parseBibleNames(value)).toThrow(/characters\.0\.name/);
     expect(() => parseBibleNames("not a bible")).toThrow(NamesError);
+  });
+});
+
+describe("a character, location or prop as a person reads it", () => {
+  const names = parseBibleNames(bible());
+
+  it("is its name in the bible, with the look or time drama-cli adds after its id", () => {
+    expect(nameOf(names, "character", "lin")).toBe("林");
+    expect(nameOf(names, "character", "lin S1")).toBe("林 · S1");
+    expect(nameOf(names, "location", "office Day")).toBe("办公室 · Day");
+  });
+
+  it("is the id drama-cli gives before a bible names it", () => {
+    expect(nameOf(null, "prop", "letter")).toBe("letter");
+    expect(nameOf(names, "prop", "letter")).toBe("letter");
   });
 });

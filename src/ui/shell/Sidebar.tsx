@@ -1,15 +1,16 @@
 // The sidebar beside the rail, in the pro direction (its spec, "Sidebar"), collapsible from the
 // rail. On the studio's pages: its places. In a drama: the drama, its steps Script · Story ·
 // Episodes · Cut, each marked with what needs the maker, the episode tree under Episodes with
-// where each stands, the drama's review queue, Computers and production line, and at the foot
+// where each stands, the drama's review queue, Computers and production line (the agent panel
+// beside the work talks to the agents), and at the foot
 // what it has spent and where it stands.
 import { useState } from "react";
 import type { DramaView, EpisodeRow } from "../../shared/types.ts";
-import { api, useAction } from "../api.ts";
+import { api } from "../api.ts";
 import { BudgetMeter } from "../components/BudgetMeter.tsx";
 import { Icon, type IconName } from "../icons.tsx";
 import { type TKey, useT } from "../i18n.ts";
-import { errorText, nowText, SETUP_STEPS } from "../labels.ts";
+import { nowText, SETUP_STEPS } from "../labels.ts";
 import { Mark } from "../Mark.tsx";
 import { ReviewingChoice } from "../Reviewing.tsx";
 import { Link } from "../router.tsx";
@@ -73,17 +74,12 @@ export function HomeSidebar({ path, waiting, replay }: { path: string; waiting: 
   );
 }
 
-/** How many episodes run at once, and how many share a Computer: changed in place. Or the line stops. */
+/** How many episodes run at once, and how many share a Computer, and what the maker reviews: changed in place. */
 function Tune({ drama, onDone }: { drama: DramaView; onDone: () => void }) {
   const { t } = useT();
   const [parallel, setParallel] = useState(drama.parallel);
   const [perComputer, setPerComputer] = useState(drama.perComputer);
   const [reviewing, setReviewing] = useState(drama.reviewing);
-  const [stopping, setStopping] = useState(false);
-  const stop = useAction(async () => {
-    await api(`/api/dramas/${drama.id}/stop`, { method: "POST" });
-    onDone();
-  });
   const save = async () => {
     await api(`/api/dramas/${drama.id}`, { method: "PATCH", json: { parallel, perComputer, reviewing } });
     onDone();
@@ -115,28 +111,6 @@ function Tune({ drama, onDone }: { drama: DramaView; onDone: () => void }) {
           {t("tune.cancel")}
         </button>
       </div>
-      {(drama.status === "setup" || drama.status === "production") && (
-        <div className="tune-stop">
-          {stopping ? (
-            <>
-              <p className="small">{t("stop.confirm")}</p>
-              <div className="tune-actions">
-                <button className="btn small" disabled={stop.busy} onClick={() => void stop.run()}>
-                  {t("stop.yes")}
-                </button>
-                <button className="link" onClick={() => setStopping(false)}>
-                  {t("tune.cancel")}
-                </button>
-              </div>
-              {stop.error !== undefined && <p className="error small">{errorText(stop.error, t)}</p>}
-            </>
-          ) : (
-            <button className="link quiet" onClick={() => setStopping(true)}>
-              {t("stop.drama")}
-            </button>
-          )}
-        </div>
-      )}
     </div>
   );
 }
@@ -149,6 +123,8 @@ function Standing({ drama }: { drama: DramaView }) {
   return (
     <div className="ds-sidebar-foot">
       <BudgetMeter spentUsd={drama.spent.total} budgetUsd={null} simulated={drama.mode === "replay"} />
+      {/* What Spent covers (docs/REDESIGN_PLAN.md, M3 notes): drama-cli's text and image calls are included at no charge, and the turn under way is priced when it ends. */}
+      <small className="ds-caption">{t("spent.about")}</small>
       <div role="status" aria-label={t("statusbar.label")} className="ds-standing">
         {episodes.total ? (
           <>
@@ -165,7 +141,7 @@ function Standing({ drama }: { drama: DramaView }) {
 }
 
 /** A drama's sidebar. */
-export function DramaSidebar({ drama, tab, episode, onTalk }: { drama: DramaView; tab: string; episode?: string; onTalk: () => void }) {
+export function DramaSidebar({ drama, tab, episode }: { drama: DramaView; tab: string; episode?: string }) {
   const { t } = useT();
   const [tuning, setTuning] = useState(false);
   const step = stepOf(drama, tab);
@@ -234,10 +210,6 @@ export function DramaSidebar({ drama, tab, episode, onTalk }: { drama: DramaView
             </span>
           </button>
         )}
-        <button type="button" className="ds-navi" onClick={onTalk}>
-          <Icon name="chats" />
-          <span>{t("rail.talk")}</span>
-        </button>
       </div>
       <Standing drama={drama} />
     </aside>

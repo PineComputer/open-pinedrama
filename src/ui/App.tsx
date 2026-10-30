@@ -5,7 +5,6 @@ import { type TKey, useT } from "./i18n.ts";
 import { errorText } from "./labels.ts";
 import { useReviewNotifications } from "./notify.ts";
 import { match, usePath } from "./router.tsx";
-import { Chat } from "./screens/Chat.tsx";
 import { Drama } from "./screens/Drama.tsx";
 import { InboxScreen } from "./screens/Inbox.tsx";
 import { NewDrama } from "./screens/NewDrama.tsx";
@@ -13,9 +12,10 @@ import { Review } from "./screens/Review.tsx";
 import { Settings } from "./screens/Settings.tsx";
 import { Slate } from "./screens/Slate.tsx";
 import { Welcome } from "./screens/Welcome.tsx";
+import { AgentBall, type AgentMode, AgentPanel, useAgentMode } from "./shell/AgentPanel.tsx";
 import { NavRail } from "./shell/NavRail.tsx";
 import { DramaSidebar, HomeSidebar } from "./shell/Sidebar.tsx";
-import { type Crumb, TopBar } from "./shell/TopBar.tsx";
+import { type Crumb, StopControl, TopBar } from "./shell/TopBar.tsx";
 
 /** Before the studio can be used: this window isn't the studio's, or the engine isn't answering. */
 function Gate({ error, onRetry }: { error: unknown; onRetry: () => void }) {
@@ -70,6 +70,19 @@ function useSidebar(): [boolean, () => void] {
   return [open, toggle];
 }
 
+/**
+ * The agent panel for the drama in view, as the maker left it. On Canvas and Graph the board
+ * needs the room: a docked panel shows as the ball there, and opens floating over the board.
+ */
+function Agent({ drama, episode, mode, onMode, canvas }: { drama: DramaView; episode?: string; mode: AgentMode; onMode: (mode: AgentMode) => void; canvas: boolean }) {
+  const shown = canvas && mode === "docked" ? "collapsed" : mode;
+  if (shown === "collapsed") {
+    const busy = drama.crew.some((computer) => computer.sessions.some((session) => session.state === "open" && !session.waiting));
+    return <AgentBall waiting={drama.waiting} busy={busy} onOpen={() => onMode(canvas ? "floating" : "docked")} />;
+  }
+  return <AgentPanel drama={drama} episode={episode} mode={shown} onMode={onMode} />;
+}
+
 export function App() {
   const { path } = usePath();
   const app = useResource<AppInfo>("/api/app", ["app"]);
@@ -83,14 +96,13 @@ export function App() {
   const dramaId = page?.id ?? reviewed?.dramaId;
   const drama = useResource<DramaView>(dramaId && ready ? `/api/dramas/${dramaId}` : null, [`drama:${dramaId}`]);
   const [sidebarOpen, toggleSidebar] = useSidebar();
-  const [talking, setTalking] = useState(false);
+  const [agentMode, setAgentMode] = useAgentMode();
   const { t } = useT();
   useReviewNotifications(inbox.data && waiting);
 
   useEffect(() => {
     document.title = waiting.length ? `(${waiting.length}) ${t("app.name")}` : t("app.name");
   }, [waiting.length, t]);
-  useEffect(() => setTalking(false), [dramaId]);
 
   if (Gallery && path === "/dev/gallery") {
     return (
@@ -124,9 +136,9 @@ export function App() {
     if (drama.data) screen = <Drama drama={drama.data} tab={tab} episode={match("/d/:id/e/:code", path)?.code} />;
     else
       screen = (
-        <main className="page">
+        <div className="page">
           <p className={drama.error !== undefined ? "error" : "quiet"}>{drama.error !== undefined ? errorText(drama.error, t) : t("loading")}</p>
-        </main>
+        </div>
       );
     const code = match("/d/:id/e/:code", path)?.code;
     crumbs = [home, ...(inDrama ? [inDrama] : []), ...(code ? [{ label: t("step.episodes"), to: inDrama?.to }, { label: code }] : TABS[tab] ? [{ label: t(TABS[tab]) }] : [{ label: t("step.episodes") }])];
@@ -134,7 +146,7 @@ export function App() {
 
   const sidebar =
     drama.data && dramaId ? (
-      <DramaSidebar drama={drama.data} tab={review ? "review" : tab} episode={match("/d/:id/e/:code", path)?.code ?? reviewed?.episode} onTalk={() => setTalking((open) => !open)} />
+      <DramaSidebar drama={drama.data} tab={review ? "review" : tab} episode={match("/d/:id/e/:code", path)?.code ?? reviewed?.episode} />
     ) : (
       <HomeSidebar path={path} waiting={waiting.length} replay={app.data.mode === "replay"} />
     );
@@ -143,10 +155,12 @@ export function App() {
       <NavRail path={path} dramaId={dramaId} sidebarOpen={sidebarOpen} onToggleSidebar={toggleSidebar} />
       {sidebarOpen && sidebar}
       <div className="ds-main">
-        <TopBar crumbs={crumbs} waiting={waiting} ready={ready} />
-        <div className="ds-scroll">{screen}</div>
+        <TopBar crumbs={crumbs} waiting={waiting} ready={ready}>
+          {drama.data && <StopControl drama={drama.data} />}
+        </TopBar>
+        <main className="ds-scroll">{screen}</main>
       </div>
-      {talking && dramaId && <Chat dramaId={dramaId} onClose={() => setTalking(false)} />}
+      {drama.data && dramaId && <Agent drama={drama.data} episode={match("/d/:id/e/:code", path)?.code ?? reviewed?.episode} mode={agentMode} onMode={setAgentMode} canvas={tab === "canvas" || tab === "graph"} />}
     </div>
   );
 }

@@ -170,7 +170,7 @@ export function Slate() {
   }
   const shown = dramas.filter((drama) => (shelf === "all" || standing(drama).shelf === shelf) && drama.title.toLowerCase().includes(find.trim().toLowerCase()));
   return (
-    <main className="page">
+    <div className="page">
       <div className="head">
         <div>
           <h1>{t("slate.title")}</h1>
@@ -224,6 +224,6 @@ export function Slate() {
       ) : (
         <Shelf dramas={[]} adding />
       )}
-    </main>
+    </div>
   );
 }

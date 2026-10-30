@@ -46,6 +46,8 @@
 .ds-seg button:hover { color: var(--text-secondary); }
 .ds-seg button[aria-pressed="true"] { background: var(--surface-container-high); color: var(--text-primary); box-shadow: 0 0 0 1px var(--border-input); }
 .ds-seg .count, .ds-tabs .count { font: 500 11.5px var(--font-sans); color: var(--text-muted); font-variant-numeric: tabular-nums; }
+/* On the chosen item's high container muted text falls under 4.5:1 in dark (theme/contrast.test.ts). */
+.ds-seg button[aria-pressed="true"] .count { color: var(--text-secondary); }
 
 /* Tabs: underlined, 40 high; what stands at the row's end sits on the same rule. */
 .ds-tabs-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; border-bottom: 1px solid var(--border); margin-bottom: 18px; }

@@ -59,11 +59,11 @@ export function InboxList({ dramaId }: { dramaId?: string }) {
 export function InboxScreen() {
   const { t } = useT();
   return (
-    <main className="page">
+    <div className="page">
       <div className="head">
         <h1>{t("inbox.title")}</h1>
       </div>
       <InboxList />
-    </main>
+    </div>
   );
 }

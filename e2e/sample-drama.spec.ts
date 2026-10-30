@@ -19,7 +19,7 @@ test("a maker starts the sample drama, answers the agent and reviews the leads",
   const next = page.getByRole("button", { name: "Next review, 1 waiting" });
   await expect(next).toBeVisible({ timeout: 30_000 });
   await next.click();
-  await expect(page.getByText("The screenplay doesn't give Wei Zhen's age.")).toBeVisible();
+  await expect(page.getByRole("main").getByText("The screenplay doesn't give Wei Zhen's age.")).toBeVisible();
   expect(await newProblems(page)).toEqual([]);
   await page.getByRole("textbox", { name: "Your answer" }).fill("He is 32, and should read older than her.");
   const question = page.url();
@@ -30,7 +30,8 @@ test("a maker starts the sample drama, answers the agent and reviews the leads",
   // Then the leads' looks, approved together, opened from the drama's review queue: the bar's
   // count still includes the answered question until the agent's next turn begins.
   await page.getByRole("complementary").getByRole("link", { name: /^To review/ }).click();
-  const looks = page.getByRole("link", { name: /^Leads' looks/ });
+  // The drama's queue, in the work; the agent panel beside it lists the same decision.
+  const looks = page.getByRole("main").getByRole("link", { name: /^Leads' looks/ });
   await expect(looks).toBeVisible({ timeout: 30_000 });
   expect(await newProblems(page)).toEqual([]);
   await looks.click();

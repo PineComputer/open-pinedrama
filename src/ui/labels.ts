@@ -1,7 +1,9 @@
 // Words for states the engine reports as data, in the maker's language.
 import type { EpisodeRow, FileKind, Spend } from "../shared/types.ts";
 import { TEMPLATES } from "../shared/presets.ts";
-import { ApiError } from "./api.ts";
+import { nameOf, type Names } from "../shared/names.ts";
+import type { ProjectView } from "../shared/project.ts";
+import { ApiError, useResource } from "./api.ts";
 import type { useT } from "./i18n.ts";
 
 type T = ReturnType<typeof useT>["t"];
@@ -23,15 +25,20 @@ export function nowText(row: EpisodeRow, t: T): string {
   }
 }
 
+/** The drama's names from its bible (docs/REDESIGN_PLAN.md, P5.5), for every screen that would otherwise show an id; null before a bible. */
+export function useNames(dramaId: string | undefined): Names | null {
+  const { data } = useResource<ProjectView>(dramaId ? `/api/dramas/${dramaId}/project` : null, [`project:${dramaId}`]);
+  return data?.names ?? null;
+}
+
 /**
- * A character's, place's or prop's name as the agent filed it ("maya-reyes", "lin/S1"), said
- * as words ("Maya Reyes", "Lin · S1"). Names in other scripts, and codes like S1, stay as written.
+ * A subject as the studio files it, named: a character ("lin"), with a look ("lin/S1"), a
+ * location or a prop ("location:home", "prop:letter", or a cast card's subject with its kind).
  */
-export function subjectName(subject: string): string {
-  return subject
-    .split("/")
-    .map((part) => (/^[a-z][a-z0-9]*(?:[-_ ][a-z0-9]+)*$/.test(part) ? part.split(/[-_ ]+/).map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(" ") : part))
-    .join(" · ");
+export function subjectLabel(names: Names | null, subject: string, kind?: "look" | "location" | "prop"): string {
+  const tagged = subject.match(/^(location|prop):(.+)$/);
+  const which = tagged ? (tagged[1] as "location" | "prop") : kind === "location" || kind === "prop" ? kind : "character";
+  return nameOf(names, which, (tagged ? tagged[2] : subject).replace("/", " "));
 }
 
 /** Markdown said as plain words, for a one-line preview: link labels, no markup. */

@@ -3,7 +3,8 @@ import { type CSSProperties, useState } from "react";
 import type { CastCard, Receipt } from "../../shared/types.ts";
 import { useResource } from "../api.ts";
 import { useT } from "../i18n.ts";
-import { errorText, subjectName } from "../labels.ts";
+import { errorText, subjectLabel, useNames } from "../labels.ts";
+import type { Names } from "../../shared/names.ts";
 import { Link } from "../router.tsx";
 
 /** One look (or a place, or a prop): its versions newest first, each with what the maker decided on it. */
@@ -80,11 +81,22 @@ function Appears({ card, dramaId }: { card: CastCard; dramaId: string }) {
 }
 
 /** A character: the base look first, then each state (S1 wedding…), side by side. */
-function Character({ card, dramaId }: { card: CastCard; dramaId: string }) {
+function Character({ card, dramaId, names }: { card: CastCard; dramaId: string; names: Names | null }) {
   const { t } = useT();
+  const aliases = names?.characters[card.subject]?.aliases ?? [];
   return (
     <section className="character" style={{ "--looks": card.looks.length } as CSSProperties}>
-      <h4>{subjectName(card.subject)}</h4>
+      <h4>{subjectLabel(names, card.subject)}</h4>
+      {aliases.length > 0 && (
+        <div className="aliases">
+          <span className="quiet">{t("cast.aliases")}</span>
+          {aliases.map((alias) => (
+            <span key={alias} className="ds-tag">
+              {alias}
+            </span>
+          ))}
+        </div>
+      )}
       <Appears card={card} dramaId={dramaId} />
       <div className="looks">
         {card.looks.map((look) => (
@@ -98,6 +110,7 @@ function Character({ card, dramaId }: { card: CastCard; dramaId: string }) {
 export function Cast({ dramaId, compact = false }: { dramaId: string; compact?: boolean }) {
   const { t } = useT();
   const { data, error } = useResource<CastCard[]>(`/api/dramas/${dramaId}/cast`, [`drama:${dramaId}`]);
+  const names = useNames(dramaId);
   const characters = (data ?? []).filter((card) => card.kind === "look");
   const places = (data ?? []).filter((card) => card.kind === "location");
   const props = (data ?? []).filter((card) => card.kind === "prop");
@@ -122,7 +135,7 @@ export function Cast({ dramaId, compact = false }: { dramaId: string; compact?: 
               </h3>
               <div className="characters">
                 {characters.map((card) => (
-                  <Character key={card.subject} card={card} dramaId={dramaId} />
+                  <Character key={card.subject} card={card} dramaId={dramaId} names={names} />
                 ))}
               </div>
             </section>
@@ -143,7 +156,7 @@ export function Cast({ dramaId, compact = false }: { dramaId: string; compact?: 
                   {cards.map((card) => (
                     <div key={card.subject}>
                       {card.looks.map((look) => (
-                        <Look key={look.look} name={subjectName(look.look ? `${card.subject}/${look.look}` : card.subject)} versions={look.versions} />
+                        <Look key={look.look} name={subjectLabel(names, look.look ? `${card.subject}/${look.look}` : card.subject, card.kind)} versions={look.versions} />
                       ))}
                       <Appears card={card} dramaId={dramaId} />
                     </div>

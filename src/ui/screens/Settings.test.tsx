@@ -21,7 +21,7 @@ describe("Settings, About", () => {
 });
 
 describe("Settings, Theme", () => {
-  it("is dark at first, the look the person chose, and keeps the maker's choice", async () => {
+  it("is dark at first, the look merecdesperez44323-lab chose, and keeps the maker's choice", async () => {
     const user = userEvent.setup();
     localStorage.removeItem("studio.theme");
     render(<Settings app={replay} onChange={() => {}} />);

@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { FileItem, ItemDecision, Note, ReviewItem, ReviewView, Verdict } from "../../shared/types.ts";
 import { api, clock, useAction, useResource } from "../api.ts";
 import { type TKey, useT } from "../i18n.ts";
-import { errorText, fileKind, subjectName } from "../labels.ts";
+import { errorText, fileKind, subjectLabel, useNames } from "../labels.ts";
 import { Markdown } from "../Markdown.tsx";
 import { Link, navigate } from "../router.tsx";
 import { Still } from "../Still.tsx";
@@ -168,7 +168,7 @@ function QuestionRoom({ review, done }: { review: ReviewView; done: () => void }
     done();
   });
   return (
-    <main className="question">
+    <div className="question">
       <Link to={`/d/${review.dramaId}`} className="crumb">
         ← {review.dramaTitle}
         {review.episode ? ` · ${review.episode}` : ""}
@@ -231,12 +231,13 @@ function QuestionRoom({ review, done }: { review: ReviewView; done: () => void }
           <Returned files={files.filter((file) => !isImage(file) && !isDocument(file))} />
         </div>
       </div>
-    </main>
+    </div>
   );
 }
 
 function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
   const { t } = useT();
+  const names = useNames(review.dramaId);
   const items = review.reviewItems;
   const open = review.state === "open";
   const [index, setIndex] = useState(0);
@@ -373,7 +374,7 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
   });
 
   const labelOf = (i: ReviewItem) =>
-    i.key === "cut" ? t("kind.cut") : /^(location|prop):/.test(i.key) && i.files[0] ? `${subjectName(i.label)} · ${fileKind(i.files[0].kind, t)}` : /^seg\d/i.test(i.key) ? i.label : subjectName(i.label);
+    i.key === "cut" ? t("kind.cut") : /^(location|prop):/.test(i.key) && i.files[0] ? `${subjectLabel(names, i.key)} · ${fileKind(i.files[0].kind, t)}` : /^seg\d/i.test(i.key) ? i.label : subjectLabel(names, i.key);
   const thumbOf = (i: ReviewItem) => {
     const file = i.files.find(isImage) ?? i.files.find(isVideo);
     return file && { url: file.url, video: isVideo(file) };
@@ -662,11 +663,11 @@ export function Review({ id }: { id: string }) {
   );
   if (error !== undefined && !data) {
     return (
-      <main className="page">
+      <div className="page">
         <p className="error">{errorText(error, t)}</p>
-      </main>
+      </div>
     );
   }
-  if (!data) return <main className="page quiet">{t("loading")}</main>;
+  if (!data) return <div className="page quiet">{t("loading")}</div>;
   return data.kind === "question" || data.reviewItems.length === 0 ? <QuestionRoom review={data} done={done} /> : <MediaRoom review={data} done={done} />;
 }
