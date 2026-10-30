@@ -235,7 +235,11 @@ p { font-size: inherit; line-height: inherit; color: inherit; margin: 0; }
 .send .ic { width: 15px; height: 15px; }
 
 /* ── canvas ── */
-.board { position: relative; flex: 1; min-width: 0; overflow: hidden; background-color: var(--canvas); background-image: radial-gradient(color-mix(in srgb, var(--text-primary) 13%, transparent) 1px, transparent 1px); background-size: 22px 22px; cursor: grab; user-select: none; touch-action: none; }
+.board { position: relative; flex: 1; min-width: 0; overflow: hidden; background-color: var(--canvas); cursor: grab; user-select: none; touch-action: none; }
+/* The board's dot grid, as infinite-canvas draws it (web/src/components/canvas/infinite-canvas.tsx, CanvasGrid): a 48 px grid scaled by the zoom
+   (--grid, set by the board), dots 1.15 px, 0.8 px when far out (--dot), in --board-dot, the layer at .4. The Graph's plane has it unscaled. */
+.board::before, .graphwrap::before { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .4; background-image: radial-gradient(circle, var(--board-dot) var(--dot, 1.15px), transparent calc(var(--dot, 1.15px) + .2px)); background-size: var(--grid, 48px) var(--grid, 48px); background-position: var(--gx, 0) var(--gy, 0); }
+.graphwrap { position: relative; }
 .board.panning { cursor: grabbing; }
 .layer { position: absolute; left: 0; top: 0; transform-origin: 0 0; }
 .wires { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; }

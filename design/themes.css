@@ -27,6 +27,8 @@
   color-scheme: light;
 
   --canvas:                 #F2F6F4;
+
+  --board-dot:              rgba(245, 245, 244, .24);  /* the board's dot grid (infinite-canvas lib/canvas-theme.ts) */
   --surface:                #FFFFFF;
   --surface-dim:            #EAF0ED;
   --surface-container:      #F6F9F7;
@@ -72,6 +74,8 @@
   color-scheme: dark;
 
   --canvas:                 #0F1412;
+
+  --board-dot:              rgba(245, 245, 244, .24);  /* the board's dot grid (infinite-canvas lib/canvas-theme.ts) */
   --surface:                #161C1A;
   --surface-dim:            #1A211E;
   --surface-container:      #1D2422;
@@ -116,6 +120,8 @@
   color-scheme: light;
 
   --canvas:                 #FFFFFF;
+
+  --board-dot:              rgba(68, 64, 60, .28);  /* the board's dot grid (infinite-canvas lib/canvas-theme.ts) */
   --surface:                #FAFAFA;
   --surface-dim:            #F0F0F0;
   --surface-container:      #F5F5F5;
@@ -160,6 +166,8 @@
   color-scheme: dark;
 
   --canvas:                 #000000;
+
+  --board-dot:              rgba(245, 245, 244, .24);  /* the board's dot grid (infinite-canvas lib/canvas-theme.ts) */
   --surface:                #0A0A0A;
   --surface-dim:            #141414;
   --surface-container:      #1A1A1A;
@@ -204,6 +212,8 @@
   color-scheme: light;
 
   --canvas:                 #F8F8F0;
+
+  --board-dot:              rgba(68, 64, 60, .28);  /* the board's dot grid (infinite-canvas lib/canvas-theme.ts) */
   --surface:                #FAFAF3;
   --surface-dim:            #EBECDC;
   --surface-container:      #F1F2E5;
@@ -248,6 +258,8 @@
   color-scheme: dark;
 
   --canvas:                 #141410;
+
+  --board-dot:              rgba(245, 245, 244, .24);  /* the board's dot grid (infinite-canvas lib/canvas-theme.ts) */
   --surface:                #1C1C16;
   --surface-dim:            #252520;
   --surface-container:      #2A2A24;
