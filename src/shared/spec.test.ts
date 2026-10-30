@@ -4,12 +4,12 @@ import type { FileItem } from "./types.ts";
 
 describe("a version's spec.json", () => {
   it("gives a take's model, ratio, seconds and text prompt as drama-cli wrote them", () => {
-    const take = { model: "seedance-2-5", content: [{ type: "image_url", image_url: { url: "x" } }, { type: "text", text: "Nora walks in." }], duration: 8, ratio: "9:16", resolution: "480p" };
-    expect(specFacts(JSON.stringify(take))).toEqual({ model: "seedance-2-5", ratio: "9:16", seconds: 8, resolution: "480p", prompt: "Nora walks in." });
+    const take = { model: "seedance-2-5", content: [{ type: "image_url", image_url: { url: "x" } }, { type: "text", text: "Nora walks in." }], duration: 8, ratio: "9:16", resolution: "480p", seed: 42 };
+    expect(specFacts(JSON.stringify(take))).toEqual({ model: "seedance-2-5", ratio: "9:16", seconds: 8, resolution: "480p", prompt: "Nora walks in.", seed: 42 });
   });
 
   it("gives a picture's model, aspect ratio and prompt", () => {
-    expect(specFacts(JSON.stringify({ provider: "seedream", model: "seedream-5", prompt: "A pier at dawn.", aspect_ratio: "9:16", size: "2K" }))).toEqual({ model: "seedream-5", ratio: "9:16", resolution: "2K", prompt: "A pier at dawn.", seconds: undefined });
+    expect(specFacts(JSON.stringify({ provider: "seedream", model: "seedream-5", prompt: "A pier at dawn.", aspect_ratio: "9:16", size: "2K" }))).toEqual({ model: "seedream-5", ratio: "9:16", resolution: "2K", prompt: "A pier at dawn.", seconds: undefined, seed: undefined });
   });
 
   it("gives nothing for text that isn't a JSON object", () => {

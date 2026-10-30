@@ -1,6 +1,6 @@
 // What a version's spec.json says about its job, for a row or a panel to show: drama-cli's own
 // statement of it, read as written, never worked out. A take's spec carries the video request's
-// `model`, `content` (its text prompt among the references), `duration`, `ratio` and `resolution`;
+// `model`, `content` (its text prompt among the references), `duration`, `ratio`, `resolution` and `seed`;
 // a picture's carries `provider`, `model`, `prompt`, `aspect_ratio` and `size` (short_drama
 // drama_cli/video.py and image specs; ModelArk's create-video-generation-task API names).
 import type { FileItem } from "./types.ts";
@@ -11,6 +11,7 @@ export interface SpecFacts {
   seconds?: number;
   resolution?: string;
   prompt?: string;
+  seed?: number;
 }
 
 const text = (value: unknown) => (typeof value === "string" && value.trim() ? value : undefined);
@@ -33,6 +34,7 @@ export function specFacts(json: string | undefined): SpecFacts | undefined {
     seconds: typeof s.duration === "number" ? s.duration : undefined,
     resolution: text(s.resolution) ?? text(s.size),
     prompt: text(s.prompt) ?? text(content.find((part) => part?.type === "text")?.text),
+    seed: typeof s.seed === "number" ? s.seed : undefined,
   };
 }
 
