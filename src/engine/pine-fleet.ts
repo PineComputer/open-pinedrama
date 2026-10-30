@@ -170,7 +170,9 @@ export class PineFleet implements Fleet {
   }
 
   async createSession(ref: ComputerRef, label: string) {
-    const session = await this.computer(ref).createSession({ label, browser: true });
+    // drama-cli publishes reference images through Pine Computer artifacts (asset.url.via: pine_artifact),
+    // which the session's agent may do only with read_write artifact access.
+    const session = await this.computer(ref).createSession({ label, artifactAccess: "read_write" });
     return { name: session.name, token: session.token };
   }
 
