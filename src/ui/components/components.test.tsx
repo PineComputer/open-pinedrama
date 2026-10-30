@@ -263,7 +263,7 @@ describe("BudgetMeter", () => {
     render(<BudgetMeter spentUsd={41.2} budgetUsd={300} />);
     const bar = screen.getByRole("progressbar", { name: "Spent of budget" });
     expect(Number(bar.getAttribute("aria-valuenow"))).toBeCloseTo((41.2 / 300) * 100);
-    expect(screen.getByText("$41.20 of $300")).toBeInTheDocument();
+    expect(screen.getByText((_, el) => el?.tagName === "B" && el.textContent === "$41.20 / $300")).toBeInTheDocument();
   });
 
   it("warns from 80% and says when the budget is spent", () => {
@@ -301,7 +301,7 @@ describe("in the maker's language", () => {
       expect(screen.getByText("2 个 error")).toBeInTheDocument();
       expect(screen.getByText("已花费")).toBeInTheDocument();
       expect(screen.getByText("预算已用完")).toBeInTheDocument();
-      expect(screen.getByText("$300.00 / $300")).toBeInTheDocument();
+      expect(screen.getByText((_, el) => el?.tagName === "B" && el.textContent === "$300.00 / $300")).toBeInTheDocument();
       expect(screen.queryByText(/Spent|Budget|Waiting/)).not.toBeInTheDocument();
     } finally {
       act(() => setLang("en"));
