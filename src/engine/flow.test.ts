@@ -415,4 +415,47 @@ describe("a drama in replay", () => {
     await call("POST", `/api/reviews/${looks.id}/decision`, { items: [], words: "Approved." });
     await until("the shared references, asked in words", openReview(id, (item) => item.id !== looks.id && item.id !== question.id));
   }, 30_000);
+
+  // A take sent back past the take cap isn't shot: the agent asks the maker, returning drama-cli's refusal, which
+  // the stop carries for its card, and no review shows it as a file.
+  it("asks about the take cap with drama-cli's refusal", async () => {
+    const { run } = await import("./db.ts");
+    run("update dramas set status = 'done'");
+    fleet.stops = "ask";
+    const form = new FormData();
+    for (const [key, value] of Object.entries({ title: "Capped drama", language: "en", preset: "en-us-live-sfw", screenplayLanguage: "en", screenplay: "0", parallel: "1", perComputer: "1" })) form.set(key, value);
+    form.append("files", new File(["EPISODE 1\nLin enters."], "screenplay.txt", { type: "text/plain" }));
+    const { id } = await call<{ id: string }>("POST", "/api/dramas", form);
+    const question = await until("the setup question", openReview(id, (item) => item.kind === "question"));
+    await call("POST", `/api/reviews/${question.id}/decision`, { items: [], words: "He is 32." });
+    for (const kind of ["looks", "references"] as const) await approveAll((await until(kind, openReview(id, (item) => item.kind === kind))).id);
+    await approveAll((await until("EP001 storyboards", openReview(id, (item) => item.episode === "EP001" && item.kind === "storyboards"))).id);
+    const sendBack = async (review: ReviewSummary) => {
+      const view = await call<ReviewView>("GET", `/api/reviews/${review.id}`);
+      expect(view.refusals).toEqual([]);
+      const items = view.reviewItems.map((item) => ({ key: item.key, verdict: item.key === "seg01" ? "revise" : "approve", notes: item.key === "seg01" ? [{ text: "Try again." }] : [] }));
+      await call("POST", `/api/reviews/${review.id}/decision`, { words: "seg01 again.", items });
+    };
+    // t01, then two new takes, shoot.max_new_takes in the replayed project.
+    let seen: string[] = [];
+    for (let n = 0; n < 3; n++) {
+      const takes = await until(`EP001 takes ${n + 1}`, openReview(id, (item) => item.episode === "EP001" && item.kind === "takes" && !seen.includes(item.id)));
+      seen = [...seen, takes.id];
+      await sendBack(takes);
+    }
+    const capped = await until("the take cap's question", openReview(id, (item) => item.episode === "EP001" && item.kind === "question"));
+    const view = await call<ReviewView>("GET", `/api/reviews/${capped.id}`);
+    expect(view.refusals).toEqual([
+      {
+        code: "SetLimitExceeded.max_new_takes",
+        message: "seg01 has had 2 new paid takes, the limit shoot.max_new_takes (2); ask the person before shooting it again",
+        param: "shoot.max_new_takes",
+        action: "ask_person",
+      },
+    ]);
+    expect(view.refusalsError).toBeUndefined();
+    expect(view.otherFiles.filter((file) => file.kind === "refusal")).toEqual([]);
+    const { stopKind } = await import("../shared/refusal.ts");
+    expect(stopKind(view.refusals[0])).toEqual({ kind: "cap", key: "shoot.max_new_takes" });
+  }, 30_000);
 });

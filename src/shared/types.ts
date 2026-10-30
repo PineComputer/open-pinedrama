@@ -1,5 +1,7 @@
 // What the engine and the UI agree on: the shapes the HTTP API returns and accepts.
 
+import type { Refusal } from "./refusal.ts";
+
 export type Mode = "pine" | "replay";
 
 /** What went wrong, for the UI to say in the maker's language (src/engine/errors.ts). */
@@ -329,6 +331,10 @@ export interface ReviewView extends ReviewSummary {
   nextId?: string;
   /** An episode's plain question while it has a cut: the maker may call the episode finished instead of answering. */
   finishable?: boolean;
+  /** The drama-cli refusals the stop asks about, as the stop returned them; none for a stop that isn't about one. */
+  refusals: Refusal[];
+  /** Why the stop's refusals didn't read, when they didn't. */
+  refusalsError?: string;
 }
 
 export interface ChatMessage {

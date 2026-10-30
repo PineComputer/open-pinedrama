@@ -174,6 +174,15 @@ create table if not exists statuses (
   saved_at text not null
 );
 
+-- The drama-cli refusals a stop asks about (refusals.ts): the file as it came, or why it didn't read.
+create table if not exists refusals (
+  turn_id text primary key,
+  session_id text not null,
+  lines text,
+  error text,
+  saved_at text not null
+);
+
 create index if not exists files_episode on files (episode_id, id);
 create index if not exists files_drama_kind on files (drama_id, kind, id);
 create index if not exists files_turn on files (turn_id);
