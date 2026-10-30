@@ -220,7 +220,7 @@
     return html`<div class="main">
       <${TopBar} crumbs=${[P.project.title, "EP006", "Cut v1"]}/>
       <${StopBanner}/>
-      <div class="room">
+      <div class="room is-cut">
         <section class="stage">
           <div class="screen"><div class="player">
             <video ref=${vref} src=${c.src} poster="img/still-s1t2.jpg" muted playsinline preload="metadata" onTimeUpdate=${(e) => set({ cutT: e.target.currentTime })} onEnded=${() => set({ cutPlaying: false })}></video>
@@ -241,7 +241,7 @@
               ${notes.map((n, i) => html`<div class="noterow"><button class="mono tbtn" onClick=${() => seek(n.t)}>${fmt(n.t)}</button><span class="grow">${n.text}</span><button class="ibtn" aria-label="Remove note" onClick=${() => set({ cutNotes: notes.filter((_, j) => j !== i) })}>${I("x")}</button></div>`)}
               <div class="addnote"><span class="mono">${fmt(S.cutT)}</span><input placeholder="Add a note at the playhead…" value=${S.noteDraft} onInput=${(e) => set({ noteDraft: e.target.value })}
                 onKeyDown=${(e) => { if (e.key === "Enter" && S.noteDraft.trim()) set({ cutNotes: [...notes, { t: S.cutT, text: S.noteDraft.trim() }].sort((a, b) => a.t - b.t), noteDraft: "" }); }}/></div></div>
-            <div class="isec"><h4>Made from</h4>${c.segs.map(([s, t, d]) => html`<div class="lrow static">${s} · take ${t}<span class="mono subtle">${d} s</span></div>`)}</div>
+            <div class="isec"><h4>Made from</h4>${c.segs.map(([s, t, d]) => html`<div class="lrow static">${s} · take ${t}<span class="mono muted">${d} s</span></div>`)}</div>
             <div class="isec" style="border-bottom:0"><h4>What happens</h4><p class="muted" style="font-size:12.5px;line-height:1.55">Send back with your notes and the agent plans the cut again; building a cut is free. Accept, and EP006 is delivered.</p></div>
           </div>
           <div class="verdict"><div class="vrow" style="grid-template-columns:1fr 1fr">

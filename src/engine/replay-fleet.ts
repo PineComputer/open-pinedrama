@@ -100,17 +100,22 @@ export function mp4Seconds(bytes: Uint8Array): number {
 
 /**
  * A replayed cut's plan, in drama-cli's form (short_drama drama_cli/edit.py, `build`): each segment's
- * newest take, in order, as replay returned it, each trimmed to an equal share of the cut replay returns.
+ * newest take, in order, as replay returned it. A sample drama's episode may give the real cut's in and
+ * out for each segment (its data's `cut`, from the run it comes from); otherwise each take is trimmed to
+ * an equal share of the cut replay returns.
  */
-export function cutPlan(p: string, code: string, cut: Out, takes: { segment: string; take: string; bytes: Uint8Array }[]): Out {
+export function cutPlan(p: string, code: string, cut: Out, takes: { segment: string; take: string; bytes: Uint8Array }[], real?: { segment: string; in: number; out: number }[]): Out {
   const share = mp4Seconds(cut.bytes) / takes.length;
-  const clips = takes.map(({ segment, take, bytes }) => ({
-    path: `episodes/${code}/segments/${segment}/${take}/video.mp4`,
-    sha256: createHash("sha256").update(bytes).digest("hex"),
-    in: 0,
-    out: share,
-    audio: "source",
-  }));
+  const clips = takes.map(({ segment, take, bytes }) => {
+    const known = real?.find((clip) => clip.segment === segment);
+    return {
+      path: `episodes/${code}/segments/${segment}/${take}/video.mp4`,
+      sha256: createHash("sha256").update(bytes).digest("hex"),
+      in: known ? known.in : 0,
+      out: known ? known.out : share,
+      audio: "source",
+    };
+  });
   // Replay's clips, the placeholders and the samples alike, are 24 frames a second; the size is the samples' (the studio reads only the rate).
   const output = { width: 480, height: 854, fps: 24 };
   return { path: p, type: typeOf("cut.json"), bytes: text(JSON.stringify({ schema_version: 1, episode: code, output, clips })) };
@@ -551,14 +556,16 @@ function episodeScript(code: string, lang: Lang, preset: string, story: { id: st
         ];
       });
     });
-  // A cut as replay returns it, with its plan beside it: each segment's newest take.
+  // A cut as replay returns it, with its plan beside it: each segment's newest take. A recut plays the
+  // episode's sample cut again, at its own version's path: replay has one cut of each episode to show.
   const cutFiles = (version: number): Out[] => {
-    const made = clip(set, `${base}/edit/v${version}/cut.mp4`, "cut");
+    const first = clip(set, `${base}/edit/v1/cut.mp4`, "cut");
+    const made = { ...first, path: first.path.replace("/edit/v1/", `/edit/v${version}/`) };
     const newest = segments.map((seg) => {
       const take = `t${String(takes.get(seg.id)).padStart(2, "0")}`;
       return { segment: seg.id, take, bytes: clip(set, `${base}/segments/${seg.id}/${take}/video.mp4`, "take").bytes };
     });
-    return [made, cutPlan(`${base}/edit/v${version}/cut.json`, code, made, newest)];
+    return [made, cutPlan(`${base}/edit/v${version}/cut.json`, code, made, newest, episode.cut)];
   };
   const shoot = (which: typeof segments) =>
     which.flatMap((seg) => {

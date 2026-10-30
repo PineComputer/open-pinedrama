@@ -153,4 +153,15 @@ describe("replay's cut.json", () => {
     expect(clips[0].start).toBe(0);
     expect(clips.at(-1)!.end).toBeCloseTo(mp4Seconds(made.bytes));
   });
+
+  it("takes a sample drama's real in and out for each segment where its data gives them", async () => {
+    const { cutPlan } = await import("./replay-fleet.ts");
+    const made = { path: "drama/episodes/EP003/edit/v1/cut.mp4", type: "video/mp4", bytes: fixture("cut.mp4") };
+    const take = fixture("take.mp4");
+    const out = cutPlan("drama/episodes/EP003/edit/v1/cut.json", "EP003", made, [{ segment: "seg01", take: "t01", bytes: take }, { segment: "seg02", take: "t01", bytes: take }], [{ segment: "seg01", in: 0, out: 23.04 }]);
+    const { clips } = cut.readCutPlan(JSON.parse(new TextDecoder().decode(out.bytes)));
+    expect(clips[0]).toMatchObject({ segment: "seg01", start: 0, end: 23.04 });
+    // A segment the data leaves out takes an equal share of the cut, as before.
+    expect(clips[1].end - clips[1].start).toBeCloseTo(4);
+  });
 });

@@ -1,7 +1,7 @@
 // Replay's samples: the sample samples.json names for a path's first version, returned at its own
 // extension; none for a redrawn version, a path it leaves out or a file Git LFS hasn't fetched, so
 // replay draws its placeholder.
-import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { describe, expect, it, vi } from "vitest";
@@ -64,5 +64,12 @@ describe("replay's samples", () => {
   it("serve a sample drama's own lineage, drama-cli's export, at handoff/lineage.json", () => {
     const sample = samplesFrom(folder({ "samples.json": JSON.stringify({ "paper-vows": { "handoff/lineage": "full/paper-vows/lineage.json" } }), "full/paper-vows/lineage.json": '{"nodes":[],"links":[]}' }));
     expect(sample("paper-vows", "handoff/lineage.json")).toMatchObject({ path: "handoff/lineage.json", type: "application/json" });
+  });
+
+  it("are named in replay's own samples.json by the keys sampleKey makes, so every one can be found", () => {
+    const table = JSON.parse(readFileSync(path.join("fixtures/replay/samples/samples.json"), "utf8")) as Record<string, unknown>;
+    const keys = Object.values(table).flatMap((set) => (set && typeof set === "object" ? Object.keys(set) : []));
+    // A key keeps no extension: one with ".mp4" is never looked up, and replay draws its placeholder instead.
+    expect(keys.filter((key) => /\.[a-z0-9]+$/i.test(key))).toEqual([]);
   });
 });

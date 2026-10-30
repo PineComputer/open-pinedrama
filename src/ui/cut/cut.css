@@ -9,8 +9,6 @@
 .room.is-cut .stage { position: static; display: flex; place-items: normal; padding: 0; overflow: visible; }
 .room.is-cut .screen { height: auto; max-height: none; aspect-ratio: auto; background: none; border-radius: 0; overflow: visible; box-shadow: none; }
 .room.is-cut .verdict { grid-template-columns: none; }
-/* The agent's ball sits over the inspector's foot: Send review keeps above it. */
-.room.is-cut .verdict { padding-bottom: 84px; }
 
 .player { display: block; --media-control-background: transparent; --media-control-hover-background: transparent; --media-primary-color: #000; }
 .player video { display: block; }
