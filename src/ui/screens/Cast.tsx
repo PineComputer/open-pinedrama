@@ -121,6 +121,9 @@ export function Cast({ dramaId, compact = false }: { dramaId: string; compact?: 
   const meta = bible?.current
     ? [t("cast.bibleVersion", { v: bible.current }), bible.accepted ? t("cast.accepted") : t("cast.notAccepted"), written ? t("cast.writtenRange", { last: `EP${String(written).padStart(3, "0")}` }) : ""].filter(Boolean).join(" · ")
     : "";
+  // Under the logline, as the design has them: the genres the maker's notes state, and the episodes × their length.
+  const facts = drama.data?.facts;
+  const tags = [...(facts?.genres ?? []), ...(facts?.scale && facts.length ? [t("cast.format", { n: facts.scale.episodes, s: facts.length })] : [])];
   const tabs: [Shelf, string, number | undefined][] = [
     ["bible", t("cast.bible"), undefined],
     ["cast", t("cast.cast"), characters.length],
@@ -155,6 +158,15 @@ export function Cast({ dramaId, compact = false }: { dramaId: string; compact?: 
               <section className="panel">
                 <span className="kick">{t("cast.logline")}</span>
                 <p className="logline">{names.logline}</p>
+                {tags.length > 0 && (
+                  <div className="tags" style={{ display: "flex", gap: 6, marginTop: 12 }}>
+                    {tags.map((tag) => (
+                      <span key={tag} className="tag">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
               </section>
             )}
             {names && names.beats.length > 0 && (
