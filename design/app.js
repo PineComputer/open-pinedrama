@@ -229,6 +229,24 @@
     P.scenes.forEach((sc) => sc.segs.forEach((s) => { s.cast.forEach((c) => e.push([c, s.id])); e.push(["apartment", s.id]); if (s.id === "seg03") e.push(["file", s.id]); }));
     return e;
   })();
+  /* The picked item's data in the detail card: drama-cli's spec.json (its prompt with each Image N as a chip of that picture,
+     its settings), the versions with what the person decided, and request.json. Read-only; the hand controls wait for phase 2. */
+  function DetailTabs({ spec }) {
+    const tab = S.dtab || "prompt";
+    const tabs = [["prompt", "Prompt"], ["settings", "Settings"], ["versions", "Versions"], ["request", "Request"]];
+    const chips = (line) => line.split(/(Image \d+)/).map((part) => { const m = part.match(/^Image (\d+)$/); return m ? html`<span class="pchip"><img src=${spec.images[m[1] - 1]} alt=""/>${part}</span>` : part; });
+    return html`<div class="dtabs">
+      <div class="utabs" role="tablist">${tabs.map(([k, l]) => html`<button role="tab" aria-selected=${String(tab === k)} onClick=${() => set({ dtab: k })}>${l}</button>`)}</div>
+      <div role="tabpanel">
+        ${tab === "prompt" && html`<div class="prompt">${spec.prompt.split("\n").map((line) => html`<p>${chips(line)}</p>`)}</div>`}
+        ${tab === "settings" && html`<dl><dt>Model</dt><dd class="mono">${spec.model}</dd><dt>Ratio</dt><dd>${spec.ratio}</dd><dt>Resolution</dt><dd>${spec.resolution}</dd><dt>Duration</dt><dd>${spec.seconds} s</dd></dl>`}
+        ${tab === "versions" && html`<ol class="versions">${spec.versions.map(([v, st, said]) => html`<li><b class="mono">${v}</b>${Status(st)}${said && html`<span class="subtle">${said}</span>`}</li>`)}</ol>`}
+        ${tab === "request" && html`<pre class="mono">${JSON.stringify({ model: spec.model, content: [{ type: "text", text: spec.prompt.slice(0, 60) + "…" }, ...spec.images.map((u) => ({ type: "image_url", image_url: { url: "@" + u }, role: "reference_image" }))], duration: spec.seconds, ratio: spec.ratio, resolution: spec.resolution }, null, 2)}</pre>`}
+      </div>
+      <div class="acts"><button class="btn sm" disabled title="Phase 2: the agent makes every item for now">${I("upload")}Upload</button><button class="btn sm" disabled title="Phase 2: the agent makes every item for now">${I("sparkle")}Generate</button></div>
+    </div>`;
+  }
+
   function Canvas() {
     const ref = useRef(null);
     const byId = Object.fromEntries(NODES.map((n) => [n.id, n]));
@@ -276,6 +294,7 @@
             <dl><dt>Kind</dt><dd>${sel.role}</dd><dt>Version</dt><dd class="mono">${sel.ver}</dd><dt>Used by</dt><dd>${EDGES.filter((e) => e[0] === sel.id).map((e) => e[1]).join(", ") || "—"}</dd><dt>Reads</dt><dd>${EDGES.filter((e) => e[1] === sel.id).map((e) => byId[e[0]].label).join(", ") || "—"}</dd></dl>
             <div class="acts">${sel.st === "you" ? html`<button class="btn sm primary" onClick=${() => sel.kind === "seg" ? go("review") : toast("Opens the looks review.")}>Review</button>` : null}
               <button class="btn sm" onClick=${() => toast("Lineage: where this version comes from and what is made from it.")}>${I("tree-structure")}Lineage</button></div>
+            ${sel.seg && sel.seg.spec && html`<${DetailTabs} spec=${sel.seg.spec}/>`}
             <span class="subtle" style="font-size:11.5px">Read-only. Changes go through the agent: review, send back, or message it.</span></div></div>`}
         ${S.minimap && html`<div class="minimap" aria-hidden="true">${NODES.filter((n) => n.kind !== "group").map((n) => html`<i style=${`left:${8 + n.x * 0.11}px;top:${8 + n.y * 0.08}px;width:${n.w * 0.11}px;height:${n.h * 0.08}px`}></i>`)}
           <b style=${`left:${8 - x * 0.11 / k}px;top:${8 - y * 0.08 / k}px;width:${(ref.current ? ref.current.clientWidth : 900) * 0.11 / k}px;height:${(ref.current ? ref.current.clientHeight : 600) * 0.08 / k}px`}></b></div>`}
