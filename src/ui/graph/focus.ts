@@ -47,9 +47,11 @@ export async function layered(ids: string[], links: LineageLink[], column: (id: 
       "elk.direction": "RIGHT",
       "elk.spacing.nodeNode": String(GAP.within),
       "elk.layered.spacing.nodeNodeBetweenLayers": String(GAP.between),
+      // Interactive layering takes each node's layer from the x it is given (elk.layered.layering.strategy INTERACTIVE):
+      // here its pipeline column, so a column holds one stage of the pipeline.
+      "elk.layered.layering.strategy": "INTERACTIVE",
     },
-    // elkjs's layer choice constraint puts a node in the layer given (elk.layered.layering.layerChoiceConstraint).
-    children: ids.map((id) => ({ id, ...CARD, layoutOptions: { "elk.layered.layering.layerChoiceConstraint": String(column(id)) } })),
+    children: ids.map((id) => ({ id, ...CARD, x: column(id) * (CARD.width + GAP.between), y: 0 })),
     edges: links.map((link, n) => ({ id: `e${n}`, sources: [link.from], targets: [link.to] })),
   });
   return new Map((laid.children ?? []).map((child) => [child.id, { x: child.x ?? 0, y: child.y ?? 0 }]));

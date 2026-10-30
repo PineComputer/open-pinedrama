@@ -42,7 +42,7 @@ describe("the Graph", () => {
   it("draws the episode's newest work in focus and its lineage as cards named as the bible names them, with their pictures, never a spec", async () => {
     engine("shot");
     render(<Graph dramaId="d1" />);
-    expect(await screen.findByRole("heading", { name: "EP001 seg01 take" })).toBeInTheDocument();
+    expect(await screen.findByRole("complementary", { name: "EP001 seg01 take" })).toBeInTheDocument();
     const lin = await card(/^林 v1/);
     expect(lin.querySelector("img")).toHaveAttribute("src", "/api/files/8");
     expect(await card(/^办公室 · Day v1/)).toBeInTheDocument();
@@ -62,22 +62,21 @@ describe("the Graph", () => {
     engine("shot");
     render(<Graph dramaId="d1" />);
     await userEvent.click(await card(/^EP001 seg01 storyboard \(line-art\) v1/));
-    expect(await screen.findByRole("heading", { name: "EP001 seg01 storyboard (line-art)" })).toBeInTheDocument();
+    expect(await screen.findByRole("complementary", { name: "EP001 seg01 storyboard (line-art)" })).toBeInTheDocument();
     const from = screen.getByRole("region", { name: /^Made from \d/ });
     expect(within(from).getByRole("button", { name: /^EP001 breakdown/ })).toBeInTheDocument();
     expect(within(from).getByRole("button", { name: /^Bible/ })).toBeInTheDocument();
     const made = screen.getByRole("region", { name: /^Made from it/ });
     expect(within(made).getByRole("button", { name: /^EP001 seg01 take/ })).toBeInTheDocument();
     await userEvent.click(within(made).getByRole("button", { name: /^EP001 seg01 take/ }));
-    expect(await screen.findByRole("heading", { name: "EP001 seg01 take" })).toBeInTheDocument();
+    expect(await screen.findByRole("complementary", { name: "EP001 seg01 take" })).toBeInTheDocument();
   });
 
   it("says what is stale in drama-cli's own words", async () => {
     engine("time-plate-replaced");
     render(<Graph dramaId="d1" />);
     const bar = await screen.findByRole("region", { name: /stale/i });
-    const row = within(bar).getByRole("button", { name: /^EP001 seg01 take t01/ }).closest("li")!;
-    expect(row).toHaveTextContent("Changed selection: assets/scenes/office/times/Day/accepted.json");
+    expect(bar).toHaveTextContent("EP001 seg01 take t01: Changed selection: assets/scenes/office/times/Day/accepted.json");
     expect(await card(/^EP001 seg01 take t01/)).toHaveTextContent("Stale");
   });
 

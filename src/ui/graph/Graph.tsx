@@ -8,15 +8,13 @@
 // versions again, through the steering every session takes (POST /api/sessions/:id/chat): an
 // episode's own versions in its session, a shared one in the setup's, since an episode's session
 // never makes a new version of a shared reference (goals.ts). No price is shown.
-import { Background, BackgroundVariant, Controls, type Edge, Handle, type Node, type NodeProps, Position, ReactFlow, ViewportPortal } from "@xyflow/react";
+import { type Edge, Handle, type Node, type NodeProps, Position, ReactFlow } from "@xyflow/react";
 import { type CSSProperties, useEffect, useState } from "react";
 import { madeFromStale, trace, type Lineage, type LineageNode, type LineageView } from "../../shared/lineage.ts";
 import { nameOf, type Names } from "../../shared/names.ts";
 import { PIPELINE } from "../../shared/pipeline.ts";
 import type { ChatView, FileItem } from "../../shared/types.ts";
-import { Button } from "../components/Button.tsx";
 import { EmptyState } from "../components/EmptyState.tsx";
-import { StatusChip } from "../components/StatusChip.tsx";
 import { api, useAction, useResource } from "../api.ts";
 import { type TKey, useT } from "../i18n.ts";
 import { Icon, type IconName } from "../icons.tsx";
@@ -86,11 +84,21 @@ function standingOf(node: LineageNode, fromStale: boolean, t: T): Standing {
 }
 
 /** A version's picture: its image, a video's first frame over the poster given (a take's storyboard), or its kind's icon. */
-function Picture({ node, file, poster }: { node: LineageNode; file?: FileItem; poster?: FileItem }) {
-  if (file?.type.startsWith("image/")) return <img src={file.url} alt="" />;
-  if (file?.type.startsWith("video/")) return <video src={`${file.url}#t=0.1`} poster={poster?.url} muted preload="metadata" aria-hidden="true" />;
-  if (poster) return <img src={poster.url} alt="" />;
-  return <Icon name={ICONS[node.kind]} />;
+function Picture({ node, file, poster, style }: { node: LineageNode; file?: FileItem; poster?: FileItem; style?: CSSProperties }) {
+  if (file?.type.startsWith("image/")) return <img src={file.url} alt="" style={style} />;
+  if (file?.type.startsWith("video/")) return <video src={`${file.url}#t=0.1`} poster={poster?.url} muted preload="metadata" aria-hidden="true" style={style} />;
+  if (poster) return <img src={poster.url} alt="" style={style} />;
+  return <Icon name={ICONS[node.kind]} className="ic" />;
+}
+
+/** The prototype's status chip (studio-pro/app.js, Status). */
+function Status({ standing, t }: { standing: Standing; t: T }) {
+  return (
+    <span className={`st ${standing.status}`}>
+      <i />
+      {standing.label ?? t(`status.${standing.status}` as TKey)}
+    </span>
+  );
 }
 
 interface CardData extends Record<string, unknown> {
@@ -101,17 +109,18 @@ interface CardData extends Record<string, unknown> {
   standing: Standing;
   relation: "sel" | "up" | "down";
   stale: boolean;
+  t: T;
 }
 
-/** A version on the plane: the prototype's card, its picture over its name, version and state, edged in its kind's tone. */
+/** A version on the plane: the prototype's .gnode (studio-pro/screens.js, Graph), its picture over its name, version and state. */
 function Card({ data }: NodeProps<Node<CardData>>) {
-  const { node, standing } = data;
+  const { node } = data;
   return (
     <button
       type="button"
       // nopan: a press on a card focuses it, never starts a pan (React Flow, "nopan").
-      className={`gnode nopan is-${data.relation}${data.stale ? " is-stale" : ""}`}
-      style={{ width: CARD.width, height: CARD.height, "--tone": `var(${PIPELINE[node.kind].tone})` } as CSSProperties}
+      className={`gnode nopan ${data.relation}${data.stale ? " stale" : ""}`}
+      style={{ width: CARD.width, height: CARD.height }}
       aria-current={data.relation === "sel" || undefined}
     >
       <Handle type="target" position={Position.Left} isConnectable={false} className="ghandle" />
@@ -120,13 +129,15 @@ function Card({ data }: NodeProps<Node<CardData>>) {
         <Picture node={node} file={data.file} poster={data.poster} />
       </span>
       <span className="gtxt">
-        <b>{data.name}</b> <span className="mono">{node.version}</span> <StatusChip status={standing.status} label={standing.label} />
+        <b>{data.name}</b> <span className="mono">{node.version}</span> <Status standing={data.standing} t={data.t} />
       </span>
     </button>
   );
 }
 
 const NODE_TYPES = { card: Card };
+// Where the prototype's graph puts its first card (screens.js, Graph: 24 in, and 24 more down under the column heads).
+const INSET = { x: 24, y: 48 };
 
 export function Graph({ dramaId }: { dramaId: string }) {
   const { t } = useT();
@@ -190,6 +201,7 @@ export function Graph({ dramaId }: { dramaId: string }) {
   const selected = byId.get(center)!;
   const { up, down } = trace(lineage, center);
   const at = places?.key === key ? places.at : undefined;
+  const placeOf = (id: string) => ({ x: at!.get(id)!.x + INSET.x, y: at!.get(id)!.y + INSET.y });
 
   const flowNodes: Node<CardData>[] = at
     ? shown.ids.map((id) => {
@@ -197,23 +209,24 @@ export function Graph({ dramaId }: { dramaId: string }) {
         return {
           id,
           type: "card",
-          position: at.get(id)!,
+          position: placeOf(id),
           // The card's size, which React Flow lays out before it measures the node (and all jsdom gives).
           width: CARD.width,
           height: CARD.height,
-          data: { node, name: name(node), file: fileOf(node), poster: posterOf(node), standing: standing(node), relation: id === center ? "sel" : up.has(id) ? "up" : "down", stale: isStale(id) },
+          data: { node, name: name(node), file: fileOf(node), poster: posterOf(node), standing: standing(node), relation: id === center ? "sel" : up.has(id) ? "up" : "down", stale: isStale(id), t },
         };
       })
     : [];
+  // The prototype's wires: those of the trace are "on" (here, every wire drawn), a stale chain's dashed.
   const flowEdges: Edge[] = shown.links.map((link) => ({
     id: `${link.from}>${link.to}`,
     source: link.from,
     target: link.to,
-    className: isStale(link.from) && isStale(link.to) ? "is-stale" : undefined,
+    className: ["on", isStale(link.from) && isStale(link.to) && "stale"].filter(Boolean).join(" "),
   }));
-  // The column headings: the kinds of each column elkjs laid out, by the pipeline's names for them.
-  const columns = at ? [...new Set([...at.values()].map((p) => p.x))].sort((a, b) => a - b).map((x) => ({ x, labels: [...new Set(shown.ids.filter((id) => at.get(id)!.x === x).map((id) => PIPELINE[byId.get(id)!.kind].label))] })) : [];
-  const top = at ? Math.min(...[...at.values()].map((p) => p.y)) : 0;
+  // The column heads: the kinds of each column elkjs laid out, by the pipeline's names for them.
+  const columns = at ? [...new Set([...at.values()].map((p) => p.x))].sort((a, b) => a - b).map((x) => ({ x: x + INSET.x, labels: [...new Set(shown.ids.filter((id) => at.get(id)!.x === x).map((id) => PIPELINE[byId.get(id)!.kind].label))] })) : [];
+  const size = at ? { width: Math.max(...[...at.values()].map((p) => p.x)) + CARD.width + INSET.x * 2, height: Math.max(...[...at.values()].map((p) => p.y)) + CARD.height + INSET.y + INSET.x } : { width: 0, height: 0 };
 
   const list = (ids: Set<string>) =>
     ids.size ? (
@@ -227,66 +240,62 @@ export function Graph({ dramaId }: { dramaId: string }) {
       <span className="muted">{t("graph.nothing")}</span>
     );
 
+  // The prototype's Graph screen (studio-pro/screens.js, Graph): the body, its scrolling main and the inspector.
   return (
-    <div className="ds-graphview">
-      <div className="ds-graphmain">
+    <div className="body graph-screen">
+      <div className="scrollmain">
         {view.data.problems.map((problem) => (
           <p key={problem.turnId} className="notice">
             {t("graph.problem", { error: problem.error })}
           </p>
         ))}
         {stale.length > 0 && (
-          <section className="stalebar" aria-label={t("graph.staleTitle", { n: stale.length })}>
-            <Icon name="warning" />
-            <div className="grow">
-              <b>{t("graph.staleTitle", { n: stale.length })}</b> {t("graph.staleWhy")}
-              <ul>
-                {stale.map((node) => (
-                  <li key={node.id}>
-                    <button type="button" className="ds-link" onClick={() => focus(node.id)}>
-                      {name(node)} {node.version}
-                    </button>
-                    : {node.problems.join("; ")}
-                  </li>
-                ))}
-              </ul>
-              {redo.error !== undefined && <div className="error small">{errorText(redo.error, t)}</div>}
-              {sent && <div role="status">{t("graph.redoSent")}</div>}
-            </div>
-            <Button size="sm" variant="outline" busy={redo.busy} disabled={!sessions.data} disabledReason={blocked} onClick={() => void redo.run()}>
+          <div className="stalebar" role="region" aria-label={t("graph.staleTitle", { n: stale.length })}>
+            <Icon name="warning" className="ic" />
+            <span>
+              <b>{t("graph.staleTitle", { n: stale.length })}</b> {stale.map((node) => `${name(node)} ${node.version ?? ""}: ${node.problems.join("; ")}`).join(" · ")} {t("graph.staleWhy")}
+              {sent && <span role="status"> {t("graph.redoSent")}</span>}
+              {redo.error !== undefined && <span className="error"> {errorText(redo.error, t)}</span>}
+            </span>
+            <span className="grow" />
+            <button type="button" className="btn sm" disabled={!sessions.data || blocked !== undefined || redo.busy} aria-describedby={blocked ? "graph-redo-why" : undefined} onClick={() => void redo.run()}>
               {t("graph.redo")}
-            </Button>
-          </section>
+            </button>
+            {blocked && (
+              <span id="graph-redo-why" className="sr-only">
+                {blocked}
+              </span>
+            )}
+          </div>
         )}
-        <div className="graphwrap" role="group" aria-label={t("surface.graph")}>
-          <ReactFlow
-            // A new focus is a new view, fitted to the window.
-            key={key}
-            nodes={flowNodes}
-            edges={flowEdges}
-            nodeTypes={NODE_TYPES}
-            fitView
-            // At least 80%, so a card's picture and name read; a long lineage pans.
-            fitViewOptions={{ padding: 0.12, minZoom: 0.8, maxZoom: 1 }}
-            minZoom={0.2}
-            maxZoom={2}
-            nodesDraggable={false}
-            nodesConnectable={false}
-            nodesFocusable={false}
-            edgesFocusable={false}
-            elementsSelectable={false}
-            onNodeClick={(_, node) => focus(node.id)}
-          >
-            <Background variant={BackgroundVariant.Dots} gap={22} size={1} />
-            <Controls showInteractive={false} position="bottom-right" />
-            <ViewportPortal>
-              {columns.map((column) => (
-                <span key={column.x} className="gcol" style={{ transform: `translate(${column.x}px, ${top - 28}px)` }}>
-                  {column.labels.map((label) => t(label)).join(", ")}
-                </span>
-              ))}
-            </ViewportPortal>
-          </ReactFlow>
+        <div className="graphwrap">
+          <div className="graph" role="group" aria-label={t("surface.graph")} style={size}>
+            {columns.map((column) => (
+              <span key={column.x} className="gcol" style={{ left: column.x }}>
+                {column.labels.map((label) => t(label)).join(", ")}
+              </span>
+            ))}
+            {/* React Flow draws the cards and wires at the prototype's own scale: one fixed view, the page scrolling it. */}
+            <ReactFlow
+              key={key}
+              nodes={flowNodes}
+              edges={flowEdges}
+              nodeTypes={NODE_TYPES}
+              defaultViewport={{ x: 0, y: 0, zoom: 1 }}
+              panOnDrag={false}
+              zoomOnScroll={false}
+              zoomOnPinch={false}
+              zoomOnDoubleClick={false}
+              preventScrolling={false}
+              nodesDraggable={false}
+              nodesConnectable={false}
+              nodesFocusable={false}
+              edgesFocusable={false}
+              elementsSelectable={false}
+              onNodeClick={(_, node) => focus(node.id)}
+              proOptions={{ hideAttribution: true }}
+            />
+          </div>
         </div>
         <div className="glegend">
           <span>
@@ -306,27 +315,27 @@ export function Graph({ dramaId }: { dramaId: string }) {
       </div>
       <aside className="insp" aria-label={name(selected)}>
         <div className="ihead">
-          <h2>{name(selected)}</h2>
+          <b>{name(selected)}</b>
           <small>
             {t(`graph.kind.${selected.kind}` as TKey)} · {selected.version ?? t("graph.noVersion")}
           </small>
         </div>
         <div className="iscroll">
           {(fileOf(selected) || posterOf(selected)) && (
-            <div className="isec ipic">
-              <Picture node={selected} file={fileOf(selected)} poster={posterOf(selected)} />
+            <div className="isec">
+              <Picture node={selected} file={fileOf(selected)} poster={posterOf(selected)} style={{ width: "100%", borderRadius: 10, maxHeight: 240, objectFit: "cover", objectPosition: "top" }} />
             </div>
           )}
           <section className="isec" aria-labelledby="graph-state">
             <h4 id="graph-state">{t("graph.state")}</h4>
             {selected.fresh === false ? (
               <div className="finding warn">
-                <Icon name="warning" />
+                <Icon name="warning" className="ic" />
                 <span>{selected.problems.join("; ")}</span>
               </div>
             ) : marked.has(selected.id) ? (
               <div className="finding warn">
-                <Icon name="warning" />
+                <Icon name="warning" className="ic" />
                 <span>{t("graph.fromStale", { names: [...up].filter((id) => byId.get(id)?.fresh === false).map((id) => name(byId.get(id)!)).join(", ") })}</span>
               </div>
             ) : (

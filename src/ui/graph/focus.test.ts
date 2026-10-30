@@ -30,7 +30,7 @@ describe("their layout", () => {
     const x = (id: string) => places.get(id)!.x;
     expect(x("bible")).toBeLessThan(x("episodes/EP001/breakdown"));
     // One stage of the pipeline per column: the look and the plate stand apart, as the pipeline's columns put them.
-    expect(x("assets/characters/lin")).not.toBe(x("episodes/EP001/breakdown"));
+    expect(x("assets/characters/lin")).toBeGreaterThan(x("episodes/EP001/breakdown"));
     expect(x("assets/scenes/office")).toBeLessThan(x("assets/scenes/office/times/Day"));
     expect(x("episodes/EP001/multi_panel_storyboard/seg01/line-art")).toBeLessThan(x(TAKE));
     const boxes = [...places.values()];

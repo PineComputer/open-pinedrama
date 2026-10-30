@@ -42,7 +42,7 @@ test("the Graph traces a version both ways on the sample drama", async ({ page }
   const board = made.getByRole("button", { name: /storyboard/ }).first();
   await expect(board).toBeVisible();
   await board.click();
-  await expect(page.getByRole("heading", { name: /storyboard/ }).first()).toBeVisible();
+  await expect(page.getByRole("complementary", { name: /storyboard/ })).toBeVisible();
   await expect(page.getByRole("region", { name: /^Made from \d/ }).getByRole("button", { name: new RegExp(`^${lookName}`) })).toBeVisible();
 
   // Read-only: no way to make, edit or keep a version, and nothing is stale in replay, so no action at all.
