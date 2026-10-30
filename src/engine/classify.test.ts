@@ -23,6 +23,12 @@ describe("classify", () => {
     expect(classify("drama/status.json").kind).not.toBe("status");
   });
 
+  it("reads the refusals a stop asks about", () => {
+    expect(classify("handoff/refusals.jsonl")).toEqual({ kind: "refusal" });
+    expect(classify("work/handoff/refusals.jsonl")).toEqual({ kind: "refusal" });
+    expect(classify("drama/refusals.jsonl").kind).not.toBe("refusal");
+  });
+
   it("reads takes and cuts", () => {
     expect(classify("episodes/EP010/segments/seg01b/t02/video.mp4")).toMatchObject({ kind: "take", episode: "EP010", segment: "seg01b", version: "t02" });
     expect(classify("episodes/EP010/edit/v3/cut.mp4")).toMatchObject({ kind: "cut", episode: "EP010", version: "v3" });
