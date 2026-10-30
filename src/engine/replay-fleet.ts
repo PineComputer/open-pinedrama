@@ -107,6 +107,9 @@ const WORDS = {
     finished: (code: string) => `${code} is finished: the cut is accepted.`,
     readingMessage: ["Reading your message"],
     noted: (goal: string) => `Noted: ${goal.slice(0, 200)}`,
+    title: "The Stepmother",
+    places: { home: "Courtyard house", office: "Factory office" },
+    props: { letter: "Torn letter" },
     bible: `# Stepmother in the 80s — bible (placeholder)
 
 ## Characters
@@ -163,6 +166,9 @@ const WORDS = {
     finished: (code: string) => `${code} 已完成：成片已通过。`,
     readingMessage: ["阅读你的消息"],
     noted: (goal: string) => `收到：${goal.slice(0, 200)}`,
+    title: "后妈来了",
+    places: { home: "四合院", office: "工厂办公室" },
+    props: { letter: "撕破的信" },
     bible: `# 后妈来了 · 设定集（示例）
 
 ## 角色
@@ -180,6 +186,24 @@ const WORDS = {
     shot: (n: number, text: string) => `- 镜头 ${n}：${text}`,
   },
 };
+
+/**
+ * The bible.json a stop returns with the bible, for the names a screen reads (shared/names.ts):
+ * replay keeps only those of drama-cli's Bible fields, as its bible.md is a placeholder too.
+ */
+const bibleJson = (say: (typeof WORDS)[Lang]): Out => ({
+  path: "drama/bible/v1/bible.json",
+  type: "application/json",
+  bytes: text(
+    JSON.stringify({
+      title: say.title,
+      characters: say.cast.map((c) => ({ id: c.id, name: c.name, aliases: [] })),
+      locations: Object.entries(say.places).map(([id, name]) => ({ id, name })),
+      props: Object.entries(say.props).map(([id, name]) => ({ id, name })),
+      episodes: say.episodes.map((title, i) => ({ id: `EP00${i + 1}`, title })),
+    }),
+  ),
+});
 
 /** A part of a packed project, as the agent returns it (here a stand-in: replay has no drama-cli project). Packed again at each stop, under the same name. */
 const archive = (name: string, stop = 1): Out => ({ path: `handoff/${name}.tar.part-aa`, type: "application/octet-stream", bytes: text(`replay stand-in for ${name}.tar, packed at stop ${stop}`) });
@@ -236,7 +260,7 @@ function setupScript(lang: Lang, preset: string): Player {
       stage = "leads";
       return {
         progress: say.drawing,
-        files: [{ path: "drama/bible/v1/bible.md", type: "text/markdown", bytes: text(say.bible) }, ...say.cast.map(leadSheet)],
+        files: [{ path: "drama/bible/v1/bible.md", type: "text/markdown", bytes: text(say.bible) }, bibleJson(say), ...say.cast.map(leadSheet)],
         ask: say.askLooks,
       };
     }

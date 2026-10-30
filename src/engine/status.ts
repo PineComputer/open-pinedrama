@@ -3,7 +3,10 @@
 // started them, not as their files were saved: a turn saved again after a failed fetch, or
 // settled late, never takes the place of a newer one. A report that doesn't read is kept with
 // what was wrong, and the one before it stays current.
+import { readFileSync } from "node:fs";
+import { type Names, parseBibleNames } from "../shared/names.ts";
 import { parseStatus, type EpisodeStatus, type ProjectState, type ProjectView } from "../shared/project.ts";
+import { blobPath } from "./library.ts";
 import { all, get, now, run } from "./db.ts";
 import { publish } from "./live.ts";
 import { episodeCode, type SessionRow } from "./records.ts";
@@ -72,7 +75,7 @@ export function projectView(dramaId: string): ProjectView {
   });
   const problems = sessions.flatMap((session) => statusProblems(session.id).map((problem) => ({ sessionId: session.id, ...problem })));
   const views = reported.map(({ session, code, turnId, state }) => ({ sessionId: session.id, role: session.role, episode: code, turnId, budget: state.budget }));
-  if (!reported.length) return { state: null, sessions: views, problems };
+  if (!reported.length) return { state: null, sessions: views, problems, names: null };
   const newest = (list: typeof reported) => list.reduce((a, b) => (b.turnAt > a.turnAt ? b : a));
   const setups = reported.filter((entry) => entry.session.role === "setup");
   const base = newest(setups.length ? setups : reported);
@@ -82,5 +85,21 @@ export function projectView(dramaId: string): ProjectView {
     if (own.state.episodes[code]) episodes[code] = own.state.episodes[code];
   }
   const { budget: _budget, ...shared } = base.state;
-  return { state: { ...shared, episodes }, sessions: views, problems };
+  return { state: { ...shared, episodes }, sessions: views, problems, names: bibleNames(dramaId, shared.bible.current) };
+}
+
+/**
+ * The names in the working bible, the version the report says is current, from the bible.json a
+ * stop returned; null before one has. A bible.json that doesn't read is logged and gives none.
+ */
+function bibleNames(dramaId: string, version: string | null): Names | null {
+  if (!version) return null;
+  const row = get<{ sha: string }>("select sha from files where drama_id = ? and rel_path like ? order by id desc limit 1", dramaId, `%bible/${version}/bible.json`);
+  if (!row) return null;
+  try {
+    return parseBibleNames(JSON.parse(readFileSync(blobPath(row.sha), "utf8")));
+  } catch (error) {
+    console.warn(`The bible ${version} of drama ${dramaId}: ${(error as Error).message}`);
+    return null;
+  }
 }

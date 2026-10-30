@@ -58,7 +58,7 @@ beforeEach(() => {
 
 describe("the drama's project", () => {
   it("is null until a session returns a report", () => {
-    expect(status.projectView("d1")).toEqual({ state: null, sessions: [], problems: [] });
+    expect(status.projectView("d1")).toEqual({ state: null, sessions: [], problems: [], names: null });
   });
 
   it("is the setup's report until an episode's session reports", () => {
@@ -153,5 +153,35 @@ describe("the setup panel's step", () => {
     const { setupReached } = await import("./views.ts");
     status.recordStatus("setup", turn("setup"), bytes(report("new")));
     expect(setupReached("d1")).toBe(0);
+  });
+});
+
+describe("the drama's names", () => {
+  const bibleJson = JSON.parse(readFileSync(new URL("../../fixtures/status/bible.json", import.meta.url), "utf8"));
+
+  async function returnBible(version: string, change?: (value: Record<string, any>) => void) {
+    const { save } = await import("./library.ts");
+    const value = structuredClone(bibleJson);
+    change?.(value);
+    await save(new TextEncoder().encode(JSON.stringify(value)), { dramaId: "d1", sessionId: "setup", turnId: `bible-${version}`, relPath: `drama/bible/${version}/bible.json`, type: "application/json" });
+  }
+
+  it("are none until a bible comes back", () => {
+    status.recordStatus("setup", turn("setup"), bytes(report("story")));
+    expect(status.projectView("d1").names).toBeNull();
+  });
+
+  it("come from the bible the report says is the working one", async () => {
+    await returnBible("v1");
+    await returnBible("v2", (value) => {
+      value.characters[0].name = "林晓雨";
+    });
+    status.recordStatus("setup", turn("setup"), bytes(report("story")));
+    expect(status.projectView("d1").names?.characters.lin.name).toBe("林");
+    const later = report("story");
+    later.bible.current = "v2";
+    status.recordStatus("setup", turn("setup"), bytes(later));
+    expect(status.projectView("d1").names?.characters.lin.name).toBe("林晓雨");
+    expect(status.projectView("d1").names?.locations.office).toBe("办公室");
   });
 });

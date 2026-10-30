@@ -92,7 +92,8 @@ async function scenario(title: string) {
   const looks = await until("the looks review", openReview(id, (item) => item.kind === "looks"));
   const looksView = await call<ReviewView>("GET", `/api/reviews/${looks.id}`);
   expect(looksView.reviewItems.map((item) => item.key)).toEqual(["lin", "wei"]);
-  expect(looksView.otherFiles.map((file) => file.kind)).toEqual(["bible"]);
+  // The bible comes back as Markdown and as its bible.json, as a real stop returns them.
+  expect(looksView.otherFiles.map((file) => file.name)).toEqual(["bible.md", "bible.json"]);
 
   // Revising one look redraws only that one; the maker's own picture goes to the session with the note.
   const picture = new FormData();
