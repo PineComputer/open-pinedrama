@@ -256,3 +256,26 @@ export function parseStatus(report: unknown): ProjectState {
     budget: budget(at(raw, "budget", "")),
   };
 }
+
+/** A session's newest report: when its turn started, and the budget as its project counts it. */
+export interface SessionReport {
+  sessionId: string;
+  role: "setup" | "episode";
+  /** EP001, for an episode's session. */
+  episode: string | null;
+  turnId: string;
+  budget: Budget;
+}
+
+/**
+ * The drama's project as the studio shows it, from every session's newest report: the bible and
+ * the shared references from the setup's, each episode from its own session's (the setup's until
+ * that session reports). Budgets aren't added up: each session's project counts its own records.
+ */
+export interface ProjectView {
+  /** null until a session has returned a report that reads. */
+  state: Omit<ProjectState, "budget"> | null;
+  sessions: SessionReport[];
+  /** Reports newer than their session's current one that didn't read. */
+  problems: { sessionId: string; turnId: string; error: string }[];
+}
