@@ -12,10 +12,11 @@
 import { type EditData, Timeline, type TimelineState } from "@xzdarcy/react-timeline-editor";
 import "@xzdarcy/react-timeline-editor/dist/react-timeline-editor.css";
 import { MediaControlBar, MediaController, MediaPlayButton, MediaTimeDisplay } from "media-chrome/react";
-import { type Ref, useEffect, useImperativeHandle, useRef, useState } from "react";
+import { type Ref, useEffect, useId, useImperativeHandle, useRef, useState } from "react";
 import type { CutClip, FileItem, Note } from "../../shared/types.ts";
 import { clock } from "../api.ts";
 import { IconButton } from "../components/Button.tsx";
+import { Icon } from "../icons.tsx";
 import { useT } from "../i18n.ts";
 
 type TimelineRow = EditData["editorData"][number];
@@ -71,6 +72,10 @@ export function CutViewer({ file, notes = [], onTime, videoRef, actions = WATCH_
   const video = useRef<HTMLVideoElement>(null);
   useImperativeHandle(videoRef, () => video.current!, []);
   const timeline = useRef<TimelineState>(null);
+  // The transport sits below the picture, outside the controller, joined to it by its id (media-chrome's mediacontroller).
+  const controller = `cut-${useId().replace(/:/g, "")}`;
+  // media-chrome's attribute, which its React types leave out.
+  const joined = { mediacontroller: controller } as Record<string, string>;
   const area = useRef<HTMLDivElement>(null);
   const [time, setTime] = useState(0);
   const [width, setWidth] = useState(0);
@@ -80,6 +85,8 @@ export function CutViewer({ file, notes = [], onTime, videoRef, actions = WATCH_
   const fps = plan && "fps" in plan ? plan.fps : undefined;
   const length = clips.at(-1)?.end ?? 0;
   const zoom = pps ?? Math.min(MAX_PPS, Math.max(MIN_PPS, (width - START_LEFT * 2) / Math.max(length, 1)));
+  // reveric's ruler (edit_timeline.jsx): a label every 10, 5, 2 or 1 seconds by the zoom, ticks between.
+  const labelEvery = zoom < 9 ? 10 : zoom < 20 ? 5 : zoom < 45 ? 2 : 1;
   const current = clips.find((clip) => time >= clip.start && time < clip.end);
   const points = [...new Set([0, ...clips.map((clip) => clip.end)])];
 
@@ -104,7 +111,7 @@ export function CutViewer({ file, notes = [], onTime, videoRef, actions = WATCH_
 
   return (
     <div className="ds-cut">
-      <MediaController className="ds-cut-player" {...(fps ? { keyboardforwardseekoffset: String(1 / fps), keyboardbackwardseekoffset: String(1 / fps) } : {})}>
+      <MediaController id={controller} className="ds-cut-player" {...(fps ? { keyboardforwardseekoffset: String(1 / fps), keyboardbackwardseekoffset: String(1 / fps) } : {})}>
         <video
           slot="media"
           ref={video}
@@ -114,14 +121,16 @@ export function CutViewer({ file, notes = [], onTime, videoRef, actions = WATCH_
           onTimeUpdate={(event) => moved(event.currentTarget.currentTime)}
           onSeeked={(event) => moved(event.currentTarget.currentTime)}
         />
-        <MediaControlBar className="ds-cut-transport">
-          <span className="label">{current ? t("cut.segment", { segment: current.segment, take: current.take }) : ""}</span>
-          <IconButton label={t("cut.previous")} icon="skip-back" onClick={() => seek(points.filter((point) => point < time - 0.05).at(-1) ?? 0)} />
-          <MediaPlayButton className="ds-cut-play" />
-          <IconButton label={t("cut.next")} icon="skip-forward" onClick={() => seek(points.find((point) => point > time + 0.05) ?? length)} />
-          <MediaTimeDisplay className="tc" showDuration />
-        </MediaControlBar>
       </MediaController>
+      <MediaControlBar {...joined} className="ds-cut-transport">
+        <span className="seg">{current ? t("cut.segment", { segment: current.segment, take: current.take }) : ""}</span>
+        <span className="btns">
+          <IconButton label={t("cut.previous")} icon="skip-back" onClick={() => seek(points.filter((point) => point < time - 0.05).at(-1) ?? 0)} />
+          <MediaPlayButton {...joined} className="ds-cut-play" />
+          <IconButton label={t("cut.next")} icon="skip-forward" onClick={() => seek(points.find((point) => point > time + 0.05) ?? length)} />
+        </span>
+        <MediaTimeDisplay {...joined} className="tc" showDuration />
+      </MediaControlBar>
       <div className="ds-tl">
         <div className="ds-tl-bar">
           {!plan && <span className="note">{t("cut.noPlan")}</span>}
@@ -131,15 +140,29 @@ export function CutViewer({ file, notes = [], onTime, videoRef, actions = WATCH_
           <IconButton label={t("cut.zoomIn")} icon="plus" onClick={() => setPps(Math.min(MAX_PPS, zoom * 1.4))} />
           <IconButton label={t("cut.fit")} icon="arrows-in" onClick={() => setPps(undefined)} />
         </div>
+        <div className="ds-tl-body">
+        <div className="ds-tl-heads" aria-hidden="true">
+          <span className="ds-tl-corner" />
+          <span className="ds-tl-head is-main">
+            <Icon name="film-strip" />
+            {t("cut.picture")}
+            <span className="id">V1</span>
+          </span>
+          <span className="ds-tl-head">
+            <Icon name="note-pencil" />
+            {t("cut.notes")}
+            <span className="id">N1</span>
+          </span>
+        </div>
         <div className="ds-tl-area" ref={area} role="group" aria-label={t("cut.segments")}>
           <Timeline
             ref={timeline}
             editorData={cutRows(clips, notes, file.id)}
             effects={{ clip: { id: "clip", name: "clip" }, note: { id: "note", name: "note" } }}
             disableDrag={!EDITING}
-            scale={1}
-            scaleSplitCount={4}
-            scaleWidth={zoom}
+            scale={labelEvery}
+            scaleSplitCount={labelEvery >= 5 ? labelEvery : labelEvery * 4}
+            scaleWidth={zoom * labelEvery}
             startLeft={START_LEFT}
             rowHeight={44}
             autoScroll
@@ -172,6 +195,7 @@ export function CutViewer({ file, notes = [], onTime, videoRef, actions = WATCH_
             onActionMoveEnd={({ action, start }) => actions.move(Number(action.id), start)}
             onActionResizeEnd={({ action, start, end }) => actions.trim(Number(action.id), start, end)}
           />
+        </div>
         </div>
       </div>
     </div>
