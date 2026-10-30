@@ -12,7 +12,8 @@ Return those paths with your question or result.
   storyboard EP001 seg01 [--shots "a|b|c"]    a segment's storyboards, line-art and photoreal;
                                               the shots come from the newest breakdown when not given
   take EP001 seg01 [--line TEXT]              a take of a segment (9:16 video with a tone for its sound)
-  cut EP001                                   the cut: the newest take of every segment, in order
+  cut EP001                                   the cut: the newest take of every segment, in order,
+                                              with its cut.json beside it
   status                                      what drama/ holds
 
 The bible and the breakdowns are not drawn: write them yourself in Markdown, at
@@ -22,6 +23,7 @@ drama/bible/v1/bible.md and drama/episodes/EP001/breakdown/v1/breakdown.md, with
 import argparse
 import colorsys
 import hashlib
+import json
 import os
 import re
 import shutil
@@ -307,7 +309,32 @@ def cut(args):
         ffmpeg("-f", "concat", "-safe", "0", "-i", listing.name, "-c", "copy", "-movflags", "+faststart", out)
     finally:
         os.unlink(listing.name)
+    plan = os.path.join(os.path.dirname(out), "cut.json")
+    with open(plan, "w") as f:
+        json.dump(cut_plan(args.episode, takes), f, indent=2)
     print(out)
+    print(plan)
+
+
+def cut_plan(episode, takes):
+    """The cut's plan in drama-cli's form, as it writes it beside cut.mp4 (short_drama drama_cli/edit.py, `build`): the
+    output's size and frame rate, here the first take's, and each clip's take, its sha256, and its in and out in
+    seconds, every take whole."""
+    def probe(path, entries):
+        done = subprocess.run(["ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries", entries, "-of",
+                               "default=noprint_wrappers=1", path], check=True, capture_output=True, text=True)
+        return dict(line.split("=", 1) for line in done.stdout.split())
+
+    def sha256(path):
+        with open(path, "rb") as f:
+            return hashlib.sha256(f.read()).hexdigest()
+
+    first = probe(takes[0], "stream=width,height,r_frame_rate")
+    num, den = (int(n) for n in first["r_frame_rate"].split("/"))
+    output = {"width": int(first["width"]), "height": int(first["height"]), "fps": num // den if num % den == 0 else num / den}
+    clips = [{"path": os.path.relpath(path, ROOT), "sha256": sha256(path), "in": 0,
+              "out": float(probe(path, "format=duration")["duration"]), "audio": "source"} for path in takes]
+    return {"schema_version": 1, "episode": episode, "output": output, "clips": clips}
 
 
 def status(_args):

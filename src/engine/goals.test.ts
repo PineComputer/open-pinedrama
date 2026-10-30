@@ -86,3 +86,17 @@ describe("each stop returns drama-cli's lineage", () => {
     expect(goal).toContain("return no handoff/status.json, handoff/lineage.json or handoff/refusals.jsonl");
   });
 });
+
+// The cut's clips, each segment's take with its in and out, are in cut.json beside cut.mp4
+// (short_drama drama_cli/edit.py, `build`); the cut viewer draws its segments from them.
+const CUT_PLAN = "returning the cut (cut.mp4) with its cut.json";
+
+describe("a cut is returned with its cut.json", () => {
+  it.each([
+    ["an episode's session", episodeGoal(drama, "EP002", ["project.tar.part-aa"], true, "screenplay.md")],
+    ["a session that carries an episode on", resumeGoal(drama, "EP002", ["project.tar.part-aa", "EP002.tar.part-aa"], true, undefined, "screenplay.md")],
+    ["a rehearsal, whose kit writes one too", rehearsed(episodeGoal(drama, "EP002", ["project.tar.part-aa"], true, "screenplay.md"))],
+  ])("in %s", (_where, goal) => {
+    expect(times(goal, CUT_PLAN)).toBe(1);
+  });
+});

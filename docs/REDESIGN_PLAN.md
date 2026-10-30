@@ -102,7 +102,12 @@ decision): its scenes as bands with their segments in shot order, the shared ref
 episode uses (from P8.0's lineage links) or needs on the left, and a switcher to the other
 episodes. A whole-series overview isn't kept.
 
-**P7 Cut viewer (M6).** P7.1 tracks. P7.2 notes at the playhead.
+**P7 Cut viewer (M6).** P7.0 the cut's segments: an episode's stop returns the cut with its
+cut.json, drama-cli's plan of the cut (each clip's take, in and out), and the engine serves the
+segments from it. P7.1 the player and the timeline, with each segment's strip. P7.2 notes at the
+playhead, as pins on the timeline. P7.3 Accept cut and Send back, through the existing decision.
+P7.4 the viewer in the cut's review and in Cut. A subtitle track is its own item, later, once a
+stop returns the cut's cut.srt.
 
 **P8 Graph (M7).** P8.0 each stop also returns `drama-cli export comfyui`, drama-cli's own
 lineage (each stage's working and accepted version, whether it is fresh, the file it shows,
