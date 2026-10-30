@@ -19,6 +19,7 @@ const PROJECTS: { name: string; spec: string; colorScheme: "light" | "dark" }[] 
   { name: "sample-drama-dark", spec: "sample-drama", colorScheme: "dark" },
   { name: "project-state", spec: "project-state", colorScheme: "light" },
   { name: "shell", spec: "shell", colorScheme: "light" },
+  { name: "stop-episode", spec: "stop-episode", colorScheme: "light" },
   { name: "gallery", spec: "gallery", colorScheme: "light" },
   { name: "gallery-dark", spec: "gallery", colorScheme: "dark" },
   { name: "screenshots", spec: "screenshots", colorScheme: "light" },

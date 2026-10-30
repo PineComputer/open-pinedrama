@@ -14,6 +14,7 @@ export type ErrorCode =
   | "file-too-large"
   | "not-found"
   | "episode-busy"
+  | "episode-not-running"
   | "drama-not-stopped"
   | "drama-done"
   | "drama-not-held"
