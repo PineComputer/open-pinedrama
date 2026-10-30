@@ -7,7 +7,6 @@
 // viewport; where the maker moved items is kept per episode as the studio's view state. Phase 1
 // only reads: the inspector steers the agent, and the hand actions stand disabled.
 import { Background, BackgroundVariant, type Edge, Handle, MiniMap, type Node, type NodeProps, NodeToolbar, Position, ReactFlow, ReactFlowProvider, useNodesInitialized, useNodesState, useReactFlow, useStore, useViewport } from "@xyflow/react";
-import "@xyflow/react/dist/style.css";
 import { createContext, type ReactNode, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { HEIGHT, layout, WIDTH } from "../../shared/layout.ts";
 import type { LineageNode, LineageView } from "../../shared/lineage.ts";
@@ -75,6 +74,10 @@ const DOCK_KEY = "studio.canvas.dock";
 
 /** The panel width under a node (design/studio.css, the canvas's node panel). */
 const PANEL = 560;
+/** Room, in screen pixels, the bar takes above the picked node and the panel under it at most (design/studio.css, .nbar and .npanel), and the docked panel with its margin. */
+const BAR = 56;
+const PANEL_HEIGHT = 420;
+const DOCKED = 420;
 
 interface BoardContext {
   pick: (id: string | null) => void;
@@ -144,6 +147,9 @@ const NODE_TYPES = { item: ItemNode, frame: FrameNode };
 
 /** Fitting leaves room for what floats over the board: the pills at the top, the zoom pill at the foot, the detail card on the right. Never past the reference's scale. */
 const FIT = { padding: { top: "72px", bottom: "72px", left: "40px", right: "40px" }, maxZoom: 1.05 } as const;
+
+/** The minimap's size, as the design's (design/studio.css .minimap). */
+const MINIMAP = { width: 168, height: 104 };
 
 /** Where a board opens: its top left clear of the pills, at the prototype's readable scale (design/app.js, the canvas's camera, 0.62), a little under it for drama-cli's larger nodes. */
 const OPEN = { x: 40, y: 72, zoom: 0.55 };
@@ -288,7 +294,8 @@ function Plane({ drama }: { drama: DramaView }) {
   // Fitted once React Flow has measured the nodes, so the bounds are the drawn ones.
   const measured = useNodesInitialized();
   useEffect(() => {
-    if (!measured || !nodes.length || opened.current === code) return;
+    // After the files too, so the agent's newest work is known before the board opens and following doesn't jump to it after.
+    if (!measured || !nodes.length || !files.data || opened.current === code) return;
     opened.current = code;
     centred.current = target;
     // The board opens on its top left at a zoom its labels read at, as the prototype's opens on its cast, places and first scene; Fit shows it all.
@@ -296,7 +303,7 @@ function Plane({ drama }: { drama: DramaView }) {
     const left = Math.min(...frames.map((node) => node.position.x));
     const top = Math.min(...frames.map((node) => node.position.y));
     void flow.setViewport({ x: OPEN.x - left * OPEN.zoom, y: OPEN.y - top * OPEN.zoom, zoom: OPEN.zoom }, { duration: 300 });
-  }, [code, nodes, measured]);
+  }, [code, nodes, measured, files.data]);
   useEffect(() => {
     if (!follow || !target || opened.current !== code || centred.current === target) return;
     const node = flow.getInternalNode(target);
@@ -319,6 +326,15 @@ function Plane({ drama }: { drama: DramaView }) {
   const pick = (id: string | null) => {
     setFollow(false);
     setNodes((all) => all.map((node) => ({ ...node, selected: node.id === id })));
+    // Bring the picked node into view at the maker's zoom: with its bar above and its panel under it, or left of the docked panel.
+    const node = id ? flow.getInternalNode(id) : undefined;
+    if (!node) return;
+    const zoom = flow.getZoom();
+    const { x, y } = node.internals.positionAbsolute;
+    const w = node.width ?? 0;
+    const h = node.height ?? 0;
+    if (dock === "under") void flow.setCenter(x + w / 2, y - BAR / zoom + (h + (BAR + PANEL_HEIGHT) / zoom) / 2, { zoom, duration: 400 });
+    else void flow.setCenter(x + w / 2 + DOCKED / 2 / zoom, y + h / 2, { zoom, duration: 400 });
   };
   const at = codes.indexOf(code);
   const byId = new Map(mapped.nodes.map((node) => [node.id, node]));
@@ -369,8 +385,8 @@ function Plane({ drama }: { drama: DramaView }) {
           ariaLabelConfig={{ "minimap.ariaLabel": t("canvas.minimap") }}
         >
           <Dots />
-          {/* React Flow draws node toolbars under its panels: the minimap steps aside while a node's panel is open, so it covers none of it. */}
-          {minimap && !(picked && dock === "under") && <MiniMap position="bottom-right" pannable zoomable className="ds-minimap" />}
+          {/* The minimap steps aside while a node's panel is open, under the node (React Flow draws node toolbars under its panels) or docked over the minimap's corner. */}
+          {minimap && !picked && <MiniMap position="bottom-right" pannable zoomable className="ds-minimap" style={MINIMAP} />}
         </ReactFlow>
         <div className="ctop">
             <div className="ds-epswitch">

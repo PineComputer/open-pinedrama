@@ -341,7 +341,8 @@
           <button class="ibtn" title="Zoom out" aria-label="Zoom out" onClick=${() => zoom(0.85)}>${I("minus")}</button>
           <span class="z">${Math.round(k * 100)}%</span>
           <button class="ibtn" title="Zoom in" aria-label="Zoom in" onClick=${() => zoom(1.15)}>${I("plus")}</button>
-          <button class=${"ibtn " + (S.minimap ? "on" : "")} title="Minimap" aria-label="Minimap" onClick=${() => set({ minimap: !S.minimap })}>${I("map-pin")}</button></div>
+          <button class=${"ibtn " + (S.minimap ? "on" : "")} title="Minimap" aria-label="Minimap" onClick=${() => set({ minimap: !S.minimap })}>${I("map-pin")}</button>
+          <button class="ibtn" title="Lay out again" aria-label="Lay out again" onClick=${() => { set({ cam: { x: 40, y: 96, k: 0.62 } }); toast("Every node back where drama-cli's layout puts it."); }}>${I("tree-structure")}</button></div>
         ${S.agentOpen && html`<${AgentPanel} float/>`}
         <button class="ball busy" aria-label="Agent, 4 decisions wait" onClick=${() => set({ agentOpen: !S.agentOpen })}>${I("robot")}<span class="badge">4</span></button>
       </div></div>`;

@@ -1,7 +1,10 @@
 /* The canvas on React Flow: its parts take our tokens through its own variables, and the nodes,
    frames and pills are the pro prototype's (design-references/studio-pro/studio.css,
    "canvas"), scoped to the canvas. Every colour is a token (CONTRIBUTING.md). */
-.ds-canvas { position: relative; height: calc(100vh - 150px); min-height: 420px; margin: 0 -16px; border-top: 1px solid var(--border); }
+/* The board fills what the drama's bar leaves, as the design's .board fills its main (design/studio.css), and as the review room fills it (styles.css .frev). */
+.ds-scroll:has(.ds-canvas) { display: flex; flex-direction: column; }
+.ds-workin:has(> .ds-canvas) { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.ds-canvas { position: relative; flex: 1; min-height: 420px; }
 .ds-canvas .react-flow {
   --xy-background-color: var(--canvas);
   --xy-background-pattern-color: color-mix(in srgb, var(--text-primary) 18%, transparent);
@@ -37,7 +40,8 @@
 /* What studio.css's canvas rules need on React Flow: its nodes fill React Flow's node boxes, wires are React Flow's edges. */
 .ds-canvas .react-flow__edge path { stroke-dasharray: 4 4; }
 .ds-canvas .react-flow__edge.hot path { stroke: var(--text-primary); stroke-dasharray: none; stroke-width: 1.6; }
-.ds-canvas .react-flow__minimap { right: 84px; border-radius: var(--radius-large); border: 1px solid var(--border); overflow: hidden; }
+/* Beside the agent ball, as the design's .minimap (design/studio.css): React Flow's own panel rule sets right: 0, so this one is more specific. */
+.ds-canvas .react-flow__panel.react-flow__minimap { right: 84px; bottom: 16px; margin: 0; border-radius: var(--radius-large); border: 1px solid var(--border); overflow: hidden; }
 .ds-canvas .react-flow__node-frame { pointer-events: none; }
 .ds-canvas .group { inset: 0; }
 .ds-canvas .group > .gl { right: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
