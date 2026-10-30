@@ -21,6 +21,11 @@ const stepmother = card({
   title: "The Stepmother",
   facts: { scale: { episodes: 2, scenes: 5, segments: 12 }, length: "60", genres: ["Family", "Period"], logline: "A stepmother takes over a house that doesn't want her.", lastActivity: "2026-10-30T11:55:00Z", lastLine: "Drawing the storyboards for EP001" },
 });
+/** A drama's card on the shelf, apart from the hero's links to the same drama. */
+async function tileOf(name: RegExp) {
+  return within(await screen.findByRole("tabpanel")).getByRole("link", { name });
+}
+
 const bride = card({ id: "d2", title: "Bride on Bail", status: "stopped", facts: {} });
 
 beforeEach(() => vi.useFakeTimers({ now: new Date("2026-10-30T12:00:00Z"), shouldAdvanceTime: true }));
@@ -32,15 +37,15 @@ describe("Home", () => {
     answer("/api/inbox", []);
     answer("/api/dramas", [stepmother, bride]);
     render(<Slate />);
-    const tile = await screen.findByRole("link", { name: /^The Stepmother/ });
+    const tile = await tileOf(/^The Stepmother/);
     expect(tile).toHaveTextContent("A stepmother takes over a house that doesn't want her.");
     expect(tile).toHaveTextContent("2 episodes · 5 scenes · 12 segments");
     expect(tile).toHaveTextContent("about 2 min planned");
     expect(tile).toHaveTextContent("English vertical drama");
     expect(tile).toHaveTextContent("5 minutes ago");
-    expect(within(tile).getByText("Family")).toHaveClass("ds-tag");
-    expect(within(tile).getByText("Period")).toHaveClass("ds-tag");
-    const other = screen.getByRole("link", { name: /^Bride on Bail/ });
+    expect(within(tile).getByText("Family")).toBeInTheDocument();
+    expect(within(tile).getByText("Period")).toBeInTheDocument();
+    const other = await tileOf(/^Bride on Bail/);
     expect(other).not.toHaveTextContent(/scenes|segments|planned|ago/);
   });
 
@@ -49,10 +54,10 @@ describe("Home", () => {
     answer("/api/inbox", []);
     answer("/api/dramas", [{ ...stepmother, cast: ["/api/files/7"], cover: { url: "/api/files/9" } }, { ...bride, cast: ["/api/files/8"] }]);
     render(<Slate />);
-    const withWork = await screen.findByRole("link", { name: /^The Stepmother/ });
+    const withWork = await tileOf(/^The Stepmother/);
     expect(withWork.querySelector(".poster .still")).toHaveStyle({ backgroundImage: "url(/api/files/9)" });
     expect(withWork.querySelector(".poster .leads")).toBeNull();
-    const faces = screen.getByRole("link", { name: /^Bride on Bail/ });
+    const faces = await tileOf(/^Bride on Bail/);
     expect(faces.querySelector(".poster .leads span")).toHaveStyle({ backgroundImage: "url(/api/files/8)" });
   });
 
@@ -66,13 +71,41 @@ describe("Home", () => {
     expect(await screen.findByRole("heading", { level: 1, name: greeting })).toBeInTheDocument();
   });
 
-  it("shows a waiting item's drama cover when the item has no picture of its own", async () => {
+  it("shows each recent drama by its cover, the face of its first lead", async () => {
     answer("/api/app", replay);
-    answer("/api/inbox", [{ id: "r1", dramaId: "d1", dramaTitle: "The Stepmother", kind: "question", state: "open", question: "How old is he?", items: 0, createdAt: "2026-10-30T11:00:00Z" }]);
-    answer("/api/dramas", [{ ...stepmother, waiting: 1, cast: ["/api/files/7"] }]);
+    answer("/api/inbox", []);
+    answer("/api/dramas", [{ ...stepmother, cast: ["/api/files/7"] }]);
     render(<Slate />);
-    const waiting = await screen.findByRole("link", { name: /^Question/ });
-    expect(waiting.querySelector(".still")).toHaveStyle({ backgroundImage: "url(/api/files/7)" });
+    const recent = await screen.findByRole("list", { name: "Recent" });
+    expect(within(recent).getByRole("link", { name: /^The Stepmother/ }).querySelector(".still")).toHaveStyle({ backgroundImage: "url(/api/files/7)" });
+  });
+
+  it("shows at most two genres on a card, and how many more", async () => {
+    answer("/api/app", replay);
+    answer("/api/inbox", []);
+    answer("/api/dramas", [{ ...stepmother, facts: { ...stepmother.facts, genres: ["Romance", "Contract marriage", "Revenge"] } }]);
+    render(<Slate />);
+    const tile = await tileOf(/^The Stepmother/);
+    expect(within(tile).getByText("Romance")).toBeInTheDocument();
+    expect(within(tile).getByText("Contract marriage")).toBeInTheDocument();
+    expect(within(tile).queryByText("Revenge")).not.toBeInTheDocument();
+    expect(within(tile).getByText("+1")).toBeInTheDocument();
+  });
+
+  it("carries on with the drama worked on last, its waiting review first, beside the recent dramas", async () => {
+    answer("/api/app", replay);
+    // The older drama's review has waited longer; the newer drama is the one to carry on with.
+    answer("/api/inbox", [
+      { id: "r0", dramaId: "d2", dramaTitle: "Bride on Bail", kind: "question", state: "open", question: "Old question", items: 0, createdAt: "2026-10-27T11:00:00Z" },
+      { id: "r1", dramaId: "d1", dramaTitle: "The Stepmother", kind: "looks", state: "open", question: "The leads' looks are ready.", items: 2, createdAt: "2026-10-30T11:56:00Z" },
+    ]);
+    answer("/api/dramas", [{ ...bride, waiting: 1, facts: { lastActivity: "2026-10-27T11:00:00Z" } }, { ...stepmother, waiting: 1 }]);
+    render(<Slate />);
+    const hero = await screen.findByRole("region", { name: "The Stepmother" });
+    expect(hero).toHaveTextContent("The leads' looks are ready.");
+    expect(within(hero).getByRole("link", { name: /^Review Leads' looks/ })).toHaveAttribute("href", "/r/r1");
+    const recent = within(hero).getByRole("list", { name: "Recent" });
+    expect(within(recent).getAllByRole("link").map((link) => link.getAttribute("href"))).toEqual(["/d/d1", "/d/d2"]);
   });
 
   it("has a shelf for each state, with its count, Stopped among them", async () => {
