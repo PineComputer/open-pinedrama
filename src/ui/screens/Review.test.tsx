@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
-import { storyboardReview } from "../test/fixtures.ts";
+import { file, storyboardReview } from "../test/fixtures.ts";
 import { accept, answer, calls } from "../test/server.ts";
 import { Review } from "./Review.tsx";
 
@@ -13,6 +13,16 @@ function open(review = storyboardReview("seg01", "seg02")) {
 }
 
 describe("the review room for storyboards", () => {
+  it("says what drama-cli made the picture in view with, from the spec.json beside it", async () => {
+    const spec = file({ kind: "spec", name: "episodes/EP002/storyboard/seg01/v1/spec.json", type: "application/json", episode: "EP002" });
+    answer("/api/dramas/d1/files", [spec]);
+    answer(spec.url, { provider: "seedream", model: "seedream-5", prompt: "A pier at dawn.", aspect_ratio: "9:16", size: "2K" });
+    open();
+    const facts = (await screen.findByRole("heading", { level: 4, name: "Picture" })).parentElement as HTMLElement;
+    expect(within(facts).getByText("9:16 · 2K")).toBeInTheDocument();
+    expect(within(facts).getByText("seedream-5")).toBeInTheDocument();
+  });
+
   it("accepts the item in view with A and moves on to the next", async () => {
     const user = userEvent.setup();
     open();

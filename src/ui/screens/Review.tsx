@@ -11,8 +11,9 @@ import { Icon } from "../icons.tsx";
 import { Markdown } from "../Markdown.tsx";
 import { Link, navigate, usePath } from "../router.tsx";
 import { Still } from "../Still.tsx";
-import { DocumentView, Pinboard, isDocument, isImage, isVideo, useShotList, useSize, variantLabel } from "../viewing.tsx";
+import { DocumentView, Pinboard, isDocument, isImage, isVideo, useShotList, useSize, useText, variantLabel } from "../viewing.tsx";
 import { buttonVariants } from "@/components/ui/button";
+import { specBeside, specFacts } from "../../shared/spec.ts";
 
 type Drafts = Record<string, { verdict?: Verdict; notes: Note[] }>;
 
@@ -291,7 +292,7 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
   const stage = useRef<HTMLDivElement>(null);
   const stageSize = useSize(stage);
   // The storyboards beside each take: the episode's files, read once.
-  const episodeFiles = useResource<FileItem[]>(takes && review.episode ? `/api/dramas/${review.dramaId}/files?episode=${review.episode}` : null, [`drama:${review.dramaId}`]);
+  const episodeFiles = useResource<FileItem[]>(review.episode ? `/api/dramas/${review.dramaId}/files?episode=${review.episode}` : null, [`drama:${review.dramaId}`]);
 
   const item: ReviewItem | undefined = items[index];
   const variants = item?.files ?? [];
@@ -300,6 +301,8 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
   const file = earlier && before ? before : latest;
   const draft = item ? drafts[item.key] : undefined;
   const space = { width: Math.max(0, stageSize.width - 40), height: Math.max(0, stageSize.height - 40) };
+  // What drama-cli says this version was made with (its spec.json beside it), as the pro direction's inspector shows a take's facts.
+  const spec = specFacts(useText(specBeside(file, episodeFiles.data ?? [])).text);
   const shots = useShotList(
     review.breakdown ?? review.otherFiles.find((file) => file.kind === "breakdown" && /markdown|text/.test(file.type)),
     review.kind === "storyboards" || takes ? item?.key : undefined,
@@ -521,6 +524,31 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
                   </li>
                 ))}
               </ol>
+            </div>
+          )}
+          {spec && (spec.seconds !== undefined || spec.ratio || spec.model) && (
+            <div className="ds-isec">
+              <h4>{t(takes ? "review.take" : "review.image")}</h4>
+              <dl className="ds-kv">
+                {spec.seconds !== undefined && (
+                  <>
+                    <dt>{t("review.length")}</dt>
+                    <dd>{t("segments.seconds", { n: spec.seconds })}</dd>
+                  </>
+                )}
+                {(spec.ratio || spec.resolution) && (
+                  <>
+                    <dt>{t("review.spec")}</dt>
+                    <dd>{[spec.ratio, spec.resolution].filter(Boolean).join(" · ")}</dd>
+                  </>
+                )}
+                {spec.model && (
+                  <>
+                    <dt>{t("review.model")}</dt>
+                    <dd className="mono">{spec.model}</dd>
+                  </>
+                )}
+              </dl>
             </div>
           )}
           {board && (
