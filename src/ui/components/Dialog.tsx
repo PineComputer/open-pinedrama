@@ -32,6 +32,7 @@ export function Dialog({
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent
+        className="glass"
         onCloseAutoFocus={(event) => {
           event.preventDefault();
           opener.current?.focus();

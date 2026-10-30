@@ -5,6 +5,12 @@
    and icons only (contrast.test.ts). */
 
 :root {
+  /* Glass: the translucent ground of what floats over the work (the agent panel floating, menus,
+     dialogs, the top bar), after the polish reference's panels; dark at 55% with a white rule, light
+     at 62% with a dark one, both blurred 24px. Used through the glass utility (index.css). */
+  --glass-bg: rgb(255 255 255 / 0.62);
+  --glass-border: rgb(0 0 0 / 0.08);
+  --glass-blur: 24px;
   --rail: 52px;
   --side: 248px;
   --agent: 360px;
@@ -14,6 +20,11 @@
   --d1: 120ms;
   --d2: 180ms;
   --d3: 320ms;
+}
+
+:root[data-theme="dark"] {
+  --glass-bg: rgb(20 20 22 / 0.55);
+  --glass-border: rgb(255 255 255 / 0.1);
 }
 
 * { box-sizing: border-box; }

@@ -24,7 +24,7 @@ export function Menu({ label, items, trigger, wide }: { label: string; items: Me
           </Button>
         )}
       </DropdownMenuTrigger>
-      <DropdownMenuContent align={wide ? "start" : "end"} className="min-w-50">
+      <DropdownMenuContent align={wide ? "start" : "end"} className="glass min-w-50">
         {items.map((item) => (
           <DropdownMenuItem key={item.label} disabled={item.disabled} onSelect={item.run}>
             {item.label}

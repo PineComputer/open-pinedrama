@@ -136,7 +136,7 @@ export function AgentPanel({ drama, episode, mode, onMode }: { drama: DramaView;
   const working = running.some((session) => !session.waiting);
   const waitingRuns = running.filter((session) => session.waiting).length;
   return (
-    <aside className={`ds-agent ${mode === "floating" ? "is-float" : ""}`} aria-label={t("agent.label")}>
+    <aside className={`ds-agent ${mode === "floating" ? "is-float glass" : ""}`} aria-label={t("agent.label")}>
       <div className="ds-agent-head">
         <span className={`ds-live ${working ? "" : "is-idle"}`} aria-hidden="true" />
         <h2>{t("agent.title")}</h2>

@@ -1,4 +1,5 @@
-// shadcn/ui's button, as pills: every button in the pro direction is one (reveric-tokens.css, --radius-button).
+// shadcn/ui's button, as pills: every button in the pro direction is one (reveric-tokens.css, --radius-button);
+// its heights are the pro direction's, sm 26 / default 32 / lg 40 (studio-pro SPEC.md, "Button").
 // Destructive is outlined, not tinted: the tint under Reveric's error colour falls below 4.5:1 (axe, e2e).
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
@@ -23,10 +24,10 @@ const buttonVariants = cva(
       },
       size: {
         default:
-          "h-8 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2",
+          "h-8 gap-1.5 px-3.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2",
         xs: "h-6 gap-1 px-2 text-xs has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3",
-        sm: "h-7 gap-1 px-2.5 text-[0.8rem] has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3.5",
-        lg: "h-9 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2",
+        sm: "h-[26px] gap-1 px-2.5 text-[0.8rem] has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3.5",
+        lg: "h-10 gap-1.5 px-[18px] has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2",
         icon: "size-8",
         "icon-xs":
           "size-6 [&_svg:not([class*='size-'])]:size-3",

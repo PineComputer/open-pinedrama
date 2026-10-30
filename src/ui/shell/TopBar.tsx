@@ -173,7 +173,7 @@ export function TopBar({ crumbs, waiting, ready, bar, children }: { crumbs: Crum
   const { t } = useT();
   const back = crumbs.length > 1 ? crumbs[crumbs.length - 2].to : undefined;
   return (
-    <header className="ds-topbar">
+    <header className="ds-topbar glass">
       {back && <IconButton label={t("crumb.back")} icon="caret-left" onClick={() => navigate(back)} />}
       {bar ?? <Breadcrumb crumbs={crumbs} />}
       <span className="ds-topbar-gap" />

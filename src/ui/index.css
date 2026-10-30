@@ -49,6 +49,13 @@
   --radius-lg: var(--radius-large);
 }
 
+/* The glass ground (theme/base.css's --glass-*), for whatever floats over the work. */
+@utility glass {
+  background-color: var(--glass-bg);
+  border-color: var(--glass-border);
+  backdrop-filter: blur(var(--glass-blur)) saturate(1.4);
+}
+
 @layer base {
   * {
     @apply border-border;
