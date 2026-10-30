@@ -16,7 +16,7 @@ const WORDS: Record<Status, string> = {
 
 export function StatusChip({ status, label }: { status: Status; label?: string }) {
   return (
-    <span className={`ds-chip ${status}`}>
+    <span className={`ds-chip is-${status}`}>
       {(status === "work" || status === "redline") && <span className="dot" aria-hidden="true" />}
       {label ?? WORDS[status]}
     </span>
@@ -26,5 +26,5 @@ export function StatusChip({ status, label }: { status: Status; label?: string }
 /** How many findings of this severity the observer reported (understand's error and warn); nothing for none. */
 export function FindingCount({ severity, count }: { severity: "error" | "warn"; count: number }) {
   if (!count) return null;
-  return <span className={`ds-chip ${severity}`}>{`${count} ${severity}`}</span>;
+  return <span className={`ds-chip is-${severity}`}>{`${count} ${severity}`}</span>;
 }

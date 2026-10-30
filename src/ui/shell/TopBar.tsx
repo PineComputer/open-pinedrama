@@ -49,12 +49,12 @@ function NextReview({ waiting }: { waiting: ReviewSummary[] }) {
   return (
     <button
       type="button"
-      className={`ds-nextreview ${others.length ? "" : "none"}`}
+      className={`ds-nextreview ${others.length ? "" : "is-none"}`}
       disabled={!others.length}
       aria-label={`${t("next.label")}, ${t("next.waiting", { n: others.length })}`}
       onClick={() => navigate(`/r/${others[0].id}`)}
     >
-      {t("next.label")} <span className="n">{others.length}</span>
+      {t("next.label")} <span className="ds-count">{others.length}</span>
     </button>
   );
 }
@@ -72,7 +72,7 @@ export function TopBar({ app, waiting, drama }: { app?: AppInfo; waiting: Review
       {drama ? (
         <>
           <div className="ds-crumb">
-            <span className="slash">/</span>
+            <span className="ds-slash">/</span>
             <b>{drama.title}</b>
           </div>
           <span className="ds-surface">
@@ -98,7 +98,7 @@ export function TopBar({ app, waiting, drama }: { app?: AppInfo; waiting: Review
       )}
       <span className="ds-meta">
         {app?.mode === "replay" && <span>{t("mode.replay")}</span>}
-        <button type="button" className="ds-btn text s32" onClick={() => setLang(lang === "zh" ? "en" : "zh")}>
+        <button type="button" className="ds-btn is-text is-s32" onClick={() => setLang(lang === "zh" ? "en" : "zh")}>
           {lang === "zh" ? "English" : "中文"}
         </button>
       </span>

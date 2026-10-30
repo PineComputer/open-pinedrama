@@ -13,7 +13,7 @@ export function Steps({ label, steps }: { label: string; steps: Step[] }) {
   return (
     <ol className="ds-steps" aria-label={label}>
       {steps.map((step) => (
-        <li key={step.title} className={step.state} aria-current={step.state === "now" ? "step" : undefined}>
+        <li key={step.title} className={`is-${step.state}`} aria-current={step.state === "now" ? "step" : undefined}>
           <span className="mk" aria-hidden="true">
             {step.state === "done" ? "✓" : step.state === "you" ? "!" : ""}
           </span>

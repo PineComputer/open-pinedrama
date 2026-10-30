@@ -81,7 +81,7 @@ export default function Gallery() {
         <Dialog open={dialog} onOpenChange={setDialog} title="Stop the drama?" description="Every Computer it has running stops. What they made stays." confirm={{ label: "Stop it", danger: true, run: () => toast("Stopped.") }} />
         <Menu label="More" items={[{ label: "Lineage", run: () => toast("Lineage.") }, { label: "Download", run: () => toast("Downloaded.") }, { label: "Not now", run: () => undefined, disabled: true }]} />
         <Tooltip text="Spent of budget">
-          <button type="button" className="ds-btn s32">Hover or focus me</button>
+          <button type="button" className="ds-btn is-secondary is-s32">Hover or focus me</button>
         </Tooltip>
         <Button onClick={() => toast("Review sent. Everything you accepted is recorded.", { label: "Next review", run: () => undefined })}>Show a toast</Button>
       </Section>
