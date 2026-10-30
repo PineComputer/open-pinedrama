@@ -4,7 +4,7 @@ import { expect, test } from "@playwright/test";
 import { TOKEN } from "../playwright.config.ts";
 import { newProblems } from "./axe.ts";
 
-const COMPONENTS = ["Button", "StatusChip", "Segmented", "Tabs", "Dialog, Menu, Tooltip, Toast", "EmptyState", "Steps", "BudgetMeter"];
+const COMPONENTS = ["Button", "StatusChip", "Segmented", "Tabs", "Dialog, Menu, Tooltip, Toast", "EmptyState", "Steps", "StopCard", "BudgetMeter"];
 
 test("the gallery shows every component, and axe finds nothing", async ({ page }) => {
   await page.goto(`/api/open?ticket=${TOKEN}`);

@@ -63,3 +63,27 @@ describe("the review room for storyboards", () => {
     });
   });
 });
+
+describe("a question the agent asks because drama-cli refused", () => {
+  it("shows the refusal as a stop card above the question, with drama-cli's words", async () => {
+    const review = {
+      ...storyboardReview(),
+      kind: "question" as const,
+      question: "drama-cli won't shoot another take of seg01. Shall I raise the limit?",
+      reviewItems: [],
+      refusals: [{ code: "SetLimitExceeded.max_new_takes", message: "seg01 has had 2 new paid takes, the limit shoot.max_new_takes (2)", param: "shoot.max_new_takes", action: "ask_person" as const }],
+    };
+    answer(`/api/reviews/${review.id}`, review);
+    render(<Review id={review.id} />);
+    const stop = await screen.findByRole("region", { name: "shoot.max_new_takes is reached" });
+    expect(within(stop).getByText("seg01 has had 2 new paid takes, the limit shoot.max_new_takes (2)")).toBeInTheDocument();
+    expect(screen.getByText("drama-cli won't shoot another take of seg01. Shall I raise the limit?")).toBeInTheDocument();
+  });
+
+  it("says when the refusals the agent returned didn't read", async () => {
+    const review = { ...storyboardReview(), kind: "question" as const, question: "Something refused.", reviewItems: [], refusalsError: "The refusals, line 1: the line should be one JSON object." };
+    answer(`/api/reviews/${review.id}`, review);
+    render(<Review id={review.id} />);
+    expect(await screen.findByText(/The refusals, line 1: the line should be one JSON object\./)).toBeInTheDocument();
+  });
+});

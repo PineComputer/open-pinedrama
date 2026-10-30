@@ -10,10 +10,19 @@ import { Menu } from "../components/Menu.tsx";
 import { Segmented } from "../components/Segmented.tsx";
 import { FindingCount, type Status, StatusChip } from "../components/StatusChip.tsx";
 import { Steps } from "../components/Steps.tsx";
+import { StopCard } from "../components/StopCard.tsx";
+import type { Refusal } from "../../shared/refusal.ts";
 import { Tabs } from "../components/Tabs.tsx";
 import { useToast } from "../components/Toast.tsx";
 import { Tooltip } from "../components/Tooltip.tsx";
 import { applyTheme, type ThemeChoice, themeChoice } from "../theme/theme.ts";
+
+// The three kinds of stop, in drama-cli's words (shared/refusal.ts).
+const STOPS: Refusal[] = [
+  { code: "RedLine", message: "Bible v2 is not usable: red line: instructions to make an explosive (EP003 scene 4); report it to the person and pass their decision back with drama-cli bible …", param: null, action: "ask_person" },
+  { code: "SetLimitExceeded.max_new_takes", message: "seg01 has had 2 new paid takes, the limit shoot.max_new_takes (2); ask the person before shooting it again", param: "shoot.max_new_takes", action: "ask_person" },
+  { code: "Refused", message: "Cannot determine Pine artifact access before provider submission; run pine-artifact status and fix its error before retrying", param: null, action: null },
+];
 
 const STATUSES: Status[] = ["work", "line", "you", "accepted", "back", "stale", "redline", "failed"];
 
@@ -99,6 +108,14 @@ export default function Gallery() {
             { title: "Story: bible, cast, locations, props", state: "later" },
           ]}
         />
+      </Section>
+
+      <Section title="StopCard">
+        {STOPS.map((refusal) => (
+          <div key={refusal.code} style={{ flex: "1 1 320px" }}>
+            <StopCard refusal={refusal} />
+          </div>
+        ))}
       </Section>
 
       <Section title="BudgetMeter">

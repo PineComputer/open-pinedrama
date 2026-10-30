@@ -120,7 +120,7 @@
 .ds-composer textarea::placeholder { color: var(--text-muted); }
 .ds-composer .row { display: flex; align-items: center; gap: 8px; font-size: 11.5px; color: var(--text-muted); }
 .ds-send { width: 30px; height: 30px; border-radius: 50%; border: 0; background: var(--accent); color: var(--on-accent); display: grid; place-items: center; cursor: pointer; margin-left: auto; }
-.ds-send:disabled { background: var(--surface-container-high); color: var(--text-muted); cursor: default; }
+.ds-send:disabled { background: var(--surface-container); color: var(--text-muted); cursor: default; }
 .ds-send .ds-icon { width: 15px; height: 15px; }
 .ds-ball { position: fixed; right: 20px; bottom: 20px; z-index: 31; width: 52px; height: 52px; border-radius: 50%; border: 1px solid var(--border-input); background: var(--surface-container-high); color: var(--text-primary); display: grid; place-items: center; cursor: pointer; box-shadow: var(--shadow-overlay); }
 .ds-ball .ds-icon { width: 24px; height: 24px; }

@@ -14,6 +14,8 @@ import { FindingCount, StatusChip } from "./StatusChip.tsx";
 import { Steps } from "./Steps.tsx";
 import { Tabs } from "./Tabs.tsx";
 import { ToastProvider, useToast } from "./Toast.tsx";
+import type { Refusal } from "../../shared/refusal.ts";
+import { StopCard } from "./StopCard.tsx";
 import { Tooltip } from "./Tooltip.tsx";
 
 describe("Button", () => {
@@ -313,5 +315,31 @@ describe("BudgetMeter in replay", () => {
     render(<BudgetMeter spentUsd={1.18} budgetUsd={null} simulated />);
     expect(screen.getByText("Simulated spend")).toBeInTheDocument();
     expect(screen.queryByText("Spent")).not.toBeInTheDocument();
+  });
+});
+
+describe("StopCard", () => {
+  const card = (refusal: Refusal) => render(<StopCard refusal={refusal} />);
+
+  it("says a red line from its code, with drama-cli's words as they came", () => {
+    card({ code: "RedLine", message: "Bible v2 is not usable: red line: …", param: null, action: "ask_person" });
+    const stop = screen.getByRole("region", { name: "The screenplay crosses a red line" });
+    expect(stop).toHaveClass("is-red-line");
+    expect(within(stop).getByText("RedLine")).toBeInTheDocument();
+    expect(within(stop).getByText("Bible v2 is not usable: red line: …")).toBeInTheDocument();
+  });
+
+  it("says which limit a cap reached, by its config key", () => {
+    card({ code: "SetLimitExceeded.max_new_takes", message: "seg01 has had 2 new paid takes", param: "shoot.max_new_takes", action: "ask_person" });
+    const stop = screen.getByRole("region", { name: "shoot.max_new_takes is reached" });
+    expect(within(stop).getByText("Limit")).toBeInTheDocument();
+    expect(within(stop).getAllByText("shoot.max_new_takes")).toHaveLength(1);
+  });
+
+  it("asks the maker to read a refusal with no kind of its own, such as a bare Refused", () => {
+    card({ code: "Refused", message: "Cannot determine Pine artifact access", param: null, action: null });
+    const stop = screen.getByRole("region", { name: "The agent needs you to read this" });
+    expect(within(stop).getByText("Cannot determine Pine artifact access")).toBeInTheDocument();
+    expect(within(stop).queryByText("Limit")).toBeNull();
   });
 });
