@@ -8,6 +8,7 @@ import { type TKey, useT } from "../i18n.ts";
 import { errorText, kindLabel, moneyText, plainText } from "../labels.ts";
 import { Link, navigate } from "../router.tsx";
 import { Still } from "../Still.tsx";
+import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 
 const CJK = /[㐀-鿿]/;
@@ -85,11 +86,12 @@ export function DramaTile({ drama, mode }: { drama: DramaCard; mode?: Mode | "no
         {facts.logline && <small className="logline">{facts.logline}</small>}
         {facts.genres && (
           <span className="tags">
-            {facts.genres.map((genre) => (
-              <span key={genre} className="ds-tag">
+            {facts.genres.slice(0, 2).map((genre) => (
+              <Badge key={genre} variant="secondary">
                 {genre}
-              </span>
+              </Badge>
             ))}
+            {facts.genres.length > 2 && <Badge variant="outline">+{facts.genres.length - 2}</Badge>}
           </span>
         )}
         {facts.scale && <small>{t("drama.scale", facts.scale)}</small>}
@@ -105,11 +107,22 @@ export function DramaTile({ drama, mode }: { drama: DramaCard; mode?: Mode | "no
   );
 }
 
-/** When nothing waits: the drama the agent spoke in last, with its last line, to carry on with. */
-function Latest({ dramas }: { dramas: DramaCard[] }) {
+/** The dramas by their newest activity: when the agent last spoke in each, else when it was made. */
+function byActivity(dramas: DramaCard[]): DramaCard[] {
+  const at = (drama: DramaCard) => drama.facts.lastActivity ?? drama.createdAt;
+  return [...dramas].sort((a, b) => at(b).localeCompare(at(a)));
+}
+
+/**
+ * The drama worked on last, to carry on with (reveric's 继续写): its cover, where it stands, the review waiting in it
+ * first, else the agent's last line; beside it, the recent dramas, each with its cover, standing and time.
+ */
+function Continue({ waiting, dramas }: { waiting: ReviewSummary[]; dramas: DramaCard[] }) {
   const { t, lang } = useT();
-  const drama = dramas.filter((item) => item.facts.lastActivity).sort((a, b) => b.facts.lastActivity!.localeCompare(a.facts.lastActivity!))[0];
+  const recent = byActivity(dramas);
+  const drama = recent[0];
   if (!drama) return null;
+  const review = waiting.find((item) => item.dramaId === drama.id);
   const where = standing(drama);
   return (
     <section className="ds-hero" aria-labelledby="continue-title">
@@ -123,71 +136,47 @@ function Latest({ dramas }: { dramas: DramaCard[] }) {
         <div className="info">
           <span className="kicker">{t("slate.continue")}</span>
           <h2 id="continue-title">{drama.title}</h2>
-          {drama.facts.logline && <span className="where">{drama.facts.logline}</span>}
-          {drama.facts.lastLine && <blockquote>{plainText(drama.facts.lastLine)}</blockquote>}
-          <span className="row">{[drama.facts.scale ? t("drama.scale", drama.facts.scale) : "", ago(drama.facts.lastActivity!, lang), drama.spent.total > 0 ? moneyText(drama.spent, t, lang) : ""].filter(Boolean).join(" · ")}</span>
-          <span className="acts">
-            <Link to={`/d/${drama.id}`} className="ds-btn is-primary is-lg">
-              <Icon name="play" />
-              {t("slate.openDrama")}
-            </Link>
-          </span>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/** The drama whose review waits longest at the top, to carry on with: its cover, the agent's question, and the review. */
-function Continue({ waiting, dramas }: { waiting: ReviewSummary[]; dramas: DramaCard[] }) {
-  const { t, lang } = useT();
-  const first = waiting[0];
-  const drama = first && dramas.find((item) => item.id === first.dramaId);
-  if (!first || !drama) return <Latest dramas={dramas} />;
-  return (
-    <section className="ds-hero" aria-labelledby="continue-title">
-      <div className="left">
-        <span className="cover">
-          <Poster drama={drama} />
-          <span className="chip">
-            <StatusChip status="you" label={t("drama.needs", { n: drama.waiting })} over />
-          </span>
-        </span>
-        <div className="info">
-          <span className="kicker">{t("slate.continue")}</span>
-          <h2 id="continue-title">{drama.title}</h2>
           <span className="where">
             <Icon name="map-pin" />
-            {[first.episode, t("slate.waitsKind", { kind: t(`kind.${first.kind}` as TKey) })].filter(Boolean).join(" · ")}
+            {review ? [review.episode, t("slate.waitsKind", { kind: t(`kind.${review.kind}` as TKey) })].filter(Boolean).join(" · ") : t(where.label, { n: drama.waiting })}
           </span>
-          {first.question && <blockquote>{plainText(first.question)}</blockquote>}
+          {(review?.question || drama.facts.lastLine) && <blockquote>{plainText(review?.question || drama.facts.lastLine!)}</blockquote>}
           <span className="row">
-            {[drama.episodes.total ? t("drama.episodes", { done: drama.episodes.done, total: drama.episodes.total }) : "", drama.spent.total > 0 ? moneyText(drama.spent, t, lang) : ""].filter(Boolean).join(" · ")}
+            {[drama.facts.scale ? t("drama.scale", drama.facts.scale) : "", drama.facts.lastActivity ? ago(drama.facts.lastActivity, lang) : "", drama.spent.total > 0 ? moneyText(drama.spent, t, lang) : ""].filter(Boolean).join(" · ")}
           </span>
           <span className="acts">
-            <Link to={`/r/${first.id}`} className={buttonVariants({ variant: "default", size: "lg" })}>
-              <Icon name="play" />
-              {t("slate.review", { kind: t(`kind.${first.kind}` as TKey) })}
-            </Link>
-            <Link to={`/d/${drama.id}`} className={buttonVariants({ variant: "outline" })}>
+            {review && (
+              <Link to={`/r/${review.id}`} className={buttonVariants({ size: "lg" })}>
+                <Icon name="play" />
+                {t("slate.review", { kind: t(`kind.${review.kind}` as TKey) })}
+              </Link>
+            )}
+            <Link to={`/d/${drama.id}`} className={buttonVariants({ variant: review ? "outline" : "default", size: review ? "default" : "lg" })}>
               {t("slate.openDrama")}
             </Link>
           </span>
         </div>
       </div>
       <div className="right">
-        <h3>{t("slate.waiting")}</h3>
-        {waiting.slice(0, 3).map((item) => (
-          <Link key={item.id} to={`/r/${item.id}`} className="wait">
-            <span className={item.thumb ? "thumb" : "thumb cover"}>
-              <Still still={item.thumb ?? coverOf(dramas.find((entry) => entry.id === item.dramaId))} />
-            </span>
-            <span>
-              <b>{[item.episode, t(`kind.${item.kind}` as TKey)].filter(Boolean).join(" · ")}</b>
-              <small>{[item.dramaTitle, ago(item.createdAt, lang)].join(" · ")}</small>
-            </span>
-          </Link>
-        ))}
+        <h3 id="recent-title">{t("slate.recent")}</h3>
+        <ul aria-labelledby="recent-title">
+          {recent.slice(0, 4).map((item) => {
+            const state = standing(item);
+            return (
+              <li key={item.id}>
+                <Link to={`/d/${item.id}`} className="wait">
+                  <span className="thumb cover">
+                    <Still still={coverOf(item)} />
+                  </span>
+                  <span>
+                    <b>{item.title}</b>
+                    <small>{[t(state.label, { n: item.waiting }), ago(item.facts.lastActivity ?? item.createdAt, lang)].join(" · ")}</small>
+                  </span>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
       </div>
     </section>
   );

@@ -714,7 +714,7 @@ a.ds-tag:hover { background: var(--hover); }
 
 /* Denser shelf (P5.1 pass 2), with work-04's measures after reveric's library: 180px columns, 16 gap, 2xl cards with
    the card shadow, a 140px 3:4 hero cover; shorter card covers, so each card's facts sit above the fold. */
-.ds-shelf { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; }
+.ds-shelf { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 16px; }
 .ds-dramacard { border-radius: var(--radius-2xl); box-shadow: var(--shadow-card); }
 .ds-dramacard .poster { aspect-ratio: 1 / 1; }
 .ds-dramacard .txt small { font-size: 11.5px; }
@@ -738,5 +738,6 @@ a.ds-tag:hover { background: var(--hover); }
 .poster .work-pic::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, color-mix(in srgb, var(--shadow-base) 0%, transparent) 45%, color-mix(in srgb, var(--shadow-base) 78%, transparent)); }
 .poster.work > :not(.work-pic) { position: relative; }
 .poster.work h3 { align-self: end; color: var(--canvas); }
-.ds-dramacard .txt .tags { display: flex; flex-wrap: wrap; gap: 4px; }
-.ds-dramacard .txt .tags .ds-tag { height: 20px; font-size: 11px; }
+.ds-dramacard .txt .tags { display: flex; gap: 4px; overflow: hidden; }
+.ds-dramacard .txt .tags > * { flex: none; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+.ds-hero .right ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
