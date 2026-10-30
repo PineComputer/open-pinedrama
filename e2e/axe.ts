@@ -6,9 +6,16 @@ import type { Page } from "@playwright/test";
 
 const KNOWN: { rule: string; target: RegExp; fixedBy: string }[] = [];
 
-/** Each serious or critical problem not yet known, as "rule target :: why". */
-export async function newProblems(page: Page): Promise<string[]> {
-  const { violations } = await new AxeBuilder({ page }).analyze();
+/**
+ * Each serious or critical problem not yet known, as "rule target :: why". With `within`, only
+ * that part of the page is checked: an open dialog or menu hides the rest with aria-hidden and
+ * keeps focus inside itself, so axe's aria-hidden-focus on the hidden page names controls focus
+ * can't reach.
+ */
+export async function newProblems(page: Page, within?: string): Promise<string[]> {
+  const builder = new AxeBuilder({ page });
+  if (within) builder.include(within);
+  const { violations } = await builder.analyze();
   return violations
     .filter((v) => v.impact === "serious" || v.impact === "critical")
     .flatMap((v) => v.nodes.map((node) => ({ rule: v.id, target: node.target.join(" "), why: node.failureSummary?.split("\n").slice(1).join(" ").trim() ?? "" })))

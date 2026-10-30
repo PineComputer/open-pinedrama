@@ -18,6 +18,8 @@ const PROJECTS: { name: string; spec: string; colorScheme: "light" | "dark" }[] 
   { name: "sample-drama", spec: "sample-drama", colorScheme: "light" },
   { name: "sample-drama-dark", spec: "sample-drama", colorScheme: "dark" },
   { name: "project-state", spec: "project-state", colorScheme: "light" },
+  { name: "gallery", spec: "gallery", colorScheme: "light" },
+  { name: "gallery-dark", spec: "gallery", colorScheme: "dark" },
 ];
 
 function engine(port: number) {

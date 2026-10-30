@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import type { AppInfo, ReviewSummary } from "../shared/types.ts";
 import { ApiError, useResource } from "./api.ts";
 import { setLang, useT } from "./i18n.ts";
@@ -75,6 +75,9 @@ function Gate({ error, onRetry }: { error: unknown; onRetry: () => void }) {
   );
 }
 
+/** The component gallery: in development and the end-to-end build only (screens/Gallery.tsx). */
+const Gallery = import.meta.env.DEV || import.meta.env.VITE_GALLERY === "1" ? lazy(() => import("./screens/Gallery.tsx")) : null;
+
 export function App() {
   const { path } = usePath();
   const app = useResource<AppInfo>("/api/app", ["app"]);
@@ -87,6 +90,13 @@ export function App() {
     document.title = waiting.length ? `(${waiting.length}) ${t("app.name")}` : t("app.name");
   }, [waiting.length, t]);
 
+  if (Gallery && path === "/dev/gallery") {
+    return (
+      <Suspense>
+        <Gallery />
+      </Suspense>
+    );
+  }
   if (!app.data) {
     return (
       <>
