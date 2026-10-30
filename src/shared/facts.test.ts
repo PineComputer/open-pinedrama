@@ -3,7 +3,7 @@
 // stands. Facts only; the screens word them in the maker's language.
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { recentWork, stageOfFile, toDo } from "./facts.ts";
+import { recentWork, scaleOf, stageOfFile, toDo } from "./facts.ts";
 import { parseStatus } from "./project.ts";
 
 function state(name: string, change?: (report: Record<string, any>) => void) {
@@ -106,5 +106,12 @@ describe("recent work", () => {
   it("keeps a version once, however many of its files came back", () => {
     const both = [files[0], { path: "drama/episodes/EP001/multi_panel_storyboard/seg01/line-art/v1/crop.png", createdAt: "2026-10-30T10:03:30Z" }];
     expect(recentWork(state("boards"), both)).toHaveLength(1);
+  });
+});
+
+describe("a drama's scale", () => {
+  it("counts its episodes, their scenes and their segments, as drama-cli's status lists them", () => {
+    expect(scaleOf(state("boards"))).toEqual({ episodes: 1, scenes: 1, segments: 1 });
+    expect(scaleOf(state("new"))).toEqual({ episodes: 0, scenes: 0, segments: 0 });
   });
 });

@@ -6,8 +6,8 @@
 // what it has spent and where it stands.
 import { useState } from "react";
 import type { ProjectView, SessionReport } from "../../shared/project.ts";
-import type { DramaCard, DramaView, EpisodeRow, ReviewKind, ReviewSummary } from "../../shared/types.ts";
-import { api, useResource } from "../api.ts";
+import type { DramaCard, DramaView, EpisodeRow, RecentConversation, ReviewKind, ReviewSummary } from "../../shared/types.ts";
+import { ago, api, useResource } from "../api.ts";
 import { Menu } from "../components/Menu.tsx";
 import { BudgetMeter } from "../components/BudgetMeter.tsx";
 import { Icon, type IconName } from "../icons.tsx";
@@ -56,8 +56,8 @@ function Item({ to, icon, label, current, count }: { to: string; icon: IconName;
 }
 
 /** The studio's pages: the dramas, the review queue, settings. */
-export function HomeSidebar({ path, waiting, replay }: { path: string; waiting: number; replay: boolean }) {
-  const { t } = useT();
+export function HomeSidebar({ path, waiting, replay, recent = [] }: { path: string; waiting: number; replay: boolean; recent?: RecentConversation[] }) {
+  const { t, lang } = useT();
   return (
     <aside className="ds-sidebar" aria-label={t("sidebar.label")}>
       <div className="ds-sidebar-head">
@@ -70,6 +70,20 @@ export function HomeSidebar({ path, waiting, replay }: { path: string; waiting: 
         <span className="ds-sidebar-sec">{t("sidebar.studio")}</span>
         <Item to="/" icon="squares-four" label={t("nav.dramas")} current={path === "/" || path === "/new"} />
         <Item to="/inbox" icon="list-checks" label={t("nav.inbox")} current={path === "/inbox"} count={waiting} />
+        {recent.length > 0 && (
+          <>
+            <span className="ds-sidebar-sec">{t("sidebar.recent")}</span>
+            {recent.map((item) => (
+              <Link key={item.sessionId} to={`/d/${item.dramaId}`} className="ds-navi ds-recent" title={item.line}>
+                <Icon name="chat-centered" />
+                <span className="txt">
+                  <span>{[item.dramaTitle, item.label || t("sidebar.setup")].join(" · ")}</span>
+                  <small>{ago(item.at, lang)}</small>
+                </span>
+              </Link>
+            ))}
+          </>
+        )}
         <span className="ds-sidebar-sec">{t("sidebar.account")}</span>
         <Item to="/settings" icon="gear-six" label={t("nav.settings")} current={path === "/settings"} />
       </nav>
