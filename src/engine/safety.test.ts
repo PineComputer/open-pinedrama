@@ -99,6 +99,16 @@ describe("the API", () => {
     expect(svg.headers.get("content-security-policy")).toMatch(/^sandbox/);
     expect(svg.headers.get("x-content-type-options")).toBe("nosniff");
   });
+
+  it("downloads a returned file under the name asked for, cut to a file name", async () => {
+    const zip = await m.library.save(new TextEncoder().encode("PK"), { dramaId: "d", relPath: "handoff/infinite-canvas.zip", type: "application/zip" });
+    const named = await request("GET", `/api/files/${zip}?download=bride-on-bail-infinite-canvas.zip`, SIGNED_IN);
+    expect(named.headers.get("content-disposition")).toBe("attachment; filename*=UTF-8''bride-on-bail-infinite-canvas.zip");
+    const plain = await request("GET", `/api/files/${zip}?download=1`, SIGNED_IN);
+    expect(plain.headers.get("content-disposition")).toBe("attachment; filename*=UTF-8''infinite-canvas.zip");
+    const sneaky = await request("GET", `/api/files/${zip}?download=${encodeURIComponent("../../etc/x\r\n.zip")}`, SIGNED_IN);
+    expect(sneaky.headers.get("content-disposition")).toBe("attachment; filename*=UTF-8''x.zip");
+  });
 });
 
 describe("the production line", () => {

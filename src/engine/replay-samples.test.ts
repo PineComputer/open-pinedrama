@@ -49,6 +49,11 @@ describe("replay's samples", () => {
     warn.mockRestore();
   });
 
+  it("give a sample's infinite-canvas project as a zip, under its own handoff name", () => {
+    const sample = samplesFrom(folder({ "samples.json": JSON.stringify({ en: { "handoff/infinite-canvas": "en/infinite-canvas.zip" } }), "en/infinite-canvas.zip": "PK" }));
+    expect(sample("en", "handoff/infinite-canvas.zip")).toMatchObject({ path: "handoff/infinite-canvas.zip", type: "application/zip" });
+  });
+
   it("are none without a samples.json", () => {
     expect(samplesFrom(folder({}))("en", "drama/assets/characters/lin/v1/image-1.svg")).toBeUndefined();
   });

@@ -67,7 +67,13 @@ function fail(c: Context, error: unknown) {
 const SHOWN = /^(image\/(png|jpeg|webp|gif|avif|svg\+xml)|video\/(mp4|webm|quicktime)|audio\/[\w.+-]+|text\/plain)$/;
 const AS_TEXT = /^(text\/markdown|application\/json|text\/csv)$/;
 
-function fileHeaders(row: { name: string; type: string; sha: string }, version: string | undefined, download: boolean): Record<string, string> {
+/** A download's file name: the one asked for, as a bare file name with no control characters, or else the file's own. */
+function downloadName(asked: string | undefined, own: string): string {
+  const name = (asked ?? "").split(/[\\/]/).pop()!.replace(/[\u0000-\u001f\u007f"]/g, "").trim();
+  return name && name !== "1" ? name : own;
+}
+
+function fileHeaders(row: { name: string; type: string; sha: string }, version: string | undefined, download: string | undefined): Record<string, string> {
   const type = row.type.split(";")[0].trim().toLowerCase();
   const shown = SHOWN.test(type) || AS_TEXT.test(type);
   const headers: Record<string, string> = {
@@ -78,7 +84,7 @@ function fileHeaders(row: { name: string; type: string; sha: string }, version: 
     "Content-Security-Policy": "sandbox; default-src 'none'; img-src 'self' data:; media-src 'self'; style-src 'unsafe-inline'",
     "Cross-Origin-Resource-Policy": "same-origin",
   };
-  if (download || !shown) headers["Content-Disposition"] = `attachment; filename*=UTF-8''${encodeURIComponent(row.name)}`;
+  if (download !== undefined || !shown) headers["Content-Disposition"] = `attachment; filename*=UTF-8''${encodeURIComponent(downloadName(download, row.name))}`;
   return headers;
 }
 
@@ -429,7 +435,8 @@ export function app(): Hono {
   api.get("/api/files/:id", (c) => {
     const row = fileRow(Number(c.req.param("id")));
     if (!row) return c.json(failure("not-found", "No such file."), 404);
-    const headers = fileHeaders(row, c.req.query("v"), Boolean(c.req.query("download")));
+    // ?download=1 downloads under the file's own name; ?download=<name> under that name (the Export menu's).
+    const headers = fileHeaders(row, c.req.query("v"), c.req.query("download"));
     const range = c.req.header("range")?.match(/^bytes=(\d*)-(\d*)$/);
     if (range && row.size > 0) {
       const start = range[1] ? Number(range[1]) : Math.max(0, row.size - Number(range[2]));

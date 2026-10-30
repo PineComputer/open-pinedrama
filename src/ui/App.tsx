@@ -16,6 +16,7 @@ import { AgentBall, type AgentMode, AgentPanel, useAgentMode } from "./shell/Age
 import { NavRail } from "./shell/NavRail.tsx";
 import { DramaSidebar, HomeSidebar } from "./shell/Sidebar.tsx";
 import { type Crumb, StopControl, TopBar } from "./shell/TopBar.tsx";
+import { ExportMenu } from "./shell/ExportMenu.tsx";
 import { buttonVariants } from "@/components/ui/button";
 
 /** Before the studio can be used: this window isn't the studio's, or the engine isn't answering. */
@@ -161,6 +162,7 @@ export function App() {
       {sidebarOpen && sidebar}
       <div className="main">
         <TopBar crumbs={crumbs} waiting={waiting} ready={ready}>
+          {drama.data && <ExportMenu drama={drama.data} />}
           {drama.data && <StopControl drama={drama.data} />}
         </TopBar>
         <div className="body" style={{ position: "relative" }}>

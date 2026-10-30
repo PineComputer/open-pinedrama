@@ -146,7 +146,7 @@ async function screenplayVersions(session: SessionRow): Promise<string[]> {
 }
 
 /** What each stop returns afresh under the same name. */
-const EVERY_STOP: FileKind[] = ["archive", "status", "lineage", "refusal"];
+const EVERY_STOP: FileKind[] = ["archive", "status", "lineage", "infinite-canvas", "refusal"];
 
 /** What the engine records from a stop's file besides saving it. */
 const RECORDED: Partial<Record<FileKind, (sessionId: string, turnId: string, bytes: Uint8Array) => void>> = {
