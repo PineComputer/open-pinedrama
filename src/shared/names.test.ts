@@ -12,6 +12,7 @@ describe("a bible's names", () => {
   it("are its people, places, props and episodes by id, in the screenplay's script", () => {
     expect(parseBibleNames(bible())).toEqual({
       title: "T",
+      logline: "l",
       characters: { lin: { name: "林", aliases: [] } },
       locations: { office: "办公室" },
       props: {},
@@ -20,6 +21,12 @@ describe("a bible's names", () => {
       beats: ["greeting"],
       summaries: { EP001: "s" },
     });
+  });
+
+  it("leave the logline out when the bible does", () => {
+    const value = bible();
+    delete value.logline;
+    expect(parseBibleNames(value).logline).toBeUndefined();
   });
 
   it("keep a person's other names, and a bible's props when it lists them", () => {

@@ -6,7 +6,7 @@ import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { LineageView } from "../shared/lineage.ts";
 import type { ProjectView } from "../shared/project.ts";
-import type { AppInfo, DramaCard } from "../shared/types.ts";
+import type { AppInfo, DramaCard, RecentConversation } from "../shared/types.ts";
 
 process.env.STUDIO_SECRET = Buffer.alloc(32, 1).toString("base64");
 process.env.STUDIO_TOKEN = "launch-token";
@@ -78,6 +78,39 @@ describe("the answers the UI reads", () => {
     const cards = (await (await call("/api/dramas")).json()) as DramaCard[];
     expect(cards).toHaveLength(1);
     expect(cards[0]).toMatchObject({ id, title: "The Stepmother", mode: "replay", preset: "en-us-live-sfw", rehearsal: false });
+  });
+
+  it("says on a card what the agent last said and when, leaving out a fact not known yet", async () => {
+    expect((await call("/api/connection/replay", { method: "POST" })).status).toBe(200);
+    const made = await call("/api/dramas/sample", { method: "POST", body: JSON.stringify({ language: "en" }), headers: { "content-type": "application/json" } });
+    const { id } = (await made.json()) as { id: string };
+    // No status report yet: no scale and no logline, rather than zeros or a guess.
+    const [fresh] = (await (await call("/api/dramas")).json()) as DramaCard[];
+    expect(fresh.facts.scale).toBeUndefined();
+    expect(fresh.facts.logline).toBeUndefined();
+    const { run } = await import("./db.ts");
+    run("insert into sessions (id, computer_id, drama_id, name, role, state, created_at) values ('s9', 'c9', ?, 'n', 'setup', 'open', ?)", id, "2099-01-01T00:00:00Z");
+    run("insert into messages (session_id, kind, text, at) values ('s9', 'progress', 'Rewriting it into Fountain', '2099-01-01T00:01:00Z')");
+    run("insert into messages (session_id, kind, text, at) values ('s9', 'input', 'Start the drama.', '2099-01-01T00:00:30Z')");
+    const [card] = (await (await call("/api/dramas")).json()) as DramaCard[];
+    expect(card.facts).toMatchObject({ lastLine: "Rewriting it into Fountain", lastActivity: "2099-01-01T00:01:00Z" });
+  });
+
+  it("lists the latest conversations with the agent, newest first, each with its drama and last line", async () => {
+    expect((await call("/api/connection/replay", { method: "POST" })).status).toBe(200);
+    const made = await call("/api/dramas/sample", { method: "POST", body: JSON.stringify({ language: "en" }), headers: { "content-type": "application/json" } });
+    const { id } = (await made.json()) as { id: string };
+    const { run } = await import("./db.ts");
+    run("insert into episodes (id, drama_id, number, title, state, updated_at) values ('e9', ?, 1, '', 'working', '2099-01-01T00:00:00Z')", id);
+    run("insert into sessions (id, computer_id, drama_id, name, role, state, created_at) values ('s8', 'c9', ?, 'n', 'setup', 'open', ?)", id, "2099-01-01T00:00:00Z");
+    run("insert into sessions (id, computer_id, drama_id, name, role, episode_id, state, created_at) values ('s9', 'c9', ?, 'n', 'episode', 'e9', 'open', ?)", id, "2099-01-01T00:00:00Z");
+    run("insert into messages (session_id, kind, text, at) values ('s8', 'question', 'How old is Wei Zhen?', '2099-01-01T00:01:00Z')");
+    run("insert into messages (session_id, kind, text, at) values ('s9', 'progress', 'Drawing the storyboards', '2099-01-01T00:02:00Z')");
+    const recent = (await (await call("/api/sessions/recent")).json()) as RecentConversation[];
+    expect(recent.slice(0, 2)).toEqual([
+      { sessionId: "s9", dramaId: id, dramaTitle: "The Stepmother", label: "EP001", at: "2099-01-01T00:02:00Z", line: "Drawing the storyboards" },
+      { sessionId: "s8", dramaId: id, dramaTitle: "The Stepmother", label: "", at: "2099-01-01T00:01:00Z", line: "How old is Wei Zhen?" },
+    ]);
   });
 
   it("says plainly when a drama doesn't exist", async () => {

@@ -4,7 +4,7 @@
 import { act, render, screen, within } from "@testing-library/react";
 import { answer } from "../test/server.ts";
 import userEvent from "@testing-library/user-event";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import type { DramaView, EpisodeRow, ReviewSummary } from "../../shared/types.ts";
 import { navigate } from "../router.tsx";
 import { NavRail } from "./NavRail.tsx";
@@ -206,4 +206,22 @@ describe("the sidebar", () => {
     expect(location.pathname).toBe("/d/d2");
   });
 
+});
+
+describe("home's sidebar, recent conversations", () => {
+  it("lists the latest conversations, each opening its drama, with when the agent last spoke", () => {
+    vi.useFakeTimers({ now: new Date("2026-10-30T12:00:00Z") });
+    const recent = [
+      { sessionId: "s9", dramaId: "d1", dramaTitle: "The Stepmother", label: "EP001", at: "2026-10-30T11:58:00Z", line: "Drawing the storyboards" },
+      { sessionId: "s8", dramaId: "d1", dramaTitle: "The Stepmother", label: "", at: "2026-10-30T09:00:00Z", line: "How old is Wei Zhen?" },
+    ];
+    render(<HomeSidebar path="/" waiting={0} replay recent={recent} />);
+    const links = screen.getAllByRole("link", { name: /^The Stepmother/ });
+    expect(links.map((link) => link.getAttribute("href"))).toEqual(["/d/d1", "/d/d1"]);
+    expect(links[0]).toHaveTextContent("EP001");
+    expect(links[0]).toHaveTextContent("2 minutes ago");
+    expect(links[1]).toHaveTextContent("Setup");
+    expect(screen.getByText("Recent conversations")).toBeInTheDocument();
+    vi.useRealTimers();
+  });
 });

@@ -123,3 +123,13 @@ export function recentWork(state: State, files: { path: string; createdAt: strin
   }
   return items;
 }
+
+/** A drama's scale, as drama-cli's status lists it: episodes, their scenes (scene chains) and their segments. */
+export function scaleOf(state: State): { episodes: number; scenes: number; segments: number } {
+  const episodes = Object.values(state.episodes);
+  return {
+    episodes: episodes.length,
+    scenes: episodes.reduce((sum, episode) => sum + episode.sceneChains.length, 0),
+    segments: episodes.reduce((sum, episode) => sum + Object.keys(episode.segments).length, 0),
+  };
+}

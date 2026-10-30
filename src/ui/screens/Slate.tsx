@@ -34,13 +34,13 @@ function Poster({ drama, mode }: { drama: DramaCard; mode?: Mode | "none" }) {
   );
 }
 
-type Shelf = "all" | "you" | "work" | "done";
+type Shelf = "all" | "you" | "work" | "done" | "stopped";
 
 /** Where a drama stands, as its card's chip says it. */
 function standing(drama: DramaCard): { status: Status; label: TKey; shelf: Shelf } {
   if (drama.waiting > 0) return { status: "you", label: "drama.needs", shelf: "you" };
   if (drama.status === "done") return { status: "accepted", label: "drama.finished", shelf: "done" };
-  if (drama.status === "stopped") return { status: "back", label: "drama.stopped", shelf: "all" };
+  if (drama.status === "stopped") return { status: "back", label: "drama.stopped", shelf: "stopped" };
   return { status: "work", label: drama.status === "setup" ? "drama.casting" : "drama.atWork", shelf: "work" };
 }
 
@@ -49,6 +49,9 @@ export function DramaTile({ drama, mode }: { drama: DramaCard; mode?: Mode | "no
   const { t, lang } = useT();
   const { total, done } = drama.episodes;
   const where = standing(drama);
+  const { facts } = drama;
+  // Planned: the episodes drama-cli lists, at the length the maker asked; neither guessed.
+  const planned = facts.scale && facts.length ? Math.round((facts.scale.episodes * Number(facts.length)) / 60) : 0;
   return (
     <Link to={`/d/${drama.id}`} className="ds-dramacard">
       <span className="pic">
@@ -64,13 +67,50 @@ export function DramaTile({ drama, mode }: { drama: DramaCard; mode?: Mode | "no
       </span>
       <span className="txt">
         <b>{drama.title}</b>
+        {facts.logline && <small className="logline">{facts.logline}</small>}
+        {facts.scale && <small>{t("drama.scale", facts.scale)}</small>}
         <small>
           {total > 0 ? `${t("drama.episodes", { done, total })} · ` : ""}
-          {[drama.format.split(",")[0], kindLabel(drama, t)].filter(Boolean).join(" · ")}
+          {[drama.format.split(",")[0], kindLabel(drama, t), planned ? t("drama.planned", { n: planned }) : ""].filter(Boolean).join(" · ")}
         </small>
-        {drama.spent.total > 0 && <small className="num">{moneyText(drama.spent, t, lang)}</small>}
+        <small className="num">
+          {[facts.lastActivity ? ago(facts.lastActivity, lang) : "", drama.spent.total > 0 ? moneyText(drama.spent, t, lang) : ""].filter(Boolean).join(" · ")}
+        </small>
       </span>
     </Link>
+  );
+}
+
+/** When nothing waits: the drama the agent spoke in last, with its last line, to carry on with. */
+function Latest({ dramas }: { dramas: DramaCard[] }) {
+  const { t, lang } = useT();
+  const drama = dramas.filter((item) => item.facts.lastActivity).sort((a, b) => b.facts.lastActivity!.localeCompare(a.facts.lastActivity!))[0];
+  if (!drama) return null;
+  const where = standing(drama);
+  return (
+    <section className="ds-hero" aria-labelledby="continue-title">
+      <div className="left">
+        <span className="cover">
+          <Poster drama={drama} />
+          <span className="chip">
+            <StatusChip status={where.status} label={t(where.label, { n: drama.waiting })} over />
+          </span>
+        </span>
+        <div className="info">
+          <span className="kicker">{t("slate.continue")}</span>
+          <h2 id="continue-title">{drama.title}</h2>
+          {drama.facts.logline && <span className="where">{drama.facts.logline}</span>}
+          {drama.facts.lastLine && <blockquote>{plainText(drama.facts.lastLine)}</blockquote>}
+          <span className="row">{[drama.facts.scale ? t("drama.scale", drama.facts.scale) : "", ago(drama.facts.lastActivity!, lang), drama.spent.total > 0 ? moneyText(drama.spent, t, lang) : ""].filter(Boolean).join(" · ")}</span>
+          <span className="acts">
+            <Link to={`/d/${drama.id}`} className="ds-btn is-primary is-lg">
+              <Icon name="play" />
+              {t("slate.openDrama")}
+            </Link>
+          </span>
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -79,7 +119,7 @@ function Continue({ waiting, dramas }: { waiting: ReviewSummary[]; dramas: Drama
   const { t, lang } = useT();
   const first = waiting[0];
   const drama = first && dramas.find((item) => item.id === first.dramaId);
-  if (!first || !drama) return null;
+  if (!first || !drama) return <Latest dramas={dramas} />;
   return (
     <section className="ds-hero" aria-labelledby="continue-title">
       <div className="left">
@@ -164,7 +204,7 @@ export function Slate() {
   // On a project without the drama skill, the way to try the studio on Pine is a rehearsal.
   const noSkill = app.data?.mode === "pine" && app.data.dramaSkill === "missing";
   const waiting = (inbox.data ?? []).filter((item) => item.state === "open").sort((a, b) => a.createdAt.localeCompare(b.createdAt));
-  const counts = { all: dramas.length, you: 0, work: 0, done: 0 };
+  const counts = { all: dramas.length, you: 0, work: 0, done: 0, stopped: 0 };
   for (const drama of dramas) {
     const where = standing(drama).shelf;
     if (where !== "all") counts[where]++;
@@ -212,7 +252,7 @@ export function Slate() {
           label={t("slate.shelves")}
           value={shelf}
           onChange={setShelf}
-          tabs={(["all", "you", "work", "done"] as const).map((key) => ({ value: key, label: t(`slate.shelf.${key}`), count: counts[key] }))}
+          tabs={(["all", "you", "work", "done", "stopped"] as const).map((key) => ({ value: key, label: t(`slate.shelf.${key}`), count: counts[key] }))}
           end={
             <label className="ds-search">
               <Icon name="magnifying-glass" />

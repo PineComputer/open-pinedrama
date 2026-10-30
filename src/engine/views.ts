@@ -28,6 +28,7 @@ import { type ComputerRow, type DramaRow, type EpisodeRow, type ReviewRow, type 
 import { turnRefusals } from "./refusals.ts";
 import { itemsOf, pendingReview } from "./reviews.ts";
 import { projectView } from "./status.ts";
+import { scaleOf } from "../shared/facts.ts";
 import { setupStep } from "../shared/project.ts";
 
 function still(file: FileRow): Still {
@@ -77,6 +78,22 @@ export function dramaCard(drama: DramaRow): DramaCard {
     cast: castFaces(drama.id),
     spent: spend("drama_id", drama.id),
     createdAt: drama.created_at,
+    facts: cardFacts(drama),
+  };
+}
+
+/** A card's facts: the scale and logline once drama-cli has reported them, and the agent's latest line. */
+function cardFacts(drama: DramaRow): DramaCard["facts"] {
+  const project = projectView(drama.id);
+  const last = get<{ text: string; at: string }>(
+    "select m.text, m.at from messages m join sessions s on s.id = m.session_id where s.drama_id = ? and m.kind in ('progress', 'activity', 'question', 'result') order by m.at desc limit 1",
+    drama.id,
+  );
+  return {
+    ...(project.state ? { scale: scaleOf(project.state) } : {}),
+    ...(drama.length ? { length: drama.length } : {}),
+    ...(project.names?.logline ? { logline: project.names.logline } : {}),
+    ...(last ? { lastActivity: last.at, lastLine: last.text } : {}),
   };
 }
 
