@@ -16,6 +16,8 @@ export interface EpisodeMade {
   headings?: Record<string, string>;
   /** The storyboard styles drawn for each segment, where not both (replay-fleet.ts, DramaData.styles). */
   styles?: string[];
+  /** Each segment's references, by asset path (assets/characters/<id>, assets/scenes/<id>, assets/props/<id>), where the recording names them. */
+  uses?: Record<string, string[]>;
   /** Each segment's storyboards, once drawn, by segment: line-art and photoreal share a version; its blocking reference is accepted with them. */
   boards?: Record<string, Made>;
   /** The takes made of each segment, t01 first, and whether its newest is accepted. */

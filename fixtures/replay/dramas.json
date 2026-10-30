@@ -1800,7 +1800,12 @@
         "沃尔特把她交出去",
         "卢卡在拱门下等着"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/ivy",
+       "assets/characters/walter",
+       "assets/scenes/garden"
+      ]
      },
      {
       "id": "seg02",
@@ -1817,7 +1822,12 @@
         "黑尔牧师翻开经书",
         "玛格丽特看着，没有笑"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/hale",
+       "assets/characters/margaret",
+       "assets/scenes/garden"
+      ]
      },
      {
       "id": "seg03",
@@ -1834,7 +1844,13 @@
         "交换戒指",
         "艾薇说我愿意"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/ivy",
+       "assets/characters/luca",
+       "assets/characters/hale",
+       "assets/scenes/garden"
+      ]
      }
     ]
    },
@@ -1859,7 +1875,12 @@
         "邓恩警佐坐在前台后",
         "卢卡掏空口袋"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/dunn",
+       "assets/characters/luca",
+       "assets/scenes/desk"
+      ]
      },
      {
       "id": "seg02",
@@ -1876,7 +1897,11 @@
         "牢门关上",
         "卢卡坐在铺上"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/luca",
+       "assets/scenes/cell"
+      ]
      },
      {
       "id": "seg03",
@@ -1893,7 +1918,12 @@
         "艾薇交了保释金",
         "邓恩点钱"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/ivy",
+       "assets/characters/dunn",
+       "assets/scenes/desk"
+      ]
      }
     ]
    },
@@ -1918,7 +1948,12 @@
         "卢卡走出看守所",
         "艾薇在车边等"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/luca",
+       "assets/characters/ivy",
+       "assets/scenes/street"
+      ]
      },
      {
       "id": "seg02",
@@ -1935,7 +1970,12 @@
         "伊森下车",
         "他递给卢卡一张名片"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/ethan",
+       "assets/characters/luca",
+       "assets/scenes/street"
+      ]
      },
      {
       "id": "seg03",
@@ -1950,7 +1990,12 @@
        "zh": [
         "他们开车离开"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/ivy",
+       "assets/characters/luca",
+       "assets/scenes/street"
+      ]
      }
     ]
    },
@@ -1975,7 +2020,12 @@
         "一页纸上三行字",
         "艾薇签名"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/ivy",
+       "assets/characters/luca",
+       "assets/scenes/house"
+      ]
      },
      {
       "id": "seg02",
@@ -1992,7 +2042,12 @@
         "伊森在他们身后看",
         "玛格丽特倒茶"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/ethan",
+       "assets/characters/margaret",
+       "assets/scenes/house"
+      ]
      },
      {
       "id": "seg03",
@@ -2007,7 +2062,11 @@
        "zh": [
         "沃尔特把契约折起来"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/walter",
+       "assets/scenes/house"
+      ]
      }
     ]
    },
@@ -2032,7 +2091,12 @@
         "卢卡拿来一条毯子",
         "艾薇站在吧台边"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/luca",
+       "assets/characters/ivy",
+       "assets/scenes/apartment"
+      ]
      },
      {
       "id": "seg02",
@@ -2049,7 +2113,12 @@
         "沙发铺好",
         "灯灭了"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/luca",
+       "assets/characters/ivy",
+       "assets/scenes/apartment"
+      ]
      },
      {
       "id": "seg03",
@@ -2064,7 +2133,12 @@
        "zh": [
         "早上，两杯咖啡"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/luca",
+       "assets/characters/ivy",
+       "assets/scenes/apartment"
+      ]
      }
     ]
    },
@@ -2091,7 +2165,12 @@
         "中景：他边说边叠",
         "全景：身后的客厅"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/luca",
+       "assets/characters/ivy",
+       "assets/scenes/apartment"
+      ]
      },
      {
       "id": "seg02",
@@ -2108,7 +2187,11 @@
         "艾薇在吧台边",
         "她没有回头"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/ivy",
+       "assets/scenes/apartment"
+      ]
      },
      {
       "id": "seg03",
@@ -2127,7 +2210,13 @@
         "中景：卢卡看那页纸",
         "特写：案卷"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/luca",
+       "assets/characters/ethan",
+       "assets/props/file",
+       "assets/scenes/apartment"
+      ]
      },
      {
       "id": "seg04",
@@ -2144,7 +2233,13 @@
         "伊森：签之前先读。",
         "卢卡把案卷放下"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/luca",
+       "assets/characters/ethan",
+       "assets/props/file",
+       "assets/scenes/apartment"
+      ]
      }
     ]
    },
@@ -2167,7 +2262,12 @@
        "zh": [
         "探视时间：第 1 场"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/ivy",
+       "assets/characters/luca",
+       "assets/scenes/house"
+      ]
      },
      {
       "id": "seg02",
@@ -2182,7 +2282,12 @@
        "zh": [
         "探视时间：第 2 场"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/ivy",
+       "assets/characters/luca",
+       "assets/scenes/street"
+      ]
      },
      {
       "id": "seg03",
@@ -2197,7 +2302,12 @@
        "zh": [
         "探视时间：第 3 场"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/ivy",
+       "assets/characters/luca",
+       "assets/scenes/desk"
+      ]
      }
     ]
    },
@@ -2220,7 +2330,12 @@
        "zh": [
         "律师：第 1 场"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/ivy",
+       "assets/characters/luca",
+       "assets/scenes/street"
+      ]
      },
      {
       "id": "seg02",
@@ -2235,7 +2350,12 @@
        "zh": [
         "律师：第 2 场"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/ivy",
+       "assets/characters/luca",
+       "assets/scenes/desk"
+      ]
      },
      {
       "id": "seg03",
@@ -2250,7 +2370,12 @@
        "zh": [
         "律师：第 3 场"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/ivy",
+       "assets/characters/luca",
+       "assets/scenes/cell"
+      ]
      }
     ]
    },
@@ -2273,7 +2398,12 @@
        "zh": [
         "品格证人：第 1 场"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/ivy",
+       "assets/characters/luca",
+       "assets/scenes/desk"
+      ]
      },
      {
       "id": "seg02",
@@ -2288,7 +2418,12 @@
        "zh": [
         "品格证人：第 2 场"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/ivy",
+       "assets/characters/luca",
+       "assets/scenes/cell"
+      ]
      },
      {
       "id": "seg03",
@@ -2303,7 +2438,12 @@
        "zh": [
         "品格证人：第 3 场"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/ivy",
+       "assets/characters/luca",
+       "assets/scenes/garden"
+      ]
      }
     ]
    },
@@ -2326,7 +2466,12 @@
        "zh": [
         "认罪：第 1 场"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/ivy",
+       "assets/characters/luca",
+       "assets/scenes/cell"
+      ]
      },
      {
       "id": "seg02",
@@ -2341,7 +2486,12 @@
        "zh": [
         "认罪：第 2 场"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/ivy",
+       "assets/characters/luca",
+       "assets/scenes/garden"
+      ]
      },
      {
       "id": "seg03",
@@ -2356,7 +2506,12 @@
        "zh": [
         "认罪：第 3 场"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/ivy",
+       "assets/characters/luca",
+       "assets/scenes/apartment"
+      ]
      }
     ]
    },
@@ -2379,7 +2534,12 @@
        "zh": [
         "退回的戒指：第 1 场"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/ivy",
+       "assets/characters/luca",
+       "assets/scenes/garden"
+      ]
      },
      {
       "id": "seg02",
@@ -2394,7 +2554,12 @@
        "zh": [
         "退回的戒指：第 2 场"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/ivy",
+       "assets/characters/luca",
+       "assets/scenes/apartment"
+      ]
      },
      {
       "id": "seg03",
@@ -2409,7 +2574,12 @@
        "zh": [
         "退回的戒指：第 3 场"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/ivy",
+       "assets/characters/luca",
+       "assets/scenes/house"
+      ]
      }
     ]
    },
@@ -2432,7 +2602,12 @@
        "zh": [
         "冷咖啡：第 1 场"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/ivy",
+       "assets/characters/luca",
+       "assets/scenes/apartment"
+      ]
      },
      {
       "id": "seg02",
@@ -2447,7 +2622,12 @@
        "zh": [
         "冷咖啡：第 2 场"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/ivy",
+       "assets/characters/luca",
+       "assets/scenes/house"
+      ]
      },
      {
       "id": "seg03",
@@ -2462,7 +2642,12 @@
        "zh": [
         "冷咖啡：第 3 场"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/ivy",
+       "assets/characters/luca",
+       "assets/scenes/street"
+      ]
      }
     ]
    },
@@ -2485,7 +2670,12 @@
        "zh": [
         "听证：第 1 场"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/ivy",
+       "assets/characters/luca",
+       "assets/scenes/house"
+      ]
      },
      {
       "id": "seg02",
@@ -2500,7 +2690,12 @@
        "zh": [
         "听证：第 2 场"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/ivy",
+       "assets/characters/luca",
+       "assets/scenes/street"
+      ]
      },
      {
       "id": "seg03",
@@ -2515,7 +2710,12 @@
        "zh": [
         "听证：第 3 场"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/ivy",
+       "assets/characters/luca",
+       "assets/scenes/desk"
+      ]
      }
     ]
    },
@@ -2538,7 +2738,12 @@
        "zh": [
         "玛格丽特的条件：第 1 场"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/ivy",
+       "assets/characters/luca",
+       "assets/scenes/street"
+      ]
      },
      {
       "id": "seg02",
@@ -2553,7 +2758,12 @@
        "zh": [
         "玛格丽特的条件：第 2 场"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/ivy",
+       "assets/characters/luca",
+       "assets/scenes/desk"
+      ]
      },
      {
       "id": "seg03",
@@ -2568,7 +2778,12 @@
        "zh": [
         "玛格丽特的条件：第 3 场"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/ivy",
+       "assets/characters/luca",
+       "assets/scenes/cell"
+      ]
      }
     ]
    },
@@ -2591,7 +2806,12 @@
        "zh": [
         "第二次婚礼：第 1 场"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/ivy",
+       "assets/characters/luca",
+       "assets/scenes/desk"
+      ]
      },
      {
       "id": "seg02",
@@ -2606,7 +2826,12 @@
        "zh": [
         "第二次婚礼：第 2 场"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/ivy",
+       "assets/characters/luca",
+       "assets/scenes/cell"
+      ]
      },
      {
       "id": "seg03",
@@ -2621,7 +2846,12 @@
        "zh": [
         "第二次婚礼：第 3 场"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/ivy",
+       "assets/characters/luca",
+       "assets/scenes/garden"
+      ]
      }
     ]
    },
@@ -2644,7 +2874,12 @@
        "zh": [
         "软禁：第 1 场"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/ivy",
+       "assets/characters/luca",
+       "assets/scenes/cell"
+      ]
      },
      {
       "id": "seg02",
@@ -2659,7 +2894,12 @@
        "zh": [
         "软禁：第 2 场"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/ivy",
+       "assets/characters/luca",
+       "assets/scenes/garden"
+      ]
      },
      {
       "id": "seg03",
@@ -2674,7 +2914,12 @@
        "zh": [
         "软禁：第 3 场"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/ivy",
+       "assets/characters/luca",
+       "assets/scenes/apartment"
+      ]
      }
     ]
    },
@@ -2697,7 +2942,12 @@
        "zh": [
         "不在场证明：第 1 场"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/ivy",
+       "assets/characters/luca",
+       "assets/scenes/garden"
+      ]
      },
      {
       "id": "seg02",
@@ -2712,7 +2962,12 @@
        "zh": [
         "不在场证明：第 2 场"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/ivy",
+       "assets/characters/luca",
+       "assets/scenes/apartment"
+      ]
      },
      {
       "id": "seg03",
@@ -2727,7 +2982,12 @@
        "zh": [
         "不在场证明：第 3 场"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/ivy",
+       "assets/characters/luca",
+       "assets/scenes/house"
+      ]
      }
     ]
    },
@@ -2750,7 +3010,12 @@
        "zh": [
         "沃尔特知道了：第 1 场"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/ivy",
+       "assets/characters/luca",
+       "assets/scenes/apartment"
+      ]
      },
      {
       "id": "seg02",
@@ -2765,7 +3030,12 @@
        "zh": [
         "沃尔特知道了：第 2 场"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/ivy",
+       "assets/characters/luca",
+       "assets/scenes/house"
+      ]
      },
      {
       "id": "seg03",
@@ -2780,7 +3050,12 @@
        "zh": [
         "沃尔特知道了：第 3 场"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/ivy",
+       "assets/characters/luca",
+       "assets/scenes/street"
+      ]
      }
     ]
    },
@@ -2803,7 +3078,12 @@
        "zh": [
         "假释：第 1 场"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/ivy",
+       "assets/characters/luca",
+       "assets/scenes/house"
+      ]
      },
      {
       "id": "seg02",
@@ -2818,7 +3098,12 @@
        "zh": [
         "假释：第 2 场"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/ivy",
+       "assets/characters/luca",
+       "assets/scenes/street"
+      ]
      },
      {
       "id": "seg03",
@@ -2833,7 +3118,12 @@
        "zh": [
         "假释：第 3 场"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/ivy",
+       "assets/characters/luca",
+       "assets/scenes/desk"
+      ]
      }
     ]
    },
@@ -2856,7 +3146,12 @@
        "zh": [
         "祝酒：第 1 场"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/ivy",
+       "assets/characters/luca",
+       "assets/scenes/street"
+      ]
      },
      {
       "id": "seg02",
@@ -2871,7 +3166,12 @@
        "zh": [
         "祝酒：第 2 场"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/ivy",
+       "assets/characters/luca",
+       "assets/scenes/desk"
+      ]
      },
      {
       "id": "seg03",
@@ -2886,7 +3186,12 @@
        "zh": [
         "祝酒：第 3 场"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/ivy",
+       "assets/characters/luca",
+       "assets/scenes/cell"
+      ]
      }
     ]
    },
@@ -2909,7 +3214,12 @@
        "zh": [
         "两把钥匙：第 1 场"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/ivy",
+       "assets/characters/luca",
+       "assets/scenes/desk"
+      ]
      },
      {
       "id": "seg02",
@@ -2924,7 +3234,12 @@
        "zh": [
         "两把钥匙：第 2 场"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/ivy",
+       "assets/characters/luca",
+       "assets/scenes/cell"
+      ]
      },
      {
       "id": "seg03",
@@ -2939,7 +3254,12 @@
        "zh": [
         "两把钥匙：第 3 场"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/ivy",
+       "assets/characters/luca",
+       "assets/scenes/garden"
+      ]
      }
     ]
    },
@@ -2962,7 +3282,12 @@
        "zh": [
         "公开审理：第 1 场"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/ivy",
+       "assets/characters/luca",
+       "assets/scenes/cell"
+      ]
      },
      {
       "id": "seg02",
@@ -2977,7 +3302,12 @@
        "zh": [
         "公开审理：第 2 场"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/ivy",
+       "assets/characters/luca",
+       "assets/scenes/garden"
+      ]
      },
      {
       "id": "seg03",
@@ -2992,7 +3322,12 @@
        "zh": [
         "公开审理：第 3 场"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/ivy",
+       "assets/characters/luca",
+       "assets/scenes/apartment"
+      ]
      }
     ]
    },
@@ -3015,7 +3350,12 @@
        "zh": [
         "判决：第 1 场"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/ivy",
+       "assets/characters/luca",
+       "assets/scenes/garden"
+      ]
      },
      {
       "id": "seg02",
@@ -3030,7 +3370,12 @@
        "zh": [
         "判决：第 2 场"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/ivy",
+       "assets/characters/luca",
+       "assets/scenes/apartment"
+      ]
      },
      {
       "id": "seg03",
@@ -3045,7 +3390,12 @@
        "zh": [
         "判决：第 3 场"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/ivy",
+       "assets/characters/luca",
+       "assets/scenes/house"
+      ]
      }
     ]
    },
@@ -3068,7 +3418,12 @@
        "zh": [
         "保释新娘：第 1 场"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/ivy",
+       "assets/characters/luca",
+       "assets/scenes/apartment"
+      ]
      },
      {
       "id": "seg02",
@@ -3083,7 +3438,12 @@
        "zh": [
         "保释新娘：第 2 场"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/ivy",
+       "assets/characters/luca",
+       "assets/scenes/house"
+      ]
      },
      {
       "id": "seg03",
@@ -3098,7 +3458,12 @@
        "zh": [
         "保释新娘：第 3 场"
        ]
-      }
+      },
+      "uses": [
+       "assets/characters/ivy",
+       "assets/characters/luca",
+       "assets/scenes/street"
+      ]
      }
     ]
    }

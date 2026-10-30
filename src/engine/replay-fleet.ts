@@ -189,7 +189,7 @@ interface DramaData {
   props: { id: string; name: Both<string> }[];
   /** An episode's sample cut, where it has one: each clip's segment and its in and out points in seconds, from the cut.json drama-cli wrote for it. */
   /** Each segment's scene heading, in the screenplay's form (INT./EXT. place - DAY/NIGHT), its shots, and the episode's sample cut. */
-  episodes: { title: Both<string>; segments: { id: string; heading: Both<string>; shots: Both<string[]> }[]; cut?: { segment: string; in: number; out: number }[] }[];
+  episodes: { title: Both<string>; segments: { id: string; heading: Both<string>; shots: Both<string[]>; uses?: string[] }[]; cut?: { segment: string; in: number; out: number }[] }[];
   /** A red line in the screenplay: the episode whose bible range names it stops on drama-cli's refusal (RedLine) and asks the maker. */
   redLine?: { episode: string; line: Both<string> };
 }
@@ -207,7 +207,7 @@ interface Story {
   cast: { id: string; name: string; short: string; looks: string[] }[];
   places: { id: string; name: string; times: string[] }[];
   props: { id: string; name: string }[];
-  episodes: { title: string; segments: { id: string; heading: string; shots: string[] }[]; cut?: { segment: string; in: number; out: number }[] }[];
+  episodes: { title: string; segments: { id: string; heading: string; shots: string[]; uses?: string[] }[]; cut?: { segment: string; in: number; out: number }[] }[];
   redLine?: { episode: string; line: string };
 }
 
@@ -223,7 +223,7 @@ const inLanguage = (d: DramaData, lang: Lang): Story => ({
   cast: d.cast.map((c) => ({ id: c.id, name: c.name[lang], short: c.short[lang], looks: c.looks ?? [] })),
   places: d.places.map((p) => ({ id: p.id, name: p.name[lang], times: p.times ?? [] })),
   props: d.props.map((p) => ({ id: p.id, name: p.name[lang] })),
-  episodes: d.episodes.map((e) => ({ title: e.title[lang], segments: e.segments.map((s) => ({ id: s.id, heading: s.heading[lang], shots: s.shots[lang] })), ...(e.cut ? { cut: e.cut } : {}) })),
+  episodes: d.episodes.map((e) => ({ title: e.title[lang], segments: e.segments.map((s) => ({ id: s.id, heading: s.heading[lang], shots: s.shots[lang], ...(s.uses ? { uses: s.uses } : {}) })), ...(e.cut ? { cut: e.cut } : {}) })),
   ...(d.redLine ? { redLine: { episode: d.redLine.episode, line: d.redLine.line[lang] } } : {}),
 });
 
@@ -260,7 +260,7 @@ function sharedOf(s: Story): Shared[] {
 }
 
 /** An episode's segments and their scene headings, as drama-cli's status reports them (replay-status.ts, EpisodeMade). */
-const madeOf = (s: Story, e: Story["episodes"][number]) => ({ segments: e.segments.map((seg) => seg.id), headings: Object.fromEntries(e.segments.map((seg) => [seg.id, seg.heading])), styles: s.styles });
+const madeOf = (s: Story, e: Story["episodes"][number]) => ({ segments: e.segments.map((seg) => seg.id), headings: Object.fromEntries(e.segments.map((seg) => [seg.id, seg.heading])), styles: s.styles, ...(e.segments.some((seg) => seg.uses) ? { uses: Object.fromEntries(e.segments.filter((seg) => seg.uses).map((seg) => [seg.id, seg.uses!])) } : {}) });
 
 /** "3 looks", "1 look": a count with its noun. */
 const count = (n: number, noun: string) => `${n} ${noun}${n === 1 ? "" : "s"}`;

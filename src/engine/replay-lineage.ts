@@ -49,11 +49,12 @@ function stages(progress: ReplayProgress): Stage[] {
     const segments = made.boards ? made.segments : [];
     return [
       stage(`${base}/breakdown`, "breakdown", { current: "v1", accepted: "v1" }, reads),
-      ...segments.map((segment) => stage(`${base}/blocking/${segment}`, "blocking", { current: "v1", accepted: "v1" }, texts, place)),
-      ...segments.flatMap((segment) => (made.styles ?? STYLES).map((style) => stage(`${base}/multi_panel_storyboard/${segment}/${style}`, "storyboard", made.boards![segment], texts, [...looks, ...place, `${base}/blocking/${segment}`]))),
+      // A segment's own references where the recording names them (EpisodeMade.uses), else the leads and the home place.
+      ...segments.map((segment) => stage(`${base}/blocking/${segment}`, "blocking", { current: "v1", accepted: "v1" }, texts, made.uses?.[segment]?.filter((use) => use.startsWith("assets/scenes/")) ?? place)),
+      ...segments.flatMap((segment) => (made.styles ?? STYLES).map((style) => stage(`${base}/multi_panel_storyboard/${segment}/${style}`, "storyboard", made.boards![segment], texts, [...(made.uses?.[segment] ?? [...looks, ...place]), `${base}/blocking/${segment}`]))),
       ...Object.entries(made.takes ?? {}).map(([segment, shot]) => {
         const newest = `t${String(shot.count).padStart(2, "0")}`;
-        return stage(`${base}/segments/${segment}`, "take", { current: newest, accepted: shot.accepted ? newest : null }, texts, [`${base}/multi_panel_storyboard/${segment}/line-art`, ...looks, ...place]);
+        return stage(`${base}/segments/${segment}`, "take", { current: newest, accepted: shot.accepted ? newest : null }, texts, [`${base}/multi_panel_storyboard/${segment}/${(made.styles ?? STYLES)[0]}`, ...(made.uses?.[segment] ?? [...looks, ...place])]);
       }),
       ...(made.cut ? [stage(`${base}/edit`, "cut", made.cut, [], Object.keys(made.takes ?? {}).map((segment) => `${base}/segments/${segment}`))] : []),
     ];
