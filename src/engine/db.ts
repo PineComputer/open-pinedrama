@@ -165,6 +165,15 @@ create table if not exists messages (
   unique (session_id, ref)
 );
 
+-- drama-cli's status report each stop returns (status.ts): the report as it came, or why it didn't read.
+create table if not exists statuses (
+  turn_id text primary key,
+  session_id text not null,
+  report text,
+  error text,
+  saved_at text not null
+);
+
 create index if not exists files_episode on files (episode_id, id);
 create index if not exists files_drama_kind on files (drama_id, kind, id);
 create index if not exists files_turn on files (turn_id);
