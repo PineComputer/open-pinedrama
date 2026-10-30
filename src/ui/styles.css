@@ -612,6 +612,8 @@ h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 700; lett
 .eg-node.is-stale .eg-node__ring { border-style: dashed; }
 .eg-node__labels { width: max-content; }
 .eg-edge { transition: opacity .2s; }
+/* The selected row's version stays readable on the selected ground. */
+.eg-rail__row.is-active .eg-rail__row-role { color: var(--text-secondary); }
 .eg-legend__line.is-other { background: var(--border-input); height: 1px; }
 .eg-legend__line.is-stale { background: none; border-top: 2px dashed var(--eg-stale); height: 0; }
 .eg-rel:focus-visible, .eg-rail__row:focus-visible, .eg-chip:focus-visible, .eg-ddbtn:focus-visible { outline: 2px solid var(--text-primary); outline-offset: 1px; }
