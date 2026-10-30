@@ -10,7 +10,7 @@
   const S = {
     screen: SCREENS.includes(hash) ? hash : "home", theme: "dark", side: true, tab: "all", filter: "all",
     dialog: null, toasts: [], dramaStop: null, draft: "", chat: [],
-    cam: { x: 40, y: 96, k: 0.62 }, sel: null, follow: true, agentOpen: false, panning: null, minimap: true,
+    cam: { x: 40, y: 96, k: 0.62 }, sel: null, dock: (() => { try { return localStorage.getItem("studio.canvas.dock") || "under"; } catch (e) { return "under"; } })(), follow: true, agentOpen: false, panning: null, minimap: true,
     ti: 0, playing: false, t: 0, watched: {}, maxT: {}, verdict: {}, reason: {}, showPrev: false, sent: false, over: false,
     state: "normal", file: null, preset: null, len: "90", budget: "1000", ana: 0, tod: null, words: "", stab: "bible", cards: {}, cardWhy: {}, gsel: "ep6seg03", cutT: 0, cutPlaying: false, cutNotes: null, noteDraft: "", cutV: null, cutWhy: "",
   };
@@ -237,8 +237,13 @@
     const tab = S.dtab || "prompt";
     const tabs = [["prompt", "Prompt"], ...(spec ? [["versions", "Versions"], ["request", "Request"]] : []), ["details", "Details"]];
     const chips = (line) => line.split(/(Image \d+)/).map((part) => { const m = part.match(/^Image (\d+)$/); return m ? html`<span class="pchip"><img src=${spec.images[m[1] - 1]} alt=""/>${part}</span>` : part; });
-    return html`<div class="npanel" role="dialog" aria-label=${node.label} style=${style}>
-      <div class="nhead"><b class="grow">${node.label}</b>${Status(node.st)}<button class="ibtn" aria-label="Close" onClick=${() => set({ sel: null })}>${I("x")}</button></div>
+    // Under the node by default, the industry's convention; docked right on asking. The viewer's choice is kept in this browser.
+    const docked = S.dock === "right";
+    const dock = (to) => { set({ dock: to }); try { localStorage.setItem("studio.canvas.dock", to); } catch (e) { /* a convenience */ } };
+    return html`<div class=${"npanel" + (docked ? " docked" : "")} role="dialog" aria-label=${node.label} style=${docked ? "" : style}>
+      <div class="nhead"><b class="grow">${node.label}</b>${Status(node.st)}
+        <button class="ibtn" title=${docked ? "Under the node" : "Dock right"} aria-label=${docked ? "Under the node" : "Dock right"} onClick=${() => dock(docked ? "under" : "right")}>${I(docked ? "square-half-bottom" : "square-half")}</button>
+        <button class="ibtn" aria-label="Close" onClick=${() => set({ sel: null })}>${I("x")}</button></div>
       <div class="utabs" role="tablist">${tabs.map(([k, l]) => html`<button role="tab" aria-selected=${String(tab === k)} onClick=${() => set({ dtab: k })}>${l}</button>`)}</div>
       <div role="tabpanel">
         ${tab === "prompt" && (spec ? html`<div class="prompt">${spec.prompt.split("\n").map((line) => html`<p>${chips(line)}</p>`)}</div>
