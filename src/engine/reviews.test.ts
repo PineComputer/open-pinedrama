@@ -32,4 +32,11 @@ describe("a stop's files in its review", () => {
     expect(items.map((item) => item.key)).toEqual(["seg01"]);
     expect(other).toEqual([]);
   });
+
+  it("leave out the refusals the stop asks about", () => {
+    const take = row("drama/episodes/EP002/segments/seg01/t02/video.mp4", "take", { type: "video/mp4", segment: "seg01", version: "t02" });
+    const { items, other } = reviews.itemsOf("takes", [take, row("handoff/refusals.jsonl", "refusal")]);
+    expect(items.map((item) => item.key)).toEqual(["seg01"]);
+    expect(other).toEqual([]);
+  });
 });

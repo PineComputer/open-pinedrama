@@ -49,3 +49,22 @@ describe("each stop returns drama-cli's status", () => {
     expect(goal).toContain("return no handoff/status.json");
   });
 });
+
+const REFUSALS = "exactly the JSON line the command printed (`{\"error\": ...}`), one per line, in handoff/refusals.jsonl";
+
+describe("a stop that asks about a drama-cli refusal returns the refusal", () => {
+  it.each([
+    ["the setup session", setupGoal(drama, ["screenplay.md", "brief.md"], { screenplay: "screenplay.md", brief: "brief.md" })],
+    ["an episode's session", episodeGoal(drama, "EP002", ["project.tar.part-aa"], true, "screenplay.md")],
+    ["a session that carries an episode on", resumeGoal(drama, "EP002", ["project.tar.part-aa", "EP002.tar.part-aa"], true, undefined, "screenplay.md")],
+  ])("in %s, as drama-cli printed it, afresh at each such stop and at no other", (_where, goal) => {
+    expect(times(goal, REFUSALS)).toBe(1);
+    expect(goal).toContain("written afresh at each such stop");
+    expect(goal).toContain("at any other stop, return none");
+  });
+
+  it("but not in a rehearsal, which has no drama-cli to refuse", () => {
+    const goal = rehearsed(episodeGoal(drama, "EP002", ["project.tar.part-aa"], true, "screenplay.md"));
+    expect(goal).toContain("return no handoff/status.json or handoff/refusals.jsonl");
+  });
+});
