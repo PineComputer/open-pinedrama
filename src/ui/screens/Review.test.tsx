@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { describe, expect, it } from "vitest";
-import { file, storyboardReview } from "../test/fixtures.ts";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { cutReview, file, storyboardReview } from "../test/fixtures.ts";
 import { accept, answer, calls } from "../test/server.ts";
 import { Review } from "./Review.tsx";
 
@@ -156,5 +156,45 @@ describe("a question the agent asks because drama-cli refused", () => {
     answer(`/api/reviews/${review.id}`, review);
     render(<Review id={review.id} />);
     expect(await screen.findByText(/The refusals, line 1: the line should be one JSON object\./)).toBeInTheDocument();
+  });
+});
+
+describe("the review room for a cut", () => {
+  beforeEach(() => {
+    vi.spyOn(HTMLMediaElement.prototype, "play").mockResolvedValue(undefined);
+    vi.spyOn(HTMLMediaElement.prototype, "pause").mockImplementation(() => undefined);
+  });
+  afterEach(() => vi.restoreAllMocks());
+
+  it("plays the cut in the cut viewer on the stage, with no reel, and is decided by Accept cut or Send back", async () => {
+    const review = open(cutReview());
+    const stage = await screen.findByRole("region", { name: "The work in view" });
+    expect(stage.querySelector("media-controller video")).toHaveAttribute("src", review.reviewItems[0].files[0].url);
+    expect(screen.queryByRole("navigation", { name: "To decide" })).toBeNull();
+    expect(screen.getByRole("button", { name: "Accept cut A" })).toHaveAttribute("aria-pressed", "false");
+    expect(screen.getByRole("button", { name: "Send back B" })).toBeInTheDocument();
+  });
+
+  it("sends the cut back once with the maker's notes, each at its time on the cut", async () => {
+    const user = userEvent.setup();
+    const review = open(cutReview());
+    const stage = await screen.findByRole("region", { name: "The work in view" });
+    const video = stage.querySelector("video") as HTMLVideoElement;
+    const fileId = review.reviewItems[0].files[0].id;
+    for (const [seconds, text] of [[2, "Cut in sooner"], [6, "Too dark"]] as const) {
+      video.currentTime = seconds;
+      fireEvent.timeUpdate(video);
+      await user.click(screen.getByRole("button", { name: `Note at 0:0${seconds}` }));
+      await user.type(screen.getByRole("textbox", { name: "A note for the agent" }), `${text}{Enter}`);
+    }
+    await user.click(screen.getByRole("button", { name: "Send back B" }));
+    await user.click(screen.getByRole("button", { name: /^Send review/ }));
+    await user.click(within(screen.getByText("Send to the agent:").closest(".ds-sendbar") as HTMLElement).getByRole("button", { name: /^Send\b/ }));
+    const sent = calls("POST", `/api/reviews/${review.id}/decision`);
+    expect(sent).toHaveLength(1);
+    expect(sent[0].body).toEqual({
+      words: "",
+      items: [{ key: "cut", verdict: "revise", notes: [{ fileId, time: 2, text: "Cut in sooner" }, { fileId, time: 6, text: "Too dark" }] }],
+    });
   });
 });

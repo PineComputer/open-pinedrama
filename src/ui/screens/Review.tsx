@@ -7,6 +7,7 @@ import { Button } from "../components/Button.tsx";
 import { Segmented } from "../components/Segmented.tsx";
 import { StatusChip } from "../components/StatusChip.tsx";
 import { StopCard } from "../components/StopCard.tsx";
+import { CutViewer } from "../cut/CutViewer.tsx";
 import { Icon } from "../icons.tsx";
 import { Markdown } from "../Markdown.tsx";
 import { Link, navigate, usePath } from "../router.tsx";
@@ -254,6 +255,8 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
   const items = review.reviewItems;
   const open = review.state === "open";
   const takes = review.kind === "takes";
+  // A cut plays in the cut viewer, its segments and notes on its timeline, with no reel: a cut review has one item (M6).
+  const cut = review.kind === "cut";
   // A link may name the item to open at (?item=, as the Canvas's Review does); else the first.
   const asked = usePath().query.get("item");
   const [index, setIndex] = useState(() => Math.max(0, items.findIndex((i) => i.key === asked)));
@@ -433,8 +436,8 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
   let pinNumber = 0;
 
   return (
-    <div className="ds-room">
-      <nav className="ds-reel" aria-label={t("review.items")}>
+    <div className={cut ? "ds-room is-cut" : "ds-room"}>
+      <nav className="ds-reel" aria-label={t("review.items")} hidden={cut}>
         <h3>
           {review.episode ? `${review.episode} · ` : ""}
           {t(`kind.${review.kind}` as TKey)}
@@ -479,7 +482,8 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
         )}
         <div className="ds-screen" ref={stage}>
           {file && isImage(file) && <Pinboard key={file.id} file={file} notes={earlier ? (item?.asked ?? []) : (draft?.notes ?? [])} draft={!earlier && pending?.fileId === file.id ? pending : undefined} space={space} onPin={pin} />}
-          {file && isVideo(file) && (
+          {file && isVideo(file) && cut && <CutViewer key={file.id} file={file} notes={earlier ? (item?.asked ?? []) : (draft?.notes ?? [])} videoRef={video} onTime={setPlayhead} />}
+          {file && isVideo(file) && !cut && (
             <div className="screen">
               <video
                 ref={video}
@@ -668,7 +672,7 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
           <div className="vrow">
             <button type="button" className="vbtn is-accept" aria-pressed={draft?.verdict === "approve"} disabled={!open || mustWatch} aria-describedby={mustWatch ? "must-watch" : undefined} onClick={accept}>
               <Icon name="check" />
-              {t("review.accept")} <kbd>A</kbd>
+              {t(cut ? "cut.accept" : "review.accept")} <kbd>A</kbd>
             </button>
             <button type="button" className="vbtn is-back" aria-pressed={draft?.verdict === "revise"} disabled={!open} onClick={sendBack}>
               <Icon name="arrow-counter-clockwise" />

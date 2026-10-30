@@ -69,3 +69,7 @@
 .ds-tl-clip .dur { position: absolute; right: 6px; bottom: 3px; font: 500 10px/1 var(--font-mono); color: var(--text-secondary); }
 .ds-tl-note { position: absolute; inset: 4px 0; box-sizing: border-box; overflow: hidden; padding: 0 6px; border-radius: var(--radius-medium); border: 1px solid var(--warning-text); background: var(--surface); color: var(--text-primary); font: 500 11px/22px var(--font-sans); text-align: left; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; }
 .ds-tl-note:focus-visible { outline: 2px solid var(--text-primary); outline-offset: 1px; }
+
+/* ---------------- the cut's review room: the viewer on the stage, no reel ---------------- */
+.ds-room.is-cut { grid-template-columns: minmax(0, 1fr) var(--insp); }
+.ds-room.is-cut .ds-screen { display: flex; padding: 0; }

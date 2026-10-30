@@ -34,3 +34,24 @@ export function storyboardReview(...segments: string[]): ReviewView {
     refusals: [],
   };
 }
+
+/** An open review of EP002's cut, v2, whose cut.json lists three segments over 8 seconds. */
+export function cutReview(): ReviewView {
+  const cut = file({
+    kind: "cut",
+    name: "cut.mp4",
+    path: "drama/episodes/EP002/edit/v2/cut.mp4",
+    type: "video/mp4",
+    episode: "EP002",
+    version: "v2",
+    cutPlan: {
+      fps: 24,
+      clips: [
+        { segment: "seg01", take: "t02", start: 0, end: 4 },
+        { segment: "seg02", take: "t01", start: 4, end: 6 },
+        { segment: "seg03", take: "t01", start: 6, end: 8 },
+      ],
+    },
+  });
+  return { ...storyboardReview(), id: "r9", kind: "cut", question: "The cut of EP002 is ready. Please watch it.", items: 1, reviewItems: [{ key: "cut", label: "Cut", files: [cut] }] };
+}
