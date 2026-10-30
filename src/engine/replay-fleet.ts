@@ -185,8 +185,9 @@ interface DramaData {
   /** How many minutes ago a sample drama was started, so the studio's recent work shows them over hours and days. */
   ago: number;
   cast: { id: string; name: Both<string>; short: Both<string>; looks?: string[] }[];
-  places: { id: string; name: Both<string>; times?: string[] }[];
-  props: { id: string; name: Both<string> }[];
+  /** Each place and prop with its bible description (drama-cli's Bible requires one), which Story's Scenes and Props show. */
+  places: { id: string; name: Both<string>; description: Both<string>; times?: string[] }[];
+  props: { id: string; name: Both<string>; description: Both<string> }[];
   /** An episode's sample cut, where it has one: each clip's segment and its in and out points in seconds, from the cut.json drama-cli wrote for it. */
   /** Each segment's scene heading, in the screenplay's form (INT./EXT. place - DAY/NIGHT), its shots, and the episode's sample cut. */
   episodes: { title: Both<string>; segments: { id: string; heading: Both<string>; shots: Both<string[]>; uses?: string[] }[]; cut?: { segment: string; in: number; out: number }[] }[];
@@ -205,8 +206,8 @@ interface Story {
   extras: Record<string, string[]>;
   ago: number;
   cast: { id: string; name: string; short: string; looks: string[] }[];
-  places: { id: string; name: string; times: string[] }[];
-  props: { id: string; name: string }[];
+  places: { id: string; name: string; description: string; times: string[] }[];
+  props: { id: string; name: string; description: string }[];
   episodes: { title: string; segments: { id: string; heading: string; shots: string[]; uses?: string[] }[]; cut?: { segment: string; in: number; out: number }[] }[];
   redLine?: { episode: string; line: string };
 }
@@ -221,8 +222,8 @@ const inLanguage = (d: DramaData, lang: Lang): Story => ({
   extras: d.extras ?? {},
   ago: d.ago,
   cast: d.cast.map((c) => ({ id: c.id, name: c.name[lang], short: c.short[lang], looks: c.looks ?? [] })),
-  places: d.places.map((p) => ({ id: p.id, name: p.name[lang], times: p.times ?? [] })),
-  props: d.props.map((p) => ({ id: p.id, name: p.name[lang] })),
+  places: d.places.map((p) => ({ id: p.id, name: p.name[lang], description: p.description[lang], times: p.times ?? [] })),
+  props: d.props.map((p) => ({ id: p.id, name: p.name[lang], description: p.description[lang] })),
   episodes: d.episodes.map((e) => ({ title: e.title[lang], segments: e.segments.map((s) => ({ id: s.id, heading: s.heading[lang], shots: s.shots[lang], ...(s.uses ? { uses: s.uses } : {}) })), ...(e.cut ? { cut: e.cut } : {}) })),
   ...(d.redLine ? { redLine: { episode: d.redLine.episode, line: d.redLine.line[lang] } } : {}),
 });
@@ -315,6 +316,8 @@ const words = (s: Story) => {
     logline: s.logline,
     places: Object.fromEntries(s.places.map((place) => [place.id, place.name])),
     props: Object.fromEntries(s.props.map((item) => [item.id, item.name])),
+    locations: s.places.map(({ id, name, description }) => ({ id, name, description })),
+    keyProps: s.props.map(({ id, name, description }) => ({ id, name, description })),
     bible: [
       `# ${s.title} — bible (placeholder)`,
       `\n${s.logline}`,
@@ -368,6 +371,8 @@ const words = (s: Story) => {
     logline: s.logline,
     places: Object.fromEntries(s.places.map((place) => [place.id, place.name])),
     props: Object.fromEntries(s.props.map((item) => [item.id, item.name])),
+    locations: s.places.map(({ id, name, description }) => ({ id, name, description })),
+    keyProps: s.props.map(({ id, name, description }) => ({ id, name, description })),
     bible: [
       `# ${s.title} · 设定集（示例）`,
       `\n${s.logline}`,
@@ -410,8 +415,8 @@ const bibleJson = (say: Say, version: string): Out => ({
       title: say.title,
       logline: say.logline,
       characters: say.cast.map((c) => ({ id: c.id, name: c.name, aliases: [] })),
-      locations: Object.entries(say.places).map(([id, name]) => ({ id, name })),
-      props: Object.entries(say.props).map(([id, name]) => ({ id, name })),
+      locations: say.locations,
+      props: say.keyProps,
       episodes: say.episodes.map((title, i) => ({ id: codeOf(i), title })),
     }),
   ),

@@ -52,6 +52,10 @@
     "name": {
      "en": "Courtyard house",
      "zh": "四合院"
+    },
+    "description": {
+     "en": "A 1980s courtyard house: grey brick walls, a date tree in the yard, a coal stove by the kitchen door.",
+     "zh": "八十年代的四合院：青砖墙，院里一棵枣树，厨房门边一只煤炉。"
     }
    },
    {
@@ -59,6 +63,10 @@
     "name": {
      "en": "Factory office",
      "zh": "工厂办公室"
+    },
+    "description": {
+     "en": "The factory director's office: a steel desk, a thermos of tea, production charts pinned to the wall.",
+     "zh": "工厂厂长办公室：一张铁皮办公桌，一只暖水瓶泡着茶，墙上钉着生产进度表。"
     }
    }
   ],
@@ -68,6 +76,10 @@
     "name": {
      "en": "Torn letter",
      "zh": "撕破的信"
+    },
+    "description": {
+     "en": "A letter torn in half, its two pieces kept together in an envelope.",
+     "zh": "一封被撕成两半的信，两片一起收在信封里。"
     }
    }
   ],
@@ -655,6 +667,10 @@
     "name": {
      "en": "Luca's apartment",
      "zh": "卢卡的公寓"
+    },
+    "description": {
+     "en": "A one-bedroom walk-up over a laundromat: a sofa bed, a desk under the window, case files stacked by the door.",
+     "zh": "洗衣店楼上的一居室：一张沙发床，窗下一张书桌，门边堆着案卷。"
     }
    },
    {
@@ -662,6 +678,10 @@
     "name": {
      "en": "Cole house · living room",
      "zh": "科尔家 · 客厅"
+    },
+    "description": {
+     "en": "The Coles' living room: a fireplace, family photographs on the mantel, a bay window onto the street.",
+     "zh": "科尔家的客厅：一座壁炉，壁炉台上摆着全家福，凸窗朝着街道。"
     }
    },
    {
@@ -669,6 +689,10 @@
     "name": {
      "en": "Garden wedding",
      "zh": "花园婚礼"
+    },
+    "description": {
+     "en": "A rented garden set for a small wedding: white chairs in rows, an arch of roses, a string quartet's stands.",
+     "zh": "租来办小型婚礼的花园：成排的白椅子，一座玫瑰拱门，弦乐四重奏的谱架。"
     }
    },
    {
@@ -676,6 +700,10 @@
     "name": {
      "en": "County jail · front desk",
      "zh": "县看守所 · 前台"
+    },
+    "description": {
+     "en": "The jail's front desk behind bulletproof glass, a bench for visitors, a clock over the door.",
+     "zh": "看守所防弹玻璃后的前台，一张访客长椅，门上挂着一只钟。"
     }
    },
    {
@@ -683,6 +711,10 @@
     "name": {
      "en": "County jail · cell",
      "zh": "县看守所 · 牢房"
+    },
+    "description": {
+     "en": "A two-bunk cell, a steel toilet, a slit window high in the back wall.",
+     "zh": "双层铺的牢房，一只不锈钢马桶，后墙高处一道窄窗。"
     }
    },
    {
@@ -690,6 +722,10 @@
     "name": {
      "en": "Jail street",
      "zh": "看守所外街道"
+    },
+    "description": {
+     "en": "The street outside the county jail: a bail bonds office, a bus stop, parked cruisers.",
+     "zh": "县看守所外的街道：一家保释担保行，一个公交站，停着的警车。"
     }
    }
   ],
@@ -699,6 +735,10 @@
     "name": {
      "en": "Case file",
      "zh": "案卷"
+    },
+    "description": {
+     "en": "A worn manila folder, the case number in marker on its tab, papers sticking out.",
+     "zh": "一只磨旧的牛皮纸文件夹，标签上用马克笔写着案号，纸页从里面露出来。"
     }
    }
   ],
@@ -2401,7 +2441,17 @@
     "zh": "第 7 集第 4 场，狱警在牢房里当面殴打卢卡"
    }
   },
-  "parallel": 7
+  "parallel": 7,
+  "extras": {
+   "setup": [
+    "assets/scenes/apartment/front/v1/image-1.jpg",
+    "assets/scenes/house/front/v1/image-1.jpg",
+    "assets/scenes/garden/front/v1/image-1.jpg",
+    "assets/scenes/desk/front/v1/image-1.jpg",
+    "assets/scenes/cell/front/v1/image-1.jpg",
+    "assets/scenes/street/front/v1/image-1.jpg"
+   ]
+  }
  },
  "paper-vows": {
   "title": {
@@ -2567,6 +2617,10 @@
     "name": {
      "en": "Jail, a cell",
      "zh": "Jail, a cell"
+    },
+    "description": {
+     "en": "A narrow, present-day concrete jail cell painted dull grey-green, with a scuffed grey concrete floor. Back wall: a small high rectangular window with steel bars, through which a pale shaft of daylight slants down into the cell. Left wall: a steel bunk bolted lengthwise along the wall, with a thin grey mattress, a folded grey wool blanket and a flat pillow. Right wall: the barred steel cell door, the only way in, which opens onto a dim corridor; beside it in the back-right corner stands a stainless-steel toilet-sink unit. Front wall (behind the camera): bare concrete with a small steel shelf. A caged fluorescent tube on the ceiling gives a flat, cold white top light.",
+     "zh": "A narrow, present-day concrete jail cell painted dull grey-green, with a scuffed grey concrete floor. Back wall: a small high rectangular window with steel bars, through which a pale shaft of daylight slants down into the cell. Left wall: a steel bunk bolted lengthwise along the wall, with a thin grey mattress, a folded grey wool blanket and a flat pillow. Right wall: the barred steel cell door, the only way in, which opens onto a dim corridor; beside it in the back-right corner stands a stainless-steel toilet-sink unit. Front wall (behind the camera): bare concrete with a small steel shelf. A caged fluorescent tube on the ceiling gives a flat, cold white top light."
     }
    },
    {
@@ -2574,6 +2628,10 @@
     "name": {
      "en": "Jail, front desk",
      "zh": "Jail, front desk"
+    },
+    "description": {
+     "en": "A present-day jail processing and release area with beige walls and a grey linoleum floor. A chest-high grey laminate front desk runs across the room, parallel to the back wall and a few steps in front of it, with a computer monitor and a tray on its top. Back wall: grey metal filing cabinets, a plain round wall clock and, at the back wall's left end, a heavy steel security door with a small wire-glass pane, which leads back to the cells. Right wall: a heavy steel exit door with a push bar and a small wire-glass window, the way out to the street. Left wall: a row of small grey steel property lockers and a steel bench bolted to the floor beneath them. Front wall (behind the camera): a cork notice board. Rectangular fluorescent ceiling panels give cool, even top light, and daylight comes in faintly through the exit door's small window on the right wall.",
+     "zh": "A present-day jail processing and release area with beige walls and a grey linoleum floor. A chest-high grey laminate front desk runs across the room, parallel to the back wall and a few steps in front of it, with a computer monitor and a tray on its top. Back wall: grey metal filing cabinets, a plain round wall clock and, at the back wall's left end, a heavy steel security door with a small wire-glass pane, which leads back to the cells. Right wall: a heavy steel exit door with a push bar and a small wire-glass window, the way out to the street. Left wall: a row of small grey steel property lockers and a steel bench bolted to the floor beneath them. Front wall (behind the camera): a cork notice board. Rectangular fluorescent ceiling panels give cool, even top light, and daylight comes in faintly through the exit door's small window on the right wall."
     }
    },
    {
@@ -2581,6 +2639,10 @@
     "name": {
      "en": "Street outside the jail",
      "zh": "Street outside the jail"
+    },
+    "description": {
+     "en": "A quiet present-day city street outside a jail, in bright daylight. Back side: a tall chain-link fence topped with coils of razor wire, and behind it the blocky grey concrete jail building with narrow slit windows. A steel pedestrian gate in the fence, opposite the camera, is the way out of the jail. A wide grey concrete sidewalk runs along the fence, and the curb runs parallel to it across the frame, with an empty parking lane of dark asphalt in front of it. Left side: the road and the fence stretch away into the distance, with a streetlamp at the curb. Right side: the sidewalk continues past a row of young trees and a bus-stop pole. Front side (behind the camera): the far lane of the road and low buildings opposite. Sunlight falls from high on the left and casts short shadows to the right; the sky is clear.",
+     "zh": "A quiet present-day city street outside a jail, in bright daylight. Back side: a tall chain-link fence topped with coils of razor wire, and behind it the blocky grey concrete jail building with narrow slit windows. A steel pedestrian gate in the fence, opposite the camera, is the way out of the jail. A wide grey concrete sidewalk runs along the fence, and the curb runs parallel to it across the frame, with an empty parking lane of dark asphalt in front of it. Left side: the road and the fence stretch away into the distance, with a streetlamp at the curb. Right side: the sidewalk continues past a row of young trees and a bus-stop pole. Front side (behind the camera): the far lane of the road and low buildings opposite. Sunlight falls from high on the left and casts short shadows to the right; the sky is clear."
     }
    },
    {
@@ -2588,6 +2650,10 @@
     "name": {
      "en": "The Quinn family mansion, living room",
      "zh": "The Quinn family mansion, living room"
+    },
+    "description": {
+     "en": "A spacious, luxurious present-day living room in a wealthy suburban mansion, in cream, white and gold. Back wall: three tall arched French windows with sheer white curtains and gold tie-backs, through which daylight floods in from behind and slightly above, the main light source. Left wall: a white marble fireplace with a large gilt-framed mirror above it and two tall vases of white orchids on the mantel. Right wall: a wide open double doorway with white panelled doors, the way in from the marble entrance hall, and a gold console table beside it. Front wall (behind the camera): built-in white bookshelves. A crystal chandelier hangs from the centre of the ceiling and adds warm fill light. A long cream tufted three-seat sofa stands in the middle of the room with its back to the windows on the back wall, facing the camera. A low rectangular glass-and-gold coffee table stands in front of the sofa. A single cream upholstered armchair stands across the coffee table from the sofa, nearer the camera, its back to the camera and facing the sofa. A pale-grey patterned rug lies under the sofa, the table and the armchair, on a polished light wood floor.",
+     "zh": "A spacious, luxurious present-day living room in a wealthy suburban mansion, in cream, white and gold. Back wall: three tall arched French windows with sheer white curtains and gold tie-backs, through which daylight floods in from behind and slightly above, the main light source. Left wall: a white marble fireplace with a large gilt-framed mirror above it and two tall vases of white orchids on the mantel. Right wall: a wide open double doorway with white panelled doors, the way in from the marble entrance hall, and a gold console table beside it. Front wall (behind the camera): built-in white bookshelves. A crystal chandelier hangs from the centre of the ceiling and adds warm fill light. A long cream tufted three-seat sofa stands in the middle of the room with its back to the windows on the back wall, facing the camera. A low rectangular glass-and-gold coffee table stands in front of the sofa. A single cream upholstered armchair stands across the coffee table from the sofa, nearer the camera, its back to the camera and facing the sofa. A pale-grey patterned rug lies under the sofa, the table and the armchair, on a polished light wood floor."
     }
    },
    {
@@ -2598,13 +2664,21 @@
     },
     "times": [
      "Night"
-    ]
+    ],
+    "description": {
+     "en": "The living room of a small but bright, clean and stylish present-day one-bedroom downtown apartment, with white walls, a pale oak floor and warm modern-minimalist décor. Back wall: on its left half, a large floor-to-ceiling window with sheer linen curtains looking out over the city skyline; by day, sunlight streams in through it from behind, and by night the city lights glow through it. On the right half of the back wall is the white panelled bedroom door, the only bedroom. Left wall: the apartment's front door, a dark-grey panelled door with a brass handle, which is the way in, with wall hooks and a slim oak shoe bench beside it. Right wall: a compact open kitchenette with white flat-front cabinets, a pale stone counter and two oak stools tucked under the counter's overhang. Front wall (behind the camera): low oak bookshelves. A charcoal-grey linen three-seat couch stands in the middle of the room, slightly left of centre, its back to the camera, facing the back wall's window, with a brass arc floor lamp at its left end and a low round oak coffee table in front of it. A small round light-oak dining table with two upholstered chairs stands in the right half of the room, between the couch and the kitchenette, nearer the bedroom door. A glass globe pendant lamp hangs over the dining table. At night the warm floor lamp from the left and the pendant over the table are the light sources; by day the window on the back wall gives soft, bright light.",
+     "zh": "The living room of a small but bright, clean and stylish present-day one-bedroom downtown apartment, with white walls, a pale oak floor and warm modern-minimalist décor. Back wall: on its left half, a large floor-to-ceiling window with sheer linen curtains looking out over the city skyline; by day, sunlight streams in through it from behind, and by night the city lights glow through it. On the right half of the back wall is the white panelled bedroom door, the only bedroom. Left wall: the apartment's front door, a dark-grey panelled door with a brass handle, which is the way in, with wall hooks and a slim oak shoe bench beside it. Right wall: a compact open kitchenette with white flat-front cabinets, a pale stone counter and two oak stools tucked under the counter's overhang. Front wall (behind the camera): low oak bookshelves. A charcoal-grey linen three-seat couch stands in the middle of the room, slightly left of centre, its back to the camera, facing the back wall's window, with a brass arc floor lamp at its left end and a low round oak coffee table in front of it. A small round light-oak dining table with two upholstered chairs stands in the right half of the room, between the couch and the kitchenette, nearer the bedroom door. A glass globe pendant lamp hangs over the dining table. At night the warm floor lamp from the left and the pendant over the table are the light sources; by day the window on the back wall gives soft, bright light."
+    }
    },
    {
     "id": "wedding_garden",
     "name": {
      "en": "Garden of the wedding venue",
      "zh": "Garden of the wedding venue"
+    },
+    "description": {
+     "en": "A small, elegant present-day outdoor wedding garden on a manicured green lawn, in sunny daylight. Back side: a white wooden wedding arch at the end of the aisle, hung with sheer white drapes and garlands of white roses, peonies and greenery, with a tall clipped hedge and leafy trees behind it. A straight aisle of white petals on a pale runner runs down the middle of the lawn from the camera to the arch, between two short rows of white folding chairs that face the arch. Left side: a clipped boxwood hedge and, in front of it, a small round white high cocktail table holding a silver tray. Right side: white rose bushes along a low cream stone garden wall. Front side (behind the camera): a gravel path from the venue's terrace, the way in, where the aisle begins. Sunlight comes from high on the right and gives warm, soft highlights.",
+     "zh": "A small, elegant present-day outdoor wedding garden on a manicured green lawn, in sunny daylight. Back side: a white wooden wedding arch at the end of the aisle, hung with sheer white drapes and garlands of white roses, peonies and greenery, with a tall clipped hedge and leafy trees behind it. A straight aisle of white petals on a pale runner runs down the middle of the lawn from the camera to the arch, between two short rows of white folding chairs that face the arch. Left side: a clipped boxwood hedge and, in front of it, a small round white high cocktail table holding a silver tray. Right side: white rose bushes along a low cream stone garden wall. Front side (behind the camera): a gravel path from the venue's terrace, the way in, where the aisle begins. Sunlight comes from high on the right and gives warm, soft highlights."
     }
    }
   ],
@@ -2614,6 +2688,10 @@
     "name": {
      "en": "agreement",
      "zh": "agreement"
+    },
+    "description": {
+     "en": "A single white US-letter sheet of paper, handwritten in blue ink in Natalie's neat cursive. It is headed 'Agreement' and lists three numbered rules, with Natalie's signature and Sebastian's signature beneath it. It is later called their divorce agreement.",
+     "zh": "A single white US-letter sheet of paper, handwritten in blue ink in Natalie's neat cursive. It is headed 'Agreement' and lists three numbered rules, with Natalie's signature and Sebastian's signature beneath it. It is later called their divorce agreement."
     }
    },
    {
@@ -2621,6 +2699,10 @@
     "name": {
      "en": "blanket",
      "zh": "blanket"
+    },
+    "description": {
+     "en": "A soft oatmeal-grey knitted throw blanket, about 130 by 170 cm, with a chunky cable-knit texture.",
+     "zh": "A soft oatmeal-grey knitted throw blanket, about 130 by 170 cm, with a chunky cable-knit texture."
     }
    },
    {
@@ -2628,6 +2710,10 @@
     "name": {
      "en": "bouquet",
      "zh": "bouquet"
+    },
+    "description": {
+     "en": "A modest round bridal bouquet of white roses and baby's breath with a little greenery, its stems wrapped in ivory satin ribbon, about 25 cm across.",
+     "zh": "A modest round bridal bouquet of white roses and baby's breath with a little greenery, its stems wrapped in ivory satin ribbon, about 25 cm across."
     }
    },
    {
@@ -2635,6 +2721,10 @@
     "name": {
      "en": "breakfast",
      "zh": "breakfast"
+    },
+    "description": {
+     "en": "Two white ceramic plates of scrambled eggs, buttered toast and sliced strawberries, with two white mugs of black coffee and cutlery, set out on the dining table.",
+     "zh": "Two white ceramic plates of scrambled eggs, buttered toast and sliced strawberries, with two white mugs of black coffee and cutlery, set out on the dining table."
     }
    },
    {
@@ -2642,6 +2732,10 @@
     "name": {
      "en": "car key",
      "zh": "car key"
+    },
+    "description": {
+     "en": "A sleek black Mercedes-Benz smart key fob with chrome edging and the silver three-pointed-star logo, about 7 cm long, the key to the black Mercedes-Maybach.",
+     "zh": "A sleek black Mercedes-Benz smart key fob with chrome edging and the silver three-pointed-star logo, about 7 cm long, the key to the black Mercedes-Maybach."
     }
    },
    {
@@ -2649,6 +2743,10 @@
     "name": {
      "en": "glasses of champagne",
      "zh": "glasses of champagne"
+    },
+    "description": {
+     "en": "Tall, slim crystal champagne flutes filled with pale golden sparkling champagne, served from a round silver tray.",
+     "zh": "Tall, slim crystal champagne flutes filled with pale golden sparkling champagne, served from a round silver tray."
     }
    },
    {
@@ -2656,6 +2754,10 @@
     "name": {
      "en": "two coins",
      "zh": "two coins"
+    },
+    "description": {
+     "en": "Two silver US quarter-dollar coins, about 24 mm across, with George Washington's profile on the face.",
+     "zh": "Two silver US quarter-dollar coins, about 24 mm across, with George Washington's profile on the face."
     }
    },
    {
@@ -2663,6 +2765,10 @@
     "name": {
      "en": "Daniel's phone",
      "zh": "Daniel's phone"
+    },
+    "description": {
+     "en": "A Samsung Galaxy S24 Ultra in titanium black with the Samsung wordmark on the back. Its screen shows a payment confirmation with a green check mark.",
+     "zh": "A Samsung Galaxy S24 Ultra in titanium black with the Samsung wordmark on the back. Its screen shows a payment confirmation with a green check mark."
     }
    },
    {
@@ -2670,6 +2776,10 @@
     "name": {
      "en": "the bag containing her wedding dress",
      "zh": "the bag containing her wedding dress"
+    },
+    "description": {
+     "en": "A long white zippered garment bag of matte nylon, about 150 cm long, on a wooden hanger, with the ivory satin of the wedding dress faintly visible through it.",
+     "zh": "A long white zippered garment bag of matte nylon, about 150 cm long, on a wooden hanger, with the ivory satin of the wedding dress faintly visible through it."
     }
    },
    {
@@ -2677,6 +2787,10 @@
     "name": {
      "en": "expensive car",
      "zh": "expensive car"
+    },
+    "description": {
+     "en": "A sleek, polished black luxury sedan with tinted windows, chrome trim, dark alloy wheels and no visible badges or plates text.",
+     "zh": "A sleek, polished black luxury sedan with tinted windows, chrome trim, dark alloy wheels and no visible badges or plates text."
     }
    },
    {
@@ -2684,6 +2798,10 @@
     "name": {
      "en": "folder",
      "zh": "folder"
+    },
+    "description": {
+     "en": "A plain manila card folder, letter size, holding typed report pages, photographs and a copy of the hospital statement.",
+     "zh": "A plain manila card folder, letter size, holding typed report pages, photographs and a copy of the hospital statement."
     }
    },
    {
@@ -2691,6 +2809,10 @@
     "name": {
      "en": "key",
      "zh": "key"
+    },
+    "description": {
+     "en": "A single brass Schlage house key, about 6 cm long, with the Schlage name stamped on its bow, on a plain silver split ring.",
+     "zh": "A single brass Schlage house key, about 6 cm long, with the Schlage name stamped on its bow, on a plain silver split ring."
     }
    },
    {
@@ -2698,6 +2820,10 @@
     "name": {
      "en": "wedding-gift box",
      "zh": "wedding-gift box"
+    },
+    "description": {
+     "en": "An empty square white cardboard gift box, about 25 by 25 by 12 cm, with its lid off. A loose white satin ribbon and bow hang from it, and the inside is lined with white tissue paper. Cassie later crushes it into a crumpled shape.",
+     "zh": "An empty square white cardboard gift box, about 25 by 25 by 12 cm, with its lid off. A loose white satin ribbon and bow hang from it, and the inside is lined with white tissue paper. Cassie later crushes it into a crumpled shape."
     }
    },
    {
@@ -2705,6 +2831,10 @@
     "name": {
      "en": "Guest 1's phone",
      "zh": "Guest 1's phone"
+    },
+    "description": {
+     "en": "An Apple iPhone 15 in pink with the Apple logo on the back, held up vertically to record video, the camera app open on screen with a red record button.",
+     "zh": "An Apple iPhone 15 in pink with the Apple logo on the back, held up vertically to record video, the camera app open on screen with a red record button."
     }
    },
    {
@@ -2712,6 +2842,10 @@
     "name": {
      "en": "hospital statement",
      "zh": "hospital statement"
+    },
+    "description": {
+     "en": "A single US-letter sheet of white paper with a pale-blue hospital header band, rows of printed billing lines and a bold total at the bottom, slightly creased from folding.",
+     "zh": "A single US-letter sheet of white paper with a pale-blue hospital header band, rows of printed billing lines and a bold total at the bottom, slightly creased from folding."
     }
    },
    {
@@ -2719,6 +2853,10 @@
     "name": {
      "en": "lace bra",
      "zh": "lace bra"
+    },
+    "description": {
+     "en": "A folded pale-blush lace bra, small and light, that falls out of Natalie's bag. It is shown only briefly and in passing.",
+     "zh": "A folded pale-blush lace bra, small and light, that falls out of Natalie's bag. It is shown only briefly and in passing."
     }
    },
    {
@@ -2726,6 +2864,10 @@
     "name": {
      "en": "Lauren's phone",
      "zh": "Lauren's phone"
+    },
+    "description": {
+     "en": "An Apple iPhone 15 Pro Max in natural titanium in a lilac-purple leather case, with the Apple logo visible on the back. Its screen shows a banking app's transfer page.",
+     "zh": "An Apple iPhone 15 Pro Max in natural titanium in a lilac-purple leather case, with the Apple logo visible on the back. Its screen shows a banking app's transfer page."
     }
    },
    {
@@ -2733,6 +2875,10 @@
     "name": {
      "en": "bag",
      "zh": "bag"
+    },
+    "description": {
+     "en": "Natalie's soft pale-blue pebbled-leather Coach shoulder tote, about 35 cm wide, with its small leather Coach logo tag on the front. Its magnetic top is left unfastened.",
+     "zh": "Natalie's soft pale-blue pebbled-leather Coach shoulder tote, about 35 cm wide, with its small leather Coach logo tag on the front. Its magnetic top is left unfastened."
     }
    },
    {
@@ -2740,6 +2886,10 @@
     "name": {
      "en": "Natalie's phone",
      "zh": "Natalie's phone"
+    },
+    "description": {
+     "en": "An Apple iPhone 13 in blue in a clear case, with the Apple logo on the back. Its lock screen shows a bank notification banner.",
+     "zh": "An Apple iPhone 13 in blue in a clear case, with the Apple logo on the back. Its lock screen shows a bank notification banner."
     }
    },
    {
@@ -2747,6 +2897,10 @@
     "name": {
      "en": "pillow",
      "zh": "pillow"
+    },
+    "description": {
+     "en": "A plump white bed pillow in a crisp white cotton case, about 50 by 70 cm.",
+     "zh": "A plump white bed pillow in a crisp white cotton case, about 50 by 70 cm."
     }
    },
    {
@@ -2754,6 +2908,10 @@
     "name": {
      "en": "release form on a clipboard",
      "zh": "release form on a clipboard"
+    },
+    "description": {
+     "en": "A brown hardboard clipboard with a silver metal clip holding a white printed form with signature lines, and a cheap black ballpoint pen clipped beside it.",
+     "zh": "A brown hardboard clipboard with a silver metal clip holding a white printed form with signature lines, and a cheap black ballpoint pen clipped beside it."
     }
    },
    {
@@ -2761,6 +2919,10 @@
     "name": {
      "en": "Sebastian's phone",
      "zh": "Sebastian's phone"
+    },
+    "description": {
+     "en": "An Apple iPhone 15 Pro in black titanium with the Apple logo on the back. Its screen shows a private-banking notification on a dark background.",
+     "zh": "An Apple iPhone 15 Pro in black titanium with the Apple logo on the back. Its screen shows a private-banking notification on a dark background."
     }
    }
   ],
@@ -3838,7 +4000,11 @@
     },
     "times": [
      "Night"
-    ]
+    ],
+    "description": {
+     "en": "Short, elegant residential corridor outside Ji Ran's door at night. Cream wall panels with a wood trim line it, with a runner rug on a stone floor and doors set at intervals. Warm recessed downlights run overhead, with soft side-glow from wall sconces.",
+     "zh": "Short, elegant residential corridor outside Ji Ran's door at night. Cream wall panels with a wood trim line it, with a runner rug on a stone floor and doors set at intervals. Warm recessed downlights run overhead, with soft side-glow from wall sconces."
+    }
    },
    {
     "id": "apartment_entrance",
@@ -3848,7 +4014,11 @@
     },
     "times": [
      "Night"
-    ]
+    ],
+    "description": {
+     "en": "Upscale downtown apartment lobby landing on Ji Ran's floor at night. Brushed-steel elevator doors stand opposite a heavy walnut front door with a smart lock. The floor is polished stone, and a framed autumn landscape painting in amber tones hangs on the wall. Warm ceiling downlights fall from above, a soft wall sconce glows beside the painting and cooler light spills from the elevator when it opens.",
+     "zh": "Upscale downtown apartment lobby landing on Ji Ran's floor at night. Brushed-steel elevator doors stand opposite a heavy walnut front door with a smart lock. The floor is polished stone, and a framed autumn landscape painting in amber tones hangs on the wall. Warm ceiling downlights fall from above, a soft wall sconce glows beside the painting and cooler light spills from the elevator when it opens."
+    }
    },
    {
     "id": "city_road",
@@ -3858,7 +4028,11 @@
     },
     "times": [
      "Night"
-    ]
+    ],
+    "description": {
+     "en": "Wide multi-lane arterial road in a modern Chinese city at dusk, lined with glass office towers. Traffic packs the lanes with headlights and taillights. The sky darkens from blue to indigo, streetlights flicker on along the median and lit office windows glow from above.",
+     "zh": "Wide multi-lane arterial road in a modern Chinese city at dusk, lined with glass office towers. Traffic packs the lanes with headlights and taillights. The sky darkens from blue to indigo, streetlights flicker on along the median and lit office windows glow from above."
+    }
    },
    {
     "id": "ji_family_living_room",
@@ -3868,7 +4042,11 @@
     },
     "times": [
      "Day"
-    ]
+    ],
+    "description": {
+     "en": "Grand living room of a contemporary luxury mansion, seen five years earlier. The floors are polished cream marble, white marble columns stand along one side and a wall runs behind them. A long beige sofa faces a low marble-and-gold coffee table on a thick ivory carpet. Tall French windows look out on garden trees whose leaves sway in warm sunlight. Golden afternoon sun streams through the windows from the right, casting warm leaf-dappled light. A crystal chandelier hangs overhead.",
+     "zh": "Grand living room of a contemporary luxury mansion, seen five years earlier. The floors are polished cream marble, white marble columns stand along one side and a wall runs behind them. A long beige sofa faces a low marble-and-gold coffee table on a thick ivory carpet. Tall French windows look out on garden trees whose leaves sway in warm sunlight. Golden afternoon sun streams through the windows from the right, casting warm leaf-dappled light. A crystal chandelier hangs overhead."
+    }
    },
    {
     "id": "ji_ran_living_room",
@@ -3878,7 +4056,11 @@
     },
     "times": [
      "Night"
-    ]
+    ],
+    "description": {
+     "en": "Spacious, stylish downtown apartment living room at night. A pale linen sofa sits on a patterned geometric rug, before a marble-and-glass coffee table. Behind it is an open kitchen with a white island and pendant lights. Floor-to-ceiling windows show city lights behind. Warm light comes from the pendants over the kitchen island, a floor lamp beside the sofa on the left and soft cove lighting in the ceiling.",
+     "zh": "Spacious, stylish downtown apartment living room at night. A pale linen sofa sits on a patterned geometric rug, before a marble-and-glass coffee table. Behind it is an open kitchen with a white island and pendant lights. Floor-to-ceiling windows show city lights behind. Warm light comes from the pendants over the kitchen island, a floor lamp beside the sofa on the left and soft cove lighting in the ceiling."
+    }
    },
    {
     "id": "ji_ran_office",
@@ -3888,7 +4070,11 @@
     },
     "times": [
      "Day"
-    ]
+    ],
+    "description": {
+     "en": "Sleek, spacious contemporary executive office of a design company, in warm walnut, white and grey. A large walnut desk is covered with architectural plans, wood samples, a metal figurine and a pour-over coffee station. Behind it stands a black leather executive chair. To one side are a lounge area of black leather sofas and armchairs around a white marble coffee table, and a wall sign reading 'JUST DO IT'. The door is on the side wall facing the desk, with open space in front of the desk for standing visitors. Floor-to-ceiling windows behind the desk let in bright, soft daylight from behind and to the left of the desk. Warm recessed ceiling spots and a brass desk lamp fill in from above.",
+     "zh": "Sleek, spacious contemporary executive office of a design company, in warm walnut, white and grey. A large walnut desk is covered with architectural plans, wood samples, a metal figurine and a pour-over coffee station. Behind it stands a black leather executive chair. To one side are a lounge area of black leather sofas and armchairs around a white marble coffee table, and a wall sign reading 'JUST DO IT'. The door is on the side wall facing the desk, with open space in front of the desk for standing visitors. Floor-to-ceiling windows behind the desk let in bright, soft daylight from behind and to the left of the desk. Warm recessed ceiling spots and a brass desk lamp fill in from above."
+    }
    },
    {
     "id": "su_dining_area",
@@ -3898,7 +4084,11 @@
     },
     "times": [
      "Day"
-    ]
+    ],
+    "description": {
+     "en": "Elegant dining nook in the same luxury apartment. A round white marble table holds a vase of daisies and a wine bottle, with upholstered dining chairs around it. A chair beside it stands by a tall window. Soft daylight comes through the window from the side, and a modern brass pendant lamp hangs above the table.",
+     "zh": "Elegant dining nook in the same luxury apartment. A round white marble table holds a vase of daisies and a wine bottle, with upholstered dining chairs around it. A chair beside it stands by a tall window. Soft daylight comes through the window from the side, and a modern brass pendant lamp hangs above the table."
+    }
    },
    {
     "id": "su_living_room",
@@ -3908,7 +4098,11 @@
     },
     "times": [
      "Day"
-    ]
+    ],
+    "description": {
+     "en": "Spacious, stylish living room of an heiress's luxury apartment. A cream bouclé sofa with pastel cushions faces a low glass coffee table on a soft pale rug. A doorway at the back opens to the kitchen. Bright daylight falls from large windows on the left, and warm floor lamps glow softly at the sofa's ends.",
+     "zh": "Spacious, stylish living room of an heiress's luxury apartment. A cream bouclé sofa with pastel cushions faces a low glass coffee table on a soft pale rug. A doorway at the back opens to the kitchen. Bright daylight falls from large windows on the left, and warm floor lamps glow softly at the sofa's ends."
+    }
    }
   ],
   "props": [
@@ -3917,6 +4111,10 @@
     "name": {
      "en": "black handbag",
      "zh": "black handbag"
+    },
+    "description": {
+     "en": "Chanel Classic Flap bag, medium, in black quilted lambskin with a gold interlocking CC turn-lock and a gold chain-and-leather strap. About 25 x 15 x 6 cm.",
+     "zh": "Chanel Classic Flap bag, medium, in black quilted lambskin with a gold interlocking CC turn-lock and a gold chain-and-leather strap. About 25 x 15 x 6 cm."
     }
    },
    {
@@ -3924,6 +4122,10 @@
     "name": {
      "en": "coffee",
      "zh": "coffee"
+    },
+    "description": {
+     "en": "Small handleless white porcelain coffee cup, about 8 cm tall, filled with black pour-over coffee.",
+     "zh": "Small handleless white porcelain coffee cup, about 8 cm tall, filled with black pour-over coffee."
     }
    },
    {
@@ -3931,6 +4133,10 @@
     "name": {
      "en": "document envelope",
      "zh": "document envelope"
+    },
+    "description": {
+     "en": "Thick A4 kraft-brown paper document envelope with a string-and-button closure, about 32 x 23 cm, bulging with papers. It has no visible writing.",
+     "zh": "Thick A4 kraft-brown paper document envelope with a string-and-button closure, about 32 x 23 cm, bulging with papers. It has no visible writing."
     }
    },
    {
@@ -3938,6 +4144,10 @@
     "name": {
      "en": "small dumbbell",
      "zh": "small dumbbell"
+    },
+    "description": {
+     "en": "Small 2 kg hexagonal hand dumbbell from Decathlon Domyos, black rubber heads on a chrome knurled handle, about 20 cm long, with the Domyos mark embossed on one head.",
+     "zh": "Small 2 kg hexagonal hand dumbbell from Decathlon Domyos, black rubber heads on a chrome knurled handle, about 20 cm long, with the Domyos mark embossed on one head."
     }
    },
    {
@@ -3945,6 +4155,10 @@
     "name": {
      "en": "grocery bag full of greens",
      "zh": "grocery bag full of greens"
+    },
+    "description": {
+     "en": "Reusable off-white canvas tote grocery bag, about 40 x 35 cm, overflowing with leafy green vegetables (bok choy, spring onions, celery).",
+     "zh": "Reusable off-white canvas tote grocery bag, about 40 x 35 cm, overflowing with leafy green vegetables (bok choy, spring onions, celery)."
     }
    },
    {
@@ -3952,6 +4166,10 @@
     "name": {
      "en": "glass",
      "zh": "glass"
+    },
+    "description": {
+     "en": "Tall clear crystal tumbler, about 14 cm high, half full of water.",
+     "zh": "Tall clear crystal tumbler, about 14 cm high, half full of water."
     }
    },
    {
@@ -3959,6 +4177,10 @@
     "name": {
      "en": "call phone",
      "zh": "call phone"
+    },
+    "description": {
+     "en": "Apple iPhone 15 Pro Max in black titanium with the Apple logo on the back, held to the ear for a call.",
+     "zh": "Apple iPhone 15 Pro Max in black titanium with the Apple logo on the back, held to the ear for a call."
     }
    },
    {
@@ -3966,6 +4188,10 @@
     "name": {
      "en": "pour-over coffee equipment",
      "zh": "pour-over coffee equipment"
+    },
+    "description": {
+     "en": "Hario pour-over set: a matte-black Hario Buono gooseneck kettle (about 25 cm long) with the Hario logo on its base, a white ceramic Hario V60 dripper with a paper filter, and a clear glass Hario V60 range server beneath it.",
+     "zh": "Hario pour-over set: a matte-black Hario Buono gooseneck kettle (about 25 cm long) with the Hario logo on its base, a white ceramic Hario V60 dripper with a paper filter, and a clear glass Hario V60 range server beneath it."
     }
    },
    {
@@ -3973,6 +4199,10 @@
     "name": {
      "en": "video-calling phone",
      "zh": "video-calling phone"
+    },
+    "description": {
+     "en": "Apple iPhone 15 Pro in natural titanium with a clear case and the Apple logo on the back. Its screen shows a video call with Ji Ran's face.",
+     "zh": "Apple iPhone 15 Pro in natural titanium with a clear case and the Apple logo on the back. Its screen shows a video call with Ji Ran's face."
     }
    }
   ],
@@ -4905,6 +5135,10 @@
     "name": {
      "en": "The Quinn family mansion, living room",
      "zh": "The Quinn family mansion, living room"
+    },
+    "description": {
+     "en": "A large, contemporary luxury living room in a wealthy suburban mansion, in daytime. The ceiling is high, the floors are polished cream marble, and the walls are pale grey with white crown moulding. At the centre, a low rectangular glass-and-gold coffee table sits on a large ivory rug. A long white tufted three-seat sofa faces two cream armchairs across the table. A crystal chandelier hangs overhead, with a fireplace with a white marble mantel behind the sofa and an abstract framed canvas above it. Tall potted fiddle-leaf figs flank the arched doorway the family enters through. Soft natural daylight pours from tall floor-to-ceiling windows with sheer white curtains along the left wall, casting warm side light across the seating. The chandelier is unlit and there are faint warm wall sconces.",
+     "zh": "A large, contemporary luxury living room in a wealthy suburban mansion, in daytime. The ceiling is high, the floors are polished cream marble, and the walls are pale grey with white crown moulding. At the centre, a low rectangular glass-and-gold coffee table sits on a large ivory rug. A long white tufted three-seat sofa faces two cream armchairs across the table. A crystal chandelier hangs overhead, with a fireplace with a white marble mantel behind the sofa and an abstract framed canvas above it. Tall potted fiddle-leaf figs flank the arched doorway the family enters through. Soft natural daylight pours from tall floor-to-ceiling windows with sheer white curtains along the left wall, casting warm side light across the seating. The chandelier is unlit and there are faint warm wall sconces."
     }
    }
   ],
@@ -5212,6 +5446,10 @@
     "name": {
      "en": "灵堂",
      "zh": "灵堂"
+    },
+    "description": {
+     "en": "A mourning hall inside a 1987 state funeral home. It is a long rectangular room with whitewashed walls and a grey terrazzo floor. At the far end a bier draped in white cloth holds the body, with a framed black-and-white portrait and a black-and-white silk flower above it. Paper wreaths of white and yellow flowers stand along both sides on wooden stands, with white elegiac couplet ribbons. Wooden benches line the walls and white and black drapes hang from the ceiling. Daylight comes in from tall side windows on the left and falls in cool diagonal shafts. Dim overhead fluorescent tubes give a flat, pale wash. The double wooden doors to the street are behind the mourners.",
+     "zh": "A mourning hall inside a 1987 state funeral home. It is a long rectangular room with whitewashed walls and a grey terrazzo floor. At the far end a bier draped in white cloth holds the body, with a framed black-and-white portrait and a black-and-white silk flower above it. Paper wreaths of white and yellow flowers stand along both sides on wooden stands, with white elegiac couplet ribbons. Wooden benches line the walls and white and black drapes hang from the ceiling. Daylight comes in from tall side windows on the left and falls in cool diagonal shafts. Dim overhead fluorescent tubes give a flat, pale wash. The double wooden doors to the street are behind the mourners."
     }
    },
    {
@@ -5219,6 +5457,10 @@
     "name": {
      "en": "殡仪馆门前",
      "zh": "殡仪馆门前"
+    },
+    "description": {
+     "en": "The street outside the funeral home's entrance on a bright day in 1987. Grey concrete steps lead down from heavy double wooden doors in a plain grey-brick building. The street is busy in 1980s style, with plane trees, painted propaganda-style walls without legible text, bicycle lanes, a few old buses and carts, and pedestrians in blue and grey clothing. Strong natural daylight comes from high front-right and casts short shadows on the asphalt.",
+     "zh": "The street outside the funeral home's entrance on a bright day in 1987. Grey concrete steps lead down from heavy double wooden doors in a plain grey-brick building. The street is busy in 1980s style, with plane trees, painted propaganda-style walls without legible text, bicycle lanes, a few old buses and carts, and pedestrians in blue and grey clothing. Strong natural daylight comes from high front-right and casts short shadows on the asphalt."
     }
    }
   ],
@@ -5807,7 +6049,11 @@
     },
     "times": [
      "Night"
-    ]
+    ],
+    "description": {
+     "en": "The private elevator landing and entrance hall outside Ji Ran's apartment in a luxury contemporary downtown building at night, in warm beige stone and dark wood. It is used by both the APARTMENT ENTRANCE and APARTMENT CORRIDOR scene headings as one continuous place. Left wall: brushed-steel elevator doors, the way in from the building. Right wall, directly opposite the elevator: the apartment's tall dark walnut front door with a black smart lock and brass handle. Back wall, facing the camera: a large framed autumn landscape painting of golden trees, hung above a slim dark-wood console table and lit by two brass wall sconces on either side of it. Front wall, behind the camera: a continuation of the stone corridor. The floor is polished pale stone, with clear open floor between the elevator doors and the front door. Light comes from the warm sconces on the back wall and soft downlights in the ceiling.",
+     "zh": "The private elevator landing and entrance hall outside Ji Ran's apartment in a luxury contemporary downtown building at night, in warm beige stone and dark wood. It is used by both the APARTMENT ENTRANCE and APARTMENT CORRIDOR scene headings as one continuous place. Left wall: brushed-steel elevator doors, the way in from the building. Right wall, directly opposite the elevator: the apartment's tall dark walnut front door with a black smart lock and brass handle. Back wall, facing the camera: a large framed autumn landscape painting of golden trees, hung above a slim dark-wood console table and lit by two brass wall sconces on either side of it. Front wall, behind the camera: a continuation of the stone corridor. The floor is polished pale stone, with clear open floor between the elevator doors and the front door. Light comes from the warm sconces on the back wall and soft downlights in the ceiling."
+    }
    },
    {
     "id": "city_road",
@@ -5817,7 +6063,11 @@
     },
     "times": [
      "Night"
-    ]
+    ],
+    "description": {
+     "en": "A wide, multi-lane contemporary city arterial road at dusk, seen from a raised vantage. Back side: the road runs straight away from the camera to a vanishing point between glass office towers, under a deep blue and orange dusk sky. Left side: a row of tall glass office towers with lit windows above a tree-lined sidewalk and a line of streetlights. Right side: a matching row of towers and streetlights. Front side, behind the camera: the overpass the view is taken from. The lanes are packed with traffic, white headlights coming towards the camera and red tail-lights going away. Light comes from the dusk sky, the streetlamps flickering on along both sides, and the headlights.",
+     "zh": "A wide, multi-lane contemporary city arterial road at dusk, seen from a raised vantage. Back side: the road runs straight away from the camera to a vanishing point between glass office towers, under a deep blue and orange dusk sky. Left side: a row of tall glass office towers with lit windows above a tree-lined sidewalk and a line of streetlights. Right side: a matching row of towers and streetlights. Front side, behind the camera: the overpass the view is taken from. The lanes are packed with traffic, white headlights coming towards the camera and red tail-lights going away. Light comes from the dusk sky, the streetlamps flickering on along both sides, and the headlights."
+    }
    },
    {
     "id": "ji_family_living_room",
@@ -5827,7 +6077,11 @@
     },
     "times": [
      "Day"
-    ]
+    ],
+    "description": {
+     "en": "A grand, contemporary villa living room in cream, gold and white marble. Back wall: tall French windows onto a garden of leafy trees, flooding the room with warm afternoon sunlight from the back and slightly from the left, with leaves swaying outside. Centred before these windows is a long cream leather sofa with its back to them, facing the camera. In front of it is a low marble-and-gilt coffee table on a large beige patterned carpet. Left wall: a fat white marble column stands in front of it near the back corner, with an open archway to the entrance hall behind it, the way in and out. Right wall: a marble fireplace with a large abstract painting above it, flanked by a cream armchair. Front wall, behind the camera: built-in display cabinets. Light comes from the sunlight through the back windows and a crystal chandelier overhead.",
+     "zh": "A grand, contemporary villa living room in cream, gold and white marble. Back wall: tall French windows onto a garden of leafy trees, flooding the room with warm afternoon sunlight from the back and slightly from the left, with leaves swaying outside. Centred before these windows is a long cream leather sofa with its back to them, facing the camera. In front of it is a low marble-and-gilt coffee table on a large beige patterned carpet. Left wall: a fat white marble column stands in front of it near the back corner, with an open archway to the entrance hall behind it, the way in and out. Right wall: a marble fireplace with a large abstract painting above it, flanked by a cream armchair. Front wall, behind the camera: built-in display cabinets. Light comes from the sunlight through the back windows and a crystal chandelier overhead."
+    }
    },
    {
     "id": "ji_ran_living_room",
@@ -5837,7 +6091,11 @@
     },
     "times": [
      "Night"
-    ]
+    ],
+    "description": {
+     "en": "A spacious, stylish contemporary downtown apartment living room at night, in pale stone, warm oak and glass. Back wall: floor-to-ceiling windows with sheer curtains and a glittering night city view, which gives a cool glow from behind. Left wall: the opening to the entrance hallway, the way in, and a large abstract canvas. Right wall: an open-plan kitchen with white cabinetry and a long marble island with three bar stools, lit by a pendant above. In the middle of the room, on a large patterned rug, a long pale-oatmeal sofa stands with its back to the left wall, facing the open kitchen on the right wall. In front of it is a low marble-and-glass coffee table, with open floor between the coffee table and the kitchen island. Front wall, behind the camera: a low TV console. Warm light also comes from a brass arc floor lamp beside the sofa and soft cove lighting in the ceiling.",
+     "zh": "A spacious, stylish contemporary downtown apartment living room at night, in pale stone, warm oak and glass. Back wall: floor-to-ceiling windows with sheer curtains and a glittering night city view, which gives a cool glow from behind. Left wall: the opening to the entrance hallway, the way in, and a large abstract canvas. Right wall: an open-plan kitchen with white cabinetry and a long marble island with three bar stools, lit by a pendant above. In the middle of the room, on a large patterned rug, a long pale-oatmeal sofa stands with its back to the left wall, facing the open kitchen on the right wall. In front of it is a low marble-and-glass coffee table, with open floor between the coffee table and the kitchen island. Front wall, behind the camera: a low TV console. Warm light also comes from a brass arc floor lamp beside the sofa and soft cove lighting in the ceiling."
+    }
    },
    {
     "id": "ji_ran_office",
@@ -5847,7 +6105,11 @@
     },
     "times": [
      "Day"
-    ]
+    ],
+    "description": {
+     "en": "A sleek, modern, contemporary corner office of a high-end architecture and design firm on a high floor, in warm walnut, black leather and white marble. Back wall: floor-to-ceiling glass windows over a daytime city skyline, the main light source, throwing soft daylight from behind towards the camera. A big walnut executive desk stands centred in front of these windows, facing the camera, with a high-backed black leather chair with padded arms behind it. The desktop holds rolled and spread architectural plans, a fan of wood samples, a small brushed-metal abstract figurine and a pour-over coffee station. Left wall: tall walnut shelving with architectural models and material samples, and at its centre a framed black-and-white typographic sign reading \"JUST DO IT.\" In front of the left wall stands the seating area: a tan leather sofa against the shelving, two tan leather armchairs facing each other, and a low white marble coffee table between them. Right wall: a tall walnut door near the front corner, the way in, and a slim console with a plant next to it. Front wall, behind the camera: a pin-up wall of drawings. The open floor between the desk and the right-wall door is a clear space of pale oak flooring. Additional light comes from warm recessed ceiling spots and a black task lamp on the desk.",
+     "zh": "A sleek, modern, contemporary corner office of a high-end architecture and design firm on a high floor, in warm walnut, black leather and white marble. Back wall: floor-to-ceiling glass windows over a daytime city skyline, the main light source, throwing soft daylight from behind towards the camera. A big walnut executive desk stands centred in front of these windows, facing the camera, with a high-backed black leather chair with padded arms behind it. The desktop holds rolled and spread architectural plans, a fan of wood samples, a small brushed-metal abstract figurine and a pour-over coffee station. Left wall: tall walnut shelving with architectural models and material samples, and at its centre a framed black-and-white typographic sign reading \"JUST DO IT.\" In front of the left wall stands the seating area: a tan leather sofa against the shelving, two tan leather armchairs facing each other, and a low white marble coffee table between them. Right wall: a tall walnut door near the front corner, the way in, and a slim console with a plant next to it. Front wall, behind the camera: a pin-up wall of drawings. The open floor between the desk and the right-wall door is a clear space of pale oak flooring. Additional light comes from warm recessed ceiling spots and a black task lamp on the desk."
+    }
    },
    {
     "id": "su_dining_area",
@@ -5857,7 +6119,11 @@
     },
     "times": [
      "Day"
-    ]
+    ],
+    "description": {
+     "en": "The elegant dining area of the same contemporary penthouse. A rectangular white marble dining table stands in the middle of the room, running from the left wall towards the right wall, with upholstered grey chairs around it. On the table are a glass vase of white daisies and a bottle of red wine. Left wall: a large window with sheer curtains, the main light source, casting daylight across the table from the left; one chair stands at the window end of the table. Back wall: a low walnut sideboard with decanters and a large framed print. Right wall: an open archway back to the living room, the way in. Front wall, behind the camera: a tall plant and a wine cabinet. A brass linear pendant lamp hangs over the table.",
+     "zh": "The elegant dining area of the same contemporary penthouse. A rectangular white marble dining table stands in the middle of the room, running from the left wall towards the right wall, with upholstered grey chairs around it. On the table are a glass vase of white daisies and a bottle of red wine. Left wall: a large window with sheer curtains, the main light source, casting daylight across the table from the left; one chair stands at the window end of the table. Back wall: a low walnut sideboard with decanters and a large framed print. Right wall: an open archway back to the living room, the way in. Front wall, behind the camera: a tall plant and a wine cabinet. A brass linear pendant lamp hangs over the table."
+    }
    },
    {
     "id": "su_living_room",
@@ -5867,7 +6133,11 @@
     },
     "times": [
      "Day"
-    ]
+    ],
+    "description": {
+     "en": "A bright, spacious, stylish contemporary downtown penthouse living room in cream, gold and soft grey. Back wall: wide windows with sheer white curtains letting in soft daylight from behind. A plush cream bouclé sofa stands in the middle of the room with its back to these windows, facing the camera, with silk cushions. In front of it is a round travertine coffee table holding flowers and a tablet stand on a pale rug. Right wall: an open doorway into the kitchen, framed in brushed brass, with a glimpse of white marble counters. Left wall: the opening to the entrance hallway, the way in, beside a low gold-legged console with a mirror. Front wall, behind the camera: a TV wall. Light comes from the window daylight and a modern brass floor lamp beside the sofa.",
+     "zh": "A bright, spacious, stylish contemporary downtown penthouse living room in cream, gold and soft grey. Back wall: wide windows with sheer white curtains letting in soft daylight from behind. A plush cream bouclé sofa stands in the middle of the room with its back to these windows, facing the camera, with silk cushions. In front of it is a round travertine coffee table holding flowers and a tablet stand on a pale rug. Right wall: an open doorway into the kitchen, framed in brushed brass, with a glimpse of white marble counters. Left wall: the opening to the entrance hallway, the way in, beside a low gold-legged console with a mirror. Front wall, behind the camera: a TV wall. Light comes from the window daylight and a modern brass floor lamp beside the sofa."
+    }
    }
   ],
   "props": [
@@ -5876,6 +6146,10 @@
     "name": {
      "en": "document envelope",
      "zh": "document envelope"
+    },
+    "description": {
+     "en": "A thick A4 kraft-brown paper document envelope, about 32 × 23 cm, with a red string-and-button closure on the flap. It is bulging with papers and has no visible writing.",
+     "zh": "A thick A4 kraft-brown paper document envelope, about 32 × 23 cm, with a red string-and-button closure on the flap. It is bulging with papers and has no visible writing."
     }
    },
    {
@@ -5883,6 +6157,10 @@
     "name": {
      "en": "small dumbbell",
      "zh": "small dumbbell"
+    },
+    "description": {
+     "en": "A small Domyos (Decathlon) 2 kg neoprene-coated hex dumbbell, about 18 cm long, in lilac purple with a black grip.",
+     "zh": "A small Domyos (Decathlon) 2 kg neoprene-coated hex dumbbell, about 18 cm long, in lilac purple with a black grip."
     }
    },
    {
@@ -5890,6 +6168,10 @@
     "name": {
      "en": "glass",
      "zh": "glass"
+    },
+    "description": {
+     "en": "A tall clear crystal water glass, about 15 cm, half full of still water.",
+     "zh": "A tall clear crystal water glass, about 15 cm, half full of still water."
     }
    },
    {
@@ -5897,6 +6179,10 @@
     "name": {
      "en": "grocery bag full of greens",
      "zh": "grocery bag full of greens"
+    },
+    "description": {
+     "en": "A sturdy plain kraft-paper grocery bag with twisted paper handles, about 30 cm tall. Leafy bok choy, celery stalks and spring onions spill out of the top.",
+     "zh": "A sturdy plain kraft-paper grocery bag with twisted paper handles, about 30 cm tall. Leafy bok choy, celery stalks and spring onions spill out of the top."
     }
    },
    {
@@ -5904,6 +6190,10 @@
     "name": {
      "en": "black handbag",
      "zh": "black handbag"
+    },
+    "description": {
+     "en": "A Saint Laurent Sac de Jour small black grained-leather structured top-handle bag, about 26 × 20 cm, with gold hardware and the gold YSL tag.",
+     "zh": "A Saint Laurent Sac de Jour small black grained-leather structured top-handle bag, about 26 × 20 cm, with gold hardware and the gold YSL tag."
     }
    },
    {
@@ -5911,6 +6201,10 @@
     "name": {
      "en": "call phone",
      "zh": "call phone"
+    },
+    "description": {
+     "en": "A Huawei Mate 60 Pro in obsidian black with the circular camera ring and the Huawei name on the back, about 16 cm tall. Its screen shows an active voice call labelled 阿杰.",
+     "zh": "A Huawei Mate 60 Pro in obsidian black with the circular camera ring and the Huawei name on the back, about 16 cm tall. Its screen shows an active voice call labelled 阿杰."
     }
    },
    {
@@ -5918,6 +6212,10 @@
     "name": {
      "en": "pour-over coffee equipment",
      "zh": "pour-over coffee equipment"
+    },
+    "description": {
+     "en": "A Hario Buono matte-black stainless steel gooseneck kettle, about 25 cm long with the spout. A clear glass Hario V60 cone dripper with a white paper filter of coffee grounds, sitting on a clear glass Hario V60 range server. A plain white ceramic coffee cup, about 8 cm tall, on a matching saucer.",
+     "zh": "A Hario Buono matte-black stainless steel gooseneck kettle, about 25 cm long with the spout. A clear glass Hario V60 cone dripper with a white paper filter of coffee grounds, sitting on a clear glass Hario V60 range server. A plain white ceramic coffee cup, about 8 cm tall, on a matching saucer."
     }
    },
    {
@@ -5925,6 +6223,10 @@
     "name": {
      "en": "phone",
      "zh": "phone"
+    },
+    "description": {
+     "en": "An Apple iPhone 15 Pro in natural titanium with the Apple logo on the back, about 15 cm tall. Its screen shows a FaceTime video call with a woman in a grey shirt in an office.",
+     "zh": "An Apple iPhone 15 Pro in natural titanium with the Apple logo on the back, about 15 cm tall. Its screen shows a FaceTime video call with a woman in a grey shirt in an office."
     }
    }
   ],

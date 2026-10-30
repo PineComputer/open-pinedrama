@@ -457,6 +457,9 @@ describe("a drama in replay", () => {
     expect((await call<ReviewView>("GET", `/api/reviews/${looks.id}`)).question).toContain("Ivy Bell and Luca Moreno");
     const { projectView } = await import("./status.ts");
     expect(Object.values(projectView(id).names?.characters ?? {}).map((character) => character.name)).toEqual(["Ivy Bell", "Luca Moreno", "Ethan Cole", "Margaret Cole", "Walter Cole", "Sgt. Ray Dunn", "Reverend Hale", "Tess Park"]);
+    // Its bible gives each place and prop its description, which Story's Scenes and Props show.
+    expect(projectView(id).names?.descriptions.locations.garden).toMatch(/arch of roses/);
+    expect(projectView(id).names?.descriptions.props.file).toMatch(/manila folder/);
   }, 30_000);
 
   it("refuses a sample drama it doesn't have", async () => {
