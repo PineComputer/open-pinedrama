@@ -6,6 +6,11 @@ import { errorText } from "../labels.ts";
 import { useNotifySetting } from "../notify.ts";
 import { ConnectForm } from "./Welcome.tsx";
 
+/** Reveric's notice links to it, as its NOTICES ask (AGPLv3 section 7(b); docs/REUSED.md). */
+export const REVERIC = "https://github.com/looplj/reveric";
+/** The studio's own source, which the AGPLv3 offers to every user. */
+export const SOURCE = "https://github.com/PineComputer/open-pinedrama";
+
 export function Settings({ app, onChange }: { app: AppInfo; onChange: () => void }) {
   const { t, lang } = useT();
   const [connecting, setConnecting] = useState(false);
@@ -104,6 +109,27 @@ export function Settings({ app, onChange }: { app: AppInfo; onChange: () => void
               </a>
             </div>
             <span className="quiet small">{t("settings.diagnosticsHint")}</span>
+          </div>
+        </section>
+        <section aria-labelledby="settings-about">
+          <span className="label" id="settings-about">
+            {t("settings.about")}
+          </span>
+          <div className="block">
+            <p className="flush">
+              <a href={REVERIC} target="_blank" rel="noreferrer">
+                {t("about.basedOn")}
+              </a>
+            </p>
+            <span className="quiet small">{t("about.licence")}</span>
+            <div className="inline">
+              <a href={SOURCE} target="_blank" rel="noreferrer">
+                {t("about.source")}
+              </a>
+              <a href={`${SOURCE}/blob/main/NOTICES`} target="_blank" rel="noreferrer">
+                {t("about.notices")}
+              </a>
+            </div>
           </div>
         </section>
       </div>
