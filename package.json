@@ -18,7 +18,8 @@
     "pine:check": "tsx scripts/pine-check.ts",
     "desktop": "node scripts/desktop.mjs && electron .",
     "package": "node scripts/desktop.mjs && electron-builder --config electron-builder.config.mjs",
-    "design": "vite design --host 127.0.0.1 --port 5180 --strictPort"
+    "design": "vite design --host 127.0.0.1 --port 5180 --strictPort",
+    "design:diff": "playwright test --config playwright.design.config.ts"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.14.0",
