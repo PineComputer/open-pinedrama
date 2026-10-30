@@ -5,12 +5,13 @@
 // drama's preset, format and spend.
 import { useState } from "react";
 import type { DramaView, ReviewSummary } from "../../shared/types.ts";
-import { api, useAction } from "../api.ts";
+import { api, useAction, useResource } from "../api.ts";
 import { Dialog } from "../components/Dialog.tsx";
 import { Icon, type IconName } from "../icons.tsx";
 import { type TKey, useT } from "../i18n.ts";
 import { errorText, moneyText } from "../labels.ts";
 import { Link, match, navigate, usePath } from "../router.tsx";
+import type { ProjectView } from "../../shared/project.ts";
 
 type Surface = "studio" | "canvas" | "graph";
 
@@ -51,6 +52,9 @@ function SurfaceSwitch({ drama }: { drama: DramaView }) {
 /** The drama's surface switch and its chips: preset, format, and what it has spent. */
 export function DramaBar({ drama }: { drama: DramaView }) {
   const { t, lang } = useT();
+  // The budget is drama-cli's (every session's project carries the drama's one config), as the design's chip reads "$X of $1,000".
+  const project = useResource<ProjectView>(`/api/dramas/${drama.id}/project`, [`project:${drama.id}`]);
+  const cap = project.data?.sessions[0]?.budget.budgetUsd ?? null;
   return (
     <div className="bar2">
       <SurfaceSwitch drama={drama} />
@@ -68,7 +72,7 @@ export function DramaBar({ drama }: { drama: DramaView }) {
       <span className="chip plain" title={t("spent.about")}>
         <Icon name="coins" className="ic" />
         <span className="mono">{moneyText(drama.spent, t, lang)}</span>
-        {drama.mode === "replay" && <span className="muted">{t("budget.simulated")}</span>}
+        {cap !== null && <span className="muted">{t("chip.of", { cap: `$${cap.toLocaleString("en-US")}` })}</span>}
       </span>
     </div>
   );

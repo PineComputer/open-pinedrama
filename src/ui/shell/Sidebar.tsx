@@ -137,6 +137,10 @@ export function DramaSidebar({ drama, tab, episode }: { drama: DramaView; tab: s
   for (const review of reviews.data ?? []) if (review.state === "open") needs[STEP_OF[review.kind]]++;
   // The script is done once the setup has read it.
   const scriptDone = drama.setup.reached > 0 || drama.episodeRows.length > 0;
+  // The tree shows the first eight episodes and folds the rest into one line once they only wait in line, as the design does.
+  const tail = drama.episodeRows.slice(8);
+  const folded = tail.length && tail.every((row) => row.state === "queued") ? tail : [];
+  const shownRows = folded.length ? drama.episodeRows.slice(0, 8) : drama.episodeRows;
   const { episodes } = drama;
   const settingUp = drama.status === "setup" || (drama.status === "stopped" && !drama.episodeRows.length);
   const head = (
@@ -212,7 +216,7 @@ export function DramaSidebar({ drama, tab, episode }: { drama: DramaView; tab: s
             </Link>
             {key === "episodes" && drama.episodeRows.length > 0 && (
               <ul className="tree" aria-label={t("tree.label")}>
-                {drama.episodeRows.map((row) => {
+                {shownRows.map((row) => {
                   const mark = markOf(row);
                   return (
                     <li key={row.id}>
@@ -225,6 +229,11 @@ export function DramaSidebar({ drama, tab, episode }: { drama: DramaView; tab: s
                     </li>
                   );
                 })}
+                {folded.length > 0 && (
+                  <li style={{ padding: "6px 8px", color: "var(--text-muted)", fontSize: 11.5 }}>
+                    {t("tree.folded", { first: folded[0].code, last: folded[folded.length - 1].code, n: folded.length })}
+                  </li>
+                )}
               </ul>
             )}
           </div>

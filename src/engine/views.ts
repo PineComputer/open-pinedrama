@@ -166,10 +166,11 @@ export function episodeViews(dramaId: string): EpisodeView[] {
     const open = reviews.find((review) => review.state === "open" || review.state === "saving");
     const session = episode.session_id ? sessionRow(episode.session_id) : undefined;
     const newest = (kind: FileRow["kind"]) => files.findLast((file) => file.kind === kind && /^(image|video)\//.test(file.type));
-    // A take's frame is the episode's cover, as the pro direction's EpisodeCard has it; the cut, whose
+    // A take's last frame (drama-cli's last_frame.jpg), else the take itself, is the episode's cover, as the
+    // design's EpisodeCard has it; the cut, whose
     // opening is its title, only before there is a take. A blocking reference is a diagram the
     // storyboards are drawn from: a cover only while there is nothing else.
-    const frame = newest("take") ?? newest("cut") ?? newest("frame") ?? newest("storyboard") ?? newest("blocking");
+    const frame = newest("last-frame") ?? newest("take") ?? newest("cut") ?? newest("frame") ?? newest("storyboard") ?? newest("blocking");
     return {
       id: episode.id,
       number: episode.number,

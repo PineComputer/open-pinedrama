@@ -42,10 +42,12 @@ function at(path: string) {
 }
 
 describe("the drama's bar", () => {
-  it("marks a replay drama's spend as simulated", () => {
+  it("reads its spend against drama-cli's budget, as the design's chip does", async () => {
+    const budget = { budgetUsd: 1000, spentUsd: 0, reservedUsd: 0, remainingUsd: 1000 };
+    answer("/api/dramas/d1/project", { state: null, sessions: [{ budget }], problems: [], names: null });
     at("/d/d1");
-    render(<DramaBar drama={{ ...drama, mode: "replay" } as DramaView} />);
-    expect(screen.getByText("Simulated spend")).toBeInTheDocument();
+    render(<DramaBar drama={drama} />);
+    expect(await screen.findByText("of $1,000")).toBeInTheDocument();
   });
 
   it("shows the drama's preset, format and what it has spent", () => {

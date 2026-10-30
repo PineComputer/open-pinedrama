@@ -153,7 +153,7 @@ export function AgentPanel({ drama, episode, mode, onMode }: { drama: DramaView;
           {decisions.length ? (
             decisions.map((item) => (
               <Link key={item.id} to={`/r/${item.id}`} className="dec">
-                {item.thumb ? <img src={item.thumb.url} alt="" /> : <span />}
+                {item.thumb?.video ? <video src={`${item.thumb.url}#t=0.5`} muted playsInline preload="metadata" style={{ width: 34, height: 46, borderRadius: 6, objectFit: "cover" }} /> : item.thumb ? <img src={item.thumb.url} alt="" /> : <span />}
                 <span>
                   <b>{[item.episode, t(`kind.${item.kind}` as TKey)].filter(Boolean).join(" · ")}</b>
                   <small>{t("agent.items", { n: item.items })}</small>

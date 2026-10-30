@@ -101,11 +101,6 @@ h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 700; lett
 .sheet .frame.wide { width: 68px; aspect-ratio: 16 / 9; }
 .sheet .ep { font: 500 16px/1.2 var(--font-sans); font-variant-numeric: tabular-nums lining-nums; }
 .sheet .ep-title { color: var(--text-muted); font-size: 13px; margin-top: 2px; }
-.mark { display: inline-flex; align-items: baseline; gap: 6px; color: var(--text-muted); white-space: nowrap; }
-.mark.done { color: var(--text-secondary); }
-.mark.done .count { color: var(--text-muted); font-size: 13px; }
-.mark.working { color: var(--text-primary); }
-.mark.review { color: var(--warning-text); font-weight: 600; }
 .dots { display: inline-flex; gap: 3px; }
 .dots i { width: 4px; height: 4px; border-radius: 50%; background: currentColor; animation: blink 1.4s infinite; }
 .dots i:nth-child(2) { animation-delay: 0.2s; } .dots i:nth-child(3) { animation-delay: 0.4s; }

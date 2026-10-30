@@ -5,7 +5,7 @@ import { Segmented } from "../components/Segmented.tsx";
 import { type Status, StatusChip } from "../components/StatusChip.tsx";
 import { type TKey, useT } from "../i18n.ts";
 import { errorText, moneyText, nowText, SETUP_STEPS } from "../labels.ts";
-import { Link, navigate } from "../router.tsx";
+import { Link } from "../router.tsx";
 import { Still } from "../Still.tsx";
 import { Cast } from "./Cast.tsx";
 import { type ScreenplayLanguage, screenplayLanguageOf } from "../../shared/screenplay-language.ts";
@@ -13,81 +13,6 @@ import { isDocument, useDocumentText } from "../viewing.tsx";
 import { PresetChoice, ScreenplayStructure } from "./NewDrama.tsx";
 import { buttonVariants } from "@/components/ui/button";
 import { Icon } from "../icons.tsx";
-
-function Mark({ cell }: { cell: StageCell }) {
-  const { t } = useT();
-  switch (cell.state) {
-    case "done":
-      return (
-        <span className="mark done">
-          ✓{cell.count ? <span className="count num">{cell.count}</span> : null}
-        </span>
-      );
-    case "working":
-      return (
-        <span className="mark working">
-          <span className="dots">
-            <i />
-            <i />
-            <i />
-          </span>
-        </span>
-      );
-    case "review":
-      return <span className="mark review">{t("board.review")} →</span>;
-    default:
-      return <span className="mark">—</span>;
-  }
-}
-
-/** One episode's line on the sheet. The whole row opens its review; its code is the keyboard's way in. */
-function Row({ row, wide, dramaId }: { row: EpisodeRow; wide: boolean; dramaId: string }) {
-  const { t, lang } = useT();
-  const resume = useAction(() => api(`/api/episodes/${row.id}/resume`, { method: "POST" }));
-  const trouble = row.state === "stopped" || row.state === "failed";
-  return (
-    <tr className="go" onClick={() => navigate(`/d/${dramaId}/e/${row.code}`)}>
-      <td>
-        <div className="ep-cell">
-          <span className={`frame ${wide ? "wide" : ""}`}>
-            <Still still={row.frame} />
-          </span>
-          <div>
-            <Link to={`/d/${dramaId}/e/${row.code}`} className="ep" onClick={(event) => event.stopPropagation()}>
-              {row.code}
-            </Link>
-            {row.title && <div className="ep-title">{row.title}</div>}
-          </div>
-        </div>
-      </td>
-      {STAGES.map((stage) => (
-        <td key={stage}>
-          <Mark cell={row.stages[stage]} />
-        </td>
-      ))}
-      <td>
-        <div className={`now ${row.state === "waiting" ? "waiting" : trouble ? "trouble" : ""}`} title={nowText(row, t)}>
-          <span className="said">{nowText(row, t)}</span>
-        </div>
-        {trouble && (
-          <button
-            className="link row-action"
-            disabled={resume.busy}
-            onClick={(event) => {
-              event.stopPropagation();
-              void resume.run();
-            }}
-          >
-            {t("board.resume")}
-          </button>
-        )}
-        {resume.error !== undefined && <div className="error small">{errorText(resume.error, t)}</div>}
-      </td>
-      <td className="pc">{row.computer ?? ""}</td>
-      <td className="spent num">{row.spent.total > 0 ? moneyText(row.spent, t, lang) : ""}</td>
-    </tr>
-  );
-}
 
 /** Where an episode stands, as its card's chip says it. */
 function chipOf(row: EpisodeRow): { status: Status; label: TKey } {
@@ -152,8 +77,6 @@ function Card({ row, wide, dramaId }: { row: EpisodeRow; wide: boolean; dramaId:
 /** A stage on the card's strip: done is solid, at work dashed, waiting for the maker in the warning's colour. */
 const STRIP: Record<StageCell["state"], string> = { done: "d", working: "w", review: "y", none: "" };
 
-type View = "wall" | "sheet";
-
 /** Which episodes the board shows: all, or those in one condition. */
 const FILTERS = {
   all: () => true,
@@ -164,35 +87,24 @@ const FILTERS = {
 } satisfies Record<string, (row: EpisodeRow) => boolean>;
 type Filter = keyof typeof FILTERS;
 
-function savedView(): View {
-  try {
-    return localStorage.getItem("studio.boardView") === "sheet" ? "sheet" : "wall";
-  } catch {
-    return "wall";
-  }
-}
-
 export function Board({ drama }: { drama: DramaView }) {
   const { t } = useT();
   const rows = drama.episodeRows;
-  const [view, setView] = useState<View>(savedView);
   const [filter, setFilter] = useState<Filter>("all");
   const [find, setFind] = useState("");
-  const shown = rows.filter(FILTERS[filter]).filter((row) => `${row.code} ${row.title}`.toLowerCase().includes(find.trim().toLowerCase()));
-  const choose = (next: View) => {
-    setView(next);
-    try {
-      localStorage.setItem("studio.boardView", next);
-    } catch {
-      // remembered for this visit only
-    }
-  };
+  // The design's "Episode order": by number, or what needs the maker first.
+  const [order, setOrder] = useState<"number" | "needs">("number");
+  const needsFirst = (row: EpisodeRow) => (FILTERS.you(row) ? 0 : 1);
+  const shown = rows
+    .filter(FILTERS[filter])
+    .filter((row) => `${row.code} ${row.title}`.toLowerCase().includes(find.trim().toLowerCase()))
+    .sort((x, y) => (order === "needs" ? needsFirst(x) - needsFirst(y) : 0) || x.number - y.number);
   const wide = /^\s*16\s*:\s*9/.test(drama.format);
   return (
     <>
       <h2 className="sr-only">{t("step.episodes")}</h2>
       {rows.length > 0 && (
-        // The design's filters (design/app.js, Episodes): a pressed chip per condition, a search, and the wall's view.
+        // The design's filters (design/app.js, Episodes): a pressed chip per condition, a search, and the episode order.
         <div className="filters">
           {(Object.keys(FILTERS) as Filter[]).map((key) => (
             <button key={key} type="button" className="fchip" aria-pressed={filter === key} onClick={() => setFilter(key)}>
@@ -205,43 +117,22 @@ export function Board({ drama }: { drama: DramaView }) {
             <Icon name="magnifying-glass" className="ic" />
             <input type="search" value={find} placeholder={t("board.find")} aria-label={t("board.find")} onChange={(event) => setFind(event.target.value)} style={{ border: 0, background: "none", outline: "none", color: "inherit", font: "inherit", minWidth: 0, flex: 1 }} />
           </label>
-          <div className="seg" role="group" aria-label={t("board.view")}>
-            {(["wall", "sheet"] as const).map((value) => (
-              <button key={value} type="button" aria-pressed={view === value} onClick={() => choose(value)}>
-                <Icon name={value === "wall" ? "squares-four" : "list"} className="ic" />
-                {t(`board.${value}`)}
-              </button>
-            ))}
-          </div>
+          <label className="select">
+            <select value={order} aria-label={t("board.order")} onChange={(event) => setOrder(event.target.value as "number" | "needs")}>
+              <option value="number">{t("board.orderNumber")}</option>
+              <option value="needs">{t("board.orderNeeds")}</option>
+            </select>
+          </label>
         </div>
       )}
       {!rows.length ? (
         <p className="empty-note">{t("board.empty")}</p>
-      ) : view === "wall" ? (
+      ) : (
         <div className="epgrid">
           {shown.map((row) => (
             <Card key={row.id} row={row} wide={wide} dramaId={drama.id} />
           ))}
         </div>
-      ) : (
-        <table className="sheet">
-          <thead>
-            <tr>
-              <th>{t("board.episode")}</th>
-              {STAGES.map((stage) => (
-                <th key={stage}>{t(`stage.${stage}` as TKey)}</th>
-              ))}
-              <th>{t("board.now")}</th>
-              <th>{t("board.computer")}</th>
-              <th className="spent">{t("board.spent")}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {shown.map((row) => (
-              <Row key={row.id} row={row} wide={wide} dramaId={drama.id} />
-            ))}
-          </tbody>
-        </table>
       )}
     </>
   );
