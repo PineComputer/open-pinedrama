@@ -279,3 +279,18 @@ export interface ProjectView {
   /** Reports newer than their session's current one that didn't read. */
   problems: { sessionId: string; turnId: string; error: string }[];
 }
+
+/**
+ * How far the setup has come, from the report, in the setup panel's steps (2 drawing the leads,
+ * 3 approving them, 4 preparing every episode, 5 approving the shared references); undefined
+ * before the bible is accepted, where the conversation, which no report knows, says where it is.
+ */
+export function setupStep(state: Omit<ProjectState, "budget">): number | undefined {
+  if (!state.bible.accepted) return undefined;
+  const episodes = Object.values(state.episodes);
+  if (episodes.length && episodes.every((episode) => episode.breakdown.usable && episode.needs?.length === 0)) return 5;
+  const leads = Object.values(state.characters);
+  if (!leads.length || leads.some((lead) => lead.current === null)) return 2;
+  if (leads.some((lead) => lead.accepted === null)) return 3;
+  return 4;
+}

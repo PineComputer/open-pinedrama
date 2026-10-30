@@ -2,7 +2,7 @@
 // stage, reference and episode has made, accepted and still needs, and the budget.
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { parseStatus, StatusError } from "./project.ts";
+import { parseStatus, setupStep, StatusError } from "./project.ts";
 
 function report(name: string): Record<string, any> {
   return JSON.parse(readFileSync(new URL(`../../fixtures/status/${name}.json`, import.meta.url), "utf8"));
@@ -112,5 +112,36 @@ describe("a report that doesn't read as drama-cli writes it", () => {
   it("refuses what isn't a report at all", () => {
     expect(() => parseStatus("not json")).toThrow(StatusError);
     expect(() => parseStatus(null)).toThrow(StatusError);
+  });
+});
+
+describe("where the setup stands, from the report", () => {
+  it("before the bible is accepted, the report doesn't say: the conversation does", () => {
+    expect(setupStep(parseStatus(report("new")))).toBeUndefined();
+  });
+
+  it("with the leads' looks accepted and nothing prepared, preparing the episodes", () => {
+    expect(setupStep(parseStatus(report("story")))).toBe(4);
+  });
+
+  it("with a breakdown that still needs a reference, still preparing", () => {
+    expect(setupStep(parseStatus(report("needs")))).toBe(4);
+  });
+
+  it("with every breakdown accepted and nothing more needed, approving the shared references", () => {
+    expect(setupStep(parseStatus(report("boards")))).toBe(5);
+  });
+
+  it("with the bible accepted and a lead's look made, not yet accepted, approving the leads", () => {
+    const drawn = report("story");
+    drawn.characters.lin = { ...drawn.characters.lin, accepted: null, candidate: "v1", usable: false, why: "not accepted" };
+    expect(setupStep(parseStatus(drawn))).toBe(3);
+  });
+
+  it("with the bible accepted and no look made yet, drawing the leads", () => {
+    const bibleOnly = report("story");
+    bibleOnly.characters = {};
+    bibleOnly.scenes = {};
+    expect(setupStep(parseStatus(bibleOnly))).toBe(2);
   });
 });
