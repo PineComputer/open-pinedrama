@@ -20,6 +20,8 @@ interface Stage {
 const COLUMN: Record<string, number> = { bible: 0, look: 1, plate: 1, prop: 1, breakdown: 2, blocking: 3, storyboard: 4, take: 6, cut: 7 };
 const STYLES = ["line-art", "photoreal"];
 const PLACE = "assets/scenes/home";
+// The files drama-cli shows for a version (drama_cli/lineage.py, SHOWN_SUFFIXES), and replay's own placeholder pictures (SVG).
+const SHOWN = /\.(png|jpe?g|webp|svg|mp4|md|srt|fountain)$/i;
 
 /** A shared reference's kind, from its asset path (replay-status.ts, Reference). */
 const kindOf = (path: string) => (path.startsWith("assets/characters/") ? "look" : path.startsWith("assets/scenes/") ? "plate" : "prop");
@@ -74,8 +76,9 @@ export function replayLineage(progress: ReplayProgress, returned: Iterable<strin
       version: stage.version,
       accepted: stage.accepted,
       fresh: true,
-      // The file a stop returned for the working version, as drama-cli names the one it shows.
-      shows: stage.version ? (files.find((file) => file.startsWith(`drama/${stage.id}/${stage.version}/`))?.slice("drama/".length) ?? null) : null,
+      // The file a stop returned for the working version that drama-cli would show: a picture, a video or a text, never
+      // the spec or request returned beside it (drama_cli/lineage.py, SHOWN_SUFFIXES).
+      shows: stage.version ? (files.find((file) => file.startsWith(`drama/${stage.id}/${stage.version}/`) && SHOWN.test(file))?.slice("drama/".length) ?? null) : null,
       reads: stage.reads,
       problems: [],
       label: stage.id,

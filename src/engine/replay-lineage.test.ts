@@ -48,6 +48,13 @@ describe("replay's lineage", () => {
     expect(shows("assets/props/letter")).toBeNull();
   });
 
+  it("shows a version's picture, video or text, never the request or spec returned beside it", () => {
+    const lineage = read(progress, ["drama/assets/characters/lin/v1/spec.json", "drama/assets/characters/lin/v1/request.json", "drama/assets/characters/lin/v1/image-1.jpg", "drama/episodes/EP001/segments/seg01/t02/spec.json"]);
+    const shows = (id: string) => lineage.nodes.find((node) => node.id === id)?.shows;
+    expect(shows("assets/characters/lin")).toBe("assets/characters/lin/v1/image-1.jpg");
+    expect(shows("episodes/EP001/segments/seg01")).toBeNull();
+  });
+
   it("links each take to the storyboard, looks and place it was made from, and the cut to its takes", () => {
     const { up, down } = trace(read(progress), "episodes/EP001/segments/seg01");
     expect(up).toContain("episodes/EP001/multi_panel_storyboard/seg01/line-art");
