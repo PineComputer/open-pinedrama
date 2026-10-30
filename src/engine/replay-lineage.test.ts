@@ -25,6 +25,25 @@ const returned = [
 const read = (p: ReplayProgress, files = returned) => parseLineage(JSON.parse(new TextDecoder().decode(replayLineage(p, files).bytes)));
 
 describe("replay's lineage", () => {
+  it("lays its nodes out as drama-cli's export does: the shared groups on the left, a group per segment, the cut alone", () => {
+    const lineage = read(progress);
+    const at = (id: string) => lineage.nodes.find((node) => node.id === id)!;
+    expect(at("assets/characters/lin").section).toBe("Characters");
+    expect(at("episodes/EP001/segments/seg01").section).toBe("EP001 seg01");
+    expect(at("episodes/EP001/edit").section).toBe("EP001 cut");
+    expect(lineage.groups.map((group) => group.title)).toEqual(["Text", "Characters", "Locations", "Props", "EP001 seg01", "EP001 cut"]);
+    // Every node has drama-cli's size, and each picture sits inside its group's frame; a text stage is a collapsed row of the Text group.
+    for (const node of lineage.nodes) {
+      expect([node.box.w, node.box.h]).toEqual([300, 340]);
+      if (node.section === "Text") continue;
+      const group = lineage.groups.find((one) => one.title === node.section)!;
+      expect(node.box.x >= group.x && node.box.y >= group.y && node.box.x + node.box.w <= group.x + group.w && node.box.y + node.box.h <= group.y + group.h, node.id).toBe(true);
+    }
+    const lead = at("assets/characters/lin").box;
+    const segment = lineage.groups.find((group) => group.title === "EP001 seg01")!;
+    expect(segment.x).toBeGreaterThan(lead.x + lead.w);
+  });
+
   it("is handed back as handoff/lineage.json", () => {
     expect(replayLineage({ preset: "", bible: null, looks: {}, references: {}, episodes: {} }, []).path).toBe("handoff/lineage.json");
   });

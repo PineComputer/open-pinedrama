@@ -57,6 +57,22 @@ export interface LineageNode {
   /** drama-cli's short name for it, with ids where the bible has names. */
   label: string;
   where: Where;
+  /** Where drama-cli's layout puts it, its top-left corner and size (drama_cli/export.py, layout and comfyui's pos and size). */
+  box: Box;
+  /** The group drama-cli's layout draws it in, by title (export.py, section): Text, Characters, Locations, Props, "EP001 seg01", "EP001 cut". */
+  section: string;
+}
+
+export interface Box {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
+
+/** One of drama-cli's layout groups, a titled frame around its nodes (export.py, layout; ComfyUI's LGraphGroup, title and bounding). */
+export interface LineageGroup extends Box {
+  title: string;
 }
 
 /** A picture or video one version used, from the stage that made it to the stage that used it. */
@@ -69,6 +85,7 @@ export interface Lineage {
   project: string;
   nodes: LineageNode[];
   links: LineageLink[];
+  groups: LineageGroup[];
 }
 
 /** The drama's lineage as the engine serves it, and each session's newer export that didn't read. */
@@ -141,6 +158,13 @@ function where(kind: LineageKind, id: string, field: string): Where {
   return Object.fromEntries(parts.flatMap((part, n) => (match[n + 1] === undefined ? [] : [[part, match[n + 1]]])));
 }
 
+/** A pair of finite numbers, as the export writes a pos or a size. */
+function pair(value: unknown, field: string): [number, number] {
+  const items = list(value, field);
+  if (items.length !== 2 || !items.every((item) => typeof item === "number" && Number.isFinite(item))) throw new LineageError(field, "two numbers");
+  return items as [number, number];
+}
+
 function lineageNode(value: unknown, field: string): { number: number; node: LineageNode } {
   const raw = object(value, field);
   const number = at(raw, "id", field);
@@ -168,6 +192,8 @@ function lineageNode(value: unknown, field: string): { number: number; node: Lin
       reads: texts(at(props, "reads", place), join(place, "reads")),
       label: text(at(props, "label", place), join(place, "label")),
       where: where(kind as LineageKind, id, join(place, "id")),
+      box: (([x, y], [w, h]) => ({ x, y, w, h }))(pair(at(raw, "pos", field), join(field, "pos")), pair(at(raw, "size", field), join(field, "size"))),
+      section: text(at(props, "section", place), join(place, "section")),
     },
   };
 }
@@ -194,7 +220,14 @@ export function parseLineage(value: unknown): Lineage {
     return { from, to };
   });
   const reads = read.flatMap(({ node }) => node.reads.map((stage) => ({ from: stage, to: node.id })));
-  return { project, nodes: read.map(({ node }) => node), links: [...links, ...reads] };
+  const groups = list(at(raw, "groups", ""), "groups").map((item, n) => {
+    const group = object(item, join("groups", n));
+    const bounding = list(at(group, "bounding", join("groups", n)), join(join("groups", n), "bounding"));
+    if (bounding.length !== 4 || !bounding.every((value) => typeof value === "number" && Number.isFinite(value))) throw new LineageError(join(join("groups", n), "bounding"), "four numbers");
+    const [x, y, w, h] = bounding as number[];
+    return { title: text(at(group, "title", join("groups", n)), join(join("groups", n), "title")), x, y, w, h };
+  });
+  return { project, nodes: read.map(({ node }) => node), links: [...links, ...reads], groups };
 }
 
 /** Every stage a version was made from (up) and every stage made from it (down), however far. */
@@ -247,5 +280,7 @@ export function mergeLineage(base: Lineage, episodes: Record<string, Lineage>): 
     const users = new Set(mine.map((node) => node.id));
     return lineage.links.filter((link) => users.has(link.to) && kept.has(link.from));
   });
-  return { project: base.project, nodes, links };
+  // A group by the source that owns its nodes: an episode's segments and cut from its own session's export, the rest from the base.
+  const groups = [...base.groups.filter((group) => !Object.keys(episodes).some((code) => group.title.startsWith(`${code} `))), ...Object.entries(episodes).flatMap(([code, lineage]) => lineage.groups.filter((group) => group.title.startsWith(`${code} `)))];
+  return { project: base.project, nodes, links, groups };
 }

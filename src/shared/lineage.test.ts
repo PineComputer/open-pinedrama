@@ -10,6 +10,8 @@ function node(n: number, props: Partial<Props> & Pick<Props, "id" | "kind" | "co
     id: n,
     type: "DramaCliStep",
     title: props.label ?? props.id,
+    pos: [0, 0],
+    size: [300, 340],
     properties: { version: "v1", accepted: "v1", fresh: true, shows: null, reads: [], problems: [], label: props.id, section: "Text", ...props },
   };
 }
