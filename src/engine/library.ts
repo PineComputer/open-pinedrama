@@ -2,12 +2,13 @@
 // so review, screening and delivery outlive the Computer. Bytes are stored once, named by
 // SHA-256; the index row says what the file is and where it came from.
 import { createHash } from "node:crypto";
-import { createReadStream, createWriteStream, existsSync, mkdirSync, renameSync, rmSync } from "node:fs";
+import { createReadStream, createWriteStream, existsSync, mkdirSync, readFileSync, renameSync, rmSync } from "node:fs";
 import path from "node:path";
 import { Readable } from "node:stream";
 import { pipeline } from "node:stream/promises";
-import type { FileItem, FileKind } from "../shared/types.ts";
+import type { CutPlan, FileItem, FileKind } from "../shared/types.ts";
 import { classify, namedPaths } from "./classify.ts";
+import { readCutPlan } from "./cut.ts";
 import { DATA_DIR } from "./config.ts";
 import { all, get, now, run } from "./db.ts";
 
@@ -160,7 +161,23 @@ function item(row: FileRow, episode: string | undefined): FileItem {
     version: row.version ?? undefined,
     url: fileUrl(row),
     createdAt: row.created_at,
+    ...(row.kind === "cut" ? { cutPlan: cutPlanOf(row) } : {}),
   };
+}
+
+/** A cut's clips, from the newest cut.json the drama returned in the cut's own folder (drama-cli writes one per version). */
+function cutPlanOf(row: FileRow): CutPlan | undefined {
+  const plan = get<FileRow>(
+    "select * from files where drama_id = ? and kind = 'cut-plan' and rel_path = ? order by id desc limit 1",
+    row.drama_id,
+    path.posix.join(path.posix.dirname(row.rel_path), "cut.json"),
+  );
+  if (!plan) return undefined;
+  try {
+    return readCutPlan(JSON.parse(readFileSync(blobPath(plan.sha), "utf8")));
+  } catch (error) {
+    return { error: error instanceof SyntaxError ? `cut.json is not JSON: ${error.message}` : (error as Error).message };
+  }
 }
 
 function episodeLabel(episodeId: string): string | undefined {

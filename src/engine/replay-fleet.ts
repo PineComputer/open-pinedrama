@@ -3,6 +3,7 @@
 // answer plays the next recorded turn, and an answer that asks for revisions replays the
 // redraw of what it names. It lives in memory, so a restarted engine finds its Computers
 // gone, as it would after a real stop.
+import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import type { Refusal } from "../shared/refusal.ts";
 import path from "node:path";
@@ -68,6 +69,38 @@ const art = (set: string, p: string, body: string): Out => sample(set, p) ?? svg
 const clip = (set: string, p: string, name: "take" | "cut"): Out => sample(set, p) ?? video(p, name);
 /** A story's pictures in samples.json: the first sample's by language, the others' by id. */
 const pictures = (id: string, lang: Lang) => (id === Object.keys(STORIES)[0] ? lang : id);
+
+/**
+ * How long an MP4 plays, in seconds, from its movie header: duration over timescale, 32-bit fields
+ * in a version 0 box and 64-bit in a version 1 (ISO/IEC 14496-12, 8.2.2, MovieHeaderBox).
+ */
+export function mp4Seconds(bytes: Uint8Array): number {
+  const at = Buffer.from(bytes.buffer, bytes.byteOffset, bytes.byteLength).indexOf("mvhd");
+  if (at < 4) throw new Error("This MP4 has no movie header (mvhd).");
+  const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+  const box = at + 4;
+  return view.getUint8(box) === 1
+    ? Number(view.getBigUint64(box + 24)) / view.getUint32(box + 20)
+    : view.getUint32(box + 16) / view.getUint32(box + 12);
+}
+
+/**
+ * A replayed cut's plan, in drama-cli's form (short_drama drama_cli/edit.py, `build`): each segment's
+ * newest take, in order, as replay returned it, each trimmed to an equal share of the cut replay returns.
+ */
+export function cutPlan(p: string, code: string, cut: Out, takes: { segment: string; take: string; bytes: Uint8Array }[]): Out {
+  const share = mp4Seconds(cut.bytes) / takes.length;
+  const clips = takes.map(({ segment, take, bytes }) => ({
+    path: `episodes/${code}/segments/${segment}/${take}/video.mp4`,
+    sha256: createHash("sha256").update(bytes).digest("hex"),
+    in: 0,
+    out: share,
+    audio: "source",
+  }));
+  // Replay's clips, the placeholders and the samples alike, are 24 frames a second; the size is the samples' (the studio reads only the rate).
+  const output = { width: 480, height: 854, fps: 24 };
+  return { path: p, type: typeOf("cut.json"), bytes: text(JSON.stringify({ schema_version: 1, episode: code, output, clips })) };
+}
 
 /** The refusals a stop asks about, one JSON line each, as drama-cli prints them (goals.ts RETURN_REFUSALS). */
 const refusals = (list: Refusal[]): Out => ({ path: "handoff/refusals.jsonl", type: typeOf("refusals.jsonl"), bytes: text(list.map((error) => `${JSON.stringify({ error })}\n`).join("")) });
@@ -418,6 +451,15 @@ function episodeScript(code: string, lang: Lang, preset: string, story: { id: st
         art(set, `${base}/multi_panel_storyboard/${seg.id}/photoreal/v${v}/image-1.svg`, storyboard(`${code} ${seg.id}`, seg.shots, "photoreal", `v${v}`, v === 1 && seg.id === "seg01" ? 3 : -1)),
       ];
     });
+  // A cut as replay returns it, with its plan beside it: each segment's newest take.
+  const cutFiles = (version: number): Out[] => {
+    const made = clip(set, `${base}/edit/v${version}/cut.mp4`, "cut");
+    const newest = segments.map((seg) => {
+      const take = `t${String(takes.get(seg.id)).padStart(2, "0")}`;
+      return { segment: seg.id, take, bytes: clip(set, `${base}/segments/${seg.id}/${take}/video.mp4`, "take").bytes };
+    });
+    return [made, cutPlan(`${base}/edit/v${version}/cut.json`, code, made, newest)];
+  };
   const shoot = (which: typeof segments) =>
     which.map((seg) => {
       takes.set(seg.id, (takes.get(seg.id) ?? 0) + 1);
@@ -454,16 +496,16 @@ function episodeScript(code: string, lang: Lang, preset: string, story: { id: st
     }
     if (stage === "takes") {
       stage = "cut";
-      return { progress: say.cutting, files: [clip(set, `${base}/edit/v1/cut.mp4`, "cut")], ask: say.askCut(code) };
+      return { progress: say.cutting, files: cutFiles(1), ask: say.askCut(code) };
     }
     if (stage === "cut" && redo.length) {
       cut += 1;
-      return { progress: say.recutting, files: [clip(set, `${base}/edit/v${cut}/cut.mp4`, "cut")], ask: say.askCutAgain(code) };
+      return { progress: say.recutting, files: cutFiles(cut), ask: say.askCutAgain(code) };
     }
     stage = "done";
     cutAccepted = true;
     // As Pine's agent does, the finished episode hands back its accepted cut again, unchanged.
-    return { progress: say.accepting, files: [clip(set, `${base}/edit/v${cut}/cut.mp4`, "cut")], summary: say.finished(code) };
+    return { progress: say.accepting, files: cutFiles(cut), summary: say.finished(code) };
   };
   // What drama-cli's status would say at this stop: the project as handed over, every shared
   // reference approved, and this episode's items as far as the maker has accepted each.

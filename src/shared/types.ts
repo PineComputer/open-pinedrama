@@ -86,6 +86,8 @@ export type FileKind =
   | "storyboard"
   | "take"
   | "cut"
+  /** drama-cli's plan of a cut, beside it (edit/vN/cut.json): each clip's take, with its in and out. */
+  | "cut-plan"
   /** A cut's subtitles: its lines and cards, timed, beside the picture (cut.srt). */
   | "subtitles"
   | "observation"
@@ -148,7 +150,20 @@ export interface FileItem {
   version?: string;
   url: string;
   createdAt: string;
+  /** A cut's clips, from the cut.json beside it; none when no cut.json came with the cut. */
+  cutPlan?: CutPlan;
 }
+
+/** One clip of a cut: a segment's take, and where it starts and ends in the cut, in seconds. */
+export interface CutClip {
+  segment: string;
+  take: string;
+  start: number;
+  end: number;
+}
+
+/** A cut's clips as drama-cli's plan of it lists them, with the cut's frame rate, or why that plan doesn't read. */
+export type CutPlan = { clips: CutClip[]; fps: number } | { error: string };
 
 /** What work has cost so far at the project's rates: every turn of its agents, generated video included. */
 export interface Spend {

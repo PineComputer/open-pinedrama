@@ -40,6 +40,11 @@ describe("classify", () => {
     expect(classify("episodes/EP010/edit/v3/cut.mp4")).toMatchObject({ kind: "cut", episode: "EP010", version: "v3" });
   });
 
+  it("reads a cut's plan beside it, and only that file of the folder", () => {
+    expect(classify("drama/episodes/EP010/edit/v3/cut.json")).toMatchObject({ kind: "cut-plan", episode: "EP010", version: "v3" });
+    expect(classify("drama/episodes/EP010/edit/v3/artifact.json").kind).toBe("other");
+  });
+
   it("reads character looks, base and named", () => {
     expect(classify("assets/characters/lin/v2/image-1.png")).toMatchObject({ kind: "look", subject: "lin", look: "base", version: "v2" });
     expect(classify("assets/characters/lin/states/S1/v1/image-1.png")).toMatchObject({ kind: "look", subject: "lin", look: "S1" });
