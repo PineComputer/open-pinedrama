@@ -433,9 +433,6 @@ h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 700; lett
 .ds-note-input:focus { border-color: var(--text-primary); }
 /* Three verdicts in a row while they fit, wrapping onto a second when the inspector is narrow. */
 /* The agent's ball sits over the room's corner (App.tsx shows it there), so Send review keeps clear of it. */
-.ds-words { flex: 1; min-width: 200px; height: 32px; padding: 0 12px; border-radius: var(--radius-medium); border: 1px solid var(--border-input); background: var(--surface); color: var(--text-primary); font-size: 12.5px; outline: none; }
-.ds-words:focus { border-color: var(--text-primary); }
-.ds-words::placeholder { color: var(--text-muted); }
 .sendbar.is-confirming { background: var(--warning-bg); }
 .sendbar .summary { flex: 1; min-width: 0; color: var(--text-primary); }
 .sendbar .summary .detail { color: var(--text-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -535,7 +532,6 @@ a.ds-tag:hover { background: var(--hover); }
 .ds-scroll:has(> .room) { display: flex; }
 /* In the room the agent's ball stands above the inspector's send bar, so the bar keeps the design's layout. */
 .body:has(.room) .ball { bottom: 64px; }
-.sendbar .ds-words { min-width: 0; }
 /* The Fountain review fills the work's scroller, as the design's .frev fills its main column: the panes scroll and the
    answer stays in view. */
 .ds-scroll:has(.frev) { display: flex; flex-direction: column; }

@@ -772,7 +772,7 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
         ) : (
           <>
           <div style={{ padding: "10px 16px 0", borderTop: "1px solid var(--border)", background: "var(--surface-dim)" }}>
-            <input className="ds-words" style={{ width: "100%" }} disabled={!open} value={words} placeholder={t("review.wordsHint")} aria-label={t("review.words")} onChange={(event) => setWords(event.target.value)} />
+            <input className="search" style={{ width: "100%", height: 32 }} disabled={!open} value={words} placeholder={t("review.wordsHint")} aria-label={t("review.words")} onChange={(event) => setWords(event.target.value)} />
           </div>
           <div className="sendbar">
             <span className="pips" aria-hidden="true">
