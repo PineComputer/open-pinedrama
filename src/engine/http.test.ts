@@ -3,15 +3,14 @@
 import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { AppInfo, DramaCard } from "../shared/types.ts";
 
-const DATA = mkdtempSync(path.join(tmpdir(), "studio-http-"));
-process.env.STUDIO_DATA_DIR = DATA;
 process.env.STUDIO_SECRET = Buffer.alloc(32, 1).toString("base64");
 process.env.STUDIO_TOKEN = "launch-token";
 
 const HOST = "127.0.0.1:4310";
+let data: string;
 let api: ReturnType<typeof import("./http.ts").app>;
 
 /** A request from the studio's own window: loopback, this launch's cookie, its own origin. */
@@ -19,12 +18,17 @@ function call(route: string, init: RequestInit = {}, headers: Record<string, str
   return api.request(route, { ...init, headers: { host: HOST, cookie: "studio=launch-token", origin: `http://${HOST}`, ...headers, ...(init.headers as Record<string, string>) } });
 }
 
-beforeAll(async () => {
+// Each test gets an engine of its own, on an empty data folder, so none depends on another
+// having run first: the engine's modules read the folder when they load.
+beforeEach(async () => {
+  data = mkdtempSync(path.join(tmpdir(), "studio-http-"));
+  process.env.STUDIO_DATA_DIR = data;
+  vi.resetModules();
   const { app } = await import("./http.ts");
   api = app();
 });
 
-afterAll(() => rmSync(DATA, { recursive: true, force: true }));
+afterEach(() => rmSync(data, { recursive: true, force: true }));
 
 describe("who may call the engine", () => {
   it("refuses a call without this launch's cookie", async () => {
@@ -56,6 +60,7 @@ describe("the answers the UI reads", () => {
   });
 
   it("lists the sample drama once it is made, as a card", async () => {
+    expect((await call("/api/connection/replay", { method: "POST" })).status).toBe(200);
     expect(await (await call("/api/dramas")).json()).toEqual([]);
 
     const made = await call("/api/dramas/sample", { method: "POST", body: JSON.stringify({ language: "en" }), headers: { "content-type": "application/json" } });
