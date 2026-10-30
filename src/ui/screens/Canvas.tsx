@@ -188,16 +188,24 @@ function ItemNode({ id, data, selected }: NodeProps<Node<ItemData>>) {
         <span className="name">{data.heading ? `${data.label} · ${data.heading}` : data.label}</span>
         {data.item.kind !== "segment" && <StatusChip status={data.status} label={t(`status.${data.status}` as TKey)} />}
       </span>
-      <span className="card">
-        {data.picture ? <img src={data.picture.url} alt="" draggable={false} /> : data.item.kind === "segment" && <span className="thumb" />}
-        {data.item.kind === "segment" && (
+      {data.item.kind === "segment" ? (
+        <span className="card">
+          {/* The storyboard, with what the segment has got to on it, as the reference's card shows its sample. */}
+          <span className="thumb">
+            {data.picture && <img src={data.picture.url} alt="" draggable={false} />}
+            <span className="tag">{data.take ? t("canvas.take", { v: data.take }) : t("canvas.storyboard", { v: data.storyboard ?? "—" })}</span>
+          </span>
           <span className="text">
             <span className="shots">{data.shots ? data.shots.join("\n") : t("segments.noShots")}</span>
-            <span className="foot">{[t("canvas.storyboard", { v: data.storyboard ?? "—" }), data.take ? t("canvas.take", { v: data.take }) : t("canvas.noTake"), board.drama.format].join(" · ")}</span>
-            <span className={`state is-${data.status}`}><i aria-hidden="true" />{t(`status.${data.status}` as TKey)}</span>
+            <span className={`foot is-${data.status}`}>
+              <i aria-hidden="true" />
+              {[t(`status.${data.status}` as TKey), board.drama.format].join(" · ")}
+            </span>
           </span>
-        )}
-      </span>
+        </span>
+      ) : (
+        <span className="card">{data.picture && <img src={data.picture.url} alt="" draggable={false} />}</span>
+      )}
       <Handle type="source" position={Position.Right} isConnectable={false} />
     </div>
   );
@@ -214,8 +222,11 @@ function SceneNode({ data }: NodeProps<Node<{ heading: string }>>) {
 
 const NODE_TYPES = { item: ItemNode, scene: SceneNode };
 
-/** Where a board opens: at 100%, its top left clear of the episode switcher. */
-const START = { x: 48, y: 72, zoom: 1 };
+/** A board opens fitted to the view, with room around it, never past the reference's scale. */
+const FIT = { padding: 0.08, maxZoom: 1.05 };
+
+/** Room a picked segment's panel takes below it (canvas.css, .ds-npanel), so framing the pick keeps the panel in view. */
+const PANEL_ROOM = 380;
 
 /** The zoom, as the reference's control cluster shows it. */
 function Zoom() {
@@ -320,9 +331,8 @@ function Plane({ drama }: { drama: DramaView }) {
     const node = flow.getInternalNode(target);
     if (node) void flow.setCenter(node.internals.positionAbsolute.x + (node.width ?? 0) / 2, node.internals.positionAbsolute.y + (node.height ?? 0) / 2, { zoom: flow.getZoom(), duration: 500 });
   }, [follow, target, nodes.length]);
-  // A board opens at full size from its top left, as the reference's opens at its own scale; Fit shows it whole.
   useEffect(() => {
-    if (!(follow && target)) void flow.setViewport(START, { duration: 500 });
+    if (!(follow && target)) void flow.fitView({ ...FIT, duration: 500 });
   }, [code]);
   // Escape lets go of the picked item, and with it its bar and panel.
   const picked = nodes.some((node) => node.selected);
@@ -339,7 +349,17 @@ function Plane({ drama }: { drama: DramaView }) {
   const at = codes.indexOf(code);
 
   return (
-    <Board.Provider value={{ drama, episodeTitle: names?.episodes[code], actions: PHASE_ONE, pick: (id) => { setFollow(false); setNodes((all) => all.map((node) => ({ ...node, selected: node.id === id }))); } }}>
+    <Board.Provider value={{ drama, episodeTitle: names?.episodes[code], actions: PHASE_ONE, pick: (id) => {
+          setFollow(false);
+          setNodes((all) => all.map((node) => ({ ...node, selected: node.id === id })));
+          // Centre the picked item with its bar above and, for a segment, its panel below, at the maker's zoom.
+          const node = id ? flow.getInternalNode(id) : undefined;
+          if (node) {
+            const { x, y } = node.internals.positionAbsolute;
+            const below = id!.startsWith("segment:") ? PANEL_ROOM : 0;
+            void flow.setCenter(x + (node.width ?? 0) / 2, y - 72 + ((node.height ?? 0) + 72 + below) / 2, { zoom: flow.getZoom(), duration: 400 });
+          }
+        } }}>
       <section className="ds-canvas" aria-label={t("surface.canvas")}>
         <ReactFlow
           nodes={nodes}
@@ -357,17 +377,18 @@ function Plane({ drama }: { drama: DramaView }) {
           maxZoom={4}
           nodesConnectable={false}
           deleteKeyCode={null}
-          defaultViewport={START}
+          fitView
+          fitViewOptions={FIT}
           ariaLabelConfig={{ "controls.zoomIn.ariaLabel": t("canvas.zoomIn"), "controls.zoomOut.ariaLabel": t("canvas.zoomOut"), "controls.fitView.ariaLabel": t("canvas.fit"), "minimap.ariaLabel": t("canvas.minimap") }}
         >
           <Background variant={BackgroundVariant.Dots} gap={22} size={1.2} />
-          <Controls position="bottom-left" showInteractive={false} fitViewOptions={{ maxZoom: 1.05, duration: 500 }}>
+          <Controls position="bottom-left" showInteractive={false} fitViewOptions={{ ...FIT, duration: 500 }}>
             <Zoom />
             <ControlButton aria-label={t("canvas.layOut")} title={t("canvas.layOut")} onClick={() => void api(`/api/dramas/${drama.id}/canvas/${code}`, { method: "DELETE" }).then(() => positions.reload())}>
               <Icon name="tree-structure" />
             </ControlButton>
           </Controls>
-          <MiniMap position="bottom-right" pannable zoomable className="ds-minimap" />
+          <MiniMap position="top-right" pannable zoomable className="ds-minimap" />
           <Panel position="top-left" className="ds-epswitch">
             <button type="button" className={buttonVariants({ variant: "ghost", size: "icon" })} aria-label={t("canvas.prevEpisode")} disabled={at <= 0} onClick={() => go(codes[at - 1])}>
               <Icon name="caret-left" />
@@ -377,7 +398,7 @@ function Plane({ drama }: { drama: DramaView }) {
               <Icon name="caret-right" />
             </button>
           </Panel>
-          <Panel position="bottom-center">
+          <Panel position="top-center" className="ds-followbar">
             <button type="button" className={`ds-follow${follow ? " is-on" : ""}`} aria-pressed={follow} onClick={() => setFollow(true)}>
               <span className={`ds-live${follow ? "" : " is-idle"}`} aria-hidden="true" />
               {t(follow ? "canvas.following" : "canvas.followPaused")}

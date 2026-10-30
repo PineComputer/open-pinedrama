@@ -20,7 +20,7 @@
 .ds-canvas .react-flow__edge.is-needs path { stroke: var(--warning-text); stroke-dasharray: 5 4; }
 .ds-canvas .react-flow__edge.is-uses path { stroke-dasharray: 3 4; }
 .ds-canvas .react-flow__handle { opacity: 0; pointer-events: none; }
-.ds-canvas .react-flow__minimap { right: 84px; border-radius: var(--radius-large); border: 1px solid var(--border); overflow: hidden; }
+.ds-canvas .react-flow__minimap { margin-top: 12px; border-radius: var(--radius-large); border: 1px solid var(--border); overflow: hidden; }
 .ds-canvas .react-flow__controls { border-radius: var(--radius-large); overflow: hidden; border: 1px solid var(--border); }
 .ds-canvas .react-flow__node-scene { border-radius: var(--radius-xl); border: 1px solid var(--border); background: color-mix(in srgb, var(--surface) 70%, transparent); }
 .ds-cscene { width: 100%; height: 100%; }
@@ -31,18 +31,8 @@
 .ds-cnode .card { display: flex; gap: 10px; min-height: 0; padding: 0; border-radius: 10px; overflow: hidden; border: 1px solid var(--border); background: var(--surface-container); transition: border-color .12s, box-shadow .12s; }
 .ds-cnode .card img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
 .ds-cnode.is-segment { grid-template-rows: 1fr; }
-.ds-cnode.is-segment .ds-clabel { position: absolute; left: 112px; top: 10px; right: 10px; color: var(--text-primary); font-size: 13px; }
+.ds-cnode.is-segment .ds-clabel { position: absolute; left: 136px; top: 10px; right: 10px; color: var(--text-primary); font-size: 13px; }
 .ds-cnode.is-segment .card { padding: 8px; gap: 12px; background: var(--surface); box-shadow: 0 1px 2px rgba(0, 0, 0, .2); }
-.ds-cnode.is-segment .card img { width: 88px; flex: none; border-radius: 6px; }
-.ds-cnode.is-segment .thumb { width: 88px; flex: none; border-radius: 6px; background: var(--surface-container); }
-.ds-cnode.is-segment .text { display: flex; flex-direction: column; gap: 6px; padding-top: 24px; min-width: 0; }
-.ds-cnode.is-segment .shots { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 4; overflow: hidden; white-space: pre-line; font: 12px/1.45 var(--font-sans); color: var(--text-secondary); }
-.ds-cnode.is-segment .foot { margin-top: auto; font: 11.5px var(--font-sans); color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.ds-cnode.is-segment .state { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-secondary); }
-.ds-cnode.is-segment .state i { width: 6px; height: 6px; border-radius: 50%; background: var(--text-subtle); }
-.ds-cnode.is-segment .state.is-accepted i { background: var(--success); }
-.ds-cnode.is-segment .state.is-you i { background: var(--warning-text); }
-.ds-cnode.is-segment .state.is-stale i, .ds-cnode.is-segment .state.is-back i { background: var(--error); }
 .ds-cnode .text { display: grid; align-content: start; gap: 4px; padding-top: 4px; font: 12px/1.4 var(--font-sans); color: var(--text-secondary); }
 .react-flow__node:hover .ds-cnode .card { border-color: color-mix(in srgb, var(--accent) 55%, var(--border-input)); }
 .react-flow__node.selected .ds-cnode .card { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 26%, transparent); }
@@ -77,3 +67,14 @@
 .ds-npanel .chip img { width: 16px; height: 16px; border-radius: 4px; object-fit: cover; object-position: top; }
 .ds-npanel .foot { display: flex; align-items: center; gap: 10px; padding-top: 10px; border-top: 1px solid var(--border-subtle); font-size: 12px; color: var(--text-secondary); }
 .ds-npanel .foot .grow { flex: 1; }
+.ds-cnode.is-segment .thumb { position: relative; width: 112px; flex: none; border-radius: 6px; overflow: hidden; background: var(--surface-container); }
+.ds-cnode.is-segment .thumb img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
+.ds-cnode.is-segment .thumb .tag { position: absolute; left: 6px; top: 6px; padding: 2px 7px; border-radius: var(--radius-pill); border: 1px solid var(--border); background: var(--surface); color: var(--text-primary); font: 600 10.5px/1.4 var(--font-sans); }
+.ds-cnode.is-segment .text { display: flex; flex-direction: column; gap: 6px; padding-top: 26px; min-width: 0; }
+.ds-cnode.is-segment .shots { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 6; overflow: hidden; white-space: pre-line; font: 12px/1.5 var(--font-sans); color: var(--text-secondary); }
+.ds-cnode.is-segment .foot { display: inline-flex; align-items: center; gap: 6px; margin-top: auto; font: 12px var(--font-sans); color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ds-cnode.is-segment .foot i { width: 6px; height: 6px; flex: none; border-radius: 50%; background: var(--text-subtle); }
+.ds-cnode.is-segment .foot.is-accepted i { background: var(--success); }
+.ds-cnode.is-segment .foot.is-you i { background: var(--warning-text); }
+.ds-cnode.is-segment .foot.is-stale i, .ds-cnode.is-segment .foot.is-back i { background: var(--error); }
+.ds-followbar { margin-top: 12px; }
