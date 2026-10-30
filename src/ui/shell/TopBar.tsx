@@ -79,7 +79,7 @@ export function TopBar({ app, waiting, drama }: { app?: AppInfo; waiting: Review
             <SurfaceSwitch drama={drama} />
           </span>
           <span className="ds-specchip">{[drama.format, drama.preset].filter(Boolean).join(" · ")}</span>
-          <BudgetMeter spentUsd={drama.spent.total} budgetUsd={null} />
+          <BudgetMeter spentUsd={drama.spent.total} budgetUsd={null} simulated={drama.mode === "replay"} />
         </>
       ) : (
         ready && (

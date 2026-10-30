@@ -2,7 +2,7 @@ import { useState } from "react";
 import { type DramaView, type EpisodeRow, STAGES, type StageCell } from "../../shared/types.ts";
 import { api, useAction } from "../api.ts";
 import { type TKey, useT } from "../i18n.ts";
-import { errorText, moneyText, nowText } from "../labels.ts";
+import { errorText, moneyText, nowText, SETUP_STEPS } from "../labels.ts";
 import { Link, navigate } from "../router.tsx";
 import { Still } from "../Still.tsx";
 import { Cast } from "./Cast.tsx";
@@ -314,7 +314,7 @@ export function SetupPanel({ drama }: { drama: DramaView }) {
       : setup.reached === 3 || setup.reached === 1
         ? setup.reached + 1
         : setup.reached;
-  const steps: TKey[] = ["setup.reading", "setup.answers", "setup.cast", "setup.approval", "setup.preparing", "setup.references"];
+  const steps = SETUP_STEPS;
   const detail =
     setup.state === "stopped"
       ? setup.reason

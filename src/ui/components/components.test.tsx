@@ -1,6 +1,6 @@
 // The design system's components, used as a maker uses them: found by role and name, operated
 // by pointer and keyboard, in each state they have.
-import { render, screen, within } from "@testing-library/react";
+import { act, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { useState } from "react";
 import { describe, expect, it, vi } from "vitest";
@@ -273,5 +273,40 @@ describe("BudgetMeter", () => {
     expect(screen.queryByRole("meter")).not.toBeInTheDocument();
     expect(screen.getByText("Spent")).toBeInTheDocument();
     expect(screen.getByText("$12.50")).toBeInTheDocument();
+  });
+});
+
+describe("in the maker's language", () => {
+  it("says states, findings, spend and Cancel in Chinese when the studio is in Chinese", async () => {
+    const { setLang } = await import("../i18n.ts");
+    act(() => setLang("zh"));
+    try {
+      render(
+        <>
+          <StatusChip status="you" />
+          <StatusChip status="back" />
+          <FindingCount severity="error" count={2} />
+          <BudgetMeter spentUsd={12.5} budgetUsd={null} />
+          <BudgetMeter spentUsd={300} budgetUsd={300} />
+        </>,
+      );
+      expect(screen.getByText("等你审")).toBeInTheDocument();
+      expect(screen.getByText("已打回")).toBeInTheDocument();
+      expect(screen.getByText("2 个 error")).toBeInTheDocument();
+      expect(screen.getByText("已花费")).toBeInTheDocument();
+      expect(screen.getByText("预算已用完")).toBeInTheDocument();
+      expect(screen.getByText("$300.00 / $300")).toBeInTheDocument();
+      expect(screen.queryByText(/Spent|Budget|Waiting/)).not.toBeInTheDocument();
+    } finally {
+      act(() => setLang("en"));
+    }
+  });
+});
+
+describe("BudgetMeter in replay", () => {
+  it("marks a replay's spend as simulated, so it never reads as a charge", () => {
+    render(<BudgetMeter spentUsd={1.18} budgetUsd={null} simulated />);
+    expect(screen.getByText("Simulated spend")).toBeInTheDocument();
+    expect(screen.queryByText("Spent")).not.toBeInTheDocument();
   });
 });

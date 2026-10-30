@@ -79,3 +79,6 @@ export function computerState(state: string, t: T): string {
 export function fileKind(kind: FileKind, t: T): string {
   return t(`file.${kind}`);
 }
+
+/** The setup's steps, in the order setup.reached counts them (types.ts DramaView.setup). */
+export const SETUP_STEPS = ["setup.reading", "setup.answers", "setup.cast", "setup.approval", "setup.preparing", "setup.references"] as const;
