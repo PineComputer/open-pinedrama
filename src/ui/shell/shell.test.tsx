@@ -112,12 +112,12 @@ describe("the rail", () => {
     expect(within(rail).getByRole("button", { name: "Dramas" })).toHaveAttribute("aria-current", "page");
   });
 
-  it("in a drama, adds its surfaces and steps, and goes to one", async () => {
+  it("in a drama, adds its steps and surfaces in the pro direction's order, and goes to one", async () => {
     const user = userEvent.setup();
     at("/d/d1/story");
     render(<NavRail path="/d/d1/story" dramaId="d1" sidebarOpen={false} onToggleSidebar={() => {}} />);
     const rail = screen.getByRole("navigation", { name: "Places" });
-    expect(within(rail).getAllByRole("button").map((button) => button.getAttribute("aria-label"))).toEqual(["Show the sidebar", "Dramas", "To review", "Episodes", "Canvas", "Graph", "Story", "Cut", "Settings"]);
+    expect(within(rail).getAllByRole("button").map((button) => button.getAttribute("aria-label"))).toEqual(["Show the sidebar", "Dramas", "Script", "Story", "Episodes", "Canvas", "Graph", "To review", "Cut", "Settings"]);
     expect(within(rail).getByRole("button", { name: "Story" })).toHaveAttribute("aria-current", "page");
     await user.click(within(rail).getByRole("button", { name: "Canvas" }));
     expect(location.pathname).toBe("/d/d1/canvas");

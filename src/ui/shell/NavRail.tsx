@@ -18,16 +18,19 @@ export function placesOf(path: string, dramaId?: string): Place[] {
   const at = (to: string, exact = true) => (exact ? path === to : path === to || path.startsWith(`${to}/`) || path.startsWith(`${to}?`));
   const studio: Place[] = [
     { to: "/", label: "nav.dramas", icon: "house", current: path === "/" || path === "/new" },
-    { to: "/inbox", label: "nav.inbox", icon: "list-checks", current: at("/inbox") || path.startsWith("/r/") },
+    { to: "/inbox", label: "nav.inbox", icon: "video-camera", current: at("/inbox") || path.startsWith("/r/") },
   ];
   if (!dramaId) return studio;
   const base = `/d/${dramaId}`;
+  // In the pro direction's order (its NavRail): the drama's steps, its surfaces, the review room, the cut.
   return [
-    ...studio,
+    studio[0],
+    { to: `${base}/script`, label: "step.script", icon: "file-text", current: at(`${base}/script`) || at(`${base}/analyzing`) },
+    { to: `${base}/story`, label: "step.story", icon: "users", current: at(`${base}/story`) },
     { to: base, label: "step.episodes", icon: "film-strip", current: path === base || path.startsWith(`${base}/e/`) },
     { to: `${base}/canvas`, label: "surface.canvas", icon: "flow-arrow", current: at(`${base}/canvas`) },
     { to: `${base}/graph`, label: "surface.graph", icon: "tree-structure", current: at(`${base}/graph`) },
-    { to: `${base}/story`, label: "step.story", icon: "users", current: at(`${base}/story`) },
+    studio[1],
     { to: `${base}/cut`, label: "step.cut", icon: "scissors", current: at(`${base}/cut`) },
   ];
 }
