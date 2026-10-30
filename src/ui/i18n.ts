@@ -339,6 +339,8 @@ const en = {
   "file.archive": "Project archive",
   "file.status": "Project status",
   "file.lineage": "Project lineage",
+  "file.spec": "Job",
+  "file.request": "Request",
   "file.refusal": "Refusals",
   "file.other": "File",
 
@@ -754,6 +756,8 @@ const zh: Record<Key, string> = {
   "file.archive": "项目存档",
   "file.status": "项目状态",
   "file.lineage": "项目血缘",
+  "file.spec": "生成参数",
+  "file.request": "请求",
   "file.refusal": "拒绝记录",
   "file.other": "文件",
 

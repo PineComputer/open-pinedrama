@@ -40,6 +40,14 @@ describe("a stop's files in its review", () => {
     expect(other).toEqual([]);
   });
 
+  it("leave out drama-cli's statement of each job and its request", () => {
+    const look = row("drama/assets/characters/lin/v1/image-1.png", "look", { type: "image/png", subject: "lin", version: "v1" });
+    const { items, other } = reviews.itemsOf("looks", [look, row("drama/assets/characters/lin/v1/spec.json", "spec"), row("drama/assets/characters/lin/v1/request.json", "request")]);
+    expect(items).toHaveLength(1);
+    expect(items[0].files).toHaveLength(1);
+    expect(other).toEqual([]);
+  });
+
   it("leave out the lineage of the project", () => {
     const look = row("drama/assets/characters/lin/v1/image-1.png", "look", { type: "image/png", subject: "lin", version: "v1" });
     const { items, other } = reviews.itemsOf("looks", [look, row("handoff/lineage.json", "lineage")]);
