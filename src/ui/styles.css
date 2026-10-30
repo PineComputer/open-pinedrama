@@ -537,10 +537,10 @@ h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 700; lett
 .ds-ritem b { font: 600 12px var(--font-mono); max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .ds-ritem small { color: var(--text-secondary); font-size: 11.5px; }
 .ds-stage { grid-row: 1; display: flex; flex-direction: column; min-width: 0; min-height: 0; }
-/* In the room the agent's words stand over the picture, label above, so the stage keeps its width. */
-.ds-stage .agent-says { grid-template-columns: minmax(0, 1fr); gap: 4px; padding: 12px 18px; border-bottom: 1px solid var(--border); }
-.ds-stage .agent-says .speech { font-size: 14px; }
-.ds-stage .agent-says .more { grid-column: 1; margin-top: 0; }
+/* In the room the agent's words open the inspector, as the pro direction's has them, label above, so the stage is the picture's alone. */
+.ds-insp .agent-says { grid-template-columns: minmax(0, 1fr); gap: 4px; padding: 12px 0; background: none; }
+.ds-insp .agent-says .speech { font-size: 13.5px; }
+.ds-insp .agent-says .more { grid-column: 1; margin-top: 0; }
 .ds-stage-bar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 12px 18px 0; }
 .ds-screen { flex: 1; min-height: 0; display: grid; place-items: center; padding: 20px; overflow: hidden; }
 .ds-insp { grid-row: 1; border-left: 1px solid var(--border); background: var(--surface-dim); display: flex; flex-direction: column; min-height: 0; min-width: 0; }

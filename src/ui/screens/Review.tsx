@@ -459,7 +459,6 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
       </nav>
 
       <section className="ds-stage" aria-label={t("review.stage")}>
-        <AgentSays review={review} />
         {(variants.length > 1 || before) && (
           <div className="ds-stage-bar">
             {variants.length > 1 && (
@@ -508,6 +507,7 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
         </div>
         <div className="ds-insp-scroll">
           <Status review={review} />
+          <AgentSays review={review} />
           {item?.asked && (
             <div className="ds-isec asked-before">
               <h4>{t("review.askedBefore")}</h4>
