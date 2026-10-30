@@ -41,7 +41,7 @@ export function Script({ dramaId }: { dramaId: string }) {
   return (
     <>
       <div className="work-head">
-        <h2>{t("section.script")}</h2>
+        <h2>{t("step.script")}</h2>
       </div>
       {!data.bible && !data.breakdowns.length && <p className="empty-note">{t("script.empty")}</p>}
       <div className="script">

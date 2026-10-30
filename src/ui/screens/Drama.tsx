@@ -1,10 +1,13 @@
 import { useState } from "react";
 import type { AppInfo, DramaView } from "../../shared/types.ts";
 import { api, useAction, useResource } from "../api.ts";
-import { type TKey, useT } from "../i18n.ts";
-import { errorText, kindLabel, moneyText } from "../labels.ts";
+import { useT } from "../i18n.ts";
+import { errorText } from "../labels.ts";
 import { ReviewingChoice } from "../Reviewing.tsx";
-import { Link } from "../router.tsx";
+import { EmptyState } from "../components/EmptyState.tsx";
+import { Link, usePath } from "../router.tsx";
+import { StatusBar } from "../shell/StatusBar.tsx";
+import { type Step, StepRail } from "../shell/StepRail.tsx";
 import { Board, SetupPanel } from "./Board.tsx";
 import { Cast } from "./Cast.tsx";
 import { Chat } from "./Chat.tsx";
@@ -13,15 +16,6 @@ import { Delivery } from "./Delivery.tsx";
 import { Episode } from "./Episode.tsx";
 import { Script } from "./Script.tsx";
 import { InboxList } from "./Inbox.tsx";
-
-const SECTIONS: [string, TKey][] = [
-  ["board", "section.board"],
-  ["script", "section.script"],
-  ["cast", "section.cast"],
-  ["delivery", "section.delivery"],
-  ["crew", "section.crew"],
-  ["inbox", "section.inbox"],
-];
 
 /** How many episodes run at once, and how many share a Computer: changed in place. Or the line stops. */
 function Tune({ drama, onDone }: { drama: DramaView; onDone: () => void }) {
@@ -159,87 +153,44 @@ export function Drama({ id, tab, episode }: { id: string; tab: string; episode?:
   if (!drama) return <main className="page quiet">{t("loading")}</main>;
 
   const { episodes } = drama;
+  // Before there are episodes, the setup's progress is the story being made.
+  const settingUp = drama.status === "setup" || (drama.status === "stopped" && !drama.episodeRows.length);
+  const step: Step = tab === "script" ? "script" : tab === "story" || (tab === "board" && settingUp) ? "story" : tab === "cut" ? "cut" : "episodes";
 
   return (
-    <div className="drama-page">
-      <aside className="rail">
-        <div>
-          <Link to="/" className="back">
-            ← {t("rail.back")}
-          </Link>
-          <h1>{drama.title}</h1>
-          <div className="about">
-            {[drama.format, kindLabel(drama, t)].filter(Boolean).join(" · ")}
-            {drama.length && ` · ${t(`new.length${drama.length}` as TKey)}`}            {drama.rehearsal && <span className="rehearsal-tag">{t("rehearsal.tag")}</span>}
-          </div>
-        </div>
-        <nav className="sections">
-          {SECTIONS.map(([key, label], index) => (
-            <Link key={key} to={key === "board" ? `/d/${id}` : `/d/${id}/${key}`} className={tab === key || (key === "board" && tab === "episode") ? "on" : ""} aria-current={tab === key ? "page" : undefined}>
-              <span className="n">{String(index + 1).padStart(2, "0")}</span>
-              <span className="name">{t(label)}</span>
-              {key === "inbox" && drama.waiting > 0 ? <span className="count">{drama.waiting}</span> : <span />}
-            </Link>
-          ))}
-        </nav>
-        <div className="ledger">
-          {drama.spent.total > 0 && (
-            <div className="spent" title={t("spent.about")}>
-              <div className="row">
-                <span>{t("ledger.spent")}</span>
-                <span className="num">{moneyText(drama.spent, t, lang)}</span>
-              </div>
-              {drama.spent.media > 0 && (
-                <div className="row">
-                  <span>{t("ledger.video")}</span>
-                  <span className="num">{moneyText(drama.spent.media, t, lang)}</span>
-                </div>
-              )}
-            </div>
-          )}
-          {episodes.total > 0 && (
-            <>
-              <div className="row">
-                <span>{t("ledger.atWork")}</span>
-                <span className="num">{episodes.working}</span>
-              </div>
-              <div className="row">
-                <span>{t("ledger.waiting")}</span>
-                <span className={`num ${episodes.waiting ? "seal-text" : ""}`}>{episodes.waiting}</span>
-              </div>
-              <div className="row">
-                <span>{t("ledger.finished")}</span>
-                <span className="num">
-                  {episodes.done} / {episodes.total}
-                </span>
-              </div>
-            </>
-          )}
-        </div>
+    <div className="ds-shell">
+      <StepRail drama={drama} step={step} episode={episode}>
+        <Link to={`/d/${id}/inbox`} aria-current={tab === "inbox" ? "page" : undefined}>
+          {t("section.inbox")}
+          {drama.waiting > 0 && <span className="count">{drama.waiting}</span>}
+        </Link>
+        <Link to={`/d/${id}/crew`} aria-current={tab === "crew" ? "page" : undefined}>
+          {t("section.crew")}
+        </Link>
         {tuning ? (
           <Tune drama={drama} onDone={() => setTuning(false)} />
         ) : (
-          <div className="rail-actions">
-            <button className="link" onClick={() => setTuning(true)}>
-              {t("rail.tune")}:{" "}
-              {episodes.total > 0 && drama.parallel >= episodes.total
-                ? t("rail.tuneAll", { n: episodes.total, c: drama.perComputer })
-                : t("rail.tuneValue", { p: drama.parallel, c: drama.perComputer })}
-            </button>
-            <button className="btn small" onClick={() => setTalking((open) => !open)}>
-              {t("rail.talk")}
-            </button>
-          </div>
+          <button className="link" onClick={() => setTuning(true)}>
+            {t("rail.tune")}:{" "}
+            {episodes.total > 0 && drama.parallel >= episodes.total
+              ? t("rail.tuneAll", { n: episodes.total, c: drama.perComputer })
+              : t("rail.tuneValue", { p: drama.parallel, c: drama.perComputer })}
+          </button>
         )}
-      </aside>
+        <button className="ds-btn s32" onClick={() => setTalking((open) => !open)}>
+          {t("rail.talk")}
+        </button>
+      </StepRail>
 
-      <section>
+      <div className="ds-work">
+      <section className="ds-workin">
         <Notices drama={drama} />
-        {tab === "board" && (drama.status === "setup" || (drama.status === "stopped" && !drama.episodeRows.length) ? <SetupPanel drama={drama} /> : <Board drama={drama} />)}
+        {tab === "board" && (settingUp ? <SetupPanel drama={drama} /> : <Board drama={drama} />)}
         {tab === "episode" && episode && <Episode key={`${id}/${episode}`} dramaId={id} code={episode} />}
         {tab === "script" && <Script dramaId={id} />}
-        {tab === "cast" && <Cast dramaId={id} />}
-        {tab === "delivery" && <Delivery dramaId={id} />}
+        {tab === "story" && (settingUp ? <SetupPanel drama={drama} /> : <Cast dramaId={id} />)}
+        {tab === "cut" && <Delivery dramaId={id} />}
+        {(tab === "canvas" || tab === "graph") && <SurfaceToCome surface={tab} />}
         {tab === "crew" && <Crew drama={drama} />}
         {tab === "inbox" && (
           <>
@@ -250,7 +201,22 @@ export function Drama({ id, tab, episode }: { id: string; tab: string; episode?:
           </>
         )}
       </section>
+      <StatusBar drama={drama} />
+      </div>
       {talking && <Chat dramaId={id} onClose={() => setTalking(false)} />}
     </div>
+  );
+}
+
+/** Canvas and Graph, not built yet: what they will show, and what is selected for them. */
+function SurfaceToCome({ surface }: { surface: "canvas" | "graph" }) {
+  const { t } = useT();
+  const { query } = usePath();
+  const item = query.get("item");
+  return (
+    <EmptyState title={t(surface === "canvas" ? "surface.canvas" : "surface.graph")}>
+      {t(surface === "canvas" ? "surface.canvasSoon" : "surface.graphSoon")}
+      {item && ` ${t("surface.selected", { item })}`}
+    </EmptyState>
   );
 }

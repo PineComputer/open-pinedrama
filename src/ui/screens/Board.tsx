@@ -183,7 +183,7 @@ export function Board({ drama }: { drama: DramaView }) {
   return (
     <>
       <div className="work-head">
-        <h2>{t("section.board")}</h2>
+        <h2>{t("step.episodes")}</h2>
         {rows.length > 0 && (
           <div className="filters" role="group" aria-label={t("board.filter")}>
             {(Object.keys(FILTERS) as Filter[]).map((key) => {
