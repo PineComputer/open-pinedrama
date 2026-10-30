@@ -61,4 +61,8 @@ describe("replay's samples", () => {
     const sample = samplesFrom(folder({ "samples.json": JSON.stringify({ "paper-vows": { "drama/assets/characters/nora/vN/image-1": "full/paper-vows/cast-nora.jpg" } }) }));
     expect(sample("paper-vows", "drama/assets/characters/nora/v1/image-1.svg")).toBeUndefined();
   });
+  it("serve a sample drama's own lineage, drama-cli's export, at handoff/lineage.json", () => {
+    const sample = samplesFrom(folder({ "samples.json": JSON.stringify({ "paper-vows": { "handoff/lineage": "full/paper-vows/lineage.json" } }), "full/paper-vows/lineage.json": '{"nodes":[],"links":[]}' }));
+    expect(sample("paper-vows", "handoff/lineage.json")).toMatchObject({ path: "handoff/lineage.json", type: "application/json" });
+  });
 });

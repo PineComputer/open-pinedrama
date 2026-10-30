@@ -467,7 +467,8 @@
   "drama/episodes/EP006/segments/seg03/t01/request": "full/paper-vows/ep6-seg03-t01.request.json",
   "drama/episodes/EP006/segments/seg03/t01/spec": "full/paper-vows/ep6-seg03-t01.spec.json",
   "drama/episodes/EP006/segments/seg04/t01/request": "full/paper-vows/ep6-seg04-t01.request.json",
-  "drama/episodes/EP006/segments/seg04/t01/spec": "full/paper-vows/ep6-seg04-t01.spec.json"
+  "drama/episodes/EP006/segments/seg04/t01/spec": "full/paper-vows/ep6-seg04-t01.spec.json",
+  "handoff/lineage": "full/paper-vows/lineage.json"
  },
  "late-sunshine": {
   "drama/assets/characters/applicant_a/vN/image-1": "full/late-sunshine/cast-applicant_a.jpg",
@@ -758,6 +759,7 @@
   "drama/episodes/EP005/multi_panel_storyboard/seg05/line-art/vN/request": "full/late-sunshine/ep5-seg05-line-art.request.json",
   "drama/episodes/EP005/multi_panel_storyboard/seg05/line-art/vN/spec": "full/late-sunshine/ep5-seg05-line-art.spec.json",
   "drama/episodes/EP005/multi_panel_storyboard/seg05/photoreal/vN/request": "full/late-sunshine/ep5-seg05-photoreal.request.json",
-  "drama/episodes/EP005/multi_panel_storyboard/seg05/photoreal/vN/spec": "full/late-sunshine/ep5-seg05-photoreal.spec.json"
+  "drama/episodes/EP005/multi_panel_storyboard/seg05/photoreal/vN/spec": "full/late-sunshine/ep5-seg05-photoreal.spec.json",
+  "handoff/lineage": "full/late-sunshine/lineage.json"
  }
 }

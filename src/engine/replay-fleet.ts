@@ -387,6 +387,12 @@ const bibleJson = (say: Say): Out => ({
 const rewriteFiles = (lang: Lang): Out[] =>
   ["screenplay.fountain", "review.md"].map((name) => ({ path: `drama/screenplay/v1/${name}`, type: typeOf(name), bytes: readFileSync(path.join(FIXTURES, "rewrite", lang, name)) }));
 
+/**
+ * The lineage a stop hands back: a sample drama's own, drama-cli's export of the project it comes from
+ * (`drama-cli export comfyui`, fixtures/replay/samples/full/<id>/lineage.json), else the one replay writes for its recording.
+ */
+const lineageOf = (set: string, progress: ReplayProgress, returned: string[]): Out => sample(set, "handoff/lineage.json") ?? replayLineage(progress, returned);
+
 /** A part of a packed project, as the agent returns it (here a stand-in: replay has no drama-cli project). Packed again at each stop, under the same name. */
 const archive = (name: string, stop = 1): Out => ({ path: `handoff/${name}.tar.part-aa`, type: "application/octet-stream", bytes: text(`replay stand-in for ${name}.tar, packed at stop ${stop}`) });
 
@@ -493,7 +499,7 @@ function setupScript(lang: Lang, preset: string, story: { id: string; story: Sto
   return (answer) => {
     const step = play(answer);
     returned.push(...step.files.map((file) => file.path));
-    return { ...step, files: [...step.files, replayStatus(progress()), replayLineage(progress(), returned)] };
+    return { ...step, files: [...step.files, replayStatus(progress()), lineageOf(set, progress(), returned)] };
   };
 }
 
@@ -610,7 +616,7 @@ function episodeScript(code: string, lang: Lang, preset: string, story: { id: st
     const step = play(answer);
     stops += 1;
     returned.push(...step.files.map((file) => file.path));
-    return { ...step, files: [...step.files, archive(code, stops), replayStatus(progress()), replayLineage(progress(), returned)] };
+    return { ...step, files: [...step.files, archive(code, stops), replayStatus(progress()), lineageOf(set, progress(), returned)] };
   };
 }
 
