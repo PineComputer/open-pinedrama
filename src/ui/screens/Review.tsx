@@ -1,10 +1,13 @@
-import { Check, Pencil, X } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { FileItem, ItemDecision, Note, ReviewItem, ReviewView, Verdict } from "../../shared/types.ts";
 import { api, clock, useAction, useResource } from "../api.ts";
 import { type TKey, useT } from "../i18n.ts";
 import { errorText, fileKind, subjectLabel, useNames } from "../labels.ts";
+import { Button } from "../components/Button.tsx";
+import { Segmented } from "../components/Segmented.tsx";
+import { StatusChip } from "../components/StatusChip.tsx";
 import { StopCard } from "../components/StopCard.tsx";
+import { Icon } from "../icons.tsx";
 import { Markdown } from "../Markdown.tsx";
 import { Link, navigate } from "../router.tsx";
 import { Still } from "../Still.tsx";
@@ -114,7 +117,7 @@ function Status({ review }: { review: ReviewView }) {
   if (review.state === "answered")
     return (
       <div className="status-line">
-        <Check size={14} />
+        <Icon name="check" />
         {t("review.sent")}
       </div>
     );
@@ -240,11 +243,15 @@ function QuestionRoom({ review, done }: { review: ReviewView; done: () => void }
   );
 }
 
+/** A take counts as watched once it has played to within this fraction of its end (the maker watches every take, D76). */
+const WATCHED = 0.98;
+
 function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
   const { t } = useT();
   const names = useNames(review.dramaId);
   const items = review.reviewItems;
   const open = review.state === "open";
+  const takes = review.kind === "takes";
   const [index, setIndex] = useState(0);
   const [variant, setVariant] = useState(0);
   const [drafts, setDrafts, forgetDrafts] = useDraft<Drafts>(review.id, "items", () =>
@@ -268,41 +275,62 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
     noteInput.current?.focus();
   });
   const [confirming, setConfirming] = useState(false);
-  const [comparing, setComparing] = useState(false);
+  // The earlier version in place of the new one on the stage (the spec's TakeCompare).
+  const [earlier, setEarlier] = useState(false);
   const [error, setError] = useState<unknown>();
   const [busy, setBusy] = useState(false);
   const noteInput = useRef<HTMLTextAreaElement>(null);
   const video = useRef<HTMLVideoElement>(null);
   // Where the take or cut is, so "add a note at 0:02" says the time a note would get.
   const [playhead, setPlayhead] = useState(0);
+  // How far each take has been watched, by file: Accept waits for the end.
+  const [watched, setWatched] = useState<Record<number, number>>({});
   const stage = useRef<HTMLDivElement>(null);
   const stageSize = useSize(stage);
+  // The storyboards beside each take: the episode's files, read once.
+  const episodeFiles = useResource<FileItem[]>(takes && review.episode ? `/api/dramas/${review.dramaId}/files?episode=${review.episode}` : null, [`drama:${review.dramaId}`]);
 
   const item: ReviewItem | undefined = items[index];
   const variants = item?.files ?? [];
-  const file = variants[Math.min(variant, variants.length - 1)];
+  const latest = variants[Math.min(variant, variants.length - 1)];
+  const before = item?.previous?.length ? (item.previous.find((p) => p.kind === latest?.kind && p.style === latest?.style) ?? item.previous[0]) : undefined;
+  const file = earlier && before ? before : latest;
   const draft = item ? drafts[item.key] : undefined;
-  // The earlier version beside the current one: the same variant where it has one.
-  const before = comparing && file ? item?.previous?.find((p) => p.kind === file.kind && p.style === file.style) ?? item?.previous?.[0] : undefined;
-  const space = before
-    ? { width: Math.max(0, (stageSize.width - 40 - 24) / 2), height: Math.max(0, stageSize.height - 40 - 28) }
-    : { width: Math.max(0, stageSize.width - 40), height: Math.max(0, stageSize.height - 40) };
+  const space = { width: Math.max(0, stageSize.width - 40), height: Math.max(0, stageSize.height - 40) };
   const shots = useShotList(
     review.breakdown ?? review.otherFiles.find((file) => file.kind === "breakdown" && /markdown|text/.test(file.type)),
-    review.kind === "storyboards" || review.kind === "takes" ? item?.key : undefined,
+    review.kind === "storyboards" || takes ? item?.key : undefined,
   );
-  const verdicts = items.map((i) => drafts[i.key]?.verdict);
-  const approved = verdicts.filter((v) => v === "approve").length;
-  const revise = verdicts.filter((v) => v === "revise").length;
-  const left = items.length - approved - revise;
-  const complete = items.length > 0 && left === 0;
+  const board = takes && item ? (episodeFiles.data ?? []).filter((f) => f.kind === "storyboard" && f.segment === item.key && f.style === "line-art").at(-1) : undefined;
+  const seen = latest ? (watched[latest.id] ?? 0) : 0;
+  const mustWatch = takes && open && latest !== undefined && isVideo(latest) && seen < WATCHED;
+  // An item is decided with a verdict, and one sent back also with its reason.
+  const decided = (i: ReviewItem) => {
+    const d = drafts[i.key];
+    return d?.verdict === "approve" || (d?.verdict === "revise" && d.notes.length > 0);
+  };
+  const count = items.filter(decided).length;
+  const approved = items.filter((i) => drafts[i.key]?.verdict === "approve").length;
+  const revise = items.filter((i) => drafts[i.key]?.verdict === "revise").length;
+  const complete = items.length > 0 && count === items.length;
 
   const update = (key: string, change: (value: Drafts[string]) => Drafts[string]) => setDrafts((current) => ({ ...current, [key]: change(current[key] ?? { notes: [] }) }));
   const setVerdict = (verdict: Verdict) => item && update(item.key, (value) => ({ ...value, verdict }));
   const go = (next: number) => {
     setIndex(Math.max(0, Math.min(items.length - 1, next)));
     setVariant(0);
+    setEarlier(false);
     setPending(undefined);
+  };
+  const accept = () => {
+    if (!open || mustWatch) return;
+    setVerdict("approve");
+    if (index < items.length - 1) go(index + 1);
+  };
+  const sendBack = () => {
+    if (!open) return;
+    setVerdict("revise");
+    noteInput.current?.focus();
   };
 
   const addNote = () => {
@@ -315,7 +343,7 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
   };
 
   const pin = (x: number, y: number) => {
-    if (!open || !file) return;
+    if (!open || !file || earlier) return;
     setPending({ x, y, fileId: file.id });
     noteInput.current?.focus();
   };
@@ -325,6 +353,13 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
     setPending({ time: video.current?.currentTime ?? 0, fileId: file.id });
     video.current?.pause();
     noteInput.current?.focus();
+  };
+
+  const track = (element: HTMLVideoElement, ended = false) => {
+    setPlayhead(element.currentTime);
+    if (!latest || file !== latest || !element.duration) return;
+    const reached = ended ? 1 : element.currentTime / element.duration;
+    setWatched((current) => (reached > (current[latest.id] ?? 0) ? { ...current, [latest.id]: reached } : current));
   };
 
   const send = async () => {
@@ -361,18 +396,16 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
       }
       const typing = event.target instanceof HTMLTextAreaElement || event.target instanceof HTMLInputElement;
       if (typing) return;
-      if (event.key === "j" || event.key === "ArrowRight") go(index + 1);
-      else if (event.key === "k" || event.key === "ArrowLeft") go(index - 1);
-      else if (event.key === "a" && open) {
-        setVerdict("approve");
-        if (index < items.length - 1) go(index + 1);
-      } else if (event.key === "r" && open) {
-        setVerdict("revise");
+      if (event.key === "j" || event.key === "ArrowDown") go(index + 1);
+      else if (event.key === "k" || event.key === "ArrowUp") go(index - 1);
+      else if (event.key === "a") accept();
+      else if (event.key === "b") {
+        event.preventDefault();
+        sendBack();
+      } else if (event.key === "n" && open) {
         event.preventDefault();
         noteInput.current?.focus();
-      } else if (event.key === "c" && item?.previous?.length) {
-        setComparing((on) => !on);
-      }
+      } else if (event.key === "c" && before) setEarlier((on) => !on);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -384,272 +417,278 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
     const file = i.files.find(isImage) ?? i.files.find(isVideo);
     return file && { url: file.url, video: isVideo(file) };
   };
+  const standing = (i: ReviewItem) => {
+    const v = drafts[i.key]?.verdict;
+    if (v === "approve") return <StatusChip status="accepted" />;
+    if (v === "revise") return <StatusChip status="back" label={decided(i) ? undefined : t("review.needsReason")} />;
+    return <StatusChip status="you" label={t(takes ? "review.notWatched" : "review.undecided")} />;
+  };
   const revisions = items.filter((i) => drafts[i.key]?.verdict === "revise");
   let pinNumber = 0;
 
   return (
-    <div className="room">
-      <div className="room-head">
-        <Link to={`/d/${review.dramaId}`} className="crumb">
-          ← {review.dramaTitle}
-        </Link>
-        <h1>
+    <div className="ds-room">
+      <nav className="ds-reel" aria-label={t("review.items")}>
+        <h3>
           {review.episode ? `${review.episode} · ` : ""}
           {t(`kind.${review.kind}` as TKey)}
-        </h1>
-        <span className="tally num">{t("review.tally", { a: approved, r: revise, left })}</span>
-        <span className="spacer" />
+        </h3>
+        {items.map((i, n) => (
+          <button key={i.key} type="button" className="ds-ritem" aria-current={n === index} onClick={() => go(n)}>
+            <span className="thumb">
+              <Still still={thumbOf(i)} />
+            </span>
+            <span className="what">
+              <b>{labelOf(i)}</b>
+              {i.files[0]?.version && <small className="num">{i.files[0].version}</small>}
+              {standing(i)}
+            </span>
+          </button>
+        ))}
         {open && (
-          <button className="link" onClick={() => setDrafts((current) => Object.fromEntries(items.map((i) => [i.key, { ...current[i.key], verdict: "approve" }])))}>
+          <button type="button" className="ds-btn is-ghost is-sm" onClick={() => setDrafts((current) => Object.fromEntries(items.map((i) => [i.key, { ...current[i.key], verdict: "approve" }])))} disabled={takes}>
             {t("review.approveAll")}
           </button>
         )}
-        {review.nextId && (
-          <button className="link" onClick={() => navigate(`/r/${review.nextId}`)}>
-            {t("review.next")} →
-          </button>
-        )}
-      </div>
+      </nav>
 
-      <AgentSays review={review} />
-
-      <div className="room-body">
-        <div className="viewing">
-          <div className="variants">
-            {variants.length > 1 &&
-              variants.map((f, n) => (
-                <button key={f.id} aria-pressed={n === variant} className={n === variant ? "on" : ""} onClick={() => setVariant(n)}>
-                  {variantLabel(f, t)}
-                </button>
-              ))}
-            <span className="grow" />
-            {item?.previous?.length ? (
-              <button aria-pressed={comparing} className={comparing ? "on" : ""} onClick={() => setComparing((on) => !on)}>
-                {t("review.compare")} <span className="key">C</span>
-              </button>
-            ) : null}
-          </div>
-          <div className={`stage ${before ? "compare" : ""}`} ref={stage}>
-            {before && (
-              <div className="pane before">
-                <span className="tag">
-                  {t("review.before")} {before.version}
-                </span>
-                {isImage(before) && <Pinboard key={before.id} file={before} notes={item?.asked ?? []} space={space} onPin={() => undefined} />}
-                {isVideo(before) && (
-                  <div className="screen">
-                    <video key={before.url} src={before.url} controls playsInline preload="metadata" />
-                  </div>
-                )}
-              </div>
+      <section className="ds-stage" aria-label={t("review.stage")}>
+        <AgentSays review={review} />
+        {(variants.length > 1 || before) && (
+          <div className="ds-stage-bar">
+            {variants.length > 1 && (
+              <Segmented label={t("review.variants")} value={String(variant)} onChange={(value) => setVariant(Number(value))} options={variants.map((f, n) => ({ value: String(n), label: variantLabel(f, t) }))} />
             )}
-            <div className="pane">
-              {before && (
-                <span className="tag now">
-                  {t("review.now")} {file?.version}
-                </span>
-              )}
-              {file && isImage(file) && <Pinboard key={file.id} file={file} notes={draft?.notes ?? []} draft={pending?.fileId === file.id ? pending : undefined} space={space} onPin={pin} />}
-              {file && isVideo(file) && (
-                <div className="screen">
-                  <video
-                    ref={video}
-                    key={file.url}
-                    src={file.url}
-                    controls
-                    playsInline
-                    preload="metadata"
-                    onTimeUpdate={(event) => setPlayhead(event.currentTarget.currentTime)}
-                    onSeeked={(event) => setPlayhead(event.currentTarget.currentTime)}
-                    onLoadedMetadata={() => setPlayhead(0)}
-                  />
-                </div>
-              )}
+            {before && latest && (
+              <Segmented
+                label={t("review.compare")}
+                value={earlier ? "earlier" : "new"}
+                onChange={(value) => setEarlier(value === "earlier")}
+                options={[
+                  { value: "new", label: t("review.newVersion", { v: latest.version ?? "" }) },
+                  { value: "earlier", label: t("review.earlierVersion", { v: before.version ?? "" }) },
+                ]}
+              />
+            )}
+          </div>
+        )}
+        <div className="ds-screen" ref={stage}>
+          {file && isImage(file) && <Pinboard key={file.id} file={file} notes={earlier ? (item?.asked ?? []) : (draft?.notes ?? [])} draft={!earlier && pending?.fileId === file.id ? pending : undefined} space={space} onPin={pin} />}
+          {file && isVideo(file) && (
+            <div className="screen">
+              <video
+                ref={video}
+                key={file.url}
+                src={file.url}
+                controls
+                playsInline
+                preload="metadata"
+                onTimeUpdate={(event) => track(event.currentTarget)}
+                onSeeked={(event) => track(event.currentTarget)}
+                onEnded={(event) => track(event.currentTarget, true)}
+                onLoadedMetadata={() => setPlayhead(0)}
+              />
             </div>
-          </div>
-          <div className="reel">
-            {items.map((i, n) => {
-              const v = drafts[i.key]?.verdict;
-              return (
-                <button key={i.key} aria-current={n === index} className={n === index ? "on" : ""} onClick={() => go(n)}>
-                  <div className="frame">
-                    <Still still={thumbOf(i)} />
-                  </div>
-                  <div className="cap">
-                    <span>{labelOf(i)}</span>
-                    {v === "approve" && <Check size={13} className="v-approve" />}
-                    {v === "revise" && <Pencil size={12} className="v-revise" />}
-                  </div>
-                </button>
-              );
-            })}
-          </div>
+          )}
         </div>
+      </section>
 
-        <aside className="inspector">
-          <div className="inspector-head">
-            <div className="item">
-              <h2>{item && labelOf(item)}</h2>
-              {file?.version && <span className="quiet num">{file.version}</span>}
+      <aside className="ds-insp" aria-label={t("review.inspector")}>
+        <div className="ds-insp-head">
+          <h2>{item && labelOf(item)}</h2>
+          <small>
+            {[file?.version, earlier ? t("review.earlierShown") : ""].filter(Boolean).join(" · ")}
+          </small>
+        </div>
+        <div className="ds-insp-scroll">
+          <Status review={review} />
+          {item?.asked && (
+            <div className="ds-isec asked-before">
+              <h4>{t("review.askedBefore")}</h4>
+              <ol className="shots">
+                {item.asked.map((note, n) => (
+                  <li key={n}>
+                    {note.time !== undefined && <span className="at">{clock(note.time)} </span>}
+                    {note.text}
+                    {note.image !== undefined && (
+                      <a className="note-picture" href={`/api/files/${note.image}`} target="_blank" rel="noreferrer">
+                        <img src={`/api/files/${note.image}`} alt={t("review.picture")} />
+                      </a>
+                    )}
+                  </li>
+                ))}
+              </ol>
             </div>
-            <div className="verdict">
-              <button aria-pressed={draft?.verdict === "approve"} className={`btn approve ${draft?.verdict === "approve" ? "on" : ""}`} disabled={!open} onClick={() => setVerdict("approve")}>
-                {t("review.approve")} <span className="key">A</span>
-              </button>
-              <button aria-pressed={draft?.verdict === "revise"} className={`btn seal-btn ${draft?.verdict === "revise" ? "on" : ""}`} disabled={!open} onClick={() => setVerdict("revise")}>
-                {t("review.revise")} <span className="key">R</span>
-              </button>
+          )}
+          {board && (
+            <div className="ds-isec">
+              <h4>{t("review.storyboard")}</h4>
+              <a href={board.url} target="_blank" rel="noreferrer" className="ds-board-thumb">
+                <img src={board.url} alt={t("review.storyboardOf", { segment: item?.key ?? "" })} />
+              </a>
             </div>
-          </div>
-          <div className="inspector-body">
-            <Status review={review} />
-            {item?.asked && (
-              <div className="block asked-before">
-                <span className="label">{t("review.askedBefore")}</span>
-                <ol className="shots">
-                  {item.asked.map((note, n) => (
-                    <li key={n}>
-                      {note.time !== undefined && <span className="at">{clock(note.time)} </span>}
+          )}
+          {shots && (
+            <div className="ds-isec">
+              <h4>{t("review.shotList")}</h4>
+              <ol className="shots">
+                {shots.map((shot) => (
+                  <li key={shot}>{shot}</li>
+                ))}
+              </ol>
+            </div>
+          )}
+          <div className="ds-isec">
+            <h4>{t("review.notes")}</h4>
+            {(draft?.notes ?? []).length === 0 && <span className="quiet small">{file && isVideo(file) ? t("review.noNotesVideo") : t("review.noNotes")}</span>}
+            <div className="notes">
+              {(draft?.notes ?? []).map((note, n) => {
+                const pinned = note.x !== undefined && note.fileId === file?.id;
+                if (pinned) pinNumber += 1;
+                return (
+                  <div key={n} className="note">
+                    <span className={`dot ${pinned ? "" : "plain"}`}>{pinned ? pinNumber : "·"}</span>
+                    <div>
+                      {note.time !== undefined && <div className="at">{clock(note.time)}</div>}
                       {note.text}
                       {note.image !== undefined && (
                         <a className="note-picture" href={`/api/files/${note.image}`} target="_blank" rel="noreferrer">
                           <img src={`/api/files/${note.image}`} alt={t("review.picture")} />
                         </a>
                       )}
-                    </li>
-                  ))}
-                </ol>
-              </div>
-            )}
-            {shots && (
-              <div className="block">
-                <span className="label">{t("review.shotList")}</span>
-                <ol className="shots">
-                  {shots.map((shot) => (
-                    <li key={shot}>{shot}</li>
-                  ))}
-                </ol>
-              </div>
-            )}
-            <div className="block">
-              <span className="label">{t("review.notes")}</span>
-              {(draft?.notes ?? []).length === 0 && (
-                <span className="quiet small">
-                  {file && isVideo(file) ? t("review.noNotesVideo") : t("review.noNotes")}
-                </span>
-              )}
-              <div className="notes">
-                {(draft?.notes ?? []).map((note, n) => {
-                  const pinned = note.x !== undefined && note.fileId === file?.id;
-                  if (pinned) pinNumber += 1;
-                  return (
-                    <div key={n} className="note">
-                      <span className={`dot ${pinned ? "" : "plain"}`}>{pinned ? pinNumber : "·"}</span>
-                      <div>
-                        {note.time !== undefined && <div className="at">{clock(note.time)}</div>}
-                        {note.text}
-                        {note.image !== undefined && (
-                          <a className="note-picture" href={`/api/files/${note.image}`} target="_blank" rel="noreferrer">
-                            <img src={`/api/files/${note.image}`} alt={t("review.picture")} />
-                          </a>
-                        )}
-                      </div>
-                      {open && (
-                        <button className="remove" aria-label={t("review.removeNote")} onClick={() => item && update(item.key, (value) => ({ ...value, notes: value.notes.filter((_, k) => k !== n) }))}>
-                          <X size={14} />
-                        </button>
-                      )}
                     </div>
-                  );
-                })}
-              </div>
-              {open && (
-                <>
-                  {file && isVideo(file) && (
-                    <button className="link start" onClick={noteAtTime}>
-                      {t("review.noteAt", { time: clock(pending?.time ?? playhead) })}
+                    {open && (
+                      <button className="remove" aria-label={t("review.removeNote")} onClick={() => item && update(item.key, (value) => ({ ...value, notes: value.notes.filter((_, k) => k !== n) }))}>
+                        <Icon name="x" />
+                      </button>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+            {open && (
+              <>
+                {file && isVideo(file) && (
+                  <button className="link start" onClick={noteAtTime}>
+                    {t("review.noteAt", { time: clock(pending?.time ?? playhead) })}
+                  </button>
+                )}
+                <textarea
+                  ref={noteInput}
+                  className="ds-note-input"
+                  aria-label={t("review.noteLabel")}
+                  value={noteText}
+                  placeholder={pending?.x !== undefined ? t("review.noteHere") : t("review.notePlaceholder")}
+                  onChange={(event) => setNoteText(event.target.value)}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter" && !event.shiftKey && !event.metaKey && !event.ctrlKey) {
+                      event.preventDefault();
+                      addNote();
+                    }
+                    if (event.key === "Escape") {
+                      setPending(undefined);
+                      (event.target as HTMLTextAreaElement).blur();
+                    }
+                  }}
+                />
+                <div className="note-tools">
+                  {picture ? (
+                    <span className="note-picture pending">
+                      <img src={picture.url} alt={picture.name} />
+                      <button className="link small" onClick={() => setPicture(undefined)}>
+                        {t("review.removePicture")}
+                      </button>
+                    </span>
+                  ) : (
+                    <button className="link small" disabled={upload.busy} onClick={() => picker.current?.click()}>
+                      {upload.busy ? t("review.addingPicture") : t("review.addPicture")}
                     </button>
                   )}
-                  <textarea
-                    ref={noteInput}
-                    className="line-area"
-                    value={noteText}
-                    placeholder={pending?.x !== undefined ? t("review.noteHere") : t("review.notePlaceholder")}
-                    onChange={(event) => setNoteText(event.target.value)}
-                    onKeyDown={(event) => {
-                      if (event.key === "Enter" && !event.shiftKey && !event.metaKey && !event.ctrlKey) {
-                        event.preventDefault();
-                        addNote();
-                      }
-                      if (event.key === "Escape") {
-                        setPending(undefined);
-                        (event.target as HTMLTextAreaElement).blur();
-                      }
+                  {(noteText.trim() || picture) && (
+                    <button className="link small" onClick={addNote}>
+                      {t("review.addNote")}
+                    </button>
+                  )}
+                  <input
+                    ref={picker}
+                    type="file"
+                    accept="image/png,image/jpeg,image/webp"
+                    hidden
+                    onChange={(event) => {
+                      const chosen = event.target.files?.[0];
+                      event.target.value = "";
+                      if (chosen) void upload.run(chosen);
                     }}
                   />
-                  <div className="note-tools">
-                    {picture ? (
-                      <span className="note-picture pending">
-                        <img src={picture.url} alt={picture.name} />
-                        <button className="link small" onClick={() => setPicture(undefined)}>
-                          {t("review.removePicture")}
-                        </button>
-                      </span>
-                    ) : (
-                      <button className="link small" disabled={upload.busy} onClick={() => picker.current?.click()}>
-                        {upload.busy ? t("review.addingPicture") : t("review.addPicture")}
-                      </button>
-                    )}
-                    {(noteText.trim() || picture) && (
-                      <button className="link small" onClick={addNote}>
-                        {t("review.addNote")}
-                      </button>
-                    )}
-                    <input
-                      ref={picker}
-                      type="file"
-                      accept="image/png,image/jpeg,image/webp"
-                      hidden
-                      onChange={(event) => {
-                        const chosen = event.target.files?.[0];
-                        event.target.value = "";
-                        if (chosen) void upload.run(chosen);
-                      }}
-                    />
-                  </div>
-                  {upload.error !== undefined && <span className="error small">{errorText(upload.error, t)}</span>}
-                </>
-              )}
-            </div>
-            <Returned files={review.otherFiles} />
+                </div>
+                {upload.error !== undefined && <span className="error small">{errorText(upload.error, t)}</span>}
+              </>
+            )}
           </div>
-        </aside>
-      </div>
+          {takes && (
+            <div className="ds-isec">
+              <h4>{t("review.whoDecides")}</h4>
+              <p className="quiet small">{t("review.whoDecidesTakes")}</p>
+            </div>
+          )}
+          <Returned files={review.otherFiles} />
+        </div>
+        <div className="ds-verdict">
+          <div className="vrow">
+            <button type="button" className="vbtn is-accept" aria-pressed={draft?.verdict === "approve"} disabled={!open || mustWatch} aria-describedby={mustWatch ? "must-watch" : undefined} onClick={accept}>
+              <Icon name="check" />
+              {t("review.accept")} <kbd>A</kbd>
+            </button>
+            <button type="button" className="vbtn is-back" aria-pressed={draft?.verdict === "revise"} disabled={!open} onClick={sendBack}>
+              <Icon name="arrow-counter-clockwise" />
+              {t("review.sendBack")} <kbd>B</kbd>
+            </button>
+            <button type="button" className="vbtn is-note" disabled={!open} onClick={() => noteInput.current?.focus()}>
+              <Icon name="note-pencil" />
+              {t("review.note")} <kbd>N</kbd>
+            </button>
+          </div>
+          {mustWatch && (
+            <span id="must-watch" className="hint">
+              <Icon name="clock" />
+              {t("review.watchFirst", { n: Math.floor(seen * 100) })}
+            </span>
+          )}
+          {draft?.verdict === "revise" && !draft.notes.length && <span className="hint">{t("review.reasonFirst")}</span>}
+          <span className="hint keys">{t("review.keys")}</span>
+        </div>
+      </aside>
 
       {confirming ? (
-        <div className="room-foot confirming">
+        <div className="ds-sendbar is-confirming">
           <div className="summary">
-            <strong>{t("review.confirm")}</strong> {t("review.tally", { a: approved, r: revise, left })}
+            <strong>{t("review.confirm")}</strong> {t("review.tally", { a: approved, r: revise, left: items.length - count })}
             {revisions.length > 0 && (
               <div className="detail">
                 {revisions.map((i) => `${labelOf(i)}: ${(drafts[i.key]?.notes ?? []).map((note) => [note.text, note.image !== undefined ? `[${t("review.picture")}]` : ""].filter(Boolean).join(" ")).join("; ") || "—"}`).join(" · ")}
               </div>
             )}
           </div>
-          <button className="link" onClick={() => setConfirming(false)}>
+          <button className="ds-btn is-ghost" onClick={() => setConfirming(false)}>
             {t("review.keep")}
           </button>
-          <button className="btn ink" disabled={busy} onClick={send}>
+          <button className="ds-btn is-primary" disabled={busy} onClick={send}>
             {t("review.sendNow")} <span className="key">⌘↵</span>
           </button>
         </div>
       ) : (
-        <div className="room-foot">
-          <input className="line-input words" disabled={!open} value={words} placeholder={t("review.wordsHint")} aria-label={t("review.words")} onChange={(event) => setWords(event.target.value)} />
+        <div className="ds-sendbar">
+          <span className="pips" aria-hidden="true">
+            {items.map((i) => (
+              <i key={i.key} className={drafts[i.key]?.verdict === "approve" ? "a" : decided(i) ? "b" : ""} />
+            ))}
+          </span>
+          <span className="num">{t("review.decided", { n: count, m: items.length })}</span>
+          <input className="ds-words" disabled={!open} value={words} placeholder={t("review.wordsHint")} aria-label={t("review.words")} onChange={(event) => setWords(event.target.value)} />
           {error !== undefined && <span className="error">{errorText(error, t)}</span>}
-          <button className="btn ink" disabled={!open || !complete || busy} onClick={() => setConfirming(true)} title={complete ? undefined : t("review.needVerdicts")}>
+          <Button variant="primary" disabled={!open || !complete || busy} disabledReason={open && !complete ? t("review.needVerdicts") : undefined} onClick={() => setConfirming(true)}>
             {t("review.send")} <span className="key">⌘↵</span>
-          </button>
+          </Button>
         </div>
       )}
     </div>

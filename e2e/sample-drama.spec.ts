@@ -35,9 +35,9 @@ test("a maker starts the sample drama, answers the agent and reviews the leads",
   await expect(looks).toBeVisible({ timeout: 30_000 });
   expect(await newProblems(page)).toEqual([]);
   await looks.click();
-  await expect(page.getByRole("heading", { level: 1, name: /Leads' looks/ })).toBeVisible();
+  await expect(page.getByRole("navigation", { name: "To decide" }).getByRole("heading", { name: /Leads' looks/ })).toBeVisible();
   expect(await newProblems(page)).toEqual([]);
-  await page.getByRole("button", { name: "Approve all" }).click();
+  await page.getByRole("button", { name: "Accept all" }).click();
   await page.getByRole("button", { name: /^Send review/ }).click();
   const looksReview = page.url();
   await page.getByRole("button", { name: /^Send\b/ }).last().click();
