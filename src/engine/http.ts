@@ -459,9 +459,12 @@ export function app(): Hono {
   api.all("/api/*", (c) => c.json(failure("not-found", "Not found."), 404));
 
   // The built UI, outside development (Vite serves it in development).
+  // Vite names what it builds under assets/ by its content's hash, so those never change and are kept;
+  // the page and any file not named so are asked about again each time, so a new build is seen at once.
+  const cacheFor = (path: string, c: Context) => c.header("Cache-Control", /[\\/]assets[\\/]/.test(path) ? "public, max-age=31536000, immutable" : "no-cache");
   if (existsSync(UI_DIR)) {
-    api.use("/*", serveStatic({ root: UI_DIR }));
-    api.get("*", serveStatic({ path: `${UI_DIR}/index.html` }));
+    api.use("/*", serveStatic({ root: UI_DIR, onFound: cacheFor }));
+    api.get("*", serveStatic({ path: `${UI_DIR}/index.html`, onFound: cacheFor }));
   }
 
   return api;
