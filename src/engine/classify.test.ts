@@ -29,6 +29,14 @@ describe("classify", () => {
     expect(classify("drama/lineage.json").kind).not.toBe("lineage");
   });
 
+  it("knows drama-cli's statement of a version's job, and what went to the provider", () => {
+    expect(classify("drama/assets/characters/lin/v1/spec.json")).toEqual({ kind: "spec", version: "v1" });
+    expect(classify("drama/episodes/EP001/segments/seg01/t02/spec.json")).toEqual({ kind: "spec", version: "t02" });
+    expect(classify("drama/episodes/EP001/multi_panel_storyboard/seg01/line-art/v3/request.json")).toEqual({ kind: "request", version: "v3" });
+    expect(classify("drama/understanding/abc/request.json").kind).toBe("observation");
+    expect(classify("drama/spec.json").kind).not.toBe("spec");
+  });
+
   it("reads the refusals a stop asks about", () => {
     expect(classify("handoff/refusals.jsonl")).toEqual({ kind: "refusal" });
     expect(classify("work/handoff/refusals.jsonl")).toEqual({ kind: "refusal" });
@@ -97,7 +105,7 @@ describe("classify", () => {
 
   it("calls anything else other", () => {
     expect(classify("notes/today.txt")).toEqual({ kind: "other" });
-    expect(classify("episodes/EP001/segments/seg01/t01/spec.json")).toEqual({ kind: "other" });
+    expect(classify("episodes/EP001/segments/seg01/t01/job.json")).toEqual({ kind: "other" });
   });
 });
 

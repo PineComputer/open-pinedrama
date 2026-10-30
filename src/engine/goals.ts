@@ -111,6 +111,7 @@ export function setupGoal(drama: DramaBrief, attachments: string[], inputs: { sc
     NO_CAP,
     RETURN_STATUS,
     RETURN_LINEAGE,
+    RETURN_SPECS,
     RETURN_REFUSALS,
     "Read the screenplay and ask me for anything that is missing.",
     "Write the bible, then make each lead's face and base look. Stop and ask me to approve the leads' looks, returning their sheets with your question.",
@@ -155,6 +156,17 @@ export const RETURN_LINEAGE =
   "Each time you stop for me or finish, also save drama-cli's lineage of the project (`mkdir -p handoff && drama-cli export comfyui --config drama/drama-cli.cfg.yaml --out handoff/lineage.json`) and return handoff/lineage.json with your other files. It is for the studio; don't ask me about it.";
 
 /**
+ * What drama-cli asked of the model for each version it made, in the version's own folder:
+ * spec.json, the job it stated (a picture's provider, model, prompt and references; a take's
+ * content and settings; short_drama drama_cli/stages.py, `write_json(out / "spec.json", spec)`),
+ * and request.json, what went to the provider (doc/drama-cli/cli.md, each stage's outputs). The
+ * studio's canvas shows them beside each item; named here, since the studio never guesses a
+ * folder's other files.
+ */
+export const RETURN_SPECS =
+  "With every picture, take or cut you return, also return the spec.json and request.json in that version's folder, where drama-cli wrote them. They are for the studio; don't ask me about them.";
+
+/**
  * The refusals a stop asks the maker about, as drama-cli printed them: each is one JSON line
  * with its code, message, param and action (short_drama doc/drama-cli/design.md, section 3.1,
  * v0.7.4). The status report has none of them, and a stop's question words them in the agent's
@@ -176,6 +188,7 @@ function handedOver(drama: DramaBrief, code: string, screenplay: string | undefi
     NO_CAP,
     RETURN_STATUS,
     RETURN_LINEAGE,
+    RETURN_SPECS,
     RETURN_REFUSALS,
     "Its asset-library registrations were made in another session and can't be used from this one: before you compile video prompts, set them aside and register every reference the episode uses again from its local file in this session.",
     `Work only on ${code}, inside drama/episodes/${code}. Use the accepted references as they are: never make a new version of the bible, a look, a location, a key prop or another episode's breakdown. Stop and ask me only when a drama-cli command refuses because a reference it reads is not accepted, quoting its refusal; until then, go on with every step that doesn't read it.`,
@@ -259,7 +272,7 @@ export function rehearsed(goal: string): string {
     "This is a rehearsal of the studio's flow. Pine's drama skill (drama-workflow) and drama-cli are not on this Computer, and that is expected.",
     `Wherever the goal below says to use them, stand in with the attached kit, \`${kit}\` (\`${kit} --help\` lists its commands). It writes placeholder looks, locations, props, blocking references, storyboards, takes and cuts where the skill would, and prints each path it wrote.`,
     'Write the bible and the breakdowns yourself, short, in Markdown: drama/bible/v1/bible.md, and drama/episodes/EP001/breakdown/v1/breakdown.md for EP001 and so on, two or three segments each, with a "## seg01" heading for each segment followed by its shots as a list, one of them a line of dialogue.',
-    `For an episode, draw each segment's blocking and storyboards, then shoot one take per segment (give a segment with dialogue its line with --line), then build the cut, stopping for me where the goal says. Skip \`drama-cli init\` and \`drama-cli status\`, and return no handoff/status.json, handoff/lineage.json or handoff/refusals.jsonl; check a restored project with \`${kit} status\`.`,
+    `For an episode, draw each segment's blocking and storyboards, then shoot one take per segment (give a segment with dialogue its line with --line), then build the cut, stopping for me where the goal says. Skip \`drama-cli init\` and \`drama-cli status\`, and return no handoff/status.json, handoff/lineage.json or handoff/refusals.jsonl, and no spec.json or request.json; check a restored project with \`${kit} status\`.`,
     "When I ask for changes, make a new version only of what I named. Everything else exactly as the goal says: the questions, the stops, packing and returning files, the list of episodes.",
     "",
     goal,
