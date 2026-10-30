@@ -252,7 +252,7 @@ export function Slate() {
         <div className="first">
           <p className="empty-note">{t(noSkill ? "slate.noSkill" : "slate.empty")}</p>
           {(app.data?.mode === "replay" || noSkill) && (
-            <button className="btn" disabled={sample.busy} onClick={() => void sample.run()}>
+            <button className={buttonVariants({ variant: "outline" })} disabled={sample.busy} onClick={() => void sample.run()}>
               {t(noSkill ? "slate.rehearseSample" : "slate.sample")}
             </button>
           )}
@@ -264,7 +264,7 @@ export function Slate() {
           <span>{t("slate.noSkill")}</span>
           <span className="notice-actions">
             {sample.error !== undefined && <span className="error small">{errorText(sample.error, t)}</span>}
-            <button className="btn small" disabled={sample.busy} onClick={() => void sample.run()}>
+            <button className={buttonVariants({ variant: "outline", size: "sm" })} disabled={sample.busy} onClick={() => void sample.run()}>
               {t("slate.rehearseSample")}
             </button>
           </span>
