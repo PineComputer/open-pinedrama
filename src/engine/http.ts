@@ -19,7 +19,7 @@ import { FIXTURES, UI_DIR } from "./config.ts";
 import { appInfo, connectPine, disconnect, useReplay } from "./connection.ts";
 import { retryStarts } from "./computers.ts";
 import { DEFAULT_ENDPOINT } from "./settings.ts";
-import { all } from "./db.ts";
+import { all, run } from "./db.ts";
 import { chat, chooseInputs, createDrama, desktop, finishEpisode, rehearse, resumeEpisode, stopDrama, updateDrama, resumeDrama, stopEpisode } from "./dramas.ts";
 import { StudioError } from "./errors.ts";
 import { STORIES } from "./replay-fleet.ts";
@@ -185,7 +185,7 @@ export function app(): Hono {
         format: "9:16, 480p",
         parallel: 3,
         perComputer: 1,
-        notes: "",
+        notes: `${zh ? "类型" : "Genres"}: ${story[zh ? "zh" : "en"].genres.join(zh ? "、" : ", ")}`,
         length: "60",
         files: [{ name, type: "text/markdown", bytes: readFileSync(path.join(FIXTURES, name)) }],
         rehearsal: mode === "pine",
@@ -193,6 +193,10 @@ export function app(): Hono {
         screenplayLanguage: zh ? "zh" : "en",
         screenplay: 0,
       }, mode);
+      // A sample started as long ago as its data says (db.ts, nowFor), so the recent work spreads the samples out.
+      const backdate = story.en.ago * 60_000;
+      const started = new Date(Date.now() - backdate).toISOString();
+      run("update dramas set backdate_ms = ?, created_at = ?, updated_at = ? where id = ?", backdate, started, started, id);
       return c.json({ id });
     } catch (error) {
       return fail(c, error);

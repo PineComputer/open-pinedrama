@@ -444,10 +444,16 @@ describe("a drama in replay", () => {
     const { id } = await call<{ id: string }>("POST", "/api/dramas/sample", { language: "en", sample: "bride-on-bail" });
     const drama = await call<DramaView>("GET", `/api/dramas/${id}`);
     expect(drama.title).toBe("Bride on Bail");
+    // Started as long ago as its data says (50 minutes): its start, messages and questions are stamped then.
+    const { get: row } = await import("./db.ts");
+    const ago = (at: string) => (Date.now() - Date.parse(at)) / 60_000;
+    expect(ago(row<{ created_at: string }>("select created_at from dramas where id = ?", id)!.created_at)).toBeGreaterThan(49);
     await acceptRewrite(id);
     const age = await until("the setup question", openReview(id, (item) => item.kind === "question"));
     await call("POST", `/api/reviews/${age.id}/decision`, { items: [], words: "He is 32." });
     const stop = await until("the red line", openReview(id, (item) => item.kind === "question" && item.id !== age.id));
+    expect(ago(row<{ created_at: string }>("select created_at from reviews where id = ?", stop.id)!.created_at)).toBeGreaterThan(49);
+    expect(ago(row<{ at: string }>("select max(m.at) at from messages m join sessions s on s.id = m.session_id where s.drama_id = ?", id)!.at)).toBeGreaterThan(49);
     const view = await call<ReviewView>("GET", `/api/reviews/${stop.id}`);
     expect(view.refusals.map((refusal) => refusal.code)).toEqual(["RedLine"]);
     expect(view.question).toContain("red line");

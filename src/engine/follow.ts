@@ -4,7 +4,7 @@
 import type { FileKind } from "../shared/types.ts";
 import { ENDED, type TurnFile, type TurnInfo } from "./fleet.ts";
 import { computerRef, fleet, markStopped, sessionRef } from "./computers.ts";
-import { all, get, now, run, transaction } from "./db.ts";
+import { all, get, now, nowFor, run, transaction } from "./db.ts";
 import { VERDICT_KINDS, save, seenBefore } from "./library.ts";
 import { publish } from "./live.ts";
 import { classify, namedPaths, typeOf } from "./classify.ts";
@@ -267,10 +267,10 @@ async function eventsLoop(sessionId: string, signal: AbortSignal): Promise<void>
             event.turnId,
             event.text,
             event.ref ?? null,
-            now(),
+            nowFor(session.drama_id),
           );
         } else {
-          run("insert into messages (session_id, turn_id, kind, text, at) values (?, ?, ?, ?, ?)", sessionId, event.turnId, event.kind, event.text, now());
+          run("insert into messages (session_id, turn_id, kind, text, at) values (?, ?, ?, ?, ?)", sessionId, event.turnId, event.kind, event.text, nowFor(session.drama_id));
         }
         if (event.kind === "progress") run("update sessions set activity = ? where id = ?", event.text, sessionId);
         run("update sessions set cursor = ?, task_id = ? where id = ?", event.id, event.taskId, sessionId);

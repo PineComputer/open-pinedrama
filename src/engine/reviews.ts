@@ -7,7 +7,7 @@ import { classify } from "./classify.ts";
 import { computerRef, fleet, sessionRef } from "./computers.ts";
 import { answerText } from "./decisions.ts";
 import { StudioError } from "./errors.ts";
-import { all, get, newId, now, run, transaction } from "./db.ts";
+import { all, get, newId, now, nowFor, run, transaction } from "./db.ts";
 import { followTurn, recordTurn } from "./follow.ts";
 import { decisionGoal } from "./goals.ts";
 import { type FileRow, filesOfStop, toItem, versionNumber } from "./library.ts";
@@ -96,7 +96,7 @@ export function questionAsked(session: SessionRow, turnId: string, question: str
     session.id,
     turnId,
     question,
-    now(),
+    nowFor(session.drama_id),
   );
   if (session.episode_id) run("update episodes set state = 'waiting', updated_at = ? where id = ? and state = 'working'", now(), session.episode_id);
   publish(`drama:${session.drama_id}`, "inbox");

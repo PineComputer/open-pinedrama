@@ -233,6 +233,7 @@ export function db(): DatabaseSync {
     add("computers", "stop_by", "text");
     add("computers", "project", "text not null default ''");
     add("dramas", "rehearsal", "integer not null default 0");
+    add("dramas", "backdate_ms", "integer not null default 0");
     add("turns", "media", "real");
     add("dramas", "length", "text not null default ''");
     add("turns", "returned", "text not null default '[]'");
@@ -280,6 +281,17 @@ export function transaction<T>(work: () => T): T {
 
 export function now(): string {
   return new Date().toISOString();
+}
+
+/**
+ * The time a drama's own record is stamped with: now, or for a replayed sample drama, now as long
+ * ago as it was started (replay-fleet.ts, DramaData.ago), so the studio's recent work spreads its
+ * samples over hours and days. Only the times the studio shows are stamped so: a drama's start,
+ * its messages and its questions.
+ */
+export function nowFor(dramaId: string): string {
+  const backdate = get<{ backdate_ms: number }>("select backdate_ms from dramas where id = ?", dramaId)?.backdate_ms ?? 0;
+  return new Date(Date.now() - backdate).toISOString();
 }
 
 export function newId(prefix: string): string {

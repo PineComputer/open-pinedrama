@@ -145,6 +145,12 @@ type Both<T> = Record<Lang, T>;
  */
 interface DramaData {
   title: Both<string>;
+  /** The bible's logline. */
+  logline: Both<string>;
+  /** Its genres, as the brief's notes give them. */
+  genres: Both<string[]>;
+  /** How many minutes ago a sample drama was started, so the studio's recent work shows them over hours and days. */
+  ago: number;
   cast: { id: string; name: Both<string>; short: Both<string>; looks?: string[] }[];
   places: { id: string; name: Both<string>; times?: string[] }[];
   props: { id: string; name: Both<string> }[];
@@ -157,6 +163,9 @@ interface DramaData {
 /** A sample drama in one language. */
 interface Story {
   title: string;
+  logline: string;
+  genres: string[];
+  ago: number;
   cast: { id: string; name: string; short: string; looks: string[] }[];
   places: { id: string; name: string; times: string[] }[];
   props: { id: string; name: string }[];
@@ -166,6 +175,9 @@ interface Story {
 
 const inLanguage = (d: DramaData, lang: Lang): Story => ({
   title: d.title[lang],
+  logline: d.logline[lang],
+  genres: d.genres[lang],
+  ago: d.ago,
   cast: d.cast.map((c) => ({ id: c.id, name: c.name[lang], short: c.short[lang], looks: c.looks ?? [] })),
   places: d.places.map((p) => ({ id: p.id, name: p.name[lang], times: p.times ?? [] })),
   props: d.props.map((p) => ({ id: p.id, name: p.name[lang] })),
@@ -249,10 +261,12 @@ const words = (s: Story) => {
     readingMessage: ["Reading your message"],
     noted: (goal: string) => `Noted: ${goal.slice(0, 200)}`,
     title: s.title,
+    logline: s.logline,
     places: Object.fromEntries(s.places.map((place) => [place.id, place.name])),
     props: Object.fromEntries(s.props.map((item) => [item.id, item.name])),
     bible: [
       `# ${s.title} — bible (placeholder)`,
+      `\n${s.logline}`,
       "\n## Characters",
       ...s.cast.map((c, i) => `- **${c.name}**${i < 2 ? ", a lead" : ""}. Looks: S0 everyday${c.looks.map((look) => `, ${look}`).join("")}.`),
       "\n## Locations",
@@ -300,10 +314,12 @@ const words = (s: Story) => {
     readingMessage: ["阅读你的消息"],
     noted: (goal: string) => `收到：${goal.slice(0, 200)}`,
     title: s.title,
+    logline: s.logline,
     places: Object.fromEntries(s.places.map((place) => [place.id, place.name])),
     props: Object.fromEntries(s.props.map((item) => [item.id, item.name])),
     bible: [
       `# ${s.title} · 设定集（示例）`,
+      `\n${s.logline}`,
       "\n## 角色",
       ...s.cast.map((c, i) => `- **${c.name}**${i < 2 ? "，主角" : ""}。造型：S0 日常${c.looks.map((look) => `，${look}`).join("")}。`),
       "\n## 场景",
@@ -341,6 +357,7 @@ const bibleJson = (say: Say): Out => ({
   bytes: text(
     JSON.stringify({
       title: say.title,
+      logline: say.logline,
       characters: say.cast.map((c) => ({ id: c.id, name: c.name, aliases: [] })),
       locations: Object.entries(say.places).map(([id, name]) => ({ id, name })),
       props: Object.entries(say.props).map(([id, name]) => ({ id, name })),

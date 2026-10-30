@@ -4,6 +4,21 @@
    "en": "The Stepmother",
    "zh": "后妈来了"
   },
+  "logline": {
+   "en": "A young stepmother marries into a factory family that wants nothing to do with her, and wins over the eldest son one hard truth at a time.",
+   "zh": "年轻后妈嫁进工厂家庭，全家都不认她，她靠一件件实事赢下了大儿子的心。"
+  },
+  "genres": {
+   "en": [
+    "Family",
+    "Period"
+   ],
+   "zh": [
+    "家庭",
+    "年代"
+   ]
+  },
+  "ago": 0,
   "cast": [
    {
     "id": "lin",
@@ -454,6 +469,21 @@
    "en": "Night Class",
    "zh": "夜校"
   },
+  "logline": {
+   "en": "A night-school teacher and her most stubborn student push each other toward the exam that could change both their lives.",
+   "zh": "夜校老师和最倔的学生互不服气，一起冲向能改变两人命运的那场考试。"
+  },
+  "genres": {
+   "en": [
+    "Romance",
+    "Coming of age"
+   ],
+   "zh": [
+    "爱情",
+    "成长"
+   ]
+  },
+  "ago": 4320,
   "cast": [
    {
     "id": "lin",
@@ -904,6 +934,21 @@
    "en": "Corner Office",
    "zh": "顶层办公室"
   },
+  "logline": {
+   "en": "A new executive fights her way to the top floor, and the rival who doubts her most turns out to be her only ally.",
+   "zh": "新上任的女高管一路杀上顶楼，那个最看不起她的对手却成了唯一的盟友。"
+  },
+  "genres": {
+   "en": [
+    "Office",
+    "Romance"
+   ],
+   "zh": [
+    "职场",
+    "爱情"
+   ]
+  },
+  "ago": 1560,
   "cast": [
    {
     "id": "lin",
@@ -1354,6 +1399,21 @@
    "en": "Bride on Bail",
    "zh": "保释新娘"
   },
+  "logline": {
+   "en": "A bride bails her fiancé out of a holding cell on the morning of the wedding, and has until the vows to learn the truth.",
+   "zh": "婚礼当天一早，新娘把未婚夫从拘留室保释出来，誓言之前她必须查清真相。"
+  },
+  "genres": {
+   "en": [
+    "Romance",
+    "Suspense"
+   ],
+   "zh": [
+    "爱情",
+    "悬疑"
+   ]
+  },
+  "ago": 50,
   "cast": [
    {
     "id": "lin",
@@ -1808,6 +1868,23 @@
    "en": "Paper Vows",
    "zh": "纸上婚约"
   },
+  "logline": {
+   "en": "To pay her mother's hospital bill, Nora marries a man fresh out of a holding cell, on paper only, until the terms start to slip.",
+   "zh": "为了付清母亲的医药费，诺拉和刚出拘留室的男人签下纸上婚约，可约定渐渐守不住了。"
+  },
+  "genres": {
+   "en": [
+    "Romance",
+    "Contract marriage",
+    "Revenge"
+   ],
+   "zh": [
+    "爱情",
+    "契约婚姻",
+    "复仇"
+   ]
+  },
+  "ago": 135,
   "cast": [
    {
     "id": "nora",
@@ -2631,6 +2708,23 @@
    "en": "Late Sunshine",
    "zh": "晚来的晴天"
   },
+  "logline": {
+   "en": "A CEO hires a broke young man to play her boyfriend in front of her family, and the act soon stops being one.",
+   "zh": "女总裁雇了个穷小子在家人面前扮男友，戏演着演着就成了真。"
+  },
+  "genres": {
+   "en": [
+    "Romance",
+    "CEO",
+    "Office"
+   ],
+   "zh": [
+    "爱情",
+    "霸总",
+    "职场"
+   ]
+  },
+  "ago": 380,
   "cast": [
    {
     "id": "qiao",
