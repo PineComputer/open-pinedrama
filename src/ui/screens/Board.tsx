@@ -299,7 +299,7 @@ function ChooseInputs({ drama }: { drama: DramaView }) {
 export function SetupPanel({ drama }: { drama: DramaView }) {
   const { t } = useT();
   const { setup } = drama;
-  const retry = useAction(() => api(`/api/dramas/${drama.id}/retry`, { method: "POST" }));
+  const retry = useAction(() => api(`/api/dramas/${drama.id}/resume`, { method: "POST" }));
   const rehearse = useAction(() => api(`/api/dramas/${drama.id}/rehearse`, { method: "POST" }));
   // Reading, answering, drawing the leads, approving them; then pre-production: preparing every
   // episode (breakdowns and shared references), and approving the shared references. A plain

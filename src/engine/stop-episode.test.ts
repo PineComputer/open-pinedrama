@@ -84,3 +84,33 @@ describe("takes still generating", () => {
     expect(project.takesInFlight(project.parseStatus(JSON.parse(readFileSync(new URL("../../fixtures/status/boards.json", import.meta.url), "utf8"))).episodes.EP001)).toBe(0);
   });
 });
+
+describe("resuming a drama the maker stopped", () => {
+  it("goes back to production and puts the episodes the stop left stopped back in line, to carry on from what was kept", async () => {
+    const at = new Date().toISOString();
+    db.run("update dramas set status = 'stopped', reason = 'by-maker' where id = 'd1'");
+    db.run("update episodes set state = 'stopped' where id in ('e1', 'e2')");
+    db.run("insert into episodes (id, drama_id, number, title, state, updated_at) values ('e5', 'd1', 5, 'Five', 'failed', ?)", at);
+    dramas.resumeDrama("d1");
+    expect(db.get<{ status: string; reason: string }>("select status, reason from dramas where id = 'd1'")).toEqual({ status: "production", reason: "" });
+    const rows = db.all<{ id: string; state: string; resume: number }>("select id, state, resume from episodes order by id");
+    expect(rows).toEqual([
+      { id: "e1", state: "queued", resume: 1 },
+      { id: "e2", state: "queued", resume: 1 },
+      { id: "e3", state: "queued", resume: 0 },
+      { id: "e4", state: "done", resume: 0 },
+      { id: "e5", state: "failed", resume: 0 },
+    ]);
+  });
+
+  it("starts the setup again for a drama stopped before it had episodes", () => {
+    db.run("delete from episodes");
+    db.run("update dramas set status = 'stopped', reason = 'by-maker' where id = 'd1'");
+    dramas.resumeDrama("d1");
+    expect(db.get<{ status: string }>("select status from dramas where id = 'd1'")?.status).toBe("setup");
+  });
+
+  it("refuses a drama that isn't stopped", () => {
+    expect(() => dramas.resumeDrama("d1")).toThrow(expect.objectContaining({ code: "drama-not-stopped" }));
+  });
+});

@@ -390,7 +390,7 @@ describe("a drama in replay", () => {
     expect([stopped.status, stopped.setup.reason]).toEqual(["stopped", "by-maker"]);
     expect(all("select id from computers where drama_id = ? and state != 'stopped'", id)).toEqual([]);
     expect(await openReview(id, () => true)()).toBeUndefined();
-    await call("POST", `/api/dramas/${id}/retry`);
+    await call("POST", `/api/dramas/${id}/resume`);
     await until("the setup question again", openReview(id, (item) => item.kind === "question"));
   }, 30_000);
 
