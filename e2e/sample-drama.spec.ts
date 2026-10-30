@@ -27,7 +27,7 @@ test("a maker starts the sample drama, answers the agent and reviews the leads",
   await expect(page).not.toHaveURL(rewriteQuestion);
 
   // Then a question, opened from the drama's review queue once the agent asks it: the screenplay leaves a lead's age open.
-  await page.getByRole("complementary").getByRole("link", { name: /^To review/ }).click();
+  await page.getByRole("navigation", { name: "Places" }).getByRole("button", { name: "To review" }).click();
   const age = page.getByRole("main").getByRole("link", { name: /Wei Zhen's age/ });
   await expect(age).toBeVisible({ timeout: 30_000 });
   await age.click();
@@ -41,7 +41,7 @@ test("a maker starts the sample drama, answers the agent and reviews the leads",
 
   // Then the leads' looks, approved together, opened from the drama's review queue: the bar's
   // count still includes the answered question until the agent's next turn begins.
-  await page.getByRole("complementary").getByRole("link", { name: /^To review/ }).click();
+  await page.getByRole("navigation", { name: "Places" }).getByRole("button", { name: "To review" }).click();
   // The drama's queue, in the work; the agent panel beside it lists the same decision.
   const looks = page.getByRole("main").getByRole("link", { name: /^Leads' looks/ });
   await expect(looks).toBeVisible({ timeout: 30_000 });
