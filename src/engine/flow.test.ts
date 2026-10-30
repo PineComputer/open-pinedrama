@@ -276,6 +276,15 @@ describe("a drama in replay", () => {
     expect(naming.length).toBeGreaterThan(1);
     expect(naming.filter((turn) => !packs.some((pack) => pack.turn_id === turn.id))).toEqual([]);
     expect(episodeArchive(episode.id).map((pack) => pack.turn_id)).toEqual([packs.at(-1)!.turn_id]);
+    // The status report keeps its name too: every stop that names it has it recorded, and the
+    // project stands where the last one says (EP001's cut accepted).
+    const naming_status = all<{ id: string }>("select t.id from turns t join sessions s on s.id = t.session_id where s.episode_id = ? and t.question like '%(handoff/status.json)%'", episode.id);
+    expect(naming_status.length).toBeGreaterThan(1);
+    const recorded = all<{ turn_id: string }>("select turn_id from statuses where report is not null");
+    expect(naming_status.filter((turn) => !recorded.some((row) => row.turn_id === turn.id))).toEqual([]);
+    const { projectView } = await import("./status.ts");
+    const [drama] = all<{ id: string }>("select id from dramas where title = 'Test drama, named files'");
+    expect(projectView(drama.id).state?.episodes.EP001.cut.accepted).toBe("v1");
   }, 30_000);
 
   // The Computer goes away while a turn's files are being saved: the parts saved before it went
