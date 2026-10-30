@@ -32,6 +32,8 @@ const RULES: [RegExp, (m: RegExpMatchArray) => Hints][] = [
   [new RegExp(String.raw`episodes/(EP\d+)/edit/${VER}/[^/]+${VIDEO}`, "i"), (m) => ({ kind: "cut", episode: m[1], version: m[2] })],
   // The plan drama-cli builds a cut from, written beside it (short_drama drama_cli/edit.py, `build`).
   [new RegExp(String.raw`episodes/(EP\d+)/edit/${VER}/cut\.json$`, "i"), (m) => ({ kind: "cut-plan", episode: m[1], version: m[2] })],
+  // The last frame drama-cli saves beside a take it asked the model for (short_drama drama_cli/video.py, return_last_frame): a still of the take's end.
+  [new RegExp(String.raw`episodes/(EP\d+)/segments/${SEG}/(t\d+)/last_frame${IMAGE}`, "i"), (m) => ({ kind: "last-frame", episode: m[1], segment: m[2], version: m[3] })],
   [new RegExp(String.raw`episodes/(EP\d+)/segments/${SEG}/(t\d+)/[^/]+${VIDEO}`, "i"), (m) => ({ kind: "take", episode: m[1], segment: m[2], version: m[3] })],
   [
     new RegExp(String.raw`episodes/(EP\d+)/multi_panel_storyboard/${SEG}/([^/]+)/${VER}/${OUTPUT}`, "i"),

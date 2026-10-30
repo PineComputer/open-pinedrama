@@ -86,6 +86,8 @@ export type FileKind =
   | "frame"
   | "storyboard"
   | "take"
+  /** The still drama-cli saves of a take's last frame, beside the take. */
+  | "last-frame"
   | "cut"
   /** drama-cli's plan of a cut, beside it (edit/vN/cut.json): each clip's take, with its in and out. */
   | "cut-plan"
