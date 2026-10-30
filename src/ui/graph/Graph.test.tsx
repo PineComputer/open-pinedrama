@@ -39,9 +39,12 @@ function engine(name: string, sessions: ChatView[] = [chat("setup", "", "run"), 
 const card = async (name: RegExp) => within(await screen.findByRole("group", { name: "Graph" })).findByRole("button", { name });
 
 describe("the Graph", () => {
-  it("draws the episode's newest work in focus and its lineage as cards named as the bible names them, with their pictures, never a spec", async () => {
+  it("opens on the episode's storyboard, as the prototype does, and draws its lineage as cards named as the bible names them, with their pictures, never a spec", async () => {
     engine("shot");
     render(<Graph dramaId="d1" />);
+    expect(await screen.findByRole("complementary", { name: "EP001 seg01 storyboard (line-art)" })).toBeInTheDocument();
+    // The take's lineage holds the look and the plate.
+    await userEvent.click(await card(/^EP001 seg01 take/));
     expect(await screen.findByRole("complementary", { name: "EP001 seg01 take" })).toBeInTheDocument();
     const lin = await card(/^林 v1/);
     expect(lin.querySelector("img")).toHaveAttribute("src", "/api/files/8");
@@ -52,7 +55,7 @@ describe("the Graph", () => {
   it("heads the columns with the pipeline's names for their kinds", async () => {
     engine("shot");
     render(<Graph dramaId="d1" />);
-    await card(/^林 v1/);
+    await card(/^EP001 breakdown v1/);
     const headings = [...screen.getByRole("group", { name: "Graph" }).querySelectorAll(".gcol")].map((heading) => heading.textContent);
     expect(headings.some((text) => /storyboard/i.test(text ?? ""))).toBe(true);
     expect(headings.some((text) => /bible/i.test(text ?? ""))).toBe(true);

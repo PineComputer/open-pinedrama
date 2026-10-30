@@ -58,10 +58,10 @@ export function stageName(node: LineageNode, names: Names | null, t: T): string 
   }
 }
 
-/** The version to focus when none is named: the episode's newest work, else the bible, else the first. */
+/** The version to focus when none is named: the episode's storyboard, as the prototype opens on one (its lineage fits the screen), else its other work, else the bible, else the first. */
 function defaultFocus(lineage: Lineage, episode: string | undefined): string | undefined {
   const code = episode ?? lineage.nodes.flatMap((node) => (node.where.episode ? [node.where.episode] : [])).sort()[0];
-  for (const kind of ["cut", "take", "storyboard", "breakdown"] as const) {
+  for (const kind of ["storyboard", "take", "cut", "breakdown"] as const) {
     const found = lineage.nodes.find((node) => node.kind === kind && node.where.episode === code && node.version);
     if (found) return found.id;
   }
@@ -191,11 +191,17 @@ export function Graph({ dramaId }: { dramaId: string }) {
   const standing = (node: LineageNode) => standingOf(node, marked.has(node.id), t);
   const isStale = (id: string) => byId.get(id)?.fresh === false || marked.has(id);
   const fileOf = (node: LineageNode) => (node.shows ? files.data?.find((file) => file.path === `drama/${node.shows}`) : undefined);
-  // A take's poster: the picture of the storyboard it was shot from, until the video's first frame loads.
-  const posterOf = (node: LineageNode) => {
-    if (node.kind !== "take") return undefined;
-    const board = lineage.links.map((link) => link.to === node.id && byId.get(link.from)).find((from) => from && from.kind === "storyboard");
-    return board ? fileOf(board) : undefined;
+  // A video's poster until its first frame loads: a take's, the storyboard it was shot from; a cut's, its first take's.
+  const madeFrom = (node: LineageNode, kind: LineageNode["kind"]) =>
+    lineage.links.map((link) => link.to === node.id && byId.get(link.from)).filter((from): from is LineageNode => !!from && from.kind === kind).sort((a, b) => a.id.localeCompare(b.id))[0];
+  const posterOf = (node: LineageNode): FileItem | undefined => {
+    if (node.kind === "take") {
+      const board = madeFrom(node, "storyboard");
+      return board ? fileOf(board) : undefined;
+    }
+    if (node.kind !== "cut") return undefined;
+    const take = madeFrom(node, "take");
+    return take ? posterOf(take) : undefined;
   };
   const focus = (id: string) => navigate(`/d/${dramaId}/graph?item=${encodeURIComponent(id)}`, { replace: true });
   const selected = byId.get(center)!;
