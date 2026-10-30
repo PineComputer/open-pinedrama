@@ -20,7 +20,6 @@
 @import "./shell/shell.css" layer(components);
 @import "./screens/canvas.css" layer(components);
 @import "@xyflow/react/dist/style.css" layer(components);
-@import "./graph/reveric-entity-graph.css" layer(components);
 @import "./cut/cut.css" layer(components);
 
 /* Dark mode follows data-theme on <html> (theme/theme.ts), as Tailwind's docs set a data attribute. */

@@ -1,29 +1,18 @@
 // The Graph: where each version came from and what was made from it, read from drama-cli's own
-// lineage (docs/REDESIGN_PLAN.md, M7 and P8). Its look and interaction are Reveric's entity graph
-// (designs/desktop/EntityGraph.jsx, reused under the AGPLv3, docs/REUSED.md): a navigator to find
-// a version, a canvas around the version in focus with its links out to a chosen depth, pan and
-// zoom, a hover card, and an inspector. What it shows stays drama-cli's: the versions and links
-// of its export, whether a version is stale and why in its own words, and what was made from a
-// stale version, marked from its links. It is read only. The one action asks the agent to make
-// the stale versions again, through the steering every session takes (POST
-// /api/sessions/:id/chat): an episode's own versions in its session, a shared one in the setup's,
-// since an episode's session never makes a new version of a shared reference (goals.ts). No price
-// is shown: nothing prices a version.
-//
-// Changed by the studio (AGPLv3 section 7(c); docs/REUSED.md): the hover card, navigator, overview
-// and inspector follow Reveric's EntityGraph.jsx (https://github.com/looplj/reveric, commit
-// 1198c2e), rewritten in TypeScript for drama-cli's lineage; the canvas is React Flow and the
-// layout d3-force (focus.ts) in place of Reveric's hand-written ones; nodes are buttons that take
-// keyboard focus; the kind and depth menus are Radix menus; Reveric's relation detail card, its
-// invented strength and evidence, and its label toggle are left out.
-import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuLabel, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { Background, BackgroundVariant, BaseEdge, Controls, type Edge, type EdgeProps, Handle, MarkerType, type Node, type NodeProps, Panel, Position, ReactFlow } from "@xyflow/react";
-import { useVirtualizer } from "@tanstack/react-virtual";
-import { type CSSProperties, useEffect, useMemo, useRef, useState } from "react";
-import { madeFromStale, trace, type Lineage, type LineageKind, type LineageNode, type LineageView } from "../../shared/lineage.ts";
+// lineage (docs/REDESIGN_PLAN.md, M7 and P8), drawn as the pro prototype's Graph screen draws it
+// (studio-pro/screens.js, Graph; SPEC.md, LineageGraph and StaleBar): the version in focus and its
+// whole lineage as picture cards in the pipeline's columns, on React Flow, laid out by elkjs
+// (focus.ts); a click focuses a version; the inspector lists what it was made from and what was
+// made from it. What drama-cli calls stale is said in its words, and what was made from a stale
+// version is marked from its links. Read only. The one action asks the agent to make the stale
+// versions again, through the steering every session takes (POST /api/sessions/:id/chat): an
+// episode's own versions in its session, a shared one in the setup's, since an episode's session
+// never makes a new version of a shared reference (goals.ts). No price is shown.
+import { Background, BackgroundVariant, Controls, type Edge, Handle, type Node, type NodeProps, Position, ReactFlow, ViewportPortal } from "@xyflow/react";
+import { type CSSProperties, useEffect, useState } from "react";
+import { madeFromStale, trace, type Lineage, type LineageNode, type LineageView } from "../../shared/lineage.ts";
 import { nameOf, type Names } from "../../shared/names.ts";
+import { PIPELINE } from "../../shared/pipeline.ts";
 import type { ChatView, FileItem } from "../../shared/types.ts";
 import { Button } from "../components/Button.tsx";
 import { EmptyState } from "../components/EmptyState.tsx";
@@ -33,31 +22,11 @@ import { type TKey, useT } from "../i18n.ts";
 import { Icon, type IconName } from "../icons.tsx";
 import { errorText, useNames } from "../labels.ts";
 import { navigate, usePath } from "../router.tsx";
-import { focusGraph, type Point } from "./focus.ts";
+import { CARD, layered, lineageOf, type Point } from "./focus.ts";
 
 type T = ReturnType<typeof useT>["t"];
 
-/** The groups a version's kind falls in, each with its colour, as Reveric's entity types have theirs. */
-export type Group = "text" | "look" | "place" | "prop" | "board" | "take";
-export const GROUPS: Group[] = ["text", "look", "place", "prop", "board", "take"];
-const GROUP_OF: Record<LineageKind, Group> = {
-  screenplay: "text",
-  bible: "text",
-  breakdown: "text",
-  video_prompts: "text",
-  subtitles: "text",
-  look: "look",
-  plate: "place",
-  prop: "prop",
-  blocking: "board",
-  first_frame_reference: "board",
-  storyboard: "board",
-  take: "take",
-  cut: "take",
-};
-const KINDS_OF = (groups: Set<Group>) => new Set((Object.keys(GROUP_OF) as LineageKind[]).filter((kind) => groups.has(GROUP_OF[kind])));
-const colour = (node: LineageNode) => `var(--eg-${GROUP_OF[node.kind]})`;
-const ICONS: Record<LineageKind, IconName> = {
+const ICONS: Record<LineageNode["kind"], IconName> = {
   screenplay: "file-text",
   bible: "book-open",
   breakdown: "list-bullets",
@@ -72,9 +41,6 @@ const ICONS: Record<LineageKind, IconName> = {
   take: "video-camera",
   cut: "film-strip",
 };
-// Ring sizes: the focus larger, as Reveric's (76 and 58 there; smaller here, since our labels are longer).
-const RING_SIZE = 44;
-const FOCUS_SIZE = 64;
 
 /** A version's name for the maker: the bible's names for people, places and props, and the episode's code and segment for the rest. */
 export function stageName(node: LineageNode, names: Names | null, t: T): string {
@@ -96,9 +62,8 @@ export function stageName(node: LineageNode, names: Names | null, t: T): string 
 
 /** The version to focus when none is named: the episode's newest work, else the bible, else the first. */
 function defaultFocus(lineage: Lineage, episode: string | undefined): string | undefined {
-  const order: LineageKind[] = ["cut", "take", "storyboard", "breakdown"];
   const code = episode ?? lineage.nodes.flatMap((node) => (node.where.episode ? [node.where.episode] : [])).sort()[0];
-  for (const kind of order) {
+  for (const kind of ["cut", "take", "storyboard", "breakdown"] as const) {
     const found = lineage.nodes.find((node) => node.kind === kind && node.where.episode === code && node.version);
     if (found) return found.id;
   }
@@ -120,30 +85,48 @@ function standingOf(node: LineageNode, fromStale: boolean, t: T): Standing {
   return { status: "you", label: t("graph.notAccepted") };
 }
 
-/** A version's ring: its picture, a video's first frame over the poster given (a take's storyboard), or its kind's icon. */
-function Avatar({ node, file, poster, size }: { node: LineageNode; file?: FileItem; poster?: FileItem; size: number }) {
-  const picture = file?.type.startsWith("image/") ? (
-    <img src={file.url} alt="" />
-  ) : file?.type.startsWith("video/") ? (
-    <video src={`${file.url}#t=0.1`} poster={poster?.url} muted preload="metadata" aria-hidden="true" />
-  ) : poster ? (
-    <img src={poster.url} alt="" />
-  ) : null;
+/** A version's picture: its image, a video's first frame over the poster given (a take's storyboard), or its kind's icon. */
+function Picture({ node, file, poster }: { node: LineageNode; file?: FileItem; poster?: FileItem }) {
+  if (file?.type.startsWith("image/")) return <img src={file.url} alt="" />;
+  if (file?.type.startsWith("video/")) return <video src={`${file.url}#t=0.1`} poster={poster?.url} muted preload="metadata" aria-hidden="true" />;
+  if (poster) return <img src={poster.url} alt="" />;
+  return <Icon name={ICONS[node.kind]} />;
+}
+
+interface CardData extends Record<string, unknown> {
+  node: LineageNode;
+  name: string;
+  file?: FileItem;
+  poster?: FileItem;
+  standing: Standing;
+  relation: "sel" | "up" | "down";
+  stale: boolean;
+}
+
+/** A version on the plane: the prototype's card, its picture over its name, version and state, edged in its kind's tone. */
+function Card({ data }: NodeProps<Node<CardData>>) {
+  const { node, standing } = data;
   return (
-    <span className="eg-node__ring" style={{ width: size, height: size, borderColor: colour(node) }}>
-      {picture ?? <Icon name={ICONS[node.kind]} />}
-    </span>
+    <button
+      type="button"
+      // nopan: a press on a card focuses it, never starts a pan (React Flow, "nopan").
+      className={`gnode nopan is-${data.relation}${data.stale ? " is-stale" : ""}`}
+      style={{ width: CARD.width, height: CARD.height, "--tone": `var(${PIPELINE[node.kind].tone})` } as CSSProperties}
+      aria-current={data.relation === "sel" || undefined}
+    >
+      <Handle type="target" position={Position.Left} isConnectable={false} className="ghandle" />
+      <Handle type="source" position={Position.Right} isConnectable={false} className="ghandle" />
+      <span className="gpic">
+        <Picture node={node} file={data.file} poster={data.poster} />
+      </span>
+      <span className="gtxt">
+        <b>{data.name}</b> <span className="mono">{node.version}</span> <StatusChip status={standing.status} label={standing.label} />
+      </span>
+    </button>
   );
 }
 
-function KindBadge({ node, t }: { node: LineageNode; t: T }) {
-  return (
-    <span className="eg-badge" style={{ "--c": colour(node) } as CSSProperties}>
-      <span className="eg-badge__dot" />
-      {t(`graph.kind.${node.kind}` as TKey)}
-    </span>
-  );
-}
+const NODE_TYPES = { card: Card };
 
 export function Graph({ dramaId }: { dramaId: string }) {
   const { t } = useT();
@@ -153,12 +136,23 @@ export function Graph({ dramaId }: { dramaId: string }) {
   const names = useNames(dramaId);
   const { query } = usePath();
   const item = query.get("item") ?? undefined;
-  const [groups, setGroups] = useState<Set<Group>>(new Set(GROUPS));
-  // The depth the maker chose; until then two links out for a take or a cut (take, storyboard, look, bible) and one for the rest.
-  const [chosenDepth, setDepth] = useState<number>();
   const [sent, setSent] = useState(false);
+  const [places, setPlaces] = useState<{ key: string; at: Map<string, Point> }>();
   const lineage = view.data?.lineage;
   const nodes = lineage?.nodes ?? [];
+  const byId = new Map(nodes.map((node) => [node.id, node]));
+  const fallback = lineage ? defaultFocus(lineage, item && !byId.has(item) ? item : undefined) : undefined;
+  const center = item && byId.has(item) ? item : fallback;
+  const shown = lineage && center ? lineageOf(lineage, center) : { ids: [], links: [] };
+  const key = `${center}|${shown.ids.join(",")}`;
+  useEffect(() => {
+    let live = true;
+    void layered(shown.ids, shown.links, (id) => PIPELINE[byId.get(id)!.kind].column).then((at) => live && setPlaces({ key, at }));
+    return () => {
+      live = false;
+    };
+    // key stands for the versions and links shown.
+  }, [key]);
   const stale = nodes.filter((node) => node.fresh === false);
   // Each stale version goes to the session that may make it again: its episode's, or the setup's for a shared one.
   const targets = new Map<string, LineageNode[]>();
@@ -179,574 +173,180 @@ export function Graph({ dramaId }: { dramaId: string }) {
 
   if (view.error) return <p className="error">{errorText(view.error, t)}</p>;
   if (!view.data) return null;
-  if (!lineage || !nodes.length) return <EmptyState title={t("surface.graph")}>{t("graph.none")}</EmptyState>;
+  if (!lineage || !center) return <EmptyState title={t("surface.graph")}>{t("graph.none")}</EmptyState>;
 
-  const byId = new Map(nodes.map((node) => [node.id, node]));
-  const fallback = defaultFocus(lineage, item && !byId.has(item) ? item : undefined)!;
-  const center = item && byId.has(item) ? item : fallback;
   const marked = madeFromStale(lineage);
   const name = (node: LineageNode) => stageName(node, names, t);
+  const standing = (node: LineageNode) => standingOf(node, marked.has(node.id), t);
+  const isStale = (id: string) => byId.get(id)?.fresh === false || marked.has(id);
   const fileOf = (node: LineageNode) => (node.shows ? files.data?.find((file) => file.path === `drama/${node.shows}`) : undefined);
-  // A take's poster: the picture of the storyboard it was shot from, shown until the video's first frame loads, or instead of a take not yet made.
+  // A take's poster: the picture of the storyboard it was shot from, until the video's first frame loads.
   const posterOf = (node: LineageNode) => {
     if (node.kind !== "take") return undefined;
     const board = lineage.links.map((link) => link.to === node.id && byId.get(link.from)).find((from) => from && from.kind === "storyboard");
     return board ? fileOf(board) : undefined;
   };
   const focus = (id: string) => navigate(`/d/${dramaId}/graph?item=${encodeURIComponent(id)}`, { replace: true });
-  const node = byId.get(center)!;
-  const depth = chosenDepth ?? (node.kind === "take" || node.kind === "cut" ? 2 : 1);
-  const standing = (n: LineageNode) => standingOf(n, marked.has(n.id), t);
+  const selected = byId.get(center)!;
+  const { up, down } = trace(lineage, center);
+  const at = places?.key === key ? places.at : undefined;
+
+  const flowNodes: Node<CardData>[] = at
+    ? shown.ids.map((id) => {
+        const node = byId.get(id)!;
+        return {
+          id,
+          type: "card",
+          position: at.get(id)!,
+          // The card's size, which React Flow lays out before it measures the node (and all jsdom gives).
+          width: CARD.width,
+          height: CARD.height,
+          data: { node, name: name(node), file: fileOf(node), poster: posterOf(node), standing: standing(node), relation: id === center ? "sel" : up.has(id) ? "up" : "down", stale: isStale(id) },
+        };
+      })
+    : [];
+  const flowEdges: Edge[] = shown.links.map((link) => ({
+    id: `${link.from}>${link.to}`,
+    source: link.from,
+    target: link.to,
+    className: isStale(link.from) && isStale(link.to) ? "is-stale" : undefined,
+  }));
+  // The column headings: the kinds of each column elkjs laid out, by the pipeline's names for them.
+  const columns = at ? [...new Set([...at.values()].map((p) => p.x))].sort((a, b) => a - b).map((x) => ({ x, labels: [...new Set(shown.ids.filter((id) => at.get(id)!.x === x).map((id) => PIPELINE[byId.get(id)!.kind].label))] })) : [];
+  const top = at ? Math.min(...[...at.values()].map((p) => p.y)) : 0;
+
+  const list = (ids: Set<string>) =>
+    ids.size ? (
+      [...ids].map((id) => byId.get(id)!).map((node) => (
+        <button key={node.id} type="button" className="lrow" onClick={() => focus(node.id)}>
+          {name(node)}
+          <span className="mono subtle">{node.version}</span>
+        </button>
+      ))
+    ) : (
+      <span className="muted">{t("graph.nothing")}</span>
+    );
 
   return (
-    <div className="eg-view">
-      <Navigator lineage={lineage} center={center} onFocus={focus} name={name} marked={marked} t={t} />
-      <div className="eg-main">
-        <div className="eg-toolbar">
-          <div className="eg-toolbar__crumb">
-            <Icon name="tree-structure" />
-            <span>{t("surface.graph")}</span>
-            <Icon name="caret-right" />
-            <span className="eg-toolbar__center">{name(node)}</span>
-          </div>
-          <div className="eg-toolbar__spacer" />
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button type="button" className="eg-ddbtn">
-                <Icon name="sliders-horizontal" />
-                <span>{t("graph.kinds")}</span>
-                <span className="eg-ddbtn__sum">
-                  {groups.size}/{GROUPS.length}
-                </span>
-                <Icon name="caret-down" />
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56">
-              <DropdownMenuLabel>{t("graph.kindsShown")}</DropdownMenuLabel>
-              {GROUPS.map((group) => (
-                <DropdownMenuCheckboxItem
-                  key={group}
-                  checked={groups.has(group)}
-                  // The last group shown stays, as Reveric's filter keeps one type; the menu stays open for another choice, as Reveric's does.
-                  disabled={groups.has(group) && groups.size === 1}
-                  onSelect={(event) => event.preventDefault()}
-                  onCheckedChange={(on) => setGroups((prev) => (on ? new Set([...prev, group]) : new Set([...prev].filter((g) => g !== group))))}
-                >
-                  <span className="eg-menu__dot" style={{ background: `var(--eg-${group})` }} />
-                  <span className="eg-menu__label">{t(`graph.group.${group}`)}</span>
-                  <span className="eg-menu__n">{nodes.filter((n) => GROUP_OF[n.kind] === group).length}</span>
-                </DropdownMenuCheckboxItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button type="button" className="eg-ddbtn">
-                <span>{t("graph.depth")}</span>
-                <span className="eg-ddbtn__sum">{t("graph.hops", { n: depth })}</span>
-                <Icon name="caret-down" />
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-44">
-              <DropdownMenuLabel>{t("graph.depthFrom")}</DropdownMenuLabel>
-              <DropdownMenuRadioGroup value={String(depth)} onValueChange={(value) => setDepth(Number(value))}>
-                {[1, 2, 3].map((d) => (
-                  <DropdownMenuRadioItem key={d} value={String(d)}>
-                    {t("graph.hopsLinks", { n: d })}
-                  </DropdownMenuRadioItem>
-                ))}
-              </DropdownMenuRadioGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
+    <div className="ds-graphview">
+      <div className="ds-graphmain">
         {view.data.problems.map((problem) => (
-          <p key={problem.turnId} className="notice eg-notice">
+          <p key={problem.turnId} className="notice">
             {t("graph.problem", { error: problem.error })}
           </p>
         ))}
         {stale.length > 0 && (
-          <section className="ds-stalebar" aria-label={t("graph.staleTitle", { n: stale.length })}>
+          <section className="stalebar" aria-label={t("graph.staleTitle", { n: stale.length })}>
             <Icon name="warning" />
             <div className="grow">
               <b>{t("graph.staleTitle", { n: stale.length })}</b> {t("graph.staleWhy")}
               <ul>
-                {stale.map((n) => (
-                  <li key={n.id}>
-                    <button type="button" className="ds-link" onClick={() => focus(n.id)}>
-                      {name(n)} {n.version}
+                {stale.map((node) => (
+                  <li key={node.id}>
+                    <button type="button" className="ds-link" onClick={() => focus(node.id)}>
+                      {name(node)} {node.version}
                     </button>
-                    : {n.problems.join("; ")}
+                    : {node.problems.join("; ")}
                   </li>
                 ))}
               </ul>
               {redo.error !== undefined && <div className="error small">{errorText(redo.error, t)}</div>}
               {sent && <div role="status">{t("graph.redoSent")}</div>}
             </div>
-            <Button size="sm" icon="arrow-counter-clockwise" busy={redo.busy} disabled={!sessions.data} disabledReason={blocked} onClick={() => void redo.run()}>
+            <Button size="sm" variant="outline" busy={redo.busy} disabled={!sessions.data} disabledReason={blocked} onClick={() => void redo.run()}>
               {t("graph.redo")}
             </Button>
           </section>
         )}
-        <Canvas lineage={lineage} center={center} kinds={KINDS_OF(groups)} depth={depth} onFocus={focus} onReset={() => focus(fallback)} name={name} fileOf={fileOf} posterOf={posterOf} marked={marked} standing={standing} t={t} />
-        <div className="eg-legend">
-          <span className="eg-legend__title">{t("graph.legend")}</span>
-          {GROUPS.map((group) => (
-            <span key={group} className="eg-legend__item">
-              <span className="eg-legend__line" style={{ background: `var(--eg-${group})` }} />
-              {t(`graph.group.${group}`)}
-            </span>
-          ))}
-          <span className="eg-legend__item">
-            <span className="eg-legend__line is-other" />
-            {t("graph.legendOther")}
+        <div className="graphwrap" role="group" aria-label={t("surface.graph")}>
+          <ReactFlow
+            // A new focus is a new view, fitted to the window.
+            key={key}
+            nodes={flowNodes}
+            edges={flowEdges}
+            nodeTypes={NODE_TYPES}
+            fitView
+            // At least 80%, so a card's picture and name read; a long lineage pans.
+            fitViewOptions={{ padding: 0.12, minZoom: 0.8, maxZoom: 1 }}
+            minZoom={0.2}
+            maxZoom={2}
+            nodesDraggable={false}
+            nodesConnectable={false}
+            nodesFocusable={false}
+            edgesFocusable={false}
+            elementsSelectable={false}
+            onNodeClick={(_, node) => focus(node.id)}
+          >
+            <Background variant={BackgroundVariant.Dots} gap={22} size={1} />
+            <Controls showInteractive={false} position="bottom-right" />
+            <ViewportPortal>
+              {columns.map((column) => (
+                <span key={column.x} className="gcol" style={{ transform: `translate(${column.x}px, ${top - 28}px)` }}>
+                  {column.labels.map((label) => t(label)).join(", ")}
+                </span>
+              ))}
+            </ViewportPortal>
+          </ReactFlow>
+        </div>
+        <div className="glegend">
+          <span>
+            <i className="l up" />
+            {t("graph.legendUp")}
           </span>
-          <span className="eg-legend__item">
-            <span className="eg-legend__line is-stale" />
+          <span>
+            <i className="l down" />
+            {t("graph.legendDown")}
+          </span>
+          <span>
+            <i className="l stale" />
             {t("graph.legendStale")}
           </span>
+          <span className="subtle">{t("graph.readOnly")}</span>
         </div>
       </div>
-      <Inspector lineage={lineage} node={node} onFocus={focus} name={name} file={fileOf(node)} poster={posterOf(node)} marked={marked} standing={standing} t={t} />
-    </div>
-  );
-}
-
-/** Reveric's navigator column: find a version by name, by group, and the versions' states at a glance. */
-function Navigator({ lineage, center, onFocus, name, marked, t }: { lineage: Lineage; center: string; onFocus: (id: string) => void; name: (node: LineageNode) => string; marked: Set<string>; t: T }) {
-  const [query, setQuery] = useState("");
-  const [shown, setShown] = useState<Set<Group>>(new Set(GROUPS));
-  const q = query.trim().toLowerCase();
-  const all = shown.size === GROUPS.length;
-  const listed = GROUPS.filter((group) => shown.has(group))
-    .map((group) => ({ group, items: lineage.nodes.filter((node) => GROUP_OF[node.kind] === group && (!q || name(node).toLowerCase().includes(q))).sort((a, b) => name(a).localeCompare(name(b))) }))
-    .filter((entry) => entry.items.length);
-  // One list of group labels and versions, drawn as it scrolls (TanStack Virtual): a long series has thousands of versions.
-  const rows: { group: Group; node?: LineageNode }[] = listed.flatMap(({ group, items }) => [{ group }, ...items.map((node) => ({ group, node }))]);
-  const scroller = useRef<HTMLDivElement>(null);
-  const virtual = useVirtualizer({ count: rows.length, getScrollElement: () => scroller.current, estimateSize: (i) => (rows[i].node ? 32 : 26), overscan: 8, initialRect: { width: 248, height: 600 } });
-  // The versions by state: the overview's donut (Reveric's relation overview), drama-cli's states for its categories.
-  const states = [
-    { key: "accepted", colour: "var(--success)", n: lineage.nodes.filter((n) => n.fresh !== false && !marked.has(n.id) && n.version !== null && n.accepted === n.version).length },
-    { key: "notAccepted", colour: "var(--warning-text)", n: lineage.nodes.filter((n) => n.fresh !== false && !marked.has(n.id) && n.version !== null && n.accepted !== n.version).length },
-    { key: "stale", colour: "var(--error)", n: lineage.nodes.filter((n) => n.fresh === false).length },
-    { key: "madeFromStale", colour: "var(--text-muted)", n: marked.size },
-  ].filter((state) => state.n);
-  const total = lineage.nodes.length;
-  const R = 26;
-  const C = 2 * Math.PI * R;
-  let acc = 0;
-  return (
-    <aside className="eg-rail" aria-label={t("graph.navigator")}>
-      <div className="eg-rail__head">
-        <Icon name="tree-structure" />
-        <div className="eg-rail__title">
-          <div className="eg-rail__novel">{t("graph.lineage")}</div>
-          <div className="eg-rail__sub">{t("graph.counts", { versions: total, links: lineage.links.length })}</div>
+      <aside className="insp" aria-label={name(selected)}>
+        <div className="ihead">
+          <h2>{name(selected)}</h2>
+          <small>
+            {t(`graph.kind.${selected.kind}` as TKey)} · {selected.version ?? t("graph.noVersion")}
+          </small>
         </div>
-      </div>
-      <div className="eg-search">
-        <Icon name="magnifying-glass" />
-        <input className="eg-search__input" placeholder={t("graph.find")} aria-label={t("graph.find")} value={query} onChange={(event) => setQuery(event.target.value)} />
-        {query && (
-          <button type="button" className="eg-search__clear" aria-label={t("graph.clear")} onClick={() => setQuery("")}>
-            <Icon name="x" />
-          </button>
-        )}
-      </div>
-      {/* Which groups the list shows: none chosen is all of them. */}
-      <ToggleGroup type="multiple" className="eg-chips" aria-label={t("graph.kinds")} value={all ? [] : [...shown]} onValueChange={(value: string[]) => setShown(value.length ? new Set(value as Group[]) : new Set(GROUPS))}>
-        {GROUPS.map((group) => (
-          <ToggleGroupItem key={group} value={group} className="eg-chip" style={{ "--c": `var(--eg-${group})` } as CSSProperties}>
-            <span className="eg-chip__dot" />
-            {t(`graph.group.${group}`)}
-            <span className="eg-chip__n">{lineage.nodes.filter((node) => GROUP_OF[node.kind] === group).length}</span>
-          </ToggleGroupItem>
-        ))}
-      </ToggleGroup>
-      <div className="eg-rail__list" ref={scroller}>
-        <div style={{ height: virtual.getTotalSize(), position: "relative" }}>
-          {virtual.getVirtualItems().map((item) => {
-            const row = rows[item.index];
-            const at: CSSProperties = { position: "absolute", top: 0, left: 0, width: "100%", transform: `translateY(${item.start}px)` };
-            return row.node ? (
-              <button key={row.node.id} type="button" style={at} className={`eg-rail__row${row.node.id === center ? " is-active" : ""}`} aria-current={row.node.id === center || undefined} onClick={() => onFocus(row.node!.id)}>
-                <span className="eg-rail__dot" style={{ background: colour(row.node) }} />
-                <span className="eg-rail__row-name">{name(row.node)}</span>{" "}
-                <span className="eg-rail__row-role">{row.node.version}</span>
-              </button>
+        <div className="iscroll">
+          {(fileOf(selected) || posterOf(selected)) && (
+            <div className="isec ipic">
+              <Picture node={selected} file={fileOf(selected)} poster={posterOf(selected)} />
+            </div>
+          )}
+          <section className="isec" aria-labelledby="graph-state">
+            <h4 id="graph-state">{t("graph.state")}</h4>
+            {selected.fresh === false ? (
+              <div className="finding warn">
+                <Icon name="warning" />
+                <span>{selected.problems.join("; ")}</span>
+              </div>
+            ) : marked.has(selected.id) ? (
+              <div className="finding warn">
+                <Icon name="warning" />
+                <span>{t("graph.fromStale", { names: [...up].filter((id) => byId.get(id)?.fresh === false).map((id) => name(byId.get(id)!)).join(", ") })}</span>
+              </div>
             ) : (
-              <div key={row.group} style={at} className="eg-rail__group-label">
-                {t(`graph.group.${row.group}`)}
-              </div>
-            );
-          })}
-        </div>
-        {listed.length === 0 && <div className="eg-rail__empty">{t("graph.noMatch")}</div>}
-      </div>
-      <div className="eg-overview">
-        <div className="eg-overview__head">{t("graph.overview")}</div>
-        <div className="eg-overview__body">
-          <svg className="eg-donut" width="72" height="72" viewBox="0 0 72 72" aria-hidden="true">
-            {states.map((state) => {
-              const len = (state.n / total) * C;
-              const circle = <circle key={state.key} cx="36" cy="36" r={R} fill="none" stroke={state.colour} strokeWidth="10" strokeDasharray={`${len} ${C - len}`} strokeDashoffset={-acc} transform="rotate(-90 36 36)" />;
-              acc += len;
-              return circle;
-            })}
-            <text x="36" y="34" textAnchor="middle" className="eg-donut__num">
-              {total}
-            </text>
-            <text x="36" y="46" textAnchor="middle" className="eg-donut__lbl">
-              {t("graph.versions")}
-            </text>
-          </svg>
-          <div className="eg-ov-legend">
-            {states.map((state) => (
-              <div key={state.key} className="eg-ov-row">
-                <span className="eg-ov-dot" style={{ background: state.colour }} />
-                <span className="eg-ov-label">{t(`graph.state.${state.key}` as TKey)}</span>
-                <span className="eg-ov-pct">{Math.round((state.n / total) * 100)}%</span>
-                <span className="eg-ov-n">{state.n}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </aside>
-  );
-}
-
-interface CanvasProps {
-  lineage: Lineage;
-  center: string;
-  kinds: Set<LineageKind>;
-  depth: number;
-  onFocus: (id: string) => void;
-  onReset: () => void;
-  name: (node: LineageNode) => string;
-  fileOf: (node: LineageNode) => FileItem | undefined;
-  posterOf: (node: LineageNode) => FileItem | undefined;
-  marked: Set<string>;
-  standing: (node: LineageNode) => Standing;
-  t: T;
-}
-
-interface VersionData extends Record<string, unknown> {
-  node: LineageNode;
-  file?: FileItem;
-  poster?: FileItem;
-  name: string;
-  state: string;
-  center: boolean;
-  dim: boolean;
-  stale: boolean;
-  onHover: (on: boolean) => void;
-}
-
-/** A version on the canvas: Reveric's ring with one short name under it; its version and state are read out with its name, and shown in the hover card and the inspector. A button, so the keyboard reaches it. */
-function VersionNode({ data }: NodeProps<Node<VersionData>>) {
-  const size = data.center ? FOCUS_SIZE : RING_SIZE;
-  return (
-    <button
-      type="button"
-      className={`eg-node nopan${data.center ? " is-center" : ""}${data.dim ? " is-dim" : ""}${data.stale ? " is-stale" : ""}`}
-      style={{ width: size, height: size }}
-      aria-current={data.center || undefined}
-      // Pointer hover and clicks are React Flow's (onNodeMouseEnter, onNodeClick); a keyboard's focus is the button's, and its Enter clicks.
-      onFocus={() => data.onHover(true)}
-      onBlur={() => data.onHover(false)}
-    >
-      <Handle type="target" position={Position.Top} isConnectable={false} className="eg-handle" />
-      <Handle type="source" position={Position.Bottom} isConnectable={false} className="eg-handle" />
-      <Avatar node={data.node} file={data.file} poster={data.poster} size={size} />
-      <span className="eg-node__labels" style={{ top: size + (data.center ? 10 : 6) }}>
-        <span className="eg-node__name" style={{ maxWidth: data.center ? 140 : 96 }}>
-          {data.name}
-        </span>{" "}
-        {/* The version and its state, for a screen reader; on the plane they are in the hover card. */}
-        <span className="sr-only">{data.state}</span>
-      </span>
-    </button>
-  );
-}
-
-interface LinkData extends Record<string, unknown> {
-  path: string;
-  /** Where the pill sits, mid-curve, and what it says (Reveric's relation label). */
-  at: Point;
-  pill?: string;
-}
-
-/** A link from the version used to the version made from it, ring to ring, with an arrow at the one made and the link's kind as a pill. */
-function LinkEdge({ data, markerEnd, style }: EdgeProps<Edge<LinkData>>) {
-  return (
-    <BaseEdge
-      path={data!.path}
-      markerEnd={markerEnd}
-      style={style}
-      label={data!.pill}
-      labelX={data!.at.x}
-      labelY={data!.at.y}
-      labelShowBg
-      labelBgPadding={[6, 2]}
-      labelBgBorderRadius={9}
-      labelStyle={{ font: "600 10px var(--font-sans)", fill: "var(--text-secondary)" }}
-      labelBgStyle={{ fill: "var(--surface)", stroke: "var(--border)" }}
-    />
-  );
-}
-
-const NODE_TYPES = { version: VersionNode };
-const EDGE_TYPES = { link: LinkEdge };
-
-/** The versions around the one in focus on React Flow: pan, zoom, fit, and a version's neighbours brought forward on hover or keyboard focus, as Reveric's canvas does. */
-function Canvas({ lineage, center, kinds, depth, onFocus, onReset, name, fileOf, posterOf, marked, standing, t }: CanvasProps) {
-  const [hovered, setHovered] = useState<string | null>(null);
-  const kindKey = [...kinds].sort().join(",");
-  // kindKey stands for kinds, a new Set at each render.
-  const graph = useMemo(() => focusGraph(lineage, center, kinds, depth), [lineage, center, kindKey, depth]);
-  const byId = new Map(lineage.nodes.map((node) => [node.id, node]));
-  const connected = hovered ? new Set([hovered, ...graph.links.flatMap((l) => (l.from === hovered ? [l.to] : l.to === hovered ? [l.from] : []))]) : null;
-  const isStale = (id: string) => byId.get(id)?.fresh === false || marked.has(id);
-  const radius = (id: string) => (id === center ? FOCUS_SIZE : RING_SIZE) / 2;
-  const nodes: Node<VersionData>[] = graph.ids.map((id) => {
-    const node = byId.get(id)!;
-    const state = standing(node);
-    const size = id === center ? FOCUS_SIZE : RING_SIZE;
-    return {
-      id,
-      type: "version",
-      position: graph.places.get(id)!,
-      // The ring's size, which React Flow lays out before it measures the node (and all jsdom gives).
-      width: size,
-      height: size,
-      data: {
-        node,
-        file: fileOf(node),
-        poster: posterOf(node),
-        name: name(node),
-        state: `${node.version ?? t("graph.noVersion")} · ${state.label ?? t(`status.${state.status}` as TKey)}`,
-        center: id === center,
-        dim: connected !== null && !connected.has(id),
-        stale: isStale(id),
-        onHover: (on) => setHovered(on ? id : null),
-      },
-    };
-  });
-  // Thin grey curves, as Reveric's read: only the links of the version hovered, or else of the focus, take their colour.
-  const lit = hovered ?? center;
-  const edges: Edge<LinkData>[] = graph.links.map((link) => {
-    const [a, b] = [graph.places.get(link.from)!, graph.places.get(link.to)!];
-    const len = Math.hypot(b.x - a.x, b.y - a.y) || 1;
-    const [ux, uy] = [(b.x - a.x) / len, (b.y - a.y) / len];
-    const [ax, ay, bx, by] = [a.x + ux * radius(link.from), a.y + uy * radius(link.from), b.x - ux * (radius(link.to) + 3), b.y - uy * (radius(link.to) + 3)];
-    // A slight bend, as Reveric's quadratic curves have.
-    const [cx, cy] = [(ax + bx) / 2 - uy * 14, (ay + by) / 2 + ux * 14];
-    const dashed = isStale(link.from) && isStale(link.to);
-    const on = link.from === lit || link.to === lit;
-    const stroke = dashed ? "var(--eg-stale)" : on ? colour(byId.get(link.from)!) : "var(--border-input)";
-    const text = GROUP_OF[byId.get(link.from)!.kind] === "text";
-    // The pill's place on the curve: 60% of the way out from the focus toward the other version, clear of the focus's arrowheads and name.
-    const along = (k: number) => ({ x: (1 - k) ** 2 * ax + 2 * k * (1 - k) * cx + k ** 2 * bx, y: (1 - k) ** 2 * ay + 2 * k * (1 - k) * cy + k ** 2 * by });
-    return {
-      id: `${link.from}>${link.to}`,
-      source: link.from,
-      target: link.to,
-      type: "link",
-      data: { path: `M${ax},${ay} Q${cx},${cy} ${bx},${by}`, at: along(link.to === center ? 0.4 : link.from === center ? 0.6 : 0.5), pill: depth === 1 ? t(text ? "graph.pillRead" : "graph.pillUsed") : undefined },
-      markerEnd: { type: MarkerType.ArrowClosed, color: stroke, width: 12, height: 12 },
-      style: { stroke, strokeWidth: on ? 1.6 : 1, strokeOpacity: connected && !(connected.has(link.from) && connected.has(link.to)) ? 0.12 : 1, strokeDasharray: dashed ? "5 4" : undefined },
-    };
-  });
-  const hoveredNode = hovered ? byId.get(hovered) : undefined;
-  return (
-    <div className="eg-canvas" role="group" aria-label={t("surface.graph")}>
-      <ReactFlow
-        // A new focus, depth or set of kinds is a new view, fitted to the window as Reveric refits.
-        key={`${center}|${depth}|${kindKey}`}
-        nodes={nodes}
-        edges={edges}
-        nodeTypes={NODE_TYPES}
-        edgeTypes={EDGE_TYPES}
-        nodeOrigin={[0.5, 0.5]}
-        fitView
-        fitViewOptions={{ padding: 0.2, minZoom: 0.42, maxZoom: 1 }}
-        minZoom={0.3}
-        maxZoom={2.6}
-        nodesDraggable={false}
-        nodesConnectable={false}
-        nodesFocusable={false}
-        edgesFocusable={false}
-        elementsSelectable={false}
-        onNodeClick={(_, node) => {
-          setHovered(null);
-          onFocus(node.id);
-        }}
-        onNodeMouseEnter={(_, node) => setHovered(node.id)}
-        onNodeMouseLeave={() => setHovered(null)}
-      >
-        <Background variant={BackgroundVariant.Dots} gap={22} size={1} />
-        <Controls showInteractive={false} position="bottom-right" />
-        <Panel position="top-right">
-          <button type="button" className="eg-reset" onClick={onReset}>
-            <Icon name="arrow-counter-clockwise" />
-            <span>{t("graph.reset")}</span>
-          </button>
-        </Panel>
-        {hoveredNode && (
-          <Panel position="top-left">
-            <div className="eg-hovercard" role="tooltip">
-              <div className="eg-hovercard__head">
-                <Avatar node={hoveredNode} file={fileOf(hoveredNode)} poster={posterOf(hoveredNode)} size={40} />
-                <div>
-                  <div className="eg-hovercard__name">{name(hoveredNode)}</div>
-                  <div className="eg-hovercard__en">{hoveredNode.version ?? t("graph.noVersion")}</div>
-                </div>
-              </div>
-              <div className="eg-hovercard__meta">
-                <KindBadge node={hoveredNode} t={t} />
-                <StatusChip status={standing(hoveredNode).status} label={standing(hoveredNode).label} />
-              </div>
-              <p className="eg-hovercard__desc">{hoveredNode.fresh === false ? hoveredNode.problems.join("; ") : t(marked.has(hoveredNode.id) ? "graph.fromStaleShort" : hoveredNode.fresh === null ? "graph.unjudged" : "graph.fresh")}</p>
-            </div>
-          </Panel>
-        )}
-      </ReactFlow>
-    </div>
-  );
-}
-
-interface InspectorProps {
-  lineage: Lineage;
-  node: LineageNode;
-  onFocus: (id: string) => void;
-  name: (node: LineageNode) => string;
-  file?: FileItem;
-  poster?: FileItem;
-  marked: Set<string>;
-  standing: (node: LineageNode) => Standing;
-  t: T;
-}
-
-/** Reveric's inspector: the version in focus, its links by direction, and its details as drama-cli records them. */
-function Inspector({ lineage, node, onFocus, name, file, poster, marked, standing, t }: InspectorProps) {
-  const [tab, setTab] = useState<"links" | "details">("links");
-  useEffect(() => setTab("links"), [node.id]);
-  const byId = new Map(lineage.nodes.map((n) => [n.id, n]));
-  const from = lineage.links.filter((link) => link.to === node.id).map((link) => byId.get(link.from)!);
-  const into = lineage.links.filter((link) => link.from === node.id).map((link) => byId.get(link.to)!);
-  const { up, down } = trace(lineage, node.id);
-  const state = standing(node);
-  const rows = (list: LineageNode[], direction: "from" | "into") =>
-    list.map((other) => (
-      <button key={other.id} type="button" className="eg-rel" onClick={() => onFocus(other.id)}>
-        <span className="eg-rel__dot" style={{ background: colour(other) }} />
-        <span className="eg-rel__main">
-          <span className="eg-rel__row1">
-            <span className="eg-rel__other-name">{name(other)}</span>{" "}
-            <span className="eg-rel__label" style={{ "--c": colour(other) } as CSSProperties}>
-              {t(direction === "from" ? "graph.usedBy" : "graph.usedIn")}
-            </span>
-          </span>{" "}
-          <span className="eg-rel__meta">
-            {other.version ?? t("graph.noVersion")} · {standing(other).label ?? t(`status.${standing(other).status}` as TKey)}
-          </span>
-        </span>
-      </button>
-    ));
-  return (
-    <aside className="eg-inspector" aria-label={name(node)}>
-      <div className="eg-inspector__hero">
-        <Avatar node={node} file={file} poster={poster} size={48} />
-        <div className="eg-inspector__herobody">
-          <h2 className="eg-inspector__name">{name(node)}</h2>
-          <div className="eg-inspector__en">
-            {node.version ?? t("graph.noVersion")} · {t("graph.statUp", { n: from.length })} · {t("graph.statDown", { n: into.length })}
-          </div>
-        </div>
-        <div className="eg-inspector__tags">
-          <KindBadge node={node} t={t} />
-          <StatusChip status={state.status} label={state.label} />
-        </div>
-      </div>
-      <Tabs value={tab} onValueChange={(value) => setTab(value as "links" | "details")} className="eg-inspector__tabs">
-        <TabsList variant="line" className="eg-tabs">
-          <TabsTrigger value="links">{t("graph.tabLinks")}</TabsTrigger>
-          <TabsTrigger value="details">{t("graph.tabDetails")}</TabsTrigger>
-        </TabsList>
-        <TabsContent value="links" className="eg-inspector__body">
-          <section aria-labelledby="eg-from">
-            <div className="eg-inspector__subhead" id="eg-from">
-              <span>
-                {t("graph.madeFrom")} <b>{from.length}</b>
-              </span>
-            </div>
-            <div className="eg-rels">{from.length ? rows(from, "from") : <div className="eg-rail__empty">{t("graph.nothing")}</div>}</div>
-          </section>
-          <section aria-labelledby="eg-into">
-            <div className="eg-inspector__subhead" id="eg-into">
-              <span>
-                {t("graph.madeFromIt")} <b>{into.length}</b>
-              </span>
-            </div>
-            <div className="eg-rels">{into.length ? rows(into, "into") : <div className="eg-rail__empty">{t("graph.nothing")}</div>}</div>
-          </section>
-        </TabsContent>
-        <TabsContent value="details" className="eg-inspector__body">
-          <section className="eg-sec" aria-labelledby="eg-state">
-            <div className="eg-sec__head" id="eg-state">
-              {t("graph.state")}
-            </div>
-            {node.fresh === false ? (
-              <ul className="ds-problems">
-                {node.problems.map((problem) => (
-                  <li key={problem}>{problem}</li>
-                ))}
-              </ul>
-            ) : (
-              <p className="eg-sec__desc">
-                {marked.has(node.id)
-                  ? t("graph.fromStale", { names: [...up].filter((id) => byId.get(id)?.fresh === false).map((id) => name(byId.get(id)!)).join(", ") })
-                  : t(node.fresh === null ? "graph.unjudged" : "graph.fresh")}
-              </p>
+              <span className="muted">{t(selected.fresh === null ? "graph.unjudged" : "graph.fresh")}</span>
             )}
           </section>
-          <section className="eg-sec">
-            <div className="eg-sec__head">{t("graph.versionsHead")}</div>
-            <div className="eg-kv">
-              <div className="eg-kv__row">
-                <span className="eg-kv__k">{t("graph.kindLabel")}</span>
-                <span className="eg-kv__v">{t(`graph.kind.${node.kind}` as TKey)}</span>
-              </div>
-              <div className="eg-kv__row">
-                <span className="eg-kv__k">{t("graph.working")}</span>
-                <span className="eg-kv__v">{node.version ?? "—"}</span>
-              </div>
-              <div className="eg-kv__row">
-                <span className="eg-kv__k">{t("graph.accepted")}</span>
-                <span className="eg-kv__v">{node.accepted ?? "—"}</span>
-              </div>
-            </div>
+          <section className="isec" aria-labelledby="graph-up">
+            <h4 id="graph-up">
+              {t("graph.madeFrom")} <span className="muted">{up.size}</span>
+            </h4>
+            {list(up)}
           </section>
-          <section className="eg-sec">
-            <div className="eg-sec__head">{t("graph.linksOverview")}</div>
-            <div className="eg-statgrid">
-              <div className="eg-statgrid__cell">
-                <b>{from.length}</b>
-                <span>{t("graph.directFrom")}</span>
-              </div>
-              <div className="eg-statgrid__cell">
-                <b>{up.size}</b>
-                <span>{t("graph.allFrom")}</span>
-              </div>
-              <div className="eg-statgrid__cell">
-                <b>{down.size}</b>
-                <span>{t("graph.allInto")}</span>
-              </div>
-            </div>
+          <section className="isec" aria-labelledby="graph-down">
+            <h4 id="graph-down">
+              {t("graph.madeFromIt")} <span className="muted">{down.size}</span>
+            </h4>
+            {list(down)}
           </section>
-        </TabsContent>
-      </Tabs>
-    </aside>
+        </div>
+      </aside>
+    </div>
   );
 }

@@ -34,7 +34,7 @@ test("the Graph traces a version both ways on the sample drama", async ({ page }
   // The version in focus, named as the bible names it.
   const focus = graph.locator('button[aria-current="true"]');
   await expect(focus).toBeVisible();
-  const lookName = (await focus.locator(".eg-node__name").textContent())!.trim();
+  const lookName = (await focus.locator(".gtxt b").textContent())!.trim();
   expect(await newProblems(page)).toEqual([]);
 
   // What was made from the look includes a storyboard; focusing it lists the look among what it was made from.
