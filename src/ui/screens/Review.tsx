@@ -800,7 +800,7 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
  * note at its time go to the agent through the review's one decision. The maker decides: nothing is
  * sent without Accept cut or Send back.
  */
-function CutRoom({ review, done }: { review: ReviewView; done: () => void }) {
+export function CutRoom({ review, done }: { review: ReviewView; done: () => void }) {
   const { t } = useT();
   const item = review.reviewItems[0];
   const file = item.files.find(isVideo) ?? item.files[0];

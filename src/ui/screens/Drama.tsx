@@ -9,7 +9,7 @@ import { Board, SetupPanel } from "./Board.tsx";
 import { Canvas } from "./Canvas.tsx";
 import { Cast } from "./Cast.tsx";
 import { Crew } from "./Crew.tsx";
-import { Delivery } from "./Delivery.tsx";
+import { CutTab } from "./CutTab.tsx";
 import { Graph } from "../graph/Graph.tsx";
 import { Episode } from "./Episode.tsx";
 import { Script } from "./Script.tsx";
@@ -82,14 +82,15 @@ export function Drama({ drama, tab, episode }: { drama: DramaView; tab: string; 
   const settingUp = drama.status === "setup" || (drama.status === "stopped" && !drama.episodeRows.length);
   return (
     <section className="ds-workin">
-      <DramaBar drama={drama} />
-      <Notices drama={drama} />
+      {/* The cut's room is the design's Cut screen, with no surface bar above it. */}
+      {tab !== "cut" && <DramaBar drama={drama} />}
+      {tab !== "cut" && <Notices drama={drama} />}
       {tab === "board" && (settingUp ? <SetupPanel drama={drama} /> : <Board drama={drama} />)}
       {tab === "episode" && episode && <Episode key={`${id}/${episode}`} dramaId={id} code={episode} />}
       {tab === "script" && <Script dramaId={id} />}
       {tab === "analyzing" && <Analyzing dramaId={id} />}
       {tab === "story" && (settingUp ? <SetupPanel drama={drama} /> : <Cast dramaId={id} />)}
-      {tab === "cut" && <Delivery dramaId={id} />}
+      {tab === "cut" && <CutTab dramaId={id} />}
       {tab === "canvas" && <Canvas drama={drama} />}
       {tab === "graph" && <Graph dramaId={id} />}
       {tab === "crew" && <Crew drama={drama} />}

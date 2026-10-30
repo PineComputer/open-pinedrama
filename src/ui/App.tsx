@@ -167,7 +167,7 @@ export function App() {
         </TopBar>
         <div className="body" style={{ position: "relative" }}>
           <main className="scrollmain ds-scroll">{screen}</main>
-          {drama.data && dramaId && <Agent drama={drama.data} episode={match("/d/:id/e/:code", path)?.code ?? reviewed?.episode} mode={agentMode} onMode={setAgentMode} canvas={tab === "canvas" || tab === "graph" || Boolean(review)} />}
+          {drama.data && dramaId && <Agent drama={drama.data} episode={match("/d/:id/e/:code", path)?.code ?? reviewed?.episode} mode={agentMode} onMode={setAgentMode} canvas={tab === "canvas" || tab === "graph" || tab === "cut" || Boolean(review)} />}
         </div>
       </div>
     </div>
