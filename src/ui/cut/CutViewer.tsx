@@ -13,7 +13,7 @@ import { type EditData, Timeline, type TimelineState } from "@xzdarcy/react-time
 import "@xzdarcy/react-timeline-editor/dist/react-timeline-editor.css";
 import { MediaControlBar, MediaController, MediaPlayButton, MediaTimeDisplay } from "media-chrome/react";
 import { type Ref, useEffect, useImperativeHandle, useRef, useState } from "react";
-import type { CutClip, FileItem } from "../../shared/types.ts";
+import type { CutClip, FileItem, Note } from "../../shared/types.ts";
 import { clock } from "../api.ts";
 import { IconButton } from "../components/Button.tsx";
 import { useT } from "../i18n.ts";
@@ -33,9 +33,20 @@ export interface CutActions {
 /** Phase 1: nothing the timeline would ask is sent. */
 export const WATCH_ONLY: CutActions = { move: () => undefined, trim: () => undefined };
 
-/** The cut's plan as the timeline's rows: the picture row, a clip for each segment's take. An action's id is its clip's place in the plan. */
-export function cutRows(clips: CutClip[]): TimelineRow[] {
-  return [{ id: "picture", actions: clips.map((clip, n) => ({ id: String(n), start: clip.start, end: clip.end, effectId: "clip", movable: EDITING, flexible: EDITING })) }];
+/** How long a note's chip runs on the notes row, in seconds: a note is at one time, not over a span. */
+const NOTE_SPAN = 1;
+
+/**
+ * The cut's plan and the maker's notes as the timeline's rows: the picture row, a clip for each
+ * segment's take, its id the clip's place in the plan; and the notes row, a chip at each note's time
+ * on this cut, its id "note-" and the note's place in the list given.
+ */
+export function cutRows(clips: CutClip[], notes: Note[] = [], fileId?: number): TimelineRow[] {
+  const timed = notes.flatMap((note, n) => (note.time !== undefined && (note.fileId === undefined || note.fileId === fileId) ? [{ note, n, time: note.time }] : []));
+  return [
+    { id: "picture", actions: clips.map((clip, n) => ({ id: String(n), start: clip.start, end: clip.end, effectId: "clip", movable: EDITING, flexible: EDITING })) },
+    { id: "notes", actions: timed.map(({ n, time }) => ({ id: `note-${n}`, start: time, end: time + NOTE_SPAN, effectId: "note", movable: false, flexible: false })) },
+  ];
 }
 
 /** The zoom's bounds, in pixels a second, as reveric's (editing.jsx). */
@@ -46,6 +57,8 @@ const START_LEFT = 12;
 
 export interface CutViewerProps {
   file: FileItem;
+  /** The maker's notes: those at a time on this cut are chips on the notes row. */
+  notes?: Note[];
   /** Each time the cut moves, where it is, in seconds. */
   onTime?: (seconds: number) => void;
   /** The cut's video, for a caller that pauses it or reads where it is. */
@@ -53,7 +66,7 @@ export interface CutViewerProps {
   actions?: CutActions;
 }
 
-export function CutViewer({ file, onTime, videoRef, actions = WATCH_ONLY }: CutViewerProps) {
+export function CutViewer({ file, notes = [], onTime, videoRef, actions = WATCH_ONLY }: CutViewerProps) {
   const { t } = useT();
   const video = useRef<HTMLVideoElement>(null);
   useImperativeHandle(videoRef, () => video.current!, []);
@@ -121,18 +134,26 @@ export function CutViewer({ file, onTime, videoRef, actions = WATCH_ONLY }: CutV
         <div className="ds-tl-area" ref={area} role="group" aria-label={t("cut.segments")}>
           <Timeline
             ref={timeline}
-            editorData={cutRows(clips)}
-            effects={{ clip: { id: "clip", name: "clip" } }}
+            editorData={cutRows(clips, notes, file.id)}
+            effects={{ clip: { id: "clip", name: "clip" }, note: { id: "note", name: "note" } }}
             disableDrag={!EDITING}
             scale={1}
             scaleSplitCount={4}
             scaleWidth={zoom}
             startLeft={START_LEFT}
-            rowHeight={56}
+            rowHeight={44}
             autoScroll
             style={{ width: "100%", height: "100%" }}
             getScaleRender={(seconds) => clock(seconds)}
             getActionRender={(action: TimelineAction) => {
+              if (action.effectId === "note") {
+                const note = notes[Number(action.id.slice("note-".length))];
+                return (
+                  <button type="button" className="ds-tl-note" title={note.text} aria-label={t("cut.pin", { time: clock(action.start), text: note.text })} onClick={() => seek(action.start)}>
+                    {note.text}
+                  </button>
+                );
+              }
               const clip = clips[Number(action.id)];
               const seconds = `${(clip.end - clip.start).toFixed(1)}s`;
               return (

@@ -39,7 +39,7 @@
 .ds-cut-play { width: 34px; height: 34px; padding: 9px; border-radius: var(--radius-pill); --media-control-background: var(--accent); --media-control-hover-background: var(--accent-warm); --media-primary-color: var(--on-accent); }
 
 /* ---------------- timeline (react-timeline-editor) ---------------- */
-.ds-tl { flex: none; display: flex; flex-direction: column; height: 150px; background: var(--surface-dim); border-top: 1px solid var(--border); }
+.ds-tl { flex: none; display: flex; flex-direction: column; height: 172px; background: var(--surface-dim); border-top: 1px solid var(--border); }
 .ds-tl-bar { flex: none; height: 40px; display: flex; align-items: center; gap: 2px; padding: 0 var(--space-md); background: var(--surface-container); border-bottom: 1px solid var(--border-subtle); }
 .ds-tl-bar .grow { flex: 1; }
 .ds-tl-bar .note { font-size: var(--type-ui-small-size); color: var(--text-secondary); }
@@ -67,3 +67,5 @@
 .ds-tl-clip .no { flex: none; padding: 0 4px; border-radius: 3px; background: var(--accent); color: var(--on-accent); font-size: 10px; }
 .ds-tl-clip .take { overflow: hidden; text-overflow: ellipsis; font-family: var(--font-mono); }
 .ds-tl-clip .dur { position: absolute; right: 6px; bottom: 3px; font: 500 10px/1 var(--font-mono); color: var(--text-secondary); }
+.ds-tl-note { position: absolute; inset: 4px 0; box-sizing: border-box; overflow: hidden; padding: 0 6px; border-radius: var(--radius-medium); border: 1px solid var(--warning-text); background: var(--surface); color: var(--text-primary); font: 500 11px/22px var(--font-sans); text-align: left; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; }
+.ds-tl-note:focus-visible { outline: 2px solid var(--text-primary); outline-offset: 1px; }

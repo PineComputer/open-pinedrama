@@ -54,7 +54,24 @@ describe("cutRows", () => {
           { id: "2", start: 6, end: 8, effectId: "clip", movable: false, flexible: false },
         ],
       },
+      { id: "notes", actions: [] },
     ]);
+  });
+
+  it("puts each of the maker's notes at its time on the notes row: those on this cut, with a time", () => {
+    const notes = [
+      { fileId: 7, time: 6, text: "Too dark" },
+      { fileId: 8, time: 3, text: "On the earlier cut" },
+      { fileId: 7, text: "Overall: faster" },
+      { time: 2, text: "Cut in sooner" },
+    ];
+    expect(cutRows(PLAN.clips, notes, 7)[1]).toEqual({
+      id: "notes",
+      actions: [
+        { id: "note-0", start: 6, end: 7, effectId: "note", movable: false, flexible: false },
+        { id: "note-3", start: 2, end: 3, effectId: "note", movable: false, flexible: false },
+      ],
+    });
   });
 });
 
