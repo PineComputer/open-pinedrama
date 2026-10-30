@@ -34,6 +34,17 @@ function Poster({ drama, mode }: { drama: DramaCard; mode?: Mode | "none" }) {
   );
 }
 
+/** A drama's cover as a still: its first lead's sheet, once drawn. */
+function coverOf(drama: DramaCard | undefined): { url: string } | undefined {
+  return drama?.cast[0] ? { url: drama.cast[0] } : undefined;
+}
+
+/** The greeting by the hour of the maker's own clock. */
+function greeting(): TKey {
+  const hour = new Date().getHours();
+  return hour < 12 ? "slate.greet.morning" : hour < 18 ? "slate.greet.afternoon" : "slate.greet.evening";
+}
+
 type Shelf = "all" | "you" | "work" | "done" | "stopped";
 
 /** Where a drama stands, as its card's chip says it. */
@@ -153,10 +164,10 @@ function Continue({ waiting, dramas }: { waiting: ReviewSummary[]; dramas: Drama
       </div>
       <div className="right">
         <h3>{t("slate.waiting")}</h3>
-        {waiting.slice(0, 4).map((item) => (
+        {waiting.slice(0, 3).map((item) => (
           <Link key={item.id} to={`/r/${item.id}`} className="wait">
-            <span className="thumb">
-              <Still still={item.thumb} />
+            <span className={item.thumb ? "thumb" : "thumb cover"}>
+              <Still still={item.thumb ?? coverOf(dramas.find((entry) => entry.id === item.dramaId))} />
             </span>
             <span>
               <b>{[item.episode, t(`kind.${item.kind}` as TKey)].filter(Boolean).join(" · ")}</b>
@@ -214,7 +225,7 @@ export function Slate() {
     <div className="page">
       <div className="head">
         <div>
-          <h1>{t("slate.title")}</h1>
+          <h1>{t(greeting())}</h1>
           {dramas.length > 0 && <p className="facts">{t("slate.facts", { a: counts.work + counts.you, b: waiting.length })}</p>}
         </div>
         <span className="spacer" />

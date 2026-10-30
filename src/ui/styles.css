@@ -711,3 +711,23 @@ a.ds-tag:hover { background: var(--hover); }
 
 /* Home's denser cards (P5.1): the logline on one line, ellipsized. */
 .ds-dramacard .txt .logline { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* Denser shelf (P5.1 pass 2), with work-04's measures after reveric's library: 180px columns, 16 gap, 2xl cards with
+   the card shadow, a 140px 3:4 hero cover; shorter card covers, so each card's facts sit above the fold. */
+.ds-shelf { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; }
+.ds-dramacard { border-radius: var(--radius-2xl); box-shadow: var(--shadow-card); }
+.ds-dramacard .poster { aspect-ratio: 1 / 1; }
+.ds-dramacard .txt small { font-size: 11.5px; }
+.ds-hero .wait .thumb.cover .still { background-size: auto 100%; background-position: 90% 0; }
+.ds-hero .left { padding: 24px 20px 20px; gap: 20px; }
+.ds-hero .cover { width: 140px; }
+.ds-hero .cover .poster { aspect-ratio: 3 / 4; }
+.ds-hero { grid-template-columns: minmax(0, 1fr) 300px; box-shadow: var(--shadow-card); margin-bottom: 20px; }
+.ds-dramacard:hover { background: color-mix(in srgb, var(--surface) 92%, var(--text-primary)); }
+.ds-dramacard .txt { padding: 10px; }
+.ds-dramacard .txt b { font-size: 13px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.page .head h1 { font-size: 26px; }
+
+/* A cover crops each lead's look sheet to its close-up, the face at the sheet's right end, as reveric's covers show
+   faces; the sheet fills the cover's height. */
+.ds-dramacard .poster .leads span, .ds-hero .poster .leads span { background-size: auto 100%; background-position: 90% 0; }

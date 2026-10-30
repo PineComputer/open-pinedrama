@@ -400,13 +400,16 @@ export function app(): Hono {
     }
   });
 
-  // The latest conversations across dramas, newest first: each session's last line from the agent (the sidebar's recent list).
+  // The latest conversations across dramas, newest first, one for each drama's setup and each episode (a resumed
+  // session continues the same one): its last line from the agent (the sidebar's recent list).
   api.get("/api/sessions/recent", (c) => {
     const rows = all<{ session_id: string; drama_id: string; title: string; number: number | null; at: string; text: string }>(
       `select m.session_id, s.drama_id, d.title, e.number, m.at, m.text from messages m
        join sessions s on s.id = m.session_id join dramas d on d.id = s.drama_id left join episodes e on e.id = s.episode_id
        where m.kind in ('progress', 'activity', 'question', 'result')
-         and m.id = (select id from messages where session_id = m.session_id and kind in ('progress', 'activity', 'question', 'result') order by at desc, id desc limit 1)
+         and m.id = (select m2.id from messages m2 join sessions s2 on s2.id = m2.session_id
+                     where s2.drama_id = s.drama_id and coalesce(s2.episode_id, '') = coalesce(s.episode_id, '')
+                       and m2.kind in ('progress', 'activity', 'question', 'result') order by m2.at desc, m2.id desc limit 1)
        order by m.at desc limit 8`,
     );
     return c.json(rows.map((row): RecentConversation => ({ sessionId: row.session_id, dramaId: row.drama_id, dramaTitle: row.title, label: row.number === null ? "" : episodeCode({ number: row.number }), at: row.at, line: row.text })));
