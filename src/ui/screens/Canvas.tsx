@@ -9,6 +9,7 @@
 import { Background, BackgroundVariant, type Edge, Handle, MiniMap, type Node, type NodeProps, Position, ReactFlow, ReactFlowProvider, useNodesInitialized, useNodesState, useReactFlow, useViewport } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { HEIGHT, layout, WIDTH } from "../../shared/layout.ts";
 import type { LineageNode, LineageView } from "../../shared/lineage.ts";
 import { type Item, itemOf, PIPELINE } from "../../shared/pipeline.ts";
 import type { ProjectView, StageStatus } from "../../shared/project.ts";
@@ -31,9 +32,6 @@ type Positions = Record<string, { x: number; y: number }>;
 
 /** drama-cli's shared groups (export.py, section); an episode's own are titled by its code. */
 const SHARED = ["Characters", "Locations", "Props"];
-/** A group's inner margin and title bar (export.py, PAD and TITLE). */
-const PAD = 20;
-const TITLE = 50;
 
 /** Where a stage stands, in the status chip's words: usable is accepted; none made is in line; made and not accepted waits for the maker; accepted but no longer usable is stale. */
 export function standing(stage: StageStatus | undefined): Status {
@@ -119,6 +117,9 @@ const NODE_TYPES = { item: ItemNode, frame: FrameNode };
 /** Fitting leaves room for what floats over the board: the pills at the top, the zoom pill at the foot, the detail card on the right. Never past the reference's scale. */
 const FIT = { padding: { top: "72px", bottom: "72px", left: "40px", right: "40px" }, maxZoom: 1.05 } as const;
 
+/** Where a board opens: its top left clear of the pills, at the prototype's readable scale (design/app.js, the canvas's camera, 0.62), a little under it for drama-cli's larger nodes. */
+const OPEN = { x: 40, y: 72, zoom: 0.55 };
+
 export function Canvas({ drama }: { drama: DramaView }) {
   return (
     <ReactFlowProvider>
@@ -172,19 +173,12 @@ function Plane({ drama }: { drama: DramaView }) {
   const mapped = useMemo(() => {
     if (!lineage || !code) return { nodes: [] as Node[], edges: [] as Edge[] };
     const moved = positions.data?.positions ?? {};
-    // The episode's own stages, and of the shared ones only those its stages were made from or made: a filter of drama-cli's
-    // layout, never a new one. A shared group's frame closes around what is left of it, with drama-cli's margins (export.py, PAD, TITLE).
+    // The episode's own stages, and of the shared ones only those its stages were made from or made, in drama-cli's groups,
+    // packed by drama-cli's own layout (shared/layout.ts) as `export comfyui` would pack this set.
     const own = new Set(lineage.nodes.filter((stage) => stage.section.startsWith(`${code} `)).map((stage) => stage.id));
     const linked = new Set(lineage.links.flatMap((link) => (own.has(link.to) ? [link.from] : own.has(link.from) ? [link.to] : [])));
     const shown = lineage.nodes.filter((stage) => own.has(stage.id) || (SHARED.includes(stage.section) && linked.has(stage.id)));
-    const groups = lineage.groups.flatMap((group) => {
-      if (group.title.startsWith(`${code} `)) return [group];
-      const members = shown.filter((stage) => stage.section === group.title);
-      if (!SHARED.includes(group.title) || !members.length) return [];
-      const x = Math.min(...members.map((stage) => stage.box.x)) - PAD;
-      const y = Math.min(...members.map((stage) => stage.box.y)) - TITLE - PAD;
-      return [{ title: group.title, x, y, w: Math.max(...members.map((stage) => stage.box.x + stage.box.w)) + PAD - x, h: Math.max(...members.map((stage) => stage.box.y + stage.box.h)) + PAD - y }];
-    });
+    const { places, groups } = layout(shown);
     const scene = (segment: string) => state?.episodes[code]?.sceneChains.find((chain) => chain.segments.includes(segment))?.sceneHeading;
     const title = (group: string) => {
       const shared = { Characters: "look", Locations: "plate", Props: "prop" } as const;
@@ -218,9 +212,9 @@ function Plane({ drama }: { drama: DramaView }) {
           // A node stands in its group, placed relative to it, and widens it when moved past its edge.
           parentId: `group:${group.title}`,
           expandParent: true,
-          position: moved[stage.id] ?? { x: stage.box.x - group.x, y: stage.box.y - group.y },
-          width: stage.box.w,
-          height: stage.box.h,
+          position: moved[stage.id] ?? { x: places.get(stage.id)![0] - group.x, y: places.get(stage.id)![1] - group.y },
+          width: WIDTH,
+          height: HEIGHT,
           data: { stage, item: of, label: label(stage, of), status: standingOf(stage), work: stage.shows ? files.data?.find((file) => file.path.endsWith(`/${stage.shows}`)) : undefined, followed: follow && target === stage.id },
         },
       ];
@@ -244,13 +238,11 @@ function Plane({ drama }: { drama: DramaView }) {
     if (!measured || !nodes.length || opened.current === code) return;
     opened.current = code;
     centred.current = target;
-    // drama-cli's shared column holds every look, plate and prop of the drama, far taller than an episode: the board opens on the
-    // episode's own groups and the shared items they use that stand beside them; Fit shows it all.
-    const own = nodes.filter((node) => node.type === "frame" && node.id.startsWith(`group:${code} `));
-    const bottom = Math.max(...own.map((node) => node.position.y + (node.height ?? 0)));
-    const used = new Set(mapped.edges.flatMap((edge) => [edge.source, edge.target]));
-    const beside = nodes.filter((node) => node.type === "item" && !node.parentId?.startsWith(`group:${code} `) && used.has(node.id) && (flow.getInternalNode(node.id)?.internals.positionAbsolute.y ?? Infinity) < bottom);
-    void flow.fitView({ ...FIT, nodes: [...own, ...beside], duration: 300 });
+    // The board opens on its top left at a zoom its labels read at, as the prototype's opens on its cast, places and first scene; Fit shows it all.
+    const frames = nodes.filter((node) => node.type === "frame");
+    const left = Math.min(...frames.map((node) => node.position.x));
+    const top = Math.min(...frames.map((node) => node.position.y));
+    void flow.setViewport({ x: OPEN.x - left * OPEN.zoom, y: OPEN.y - top * OPEN.zoom, zoom: OPEN.zoom }, { duration: 300 });
   }, [code, nodes, measured]);
   useEffect(() => {
     if (!follow || !target || opened.current !== code || centred.current === target) return;

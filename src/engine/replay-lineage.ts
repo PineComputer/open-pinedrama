@@ -4,6 +4,7 @@
 // with a stage for each thing the recording made at its versions, everything fresh, and a link
 // from each picture to what was made from it. Every segment is set at home, as replay's status
 // report heads its scenes (replay-status.ts).
+import { HEIGHT, layout, WIDTH } from "../shared/layout.ts";
 import type { ReplayProgress } from "./replay-status.ts";
 
 interface Stage {
@@ -60,17 +61,10 @@ function stages(progress: ReplayProgress): Stage[] {
   return [...bible, ...leads, ...references, ...episodes];
 }
 
-// drama-cli's layout of the export, as `export comfyui` writes it (short_drama drama_cli/export.py, WIDTH, HEIGHT,
-// GAP, PAD, TITLE, section and layout): the studio's Canvas places every node where drama-cli does.
-const WIDTH = 300;
-const HEIGHT = 340;
-const GAP = 60;
-const PAD = 20;
-const TITLE = 50;
-const TEXT_HEIGHT = 30;
+// The export carries drama-cli's layout (shared/layout.ts): the studio's Canvas places every node where drama-cli does.
 const TEXT_KINDS = new Set(["screenplay", "bible", "breakdown", "video_prompts", "subtitles"]);
 
-/** The group a stage is drawn in (export.py, section). */
+/** The group a stage is drawn in (short_drama drama_cli/export.py, section). */
 function section(stage: Stage): string {
   const parts = stage.id.split("/");
   if (TEXT_KINDS.has(stage.kind)) return "Text";
@@ -81,40 +75,12 @@ function section(stage: Stage): string {
   return `${parts[1]} ${parts[3]}`;
 }
 
-/** Each stage's top-left corner and the groups' title and bounding (export.py, layout), sorted as Python sorts strings. */
-function layout(all: Stage[]): { places: Map<string, [number, number]>; groups: { title: string; bounding: number[] }[] } {
-  const byCodePoint = (a: string, b: string) => (a < b ? -1 : a > b ? 1 : 0);
-  const members = new Map<string, Stage[]>();
-  for (const stage of all) members.set(section(stage), [...(members.get(section(stage)) ?? []), stage]);
-  const shared = ["Text", "Characters", "Locations", "Props"];
-  const names = [...members.keys()];
-  const segments = names.filter((name) => !shared.includes(name) && !name.endsWith(" cut")).sort(byCodePoint);
-  const places = new Map<string, [number, number]>();
-  const groups: { title: string; bounding: number[] }[] = [];
-  const place = (name: string, x: number, y: number, stages: Stage[], perRow: number, [w, h]: [number, number]) => {
-    [...stages].sort((a, b) => a.column - b.column || byCodePoint(a.id, b.id)).forEach((stage, n) => places.set(stage.id, [x + (n % perRow) * (w + GAP), y + Math.floor(n / perRow) * (h + GAP)]));
-    const width = Math.min(stages.length, perRow) * (w + GAP) - GAP;
-    const height = Math.ceil(stages.length / perRow) * (h + GAP) - GAP;
-    groups.push({ title: name, bounding: [x - PAD, y - TITLE - PAD, width + 2 * PAD, height + TITLE + 2 * PAD] });
-    return y + height + TITLE + 2 * PAD + GAP;
-  };
-  let y = place("Text", 0, TITLE + PAD, members.get("Text") ?? [], 1, [WIDTH, TEXT_HEIGHT]);
-  for (const name of ["Characters", "Locations", "Props"]) if (members.has(name)) y = place(name, 0, y + TITLE + PAD, members.get(name)!, 2, [WIDTH, HEIGHT]);
-  let x = 2 * (WIDTH + GAP) + 2 * PAD + GAP;
-  y = TITLE + PAD;
-  for (const name of segments) y = place(name, x, y, members.get(name)!, 4, [WIDTH, HEIGHT]) + TITLE + PAD;
-  x += 4 * (WIDTH + GAP) + 2 * PAD + GAP;
-  y = TITLE + PAD;
-  for (const name of names.filter((one) => one.endsWith(" cut")).sort(byCodePoint)) y = place(name, x, y, members.get(name)!, 1, [WIDTH, HEIGHT]) + TITLE + PAD;
-  return { places, groups };
-}
-
 /** The export, as the bytes of handoff/lineage.json; `returned` is every file the session's stops returned. */
 export function replayLineage(progress: ReplayProgress, returned: Iterable<string>): { path: string; type: string; bytes: Uint8Array } {
   const files = [...returned];
   const all = stages(progress);
   const number = new Map(all.map((stage, n) => [stage.id, n + 1]));
-  const { places, groups } = layout(all);
+  const { places, groups } = layout(all.map((stage) => ({ id: stage.id, column: stage.column, section: section(stage) })));
   const nodes = all.map((stage) => ({
     id: number.get(stage.id),
     type: "DramaCliStep",
@@ -141,7 +107,7 @@ export function replayLineage(progress: ReplayProgress, returned: Iterable<strin
   const workflow = {
     nodes,
     links: links.map(([from, to], n) => [n + 1, number.get(from), 0, number.get(to), 0, "DRAMA_CLI_FILE"]),
-    groups: groups.map((group, n) => ({ id: n + 1, title: group.title, font_size: 24, bounding: group.bounding })),
+    groups: groups.map((group, n) => ({ id: n + 1, title: group.title, font_size: 24, bounding: [group.x, group.y, group.w, group.h] })),
     extra: { drama_cli: { project: "/work/drama" } },
     version: 0.4,
   };
