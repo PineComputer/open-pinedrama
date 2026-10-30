@@ -423,12 +423,6 @@ h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 700; lett
 /* The episodes board (the spec's FilterChip and EpisodeCard). */
 
 /* StopBanner: dashed while the drama's Computers stop, solid once it is stopped (the spec's StopBanner). */
-.ds-banner { margin: 0 0 16px; padding: 10px 14px; border-radius: var(--radius-large); border: 1px solid color-mix(in srgb, var(--error) 50%, transparent); background: var(--surface); display: flex; align-items: center; gap: 12px; font-size: 12.5px; flex-wrap: wrap; }
-.ds-banner.is-stopping { border-style: dashed; }
-.ds-banner.is-stopping .ds-icon { animation: ds-spin 1.2s linear infinite; }
-.ds-banner > div { flex: 1; min-width: 0; }
-.ds-banner b, .ds-banner strong { color: var(--text-primary); font-weight: 600; }
-.ds-banner .why { color: var(--text-secondary); }
 
 /* The review room (the spec's ReviewRoom): the items on a reel to the left, the work on a stage
    in the middle, the inspector with the verdict bar to the right, and the send bar along the foot. */

@@ -543,6 +543,7 @@ const en = {
   "stop.keep": "Keep running",
   "stop.stopping": "Stopping…",
   "stop.banner": "Stopping — keep the app open until its Computers have stopped.",
+  "stop.isStopped": "{title} is stopped",
 
   "stage.breakdown": "Breakdown",
   "stage.blocking": "Blocking",
@@ -1383,6 +1384,7 @@ const zh: Record<Key, string> = {
   "stop.keep": "继续运行",
   "stop.stopping": "正在停止…",
   "stop.banner": "正在停止——在它的电脑停好之前请不要关闭应用。",
+  "stop.isStopped": "{title} 已停止",
 
   "stage.breakdown": "拆分",
   "stage.blocking": "站位",

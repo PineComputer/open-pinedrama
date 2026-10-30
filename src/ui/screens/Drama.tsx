@@ -31,29 +31,29 @@ function Notices({ drama }: { drama: DramaView }) {
       {elsewhere && <p className="notice">{t(drama.mode === "replay" ? "otherMode.replayNote" : "otherMode.pineNote")}</p>}
       {drama.rehearsal && !elsewhere && <p className="notice quiet-notice">{t("rehearsal.note")}</p>}
       {drama.atLimit !== undefined && !drama.stalled && <p className="notice">{t("limit.note", { n: drama.atLimit })}</p>}
+      {/* The design's StopBanner (design/app.js): dashed while its Computers stop, solid once stopped, with Resume. */}
       {stillStopping(drama) && (
-        <div className="ds-banner is-stopping" role="status">
-          <Icon name="circle-notch" />
+        <div className="banner" role="status">
+          <Icon name="circle-notch" className="ic" />
           <b>{t("stop.banner")}</b>
         </div>
       )}
       {held && !stillStopping(drama) && (
-        <div className="ds-banner">
-          <div>
-            <strong>{drama.setup.reason ? t(`setup.held.${drama.setup.reason}`) : drama.setup.note ?? t("board.stopped")}</strong>
-            {drama.setup.reason === "no-drama-skill" && <div className="why">{t("setup.rehearseHint")}</div>}
-            {[again.error, rehearse.error].map((failed, n) => failed !== undefined && <div key={n} className="error small">{errorText(failed, t)}</div>)}
-          </div>
-          <span className="notice-actions">
-            <button className={buttonVariants({ variant: "default", size: "sm" })} disabled={again.busy} onClick={() => void again.run()}>
-              {t("setup.retry")}
-            </button>
-            {drama.setup.reason === "no-drama-skill" && (
-              <button className={buttonVariants({ variant: "outline", size: "sm" })} disabled={rehearse.busy} onClick={() => void rehearse.run()}>
-                {t("setup.rehearse")}
-              </button>
-            )}
+        <div className="banner done">
+          <b>{t("stop.isStopped", { title: drama.title })}</b>
+          <span className="grow">
+            {drama.setup.reason ? t(`setup.held.${drama.setup.reason}`) : drama.setup.note ?? t("board.stopped")}
+            {drama.setup.reason === "no-drama-skill" && ` ${t("setup.rehearseHint")}`}
           </span>
+          {[again.error, rehearse.error].map((failed, n) => failed !== undefined && <span key={n} className="error small">{errorText(failed, t)}</span>)}
+          {drama.setup.reason === "no-drama-skill" && (
+            <button type="button" className="btn sm" disabled={rehearse.busy} onClick={() => void rehearse.run()}>
+              {t("setup.rehearse")}
+            </button>
+          )}
+          <button type="button" className="btn sm primary" disabled={again.busy} onClick={() => void again.run()}>
+            {t("setup.retry")}
+          </button>
         </div>
       )}
       {drama.stalled && (

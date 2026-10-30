@@ -1,5 +1,5 @@
-// A stop the agent asks the maker about because drama-cli refused (docs/REDESIGN_PLAN.md, P5.8;
-// the pro direction's spec, "StopCard"): which kind of stop it is, from the refusal's code
+// A stop the agent asks the maker about because drama-cli refused, ported from the design
+// (design/screens.js, StopCard; studio.css .stopcard): which kind of stop it is, from the refusal's code
 // (shared/refusal.ts stopKind), the code, the config key for a cap, and what drama-cli said, word
 // for word. The facts are the refusal's own, so they don't change while the maker decides; the
 // maker answers the agent in their own words below it.
@@ -11,15 +11,18 @@ export function StopCard({ refusal }: { refusal: Refusal }) {
   const { t } = useT();
   const kind = stopKind(refusal);
   const title = kind.kind === "red-line" ? t("stopcard.redLine") : kind.kind === "cap" ? t("stopcard.cap", { key: kind.key }) : t("stopcard.ask");
+  // The design's StopCard (design/screens.js): a red line on the error's header; a cap or another refusal on a quiet one.
+  const look = kind.kind === "red-line" ? "redline" : kind.kind === "cap" ? "cap" : "env";
   return (
-    <section className={`ds-stopcard is-${kind.kind}`} aria-label={title}>
+    <section className={`stopcard ${look}`} aria-label={title}>
       <header>
-        <Icon name={kind.kind === "red-line" ? "warning" : kind.kind === "cap" ? "lock-simple" : "info"} />
-        {t(`stopcard.kind.${kind.kind}`)}
+        <Icon name={kind.kind === "red-line" ? "warning" : kind.kind === "cap" ? "lock-simple" : "info"} className="ic" />
+        <span>{t(`stopcard.kind.${kind.kind}`)}</span>
+        <span className="grow" />
       </header>
-      <div className="ds-stopcard-body">
+      <div className="sbody">
         <h3>{title}</h3>
-        <dl>
+        <dl className="kv">
           <dt>{t("stopcard.code")}</dt>
           <dd className="mono">{refusal.code}</dd>
           {kind.kind === "cap" && (
@@ -28,10 +31,14 @@ export function StopCard({ refusal }: { refusal: Refusal }) {
               <dd className="mono">{kind.key}</dd>
             </>
           )}
+          <dt>{t("stopcard.said")}</dt>
+          <dd className="said mono">{refusal.message}</dd>
         </dl>
-        <span className="ds-stopcard-label">{t("stopcard.said")}</span>
-        <p className="ds-stopcard-words">{refusal.message}</p>
-        <p className="ds-stopcard-note">{t(`stopcard.note.${kind.kind}`)}</p>
+        <div className="acts">
+          <span className="muted" style={{ fontSize: 11.5 }}>
+            {t(`stopcard.note.${kind.kind}`)}
+          </span>
+        </div>
       </div>
     </section>
   );

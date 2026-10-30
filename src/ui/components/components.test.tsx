@@ -323,7 +323,7 @@ describe("StopCard", () => {
   it("says a red line from its code, with drama-cli's words as they came", () => {
     card({ code: "RedLine", message: "Bible v2 is not usable: red line: …", param: null, action: "ask_person" });
     const stop = screen.getByRole("region", { name: "The screenplay crosses a red line" });
-    expect(stop).toHaveClass("is-red-line");
+    expect(stop).toHaveClass("stopcard", "redline");
     expect(within(stop).getByText("RedLine")).toBeInTheDocument();
     expect(within(stop).getByText("Bible v2 is not usable: red line: …")).toBeInTheDocument();
   });
