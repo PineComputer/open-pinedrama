@@ -19,7 +19,7 @@ milestone is accepted by merecdesperez44323-lab, as [REDESIGN_PLAN.md](REDESIGN_
 |---|---|
 | Colours, type, space, radii | `src/ui/theme/reveric-themes.css` and `reveric-tokens.css` (Reveric's, see below), `src/ui/theme/base.css` (our layout sizes and motion) |
 | Theme switching | `src/ui/theme/theme.ts`: `data-palette="classic"` and `data-theme` (`light` or `dark`) on `<html>` |
-| Icons | `src/ui/icons.tsx`: `<Icon name="film-strip" />` (Phosphor, regular). Add an icon by copying its SVG from Phosphor's regular set, the same way |
+| Icons | `src/ui/icons.tsx`: `<Icon name="film-strip" />`, @phosphor-icons/react by the studio's names. Add an icon by adding its Phosphor component to the table there |
 | Components | `src/ui/components/` and `components.css` |
 | The shell | `src/ui/shell/`: `NavRail`, `Sidebar` (`HomeSidebar`, `DramaSidebar`), `TopBar` (`Breadcrumb`, `StopControl`, `DramaBar` with the surface switch and project chips), `AgentPanel` and `AgentBall`, all styled in `shell.css` |
 | Screens | `src/ui/screens/`; a drama's surfaces are tabs of `Drama.tsx`, with `canvas` and `graph` routed at `/d/:id/canvas` and `/d/:id/graph` |
@@ -63,7 +63,7 @@ for 2026-10-23..29.
 | Components | shadcn/ui 4.23.0 on radix-ui 1.8.1, Tailwind CSS 4.3.3, class-variance-authority 0.7.1 | radix-ui 24.9 M, tailwindcss 167.7 M, cva 77.6 M | Reveric's Material plus skin; our hand-written Button, Chip, Segmented, Tabs, Dialog, Menu, Tooltip, EmptyState, BudgetMeter |
 | Toasts | sonner 2.0.8 | 54.5 M | our Toast |
 | Relative times | date-fns 4.4.0 | 118.6 M | our `ago` |
-| Icons | @phosphor-icons/react 2.1.10 | 7.4 M | Reveric's SVG copies (the switch from `icons.tsx` comes next) |
+| Icons | @phosphor-icons/react 2.1.10 | 7.4 M | our SVG copies of Reveric's Phosphor icons |
 | Node canvas | @xyflow/react 12.12.0 | 19.5 M | Reveric's vendored vyuh_node_flow; our camera, zoom and minimap |
 | Graph layout | d3-force 3.0.0 | 34.8 M | our column layout |
 | Long lists | @tanstack/react-virtual 3.14.21 | 39.2 M | none |
