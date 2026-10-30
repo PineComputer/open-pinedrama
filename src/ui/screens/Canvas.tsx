@@ -11,7 +11,7 @@ import { createContext, Fragment, useContext, useEffect, useMemo, useState } fro
 import { shotListOf } from "../../shared/shots.ts";
 import { type BoardNode, layoutEpisode } from "../../shared/canvas.ts";
 import { stageOfFile } from "../../shared/facts.ts";
-import type { LineageView } from "../../shared/lineage.ts";
+import type { Lineage, LineageView } from "../../shared/lineage.ts";
 import type { ProjectView, StageStatus } from "../../shared/project.ts";
 import type { DramaView, FileItem, FileKind } from "../../shared/types.ts";
 import { api, useResource } from "../api.ts";
@@ -24,6 +24,7 @@ import { Icon } from "../icons.tsx";
 import { subjectLabel } from "../labels.ts";
 import { Link, navigate, usePath } from "../router.tsx";
 import { useText } from "../viewing.tsx";
+import { NodePanel, type PanelItem } from "./NodePanel.tsx";
 import { SteerBar } from "./SteerBar.tsx";
 import { buttonVariants } from "@/components/ui/button";
 
@@ -56,6 +57,11 @@ const PICTURES = new Set<FileKind>(["look", "location", "prop", "storyboard", "b
 function picture(files: FileItem[], at: string[], stage: StageStatus | undefined): FileItem | undefined {
   const mine = files.filter((file) => PICTURES.has(file.kind) && stageOfFile(file.path)?.at.join("/") === at.join("/")).sort((a, b) => b.createdAt.localeCompare(a.createdAt));
   return mine.find((file) => stageOfFile(file.path)!.version === stage?.current) ?? mine[0];
+}
+
+/** The video of a segment's working take among the files the stops returned. */
+function takeOf(files: FileItem[], at: string[], stage: StageStatus | undefined): FileItem | undefined {
+  return files.find((file) => file.type.startsWith("video/") && stageOfFile(file.path)?.at.join("/") === at.join("/") && stageOfFile(file.path)!.version === stage?.current);
 }
 
 /** A segment waits for the maker when its board or its take does. */
@@ -92,75 +98,17 @@ export interface NodeActions {
 
 export const PHASE_ONE: NodeActions = { generate: () => {}, upload: () => {}, useAsReference: () => {} };
 
-interface ItemData extends Record<string, unknown> {
-  item: BoardNode;
-  label: string;
+interface ItemData extends PanelItem, Record<string, unknown> {
   status: Status;
   picture?: FileItem;
-  /** A segment's scene heading, its shots as the breakdown lists them, its storyboard and take versions. */
+  /** A segment's scene heading, its storyboard and take versions. */
   heading?: string;
-  shots?: string[];
   storyboard?: string | null;
   take?: string | null;
-  /** The references a segment uses or needs, in the board's order. */
-  refs?: { id: string; label: string; picture?: FileItem }[];
   followed: boolean;
 }
 
-const Board = createContext<{ drama: DramaView; episodeTitle?: string; actions: NodeActions; pick: (id: string | null) => void } | null>(null);
-
-/** A shot's words, with each reference it names shown as a chip, as the reference's prompt shows them. */
-function withChips(line: string, refs: { label: string; picture?: FileItem }[]) {
-  const named = refs.filter((ref) => ref.label);
-  if (!named.length) return line;
-  const pattern = new RegExp(`(${named.map((ref) => ref.label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|")})`, "giu");
-  return line.split(pattern).map((part, n) => {
-    const ref = named.find((one) => one.label.toLowerCase() === part.toLowerCase());
-    return ref ? (
-      <span key={n} className="chip">
-        {ref.picture && <img src={ref.picture.url} alt="" />}
-        {part}
-      </span>
-    ) : (
-      <Fragment key={n}>{part}</Fragment>
-    );
-  });
-}
-
-/** Under a picked segment, as the reference's node panel: the pictures it is made from, its shots, its settings. The hand controls stand disabled. */
-function NodePanel({ id, data }: { id: string; data: ItemData }) {
-  const { t } = useT();
-  const board = useContext(Board)!;
-  const refs = data.refs ?? [];
-  return (
-    <section className="ds-npanel" aria-label={t("canvas.panel", { item: data.label })}>
-      {refs.length > 0 && (
-        <ol className="refs">
-          {refs.map((ref, n) => (
-            <li key={ref.id}>
-              {ref.picture ? <img src={ref.picture.url} alt="" /> : <span className="none" />}
-              <span>{t("canvas.image", { n: n + 1 })}</span>
-              <b>{ref.label}</b>
-            </li>
-          ))}
-        </ol>
-      )}
-      <div className="prompt">{data.shots ? data.shots.map((line) => <p key={line}>{withChips(line, refs)}</p>) : <p className="quiet">{t("segments.noShots")}</p>}</div>
-      <div className="foot">
-        <span>{board.drama.format}</span>
-        <span>{t("canvas.storyboard", { v: data.storyboard ?? "—" })}</span>
-        <span>{data.take ? t("canvas.take", { v: data.take }) : t("canvas.noTake")}</span>
-        <span className="grow" />
-        <Button variant="outline" size="sm" icon="upload" disabledReason={t("canvas.phase2")} onClick={() => board.actions.upload(id)}>
-          {t("canvas.upload")}
-        </Button>
-        <Button size="sm" icon="sparkle" disabledReason={t("canvas.phase2")} onClick={() => board.actions.generate(id)}>
-          {t("canvas.generate")}
-        </Button>
-      </div>
-    </section>
-  );
-}
+const Board = createContext<{ drama: DramaView; episodeTitle?: string; files: FileItem[]; lineage: Lineage | null; onBoard: Set<string>; actions: NodeActions; pick: (id: string | null) => void } | null>(null);
 
 /** An item as a node: its picture is the node, its name and standing above it; picked, its SteerBar stands over it. */
 function ItemNode({ id, data, selected }: NodeProps<Node<ItemData>>) {
@@ -172,11 +120,9 @@ function ItemNode({ id, data, selected }: NodeProps<Node<ItemData>>) {
       <NodeToolbar isVisible={selected} position={Position.Top}>
         <SteerBar drama={board.drama} node={data.item} label={data.label} status={data.status} picture={data.picture} episodeTitle={board.episodeTitle} actions={board.actions} onClose={() => board.pick(null)} />
       </NodeToolbar>
-      {data.item.kind === "segment" && (
-        <NodeToolbar isVisible={selected} position={Position.Bottom}>
-          <NodePanel id={id} data={data} />
-        </NodeToolbar>
-      )}
+      <NodeToolbar isVisible={selected} position={Position.Bottom}>
+        <NodePanel dramaId={board.drama.id} data={data} files={board.files} lineage={board.lineage} onBoard={board.onBoard} actions={board.actions} pick={board.pick} />
+      </NodeToolbar>
       <Handle type="target" position={Position.Left} isConnectable={false} />
       {/* Named by what it shows (WCAG 2.5.3): its name, then where it stands. A segment's card holds both, as the reference's does. */}
       <span
@@ -304,6 +250,7 @@ function Plane({ drama }: { drama: DramaView }) {
           label: label(node),
           status: node.kind === "segment" ? segmentStanding(stages) : standing(stages[0].stage),
           picture: pictureOf(node),
+          work: (node.kind === "segment" ? takeOf(files.data ?? [], stages[1].at, stages[1].stage) : undefined) ?? pictureOf(node),
           ...(node.kind === "segment" && {
             heading: scene?.heading,
             shots: shotListOf(breakdownText, node.subject),
@@ -352,7 +299,7 @@ function Plane({ drama }: { drama: DramaView }) {
   const at = codes.indexOf(code);
 
   return (
-    <Board.Provider value={{ drama, episodeTitle: names?.episodes[code], actions: PHASE_ONE, pick: (id) => {
+    <Board.Provider value={{ drama, episodeTitle: names?.episodes[code], files: files.data ?? [], lineage: lineage.data?.lineage ?? null, onBoard: new Set(nodes.map((node) => node.id)), actions: PHASE_ONE, pick: (id) => {
           setFollow(false);
           setNodes((all) => all.map((node) => ({ ...node, selected: node.id === id })));
           // Centre the picked item with its bar above and, for a segment, its panel below, at the maker's zoom.

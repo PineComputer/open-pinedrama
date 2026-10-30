@@ -217,14 +217,84 @@ describe("a picked item's hand actions and panel (P6.8)", () => {
     expect(card.textContent).not.toContain("Elsewhere");
   });
 
-  it("opens under a picked segment: the pictures it is made from, numbered, and its shots with each one named", async () => {
+  const folder = "/work/drama/episodes/EP001/multi_panel_storyboard/seg01/line-art/v1";
+  const look = { id: 9, name: "image-1.png", path: "/work/drama/assets/characters/lin/v1/image-1.png", type: "image/png", size: 1, kind: "look", url: "/f/9?v=1", createdAt: "2026-10-30T09:00:00Z" };
+  const spec = { id: 10, name: "spec.json", path: `${folder}/spec.json`, type: "application/json", size: 1, kind: "spec", url: "/f/10?v=1", createdAt: "2026-10-30T10:00:00Z" };
+  const request = { id: 11, name: "request.json", path: `${folder}/request.json`, type: "application/json", size: 1, kind: "request", url: "/f/11?v=1", createdAt: "2026-10-30T10:00:00Z" };
+
+  function withSpec() {
+    withBreakdown();
+    answer("/api/dramas/d1/files", [breakdown, sheet, look, spec, request]);
+    const content = [
+      { type: "text", text: "Image 1: 林's look.\nShe walks in, as in Image 1, past Image 2." },
+      { type: "image_url", image_url: { url: "@/Users/maker/drama/assets/characters/lin/v1/image-1.png" }, role: "reference_image" },
+      { type: "image_url", image_url: { url: "asset://asset-1" }, role: "reference_image" },
+    ];
+    server.use(http.get("/f/10", () => HttpResponse.text(JSON.stringify({ model: "sd25", content, duration: 12, ratio: "9:16", resolution: "480p", seed: 42 }))));
+    server.use(http.get("/f/11", () => HttpResponse.text(JSON.stringify({ model: "sd25", content, duration: 12 }))));
+  }
+
+  async function panelOf(name: RegExp) {
+    const picked = await pick(name);
+    return { ...picked, panel: await screen.findByRole("region", { name: /what it is made from/ }) };
+  }
+
+  it("shows the prompt drama-cli sent, each Image N as a chip with the picture it names", async () => {
+    withSpec();
+    render(<Canvas drama={drama("working")} />);
+    const { panel } = await panelOf(/^Seg 1-1 · /);
+    await waitFor(() => expect(within(panel).getByRole("tabpanel").textContent).toContain("She walks in, as in Image 1, past Image 2."));
+    const chips = [...panel.querySelectorAll(".prompt .chip")];
+    expect(chips.map((chip) => chip.textContent)).toEqual(["Image 1", "Image 1", "Image 2"]);
+    // A picture sent from the project is the returned file at that path; one from the asset library has none here.
+    expect(chips[0].querySelector("img")).toHaveAttribute("src", "/f/9?v=1");
+    expect(chips[2].querySelector("img")).toBeNull();
+  });
+
+  it("lists the settings the spec states, and nothing it doesn't", async () => {
+    withSpec();
+    render(<Canvas drama={drama("working")} />);
+    const { user, panel } = await panelOf(/^Seg 1-1 · /);
+    await user.click(within(panel).getByRole("tab", { name: "Settings" }));
+    await waitFor(() => expect(within(panel).getByRole("tabpanel").textContent).toBe("Modelsd25Ratio9:16Resolution480pDuration12sSeed42"));
+  });
+
+  it("shows the request as a JSON tree", async () => {
+    withSpec();
+    render(<Canvas drama={drama("working")} />);
+    const { user, panel } = await panelOf(/^Seg 1-1 · /);
+    await user.click(within(panel).getByRole("tab", { name: "Request" }));
+    expect(await within(panel).findByRole("tree", { name: "Request" })).toHaveTextContent(/"sd25"/);
+  });
+
+  it("shows the breakdown's shots until a spec comes back, and says so", async () => {
     withBreakdown();
     render(<Canvas drama={drama("working")} />);
-    await pick(/^Seg 1-1 · /);
-    const panel = await screen.findByRole("region", { name: /^Seg 1-1: what it is made from/ });
-    const refs = within(panel).getAllByRole("listitem");
-    expect(refs.map((ref) => ref.textContent)).toEqual(["Image 1林", "Image 2办公室"]);
-    await waitFor(() => expect(panel.querySelectorAll(".prompt .chip")).toHaveLength(2));
+    const { panel } = await panelOf(/^Seg 1-1 · /);
+    await waitFor(() => expect(within(panel).getByRole("tabpanel").textContent).toContain("Shot 2 (close · 3s) She stops."));
+    expect(within(panel).getByRole("tabpanel").textContent).toContain("until the agent returns this version's spec.json");
+  });
+
+  it("lists what drama-cli's lineage made it from, and picks one on the board", async () => {
+    withBreakdown();
+    render(<Canvas drama={drama("working")} />);
+    const { user, panel } = await panelOf(/^Seg 1-1 · /);
+    await user.click(within(panel).getByRole("tab", { name: "Made from" }));
+    await user.click(within(panel).getByRole("button", { name: "lin" }));
+    expect(await screen.findByRole("toolbar", { name: /林/ })).toBeInTheDocument();
+  });
+
+  it("lists the segment's versions, each with what the maker decided", async () => {
+    withBreakdown();
+    answer("/api/dramas/d1/episodes/EP001", { segments: [{ key: "seg01", boards: [{ turnId: "u1", files: [{ ...sheet, version: "v1" }], review: { reviewId: "r1", kind: "storyboards", state: "answered", verdict: "revise", notes: [{ text: "Brighter lamp." }] } }], stills: [], takes: [] }] });
+    render(<Canvas drama={drama("working")} />);
+    const { user, panel } = await panelOf(/^Seg 1-1 · /);
+    await user.click(within(panel).getByRole("tab", { name: "Versions" }));
+    await waitFor(() => expect(panel.querySelector(".versions > li")).not.toBeNull());
+    const version = panel.querySelector(".versions > li")!;
+    expect(version).toHaveTextContent("Storyboard · v1");
+    expect(version).toHaveTextContent("Sent back");
+    expect(version).toHaveTextContent("Brighter lamp.");
   });
 
   it("offers the hand actions disabled, saying why, and they do nothing", async () => {

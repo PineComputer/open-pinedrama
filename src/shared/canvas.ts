@@ -74,7 +74,7 @@ export const SIZE = {
 const byCode = (a: string, b: string) => a.localeCompare(b, "en", { numeric: true });
 
 /** The board node a reference's stage folder stands for (assets/characters|scenes|props/<id>, a look, time or view folded into its subject). */
-function reference(path: string): string | undefined {
+export function referenceNode(path: string): string | undefined {
   const m = path.match(/assets\/(characters|scenes|props)\/([^/]+)/);
   if (!m) return undefined;
   return `${{ characters: "character", scenes: "location", props: "prop" }[m[1] as "characters" | "scenes" | "props"]}:${m[2]}`;
@@ -90,7 +90,7 @@ export function episodeUses(lineage: Lineage | null, code: string): BoardEdge[] 
     const to = byId.get(link.to);
     if (!from || !to || to.where.episode !== code || !to.where.segment) continue;
     if (from.kind !== "look" && from.kind !== "plate" && from.kind !== "prop") continue;
-    const ref = reference(from.id);
+    const ref = referenceNode(from.id);
     if (!ref) continue;
     const edge: BoardEdge = { from: ref, to: `segment:${code}/${to.where.segment}`, kind: "uses" };
     uses.set(`${edge.from}>${edge.to}`, edge);
@@ -106,7 +106,7 @@ export function layoutEpisode(state: State, code: string, lineage: Lineage | nul
   if (!episode) return { episode: code, nodes, groups, edges, width: 0, height: 0 };
 
   const needs: BoardEdge[] = (episode.needs ?? []).flatMap((need) => {
-    const from = reference(need.path);
+    const from = referenceNode(need.path);
     return from ? need.segments.map((segment): BoardEdge => ({ from, to: `segment:${code}/${segment}`, kind: "needs" })) : [];
   });
   const uses = episodeUses(lineage, code);

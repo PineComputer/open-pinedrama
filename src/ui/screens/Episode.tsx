@@ -14,7 +14,7 @@ import { buttonVariants } from "@/components/ui/button";
 type Selection = { kind: "segment"; key: string; tab: "boards" | "stills" | "takes" } | { kind: "cut" } | { kind: "other" };
 
 /** What the maker decided on what a review showed, with the way back to that review. */
-function JudgedLine({ review }: { review?: Judged }) {
+export function JudgedLine({ review }: { review?: Judged }) {
   const { t } = useT();
   if (!review) return <div className="judged quiet">{t("judged.none")}</div>;
   const link = (
