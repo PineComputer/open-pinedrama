@@ -9,6 +9,7 @@ import { Icon } from "../icons.tsx";
 import { useT } from "../i18n.ts";
 import { Link } from "../router.tsx";
 import { useText } from "../viewing.tsx";
+import { buttonVariants } from "@/components/ui/button";
 
 /** The setup session's named steps (its activity, as the agent panel's Process shows it): each done but the newest, under way unless the agent waits. */
 export function stepsOf(chat: ChatView | undefined): Step[] {
@@ -41,7 +42,7 @@ export function Analyzing({ dramaId }: { dramaId: string }) {
         <h1>{t(ready ? "analyzing.ready" : "analyzing.title")}</h1>
         <p>{t(ready ? "analyzing.readyLede" : "analyzing.lede")}</p>
         {ready && (
-          <Link to={`/d/${dramaId}/script`} className="ds-btn is-primary is-lg">
+          <Link to={`/d/${dramaId}/script`} className={buttonVariants({ variant: "default", size: "lg" })}>
             <Icon name="eye" />
             {t("analyzing.review")}
           </Link>
