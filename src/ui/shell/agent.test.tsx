@@ -92,51 +92,51 @@ describe("the agent panel", () => {
     await waitFor(() => expect(within(recent).getAllByText(/^Look · 林/).map((line) => line.textContent)).toEqual(["Look · 林 v2", "Look · 林 v1"]));
   });
 
-  // Codex round 4, F4: the script, the bible and the shared assets are the setup's work.
-  it("follows the setup session on the setup's pages, never an episode's", async () => {
-    engine();
-    answer("/api/dramas/d1/sessions", [chat("s0", "", "run"), chat("s1", "EP001", "steer")]);
-    answer("/api/sessions/s0/chat", chat("s0", "", "run"));
-    await renderAt(<AgentPanel drama={drama} setup onCollapse={() => {}} />);
-    expect(screen.getByRole("status")).toHaveTextContent("Following the setup session: the script, bible and shared assets");
-    expect(await screen.findByText("To the setup session")).toBeInTheDocument();
-    expect(screen.queryByText(/EP001's session/)).not.toBeInTheDocument();
-    expect(screen.getByRole("textbox", { name: /message/i })).toBeEnabled();
-  });
-
-  it("after the handover, starts a new setup session with the maker's message, sent once per draft (D38)", async () => {
+  // D31 as amended: every drama page has a scope, its episode, else the setup; the line always names its target.
+  it("follows the setup on a page of no episode: with none open, one line says a message starts one, and sends it there", async () => {
     const user = userEvent.setup();
     engine();
-    answer("/api/dramas/d1/sessions", [chat("s0", "", "none"), chat("s1", "EP001", "steer")]);
-    answer("/api/sessions/s0/chat", chat("s0", "", "none"));
     accept("/api/dramas/d1/messages", { id: "sub", sessionId: "", state: "sent" });
-    await renderAt(<AgentPanel drama={drama} setup onCollapse={() => {}} />);
-    expect(await screen.findByText(/^The setup session ended when it handed the project over/)).toBeInTheDocument();
+    await renderAt(<AgentPanel drama={drama} onCollapse={() => {}} />);
+    const status = screen.getByRole("status");
+    expect(status).toHaveTextContent("No session open: a message starts a new setup session");
+    // No dot when no session is open, and none in the head: one dot, one meaning.
+    expect(status.querySelector(".live, .adot")).toBeNull();
+    expect(document.querySelector(".ahead .live")).toBeNull();
+    // EP001 is at work and EP002 waits, but neither is taken for the page's.
+    expect(screen.queryByText(/EP001's session/)).toBeNull();
     expect(screen.getByText("To a new setup session")).toBeInTheDocument();
-    await user.type(screen.getByRole("textbox", { name: /message/i }), "Make Ethan older.");
+    await user.type(screen.getByRole("textbox", { name: "Message the agent" }), "Make Ethan older.");
     await user.click(screen.getByRole("button", { name: "Send" }));
     await waitFor(() => expect(calls("POST", "/api/dramas/d1/messages")).toHaveLength(1));
     const body = calls("POST", "/api/dramas/d1/messages")[0].body as { scope: string; submissionId: string; text: string };
-    expect(body.scope).toBe("setup");
-    expect(body.text).toBe("Make Ethan older.");
+    expect(body).toMatchObject({ scope: "setup", text: "Make Ethan older." });
     expect(body.submissionId).toMatch(/\S/);
     expect(await screen.findByText(/Sent to a new setup session/)).toBeInTheDocument();
-    expect(screen.getByRole("textbox", { name: /message/i })).toHaveValue("");
+    expect(screen.getByRole("textbox", { name: "Message the agent" })).toHaveValue("");
   });
 
   it("shows the engine's refusal in its words, and keeps the message", async () => {
     const user = userEvent.setup();
     engine();
-    answer("/api/dramas/d1/sessions", [chat("s0", "", "none")]);
-    answer("/api/sessions/s0/chat", chat("s0", "", "none"));
     server.use(http.post("/api/dramas/d1/messages", () => HttpResponse.json({ code: "drama-not-running", error: "The project is stopped: resume it to send a message." }, { status: 409 })));
-    await renderAt(<AgentPanel drama={drama} setup onCollapse={() => {}} />);
-    expect(await screen.findByText("To a new setup session")).toBeInTheDocument();
-    await user.type(screen.getByRole("textbox", { name: /message/i }), "Make Ethan older.");
+    await renderAt(<AgentPanel drama={drama} onCollapse={() => {}} />);
+    await user.type(screen.getByRole("textbox", { name: "Message the agent" }), "Make Ethan older.");
     await user.click(screen.getByRole("button", { name: "Send" }));
     // The engine's code, worded as labels.ts words it, and the message kept.
     expect(await screen.findByRole("alert")).toHaveTextContent("Not submitted. The project is stopped: resume it first. Your message is kept.");
-    expect(screen.getByRole("textbox", { name: /message/i })).toHaveValue("Make Ethan older.");
+    expect(screen.getByRole("textbox", { name: "Message the agent" })).toHaveValue("Make Ethan older.");
+  });
+
+  it("points a setup waiting on a screenplay rewrite to Script, with no answer box that would be refused", async () => {
+    engine();
+    const setupDrama = { ...drama, crew: [{ ...drama.crew[0], sessions: [{ id: "s0", name: "setup", role: "setup", state: "open", waiting: true }] }] } as unknown as DramaView;
+    answer("/api/dramas/d1/sessions", [chat("s0", "", "review")]);
+    answer("/api/sessions/s0/chat", { ...chat("s0", "", "review"), reviewId: "r9", rewrite: "v1" });
+    await renderAt(<AgentPanel drama={setupDrama} onCollapse={() => {}} />);
+    expect(screen.getByRole("status")).toHaveTextContent("Following the setup session: it waits for you");
+    expect(await screen.findByRole("link", { name: "v1 waits for your Accept or Send back on Script" })).toHaveAttribute("href", "/d/d1/script?item=screenplay&version=v1");
+    expect(screen.queryByRole("textbox", { name: "Message the agent" })).toBeNull();
   });
 
   it("shows each decision the maker sent in the conversation, item by item, with its reason (D70)", async () => {
@@ -157,10 +157,13 @@ describe("the agent panel", () => {
     expect(within(said).queryByText("(the agent's terms)")).not.toBeInTheDocument();
   });
 
-  it("says whose session it follows", async () => {
+  it("says, with one dot, that the episode's session is working, and names it on the line", async () => {
     engine();
     await renderAt(<AgentPanel drama={drama} episode="EP001" onCollapse={() => {}} />);
-    expect(await screen.findByText(/^To EP001's session/)).toBeInTheDocument();
+    const status = screen.getByRole("status");
+    expect(status).toHaveTextContent("Following EP001's session: working");
+    expect(status.querySelectorAll(".live, .adot")).toHaveLength(1);
+    expect(await screen.findByText("To EP001's session")).toBeInTheDocument();
   });
 
   it("follows the session in view: its steps, what it said, and a line to it", async () => {
@@ -189,8 +192,9 @@ describe("the agent panel", () => {
   it("sends the maker to the review a session waits on rather than a line to it", async () => {
     engine();
     await renderAt(<AgentPanel drama={drama} episode="EP002" onCollapse={() => {}} />);
+    expect(screen.getByRole("status")).toHaveTextContent("Following EP002's session: it waits for you");
     expect(await screen.findByRole("link", { name: "Open the review it waits on" })).toHaveAttribute("href", "/r/r2");
-    expect(screen.getByRole("textbox", { name: "Message the agent" })).toBeDisabled();
+    expect(screen.queryByRole("textbox", { name: "Message the agent" })).toBeNull();
   });
 
   it("follows the episode in view, and a pin wins until the maker follows it again (IA draft E)", async () => {
@@ -198,34 +202,16 @@ describe("the agent panel", () => {
     engine();
     await renderAt(<AgentPanel drama={drama} episode="EP002" onCollapse={() => {}} />);
     const scope = screen.getByRole("status");
-    expect(scope).toHaveTextContent("Following EP002, the episode in view");
-    // EP002's session waits on its review: the panel follows it there.
+    expect(scope).toHaveTextContent("Following EP002's session: it waits for you");
     expect(await screen.findByRole("link", { name: "Open the review it waits on" })).toHaveAttribute("href", "/r/r2");
     await user.click(within(screen.getByRole("region", { name: "Sessions" })).getByRole("button", { name: /^EP001/ }));
-    expect(scope).toHaveTextContent("Pinned to EP001");
+    expect(scope).toHaveTextContent("Pinned to EP001's session: working");
     // The process, the messages and the line all go with the pin.
-    expect(await screen.findByText(/^To EP001's session/)).toBeInTheDocument();
+    expect(await screen.findByText("To EP001's session")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /EP001 · Process/ })).toBeInTheDocument();
-    await user.click(within(scope).getByRole("button", { name: "Follow EP002" }));
-    expect(scope).toHaveTextContent("Following EP002, the episode in view");
+    await user.click(within(scope).getByRole("button", { name: "Follow EP002's session" }));
+    expect(scope).toHaveTextContent("Following EP002's session: it waits for you");
     expect(await screen.findByRole("link", { name: "Open the review it waits on" })).toBeInTheDocument();
-  });
-
-  it("follows no session on a page with no episode in view, and never guesses one (IA draft E)", async () => {
-    const user = userEvent.setup();
-    engine();
-    await renderAt(<AgentPanel drama={drama} onCollapse={() => {}} />);
-    expect(screen.getByRole("status")).toHaveTextContent("No episode in view");
-    // EP001 is at work and EP002 asks, but neither is taken for the page's.
-    expect(screen.getByRole("textbox", { name: "Message the agent" })).toBeDisabled();
-    expect(screen.getByRole("textbox", { name: "Message the agent" })).toHaveAttribute("placeholder", "Pin a session to message it");
-    expect(screen.getByText("No session chosen")).toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: /· Process/ })).toBeNull();
-    await user.click(within(await screen.findByRole("region", { name: "Sessions" })).getByRole("button", { name: /^EP001/ }));
-    expect(screen.getByRole("status")).toHaveTextContent("Pinned to EP001");
-    expect(await screen.findByText(/^To EP001's session/)).toBeInTheDocument();
-    await user.click(screen.getByRole("button", { name: "Unpin" }));
-    expect(screen.getByRole("status")).toHaveTextContent("No episode in view");
   });
 
   it("stops one episode after the maker confirms, and only then", async () => {

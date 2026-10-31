@@ -115,10 +115,10 @@ function Running({ drama, session, inView, inFlight, onPick }: { drama: DramaVie
 }
 
 /**
- * `setup` says the page in view is the setup's work (Script, the Bible, the shared assets: D5), so the panel follows the
- * setup session there, never an episode's (Codex round 4, F4).
+ * The panel follows the page's scope (D31 as amended): its episode, else the setup, the project's own session (Script, the
+ * Bible, the shared assets, and the pages of no one episode). A pin changes the scope to another episode or the setup.
  */
-export function AgentPanel({ drama, episode, setup = false, onCollapse }: { drama: DramaView; episode?: string; setup?: boolean; onCollapse: () => void }) {
+export function AgentPanel({ drama, episode, onCollapse }: { drama: DramaView; episode?: string; onCollapse: () => void }) {
   const { t, lang } = useT();
   const navigate = useNavigate();
   const id = drama.id;
@@ -128,19 +128,24 @@ export function AgentPanel({ drama, episode, setup = false, onCollapse }: { dram
   const sessions = useResource<ChatView[]>(`/api/dramas/${id}/sessions`, [`drama:${id}`]);
   // The drama's sessions, at work or waiting for the maker (design/app.js, AgentPanel's Sessions): each can be pinned.
   const open = drama.crew.flatMap((computer) => computer.sessions.filter((session) => session.state === "open"));
-  const running = open.filter((session) => !session.waiting);
-  // The session pinned, with the name it had, so the pin still says what it holds once that session has ended.
-  const [picked, setPicked] = useState<{ id: string; label: string }>();
+  // A scope pinned by the maker: an episode's code or "setup".
+  const [pinned, setPinned] = useState<string>();
   const [processOpen, setProcessOpen] = useState(true);
-  // The session the panel speaks to (IA draft E): the one pinned, else the episode's in view. A page with no episode in
-  // view follows none and never guesses one; its process, messages and composer all follow that one session.
+  const scope = pinned ?? episode ?? "setup";
+  // The scope's open session, if any: what the status line and the line's target say.
+  const live = open.find((session) => (scope === "setup" ? session.role === "setup" : session.episode === scope));
+  const status: "running" | "waiting" | "none" = !live ? "none" : live.waiting ? "waiting" : "running";
+  // The scope's conversation: its open session's, else the newest it had (the setup's chat has no episode label).
   const chats = sessions.data ?? [];
-  // The setup session is the chat with no episode label (ChatView.label).
-  const inView = picked ? chats.find((chat) => chat.sessionId === picked.id) : episode ? chats.find((chat) => chat.label === episode) : setup ? chats.find((chat) => chat.label === "") : undefined;
-  const followsSetup = !picked && !episode && setup;
+  const label = scope === "setup" ? "" : scope;
+  const inView = (live && chats.find((chat) => chat.sessionId === live.id)) ?? chats.find((chat) => chat.label === label);
   const chat = useResource<ChatView>(inView ? `/api/sessions/${inView.sessionId}/chat` : null, inView ? [`session:${inView.sessionId}`] : []);
-  // The setup session ended at the handover (D5): nothing can be sent to it, and the panel says what can be done instead.
-  const setupEnded = followsSetup && sessions.data !== undefined && (!inView || chat.data?.sends === "none");
+  const name = (of: string) => (of === "setup" ? t("agent.setupSession") : t("agent.sessionOf", { who: of }));
+  const fresh = (of: string) => (of === "setup" ? t("agent.newSetup") : t("agent.newSessionOf", { who: of }));
+  const reload = () => {
+    sessions.reload();
+    chat.reload();
+  };
   const links = new Map((files.data ?? []).map((file) => [file.path, file.url]));
   const names = project.data?.names ?? null;
   const state = project.data?.state ?? null;
@@ -150,41 +155,30 @@ export function AgentPanel({ drama, episode, setup = false, onCollapse }: { dram
   // The conversation, the one log (D70): what the maker said or decided and what the agent said, the newest last;
   // the studio's own goals and the agent's steps are not part of it.
   const conversation = (chat.data?.messages ?? []).filter((message) => (message.kind === "input" && !message.brief) || message.kind === "answer" || message.kind === "progress" || message.kind === "question" || message.kind === "result").slice(-8);
-  const working = running.length > 0;
-  const who = inView?.label || t("talk.setup");
   return (
     <aside className="agent" id="agent" aria-label={t("agent.label")}>
       <div className="ahead">
-        <span className="live" style={working ? undefined : { background: "var(--text-subtle)", boxShadow: "none" }} aria-hidden="true" />
         <h2>{t("agent.title")}</h2>
         <span className="grow" />
         <button type="button" className="ibtn" aria-label={t("agent.collapse")} aria-expanded="true" aria-controls="agent" title={t("agent.collapseKey")} onClick={onCollapse}>
           <Icon name="sidebar-simple" className="ic flipx" />
         </button>
       </div>
-      {/* Whom the panel speaks to, and the way back to following the page (Codex's IA re-review, E). */}
+      {/* One status line, one dot, as the maker's states read (D31 as amended): working while the scope's session runs,
+          needs you while it waits, no dot when none is open, and then a message starts one. */}
       <div className="ascope" role="status">
-        {picked ? (
-          <>
-            <Icon name="map-pin" className="ic" />
-            <span>{t("agent.pinned", { who: picked.label })}</span>
-            <span className="grow" />
-            <button type="button" className="btn sm ghost" onClick={() => setPicked(undefined)}>
-              {episode ? t("agent.followEpisode", { who: episode }) : setup ? t("agent.followSetup") : t("agent.unpin")}
-            </button>
-          </>
-        ) : episode ? (
-          <>
-            <span className="live" aria-hidden="true" />
-            <span>{t("agent.following", { who: episode })}</span>
-          </>
-        ) : setup ? (
-          <>
-            <span className="live" aria-hidden="true" />
-            <span>{t("agent.followingSetup")}</span>
-          </>
-        ) : (
-          <span>{t("agent.noEpisode")}</span>
+        {status === "running" ? <span className="live" aria-hidden="true" /> : status === "waiting" ? <span className="adot you" aria-hidden="true" /> : null}
+        {pinned && <Icon name="map-pin" className="ic" />}
+        <span>
+          {status === "none"
+            ? t("agent.noneOpen", { who: fresh(scope) })
+            : t(pinned ? (status === "running" ? "agent.pinnedRunning" : "agent.pinnedWaiting") : status === "running" ? "agent.followRunning" : "agent.followWaiting", { who: name(scope) })}
+        </span>
+        <span className="grow" />
+        {pinned && (
+          <button type="button" className="btn sm ghost" onClick={() => setPinned(undefined)}>
+            {t("agent.followScope", { who: name(episode ?? "setup") })}
+          </button>
         )}
       </div>
       <div className="ascroll">
@@ -201,7 +195,7 @@ export function AgentPanel({ drama, episode, setup = false, onCollapse }: { dram
                   session={session}
                   inView={session.id === inView?.sessionId}
                   inFlight={session.episode && state?.episodes[session.episode] ? takesInFlight(state.episodes[session.episode]) : 0}
-                  onPick={() => setPicked({ id: session.id, label: session.episode ?? t("crew.setup") })}
+                  onPick={() => setPinned(session.episode ?? "setup")}
                 />
               ))}
             </div>
@@ -234,14 +228,14 @@ export function AgentPanel({ drama, episode, setup = false, onCollapse }: { dram
               {/* A disclosure, as design/'s: the steps fold away under their heading. */}
               <button type="button" aria-expanded={processOpen} onClick={() => setProcessOpen((was) => !was)}>
                 <Icon name="list-checks" className="ic" />
-                {t("agent.process", { who })}
+                {t("agent.process", { who: scope === "setup" ? t("talk.setup") : scope })}
                 <span className="cnt">{steps.length === 1 ? t("agent.stepOne") : t("agent.stepsCount", { n: steps.length })}</span>
                 <Icon name={processOpen ? "caret-down" : "caret-right"} className="ic" />
               </button>
               {processOpen && (
                 <ol className="steps">
                   {steps.map((step, n) => {
-                    const now = n === steps.length - 1 && working;
+                    const now = n === steps.length - 1 && status === "running";
                     return (
                       <li key={step.id} className={now ? "now" : undefined}>
                         <Icon name={now ? "circle-notch" : "check-circle"} className="ic" />
@@ -268,11 +262,6 @@ export function AgentPanel({ drama, episode, setup = false, onCollapse }: { dram
                 <Markdown key={message.id} text={message.text} links={links} className="msg" />
               ),
             )}
-          </section>
-        )}
-        {setupEnded && (
-          <section className="asec">
-            <p className="msg">{t("agent.setupEnded")}</p>
           </section>
         )}
         {recent.length > 0 && (
@@ -307,7 +296,7 @@ export function AgentPanel({ drama, episode, setup = false, onCollapse }: { dram
           </section>
         )}
       </div>
-      {setupEnded ? <NewSetupLine dramaId={id} onSent={sessions.reload} /> : <Composer dramaId={id} chat={inView && chat.data} chosen={picked?.label ?? episode} onSent={chat.reload} />}
+      <Line dramaId={id} scope={scope} target={live ? name(scope) : fresh(scope)} chat={live ? chat.data : undefined} onSent={reload} />
     </aside>
   );
 }
@@ -335,16 +324,18 @@ function Decided({ decision, episode }: { decision: DecisionRecord; episode: str
 }
 
 /**
- * The line to a new setup session, once the setup's own has ended at the handover (D38): a message starts one on this
- * project (POST /api/dramas/:id/messages, scope setup; D71), sent once per draft under one submission id with the shared Submission
- * states, the engine's refusal in its words. The new session then shows in the sessions, and its conversation with it.
+ * The line to the page's scope (D31 as amended, D71): always open on a drama page, naming its target, the scope's open
+ * session or a new one. A message goes through POST /api/dramas/:id/messages {scope, submissionId, text}, once per draft
+ * under one submission id with the shared Submission states, the engine's refusal in labels.ts's words. While the open
+ * session waits on a review it takes no message (the engine refuses "decide-in-review"), so the line points to the
+ * decision instead: Script at the version, for a screenplay rewrite; the review room for files.
  */
-function NewSetupLine({ dramaId, onSent }: { dramaId: string; onSent: () => void }) {
+function Line({ dramaId, scope, target, chat, onSent }: { dramaId: string; scope: string; target: string; chat?: ChatView; onSent: () => void }) {
   const { t } = useT();
   const [text, setText] = useState("");
   const submission = useRef(crypto.randomUUID());
   const { sending, send, check } = useSubmission({
-    submit: () => api(`/api/dramas/${dramaId}/messages`, { method: "POST", json: { scope: "setup", submissionId: submission.current, text } }),
+    submit: () => api(`/api/dramas/${dramaId}/messages`, { method: "POST", json: { scope, submissionId: submission.current, text } }),
     // The engine's word on the submission (GET /api/submissions/:id): found is taken; 404 is nothing submitted.
     taken: async () => {
       try {
@@ -362,79 +353,43 @@ function NewSetupLine({ dramaId, onSent }: { dramaId: string; onSent: () => void
     submission.current = crypto.randomUUID();
     onSent();
   }, [sending.state]);
+  if (chat?.sends === "review" && chat.reviewId)
+    return (
+      <div className="composer">
+        <div className="crow">
+          {chat.rewrite ? (
+            <Link to="/d/$dramaId/script" params={{ dramaId }} search={{ item: "screenplay", version: chat.rewrite }} className="grow">
+              {t("agent.decideOnScript", { v: chat.rewrite })}
+            </Link>
+          ) : (
+            <Link to="/r/$reviewId" params={{ reviewId: chat.reviewId }} className="grow">
+              {t("talk.openReview")}
+            </Link>
+          )}
+        </div>
+      </div>
+    );
   const busy = sending.state === "sending" || sending.state === "checking";
+  const placeholder = chat?.sends === "answer" ? t("talk.answer") : chat?.sends === "steer" ? t("talk.steer") : t("talk.run");
   return (
     <div className="composer">
       <textarea
         aria-label={t("agent.message")}
         value={text}
         disabled={busy}
-        placeholder={t("agent.askNewSetup")}
+        placeholder={placeholder}
         onChange={(event) => setText(event.target.value)}
         onKeyDown={(event) => {
           if (event.key === "Enter" && (event.metaKey || event.ctrlKey) && text.trim() && !busy) void send();
         }}
       />
       <div className="crow">
-        <span className="grow">{t("agent.toNewSetup")}</span>
+        <span className="grow">{t("agent.toWho", { who: target })}</span>
         <button type="button" className="send" aria-label={t("talk.send")} disabled={!text.trim() || busy} onClick={() => void send()}>
           <Icon name="arrow-up" className="ic" />
         </button>
       </div>
-      <Submission sending={sending} to={t("agent.newSetup")} kept={t("agent.messageKept")} onSend={() => void send()} onCheck={() => void check()} />
-    </div>
-  );
-}
-
-/**
- * A line to the session the panel speaks to, as a message to its scope (POST /api/dramas/:id/messages; D71), one
- * submission id per draft; with none, it says why: the one pinned or followed has none open, or none is chosen.
- */
-function Composer({ dramaId, chat, chosen, onSent }: { dramaId: string; chat?: ChatView; chosen?: string; onSent: () => void }) {
-  const { t } = useT();
-  const [text, setText] = useState("");
-  const [error, setError] = useState<unknown>();
-  const submission = useRef(crypto.randomUUID());
-  const send = async () => {
-    if (!chat || !text.trim()) return;
-    setError(undefined);
-    try {
-      await api(`/api/dramas/${dramaId}/messages`, { method: "POST", json: { scope: chat.label || "setup", submissionId: submission.current, text } });
-      setText("");
-      submission.current = crypto.randomUUID();
-      onSent();
-    } catch (reason) {
-      setError(reason);
-    }
-  };
-  // Waiting on the maker's review, the session takes no message: the line says so and opens the review.
-  const reviewing = chat?.sends === "review" && chat.reviewId;
-  const placeholder = !chat ? t("talk.pick") : reviewing ? t("talk.inReview") : chat.sends === "answer" ? t("talk.answer") : chat.sends === "steer" ? t("talk.steer") : t("talk.run");
-  return (
-    <div className="composer">
-      <textarea
-        aria-label={t("agent.message")}
-        value={text}
-        disabled={!chat || chat.sends === "none" || Boolean(reviewing)}
-        placeholder={placeholder}
-        onChange={(event) => setText(event.target.value)}
-        onKeyDown={(event) => {
-          if (event.key === "Enter" && (event.metaKey || event.ctrlKey)) void send();
-        }}
-      />
-      <div className="crow">
-        {reviewing ? (
-          <Link to="/r/$reviewId" params={{ reviewId: reviewing }} className="grow">
-            {t("talk.openReview")}
-          </Link>
-        ) : (
-          <span className="grow">{chat ? (chat.label ? t("agent.to", { who: chat.label }) : t("agent.toSetup")) : chosen ? t("talk.noSessionFor", { who: chosen }) : t("talk.noSession")}</span>
-        )}
-        {error !== undefined && <span className="error small">{errorText(error, t)}</span>}
-        <button type="button" className="send" aria-label={t("talk.send")} disabled={!text.trim()} onClick={() => void send()}>
-          <Icon name="arrow-up" className="ic" />
-        </button>
-      </div>
+      <Submission sending={sending} to={target} kept={t("agent.messageKept")} onSend={() => void send()} onCheck={() => void check()} />
     </div>
   );
 }
