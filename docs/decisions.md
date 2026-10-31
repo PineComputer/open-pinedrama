@@ -1121,9 +1121,9 @@ timeline
   agent is rewriting your file into Fountain" while the setup works on the screenplay, with the agent's
   steps and validate's output in the agent sidebar, shown on Script during setup; the "Setup › Script"
   and "Fountain review" crumbs are gone. A rewrite question takes an explicit verdict, approve or
-  revise (the item verdicts' names), required by the engine (db1a5f5): the agent is told "I accept
-  screenplay vN … --person "<words>"" or "I send screenplay vN back … "<words>"", the maker's words
-  verbatim, so it never guesses the verdict from the words (master's choice). The review room sends a
+  revise (the item verdicts' names), required by the engine (db1a5f5): the agent is told "I accept the rewrite (screenplay vN). My words: "…"" or "Send the rewrite
+  (screenplay vN) back. What to change: "…"", the maker's words verbatim and no drama-cli command named
+  (fa7ed6e, for the tag), so it never guesses the verdict from the words (master's choice). The review room sends a
   rewrite question to Script at that version.
 - **Alternatives.** The setup steps as their own route (D21); a horizontal stage line beside the
   vertical tree, which merecdesperez44323-lab rejected.
@@ -1377,7 +1377,9 @@ timeline
   failed with the engine's reason, stopped), so the conversation shows a stopped message as stopped.
   Master's words: "the conversation must show a stopped message as stopped, not 'sent'"; the failed
   reason was work-04's request. No words from merecdesperez44323-lab.
-- **Amended by.** [D72](#d72-2026-10-30--computers-sessions-and-their-scopes-are-objects-the-tag-follows-mains-engine): reverted for the tag (c3cc6f0); a message reaches only its scope's open session.
+- **Amended by.** [D72](#d72-2026-10-30--computers-sessions-and-their-scopes-are-objects-the-tag-follows-mains-engine): reverted for the tag (401faed); a message reaches only its scope's open session, and nothing opens
+  one: with none open it is refused as `episode-stopped` (naming main's `POST /api/episodes/:id/resume`),
+  `episode-done` or `no-session-open`.
 ## D72. 2026-10-30 · Computers, sessions and their scopes are objects; the tag follows main's engine
 - **Context.** A message to a finished episode had opened a new session on a new Computer (Codex's
   round 4; the engine diff audit, B1), and no document said how a Computer, a session and the work it
@@ -1388,14 +1390,14 @@ timeline
   session, addressed by its scope, never to a Computer. For this tag the engine follows main's: a message
   reaches only its scope's open session, and an episode is resumed only when it is stopped or failed.
 - **Alternatives.** Reopening a done episode by a message, which opened a new session (the audit's B1,
-  reverted for the tag in c3cc6f0).
+  reverted for the tag in 401faed).
 - **Grounds.** merecdesperez44323-lab's request, reporting how Pine's engine owner describes Pine's
   Computers; main's engine, cited by file and line in the architecture.
 - **Consequences.** The UI shows which Computer a session runs on (work-04). Waiting for Pine's engine
   owner: the audit's B4, B5, B7, B8 and B9, and reopening a done episode.
 - **Words.** merecdesperez44323-lab, reporting Pine's engine owner, relayed by master: "这台剧做完了，然后它那个电脑会现在设置的，会等3个小时，等完3个小时他就stop掉了，Stop掉他那个电脑，因为它就是runtime环境嘛，然后中间的那些文件它就不存了。" (*when this drama is done, its Computer, as now set, waits 3 hours, then it stops; it stops that Computer, because it is a runtime environment, and the intermediate files are not kept*); "关了之后，你可以再起再起，但起的就是新的了，已经不是那台了。然后，上面一些中间文件就没了。然后，[Pine's engine owner]说现在魅上代码已经实现了，就是说，如果这时候起的是新的的话，会自动把这一集的东西再传到新开的那台电脑上去。" (*after it is off you can start it again, but what starts is new, no longer that one, and the intermediate files on it are gone; and [Pine's engine owner] says main's code now does it: if a new one starts, the episode's things are sent again to the newly opened Computer*); "只不过就是说要再启一台电脑这样子，但它启动电脑很快，大概就几秒钟" (*it only means starting another Computer, but a Computer starts fast, in a few seconds*); "咱们如果就只改UI的话，只要别break它那个设计就行 … 我们这个版本先改UI，打tag … 先不大改" (*if we only change the UI, just don't break that design … for this version we change the UI first and tag it … no big changes yet*); "其实核心就是面向对象去建模儿嘛 … 现在就是在旅顺和computer之间的关系就好了" (*the core is modelling it as objects … right now just the relationship between the task (旅顺, most likely 任务 as transcribed) and the Computer*). The
   name of Pine's engine owner is replaced by that role, since this repository names no person.
-- **Recorded in.** Commit c3cc6f0 (the revert); `short-drama-runs/qa/ENGINE_DIFF_AUDIT.md`; master's
+- **Recorded in.** Commit 401faed (the revert); `short-drama-runs/qa/ENGINE_DIFF_AUDIT.md`; master's
   note to the docs, 30 October 2026.
 
 ## References
