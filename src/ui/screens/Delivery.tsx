@@ -1,7 +1,11 @@
 import type { DeliveryRow, Judged } from "../../shared/types.ts";
 import { useResource } from "../api.ts";
+import { StatusChip, type Status } from "../components/StatusChip.tsx";
+import { buttonClass } from "../components/Button.tsx";
+import { Icon } from "../icons.tsx";
 import { useT } from "../i18n.ts";
 import { errorText } from "../labels.ts";
+import { homeLink } from "../place.ts";
 import { Link } from "@tanstack/react-router";
 
 function status(review: Judged | undefined): "approve" | "revise" | "waiting" | "none" {
@@ -10,9 +14,12 @@ function status(review: Judged | undefined): "approve" | "revise" | "waiting" | 
   return review.verdict ?? "none";
 }
 
+const CHIP: Record<ReturnType<typeof status>, Status> = { approve: "accepted", revise: "back", waiting: "you", none: "line" };
+
 /**
- * What can be handed over: each episode's latest cut with its own review status, and the cut
- * the maker approved. Only an approved cut is offered as the episode's delivery; a review that
+ * Drama › Delivery, the one home of the accepted cuts across episodes (IA §16; design/screens.js, Delivery): each
+ * episode's delivered cut and its latest, with the latest's review status. A row links to its episode's Cut, which
+ * plays it; there is no second player here. Only an approved cut is offered as the episode's delivery; a review that
  * showed several cuts approves none of them in particular, and says so.
  */
 export function Delivery({ dramaId, episode }: { dramaId: string; episode?: string }) {
@@ -24,74 +31,88 @@ export function Delivery({ dramaId, episode }: { dramaId: string; episode?: stri
   if (error !== undefined && !data) return <p className="error">{errorText(error, t)}</p>;
   if (!data) return <p className="quiet">{t("loading")}</p>;
   const ready = data.filter((row) => row.accepted).length;
+  const cut = (code: string) => ({ to: "/d/$dramaId/e/$episodeCode/cut" as const, params: { dramaId, episodeCode: code } });
   return (
     <>
-      <div className="work-head">
-        <h2>{t("step.cut")}</h2>
-        {data.length > 0 && <span className="facts">{t("delivery.ready", { n: ready, total: data.length })}</span>}
+      <div className="bar2">
+        <h2 className="sr-only">{t("step.delivery")}</h2>
+        {data.length > 0 && <span className="delivsum">{t("delivery.ready", { n: ready, total: data.length })}</span>}
+        <span className="grow" />
         {ready > 0 && (
-          <>
-            <span className="spacer" />
-            <a className="btn small ink" href={`/api/dramas/${dramaId}/season.zip`} download>
-              {t("delivery.season", { n: ready })}
-            </a>
-          </>
+          <a className={buttonClass({ size: "sm" })} href={`/api/dramas/${dramaId}/season.zip`} download>
+            <Icon name="download-simple" className="ic" />
+            {t("delivery.season", { n: ready })}
+          </a>
         )}
       </div>
       {!data.length ? (
         <p className="empty-note">{t("delivery.empty")}</p>
       ) : (
-        <table className="sheet delivery">
-          <thead>
-            <tr>
-              <th>{t("board.episode")}</th>
-              <th>{t("delivery.latest")}</th>
-              <th>{t("delivery.accepted")}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((row) => {
-              const latest = status(row.latest?.review);
-              const group = (row.latest?.together ?? 1) > 1 && (latest === "approve" || latest === "revise");
-              return (
-                <tr key={row.code}>
-                  <td>
-                    <Link to="/d/$dramaId/e/$episodeCode/list" params={{ dramaId: dramaId, episodeCode: row.code }} className="ep">
-                      {row.code}
-                    </Link>
-                    {row.title && <div className="ep-title">{row.title}</div>}
-                  </td>
-                  <td>
-                    {row.latest ? (
-                      <div className="cut-line">
-                        <span className="num">{row.latest.file.version ?? row.latest.file.name}</span>
-                        <span className={`chip ${latest}`}>
-                          {group ? t(latest === "approve" ? "delivery.groupApproved" : "delivery.groupRevised", { n: row.latest!.together }) : t(`delivery.status.${latest}`)}
+        <div className="delivwrap">
+          <table className="deliv">
+            <thead>
+              <tr>
+                <th>{t("board.episode")}</th>
+                <th>{t("delivery.accepted")}</th>
+                <th>{t("delivery.latest")}</th>
+                <th>{t("delivery.status")}</th>
+                <th aria-label={t("episode.download")} />
+              </tr>
+            </thead>
+            <tbody>
+              {data.map((row) => {
+                const latest = status(row.latest?.review);
+                const group = (row.latest?.together ?? 1) > 1 && (latest === "approve" || latest === "revise");
+                return (
+                  <tr key={row.code}>
+                    <td>
+                      <span className="delivep">
+                        <span>
+                          <b className="mono">{row.code}</b>
+                          {row.title && <small>{row.title}</small>}
                         </span>
-                        <a className="link small" href={`${row.latest.file.url}&download=1`}>
-                          {t("episode.download")}
+                      </span>
+                    </td>
+                    <td>
+                      {row.accepted ? (
+                        <Link {...cut(row.code)} className="linkbtn">
+                          {row.accepted.version ?? row.accepted.name}
+                        </Link>
+                      ) : row.ambiguous ? (
+                        <span className="muted">{t("delivery.ambiguous")}</span>
+                      ) : (
+                        <span className="muted">—</span>
+                      )}
+                    </td>
+                    <td>
+                      {row.latest ? (
+                        <>
+                          <Link {...cut(row.code)} className="linkbtn">
+                            {row.latest.file.version ?? row.latest.file.name}
+                          </Link>{" "}
+                          <Link {...homeLink(dramaId, `episodes/${row.code}/edit`, "lineage")} className="ibtn" aria-label={t("edit.lineage")} title={t("edit.lineage")}>
+                            <Icon name="tree-structure" className="ic" />
+                          </Link>
+                        </>
+                      ) : (
+                        <span className="muted">{t("delivery.none")}</span>
+                      )}
+                    </td>
+                    <td>{row.latest && <StatusChip status={CHIP[latest]} label={group ? t(latest === "approve" ? "delivery.groupApproved" : "delivery.groupRevised", { n: row.latest.together }) : t(`delivery.status.${latest}`)} />}</td>
+                    <td className="act">
+                      {row.accepted && (
+                        <a className={buttonClass({ size: "sm", variant: "ghost" })} href={`${row.accepted.url}&download=1`}>
+                          <Icon name="download-simple" className="ic" />
+                          {t("episode.download")} {row.accepted.version}
                         </a>
-                      </div>
-                    ) : (
-                      <span className="faint">{t("delivery.none")}</span>
-                    )}
-                  </td>
-                  <td>
-                    {row.accepted ? (
-                      <a className="btn small ink" href={`${row.accepted.url}&download=1`}>
-                        {t("episode.download")} {row.accepted.version}
-                      </a>
-                    ) : row.ambiguous ? (
-                      <span className="quiet small">{t("delivery.ambiguous")}</span>
-                    ) : (
-                      <span className="faint">—</span>
-                    )}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
       )}
     </>
   );
