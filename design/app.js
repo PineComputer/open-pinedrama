@@ -381,8 +381,8 @@
           <button class="ibtn" title="Shortcuts (?)" aria-label="Shortcuts" onClick=${() => set({ keysOpen: true })}>${I("question")}</button></div>
         ${S.keysOpen && html`<div class="scrim" onClick=${(e) => { if (e.target === e.currentTarget) set({ keysOpen: false }); }}>
           <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="keys-t"><h2 id="keys-t">Canvas shortcuts</h2>
-            <dl class="keys">${[["V", "Move: pick and drag items, draw a box to pick several"], ["H", "Hand: drag the board"], ["Space + drag", "Drag the board, whatever the tool"], ["⌘ +  /  ⌘ −", "Zoom in / out"], ["⌘ 0", "Fit to screen"], ["⌘ A", "Pick every item"], ["Esc", "Let go of the pick and close its panel"], ["?", "This list"]].map(([key, what]) => html`<dt><kbd>${key}</kbd></dt><dd>${what}</dd>`)}</dl>
             <p class="subtle">Copy, paste, delete, group and undo come with phase 2, when the canvas makes items by hand.</p>
+            <dl class="keys">${[["V", "Move: pick and drag items, draw a box to pick several"], ["H", "Hand: drag the board"], ["Space + drag", "Drag the board, whatever the tool"], ["⌘ +  /  ⌘ −", "Zoom in / out"], ["⌘ 0", "Fit to screen"], ["⌘ A", "Pick every item"], ["Esc", "Let go of the pick and close its panel"], ["?", "This list"]].map(([key, what]) => html`<dt><kbd>${key}</kbd></dt><dd>${what}</dd>`)}</dl>
             <div class="acts"><button class="btn" onClick=${() => set({ keysOpen: false })}>Close</button></div></div></div>`}
         ${S.agentOpen && html`<${AgentPanel} float/>`}
         <button class="ball busy" aria-label="Agent, 4 decisions wait" onClick=${() => set({ agentOpen: !S.agentOpen })}>${I("robot")}<span class="badge">4</span></button>

@@ -649,8 +649,8 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
 .menu .mi[aria-checked="true"] { background: var(--selected); }
 .menu .mi kbd, .dialog .keys kbd { margin-left: auto; font: 500 11px var(--font-mono); color: var(--text-muted); }
 .menu hr { margin: 4px 6px; border: 0; border-top: 1px solid var(--border); }
-.zmenu .zin { display: flex; align-items: center; gap: 6px; margin: 4px 6px 6px; padding: 0 10px; height: 32px; border-radius: var(--radius-medium); border: 1px solid var(--border-input); background: var(--surface-container); color: var(--text-secondary); font-size: 12.5px; }
-.zmenu .zin input { flex: 1; min-width: 0; border: 0; background: none; color: var(--text-primary); font: 600 12.5px var(--font-sans); outline: none; }
+.menu .zin { display: flex; align-items: center; gap: 6px; margin: 4px 6px 6px; padding: 0 10px; height: 32px; border-radius: var(--radius-medium); border: 1px solid var(--border-input); background: var(--surface-container); color: var(--text-secondary); font-size: 12.5px; }
+.menu .zin input { flex: 1; min-width: 0; border: 0; background: none; color: var(--text-primary); font: 600 12.5px var(--font-sans); outline: none; }
 .ctool .sep { width: 1px; height: 18px; margin: 0 2px; background: var(--border); }
 .dialog dl.keys { display: grid; grid-template-columns: max-content 1fr; gap: 8px 16px; margin: 0 0 12px; font-size: 13px; }
 .dialog dl.keys dt { margin: 0; } .dialog dl.keys dd { margin: 0; color: var(--text-secondary); }
