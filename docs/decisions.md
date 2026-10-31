@@ -22,7 +22,7 @@ timeline
   2026-10-23 : D5 pre-production in one session
   2026-10-24 : D6 idle timeouts follow the work : D7 spend shown, never in a goal
   2026-10-29 : D8 phase 1 steers
-  2026-10-30 : D9 design/ is the UI source : D10 tsc gate : D11 mature libraries : D12 real samples in LFS : D13 decisions taken once : D14 credentials stop : D15 Codex review loop : D16 navigation and one home : D17 every take and cut watched : D18 cut editing as an edit spec : D19 TanStack Router : D20 Export by owner : D21 Analyzing and Out of date routes : D22 redo by owner : D23 the asset detail : D24 the cut edit goal : D25 one Submission : D26 crumbs and Back : D27 Reviews : D28 model badge : D29 canvas zoom, inline video : D30 URL rules : D31 agent scope : D32 narrow windows : D33 review options : D34 Episodes filters : D35 every element cites its ground : D36 Delivery is the cuts' home : D37 a picked node zooms : D38 shared redo after release : D39 a take plays on its node : D40 where a stop shows : D41 Script is the screenplay's home : D42 Story and Assets apart : D43 stable sample ids : D44 the cut leaves the switch : D45 samples' own screenplays : D46 Project : D47 a draft's changed base : D48 the List's ?version : D49 project types : D50 Home cards : D51 one column, rail labels : D52 Home first, disabled : D53 account footer : D54 icon-only rail : D55 the cover follows the format : D56 Assets grid and inspector : D57 no tabs in Assets : D58 Canvas nodes whole : D59 Canvas opens in Hand
+  2026-10-30 : D9 design/ is the UI source : D10 tsc gate : D11 mature libraries : D12 real samples in LFS : D13 decisions taken once : D14 credentials stop : D15 Codex review loop : D16 navigation and one home : D17 every take and cut watched : D18 cut editing as an edit spec : D19 TanStack Router : D20 Export by owner : D21 Analyzing and Out of date routes : D22 redo by owner : D23 the asset detail : D24 the cut edit goal : D25 one Submission : D26 crumbs and Back : D27 Reviews : D28 model badge : D29 canvas zoom, inline video : D30 URL rules : D31 agent scope : D32 narrow windows : D33 review options : D34 Episodes filters : D35 every element cites its ground : D36 Delivery is the cuts' home : D37 a picked node zooms : D38 shared redo after release : D39 a take plays on its node : D40 where a stop shows : D41 Script is the screenplay's home : D42 Story and Assets apart : D43 stable sample ids : D44 the cut leaves the switch : D45 samples' own screenplays : D46 Project : D47 a draft's changed base : D48 the List's ?version : D49 project types : D50 Home cards : D51 one column, rail labels : D52 Home first, disabled : D53 account footer : D54 icon-only rail : D55 the cover follows the format : D56 Assets grid and inspector : D57 no tabs in Assets : D58 Canvas nodes whole : D59 Canvas opens in Hand : D60 replay's freshness
 ```
 
 ## D1. 2026-10-22 · A desktop app on Electron
@@ -994,6 +994,24 @@ timeline
 - **Words.** "到 canvas界面能不能默认是 hand， 这样可以拖拽" (*can the canvas default to hand, so it can be
   dragged*), relayed by master.
 - **Recorded in.** Commit 2d52bbe.
+
+## D60. 2026-10-30 · Replay marks what a changed selection made out of date, in drama-cli's words
+- **Context.** Replay wrote its own lineage as all fresh, so no replayed sample had an out-of-date
+  item an open session could redo (QA journey 3).
+- **Decision.** Replay marks a stage out of date when a selection it pinned has changed, in
+  drama-cli's words ("Changed selection: …/accepted.json", "…/current.json"), on its own exports and
+  the samples'. A sample's recorded history may redraw a storyboard after its take
+  (`boardsAfterTakes` in dramas.json): Bride on Bail's EP006 redraws seg03's storyboard as v2 once
+  its takes review is answered, whatever the answer, so seg03's take and what was made from it are
+  out of date. The event is scripted; no answer's text is read for intent.
+- **Alternatives.** None recorded.
+- **Grounds.** drama-cli's freshness rule: a version is stale when a selection it pinned changed
+  (short_drama `doc/drama-cli/design.md:76`, its D85, `drama_cli/artifacts.py:234`); master's rule:
+  scripted, no intent guessing.
+- **Consequences.** Out of date lists EP006's take under its episode; its Redo this goes to EP006's
+  session, and while that session waits on a review it offers "Open the review".
+- **Words.** None recorded.
+- **Recorded in.** Commit c93a909; work-05's note to the docs.
 
 ## References
 
