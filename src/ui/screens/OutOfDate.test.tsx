@@ -66,7 +66,7 @@ describe("the drama's Out of date", () => {
     await renderAt(<OutOfDate dramaId="d1" />, "/d/d1/out-of-date");
     await user.click(within(await waitFor(() => group(/^Assets$/))).getByRole("button", { name: "Ask the setup's agent to redo them" }));
     const dialog = await screen.findByRole("alertdialog");
-    expect(dialog).toHaveTextContent(/It will remake .*Day.* v1\. It spends from the drama's budget; the earlier versions stay\./);
+    expect(dialog).toHaveTextContent(/It will remake .*Day.* v1\. It spends from the project's budget; the earlier versions stay\./);
     expect(calls("POST", "/api/sessions/setup/redo")).toHaveLength(0);
     await user.click(within(dialog).getByRole("button", { name: "Ask to redo" }));
     expect(await within(group(/^Assets$/)).findByText("Sent to the setup's agent.")).toBeInTheDocument();

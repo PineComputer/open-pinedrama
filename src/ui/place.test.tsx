@@ -82,7 +82,7 @@ describe("a drama's page", () => {
     setup: { state: "done", reached: 5 },
     cast: [],
     crew: [],
-    episodeRows: [{ id: "e1", number: 1, code: "EP001", title: "", state: "working", stages: {}, spent: { total: 0, media: 0, partial: false }, updatedAt: "2026-10-30T10:00:00Z" }],
+    episodeRows: [{ id: "e1", number: 1, code: "EP001", title: "", state: "working", stages: { cut: { state: "none" } }, spent: { total: 0, media: 0, partial: false }, updatedAt: "2026-10-30T10:00:00Z" }],
   } as unknown as DramaView;
 
   function engine() {
@@ -100,8 +100,8 @@ describe("a drama's page", () => {
   ])("says when the drama has no such %s, with the way back to it", async (_, path, what) => {
     engine();
     render(<RouterProvider router={studioRouter(createMemoryHistory({ initialEntries: [path] }))} />);
-    expect(await screen.findByText(`This drama has no ${what}.`)).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Back to the drama" })).toHaveAttribute("href", "/d/d1/episodes");
+    expect(await screen.findByText(`This project has no ${what}.`)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Back to the project" })).toHaveAttribute("href", "/d/d1/episodes");
   });
 
   it("says Not found for a path the studio has no page for, never falling back to Home", async () => {

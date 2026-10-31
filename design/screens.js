@@ -315,7 +315,7 @@
     // (§14.6), its state the shared Submission's (app.js). The button shows only while nothing is submitted; after a refusal
     // Submission's Send again is the one action, and it asks again.
     const redo = (g, rows) => set({ dialog: { title: `Ask ${owner(g)} to redo ${rows.length} items?`,
-      body: `${owner(g)[0].toUpperCase() + owner(g).slice(1)} will remake ${rows.length} items: ${rows.map((r) => r.full).join(", ")}. It spends from the drama's budget; the earlier versions stay.`,
+      body: `${owner(g)[0].toUpperCase() + owner(g).slice(1)} will remake ${rows.length} items: ${rows.map((r) => r.full).join(", ")}. It spends from the project's budget; the earlier versions stay.`,
       ok: "Ask to redo", cancel: "Not now", run: () => submit("redo:" + g) } });
     const state = (g, rows) => ((S.subs || {})["redo:" + g]
       ? html`<${Submission} id=${"redo:" + g} to=${owner(g)} onSend=${() => redo(g, rows)}/>`
