@@ -351,7 +351,7 @@
           onDragOver=${(e) => { e.preventDefault(); if (!S.over) set({ over: true }); }} onDragLeave=${() => set({ over: false })} onDrop=${(e) => { e.preventDefault(); set({ over: false }); upload(); }}>
           <span class="pic"><span class="plus">${I("plus")}</span></span><span class="txt"><b>New drama project</b><small>Drop a screenplay here</small></span></button>
         ${list.map((p, i) => html`<div class="pcard"><button class="open" onClick=${() => i === 0 || p.t === P.project.title ? go("episodes") : toast(p.t + ": only the first project opens in this direction.")}>
-          <div class="pic"><img src=${p.cover} alt=""/></div>
+          <div class=${"pic" + (p.format === "16:9" ? " wide" : "")}>${p.cover ? html`<img src=${p.cover} alt=""/>` : html`<span class="emptycover">${I("film-strip")}</span>`}</div>
           <div class="txt"><b>${p.t}</b><small>${p.ago}</small></div></button>
           ${p.st === "you" || p.st === "redline"
             ? html`<button class=${"st " + p.st} title=${"Open Reviews for " + p.t} onClick=${() => set({ waitFor: p.t, screen: "reviews" })}><i></i>${p.lab}</button>`

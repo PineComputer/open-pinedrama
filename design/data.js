@@ -65,10 +65,10 @@ window.P = (() => {
         shots: ["WS Ethan at the table, Luca standing", "MS Luca reads the page", "CU the case file"], scene: "Scene 2 · Luca's apartment · Day" },
     ],
     projects: [
-      { t: "Bride on Bail", st: "you", lab: "4 need you", ago: "4 min ago", cover: img("cover-ep1") },
-      { t: "The Contract Groom", st: "accepted", lab: "Done", ago: "2 days ago", cover: img("cover-groom") },
-      { t: "Visiting Hours", st: "work", lab: "Working", ago: "12 min ago", cover: img("cover-ep7") },
-      { t: "Last Toast", st: "redline", lab: "Needs you", ago: "1 h ago", cover: img("cover-guest") },
+      { t: "Bride on Bail", st: "you", lab: "4 need you", ago: "4 min ago", format: "9:16", cover: img("cover-ep1") },
+      { t: "The Contract Groom", st: "accepted", lab: "Done", ago: "2 days ago", format: "9:16", cover: img("cover-groom") },
+      { t: "Visiting Hours", st: "work", lab: "Working", ago: "12 min ago", format: "9:16", cover: null },
+      { t: "Last Toast", st: "redline", lab: "Needs you", ago: "1 h ago", format: "9:16", cover: img("cover-guest") },
     ],
   };
 })();

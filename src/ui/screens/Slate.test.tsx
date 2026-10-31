@@ -58,7 +58,18 @@ describe("Home", () => {
     const empty = await tileOf(/Bride on Bail/);
     expect(empty.querySelector(".pic img")).toBeNull();
     expect(empty.querySelector('[src="/api/files/8"]')).toBeNull();
-    expect(empty.querySelector(".emptycover")).toHaveTextContent("Bride on Bail");
+    // D50 as amended: the designed placeholder, never the title a second time.
+    expect(empty.querySelector(".emptycover")).not.toHaveTextContent("Bride on Bail");
+    expect(empty.querySelector(".emptycover .ic")).not.toBeNull();
+  });
+
+  it("shapes the cover by the project's format: portrait for vertical, wide for 16:9 (D50 as amended)", async () => {
+    answer("/api/app", replay);
+    answer("/api/reviews", []);
+    answer("/api/dramas", [{ ...stepmother, format: "9:16, 480p" }, { ...bride, format: "16:9, 720p" }]);
+    await renderAt(<Slate />);
+    expect((await tileOf(/The Stepmother/)).querySelector(".pic")).not.toHaveClass("wide");
+    expect((await tileOf(/Bride on Bail/)).querySelector(".pic")).toHaveClass("wide");
   });
 
   it("is titled Projects, the studio's name for the container (D46)", async () => {

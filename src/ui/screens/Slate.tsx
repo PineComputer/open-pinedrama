@@ -61,7 +61,13 @@ function Pic({ still }: { still: StillData }) {
  * engine); before either, the designed empty cover, its title as type.
  */
 function Cover({ drama }: { drama: DramaCard }) {
-  return drama.cover ? <Pic still={drama.cover} /> : <span className="emptycover">{drama.title}</span>;
+  return drama.cover ? (
+    <Pic still={drama.cover} />
+  ) : (
+    <span className="emptycover" aria-hidden="true">
+      <Icon name="film-strip" className="ic" />
+    </span>
+  );
 }
 
 
@@ -122,7 +128,8 @@ function Card({ drama, redLine }: { drama: DramaCard; redLine: boolean }) {
   return (
     <div className="pcard">
       <Link to="/d/$dramaId/episodes" params={{ dramaId: drama.id }} className="open">
-        <div className="pic">
+        {/* D50 as amended: the format decides the cover's shape, portrait for a vertical drama, wide for a 16:9 one. */}
+        <div className={drama.format.startsWith("16:9") ? "pic wide" : "pic"}>
           <Cover drama={drama} />
         </div>
         <div className="txt">

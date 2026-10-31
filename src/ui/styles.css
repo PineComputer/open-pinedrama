@@ -392,7 +392,6 @@ h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 700; lett
 /* Home, ported from the pro prototype: what studio.css doesn't have for real data. A drama with no take or photoreal
    board yet has the designed empty cover, its title as type; a look's thumbnail is cropped to the sheet's close-up;
    the search is a real input; the logline stays on one line. */
-.emptycover { display: grid; align-items: end; width: 100%; height: 100%; padding: 14px; background: radial-gradient(120% 70% at 30% 18%, var(--border), transparent 70%), linear-gradient(180deg, var(--surface-container), var(--surface-dim)); color: var(--text-primary); font: 700 18px/1.15 var(--font-display); overflow-wrap: anywhere; }
 .wait .emptythumb { width: 38px; height: 52px; border-radius: 6px; background: var(--surface-container); }
 .pcard .pic video, .wait video { width: 100%; height: 100%; object-fit: cover; }
 .wait video { width: 38px; height: 52px; border-radius: 6px; object-position: top; }

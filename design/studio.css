@@ -148,13 +148,18 @@ input.search::placeholder { color: var(--text-muted); }
 input.search:focus { border-color: var(--text-primary); }
 .select { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 10px; border-radius: var(--radius-medium); border: 1px solid var(--border-input); background: var(--surface); color: var(--text-secondary); font-size: 12.5px; cursor: pointer; }
 .select .ic { width: 13px; height: 13px; color: var(--text-muted); }
-/* merecdesperez44323-lab's round 2: liblib's project grid, a 16:9 cover, the title and a time; five a row at 1440. */
-.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 18px; }
+/* D50 as amended: the cover follows the project's format, 3:4 for a vertical drama (DramaBox's and 红果's poster grids),
+   16:9 for a wide one; the title and a time under it; six a row at 1440. */
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 18px; }
 .pcard { position: relative; display: flex; flex-direction: column; border-radius: var(--radius-large); border: 1px solid var(--border); background: var(--surface); overflow: hidden; transition: border-color .12s, transform .12s; }
 .pcard > .open { flex: 1; display: flex; flex-direction: column; border: 0; background: none; padding: 0; text-align: left; color: inherit; font: inherit; cursor: pointer; }
 .pcard:hover { border-color: var(--border-input); transform: translateY(-1px); }
-.pcard .pic { position: relative; aspect-ratio: 16/9; background: var(--surface-container); overflow: hidden; }
-.pcard .pic img { width: 100%; height: 100%; object-fit: cover; }
+.pcard .pic { position: relative; aspect-ratio: 3/4; background: var(--surface-container); overflow: hidden; }
+.pcard .pic img { width: 100%; height: 100%; object-fit: cover; object-position: center 30%; }
+.pcard .pic.wide, .newcard .pic.wide { aspect-ratio: 16/9; }
+/* A project with no work yet: the designed placeholder, never its title a second time. */
+.emptycover { display: grid; place-items: center; width: 100%; height: 100%; background: linear-gradient(180deg, var(--surface-container), var(--surface-dim)); color: var(--text-subtle); }
+.emptycover .ic { width: 28px; height: 28px; }
 .pcard > .st { position: absolute; left: 8px; top: 8px; }
 /* A card's "Needs you" or "Red line" pill shows what waits in that drama: a button, pressed while Waiting for you is filtered to it. */
 .pcard > button.st { cursor: pointer; font-family: inherit; } .pcard > button.st:hover { border-color: var(--text-primary); } .pcard > button.st[aria-pressed="true"] { background: var(--text-primary); color: var(--canvas); }
@@ -163,7 +168,7 @@ input.search:focus { border-color: var(--text-primary); }
 .pcard small { color: var(--text-muted); font-size: 12px; }
 .newcard { display: flex; flex-direction: column; border: 1px dashed var(--border-input); border-radius: var(--radius-large); background: transparent; overflow: hidden; cursor: pointer; text-align: left; color: inherit; font: inherit; padding: 0; text-decoration: none; }
 .newcard:hover { background: var(--hover); }
-.newcard .pic { aspect-ratio: 16/9; display: grid; place-items: center; }
+.newcard .pic { aspect-ratio: 3/4; display: grid; place-items: center; }
 .newcard .plus { width: 44px; height: 44px; border-radius: 50%; background: var(--surface-container-high); display: grid; place-items: center; color: var(--text-primary); }
 .newcard .plus .ic { width: 20px; height: 20px; }
 .newcard b { color: var(--text-primary); }
