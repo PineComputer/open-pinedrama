@@ -1171,6 +1171,13 @@ timeline
   only" with the waiting-in-line dot, never green, and Script has no banner, its history saying under the
   upload "This project's rewrite wasn't recorded." Words: "这个也太丑了 … what the fuck is it" (*this is far
   too ugly … what the fuck is it*), relayed by master.
+- **Amended.** 31 October 2026, Codex's end-to-end review of rc2, C3, C5 and C6, on master's briefs (work-02):
+  a question the agent asks about the upload before any version is recorded (a synopsis, not a
+  screenplay) shows in Script's history above the upload, "The agent asks you about your file", with
+  its words and a link to answer it in its question, instead of "not recorded" (8eda77f); an original
+  the page can't show (a legacy .doc) says so, names the kinds it can show and offers its download, and
+  a failed fetch is an error, never Loading (2d0b70a); a Word or PDF upload's row reads "Text extracted
+  from X.pdf", linking the preserved file in the library (185c59c).
 ## D63. 2026-10-30 · An episode's views are Segments and Canvas; Segments is a matrix
 - **Context.** An episode's List showed each segment's tiles in a row, without its shots or
   references side by side.
