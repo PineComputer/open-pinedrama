@@ -10,7 +10,7 @@
   const S = {
     screen: SCREENS.includes(hash) ? hash : "home", theme: "dark", side: true, tab: "all", filter: "all", waitFor: null,
     dialog: null, toasts: [], dramaStop: null, draft: "", chat: [],
-    cam: { x: 40, y: 96, k: 0.62 }, sel: null, dock: (() => { try { return localStorage.getItem("studio.canvas.dock") || "under"; } catch (e) { return "under"; } })(), follow: true, agentOpen: false, panning: null, minimap: true,
+    cam: { x: 40, y: 96, k: 0.62 }, tool: "move", toolOpen: false, zoomOpen: false, keysOpen: false, sel: null, dock: (() => { try { return localStorage.getItem("studio.canvas.dock") || "under"; } catch (e) { return "under"; } })(), follow: true, agentOpen: false, panning: null, minimap: true,
     ti: 0, playing: false, t: 0, watched: {}, maxT: {}, verdict: {}, reason: {}, showPrev: false, sent: false, over: false,
     state: "normal", file: null, preset: null, len: "90", budget: "1000", ana: 0, tod: null, words: "", stab: "bible", cards: {}, cardWhy: {}, gsel: "ep6seg03", cutT: 0, cutPlaying: false, cutNotes: null, noteDraft: "", cutV: null, cutWhy: "",
   };
@@ -304,6 +304,16 @@
         const kk = 0.62; set({ cam: { k: kk, x: el.clientWidth / 2 - (n.x + n.w / 2) * kk, y: el.clientHeight / 2 - (n.y + n.h / 2) * kk }, sel: n.id }); }, 6000);
       return () => clearInterval(t);
     }, [S.follow]);
+    useEffect(() => {
+      // The canvas's keys, as infinite-canvas's shortcuts, read-only ones only (docs/shortcuts.md there): not while typing.
+      const kd = (e) => { if (/textarea|input/i.test(e.target.tagName) || S.screen !== "canvas") return; const mod = e.metaKey || e.ctrlKey;
+        if (!mod && e.key === "v") set({ tool: "move" }); else if (!mod && e.key === "h") set({ tool: "hand" });
+        else if (!mod && e.key === "?") set({ keysOpen: true });
+        else if (e.key === "Escape") set({ sel: null, toolOpen: false, zoomOpen: false, keysOpen: false });
+        else if (mod && (e.key === "=" || e.key === "+")) { e.preventDefault(); zoom(1.15); } else if (mod && e.key === "-") { e.preventDefault(); zoom(0.85); }
+        else if (mod && e.key === "0") { e.preventDefault(); fit(); } };
+      window.addEventListener("keydown", kd); return () => window.removeEventListener("keydown", kd);
+    }, []);
     const down = (e) => { if (e.target.closest(".card, button")) return; set({ panning: { sx: e.clientX, sy: e.clientY, x, y }, follow: false }); };
     const move = (e) => { const p = S.panning; if (p) set({ cam: { ...S.cam, x: p.x + e.clientX - p.sx, y: p.y + e.clientY - p.sy } }); };
     const up = () => S.panning && set({ panning: null });
@@ -350,13 +360,30 @@
         })()}
         ${S.minimap && html`<div class="minimap" aria-hidden="true">${NODES.filter((n) => n.kind !== "group").map((n) => html`<i style=${`left:${8 + n.x * 0.11}px;top:${8 + n.y * 0.08}px;width:${n.w * 0.11}px;height:${n.h * 0.08}px`}></i>`)}
           <b style=${`left:${8 - x * 0.11 / k}px;top:${8 - y * 0.08 / k}px;width:${(ref.current ? ref.current.clientWidth : 900) * 0.11 / k}px;height:${(ref.current ? ref.current.clientHeight : 600) * 0.08 / k}px`}></b></div>`}
+        ${S.toolOpen && html`<div class="menu tmenu" role="menu" aria-label="Tools">
+          ${[["move", "cursor", "Move", "V"], ["hand", "hand", "Hand", "H"]].map(([k, ic, l, key]) => html`<button class="mi row" role="menuitemradio" aria-checked=${String(S.tool === k)} onClick=${() => set({ tool: k, toolOpen: false })}>${I(ic)}<b>${l}</b><kbd>${key}</kbd></button>`)}</div>`}
+        ${S.zoomOpen && html`<div class="menu zmenu" role="menu" aria-label="Zoom">
+          <label class="zin"><input type="number" min="5" max="800" value=${Math.round(k * 100)} aria-label="Zoom, in percent" onKeyDown=${(e) => { if (e.key === "Enter") { const v = Math.min(800, Math.max(5, +e.target.value || 100)); set({ cam: { ...S.cam, k: v / 100 }, zoomOpen: false }); } }}/><span>%</span></label>
+          <button class="mi row" role="menuitem" onClick=${() => { zoom(1.15); set({ zoomOpen: false }); }}><b>Zoom in</b><kbd>⌘ +</kbd></button>
+          <button class="mi row" role="menuitem" onClick=${() => { zoom(0.85); set({ zoomOpen: false }); }}><b>Zoom out</b><kbd>⌘ −</kbd></button>
+          <button class="mi row" role="menuitem" onClick=${() => { fit(); set({ zoomOpen: false }); }}><b>Fit to screen</b><kbd>⌘ 0</kbd></button>
+          <hr/>
+          ${[50, 100, 800].map((v) => html`<button class="mi row" role="menuitem" onClick=${() => set({ cam: { ...S.cam, k: v / 100 }, zoomOpen: false })}><b>Zoom to ${v}%</b></button>`)}</div>`}
         <div class="ctool" role="toolbar" aria-label="Canvas">
+          <button class="ibtn" title=${S.tool === "hand" ? "Hand (H)" : "Move (V)"} aria-label="Tool" aria-haspopup="menu" aria-expanded=${String(S.toolOpen)} onClick=${() => set({ toolOpen: !S.toolOpen, zoomOpen: false })}>${I(S.tool === "hand" ? "hand" : "cursor")}</button>
+          <i class="sep"></i>
           <button class="ibtn" title="Fit to screen" aria-label="Fit to screen" onClick=${fit}>${I("frame-corners")}</button>
           <button class="ibtn" title="Zoom out" aria-label="Zoom out" onClick=${() => zoom(0.85)}>${I("minus")}</button>
-          <span class="z">${Math.round(k * 100)}%</span>
+          <button class="z" aria-label="Zoom" aria-haspopup="menu" aria-expanded=${String(S.zoomOpen)} onClick=${() => set({ zoomOpen: !S.zoomOpen, toolOpen: false })}>${Math.round(k * 100)}%</button>
           <button class="ibtn" title="Zoom in" aria-label="Zoom in" onClick=${() => zoom(1.15)}>${I("plus")}</button>
           <button class=${"ibtn " + (S.minimap ? "on" : "")} title="Minimap" aria-label="Minimap" onClick=${() => set({ minimap: !S.minimap })}>${I("map-pin")}</button>
-          <button class="ibtn" title="Lay out again" aria-label="Lay out again" onClick=${() => { set({ cam: { x: 40, y: 96, k: 0.62 } }); toast("Every node back where drama-cli's layout puts it."); }}>${I("tree-structure")}</button></div>
+          <button class="ibtn" title="Lay out again" aria-label="Lay out again" onClick=${() => { set({ cam: { x: 40, y: 96, k: 0.62 } }); toast("Every node back where drama-cli's layout puts it."); }}>${I("tree-structure")}</button>
+          <button class="ibtn" title="Shortcuts (?)" aria-label="Shortcuts" onClick=${() => set({ keysOpen: true })}>${I("question")}</button></div>
+        ${S.keysOpen && html`<div class="scrim" onClick=${(e) => { if (e.target === e.currentTarget) set({ keysOpen: false }); }}>
+          <div class="dialog keys" role="dialog" aria-modal="true" aria-labelledby="keys-t"><h2 id="keys-t">Canvas shortcuts</h2>
+            <dl>${[["V", "Move: pick and drag items, draw a box to pick several"], ["H", "Hand: drag the board"], ["Space + drag", "Drag the board, whatever the tool"], ["⌘ +  /  ⌘ −", "Zoom in / out"], ["⌘ 0", "Fit to screen"], ["⌘ A", "Pick every item"], ["Esc", "Let go of the pick and close its panel"], ["?", "This list"]].map(([key, what]) => html`<dt><kbd>${key}</kbd></dt><dd>${what}</dd>`)}</dl>
+            <p class="subtle">Copy, paste, delete, group and undo come with phase 2, when the canvas makes items by hand.</p>
+            <div class="acts"><button class="btn" onClick=${() => set({ keysOpen: false })}>Close</button></div></div></div>`}
         ${S.agentOpen && html`<${AgentPanel} float/>`}
         <button class="ball busy" aria-label="Agent, 4 decisions wait" onClick=${() => set({ agentOpen: !S.agentOpen })}>${I("robot")}<span class="badge">4</span></button>
       </div></div>`;
