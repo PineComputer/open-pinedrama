@@ -106,6 +106,7 @@ async function setupEnded(session: SessionRow, info: TurnInfo) {
       }
       assignBreakdowns(drama.id);
       run("update dramas set status = 'production', note = '', updated_at = ? where id = ?", now(), drama.id);
+      run("update sessions set handed_over = 1 where id = ?", session.id);
       await close(session);
       return;
     }
@@ -163,6 +164,7 @@ async function rehearsalEnded(session: SessionRow, info: TurnInfo, listed: { num
     }
     assignBreakdowns(drama.id);
     run("update dramas set status = 'production', note = '', updated_at = ? where id = ?", now(), drama.id);
+    run("update sessions set handed_over = 1 where id = ?", session.id);
     await close(session);
     return;
   }

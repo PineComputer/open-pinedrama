@@ -86,6 +86,8 @@ create table if not exists sessions (
   task_id text,
   cursor text,                      -- last applied event id, for task_id
   activity text,
+  started_from text,                -- inputs | project | episode-pack: what its first run was given (scheduler.ts)
+  handed_over integer not null default 0, -- a setup session that handed the project over (flow.ts setupEnded)
   created_at text not null,
   closed_at text
 );
@@ -245,6 +247,8 @@ export function db(): DatabaseSync {
     add("episodes", "carry", "text not null default ''");
     add("dramas", "reason", "text not null default ''");
     add("reviews", "submission_id", "text");
+    add("sessions", "started_from", "text");
+    add("sessions", "handed_over", "integer not null default 0");
     add("computers", "stop_by", "text");
     add("computers", "project", "text not null default ''");
     add("dramas", "rehearsal", "integer not null default 0");

@@ -212,6 +212,8 @@ async function beginSetup(drama: DramaRow, session: SessionRow): Promise<void> {
     return;
   }
   const { sent, names } = await attach(session, files);
+  // A setup always starts from the maker's inputs, a restart after a stop included: it never restores a pack.
+  run("update sessions set started_from = 'inputs' where id = ?", session.id);
   if (drama.rehearsal) await attachKit(session);
   await startRun(session, "setup", goalOf(drama, setupGoal(drama, sent, { screenplay: names[drama.screenplay_file!], brief: names[brief.id] })));
 }
@@ -294,6 +296,9 @@ function startEpisode(drama: DramaRow, episode: EpisodeRow, computer: ComputerRo
       }
       const { sent, skipped } = await attach(session, files);
       if (skipped.length) console.warn(`${code}: too large to hand over (over 64 MiB): ${skipped.join(", ")}`);
+      // What it was given, as sent: the handed-over project, with the episode's own pack when one went too.
+      const from = !handoff ? "inputs" : sent.some((name) => name.startsWith(`${code}.tar.part-`)) ? "episode-pack" : "project";
+      run("update sessions set started_from = ? where id = ?", from, session.id);
       if (drama.rehearsal) await attachKit(session);
       const goal = episode.resume
         ? resumeGoal(drama, code, sent, handoff, episode.carry || undefined, screenplayOf(drama))

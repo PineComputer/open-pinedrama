@@ -418,7 +418,7 @@ export function reviewView(review: ReviewRow): ReviewView {
 
 /** Every session the drama had, oldest first, with the Computer it ran on: where each scope's work went on after a stop. */
 export function sessionHistory(dramaId: string): SessionRecord[] {
-  return all<SessionRow & { label: string; number: number | null }>(
+  return all<SessionRow & { label: string; number: number | null; started_from: SessionRecord["startedFrom"] | null; handed_over: number }>(
     `select s.*, c.label, e.number from sessions s join computers c on c.id = s.computer_id left join episodes e on e.id = s.episode_id
      where s.drama_id = ? order by s.created_at, s.rowid`,
     dramaId,
@@ -429,6 +429,8 @@ export function sessionHistory(dramaId: string): SessionRecord[] {
     state: row.state as SessionRecord["state"],
     createdAt: row.created_at,
     ...(row.closed_at ? { closedAt: row.closed_at } : {}),
+    ...(row.started_from ? { startedFrom: row.started_from } : {}),
+    handedOver: row.handed_over === 1,
   }));
 }
 

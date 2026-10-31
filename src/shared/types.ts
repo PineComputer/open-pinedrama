@@ -303,6 +303,13 @@ export interface SessionRecord {
   state: "open" | "closed" | "lost";
   createdAt: string;
   closedAt?: string;
+  /**
+   * What its first run was given: the maker's inputs (a setup always, a restart after a stop included), the project the
+   * setup handed over, or that and the episode's own pack from its last session. Absent while it was still being given.
+   */
+  startedFrom?: "inputs" | "project" | "episode-pack";
+  /** A setup session that handed the project over to production; false for every other. */
+  handedOver: boolean;
 }
 
 export interface ComputerView {

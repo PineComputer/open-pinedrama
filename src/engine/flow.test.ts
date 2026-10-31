@@ -212,6 +212,10 @@ async function scenario(title: string) {
     return rows.EP001.state === "done" && rows.EP003.state !== "queued" ? view : undefined;
   });
   expect(after.episodeRows.find((row) => row.code === "EP001")!.stages.cut.state).toBe("done");
+  // The setup handed over, from the maker's inputs; each episode started on the project it handed over.
+  const history = await call<SessionRecord[]>("GET", `/api/dramas/${id}/session-history`);
+  expect(history.filter((session) => session.scope === "setup").map((session) => [session.startedFrom, session.handedOver])).toEqual([["inputs", true]]);
+  expect(new Set(history.filter((session) => session.scope !== "setup").map((session) => [session.startedFrom, session.handedOver].join()))).toEqual(new Set(["project,false"]));
   // What it cost: the takes' video is billed as it settles, after their turns, and counts toward the episode and the drama.
   const billed = await until("EP001's video billed", async () => {
     const view = await call<DramaView>("GET", `/api/dramas/${id}`);
@@ -369,6 +373,12 @@ describe("a drama in replay", () => {
     expect(again.kind).toBe("storyboards");
     const ids = (review: ReviewView) => review.reviewItems.flatMap((item) => item.files.map((file) => file.id));
     expect(ids(await call<ReviewView>("GET", `/api/reviews/${again.id}`))).toEqual(ids(await call<ReviewView>("GET", `/api/reviews/${first.id}`)));
+    // EP001's first session was lost with its Computer; the resumed one started on the project and EP001's own pack.
+    const ep001 = (await call<SessionRecord[]>("GET", `/api/dramas/${id}/session-history`)).filter((session) => session.scope === "EP001");
+    expect(ep001.map((session) => [session.state, session.startedFrom])).toEqual([
+      ["lost", "project"],
+      ["open", "episode-pack"],
+    ]);
   }, 30_000);
 
   // Codex's IA review, 14.6: a decision is taken once. The same submission again gets the first result and sends
@@ -532,6 +542,11 @@ describe("a drama in replay", () => {
     expect(history.map((session) => session.computer)).toEqual(["PC-1", "PC-1"]);
     expect(history[0].closedAt).toBeDefined();
     expect(history[1].closedAt).toBeUndefined();
+    // A stopped setup never handed over, and its restart starts from the maker's inputs again, no pack (Codex's rc2, C4).
+    expect(history.map((session) => [session.startedFrom, session.handedOver])).toEqual([
+      ["inputs", false],
+      ["inputs", false],
+    ]);
   }, 30_000);
 
   // Or ask about files it neither returns nor names. It may be asking something else entirely (a reference it
