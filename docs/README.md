@@ -44,14 +44,15 @@ decision needs its grounds… all in English, plenty of Mermaid and the like, th
 | Document | Kind | Content |
 |---|---|---|
 | [design-principles.md](design-principles.md) | explanation | the principles every screen and flow follows, each with its source and how others apply it |
+| [glossary.md](glossary.md) | reference | every term the documents and screens use, with its Chinese term and source |
 | [decisions.md](decisions.md) | reference | the studio's decisions, dated, with their grounds and the words they rest on |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | how-to | how to change the studio: where things live, the components, the rules the tests keep |
 | [TESTING.md](TESTING.md) | how-to | how the studio is tested, and how to write a test for a change |
 | [REUSED.md](REUSED.md) | reference | the files the studio takes from other projects, and their licences |
 
 `PROPOSAL.md`, `IMPLEMENTATION_PLAN.md` and `REDESIGN_PLAN.md` are being folded into these
-documents (the glossary, the architecture and the studio's information architecture,
-interaction and design system come next), and are deleted when the last of them lands.
+documents (the architecture and the studio's information architecture, interaction and
+design system come next), and are deleted when the last of them lands.
 `references/` keeps the screenshots of other apps that those documents cite.
 
 The studio's UI itself is designed in [`design/`](../design/), the one source of every screen
