@@ -264,8 +264,8 @@ input.search:focus { border-color: var(--text-primary); }
 .cnode .lab .st { margin-left: 4px; }
 /* A picture node's label, as astorie labels its nodes: the kind's icon, the name, and the model that made it, small and monospaced, as drama-cli's spec.json names it. */
 .cnode .lab .name { flex: 0 1 auto; min-width: 4em; overflow: hidden; text-overflow: ellipsis; }
-.cnode .lab .model { flex: 0 4 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; margin-left: 2px; padding: 1px 6px; border-radius: 6px; background: color-mix(in srgb, var(--text-primary) 8%, transparent); color: var(--text-muted); font: 500 10.5px/1.5 var(--font-mono); }
-.cnode .card { border-radius: 10px; overflow: hidden; border: 1px solid var(--border); background: var(--surface); cursor: pointer; transition: border-color .12s, box-shadow .12s; }
+.cnode .lab .model { flex: 0 4 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; margin-left: 2px; padding: 1px 6px; border-radius: var(--radius-pill); background: color-mix(in srgb, var(--text-primary) 8%, transparent); color: var(--text-muted); font: 500 10.5px/1.5 var(--font-mono); }
+.cnode .card { border-radius: var(--radius-large); overflow: hidden; border: 1px solid var(--border); background: var(--surface); cursor: pointer; transition: border-color .12s, box-shadow .12s; }
 .cnode .card:hover { border-color: color-mix(in srgb, var(--text-primary) 45%, var(--border)); }
 .cnode.sel .card { border-color: var(--text-primary); box-shadow: 0 0 0 1px var(--text-primary); }
 /* A node's picture whole, at its own ratio (liblib's node): contained, never cropped; its size in the label's corner. */
@@ -274,9 +274,9 @@ input.search:focus { border-color: var(--text-primary); }
 .group { position: absolute; border-radius: var(--radius-2xl); border: 1px solid var(--border); background: color-mix(in srgb, var(--surface) 70%, transparent); }
 .group > .gl { position: absolute; left: 16px; top: 14px; font-size: 13px; font-weight: 600; color: var(--text-muted); }
 .ctool { position: absolute; left: 16px; bottom: 16px; display: flex; align-items: center; gap: 2px; padding: 4px; border-radius: var(--radius-pill); background: var(--surface-container); border: 1px solid var(--border); box-shadow: var(--shadow-overlay); }
-.ctool .ibtn { width: 32px; height: 32px; border-radius: 999px; }
+.ctool .ibtn { width: 32px; height: 32px; border-radius: var(--radius-pill); }
 .ctool .ibtn .ic { width: 17px; height: 17px; }
-.ctool .z { height: 32px; border: 0; border-radius: 999px; background: none; cursor: pointer; min-width: 52px; text-align: center; font: 600 12.5px var(--font-sans); color: var(--text-primary); font-variant-numeric: tabular-nums; }
+.ctool .z { height: 32px; border: 0; border-radius: var(--radius-pill); background: none; cursor: pointer; min-width: 52px; text-align: center; font: 600 12.5px var(--font-sans); color: var(--text-primary); font-variant-numeric: tabular-nums; }
 .ctop { position: absolute; left: 16px; top: 14px; right: 16px; display: flex; align-items: center; gap: 10px; pointer-events: none; flex-wrap: wrap; }
 .ctop > * { pointer-events: auto; }
 .follow { display: inline-flex; align-items: center; gap: 8px; height: 34px; padding: 0 14px; border-radius: var(--radius-pill); background: var(--surface-container); border: 1px solid var(--border); font-size: 12.5px; color: var(--text-secondary); cursor: pointer; }
@@ -289,7 +289,7 @@ input.search:focus { border-color: var(--text-primary); }
 /* The picked node's bar above it and panel under it (infinite-canvas's prompt panel, astorie's node panel): glass, the board showing through. */
 .nbar, .npanel { position: absolute; z-index: 20; border: 1px solid color-mix(in srgb, var(--text-primary) 12%, transparent); background: var(--glass); backdrop-filter: blur(18px) saturate(1.2); box-shadow: var(--shadow-dialog); }
 .nbar { display: flex; align-items: center; gap: 2px; padding: 4px; border-radius: var(--radius-pill); }
-.nbar .ibtn { width: 32px; height: 32px; border-radius: 999px; }
+.nbar .ibtn { width: 32px; height: 32px; border-radius: var(--radius-pill); }
 .npanel { display: grid; gap: 10px; padding: 12px 14px; border-radius: var(--radius-2xl); }
 .npanel .nhead { display: flex; align-items: center; gap: 8px; font-size: 13.5px; }
 /* Docked right: the same panel, full height at the board's right edge. */
@@ -299,7 +299,7 @@ input.search:focus { border-color: var(--text-primary); }
 .npanel .nhome { margin: 0; font-size: 12px; }
 /* §15 progressive disclosure: prompt, versions, request and details open on demand, one at a time. */
 .npanel .ndisc { display: flex; flex-wrap: wrap; gap: 6px; }
-.npanel .ndisc button { height: 26px; display: inline-flex; align-items: center; gap: 4px; padding: 0 8px 0 10px; border: 1px solid color-mix(in srgb, var(--text-primary) 12%, transparent); border-radius: 999px; background: none; color: var(--text-secondary); font-size: 12px; cursor: pointer; }
+.npanel .ndisc button { height: 26px; display: inline-flex; align-items: center; gap: 4px; padding: 0 8px 0 10px; border: 1px solid color-mix(in srgb, var(--text-primary) 12%, transparent); border-radius: var(--radius-pill); background: none; color: var(--text-secondary); font-size: 12px; cursor: pointer; }
 .npanel .ndisc button .ic { width: 12px; height: 12px; }
 .npanel .ndisc button[aria-expanded="true"] { background: color-mix(in srgb, var(--text-primary) 8%, transparent); color: var(--text-primary); font-weight: 600; }
 .npanel .npart { display: grid; gap: 10px; max-height: 240px; overflow-y: auto; font-size: 12.5px; }
@@ -307,13 +307,13 @@ input.search:focus { border-color: var(--text-primary); }
 .npanel .prompt { display: grid; gap: 6px; line-height: 1.6; color: var(--text-primary); }
 .npanel .prompt p { margin: 0; }
 /* A reference in the prompt as liblib.tv shows it: its picture and its name in one bordered chip, inline in the words. */
-.pchip { display: inline-flex; align-items: center; gap: 5px; height: 26px; padding: 0 8px 0 2px; margin: 0 2px; border-radius: 8px; border: 1px solid color-mix(in srgb, var(--text-primary) 14%, transparent); background: color-mix(in srgb, var(--text-primary) 7%, transparent); color: var(--text-primary); font-weight: 600; vertical-align: middle; }
-.pchip img { width: 22px; height: 22px; border-radius: 6px; object-fit: cover; object-position: top; }
+.pchip { display: inline-flex; align-items: center; gap: 5px; height: 26px; padding: 0 8px 0 2px; margin: 0 2px; border-radius: var(--radius-pill); background: color-mix(in srgb, var(--text-primary) 7%, transparent); color: var(--text-primary); font-weight: 600; vertical-align: middle; }
+.pchip img { width: 22px; height: 22px; border-radius: var(--radius-small); object-fit: cover; object-position: top; }
 .npanel .refs { display: flex; gap: 8px; margin: 0; padding: 0; list-style: none; }
 /* The pictures the prompt names, numbered on their corner as the prompt's Image N, as liblib.tv numbers them. */
 .npanel .refs li { position: relative; width: 56px; height: 56px; }
-.npanel .refs img { width: 56px; height: 56px; border-radius: 8px; object-fit: cover; object-position: top; }
-.npanel .refs li b { position: absolute; left: 4px; top: 4px; min-width: 18px; height: 18px; padding: 0 4px; border-radius: 999px; display: grid; place-items: center; background: color-mix(in srgb, var(--canvas) 70%, transparent); color: var(--text-primary); font: 600 10.5px var(--font-mono); }
+.npanel .refs img { width: 56px; height: 56px; border-radius: var(--radius-medium); object-fit: cover; object-position: top; }
+.npanel .refs li b { position: absolute; left: 4px; top: 4px; min-width: 18px; height: 18px; padding: 0 4px; border-radius: var(--radius-pill); display: grid; place-items: center; background: color-mix(in srgb, var(--canvas) 70%, transparent); color: var(--text-primary); font: 600 10.5px var(--font-mono); }
 .npanel dl { margin: 0; display: grid; grid-template-columns: 76px 1fr; gap: 6px 10px; font-size: 12px; }
 .npanel dt { color: var(--text-muted); } .npanel dd { margin: 0; color: var(--text-secondary); }
 /* Why a version is stale, in drama-cli's own words (its lineage's `problems`), one line each. */
@@ -323,10 +323,10 @@ input.search:focus { border-color: var(--text-primary); }
 .npanel .versions .subtle { flex-basis: 100%; }
 .npanel pre { margin: 0; padding: 10px; border-radius: var(--radius-medium); background: color-mix(in srgb, var(--text-primary) 6%, transparent); color: var(--text-secondary); font-size: 11px; line-height: 1.5; white-space: pre-wrap; word-break: break-all; }
 .npanel .nfoot { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; padding-top: 10px; border-top: 1px solid color-mix(in srgb, var(--text-primary) 10%, transparent); }
-.npanel .pill { height: 26px; display: inline-flex; align-items: center; padding: 0 10px; border-radius: 999px; background: color-mix(in srgb, var(--text-primary) 8%, transparent); color: var(--text-secondary); font-size: 11.5px; }
+.npanel .pill { height: 26px; display: inline-flex; align-items: center; padding: 0 10px; border-radius: var(--radius-pill); background: color-mix(in srgb, var(--text-primary) 8%, transparent); color: var(--text-secondary); font-size: 11.5px; }
 .minimap { position: absolute; right: 84px; bottom: 16px; width: 168px; height: 104px; border-radius: var(--radius-large); background: var(--surface-container); border: 1px solid var(--border); overflow: hidden; }
-.minimap i { position: absolute; background: color-mix(in srgb, var(--text-primary) 30%, transparent); border-radius: 2px; }
-.minimap b { position: absolute; border: 1.5px solid var(--text-primary); border-radius: 3px; }
+.minimap i { position: absolute; background: color-mix(in srgb, var(--text-primary) 30%, transparent); border-radius: var(--radius-small); }
+.minimap b { position: absolute; border: 1.5px solid var(--text-primary); border-radius: var(--radius-small); }
 
 /* ── review room ── */
 .room { flex: 1; min-width: 0; display: flex; min-height: 0; background: var(--canvas); }
@@ -638,7 +638,7 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
 .cnode .card { position: relative; }
 .cnode .card .none { display: grid; place-items: center; height: 100%; color: var(--text-subtle); font-size: 11px; }
 .cnode .play { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; }
-.cnode .play i { width: 32px; height: 32px; border-radius: 50%; background: color-mix(in srgb, var(--canvas) 55%, transparent); display: grid; place-items: center; color: var(--text-primary); border: 1px solid color-mix(in srgb, var(--text-primary) 25%, transparent); }
+.cnode .play i { width: 32px; height: 32px; border-radius: var(--radius-pill); background: color-mix(in srgb, var(--canvas) 55%, transparent); display: grid; place-items: center; color: var(--text-primary); border: 1px solid color-mix(in srgb, var(--text-primary) 25%, transparent); }
 .cnode .play .ic { width: 14px; height: 14px; }
 /* A segment's shot list (ours, beside the pictures it made; SPEC): breakdown.json's shots as text, each its time, size,
    angle and camera, then what is seen and heard. Far out only its title bar shows, as ComfyUI collapses a node. */
@@ -648,11 +648,11 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
 .cnode .shotlist li { display: grid; gap: 2px; font-size: 11.5px; line-height: 1.4; color: var(--text-secondary); }
 .cnode .shotlist .sfacts { color: var(--text-muted); } .cnode .shotlist .saud { color: var(--text-subtle); }
 .layer.far .cnode .shotlist .srows { display: none; }
-.cnode .vbar { position: absolute; left: 4px; right: 4px; bottom: 4px; z-index: 2; display: none; align-items: center; gap: 4px; padding: 2px 6px; border-radius: 8px; background: color-mix(in srgb, var(--canvas) 72%, transparent); backdrop-filter: blur(10px); color: var(--text-primary); font: 600 10px var(--font-mono); }
+.cnode .vbar { position: absolute; left: 4px; right: 4px; bottom: 4px; z-index: 2; display: none; align-items: center; gap: 4px; padding: 2px 6px; border-radius: var(--radius-medium); background: color-mix(in srgb, var(--canvas) 72%, transparent); backdrop-filter: blur(10px); color: var(--text-primary); font: 600 10px var(--font-mono); }
 .cnode .card:hover .vbar, .cnode .vbar.shown { display: flex; }
-.cnode .vbar .vb { width: 22px; height: 22px; padding: 0; border: 0; border-radius: 50%; background: none; color: inherit; display: grid; place-items: center; cursor: pointer; }
+.cnode .vbar .vb { width: 22px; height: 22px; padding: 0; border: 0; border-radius: var(--radius-pill); background: none; color: inherit; display: grid; place-items: center; cursor: pointer; }
 .cnode .vbar .vb .ic { width: 13px; height: 13px; }
-.cnode .vbar .vtrack { flex: 1; min-width: 0; height: 3px; border-radius: 999px; background: color-mix(in srgb, var(--text-primary) 25%, transparent); }
+.cnode .vbar .vtrack { flex: 1; min-width: 0; height: 3px; border-radius: var(--radius-pill); background: color-mix(in srgb, var(--text-primary) 25%, transparent); }
 .cnode .vbar .vtrack i { display: block; width: 0; height: 100%; border-radius: inherit; background: var(--text-primary); }
 .backto .ic { width: 14px; height: 14px; }
 .top .backto { margin-left: 6px; flex: none; border: 1px solid var(--border); }
