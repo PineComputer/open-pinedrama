@@ -835,3 +835,6 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
 /* The episode's cut, as its child row in the drama tree (IA §16: its own home), under the episode in view. */
 .tree .treecut button { padding-left: 18px; }
 .tree .treecut .code { color: var(--text-subtle); }
+/* What the tree's dots mean (yurun's Y10), one line under it. */
+.treelegend { display: flex; gap: 12px; margin: 2px 0 6px 26px; font-size: 11px; color: var(--text-subtle); }
+.treelegend span { display: inline-flex; align-items: center; gap: 5px; }

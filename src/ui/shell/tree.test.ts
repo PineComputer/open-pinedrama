@@ -1,7 +1,7 @@
 // The drama tree's counts, from what each of the drama's places shows.
 import { describe, expect, it } from "vitest";
 import type { Lineage, LineageKind, LineageNode } from "../../shared/lineage.ts";
-import type { CastCard, ReviewKind, ReviewState, ReviewSummary } from "../../shared/types.ts";
+import { type CastCard, type EpisodeRow, type ReviewKind, type ReviewState, type ReviewSummary, STAGES } from "../../shared/types.ts";
 import { dramaTree } from "./tree.ts";
 
 function review(kind: ReviewKind, state: ReviewState = "open", episode?: string): ReviewSummary {
@@ -15,18 +15,19 @@ function node(id: string, kind: LineageKind, fresh: boolean | null = true): Line
 }
 
 describe("the drama tree", () => {
-  it("counts each open review where it is decided, and only open ones", () => {
+  it("counts each open review where it is decided off an episode, and only open ones", () => {
     const tree = dramaTree({
       cast: [],
       lineage: null,
+      rows: [],
       reviews: [review("looks"), review("references"), review("storyboards", "open", "EP004"), review("takes", "open", "EP006"), review("cut", "open", "EP001"), review("question"), review("question", "open", "EP007"), review("takes", "answered", "EP002"), review("looks", "saving")],
     });
-    expect(tree.needs).toEqual({ script: 1, assets: 2, episodes: 3, delivery: 1 });
+    expect(tree.needs).toEqual({ script: 1, assets: 2, delivery: 1 });
     expect(tree.reviews).toBe(7);
   });
 
   it("counts the Assets shelves by the cards the Assets page shows", () => {
-    const tree = dramaTree({ cast: [card("look", "ivy"), card("look", "luca"), card("location", "garden"), card("prop", "file")], reviews: [], lineage: null });
+    const tree = dramaTree({ cast: [card("look", "ivy"), card("look", "luca"), card("location", "garden"), card("prop", "file")], reviews: [], lineage: null, rows: [] });
     expect(tree.shelves).toEqual({ characters: 2, locations: 1, props: 1 });
   });
 
@@ -41,7 +42,13 @@ describe("the drama tree", () => {
       ],
       groups: [],
     };
-    expect(dramaTree({ cast: [], reviews: [], lineage }).outOfDate).toBe(3);
-    expect(dramaTree({ cast: [], reviews: [], lineage: null }).outOfDate).toBe(0);
+    expect(dramaTree({ cast: [], reviews: [], lineage, rows: [] }).outOfDate).toBe(3);
+    expect(dramaTree({ cast: [], reviews: [], lineage: null, rows: [] }).outOfDate).toBe(0);
+  });
+
+  it("counts as needing the maker exactly the episodes whose dot says so: waiting, stopped or failed (yurun's Y10)", () => {
+    const row = (code: string, state: EpisodeRow["state"]) => ({ id: code, number: 1, code, title: "", state, stages: Object.fromEntries(STAGES.map((stage) => [stage, { state: "none" }])), spent: { total: 0, media: 0, partial: false }, updatedAt: "" }) as unknown as EpisodeRow;
+    const rows = [row("EP001", "waiting"), row("EP002", "working"), row("EP003", "stopped"), row("EP004", "failed"), row("EP005", "queued"), row("EP006", "done")];
+    expect(dramaTree({ cast: [], reviews: [], lineage: null, rows }).episodes).toBe(3);
   });
 });

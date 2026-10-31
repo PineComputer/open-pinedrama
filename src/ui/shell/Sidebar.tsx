@@ -13,18 +13,10 @@ import { type TKey, useT } from "../i18n.ts";
 import { isSettingUp, moneyText, nowText, scriptWaits, SETUP_STEPS } from "../labels.ts";
 import { Mark } from "../Mark.tsx";
 import type { Page } from "../place.ts";
-import { dramaTree } from "./tree.ts";
+import { dramaTree, type Mark as EpisodeMark, markOf } from "./tree.ts";
 import { isRedLine, standing } from "../screens/Slate.tsx";
 
 export type Step = "script" | "story" | "episodes" | "cut";
-
-type Mark = "you" | "work" | "done" | "line";
-
-function markOf(row: EpisodeRow): Mark {
-  if (row.state === "waiting" || row.state === "stopped" || row.state === "failed") return "you";
-  if (row.state === "working") return "work";
-  return row.state === "done" ? "done" : "line";
-}
 
 /** The step a drama's page is on: before there are episodes, its board is the story being made. */
 export function stepOf(drama: DramaView, page: Page | undefined): Step | undefined {
@@ -141,7 +133,7 @@ export function DramaSidebar({ drama, page, episode, drawer }: { drama: DramaVie
   const reviews = useResource<ReviewSummary[]>(`/api/reviews?drama=${drama.id}`, ["reviews"]);
   const cast = useResource<CastCard[]>(`/api/dramas/${drama.id}/cast`, [`drama:${drama.id}`]);
   const lineage = useResource<LineageView>(`/api/dramas/${drama.id}/lineage`, [`project:${drama.id}`]);
-  const tree = dramaTree({ cast: cast.data ?? [], reviews: reviews.data ?? [], lineage: lineage.data?.lineage ?? null });
+  const tree = dramaTree({ cast: cast.data ?? [], reviews: reviews.data ?? [], lineage: lineage.data?.lineage ?? null, rows: drama.episodeRows });
   // The script is done once the maker has answered the setup's first question about it.
   const scriptDone = drama.setup.reached > 1 || drama.episodeRows.length > 0;
   // The tree folds the episodes that only wait in line at its end into one line ("EP009–EP024 · 16 in line"), as the design does.
@@ -254,7 +246,7 @@ export function DramaSidebar({ drama, page, episode, drawer }: { drama: DramaVie
         <Link to="/d/$dramaId/episodes" params={params} className="navi" aria-current={at(page === "episodes")}>
           <Icon name="film-strip" className="ic" />
           {t("step.episodes")}
-          {needs(tree.needs.episodes)}
+          {needs(tree.episodes)}
         </Link>
         {drama.episodeRows.length > 0 && (
           <ul className="tree" aria-label={t("tree.label")}>
@@ -266,7 +258,7 @@ export function DramaSidebar({ drama, page, episode, drawer }: { drama: DramaVie
                   <button type="button" aria-current={row.code === episode ? "true" : "false"} onClick={() => void navigate({ to: "/d/$dramaId/e/$episodeCode/list", params: { dramaId, episodeCode: row.code } })}>
                     <span className="code">{row.code}</span> <span className="now">{nowText(row, t)}</span>
                     <span className="sr-only">, {t(`tree.${mark}` as TKey)}</span>
-                    <span className={`dot ${DOT[mark]}`} aria-hidden="true" />
+                    <span className={`dot ${DOT[mark]}`} aria-hidden="true" title={t(`tree.${mark}` as TKey)} />
                   </button>
                 </li>,
                 // The episode in view's cut, its own object with its own home (IA §16), as its child row.
@@ -286,6 +278,17 @@ export function DramaSidebar({ drama, page, episode, drawer }: { drama: DramaVie
               </li>
             )}
           </ul>
+        )}
+        {/* What the dots mean, once, at the tree's foot (yurun's Y10; Nielsen: recognition rather than recall). */}
+        {drama.episodeRows.length > 0 && (
+          <p className="treelegend" aria-hidden="true">
+            {(["you", "work", "done"] as const).map((mark) => (
+              <span key={mark}>
+                <i className={`dot ${DOT[mark]}`} />
+                {t(`tree.legend.${mark}`)}
+              </span>
+            ))}
+          </p>
         )}
         <Link to="/d/$dramaId/delivery" params={params} className="navi" aria-current={at(page === "delivery")}>
           <Icon name="scissors" className="ic" />
@@ -309,7 +312,7 @@ export function DramaSidebar({ drama, page, episode, drawer }: { drama: DramaVie
   );
 }
 
-const DOT: Record<Mark, string> = { you: "you", work: "work", done: "accepted", line: "line" };
+const DOT: Record<EpisodeMark, string> = { you: "you", work: "work", done: "accepted", line: "line" };
 // A cut's stage as the maker's state (principle "Five maker-facing states"), and its dot.
 const CUT = { review: "you", working: "work", done: "accepted" } as const;
 const DOT_OF = { you: "you", work: "work", accepted: "accepted" } as const;

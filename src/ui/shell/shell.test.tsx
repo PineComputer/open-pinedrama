@@ -210,8 +210,8 @@ describe("the sidebar", () => {
     // The name starts with what the button shows (WCAG 2.5.3), then where the episode stands.
     expect(within(tree).getAllByRole("button").map((button) => button.textContent)).toEqual([
       "EP001 6 storyboards wait for you, needs you",
-      "EP002 Starting, at work",
-      "EP003 Done, finished",
+      "EP002 Starting, working",
+      "EP003 Done, done",
       "EP004 In line, #1, in line",
     ]);
     await user.click(within(tree).getAllByRole("button")[1]);
