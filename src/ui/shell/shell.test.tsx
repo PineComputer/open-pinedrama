@@ -82,7 +82,7 @@ describe("the top bar", () => {
   it("says where you are, each step back a link, and goes back one", async () => {
     const user = userEvent.setup();
     at("/d/d1/e/EP002");
-    render(<TopBar crumbs={crumbs} waiting={[]} ready />);
+    render(<TopBar crumbs={crumbs} waiting={[]} ready next />);
     const where = screen.getByRole("navigation", { name: "Where you are" });
     expect(within(where).getAllByRole("link").map((link) => link.textContent)).toEqual(["Dramas", "The Stepmother"]);
     expect(within(where).getByText("EP002")).toHaveAttribute("aria-current", "page");
@@ -93,14 +93,14 @@ describe("the top bar", () => {
   it("goes to the next review waiting, not the one in view", async () => {
     const user = userEvent.setup();
     at("/r/r1");
-    render(<TopBar crumbs={crumbs} waiting={[review("r1"), review("r2"), review("r3")]} ready />);
+    render(<TopBar crumbs={crumbs} waiting={[review("r1"), review("r2"), review("r3")]} ready next />);
     await user.click(screen.getByRole("button", { name: "Next review, 2 waiting" }));
     expect(location.pathname).toBe("/r/r2");
   });
 
   it("says when nothing waits, and does nothing", () => {
     at("/d/d1");
-    render(<TopBar crumbs={crumbs} waiting={[]} ready />);
+    render(<TopBar crumbs={crumbs} waiting={[]} ready next />);
     expect(screen.getByRole("button", { name: "Next review, 0 waiting" })).toBeDisabled();
   });
 });

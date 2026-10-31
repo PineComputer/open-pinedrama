@@ -181,7 +181,7 @@ export function Breadcrumb({ crumbs }: { crumbs: Crumb[] }) {
   );
 }
 
-export function TopBar({ crumbs, waiting, ready, children }: { crumbs: Crumb[]; waiting: ReviewSummary[]; ready: boolean; children?: React.ReactNode }) {
+export function TopBar({ crumbs, waiting, ready, next, children }: { crumbs: Crumb[]; waiting: ReviewSummary[]; ready: boolean; next: boolean; children?: React.ReactNode }) {
   const { t } = useT();
   const back = crumbs.length > 1 ? crumbs[crumbs.length - 2].to : undefined;
   return (
@@ -194,7 +194,7 @@ export function TopBar({ crumbs, waiting, ready, children }: { crumbs: Crumb[]; 
       <Breadcrumb crumbs={crumbs} />
       <span className="grow" />
       {children}
-      {ready && <NextReview waiting={waiting} />}
+      {next && ready && <NextReview waiting={waiting} />}
     </header>
   );
 }

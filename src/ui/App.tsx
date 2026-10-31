@@ -165,9 +165,9 @@ export function App() {
       <NavRail path={path} dramaId={dramaId} sidebarOpen={sidebarOpen} onToggleSidebar={toggleSidebar} />
       {sidebarOpen && sidebar}
       <div className="main">
-        {/* design/'s Home has no top bar: the page starts at the greeting. */}
+        {/* design/'s Home has no top bar: the page starts at the greeting; its Upload's has no Next review. */}
         {screen.type !== Slate && (
-          <TopBar crumbs={crumbs} waiting={waiting} ready={ready}>
+          <TopBar crumbs={crumbs} waiting={waiting} ready={ready} next={path !== "/new"}>
             {drama.data && <ExportMenu drama={drama.data} />}
             {drama.data && <StopControl drama={drama.data} />}
           </TopBar>
