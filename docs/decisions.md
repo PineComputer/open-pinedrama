@@ -22,7 +22,7 @@ timeline
   2026-10-23 : D5 pre-production in one session
   2026-10-24 : D6 idle timeouts follow the work : D7 spend shown, never in a goal
   2026-10-29 : D8 phase 1 steers
-  2026-10-30 : D9 design/ is the UI source : D10 tsc gate : D11 mature libraries : D12 real samples in LFS : D13 decisions taken once : D14 credentials stop : D15 Codex review loop : D16 navigation and one home : D17 every take and cut watched : D18 cut editing as an edit spec : D19 TanStack Router : D20 Export by owner : D21 Analyzing and Out of date routes : D22 redo by owner : D23 the asset detail : D24 the cut edit goal : D25 one Submission : D26 crumbs and Back : D27 Reviews : D28 model badge : D29 canvas zoom, inline video : D30 URL rules : D31 agent scope : D32 narrow windows : D33 review options : D34 Episodes filters : D35 every element cites its ground : D36 Delivery is the cuts' home : D37 a picked node zooms : D38 shared redo after release : D39 a take plays on its node : D40 where a stop shows : D41 Script is the screenplay's home : D42 Story and Assets apart : D43 stable sample ids : D44 the cut leaves the switch : D45 samples' own screenplays : D46 Project : D47 a draft's changed base : D48 the List's ?version : D49 project types : D50 Home cards : D51 one column, rail labels : D52 Home first, disabled : D53 account footer : D54 icon-only rail : D55 the cover follows the format : D56 Assets grid and inspector : D57 no tabs in Assets : D58 Canvas nodes whole : D59 Canvas opens in Hand : D60 replay's freshness : D61 Bible : D62 Script holds the process : D63 Segments matrix : D64 a visualization of drama-cli : D65 no accent bar : D66 an episode is its Canvas : D67 shape and alignment : D68 recorded edges only : D69 review by identity
+  2026-10-30 : D9 design/ is the UI source : D10 tsc gate : D11 mature libraries : D12 real samples in LFS : D13 decisions taken once : D14 credentials stop : D15 Codex review loop : D16 navigation and one home : D17 every take and cut watched : D18 cut editing as an edit spec : D19 TanStack Router : D20 Export by owner : D21 Analyzing and Out of date routes : D22 redo by owner : D23 the asset detail : D24 the cut edit goal : D25 one Submission : D26 crumbs and Back : D27 Reviews : D28 model badge : D29 canvas zoom, inline video : D30 URL rules : D31 agent scope : D32 narrow windows : D33 review options : D34 Episodes filters : D35 every element cites its ground : D36 Delivery is the cuts' home : D37 a picked node zooms : D38 shared redo after release : D39 a take plays on its node : D40 where a stop shows : D41 Script is the screenplay's home : D42 Story and Assets apart : D43 stable sample ids : D44 the cut leaves the switch : D45 samples' own screenplays : D46 Project : D47 a draft's changed base : D48 the List's ?version : D49 project types : D50 Home cards : D51 one column, rail labels : D52 Home first, disabled : D53 account footer : D54 icon-only rail : D55 the cover follows the format : D56 Assets grid and inspector : D57 no tabs in Assets : D58 Canvas nodes whole : D59 Canvas opens in Hand : D60 replay's freshness : D61 Bible : D62 Script holds the process : D63 Segments matrix : D64 a visualization of drama-cli : D65 no accent bar : D66 an episode is its Canvas : D67 shape and alignment : D68 recorded edges only : D69 review by identity : D70 the UI decides, the chat acts
 ```
 
 ## D1. 2026-10-22 · A desktop app on Electron
@@ -149,7 +149,7 @@ timeline
   the feature must be supported, and this should be the industry's common solution; not having it
   won't do*).
 - **Recorded in.** `REDESIGN_PLAN.md`, "Direction"; `CONTRIBUTING.md`.
-
+- **Amended by.** [D70](#d70-2026-10-30--the-ui-decides-the-chat-acts): the Canvas's steer bar and Note leave the UI; Accept and Send back stay on the exact item.
 ## D9. 2026-10-30 · design/ is the one source of the UI
 - **Context.** The lanes had changed the UI directly in code, each against its own reference
   screenshots, and the integrated studio drifted far from the prototype merecdesperez44323-lab had
@@ -411,7 +411,7 @@ timeline
 - **Words.** None recorded.
 - **Recorded in.** Commits e3e05a9 and c72fad6 (the list), 420a21d (one submission per owner);
   work-02's, work-05's and master's notes to the docs, 30 October 2026.
-
+- **Amended by.** [D70](#d70-2026-10-30--the-ui-decides-the-chat-acts): the redo buttons leave the UI; the agent chat redoes.
 ## D23. 2026-10-30 · An asset's one home is its detail in Assets
 - **Context.** The dry run of the IA draft (QA journey 1) found a character's versions reachable
   nowhere: an Assets card did nothing when clicked, and the canvas panel said its versions "are in
@@ -676,7 +676,7 @@ timeline
 - **Amended by.** Commit 3bb6353, the same evening: a shared reference's redo after the handover
   opens a new setup session, from Out of date's shared groups (an impact confirmation, then a review
   of the new versions).
-
+- **Amended by.** [D70](#d70-2026-10-30--the-ui-decides-the-chat-acts): the shared redo's button leaves the UI; the agent chat asks for it.
 ## D39. 2026-10-30 · A take or cut plays on its Canvas node
 - **Context.** A take or cut node previewed its video on hover, muted, with no way to play it with
   sound, scrub it or see it large without leaving the board.
@@ -1251,6 +1251,39 @@ timeline
 - **Consequences.** None beyond the Canvas's Review.
 - **Words.** None recorded.
 - **Recorded in.** Design commit 3c06e2e; product commit 3f94c78; work-06's notes to the docs.
+
+## D70. 2026-10-30 · The UI decides; the chat acts
+- **Context.** Buttons that ask the agent to do something (redo, note, steer, regenerate, ask to
+  change) had spread across Out of date, the Canvas and the review rooms, each a second way to talk
+  to the agent beside its chat.
+- **Decision.** The UI keeps: Accept and Send back on the exact item and version, each with one
+  sentence (the maker's words or a reason), every decision also shown in the agent conversation of
+  the session it goes to; Stop and Resume; Reconcile ("Check again") where an outcome is unknown, so
+  nothing is paid for twice; the cut's editor (timeline and edit spec) with the chat; and starting a
+  project (upload, preset, budget), export and download, navigation and viewing. Everything else
+  goes through the agent chat: redo and remake buttons (Out of date's rows and groups, the shared
+  redo), note-to-agent buttons, steer bars and canvas action toolbars, "ask the agent to change"
+  buttons, and Apply-type actions other than the cut's. Where a removed button stood, at most one
+  line points to the agent sidebar ("Ask the agent to redo it"); nothing pretends to be an action.
+- **Alternatives.** The buttons kept beside the chat.
+- **Grounds.** merecdesperez44323-lab's decision on master's proposal; one action, one meaning
+  ([design principles](design-principles.md#2-one-action-one-meaning)); never a second way to do
+  something ([D35](#d35-2026-10-30--every-ui-element-and-behaviour-cites-its-ground)).
+- **Consequences.** [Design principle 15](design-principles.md#15-the-ui-decides-the-chat-acts).
+  Out of date's redo buttons ([D22](#d22-2026-10-30--out-of-date-is-redone-by-its-owners-session-one-row-or-the-whole-group),
+  [D38](#d38-2026-10-30--redoing-a-shared-reference-takes-a-new-setup-session-after-release)) and the
+  Canvas's steer bar and Note ([D8](#d8-2026-10-29--phase-1-steers)) leave the UI. The lanes remove
+  them in their own commits.
+- **Words.** Master's proposal, which merecdesperez44323-lab pasted back and answered "ok.":
+  "界面上只保留"对这一项做决定"：在确切的那一项上点"接受"或"退回"，写一句话。点完以后，这条决定也会出现在 agent 的对话里，你在聊天中能看到。" (*the UI keeps only "decide on this item": on the exact item, click Accept or Send back
+  and write a sentence; the decision then also appears in the agent's conversation, in the chat*);
+  "其余操作都交给聊天：改剧本、重做、调整、提问、让它解释，界面不再放这类按钮。界面主要用来看：剧本、Bible、素材、画布、成片。" (*everything else goes to the chat: changing the script, redoing, adjusting, asking,
+  having it explain; the UI no longer has such buttons, and is mainly for viewing the script, the
+  Bible, the assets, the canvas and the cut*); "少数控制保留在界面上：停止项目，以及结果不确定时的"核实一下"（避免重复花钱）。" (*a few controls stay in the UI: stopping
+  the project, and "check" when an outcome is unknown, to avoid paying twice*). On the cut, asked
+  "成片剪辑保留界面编辑，还是也改成聊天？" (*does the cut keep editing in the UI, or move to the chat too?*),
+  merecdesperez44323-lab answered "界面编辑 + 聊天" (*editing in the UI, plus the chat*).
+- **Recorded in.** `short-drama-runs/qa/UI_ACTIONS_RULE.md`; master's note to the docs, 30 October 2026.
 
 ## References
 

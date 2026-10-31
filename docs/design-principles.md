@@ -73,6 +73,7 @@ flowchart LR
     P12[12 Mature libraries]
     P13[13 Light process early]
     P14[14 Every element cites its ground]
+    P15[15 The UI decides; the chat acts]
   end
   P0 --> Where
   P0 --> How
@@ -164,7 +165,7 @@ finder and lands on homes.
 
 **Rule.** Each control does one thing, and the same word means the same thing everywhere:
 
-- **Note** records a remark only;
+- **Note** records a remark only (it leaves the UI with [D70](decisions.md#d70-2026-10-30--the-ui-decides-the-chat-acts): a remark goes in the chat);
 - **Send back** asks for a redo, with a reason;
 - **Accept** accepts this version;
 - **Apply** submits a cut edit;
@@ -450,6 +451,25 @@ systems such as Apple's and Material state each component's use and behaviour be
 
 **In the studio.** Every design change carries the checklist in `CONTRIBUTING.md`, "The design
 comes first"; `design/SPEC.md` gives each component its ground.
+
+## 15. The UI decides; the chat acts
+
+**Rule.** The UI keeps the maker's decisions and a few controls; everything that asks the agent to do
+something goes through the agent chat. Kept: Accept and Send back on the exact item and version, each
+with one sentence, every decision also shown in that session's conversation; Stop and Resume;
+Reconcile where an outcome is unknown; the cut's editor, with the chat; starting a project, export,
+navigation and viewing. Removed: redo, note, steer, regenerate and "ask to change" buttons. Where one
+stood, at most one line points to the agent sidebar. The principle's name is ours.
+
+**Source.** merecdesperez44323-lab's decision on master's proposal
+([D70](decisions.md#d70-2026-10-30--the-ui-decides-the-chat-acts)).
+
+**How others do it.** Code review keeps the verdict in the tool (GitHub's Approve and Request
+changes) and the discussion in the conversation; assistants such as Cursor take requests in their
+chat rather than as one button per action.
+
+**In the studio.** One way to ask the agent anything: its chat. One way to decide an item: Accept or
+Send back on that item.
 
 ## References
 
