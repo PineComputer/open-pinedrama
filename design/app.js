@@ -447,10 +447,10 @@
             <svg class="wires" width="1" height="1">${EDGES.map(wire)}</svg>
             ${NODES.filter((n) => n.kind === "group").map((g) => html`<div class="group" style=${`left:${g.x}px;top:${g.y}px;width:${g.w}px;height:${g.h}px`}><span class="gl">${g.label}</span></div>`)}
             ${NODES.filter((n) => n.kind !== "group" && n.kind !== "seg").map((n) => html`<div class=${"cnode " + (S.sel === n.id ? "sel" : "")} style=${`left:${n.x}px;top:${n.y - 26}px;width:${n.w}px`}>
-              <div class="lab">${I(n.kind === "cast" ? "user" : n.kind === "place" ? "image" : "cube")}<span class="name">${n.label}</span>${n.st !== "accepted" ? Status(n.st) : outOfDate(n) && Status("stale")}</div>
+              <div class="lab">${I(n.kind === "cast" ? "user" : n.kind === "place" ? "image" : "cube")}<span class="name">${n.label}</span><span class="model">${n.model}</span>${n.st !== "accepted" ? Status(n.st) : outOfDate(n) && Status("stale")}</div>
               <div class="card" style=${`height:${n.h}px`} onClick=${() => pick(n)}><img src=${n.pic} alt="" draggable="false"/></div></div>`)}
             ${NODES.filter((n) => n.kind === "seg").map((n) => html`<div class=${"segnode cnode " + (S.sel === n.id ? "sel" : "")} style=${`left:${n.x}px;top:${n.y - 26}px`}>
-              <div class="lab">${I("film-strip")}<span class="name">${n.label}</span><span class="subtle" style="font-weight:500">${n.seg.s} s</span>${n.st !== "accepted" && Status(n.st)}</div>
+              <div class="lab">${I("film-strip")}<span class="name">${n.label}</span><span class="subtle" style="font-weight:500">${n.seg.s} s</span><span class="model">${n.model}</span>${n.st !== "accepted" && Status(n.st)}</div>
               <div class="card" onClick=${() => pick(n)}>
                 ${n.seg.board ? html`<div class="board-img"><img src=${n.seg.board} alt="" draggable="false"/><span>board v1</span></div>` : html`<div class="none">board accepted</div>`}
                 ${n.seg.still ? html`<div><img src=${n.seg.still} alt="" draggable="false"/><span>${n.seg.take}</span><span class="play"><i>${I("play")}</i></span></div>` : html`<div class="none">${n.seg.take} accepted</div>`}</div></div>`)}
