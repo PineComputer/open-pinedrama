@@ -13,6 +13,7 @@ import { type TKey, useT } from "../i18n.ts";
 import { isSettingUp, moneyText, nowText, scriptWaits, SETUP_STEPS } from "../labels.ts";
 import { Mark } from "../Mark.tsx";
 import type { Page } from "../place.ts";
+import { DramaThumb } from "../components/DramaThumb.tsx";
 import { dramaTree, type Mark as EpisodeMark, markOf } from "./tree.ts";
 import { isRedLine, standing } from "../screens/Slate.tsx";
 
@@ -49,14 +50,8 @@ export function HomeSidebar({ page, reviews, replay, drawer }: { page: Page | un
           const { st, label } = standing(drama, redLine.has(drama.id));
           return (
             <Link key={drama.id} to="/d/$dramaId" params={{ dramaId: drama.id }} className="navi">
-              {/* A drama with no work to show yet (still in setup) has the setup sidebar's file placeholder, not a blank (principle "Design states, not screens"). */}
-              {drama.cover && !drama.cover.video ? (
-                <img className="dthumb" src={drama.cover.url} alt="" />
-              ) : (
-                <span className="newthumb dthumb" aria-hidden="true">
-                  <Icon name="file-text" className="ic" />
-                </span>
-              )}
+              {/* One cover rule (Y6); a drama with nothing to show yet has the designed placeholder (principle "Design states, not screens"). */}
+              <DramaThumb drama={drama} className="dthumb" />
               <span className="grow">{drama.title}</span>
               <span className="sr-only">, {t(label, { n: drama.waiting })}</span>
               <span className={`dot ${st}`} aria-hidden="true" />
@@ -149,7 +144,7 @@ export function DramaSidebar({ drama, page, episode, drawer }: { drama: DramaVie
         wide="proj"
         trigger={
           <>
-            {drama.cast[0] ? <img src={drama.cast[0]} alt="" /> : <span className="newthumb"><Icon name="file-text" className="ic" /></span>}
+            <DramaThumb drama={drama} />
             <span className="grow">
               <b>{drama.title}</b>
               <small>{settingUp ? t("sidebar.setupSession") : [episodes.total ? t("sidebar.episodes", { n: episodes.total }) : "", drama.format].filter(Boolean).join(" · ")}</small>

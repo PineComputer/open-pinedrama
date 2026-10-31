@@ -21,6 +21,7 @@ import { type Crumb, StopControl, TopBar } from "./shell/TopBar.tsx";
 import { ExportMenu } from "./shell/ExportMenu.tsx";
 import { AsideSlot } from "./shell/aside.ts";
 import { buttonClass } from "./components/Button.tsx";
+import { DramaThumb } from "./components/DramaThumb.tsx";
 
 /** Before the studio can be used: this window isn't the studio's, or the engine isn't answering. */
 function Gate({ error, onRetry }: { error: unknown; onRetry: () => void }) {
@@ -240,11 +241,10 @@ export function App() {
 
   // Round 3 (design/ 2f2a07b): the crumbs say where the page's object belongs, each ancestor a link to its home; where
   // you came from is only "Back to …". The drama comes first, its cover and name, so it is clear which one is open.
-  const cover = drama.data?.cover && !drama.data.cover.video ? drama.data.cover.url : drama.data?.cast[0];
   const inDrama: Crumb | undefined = drama.data && {
     label: (
       <>
-        {cover && <img className="crumbimg" src={cover} alt="" />}
+        <DramaThumb drama={drama.data} className="crumbimg" />
         {drama.data.title}
       </>
     ),

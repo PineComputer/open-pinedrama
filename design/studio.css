@@ -839,3 +839,7 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
 .treelegend { display: flex; gap: 12px; margin: 2px 0 6px 26px; font-size: 11px; color: var(--text-subtle); }
 .treelegend span { display: inline-flex; align-items: center; gap: 5px; }
 .pagesub { margin: 2px 0 0; font-size: 12.5px; max-width: 72ch; }
+/* One cover rule (Y6): a drama's cover may be its newest take, shown as its frame; the same box as a picture. */
+.side .proj video { width: 30px; height: 40px; border-radius: 6px; object-fit: cover; }
+.navi video.dthumb, video.crumbimg { object-fit: cover; }
+.crumb .crumbimg { width: 16px; height: 22px; } .crumb .newthumb.crumbimg .ic { width: 11px; height: 11px; }
