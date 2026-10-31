@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 const en = {
   "app.name": "Pine Drama",
   "nav.dramas": "Projects",
+  "nav.home": "Home",
+  "nav.homeLater": "Coming later: a gallery of sample projects",
   "nav.reviews": "Reviews",
   "nav.settings": "Settings",
   "next.label": "Next review",
@@ -1025,6 +1027,8 @@ type Key = keyof typeof en;
 const zh: Record<Key, string> = {
   "app.name": "Pine 短剧",
   "nav.dramas": "项目",
+  "nav.home": "首页",
+  "nav.homeLater": "即将推出：示例项目展廊",
   "nav.reviews": "待审",
   "nav.settings": "设置",
   "next.label": "下一个待审",

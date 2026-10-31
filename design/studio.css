@@ -845,3 +845,6 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
 .rail.wide .raillabel { font-size: 13px; font-weight: 500; }
 .rail.wide .railcount.labelled .badge { position: static; margin-left: auto; }
 .rail.wide .railnote { padding: 0 10px 6px; }
+/* Home, shown and disabled until the gallery exists (yurun). */
+.rail .ibtn.disabled { opacity: .45; cursor: default; }
+.rail .ibtn.disabled:hover { background: transparent; color: var(--text-muted); }

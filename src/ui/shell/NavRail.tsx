@@ -10,8 +10,12 @@ import { useT } from "../i18n.ts";
 import { Mark } from "../Mark.tsx";
 import type { Page } from "../place.ts";
 
-/** wide: the studio's own column (off a project, open); waiting: every project's open reviews; replay: say it's sample work. */
-export function NavRail({ page, waiting, wide, replay, sidebarOpen, onToggleSidebar }: { page: Page | undefined; waiting: number; wide: boolean; replay: boolean; sidebarOpen: boolean; onToggleSidebar: () => void }) {
+/**
+ * wide: the studio's own column (off a project); waiting: every project's open reviews; replay: say it's sample work;
+ * narrow: below 1100 px, where ☰ opens the drawer (drawer: whether it's open). On a wide window there is no ☰: the
+ * column is always shown (yurun: "it's meaningless for this icon on the left top corner"; Apple HIG sidebars).
+ */
+export function NavRail({ page, waiting, wide, replay, narrow, drawer, onToggleDrawer }: { page: Page | undefined; waiting: number; wide: boolean; replay: boolean; narrow: boolean; drawer: boolean; onToggleDrawer: () => void }) {
   const { t } = useT();
   const queue = page === "reviews" || page === "review";
   // The name is the visible text, the count in it and then said for what it is ("Reviews 2 waiting"): WCAG 2.5.3, and
@@ -32,9 +36,11 @@ export function NavRail({ page, waiting, wide, replay, sidebarOpen, onToggleSide
   return (
     <nav className={wide ? "rail wide" : "rail"} aria-label={t("rail.label")}>
       <div className="railhead">
-        <button type="button" className="ibtn" aria-label={t(sidebarOpen ? "rail.hideSidebar" : "rail.showSidebar")} aria-expanded={sidebarOpen} onClick={onToggleSidebar}>
-          <Icon name="list" className="ic" />
-        </button>
+        {narrow && (
+          <button type="button" className="ibtn" aria-label={t(drawer ? "rail.hideSidebar" : "rail.showSidebar")} aria-expanded={drawer} onClick={onToggleDrawer}>
+            <Icon name="list" className="ic" />
+          </button>
+        )}
         {wide && (
           <span className="brand">
             <Mark size={24} />
@@ -43,6 +49,12 @@ export function NavRail({ page, waiting, wide, replay, sidebarOpen, onToggleSide
         )}
       </div>
       <hr />
+      {/* yurun: "you need to have a home page top of the drama project icon … currently just put Home and make if gray and
+          not clicable": shown and disabled until the gallery of sample projects exists; not a link, not in the tab order. */}
+      <span className="ibtn labelled disabled" role="link" aria-disabled="true" title={t("nav.homeLater")}>
+        <Icon name="house" className="ic" />
+        <span className="raillabel">{t("nav.home")}</span>
+      </span>
       {place("/", "film-strip", t("nav.dramas"), !queue && page !== "settings")}
       {place("/reviews", "list-checks", t("nav.reviews"), queue, waiting)}
       <span className="grow" />

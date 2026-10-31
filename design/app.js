@@ -8,7 +8,7 @@
   const SETUP = ["analyzing", "fountain"];
   const hash = (location.hash || "").slice(1);
   const S = {
-    screen: SCREENS.includes(hash) ? hash : "home", theme: "dark", side: true, tab: "all", filter: "all", waitFor: null, pin: null,
+    screen: SCREENS.includes(hash) ? hash : "home", theme: "dark", tab: "all", filter: "all", waitFor: null, pin: null,
     dialog: null, toasts: [], dramaStop: null, draft: "", chats: {}, drafts: {}, drawer: false,
     cam: { x: 40, y: 96, k: 0.62 }, tool: "move", toolOpen: false, zoomOpen: false, keysOpen: false, sel: null, dock: (() => { try { return localStorage.getItem("studio.canvas.dock") || "under"; } catch (e) { return "under"; } })(), follow: true, agentOpen: false, panning: null, minimap: true,
     ti: 0, playing: false, t: 0, watched: {}, maxT: {}, verdict: {}, reason: {}, showPrev: false, subs: {}, outcome: "ok", over: false,
@@ -98,12 +98,17 @@
   const studioPage = () => ["home", "upload", "reviews"].includes(S.screen);
   function Rail() {
     const dramas = !["reviews"].includes(S.screen);
-    const wide = studioPage() && S.side && !narrow();
+    // yurun ("it's meaningless for this icon on the left top corner"): on wide windows the column is always shown, and ☰
+    // is only the narrow window's way to open it as a drawer (Apple HIG sidebars; Material's navigation drawer).
+    const wide = studioPage() && (narrow() ? !!S.drawer : true);
     const place = (label, icon, current, onClick, extra) => html`<button class=${"ibtn labelled" + (extra ? " railcount" : "")} title=${wide ? undefined : label} aria-label=${extra ? extra.name : undefined} aria-current=${current ? "page" : "false"} onClick=${onClick}>${I(icon)}<span class="raillabel">${label}</span>${extra && extra.badge}</button>`;
     return html`<nav class=${"rail" + (wide ? " wide" : "")} aria-label="Main">
-      <div class="railhead"><button class="ibtn" aria-label="Show or hide the sidebar" aria-expanded=${String(narrow() ? !!S.drawer : S.side)} onClick=${() => (narrow() ? set({ drawer: !S.drawer }) : set({ side: !S.side }))}>${I("list")}</button>
+      <div class="railhead">${narrow() && html`<button class="ibtn" aria-label="Show or hide the sidebar" aria-expanded=${String(!!S.drawer)} onClick=${() => set({ drawer: !S.drawer })}>${I("list")}</button>`}
         ${wide && html`<span class="brand">${Mark()}<b>Pine Drama</b></span>`}</div>
       <hr/>
+      ${/* yurun: "you need to have a home page top of the drama project icon … currently just put Home and make if gray and not
+         clicable": a place to come (a gallery of sample projects), shown and disabled until it exists. */ ""}
+      <span class="ibtn labelled disabled" role="link" aria-disabled="true" title="Coming later: a gallery of sample projects">${I("house")}<span class="raillabel">Home</span></span>
       ${place("Projects", "film-strip", dramas, () => go("home"))}
       ${place("Reviews", "list-checks", S.screen === "reviews", () => set({ waitFor: null, screen: "reviews" }), { name: "Reviews, 5 waiting", badge: html`<span class="badge">5</span>` })}
       <span class="grow"></span>
@@ -115,12 +120,12 @@
     // Off a project the rail is the one column (Rail): no second one.
     if (studioPage()) return null;
     const cur = { episodes: null, episode: "EP006", canvas: "EP006", review: "EP006", cut: "EP006" }[S.screen];
-    if (SETUP.includes(S.screen)) return html`<aside class=${"side " + (S.side ? "" : "closed") + (S.drawer ? " drawer-open" : "")} aria-label="Project">
+    if (SETUP.includes(S.screen)) return html`<aside class=${"side" + (S.drawer ? " drawer-open" : "")} aria-label="Project">
       <div class="head"><button class="proj" onClick=${() => go("home")} title="All dramas"><span class="newthumb">${I("file-text")}</span><span class="grow"><b>${P.project.title}</b><small>Setup · 1 session</small></span>${I("caret-down", "subtle")}</button></div>
       <div class="scroll"><div class="sec">Setup</div>${window.EXTRA.SetupSteps()}</div>
       <div class="foot" title=${SPENT_COVERS}><div style="display:flex;justify-content:space-between"><span>Spent</span><b class="mono" style="color:var(--text-primary)">$0.40 <span class="muted">/ $1,000</span></b></div><span>Nothing in flight</span><span class="muted" style="font-size:11px">${SPENT_COVERS}</span></div>
     </aside>`;
-    return html`<aside class=${"side " + (S.side ? "" : "closed") + (S.drawer ? " drawer-open" : "")} aria-label="Project">
+    return html`<aside class=${"side" + (S.drawer ? " drawer-open" : "")} aria-label="Project">
       <div class="head"><button class="proj" onClick=${() => go("home")} title="All dramas"><img src=${P.eps[0].cover} alt=""/><span class="grow"><b>${P.project.title}</b><small>${P.project.episodes} episodes · ${P.project.spec}</small></span>${I("caret-down", "subtle")}</button></div>
       <div class="scroll">
         <button class="navi" aria-current=${S.screen === "script" ? "page" : "false"} onClick=${() => go("script")}>${I("file-text")}Script</button>

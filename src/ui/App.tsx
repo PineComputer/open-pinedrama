@@ -65,29 +65,6 @@ const LABEL: Partial<Record<Page, TKey>> = {
 // The pages that need the room: a docked agent shows as the ball there (Agent, below).
 const ROOMS: Page[] = ["canvasPick", "canvas", "cut", "review"];
 
-const SIDEBAR = "studio.sidebar";
-
-/** Whether the sidebar is open: the maker's last choice, a convenience kept in this browser. */
-function useSidebar(): [boolean, () => void] {
-  const [open, setOpen] = useState(() => {
-    try {
-      return localStorage.getItem(SIDEBAR) !== "closed";
-    } catch {
-      return true;
-    }
-  });
-  const toggle = () =>
-    setOpen((was) => {
-      try {
-        localStorage.setItem(SIDEBAR, was ? "closed" : "open");
-      } catch {
-        // Storage may be blocked; the sidebar still opens and closes for this window.
-      }
-      return !was;
-    });
-  return [open, toggle];
-}
-
 /**
  * The agent panel for the drama in view, as the maker left it. On Canvas and Lineage the board
  * needs the room, and the review room its stage, as the pro direction's Review room has it; and at
@@ -233,7 +210,6 @@ export function App() {
   const cutReview = page === "cut" && place?.episode ? waiting.find((item) => item.kind === "cut" && item.dramaId === dramaId && item.episode === place.episode) : undefined;
   const cutInView = useResource<ReviewView>(cutReview ? `/api/reviews/${cutReview.id}` : null, ["reviews"]);
   const cutVersion = cutInView.data?.reviewItems[0]?.files.find((file) => file.kind === "cut")?.version;
-  const [sidebarOpen, toggleSidebar] = useSidebar();
   // IA draft r2 (F): below 1100 px the sidebar is a drawer over the work, opened from the rail and closed by any move.
   const narrow = useMediaQuery("(max-width: 1100px)");
   const [drawer, setDrawer] = useState(false);
@@ -292,8 +268,8 @@ export function App() {
     );
   else crumbs = ofDrama({ label: t(LABEL[page] ?? "step.episodes") });
 
-  // Inside a project: the icon rail beside its tree, which ☰ opens and closes (a drawer below 1100 px). Off a project the
-  // rail itself is the studio's one column, which ☰ widens and narrows (NavRail).
+  // Inside a project: the icon rail beside its tree. Off a project the rail itself is the studio's one column (NavRail).
+  // Below 1100 px either column is a drawer that ☰ opens.
   const inProject = Boolean(drama.data && dramaId);
   const sidebar = drama.data && dramaId ? <DramaSidebar drama={drama.data} page={page} episode={followed} drawer={narrow} /> : null;
   return (
@@ -303,12 +279,14 @@ export function App() {
       <NavRail
         page={page}
         waiting={waiting.length}
-        wide={!inProject && sidebarOpen}
+        wide={!inProject && (narrow ? drawer : true)}
         replay={app.data.mode === "replay"}
-        sidebarOpen={inProject && narrow ? drawer : sidebarOpen}
-        onToggleSidebar={inProject && narrow ? () => setDrawer(!drawer) : toggleSidebar}
+        narrow={narrow}
+        drawer={drawer}
+        onToggleDrawer={() => setDrawer(!drawer)}
       />
-      {(narrow ? drawer : sidebarOpen) && sidebar}
+      {/* On a wide window the column is always shown; ☰ opens it as a drawer on a narrow one (yurun; Apple HIG sidebars). */}
+      {(narrow ? drawer : true) && sidebar}
       <div className="main">
         {/* design/'s Home has no top bar: the page starts at the greeting; its Upload's has no Next review. Reviews acts on
             no one drama, so it has none either (IA draft A1); inside a drama, Next review is that drama's. */}
