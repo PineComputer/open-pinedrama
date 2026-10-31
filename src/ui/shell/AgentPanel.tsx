@@ -1,8 +1,8 @@
 // The agent's panel beside the work, ported from the design (design/app.js, AgentPanel) with its markup
 // and classes: what runs, with Watch and Stop; the decisions waiting; the process of the session in
-// view and what it last said; recent work; the next steps; and a line to that session. Floating over
-// the work, or collapsed to a ball. Phase 1 steers only: nothing here edits the work.
-import { useState } from "react";
+// view and what it last said; recent work; the next steps; and a line to that session. Its one form
+// (D32 as amended): a right sidebar, open or collapsed to the ball. Phase 1 steers only: nothing here edits the work.
+import { useEffect, useState } from "react";
 import { recentWork, type WorkItem } from "../../shared/facts.ts";
 import { nameOf, type Names } from "../../shared/names.ts";
 import { type ProjectView, takesInFlight } from "../../shared/project.ts";
@@ -16,28 +16,46 @@ import { Markdown } from "../Markdown.tsx";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { Watch } from "../screens/Crew.tsx";
 
-export type AgentMode = "docked" | "floating" | "collapsed";
+export type AgentMode = "open" | "closed";
 
 const MODE = "studio.agent";
 
-/** Where the panel stands: the maker's last choice, a convenience kept in this browser. */
-export function useAgentMode(): [AgentMode, (mode: AgentMode) => void] {
+/** Toggles the sidebar: VS Code's key for its Secondary Side Bar (View: Toggle Secondary Side Bar, ⌥⌘B / Ctrl+Alt+B). */
+const isToggle = (event: KeyboardEvent) => event.code === "KeyB" && event.altKey && (event.metaKey || event.ctrlKey);
+
+/**
+ * Whether the agent sidebar is open: the maker's last choice, a convenience kept in this browser; until they choose, a
+ * narrow window (1280 px and below) starts with it collapsed (D32). `active` is whether a drama page shows the agent, so
+ * the key toggles it only there.
+ */
+export function useAgentMode(active: boolean): [AgentMode, (mode: AgentMode) => void] {
   const [mode, setMode] = useState<AgentMode>(() => {
     try {
       const saved = localStorage.getItem(MODE);
-      return saved === "floating" || saved === "collapsed" ? saved : "docked";
+      if (saved === "open" || saved === "closed") return saved;
     } catch {
-      return "docked";
+      // Storage may be blocked: the window's width decides, as for a first visit.
     }
+    return window.matchMedia("(max-width: 1280px)").matches ? "closed" : "open";
   });
   const choose = (next: AgentMode) => {
     setMode(next);
     try {
       localStorage.setItem(MODE, next);
     } catch {
-      // Storage may be blocked; the panel still moves for this window.
+      // Storage may be blocked; the sidebar still opens or collapses for this window.
     }
   };
+  useEffect(() => {
+    if (!active) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (!isToggle(event)) return;
+      event.preventDefault();
+      choose(mode === "open" ? "closed" : "open");
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  });
   return [mode, choose];
 }
 
@@ -95,7 +113,7 @@ function Running({ drama, session, inView, inFlight, onPick }: { drama: DramaVie
   );
 }
 
-export function AgentPanel({ drama, episode, mode, onMode }: { drama: DramaView; episode?: string; mode: Exclude<AgentMode, "collapsed">; onMode: (mode: AgentMode) => void }) {
+export function AgentPanel({ drama, episode, onCollapse }: { drama: DramaView; episode?: string; onCollapse: () => void }) {
   const { t, lang } = useT();
   const navigate = useNavigate();
   const id = drama.id;
@@ -125,16 +143,13 @@ export function AgentPanel({ drama, episode, mode, onMode }: { drama: DramaView;
   const who = inView?.label || t("talk.setup");
   const last = said.at(-1);
   return (
-    <aside className={mode === "floating" ? "agent float glass" : "agent"} aria-label={t("agent.label")}>
+    <aside className="agent" id="agent" aria-label={t("agent.label")}>
       <div className="ahead">
         <span className="live" style={working ? undefined : { background: "var(--text-subtle)", boxShadow: "none" }} aria-hidden="true" />
         <h2>{t("agent.title")}</h2>
         <span className="grow" />
-        <button type="button" className="ibtn" aria-label={t(mode === "floating" ? "agent.dock" : "agent.float")} title={t(mode === "floating" ? "agent.dock" : "agent.float")} onClick={() => onMode(mode === "floating" ? "docked" : "floating")}>
-          <Icon name={mode === "floating" ? "arrows-in" : "arrows-out"} className="ic" />
-        </button>
-        <button type="button" className="ibtn" aria-label={t("agent.collapse")} title={t("agent.collapse")} onClick={() => onMode("collapsed")}>
-          <Icon name="x" className="ic" />
+        <button type="button" className="ibtn" aria-label={t("agent.collapse")} aria-expanded="true" aria-controls="agent" title={t("agent.collapseKey")} onClick={onCollapse}>
+          <Icon name="sidebar-simple" className="ic flipx" />
         </button>
       </div>
       {/* Whom the panel speaks to, and the way back to following the page (Codex's IA re-review, E). */}
@@ -316,11 +331,11 @@ function Composer({ chat, chosen, onSent }: { chat?: ChatView; chosen?: string; 
   );
 }
 
-/** The panel collapsed: a ball with the decisions waiting, turning while an agent works. */
+/** The sidebar collapsed: a ball in the window's corner with the decisions waiting, turning while an agent works. */
 export function AgentBall({ waiting, busy, onOpen }: { waiting: number; busy: boolean; onOpen: () => void }) {
   const { t } = useT();
   return (
-    <button type="button" className={busy ? "ball busy" : "ball"} aria-label={t("agent.open", { n: waiting })} onClick={onOpen}>
+    <button type="button" className={busy ? "ball busy" : "ball"} aria-label={t("agent.open", { n: waiting })} aria-expanded="false" title={t("agent.openKey")} onClick={onOpen}>
       <Icon name="robot" className="ic" />
       {waiting > 0 && <span className="badge">{waiting}</span>}
     </button>

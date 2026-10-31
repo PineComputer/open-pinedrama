@@ -109,7 +109,7 @@ flowchart TB
 | **project tree** | | The sidebar inside a project: Script · Story · Assets · Episodes · Delivery, with the project's Reviews and Out of date. It stops at episodes. | [D16](decisions.md#d16-2026-10-30--the-navigation-a-studio-wide-rail-the-dramas-tree-one-home-per-object); VS Code's explorer |
 | **home** | | An object's one page and URL; other places only link to it. | [design principles](design-principles.md#1-one-home-per-object) |
 | **Canvas** | | An episode's page: its segments as groups on one board, in drama-cli's export layout. | [D66](decisions.md#d66-2026-10-30--an-episode-is-its-canvas-laid-out-as-drama-clis-export) |
-| **agent panel**, **ball** | | The agent beside whatever is open: sessions, decisions, activity, composer. It folds to the ball in focused rooms and narrow windows. | the IA proposal, sections 2 and 7.5 <sup>[3](#ref-3)</sup> |
+| **agent panel**, **ball** | | The agent beside whatever is open: sessions, decisions, activity, composer. One form: a right sidebar, open or collapsed to the ball (D32 as amended). | the IA proposal, sections 2 and 7.5 <sup>[3](#ref-3)</sup> |
 | **current object** | | The project, episode, item, version and session an action applies to, carried by the route's typed parameters. | [D19](decisions.md#d19-2026-10-30--tanstack-router-for-typed-routes); [design principles](design-principles.md#3-always-clear-what-you-act-on) |
 | **Analyzing**, **Fountain review** | | The setup steps that read the screenplay and review its Fountain rewrite; a process, not a view of Script. | [D21](decisions.md#d21-2026-10-30--analyzing-and-out-of-date-have-drama-level-routes-of-their-own) |
 

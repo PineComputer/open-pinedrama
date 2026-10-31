@@ -407,9 +407,6 @@ h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 700; lett
 
 /* The room fills the work's scroller, as the design's fills its main column (studio.css .room is a flex item there). */
 .ds-scroll:has(> .room) { display: flex; }
-/* In the room the agent's ball stands above the inspector's send bar, so the bar keeps the design's layout. The cut's
-   room keeps the design's own room for it instead (studio.css, .room.is-cut .verdict's padding). */
-.body:has(.room:not(.is-cut)) .ball { bottom: 64px; }
 /* The Fountain review fills the work's scroller, as the design's .frev fills its main column: the panes scroll and the
    answer stays in view. */
 .ds-scroll:has(.frev) { display: flex; flex-direction: column; }

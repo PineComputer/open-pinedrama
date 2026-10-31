@@ -1,7 +1,7 @@
 /* The rest of the flow in the pro direction: Upload, Analyzing, Fountain review, Bible, Graph (lineage) and Cut,
    plus the setup steps and the stop cards. Uses the shell and helpers app.js exposes as window.PD. */
 (() => {
-  const { html, I, S, set, go, own, jump, openHome, openStage, openLineage, stageNode, Submission, submit, toast, money, Status, TopBar, StopBanner, ProjectChips, AgentPanel, SPENT_COVERS, useEffect, useRef } = window.PD;
+  const { html, I, S, set, go, own, jump, openHome, openStage, openLineage, stageNode, Submission, submit, toast, money, Status, TopBar, StopBanner, ProjectChips, SPENT_COVERS, useEffect, useRef } = window.PD;
 
   /* ───── stop cards: drama-cli's refusal shown as data ───── */
   function StopCard({ kind }) {
@@ -166,7 +166,7 @@
           <div class="ctxt"><span class="cardname"><b>${x.name}</b></span><span class="mono subtle">${shownOf(x)}</span></div></article>`)}</div>`}
         ${S.stab !== "bible" && html`<div class="sendstrip"><span class="muted">Looks and plates · ${decided} of 2 decided</span><span class="grow"></span>
           <button class="btn primary sm" disabled=${decided < 2} onClick=${() => toast("Review sent: Margaret Cole and Garden wedding.")}>Send review</button></div>`}
-      </div><${AgentPanel}/></div>
+      </div></div>
       ${asset && html`<${AssetViewer} x=${asset} list=${{ cast: P.cast, scenes: P.places, props: P.props }[S.stab]}/>`}</div>`;
   }
 
@@ -286,7 +286,7 @@
         <${StopBanner}/>
         ${items.length > 0 && html`<div class="delivwrap"><table class="deliv ood"><thead><tr><th>Item</th><th>Version</th><th>Why</th><th aria-label="Lineage"></th></tr></thead>
           <tbody>${group("Assets", "Assets")}${["EP006"].map((ep) => group(ep, "Episodes · " + ep))}</tbody></table></div>`}
-      </div><${AgentPanel}/></div></div>`;
+      </div></div></div>`;
   }
 
   /* ───── Cut: EPxxx › Cut, the one home of an episode's cut (IA §16). Review and Edit are two separate things:
@@ -476,7 +476,7 @@
             <td>${c ? (c.st === "you" ? Status("you", "Cut " + c.latest + " needs you") : Status("accepted", "Delivered")) : html`<span class="muted">${e.now}</span>`}</td>
             <td class="act">${c && c.accepted && html`<button class="btn sm ghost" onClick=${() => toast(`Downloads ${e.code}-cut-${c.accepted}.mp4, the accepted cut.`)}>${I("download-simple")}Download</button>`}</td></tr>`; })}
             <tr class="more"><td colspan="5">EP009–EP024 · 16 episodes in line, no cut yet</td></tr></tbody></table></div>
-      </div><${AgentPanel}/></div></div>`;
+      </div></div></div>`;
   }
 
   /* ───── Script: the screenplay's home (IA draft, A3) ─────
@@ -569,7 +569,7 @@
             : html`<div class="edbody scriptdoc"><pre class="original">${sc.original}</pre></div>`}
           </section>
         </div>
-      </div><${AgentPanel}/></div></div>`;
+      </div></div></div>`;
   }
   window.EXTRA = { BackTo, lineageOf, outOfDateAt, lineageInEpisode, outofdate: OutOfDate, script: Script, upload: Upload, story: Bible, graph: Graph, cut: Cut, delivery: Delivery, StopCard, scriptRow };
   window.PD.draw();

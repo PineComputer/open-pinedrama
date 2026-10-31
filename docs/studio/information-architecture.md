@@ -142,15 +142,19 @@ compatibility routes (the IA proposal, sections 8.7 and 14.1) <sup>[1](#ref-1)</
 
 The agent panel follows the episode in view by default, "Following EP006"; the maker can pin it,
 "Pinned to EP007", and a pinned session moves its activity, messages and composer together. The
-composer always names its recipient. In focused rooms (Analyzing, the Fountain review, a review
-room, a cut) and in narrow windows the panel folds to the ball. Source: the IA proposal, sections
+composer always names its recipient. It has one form on every drama page, a right sidebar like
+VS Code's Secondary Side Bar: open beside the page, which narrows (Canvas and the rooms included),
+or collapsed to the ball; the maker's choice is kept, and ⌥⌘B / Ctrl+Alt+B toggles it (D32 as
+amended; merecdesperez44323-lab asked for one form). Source: the IA proposal, sections
 7.5, 11.4 and 13 <sup>[1](#ref-1)</sup>;
 [design principles](../design-principles.md#3-always-clear-what-you-act-on).
 
 ## Narrow windows
 
-Below about 1100 px the sidebar is hidden: the same tree opens as a drawer, and the agent stays
-reachable as the ball (the IA proposal, sections 8.2 and 15, round 2, F) <sup>[1](#ref-1)</sup>.
+Below about 1100 px the sidebar is hidden: the same tree opens as a drawer. At 1280 px and below
+the agent starts collapsed to the ball; opened where there is no room, the same sidebar lays over
+the page from the right edge, never a popover (the IA proposal, sections 8.2 and 15, round 2, F;
+D32 as amended) <sup>[1](#ref-1)</sup>.
 Codex recommends 1024 × 800 as the smallest window in which navigation, review and the agent all
 work (re-review, H) <sup>[5](#ref-5)</sup>; merecdesperez44323-lab's decision: pending.
 

@@ -62,24 +62,11 @@ const LABEL: Partial<Record<Page, TKey>> = {
   episodes: "step.episodes",
 };
 
-// The pages that need the room: a docked agent shows as the ball there (Agent, below).
-const ROOMS: Page[] = ["canvasPick", "canvas", "cut", "review"];
-
-/**
- * The agent panel for the drama in view, as the maker left it. On Canvas and Lineage the board
- * needs the room, and the review room its stage, as the pro direction's Review room has it; and at
- * 1280 px and below the work does (IA draft r2, F): a docked panel shows as the ball there, and
- * opens floating over the work.
- */
-function Agent({ drama, episode, mode, onMode, canvas }: { drama: DramaView; episode?: string; mode: AgentMode; onMode: (mode: AgentMode) => void; canvas: boolean }) {
-  const narrow = useMediaQuery("(max-width: 1280px)");
-  const roomless = canvas || narrow;
-  const shown = roomless && mode === "docked" ? "collapsed" : mode;
-  if (shown === "collapsed") {
-    const busy = drama.crew.some((computer) => computer.sessions.some((session) => session.state === "open" && !session.waiting));
-    return <AgentBall waiting={drama.waiting} busy={busy} onOpen={() => onMode(roomless ? "floating" : "docked")} />;
-  }
-  return <AgentPanel drama={drama} episode={episode} mode={shown} onMode={onMode} />;
+/** The agent for the drama in view (D32 as amended): its sidebar, open beside the page, or collapsed to the ball. */
+function Agent({ drama, episode, mode, onMode }: { drama: DramaView; episode?: string; mode: AgentMode; onMode: (mode: AgentMode) => void }) {
+  if (mode === "open") return <AgentPanel drama={drama} episode={episode} onCollapse={() => onMode("closed")} />;
+  const busy = drama.crew.some((computer) => computer.sessions.some((session) => session.state === "open" && !session.waiting));
+  return <AgentBall waiting={drama.waiting} busy={busy} onOpen={() => onMode("open")} />;
 }
 
 /** A path the studio has no page for, with the way back to the dramas. */
@@ -186,7 +173,6 @@ export function DramaPage() {
 
 export function App() {
   const { page, params, search } = useRoute();
-  const view = search.view;
   const [asideSlot, setAsideSlot] = useState<HTMLElement | null>(null);
   const app = useResource<AppInfo>("/api/app", ["app"]);
   const ready = app.data !== undefined && app.data.mode !== "none";
@@ -218,7 +204,9 @@ export function App() {
   const [drawer, setDrawer] = useState(false);
   const pathname = useLocation({ select: (location) => location.pathname });
   useEffect(() => setDrawer(false), [pathname]);
-  const [agentMode, setAgentMode] = useAgentMode();
+  // design/'s setup screens (Analyzing, the Fountain review) go full width, with no agent beside them.
+  const agentShown = Boolean(drama.data && dramaId && !(page && isSetupScreen(drama.data, page)));
+  const [agentMode, setAgentMode] = useAgentMode(agentShown);
   const { t } = useT();
   useReviewNotifications(queue.data && waiting);
 
@@ -276,8 +264,8 @@ export function App() {
   const inProject = Boolean(drama.data && dramaId);
   const sidebar = drama.data && dramaId ? <DramaSidebar drama={drama.data} page={page} episode={followed} drawer={narrow} /> : null;
   return (
-    // The design's frame (design/app.js, App and each screen): the rail, the sidebar, then the main column, its
-    // top bar over a body that holds the work beside the agent's panel.
+    // The design's frame (design/app.js, App): the rail, the sidebar, the main column (its top bar over the work), then
+    // the agent's sidebar the window's full height, or its ball.
     <div className="app">
       <NavRail page={page} waiting={waiting.length} replay={app.data.mode === "replay"} drawerToggle={inProject && narrow} drawer={drawer} onToggleDrawer={() => setDrawer(!drawer)} />
       {/* On a wide window the column is always shown; ☰ opens it as a drawer on a narrow one (merecdesperez44323-lab; Apple HIG sidebars). */}
@@ -300,10 +288,9 @@ export function App() {
             </AsideSlot.Provider>
           </ShellContext.Provider>
           <div ref={setAsideSlot} style={{ display: "contents" }} />
-          {/* design/'s setup screens (Analyzing, the Fountain review) go full width, with no agent beside them. */}
-          {drama.data && dramaId && !(page && isSetupScreen(drama.data, page)) && <Agent drama={drama.data} episode={followed} mode={agentMode} onMode={setAgentMode} canvas={(page !== undefined && ROOMS.includes(page)) || view === "lineage"} />}
         </div>
       </div>
+      {agentShown && drama.data && <Agent drama={drama.data} episode={followed} mode={agentMode} onMode={setAgentMode} />}
     </div>
   );
 }

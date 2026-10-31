@@ -11,7 +11,7 @@ import { parseBibleNames } from "../../shared/names.ts";
 import { parseStatus, type ProjectView } from "../../shared/project.ts";
 import type { ChatView, DramaView, EpisodeRow, FileItem, ReviewSummary } from "../../shared/types.ts";
 import { accept, answer, calls } from "../test/server.ts";
-import { AgentBall, AgentPanel } from "./AgentPanel.tsx";
+import { AgentBall, AgentPanel, useAgentMode } from "./AgentPanel.tsx";
 import { StopControl } from "./TopBar.tsx";
 import { renderAt } from "../test/router.tsx";
 
@@ -79,7 +79,7 @@ function engine() {
 describe("the agent panel", () => {
   it("shows the sessions, the decisions waiting, and what was made, named as the bible names them", async () => {
     engine();
-    await renderAt(<AgentPanel drama={drama} mode="docked" onMode={() => {}} />);
+    await renderAt(<AgentPanel drama={drama} onCollapse={() => {}} />);
     // Every open session, at work or waiting for the maker, so any can be pinned (design/app.js, AgentPanel's Sessions).
     const sessions = screen.getByRole("region", { name: "Sessions" });
     expect(within(sessions).getByRole("button", { name: /EP001\s*Shooting seg01/ })).toBeInTheDocument();
@@ -93,14 +93,14 @@ describe("the agent panel", () => {
 
   it("says whose session it follows", async () => {
     engine();
-    await renderAt(<AgentPanel drama={drama} episode="EP001" mode="docked" onMode={() => {}} />);
+    await renderAt(<AgentPanel drama={drama} episode="EP001" onCollapse={() => {}} />);
     expect(await screen.findByText(/^To EP001's session/)).toBeInTheDocument();
   });
 
   it("follows the session in view: its steps, what it said, and a line to it", async () => {
     const user = userEvent.setup();
     engine();
-    await renderAt(<AgentPanel drama={drama} episode="EP001" mode="docked" onMode={() => {}} />);
+    await renderAt(<AgentPanel drama={drama} episode="EP001" onCollapse={() => {}} />);
     const process = (await screen.findByRole("button", { name: /EP001 · Process/ })).parentElement as HTMLElement;
     // The process shows once the sessions are in, with its steps once the session's chat is.
     expect(within(process).getAllByRole("listitem").map((item) => item.textContent)).toEqual(["Compiled the video prompts", "Shooting seg01"]);
@@ -119,7 +119,7 @@ describe("the agent panel", () => {
 
   it("sends the maker to the review a session waits on rather than a line to it", async () => {
     engine();
-    await renderAt(<AgentPanel drama={drama} episode="EP002" mode="docked" onMode={() => {}} />);
+    await renderAt(<AgentPanel drama={drama} episode="EP002" onCollapse={() => {}} />);
     expect(await screen.findByRole("link", { name: "Open the review it waits on" })).toHaveAttribute("href", "/r/r2");
     expect(screen.getByRole("textbox", { name: "Message the agent" })).toBeDisabled();
   });
@@ -127,7 +127,7 @@ describe("the agent panel", () => {
   it("follows the episode in view, and a pin wins until the maker follows it again (IA draft E)", async () => {
     const user = userEvent.setup();
     engine();
-    await renderAt(<AgentPanel drama={drama} episode="EP002" mode="docked" onMode={() => {}} />);
+    await renderAt(<AgentPanel drama={drama} episode="EP002" onCollapse={() => {}} />);
     const scope = screen.getByRole("status");
     expect(scope).toHaveTextContent("Following EP002, the episode in view");
     // EP002's session waits on its review: the panel follows it there.
@@ -145,7 +145,7 @@ describe("the agent panel", () => {
   it("follows no session on a page with no episode in view, and never guesses one (IA draft E)", async () => {
     const user = userEvent.setup();
     engine();
-    await renderAt(<AgentPanel drama={drama} mode="docked" onMode={() => {}} />);
+    await renderAt(<AgentPanel drama={drama} onCollapse={() => {}} />);
     expect(screen.getByRole("status")).toHaveTextContent("No episode in view");
     // EP001 is at work and EP002 asks, but neither is taken for the page's.
     expect(screen.getByRole("textbox", { name: "Message the agent" })).toBeDisabled();
@@ -163,7 +163,7 @@ describe("the agent panel", () => {
     const user = userEvent.setup();
     engine();
     accept("/api/episodes/e1/stop");
-    await renderAt(<AgentPanel drama={drama} mode="docked" onMode={() => {}} />);
+    await renderAt(<AgentPanel drama={drama} onCollapse={() => {}} />);
     await user.click(screen.getByRole("button", { name: "Stop EP001" }));
     const dialog = screen.getByRole("alertdialog", { name: "Stop EP001?" });
     await user.click(within(dialog).getByRole("button", { name: "Cancel" }));
@@ -173,26 +173,45 @@ describe("the agent panel", () => {
     expect(calls("POST", "/api/episodes/e1/stop")).toHaveLength(1);
   });
 
-  it("floats, docks and collapses as the maker chooses", async () => {
+  it("collapses to its ball from its head, the one form it has besides the sidebar", async () => {
     const user = userEvent.setup();
     engine();
-    const chosen: string[] = [];
-    const { rerender } = await renderAt(<AgentPanel drama={drama} mode="docked" onMode={(mode) => chosen.push(mode)} />);
-    await user.click(screen.getByRole("button", { name: "Float the panel" }));
-    rerender(<AgentPanel drama={drama} mode="floating" onMode={(mode) => chosen.push(mode)} />);
-    expect(screen.getByRole("complementary", { name: "Agent" })).toHaveClass("float");
-    await user.click(screen.getByRole("button", { name: "Dock the panel" }));
-    await user.click(screen.getByRole("button", { name: "Close the panel" }));
-    expect(chosen).toEqual(["floating", "docked", "collapsed"]);
+    let collapsed = 0;
+    await renderAt(<AgentPanel drama={drama} onCollapse={() => collapsed++} />);
+    const collapse = screen.getByRole("button", { name: "Collapse the agent sidebar" });
+    expect(collapse).toHaveAttribute("aria-expanded", "true");
+    expect(screen.queryByRole("button", { name: /float|dock/i })).toBeNull();
+    await user.click(collapse);
+    expect(collapsed).toBe(1);
+  });
+});
+
+describe("the agent sidebar's state", () => {
+  function Probe() {
+    const [mode, setMode] = useAgentMode(true);
+    return <button type="button" onClick={() => setMode(mode === "open" ? "closed" : "open")}>{mode}</button>;
+  }
+
+  it("keeps the maker's choice in this browser, and ⌥⌘B or Ctrl+Alt+B toggles it", async () => {
+    const user = userEvent.setup();
+    localStorage.setItem("studio.agent", "closed");
+    await renderAt(<Probe />);
+    expect(screen.getByRole("button", { name: "closed" })).toBeInTheDocument();
+    await user.keyboard("{Meta>}{Alt>}b{/Alt}{/Meta}");
+    expect(screen.getByRole("button", { name: "open" })).toBeInTheDocument();
+    expect(localStorage.getItem("studio.agent")).toBe("open");
+    await user.keyboard("{Control>}{Alt>}b{/Alt}{/Control}");
+    expect(localStorage.getItem("studio.agent")).toBe("closed");
+    localStorage.removeItem("studio.agent");
   });
 });
 
 describe("the agent ball", () => {
-  it("says how many decisions wait, turns while an agent works, and opens the panel", async () => {
+  it("says how many decisions wait, turns while an agent works, and opens the sidebar", async () => {
     const user = userEvent.setup();
     let opened = 0;
     await renderAt(<AgentBall waiting={4} busy onOpen={() => opened++} />);
-    const ball = screen.getByRole("button", { name: "Open the agent panel, 4 decisions waiting" });
+    const ball = screen.getByRole("button", { name: "Open the agent sidebar, 4 decisions waiting" });
     expect(ball).toHaveClass("busy");
     expect(ball).toHaveTextContent("4");
     await user.click(ball);

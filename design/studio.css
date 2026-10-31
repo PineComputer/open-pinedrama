@@ -204,9 +204,10 @@ input.search:focus { border-color: var(--text-primary); }
 
 /* ── agent panel ── */
 .agent { width: var(--agent); flex: none; display: flex; flex-direction: column; border-left: 1px solid var(--border); background: var(--surface-dim); min-height: 0; }
-.agent.float { position: absolute; right: 20px; bottom: 84px; width: 380px; height: min(640px, calc(100% - 120px)); border: 1px solid var(--border); border-radius: var(--radius-2xl); box-shadow: var(--shadow-dialog); z-index: 30; overflow: hidden; }
 .agent .ahead { height: var(--top); flex: none; display: flex; align-items: center; gap: 10px; padding: 0 10px 0 16px; border-bottom: 1px solid var(--border); }
 .agent .ahead h2 { margin: 0; font-size: 13.5px; font-weight: 700; }
+/* The sidebar glyph mirrored: the bar on the right, where the agent's sidebar is (span.ic in design/, svg.ic in the app). */
+.ic.flipx svg, svg.ic.flipx { transform: scaleX(-1); }
 .live { width: 8px; height: 8px; border-radius: 50%; background: var(--success); box-shadow: 0 0 0 3px color-mix(in srgb, var(--success) 25%, transparent); }
 .agent .ascroll { flex: 1; overflow: auto; padding: 6px 14px 14px; }
 .asec { padding: 12px 0; border-bottom: 1px solid var(--border-subtle); }
@@ -282,7 +283,10 @@ input.search:focus { border-color: var(--text-primary); }
 .follow { display: inline-flex; align-items: center; gap: 8px; height: 34px; padding: 0 14px; border-radius: var(--radius-pill); background: var(--surface-container); border: 1px solid var(--border); font-size: 12.5px; color: var(--text-secondary); cursor: pointer; }
 .follow[aria-pressed="true"] { color: var(--text-primary); border-color: var(--border-input); }
 .follow .live { width: 7px; height: 7px; }
-.ball { position: absolute; right: 20px; bottom: 20px; width: 52px; height: 52px; border-radius: 50%; border: 1px solid var(--border-input); background: var(--surface-container-high); color: var(--text-primary); display: grid; place-items: center; cursor: pointer; box-shadow: var(--shadow-overlay); z-index: 31; }
+/* The agent collapsed to its icon (AgentPanel), in the window's corner on every drama page; in the review room it stands
+   above the inspector's send bar. */
+.app:has(.room:not(.is-cut)) .ball { bottom: 64px; }
+.ball { position: fixed; right: 20px; bottom: 20px; width: 52px; height: 52px; border-radius: 50%; border: 1px solid var(--border-input); background: var(--surface-container-high); color: var(--text-primary); display: grid; place-items: center; cursor: pointer; box-shadow: var(--shadow-overlay); z-index: 31; }
 .ball .ic { width: 24px; height: 24px; }
 .ball .badge { position: absolute; right: -2px; top: -2px; min-width: 20px; height: 20px; border-radius: var(--radius-pill); background: var(--warning-text); color: var(--on-accent); font-size: 11px; font-weight: 700; display: grid; place-items: center; border: 2px solid var(--canvas); }
 .ball.busy::after { content: ""; position: absolute; inset: -4px; border-radius: 50%; border: 2px solid transparent; border-top-color: var(--text-primary); animation: spin 1.2s linear infinite; }
@@ -606,7 +610,6 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
 .select select { border: 0; background: none; color: var(--text-primary); font: inherit; outline: none; }
 
 /* ── narrow ── */
-@media (max-width: 1280px) { .agent:not(.float) { display: none; } }
 @media (max-width: 1100px) { .side { display: none; } .insp { width: 320px; } }
 @media (max-width: 760px) {
   .rail { display: none; } .wrap { padding: 20px 16px 40px; } .top { padding-right: 12px; }
@@ -786,12 +789,10 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
 .panel.scriptdoc { margin: 0 16px 14px; padding: 18px 22px; }
 .scriptpanes .fdoc .fl { cursor: default; } .scriptpanes .fdoc .fl:hover { background: none; }
 .panel.scriptversions { margin: 0 16px 24px; }
-/* IA draft r2 (F): narrow windows. The same drama tree as a drawer below 1100 px, opened by the rail's menu button; the
-   agent as its ball at 1280 px and below, opening the same panel as a float. Target 1024 x 800. */
-.agentball { display: none; }
-@media (max-width: 1280px) {
-  .body { position: relative; }
-  .agentball { display: grid; }
+/* IA draft r2 (F): narrow windows, target 1024 x 800. The drama tree is a drawer below 1100 px, opened by the rail's menu
+   button; the agent sidebar, opened there, lays over the page from the right edge: the same sidebar, not a popover (D32). */
+@media (max-width: 1100px) {
+  .agent { position: fixed; right: 0; top: 0; bottom: 0; z-index: 35; box-shadow: var(--shadow-dialog); }
 }
 @media (max-width: 1100px) {
   .side.drawer-open { display: flex; position: fixed; left: var(--rail); top: 0; bottom: 0; z-index: 60; box-shadow: var(--shadow-dialog); }

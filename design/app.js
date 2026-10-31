@@ -12,21 +12,24 @@
   const S = {
     screen: SCREENS.includes(hash) ? hash : "home", theme: "dark", tab: "all", filter: "all", waitFor: null, pin: null,
     dialog: null, toasts: [], dramaStop: null, draft: "", chats: {}, drafts: {}, drawer: false,
-    cam: { x: 40, y: 96, k: 0.62 }, tool: "hand", toolOpen: false, zoomOpen: false, keysOpen: false, sel: null, dock: (() => { try { return localStorage.getItem("studio.canvas.dock") || "under"; } catch (e) { return "under"; } })(), follow: true, agentOpen: false, panning: null, minimap: true,
+    // The agent sidebar is open or collapsed to its icon, the viewer's choice kept on this browser; until they choose,
+    // narrow windows start collapsed (D32).
+    agent: (() => { try { const v = localStorage.getItem("studio.agent"); if (v === "open" || v === "closed") return v; } catch (e) { /* storage may be blocked */ } return window.matchMedia("(max-width: 1280px)").matches ? "closed" : "open"; })(),
+    cam: { x: 40, y: 96, k: 0.62 }, tool: "hand", toolOpen: false, zoomOpen: false, keysOpen: false, sel: null, dock: (() => { try { return localStorage.getItem("studio.canvas.dock") || "under"; } catch (e) { return "under"; } })(), follow: true, panning: null, minimap: true,
     ti: 0, playing: false, t: 0, watched: {}, maxT: {}, verdict: {}, reason: {}, showPrev: false, subs: {}, outcome: "ok", over: false,
     state: "normal", proto: false, file: null, preset: null, len: "90", reviewing: "every", budget: "1000", sview: null, ssel: null, saccept: false, words: "", stab: "bible", cards: {}, cardWhy: {}, gsel: "ep6seg03", dims: {}, cutT: 0, cutPlaying: false, cutNotes: null, noteDraft: "", cutV: null, cutWhy: "",
   };
   let drawing = false;
   const draw = () => { if (!drawing) { drawing = true; requestAnimationFrame(() => { drawing = false; render(html`<${App}/>`, root); }); } };
   const set = (p) => { Object.assign(S, typeof p === "function" ? p(S) : p); draw(); };
-  const go = (screen) => { set({ screen, sel: null, agentOpen: false, playing: false, drawer: false, from: null, at: null, asel: null, scriptEp: null }); try { history.replaceState(null, "", "#" + screen); } catch (e) { /* the hash is a convenience */ } };
-  /* IA draft (F): below 1100 px the drama tree is a drawer the rail's menu button opens; the agent is the ball at 1280 and
-     below, keeping what it follows or is pinned to. */
+  const go = (screen) => { set({ screen, sel: null, playing: false, drawer: false, from: null, at: null, asel: null, scriptEp: null }); try { history.replaceState(null, "", "#" + screen); } catch (e) { /* the hash is a convenience */ } };
+  /* IA draft (F): below 1100 px the drama tree is a drawer the rail's menu button opens. The agent has one form everywhere,
+     a right sidebar, open or collapsed to its icon (setAgent). */
   const narrow = () => window.matchMedia("(max-width: 1100px)").matches;
   /* IA r2 (§16): each object has one home. A link lands on the home with the object selected (S.asel in Assets, S.sel on
      Canvas, S.gsel in Lineage), and remembers where it came from (S.from), so Back returns there. */
   const homeTab = (id) => (P.cast.some((c) => c.id === id) ? "cast" : P.places.some((p) => p.id === id) ? "scenes" : P.props.some((p) => p.id === id) ? "props" : null);
-  const jump = (to, label) => { set({ sel: null, agentOpen: false, drawer: false, toolOpen: false, zoomOpen: false, ...to, from: { screen: S.screen, sel: S.sel, osel: S.osel, asel: S.asel, at: S.at, label } }); try { history.replaceState(null, "", "#" + to.screen); } catch (e) { /* the hash is a convenience */ } };
+  const jump = (to, label) => { set({ sel: null, drawer: false, toolOpen: false, zoomOpen: false, ...to, from: { screen: S.screen, sel: S.sel, osel: S.osel, asel: S.asel, at: S.at, label } }); try { history.replaceState(null, "", "#" + to.screen); } catch (e) { /* the hash is a convenience */ } };
   /* Codex round 3 (fix 3): a link names the object's kind and version as well as its item (S.at = { kind, ver }), so it
      lands on that version, never on the item's newest. Kinds are drama-cli's lineage kinds (look, plate, prop, blocking,
      first_frame_reference, storyboard, take, cut); a plate's view or a storyboard's style rides along as at.view / at.style. */
@@ -230,14 +233,23 @@
   const inEpisode = () => ["canvas", "review", "cut"].includes(S.screen) || (S.screen === "graph" && window.EXTRA.lineageInEpisode());
   const talkTo = () => S.pin || (inEpisode() ? "EP006" : null);
   const switchTo = (pin) => { const from = talkTo(), next = pin || (inEpisode() ? "EP006" : null); set({ pin, drafts: { ...S.drafts, [from || ""]: S.draft }, draft: (S.drafts || {})[next || ""] || "" }); };
-  function AgentPanel({ float }) {
+  const setAgent = (v) => { set({ agent: v }); try { localStorage.setItem("studio.agent", v); } catch (e) { /* storage may be blocked */ } };
+  /* The agent's one form (D32 as amended): a right sidebar like VS Code's Secondary Side Bar and Cursor's agent pane. Open,
+     it docks beside the page, which narrows, Canvas included; below 1100 px it lays over the page from the right edge,
+     still the sidebar. Collapsed, it is its icon: the robot, a ring while a session works, a badge for decisions.
+     ⌥⌘B / Ctrl+Alt+B toggles it, VS Code's key for its Secondary Side Bar. Studio pages have no drama, so no agent. */
+  function AgentPanel() {
+    if (studioPage()) return null;
     const dec = decisions(), to = talkTo(), ep7 = to === "EP007";
     const runRow = (code, what) => html`<div class="arow"><div class="what"><b>${code}</b><span>${S.dramaStop === "stopped" ? "Stopped with the drama" : S.dramaStop ? (code === "EP003" ? "Stopping… waiting on 4 takes in flight" : "Stopping…") : what}</span></div>
       ${!S.dramaStop && html`<button class="btn sm ghost" onClick=${() => toast("Watch opens the Computer's desktop, view-only.")}>Watch</button>
       <button class="btn sm ghost" onClick=${() => set({ dialog: { title: "Stop " + code + "?", body: code === "EP003" ? "4 takes are in flight. They are waited on and recorded, never sent again. The episode stops after them." : "No take is in flight. The episode stops now and can be resumed.", ok: "Stop " + code, danger: true, cancel: "Keep running", run: () => toast(code + " stopped.") } })}>Stop</button>`}</div>`;
-    return html`<aside class=${"agent " + (float ? "float" : "")} aria-label="Agent panel">
+    const busy = !S.dramaStop;
+    if (S.agent !== "open") return html`<button class=${"ball" + (busy ? " busy" : "")} aria-expanded="false" title="Open the agent sidebar (⌥⌘B)"
+      aria-label=${"Agent" + (to ? ", " + (S.pin ? "pinned to " : "following ") + to : "") + (dec.length ? ", " + dec.length + " decisions wait" : "")} onClick=${() => setAgent("open")}>${I("robot")}${dec.length ? html`<span class="badge">${dec.length}</span>` : null}</button>`;
+    return html`<aside class="agent" id="agent" aria-label="Agent">
       <div class="ahead"><span class="live"></span><h2>Agent</h2><span class="grow"></span>
-        ${float ? html`<button class="ibtn" aria-label="Close the agent panel" onClick=${() => set({ agentOpen: false })}>${I("x")}</button>` : html`<button class="ibtn" aria-label="Collapse" onClick=${() => toast("The panel collapses to the agent ball, as on Canvas.")}>${I("arrows-in")}</button>`}</div>
+        <button class="ibtn" aria-label="Collapse the agent sidebar" aria-expanded="true" aria-controls="agent" title="Collapse (⌥⌘B)" onClick=${() => setAgent("closed")}>${I("sidebar-simple", "flipx")}</button></div>
       <div class="ascope">${S.pin
         ? html`${I("map-pin")}<span>Pinned to <b>${S.pin}</b></span><span class="grow"></span><button class="btn sm ghost" onClick=${() => switchTo(null)}>${inEpisode() ? "Follow EP006" : "Unpin"}</button>`
         : to ? html`<span class="live"></span><span>Following <b>${to}</b>, the episode in view</span><span class="grow"></span><button class="btn sm ghost" onClick=${() => switchTo("EP007")}>Pin to EP007</button>`
@@ -289,9 +301,7 @@
           onKeyDown=${(e) => { if (e.key === "Enter" && (e.metaKey || e.ctrlKey) && S.draft.trim() && to) send(); }}></textarea>
         <div class="crow"><span>${to ? html`To <b>${to}</b>'s session · ${S.pin ? "pinned" : "the episode in view"}` : "No session chosen"}</span><button class="send" aria-label=${to ? "Send to " + to : "Send"} disabled=${!to || !S.draft.trim()} onClick=${send}>${I("arrow-up")}</button></div></div>`;
       })()}
-    </aside>
-    ${!float && html`<button class="ball agentball" aria-label=${"Agent" + (to ? ", " + (S.pin ? "pinned to " : "following ") + to : "")} onClick=${() => set({ agentOpen: !S.agentOpen })}>${I("robot")}<span class="badge">${dec.length}</span></button>
-      ${S.agentOpen && html`<${AgentPanel} float/>`}`}`;
+    </aside>`;
   }
 
   /* Home's "Waiting for you": every drama's decisions, each row named by its drama and pictured by its cover (the agent
@@ -372,7 +382,7 @@
             <span class="code">${e.code}</span>${e.status !== "line" && Status(e.status)}
             <span class="strip">${e.strip.map((s) => html`<i class=${s}></i>`)}</span></div>
           <b>${e.title}</b><small><span>${e.now}</span><span class="mono">${e.spent ? money(e.spent) : ""}</span></small></button>`)}</div>
-      </div><${AgentPanel}/></div></div>`;
+      </div></div></div>`;
   }
 
   /* ───── Canvas ───── */
@@ -619,8 +629,6 @@
             <p class="subtle">Copy, paste, delete, group and undo come with phase 2, when the canvas makes items by hand.</p>
             <dl class="keys">${[["V", "Move: pick and drag items, draw a box to pick several"], ["H", "Hand: drag the board"], ["Space + drag", "Drag the board, whatever the tool"], ["⌘ +  /  ⌘ −", "Zoom in / out"], ["⌘ 0", "Fit to screen"], ["⌘ A", "Pick every item"], ["Esc", "Let go of the pick, close its panel and zoom back"], ["?", "This list"]].map(([key, what]) => html`<dt><kbd>${key}</kbd></dt><dd>${what}</dd>`)}</dl>
             <div class="acts"><button class="btn" onClick=${() => set({ keysOpen: false })}>Close</button></div></div></div>`}
-        ${S.agentOpen && html`<${AgentPanel} float/>`}
-        <button class="ball busy" aria-label="Agent, 4 decisions wait" onClick=${() => set({ agentOpen: !S.agentOpen })}>${I("robot")}<span class="badge">4</span></button>
       </div></div>`;
   }
 
@@ -760,9 +768,12 @@
     applyTheme();
     const sc = S.screen;
     const main = { home: html`<${Home}/>`, reviews: html`<${Reviews}/>`, episodes: html`<${Episodes}/>`, canvas: html`<${Canvas}/>`, review: html`<${Review}/>` }[sc] || html`<${window.EXTRA[sc]}/>`;
-    return html`<div class="app"><${Rail}/><${Side}/>${main}</div><${Proto}/><${Dialog}/>
+    return html`<div class="app"><${Rail}/><${Side}/>${main}<${AgentPanel}/></div><${Proto}/><${Dialog}/>
       <div class="toasts" aria-live="polite">${S.toasts.map((t) => html`<div class="toast">${t.text}${t.action && html`<button onClick=${t.action.run}>${t.action.label}</button>`}</div>`)}</div>`;
   }
+  window.addEventListener("keydown", (e) => {
+    if (e.code === "KeyB" && e.altKey && (e.metaKey || e.ctrlKey) && !studioPage()) { e.preventDefault(); setAgent(S.agent === "open" ? "closed" : "open"); }
+  });
   window.PD = { html, I, S, set, go, own, jump, openHome, openStage, openLineage, stageNode, toast, money, Status, TopBar, StopBanner, ProjectChips, AgentPanel, SPENT_COVERS, useEffect, useRef, Mark, draw, Submission, submit, recheck };
   // screens.js draws first, once its screens are registered.
 })();
