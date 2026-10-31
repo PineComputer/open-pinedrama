@@ -294,9 +294,10 @@ function ScriptBody({ dramaId, data, ep, rewriting }: { dramaId: string; data: S
         {/* One editor surface, VS Code's way: the open file's label, and the view switch beside it. */}
         <section ref={editor} className="editor" aria-label={t("step.script")}>
           <div className="edbar">
-            <div className="edtab">
+            {/* One line: in Compare the panes' own headers name both files, so the tab names the view, the pair in its title. */}
+            <div className="edtab" title={view === "compare" ? `${original?.name ?? ""} ↔ screenplay.fountain` : undefined}>
               <Icon name={view === "original" ? "file-text" : view === "compare" ? "square-half" : "film-strip"} className="ic" />
-              <b>{view === "compare" ? `${original?.name ?? ""} ↔ screenplay.fountain` : view === "original" ? (original?.name ?? "") : "screenplay.fountain"}</b>
+              <b>{view === "compare" ? t("script.viewCompare") : view === "original" ? (original?.name ?? "") : "screenplay.fountain"}</b>
               {view !== "original" && shown && <span className="tag">{shown.version}</span>}
               {/* Read-only (VS Code's read-only editor): a change is asked of the agent in the sidebar (D70). */}
               <span className="ro" title={t("script.readOnlyWhy")}>

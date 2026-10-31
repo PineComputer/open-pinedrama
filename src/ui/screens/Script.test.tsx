@@ -186,6 +186,9 @@ describe("Script's Compare", () => {
     await renderAt(<Script dramaId="d1" />, "/d/d1/script");
     await user.click(await screen.findByRole("radio", { name: "Compare" }));
     const compare = await screen.findByLabelText("The original beside v2, line by line as drama-cli aligned them");
+    // The tab names the view on one line; the pair of files is the panes' headers and its title.
+    expect(document.querySelector(".edtab")).toHaveTextContent("Comparev2Read-only");
+    expect(document.querySelector(".edtab")).toHaveAttribute("title", "stepmother.txt ↔ screenplay.fountain");
     const rows = [...compare.querySelectorAll(".drowpair")].map((row) =>
       [...row.querySelectorAll(".dcell")].map((cell) => [...cell.querySelectorAll(".ln")].map((n) => Number(n.textContent))),
     );

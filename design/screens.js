@@ -599,8 +599,8 @@
           <section class="editor" aria-label="Script">
           ${/* VS Code's editor title area: the open file as a tab, its actions as icon buttons on the right (Apple HIG:
                an icon-only toolbar button has a tooltip and a name). */ ""}
-          <div class="edbar"><div class="edtab">${I(view === "original" ? "file-text" : view === "compare" ? "square-half" : "film-strip")}
-              <b>${view === "compare" ? sc.file + " ↔ screenplay.fountain" : view === "original" ? sc.file : "screenplay.fountain"}</b>
+          <div class="edbar"><div class="edtab" title=${view === "compare" ? sc.file + " ↔ screenplay.fountain" : ""}>${I(view === "original" ? "file-text" : view === "compare" ? "square-half" : "film-strip")}
+              <b>${view === "compare" ? "Compare" : view === "original" ? sc.file : "screenplay.fountain"}</b>
               ${view !== "original" && shown && html`<span class="tag">${shown.v}</span>`}
               ${/* Read-only for now (VS Code's read-only editor, files.readonly): a change goes through the agent, Send back
                    while a version waits for you, or ask the agent after acceptance; drama-cli validates the new version. */ ""}
