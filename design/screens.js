@@ -197,16 +197,17 @@
     { id: "ethan", col: 2, row: 1, t: "Ethan Cole", v: "S0 v1", k: "look", pic: "img/face-ethan.jpg", of: "ethan" },
     { id: "apt", col: 2, row: 2, t: "Luca's apartment", v: "v2", k: "plate", pic: "img/plate-apartment.jpg", of: "apartment" },
     { id: "file", col: 2, row: 3, t: "Case file", v: "v1", k: "prop", pic: "img/prop-folder.jpg", stale: true, of: "file" },
-    { id: "ep6seg03", col: 3, row: 1, t: "EP006 seg03 storyboard", v: "v1", k: "storyboard", pic: "img/board-seg03.jpg", stale: true, ep: "seg03" },
-    { id: "take", col: 4, row: 1, t: "EP006 seg03 take", v: "t02", k: "take", pic: "img/still-s3t2.jpg", stale: true, ep: "seg03", of: "seg03" },
-    { id: "cut", col: 5, row: 1, t: "EP006 cut", v: "v1", k: "cut", pic: "img/cover-ep6.jpg", stale: true, home: ["EP006 › Cut", { screen: "cut" }] },
+    { id: "ep6seg03", col: 3, row: 1, t: "EP006 seg03 storyboard", v: "v1", k: "storyboard", pic: "img/board-seg03.jpg", stale: true, episode: "EP006", ep: "seg03" },
+    { id: "take", col: 4, row: 1, t: "EP006 seg03 take", v: "t02", k: "take", pic: "img/still-s3t2.jpg", stale: true, episode: "EP006", ep: "seg03", of: "seg03" },
+    { id: "cut", col: 5, row: 1, t: "EP006 cut", v: "v1", k: "cut", pic: "img/cover-ep6.jpg", stale: true, episode: "EP006", home: ["EP006 › Cut", { screen: "cut" }] },
   ];
   /* The Lineage an item opens on: seg03's node opens its take, the version that waits for you. */
   const lineageOf = (id) => (G.find((n) => n.of === id) || {}).id;
-  /* A2: whether the Lineage in view sits inside EP006: its item is the episode's, or it was opened from the episode's List
-     or Canvas. The crumbs, Export and the agent panel all read this one answer. */
+  /* A2: whether the Lineage in view sits inside EP006: its item is the episode's (a storyboard, a take, the cut, wherever it
+     was opened from: Cut, Delivery, Out of date), or it was opened from one of the episode's pages. The crumbs, Export and
+     the agent panel all read this one answer. */
   const lineageInEpisode = () => { const sel = G.find((n) => n.id === S.gsel) || G.find((n) => n.id === "ep6seg03");
-    return Boolean(sel.ep) || Boolean(S.from && ["canvas", "episode"].includes(S.from.screen)); };
+    return Boolean(sel.episode) || Boolean(S.from && ["canvas", "episode", "cut"].includes(S.from.screen)); };
   /* "← Back to …": where a link came from (S.from), with its selection. */
   function BackTo() {
     const f = S.from;
