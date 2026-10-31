@@ -92,10 +92,18 @@ describe("the canvas", () => {
     await waitFor(() => expect(calls("GET", "/api/dramas/d1/lineage")).toHaveLength(2));
   });
 
-  it("heads the episode with its script, opened at that episode (D66)", async () => {
+  it("heads the episode with its script, opened at that episode, and its cut, opened at its home (D66)", async () => {
     engine(project());
+    // The episode's cut, as drama-cli's lineage records a built cut (lineage.KINDS: cut, episodes/<EP>/edit) waiting for the maker.
+    const view = lineageView();
+    const take = view.lineage.nodes.find((node) => node.kind === "take")!;
+    view.lineage.nodes.push({ ...take, id: "episodes/EP001/edit", kind: "cut", version: "v1", accepted: null, shows: "episodes/EP001/edit/v1/cut.mp4", label: "EP001 cut", section: "EP001 cut", where: { episode: "EP001" } });
+    answer("/api/dramas/d1/lineage", view);
     await renderAt(<Canvas drama={drama} />, "/d/d1/e/EP001/canvas");
     expect(await screen.findByRole("link", { name: "Episode script" })).toHaveAttribute("href", "/d/d1/script?ep=EP001");
+    const cut = await screen.findByRole("link", { name: /^Cut v1/ });
+    expect(cut).toHaveAttribute("href", "/d/d1/e/EP001/cut?item=episodes%2FEP001%2Fedit");
+    expect(cut).toHaveTextContent("Waiting for you");
   });
 
   it("starts each segment's group with its shots from drama-cli's breakdown.json, wired to the stages that read it (D66)", async () => {
