@@ -71,6 +71,35 @@ flowchart TB
 - **Light and dark.** Every component is checked in both, with the gallery's pictures
   (`/dev/gallery`).
 
+## Shape and alignment
+
+merecdesperez44323-lab, on the Script screen: "这个多圆角 非圆角 又都对不齐， 太丑了 ，能不能优雅好看点儿。。。不要这么vibecoding"
+(*rounded and square corners mixed, nothing aligned, too ugly; can it be elegant… not this vibe-coding*).
+Lanes had each picked their own radii, insets and nested boxes. One rule now holds for every screen;
+its values (which token each element takes) are in [`design/SPEC.md`](../../design/SPEC.md),
+"Shape and alignment".
+
+- **A radius says what an element is.** A pill is something you press or a label you read (buttons,
+  chips, segmented controls, badges, tags); a surface (panel, dialog, menu) has the large rounded
+  corner; a card of work (a cover, a picture, a canvas node) a smaller one; a control or row inside a
+  surface a smaller one still; what meets another edge (the rail, the sidebar, the top bar, a docked
+  inspector, a table's rows) has none. Material 3 gives each component a role on one shape scale
+  <sup>[5](#ref-5)</sup>; VS Code's workbench keeps docked parts square and flat
+  <sup>[7](#ref-7)</sup>.
+- **Nested corners are concentric.** An element close to its container's corner takes the
+  container's radius less the inset between them, so the two curves run parallel (the nested-radius
+  rule; Apple's layout guidance asks for concentric corners <sup>[6](#ref-6)</sup>).
+- **No card inside a card.** Inside a surface, things are grouped by spacing, a heading or a divider,
+  never by another bordered box. A picture of the work and an inline notice (a Finding) are not
+  cards. Ours, after VS Code's flat surfaces <sup>[7](#ref-7)</sup>.
+- **One content column.** A page's title, its bar, its panels, its tables and its banners share one
+  left and one right edge, the page gutter; nothing indents again outside a surface's own padding.
+- **The 4-point grid.** Margins, paddings and the gaps between blocks are multiples of 4, from
+  `design/tokens.css`'s spacing tokens (`--space-xxs` 4, `--space-sm` 8, `--space-lg` 12,
+  `--space-2xl` 16, `--space-3xl` 20, `--space-4xl` 24, `--space-6xl` 40); radii are tokens, never
+  raw pixels. Material lays out on a 4 dp grid <sup>[5](#ref-5)</sup>, and Apple's layout guidance
+  aligns content to consistent margins <sup>[6](#ref-6)</sup>.
+
 ## Changing the design
 
 ```mermaid
@@ -97,3 +126,12 @@ https://www.radix-ui.com/primitives/docs/overview/introduction
 <a id="ref-3"></a>[3] shadcn. *shadcn/ui*, "Introduction". https://ui.shadcn.com/docs
 
 <a id="ref-4"></a>[4] Figma. *Dev Mode*. https://www.figma.com/dev-mode/
+
+<a id="ref-5"></a>[5] Google. *Material Design 3*, "Shape" (corner radius scale and component roles).
+https://m3.material.io/styles/shape/corner-radius-scale
+
+<a id="ref-6"></a>[6] Apple. *Human Interface Guidelines*, "Layout" and "Materials".
+https://developer.apple.com/design/human-interface-guidelines/layout
+
+<a id="ref-7"></a>[7] Microsoft. *Visual Studio Code UX Guidelines*, "Overview" (the workbench's
+containers). https://code.visualstudio.com/api/ux-guidelines/overview

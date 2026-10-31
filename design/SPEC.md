@@ -10,6 +10,24 @@ This is the spec for the pro direction (https://claude.ai/artifact/8v2dRgRKL1Gpu
 ## Icons
 Phosphor regular, 70 names (icons.js). Sizes: 16 default, 18 in IconButton and NavRail, 15 in Segmented, 14 in chevrons and steps, 24 in AgentBall.
 
+## Shape and alignment
+The rule and its grounds: [docs/studio/design-system.md](../docs/studio/design-system.md#shape-and-alignment). The values:
+
+| Role | Radius | Elements |
+|---|---|---|
+| Press or read | `--radius-pill` | Button, IconButton, StatusChip, chips, Segmented, badges and counts, tags, the search field, progress and meter tracks, Toast |
+| Surface | `--radius-2xl` | Panel, Dialog, StopCard, menus and popovers, a floating inspector, the agent panel's cards that stand alone on the ground |
+| Card of work | `--radius-large` | DramaCard, AssetCard, an EpisodeCard's cover, a CanvasNode's card, players and big pictures in an inspector |
+| Inside a surface | `--radius-medium` | inputs and textareas, rows with a hover or selected fill (tree, nav items, list rows, menu items), Finding, code and prompt blocks, thumbnails from 40 px |
+| Mark | `--radius-small` | thumbnails under 40 px, timeline clips, a tile's label |
+| Circle | `50%` | faces, status dots |
+| Edge | `0` | the rail, the sidebar, the top bar, a docked inspector or agent panel, a table's rows, a strip across a surface's full width |
+
+- Concentric: an element within 18 px of a `--radius-2xl` surface's corner takes 18 minus its inset, rounded down to a token: a 6 px inset takes `--radius-large` (12), an 8 or 10 px inset `--radius-medium` (8), a 12 px inset `--radius-small` (6); a card of work's picture inset by p takes `--radius-large` minus p the same way.
+- No bordered box inside a surface: group by spacing, an `h3`/`h4` or a 1 px `--border-subtle` divider.
+- The page gutter is `--space-2xl` (16 px) left and right for everything in `.scrollmain`: the bar, the page title, panels, tables, banners and grids. A surface's padding is `--space-3xl` (20 px) across and `--space-2xl` (16 px) down; the gap between blocks is `--space-2xl`.
+- Spacing on the 4-point grid (`--space-xxs`, `-sm`, `-lg`, `-2xl`, `-3xl`, `-4xl`, `-6xl`); `--space-xs`, `-md`, `-xl` (6, 10, 14) only inside a control's own box.
+
 ## Components (work-04's names; class in the prototype)
 | Component | Class | Spec | Ground |
 |---|---|---|---|
