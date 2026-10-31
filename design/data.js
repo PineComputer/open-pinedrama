@@ -124,7 +124,9 @@ Object.assign(window.P, {
   // title, summary, end hook and seconds; the beats are the bible's, each [seconds, event], grouped under the episode whose
   // lines hold them (both carry their screenplay lines). Sample words for the prototype.
   bible: {
-    version: "b0003", accepted: "b0003", written: "EP001–EP012",
+    // drama-cli accepts only a bible that covers the whole accepted screenplay (short_drama doc/drama-cli/long-screenplays.md);
+    // the sample lists 6 of its 24 episodes.
+    version: "b0003", accepted: "b0003", covers: "EP001–EP024",
     logline: "To keep her inheritance, a florist marries the stranger she bailed out of county jail, and his lawyer brother wants the marriage annulled before the trust pays out.",
     tone: "Glossy legal romance, fast and teasing; kisses and no more.",
     eps: [

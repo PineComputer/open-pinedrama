@@ -147,13 +147,13 @@
         <div class="bar2"><span class="grow"></span><${ProjectChips}/></div>
         <${StopBanner}/>
         <div style="padding:0 16px"><div class="tabsrow" style="margin:4px 0 18px">${story ? html`<div><h2 class="pagetitle">Bible</h2><p class="muted pagesub">The logline, and for each episode its title, summary, end hook and beats, written from your script.</p></div>` : html`<h2 class="pagetitle">${{ cast: "Characters", scenes: "Locations", props: "Props" }[S.stab]} <span class="muted">· ${{ cast: P.cast, scenes: P.places, props: P.props }[S.stab].length}</span></h2>`}
-          <span class="grow"></span><span class="muted" style="font-size:12px">${story ? `${P.bible.version} · accepted · ${P.bible.written} written` : "Shared by every episode"}</span></div></div>
+          <span class="grow"></span><span class="muted" style="font-size:12px">${story ? `${P.bible.version} · accepted · covers ${P.bible.covers}, the whole screenplay` : "Shared by every episode"}</span></div></div>
         ${/* The bible as drama-cli writes it (bible.json): the logline and the tone, then one row per episode with its title,
              summary, end hook and seconds; each episode's beats open under it (WAI-ARIA APG Disclosure), so the beats read as that episode's. */ ""}
         ${S.stab === "bible" && html`<div class="biblegrid">
           <section class="panel wide"><span class="kick">Logline</span><p class="logline">${P.bible.logline}</p>
             <span class="kick" style="margin-top:14px">Tone</span><p class="tone">${P.bible.tone}</p></section>
-          <section class="panel wide"><h3>${I("film-strip")}Episodes<span class="grow"></span><span class="muted" style="font-size:11.5px;font-weight:500">${P.bible.eps.length} of 24 in this sample · the next range is written when EP007 starts</span></h3>
+          <section class="panel wide"><h3>${I("film-strip")}Episodes<span class="grow"></span><span class="muted" style="font-size:11.5px;font-weight:500">${P.bible.eps.length} of 24 shown in this sample</span></h3>
             <div class="delivwrap flush"><table class="deliv bibleeps"><thead><tr><th>Episode</th><th>Title</th><th>Summary</th><th>End hook</th><th>Seconds</th></tr></thead>
               <tbody>${P.bible.eps.map((e, i) => { const open = (S.beatsOpen || {})[e.code];
                 return html`<tr><td><button class="disc" aria-expanded=${String(!!open)} aria-controls=${"beats-" + e.code} onClick=${() => set({ beatsOpen: { ...(S.beatsOpen || {}), [e.code]: !open } })}>${I(open ? "caret-down" : "caret-right")}<img src=${P.eps[i].cover} alt=""/><span class="mono">${e.code}</span></button></td>

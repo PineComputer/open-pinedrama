@@ -18,7 +18,7 @@ The rule and its grounds: [docs/studio/design-system.md](../docs/studio/design-s
 | Press or read | `--radius-pill` | Button, IconButton, StatusChip, chips, Segmented, badges and counts, tags (a code or time over a picture or a clip), progress, meter and step tracks, Toast |
 | Surface | `--radius-2xl` | Panel, Dialog, StopCard, menus and popovers, a floating inspector, the agent panel's cards that stand alone on the ground |
 | Card of work | `--radius-large` | DramaCard, AssetCard, an EpisodeCard's cover, a CanvasNode's card, players and big pictures in an inspector |
-| Control or row | `--radius-medium` | inputs, textareas, selects and the search field, the agent's composer, rows with a hover or selected fill (tree, nav items, list rows, review reel items, menu items, radio choices such as the presets), Finding, code and prompt blocks, thumbnails from 40 px, the brand mark |
+| Control or row | `--radius-medium` | inputs, textareas, selects and the search field, drop zones, the agent's composer, inline notices (a quoted ask, a sent card), rows with a hover or selected fill (tree, nav items, list rows, review reel items, menu items, radio choices such as the presets), Finding, code and prompt blocks, thumbnails from 40 px, the brand mark |
 | Mark | `--radius-small` | thumbnails under 40 px, timeline clips and tracks, keyboard keys |
 | Circle | `50%` | faces, status dots |
 | Edge | `0` | the rail, the sidebar, the top bar, a docked inspector or agent panel, a table's rows, a strip across a surface's full width |
@@ -32,7 +32,7 @@ The rule and its grounds: [docs/studio/design-system.md](../docs/studio/design-s
 | Component | Class | Spec | Ground |
 |---|---|---|---|
 | Button | .btn | Pill, 1px border-input. Sizes sm 26 / md 32 / lg 40. Variants: primary (accent bg, on-accent text), secondary (transparent + border), ghost (no border), danger (error text, 40% error border). 12.5px/600. | HIG Buttons; APG Button |
-| IconButton | .ibtn | 32 square, radius-medium, hover = --hover, `.on` = --selected. | APG Button (name from `aria-label`); WCAG 2.2, 2.5.3 Label in Name; HIG Buttons |
+| IconButton | .ibtn | 32 circle, `--radius-pill` like every button (D67, "Press or read"), hover = --hover, `.on` = --selected. | APG Button (name from `aria-label`); WCAG 2.2, 2.5.3 Label in Name; HIG Buttons |
 | StatusChip | .st | 22 high pill, 11px/600, 6px dot. States: you (warning-text), work (pulsing text-primary), accepted (success), back / redline / err (error), stale (dashed dot). Over pictures: blurred canvas 72%. | [Five maker-facing states](../docs/design-principles.md#4-five-maker-facing-states); WCAG 2.2, 1.4.1 Use of Color (dot plus words); Linear's statuses |
 | Segmented | .seg | Track: surface-container, 1px border, pill, 3px padding. Item 28 high; on = surface-container-high + 1px border-input ring. | HIG Segmented controls; APG Radio Group (one choice) |
 | Tabs | .utabs | Underline tabs, 40 high, 2px text-primary underline, count in text-subtle. | APG Tabs; HIG Tab views |
