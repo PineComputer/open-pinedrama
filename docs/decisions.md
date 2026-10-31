@@ -1178,6 +1178,20 @@ timeline
   the page can't show (a legacy .doc) says so, names the kinds it can show and offers its download, and
   a failed fetch is an error, never Loading (2d0b70a); a Word or PDF upload's row reads "Text extracted
   from X.pdf", linking the preserved file in the library (185c59c).
+- **Amended.** 31 October 2026, Codex's end-to-end review of rc5 (C15), master's decision: the Fountain
+  view's line kinds (action, character, dialogue and the rest) come only from drama-cli's record of the
+  Fountain file's per-line kinds. drama-cli reads Fountain with our screenplay-tools fork (0.0.10+fork.3,
+  short_drama `requirements.txt`) plus its own `_read`, which handles `@` cues and full-width parentheses;
+  any parser in the studio, fountain-js or screenplay-tools' own JS port, would be a second grammar that
+  drifts. On rc5, fountain-js (`src/ui/fountainLines.ts:38`) rendered the Chinese action lines `1981
+  年，长江中上游洪水灾害后。` and `Δ陈海清拾起推车…` as character cues and the forced cue `@蔡晓磊` after a
+  note as dialogue, where drama-cli's table read them as actions and Cai's dialogue. validate.json records
+  each line of the **original** with the kinds its letters became (v0.7.5 as text rows; main's `lines[]`,
+  `{line, text, to, kinds}`, D172), not one kind per line of the Fountain file, and that cannot be inverted
+  exactly; drama-cli computes the per-line map (`drama_cli/screenplay.py`, `lined()`) but does not write it.
+  Until the pinned drama-cli writes it, the Fountain tab shows the file as plain text, without kind styling,
+  and says so in one line, as `graph.staleNoReason` does for a reason drama-cli doesn't give; fountain-js
+  styling is removed, with no fallback. The drama-cli change is briefed separately (master).
 ## D63. 2026-10-30 · An episode's views are Segments and Canvas; Segments is a matrix
 - **Context.** An episode's List showed each segment's tiles in a row, without its shots or
   references side by side.
@@ -1510,6 +1524,20 @@ timeline
   master then kept main's limits exactly, as two named constants: "two named constants matching main exactly
   (MAX_ATTACHMENT_MIB = 64 for New drama/attach(), MAX_REFERENCE_MIB = 20 for the references route), each
   route's message reading its own constant, and the reference-too-large code for the references route."
+- **Amended.** 31 October 2026, Codex's end-to-end review of rc5 (C18, P2; C19, P1), master's decision: when
+  an answer's file becomes the screenplay, that choice is the drama's screenplay source (`screenplay_file`),
+  and both Resume and Script › Original read it. The record that states the choice is drama-cli's own: a
+  returned version's `screenplay/vN/original.txt`, the copy of the config's `inputs.screenplay` that
+  validate.json's `original` names. The engine compares its SHA-256 with every stored file of this drama
+  (inputs, references and the studio's own extracted text of an uploaded PDF or Word file, D62 as amended for
+  C6) and, on a match, sets `screenplay_file` to that file: an identity check, like drama-cli's hash-bound
+  records, never a guess from names. No match keeps `screenplay_file` and shows a visible notice; nothing
+  else is inferred and nothing falls back silently to the first upload. Found on rc5 T5: the agent validated
+  the attached 家里家外 excerpt as v1 (its original.txt byte-identical to attachment 123), but Original still
+  showed the first upload (`src/ui/screens/Script.tsx:234–241`; C18), and Pause then Resume started the setup
+  again from the first upload, which asked for a screenplay once more (`src/engine/scheduler.ts:190`,
+  `211–219`; C19). main restarts a setup from `screenplay_file` too, but has no answer attachment: the defect
+  is ours, from B18 meeting main's restart rule (`short-drama-runs/qa/ENGINE_DIFF_AUDIT.md`, B23).
 
 ## References
 
