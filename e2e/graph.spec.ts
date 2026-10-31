@@ -35,7 +35,7 @@ test("the Graph traces a version both ways on the sample drama", async ({ page }
   const home = (node: { kind: string; where: { subject?: string; episode?: string } }) =>
     node.kind === "look" ? `/d/${id}/assets/characters/${node.where.subject}` : node.kind === "plate" ? `/d/${id}/assets/locations/${node.where.subject}` : `/d/${id}/e/${node.where.episode}/list`;
   await page.goto(`${home(look)}?view=lineage`);
-  const graph = page.getByRole("group", { name: "Graph" });
+  const graph = page.getByRole("group", { name: "Lineage" });
   // The version in focus, named as the bible names it.
   const focus = graph.locator('button[aria-current="true"]');
   await expect(focus).toBeVisible();
