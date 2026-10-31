@@ -44,7 +44,7 @@ function engine() {
 }
 
 describe("the Story", () => {
-  it("shows a card as the picture, the name, the version and where it stands, and the rest in the detail (D57)", async () => {
+  it("shows a card as the picture, the name, the version and where it stands, and the rest in the detail (D56)", async () => {
     const user = userEvent.setup();
     engine();
     await renderAt(<Cast dramaId="d1" />, "/d/d1/assets/characters");
@@ -76,7 +76,7 @@ describe("the Story", () => {
     expect(within(detail).getByText("Sent back")).toBeInTheDocument();
   });
 
-  it("shows a place's views and times as a strip under its picture, and its description clamped with More (D57)", async () => {
+  it("shows a place's views and times as a strip under its picture, and its description clamped with More (D56)", async () => {
     const user = userEvent.setup();
     engine();
     await renderAt(<Cast dramaId="d1" />, "/d/d1/assets/locations");

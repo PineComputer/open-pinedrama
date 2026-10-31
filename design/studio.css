@@ -841,7 +841,7 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
 .rail .ibtn:disabled { opacity: .45; cursor: default; }
 .rail .ibtn:disabled:hover { background: transparent; }
 .rail .acctdot .av { width: 22px; height: 22px; font-size: 11px; }
-/* D57: Assets as a picture grid plus an inspector (Apple Photos, Finder; liblib's 资产 library). A card is the picture at
+/* D56: Assets as a picture grid plus an inspector (Apple Photos, Finder; liblib's 资产 library). A card is the picture at
    its own ratio, the name, the version and where it stands; the detail holds the rest. */
 .assetgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 16px; padding: 0 16px 80px; align-items: start; }
 .assetcard { border-radius: var(--radius-large); border: 1px solid var(--border); background: var(--surface); overflow: hidden; cursor: pointer; }

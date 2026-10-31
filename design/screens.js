@@ -200,7 +200,7 @@
           <section class="panel wide"><h3>${I("film-strip")}Episodes<span class="grow"></span><span class="muted" style="font-size:11.5px;font-weight:500">12 of 24 written · the next range is written when EP007 starts</span></h3>
             <div class="eplist">${P.bible.eps.map(([c, t, s], i) => html`<div class="eprow"><img src=${P.eps[i].cover} alt=""/><span class="mono">${c}</span><b>${t}</b><span class="muted grow">${s}</span></div>`)}</div></section>
         </div>`}
-        ${/* D57/D58: the tree navigates Assets; a card is the picture, the name, the version and where it stands. */ ""}
+        ${/* D56/D57: the tree navigates Assets; a card is the picture, the name, the version and where it stands. */ ""}
         ${S.stab !== "bible" && html`<div class="assetgrid">${{ cast: P.cast, scenes: P.places, props: P.props }[S.stab].map((x) => html`<article class=${"assetcard" + (S.asel === x.id ? " sel" : "")} ...${picked(x.id)} ...${openCard(x.id)}>
           ${pic(x, x.sheet || x.pic, x.st !== "accepted" ? Status(x.st) : Status("accepted"))}
           <div class="ctxt"><span class="cardname"><b>${x.name}</b></span><span class="mono subtle">${shownOf(x)}</span></div></article>`)}</div>`}

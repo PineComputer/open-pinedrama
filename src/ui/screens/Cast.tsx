@@ -60,7 +60,7 @@ function versionsOf(entry: CastCard["looks"][number] | undefined) {
 const mainOf = (card: CastCard) => card.looks.find((entry) => !entry.look || entry.look === "base") ?? card.looks[0];
 
 /**
- * D57's grid card (design/screens.js, Story; Apple Photos and Finder's picture grid, liblib's 资产 library): the picture
+ * D56's grid card (design/screens.js, Story; Apple Photos and Finder's picture grid, liblib's 资产 library): the picture
  * at its own ratio, the name, the version and where it stands. Everything else is the detail's (progressive disclosure).
  */
 function AssetCard({ card, names, dramaId, picked }: { card: CastCard; names: Names | null; dramaId: string; picked: boolean }) {
@@ -87,7 +87,7 @@ function AssetCard({ card, names, dramaId, picked }: { card: CastCard; names: Na
 }
 
 /**
- * D57's detail (Apple Photos' and Finder's inspector): one large picture with its views or looks as a strip under it,
+ * D56's detail (Apple Photos' and Finder's inspector): one large picture with its views or looks as a strip under it,
  * the name, kind and version with where it stands, Review and Lineage, the bible's description clamped to three lines,
  * the episodes it is in, and its versions. Decisions are made in the review room, as everywhere.
  */
@@ -255,7 +255,7 @@ export function Cast({ dramaId, compact = false }: { dramaId: string; compact?: 
   // Under the logline, as the design has them: the genres the maker's notes state, and the episodes × their length.
   const facts = drama.data?.facts;
   const tags = [...(facts?.genres ?? []), ...(facts?.scale && facts.length ? [t("cast.format", { n: facts.scale.episodes, s: facts.length })] : [])];
-  // D58: the drama tree is how Assets is navigated (Characters, Locations, Props are its rows, as Episodes' are), so the
+  // D57: the drama tree is how Assets is navigated (Characters, Locations, Props are its rows, as Episodes' are), so the
   // page has no tabs of its own: a plain heading with the count, shared by every episode. Story is the bible's page.
   const shelves: Record<Exclude<Shelf, "bible">, [string, CastCard[]]> = { cast: [t("cast.characters"), characters], scenes: [t("cast.locations"), places], props: [t("cast.props"), props] };
   if (shelf === "bible")

@@ -74,7 +74,7 @@ test("the Graph traces a version both ways on the sample drama", async ({ page }
     await page.getByRole("link", { name: "Open in Assets" }).click();
     await expect.poll(() => new URL(page.url()).pathname).toBe(home(node));
     expect(query(page.url()).get("view")).toBeNull();
-    // Its card picked: one card per asset (D57).
+    // Its card picked: one card per asset (D56).
     const picked = page.locator('article[aria-current="true"]');
     await expect(picked.first()).toBeVisible();
     expect(await page.locator("article.assetcard").count()).toBeGreaterThan(await picked.count());
