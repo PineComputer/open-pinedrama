@@ -107,7 +107,7 @@ a.tag:hover { background: var(--hover); color: var(--text-primary); }
 .tree .code { font-family: var(--font-mono); font-size: 11px; }
 .tree .now { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--text-subtle); }
-.dot.you { background: var(--warning-text); } .dot.work { background: var(--text-primary); } .dot.accepted { background: var(--success); } .dot.line { background: transparent; border: 1px solid var(--text-subtle); }
+.dot.you { background: var(--warning-text); } .dot.work { background: var(--text-primary); } .dot.accepted { background: var(--success); } .dot.line { background: transparent; border: 1px solid var(--text-subtle); } .dot.paused { background: var(--text-subtle); }
 .side .foot { padding: 12px 14px; border-top: 1px solid var(--border); display: grid; gap: 8px; font-size: 12px; color: var(--text-muted); }
 .meter { height: 4px; border-radius: var(--radius-pill); background: var(--surface-container-high); overflow: hidden; display: flex; }
 .meter i { display: block; height: 100%; background: var(--text-primary); }

@@ -225,11 +225,13 @@ describe("the sidebar", () => {
     await waitFor(() => expect(href(router)).toBe("/d/d1/e/EP002/canvas"));
   });
 
-  it("says Paused on an episode stopped with the project the maker paused (D74)", async () => {
+  it("says Paused on an episode stopped with the project the maker paused, with the neutral dot, not needing the maker (D74)", async () => {
     const paused = { ...drama, status: "stopped", setup: { ...drama.setup, reason: "by-maker" }, episodeRows: [row(1, "stopped"), row(3, "done")] } as unknown as DramaView;
     await renderAt(<DramaSidebar drama={paused} page="episodes" drawer={false} />, "/d/d1/episodes");
     const tree = screen.getByRole("list", { name: "Episodes" });
-    expect(within(tree).getAllByRole("button")[0]).toHaveTextContent(/^EP001 Paused,/);
+    expect(within(tree).getAllByRole("button")[0]).toHaveTextContent(/^EP001 Paused, paused$/);
+    expect(within(tree).getAllByRole("button")[0].querySelector(".dot")).toHaveClass("paused");
+    expect(screen.getByRole("link", { name: /^Episodes/ })).not.toHaveTextContent(/need you/);
   });
 
   it("folds the episodes that only wait in line at its end into one line", async () => {

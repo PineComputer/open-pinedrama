@@ -8,10 +8,13 @@ export type TreePlace = "assets" | "delivery";
 
 /**
  * Where an episode stands in the tree, as its dot shows it (principle "Five maker-facing states"): it needs the maker when
- * it waits for a decision, or stopped or failed and waits for Resume or the next step.
+ * it waits for a decision, or stopped or failed and waits for Resume or the next step. paused: the maker paused the
+ * project (labels.ts isPaused); an episode stopped with it is paused, a neutral dot, since nothing waits on the maker
+ * there but the top bar's Resume; a review it waits on stays counted in Reviews and Next review (master, D74).
  */
-export type Mark = "you" | "work" | "done" | "line";
-export function markOf(row: EpisodeRow): Mark {
+export type Mark = "you" | "work" | "done" | "line" | "paused";
+export function markOf(row: EpisodeRow, paused: boolean): Mark {
+  if (paused && row.state === "stopped") return "paused";
   if (row.state === "waiting" || row.state === "stopped" || row.state === "failed") return "you";
   if (row.state === "working") return "work";
   return row.state === "done" ? "done" : "line";
@@ -47,7 +50,7 @@ export function scriptNow(versions: ScreenplayVersion[], rewriting: boolean): { 
   return undefined;
 }
 
-export function dramaTree({ cast, reviews, lineage, rows }: { cast: CastCard[]; reviews: ReviewSummary[]; lineage: Lineage | null; rows: EpisodeRow[] }): DramaTree {
+export function dramaTree({ cast, reviews, lineage, rows, paused }: { cast: CastCard[]; reviews: ReviewSummary[]; lineage: Lineage | null; rows: EpisodeRow[]; paused: boolean }): DramaTree {
   const needs: Record<TreePlace, number> = { assets: 0, delivery: 0 };
   const open = reviews.filter((review) => review.state === "open");
   for (const review of open) {
@@ -55,5 +58,5 @@ export function dramaTree({ cast, reviews, lineage, rows }: { cast: CastCard[]; 
     if (place) needs[place]++;
   }
   const shelf = (kind: CastCard["kind"]) => cast.filter((card) => card.kind === kind).length;
-  return { needs, episodes: rows.filter((row) => markOf(row) === "you").length, shelves: { characters: shelf("look"), locations: shelf("location"), props: shelf("prop") }, reviews: open.length, outOfDate: lineage ? outOfDate(lineage).size : 0 };
+  return { needs, episodes: rows.filter((row) => markOf(row, paused) === "you").length, shelves: { characters: shelf("look"), locations: shelf("location"), props: shelf("prop") }, reviews: open.length, outOfDate: lineage ? outOfDate(lineage).size : 0 };
 }

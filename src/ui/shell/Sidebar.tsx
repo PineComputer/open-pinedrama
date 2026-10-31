@@ -68,7 +68,7 @@ export function DramaSidebar({ drama, page, episode, drawer }: { drama: DramaVie
   const reviews = useResource<ReviewSummary[]>(`/api/reviews?drama=${drama.id}`, ["reviews"]);
   const cast = useResource<CastCard[]>(`/api/dramas/${drama.id}/cast`, [`drama:${drama.id}`]);
   const lineage = useResource<LineageView>(`/api/dramas/${drama.id}/lineage`, [`project:${drama.id}`]);
-  const tree = dramaTree({ cast: cast.data ?? [], reviews: reviews.data ?? [], lineage: lineage.data?.lineage ?? null, rows: drama.episodeRows });
+  const tree = dramaTree({ cast: cast.data ?? [], reviews: reviews.data ?? [], lineage: lineage.data?.lineage ?? null, rows: drama.episodeRows, paused: isPaused(drama) });
   const script = useResource<ScriptPage>(`/api/dramas/${drama.id}/script`, [`drama:${drama.id}`]);
   const scriptRow = script.data && scriptNow(script.data.versions, isSettingUp(drama) && drama.setup.state === "working" && drama.setup.reached <= 1);
   // The tree folds the episodes that only wait in line at its end into one line ("EP009–EP024 · 16 in line"), as the design does.
@@ -167,7 +167,7 @@ export function DramaSidebar({ drama, page, episode, drawer }: { drama: DramaVie
         {drama.episodeRows.length > 0 && (
           <ul className="tree" aria-label={t("tree.label")}>
             {shownRows.map((row) => {
-              const mark = markOf(row);
+              const mark = markOf(row, isPaused(drama));
               return [
                 <li key={row.id}>
                   {/* The name is what the button shows, then where it stands, said rather than shown (WCAG 2.5.3). */}
@@ -198,7 +198,7 @@ export function DramaSidebar({ drama, page, episode, drawer }: { drama: DramaVie
         {/* What the dots mean, once, at the tree's foot (merecdesperez44323-lab's Y10; Nielsen: recognition rather than recall). */}
         {drama.episodeRows.length > 0 && (
           <p className="treelegend" aria-hidden="true">
-            {(["you", "work", "done"] as const).map((mark) => (
+            {(isPaused(drama) ? (["you", "work", "done", "paused"] as const) : (["you", "work", "done"] as const)).map((mark) => (
               <span key={mark}>
                 <i className={`dot ${DOT[mark]}`} />
                 {t(`tree.legend.${mark}`)}
@@ -228,6 +228,6 @@ export function DramaSidebar({ drama, page, episode, drawer }: { drama: DramaVie
   );
 }
 
-const DOT: Record<EpisodeMark, string> = { you: "you", work: "work", done: "accepted", line: "line" };
+const DOT: Record<EpisodeMark, string> = { you: "you", work: "work", done: "accepted", line: "line", paused: "paused" };
 // A cut's stage as the maker's state (principle "Five maker-facing states"), and its dot.
 const DOT_OF = { you: "you", work: "work", accepted: "accepted" } as const;

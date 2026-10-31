@@ -2,7 +2,7 @@
 import { describe, expect, it } from "vitest";
 import type { Lineage, LineageKind, LineageNode } from "../../shared/lineage.ts";
 import { type CastCard, type EpisodeRow, type ReviewKind, type ReviewState, type ReviewSummary, type ScreenplayVersion, STAGES } from "../../shared/types.ts";
-import { dramaTree, scriptNow } from "./tree.ts";
+import { dramaTree, markOf, scriptNow } from "./tree.ts";
 
 function review(kind: ReviewKind, state: ReviewState = "open", episode?: string): ReviewSummary {
   return { id: `${kind}-${episode ?? "drama"}-${state}`, dramaId: "d1", dramaTitle: "The Stepmother", episode, kind, state, question: "", items: 1, subjects: [], createdAt: "2026-10-30T10:00:00Z" };
@@ -20,6 +20,7 @@ describe("the drama tree", () => {
       cast: [],
       lineage: null,
       rows: [],
+      paused: false,
       reviews: [review("looks"), review("references"), review("storyboards", "open", "EP004"), review("takes", "open", "EP006"), review("cut", "open", "EP001"), review("question"), review("question", "open", "EP007"), review("takes", "answered", "EP002"), review("looks", "saving")],
     });
     expect(tree.needs).toEqual({ assets: 2, delivery: 1 });
@@ -27,7 +28,7 @@ describe("the drama tree", () => {
   });
 
   it("counts the Assets shelves by the cards the Assets page shows", () => {
-    const tree = dramaTree({ cast: [card("look", "ivy"), card("look", "luca"), card("location", "garden"), card("prop", "file")], reviews: [], lineage: null, rows: [] });
+    const tree = dramaTree({ cast: [card("look", "ivy"), card("look", "luca"), card("location", "garden"), card("prop", "file")], reviews: [], lineage: null, rows: [], paused: false });
     expect(tree.shelves).toEqual({ characters: 2, locations: 1, props: 1 });
   });
 
@@ -42,14 +43,24 @@ describe("the drama tree", () => {
       ],
       groups: [],
     };
-    expect(dramaTree({ cast: [], reviews: [], lineage, rows: [] }).outOfDate).toBe(3);
-    expect(dramaTree({ cast: [], reviews: [], lineage: null, rows: [] }).outOfDate).toBe(0);
+    expect(dramaTree({ cast: [], reviews: [], lineage, rows: [], paused: false }).outOfDate).toBe(3);
+    expect(dramaTree({ cast: [], reviews: [], lineage: null, rows: [], paused: false }).outOfDate).toBe(0);
   });
 
   it("counts as needing the maker exactly the episodes whose dot says so: waiting, stopped or failed (merecdesperez44323-lab's Y10)", () => {
     const row = (code: string, state: EpisodeRow["state"]) => ({ id: code, number: 1, code, title: "", state, stages: Object.fromEntries(STAGES.map((stage) => [stage, { state: "none" }])), spent: { total: 0, media: 0, partial: false }, updatedAt: "" }) as unknown as EpisodeRow;
     const rows = [row("EP001", "waiting"), row("EP002", "working"), row("EP003", "stopped"), row("EP004", "failed"), row("EP005", "queued"), row("EP006", "done")];
-    expect(dramaTree({ cast: [], reviews: [], lineage: null, rows }).episodes).toBe(3);
+    expect(dramaTree({ cast: [], reviews: [], lineage: null, rows, paused: false }).episodes).toBe(3);
+  });
+
+  it("while the maker has paused the project, marks an episode stopped with it paused and counts it as no longer needing the maker (D74)", () => {
+    const row = (code: string, state: EpisodeRow["state"]) => ({ id: code, number: 1, code, title: "", state, stages: Object.fromEntries(STAGES.map((stage) => [stage, { state: "none" }])), spent: { total: 0, media: 0, partial: false }, updatedAt: "" }) as unknown as EpisodeRow;
+    expect(markOf(row("EP001", "stopped"), true)).toBe("paused");
+    expect(markOf(row("EP001", "stopped"), false)).toBe("you");
+    // A review that still waits is answerable while paused: that episode still needs the maker.
+    expect(markOf(row("EP002", "waiting"), true)).toBe("you");
+    const rows = [row("EP001", "stopped"), row("EP002", "waiting"), row("EP003", "done")];
+    expect(dramaTree({ cast: [], reviews: [], lineage: null, rows, paused: true }).episodes).toBe(1);
   });
 
   it("says where the screenplay stands on Script's row, as an episode row does", () => {
