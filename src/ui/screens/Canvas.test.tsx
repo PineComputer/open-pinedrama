@@ -12,7 +12,8 @@ import { parseBibleNames } from "../../shared/names.ts";
 import { parseStatus, type ProjectView } from "../../shared/project.ts";
 import type { DramaView, FileItem } from "../../shared/types.ts";
 import { changed } from "../test/live.ts";
-import { answer, calls } from "../test/server.ts";
+import { http, HttpResponse } from "msw";
+import { answer, calls, server } from "../test/server.ts";
 import { Canvas } from "./Canvas.tsx";
 import { href, renderAt } from "../test/router.tsx";
 
@@ -89,6 +90,25 @@ describe("the canvas", () => {
     // The engine says a saved lineage changed the project (src/engine/lineage.ts), as Graph hears it.
     changed("project:d1");
     await waitFor(() => expect(calls("GET", "/api/dramas/d1/lineage")).toHaveLength(2));
+  });
+
+  it("starts each segment's group with its shots from drama-cli's breakdown.json, wired to the stages that read it (D66)", async () => {
+    const shot = { time: "0-3s", size: "wide shot", angle: "eye level", camera: "Static wide shot.", visual: "林 walks into the office.", audio: "Room tone." };
+    const breakdown = { id: 50, name: "breakdown.json", path: "/work/drama/episodes/EP001/breakdown/v1/breakdown.json", type: "application/json", size: 1, kind: "breakdown", episode: "EP001", url: "/f/50", createdAt: "2026-10-30T10:00:00Z" } as unknown as FileItem;
+    engine(project(), [breakdown]);
+    server.use(http.get("/f/50", () => HttpResponse.text(JSON.stringify({ episode: "EP001", title: "x", segments: [{ id: "seg01", shots: [shot, { ...shot, time: "3-7s", visual: "She stops." }] }] }))));
+    await renderAt(<Canvas drama={drama} />, "/d/d1/e/EP001/canvas");
+    const group = await screen.findByRole("group", { name: "EP001 seg01 · INT. OFFICE - DAY" });
+    const shots = (await screen.findByText("2 shots · 7 s")).closest(".react-flow__node") as HTMLElement;
+    expect(shots).toHaveTextContent("wide shot · eye level · Static wide shot.");
+    expect(shots).toHaveTextContent("She stops.");
+    // First in its segment's group, left of drama-cli's stages.
+    const x = (node: Element) => Number((node as HTMLElement).style.transform.match(/translate\((-?[\d.]+)px/)![1]);
+    const storyboard = screen.getByRole("button", { name: /^Storyboard · line-art/ }).closest(".react-flow__node")!;
+    expect(x(shots)).toBeLessThan(x(storyboard));
+    expect(group).toBeInTheDocument();
+    // Wired only where drama-cli recorded that a stage read the breakdown.
+    expect(document.querySelector('.react-flow__edge[data-id="shots:EP001 seg01>episodes/EP001/multi_panel_storyboard/seg01/line-art"]')).not.toBeNull();
   });
 
   it("shows of the shared looks, plates and props only those the episode's stages were made from, where drama-cli put them", async () => {

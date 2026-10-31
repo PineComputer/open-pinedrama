@@ -221,7 +221,8 @@ export function NodePanel({
   onClose,
 }: {
   dramaId: string;
-  item: Item;
+  /** The item it is the panel of; none for a segment's shots, whose text is on the node and which has Details only (D66). */
+  item?: Item;
   /** A character's look (S1…) or a place's time of day (Night), as the lineage names the stage; none for a base look or a plate. */
   look?: string;
   /** A storyboard's style (line-art, photoreal), as the lineage names the stage. */
@@ -273,7 +274,7 @@ export function NodePanel({
       </div>
       {needs && <p className="needs">{t(needs)}</p>}
       <div className="ndisc">
-        {PARTS.map((part) => (
+        {(item ? PARTS : (["details"] as const)).map((part) => (
           <button key={part} type="button" aria-expanded={open === part} aria-controls="npart" onClick={() => setOpen(open === part ? null : part)}>
             {t(`canvas.tab.${part}`)}
             <Icon name={open === part ? "caret-up" : "caret-down"} />
@@ -303,7 +304,7 @@ export function NodePanel({
             ) : (
               <p className="subtle">{t("canvas.noSpec")}</p>
             ))}
-          {open === "versions" && <Versions dramaId={dramaId} item={item} look={look} style={style} on={on} />}
+          {open === "versions" && item && <Versions dramaId={dramaId} item={item} look={look} style={style} on={on} />}
           {open === "request" && (request && typeof request === "object" ? <JsonView data={request as object} shouldExpandNode={collapseAllNested} style={JSON_STYLE} aria-label={t("canvas.tab.request")} /> : <p className="subtle">{t("canvas.noSpec")}</p>)}
           {open === "details" && (
             <dl>
@@ -319,7 +320,7 @@ export function NodePanel({
           )}
         </div>
       )}
-      {open && (
+      {open && item && (
       <div className="nfoot">
         {pills.map((pill) => (
           <span key={pill} className="pill mono">

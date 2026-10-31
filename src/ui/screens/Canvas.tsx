@@ -10,6 +10,7 @@ import { Background, BackgroundVariant, type Edge, getViewportForBounds, type Vi
 import { createContext, Fragment, type ReactNode, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { DropdownMenu } from "radix-ui";
 import { MediaControlBar, MediaController, MediaDurationDisplay, MediaFullscreenButton, MediaMuteButton, MediaPlayButton, MediaTimeDisplay, MediaTimeRange } from "media-chrome/react";
+import { breakdownShots, type Shot } from "../../shared/breakdown.ts";
 import { HEIGHT, layout, WIDTH } from "../../shared/layout.ts";
 import type { LineageNode, LineageView } from "../../shared/lineage.ts";
 import { type Item, itemOf, PIPELINE } from "../../shared/pipeline.ts";
@@ -102,7 +103,7 @@ interface BoardContext {
   dock: Dock;
   /** The bar above the picked node and its panel, as the canvas renders them for it. */
   bar: (node: Node<ItemData>) => ReactNode;
-  panel: (node: Node<ItemData>) => ReactNode;
+  panel: (node: Node<ItemData | ShotsData>) => ReactNode;
   /** The files the stops returned, where each node's spec.json is found beside its picture. */
   files: FileItem[];
   /** The one item picked, whose bar and panel show; none while several are. */
@@ -237,6 +238,68 @@ function ItemNode(props: NodeProps<Node<ItemData>>) {
   );
 }
 
+/** A segment's shots: the text node at the start of its group (D66), what breakdown.json says of them. */
+interface ShotsData extends Record<string, unknown> {
+  label: string;
+  shots?: Shot[];
+  /** Why the breakdown couldn't be read, in drama-cli's words or the parser's. */
+  error?: string;
+}
+
+/** The shots' height on the board: the label, the title and each shot's four short lines (design/studio.css .shotlist). */
+const shotsHeight = (count: number) => LABEL + 52 + count * 88;
+
+/**
+ * A segment's shot list, ours (D66): each shot's time, size · angle · camera, what is seen and what is heard, as
+ * drama-cli's breakdown.json gives them, beside the pictures they made. Far out it keeps its title only, as ComfyUI
+ * collapses a node (and drama-cli's export draws the breakdown as text in its Text group, which stays off the board).
+ */
+function ShotsNode(props: NodeProps<Node<ShotsData>>) {
+  const { id, data, selected } = props;
+  const { t } = useT();
+  const board = useContext(Board)!;
+  const far = useViewport().zoom < 0.35;
+  const shots = data.shots ?? [];
+  const seconds = shots.length ? Number(shots[shots.length - 1].time.match(/-(\d+)s$/)?.[1] ?? 0) : 0;
+  return (
+    <div className={`cnode is-shots${selected ? " sel" : ""}`}>
+      {board.dock === "under" && (
+        <NodeToolbar isVisible={board.picked === id} position={Position.Bottom}>
+          {board.panel(props as unknown as Node<ItemData | ShotsData>)}
+        </NodeToolbar>
+      )}
+      <div className="lab" role="button" tabIndex={0} aria-pressed={selected} onClick={() => board.pick(id)} onKeyDown={(event) => event.key === "Enter" && board.pick(id)}>
+        <Icon name="list-numbers" />
+        <span className="name">{data.label}</span>
+      </div>
+      <div className="card shotlist" onClick={() => board.pick(id)}>
+        {data.error ? (
+          <p className="error">{data.error}</p>
+        ) : data.shots ? (
+          <>
+            <b className="stitle">{t("canvas.shotsTitle", { n: shots.length, s: seconds })}</b>
+            {!far && (
+              <ol className="srows">
+                {shots.map((shot) => (
+                  <li key={shot.time}>
+                    <span className="mono">{shot.time}</span>
+                    <span className="sfacts">{[shot.size, shot.angle, shot.camera].join(" · ")}</span>
+                    <span className="svis">{shot.visual}</span>
+                    <span className="saud">{shot.audio}</span>
+                  </li>
+                ))}
+              </ol>
+            )}
+          </>
+        ) : (
+          <p className="quiet">{t("canvas.noShots")}</p>
+        )}
+      </div>
+      <Handle type="source" position={Position.Right} isConnectable={false} />
+    </div>
+  );
+}
+
 /** One of drama-cli's groups, as the prototype's frame: a titled rounded area holding its nodes. */
 function FrameNode({ data }: NodeProps<Node<{ title: string }>>) {
   return (
@@ -246,7 +309,7 @@ function FrameNode({ data }: NodeProps<Node<{ title: string }>>) {
   );
 }
 
-const NODE_TYPES = { item: ItemNode, frame: FrameNode };
+const NODE_TYPES = { item: ItemNode, shots: ShotsNode, frame: FrameNode };
 
 /** Fitting leaves room for what floats over the board: the pills at the top, the zoom pill at the foot, the detail card on the right. Never past the reference's scale. */
 const FIT = { padding: { top: "72px", bottom: "72px", left: "40px", right: "40px" }, maxZoom: 1.05 } as const;
@@ -453,6 +516,18 @@ function Plane({ drama }: { drama: DramaView }) {
     setSizes((known) => (known[id]?.[0] === width && known[id]?.[1] === height ? known : { ...known, [id]: [width, height] }));
   };
 
+  // The episode's breakdown.json at the version drama-cli's lineage works on, and each segment's shots in it (D66).
+  const breakdownStage = lineage?.nodes.find((stage) => stage.id === `episodes/${code}/breakdown`);
+  const breakdownFile = files.data?.find((file) => file.kind === "breakdown" && file.path.endsWith(`/episodes/${code}/breakdown/${breakdownStage?.version}/breakdown.json`));
+  const breakdownText = useText(breakdownFile).text;
+  const shotsOf = useMemo((): { shots?: Map<string, Shot[]>; error?: string } => {
+    if (!breakdownText) return {};
+    try {
+      return { shots: breakdownShots(JSON.parse(breakdownText)) };
+    } catch (reason) {
+      return { error: (reason as Error).message };
+    }
+  }, [breakdownText]);
   const mapped = useMemo(() => {
     if (!lineage || !code) return { nodes: [] as Node[], edges: [] as Edge[] };
     const moved = positions.data?.positions ?? {};
@@ -462,8 +537,13 @@ function Plane({ drama }: { drama: DramaView }) {
     const linked = new Set(lineage.links.flatMap((link) => (own.has(link.to) ? [link.from] : own.has(link.from) ? [link.to] : [])));
     const shown = lineage.nodes.filter((stage) => own.has(stage.id) || (SHARED.includes(stage.section) && linked.has(stage.id)));
     // Each node at its picture's own ratio, at drama-cli's width: a row is as tall as its tallest (shared/layout.ts).
-    const heightOf = (id: string) => (sizes[id] ? LABEL + Math.round((WIDTH * sizes[id][1]) / sizes[id][0]) : HEIGHT);
-    const { places, groups } = layout(shown, heightOf);
+    // Each segment's group starts with its shots (D66): ours, before drama-cli's stages in their columns.
+    const segmentOf = (section: string) => section.slice(code.length + 1);
+    const segments = [...new Set(shown.map((stage) => stage.section).filter((section) => section.startsWith(`${code} seg`)))];
+    const shotsId = (section: string) => `shots:${section}`;
+    const shotCount = (section: string) => shotsOf.shots?.get(segmentOf(section))?.length ?? 0;
+    const heightOf = (id: string) => (id.startsWith("shots:") ? shotsHeight(shotCount(id.slice(6))) : sizes[id] ? LABEL + Math.round((WIDTH * sizes[id][1]) / sizes[id][0]) : HEIGHT);
+    const { places, groups } = layout([...segments.map((section) => ({ id: shotsId(section), column: -1, section })), ...shown], heightOf);
     // The scene's heading as the other screens show it, without Fountain's scene number (labels.ts, headingText).
     const scene = (segment: string) => {
       const heading = state?.episodes[code]?.sceneChains.find((chain) => chain.segments.includes(segment))?.sceneHeading;
@@ -508,12 +588,22 @@ function Plane({ drama }: { drama: DramaView }) {
         },
       ];
     });
+    const shotNodes: Node<ShotsData>[] = segments.flatMap((section) => {
+      const group = groups.find((one) => one.title === section)!;
+      const id = shotsId(section);
+      return [{ id, type: "shots", parentId: `group:${section}`, expandParent: true, position: moved[id] ?? { x: places.get(id)![0] - group.x, y: places.get(id)![1] - group.y }, width: WIDTH, height: heightOf(id), data: { label: t("canvas.shots"), shots: shotsOf.shots?.get(segmentOf(section)), error: shotsOf.error } }];
+    });
     const drawn = new Set(items.map((node) => node.id));
-    const edges: Edge[] = lineage.links.filter((link) => drawn.has(link.from) && drawn.has(link.to)).map((link) => ({ id: `${link.from}>${link.to}`, source: link.from, target: link.to, selectable: false }));
-    return { nodes: [...frames, ...items], edges };
+    const sectionOf = new Map(shown.map((stage) => [stage.id, stage.section]));
+    const edges: Edge[] = [
+      ...lineage.links.filter((link) => drawn.has(link.from) && drawn.has(link.to)).map((link) => ({ id: `${link.from}>${link.to}`, source: link.from, target: link.to, selectable: false })),
+      // The breakdown's own recorded links into each segment's stages, drawn from that segment's shots.
+      ...lineage.links.filter((link) => link.from === `episodes/${code}/breakdown` && drawn.has(link.to) && segments.includes(sectionOf.get(link.to)!)).map((link) => ({ id: `${shotsId(sectionOf.get(link.to)!)}>${link.to}`, source: shotsId(sectionOf.get(link.to)!), target: link.to, selectable: false })),
+    ];
+    return { nodes: [...frames, ...shotNodes, ...items], edges };
     // t is made anew each render; the words change only with the language.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lineage, state, code, positions.data, files.data, names, follow, target, lang, sizes]);
+  }, [lineage, state, code, positions.data, files.data, names, follow, target, lang, sizes, shotsOf]);
 
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
   // New data keeps what the maker picked.
@@ -549,8 +639,8 @@ function Plane({ drama }: { drama: DramaView }) {
     void flow.setCenter(node.internals.positionAbsolute.x + (node.width ?? 0) / 2, node.internals.positionAbsolute.y + (node.height ?? 0) / 2, { zoom: flow.getZoom(), duration: 500 });
   }, [follow, target, nodes, code]);
   // The panel is one item's: none while several are picked (⌘A, or a box drawn with Move).
-  const selected = nodes.filter((node) => node.selected && node.type === "item");
-  const picked = selected.length === 1 ? (selected[0] as Node<ItemData>) : undefined;
+  const selected = nodes.filter((node) => node.selected && (node.type === "item" || node.type === "shots"));
+  const picked = selected.length === 1 ? (selected[0] as Node<ItemData | ShotsData>) : undefined;
   const paneWidth = useStore((store) => store.width);
   const paneHeight = useStore((store) => store.height);
   // A dock or a resize moves the visible area: the picked node is placed in it again.
@@ -632,7 +722,34 @@ function Plane({ drama }: { drama: DramaView }) {
   const bar = (node: Node<ItemData>) => (
     <SteerBar drama={drama} node={node.data.item} label={node.data.label} picture={workOf(node)} episodeTitle={names?.episodes[code]} lineage={homeLink(drama.id, node.data.stage.id, "lineage", page?.item === node.id ? page.version : undefined)} />
   );
-  const panel = (node: Node<ItemData>) => (
+  const panel = (picked: Node<ItemData | ShotsData>) => {
+    // A segment's shots: the breakdown's facts, its version and where it stands, and the stages it feeds; the rest is the text on the node.
+    if (picked.type === "shots") {
+      const shots = picked as Node<ShotsData>;
+      return (
+        <NodePanel
+          dramaId={drama.id}
+          on={breakdownStage?.version ?? "—"}
+          files={files.data ?? []}
+          facts={{
+            label: shots.data.label,
+            status: breakdownStage ? standingOf(breakdownStage) : "line",
+            kind: t("canvas.shotList"),
+            version: breakdownStage?.version ?? "—",
+            accepted: breakdownStage?.accepted ?? null,
+            usedBy: mapped.edges.filter((edge) => edge.source === shots.id).map((edge) => labelOf(edge.target)).join(", "),
+            reads: "",
+            problems: breakdownStage?.problems ?? [],
+          }}
+          dock={dock}
+          onDock={dockTo}
+          actions={PHASE_ONE}
+          onClose={() => pick(null)}
+        />
+      );
+    }
+    const node = picked as Node<ItemData>;
+    return (
     <NodePanel
       dramaId={drama.id}
       item={node.data.item}
@@ -656,7 +773,8 @@ function Plane({ drama }: { drama: DramaView }) {
       actions={PHASE_ONE}
       onClose={() => pick(null)}
     />
-  );
+    );
+  };
   // The picked stage's links, drawn hot as the prototype draws them.
   const edges = picked ? mapped.edges.map((edge) => (edge.source === picked.id || edge.target === picked.id ? { ...edge, className: "hot" } : edge)) : mapped.edges;
 
@@ -670,7 +788,7 @@ function Plane({ drama }: { drama: DramaView }) {
           onNodesChange={onNodesChange}
           onNodeDragStop={(_, __, dragged) => save(nodes.map((node) => dragged.find((one) => one.id === node.id) ?? node))}
           onNodeDragStart={() => setFollow(false)}
-          onNodeClick={(_, node) => node.type === "item" && pick(node.id)}
+          onNodeClick={(_, node) => (node.type === "item" || node.type === "shots") && pick(node.id)}
           // A move the maker makes has an event; following's own moves don't.
           onMoveStart={(event) => event && setFollow(false)}
           panOnScroll

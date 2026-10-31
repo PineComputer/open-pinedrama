@@ -110,11 +110,13 @@ describe("each picture, take or cut comes with drama-cli's statement of the job"
     ["a session that carries an episode on", resumeGoal(drama, "EP002", ["project.tar.part-aa", "EP002.tar.part-aa"], true, undefined, "screenplay.md")],
   ])("in %s, asked for by name, never worked out from the folder", (_where, goal) => {
     expect(times(goal, SPECS)).toBe(1);
+    // The breakdown's shots, as drama-cli's schema states them, for the Canvas's shot lists (D66).
+    expect(times(goal, "with every breakdown, also its breakdown.json beside it")).toBe(1);
   });
 
   it("but not in a rehearsal, whose stand-in writes none", () => {
     const goal = rehearsed(episodeGoal(drama, "EP002", ["project.tar.part-aa"], true, "screenplay.md"));
-    expect(goal).toContain("and no spec.json, request.json or asset/asset.json");
+    expect(goal).toContain("and no spec.json, request.json, asset/asset.json or breakdown.json");
   });
 });
 
