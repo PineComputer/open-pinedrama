@@ -12,7 +12,7 @@
     dialog: null, toasts: [], dramaStop: null, draft: "", chats: {}, drafts: {}, drawer: false,
     cam: { x: 40, y: 96, k: 0.62 }, tool: "move", toolOpen: false, zoomOpen: false, keysOpen: false, sel: null, dock: (() => { try { return localStorage.getItem("studio.canvas.dock") || "under"; } catch (e) { return "under"; } })(), follow: true, agentOpen: false, panning: null, minimap: true,
     ti: 0, playing: false, t: 0, watched: {}, maxT: {}, verdict: {}, reason: {}, showPrev: false, subs: {}, outcome: "ok", over: false,
-    state: "normal", file: null, preset: null, len: "90", reviewing: "every", budget: "1000", ana: 0, tod: null, words: "", stab: "bible", cards: {}, cardWhy: {}, gsel: "ep6seg03", cutT: 0, cutPlaying: false, cutNotes: null, noteDraft: "", cutV: null, cutWhy: "",
+    state: "normal", proto: false, file: null, preset: null, len: "90", reviewing: "every", budget: "1000", ana: 0, tod: null, words: "", stab: "bible", cards: {}, cardWhy: {}, gsel: "ep6seg03", cutT: 0, cutPlaying: false, cutNotes: null, noteDraft: "", cutV: null, cutWhy: "",
   };
   let drawing = false;
   const draw = () => { if (!drawing) { drawing = true; requestAnimationFrame(() => { drawing = false; render(html`<${App}/>`, root); }); } };
@@ -37,6 +37,15 @@
   const stagesOf = (g) => [g.board && { kind: "storyboard", ver: "v1", pic: g.board }, g.still && { kind: "take", ver: g.take, pic: g.still }].filter(Boolean);
   const pickedAt = (g) => (S.at && ["storyboard", "take"].includes(S.at.kind) ? S.at : stagesOf(g).slice(-1)[0]);
   const openLineage = (gid, label) => jump({ screen: "graph", gsel: gid }, label);
+  /* Round 3 (Codex, yurun): the crumbs say where an object belongs, each ancestor a link to its home; where you came
+     from is only ever "Back to …" (BackTo). The drama shows its cover and name first, so it's clear which one is open. */
+  const TABS = { cast: "Characters", scenes: "Locations", props: "Props" };
+  const own = {
+    drama: () => [html`<img class="crumbimg" src=${P.eps[0].cover} alt=""/>${P.project.title}`, () => go("episodes")],
+    ep: () => ["EP006", () => go("episode")],
+    assets: () => ["Assets", () => set({ screen: "story", stab: "cast", asel: null, at: null, from: null })],
+    tab: (k) => [TABS[k], () => set({ screen: "story", stab: k, asel: null, at: null, from: null })],
+  };
   let tid = 0;
   const toast = (text, action) => { const id = ++tid; set({ toasts: [...S.toasts, { id, text, action }] }); setTimeout(() => set({ toasts: S.toasts.filter((t) => t.id !== id) }), 4200); };
   const money = (n) => "$" + n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -173,8 +182,10 @@
   function TopBar({ crumbs, right }) {
     const n = decisions().length;
     return html`<header class="top">
-      <button class="ibtn" aria-label="Back" onClick=${() => go(S.screen === "review" ? "episodes" : "home")}>${I("caret-left")}</button>
-      <div class="crumb">${crumbs.map((c, i) => html`${i > 0 && I("caret-right")}${i === crumbs.length - 1 ? html`<b>${c}</b>` : html`<span>${c}</span>`}`)}</div>
+      <nav class="crumb" aria-label="Where this belongs">${crumbs.map((c, i) => { const [t, to] = Array.isArray(c) ? c : [c];
+        return html`${i > 0 && I("caret-right")}${i === crumbs.length - 1 ? html`<b aria-current="page">${t}</b>` : to ? html`<button class="crumblink" onClick=${to}>${t}</button>` : html`<span>${t}</span>`}`; })}</nav>
+      ${/* Where you came from, apart from where it belongs: its own control, in the same place on every page. */ ""}
+      <${window.EXTRA.BackTo}/>
       <span class="grow"></span>
       ${right}
       <${ExportMenu}/>
@@ -354,7 +365,7 @@
     const list = P.eps.filter((e) => S.filter === "all" || e.status === S.filter || (S.filter === "work" && e.status === "line"));
     const open = (e) => e.code === "EP006" ? go("episode") : toast(e.code + ": only EP006 opens in this direction.");
     return html`<div class="main">
-      <${TopBar} crumbs=${[P.project.title, "Episodes"]}/>
+      <${TopBar} crumbs=${[own.drama(), "Episodes"]}/>
       <div class="body"><div class="scrollmain">
         <div class="bar2"><${EpisodeViews}/><span class="grow"></span><${ProjectChips}/></div>
         <${StopBanner}/>
@@ -479,7 +490,7 @@
       return html`<path class=${S.sel === a || S.sel === b ? "hot" : ""} d=${`M${x1},${y1} C${m},${y1} ${m},${y2} ${x2},${y2}`}/>`; };
     const sel = S.sel && byId[S.sel];
     return html`<div class="main">
-      <${TopBar} crumbs=${[P.project.title, "EP006", "Canvas"]}/>
+      <${TopBar} crumbs=${[own.drama(), ...(sel && sel.kind === "seg" ? [own.ep(), sel.id + (S.at ? " · " + S.at.kind + " " + S.at.ver : "")] : sel && homeTab(sel.id) ? [own.assets(), own.tab(homeTab(sel.id)), sel.label + " · " + sel.ver] : ["EP006"])]}/>
       <div class="body" style="position:relative">
         <div class=${"board " + (S.panning ? "panning" : "")} style=${`--grid:${48 * k}px;--gx:${x % (48 * k)}px;--gy:${y % (48 * k)}px;--dot:${k < 0.12 ? 0.8 : 1.15}px`} ref=${ref} onPointerDown=${down} onPointerMove=${move} onPointerUp=${up} onPointerLeave=${up} onWheel=${wheel}>
           <div class="layer" style=${`transform:translate(${x}px,${y}px) scale(${k})`}>
@@ -495,7 +506,7 @@
                 ${n.seg.still ? html`<button class=${S.sel === n.id && pickedAt(n.seg).kind === "take" ? "on" : ""} aria-label=${n.label + " take " + n.seg.take} onClick=${() => pick(n, { kind: "take", ver: n.seg.take })}><img src=${n.seg.still} alt="" draggable="false"/><span>${n.seg.take}</span><span class="play"><i>${I("play")}</i></span></button>` : html`<div class="none">${n.seg.take} accepted</div>`}</div></div>`)}
           </div>
         </div>
-        <div class="ctop"><${window.EXTRA.BackTo}/><${EpisodeViews}/><button class="follow" aria-pressed=${String(S.follow)} onClick=${() => set({ follow: !S.follow })}>${S.follow && html`<span class="live"></span>`}${S.follow ? "Following the agent" : "Follow the agent"}</button>
+        <div class="ctop"><${EpisodeViews}/><button class="follow" aria-pressed=${String(S.follow)} onClick=${() => set({ follow: !S.follow })}>${S.follow && html`<span class="live"></span>`}${S.follow ? "Following the agent" : "Follow the agent"}</button>
           <span class="grow"></span><${ProjectChips}/></div>
         ${S.dramaStop && html`<div style="position:absolute;left:0;right:0;top:60px"><${StopBanner}/></div>`}
         ${sel && (() => {
@@ -593,7 +604,7 @@
     const inSeg = (id, ver, label) => openStage(id, { kind: "take", ver }, label);
     const here = "Review · " + tk.seg + " " + tk.take;
     return html`<div class="main">
-      <${TopBar} crumbs=${[P.project.title, "EP006", "Takes"]} right=${html`<span class="muted hide-s" style="font-size:12px">${P.takes.length - done} of ${P.takes.length} waiting</span>`}/>
+      <${TopBar} crumbs=${[own.drama(), own.ep(), here]} right=${html`<span class="muted hide-s" style="font-size:12px">${P.takes.length - done} of ${P.takes.length} waiting</span>`}/>
       <${StopBanner}/>
       <div class="room">
         <nav class="reel" aria-label="Takes waiting">
@@ -667,27 +678,28 @@
         <div class="acts"><button class="btn" onClick=${() => set({ dialog: null })}>${d.cancel || "Cancel"}</button>
           <button class=${"btn " + (d.danger ? "danger" : "primary")} onClick=${() => { set({ dialog: null }); d.run && d.run(); }}>${d.ok}</button></div></div></div>`;
   }
+  /* The prototype's own controls (a screen, State, Outcome, theme): not the app. Collapsed by default in the bottom-left
+     corner, so a walkthrough uses only the app's own navigation (round 3: the old top strip read as app navigation). */
   function Proto() {
-    return html`<div class="proto" role="navigation" aria-label="Prototype">
-      <b>Pine Drama Studio · pro direction</b><span class="sep"></span>
-      <div class="seg" role="group" aria-label="Screen">${[["home", "Home"], ["reviews", "Reviews"], ["upload", "Upload"], ["analyzing", "Analyzing"], ["fountain", "Fountain"], ["script", "Script"], ["story", "Story"], ["episodes", "Episodes"], ["episode", "Episode"], ["canvas", "Canvas"], ["graph", "Graph"], ["review", "Review"], ["cut", "Cut"], ["delivery", "Delivery"], ["outofdate", "Out of date"]].map(([k, l]) => html`<button aria-pressed=${String(S.screen === k)} onClick=${() => go(k)}>${l}</button>`)}</div>
-      <span class="sep"></span>
-      <label class="select" style="gap:8px">State<select aria-label="State" value=${S.state} onChange=${(e) => { const v = e.target.value; set({ state: v, dramaStop: v === "stopping" ? "stopping" : v === "stopped" ? "stopped" : null }); }}>
+    if (!S.proto) return html`<button class="protobtn" aria-label="Prototype controls" title="Prototype controls: not part of the app" aria-expanded="false" onClick=${() => set({ proto: true })}>${I("sliders-horizontal")}Prototype</button>`;
+    return html`<section class="proto" aria-label="Prototype controls">
+      <div class="ph"><b>Prototype controls</b><span class="grow"></span><button class="ibtn" aria-label="Close the prototype controls" aria-expanded="true" onClick=${() => set({ proto: false })}>${I("x")}</button></div>
+      <p>Not part of the app: they set what the sample shows. Phase 1: steering, and editing the cut's spec · Canvas and Lineage read-only · sample project, our own test pictures.</p>
+      <span class="pl">Screen</span><div class="seg wrap" role="group" aria-label="Screen">${[["home", "Home"], ["reviews", "Reviews"], ["upload", "Upload"], ["analyzing", "Analyzing"], ["fountain", "Fountain"], ["script", "Script"], ["story", "Story"], ["episodes", "Episodes"], ["episode", "Episode"], ["canvas", "Canvas"], ["graph", "Graph"], ["review", "Review"], ["cut", "Cut"], ["delivery", "Delivery"], ["outofdate", "Out of date"]].map(([k, l]) => html`<button aria-pressed=${String(S.screen === k)} onClick=${() => go(k)}>${l}</button>`)}</div>
+      <label class="select">State<select aria-label="State" value=${S.state} onChange=${(e) => { const v = e.target.value; set({ state: v, dramaStop: v === "stopping" ? "stopping" : v === "stopped" ? "stopped" : null }); }}>
         ${[["normal", "Normal"], ["fresh", "Nothing out of date"], ["cutnewer", "Cut: a newer cut exists"], ["cutinputs", "Cut: draft inputs changed"], ["cutrefused", "Cut: drama-cli refuses the edit"], ["nostop", "No stop yet"], ["stopping", "Stopping"], ["stopped", "Stopped"], ["redline", "Red line"], ["budget", "Refused (no code)"], ["cap", "Cap reached"], ["env", "Pine access denied"]].map(([k, l]) => html`<option value=${k}>${l}</option>`)}</select></label>
-      <label class="select" style="gap:8px" title="What a send, a check or a Reconcile finds">Outcome<select aria-label="Outcome" value=${S.outcome} onChange=${(e) => set({ outcome: e.target.value })}>
+      <label class="select" title="What a send, a check or a Reconcile finds">Outcome<select aria-label="Outcome" value=${S.outcome} onChange=${(e) => set({ outcome: e.target.value })}>
         ${[["ok", "Goes through"], ["refused", "Not submitted (the engine says)"], ["unknown", "No answer"]].map(([k, l]) => html`<option value=${k}>${l}</option>`)}</select></label>
-      <span class="sep"></span>
       <div class="seg" role="group" aria-label="Theme">${[["dark", "Dark", "moon-stars"], ["light", "Light", "sun-dim"]].map(([k, l, ic]) => html`<button aria-pressed=${String(S.theme === k)} onClick=${() => set({ theme: k })}>${I(ic)}${l}</button>`)}</div>
-      <span class="sep"></span><span>Phase 1: steering, and editing the cut's spec · Canvas and Lineage read-only · sample project, our own test pictures</span>
-    </div>`;
+    </section>`;
   }
   function App() {
     applyTheme();
     const sc = S.screen;
     const main = { home: html`<${Home}/>`, reviews: html`<${Reviews}/>`, episodes: html`<${Episodes}/>`, canvas: html`<${Canvas}/>`, review: html`<${Review}/>` }[sc] || html`<${window.EXTRA[sc]}/>`;
-    return html`<${Proto}/><div class="app"><${Rail}/><${Side}/>${main}</div><${Dialog}/>
+    return html`<div class="app"><${Rail}/><${Side}/>${main}</div><${Proto}/><${Dialog}/>
       <div class="toasts" aria-live="polite">${S.toasts.map((t) => html`<div class="toast">${t.text}${t.action && html`<button onClick=${t.action.run}>${t.action.label}</button>`}</div>`)}</div>`;
   }
-  window.PD = { html, I, S, set, go, jump, openHome, openStage, openLineage, stagesOf, pickedAt, toast, money, Status, TopBar, StopBanner, EpisodeViews, ProjectChips, AgentPanel, SPENT_COVERS, useEffect, useRef, Mark, draw, Submission, submit, recheck };
+  window.PD = { html, I, S, set, go, own, jump, openHome, openStage, openLineage, stagesOf, pickedAt, toast, money, Status, TopBar, StopBanner, EpisodeViews, ProjectChips, AgentPanel, SPENT_COVERS, useEffect, useRef, Mark, draw, Submission, submit, recheck };
   // screens.js draws first, once its screens are registered.
 })();

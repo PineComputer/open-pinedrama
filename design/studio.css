@@ -1,6 +1,6 @@
 /* Pine Drama Studio, pro direction. Colours, type, spacing and radii come from themes.css and tokens.css;
    every colour here is one of those tokens or a mix of them. */
-:root { --rail: 52px; --side: 248px; --agent: 360px; --insp: 380px; --top: 52px; --proto: 40px; }
+:root { --rail: 52px; --side: 248px; --agent: 360px; --insp: 380px; --top: 52px; }
 * { box-sizing: border-box; }
 html, body, #root { height: 100%; }
 body { margin: 0; background: var(--canvas); color: var(--text-primary); font: var(--type-ui-weight) var(--type-ui-size)/var(--type-ui-line) var(--font-sans); -webkit-font-smoothing: antialiased; }
@@ -16,10 +16,14 @@ p { font-size: inherit; line-height: inherit; color: inherit; margin: 0; }
 .grow { flex: 1; min-width: 0; }
 
 /* ── prototype bar (not part of the product) ── */
-.proto { height: var(--proto); display: flex; align-items: center; gap: 10px; padding: 0 14px; background: var(--surface-container); border-bottom: 1px solid var(--border); font-size: 12px; color: var(--text-muted); overflow-x: auto; white-space: nowrap; }
-.proto b { color: var(--text-primary); font-weight: 600; }
-.proto .sep { width: 1px; height: 16px; background: var(--border); flex: none; }
-.app { height: calc(100% - var(--proto)); display: flex; min-height: 0; }
+/* The prototype's controls: a labelled toggle low in the left rail (above Settings, covering nothing), collapsed; the panel
+   opens in the bottom-left corner. Not part of the app. */
+.protobtn { position: fixed; left: 2px; bottom: 96px; z-index: 90; width: 48px; display: grid; justify-items: center; gap: 2px; padding: 6px 0; border-radius: var(--radius-medium); border: 1px dashed var(--border-input); background: var(--surface-container); color: var(--text-muted); font-size: 8.5px; letter-spacing: .02em; cursor: pointer; }
+.protobtn:hover { color: var(--text-primary); }
+.proto { position: fixed; left: 8px; bottom: 8px; z-index: 90; width: 360px; max-height: calc(100% - 16px); overflow: auto; display: grid; gap: 10px; padding: 12px 14px 14px; border-radius: var(--radius-2xl); border: 1px dashed var(--border-input); background: var(--surface-container); box-shadow: var(--shadow-dialog); font-size: 12px; color: var(--text-muted); }
+.proto .ph { display: flex; align-items: center; } .proto b { color: var(--text-primary); font-weight: 600; } .proto p { margin: 0; line-height: 1.5; }
+.proto .pl { margin-bottom: -6px; } .proto .seg.wrap { flex-wrap: wrap; border-radius: var(--radius-large); } .proto .select { justify-content: space-between; }
+.app { height: 100%; display: flex; min-height: 0; }
 
 /* ── buttons ── */
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 32px; padding: 0 14px; border-radius: var(--radius-button); border: 1px solid var(--border-input); background: transparent; color: var(--text-secondary); font-size: 12.5px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: background .12s, border-color .12s, color .12s; }
@@ -113,6 +117,10 @@ a.tag:hover { background: var(--hover); color: var(--text-primary); }
 .crumb { display: flex; align-items: center; gap: 6px; min-width: 0; font-size: 13px; color: var(--text-muted); white-space: nowrap; }
 .crumb b { color: var(--text-primary); font-weight: 600; }
 .crumb .ic { width: 12px; height: 12px; color: var(--text-subtle); }
+/* Round 3: each ancestor links to its home; the drama leads with its cover. */
+.crumblink { display: inline-flex; align-items: center; gap: 6px; border: 0; padding: 0; background: none; color: inherit; font: inherit; cursor: pointer; }
+.crumblink:hover { color: var(--text-primary); text-decoration: underline; text-underline-offset: 3px; }
+.crumbimg { width: 16px; height: 22px; border-radius: 3px; object-fit: cover; }
 .bar2 { flex: none; display: flex; align-items: center; gap: 10px; padding: 12px 16px; flex-wrap: wrap; }
 .body { flex: 1; min-height: 0; display: flex; }
 .scrollmain { flex: 1; min-width: 0; overflow: auto; }
@@ -626,7 +634,7 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
   .room { flex-direction: column; overflow: auto; } .reel { width: auto; flex-direction: row; border-right: 0; border-bottom: 1px solid var(--border); overflow-x: auto; }
   .reel h3 { display: none; } .ritem { grid-template-columns: 40px 1fr; min-width: 180px; } .ritem img { width: 40px; height: 70px; }
   .stage { flex: none; height: 72vh; } .screen { min-height: 0; padding: 12px; } .insp { width: auto; border-left: 0; flex: none; } .insp .iscroll { overflow: visible; } .search { width: 100%; }
-  .crumb > span, .crumb > .ic { display: none; } .controls { flex-wrap: wrap; gap: 10px; } .controls .muted { display: none; }
+  .crumb > :nth-last-child(n+4) { display: none; } .controls { flex-wrap: wrap; gap: 10px; } .controls .muted { display: none; }
   .epgrid { grid-template-columns: repeat(2, 1fr); } .bar2 .chip { display: none; }
   .formgrid, .anagrid, .biblegrid, .presets { grid-template-columns: 1fr; } .fpanes { grid-template-columns: 1fr; flex: none; padding: 0 16px; } .frev { overflow: auto; } .frevhead { flex-direction: column; align-items: stretch; padding: 16px; } .faccept { margin: 14px 16px 18px; }
   .body { flex-direction: column; overflow: auto; } .body > .scrollmain { flex: none; overflow: visible; } .body > .insp { flex: none; } .faccept { grid-template-columns: 1fr; } .eprow { grid-template-columns: 30px 48px 1fr; } .eprow .grow { display: none; }
@@ -652,6 +660,7 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
 .segnode .card > button { padding: 0; border: 0; font: inherit; color: inherit; text-align: inherit; cursor: pointer; }
 .segrow .segat { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0 0 6px; font-size: 12px; }
 .backto .ic { width: 14px; height: 14px; }
+.top .backto { margin-left: 6px; flex: none; border: 1px solid var(--border); }
 .segrow img, .segrow video { width: 64px; aspect-ratio: 9 / 16; border-radius: 6px; object-fit: cover; background: var(--surface-container); }
 .segrow .seghead { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; min-width: 0; }
 .segrow .seghead b { font: 600 12.5px var(--font-mono); }
@@ -794,7 +803,7 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
   .agentball { display: grid; }
 }
 @media (max-width: 1100px) {
-  .side.drawer-open { display: flex; position: fixed; left: var(--rail); top: var(--proto); bottom: 0; z-index: 60; box-shadow: var(--shadow-dialog); }
+  .side.drawer-open { display: flex; position: fixed; left: var(--rail); top: 0; bottom: 0; z-index: 60; box-shadow: var(--shadow-dialog); }
 }
 /* Codex round 3 (fix 1): one submission's state (app.js, Submission), wherever something is sent. */
 .subst { display: inline-flex; align-items: center; gap: 8px; min-width: 0; font-size: 12px; }

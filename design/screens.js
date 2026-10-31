@@ -1,7 +1,7 @@
 /* The rest of the flow in the pro direction: Upload, Analyzing, Fountain review, Story, Graph (lineage) and Cut,
    plus the setup steps and the stop cards. Uses the shell and helpers app.js exposes as window.PD. */
 (() => {
-  const { html, I, S, set, go, jump, openHome, openStage, openLineage, stagesOf, pickedAt, Submission, submit, toast, money, Status, TopBar, StopBanner, EpisodeViews, ProjectChips, AgentPanel, SPENT_COVERS, useEffect, useRef } = window.PD;
+  const { html, I, S, set, go, own, jump, openHome, openStage, openLineage, stagesOf, pickedAt, Submission, submit, toast, money, Status, TopBar, StopBanner, EpisodeViews, ProjectChips, AgentPanel, SPENT_COVERS, useEffect, useRef } = window.PD;
 
   /* ───── setup steps (sidebar) ───── */
   function SetupSteps() {
@@ -89,7 +89,7 @@
     useEffect(() => { if (S.ana >= P.setupSteps.length) return; const t = setTimeout(() => set({ ana: S.ana + 1 }), 1100); return () => clearTimeout(t); });
     const done = S.ana >= P.setupSteps.length;
     return html`<div class="main">
-      <${TopBar} crumbs=${[P.project.title, "Setup", "Script"]}/>
+      <${TopBar} crumbs=${[own.drama(), "Setup", "Script"]}/>
       <${StopBanner}/>
       <div class="scrollmain"><div class="wrap" style="max-width:1120px">
         <div class="greet"><div class="grow"><span class="kick">Step 1 of 4 · Script</span><h1>${done ? "Your Fountain is ready" : "Analyzing your script"}</h1>
@@ -111,7 +111,7 @@
     const ok = S.tod && S.words.trim().length >= 3;
     const hit = (l) => S.fsel && l.from && l.from.includes(S.fsel);
     return html`<div class="main">
-      <${TopBar} crumbs=${[P.project.title, "Setup", "Fountain review"]}/>
+      <${TopBar} crumbs=${[own.drama(), "Setup", "Fountain review"]}/>
       <${StopBanner}/>
       <div class="frev">
         <div class="frevhead"><div class="grow"><span class="kick">Step 1 of 4 · Your review</span><h2>Check what the rewrite changed</h2>
@@ -166,11 +166,12 @@
       ? html`<div class="pic"><img src=${src} alt=""/>${chip}</div>`
       : html`<div class="pic"><span class="empty">${shownOf(x)}'s picture isn't in this sample.</span>${shownOf(x) === x.accepted && Status("accepted")}</div>`);
     const now = (x) => shownOf(x) === x.ver;
+    const asset = S.stab !== "bible" && { cast: P.cast, scenes: P.places, props: P.props }[S.stab].find((x) => x.id === S.asel);
     const open = ["margaret", "garden"], decided = open.filter((k) => S.cards[k] && (S.cards[k] !== "back" || (S.cardWhy[k] || "").trim())).length;
     return html`<div class="main">
-      <${TopBar} crumbs=${(S.stab || "bible") === "bible" ? [P.project.title, "Story"] : [P.project.title, "Assets", { cast: "Characters", scenes: "Locations", props: "Props" }[S.stab]]}/>
+      <${TopBar} crumbs=${(S.stab || "bible") === "bible" ? [own.drama(), "Story"] : [own.drama(), own.assets(), ...(asset ? [own.tab(S.stab), asset.name + " · " + shownOf(asset)] : [own.tab(S.stab)[0]])]}/>
       <div class="body"><div class="scrollmain">
-        <div class="bar2"><${BackTo}/><span class="grow"></span><${ProjectChips}/></div>
+        <div class="bar2"><span class="grow"></span><${ProjectChips}/></div>
         <${StopBanner}/>
         <div style="padding:0 16px"><div class="tabsrow" style="margin:4px 0 18px">${story ? html`<h2 class="pagetitle">Story</h2>` : html`<div class="utabs" role="tablist">${tabs.map(([k, l, n]) => html`<button role="tab" aria-selected=${String(S.stab === k)} onClick=${() => set({ stab: k })}>${l}${n && html`<small>${n}</small>`}</button>`)}</div>`}
           <span class="grow"></span><span class="muted" style="font-size:12px">${story ? "Bible b0003 · accepted · EP001–EP012 written" : "Shared by every episode"}</span></div></div>
@@ -238,9 +239,10 @@
     const walk = (id, dir, acc) => GE.forEach(([a, b]) => { const [f, t] = dir ? [a, b] : [b, a]; if (f === id && !acc.has(t)) { acc.add(t); walk(t, dir, acc); } });
     walk(sel.id, false, up); walk(sel.id, true, down);
     const cols = ["Screenplay", "Bible", "Looks, plates, props", "Storyboards", "Takes", "Cut"];
-    // A2: the crumbs, the inspector and the picked node name one object. An item opened from an episode sits inside it, as Export does.
-    const inEp = lineageInEpisode();
-    const crumbs = [P.project.title, ...(inEp ? ["EP006"] : []), sel.t.replace(/^EP006 /, "") + " · " + sel.v, "Lineage"];
+    // A2: the crumbs, the inspector and the picked node name one object. The crumbs say where it belongs (round 3), never
+    // where Lineage was opened from; that is Back to's, and Export and the agent follow lineageInEpisode.
+    const tab = sel.of && { look: "cast", plate: "scenes", prop: "props" }[sel.k];
+    const crumbs = [own.drama(), ...(sel.episode ? [own.ep()] : tab ? [own.assets(), own.tab(tab)] : sel.home ? [[sel.home[0], () => set({ ...sel.home[1], from: null })]] : []), sel.t.replace(/^EP006 /, "") + " · " + sel.v, "Lineage"];
     // Lineage is a view of relations, not a home (§16): the inspector links to where the object lives.
     const at = { kind: sel.k, ver: sel.v };
     const home = sel.ep ? ["EP006 · " + sel.ep, { screen: "canvas", sel: sel.ep, esel: sel.ep, at }] : sel.home && [sel.home[0], { ...sel.home[1], at }];
@@ -249,7 +251,7 @@
       <${TopBar} crumbs=${crumbs}/>
       <${StopBanner}/>
       <div class="body"><div class="scrollmain">
-        <div class="bar2"><${BackTo}/><span class="grow"></span><${ProjectChips}/></div>
+        <div class="bar2"><span class="grow"></span><${ProjectChips}/></div>
         <div class="graphwrap" role="group" aria-label="Graph" tabindex="0"><div class="graph" style=${`width:${24 * 2 + 6 * W + 5 * GX}px;height:${24 * 2 + 4 * H + 3 * GY + 24}px`}>
           ${cols.map((c, i) => html`<span class="gcol" style=${`left:${24 + i * (W + GX)}px`}>${c}</span>`)}
           <svg class="gwires" width="100%" height="100%">${GE.map(([a, b]) => { const A = pos(by[a]), B = pos(by[b]); const x1 = A.x + W, y1 = A.y + H / 2 + 24, x2 = B.x, y2 = B.y + H / 2 + 24, m = (x1 + x2) / 2;
@@ -311,7 +313,7 @@
       <tr class="grp"><td colspan="3"><b>${head}</b></td><td class="act">${state(g, rows)}</td></tr>
       ${rows.map(row)}` : null; };
     return html`<div class="main">
-      <${TopBar} crumbs=${[P.project.title, "Out of date"]}/>
+      <${TopBar} crumbs=${[own.drama(), "Out of date"]}/>
       <div class="body"><div class="scrollmain">
         <div class="bar2"><span class="delivsum">${items.length ? html`<b>${items.length} items</b> are out of date. The agent that made each one redoes it.` : "Nothing is out of date."}</span></div>
         <${StopBanner}/>
@@ -384,7 +386,7 @@
     const discard = () => { set({ cutEd: cutBase(), cutEdHist: [], cutRebased: false, cutCheck: null, cutCompare: false }); toast("Draft discarded. Nothing was applied."); };
     let acc = 0;
     return html`<div class="main">
-      <${TopBar} crumbs=${[P.project.title, "Episodes", "EP006", "Cut " + c.base.v]}/>
+      <${TopBar} crumbs=${[own.drama(), own.ep(), "Cut " + c.base.v]}/>
       <${StopBanner}/>
       <div class="room is-cut">
         <section class="stage">
@@ -494,7 +496,7 @@
     const open = (e, v) => (e.code === "EP006" ? go("cut") : toast(`Opens ${e.code} › Cut ${v}. Only EP006's cut opens in this sample.`));
     const delivered = P.eps.filter((e) => e.cut && e.cut.accepted), waiting = P.eps.filter((e) => e.cut && e.cut.st === "you");
     return html`<div class="main">
-      <${TopBar} crumbs=${[P.project.title, "Delivery"]}/>
+      <${TopBar} crumbs=${[own.drama(), "Delivery"]}/>
       <div class="body"><div class="scrollmain">
         <div class="bar2"><span class="delivsum"><b>${delivered.length} of ${P.project.episodes}</b> episodes delivered · ${waiting.length} cuts wait for you</span><span class="grow"></span>
           <button class="btn sm" disabled=${!delivered.length} onClick=${() => toast(`Downloads the ${delivered.length} accepted cut${delivered.length > 1 ? "s" : ""} as one zip, each file named by episode and cut version.`)}>${I("download-simple")}Download accepted (${delivered.length})</button></div>
@@ -518,10 +520,11 @@
     useEffect(() => { const row = document.querySelector(".segrow.sel"), box = row && row.closest(".scrollmain"); if (!box) return;
       const r = row.getBoundingClientRect(), b = box.getBoundingClientRect(); box.scrollTop += r.top - b.top - (b.height - r.height) / 2; }, []);
     const place = (id) => (P.places.find((p) => p.id === id) || {}).name || id;
+    const pickedSeg = S.esel && P.scenes.flatMap((sc) => sc.segs).find((g) => g.id === S.esel);
     return html`<div class="main">
-      <${TopBar} crumbs=${[P.project.title, "Episodes", ep.code]}/>
+      <${TopBar} crumbs=${[own.drama(), ...(pickedSeg ? [own.ep(), pickedSeg.id + " · " + pickedAt(pickedSeg).kind + " " + pickedAt(pickedSeg).ver] : [ep.code])]}/>
       <div class="body"><div class="scrollmain">
-        <div class="bar2"><${BackTo}/><${EpisodeViews}/><span class="grow"></span><${ProjectChips}/></div>
+        <div class="bar2"><${EpisodeViews}/><span class="grow"></span><${ProjectChips}/></div>
         <${StopBanner}/>
         <div class="ephead"><h2>${ep.code}<span class="muted"> · ${ep.title}</span></h2><span class="muted">${ep.now}</span><span class="grow"></span><span class="mono muted">${money(ep.spent)}</span></div>
         ${P.scenes.map((sc) => html`<section class="panel segscene"><h3>${I("film-strip")}Scene ${sc.n} · ${place(sc.place)} · ${sc.time}<span class="grow"></span>
@@ -546,7 +549,7 @@
     const lines = P.fountain.map((l) => (l.ask ? { ...l, tx: l.tx.replace(" - ? ", " - DAY "), ask: false } : l));
     const doc = html`<div class="fdoc">${lines.map((l) => (l.gap ? html`<div class="gap"></div>` : html`<div class=${"fl " + l.el}>${l.tx}</div>`))}</div>`;
     return html`<div class="main">
-      <${TopBar} crumbs=${[P.project.title, "Script"]}/>
+      <${TopBar} crumbs=${[own.drama(), "Script"]}/>
       <div class="body"><div class="scrollmain">
         <div class="bar2"><span class="grow"></span><${ProjectChips}/></div>
         <${StopBanner}/>
