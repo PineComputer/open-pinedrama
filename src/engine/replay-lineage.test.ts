@@ -97,6 +97,19 @@ describe("replay's lineage", () => {
     expect(own.nodes.find((node) => node.properties.id === "episodes/EP001/segments/seg01")!.properties).toMatchObject({ fresh: false, problems: expect.arrayContaining(["Changed selection: episodes/EP001/multi_panel_storyboard/seg01/line-art/accepted.json"]) });
   });
 
+  it("on a sample's own export, says accepted what this stop's history accepted, not what the project had when it was exported", () => {
+    // FITL r2's export has EP001's cut and most takes never accepted; replay's maker accepts them, and the episode is done.
+    const exported = replayLineage({ ...progress, episodes: { EP001: { ...progress.episodes.EP001, takes: { seg01: { count: 2, accepted: false } }, cut: { current: "v1", accepted: null } } } }, returned).bytes;
+    const done: ReplayProgress = { ...progress, episodes: { EP001: { ...progress.episodes.EP001, cut: { current: "v1", accepted: "v1" } } } };
+    const own = parseLineage(JSON.parse(new TextDecoder().decode(lineageAt(done, exported))));
+    const by = (id: string) => own.nodes.find((node) => node.id === id);
+    expect(by("episodes/EP001/edit")).toMatchObject({ version: "v1", accepted: "v1" });
+    expect(by("episodes/EP001/segments/seg01")).toMatchObject({ version: "t02", accepted: "t02" });
+    // And the other way: what the export had accepted waits for the maker until this stop's history accepts it.
+    const waiting = parseLineage(JSON.parse(new TextDecoder().decode(lineageAt(progress, replayLineage(done, returned).bytes))));
+    expect(waiting.nodes.find((node) => node.id === "episodes/EP001/edit")).toMatchObject({ version: "v1", accepted: null });
+  });
+
   it("has no episode stage before the episode's boards are drawn", () => {
     const lineage = read({ ...progress, episodes: { EP001: { segments: ["seg01"] } } });
     expect(lineage.nodes.map((node) => node.id).filter((id) => id.startsWith("episodes/"))).toEqual(["episodes/EP001/breakdown"]);

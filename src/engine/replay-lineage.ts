@@ -142,7 +142,7 @@ interface ExportNode {
   id: number;
   inputs?: { name: string; link: number | null }[];
   outputs?: { links: number[] | null }[];
-  properties: { id: string; kind: string; section: string; fresh?: boolean | null; problems?: string[] };
+  properties: { id: string; kind: string; section: string; accepted?: string | null; fresh?: boolean | null; problems?: string[] };
 }
 interface Export {
   nodes: ExportNode[];
@@ -158,7 +158,7 @@ interface Export {
  */
 export function lineageAt(progress: ReplayProgress, exported: Uint8Array): Uint8Array {
   const workflow = JSON.parse(new TextDecoder().decode(exported)) as Export;
-  const made = new Set(stages(progress).map((stage) => stage.id));
+  const made = new Map(stages(progress).map((stage) => [stage.id, stage]));
   const byId = new Map(workflow.nodes.map((node) => [node.properties.id, node]));
   const kept = new Map<string, boolean>();
   const keep = (node: ExportNode): boolean => {
@@ -172,6 +172,13 @@ export function lineageAt(progress: ReplayProgress, exported: Uint8Array): Uint8
     return kept.get(id)!;
   };
   const nodes = workflow.nodes.filter(keep);
+  // Accepted as this stop's history accepted it: the sample's own export says what its project had accepted when it was
+  // exported, which a replay that has the maker accept an episode's takes and cut would otherwise contradict (QA, FITL r2
+  // EP001: Done in the sidebar, its cut and takes waiting on the Canvas).
+  for (const node of nodes) {
+    const stage = made.get(node.properties.id);
+    if (stage) node.properties = { ...node.properties, accepted: stage.accepted };
+  }
   // What this stop's history leaves out of date, as drama-cli would say it (outOfDate), on the sample's own export too.
   for (const [id, problems] of outOfDate(progress)) {
     const node = byId.get(id);
