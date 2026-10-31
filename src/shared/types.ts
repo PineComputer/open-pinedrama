@@ -491,6 +491,8 @@ export interface ReviewView extends ReviewSummary {
   refusals: Refusal[];
   /** Why the stop's refusals didn't read, when they didn't. */
   refusalsError?: string;
+  /** The project's folder as the stop's status report names it, which the refusals' paths start with (labels.ts firstLine). */
+  project?: string;
   /** On a question whose turn recorded a screenplay version: that version (vN), which the decision accepts or sends back. */
   rewrite?: string;
 }
@@ -507,6 +509,21 @@ export interface ChatMessage {
    * accepted or sent back with its version and reason, and their words (D70: the chat is the one log).
    */
   decision?: DecisionRecord;
+  /** The agent's message that asked the maker at a stop: the stop, with what drama-cli said there (D70). */
+  stop?: ChatStop;
+}
+
+/**
+ * A stop for the maker in the conversation: drama-cli's refusals it asks about, drawn as drama-cli's own messages before the
+ * agent's (design/app.js, Said), and whether it still waits: open while the maker can answer, answered once they did,
+ * ended when its session ended first.
+ */
+export interface ChatStop {
+  reviewId: string;
+  state: "open" | "answered" | "ended";
+  refusals: Refusal[];
+  refusalsError?: string;
+  project?: string;
 }
 
 /** A decision as the conversation shows it: the review it answered, the maker's words and each item's verdict. */

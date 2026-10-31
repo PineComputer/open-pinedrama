@@ -22,7 +22,7 @@ const view = (row: MessageRow): SubmissionView => ({ id: row.id, sessionId: row.
 
 const message = (id: string) => get<MessageRow>("select * from scope_messages where id = ?", id);
 
-export async function sendMessage(dramaId: string, scope: string, submissionId: string, text: string): Promise<SubmissionView> {
+export async function sendMessage(dramaId: string, scope: string, submissionId: string, text: string, file?: number): Promise<SubmissionView> {
   if (!submissionId) throw new StudioError("submission-missing", "A message needs its submissionId.");
   const known = message(submissionId);
   if (known) {
@@ -42,11 +42,11 @@ export async function sendMessage(dramaId: string, scope: string, submissionId: 
     throw new StudioError("episode-stopped", `${scope}'s Computer stopped: Resume it to continue in a new session with its files.`, 409);
   if (!open && episode?.state === "done") throw new StudioError("episode-done", `${scope} is done; this version can't reopen a finished episode.`, 409);
   if (!open) throw new StudioError("no-session-open", `${episode ? scope : "The setup"} has no open session in this version.`, 409);
-  // As the chat sends: the open session's running turn is steered, its question answered, or a run started.
+  // As the chat sends: the open session's running turn is steered, its question answered (with the file, if any), or a run started.
   const at = now();
   run("insert into scope_messages (id, drama_id, scope, text, state, session_id, created_at, updated_at) values (?, ?, ?, ?, 'sending', ?, ?, ?)", submissionId, dramaId, scope, text, open.id, at, at);
   try {
-    await chat(open.id, text);
+    await chat(open.id, text, file);
   } catch (error) {
     // Refused by the engine: nothing was taken, so there is no such submission and it may be sent again.
     if (error instanceof StudioError) run("delete from scope_messages where id = ?", submissionId);

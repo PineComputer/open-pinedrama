@@ -651,7 +651,8 @@ describe("a drama in replay", () => {
     for (const [key, value] of Object.entries({ title: "Messages", language: "en", parallel: "1", perComputer: "1", length: "90", preset: "en-us-live-sfw", screenplayLanguage: "en", screenplay: "0" })) form.set(key, value);
     form.append("files", new File(["EPISODE 1\nLin enters."], "screenplay.txt", { type: "text/plain" }));
     const { id } = await call<{ id: string }>("POST", "/api/dramas", form);
-    const send = (scope: string, submissionId: string, text = "Make the office brighter.") => call<SubmissionView>("POST", `/api/dramas/${id}/messages`, { scope, submissionId, text });
+    const send = (scope: string, submissionId: string, text = "Make the office brighter.", file?: number) =>
+      call<SubmissionView>("POST", `/api/dramas/${id}/messages`, { scope, submissionId, text, ...(file === undefined ? {} : { file }) });
     const kept = (submissionId: string) => get<{ state: string }>("select state from scope_messages where id = ?", submissionId)?.state;
     const sessionsOf = (code: string) => all<{ id: string }>("select s.id from sessions s join episodes e on e.id = s.episode_id where s.drama_id = ? and e.number = ?", id, Number(code.slice(2))).length;
     // The setup's session waits on the screenplay rewrite's verdict, which is given on Script, never in words.
@@ -660,12 +661,20 @@ describe("a drama in replay", () => {
     expect(await call<ChatView>("GET", `/api/sessions/${setupSession}/chat`)).toMatchObject({ sends: "review", reviewId: rewrite.id, rewrite: expect.stringMatching(/^v\d+$/) });
     await expect(send("setup", "sub-0")).rejects.toThrow(/Decide this in its review/);
     expect(kept("sub-0")).toBeUndefined();
+    // A file goes only with an answer to the agent's question (D75), never with a message the rewrite's verdict owns.
+    const reference = new FormData();
+    reference.set("file", new File(["EPISODE 1\nLin enters. Wei waits."], "full-screenplay.pdf", { type: "application/pdf" }));
+    const attached = await call<FileItem>("POST", `/api/dramas/${id}/references`, reference);
+    await expect(send("setup", "sub-0f", "Here it is.", attached.id)).rejects.toThrow("Only an answer to the agent's question can carry a file.");
+    expect(kept("sub-0f")).toBeUndefined();
     await acceptRewrite(id);
-    // Its plain question takes a message as the answer, in the session that asked it, once per submission id.
+    // Its plain question takes a message as the answer, in the session that asked it, once per submission id, with the
+    // file the composer attached handed to the session in the answer's words.
     const question = await until("the setup question", openReview(id, (item) => item.kind === "question"));
     const asked = get<{ session_id: string }>("select session_id from reviews where id = ?", question.id)!.session_id;
-    expect(await send("setup", "sub-1", "He is 32.")).toMatchObject({ id: "sub-1", state: "sent", sessionId: asked });
-    expect(await send("setup", "sub-1", "He is 32.")).toMatchObject({ id: "sub-1", state: "sent", sessionId: asked });
+    expect(await send("setup", "sub-1", "He is 32.", attached.id)).toMatchObject({ id: "sub-1", state: "sent", sessionId: asked });
+    expect(await send("setup", "sub-1", "He is 32.", attached.id)).toMatchObject({ id: "sub-1", state: "sent", sessionId: asked });
+    expect(get<{ answer: string }>("select answer from reviews where id = ?", question.id)?.answer).toBe(`He is 32.\nThe file I attached: attachments/reference-${attached.id}-full-screenplay.pdf`);
     expect(await call("GET", "/api/submissions/sub-1")).toMatchObject({ id: "sub-1", state: "sent", sessionId: asked });
     expect(get<{ state: string }>("select state from reviews where id = ?", question.id)?.state).not.toBe("open");
     await approveAll((await until("the looks", openReview(id, (item) => item.kind === "looks"))).id);

@@ -1,6 +1,6 @@
 // The refusals a stop returns, kept per turn: as they read, or, when they don't, why not, so the
 // stop's card shows that instead of a kind it can't know.
-import { mkdtempSync } from "node:fs";
+import { mkdtempSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { beforeAll, describe, expect, it } from "vitest";
@@ -31,6 +31,15 @@ describe("a stop's refusals", () => {
 
   it("are none for a turn that returned none", () => {
     expect(refusals.turnRefusals("t3")).toEqual({ refusals: [] });
+  });
+
+  it("come with the project's folder their paths start with, from the same turn's status report, and none without one", async () => {
+    const { recordStatus } = await import("./status.ts");
+    refusals.recordRefusals("s1", "t4", bytes(`${JSON.stringify({ error: RED_LINE })}\n`));
+    recordStatus("s1", "t4", readFileSync(path.resolve("fixtures/status/boards.json")));
+    expect(refusals.turnRefusals("t4")).toEqual({ refusals: [RED_LINE], project: "/work/drama" });
+    // A report of another turn is not this stop's.
+    expect(refusals.turnRefusals("t1")).toEqual({ refusals: [RED_LINE] });
   });
 
   it("stay as the turn first returned them", () => {

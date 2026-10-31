@@ -5,16 +5,19 @@
 import { useEffect, useRef, useState } from "react";
 import type { Names } from "../../shared/names.ts";
 import { type ProjectView, takesInFlight } from "../../shared/project.ts";
-import type { ChatView, ComputerView, DecisionRecord, DramaView, FileItem, SessionRecord, SessionView, SubmissionView } from "../../shared/types.ts";
+import type { Refusal } from "../../shared/refusal.ts";
+import type { ChatMessage, ChatStop, ChatView, ComputerView, DecisionRecord, DramaView, FileItem, SessionRecord, SessionView, SubmissionView } from "../../shared/types.ts";
 import { api, ApiError, useAction, useResource } from "../api.ts";
 import { Submission, useSubmission } from "../components/Submission.tsx";
 import { Dialog } from "../components/Dialog.tsx";
+import { StatusChip } from "../components/StatusChip.tsx";
 import { Icon } from "../icons.tsx";
 import { useT } from "../i18n.ts";
-import { errorText, isPaused, isSettingUp, openSession, itemName } from "../labels.ts";
+import { errorText, firstLine, isPaused, isSettingUp, openSession, itemName } from "../labels.ts";
 import { Markdown } from "../Markdown.tsx";
 import { Link } from "@tanstack/react-router";
 import { Watch } from "../screens/Crew.tsx";
+import { type AgentFocus, stopAnchor } from "./openInAgent.tsx";
 
 export type AgentMode = "open" | "closed";
 
@@ -133,7 +136,7 @@ function SessionActions({ drama, session, computer, inFlight }: { drama: DramaVi
  * The panel follows the page's scope (D31 as amended): its episode, else the setup, the project's own session (Script, the
  * Bible, the shared assets, and the pages of no one episode). A pin changes the scope to another episode or the setup.
  */
-export function AgentPanel({ drama, episode, onCollapse }: { drama: DramaView; episode?: string; onCollapse: () => void }) {
+export function AgentPanel({ drama, episode, focus, onCollapse }: { drama: DramaView; episode?: string; focus?: AgentFocus & { at: number }; onCollapse: () => void }) {
   const { t } = useT();
   const id = drama.id;
   const project = useResource<ProjectView>(`/api/dramas/${id}/project`, [`project:${id}`]);
@@ -150,6 +153,14 @@ export function AgentPanel({ drama, episode, onCollapse }: { drama: DramaView; e
   // An episode is a scope only if the project has it: a page that names one it hasn't (Not found) follows the setup.
   const row = (code?: string) => (code ? drama.episodeRows.find((episodeRow) => episodeRow.code === code) : undefined);
   const pageScope = row(episode) ? episode! : "setup";
+  // Open in Agent (openInAgent.tsx): a page names a stop's session, pinned unless it is the page's own, and its message,
+  // shown and focused once the conversation has it. Set as the request comes, during render (react.dev, "Adjusting some
+  // state when a prop changes"), so the panel never shows another session first.
+  const [asked, setAsked] = useState<{ at: number; reviewId: string; shown: boolean }>();
+  if (focus && focus.at !== asked?.at) {
+    setAsked({ at: focus.at, reviewId: focus.reviewId, shown: false });
+    setPinned(focus.scope === pageScope ? undefined : focus.scope);
+  }
   const scope = pinned ?? pageScope;
   // The scope's open session, if any: what the status line and the line's target say.
   const live = openSession(drama, scope);
@@ -200,16 +211,28 @@ export function AgentPanel({ drama, episode, onCollapse }: { drama: DramaView; e
   // The conversation, the one log (D70): what the maker said or decided, what the agent said, and its steps in place, the
   // newest last; the studio's own goals are not part of it. A step and a message the agent gave in the same words, next to
   // each other in either order, are one event: shown once, as the step.
-  const conversation = (chat.data?.messages ?? [])
+  const told = (chat.data?.messages ?? [])
     .filter((message) => (message.kind === "input" && !message.brief) || message.kind === "answer" || message.kind === "activity" || message.kind === "progress" || message.kind === "question" || message.kind === "result")
-    .filter((message, n, all) => !(message.kind === "progress" && [all[n - 1], all[n + 1]].some((next) => next?.kind === "activity" && next.text === message.text)))
-    .slice(-20);
+    .filter((message, n, all) => !(message.kind === "progress" && [all[n - 1], all[n + 1]].some((next) => next?.kind === "activity" && next.text === message.text)));
+  // The newest twenty, and back to the stop a page asked to see, however long ago it was.
+  const askedAt = asked ? told.findIndex((message) => message.stop?.reviewId === asked.reviewId) : -1;
+  const conversation = told.slice(Math.max(0, askedAt >= 0 ? Math.min(askedAt, told.length - 20) : told.length - 20));
   const lastStep = conversation.findLast((message) => message.kind === "activity");
   // The newest at the bottom, in view, as chat apps keep it.
   const scroller = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (scroller.current) scroller.current.scrollTop = scroller.current.scrollHeight;
   }, [conversation.length, inView?.sessionId]);
+  // The asked stop's message, once in the conversation: in view and focused, once (design/app.js, openInAgent).
+  const askedStop = askedAt >= 0 ? told[askedAt]!.stop : undefined;
+  useEffect(() => {
+    if (!asked || asked.shown || !askedStop) return;
+    const message = document.getElementById(stopAnchor(askedStop.reviewId, askedStop.refusals.length > 0));
+    if (!message) return;
+    message.scrollIntoView({ block: "center" });
+    message.focus({ preventScroll: true });
+    setAsked({ ...asked, shown: true });
+  });
   return (
     <aside className="agent" id="agent" aria-label={t("agent.label")}>
       <div className="ahead">
@@ -295,6 +318,8 @@ export function AgentPanel({ drama, episode, onCollapse }: { drama: DramaView; e
                   <Icon name={message === lastStep && status === "running" ? "circle-notch" : "check-circle"} className="ic" />
                   <span>{message.text}</span>
                 </p>
+              ) : message.stop ? (
+                <Stop key={message.id} message={message} stop={message.stop} links={links} />
               ) : (
                 <Markdown key={message.id} text={message.text} links={links} className="msg" />
               ),
@@ -304,6 +329,49 @@ export function AgentPanel({ drama, episode, onCollapse }: { drama: DramaView; e
       </div>
       {live && <Line dramaId={id} scope={scope} target={name(scope)} chat={chat.data} onSent={reload} />}
     </aside>
+  );
+}
+
+/**
+ * A stop in the conversation (D70): what drama-cli said there, each refusal its own message, then the agent's words that
+ * carry them. The stop's anchor (openInAgent.tsx) is drama-cli's first message, else the agent's question.
+ */
+function Stop({ message, stop, links }: { message: ChatMessage; stop: ChatStop; links: Map<string, string> }) {
+  const { t } = useT();
+  return (
+    <>
+      {stop.refusals.map((refusal, n) => (
+        <Said key={n} refusal={refusal} stop={stop} anchor={n === 0 ? stopAnchor(stop.reviewId, true) : undefined} />
+      ))}
+      {stop.refusalsError && <p className="error small">{t("said.unread", { error: stop.refusalsError })}</p>}
+      <Markdown text={message.text} links={links} className="msg" anchor={stop.refusals.length ? undefined : stopAnchor(stop.reviewId, false)} />
+    </>
+  );
+}
+
+/**
+ * One thing drama-cli said, as its own message (design/app.js, Said; SPEC DramaCliMessage): who said it and its code, whether
+ * its question still waits, its first line, and its whole words, paths included, collapsed in NodePanel's mono Why.
+ */
+function Said({ refusal, stop, anchor }: { refusal: Refusal; stop: ChatStop; anchor?: string }) {
+  const { t } = useT();
+  return (
+    <div className="msg said" aria-label={t("said.label", { code: refusal.code })} {...(anchor ? { id: anchor, tabIndex: -1 } : {})}>
+      <p className="saidhead">
+        <span className="st">
+          <Icon name="info" className="ic" />
+          drama-cli
+        </span>
+        <code>{refusal.code}</code>
+        <span className="fill" />
+        {stop.state === "open" ? <StatusChip status="you" label={t("said.waiting")} /> : <span className="muted">{t(stop.state === "answered" ? "said.answered" : "said.ended")}</span>}
+      </p>
+      <p>{firstLine(refusal.message, stop.project)}</p>
+      <details className="basedet">
+        <summary>{t("said.whole")}</summary>
+        <span className="why">{refusal.message}</span>
+      </details>
+    </div>
   );
 }
 
@@ -334,14 +402,25 @@ function Decided({ decision, episode, names }: { decision: DecisionRecord; episo
  * session or a new one. A message goes through POST /api/dramas/:id/messages {scope, submissionId, text}, once per draft
  * under one submission id with the shared Submission states, the engine's refusal in labels.ts's words. While the open
  * session waits on a review it takes no message (the engine refuses "decide-in-review"), so the line points to the
- * decision instead: Script at the version, for a screenplay rewrite; the review room for files.
+ * decision instead: Script at the version, for a screenplay rewrite; the review room for files. While a question waits
+ * the line is the answer, and can carry one file (D75; design/app.js, the composer): added to the drama first, as an
+ * answer's file always is, then handed to the session with the answer.
  */
 function Line({ dramaId, scope, target, chat, onSent }: { dramaId: string; scope: string; target: string; chat?: ChatView; onSent: () => void }) {
   const { t } = useT();
   const [text, setText] = useState("");
+  const answering = chat?.sends === "answer";
+  const [attached, setAttached] = useState<FileItem>();
+  const picker = useRef<HTMLInputElement>(null);
+  const upload = useAction(async (chosen: File) => {
+    const form = new FormData();
+    form.set("file", chosen);
+    setAttached(await api<FileItem>(`/api/dramas/${dramaId}/references`, { method: "POST", body: form }));
+  });
+  const file = answering ? attached : undefined;
   const submission = useRef(crypto.randomUUID());
   const { sending, send, check } = useSubmission({
-    submit: () => api(`/api/dramas/${dramaId}/messages`, { method: "POST", json: { scope, submissionId: submission.current, text } }),
+    submit: () => api(`/api/dramas/${dramaId}/messages`, { method: "POST", json: { scope, submissionId: submission.current, text, ...(file ? { file: file.id } : {}) } }),
     // The engine's word on the submission (GET /api/submissions/:id): found is taken; 404 is nothing submitted.
     taken: async () => {
       try {
@@ -356,17 +435,18 @@ function Line({ dramaId, scope, target, chat, onSent }: { dramaId: string; scope
   useEffect(() => {
     if (sending.state !== "sent") return;
     setText("");
+    setAttached(undefined);
     submission.current = crypto.randomUUID();
     onSent();
   }, [sending.state]);
   // Waiting on a review the session takes no message; the status line links to it (once).
   if (chat?.sends === "review") return null;
-  const busy = sending.state === "sending" || sending.state === "checking";
-  const placeholder = chat?.sends === "answer" ? t("talk.answer") : chat?.sends === "steer" ? t("talk.steer") : t("talk.run");
+  const busy = sending.state === "sending" || sending.state === "checking" || upload.busy;
+  const placeholder = answering ? t("agent.answerWho", { who: target }) : chat?.sends === "steer" ? t("talk.steer") : t("talk.run");
   return (
     <div className="composer">
       <textarea
-        aria-label={t("agent.message")}
+        aria-label={answering ? t("agent.yourAnswer") : t("agent.message")}
         value={text}
         disabled={busy}
         placeholder={placeholder}
@@ -375,22 +455,49 @@ function Line({ dramaId, scope, target, chat, onSent }: { dramaId: string; scope
           if (event.key === "Enter" && (event.metaKey || event.ctrlKey) && text.trim() && !busy) void send();
         }}
       />
+      {file && (
+        <span className="chip plain">
+          <Icon name="file-text" className="ic" />
+          <span className="mono">{file.name}</span>
+          <button type="button" className="ibtn" aria-label={t("agent.removeFile", { name: file.name })} disabled={busy} onClick={() => setAttached(undefined)}>
+            <Icon name="x" className="ic" />
+          </button>
+        </span>
+      )}
       <div className="crow">
+        {answering && !file && (
+          <button type="button" className="ibtn" aria-label={t("review.attachFile")} title={t("review.attachHint")} disabled={busy} onClick={() => picker.current?.click()}>
+            <Icon name="plus" className="ic" />
+          </button>
+        )}
+        <input
+          ref={picker}
+          type="file"
+          accept=".txt,.md,.markdown,.fountain,.fdx,.docx,.pdf,.doc,image/png,image/jpeg,image/webp"
+          hidden
+          onChange={(event) => {
+            const chosen = event.target.files?.[0];
+            event.target.value = "";
+            if (chosen) void upload.run(chosen);
+          }}
+        />
         <span className="fill">{t("agent.toWho", { who: target })}</span>
         <button type="button" className="send" aria-label={t("talk.send")} disabled={!text.trim() || busy} onClick={() => void send()}>
           <Icon name="arrow-up" className="ic" />
         </button>
       </div>
+      {upload.error !== undefined && <p className="error small">{errorText(upload.error, t)}</p>}
       <Submission sending={sending} to={target} kept={t("agent.messageKept")} onSend={() => void send()} onCheck={() => void check()} />
     </div>
   );
 }
 
 /** The sidebar collapsed: a ball in the window's corner with the decisions waiting, turning while an agent works. */
-export function AgentBall({ waiting, busy, onOpen }: { waiting: number; busy: boolean; onOpen: () => void }) {
+export function AgentBall({ waiting, asking, busy, onOpen }: { waiting: number; asking: number; busy: boolean; onOpen: () => void }) {
   const { t } = useT();
+  // The questions waiting for the maker's answer are said too (design/app.js, the ball's label); nothing visual is added.
   return (
-    <button type="button" className={busy ? "ball busy" : "ball"} aria-label={t("agent.open", { n: waiting })} aria-expanded="false" title={t("agent.openKey")} onClick={onOpen}>
+    <button type="button" className={busy ? "ball busy" : "ball"} aria-label={asking ? t("agent.openAsking", { n: waiting, asking }) : t("agent.open", { n: waiting })} aria-expanded="false" title={t("agent.openKey")} onClick={onOpen}>
       <Icon name="robot" className="ic" />
       {waiting > 0 && <span className="badge">{waiting}</span>}
     </button>

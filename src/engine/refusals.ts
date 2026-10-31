@@ -3,6 +3,7 @@
 // with what was wrong, and the stop shows that instead.
 import { parseRefusals, type Refusal } from "../shared/refusal.ts";
 import { get, now, run } from "./db.ts";
+import { turnProject } from "./status.ts";
 
 export function recordRefusals(sessionId: string, turnId: string, bytes: Uint8Array): void {
   const body = new TextDecoder().decode(bytes);
@@ -23,9 +24,14 @@ export function recordRefusals(sessionId: string, turnId: string, bytes: Uint8Ar
   );
 }
 
-/** The refusals the turn's stop asked about: none when it returned none, or why its file didn't read. */
-export function turnRefusals(turnId: string): { refusals: Refusal[]; refusalsError?: string } {
+/**
+ * The refusals the turn's stop asked about: none when it returned none, or why its file didn't read; with the project's
+ * folder their paths start with, from the same turn's status report, when it returned one.
+ */
+export function turnRefusals(turnId: string): { refusals: Refusal[]; refusalsError?: string; project?: string } {
   const row = get<{ lines: string | null; error: string | null }>("select lines, error from refusals where turn_id = ?", turnId);
   if (!row) return { refusals: [] };
-  return row.error ? { refusals: [], refusalsError: row.error } : { refusals: parseRefusals(row.lines!) };
+  const project = turnProject(turnId);
+  const where = project === undefined ? {} : { project };
+  return row.error ? { refusals: [], refusalsError: row.error, ...where } : { refusals: parseRefusals(row.lines!), ...where };
 }

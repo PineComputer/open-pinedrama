@@ -16,6 +16,7 @@ import { Drama } from "./screens/Drama.tsx";
 import { Settings } from "./screens/Settings.tsx";
 import { Welcome } from "./screens/Welcome.tsx";
 import { AgentBall, type AgentMode, AgentPanel, useAgentMode } from "./shell/AgentPanel.tsx";
+import { type AgentFocus, OpenInAgent } from "./shell/openInAgent.tsx";
 import { NavRail } from "./shell/NavRail.tsx";
 import { DramaSidebar } from "./shell/Sidebar.tsx";
 import { type Crumb, StopControl, TopBar } from "./shell/TopBar.tsx";
@@ -63,10 +64,11 @@ const LABEL: Partial<Record<Page, TKey>> = {
 };
 
 /** The agent for the drama in view (D32 as amended): its sidebar, open beside the page, or collapsed to the ball. */
-function Agent({ drama, episode, mode, onMode }: { drama: DramaView; episode?: string; mode: AgentMode; onMode: (mode: AgentMode) => void }) {
-  if (mode === "open") return <AgentPanel drama={drama} episode={episode} onCollapse={() => onMode("closed")} />;
+/** focus: the stop a page last asked to see (openInAgent.tsx); asking: the drama's questions waiting for an answer. */
+function Agent({ drama, episode, mode, focus, asking, onMode }: { drama: DramaView; episode?: string; mode: AgentMode; focus?: AgentFocus & { at: number }; asking: number; onMode: (mode: AgentMode) => void }) {
+  if (mode === "open") return <AgentPanel drama={drama} episode={episode} focus={focus} onCollapse={() => onMode("closed")} />;
   const busy = drama.crew.some((computer) => computer.sessions.some((session) => session.state === "open" && !session.waiting));
-  return <AgentBall waiting={drama.waiting} busy={busy} onOpen={() => onMode("open")} />;
+  return <AgentBall waiting={drama.waiting} asking={asking} busy={busy} onOpen={() => onMode("open")} />;
 }
 
 /** A path the studio has no page for, with the way back to the dramas. */
@@ -208,6 +210,12 @@ export function App() {
   useEffect(() => setDrawer(false), [pathname]);
   const agentShown = Boolean(drama.data && dramaId);
   const [agentMode, setAgentMode] = useAgentMode(agentShown, page === "review");
+  // Open in Agent: a page asks for a stop's message; the sidebar opens (as ⌥⌘B does) and shows it.
+  const [agentFocus, setAgentFocus] = useState<AgentFocus & { at: number }>();
+  const openInAgent = (focus: AgentFocus) => {
+    setAgentMode("open");
+    setAgentFocus({ ...focus, at: Date.now() });
+  };
   const { t } = useT();
   useReviewNotifications(queue.data && waiting);
 
@@ -267,31 +275,42 @@ export function App() {
   return (
     // The design's frame (design/app.js, App): the rail, the sidebar, the main column (its top bar over the work), then
     // the agent's sidebar the window's full height, or its ball.
-    <div className="app">
-      <NavRail page={page} waiting={waiting.length} replay={app.data.mode === "replay"} drawerToggle={inProject && narrow} drawer={drawer} onToggleDrawer={() => setDrawer(!drawer)} />
-      {/* On a wide window the column is always shown; ☰ opens it as a drawer on a narrow one (merecdesperez44323-lab; Apple HIG sidebars). */}
-      {(narrow ? drawer : true) && sidebar}
-      <div className="main">
-        {/* design/'s Home has no top bar: the page starts at the greeting; its Upload's has no Next review. Reviews acts on
-            no one drama, so it has none either (IA draft A1); inside a drama, Next review is that drama's. */}
-        {page !== "home" && (
-          <TopBar crumbs={crumbs} waiting={dramaId ? waiting.filter((item) => item.dramaId === dramaId) : waiting} ready={ready} next={page !== "new" && page !== "reviews"}>
-            {drama.data && <ExportMenu drama={drama.data} />}
-            {drama.data && <StopControl drama={drama.data} />}
-          </TopBar>
-        )}
-        <div className="body" style={{ position: "relative" }}>
-          <ShellContext.Provider value={{ app: app.data, reloadApp: app.reload, drama }}>
-            <AsideSlot.Provider value={asideSlot}>
-              <main className="scrollmain ds-scroll">
-                <Outlet />
-              </main>
-            </AsideSlot.Provider>
-          </ShellContext.Provider>
-          <div ref={setAsideSlot} style={{ display: "contents" }} />
+    <OpenInAgent.Provider value={openInAgent}>
+      <div className="app">
+        <NavRail page={page} waiting={waiting.length} replay={app.data.mode === "replay"} drawerToggle={inProject && narrow} drawer={drawer} onToggleDrawer={() => setDrawer(!drawer)} />
+        {/* On a wide window the column is always shown; ☰ opens it as a drawer on a narrow one (merecdesperez44323-lab; Apple HIG sidebars). */}
+        {(narrow ? drawer : true) && sidebar}
+        <div className="main">
+          {/* design/'s Home has no top bar: the page starts at the greeting; its Upload's has no Next review. Reviews acts on
+              no one drama, so it has none either (IA draft A1); inside a drama, Next review is that drama's. */}
+          {page !== "home" && (
+            <TopBar crumbs={crumbs} waiting={dramaId ? waiting.filter((item) => item.dramaId === dramaId) : waiting} ready={ready} next={page !== "new" && page !== "reviews"}>
+              {drama.data && <ExportMenu drama={drama.data} />}
+              {drama.data && <StopControl drama={drama.data} />}
+            </TopBar>
+          )}
+          <div className="body" style={{ position: "relative" }}>
+            <ShellContext.Provider value={{ app: app.data, reloadApp: app.reload, drama }}>
+              <AsideSlot.Provider value={asideSlot}>
+                <main className="scrollmain ds-scroll">
+                  <Outlet />
+                </main>
+              </AsideSlot.Provider>
+            </ShellContext.Provider>
+            <div ref={setAsideSlot} style={{ display: "contents" }} />
+          </div>
         </div>
+        {agentShown && drama.data && (
+          <Agent
+            drama={drama.data}
+            episode={followed}
+            mode={agentMode}
+            focus={agentFocus}
+            asking={waiting.filter((item) => item.dramaId === drama.data!.id && item.kind === "question").length}
+            onMode={setAgentMode}
+          />
+        )}
       </div>
-      {agentShown && drama.data && <Agent drama={drama.data} episode={followed} mode={agentMode} onMode={setAgentMode} />}
-    </div>
+    </OpenInAgent.Provider>
   );
 }

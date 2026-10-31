@@ -6,10 +6,10 @@ import { screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { readFileSync } from "node:fs";
 import path from "node:path";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { parseBibleNames } from "../../shared/names.ts";
 import { parseStatus, type ProjectView } from "../../shared/project.ts";
-import type { ChatView, DramaView, EpisodeRow, FileItem, ReviewSummary } from "../../shared/types.ts";
+import type { ChatStop, ChatView, DramaView, EpisodeRow, FileItem, ReviewSummary } from "../../shared/types.ts";
 import { http, HttpResponse } from "msw";
 import { accept, answer, calls, server } from "../test/server.ts";
 import { AgentBall, AgentPanel, useAgentMode } from "./AgentPanel.tsx";
@@ -429,16 +429,117 @@ describe("the agent sidebar's state", () => {
   });
 });
 
+describe("what drama-cli said, in the conversation (D70)", () => {
+  const project = "/var/lib/sandbox/sessions/amber-grove-f3d957/files/drama";
+  const cap = {
+    code: "SetLimitExceeded.max_new_versions",
+    message: `${project}/episodes/EP002/multi_panel_storyboard/seg06/line-art has had 3 new paid versions after its first, the limit defaults.max_new_versions (3); ask the person before making it again`,
+    param: "defaults.max_new_versions",
+    action: "ask_person" as const,
+  };
+  const asking = (stop: Partial<ChatStop>, sends: ChatView["sends"] = "answer"): ChatView => {
+    const view = chat("s2", "EP002", sends);
+    view.messages.push({ id: 4, kind: "question", text: "seg06 reached drama-cli's limit. Raise it once, or stop here?", at: "2026-10-30T10:03:00Z", stop: { reviewId: "r7", state: "open", refusals: [cap], project, ...stop } });
+    return view;
+  };
+
+  it("is drama-cli's own message before the agent's question: its code, its first line from the project's folder, its whole words a click away", async () => {
+    const user = userEvent.setup();
+    engine();
+    answer("/api/sessions/s2/chat", asking({}));
+    await renderAt(<AgentPanel drama={drama} episode="EP002" onCollapse={() => {}} />);
+    const said = await screen.findByLabelText("drama-cli said, SetLimitExceeded.max_new_versions");
+    expect(said).toHaveClass("msg", "said");
+    expect(within(said).getByText("Waiting for your answer")).toBeInTheDocument();
+    // Cut at the first "; ", the project's folder left out, never reworded.
+    expect(within(said).getByText("episodes/EP002/multi_panel_storyboard/seg06/line-art has had 3 new paid versions after its first, the limit defaults.max_new_versions (3)")).toBeInTheDocument();
+    await user.click(within(said).getByText("What drama-cli said"));
+    expect(within(said).getByText(cap.message)).toBeVisible();
+    // Then the agent's question that carries it, and the line answers it.
+    expect(said.nextElementSibling).toHaveTextContent("seg06 reached drama-cli's limit. Raise it once, or stop here?");
+    expect(screen.getByRole("textbox", { name: "Your answer" })).toHaveAttribute("placeholder", "Answer EP002's session…");
+  });
+
+  it("is history once its question ended or was answered", async () => {
+    engine();
+    answer("/api/sessions/s2/chat", asking({ state: "ended" }, "run"));
+    const { unmount } = await renderAt(<AgentPanel drama={drama} episode="EP002" onCollapse={() => {}} />);
+    const said = await screen.findByLabelText("drama-cli said, SetLimitExceeded.max_new_versions");
+    expect(within(said).getByText("Ended")).toBeInTheDocument();
+    expect(within(said).queryByText("Waiting for your answer")).toBeNull();
+    unmount();
+    answer("/api/sessions/s2/chat", asking({ state: "answered" }, "run"));
+    await renderAt(<AgentPanel drama={drama} episode="EP002" onCollapse={() => {}} />);
+    expect(within(await screen.findByLabelText("drama-cli said, SetLimitExceeded.max_new_versions")).getByText("Answered")).toBeInTheDocument();
+  });
+
+  it("says when the refusals the agent returned didn't read, and keeps the agent's question", async () => {
+    engine();
+    answer("/api/sessions/s2/chat", asking({ refusals: [], refusalsError: "The refusals, line 1: the line should be one JSON object." }));
+    await renderAt(<AgentPanel drama={drama} episode="EP002" onCollapse={() => {}} />);
+    expect(await screen.findByText("The agent returned drama-cli's refusals, but they didn't read: The refusals, line 1: the line should be one JSON object.")).toBeInTheDocument();
+    expect(screen.getByText("seg06 reached drama-cli's limit. Raise it once, or stop here?")).toBeInTheDocument();
+  });
+
+  it("opens on the session a page names, its stop's message in view and focused: drama-cli's, else the agent's question", async () => {
+    const scrolled = vi.fn();
+    Element.prototype.scrollIntoView = scrolled;
+    engine();
+    answer("/api/sessions/s2/chat", asking({}));
+    const { rerender, unmount } = await renderAt(<AgentPanel drama={drama} episode="EP001" onCollapse={() => {}} />);
+    rerender(<AgentPanel drama={drama} episode="EP001" focus={{ scope: "EP002", reviewId: "r7", at: 1 }} onCollapse={() => {}} />);
+    // Pinned to EP002, whose page this isn't, and at its message.
+    await waitFor(() => expect(screen.getByLabelText("drama-cli said, SetLimitExceeded.max_new_versions")).toHaveFocus());
+    expect(screen.getByRole("combobox", { name: "Session" })).toHaveValue("EP002");
+    expect(scrolled).toHaveBeenCalledWith({ block: "center" });
+    unmount();
+    // A question drama-cli said nothing about is the agent's own message.
+    answer("/api/sessions/s2/chat", asking({ refusals: [] }));
+    await renderAt(<AgentPanel drama={drama} episode="EP001" focus={{ scope: "EP002", reviewId: "r7", at: 2 }} onCollapse={() => {}} />);
+    await waitFor(() => expect(screen.getByText("seg06 reached drama-cli's limit. Raise it once, or stop here?").closest(".msg")).toHaveFocus());
+  });
+
+  it("answers the open question in the composer, with one file attached (D75)", async () => {
+    const user = userEvent.setup();
+    engine();
+    answer("/api/sessions/s2/chat", asking({}));
+    const stored = { ...file("drama/references/screenplay-v2.fountain", "2026-10-30T10:04:00Z"), id: 41, name: "screenplay-v2.fountain" };
+    accept("/api/dramas/d1/references", stored);
+    accept("/api/dramas/d1/messages", { id: "m1", sessionId: "s2", state: "sent" });
+    await renderAt(<AgentPanel drama={drama} episode="EP002" onCollapse={() => {}} />);
+    expect(await screen.findByRole("button", { name: "Attach a file" })).toHaveAttribute("title", "A screenplay or a picture, up to 20 MiB.");
+    await user.upload(document.querySelector<HTMLInputElement>('.composer input[type="file"]')!, new File(["INT. ROOM - DAY"], "screenplay-v2.fountain", { type: "text/plain" }));
+    expect(await screen.findByRole("button", { name: "Remove screenplay-v2.fountain" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Attach a file" })).toBeNull();
+    await user.type(screen.getByRole("textbox", { name: "Your answer" }), "Raise it once.");
+    await user.click(screen.getByRole("button", { name: "Send" }));
+    await waitFor(() => expect(calls("POST", "/api/dramas/d1/messages")).toHaveLength(1));
+    expect(calls("POST", "/api/dramas/d1/messages")[0]!.body).toEqual({ scope: "EP002", submissionId: expect.any(String), text: "Raise it once.", file: 41 });
+  });
+
+  it("offers no attachment when the message isn't an answer", async () => {
+    engine();
+    await renderAt(<AgentPanel drama={drama} episode="EP001" onCollapse={() => {}} />);
+    expect(await screen.findByRole("textbox", { name: "Message the agent" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Attach a file" })).toBeNull();
+  });
+});
+
 describe("the agent ball", () => {
   it("says how many decisions wait, turns while an agent works, and opens the sidebar", async () => {
     const user = userEvent.setup();
     let opened = 0;
-    await renderAt(<AgentBall waiting={4} busy onOpen={() => opened++} />);
+    await renderAt(<AgentBall waiting={4} asking={0} busy onOpen={() => opened++} />);
     const ball = screen.getByRole("button", { name: "Open the agent sidebar, 4 decisions waiting" });
     expect(ball).toHaveClass("busy");
     expect(ball).toHaveTextContent("4");
     await user.click(ball);
     expect(opened).toBe(1);
+  });
+
+  it("also says the questions waiting for an answer, and adds nothing to see", async () => {
+    await renderAt(<AgentBall waiting={4} asking={2} busy={false} onOpen={() => {}} />);
+    expect(screen.getByRole("button", { name: "Open the agent sidebar, 4 decisions waiting, 2 waiting for your answer" })).toHaveTextContent(/^4$/);
   });
 });
 

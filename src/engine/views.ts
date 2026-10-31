@@ -16,6 +16,7 @@ import {
   type StageCell,
   type Still,
   type ChatMessage,
+  type ChatStop,
   type Decision,
   type ReviewItem,
   type Spend,
@@ -457,9 +458,9 @@ export function chatView(session: SessionRow): ChatView {
   const decisions = new Map(
     all<ReviewRow>("select * from reviews where session_id = ? and answer is not null and kind != 'question'", session.id).map((row) => [row.answer!, row]),
   );
-  const messages = all<ChatMessage>("select id, kind, text, at from messages where session_id = ? order by id desc limit 200", session.id)
+  const messages = all<Said>("select id, turn_id, kind, text, at from messages where session_id = ? order by id desc limit 200", session.id)
     .reverse()
-    .map((message): ChatMessage => {
+    .map((message): Said => {
       if (message.kind !== "input") return message;
       // A decision on a stop that ended its turn went as a run: its answer, then "carry on".
       const decided = decisions.get(message.text) ?? [...decisions.entries()].find(([answer]) => message.text.startsWith(`${answer}\n\n`))?.[1];
@@ -484,8 +485,37 @@ export function chatView(session: SessionRow): ChatView {
     sends,
     reviewId: review && review.state !== "ended" ? review.id : undefined,
     rewrite: review && review.kind === "question" ? rewriteOf(filesOfStop(review)) : undefined,
-    messages,
+    messages: withStops(session.id, messages),
   };
+}
+
+/** A message as the session's events gave it, with the turn it came in. */
+type Said = ChatMessage & { turn_id: string | null };
+
+/**
+ * Each stop for the maker on the agent's message that asked it (D70): every question, and any stop that asks about
+ * drama-cli's refusals, on the last question or result of the turn that stopped. A stop whose words came in no message
+ * (a turn that finished short, askMaker) gets one of its own, its question as the review recorded it, where it was asked;
+ * one older than the messages kept is left out with them.
+ */
+function withStops(sessionId: string, messages: Said[]): ChatMessage[] {
+  const said = messages.map(({ turn_id, ...message }) => ({ turn: turn_id, message: message as ChatMessage }));
+  let own = 0;
+  for (const review of all<ReviewRow>("select * from reviews where session_id = ? order by created_at, rowid", sessionId)) {
+    const refused = turnRefusals(review.turn_id);
+    if (review.kind !== "question" && !refused.refusals.length && refused.refusalsError === undefined) continue;
+    const stop: ChatStop = { reviewId: review.id, state: review.state === "ended" ? "ended" : review.state === "answered" ? "answered" : "open", ...refused };
+    const asked = said.findLastIndex((entry) => entry.turn === review.turn_id && (entry.message.kind === "question" || entry.message.kind === "result"));
+    if (asked >= 0) {
+      said[asked]!.message = { ...said[asked]!.message, stop };
+      continue;
+    }
+    if (said.length && review.created_at < said[0]!.message.at) continue;
+    const after = said.findIndex((entry) => entry.message.at > review.created_at);
+    own += 1;
+    said.splice(after < 0 ? said.length : after, 0, { turn: review.turn_id, message: { id: -own, kind: "question", text: review.question, at: review.created_at, stop } });
+  }
+  return said.map((entry) => entry.message);
 }
 
 export function dramaFiles(dramaId: string, episodeId?: string) {

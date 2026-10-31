@@ -261,9 +261,10 @@ export function rehearse(id: string): void {
 
 /**
  * A message to a session's agent. While a question waits, it is the answer (and the
- * review closes with it); while a turn runs, it steers; otherwise it starts a run.
+ * review closes with it), which may carry one file the maker added (D75); while a turn runs, it steers; otherwise it
+ * starts a run.
  */
-export async function chat(sessionId: string, text: string): Promise<void> {
+export async function chat(sessionId: string, text: string, file?: number): Promise<void> {
   const session = sessionRow(sessionId);
   if (!session || session.state !== "open") throw new StudioError("session-ended", "This session has ended.", 409);
   const computer = computerRow(session.computer_id);
@@ -271,12 +272,13 @@ export async function chat(sessionId: string, text: string): Promise<void> {
   if (!text.trim()) throw new StudioError("message-empty", "Write a message first.");
   const turn = latestTurn(session.id);
   const review = pendingReview(session.id);
+  if (file !== undefined && !(review && !decidedInReview(review))) throw new StudioError("file-not-asked", "Only an answer to the agent's question can carry a file.");
   if (review) {
     // The session waits on the maker: a plain question can be answered from here, through the
     // same gate as the review room; anything to look at is decided in the room, item by item, and a screenplay rewrite on
     // Script, by its verdict (D62).
     if (decidedInReview(review)) throw new StudioError("decide-in-review", "Decide this in its review, where the files are.", 409);
-    await decide(review.id, { submissionId: newId("sub"), items: [], words: text });
+    await decide(review.id, { submissionId: newId("sub"), items: [], words: text, ...(file === undefined ? {} : { file }) });
   } else if (turn?.state === "needs_input") {
     throw new StudioError("question-closed", "This question can't be answered any more.", 409);
   } else if (turn && !turn.ended_at && turn.state !== "answered") {

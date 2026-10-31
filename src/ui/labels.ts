@@ -169,6 +169,14 @@ export function lineageUnreadable(view: Pick<LineageView, "lineage" | "problems"
   return view.lineage === null && view.problems.length ? t("lineage.unreadable", { problems: view.problems.map((problem) => problem.error).join("; ") }) : undefined;
 }
 
+/**
+ * A line of drama-cli's as the maker first reads it (design/app.js, firstLine): its words up to the first "; " or ". ",
+ * each path from the project's folder. Cut, never reworded: the whole words are a click away. Our own rule.
+ */
+export function firstLine(words: string, project?: string): string {
+  return (project ? words.split(`${project.replace(/\/$/, "")}/`).join("") : words).split(/; |\. /)[0]!;
+}
+
 /** What work has cost, in US dollars as Pine prices it; "at least" where some turns couldn't be priced. */
 export function moneyText(spent: Spend | number, t: T, lang: string): string {
   const total = typeof spent === "number" ? spent : spent.total;

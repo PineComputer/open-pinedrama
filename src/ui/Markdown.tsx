@@ -8,7 +8,8 @@ import remarkGfm from "remark-gfm";
 
 const LIMIT = 200_000;
 
-export function Markdown({ text, links, className = "document" }: { text: string; links?: Map<string, string>; className?: string }) {
+/** anchor: the id a link elsewhere scrolls to and focuses (openInAgent.tsx), so the text takes focus without a tab stop. */
+export function Markdown({ text, links, className = "document", anchor }: { text: string; links?: Map<string, string>; className?: string; anchor?: string }) {
   const cut = text.length > LIMIT;
   const saved = (target: string | undefined) => (target ? links?.get(target.replace(/^\.\//, "")) : undefined);
   const components: Components = {
@@ -41,7 +42,7 @@ export function Markdown({ text, links, className = "document" }: { text: string
     pre: ({ children }) => <pre className="fenced">{children}</pre>,
   };
   return (
-    <div className={className}>
+    <div className={className} {...(anchor ? { id: anchor, tabIndex: -1 } : {})}>
       <ReactMarkdown remarkPlugins={[remarkGfm]} components={components}>
         {cut ? text.slice(0, LIMIT) : text}
       </ReactMarkdown>

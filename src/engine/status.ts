@@ -50,6 +50,17 @@ export function sessionStatus(sessionId: string): SessionStatus | undefined {
   return row && { turnId: row.turn_id, turnAt: row.created_at, state: parseStatus(JSON.parse(row.report)) };
 }
 
+/**
+ * The project's folder as the turn's status report names it (`project`, drama-cli's `status`, short_drama
+ * doc/drama-cli/cli.md, status), which the paths in that stop's refusals start with; undefined when the turn returned no
+ * report that reads.
+ */
+export function turnProject(turnId: string): string | undefined {
+  const row = get<{ report: string }>("select report from statuses where turn_id = ? and report is not null", turnId);
+  const project = row && (JSON.parse(row.report) as { project?: unknown }).project;
+  return typeof project === "string" ? project : undefined;
+}
+
 /** The reports of the session that didn't read, newer than its current one, newest first. */
 export function statusProblems(sessionId: string): { turnId: string; error: string }[] {
   const current = sessionStatus(sessionId)?.turnId;

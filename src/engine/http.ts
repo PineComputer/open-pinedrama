@@ -428,11 +428,11 @@ export function app(): Hono {
   });
 
   // A message to a scope of the drama, the setup's or an episode's (D71): its open session takes it as a chat; with none
-  // open, it is refused. Once per submission id.
+  // open, it is refused. Once per submission id. An answer may carry one file added to the drama (D75).
   api.post("/api/dramas/:id/messages", async (c) => {
     try {
-      const { scope, submissionId, text } = (await c.req.json()) as { scope: string; submissionId: string; text: string };
-      return c.json(await sendMessage(c.req.param("id"), scope, submissionId, text));
+      const { scope, submissionId, text, file } = (await c.req.json()) as { scope: string; submissionId: string; text: string; file?: number };
+      return c.json(await sendMessage(c.req.param("id"), scope, submissionId, text, file));
     } catch (error) {
       return fail(c, error);
     }
