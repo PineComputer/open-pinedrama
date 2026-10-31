@@ -161,7 +161,7 @@
                   ${open && html`<tr class="beatsrow" id=${"beats-" + e.code}><td></td><td colspan="4"><span class="kick">Beats · ${e.beats.length}</span><ol class="beats">${e.beats.map(([sec, ev]) => html`<li>${ev} <span class="mono subtle">${sec} s</span></li>`)}</ol></td></tr>`}`; })}</tbody></table></div></section>
         </div>`}
         ${/* D56/D57: the tree navigates Assets; a card is the picture, the name, the version and where it stands. */ ""}
-        ${S.stab !== "bible" && html`<div class="assetgrid flexrows">${{ cast: P.cast, scenes: P.places, props: P.props }[S.stab].map((x) => html`<article style=${"--r:" + (S.stab === "cast" ? 960 / 540 : S.stab === "scenes" ? 960 / 1706 : 480 / 854)} class=${"assetcard" + (S.asel === x.id ? " sel" : "")} ...${picked(x.id)} ...${openCard(x.id)}>
+        ${S.stab !== "bible" && html`<div class=${"assetgrid flexrows " + S.stab}>${{ cast: P.cast, scenes: P.places, props: P.props }[S.stab].map((x) => html`<article style=${"--r:" + (S.stab === "cast" ? 960 / 540 : S.stab === "scenes" ? 960 / 1706 : 480 / 854)} class=${"assetcard" + (S.asel === x.id ? " sel" : "")} ...${picked(x.id)} ...${openCard(x.id)}>
           ${pic(x, x.sheet || x.pic, x.st !== "accepted" ? Status(x.st) : Status("accepted"))}
           <div class="ctxt"><span class="cardname" title=${x.name}><b>${x.name}</b></span><span class="mono subtle">${shownOf(x)}</span></div></article>`)}</div>`}
         ${S.stab !== "bible" && html`<div class="sendstrip"><span class="muted">Looks and plates · ${decided} of 2 decided</span><span class="grow"></span>

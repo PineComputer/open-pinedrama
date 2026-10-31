@@ -114,17 +114,21 @@ type AssetPhoto = Photo & { card: CastCard };
  * D56's grid as justified rows (Google Photos, Flickr; react-photo-album's rows layout): each row one height, each card
  * as wide as its picture's own ratio, so nothing is letterboxed or cropped; the caption sits under the picture.
  */
-function AssetGrid({ cards, names, dramaId, picked }: { cards: CastCard[]; names: Names | null; dramaId: string; picked?: string }) {
-  const items = cards.flatMap((card) => {
-    const file = versionsOf(mainOf(card)).file;
-    return file ? [{ card, url: file.url }] : [];
-  });
-  const sizes = useSizes(items.map((item) => item.url));
+function AssetGrid({ cards, sizedBy = cards, names, dramaId, picked }: { cards: CastCard[]; sizedBy?: CastCard[]; names: Names | null; dramaId: string; picked?: string }) {
+  const pictured = (shelf: CastCard[]) =>
+    shelf.flatMap((card) => {
+      const file = versionsOf(mainOf(card)).file;
+      return file ? [{ card, url: file.url }] : [];
+    });
+  const items = pictured(cards);
+  const sizing = pictured(sizedBy);
+  const sizes = useSizes([...items, ...sizing].map((item) => item.url));
   const photos: AssetPhoto[] = items.map(({ card, url }) => {
     const [width, height] = sizes[url] ?? [4, 3];
     return { key: card.subject, src: url, width, height, card };
   });
-  const ratios = photos.map((photo) => photo.width / photo.height).sort((a, b) => a - b);
+  // The row height comes from the shelf that sizes this one: its own, or Props' for Locations (below).
+  const ratios = sizing.map(({ url }) => (sizes[url] ? sizes[url][0] / sizes[url][1] : 4 / 3)).sort((a, b) => a - b);
   const median = ratios[Math.floor(ratios.length / 2)] ?? 4 / 3;
   const rowHeight = Math.round(Math.min(270, Math.max(180, 150 / median)));
   return (
@@ -367,7 +371,9 @@ export function Cast({ dramaId, compact = false }: { dramaId: string; compact?: 
           </span>
         </div>
       </div>
-      {cards.length ? <AssetGrid cards={cards} names={names} dramaId={dramaId} picked={picked} /> : none}
+      {/* Locations' cards are as big as Props' (merecdesperez44323-lab: "location和props一样大就好了"): their rows take the
+          height Props' pictures give theirs, so near-square plates aren't kept small by their own ratio. */}
+      {cards.length ? <AssetGrid cards={cards} sizedBy={shelf === "scenes" && props.length ? props : cards} names={names} dramaId={dramaId} picked={picked} /> : none}
       {pickedCard && <AssetViewer cards={cards} picked={pickedCard.subject} shelf={shelf} names={names} dramaId={dramaId} />}
     </>
   );

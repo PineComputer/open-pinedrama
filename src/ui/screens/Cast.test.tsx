@@ -146,6 +146,32 @@ describe("Assets", () => {
     await waitFor(() => expect(href(router)).toBe("/d/d1/assets/characters"));
   });
 
+  it("makes Locations' cards as big as Props': their rows take the height Props' pictures give theirs", async () => {
+    // jsdom loads no picture: this one reports each picture's size as it would load, a near-square plate and a 9:16 prop.
+    const sizes: Record<string, [number, number]> = { "/f/3": [840, 1000], "/f/6": [540, 960] };
+    const Real = window.Image;
+    window.Image = class {
+      naturalWidth = 0;
+      naturalHeight = 0;
+      onload: (() => void) | null = null;
+      set src(url: string) {
+        [this.naturalWidth, this.naturalHeight] = sizes[url] ?? [4, 3];
+        queueMicrotask(() => this.onload?.());
+      }
+    } as never;
+    try {
+      engine();
+      await renderAt(<Cast dramaId="d1" />, "/d/d1/assets/locations");
+      const office = await screen.findByRole("article", { name: "Factory office" });
+      // Props' 9:16 pictures give rows 150 / (9/16) ≈ 267px high; the plate's own ratio would give 180. A shelf in one row
+      // is held to that height by the album's width (react-photo-album, singleRowMaxHeight): 0.84 × 267 ≈ 224px, not 151.
+      const album = office.closest<HTMLElement>(".react-photo-album")!;
+      await waitFor(() => expect(album.style.maxWidth).toBe("224px"));
+    } finally {
+      window.Image = Real;
+    }
+  });
+
   it("keeps props on their own shelf", async () => {
     engine();
     await renderAt(<Cast dramaId="d1" />, "/d/d1/assets/props");
