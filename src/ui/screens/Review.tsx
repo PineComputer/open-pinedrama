@@ -1194,6 +1194,18 @@ export function Review({ id }: { id: string }) {
     },
     [id, navigate],
   );
+  // A review that is no longer here was answered or replaced (D73: replay keeps a review's id stable across rebuilds), and
+  // the way on is the Reviews queue; the drama it belonged to isn't known once it's gone.
+  if (error instanceof ApiError && error.status === 404 && !data) {
+    return (
+      <div className="page">
+        <p>{t("review.gone")}</p>
+        <Link to="/reviews" className="btn sm">
+          {t("review.goneOpen")}
+        </Link>
+      </div>
+    );
+  }
   if (error !== undefined && !data) {
     return (
       <div className="page">

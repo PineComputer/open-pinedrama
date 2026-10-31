@@ -2,7 +2,8 @@ import { fireEvent, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { cutReview, file, storyboardReview } from "../test/fixtures.ts";
-import { accept, answer, calls } from "../test/server.ts";
+import { http, HttpResponse } from "msw";
+import { accept, answer, calls, server } from "../test/server.ts";
 import { changed } from "../test/live.ts";
 import { itemStage, Review } from "./Review.tsx";
 import { renderAt } from "../test/router.tsx";
@@ -142,6 +143,13 @@ describe("a link into the review room", () => {
   it("opens at the first item when it names none it has", async () => {
     await open(undefined, "/r/r1?key=seg09");
     expect(await screen.findByRole("heading", { level: 2, name: /\bseg01\b/ })).toBeInTheDocument();
+  });
+
+  it("says a review that is no longer here was answered or replaced, and leads to Reviews (D73)", async () => {
+    server.use(http.get("/api/reviews/gone", () => HttpResponse.json({ code: "not-found", error: "No such review." }, { status: 404 })));
+    await renderAt(<Review id="gone" />, "/r/gone");
+    expect(await screen.findByText("This review was answered or replaced.")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Open Reviews" })).toHaveAttribute("href", "/reviews");
   });
 });
 
