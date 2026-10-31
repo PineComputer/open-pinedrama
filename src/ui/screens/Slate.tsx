@@ -7,7 +7,7 @@ import { ago, api, since, useAction, useResource } from "../api.ts";
 import { Menu } from "../components/Menu.tsx";
 import { Icon } from "../icons.tsx";
 import { type TKey, useT } from "../i18n.ts";
-import { errorText, kindLabel, moneyText, plainText } from "../labels.ts";
+import { countText, errorText, kindLabel, moneyText, plainText } from "../labels.ts";
 import { Link, navigate } from "../router.tsx";
 import { dropScreenplay } from "./NewDrama.tsx";
 
@@ -40,32 +40,30 @@ const isRedLine = (item: ReviewSummary) => item.stop?.kind === "red-line";
 
 type T = ReturnType<typeof useT>["t"];
 
-/** How many items wait, in what they are: "2 takes", "1 item"; nothing for a question. */
-function countOf(item: ReviewSummary, t: T): string {
-  const one = item.items === 1;
-  return item.items ? t(item.kind === "takes" ? (one ? "slate.take" : "slate.takes") : one ? "slate.item" : "slate.items", { n: item.items }) : "";
-}
-
 /** What a review is, as the prototype's rows and buttons say it in a line: "takes", "red line". */
 const whatOf = (item: ReviewSummary): TKey => (isRedLine(item) ? "slate.row.redLine" : `slate.row.${item.kind}`);
 
-/** A waiting review as the prototype's rows name it: its episode and what it is; how many, which, and how long it has waited. */
+/**
+ * A waiting review as design/'s rows name it, tied to its drama: "Bride on Bail · EP006", then what waits (how
+ * many, or a red line or a question), which, and how long it has waited.
+ */
 function rowOf(item: ReviewSummary, t: T, lang: ReturnType<typeof useT>["lang"]): { title: string; detail: string } {
-  const title = item.episode ? `${item.episode} · ${t(whatOf(item))}` : t(isRedLine(item) ? "drama.redLine" : `kind.${item.kind}`);
-  return { title, detail: [countOf(item, t), item.subjects.join(", "), since(item.createdAt, lang)].filter(Boolean).join(" · ") };
+  const title = `${item.dramaTitle} · ${item.episode ?? t(`kind.${item.kind}`)}`;
+  const what = isRedLine(item) ? t("drama.redLine") : countText(item.kind, item.items, t) || t(`kind.${item.kind}`);
+  return { title, detail: [what, item.subjects.join(", "), since(item.createdAt, lang)].filter(Boolean).join(" · ") };
 }
 
 /** What waits in Continue's line, as the prototype says it: "2 takes wait for you", a question or a red line. */
 function waitsOf(item: ReviewSummary, t: T): string {
   if (isRedLine(item)) return t("slate.waitsRedLine");
-  const count = countOf(item, t);
+  const count = countText(item.kind, item.items, t);
   return count ? t(item.items === 1 ? "slate.waitsOne" : "slate.waitsMany", { what: count }) : t("slate.waitsQuestion");
 }
 
-/** A picture as the prototype's `img`: an image, or a video's opening frame. `face` crops a look sheet to its close-up. */
-function Pic({ still, face }: { still: StillData; face?: boolean }) {
+/** A picture as the prototype's `img`: an image, or a video's opening frame. */
+function Pic({ still }: { still: StillData }) {
   if (still.video) return <video src={`${still.url}#t=0.5`} muted playsInline preload="metadata" />;
-  return <img src={still.url} alt="" className={face ? "face" : undefined} />;
+  return <img src={still.url} alt="" />;
 }
 
 /**
@@ -89,11 +87,12 @@ function byActivity(dramas: DramaCard[]): DramaCard[] {
 }
 
 /** The prototype's .hero: the drama worked on last, its waiting review first; beside it, what waits, newest first. */
-function Hero({ waiting, dramas }: { waiting: ReviewSummary[]; dramas: DramaCard[] }) {
+function Hero({ waiting, dramas, waitFor, onAll }: { waiting: ReviewSummary[]; dramas: DramaCard[]; waitFor?: string; onAll: () => void }) {
   const { t, lang } = useT();
   const drama = byActivity(dramas)[0];
   if (!drama) return null;
   const review = waiting.find((item) => item.dramaId === drama.id);
+  const filtered = waitFor ? dramas.find((entry) => entry.id === waitFor) : undefined;
   const where = standing(drama, waiting.some((item) => item.dramaId === drama.id && isRedLine(item)));
   const line = review?.question || drama.facts.lastLine;
   const { total, done } = drama.episodes;
@@ -142,20 +141,30 @@ function Hero({ waiting, dramas }: { waiting: ReviewSummary[]; dramas: DramaCard
         </div>
       </div>
       <div className="right">
-        <h3 id="waiting-title">{t("slate.waiting")}</h3>
+        <h3>
+          <span id="waiting-title">{t("slate.waiting")}</span>
+          {filtered && (
+            <span className="tag">
+              {filtered.title}
+              <button type="button" aria-label={t("slate.waitsAll")} onClick={onAll}>
+                <Icon name="x" className="ic" />
+              </button>
+            </span>
+          )}
+        </h3>
         <ul aria-labelledby="waiting-title">
-          {[...waiting]
+          {waiting
+            .filter((item) => !waitFor || item.dramaId === waitFor)
             .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
             .slice(0, 4)
             .map((item) => {
-              const own = dramas.find((entry) => entry.id === item.dramaId);
-              // The item's own picture (a look's is a whole sheet, cropped to its close-up), else its drama's cover.
-              const pic = item.thumb ?? own?.cover;
+              // design/'s row is pictured by its drama's cover, so the row and the card read as one drama.
+              const cover = dramas.find((entry) => entry.id === item.dramaId)?.cover;
               const row = rowOf(item, t, lang);
               return (
                 <li key={item.id}>
                   <Link to={`/r/${item.id}`} className="wait">
-                    {pic ? <Pic still={pic} face={Boolean(item.thumb) && item.kind === "looks"} /> : <span className="emptythumb" />}
+                    {cover ? <Pic still={cover} /> : <span className="emptythumb" />}
                     <span>
                       <b>{row.title}</b>
                       <small>{row.detail}</small>
@@ -171,7 +180,7 @@ function Hero({ waiting, dramas }: { waiting: ReviewSummary[]; dramas: DramaCard
 }
 
 /** The prototype's .pcard: the cover with its status and progress, then the title, what it is, its spend and two tags. */
-function Card({ drama, redLine }: { drama: DramaCard; redLine: boolean }) {
+function Card({ drama, redLine, waitFor, onWaitFor }: { drama: DramaCard; redLine: boolean; waitFor?: string; onWaitFor: (id?: string) => void }) {
   const { t, lang } = useT();
   const where = standing(drama, redLine);
   const { total, done } = drama.episodes;
@@ -179,35 +188,45 @@ function Card({ drama, redLine }: { drama: DramaCard; redLine: boolean }) {
   // Planned: the episodes drama-cli lists, at the length the maker asked; neither guessed.
   const planned = facts.scale && facts.length ? Math.round((facts.scale.episodes * Number(facts.length)) / 60) : 0;
   return (
-    <Link to={`/d/${drama.id}`} className="pcard">
-      <div className="pic">
-        <Cover drama={drama} />
+    <div className="pcard">
+      <Link to={`/d/${drama.id}`} className="open">
+        <div className="pic">
+          <Cover drama={drama} />
+          {total > 0 && (
+            <span className="bar">
+              <i style={{ width: `${(done / total) * 100}%` }} />
+            </span>
+          )}
+        </div>
+        <div className="txt">
+          <b>{drama.title}</b>
+          {facts.logline && <small className="logline">{facts.logline}</small>}
+          <small>{[facts.scale ? t("drama.scale", facts.scale) : "", kindLabel(drama, t), planned ? t("drama.planned", { n: planned }) : ""].filter(Boolean).join(" · ")}</small>
+          <small>
+            {[facts.lastActivity ? ago(facts.lastActivity, lang) : "", drama.spent.total > 0 ? t("slate.spent", { amount: moneyText(drama.spent, t, lang) }) : ""].filter(Boolean).join(" · ")}
+          </small>
+          {facts.genres && (
+            <div className="tags">
+              {facts.genres.slice(0, 2).map((genre) => (
+                <span key={genre} className="tag">
+                  {genre}
+                </span>
+              ))}
+              {facts.genres.length > 2 && <span className="tag">+{facts.genres.length - 2}</span>}
+            </div>
+          )}
+        </div>
+      </Link>
+      {/* design/'s "N need you" or "Red line" pill narrows Waiting for you to this drama: a sibling of the link, not inside it. */}
+      {where.st === "you" || where.st === "redline" ? (
+        <button type="button" className={`st ${where.st}`} aria-pressed={waitFor === drama.id} title={t("slate.waitsFor", { title: drama.title })} onClick={() => onWaitFor(waitFor === drama.id ? undefined : drama.id)}>
+          <i />
+          {t(where.label, { n: drama.waiting })}
+        </button>
+      ) : (
         <Status st={where.st} label={t(where.label, { n: drama.waiting })} />
-        {total > 0 && (
-          <span className="bar">
-            <i style={{ width: `${(done / total) * 100}%` }} />
-          </span>
-        )}
-      </div>
-      <div className="txt">
-        <b>{drama.title}</b>
-        {facts.logline && <small className="logline">{facts.logline}</small>}
-        <small>{[facts.scale ? t("drama.scale", facts.scale) : "", kindLabel(drama, t), planned ? t("drama.planned", { n: planned }) : ""].filter(Boolean).join(" · ")}</small>
-        <small>
-          {[facts.lastActivity ? ago(facts.lastActivity, lang) : "", drama.spent.total > 0 ? t("slate.spent", { amount: moneyText(drama.spent, t, lang) }) : ""].filter(Boolean).join(" · ")}
-        </small>
-        {facts.genres && (
-          <div className="tags">
-            {facts.genres.slice(0, 2).map((genre) => (
-              <span key={genre} className="tag">
-                {genre}
-              </span>
-            ))}
-            {facts.genres.length > 2 && <span className="tag">+{facts.genres.length - 2}</span>}
-          </div>
-        )}
-      </div>
-    </Link>
+      )}
+    </div>
   );
 }
 
@@ -246,6 +265,8 @@ export function Slate() {
   const [shelf, setShelf] = useState<Shelf>("all");
   const [find, setFind] = useState("");
   const [sort, setSort] = useState<"edited" | "title">("edited");
+  // design/'s card pill: Waiting for you narrowed to one drama.
+  const [waitFor, setWaitFor] = useState<string>();
   const sample = useAction(async () => {
     const { id } = await api<{ id: string }>("/api/dramas/sample", { method: "POST", json: { language: lang } });
     navigate(`/d/${id}`);
@@ -294,7 +315,7 @@ export function Slate() {
           </button>
         </div>
       )}
-      <Hero waiting={waiting} dramas={dramas} />
+      <Hero waiting={waiting} dramas={dramas} waitFor={waitFor} onAll={() => setWaitFor(undefined)} />
       {dramas.length > 0 && (
         <div className="tabsrow">
           <div className="utabs" role="tablist" aria-label={t("slate.shelves")}>
@@ -328,7 +349,7 @@ export function Slate() {
       )}
       <div className="cards" role="tabpanel" aria-label={t("slate.shelves")}>
         {shown.map((drama) => (
-          <Card key={drama.id} drama={drama} redLine={redLines.has(drama.id)} />
+          <Card key={drama.id} drama={drama} redLine={redLines.has(drama.id)} waitFor={waitFor} onWaitFor={setWaitFor} />
         ))}
         {(shelf === "all" && !find) || dramas.length === 0 ? <NewCard /> : null}
       </div>

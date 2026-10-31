@@ -74,7 +74,7 @@ describe("Home", () => {
     expect(await screen.findByRole("heading", { level: 1, name: greeting })).toBeInTheDocument();
   });
 
-  it("shows a waiting item's own picture, else its drama's cover", async () => {
+  it("pictures each waiting row by its drama's cover, as design/'s rows are", async () => {
     answer("/api/app", replay);
     answer("/api/inbox", [
       { id: "r1", dramaId: "d1", dramaTitle: "The Stepmother", kind: "takes", state: "open", question: "", items: 1, subjects: ["seg01"], thumb: { url: "/api/files/3", video: true }, createdAt: "2026-10-30T11:56:00Z" },
@@ -83,10 +83,8 @@ describe("Home", () => {
     answer("/api/dramas", [{ ...stepmother, waiting: 2, cover: { url: "/api/files/9" } }]);
     render(<Slate />);
     const waiting = await screen.findByRole("list", { name: "Waiting for you" });
-    const [take, question] = within(waiting).getAllByRole("link");
-    expect(take.querySelector("video")).toHaveAttribute("src", "/api/files/3#t=0.5");
-    // A question has no picture of its own: its drama's cover.
-    expect(question.querySelector("img")).toHaveAttribute("src", "/api/files/9");
+    // The take's own picture is left for its review: the row and the card read as one drama.
+    for (const row of within(waiting).getAllByRole("link")) expect(row.querySelector("img")).toHaveAttribute("src", "/api/files/9");
   });
 
   it("shows at most two genres on a card, and how many more", async () => {
@@ -117,9 +115,9 @@ describe("Home", () => {
     const waiting = within(hero).getByRole("list", { name: "Waiting for you" });
     const rows = within(waiting).getAllByRole("link");
     expect(rows.map((link) => link.getAttribute("href"))).toEqual(["/r/r1", "/r/r0"]);
-    // As the prototype's rows read: what it is in the episode, then how many, which, and how long it has waited.
-    expect(rows[0]).toHaveTextContent("EP001 · takes2 takes · seg01, seg03 · 4 min");
-    expect(rows[1]).toHaveTextContent("Question3 days");
+    // As design/'s rows read: the drama and the episode, then what waits, which, and how long it has waited.
+    expect(rows[0]).toHaveTextContent("The Stepmother · EP0012 takes · seg01, seg03 · 4 min");
+    expect(rows[1]).toHaveTextContent("Bride on Bail · QuestionQuestion · 3 days");
     expect(screen.getByText("2 decisions wait for you across your dramas.")).toBeInTheDocument();
   });
 
@@ -181,8 +179,28 @@ describe("Home", () => {
     answer("/api/dramas", [stepmother, { ...bride, status: "production", waiting: 1 }]);
     render(<Slate />);
     const waiting = await screen.findByRole("list", { name: "Waiting for you" });
-    expect(within(waiting).getByRole("link")).toHaveTextContent("EP007 · red line2 min");
-    expect((await tileOf(/Bride on Bail/)).querySelector(".st.redline")).toHaveTextContent("Red line");
+    expect(within(waiting).getByRole("link")).toHaveTextContent("Bride on Bail · EP007Red line · 2 min");
+    expect((await tileOf(/Bride on Bail/)).parentElement?.querySelector(".st.redline")).toHaveTextContent("Red line");
     expect(within(screen.getByRole("tablist")).getByRole("tab", { name: /Needs you/ })).toHaveTextContent("1");
+  });
+
+  it("narrows Waiting for you to a drama from its card's pill, and back to every drama", async () => {
+    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+    answer("/api/app", replay);
+    answer("/api/inbox", [
+      { id: "r1", dramaId: "d1", dramaTitle: "The Stepmother", episode: "EP001", kind: "takes", state: "open", question: "", items: 2, subjects: ["seg01", "seg03"], createdAt: "2026-10-30T11:56:00Z" },
+      { id: "r2", dramaId: "d2", dramaTitle: "Bride on Bail", episode: "EP004", kind: "storyboards", state: "open", question: "", items: 6, subjects: [], createdAt: "2026-10-30T11:50:00Z" },
+    ]);
+    answer("/api/dramas", [{ ...stepmother, waiting: 1 }, { ...bride, status: "production", waiting: 1 }]);
+    render(<Slate />);
+    const waiting = await screen.findByRole("list", { name: "Waiting for you" });
+    expect(within(waiting).getAllByRole("link")).toHaveLength(2);
+    const pill = screen.getByRole("button", { name: "1 need you", description: "Show what waits for you in Bride on Bail" });
+    await user.click(pill);
+    expect(pill).toHaveAttribute("aria-pressed", "true");
+    expect(within(waiting).getAllByRole("link").map((row) => row.textContent)).toEqual([expect.stringContaining("Bride on Bail · EP004")]);
+    await user.click(screen.getByRole("button", { name: "Show every drama's" }));
+    expect(within(waiting).getAllByRole("link")).toHaveLength(2);
+    expect(pill).toHaveAttribute("aria-pressed", "false");
   });
 });

@@ -8,13 +8,19 @@ import type { useT } from "./i18n.ts";
 
 type T = ReturnType<typeof useT>["t"];
 
+/** How many items a review holds, in what they are, as design/ counts them: "2 takes", "6 storyboards", "1 item"; nothing for none. */
+export function countText(kind: ReviewKind, items: number, t: T): string {
+  if (!items) return "";
+  const one = items === 1;
+  const noun = kind === "takes" ? (one ? "slate.take" : "slate.takes") : kind === "storyboards" ? (one ? "board.storyboard" : "board.storyboards") : one ? "slate.item" : "slate.items";
+  return t(noun, { n: items });
+}
+
 /** What waits for the maker, as design/'s cards say it: "2 takes wait for you", "The cut waits for you", "A question waits for you". */
 function waitsText(kind: ReviewKind, items: number, t: T): string {
   if (kind === "question" || !items) return t("slate.waitsQuestion");
   if (kind === "cut") return t("board.waitsCut");
-  const one = items === 1;
-  const noun = kind === "takes" ? (one ? "slate.take" : "slate.takes") : kind === "storyboards" ? (one ? "board.storyboard" : "board.storyboards") : one ? "slate.item" : "slate.items";
-  return t(one ? "slate.waitsOne" : "slate.waitsMany", { what: t(noun, { n: items }) });
+  return t(items === 1 ? "slate.waitsOne" : "slate.waitsMany", { what: countText(kind, items, t) });
 }
 
 export function nowText(row: EpisodeRow, t: T): string {
