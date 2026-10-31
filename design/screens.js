@@ -242,72 +242,185 @@
         </div></aside></div></div>`;
   }
 
-  /* ───── Cut ───── */
+  /* ───── Cut: EPxxx › Cut, the one home of an episode's cut (IA §16). Review and Edit are two separate things:
+     notes and a verdict go back to the agent with the review; an edit is a draft of drama-cli's edit spec
+     (drama_cli/edit.py: each clip's take, in, out and audio, source or silence, in order) that Apply hands to the agent. ───── */
+  const cutBase = () => P.cut.segs.map(([seg, take, d]) => ({ seg, take, in: 0, out: d, audio: "source" }));
+  // The sample draft opens with one real edit: seg03 starts 1.2 s in (its first take went back as too wide at the start).
+  const cutSeed = () => cutBase().map((x) => (x.seg === "seg03" ? { ...x, in: 1.2 } : x));
+  const sameClip = (a, b) => a.seg === b.seg && a.take === b.take && a.in === b.in && a.out === b.out && a.audio === b.audio;
+  // The draft's changes against its base, one line each: take, in, out, sound, and the order.
+  function cutDiff(base, ed) {
+    const out = [];
+    ed.forEach((x) => {
+      const b = base.find((y) => y.seg === x.seg);
+      if (!b) return out.push([x.seg, "added"]);
+      if (b.take !== x.take) out.push([x.seg, `take ${b.take} → ${x.take}`]);
+      if (b.in !== x.in) out.push([x.seg, `in ${b.in.toFixed(1)} → ${x.in.toFixed(1)} s`]);
+      if (b.out !== x.out) out.push([x.seg, `out ${b.out.toFixed(1)} → ${x.out.toFixed(1)} s`]);
+      if (b.audio !== x.audio) out.push([x.seg, x.audio === "silence" ? "sound → silence" : "sound → the take's own"]);
+    });
+    if (ed.map((x) => x.seg).join() !== base.map((b) => b.seg).join()) out.push(["Order", ed.map((x) => x.seg).join(" → ")]);
+    return out;
+  }
   function Cut() {
-    const vref = useRef(null), c = P.cut, notes = S.cutNotes || c.notes;
-    // D2: each note added or removed is a step; Undo puts the notes back as before the last one, whatever its place in the list.
-    const noteStep = (next) => set({ cutHist: [...(S.cutHist || []), notes], cutNotes: next });
+    const vref = useRef(null), c = P.cut, tab = S.cutTab || "review";
     useEffect(() => { const el = vref.current; if (!el) return; if (S.cutPlaying) el.play().catch(() => set({ cutPlaying: false })); else el.pause(); });
     const seek = (t) => { if (vref.current) vref.current.currentTime = t; set({ cutT: t }); };
     const fmt = (t) => "0:" + String(Math.floor(t)).padStart(2, "0");
+    // Review: notes, a verdict and its reason. Undo restores the state before the last step; Reset restores the start.
+    const rev = { notes: S.cutNotes || c.notes, v: S.cutV, why: S.cutWhy };
+    const revStart = { notes: c.notes, v: null, why: "" };
+    const revChanged = rev.notes !== c.notes || rev.v || rev.why;
+    const revHist = S.cutRevHist || [];
+    const revDo = (patch) => set({ cutRevHist: [...revHist, rev], ...patch });
+    const revSet = (r) => set({ cutNotes: r.notes, cutV: r.v, cutWhy: r.why });
+    const sent = S.cutSent;
+    const seen = S.cutSeen || 0, watched = seen >= c.dur - 0.25;
+    // Edit: the draft spec, its base (cut v1, or cut v2 once re-checked against it), and where Apply has got to.
+    const rebased = S.state === "cutnewer" && S.cutRebased;
+    const base = rebased ? c.newer.clips.map(([seg, take, i, o]) => ({ seg, take, in: i, out: o, audio: "source" })) : cutBase();
+    const baseV = rebased ? c.newer.v : c.base.v;
+    const ed = S.cutEd || cutSeed();
+    const edHist = S.cutEdHist || [];
+    const edDo = (next) => set({ cutEdHist: [...edHist, ed], cutEd: next });
+    const put = (i, patch) => edDo(ed.map((x, j) => (j === i ? { ...x, ...patch } : x)));
+    const move = (i, d) => { const n = [...ed]; [n[i], n[i + d]] = [n[i + d], n[i]]; edDo(n); set({ cutSel: i + d }); };
+    const diff = cutDiff(base, ed);
+    const takeOf = (seg, take) => (c.takes[seg] || []).find(([t]) => t === take) || [take, 0, "", ""];
+    const blocked = (S.state === "cutnewer" && !rebased) || S.state === "cutinputs";
+    const dur = tab === "edit" ? ed.reduce((a, x) => a + (x.out - x.in), 0) : c.dur;
+    const apply = () => {
+      set({ cutApply: "sending" });
+      setTimeout(() => set({ cutApply: "building" }), 900);
+      setTimeout(() => set({ cutApply: { ok: "ready", failed: "failed", unknown: "unknown" }[S.outcome] }), 4200);
+    };
+    const discard = () => { set({ cutEd: cutBase(), cutEdHist: [], cutRebased: false, cutCheck: null, cutCompare: false }); toast("Draft discarded. Nothing was applied."); };
     let acc = 0;
     return html`<div class="main">
-      <${TopBar} crumbs=${[P.project.title, "Delivery", "EP006 · Cut v1"]}/>
+      <${TopBar} crumbs=${[P.project.title, "Episodes", "EP006", "Cut " + c.base.v]}/>
       <${StopBanner}/>
       <div class="room is-cut">
         <section class="stage">
           <div class="screen"><div class="player">
-            <video ref=${vref} src=${c.src} poster="img/still-s1t2.jpg" muted playsinline preload="metadata" onTimeUpdate=${(e) => set({ cutT: e.target.currentTime, cutMax: Math.max(S.cutMax || 0, e.target.currentTime) })} onEnded=${() => set({ cutPlaying: false, cutMax: c.dur })}></video>
-            <span class="tag2">EP006 · cut v1</span>
+            <video ref=${vref} src=${c.src} poster="img/still-s1t2.jpg" muted playsinline preload="metadata" onTimeUpdate=${(e) => { const t = e.target.currentTime; set({ cutT: t, cutSeen: Math.max(seen, t) }); }} onEnded=${() => set({ cutPlaying: false, cutSeen: c.dur })}></video>
+            <span class="tag2">EP006 · cut ${c.base.v}</span>
             ${!S.cutPlaying && html`<button class="bigplay" aria-label="Play" onClick=${() => set({ cutPlaying: true })}><i>${I("play")}</i></button>`}</div></div>
           <div class="cuttl">
             <div class="controls" style="border-top:0;padding:0 0 8px"><button class="pp" aria-label=${S.cutPlaying ? "Pause" : "Play"} onClick=${() => set({ cutPlaying: !S.cutPlaying })}>${I(S.cutPlaying ? "pause" : "play")}</button>
               <span class="t">${S.cutT.toFixed(1)}s <small>/ ${c.dur.toFixed(1)}s</small></span><span class="grow"></span><span class="muted" style="font-size:11.5px">9:16 · 480p · subtitles from the screenplay · muted in this prototype</span></div>
-            <div class="tl" onClick=${(e) => { const r = e.currentTarget.getBoundingClientRect(); seek(Math.max(0, Math.min(c.dur, ((e.clientX - r.left) / r.width) * c.dur))); }}>
-              <div class="tlsegs">${c.segs.map(([s, t, d, pic], i) => { const left = acc; acc += d; return html`<button class=${"tlseg" + (S.cutSel === i ? " on" : "")} style=${`left:${(left / c.dur) * 100}%;width:${(d / c.dur) * 100}%;background-image:url(${pic})`} onClick=${(e) => { e.stopPropagation(); set({ cutSel: i }); seek(left); }}><span>${s} · ${t}</span></button>`; })}</div>
-              ${notes.map((n) => html`<span class="pin" style=${`left:${(n.t / c.dur) * 100}%`} title=${n.text}>${I("note-pencil")}</span>`)}
-              <span class="head" style=${`left:${(S.cutT / c.dur) * 100}%`}></span></div>
+            ${tab === "edit" && html`<p class="draftnote">${I("scissors")}<span>Your draft, ${dur.toFixed(1)} s, drawn from its spec. The picture above stays cut ${baseV} until the agent builds the draft.</span></p>`}
+            <div class="tl" onClick=${(e) => { if (tab === "edit") return; const r = e.currentTarget.getBoundingClientRect(); seek(Math.max(0, Math.min(c.dur, ((e.clientX - r.left) / r.width) * c.dur))); }}>
+              <div class="tlsegs">${tab === "edit"
+                ? ed.map((x, i) => { const left = acc, d = x.out - x.in; acc += d; const b = base.find((y) => y.seg === x.seg), chg = !b || !sameClip(b, x);
+                  return html`<button class=${"tlseg edit" + (S.cutSel === i ? " on" : "") + (chg ? " chg" : "")} style=${`left:${(left / dur) * 100}%;width:${(d / dur) * 100}%;background-image:url(${takeOf(x.seg, x.take)[2]})`} onClick=${(e) => { e.stopPropagation(); set({ cutSel: i }); }}>
+                    <i class="hdl l"></i><i class="hdl r"></i><span>${x.seg} · ${x.take}${x.audio === "silence" ? html` ${I("speaker-slash")}` : ""}${chg ? " · edited" : ""}</span></button>`; })
+                : c.segs.map(([s, t, d, pic], i) => { const left = acc; acc += d; return html`<button class=${"tlseg" + (S.cutSel === i ? " on" : "")} style=${`left:${(left / c.dur) * 100}%;width:${(d / c.dur) * 100}%;background-image:url(${pic})`} onClick=${(e) => { e.stopPropagation(); set({ cutSel: i }); seek(left); }}><span>${s} · ${t}</span></button>`; })}</div>
+              ${tab === "review" && rev.notes.map((n) => html`<span class="pin" style=${`left:${(n.t / c.dur) * 100}%`} title=${n.text}>${I("note-pencil")}</span>`)}
+              ${tab === "review" && html`<span class="head" style=${`left:${(S.cutT / c.dur) * 100}%`}></span>`}</div>
             <div class="tracks">
               <div class="trk"><span class="trk-h">Sound</span><div class="trk-lane wave">${Array.from({ length: 96 }, (_, i) => html`<i style=${`height:${18 + Math.round(70 * Math.abs(Math.sin(i * 0.37) * Math.cos(i * 0.11)))}%`}></i>`)}</div></div>
               <div class="trk"><span class="trk-h">${I("chats")}Lines</span><div class="trk-lane">${c.lines.map(([t, d, text]) => html`<button class="line" style=${`left:${(t / c.dur) * 100}%;width:${(d / c.dur) * 100}%`} title=${text} onClick=${() => seek(t)}>${text}</button>`)}</div></div>
             </div>
           </div>
         </section>
-        <aside class="insp"><div class="ihead"><b>EP006 · cut v1</b><small>${c.dur} s of 90 s planned · 2 of 4 segments in this sample</small></div>
+        <aside class="insp"><div class="ihead"><b>EP006 · cut ${c.base.v}</b><small>${c.dur} s of 90 s planned · 2 of 4 segments in this sample</small>
+          <div class="seg" role="tablist" aria-label="Review or edit" style="margin-top:10px">${[["review", "Review", "note-pencil"], ["edit", "Edit", "scissors"]].map(([k, l, ic]) =>
+            html`<button role="tab" aria-selected=${String(tab === k)} aria-pressed=${String(tab === k)} onClick=${() => set({ cutTab: k, cutSel: k === "edit" ? (S.cutSel ?? 1) : S.cutSel })}>${I(ic)}${l}${k === "edit" && diff.length ? html` <span class="cnt">${diff.length}</span>` : ""}</button>`)}</div></div>
+          ${tab === "review" ? html`
           <div class="iscroll">
-            <div class="isec"><h4>Notes at a time <span class="muted">${notes.length}</span></h4>
-              ${notes.map((n, i) => html`<div class="noterow"><button class="mono tbtn" onClick=${() => seek(n.t)}>${fmt(n.t)}</button><span class="grow">${n.text}</span><button class="ibtn" aria-label="Remove note" onClick=${() => noteStep(notes.filter((_, j) => j !== i))}>${I("x")}</button></div>`)}
-              <div class="addnote"><span class="mono">${fmt(S.cutT)}</span><input placeholder="Add a note at the playhead…" value=${S.noteDraft} onInput=${(e) => set({ noteDraft: e.target.value })}
-                onKeyDown=${(e) => { if (e.key === "Enter" && S.noteDraft.trim()) { noteStep([...notes, { t: S.cutT, text: S.noteDraft.trim() }].sort((a, b) => a.t - b.t)); set({ noteDraft: "" }); } }}/></div></div>
+            <div class="isec"><h4>Notes at a time <span class="muted">${rev.notes.length}</span></h4>
+              ${rev.notes.map((n, i) => html`<div class="noterow"><button class="mono tbtn" onClick=${() => seek(n.t)}>${fmt(n.t)}</button><span class="grow">${n.text}</span>${!sent && html`<button class="ibtn" aria-label="Remove note" onClick=${() => revDo({ cutNotes: rev.notes.filter((_, j) => j !== i) })}>${I("x")}</button>`}</div>`)}
+              ${!sent && html`<div class="addnote"><span class="mono">${fmt(S.cutT)}</span><input placeholder="Add a note at the playhead…" value=${S.noteDraft} onInput=${(e) => set({ noteDraft: e.target.value })}
+                onKeyDown=${(e) => { if (e.key === "Enter" && S.noteDraft.trim()) revDo({ cutNotes: [...rev.notes, { t: S.cutT, text: S.noteDraft.trim() }].sort((a, b) => a.t - b.t), noteDraft: "" }); }}/></div>`}
+              <p class="muted" style="margin:8px 0 0;font-size:11.5px">Notes go to the agent with Send back. To change the cut yourself, use Edit.</p></div>
             ${S.cutSel != null && c.segs[S.cutSel] && (() => { const [seg, take, d] = c.segs[S.cutSel]; return html`<div class="isec"><h4>Properties <span class="muted">${seg}</span></h4>
               <dl class="kv"><dt>Segment</dt><dd>${seg}</dd><dt>Take</dt><dd>${take}</dd><dt>Model</dt><dd>${c.spec.model}</dd><dt>Duration</dt><dd class="mono">${d} s</dd><dt>Picture</dt><dd>${c.spec.ratio} · ${c.spec.resolution} · ${c.spec.fps} fps</dd></dl>
-              <div class="propoff"><span class="muted">Speed</span><div class="seg" aria-disabled="true">${["0.5×", "1×", "1.5×", "2×"].map((x) => html`<button disabled aria-pressed=${String(x === "1×")}>${x}</button>`)}</div>
-                <span class="muted">Volume</span><input type="range" disabled value="80" aria-label="Volume"/>
-                <p class="muted">drama-cli makes every cut; editing here comes later.</p></div>
-              <button class="btn sm" onClick=${() => go("canvas")}>${I("flow-arrow")}Open on Canvas</button></div>`; })()}
-            <div class="isec"><h4>Made from</h4>${c.segs.map(([s, t, d]) => html`<div class="lrow static">${s} · take ${t}<span class="mono subtle">${d} s</span></div>`)}</div>
-            <div class="isec" style="border-bottom:0"><h4>What happens</h4><p class="muted" style="font-size:12.5px;line-height:1.55">You watch every cut and decide; no model checks a cut for you. Send back with your notes and the agent plans the cut again; building a cut is free. Accept, and EP006 is delivered.</p></div>
+              <div style="display:flex;gap:8px;margin-top:10px"><button class="btn sm" onClick=${() => set({ cutTab: "edit" })}>${I("scissors")}Edit this clip</button><button class="btn sm ghost" onClick=${() => go("canvas")}>${I("flow-arrow")}Open on Canvas</button></div></div>`; })()}
+            <div class="isec"><h4>Made from</h4>${c.segs.map(([s, t, d]) => html`<div class="lrow static">${s} · take ${t}<span class="mono muted">${d} s</span></div>`)}</div>
+            <div class="isec" style="border-bottom:0"><h4>What happens</h4><p class="muted" style="font-size:12.5px;line-height:1.55">You watch every cut and decide; no model checks a cut for you. Send back, and your notes go to the agent, which plans the cut again; building a cut is free. Accept, and this is EP006's delivered cut, listed in Delivery.</p></div>
           </div>
-          ${(() => {
-            // B3: as with a take, you watch every cut: Accept waits until it has played to the end.
-            const cutWatched = (S.cutMax || 0) >= c.dur - 0.25;
-            return html`<div class="verdict"><div class="vrow" style="grid-template-columns:1fr 1fr">
-            <button class="vbtn acc" aria-pressed=${String(S.cutV === "accept")} disabled=${!cutWatched} title=${cutWatched ? "Accept the cut" : "Watch the cut to the end first"} onClick=${() => set({ cutV: S.cutV === "accept" ? null : "accept" })}>${I("check")}Accept cut</button>
-            <button class="vbtn back" aria-pressed=${String(S.cutV === "back")} onClick=${() => set({ cutV: S.cutV === "back" ? null : "back" })}>${I("arrow-counter-clockwise")}Send back</button></div>
-            ${S.cutV === "back" && html`<textarea placeholder="Why it goes back (required). Your timed notes go with it." value=${S.cutWhy} onInput=${(e) => set({ cutWhy: e.target.value })}></textarea>`}
-            <span class="hint">${I(cutWatched ? "check-circle" : "clock")}${cutWatched ? "Watched to the end." : `Watched ${Math.round(((S.cutMax || 0) / c.dur) * 100)}% · Accept unlocks at the end.`}</span>
-            <button class="btn primary" disabled=${!S.cutV || (S.cutV === "back" && !S.cutWhy.trim())} onClick=${() => toast(S.cutV === "accept" ? "EP006 cut accepted." : "Cut sent back with " + notes.length + " notes.")}>Send review</button>
-            ${(() => {
-              // IA draft: edits are a draft of drama-cli's own edit spec until Apply; the agent builds and validates it.
-              // What the draft changes against cut v1's notes: each added and each removed, not the difference in length.
-              const n = notes.filter((x) => !c.notes.includes(x)).length + c.notes.filter((x) => !notes.includes(x)).length, moved = S.state === "cutchanged";
-              return html`<div class="draftbar"><span>Edit spec · based on cut v1 · ${n > 0 ? html`<b>Draft: ${n} changes</b>` : "no changes"}</span><span class="grow"></span>
-                <button class="btn sm ghost" title="Undo the last change" disabled=${!(S.cutHist || []).length} onClick=${() => { const h = [...S.cutHist], last = h.pop(); set({ cutHist: h, cutNotes: last === c.notes ? null : last }); }}>Undo</button>
-                <button class="btn sm ghost" title="Discard the whole draft, its text too" disabled=${n <= 0 && !(S.cutWhy || "").trim()} onClick=${() => { set({ cutNotes: null, cutHist: [], cutWhy: "" }); toast("Draft discarded. Nothing was applied."); }}>Reset</button>
-                <button class="btn sm" disabled=${n <= 0 || moved} onClick=${() => toast("Applied: the agent runs drama-cli edit build and edit validate; cut v2 comes back for your review.")}>Apply</button></div>
-                ${moved && html`<p class="draftwarn">${I("warning")}The cut changed since you started (cut v2 is in). Re-check your draft against it before Apply.</p>`}`;
-            })()}</div>`; })()}
+          <div class="verdict">${sent ? html`
+            <div class=${"sentcard " + sent}>${I(sent === "accept" ? "check-circle" : "paper-plane-tilt")}<span class="grow"><b>${sent === "accept" ? "Accepted · EP006 cut v1 is delivered" : "Sent back · waiting for the agent"}</b>
+              <small>${sent === "accept" ? "It is listed in Delivery." : `Your ${rev.notes.length} notes and reason went with it. A new cut comes back here for review.`}</small></span>
+              ${sent === "accept" && html`<button class="btn sm" onClick=${() => go("delivery")}>Open Delivery</button>`}</div>` : html`
+            <div class="vrow" style="grid-template-columns:1fr 1fr">
+              <button class="vbtn acc" aria-pressed=${String(rev.v === "accept")} disabled=${!watched} title=${watched ? "Accept" : "Watch the cut to the end first"} onClick=${() => revDo({ cutV: rev.v === "accept" ? null : "accept" })}>${I("check")}Accept cut</button>
+              <button class="vbtn back" aria-pressed=${String(rev.v === "back")} onClick=${() => revDo({ cutV: rev.v === "back" ? null : "back" })}>${I("arrow-counter-clockwise")}Send back</button></div>
+            <span class="hint">${I(watched ? "check-circle" : "clock")}${watched ? "Watched to the end." : `Watched ${Math.round((seen / c.dur) * 100)}% · Accept unlocks at the end, as for a take.`}</span>
+            ${rev.v === "back" && html`<textarea placeholder="Why it goes back (required). Your timed notes go with it." value=${rev.why} onFocus=${() => set({ cutRevHist: [...revHist, rev] })} onInput=${(e) => set({ cutWhy: e.target.value })}></textarea>`}
+            <div class="draftbar"><span>${revChanged ? html`<b>Your review is a draft</b>` : "No review yet"}</span><span class="grow"></span>
+              <button class="btn sm ghost" title="Undo your last step" disabled=${!revHist.length} onClick=${() => set({ cutRevHist: revHist.slice(0, -1), ...{ cutNotes: revHist[revHist.length - 1].notes, cutV: revHist[revHist.length - 1].v, cutWhy: revHist[revHist.length - 1].why } })}>Undo</button>
+              <button class="btn sm ghost" title="Back to how the review started" disabled=${!revChanged} onClick=${() => { revSet(revStart); set({ cutRevHist: [] }); }}>Reset</button>
+              <button class="btn sm primary" disabled=${!rev.v || (rev.v === "back" && !rev.why.trim())} onClick=${() => set({ cutSent: rev.v, cutPlaying: false })}>Send review</button></div>`}</div>`
+          : html`
+          <div class="iscroll">
+            <div class="isec"><h4>Based on <span class="muted">cut ${baseV}</span></h4>
+              ${S.state === "cutnewer" && !rebased && html`<div class="basewarn">${I("warning")}<span class="grow"><b>A newer cut exists</b><small>Cut ${c.newer.v} came in after you started this draft on cut ${c.base.v}. Nothing your draft uses has changed.</small></span></div>`}
+              ${S.state === "cutinputs" && html`<div class="basewarn err">${I("warning")}<span class="grow"><b>Your draft's inputs changed</b><small>seg03 · t02, which your draft trims, is no longer accepted: its storyboard changed after you accepted it. There is no newer cut.</small></span></div>`}
+              ${rebased && html`<div class="baseok">${I("check-circle")}<span class="grow"><b>Re-checked against cut ${c.newer.v}</b><small>Your ${diff.length === 1 ? "change applies" : diff.length + " changes apply"} to it as before; it is your draft's base now.</small></span></div>`}
+              ${S.state === "cutinputs" && S.cutCheck && html`<div class="basewarn err"><span class="grow"><b>Re-checked: Apply waits</b><small>seg03 has no accepted take now, so your trim of it can't be built. Keep the draft until seg03's new take is accepted, or discard it.</small></span></div>`}
+              ${blocked && html`<div style="display:flex;gap:8px;margin-top:8px">
+                <button class="btn sm" aria-pressed=${String(!!S.cutCompare)} onClick=${() => set({ cutCompare: !S.cutCompare })}>${I("eye")}Compare</button>
+                <button class="btn sm" disabled=${S.state === "cutinputs" && S.cutCheck} onClick=${() => S.state === "cutnewer"
+                  ? set({ cutRebased: true, cutCompare: false, cutEdHist: [], cutEd: c.newer.clips.map(([seg, take, i, o]) => { const nb = { seg, take, in: i, out: o, audio: "source" }; const x = ed.find((y) => y.seg === seg), ob = cutBase().find((y) => y.seg === seg); return x && ob && !sameClip(x, ob) ? x : nb; }) })
+                  : set({ cutCheck: true })}>${I("check")}Re-check</button>
+                <button class="btn sm ghost" onClick=${discard}>Discard draft</button></div>`}
+              ${S.cutCompare && html`<table class="cmp"><thead><tr><th></th><th>${S.state === "cutnewer" ? `Cut ${c.base.v} · your base` : "When you started"}</th><th>${S.state === "cutnewer" ? `Cut ${c.newer.v} · now` : "Now"}</th></tr></thead><tbody>
+                ${S.state === "cutnewer"
+                  ? c.newer.clips.map(([seg, take, i, o]) => { const b = cutBase().find((y) => y.seg === seg); return html`<tr class=${b ? "" : "add"}><td>${seg}</td><td>${b ? `${b.take} · ${b.in}–${b.out} s` : "—"}</td><td>${take} · ${i}–${o} s</td></tr>`; })
+                  : html`<tr><td>seg01</td><td>t02 · accepted</td><td>t02 · accepted</td></tr><tr class="add"><td>seg03</td><td>t02 · accepted</td><td>t02 · out of date</td></tr>`}</tbody></table>`}
+              <details class="basedet"><summary>What the draft rests on</summary><dl class="kv"><dt>Cut</dt><dd class="mono">${baseV} · ${rebased ? c.newer.sha : c.base.sha}</dd>${c.base.inputs.map(([k, h]) => html`<dt>${k}</dt><dd class="mono">sha256 ${h}…</dd>`)}</dl></details></div>
+            <div class="isec"><h4>Clips in order <span class="muted">${ed.length}</span></h4>
+              ${ed.map((x, i) => { const b = base.find((y) => y.seg === x.seg), chg = !b || !sameClip(b, x); return html`<div class=${"cliprow" + (S.cutSel === i ? " on" : "")}>
+                <button class="clipmain" onClick=${() => set({ cutSel: i })}><img src=${takeOf(x.seg, x.take)[2]} alt=""/><span class="grow"><b>${x.seg} · ${x.take}</b><small class="mono">${x.in.toFixed(1)}–${x.out.toFixed(1)} s${x.audio === "silence" ? " · silence" : ""}</small></span>${chg && html`<span class="chgdot" title="Edited"></span>`}</button>
+                <button class="ibtn" aria-label=${"Move " + x.seg + " earlier"} disabled=${i === 0} onClick=${() => move(i, -1)}>${I("caret-up")}</button>
+                <button class="ibtn" aria-label=${"Move " + x.seg + " later"} disabled=${i === ed.length - 1} onClick=${() => move(i, 1)}>${I("caret-down")}</button></div>`; })}</div>
+            ${ed[S.cutSel] && (() => { const x = ed[S.cutSel], i = S.cutSel, len = takeOf(x.seg, x.take)[1]; return html`<div class="isec"><h4>Clip <span class="muted">${x.seg}</span></h4>
+              <div class="propedit">
+                <span class="muted">Take</span><div class="takes">${(c.takes[x.seg] || []).map(([t, d, p, st]) => html`<button class=${"take" + (t === x.take ? " on" : "")} aria-pressed=${String(t === x.take)} disabled=${st !== "accepted"} title=${st === "accepted" ? "Accepted" : "Sent back: only accepted takes go in a cut"} onClick=${() => put(i, { take: t, in: 0, out: d })}><img src=${p} alt=""/><b>${t}</b><small>${st === "accepted" ? html`<span class="mono">${d} s</span>` : "Sent back"}</small></button>`)}</div>
+                <span class="muted">In</span><input class="mono" type="number" step="0.1" min="0" max=${x.out - 0.1} value=${x.in} onChange=${(e) => put(i, { in: Math.max(0, Math.min(x.out - 0.1, Number(e.target.value))) })}/>
+                <span class="muted">Out</span><input class="mono" type="number" step="0.1" min=${x.in + 0.1} max=${len} value=${x.out} onChange=${(e) => put(i, { out: Math.min(len, Math.max(x.in + 0.1, Number(e.target.value))) })}/>
+                <span class="muted">Sound</span><div class="seg">${["source", "silence"].map((a) => html`<button aria-pressed=${String(x.audio === a)} onClick=${() => put(i, { audio: a })}>${a === "source" ? "Take's sound" : "Silence"}</button>`)}</div>
+                <p class="muted">Phase 1 edits what drama-cli's edit takes: an accepted take, the order, in and out, and the take's sound or silence. A start off a keyframe is re-encoded when the agent builds it.</p></div></div>`; })()}
+            <div class="isec" style="border-bottom:0"><h4>Changes <span class="muted">${diff.length} against cut ${baseV}</span></h4>
+              ${diff.length ? diff.map(([k, d]) => html`<div class="lrow static"><span>${k}</span><span class="mono">${d}</span></div>`) : html`<p class="muted" style="margin:0;font-size:12.5px">No edits. The draft matches cut ${baseV}.</p>`}
+              <p class="muted" style="margin:8px 0 0;font-size:11.5px">Your timed notes are not edits: they stay on Review.</p></div>
+          </div>
+          <div class="verdict">${S.cutApply ? html`
+            <div class=${"sentcard " + S.cutApply}>${I(S.cutApply === "ready" ? "check-circle" : S.cutApply === "failed" ? "x-circle" : S.cutApply === "unknown" ? "warning" : "circle-notch")}<span class="grow">
+              <b>${{ sending: "Sending your edit…", building: "Building cut v2", ready: "Cut v2 waits for your review", failed: "drama-cli refused the edit", unknown: "Outcome unknown" }[S.cutApply]}</b>
+              <small>${{ sending: "Handing the spec to the agent.", building: "The agent runs drama-cli edit build EP006, then edit validate. Building a cut is free.", ready: "Made from your edit of cut " + baseV + ". Watch it and decide, as for any cut.", failed: "Clip 2 has no audio; explicitly choose silence. Nothing was built and nothing was spent; your draft is kept.", unknown: "The agent's answer never came. Check asks drama-cli whether cut v2 was built; the edit is not sent again until that is known." }[S.cutApply]}</small></span>
+              ${S.cutApply === "ready" && html`<button class="btn sm primary" onClick=${() => toast("Opens EP006 › Cut v2. This sample has only cut v1.")}>Open cut v2</button>`}
+              ${S.cutApply === "unknown" && html`<button class="btn sm" onClick=${() => { set({ cutApply: "building" }); setTimeout(() => set({ cutApply: "ready" }), 1500); }}>Check</button>`}
+              ${S.cutApply === "failed" && html`<button class="btn sm" onClick=${() => set({ cutApply: null, cutSel: 1 })}>Back to the draft</button>`}</div>` : html`
+            <div class="draftbar" style="border-top:0;margin-top:0;padding-top:0"><span>${diff.length ? html`<b>Draft · ${diff.length} edit${diff.length > 1 ? "s" : ""}</b>` : "No edits"}</span><span class="grow"></span>
+              <button class="btn sm ghost" title="Undo your last edit" disabled=${!edHist.length} onClick=${() => set({ cutEd: edHist[edHist.length - 1], cutEdHist: edHist.slice(0, -1) })}>Undo</button>
+              <button class="btn sm ghost" title=${"Back to cut " + baseV + " with no edits"} disabled=${!diff.length} onClick=${() => edDo(base)}>Reset</button>
+              <button class="btn sm primary" disabled=${!diff.length || blocked} title=${blocked ? "Compare and re-check the draft first" : "The agent builds it; cut v2 comes back for review"} onClick=${apply}>${I("paper-plane-tilt")}Apply</button></div>`}</div>`}
         </aside></div></div>`;
+  }
+
+  /* ───── Delivery: Drama › Delivery, the one home of the accepted cuts across episodes (IA §16). A row links to its
+     episode's Cut, which plays it; there is no second player here. ───── */
+  function Delivery() {
+    const open = (e, v) => (e.code === "EP006" ? go("cut") : toast(`Opens ${e.code} › Cut ${v}. Only EP006's cut opens in this sample.`));
+    const delivered = P.eps.filter((e) => e.cut && e.cut.accepted), waiting = P.eps.filter((e) => e.cut && e.cut.st === "you");
+    return html`<div class="main">
+      <${TopBar} crumbs=${[P.project.title, "Delivery"]}/>
+      <div class="body"><div class="scrollmain">
+        <div class="bar2"><span class="delivsum"><b>${delivered.length} of ${P.project.episodes}</b> episodes delivered · ${waiting.length} cuts wait for you</span><span class="grow"></span>
+          <button class="btn sm" disabled=${!delivered.length} onClick=${() => toast(`Downloads the ${delivered.length} accepted cut${delivered.length > 1 ? "s" : ""} as one zip, each file named by episode and cut version.`)}>${I("download-simple")}Download accepted (${delivered.length})</button></div>
+        <${StopBanner}/>
+        <div class="delivwrap"><table class="deliv"><thead><tr><th>Episode</th><th>Delivered cut</th><th>Latest cut</th><th>Status</th><th aria-label="Download"></th></tr></thead>
+          <tbody>${P.eps.slice(0, 8).map((e) => { const c = e.cut; return html`<tr>
+            <td><span class="delivep">${e.cover ? html`<img src=${e.cover} alt=""/>` : html`<span class="noimg"></span>`}<span><b class="mono">${e.code}</b><small>${e.title}</small></span></span></td>
+            <td>${c && c.accepted ? html`<button class="linkbtn" onClick=${() => open(e, c.accepted)}>Cut ${c.accepted}</button> <span class="mono muted">${c.acceptedDur} s</span>` : html`<span class="muted">—</span>`}</td>
+            <td>${c ? html`<button class="linkbtn" onClick=${() => open(e, c.latest)}>Cut ${c.latest}</button> <span class="mono muted">${c.latestDur} s</span>` : html`<span class="muted">No cut yet</span>`}</td>
+            <td>${c ? (c.st === "you" ? Status("you", "Cut " + c.latest + " needs you") : Status("accepted", "Delivered")) : html`<span class="muted">${e.now}</span>`}</td>
+            <td class="act">${c && c.accepted && html`<button class="btn sm ghost" onClick=${() => toast(`Downloads ${e.code}-cut-${c.accepted}.mp4, the accepted cut.`)}>${I("download-simple")}Download</button>`}</td></tr>`; })}
+            <tr class="more"><td colspan="5">EP009–EP024 · 16 episodes in line, no cut yet</td></tr></tbody></table></div>
+      </div><${AgentPanel}/></div></div>`;
   }
 
   /* ───── Episode: its segments scene by scene, the take beside its shot text (reveric's 分镜 list) ───── */
@@ -360,6 +473,6 @@
           <div class="lrow static">Your original · bride-on-bail.docx<span class="mono subtle">uploaded 17:31</span></div></section>
       </div><${AgentPanel}/></div></div>`;
   }
-  window.EXTRA = { BackTo, lineageOf, script: Script, upload: Upload, analyzing: Analyzing, fountain: Fountain, story: Story, graph: Graph, cut: Cut, episode: Episode, StopCard, SetupSteps };
+  window.EXTRA = { BackTo, lineageOf, script: Script, upload: Upload, analyzing: Analyzing, fountain: Fountain, story: Story, graph: Graph, cut: Cut, delivery: Delivery, episode: Episode, StopCard, SetupSteps };
   window.PD.draw();
 })();

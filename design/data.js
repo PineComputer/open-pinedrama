@@ -11,12 +11,12 @@ window.P = (() => {
     const code = "EP" + String(i + 1).padStart(3, "0");
     const base = { code, title: t, n: i + 1, spent: 0, strip: ["", "", "", "", ""], now: "In line, #" + (i - 5), status: "line", cover: covers[i] ? img(covers[i]) : null };
     const set = [
-      { status: "you", strip: ["d", "d", "d", "d", "y"], now: "Cut v2 waits for you", spent: 14.8 },
+      { status: "you", strip: ["d", "d", "d", "d", "y"], now: "Cut v2 waits for you", spent: 14.8, cut: { accepted: "v1", acceptedDur: 86, latest: "v2", latestDur: 84, st: "you" } },
       { status: "you", strip: ["d", "d", "d", "y", ""], now: "2 takes wait for you", spent: 11.4 },
       { status: "work", strip: ["d", "d", "d", "w", ""], now: "Shooting 4 takes", spent: 8.9 },
       { status: "you", strip: ["d", "d", "y", "", ""], now: "6 storyboards wait for you", spent: 2.1 },
       { status: "work", strip: ["d", "w", "", "", ""], now: "Blocking seg03", spent: 1.2 },
-      { status: "you", strip: ["d", "d", "d", "y", ""], now: "2 takes wait for you", spent: 2.8 },
+      { status: "you", strip: ["d", "d", "d", "y", ""], now: "2 takes wait for you", spent: 2.8, cut: { accepted: null, latest: "v1", latestDur: 15, st: "you" } },
     ][i];
     return set ? { ...base, ...set } : { ...base, strip: i < 8 ? ["d", "", "", "", ""] : ["", "", "", "", ""] };
   });
@@ -129,6 +129,14 @@ Object.assign(window.P, {
   cut: { dur: 15, src: "clips/cut-ep6.mp4", segs: [["seg01", "t02", 5, "img/still-s1t2.jpg"], ["seg03", "t02", 10, "img/still-s3t2.jpg"]],
     // What drama-cli made each take from (its spec.json), and the breakdown's lines at their times in the cut.
     spec: { model: "Seedance 2.5", resolution: "480p", ratio: "9:16", fps: 24 },
+    // Each segment's takes, with length, poster and drama-cli status: an edit picks among the accepted ones only.
+    takes: { seg01: [["t01", 6, "img/still-s1t1.jpg", "back"], ["t02", 5, "img/still-s1t2.jpg", "accepted"]],
+      seg03: [["t01", 11, "img/still-s3t1.jpg", "back"], ["t02", 10, "img/still-s3t2.jpg", "accepted"]],
+      seg04: [["t02", 22, "img/board-seg04.jpg", "accepted"]] },
+    // What the edit draft rests on: the cut it started from and each input's sha256 (drama_cli/edit.py pins both).
+    base: { v: "v1", sha: "3f9a2c1e", inputs: [["seg01 · t02", "a41c09d2"], ["seg03 · t02", "7be3f015"]] },
+    // A newer cut the agent made after the draft began: seg04's take was accepted, so the agent added it.
+    newer: { v: "v2", sha: "c07d51ab", clips: [["seg01", "t02", 0, 5], ["seg03", "t02", 0, 10], ["seg04", "t02", 0, 22]] },
     lines: [[0.6, 2.2, "Luca: You kept it."], [3.4, 1.6, "Ethan: Every page."], [6.2, 2.8, "Luca: Then read me the last one."], [11.4, 2.4, "Ethan: It ends with your name."]],
     notes: [{ t: 3.2, text: "Hold on the blanket a beat longer." }, { t: 11, text: "The cut to the file is too early." }] },
 });

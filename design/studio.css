@@ -703,7 +703,59 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
 .npanel .nhead .st + .st { margin-left: 4px; }
 .draftbar { display: flex; align-items: center; gap: 8px; padding-top: 10px; margin-top: 4px; border-top: 1px solid var(--border); font-size: 12px; color: var(--text-secondary); }
 .draftbar b { color: var(--text-primary); }
-.draftwarn { margin: 6px 0 0; display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--warning-text); } .draftwarn .ic { width: 14px; height: 14px; }
+/* Cut (IA draft r2): Review and Edit are two tabs. Edit shows the draft of drama-cli's edit spec, its base, and Apply's states. */
+.seg .cnt { min-width: 16px; height: 16px; padding: 0 4px; border-radius: 999px; background: var(--warning-text); color: var(--on-accent); font-size: 10px; font-weight: 700; display: inline-grid; place-items: center; }
+.draftnote { display: flex; align-items: center; gap: 6px; margin: 0 0 6px; font-size: 11.5px; color: var(--text-muted); } .draftnote .ic { width: 13px; height: 13px; }
+.tlseg.edit { cursor: default; }
+.tlseg.edit span { left: 12px; }
+.tlseg.chg { border: 2px dashed var(--warning-text); }
+.tlseg.chg.on { border-style: solid; }
+.tlseg .hdl { position: absolute; top: 0; bottom: 0; width: 7px; background: var(--text-primary); opacity: .85; }
+.tlseg .hdl.l { left: 0; border-radius: 6px 0 0 6px; } .tlseg .hdl.r { right: 0; border-radius: 0 6px 6px 0; }
+.tlseg span .ic { width: 11px; height: 11px; vertical-align: -1px; }
+.basewarn, .baseok { display: flex; gap: 8px; align-items: flex-start; padding: 8px 10px; margin-bottom: 6px; border-radius: var(--radius-medium); background: var(--warning-bg); color: var(--warning-text); font-size: 12px; }
+.basewarn.err { background: color-mix(in srgb, var(--error) 10%, transparent); color: var(--error); }
+.baseok { background: color-mix(in srgb, var(--success) 10%, transparent); color: var(--success); }
+.basewarn .ic, .baseok .ic { width: 15px; height: 15px; flex: none; margin-top: 1px; }
+.basewarn b, .baseok b { display: block; color: inherit; } .basewarn small, .baseok small { display: block; color: var(--text-secondary); line-height: 1.45; margin-top: 2px; }
+.cmp { width: 100%; margin-top: 10px; border-collapse: collapse; font-size: 12px; }
+.cmp th, .cmp td { padding: 5px 6px; border-bottom: 1px solid var(--border-subtle); text-align: left; color: var(--text-secondary); }
+.cmp th { font-weight: 600; color: var(--text-muted); font-size: 11px; }
+.cmp tr.add td:last-child { color: var(--warning-text); font-weight: 600; }
+.basedet { margin-top: 8px; font-size: 12px; color: var(--text-muted); } .basedet summary { cursor: pointer; } .basedet .kv { margin-top: 6px; }
+.cliprow { display: flex; align-items: center; gap: 2px; border-radius: var(--radius-medium); }
+.cliprow.on { background: var(--selected); }
+.clipmain { flex: 1; min-width: 0; display: flex; align-items: center; gap: 10px; padding: 6px; border: 0; background: none; color: inherit; text-align: left; cursor: pointer; }
+.clipmain img { width: 27px; height: 48px; border-radius: 4px; object-fit: cover; }
+.clipmain b { display: block; font-size: 12.5px; } .clipmain small { color: var(--text-muted); font-size: 11px; }
+.chgdot { width: 8px; height: 8px; border-radius: 50%; background: var(--warning-text); flex: none; }
+.propedit { display: grid; grid-template-columns: 56px 1fr; align-items: center; gap: 8px 10px; font-size: 12.5px; }
+.propedit input[type=number] { width: 96px; height: 30px; padding: 0 8px; border-radius: var(--radius-medium); border: 1px solid var(--border-input); background: var(--surface); color: var(--text-primary); }
+.propedit p { grid-column: 1 / -1; margin: 4px 0 0; font-size: 11.5px; line-height: 1.5; }
+.takes { display: flex; gap: 8px; }
+.take { display: grid; gap: 2px; padding: 4px; border-radius: var(--radius-medium); border: 1px solid var(--border-input); background: var(--surface); color: var(--text-primary); cursor: pointer; font-size: 11.5px; text-align: left; }
+.take img { width: 54px; height: 96px; object-fit: cover; border-radius: 4px; }
+.take small { color: var(--text-muted); }
+.take.on { border: 2px solid var(--text-primary); }
+.take:disabled { opacity: .45; cursor: not-allowed; }
+.sentcard { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: var(--radius-large); border: 1px solid var(--border-input); background: var(--surface); font-size: 12.5px; }
+.sentcard > .ic { width: 18px; height: 18px; flex: none; }
+.sentcard b { display: block; color: var(--text-primary); } .sentcard small { display: block; color: var(--text-muted); line-height: 1.45; margin-top: 2px; }
+.sentcard.accept > .ic, .sentcard.ready > .ic { color: var(--success); }
+.sentcard.failed > .ic { color: var(--error); }
+.sentcard.sending > .ic, .sentcard.building > .ic { animation: spin 1.2s linear infinite; }
+/* Delivery: one row per episode, linking to its Cut. */
+.delivsum { font-size: 13px; color: var(--text-secondary); } .delivsum b { color: var(--text-primary); }
+.delivwrap { padding: 0 16px 24px; overflow-x: auto; }
+.deliv { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+.deliv th { padding: 8px 10px; text-align: left; font-size: 11px; font-weight: 600; color: var(--text-muted); letter-spacing: .4px; text-transform: uppercase; border-bottom: 1px solid var(--border); }
+.deliv td { padding: 8px 10px; border-bottom: 1px solid var(--border-subtle); color: var(--text-secondary); vertical-align: middle; white-space: nowrap; }
+.deliv td.act { text-align: right; }
+.deliv tr.more td { color: var(--text-subtle); font-size: 11.5px; }
+.delivep { display: flex; align-items: center; gap: 10px; }
+.delivep img, .delivep .noimg { width: 27px; height: 48px; border-radius: 4px; object-fit: cover; background: var(--surface-container); }
+.delivep b { display: block; color: var(--text-primary); font-size: 12px; } .delivep small { color: var(--text-muted); }
+.linkbtn { border: 0; padding: 0; background: none; color: var(--text-primary); font: inherit; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
 .arow.failed .what .subtle { color: var(--text-muted); font-size: 11px; }
 .dot.redline { background: var(--error); }
 /* IA draft r2: the Script page and Story's title */

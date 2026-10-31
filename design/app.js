@@ -4,7 +4,7 @@
   const { html, render, useEffect, useRef } = window.htmPreact;
   const root = document.getElementById("root");
   const SPENT_COVERS = "Agent turns and video, priced when each turn ends.";
-  const SCREENS = ["home", "reviews", "upload", "analyzing", "fountain", "script", "story", "episodes", "episode", "canvas", "graph", "review", "cut"];
+  const SCREENS = ["home", "reviews", "upload", "analyzing", "fountain", "script", "story", "episodes", "episode", "canvas", "graph", "review", "cut", "delivery"];
   const SETUP = ["analyzing", "fountain"];
   const hash = (location.hash || "").slice(1);
   const S = {
@@ -168,8 +168,9 @@
   /* IA draft: an episode's two views. Story, Assets, the board and Delivery have none; Lineage opens from an item. */
   function EpisodeViews() {
     if (S.screen !== "episode" && S.screen !== "canvas") return null;
+    // EP006 › Cut is the episode's cut (IA §16): a link to its home, beside the episode's two views.
     return html`<div class="seg" role="group" aria-label="EP006 view">
-      ${[["List", "list-bullets", "episode"], ["Canvas", "flow-arrow", "canvas"]].map(([l, ic, sc]) =>
+      ${[["List", "list-bullets", "episode"], ["Canvas", "flow-arrow", "canvas"], ["Cut", "scissors", "cut"]].map(([l, ic, sc]) =>
         html`<button aria-pressed=${String(S.screen === sc)} onClick=${() => { const at = S.sel || S.esel; go(sc); set({ sel: sc === "canvas" ? at : null, esel: at }); }}>${I(ic)}${l}</button>`)}
     </div>`;
   }
@@ -623,10 +624,10 @@
   function Proto() {
     return html`<div class="proto" role="navigation" aria-label="Prototype">
       <b>Pine Drama Studio · pro direction</b><span class="sep"></span>
-      <div class="seg" role="group" aria-label="Screen">${[["home", "Home"], ["reviews", "Reviews"], ["upload", "Upload"], ["analyzing", "Analyzing"], ["fountain", "Fountain"], ["script", "Script"], ["story", "Story"], ["episodes", "Episodes"], ["episode", "Episode"], ["canvas", "Canvas"], ["graph", "Graph"], ["review", "Review"], ["cut", "Cut"]].map(([k, l]) => html`<button aria-pressed=${String(S.screen === k)} onClick=${() => go(k)}>${l}</button>`)}</div>
+      <div class="seg" role="group" aria-label="Screen">${[["home", "Home"], ["reviews", "Reviews"], ["upload", "Upload"], ["analyzing", "Analyzing"], ["fountain", "Fountain"], ["script", "Script"], ["story", "Story"], ["episodes", "Episodes"], ["episode", "Episode"], ["canvas", "Canvas"], ["graph", "Graph"], ["review", "Review"], ["cut", "Cut"], ["delivery", "Delivery"]].map(([k, l]) => html`<button aria-pressed=${String(S.screen === k)} onClick=${() => go(k)}>${l}</button>`)}</div>
       <span class="sep"></span>
       <label class="select" style="gap:8px">State<select aria-label="State" value=${S.state} onChange=${(e) => { const v = e.target.value; set({ state: v, dramaStop: v === "stopping" ? "stopping" : v === "stopped" ? "stopped" : null }); }}>
-        ${[["normal", "Normal"], ["cutchanged", "Cut changed upstream"], ["nostop", "No stop yet"], ["stopping", "Stopping"], ["stopped", "Stopped"], ["redline", "Red line"], ["budget", "Refused (no code)"], ["cap", "Cap reached"], ["env", "Pine access denied"]].map(([k, l]) => html`<option value=${k}>${l}</option>`)}</select></label>
+        ${[["normal", "Normal"], ["cutnewer", "Cut: a newer cut exists"], ["cutinputs", "Cut: draft inputs changed"], ["nostop", "No stop yet"], ["stopping", "Stopping"], ["stopped", "Stopped"], ["redline", "Red line"], ["budget", "Refused (no code)"], ["cap", "Cap reached"], ["env", "Pine access denied"]].map(([k, l]) => html`<option value=${k}>${l}</option>`)}</select></label>
       <label class="select" style="gap:8px" title="What happens when something is sent: a review, a Reconcile">Outcome<select aria-label="Outcome" value=${S.outcome} onChange=${(e) => set({ outcome: e.target.value })}>
         ${[["ok", "Goes through"], ["failed", "Fails"], ["unknown", "Unknown"]].map(([k, l]) => html`<option value=${k}>${l}</option>`)}</select></label>
       <span class="sep"></span>
