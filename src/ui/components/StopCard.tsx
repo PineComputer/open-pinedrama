@@ -3,11 +3,13 @@
 // (shared/refusal.ts stopKind), the code, the config key for a cap, and what drama-cli said, word
 // for word. The facts are the refusal's own, so they don't change while the maker decides; the
 // maker answers the agent in their own words below it.
+import type { ReactNode } from "react";
 import { type Refusal, stopKind } from "../../shared/refusal.ts";
 import { Icon } from "../icons.tsx";
 import { useT } from "../i18n.ts";
 
-export function StopCard({ refusal }: { refusal: Refusal }) {
+/** A stop: the refusal, the episode it stopped (the header's right end) and what the maker can do about it (the design's acts). */
+export function StopCard({ refusal, episode, children }: { refusal: Refusal; episode?: string; children?: ReactNode }) {
   const { t } = useT();
   const kind = stopKind(refusal);
   const title = kind.kind === "red-line" ? t("stopcard.redLine") : kind.kind === "cap" ? t("stopcard.cap", { key: kind.key }) : t("stopcard.ask");
@@ -19,6 +21,7 @@ export function StopCard({ refusal }: { refusal: Refusal }) {
         <Icon name={kind.kind === "red-line" ? "warning" : kind.kind === "cap" ? "lock-simple" : "info"} className="ic" />
         <span>{t(`stopcard.kind.${kind.kind}`)}</span>
         <span className="grow" />
+        {episode && <span className="mono">{episode}</span>}
       </header>
       <div className="sbody">
         <h3>{title}</h3>
@@ -35,6 +38,7 @@ export function StopCard({ refusal }: { refusal: Refusal }) {
           <dd className="said mono">{refusal.message}</dd>
         </dl>
         <div className="acts">
+          {children}
           <span className="muted" style={{ fontSize: 11.5 }}>
             {t(`stopcard.note.${kind.kind}`)}
           </span>
