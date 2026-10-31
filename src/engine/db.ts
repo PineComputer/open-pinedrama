@@ -94,7 +94,7 @@ create table if not exists sessions (
 create table if not exists runs (
   key text primary key,
   session_id text not null,
-  kind text not null,               -- setup | episode | resume | continue | chat | message
+  kind text not null,               -- setup | episode | resume | continue | chat
   goal text not null,
   turn_id text,
   created_at text not null
@@ -193,17 +193,15 @@ create table if not exists refusals (
   saved_at text not null
 );
 
--- A message the maker sent to a scope of the drama (scope-messages.ts, D71), by its submission id: sending, then sent, to the
--- scope's open session; else queued for a new session of that scope, working while it runs, then done or failed.
+-- A message the maker sent to a scope's open session (scope-messages.ts, D71), by its submission id: sending while the
+-- session takes it, then sent.
 create table if not exists scope_messages (
   id text primary key,
   drama_id text not null,
   scope text not null,
-  episode_id text,
   text text not null,
   state text not null,
-  session_id text,
-  note text,
+  session_id text not null,
   created_at text not null,
   updated_at text not null
 );

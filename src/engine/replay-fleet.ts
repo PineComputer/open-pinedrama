@@ -788,50 +788,6 @@ export function episodeScript(code: string, lang: Lang, preset: string, story: {
   };
 }
 
-/**
- * A message to the setup's scope after the handover (goals.ts, setupMessageGoal; D71). Replay doesn't read what the maker
- * wrote: the session notes the message, packs the project as it was handed over and hands it back.
- */
-function setupMessageScript(goal: string, lang: Lang, preset: string, story: { id: string; story: Story }): Player {
-  const say = words(story.story)[lang];
-  const set = pictures(story.id, lang);
-  const at = (path: string): Made => ({ current: `v${firstOf(story.story, path)}`, accepted: `v${firstOf(story.story, path)}` });
-  const progress = (): ReplayProgress => ({
-    preset,
-    bible: story.story.versions.bible ?? "v1",
-    looks: Object.fromEntries(story.story.cast.slice(0, 2).map((c) => [c.id, at(`assets/characters/${c.id}`)])),
-    references: Object.fromEntries(sharedOf(story.story).map((reference) => [reference.key, { ...at(reference.path), path: reference.path }])),
-    episodes: Object.fromEntries(story.story.episodes.map((e, i) => [codeOf(i), madeOf(story.story, e, codeOf(i))])),
-  });
-  const message = goal.split("My message:\n")[1]?.split("\n")[0] ?? "";
-  return () => {
-    const files = [archive("project")];
-    return { progress: [...say.readingMessage, ...say.packing], files: [...files, replayStatus(progress()), lineageOf(set, progress(), files.map((file) => file.path))], summary: say.noted(message) };
-  };
-}
-
-/**
- * A message to an episode whose session ended (goals.ts, episodeMessageGoal; D71). Replay doesn't read what the maker
- * wrote: the session notes the message and hands the episode's folder back as it was, packed.
- */
-function episodeMessageScript(goal: string, code: string, lang: Lang, preset: string, story: { id: string; story: Story }): Player {
-  const say = words(story.story)[lang];
-  const set = pictures(story.id, lang);
-  const at = (path: string): Made => ({ current: `v${firstOf(story.story, path)}`, accepted: `v${firstOf(story.story, path)}` });
-  const progress = (): ReplayProgress => ({
-    preset,
-    bible: story.story.versions.bible ?? "v1",
-    looks: Object.fromEntries(story.story.cast.slice(0, 2).map((c) => [c.id, at(`assets/characters/${c.id}`)])),
-    references: Object.fromEntries(sharedOf(story.story).map((reference) => [reference.key, { ...at(reference.path), path: reference.path }])),
-    episodes: Object.fromEntries(story.story.episodes.map((e, i) => [codeOf(i), madeOf(story.story, e, codeOf(i))])),
-  });
-  const message = goal.split("My message:\n")[1]?.split("\n")[0] ?? "";
-  return () => {
-    const files = [archive(code)];
-    return { progress: [...say.readingMessage, ...say.packing], files: [...files, replayStatus(progress()), lineageOf(set, progress(), files.map((file) => file.path))], summary: say.noted(message) };
-  };
-}
-
 function chatScript(goal: string, lang: Lang): Player {
   const say = words(Object.values(STORIES)[0][lang])[lang];
   return () => ({ progress: say.readingMessage, files: [], summary: say.noted(goal) });
@@ -843,10 +799,8 @@ function scriptFor(goal: string, lang: Lang): Player {
   // The preset the goal's drama-cli init names, as the report says it.
   const preset = goal.match(/--preset (\S+)/)?.[1] ?? "";
   const story = storyOf(goal, lang);
-  if (/I have a message about it\./.test(goal) && episode) return episodeMessageScript(goal, episode[1], lang, preset, story);
   if (/make episode|continue episode/i.test(goal) && episode) return episodeScript(episode[1], lang, preset, story);
   if (/vertical short drama from my screenplay/i.test(goal)) return setupScript(lang, preset, story);
-  if (/I have a message about the drama's script, bible or shared references/.test(goal)) return setupMessageScript(goal, lang, preset, story);
   return chatScript(goal, lang);
 }
 

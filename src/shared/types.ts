@@ -31,9 +31,9 @@ export type ErrorCode =
   | "decide-in-review"
   | "submission-missing"
   | "submission-elsewhere"
-  | "setup-running"
-  | "episode-not-started"
-  | "limit-full"
+  | "no-session-open"
+  | "episode-stopped"
+  | "episode-done"
   | "drama-not-running"
   | "review-decided"
   | "review-base-changed"
@@ -401,23 +401,6 @@ export interface SubmissionView {
   id: string;
   sessionId: string;
   state: "sending" | "sent";
-}
-
-/**
- * A message the maker sent to a scope that went to a new session of it (D71), as the conversation shows it: queued for
- * that session, working in it, done at its handback, failed, or stopped with the project (Resume reopens none).
- */
-export interface MessageView {
-  id: string;
-  /** "setup", or the episode's code. */
-  scope: string;
-  text: string;
-  state: "queued" | "working" | "done" | "failed" | "stopped";
-  /** The new session it went to; empty until one opens. */
-  sessionId: string;
-  at: string;
-  /** Why it failed, in the engine's words: the start's error, or what the agent said when its turn broke off for good. */
-  reason?: string;
 }
 
 export interface Decision {

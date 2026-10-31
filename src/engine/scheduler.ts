@@ -25,14 +25,13 @@ import {
 } from "./computers.ts";
 import { all, get, now, run } from "./db.ts";
 import { followEvents, followTurn, isFollowed, unsettledTurns } from "./follow.ts";
-import { DRAMA_SKILL, episodeGoal, episodeMessageGoal, projectScreenplay, rehearsed, resumeGoal, setupGoal, setupMessageGoal } from "./goals.ts";
+import { DRAMA_SKILL, episodeGoal, projectScreenplay, rehearsed, resumeGoal, setupGoal } from "./goals.ts";
 import type { FileRow } from "./library.ts";
 import { publish } from "./live.ts";
-import { type ComputerRow, type DramaRow, type EpisodeRow, type SessionRow, computer as computerRow, episode as episodeRow, episodeCode, latestTurn, openSessionsOf, session as sessionRow } from "./records.ts";
+import { type ComputerRow, type DramaRow, type EpisodeRow, type SessionRow, computer as computerRow, episodeCode, latestTurn, openSessionsOf, session as sessionRow } from "./records.ts";
 import { approveUnreviewed, reconcileSending } from "./reviews.ts";
 import { noteDramaSkill } from "./settings.ts";
 import { attach, attachKit, episodeArchive, hasRun, inputs, projectArchive, references, sendRun, startRun, unconfirmedRuns } from "./runs.ts";
-import { type MessageRow, markMessage, messagesIn, queuedMessages } from "./scope-messages.ts";
 
 /** Work the clock started and hasn't finished, so a slow call never starts twice. */
 const busy = new Set<string>();
@@ -325,45 +324,6 @@ function startEpisode(drama: DramaRow, episode: EpisodeRow, computer: ComputerRo
 }
 
 /**
- * A message to a scope with no session open (D71): a new session of that scope, the setup's on the project last handed
- * over, an episode's on it and the episode's own folder as its last session packed it, its goal the maker's message. One
- * that won't open goes back to the queue, after a pause; one that keeps failing says why.
- */
-function startMessage(drama: DramaRow, request: MessageRow, computer: ComputerRow): void {
-  markMessage(request.id, "working");
-  const release = reserve(computer.id);
-  const started = once(`message:${request.id}`, async () => {
-    let session: SessionRow | undefined;
-    try {
-      const episode = request.episode_id ? episodeRow(request.episode_id) : undefined;
-      session = await openSession(computer, episode ? "episode" : "setup", episode?.id ?? null, episode ? episodeCode(episode) : "Setup");
-      release();
-      markMessage(request.id, "working", { sessionId: session.id });
-      const { sent } = await attach(session, [...projectArchive(drama.id), ...(episode ? episodeArchive(episode.id) : [])]);
-      if (drama.rehearsal) await attachKit(session);
-      const goal = episode ? episodeMessageGoal(drama, episodeCode(episode), sent, request.text, screenplayOf(drama)) : setupMessageGoal(drama, request.text, screenplayOf(drama));
-      await startRun(session, "message", goalOf(drama, goal));
-      failures.delete(`message:${request.id}`);
-    } catch (error) {
-      if (!session || !hasRun(session.id)) {
-        if (session) await closeSession(session);
-        if (failedAgain(`message:${request.id}`) >= START_ATTEMPTS) {
-          failures.delete(`message:${request.id}`);
-          markMessage(request.id, "failed", { sessionId: null, note: message(error) });
-        } else {
-          run("update scope_messages set state = 'queued', session_id = null, updated_at = ? where id = ? and state = 'working'", now(), request.id);
-        }
-      }
-      throw error;
-    } finally {
-      release();
-      publish(`drama:${drama.id}`);
-    }
-  });
-  if (!started) release();
-}
-
-/**
  * Episodes whose start was cut short (the engine stopped after it opened their session but
  * before their run was saved): the half-open session is let go and they wait their turn again.
  */
@@ -381,18 +341,8 @@ function recoverStarts(drama: DramaRow): void {
 function fill(drama: DramaRow): void {
   recoverStarts(drama);
   const count = (state: string) => get<{ n: number }>("select count(*) as n from episodes where drama_id = ? and state = ?", drama.id, state)?.n ?? 0;
-  let active = count("working") + count("waiting") + messagesIn(drama.id, "working");
+  let active = count("working") + count("waiting");
   const waiting = count("waiting");
-  // A message goes first, as it was let in on its place: what episodes start after a setup message restore the project it
-  // hands back.
-  for (const request of queuedMessages(drama.id)) {
-    if (active >= drama.parallel) return;
-    if (backingOff(`message:${request.id}`)) continue;
-    const computer = claimComputer(drama);
-    if (!computer) return;
-    startMessage(drama, request, computer);
-    active += 1;
-  }
   const queued = all<EpisodeRow>("select * from episodes where drama_id = ? and state = 'queued' order by number", drama.id);
   for (const episode of queued) {
     if (active >= drama.parallel || waiting >= WAITING_CAP) return;
@@ -478,12 +428,8 @@ export async function reconcile(): Promise<void> {
 
 export function tick(): void {
   if (!hasFleet() || paused) return; // nothing to run on until the maker connects a project or chooses replay
-  // Only the dramas made for this mode: a replay drama never starts a Pine Computer. A finished drama comes back for a
-  // message to a scope (D71).
-  for (const drama of all<DramaRow>(
-    "select * from dramas where (status in ('setup', 'production') or (status = 'done' and exists (select 1 from scope_messages r where r.drama_id = dramas.id and r.state in ('queued', 'working')))) and mode = ?",
-    fleet().mode,
-  )) {
+  // Only the dramas made for this mode: a replay drama never starts a Pine Computer.
+  for (const drama of all<DramaRow>("select * from dramas where status in ('setup', 'production') and mode = ?", fleet().mode)) {
     if (drama.status === "setup") ensureSetup(drama);
     else fill(drama);
   }

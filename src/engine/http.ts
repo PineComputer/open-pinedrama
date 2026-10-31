@@ -31,7 +31,7 @@ import { decide, resumeWithDecision } from "./reviews.ts";
 import { lineageView } from "./lineage.ts";
 import { forgetPositions, positionsOf, readPositions, replacePositions } from "./canvas.ts";
 import { submission } from "./submission.ts";
-import { scopeMessages, sendMessage } from "./scope-messages.ts";
+import { sendMessage } from "./scope-messages.ts";
 import { projectView, sessionStatus } from "./status.ts";
 import { assetPictures, castCards, deliveryRows, episodePage, scriptPage, seasonEntries } from "./browse.ts";
 import { diagnostics } from "./diagnostics.ts";
@@ -420,7 +420,7 @@ export function app(): Hono {
   });
 
   // A message to a scope of the drama, the setup's or an episode's (D71): its open session takes it as a chat; with none
-  // open, a new session of that scope does. Once per submission id.
+  // open, it is refused. Once per submission id.
   api.post("/api/dramas/:id/messages", async (c) => {
     try {
       const { scope, submissionId, text } = (await c.req.json()) as { scope: string; submissionId: string; text: string };
@@ -429,8 +429,6 @@ export function app(): Hono {
       return fail(c, error);
     }
   });
-
-  api.get("/api/dramas/:id/messages", (c) => c.json(scopeMessages(c.req.param("id"), c.req.query("scope") ?? "")));
 
   api.get("/api/submissions/:id", (c) => {
     const found = submission(c.req.param("id"));

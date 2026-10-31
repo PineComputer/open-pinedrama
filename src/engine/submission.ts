@@ -2,7 +2,7 @@
 // knows became of it, so a studio that lost the answer (closed, offline) finds it again and never sends it twice. A review
 // keeps its decision's submission while it is being sent and once it was (reviews.ts, decide), and drops it when the send
 // did not reach the session: then nothing was taken, and there is no such submission. A message is kept once its scope's
-// session or a new one's queue took it (scope-messages.ts).
+// open session is taking it (scope-messages.ts).
 import type { SubmissionView } from "../shared/types.ts";
 import { get } from "./db.ts";
 import { messageView } from "./scope-messages.ts";
