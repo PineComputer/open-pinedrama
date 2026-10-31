@@ -22,7 +22,7 @@ timeline
   2026-10-23 : D5 pre-production in one session
   2026-10-24 : D6 idle timeouts follow the work : D7 spend shown, never in a goal
   2026-10-29 : D8 phase 1 steers
-  2026-10-30 : D9 design/ is the UI source : D10 tsc gate : D11 mature libraries : D12 real samples in LFS : D13 decisions taken once : D14 credentials stop : D15 Codex review loop : D16 navigation and one home : D17 every take and cut watched : D18 cut editing as an edit spec : D19 TanStack Router : D20 Export by owner : D21 Analyzing and Out of date routes : D22 redo by owner : D23 the asset detail : D24 the cut edit goal : D25 one Submission : D26 crumbs and Back : D27 Reviews : D28 model badge : D29 canvas zoom, inline video : D30 URL rules : D31 agent scope : D32 narrow windows : D33 review options : D34 Episodes filters : D35 every element cites its ground : D36 Delivery is the cuts' home : D37 a picked node zooms : D38 shared redo after release : D39 a take plays on its node : D40 where a stop shows : D41 Script is the screenplay's home : D42 Story and Assets apart : D43 stable sample ids : D44 the cut leaves the switch : D45 samples' own screenplays : D46 Project : D47 a draft's changed base : D48 the List's ?version : D49 project types : D50 Home cards : D51 one column, rail labels : D52 Home first, disabled : D53 account footer : D54 icon-only rail
+  2026-10-30 : D9 design/ is the UI source : D10 tsc gate : D11 mature libraries : D12 real samples in LFS : D13 decisions taken once : D14 credentials stop : D15 Codex review loop : D16 navigation and one home : D17 every take and cut watched : D18 cut editing as an edit spec : D19 TanStack Router : D20 Export by owner : D21 Analyzing and Out of date routes : D22 redo by owner : D23 the asset detail : D24 the cut edit goal : D25 one Submission : D26 crumbs and Back : D27 Reviews : D28 model badge : D29 canvas zoom, inline video : D30 URL rules : D31 agent scope : D32 narrow windows : D33 review options : D34 Episodes filters : D35 every element cites its ground : D36 Delivery is the cuts' home : D37 a picked node zooms : D38 shared redo after release : D39 a take plays on its node : D40 where a stop shows : D41 Script is the screenplay's home : D42 Story and Assets apart : D43 stable sample ids : D44 the cut leaves the switch : D45 samples' own screenplays : D46 Project : D47 a draft's changed base : D48 the List's ?version : D49 project types : D50 Home cards : D51 one column, rail labels : D52 Home first, disabled : D53 account footer : D54 icon-only rail : D55 the cover follows the format
 ```
 
 ## D1. 2026-10-22 · A desktop app on Electron
@@ -836,6 +836,7 @@ timeline
   too thin and long, not good-looking; it should just be a cover with a title and a time under it*),
   relayed by master.
 - **Recorded in.** Master's note to the docs, 30 October 2026.
+- **Amended by.** [D55](#d55-2026-10-30--a-home-cards-cover-follows-the-projects-format): the cover follows the project's format.
 
 ## D51. 2026-10-30 · Home has one column; the rail shows each icon with its label
 - **Context.** Home kept a sidebar column whose only item was New project, already the grid's first
@@ -913,6 +914,22 @@ timeline
   a new user must hover to know each icon; with three or four icons that matters little*);
   merecdesperez44323-lab: "可以的" (*that works*), relayed by master.
 - **Recorded in.** Commit 57fd287; master's and work-04's notes, 30 October 2026.
+
+## D55. 2026-10-30 · A Home card's cover follows the project's format
+- **Context.** D50's 16:9 cover sat oddly on vertical dramas.
+- **Decision.** The cover follows the project's format: 3:4 portrait for a vertical (9:16) project,
+  cropped to the face and centre, and 16:9 for a wide one. Six cards a row at 1440 px, the title and
+  the time under the cover. A project with no work yet shows the designed placeholder (a film icon),
+  not its title a second time; the New drama project card is portrait too. This amends
+  [D50](#d50-2026-10-30--a-home-card-is-a-cover-a-title-and-a-time)'s 16:9.
+- **Alternatives.** One 16:9 cover for every format (D50).
+- **Grounds.** merecdesperez44323-lab's decision; DramaBox's and Hongguo's poster grids; D50's "too
+  thin and long", which six a row with a title and a time keeps short; design states, not screens
+  ([design principles](design-principles.md#8-design-states-not-screens)), for the empty project.
+- **Consequences.** None beyond Home.
+- **Words.** "i think we can use 竖屏 here. 本来短剧就是竖屏，这里横屏比较奇怪" (*use portrait here; short
+  dramas are portrait to begin with, so landscape is odd here*), relayed by master.
+- **Recorded in.** Commit 43783d9 (design and product); work-02's note to the docs.
 
 ## References
 
