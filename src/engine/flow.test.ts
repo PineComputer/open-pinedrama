@@ -788,10 +788,12 @@ describe("a drama in replay", () => {
   }, 30_000);
 
   // Codex's rc5 T5 (C19; D75 as amended, B23): the first upload is an analysis, not a screenplay; the agent asks for one,
-  // the maker attaches it to the answer, and drama-cli validates it as v1, its original.txt byte for byte the attachment.
-  // That file is now the drama's screenplay: after Pause and Resume, the new setup is handed it as the screenplay, not the
-  // first upload. An original that copies none of the drama's files changes nothing, and Script says so.
-  it("starts a setup again from the answer's file that drama-cli validated as the screenplay, not from the first upload", async () => {
+  // and drama-cli validates the maker's file as v1, its original.txt byte for byte that file. That file is the drama's
+  // screenplay: Script › Original shows it and, after Pause and Resume, the new setup is handed it, not the first upload.
+  // Both read one derivation (browse.ts screenplaySource), so it holds however late the file is stored (work-03's 4600
+  // retest: the file stored after the turn that validated it). An original that copies none of the drama's files leaves
+  // the upload, and Script says so.
+  it.each(["with the answer", "after the turn that validated it"] as const)("starts a setup again from the file drama-cli validated as the screenplay, stored %s, not from the first upload", async (stored) => {
     const { run } = await import("./db.ts");
     run("update dramas set status = 'done'");
     fleet.stops = "ask";
@@ -839,26 +841,28 @@ describe("a drama in replay", () => {
       const { id } = await call<{ id: string }>("POST", "/api/dramas", form);
       const first = (await call<ScriptPage>("GET", `/api/dramas/${id}/script`)).screenplayFile;
       const question = await until("the question for a screenplay", openReview(id, () => true));
-      const attachment = new FormData();
-      attachment.set("file", new File([excerpt], "家里家外-节选.txt", { type: "text/plain" }));
-      const attached = await call<FileItem>("POST", `/api/dramas/${id}/references`, attachment);
-      await call("POST", `/api/reviews/${question.id}/decision`, { submissionId: crypto.randomUUID(), items: [], words: "Here is the screenplay.", file: attached.id });
-      await until("the rewrite of the attachment", openReview(id, (item) => item.id !== question.id));
-      // drama-cli's original.txt copies the attachment: it is the screenplay now, and one of the drama's inputs.
+      const store = () => {
+        const attachment = new FormData();
+        attachment.set("file", new File([excerpt], "家里家外-节选.txt", { type: "text/plain" }));
+        return call<FileItem>("POST", `/api/dramas/${id}/references`, attachment);
+      };
+      let attached = stored === "with the answer" ? await store() : undefined;
+      await call("POST", `/api/reviews/${question.id}/decision`, { submissionId: crypto.randomUUID(), items: [], words: "Here is the screenplay.", file: attached?.id });
+      await until("the rewrite of the file", openReview(id, (item) => item.id !== question.id));
+      attached ??= await store();
+      // drama-cli's original.txt copies the file: Original shows it, as the setup will be handed it.
       const script = await call<ScriptPage>("GET", `/api/dramas/${id}/script`);
       expect(script.versions[0].source?.id).toBe(attached.id);
-      expect(script.screenplayFile).toBe(attached.id);
-      expect(script.inputs.map((file) => file.id)).toEqual([first, expect.any(Number), attached.id]);
       // Pause, then Resume: the new setup session is handed the attachment as the screenplay.
       await call("POST", `/api/dramas/${id}/stop`);
       await call("POST", `/api/dramas/${id}/resume`);
       await until("the resumed setup", async () => setupGoals.length === 2 || undefined);
       expect(setupGoals[1]).toContain(`from my screenplay, attached as reference-${attached.id}-家里家外-节选.txt`);
-      // A version whose original copies none of the drama's files leaves the screenplay as it was, and says so.
+      // A version whose original copies none of the drama's files says so; the maker's upload stays the drama's own.
       await until("the resumed setup's v2", async () => (await call<ScriptPage>("GET", `/api/dramas/${id}/script`)).versions.find((version) => version.version === "v2"));
       const after = await call<ScriptPage>("GET", `/api/dramas/${id}/script`);
       expect(after.versions.find((version) => version.version === "v2")?.source).toBeNull();
-      expect(after.screenplayFile).toBe(attached.id);
+      expect(after.screenplayFile).toBe(first);
       await call("POST", `/api/dramas/${id}/stop`);
     } finally {
       Object.assign(fleet, played);

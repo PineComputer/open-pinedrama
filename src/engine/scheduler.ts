@@ -27,6 +27,7 @@ import {
 import { all, get, now, run } from "./db.ts";
 import { followEvents, followTurn, isFollowed, unsettledTurns } from "./follow.ts";
 import { DRAMA_SKILL, episodeGoal, projectScreenplay, rehearsed, resumeGoal, setupGoal } from "./goals.ts";
+import { screenplaySource } from "./browse.ts";
 import type { FileRow } from "./library.ts";
 import { publish } from "./live.ts";
 import { type ComputerRow, type DramaRow, type EpisodeRow, type SessionRow, computer as computerRow, episodeCode, latestTurn, openSessionsOf, session as sessionRow } from "./records.ts";
@@ -187,7 +188,7 @@ async function hold(drama: DramaRow, session: SessionRow, reason: "no-drama-skil
 
 /** The drama's screenplay as its sessions name it in the project (goals.ts, projectScreenplay); undefined before the studio chose the inputs. */
 function screenplayOf(drama: DramaRow): string | undefined {
-  const file = drama.screenplay_file === null ? undefined : get<FileRow>("select * from files where id = ?", drama.screenplay_file);
+  const file = screenplaySource(drama.id);
   return file && projectScreenplay(file.name);
 }
 
@@ -212,11 +213,14 @@ async function beginSetup(drama: DramaRow, session: SessionRow): Promise<void> {
     await hold(drama, session, "choose-inputs");
     return;
   }
-  const { sent, names } = await attach(session, files);
+  // The screenplay is the one Script › Original shows (browse.ts screenplaySource): an answer's file drama-cli validated
+  // the newest version against is handed over beside the inputs (Codex rc5 C19).
+  const screenplay = screenplaySource(drama.id)!;
+  const { sent, names } = await attach(session, files.some((file) => file.id === screenplay.id) ? files : [...files, screenplay]);
   // A setup always starts from the maker's inputs, a restart after a stop included: it never restores a pack.
   run("update sessions set started_from = 'inputs' where id = ?", session.id);
   if (drama.rehearsal) await attachKit(session);
-  await startRun(session, "setup", goalOf(drama, setupGoal(drama, sent, { screenplay: names[drama.screenplay_file!], brief: names[brief.id] })));
+  await startRun(session, "setup", goalOf(drama, setupGoal(drama, sent, { screenplay: names[screenplay.id], brief: names[brief.id] })));
 }
 
 /**

@@ -7,7 +7,7 @@ import type { CastCard, Decision, DeliveryRow, EpisodePage, FileItem, Judged, Re
 import { classify } from "./classify.ts";
 import { all, get } from "./db.ts";
 import { readFileSync } from "node:fs";
-import { type FileRow, blobPath, filesOfStop, itemIn, storedWithSha, toItem } from "./library.ts";
+import { type FileRow, blobPath, fileRow, filesOfStop, itemIn, storedWithSha, toItem } from "./library.ts";
 import type { ZipEntry } from "./zip.ts";
 import { type EpisodeRow, type ReviewRow, drama as dramaRow, episodeCode } from "./records.ts";
 import { itemsOf, placeKey, rewriteOf } from "./reviews.ts";
@@ -126,6 +126,17 @@ function screenplayVersions(dramaId: string): ScreenplayVersion[] {
       question: asked && { reviewId: asked.id, state: asked.state, words: decision?.words, verdict: decision?.verdict, decidedAt: asked.decided_at ?? undefined },
     };
   });
+}
+
+/**
+ * The drama's screenplay, as a setup is handed it and Script › Original shows it: the stored file the newest version's
+ * original copies (its `source`), else the maker's upload, before any version or when that original copies none of the
+ * drama's files (D75 as amended, B23). One derivation, read when needed, so Resume and Original never disagree.
+ */
+export function screenplaySource(dramaId: string): FileRow | undefined {
+  const source = screenplayVersions(dramaId)[0]?.source;
+  const id = source ? source.id : dramaRow(dramaId)?.screenplay_file;
+  return id === null || id === undefined ? undefined : fileRow(id);
 }
 
 /**

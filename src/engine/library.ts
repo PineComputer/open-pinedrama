@@ -146,18 +146,6 @@ export function storedWithSha(dramaId: string, sha: string): FileRow | undefined
   );
 }
 
-/**
- * A screenplay version's original, returned by the setup, makes the stored file it copies the drama's screenplay, and
- * one of its inputs, so a setup started again is handed it (scheduler.ts beginSetup) and Script shows it. An original
- * that copies no stored file changes nothing: Script says so (ScreenplayVersion.source).
- */
-export function followScreenplaySource(dramaId: string, original: FileRow): void {
-  const source = storedWithSha(dramaId, original.sha);
-  if (!source) return;
-  run("update dramas set screenplay_file = ?, updated_at = ? where id = ?", source.id, now(), dramaId);
-  run("insert or ignore into inputs (drama_id, file_id) values (?, ?)", dramaId, source.id);
-}
-
 export function openBlob(row: FileRow, range?: { start: number; end: number }) {
   return createReadStream(blobPath(row.sha), range);
 }

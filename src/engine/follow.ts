@@ -5,7 +5,7 @@ import type { FileKind } from "../shared/types.ts";
 import { ENDED, type TurnFile, type TurnInfo } from "./fleet.ts";
 import { computerRef, fleet, markStopped, sessionRef } from "./computers.ts";
 import { all, get, now, nowFor, run, transaction } from "./db.ts";
-import { VERDICT_KINDS, fileRow, followScreenplaySource, save, seenBefore } from "./library.ts";
+import { VERDICT_KINDS, save, seenBefore } from "./library.ts";
 import { publish } from "./live.ts";
 import { classify, namedPaths, typeOf } from "./classify.ts";
 import { onEnded, stopsForMaker } from "./flow.ts";
@@ -187,13 +187,8 @@ export async function settle(sessionId: string, info: TurnInfo): Promise<void> {
     try {
       // A status report, the lineage and the refusals are recorded as well as saved, whether the turn returned them or named them.
       const keep = async (body: ReadableStream<Uint8Array>, relPath: string, type: string) => {
-        const kind = classify(relPath).kind;
-        const record = RECORDED[kind];
-        if (!record) {
-          const id = await save(body, { ...where, relPath, type });
-          if (kind === "screenplay-original" && !session.episode_id) followScreenplaySource(session.drama_id, fileRow(id)!);
-          return;
-        }
+        const record = RECORDED[classify(relPath).kind];
+        if (!record) return void (await save(body, { ...where, relPath, type }));
         const bytes = new Uint8Array(await new Response(body).arrayBuffer());
         await save(bytes, { ...where, relPath, type });
         record(sessionId, info.turnId, bytes);
