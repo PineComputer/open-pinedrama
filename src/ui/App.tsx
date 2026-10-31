@@ -1,7 +1,8 @@
 import { Link, linkOptions, type NotFoundRouteProps, Outlet, useLocation } from "@tanstack/react-router";
 import { createContext, lazy, Suspense, useContext, useEffect, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
-import type { LineageView } from "../shared/lineage.ts";
+import { stageOf, type LineageView } from "../shared/lineage.ts";
+import type { ProjectView } from "../shared/project.ts";
 import type { AppInfo, DramaView, ReviewSummary } from "../shared/types.ts";
 import { ApiError, useResource } from "./api.ts";
 import { type TKey, useT } from "./i18n.ts";
@@ -209,6 +210,11 @@ export function App() {
   const dramaId = params.dramaId ?? reviewed?.dramaId;
   const drama = useResource<DramaView>(dramaId && ready ? `/api/dramas/${dramaId}` : null, [`drama:${dramaId}`]);
   const place = usePlace();
+  // The stage picked in an episode and its version, as drama-cli's status gives it, for the crumbs: "seg03 · Take t02".
+  const stage = place?.item && place.episode ? stageOf(place.item) : undefined;
+  const status = useResource<ProjectView>(stage && dramaId ? `/api/dramas/${dramaId}/project` : null, [`project:${dramaId}`]);
+  const stageState = stage?.where.segment && place?.episode ? status.data?.state?.episodes[place.episode] : undefined;
+  const version = stage && stage.where.segment ? (stage.kind === "take" ? stageState?.segments[stage.where.segment]?.current : stage.kind === "storyboard" && stage.where.style ? stageState?.storyboards[stage.where.segment]?.[stage.where.style]?.current : undefined) : undefined;
   const [sidebarOpen, toggleSidebar] = useSidebar();
   // IA draft r2 (F): below 1100 px the sidebar is a drawer over the work, opened from the rail and closed by any move.
   const narrow = useMediaQuery("(max-width: 1100px)");
@@ -227,35 +233,41 @@ export function App() {
   if (!app.data) return app.error !== undefined ? <Gate error={app.error} onRetry={app.reload} /> : null;
   if (app.data.mode === "none") return <Welcome onReady={app.reload} />;
 
-  const home: Crumb = { label: t("nav.dramas"), to: linkOptions({ to: "/" }) };
-  const inDrama: Crumb | undefined = drama.data && { label: drama.data.title, to: linkOptions({ to: "/d/$dramaId/episodes", params: { dramaId: drama.data.id } }) };
+  // Round 3 (design/ 2f2a07b): the crumbs say where the page's object belongs, each ancestor a link to its home; where
+  // you came from is only "Back to …". The drama comes first, its cover and name, so it is clear which one is open.
+  const cover = drama.data?.cover && !drama.data.cover.video ? drama.data.cover.url : drama.data?.cast[0];
+  const inDrama: Crumb | undefined = drama.data && {
+    label: (
+      <>
+        {cover && <img className="crumbimg" src={cover} alt="" />}
+        {drama.data.title}
+      </>
+    ),
+    to: linkOptions({ to: "/d/$dramaId/episodes", params: { dramaId: drama.data.id } }),
+  };
+  const picked = stage?.where.segment ? [stage.where.segment, [t(`graph.kind.${stage.kind}` as TKey), version].filter(Boolean).join(" ")].join(" · ") : undefined;
+  const ofDrama = (...rest: Crumb[]): Crumb[] => [...(inDrama ? [inDrama] : []), ...rest];
+  const episodeCrumb = (code: string, dramaOf: string): Crumb => ({ label: code, to: linkOptions({ to: "/d/$dramaId/e/$episodeCode/list", params: { dramaId: dramaOf, episodeCode: code } }) });
   // The episode in view, wherever it shows (its List, Canvas or Cut, a review of it): the sidebar marks it and the agent follows it (B3).
   const followed = place?.episode ?? reviewed?.episode;
   let crumbs: Crumb[];
-  if (page === "home") crumbs = [home];
-  else if (page === "new") crumbs = [home, { label: t("new.title") }];
+  if (page === "home" || page === "new") crumbs = [{ label: t("new.title") }];
   else if (page === "reviews") crumbs = [{ label: t("reviews.title") }];
   else if (page === "settings") crumbs = [{ label: t("settings.title") }];
-  else if (page === "review")
-    crumbs = [
-      home,
-      ...(inDrama ? [inDrama] : []),
-      ...(reviewed?.episode ? [{ label: reviewed.episode, to: linkOptions({ to: "/d/$dramaId/e/$episodeCode/list", params: { dramaId: reviewed.dramaId, episodeCode: reviewed.episode } }) }] : []),
-      { label: reviewed ? t(`kind.${reviewed.kind}`) : t("reviews.title") },
-    ];
-  else if (!page) crumbs = [home, { label: t("notFound.title") }];
-  // An episode's List is the episode; its Canvas and Cut are named after it, as design/'s crumbs read: Episodes › EP006 › Cut.
+  else if (page === "review") crumbs = ofDrama(...(reviewed?.episode ? [episodeCrumb(reviewed.episode, reviewed.dramaId)] : []), { label: reviewed ? t(`kind.${reviewed.kind}`) : t("reviews.title") });
+  else if (!page) crumbs = [{ label: t("notFound.title") }];
+  // In an episode: the episode, then what is picked in it (its stage and version), or its Cut.
   else if (place?.episode && drama.data) {
-    const episode: Crumb = { label: place.episode, to: linkOptions({ to: "/d/$dramaId/e/$episodeCode/list", params: { dramaId: drama.data.id, episodeCode: place.episode } }) };
-    const view = page === "canvas" ? t("surface.canvas") : page === "cut" ? t("step.cut") : undefined;
-    crumbs = [home, ...(inDrama ? [inDrama, { label: t("step.episodes"), to: inDrama.to }] : []), episode, ...(view ? [{ label: view }] : [])];
+    const episode = episodeCrumb(place.episode, drama.data.id);
+    if (page === "cut") crumbs = ofDrama(episode, { label: t("step.cut") });
+    else crumbs = picked ? ofDrama(episode, { label: picked }) : ofDrama({ label: place.episode });
   }
   // The setup's own screens, as design/'s crumbs read: Setup › Script, or Setup › Fountain review while the rewrite waits on the maker.
-  else if (drama.data && isSetupScreen(drama.data, page)) crumbs = [home, ...(inDrama ? [inDrama] : []), { label: t("sidebar.setup") }, { label: t(page === "script" && scriptWaits(drama.data) ? "crumb.fountainReview" : "step.script") }];
+  else if (drama.data && isSetupScreen(drama.data, page)) crumbs = ofDrama({ label: t("sidebar.setup") }, { label: t(page === "script" && scriptWaits(drama.data) ? "crumb.fountainReview" : "step.script") });
   // An Assets shelf sits under Assets, as the drama tree has it (IA §2): Drama › Assets › Characters.
   else if (drama.data && (page === "characters" || page === "locations" || page === "props"))
-    crumbs = [home, ...(inDrama ? [inDrama] : []), { label: t("step.assets"), to: linkOptions({ to: "/d/$dramaId/assets/characters/{-$assetId}", params: { dramaId: drama.data.id, assetId: undefined } }) }, { label: t(LABEL[page] ?? "step.assets") }];
-  else crumbs = [home, ...(inDrama ? [inDrama] : []), { label: t(LABEL[page] ?? "step.episodes") }];
+    crumbs = ofDrama({ label: t("step.assets"), to: linkOptions({ to: "/d/$dramaId/assets/characters/{-$assetId}", params: { dramaId: drama.data.id, assetId: undefined } }) }, { label: t(LABEL[page] ?? "step.assets") });
+  else crumbs = ofDrama({ label: t(LABEL[page] ?? "step.episodes") });
 
   const sidebar = drama.data && dramaId ? <DramaSidebar drama={drama.data} page={page} episode={followed} drawer={narrow} /> : <HomeSidebar page={page} reviews={queue.data ?? []} replay={app.data.mode === "replay"} drawer={narrow} />;
   return (

@@ -1182,7 +1182,7 @@ const zh: Record<Key, string> = {
   "graph.kind.first_frame_reference": "首帧",
   "graph.kind.storyboard": "分镜",
   "graph.kind.video_prompts": "视频提示词",
-  "graph.kind.take": "镜头",
+  "graph.kind.take": "视频版本",
   "graph.kind.cut": "成片",
   "graph.kind.subtitles": "字幕",
   "graph.name.screenplay": "剧本",

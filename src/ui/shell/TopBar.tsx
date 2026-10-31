@@ -171,11 +171,12 @@ function NextReview({ waiting }: { waiting: ReviewSummary[] }) {
 }
 
 export interface Crumb {
-  label: string;
+  /** Text, or the drama's cover and name (design/'s crumbimg). */
+  label: React.ReactNode;
   to?: LinkOptions;
 }
 
-/** Where you are: each step back a link, the last the page itself. */
+/** Where this belongs: each ancestor a link to its home, the last the page itself. */
 export function Breadcrumb({ crumbs }: { crumbs: Crumb[] }) {
   const { t } = useT();
   return (
