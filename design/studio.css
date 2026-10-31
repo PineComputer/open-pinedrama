@@ -845,7 +845,7 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
 /* With the detail open the grid keeps several columns, and a tall plate never makes a card taller than the detail. */
 .assetsplit .assetgrid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; }
 .assetcard .pic { max-height: 240px; margin: 0 auto; }
-/* Script (design draft; D-entry pending): the page holds the screenplay from upload to acceptance. The views on the
+/* Script (design draft; D62): the page holds the screenplay from upload to acceptance. The views on the
    left, the version history on the right (GitHub's PR timeline; Figma's and Google Docs' version history). */
 .notice { display: flex; gap: 8px; align-items: flex-start; margin: 0 16px 12px; padding: 10px 12px; border-radius: var(--radius-large); border: 1px solid var(--border); background: var(--surface-container); font-size: 12.5px; color: var(--text-secondary); }
 .notice .ic { width: 16px; height: 16px; flex: none; margin-top: 1px; } .notice b { color: var(--text-primary); }

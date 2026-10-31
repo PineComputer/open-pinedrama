@@ -466,7 +466,7 @@
   /* ───── Script: the screenplay's home (IA draft, A3) ─────
      The accepted Fountain, read; your original beside it on demand. A rewrite waiting for you is a review: it opens in
      Fountain review, not here. */
-  /* ───── Script: the screenplay's one home, from the upload to your acceptance (D-entry pending) ─────
+  /* ───── Script: the screenplay's one home, from the upload to your acceptance (D62) ─────
      merecdesperez44323-lab: "script, 这个part就把用户上传、drama-cli修改、revise、变成fountain， 用户确认， 这些在这个part都搞定，
      包括对比啥的， 改了啥". So the setup's Analyzing and Fountain review fold in here: they were steps ② to ④ of one thing.
      The sample is The Stepmother's real files (P.script); its states are the Prototype controls' "Script: …" states. */
