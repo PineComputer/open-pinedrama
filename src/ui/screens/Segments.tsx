@@ -36,7 +36,7 @@ function tilesOf(code: string, segment: string, page: SegmentPage | undefined, e
   ].filter((tile) => !!tile);
 }
 
-function Row({ dramaId, code, segment, page, episode, shots, others, item, stale }: { dramaId: string; code: string; segment: string; page?: SegmentPage; episode?: Episode; shots?: string[]; others: FileItem[]; item?: string; stale: Set<string> }) {
+function Row({ dramaId, code, segment, page, episode, shots, others, item, version, stale }: { dramaId: string; code: string; segment: string; page?: SegmentPage; episode?: Episode; shots?: string[]; others: FileItem[]; item?: string; version?: string; stale: Set<string> }) {
   const { t } = useT();
   const navigate = useNavigate();
   const tiles = tilesOf(code, segment, page, episode);
@@ -45,6 +45,11 @@ function Row({ dramaId, code, segment, page, episode, shots, others, item, stale
   const picked = tiles.find((tile) => tile.stage === item);
   const on = picked !== undefined || item === `episodes/${code}/segments/${segment}`;
   const shown = picked ?? tiles.at(-1);
+  // A link may name an earlier version of the stage (?version, work-06's contract with Canvas): it is shown, and said
+  // apart from the current one; a tile click goes back to the stage's current version.
+  const at = picked && version ? version : shown?.version;
+  // The version a tile shows, the same in its name and its label (WCAG 2.5.3).
+  const shownOn = (tile: (typeof tiles)[number]) => (on && shown?.kind === tile.kind && at) || tile.version;
   const status = standing(shown?.standing);
   // What drama-cli says the newest take (or board) was made from: its prompt, model, ratio and length (spec.json).
   const spec = specFacts(useText(specBeside(page?.takes[0]?.files[0] ?? page?.boards[0]?.files[0], others)).text);
@@ -60,14 +65,14 @@ function Row({ dramaId, code, segment, page, episode, shots, others, item, stale
             type="button"
             className="stile"
             aria-pressed={on && shown?.kind === tile.kind}
-            aria-label={`${segment} ${t(tile.kind === "take" ? "segments.take" : "segments.board")} ${tile.version}`}
+            aria-label={`${segment} ${t(tile.kind === "take" ? "segments.take" : "segments.board")} ${shownOn(tile)}`}
             onClick={(event) => {
               event.stopPropagation();
               pick(tile.stage);
             }}
           >
             {tile.file && isVideo(tile.file) ? <video src={`${tile.file.url}#t=0.5`} muted playsInline preload="metadata" /> : <img src={tile.file?.url} alt="" />}
-            <span>{tile.kind === "take" ? tile.version : t("segments.boardVersion", { v: tile.version })}</span>
+            <span>{tile.kind === "take" ? shownOn(tile) : t("segments.boardVersion", { v: shownOn(tile) })}</span>
           </button>
         ))}
       </div>
@@ -79,12 +84,12 @@ function Row({ dramaId, code, segment, page, episode, shots, others, item, stale
           {facts && <span className="mono muted">{facts}</span>}
           {/* Lineage of the stage picked, as a view on this home (IA §16). */}
           {shown && (
-            <Link className="ibtn" title={t("segments.lineageOf", { what: `${t(shown.kind === "take" ? "segments.take" : "segments.board")} ${shown.version}` })} aria-label={t("segments.lineage")} {...homeLink(dramaId, shown.stage, "lineage")} state={{ backTo: `${t("view.list")} · ${segment} ${t(shown.kind === "take" ? "segments.take" : "segments.board")} ${shown.version}` }} onClick={(event) => event.stopPropagation()}>
+            <Link className="ibtn" title={t("segments.lineageOf", { what: `${t(shown.kind === "take" ? "segments.take" : "segments.board")} ${shown.version}` })} aria-label={t("segments.lineage")} {...homeLink(dramaId, shown.stage, "lineage", picked ? version : undefined)} state={{ backTo: `${t("view.list")} · ${segment} ${t(shown.kind === "take" ? "segments.take" : "segments.board")} ${shown.version}` }} onClick={(event) => event.stopPropagation()}>
               <Icon name="tree-structure" className="ic" />
             </Link>
           )}
           {/* The same stage on the episode's board, picked. */}
-          <Link className="btn sm ghost" {...placeLink({ dramaId, surface: "canvas", episode: code, item: shown?.stage ?? `episodes/${code}/segments/${segment}` })} onClick={(event) => event.stopPropagation()}>
+          <Link className="btn sm ghost" {...placeLink({ dramaId, surface: "canvas", episode: code, item: shown?.stage ?? `episodes/${code}/segments/${segment}`, version: picked ? version : undefined })} onClick={(event) => event.stopPropagation()}>
             {t("segments.onCanvas")}
             <Icon name="arrow-right" className="ic" />
           </Link>
@@ -92,8 +97,9 @@ function Row({ dramaId, code, segment, page, episode, shots, others, item, stale
         {on && shown && (
           <p className="segat">
             <b className="mono">
-              {t(shown.kind === "take" ? "segments.take" : "segments.board")} {shown.version}
+              {t(shown.kind === "take" ? "segments.take" : "segments.board")} {at}
             </b>
+            {at !== shown.version && <span className="muted">{t("segments.current", { v: shown.version })}</span>}
             {stale.has(shown.stage) && <StatusChip status="stale" label={t("tree.outOfDate")} />}
           </p>
         )}
@@ -116,7 +122,7 @@ export function Segments({ dramaId, page }: { dramaId: string; page: EpisodePage
   const loose = page.segments.map((segment) => segment.key).filter((key) => !listed.has(key));
   const scenes = [...chains.map((chain, n) => ({ heading: t("review.sceneLine", { n: n + 1, heading: headingText(chain.sceneHeading) }), segments: chain.segments })), ...(loose.length ? [{ heading: t("canvas.unlisted"), segments: loose }] : [])];
   const accepted = (segment: string) => standing(episode?.segments[segment]) === "accepted";
-  const item = useRoute().search.item;
+  const { item, version } = useRoute().search;
   const lineage = useResource<LineageView>(`/api/dramas/${dramaId}/lineage`, [`project:${dramaId}`]);
   const stale = lineage.data?.lineage ? outOfDate(lineage.data.lineage) : new Set<string>();
   // Landing on a stage (from Lineage, Out of date, Canvas or the review room): its row is in view. Only the list scrolls.
@@ -138,7 +144,7 @@ export function Segments({ dramaId, page }: { dramaId: string; page: EpisodePage
         </span>
       </h3>
       {scene.segments.map((segment) => (
-        <Row key={segment} dramaId={dramaId} code={code} segment={segment} page={pages.get(segment)} episode={episode} shots={shotListOf(breakdown, segment)} others={page.other} item={item} stale={stale} />
+        <Row key={segment} dramaId={dramaId} code={code} segment={segment} page={pages.get(segment)} episode={episode} shots={shotListOf(breakdown, segment)} others={page.other} item={item} version={version} stale={stale} />
       ))}
     </section>
   ));

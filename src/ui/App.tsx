@@ -216,7 +216,7 @@ export function App() {
   const stage = place?.item && place.episode ? stageOf(place.item) : undefined;
   const status = useResource<ProjectView>(stage && dramaId ? `/api/dramas/${dramaId}/project` : null, [`project:${dramaId}`]);
   const stageState = stage?.where.segment && place?.episode ? status.data?.state?.episodes[place.episode] : undefined;
-  const version = stage && stage.where.segment ? (stage.kind === "take" ? stageState?.segments[stage.where.segment]?.current : stage.kind === "storyboard" && stage.where.style ? stageState?.storyboards[stage.where.segment]?.[stage.where.style]?.current : undefined) : undefined;
+  const version = place?.version ?? (stage && stage.where.segment ? (stage.kind === "take" ? stageState?.segments[stage.where.segment]?.current : stage.kind === "storyboard" && stage.where.style ? stageState?.storyboards[stage.where.segment]?.[stage.where.style]?.current : undefined) : undefined);
   // The cut in view on an episode's Cut: the one its open review shows (CutTab), with its version for the crumbs.
   const cutReview = page === "cut" && place?.episode ? waiting.find((item) => item.kind === "cut" && item.dramaId === dramaId && item.episode === place.episode) : undefined;
   const cutInView = useResource<ReviewView>(cutReview ? `/api/reviews/${cutReview.id}` : null, ["reviews"]);

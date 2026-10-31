@@ -82,4 +82,13 @@ describe("an episode's segments", () => {
     await screen.findAllByRole("button", { name: /^seg01 / });
     expect(screen.getByText("seg01").closest(".segrow")).toHaveAttribute("aria-current", "false");
   });
+
+  it("show the version a link names on its tile, say the current one, and keep it on Canvas (work-06's ?version)", async () => {
+    project(withTake);
+    const take = "episodes/EP001/segments/seg01";
+    await renderAt(<Segments dramaId="d1" page={page} />, `/d/d1/e/EP001/list?item=${encodeURIComponent(take)}&version=t00`);
+    expect(await screen.findByRole("button", { name: "seg01 Take t00" })).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByText("the current is t01")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "On Canvas" })).toHaveAttribute("href", `/d/d1/e/EP001/canvas?item=${encodeURIComponent(take)}&version=t00`);
+  });
 });
