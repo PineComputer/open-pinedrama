@@ -22,7 +22,7 @@ timeline
   2026-10-23 : D5 pre-production in one session
   2026-10-24 : D6 idle timeouts follow the work : D7 spend shown, never in a goal
   2026-10-29 : D8 phase 1 steers
-  2026-10-30 : D9 design/ is the UI source : D10 tsc gate : D11 mature libraries : D12 real samples in LFS : D13 decisions taken once : D14 credentials stop : D15 Codex review loop : D16 navigation and one home : D17 every take and cut watched : D18 cut editing as an edit spec : D19 TanStack Router : D20 Export by owner : D21 Analyzing and Out of date routes : D22 redo by owner : D23 the asset detail : D24 the cut edit goal : D25 one Submission : D26 crumbs and Back : D27 Reviews : D28 model badge : D29 canvas zoom, inline video : D30 URL rules : D31 agent scope : D32 narrow windows : D33 review options : D34 Episodes filters : D35 every element cites its ground : D36 Delivery is the cuts' home : D37 a picked node zooms : D38 shared redo after release : D39 a take plays on its node : D40 where a stop shows : D41 Script is the screenplay's home : D42 Story and Assets apart : D43 stable sample ids : D44 the cut leaves the switch : D45 samples' own screenplays : D46 Project : D47 a draft's changed base : D48 the List's ?version : D49 project types : D50 Home cards : D51 one column, rail labels
+  2026-10-30 : D9 design/ is the UI source : D10 tsc gate : D11 mature libraries : D12 real samples in LFS : D13 decisions taken once : D14 credentials stop : D15 Codex review loop : D16 navigation and one home : D17 every take and cut watched : D18 cut editing as an edit spec : D19 TanStack Router : D20 Export by owner : D21 Analyzing and Out of date routes : D22 redo by owner : D23 the asset detail : D24 the cut edit goal : D25 one Submission : D26 crumbs and Back : D27 Reviews : D28 model badge : D29 canvas zoom, inline video : D30 URL rules : D31 agent scope : D32 narrow windows : D33 review options : D34 Episodes filters : D35 every element cites its ground : D36 Delivery is the cuts' home : D37 a picked node zooms : D38 shared redo after release : D39 a take plays on its node : D40 where a stop shows : D41 Script is the screenplay's home : D42 Story and Assets apart : D43 stable sample ids : D44 the cut leaves the switch : D45 samples' own screenplays : D46 Project : D47 a draft's changed base : D48 the List's ?version : D49 project types : D50 Home cards : D51 one column, rail labels : D52 Home first, disabled
 ```
 
 ## D1. 2026-10-22 · A desktop app on Electron
@@ -853,6 +853,26 @@ timeline
   the left needs no column of its own*), and "project应该和icon 平铺" (*"project" should sit beside the
   icon*), relayed by master.
 - **Recorded in.** Commit 1fcae42 (design and port); master's and work-04's notes, 30 October 2026.
+
+## D52. 2026-10-30 · Home comes first in the rail, disabled until its gallery; ☰ only in narrow windows
+- **Context.** The ☰ at the top of the rail did nothing a maker needed at full width, and the rail
+  had no place for the studio's own home above the projects.
+- **Decision.**
+  - The ☰ shows only below 1100 px, where it opens the drawer
+    ([D32](#d32-2026-10-30--narrow-windows-the-sidebar-is-a-drawer-the-agent-is-the-ball)). This
+    replaces [D51](#d51-2026-10-30--home-has-one-column-the-rail-shows-each-icon-with-its-label)'s
+    ☰ everywhere.
+  - Home is first in the rail, disabled, with the tooltip "Coming later: a gallery of sample
+    projects", as phase 2's hand actions are drawn disabled with their reason
+    ([D8](#d8-2026-10-29--phase-1-steers)).
+  - The future Home is a gallery of predefined sample projects to start from.
+- **Alternatives.** None recorded.
+- **Grounds.** merecdesperez44323-lab's decision.
+- **Consequences.** The gallery is future work; nothing behind Home is built now.
+- **Words.** "i think it's meaningless for this icon on the left top corner. also i think you need to
+  have a home page top of the drama project icon. and in the future we should have some pre-defined
+  project as gallary. currently just put Home and make if gray and not clicable", relayed by master.
+- **Recorded in.** Master's note to the docs, 30 October 2026; work-04 builds it.
 
 ## References
 
