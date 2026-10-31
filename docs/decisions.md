@@ -20,7 +20,7 @@ timeline
   2026-10-23 : D5 pre-production in one session
   2026-10-24 : D6 idle timeouts follow the work : D7 spend shown, never in a goal
   2026-10-29 : D8 phase 1 steers
-  2026-10-30 : D9 design/ is the UI source : D10 tsc gate : D11 mature libraries : D12 real samples in LFS : D13 decisions taken once : D14 credentials stop : D15 Codex review loop : D16 navigation and one home : D17 every take and cut watched : D18 cut editing as an edit spec : D19 TanStack Router : D20 Export by owner : D21 Analyzing and Out of date routes : D22 redo by owner : D23 the asset detail : D24 the cut edit goal : D25 one Submission : D26 crumbs and Back : D27 Reviews : D28 model badge : D29 canvas zoom, inline video : D30 URL rules : D31 agent scope : D32 narrow windows : D33 review options : D34 Episodes filters : D35 every element cites its ground : D36 Delivery is the cuts' home : D37 where a stop shows
+  2026-10-30 : D9 design/ is the UI source : D10 tsc gate : D11 mature libraries : D12 real samples in LFS : D13 decisions taken once : D14 credentials stop : D15 Codex review loop : D16 navigation and one home : D17 every take and cut watched : D18 cut editing as an edit spec : D19 TanStack Router : D20 Export by owner : D21 Analyzing and Out of date routes : D22 redo by owner : D23 the asset detail : D24 the cut edit goal : D25 one Submission : D26 crumbs and Back : D27 Reviews : D28 model badge : D29 canvas zoom, inline video : D30 URL rules : D31 agent scope : D32 narrow windows : D33 review options : D34 Episodes filters : D35 every element cites its ground : D36 Delivery is the cuts' home : D37 where a stop shows : D38 shared redo after release
 ```
 
 ## D1. 2026-10-22 · A desktop app on Electron
@@ -477,6 +477,23 @@ timeline
 - **Consequences.** None beyond the StopCard and its notice.
 - **Words.** None recorded.
 - **Recorded in.** work-04's note to the docs, 30 October 2026.
+
+## D38. 2026-10-30 · Redoing a shared reference takes a new setup session, after release
+- **Context.** Out of date offers a redo to the session that owns each item (D22). Shared
+  references belong to the setup session, which closes once it hands the project over (D5).
+- **Decision.** Redoing a look, location or prop after the handover will start a new setup session
+  on the drama's project; it is not available tonight. Tonight, Out of date redoes episode-owned
+  items, through the episode's own session; the setup group's redo stays disabled, saying why.
+- **Alternatives.** Keeping the setup session open after the handover.
+- **Grounds.** An open setup session keeps a Computer running while it idles
+  ([D6](#d6-2026-10-24--idle-timeouts-follow-the-work-1-h-working-3-h-waiting-on-the-maker)), and
+  a setup session redrawing shared references while episode sessions work on copies of the project
+  would compete with them (D5: episodes never make a new version of anything shared). Master's
+  decision on work-05's question, 30 October 2026.
+- **Consequences.** QA journey 3 redoes an EP006 item; the shared-reference redo is in
+  [architecture](architecture.md#11-before-release), "Before release".
+- **Words.** None recorded.
+- **Recorded in.** Master's notes to work-05 and the docs, 30 October 2026.
 
 ## D25. 2026-10-30 · One Submission state for every send
 - **Context.** A review's send, a cut's Apply and a redo each go to an agent and can time out.
