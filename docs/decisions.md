@@ -1379,7 +1379,8 @@ timeline
   reason was work-04's request. No words from merecdesperez44323-lab.
 - **Amended by.** [D72](#d72-2026-10-30--computers-sessions-and-their-scopes-are-objects-the-tag-follows-mains-engine): reverted for the tag (401faed); a message reaches only its scope's open session, and nothing opens
   one: with none open it is refused as `episode-stopped` (naming main's `POST /api/episodes/:id/resume`),
-  `episode-done` or `no-session-open`.
+  `episode-done` or `no-session-open`. In the UI (a03fa0a), a stopped episode offers Resume; a done
+  episode and a handed-over setup say this version can't reopen them.
 ## D72. 2026-10-30 · Computers, sessions and their scopes are objects; the tag follows main's engine
 - **Context.** A message to a finished episode had opened a new session on a new Computer (Codex's
   round 4; the engine diff audit, B1), and no document said how a Computer, a session and the work it

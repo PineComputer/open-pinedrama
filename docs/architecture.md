@@ -351,7 +351,13 @@ stateDiagram-v2
 - States: Computer `records.ts:60`, session role and state `records.ts:76`, `:78`, episode
   `src/shared/types.ts:60`.
 
-**What the UI shows.** Each session row names the Computer it runs on (work-04). **Waiting for Pine's
+**What the UI shows** (e01d2b3, 69d8c93). Each open session row names its Computer ("on PC-1 · waits for
+you"); Watch names the desktop and what else runs there ("Watch PC-1's desktop (also running EP005)"); a
+session that is not the scope's first says what came before it ("Session 2 on PC-1, after PC-2 stopped",
+"after session 1 ended"), from `GET /api/dramas/:id/session-history` (757df1b); with none open, the status
+says how the last session ended. A message reaches only an open session (a03fa0a): a stopped episode
+offers Resume, a run control ([D70](decisions.md#d70-2026-10-30--the-ui-decides-the-chat-acts)); a done
+episode and a handed-over setup say this version can't reopen them. **Waiting for Pine's
 engine owner:** the engine diff audit's B4, B5, B7, B8 and B9 (`short-drama-runs/qa/ENGINE_DIFF_AUDIT.md`),
 and reopening a done episode by a message.
 
