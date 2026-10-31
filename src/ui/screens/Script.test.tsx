@@ -20,7 +20,7 @@ function page(waiting: boolean): ScriptPage {
     inputs: [original],
     screenplayFile: original.id,
     versions: [
-      { version: "v2", file: v2, review: review2, question: { reviewId: "r3", state: waiting ? "open" : "answered", words: waiting ? undefined : "Yes, this is my script." } },
+      { version: "v2", file: v2, review: review2, question: { reviewId: "r3", state: waiting ? "open" : "answered", ...(waiting ? {} : { words: "Yes, this is my script.", verdict: "approve" as const }) } },
       { version: "v1", file: v1 },
     ],
   };
@@ -46,7 +46,7 @@ describe("Script", () => {
       ["v2", "true"],
       ["v1", "false"],
     ]);
-    expect(within(versions).getByText(/answered in your words: “Yes, this is my script\.”/)).toBeInTheDocument();
+    expect(within(versions).getByText(/accepted in your words: “Yes, this is my script\.”/)).toBeInTheDocument();
     expect(screen.getByRole("tab")).toHaveTextContent("screenplay.fountainv2Read-only");
   });
 
@@ -108,7 +108,7 @@ describe("Script, a version waiting for the maker", () => {
     await user.type(screen.getByRole("textbox", { name: "Why v2 goes back (required)" }), "Keep MORNING in the action line.");
     await user.click(sendBack);
     await waitFor(() => expect(calls("POST", "/api/reviews/r3/decision")).toHaveLength(1));
-    expect(calls("POST", "/api/reviews/r3/decision")[0].body).toEqual({ submissionId: expect.any(String), items: [], words: "Keep MORNING in the action line." });
+    expect(calls("POST", "/api/reviews/r3/decision")[0].body).toEqual({ submissionId: expect.any(String), items: [], words: "Keep MORNING in the action line.", verdict: "revise" });
     expect(await screen.findByText("Sent to the setup session.")).toBeInTheDocument();
   });
 

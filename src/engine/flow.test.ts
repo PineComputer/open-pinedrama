@@ -48,7 +48,7 @@ const openReview = (dramaId: string, filter: (review: ReviewSummary) => boolean)
 /** The setup's first stop: the screenplay rewritten into drama-cli's Fountain, accepted in the maker's words. */
 async function acceptRewrite(dramaId: string) {
   const rewrite = await until("the screenplay rewrite", openReview(dramaId, () => true));
-  await call("POST", `/api/reviews/${rewrite.id}/decision`, { submissionId: crypto.randomUUID(), items: [], words: "Yes, this is my script." });
+  await call("POST", `/api/reviews/${rewrite.id}/decision`, { submissionId: crypto.randomUUID(), items: [], words: "Yes, this is my script.", verdict: "approve" });
   return rewrite;
 }
 
@@ -94,6 +94,10 @@ async function scenario(title: string) {
   form.append("files", new File(["EPISODE 1\nLin enters."], "screenplay.txt", { type: "text/plain" }));
   const { id } = await call<{ id: string }>("POST", "/api/dramas", form);
 
+  // The rewrite's question names the screenplay version it recorded, and takes a verdict, never read from the words.
+  const rewrite = await until("the screenplay rewrite", openReview(id, () => true));
+  expect((await call<ReviewView>("GET", `/api/reviews/${rewrite.id}`)).rewrite).toMatch(/^v\d+$/);
+  await expect(call("POST", `/api/reviews/${rewrite.id}/decision`, { submissionId: crypto.randomUUID(), items: [], words: "Yes, this is my script." })).rejects.toThrow("Accept screenplay");
   // The setup asks a question, then for the leads' looks, with their sheets saved first.
   await acceptRewrite(id);
   const question = await until("the setup question", openReview(id, (item) => item.kind === "question"));
@@ -377,7 +381,8 @@ describe("a drama in replay", () => {
     for (const [key, value] of Object.entries({ title: "Decided once", language: "en", preset: "en-us-live-sfw", screenplayLanguage: "en", screenplay: "0", parallel: "1", perComputer: "1" })) form.set(key, value);
     form.append("files", new File(["EPISODE 1\nLin enters."], "screenplay.txt", { type: "text/plain" }));
     const { id } = await call<{ id: string }>("POST", "/api/dramas", form);
-    const decide = (review: string, submissionId: string, words: string) => call<ReviewView>("POST", `/api/reviews/${review}/decision`, { submissionId, items: [], words });
+    // The rewrite's question takes a verdict; the setup's plain question after it ignores one.
+    const decide = (review: string, submissionId: string, words: string) => call<ReviewView>("POST", `/api/reviews/${review}/decision`, { submissionId, items: [], words, verdict: "approve" });
     const turns = (review: string) => get<{ n: number }>("select count(*) as n from turns where session_id = (select session_id from reviews where id = ?)", review)!.n;
 
     // A send that fails reopens the review; the same submission, tried again, goes.

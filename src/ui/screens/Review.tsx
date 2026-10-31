@@ -14,7 +14,7 @@ import { CutViewer, alignedLines, cutLines, fmt } from "../cut/CutViewer.tsx";
 import { shotListOf } from "../../shared/shots.ts";
 import { Icon } from "../icons.tsx";
 import { Markdown } from "../Markdown.tsx";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link, Navigate, useNavigate } from "@tanstack/react-router";
 import { homeLink, placeLink, useRoute } from "../place.ts";
 import { standing as stageStanding } from "./Canvas.tsx";
 import { Still } from "../Still.tsx";
@@ -1202,6 +1202,8 @@ export function Review({ id }: { id: string }) {
     );
   }
   if (!data) return <div className="page quiet">{t("loading")}</div>;
+  // A screenplay rewrite is decided on its exact version, in Script (D62, D70), with a verdict the question room has no way to give.
+  if (data.rewrite) return <Navigate {...homeLink(data.dramaId, "screenplay", "canvas", data.rewrite)} replace />;
   if (data.kind === "question" || data.reviewItems.length === 0) return <QuestionRoom review={data} done={done} />;
   return data.kind === "cut" ? <CutRoom review={data} done={done} /> : <MediaRoom review={data} done={done} />;
 }

@@ -408,6 +408,11 @@ export interface Decision {
   submissionId: string;
   /** On a cut's review, the maker's edit of it: the next cut, built by the agent with drama-cli edit (Apply). */
   edit?: CutEdit;
+  /**
+   * On a question about a screenplay rewrite (ReviewView.rewrite), required: accept that version or send it back. The
+   * item verdicts' names, so the agent is told which, never left to read it from the words.
+   */
+  verdict?: Verdict;
 }
 
 /**
@@ -445,6 +450,8 @@ export interface ReviewView extends ReviewSummary {
   refusals: Refusal[];
   /** Why the stop's refusals didn't read, when they didn't. */
   refusalsError?: string;
+  /** On a question whose turn recorded a screenplay version: that version (vN), which the decision accepts or sends back. */
+  rewrite?: string;
 }
 
 export interface ChatMessage {
@@ -544,7 +551,7 @@ export interface ScreenplayVersion {
   file?: FileItem;
   review?: FileItem;
   /** The agent's question about this version (the rewrite waiting for the maker), where it stands and the maker's words once decided. */
-  question?: { reviewId: string; state: ReviewState; words?: string; decidedAt?: string };
+  question?: { reviewId: string; state: ReviewState; words?: string; verdict?: Verdict; decidedAt?: string };
 }
 
 export interface DeliveryRow {

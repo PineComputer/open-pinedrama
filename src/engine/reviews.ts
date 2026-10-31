@@ -115,6 +115,11 @@ export function questionReady(session: SessionRow, turnId: string, inWords = fal
   publish(`drama:${session.drama_id}`, "reviews");
 }
 
+/** The screenplay version a stop's turn recorded (drama-cli's screenplay validate, D115): the rewrite its question is about. */
+export function rewriteOf(files: FileRow[]): string | undefined {
+  return files.map((file) => classify(file.rel_path)).find((hints) => hints.kind === "screenplay-version")?.version;
+}
+
 function subject(review: ReviewRow): string {
   const code = review.episode_id ? episodeCode(episodeRow(review.episode_id)!) : "";
   switch (review.kind) {
@@ -288,8 +293,10 @@ async function send(reviewId: string, decision: Decision): Promise<ReviewRow> {
   // Keep verdicts for this review's items only, and a note's file only if it belongs to that item.
   const itemFiles = new Map(items.map((item) => [item.key, new Set(item.files.map((file) => file.id))]));
   const edit = decision.edit !== undefined ? editOf(review, files, decision.edit) : undefined;
+  const rewrite = review.kind === "question" ? rewriteOf(files) : undefined;
   const kept: Decision = {
     ...(edit ? { edit: edit.kept } : {}),
+    ...(rewrite && (decision.verdict === "approve" || decision.verdict === "revise") ? { verdict: decision.verdict } : {}),
     submissionId: decision.submissionId,
     words: decision.words ?? "",
     items: (decision.items ?? [])
@@ -306,8 +313,9 @@ async function send(reviewId: string, decision: Decision): Promise<ReviewRow> {
       })),
   };
   if (review.kind === "question" && !kept.words.trim()) throw new StudioError("answer-missing", "Write an answer first.");
+  if (rewrite && !kept.verdict) throw new StudioError("verdicts-missing", `Accept screenplay ${rewrite} or send it back first.`);
   if (review.kind !== "question" && (!items.length || kept.items.length !== items.length)) throw new StudioError("verdicts-missing", "Give every item a verdict first.");
-  const context = { kind: review.kind, subject: subject(review), labels, paths: new Map(files.map((file) => [file.id, file.rel_path])), edit: edit?.goal };
+  const context = { kind: review.kind, subject: subject(review), labels, paths: new Map(files.map((file) => [file.id, file.rel_path])), edit: edit?.goal, rewrite };
   const pictures = [...new Set(kept.items.flatMap((item) => item.notes.flatMap((note) => (note.image !== undefined ? [note.image] : []))))].map((id) => references.get(id)!);
 
   // Kept as written for a session that later resumes the work; said again below with where its pictures are.

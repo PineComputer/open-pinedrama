@@ -1,6 +1,6 @@
 import { useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import type { FileItem, ScreenplayVersion, ScriptPage, SubmissionView } from "../../shared/types.ts";
+import type { Decision, FileItem, ScreenplayVersion, ScriptPage, SubmissionView } from "../../shared/types.ts";
 import { api, ApiError, useResource } from "../api.ts";
 import { Submission, useSubmission } from "../components/Submission.tsx";
 import { FountainDiff } from "../FountainDiff.tsx";
@@ -24,7 +24,8 @@ function Decide({ reviewId, version }: { reviewId: string; version: string }) {
   const [words, setWords] = useState("");
   const submission = useRef(crypto.randomUUID());
   const { sending, send, check } = useSubmission({
-    submit: () => api(`/api/reviews/${reviewId}/decision`, { method: "POST", json: { submissionId: submission.current, items: [], words: words.trim() } }),
+    submit: () =>
+      api(`/api/reviews/${reviewId}/decision`, { method: "POST", json: { submissionId: submission.current, items: [], words: words.trim(), verdict: form === "accept" ? "approve" : "revise" } satisfies Decision }),
     // The engine's word on that submission (GET /api/submissions/:id): none means nothing was taken.
     taken: async () => {
       try {
@@ -94,7 +95,7 @@ function VersionRow({ version, shown, onShow }: { version: ScreenplayVersion; sh
             {version.version}
           </button>
           {" · "}
-          {decided ? t("script.decided", { words: question.words! }) : waiting ? <b>{t("script.waiting")}</b> : t("script.recorded")}
+          {decided ? t(question.verdict === "revise" ? "script.sentBack" : "script.accepted", { words: question.words! }) : waiting ? <b>{t("script.waiting")}</b> : t("script.recorded")}
         </span>
         {question?.decidedAt && <time>{question.decidedAt.slice(11, 16)}</time>}
         {shown && version.review && (
@@ -190,7 +191,7 @@ function ScriptBody({ dramaId, data, ep }: { dramaId: string; data: ScriptPage; 
               <Icon name={view === "original" ? "file-text" : view === "compare" ? "square-half" : "film-strip"} className="ic" />
               <b>{view === "compare" ? `${original?.name ?? ""} ↔ screenplay.fountain` : view === "original" ? (original?.name ?? "") : "screenplay.fountain"}</b>
               {view !== "original" && shown && <span className="tag">{shown.version}</span>}
-              {/* Read-only (VS Code's read-only editor): a change is asked of the agent in the sidebar (UI_ACTIONS_RULE). */}
+              {/* Read-only (VS Code's read-only editor): a change is asked of the agent in the sidebar (D70). */}
               <span className="ro" title={t("script.readOnlyWhy")}>
                 <Icon name="lock-simple" className="ic" />
                 {t("script.readOnly")}

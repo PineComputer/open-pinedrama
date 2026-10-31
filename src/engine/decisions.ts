@@ -15,6 +15,8 @@ export interface DecisionContext {
   images?: Map<number, string>;
   /** A cut's edit, as the goal that asks the agent to build it (goals.ts, editGoal). */
   edit?: string;
+  /** On a question about a screenplay rewrite, the version it recorded (vN). */
+  rewrite?: string;
 }
 
 function percent(value: number): string {
@@ -39,6 +41,12 @@ function where(note: Note, paths: Map<number, string>, images?: Map<number, stri
 
 export function answerText(decision: Omit<Decision, "submissionId">, context: DecisionContext): string {
   const words = decision.words.trim();
+  // A screenplay rewrite is accepted with the person's words as drama-cli accept's --person, verbatim (short_drama
+  // doc/drama-cli/cli.md, screenplay validate: it prints the accept command, --person for a rewrite; D115), or sent back.
+  if (context.kind === "question" && context.rewrite && decision.verdict === "approve")
+    return `I accept screenplay ${context.rewrite}. Accept it with my words, verbatim, as --person in the accept command screenplay validate printed for it (drama-cli accept <project>/screenplay ${context.rewrite} --person): "${words}"`;
+  if (context.kind === "question" && context.rewrite && decision.verdict === "revise")
+    return `I send screenplay ${context.rewrite} back: do not accept it. What to change, in my words: "${words}"`;
   if (context.kind === "question") return words;
   // An edit is the maker's own next cut, apart from notes (Codex's IA re-review D1): the goal says it all.
   if (context.edit) return [`My review of ${context.subject}.`, context.edit, ...(words ? [`In my own words: "${words}"`] : [])].join("\n");

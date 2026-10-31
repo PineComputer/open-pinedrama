@@ -43,6 +43,18 @@ describe("answerText", () => {
     expect(text).toContain("- cut: the slap lands early (at 0:47)");
   });
 
+  it("tells the agent whether a screenplay rewrite is accepted or sent back, the words verbatim either way", () => {
+    const rewrite = { ...context, kind: "question" as const, rewrite: "v2" };
+    const words = "Yes, this is my script.";
+    const accepted = answerText({ items: [], words, verdict: "approve" }, rewrite);
+    const sentBack = answerText({ items: [], words, verdict: "revise" }, rewrite);
+    expect(accepted).not.toBe(sentBack);
+    expect(accepted).toBe(
+      `I accept screenplay v2. Accept it with my words, verbatim, as --person in the accept command screenplay validate printed for it (drama-cli accept <project>/screenplay v2 --person): "Yes, this is my script."`,
+    );
+    expect(sentBack).toBe(`I send screenplay v2 back: do not accept it. What to change, in my words: "Yes, this is my script."`);
+  });
+
   it("sends a plain question's answer as the maker wrote it", () => {
     expect(answerText({ items: [], words: "He is 32." }, { ...context, kind: "question" })).toBe("He is 32.");
   });

@@ -26,7 +26,7 @@ import { LENGTHS } from "./goals.ts";
 import { type FileRow, fileUrl, filesOfStop, toItem, versionNumber } from "./library.ts";
 import { type ComputerRow, type DramaRow, type EpisodeRow, type ReviewRow, type SessionRow, episodeCode, latestTurn, session as sessionRow } from "./records.ts";
 import { turnRefusals } from "./refusals.ts";
-import { itemLabel, itemsOf, pendingReview } from "./reviews.ts";
+import { itemLabel, itemsOf, pendingReview, rewriteOf } from "./reviews.ts";
 import { projectView } from "./status.ts";
 import { scaleOf } from "../shared/facts.ts";
 import { stopKind } from "../shared/refusal.ts";
@@ -411,6 +411,7 @@ export function reviewView(review: ReviewRow): ReviewView {
     finishable:
       review.kind === "question" && review.state === "open" && review.episode_id !== null && get("select id from files where episode_id = ? and kind = 'cut' limit 1", review.episode_id) !== undefined,
     ...turnRefusals(review.turn_id),
+    rewrite: review.kind === "question" ? rewriteOf(files) : undefined,
   };
 }
 

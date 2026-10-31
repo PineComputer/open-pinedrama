@@ -114,7 +114,7 @@ function screenplayVersions(dramaId: string): ScreenplayVersion[] {
       version: `v${number}`,
       file: file && toItem(file),
       review: review && toItem(review),
-      question: asked && { reviewId: asked.id, state: asked.state, words: decision?.words, decidedAt: asked.decided_at ?? undefined },
+      question: asked && { reviewId: asked.id, state: asked.state, words: decision?.words, verdict: decision?.verdict, decidedAt: asked.decided_at ?? undefined },
     };
   });
 }

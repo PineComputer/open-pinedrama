@@ -423,3 +423,12 @@ describe("where a review item lives (IA §16)", () => {
     expect(itemStage("question", undefined, "q1")).toBeUndefined();
   });
 });
+
+describe("a question about a screenplay rewrite", () => {
+  it("opens Script at that version, where it is accepted or sent back (D62)", async () => {
+    const review = { ...storyboardReview(), kind: "question" as const, question: "Accept the rewrite?", reviewItems: [], rewrite: "v2" };
+    answer(`/api/reviews/${review.id}`, review);
+    const { router } = await renderAt(<Review id={review.id} />, `/r/${review.id}`);
+    await waitFor(() => expect(router.state.location.href).toBe(`/d/${review.dramaId}/script?item=screenplay&version=v2`));
+  });
+});
