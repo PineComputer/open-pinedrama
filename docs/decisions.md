@@ -22,7 +22,7 @@ timeline
   2026-10-23 : D5 pre-production in one session
   2026-10-24 : D6 idle timeouts follow the work : D7 spend shown, never in a goal
   2026-10-29 : D8 phase 1 steers
-  2026-10-30 : D9 design/ is the UI source : D10 tsc gate : D11 mature libraries : D12 real samples in LFS : D13 decisions taken once : D14 credentials stop : D15 Codex review loop : D16 navigation and one home : D17 every take and cut watched : D18 cut editing as an edit spec : D19 TanStack Router : D20 Export by owner : D21 Analyzing and Out of date routes : D22 redo by owner : D23 the asset detail : D24 the cut edit goal : D25 one Submission : D26 crumbs and Back : D27 Reviews : D28 model badge : D29 canvas zoom, inline video : D30 URL rules : D31 agent scope : D32 narrow windows : D33 review options : D34 Episodes filters : D35 every element cites its ground : D36 Delivery is the cuts' home : D37 a picked node zooms : D38 shared redo after release : D39 a take plays on its node : D40 where a stop shows : D41 Script is the screenplay's home : D42 Story and Assets apart : D43 stable sample ids : D44 the cut leaves the switch : D45 samples' own screenplays : D46 Project : D47 a draft's changed base : D48 the List's ?version : D49 project types : D50 Home cards : D51 one column, rail labels : D52 Home first, disabled : D53 account footer : D54 icon-only rail : D55 the cover follows the format : D56 Assets grid and inspector : D57 no tabs in Assets
+  2026-10-30 : D9 design/ is the UI source : D10 tsc gate : D11 mature libraries : D12 real samples in LFS : D13 decisions taken once : D14 credentials stop : D15 Codex review loop : D16 navigation and one home : D17 every take and cut watched : D18 cut editing as an edit spec : D19 TanStack Router : D20 Export by owner : D21 Analyzing and Out of date routes : D22 redo by owner : D23 the asset detail : D24 the cut edit goal : D25 one Submission : D26 crumbs and Back : D27 Reviews : D28 model badge : D29 canvas zoom, inline video : D30 URL rules : D31 agent scope : D32 narrow windows : D33 review options : D34 Episodes filters : D35 every element cites its ground : D36 Delivery is the cuts' home : D37 a picked node zooms : D38 shared redo after release : D39 a take plays on its node : D40 where a stop shows : D41 Script is the screenplay's home : D42 Story and Assets apart : D43 stable sample ids : D44 the cut leaves the switch : D45 samples' own screenplays : D46 Project : D47 a draft's changed base : D48 the List's ?version : D49 project types : D50 Home cards : D51 one column, rail labels : D52 Home first, disabled : D53 account footer : D54 icon-only rail : D55 the cover follows the format : D56 Assets grid and inspector : D57 no tabs in Assets : D58 Canvas nodes whole : D59 Canvas opens in Hand
 ```
 
 ## D1. 2026-10-22 · A desktop app on Electron
@@ -963,6 +963,37 @@ timeline
 - **Words.** "这里菜单既有竖着的又有横着的" (*the menus here are both vertical and horizontal*), relayed by
   master.
 - **Recorded in.** Commit 0934071; work-02's note to the docs.
+
+## D58. 2026-10-30 · A Canvas node shows its picture or video whole
+- **Context.** Canvas cards cut every picture and take to one ratio, square or the project's format
+  (6e0024c).
+- **Decision.** Each node shows its file whole, at the file's own ratio and size: the node keeps
+  drama-cli's layout width, its card takes the file's natural size once loaded (`object-fit:
+  contain`, nothing cropped), and the size ("2048 × 1152") shows at the right of its label. Since
+  heights vary, `src/shared/layout.ts` stacks each group's rows by their tallest member, keeping
+  drama-cli's columns, groups and order, with nothing overlapping; without heights it is
+  `drama-cli export comfyui`'s layout exactly. This supersedes 6e0024c.
+- **Alternatives.** One card ratio for every node (6e0024c).
+- **Grounds.** merecdesperez44323-lab's decision; liblib.tv's nodes, each box following its media
+  with its size in the label; CSS `aspect-ratio` and `object-fit`; the player's own fit and full
+  screen (`design/studio.css`, `.player`).
+- **Consequences.** The layout depends on loaded heights; nothing overlaps.
+- **Words.** "这个卡片的size就是有点儿限制图片…不然就索性直接展示原始的 图片 or 视频的 比例 & size？现在人为cut到 一个方形了"
+  (*the card's size somewhat limits the picture… why not just show the picture's or video's
+  original ratio and size? Right now it's cut to a square by hand*), relayed by master.
+- **Recorded in.** Commit 2d52bbe; follow-ups 173b897 and 9c669fb.
+
+## D59. 2026-10-30 · The Canvas opens in Hand
+- **Context.** A drag on the Canvas moved nodes, though phase 1 only reads the board.
+- **Decision.** The Canvas opens with the Hand tool: a drag pans, V switches to Move, and a click
+  still picks a node.
+- **Alternatives.** Move as the default tool.
+- **Grounds.** merecdesperez44323-lab's decision; phase 1 steers and moves nothing
+  ([D8](#d8-2026-10-29--phase-1-steers)); Figma's view-only mode; liblib's hand tool.
+- **Consequences.** None beyond the Canvas.
+- **Words.** "到 canvas界面能不能默认是 hand， 这样可以拖拽" (*can the canvas default to hand, so it can be
+  dragged*), relayed by master.
+- **Recorded in.** Commit 2d52bbe.
 
 ## References
 
