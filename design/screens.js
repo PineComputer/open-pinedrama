@@ -133,15 +133,17 @@
       ${(v === "back" || v === "note") && html`<input class="why" placeholder=${v === "back" ? "Why it goes back (required)" : "Your note"} value=${S.cardWhy[id] || ""} onInput=${(e) => set({ cardWhy: { ...S.cardWhy, [id]: e.target.value } })}/>`}`;
   }
   function Story() {
-    const tabs = [["bible", "Bible"], ["cast", "Characters", P.cast.length], ["scenes", "Locations", P.places.length], ["props", "Props", P.props.length]];
+    // IA draft (§16): Story is the bible's home; Assets is the home of characters, locations and props, with its own tabs.
+    const story = (S.stab || "bible") === "bible";
+    const tabs = story ? [] : [["cast", "Characters", P.cast.length], ["scenes", "Locations", P.places.length], ["props", "Props", P.props.length]];
     const open = ["margaret", "garden"], decided = open.filter((k) => S.cards[k] && (S.cards[k] !== "back" || (S.cardWhy[k] || "").trim())).length;
     return html`<div class="main">
       <${TopBar} crumbs=${(S.stab || "bible") === "bible" ? [P.project.title, "Story"] : [P.project.title, "Assets", { cast: "Characters", scenes: "Locations", props: "Props" }[S.stab]]}/>
       <div class="body"><div class="scrollmain">
         <div class="bar2"><${EpisodeViews}/><span class="grow"></span><${ProjectChips}/></div>
         <${StopBanner}/>
-        <div style="padding:0 16px"><div class="tabsrow" style="margin:4px 0 18px"><div class="utabs" role="tablist">${tabs.map(([k, l, n]) => html`<button role="tab" aria-selected=${String(S.stab === k)} onClick=${() => set({ stab: k })}>${l}${n && html`<small>${n}</small>`}</button>`)}</div>
-          <span class="grow"></span><span class="muted" style="font-size:12px">Bible b0003 · accepted · EP001–EP012 written</span></div></div>
+        <div style="padding:0 16px"><div class="tabsrow" style="margin:4px 0 18px">${story ? html`<h2 class="pagetitle">Story</h2>` : html`<div class="utabs" role="tablist">${tabs.map(([k, l, n]) => html`<button role="tab" aria-selected=${String(S.stab === k)} onClick=${() => set({ stab: k })}>${l}${n && html`<small>${n}</small>`}</button>`)}</div>`}
+          <span class="grow"></span><span class="muted" style="font-size:12px">${story ? "Bible b0003 · accepted · EP001–EP012 written" : "Shared by every episode"}</span></div></div>
         ${S.stab === "bible" && html`<div class="biblegrid">
           <section class="panel"><span class="kick">Logline</span><p class="logline">${P.bible.logline}</p>
             <div class="tags" style="display:flex;gap:6px;margin-top:12px"><span class="tag">Romance</span><span class="tag">Legal</span><span class="tag">24 × 90 s</span></div></section>
@@ -301,6 +303,29 @@
       </div><${AgentPanel}/></div></div>`;
   }
 
-  window.EXTRA = { upload: Upload, analyzing: Analyzing, fountain: Fountain, story: Story, graph: Graph, cut: Cut, episode: Episode, StopCard, SetupSteps };
+  /* ───── Script: the screenplay's home (IA draft, A3) ─────
+     The accepted Fountain, read; your original beside it on demand. A rewrite waiting for you is a review: it opens in
+     Fountain review, not here. */
+  function Script() {
+    const beside = S.scriptBeside;
+    const lines = P.fountain.map((l) => (l.ask ? { ...l, tx: l.tx.replace(" - ? ", " - DAY "), ask: false } : l));
+    const doc = html`<div class="fdoc">${lines.map((l) => (l.gap ? html`<div class="gap"></div>` : html`<div class=${"fl " + l.el}>${l.tx}</div>`))}</div>`;
+    return html`<div class="main">
+      <${TopBar} crumbs=${[P.project.title, "Script"]}/>
+      <div class="body"><div class="scrollmain">
+        <div class="bar2"><span class="grow"></span><${ProjectChips}/></div>
+        <${StopBanner}/>
+        <div class="scripthead"><div class="grow"><h2 class="pagetitle">Script</h2>
+            <p class="muted">screenplay.fountain v2 · ${Status("accepted")} accepted in your words: “Yes, this is my script. Day for the second scene.”</p></div>
+          <div class="seg" role="group" aria-label="Show"><button aria-pressed=${String(!beside)} onClick=${() => set({ scriptBeside: false })}>Fountain</button><button aria-pressed=${String(!!beside)} onClick=${() => set({ scriptBeside: true })}>Beside your original</button></div></div>
+        ${beside ? html`<div class="fpanes scriptpanes"><section class="fpane"><h4>Your file <span class="tag">bride-on-bail.docx</span></h4><ol class="orig">${P.orig.map((l, i) => html`<li><button type="button"><span>${i + 1}</span>${l}</button></li>`)}</ol></section>
+            <section class="fpane fnt"><h4>Fountain <span class="tag">v2 · accepted</span></h4>${doc}</section></div>`
+          : html`<section class="panel scriptdoc">${doc}</section>`}
+        <section class="panel scriptversions"><h3>${I("stack")}Versions</h3>
+          <div class="lrow static">v2 · the agent's rewrite, accepted<span class="mono subtle">today 17:40</span></div>
+          <div class="lrow static">Your original · bride-on-bail.docx<span class="mono subtle">uploaded 17:31</span></div></section>
+      </div><${AgentPanel}/></div></div>`;
+  }
+  window.EXTRA = { script: Script, upload: Upload, analyzing: Analyzing, fountain: Fountain, story: Story, graph: Graph, cut: Cut, episode: Episode, StopCard, SetupSteps };
   window.PD.draw();
 })();
