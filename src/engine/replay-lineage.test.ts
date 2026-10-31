@@ -3,7 +3,7 @@
 // from each picture to what was made from it.
 import { describe, expect, it } from "vitest";
 import { parseLineage, trace } from "../shared/lineage.ts";
-import { replayLineage } from "./replay-lineage.ts";
+import { lineageAt, replayLineage } from "./replay-lineage.ts";
 import type { ReplayProgress } from "./replay-status.ts";
 
 const v1 = { current: "v1", accepted: "v1" };
@@ -85,5 +85,54 @@ describe("replay's lineage", () => {
   it("has no episode stage before the episode's boards are drawn", () => {
     const lineage = read({ ...progress, episodes: { EP001: { segments: ["seg01"] } } });
     expect(lineage.nodes.map((node) => node.id).filter((id) => id.startsWith("episodes/"))).toEqual(["episodes/EP001/breakdown"]);
+  });
+});
+
+describe("a sample drama's own lineage at a stop", () => {
+  // drama-cli's export of a finished run, in its own form: a plate and its front view, a first-frame reference, a take.
+  const node = (id: number, stage: string, kind: string, section: string, inputs: [string, number][], outputs: number[]) => ({
+    id,
+    inputs: inputs.map(([name, link]) => ({ name, link })),
+    outputs: [{ links: outputs }],
+    properties: { id: stage, kind, section },
+  });
+  const exported = new TextEncoder().encode(
+    JSON.stringify({
+      nodes: [
+        node(1, "screenplay", "screenplay", "Text", [], [1]),
+        node(2, "bible", "bible", "Text", [["screenplay", 1]], [2, 3]),
+        node(3, "assets/characters/lin", "look", "Characters", [["bible", 2]], [4]),
+        node(4, "assets/scenes/home", "plate", "Locations", [["bible", 3]], [5]),
+        node(5, "assets/scenes/home/front", "plate", "Locations", [["assets/scenes/home", 5]], []),
+        node(6, "episodes/EP001/blocking/seg01", "blocking", "EP001 seg01", [["assets/characters/lin", 4]], [6]),
+        node(7, "episodes/EP001/first_frame_reference/seg01", "first_frame_reference", "EP001 seg01", [["episodes/EP001/blocking/seg01", 6]], []),
+      ],
+      links: [
+        [1, 1, 0, 2, 0, "DRAMA_CLI_FILE"],
+        [2, 2, 0, 3, 0, "DRAMA_CLI_FILE"],
+        [3, 2, 0, 4, 0, "DRAMA_CLI_FILE"],
+        [4, 3, 0, 6, 0, "DRAMA_CLI_FILE"],
+        [5, 4, 0, 5, 0, "DRAMA_CLI_FILE"],
+        [6, 6, 0, 7, 0, "DRAMA_CLI_FILE"],
+      ],
+      groups: [{ title: "Text" }, { title: "Characters" }, { title: "Locations" }, { title: "EP001 seg01" }],
+    }),
+  );
+  const at = (p: ReplayProgress) => JSON.parse(new TextDecoder().decode(lineageAt(p, exported))) as { nodes: { id: number; properties: { id: string }; outputs: { links: number[] }[] }[]; links: number[][]; groups: { title: string }[] };
+
+  it("holds only what the drama has made by then, and what is made from that alone", () => {
+    // The leads' looks are drawn; no place yet, no episode.
+    const early = at({ preset: "en-us-live-sfw", bible: "v1", looks: { lin: v1 }, references: {}, episodes: {} });
+    expect(early.nodes.map((n) => n.properties.id)).toEqual(["screenplay", "bible", "assets/characters/lin"]);
+    expect(early.links.map(([id]) => id)).toEqual([1, 2]);
+    expect(early.nodes.find((n) => n.id === 2)!.outputs[0].links).toEqual([2]);
+    expect(early.groups.map((g) => g.title)).toEqual(["Text", "Characters"]);
+    // With the place drawn, its plate and the view made from it come in.
+    const later = at({ preset: "en-us-live-sfw", bible: "v1", looks: { lin: v1 }, references: { home: { ...v1, path: "assets/scenes/home" } }, episodes: {} });
+    expect(later.nodes.map((n) => n.properties.id)).toContain("assets/scenes/home/front");
+    expect(later.links.map(([id]) => id)).toEqual([1, 2, 3, 5]);
+    // Once EP001's boards are drawn, its blocking and the first-frame reference made from it come in.
+    const boards = at({ preset: "en-us-live-sfw", bible: "v1", looks: { lin: v1 }, references: { home: { ...v1, path: "assets/scenes/home" } }, episodes: { EP001: { segments: ["seg01"], boards: { seg01: v1 } } } });
+    expect(boards.nodes.map((n) => n.properties.id)).toContain("episodes/EP001/first_frame_reference/seg01");
   });
 });

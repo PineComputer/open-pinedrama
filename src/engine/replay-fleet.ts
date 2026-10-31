@@ -14,7 +14,7 @@ import { DRAMA_SKILL } from "./goals.ts";
 import type { Attached, ComputerRef, Fleet, FleetEvent, Limits, SessionRef, TurnFile, TurnInfo } from "./fleet.ts";
 import { blocking, lookSheet, plate, prop, storyboard } from "./placeholders.ts";
 import { samplesFrom } from "./replay-samples.ts";
-import { replayLineage } from "./replay-lineage.ts";
+import { lineageAt, replayLineage } from "./replay-lineage.ts";
 import { type EpisodeMade, type Made, type ReplayProgress, replayStatus } from "./replay-status.ts";
 
 const SPEED = Number(process.env.STUDIO_REPLAY_SPEED ?? 1);
@@ -431,9 +431,13 @@ const rewriteFiles = (lang: Lang): Out[] =>
 
 /**
  * The lineage a stop hands back: a sample drama's own, drama-cli's export of the project it comes from
- * (`drama-cli export comfyui`, fixtures/replay/samples/full/<id>/lineage.json), else the one replay writes for its recording.
+ * (`drama-cli export comfyui`, fixtures/replay/samples/full/<id>/lineage.json) cut to what the drama has made by this
+ * stop (lineageAt), else the one replay writes for its recording.
  */
-const lineageOf = (set: string, progress: ReplayProgress, returned: string[]): Out => sample(set, "handoff/lineage.json") ?? replayLineage(progress, returned);
+const lineageOf = (set: string, progress: ReplayProgress, returned: string[]): Out => {
+  const own = sample(set, "handoff/lineage.json");
+  return own ? { ...own, bytes: lineageAt(progress, own.bytes) } : replayLineage(progress, returned);
+};
 // A sample's infinite-canvas project, as drama-cli exported it from the sample's source project (goals.ts RETURN_LINEAGE);
 // none for a sample with no source project, whose lineage replay draws itself.
 const canvasOf = (set: string): Out[] => {

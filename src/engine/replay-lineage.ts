@@ -114,3 +114,51 @@ export function replayLineage(progress: ReplayProgress, returned: Iterable<strin
   };
   return { path: "handoff/lineage.json", type: "application/json", bytes: new TextEncoder().encode(JSON.stringify(workflow, null, 1)) };
 }
+
+// A plate's views (drama-cli's LOCATION_STEPS): replay draws no stage of its own for them.
+const VIEW = /^assets\/scenes\/.+\/(?:floor-plan|front|back|left-side|right-side)$/;
+
+interface ExportNode {
+  id: number;
+  inputs?: { name: string; link: number | null }[];
+  outputs?: { links: number[] | null }[];
+  properties: { id: string; kind: string; section: string };
+}
+interface Export {
+  nodes: ExportNode[];
+  links: [number, number, number, number, number, string][];
+  groups: { title: string }[];
+}
+
+/**
+ * A sample drama's own export (drama-cli's `export comfyui` of the finished run) cut to what the drama has made by
+ * this stop, as a real stop's export holds only that: every stage replay makes is kept once its progress has it, and
+ * every other one (a plate's view, a first-frame reference, the video prompts, the screenplay) once everything it is
+ * made from is kept. Links, inputs, outputs and groups follow the nodes kept; nothing else changes.
+ */
+export function lineageAt(progress: ReplayProgress, exported: Uint8Array): Uint8Array {
+  const workflow = JSON.parse(new TextDecoder().decode(exported)) as Export;
+  const made = new Set(stages(progress).map((stage) => stage.id));
+  const byId = new Map(workflow.nodes.map((node) => [node.properties.id, node]));
+  const kept = new Map<string, boolean>();
+  const keep = (node: ExportNode): boolean => {
+    const id = node.properties.id;
+    if (!kept.has(id)) {
+      kept.set(id, false);
+      const modelled = node.properties.kind in COLUMN && !VIEW.test(id);
+      const upstream = (node.inputs ?? []).map((input) => byId.get(input.name)).filter((one) => one !== undefined);
+      kept.set(id, modelled ? made.has(id) : upstream.every(keep));
+    }
+    return kept.get(id)!;
+  };
+  const nodes = workflow.nodes.filter(keep);
+  const numbers = new Set(nodes.map((node) => node.id));
+  const links = workflow.links.filter(([, from, , to]) => numbers.has(from) && numbers.has(to));
+  const live = new Set(links.map(([id]) => id));
+  for (const node of nodes) {
+    node.inputs = (node.inputs ?? []).filter((input) => input.link === null || live.has(input.link));
+    for (const output of node.outputs ?? []) output.links = (output.links ?? []).filter((link) => live.has(link));
+  }
+  const sections = new Set(nodes.map((node) => node.properties.section));
+  return new TextEncoder().encode(JSON.stringify({ ...workflow, nodes, links, groups: workflow.groups.filter((group) => sections.has(group.title)) }, null, 1));
+}
