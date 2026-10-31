@@ -116,6 +116,26 @@ describe("the agent panel", () => {
     expect(screen.getByRole("textbox", { name: "Message the agent" })).toHaveValue("");
   });
 
+  it("takes an episode as the scope only if the project has it: on a page naming another, it follows the setup", async () => {
+    engine();
+    await renderAt(<AgentPanel drama={drama} episode="EP003" onCollapse={() => {}} />);
+    expect(screen.getByRole("status")).toHaveTextContent("No session open: a message starts a new setup session");
+    expect(screen.getByText("To a new setup session")).toBeInTheDocument();
+    expect(screen.queryByText(/EP003/)).toBeNull();
+  });
+
+  it("says, in the engine's words, when an episode can't take a message yet, and offers no line that would be refused", async () => {
+    engine();
+    // EP003 is in line and has never run; EP001's turn is starting with no session open yet.
+    const starting = { ...drama, crew: [], episodeRows: [row(1, "working"), row(2, "waiting"), row(3, "queued")] } as unknown as DramaView;
+    const { rerender } = await renderAt(<AgentPanel drama={starting} episode="EP003" onCollapse={() => {}} />);
+    expect(screen.getByRole("status")).toHaveTextContent("EP003 hasn't started: it starts in its turn, and you can write to it then.");
+    expect(screen.queryByRole("textbox", { name: "Message the agent" })).toBeNull();
+    rerender(<AgentPanel drama={starting} episode="EP001" onCollapse={() => {}} />);
+    expect(screen.getByRole("status")).toHaveTextContent("EP001's session is starting: write to it in a moment.");
+    expect(screen.queryByRole("textbox", { name: "Message the agent" })).toBeNull();
+  });
+
   it("shows the engine's refusal in its words, and keeps the message", async () => {
     const user = userEvent.setup();
     engine();

@@ -131,10 +131,27 @@ export function AgentPanel({ drama, episode, onCollapse }: { drama: DramaView; e
   // A scope pinned by the maker: an episode's code or "setup".
   const [pinned, setPinned] = useState<string>();
   const [processOpen, setProcessOpen] = useState(true);
-  const scope = pinned ?? episode ?? "setup";
+  // An episode is a scope only if the project has it: a page that names one it hasn't (Not found) follows the setup.
+  const row = (code?: string) => (code ? drama.episodeRows.find((episodeRow) => episodeRow.code === code) : undefined);
+  const scope = pinned ?? (row(episode) ? episode! : "setup");
   // The scope's open session, if any: what the status line and the line's target say.
   const live = open.find((session) => (scope === "setup" ? session.role === "setup" : session.episode === scope));
   const status: "running" | "waiting" | "none" = !live ? "none" : live.waiting ? "waiting" : "running";
+  // With no session open, where the engine refuses a message (scope-messages.ts), the panel says so in the engine's words
+  // instead of offering a send that can only be refused: the setup or an episode whose session is starting, or an episode
+  // in line that hasn't started.
+  const scopeRow = row(scope);
+  const blocked = live
+    ? undefined
+    : scope === "setup"
+      ? drama.status === "setup"
+        ? t("agent.setupStarting")
+        : undefined
+      : scopeRow?.state === "queued"
+        ? t("agent.notStarted", { who: scope })
+        : scopeRow?.state === "working" || scopeRow?.state === "waiting"
+          ? t("agent.sessionStarting", { who: scope })
+          : undefined;
   // The scope's conversation: its open session's, else the newest it had (the setup's chat has no episode label).
   const chats = sessions.data ?? [];
   const label = scope === "setup" ? "" : scope;
@@ -170,14 +187,16 @@ export function AgentPanel({ drama, episode, onCollapse }: { drama: DramaView; e
         {status === "running" ? <span className="live" aria-hidden="true" /> : status === "waiting" ? <span className="adot you" aria-hidden="true" /> : null}
         {pinned && <Icon name="map-pin" className="ic" />}
         <span>
-          {status === "none"
+          {blocked
+            ? blocked
+            : status === "none"
             ? t("agent.noneOpen", { who: fresh(scope) })
             : t(pinned ? (status === "running" ? "agent.pinnedRunning" : "agent.pinnedWaiting") : status === "running" ? "agent.followRunning" : "agent.followWaiting", { who: name(scope) })}
         </span>
         <span className="grow" />
         {pinned && (
           <button type="button" className="btn sm ghost" onClick={() => setPinned(undefined)}>
-            {t("agent.followScope", { who: name(episode ?? "setup") })}
+            {t("agent.followScope", { who: name(row(episode) ? episode! : "setup") })}
           </button>
         )}
       </div>
@@ -296,7 +315,7 @@ export function AgentPanel({ drama, episode, onCollapse }: { drama: DramaView; e
           </section>
         )}
       </div>
-      <Line dramaId={id} scope={scope} target={live ? name(scope) : fresh(scope)} chat={live ? chat.data : undefined} onSent={reload} />
+      {blocked ? null : <Line dramaId={id} scope={scope} target={live ? name(scope) : fresh(scope)} chat={live ? chat.data : undefined} onSent={reload} />}
     </aside>
   );
 }
