@@ -126,7 +126,7 @@ export function PresetChoice({ value, onChange }: { value: string; onChange: (pr
   );
 }
 
-/** A screenplay dropped on Home's New drama card, handed to Upload as it opens; taken once. */
+/** A screenplay dropped on Home's New project card, handed to Upload as it opens; taken once. */
 let dropped: File | undefined;
 
 export function dropScreenplay(file: File): void {

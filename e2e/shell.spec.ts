@@ -7,7 +7,7 @@ import { decide, review, acceptRewrite } from "./api.ts";
 
 test("an episode chosen in the tree stays selected across the surfaces", async ({ page }) => {
   await page.goto(`/api/open?ticket=${TOKEN}`);
-  await page.getByRole("button", { name: "Start the sample drama" }).click();
+  await page.getByRole("button", { name: "Start the sample project" }).click();
   await expect(page).toHaveURL(/\/d\/[^/]+/);
   const id = new URL(page.url()).pathname.split("/")[2];
   await acceptRewrite(page, id);

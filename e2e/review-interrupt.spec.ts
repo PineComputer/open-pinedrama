@@ -7,7 +7,7 @@ import type { ReviewSummary } from "../src/shared/types.ts";
 import { TOKEN } from "../playwright.config.ts";
 import { acceptRewrite, call, decide, review } from "./api.ts";
 
-// Each test starts its own sample drama, as Home's "Start the sample drama" does (Slate.tsx), on the engine both share.
+// Each test starts its own sample drama, as Home's "Start the sample project" does (Slate.tsx), on the engine both share.
 async function looksReview(page: Page) {
   await page.goto(`/api/open?ticket=${TOKEN}`);
   const { id } = await call<{ id: string }>(page, "/api/dramas/sample", { language: "en" });

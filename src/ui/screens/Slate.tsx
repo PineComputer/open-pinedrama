@@ -7,7 +7,7 @@ import { ago, api, since, useAction, useResource } from "../api.ts";
 import { Menu } from "../components/Menu.tsx";
 import { Icon } from "../icons.tsx";
 import { type TKey, useT } from "../i18n.ts";
-import { countText, errorText, kindLabel, moneyText, plainText } from "../labels.ts";
+import { countText, errorText, kindLabel, moneyText } from "../labels.ts";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { dropScreenplay } from "./NewDrama.tsx";
 
@@ -28,7 +28,7 @@ function Status({ st, label }: { st: St; label: string }) {
  * Where a drama stands, as its card's chip says it, and the prototype's shelf it sits on: a red line waiting on the
  * maker is its own state under Needs you; a stopped drama is under All only.
  */
-export function standing(drama: DramaCard, redLine: boolean): { st: St; label: TKey; shelf?: Shelf } {
+function standing(drama: DramaCard, redLine: boolean): { st: St; label: TKey; shelf?: Shelf } {
   if (redLine) return { st: "redline", label: "drama.redLine", shelf: "you" };
   if (drama.waiting > 0) return { st: "you", label: "drama.needs", shelf: "you" };
   if (drama.status === "done") return { st: "accepted", label: "drama.finished", shelf: "done" };
@@ -36,12 +36,9 @@ export function standing(drama: DramaCard, redLine: boolean): { st: St; label: T
   return { st: "work", label: drama.status === "setup" ? "drama.casting" : "drama.atWork", shelf: "work" };
 }
 
-export const isRedLine = (item: ReviewSummary) => item.stop?.kind === "red-line";
+const isRedLine = (item: ReviewSummary) => item.stop?.kind === "red-line";
 
 type T = ReturnType<typeof useT>["t"];
-
-/** What a review is, as the prototype's rows and buttons say it in a line: "takes", "red line". */
-const whatOf = (item: ReviewSummary): TKey => (isRedLine(item) ? "slate.row.redLine" : `slate.row.${item.kind}`);
 
 /**
  * A waiting review as design/'s rows name it, tied to its drama: "Bride on Bail · EP006", then what waits (how
@@ -51,13 +48,6 @@ function rowOf(item: ReviewSummary, t: T, lang: ReturnType<typeof useT>["lang"])
   const title = `${item.dramaTitle} · ${item.episode ?? t(`kind.${item.kind}`)}`;
   const what = isRedLine(item) ? t("drama.redLine") : countText(item.kind, item.items, t) || t(`kind.${item.kind}`);
   return { title, detail: [what, item.subjects.join(", "), since(item.createdAt, lang)].filter(Boolean).join(" · ") };
-}
-
-/** What waits in Continue's line, as the prototype says it: "2 takes wait for you", a question or a red line. */
-function waitsOf(item: ReviewSummary, t: T): string {
-  if (isRedLine(item)) return t("slate.waitsRedLine");
-  const count = countText(item.kind, item.items, t);
-  return count ? t(item.items === 1 ? "slate.waitsOne" : "slate.waitsMany", { what: count }) : t("slate.waitsQuestion");
 }
 
 /** A picture as the prototype's `img`: an image, or a video's opening frame. */
@@ -74,11 +64,6 @@ function Cover({ drama }: { drama: DramaCard }) {
   return drama.cover ? <Pic still={drama.cover} /> : <span className="emptycover">{drama.title}</span>;
 }
 
-/** The greeting by the hour of the maker's own clock. */
-function greeting(): TKey {
-  const hour = new Date().getHours();
-  return hour < 12 ? "slate.greet.morning" : hour < 18 ? "slate.greet.afternoon" : "slate.greet.evening";
-}
 
 /** The dramas by their newest activity: when the agent last spoke in each, else when it was made. */
 function byActivity(dramas: DramaCard[]): DramaCard[] {
@@ -86,92 +71,44 @@ function byActivity(dramas: DramaCard[]): DramaCard[] {
   return [...dramas].sort((a, b) => at(b).localeCompare(at(a)));
 }
 
-/** The prototype's .hero: the drama worked on last, its waiting review first; beside it, what waits, newest first. */
-function Hero({ waiting, dramas }: { waiting: ReviewSummary[]; dramas: DramaCard[] }) {
+/**
+ * What waits for the maker, newest first, as a compact strip above the grid (yurun's Y4: the projects are the grid's,
+ * once each; design/app.js Home, .waitstrip). Each row opens its review; See all opens Reviews, the one queue (IA §16).
+ */
+function Waiting({ waiting, dramas }: { waiting: ReviewSummary[]; dramas: DramaCard[] }) {
   const { t, lang } = useT();
-  const drama = byActivity(dramas)[0];
-  if (!drama) return null;
-  const review = waiting.find((item) => item.dramaId === drama.id);
-  const where = standing(drama, waiting.some((item) => item.dramaId === drama.id && isRedLine(item)));
-  const line = review?.question || drama.facts.lastLine;
-  const { total, done } = drama.episodes;
+  if (!waiting.length) return null;
   return (
-    <section className="hero" aria-labelledby="continue-title">
-      <div className="left">
-        <div className="cover">
-          <Cover drama={drama} />
-          <Status st={where.st} label={t(where.label, { n: drama.waiting })} />
-        </div>
-        <div className="info grow">
-          <span className="kicker">{t("slate.continue")}</span>
-          <h2 id="continue-title">{drama.title}</h2>
-          <span className="where">
-            <Icon name="map-pin" className="ic" />
-            {review ? [review.episode, waitsOf(review, t)].filter(Boolean).join(" · ") : t(where.label, { n: drama.waiting })}
-          </span>
-          {line && <blockquote>“{plainText(line)}”</blockquote>}
-          <div className="row">
-            <span>
-              {[
-                total ? t("drama.episodes", { done, total }) : "",
-                drama.spent.total > 0 ? t("slate.spent", { amount: moneyText(drama.spent, t, lang) }) : "",
-                drama.facts.lastActivity ? t("slate.updated", { when: since(drama.facts.lastActivity, lang) }) : "",
-              ]
-                .filter(Boolean)
-                .join(" · ")}
-            </span>
-            <span className="grow" />
-            {review ? (
-              <>
-                <Link to="/d/$dramaId/episodes" params={{ dramaId: drama.id }} className="btn">
-                  {t("slate.openDrama")}
-                </Link>
-                <Link to="/r/$reviewId" params={{ reviewId: review.id }} className="btn lg primary">
-                  <Icon name="play" className="ic" />
-                  {t("slate.review", { kind: t(whatOf(review)) })}
-                </Link>
-              </>
-            ) : (
-              <Link to="/d/$dramaId/episodes" params={{ dramaId: drama.id }} className="btn lg primary">
-                {t("slate.openDrama")}
-              </Link>
-            )}
-          </div>
-        </div>
+    <section className="waitstrip" aria-labelledby="waiting-title">
+      <div className="wh">
+        <h3 id="waiting-title">{t("slate.waiting")}</h3>
+        <span className="grow" />
+        <Link to="/reviews" className="seeall">
+          {t("slate.seeAll", { n: waiting.length })}
+          <Icon name="caret-right" className="ic" />
+        </Link>
       </div>
-      <div className="right">
-        <h3>
-          <span id="waiting-title">{t("slate.waiting")}</span>
-        </h3>
-        <ul aria-labelledby="waiting-title">
-          {waiting
-            .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
-            .slice(0, 4)
-            .map((item) => {
-              // design/'s row is pictured by its drama's cover, so the row and the card read as one drama.
-              const cover = dramas.find((entry) => entry.id === item.dramaId)?.cover;
-              const row = rowOf(item, t, lang);
-              return (
-                <li key={item.id}>
-                  <Link to="/r/$reviewId" params={{ reviewId: item.id }} className="wait">
-                    {cover ? <Pic still={cover} /> : <span className="emptythumb" />}
-                    <span>
-                      <b>{row.title}</b>
-                      <small>{row.detail}</small>
-                    </span>
-                  </Link>
-                </li>
-              );
-            })}
-        </ul>
-        {/* IA §16: the preview's home is Reviews, the one queue; this is the way there. */}
-        {waiting.length > 0 && (
-          <Link to="/reviews" className="seeall">
-            {t("slate.seeAll", { n: waiting.length })}
-            <Icon name="caret-right" className="ic" />
-          </Link>
-        )}
-      </div>
+      <ul aria-labelledby="waiting-title">
+        {[...waiting]
+          .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+          .slice(0, 4)
+          .map((item) => {
+            // design/'s row is pictured by its project's cover, so the row and the card read as one project.
+            const cover = dramas.find((entry) => entry.id === item.dramaId)?.cover;
+            const row = rowOf(item, t, lang);
+            return (
+              <li key={item.id}>
+                <Link to="/r/$reviewId" params={{ reviewId: item.id }} className="wait">
+                  {cover ? <Pic still={cover} /> : <span className="emptythumb" />}
+                  <span>
+                    <b>{row.title}</b>
+                    <small>{row.detail}</small>
+                  </span>
+                </Link>
+              </li>
+            );
+          })}
+      </ul>
     </section>
   );
 }
@@ -285,13 +222,9 @@ export function Slate() {
     <div className="wrap">
       <div className="greet">
         <div className="grow">
-          <h1>{t(greeting())}</h1>
+          <h1>{t("slate.title")}</h1>
           {dramas.length > 0 && <p>{waiting.length ? t("slate.decisions", { n: waiting.length }) : t("slate.facts", { a: counts.work + counts.you, b: 0 })}</p>}
         </div>
-        <Link to="/new" className="btn lg primary">
-          <Icon name="upload" className="ic" />
-          {t("slate.upload")}
-        </Link>
       </div>
       {error !== undefined && <p className="error">{errorText(error, t)}</p>}
       {data && dramas.length === 0 && (
@@ -313,7 +246,7 @@ export function Slate() {
           </button>
         </div>
       )}
-      <Hero waiting={waiting} dramas={dramas} />
+      <Waiting waiting={waiting} dramas={dramas} />
       {dramas.length > 0 && (
         <div className="tabsrow">
           <div className="utabs" role="tablist" aria-label={t("slate.shelves")}>
@@ -346,10 +279,11 @@ export function Slate() {
         </div>
       )}
       <div className="cards" role="tabpanel" aria-label={t("slate.shelves")}>
+        {/* Y3: New project leads the grid (liblib's 开始创作; Apple HIG keeps the create action with its collection). */}
+        {(shelf === "all" && !find) || dramas.length === 0 ? <NewCard /> : null}
         {shown.map((drama) => (
           <Card key={drama.id} drama={drama} redLine={redLines.has(drama.id)} />
         ))}
-        {(shelf === "all" && !find) || dramas.length === 0 ? <NewCard /> : null}
       </div>
     </div>
   );

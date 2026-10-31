@@ -9,7 +9,7 @@ test("a maker starts the sample drama, answers the agent and reviews the leads",
   await expect(page.getByText("Replay · sample work, no spend")).toBeVisible();
   expect(await newProblems(page)).toEqual([]);
 
-  await page.getByRole("button", { name: "Start the sample drama" }).click();
+  await page.getByRole("button", { name: "Start the sample project" }).click();
   await expect(page).toHaveURL(/\/d\/[^/]+/);
   // The drama in its shell: setting up, so its story is the step in view.
   await expect(page.getByRole("list", { name: "Steps" }).getByRole("button", { name: /Story/ })).toHaveAttribute("aria-current", "true");

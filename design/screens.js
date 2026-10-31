@@ -45,9 +45,9 @@
     const ready = S.file && S.preset;
     const pick = () => set({ file: { name: "bride-on-bail.docx", size: "212 KB", pages: 41 } });
     return html`<div class="main">
-      <header class="top"><button class="ibtn" aria-label="Back" onClick=${() => go("home")}>${I("caret-left")}</button><div class="crumb"><span>Dramas</span>${I("caret-right")}<b>New drama</b></div><span class="grow"></span></header>
+      <header class="top"><button class="ibtn" aria-label="Back" onClick=${() => go("home")}>${I("caret-left")}</button><div class="crumb"><span>Projects</span>${I("caret-right")}<b>New project</b></div><span class="grow"></span></header>
       <div class="scrollmain"><div class="wrap" style="max-width:1040px">
-        <div class="greet"><div class="grow"><h1>New drama</h1><p>Check the file, choose how it is made, and start. drama-cli's screenplay check is free; the agent's turns are billed from the start.</p></div></div>
+        <div class="greet"><div class="grow"><h1>New project</h1><p>Check the file, choose how it is made, and start. drama-cli's screenplay check is free; the agent's turns are billed from the start.</p></div></div>
         <div class="formgrid">
           <div class="fcol">
             <section class="panel"><h3>${I("file-text")}Screenplay</h3>

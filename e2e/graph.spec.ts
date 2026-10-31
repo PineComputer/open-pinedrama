@@ -13,7 +13,7 @@ import { newProblems } from "./axe.ts";
 test("the Graph traces a version both ways on the sample drama", async ({ page }) => {
   test.setTimeout(180_000);
   await page.goto(`/api/open?ticket=${TOKEN}`);
-  await page.getByRole("button", { name: "Start the sample drama" }).click();
+  await page.getByRole("button", { name: "Start the sample project" }).click();
   await expect(page).toHaveURL(/\/d\/[^/]+/);
   const id = new URL(page.url()).pathname.split("/")[2];
   const lineage = async () => (await call<LineageView>(page, `/api/dramas/${id}/lineage`)).lineage;

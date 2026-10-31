@@ -65,14 +65,12 @@ describe("Home", () => {
     expect(empty.querySelector(".emptycover")).toHaveTextContent("Bride on Bail");
   });
 
-  it("greets the maker by the time of day, with what waits for them", async () => {
+  it("is titled Projects, the studio's name for the container (yurun's words)", async () => {
     answer("/api/app", replay);
     answer("/api/reviews", []);
     answer("/api/dramas", [stepmother, bride]);
     await renderAt(<Slate />);
-    const hour = new Date().getHours();
-    const greeting = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
-    expect(await screen.findByRole("heading", { level: 1, name: greeting })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { level: 1, name: "Projects" })).toBeInTheDocument();
   });
 
   it("pictures each waiting row by its drama's cover, as design/'s rows are", async () => {
@@ -100,26 +98,23 @@ describe("Home", () => {
     expect(within(tile).getByText("+1")).toBeInTheDocument();
   });
 
-  it("carries on with the drama worked on last, its waiting review first, beside what waits, newest first", async () => {
+  it("shows what waits as a strip above the grid, newest first, each project once in the grid (Y4)", async () => {
     answer("/api/app", replay);
-    // The older drama's review has waited longer; the newer drama is the one to carry on with.
     answer("/api/reviews", [
       { id: "r0", dramaId: "d2", dramaTitle: "Bride on Bail", kind: "question", state: "open", question: "Old question", items: 0, subjects: [], createdAt: "2026-10-27T11:00:00Z" },
       { id: "r1", dramaId: "d1", dramaTitle: "The Stepmother", episode: "EP001", kind: "takes", state: "open", question: "Two takes wait.", items: 2, subjects: ["seg01", "seg03"], createdAt: "2026-10-30T11:56:00Z" },
     ]);
     answer("/api/dramas", [{ ...bride, waiting: 1, facts: { lastActivity: "2026-10-27T11:00:00Z" } }, { ...stepmother, waiting: 1 }]);
     await renderAt(<Slate />);
-    const hero = await screen.findByRole("region", { name: "The Stepmother" });
-    expect(within(hero).getByText("“Two takes wait.”", { selector: "blockquote" })).toBeInTheDocument();
-    expect(hero).toHaveTextContent("EP001 · 2 takes wait for you");
-    expect(within(hero).getByRole("link", { name: "Review takes" })).toHaveAttribute("href", "/r/r1");
-    const waiting = within(hero).getByRole("list", { name: "Waiting for you" });
+    const waiting = await screen.findByRole("list", { name: "Waiting for you" });
     const rows = within(waiting).getAllByRole("link");
     expect(rows.map((link) => link.getAttribute("href"))).toEqual(["/r/r1", "/r/r0"]);
-    // As design/'s rows read: the drama and the episode, then what waits, which, and how long it has waited.
+    // As design/'s rows read: the project and the episode, then what waits, which, and how long it has waited.
     expect(rows[0]).toHaveTextContent("The Stepmother · EP0012 takes · seg01, seg03 · 4 min");
     expect(rows[1]).toHaveTextContent("Bride on Bail · QuestionQuestion · 3 days");
-    expect(screen.getByText("2 decisions wait for you across your dramas.")).toBeInTheDocument();
+    expect(screen.getByText("2 decisions wait for you across your projects.")).toBeInTheDocument();
+    expect(screen.getAllByText("The Stepmother", { selector: ".pcard b" })).toHaveLength(1);
+    expect(screen.queryByText("Continue")).not.toBeInTheDocument();
   });
 
   it("sorts the shelf by when each drama was last worked on, or by title", async () => {
@@ -137,12 +132,15 @@ describe("Home", () => {
     expect(screen.getByRole("button", { name: /Title/ })).toBeInTheDocument();
   });
 
-  it("ends the shelf with New drama, a drop target that opens Upload with the dropped screenplay", async () => {
+  it("leads the grid with New project, a drop target that opens Upload with the dropped screenplay (Y3)", async () => {
     answer("/api/app", replay);
     answer("/api/reviews", []);
     answer("/api/dramas", [stepmother]);
     const { router } = await renderAt(<Slate />);
-    const card = await within(await screen.findByRole("tabpanel")).findByRole("link", { name: /New drama/ });
+    const shelf = await screen.findByRole("tabpanel");
+    const card = await within(shelf).findByRole("link", { name: /New project/ });
+    expect(shelf.firstElementChild).toBe(card);
+    expect(screen.queryByRole("link", { name: "Upload script" })).not.toBeInTheDocument();
     expect(card).toHaveTextContent("Drop a screenplay here");
     expect(card).toHaveTextContent("Fountain, Word, PDF or plain text");
     const file = new File(["EPISODE 1"], "stepmother.fountain");
@@ -159,17 +157,6 @@ describe("Home", () => {
     await renderAt(<Slate />);
     const tabs = await screen.findByRole("tablist");
     expect(within(tabs).getAllByRole("tab").map((tab) => tab.textContent)).toEqual(["All2", "Needs you0", "Working1", "Done0"]);
-  });
-
-  it("offers the latest drama to carry on with, and the agent's last line, when nothing waits", async () => {
-    answer("/api/app", replay);
-    answer("/api/reviews", []);
-    answer("/api/dramas", [bride, stepmother]);
-    await renderAt(<Slate />);
-    const hero = await screen.findByRole("region", { name: "The Stepmother" });
-    expect(hero).toHaveTextContent("Drawing the storyboards for EP001");
-    expect(hero).toHaveTextContent(/updated \d+ \w+ ago/);
-    expect(within(hero).getByRole("link", { name: /Open drama/ })).toHaveAttribute("href", "/d/d1/episodes");
   });
 
   it("shows a red line waiting on the maker as its own state, under Needs you", async () => {

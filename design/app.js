@@ -109,10 +109,7 @@
     if (S.screen === "home" || S.screen === "upload" || S.screen === "reviews") return html`<aside class=${"side " + (S.side ? "" : "closed") + (S.drawer ? " drawer-open" : "")} aria-label="Sidebar">
       <div class="head"><div class="who" style="padding-left:4px">${Mark()}<b style="font-size:14px">Pine Drama</b></div></div>
       <div class="scroll">
-        <div class="sec">Dramas</div>
-        ${P.projects.map((p, i) => html`<button class="navi" aria-current=${String(S.screen !== "reviews" && i === 0 && S.screen !== "home" && S.screen !== "upload")} onClick=${() => (i === 0 ? go("episodes") : toast(p.t + ": only Bride on Bail opens in this direction."))}>
-          <img class="dthumb" src=${p.cover} alt=""/><span class="grow">${p.t}</span><span class=${"dot " + p.st}></span></button>`)}
-        <button class="navi" onClick=${() => go("upload")}>${I("plus")}New drama</button>
+        ${/* Y2: the projects are Home's grid, their one list; the sidebar keeps the studio's own items. */ ""}
       </div>
       <div class="foot"><div class="who"><span class="av">Y</span><span class="grow">Your studio</span>${I("caret-right")}</div></div>
     </aside>`;
@@ -326,39 +323,30 @@
       </div></div></div>`;
   }
   /* ───── Home ───── */
+  /* Home (yurun's round 1, Y2–Y4): the grid is the one list of projects (one home per object: a project appears once
+     on Home); New project leads it (liblib's 开始创作; Apple HIG puts the create action with its collection); what waits
+     is a compact strip above it that leads to Reviews. */
   function Home() {
     const tabs = [["all", "All", 4], ["you", "Needs you", 2], ["work", "Working", 1], ["done", "Done", 1]];
     const list = P.projects.filter((p) => S.tab === "all" || (S.tab === "you" ? p.st === "you" || p.st === "redline" : S.tab === "work" ? p.st === "work" : p.st === "accepted"));
     const upload = () => go("upload");
     return html`<div class="main"><div class="scrollmain"><div class="wrap">
-      <div class="greet"><div class="grow"><h1>Good evening</h1><p>5 decisions wait for you across 2 dramas.</p></div>
-        <button class="btn lg primary" onClick=${upload}>${I("upload")}Upload script</button></div>
-      <section class="hero">
-        <div class="left">
-          <div class="cover"><img src=${P.eps[0].cover} alt=""/>${Status("you", "4 need you")}</div>
-          <div class="info grow"><span class="kicker">Continue</span><h2>${P.project.title}</h2>
-            <span class="where">${I("map-pin")}EP006 · 2 takes wait for you</span>
-            <blockquote>“I shot seg01 again with the blanket folded before Luca speaks, and seg03 again opening on his face. Both new takes wait for you.”</blockquote>
-            <div class="row"><span>1 of 24 episodes cut · ${money(P.project.spent)} spent · updated 4 min ago</span><span class="grow"></span>
-              <button class="btn" onClick=${() => go("episodes")}>Open drama</button>
-              <button class="btn lg primary" onClick=${() => go("review")}>${I("play")}Review takes</button></div></div>
-        </div>
-        <div class="right"><h3>Waiting for you</h3>
-          ${waits().slice(0, 4).map((w) => html`<button class="wait" onClick=${w.open}><img src=${w.pic} alt=""/><span><b>${w.dr} · ${w.what}</b><small>${w.d} · ${w.age}</small></span></button>`)}
+      <div class="greet"><div class="grow"><h1>Projects</h1><p>5 decisions wait for you across 2 projects.</p></div></div>
+      <section class="waitstrip" aria-labelledby="waiting-title"><div class="wh"><h3 id="waiting-title">Waiting for you</h3><span class="grow"></span>
           <button class="seeall" onClick=${() => set({ waitFor: null, screen: "reviews" })}>See all ${waits().length} in Reviews ${I("caret-right")}</button></div>
-      </section>
+        <ul>${waits().slice(0, 4).map((w) => html`<li><button class="wait" onClick=${w.open}><img src=${w.pic} alt=""/><span><b>${w.dr} · ${w.what}</b><small>${w.d} · ${w.age}</small></span></button></li>`)}</ul></section>
       <div class="tabsrow"><div class="utabs" role="tablist">${tabs.map(([k, l, n]) => html`<button role="tab" aria-selected=${String(S.tab === k)} onClick=${() => set({ tab: k })}>${l}<small>${n}</small></button>`)}</div>
-        <span class="grow"></span><span class="search">${I("magnifying-glass")}Search dramas…</span><button class="select">Last edited ${I("caret-down")}</button></div>
+        <span class="grow"></span><span class="search">${I("magnifying-glass")}Search projects…</span><button class="select">Last edited ${I("caret-down")}</button></div>
       <div class="cards">
-        ${list.map((p, i) => html`<div class="pcard"><button class="open" onClick=${() => i === 0 || p.t === P.project.title ? go("episodes") : toast(p.t + ": only the first drama opens in this direction.")}>
+        <button class=${"newcard " + (S.over ? "over" : "")} onClick=${upload}
+          onDragOver=${(e) => { e.preventDefault(); if (!S.over) set({ over: true }); }} onDragLeave=${() => set({ over: false })} onDrop=${(e) => { e.preventDefault(); set({ over: false }); upload(); }}>
+          <span class="plus">${I("plus")}</span><b>New project</b><small>Drop a screenplay here<br/>Fountain, Word, PDF or plain text</small></button>
+        ${list.map((p, i) => html`<div class="pcard"><button class="open" onClick=${() => i === 0 || p.t === P.project.title ? go("episodes") : toast(p.t + ": only the first project opens in this direction.")}>
           <div class="pic"><img src=${p.cover} alt=""/><span class="bar"><i style=${`width:${p.p}%`}></i></span></div>
           <div class="txt"><b>${p.t}</b><small>${p.m}</small><small>${p.spent} spent</small><div class="tags">${p.tags.map((t) => html`<span class="tag">${t}</span>`)}</div></div></button>
           ${p.st === "you" || p.st === "redline"
             ? html`<button class=${"st " + p.st} title=${"Open Reviews for " + p.t} onClick=${() => set({ waitFor: p.t, screen: "reviews" })}><i></i>${p.lab}</button>`
             : Status(p.st, p.lab)}</div>`)}
-        <button class=${"newcard " + (S.over ? "over" : "")} onClick=${upload}
-          onDragOver=${(e) => { e.preventDefault(); if (!S.over) set({ over: true }); }} onDragLeave=${() => set({ over: false })} onDrop=${(e) => { e.preventDefault(); set({ over: false }); upload(); }}>
-          <span class="plus">${I("plus")}</span><b>New drama</b><small>Drop a screenplay here<br/>Fountain, Word, PDF or plain text</small></button>
       </div>
     </div></div></div>`;
   }
