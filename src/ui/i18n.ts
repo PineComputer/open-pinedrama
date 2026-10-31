@@ -342,6 +342,7 @@ const en = {
   "file.infinite-canvas": "infinite-canvas project",
   "file.spec": "Job",
   "file.request": "Request",
+  "file.asset": "Asset record",
   "file.refusal": "Refusals",
   "file.other": "File",
 
@@ -760,6 +761,7 @@ const zh: Record<Key, string> = {
   "file.infinite-canvas": "infinite-canvas 项目",
   "file.spec": "生成参数",
   "file.request": "请求",
+  "file.asset": "素材库记录",
   "file.refusal": "拒绝记录",
   "file.other": "文件",
 

@@ -87,7 +87,7 @@ describe("each stop returns drama-cli's lineage", () => {
   });
 });
 
-const SPECS = "also return the spec.json and request.json in that version's folder";
+const SPECS = "also return the spec.json and request.json in that version's folder, and asset/asset.json where drama-cli registered the picture in the asset library";
 
 describe("each picture, take or cut comes with drama-cli's statement of the job", () => {
   it.each([
@@ -100,7 +100,7 @@ describe("each picture, take or cut comes with drama-cli's statement of the job"
 
   it("but not in a rehearsal, whose stand-in writes none", () => {
     const goal = rehearsed(episodeGoal(drama, "EP002", ["project.tar.part-aa"], true, "screenplay.md"));
-    expect(goal).toContain("and no spec.json or request.json");
+    expect(goal).toContain("and no spec.json, request.json or asset/asset.json");
   });
 });
 

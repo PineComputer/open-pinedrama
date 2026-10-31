@@ -61,6 +61,8 @@ const RULES: [RegExp, (m: RegExpMatchArray) => Hints][] = [
   [/(?:^|\/)understanding\//i, () => ({ kind: "observation" })],
   // A version's spec.json and request.json beside its output (short_drama drama_cli/stages.py; doc/drama-cli/cli.md, each stage's outputs). After understanding/, whose records hold their own request.json.
   [/\/(v\d+|t\d+)\/(spec|request)\.json$/i, (m) => ({ kind: m[2].toLowerCase() as "spec" | "request", version: m[1] })],
+  // A version's asset-library record, beside its picture (short_drama drama_cli/stages.py, asset.create into the version's asset/).
+  [/\/(v\d+)\/asset\/asset\.json$/i, (m) => ({ kind: "asset", version: m[1] })],
 ];
 
 export function classify(relPath: string): Hints {

@@ -161,10 +161,14 @@ export const RETURN_LINEAGE =
  * content and settings; short_drama drama_cli/stages.py, `write_json(out / "spec.json", spec)`),
  * and request.json, what went to the provider (doc/drama-cli/cli.md, each stage's outputs). The
  * studio's canvas shows them beside each item; named here, since the studio never guesses a
- * folder's other files.
+ * folder's other files. A take's request names most pictures by their asset-library id
+ * (asset://…): where drama-cli registered a version's picture, the version's asset/asset.json
+ * is the library's record of it, its Id among them (short_drama drama_cli/stages.py,
+ * `asset.create(…, out / "asset", …)`), so the studio shows the picture an id stands for. Not
+ * asset/job.json beside it, which holds the maker's machine: its paths, host and tunnel log.
  */
 export const RETURN_SPECS =
-  "With every picture, take or cut you return, also return the spec.json and request.json in that version's folder, where drama-cli wrote them. They are for the studio; don't ask me about them.";
+  "With every picture, take or cut you return, also return the spec.json and request.json in that version's folder, and asset/asset.json where drama-cli registered the picture in the asset library, where drama-cli wrote them. They are for the studio; don't ask me about them.";
 
 /**
  * The refusals a stop asks the maker about, as drama-cli printed them: each is one JSON line
@@ -272,7 +276,7 @@ export function rehearsed(goal: string): string {
     "This is a rehearsal of the studio's flow. Pine's drama skill (drama-workflow) and drama-cli are not on this Computer, and that is expected.",
     `Wherever the goal below says to use them, stand in with the attached kit, \`${kit}\` (\`${kit} --help\` lists its commands). It writes placeholder looks, locations, props, blocking references, storyboards, takes and cuts where the skill would, and prints each path it wrote.`,
     'Write the bible and the breakdowns yourself, short, in Markdown: drama/bible/v1/bible.md, and drama/episodes/EP001/breakdown/v1/breakdown.md for EP001 and so on, two or three segments each, with a "## seg01" heading for each segment followed by its shots as a list, one of them a line of dialogue.',
-    `For an episode, draw each segment's blocking and storyboards, then shoot one take per segment (give a segment with dialogue its line with --line), then build the cut, stopping for me where the goal says. Skip \`drama-cli init\` and \`drama-cli status\`, and return no handoff/status.json, handoff/lineage.json, handoff/infinite-canvas.zip or handoff/refusals.jsonl, and no spec.json or request.json; check a restored project with \`${kit} status\`.`,
+    `For an episode, draw each segment's blocking and storyboards, then shoot one take per segment (give a segment with dialogue its line with --line), then build the cut, stopping for me where the goal says. Skip \`drama-cli init\` and \`drama-cli status\`, and return no handoff/status.json, handoff/lineage.json, handoff/infinite-canvas.zip or handoff/refusals.jsonl, and no spec.json, request.json or asset/asset.json; check a restored project with \`${kit} status\`.`,
     "When I ask for changes, make a new version only of what I named. Everything else exactly as the goal says: the questions, the stops, packing and returning files, the list of episodes.",
     "",
     goal,
