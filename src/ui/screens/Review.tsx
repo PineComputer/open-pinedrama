@@ -321,7 +321,8 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
   const item: ReviewItem | undefined = items[index];
   const variants = item?.files ?? [];
   const latest = variants[Math.min(variant, variants.length - 1)];
-  const before = item?.previous?.length ? (item.previous.find((p) => p.kind === latest?.kind && p.style === latest?.style) ?? item.previous[0]) : undefined;
+  // The version before of the same picture: the same kind and style (a photoreal board is never compared with a line-art one).
+  const before = item?.previous?.find((p) => p.kind === latest?.kind && p.style === latest?.style);
   const file = earlier && before ? before : latest;
   const draft = item ? drafts[item.key] : undefined;
   const space = { width: Math.max(0, stageSize.width - 40), height: Math.max(0, stageSize.height - 40) };

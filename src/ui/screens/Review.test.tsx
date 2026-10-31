@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, within } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { cutReview, file, storyboardReview } from "../test/fixtures.ts";
@@ -94,6 +94,29 @@ describe("a link into the review room", () => {
   });
 });
 
+describe("a storyboard with variants and an earlier version", () => {
+  it("offers its variants and the same variant's version before, and puts the one picked on the stage", async () => {
+    const user = userEvent.setup();
+    const review = storyboardReview("seg01");
+    const board = (style: string, version: string) => file({ kind: "storyboard", name: `episodes/EP002/storyboard/seg01/${version}/${style}.png`, episode: "EP002", segment: "seg01", style, version });
+    const [lineArt, photoreal, before] = [board("line-art", "v2"), board("photoreal", "v2"), board("line-art", "v1")];
+    review.reviewItems = [{ key: "seg01", label: "seg01", files: [lineArt, photoreal], previous: [before], asked: [{ text: "Move the letter to her left hand." }] }];
+    open(review);
+    const stage = await screen.findByRole("region", { name: "The work in view" });
+    const variants = screen.getByRole("radiogroup", { name: "Which picture" });
+    expect(within(variants).getAllByRole("radio").map((radio) => radio.textContent)).toEqual(["Line art", "Photoreal"]);
+    expect(stage.querySelector("img")).toHaveAttribute("src", lineArt.url);
+    await user.click(within(variants).getByRole("radio", { name: "Photoreal" }));
+    expect(stage.querySelector("img")).toHaveAttribute("src", photoreal.url);
+    // No photoreal board came before: nothing to compare it with, never the line art's v1.
+    expect(screen.queryByRole("group", { name: "Compare with before" })).toBeNull();
+    await user.click(within(variants).getByRole("radio", { name: "Line art" }));
+    await user.click(within(screen.getByRole("group", { name: "Compare with before" })).getByRole("button", { name: "v1 · earlier" }));
+    expect(stage.querySelector("img")).toHaveAttribute("src", before.url);
+    expect(screen.getByText("“Move the letter to her left hand.”")).toBeInTheDocument();
+  });
+});
+
 describe("the review room for takes", () => {
   function takes() {
     const review = storyboardReview("seg01");
@@ -139,6 +162,23 @@ describe("the review room for takes", () => {
     expect(within(reel).getAllByText("Scene 1 · EXT. PIER - DAY")).toHaveLength(2);
   });
 
+  it("pictures an accepted take by its last frame, or by the take itself when drama-cli kept none", async () => {
+    const review = takes();
+    answer(`/api/reviews/${review.id}`, review);
+    const made = (segment: string, kind: "take" | "last-frame", name: string, type: string) => file({ kind, name: `episodes/EP002/segments/${segment}/t01/${name}`, type, episode: "EP002", segment, version: "t01" });
+    const seg02Take = made("seg02", "take", "video.mp4", "video/mp4");
+    const seg03Frame = made("seg03", "last-frame", "last_frame.png", "image/png");
+    answer("/api/dramas/d1/files", [seg02Take, made("seg03", "take", "video.mp4", "video/mp4"), seg03Frame]);
+    const accepted = { current: "t01", accepted: "t01", usable: true };
+    const episode = { segments: { seg01: { current: "t02", accepted: null, usable: false }, seg02: accepted, seg03: accepted }, storyboards: {}, sceneChains: [] };
+    answer("/api/dramas/d1/project", { state: { episodes: { [review.episode!]: episode } }, sessions: [], problems: [], names: null });
+    render(<Review id={review.id} />);
+    const reel = await screen.findByRole("navigation", { name: "To decide" });
+    const row = async (label: string) => (await within(reel).findByText(label)).closest(".ritem") as HTMLElement;
+    await waitFor(async () => expect((await row("seg02 · t01")).querySelector("video")).toHaveAttribute("src", `${seg02Take.url}#t=0.5`));
+    expect(((await row("seg03 · t01")).querySelector(".still") as HTMLElement).style.backgroundImage).toContain(seg03Frame.url);
+  });
+
   it("offers no Accept all for takes", async () => {
     const review = takes();
     answer(`/api/reviews/${review.id}`, review);
@@ -163,6 +203,24 @@ describe("a question the agent asks because drama-cli refused", () => {
     const stop = await screen.findByRole("region", { name: "shoot.max_new_takes is reached" });
     expect(within(stop).getByText("seg01 has had 2 new paid takes, the limit shoot.max_new_takes (2)")).toBeInTheDocument();
     expect(screen.getByText("drama-cli won't shoot another take of seg01. Shall I raise the limit?")).toBeInTheDocument();
+  });
+
+  it("shows each of several refusals as its own stop card, a red line first as drama-cli returned it", async () => {
+    const review = {
+      ...storyboardReview(),
+      kind: "question" as const,
+      question: "drama-cli refused twice. What should I do?",
+      reviewItems: [],
+      refusals: [
+        { code: "RedLine", message: "Bible v2 is not usable: red line: EP003 scene 4.", param: null, action: "ask_person" as const },
+        { code: "SetLimitExceeded.max_new_takes", message: "seg01 has had 2 new paid takes, the limit shoot.max_new_takes (2)", param: "shoot.max_new_takes", action: "ask_person" as const },
+      ],
+    };
+    answer(`/api/reviews/${review.id}`, review);
+    render(<Review id={review.id} />);
+    const cards = await screen.findAllByRole("region", { name: /red line|is reached/ });
+    expect(cards.map((card) => card.getAttribute("aria-label"))).toEqual(["The screenplay crosses a red line", "shoot.max_new_takes is reached"]);
+    expect(within(cards[0]).getByText("Bible v2 is not usable: red line: EP003 scene 4.")).toBeInTheDocument();
   });
 
   it("says when the refusals the agent returned didn't read", async () => {
