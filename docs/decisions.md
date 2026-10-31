@@ -912,7 +912,7 @@ timeline
   (*icons only, the text on hover, as VS Code does: the least space and the cleanest; the cost is that
   a new user must hover to know each icon; with three or four icons that matters little*);
   merecdesperez44323-lab: "可以的" (*that works*), relayed by master.
-- **Recorded in.** Master's note to the docs, 30 October 2026.
+- **Recorded in.** Commit 57fd287; master's and work-04's notes, 30 October 2026.
 
 ## References
 
