@@ -480,22 +480,23 @@
      merecdesperez44323-lab: "script, 这个part就把用户上传、drama-cli修改、revise、变成fountain， 用户确认， 这些在这个part都搞定，
      包括对比啥的， 改了啥". So the setup's Analyzing and Fountain review fold in here: they were steps ② to ④ of one thing.
      The sample is The Stepmother's real files (P.script); its states are the Prototype controls' "Script: …" states. */
-  const SCRIPT_STATES = { scriptRewriting: "rewriting", scriptFailed: "failed", scriptYou: "you", scriptOriginal: "original" };
+  const SCRIPT_STATES = { scriptRewriting: "rewriting", scriptYou: "you", scriptBack: "back", scriptYou2: "you2", scriptOriginal: "original" };
   const scriptState = () => SCRIPT_STATES[S.state] || "accepted";
-  // drama-cli's screenplay validate (drama_cli/screenplay.py, _slug's scene_time rule), with this sample's values: what
-  // it says when a rewrite keeps the original's "MORNING".
-  const CHECK_FAILED = "line 3 · scene_time · the scene heading's time is 'MORNING': write DAY or NIGHT, and put a finer time in the action after it";
   // The Script row in the project tree says the same, as an episode row does (now-line + dot, the five maker states).
-  const scriptRow = () => ({ rewriting: ["Rewriting", "work"], failed: ["Rewriting", "work"], you: ["Waiting for you", "you"], accepted: ["Accepted", "accepted"], original: ["Original only", "accepted"] })[scriptState()];
-  /* The sample's versions (Codex round 4, F3: v1 check failed → v2 ready → v2 accepted, v1 kept). v2 is The Stepmother's
-     recorded rewrite and review.md (P.script), renumbered v2; v1 is example values: the same rewrite with the original's
-     "MORNING" kept in line 3's heading, the line drama-cli refuses. Each version carries its own document, review.md and
-     line map, so whatever is selected shows its own. */
+  const scriptRow = () => ({ rewriting: ["Rewriting", "work"], back: ["Rewriting", "work"], you: ["Waiting for you", "you"], you2: ["Waiting for you", "you"], accepted: ["Accepted", "accepted"], original: ["Original only", "accepted"] })[scriptState()];
+  /* The sample's versions. Only a rewrite that passes drama-cli's screenplay validate is recorded, as the next vN with its
+     review.md (short_drama doc/drama-cli/cli.md, screenplay: "A ready FILE is recorded as a version"); an attempt that
+     fails is no record, so it is not here: the agent reports it in its own process in the sidebar. v1 is The Stepmother's
+     recorded rewrite and review.md (P.script); v2 is example values: v1 with what the reason for sending it back asked
+     for, EP002's dusk said in its action line (the heading keeps NIGHT, as drama-cli's scene_time rule wants). Each
+     version carries its own document, review.md and line map, so whatever is selected shows its own. */
+  const SENT_BACK = "Episode 2 is at dusk: say so in the action.";
   function scriptVersions() {
-    const sc = P.script, kept = "INT. TENEMENT FLAT - MORNING #1-1#", fixed = "INT. TENEMENT FLAT - DAY #1-1#";
-    const v2 = { v: "v2", text: sc.fountainText, fl: sc.fountain, map: sc.map, review: sc.review.replaceAll("screenplay/v1/", "screenplay/v2/") };
-    const v1 = { v: "v1", text: sc.fountainText.replace(fixed, kept), fl: sc.fountain.map((l) => (l.text === fixed ? { ...l, text: kept } : l)),
-      map: sc.map.map((r) => (r.o === 5 ? { ...r, became: "3: " + kept } : r)), review: sc.review.replace("3: " + fixed, "3: " + kept) };
+    const sc = P.script, was = "Lin waits outside the gatehouse.", now = "Dusk. Lin waits outside the gatehouse.";
+    const v1 = { v: "v1", text: sc.fountainText, fl: sc.fountain, map: sc.map, review: sc.review };
+    const v2 = { v: "v2", text: sc.fountainText.replace(was, now), fl: sc.fountain.map((l) => (l.el === "action" && l.text.startsWith(was) ? { ...l, text: l.text.replace(was, now) } : l)),
+      map: sc.map.map((r) => (r.o === 15 ? { ...r, same: false, became: "22: " + now + " …" } : r)),
+      review: sc.review.replaceAll("screenplay/v1/", "screenplay/v2/").replace("15 | " + was + " … | 22: (unchanged)", "15 | " + was + " … | 22: " + now + " …") };
     return { v1, v2 };
   }
   /* VS Code's side-by-side diff with drama-cli's alignment (Codex round 4, F5): the rows come from review.md's line map,
@@ -522,9 +523,10 @@
     const sc = P.script, st = scriptState(), { v1, v2 } = scriptVersions();
     // The maker's decision on the waiting version, once confirmed, and its one submission (app.js Submission).
     const sub = (S.subs || {}).script, dec = S.sdec;
-    const decided = st === "you" && dec && sub === "sent" ? dec.kind : null;
-    // The versions with a document, oldest first, and where each stands.
-    const docs = { rewriting: [], failed: [v1], you: [v1, v2], accepted: [v1, v2], original: [] }[st];
+    const waitingV = st === "you" ? v1 : st === "you2" ? v2 : null;
+    const decided = waitingV && dec && sub === "sent" ? dec.kind : null;
+    // The versions recorded so far, oldest first.
+    const docs = { rewriting: [], you: [v1], back: [v1], you2: [v1, v2], accepted: [v1, v2], original: [] }[st];
     const shown = docs.find((d) => d.v === S.sver) || docs[docs.length - 1];
     const hasFountain = !!shown;
     const fl = shown?.fl || [], map = shown?.map || [];
@@ -543,35 +545,39 @@
     const review = (d) => html`<details class="whatchanged"><summary>What changed in ${d.v}</summary><pre class="document plain">${d.review}</pre></details>`;
     // Accept and Send back are peer decisions on the version that waits (Codex round 4, F3): Accept needs your words,
     // Send back a reason; either is one submission to the setup session (the agent panel's recipient for Script), its state the shared Submission's.
-    const form = st === "you" && !decided && S.sform;
+    const form = waitingV && !decided && S.sform;
     const draft = S.sdraft || "";
     const locked = sub && sub !== "failed";
     const confirm = () => { set({ sdec: { kind: form, words: draft.trim() } }); submit("script"); };
     const Decide = html`<div class="sdecide">
-        <div class="fbtns" role="group" aria-label="Your decision on v2">
+        <div class="fbtns" role="group" aria-label=${"Your decision on " + waitingV?.v}>
           <button class="btn sm" aria-pressed=${String(form === "accept")} disabled=${locked} onClick=${() => form !== "accept" && set({ sform: "accept", sdraft: "" })}>${I("check")}Accept</button>
           <button class="btn sm" aria-pressed=${String(form === "back")} disabled=${locked} onClick=${() => form !== "back" && set({ sform: "back", sdraft: "" })}>${I("arrow-counter-clockwise")}Send back</button></div>
-        ${form && html`<label class="sfield"><span>${form === "accept" ? "Accept v2 in your own words (required)" : "Why it goes back (required)"}</span>
+        ${form && html`<label class="sfield"><span>${form === "accept" ? `Accept ${waitingV.v} in your own words (required)` : `Why ${waitingV.v} goes back (required)`}</span>
           <textarea readonly=${locked} placeholder=${form === "accept" ? "e.g. “Yes, this is my script.”" : "e.g. “Keep MORNING in EP001's action line.”"} value=${draft} onInput=${(e) => set({ sdraft: e.target.value })}></textarea></label>
-          <div class="fbtns">${!sub && html`<button class="btn sm primary" disabled=${draft.trim().length < 3} onClick=${confirm}>${form === "accept" ? "Accept v2" : "Send v2 back"}</button>
+          <div class="fbtns">${!sub && html`<button class="btn sm primary" disabled=${draft.trim().length < 3} onClick=${confirm}>${form === "accept" ? `Accept ${waitingV.v}` : `Send ${waitingV.v} back`}</button>
             <button class="btn sm ghost" onClick=${() => set({ sform: null })}>Cancel</button>`}
             <${Submission} id="script" to="the setup session" kept="Your words are kept." onSend=${confirm}/></div>`}</div>`;
     // The history, newest on top (GitHub's pull-request timeline; Figma's and Google Docs' version history): each step as
     // drama-cli recorded it, drama-cli's own words where it refused. A version's row selects it: the editor, its tab and
     // What changed then show that version.
-    const failedV1 = ["err", v1, html`drama-cli screenplay validate failed: <code>${CHECK_FAILED}</code> <span class="subtle">(example values)</span>`, "17:38"];
     const uploaded = ["done", null, "Original uploaded · " + sc.file, "17:31"];
+    const v1back = ["line", v1, html`sent back with your reason: “${SENT_BACK}”`, "17:40"];
+    const passed = (d, at) => ["you", d, html`drama-cli screenplay validate passed · <b>waiting for you</b>`, at];
+    // The version that waits, as the maker's decision left it once sent.
+    const onWaiting = (d, at, below) => decided === "back" ? [["work", null, `v${Number(d.v.slice(1)) + 1} · the agent revises ${d.v} with your reason`, null], ["line", d, html`sent back with your reason: “${dec.words}”`, "17:46"], ...below]
+      : decided === "accept" ? [["done", d, html`accepted in your words: “${dec.words}”`, "17:46"], ...below]
+      : [passed(d, at), ...below];
     const events = {
       rewriting: [["work", null, "v1 · the agent is rewriting your file into Fountain", null], uploaded],
-      failed: [["work", null, "v2 · the agent revises v1, then drama-cli validates it again", null], failedV1, uploaded],
-      you: decided === "back" ? [["work", null, "v3 · the agent revises v2 with your reason", null], ["done", v2, html`sent back with your reason: “${dec.words}”`, "17:46"], failedV1, uploaded]
-        : decided === "accept" ? [["done", v2, html`accepted in your words: “${dec.words}”`, "17:46"], failedV1, uploaded]
-        : [["you", v2, html`drama-cli screenplay validate passed · <b>waiting for you</b>`, "17:44"], failedV1, uploaded],
-      accepted: [["done", v2, "accepted in your words: “Yes, this is my script.”", "17:46"], failedV1, uploaded],
+      you: onWaiting(v1, "17:38", [uploaded]),
+      back: [["work", null, "v2 · the agent revises v1 with your reason", null], v1back, uploaded],
+      you2: onWaiting(v2, "17:44", [v1back, uploaded]),
+      accepted: [["done", v2, "accepted in your words: “Yes, this is my script.”", "17:46"], v1back, uploaded],
       original: [uploaded],
     }[st];
     const History = html`<ol class="history">${events.map(([kind, d, text, at]) => html`<li class=${kind + (d && d === shown ? " sel" : "")}>
-        <span class="dot ${kind === "you" ? "you" : kind === "work" ? "work" : kind === "err" ? "redline" : "accepted"}"></span>
+        <span class="dot ${kind === "you" ? "you" : kind === "work" ? "work" : kind === "line" ? "line" : "accepted"}"></span>
         <div class="grow"><span>${d && html`<button class="hver" aria-pressed=${String(d === shown)} title=${"Show " + d.v} onClick=${() => set({ sver: d.v, ssel: null, scriptEp: null })}>${d.v}</button> · `}${text}</span>${at && html`<time>${at}</time>`}
           ${d && d === shown && review(d)}
           ${kind === "you" && Decide}</div></li>`)}</ol>`;
@@ -587,7 +593,7 @@
         ${st === "original" && html`<div class="notice" role="status">${I("info")}<span><b>Only the original was recorded for this project.</b> It was set up before drama-cli kept the rewrite, its check and your acceptance, so there are none to show.</span></div>`}
         <div class="scriptlayout">
           <section class="scripthistory" aria-label="Versions"><h3>${I("stack")}Versions</h3>
-            ${accepted ? html`<details open=${!!S.sver}><summary>Accepted v2 · ${events.length} steps</summary>${History}</details>` : History}</section>
+            ${accepted ? html`<details open=${!!S.sver}><summary>Accepted ${events[0][1]?.v || ""} · ${events.length} steps</summary>${History}</details>` : History}</section>
           ${/* One editor surface, VS Code's way: the tab bar and the document under it share one border and one radius;
                no card inside it. */ ""}
           <section class="editor" aria-label="Script">
