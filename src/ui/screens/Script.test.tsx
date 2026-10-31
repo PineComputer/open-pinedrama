@@ -66,7 +66,7 @@ describe("Script", () => {
     answer("/api/dramas/d1/script", page(false));
     texts();
     await renderAt(<Script dramaId="d1" />, "/d/d1/script");
-    await user.click(await screen.findByRole("button", { name: "Show the original" }));
+    await user.click(await screen.findByRole("radio", { name: "Original" }));
     await waitFor(() => expect(document.querySelector("pre.original")?.textContent).toBe("EPISODE 1\nTENEMENT FLAT, MORNING\n"));
   });
 
@@ -90,7 +90,8 @@ describe("Script", () => {
     texts();
     await renderAt(<Script dramaId="d1" />, "/d/d1/script");
     expect(await screen.findByText("Only the original was recorded for this project.")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Show the Fountain" })).toBeDisabled();
+    // One view only, so no switch to offer.
+    expect(screen.queryByRole("radio", { name: "Fountain" })).not.toBeInTheDocument();
   });
 });
 
@@ -132,5 +133,35 @@ describe("Script, while the agent rewrites", () => {
     await renderAt(<Script dramaId="d1" rewriting />, "/d/d1/script");
     expect(await screen.findByText("v1 · the agent is rewriting your file into Fountain")).toBeInTheDocument();
     expect(screen.queryByText("Only the original was recorded for this project.")).not.toBeInTheDocument();
+  });
+});
+
+describe("Script's view switch", () => {
+  it("names each view beside its icon, and the one picked is the one shown (Apple HIG, labelled icons)", async () => {
+    const user = userEvent.setup();
+    answer("/api/dramas/d1/script", page(false));
+    texts();
+    await renderAt(<Script dramaId="d1" />, "/d/d1/script");
+    const views = await screen.findByRole("radiogroup", { name: "Show" });
+    expect(within(views).getAllByRole("radio").map((view) => [view.textContent, view.getAttribute("aria-checked")])).toEqual([
+      ["Original", "false"],
+      ["Fountain", "true"],
+      ["Compare", "false"],
+    ]);
+    await user.click(within(views).getByRole("radio", { name: "Original" }));
+    expect(within(views).getByRole("radio", { name: "Original" })).toHaveAttribute("aria-checked", "true");
+    await waitFor(() => expect(document.querySelector("pre.original")).toBeInTheDocument());
+    expect(document.querySelector(".fdoc")).not.toBeInTheDocument();
+    await user.click(within(views).getByRole("radio", { name: "Fountain" }));
+    expect(document.querySelector(".fdoc")).toBeInTheDocument();
+  });
+
+  it("says so when the upload was already Fountain, since the original and the version then read alike", async () => {
+    const fountainUpload = file({ kind: "screenplay", name: "screenplay.fountain", type: "text/plain" });
+    answer("/api/dramas/d1/script", { ...page(false), inputs: [fountainUpload], screenplayFile: fountainUpload.id });
+    texts();
+    server.use(http.get(fountainUpload.url, () => HttpResponse.text("# Episode 1\n")));
+    await renderAt(<Script dramaId="d1" />, "/d/d1/script");
+    expect(await screen.findByText("Your upload was already Fountain, so the original and v2 read alike: Compare shows where they differ.")).toBeInTheDocument();
   });
 });

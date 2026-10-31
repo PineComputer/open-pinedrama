@@ -2,6 +2,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import type { Decision, FileItem, ScreenplayVersion, ScriptPage, SubmissionView } from "../../shared/types.ts";
 import { api, ApiError, useResource } from "../api.ts";
+import { Segmented } from "../components/Segmented.tsx";
 import { Submission, useSubmission } from "../components/Submission.tsx";
 import { FountainDiff } from "../FountainDiff.tsx";
 import { fountainLines } from "../fountainLines.ts";
@@ -133,15 +134,19 @@ function ScriptBody({ dramaId, data, ep, rewriting }: { dramaId: string; data: S
     if (target >= 0) document.getElementById(`fl-${target}`)?.scrollIntoView({ block: "start" });
   }, [target, fountain]);
   const show = (version: ScreenplayVersion) => void navigate({ ...homeLink(dramaId, "screenplay", "canvas", version.version), replace: true });
+  const editor = useRef<HTMLElement>(null);
   const choose = (next: View) => {
     setPicked(next);
+    // The switched view starts at its top, in sight: the editor comes back into view when its top had scrolled away.
+    if (editor.current && editor.current.getBoundingClientRect().top < 0) editor.current.scrollIntoView({ block: "start" });
     if (ep) void navigate({ to: "/d/$dramaId/script", params: { dramaId }, search: { item: search.item, version: search.version }, replace: true });
   };
-  const ACTIONS: [View, "script.showOriginal" | "script.showFountain" | "script.compare", IconName][] = [
-    ["original", "script.showOriginal", "file-text"],
-    ["fountain", "script.showFountain", "film-strip"],
-    ["compare", "script.compare", "square-half"],
+  const VIEWS: [View, "script.viewOriginal" | "script.viewFountain" | "script.viewCompare", IconName][] = [
+    ["original", "script.viewOriginal", "file-text"],
+    ["fountain", "script.viewFountain", "film-strip"],
+    ["compare", "script.viewCompare", "square-half"],
   ];
+  const views = VIEWS.filter(([key]) => (key === "original" ? Boolean(original) : key === "fountain" ? Boolean(shown) : Boolean(shown && original)));
   return (
     <>
       <div className="scripthead">
@@ -192,8 +197,8 @@ function ScriptBody({ dramaId, data, ep, rewriting }: { dramaId: string; data: S
             )}
           </ol>
         </section>
-        {/* One editor surface, VS Code's way: the open file as a tab, its actions as icon buttons (Apple HIG: a tooltip and a name). */}
-        <section className="editor" aria-label={t("step.script")}>
+        {/* One editor surface, VS Code's way: the open file's label, and the view switch beside it. */}
+        <section ref={editor} className="editor" aria-label={t("step.script")}>
           <div className="edbar">
             <div className="edtab">
               <Icon name={view === "original" ? "file-text" : view === "compare" ? "square-half" : "film-strip"} className="ic" />
@@ -206,15 +211,13 @@ function ScriptBody({ dramaId, data, ep, rewriting }: { dramaId: string; data: S
               </span>
             </div>
             <span className="grow" />
-            {ACTIONS.map(([key, label, icon]) => {
-              const off = (key !== "original" && !shown) || (key !== "fountain" && !original);
-              return (
-                <button key={key} type="button" className="ibtn" title={t(label)} aria-label={t(label)} aria-pressed={view === key} disabled={off} onClick={() => choose(key)}>
-                  <Icon name={icon} className="ic" />
-                </button>
-              );
-            })}
+            {/* The view switch is the editor's primary control, so each choice says its name beside its icon (Apple HIG:
+                label an icon whose meaning isn't universal) on the design's Segmented, and only the views this version has. */}
+            {views.length > 1 && <Segmented label={t("script.view")} value={view} options={views.map(([value, label, icon]) => ({ value, label: t(label), icon }))} onChange={choose} />}
           </div>
+          {view !== "compare" && shown && original?.name.toLowerCase().endsWith(".fountain") && (
+            <p className="muted ednote">{t("script.alreadyFountain", { version: shown.version })}</p>
+          )}
           {view === "fountain" ? (
             <div className="edbody scriptdoc">
               {fountain === undefined ? (

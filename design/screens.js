@@ -606,8 +606,11 @@
                    while a version waits for you, or ask the agent after acceptance; drama-cli validates the new version. */ ""}
               <span class="ro" title="Read-only: ask the agent for a change; it writes a new version that drama-cli validates and you accept">${I("lock-simple")}Read-only</span></div>
             <span class="grow"></span>
-            ${[["original", "Show the original", "file-text"], ["fountain", "Show the Fountain", "film-strip"], ["compare", "Compare the original and the Fountain", "square-half"]].map(([k, l, ic]) =>
-              html`<button class="ibtn" title=${!hasFountain && k !== "original" ? l + " · no Fountain recorded yet" : l} aria-label=${l} aria-pressed=${String(view === k)} disabled=${!hasFountain && k !== "original"} onClick=${() => set({ sview: k, scriptEp: null })}>${I(ic)}</button>`)}</div>
+            ${/* The view switch is the editor's primary control: each choice names itself beside its icon (Apple HIG: label an
+                 icon whose meaning isn't universal), on Segmented, and only the views this version has. */ ""}
+            ${hasFountain && html`<div class="seg" role="group" aria-label="Show">${[["original", "Original", "file-text"], ["fountain", "Fountain", "film-strip"], ["compare", "Compare", "square-half"]].map(([k, l, ic]) =>
+              html`<button aria-pressed=${String(view === k)} onClick=${() => { set({ sview: k, scriptEp: null }); const ed = document.querySelector(".editor"); if (ed && ed.getBoundingClientRect().top < 0) ed.scrollIntoView({ block: "start" }); }}>${I(ic)}${l}</button>`)}</div>`}</div>
+          ${view !== "compare" && shown && sc.file.toLowerCase().endsWith(".fountain") && html`<p class="muted ednote">Your upload was already Fountain, so the original and ${shown.v} read alike: Compare shows where they differ.</p>`}
           ${view === "fountain" ? html`<div class="edbody scriptdoc"><div class="fdoc">${fl.map(Line)}</div></div>`
             : view === "compare" ? html`<div class="diffed" aria-label=${"Changes: the original beside the Fountain " + shown.v}>
                 <div class="dhead">${sc.file}</div><div class="dhead">screenplay.fountain <span class="tag">${shown.v}</span></div>
