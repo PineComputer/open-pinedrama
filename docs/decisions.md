@@ -1264,7 +1264,9 @@ timeline
   vN". Completed in 9a2d903 (work-04), on master's send-back: an asset reads "Waiting for you" only while a
   review of that exact version is open; otherwise a working version drama-cli hasn't accepted reads "vN ·
   not accepted", as the Bible row does, even when the maker approved it, and that approval shows only under
-  "Your decision on vN".
+  "Your decision on vN". The Canvas in 0f862ad (work-04): `labels.ts` `versionStanding` is the one status → chip
+  rule for Assets, the Canvas (nodes, the shots card, the node panel) and the review's "accepted before"; the
+  Canvas's `standing()` and `standingOf()` are deleted.
 
 ## D65. 2026-10-30 · The tree's current row is a tint, without an accent bar
 - **Context.** The project tree marked its current row with a curved accent bar on its left
