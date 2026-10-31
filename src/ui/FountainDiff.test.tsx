@@ -38,7 +38,7 @@ describe("FountainReview", () => {
     render(<FountainReview original={ORIGINAL} fountain={"# Episode 1\n\nINT. TENEMENT FLAT - DAY #1-1#\n\nLin stands in the doorway.\n"} reviewId="r1" />);
     expect(screen.getByRole("heading", { name: "Check what the rewrite changed" })).toBeInTheDocument();
     // Three of the file's lines changed form (two became four); one came back as it was.
-    expect(screen.getByText(/^3 lines changed form, 1 kept as it was\./)).toBeInTheDocument();
+    expect(screen.getByText(/^3 lines changed form, 1 unchanged\./)).toBeInTheDocument();
     expect(screen.getByText("episode").parentElement).toHaveTextContent("1 episode");
     expect(screen.getByText("scene").parentElement).toHaveTextContent("1 scene");
     expect(screen.getByRole("textbox", { name: "Your words" })).toBeInTheDocument();
