@@ -45,7 +45,7 @@ describe("stopping one episode", () => {
     stop();
     expect(episode("e1")).toEqual({ state: "stopped", session_id: null });
     expect(db.get<{ state: string }>("select state from sessions where id = 's1'")?.state).toBe("closed");
-    expect(db.get<{ state: string }>("select state from reviews where id = 'r1'")?.state).toBe("ended");
+    expect(db.get<{ state: string; ended_by: string }>("select state, ended_by from reviews where id = 'r1'")).toEqual({ state: "ended", ended_by: "episode-stop" });
     expect(episode("e2").state).toBe("working");
     expect(db.get<{ state: string }>("select state from sessions where id = 's2'")?.state).toBe("open");
     expect(heard).toContainEqual({ type: "changed", scope: "drama:d1" });
@@ -67,6 +67,15 @@ describe("stopping one episode", () => {
     await dramas.stopEpisode("e1");
     await expect(dramas.stopEpisode("e1")).rejects.toMatchObject({ code: "episode-not-running" });
     await expect(dramas.stopEpisode("nope")).rejects.toMatchObject({ code: "not-found" });
+  });
+});
+
+describe("a decision its session can't take", () => {
+  it("ends the review, recorded as undelivered, when its Computer is gone", async () => {
+    const reviews = await import("./reviews.ts");
+    db.run("insert into reviews (id, drama_id, episode_id, session_id, turn_id, kind, state, question, created_at) values ('r2', 'd1', 'e1', 's1', 't2', 'question', 'open', 'Which is scene 1-3?', ?)", new Date().toISOString());
+    await reviews.decide("r2", { submissionId: crypto.randomUUID(), items: [], words: "Day." });
+    expect(db.get<{ state: string; ended_by: string }>("select state, ended_by from reviews where id = 'r2'")).toEqual({ state: "ended", ended_by: "undelivered" });
   });
 });
 

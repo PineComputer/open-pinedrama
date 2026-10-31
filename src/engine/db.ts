@@ -130,6 +130,7 @@ create table if not exists reviews (
   question text not null,
   decision text,                    -- JSON Decision
   submission_id text,               -- the decision's submission (reviews.ts, decide): one decision per review
+  ended_by text,                    -- why it ended (types.ts EndedBy), set with state 'ended'
   answer text,
   created_at text not null,
   decided_at text
@@ -247,6 +248,7 @@ export function db(): DatabaseSync {
     add("episodes", "carry", "text not null default ''");
     add("dramas", "reason", "text not null default ''");
     add("reviews", "submission_id", "text");
+    add("reviews", "ended_by", "text");
     add("sessions", "started_from", "text");
     add("sessions", "handed_over", "integer not null default 0");
     add("computers", "stop_by", "text");

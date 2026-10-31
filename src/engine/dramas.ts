@@ -204,7 +204,7 @@ export async function stopEpisode(id: string): Promise<void> {
   if (!["queued", "working", "waiting"].includes(episode.state)) throw new StudioError("episode-not-running", "This episode isn't running, so there's nothing to stop.", 409);
   const session = episode.session_id ? sessionRow(episode.session_id) : undefined;
   transaction(() => {
-    if (session) run("update reviews set state = 'ended' where session_id = ? and state in ('saving', 'open')", session.id);
+    if (session) run("update reviews set state = 'ended', ended_by = 'episode-stop' where session_id = ? and state in ('saving', 'open')", session.id);
     run("update episodes set state = 'stopped', note = '', session_id = null, updated_at = ? where id = ?", now(), id);
   });
   if (session?.state === "open") {
@@ -242,7 +242,7 @@ export async function stopDrama(id: string): Promise<void> {
   if (drama.status === "done") throw new StudioError("drama-done", "The drama is finished.", 409);
   run("update dramas set status = 'stopped', reason = 'by-maker', note = '', updated_at = ? where id = ?", now(), id);
   publish(`drama:${id}`, "dramas");
-  const stops = await Promise.allSettled(runningComputers(id).map((row) => stopComputer(row)));
+  const stops = await Promise.allSettled(runningComputers(id).map((row) => stopComputer(row, "pause")));
   const failed = stops.find((result) => result.status === "rejected");
   if (failed) throw failed.reason;
 }

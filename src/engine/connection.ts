@@ -58,7 +58,7 @@ export async function disconnect(): Promise<AppInfo> {
     if (hasFleet() && fleet().mode === "pine") {
       await drain();
       const live = all<ComputerRow>("select * from computers where mode = 'pine' and state in ('starting', 'running', 'stopping')");
-      const results = await Promise.allSettled(live.map((computer) => stop(computer)));
+      const results = await Promise.allSettled(live.map((computer) => stop(computer, "computer")));
       const stuck = live.filter((_, index) => results[index].status === "rejected");
       if (stuck.length) {
         const names = stuck.map((computer) => computer.label).join(", ");

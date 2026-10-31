@@ -157,6 +157,11 @@ export type Reviewing = "every" | "key" | "none";
  * answered: the agent has it. ended: the session that asked is gone.
  */
 export type ReviewState = "saving" | "open" | "sending" | "answered" | "ended";
+/**
+ * Why a review ended, recorded in the statement that ended it: the maker paused the drama, stopped its episode, its
+ * Computer stopped otherwise (lost, idle, the studio disconnected), or the maker's decision couldn't be delivered.
+ */
+export type EndedBy = "pause" | "episode-stop" | "computer" | "undelivered";
 
 export type Verdict = "approve" | "revise";
 
@@ -388,6 +393,10 @@ export interface ReviewSummary {
   stop?: StopKind;
   thumb?: Still;
   createdAt: string;
+  /** Why it ended, on an ended review. */
+  endedBy?: EndedBy;
+  /** On a question whose turn recorded a screenplay version: that version (vN), which the decision accepts or sends back. */
+  rewrite?: string;
 }
 
 /** One thing the maker gives a verdict on: a segment's storyboard, a character's look, a take, the cut. */
@@ -493,8 +502,6 @@ export interface ReviewView extends ReviewSummary {
   refusalsError?: string;
   /** The project's folder as the stop's status report names it, which the refusals' paths start with (labels.ts firstLine). */
   project?: string;
-  /** On a question whose turn recorded a screenplay version: that version (vN), which the decision accepts or sends back. */
-  rewrite?: string;
 }
 
 export interface ChatMessage {

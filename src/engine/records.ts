@@ -1,5 +1,5 @@
 // The studio's rows, typed, and the small queries several modules share.
-import type { DramaStatus, EpisodeState, Mode, ReviewKind, ReviewState, Reviewing } from "../shared/types.ts";
+import type { DramaStatus, EndedBy, EpisodeState, Mode, ReviewKind, ReviewState, Reviewing } from "../shared/types.ts";
 import { all, get, run } from "./db.ts";
 
 export interface DramaRow {
@@ -111,6 +111,7 @@ export interface ReviewRow {
   question: string;
   decision: string | null;
   submission_id: string | null;
+  ended_by: EndedBy | null;
   answer: string | null;
   created_at: string;
   decided_at: string | null;

@@ -6,6 +6,7 @@
 import { IDLE_WAITING_S, IDLE_WORKING_S } from "./config.ts";
 import { all, get, newId, now, run } from "./db.ts";
 import { type ArtifactAccess, type Attached, type ComputerRef, type Fleet, type Limits, type SessionRef, isBusy } from "./fleet.ts";
+import type { EndedBy } from "../shared/types.ts";
 import { publish } from "./live.ts";
 import { type ComputerRow, type SessionRow, computer as computerRow, openSessionsOf, raiseCost } from "./records.ts";
 import { seal, unseal } from "./seal.ts";
@@ -95,7 +96,7 @@ export function setFleet(fleet: Fleet | undefined, known?: Limits): void {
   );
   for (const row of others) {
     const why = !fleet ? "The studio was disconnected from Pine." : fleet.mode !== row.mode ? `The studio switched to ${fleet.mode === "pine" ? "your Pine project" : "replay"}.` : "The studio switched to another Pine project.";
-    markStopped(row, why);
+    markStopped(row, why, "computer");
   }
 }
 
@@ -220,12 +221,12 @@ export function retryStarts(dramaId: string): void {
  * The Computer is gone: its sessions end with it, and the work they held stops. Episodes
  * and reviews that depended on them say so; nothing claims their files or turns survive.
  */
-export function markStopped(row: ComputerRow, why: string): void {
+export function markStopped(row: ComputerRow, why: string, endedBy: Extract<EndedBy, "pause" | "computer">): void {
   const sessions = openSessionsOf(row.id);
   run("update computers set state = 'stopped', binding = null, updated_at = ? where id = ?", now(), row.id);
   for (const session of sessions) {
     run("update sessions set state = 'lost', closed_at = ? where id = ?", now(), session.id);
-    run("update reviews set state = 'ended' where session_id = ? and state in ('saving', 'open', 'sending')", session.id);
+    run("update reviews set state = 'ended', ended_by = ? where session_id = ? and state in ('saving', 'open', 'sending')", endedBy, session.id);
     if (session.episode_id) {
       run(
         "update episodes set state = 'stopped', note = ?, updated_at = ? where id = ? and state in ('working', 'waiting')",
@@ -243,17 +244,17 @@ export function markStopped(row: ComputerRow, why: string): void {
  * running (and says why), and one still shutting down stays "stopping" until reconcile sees
  * it gone. Throws when the stop failed, so whoever asked can tell the maker.
  */
-export async function stop(row: ComputerRow): Promise<void> {
+export async function stop(row: ComputerRow, endedBy: Extract<EndedBy, "pause" | "computer">): Promise<void> {
   run("update computers set state = 'stopping', updated_at = ? where id = ?", now(), row.id);
   publish(`drama:${row.drama_id}`);
   await serialized(row.id, async () => {
     const current = computerRow(row.id) ?? row;
     if (!current.binding) {
-      markStopped(current, "Its Computer was stopped.");
+      markStopped(current, "Its Computer was stopped.", endedBy);
       return;
     }
     try {
-      if (await fleet().stop(computerRef(current))) markStopped(current, "Its Computer was stopped.");
+      if (await fleet().stop(computerRef(current))) markStopped(current, "Its Computer was stopped.", endedBy);
     } catch (error) {
       run("update computers set state = 'running', last_error = ?, updated_at = ? where id = ?", message(error), now(), row.id);
       publish(`drama:${row.drama_id}`);

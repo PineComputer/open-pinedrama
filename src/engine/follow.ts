@@ -68,7 +68,7 @@ async function loop(sessionId: string, firstTurn: string): Promise<void> {
     } catch (error) {
       failures += 1;
       if ((await fleet().status(computerRef(computer)).catch(() => "unknown")) === "stopped") {
-        markStopped(computer, "Its Computer stopped.");
+        markStopped(computer, "Its Computer stopped.", "computer");
         return;
       }
       console.error(`follow ${turnId}:`, (error as Error).message);

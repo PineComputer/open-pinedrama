@@ -401,7 +401,7 @@ function tend(computer: ComputerRow): void {
     const queued = get<{ n: number }>("select count(*) as n from episodes where drama_id = ? and state = 'queued'", computer.drama_id)?.n ?? 0;
     const triedLately = computer.last_error !== null && Date.now() - Date.parse(computer.updated_at) < 60_000;
     const done = drama && drama.status !== "setup" && !queued;
-    if (drama && (done || retiring(computer)) && !opening.get(computer.id) && !triedLately) once(`stop:${computer.id}`, () => stop(computer));
+    if (drama && (done || retiring(computer)) && !opening.get(computer.id) && !triedLately) once(`stop:${computer.id}`, () => stop(computer, "computer"));
   }
 }
 
@@ -410,12 +410,12 @@ export async function reconcile(): Promise<void> {
   if (!hasFleet()) return;
   for (const computer of all<ComputerRow>("select * from computers where state in ('running', 'starting', 'stopping') and mode = ?", fleet().mode)) {
     if (!computer.binding) {
-      if (computer.state !== "running") markStopped(computer, "Its Computer didn't finish starting.");
+      if (computer.state !== "running") markStopped(computer, "Its Computer didn't finish starting.", "computer");
       continue;
     }
     const state = await fleet().status(computerRef(computer)).catch(() => "unknown");
     if (state === "stopped" || state === "failed") {
-      markStopped(computer, "Its Computer stopped.");
+      markStopped(computer, "Its Computer stopped.", "computer");
       continue;
     }
     if (state !== "running") continue;

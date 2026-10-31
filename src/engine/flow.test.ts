@@ -98,6 +98,8 @@ async function scenario(title: string) {
   // The rewrite's question names the screenplay version it recorded, and takes a verdict, never read from the words.
   const rewrite = await until("the screenplay rewrite", openReview(id, () => true));
   expect((await call<ReviewView>("GET", `/api/reviews/${rewrite.id}`)).rewrite).toMatch(/^v\d+$/);
+  // The list says it too, so a page can tell a rewrite from a plain question without opening each review.
+  expect(rewrite.rewrite).toBe((await call<ReviewView>("GET", `/api/reviews/${rewrite.id}`)).rewrite);
   await expect(call("POST", `/api/reviews/${rewrite.id}/decision`, { submissionId: crypto.randomUUID(), items: [], words: "Yes, this is my script." })).rejects.toThrow("Accept screenplay");
   // A file goes with an answer to the agent's own question, never with a rewrite's verdict (Script owns that).
   const screenplay = new FormData();
@@ -403,12 +405,14 @@ describe("a drama in replay", () => {
     const computer = get<import("./records.ts").ComputerRow>("select c.* from computers c join sessions s on s.computer_id = c.id where s.id = ?", episode.session_id)!;
     await fleet.stop(computerRef(computer));
     // Together, so the line doesn't hand the free place to the next episode first.
-    markStopped(computer, "Its Computer stopped.");
+    markStopped(computer, "Its Computer stopped.", "computer");
     resumeEpisode(episode.id);
     const again = await until("EP001 storyboards again", openReview(id, (item) => item.episode === "EP001" && item.id !== first.id));
     expect(again.kind).toBe("storyboards");
     const ids = (review: ReviewView) => review.reviewItems.flatMap((item) => item.files.map((file) => file.id));
     expect(ids(await call<ReviewView>("GET", `/api/reviews/${again.id}`))).toEqual(ids(await call<ReviewView>("GET", `/api/reviews/${first.id}`)));
+    // The review its lost Computer ended says so; the maker didn't pause it.
+    expect((await call<ReviewSummary[]>("GET", `/api/reviews?drama=${id}`)).find((review) => review.id === first.id)?.endedBy).toBe("computer");
     // EP001's first session was lost with its Computer; the resumed one started on the project and EP001's own pack.
     const ep001 = (await call<SessionRecord[]>("GET", `/api/dramas/${id}/session-history`)).filter((session) => session.scope === "EP001");
     expect(ep001.map((session) => [session.state, session.startedFrom])).toEqual([
@@ -566,6 +570,9 @@ describe("a drama in replay", () => {
     expect([stopped.status, stopped.setup.reason]).toEqual(["stopped", "by-maker"]);
     expect(all("select id from computers where drama_id = ? and state != 'stopped'", id)).toEqual([]);
     expect(await openReview(id, () => true)()).toBeUndefined();
+    // The question the pause ended says the maker paused it, recorded as it ended, never read from words.
+    const ended = (await call<ReviewSummary[]>("GET", `/api/reviews?drama=${id}`)).filter((review) => review.state === "ended");
+    expect(ended.map((review) => [review.kind, review.endedBy])).toEqual([["question", "pause"]]);
     await call("POST", `/api/dramas/${id}/resume`);
     await until("the setup question again", openReview(id, (item) => item.kind === "question"));
     // The session history keeps the one the stop ended beside the one that carried on, each with its Computer, oldest first.

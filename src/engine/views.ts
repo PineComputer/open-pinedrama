@@ -345,6 +345,8 @@ function summary(review: ReviewRow): ReviewSummary {
     stop: refusal ? stopKind(refusal) : undefined,
     thumb: image ? still(image) : undefined,
     createdAt: review.created_at,
+    endedBy: review.state === "ended" ? review.ended_by ?? undefined : undefined,
+    rewrite: review.kind === "question" ? rewriteOf(files) : undefined,
   };
 }
 
@@ -417,7 +419,6 @@ export function reviewView(review: ReviewRow): ReviewView {
     finishable:
       review.kind === "question" && review.state === "open" && review.episode_id !== null && get("select id from files where episode_id = ? and kind = 'cut' limit 1", review.episode_id) !== undefined,
     ...turnRefusals(review.turn_id),
-    rewrite: review.kind === "question" ? rewriteOf(files) : undefined,
   };
 }
 

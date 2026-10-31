@@ -252,7 +252,7 @@ export async function reconcileSending(): Promise<void> {
     const session = sessionRow(review.session_id);
     const computer = session && computerRow(session.computer_id);
     if (!session || session.state !== "open" || computer?.state !== "running") {
-      run("update reviews set state = 'ended' where id = ? and state = 'sending'", review.id);
+      run("update reviews set state = 'ended', ended_by = 'undelivered' where id = ? and state = 'sending'", review.id);
       continue;
     }
     try {
@@ -358,7 +358,7 @@ async function send(reviewId: string, decision: Decision): Promise<ReviewRow> {
   const session = sessionRow(review.session_id);
   const computer = session && computerRow(session.computer_id);
   if (!session || session.state !== "open" || computer?.state !== "running") {
-    run("update reviews set state = 'ended' where id = ?", reviewId);
+    run("update reviews set state = 'ended', ended_by = 'undelivered' where id = ?", reviewId);
     publish(`drama:${review.drama_id}`, "reviews");
     return reviewRow(reviewId)!;
   }
@@ -400,7 +400,7 @@ async function send(reviewId: string, decision: Decision): Promise<ReviewRow> {
     const status = (error as { status?: number }).status;
     // The turn can't take an answer any more: the session moved on or ended. Keep the decision.
     const ended = status === 404 || status === 409;
-    run("update reviews set state = ?, submission_id = ? where id = ?", ended ? "ended" : "open", ended ? decision.submissionId : null, reviewId);
+    run("update reviews set state = ?, submission_id = ?, ended_by = ? where id = ?", ended ? "ended" : "open", ended ? decision.submissionId : null, ended ? "undelivered" : null, reviewId);
     publish(`drama:${review.drama_id}`, "reviews");
     if (status !== 404 && status !== 409) throw new StudioError("send-failed", `Couldn't send the decision: ${(error as Error).message}`, 502, (error as Error).message);
   }
