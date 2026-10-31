@@ -232,7 +232,8 @@
      The session's process, messages and composer follow it together; an unsent draft stays with its own session. */
   const inEpisode = () => ["canvas", "review", "cut"].includes(S.screen) || (S.screen === "graph" && window.EXTRA.lineageInEpisode());
   /* Codex round 4, F4: the script, the bible and the shared assets belong to the setup session (D5), so their pages follow
-     it, never an episode's. It ended at the handover; a message opens a new one on the drama's project (D38). */
+     it, never an episode's. It ended at the handover, so nothing can be sent to it; what a new setup session can do is
+     redraw out-of-date shared references, from Out of date (D38). */
   const setupPage = () => S.screen === "script" || S.screen === "story";
   const followed = () => (inEpisode() ? "EP006" : setupPage() ? "Setup" : null);
   const talkTo = () => S.pin || followed();
@@ -286,9 +287,7 @@
             <li>${I("check-circle")}<span>Breakdown EP007: refused, a red line in the screenplay</span><time>1:10</time></li>
             <li class="now">${I("circle-notch")}<span>Waiting for your decision</span><time></time></li></ol>`}</div></section>
         <section class="asec"><p class="msg">drama-cli won't break EP007 down: its scene 4 shows a guard striking Luca in the cell, a red line in the screenplay. It's yours to decide: change the scene in the script, or stop EP007 here. Other episodes carry on.</p></section>`
-        : to === "Setup" ? html`<section class="asec"><p class="msg">The setup session wrote the script's Fountain, the bible and the shared looks, plates and props, and ended when it handed the project over. ${S.dramaStop === "stopped"
-            ? "The drama is stopped, so nothing can be sent: resume it to ask for a change."
-            : "Ask here for a change to any of them: your message opens a new setup session on this drama's project, which reads what you accepted and asks before it changes or spends anything."}</p></section>`
+        : to === "Setup" ? html`<section class="asec"><p class="msg">The setup session ended when it handed the project over, so nothing can be sent to it. A new setup session can redraw shared looks, locations and props that are out of date; other changes to the script, bible or shared assets after the handover aren't available yet. <button class="linkbtn" onClick=${() => go("outofdate")}>Open Out of date</button></p></section>`
         : to ? html`<section class="asec"><div class="process"><button aria-expanded=${String(S.procOpen !== false)} onClick=${() => set({ procOpen: S.procOpen === false })}>${I("list-checks")}EP006 · Process<span class="cnt">7 steps</span>${I(S.procOpen === false ? "caret-right" : "caret-down")}</button>
           ${S.procOpen !== false && html`<ol class="steps">
             <li>${I("check-circle")}<span>Status <code>drama-cli status</code></span><time>0:02</time></li>
@@ -305,11 +304,11 @@
         <section class="asec"><h3>Next</h3><div class="nextchips"><button onClick=${() => go("review")}>Review EP006 takes</button><button onClick=${() => go("canvas")}>Review looks and plates</button></div></section>
       </div>
       ${(() => {
-        const setup = to === "Setup", closed = setup && S.dramaStop === "stopped", can = to && !closed;
-        const send = () => { set({ chats: { ...S.chats, [to]: [...((S.chats || {})[to] || []), S.draft.trim()] }, draft: "" }); toast(setup ? "A new setup session opens with your message." : "Sent to " + to + "'s session."); };
-        return html`<div class="composer"><textarea placeholder=${closed ? "The drama is stopped: resume it to message" : setup ? "Ask the setup session for a change…" : to ? "Message " + to + "'s session…" : "Pin a session to message it"} disabled=${!can} value=${S.draft} onInput=${(e) => set({ draft: e.target.value })}
+        const setup = to === "Setup", can = to && !setup;
+        const send = () => { set({ chats: { ...S.chats, [to]: [...((S.chats || {})[to] || []), S.draft.trim()] }, draft: "" }); toast("Sent to " + to + "'s session."); };
+        return html`<div class="composer"><textarea placeholder=${setup ? "The setup session has ended" : to ? "Message " + to + "'s session…" : "Pin a session to message it"} disabled=${!can} value=${S.draft} onInput=${(e) => set({ draft: e.target.value })}
           onKeyDown=${(e) => { if (e.key === "Enter" && (e.metaKey || e.ctrlKey) && S.draft.trim() && can) send(); }}></textarea>
-        <div class="crow"><span>${setup ? html`To <b>a new setup session</b> · it opens when you send` : to ? html`To <b>${to}</b>'s session · ${S.pin ? "pinned" : "the episode in view"}` : "No session chosen"}</span><button class="send" aria-label=${to ? "Send to " + whose(to) : "Send"} disabled=${!can || !S.draft.trim()} onClick=${send}>${I("arrow-up")}</button></div></div>`;
+        <div class="crow"><span>${setup ? html`To <b>the setup session</b> · ended at the handover` : to ? html`To <b>${to}</b>'s session · ${S.pin ? "pinned" : "the episode in view"}` : "No session chosen"}</span><button class="send" aria-label=${to ? "Send to " + whose(to) : "Send"} disabled=${!can || !S.draft.trim()} onClick=${send}>${I("arrow-up")}</button></div></div>`;
       })()}
     </aside>`;
   }

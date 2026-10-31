@@ -91,6 +91,29 @@ describe("the agent panel", () => {
     await waitFor(() => expect(within(recent).getAllByText(/^Look · 林/).map((line) => line.textContent)).toEqual(["Look · 林 v2", "Look · 林 v1"]));
   });
 
+  // Codex round 4, F4: the script, the bible and the shared assets are the setup's work.
+  it("follows the setup session on the setup's pages, never an episode's", async () => {
+    engine();
+    answer("/api/dramas/d1/sessions", [chat("s0", "", "run"), chat("s1", "EP001", "steer")]);
+    answer("/api/sessions/s0/chat", chat("s0", "", "run"));
+    await renderAt(<AgentPanel drama={drama} setup onCollapse={() => {}} />);
+    expect(screen.getByRole("status")).toHaveTextContent("Following the setup session: the script, bible and shared assets");
+    expect(await screen.findByText("To the setup session")).toBeInTheDocument();
+    expect(screen.queryByText(/EP001's session/)).not.toBeInTheDocument();
+    expect(screen.getByRole("textbox", { name: /message/i })).toBeEnabled();
+  });
+
+  it("says when the setup session has ended, what a new one can do, and where", async () => {
+    engine();
+    answer("/api/dramas/d1/sessions", [chat("s0", "", "none"), chat("s1", "EP001", "steer")]);
+    answer("/api/sessions/s0/chat", chat("s0", "", "none"));
+    await renderAt(<AgentPanel drama={drama} setup onCollapse={() => {}} />);
+    expect(await screen.findByText(/^The setup session ended when it handed the project over/)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Open Out of date" })).toHaveAttribute("href", "/d/d1/out-of-date");
+    expect(screen.getByRole("textbox", { name: /message/i })).toBeDisabled();
+    expect(await screen.findByText("To the setup session · ended at the handover")).toBeInTheDocument();
+  });
+
   it("says whose session it follows", async () => {
     engine();
     await renderAt(<AgentPanel drama={drama} episode="EP001" onCollapse={() => {}} />);

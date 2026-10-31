@@ -62,9 +62,12 @@ const LABEL: Partial<Record<Page, TKey>> = {
   episodes: "step.episodes",
 };
 
+// The setup's own work, whose session the agent follows there (D5): the script, the bible and the shared assets.
+const SETUP_PAGES: Page[] = ["script", "bible", "characters", "locations", "props"];
+
 /** The agent for the drama in view (D32 as amended): its sidebar, open beside the page, or collapsed to the ball. */
-function Agent({ drama, episode, mode, onMode }: { drama: DramaView; episode?: string; mode: AgentMode; onMode: (mode: AgentMode) => void }) {
-  if (mode === "open") return <AgentPanel drama={drama} episode={episode} onCollapse={() => onMode("closed")} />;
+function Agent({ drama, episode, setup, mode, onMode }: { drama: DramaView; episode?: string; setup: boolean; mode: AgentMode; onMode: (mode: AgentMode) => void }) {
+  if (mode === "open") return <AgentPanel drama={drama} episode={episode} setup={setup} onCollapse={() => onMode("closed")} />;
   const busy = drama.crew.some((computer) => computer.sessions.some((session) => session.state === "open" && !session.waiting));
   return <AgentBall waiting={drama.waiting} busy={busy} onOpen={() => onMode("open")} />;
 }
@@ -290,7 +293,7 @@ export function App() {
           <div ref={setAsideSlot} style={{ display: "contents" }} />
         </div>
       </div>
-      {agentShown && drama.data && <Agent drama={drama.data} episode={followed} mode={agentMode} onMode={setAgentMode} />}
+      {agentShown && drama.data && <Agent drama={drama.data} episode={followed} setup={page !== undefined && SETUP_PAGES.includes(page)} mode={agentMode} onMode={setAgentMode} />}
     </div>
   );
 }

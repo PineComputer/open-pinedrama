@@ -33,7 +33,7 @@ export function Bible({ dramaId }: { dramaId: string }) {
   const covers = !coverage
     ? []
     : coverage.episodes >= total
-      ? [t("bible.covers", { n: total })]
+      ? [total === 1 ? t("bible.coversOne") : t("bible.covers", { n: total })]
       : [t("bible.partial", { n: coverage.episodes, total }), coverage.next ? t("bible.next", { step: coverage.next }) : coverage.blocked ? t("bible.blocked", { why: coverage.blocked }) : ""];
   const meta = bible?.current ? [t("cast.bibleVersion", { v: bible.current }), ...standing, ...covers].filter(Boolean).join(" · ") : "";
   const toggle = (code: string) => setOpen((now) => (now.has(code) ? new Set([...now].filter((c) => c !== code)) : new Set([...now, code])));

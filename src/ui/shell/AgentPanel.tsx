@@ -113,7 +113,11 @@ function Running({ drama, session, inView, inFlight, onPick }: { drama: DramaVie
   );
 }
 
-export function AgentPanel({ drama, episode, onCollapse }: { drama: DramaView; episode?: string; onCollapse: () => void }) {
+/**
+ * `setup` says the page in view is the setup's work (Script, the Bible, the shared assets: D5), so the panel follows the
+ * setup session there, never an episode's (Codex round 4, F4).
+ */
+export function AgentPanel({ drama, episode, setup = false, onCollapse }: { drama: DramaView; episode?: string; setup?: boolean; onCollapse: () => void }) {
   const { t, lang } = useT();
   const navigate = useNavigate();
   const id = drama.id;
@@ -130,8 +134,12 @@ export function AgentPanel({ drama, episode, onCollapse }: { drama: DramaView; e
   // The session the panel speaks to (IA draft E): the one pinned, else the episode's in view. A page with no episode in
   // view follows none and never guesses one; its process, messages and composer all follow that one session.
   const chats = sessions.data ?? [];
-  const inView = picked ? chats.find((chat) => chat.sessionId === picked.id) : episode ? chats.find((chat) => chat.label === episode) : undefined;
+  // The setup session is the chat with no episode label (ChatView.label).
+  const inView = picked ? chats.find((chat) => chat.sessionId === picked.id) : episode ? chats.find((chat) => chat.label === episode) : setup ? chats.find((chat) => chat.label === "") : undefined;
+  const followsSetup = !picked && !episode && setup;
   const chat = useResource<ChatView>(inView ? `/api/sessions/${inView.sessionId}/chat` : null, inView ? [`session:${inView.sessionId}`] : []);
+  // The setup session ended at the handover (D5): nothing can be sent to it, and the panel says what can be done instead.
+  const setupEnded = followsSetup && sessions.data !== undefined && (!inView || chat.data?.sends === "none");
   const links = new Map((files.data ?? []).map((file) => [file.path, file.url]));
   const names = project.data?.names ?? null;
   const state = project.data?.state ?? null;
@@ -160,13 +168,18 @@ export function AgentPanel({ drama, episode, onCollapse }: { drama: DramaView; e
             <span>{t("agent.pinned", { who: picked.label })}</span>
             <span className="grow" />
             <button type="button" className="btn sm ghost" onClick={() => setPicked(undefined)}>
-              {episode ? t("agent.followEpisode", { who: episode }) : t("agent.unpin")}
+              {episode ? t("agent.followEpisode", { who: episode }) : setup ? t("agent.followSetup") : t("agent.unpin")}
             </button>
           </>
         ) : episode ? (
           <>
             <span className="live" aria-hidden="true" />
             <span>{t("agent.following", { who: episode })}</span>
+          </>
+        ) : setup ? (
+          <>
+            <span className="live" aria-hidden="true" />
+            <span>{t("agent.followingSetup")}</span>
           </>
         ) : (
           <span>{t("agent.noEpisode")}</span>
@@ -245,6 +258,17 @@ export function AgentPanel({ drama, episode, onCollapse }: { drama: DramaView; e
             <Markdown text={last.text} links={links} className="msg" />
           </section>
         )}
+        {setupEnded && (
+          // D38: what a new setup session can do after the handover is redraw out-of-date shared references, from Out of date.
+          <section className="asec">
+            <p className="msg">
+              {t("agent.setupEnded")}{" "}
+              <Link to="/d/$dramaId/out-of-date" params={{ dramaId: id }}>
+                {t("agent.setupRecovery")}
+              </Link>
+            </p>
+          </section>
+        )}
         {recent.length > 0 && (
           <section className="asec" aria-label={t("agent.recent")}>
             <h3>{t("agent.recent")}</h3>
@@ -277,14 +301,15 @@ export function AgentPanel({ drama, episode, onCollapse }: { drama: DramaView; e
           </section>
         )}
       </div>
-      <Composer chat={inView && chat.data} chosen={picked?.label ?? episode} onSent={chat.reload} />
+      <Composer chat={setupEnded ? undefined : inView && chat.data} chosen={picked?.label ?? episode} ended={setupEnded} onSent={chat.reload} />
     </aside>
   );
 }
 
 /** A line to the session in view: it answers, steers or starts a run, as the session stands. */
 /** A line to the session the panel speaks to; with none, it says why: the one pinned or followed has none open, or none is chosen. */
-function Composer({ chat, chosen, onSent }: { chat?: ChatView; chosen?: string; onSent: () => void }) {
+/** `ended`: the panel follows the setup session, which ended at the handover; the line says so and takes nothing. */
+function Composer({ chat, chosen, ended, onSent }: { chat?: ChatView; chosen?: string; ended: boolean; onSent: () => void }) {
   const { t } = useT();
   const [text, setText] = useState("");
   const [error, setError] = useState<unknown>();
@@ -301,7 +326,7 @@ function Composer({ chat, chosen, onSent }: { chat?: ChatView; chosen?: string; 
   };
   // Waiting on the maker's review, the session takes no message: the line says so and opens the review.
   const reviewing = chat?.sends === "review" && chat.reviewId;
-  const placeholder = !chat ? t("talk.pick") : reviewing ? t("talk.inReview") : chat.sends === "answer" ? t("talk.answer") : chat.sends === "steer" ? t("talk.steer") : t("talk.run");
+  const placeholder = ended ? t("agent.setupClosed") : !chat ? t("talk.pick") : reviewing ? t("talk.inReview") : chat.sends === "answer" ? t("talk.answer") : chat.sends === "steer" ? t("talk.steer") : t("talk.run");
   return (
     <div className="composer">
       <textarea
@@ -320,7 +345,7 @@ function Composer({ chat, chosen, onSent }: { chat?: ChatView; chosen?: string; 
             {t("talk.openReview")}
           </Link>
         ) : (
-          <span className="grow">{chat ? t("agent.to", { who: chat.label || t("talk.setup") }) : chosen ? t("talk.noSessionFor", { who: chosen }) : t("talk.noSession")}</span>
+          <span className="grow">{ended ? t("agent.toSetupEnded") : chat ? (chat.label ? t("agent.to", { who: chat.label }) : t("agent.toSetup")) : chosen ? t("talk.noSessionFor", { who: chosen }) : t("talk.noSession")}</span>
         )}
         {error !== undefined && <span className="error small">{errorText(error, t)}</span>}
         <button type="button" className="send" aria-label={t("talk.send")} disabled={!text.trim()} onClick={() => void send()}>
