@@ -216,7 +216,9 @@ export function App() {
     label: (
       <>
         <DramaThumb drama={drama.data} className="crumbimg" />
-        {drama.data.title}
+        <span className="ctext" title={drama.data.title}>
+          {drama.data.title}
+        </span>
       </>
     ),
     to: linkOptions({ to: "/d/$dramaId/episodes", params: { dramaId: drama.data.id } }),

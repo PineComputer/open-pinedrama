@@ -47,7 +47,7 @@
      from is only ever "Back to …" (BackTo). The drama shows its cover and name first, so it's clear which one is open. */
   const TABS = { cast: "Characters", scenes: "Locations", props: "Props" };
   const own = {
-    drama: () => [html`<img class="crumbimg" src=${P.eps[0].cover} alt=""/>${P.project.title}`, () => go("episodes")],
+    drama: () => [html`<img class="crumbimg" src=${P.eps[0].cover} alt=""/><span class="ctext" title=${P.project.title}>${P.project.title}</span>`, () => go("episodes")],
     ep: () => ["EP006", () => go("canvas")],
     assets: () => ["Assets", () => set({ screen: "story", stab: "cast", asel: null, at: null, from: null })],
     tab: (k) => [TABS[k], () => set({ screen: "story", stab: k, asel: null, at: null, from: null })],
@@ -194,7 +194,8 @@
     const n = decisions().length;
     return html`<header class="top">
       <nav class="crumb" aria-label="Where this belongs">${crumbs.map((c, i) => { const [t, to] = Array.isArray(c) ? c : [c];
-        return html`${i > 0 && I("caret-right")}${i === crumbs.length - 1 ? html`<b aria-current="page">${t}</b>` : to ? html`<button class="crumblink" onClick=${to}>${t}</button>` : html`<span>${t}</span>`}`; })}</nav>
+        const words = typeof t === "string" ? html`<span class="ctext">${t}</span>` : t, title = typeof t === "string" ? t : undefined;
+        return html`${i > 0 && I("caret-right")}${i === crumbs.length - 1 ? html`<b aria-current="page" title=${title}>${words}</b>` : to ? html`<button class="crumblink" title=${title} onClick=${to}>${words}</button>` : html`<span title=${title}>${words}</span>`}`; })}</nav>
       ${/* Where you came from, apart from where it belongs: its own control, in the same place on every page. */ ""}
       <${window.EXTRA.BackTo}/>
       <span class="grow"></span>

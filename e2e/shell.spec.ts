@@ -66,4 +66,33 @@ test("an episode chosen in the tree stays selected across the surfaces", async (
   await expect(page.locator(`article.assetcard a.cardname[href$="/assets/characters/${asset}"]`)).toBeFocused();
   await page.getByRole("navigation", { name: "Where this belongs" }).getByRole("link", { name: "Assets" }).click();
   await expect(page).toHaveURL(new RegExp(`/d/${id}/assets/`));
+
+  // The crumbs give way to the actions (master, from w02-assets-1280-agent-r4-props.png: "Export" printed over "Assets"):
+  // with the deepest crumbs, an asset in Assets, the crumbs shrink, middle first, and never reach Export, Stop or Next
+  // review, which keep their size (design/studio.css, .top > .crumb), at every width, the agent sidebar open or not.
+  await page.goto(`/d/${id}/assets/characters/${asset}`);
+  // 1180 too: there, with the sidebar open, the crumbs are wider than their room, so they must give way.
+  for (const width of [1024, 1180, 1280, 1440])
+    for (const agent of ["open", "closed"]) {
+      await page.setViewportSize({ width, height: 800 });
+      await page.evaluate((state) => localStorage.setItem("studio.agent", state), agent);
+      await page.reload();
+      await expect(page.locator("header.top nav.crumb")).toBeAttached();
+      const layout = await page.locator("header.top").evaluate((top) => {
+        // What shows of the crumbs: the nav's edge where it clips them, else its words' edge, since a nav that shrinks
+        // while its words spill past it is the bug.
+        const nav = top.querySelector(".crumb")!;
+        const items = [...nav.querySelectorAll("*")].map((el) => el.getBoundingClientRect()).filter((box) => box.width > 0);
+        const shown = getComputedStyle(nav).overflowX !== "visible" ? nav.getBoundingClientRect().right : Math.max(...items.map((box) => box.right));
+        const actions = [...top.children].filter((el) => !el.matches(".crumb, .grow") && el.getBoundingClientRect().width > 0);
+        return {
+          crumbRight: shown,
+          actionsLeft: Math.min(...actions.map((el) => el.getBoundingClientRect().left)),
+          squashed: actions.filter((el) => el.scrollWidth > el.clientWidth + 1).map((el) => el.textContent),
+        };
+      });
+      expect(layout.crumbRight, `crumbs at ${width} px, agent ${agent}`).toBeLessThanOrEqual(layout.actionsLeft);
+      expect(layout.squashed, `actions at ${width} px, agent ${agent}`).toEqual([]);
+    }
 });
+

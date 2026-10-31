@@ -3,7 +3,7 @@
 // it belongs as a breadcrumb, "Back to …", Stop drama and the next review. In a drama, the bar under it
 // holds an episode's views (List, Canvas, Cut) inside one, and the drama's preset, format and spend.
 import { Link, linkOptions, type LinkOptions, useLocation, useNavigate, useRouter } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, Fragment } from "react";
 import type { DramaView, ReviewSummary } from "../../shared/types.ts";
 import { api, useAction, useResource } from "../api.ts";
 import { Dialog } from "../components/Dialog.tsx";
@@ -153,21 +153,29 @@ export interface Crumb {
 export function Breadcrumb({ crumbs }: { crumbs: Crumb[] }) {
   const { t } = useT();
   return (
+    // Flat, as design/'s: each crumb's words in .ctext, so a crumb can shrink to "…" while the actions keep their room
+    // (design/studio.css, .top > .crumb; a string crumb keeps its whole name as its title).
     <nav className="crumb" aria-label={t("crumb.label")}>
-      {crumbs.map((crumb, n) => (
-        <span key={n} className="contents">
-          {n > 0 && <Icon name="caret-right" className="ic" />}
-          {crumb.to && n < crumbs.length - 1 ? (
-            <Link {...crumb.to} className="crumblink">
-              {crumb.label}
-            </Link>
-          ) : n === crumbs.length - 1 ? (
-            <b aria-current="page">{crumb.label}</b>
-          ) : (
-            <span>{crumb.label}</span>
-          )}
-        </span>
-      ))}
+      {crumbs.map((crumb, n) => {
+        const words = typeof crumb.label === "string" ? <span className="ctext">{crumb.label}</span> : crumb.label;
+        const title = typeof crumb.label === "string" ? crumb.label : undefined;
+        return (
+          <Fragment key={n}>
+            {n > 0 && <Icon name="caret-right" className="ic" />}
+            {crumb.to && n < crumbs.length - 1 ? (
+              <Link {...crumb.to} className="crumblink" title={title}>
+                {words}
+              </Link>
+            ) : n === crumbs.length - 1 ? (
+              <b aria-current="page" title={title}>
+                {words}
+              </b>
+            ) : (
+              <span title={title}>{words}</span>
+            )}
+          </Fragment>
+        );
+      })}
     </nav>
   );
 }

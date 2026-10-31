@@ -120,7 +120,17 @@ a.tag:hover { background: var(--hover); color: var(--text-primary); }
 .top { height: var(--top); flex: none; display: flex; align-items: center; gap: 10px; padding: 0 16px 0 10px; border-bottom: 1px solid var(--border); }
 .crumb { display: flex; align-items: center; gap: 6px; min-width: 0; font-size: 13px; color: var(--text-muted); white-space: nowrap; }
 .crumb b { color: var(--text-primary); font-weight: 600; }
-.crumb .ic { width: 12px; height: 12px; color: var(--text-subtle); }
+.crumb .ic { width: 12px; height: 12px; color: var(--text-subtle); flex: none; }
+/* The crumbs give way, the actions never (WAI-ARIA APG Breadcrumb; VS Code's breadcrumbs collapse their middle): the top
+   bar's actions keep their size; the middle crumbs shrink first, to "…"; then the drama's title ellipsizes; the current
+   page keeps its name longest. Each crumb keeps its whole name in the DOM and as its title. */
+.top > .crumb { flex: 0 1 auto; overflow: hidden; }
+.top > :not(.crumb):not(.grow) { flex-shrink: 0; }
+.crumb > :not(.ic) { min-width: 0; display: inline-flex; align-items: center; gap: 6px; }
+.crumb .ctext { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.crumb > :not(.ic):not(:first-child):not(:last-child) { flex: 0 1000 auto; min-width: 1.6em; }
+.crumb > :first-child { flex: 0 10 auto; min-width: 5em; }
+.crumb > :last-child { flex: 0 0.05 auto; min-width: 4em; }
 /* Round 3: each ancestor links to its home; the drama leads with its cover. */
 .crumblink { display: inline-flex; align-items: center; gap: 6px; border: 0; padding: 0; background: none; color: inherit; font: inherit; cursor: pointer; }
 .crumblink:hover { color: var(--text-primary); text-decoration: underline; text-underline-offset: 3px; }
