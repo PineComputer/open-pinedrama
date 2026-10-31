@@ -148,7 +148,7 @@ input.search::placeholder { color: var(--text-muted); }
 input.search:focus { border-color: var(--text-primary); }
 .select { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 10px; border-radius: var(--radius-medium); border: 1px solid var(--border-input); background: var(--surface); color: var(--text-secondary); font-size: 12.5px; cursor: pointer; }
 .select .ic { width: 13px; height: 13px; color: var(--text-muted); }
-/* yurun's round 2: liblib's project grid, a 16:9 cover, the title and a time; five a row at 1440. */
+/* merecdesperez44323-lab's round 2: liblib's project grid, a 16:9 cover, the title and a time; five a row at 1440. */
 .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 18px; }
 .pcard { position: relative; display: flex; flex-direction: column; border-radius: var(--radius-large); border: 1px solid var(--border); background: var(--surface); overflow: hidden; transition: border-color .12s, transform .12s; }
 .pcard > .open { flex: 1; display: flex; flex-direction: column; border: 0; background: none; padding: 0; text-align: left; color: inherit; font: inherit; cursor: pointer; }
@@ -691,7 +691,7 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
 .dialog dl.keys dt { margin: 0; } .dialog dl.keys dd { margin: 0; color: var(--text-secondary); }
 .dialog dl.keys dt kbd { margin: 0; padding: 2px 8px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface-container); color: var(--text-primary); }
 
-/* ── IA draft (design/ia-draft, for yurun's decision): the studio-wide rail, the drama tree, the agent's scope,
+/* ── IA draft (design/ia-draft, for merecdesperez44323-lab's decision): the studio-wide rail, the drama tree, the agent's scope,
    session states, the two status axes, drafts and the compact cross-episode notice ── */
 .rail .railcount { position: relative; }
 .rail .railcount .badge { position: absolute; right: 0; top: 0; min-width: 16px; height: 16px; padding: 0 4px; border-radius: 999px; background: var(--warning-text); color: var(--on-accent); font-size: 10px; font-weight: 700; display: grid; place-items: center; }
@@ -816,7 +816,7 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
 /* The episode's cut, as its child row in the drama tree (IA §16: its own home), under the episode in view. */
 .tree .treecut button { padding-left: 18px; }
 .tree .treecut .code { color: var(--text-subtle); }
-/* What the tree's dots mean (yurun's Y10), one line under it. */
+/* What the tree's dots mean (merecdesperez44323-lab's Y10), one line under it. */
 .treelegend { display: flex; gap: 12px; margin: 2px 0 6px 26px; font-size: 11px; color: var(--text-subtle); }
 .treelegend span { display: inline-flex; align-items: center; gap: 5px; }
 .pagesub { margin: 2px 0 0; font-size: 12.5px; max-width: 72ch; }
@@ -824,7 +824,7 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
 .side .proj video { width: 30px; height: 40px; border-radius: 6px; object-fit: cover; }
 .navi video.dthumb, video.crumbimg { object-fit: cover; }
 .crumb .crumbimg { width: 16px; height: 22px; } .crumb .newthumb.crumbimg .ic { width: 11px; height: 11px; }
-/* yurun's Y1: the rail's places with their names under the icons, compact (liblib, astorie; Apple HIG). */
+/* merecdesperez44323-lab's Y1: the rail's places with their names under the icons, compact (liblib, astorie; Apple HIG). */
 .rail .ibtn.labelled { width: 52px; height: 46px; display: grid; grid-template-rows: 20px auto; place-items: center; align-content: center; gap: 2px; padding: 0; }
 .rail .raillabel { font-size: 10px; line-height: 1.1; font-weight: 500; }
 .rail .railcount.labelled .badge { right: 6px; top: 2px; }
@@ -832,7 +832,7 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
 .waitstrip { border: 1px solid var(--border); border-radius: var(--radius-2xl); background: var(--surface); padding: 12px 14px; margin-bottom: 24px; }
 .waitstrip .wh { display: flex; align-items: center; gap: 8px; } .waitstrip h3 { margin: 0; font-size: 12px; font-weight: 600; color: var(--text-muted); }
 .waitstrip ul { list-style: none; margin: 8px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 4px; }
-/* The studio's nav (yurun): off a project, the one left column with icon and label side by side (liblib); inside a
+/* The studio's nav (merecdesperez44323-lab): off a project, the one left column with icon and label side by side (liblib); inside a
    project, the icon rail beside the project tree (VS Code), its labels as tooltips and kept as accessible names. */
 .rail .railhead { display: flex; align-items: center; gap: 8px; }
 .rail:not(.wide) .raillabel { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
@@ -845,6 +845,15 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
 .rail.wide .raillabel { font-size: 13px; font-weight: 500; }
 .rail.wide .railcount.labelled .badge { position: static; margin-left: auto; }
 .rail.wide .railnote { padding: 0 10px 6px; }
-/* Home, shown and disabled until the gallery exists (yurun). */
+/* Home, shown and disabled until the gallery exists (merecdesperez44323-lab). */
 .rail .ibtn.disabled { opacity: .45; cursor: default; }
 .rail .ibtn.disabled:hover { background: transparent; color: var(--text-muted); }
+/* The rail's account footer (merecdesperez44323-lab): the Pine project, its credits with Top up, the community link. */
+.rail .acct { display: grid; gap: 4px; margin: 0 2px 6px; padding: 8px; border: 1px solid var(--border); border-radius: var(--radius-large); background: var(--surface); }
+.rail .acctrow, .rail .credits, .rail .acctlink { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-secondary); }
+.rail .acctrow b { display: block; font-size: 12.5px; color: var(--text-primary); } .rail .acctrow small, .rail .credits small { display: block; font-size: 11px; color: var(--text-muted); }
+.rail .acct .ic { width: 15px; height: 15px; flex: none; }
+.rail .credits.problem { align-items: flex-start; color: var(--text-primary); } .rail .credits.problem .ic { color: var(--error); margin-top: 2px; }
+.rail .acctlink { border: 0; background: none; padding: 4px 0; cursor: pointer; text-align: left; }
+.rail .acctlink:hover { color: var(--text-primary); }
+.rail .acctdot .av { width: 22px; height: 22px; font-size: 11px; }

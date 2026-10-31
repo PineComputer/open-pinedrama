@@ -37,7 +37,7 @@
   const stagesOf = (g) => [g.board && { kind: "storyboard", ver: "v1", pic: g.board }, g.still && { kind: "take", ver: g.take, pic: g.still }].filter(Boolean);
   const pickedAt = (g) => (S.at && ["storyboard", "take"].includes(S.at.kind) ? S.at : stagesOf(g).slice(-1)[0]);
   const openLineage = (gid, label) => jump({ screen: "graph", gsel: gid }, label);
-  /* Round 3 (Codex, yurun): the crumbs say where an object belongs, each ancestor a link to its home; where you came
+  /* Round 3 (Codex, merecdesperez44323-lab): the crumbs say where an object belongs, each ancestor a link to its home; where you came
      from is only ever "Back to …" (BackTo). The drama shows its cover and name first, so it's clear which one is open. */
   const TABS = { cast: "Characters", scenes: "Locations", props: "Props" };
   const own = {
@@ -92,13 +92,13 @@
   const decisions = () => waits().filter((w) => w.dr === P.project.title);
   /* IA draft: the rail is studio-wide only: Dramas, Reviews, Settings. Computers and Usage stay hidden until they work.
      A drama's places are in its sidebar, never here. */
-  /* yurun ("project应该和icon 平铺", "左侧就不需要单独有一个column了"): off a project the studio's nav is the one left
+  /* merecdesperez44323-lab ("project应该和icon 平铺", "左侧就不需要单独有一个column了"): off a project the studio's nav is the one left
      column, rows of icon and label side by side (liblib); inside a project it is the icon rail (VS Code's activity bar)
      beside the project tree, its labels as tooltips. ☰ opens and closes that column, the same everywhere. */
   const studioPage = () => ["home", "upload", "reviews"].includes(S.screen);
   function Rail() {
     const dramas = !["reviews"].includes(S.screen);
-    // yurun ("it's meaningless for this icon on the left top corner"): on wide windows the column is always shown, and ☰
+    // merecdesperez44323-lab ("it's meaningless for this icon on the left top corner"): on wide windows the column is always shown, and ☰
     // is only the narrow window's way to open it as a drawer (Apple HIG sidebars; Material's navigation drawer).
     const wide = studioPage() && (narrow() ? !!S.drawer : true);
     const place = (label, icon, current, onClick, extra) => html`<button class=${"ibtn labelled" + (extra ? " railcount" : "")} title=${wide ? undefined : label} aria-label=${extra ? extra.name : undefined} aria-current=${current ? "page" : "false"} onClick=${onClick}>${I(icon)}<span class="raillabel">${label}</span>${extra && extra.badge}</button>`;
@@ -106,12 +106,23 @@
       <div class="railhead">${narrow() && html`<button class="ibtn" aria-label="Show or hide the sidebar" aria-expanded=${String(!!S.drawer)} onClick=${() => set({ drawer: !S.drawer })}>${I("list")}</button>`}
         ${wide && html`<span class="brand">${Mark()}<b>Pine Drama</b></span>`}</div>
       <hr/>
-      ${/* yurun: "you need to have a home page top of the drama project icon … currently just put Home and make if gray and not
+      ${/* merecdesperez44323-lab: "you need to have a home page top of the drama project icon … currently just put Home and make if gray and not
          clicable": a place to come (a gallery of sample projects), shown and disabled until it exists. */ ""}
       <span class="ibtn labelled disabled" role="link" aria-disabled="true" title="Coming later: a gallery of sample projects">${I("house")}<span class="raillabel">Home</span></span>
       ${place("Projects", "film-strip", dramas, () => go("home"))}
       ${place("Reviews", "list-checks", S.screen === "reviews", () => set({ waitFor: null, screen: "reviews" }), { name: "Reviews, 5 waiting", badge: html`<span class="badge">5</span>` })}
       <span class="grow"></span>
+      ${/* merecdesperez44323-lab: the Pine Computer account, its community and the credits at the rail's foot, above Settings (liblib's and
+         astorie's account footers; Apple HIG sidebar footer). Sample values: Pine's portal API has no account or balance
+         endpoint yet (master), so the studio shows none of these until it does; the replay line stands in for credits. */ ""}
+      ${wide ? html`<div class="acct">
+          <div class="acctrow"><span class="av">Y</span><span class="grow"><b>Your Pine project</b><small>Pine Computer</small></span></div>
+          ${S.state === "spendlimit"
+            ? html`<div class="credits problem" role="status">${I("warning-circle")}<span class="grow"><b>Credits used up</b><small>Nothing new starts until you top up; work in flight finishes.</small></span><button class="btn sm primary" onClick=${() => toast("Opens Pine's billing page.")}>Top up</button></div>`
+            : html`<div class="credits">${I("coins")}<span class="grow">Credits <b class="mono">$184.60</b></span><button class="linkbtn" onClick=${() => toast("Opens Pine's billing page.")}>Top up</button></div>`}
+          <button class="acctlink" onClick=${() => toast("Opens the Pine Computer community on Discord.")}>${I("chat-centered")}<span class="grow">Pine Computer community</span>${I("caret-right")}</button>
+        </div>`
+        : html`<span class="ibtn labelled acctdot" title="Your Pine project · credits $184.60">${S.state === "spendlimit" ? I("warning-circle") : html`<span class="av">Y</span>`}<span class="raillabel">Your Pine project</span></span>`}
       ${place("Settings", "gear-six", false, () => toast("Settings: notifications, appearance, data."))}
       ${!wide && html`<div style="margin-top:6px">${Mark()}</div>`}
     </nav>`;
@@ -137,7 +148,7 @@
           <span class="code">${e.code}</span><span class="now">${e.now}</span><span class=${"dot " + e.status} title=${{ you: "Needs you", work: "Working", accepted: "Done", line: "In line" }[e.status]}></span></button></li>
           ${cur === e.code && e.cut && html`<li class="treecut"><button aria-current=${String(S.screen === "cut")} onClick=${() => go("cut")}><span class="code">› Cut</span><span class="now">${e.cut.latest}${e.cut.st === "you" ? " waits for you" : ""}</span><span class=${"dot " + e.cut.st}></span></button></li>`}`)}
           <li style="padding:6px 8px;color:var(--text-subtle);font-size:11.5px">EP009–EP024 · 16 in line</li></ul>
-        ${/* yurun's Y10: what the dots mean, once, at the tree's foot (Nielsen: recognition rather than recall). */ ""}
+        ${/* merecdesperez44323-lab's Y10: what the dots mean, once, at the tree's foot (Nielsen: recognition rather than recall). */ ""}
         <p class="treelegend"><span><i class="dot you"></i>Needs you</span><span><i class="dot work"></i>Working</span><span><i class="dot accepted"></i>Done</span></p>
         <button class="navi" aria-current=${S.screen === "delivery" ? "page" : "false"} onClick=${() => go("delivery")}>${I("scissors")}Delivery<span class="cnt">1</span></button>
         <hr class="sidehr"/>
@@ -329,7 +340,7 @@
       </div></div></div>`;
   }
   /* ───── Home ───── */
-  /* Home (yurun's round 1, Y2–Y4): the grid is the one list of projects (one home per object: a project appears once
+  /* Home (merecdesperez44323-lab's round 1, Y2–Y4): the grid is the one list of projects (one home per object: a project appears once
      on Home); New project leads it (liblib's 开始创作; Apple HIG puts the create action with its collection); what waits
      is a compact strip above it that leads to Reviews. */
   function Home() {
@@ -458,7 +469,7 @@
       const tall = BAR + ((n.h || 196) + 26) * kk + (S.dock === "right" ? 0 : 10 + PANEL);
       const top = Math.max(PILLS, PILLS + (el.clientHeight - PILLS - tall) / 2);
       return { k: kk, x: (el.clientWidth - (S.dock === "right" ? DOCKED : 0)) / 2 - (n.x + (n.w || 300) / 2) * kk, y: top + BAR - (n.y - 26) * kk }; };
-    // yurun: a picked node zooms in to a readable size (D37). Figma's Zoom to selection (Shift+2), as React Flow's
+    // merecdesperez44323-lab: a picked node zooms in to a readable size (D37). Figma's Zoom to selection (Shift+2), as React Flow's
     // fitView({ nodes }) does it: the node fills the room its bar and panel leave, up to 150%. Esc or Fit returns.
     const readable = (n) => { const el = ref.current; if (!el) return k;
       const roomH = el.clientHeight - PILLS - BAR - (S.dock === "right" ? 0 : 10 + PANEL) - 16, roomW = el.clientWidth - (S.dock === "right" ? DOCKED : 0) - 80;
@@ -509,7 +520,7 @@
               <div class="card">
                 ${n.seg.board ? html`<button class=${"board-img" + (S.sel === n.id && pickedAt(n.seg).kind === "storyboard" ? " on" : "")} aria-label=${n.label + " storyboard v1"} onClick=${() => pick(n, { kind: "storyboard", ver: "v1" })}><img src=${n.seg.board} alt="" draggable="false"/><span>board v1</span></button>` : html`<div class="none">board accepted</div>`}
                 ${n.seg.still ? html`<button class=${"take-tile" + (S.sel === n.id && pickedAt(n.seg).kind === "take" ? " on" : "")} aria-label=${n.label + " take " + n.seg.take} onClick=${() => pick(n, { kind: "take", ver: n.seg.take })}><img src=${n.seg.still} alt="" draggable="false"/><span>${n.seg.take}</span><span class="play"><i>${I("play")}</i></span></button>
-                  ${/* The take's inline player (yurun, D39): shown on the picked take and on hover, in media-chrome's control bar order,
+                  ${/* The take's inline player (merecdesperez44323-lab, D39): shown on the picked take and on hover, in media-chrome's control bar order,
                      as Premiere's, Frame.io's and YouTube's: play, time, the slider, duration, sound, full screen. Muted until the sound is on. */ ""}
                   <div class=${"vbar" + (S.sel === n.id && pickedAt(n.seg).kind === "take" ? " shown" : "")} role="group" aria-label=${"Play " + n.label + " take " + n.seg.take}>
                     <button class="vb" aria-label="Play" onClick=${() => toast("Plays the take here, muted until you turn the sound on.")}>${I("play")}</button>
@@ -699,7 +710,7 @@
       <p>Not part of the app: they set what the sample shows. Phase 1: steering, and editing the cut's spec · Canvas and Lineage read-only · sample project, our own test pictures.</p>
       <span class="pl">Screen</span><div class="seg wrap" role="group" aria-label="Screen">${[["home", "Home"], ["reviews", "Reviews"], ["upload", "Upload"], ["analyzing", "Analyzing"], ["fountain", "Fountain"], ["script", "Script"], ["story", "Story"], ["episodes", "Episodes"], ["episode", "Episode"], ["canvas", "Canvas"], ["graph", "Graph"], ["review", "Review"], ["cut", "Cut"], ["delivery", "Delivery"], ["outofdate", "Out of date"]].map(([k, l]) => html`<button aria-pressed=${String(S.screen === k)} onClick=${() => go(k)}>${l}</button>`)}</div>
       <label class="select">State<select aria-label="State" value=${S.state} onChange=${(e) => { const v = e.target.value; set({ state: v, dramaStop: v === "stopping" ? "stopping" : v === "stopped" ? "stopped" : null }); }}>
-        ${[["normal", "Normal"], ["fresh", "Nothing out of date"], ["cutnewer", "Cut: a newer cut exists"], ["cutinputs", "Cut: draft inputs changed"], ["cutrefused", "Cut: drama-cli refuses the edit"], ["nostop", "No stop yet"], ["stopping", "Stopping"], ["stopped", "Stopped"], ["redline", "Red line"], ["budget", "Refused (no code)"], ["cap", "Cap reached"], ["env", "Pine access denied"]].map(([k, l]) => html`<option value=${k}>${l}</option>`)}</select></label>
+        ${[["normal", "Normal"], ["fresh", "Nothing out of date"], ["cutnewer", "Cut: a newer cut exists"], ["cutinputs", "Cut: draft inputs changed"], ["cutrefused", "Cut: drama-cli refuses the edit"], ["nostop", "No stop yet"], ["stopping", "Stopping"], ["stopped", "Stopped"], ["redline", "Red line"], ["budget", "Refused (no code)"], ["cap", "Cap reached"], ["env", "Pine access denied"], ["spendlimit", "Pine credits used up"]].map(([k, l]) => html`<option value=${k}>${l}</option>`)}</select></label>
       <label class="select" title="What a send, a check or a Reconcile finds">Outcome<select aria-label="Outcome" value=${S.outcome} onChange=${(e) => set({ outcome: e.target.value })}>
         ${[["ok", "Goes through"], ["refused", "Not submitted (the engine says)"], ["unknown", "No answer"]].map(([k, l]) => html`<option value=${k}>${l}</option>`)}</select></label>
       <div class="seg" role="group" aria-label="Theme">${[["dark", "Dark", "moon-stars"], ["light", "Light", "sun-dim"]].map(([k, l, ic]) => html`<button aria-pressed=${String(S.theme === k)} onClick=${() => set({ theme: k })}>${I(ic)}${l}</button>`)}</div>
