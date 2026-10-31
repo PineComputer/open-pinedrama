@@ -524,14 +524,16 @@
         ${S.scriptEp && hasFountain && !target && html`<div class="notice" role="status">${I("info")}<span><b>${S.scriptEp} isn't in this sample's screenplay.</b> The sample is The Stepmother's two episodes; for a real project Script opens at ${S.scriptEp}'s section.</span></div>`}
         ${st === "original" && html`<div class="notice" role="status">${I("info")}<span><b>Only the original was recorded for this project.</b> It was set up before drama-cli kept the rewrite, its check and your acceptance, so there are none to show.</span></div>`}
         <div class="scriptlayout">
-          <section class="panel scripthistory" aria-label="Versions"><h3>${I("stack")}Versions</h3>
+          <section class="scripthistory" aria-label="Versions"><h3>${I("stack")}Versions</h3>
             ${st === "accepted" ? html`<details><summary>Accepted v1 · 3 steps</summary>${History}</details>` : History}</section>
           ${st === "you" && S.saccept && html`<div class="faccept">
             <textarea placeholder="Accept the rewrite in your own words, e.g. “Yes, this is my script.” (required)" value=${S.words} onInput=${(e) => set({ words: e.target.value })}></textarea>
             <div class="fbtns"><button class="btn" onClick=${() => toast("Sent back to the agent with your words.")}>${I("arrow-counter-clockwise")}Send back</button>
               <button class="btn primary" disabled=${S.words.trim().length < 3} onClick=${() => { toast("Rewrite accepted, with your words. The agent starts the bible."); set({ state: "normal", saccept: false }); }}>${I("check")}Accept the rewrite</button></div>
             <small class="muted">${S.words.trim().length < 3 ? "Accepting needs your own words." : "Your words are recorded with the accepted file."}</small></div>`}
-          <div class="scriptmain">
+          ${/* One editor surface, VS Code's way: the tab bar and the document under it share one border and one radius;
+               no card inside it. */ ""}
+          <section class="editor" aria-label="Script">
           ${/* VS Code's editor title area: the open file as a tab, its actions as icon buttons on the right (Apple HIG:
                an icon-only toolbar button has a tooltip and a name). */ ""}
           <div class="edbar"><div class="edtab" role="tab" aria-selected="true">${I(view === "original" ? "file-text" : view === "compare" ? "square-half" : "film-strip")}
@@ -543,13 +545,13 @@
             <span class="grow"></span>
             ${[["original", "Show the original", "file-text"], ["fountain", "Show the Fountain", "film-strip"], ["compare", "Compare the original and the Fountain", "square-half"]].map(([k, l, ic]) =>
               html`<button class="ibtn" title=${!hasFountain && k !== "original" ? l + " · no Fountain recorded yet" : l} aria-label=${l} aria-pressed=${String(view === k)} disabled=${!hasFountain && k !== "original"} onClick=${() => set({ sview: k, scriptEp: null })}>${I(ic)}</button>`)}</div>
-          ${view === "fountain" ? html`<section class="panel scriptdoc"><div class="fdoc">${fl.map(Line)}</div></section>`
+          ${view === "fountain" ? html`<div class="edbody scriptdoc"><div class="fdoc">${fl.map(Line)}</div></div>`
             : view === "compare" ? html`<div class="diffed" aria-label="Changes: the original beside the Fountain">
                 <div class="dpane a" onScroll=${sync("a")}><div class="dhead">${sc.file}</div>${origLines.map((t, i) => html`<button type="button" class=${"drow" + (changed.has(i + 1) ? " chg del" : "") + (S.ssel === i + 1 ? " on" : "")} onClick=${() => set({ ssel: i + 1 })}><span class="ln">${i + 1}</span><span class="tx">${t}</span></button>`)}</div>
                 <div class="dpane b" onScroll=${sync("b")}><div class="dhead">screenplay.fountain <span class="tag">v1</span></div>${fountainRows.map((t, i) => html`<div class=${"drow" + (became.has(i) ? " chg add" : "") + (lit.has(i) ? " on" : "")}><span class="ln">${i + 1}</span><span class="tx">${t}</span></div>`)}</div>
                 ${S.ssel && html`<p class="muted dnote">Line ${S.ssel} became: <code>${(map.find((r) => r.o === S.ssel) || { became: "a blank line" }).became}</code> · drama-cli's record (review.md)</p>`}</div>`
-            : html`<section class="panel scriptdoc"><pre class="document plain">${sc.original}</pre></section>`}
-        </div>
+            : html`<div class="edbody scriptdoc"><pre class="original">${sc.original}</pre></div>`}
+          </section>
         </div>
       </div><${AgentPanel}/></div></div>`;
   }
