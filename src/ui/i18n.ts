@@ -330,7 +330,7 @@ const en = {
   "tree.work": "at work",
   "tree.done": "finished",
   "tree.line": "in line",
-  "status.work": "At work",
+  "status.work": "Working",
   "status.line": "In line",
   "status.you": "Waiting for you",
   "status.accepted": "Accepted",
@@ -456,7 +456,7 @@ const en = {
   "drama.redLine": "Red line",
   "drama.finished": "Finished",
   "drama.needs": "{n} need you",
-  "drama.atWork": "At work",
+  "drama.atWork": "Working",
 
   "new.title": "New drama",
   "new.lede": "Drop your screenplay, choose how the drama is made, and start.",
@@ -761,6 +761,7 @@ const en = {
   "review.variant.frame": "First frame",
 
   "reviews.title": "Reviews",
+  "reviews.allDramas": "All dramas",
   "reviews.empty": "Nothing waits for you. When the agents need you next, it will be here.",
   "reviews.ended": "Session ended",
 
@@ -1360,7 +1361,7 @@ const zh: Record<Key, string> = {
   "tree.work": "在做",
   "tree.done": "已完成",
   "tree.line": "排队中",
-  "status.work": "在做",
+  "status.work": "制作中",
   "status.line": "排队中",
   "status.you": "等你审",
   "status.accepted": "已通过",
@@ -1584,7 +1585,7 @@ const zh: Record<Key, string> = {
 
   "step.episodes": "分集",
   "step.story": "故事",
-  "section.crew": "电脑",
+  "section.crew": "云端电脑",
   "step.script": "剧本",
   "step.cut": "剪辑成片",
   "step.assets": "素材",
@@ -1790,6 +1791,7 @@ const zh: Record<Key, string> = {
   "review.variant.frame": "首帧",
 
   "reviews.title": "待审",
+  "reviews.allDramas": "全部剧目",
   "reviews.empty": "暂时没有等你处理的事。智能体下一次需要你时，会出现在这里。",
   "reviews.ended": "会话已结束",
 

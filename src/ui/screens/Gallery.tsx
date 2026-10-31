@@ -130,7 +130,7 @@ export default function Gallery() {
         {[
           ["all", "All", 24],
           ["you", "Needs you", 3],
-          ["work", "At work", 2],
+          ["work", "Working", 2],
           ["line", "In line", 18],
         ].map(([value, label, count]) => (
           <button key={value} type="button" className="fchip" aria-pressed={filter === value} onClick={() => setFilter(String(value))}>

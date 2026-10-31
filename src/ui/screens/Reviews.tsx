@@ -63,6 +63,12 @@ export function ReviewsScreen({ dramaId }: { dramaId?: string }) {
     <div className="page">
       <div className="head">
         <h1>{t("reviews.title")}</h1>
+        {/* One drama's filter of the one queue says so, with the way back to all (IA §16; design/app.js, Reviews). */}
+        {dramaId && (
+          <Link className="btn sm ghost" to="/reviews">
+            {t("reviews.allDramas")}
+          </Link>
+        )}
       </div>
       <ReviewsList dramaId={dramaId} />
     </div>

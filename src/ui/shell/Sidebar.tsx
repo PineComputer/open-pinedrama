@@ -57,7 +57,14 @@ export function HomeSidebar({ page, reviews, replay, drawer }: { page: Page | un
           const { st, label } = standing(drama, redLine.has(drama.id));
           return (
             <Link key={drama.id} to="/d/$dramaId" params={{ dramaId: drama.id }} className="navi">
-              {drama.cover && !drama.cover.video ? <img className="dthumb" src={drama.cover.url} alt="" /> : <span className="dthumb" aria-hidden="true" />}
+              {/* A drama with no work to show yet (still in setup) has the setup sidebar's file placeholder, not a blank (principle "Design states, not screens"). */}
+              {drama.cover && !drama.cover.video ? (
+                <img className="dthumb" src={drama.cover.url} alt="" />
+              ) : (
+                <span className="newthumb dthumb" aria-hidden="true">
+                  <Icon name="file-text" className="ic" />
+                </span>
+              )}
               <span className="grow">{drama.title}</span>
               <span className="sr-only">, {t(label, { n: drama.waiting })}</span>
               <span className={`dot ${st}`} aria-hidden="true" />

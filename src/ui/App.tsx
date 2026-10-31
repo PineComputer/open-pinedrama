@@ -55,7 +55,7 @@ const LABEL: Partial<Record<Page, TKey>> = {
 };
 
 // The pages that need the room: a docked agent shows as the ball there (Agent, below).
-const ROOMS: Page[] = ["canvasPick", "canvas", "cut", "delivery", "review"];
+const ROOMS: Page[] = ["canvasPick", "canvas", "cut", "review"];
 
 const SIDEBAR = "studio.sidebar";
 
@@ -210,6 +210,7 @@ export function App() {
   const dramaId = params.dramaId ?? reviewed?.dramaId;
   const drama = useResource<DramaView>(dramaId && ready ? `/api/dramas/${dramaId}` : null, [`drama:${dramaId}`]);
   const place = usePlace();
+  const filteredBy = useRoute().search.drama;
   // The stage picked in an episode and its version, as drama-cli's status gives it, for the crumbs: "seg03 · Take t02".
   const stage = place?.item && place.episode ? stageOf(place.item) : undefined;
   const status = useResource<ProjectView>(stage && dramaId ? `/api/dramas/${dramaId}/project` : null, [`project:${dramaId}`]);
@@ -256,7 +257,9 @@ export function App() {
   const followed = place?.episode ?? reviewed?.episode;
   let crumbs: Crumb[];
   if (page === "home" || page === "new") crumbs = [{ label: t("new.title") }];
-  else if (page === "reviews") crumbs = [{ label: t("reviews.title") }];
+  // One drama's Reviews is a filter of the one queue: the crumbs name it under Reviews (design/app.js, Reviews).
+  else if (page === "reviews")
+    crumbs = filteredBy ? [{ label: t("reviews.title"), to: linkOptions({ to: "/reviews" }) }, { label: queue.data?.find((item) => item.dramaId === filteredBy)?.dramaTitle ?? filteredBy }] : [{ label: t("reviews.title") }];
   else if (page === "settings") crumbs = [{ label: t("settings.title") }];
   else if (page === "review") crumbs = ofDrama(...(reviewed?.episode ? [episodeCrumb(reviewed.episode, reviewed.dramaId)] : []), { label: reviewed ? t(`kind.${reviewed.kind}`) : t("reviews.title") });
   else if (!page) crumbs = [{ label: t("notFound.title") }];

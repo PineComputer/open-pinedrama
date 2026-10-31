@@ -159,7 +159,7 @@ describe("the sidebar", () => {
     const redLine = { ...review("r9"), dramaId: "d3", kind: "question", stop: { kind: "red-line" } } as unknown as ReviewSummary;
     await renderAt(<HomeSidebar page="home" reviews={[redLine]} replay drawer={false} />, "/");
     const places = screen.getByRole("navigation", { name: "The studio" });
-    await waitFor(() => expect(within(places).getAllByRole("link").map((link) => link.textContent)).toEqual(["The Stepmother, 2 need you", "Night Class, At work", "Last Toast, Red line", "New drama"]));
+    await waitFor(() => expect(within(places).getAllByRole("link").map((link) => link.textContent)).toEqual(["The Stepmother, 2 need you", "Night Class, Working", "Last Toast, Red line", "New drama"]));
     expect(within(places).getByRole("link", { name: /^Night Class/ })).toHaveAttribute("href", "/d/d2");
     expect(screen.getByText("Replay · sample work, no spend")).toBeInTheDocument();
   });

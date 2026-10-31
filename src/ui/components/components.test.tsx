@@ -80,7 +80,7 @@ describe("IconButton", () => {
 
 describe("StatusChip", () => {
   it.each([
-    ["work", "At work"],
+    ["work", "Working"],
     ["line", "In line"],
     ["you", "Waiting for you"],
     ["accepted", "Accepted"],
