@@ -204,17 +204,10 @@ export function SetupPanel({ drama }: { drama: DramaView }) {
   const rehearse = useAction(() => api(`/api/dramas/${drama.id}/rehearse`, { method: "POST" }));
   // Reading, answering, drawing the leads, approving them; then pre-production: preparing every
   // episode (breakdowns and shared references), and approving the shared references. A plain
-  // question waits at the step the setup has reached, or at "answering" before any.
-  const current =
-    setup.state === "waiting"
-      ? setup.kind === "references"
-        ? 5
-        : setup.kind === "looks"
-          ? 3
-          : Math.max(1, setup.reached)
-      : setup.reached === 3 || setup.reached === 1
-        ? setup.reached + 1
-        : setup.reached;
+  // question waits at the step the setup has reached, or at "answering" before any. Otherwise the
+  // step is the engine's, from drama-cli's record (views.ts setupReached; D64), as the sidebar says
+  // it: never one further on a guess (Codex rc5 T4 read "Drawing the leads" with no bible written).
+  const current = setup.state === "waiting" ? (setup.kind === "references" ? 5 : setup.kind === "looks" ? 3 : Math.max(1, setup.reached)) : setup.reached;
   const steps = SETUP_STEPS;
   const detail =
     setup.state === "stopped"

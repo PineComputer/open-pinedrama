@@ -4,7 +4,7 @@ import { screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 import { type DramaView, type EpisodeRow, STAGES } from "../../shared/types.ts";
-import { Board } from "./Board.tsx";
+import { Board, SetupPanel } from "./Board.tsx";
 import { renderAt } from "../test/router.tsx";
 
 function row(number: number, state: EpisodeRow["state"], waiting?: Pick<EpisodeRow, "waitingFor" | "waitingItems">): EpisodeRow {
@@ -65,5 +65,17 @@ describe("Board", () => {
     expect(chips.filter((chip) => chip.classList.contains("fchip")).map((chip) => chip.textContent).sort()).toEqual(["All5", "Done1", "Needs you2", "Working2"]);
     await user.click(screen.getByRole("button", { name: /^Working/ }));
     expect([...document.querySelectorAll(".epcard .code")].map((code) => code.textContent)).toEqual(["EP004", "EP005"]);
+  });
+
+  // Codex rc5 T4: the screenplay never validated, so drama-cli recorded no version and no bible; the one question ended
+  // when the maker paused. The engine says the setup was asking (setup.reached 1), and the panel says so too.
+  it.each([
+    ["paused by the maker", { state: "stopped", reached: 1, reason: "by-maker" }],
+    ["working", { state: "working", reached: 1 }],
+  ])("shows the setup at the step drama-cli's record puts it, never one further, %s (Codex rc5 T4)", async (_, setup) => {
+    const settingUp = { ...drama, status: setup.state === "stopped" ? "stopped" : "setup", setup, crew: [], episodeRows: [] } as unknown as DramaView;
+    const { container } = await renderAt(<SetupPanel drama={settingUp} />, "/d/d1/episodes");
+    expect(container.querySelector(".step.on")).toHaveTextContent("Answering the agent's questions");
+    expect(screen.getByText("Drawing the leads").closest(".step")).not.toHaveClass("on");
   });
 });
