@@ -96,7 +96,7 @@
         <ul class="tree">${P.eps.slice(0, 8).map((e) => html`<li><button aria-current=${String(cur === e.code)} onClick=${() => e.code === "EP006" ? go("episode") : go("episodes")}>
           <span class="code">${e.code}</span><span class="now">${e.now}</span><span class=${"dot " + e.status}></span></button></li>`)}
           <li style="padding:6px 8px;color:var(--text-subtle);font-size:11.5px">EP009–EP024 · 16 in line</li></ul>
-        <button class="navi" aria-current=${S.screen === "cut" ? "page" : "false"} onClick=${() => go("cut")}>${I("scissors")}Delivery<span class="cnt">1</span></button>
+        <button class="navi" aria-current=${S.screen === "delivery" ? "page" : "false"} onClick=${() => go("delivery")}>${I("scissors")}Delivery<span class="cnt">1</span></button>
         <hr class="sidehr"/>
         <button class="navi" aria-current=${S.screen === "reviews" ? "page" : "false"} onClick=${() => set({ waitFor: P.project.title, screen: "reviews" })}>${I("list-checks")}Reviews<span class="cnt">4</span></button>
         <button class="navi" aria-current=${S.screen === "graph" && S.stale ? "page" : "false"} onClick=${() => set({ screen: "graph", stale: true })}>${I("warning")}Out of date<span class="n">4</span></button>
