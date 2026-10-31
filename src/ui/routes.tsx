@@ -99,7 +99,7 @@ const scriptRoute = createRoute({
   beforeLoad: ({ search }) => {
     if (search.ep !== undefined && !/^EP[0-9]{3}$/.test(search.ep)) throw notFound({ data: { what: `ep=${search.ep}` } });
   },
-  component: () => <Script dramaId={useDrama().id} />,
+  component: () => <Script dramaId={useDrama().id} ep={scriptRoute.useSearch().ep} />,
 });
 // Analyzing and the Fountain review are setup steps, a process like the review room, not views of Script's (D21).
 const analyzingRoute = createRoute({ ...leaf("analyzing"), staticData: { page: "analyzing" }, component: () => <Analyzing dramaId={useDrama().id} /> });

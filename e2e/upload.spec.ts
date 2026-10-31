@@ -29,8 +29,11 @@ test("a maker uploads one screenplay, chooses a preset and starts", async ({ pag
   expect(await newProblems(page)).toEqual([]);
 
   await page.getByRole("link", { name: "Review the rewrite" }).click();
-  await expect(page.getByRole("heading", { name: "Check what the rewrite changed" })).toBeVisible();
-  await expect(page.getByRole("region", { name: "Fountain" }).getByRole("button").first()).toBeVisible();
-  await expect(page.getByRole("button", { name: "Accept the rewrite" })).toBeInViewport();
+  // Script decides on the version that waits (D62): Accept and Send back as peers in its history.
+  await expect(page).toHaveURL(/\/d\/[^/]+\/script$/);
+  const decision = page.getByRole("group", { name: /^Your decision on v\d+$/ });
+  await expect(decision.getByRole("button", { name: "Accept" })).toBeInViewport();
+  await expect(decision.getByRole("button", { name: "Send back" })).toBeVisible();
+  await expect(page.getByRole("tab")).toContainText("screenplay.fountain");
   expect(await newProblems(page)).toEqual([]);
 });

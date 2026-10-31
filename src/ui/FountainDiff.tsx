@@ -1,16 +1,11 @@
 // The Fountain review (P5.4), ported from design/screens.js: the maker's file beside the Fountain drama-cli recorded,
 // compared line by line by jsdiff (diffLines). Each change, and each run of lines that came back as they were, is one
 // group, so a click on a line marks it and what it became on the other side. The Fountain is printed as screenplay
-// lines (fountain-js), each tied to the file's line it was written on. AcceptInWords: the answer to the agent's
-// question, in the maker's words.
+// lines (fountain-js), each tied to the file's line it was written on.
 import { diffLines } from "diff";
-import { Fountain } from "fountain-js";
-import { useMemo, useRef, useState } from "react";
-import { api, useAction } from "./api.ts";
+import { useMemo, useState } from "react";
 import { fountainLines } from "./fountainLines.ts";
-import { Icon } from "./icons.tsx";
 import { useT } from "./i18n.ts";
-import { errorText } from "./labels.ts";
 
 interface Line {
   n: number;
@@ -37,15 +32,6 @@ export function compare(original: string, fountain: string): { yours: Line[]; fo
     else if (!part.added) kept += lines.length;
   });
   return { yours, fountain: theirs, changed, kept };
-}
-
-/** Episodes ("# Episode 1" sections, as the upload's format tip asks) and scene headings, as fountain-js reads them. */
-function counts(fountain: string): { episodes: number; scenes: number } {
-  const tokens = new Fountain().parse(fountain, true).tokens;
-  return {
-    episodes: tokens.filter((token) => token.type === "section" && token.depth === 1).length,
-    scenes: tokens.filter((token) => token.type === "scene_heading").length,
-  };
 }
 
 function Panes({ compared, fountain }: { compared: ReturnType<typeof compare>; fountain: string }) {
@@ -92,63 +78,4 @@ function Panes({ compared, fountain }: { compared: ReturnType<typeof compare>; f
 export function FountainDiff({ original, fountain }: { original: string; fountain: string }) {
   const compared = useMemo(() => compare(original, fountain), [original, fountain]);
   return <Panes compared={compared} fountain={fountain} />;
-}
-
-/** The rewrite as it waits for the maker: what changed, the two sides, and the answer in their words. */
-export function FountainReview({ original, fountain, reviewId }: { original: string; fountain: string; reviewId: string }) {
-  const { t } = useT();
-  const compared = useMemo(() => compare(original, fountain), [original, fountain]);
-  const { episodes, scenes } = useMemo(() => counts(fountain), [fountain]);
-  return (
-    <div className="frev">
-      <div className="frevhead">
-        <div className="grow">
-          <span className="kick">{t("fountain.kick")}</span>
-          <h2>{t("fountain.title")}</h2>
-          <p className="muted">
-            {t("fountain.facts", { changed: compared.changed, kept: compared.kept })} {t("fountain.lede")}
-          </p>
-        </div>
-        <div className="facts">
-          <span>
-            <b>{episodes}</b> {t(episodes === 1 ? "fountain.episode" : "fountain.episodes")}
-          </span>
-          <span>
-            <b>{scenes}</b> {t(scenes === 1 ? "fountain.scene" : "fountain.scenes")}
-          </span>
-        </div>
-      </div>
-      <Panes compared={compared} fountain={fountain} />
-      <AcceptInWords reviewId={reviewId} />
-    </div>
-  );
-}
-
-/** The maker's answer to the rewrite: accepted, or sent back with what to change; either way in their own words. */
-export function AcceptInWords({ reviewId, onSent }: { reviewId: string; onSent?: () => void }) {
-  const { t } = useT();
-  const [words, setWords] = useState("");
-  // One id for this answer's sending, kept for a retry: the engine takes a decision once (reviews.ts, decide).
-  const submission = useRef(crypto.randomUUID());
-  const send = useAction(async () => {
-    await api(`/api/reviews/${reviewId}/decision`, { method: "POST", json: { submissionId: submission.current, items: [], words: words.trim() } });
-    onSent?.();
-  });
-  const ready = words.trim().length > 0 && !send.busy;
-  return (
-    <div className="faccept">
-      <textarea aria-label={t("fountain.words")} placeholder={t("fountain.wordsHint")} value={words} onChange={(event) => setWords(event.target.value)} />
-      <div className="fbtns">
-        <button type="button" className="btn" disabled={!ready} onClick={() => void send.run()}>
-          <Icon name="arrow-counter-clockwise" className="ic" />
-          {t("fountain.sendBack")}
-        </button>
-        <button type="button" className="btn primary" disabled={!ready} onClick={() => void send.run()}>
-          <Icon name="check" className="ic" />
-          {t("fountain.accept")}
-        </button>
-      </div>
-      <small className="muted">{send.error !== undefined ? errorText(send.error, t) : t(ready ? "fountain.recorded" : "fountain.needWords")}</small>
-    </div>
-  );
 }

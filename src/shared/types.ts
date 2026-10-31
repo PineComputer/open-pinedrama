@@ -523,8 +523,20 @@ export interface ScriptPage {
   inputs: FileItem[];
   /** The input the maker marked as the screenplay, the original a rewrite is set beside. */
   screenplayFile: number | null;
-  /** The newest screenplay version drama-cli recorded, its review when it is a rewrite, and whether a question still waits on it. */
-  screenplay?: { version: string; file?: FileItem; review?: FileItem; pending: boolean; /** The open review that asks about it, to answer beside the rewrite. */ reviewId?: string };
+  /** Every screenplay version drama-cli recorded, newest first. */
+  versions: ScreenplayVersion[];
+}
+
+/**
+ * A screenplay version as drama-cli's screenplay validate records it: only a ready file becomes one (short_drama
+ * doc/drama-cli/cli.md, screenplay validate), so every version passed. A rewrite has its review.md beside it.
+ */
+export interface ScreenplayVersion {
+  version: string;
+  file?: FileItem;
+  review?: FileItem;
+  /** The agent's question about this version (the rewrite waiting for the maker), where it stands and the maker's words once decided. */
+  question?: { reviewId: string; state: ReviewState; words?: string; decidedAt?: string };
 }
 
 export interface DeliveryRow {

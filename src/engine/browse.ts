@@ -3,7 +3,7 @@
 // pages show what was decided on, which covers the group a review showed, never one file of
 // it (a verdict on seg03's takes is not a choice among them). Files are grouped by path
 // hints; whatever isn't recognised is still listed (docs/architecture.md, section 6.2, rule 5).
-import type { CastCard, Decision, DeliveryRow, EpisodePage, FileItem, Judged, Receipt, ReviewKind, ScriptPage, SegmentPage } from "../shared/types.ts";
+import type { CastCard, Decision, DeliveryRow, EpisodePage, FileItem, Judged, Receipt, ReviewKind, ScreenplayVersion, ScriptPage, SegmentPage } from "../shared/types.ts";
 import { classify } from "./classify.ts";
 import { all, get } from "./db.ts";
 import { readFileSync } from "node:fs";
@@ -91,24 +91,32 @@ export function episodePage(dramaId: string, code: string): EpisodePage | undefi
 }
 
 /**
- * The newest screenplay version drama-cli recorded (the highest vN), with its rewrite review, and whether the
- * question that brought it still waits for the maker. Read from each file's path, so files saved before these
+ * Every screenplay version drama-cli recorded, newest first, each with its rewrite review and the agent's question
+ * about it (the turn that recorded it ended asking the maker). Read from each file's path, so files saved before these
  * kinds existed count too.
  */
-function currentScreenplay(dramaId: string): ScriptPage["screenplay"] {
+function screenplayVersions(dramaId: string): ScreenplayVersion[] {
   const found = all<FileRow>("select * from files where drama_id = ? and type like 'text/%' order by id", dramaId)
     .map((row) => ({ row, hints: classify(row.rel_path) }))
     .filter(({ hints }) => hints.kind === "screenplay-version" || hints.kind === "screenplay-review");
-  const number = (version?: string) => Number(version?.slice(1) ?? 0);
-  const newest = Math.max(0, ...found.map(({ hints }) => number(hints.version)));
-  if (!newest) return undefined;
-  const of = (kind: string) => found.findLast(({ hints }) => hints.kind === kind && number(hints.version) === newest)?.row;
-  const file = of("screenplay-version");
-  const review = of("screenplay-review");
-  const turns = [file, review].flatMap((row) => (row?.turn_id ? [row.turn_id] : []));
-  const waiting = turns.flatMap((turnId) => all<ReviewRow>("select * from reviews where turn_id = ? and state in ('saving', 'open', 'sending')", turnId));
-  const reviewId = waiting.find((row) => row.state === "open")?.id;
-  return { version: `v${newest}`, file: file && toItem(file), review: review && toItem(review), pending: waiting.length > 0, reviewId };
+  const numbers = [...new Set(found.map(({ hints }) => Number(hints.version!.slice(1))))].sort((a, b) => b - a);
+  return numbers.map((number) => {
+    const of = (kind: string) => found.findLast(({ hints }) => hints.kind === kind && hints.version === `v${number}`)?.row;
+    const file = of("screenplay-version");
+    const review = of("screenplay-review");
+    const turns = [...new Set([file, review].flatMap((row) => (row?.turn_id ? [row.turn_id] : [])))];
+    const asked = turns
+      .flatMap((turnId) => all<ReviewRow>("select * from reviews where turn_id = ? and kind = 'question'", turnId))
+      .sort((a, b) => a.created_at.localeCompare(b.created_at))
+      .at(-1);
+    const decision = asked?.decision ? (JSON.parse(asked.decision) as Decision) : undefined;
+    return {
+      version: `v${number}`,
+      file: file && toItem(file),
+      review: review && toItem(review),
+      question: asked && { reviewId: asked.id, state: asked.state, words: decision?.words, decidedAt: asked.decided_at ?? undefined },
+    };
+  });
 }
 
 /**
@@ -120,7 +128,7 @@ export function scriptPage(dramaId: string): ScriptPage {
   return {
     inputs: inputs.map(toItem),
     screenplayFile: get<{ screenplay_file: number | null }>("select screenplay_file from dramas where id = ?", dramaId)?.screenplay_file ?? null,
-    screenplay: currentScreenplay(dramaId),
+    versions: screenplayVersions(dramaId),
   };
 }
 

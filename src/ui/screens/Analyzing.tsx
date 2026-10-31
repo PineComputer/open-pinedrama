@@ -38,8 +38,8 @@ export function Analyzing({ dramaId }: { dramaId: string }) {
   const sessions = useResource<ChatView[]>(`/api/dramas/${dramaId}/sessions`, [`drama:${dramaId}`]);
   const script = useResource<ScriptPage>(`/api/dramas/${dramaId}/script`, [`drama:${dramaId}`]);
   const setup = sessions.data?.find((session) => session.label === "");
-  const rewrite = script.data?.screenplay;
-  const ready = Boolean(rewrite?.reviewId);
+  const rewrite = script.data?.versions[0];
+  const ready = rewrite?.question?.state === "open";
   const fountain = useText(rewrite?.file);
   const steps = stepsOf(setup);
   return (

@@ -119,11 +119,15 @@ describe("browsing", () => {
     expect(row.latest?.together).toBe(2);
   });
 
-  it("shows the newest screenplay version and its review, waiting while its question is open", () => {
-    const current = browse.scriptPage("d1").screenplay!;
-    expect([current.version, current.file?.id, current.review?.id, current.pending]).toEqual(["v2", 6, 7, true]);
-    // The open review that asks about it, for the maker to answer beside the rewrite (P5.4).
-    expect(current.reviewId).toBe("r3");
+  it("lists every screenplay version, newest first, each with its review and the question that waits on it", () => {
+    const versions = browse.scriptPage("d1").versions;
+    expect(versions.map((version) => [version.version, version.file?.id, version.review?.id])).toEqual([
+      ["v2", 6, 7],
+      ["v1", 5, undefined],
+    ]);
+    // The open review that asks about v2, for the maker to decide on it in Script (D62).
+    expect(versions[0].question).toMatchObject({ reviewId: "r3", state: "open" });
+    expect(versions[1].question).toBeUndefined();
   });
 
   it("names the screenplay the maker marked, for the rewrite to be set beside it", () => {
