@@ -1207,6 +1207,9 @@
        "assets/scenes/apartment"
       ]
      }
+    ],
+    "boardsAfterTakes": [
+     "seg03"
     ]
    },
    {

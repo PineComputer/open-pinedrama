@@ -192,8 +192,13 @@ interface DramaData {
   places: { id: string; name: Both<string>; description: Both<string>; times?: string[] }[];
   props: { id: string; name: Both<string>; description: Both<string> }[];
   /** An episode's sample cut, where it has one: each clip's segment and its in and out points in seconds, from the cut.json drama-cli wrote for it. */
-  /** Each segment's scene heading, in the screenplay's form (INT./EXT. place - DAY/NIGHT), its shots, and the episode's sample cut. */
-  episodes: { title: Both<string>; segments: { id: string; heading: Both<string>; shots: Both<string[]>; uses?: string[] }[]; cut?: { segment: string; in: number; out: number }[] }[];
+  /**
+   * Each segment's scene heading, in the screenplay's form (INT./EXT. place - DAY/NIGHT), its shots, and the episode's sample
+   * cut. boardsAfterTakes: segments whose storyboard the run redrew after their takes were shot, once the takes review was
+   * answered, whatever the answer: a recorded event of the run's history, which leaves those takes out of date by
+   * drama-cli's rule (replay-lineage.ts, outOfDate).
+   */
+  episodes: { title: Both<string>; segments: { id: string; heading: Both<string>; shots: Both<string[]>; uses?: string[] }[]; cut?: { segment: string; in: number; out: number }[]; boardsAfterTakes?: string[] }[];
   /** A red line in the screenplay: the episode whose bible range names it stops on drama-cli's refusal (RedLine) and asks the maker. */
   redLine?: { episode: string; line: Both<string> };
   /**
@@ -216,7 +221,7 @@ interface Story {
   cast: { id: string; name: string; short: string; looks: string[] }[];
   places: { id: string; name: string; description: string; times: string[] }[];
   props: { id: string; name: string; description: string }[];
-  episodes: { title: string; segments: { id: string; heading: string; shots: string[]; uses?: string[] }[]; cut?: { segment: string; in: number; out: number }[] }[];
+  episodes: { title: string; segments: { id: string; heading: string; shots: string[]; uses?: string[] }[]; cut?: { segment: string; in: number; out: number }[]; boardsAfterTakes?: string[] }[];
   redLine?: { episode: string; line: string };
   derivedScreenplay?: boolean;
 }
@@ -233,7 +238,7 @@ const inLanguage = (d: DramaData, lang: Lang): Story => ({
   cast: d.cast.map((c) => ({ id: c.id, name: c.name[lang], short: c.short[lang], looks: c.looks ?? [] })),
   places: d.places.map((p) => ({ id: p.id, name: p.name[lang], description: p.description[lang], times: p.times ?? [] })),
   props: d.props.map((p) => ({ id: p.id, name: p.name[lang], description: p.description[lang] })),
-  episodes: d.episodes.map((e) => ({ title: e.title[lang], segments: e.segments.map((s) => ({ id: s.id, heading: s.heading[lang], shots: s.shots[lang], ...(s.uses ? { uses: s.uses } : {}) })), ...(e.cut ? { cut: e.cut } : {}) })),
+  episodes: d.episodes.map((e) => ({ title: e.title[lang], segments: e.segments.map((s) => ({ id: s.id, heading: s.heading[lang], shots: s.shots[lang], ...(s.uses ? { uses: s.uses } : {}) })), ...(e.cut ? { cut: e.cut } : {}), ...(e.boardsAfterTakes ? { boardsAfterTakes: e.boardsAfterTakes } : {}) })),
   ...(d.redLine ? { redLine: { episode: d.redLine.episode, line: d.redLine.line[lang] } } : {}),
   ...(d.derivedScreenplay ? { derivedScreenplay: true } : {}),
 });
@@ -626,7 +631,7 @@ function setupScript(lang: Lang, preset: string, story: { id: string; story: Sto
   };
 }
 
-function episodeScript(code: string, lang: Lang, preset: string, story: { id: string; story: Story }): Player {
+export function episodeScript(code: string, lang: Lang, preset: string, story: { id: string; story: Story }): Player {
   const say = words(story.story)[lang];
   const set = pictures(story.id, lang);
   const episode = story.story.episodes[Number(code.slice(2)) - 1];
@@ -639,7 +644,10 @@ function episodeScript(code: string, lang: Lang, preset: string, story: { id: st
   const boardVersion = new Map(segments.map((seg) => [seg.id, at(`multi_panel_storyboard/${seg.id}/${story.story.styles[0]}`)]));
   const boardAccepted = new Map<string, number>();
   const takes = new Map<string, number>();
+  // The storyboard version each segment's newest take was shot from, which drama-cli's manifest pins.
+  const shotFrom = new Map<string, number>();
   const takeAccepted = new Set<string>();
+  let redrawn = false;
   let cut = at("edit");
   // The cut's first version: the sample drama's own (a project's real v2), else v1.
   const firstCut = cut;
@@ -672,6 +680,7 @@ function episodeScript(code: string, lang: Lang, preset: string, story: { id: st
   const shoot = (which: typeof segments) =>
     which.flatMap((seg) => {
       takes.set(seg.id, (takes.get(seg.id) ?? at(`segments/${seg.id}`) - 1) + 1);
+      shotFrom.set(seg.id, boardVersion.get(seg.id)!);
       const dir = `${base}/segments/${seg.id}/t${String(takes.get(seg.id)).padStart(2, "0")}`;
       // The still drama-cli saves of the take's last frame, where the sample has one (classify.ts, last-frame).
       const still = sample(set, `${dir}/last_frame.jpg`);
@@ -680,7 +689,19 @@ function episodeScript(code: string, lang: Lang, preset: string, story: { id: st
   let started = false;
   // An episode whose bible range names the screenplay's red line stops first on drama-cli's refusal, and asks the maker; their answer is passed back.
   let redLineAsked = story.story.redLine?.episode !== code;
+  // The recording's late redraw (DramaData, boardsAfterTakes): once the takes review is answered, those segments' storyboards
+  // are drawn again and accepted, after their takes were shot from the earlier version.
   const play = (answer: string): Step => {
+    const late = stage === "takes" && !redrawn ? segments.filter((seg) => episode.boardsAfterTakes?.includes(seg.id)) : [];
+    if (stage === "takes") redrawn = true;
+    for (const seg of late) {
+      boardVersion.set(seg.id, boardVersion.get(seg.id)! + 1);
+      boardAccepted.set(seg.id, boardVersion.get(seg.id)!);
+    }
+    const step = act(answer);
+    return late.length ? { ...step, progress: [...late.map((seg) => say.redrawBoard(seg.id)), ...step.progress], files: [...boards(late), ...step.files] } : step;
+  };
+  const act = (answer: string): Step => {
     const redo = revisedKeys(answer);
     if (!redLineAsked) {
       redLineAsked = true;
@@ -741,7 +762,7 @@ function episodeScript(code: string, lang: Lang, preset: string, story: { id: st
       ...madeOf(story.story, episode, code),
       boards: Object.fromEntries(ids.map((id) => [id, { current: `v${boardVersion.get(id)}`, accepted: boardAccepted.has(id) ? `v${boardAccepted.get(id)}` : null }])),
     };
-    if (takes.size) own.takes = Object.fromEntries([...takes].map(([id, count]) => [id, { count, accepted: takeAccepted.has(id) }]));
+    if (takes.size) own.takes = Object.fromEntries([...takes].map(([id, count]) => [id, { count, accepted: takeAccepted.has(id), board: `v${shotFrom.get(id)}` }]));
     if (stage === "cut" || stage === "done") own.cut = { current: `v${cut}`, accepted: cutAccepted ? `v${cut}` : null };
     const accepted = (path: string): Made => ({ current: `v${firstOf(story.story, path)}`, accepted: `v${firstOf(story.story, path)}` });
     return {

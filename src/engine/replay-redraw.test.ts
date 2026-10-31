@@ -1,0 +1,29 @@
+// A sample's recorded history can redraw a storyboard after its take was shot (DramaData.boardsAfterTakes): Bride on
+// Bail's EP006 redraws seg03's once its takes review is answered, so the take shot from the earlier board is out of date
+// by drama-cli's rule in the lineage that stop hands back, while the other segments' takes stay fresh.
+import { mkdtempSync } from "node:fs";
+import { tmpdir } from "node:os";
+import path from "node:path";
+import { describe, expect, it } from "vitest";
+import { parseLineage } from "../shared/lineage.ts";
+
+process.env.STUDIO_DATA_DIR = mkdtempSync(path.join(tmpdir(), "studio-redraw-"));
+process.env.STUDIO_SECRET = Buffer.alloc(32, 1).toString("base64");
+
+describe("a recorded late redraw", () => {
+  it("leaves Bride's EP006 seg03 take out of date once its takes review is answered", async () => {
+    const { episodeScript, STORIES } = await import("./replay-fleet.ts");
+    const play = episodeScript("EP006", "en", "en-us-live-sfw", { id: "bride-on-bail", story: STORIES["bride-on-bail"].en });
+    const lineageOf = (step: ReturnType<typeof play>) => parseLineage(JSON.parse(new TextDecoder().decode(step.files.find((file) => file.path === "handoff/lineage.json")!.bytes)));
+    const take = (step: ReturnType<typeof play>, segment: string) => lineageOf(step).nodes.find((node) => node.id === `episodes/EP006/segments/${segment}`)!;
+    play("");
+    const shot = play("");
+    // The takes are shot from the storyboards then accepted: all fresh.
+    expect(take(shot, "seg03").fresh).toBe(true);
+    // Whatever the answer to the takes review, seg03's storyboard is redrawn as v2 and accepted.
+    const answered = play("");
+    expect(answered.files.map((file) => file.path)).toContain("drama/episodes/EP006/multi_panel_storyboard/seg03/line-art/v2/image-1.svg");
+    expect(take(answered, "seg03")).toMatchObject({ fresh: false, problems: expect.arrayContaining(["Changed selection: episodes/EP006/multi_panel_storyboard/seg03/line-art/accepted.json"]) });
+    expect(take(answered, "seg01").fresh).toBe(true);
+  });
+});

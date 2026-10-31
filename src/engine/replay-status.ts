@@ -22,8 +22,8 @@ export interface EpisodeMade {
   uses?: Record<string, string[]>;
   /** Each segment's storyboards, once drawn, by segment: line-art and photoreal share a version; its blocking reference is accepted with them. */
   boards?: Record<string, Made>;
-  /** The takes made of each segment, t01 first, and whether its newest is accepted. */
-  takes?: Record<string, { count: number; accepted: boolean }>;
+  /** The takes made of each segment, t01 first, whether its newest is accepted, and the storyboard version it was shot from. */
+  takes?: Record<string, { count: number; accepted: boolean; board?: string }>;
   cut?: Made;
 }
 

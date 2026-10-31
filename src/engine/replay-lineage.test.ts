@@ -82,6 +82,21 @@ describe("replay's lineage", () => {
     expect([...down]).toEqual(["episodes/EP001/edit"]);
   });
 
+  it("says a take is out of date, in drama-cli's words, once its storyboard is redrawn after it was shot", () => {
+    const shotFrom = (board: string): ReplayProgress => ({ ...progress, episodes: { EP001: { ...progress.episodes.EP001, takes: { seg01: { count: 2, accepted: true, board } } } } });
+    const take = (p: ReplayProgress) => read(p).nodes.find((node) => node.id === "episodes/EP001/segments/seg01")!;
+    // Shot from the storyboard now accepted: fresh.
+    expect(take(shotFrom("v2"))).toMatchObject({ fresh: true, problems: [] });
+    // Shot from v1, the storyboard since redrawn and accepted at v2: what drama-cli says of a changed selection (artifacts.py:234).
+    expect(take(shotFrom("v1"))).toMatchObject({
+      fresh: false,
+      problems: ["Changed selection: episodes/EP001/multi_panel_storyboard/seg01/line-art/accepted.json", "Changed selection: episodes/EP001/multi_panel_storyboard/seg01/line-art/current.json"],
+    });
+    // A sample's own export gets the same, at the same stop.
+    const own = JSON.parse(new TextDecoder().decode(lineageAt(shotFrom("v1"), replayLineage(shotFrom("v2"), returned).bytes))) as { nodes: { properties: { id: string; fresh: boolean; problems: string[] } }[] };
+    expect(own.nodes.find((node) => node.properties.id === "episodes/EP001/segments/seg01")!.properties).toMatchObject({ fresh: false, problems: expect.arrayContaining(["Changed selection: episodes/EP001/multi_panel_storyboard/seg01/line-art/accepted.json"]) });
+  });
+
   it("has no episode stage before the episode's boards are drawn", () => {
     const lineage = read({ ...progress, episodes: { EP001: { segments: ["seg01"] } } });
     expect(lineage.nodes.map((node) => node.id).filter((id) => id.startsWith("episodes/"))).toEqual(["episodes/EP001/breakdown"]);

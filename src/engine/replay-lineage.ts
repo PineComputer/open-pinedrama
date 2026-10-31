@@ -62,6 +62,24 @@ function stages(progress: ReplayProgress): Stage[] {
   return [...bible, ...leads, ...references, ...episodes];
 }
 
+/**
+ * What drama-cli would call stale at this stop, with its reasons: a stage whose manifest pins a selection that has since
+ * changed (short_drama doc/drama-cli/design.md:76, D85). Replay records the one input that changes under a made stage, a
+ * take's storyboard (EpisodeMade.takes.board); the reasons are drama-cli's words for a changed selection
+ * (drama_cli/artifacts.py:234), as fixtures/lineage/time-plate-replaced.json has them for a take.
+ */
+export function outOfDate(progress: ReplayProgress): Map<string, string[]> {
+  const stale = new Map<string, string[]>();
+  for (const [code, made] of Object.entries(progress.episodes))
+    for (const [segment, shot] of Object.entries(made.takes ?? {})) {
+      const accepted = made.boards?.[segment]?.accepted;
+      if (!shot.board || !accepted || shot.board === accepted) continue;
+      const board = `episodes/${code}/multi_panel_storyboard/${segment}/${(made.styles ?? STYLES)[0]}`;
+      stale.set(`episodes/${code}/segments/${segment}`, [`Changed selection: ${board}/accepted.json`, `Changed selection: ${board}/current.json`]);
+    }
+  return stale;
+}
+
 // The export carries drama-cli's layout (shared/layout.ts): the studio's Canvas places every node where drama-cli does.
 const TEXT_KINDS = new Set(["screenplay", "bible", "breakdown", "video_prompts", "subtitles"]);
 
@@ -80,6 +98,7 @@ function section(stage: Stage): string {
 export function replayLineage(progress: ReplayProgress, returned: Iterable<string>): { path: string; type: string; bytes: Uint8Array } {
   const files = [...returned];
   const all = stages(progress);
+  const stale = outOfDate(progress);
   const number = new Map(all.map((stage, n) => [stage.id, n + 1]));
   const { places, groups } = layout(all.map((stage) => ({ id: stage.id, column: stage.column, section: section(stage) })));
   const nodes = all.map((stage) => ({
@@ -94,12 +113,12 @@ export function replayLineage(progress: ReplayProgress, returned: Iterable<strin
       column: stage.column,
       version: stage.version,
       accepted: stage.accepted,
-      fresh: true,
+      fresh: !stale.has(stage.id),
       // The file a stop returned for the working version that drama-cli would show: a picture, a video or a text, never
       // the spec or request returned beside it (drama_cli/lineage.py, SHOWN_SUFFIXES).
       shows: stage.version ? (files.find((file) => file.startsWith(`drama/${stage.id}/${stage.version}/`) && SHOWN.test(file))?.slice("drama/".length) ?? null) : null,
       reads: stage.reads,
-      problems: [],
+      problems: stale.get(stage.id) ?? [],
       label: stage.id,
       section: section(stage),
     },
@@ -123,7 +142,7 @@ interface ExportNode {
   id: number;
   inputs?: { name: string; link: number | null }[];
   outputs?: { links: number[] | null }[];
-  properties: { id: string; kind: string; section: string };
+  properties: { id: string; kind: string; section: string; fresh?: boolean | null; problems?: string[] };
 }
 interface Export {
   nodes: ExportNode[];
@@ -153,6 +172,11 @@ export function lineageAt(progress: ReplayProgress, exported: Uint8Array): Uint8
     return kept.get(id)!;
   };
   const nodes = workflow.nodes.filter(keep);
+  // What this stop's history leaves out of date, as drama-cli would say it (outOfDate), on the sample's own export too.
+  for (const [id, problems] of outOfDate(progress)) {
+    const node = byId.get(id);
+    if (node) node.properties = { ...node.properties, fresh: false, problems };
+  }
   const numbers = new Set(nodes.map((node) => node.id));
   const links = workflow.links.filter(([, from, , to]) => numbers.has(from) && numbers.has(to));
   const live = new Set(links.map(([id]) => id));
