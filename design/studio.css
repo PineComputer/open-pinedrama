@@ -446,7 +446,7 @@ input.search:focus { border-color: var(--text-primary); }
 .banner b { color: var(--text-primary); }
 .banner span { color: var(--text-secondary); }
 .banner.done { border-style: solid; }
-.stopped-chip { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 12px; border-radius: var(--radius-pill); border: 1px solid color-mix(in srgb, var(--error) 45%, transparent); color: var(--error); font-size: 12px; font-weight: 600; }
+.stopped-chip { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 12px; border-radius: var(--radius-pill); border: 1px solid var(--border); color: var(--text-secondary); font-size: 12px; font-weight: 600; }
 
 /* ── shared panels ── */
 .panel { border-radius: var(--radius-2xl); border: 1px solid var(--border); background: var(--surface); padding: var(--space-2xl) var(--space-3xl); min-width: 0; }

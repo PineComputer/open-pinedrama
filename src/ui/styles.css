@@ -345,8 +345,6 @@ h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 700; lett
 
 /* The episodes board (the spec's FilterChip and EpisodeCard). */
 
-/* StopBanner: dashed while the drama's Computers stop, solid once it is stopped (the spec's StopBanner). */
-
 /* The review room (the spec's ReviewRoom): the items on a reel to the left, the work on a stage
    in the middle, the inspector with the verdict bar to the right, and the send bar along the foot. */
 .ritem .thumb { position: relative; width: 52px; height: 92px; border-radius: var(--radius-medium); overflow: hidden; background: var(--surface-container); }

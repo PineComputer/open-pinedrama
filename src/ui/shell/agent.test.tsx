@@ -217,7 +217,7 @@ describe("the agent panel", () => {
     await user.type(await screen.findByRole("textbox", { name: "Message the agent" }), "Keep the letter.");
     await user.click(screen.getByRole("button", { name: "Send" }));
     // The engine's code, worded as labels.ts words it, and the message kept.
-    expect(await screen.findByRole("alert")).toHaveTextContent("Not submitted. The project is stopped: resume it first. Your message is kept.");
+    expect(await screen.findByRole("alert")).toHaveTextContent("Not submitted. Production is paused: resume it first. Your message is kept.");
     expect(screen.getByRole("textbox", { name: "Message the agent" })).toHaveValue("Keep the letter.");
   });
 

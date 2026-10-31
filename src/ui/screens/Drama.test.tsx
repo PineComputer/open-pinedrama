@@ -44,3 +44,31 @@ describe("a stop waiting on the maker", () => {
     expect(screen.queryByText("EP007 stopped on a red line in the screenplay.")).toBeNull();
   });
 });
+
+describe("a stopped drama", () => {
+  const stopped = (reason: string) => ({ id: "d1", mode: "replay", title: "Bride on Bail", status: "stopped", format: "9:16, 480p", spent: { total: 0, media: 0 }, crew: [], episodeRows: [{ code: "EP001", state: "waiting" }], setup: { state: "stopped", reached: 5, reason } }) as unknown as DramaView;
+
+  it("paused by the maker, adds no banner: the top bar's Paused and Resume (StopControl) say it once", async () => {
+    answer("/api/reviews", []);
+    await renderAt(
+      <Drama drama={stopped("by-maker")} page="canvas">
+        <p>EP001</p>
+      </Drama>,
+      "/d/d1/e/EP001/canvas",
+    );
+    expect(await screen.findByText("EP001")).toBeInTheDocument();
+    expect(screen.queryByText("Bride on Bail is stopped")).toBeNull();
+    expect(screen.queryByRole("button", { name: "Resume" })).toBeNull();
+  });
+
+  it("stopped by the engine for a reason of its own, says why", async () => {
+    answer("/api/reviews", []);
+    await renderAt(
+      <Drama drama={stopped("no-drama-skill")} page="canvas">
+        <p>EP001</p>
+      </Drama>,
+      "/d/d1/e/EP001/canvas",
+    );
+    expect(await screen.findByText("Bride on Bail is stopped")).toBeInTheDocument();
+  });
+});
