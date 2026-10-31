@@ -91,6 +91,23 @@ describe("the agent panel", () => {
     expect(within(sessions).getByRole("button", { name: "Watch Computer 2's desktop" })).toBeInTheDocument();
   });
 
+  it("tells which session of its scope each is and what came before it, and how a scope's last session ended", async () => {
+    engine();
+    answer("/api/dramas/d1/session-history", [
+      { id: "s0", scope: "EP001", computer: "PC-2", state: "lost", createdAt: "2026-10-30T08:00:00Z", closedAt: "2026-10-30T09:00:00Z" },
+      { id: "s1", scope: "EP001", computer: "PC-1", state: "open", createdAt: "2026-10-30T09:30:00Z" },
+      { id: "s2", scope: "EP002", computer: "PC-1", state: "open", createdAt: "2026-10-30T09:31:00Z" },
+      { id: "s9", scope: "EP003", computer: "PC-2", state: "lost", createdAt: "2026-10-30T08:00:00Z", closedAt: "2026-10-30T09:00:00Z" },
+    ]);
+    const stopped = { ...drama, episodeRows: [row(1, "working"), row(2, "waiting"), row(3, "stopped")] } as unknown as DramaView;
+    await renderAt(<AgentPanel drama={stopped} episode="EP003" onCollapse={() => {}} />);
+    const sessions = screen.getByRole("region", { name: "Sessions" });
+    expect(await within(sessions).findByText("Session 2 on PC-1, after PC-2 stopped")).toBeInTheDocument();
+    // A first session has nothing before it.
+    expect(within(sessions).queryByText(/^Session 1 /)).toBeNull();
+    expect(screen.getByText("Its last session, 1, was on PC-2 when it stopped.")).toBeInTheDocument();
+  });
+
   it("shows the sessions, the decisions waiting, and what was made, named as the bible names them", async () => {
     engine();
     await renderAt(<AgentPanel drama={drama} onCollapse={() => {}} />);

@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { recentWork, type WorkItem } from "../../shared/facts.ts";
 import { nameOf, type Names } from "../../shared/names.ts";
 import { type ProjectView, takesInFlight } from "../../shared/project.ts";
-import type { ChatView, ComputerView, DecisionRecord, DramaView, FileItem, ReviewSummary, SessionView, SubmissionView } from "../../shared/types.ts";
+import type { ChatView, ComputerView, DecisionRecord, DramaView, FileItem, ReviewSummary, SessionRecord, SessionView, SubmissionView } from "../../shared/types.ts";
 import { ago, api, ApiError, useAction, useResource } from "../api.ts";
 import { Submission, useSubmission } from "../components/Submission.tsx";
 import { Dialog } from "../components/Dialog.tsx";
@@ -74,7 +74,18 @@ function decisionLine(item: ReviewSummary, t: (key: TKey, values?: Record<string
   return [count, item.subjects.slice(0, 3).join(", ")].filter(Boolean).join(" · ");
 }
 
-function Running({ drama, session, computer, inView, inFlight, onPick }: { drama: DramaView; session: SessionView; computer: ComputerView; inView: boolean; inFlight: number; onPick: () => void }) {
+/**
+ * A session among its scope's (GET /api/dramas/:id/session-history, oldest first): which one it is and what came before it,
+ * so the Computer and the task stay told together (master): "session 2 on PC-1, after PC-1 stopped". Nothing for a first.
+ */
+function sessionTold(records: SessionRecord[], sessionId: string, t: ReturnType<typeof useT>["t"]): string | undefined {
+  const at = records.findIndex((record) => record.id === sessionId);
+  if (at < 1) return undefined;
+  const before = records[at - 1];
+  return t("agent.sessionAfter", { n: at + 1, computer: records[at].computer, before: before.state === "lost" ? t("agent.afterStopped", { computer: before.computer }) : t("agent.afterEnded", { n: at }) });
+}
+
+function Running({ drama, session, computer, told, inView, inFlight, onPick }: { drama: DramaView; session: SessionView; computer: ComputerView; told?: string; inView: boolean; inFlight: number; onPick: () => void }) {
   const { t } = useT();
   const [watching, setWatching] = useState(false);
   const [asking, setAsking] = useState(false);
@@ -89,6 +100,7 @@ function Running({ drama, session, computer, inView, inFlight, onPick }: { drama
       <button type="button" className="what" title={t("agent.pinTo", { who: label })} style={{ border: 0, background: "none", padding: 0, textAlign: "left", cursor: "pointer", color: "inherit" }} onClick={onPick}>
         <b>{label}</b>
         <span>{[t("agent.onComputer", { computer: computer.label }), session.waiting ? t("crew.waiting") : (session.activity ?? t("board.atWork"))].join(" · ")}</span>
+        {told && <small>{told}</small>}
       </button>
       <button type="button" className="btn sm ghost" aria-label={watchName} title={watchName} onClick={() => setWatching(true)}>
         {t("agent.watchShort")}
@@ -129,6 +141,8 @@ export function AgentPanel({ drama, episode, onCollapse }: { drama: DramaView; e
   const queue = useResource<ReviewSummary[]>(`/api/reviews?drama=${id}`, ["reviews"]);
   const files = useResource<FileItem[]>(`/api/dramas/${id}/files`, [`drama:${id}`]);
   const sessions = useResource<ChatView[]>(`/api/dramas/${id}/sessions`, [`drama:${id}`]);
+  const history = useResource<SessionRecord[]>(`/api/dramas/${id}/session-history`, [`drama:${id}`]);
+  const recordsOf = (of: string) => (history.data ?? []).filter((record) => record.scope === of);
   // The drama's sessions, at work or waiting for the maker (design/app.js, AgentPanel's Sessions): each can be pinned.
   // Each with the Computer it runs on (a session has one scope and runs on one Computer), so the panel keeps the Computer
   // and the task it does together (master, from merecdesperez44323-lab: "把电脑和这个task能对应上").
@@ -160,6 +174,7 @@ export function AgentPanel({ drama, episode, onCollapse }: { drama: DramaView; e
           : scopeRow?.state === "queued"
             ? t("agent.notStarted", { who: scope })
             : t("agent.sessionStarting", { who: scope });
+  const lastRecord = recordsOf(scope).at(-1);
   const resumable = !live && scopeRow && (scopeRow.state === "stopped" || scopeRow.state === "failed") ? scopeRow : undefined;
   const resume = useAction(() => api(`/api/episodes/${resumable!.id}/resume`, { method: "POST" }));
   // The scope's conversation: its open session's, else the newest it had (the setup's chat has no episode label).
@@ -213,6 +228,12 @@ export function AgentPanel({ drama, episode, onCollapse }: { drama: DramaView; e
         )}
       </div>
       {resume.error !== undefined && <p className="error small" style={{ margin: "6px 16px 0" }}>{errorText(resume.error, t)}</p>}
+      {/* With none open, how the scope's last session ended and on which Computer. */}
+      {!live && lastRecord && (
+        <p className="muted small" style={{ margin: "6px 16px 0" }}>
+          {t(lastRecord.state === "lost" ? "agent.lastLost" : "agent.lastClosed", { n: recordsOf(scope).length, computer: lastRecord.computer })}
+        </p>
+      )}
       <div className="ascroll">
         <section className="asec" aria-label={t("agent.sessions")}>
           <h3>
@@ -226,6 +247,7 @@ export function AgentPanel({ drama, episode, onCollapse }: { drama: DramaView; e
                   drama={drama}
                   session={session}
                   computer={computer}
+                  told={sessionTold(recordsOf(session.episode ?? "setup"), session.id, t)}
                   inView={session.id === inView?.sessionId}
                   inFlight={session.episode && state?.episodes[session.episode] ? takesInFlight(state.episodes[session.episode]) : 0}
                   onPick={() => setPinned(session.episode ?? "setup")}

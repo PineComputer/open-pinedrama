@@ -260,8 +260,10 @@
     if (studioPage()) return null;
     const dec = decisions(), to = talkTo(), ep7 = to === "EP007";
     /* Each session with the Computer it runs on, by the Computer's own label (computers.label); Watch says whose desktop it
-       shows and what else that Computer runs. The sample: Computer 1 runs EP003 and EP006, Computer 2 ran EP005. */
-    const runRow = (code, what) => html`<div class="arow"><div class="what"><b>${code}</b><span>on Computer 1 · ${S.dramaStop === "stopped" ? "Stopped with the drama" : S.dramaStop ? (code === "EP003" ? "Stopping… waiting on 4 takes in flight" : "Stopping…") : what}</span></div>
+       shows and what else that Computer runs; a session that isn't its scope's first says what came before it
+       (GET /api/dramas/:id/session-history). The sample: Computer 1 runs EP003 (after Computer 2 stopped under its first
+       session) and EP006; Computer 2 ran EP005. */
+    const runRow = (code, what) => html`<div class="arow"><div class="what"><b>${code}</b><span>on Computer 1 · ${S.dramaStop === "stopped" ? "Stopped with the drama" : S.dramaStop ? (code === "EP003" ? "Stopping… waiting on 4 takes in flight" : "Stopping…") : what}</span>${code === "EP003" && html`<small>Session 2 on Computer 1, after Computer 2 stopped</small>`}</div>
       ${!S.dramaStop && html`<button class="btn sm ghost" aria-label="Watch Computer 1's desktop (also running EP006)" title="Watch Computer 1's desktop (also running EP006)" onClick=${() => toast("Watch opens Computer 1's desktop, view-only.")}>Watch</button>
       <button class="btn sm ghost" onClick=${() => set({ dialog: { title: "Stop " + code + "?", body: code === "EP003" ? "4 takes are in flight. They are waited on and recorded, never sent again. The episode stops after them." : "No take is in flight. The episode stops now and can be resumed.", ok: "Stop " + code, danger: true, cancel: "Keep running", run: () => toast(code + " stopped.") } })}>Stop</button>`}</div>`;
     const busy = !S.dramaStop;
@@ -273,7 +275,7 @@
       <div class="ascope" role="status">${(() => {
         const st = stateOf(to), lead = S.pin ? html`${I("map-pin")}Pinned to` : "Following";
         const dot = st === "running" ? html`<span class="live" aria-hidden="true"></span>` : st === "waiting" ? html`<span class="adot you" aria-hidden="true"></span>` : null;
-        const words = st === "none" ? html`<span>${whyNone(to)}</span>${to === "EP005" && html`<button class="btn sm" onClick=${() => toast("EP005 continues in a new session with its files.")}>Resume</button>`}`
+        const words = st === "none" ? html`<span>${whyNone(to)}${to === "EP005" && html`<small class="muted" style="display:block">Its last session, 1, was on Computer 2 when it stopped.</small>`}</span>${to === "EP005" && html`<button class="btn sm" onClick=${() => toast("EP005 continues in a new session with its files.")}>Resume</button>`}`
           : html`<span>${lead} <b>${whose(to)}</b>: ${st === "running" ? "working" : "it waits for you"}</span>`;
         const back = S.pin ? html`<button class="btn sm ghost" onClick=${() => switchTo(null)}>${inEpisode() ? "Follow EP006" : "Follow the setup session"}</button>`
           : html`<button class="btn sm ghost" onClick=${() => switchTo("EP007")}>Pin to EP007</button>`;
