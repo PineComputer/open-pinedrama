@@ -10,6 +10,7 @@ import { errorText, subjectLabel, useNames } from "./labels.ts";
 import { useReviewNotifications } from "./notify.ts";
 import { type Page, usePlace, useRoute } from "./place.ts";
 import { EmptyState } from "./components/EmptyState.tsx";
+import { Missing } from "./components/Missing.tsx";
 import { Graph } from "./graph/Graph.tsx";
 import { Drama } from "./screens/Drama.tsx";
 import { Settings } from "./screens/Settings.tsx";
@@ -79,15 +80,6 @@ export function NotFound() {
   );
 }
 
-/** An episode or item the drama doesn't have (Codex's rebuttal, IA §14.1), with the way back to the drama. */
-function Missing({ dramaId, what }: { dramaId: string; what: string }) {
-  const { t } = useT();
-  return (
-    <EmptyState title={t("notFound.title")} action={<Link className="btn primary" to="/d/$dramaId/episodes" params={{ dramaId }}>{t("notFound.drama")}</Link>}>
-      {t("notFound.object", { what })}
-    </EmptyState>
-  );
-}
 
 /** A drama route's Not found: what the URL names that the drama can't have, else the path. */
 export function MissingObject({ data }: NotFoundRouteProps) {
@@ -145,7 +137,9 @@ export function DramaPage() {
   const place = usePlace()!;
   const { assetId } = params;
   const shelf = page === "characters" ? "look" : page === "locations" ? "plate" : page === "props" ? "prop" : undefined;
-  const asked = search.item;
+  // What the URL names is checked against drama-cli's lineage, except on Script, which checks its own item against the
+  // screenplay versions recorded: a version waits for the maker before the lineage has a screenplay node.
+  const asked = page === "script" ? undefined : search.item;
   // Loaded on every page of the project, not only once a link names an item: a pick on Canvas writes ?item, and a lineage
   // first fetched then would put Loading in the page's place and remount it, losing the board's view.
   const lineage = useResource<LineageView>(`/api/dramas/${place.dramaId}/lineage`, [`project:${place.dramaId}`]);

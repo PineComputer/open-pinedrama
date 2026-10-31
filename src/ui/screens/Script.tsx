@@ -2,6 +2,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import type { Decision, FileItem, ScreenplayVersion, ScriptPage, SubmissionView } from "../../shared/types.ts";
 import { api, ApiError, useResource } from "../api.ts";
+import { Missing } from "../components/Missing.tsx";
 import { Segmented } from "../components/Segmented.tsx";
 import { Submission, useSubmission } from "../components/Submission.tsx";
 import { fountainLines } from "../fountainLines.ts";
@@ -343,8 +344,13 @@ function ScriptBody({ dramaId, data, ep, rewriting }: { dramaId: string; data: S
  */
 export function Script({ dramaId, ep, rewriting = false }: { dramaId: string; ep?: string; rewriting?: boolean }) {
   const { t } = useT();
+  const { search } = useRoute();
   const { data, error } = useResource<ScriptPage>(`/api/dramas/${dramaId}/script`, [`drama:${dramaId}`]);
   if (error !== undefined && !data) return <p className="error">{errorText(error, t)}</p>;
   if (!data) return <p className="quiet">{t("loading")}</p>;
+  // Script's own item is the screenplay, at a version drama-cli recorded; anything else a link names isn't here.
+  if (search.item !== undefined && search.item !== "screenplay") return <Missing dramaId={dramaId} what={search.item} />;
+  if (search.version !== undefined && !data.versions.some((version) => version.version === search.version))
+    return <Missing dramaId={dramaId} what={`screenplay ${search.version}`} />;
   return <ScriptBody dramaId={dramaId} data={data} ep={ep} rewriting={rewriting} />;
 }

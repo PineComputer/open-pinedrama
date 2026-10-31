@@ -108,6 +108,25 @@ describe("a drama's page", () => {
     expect(screen.getByRole("link", { name: "Back to the project" })).toHaveAttribute("href", "/d/d1/episodes");
   });
 
+  it("opens Script at the screenplay version that waits, before drama-cli's lineage has a screenplay (box-ci, sample-drama)", async () => {
+    engine();
+    answer("/api/dramas/d1/lineage", { lineage: null, problems: [] });
+    answer("/api/dramas/d1/script", { inputs: [], screenplayFile: null, versions: [{ version: "v1", question: { reviewId: "r1", state: "open" } }] });
+    render(<RouterProvider router={studioRouter(createMemoryHistory({ initialEntries: ["/d/d1/script?item=screenplay&version=v1"] }))} />);
+    expect(await screen.findByRole("group", { name: "Your decision on v1" })).toBeInTheDocument();
+    expect(screen.queryByText(/This project has no/)).not.toBeInTheDocument();
+  });
+
+  it.each([
+    ["a screenplay version drama-cli didn't record", "/d/d1/script?item=screenplay&version=v9", "screenplay v9"],
+    ["another item on Script", "/d/d1/script?item=bible", "bible"],
+  ])("says Script has no %s", async (_, path, what) => {
+    engine();
+    answer("/api/dramas/d1/script", { inputs: [], screenplayFile: null, versions: [{ version: "v1" }] });
+    render(<RouterProvider router={studioRouter(createMemoryHistory({ initialEntries: [path] }))} />);
+    expect(await screen.findByText(`This project has no ${what}.`)).toBeInTheDocument();
+  });
+
   it("ends an asset's crumbs at the version in view, the one the URL names, else drama-cli's working one (D26, D48; QA J1)", async () => {
     engine();
     answer("/api/dramas/d1/lineage", { lineage: { nodes: [{ id: "assets/characters/luca", kind: "look", where: { subject: "luca" } }], links: [], groups: [] }, problems: [] });
