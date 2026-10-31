@@ -4,7 +4,7 @@
   const { html, render, useEffect, useRef } = window.htmPreact;
   const root = document.getElementById("root");
   const SPENT_COVERS = "Agent turns and video, priced when each turn ends.";
-  const SCREENS = ["home", "reviews", "upload", "analyzing", "fountain", "script", "story", "episodes", "episode", "canvas", "graph", "review", "cut", "delivery"];
+  const SCREENS = ["home", "reviews", "upload", "analyzing", "fountain", "script", "story", "episodes", "episode", "canvas", "graph", "review", "cut", "delivery", "outofdate"];
   const SETUP = ["analyzing", "fountain"];
   const hash = (location.hash || "").slice(1);
   const S = {
@@ -24,9 +24,9 @@
   /* IA r2 (§16): each object has one home. A link lands on the home with the object selected (S.asel in Assets, S.sel on
      Canvas, S.esel in the List, S.gsel in Lineage), and remembers where it came from (S.from), so Back returns there. */
   const homeTab = (id) => (P.cast.some((c) => c.id === id) ? "cast" : P.places.some((p) => p.id === id) ? "scenes" : P.props.some((p) => p.id === id) ? "props" : null);
-  const jump = (to, label) => { set({ sel: null, agentOpen: false, drawer: false, toolOpen: false, zoomOpen: false, ...to, from: { screen: S.screen, sel: S.sel, esel: S.esel, label } }); try { history.replaceState(null, "", "#" + to.screen); } catch (e) { /* the hash is a convenience */ } };
+  const jump = (to, label) => { set({ sel: null, agentOpen: false, drawer: false, toolOpen: false, zoomOpen: false, ...to, from: { screen: S.screen, sel: S.sel, esel: S.esel, osel: S.osel, label } }); try { history.replaceState(null, "", "#" + to.screen); } catch (e) { /* the hash is a convenience */ } };
   const openHome = (id, label) => jump({ screen: "story", stab: homeTab(id), asel: id }, label);
-  const openLineage = (gid, label) => jump({ screen: "graph", gsel: gid, stale: false }, label);
+  const openLineage = (gid, label) => jump({ screen: "graph", gsel: gid }, label);
   let tid = 0;
   const toast = (text, action) => { const id = ++tid; set({ toasts: [...S.toasts, { id, text, action }] }); setTimeout(() => set({ toasts: S.toasts.filter((t) => t.id !== id) }), 4200); };
   const money = (n) => "$" + n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -95,7 +95,7 @@
         <button class="navi" aria-current=${S.screen === "delivery" ? "page" : "false"} onClick=${() => go("delivery")}>${I("scissors")}Delivery<span class="cnt">1</span></button>
         <hr class="sidehr"/>
         <button class="navi" aria-current=${S.screen === "reviews" ? "page" : "false"} onClick=${() => set({ waitFor: P.project.title, screen: "reviews" })}>${I("list-checks")}Reviews<span class="cnt">4</span></button>
-        <button class="navi" aria-current=${S.screen === "graph" && S.stale ? "page" : "false"} onClick=${() => set({ screen: "graph", stale: true })}>${I("warning")}Out of date<span class="n">4</span></button>
+        <button class="navi" aria-current=${S.screen === "outofdate" ? "page" : "false"} onClick=${() => go("outofdate")}>${I("warning")}Out of date${S.state !== "fresh" && html`<span class="n">5</span>`}</button>
       </div>
       <div class="foot" title=${SPENT_COVERS}>
         <dl class="spend"><dt>Spent</dt><dd class="mono">${money(P.project.spent)}</dd><dt>Reserved</dt><dd class="mono">${money(P.project.inflight)}</dd><dt>Budget</dt><dd class="mono">$1,000</dd></dl>
@@ -122,8 +122,8 @@
     if (["home", "upload", "reviews"].includes(S.screen)) return null;
     const none = S.state === "nostop";
     const why = "Ready after the agent's next stop returns it.";
-    // Lineage opened from an item sits inside its episode; "Out of date" (S.stale) is drama-wide.
-    const ep = ["episode", "canvas", "cut"].includes(S.screen) || (S.screen === "graph" && !S.stale);
+    // Lineage sits inside its episode when its item is the episode's or it was opened from there (A2); Out of date is drama-wide.
+    const ep = ["episode", "canvas", "cut"].includes(S.screen) || (S.screen === "graph" && window.EXTRA.lineageInEpisode());
     const scope = ep ? "EP006" : "the shared project";
     const from = ep ? "EP006's session · stop at 18:12" : "The setup's session · stop at 17:40";
     const name = ep ? "bride-on-bail-ep006" : "bride-on-bail";
@@ -180,7 +180,7 @@
   /* IA draft (E): the session the agent panel speaks to. It follows the episode in view (List, Canvas, its review, its
      cut, Lineage from one of its items); a page with no episode in view follows none, and never guesses one. A pin wins.
      The session's process, messages and composer follow it together; an unsent draft stays with its own session. */
-  const inEpisode = () => ["episode", "canvas", "review", "cut"].includes(S.screen) || (S.screen === "graph" && !S.stale);
+  const inEpisode = () => ["episode", "canvas", "review", "cut"].includes(S.screen) || (S.screen === "graph" && window.EXTRA.lineageInEpisode());
   const talkTo = () => S.pin || (inEpisode() ? "EP006" : null);
   const switchTo = (pin) => { const from = talkTo(), next = pin || (inEpisode() ? "EP006" : null); set({ pin, drafts: { ...S.drafts, [from || ""]: S.draft }, draft: (S.drafts || {})[next || ""] || "" }); };
   function AgentPanel({ float }) {
@@ -254,7 +254,7 @@
   const waits = () => {
     const cover = (t) => P.projects.find((p) => p.t === t).cover;
     // "Back to …" names the page the row was opened from: Home, Reviews, or any page under the agent panel.
-    const back = () => ({ home: "Home", reviews: "Reviews", story: S.stab === "bible" ? "Story" : "Assets", episode: "EP006", canvas: "EP006 · Canvas", graph: "Lineage", cut: "EP006 › Cut", delivery: "Delivery", script: "Script" })[S.screen];
+    const back = () => ({ home: "Home", reviews: "Reviews", story: S.stab === "bible" ? "Story" : "Assets", episode: "EP006", canvas: "EP006 · Canvas", graph: "Lineage", cut: "EP006 › Cut", delivery: "Delivery", script: "Script", outofdate: "Out of date" })[S.screen];
     const only = (where) => () => toast("Opens " + where + ". This sample opens EP006 only.");
     return [
       { dr: "Bride on Bail", what: "EP006", d: "2 takes · seg01, seg03", age: "4 min", thumb: P.takes[0].poster, open: () => go("review") },
@@ -633,10 +633,10 @@
   function Proto() {
     return html`<div class="proto" role="navigation" aria-label="Prototype">
       <b>Pine Drama Studio · pro direction</b><span class="sep"></span>
-      <div class="seg" role="group" aria-label="Screen">${[["home", "Home"], ["reviews", "Reviews"], ["upload", "Upload"], ["analyzing", "Analyzing"], ["fountain", "Fountain"], ["script", "Script"], ["story", "Story"], ["episodes", "Episodes"], ["episode", "Episode"], ["canvas", "Canvas"], ["graph", "Graph"], ["review", "Review"], ["cut", "Cut"], ["delivery", "Delivery"]].map(([k, l]) => html`<button aria-pressed=${String(S.screen === k)} onClick=${() => go(k)}>${l}</button>`)}</div>
+      <div class="seg" role="group" aria-label="Screen">${[["home", "Home"], ["reviews", "Reviews"], ["upload", "Upload"], ["analyzing", "Analyzing"], ["fountain", "Fountain"], ["script", "Script"], ["story", "Story"], ["episodes", "Episodes"], ["episode", "Episode"], ["canvas", "Canvas"], ["graph", "Graph"], ["review", "Review"], ["cut", "Cut"], ["delivery", "Delivery"], ["outofdate", "Out of date"]].map(([k, l]) => html`<button aria-pressed=${String(S.screen === k)} onClick=${() => go(k)}>${l}</button>`)}</div>
       <span class="sep"></span>
       <label class="select" style="gap:8px">State<select aria-label="State" value=${S.state} onChange=${(e) => { const v = e.target.value; set({ state: v, dramaStop: v === "stopping" ? "stopping" : v === "stopped" ? "stopped" : null }); }}>
-        ${[["normal", "Normal"], ["cutnewer", "Cut: a newer cut exists"], ["cutinputs", "Cut: draft inputs changed"], ["nostop", "No stop yet"], ["stopping", "Stopping"], ["stopped", "Stopped"], ["redline", "Red line"], ["budget", "Refused (no code)"], ["cap", "Cap reached"], ["env", "Pine access denied"]].map(([k, l]) => html`<option value=${k}>${l}</option>`)}</select></label>
+        ${[["normal", "Normal"], ["fresh", "Nothing out of date"], ["cutnewer", "Cut: a newer cut exists"], ["cutinputs", "Cut: draft inputs changed"], ["nostop", "No stop yet"], ["stopping", "Stopping"], ["stopped", "Stopped"], ["redline", "Red line"], ["budget", "Refused (no code)"], ["cap", "Cap reached"], ["env", "Pine access denied"]].map(([k, l]) => html`<option value=${k}>${l}</option>`)}</select></label>
       <label class="select" style="gap:8px" title="What happens when something is sent: a review, a Reconcile">Outcome<select aria-label="Outcome" value=${S.outcome} onChange=${(e) => set({ outcome: e.target.value })}>
         ${[["ok", "Goes through"], ["failed", "Fails"], ["unknown", "Unknown"]].map(([k, l]) => html`<option value=${k}>${l}</option>`)}</select></label>
       <span class="sep"></span>
@@ -651,6 +651,6 @@
     return html`<${Proto}/><div class="app"><${Rail}/><${Side}/>${main}</div><${Dialog}/>
       <div class="toasts" aria-live="polite">${S.toasts.map((t) => html`<div class="toast">${t.text}${t.action && html`<button onClick=${t.action.run}>${t.action.label}</button>`}</div>`)}</div>`;
   }
-  window.PD = { html, I, S, set, go, openHome, openLineage, toast, money, Status, TopBar, StopBanner, EpisodeViews, ProjectChips, AgentPanel, SPENT_COVERS, useEffect, useRef, Mark, draw };
+  window.PD = { html, I, S, set, go, jump, openHome, openLineage, toast, money, Status, TopBar, StopBanner, EpisodeViews, ProjectChips, AgentPanel, SPENT_COVERS, useEffect, useRef, Mark, draw };
   // screens.js draws first, once its screens are registered.
 })();

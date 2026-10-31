@@ -756,6 +756,12 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
 .delivep img, .delivep .noimg { width: 27px; height: 48px; border-radius: 4px; object-fit: cover; background: var(--surface-container); }
 .delivep b { display: block; color: var(--text-primary); font-size: 12px; } .delivep small { color: var(--text-muted); }
 .linkbtn { border: 0; padding: 0; background: none; color: var(--text-primary); font: inherit; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+/* Out of date (screens.js, OutOfDate): Delivery's table, a group's row with its owner's action, the reason wrapping. */
+.deliv tr.grp td { padding-top: 16px; color: var(--text-primary); }
+.deliv.ood td.why { white-space: normal; min-width: 240px; }
+.deliv.ood .delivep .ic { width: 18px; height: 18px; color: var(--text-muted); }
+.deliv.ood .delivep .linkbtn { display: block; font-size: 12px; }
+.deliv tr.sel td { background: var(--surface-container); }
 .arow.failed .what .subtle { color: var(--text-muted); font-size: 11px; }
 .dot.redline { background: var(--error); }
 /* IA draft r2: the Script page and Story's title */

@@ -1,7 +1,7 @@
 /* The rest of the flow in the pro direction: Upload, Analyzing, Fountain review, Story, Graph (lineage) and Cut,
    plus the setup steps and the stop cards. Uses the shell and helpers app.js exposes as window.PD. */
 (() => {
-  const { html, I, S, set, go, openHome, openLineage, toast, money, Status, TopBar, StopBanner, EpisodeViews, ProjectChips, AgentPanel, SPENT_COVERS, useEffect, useRef } = window.PD;
+  const { html, I, S, set, go, jump, openHome, openLineage, toast, money, Status, TopBar, StopBanner, EpisodeViews, ProjectChips, AgentPanel, SPENT_COVERS, useEffect, useRef } = window.PD;
 
   /* ───── setup steps (sidebar) ───── */
   function SetupSteps() {
@@ -203,11 +203,15 @@
   ];
   /* The Lineage an item opens on: seg03's node opens its take, the version that waits for you. */
   const lineageOf = (id) => (G.find((n) => n.of === id) || {}).id;
+  /* A2: whether the Lineage in view sits inside EP006: its item is the episode's, or it was opened from the episode's List
+     or Canvas. The crumbs, Export and the agent panel all read this one answer. */
+  const lineageInEpisode = () => { const sel = G.find((n) => n.id === S.gsel) || G.find((n) => n.id === "ep6seg03");
+    return Boolean(sel.ep) || Boolean(S.from && ["canvas", "episode"].includes(S.from.screen)); };
   /* "← Back to …": where a link came from (S.from), with its selection. */
   function BackTo() {
     const f = S.from;
     if (!f) return null;
-    const back = () => { set({ screen: f.screen, sel: f.sel, esel: f.esel, asel: null, from: null }); try { history.replaceState(null, "", "#" + f.screen); } catch (e) { /* the hash is a convenience */ } };
+    const back = () => { set({ screen: f.screen, sel: f.sel, esel: f.esel, osel: f.osel, asel: null, from: null }); try { history.replaceState(null, "", "#" + f.screen); } catch (e) { /* the hash is a convenience */ } };
     return html`<button class="btn sm ghost backto" onClick=${back}>${I("arrow-left")}Back to ${f.label}</button>`;
   }
   const GE = [["sp", "bible"], ["bible", "luca"], ["bible", "ethan"], ["bible", "apt"], ["bible", "file"], ["luca", "ep6seg03"], ["ethan", "ep6seg03"], ["apt", "ep6seg03"], ["file", "ep6seg03"], ["ep6seg03", "take"], ["take", "cut"]];
@@ -218,10 +222,9 @@
     const walk = (id, dir, acc) => GE.forEach(([a, b]) => { const [f, t] = dir ? [a, b] : [b, a]; if (f === id && !acc.has(t)) { acc.add(t); walk(t, dir, acc); } });
     walk(sel.id, false, up); walk(sel.id, true, down);
     const cols = ["Screenplay", "Bible", "Looks, plates, props", "Storyboards", "Takes", "Cut"];
-    // A2: the crumbs, the inspector and the picked node name one object. "Out of date" is the drama-wide summary; picking
-    // an item there makes it that item's Lineage. An item opened from an episode sits inside it, as Export does.
-    const inEp = sel.ep || (S.from && ["canvas", "episode"].includes(S.from.screen));
-    const crumbs = S.stale ? [P.project.title, "Out of date"] : [P.project.title, ...(inEp ? ["EP006"] : []), sel.t.replace(/^EP006 /, "") + " · " + sel.v, "Lineage"];
+    // A2: the crumbs, the inspector and the picked node name one object. An item opened from an episode sits inside it, as Export does.
+    const inEp = lineageInEpisode();
+    const crumbs = [P.project.title, ...(inEp ? ["EP006"] : []), sel.t.replace(/^EP006 /, "") + " · " + sel.v, "Lineage"];
     // Lineage is a view of relations, not a home (§16): the inspector links to where the object lives.
     const home = sel.ep ? ["EP006 · " + sel.ep, { screen: "canvas", sel: sel.ep, esel: sel.ep }] : sel.home;
     const label = "Lineage · " + sel.t;
@@ -230,14 +233,13 @@
       <${StopBanner}/>
       <div class="body"><div class="scrollmain">
         <div class="bar2"><${BackTo}/><span class="grow"></span><${ProjectChips}/></div>
-        <div class="stalebar">${I("warning")}<span><b>4 items are out of date.</b> Case file v1 was made from bible b0002, and b0003 is accepted. What was made from it is out of date until the agent redraws it.</span><span class="grow"></span><button class="btn sm" onClick=${() => toast("Sent to the agent as a steering note: redo the 4 out-of-date items.")}>Ask the agent to redo them</button></div>
         <div class="graphwrap" role="group" aria-label="Graph" tabindex="0"><div class="graph" style=${`width:${24 * 2 + 6 * W + 5 * GX}px;height:${24 * 2 + 4 * H + 3 * GY + 24}px`}>
           ${cols.map((c, i) => html`<span class="gcol" style=${`left:${24 + i * (W + GX)}px`}>${c}</span>`)}
           <svg class="gwires" width="100%" height="100%">${GE.map(([a, b]) => { const A = pos(by[a]), B = pos(by[b]); const x1 = A.x + W, y1 = A.y + H / 2 + 24, x2 = B.x, y2 = B.y + H / 2 + 24, m = (x1 + x2) / 2;
             const on = (a === sel.id || up.has(a)) && (b === sel.id || up.has(b)) || (a === sel.id || down.has(a)) && (b === sel.id || down.has(b));
             return html`<path class=${(on ? "on " : "") + (by[b].stale && by[a].stale || a === "file" ? "stale" : "")} d=${`M${x1},${y1} C${m},${y1} ${m},${y2} ${x2},${y2}`}/>`; })}</svg>
           ${G.map((n) => { const p = pos(n), rel = n.id === sel.id ? "sel" : up.has(n.id) ? "up" : down.has(n.id) ? "down" : "dim";
-            return html`<button class=${"gnode " + rel + (n.stale ? " stale" : "")} style=${`left:${p.x}px;top:${p.y + 24}px;width:${W}px;height:${H}px`} aria-pressed=${String(!S.stale && n.id === sel.id)} onClick=${() => set({ gsel: n.id, stale: false })}>
+            return html`<button class=${"gnode " + rel + (n.stale ? " stale" : "")} style=${`left:${p.x}px;top:${p.y + 24}px;width:${W}px;height:${H}px`} aria-pressed=${String(n.id === sel.id)} onClick=${() => set({ gsel: n.id })}>
               <span class="gpic">${n.pic ? html`<img src=${n.pic} alt=""/>` : I(n.icon)}</span>
               <span class="gtxt"><b>${n.t}</b><span class="mono">${n.v}</span>${n.stale ? html`<span class="st stale"><i></i>Out of date</span>` : html`<span class="st accepted"><i></i>Accepted</span>`}</span></button>`; })}
         </div></div>
@@ -248,10 +250,60 @@
           : home ? html`<button class="btn sm" onClick=${() => { set({ ...home[1], from: { screen: "graph", label } }); try { history.replaceState(null, "", "#" + home[1].screen); } catch (e) { /* the hash is a convenience */ } }}>Open in ${home[0]}</button>` : null}</div>
         <div class="iscroll">
           ${sel.pic && html`<div class="isec"><img src=${sel.pic} alt="" style="width:100%;border-radius:10px;max-height:240px;object-fit:cover;object-position:top"/></div>`}
-          <div class="isec"><h4>State</h4>${sel.stale ? html`<div class="finding warn">${I("warning")}<span>${sel.id === "file" ? "Made from bible b0002; b0003 is accepted." : "Made from Case file v1, which is stale."} The agent redraws it.</span></div>` : html`<span class="muted">Fresh: made from the accepted versions.</span>`}</div>
+          <div class="isec"><h4>State</h4>${sel.stale ? html`<div class="finding warn">${I("warning")}<span>${sel.id === "file" ? "Changed file: bible/v3/bible.json" : "Made from Case file v1, which is out of date."} The agent redraws it.</span></div>` : html`<span class="muted">Fresh: made from the accepted versions.</span>`}</div>
           <div class="isec"><h4>Made from <span class="muted">${up.size}</span></h4>${[...up].map((id) => html`<button class="lrow" onClick=${() => set({ gsel: id })}>${by[id].t}<span class="mono subtle">${by[id].v}</span></button>`)}</div>
           <div class="isec"><h4>Made from it <span class="muted">${down.size}</span></h4>${[...down].map((id) => html`<button class="lrow" onClick=${() => set({ gsel: id })}>${by[id].t}<span class="mono subtle">${by[id].v}</span></button>`)}${!down.size && html`<span class="muted">Nothing yet.</span>`}</div>
         </div></aside></div></div>`;
+  }
+
+  /* ───── Out of date: what drama-cli calls stale and what was made from it, one row per item, each opening its one home
+     (IA §16; D21). Grouped by the session that redoes them (E: the agent panel speaks to one session): the setup's for
+     the assets, each episode's for its own. The same set as the sidebar's count: src/ui/shell/tree.ts, dramaTree(…).outOfDate,
+     what drama-cli calls stale plus shared/lineage.ts, madeFromStale. ───── */
+  // `why` is drama-cli's reason, its `problems` verbatim; `from` is for an item drama-cli calls fresh that was made from an
+  // out-of-date version, said in our own words ("Made from …, which is out of date"), since the export gives no reason for it.
+  const OOD = [
+    { id: "walter", group: "Assets", kind: "Character", icon: "user", t: "Walter Cole", v: "S0 v3", full: "Walter Cole S0 v3", why: "Changed file: bible/v3/bible.json", home: () => openHome("walter", "Out of date") },
+    { id: "file", group: "Assets", kind: "Prop", icon: "cube", t: "Case file", v: "v1", full: "Case file v1", why: "Changed file: bible/v3/bible.json", gid: "file", home: () => openHome("file", "Out of date") },
+    { id: "ep6seg03", group: "EP006", kind: "Storyboard", icon: "squares-four", t: "seg03", v: "v1", full: "seg03 storyboard v1", from: "Case file v1", gid: "ep6seg03", home: () => jump({ screen: "episode", esel: "seg03" }, "Out of date") },
+    { id: "take", group: "EP006", kind: "Take", icon: "play", t: "seg03", v: "t02", full: "seg03 take t02", from: "seg03 storyboard v1", gid: "take", home: () => jump({ screen: "episode", esel: "seg03" }, "Out of date") },
+    { id: "cut", group: "EP006", kind: "Cut", icon: "scissors", t: "EP006 cut", v: "v1", full: "EP006 cut v1", from: "seg03 take t02", gid: "cut", home: () => jump({ screen: "cut" }, "Out of date") },
+  ];
+  function OutOfDate() {
+    const items = S.state === "fresh" ? [] : OOD;
+    // Leaving for a home or Lineage marks the row (its own key, apart from Canvas's pick), so Back returns to it.
+    const leave = (r, to) => { set({ osel: r.id }); to(); };
+    const owner = (g) => (g === "Assets" ? "the setup's agent" : g + "'s agent");
+    // A redo remakes items, which spends: it asks first with its impact (§15), and is one submission to the owner's session
+    // (§14.6): sending → sent, failed (send again, the same submission) or unknown (checked, never sent twice), shown here.
+    const sent = S.redo || {};
+    const send = (g) => { set({ redo: { ...sent, [g]: "sending" } }); setTimeout(() => set({ redo: { ...S.redo, [g]: { ok: "sent", failed: "failed", unknown: "unknown" }[S.outcome] } }), 1200); };
+    const check = (g) => { set({ redo: { ...sent, [g]: "checking" } }); setTimeout(() => set({ redo: { ...S.redo, [g]: "sent" } }), 1200); };
+    const redo = (g, rows) => set({ dialog: { title: `Ask ${owner(g)} to redo ${rows.length} items?`,
+      body: `${owner(g)[0].toUpperCase() + owner(g).slice(1)} will remake ${rows.length} items: ${rows.map((r) => r.full).join(", ")}. It spends from the drama's budget; the earlier versions stay.`,
+      ok: "Ask to redo", cancel: "Not now", run: () => send(g) } });
+    const state = (g, rows) => { const st = sent[g];
+      if (st === "sending") return html`<span class="muted">${I("circle-notch")} Sending to ${owner(g)}…</span>`;
+      if (st === "checking") return html`<span class="muted">${I("circle-notch")} Checking whether ${owner(g)} has it…</span>`;
+      if (st === "sent") return html`<span>${I("check-circle")} <b>Sent to ${owner(g)}</b> <span class="muted">· it is on it.</span></span>`;
+      if (st === "unknown") return html`<span class="muted">Sent, no answer yet. Checking whether ${owner(g)} has it; it is never sent twice. </span><button class="btn sm" onClick=${() => check(g)}>Check again</button>`;
+      return html`${st === "failed" && html`<span class="error-line" role="alert">${I("warning-circle")}Not sent: the connection dropped. Send it again.</span> `}<button class="btn sm" onClick=${() => redo(g, rows)}>Ask ${owner(g)} to redo them</button>`; };
+    const row = (r) => html`<tr class=${S.osel === r.id ? "sel" : ""}>
+      <td><span class="delivep">${I(r.icon)}<span><button class="linkbtn" onClick=${() => leave(r, r.home)}>${r.t}</button><small>${r.kind}</small></span></span></td>
+      <td class="mono">${r.v}</td>
+      <td class="why">${r.why || `Made from ${r.from}, which is out of date.`}</td>
+      <td class="act"><button class="ibtn" title=${r.gid ? "Lineage" : "Lineage: this sample traces seg03 and what it reads"} aria-label="Lineage" disabled=${!r.gid} onClick=${() => leave(r, () => openLineage(r.gid, "Out of date"))}>${I("tree-structure")}</button></td></tr>`;
+    const group = (g, head) => { const rows = items.filter((r) => r.group === g); return rows.length ? html`
+      <tr class="grp"><td colspan="3"><b>${head}</b></td><td class="act">${state(g, rows)}</td></tr>
+      ${rows.map(row)}` : null; };
+    return html`<div class="main">
+      <${TopBar} crumbs=${[P.project.title, "Out of date"]}/>
+      <div class="body"><div class="scrollmain">
+        <div class="bar2"><span class="delivsum">${items.length ? html`<b>${items.length} items</b> are out of date. The agent that made each one redoes it.` : "Nothing is out of date."}</span></div>
+        <${StopBanner}/>
+        ${items.length > 0 && html`<div class="delivwrap"><table class="deliv ood"><thead><tr><th>Item</th><th>Version</th><th>Why</th><th aria-label="Lineage"></th></tr></thead>
+          <tbody>${group("Assets", "Assets")}${["EP006"].map((ep) => group(ep, "Episodes · " + ep))}</tbody></table></div>`}
+      </div><${AgentPanel}/></div></div>`;
   }
 
   /* ───── Cut: EPxxx › Cut, the one home of an episode's cut (IA §16). Review and Edit are two separate things:
@@ -485,6 +537,6 @@
           <div class="lrow static">Your original · bride-on-bail.docx<span class="mono subtle">uploaded 17:31</span></div></section>
       </div><${AgentPanel}/></div></div>`;
   }
-  window.EXTRA = { BackTo, lineageOf, script: Script, upload: Upload, analyzing: Analyzing, fountain: Fountain, story: Story, graph: Graph, cut: Cut, delivery: Delivery, episode: Episode, StopCard, SetupSteps };
+  window.EXTRA = { BackTo, lineageOf, lineageInEpisode, outofdate: OutOfDate, script: Script, upload: Upload, analyzing: Analyzing, fountain: Fountain, story: Story, graph: Graph, cut: Cut, delivery: Delivery, episode: Episode, StopCard, SetupSteps };
   window.PD.draw();
 })();
