@@ -401,7 +401,7 @@
               <p class="muted" style="margin:8px 0 0;font-size:11.5px">Notes go to the agent with Send back. To change the cut yourself, use Edit.</p></div>
             ${S.cutSel != null && c.segs[S.cutSel] && (() => { const [seg, take, d] = c.segs[S.cutSel]; return html`<div class="isec"><h4>Properties <span class="muted">${seg}</span></h4>
               <dl class="kv"><dt>Segment</dt><dd>${seg}</dd><dt>Take</dt><dd>${take}</dd><dt>Model</dt><dd>${c.spec.model}</dd><dt>Duration</dt><dd class="mono">${d} s</dd><dt>Picture</dt><dd>${c.spec.ratio} · ${c.spec.resolution} · ${c.spec.fps} fps</dd></dl>
-              <div style="display:flex;gap:8px;margin-top:10px"><button class="btn sm" onClick=${() => set({ cutTab: "edit" })}>${I("scissors")}Edit this clip</button><button class="btn sm ghost" onClick=${() => go("canvas")}>${I("flow-arrow")}Open on Canvas</button></div></div>`; })()}
+              <div style="display:flex;gap:8px;margin-top:10px"><button class="btn sm" onClick=${() => set({ cutTab: "edit" })}>${I("scissors")}Edit this clip</button><button class="btn sm ghost" onClick=${() => go("canvas")}>${I("flow-arrow")}Open on Canvas</button><button class="btn sm ghost" onClick=${() => openLineage("cut", "EP006 › Cut v1")}>${I("tree-structure")}Lineage</button></div></div>`; })()}
             <div class="isec"><h4>Made from</h4>${c.segs.map(([s, t, d]) => html`<div class="lrow static">${s} · take ${t}<span class="mono muted">${d} s</span></div>`)}</div>
             <div class="isec" style="border-bottom:0"><h4>What happens</h4><p class="muted" style="font-size:12.5px;line-height:1.55">You watch every cut and decide; no model checks a cut for you. Send back, and your notes go to the agent, which plans the cut again; building a cut is free. Accept, and this is EP006's delivered cut, listed in Delivery.</p></div>
           </div>
@@ -481,7 +481,7 @@
           <tbody>${P.eps.slice(0, 8).map((e) => { const c = e.cut; return html`<tr>
             <td><span class="delivep">${e.cover ? html`<img src=${e.cover} alt=""/>` : html`<span class="noimg"></span>`}<span><b class="mono">${e.code}</b><small>${e.title}</small></span></span></td>
             <td>${c && c.accepted ? html`<button class="linkbtn" onClick=${() => open(e, c.accepted)}>Cut ${c.accepted}</button> <span class="mono muted">${c.acceptedDur} s</span>` : html`<span class="muted">—</span>`}</td>
-            <td>${c ? html`<button class="linkbtn" onClick=${() => open(e, c.latest)}>Cut ${c.latest}</button> <span class="mono muted">${c.latestDur} s</span>` : html`<span class="muted">No cut yet</span>`}</td>
+            <td>${c ? html`<button class="linkbtn" onClick=${() => open(e, c.latest)}>Cut ${c.latest}</button> <span class="mono muted">${c.latestDur} s</span>${e.code === "EP006" && html` <button class="ibtn" title="Lineage" aria-label="Lineage" onClick=${() => openLineage("cut", "Delivery")}>${I("tree-structure")}</button>`}` : html`<span class="muted">No cut yet</span>`}</td>
             <td>${c ? (c.st === "you" ? Status("you", "Cut " + c.latest + " needs you") : Status("accepted", "Delivered")) : html`<span class="muted">${e.now}</span>`}</td>
             <td class="act">${c && c.accepted && html`<button class="btn sm ghost" onClick=${() => toast(`Downloads ${e.code}-cut-${c.accepted}.mp4, the accepted cut.`)}>${I("download-simple")}Download</button>`}</td></tr>`; })}
             <tr class="more"><td colspan="5">EP009–EP024 · 16 episodes in line, no cut yet</td></tr></tbody></table></div>
