@@ -187,7 +187,8 @@ describe("Assets", () => {
   it("shows where each look stands by drama-cli's status, and the maker's decision apart from it (D64; Codex rc5 C17)", async () => {
     const user = userEvent.setup();
     // Her face was accepted in drama-cli with no verdict of the maker's; her base sheet the maker approved in a review
-    // drama-cli hasn't accepted. Status says which stands where; the review is the maker's history, shown as theirs.
+    // drama-cli hasn't accepted. Status says which stands where; the review is the maker's history, shown as theirs. The
+    // maker has decided and the next step is the agent's, so the base never reads as waiting for them (no review is open).
     const cai: CastCard = {
       kind: "look",
       subject: "cai_xiaoyan",
@@ -200,11 +201,15 @@ describe("Assets", () => {
     engine([cai], { ...state, characters: { cai_xiaoyan: { ...stage("v1", null), looks: { face: stage("v1", "v1") } } } });
     await renderAt(<Cast dramaId="d1" />, "/d/d1/assets/characters");
     const card = await screen.findByRole("article", { name: "cai_xiaoyan" });
-    expect(within(card).getByText("Waiting for you")).toBeInTheDocument();
+    expect(within(card).getByText("v1 · not accepted")).toBeInTheDocument();
+    expect(within(card).queryByText("Waiting for you")).not.toBeInTheDocument();
     await user.click(within(card).getByRole("link", { name: "cai_xiaoyan" }));
     const detail = await screen.findByRole("complementary", { name: "cai_xiaoyan: versions, state and review" });
     expect(within(detail).getByText("current v1 · none accepted")).toBeInTheDocument();
-    expect(within(detail).getByText("Waiting for you")).toBeInTheDocument();
+    expect(within(detail).getByText("v1 · not accepted")).toBeInTheDocument();
+    expect(within(detail).queryByText("Waiting for you")).not.toBeInTheDocument();
+    // Its one Review link is the decision's way back, not a call to review.
+    expect(within(detail).getByRole("link", { name: "Review" }).closest(".judged")).not.toBeNull();
     expect(within(detail).getByRole("heading", { name: "Your decision on v1" }).parentElement).toHaveTextContent("Approved · Review");
     await user.click(within(within(detail).getByRole("group", { name: "Looks" })).getByRole("button", { name: "face" }));
     expect(await within(detail).findByText("current v1 · accepted v1")).toBeInTheDocument();

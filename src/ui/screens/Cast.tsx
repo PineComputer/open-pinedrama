@@ -9,15 +9,14 @@ import { useEffect, useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import type { Names } from "../../shared/names.ts";
 import type { ProjectView, StageStatus } from "../../shared/project.ts";
-import type { CastCard, FileItem } from "../../shared/types.ts";
+import type { CastCard, FileItem, Receipt } from "../../shared/types.ts";
 import { useResource } from "../api.ts";
-import { type Status, StatusChip } from "../components/StatusChip.tsx";
+import { StatusChip } from "../components/StatusChip.tsx";
 import { Icon } from "../icons.tsx";
 import { useT } from "../i18n.ts";
 import { errorText, subjectLabel, useNames } from "../labels.ts";
 import { Link, linkOptions, useNavigate } from "@tanstack/react-router";
 import { homeLink, type Page, useRoute } from "../place.ts";
-import { standing } from "./Canvas.tsx";
 import { JudgedLine } from "./NodePanel.tsx";
 
 type Shelf = "cast" | "scenes" | "props";
@@ -66,11 +65,23 @@ function stageStatus(state: State, card: CastCard, entry: CastCard["looks"][numb
   return state.props[card.subject];
 }
 
-/** Where one version stands by that status: the working one as the stage stands, the accepted one accepted, any other none. */
-function versionStanding(stage: StageStatus | undefined, version: string | undefined): Status | undefined {
-  if (!stage || !version) return undefined;
-  if (version === stage.current) return standing(stage);
-  return version === stage.accepted ? "accepted" : undefined;
+/** Whether a review of exactly this version waits for the maker. */
+const awaits = (receipt: Receipt | undefined) => receipt?.review?.state === "open" || receipt?.review?.state === "saving";
+
+/**
+ * Where one version stands, as a chip. Waiting for you only while a review of this very item is open; otherwise
+ * drama-cli's status: the working version not accepted reads as the Bible row does ("vN · not accepted", tree.ts
+ * bibleNow), whatever the maker decided on it, since the next step is the agent's; accepted, or out of date once
+ * drama-cli calls it unusable; an earlier version only if it is the accepted one (D64, amended; Codex rc5 C17).
+ */
+function VersionChip({ stage, receipt }: { stage: StageStatus | undefined; receipt: Receipt | undefined }) {
+  const { t } = useT();
+  const version = (receipt?.files.find((file) => !file.style) ?? receipt?.files[0])?.version;
+  if (awaits(receipt)) return <StatusChip status="you" />;
+  if (!stage || !version) return null;
+  if (version === stage.current && stage.current !== stage.accepted) return <StatusChip status="work" label={t("tree.bible.candidate", { version })} />;
+  if (version === stage.current) return <StatusChip status={stage.usable ? "accepted" : "stale"} />;
+  return version === stage.accepted ? <StatusChip status="accepted" /> : null;
 }
 
 /** The newest version of an entry and the picture it shows: the plate's sheet, not one of its views. */
@@ -89,15 +100,14 @@ const mainOf = (card: CastCard) => card.looks.find((entry) => !entry.look || ent
 function AssetCard({ card, state, names, dramaId, picked, width, height }: { card: CastCard; state: State; names: Names | null; dramaId: string; picked: boolean; width: number; height: number }) {
   const open = useOpen(card, dramaId);
   const main = mainOf(card);
-  const { file } = versionsOf(main);
+  const { newest, file } = versionsOf(main);
   if (!file) return null;
-  const status = versionStanding(stageStatus(state, card, main), file.version);
   const name = subjectLabel(names, card.subject, card.kind);
   return (
     <article className={`assetcard${picked ? " sel" : ""}`} aria-label={name} aria-current={picked || undefined} onClick={open.onClick} style={{ width }}>
       <div className="pic" style={{ height }}>
         <img src={file.url} alt="" loading="lazy" />
-        {status && <StatusChip status={status} />}
+        <VersionChip stage={stageStatus(state, card, main)} receipt={newest} />
       </div>
       <div className="ctxt">
         <Link {...open.to} className="fill cardname" title={name}>
@@ -207,10 +217,9 @@ function AssetPanel({ card, state, names, dramaId, onShow }: { card: CastCard; s
   }, [big?.url]);
   const name = subjectLabel(names, card.subject, card.kind);
   const stage = stageStatus(state, card, look);
-  const status = versionStanding(stage, sheet?.version);
   // The maker's decision on the version shown, kept apart from where it stands: the review is waiting, or decided.
   const review = shown?.review;
-  const waiting = review?.state === "open" || review?.state === "saving";
+  const waiting = awaits(shown);
   const lookName = (entry: CastCard["looks"][number]) =>
     entry.look && entry.look !== "base" ? entry.look : card.kind === "look" ? t("cast.base") : card.kind === "location" ? t("cast.plate") : t("cast.keyProp");
   const description = card.kind === "location" ? names?.descriptions.locations[card.subject] : card.kind === "prop" ? names?.descriptions.props[card.subject] : undefined;
@@ -257,9 +266,9 @@ function AssetPanel({ card, state, names, dramaId, onShow }: { card: CastCard; s
         )}
         <div className="isec">
           <div style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
-            {status && <StatusChip status={status} />}
+            <VersionChip stage={stage} receipt={shown} />
             <span className="fill" />
-            {waiting && (
+            {waiting && review && (
               <Link to="/r/$reviewId" params={{ reviewId: review.reviewId }} className="btn sm primary">
                 {t("cast.review")}
               </Link>
