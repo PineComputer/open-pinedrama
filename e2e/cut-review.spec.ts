@@ -66,6 +66,7 @@ test("a cut sent back with two notes at their times, recut, and accepted", async
         { fileId: cut, time: expect.closeTo(1, 1), text: "Cut in sooner" },
         { fileId: cut, time: expect.closeTo(3, 1), text: "Hold on her face" },
       ],
+      base: first.reviewItems[0].files.map((f) => f.id),
     },
   ]);
 

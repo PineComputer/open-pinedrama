@@ -57,7 +57,7 @@ async function approveAll(id: string, words = "Approved.") {
   return call<ReviewView>("POST", `/api/reviews/${id}/decision`, {
     submissionId: crypto.randomUUID(),
     words,
-    items: review.reviewItems.map((item) => ({ key: item.key, verdict: "approve", notes: [] })),
+    items: review.reviewItems.map((item) => ({ key: item.key, verdict: "approve", notes: [], base: item.files.map((f) => f.id) })),
   });
 }
 
@@ -113,8 +113,8 @@ async function scenario(title: string) {
     submissionId: crypto.randomUUID(),
     words: "Fix Wei's jacket.",
     items: [
-      { key: "lin", verdict: "approve", notes: [] },
-      { key: "wei", verdict: "revise", notes: [{ fileId: looksView.reviewItems[1].files[0].id, x: 0.4, y: 0.6, text: "Lighter jacket.", image: reference.id }] },
+      { key: "lin", verdict: "approve", notes: [], base: looksView.reviewItems[0].files.map((f) => f.id) },
+      { key: "wei", verdict: "revise", notes: [{ fileId: looksView.reviewItems[1].files[0].id, x: 0.4, y: 0.6, text: "Lighter jacket.", image: reference.id }], base: looksView.reviewItems[1].files.map((f) => f.id) },
     ],
   });
   expect(revised.answer).toContain(
@@ -406,8 +406,14 @@ describe("a drama in replay", () => {
     // A second press while the first is still on its way: the first one only.
     const looks = await until("the looks", openReview(id, (item) => item.kind === "looks"));
     const view = await call<ReviewView>("GET", `/api/reviews/${looks.id}`);
-    const approve = () => call<ReviewView>("POST", `/api/reviews/${looks.id}/decision`, { submissionId: "press", words: "Approved.", items: view.reviewItems.map((item) => ({ key: item.key, verdict: "approve", notes: [] })) });
+    const approve = () => call<ReviewView>("POST", `/api/reviews/${looks.id}/decision`, { submissionId: "press", words: "Approved.", items: view.reviewItems.map((item) => ({ key: item.key, verdict: "approve", notes: [], base: item.files.map((f) => f.id) })) });
     const atFirst = turns(looks.id);
+    // A draft made on another version (a second window, a stale client): the engine refuses it and sends nothing
+    // (Codex's IA round 3, Conflict; D47), and the review stays open for a decision on what it shows now.
+    const stale = call("POST", `/api/reviews/${looks.id}/decision`, { submissionId: "stale", words: "Approved.", items: view.reviewItems.map((item) => ({ key: item.key, verdict: "approve", notes: [], base: [-1] })) });
+    await expect(stale).rejects.toThrow(/newer version/);
+    expect(turns(looks.id)).toBe(atFirst);
+    expect((await call<ReviewView>("GET", `/api/reviews/${looks.id}`)).state).toBe("open");
     const [first, second] = await Promise.all([approve(), approve()]);
     expect(first.state).toBe("answered");
     expect(["sending", "answered"]).toContain(second.state);
@@ -478,7 +484,7 @@ describe("a drama in replay", () => {
     const takes = (await call<FileItem[]>("GET", `/api/dramas/${id}/files?episode=${review.episodeId}`)).filter((file) => file.kind === "take");
     const shaOf = (segment: string, take: string) => takes.find((file) => file.segment === segment && file.version === take)!.sha;
     const clips = [...plan!.clips].reverse().map((clip) => ({ segment: clip.segment, take: clip.take, sha: shaOf(clip.segment, clip.take), in: 0.5, out: clip.end - clip.start, audio: "silence" }));
-    const decision = (edit: unknown) => ({ submissionId: "apply-1", words: "", items: [{ key: review.reviewItems[0].key, verdict: "revise", notes: [] }], edit });
+    const decision = (edit: unknown) => ({ submissionId: "apply-1", words: "", items: [{ key: review.reviewItems[0].key, verdict: "revise", notes: [], base: review.reviewItems[0].files.map((f) => f.id) }], edit });
 
     await expect(call("POST", `/api/reviews/${review.id}/decision`, decision({ base: cut.id, clips: [{ ...clips[0], sha: "not-the-file" }, ...clips.slice(1)] }))).rejects.toThrow("inputs changed");
     expect(all<{ state: string }>("select state from reviews where id = ?", review.id)[0].state).toBe("open");
@@ -584,7 +590,7 @@ describe("a drama in replay", () => {
     const sendBack = async (review: ReviewSummary) => {
       const view = await call<ReviewView>("GET", `/api/reviews/${review.id}`);
       expect(view.refusals).toEqual([]);
-      const items = view.reviewItems.map((item) => ({ key: item.key, verdict: item.key === "seg01" ? "revise" : "approve", notes: item.key === "seg01" ? [{ text: "Try again." }] : [] }));
+      const items = view.reviewItems.map((item) => ({ key: item.key, verdict: item.key === "seg01" ? "revise" : "approve", notes: item.key === "seg01" ? [{ text: "Try again." }] : [], base: item.files.map((f) => f.id) }));
       await call("POST", `/api/reviews/${review.id}/decision`, { submissionId: crypto.randomUUID(), words: "seg01 again.", items });
     };
     // t01, then two new takes, shoot.max_new_takes in the replayed project.

@@ -126,8 +126,8 @@ describe("the review room for storyboards", () => {
       submissionId: expect.any(String),
       words: "Good start.",
       items: [
-        { key: "seg01", verdict: "approve", notes: [] },
-        { key: "seg02", verdict: "revise", notes: [{ text: "Too dark." }] },
+        { key: "seg01", verdict: "approve", notes: [], base: review.reviewItems[0].files.map((f) => f.id) },
+        { key: "seg02", verdict: "revise", notes: [{ text: "Too dark." }], base: review.reviewItems[1].files.map((f) => f.id) },
       ],
     });
   });
@@ -373,6 +373,7 @@ describe("the review room for a cut", () => {
             { fileId, time: 6, text: "Too dark" },
             { fileId, time: 2, text: "Cut in sooner" },
           ],
+          base: review.reviewItems[0].files.map((f) => f.id),
         },
       ],
     });
@@ -401,7 +402,7 @@ describe("the review room for a cut", () => {
     expect(calls("POST", `/api/reviews/${review.id}/decision`)[0].body).toEqual({
       submissionId: expect.any(String),
       words: "",
-      items: [{ key: "cut", verdict: "approve", notes: [{ fileId: review.reviewItems[0].files[0].id, time: 1, text: "Lovely open" }] }],
+      items: [{ key: "cut", verdict: "approve", notes: [{ fileId: review.reviewItems[0].files[0].id, time: 1, text: "Lovely open" }], base: review.reviewItems[0].files.map((f) => f.id) }],
     });
   });
 });

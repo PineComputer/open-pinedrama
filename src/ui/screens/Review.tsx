@@ -308,7 +308,7 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
       setSentAs(submission.current);
       return api(`/api/reviews/${review.id}/decision`, {
         method: "POST",
-        json: { submissionId: submission.current, words, items: items.map((i) => ({ key: i.key, verdict: drafts[i.key]?.verdict ?? "approve", notes: drafts[i.key]?.notes ?? [] })) } satisfies Decision,
+        json: { submissionId: submission.current, words, items: items.map((i) => ({ key: i.key, verdict: drafts[i.key]?.verdict ?? "approve", notes: drafts[i.key]?.notes ?? [], base: bases[i.key] ?? idsOf(i) })) } satisfies Decision,
       });
     },
     // The engine's word on that submission (GET /api/submissions/:id): taken while it is sent or being sent; none, or
@@ -1026,7 +1026,7 @@ export function CutRoom({ review, done }: { review: ReviewView; done: () => void
   const { sending, send, check } = useSubmission({
     submit: () => {
       const why: Note[] = verdict === "revise" ? [{ fileId: file.id, text: reason.trim() }] : [];
-      return api(`/api/reviews/${review.id}/decision`, { method: "POST", json: { submissionId: submission.current, words: "", items: [{ key: item.key, verdict: verdict!, notes: [...why, ...notes] }] } satisfies Decision });
+      return api(`/api/reviews/${review.id}/decision`, { method: "POST", json: { submissionId: submission.current, words: "", items: [{ key: item.key, verdict: verdict!, notes: [...why, ...notes], base: idsOf(item) }] } satisfies Decision });
     },
     taken: async () => (await api<ReviewView>(`/api/reviews/${review.id}`)).state !== "open",
   });

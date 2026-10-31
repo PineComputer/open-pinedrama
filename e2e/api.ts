@@ -29,7 +29,7 @@ export async function review(page: Page, drama: string, kind: ReviewSummary["kin
 
 /** Accepts every item of the review but those named, which go back with a reason. */
 export async function decide(page: Page, view: ReviewView, sendBack: string[] = []) {
-  const items = view.reviewItems.map((item) => ({ key: item.key, verdict: sendBack.includes(item.key) ? "revise" : "approve", notes: sendBack.includes(item.key) ? [{ text: "Try again." }] : [] }));
+  const items = view.reviewItems.map((item) => ({ key: item.key, verdict: sendBack.includes(item.key) ? "revise" : "approve", notes: sendBack.includes(item.key) ? [{ text: "Try again." }] : [], base: item.files.map((f) => f.id) }));
   await call(page, `/api/reviews/${view.id}/decision`, { submissionId: crypto.randomUUID(), items, words: view.kind === "question" ? "He is 32." : "Reviewed." });
 }
 

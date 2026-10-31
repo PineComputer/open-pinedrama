@@ -141,6 +141,14 @@ export async function decide(reviewId: string, decision: Decision): Promise<Revi
     if (review.submission_id === decision.submissionId) return review;
     throw new StudioError("review-decided", "This review was already decided, in another window or an earlier send. Reload it to see the decision.", 409);
   }
+  // Codex's IA round 3, Conflict (D47): a decision is about the version it was drafted on. If the agent has since
+  // returned a newer one of any item, the decision is refused, whichever window or client sends it.
+  if (review) {
+    const now = new Map(itemsOf(review.kind, filesOfStop(review)).items.map((item) => [item.key, item.files.map((file) => file.id).join()]));
+    const changed = decision.items.filter((item) => now.has(item.key) && (!Array.isArray(item.base) || item.base.join() !== now.get(item.key)));
+    if (changed.length)
+      throw new StudioError("review-base-changed", `A newer version of ${changed.map((item) => item.key).join(", ")} arrived after this draft began. Look at it, then decide again.`, 409);
+  }
   sending.add(reviewId);
   try {
     return await send(reviewId, decision);
@@ -182,7 +190,7 @@ export async function approveUnreviewed(dramaId?: string): Promise<void> {
     // one waits for them, whatever they chose.
     if (files.some((file) => file.kind === "storyboard" && file.style === "photoreal")) continue;
     const { items } = itemsOf(review.kind, files);
-    await decide(review.id, { submissionId: newId("sub"), words: UNREVIEWED, items: items.map((item) => ({ key: item.key, verdict: "approve", notes: [] })) }).catch((error) =>
+    await decide(review.id, { submissionId: newId("sub"), words: UNREVIEWED, items: items.map((item) => ({ key: item.key, verdict: "approve", notes: [], base: item.files.map((file) => file.id) })) }).catch((error) =>
       console.error(`review ${review.id}: not approved on its own:`, (error as Error).message),
     );
   }
@@ -284,6 +292,7 @@ async function send(reviewId: string, decision: Decision): Promise<ReviewRow> {
       .map((item) => ({
         key: item.key,
         verdict: item.verdict === "revise" ? "revise" : "approve",
+        base: item.base,
         notes: (item.notes ?? []).map((note) => ({
           ...note,
           fileId: note.fileId !== undefined && itemFiles.get(item.key)!.has(note.fileId) ? note.fileId : undefined,

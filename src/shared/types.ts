@@ -32,6 +32,7 @@ export type ErrorCode =
   | "submission-missing"
   | "submission-elsewhere"
   | "review-decided"
+  | "review-base-changed"
   | "review-saving"
   | "review-closed"
   | "answer-missing"
@@ -377,6 +378,11 @@ export interface ItemDecision {
   key: string;
   verdict: Verdict;
   notes: Note[];
+  /**
+   * The item's files the maker decided on (ReviewItem.files' ids, the version their draft began on): the engine refuses
+   * the decision if the item shows other files now (409 review-base-changed; Codex's IA round 3, Conflict; D47).
+   */
+  base: number[];
 }
 
 /**

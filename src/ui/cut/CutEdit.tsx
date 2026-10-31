@@ -59,7 +59,7 @@ export function CutEdit({ review, file, clips, files, code }: { review: ReviewVi
   const blocked = Boolean(newer) || changed.length > 0;
   // One id for this Apply, kept for Send again: the engine takes a decision once (reviews.ts, decide).
   const submission = useRef(crypto.randomUUID());
-  const decision = (): Decision => ({ submissionId: submission.current, words: "", items: [{ key: item.key, verdict: "revise", notes: [] }], edit: { base: file.id, clips: edit } });
+  const decision = (): Decision => ({ submissionId: submission.current, words: "", items: [{ key: item.key, verdict: "revise", notes: [], base: item.files.map((f) => f.id) }], edit: { base: file.id, clips: edit } });
   const { sending, send, check } = useSubmission({
     submit: () => api(`/api/reviews/${review.id}/decision`, { method: "POST", json: decision() }),
     taken: async () => (await api<ReviewView>(`/api/reviews/${review.id}`)).state !== "open",

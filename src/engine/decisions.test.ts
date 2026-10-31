@@ -14,7 +14,7 @@ const context = {
 describe("answerText", () => {
   it("approves everything in one line and quotes the maker", () => {
     const text = answerText(
-      { items: [{ key: "seg01", verdict: "approve", notes: [] }, { key: "seg03", verdict: "approve", notes: [] }], words: "Looks right." },
+      { items: [{ key: "seg01", verdict: "approve", notes: [], base: [] }, { key: "seg03", verdict: "approve", notes: [], base: [] }], words: "Looks right." },
       context,
     );
     expect(text).toBe(`My review of EP002's storyboards.\nApproved: all 2.\nIn my own words: "Looks right."`);
@@ -24,8 +24,8 @@ describe("answerText", () => {
     const text = answerText(
       {
         items: [
-          { key: "seg01", verdict: "approve", notes: [] },
-          { key: "seg03", verdict: "revise", notes: [{ fileId: 7, x: 0.7, y: 0.62, text: "the letter is in her left hand" }] },
+          { key: "seg01", verdict: "approve", notes: [], base: [] },
+          { key: "seg03", verdict: "revise", notes: [{ fileId: 7, x: 0.7, y: 0.62, text: "the letter is in her left hand" }], base: [] },
         ],
         words: "",
       },
@@ -39,7 +39,7 @@ describe("answerText", () => {
   });
 
   it("puts a time on notes made on a video", () => {
-    const text = answerText({ items: [{ key: "cut", verdict: "revise", notes: [{ time: 47.2, text: "the slap lands early" }] }], words: "" }, { ...context, kind: "cut" });
+    const text = answerText({ items: [{ key: "cut", verdict: "revise", notes: [{ time: 47.2, text: "the slap lands early" }], base: [] }], words: "" }, { ...context, kind: "cut" });
     expect(text).toContain("- cut: the slap lands early (at 0:47)");
   });
 
