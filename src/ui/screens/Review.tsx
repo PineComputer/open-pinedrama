@@ -188,8 +188,17 @@ function QuestionRoom({ review, done }: { review: ReviewView; done: () => void }
   const submission = useRef(crypto.randomUUID());
   const files = [...review.reviewItems.flatMap((item) => item.files), ...review.otherFiles];
   const open = review.state === "open";
+  // A file to go with the answer, a screenplay the agent asked for, say: stored with the drama and handed to the session
+  // with this answer (reviews.ts, send), as a note's picture is.
+  const [attached, setAttached] = useState<FileItem>();
+  const picker = useRef<HTMLInputElement>(null);
+  const upload = useAction(async (chosen: File) => {
+    const form = new FormData();
+    form.set("file", chosen);
+    setAttached(await api<FileItem>(`/api/dramas/${review.dramaId}/references`, { method: "POST", body: form }));
+  });
   const send = useAction(async () => {
-    await api(`/api/reviews/${review.id}/decision`, { method: "POST", json: { submissionId: submission.current, items: [], words: answer } });
+    await api(`/api/reviews/${review.id}/decision`, { method: "POST", json: { submissionId: submission.current, items: [], words: answer, ...(attached ? { file: attached.id } : {}) } });
     forget();
     done();
   });
@@ -241,14 +250,42 @@ function QuestionRoom({ review, done }: { review: ReviewView; done: () => void }
               value={open ? answer : review.answer ?? answer}
               onChange={(event) => setAnswer(event.target.value)}
               onKeyDown={(event) => {
-                if (event.key === "Enter" && (event.metaKey || event.ctrlKey) && answer.trim() && !send.busy) void send.run();
+                if (event.key === "Enter" && (event.metaKey || event.ctrlKey) && answer.trim() && !send.busy && !upload.busy) void send.run();
               }}
             />
+            {open && (
+              <div className="note-tools">
+                {attached ? (
+                  <span className="small">
+                    {attached.name}{" "}
+                    <button className="link small" disabled={send.busy} onClick={() => setAttached(undefined)}>
+                      {t("review.removePicture")}
+                    </button>
+                  </span>
+                ) : (
+                  <button className="link small" disabled={upload.busy || send.busy} onClick={() => picker.current?.click()}>
+                    {upload.busy ? t("review.addingPicture") : t("review.attachFile")}
+                  </button>
+                )}
+                <input
+                  ref={picker}
+                  type="file"
+                  aria-label={t("review.attachFile")}
+                  accept=".txt,.md,.markdown,.fountain,.fdx,.docx,.pdf,.doc,image/png,image/jpeg,image/webp"
+                  hidden
+                  onChange={(event) => {
+                    const chosen = event.target.files?.[0];
+                    event.target.value = "";
+                    if (chosen) void upload.run(chosen);
+                  }}
+                />
+              </div>
+            )}
           </div>
-          {[send.error, finish.error].map((failed, n) => failed !== undefined && <p key={n} className="error">{errorText(failed, t)}</p>)}
+          {[send.error, finish.error, upload.error].map((failed, n) => failed !== undefined && <p key={n} className="error">{errorText(failed, t)}</p>)}
           <div className="question-actions">
             {open && (
-              <button className={buttonClass({ variant: "primary" })} disabled={send.busy || !answer.trim()} onClick={() => void send.run()}>
+              <button className={buttonClass({ variant: "primary" })} disabled={send.busy || upload.busy || !answer.trim()} onClick={() => void send.run()}>
                 {t("review.sendAnswer")} <span className="key">⌘↵</span>
               </button>
             )}

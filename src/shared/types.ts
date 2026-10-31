@@ -23,7 +23,9 @@ export type ErrorCode =
   | "drama-not-held"
   | "nothing-delivered"
   | "no-cut"
-  | "not-an-image"
+  | "unsupported-file"
+  | "file-not-asked"
+  | "file-missing"
   | "session-ended"
   | "computer-not-running"
   | "message-empty"
@@ -439,6 +441,11 @@ export interface Decision {
    * item verdicts' names, so the agent is told which, never left to read it from the words.
    */
   verdict?: Verdict;
+  /**
+   * On a plain question (not a rewrite), a file the maker attached to the answer, a screenplay say: a library file of
+   * kind "reference" (POST /api/dramas/:id/references), handed to the session with the answer, as a note's picture is.
+   */
+  file?: number;
 }
 
 /**

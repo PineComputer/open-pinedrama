@@ -17,6 +17,8 @@ export interface DecisionContext {
   edit?: string;
   /** On a question about a screenplay rewrite, the version it recorded (vN). */
   rewrite?: string;
+  /** The file attached to a question's answer: its name, and the name it was attached under once it was. */
+  file?: { name: string; sent?: string };
 }
 
 function percent(value: number): string {
@@ -46,6 +48,10 @@ export function answerText(decision: Omit<Decision, "submissionId">, context: De
   // run beyond main's goals; ENGINE_DIFF_AUDIT B6).
   if (context.kind === "question" && context.rewrite && decision.verdict === "approve") return `I accept the rewrite (screenplay ${context.rewrite}). My words: "${words}"`;
   if (context.kind === "question" && context.rewrite && decision.verdict === "revise") return `Send the rewrite (screenplay ${context.rewrite}) back. What to change: "${words}"`;
+  if (context.kind === "question" && context.file) {
+    const { name, sent } = context.file;
+    return `${words}\n${sent ? `The file I attached: attachments/${sent}` : `I attached ${name}.`}`;
+  }
   if (context.kind === "question") return words;
   // An edit is the maker's own next cut, apart from notes (Codex's IA re-review D1): the goal says it all.
   if (context.edit) return [`My review of ${context.subject}.`, context.edit, ...(words ? [`In my own words: "${words}"`] : [])].join("\n");

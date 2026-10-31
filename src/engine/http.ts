@@ -346,7 +346,10 @@ export function app(): Hono {
       if (!drama) return c.json(failure("not-found", "No such drama."), 404);
       const body = await c.req.parseBody();
       const file = body.file;
-      if (!(file instanceof File) || !/^image\/(png|jpeg|webp)$/.test(file.type)) throw new StudioError("not-an-image", "Add a PNG, JPEG or WebP picture.");
+      // A note's picture, or the file an answer to the agent's question carries (a screenplay: the kinds New drama reads,
+      // and a legacy .doc, which the agent converts, Codex rc2 T8).
+      if (!(file instanceof File) || !(/^image\/(png|jpeg|webp)$/.test(file.type) || /\.(txt|md|markdown|fountain|fdx|docx|pdf|doc)$/i.test(file.name)))
+        throw new StudioError("unsupported-file", "Add a PNG, JPEG or WebP picture, or a screenplay file (.txt .md .fountain .fdx .docx .pdf .doc).");
       if (file.size > 20 * 1024 * 1024) throw new StudioError("file-too-large", `${file.name} is over 20 MiB.`, 400, file.name);
       const id = await save(new Uint8Array(await file.arrayBuffer()), { dramaId: drama.id, relPath: `references/${file.name}`, type: file.type, kind: "reference" });
       return c.json(toItem(fileRow(id)!));

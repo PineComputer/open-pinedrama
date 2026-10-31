@@ -98,12 +98,32 @@ async function scenario(title: string) {
   const rewrite = await until("the screenplay rewrite", openReview(id, () => true));
   expect((await call<ReviewView>("GET", `/api/reviews/${rewrite.id}`)).rewrite).toMatch(/^v\d+$/);
   await expect(call("POST", `/api/reviews/${rewrite.id}/decision`, { submissionId: crypto.randomUUID(), items: [], words: "Yes, this is my script." })).rejects.toThrow("Accept screenplay");
+  // A file goes with an answer to the agent's own question, never with a rewrite's verdict (Script owns that).
+  const screenplay = new FormData();
+  screenplay.set("file", new File(["EPISODE 1\nLin enters. Wei waits."], "full-screenplay.pdf", { type: "application/pdf" }));
+  const attached = await call<FileItem>("POST", `/api/dramas/${id}/references`, screenplay);
+  await expect(
+    call("POST", `/api/reviews/${rewrite.id}/decision`, { submissionId: crypto.randomUUID(), items: [], words: "Yes, this is my script.", verdict: "approve", file: attached.id }),
+  ).rejects.toThrow("Only an answer to the agent's question");
   // The setup asks a question, then for the leads' looks, with their sheets saved first.
   await acceptRewrite(id);
   const question = await until("the setup question", openReview(id, (item) => item.kind === "question"));
-  await call("POST", `/api/reviews/${question.id}/decision`, { submissionId: crypto.randomUUID(), items: [], words: "He is 32." });
+  // Only a file added to this drama goes; the one attached reaches the session, named in the answer.
+  await expect(call("POST", `/api/reviews/${question.id}/decision`, { submissionId: crypto.randomUUID(), items: [], words: "He is 32.", file: 999_999 })).rejects.toThrow("isn't one added");
+  const answered = await call<ReviewView>("POST", `/api/reviews/${question.id}/decision`, { submissionId: crypto.randomUUID(), items: [], words: "He is 32.", file: attached.id });
+  expect(answered.answer).toBe(`He is 32.\nThe file I attached: attachments/reference-${attached.id}-full-screenplay.pdf`);
+  expect(answered.decision?.file).toBe(attached.id);
   const looks = await until("the looks review", openReview(id, (item) => item.kind === "looks"));
   const looksView = await call<ReviewView>("GET", `/api/reviews/${looks.id}`);
+  // A review of items takes no file.
+  await expect(
+    call("POST", `/api/reviews/${looks.id}/decision`, {
+      submissionId: crypto.randomUUID(),
+      words: "Fine.",
+      items: looksView.reviewItems.map((item) => ({ key: item.key, verdict: "approve", notes: [], base: item.files.map((f) => f.id) })),
+      file: attached.id,
+    }),
+  ).rejects.toThrow("Only an answer to the agent's question");
   expect(looksView.reviewItems.map((item) => item.key)).toEqual(["lin", "wei"]);
   // The bible comes back as Markdown and as its bible.json, as a real stop returns them.
   expect(looksView.otherFiles.map((file) => file.name)).toEqual(["bible.md", "bible.json"]);

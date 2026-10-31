@@ -317,8 +317,14 @@ async function send(reviewId: string, decision: Decision): Promise<ReviewRow> {
   const itemFiles = new Map(items.map((item) => [item.key, new Set(item.files.map((file) => file.id))]));
   const edit = decision.edit !== undefined ? editOf(review, files, decision.edit) : undefined;
   const rewrite = review.kind === "question" ? rewriteOf(files) : undefined;
+  // A file goes with an answer to the agent's own question only, bound to that question; anywhere else it is refused,
+  // as is a file the maker didn't add to this drama.
+  if (decision.file !== undefined && (review.kind !== "question" || rewrite)) throw new StudioError("file-not-asked", "Only an answer to the agent's question can carry a file.");
+  const attached = decision.file !== undefined ? references.get(decision.file) : undefined;
+  if (decision.file !== undefined && !attached) throw new StudioError("file-missing", "That file isn't one added to this project. Attach it again.");
   const kept: Decision = {
     ...(edit ? { edit: edit.kept } : {}),
+    ...(attached ? { file: attached.id } : {}),
     ...(rewrite && (decision.verdict === "approve" || decision.verdict === "revise") ? { verdict: decision.verdict } : {}),
     submissionId: decision.submissionId,
     words: decision.words ?? "",
@@ -331,14 +337,14 @@ async function send(reviewId: string, decision: Decision): Promise<ReviewRow> {
         notes: (item.notes ?? []).map((note) => ({
           ...note,
           fileId: note.fileId !== undefined && itemFiles.get(item.key)!.has(note.fileId) ? note.fileId : undefined,
-          image: note.image !== undefined && references.has(note.image) ? note.image : undefined,
+          image: note.image !== undefined && references.get(note.image)?.type.startsWith("image/") ? note.image : undefined,
         })),
       })),
   };
   if (review.kind === "question" && !kept.words.trim()) throw new StudioError("answer-missing", "Write an answer first.");
   if (rewrite && !kept.verdict) throw new StudioError("verdicts-missing", `Accept screenplay ${rewrite} or send it back first.`);
   if (review.kind !== "question" && (!items.length || kept.items.length !== items.length)) throw new StudioError("verdicts-missing", "Give every item a verdict first.");
-  const context = { kind: review.kind, subject: subject(review), labels, paths: new Map(files.map((file) => [file.id, file.rel_path])), edit: edit?.goal, rewrite };
+  const context = { kind: review.kind, subject: subject(review), labels, paths: new Map(files.map((file) => [file.id, file.rel_path])), edit: edit?.goal, rewrite, file: attached && { name: attached.name } };
   const pictures = [...new Set(kept.items.flatMap((item) => item.notes.flatMap((note) => (note.image !== undefined ? [note.image] : []))))].map((id) => references.get(id)!);
 
   // Kept as written for a session that later resumes the work; said again below with where its pictures are.
@@ -355,8 +361,8 @@ async function send(reviewId: string, decision: Decision): Promise<ReviewRow> {
   // The maker's pictures go into the session first, so the answer can say where they are.
   let answer: string;
   try {
-    const { sent } = await attach(session, pictures);
-    answer = answerText(kept, { ...context, images: new Map(pictures.map((file, index) => [file.id, sent[index]])) });
+    const { sent, names } = await attach(session, attached ? [...pictures, attached] : pictures);
+    answer = answerText(kept, { ...context, images: new Map(pictures.map((file, index) => [file.id, sent[index]])), file: attached && { name: attached.name, sent: names[attached.id] } });
   } catch (error) {
     // Not sent: the review is open again, and the same submission may try again.
     run("update reviews set state = 'open', submission_id = null where id = ?", reviewId);

@@ -319,6 +319,24 @@ describe("a question the agent asks because drama-cli refused", () => {
     expect(within(cards[0]).getByText("Bible v2 is not usable: red line: EP003 scene 4.")).toBeInTheDocument();
   });
 
+  it("sends a file the maker attached with the answer to the agent's question, bound to that question", async () => {
+    const user = userEvent.setup();
+    const review = { ...storyboardReview(), kind: "question" as const, question: "This is a synopsis. Please provide the finished screenplay.", reviewItems: [] };
+    const stored = file({ kind: "reference", name: "full-screenplay.pdf", type: "application/pdf" });
+    answer(`/api/reviews/${review.id}`, review);
+    accept(`/api/dramas/${review.dramaId}/references`, stored);
+    accept(`/api/reviews/${review.id}/decision`, review);
+    await renderAt(<Review id={review.id} />);
+    await user.upload(await screen.findByLabelText("Attach a file"), new File(["%PDF-1.4"], "full-screenplay.pdf", { type: "application/pdf" }));
+    expect(await screen.findByText("full-screenplay.pdf")).toBeInTheDocument();
+    // Words are still required.
+    expect(screen.getByRole("button", { name: /Send answer/ })).toBeDisabled();
+    await user.type(screen.getByRole("textbox", { name: "Your answer" }), "Here it is.");
+    await user.click(screen.getByRole("button", { name: /Send answer/ }));
+    await waitFor(() => expect(calls("POST", `/api/reviews/${review.id}/decision`)).toHaveLength(1));
+    expect(calls("POST", `/api/reviews/${review.id}/decision`)[0].body).toEqual({ submissionId: expect.any(String), items: [], words: "Here it is.", file: stored.id });
+  });
+
   it("says when the refusals the agent returned didn't read", async () => {
     const review = { ...storyboardReview(), kind: "question" as const, question: "Something refused.", reviewItems: [], refusalsError: "The refusals, line 1: the line should be one JSON object." };
     answer(`/api/reviews/${review.id}`, review);
