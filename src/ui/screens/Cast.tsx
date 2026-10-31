@@ -13,7 +13,6 @@ import { Icon } from "../icons.tsx";
 import { useT } from "../i18n.ts";
 import { errorText, subjectLabel, useNames } from "../labels.ts";
 import { Link } from "../router.tsx";
-import { buttonVariants } from "@/components/ui/button";
 
 type Shelf = "bible" | "cast" | "scenes" | "props";
 
@@ -37,27 +36,27 @@ function Card({ card, look, names, dramaId }: { card: CastCard; look: CastCard["
   const name = subjectLabel(names, look.look && look.look !== "base" ? `${card.subject}/${look.look}` : card.subject, card.kind);
   const aliases = names?.characters[card.subject]?.aliases ?? [];
   const kind = look.look === "base" || !look.look ? t("cast.base") : look.look;
+  // The design's cast card (design/screens.js, Story; studio.css .castcard): the sheet, where it stands, the name and
+  // version, the look, its other names and episodes; its versions to flip through, and the way to its review.
   return (
-    <article className="ds-castcard" aria-label={name}>
-      <a className="pic" href={file.url} target="_blank" rel="noreferrer">
+    <article className="castcard" aria-label={name}>
+      <a className="pic" href={file.url} target="_blank" rel="noreferrer" style={{ display: "block" }}>
         <img src={file.url} alt="" loading="lazy" />
-        {status && (
-          <span className="ds-chipslot">
-            <StatusChip status={status} />
-          </span>
-        )}
+        {status && <StatusChip status={status} />}
       </a>
-      <div className="txt">
-        <div className="line">
-          <b>{name}</b>
-          <span className="ver">{file.version}</span>
+      <div className="ctxt">
+        <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
+          <b className="grow">{name}</b>
+          <span className="mono subtle" style={{ fontSize: 11 }}>
+            {file.version}
+          </span>
         </div>
-        <small>{kind}</small>
+        <small className="muted">{kind}</small>
         {aliases.length > 0 && (
           <div className="aka">
-            <span>{t("cast.aliases")}</span>
+            <span className="muted">{t("cast.aliases")}</span>
             {aliases.map((alias) => (
-              <span key={alias} className="ds-tag">
+              <span key={alias} className="tag">
                 {alias}
               </span>
             ))}
@@ -65,31 +64,33 @@ function Card({ card, look, names, dramaId }: { card: CastCard; look: CastCard["
         )}
         {card.episodes.length > 0 && (
           <div className="aka">
-            <span>{t("cast.in")}</span>
+            <span className="muted">{t("cast.in")}</span>
             {card.episodes.map((code) => (
-              <Link key={code} to={`/d/${dramaId}/e/${code}`} className="ds-tag">
+              <Link key={code} to={`/d/${dramaId}/e/${code}`} className="tag">
                 {code}
               </Link>
             ))}
           </div>
         )}
-        <div className="acts">
-          {look.versions.length > 1 && (
-            <span className="versions" role="group" aria-label={t("cast.versions", { name })}>
-              {look.versions.map((version, i) => (
-                <button key={version.turnId} type="button" aria-pressed={i === index} onClick={() => setIndex(i)}>
-                  {version.files[0]?.version ?? i + 1}
-                </button>
-              ))}
-            </span>
-          )}
-          <span className="grow" />
-          {shown.review && (
-            <Link to={`/r/${shown.review.reviewId}`} className={buttonVariants({ variant: status === "you" ? "default" : "ghost", size: "sm" })}>
-              {status === "you" ? t("cast.review") : t("judged.open")}
-            </Link>
-          )}
-        </div>
+        {(look.versions.length > 1 || shown.review) && (
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 4 }}>
+            {look.versions.length > 1 && (
+              <div className="seg" role="group" aria-label={t("cast.versions", { name })}>
+                {look.versions.map((version, i) => (
+                  <button key={version.turnId} type="button" aria-pressed={i === index} onClick={() => setIndex(i)}>
+                    {version.files[0]?.version ?? i + 1}
+                  </button>
+                ))}
+              </div>
+            )}
+            <span className="grow" />
+            {shown.review && (
+              <Link to={`/r/${shown.review.reviewId}`} className={`btn sm ${status === "you" ? "primary" : "ghost"}`}>
+                {status === "you" ? t("cast.review") : t("judged.open")}
+              </Link>
+            )}
+          </div>
+        )}
       </div>
     </article>
   );
@@ -187,7 +188,7 @@ export function Cast({ dramaId, compact = false }: { dramaId: string; compact?: 
   const places = (data ?? []).filter((card) => card.kind === "location");
   const props = (data ?? []).filter((card) => card.kind === "prop");
   const castGrid = (
-    <div className="ds-castgrid">
+    <div className="castgrid">
       {characters.flatMap((card) => card.looks.map((look) => <Card key={`${card.subject}/${look.look}`} card={card} look={look} names={names} dramaId={dramaId} />))}
     </div>
   );

@@ -398,27 +398,6 @@ h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 700; lett
 .graph-screen .react-flow__edge.on .react-flow__edge-path { stroke: var(--text-primary); stroke-width: 1.8; }
 .graph-screen .react-flow__edge.stale .react-flow__edge-path { stroke-dasharray: 5 4; }
 
-/* The Story (the spec's CastCard and PlateCard): the cast as 16:9 sheets, the world as tall
-   cards, each with where it stands, its versions and the way to its review. */
-.ds-castgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
-.ds-castcard { border-radius: var(--radius-2xl); border: 1px solid var(--border); background: var(--surface); overflow: hidden; display: flex; flex-direction: column; }
-.ds-castcard .pic { position: relative; display: block; background: var(--surface-container); }
-.ds-castcard .pic { aspect-ratio: 16 / 9; }
-.ds-castcard .pic img { width: 100%; height: 100%; object-fit: cover; }
-.ds-castcard .pic .ds-chipslot { position: absolute; left: 8px; top: 8px; }
-.ds-castcard .txt { padding: 12px 14px 14px; display: grid; gap: 6px; }
-.ds-castcard .line { display: flex; align-items: baseline; gap: 8px; }
-.ds-castcard .line b { flex: 1; min-width: 0; font-size: 14px; font-weight: 700; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.ds-castcard .ver { font: 500 11px var(--font-mono); color: var(--text-secondary); }
-.ds-castcard small { color: var(--text-secondary); font-size: 12px; }
-.ds-castcard .aka { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-size: 11.5px; color: var(--text-secondary); }
-.ds-tag { display: inline-flex; align-items: center; height: 22px; padding: 0 8px; border-radius: var(--radius-small); background: var(--surface-container); color: var(--text-primary); font-size: 11.5px; }
-a.ds-tag:hover { background: var(--hover); }
-.ds-castcard .acts { display: flex; align-items: center; gap: 6px; margin-top: 4px; }
-.ds-castcard .acts .grow { flex: 1; }
-.ds-castcard .versions { display: inline-flex; gap: 2px; padding: 2px; border-radius: var(--radius-pill); background: var(--surface-container); border: 1px solid var(--border); }
-.ds-castcard .versions button { height: 22px; padding: 0 8px; border: 0; border-radius: var(--radius-pill); background: none; color: var(--text-secondary); font: 600 11px var(--font-mono); cursor: pointer; }
-.ds-castcard .versions button[aria-pressed="true"] { background: var(--surface); color: var(--text-primary); box-shadow: 0 0 0 1px var(--border-input); }
 
 /* Home, ported from the pro prototype: what studio.css doesn't have for real data. A drama with no take or photoreal
    board yet has the designed empty cover, its title as type; a look's thumbnail is cropped to the sheet's close-up;

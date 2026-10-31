@@ -20,14 +20,6 @@
 .ds-steps .is-later .t { color: var(--text-muted); font-weight: 500; }
 .ds-steps .time { font: 500 11px var(--font-mono); color: var(--text-muted); }
 
-/* BudgetMeter: a 4px track; the solid part is spent. */
-.ds-budget { display: grid; gap: 6px; min-width: 150px; }
-.ds-budget .row { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; color: var(--text-muted); }
-.ds-budget .row b { font: 600 12px var(--font-mono); color: var(--text-primary); }
-.ds-budget .bar { height: 4px; border-radius: var(--radius-pill); background: var(--border); overflow: hidden; display: flex; }
-.ds-budget .bar i { display: block; height: 100%; background: var(--text-primary); }
-.ds-budget.is-warn .bar i { background: var(--warning-text); }
-.ds-budget.is-out .bar i { background: var(--error); }
 
 
 /* The gallery (screens/Gallery.tsx), development only */

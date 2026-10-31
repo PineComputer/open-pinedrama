@@ -1,35 +1,8 @@
-/* The shell (NavRail, Sidebar, TopBar, DramaBar), in the pro direction's measurements (its spec,
-   "NavRail", "Sidebar", "Breadcrumb", "TopBar", "SurfaceSwitch", "ProjectChip"). Colours are
-   Reveric's tokens; sizes are base.css's. */
-
-
-/* NavRail: 52 wide on the dimmed surface; 36px places, the current one selected; settings and the mark at the foot. */
-
-/* Sidebar: 248 wide; the project at its head, places as 36-high rows, the episode tree, and what was spent at its foot. */
-/* The scenes of the episode in view (after the reference's scene list): number, heading, segments. */
-
-/* The episode tree: 28-high rows of code, what it is doing and a dot. */
-
-/* TopBar: 52 high: back, the breadcrumb, then the stop control and the next review. */
-
-/* The drama's bar: the surface switch, then its chips. */
+/* The shell is design/'s markup and studio.css's rules (.rail, .side, .top, .bar2, .agent, .ball); what
+   follows is the desktop app's own and the narrow layouts. */
 
 /* Each block of a drama's page brings its own padding, as the design's do (.bar2, .filters, .epgrid…). */
 .ds-workin { min-width: 0; }
-
-/* AgentPanel: 360 wide on the dimmed surface beside the work, or floating over it (380, the
-   dialog's shadow); its sections, rows, decisions, process, messages and composer. AgentBall:
-   the panel collapsed, a 52px circle with the decisions waiting and a ring while an agent works. */
-.ds-asec { padding: 12px 0; border-bottom: 1px solid var(--border-subtle); }
-.ds-asec:last-child { border-bottom: 0; }
-.ds-asec h3 { margin: 0 0 8px; display: flex; align-items: center; gap: 8px; font: 600 11px/1.3 var(--font-sans); color: var(--text-muted); letter-spacing: 0.4px; text-transform: uppercase; }
-.ds-asec h3 .c { margin-left: auto; font-variant-numeric: tabular-nums; }
-/* The agent's runs, as one card (after the reference's task strip): a summary that folds when more than one runs, then a row each with its dot, what it is doing, Watch and Stop. */
-/* Recent work, as a card that folds (after the reference's recent changes): each version, when, and where it stands. */
-.ds-tag { flex: none; display: inline-flex; align-items: center; height: 20px; padding: 0 7px; border-radius: var(--radius-small); background: var(--surface-container); color: var(--text-secondary); font-size: 11px; }
-.ds-tag.is-review, .ds-tag.is-make { box-shadow: inset 2px 0 0 var(--warning-text); }
-.ds-tag.is-stale { box-shadow: inset 2px 0 0 var(--error); }
-.ds-tag.is-accepted { box-shadow: inset 2px 0 0 var(--success); }
 
 /* In the desktop app on macOS the top of the window is its title bar, with the traffic lights at
    18, 18 (desktop/main.ts) over the rail and the start of what follows it: room is made for them,
@@ -48,7 +21,3 @@
   .rail { display: none; }
   .bar2 .chip { display: none; }
 }
-.ds-caption { color: var(--text-muted); font-size: 11.5px; line-height: 1.45; }
-/* Canvas's follow dot (screens/Canvas.tsx), until the Canvas is ported to the design's .live. */
-.ds-live { width: 8px; height: 8px; border-radius: 50%; background: var(--success); box-shadow: 0 0 0 3px color-mix(in srgb, var(--success) 25%, transparent); }
-.ds-live.is-idle { background: var(--text-subtle); box-shadow: none; }
