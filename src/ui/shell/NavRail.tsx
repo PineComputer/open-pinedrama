@@ -1,6 +1,6 @@
 // The studio's nav down the left of every screen, ported from the design (design/app.js, Rail). It is studio-wide only
 // (IA §2): the toggle, Projects, Reviews with how many wait across every project, then Settings and the mark. A
-// project's places are in its tree, never here. yurun: "project应该和icon 平铺", "左侧就不需要单独有一个column了": off
+// project's places are in its tree, never here. merecdesperez44323-lab: "project应该和icon 平铺", "左侧就不需要单独有一个column了": off
 // a project it is the one left column, rows of icon and label side by side (liblib; Apple HIG sidebars); inside a project
 // it is the icon rail beside the project tree (VS Code's activity bar), each label a tooltip and the place's name. ☰
 // opens and closes that column, the same everywhere.
@@ -13,7 +13,7 @@ import type { Page } from "../place.ts";
 /**
  * wide: the studio's own column (off a project); waiting: every project's open reviews; replay: say it's sample work;
  * narrow: below 1100 px, where ☰ opens the drawer (drawer: whether it's open). On a wide window there is no ☰: the
- * column is always shown (yurun: "it's meaningless for this icon on the left top corner"; Apple HIG sidebars).
+ * column is always shown (merecdesperez44323-lab: "it's meaningless for this icon on the left top corner"; Apple HIG sidebars).
  */
 export function NavRail({ page, waiting, wide, replay, narrow, drawer, onToggleDrawer }: { page: Page | undefined; waiting: number; wide: boolean; replay: boolean; narrow: boolean; drawer: boolean; onToggleDrawer: () => void }) {
   const { t } = useT();
@@ -49,7 +49,7 @@ export function NavRail({ page, waiting, wide, replay, narrow, drawer, onToggleD
         )}
       </div>
       <hr />
-      {/* yurun: "you need to have a home page top of the drama project icon … currently just put Home and make if gray and
+      {/* merecdesperez44323-lab: "you need to have a home page top of the drama project icon … currently just put Home and make if gray and
           not clicable": shown and disabled until the gallery of sample projects exists; not a link, not in the tab order. */}
       <span className="ibtn labelled disabled" role="link" aria-disabled="true" title={t("nav.homeLater")}>
         <Icon name="house" className="ic" />

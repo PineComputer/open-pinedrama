@@ -1,4 +1,4 @@
-// A drama's cover as a small picture, by the one cover rule (yurun's Y6): the engine's cover, its newest take's last frame,
+// A drama's cover as a small picture, by the one cover rule (merecdesperez44323-lab's Y6): the engine's cover, its newest take's last frame,
 // else its photoreal storyboard (DramaCard.cover, as Home's card shows it); before either, the designed empty placeholder.
 // Never a look or a plate, so the sidebar, the crumbs and Home show one drama the same way.
 import type { DramaCard } from "../../shared/types.ts";

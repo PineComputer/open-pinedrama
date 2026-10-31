@@ -226,7 +226,7 @@ export function DramaSidebar({ drama, page, episode, drawer }: { drama: DramaVie
             )}
           </ul>
         )}
-        {/* What the dots mean, once, at the tree's foot (yurun's Y10; Nielsen: recognition rather than recall). */}
+        {/* What the dots mean, once, at the tree's foot (merecdesperez44323-lab's Y10; Nielsen: recognition rather than recall). */}
         {drama.episodeRows.length > 0 && (
           <p className="treelegend" aria-hidden="true">
             {(["you", "work", "done"] as const).map((mark) => (

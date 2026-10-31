@@ -46,7 +46,7 @@ describe("the drama tree", () => {
     expect(dramaTree({ cast: [], reviews: [], lineage: null, rows: [] }).outOfDate).toBe(0);
   });
 
-  it("counts as needing the maker exactly the episodes whose dot says so: waiting, stopped or failed (yurun's Y10)", () => {
+  it("counts as needing the maker exactly the episodes whose dot says so: waiting, stopped or failed (merecdesperez44323-lab's Y10)", () => {
     const row = (code: string, state: EpisodeRow["state"]) => ({ id: code, number: 1, code, title: "", state, stages: Object.fromEntries(STAGES.map((stage) => [stage, { state: "none" }])), spent: { total: 0, media: 0, partial: false }, updatedAt: "" }) as unknown as EpisodeRow;
     const rows = [row("EP001", "waiting"), row("EP002", "working"), row("EP003", "stopped"), row("EP004", "failed"), row("EP005", "queued"), row("EP006", "done")];
     expect(dramaTree({ cast: [], reviews: [], lineage: null, rows }).episodes).toBe(3);

@@ -285,7 +285,7 @@ export function App() {
         drawer={drawer}
         onToggleDrawer={() => setDrawer(!drawer)}
       />
-      {/* On a wide window the column is always shown; ☰ opens it as a drawer on a narrow one (yurun; Apple HIG sidebars). */}
+      {/* On a wide window the column is always shown; ☰ opens it as a drawer on a narrow one (merecdesperez44323-lab; Apple HIG sidebars). */}
       {(narrow ? drawer : true) && sidebar}
       <div className="main">
         {/* design/'s Home has no top bar: the page starts at the greeting; its Upload's has no Next review. Reviews acts on

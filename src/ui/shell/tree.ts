@@ -20,7 +20,7 @@ export function markOf(row: EpisodeRow): Mark {
 export interface DramaTree {
   /** Open reviews, by the place where each is decided (IA §16, rule 2). */
   needs: Record<TreePlace, number>;
-  /** The episodes that need the maker: exactly those whose dot says so (yurun's Y10). */
+  /** The episodes that need the maker: exactly those whose dot says so (merecdesperez44323-lab's Y10). */
   episodes: number;
   /** The Assets shelves, by the cards the Assets page shows (/api/dramas/:id/cast). */
   shelves: { characters: number; locations: number; props: number };

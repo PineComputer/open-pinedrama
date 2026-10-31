@@ -122,7 +122,7 @@ describe("the rail", () => {
   it("is studio-wide: Dramas, Reviews with every drama's count, Settings, and no drama's places (IA §2)", async () => {
     await renderAt(<NavRail page="list" waiting={3} wide={false} replay={false} narrow={false} drawer={false} onToggleDrawer={() => {}} />, "/d/d1/e/EP002/list");
     const rail = screen.getByRole("navigation", { name: "Places" });
-    // Each place says its name under its icon (yurun's Y1); Reviews' name holds its count too (WCAG 2.5.3).
+    // Each place says its name under its icon (merecdesperez44323-lab's Y1); Reviews' name holds its count too (WCAG 2.5.3).
     expect(within(rail).getAllByRole("link").map((link) => [link.textContent, link.getAttribute("aria-current")])).toEqual([
       ["Home", null],
       ["Projects", "page"],
@@ -142,7 +142,7 @@ describe("the rail", () => {
     }
   });
 
-  it("is the one left column off a project, icon and label side by side, and an icon rail inside one (yurun; liblib, VS Code)", async () => {
+  it("is the one left column off a project, icon and label side by side, and an icon rail inside one (merecdesperez44323-lab; liblib, VS Code)", async () => {
     const { unmount } = await renderAt(<NavRail page="home" waiting={2} wide replay narrow={false} drawer={false} onToggleDrawer={() => {}} />, "/");
     const rail = screen.getByRole("navigation", { name: "Places" });
     expect(rail).toHaveClass("rail", "wide");
@@ -158,7 +158,7 @@ describe("the rail", () => {
     expect(within(icons).queryByText("Pine Drama")).toBeNull();
   });
 
-  it("shows Home first, disabled until the gallery of sample projects exists, and not in the tab order (yurun)", async () => {
+  it("shows Home first, disabled until the gallery of sample projects exists, and not in the tab order (merecdesperez44323-lab)", async () => {
     await renderAt(<NavRail page="home" waiting={0} wide replay={false} narrow={false} drawer={false} onToggleDrawer={() => {}} />, "/");
     const rail = screen.getByRole("navigation", { name: "Places" });
     expect(within(rail).queryByRole("button", { name: /sidebar/ })).toBeNull();
@@ -170,7 +170,7 @@ describe("the rail", () => {
     expect(within(rail).getAllByRole("link").map((link) => link.querySelector(".raillabel")?.textContent)).toEqual(["Home", "Projects", "Reviews", "Settings"]);
   });
 
-  it("on a narrow window, opens and closes the drawer with ☰; on a wide one has no ☰ (yurun; Apple HIG sidebars)", async () => {
+  it("on a narrow window, opens and closes the drawer with ☰; on a wide one has no ☰ (merecdesperez44323-lab; Apple HIG sidebars)", async () => {
     const user = userEvent.setup();
     let toggled = 0;
     await renderAt(<NavRail page="home" waiting={0} wide replay={false} narrow drawer onToggleDrawer={() => toggled++} />);
