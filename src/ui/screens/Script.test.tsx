@@ -2,6 +2,7 @@
 // about it is open, the answer in the maker's own words.
 import { render, screen, waitFor, within } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
+import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 import type { ScriptPage } from "../../shared/types.ts";
 import { file } from "../test/fixtures.ts";
@@ -33,23 +34,34 @@ describe("Script, with a rewrite", () => {
     expect(screen.getByRole("button", { name: "Accept the rewrite" })).toBeInTheDocument();
   });
 
-  it("shows the comparison alone once the question is answered", async () => {
+  it("asks nothing once the question is answered", async () => {
     answer("/api/dramas/d1/script", page(false) as never);
     texts();
     render(<Script dramaId="d1" />);
-    await screen.findByRole("region", { name: "Your file" });
+    await screen.findByRole("region", { name: "Versions" });
     expect(screen.queryByRole("button", { name: "Accept the rewrite" })).not.toBeInTheDocument();
   });
 });
 
 describe("Script", () => {
-  it("opens on the screenplay drama-cli recorded, not on the bible", async () => {
+  it("is the screenplay's home: it opens on the version drama-cli recorded, and the bible is not here (IA §16)", async () => {
     const fountain = file({ kind: "screenplay-version", name: "screenplay/v1/screenplay.fountain", type: "text/plain", version: "v1" });
     const bible = file({ kind: "bible", name: "bible/v1/bible.md", type: "text/markdown", version: "v1" });
     answer("/api/dramas/d1/script", { inputs: [], screenplay: { version: "v1", file: fountain, pending: false }, bible, breakdowns: [] } as never);
     server.use(http.get(fountain.url, () => HttpResponse.text("INT. TENEMENT FLAT - DAY\n")), http.get(bible.url, () => HttpResponse.text("# Bible\n")));
     render(<Script dramaId="d1" />);
-    const nav = await screen.findByRole("navigation");
-    expect(within(nav).getAllByRole("button").filter((button) => button.getAttribute("aria-current") === "true").map((button) => button.textContent)).toEqual(["v1, as drama-cli recorded it"]);
+    const versions = await screen.findByRole("region", { name: "Versions" });
+    expect(within(versions).getAllByRole("button").map((button) => [button.textContent, button.getAttribute("aria-current")])).toEqual([["v1, as drama-cli recorded itv1", "true"]]);
+    expect(screen.queryByText(/Bible/)).not.toBeInTheDocument();
+  });
+
+  it("shows a rewrite on its own or beside the maker's original", async () => {
+    answer("/api/dramas/d1/script", page(false) as never);
+    texts();
+    render(<Script dramaId="d1" />);
+    const show = await screen.findByRole("group", { name: "Show" });
+    expect(screen.queryByRole("region", { name: "Your file" })).not.toBeInTheDocument();
+    await userEvent.click(within(show).getByRole("button", { name: "Beside your original" }));
+    expect(await screen.findByRole("region", { name: "Your file" })).toBeInTheDocument();
   });
 });

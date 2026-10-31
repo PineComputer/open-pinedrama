@@ -280,13 +280,7 @@ h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 700; lett
 .v-approve { color: var(--text-secondary); }
 .v-revise { color: var(--error); }
 
-/* The script: documents to read, chosen on the left. */
-.script { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 32px; align-items: start; }
-.script-nav { display: grid; gap: 22px; position: sticky; top: calc(var(--top) + 20px); }
-.script-nav button { display: block; width: 100%; text-align: left; padding: 5px 8px; border: 0; border-radius: var(--radius-medium); background: none; cursor: pointer; color: var(--text-secondary); font-size: 14px; }
-.script-nav button:hover { background: var(--surface-container); }
-.script-nav button.on { background: var(--surface-container-high); color: var(--text-primary); }
-.script-page { max-width: 74ch; padding: 36px 44px 56px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-medium); }
+.scriptdoc .download { float: right; }
 .document { font: 400 16px/1.7 var(--font-sans); color: var(--text-primary); overflow-wrap: anywhere; }
 .document h2 { font-size: 26px; margin: 0 0 18px; }
 .document h3 { font-size: 20px; margin: 28px 0 10px; }
@@ -308,13 +302,6 @@ h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 700; lett
 /* Cast cards: a character's looks side by side; places and props as a grid. */
 /* Characters side by side, each as wide as its looks, wrapping as the page narrows. */
 
-@media (max-width: 900px) {
-  .script { grid-template-columns: 1fr; }
-  .script-nav { position: static; }
-}
-.script-page .download { float: right; }
-/* A rewrite beside the maker's original: the page widens to two columns, each scrolling on its own. */
-.script-page:has(.fpanes) { max-width: none; }
 
 /* New drama, on a project without the drama skill: rehearse it, or let it wait for the skill. */
 .rehearse-choice { display: flex; gap: 12px; align-items: flex-start; padding: 12px 14px; margin: 4px 0 18px; border: 1px dashed var(--text-primary); border-radius: var(--radius-medium); cursor: pointer; }

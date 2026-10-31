@@ -16,68 +16,67 @@ function Rewrite({ original, rewrite, reviewId }: { original: FileItem; rewrite:
 }
 
 /**
- * The drama as text: the screenplay as drama-cli recorded it (a rewrite beside the maker's original, and what it
- * changed), the screenplay as given, the bible, and every episode's breakdown, read only.
+ * Script, the screenplay's one home (IA §16; design/screens.js, Script): the screenplay drama-cli recorded, on its own or
+ * beside the maker's original, and its versions with what the maker gave. The bible lives in Story and each breakdown in
+ * its episode. While the agent's question about a rewrite is open, Script is that review (P5.4).
  */
 export function Script({ dramaId }: { dramaId: string }) {
   const { t } = useT();
   const { data, error } = useResource<ScriptPage>(`/api/dramas/${dramaId}/script`, [`drama:${dramaId}`]);
   const [picked, setPicked] = useState<number>();
+  const [beside, setBeside] = useState(false);
   if (error !== undefined && !data) return <p className="error">{errorText(error, t)}</p>;
   if (!data) return <p className="quiet">{t("loading")}</p>;
   const current = data.screenplay;
-  const docs = [
-    ...(current?.file
-      ? [{ group: "screenplay", label: t(current.pending ? "script.pending" : "script.version", { version: current.version }), file: current.file }]
-      : []),
-    ...(current?.review ? [{ group: "screenplay", label: t("script.review", { version: current.version }), file: current.review }] : []),
-    ...data.inputs.map((file) => ({ group: "inputs", label: file.name, file })),
-    ...(data.bible ? [{ group: "bible", label: t("script.bible"), file: data.bible }] : []),
-    ...data.breakdowns.map((entry) => ({ group: "episodes", label: entry.title ? `${entry.code} · ${entry.title}` : entry.code, file: entry.file })),
-  ];
   // The screenplay the maker marked (a Word or PDF one as its text), to set beside a rewrite.
   const original: FileItem | undefined = data.inputs.find((file) => file.id === data.screenplayFile);
   const rewritten = current?.file && original && original.id !== current.file.id ? current.file : undefined;
   if (rewritten && original && current?.reviewId) return <Rewrite key={rewritten.id} original={original} rewrite={rewritten} reviewId={current.reviewId} />;
-  // Script opens on the screenplay drama-cli recorded, as its name says; the bible has its own place in Story.
-  const shown = docs.find((doc) => doc.file.id === picked) ?? docs.find((doc) => doc.group === "screenplay") ?? docs[0];
-  const groups: [string, string][] = [
-    ["screenplay", t("script.current")],
-    ["inputs", t("script.inputs")],
-    ["bible", t("script.bible")],
-    ["episodes", t("script.episodes")],
+  const rows = [
+    ...(current?.file ? [{ label: t(current.pending ? "script.pending" : "script.version", { version: current.version }), file: current.file }] : []),
+    ...(current?.review ? [{ label: t("script.review", { version: current.version }), file: current.review }] : []),
+    ...data.inputs.map((file) => ({ label: t("script.yours", { name: file.name }), file })),
   ];
+  const shown = rows.find((row) => row.file.id === picked)?.file ?? current?.file;
+  const pair = beside && rewritten && original && shown === rewritten;
   return (
     <>
-      <div className="work-head">
-        <h2>{t("step.script")}</h2>
+      <div className="scripthead">
+        <div className="grow">
+          <h2 className="pagetitle">{t("step.script")}</h2>
+          {current?.file && <p className="muted">{t(current.pending ? "script.pending" : "script.version", { version: `${current.file.name} ${current.version}` })}</p>}
+        </div>
+        {rewritten && original && shown === rewritten && (
+          <div className="seg" role="group" aria-label={t("script.show")}>
+            <button type="button" aria-pressed={!beside} onClick={() => setBeside(false)}>
+              {t("script.fountain")}
+            </button>
+            <button type="button" aria-pressed={beside} onClick={() => setBeside(true)}>
+              {t("script.beside")}
+            </button>
+          </div>
+        )}
       </div>
-      {!data.bible && !data.breakdowns.length && <p className="empty-note">{t("script.empty")}</p>}
-      <div className="script">
-        <nav className="script-nav">
-          {groups.map(([group, label]) => {
-            const items = docs.filter((doc) => doc.group === group);
-            if (!items.length) return null;
-            return (
-              <div key={group} className="block">
-                {group !== "bible" && <span className="label">{label}</span>}
-                {items.map((doc) => (
-                  <button key={doc.file.id} aria-current={doc === shown} className={doc === shown ? "on" : ""} onClick={() => setPicked(doc.file.id)}>
-                    {doc.label}
-                  </button>
-                ))}
-              </div>
-            );
-          })}
-        </nav>
-        <article className="script-page">
-          {shown && rewritten && original && shown.file === rewritten ? (
-            <Rewrite key={shown.file.id} original={original} rewrite={shown.file} />
-          ) : (
-            shown && <DocumentView key={shown.file.id} file={shown.file} />
-          )}
-        </article>
-      </div>
+      {!shown ? (
+        <p className="empty-note">{t("script.none")}</p>
+      ) : pair ? (
+        <Rewrite key={shown.id} original={original} rewrite={shown} />
+      ) : (
+        <section className="panel scriptdoc">
+          <DocumentView key={shown.id} file={shown} />
+        </section>
+      )}
+      {rows.length > 0 && (
+        <section className="panel scriptversions" aria-label={t("script.versions")}>
+          <h3>{t("script.versions")}</h3>
+          {rows.map((row) => (
+            <button key={row.file.id} type="button" className="lrow" aria-current={row.file === shown} onClick={() => (setPicked(row.file.id), setBeside(false))}>
+              {row.label}
+              <span className="mono subtle">{row.file.version ?? ""}</span>
+            </button>
+          ))}
+        </section>
+      )}
     </>
   );
 }
