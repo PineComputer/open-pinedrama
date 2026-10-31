@@ -28,6 +28,7 @@ const PROJECTS: { name: string; spec: string; colorScheme: "light" | "dark" }[] 
   { name: "gallery-dark", spec: "gallery", colorScheme: "dark" },
   { name: "upload", spec: "upload", colorScheme: "light" },
   { name: "upload-dark", spec: "upload", colorScheme: "dark" },
+  { name: "review-interrupt", spec: "review-interrupt", colorScheme: "light" },
   { name: "screenshots", spec: "screenshots", colorScheme: "light" },
 ];
 

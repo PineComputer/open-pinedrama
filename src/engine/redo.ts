@@ -14,9 +14,17 @@ interface Row {
   message: string | null;
 }
 
+/**
+ * One submission, a redo or a review's decision (Codex's IA round 3, Interrupt): what the engine knows became of it, so
+ * a studio that lost the answer (closed, offline) finds it again and never sends it twice. A review keeps its decision's
+ * submission while it is being sent and once it was (reviews.ts, decide), and drops it when the send did not reach the
+ * session: then nothing was taken, and there is no such submission.
+ */
 export function submission(id: string): SubmissionView | undefined {
   const row = get<Row>("select id, session_id, state, message from submissions where id = ?", id);
-  return row && { id: row.id, sessionId: row.session_id, state: row.state, ...(row.message ? { message: row.message } : {}) };
+  if (row) return { id: row.id, sessionId: row.session_id, state: row.state, ...(row.message ? { message: row.message } : {}) };
+  const decided = get<{ session_id: string; state: string }>("select session_id, state from reviews where submission_id = ?", id);
+  return decided && { id, sessionId: decided.session_id, state: decided.state === "sending" ? "sending" : "sent" };
 }
 
 export async function redo(sessionId: string, submissionId: string, text: string): Promise<SubmissionView> {

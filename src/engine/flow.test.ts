@@ -412,6 +412,11 @@ describe("a drama in replay", () => {
     expect(first.state).toBe("answered");
     expect(["sending", "answered"]).toContain(second.state);
     expect(turns(looks.id)).toBe(atFirst + 1);
+
+    // A studio that lost the answer finds the decision by its submission (Codex's IA round 3, Interrupt): taken, so it
+    // never sends it again; a submission nothing took is no submission at all.
+    expect(await call("GET", "/api/submissions/press")).toMatchObject({ id: "press", state: "sent" });
+    await expect(call("GET", "/api/submissions/never-sent")).rejects.toThrow(/No such submission/);
   });
 
   // The maker reviews only what they chose: the studio approves the rest as the agent stops for it, but never a photoreal

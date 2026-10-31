@@ -1,7 +1,7 @@
 import { MediaController, MediaPlayButton, MediaTimeRange } from "media-chrome/react";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
-import type { Decision, DramaView, FileItem, Note, ReviewItem, ReviewKind, ReviewView, Verdict } from "../../shared/types.ts";
-import { api, clock, useAction, useResource } from "../api.ts";
+import type { Decision, DramaView, FileItem, Note, ReviewItem, ReviewKind, ReviewView, SubmissionView, Verdict } from "../../shared/types.ts";
+import { api, ApiError, clock, useAction, useResource } from "../api.ts";
 import { type TKey, useT } from "../i18n.ts";
 import { errorText, fileKind, headingText, moneyText, subjectLabel, useNames } from "../labels.ts";
 import { Button, buttonClass } from "../components/Button.tsx";
@@ -275,8 +275,11 @@ const WATCHED = 0.98;
 
 function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
   const { t, lang } = useT();
-  // One id for this draft's sending, kept for a retry: the engine takes a decision once (reviews.ts, decide).
-  const submission = useRef(crypto.randomUUID());
+  // One id for this draft's sending, kept for a retry: the engine takes a decision once (reviews.ts, decide). Once a send
+  // starts it is kept with the draft (sentAs), so a room reopened after a lost answer finds that same submission
+  // (Codex's IA round 3, Interrupt) and checks it before anything is sent again.
+  const [sentAs, setSentAs, forgetSentAs] = useDraft<string | null>(review.id, "submission", () => null);
+  const submission = useRef(sentAs ?? crypto.randomUUID());
   const names = useNames(review.dramaId);
   const items = review.reviewItems;
   const takes = review.kind === "takes";
@@ -296,13 +299,28 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
   // The review is one submission (Submission, Codex's IA round 3): read only while it is on its way, sent, or not known
   // to have arrived; only the engine's word that it was not submitted gives the draft back, to send again.
   const { sending, send: submit, check } = useSubmission({
-    submit: () =>
-      api(`/api/reviews/${review.id}/decision`, {
+    submit: () => {
+      setSentAs(submission.current);
+      return api(`/api/reviews/${review.id}/decision`, {
         method: "POST",
         json: { submissionId: submission.current, words, items: items.map((i) => ({ key: i.key, verdict: drafts[i.key]?.verdict ?? "approve", notes: drafts[i.key]?.notes ?? [] })) } satisfies Decision,
-      }),
-    taken: async () => (await api<ReviewView>(`/api/reviews/${review.id}`)).state !== "open",
+      });
+    },
+    // The engine's word on that submission (GET /api/submissions/:id): taken while it is sent or being sent; none, or
+    // refused, means nothing was taken.
+    taken: async () => {
+      try {
+        return (await api<SubmissionView>(`/api/submissions/${encodeURIComponent(submission.current)}`)).state !== "refused";
+      } catch (error) {
+        if (error instanceof ApiError && error.status === 404) return false;
+        throw error;
+      }
+    },
   });
+  // Reopened with a send whose answer never came: check it first, never send it again blind.
+  useEffect(() => {
+    if (sentAs && review.state === "open") void check();
+  }, []);
   const open = review.state === "open" && (sending.state === "idle" || sending.state === "failed");
   // IA draft (Codex's re-review, D2): every change to the draft is a step, typing on in the words one step; Undo puts
   // the draft back as it was before the last, Reset discards all of it.
@@ -478,6 +496,7 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
     if (sending.state !== "sent") return;
     forgetDrafts();
     forgetWords();
+    forgetSentAs();
     done();
   }, [sending.state]);
 

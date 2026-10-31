@@ -816,6 +816,12 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
 }
 /* Codex round 3 (fix 1): one submission's state (app.js, Submission), wherever something is sent. */
 .subst { display: inline-flex; align-items: center; gap: 8px; min-width: 0; font-size: 12px; }
+/* Its words wrap in a narrow inspector, so its button stays in reach; in the sendbar it takes a line of its own. */
+.subst > span { flex: 1; min-width: 0; }
+.sendbar .subst { flex: 1 1 100%; }
+/* At 1280 px and below the agent is a ball fixed at the bottom right, over the room's inspector: its sendbar keeps the
+   ball's corner clear, so Send and Send again stay in reach (principle "Always clear what you act on"). */
+@media (max-width: 1280px) { .room .sendbar { padding-right: 88px; } }
 .subst .ic { width: 16px; height: 16px; flex: none; }
 .subst[role="alert"] .ic { color: var(--error); }
 .subst .btn { flex: none; }
