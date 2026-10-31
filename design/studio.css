@@ -283,9 +283,15 @@ input.search:focus { border-color: var(--text-primary); }
 .follow { display: inline-flex; align-items: center; gap: 8px; height: 34px; padding: 0 14px; border-radius: var(--radius-pill); background: var(--surface-container); border: 1px solid var(--border); font-size: 12.5px; color: var(--text-secondary); cursor: pointer; }
 .follow[aria-pressed="true"] { color: var(--text-primary); border-color: var(--border-input); }
 .follow .live { width: 7px; height: 7px; }
-/* The agent collapsed to its icon (AgentPanel), in the window's corner on every drama page; in the review room it stands
-   above the inspector's send bar. */
-.app:has(.room:not(.is-cut)) .ball { bottom: 64px; }
+/* The agent collapsed to its icon (AgentPanel), in the window's corner on every drama page. */
+/* The ball never covers a card or a control: while it shows, a scrolling page ends with room for it (the 52 px ball and
+   its 20 px margins), as Material's floating action button asks of the list under it, and a sticky send strip keeps its
+   button clear of it; an inspector at the window's right edge (Lineage's, the review room's, the cut's) ends with that room
+   under its last control. The canvas is a board the maker pans, under its minimap, toolbar and ball alike. */
+.app:has(> .ball) { --ball-room: calc(52px + 2 * var(--space-3xl)); }
+.app:has(> .ball) .scrollmain:not(:has(> .room, .ds-canvas, .frev)) { padding-bottom: var(--ball-room); }
+.app:has(> .ball) .insp { padding-bottom: var(--ball-room); }
+.app:has(> .ball) .sendstrip { padding-right: var(--ball-room); }
 .ball { position: fixed; right: 20px; bottom: 20px; width: 52px; height: 52px; border-radius: 50%; border: 1px solid var(--border-input); background: var(--surface-container-high); color: var(--text-primary); display: grid; place-items: center; cursor: pointer; box-shadow: var(--shadow-overlay); z-index: 31; }
 .ball .ic { width: 24px; height: 24px; }
 .ball .badge { position: absolute; right: -2px; top: -2px; min-width: 20px; height: 20px; border-radius: var(--radius-pill); background: var(--warning-text); color: var(--on-accent); font-size: 11px; font-weight: 700; display: grid; place-items: center; border: 2px solid var(--canvas); }
@@ -382,7 +388,6 @@ input.search:focus { border-color: var(--text-primary); }
 .prevtake img { width: 46px; height: 82px; border-radius: var(--radius-medium); object-fit: cover; }
 .verdict { flex: none; padding: 14px 16px 16px; border-top: 1px solid var(--border); background: var(--surface-container); display: grid; gap: 10px; }
 /* On the cut the agent's ball sits over the inspector's foot: Send review keeps above it. */
-.room.is-cut .verdict { padding-bottom: 84px; }
 .verdict .vrow { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
 .verdict .vbtn { white-space: nowrap; padding: 0 8px; height: 38px; border-radius: var(--radius-pill); border: 1px solid var(--border-input); background: var(--surface); color: var(--text-secondary); font-weight: 600; font-size: 12.5px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
 .verdict .vbtn .ic { width: 15px; height: 15px; }
