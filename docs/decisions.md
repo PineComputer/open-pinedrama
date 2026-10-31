@@ -1253,7 +1253,10 @@ timeline
   studio's review verdicts (`src/ui/screens/Cast.tsx:50–56`, `193–194`; C17). Evidence:
   `short-drama-runs/qa/codex-e2e-rc2.md`, "rc5". Fixed for C14 in 95a8245 (work-02): no rewrite is
   inferred from a running setup; the tree's Script row reads drama-cli's lineage and its Bible row
-  status.bible (Not started, Accepted, or "vN · not accepted").
+  status.bible (Not started, Accepted, or "vN · not accepted"). Fixed for C17 in cd45a3d (work-04): Assets'
+  card chip, detail chip and "current · accepted" line come from drama-cli's status, each character's
+  `states/` and each location's `times/` included; the maker's verdict shows apart, as "Your decision on
+  vN".
 
 ## D65. 2026-10-30 · The tree's current row is a tint, without an accent bar
 - **Context.** The project tree marked its current row with a curved accent bar on its left
