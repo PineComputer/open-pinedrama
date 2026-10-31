@@ -20,7 +20,7 @@ timeline
   2026-10-23 : D5 pre-production in one session
   2026-10-24 : D6 idle timeouts follow the work : D7 spend shown, never in a goal
   2026-10-29 : D8 phase 1 steers
-  2026-10-30 : D9 design/ is the UI source : D10 tsc gate : D11 mature libraries : D12 real samples in LFS : D13 decisions taken once : D14 credentials stop : D15 Codex review loop : D16 navigation and one home : D17 every take and cut watched : D18 cut editing as an edit spec : D19 TanStack Router : D20 Export by owner : D21 Analyzing and Out of date routes : D22 redo by owner : D23 the asset detail : D24 the cut edit goal : D25 one Submission : D26 crumbs and Back : D27 Reviews : D28 model badge : D29 canvas zoom, inline video : D30 URL rules : D31 agent scope : D32 narrow windows : D33 review options : D34 Episodes filters : D35 every element cites its ground
+  2026-10-30 : D9 design/ is the UI source : D10 tsc gate : D11 mature libraries : D12 real samples in LFS : D13 decisions taken once : D14 credentials stop : D15 Codex review loop : D16 navigation and one home : D17 every take and cut watched : D18 cut editing as an edit spec : D19 TanStack Router : D20 Export by owner : D21 Analyzing and Out of date routes : D22 redo by owner : D23 the asset detail : D24 the cut edit goal : D25 one Submission : D26 crumbs and Back : D27 Reviews : D28 model badge : D29 canvas zoom, inline video : D30 URL rules : D31 agent scope : D32 narrow windows : D33 review options : D34 Episodes filters : D35 every element cites its ground : D36 Delivery is the cuts' home
 ```
 
 ## D1. 2026-10-22 · A desktop app on Electron
@@ -328,7 +328,7 @@ timeline
   per Apply, keyed by a submission id (D13).
 - **Words.** "你先同步把 cut 放上去？因为这个不涉及到 IA" (*put the cut up first, in parallel? It does
   not involve the IA*), 30 October 2026. merecdesperez44323-lab's approval of the edit-spec design:
-  pending.
+  counted within the IA draft, as master relayed (D24).
 - **Recorded in.** The IA proposal, sections 12.2, 14.2 and 15 (round 2, D1–D3) <sup>[3](#ref-3)</sup>.
 
 ## D19. 2026-10-30 · TanStack Router for typed routes
@@ -428,16 +428,41 @@ timeline
 ## D24. 2026-10-30 · A cut edit is built by drama-cli, after the engine checks its base
 - **Context.** D18 lets the maker edit a draft of the cut's edit spec; this is how the edit reaches
   drama-cli.
-- **Decision.** The cut's review takes the maker's edit bound to its base cut and every clip's
-  sha256. The engine checks that base and those hashes first, then sends the edit once, as the goal
-  to run `drama-cli edit build` and check it with `drama-cli edit validate`; the result returns as a
-  new cut version for review.
-- **Alternatives.** None recorded.
-- **Grounds.** [D18](#d18-2026-10-30--cut-editing-edits-a-draft-of-drama-clis-edit-spec): drama-cli
-  stays the single producer; D13's idempotency.
-- **Consequences.** `src/engine/goals.ts` (the edit goal) and the cut's review in the engine.
+- **Decision.**
+  - The edit is a draft of drama-cli edit's cut plan: an accepted take per segment, the order, in
+    and out, and source sound or silence. The review's notes are never counted as edits.
+  - Apply sends it as the cut review's decision under one submission id (D25). The engine first
+    refuses, sending nothing, unless the base is the cut under review and still the episode's newest
+    (`edit-base-changed`) and each clip's take file has the sha256 chosen (`edit-inputs-changed`).
+  - The agent's goal: write the plan, run `drama-cli edit build` (with `--encode` only if drama-cli
+    says stream copy can't join the clips), then `drama-cli edit validate`; on a refusal it stops
+    with drama-cli's message. The result returns as a new cut version for review.
+  - A newer cut is never re-based inside the old review: Edit offers Compare and Discard, and the
+    newer cut is edited in its own review (ours, untested).
+  - The cost line says what is true: drama-cli's edit calls no paid model, and Pine bills the
+    agent's turns.
+- **Alternatives.** Re-basing a draft onto the newest cut silently.
+- **Grounds.** [D18](#d18-2026-10-30--cut-editing-edits-a-draft-of-drama-clis-edit-spec); Codex's
+  re-review, D1, G1 and G7 <sup>[5](#ref-5)</sup>; drama-cli's review guide, "Build and inspect a
+  cut", and design, "The cut's encoding" (short_drama `doc/drama-cli/`); master's rule, relayed: a
+  draft whose inputs changed is re-checked, never sent.
+- **Consequences.** `src/engine/goals.ts` (the edit goal), `src/engine/reviews.ts` (the checks);
+  master relayed that the cut-editing design counts as approved within the IA draft, which answers
+  D18's pending approval.
 - **Words.** None recorded.
-- **Recorded in.** Commits 0f283df and 3107cf7; #71.
+- **Recorded in.** Commits 0f283df and 3107cf7; #71; work-07's notes, 30 October 2026.
+
+## D36. 2026-10-30 · Delivery is the one home of the accepted cuts
+- **Context.** Delivery could play a cut, making a second copy of the cut's home.
+- **Decision.** Delivery lists the accepted cuts; each row links to EPxxx › Cut and to the cut's
+  Lineage. The page has no player. In the cut room, the design's own space under the send bar keeps
+  the agent's ball clear of it.
+- **Alternatives.** A player on Delivery.
+- **Grounds.** One home per object ([design principles](design-principles.md#1-one-home-per-object));
+  WCAG 2.2, 2.4.11 Focus Not Obscured and 2.5.8 Target Size, for the ball.
+- **Consequences.** None beyond Delivery and the cut room.
+- **Words.** None recorded.
+- **Recorded in.** work-07's notes, 30 October 2026; commit 7e51b8e.
 
 ## D25. 2026-10-30 · One Submission state for every send
 - **Context.** A review's send, a cut's Apply and a redo each go to an agent and can time out.
