@@ -125,6 +125,20 @@ describe("the review room for takes", () => {
     expect(accept).toHaveAttribute("aria-pressed", "true");
   });
 
+  it("lists the episode's takes accepted before, after the ones waiting, with their scene", async () => {
+    const review = takes();
+    answer(`/api/reviews/${review.id}`, review);
+    answer("/api/dramas/d1/files", []);
+    const segment = (current: string, usable: boolean) => ({ current, accepted: usable ? current : null, usable });
+    const episode = { segments: { seg01: segment("t02", false), seg02: segment("t01", true) }, storyboards: {}, sceneChains: [{ sceneHeading: "EXT. PIER - DAY", segments: ["seg01", "seg02"] }] };
+    answer("/api/dramas/d1/project", { state: { episodes: { [review.episode!]: episode } }, sessions: [], problems: [], names: null });
+    render(<Review id={review.id} />);
+    const reel = await screen.findByRole("navigation", { name: "To decide" });
+    await within(reel).findByRole("heading", { name: `Accepted in ${review.episode}` });
+    expect(within(reel).getByText("seg02 · t01")).toBeInTheDocument();
+    expect(within(reel).getAllByText("Scene 1 · EXT. PIER - DAY")).toHaveLength(2);
+  });
+
   it("offers no Accept all for takes", async () => {
     const review = takes();
     answer(`/api/reviews/${review.id}`, review);

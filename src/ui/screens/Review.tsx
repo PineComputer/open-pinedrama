@@ -12,6 +12,7 @@ import { CutViewer, fmt } from "../cut/CutViewer.tsx";
 import { Icon } from "../icons.tsx";
 import { Markdown } from "../Markdown.tsx";
 import { Link, navigate, usePath } from "../router.tsx";
+import { standing as stageStanding } from "./Canvas.tsx";
 import { Still } from "../Still.tsx";
 import { DocumentView, Pinboard, isDocument, isImage, isVideo, useShotList, useSize, useText, variantLabel } from "../viewing.tsx";
 import { buttonVariants } from "@/components/ui/button";
@@ -306,6 +307,13 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
   const spent = drama.data?.episodeRows.find((row) => row.code === review.episode)?.spent;
   // The storyboards beside each take: the episode's files, read once.
   const episodeFiles = useResource<FileItem[]>(review.episode ? `/api/dramas/${review.dramaId}/files?episode=${review.episode}` : null, [`drama:${review.dramaId}`]);
+  // The episode's segments whose take drama-cli's status gives as accepted, outside this review, with the newest take of each.
+  const segments = review.episode ? (project.data?.state?.episodes[review.episode]?.segments ?? {}) : {};
+  const acceptedBefore = takes
+    ? Object.entries(segments)
+        .filter(([key, stage]) => stageStanding(stage) === "accepted" && !items.some((i) => i.key === key))
+        .map(([key, stage]) => ({ key, version: stage.current ?? undefined, take: (episodeFiles.data ?? []).filter((f) => f.kind === "take" && f.segment === key).at(-1) }))
+    : [];
 
   const item: ReviewItem | undefined = items[index];
   const variants = item?.files ?? [];
@@ -480,6 +488,24 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
             </span>
           </button>
         ))}
+        {acceptedBefore.length > 0 && (
+          // The episode's takes accepted before this review, as the design's reel lists them after the ones waiting; read only.
+          <>
+            <h3 style={{ marginTop: 14 }}>{t("review.acceptedIn", { episode: review.episode ?? "" })}</h3>
+            {acceptedBefore.map(({ key, version, take }) => (
+              <div key={key} className="ritem">
+                <span className="thumb">
+                  <Still still={take && { url: take.url, video: true }} />
+                </span>
+                <span className="what">
+                  <b>{[key, version].filter(Boolean).join(" · ")}</b>
+                  <small>{sceneOf(key) ?? ""}</small>
+                  <StatusChip status="accepted" />
+                </span>
+              </div>
+            ))}
+          </>
+        )}
         {open && (
           <button type="button" className={buttonVariants({ variant: "ghost", size: "sm" })} onClick={() => setDrafts((current) => Object.fromEntries(items.map((i) => [i.key, { ...current[i.key], verdict: "approve" }])))} disabled={takes}>
             {t("review.approveAll")}
