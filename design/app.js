@@ -156,12 +156,16 @@
       </div>
     </aside>`;
   }
+  /* Pause production (the engine's stopDrama, dramas.ts): nothing new starts, every running Computer stops now, nothing
+     more is billed, everything made stays, Resume carries on. A reversible pause, so a secondary button, not red (HIG keeps
+     red for destructive actions); it says what is working now, and the facts before it pauses. Paused is one state: the
+     chip and Resume, with no banner. The sample: Computer 1 runs EP003 at work. */
   function StopControl() {
-    if (S.dramaStop === "stopping") return html`<button class="btn sm" disabled>${I("circle-notch")}Stopping…</button>`;
-    if (S.dramaStop === "stopped") return html`<span class="stopped-chip">${I("stop")}Stopped</span><button class="btn sm" onClick=${resume}>Resume</button>`;
-    return html`<button class="btn sm danger" onClick=${() => set({ dialog: { title: "Stop " + P.project.title + "?", body: "EP003 has 4 takes in flight and EP005 is blocking seg03. The takes are waited on and recorded, never sent again, and charged if the provider made them; a take whose outcome stays unknown may not be recoverable. Then every episode stops, and you can resume.", ok: "Stop drama", danger: true, cancel: "Keep running", run: stopDrama } })}>${I("stop")}Stop drama</button>`;
+    if (S.dramaStop === "stopping") return html`<button class="btn sm" disabled title="Its Computers are stopping: keep the app open until they have.">${I("circle-notch")}Pausing…</button>`;
+    if (S.dramaStop === "stopped") return html`<span class="stopped-chip">${I("pause")}Paused</span><button class="btn sm primary" onClick=${resume}>Resume</button>`;
+    return html`<button class="btn sm" title="1 Computer working" onClick=${() => set({ dialog: { title: "Pause production of " + P.project.title + "?", body: "The Computer working stops now; its work stops at its last saved pack. Nothing new starts and nothing more is billed. Nothing is deleted. Resume carries on from where each episode stopped.", ok: "Pause production", cancel: "Keep working", run: stopDrama } })}>${I("pause")}Pause production</button>`;
   }
-  function stopDrama() { set({ dramaStop: "stopping" }); setTimeout(() => { if (S.dramaStop === "stopping") { set({ dramaStop: "stopped" }); toast(P.project.title + " stopped.", { label: "Resume", run: resume }); } }, 5000); }
+  function stopDrama() { set({ dramaStop: "stopping" }); setTimeout(() => { if (S.dramaStop === "stopping") { set({ dramaStop: "stopped" }); toast(P.project.title + " paused.", { label: "Resume", run: resume }); } }, 5000); }
   function resume() { set({ dramaStop: null }); toast(P.project.title + " resumed."); }
   /* Export: the drama as other tools read it, downloaded from what the agent's stops return (handoff/lineage.json,
      handoff/infinite-canvas.zip, written by drama-cli export). Disabled, with why, until a stop has returned them. */
@@ -210,10 +214,8 @@
     // IA draft: a red line stops EP007 only. Elsewhere it is a compact notice; the full StopCard sits on EP007.
     if (S.state === "redline") return html`<div class="notice-red" role="status">${I("warning")}<span><b>EP007 stopped on a red line</b> in the screenplay. Other episodes carry on.</span><span class="grow"></span><button class="btn sm" onClick=${() => toast("Opens EP007, where its stop card waits for your decision.")}>Open EP007</button></div>`;
     if (["budget", "cap", "env"].includes(S.state)) return html`<${window.EXTRA.StopCard} kind=${S.state}/>`;
-    if (!S.dramaStop) return null;
-    return S.dramaStop === "stopping"
-      ? html`<div class="banner" role="status">${I("circle-notch")}<b>Stopping — keep the app open</b><span>Waiting on EP003's 4 takes in flight. They are recorded when they come back, never shot again.</span></div>`
-      : html`<div class="banner done"><b>${P.project.title} is stopped</b><span class="grow">No agent turn runs and nothing new is sent until you resume.</span><button class="btn sm primary" onClick=${resume}>Resume</button></div>`;
+    // A pause is one state, the top bar's Paused with Resume: no banner for it.
+    return null;
   }
   /* The episode's head over its Canvas, the episode's one page (D66: merecdesperez44323-lab dropped the
      Segments table, "还不如就直接canvas"): its code and title, its script, and its cut, an object with its own home. */

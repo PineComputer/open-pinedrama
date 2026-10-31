@@ -91,6 +91,7 @@ flowchart TB
 | **Apply** | | Submits a cut's edit-spec draft to the agent, which builds a new cut version. | [D18](decisions.md#d18-2026-10-30--cut-editing-edits-a-draft-of-drama-clis-edit-spec) |
 | **Reset**, **Undo** | | Reset discards the draft; Undo reverts its last step. | the IA proposal, section 14.7 <sup>[3](#ref-3)</sup> |
 | **submission id** | | The id one sending of a draft carries, so a retry, a refresh or a second window takes effect once. | [D13](decisions.md#d13-2026-10-30--a-review-decision-is-taken-once-by-its-submission-id); Stripe's idempotency key |
+| **pause**, **resume** | 暂停，恢复 | The project's Pause production (StopControl): nothing new starts, every running Computer stops now, nothing more is billed, everything made stays; Resume carries on from where each episode stopped. Reversible, not an end and not a delete. Not the agent's **stop** (where a turn waits on the maker). | main's stopDrama and resume (src/engine/dramas.ts) |
 | **steer** | | A message to a running agent, sent in the agent chat; with Stop and Resume, how the maker directs work between reviews. The studio has no steer buttons of its own ([D70](decisions.md#d70-2026-10-30--the-ui-decides-the-chat-acts)). | Pine Computer (`steer`) |
 | **Following**, **Pinned** | | The agent panel's recipient: "Following EP006" (the episode in view) by default, "Pinned to EP007" when chosen. | the IA proposal, section 13 <sup>[3](#ref-3)</sup> |
 

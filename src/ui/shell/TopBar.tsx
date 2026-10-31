@@ -72,8 +72,11 @@ export function stillStopping(drama: DramaView): boolean {
 }
 
 /**
- * Stop in plain sight (the spec's StopControl): Stop drama, after a confirm; Stopping… while its
- * Computers stop; then Stopped, with Resume.
+ * Pause production (the spec's StopControl). What the engine's stop does (dramas.ts, stopDrama): the project's status
+ * becomes stopped, nothing new starts, every running Computer stops now, nothing more is billed, everything made stays,
+ * and Resume carries on from there. A reversible pause, not an end and not a delete, so it is a secondary button, not a
+ * red one (HIG keeps red for destructive actions), and it says so: what is working now, then the facts before it pauses.
+ * Pausing… while its Computers stop; then one state, Paused, with Resume. A done project has none.
  */
 export function StopControl({ drama }: { drama: DramaView }) {
   const { t } = useT();
@@ -82,30 +85,33 @@ export function StopControl({ drama }: { drama: DramaView }) {
   const resume = useAction(() => api(`/api/dramas/${drama.id}/resume`, { method: "POST" }));
   const error = stop.error ?? resume.error;
   const failed = error !== undefined && <span className="error small">{errorText(error, t)}</span>;
+  // The Computers working now: running, with a session at work on them (not one waiting on the maker).
+  const working = drama.crew.filter((computer) => computer.state === "running" && computer.sessions.some((session) => session.state === "open" && !session.waiting)).length;
   if (drama.status === "setup" || drama.status === "production") {
+    const now = working === 0 ? t("pause.idle") : working === 1 ? t("pause.workingOne") : t("pause.working", { n: working });
     return (
       <>
         {failed}
-        <button type="button" className="btn sm danger" disabled={stop.busy} onClick={() => setAsking(true)}>
-          <Icon name="stop" className="ic" />
-          {t("stop.drama")}
+        <button type="button" className="btn sm" title={now} disabled={stop.busy} onClick={() => setAsking(true)}>
+          <Icon name="pause" className="ic" />
+          {t("pause.label")}
         </button>
         <Dialog
           open={asking}
           onOpenChange={setAsking}
-          title={t("stop.title", { title: drama.title })}
-          description={t("stop.confirm")}
-          cancel={t("stop.keep")}
-          confirm={{ label: t("stop.yes"), danger: true, run: () => void stop.run() }}
+          title={t("pause.title", { title: drama.title })}
+          description={[working === 0 ? t("pause.noneStop") : working === 1 ? t("pause.oneStops") : t("pause.theyStop", { n: working }), t("pause.facts")].join(" ")}
+          cancel={t("pause.keep")}
+          confirm={{ label: t("pause.label"), run: () => void stop.run() }}
         />
       </>
     );
   }
   if (stillStopping(drama)) {
     return (
-      <button type="button" className="btn sm" disabled aria-busy="true">
+      <button type="button" className="btn sm" disabled aria-busy="true" title={t("pause.pausingWhy")}>
         <Icon name="circle-notch" className="ic" />
-        {t("stop.stopping")}
+        {t("pause.pausing")}
       </button>
     );
   }
@@ -114,10 +120,10 @@ export function StopControl({ drama }: { drama: DramaView }) {
     <>
       {failed}
       <span className="stopped-chip">
-        <Icon name="stop" className="ic" />
-        {t("drama.stopped")}
+        <Icon name="pause" className="ic" />
+        {t("pause.paused")}
       </span>
-      <button type="button" className="btn sm" disabled={resume.busy} onClick={() => void resume.run()}>
+      <button type="button" className="btn sm primary" disabled={resume.busy} onClick={() => void resume.run()}>
         {t("setup.retry")}
       </button>
     </>

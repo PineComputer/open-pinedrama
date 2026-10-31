@@ -59,14 +59,9 @@ function Notices({ drama }: { drama: DramaView }) {
           <WaitingStop key={stop.id} stop={stop} />
         ),
       )}
-      {/* The design's StopBanner (design/app.js): dashed while its Computers stop, solid once stopped, with Resume. */}
-      {stillStopping(drama) && (
-        <div className="banner" role="status">
-          <Icon name="circle-notch" className="ic" />
-          <b>{t("stop.banner")}</b>
-        </div>
-      )}
-      {held && !stillStopping(drama) && (
+      {/* A pause is one state, the top bar's Paused with Resume (StopControl). A stop the engine made for a reason of its own
+          (a failure, a missing skill) also says why, here, with its way on. */}
+      {held && !stillStopping(drama) && (drama.setup.reason || drama.setup.note) && (
         <div className="banner done">
           <b>{t("stop.isStopped", { title: drama.title })}</b>
           <span className="grow">

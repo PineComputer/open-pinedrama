@@ -372,33 +372,51 @@ describe("the agent ball", () => {
   });
 });
 
-describe("Stop project", () => {
-  it("asks first, and Keep running leaves it running", async () => {
+describe("Pause production", () => {
+  it("says what is working now, asks first with the facts, and Keep working leaves it working", async () => {
     const user = userEvent.setup();
     accept("/api/dramas/d1/stop");
     await renderAt(<StopControl drama={drama} />);
-    await user.click(screen.getByRole("button", { name: "Stop project" }));
-    const dialog = screen.getByRole("alertdialog", { name: "Stop The Stepmother?" });
-    await user.click(within(dialog).getByRole("button", { name: "Keep running" }));
+    // Computer 1 runs EP001 at work: one Computer working. A pause, not a destructive action: no red button.
+    const pause = screen.getByRole("button", { name: "Pause production" });
+    expect(pause).toHaveAttribute("title", "1 Computer working");
+    expect(pause).not.toHaveClass("danger");
+    await user.click(pause);
+    const dialog = screen.getByRole("alertdialog", { name: "Pause production of The Stepmother?" });
+    expect(dialog).toHaveTextContent("The Computer working stops now; its work stops at its last saved pack. Nothing new starts and nothing more is billed. Nothing is deleted. Resume carries on from where each episode stopped.");
+    await user.click(within(dialog).getByRole("button", { name: "Keep working" }));
     expect(calls("POST", "/api/dramas/d1/stop")).toEqual([]);
-    await user.click(screen.getByRole("button", { name: "Stop project" }));
-    await user.click(within(screen.getByRole("alertdialog", { name: "Stop The Stepmother?" })).getByRole("button", { name: "Stop project" }));
+    await user.click(screen.getByRole("button", { name: "Pause production" }));
+    await user.click(within(screen.getByRole("alertdialog", { name: "Pause production of The Stepmother?" })).getByRole("button", { name: "Pause production" }));
     expect(calls("POST", "/api/dramas/d1/stop")).toHaveLength(1);
   });
 
-  it("says Stopping… while its Computers stop, and can't be pressed", async () => {
-    const stopping = { ...drama, status: "stopped", crew: [{ ...drama.crew[0], state: "stopping" }] } as DramaView;
-    await renderAt(<StopControl drama={stopping} />);
-    expect(screen.getByRole("button", { name: "Stopping…" })).toBeDisabled();
+  it("says no Computer is running when every session waits on the maker", async () => {
+    const waiting = { ...drama, crew: [{ ...drama.crew[0], sessions: drama.crew[0].sessions.map((session) => ({ ...session, waiting: true })) }] } as DramaView;
+    await renderAt(<StopControl drama={waiting} />);
+    expect(screen.getByRole("button", { name: "Pause production" })).toHaveAttribute("title", "No Computer running: work resumes when you answer a review");
   });
 
-  it("once stopped, says so and offers Resume", async () => {
+  it("says Pausing… while its Computers stop, and can't be pressed", async () => {
+    const stopping = { ...drama, status: "stopped", crew: [{ ...drama.crew[0], state: "stopping" }] } as DramaView;
+    await renderAt(<StopControl drama={stopping} />);
+    expect(screen.getByRole("button", { name: "Pausing…" })).toBeDisabled();
+  });
+
+  it("once paused, is one state, Paused, with Resume", async () => {
     const user = userEvent.setup();
     accept("/api/dramas/d1/resume");
     const stopped = { ...drama, status: "stopped", crew: [] } as unknown as DramaView;
     await renderAt(<StopControl drama={stopped} />);
-    expect(screen.getByText("Stopped")).toBeInTheDocument();
+    expect(screen.getByText("Paused")).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: "Resume" }));
     expect(calls("POST", "/api/dramas/d1/resume")).toHaveLength(1);
   });
+
+  it("has no control on a done project", async () => {
+    const done = { ...drama, status: "done", crew: [] } as unknown as DramaView;
+    await renderAt(<StopControl drama={done} />);
+    expect(screen.queryByRole("button")).toBeNull();
+  });
 });
+
