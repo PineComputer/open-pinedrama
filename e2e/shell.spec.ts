@@ -36,14 +36,22 @@ test("an episode chosen in the tree stays selected across the surfaces", async (
   await expect(page).toHaveURL(new RegExp(`/d/${id}/e/EP001/canvas$`));
   await expect(views.getByRole("button", { name: "Canvas" })).toHaveAttribute("aria-pressed", "true");
 
-  // D26: an asset's detail ends the crumbs at the asset and its working version, its shelf a link back.
+  // D26: an asset's detail ends the crumbs at the asset and its working version, its shelf a link back. The card, the
+  // detail and the crumbs name it as the bible does once the names have loaded (the card shows the id until then), so
+  // the check waits for the detail's name and the crumb's to agree, and for that name not to be the id.
   await page.goto(`/d/${id}/assets/characters`);
-  const card = page.locator("article.castcard").first();
-  const name = (await card.locator(".cardname").innerText()).trim();
-  await card.locator(".cardname").click();
+  await page.locator("article.castcard .cardname").first().click();
   await expect(page).toHaveURL(new RegExp(`/d/${id}/assets/characters/[^/?]+`));
+  const asset = new URL(page.url()).pathname.split("/").pop()!;
   const where = page.getByRole("navigation", { name: "Where this belongs" });
   await expect(where.getByRole("link", { name: "Characters" })).toBeVisible();
-  const quoted = name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  await expect(where).toContainText(new RegExp(`${quoted} · (S\\d+ )?v\\d+$`));
+  const detail = page.getByRole("complementary", { name: /: versions, state and review$/ });
+  await expect
+    .poll(async () => {
+      const name = (await detail.locator(".ihead b").first().innerText()).trim();
+      const quoted = name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      const crumbs = (await where.innerText()).replace(/\s+/g, " ").trim();
+      return name !== asset && new RegExp(`${quoted} · (S\\d+ )?v\\d+$`).test(crumbs);
+    })
+    .toBe(true);
 });
