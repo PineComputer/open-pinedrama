@@ -1171,11 +1171,14 @@ timeline
 - **Alternatives.** None recorded.
 - **Grounds.** merecdesperez44323-lab's request; Material 3's shape scale; Apple's HIG, Layout and
   Materials; VS Code's workbench. "No bordered box inside a surface" is our own.
-- **Consequences.** An audit of `design/studio.css` against the rule follows in its own commit.
+- **Consequences.** The audit replaced raw radii with role tokens, turned Upload's preset cards and
+  the review room's sent-back card into rows, and set Reviews' chips, Home's tabs and the list rows
+  on one column (7dd3279); Script's in 8ee5070; the Canvas's is work-06's.
 - **Words.** "这个多圆角 非圆角 又都对不齐， 太丑了 ，能不能优雅好看点儿。。。不要这么vibecoding" (*rounded and
   square corners, and nothing lines up; too ugly; can it be more elegant… not so vibe-coded*),
   relayed by master.
-- **Recorded in.** Commit 8459785; work-04's note to the docs.
+- **Recorded in.** Commits 8459785 (the rule), 7dd3279 and 8ee5070 (the audit); work-04's notes to
+  the docs.
 
 ## References
 
