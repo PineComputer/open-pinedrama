@@ -12,7 +12,7 @@ import { Submission, useSubmission } from "../components/Submission.tsx";
 import { Dialog } from "../components/Dialog.tsx";
 import { Icon } from "../icons.tsx";
 import { type TKey, useT } from "../i18n.ts";
-import { errorText } from "../labels.ts";
+import { errorText, openSession } from "../labels.ts";
 import { Markdown } from "../Markdown.tsx";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { Watch } from "../screens/Crew.tsx";
@@ -135,7 +135,7 @@ export function AgentPanel({ drama, episode, onCollapse }: { drama: DramaView; e
   const row = (code?: string) => (code ? drama.episodeRows.find((episodeRow) => episodeRow.code === code) : undefined);
   const scope = pinned ?? (row(episode) ? episode! : "setup");
   // The scope's open session, if any: what the status line and the line's target say.
-  const live = open.find((session) => (scope === "setup" ? session.role === "setup" : session.episode === scope));
+  const live = openSession(drama, scope);
   const status: "running" | "waiting" | "none" = !live ? "none" : live.waiting ? "waiting" : "running";
   // With no session open, where the engine refuses a message (scope-messages.ts), the panel says so in the engine's words
   // instead of offering a send that can only be refused: the setup or an episode whose session is starting, or an episode

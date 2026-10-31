@@ -18,7 +18,9 @@ import { renderAt } from "../test/router.tsx";
 
 const fixture = (name: string) => JSON.parse(readFileSync(path.resolve("fixtures/status", `${name}.json`), "utf8"));
 const lineageView = () => ({ lineage: parseLineage(JSON.parse(readFileSync(path.resolve("fixtures/lineage", "shot.json"), "utf8"))), problems: [] });
-const drama = { id: "d1", title: "The Stepmother", status: "production", crew: [], episodeRows: [] } as unknown as DramaView;
+// EP001's session is open and at work: Follow follows it (labels.ts openSession, as the agent sidebar reads it).
+const session = { id: "s1", name: "EP001", role: "episode", episode: "EP001", state: "open", waiting: false };
+const drama = { id: "d1", title: "The Stepmother", status: "production", crew: [{ id: "c1", label: "Computer 1", state: "running", idleTimeoutMinutes: 180, sessions: [session] }], episodeRows: [] } as unknown as DramaView;
 
 function project(): ProjectView {
   const { budget: _budget, ...state } = parseStatus(fixture("boards"));

@@ -10,7 +10,7 @@ import { describe, expect, it } from "vitest";
 import { parseLineage } from "../../shared/lineage.ts";
 import { parseBibleNames } from "../../shared/names.ts";
 import { parseStatus, type ProjectView } from "../../shared/project.ts";
-import type { DramaView, FileItem } from "../../shared/types.ts";
+import type { DramaView, FileItem, SessionView } from "../../shared/types.ts";
 import { changed } from "../test/live.ts";
 import { http, HttpResponse } from "msw";
 import { answer, calls, server } from "../test/server.ts";
@@ -19,7 +19,8 @@ import { href, renderAt } from "../test/router.tsx";
 
 const fixture = (name: string) => JSON.parse(readFileSync(path.resolve("fixtures/status", `${name}.json`), "utf8"));
 const lineageView = () => ({ lineage: parseLineage(JSON.parse(readFileSync(path.resolve("fixtures/lineage", "shot.json"), "utf8"))), problems: [] });
-const drama = { id: "d1", title: "The Stepmother" } as unknown as DramaView;
+const session: SessionView = { id: "s1", name: "EP001", role: "episode", episode: "EP001", state: "open", waiting: false };
+const drama = { id: "d1", title: "The Stepmother", crew: [{ id: "c1", label: "Computer 1", state: "running", idleTimeoutMinutes: 180, sessions: [session] }] } as unknown as DramaView;
 
 function project(change?: (report: Record<string, any>) => void, names = true): ProjectView {
   const report = fixture("boards");
@@ -90,6 +91,23 @@ describe("the canvas", () => {
     // The engine says a saved lineage changed the project (src/engine/lineage.ts), as Graph hears it.
     changed("project:d1");
     await waitFor(() => expect(calls("GET", "/api/dramas/d1/lineage")).toHaveLength(2));
+  });
+
+  it("follows the agent only while the episode's session is open, as the agent sidebar says, its live dot only while it works", async () => {
+    engine(project());
+    const { unmount } = await renderAt(<Canvas drama={drama} />, "/d/d1/e/EP001/canvas");
+    const following = await screen.findByRole("button", { name: "Following the agent" });
+    expect(following.querySelector(".live")).not.toBeNull();
+    unmount();
+    // The session waits for the maker: Follow stays, with no live dot.
+    const waiting = await renderAt(<Canvas drama={{ ...drama, crew: [{ ...drama.crew[0], sessions: [{ ...session, waiting: true }] }] }} />, "/d/d1/e/EP001/canvas");
+    expect((await screen.findByRole("button", { name: "Following the agent" })).querySelector(".live")).toBeNull();
+    waiting.unmount();
+    // No session open (an episode done): no live dot, no Follow, the sidebar's answer.
+    await renderAt(<Canvas drama={{ ...drama, crew: [] }} />, "/d/d1/e/EP001/canvas");
+    expect(await screen.findByRole("button", { name: "No agent at work on EP001" })).toBeDisabled();
+    expect(screen.queryByRole("button", { name: /^Follow/ })).toBeNull();
+    expect(document.querySelector(".ctop .live")).toBeNull();
   });
 
   it("heads the episode with its script, opened at that episode, and its cut, opened at its home (D66)", async () => {

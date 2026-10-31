@@ -1,5 +1,5 @@
 // Words for states the engine reports as data, in the maker's language.
-import type { DramaView, EpisodeRow, FileKind, ReviewKind, Spend } from "../shared/types.ts";
+import type { DramaView, EpisodeRow, FileKind, ReviewKind, SessionView, Spend } from "../shared/types.ts";
 import { nameOf, type Names } from "../shared/names.ts";
 import type { ProjectView } from "../shared/project.ts";
 import { ApiError, useResource } from "./api.ts";
@@ -56,6 +56,14 @@ export function subjectLabel(names: Names | null, subject: string, kind?: "look"
 }
 
 /** Markdown said as plain words, for a one-line preview: link labels, no markup. */
+/**
+ * The session open on a scope (the setup, or an episode by its code), if any: the one answer the agent sidebar's status
+ * and the Canvas's Follow both read, so neither shows an agent at work where the other says none is.
+ */
+export function openSession(drama: Pick<DramaView, "crew">, scope: string): SessionView | undefined {
+  return drama.crew.flatMap((computer) => computer.sessions).find((session) => session.state === "open" && (scope === "setup" ? session.role === "setup" : session.episode === scope));
+}
+
 /** Whether a drama is still being set up: before its episodes, or stopped before it had any. */
 export function isSettingUp(drama: Pick<DramaView, "status" | "episodeRows">): boolean {
   return drama.status === "setup" || (drama.status === "stopped" && !drama.episodeRows.length);

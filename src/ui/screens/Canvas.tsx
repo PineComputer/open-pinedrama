@@ -25,7 +25,7 @@ import { Menu } from "../components/Menu.tsx";
 import { type Status, StatusChip } from "../components/StatusChip.tsx";
 import { type TKey, useT } from "../i18n.ts";
 import { Icon } from "../icons.tsx";
-import { headingText, subjectLabel } from "../labels.ts";
+import { headingText, openSession, subjectLabel } from "../labels.ts";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { homeLink, placeLink, usePage, usePlace } from "../place.ts";
 import { useText } from "../viewing.tsx";
@@ -481,6 +481,10 @@ function Plane({ drama }: { drama: DramaView }) {
   }, [picker, code, ready, named, drama.id, navigate]);
   // An item the link names is shown picked, so the board doesn't follow the agent away from it.
   const [follow, setFollow] = useState(!page?.item);
+  // The episode's open session, as the agent sidebar reads it (labels.ts openSession): Follow follows it, and only
+  // it; with no session open there is nothing to follow, and the board stays where the maker put it.
+  const live = code ? openSession(drama, code) : undefined;
+  const following = follow && live !== undefined;
   const [minimap, setMinimap] = useState(true);
   const [dock, setDock] = useState<Dock>(() => {
     try {
@@ -575,7 +579,7 @@ function Plane({ drama }: { drama: DramaView }) {
           position: moved[stage.id] ?? { x: places.get(stage.id)![0] - group.x, y: places.get(stage.id)![1] - group.y },
           width: WIDTH,
           height: heightOf(stage.id),
-          data: { stage, item: of, label: label(stage, of), status: standingOf(stage), work: stage.shows ? files.data?.find((file) => file.path.endsWith(`/${stage.shows}`)) : undefined, size: sizes[stage.id], followed: follow && target === stage.id },
+          data: { stage, item: of, label: label(stage, of), status: standingOf(stage), work: stage.shows ? files.data?.find((file) => file.path.endsWith(`/${stage.shows}`)) : undefined, size: sizes[stage.id], followed: following && target === stage.id },
         },
       ];
     });
@@ -594,7 +598,7 @@ function Plane({ drama }: { drama: DramaView }) {
     return { nodes: [...frames, ...shotNodes, ...items], edges };
     // t is made anew each render; the words change only with the language.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lineage, state, code, positions.data, files.data, names, follow, target, lang, sizes, shotsOf]);
+  }, [lineage, state, code, positions.data, files.data, names, following, target, lang, sizes, shotsOf]);
 
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
   // New data keeps what the maker picked.
@@ -623,12 +627,12 @@ function Plane({ drama }: { drama: DramaView }) {
     void flow.setViewport({ x: OPEN.x - left * OPEN.zoom, y: OPEN.y - top * OPEN.zoom, zoom: OPEN.zoom }, { duration: 300 });
   }, [code, nodes, measured, files.data]);
   useEffect(() => {
-    if (!follow || !target || opened.current !== code || centred.current === target) return;
+    if (!following || !target || opened.current !== code || centred.current === target) return;
     const node = flow.getInternalNode(target);
     if (!node) return;
     centred.current = target;
     void flow.setCenter(node.internals.positionAbsolute.x + (node.width ?? 0) / 2, node.internals.positionAbsolute.y + (node.height ?? 0) / 2, { zoom: flow.getZoom(), duration: 500 });
-  }, [follow, target, nodes, code]);
+  }, [following, target, nodes, code]);
   // The panel is one item's: none while several are picked (⌘A, or a box drawn with Move).
   const selected = nodes.filter((node) => node.selected && (node.type === "item" || node.type === "shots"));
   const picked = selected.length === 1 ? (selected[0] as Node<ItemData | ShotsData>) : undefined;
@@ -819,10 +823,18 @@ function Plane({ drama }: { drama: DramaView }) {
                 {standingOf(cutStage) !== "accepted" && <StatusChip status={standingOf(cutStage)} label={t(`status.${standingOf(cutStage)}` as TKey)} />}
               </Link>
             )}
-            <button type="button" className="follow" aria-pressed={follow} onClick={() => { centred.current = undefined; setFollow(!follow); }}>
-              {follow && <span className="live" aria-hidden="true" />}
-              {t(follow ? "canvas.following" : "canvas.follow")}
-            </button>
+            {/* Follow is the agent's: only while the episode's session is open (labels.ts openSession, as the agent sidebar
+                reads it), its live dot only while that session works; with none open it says so and does nothing. */}
+            {live ? (
+              <button type="button" className="follow" aria-pressed={following} onClick={() => { centred.current = undefined; setFollow(!follow); }}>
+                {following && !live.waiting && <span className="live" aria-hidden="true" />}
+                {t(following ? "canvas.following" : "canvas.follow")}
+              </button>
+            ) : (
+              <button type="button" className="follow" disabled>
+                {t("canvas.noAgent", { who: code })}
+              </button>
+            )}
             {drama.waiting > 0 && (
               // What waits for the maker (the reference's "items to confirm"); it opens the drama's review list.
               <Link to="/reviews" search={{ drama: drama.id }} className="follow">
