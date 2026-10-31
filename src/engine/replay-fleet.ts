@@ -194,9 +194,9 @@ interface DramaData {
   /** An episode's sample cut, where it has one: each clip's segment and its in and out points in seconds, from the cut.json drama-cli wrote for it. */
   /**
    * Each segment's scene heading, in the screenplay's form (INT./EXT. place - DAY/NIGHT), its shots, and the episode's sample
-   * cut. boardsAfterTakes: segments whose storyboard the run redrew after their takes were shot, once the takes review was
-   * answered, whatever the answer: a recorded event of the run's history, which leaves those takes out of date by
-   * drama-cli's rule (replay-lineage.ts, outOfDate).
+   * cut. boardsAfterTakes: segments whose storyboard the run redrew after their takes were shot, once a takes review
+   * accepted the segment's take: a recorded event of the run's history, which leaves that take out of date by drama-cli's
+   * rule (replay-lineage.ts, outOfDate).
    */
   episodes: { title: Both<string>; segments: { id: string; heading: Both<string>; shots: Both<string[]>; uses?: string[] }[]; cut?: { segment: string; in: number; out: number }[]; boardsAfterTakes?: string[] }[];
   /** A red line in the screenplay: the episode whose bible range names it stops on drama-cli's refusal (RedLine) and asks the maker. */
@@ -647,7 +647,7 @@ export function episodeScript(code: string, lang: Lang, preset: string, story: {
   // The storyboard version each segment's newest take was shot from, which drama-cli's manifest pins.
   const shotFrom = new Map<string, number>();
   const takeAccepted = new Set<string>();
-  let redrawn = false;
+  const redrawn = new Set<string>();
   let cut = at("edit");
   // The cut's first version: the sample drama's own (a project's real v2), else v1.
   const firstCut = cut;
@@ -689,12 +689,13 @@ export function episodeScript(code: string, lang: Lang, preset: string, story: {
   let started = false;
   // An episode whose bible range names the screenplay's red line stops first on drama-cli's refusal, and asks the maker; their answer is passed back.
   let redLineAsked = story.story.redLine?.episode !== code;
-  // The recording's late redraw (DramaData, boardsAfterTakes): once the takes review is answered, those segments' storyboards
-  // are drawn again and accepted, after their takes were shot from the earlier version.
+  // The recording's late redraw (DramaData, boardsAfterTakes): once a takes review accepts such a segment's take, its
+  // storyboard is drawn again and accepted, after the take was shot from the earlier version.
   const play = (answer: string): Step => {
-    const late = stage === "takes" && !redrawn ? segments.filter((seg) => episode.boardsAfterTakes?.includes(seg.id)) : [];
-    if (stage === "takes") redrawn = true;
+    const sentBack = revisedKeys(answer);
+    const late = stage === "takes" ? segments.filter((seg) => episode.boardsAfterTakes?.includes(seg.id) && !redrawn.has(seg.id) && takes.has(seg.id) && !sentBack.includes(seg.id)) : [];
     for (const seg of late) {
+      redrawn.add(seg.id);
       boardVersion.set(seg.id, boardVersion.get(seg.id)! + 1);
       boardAccepted.set(seg.id, boardVersion.get(seg.id)!);
     }

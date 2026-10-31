@@ -26,4 +26,20 @@ describe("a recorded late redraw", () => {
     expect(take(answered, "seg03")).toMatchObject({ fresh: false, problems: expect.arrayContaining(["Changed selection: episodes/EP006/multi_panel_storyboard/seg03/line-art/accepted.json"]) });
     expect(take(answered, "seg01").fresh).toBe(true);
   });
+
+  it("waits until seg03's take is accepted: a take sent back is shot again first, from the board as it is", async () => {
+    const { episodeScript, STORIES } = await import("./replay-fleet.ts");
+    const play = episodeScript("EP006", "en", "en-us-live-sfw", { id: "bride-on-bail", story: STORIES["bride-on-bail"].en });
+    const lineageOf = (step: ReturnType<typeof play>) => parseLineage(JSON.parse(new TextDecoder().decode(step.files.find((file) => file.path === "handoff/lineage.json")!.bytes)));
+    const take = (step: ReturnType<typeof play>) => lineageOf(step).nodes.find((node) => node.id === "episodes/EP006/segments/seg03")!;
+    play("");
+    play("");
+    // The first takes review sends seg03 back (the decision's "Revise:" list, decisions.ts): reshot, its board unchanged.
+    const reshot = play("Revise:\n- seg03: too dark");
+    expect(reshot.files.map((file) => file.path)).not.toContain("drama/episodes/EP006/multi_panel_storyboard/seg03/line-art/v2/image-1.svg");
+    expect(take(reshot).fresh).toBe(true);
+    // The next one accepts it: then the board moves on, and the take shot from the earlier one is out of date.
+    const accepted = play("");
+    expect(take(accepted).fresh).toBe(false);
+  });
 });
