@@ -939,7 +939,6 @@ export function CutRoom({ review, done }: { review: ReviewView; done: () => void
   const submission = useRef(crypto.randomUUID());
   const item = review.reviewItems[0];
   const file = item.files.find(isVideo) ?? item.files[0];
-  const open = review.state === "open";
   const saved = review.decision?.items.find((decision) => decision.key === item.key);
   const [verdict, setVerdict, forgetVerdict] = useDraft<Verdict | undefined>(review.id, "cut.verdict", () => saved?.verdict);
   const [notes, setNotes, forgetNotes] = useDraft<Note[]>(review.id, "cut.notes", () => saved?.notes.filter((note) => note.time !== undefined) ?? []);
@@ -963,25 +962,24 @@ export function CutRoom({ review, done }: { review: ReviewView; done: () => void
   const takeSpec = clip ? (episodeFiles.data ?? []).find((other) => other.kind === "spec" && other.path.endsWith(`/segments/${clip.segment}/${clip.take}/spec.json`)) : undefined;
   const spec = specFacts(useText(takeSpec).text);
   const drama = useResource<DramaView>(`/api/dramas/${review.dramaId}`, [`drama:${review.dramaId}`]);
-  // A second press that lands before the button re-renders busy, or after the decision went, finds this set: one
-  // decision goes, not two. Only a failed send clears it, for the maker to try again.
-  const sending = useRef(false);
-  const send = useAction(async () => {
-    if (sending.current) return;
-    sending.current = true;
-    const why: Note[] = verdict === "revise" ? [{ fileId: file.id, text: reason.trim() }] : [];
-    const decision: Decision = { submissionId: submission.current, words: "", items: [{ key: item.key, verdict: verdict!, notes: [...why, ...notes] }] };
-    try {
-      await api(`/api/reviews/${review.id}/decision`, { method: "POST", json: decision });
-    } catch (failed) {
-      sending.current = false;
-      throw failed;
-    }
+  // The review is one submission, as every review is (Submission, Codex's IA round 3): read only while on its way, sent,
+  // or not known to have arrived; only the engine's word that it was not submitted gives the draft back, to send again.
+  const { sending, send, check } = useSubmission({
+    submit: () => {
+      const why: Note[] = verdict === "revise" ? [{ fileId: file.id, text: reason.trim() }] : [];
+      return api(`/api/reviews/${review.id}/decision`, { method: "POST", json: { submissionId: submission.current, words: "", items: [{ key: item.key, verdict: verdict!, notes: [...why, ...notes] }] } satisfies Decision });
+    },
+    taken: async () => (await api<ReviewView>(`/api/reviews/${review.id}`)).state !== "open",
+  });
+  const open = review.state === "open" && (sending.state === "idle" || sending.state === "failed");
+  // Sent: the engine has it. The draft is done with, and the room moves on as it did.
+  useEffect(() => {
+    if (sending.state !== "sent") return;
     forgetVerdict();
     forgetNotes();
     forgetReason();
     done();
-  });
+  }, [sending.state]);
   const seek = (seconds: number) => {
     if (video.current) video.current.currentTime = seconds;
     setPlayhead(seconds);
@@ -1112,9 +1110,9 @@ export function CutRoom({ review, done }: { review: ReviewView; done: () => void
           </div>
           {verdict === "revise" && open && <textarea aria-label={t("cut.why")} placeholder={t("cut.whyHint")} value={reason} onChange={(event) => setReason(event.target.value)} />}
           {verdict === "revise" && !open && reason && <p className="muted">{reason}</p>}
-          {send.error !== undefined && <span className="error">{errorText(send.error, t)}</span>}
-          {open && (
-            <Button className="btn primary" busy={send.busy} disabledReason={why} onClick={() => void send.run()}>
+          <Submission sending={sending} to={t("submission.agentOf", { who: code })} kept={t("review.kept")} onSend={() => void send()} onCheck={() => void check()} />
+          {open && sending.state === "idle" && (
+            <Button className="btn primary" disabledReason={why} onClick={() => void send()}>
               {t("review.send")}
             </Button>
           )}
