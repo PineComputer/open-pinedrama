@@ -442,7 +442,19 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
         return;
       }
       const typing = event.target instanceof HTMLTextAreaElement || event.target instanceof HTMLInputElement;
-      if (typing) return;
+      // A shortcut is a bare key: ⌘A selects, ⌘C copies, never accepts or turns to the earlier version.
+      if (typing || event.metaKey || event.ctrlKey || event.altKey) return;
+      // Arrows belong to a control that takes them (a segment, the playhead, a menu); Space to a button it presses.
+      const target = event.target instanceof Element ? event.target : null;
+      if (event.key.startsWith("Arrow") && target?.closest('[role="radiogroup"], [role="slider"], [role="menu"], [role="tablist"], media-time-range')) return;
+      if (event.key === " ") {
+        if (!playing || target?.closest("button, a, [role]")) return;
+        // Space plays and pauses the take, as design/'s room does.
+        event.preventDefault();
+        if (video.current?.paused) void video.current.play();
+        else video.current?.pause();
+        return;
+      }
       if (event.key === "j" || event.key === "ArrowDown") go(index + 1);
       else if (event.key === "k" || event.key === "ArrowUp") go(index - 1);
       else if (event.key === "a") accept();

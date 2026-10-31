@@ -94,6 +94,29 @@ describe("a link into the review room", () => {
   });
 });
 
+describe("the room's keys", () => {
+  it("take no shortcut with a modifier: ⌘A selects and ⌘C copies, they never accept or turn to the earlier version", async () => {
+    const user = userEvent.setup();
+    open();
+    const accept = await screen.findByRole("button", { name: "Accept A" });
+    await user.keyboard("{Meta>}a{/Meta}{Control>}a{/Control}");
+    expect(accept).toHaveAttribute("aria-pressed", "false");
+    expect(screen.getByRole("heading", { level: 2, name: /\bseg01\b/ })).toBeInTheDocument();
+  });
+
+  it("leave the arrows to the control that has the focus", async () => {
+    const user = userEvent.setup();
+    const review = storyboardReview("seg01", "seg02");
+    const photoreal = file({ kind: "storyboard", name: "episodes/EP002/storyboard/seg01/v1/photoreal.png", episode: "EP002", segment: "seg01", style: "photoreal", version: "v1" });
+    review.reviewItems[0] = { ...review.reviewItems[0], files: [...review.reviewItems[0].files, photoreal] };
+    open(review);
+    const variants = await screen.findByRole("radiogroup", { name: "Which picture" });
+    within(variants).getByRole("radio", { name: "Line art" }).focus();
+    await user.keyboard("{ArrowDown}");
+    expect(screen.getByRole("heading", { level: 2, name: /\bseg01\b/ })).toBeInTheDocument();
+  });
+});
+
 describe("a storyboard with variants and an earlier version", () => {
   it("offers its variants and the same variant's version before, and puts the one picked on the stage", async () => {
     const user = userEvent.setup();
@@ -177,6 +200,20 @@ describe("the review room for takes", () => {
     const row = async (label: string) => (await within(reel).findByText(label)).closest(".ritem") as HTMLElement;
     await waitFor(async () => expect((await row("seg02 · t01")).querySelector("video")).toHaveAttribute("src", `${seg02Take.url}#t=0.5`));
     expect(((await row("seg03 · t01")).querySelector(".still") as HTMLElement).style.backgroundImage).toContain(seg03Frame.url);
+  });
+
+  it("plays and pauses the take with Space, as design/'s room does", async () => {
+    const user = userEvent.setup();
+    const review = takes();
+    answer(`/api/reviews/${review.id}`, review);
+    answer("/api/dramas/d1/files", []);
+    const play = vi.spyOn(HTMLMediaElement.prototype, "play").mockResolvedValue();
+    render(<Review id={review.id} />);
+    await screen.findByRole("button", { name: "Accept A" });
+    (document.activeElement as HTMLElement | null)?.blur();
+    await user.keyboard(" ");
+    expect(play).toHaveBeenCalledTimes(1);
+    play.mockRestore();
   });
 
   it("offers no Accept all for takes", async () => {
