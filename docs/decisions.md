@@ -149,7 +149,9 @@ timeline
   the feature must be supported, and this should be the industry's common solution; not having it
   won't do*).
 - **Recorded in.** `REDESIGN_PLAN.md`, "Direction"; `CONTRIBUTING.md`.
-- **Amended by.** [D70](#d70-2026-10-30--the-ui-decides-the-chat-acts): the Canvas's steer bar and Note leave the UI; Accept and Send back stay on the exact item.
+- **Amended by.** [D70](#d70-2026-10-30--the-ui-decides-the-chat-acts): the Canvas's steer bar and Note leave the UI, and so
+  do the disabled hand actions (Generate, Upload) drawn for phase 2 (0331bf4); Accept and Send back stay on
+  the exact item, in its review. The test named above went with them.
 ## D9. 2026-10-30 · design/ is the one source of the UI
 - **Context.** The lanes had changed the UI directly in code, each against its own reference
   screenshots, and the integrated studio drifted far from the prototype merecdesperez44323-lab had
@@ -1290,7 +1292,10 @@ timeline
   "成片剪辑保留界面编辑，还是也改成聊天？" (*does the cut keep editing in the UI, or move to the chat too?*),
   merecdesperez44323-lab answered "界面编辑 + 聊天" (*editing in the UI, plus the chat*).
 - **Recorded in.** `short-drama-runs/qa/UI_ACTIONS_RULE.md`; master's note to the docs, 30 October 2026;
-  d7b8509 (the cut's Accept, work-07).
+  d7b8509 (the cut's Accept, work-07); 0331bf4 (the Canvas, work-06: the node bar, renamed from the steer bar,
+  keeps Review into the item's own review (D69), Lineage and Download; Send back, Note, the steering box and
+  its sends, Resume and the disabled Upload and Generate leave it; one line points to the agent: "To redo or
+  change it, ask the agent in the sidebar.").
 
 ## References
 
