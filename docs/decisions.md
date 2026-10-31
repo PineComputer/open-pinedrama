@@ -22,7 +22,7 @@ timeline
   2026-10-23 : D5 pre-production in one session
   2026-10-24 : D6 idle timeouts follow the work : D7 spend shown, never in a goal
   2026-10-29 : D8 phase 1 steers
-  2026-10-30 : D9 design/ is the UI source : D10 tsc gate : D11 mature libraries : D12 real samples in LFS : D13 decisions taken once : D14 credentials stop : D15 Codex review loop : D16 navigation and one home : D17 every take and cut watched : D18 cut editing as an edit spec : D19 TanStack Router : D20 Export by owner : D21 Analyzing and Out of date routes : D22 redo by owner : D23 the asset detail : D24 the cut edit goal : D25 one Submission : D26 crumbs and Back : D27 Reviews : D28 model badge : D29 canvas zoom, inline video : D30 URL rules : D31 agent scope : D32 narrow windows : D33 review options : D34 Episodes filters : D35 every element cites its ground : D36 Delivery is the cuts' home : D37 a picked node zooms : D38 shared redo after release : D39 a take plays on its node : D40 where a stop shows : D41 Script is the screenplay's home : D42 Story and Assets apart : D43 stable sample ids : D44 the cut leaves the switch : D45 samples' own screenplays : D46 Project : D47 a draft's changed base : D48 the List's ?version : D49 project types : D50 Home cards : D51 one column, rail labels : D52 Home first, disabled : D53 account footer : D54 icon-only rail : D55 the cover follows the format : D56 Assets grid and inspector : D57 no tabs in Assets : D58 Canvas nodes whole : D59 Canvas opens in Hand : D60 replay's freshness : D61 Bible : D62 Script holds the process : D63 Segments matrix : D64 a visualization of drama-cli : D65 no accent bar : D66 an episode is its Canvas : D67 shape and alignment
+  2026-10-30 : D9 design/ is the UI source : D10 tsc gate : D11 mature libraries : D12 real samples in LFS : D13 decisions taken once : D14 credentials stop : D15 Codex review loop : D16 navigation and one home : D17 every take and cut watched : D18 cut editing as an edit spec : D19 TanStack Router : D20 Export by owner : D21 Analyzing and Out of date routes : D22 redo by owner : D23 the asset detail : D24 the cut edit goal : D25 one Submission : D26 crumbs and Back : D27 Reviews : D28 model badge : D29 canvas zoom, inline video : D30 URL rules : D31 agent scope : D32 narrow windows : D33 review options : D34 Episodes filters : D35 every element cites its ground : D36 Delivery is the cuts' home : D37 a picked node zooms : D38 shared redo after release : D39 a take plays on its node : D40 where a stop shows : D41 Script is the screenplay's home : D42 Story and Assets apart : D43 stable sample ids : D44 the cut leaves the switch : D45 samples' own screenplays : D46 Project : D47 a draft's changed base : D48 the List's ?version : D49 project types : D50 Home cards : D51 one column, rail labels : D52 Home first, disabled : D53 account footer : D54 icon-only rail : D55 the cover follows the format : D56 Assets grid and inspector : D57 no tabs in Assets : D58 Canvas nodes whole : D59 Canvas opens in Hand : D60 replay's freshness : D61 Bible : D62 Script holds the process : D63 Segments matrix : D64 a visualization of drama-cli : D65 no accent bar : D66 an episode is its Canvas : D67 shape and alignment : D68 recorded edges only : D69 review by identity
 ```
 
 ## D1. 2026-10-22 · A desktop app on Electron
@@ -514,7 +514,8 @@ timeline
 - **Alternatives.** The model in the inspector only.
 - **Grounds.** Astorie and LibTV show the model on their nodes (master's note); the labels design,
   badge included, was shown to merecdesperez44323-lab, who said to continue.
-- **Consequences.** `design/app.js`, the canvas node's `.model`.
+- **Consequences.** `design/app.js`, the canvas node's `.model`. Amended by 3c06e2e (Codex's round 4,
+  F2): where both show, the node's stage name wins over the model tag.
 - **Words.** None beyond "you can continue", after the labels design was shown.
 - **Recorded in.** Master's note to the docs, 30 October 2026.
 
@@ -1201,6 +1202,37 @@ timeline
   relayed by master.
 - **Recorded in.** Commits 8459785 (the rule), 7dd3279 and 8ee5070 (the audit), 0318183 (the
   product's CSS); work-04's and work-05's notes to the docs.
+
+## D68. 2026-10-30 · The Canvas draws only drama-cli's recorded "made from" edges
+- **Context.** The Canvas joined nodes by their order in a row, so it showed pictures as made from
+  ones they never used (Codex's round 4, F1).
+- **Decision.** An edge is drawn only where drama-cli recorded one (the lineage's links), never from
+  the row's order. The photoreal storyboard feeds nothing. A location's plate feeds the blocking and
+  both storyboards; the plate at the segment's time of day, a stage of its own
+  (`assets/scenes/<id>/times/<Day|Night>`), feeds the first-frame reference and the take. A time
+  plate opens Locations, at its location with that time named.
+- **Alternatives.** Edges by position in the layout.
+- **Grounds.** drama-cli's order of the stages and what each is made from (short_drama
+  `doc/drama-cli/image-references.md`, section 1 and lines 53-54; its D122 and D141); Codex's round 4,
+  F1 and F2; the studio visualizes drama-cli's work
+  ([D64](#d64-2026-10-30--the-studio-is-a-visualization-of-drama-clis-work)).
+- **Consequences.** [D66](#d66-2026-10-30--an-episode-is-its-canvas-laid-out-as-drama-clis-export)'s
+  layout keeps its places; only the lines between nodes change.
+- **Words.** None recorded.
+- **Recorded in.** Design commit 3c06e2e; the product port follows; work-06's note to the docs.
+
+## D69. 2026-10-30 · Review routes by the selected object's identity
+- **Context.** A Canvas node's Review opened a generic review, whatever the node was (Codex's round 4,
+  F7).
+- **Decision.** Review goes to the object picked: a take to that take's review, the cut to Cut and its
+  version, a storyboard to its place in the queue. There is no generic review.
+- **Alternatives.** One generic review for every node.
+- **Grounds.** One home per object ([design principles](design-principles.md#1-one-home-per-object));
+  always clear what you act on ([design principles](design-principles.md#3-always-clear-what-you-act-on));
+  Codex's round 4, F7.
+- **Consequences.** None beyond the Canvas's Review.
+- **Words.** None recorded.
+- **Recorded in.** Design commit 3c06e2e; the product port follows; work-06's note to the docs.
 
 ## References
 
