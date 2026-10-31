@@ -8,7 +8,7 @@
   const SETUP = ["analyzing", "fountain"];
   const hash = (location.hash || "").slice(1);
   const S = {
-    screen: SCREENS.includes(hash) ? hash : "home", theme: "dark", side: true, tab: "all", filter: "all",
+    screen: SCREENS.includes(hash) ? hash : "home", theme: "dark", side: true, tab: "all", filter: "all", waitFor: null,
     dialog: null, toasts: [], dramaStop: null, draft: "", chat: [],
     cam: { x: 40, y: 96, k: 0.62 }, sel: null, dock: (() => { try { return localStorage.getItem("studio.canvas.dock") || "under"; } catch (e) { return "under"; } })(), follow: true, agentOpen: false, panning: null, minimap: true,
     ti: 0, playing: false, t: 0, watched: {}, maxT: {}, verdict: {}, reason: {}, showPrev: false, sent: false, over: false,
@@ -173,13 +173,24 @@
     </aside>`;
   }
 
+  /* Home's "Waiting for you": every drama's decisions, each row named by its drama and pictured by its cover. */
+  const waits = () => {
+    const cover = (t) => P.projects.find((p) => p.t === t).cover;
+    return [
+      { dr: "Bride on Bail", what: "EP006", d: "2 takes · seg01, seg03", age: "4 min", go: "review" },
+      { dr: "Bride on Bail", what: "Looks and plates", d: "2 items · Margaret Cole, Garden wedding", age: "12 min", go: "canvas" },
+      { dr: "Bride on Bail", what: "EP004", d: "6 storyboards · scene 1 and 2", age: "26 min", go: "episodes" },
+      { dr: "Bride on Bail", what: "EP001", d: "Cut v2 · The Wedding", age: "1 h", go: "episodes" },
+      { dr: "Last Toast", what: "EP007", d: "Red line · decide in your words", age: "2 h" },
+    ].map((w) => ({ ...w, pic: cover(w.dr) }));
+  };
   /* ───── Home ───── */
   function Home() {
     const tabs = [["all", "All", 4], ["you", "Needs you", 1], ["work", "At work", 1], ["done", "Finished", 1]];
     const list = P.projects.filter((p) => S.tab === "all" || (S.tab === "you" ? p.st === "you" || p.st === "redline" : S.tab === "work" ? p.st === "work" : p.st === "accepted"));
     const upload = () => go("upload");
     return html`<div class="main"><div class="scrollmain"><div class="wrap">
-      <div class="greet"><div class="grow"><h1>Good evening</h1><p>4 decisions wait for you across your dramas.</p></div>
+      <div class="greet"><div class="grow"><h1>Good evening</h1><p>5 decisions wait for you across 2 dramas.</p></div>
         <button class="btn lg primary" onClick=${upload}>${I("upload")}Upload script</button></div>
       <section class="hero">
         <div class="left">
@@ -187,19 +198,22 @@
           <div class="info grow"><span class="kicker">Continue</span><h2>${P.project.title}</h2>
             <span class="where">${I("map-pin")}EP006 · 2 takes wait for you</span>
             <blockquote>“I shot seg01 again with the blanket folded before Luca speaks, and seg03 again opening on his face. Both new takes wait for you.”</blockquote>
-            <div class="row"><span>1 of 24 cut · ${money(P.project.spent)} spent · updated 4 min ago</span><span class="grow"></span>
+            <div class="row"><span>1 of 24 episodes cut · ${money(P.project.spent)} spent · updated 4 min ago</span><span class="grow"></span>
               <button class="btn" onClick=${() => go("episodes")}>Open drama</button>
               <button class="btn lg primary" onClick=${() => go("review")}>${I("play")}Review takes</button></div></div>
         </div>
-        <div class="right"><h3>Waiting for you</h3>
-          ${decisions().map((d) => html`<button class="wait" onClick=${() => go(d.go)}><img src=${d.pic} alt=""/><span><b>${d.t}</b><small>${d.d} · ${d.age}</small></span></button>`)}</div>
+        <div class="right"><h3>Waiting for you${S.waitFor && html`<span class="tag">${S.waitFor}<button aria-label="Show every drama's" onClick=${() => set({ waitFor: null })}>${I("x")}</button></span>`}</h3>
+          ${waits().filter((w) => !S.waitFor || w.dr === S.waitFor).map((w) => html`<button class="wait" onClick=${() => (w.go ? go(w.go) : toast(w.dr + ": only Bride on Bail opens in this direction."))}><img src=${w.pic} alt=""/><span><b>${w.dr} · ${w.what}</b><small>${w.d} · ${w.age}</small></span></button>`)}</div>
       </section>
       <div class="tabsrow"><div class="utabs" role="tablist">${tabs.map(([k, l, n]) => html`<button role="tab" aria-selected=${String(S.tab === k)} onClick=${() => set({ tab: k })}>${l}<small>${n}</small></button>`)}</div>
         <span class="grow"></span><span class="search">${I("magnifying-glass")}Search dramas…</span><button class="select">Last edited ${I("caret-down")}</button></div>
       <div class="cards">
-        ${list.map((p, i) => html`<button class="pcard" onClick=${() => i === 0 || p.t === P.project.title ? go("episodes") : toast(p.t + ": only the first drama opens in this direction.")}>
-          <div class="pic"><img src=${p.cover} alt=""/>${Status(p.st, p.lab)}<span class="bar"><i style=${`width:${p.p}%`}></i></span></div>
-          <div class="txt"><b>${p.t}</b><small>${p.m}</small><small>${p.spent} spent</small><div class="tags">${p.tags.map((t) => html`<span class="tag">${t}</span>`)}</div></div></button>`)}
+        ${list.map((p, i) => html`<div class="pcard"><button class="open" onClick=${() => i === 0 || p.t === P.project.title ? go("episodes") : toast(p.t + ": only the first drama opens in this direction.")}>
+          <div class="pic"><img src=${p.cover} alt=""/><span class="bar"><i style=${`width:${p.p}%`}></i></span></div>
+          <div class="txt"><b>${p.t}</b><small>${p.m}</small><small>${p.spent} spent</small><div class="tags">${p.tags.map((t) => html`<span class="tag">${t}</span>`)}</div></div></button>
+          ${p.st === "you" || p.st === "redline"
+            ? html`<button class=${"st " + p.st} aria-pressed=${String(S.waitFor === p.t)} title=${"Show what waits for you in " + p.t} onClick=${() => set({ waitFor: S.waitFor === p.t ? null : p.t })}><i></i>${p.lab}</button>`
+            : Status(p.st, p.lab)}</div>`)}
         <button class=${"newcard " + (S.over ? "over" : "")} onClick=${upload}
           onDragOver=${(e) => { e.preventDefault(); if (!S.over) set({ over: true }); }} onDragLeave=${() => set({ over: false })} onDrop=${(e) => { e.preventDefault(); set({ over: false }); upload(); }}>
           <span class="plus">${I("plus")}</span><b>New drama</b><small>Drop a screenplay here<br/>Fountain, Word, PDF or plain text</small></button>

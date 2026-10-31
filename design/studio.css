@@ -154,11 +154,16 @@ input.search:focus { border-color: var(--text-primary); }
 .select { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 10px; border-radius: var(--radius-medium); border: 1px solid var(--border-input); background: var(--surface); color: var(--text-secondary); font-size: 12.5px; cursor: pointer; }
 .select .ic { width: 13px; height: 13px; color: var(--text-muted); }
 .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 18px; }
-.pcard { display: flex; flex-direction: column; border-radius: var(--radius-large); border: 1px solid var(--border); background: var(--surface); overflow: hidden; cursor: pointer; text-align: left; padding: 0; color: inherit; transition: border-color .12s, transform .12s; }
+.pcard { position: relative; display: flex; flex-direction: column; border-radius: var(--radius-large); border: 1px solid var(--border); background: var(--surface); overflow: hidden; transition: border-color .12s, transform .12s; }
+.pcard > .open { flex: 1; display: flex; flex-direction: column; border: 0; background: none; padding: 0; text-align: left; color: inherit; font: inherit; cursor: pointer; }
 .pcard:hover { border-color: var(--border-input); transform: translateY(-1px); }
 .pcard .pic { position: relative; aspect-ratio: 3/4; background: var(--surface-container); overflow: hidden; }
 .pcard .pic img { width: 100%; height: 100%; object-fit: cover; }
-.pcard .pic .st { position: absolute; left: 8px; top: 8px; }
+.pcard > .st { position: absolute; left: 8px; top: 8px; }
+/* A card's "Needs you" or "Red line" pill shows what waits in that drama: a button, pressed while Waiting for you is filtered to it. */
+.pcard > button.st { cursor: pointer; font-family: inherit; } .pcard > button.st:hover { border-color: var(--text-primary); } .pcard > button.st[aria-pressed="true"] { background: var(--text-primary); color: var(--canvas); }
+.hero .right h3 { display: flex; align-items: center; gap: 8px; } .hero .right h3 .tag { display: inline-flex; align-items: center; gap: 2px; font-weight: 600; color: var(--text-primary); }
+.hero .right h3 .tag button { display: grid; place-items: center; width: 16px; height: 16px; padding: 0; border: 0; border-radius: 50%; background: none; color: inherit; cursor: pointer; } .hero .right h3 .tag .ic { width: 11px; height: 11px; }
 .pcard .pic .bar { position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: color-mix(in srgb, var(--canvas) 60%, transparent); }
 .pcard .pic .bar i { display: block; height: 100%; background: var(--text-primary); }
 .pcard .txt { padding: 12px 12px 14px; display: grid; gap: 4px; }

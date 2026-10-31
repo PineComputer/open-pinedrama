@@ -64,8 +64,8 @@ window.P = (() => {
         shots: ["WS Ethan at the table, Luca standing", "MS Luca reads the page", "CU the case file"], scene: "Scene 2 · Luca's apartment · Day" },
     ],
     projects: [
-      { t: "Bride on Bail", m: "1 of 24 cut", st: "you", lab: "4 need you", spent: "$41.20", p: 12, cover: img("cover-ep1"), tags: ["Romance", "Legal"] },
-      { t: "The Contract Groom", m: "12 of 12 cut", st: "accepted", lab: "Finished", spent: "$212.60", p: 100, cover: img("cover-groom"), tags: ["Romance"] },
+      { t: "Bride on Bail", m: "1 of 24 episodes cut", st: "you", lab: "4 need you", spent: "$41.20", p: 12, cover: img("cover-ep1"), tags: ["Romance", "Legal"] },
+      { t: "The Contract Groom", m: "12 of 12 episodes cut", st: "accepted", lab: "Finished", spent: "$212.60", p: 100, cover: img("cover-groom"), tags: ["Romance"] },
       { t: "Visiting Hours", m: "Analyzing · step 3 of 5", st: "work", lab: "At work", spent: "$0.40", p: 4, cover: img("cover-ep7"), tags: ["Drama"] },
       { t: "Last Toast", m: "EP007 stopped", st: "redline", lab: "Red line", spent: "$96.10", p: 30, cover: img("cover-guest"), tags: ["Family"] },
     ],
