@@ -16,10 +16,10 @@ import { Delivery } from "./screens/Delivery.tsx";
 import { Episode } from "./screens/Episode.tsx";
 import { ReviewsScreen } from "./screens/Reviews.tsx";
 import { NewDrama } from "./screens/NewDrama.tsx";
+import { OutOfDate } from "./screens/OutOfDate.tsx";
 import { Review } from "./screens/Review.tsx";
 import { Script } from "./screens/Script.tsx";
 import { Slate } from "./screens/Slate.tsx";
-import { Graph } from "./graph/Graph.tsx";
 
 const text = (value: unknown) => (value === undefined ? undefined : String(value));
 
@@ -116,8 +116,8 @@ const propsRoute = createRoute({
   component: () => <Cast dramaId={useDrama().id} />,
 });
 const deliveryRoute = createRoute({ ...leaf("delivery"), staticData: { page: "delivery" }, component: () => <Delivery dramaId={useDrama().id} /> });
-// Out of date is a drama-wide filter beside Reviews (D21); the drama-wide Graph shows here until its list replaces it.
-const outOfDateRoute = createRoute({ ...leaf("out-of-date"), staticData: { page: "outOfDate" }, component: () => <Graph dramaId={useDrama().id} /> });
+// Out of date is a drama-wide filter beside Reviews (D21): a row per out-of-date item, each linking to its home.
+const outOfDateRoute = createRoute({ ...leaf("out-of-date"), staticData: { page: "outOfDate" }, component: () => <OutOfDate dramaId={useDrama().id} /> });
 const crewRoute = createRoute({ ...leaf("crew"), staticData: { page: "crew" }, component: () => <Crew drama={useDrama()} /> });
 // The drama's Canvas opens the episode it picks (Canvas.tsx) on that episode's Canvas.
 const canvasPickRoute = createRoute({ ...leaf("canvas"), staticData: { page: "canvasPick" }, component: () => <Canvas drama={useDrama()} /> });
