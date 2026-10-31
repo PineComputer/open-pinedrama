@@ -99,6 +99,8 @@ export type FileKind =
   | "spec"
   /** What drama-cli sent the provider for a version (request.json). */
   | "request"
+  /** drama-cli's record of a version's picture in the asset library (asset/asset.json): its Id, which a request names as asset://<Id>. */
+  | "asset"
   /** A picture the maker added to a note: a face to use, a costume, a place to match. */
   | "reference"
   | "other";
