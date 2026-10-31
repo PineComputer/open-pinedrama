@@ -112,8 +112,9 @@ the IA proposal, sections 3, 8.4–8.5 and 10 <sup>[1](#ref-1)</sup>.
 ## Routes
 
 Each home has one URL; the route's typed parameters are the current object
-([D19](../decisions.md#d19-2026-10-30--tanstack-router-for-typed-routes)). The route tree is being
-ported to TanStack Router (`src/ui/routes.tsx`):
+([D19](../decisions.md#d19-2026-10-30--tanstack-router-for-typed-routes)). The route tree is TanStack
+Router's, in `src/ui/routes.tsx`; one reader, `usePlace`, and one builder, `placeLink`
+(`src/ui/place.ts`), carry the current object:
 
 | Route | Home |
 |---|---|
@@ -129,10 +130,13 @@ ported to TanStack Router (`src/ui/routes.tsx`):
 | `/d/$dramaId/out-of-date` | the Out of date filter |
 | `?item=<drama-cli stage id>&view=lineage` | an item selected on its home, and its Lineage |
 
+Two drama routes remain from before the IA: `/d/$dramaId/crew` and `/d/$dramaId/canvas`, which
+opens the episode it picks on that episode's Canvas.
+
 An episode code is drama-cli's (`EP` and three digits); an item must belong to its drama, and to
 its episode where it is episode-scoped; anything else is "not found", never a fall back to Home.
-The port moves the e2e specs and the samples' links in the same change, with no compatibility
-routes (the IA proposal, sections 8.7 and 14.1) <sup>[1](#ref-1)</sup>.
+The port moved the e2e specs and the design comparison's URLs in the same change, with no
+compatibility routes (the IA proposal, sections 8.7 and 14.1) <sup>[1](#ref-1)</sup>.
 
 ## The agent's scope
 

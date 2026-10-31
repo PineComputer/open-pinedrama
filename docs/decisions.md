@@ -345,11 +345,15 @@ timeline
 - **Grounds.** D11 (mature libraries over hand-written infrastructure), and type-safe routes are
   what prevents B1. The first proposal had already chosen TanStack Router (`PROPOSAL.md`,
   section 7).
-- **Consequences.** `src/ui/router.tsx` and its importers are replaced in the port, with the e2e
-  specs and the samples' links in the same change.
+- **Consequences.** Landed in commit b6e234d: the hand-written `src/ui/router.tsx` is deleted; the
+  route tree is `src/ui/routes.tsx`, the current object is read by `usePlace` and built by
+  `placeLink` (`src/ui/place.ts`), and tests render at a URL with `renderAt`
+  (`src/ui/test/router.tsx`). The e2e specs, `design/SCREENS.md`'s routes and
+  `scripts/design-diff.spec.ts`'s URLs moved in the same change.
 - **Words.** None recorded.
 - **Recorded in.** The IA proposal, sections 12.1 and 14.1 <sup>[3](#ref-3)</sup>; commit 01193f0
-  (the interim fix).
+  (the interim fix); commit b6e234d (the port: `src/ui/routes.tsx`, `src/ui/place.ts`,
+  `src/ui/test/router.tsx`).
 
 ## D20. 2026-10-30 · Export belongs to its owner
 - **Context.** Export offered the drama's workflow on every page, the global Reviews included, so
