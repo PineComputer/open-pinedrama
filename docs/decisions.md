@@ -1140,7 +1140,12 @@ timeline
   Compare) and 0c79dcc (recorded versions only); product commits ca0a623, 7381a9a (Analyzing retired)
   and db1a5f5 (the explicit verdict); master's and work-02's notes,
   30 October 2026.
-
+- **Amended.** 30 October 2026, 6f492d5 (master's wording, after merecdesperez44323-lab's reaction to
+  Double Life r4's Script): the tree's Script row reads from the versions Script shows. "Accepted"
+  requires a recorded acceptance, an approve verdict; with no recorded version the row reads "Original
+  only" with the waiting-in-line dot, never green, and Script has no banner, its history saying under the
+  upload "This project's rewrite wasn't recorded." Words: "这个也太丑了 … what the fuck is it" (*this is far
+  too ugly … what the fuck is it*), relayed by master.
 ## D63. 2026-10-30 · An episode's views are Segments and Canvas; Segments is a matrix
 - **Context.** An episode's List showed each segment's tiles in a row, without its shots or
   references side by side.
@@ -1249,7 +1254,9 @@ timeline
   relayed by master.
 - **Recorded in.** Commits 8459785 (the rule), 7dd3279 and 8ee5070 (the audit), 0318183 (the
   product's CSS); work-04's and work-05's notes to the docs.
-
+- **Amended.** 30 October 2026, 6f492d5: a notice is one rule (`.notice`): in the 16 px content column,
+  left-aligned, a filled block with no border, never full-bleed. The older product rule (space-between,
+  full-bleed borders) is deleted; `design/SPEC.md` has a Notice row.
 ## D68. 2026-10-30 · The Canvas draws only drama-cli's recorded "made from" edges
 - **Context.** The Canvas joined nodes by their order in a row, so it showed pictures as made from
   ones they never used (Codex's round 4, F1).
