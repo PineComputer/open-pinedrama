@@ -1,11 +1,9 @@
 // An episode's segments, scene by scene: each scene with how many of its segments are accepted,
-// each segment with where its storyboard and take stand and its shot list, and the episode's
-// standing at the foot. It reads: a segment opens on its pictures, and on Canvas.
+// each segment with where it stands and its shot list, and its way onto Canvas.
 import { render, screen, within } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
 import { readFileSync } from "node:fs";
 import path from "node:path";
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import { parseStatus } from "../../shared/project.ts";
 import type { EpisodePage } from "../../shared/types.ts";
 import { answer } from "../test/server.ts";
@@ -29,42 +27,24 @@ const page = {
 describe("an episode's segments", () => {
   it("are grouped by scene, each scene saying how many of its segments are accepted", async () => {
     project();
-    render(<Segments dramaId="d1" page={page} onOpen={() => {}} />);
-    const scene = await screen.findByRole("region", { name: "INT. OFFICE - DAY #1-1#" });
-    expect(within(scene).getByText(/segments accepted/)).toBeInTheDocument();
-    expect(within(scene).getByRole("button", { name: "seg01" })).toBeInTheDocument();
+    render(<Segments dramaId="d1" page={page} />);
+    const scene = await screen.findByRole("region", { name: "Scene 1 · INT. OFFICE - DAY #1-1#" });
+    expect(within(scene).getByText("0 of 1 accepted")).toBeInTheDocument();
+    expect(within(scene).getByText("seg01")).toBeInTheDocument();
   });
 
-  it("say where each segment's storyboard and take stand", async () => {
+  it("say where each segment stands: its storyboard until it has a take", async () => {
     project((report) => {
       report.episodes.EP001.multi_panel_storyboard.seg01["line-art"] = { ...report.episodes.EP001.multi_panel_storyboard.seg01["line-art"], current: "v2", candidate: "v2", accepted: "v1", usable: false };
     });
-    render(<Segments dramaId="d1" page={page} onOpen={() => {}} />);
+    render(<Segments dramaId="d1" page={page} />);
     expect(await screen.findByText("Storyboard · Waiting for you")).toBeInTheDocument();
   });
 
-  it("open a segment on its pictures, and link it to Canvas", async () => {
-    const user = userEvent.setup();
+  it("link a segment to Canvas, and say when the breakdown lists no shots for it", async () => {
     project();
-    const onOpen = vi.fn();
-    render(<Segments dramaId="d1" page={page} onOpen={onOpen} />);
-    await user.click(await screen.findByRole("button", { name: "seg01" }));
-    expect(onOpen).toHaveBeenCalledWith("seg01");
-    expect(screen.getByRole("link", { name: "On Canvas" })).toHaveAttribute("href", "/d/d1/canvas?item=EP001");
-  });
-
-  it("say where the episode stands at the foot", async () => {
-    project();
-    render(<Segments dramaId="d1" page={page} onOpen={() => {}} />);
-    const status = await screen.findByRole("status", { name: "Where the episode stands" });
-    expect(status).toHaveTextContent("1 segments / 1 scenes");
-  });
-
-  it("fold a segment's shots", async () => {
-    const user = userEvent.setup();
-    project();
-    render(<Segments dramaId="d1" page={page} onOpen={() => {}} />);
-    await user.click(await screen.findByRole("button", { name: "Fold segment 1-1" }));
-    expect(screen.queryByText("The breakdown lists no shots for it yet.")).toBeNull();
+    render(<Segments dramaId="d1" page={page} />);
+    expect(await screen.findByRole("link", { name: "On Canvas" })).toHaveAttribute("href", "/d/d1/canvas?item=EP001");
+    expect(screen.getByText("The breakdown lists no shots for it yet.")).toBeInTheDocument();
   });
 });
