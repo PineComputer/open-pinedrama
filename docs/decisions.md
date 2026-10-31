@@ -1071,9 +1071,11 @@ timeline
 - **Decision.** Script is the one home of the screenplay's process: the upload, drama-cli's check,
   the agent's revisions into Fountain, the maker's acceptance, and the comparison of what changed.
   The tree's Script row carries its state as an episode row does (its now-line and dot), and the page
-  shows the process as a vertical version history, newest on top: drama-cli's words where its check
-  refuses, collapsed once accepted. Each version is selectable and carries its own document,
-  review.md and validate result; a refused version stays in the history. On the version that waits,
+  shows the process as a vertical version history, newest on top, collapsed once accepted. The
+  history holds only drama-cli's recorded versions: each passed `screenplay validate` and has its
+  review.md and its decision, and each is selectable and carries its own document. A failed attempt
+  is not a record, so it is not on Script; the agent reports it in its process, in the sidebar. A
+  version sent back stays in the history beside the one that replaced it. On the version that waits,
   Accept and Send back are peers: Accept needs the maker's words and Send back a reason, both
   required, and either is one submission to the setup session through the shared Submission
   ([D25](#d25-2026-10-30--one-submission-state-for-every-send)), not a toast.
@@ -1090,7 +1092,9 @@ timeline
   Analyzing route when the draft is ported.
 - **Alternatives.** The setup steps as their own route (D21); a horizontal stage line beside the
   vertical tree, which merecdesperez44323-lab rejected.
-- **Grounds.** merecdesperez44323-lab's decision; GitHub's pull-request timeline; Figma's and Google
+- **Grounds.** merecdesperez44323-lab's decision; drama-cli records a version only when it passes:
+  "A ready FILE is recorded as a version" (short_drama `doc/drama-cli/cli.md`, `screenplay validate`);
+  GitHub's pull-request timeline; Figma's and Google
   Docs' version history; VS Code's editor title area, diff editor and read-only editor
   (`files.readonly`) and side-by-side diff; GitHub's review (Approve and Request changes, with a
   comment); Codex's round 4, F3 and F5; Apple's HIG, toolbar icon buttons with a tooltip and a name; Nielsen's first heuristic, visibility of system status;
@@ -1107,8 +1111,8 @@ timeline
   有点儿重复啊， 是不是就直接诶就简单是文档算了" (*and there are episodes here and episodes below, a bit
   repetitive; shouldn't it simply be a document*); "当然 是否允许用户改是个问题， 暂时先不允许用户改？"
   (*whether to let the user edit is a question; not for now?*), relayed by master.
-- **Recorded in.** Design commits 46b2c73, f12ca5e (the editor) and a1fc671 (the decision and
-  Compare); master's and work-02's notes,
+- **Recorded in.** Design commits 46b2c73, f12ca5e (the editor), a1fc671 (the decision and
+  Compare) and 0c79dcc (recorded versions only); product commit ca0a623; master's and work-02's notes,
   30 October 2026.
 
 ## D63. 2026-10-30 · An episode's views are Segments and Canvas; Segments is a matrix
