@@ -44,8 +44,8 @@ for (const theme of ["dark", "light"] as const) {
     // (open-qa.mjs leaves 后妈来了 there), else Bride's.
     const rewriting = list.find((d) => d.title === "后妈来了")?.id ?? bride;
     expect(bride, "Bride on Bail is seeded in the product").toBeTruthy();
-    const inbox: { id: string; state: string; episode?: string; kind: string }[] = await page.evaluate(async (d) => (await (await fetch(`/api/inbox?drama=${d}`)).json()), bride);
-    const takes = inbox.find((r) => r.state === "open" && r.episode === "EP006" && r.kind === "takes");
+    const queue: { id: string; state: string; episode?: string; kind: string }[] = await page.evaluate(async (d) => (await (await fetch(`/api/reviews?drama=${d}`)).json()), bride);
+    const takes = queue.find((r) => r.state === "open" && r.episode === "EP006" && r.kind === "takes");
     const routes: Record<(typeof SCREENS)[number], string> = {
       home: "/", upload: "/new", analyzing: `/d/${rewriting}/analyzing`, fountain: `/d/${rewriting}/script`, story: `/d/${bride}/story`, episodes: `/d/${bride}/episodes`,
       canvas: `/d/${bride}/e/EP006/canvas`, graph: `/d/${bride}/out-of-date`, review: takes ? `/r/${takes.id}` : `/d/${bride}/review`, cut: `/d/${bride}/e/EP001/cut`,

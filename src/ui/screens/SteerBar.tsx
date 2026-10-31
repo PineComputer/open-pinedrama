@@ -24,10 +24,10 @@ function reviewKey(node: Item): string {
 
 /** The open review that holds the item, if one does. */
 function useOpenReview(drama: DramaView, node: Item): ReviewView | undefined {
-  const inbox = useResource<ReviewSummary[]>("/api/inbox", ["inbox"]);
+  const queue = useResource<ReviewSummary[]>("/api/reviews", ["reviews"]);
   const [found, setFound] = useState<ReviewView>();
   const kinds = node.kind === "cut" ? ["cut"] : node.episode ? ["storyboards", "takes"] : ["looks", "references"];
-  const candidates = (inbox.data ?? []).filter((review) => review.dramaId === drama.id && review.state === "open" && kinds.includes(review.kind) && (!node.episode || review.episode === node.episode));
+  const candidates = (queue.data ?? []).filter((review) => review.dramaId === drama.id && review.state === "open" && kinds.includes(review.kind) && (!node.episode || review.episode === node.episode));
   const ids = candidates.map((review) => review.id).join(",");
   useEffect(() => {
     let live = true;

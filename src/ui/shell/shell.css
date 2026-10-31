@@ -14,9 +14,6 @@
 /* The design's frame leaves room for its own preview bar (--proto); the studio has none. */
 :root { --proto: 0px; }
 
-/* Too narrow for the panel beside the work: it floats over it. */
-@media (max-width: 1279px) { .agent:not(.float) { position: fixed; right: 20px; bottom: 20px; z-index: 30; width: 380px; height: min(640px, calc(100vh - 120px)); border: 1px solid var(--border); border-radius: var(--radius-2xl); box-shadow: var(--shadow-dialog); overflow: hidden; } }
-@media (max-width: 1100px) { .side { display: none; } }
 @media (max-width: 760px) {
   .rail { display: none; }
   .bar2 .chip { display: none; }

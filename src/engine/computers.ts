@@ -235,7 +235,7 @@ export function markStopped(row: ComputerRow, why: string): void {
       );
     }
   }
-  publish(`drama:${row.drama_id}`, "inbox", "dramas");
+  publish(`drama:${row.drama_id}`, "reviews", "dramas");
 }
 
 /**

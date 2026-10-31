@@ -342,7 +342,7 @@ function summary(review: ReviewRow): ReviewSummary {
   };
 }
 
-export function inbox(dramaId?: string): ReviewSummary[] {
+export function reviewList(dramaId?: string): ReviewSummary[] {
   const rows = all<ReviewRow & { role: string }>(
     `select r.*, s.role from reviews r join sessions s on s.id = r.session_id
      where r.state in ('open', 'saving', 'sending', 'ended') ${dramaId ? "and r.drama_id = ?" : ""}`,
@@ -395,7 +395,7 @@ export function reviewView(review: ReviewRow): ReviewView {
   const files = filesOfStop(review);
   const { items, other } = itemsOf(review.kind, files);
   const first = Math.min(...files.map((file) => file.id));
-  const next = inbox().find((item) => item.id !== review.id && item.state === "open");
+  const next = reviewList().find((item) => item.id !== review.id && item.state === "open");
   // The episode's shot list, wherever it was written (pre-production writes them all).
   const breakdown = review.episode_id
     ? get<FileRow>("select * from files where episode_id = ? and kind = 'breakdown' and type like 'text/%' order by id desc limit 1", review.episode_id)

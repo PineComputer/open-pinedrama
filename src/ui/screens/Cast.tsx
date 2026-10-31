@@ -231,7 +231,7 @@ export function Cast({ dramaId, compact = false }: { dramaId: string; compact?: 
   const tabs: [Shelf, string, number | undefined][] = [
     ["bible", t("cast.bible"), undefined],
     ["cast", t("cast.cast"), characters.length],
-    ["scenes", t("cast.scenes"), places.length],
+    ["scenes", t("cast.locations"), places.length],
     ["props", t("cast.props"), props.length],
   ];
   // The design's Story (design/screens.js, Story): underlined tabs with the bible's state at their end, then the shelf.

@@ -1,7 +1,7 @@
 // The agent panel and the stop control, used as a maker uses them on a drama with one episode at
-// work and one waiting: what runs, with Watch and Stop; the decisions waiting; what is to do and
-// the recent work named as the bible names them; the session in view and a line to it; the panel
-// docked, floated and collapsed to its ball; and Stop drama through to Resume.
+// work and one waiting: its sessions, with Watch and Stop; the decisions waiting; the recent work
+// named as the bible names them; the session it speaks to, followed or pinned, and a line to it;
+// the panel docked, floated and collapsed to its ball; and Stop drama through to Resume.
 import { screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { readFileSync } from "node:fs";
@@ -69,7 +69,7 @@ function chat(sessionId: string, label: string, sends: ChatView["sends"]): ChatV
 
 function engine() {
   answer("/api/dramas/d1/project", project());
-  answer("/api/inbox", [decision]);
+  answer("/api/reviews", [decision]);
   answer("/api/dramas/d1/files", [file("drama/assets/characters/lin/v1/image-1.png", "2026-10-30T10:00:00Z"), file("drama/assets/characters/lin/v2/image-1.png", "2026-10-30T10:05:00Z")]);
   answer("/api/dramas/d1/sessions", [chat("s1", "EP001", "steer"), chat("s2", "EP002", "review")]);
   answer("/api/sessions/s1/chat", chat("s1", "EP001", "steer"));
@@ -77,13 +77,13 @@ function engine() {
 }
 
 describe("the agent panel", () => {
-  it("shows what runs, the decisions waiting, and what was made, named as the bible names them", async () => {
+  it("shows the sessions, the decisions waiting, and what was made, named as the bible names them", async () => {
     engine();
     await renderAt(<AgentPanel drama={drama} mode="docked" onMode={() => {}} />);
-    const running = screen.getByRole("region", { name: "Running" });
-    expect(within(running).getByRole("button", { name: /EP001\s*Shooting seg01/ })).toBeInTheDocument();
-    // A session that waits for the maker is a decision, not something running (the design's Running lists those at work).
-    expect(within(running).queryByRole("button", { name: /EP002/ })).toBeNull();
+    // Every open session, at work or waiting for the maker, so any can be pinned (design/app.js, AgentPanel's Sessions).
+    const sessions = screen.getByRole("region", { name: "Sessions" });
+    expect(within(sessions).getByRole("button", { name: /EP001\s*Shooting seg01/ })).toBeInTheDocument();
+    expect(within(sessions).getByRole("button", { name: /^EP002/ })).toBeInTheDocument();
     const decisions = screen.getByRole("region", { name: "Decisions" });
     expect(await within(decisions).findByRole("link", { name: /EP002 · Storyboards\s*3 items · seg01, seg02, seg03/ })).toHaveAttribute("href", "/r/r2");
     // Recent work needs the files as well as the project.
@@ -124,17 +124,39 @@ describe("the agent panel", () => {
     expect(screen.getByRole("textbox", { name: "Message the agent" })).toBeDisabled();
   });
 
-  it("follows the episode in view, and says so when the maker pins another session by hand (Codex's IA review, B3)", async () => {
+  it("follows the episode in view, and a pin wins until the maker follows it again (IA draft E)", async () => {
     const user = userEvent.setup();
     engine();
     await renderAt(<AgentPanel drama={drama} episode="EP002" mode="docked" onMode={() => {}} />);
+    const scope = screen.getByRole("status");
+    expect(scope).toHaveTextContent("Following EP002, the episode in view");
     // EP002's session waits on its review: the panel follows it there.
     expect(await screen.findByRole("link", { name: "Open the review it waits on" })).toHaveAttribute("href", "/r/r2");
-    await user.click(within(screen.getByRole("region", { name: "Running" })).getByRole("button", { name: /^EP001/ }));
-    expect(await screen.findByText(/^To EP001's session · Pinned to EP001/)).toBeInTheDocument();
-    await user.click(screen.getByRole("button", { name: "Follow the page" }));
+    await user.click(within(screen.getByRole("region", { name: "Sessions" })).getByRole("button", { name: /^EP001/ }));
+    expect(scope).toHaveTextContent("Pinned to EP001");
+    // The process, the messages and the line all go with the pin.
+    expect(await screen.findByText(/^To EP001's session/)).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /EP001 · Process/ })).toBeInTheDocument();
+    await user.click(within(scope).getByRole("button", { name: "Follow EP002" }));
+    expect(scope).toHaveTextContent("Following EP002, the episode in view");
     expect(await screen.findByRole("link", { name: "Open the review it waits on" })).toBeInTheDocument();
-    expect(screen.queryByText(/Pinned to/)).not.toBeInTheDocument();
+  });
+
+  it("follows no session on a page with no episode in view, and never guesses one (IA draft E)", async () => {
+    const user = userEvent.setup();
+    engine();
+    await renderAt(<AgentPanel drama={drama} mode="docked" onMode={() => {}} />);
+    expect(screen.getByRole("status")).toHaveTextContent("No episode in view");
+    // EP001 is at work and EP002 asks, but neither is taken for the page's.
+    expect(screen.getByRole("textbox", { name: "Message the agent" })).toBeDisabled();
+    expect(screen.getByRole("textbox", { name: "Message the agent" })).toHaveAttribute("placeholder", "Pin a session to message it");
+    expect(screen.getByText("No session chosen")).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /· Process/ })).toBeNull();
+    await user.click(within(await screen.findByRole("region", { name: "Sessions" })).getByRole("button", { name: /^EP001/ }));
+    expect(screen.getByRole("status")).toHaveTextContent("Pinned to EP001");
+    expect(await screen.findByText(/^To EP001's session/)).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Unpin" }));
+    expect(screen.getByRole("status")).toHaveTextContent("No episode in view");
   });
 
   it("stops one episode after the maker confirms, and only then", async () => {

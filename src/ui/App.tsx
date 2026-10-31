@@ -1,5 +1,6 @@
 import { Link, linkOptions, type NotFoundRouteProps, Outlet, useLocation } from "@tanstack/react-router";
 import { createContext, lazy, Suspense, useContext, useEffect, useState } from "react";
+import { useMediaQuery } from "usehooks-ts";
 import type { LineageView } from "../shared/lineage.ts";
 import type { AppInfo, DramaView, ReviewSummary } from "../shared/types.ts";
 import { ApiError, useResource } from "./api.ts";
@@ -42,12 +43,12 @@ const LABEL: Partial<Record<Page, TKey>> = {
   script: "step.script",
   analyzing: "step.script",
   story: "step.story",
-  characters: "step.story",
-  locations: "step.story",
-  props: "step.story",
-  delivery: "step.cut",
+  characters: "cast.characters",
+  locations: "cast.locations",
+  props: "cast.props",
+  delivery: "step.delivery",
   canvasPick: "surface.canvas",
-  outOfDate: "surface.graph",
+  outOfDate: "tree.outOfDate",
   crew: "section.crew",
   episodes: "step.episodes",
 };
@@ -79,15 +80,18 @@ function useSidebar(): [boolean, () => void] {
 }
 
 /**
- * The agent panel for the drama in view, as the maker left it. On Canvas and Graph the board
- * needs the room, and the review room its stage, as the pro direction's Review room has it: a
- * docked panel shows as the ball there, and opens floating over the work.
+ * The agent panel for the drama in view, as the maker left it. On Canvas and Lineage the board
+ * needs the room, and the review room its stage, as the pro direction's Review room has it; and at
+ * 1280 px and below the work does (IA draft r2, F): a docked panel shows as the ball there, and
+ * opens floating over the work.
  */
 function Agent({ drama, episode, mode, onMode, canvas }: { drama: DramaView; episode?: string; mode: AgentMode; onMode: (mode: AgentMode) => void; canvas: boolean }) {
-  const shown = canvas && mode === "docked" ? "collapsed" : mode;
+  const narrow = useMediaQuery("(max-width: 1280px)");
+  const roomless = canvas || narrow;
+  const shown = roomless && mode === "docked" ? "collapsed" : mode;
   if (shown === "collapsed") {
     const busy = drama.crew.some((computer) => computer.sessions.some((session) => session.state === "open" && !session.waiting));
-    return <AgentBall waiting={drama.waiting} busy={busy} onOpen={() => onMode(canvas ? "floating" : "docked")} />;
+    return <AgentBall waiting={drama.waiting} busy={busy} onOpen={() => onMode(roomless ? "floating" : "docked")} />;
   }
   return <AgentPanel drama={drama} episode={episode} mode={shown} onMode={onMode} />;
 }
@@ -198,17 +202,22 @@ export function App() {
   const [asideSlot, setAsideSlot] = useState<HTMLElement | null>(null);
   const app = useResource<AppInfo>("/api/app", ["app"]);
   const ready = app.data !== undefined && app.data.mode !== "none";
-  const inbox = useResource<ReviewSummary[]>(ready ? "/api/inbox" : null, ["inbox"]);
-  const waiting = (inbox.data ?? []).filter((item) => item.state === "open");
-  const reviewed = params.reviewId ? inbox.data?.find((item) => item.id === params.reviewId) : undefined;
+  const queue = useResource<ReviewSummary[]>(ready ? "/api/reviews" : null, ["reviews"]);
+  const waiting = (queue.data ?? []).filter((item) => item.state === "open");
+  const reviewed = params.reviewId ? queue.data?.find((item) => item.id === params.reviewId) : undefined;
   // The drama in view: its page's, or the one the review in view belongs to.
   const dramaId = params.dramaId ?? reviewed?.dramaId;
   const drama = useResource<DramaView>(dramaId && ready ? `/api/dramas/${dramaId}` : null, [`drama:${dramaId}`]);
   const place = usePlace();
   const [sidebarOpen, toggleSidebar] = useSidebar();
+  // IA draft r2 (F): below 1100 px the sidebar is a drawer over the work, opened from the rail and closed by any move.
+  const narrow = useMediaQuery("(max-width: 1100px)");
+  const [drawer, setDrawer] = useState(false);
+  const pathname = useLocation({ select: (location) => location.pathname });
+  useEffect(() => setDrawer(false), [pathname]);
   const [agentMode, setAgentMode] = useAgentMode();
   const { t } = useT();
-  useReviewNotifications(inbox.data && waiting);
+  useReviewNotifications(queue.data && waiting);
 
   useEffect(() => {
     document.title = waiting.length ? `(${waiting.length}) ${t("app.name")}` : t("app.name");
@@ -225,32 +234,41 @@ export function App() {
   let crumbs: Crumb[];
   if (page === "home") crumbs = [home];
   else if (page === "new") crumbs = [home, { label: t("new.title") }];
-  else if (page === "reviews") crumbs = [{ label: t("inbox.title") }];
+  else if (page === "reviews") crumbs = [{ label: t("reviews.title") }];
   else if (page === "settings") crumbs = [{ label: t("settings.title") }];
   else if (page === "review")
     crumbs = [
       home,
       ...(inDrama ? [inDrama] : []),
       ...(reviewed?.episode ? [{ label: reviewed.episode, to: linkOptions({ to: "/d/$dramaId/e/$episodeCode/list", params: { dramaId: reviewed.dramaId, episodeCode: reviewed.episode } }) }] : []),
-      { label: reviewed ? t(`kind.${reviewed.kind}`) : t("inbox.title") },
+      { label: reviewed ? t(`kind.${reviewed.kind}`) : t("reviews.title") },
     ];
   else if (!page) crumbs = [home, { label: t("notFound.title") }];
-  else if (place?.episode) crumbs = [home, ...(inDrama ? [inDrama, { label: t("step.episodes"), to: inDrama.to }] : []), { label: place.episode }];
+  // An episode's List is the episode; its Canvas and Cut are named after it, as design/'s crumbs read: Episodes › EP006 › Cut.
+  else if (place?.episode && drama.data) {
+    const episode: Crumb = { label: place.episode, to: linkOptions({ to: "/d/$dramaId/e/$episodeCode/list", params: { dramaId: drama.data.id, episodeCode: place.episode } }) };
+    const view = page === "canvas" ? t("surface.canvas") : page === "cut" ? t("step.cut") : undefined;
+    crumbs = [home, ...(inDrama ? [inDrama, { label: t("step.episodes"), to: inDrama.to }] : []), episode, ...(view ? [{ label: view }] : [])];
+  }
   // The setup's own screens, as design/'s crumbs read: Setup › Script, or Setup › Fountain review while the rewrite waits on the maker.
   else if (drama.data && isSetupScreen(drama.data, page)) crumbs = [home, ...(inDrama ? [inDrama] : []), { label: t("sidebar.setup") }, { label: t(page === "script" && scriptWaits(drama.data) ? "crumb.fountainReview" : "step.script") }];
+  // An Assets shelf sits under Assets, as the drama tree has it (IA §2): Drama › Assets › Characters.
+  else if (drama.data && (page === "characters" || page === "locations" || page === "props"))
+    crumbs = [home, ...(inDrama ? [inDrama] : []), { label: t("step.assets"), to: linkOptions({ to: "/d/$dramaId/assets/characters/{-$assetId}", params: { dramaId: drama.data.id, assetId: undefined } }) }, { label: t(LABEL[page] ?? "step.assets") }];
   else crumbs = [home, ...(inDrama ? [inDrama] : []), { label: t(LABEL[page] ?? "step.episodes") }];
 
-  const sidebar = drama.data && dramaId ? <DramaSidebar drama={drama.data} page={page} episode={followed} /> : <HomeSidebar page={page} replay={app.data.mode === "replay"} />;
+  const sidebar = drama.data && dramaId ? <DramaSidebar drama={drama.data} page={page} episode={followed} drawer={narrow} /> : <HomeSidebar page={page} reviews={queue.data ?? []} replay={app.data.mode === "replay"} drawer={narrow} />;
   return (
     // The design's frame (design/app.js, App and each screen): the rail, the sidebar, then the main column, its
     // top bar over a body that holds the work beside the agent's panel.
     <div className="app">
-      <NavRail page={page} dramaId={dramaId} sidebarOpen={sidebarOpen} onToggleSidebar={toggleSidebar} />
-      {sidebarOpen && sidebar}
+      <NavRail page={page} waiting={waiting.length} sidebarOpen={narrow ? drawer : sidebarOpen} onToggleSidebar={narrow ? () => setDrawer(!drawer) : toggleSidebar} />
+      {(narrow ? drawer : sidebarOpen) && sidebar}
       <div className="main">
-        {/* design/'s Home has no top bar: the page starts at the greeting; its Upload's has no Next review. */}
+        {/* design/'s Home has no top bar: the page starts at the greeting; its Upload's has no Next review. Reviews acts on
+            no one drama, so it has none either (IA draft A1); inside a drama, Next review is that drama's. */}
         {page !== "home" && (
-          <TopBar crumbs={crumbs} waiting={waiting} ready={ready} next={page !== "new"}>
+          <TopBar crumbs={crumbs} waiting={dramaId ? waiting.filter((item) => item.dramaId === dramaId) : waiting} ready={ready} next={page !== "new" && page !== "reviews"}>
             {drama.data && <ExportMenu drama={drama.data} />}
             {drama.data && <StopControl drama={drama.data} />}
           </TopBar>

@@ -1,6 +1,7 @@
 // The shell, used as a maker uses it, on a drama in production with episodes in each state: the
-// rail, the sidebar with the steps, the episode tree and where the drama stands, the top bar with
-// the breadcrumb and the next review, and the drama's bar with its surface and chips.
+// studio-wide rail, the drama tree with its counts, the episode tree and where the drama stands, the
+// top bar with the breadcrumb and the next review, and the drama's bar with Back to, an episode's
+// views and its chips.
 import { screen, waitFor, within } from "@testing-library/react";
 import { answer } from "../test/server.ts";
 import userEvent from "@testing-library/user-event";
@@ -53,26 +54,27 @@ describe("the drama's bar", () => {
     expect(screen.getByText("$41.20")).toBeInTheDocument();
   });
 
-  it("switches surface, keeping what is selected", async () => {
+  it("inside an episode, switches between its List, Canvas and Cut, keeping the item picked (IA §3)", async () => {
     const user = userEvent.setup();
-    const { router } = await renderAt(<DramaBar drama={drama} />, "/d/d1/e/EP002");
-    const surfaces = screen.getByRole("group", { name: "Surface" });
-    expect(within(surfaces).getByRole("button", { name: "Studio" })).toHaveAttribute("aria-pressed", "true");
-    await user.click(within(surfaces).getByRole("button", { name: "Canvas" }));
-    await waitFor(() => expect(href(router)).toBe("/d/d1/e/EP002/canvas"));
-    expect(within(surfaces).getByRole("button", { name: "Canvas" })).toHaveAttribute("aria-pressed", "true");
-    await user.click(within(surfaces).getByRole("button", { name: "Studio" }));
-    await waitFor(() => expect(href(router)).toBe("/d/d1/e/EP002/list"));
+    const { router } = await renderAt(<DramaBar drama={drama} />, "/d/d1/e/EP002/list?item=episodes%2FEP002%2Fsegments%2Fseg01");
+    const views = screen.getByRole("group", { name: "EP002 view" });
+    expect(within(views).getAllByRole("button").map((button) => [button.textContent, button.getAttribute("aria-pressed")])).toEqual([
+      ["List", "true"],
+      ["Canvas", "false"],
+      ["Cut", "false"],
+    ]);
+    await user.click(within(views).getByRole("button", { name: "Canvas" }));
+    await waitFor(() => expect(href(router)).toBe("/d/d1/e/EP002/canvas?item=episodes%2FEP002%2Fsegments%2Fseg01"));
+    await user.click(within(views).getByRole("button", { name: "List" }));
+    await waitFor(() => expect(href(router)).toBe("/d/d1/e/EP002/list?item=episodes%2FEP002%2Fsegments%2Fseg01"));
   });
 
-  it("takes a character picked on Lineage to its home under Assets, never to Home or an episode (Codex's IA review, B1)", async () => {
-    const user = userEvent.setup();
-    const { router } = await renderAt(<DramaBar drama={drama} />, "/d/d1/assets/characters/ivy?view=lineage");
-    const surfaces = screen.getByRole("group", { name: "Surface" });
-    await user.click(within(surfaces).getByRole("button", { name: "Canvas" }));
-    await waitFor(() => expect(href(router)).toBe("/d/d1/canvas?item=assets%2Fcharacters%2Fivy"));
-    await user.click(within(surfaces).getByRole("button", { name: "Studio" }));
-    await waitFor(() => expect(href(router)).toBe("/d/d1/assets/characters/ivy"));
+  it("has no views off an episode, nor on an item's Lineage: Story, Assets, the board and Delivery are one page each", async () => {
+    for (const path of ["/d/d1/story", "/d/d1/assets/characters/ivy", "/d/d1/episodes", "/d/d1/delivery", "/d/d1/e/EP002/list?item=episodes%2FEP002%2Fsegments%2Fseg01&view=lineage"]) {
+      const { unmount } = await renderAt(<DramaBar drama={drama} />, path);
+      expect(screen.queryByRole("group", { name: /view$/ })).toBeNull();
+      unmount();
+    }
   });
 });
 
@@ -83,14 +85,25 @@ describe("the top bar", () => {
     { label: "EP002" },
   ];
 
-  it("says where you are, each step back a link, and goes back one", async () => {
+  it("says where this belongs, each step up a link, with no Back of its own (design/'s TopBar, 2f2a07b)", async () => {
     const user = userEvent.setup();
     const { router } = await renderAt(<TopBar crumbs={crumbs} waiting={[]} ready next />, "/d/d1/e/EP002/list");
-    const where = screen.getByRole("navigation", { name: "Where you are" });
+    const where = screen.getByRole("navigation", { name: "Where this belongs" });
     expect(within(where).getAllByRole("link").map((link) => link.textContent)).toEqual(["Dramas", "The Stepmother"]);
     expect(within(where).getByText("EP002")).toHaveAttribute("aria-current", "page");
-    await user.click(screen.getByRole("button", { name: "Back" }));
+    expect(screen.queryByRole("button", { name: /^Back/ })).toBeNull();
+    await user.click(within(where).getByRole("link", { name: "The Stepmother" }));
     await waitFor(() => expect(href(router)).toBe("/d/d1/episodes"));
+  });
+
+  it("goes back to where a link came from, as its history entry says, and only then offers it (IA §16, rule 2)", async () => {
+    const user = userEvent.setup();
+    const { router } = await renderAt(<TopBar crumbs={crumbs} waiting={[]} ready next />, "/r/r1");
+    expect(screen.queryByRole("button", { name: /^Back to/ })).toBeNull();
+    await router.navigate({ to: "/d/$dramaId/e/$episodeCode/list", params: { dramaId: "d1", episodeCode: "EP002" }, search: { item: "episodes/EP002/segments/seg01" }, state: { backTo: "the review of EP002 seg01" } });
+    await user.click(await screen.findByRole("button", { name: "Back to the review of EP002 seg01" }));
+    // Back is the browser's (the history's): renderAt's router follows navigations, not the history moving under it.
+    await waitFor(() => expect(router.history.location.href).toBe("/r/r1"));
   });
 
   it("goes to the next review waiting, not the one in view", async () => {
@@ -107,29 +120,31 @@ describe("the top bar", () => {
 });
 
 describe("the rail", () => {
-  it("outside a drama, shows every place, the drama's own disabled, with settings at its foot", async () => {
-    const { router } = await renderAt(<NavRail page="home" sidebarOpen onToggleSidebar={() => {}} />, "/");
+  it("is studio-wide: Dramas, Reviews with every drama's count, Settings, and no drama's places (IA §2)", async () => {
+    await renderAt(<NavRail page="list" waiting={3} sidebarOpen onToggleSidebar={() => {}} />, "/d/d1/e/EP002/list");
     const rail = screen.getByRole("navigation", { name: "Places" });
-    expect(within(rail).getAllByRole("button").map((button) => button.getAttribute("aria-label"))).toEqual(["Hide the sidebar", "Dramas", "Script", "Story", "Episodes", "Canvas", "Graph", "To review", "Cut", "Settings"]);
-    expect(within(rail).getByRole("button", { name: "Dramas" })).toHaveAttribute("aria-current", "page");
-    expect(within(rail).getByRole("button", { name: "Story" })).toBeDisabled();
-    expect(within(rail).getByRole("button", { name: "To review" })).toBeEnabled();
+    expect(within(rail).getAllByRole("link").map((link) => [link.getAttribute("aria-label"), link.getAttribute("aria-current")])).toEqual([
+      ["Dramas", "page"],
+      ["Reviews, 3 waiting", "false"],
+      ["Settings", "false"],
+    ]);
+    expect(within(rail).getByRole("link", { name: "Reviews, 3 waiting" })).toHaveAttribute("href", "/reviews");
   });
 
-  it("in a drama, adds its steps and surfaces in the pro direction's order, and goes to one", async () => {
-    const user = userEvent.setup();
-    const { router } = await renderAt(<NavRail page="story" dramaId="d1" sidebarOpen={false} onToggleSidebar={() => {}} />, "/d/d1/story");
-    const rail = screen.getByRole("navigation", { name: "Places" });
-    expect(within(rail).getAllByRole("button").map((button) => button.getAttribute("aria-label"))).toEqual(["Show the sidebar", "Dramas", "Script", "Story", "Episodes", "Canvas", "Graph", "To review", "Cut", "Settings"]);
-    expect(within(rail).getByRole("button", { name: "Story" })).toHaveAttribute("aria-current", "page");
-    await user.click(within(rail).getByRole("button", { name: "Canvas" }));
-    await waitFor(() => expect(href(router)).toBe("/d/d1/canvas"));
+  it("marks Reviews on the queue and on a review, and says no count when nothing waits", async () => {
+    for (const [page, path] of [["reviews", "/reviews"], ["review", "/r/r1"]] as const) {
+      const { unmount } = await renderAt(<NavRail page={page} waiting={0} sidebarOpen onToggleSidebar={() => {}} />, path);
+      const rail = screen.getByRole("navigation", { name: "Places" });
+      expect(within(rail).getByRole("link", { name: "Reviews" })).toHaveAttribute("aria-current", "page");
+      expect(within(rail).getByRole("link", { name: "Dramas" })).toHaveAttribute("aria-current", "false");
+      unmount();
+    }
   });
 
   it("opens and closes the sidebar", async () => {
     const user = userEvent.setup();
     let toggled = 0;
-    await renderAt(<NavRail page="home" sidebarOpen onToggleSidebar={() => toggled++} />);
+    await renderAt(<NavRail page="home" waiting={0} sidebarOpen onToggleSidebar={() => toggled++} />);
     const toggle = screen.getByRole("button", { name: "Hide the sidebar" });
     expect(toggle).toHaveAttribute("aria-expanded", "true");
     await user.click(toggle);
@@ -138,29 +153,60 @@ describe("the rail", () => {
 });
 
 describe("the sidebar", () => {
-  it("on the studio's pages, offers its places as the design does, Computers and Usage for phase 2", async () => {
-    await renderAt(<HomeSidebar page="settings" replay />, "/settings");
-    expect(screen.getByRole("link", { name: "Settings" })).toHaveAttribute("aria-current", "page");
-    expect(screen.getByRole("link", { name: "Dramas" })).toHaveAttribute("aria-current", "false");
-    expect(screen.getByRole("button", { name: "Computers" })).toBeDisabled();
-    expect(screen.getByRole("button", { name: "Usage" })).toBeDisabled();
+  it("on the studio's pages, lists the dramas as Home's cards stand, and New drama", async () => {
+    const card = (id: string, title: string, more: object) => ({ id, title, status: "production", waiting: 0, episodes: { total: 2, done: 0, waiting: 0, working: 1 }, ...more });
+    answer("/api/dramas", [card("d1", "The Stepmother", { waiting: 2 }), card("d2", "Night Class", {}), card("d3", "Last Toast", {})]);
+    const redLine = { ...review("r9"), dramaId: "d3", kind: "question", stop: { kind: "red-line" } } as unknown as ReviewSummary;
+    await renderAt(<HomeSidebar page="home" reviews={[redLine]} replay drawer={false} />, "/");
+    const places = screen.getByRole("navigation", { name: "The studio" });
+    await waitFor(() => expect(within(places).getAllByRole("link").map((link) => link.textContent)).toEqual(["The Stepmother, 2 need you", "Night Class, At work", "Last Toast, Red line", "New drama"]));
+    expect(within(places).getByRole("link", { name: /^Night Class/ })).toHaveAttribute("href", "/d/d2");
     expect(screen.getByText("Replay · sample work, no spend")).toBeInTheDocument();
   });
 
-  it("marks the step in view, and counts what waits for the maker under each step", async () => {
-    answer("/api/inbox", [review("r1"), { ...review("r2"), kind: "looks" }, { ...review("r3"), kind: "cut", state: "sent" }]);
-    const { router } = await renderAt(<DramaSidebar drama={{ ...drama, setup: { ...drama.setup, reached: 2 } }} page="episodes" />, "/d/d1/episodes");
-    const steps = screen.getByRole("navigation", { name: "Steps" });
-    expect(within(steps).getByRole("link", { name: /^Episodes/ })).toHaveAttribute("aria-current", "page");
-    expect(await within(steps).findByRole("link", { name: /^Episodes\s*1 need you$/ })).toBeInTheDocument();
-    expect(within(steps).getByRole("link", { name: /^Story\s*1 need you$/ })).toBeInTheDocument();
-    expect(within(steps).getByRole("link", { name: "Cut" })).toBeInTheDocument();
-    expect(within(steps).getAllByRole("link", { name: /^(Script|Story|Episodes|Cut)/ }).map((link) => link.textContent?.split(/\d/)[0].trim())).toEqual(["Script", "Story", "Episodes", "Cut"]);
+  it("is the drama tree: each place once, the shelves and episodes under theirs, then Reviews and Out of date (D16)", async () => {
+    answer("/api/reviews", [review("r1"), { ...review("r2"), kind: "looks" }, { ...review("r3"), kind: "cut", episode: "EP003" }, { ...review("r4"), kind: "cut", state: "sent" }]);
+    answer("/api/dramas/d1/cast", [{ kind: "look", subject: "ivy", looks: [], episodes: [] }, { kind: "look", subject: "luca", looks: [], episodes: [] }, { kind: "location", subject: "garden", looks: [], episodes: [] }]);
+    await renderAt(<DramaSidebar drama={{ ...drama, setup: { ...drama.setup, reached: 2 } }} page="episodes" drawer={false} />, "/d/d1/episodes");
+    const tree = screen.getByRole("navigation", { name: "The Stepmother" });
+    expect(within(tree).getAllByRole("link").map((link) => link.getAttribute("href"))).toEqual([
+      "/d/d1/script",
+      "/d/d1/story",
+      "/d/d1/assets/characters",
+      "/d/d1/episodes",
+      "/d/d1/delivery",
+      "/reviews?drama=d1",
+      "/d/d1/out-of-date",
+    ]);
+    expect(within(tree).getByRole("link", { name: /^Episodes/ })).toHaveAttribute("aria-current", "page");
+    // Each open review counted where it is decided: storyboards in Episodes, looks in Assets, a cut in Delivery.
+    expect(await within(tree).findByRole("link", { name: /^Episodes\s*1 need you$/ })).toBeInTheDocument();
+    expect(within(tree).getByRole("link", { name: /^Assets\s*1 need you$/ })).toBeInTheDocument();
+    expect(within(tree).getByRole("link", { name: /^Delivery\s*1 need you$/ })).toBeInTheDocument();
+    expect(within(tree).getByRole("link", { name: /^Reviews\s*3 need you$/ })).toBeInTheDocument();
+    const shelves = within(tree).getByRole("list", { name: "Assets" });
+    await waitFor(() => expect(within(shelves).getAllByRole("button").map((button) => button.textContent)).toEqual(["Characters2", "Locations1", "Props0"]));
+  });
+
+  it("opens an Assets shelf, marked while it is in view", async () => {
+    const user = userEvent.setup();
+    const { router } = await renderAt(<DramaSidebar drama={drama} page="locations" drawer={false} />, "/d/d1/assets/locations");
+    const tree = screen.getByRole("navigation", { name: "The Stepmother" });
+    expect(within(tree).getByRole("link", { name: /^Assets/ })).toHaveAttribute("aria-current", "page");
+    const shelves = within(tree).getByRole("list", { name: "Assets" });
+    expect(within(shelves).getByRole("button", { name: /^Locations/ })).toHaveAttribute("aria-current", "true");
+    await user.click(within(shelves).getByRole("button", { name: /^Props/ }));
+    await waitFor(() => expect(href(router)).toBe("/d/d1/assets/props"));
+  });
+
+  it("opens over the work as a drawer when the window is narrow", async () => {
+    await renderAt(<DramaSidebar drama={drama} page="episodes" drawer />, "/d/d1/episodes");
+    expect(screen.getByRole("complementary", { name: "Sidebar" })).toHaveClass("side", "drawer-open");
   });
 
   it("lists every episode with what it is doing and where it stands, and opens one", async () => {
     const user = userEvent.setup();
-    const { router } = await renderAt(<DramaSidebar drama={drama} page="episodes" />, "/d/d1/episodes");
+    const { router } = await renderAt(<DramaSidebar drama={drama} page="episodes" drawer={false} />, "/d/d1/episodes");
     const tree = screen.getByRole("list", { name: "Episodes" });
     // The name starts with what the button shows (WCAG 2.5.3), then where the episode stands.
     expect(within(tree).getAllByRole("button").map((button) => button.textContent)).toEqual([
@@ -175,20 +221,20 @@ describe("the sidebar", () => {
 
   it("folds the episodes that only wait in line at its end into one line", async () => {
     const queued = drama.episodeRows[3];
-    const { router } = await renderAt(<DramaSidebar drama={{ ...drama, episodeRows: [...drama.episodeRows, { ...queued, id: "e5", code: "EP005" }] }} page="episodes" />, "/d/d1/episodes");
+    const { router } = await renderAt(<DramaSidebar drama={{ ...drama, episodeRows: [...drama.episodeRows, { ...queued, id: "e5", code: "EP005" }] }} page="episodes" drawer={false} />, "/d/d1/episodes");
     const tree = screen.getByRole("list", { name: "Episodes" });
     expect(within(tree).getAllByRole("button").map((button) => button.textContent?.slice(0, 5))).toEqual(["EP001", "EP002", "EP003"]);
     expect(within(tree).getByText("EP004–EP005 · 2 in line")).toBeInTheDocument();
   });
 
   it("marks the episode in view", async () => {
-    const { router } = await renderAt(<DramaSidebar drama={drama} page="list" episode="EP003" />, "/d/d1/e/EP003/list");
+    const { router } = await renderAt(<DramaSidebar drama={drama} page="list" episode="EP003" drawer={false} />, "/d/d1/e/EP003/list");
     expect(within(screen.getByRole("list", { name: "Episodes" })).getAllByRole("button")[2]).toHaveAttribute("aria-current", "true");
   });
 
   it("while the drama is set up, says the setup's step at its foot, not empty episode counts", async () => {
     const settingUp = { ...drama, status: "setup", episodes: { total: 0, done: 0, waiting: 0, working: 0 }, setup: { state: "working", reached: 4 }, episodeRows: [] } as unknown as DramaView;
-    await renderAt(<DramaSidebar drama={settingUp} page="episodes" />);
+    await renderAt(<DramaSidebar drama={settingUp} page="episodes" drawer={false} />);
     const standing = screen.getByRole("status", { name: "Where the drama stands" });
     expect(standing).toHaveTextContent("Setup · Preparing every episode: breakdowns, looks, places and props");
     expect(standing).not.toHaveTextContent("0 of 0");
@@ -196,7 +242,7 @@ describe("the sidebar", () => {
 
   it("while the setup waits on the rewrite, gives the four steps with Script for the maker's review", async () => {
     const waiting = { ...drama, status: "setup", setup: { state: "waiting", reached: 1 }, episodeRows: [] } as unknown as DramaView;
-    await renderAt(<DramaSidebar drama={waiting} page="script" />);
+    await renderAt(<DramaSidebar drama={waiting} page="script" drawer={false} />);
     const steps = screen.getByRole("list", { name: "Steps" });
     expect(within(steps).getAllByRole("listitem").map((step) => [step.className, step.textContent])).toEqual([
       ["you", "1ScriptYour review"],
@@ -209,7 +255,7 @@ describe("the sidebar", () => {
   it("says at its foot what the drama spent against its budget, what is in flight and how many are at work", async () => {
     const budget = (reservedUsd: number) => ({ budgetUsd: 1000, spentUsd: 0, reservedUsd, remainingUsd: 1000 });
     answer("/api/dramas/d1/project", { state: null, sessions: [{ budget: budget(4.8) }, { budget: budget(2.4) }], problems: [], names: null });
-    await renderAt(<DramaSidebar drama={drama} page="episodes" />);
+    await renderAt(<DramaSidebar drama={drama} page="episodes" drawer={false} />);
     const standing = screen.getByRole("status", { name: "Where the drama stands" });
     expect(standing).toHaveTextContent("$41.20");
     expect(await within(standing).findByText("/ $1,000")).toBeInTheDocument();
@@ -219,7 +265,7 @@ describe("the sidebar", () => {
   });
 
   it("marks a replay's spend as simulated, so it never reads as a charge", async () => {
-    await renderAt(<DramaSidebar drama={{ ...drama, mode: "replay" }} page="episodes" />);
+    await renderAt(<DramaSidebar drama={{ ...drama, mode: "replay" }} page="episodes" drawer={false} />);
     const standing = screen.getByRole("status", { name: "Where the drama stands" });
     expect(within(standing).getByText("Simulated spend")).toBeInTheDocument();
     expect(within(standing).queryByText("Spent")).not.toBeInTheDocument();
@@ -228,7 +274,7 @@ describe("the sidebar", () => {
   it("switches to another drama from its head", async () => {
     const user = userEvent.setup();
     answer("/api/dramas", [{ id: "d1", title: "The Stepmother" }, { id: "d2", title: "Night Class" }]);
-    const { router } = await renderAt(<DramaSidebar drama={drama} page="episodes" />, "/d/d1/episodes");
+    const { router } = await renderAt(<DramaSidebar drama={drama} page="episodes" drawer={false} />, "/d/d1/episodes");
     await user.click(screen.getByRole("button", { name: /^The Stepmother/ }));
     await user.click(await screen.findByRole("menuitem", { name: "Night Class" }));
     await waitFor(() => expect(href(router)).toBe("/d/d2/episodes"));

@@ -64,7 +64,7 @@ function Running({ drama, session, inView, inFlight, onPick }: { drama: DramaVie
   const label = session.episode ?? t("crew.setup");
   return (
     <div className="arow" aria-current={inView ? "true" : undefined}>
-      <button type="button" className="what" style={{ border: 0, background: "none", padding: 0, textAlign: "left", cursor: "pointer", color: "inherit" }} onClick={onPick}>
+      <button type="button" className="what" title={t("agent.pinTo", { who: label })} style={{ border: 0, background: "none", padding: 0, textAlign: "left", cursor: "pointer", color: "inherit" }} onClick={onPick}>
         <b>{label}</b>
         <span>{session.waiting ? t("crew.waiting") : (session.activity ?? t("board.atWork"))}</span>
       </button>
@@ -100,33 +100,29 @@ export function AgentPanel({ drama, episode, mode, onMode }: { drama: DramaView;
   const navigate = useNavigate();
   const id = drama.id;
   const project = useResource<ProjectView>(`/api/dramas/${id}/project`, [`project:${id}`]);
-  const inbox = useResource<ReviewSummary[]>(`/api/inbox?drama=${id}`, ["inbox"]);
+  const queue = useResource<ReviewSummary[]>(`/api/reviews?drama=${id}`, ["reviews"]);
   const files = useResource<FileItem[]>(`/api/dramas/${id}/files`, [`drama:${id}`]);
   const sessions = useResource<ChatView[]>(`/api/dramas/${id}/sessions`, [`drama:${id}`]);
-  // What runs, as the design's Running lists it: the sessions at work; one that waits for the maker is a decision instead.
-  const running = drama.crew.flatMap((computer) => computer.sessions.filter((session) => session.state === "open" && !session.waiting));
-  const [picked, setPicked] = useState<string>();
+  // The drama's sessions, at work or waiting for the maker (design/app.js, AgentPanel's Sessions): each can be pinned.
+  const open = drama.crew.flatMap((computer) => computer.sessions.filter((session) => session.state === "open"));
+  const running = open.filter((session) => !session.waiting);
+  // The session pinned, with the name it had, so the pin still says what it holds once that session has ended.
+  const [picked, setPicked] = useState<{ id: string; label: string }>();
   const [processOpen, setProcessOpen] = useState(true);
-  // The session in view: the one picked, else the episode's in view, else one at work (its process shows), else one that asks, else the first.
+  // The session the panel speaks to (IA draft E): the one pinned, else the episode's in view. A page with no episode in
+  // view follows none and never guesses one; its process, messages and composer all follow that one session.
   const chats = sessions.data ?? [];
-  const inView =
-    chats.find((chat) => chat.sessionId === picked) ??
-    chats.find((chat) => episode && chat.label === episode) ??
-    chats.find((chat) => running.some((session) => session.id === chat.sessionId)) ??
-    chats.find((chat) => chat.sends === "answer") ??
-    chats[0];
+  const inView = picked ? chats.find((chat) => chat.sessionId === picked.id) : episode ? chats.find((chat) => chat.label === episode) : undefined;
   const chat = useResource<ChatView>(inView ? `/api/sessions/${inView.sessionId}/chat` : null, inView ? [`session:${inView.sessionId}`] : []);
   const links = new Map((files.data ?? []).map((file) => [file.path, file.url]));
   const names = project.data?.names ?? null;
   const state = project.data?.state ?? null;
-  const decisions = (inbox.data ?? []).filter((item) => item.state === "open");
+  const decisions = (queue.data ?? []).filter((item) => item.state === "open");
   const recent = state ? recentWork(state, files.data ?? [], 6) : [];
   const steps = (chat.data?.messages ?? []).filter((message) => message.kind === "activity").slice(-7);
   const said = (chat.data?.messages ?? []).filter((message) => message.kind === "progress" || message.kind === "question" || message.kind === "result").slice(-2);
   const working = running.length > 0;
   const who = inView?.label || t("talk.setup");
-  // A session picked by hand that isn't the one the page shows.
-  const pinned = picked && inView?.sessionId === picked && inView.label !== episode ? inView : undefined;
   const last = said.at(-1);
   return (
     <aside className={mode === "floating" ? "agent float glass" : "agent"} aria-label={t("agent.label")}>
@@ -141,21 +137,41 @@ export function AgentPanel({ drama, episode, mode, onMode }: { drama: DramaView;
           <Icon name="x" className="ic" />
         </button>
       </div>
+      {/* Whom the panel speaks to, and the way back to following the page (Codex's IA re-review, E). */}
+      <div className="ascope" role="status">
+        {picked ? (
+          <>
+            <Icon name="map-pin" className="ic" />
+            <span>{t("agent.pinned", { who: picked.label })}</span>
+            <span className="grow" />
+            <button type="button" className="btn sm ghost" onClick={() => setPicked(undefined)}>
+              {episode ? t("agent.followEpisode", { who: episode }) : t("agent.unpin")}
+            </button>
+          </>
+        ) : episode ? (
+          <>
+            <span className="live" aria-hidden="true" />
+            <span>{t("agent.following", { who: episode })}</span>
+          </>
+        ) : (
+          <span>{t("agent.noEpisode")}</span>
+        )}
+      </div>
       <div className="ascroll">
-        <section className="asec" aria-label={t("agent.running")}>
+        <section className="asec" aria-label={t("agent.sessions")}>
           <h3>
-            {t("agent.running")} <span className="c">{running.length}</span>
+            {t("agent.sessions")} <span className="c">{open.length}</span>
           </h3>
-          {running.length ? (
+          {open.length ? (
             <div style={{ display: "grid", gap: 6 }}>
-              {running.map((session) => (
+              {open.map((session) => (
                 <Running
                   key={session.id}
                   drama={drama}
                   session={session}
                   inView={session.id === inView?.sessionId}
                   inFlight={session.episode && state?.episodes[session.episode] ? takesInFlight(state.episodes[session.episode]) : 0}
-                  onPick={() => setPicked(session.id)}
+                  onPick={() => setPicked({ id: session.id, label: session.episode ?? t("crew.setup") })}
                 />
               ))}
             </div>
@@ -246,14 +262,14 @@ export function AgentPanel({ drama, episode, mode, onMode }: { drama: DramaView;
           </section>
         )}
       </div>
-      <Composer chat={chat.data} onSent={chat.reload} pinned={pinned ? pinned.label || t("talk.setup") : undefined} onFollow={() => setPicked(undefined)} />
+      <Composer chat={inView && chat.data} chosen={picked?.label ?? episode} onSent={chat.reload} />
     </aside>
   );
 }
 
 /** A line to the session in view: it answers, steers or starts a run, as the session stands. */
-/** `pinned`: the session the maker picked by hand, when it isn't the page's; `onFollow` goes back to following the page. */
-function Composer({ chat, onSent, pinned, onFollow }: { chat?: ChatView; onSent: () => void; pinned?: string; onFollow: () => void }) {
+/** A line to the session the panel speaks to; with none, it says why: the one pinned or followed has none open, or none is chosen. */
+function Composer({ chat, chosen, onSent }: { chat?: ChatView; chosen?: string; onSent: () => void }) {
   const { t } = useT();
   const [text, setText] = useState("");
   const [error, setError] = useState<unknown>();
@@ -270,7 +286,7 @@ function Composer({ chat, onSent, pinned, onFollow }: { chat?: ChatView; onSent:
   };
   // Waiting on the maker's review, the session takes no message: the line says so and opens the review.
   const reviewing = chat?.sends === "review" && chat.reviewId;
-  const placeholder = reviewing ? t("talk.inReview") : chat?.sends === "answer" ? t("talk.answer") : chat?.sends === "steer" ? t("talk.steer") : t("talk.run");
+  const placeholder = !chat ? t("talk.pick") : reviewing ? t("talk.inReview") : chat.sends === "answer" ? t("talk.answer") : chat.sends === "steer" ? t("talk.steer") : t("talk.run");
   return (
     <div className="composer">
       <textarea
@@ -289,19 +305,7 @@ function Composer({ chat, onSent, pinned, onFollow }: { chat?: ChatView; onSent:
             {t("talk.openReview")}
           </Link>
         ) : (
-          <span className="grow">
-            {chat ? t("agent.to", { who: chat.label || t("talk.setup") }) : ""}
-            {/* Following the page is the default; a session picked by hand says so, with the way back (Codex's IA review, B3). */}
-            {pinned && (
-              <>
-                {" · "}
-                {t("agent.pinned", { who: pinned })}{" "}
-                <button type="button" className="link" onClick={onFollow}>
-                  {t("agent.followPage")}
-                </button>
-              </>
-            )}
-          </span>
+          <span className="grow">{chat ? t("agent.to", { who: chat.label || t("talk.setup") }) : chosen ? t("talk.noSessionFor", { who: chosen }) : t("talk.noSession")}</span>
         )}
         {error !== undefined && <span className="error small">{errorText(error, t)}</span>}
         <button type="button" className="send" aria-label={t("talk.send")} disabled={!text.trim()} onClick={() => void send()}>

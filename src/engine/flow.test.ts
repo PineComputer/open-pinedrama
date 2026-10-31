@@ -43,7 +43,7 @@ async function until<T>(what: string, probe: () => Promise<T | undefined>, timeo
 }
 
 const openReview = (dramaId: string, filter: (review: ReviewSummary) => boolean) => () =>
-  call<ReviewSummary[]>("GET", `/api/inbox?drama=${dramaId}`).then((items) => items.find((item) => item.state === "open" && filter(item)));
+  call<ReviewSummary[]>("GET", `/api/reviews?drama=${dramaId}`).then((items) => items.find((item) => item.state === "open" && filter(item)));
 
 /** The setup's first stop: the screenplay rewritten into drama-cli's Fountain, accepted in the maker's words. */
 async function acceptRewrite(dramaId: string) {

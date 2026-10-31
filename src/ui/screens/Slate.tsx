@@ -1,5 +1,5 @@
 // Home, ported from the approved pro prototype (design reference studio-pro/app.js, Home): the same DOM and class
-// names as studio.css styles them, fed by the engine's dramas, inbox and card facts instead of the prototype's data.
+// names as studio.css styles them, fed by the engine's dramas, reviews and card facts instead of the prototype's data.
 import { useState } from "react";
 import { useDropzone } from "react-dropzone";
 import type { AppInfo, DramaCard, ReviewSummary, Still as StillData } from "../../shared/types.ts";
@@ -28,7 +28,7 @@ function Status({ st, label }: { st: St; label: string }) {
  * Where a drama stands, as its card's chip says it, and the prototype's shelf it sits on: a red line waiting on the
  * maker is its own state under Needs you; a stopped drama is under All only.
  */
-function standing(drama: DramaCard, redLine: boolean): { st: St; label: TKey; shelf?: Shelf } {
+export function standing(drama: DramaCard, redLine: boolean): { st: St; label: TKey; shelf?: Shelf } {
   if (redLine) return { st: "redline", label: "drama.redLine", shelf: "you" };
   if (drama.waiting > 0) return { st: "you", label: "drama.needs", shelf: "you" };
   if (drama.status === "done") return { st: "accepted", label: "drama.finished", shelf: "done" };
@@ -36,7 +36,7 @@ function standing(drama: DramaCard, redLine: boolean): { st: St; label: TKey; sh
   return { st: "work", label: drama.status === "setup" ? "drama.casting" : "drama.atWork", shelf: "work" };
 }
 
-const isRedLine = (item: ReviewSummary) => item.stop?.kind === "red-line";
+export const isRedLine = (item: ReviewSummary) => item.stop?.kind === "red-line";
 
 type T = ReturnType<typeof useT>["t"];
 
@@ -261,8 +261,8 @@ function NewCard() {
 export function Slate() {
   const { t, lang } = useT();
   const navigate = useNavigate();
-  const { data, error } = useResource<DramaCard[]>("/api/dramas", ["dramas", "inbox"]);
-  const inbox = useResource<ReviewSummary[]>("/api/inbox", ["inbox"]);
+  const { data, error } = useResource<DramaCard[]>("/api/dramas", ["dramas", "reviews"]);
+  const queue = useResource<ReviewSummary[]>("/api/reviews", ["reviews"]);
   const app = useResource<AppInfo>("/api/app", ["app"]);
   const [shelf, setShelf] = useState<Shelf>("all");
   const [find, setFind] = useState("");
@@ -276,7 +276,7 @@ export function Slate() {
   const dramas = data ?? [];
   // On a project without the drama skill, the way to try the studio on Pine is a rehearsal.
   const noSkill = app.data?.mode === "pine" && app.data.dramaSkill === "missing";
-  const waiting = (inbox.data ?? []).filter((item) => item.state === "open");
+  const waiting = (queue.data ?? []).filter((item) => item.state === "open");
   const redLines = new Set(waiting.filter(isRedLine).map((item) => item.dramaId));
   const counts: Record<Shelf, number> = { all: dramas.length, you: 0, work: 0, done: 0 };
   for (const drama of dramas) {

@@ -52,6 +52,26 @@ describe("the Graph", () => {
     expect(screen.queryByRole("button", { name: /assets\/characters/ })).toBeNull();
   });
 
+  it("leaves Lineage for the item's one home: a look in Assets, a storyboard in its episode, never Home (IA §16; Codex's IA review, B1)", async () => {
+    engine("shot");
+    const { unmount } = await renderAt(<Graph dramaId="d1" />, "/d/d1/assets/characters/lin?view=lineage");
+    expect(await screen.findByRole("link", { name: "Open in Assets" })).toHaveAttribute("href", "/d/d1/assets/characters/lin");
+    unmount();
+    await renderAt(<Graph dramaId="d1" />, "/d/d1/e/EP001/list?item=episodes%2FEP001%2Fmulti_panel_storyboard%2Fseg01%2Fline-art&view=lineage");
+    expect(await screen.findByRole("link", { name: "Open in EP001" })).toHaveAttribute("href", "/d/d1/e/EP001/list?item=episodes%2FEP001%2Fmulti_panel_storyboard%2Fseg01%2Fline-art");
+  });
+
+  it("names a cut's home EPxxx › Cut, apart from the episode's List", async () => {
+    engine("shot");
+    // The shot export has no cut: one is added, made from its take, as drama-cli's edit stage is (lineage.ts, KINDS).
+    const shot = view("shot");
+    const take = shot.lineage!.nodes.find((node) => node.kind === "take")!;
+    const cut = { ...take, id: "episodes/EP001/edit", kind: "cut" as const, label: "EP001 cut", version: "v1", accepted: "v1", where: { episode: "EP001" } };
+    answer("/api/dramas/d1/lineage", { ...shot, lineage: { ...shot.lineage!, nodes: [...shot.lineage!.nodes, cut], links: [...shot.lineage!.links, { from: take.id, to: cut.id }] } });
+    await renderAt(<Graph dramaId="d1" />, "/d/d1/e/EP001/cut?item=episodes%2FEP001%2Fedit&view=lineage");
+    expect(await screen.findByRole("link", { name: "Open in EP001 › Cut" })).toHaveAttribute("href", "/d/d1/e/EP001/cut?item=episodes%2FEP001%2Fedit");
+  });
+
   it("heads the columns with the pipeline's names for their kinds", async () => {
     engine("shot");
     await renderAt(<Graph dramaId="d1" />, "/d/d1/out-of-date");

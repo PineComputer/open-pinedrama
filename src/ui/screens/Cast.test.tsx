@@ -66,11 +66,11 @@ describe("the Story", () => {
     expect(within(lin).getByText("Sent back")).toBeInTheDocument();
   });
 
-  it("keeps places in Scenes with their description, views and times, props in Props, and the episodes in the bible", async () => {
+  it("keeps places in Locations with their description, views and times, props in Props, and the episodes in the bible", async () => {
     const user = userEvent.setup();
     engine();
     await renderAt(<Cast dramaId="d1" />, "/d/d1/story");
-    await user.click(await screen.findByRole("tab", { name: /Scenes/ }));
+    await user.click(await screen.findByRole("tab", { name: /Locations/ }));
     const office = screen.getByRole("article", { name: "Factory office" });
     expect(within(office).getByText("Desks under strip lights.")).toBeInTheDocument();
     expect(within(office).getByRole("link", { name: "left side" })).toHaveAttribute("href", "/f/4");

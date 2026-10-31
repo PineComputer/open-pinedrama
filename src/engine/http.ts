@@ -34,7 +34,7 @@ import { projectView, sessionStatus } from "./status.ts";
 import { assetPictures, castCards, deliveryRows, episodePage, scriptPage, seasonEntries } from "./browse.ts";
 import { diagnostics } from "./diagnostics.ts";
 import { zipLength, zipStream } from "./zip.ts";
-import { chatView, dramaCards, dramaFiles, dramaView, inbox, reviewView } from "./views.ts";
+import { chatView, dramaCards, dramaFiles, dramaView, reviewList, reviewView } from "./views.ts";
 
 const LOOPBACK = /^(127\.0\.0\.1|localhost|\[::1\])(:\d+)?$/;
 
@@ -383,7 +383,7 @@ export function app(): Hono {
     }
   });
 
-  api.get("/api/inbox", (c) => c.json(inbox(c.req.query("drama") || undefined)));
+  api.get("/api/reviews", (c) => c.json(reviewList(c.req.query("drama") || undefined)));
 
   api.get("/api/reviews/:id", (c) => {
     const review = reviewRow(c.req.param("id"));

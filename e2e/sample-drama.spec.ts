@@ -26,8 +26,9 @@ test("a maker starts the sample drama, answers the agent and reviews the leads",
   await page.getByRole("button", { name: /^Send answer/ }).click();
   await expect(page).not.toHaveURL(rewriteQuestion);
 
-  // Then a question, opened from the drama's review queue once the agent asks it: the screenplay leaves a lead's age open.
-  await page.getByRole("navigation", { name: "Places" }).getByRole("button", { name: "To review" }).click();
+  // Then a question, opened from the review queue (the rail's Reviews: the drama is still set up, so its sidebar shows
+  // the setup's steps) once the agent asks it: the screenplay leaves a lead's age open.
+  await page.getByRole("navigation", { name: "Places" }).getByRole("link", { name: /^Reviews/ }).click();
   const age = page.getByRole("main").getByRole("link", { name: /Wei Zhen's age/ });
   await expect(age).toBeVisible({ timeout: 30_000 });
   await age.click();
@@ -39,10 +40,10 @@ test("a maker starts the sample drama, answers the agent and reviews the leads",
   // Sending moves on by itself, to the drama or the next review; the count is fresh only then.
   await expect(page).not.toHaveURL(question);
 
-  // Then the leads' looks, approved together, opened from the drama's review queue: the bar's
+  // Then the leads' looks, approved together, opened from the review queue: the bar's
   // count still includes the answered question until the agent's next turn begins.
-  await page.getByRole("navigation", { name: "Places" }).getByRole("button", { name: "To review" }).click();
-  // The drama's queue, in the work; the agent panel beside it lists the same decision.
+  await page.getByRole("navigation", { name: "Places" }).getByRole("link", { name: /^Reviews/ }).click();
+  // The queue, in the work; the agent panel beside it lists the same decision.
   const looks = page.getByRole("main").getByRole("link", { name: /^Leads' looks/ });
   await expect(looks).toBeVisible({ timeout: 30_000 });
   expect(await newProblems(page)).toEqual([]);

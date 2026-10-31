@@ -1,9 +1,8 @@
-// The bar over the work, ported from the pro prototype (studio-pro/app.js, TopBar, StopControl,
-// SurfaceSwitch, ProjectChips) with its markup and classes (studio.css .top, .crumb, .btn, .bar2,
-// .chip): back, where you are as a breadcrumb, Stop drama and the next review. In a drama, the bar
-// under it holds the surface (Studio, Canvas, Graph) with the selection kept across them, and the
-// drama's preset, format and spend.
-import { Link, type LinkOptions, useNavigate } from "@tanstack/react-router";
+// The bar over the work, ported from the design (design/app.js, TopBar, StopControl, EpisodeViews,
+// ProjectChips) with its markup and classes (studio.css .top, .crumb, .btn, .bar2, .chip): back, where
+// it belongs as a breadcrumb, "Back to …", Stop drama and the next review. In a drama, the bar under it
+// holds an episode's views (List, Canvas, Cut) inside one, and the drama's preset, format and spend.
+import { Link, linkOptions, type LinkOptions, useLocation, useNavigate, useRouter } from "@tanstack/react-router";
 import { useState } from "react";
 import type { DramaView, ReviewSummary } from "../../shared/types.ts";
 import { api, useAction, useResource } from "../api.ts";
@@ -11,46 +10,69 @@ import { Dialog } from "../components/Dialog.tsx";
 import { Icon, type IconName } from "../icons.tsx";
 import { type TKey, useT } from "../i18n.ts";
 import { errorText, moneyText } from "../labels.ts";
-import { placeLink, type Surface, usePlace, useRoute } from "../place.ts";
+import { type Page, usePage, usePlace, useRoute } from "../place.ts";
 import type { ProjectView } from "../../shared/project.ts";
 
 
-function SurfaceSwitch({ drama }: { drama: DramaView }) {
+// "Back to …" (IA §16, rule 2): a link that lands on an object's home says where it came from in the history entry's
+// state, never in the URL, so there is nothing to check as internal and a reload keeps it. Back is the browser's.
+declare module "@tanstack/react-router" {
+  interface HistoryState {
+    backTo?: string;
+  }
+}
+
+export function BackTo() {
+  const { t } = useT();
+  const router = useRouter();
+  const from = useLocation({ select: (location) => location.state.backTo });
+  if (!from) return null;
+  return (
+    <button type="button" className="btn sm ghost backto" onClick={() => router.history.back()}>
+      <Icon name="arrow-left" className="ic" />
+      {t("back.to", { place: from })}
+    </button>
+  );
+}
+
+/** An episode's views (IA §3; design/app.js, EpisodeViews): List and Canvas show the same home, keeping the pick; Cut is the episode's cut. */
+function EpisodeViews({ dramaId, episode }: { dramaId: string; episode: string }) {
   const { t } = useT();
   const navigate = useNavigate();
-  // The same episode and item on the other surface (place.ts, Place): an item is never read as an episode.
-  const place = usePlace() ?? { dramaId: drama.id, surface: "list" as const };
-  const surface = place.surface;
-  const go = (next: Surface) => {
-    if (next !== surface) void navigate(placeLink({ ...place, dramaId: drama.id, surface: next }));
-  };
-  const options: [Surface, TKey, IconName][] = [
-    ["list", "surface.studio", "squares-four"],
-    ["canvas", "surface.canvas", "flow-arrow"],
-    ["lineage", "surface.graph", "tree-structure"],
-  ];
-  // The design's SurfaceSwitch (design/app.js): one pressed button among three.
+  const page = usePage();
+  const place = usePlace();
+  const params = { dramaId, episodeCode: episode };
+  const item = place?.item;
+  const views = [
+    { page: "list", label: "view.list", icon: "list-bullets", to: linkOptions({ to: "/d/$dramaId/e/$episodeCode/list", params, search: { item } }) },
+    { page: "canvas", label: "surface.canvas", icon: "flow-arrow", to: linkOptions({ to: "/d/$dramaId/e/$episodeCode/canvas", params, search: { item } }) },
+    { page: "cut", label: "step.cut", icon: "scissors", to: linkOptions({ to: "/d/$dramaId/e/$episodeCode/cut", params }) },
+  ] as const satisfies readonly { page: Page; label: TKey; icon: IconName; to: LinkOptions }[];
   return (
-    <div className="seg" role="group" aria-label={t("surface.label")}>
-      {options.map(([value, label, icon]) => (
-        <button key={value} type="button" aria-pressed={value === surface} onClick={() => go(value)}>
-          <Icon name={icon} className="ic" />
-          {t(label)}
+    <div className="seg" role="group" aria-label={t("view.label", { code: episode })}>
+      {views.map((view) => (
+        <button key={view.page} type="button" aria-pressed={view.page === page} onClick={() => void navigate(view.to)}>
+          <Icon name={view.icon} className="ic" />
+          {t(view.label)}
         </button>
       ))}
     </div>
   );
 }
 
-/** The drama's surface switch and its chips: preset, format, and what it has spent. */
+/** The drama's bar (design/app.js, bar2): Back to where a link came from, an episode's views inside one, and the chips: preset, format, spend. */
 export function DramaBar({ drama }: { drama: DramaView }) {
+  const place = usePlace();
+  const page = usePage();
+  // Lineage is a view of an item, not an episode's view (IA §3): as design/'s Lineage, it has Back to and no views.
+  const inEpisode = place?.episode !== undefined && place.surface !== "lineage" && (page === "list" || page === "canvas" || page === "cut");
   const { t, lang } = useT();
   // The budget is drama-cli's (every session's project carries the drama's one config), as the design's chip reads "$X of $1,000".
   const project = useResource<ProjectView>(`/api/dramas/${drama.id}/project`, [`project:${drama.id}`]);
   const cap = project.data?.sessions[0]?.budget.budgetUsd ?? null;
   return (
     <div className="bar2">
-      <SurfaceSwitch drama={drama} />
+      {inEpisode && <EpisodeViews dramaId={drama.id} episode={place.episode!} />}
       <span className="grow" />
       {drama.preset && (
         <span className="chip plain" title={t("chip.preset")}>
@@ -162,7 +184,9 @@ export function Breadcrumb({ crumbs }: { crumbs: Crumb[] }) {
         <span key={n} className="contents">
           {n > 0 && <Icon name="caret-right" className="ic" />}
           {crumb.to && n < crumbs.length - 1 ? (
-            <Link {...crumb.to}>{crumb.label}</Link>
+            <Link {...crumb.to} className="crumblink">
+              {crumb.label}
+            </Link>
           ) : n === crumbs.length - 1 ? (
             <b aria-current="page">{crumb.label}</b>
           ) : (
@@ -175,17 +199,12 @@ export function Breadcrumb({ crumbs }: { crumbs: Crumb[] }) {
 }
 
 export function TopBar({ crumbs, waiting, ready, next, children }: { crumbs: Crumb[]; waiting: ReviewSummary[]; ready: boolean; next: boolean; children?: React.ReactNode }) {
-  const { t } = useT();
-  const navigate = useNavigate();
-  const back = crumbs.length > 1 ? crumbs[crumbs.length - 2].to : undefined;
+  // design/'s TopBar (2f2a07b): where this belongs, then where you came from as its own control in the same place on
+  // every page, the one Back (work-03's dry run, J2); no chevron.
   return (
     <header className="top">
-      {back && (
-        <button type="button" className="ibtn" aria-label={t("crumb.back")} title={t("crumb.back")} onClick={() => void navigate(back)}>
-          <Icon name="caret-left" className="ic" />
-        </button>
-      )}
       <Breadcrumb crumbs={crumbs} />
+      <BackTo />
       <span className="grow" />
       {children}
       {next && ready && <NextReview waiting={waiting} />}

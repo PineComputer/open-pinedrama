@@ -25,7 +25,7 @@ function Asks({ items, dramaId }: { items: ReviewSummary[]; dramaId?: string }) 
             <div className="words">{plainText(item.question)}</div>
           </div>
           <div className="when">
-            {item.state === "ended" ? t("inbox.ended") : item.state === "saving" ? "…" : <span className="seal-text">●</span>}
+            {item.state === "ended" ? t("reviews.ended") : item.state === "saving" ? "…" : <span className="seal-text">●</span>}
             <div className="num below">
               {ago(item.createdAt, lang)}
             </div>
@@ -37,18 +37,18 @@ function Asks({ items, dramaId }: { items: ReviewSummary[]; dramaId?: string }) 
 }
 
 /** What waits for the maker, then, apart, what ended before they decided (each can carry on in a new session). */
-export function InboxList({ dramaId }: { dramaId?: string }) {
+export function ReviewsList({ dramaId }: { dramaId?: string }) {
   const { t } = useT();
-  const { data } = useResource<ReviewSummary[]>(dramaId ? `/api/inbox?drama=${dramaId}` : "/api/inbox", ["inbox"]);
+  const { data } = useResource<ReviewSummary[]>(dramaId ? `/api/reviews?drama=${dramaId}` : "/api/reviews", ["reviews"]);
   if (!data) return <p className="quiet">{t("loading")}</p>;
   const waiting = data.filter((item) => item.state !== "ended");
   const ended = data.filter((item) => item.state === "ended");
   return (
     <>
-      {waiting.length ? <Asks items={waiting} dramaId={dramaId} /> : <p className="empty-note">{t("inbox.empty")}</p>}
+      {waiting.length ? <Asks items={waiting} dramaId={dramaId} /> : <p className="empty-note">{t("reviews.empty")}</p>}
       {ended.length > 0 && (
         <section className="ended-asks">
-          <h3 className="label">{t("inbox.endedTitle")}</h3>
+          <h3 className="label">{t("reviews.endedTitle")}</h3>
           <Asks items={ended} dramaId={dramaId} />
         </section>
       )}
@@ -57,14 +57,14 @@ export function InboxList({ dramaId }: { dramaId?: string }) {
 }
 
 /** Reviews: the one queue, or one drama's (IA §16). */
-export function InboxScreen({ dramaId }: { dramaId?: string }) {
+export function ReviewsScreen({ dramaId }: { dramaId?: string }) {
   const { t } = useT();
   return (
     <div className="page">
       <div className="head">
-        <h1>{t("inbox.title")}</h1>
+        <h1>{t("reviews.title")}</h1>
       </div>
-      <InboxList dramaId={dramaId} />
+      <ReviewsList dramaId={dramaId} />
     </div>
   );
 }

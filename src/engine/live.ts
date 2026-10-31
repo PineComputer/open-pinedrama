@@ -7,7 +7,7 @@ type Listener = (message: LiveMessage) => void;
 const shared = globalThis as typeof globalThis & { __studioLive?: Set<Listener> };
 const listeners = (shared.__studioLive ??= new Set());
 
-/** Scopes: "dramas", "drama:<id>", "inbox", "session:<id>", "project:<drama id>" (status.ts). */
+/** Scopes: "dramas", "drama:<id>", "reviews", "session:<id>", "project:<drama id>" (status.ts). */
 export function publish(...scopes: string[]): void {
   for (const scope of new Set(scopes)) for (const listener of listeners) listener({ type: "changed", scope });
 }

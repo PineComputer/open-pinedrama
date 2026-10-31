@@ -99,7 +99,7 @@ export function questionAsked(session: SessionRow, turnId: string, question: str
     nowFor(session.drama_id),
   );
   if (session.episode_id) run("update episodes set state = 'waiting', updated_at = ? where id = ? and state = 'working'", now(), session.episode_id);
-  publish(`drama:${session.drama_id}`, "inbox");
+  publish(`drama:${session.drama_id}`, "reviews");
 }
 
 /** The question's files are saved: it can be answered now, in words when the agent asked in words. */
@@ -107,7 +107,7 @@ export function questionReady(session: SessionRow, turnId: string, inWords = fal
   const stop = get<ReviewRow>("select * from reviews where turn_id = ?", turnId);
   const kind = inWords || !stop ? "question" : inferKind(session.role, filesOfStop(stop));
   run("update reviews set kind = ?, state = 'open' where turn_id = ? and state = 'saving'", kind, turnId);
-  publish(`drama:${session.drama_id}`, "inbox");
+  publish(`drama:${session.drama_id}`, "reviews");
 }
 
 function subject(review: ReviewRow): string {
@@ -222,7 +222,7 @@ export async function reconcileSending(): Promise<void> {
     } catch (error) {
       console.error(`review ${review.id}:`, (error as Error).message); // asked again at the next reconcile
     }
-    publish(`drama:${review.drama_id}`, "inbox");
+    publish(`drama:${review.drama_id}`, "reviews");
   }
 }
 
@@ -259,13 +259,13 @@ async function send(reviewId: string, decision: Decision): Promise<ReviewRow> {
 
   // Kept as written for a session that later resumes the work; said again below with where its pictures are.
   run("update reviews set state = 'sending', decision = ?, submission_id = ?, answer = ?, decided_at = ? where id = ?", JSON.stringify(kept), decision.submissionId, answerText(kept, context), now(), reviewId);
-  publish(`drama:${review.drama_id}`, "inbox");
+  publish(`drama:${review.drama_id}`, "reviews");
 
   const session = sessionRow(review.session_id);
   const computer = session && computerRow(session.computer_id);
   if (!session || session.state !== "open" || computer?.state !== "running") {
     run("update reviews set state = 'ended' where id = ?", reviewId);
-    publish(`drama:${review.drama_id}`, "inbox");
+    publish(`drama:${review.drama_id}`, "reviews");
     return reviewRow(reviewId)!;
   }
   // The maker's pictures go into the session first, so the answer can say where they are.
@@ -276,7 +276,7 @@ async function send(reviewId: string, decision: Decision): Promise<ReviewRow> {
   } catch (error) {
     // Not sent: the review is open again, and the same submission may try again.
     run("update reviews set state = 'open', submission_id = null where id = ?", reviewId);
-    publish(`drama:${review.drama_id}`, "inbox");
+    publish(`drama:${review.drama_id}`, "reviews");
     throw new StudioError("send-failed", `Couldn't send the decision: ${(error as Error).message}`, 502, (error as Error).message);
   }
   run("update reviews set answer = ? where id = ?", answer, reviewId);
@@ -292,7 +292,7 @@ async function send(reviewId: string, decision: Decision): Promise<ReviewRow> {
       return saved;
     });
     await sendRun(key).catch((error) => console.error(`review ${review.id}:`, (error as Error).message));
-    publish(`drama:${review.drama_id}`, "inbox", `session:${session.id}`);
+    publish(`drama:${review.drama_id}`, "reviews", `session:${session.id}`);
     return reviewRow(reviewId)!;
   }
   try {
@@ -307,10 +307,10 @@ async function send(reviewId: string, decision: Decision): Promise<ReviewRow> {
     // The turn can't take an answer any more: the session moved on or ended. Keep the decision.
     const ended = status === 404 || status === 409;
     run("update reviews set state = ?, submission_id = ? where id = ?", ended ? "ended" : "open", ended ? decision.submissionId : null, reviewId);
-    publish(`drama:${review.drama_id}`, "inbox");
+    publish(`drama:${review.drama_id}`, "reviews");
     if (status !== 404 && status !== 409) throw new StudioError("send-failed", `Couldn't send the decision: ${(error as Error).message}`, 502, (error as Error).message);
   }
-  publish(`drama:${review.drama_id}`, "inbox", `session:${session.id}`);
+  publish(`drama:${review.drama_id}`, "reviews", `session:${session.id}`);
   return reviewRow(reviewId)!;
 }
 
@@ -327,5 +327,5 @@ export function resumeWithDecision(reviewId: string): void {
     review.episode_id,
   );
   run("update reviews set state = 'answered' where id = ?", reviewId);
-  publish(`drama:${review.drama_id}`, "inbox");
+  publish(`drama:${review.drama_id}`, "reviews");
 }

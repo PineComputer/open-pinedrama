@@ -14,7 +14,7 @@ import { Crew } from "./screens/Crew.tsx";
 import { CutTab } from "./screens/CutTab.tsx";
 import { Delivery } from "./screens/Delivery.tsx";
 import { Episode } from "./screens/Episode.tsx";
-import { InboxScreen } from "./screens/Inbox.tsx";
+import { ReviewsScreen } from "./screens/Reviews.tsx";
 import { NewDrama } from "./screens/NewDrama.tsx";
 import { Review } from "./screens/Review.tsx";
 import { Script } from "./screens/Script.tsx";
@@ -35,7 +35,7 @@ const reviewsRoute = createRoute({
   staticData: { page: "reviews" },
   validateSearch: (search: Record<string, unknown>): { drama?: string } => ({ drama: text(search.drama) }),
   component: function ReviewsPage() {
-    return <InboxScreen dramaId={reviewsRoute.useSearch().drama} />;
+    return <ReviewsScreen dramaId={reviewsRoute.useSearch().drama} />;
   },
 });
 // A link may open a review at one of its items, by the item's key (ReviewItem.key).

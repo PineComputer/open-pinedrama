@@ -135,7 +135,7 @@ h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 700; lett
 
 /* Cast & world */
 
-/* Inbox */
+/* Reviews */
 .queue { display: grid; border-top: 1px solid var(--text-primary); }
 .ask { display: grid; grid-template-columns: 112px minmax(0, 1fr) auto; gap: 20px; align-items: start; padding: 16px 0; border-bottom: 1px solid var(--border); transition: background 0.15s; }
 .ask:hover { background: var(--surface-container); }

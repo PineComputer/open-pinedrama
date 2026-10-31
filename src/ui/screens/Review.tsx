@@ -1,6 +1,6 @@
 import { MediaController, MediaPlayButton, MediaTimeRange } from "media-chrome/react";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
-import type { Decision, DramaView, FileItem, Note, ReviewItem, ReviewView, Verdict } from "../../shared/types.ts";
+import type { Decision, DramaView, FileItem, Note, ReviewItem, ReviewKind, ReviewView, Verdict } from "../../shared/types.ts";
 import { api, clock, useAction, useResource } from "../api.ts";
 import { type TKey, useT } from "../i18n.ts";
 import { errorText, fileKind, headingText, moneyText, subjectLabel, useNames } from "../labels.ts";
@@ -8,17 +8,33 @@ import { Button, buttonClass } from "../components/Button.tsx";
 import { Segmented } from "../components/Segmented.tsx";
 import { StatusChip } from "../components/StatusChip.tsx";
 import { StopCard } from "../components/StopCard.tsx";
+import { Submission, useSubmission } from "../components/Submission.tsx";
 import { CutViewer, alignedLines, cutLines, fmt } from "../cut/CutViewer.tsx";
 import { shotListOf } from "../../shared/shots.ts";
 import { Icon } from "../icons.tsx";
 import { Markdown } from "../Markdown.tsx";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { placeLink, useRoute } from "../place.ts";
+import { homeLink, placeLink, useRoute } from "../place.ts";
 import { standing as stageStanding } from "./Canvas.tsx";
 import { Still } from "../Still.tsx";
 import { DocumentView, Pinboard, isDocument, isImage, isVideo, useShotList, useSize, useText, variantLabel } from "../viewing.tsx";
 import { specBeside, specFacts } from "../../shared/spec.ts";
 import type { ProjectView } from "../../shared/project.ts";
+
+/**
+ * The drama-cli stage a review item is, by the engine's item keys (engine reviews.ts, itemsOf, lookKey, placeKey), so the
+ * room links to the item's one home (IA §16): a segment's storyboards and takes to the segment, a look, a location or a
+ * prop to its card in Assets, a cut to its episode's Cut. A question is about no one stage.
+ */
+export function itemStage(kind: ReviewKind, episode: string | undefined, key: string): string | undefined {
+  if (kind === "takes" || kind === "storyboards") return episode && `episodes/${episode}/segments/${key}`;
+  if (kind === "cut") return episode && `episodes/${episode}/edit`;
+  if (kind === "question") return undefined;
+  if (key.startsWith("location:")) return `assets/scenes/${key.slice("location:".length)}`;
+  if (key.startsWith("prop:")) return `assets/props/${key.slice("prop:".length)}`;
+  const [subject, look] = key.split("/");
+  return look ? `assets/characters/${subject}/states/${look}` : `assets/characters/${subject}`;
+}
 
 type Drafts = Record<string, { verdict?: Verdict; notes: Note[] }>;
 
@@ -262,7 +278,6 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
   const submission = useRef(crypto.randomUUID());
   const names = useNames(review.dramaId);
   const items = review.reviewItems;
-  const open = review.state === "open";
   const takes = review.kind === "takes";
   // A link may name the item to open at by its key (?key=, as the Canvas's Review does); else the first.
   const asked = useRoute().search.key;
@@ -277,6 +292,41 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
     ),
   );
   const [words, setWords, forgetWords] = useDraft(review.id, "words", () => review.decision?.words ?? "");
+  // The review is one submission (Submission, Codex's IA round 3): read only while it is on its way, sent, or not known
+  // to have arrived; only the engine's word that it was not submitted gives the draft back, to send again.
+  const { sending, send: submit, check } = useSubmission({
+    submit: () =>
+      api(`/api/reviews/${review.id}/decision`, {
+        method: "POST",
+        json: { submissionId: submission.current, words, items: items.map((i) => ({ key: i.key, verdict: drafts[i.key]?.verdict ?? "approve", notes: drafts[i.key]?.notes ?? [] })) } satisfies Decision,
+      }),
+    taken: async () => (await api<ReviewView>(`/api/reviews/${review.id}`)).state !== "open",
+  });
+  const open = review.state === "open" && (sending.state === "idle" || sending.state === "failed");
+  // IA draft (Codex's re-review, D2): every change to the draft is a step, typing on in the words one step; Undo puts
+  // the draft back as it was before the last, Reset discards all of it.
+  const [steps, setSteps] = useState<{ drafts: Drafts; words: string }[]>([]);
+  const lastStep = useRef<string>(undefined);
+  const remember = (field: string) => {
+    if (field === "words" && lastStep.current === "words") return;
+    lastStep.current = field;
+    setSteps((current) => [...current, { drafts, words }]);
+  };
+  const undo = () => {
+    const last = steps.at(-1);
+    if (!last) return;
+    lastStep.current = undefined;
+    setSteps(steps.slice(0, -1));
+    setDrafts(last.drafts);
+    setWords(last.words);
+  };
+  const reset = () => {
+    lastStep.current = undefined;
+    setSteps([]);
+    setDrafts(Object.fromEntries(items.map((i) => [i.key, { notes: [] }])));
+    setWords("");
+  };
+  const changed = items.filter((i) => drafts[i.key]?.verdict || drafts[i.key]?.notes.length).length + (words.trim() ? 1 : 0);
   const [noteText, setNoteText] = useState("");
   const [pending, setPending] = useState<{ x?: number; y?: number; time?: number; fileId?: number }>();
   // A picture for the note being written: a face to use, a costume, a place to match.
@@ -291,8 +341,6 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
   const [confirming, setConfirming] = useState(false);
   // The earlier version in place of the new one on the stage (the spec's TakeCompare).
   const [earlier, setEarlier] = useState(false);
-  const [error, setError] = useState<unknown>();
-  const [busy, setBusy] = useState(false);
   const noteInput = useRef<HTMLTextAreaElement>(null);
   const video = useRef<HTMLVideoElement>(null);
   // Where the take or cut is, so "add a note at 0:02" says the time a note would get.
@@ -325,6 +373,8 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
     : [];
 
   const item: ReviewItem | undefined = items[index];
+  // Where the item lives (IA §16), and the words "Back to …" says on the way back to this room.
+  const home = item && itemStage(review.kind, review.episode, item.key);
   const variants = item?.files ?? [];
   const latest = variants[Math.min(variant, variants.length - 1)];
   // The version before of the same picture: the same kind and style (a photoreal board is never compared with a line-art one).
@@ -367,7 +417,10 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
   const revise = items.filter((i) => drafts[i.key]?.verdict === "revise").length;
   const complete = items.length > 0 && count === items.length;
 
-  const update = (key: string, change: (value: Drafts[string]) => Drafts[string]) => setDrafts((current) => ({ ...current, [key]: change(current[key] ?? { notes: [] }) }));
+  const update = (key: string, change: (value: Drafts[string]) => Drafts[string]) => {
+    remember(`item:${key}`);
+    setDrafts((current) => ({ ...current, [key]: change(current[key] ?? { notes: [] }) }));
+  };
   const setVerdict = (verdict: Verdict) => item && update(item.key, (value) => ({ ...value, verdict }));
   const go = (next: number) => {
     setIndex(Math.max(0, Math.min(items.length - 1, next)));
@@ -415,32 +468,24 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
     setWatched((current) => (reached > (current[latest.id] ?? 0) ? { ...current, [latest.id]: reached } : current));
   };
 
-  const send = async () => {
-    setBusy(true);
-    setError(undefined);
-    const decision: Decision = {
-      submissionId: submission.current,
-      words,
-      items: items.map((i) => ({ key: i.key, verdict: drafts[i.key]?.verdict ?? "approve", notes: drafts[i.key]?.notes ?? [] })),
-    };
-    try {
-      await api(`/api/reviews/${review.id}/decision`, { method: "POST", json: decision });
-      forgetDrafts();
-      forgetWords();
-      done();
-    } catch (reason) {
-      setError(reason);
-      setBusy(false);
-      setConfirming(false);
-    }
+  const send = () => {
+    setConfirming(false);
+    void submit();
   };
+  // Sent: the engine has it. The draft is done with, and the room moves on as it did.
+  useEffect(() => {
+    if (sending.state !== "sent") return;
+    forgetDrafts();
+    forgetWords();
+    done();
+  }, [sending.state]);
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
       if ((event.metaKey || event.ctrlKey) && event.key === "Enter") {
         // The first ⌘↵ shows what will be sent; the second sends it.
         event.preventDefault();
-        if (confirming && !busy) void send();
+        if (confirming) send();
         else if (complete && open) setConfirming(true);
         return;
       }
@@ -479,6 +524,7 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
 
   const labelOf = (i: ReviewItem) =>
     i.key === "cut" ? t("kind.cut") : /^(location|prop):/.test(i.key) && i.files[0] ? `${subjectLabel(names, i.key)} · ${fileKind(i.files[0].kind, t)}` : /^seg\d/i.test(i.key) ? i.label : subjectLabel(names, i.key);
+  const here = t("review.backPlace", { what: [review.episode, item && labelOf(item)].filter(Boolean).join(" ") });
   const thumbOf = (i: ReviewItem) => {
     const file = i.files.find(isImage) ?? i.files.find(isVideo);
     return file && { url: file.url, video: isVideo(file) };
@@ -516,7 +562,8 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
           <>
             <h3 style={{ marginTop: 14 }}>{t("review.acceptedIn", { episode: review.episode ?? "" })}</h3>
             {acceptedBefore.map(({ key, version, take }) => (
-              <div key={key} className="ritem">
+              // An accepted take lives in its segment (IA §16): the reel links there, never to a read-only copy of its own.
+              <Link key={key} {...homeLink(review.dramaId, `episodes/${review.episode}/segments/${key}`)} state={{ backTo: t("review.backPlace", { what: [review.episode, t(`kind.${review.kind}` as TKey)].join(" ") }) }} className="ritem">
                 <span className="thumb">
                   <Still still={take && { url: take.url, video: isVideo(take) }} />
                 </span>
@@ -525,13 +572,16 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
                   <small>{sceneOf(key) ?? ""}</small>
                   <StatusChip status="accepted" />
                 </span>
-              </div>
+              </Link>
             ))}
           </>
         )}
         {/* Takes are watched one by one (D76): the design's take reel has no Accept all. */}
         {open && !takes && (
-          <button type="button" className="btn sm ghost" onClick={() => setDrafts((current) => Object.fromEntries(items.map((i) => [i.key, { ...current[i.key], verdict: "approve" }])))}>
+          <button type="button" className="btn sm ghost" onClick={() => {
+              remember("all");
+              setDrafts((current) => Object.fromEntries(items.map((i) => [i.key, { ...current[i.key], verdict: "approve" }])));
+            }}>
             {t("review.approveAll")}
           </button>
         )}
@@ -608,6 +658,11 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
             {file?.version && ` · ${t(takes ? "review.takeVersion" : "review.version", { v: file.version })}`}
           </b>
           <small>{[item ? sceneOf(item.key) : undefined, earlier ? t("review.earlierShown") : ""].filter(Boolean).join(" · ")}</small>
+          {home && (
+            <Link {...homeLink(review.dramaId, home)} state={{ backTo: here }} className="btn sm">
+              {review.kind === "cut" ? t("review.openCut", { episode: review.episode ?? "" }) : review.kind === "takes" || review.kind === "storyboards" ? t("review.openSegment", { segment: item?.key ?? "", episode: review.episode ?? "" }) : t("review.openAsset")}
+            </Link>
+          )}
         </div>
         <div className="iscroll">
           <Status review={review} />
@@ -824,14 +879,17 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
             <button className={buttonClass({ variant: "ghost" })} onClick={() => setConfirming(false)}>
               {t("review.keep")}
             </button>
-            <button className={buttonClass({ variant: "primary" })} disabled={busy} onClick={send}>
+            <button className={buttonClass({ variant: "primary" })} onClick={send}>
               {t("review.sendNow")} <span className="key">⌘↵</span>
             </button>
           </div>
         ) : (
           <>
           <div style={{ padding: "10px 16px 0", borderTop: "1px solid var(--border)", background: "var(--surface-dim)" }}>
-            <input className="search" style={{ width: "100%", height: 32 }} disabled={!open} value={words} placeholder={t("review.wordsHint")} aria-label={t("review.words")} onChange={(event) => setWords(event.target.value)} />
+            <input className="search" style={{ width: "100%", height: 32 }} disabled={!open} value={words} placeholder={t("review.wordsHint")} aria-label={t("review.words")} onChange={(event) => {
+                remember("words");
+                setWords(event.target.value);
+              }} />
           </div>
           <div className="sendbar">
             <span className="pips" aria-hidden="true">
@@ -840,10 +898,25 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
               ))}
             </span>
             <span className="num">{t("review.decided", { n: count, m: items.length })}</span>
-            {error !== undefined && <span className="error">{errorText(error, t)}</span>}
-            <Button variant="primary" disabled={!open || !complete || busy} disabledReason={open && !complete ? t("review.needVerdicts") : undefined} onClick={() => setConfirming(true)}>
-              {t("review.send")} <span className="key">⌘↵</span>
-            </Button>
+            {changed > 0 && open && <span className="num">{t("review.draftChanged", { n: changed })}</span>}
+            <Submission sending={sending} to={t("submission.agentOf", { who: review.episode ?? t("talk.setup") })} kept={t("review.kept")} onSend={() => setConfirming(true)} onCheck={() => void check()} />
+            {sending.state === "sent" && <span className="muted small">{t("review.keptSent")}</span>}
+            {open && (
+              <>
+                <button type="button" className="btn sm ghost" title={t("review.undoHint")} disabled={!steps.length} onClick={undo}>
+                  {t("review.undo")}
+                </button>
+                <button type="button" className="btn sm ghost" title={t("review.resetHint")} disabled={!changed} onClick={reset}>
+                  {t("review.reset")}
+                </button>
+              </>
+            )}
+            {/* Send again is Submission's while the engine says nothing was submitted: one send action at a time. */}
+            {sending.state === "idle" && (
+              <Button variant="primary" disabled={!open || !complete} disabledReason={open && !complete ? t("review.needVerdicts") : undefined} onClick={() => setConfirming(true)}>
+                {t("review.send")} <span className="key">⌘↵</span>
+              </Button>
+            )}
           </div>
           </>
         )}
@@ -1042,7 +1115,7 @@ export function CutRoom({ review, done }: { review: ReviewView; done: () => void
 export function Review({ id }: { id: string }) {
   const { t } = useT();
   const navigate = useNavigate();
-  const { data, error } = useResource<ReviewView>(`/api/reviews/${id}`, ["inbox"]);
+  const { data, error } = useResource<ReviewView>(`/api/reviews/${id}`, ["reviews"]);
   const done = useMemo(
     () => () => {
       // On to the next review waiting, or back to the drama.

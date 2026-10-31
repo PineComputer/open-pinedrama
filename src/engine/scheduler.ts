@@ -423,7 +423,7 @@ export async function reconcile(): Promise<void> {
   }
   await reconcileSending();
   await approveUnreviewed();
-  publish("dramas", "inbox");
+  publish("dramas", "reviews");
 }
 
 export function tick(): void {

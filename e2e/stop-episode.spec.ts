@@ -22,7 +22,7 @@ test("stopping one episode leaves the others going, and Resume puts it back in l
 
   expect((await row("EP002")).state).toBe("stopped");
   expect((await row("EP001")).state).toBe("waiting");
-  const open = (await call<ReviewSummary[]>(page, "/api/inbox")).filter((item) => item.dramaId === id && item.state === "open");
+  const open = (await call<ReviewSummary[]>(page, "/api/reviews")).filter((item) => item.dramaId === id && item.state === "open");
   expect(open.map((item) => item.episode)).not.toContain("EP002");
   expect(open.map((item) => item.episode)).toContain("EP001");
 

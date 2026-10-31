@@ -67,7 +67,7 @@ export async function onEnded(session: SessionRow, info: TurnInfo, stop: boolean
   }
   if (session.role === "setup") await setupEnded(session, info);
   else await episodeEnded(session, info);
-  publish(`drama:${session.drama_id}`, "dramas", "inbox");
+  publish(`drama:${session.drama_id}`, "dramas", "reviews");
 }
 
 async function setupEnded(session: SessionRow, info: TurnInfo) {

@@ -8,11 +8,11 @@ import { CutRoom } from "./Review.tsx";
 
 export function CutTab({ dramaId, episode }: { dramaId: string; episode: string }) {
   const { t } = useT();
-  const inbox = useResource<ReviewSummary[]>(`/api/inbox?drama=${dramaId}`, ["inbox", `drama:${dramaId}`]);
-  const waiting = inbox.data?.find((review) => review.kind === "cut" && review.state === "open" && review.episode === episode);
-  const review = useResource<ReviewView>(waiting ? `/api/reviews/${waiting.id}` : null, ["inbox"]);
-  if (!inbox.data) return <p className="quiet">{t("loading")}</p>;
+  const queue = useResource<ReviewSummary[]>(`/api/reviews?drama=${dramaId}`, ["reviews", `drama:${dramaId}`]);
+  const waiting = queue.data?.find((review) => review.kind === "cut" && review.state === "open" && review.episode === episode);
+  const review = useResource<ReviewView>(waiting ? `/api/reviews/${waiting.id}` : null, ["reviews"]);
+  if (!queue.data) return <p className="quiet">{t("loading")}</p>;
   if (!waiting) return <Delivery dramaId={dramaId} episode={episode} />;
   if (!review.data) return <p className="quiet">{t("loading")}</p>;
-  return <CutRoom key={review.data.id} review={review.data} done={inbox.reload} />;
+  return <CutRoom key={review.data.id} review={review.data} done={queue.reload} />;
 }

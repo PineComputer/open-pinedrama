@@ -14,7 +14,7 @@ import { buttonClass } from "../components/Button.tsx";
 /** A stop waiting on the maker (a red line, a limit, another refusal), as the design's StopBanner shows it on every page of the drama. */
 export function WaitingStop({ stop }: { stop: ReviewSummary }) {
   const { t } = useT();
-  const { data } = useResource<ReviewView>(`/api/reviews/${stop.id}`, ["inbox"]);
+  const { data } = useResource<ReviewView>(`/api/reviews/${stop.id}`, ["reviews"]);
   return (data?.refusals ?? []).map((refusal, n) => (
     <StopCard key={n} refusal={refusal} episode={stop.episode}>
       <Link className="btn sm primary" to="/r/$reviewId" params={{ reviewId: stop.id }}>
@@ -32,8 +32,8 @@ function Notices({ drama }: { drama: DramaView }) {
   const rehearse = useAction(() => api(`/api/dramas/${drama.id}/rehearse`, { method: "POST" }));
   // Held during production (the setup panel says so before there are episodes).
   const held = drama.status === "stopped" && drama.episodeRows.length > 0;
-  const inbox = useResource<ReviewSummary[]>("/api/inbox", ["inbox"]);
-  const stops = (inbox.data ?? []).filter((review) => review.dramaId === drama.id && review.stop);
+  const queue = useResource<ReviewSummary[]>("/api/reviews", ["reviews"]);
+  const stops = (queue.data ?? []).filter((review) => review.dramaId === drama.id && review.stop);
   const elsewhere = app.data !== undefined && app.data.mode !== "none" && app.data.mode !== drama.mode;
   return (
     <>

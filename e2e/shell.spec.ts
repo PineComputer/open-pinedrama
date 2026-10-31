@@ -1,5 +1,5 @@
-// The project shell in a drama in production: the steps and the episode tree, and the episode kept
-// across its List, Canvas and Lineage, the browser's back button included.
+// The project shell in a drama in production: the episode tree, and the episode kept across its List
+// and Canvas, the browser's back button included.
 import { expect, test } from "@playwright/test";
 import { TOKEN } from "../playwright.config.ts";
 import { newProblems } from "./axe.ts";
@@ -20,19 +20,19 @@ test("an episode chosen in the tree stays selected across the surfaces", async (
   await tree.getByRole("button", { name: /^EP001 / }).click();
   await expect(page).toHaveURL(new RegExp(`/d/${id}/e/EP001/list$`));
   await expect(tree.getByRole("button", { name: /^EP001 / })).toHaveAttribute("aria-current", "true");
-  await expect(page.getByRole("navigation", { name: "Steps" }).getByRole("link", { name: /^Episodes/ })).toHaveAttribute("aria-current", "page");
 
-  const surfaces = page.getByRole("group", { name: "Surface" });
-  await surfaces.getByRole("button", { name: "Canvas" }).click();
+  // The episode's views (IA §3): List, Canvas and Cut, in the episode only.
+  const views = page.getByRole("group", { name: "EP001 view" });
+  await expect(views.getByRole("button", { name: "List" })).toHaveAttribute("aria-pressed", "true");
+  await views.getByRole("button", { name: "Canvas" }).click();
   await expect(page).toHaveURL(new RegExp(`/d/${id}/e/EP001/canvas$`));
   await expect(page.getByRole("region", { name: "Canvas" }).getByRole("button", { name: /^EP001 · / })).toBeVisible();
+  await expect(tree.getByRole("button", { name: /^EP001 / })).toHaveAttribute("aria-current", "true");
   expect(await newProblems(page)).toEqual([]);
-  await surfaces.getByRole("button", { name: "Graph" }).click();
-  await expect(page).toHaveURL(new RegExp(`/d/${id}/e/EP001/list\\?view=lineage$`));
-  await surfaces.getByRole("button", { name: "Studio" }).click();
+  await views.getByRole("button", { name: "List" }).click();
   await expect(page).toHaveURL(new RegExp(`/d/${id}/e/EP001/list$`));
 
   await page.goBack();
-  await expect(page).toHaveURL(new RegExp(`/d/${id}/e/EP001/list\\?view=lineage$`));
-  await expect(surfaces.getByRole("button", { name: "Graph" })).toHaveAttribute("aria-pressed", "true");
+  await expect(page).toHaveURL(new RegExp(`/d/${id}/e/EP001/canvas$`));
+  await expect(views.getByRole("button", { name: "Canvas" })).toHaveAttribute("aria-pressed", "true");
 });

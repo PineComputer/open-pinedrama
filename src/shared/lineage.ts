@@ -274,6 +274,11 @@ export function madeFromStale(lineage: Lineage): Set<string> {
   return new Set(stale.flatMap((node) => [...trace(lineage, node.id).down]).filter((id) => fresh.has(id)));
 }
 
+/** A drama's Out of date (IA §16): the versions drama-cli calls stale and what was made from them. */
+export function outOfDate(lineage: Lineage): Set<string> {
+  return new Set([...lineage.nodes.filter((node) => node.fresh === false).map((node) => node.id), ...madeFromStale(lineage)]);
+}
+
 /**
  * One drama's lineage from its sessions' newest exports, as the status reports are merged
  * (engine status.ts, projectView): each episode works on its own copy of the project, so the

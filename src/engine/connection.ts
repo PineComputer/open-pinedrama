@@ -24,7 +24,7 @@ export function initialFleet(): Fleet | undefined {
 function use(next: Fleet | undefined, limits?: Limits): void {
   setFleet(next, limits);
   void reconcile();
-  publish("app", "dramas", "inbox");
+  publish("app", "dramas", "reviews");
 }
 
 export async function connectPine(project: PineProject): Promise<AppInfo> {

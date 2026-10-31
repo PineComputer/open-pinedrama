@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { LineageError, madeFromStale, mergeLineage, parseLineage, trace, type Lineage } from "./lineage.ts";
+import { LineageError, madeFromStale, mergeLineage, outOfDate, parseLineage, trace, type Lineage } from "./lineage.ts";
 
 type Props = { id: string; kind: string; column: number; version: string | null; accepted: string | null; fresh: boolean | null; shows: string | null; reads: string[]; problems: string[]; label: string };
 
@@ -93,6 +93,10 @@ describe("tracing a version", () => {
 
   it("marks what was made from a stale version, which drama-cli itself may call fresh", () => {
     expect([...madeFromStale(lineage)]).toEqual(["episodes/EP001/edit"]);
+  });
+
+  it("holds as out of date what drama-cli calls stale and what was made from it", () => {
+    expect([...outOfDate(lineage)].sort()).toEqual(["episodes/EP001/edit", TAKE]);
   });
 });
 

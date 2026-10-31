@@ -80,5 +80,8 @@
   },
   "engines": {
     "node": ">=24"
+  },
+  "dependencies": {
+    "usehooks-ts": "3.1.1"
   }
 }

@@ -37,7 +37,7 @@ afterEach(() => vi.useRealTimers());
 describe("Home", () => {
   it("shows on each card what drama-cli and the bible say, and leaves out what isn't known", async () => {
     answer("/api/app", replay);
-    answer("/api/inbox", []);
+    answer("/api/reviews", []);
     answer("/api/dramas", [stepmother, bride]);
     await renderAt(<Slate />);
     const tile = await tileOf(/The Stepmother/);
@@ -54,7 +54,7 @@ describe("Home", () => {
 
   it("makes a poster of the drama's own work when it has some, else the empty cover, never its leads' sheets", async () => {
     answer("/api/app", replay);
-    answer("/api/inbox", []);
+    answer("/api/reviews", []);
     answer("/api/dramas", [{ ...stepmother, cast: ["/api/files/7"], cover: { url: "/api/files/9" } }, { ...bride, cast: ["/api/files/8"] }]);
     await renderAt(<Slate />);
     const withWork = await tileOf(/The Stepmother/);
@@ -67,7 +67,7 @@ describe("Home", () => {
 
   it("greets the maker by the time of day, with what waits for them", async () => {
     answer("/api/app", replay);
-    answer("/api/inbox", []);
+    answer("/api/reviews", []);
     answer("/api/dramas", [stepmother, bride]);
     await renderAt(<Slate />);
     const hour = new Date().getHours();
@@ -77,7 +77,7 @@ describe("Home", () => {
 
   it("pictures each waiting row by its drama's cover, as design/'s rows are", async () => {
     answer("/api/app", replay);
-    answer("/api/inbox", [
+    answer("/api/reviews", [
       { id: "r1", dramaId: "d1", dramaTitle: "The Stepmother", kind: "takes", state: "open", question: "", items: 1, subjects: ["seg01"], thumb: { url: "/api/files/3", video: true }, createdAt: "2026-10-30T11:56:00Z" },
       { id: "r2", dramaId: "d1", dramaTitle: "The Stepmother", kind: "question", state: "open", question: "How old?", items: 0, subjects: [], createdAt: "2026-10-30T11:50:00Z" },
     ]);
@@ -90,7 +90,7 @@ describe("Home", () => {
 
   it("shows at most two genres on a card, and how many more", async () => {
     answer("/api/app", replay);
-    answer("/api/inbox", []);
+    answer("/api/reviews", []);
     answer("/api/dramas", [{ ...stepmother, facts: { ...stepmother.facts, genres: ["Romance", "Contract marriage", "Revenge"] } }]);
     await renderAt(<Slate />);
     const tile = await tileOf(/The Stepmother/);
@@ -103,7 +103,7 @@ describe("Home", () => {
   it("carries on with the drama worked on last, its waiting review first, beside what waits, newest first", async () => {
     answer("/api/app", replay);
     // The older drama's review has waited longer; the newer drama is the one to carry on with.
-    answer("/api/inbox", [
+    answer("/api/reviews", [
       { id: "r0", dramaId: "d2", dramaTitle: "Bride on Bail", kind: "question", state: "open", question: "Old question", items: 0, subjects: [], createdAt: "2026-10-27T11:00:00Z" },
       { id: "r1", dramaId: "d1", dramaTitle: "The Stepmother", episode: "EP001", kind: "takes", state: "open", question: "Two takes wait.", items: 2, subjects: ["seg01", "seg03"], createdAt: "2026-10-30T11:56:00Z" },
     ]);
@@ -125,7 +125,7 @@ describe("Home", () => {
   it("sorts the shelf by when each drama was last worked on, or by title", async () => {
     const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
     answer("/api/app", replay);
-    answer("/api/inbox", []);
+    answer("/api/reviews", []);
     answer("/api/dramas", [{ ...bride, facts: { lastActivity: "2026-10-27T11:00:00Z" } }, stepmother]);
     await renderAt(<Slate />);
     const shelf = await screen.findByRole("tabpanel");
@@ -139,7 +139,7 @@ describe("Home", () => {
 
   it("ends the shelf with New drama, a drop target that opens Upload with the dropped screenplay", async () => {
     answer("/api/app", replay);
-    answer("/api/inbox", []);
+    answer("/api/reviews", []);
     answer("/api/dramas", [stepmother]);
     const { router } = await renderAt(<Slate />);
     const card = await within(await screen.findByRole("tabpanel")).findByRole("link", { name: /New drama/ });
@@ -154,7 +154,7 @@ describe("Home", () => {
 
   it("has the prototype's shelves, a stopped drama under All only", async () => {
     answer("/api/app", replay);
-    answer("/api/inbox", []);
+    answer("/api/reviews", []);
     answer("/api/dramas", [stepmother, bride]);
     await renderAt(<Slate />);
     const tabs = await screen.findByRole("tablist");
@@ -163,7 +163,7 @@ describe("Home", () => {
 
   it("offers the latest drama to carry on with, and the agent's last line, when nothing waits", async () => {
     answer("/api/app", replay);
-    answer("/api/inbox", []);
+    answer("/api/reviews", []);
     answer("/api/dramas", [bride, stepmother]);
     await renderAt(<Slate />);
     const hero = await screen.findByRole("region", { name: "The Stepmother" });
@@ -174,7 +174,7 @@ describe("Home", () => {
 
   it("shows a red line waiting on the maker as its own state, under Needs you", async () => {
     answer("/api/app", replay);
-    answer("/api/inbox", [
+    answer("/api/reviews", [
       { id: "r7", dramaId: "d2", dramaTitle: "Bride on Bail", episode: "EP007", kind: "question", state: "open", question: "A red line.", items: 0, subjects: [], stop: { kind: "red-line" }, createdAt: "2026-10-30T11:58:00Z" },
     ]);
     answer("/api/dramas", [stepmother, { ...bride, status: "production", waiting: 1 }]);
@@ -188,7 +188,7 @@ describe("Home", () => {
   it("narrows Waiting for you to a drama from its card's pill, and back to every drama", async () => {
     const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
     answer("/api/app", replay);
-    answer("/api/inbox", [
+    answer("/api/reviews", [
       { id: "r1", dramaId: "d1", dramaTitle: "The Stepmother", episode: "EP001", kind: "takes", state: "open", question: "", items: 2, subjects: ["seg01", "seg03"], createdAt: "2026-10-30T11:56:00Z" },
       { id: "r2", dramaId: "d2", dramaTitle: "Bride on Bail", episode: "EP004", kind: "storyboards", state: "open", question: "", items: 6, subjects: [], createdAt: "2026-10-30T11:50:00Z" },
     ]);

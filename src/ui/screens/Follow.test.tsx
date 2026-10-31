@@ -35,7 +35,7 @@ function engine(files: FileItem[]) {
   answer("/api/dramas/d1/lineage", lineageView());
   answer("/api/dramas/d1/canvas/EP001", { positions: {} });
   answer("/api/dramas/d1/canvas/EP002", { positions: {} });
-  answer("/api/inbox", []);
+  answer("/api/reviews", []);
 }
 
 const followed = () => document.querySelector(".cnode[data-followed]");

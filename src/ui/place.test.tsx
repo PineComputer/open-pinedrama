@@ -76,7 +76,7 @@ describe("a drama's page", () => {
 
   function engine() {
     answer("/api/app", { mode: "replay", version: "0.3.0", dataDir: "/data", stopping: 0 });
-    answer("/api/inbox", []);
+    answer("/api/reviews", []);
     answer("/api/dramas", []);
     answer("/api/dramas/d1", drama);
     answer("/api/dramas/d1/lineage", { lineage: { nodes: [], links: [], groups: [] }, problems: [] });

@@ -15,7 +15,7 @@ afterEach(() => vi.restoreAllMocks());
 describe("Cut", () => {
   it("opens the cut that waits for the maker in the cut's room", async () => {
     const review = cutReview();
-    answer("/api/inbox", [{ ...review, reviewItems: undefined }]);
+    answer("/api/reviews", [{ ...review, reviewItems: undefined }]);
     answer(`/api/reviews/${review.id}`, review);
     await renderAt(<CutTab dramaId="d1" episode="EP002" />, "/d/d1/e/EP002/cut");
     expect(await screen.findByRole("button", { name: "Accept cut" })).toBeInTheDocument();
@@ -23,7 +23,7 @@ describe("Cut", () => {
   });
 
   it("lists the episodes' cuts when none waits", async () => {
-    answer("/api/inbox", []);
+    answer("/api/reviews", []);
     answer("/api/dramas/d1/delivery", []);
     await renderAt(<CutTab dramaId="d1" episode="EP002" />, "/d/d1/e/EP002/cut");
     expect(await screen.findByText("Episodes appear here once production starts.")).toBeInTheDocument();

@@ -20,7 +20,7 @@ import { api, useAction, useResource } from "../api.ts";
 import { type TKey, useT } from "../i18n.ts";
 import { Icon, type IconName } from "../icons.tsx";
 import { errorText, useNames } from "../labels.ts";
-import { useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { homeLink, usePage, usePlace } from "../place.ts";
 import { AsideSlot } from "../shell/aside.ts";
 import { CARD, layered, lineageOf, type Point } from "./focus.ts";
@@ -280,6 +280,15 @@ export function Graph({ dramaId }: { dramaId: string }) {
         <small>
           {t(`graph.kind.${selected.kind}` as TKey)} · {selected.version ?? t("graph.noVersion")}
         </small>
+        {/* Lineage is a view of the item, not its home (IA §16): the way out is to where it lives (design/'s "Open in …"). */}
+        <Link {...homeLink(dramaId, selected.id)} className="btn sm">
+          {t("graph.openIn", {
+            // Named as the home is (design/'s "Open in …"): an episode's cut is EPxxx › Cut, apart from its List.
+            where: selected.where.episode
+              ? selected.kind === "cut" ? `${selected.where.episode} › ${t("step.cut")}` : selected.where.episode
+              : t(selected.kind === "screenplay" ? "step.script" : selected.kind === "bible" ? "step.story" : "step.assets"),
+          })}
+        </Link>
       </div>
       <div className="iscroll">
         {(fileOf(selected) || posterOf(selected)) && (

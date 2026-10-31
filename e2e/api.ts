@@ -20,7 +20,7 @@ export async function review(page: Page, drama: string, kind: ReviewSummary["kin
   let found: ReviewSummary | undefined;
   await expect
     .poll(async () => {
-      found = (await call<ReviewSummary[]>(page, "/api/inbox")).find((item) => item.dramaId === drama && item.kind === kind && item.state === "open" && (!episode || item.episode === episode));
+      found = (await call<ReviewSummary[]>(page, "/api/reviews")).find((item) => item.dramaId === drama && item.kind === kind && item.state === "open" && (!episode || item.episode === episode));
       return Boolean(found);
     }, { timeout: 30_000 })
     .toBe(true);

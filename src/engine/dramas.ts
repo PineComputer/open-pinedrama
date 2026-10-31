@@ -174,7 +174,7 @@ export async function finishEpisode(id: string): Promise<void> {
     stopEvents(session.id);
     await closeSession(session);
   }
-  publish(`drama:${episode.drama_id}`, "dramas", "inbox");
+  publish(`drama:${episode.drama_id}`, "dramas", "reviews");
 }
 
 /**
@@ -197,7 +197,7 @@ export async function stopEpisode(id: string): Promise<void> {
     stopEvents(session.id);
     await closeSession(session);
   }
-  publish(`drama:${episode.drama_id}`, "dramas", "inbox");
+  publish(`drama:${episode.drama_id}`, "dramas", "reviews");
 }
 
 /**
@@ -269,7 +269,7 @@ export async function chat(sessionId: string, text: string): Promise<void> {
   } else {
     await startRun(session, "chat", text);
   }
-  publish(`session:${sessionId}`, `drama:${session.drama_id}`, "inbox");
+  publish(`session:${sessionId}`, `drama:${session.drama_id}`, "reviews");
 }
 
 export async function desktop(sessionId: string): Promise<unknown | null> {

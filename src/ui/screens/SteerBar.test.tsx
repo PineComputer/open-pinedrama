@@ -50,7 +50,7 @@ function project(): ProjectView {
   return { state, sessions: [], problems: [], names: parseBibleNames(fixture("bible")) };
 }
 
-function engine(inbox: ReviewSummary[] = [], sends: ChatView["sends"] = "steer", reviewId?: string) {
+function engine(queue: ReviewSummary[] = [], sends: ChatView["sends"] = "steer", reviewId?: string) {
   for (const id of ["s0", "s1"]) answer(`/api/sessions/${id}/chat`, { sessionId: id, label: id === "s1" ? "EP001" : "", sends, ...(reviewId ? { reviewId } : {}), messages: [] });
   answer("/api/dramas/d1/project", project());
   answer("/api/dramas/d1/files", []);
@@ -58,7 +58,7 @@ function engine(inbox: ReviewSummary[] = [], sends: ChatView["sends"] = "steer",
   answer("/api/dramas/d1/canvas/EP001", { positions: {} });
   answer("/api/dramas/d1/canvas/EP002", { positions: {} });
   answer("/api/dramas/d1/assets", {});
-  answer("/api/inbox", inbox);
+  answer("/api/reviews", queue);
   accept("/api/sessions/s0/chat");
   accept("/api/sessions/s1/chat");
   accept("/api/episodes/e1/resume");

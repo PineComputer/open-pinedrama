@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { cutReview, file, storyboardReview } from "../test/fixtures.ts";
 import { accept, answer, calls } from "../test/server.ts";
-import { Review } from "./Review.tsx";
+import { itemStage, Review } from "./Review.tsx";
 import { renderAt } from "../test/router.tsx";
 
 async function open(review = storyboardReview("seg01", "seg02"), path = `/r/${review.id}`) {
@@ -350,5 +350,18 @@ describe("the review room for a cut", () => {
       words: "",
       items: [{ key: "cut", verdict: "approve", notes: [{ fileId: review.reviewItems[0].files[0].id, time: 1, text: "Lovely open" }] }],
     });
+  });
+});
+
+describe("where a review item lives (IA §16)", () => {
+  it("is the drama-cli stage the room links to, from the engine's item keys", () => {
+    expect(itemStage("takes", "EP006", "seg03")).toBe("episodes/EP006/segments/seg03");
+    expect(itemStage("storyboards", "EP004", "seg01")).toBe("episodes/EP004/segments/seg01");
+    expect(itemStage("cut", "EP001", "cut")).toBe("episodes/EP001/edit");
+    expect(itemStage("looks", undefined, "margaret")).toBe("assets/characters/margaret");
+    expect(itemStage("references", undefined, "margaret/wedding")).toBe("assets/characters/margaret/states/wedding");
+    expect(itemStage("references", undefined, "location:garden")).toBe("assets/scenes/garden");
+    expect(itemStage("references", undefined, "prop:file")).toBe("assets/props/file");
+    expect(itemStage("question", undefined, "q1")).toBeUndefined();
   });
 });
