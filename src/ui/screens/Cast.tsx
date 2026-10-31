@@ -198,7 +198,9 @@ function AssetDetail({ card, names, dramaId }: { card: CastCard; names: Names | 
   const current = versions[0]?.files[0]?.version;
   const accepted = versions.find((version) => standing(version) === "accepted")?.files[0]?.version;
   const status = standing(shown);
-  const lookName = (entry: CastCard["looks"][number]) => entry.look || (card.kind === "look" ? t("cast.base") : card.kind === "location" ? t("cast.plate") : t("cast.keyProp"));
+  // drama-cli names a character's first look "base" (the cards say Base look); a plate or prop has no look name.
+  const lookName = (entry: CastCard["looks"][number]) =>
+    entry.look && entry.look !== "base" ? entry.look : card.kind === "look" ? t("cast.base") : card.kind === "location" ? t("cast.plate") : t("cast.keyProp");
   return (
     <aside className="insp" aria-label={t("asset.detail", { name })}>
       <div className="ihead">

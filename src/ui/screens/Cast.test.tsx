@@ -62,6 +62,7 @@ describe("the Story", () => {
     await user.click(within(lin).getByRole("link", { name: "Lin Xiaoyu" }));
     const detail = await screen.findByRole("complementary", { name: "Lin Xiaoyu: versions, state and review" });
     expect(within(detail).getByText("current v2 · none accepted")).toBeInTheDocument();
+    expect(within(detail).getByText("Base look · v2")).toBeInTheDocument();
     expect(within(detail).getByRole("link", { name: "Review" })).toHaveAttribute("href", "/r/r2");
     expect(within(detail).getByRole("link", { name: "Lineage" })).toHaveAttribute("href", "/d/d1/assets/characters/lin?view=lineage");
     await user.click(within(detail).getByRole("button", { name: "v1" }));
