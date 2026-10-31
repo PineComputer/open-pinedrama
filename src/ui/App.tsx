@@ -3,7 +3,7 @@ import { createContext, lazy, Suspense, useContext, useEffect, useState } from "
 import { useMediaQuery } from "usehooks-ts";
 import { stageOf, type LineageView } from "../shared/lineage.ts";
 import type { ProjectView } from "../shared/project.ts";
-import type { AppInfo, DramaView, ReviewSummary } from "../shared/types.ts";
+import type { AppInfo, DramaView, ReviewSummary, ReviewView } from "../shared/types.ts";
 import { ApiError, useResource } from "./api.ts";
 import { type TKey, useT } from "./i18n.ts";
 import { errorText, isSetupScreen, scriptWaits } from "./labels.ts";
@@ -215,6 +215,10 @@ export function App() {
   const status = useResource<ProjectView>(stage && dramaId ? `/api/dramas/${dramaId}/project` : null, [`project:${dramaId}`]);
   const stageState = stage?.where.segment && place?.episode ? status.data?.state?.episodes[place.episode] : undefined;
   const version = stage && stage.where.segment ? (stage.kind === "take" ? stageState?.segments[stage.where.segment]?.current : stage.kind === "storyboard" && stage.where.style ? stageState?.storyboards[stage.where.segment]?.[stage.where.style]?.current : undefined) : undefined;
+  // The cut in view on an episode's Cut: the one its open review shows (CutTab), with its version for the crumbs.
+  const cutReview = page === "cut" && place?.episode ? waiting.find((item) => item.kind === "cut" && item.dramaId === dramaId && item.episode === place.episode) : undefined;
+  const cutInView = useResource<ReviewView>(cutReview ? `/api/reviews/${cutReview.id}` : null, ["reviews"]);
+  const cutVersion = cutInView.data?.reviewItems[0]?.files.find((file) => file.kind === "cut")?.version;
   const [sidebarOpen, toggleSidebar] = useSidebar();
   // IA draft r2 (F): below 1100 px the sidebar is a drawer over the work, opened from the rail and closed by any move.
   const narrow = useMediaQuery("(max-width: 1100px)");
@@ -259,7 +263,7 @@ export function App() {
   // In an episode: the episode, then what is picked in it (its stage and version), or its Cut.
   else if (place?.episode && drama.data) {
     const episode = episodeCrumb(place.episode, drama.data.id);
-    if (page === "cut") crumbs = ofDrama(episode, { label: t("step.cut") });
+    if (page === "cut") crumbs = ofDrama(episode, { label: [t("step.cut"), cutVersion].filter(Boolean).join(" ") });
     else crumbs = picked ? ofDrama(episode, { label: picked }) : ofDrama({ label: place.episode });
   }
   // The setup's own screens, as design/'s crumbs read: Setup › Script, or Setup › Fountain review while the rewrite waits on the maker.
