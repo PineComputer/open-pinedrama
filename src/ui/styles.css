@@ -43,6 +43,8 @@ h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 700; lett
 .page > .head .facts { color: var(--text-muted); margin-top: 4px; }
 .page > .head .spacer { flex: 1; }
 .empty-note { max-width: 46ch; color: var(--text-secondary); font: 400 19px/1.45 var(--font-sans); }
+/* On a drama's page an empty state is one of its blocks, so it brings the page's 16px edge (shell.css, .ds-workin). */
+.ds-workin > .empty-note { padding: 0 16px; }
 .gate { display: grid; gap: 20px; justify-items: start; padding-top: clamp(64px, 12vh, 140px); }
 .gate h1 { font-size: clamp(30px, 3.6vw, 42px); max-width: 22ch; }
 .gate .empty-note { margin: 0; }

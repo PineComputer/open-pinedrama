@@ -138,7 +138,7 @@ export function Bible({ dramaId }: { dramaId: string }) {
           </section>
         </div>
       ) : (
-        <p className="empty-note" style={{ padding: "0 16px" }}>
+        <p className="empty-note">
           {t("cast.noBible")}
         </p>
       )}

@@ -386,7 +386,7 @@ export function Cast({ dramaId, compact = false }: { dramaId: string; compact?: 
   const castGrid = <AssetGrid cards={characters} state={state} names={names} dramaId={dramaId} picked={picked} />;
   if (!data) return <p className={error === undefined ? "quiet" : "error"}>{error === undefined ? t("loading") : errorText(error, t)}</p>;
   // Y8: an asset shelf says when it is empty.
-  const none = <p className="empty-note" style={{ padding: "0 16px" }}>{t("cast.empty")}</p>;
+  const none = <p className="empty-note">{t("cast.empty")}</p>;
   if (compact) return characters.length ? castGrid : none;
   // D57: the drama tree is how Assets is navigated (Characters, Locations, Props are its rows, as Episodes' are), so the
   // page has no tabs of its own: a plain heading with the count, shared by every episode.
