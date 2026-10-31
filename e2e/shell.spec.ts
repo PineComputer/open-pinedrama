@@ -36,16 +36,17 @@ test("an episode chosen in the tree stays selected across the surfaces", async (
   await expect(page).toHaveURL(new RegExp(`/d/${id}/e/EP001/canvas$`));
   await expect(views.getByRole("button", { name: "Canvas" })).toHaveAttribute("aria-pressed", "true");
 
-  // D26: an asset's detail ends the crumbs at the asset and its working version, its shelf a link back. The card, the
-  // detail and the crumbs name it as the bible does once the names have loaded (the card shows the id until then), so
-  // the check waits for the detail's name and the crumb's to agree, and for that name not to be the id.
+  // D26 and D56: an asset opens in the viewer, a modal dialog (WAI-ARIA APG), so the page behind it, the crumbs included,
+  // leaves the accessibility tree; the crumbs still end at the asset and its working version under the backdrop. The
+  // card, the panel and the crumbs name it as the bible does once the names have loaded (the card shows the id until
+  // then), so the check waits for the panel's name and the crumbs' to agree, and for that name not to be the id.
   await page.goto(`/d/${id}/assets/characters`);
   await page.locator("article.assetcard .cardname").first().click();
   await expect(page).toHaveURL(new RegExp(`/d/${id}/assets/characters/[^/?]+`));
   const asset = new URL(page.url()).pathname.split("/").pop()!;
-  const where = page.getByRole("navigation", { name: "Where this belongs" });
-  await expect(where.getByRole("link", { name: "Characters" })).toBeVisible();
-  const detail = page.getByRole("complementary", { name: /: versions, state and review$/ });
+  const viewer = page.getByRole("dialog");
+  const detail = viewer.getByRole("complementary", { name: /: versions, state and review$/ });
+  const where = page.locator('nav[aria-label="Where this belongs"]');
   await expect
     .poll(async () => {
       const name = (await detail.locator(".ihead b").first().innerText()).trim();
@@ -54,4 +55,15 @@ test("an episode chosen in the tree stays selected across the surfaces", async (
       return name !== asset && new RegExp(`${quoted} · (S\\d+ )?v\\d+$`).test(crumbs);
     })
     .toBe(true);
+  // The viewer's own controls stay clear of the panel beside the picture: each is the topmost element at its centre.
+  for (const label of ["Previous asset", "Next asset", "Close"]) {
+    const control = viewer.getByRole("button", { name: label });
+    expect(await control.evaluate((el) => {
+      const box = el.getBoundingClientRect();
+      return el.contains(document.elementFromPoint(box.left + box.width / 2, box.top + box.height / 2));
+    }), label).toBe(true);
+  }
+  await page.keyboard.press("Escape");
+  await expect(page).toHaveURL(new RegExp(`/d/${id}/assets/characters$`));
+  await expect(viewer).toBeHidden();
 });

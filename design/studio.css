@@ -927,4 +927,6 @@ button.drow { cursor: pointer; } button.drow:hover { background: var(--hover); }
    on the right, where the details sit docked (Edge, square); the backdrop is the draft's .lbox dim. */
 .assetviewer { --yarl__color_backdrop: color-mix(in srgb, #000 88%, transparent); }
 .assetviewer .yarl__container { right: var(--insp); }
+/* The library places its Next arrow and its toolbar (Close) against the window's right edge, under the panel. */
+.assetviewer .yarl__navigation_next, .assetviewer .yarl__toolbar { right: var(--insp); }
 .assetviewer .insp { position: fixed; top: 0; right: 0; bottom: 0; z-index: 1; background: var(--surface); }
