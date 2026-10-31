@@ -9,7 +9,7 @@
   const hash = (location.hash || "").slice(1);
   const S = {
     screen: SCREENS.includes(hash) ? hash : "home", theme: "dark", side: true, tab: "all", filter: "all", waitFor: null, pin: null,
-    dialog: null, toasts: [], dramaStop: null, draft: "", chat: [],
+    dialog: null, toasts: [], dramaStop: null, draft: "", chats: {}, drafts: {}, drawer: false,
     cam: { x: 40, y: 96, k: 0.62 }, tool: "move", toolOpen: false, zoomOpen: false, keysOpen: false, sel: null, dock: (() => { try { return localStorage.getItem("studio.canvas.dock") || "under"; } catch (e) { return "under"; } })(), follow: true, agentOpen: false, panning: null, minimap: true,
     ti: 0, playing: false, t: 0, watched: {}, maxT: {}, verdict: {}, reason: {}, showPrev: false, rsend: null, outcome: "ok", over: false,
     state: "normal", file: null, preset: null, len: "90", budget: "1000", ana: 0, tod: null, words: "", stab: "bible", cards: {}, cardWhy: {}, gsel: "ep6seg03", cutT: 0, cutPlaying: false, cutNotes: null, noteDraft: "", cutV: null, cutWhy: "",
@@ -17,7 +17,10 @@
   let drawing = false;
   const draw = () => { if (!drawing) { drawing = true; requestAnimationFrame(() => { drawing = false; render(html`<${App}/>`, root); }); } };
   const set = (p) => { Object.assign(S, typeof p === "function" ? p(S) : p); draw(); };
-  const go = (screen) => { set({ screen, sel: null, agentOpen: false, playing: false }); try { history.replaceState(null, "", "#" + screen); } catch (e) { /* the hash is a convenience */ } };
+  const go = (screen) => { set({ screen, sel: null, agentOpen: false, playing: false, drawer: false }); try { history.replaceState(null, "", "#" + screen); } catch (e) { /* the hash is a convenience */ } };
+  /* IA draft (F): below 1100 px the drama tree is a drawer the rail's menu button opens; the agent is the ball at 1280 and
+     below, keeping what it follows or is pinned to. */
+  const narrow = () => window.matchMedia("(max-width: 1100px)").matches;
   let tid = 0;
   const toast = (text, action) => { const id = ++tid; set({ toasts: [...S.toasts, { id, text, action }] }); setTimeout(() => set({ toasts: S.toasts.filter((t) => t.id !== id) }), 4200); };
   const money = (n) => "$" + n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -50,7 +53,7 @@
   function Rail() {
     const dramas = !["reviews"].includes(S.screen);
     return html`<nav class="rail" aria-label="Main">
-      <button class="ibtn" aria-label="Show or hide the sidebar" onClick=${() => set({ side: !S.side })}>${I("list")}</button>
+      <button class="ibtn" aria-label="Show or hide the sidebar" aria-expanded=${String(narrow() ? !!S.drawer : S.side)} onClick=${() => (narrow() ? set({ drawer: !S.drawer }) : set({ side: !S.side }))}>${I("list")}</button>
       <hr/>
       <button class="ibtn" title="Dramas" aria-label="Dramas" aria-current=${dramas ? "page" : "false"} onClick=${() => go("home")}>${I("film-strip")}</button>
       <button class="ibtn railcount" title="Reviews" aria-label="Reviews, 5 waiting" aria-current=${S.screen === "reviews" ? "page" : "false"} onClick=${() => set({ waitFor: null, screen: "reviews" })}>${I("list-checks")}<span class="badge">5</span></button>
@@ -60,7 +63,7 @@
     </nav>`;
   }
   function Side() {
-    if (S.screen === "home" || S.screen === "upload" || S.screen === "reviews") return html`<aside class=${"side " + (S.side ? "" : "closed")} aria-label="Sidebar">
+    if (S.screen === "home" || S.screen === "upload" || S.screen === "reviews") return html`<aside class=${"side " + (S.side ? "" : "closed") + (S.drawer ? " drawer-open" : "")} aria-label="Sidebar">
       <div class="head"><div class="who" style="padding-left:4px">${Mark()}<b style="font-size:14px">Pine Drama</b></div></div>
       <div class="scroll">
         <div class="sec">Dramas</div>
@@ -71,12 +74,12 @@
       <div class="foot"><div class="who"><span class="av">Y</span><span class="grow">Your studio</span>${I("caret-right")}</div></div>
     </aside>`;
     const cur = { episodes: null, episode: "EP006", canvas: "EP006", review: "EP006", cut: "EP006" }[S.screen];
-    if (SETUP.includes(S.screen)) return html`<aside class=${"side " + (S.side ? "" : "closed")} aria-label="Project">
+    if (SETUP.includes(S.screen)) return html`<aside class=${"side " + (S.side ? "" : "closed") + (S.drawer ? " drawer-open" : "")} aria-label="Project">
       <div class="head"><button class="proj" onClick=${() => go("home")} title="All dramas"><span class="newthumb">${I("file-text")}</span><span class="grow"><b>${P.project.title}</b><small>Setup · 1 session</small></span>${I("caret-down", "subtle")}</button></div>
       <div class="scroll"><div class="sec">Setup</div>${window.EXTRA.SetupSteps()}</div>
       <div class="foot" title=${SPENT_COVERS}><div style="display:flex;justify-content:space-between"><span>Spent</span><b class="mono" style="color:var(--text-primary)">$0.40 <span class="muted">/ $1,000</span></b></div><span>Nothing in flight</span><span class="muted" style="font-size:11px">${SPENT_COVERS}</span></div>
     </aside>`;
-    return html`<aside class=${"side " + (S.side ? "" : "closed")} aria-label="Project">
+    return html`<aside class=${"side " + (S.side ? "" : "closed") + (S.drawer ? " drawer-open" : "")} aria-label="Project">
       <div class="head"><button class="proj" onClick=${() => go("home")} title="All dramas"><img src=${P.eps[0].cover} alt=""/><span class="grow"><b>${P.project.title}</b><small>${P.project.episodes} episodes · ${P.project.spec}</small></span>${I("caret-down", "subtle")}</button></div>
       <div class="scroll">
         <button class="navi" aria-current=${S.screen === "script" ? "page" : "false"} onClick=${() => go("script")}>${I("file-text")}Script</button>
@@ -171,8 +174,14 @@
   }
 
   /* ───── agent panel ───── */
+  /* IA draft (E): the session the agent panel speaks to. It follows the episode in view (List, Canvas, its review, its
+     cut, Lineage from one of its items); a page with no episode in view follows none, and never guesses one. A pin wins.
+     The session's process, messages and composer follow it together; an unsent draft stays with its own session. */
+  const inEpisode = () => ["episode", "canvas", "review", "cut"].includes(S.screen) || (S.screen === "graph" && !S.stale);
+  const talkTo = () => S.pin || (inEpisode() ? "EP006" : null);
+  const switchTo = (pin) => { const from = talkTo(), next = pin || (inEpisode() ? "EP006" : null); set({ pin, drafts: { ...S.drafts, [from || ""]: S.draft }, draft: (S.drafts || {})[next || ""] || "" }); };
   function AgentPanel({ float }) {
-    const dec = decisions();
+    const dec = decisions(), to = talkTo(), ep7 = to === "EP007";
     const runRow = (code, what) => html`<div class="arow"><div class="what"><b>${code}</b><span>${S.dramaStop === "stopped" ? "Stopped with the drama" : S.dramaStop ? (code === "EP003" ? "Stopping… waiting on 4 takes in flight" : "Stopping…") : what}</span></div>
       ${!S.dramaStop && html`<button class="btn sm ghost" onClick=${() => toast("Watch opens the Computer's desktop, view-only.")}>Watch</button>
       <button class="btn sm ghost" onClick=${() => set({ dialog: { title: "Stop " + code + "?", body: code === "EP003" ? "4 takes are in flight. They are waited on and recorded, never sent again. The episode stops after them." : "Nothing paid is in flight. The episode stops now and can be resumed.", ok: "Stop " + code, danger: true, cancel: "Keep running", run: () => toast(code + " stopped.") } })}>Stop</button>`}</div>`;
@@ -180,32 +189,45 @@
       <div class="ahead"><span class="live"></span><h2>Agent</h2><span class="grow"></span>
         ${float ? html`<button class="ibtn" aria-label="Close the agent panel" onClick=${() => set({ agentOpen: false })}>${I("x")}</button>` : html`<button class="ibtn" aria-label="Collapse" onClick=${() => toast("The panel collapses to the agent ball, as on Canvas.")}>${I("arrows-in")}</button>`}</div>
       <div class="ascope">${S.pin
-        ? html`${I("map-pin")}<span>Pinned to <b>${S.pin}</b></span><span class="grow"></span><button class="btn sm ghost" onClick=${() => set({ pin: null })}>Follow EP006</button>`
-        : html`<span class="live"></span><span>Following <b>EP006</b></span><span class="grow"></span><button class="btn sm ghost" onClick=${() => set({ pin: "EP007" })}>Pin to EP007</button>`}</div>
+        ? html`${I("map-pin")}<span>Pinned to <b>${S.pin}</b></span><span class="grow"></span><button class="btn sm ghost" onClick=${() => switchTo(null)}>${inEpisode() ? "Follow EP006" : "Unpin"}</button>`
+        : to ? html`<span class="live"></span><span>Following <b>${to}</b>, the episode in view</span><span class="grow"></span><button class="btn sm ghost" onClick=${() => switchTo("EP007")}>Pin to EP007</button>`
+        : html`<span>No episode in view</span><span class="grow"></span><button class="btn sm ghost" onClick=${() => switchTo("EP007")}>Pin to EP007</button>`}</div>
       <div class="ascroll">
         <section class="asec"><h3>Sessions <span class="c">3</span></h3>${runRow("EP003", "Running · shooting 4 takes · 2 back")}
           <div class="arow"><div class="what"><b>EP006</b><span>Waiting · 2 takes wait for you</span></div><button class="btn sm ghost" onClick=${() => go("review")}>Review</button></div>
           <div class="arow failed"><div class="what"><b>EP005</b><span>Failed while shooting seg03 · <code>ProviderError.Unknown</code></span><small>drama-cli: the video request's outcome is unknown. It isn't sent again until it is reconciled.</small><small class="subtle">A failed session doesn't mean its jobs failed.</small></div><button class="btn sm" title="drama-cli's recovery for this refusal" onClick=${() => toast("Reconciling EP005 seg03: the agent asks the provider what became of the request; nothing is resubmitted.")}>Reconcile</button></div></section>
         <section class="asec"><h3>Decisions <span class="c">${dec.length}</span></h3>
           ${dec.map((d) => html`<button class="dec" onClick=${() => go(d.go)}><img src=${d.pic} alt=""/><span><b>${d.t}</b><small>${d.d}</small></span><span class="age">${d.age}</span></button>`)}</section>
-        <section class="asec"><div class="process"><button onClick=${() => {}}>${I("list-checks")}EP006 · Process<span class="cnt">7 steps</span></button>
+        ${ep7 ? html`<section class="asec"><div class="process"><button onClick=${() => {}}>${I("list-checks")}EP007 · Process<span class="cnt">3 steps</span></button>
+          <ol class="steps">
+            <li>${I("check-circle")}<span>Status <code>drama-cli status</code></span><time>0:02</time></li>
+            <li>${I("check-circle")}<span>Bible EP007–EP012: refused, a red line</span><time>1:10</time></li>
+            <li class="now">${I("circle-notch")}<span>Waiting for your decision</span><time></time></li></ol></div></section>
+        <section class="asec"><p class="msg">drama-cli won't write EP007–EP012: scene 4 shows a guard striking Luca in the cell. Shall I write it without that, or stop here? Other episodes carry on.</p></section>`
+        : to ? html`<section class="asec"><div class="process"><button onClick=${() => {}}>${I("list-checks")}EP006 · Process<span class="cnt">7 steps</span></button>
           <ol class="steps">
             <li>${I("check-circle")}<span>Status <code>drama-cli status</code></span><time>0:02</time></li>
             <li>${I("check-circle")}<span>seg01 shot again: blanket folded first</span><time>2:40</time></li>
             <li>${I("check-circle")}<span>seg03 shot again: opens on Luca</span><time>2:12</time></li>
             <li>${I("check-circle")}<span>Downloaded both takes</span><time>0:18</time></li>
             <li class="now">${I("circle-notch")}<span>Waiting for your review</span><time></time></li></ol></div></section>
-        <section class="asec"><p class="msg">I shot seg01 again with the blanket folded before Luca speaks, and seg03 again opening on his face, as you asked. Both new takes wait for you.</p></section>
+        <section class="asec"><p class="msg">I shot seg01 again with the blanket folded before Luca speaks, and seg03 again opening on his face, as you asked. Both new takes wait for you.</p></section>`
+        : html`<section class="asec"><p class="msg muted">Open an episode, or pin a session, to see its work here and message it.</p></section>`}
         <section class="asec"><h3>Recent work</h3>
           <div class="arow"><div class="what"><b>EP006 seg03 take t02</b><span>waits for you</span></div></div>
           <div class="arow"><div class="what"><b>Margaret Cole base look v3</b><span>waits for you</span></div></div></section>
-        ${S.chat.map((m) => html`<section class="asec"><p class="msg you">${m}</p></section>`)}
+        ${to && (S.chats?.[to] || []).map((m) => html`<section class="asec"><p class="msg you">${m}</p></section>`)}
         <section class="asec"><h3>Next</h3><div class="nextchips"><button onClick=${() => go("review")}>Review EP006 takes</button><button onClick=${() => go("canvas")}>Review looks and plates</button></div></section>
       </div>
-      <div class="composer"><textarea placeholder="Message the agent…" value=${S.draft} onInput=${(e) => set({ draft: e.target.value })}
-          onKeyDown=${(e) => { if (e.key === "Enter" && (e.metaKey || e.ctrlKey) && S.draft.trim()) { set({ chat: [...S.chat, S.draft.trim()], draft: "" }); toast("Sent to " + (S.pin || "EP006") + "'s session."); } }}></textarea>
-        <div class="crow"><span>To ${S.pin || "EP006"}'s session · ${S.pin ? "pinned" : "the episode in view"}</span><button class="send" aria-label="Send" disabled=${!S.draft.trim()} onClick=${() => { set({ chat: [...S.chat, S.draft.trim()], draft: "" }); toast("Sent to " + (S.pin || "EP006") + "'s session."); }}>${I("arrow-up")}</button></div></div>
-    </aside>`;
+      ${(() => {
+        const send = () => { set({ chats: { ...S.chats, [to]: [...((S.chats || {})[to] || []), S.draft.trim()] }, draft: "" }); toast("Sent to " + to + "'s session."); };
+        return html`<div class="composer"><textarea placeholder=${to ? "Message " + to + "'s session…" : "Pin a session to message it"} disabled=${!to} value=${S.draft} onInput=${(e) => set({ draft: e.target.value })}
+          onKeyDown=${(e) => { if (e.key === "Enter" && (e.metaKey || e.ctrlKey) && S.draft.trim() && to) send(); }}></textarea>
+        <div class="crow"><span>${to ? html`To <b>${to}</b>'s session · ${S.pin ? "pinned" : "the episode in view"}` : "No session chosen"}</span><button class="send" aria-label=${to ? "Send to " + to : "Send"} disabled=${!to || !S.draft.trim()} onClick=${send}>${I("arrow-up")}</button></div></div>`;
+      })()}
+    </aside>
+    ${!float && html`<button class="ball agentball" aria-label=${"Agent" + (to ? ", " + (S.pin ? "pinned to " : "following ") + to : "")} onClick=${() => set({ agentOpen: !S.agentOpen })}>${I("robot")}<span class="badge">${dec.length}</span></button>
+      ${S.agentOpen && html`<${AgentPanel} float/>`}`}`;
   }
 
   /* Home's "Waiting for you": every drama's decisions, each row named by its drama and pictured by its cover. */
