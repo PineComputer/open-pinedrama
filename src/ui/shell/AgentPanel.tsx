@@ -82,6 +82,8 @@ function sessionTold(records: SessionRecord[], sessionId: string, t: ReturnType<
   const at = records.findIndex((record) => record.id === sessionId);
   if (at < 1) return undefined;
   const before = records[at - 1];
+  // A Computer restarted under its own label after it stopped keeps its identity, not its files (D72): said as it is.
+  if (before.state === "lost" && before.computer === records[at].computer) return t("agent.sessionRestarted", { n: at + 1, computer: records[at].computer });
   return t("agent.sessionAfter", { n: at + 1, computer: records[at].computer, before: before.state === "lost" ? t("agent.afterStopped", { computer: before.computer }) : t("agent.afterEnded", { n: at }) });
 }
 

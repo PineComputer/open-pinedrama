@@ -108,6 +108,18 @@ describe("the agent panel", () => {
     expect(screen.getByText("Its last session, 1, was on PC-2 when it stopped.")).toBeInTheDocument();
   });
 
+  it("says a Computer restarted under its own label kept its identity, not its files (D72)", async () => {
+    engine();
+    answer("/api/dramas/d1/session-history", [
+      { id: "s0", scope: "EP001", computer: "PC-1", state: "lost", createdAt: "2026-10-30T08:00:00Z", closedAt: "2026-10-30T09:00:00Z" },
+      { id: "s1", scope: "EP001", computer: "PC-1", state: "open", createdAt: "2026-10-30T09:30:00Z" },
+    ]);
+    await renderAt(<AgentPanel drama={drama} episode="EP001" onCollapse={() => {}} />);
+    const sessions = screen.getByRole("region", { name: "Sessions" });
+    expect(await within(sessions).findByText("Session 2 on PC-1, restarted after it stopped; its files came back from the pack")).toBeInTheDocument();
+    expect(within(sessions).queryByText(/after PC-1 stopped/)).toBeNull();
+  });
+
   it("shows the sessions, the decisions waiting, and what was made, named as the bible names them", async () => {
     engine();
     await renderAt(<AgentPanel drama={drama} onCollapse={() => {}} />);
