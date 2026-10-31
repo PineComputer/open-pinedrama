@@ -55,14 +55,16 @@ function useJson(file: FileItem | undefined): unknown {
  * reference images in the order of `content` (reference/byteplus/docs/seedance-2-5-prompt-guide.md,
  * binding references in the text prompt). A picture drama-cli sent from the project (`@<path>`)
  * (`@assets/…`, or an older run's absolute `@/…/assets/…`) is matched to the returned file at the same project path; one sent from the asset library
- * (`asset://`) has no file here.
+ * (`asset://<Id>`) is the picture drama-cli registered under that id, which has none until the stop returns its record.
  */
-function sentPictures(spec: unknown, files: FileItem[]): (FileItem | undefined)[] {
+function sentPictures(spec: unknown, files: FileItem[], assets: Record<string, FileItem>): (FileItem | undefined)[] {
   const content = spec && typeof spec === "object" && Array.isArray((spec as { content?: unknown }).content) ? ((spec as { content: { type?: string; image_url?: { url?: string } }[] }).content) : [];
   return content
     .filter((part) => part?.type === "image_url")
     .map((part) => {
       const url = part.image_url?.url ?? "";
+      // One the request sent from the asset library: the picture drama-cli registered under that id (engine/browse.ts, assetPictures).
+      if (url.startsWith("asset://")) return assets[url.slice("asset://".length)];
       // drama-cli writes a project picture relative to the project (@assets/…) or, from an older run, by its absolute path (@/…/assets/…).
       const tail = url.startsWith("@") ? url.slice(1).match(/(?:^|\/)((?:assets|episodes)\/.+)$/)?.[1] : undefined;
       return tail ? files.find((file) => file.path.endsWith(`/${tail}`)) : undefined;
@@ -172,7 +174,8 @@ export function NodePanel({
   const spec = specFacts(useText(specFile).text);
   const raw = useJson(specFile);
   const request = useJson(beside(work, files, "request.json"));
-  const pictures = sentPictures(raw, files);
+  const assets = useResource<Record<string, FileItem>>(`/api/dramas/${dramaId}/assets`, [`drama:${dramaId}`]);
+  const pictures = sentPictures(raw, files, assets.data ?? {});
   // The model in its own pill, then the request's settings in one, as design/'s node panel (after liblib.tv's composer).
   const settings = [spec?.ratio, spec?.resolution, spec?.seconds !== undefined ? t("canvas.seconds", { n: spec.seconds }) : undefined, spec?.seed !== undefined ? t("canvas.seedPill", { n: spec.seed }) : undefined].filter((part): part is string => part !== undefined);
   const pills = [spec?.model, settings.length ? settings.join(" · ") : undefined].filter((pill): pill is string => pill !== undefined);

@@ -1,7 +1,7 @@
 // Browsing shows what each review decided on, and nothing more: a takes review says nothing
 // about storyboards the same turn returned, and approving several cuts at once approves none
 // of them in particular.
-import { mkdtempSync, rmSync } from "node:fs";
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
@@ -15,6 +15,7 @@ let browse: typeof import("./browse.ts");
 beforeAll(async () => {
   const { db, run } = await import("./db.ts");
   browse = await import("./browse.ts");
+  const { blobPath } = await import("./library.ts");
   db();
   const at = new Date().toISOString();
   run(
@@ -72,6 +73,11 @@ beforeAll(async () => {
   file(12, "t5", "drama/episodes/EP001/blocking/seg02/v1/image-1.jpg", "blocking", "seg02", "v1", "image/jpeg");
   file(13, "t6", "drama/episodes/EP001/blocking/seg02/v2/image-1.jpg", "blocking", "seg02", "v2", "image/jpeg");
   file(14, "t6", "drama/episodes/EP001/blocking/seg02/v2/view.png", "blocking", "seg02", "v2", "image/png");
+  // seg02's blocking v2 was registered in the asset library: its record sits in the version's asset/.
+  file(15, "t6", "drama/episodes/EP001/blocking/seg02/v2/asset/asset.json", "asset", "seg02", "v2", "application/json");
+  const blob = blobPath(`sha15`.padEnd(64, "0"));
+  mkdirSync(path.dirname(blob), { recursive: true });
+  writeFileSync(blob, JSON.stringify({ Id: "asset-20261021071730-hmn2z", AssetType: "Image", Status: "Active" }));
   run(
     "insert into reviews (id, drama_id, episode_id, session_id, turn_id, kind, state, question, decision, answer, created_at) values ('r3', 'd1', null, 's1', 't4', 'question', 'open', 'Accept the rewrite?', null, '', ?)",
     at,
@@ -79,6 +85,14 @@ beforeAll(async () => {
 });
 
 afterAll(() => rmSync(DATA, { recursive: true, force: true }));
+
+describe("an asset-library id", () => {
+  it("stands for the version's own picture beside drama-cli's record of it, never a crop it was drawn from", () => {
+    const pictures = browse.assetPictures("d1");
+    expect(Object.keys(pictures)).toEqual(["asset-20261021071730-hmn2z"]);
+    expect(pictures["asset-20261021071730-hmn2z"].id).toBe(13);
+  });
+});
 
 describe("browsing", () => {
   it("puts a verdict only on what its review judged", () => {

@@ -56,6 +56,7 @@ function engine(inbox: ReviewSummary[] = [], sends: ChatView["sends"] = "steer",
   answer("/api/dramas/d1/lineage", lineageView());
   answer("/api/dramas/d1/canvas/EP001", { positions: {} });
   answer("/api/dramas/d1/canvas/EP002", { positions: {} });
+  answer("/api/dramas/d1/assets", {});
   answer("/api/inbox", inbox);
   accept("/api/sessions/s0/chat");
   accept("/api/sessions/s1/chat");
@@ -235,6 +236,16 @@ describe("a picked item's hand actions and panel (P6.8)", () => {
     return { ...picked, panel: await screen.findByRole("region", { name: /what it is made from/ }) };
   }
 
+  it("shows the picture an asset-library id stands for, once drama-cli's record of it has come back", async () => {
+    withSpec();
+    answer("/api/dramas/d1/assets", { "asset-1": look });
+    render(<Canvas drama={drama("working")} />);
+    const { panel } = await panelOf(/^Storyboard · line-art/);
+    // Image 2 is asset://asset-1: in the words and among the numbered pictures.
+    await waitFor(() => expect(panel.querySelectorAll(".prompt .pchip")[2].querySelector("img")).toHaveAttribute("src", "/f/9?v=1"));
+    expect(panel.querySelector(".refs li:nth-child(2) img")).toHaveAttribute("src", "/f/9?v=1");
+  });
+
   it("labels a node with the model its spec.json names, and with none where no spec came back", async () => {
     withSpec();
     render(<Canvas drama={drama("working")} />);
@@ -251,7 +262,7 @@ describe("a picked item's hand actions and panel (P6.8)", () => {
     await waitFor(() => expect(within(panel).getByRole("tabpanel").textContent).toContain("She walks in, as in Image 1, past Image 2."));
     const chips = [...panel.querySelectorAll(".prompt .pchip")];
     expect(chips.map((chip) => chip.textContent)).toEqual(["Image 1", "Image 1", "Image 2"]);
-    // A picture sent from the project is the returned file at that path; one from the asset library has none here.
+    // A picture sent from the project is the returned file at that path; one from the asset library has none until its record comes back.
     expect(chips[0].querySelector("img")).toHaveAttribute("src", "/f/9?v=1");
     expect(chips[2].querySelector("img")).toBeNull();
     // Above the prompt, the pictures it names, numbered as its Image N; one from the asset library keeps its number with no picture.

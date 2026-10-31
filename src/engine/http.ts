@@ -30,7 +30,7 @@ import { decide, resumeWithDecision } from "./reviews.ts";
 import { lineageView } from "./lineage.ts";
 import { forgetPositions, positionsOf, readPositions, replacePositions } from "./canvas.ts";
 import { projectView, sessionStatus } from "./status.ts";
-import { castCards, deliveryRows, episodePage, scriptPage, seasonEntries } from "./browse.ts";
+import { assetPictures, castCards, deliveryRows, episodePage, scriptPage, seasonEntries } from "./browse.ts";
 import { diagnostics } from "./diagnostics.ts";
 import { zipLength, zipStream } from "./zip.ts";
 import { chatView, dramaCards, dramaFiles, dramaView, inbox, reviewView } from "./views.ts";
@@ -281,6 +281,7 @@ export function app(): Hono {
     return c.json(sessionStatus(id) ?? null);
   });
   api.get("/api/dramas/:id/cast", (c) => c.json(castCards(c.req.param("id"))));
+  api.get("/api/dramas/:id/assets", (c) => c.json(assetPictures(c.req.param("id"))));
   api.get("/api/dramas/:id/script", (c) => c.json(scriptPage(c.req.param("id"))));
   api.get("/api/dramas/:id/delivery", (c) => c.json(deliveryRows(c.req.param("id"))));
   // Every approved cut in one download, streamed as it is read.

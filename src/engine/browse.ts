@@ -3,7 +3,7 @@
 // pages show what was decided on, which covers the group a review showed, never one file of
 // it (a verdict on seg03's takes is not a choice among them). Files are grouped by path
 // hints; whatever isn't recognised is still listed (docs/IMPLEMENTATION_PLAN.md, rule 5).
-import type { CastCard, Decision, DeliveryRow, EpisodePage, Judged, Receipt, ReviewKind, ScriptPage, SegmentPage } from "../shared/types.ts";
+import type { CastCard, Decision, DeliveryRow, EpisodePage, FileItem, Judged, Receipt, ReviewKind, ScriptPage, SegmentPage } from "../shared/types.ts";
 import { classify } from "./classify.ts";
 import { all, get } from "./db.ts";
 import { readFileSync } from "node:fs";
@@ -210,6 +210,30 @@ function names(text: string, subject: string, character: boolean): boolean {
 }
 
 /** Characters with every version of each look (base first), then places and props, each version with its verdict. */
+/**
+ * The picture each asset-library id stands for: a take's request names a picture it sent from the library as
+ * asset://<Id>, and drama-cli's record of that registration, asset/asset.json (its `Id`, the library's own field),
+ * sits in the version's folder beside the picture (short_drama drama_cli/stages.py, asset.create into the version's
+ * asset/). Keyed by the id, as the request writes it after asset://.
+ */
+export function assetPictures(dramaId: string): Record<string, FileItem> {
+  const files = all<FileRow>("select * from files where drama_id = ? order by id", dramaId);
+  const pictures: Record<string, FileItem> = {};
+  for (const record of files.filter((file) => file.kind === "asset")) {
+    let id: unknown;
+    try {
+      id = (JSON.parse(textOf(record.id)) as { Id?: unknown }).Id;
+    } catch {
+      continue;
+    }
+    const folder = record.rel_path.slice(0, record.rel_path.lastIndexOf("/asset/"));
+    // The version's output, image-1.<ext> (stages.py, _image_file), not the crops drama-cli drew it from beside it.
+    const picture = files.findLast((file) => file.type.startsWith("image/") && file.rel_path === `${folder}/${file.name}` && /^image-1\./.test(file.name));
+    if (typeof id === "string" && picture) pictures[id] = toItem(picture);
+  }
+  return pictures;
+}
+
 export function castCards(dramaId: string): CastCard[] {
   const files = all<FileRow>("select * from files where drama_id = ? and kind in ('look', 'location', 'prop') and type like 'image/%' order by id", dramaId);
   const reviews = reviewsByTurn("drama_id", dramaId);
