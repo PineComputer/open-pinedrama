@@ -81,6 +81,8 @@ const PANEL = 560;
 const BAR = 56;
 const PANEL_HEIGHT = 420;
 const DOCKED = 420;
+/** The board's top the pills take (design/studio.css .ctop: 14 px in, 34 px high, and a margin), which nothing is placed under. */
+const PILLS = 64;
 
 interface BoardContext {
   pick: (id: string | null) => void;
@@ -432,6 +434,13 @@ function Plane({ drama }: { drama: DramaView }) {
   // The panel is one item's: none while several are picked (⌘A, or a box drawn with Move).
   const selected = nodes.filter((node) => node.selected && node.type === "item");
   const picked = selected.length === 1 ? (selected[0] as Node<ItemData>) : undefined;
+  const paneWidth = useStore((store) => store.width);
+  const paneHeight = useStore((store) => store.height);
+  // A dock or a resize moves the visible area: the picked node is placed in it again.
+  useEffect(() => {
+    if (picked) place(picked.id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dock, paneWidth, paneHeight, picked?.id]);
   const [tool, setTool] = useState<Tool>("move");
   const [keysOpen, setKeysOpen] = useState(false);
   useCanvasKeys({
@@ -447,18 +456,27 @@ function Plane({ drama }: { drama: DramaView }) {
   if (!state || !code) return <EmptyState title={t("canvas.emptyTitle")}>{t("canvas.emptyText")}</EmptyState>;
   const save = (all: Node[]) => void api(`/api/dramas/${drama.id}/canvas/${code}`, { method: "PUT", json: { positions: Object.fromEntries(all.map((node) => [node.id, node.position])) } });
   const go = (other: string) => navigate(`/d/${drama.id}/canvas?item=${other}`, { replace: true });
-  const pick = (id: string | null) => {
-    setFollow(false);
-    setNodes((all) => all.map((node) => ({ ...node, selected: node.id === id })));
-    // Bring the picked node into view at the maker's zoom: with its bar above and its panel under it, or left of the docked panel.
-    const node = id ? flow.getInternalNode(id) : undefined;
+  /**
+   * Bring the picked node into the board's visible area at the maker's zoom: its bar's top below the pills, never above
+   * the board's top edge (where it would land under what stands over the board, a stop card say), with its panel under
+   * it, or left of the docked panel. The area is React Flow's own pane, so a dock or a resize places it again.
+   */
+  const place = (id: string) => {
+    const node = flow.getInternalNode(id);
     if (!node) return;
     const zoom = flow.getZoom();
     const { x, y } = node.internals.positionAbsolute;
     const w = node.width ?? 0;
     const h = node.height ?? 0;
-    if (dock === "under") void flow.setCenter(x + w / 2, y - BAR / zoom + (h + (BAR + PANEL_HEIGHT) / zoom) / 2, { zoom, duration: 400 });
-    else void flow.setCenter(x + w / 2 + DOCKED / 2 / zoom, y + h / 2, { zoom, duration: 400 });
+    const tall = BAR + h * zoom + (dock === "under" ? PANEL_HEIGHT : 0);
+    const top = Math.max(PILLS, PILLS + (paneHeight - PILLS - tall) / 2);
+    const centre = (paneWidth - (dock === "right" ? DOCKED : 0)) / 2;
+    void flow.setViewport({ x: centre - (x + w / 2) * zoom, y: top + BAR - y * zoom, zoom }, { duration: 400 });
+  };
+  const pick = (id: string | null) => {
+    setFollow(false);
+    setNodes((all) => all.map((node) => ({ ...node, selected: node.id === id })));
+    if (id) place(id);
   };
   const at = codes.indexOf(code);
   const byId = new Map(mapped.nodes.map((node) => [node.id, node]));
@@ -469,6 +487,7 @@ function Plane({ drama }: { drama: DramaView }) {
       dramaId={drama.id}
       item={node.data.item}
       look={node.data.stage.where.look ?? node.data.stage.where.time}
+      style={node.data.stage.where.style}
       work={node.data.work}
       files={files.data ?? []}
       facts={{

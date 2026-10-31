@@ -344,15 +344,79 @@ describe("a picked item's hand actions and panel (P6.8)", () => {
 
   it("lists the segment's versions, each with what the maker decided", async () => {
     withBreakdown();
-    answer("/api/dramas/d1/episodes/EP001", { segments: [{ key: "seg01", boards: [{ turnId: "u1", files: [{ ...sheet, version: "v1" }], review: { reviewId: "r1", kind: "storyboards", state: "answered", verdict: "revise", notes: [{ text: "Brighter lamp." }] } }], stills: [], takes: [] }] });
+    answer("/api/dramas/d1/episodes/EP001", { segments: [{ key: "seg01", boards: [{ turnId: "u1", files: [{ ...sheet, version: "v1", style: "line-art" }], review: { reviewId: "r1", kind: "storyboards", state: "answered", verdict: "revise", notes: [{ text: "Brighter lamp." }] } }], stills: [], takes: [] }] });
     render(<Canvas drama={drama("working")} />);
     const { user, panel } = await panelOf(/^Storyboard · line-art/);
     await user.click(within(panel).getByRole("tab", { name: "Versions" }));
     await waitFor(() => expect(panel.querySelector(".versions > li")).not.toBeNull());
     const version = panel.querySelector(".versions > li")!;
-    expect(version).toHaveTextContent("Storyboard · v1");
+    expect(version).toHaveTextContent("Version · v1");
     expect(version).toHaveTextContent("Sent back");
     expect(version).toHaveTextContent("Brighter lamp.");
+  });
+
+  it("lists each stage's own versions only, never another stage's of the same segment", async () => {
+    withBreakdown();
+    const of = (turnId: string, kind: string, version: string, style?: string) => ({ turnId, files: [{ ...sheet, id: Number(turnId.slice(1)) + 100, kind, version, ...(style ? { style } : {}) }] });
+    answer("/api/dramas/d1/episodes/EP001", {
+      segments: [
+        {
+          key: "seg01",
+          boards: [of("u1", "storyboard", "v2", "line-art"), of("u2", "storyboard", "v1", "photoreal"), of("u3", "storyboard", "v1", "line-art")],
+          stills: [of("u4", "blocking", "v1"), of("u5", "frame", "v1")],
+          takes: [of("u6", "take", "t02"), of("u7", "take", "t01")],
+        },
+      ],
+    });
+    render(<Canvas drama={drama("working")} />);
+    const versionsOf = async (name: RegExp) => {
+      const { user, panel } = await panelOf(name);
+      await user.click(within(panel).getByRole("tab", { name: "Versions" }));
+      await waitFor(() => expect(panel.querySelector(".versions")).not.toBeNull());
+      const rows = [...panel.querySelectorAll(".versions > li b")].map((row) => row.textContent);
+      await user.keyboard("{Escape}");
+      return rows;
+    };
+    expect(await versionsOf(/^Blocking · v1/)).toEqual(["Version · v1"]);
+    expect(await versionsOf(/^First frame · v1/)).toEqual(["Version · v1"]);
+    expect(await versionsOf(/^Storyboard · line-art/)).toEqual(["Version · v2", "Version · v1"]);
+    expect(await versionsOf(/^Take · t01/)).toEqual(["Version · t02", "Version · t01"]);
+  });
+
+  it("places the picked node's bar inside the board's visible area, under the pills, and again after a dock", async () => {
+    withBreakdown();
+    render(<Canvas drama={drama("working")} />);
+    // React Flow writes the viewport and each node's absolute place on the page, and measures its pane as the page lays it out.
+    const translate = (element: Element) => (element as HTMLElement).style.transform.match(/translate\((-?[\d.]+)px,\s*(-?[\d.]+)px\)(?:\s*scale\(([\d.]+)\))?/)!.slice(1).map(Number);
+    const screen = () => {
+      const [vx, vy, zoom] = translate(document.querySelector(".react-flow__viewport")!);
+      const node = document.querySelector('.react-flow__node[data-id="episodes/EP001/segments/seg01"]')!;
+      const [x, y] = translate(node);
+      return { left: x * zoom + vx, top: y * zoom + vy, width: (node as HTMLElement).offsetWidth * zoom };
+    };
+    const { user, panel } = await panelOf(/^Take · t01/);
+    const pane = (document.querySelector(".react-flow") as HTMLElement).offsetWidth;
+    // The bar (56 px) stands above the node, and its top is never above the pills' 64 px.
+    await waitFor(() => {
+      const under = screen();
+      expect(under.left + under.width / 2).toBeCloseTo(pane / 2, 0);
+      expect(under.top - 56).toBeGreaterThanOrEqual(64);
+    });
+    await user.click(within(panel).getByRole("button", { name: "Dock right" }));
+    // Docked, the node is centred in what the docked panel (420 px) leaves of the board.
+    await waitFor(() => expect(screen().left + screen().width / 2).toBeCloseTo((pane - 420) / 2, 0));
+    expect(screen().top - 56).toBeGreaterThanOrEqual(64);
+    localStorage.removeItem("studio.canvas.dock");
+  });
+
+  it("says when the versions can't be read, rather than that there are none", async () => {
+    withBreakdown();
+    server.use(http.get("/api/dramas/d1/episodes/EP001", () => HttpResponse.json({ code: "internal", error: "boom" }, { status: 500 })));
+    render(<Canvas drama={drama("working")} />);
+    const { user, panel } = await panelOf(/^Take · t01/);
+    await user.click(within(panel).getByRole("tab", { name: "Versions" }));
+    expect(await within(panel).findByText("The versions couldn't be read. Try again in a moment.")).toBeInTheDocument();
+    expect(within(panel).queryByText("No version returned yet.")).toBeNull();
   });
 
   it("offers the hand actions disabled, saying why, and they do nothing", async () => {

@@ -98,33 +98,45 @@ function Prompt({ text, pictures }: { text: string; pictures: (FileItem | undefi
 const CARD = { character: "look", location: "location", prop: "prop" } as const;
 
 /**
- * The versions of the item the stops returned, newest first, each with what the maker decided: a shared reference's from
- * its cast card (by its look, or a place's time of day, "" for its plate), a segment's takes and storyboards from its
- * episode's page, an episode's cut from that page's cuts.
+ * The picked stage's own versions the stops returned, newest first, each with what the maker decided: a shared
+ * reference's from its cast card (by its look, or a place's time of day, "" for its plate); a segment's blocking, first
+ * frame, storyboard of its style, or take from its episode's page, each only its own kind (another stage's history is its
+ * lineage, not its versions); an episode's cut from that page's cuts. While the record loads, or if it can't be read, it
+ * says so rather than "none".
  */
-function Versions({ dramaId, item, look }: { dramaId: string; item: Item; look?: string }) {
+function Versions({ dramaId, item, look, style }: { dramaId: string; item: Item; look?: string; style?: string }) {
   const { t } = useT();
   const shared = item.kind === "character" || item.kind === "location" || item.kind === "prop";
   const cast = useResource<CastCard[]>(shared ? `/api/dramas/${dramaId}/cast` : null, [`drama:${dramaId}`]);
   const page = useResource<EpisodePage>(shared ? null : `/api/dramas/${dramaId}/episodes/${item.episode}`, [`drama:${dramaId}`]);
-  let rows: { what: string; receipt: Receipt }[];
+  const source = shared ? cast : page;
+  if (source.error !== undefined) return <p className="quiet">{t("canvas.versionsFailed")}</p>;
+  if (source.data === undefined) return <p className="quiet">{t("loading")}</p>;
+  // A receipt counts for this stage when it returned a file of it; its version is that file's.
+  const own = (receipts: Receipt[], mine: (file: FileItem) => boolean) => receipts.flatMap((receipt) => (receipt.files.some(mine) ? [{ receipt, version: receipt.files.find(mine)!.version }] : []));
+  let rows: { receipt: Receipt; version?: string }[];
   if (shared) {
     const card = cast.data?.find((one) => one.kind === CARD[item.kind as keyof typeof CARD] && one.subject === item.subject);
     const which = look ?? (item.kind === "character" ? "base" : "");
-    rows = [...(card?.looks.find((one) => one.look === which)?.versions ?? [])].reverse().map((receipt) => ({ what: t("canvas.version"), receipt }));
+    rows = [...(card?.looks.find((one) => one.look === which)?.versions ?? [])].reverse().map((receipt) => ({ receipt, version: receipt.files.map((file) => file.version).find(Boolean) }));
   } else if (item.kind === "cut") {
-    rows = (page.data?.cuts ?? []).map((receipt) => ({ what: t("canvas.versionCut"), receipt }));
+    rows = own(page.data?.cuts ?? [], (file) => file.kind === "cut");
   } else {
     const segment = page.data?.segments.find((one) => one.key === item.subject);
-    rows = [...(segment?.takes ?? []).map((receipt) => ({ what: t("canvas.versionTake"), receipt })), ...(segment?.boards ?? []).map((receipt) => ({ what: t("canvas.versionBoard"), receipt }))];
+    rows =
+      item.kind === "take"
+        ? own(segment?.takes ?? [], (file) => file.kind === "take")
+        : item.kind === "segment"
+          ? own(segment?.boards ?? [], (file) => file.kind === "storyboard" && file.style === style)
+          : own(segment?.stills ?? [], (file) => file.kind === item.kind);
   }
   if (!rows.length) return <p className="quiet">{t("canvas.noVersions")}</p>;
   return (
     <ol className="versions">
-      {rows.map(({ what, receipt }) => (
-        <li key={`${what}:${receipt.turnId}`}>
+      {rows.map(({ receipt, version }) => (
+        <li key={receipt.turnId}>
           <b>
-            {what} · {receipt.files.map((file) => file.version).find(Boolean) ?? "—"}
+            {t("canvas.version")} · {version ?? "—"}
           </b>
           <JudgedLine review={receipt.review} />
         </li>
@@ -148,6 +160,7 @@ export function NodePanel({
   dramaId,
   item,
   look,
+  style,
   work,
   files,
   facts,
@@ -160,6 +173,8 @@ export function NodePanel({
   item: Item;
   /** A character's look (S1…) or a place's time of day (Night), as the lineage names the stage; none for a base look or a plate. */
   look?: string;
+  /** A storyboard's style (line-art, photoreal), as the lineage names the stage. */
+  style?: string;
   work?: FileItem;
   files: FileItem[];
   facts: PanelFacts;
@@ -218,7 +233,7 @@ export function NodePanel({
           )}
         </Tabs.Content>
         <Tabs.Content value="versions">
-          <Versions dramaId={dramaId} item={item} look={look} />
+          <Versions dramaId={dramaId} item={item} look={look} style={style} />
         </Tabs.Content>
         <Tabs.Content value="request">
           {request && typeof request === "object" ? <JsonView data={request as object} shouldExpandNode={collapseAllNested} style={JSON_STYLE} aria-label={t("canvas.tab.request")} /> : <p className="subtle">{t("canvas.noSpec")}</p>}

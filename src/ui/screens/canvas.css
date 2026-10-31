@@ -4,7 +4,7 @@
 /* The board fills what the drama's bar leaves, as the design's .board fills its main (design/studio.css), and as the review room fills it (styles.css .frev). */
 .ds-scroll:has(.ds-canvas) { display: flex; flex-direction: column; }
 .ds-workin:has(> .ds-canvas) { flex: 1; min-height: 0; display: flex; flex-direction: column; }
-.ds-canvas { position: relative; flex: 1; min-height: 420px; }
+.ds-canvas { position: relative; flex: 1; min-height: 420px; overflow: hidden; }
 .ds-canvas .react-flow {
   --xy-background-color: var(--canvas);
   --xy-background-pattern-color: color-mix(in srgb, var(--text-primary) 18%, transparent);
