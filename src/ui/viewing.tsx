@@ -136,7 +136,7 @@ export function DocumentView({ file }: { file: FileItem }) {
   const { text, failed } = useDocumentText(readable ? file : undefined);
   if (!readable || failed || text === "") {
     return (
-      <div className="block">
+      <div className="stack">
         <p className="empty-note">{t("script.noPreview")}</p>
         <a className="link start" href={`${file.url}&download=1`}>
           {t("episode.download")} · {file.name}

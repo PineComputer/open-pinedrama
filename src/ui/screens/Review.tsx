@@ -78,7 +78,7 @@ function Returned({ files }: { files: FileItem[] }) {
   const { t } = useT();
   if (!files.length) return null;
   return (
-    <div className="block">
+    <div className="stack">
       <span className="label">{t("review.files")}</span>
       <div className="files">
         {files.map((file) => (
@@ -97,7 +97,7 @@ function Documents({ files }: { files: FileItem[] }) {
   const { t } = useT();
   if (!files.length) return null;
   return (
-    <div className="block documents">
+    <div className="stack documents">
       <span className="label">{t("review.documents")}</span>
       {files.map((file, index) => (
         <details key={file.id} open={index === 0}>
@@ -205,7 +205,7 @@ function QuestionRoom({ review, done }: { review: ReviewView; done: () => void }
         {review.episode ? ` · ${review.episode}` : ""}
       </Link>
       <div className="question-body">
-        <div className="block">
+        <div className="stack">
           {review.refusals.map((refusal, n) => (
             <StopCard key={n} refusal={refusal} />
           ))}

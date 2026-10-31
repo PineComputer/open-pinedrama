@@ -47,7 +47,7 @@ export function ConnectForm({ onDone }: { onDone: () => void }) {
         </button>
       )}
       {error !== undefined && <p className="error flush">{errorText(error, t)}</p>}
-      <div className="inline">
+      <div className="cluster">
         <button className={buttonClass({ variant: "primary" })} type="submit" disabled={busy || !apiKey.trim()}>
           {busy ? t("connect.checking") : t("connect.go")}
         </button>
@@ -76,9 +76,9 @@ export function Welcome({ onReady }: { onReady: () => void }) {
           </h1>
           <p className="lede">{t("welcome.lede")}</p>
         </div>
-        <div className="block roomy">
+        <div className="stack roomy">
           <ConnectForm onDone={onReady} />
-          <div className="quiet block tight">
+          <div className="quiet stack tight">
             <span>
               {t("connect.noProject")}{" "}
               <a className="link" href="https://pinecomputer.io/#access" target="_blank" rel="noreferrer">

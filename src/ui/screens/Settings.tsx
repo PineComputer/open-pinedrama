@@ -32,7 +32,7 @@ export function Settings({ app, onChange }: { app: AppInfo; onChange: () => void
       <div className="settings">
         <section>
           <span className="label">{t("settings.project")}</span>
-          <div className="block wide">
+          <div className="stack wide">
             {app.mode === "pine" && app.project ? (
               <>
                 <dl>
@@ -47,7 +47,7 @@ export function Settings({ app, onChange }: { app: AppInfo; onChange: () => void
                   <span className="quiet">{t("settings.fromEnv")}</span>
                 ) : (
                   <>
-                    <div className="inline">
+                    <div className="cluster">
                       <button className={buttonClass()} disabled={disconnect.busy} onClick={() => void disconnect.run()}>
                         {disconnect.busy ? t("settings.disconnecting") : t("settings.disconnect")}
                       </button>
@@ -90,7 +90,7 @@ export function Settings({ app, onChange }: { app: AppInfo; onChange: () => void
         {notify.supported && (
           <section>
             <span className="label">{t("settings.notify")}</span>
-            <div className="block">
+            <div className="stack">
               <Segmented
                 label={t("settings.notify")}
                 value={notify.on ? "on" : "off"}
@@ -106,15 +106,15 @@ export function Settings({ app, onChange }: { app: AppInfo; onChange: () => void
         )}
         <section>
           <span className="label">{t("settings.data")}</span>
-          <div className="block">
+          <div className="stack">
             <span className="path">{app.dataDir}</span>
             <span className="quiet small">{t("settings.dataHint")}</span>
           </div>
         </section>
         <section>
           <span className="label">{t("settings.troubleshooting")}</span>
-          <div className="block">
-            <div className="inline">
+          <div className="stack">
+            <div className="cluster">
               <a className={buttonClass()} href="/api/diagnostics" download>
                 {t("settings.diagnostics")}
               </a>
@@ -126,14 +126,14 @@ export function Settings({ app, onChange }: { app: AppInfo; onChange: () => void
           <span className="label" id="settings-about">
             {t("settings.about")}
           </span>
-          <div className="block">
+          <div className="stack">
             <p className="flush">
               <a href={REVERIC} target="_blank" rel="noreferrer">
                 {t("about.basedOn")}
               </a>
             </p>
             <span className="quiet small">{t("about.licence")}</span>
-            <div className="inline">
+            <div className="cluster">
               <a href={SOURCE} target="_blank" rel="noreferrer">
                 {t("about.source")}
               </a>
