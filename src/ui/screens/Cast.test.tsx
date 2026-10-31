@@ -111,6 +111,29 @@ describe("the Story", () => {
     expect(within(detail).queryByText("image-1.png")).not.toBeInTheDocument();
   });
 
+  it("moves the viewer's picture toward the side the picked view lies on, and opens an asset without moving (D56)", async () => {
+    const user = userEvent.setup();
+    engine();
+    // jsdom has no View Transition API; the stub records each transition's types and applies its update at once.
+    const types: string[][] = [];
+    document.startViewTransition = ((options: StartViewTransitionOptions) => {
+      types.push([...(options.types ?? [])]);
+      void options.update?.();
+    }) as never;
+    try {
+      await renderAt(<Cast dramaId="d1" />, "/d/d1/assets/locations/office");
+      const detail = await screen.findByRole("complementary", { name: "Factory office: versions, state and review" });
+      const strip = within(detail).getByRole("group", { name: "Views" });
+      expect(types).toEqual([]);
+      await user.click(within(strip).getByRole("button", { name: "left side" }));
+      await user.click(within(strip).getByRole("button", { name: "Plate" }));
+      expect(types).toEqual([["asset-forward"], ["asset-backward"]]);
+      expect([...document.querySelectorAll(".assetviewer img")].map((image) => image.getAttribute("src"))).toContain("/f/3");
+    } finally {
+      Reflect.deleteProperty(document, "startViewTransition");
+    }
+  });
+
   it("opens an asset in the viewer, its details beside it, and Esc goes back to the grid (D56)", async () => {
     const user = userEvent.setup();
     engine();

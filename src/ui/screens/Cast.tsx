@@ -5,7 +5,8 @@
 import Lightbox from "yet-another-react-lightbox";
 import { type Photo, RowsPhotoAlbum } from "react-photo-album";
 import "react-photo-album/rows.css";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { flushSync } from "react-dom";
 import type { Names } from "../../shared/names.ts";
 import type { CastCard, DramaView, FileItem, Receipt } from "../../shared/types.ts";
 import { useResource } from "../api.ts";
@@ -151,13 +152,16 @@ function AssetGrid({ cards, names, dramaId, picked }: { cards: CastCard[]; names
  * the name, kind and version with where it stands, Review and Lineage, the bible's description clamped to three lines,
  * the episodes it is in, and its versions. Decisions are made in the review room, as everywhere.
  */
-function AssetPanel({ card, names, dramaId, onShow }: { card: CastCard; names: Names | null; dramaId: string; onShow: (file: FileItem | undefined) => void }) {
+function AssetPanel({ card, names, dramaId, onShow }: { card: CastCard; names: Names | null; dramaId: string; onShow: (file: FileItem | undefined, move?: Move) => void }) {
   const { t } = useT();
   const navigate = useNavigate();
   const { search } = useRoute();
   const [lookIndex, setLookIndex] = useState(Math.max(0, card.looks.indexOf(mainOf(card)!)));
   const [view, setView] = useState("");
   const [more, setMore] = useState(false);
+  // Which way the picture moves when the next one is picked: the way the picked thumbnail or version lies from the one
+  // in view, in the strip's order.
+  const move = useRef<Move>(undefined);
   const look = card.looks[lookIndex];
   const versions = look?.versions ?? [];
   // The version in view is the URL's (?item=<this look's stage>&version=vN, D48), so the crumbs, a link and Back agree
@@ -166,6 +170,7 @@ function AssetPanel({ card, names, dramaId, onShow }: { card: CastCard; names: N
   const named = search.item === stage && search.version ? versions.findIndex((version) => version.files[0]?.version === search.version) : -1;
   const index = Math.max(0, named);
   const pick = (i: number) => {
+    move.current = i > index ? "asset-forward" : "asset-backward";
     const version = versions[i]?.files[0]?.version;
     if (stage && version) void navigate({ ...homeLink(dramaId, stage, "canvas", version), replace: true });
   };
@@ -173,7 +178,10 @@ function AssetPanel({ card, names, dramaId, onShow }: { card: CastCard; names: N
   const sheet = shown?.files.find((file) => !file.style) ?? shown?.files[0];
   const big = (view && shown?.files.find((file) => file.style === view)) || sheet;
   // The viewer shows large whatever the panel picks: a version, a view, a look.
-  useEffect(() => onShow(big), [big?.url]);
+  useEffect(() => {
+    onShow(big, move.current);
+    move.current = undefined;
+  }, [big?.url]);
   const name = subjectLabel(names, card.subject, card.kind);
   const current = versions[0]?.files[0]?.version;
   const accepted = versions.find((version) => standing(version) === "accepted")?.files[0]?.version;
@@ -205,8 +213,16 @@ function AssetPanel({ card, names, dramaId, onShow }: { card: CastCard; names: N
         {strip.length > 1 && (
           <div className="isec">
             <div className="viewstrip" role="group" aria-label={card.kind === "look" ? t("asset.looks") : t("cast.views")}>
-              {strip.map((item) => (
-                <button key={item.key} type="button" aria-pressed={item.on} onClick={item.pick}>
+              {strip.map((item, k) => (
+                <button
+                  key={item.key}
+                  type="button"
+                  aria-pressed={item.on}
+                  onClick={() => {
+                    move.current = k > strip.findIndex((other) => other.on) ? "asset-forward" : "asset-backward";
+                    item.pick();
+                  }}
+                >
                   {item.file ? <img src={item.file.url} alt="" /> : <span className="emptythumb" />}
                   <small>{item.label}</small>
                 </button>
@@ -274,6 +290,9 @@ function AssetPanel({ card, names, dramaId, onShow }: { card: CastCard; names: N
   );
 }
 
+/** The view transition types the asset viewer's picture moves by (studio.css, .assetviewer). */
+type Move = "asset-forward" | "asset-backward" | undefined;
+
 /**
  * D56's viewer (merecdesperez44323-lab: "弹出大图可以，做吧"): an asset opens in yet-another-react-lightbox, the picture as
  * large as the window allows at its own ratio on a dimmed backdrop, ← and → through the shelf, Esc back to the grid
@@ -284,6 +303,13 @@ function AssetViewer({ cards, picked, shelf, names, dramaId }: { cards: CastCard
   const { t } = useT();
   const navigate = useNavigate();
   const [shown, setShown] = useState<FileItem>();
+  // A look, view or version picked in the panel slides the stage picture in from the side it lies on (MDN, View
+  // Transition API: document.startViewTransition with types; studio.css .assetviewer). Moving to another asset is the
+  // library's own swipe, and where the API is missing the picture swaps at once (progressive enhancement).
+  const show = (file: FileItem | undefined, move?: Move) => {
+    if (!move || !document.startViewTransition) return setShown(file);
+    document.startViewTransition({ update: () => flushSync(() => setShown(file)), types: [move] });
+  };
   const index = cards.findIndex((card) => card.subject === picked);
   const slides = cards.map((card, i) => ({ src: (i === index && shown?.url) || versionsOf(mainOf(card)).file?.url || "", alt: subjectLabel(names, card.subject, card.kind) }));
   return (
@@ -295,7 +321,7 @@ function AssetViewer({ cards, picked, shelf, names, dramaId }: { cards: CastCard
       on={{ view: ({ index: next }) => next !== index && void navigate({ ...shelfLink(shelf, dramaId, cards[next].subject), replace: true }) }}
       labels={{ Previous: t("asset.previous"), Next: t("asset.next"), Close: t("asset.close"), Lightbox: t("asset.viewer") }}
       className="assetviewer"
-      render={{ controls: () => <AssetPanel key={picked} card={cards[index]} names={names} dramaId={dramaId} onShow={setShown} /> }}
+      render={{ controls: () => <AssetPanel key={picked} card={cards[index]} names={names} dramaId={dramaId} onShow={show} /> }}
     />
   );
 }
