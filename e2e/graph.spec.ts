@@ -1,6 +1,8 @@
 // The Graph on the sample drama in replay: once an episode's storyboards are drawn, a click
 // traces a version both ways, with no way to make or edit one; axe finds nothing, in the light
-// and the dark theme.
+// and the dark theme. Switching views from a version in focus keeps the drama and what is in
+// focus: a cast look and a place's plate go to Story, an episode's storyboard to its episode,
+// and never to Home (qa/codex-ia-review.md, B1).
 import { expect, test } from "@playwright/test";
 import type { LineageView } from "../src/shared/lineage.ts";
 import type { ReviewSummary, ReviewView } from "../src/shared/types.ts";
@@ -48,4 +50,29 @@ test("the Graph traces a version both ways on the sample drama", async ({ page }
   // Read-only: no way to make, edit or keep a version, and nothing is stale in replay, so no action at all.
   await expect(page.getByRole("button", { name: /generat|draw|edit|keep|redo/i })).toHaveCount(0);
   expect(await newProblems(page)).toEqual([]);
+
+  // A look, a plate and an episode's storyboard, each focused by a click on its card, then the other views.
+  // The look and plate are ones the storyboard was made from, so each shows beside the other's focus.
+  const { nodes, links } = (await lineage())!;
+  const storyboard = nodes.find((node) => node.kind === "storyboard" && node.version)!;
+  const from = (kind: string) => nodes.find((node) => node.kind === kind && links.some((link) => link.from === node.id && link.to === storyboard.id))!;
+  const [castLook, plate] = [from("look"), from("plate")];
+  const surfaces = page.getByRole("group", { name: "Surface" });
+  const query = (url: string) => new URL(url).searchParams;
+  for (const [node, studio] of [
+    [castLook, `/d/${id}/story`],
+    [plate, `/d/${id}/story`],
+    [storyboard, `/d/${id}/e/${storyboard.where.episode}`],
+  ] as const) {
+    await page.goto(`/d/${id}/graph?item=${encodeURIComponent(storyboard.id === node.id ? castLook.id : storyboard.id)}`);
+    await graph.locator(`.react-flow__node[data-id="${node.id}"] button`).click();
+    await expect.poll(() => query(page.url()).get("item")).toBe(node.id);
+    expect(query(page.url()).get("episode") ?? undefined).toBe(node.where.episode);
+    await surfaces.getByRole("button", { name: "Canvas" }).click();
+    await expect(page).toHaveURL(new RegExp(`/d/${id}/canvas\\?`));
+    expect(query(page.url()).get("item")).toBe(node.id);
+    expect(query(page.url()).get("episode") ?? undefined).toBe(node.where.episode);
+    await surfaces.getByRole("button", { name: "Studio" }).click();
+    await expect.poll(() => new URL(page.url()).pathname).toBe(studio);
+  }
 });
