@@ -44,12 +44,19 @@ function engine() {
 }
 
 describe("the Story", () => {
-  it("shows the cast named as the bible names them, with their other names and the episodes they are in", async () => {
+  it("shows a card as the picture, the name, the version and where it stands, and the rest in the detail (D57)", async () => {
+    const user = userEvent.setup();
     engine();
     await renderAt(<Cast dramaId="d1" />, "/d/d1/assets/characters");
+    expect(await screen.findByRole("heading", { name: /Characters\s*· 1/ })).toBeInTheDocument();
+    expect(screen.queryByRole("tab")).not.toBeInTheDocument();
     const lin = await screen.findByRole("article", { name: "Lin Xiaoyu" });
-    expect(within(lin).getByText("Xiaoyu")).toBeInTheDocument();
-    expect(within(lin).getByRole("link", { name: "EP001" })).toHaveAttribute("href", "/d/d1/e/EP001/list");
+    expect(lin.querySelector(".ctxt")).toHaveTextContent(/^Lin Xiaoyuv2$/);
+    expect(within(lin).queryByRole("link", { name: "EP001" })).not.toBeInTheDocument();
+    await user.click(within(lin).getByRole("link", { name: "Lin Xiaoyu" }));
+    const detail = await screen.findByRole("complementary", { name: "Lin Xiaoyu: versions, state and review" });
+    expect(detail).toHaveTextContent("Also called Xiaoyu");
+    expect(within(detail).getByRole("link", { name: "EP001" })).toHaveAttribute("href", "/d/d1/e/EP001/list");
   });
 
   it("opens a card's asset at its home: the detail links to its review and shows its earlier versions (J1)", async () => {
@@ -69,19 +76,28 @@ describe("the Story", () => {
     expect(within(detail).getByText("Sent back")).toBeInTheDocument();
   });
 
-  it("keeps places in Locations with their description, views and times, and props in Props", async () => {
+  it("shows a place's views and times as a strip under its picture, and its description clamped with More (D57)", async () => {
     const user = userEvent.setup();
     engine();
     await renderAt(<Cast dramaId="d1" />, "/d/d1/assets/locations");
     const office = await screen.findByRole("article", { name: "Factory office" });
-    expect(within(office).getByText("Desks under strip lights.")).toBeInTheDocument();
-    expect(within(office).getByRole("link", { name: "left side" })).toHaveAttribute("href", "/f/4");
-    expect(within(office).getByRole("link", { name: "Night · v2" })).toHaveAttribute("href", "/f/5");
+    expect(within(office).queryByText("Desks under strip lights.")).not.toBeInTheDocument();
     await user.click(within(office).getByRole("link", { name: "Factory office" }));
     const detail = await screen.findByRole("complementary", { name: "Factory office: versions, state and review" });
-    expect(within(detail).getAllByRole("link").map((link) => link.getAttribute("href"))).toContain("/f/3");
-    await user.click(screen.getByRole("tab", { name: /Props/ }));
-    expect(within(await screen.findByRole("article", { name: "The letter" })).getByText("A folded letter.")).toBeInTheDocument();
+    const strip = within(detail).getByRole("group", { name: "Views" });
+    expect(within(strip).getAllByRole("button").map((button) => button.textContent)).toEqual(["Plate", "left side", "Night"]);
+    await user.click(within(strip).getByRole("button", { name: "left side" }));
+    expect(detail.querySelector(".assetbig")).toHaveAttribute("src", "/f/4");
+    expect(within(detail).getByText("Desks under strip lights.")).toHaveClass("clamp3");
+    await user.click(within(detail).getByRole("button", { name: "More" }));
+    expect(within(detail).getByText("Desks under strip lights.")).not.toHaveClass("clamp3");
+    expect(within(detail).queryByText("image-1.png")).not.toBeInTheDocument();
+  });
+
+  it("keeps props on their own shelf", async () => {
+    engine();
+    await renderAt(<Cast dramaId="d1" />, "/d/d1/assets/props");
+    expect(await screen.findByRole("article", { name: "The letter" })).toBeInTheDocument();
   });
 
   it("shows the bible on Story before anything is drawn, and says what Story is (Y8)", async () => {

@@ -7,7 +7,6 @@ import type { Names } from "../../shared/names.ts";
 import type { CastCard, DramaView, FileItem, Receipt } from "../../shared/types.ts";
 import { useResource } from "../api.ts";
 import { type Status, StatusChip } from "../components/StatusChip.tsx";
-import { Tabs as TabsPrimitive } from "radix-ui";
 import type { ProjectView } from "../../shared/project.ts";
 import { Icon } from "../icons.tsx";
 import { useT } from "../i18n.ts";
@@ -49,60 +48,6 @@ function standing(receipt: Receipt | undefined): Status | undefined {
   return review.verdict === "revise" ? "back" : undefined;
 }
 
-/** One character's look: its newest version's picture, where it stands, and the versions before it. */
-function Card({ card, look, names, dramaId, picked }: { card: CastCard; look: CastCard["looks"][number]; names: Names | null; dramaId: string; picked: boolean }) {
-  const { t } = useT();
-  const open = useOpen(card, dramaId);
-  const shown = look.versions[0];
-  const file = shown?.files[0];
-  if (!file) return null;
-  const status = standing(shown);
-  const name = subjectLabel(names, look.look && look.look !== "base" ? `${card.subject}/${look.look}` : card.subject, card.kind);
-  const aliases = names?.characters[card.subject]?.aliases ?? [];
-  const kind = look.look === "base" || !look.look ? t("cast.base") : look.look;
-  // The design's cast card (design/screens.js, Story; studio.css .castcard): the sheet, where it stands, the name and
-  // version, the look, its other names and episodes; its versions to flip through, and the way to its review.
-  return (
-    <article className={`castcard${picked ? " sel" : ""}`} aria-label={name} aria-current={picked || undefined} onClick={open.onClick}>
-      <div className="pic">
-        <img src={file.url} alt="" loading="lazy" />
-        {status && <StatusChip status={status} />}
-      </div>
-      <div className="ctxt">
-        <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
-          <Link {...open.to} className="grow cardname">
-            <b>{name}</b>
-          </Link>
-          <span className="mono subtle" style={{ fontSize: 11 }}>
-            {file.version}
-          </span>
-        </div>
-        <small className="muted">{kind}</small>
-        {aliases.length > 0 && (
-          <div className="aka">
-            <span className="muted">{t("cast.aliases")}</span>
-            {aliases.map((alias) => (
-              <span key={alias} className="tag">
-                {alias}
-              </span>
-            ))}
-          </div>
-        )}
-        {card.episodes.length > 0 && (
-          <div className="aka">
-            <span className="muted">{t("cast.in")}</span>
-            {card.episodes.map((code) => (
-              <Link key={code} to="/d/$dramaId/e/$episodeCode/list" params={{ dramaId: dramaId, episodeCode: code }} className="tag">
-                {code}
-              </Link>
-            ))}
-          </div>
-        )}
-      </div>
-    </article>
-  );
-}
-
 /** The newest version of an entry, the one accepted last, and the picture each shows: the plate's sheet, not one of its views. */
 function versionsOf(entry: CastCard["looks"][number] | undefined) {
   const sheet = (receipt: Receipt | undefined) => receipt?.files.find((file) => !file.style) ?? receipt?.files[0];
@@ -111,96 +56,71 @@ function versionsOf(entry: CastCard["looks"][number] | undefined) {
   return { newest, file: sheet(newest), accepted: sheet(accepted)?.version };
 }
 
+/** The entry a card and the detail open on: a character's base look, a place's plate, a prop's picture. */
+const mainOf = (card: CastCard) => card.looks.find((entry) => !entry.look || entry.look === "base") ?? card.looks[0];
+
 /**
- * A place as drama-cli scenes draws it, or a key prop as drama-cli props does (the design's .placecard): its plate or
- * picture, where its newest version stands, the bible's name and description, its views and its times of day.
+ * D57's grid card (design/screens.js, Story; Apple Photos and Finder's picture grid, liblib's 资产 library): the picture
+ * at its own ratio, the name, the version and where it stands. Everything else is the detail's (progressive disclosure).
  */
-function PlaceCard({ card, names, dramaId, picked }: { card: CastCard; names: Names | null; dramaId: string; picked: boolean }) {
-  const { t } = useT();
+function AssetCard({ card, names, dramaId, picked }: { card: CastCard; names: Names | null; dramaId: string; picked: boolean }) {
   const open = useOpen(card, dramaId);
-  const place = card.kind === "location";
-  const plate = card.looks.find((entry) => !entry.look);
-  const { newest, file, accepted } = versionsOf(plate ?? card.looks[0]);
+  const [ratio, setRatio] = useState<string>();
+  const { newest, file } = versionsOf(mainOf(card));
   if (!file) return null;
   const status = standing(newest);
   const name = subjectLabel(names, card.subject, card.kind);
-  const description = (place ? names?.descriptions.locations : names?.descriptions.props)?.[card.subject];
-  // Each view's newest picture (drama-cli's location steps), and each other time of day's newest sheet.
-  const views = new Map<string, FileItem>();
-  for (const version of plate?.versions ?? []) for (const view of version.files) if (view.style && !views.has(view.style)) views.set(view.style, view);
-  const times = card.looks.filter((entry) => entry.look).map((entry) => ({ time: entry.look, file: versionsOf(entry).file }));
   return (
-    <article className={`placecard${picked ? " sel" : ""}`} aria-label={name} aria-current={picked || undefined} onClick={open.onClick}>
-      <div className="pic">
-        <img src={file.url} alt="" loading="lazy" />
-        {status && status !== "accepted" && <StatusChip status={status} />}
+    <article className={`assetcard${picked ? " sel" : ""}`} aria-label={name} aria-current={picked || undefined} onClick={open.onClick}>
+      <div className="pic" style={ratio ? { aspectRatio: ratio } : undefined}>
+        <img src={file.url} alt="" loading="lazy" onLoad={(event) => setRatio(`${event.currentTarget.naturalWidth} / ${event.currentTarget.naturalHeight}`)} />
+        {status && <StatusChip status={status} />}
       </div>
       <div className="ctxt">
-        <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
-          <Link {...open.to} className="grow cardname">
-            <b>{name}</b>
-          </Link>
-          <span className="mono subtle" style={{ fontSize: 11 }}>
-            {file.version}
-          </span>
-        </div>
-        <small className="muted">{[place ? t("cast.plate") : t("cast.keyProp"), accepted && accepted !== file.version ? t("cast.acceptedVersion", { v: accepted }) : ""].filter(Boolean).join(" · ")}</small>
-        {description && <p className="desc">{description}</p>}
-        {views.size > 0 && (
-          <div className="aka">
-            <span className="muted">{t("cast.views")}</span>
-            {[...views].map(([view, picture]) => (
-              <a key={view} className="tag" href={picture.url} target="_blank" rel="noreferrer">
-                {view.replace(/-/g, " ")}
-              </a>
-            ))}
-          </div>
-        )}
-        {times.length > 0 && (
-          <div className="aka">
-            <span className="muted">{t("cast.times")}</span>
-            {times.map(({ time, file: sheet }) => (
-              <a key={time} className="tag" href={sheet?.url} target="_blank" rel="noreferrer">
-                {[time, sheet?.version].filter(Boolean).join(" · ")}
-              </a>
-            ))}
-          </div>
-        )}
-        {card.episodes.length > 0 && (
-          <div className="aka">
-            <span className="muted">{t("cast.in")}</span>
-            {card.episodes.map((code) => (
-              <Link key={code} to="/d/$dramaId/e/$episodeCode/list" params={{ dramaId: dramaId, episodeCode: code }} className="tag">
-                {code}
-              </Link>
-            ))}
-          </div>
-        )}
+        <Link {...open.to} className="grow cardname">
+          <b>{name}</b>
+        </Link>
+        <span className="mono subtle">{file.version}</span>
       </div>
     </article>
   );
 }
 
 /**
- * J1 (design/screens.js, Story's AssetDetail): an asset's one home is its detail beside the grid, as Lineage's inspector
- * sits beside its graph: its looks or plate, the versions with the one in view, current and accepted, where it stands,
- * the way to its review, its files and Lineage. Decisions are made in the review room, as everywhere.
+ * D57's detail (Apple Photos' and Finder's inspector): one large picture with its views or looks as a strip under it,
+ * the name, kind and version with where it stands, Review and Lineage, the bible's description clamped to three lines,
+ * the episodes it is in, and its versions. Decisions are made in the review room, as everywhere.
  */
 function AssetDetail({ card, names, dramaId }: { card: CastCard; names: Names | null; dramaId: string }) {
   const { t } = useT();
-  const [lookIndex, setLookIndex] = useState(0);
+  const [lookIndex, setLookIndex] = useState(Math.max(0, card.looks.indexOf(mainOf(card)!)));
   const [index, setIndex] = useState(0);
-  const look = card.looks[Math.min(lookIndex, card.looks.length - 1)];
+  const [view, setView] = useState("");
+  const [more, setMore] = useState(false);
+  const look = card.looks[lookIndex];
   const versions = look?.versions ?? [];
   const shown = versions[Math.min(index, versions.length - 1)];
-  const file = shown?.files.find((item) => !item.style) ?? shown?.files[0];
+  const sheet = shown?.files.find((file) => !file.style) ?? shown?.files[0];
+  const big = (view && shown?.files.find((file) => file.style === view)) || sheet;
   const name = subjectLabel(names, card.subject, card.kind);
   const current = versions[0]?.files[0]?.version;
   const accepted = versions.find((version) => standing(version) === "accepted")?.files[0]?.version;
   const status = standing(shown);
-  // drama-cli names a character's first look "base" (the cards say Base look); a plate or prop has no look name.
   const lookName = (entry: CastCard["looks"][number]) =>
     entry.look && entry.look !== "base" ? entry.look : card.kind === "look" ? t("cast.base") : card.kind === "location" ? t("cast.plate") : t("cast.keyProp");
+  const description = card.kind === "location" ? names?.descriptions.locations[card.subject] : card.kind === "prop" ? names?.descriptions.props[card.subject] : undefined;
+  const aliases = card.kind === "look" ? (names?.characters[card.subject]?.aliases ?? []) : [];
+  // The strip: a character's looks; a place's plate, its views and its other times of day; a prop has none.
+  const strip: { key: string; label: string; file: FileItem | undefined; pick: () => void; on: boolean }[] =
+    card.kind === "look"
+      ? card.looks.map((entry, i) => ({ key: entry.look || "base", label: lookName(entry), file: versionsOf(entry).file, pick: () => (setLookIndex(i), setIndex(0), setView("")), on: i === lookIndex }))
+      : card.kind === "location"
+        ? [
+            ...(sheet ? [{ key: "plate", label: lookName(look!), file: sheet, pick: () => setView(""), on: !view }] : []),
+            ...(shown?.files.filter((file) => file.style) ?? []).map((file) => ({ key: file.style!, label: file.style!.replace(/-/g, " "), file, pick: () => setView(file.style!), on: view === file.style })),
+            ...card.looks.map((entry, i) => ({ entry, i })).filter(({ i }) => i !== lookIndex).map(({ entry, i }) => ({ key: `time-${entry.look}`, label: lookName(entry), file: versionsOf(entry).file, pick: () => (setLookIndex(i), setIndex(0), setView("")), on: false })),
+          ]
+        : [];
   return (
     <aside className="insp" aria-label={t("asset.detail", { name })}>
       <div className="ihead">
@@ -210,28 +130,60 @@ function AssetDetail({ card, names, dramaId }: { card: CastCard; names: Names | 
             <Icon name="x" className="ic" />
           </Link>
         </div>
-        <small>{[lookName(look!), file?.version].filter(Boolean).join(" · ")}</small>
-        <Link {...homeLink(dramaId, `${STAGE[card.kind]}/${card.subject}`, "lineage")} state={{ backTo: name }} className="btn sm">
-          <Icon name="tree-structure" className="ic" />
-          {t("asset.lineage")}
-        </Link>
+        <small>{[lookName(look!), big?.version].filter(Boolean).join(" · ")}</small>
       </div>
       <div className="iscroll">
-        {file && (
+        {big && (
           <div className="isec">
-            <a href={file.url} target="_blank" rel="noreferrer">
-              <img src={file.url} alt="" style={{ width: "100%", borderRadius: 10, maxHeight: 240, objectFit: "cover", objectPosition: "top" }} />
-            </a>
+            <img className="assetbig" src={big.url} alt="" />
+            {strip.length > 1 && (
+              <div className="viewstrip" role="group" aria-label={card.kind === "look" ? t("asset.looks") : t("cast.views")}>
+                {strip.map((item) => (
+                  <button key={item.key} type="button" aria-pressed={item.on} onClick={item.pick}>
+                    {item.file ? <img src={item.file.url} alt="" /> : <span className="emptythumb" />}
+                    <small>{item.label}</small>
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         )}
-        {card.looks.length > 1 && (
+        <div className="isec">
+          <div style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
+            {status && <StatusChip status={status} />}
+            <span className="grow" />
+            {shown?.review && (
+              <Link to="/r/$reviewId" params={{ reviewId: shown.review.reviewId }} className={`btn sm ${status === "you" ? "primary" : "ghost"}`}>
+                {status === "you" ? t("cast.review") : t("judged.open")}
+              </Link>
+            )}
+            <Link {...homeLink(dramaId, `${STAGE[card.kind]}/${card.subject}`, "lineage")} className="btn sm">
+              <Icon name="tree-structure" className="ic" />
+              {t("asset.lineage")}
+            </Link>
+          </div>
+          {aliases.length > 0 && (
+            <p className="muted" style={{ margin: "8px 0 0", fontSize: 12 }}>
+              {t("cast.aliases")} {aliases.join(" · ")}
+            </p>
+          )}
+          {description && (
+            <>
+              <p className={`desc${more ? "" : " clamp3"}`}>{description}</p>
+              <button type="button" className="link small" onClick={() => setMore(!more)}>
+                {t(more ? "asset.less" : "asset.more")}
+              </button>
+            </>
+          )}
+        </div>
+        {card.episodes.length > 0 && (
           <div className="isec">
-            <h4>{t("asset.looks")}</h4>
-            <div className="vstrip" role="group" aria-label={t("asset.looks")}>
-              {card.looks.map((entry, i) => (
-                <button key={entry.look || "base"} type="button" aria-pressed={i === lookIndex} onClick={() => (setLookIndex(i), setIndex(0))}>
-                  {lookName(entry)}
-                </button>
+            <h4>{t("cast.in")}</h4>
+            <div className="aka">
+              {card.episodes.map((code) => (
+                <Link key={code} to="/d/$dramaId/e/$episodeCode/list" params={{ dramaId, episodeCode: code }} className="tag">
+                  {code}
+                </Link>
               ))}
             </div>
           </div>
@@ -247,43 +199,9 @@ function AssetDetail({ card, names, dramaId }: { card: CastCard; names: Names | 
               </button>
             ))}
           </div>
-          <p className="mono subtle" style={{ fontSize: 11.5, margin: "8px 0 6px" }}>
+          <p className="mono subtle" style={{ fontSize: 11.5, margin: "8px 0 0" }}>
             {[current && t("asset.current", { v: current }), accepted ? t("asset.accepted", { v: accepted }) : t("asset.noneAccepted")].filter(Boolean).join(" · ")}
           </p>
-          <div style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
-            {status && <StatusChip status={status} />}
-            <span className="grow" />
-            {shown?.review && (
-              <Link to="/r/$reviewId" params={{ reviewId: shown.review.reviewId }} className={`btn sm ${status === "you" ? "primary" : "ghost"}`}>
-                {status === "you" ? t("cast.review") : t("judged.open")}
-              </Link>
-            )}
-          </div>
-        </div>
-        {card.episodes.length > 0 && (
-          <div className="isec">
-            <h4>{t("cast.in")}</h4>
-            <div className="aka">
-              {card.episodes.map((code) => (
-                <Link key={code} to="/d/$dramaId/e/$episodeCode/list" params={{ dramaId, episodeCode: code }} className="tag">
-                  {code}
-                </Link>
-              ))}
-            </div>
-          </div>
-        )}
-        <div className="isec">
-          <h4>{t("asset.files")}</h4>
-          {shown?.files.length ? (
-            shown.files.map((item) => (
-              <a key={item.id} className="lrow" href={item.url} target="_blank" rel="noreferrer">
-                {item.name}
-                <span className="mono subtle">{[item.style, item.version].filter(Boolean).join(" · ")}</span>
-              </a>
-            ))
-          ) : (
-            <p className="subtle">{t("asset.noFiles")}</p>
-          )}
         </div>
       </div>
     </aside>
@@ -295,7 +213,6 @@ const SHELF_OF: Partial<Record<Page, Shelf>> = { story: "bible", characters: "ca
 
 /** The bible and the assets, on the shelf the page shows with the asset it names picked; compact, the characters alone. */
 export function Cast({ dramaId, compact = false }: { dramaId: string; compact?: boolean }) {
-  const navigate = useNavigate();
   const route = useRoute();
   const shelf = SHELF_OF[route.page ?? "story"] ?? "bible";
   const picked = route.params.assetId;
@@ -310,8 +227,10 @@ export function Cast({ dramaId, compact = false }: { dramaId: string; compact?: 
   const pickedCard = shelf === "bible" ? undefined : (data ?? []).find((card) => SHELF_BY_KIND[card.kind] === shelf && card.subject === picked);
   const detail = pickedCard && <AssetDetail key={pickedCard.subject} card={pickedCard} names={names} dramaId={dramaId} />;
   const castGrid = (
-    <div className="castgrid">
-      {characters.flatMap((card) => card.looks.map((look) => <Card key={`${card.subject}/${look.look}`} card={card} look={look} names={names} dramaId={dramaId} picked={card.subject === picked} />))}
+    <div className="assetgrid">
+      {characters.map((card) => (
+        <AssetCard key={card.subject} card={card} names={names} dramaId={dramaId} picked={card.subject === picked} />
+      ))}
     </div>
   );
   if (!data) return <p className={error === undefined ? "quiet" : "error"}>{error === undefined ? t("loading") : errorText(error, t)}</p>;
@@ -336,121 +255,116 @@ export function Cast({ dramaId, compact = false }: { dramaId: string; compact?: 
   // Under the logline, as the design has them: the genres the maker's notes state, and the episodes × their length.
   const facts = drama.data?.facts;
   const tags = [...(facts?.genres ?? []), ...(facts?.scale && facts.length ? [t("cast.format", { n: facts.scale.episodes, s: facts.length })] : [])];
-  const tabs: [Shelf, string, number][] = [
-    ["cast", t("cast.characters"), characters.length],
-    ["scenes", t("cast.locations"), places.length],
-    ["props", t("cast.props"), props.length],
-  ];
-  // The design's Story and Assets (design/screens.js, Story): two homes (IA §16), the bible's page titled Story with its
-  // state, and Assets with its three tabs, shared by every episode.
-  const story = shelf === "bible";
-  return (
-    <TabsPrimitive.Root value={shelf} onValueChange={(next) => void navigate(shelfLink(next as Shelf, dramaId))}>
-      <div style={{ padding: "0 16px" }}>
-        <div className="tabsrow" style={{ margin: "4px 0 18px" }}>
-          {story ? (
+  // D58: the drama tree is how Assets is navigated (Characters, Locations, Props are its rows, as Episodes' are), so the
+  // page has no tabs of its own: a plain heading with the count, shared by every episode. Story is the bible's page.
+  const shelves: Record<Exclude<Shelf, "bible">, [string, CastCard[]]> = { cast: [t("cast.characters"), characters], scenes: [t("cast.locations"), places], props: [t("cast.props"), props] };
+  if (shelf === "bible")
+    return (
+      <>
+        <div style={{ padding: "0 16px" }}>
+          <div className="tabsrow" style={{ margin: "4px 0 18px" }}>
             <div>
               <h2 className="pagetitle">{t("step.story")}</h2>
               <p className="muted pagesub">{t("story.subtitle")}</p>
             </div>
-          ) : (
-            <TabsPrimitive.List className="utabs" aria-label={t("cast.shelves")}>
-              {tabs.map(([value, label, count]) => (
-                <TabsPrimitive.Trigger key={value} value={value}>
-                  {label}
-                  <small> {count}</small>
-                </TabsPrimitive.Trigger>
-              ))}
-            </TabsPrimitive.List>
+            <span className="grow" />
+            {meta && (
+              <span className="muted" style={{ fontSize: 12 }}>
+                {meta}
+              </span>
+            )}
+          </div>
+        </div>
+        {episodes.length || names?.logline ? (
+        <div className="biblegrid">
+          {names?.logline && (
+            <section className="panel">
+              <span className="kick">{t("cast.logline")}</span>
+              <p className="logline">{names.logline}</p>
+              {tags.length > 0 && (
+                <div className="tags" style={{ display: "flex", gap: 6, marginTop: 12 }}>
+                  {tags.map((tag) => (
+                    <span key={tag} className="tag">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </section>
           )}
+          {names && names.beats.length > 0 && (
+            <section className="panel" aria-label={t("cast.beats")}>
+              <h3>
+                <Icon name="list-numbers" className="ic" />
+                {t("cast.beats")}
+              </h3>
+              <ol className="beats">
+                {names.beats.map((beat, n) => (
+                  <li key={n}>{beat}</li>
+                ))}
+              </ol>
+            </section>
+          )}
+          <section className="panel wide" aria-label={t("cast.episodes")}>
+            <h3>
+              <Icon name="film-strip" className="ic" />
+              {t("cast.episodes")}
+              <span className="grow" />
+              {written > 0 && (
+                <span className="muted" style={{ fontSize: 11.5, fontWeight: 500 }}>
+                  {t("cast.writtenOf", { n: written, total })}
+                </span>
+              )}
+            </h3>
+            <div className="eplist">
+              {episodes.map(([code, title]) => {
+                const frame = drama.data?.episodeRows.find((row) => row.code === code)?.frame;
+                return (
+                  <Link key={code} to="/d/$dramaId/e/$episodeCode/list" params={{ dramaId: dramaId, episodeCode: code }} className="eprow">
+                    {frame ? <img src={frame.url} alt="" /> : <span />}
+                    <span className="mono">{code}</span>
+                    <b>{title}</b>
+                    <span className="muted grow">{names?.summaries[code]}</span>
+                  </Link>
+                );
+              })}
+            </div>
+          </section>
+        </div>
+      ) : (
+        <p className="empty-note" style={{ padding: "0 16px" }}>
+          {t("cast.noBible")}
+        </p>
+      )}
+      </>
+    );
+  const [label, cards] = shelves[shelf];
+  return (
+    <>
+      <div style={{ padding: "0 16px" }}>
+        <div className="tabsrow" style={{ margin: "4px 0 18px" }}>
+          <h2 className="pagetitle">
+            {label} <span className="muted">· {cards.length}</span>
+          </h2>
           <span className="grow" />
-          {(story ? meta : t("cast.shared")) && (
-            <span className="muted" style={{ fontSize: 12 }}>
-              {story ? meta : t("cast.shared")}
-            </span>
-          )}
+          <span className="muted" style={{ fontSize: 12 }}>
+            {t("cast.shared")}
+          </span>
         </div>
       </div>
-      <TabsPrimitive.Content value="bible">
-        {episodes.length || names?.logline ? (
-          <div className="biblegrid">
-            {names?.logline && (
-              <section className="panel">
-                <span className="kick">{t("cast.logline")}</span>
-                <p className="logline">{names.logline}</p>
-                {tags.length > 0 && (
-                  <div className="tags" style={{ display: "flex", gap: 6, marginTop: 12 }}>
-                    {tags.map((tag) => (
-                      <span key={tag} className="tag">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </section>
-            )}
-            {names && names.beats.length > 0 && (
-              <section className="panel" aria-label={t("cast.beats")}>
-                <h3>
-                  <Icon name="list-numbers" className="ic" />
-                  {t("cast.beats")}
-                </h3>
-                <ol className="beats">
-                  {names.beats.map((beat, n) => (
-                    <li key={n}>{beat}</li>
-                  ))}
-                </ol>
-              </section>
-            )}
-            <section className="panel wide" aria-label={t("cast.episodes")}>
-              <h3>
-                <Icon name="film-strip" className="ic" />
-                {t("cast.episodes")}
-                <span className="grow" />
-                {written > 0 && (
-                  <span className="muted" style={{ fontSize: 11.5, fontWeight: 500 }}>
-                    {t("cast.writtenOf", { n: written, total })}
-                  </span>
-                )}
-              </h3>
-              <div className="eplist">
-                {episodes.map(([code, title]) => {
-                  const frame = drama.data?.episodeRows.find((row) => row.code === code)?.frame;
-                  return (
-                    <Link key={code} to="/d/$dramaId/e/$episodeCode/list" params={{ dramaId: dramaId, episodeCode: code }} className="eprow">
-                      {frame ? <img src={frame.url} alt="" /> : <span />}
-                      <span className="mono">{code}</span>
-                      <b>{title}</b>
-                      <span className="muted grow">{names?.summaries[code]}</span>
-                    </Link>
-                  );
-                })}
-              </div>
-            </section>
-          </div>
-        ) : (
-          <p className="empty-note" style={{ padding: "0 16px" }}>
-            {t("cast.noBible")}
-          </p>
-        )}
-      </TabsPrimitive.Content>
-      <TabsPrimitive.Content value="cast" className={detail ? "assetsplit" : undefined}>
-        {characters.length ? castGrid : none}
-        {shelf === "cast" && detail}
-      </TabsPrimitive.Content>
-      {/* drama-cli's own two stages: scenes (assets/scenes/<id>) and props (assets/props/<id>). */}
-      {(["scenes", "props"] as const).map((shelf) => (
-        <TabsPrimitive.Content key={shelf} value={shelf} className={detail ? "assetsplit" : undefined}>
-          {!(shelf === "scenes" ? places : props).length && none}
-          <div className="worldgrid">
-            {(shelf === "scenes" ? places : props).map((card) => (
-              <PlaceCard key={card.subject} card={card} names={names} dramaId={dramaId} picked={card.subject === picked} />
+      <div className={detail ? "assetsplit" : undefined}>
+        {cards.length ? (
+          <div className="assetgrid">
+            {cards.map((card) => (
+              <AssetCard key={card.subject} card={card} names={names} dramaId={dramaId} picked={card.subject === picked} />
             ))}
           </div>
-          {detail}
-        </TabsPrimitive.Content>
-      ))}
-    </TabsPrimitive.Root>
+        ) : (
+          none
+        )}
+        {detail}
+      </div>
+    </>
   );
 }
 

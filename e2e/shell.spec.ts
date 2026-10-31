@@ -40,7 +40,7 @@ test("an episode chosen in the tree stays selected across the surfaces", async (
   // detail and the crumbs name it as the bible does once the names have loaded (the card shows the id until then), so
   // the check waits for the detail's name and the crumb's to agree, and for that name not to be the id.
   await page.goto(`/d/${id}/assets/characters`);
-  await page.locator("article.castcard .cardname").first().click();
+  await page.locator("article.assetcard .cardname").first().click();
   await expect(page).toHaveURL(new RegExp(`/d/${id}/assets/characters/[^/?]+`));
   const asset = new URL(page.url()).pathname.split("/").pop()!;
   const where = page.getByRole("navigation", { name: "Where this belongs" });

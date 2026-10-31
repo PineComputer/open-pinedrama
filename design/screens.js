@@ -147,7 +147,6 @@
   function Story() {
     // IA draft (§16): Story is the bible's home; Assets is the home of characters, locations and props, with its own tabs.
     const story = (S.stab || "bible") === "bible";
-    const tabs = story ? [] : [["cast", "Characters", P.cast.length], ["scenes", "Locations", P.places.length], ["props", "Props", P.props.length]];
     // §16: a link lands here with its object picked (S.asel), marked and scrolled into view.
     useEffect(() => { if (S.asel) document.querySelector(`[data-asset="${S.asel}"]`)?.scrollIntoView({ block: "center" }); }, [S.asel, S.stab]);
     const picked = (id) => ({ "data-asset": id, "aria-current": S.asel === id ? "true" : undefined });
@@ -170,7 +169,9 @@
           <small>${kind} · ${kindOf} ${shown}</small>
           <button class="btn sm" disabled=${!lin} title=${lin ? "" : "Lineage: this sample traces seg03 and what it reads"} onClick=${() => openLineage(lin, x.name + " · Assets")}>${I("tree-structure")}Lineage</button></div>
         <div class="iscroll">
-          <div class="isec">${cur ? html`<img src=${src} alt="" style="width:100%;border-radius:10px;max-height:240px;object-fit:cover;object-position:top"/>` : html`<p class="subtle">${shown}'s picture isn't in this sample.</p>`}</div>
+          <div class="isec">${cur ? html`<img class="assetbig" src=${src} alt=""/>` : html`<p class="subtle">${shown}'s picture isn't in this sample.</p>`}
+            ${x.views && html`<div class="viewstrip" role="group" aria-label="Views">${x.views.map((v, i) => html`<button aria-pressed=${String(i === 0)} onClick=${() => toast("Shows the " + v + " view large. This sample has the plate only.")}><img src=${src} alt=""/><small>${v}</small></button>`)}</div>`}</div>
+          ${x.desc && html`<div class="isec"><p class=${"desc" + (S.more ? "" : " clamp3")}>${x.desc}</p><button class="linkbtn" onClick=${() => set({ more: !S.more })}>${S.more ? "Less" : "More"}</button></div>`}
           <div class="isec"><h4>Versions <span class="muted">${all.length}</span></h4>
             <div class="vstrip" role="group" aria-label=${"Versions of " + x.name}>${all.map((v) => html`<button aria-pressed=${String(v === shown)} onClick=${() => set({ at: { kind: kindOf, ver: v } })}>${v.replace(/^.* /, "")}</button>`)}</div>
             <p class="mono subtle" style="font-size:11.5px;margin:8px 0 6px">current ${x.ver} · ${x.accepted ? "accepted " + x.accepted : "none accepted"}</p>
@@ -178,7 +179,6 @@
           ${cur && x.problems && html`<div class="isec"><h4>Why it's out of date</h4>${x.problems.map((said) => html`<div class="finding warn">${I("warning")}<span>${said}</span></div>`)}<p class="subtle">The agent redraws it.</p></div>`}
           ${cur && x.st === "you" && html`<div class="isec"><h4>Your review</h4>${S.stab === "cast" && html`<div class="finding warn">${I("warning")}<span>warn · The blouse reads as purple; the bible says plum.</span></div>`}<${ReviewBtns} id=${x.id}/></div>`}
           ${cur && x.st === "back" && html`<div class="isec"><h4>Review</h4><div class="finding err">${I("warning-circle")}<span>Sent back by the agent: the observer found an error (a third hand). Redrawing.</span></div></div>`}
-          <div class="isec"><h4>Prompt and settings</h4><p class="subtle">The agent hasn't returned ${shown}'s spec.json and request.json.</p></div>
         </div></aside>`; };
     // An older version keeps its own state: accepted if status says so; the review and findings belong to the current one.
     const pic = (x, src, chip) => (shownOf(x) === x.ver
@@ -191,7 +191,7 @@
       <div class="body"><div class="scrollmain">
         <div class="bar2"><span class="grow"></span><${ProjectChips}/></div>
         <${StopBanner}/>
-        <div style="padding:0 16px"><div class="tabsrow" style="margin:4px 0 18px">${story ? html`<div><h2 class="pagetitle">Story</h2><p class="muted pagesub">The bible: logline, beats and the facts of the characters, places and props, drawn from the script.</p></div>` : html`<div class="utabs" role="tablist">${tabs.map(([k, l, n]) => html`<button role="tab" aria-selected=${String(S.stab === k)} onClick=${() => set({ stab: k })}>${l}${n && html`<small>${n}</small>`}</button>`)}</div>`}
+        <div style="padding:0 16px"><div class="tabsrow" style="margin:4px 0 18px">${story ? html`<div><h2 class="pagetitle">Story</h2><p class="muted pagesub">The bible: logline, beats and the facts of the characters, places and props, drawn from the script.</p></div>` : html`<h2 class="pagetitle">${{ cast: "Characters", scenes: "Locations", props: "Props" }[S.stab]} <span class="muted">· ${{ cast: P.cast, scenes: P.places, props: P.props }[S.stab].length}</span></h2>`}
           <span class="grow"></span><span class="muted" style="font-size:12px">${story ? "Bible b0003 · accepted · EP001–EP012 written" : "Shared by every episode"}</span></div></div>
         ${S.stab === "bible" && html`<div class="biblegrid">
           <section class="panel"><span class="kick">Logline</span><p class="logline">${P.bible.logline}</p>
@@ -200,21 +200,10 @@
           <section class="panel wide"><h3>${I("film-strip")}Episodes<span class="grow"></span><span class="muted" style="font-size:11.5px;font-weight:500">12 of 24 written · the next range is written when EP007 starts</span></h3>
             <div class="eplist">${P.bible.eps.map(([c, t, s], i) => html`<div class="eprow"><img src=${P.eps[i].cover} alt=""/><span class="mono">${c}</span><b>${t}</b><span class="muted grow">${s}</span></div>`)}</div></section>
         </div>`}
-        ${S.stab === "cast" && html`<div class="castgrid">${P.cast.map((c) => html`<article class=${"castcard" + (S.asel === c.id ? " sel" : "")} ...${picked(c.id)} ...${openCard(c.id)}>
-          ${pic(c, c.sheet, Status(c.st, c.st === "back" ? "Sent back · 1 error" : c.st === "you" ? "Waiting for you · 1 warn" : undefined))}
-          <div class="ctxt">${head(c)}
-            <small class="muted">${c.role}</small>
-            <div class="aka"><span class="muted">Also called</span>${(P.names[c.id] || []).map((n) => html`<span class="tag">${n}</span>`)}</div>
-          </div></article>`)}</div>`}
-        ${S.stab === "scenes" && html`<div class="worldgrid">${P.places.map((p) => html`<article class=${"placecard" + (S.asel === p.id ? " sel" : "")} ...${picked(p.id)} ...${openCard(p.id)}>
-          ${pic(p, p.pic, p.st !== "accepted" && Status(p.st))}
-          <div class="ctxt">${head(p)}
-            <p class="desc">${p.desc}</p>
-            <div class="aka"><span class="muted">Views</span>${p.views.map((v) => html`<span class="tag">${v}</span>`)}</div>
-            <div class="aka"><span class="muted">Times</span>${p.times.map(([t, v]) => html`<span class="tag">${t} · ${v}</span>`)}</div>
-</div></article>`)}</div>`}
-        ${S.stab === "props" && html`<div class="worldgrid">${P.props.map((p) => html`<article class=${"placecard" + (S.asel === p.id ? " sel" : "")} ...${picked(p.id)} ...${openCard(p.id)}>${pic(p, p.pic, p.st !== "accepted" && Status(p.st))}
-          <div class="ctxt">${head(p)}<small class="muted">Key prop</small><p class="desc">${p.desc}</p></div></article>`)}</div>`}
+        ${/* D57/D58: the tree navigates Assets; a card is the picture, the name, the version and where it stands. */ ""}
+        ${S.stab !== "bible" && html`<div class="assetgrid">${{ cast: P.cast, scenes: P.places, props: P.props }[S.stab].map((x) => html`<article class=${"assetcard" + (S.asel === x.id ? " sel" : "")} ...${picked(x.id)} ...${openCard(x.id)}>
+          ${pic(x, x.sheet || x.pic, x.st !== "accepted" ? Status(x.st) : Status("accepted"))}
+          <div class="ctxt"><span class="cardname"><b>${x.name}</b></span><span class="mono subtle">${shownOf(x)}</span></div></article>`)}</div>`}
         ${S.stab !== "bible" && html`<div class="sendstrip"><span class="muted">Looks and plates · ${decided} of 2 decided</span><span class="grow"></span>
           <button class="btn primary sm" disabled=${decided < 2} onClick=${() => toast("Review sent: Margaret Cole and Garden wedding.")}>Send review</button></div>`}
       </div>${asset ? html`<${AssetDetail} x=${asset}/>` : html`<${AgentPanel}/>`}</div></div>`;

@@ -74,10 +74,10 @@ test("the Graph traces a version both ways on the sample drama", async ({ page }
     await page.getByRole("link", { name: "Open in Assets" }).click();
     await expect.poll(() => new URL(page.url()).pathname).toBe(home(node));
     expect(query(page.url()).get("view")).toBeNull();
-    // Its card picked: a character's every look is its card, so each of them is.
+    // Its card picked: one card per asset (D57).
     const picked = page.locator('article[aria-current="true"]');
     await expect(picked.first()).toBeVisible();
-    expect(await page.locator("article.castcard, article.placecard").count()).toBeGreaterThan(await picked.count());
+    expect(await page.locator("article.assetcard").count()).toBeGreaterThan(await picked.count());
   }
   // From the storyboard's home, its episode's Canvas keeps it picked, and List brings it back.
   await page.goto(`${home(storyboard)}?item=${encodeURIComponent(storyboard.id)}`);

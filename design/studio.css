@@ -539,14 +539,7 @@ input.search:focus { border-color: var(--text-primary); }
 .eprow:hover { background: var(--hover); }
 .eprow img { width: 30px; height: 42px; border-radius: 5px; object-fit: cover; }
 .eprow .mono { font-size: 11.5px; color: var(--text-muted); }
-.castgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; padding: 0 16px 80px; }
-.castcard, .placecard { border-radius: var(--radius-2xl); border: 1px solid var(--border); background: var(--surface); overflow: hidden; display: flex; flex-direction: column; }
-.castcard[role="button"], .placecard[role="button"] { cursor: pointer; } .castcard[role="button"]:hover, .placecard[role="button"]:hover { border-color: var(--border-input); }
-.castcard .pic { position: relative; aspect-ratio: 16/9; background: var(--surface-container); }
-.castcard .pic img, .placecard .pic img { width: 100%; height: 100%; object-fit: cover; }
-.castcard .pic .st, .placecard .pic .st { position: absolute; left: 8px; top: 8px; }
 /* Fix 3: an older version picked by a link; its picture is not in the sample. */
-.castcard .pic .empty, .placecard .pic .empty { position: absolute; inset: 0; display: grid; place-items: center; padding: 12px; text-align: center; color: var(--text-subtle); font-size: 12px; }
 .vstrip { display: flex; flex-wrap: wrap; gap: 4px; }
 .vstrip button { height: 22px; padding: 0 8px; border-radius: 999px; border: 1px solid var(--border); background: none; color: var(--text-secondary); font: 11px var(--font-mono); cursor: pointer; }
 .vstrip button[aria-pressed="true"] { border-color: var(--text-primary); color: var(--text-primary); }
@@ -562,8 +555,6 @@ input.search:focus { border-color: var(--text-primary); }
 .mini.back[aria-pressed="true"] { background: var(--error); border-color: var(--error); color: #fff; }
 .mini.note[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
 input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid var(--border-input); background: var(--surface); color: var(--text-primary); padding: 0 10px; font: 12.5px var(--font-sans); outline: none; }
-.worldgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 16px; padding: 0 16px 80px; }
-.placecard .pic { position: relative; aspect-ratio: 9/14; background: var(--surface-container); }
 .sendstrip { position: sticky; bottom: 0; display: flex; align-items: center; gap: 12px; padding: 10px 16px; border-top: 1px solid var(--border); background: var(--glass); backdrop-filter: blur(8px); font-size: 12.5px; }
 
 /* ── graph ── */
@@ -646,7 +637,7 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
 .segrow:hover { background: var(--hover); }
 /* §16: a link lands on the object's home with the object picked (S.esel in the List, S.asel in Assets). */
 .segrow { cursor: pointer; }
-.segrow.sel, .castcard.sel, .placecard.sel { box-shadow: inset 0 0 0 2px var(--accent); }
+.segrow.sel { box-shadow: inset 0 0 0 2px var(--accent); }
 /* Codex round 3 (fix 3): a segment's versions are tiles; a link to one version lands on its tile, picked. */
 .segrow { grid-template-columns: auto minmax(0, 1fr); }
 .segrow .stiles { display: flex; gap: 6px; }
@@ -828,10 +819,8 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
 .subst .btn { flex: none; }
 /* J1 in the product: an asset's detail beside its shelf's grid (src/ui/screens/Cast.tsx, AssetDetail). */
 .assetsplit { display: flex; align-items: flex-start; }
-.assetsplit > .castgrid, .assetsplit > .worldgrid { flex: 1; min-width: 0; }
+.assetsplit > .assetgrid, .assetsplit > .empty-note { flex: 1; min-width: 0; }
 .assetsplit > .insp { position: sticky; top: 0; max-height: calc(100vh - 140px); margin-right: 16px; border: 1px solid var(--border); border-radius: var(--radius-2xl); overflow: hidden; }
-.castcard .cardname, .placecard .cardname { color: inherit; text-decoration: none; } .castcard .cardname:hover b, .placecard .cardname:hover b { text-decoration: underline; text-underline-offset: 3px; }
-.castcard[aria-current], .placecard[aria-current] { cursor: default; } .castcard, .placecard { cursor: pointer; }
 .preset[data-disabled] { cursor: not-allowed; } .preset > [data-slot="radio-group-item"] { margin-top: 2px; }
 /* The episode's cut, as its child row in the drama tree (IA §16: its own home), under the episode in view. */
 .tree .treecut button { padding-left: 18px; }
@@ -852,3 +841,21 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
 .rail .ibtn:disabled { opacity: .45; cursor: default; }
 .rail .ibtn:disabled:hover { background: transparent; }
 .rail .acctdot .av { width: 22px; height: 22px; font-size: 11px; }
+/* D57: Assets as a picture grid plus an inspector (Apple Photos, Finder; liblib's 资产 library). A card is the picture at
+   its own ratio, the name, the version and where it stands; the detail holds the rest. */
+.assetgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 16px; padding: 0 16px 80px; align-items: start; }
+.assetcard { border-radius: var(--radius-large); border: 1px solid var(--border); background: var(--surface); overflow: hidden; cursor: pointer; }
+.assetcard:hover { border-color: var(--border-input); } .assetcard.sel { box-shadow: inset 0 0 0 2px var(--accent); }
+.assetcard .pic { position: relative; aspect-ratio: 3 / 4; background: var(--surface-container); }
+.assetcard .pic img { width: 100%; height: 100%; object-fit: contain; }
+.assetcard .pic .st { position: absolute; left: 8px; top: 8px; }
+.assetcard .ctxt { display: flex; align-items: baseline; gap: 8px; padding: 8px 10px 10px; min-width: 0; }
+.assetcard .cardname { min-width: 0; color: inherit; text-decoration: none; } .assetcard .cardname b { display: block; font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.assetcard .ctxt .mono { font-size: 11px; }
+.assetbig { width: 100%; max-height: 300px; object-fit: contain; border-radius: 10px; background: var(--surface-container); }
+.viewstrip { display: flex; gap: 6px; overflow-x: auto; margin-top: 8px; padding-bottom: 2px; }
+.viewstrip button { flex: none; width: 64px; display: grid; gap: 3px; padding: 0; border: 0; background: none; color: var(--text-secondary); cursor: pointer; text-align: center; }
+.viewstrip img, .viewstrip .emptythumb { width: 64px; height: 48px; object-fit: cover; border-radius: 6px; border: 1px solid var(--border); }
+.viewstrip button[aria-pressed="true"] img { border-color: var(--text-primary); box-shadow: 0 0 0 1px var(--text-primary); }
+.viewstrip small { font-size: 10.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.clamp3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
