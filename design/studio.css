@@ -854,7 +854,7 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
    left, the version history on the right (GitHub's PR timeline; Figma's and Google Docs' version history). */
 .notice { display: flex; gap: 8px; align-items: flex-start; margin: 0 16px 12px; padding: 10px 12px; border-radius: var(--radius-large); border: 1px solid var(--border); background: var(--surface-container); font-size: 12.5px; color: var(--text-secondary); }
 .notice .ic { width: 16px; height: 16px; flex: none; margin-top: 1px; } .notice b { color: var(--text-primary); }
-.scriptlayout { display: grid; gap: 14px; padding: 0 16px 40px; min-width: 0; }
+.scriptlayout { display: grid; gap: 16px; padding: 0 16px 40px; min-width: 0; }
 .orig button.chg { box-shadow: inset 3px 0 0 var(--warning-text); }
 .scriptpanes { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; padding: 0; }
 .history { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 0; }
@@ -888,14 +888,14 @@ button.drow { cursor: pointer; } button.drow:hover { background: var(--hover); }
 .dnote { grid-column: 1 / -1; margin: 0; padding: 8px 10px; border-top: 1px solid var(--border); font-size: 12px; }
 .edtab .ro { display: inline-flex; align-items: center; gap: 4px; margin-left: 6px; font-size: 11px; color: var(--text-muted); } .edtab .ro .ic { width: 12px; height: 12px; }
 .scriptdoc, .dpane { cursor: default; user-select: text; }
-/* Script's surfaces, one column and one radius (radius-large) on each outer container; inside the editor no second card,
-   the tab square where it meets the bar. */
-.scripthistory { border: 1px solid var(--border); border-radius: var(--radius-large); background: var(--surface); padding: 10px 14px; }
+/* Script's surfaces (SPEC.md, Shape and alignment): Versions and the editor are surfaces (radius-2xl, 16px down and 20px
+   across), on the one 16px column, 16px apart; inside the editor no second box, the tab square where it meets the bar. */
+.scripthistory { border: 1px solid var(--border); border-radius: var(--radius-2xl); background: var(--surface); padding: 16px 20px; }
 .scripthistory h3 { display: flex; align-items: center; gap: 6px; margin: 0; font-size: 12px; font-weight: 600; color: var(--text-muted); }
-.scriptlayout .faccept { margin: 0; border-radius: var(--radius-large); }
-.editor { border: 1px solid var(--border); border-radius: var(--radius-large); background: var(--surface); overflow: hidden; min-width: 0; }
+.scriptlayout .faccept { margin: 0; border-radius: var(--radius-2xl); padding: 16px 20px; }
+.editor { border: 1px solid var(--border); border-radius: var(--radius-2xl); background: var(--surface); overflow: hidden; min-width: 0; }
 .editor .edbar { padding: 0 6px 0 0; background: var(--surface-container); }
 .editor .edtab { border: 0; border-right: 1px solid var(--border); border-radius: 0; margin: 0; padding: 10px 14px; background: var(--surface); }
-.editor .edbody { padding: 18px 22px; }
+.editor .edbody { padding: 16px 20px; }
 .editor .original { margin: 0; white-space: pre-wrap; font: 13px/1.6 var(--font-mono); color: var(--text-primary); }
 .editor .diffed { border: 0; border-radius: 0; }
