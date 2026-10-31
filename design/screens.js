@@ -1,7 +1,7 @@
 /* The rest of the flow in the pro direction: Upload, Analyzing, Fountain review, Story, Graph (lineage) and Cut,
    plus the setup steps and the stop cards. Uses the shell and helpers app.js exposes as window.PD. */
 (() => {
-  const { html, I, S, set, go, jump, openHome, openLineage, toast, money, Status, TopBar, StopBanner, EpisodeViews, ProjectChips, AgentPanel, SPENT_COVERS, useEffect, useRef } = window.PD;
+  const { html, I, S, set, go, jump, openHome, openLineage, Submission, submit, toast, money, Status, TopBar, StopBanner, EpisodeViews, ProjectChips, AgentPanel, SPENT_COVERS, useEffect, useRef } = window.PD;
 
   /* ───── setup steps (sidebar) ───── */
   function SetupSteps() {
@@ -276,19 +276,14 @@
     const leave = (r, to) => { set({ osel: r.id }); to(); };
     const owner = (g) => (g === "Assets" ? "the setup's agent" : g + "'s agent");
     // A redo remakes items, which spends: it asks first with its impact (§15), and is one submission to the owner's session
-    // (§14.6): sending → sent, failed (send again, the same submission) or unknown (checked, never sent twice), shown here.
-    const sent = S.redo || {};
-    const send = (g) => { set({ redo: { ...sent, [g]: "sending" } }); setTimeout(() => set({ redo: { ...S.redo, [g]: { ok: "sent", refused: "failed", unknown: "unknown" }[S.outcome] } }), 1200); };
-    const check = (g) => { set({ redo: { ...sent, [g]: "checking" } }); setTimeout(() => set({ redo: { ...S.redo, [g]: "sent" } }), 1200); };
+    // (§14.6), its state the shared Submission's (app.js). The button shows only while nothing is submitted; after a refusal
+    // Submission's Send again is the one action, and it asks again.
     const redo = (g, rows) => set({ dialog: { title: `Ask ${owner(g)} to redo ${rows.length} items?`,
       body: `${owner(g)[0].toUpperCase() + owner(g).slice(1)} will remake ${rows.length} items: ${rows.map((r) => r.full).join(", ")}. It spends from the drama's budget; the earlier versions stay.`,
-      ok: "Ask to redo", cancel: "Not now", run: () => send(g) } });
-    const state = (g, rows) => { const st = sent[g];
-      if (st === "sending") return html`<span class="muted">${I("circle-notch")} Sending to ${owner(g)}…</span>`;
-      if (st === "checking") return html`<span class="muted">${I("circle-notch")} Checking whether ${owner(g)} has it…</span>`;
-      if (st === "sent") return html`<span>${I("check-circle")} <b>Sent to ${owner(g)}</b> <span class="muted">· it is on it.</span></span>`;
-      if (st === "unknown") return html`<span class="muted">Sent, no answer yet. Checking whether ${owner(g)} has it; it is never sent twice. </span><button class="btn sm" onClick=${() => check(g)}>Check again</button>`;
-      return html`${st === "failed" && html`<span class="error-line" role="alert">${I("warning-circle")}Not sent: the connection dropped. Send it again.</span> `}<button class="btn sm" onClick=${() => redo(g, rows)}>Ask ${owner(g)} to redo them</button>`; };
+      ok: "Ask to redo", cancel: "Not now", run: () => submit("redo:" + g) } });
+    const state = (g, rows) => ((S.subs || {})["redo:" + g]
+      ? html`<${Submission} id=${"redo:" + g} to=${owner(g)} onSend=${() => redo(g, rows)}/>`
+      : html`<button class="btn sm" onClick=${() => redo(g, rows)}>Ask ${owner(g)} to redo them</button>`);
     const row = (r) => html`<tr class=${S.osel === r.id ? "sel" : ""}>
       <td><span class="delivep">${I(r.icon)}<span><button class="linkbtn" onClick=${() => leave(r, r.home)}>${r.t}</button><small>${r.kind}</small></span></span></td>
       <td class="mono">${r.v}</td>
