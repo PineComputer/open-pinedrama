@@ -77,6 +77,11 @@ export function openSession(drama: Pick<DramaView, "crew">, scope: string): Sess
   return drama.crew.flatMap((computer) => computer.sessions).find((session) => session.state === "open" && (scope === "setup" ? session.role === "setup" : session.episode === scope));
 }
 
+/** An episode's cut in the maker's states, from its row (the engine's episode board): what the tree and the Canvas's head both say. */
+export function cutStanding(row: Pick<EpisodeRow, "stages">): "you" | "work" | "accepted" | undefined {
+  return ({ review: "you", working: "work", done: "accepted", none: undefined } as const)[row.stages.cut.state];
+}
+
 /** Whether a drama is still being set up: before its episodes, or stopped before it had any. */
 export function isSettingUp(drama: Pick<DramaView, "status" | "episodeRows">): boolean {
   return drama.status === "setup" || (drama.status === "stopped" && !drama.episodeRows.length);

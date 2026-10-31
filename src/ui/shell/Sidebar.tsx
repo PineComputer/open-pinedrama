@@ -10,7 +10,7 @@ import { useResource } from "../api.ts";
 import { Menu } from "../components/Menu.tsx";
 import { Icon } from "../icons.tsx";
 import { type TKey, useT } from "../i18n.ts";
-import { isSettingUp, moneyText, nowText, SETUP_STEPS } from "../labels.ts";
+import { cutStanding, isSettingUp, moneyText, nowText, SETUP_STEPS } from "../labels.ts";
 import { Mark } from "../Mark.tsx";
 import type { Page } from "../place.ts";
 import { DramaThumb } from "../components/DramaThumb.tsx";
@@ -181,8 +181,8 @@ export function DramaSidebar({ drama, page, episode, drawer }: { drama: DramaVie
                 row.code === episode && row.stages.cut.state !== "none" && (
                   <li key={`${row.id}-cut`} className="treecut">
                     <button type="button" aria-current={page === "cut" ? "true" : "false"} onClick={() => void navigate({ to: "/d/$dramaId/e/$episodeCode/cut", params: { dramaId, episodeCode: row.code } })}>
-                      <span className="code">› {t("step.cut")}</span> <span className="now">{t(`status.${CUT[row.stages.cut.state]}` as TKey)}</span>
-                      <span className={`dot ${DOT_OF[CUT[row.stages.cut.state]]}`} aria-hidden="true" />
+                      <span className="code">› {t("step.cut")}</span> <span className="now">{t(`status.${cutStanding(row)!}` as TKey)}</span>
+                      <span className={`dot ${DOT_OF[cutStanding(row)!]}`} aria-hidden="true" />
                     </button>
                   </li>
                 ),
@@ -230,5 +230,4 @@ export function DramaSidebar({ drama, page, episode, drawer }: { drama: DramaVie
 
 const DOT: Record<EpisodeMark, string> = { you: "you", work: "work", done: "accepted", line: "line" };
 // A cut's stage as the maker's state (principle "Five maker-facing states"), and its dot.
-const CUT = { review: "you", working: "work", done: "accepted" } as const;
 const DOT_OF = { you: "you", work: "work", accepted: "accepted" } as const;

@@ -26,7 +26,7 @@ import { Menu } from "../components/Menu.tsx";
 import { type Status, StatusChip } from "../components/StatusChip.tsx";
 import { type TKey, useT } from "../i18n.ts";
 import { Icon } from "../icons.tsx";
-import { headingText, openSession, subjectLabel } from "../labels.ts";
+import { cutStanding, headingText, openSession, subjectLabel } from "../labels.ts";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { homeLink, placeLink, shotsItem, usePage, usePlace } from "../place.ts";
 import { useText } from "../viewing.tsx";
@@ -509,6 +509,11 @@ function Plane({ drama }: { drama: DramaView }) {
   // The episode's breakdown.json at the version drama-cli's lineage works on, and each segment's shots in it (D66).
   const breakdownStage = lineage?.nodes.find((stage) => stage.id === `episodes/${code}/breakdown`);
   const cutStage = lineage?.nodes.find((stage) => stage.id === `episodes/${code}/edit`);
+  const row = drama.episodeRows?.find((one) => one.code === code);
+  const cut = row ? cutStanding(row) : undefined;
+  // What the panel says of changing an item, as the agent sidebar's state has it (labels.ts openSession, D70): ask the
+  // agent while the episode's session is open; resume a stopped or failed episode first; for a done one, nothing.
+  const ask = code && openSession(drama, code) ? t("canvas.askAgent") : row && (row.state === "stopped" || row.state === "failed") ? t("canvas.askResume", { who: code }) : undefined;
   const breakdownFile = files.data?.find((file) => file.kind === "breakdown" && file.path.endsWith(`/episodes/${code}/breakdown/${breakdownStage?.version}/breakdown.json`));
   const breakdownText = useText(breakdownFile).text;
   const shotsOf = useMemo((): { shots?: Map<string, Shot[]>; error?: string } => {
@@ -532,10 +537,14 @@ function Plane({ drama }: { drama: DramaView }) {
     const segmentOf = (section: string) => section.slice(code.length + 1);
     const segments = [...new Set(shown.map((stage) => stage.section).filter((section) => section.startsWith(`${code} seg`)))];
     const shotsId = (section: string) => shotsItem(code, segmentOf(section));
-    // A shots card is as tall as its row's pictures, at most drama-cli's HEIGHT: its list scrolls inside (ShotsNode).
+    // A shots card is as tall as its row's pictures, at most drama-cli's HEIGHT: a longer list scrolls inside (ShotsNode)...
     const pictureHeight = (id: string) => (sizes[id] ? LABEL + Math.round((WIDTH * sizes[id][1]) / sizes[id][0]) : HEIGHT);
     const firstRow = (section: string) => shown.filter((stage) => stage.section === section).sort((a, b) => a.column - b.column || (a.id < b.id ? -1 : 1)).slice(0, 3);
-    const heightOf = (id: string) => (id.startsWith("shots:") ? Math.min(HEIGHT, Math.max(0, ...firstRow(id.slice(6)).map((stage) => pictureHeight(stage.id))) || HEIGHT) : pictureHeight(id));
+    // ...and no taller than its list: the label, the title and a 22 px line a shot (design/studio.css .shotlist), so four
+    // shots don't stand in an empty card.
+    const listHeight = (section: string) => LABEL + 44 + 22 * Math.max(1, shotsOf.shots?.get(segmentOf(section))?.length ?? 1);
+    const heightOf = (id: string) =>
+      id.startsWith("shots:") ? Math.min(Math.min(HEIGHT, Math.max(0, ...firstRow(id.slice(6)).map((stage) => pictureHeight(stage.id))) || HEIGHT), listHeight(id.slice(6))) : pictureHeight(id);
     const { places, groups } = layout([...segments.map((section) => ({ id: shotsId(section), column: -1, section })), ...shown], heightOf);
     // The scene's heading as the other screens show it, without Fountain's scene number (labels.ts, headingText).
     const scene = (segment: string) => {
@@ -738,6 +747,7 @@ function Plane({ drama }: { drama: DramaView }) {
             problems: breakdownStage?.problems ?? [],
           }}
           shots={shots.data.shots}
+          ask={ask}
           dock={dock}
           onDock={dockTo}
           onClose={() => pick(null)}
@@ -764,6 +774,7 @@ function Plane({ drama }: { drama: DramaView }) {
         reads: mapped.edges.filter((edge) => edge.target === node.id).map((edge) => labelOf(edge.source)).join(", "),
         problems: node.data.stage.problems,
       }}
+      ask={ask}
       dock={dock}
       onDock={dockTo}
       onClose={() => pick(null)}
@@ -818,11 +829,13 @@ function Plane({ drama }: { drama: DramaView }) {
               <Icon name="file-text" />
               {t("canvas.episodeScript")}
             </Link>
-            {cutStage?.version && (
+            {/* The cut where the tree says it stands (labels.ts cutStanding, the episode board's row): accepted, its
+                accepted version; else the version that waits or is being made. */}
+            {cutStage?.version && cut && (
               <Link {...homeLink(drama.id, cutStage.id)} className={buttonClass({ size: "sm", variant: "ghost" })}>
                 <Icon name="scissors" />
-                {t("canvas.cutVersion", { v: cutStage.version })}
-                {standingOf(cutStage) !== "accepted" && <StatusChip status={standingOf(cutStage)} label={t(`status.${standingOf(cutStage)}` as TKey)} />}
+                {t("canvas.cutVersion", { v: cut === "accepted" ? (cutStage.accepted ?? cutStage.version) : cutStage.version })}
+                {cut !== "accepted" && <StatusChip status={cut} label={t(`status.${cut}` as TKey)} />}
               </Link>
             )}
             {/* Follow is the agent's: only while the episode's session is open (labels.ts openSession, as the agent sidebar

@@ -212,6 +212,7 @@ export function NodePanel({
   look,
   style,
   shots,
+  ask,
   on,
   work,
   files,
@@ -225,6 +226,8 @@ export function NodePanel({
   item?: Item;
   /** A segment's shots, whole, for its Details: the node lists one line of each. */
   shots?: Shot[];
+  /** Where to ask for a change, as the agent sidebar's state has it; none where no agent can take one (a done episode). */
+  ask?: string;
   /** A character's look (S1…) or a place's time of day (Night), as the lineage names the stage; none for a base look or a plate. */
   look?: string;
   /** A storyboard's style (line-art, photoreal), as the lineage names the stage. */
@@ -345,8 +348,8 @@ export function NodePanel({
           ))}
         </div>
       )}
-      {/* The UI views and decides; to redo or change it, the agent's chat (D70, design/app.js .nask). */}
-      <p className="subtle nask">{t("canvas.askAgent")}</p>
+      {/* The UI views and decides; to redo or change it, the agent's chat (D70, design/app.js .nask), when the sidebar has one. */}
+      {ask && <p className="subtle nask">{ask}</p>}
     </section>
   );
 }

@@ -454,7 +454,7 @@
         node({ id: `${g.id}/storyboard`, kind: "storyboard", pic: g.board, label: "Storyboard · line-art", st: g.boardSt || "accepted", ver: "v1", accepted: "v1", role: "Storyboard · line-art", model: "gpt-image-2.5", ...at("storyboard", "v1"), at: { kind: "storyboard", ver: "v1", style: "line-art" } }),
         g.photo && node({ id: `${g.id}/photoreal`, kind: "photoreal", pic: g.photo, label: "Storyboard · photoreal", st: g.photoSt || "accepted", ver: "v1", accepted: "v1", role: "Storyboard · photoreal", model: "gpt-image-2.5", seg: g, at: { kind: "storyboard", ver: "v1", style: "photoreal" } }),
         node({ id: `${g.id}/take`, kind: "take", pic: g.still, label: `Take · ${g.take}`, st: g.st, ver: g.take, accepted: g.accepted, role: `${g.s} s · ${g.cast.length} in frame`, model: "sd25", ...at("take", g.take) }),
-      ].filter(Boolean).map((n, i, row) => (n.kind === "shots" ? { ...n, h: Math.min(CARD, Math.max(...row.slice(1, 4).map((m) => m.h))) } : n)), scene[g.id]];
+      ].filter(Boolean).map((n, i, row) => (n.kind === "shots" ? { ...n, h: Math.min(CARD, Math.max(...row.slice(1, 4).map((m) => m.h)), 44 + 22 * n.seg.shots.length) } : n)), scene[g.id]];
     });
     const place = (title, x, y, list, perRow, label) => {
       let row = y;

@@ -21,7 +21,7 @@ const fixture = (name: string) => JSON.parse(readFileSync(path.resolve("fixtures
 const lineageView = () => ({ lineage: parseLineage(JSON.parse(readFileSync(path.resolve("fixtures/lineage", "shot.json"), "utf8"))), problems: [] });
 
 function row(state: EpisodeRow["state"]): EpisodeRow {
-  return { id: "e1", number: 1, code: "EP001", title: "The stepmother arrives", state, stages: {} as EpisodeRow["stages"], spent: { total: 0, media: 0, partial: false }, updatedAt: "2026-10-30T10:00:00Z" };
+  return { id: "e1", number: 1, code: "EP001", title: "The stepmother arrives", state, stages: { breakdown: { state: "done" }, blocking: { state: "done" }, storyboards: { state: "done" }, takes: { state: "done" }, cut: { state: "none" } }, spent: { total: 0, media: 0, partial: false }, updatedAt: "2026-10-30T10:00:00Z" };
 }
 
 function drama(episode: EpisodeRow["state"], setupOpen = true, status: DramaView["status"] = "production"): DramaView {
@@ -428,6 +428,21 @@ describe("a picked item's panel (P6.8)", () => {
     expect(getComputedStyle(picture).objectFit).toBe("contain");
     expect(getComputedStyle(video).objectFit).toBe("contain");
     sheet.remove();
+  });
+
+  it("points to the agent only where the sidebar has one: the episode's session open, a stopped episode to resume, a done one nothing (D70)", async () => {
+    const line = async (state: EpisodeRow["state"]) => {
+      engine();
+      const view = await renderAt(<Canvas drama={drama(state)} />, "/d/d1/e/EP001/canvas");
+      await pick(/^Storyboard · line-art/);
+      const panel = await screen.findByRole("region", { name: /what it is made from/ });
+      const text = panel.querySelector(".nask")?.textContent ?? null;
+      view.unmount();
+      return text;
+    };
+    expect(await line("working")).toBe("To redo or change it, ask the agent in the sidebar.");
+    expect(await line("stopped")).toBe("EP001 is stopped: resume it, then ask the agent in the sidebar.");
+    expect(await line("done")).toBeNull();
   });
 
   it("pauses a take's hover preview where it is when the pointer leaves, and plays on from there (LibTV)", async () => {
