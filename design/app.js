@@ -373,7 +373,7 @@
   }
 
   /* ───── Canvas ───── */
-  /* The episode's one view (merecdesperez44323-lab: "还不如就直接canvas"): drama-cli's own board, as `drama-cli export
+  /* The episode's one view (D66): drama-cli's own board, as `drama-cli export
      comfyui` lays it out (short_drama drama_cli/export.py, section() and layout(), the port in src/shared/layout.ts): the
      Characters, Locations and Props groups two to a row on the left; one group per segment, four to a row, its stages in
      drama-cli's column order (blocking, the line-art and photoreal storyboards, the take); the cut alone on the right.
