@@ -1,4 +1,4 @@
-/* The rest of the flow in the pro direction: Upload, Analyzing, Fountain review, Story, Graph (lineage) and Cut,
+/* The rest of the flow in the pro direction: Upload, Analyzing, Fountain review, Bible, Graph (lineage) and Cut,
    plus the setup steps and the stop cards. Uses the shell and helpers app.js exposes as window.PD. */
 (() => {
   const { html, I, S, set, go, own, jump, openHome, openStage, openLineage, stagesOf, pickedAt, Submission, submit, toast, money, Status, TopBar, StopBanner, EpisodeViews, ProjectChips, AgentPanel, SPENT_COVERS, useEffect, useRef } = window.PD;
@@ -75,7 +75,7 @@
         </div></div></div></div>`;
   }
 
-  /* ───── Story: bible, cast, world ───── */
+  /* ───── Bible and Assets ───── */
   function ReviewBtns({ id }) {
     const v = S.cards[id];
     const setv = (val) => set({ cards: { ...S.cards, [id]: v === val ? undefined : val } });
@@ -84,8 +84,8 @@
       <button class="mini note" aria-pressed=${String(v === "note")} onClick=${() => setv("note")}>${I("note-pencil")}Accept with note</button></div>
       ${(v === "back" || v === "note") && html`<input class="why" placeholder=${v === "back" ? "Why it goes back (required)" : "Your note, kept with the accepted version"} value=${S.cardWhy[id] || ""} onInput=${(e) => set({ cardWhy: { ...S.cardWhy, [id]: e.target.value } })}/>`}`;
   }
-  function Story() {
-    // IA draft (§16): Story is the bible's home; Assets is the home of characters, locations and props, with its own tabs.
+  function Bible() {
+    // IA draft (§16), named as drama-cli names it: Bible is the bible's home; Assets is the home of characters, locations and props, with its own tabs.
     const story = (S.stab || "bible") === "bible";
     // §16: a link lands here with its object picked (S.asel), marked and scrolled into view.
     useEffect(() => { if (S.asel) document.querySelector(`[data-asset="${S.asel}"]`)?.scrollIntoView({ block: "center" }); }, [S.asel, S.stab]);
@@ -127,18 +127,23 @@
     const asset = S.stab !== "bible" && { cast: P.cast, scenes: P.places, props: P.props }[S.stab].find((x) => x.id === S.asel);
     const open = ["margaret", "garden"], decided = open.filter((k) => S.cards[k] && (S.cards[k] !== "back" || (S.cardWhy[k] || "").trim())).length;
     return html`<div class="main">
-      <${TopBar} crumbs=${(S.stab || "bible") === "bible" ? [own.drama(), "Story"] : [own.drama(), own.assets(), ...(asset ? [own.tab(S.stab), asset.name + " · " + shownOf(asset)] : [own.tab(S.stab)[0]])]}/>
+      <${TopBar} crumbs=${(S.stab || "bible") === "bible" ? [own.drama(), "Bible"] : [own.drama(), own.assets(), ...(asset ? [own.tab(S.stab), asset.name + " · " + shownOf(asset)] : [own.tab(S.stab)[0]])]}/>
       <div class="body"><div class="scrollmain">
         <div class="bar2"><span class="grow"></span><${ProjectChips}/></div>
         <${StopBanner}/>
-        <div style="padding:0 16px"><div class="tabsrow" style="margin:4px 0 18px">${story ? html`<div><h2 class="pagetitle">Story</h2><p class="muted pagesub">The bible: logline, beats and the facts of the characters, places and props, drawn from the script.</p></div>` : html`<h2 class="pagetitle">${{ cast: "Characters", scenes: "Locations", props: "Props" }[S.stab]} <span class="muted">· ${{ cast: P.cast, scenes: P.places, props: P.props }[S.stab].length}</span></h2>`}
-          <span class="grow"></span><span class="muted" style="font-size:12px">${story ? "Bible b0003 · accepted · EP001–EP012 written" : "Shared by every episode"}</span></div></div>
+        <div style="padding:0 16px"><div class="tabsrow" style="margin:4px 0 18px">${story ? html`<div><h2 class="pagetitle">Bible</h2><p class="muted pagesub">The logline, and for each episode its title, summary, end hook and beats, written from your script.</p></div>` : html`<h2 class="pagetitle">${{ cast: "Characters", scenes: "Locations", props: "Props" }[S.stab]} <span class="muted">· ${{ cast: P.cast, scenes: P.places, props: P.props }[S.stab].length}</span></h2>`}
+          <span class="grow"></span><span class="muted" style="font-size:12px">${story ? `${P.bible.version} · accepted · ${P.bible.written} written` : "Shared by every episode"}</span></div></div>
+        ${/* The bible as drama-cli writes it (bible.json): the logline and the tone, then one row per episode with its title,
+             summary, end hook and seconds; each episode's beats open under it (WAI-ARIA APG Disclosure), so the beats read as that episode's. */ ""}
         ${S.stab === "bible" && html`<div class="biblegrid">
-          <section class="panel"><span class="kick">Logline</span><p class="logline">${P.bible.logline}</p>
-            <div class="tags" style="display:flex;gap:6px;margin-top:12px"><span class="tag">Romance</span><span class="tag">Legal</span><span class="tag">24 × 90 s</span></div></section>
-          <section class="panel"><h3>${I("list-numbers")}Beats</h3><ol class="beats">${P.bible.beats.map((b) => html`<li>${b}</li>`)}</ol></section>
-          <section class="panel wide"><h3>${I("film-strip")}Episodes<span class="grow"></span><span class="muted" style="font-size:11.5px;font-weight:500">12 of 24 written · the next range is written when EP007 starts</span></h3>
-            <div class="eplist">${P.bible.eps.map(([c, t, s], i) => html`<div class="eprow"><img src=${P.eps[i].cover} alt=""/><span class="mono">${c}</span><b>${t}</b><span class="muted grow">${s}</span></div>`)}</div></section>
+          <section class="panel wide"><span class="kick">Logline</span><p class="logline">${P.bible.logline}</p>
+            <span class="kick" style="margin-top:14px">Tone</span><p class="tone">${P.bible.tone}</p></section>
+          <section class="panel wide"><h3>${I("film-strip")}Episodes<span class="grow"></span><span class="muted" style="font-size:11.5px;font-weight:500">${P.bible.eps.length} of 24 in this sample · the next range is written when EP007 starts</span></h3>
+            <div class="delivwrap flush"><table class="deliv bibleeps"><thead><tr><th>Episode</th><th>Title</th><th>Summary</th><th>End hook</th><th>Seconds</th></tr></thead>
+              <tbody>${P.bible.eps.map((e, i) => { const open = (S.beatsOpen || {})[e.code];
+                return html`<tr><td><button class="disc" aria-expanded=${String(!!open)} aria-controls=${"beats-" + e.code} onClick=${() => set({ beatsOpen: { ...(S.beatsOpen || {}), [e.code]: !open } })}>${I(open ? "caret-down" : "caret-right")}<img src=${P.eps[i].cover} alt=""/><span class="mono">${e.code}</span></button></td>
+                  <td><b>${e.title}</b></td><td class="wrap">${e.summary}</td><td class="wrap">${e.hook}</td><td class="mono">${e.seconds}</td></tr>
+                  ${open && html`<tr class="beatsrow" id=${"beats-" + e.code}><td></td><td colspan="4"><span class="kick">Beats · ${e.beats.length}</span><ol class="beats">${e.beats.map(([sec, ev]) => html`<li>${ev} <span class="mono subtle">${sec} s</span></li>`)}</ol></td></tr>`}`; })}</tbody></table></div></section>
         </div>`}
         ${/* D56/D57: the tree navigates Assets; a card is the picture, the name, the version and where it stands. */ ""}
         ${S.stab !== "bible" && html`<div class="assetgrid">${{ cast: P.cast, scenes: P.places, props: P.props }[S.stab].map((x) => html`<article class=${"assetcard" + (S.asel === x.id ? " sel" : "")} ...${picked(x.id)} ...${openCard(x.id)}>
@@ -150,10 +155,10 @@
   }
 
   /* ───── Graph: lineage, read-only ───── */
-  // `of` is the item a node is shown by on Canvas and in the List; `home` where the object lives (IA_PROPOSAL §16).
+  // `of` is the item a node is shown by on Canvas and in Segments; `home` where the object lives (IA_PROPOSAL §16).
   const G = [
     { id: "sp", col: 0, row: 1, t: "Screenplay", v: "v2", k: "screenplay", pic: null, icon: "file-text", home: ["Script", { screen: "script" }] },
-    { id: "bible", col: 1, row: 1, t: "Bible", v: "b0003", k: "bible", pic: null, icon: "book-open", home: ["Story", { screen: "story", stab: "bible" }] },
+    { id: "bible", col: 1, row: 1, t: "Bible", v: "b0003", k: "bible", pic: null, icon: "book-open", home: ["Bible", { screen: "story", stab: "bible" }] },
     { id: "luca", col: 2, row: 0, t: "Luca Moreno", v: "S0 v2", k: "look", pic: "img/face-luca.jpg", of: "luca" },
     { id: "ethan", col: 2, row: 1, t: "Ethan Cole", v: "S0 v1", k: "look", pic: "img/face-ethan.jpg", of: "ethan" },
     { id: "apt", col: 2, row: 2, t: "Luca's apartment", v: "v2", k: "plate", pic: "img/plate-apartment.jpg", of: "apartment" },
@@ -457,36 +462,103 @@
       </div><${AgentPanel}/></div></div>`;
   }
 
-  /* ───── Episode: its segments scene by scene, the take beside its shot text (reveric's 分镜 list) ───── */
+  /* ───── Episode: Segments, a matrix of its segments by stage ─────
+     Rows are segments, scene by scene; columns are the stages a segment goes through: its shots (breakdown.json's, each
+     with drama-cli's fields: time, size, angle, camera, visual, audio), the line-art storyboard,
+     the photoreal storyboard, the references the take reads, and the take (ShotGrid's and ftrack's shot-by-task grid:
+     one row per shot, one column per task, a status in each cell). A cell is its newest version and where it stands; a
+     click opens it in the inspector (as Assets' card and Lineage's node do). The Seedance prompt is shown there only,
+     labelled, never in the grid. */
+  const COLS = [["line", "Line-art storyboard"], ["photo", "Photoreal storyboard"], ["refs", "References"], ["take", "Take"]];
+  /* The prototype's Episode frame (Prototype controls) sets what the sample rows say: done, storyboards waiting for you,
+     a send-back and a red line, a take being shot. "now" is the sample as data.js writes it. */
+  const cellsOf = (g) => {
+    const f = S.epFrame || "now", n = (st, ver, pic, extra) => ({ st, ver, pic, ...extra });
+    const c = {
+      line: n(g.boardSt, "v1", g.board || "img/board-seg02.jpg"),
+      photo: n(g.photoSt, "v1", g.photo),
+      take: n(g.takeSt, g.take, g.still || g.photo, { count: g.takeN }),
+      seg: null,
+    };
+    if (f === "done") { c.take = { ...c.take, st: "accepted" }; }
+    if (f === "boards" && (g.id === "seg03" || g.id === "seg04")) { c.photo = { ...c.photo, st: "you" }; c.take = n(null, null, null, { count: 0 }); }
+    if (f === "boards" && g.id !== "seg03" && g.id !== "seg04") { c.take = { ...c.take, st: "accepted" }; }
+    if (f === "redline" && g.id === "seg03") { c.photo = { ...c.photo, ver: "v2", st: "back", said: "Sent back by you: “Ethan holds the file in his left hand, as in the line-art.” The agent redraws it." }; c.take = n(null, null, null, { count: 0 }); }
+    if (f === "redline" && g.id === "seg04") { c.seg = { st: "redline", said: "A red line in the screenplay, shot 2: yours to decide. Work on this segment stops until you do." }; c.photo = n(null, null, null); c.take = n(null, null, null, { count: 0 }); }
+    if (f === "shooting" && g.id === "seg01") { c.take = { ...c.take, ver: "t03", st: "work", count: 3, said: "Shooting t03 · submitted 1 min ago" }; }
+    if (f === "shooting" && g.id === "seg03") { c.take = { ...c.take, ver: "t03", st: "line", count: 3, said: "In line behind seg01's t03" }; }
+    return c;
+  };
+  // A link lands on a stage of a segment (S.esel with S.at = { kind, ver, style }); the cell it names is the one picked.
+  const colOf = () => S.ecol || (S.at && (S.at.kind === "take" ? "take" : S.at.kind === "storyboard" ? (S.at.style === "photoreal" ? "photo" : "line") : null));
+  const atOf = (col, c) => (col === "take" ? { kind: "take", ver: c.ver } : col === "line" || col === "photo" ? { kind: "storyboard", ver: c.ver, style: col === "photo" ? "photoreal" : "line-art" } : null);
   function Episode() {
     const ep = P.eps[5];
-    // Back from Lineage, or from Canvas with a pick: the picked row is in view.
-    // Only the list scrolls (scrollIntoView would move the page's frame too).
-    useEffect(() => { const row = document.querySelector(".segrow.sel"), box = row && row.closest(".scrollmain"); if (!box) return;
+    // Back from Lineage, or from Canvas with a pick: the picked row is in view. Only the grid scrolls.
+    useEffect(() => { const row = document.querySelector(".mxrow.sel"), box = row && row.closest(".scrollmain"); if (!box) return;
       const r = row.getBoundingClientRect(), b = box.getBoundingClientRect(); box.scrollTop += r.top - b.top - (b.height - r.height) / 2; }, []);
     const place = (id) => (P.places.find((p) => p.id === id) || {}).name || id;
-    const pickedSeg = S.esel && P.scenes.flatMap((sc) => sc.segs).find((g) => g.id === S.esel);
+    const segs = P.scenes.flatMap((sc) => sc.segs);
+    const g = S.esel && segs.find((x) => x.id === S.esel), col = g && colOf();
+    const pick = (x, k, c) => set({ esel: x.id, ecol: k, at: atOf(k, c) });
+    const label = (k) => COLS.find(([c]) => c === k)[1];
+    const cell = (x, k, c) => { const on = S.esel === x.id && col === k, v = c[k];
+      if (k === "refs") return html`<td><button class="mxcell refs" aria-pressed=${String(on)} aria-label=${x.id + " references, " + x.refs.length} onClick=${() => pick(x, k, c)}>
+        <span class="mxthumbs">${x.refs.slice(0, 4).map(([, pic]) => html`<img src=${pic} alt=""/>`)}</span><span class="mono subtle">${x.refs.length}</span></button></td>`;
+      if (!v.st) return html`<td><span class="mxnone">Not made yet</span></td>`;
+      return html`<td><button class="mxcell" aria-pressed=${String(on)} aria-label=${x.id + " " + label(k) + " " + v.ver} onClick=${() => pick(x, k, c)}>
+        <img src=${v.pic} alt=""/><span class="mxmeta"><span class="mono">${v.ver}</span>${k === "take" && v.count > 1 ? html`<span class="subtle">${v.count} takes</span>` : null}${Status(v.st, v.st === "you" ? (k === "take" ? "Watch" : "Review") : undefined)}</span></button></td>`; };
     return html`<div class="main">
-      <${TopBar} crumbs=${[own.drama(), ...(pickedSeg ? [own.ep(), pickedSeg.id + " · " + pickedAt(pickedSeg).kind + " " + pickedAt(pickedSeg).ver] : [ep.code])]}/>
+      <${TopBar} crumbs=${[own.drama(), ...(g && col ? [own.ep(), g.id + " · " + label(col) + (col === "refs" ? "" : " " + cellsOf(g)[col].ver)] : [ep.code])]}/>
       <div class="body"><div class="scrollmain">
         <div class="bar2"><${EpisodeViews}/><span class="grow"></span><${ProjectChips}/></div>
         <${StopBanner}/>
         <div class="ephead"><h2>${ep.code}<span class="muted"> · ${ep.title}</span></h2><span class="muted">${ep.now}</span><span class="grow"></span>
+          ${/* The episode's script opens Script at this episode (work-02's screen). */ ""}
+          <button class="btn sm ghost" onClick=${() => jump({ screen: "script", scriptEp: ep.code }, ep.code)}>${I("file-text")}Episode script</button>
           ${/* The episode's cut, its own object (IA §16; master's decision): a link to its home with its state, apart from the views. */ ""}
           ${ep.cut && html`<button class="btn sm ghost" onClick=${() => go("cut")}>${I("scissors")}Cut ${ep.cut.latest}${Status(ep.cut.st, ep.cut.st === "you" ? "Waits for you" : undefined)}</button>`}
           <span class="mono muted">${money(ep.spent)}</span></div>
-        ${P.scenes.map((sc) => html`<section class="panel segscene"><h3>${I("film-strip")}Scene ${sc.n} · ${place(sc.place)} · ${sc.time}<span class="grow"></span>
-            <span class="muted" style="font-size:11.5px;font-weight:500">${sc.segs.filter((g) => g.st === "accepted").length} of ${sc.segs.length} accepted</span></h3>
-          ${sc.segs.map((g) => { const on = S.esel === g.id, at = pickedAt(g), ood = on && at && outOfDateAt(g.id, at); return html`<div class=${"segrow" + (on ? " sel" : "")} aria-current=${String(on)} onClick=${() => set({ esel: g.id, at: null })}>
-            <div class="stiles">${stagesOf(g).map((t) => html`<button class="stile" aria-pressed=${String(on && at.kind === t.kind)} aria-label=${g.id + " " + t.kind + " " + t.ver} onClick=${(e) => { e.stopPropagation(); set({ esel: g.id, at: { kind: t.kind, ver: t.ver } }); }}><img src=${t.pic} alt=""/><span>${t.kind === "take" ? t.ver : "board " + t.ver}</span></button>`)}</div>
-            <div class="segtext">
-              <div class="seghead"><b>${g.id}</b>${Status(g.st, g.st === "you" ? "Take waits for you" : undefined)}<span class="grow"></span>
-                <span class="mono muted">sd25 · 9:16 · ${g.s} s · ${g.take}</span>
-                <button class="ibtn" title=${lineageOf(g.id, at.kind) ? "Lineage of " + at.kind + " " + at.ver : "Lineage: this sample traces seg03 and what it reads"} aria-label="Lineage" disabled=${!lineageOf(g.id, at.kind)} onClick=${(e) => { e.stopPropagation(); set({ esel: g.id, at }); openLineage(lineageOf(g.id, at.kind), "List · " + g.id + " " + at.kind + " " + at.ver); }}>${I("tree-structure")}</button>
-                <button class="btn sm ghost" onClick=${(e) => { e.stopPropagation(); const keep = on ? S.at : null; go("canvas"); set({ sel: g.id, esel: g.id, at: keep }); }}>On Canvas ${I("arrow-right")}</button></div>
-              ${on && at && html`<p class="segat"><b class="mono">${at.kind} ${at.ver}</b>${ood ? Status("stale") : null}${ood ? html`<span class="muted">Made from ${ood.from}, which is out of date</span>` : null}</p>`}
-              <p class="shottext">${g.text}</p></div></div>`; })}</section>`)}
-      </div><${AgentPanel}/></div></div>`;
+        <div class="delivwrap"><table class="deliv mx"><thead><tr><th>Segment</th><th>Shots</th>${COLS.map(([, l]) => html`<th>${l}</th>`)}</tr></thead>
+          ${P.scenes.map((sc) => html`<tbody><tr class="mxscene"><th colspan="6" scope="colgroup">Scene ${sc.n} · ${place(sc.place)} · ${sc.time}</th></tr>
+            ${sc.segs.map((x) => { const c = cellsOf(x), open = (S.shotsOpen || {})[x.id], sel = S.esel === x.id;
+              return html`<tr class=${"mxrow" + (sel ? " sel" : "")}>
+                <td><span class="mxseg"><b class="mono">${x.id}</b><span class="mono subtle">${x.s} s</span>${c.seg && Status(c.seg.st)}</span></td>
+                <td><button class="disc" aria-expanded=${String(!!open)} aria-controls=${"shots-" + x.id} onClick=${() => set({ shotsOpen: { ...(S.shotsOpen || {}), [x.id]: !open } })}>${I(open ? "caret-down" : "caret-right")}<span class="mono">${x.shots.length} shots</span></button></td>
+                ${COLS.map(([k]) => cell(x, k, c))}</tr>
+                ${c.seg && html`<tr class="mxnote"><td></td><td colspan="5"><div class="finding err">${I("warning-circle")}<span>${c.seg.said}</span></div></td></tr>`}
+                ${open && html`<tr class="mxshots" id=${"shots-" + x.id}><td></td><td colspan="5"><table class="shotlist"><thead><tr><th>Shot</th><th>Time</th><th>Size</th><th>Angle</th><th>Camera</th><th>Visual</th><th>Audio</th></tr></thead>
+                  <tbody>${x.shots.map(([time, size, angle, cam, visual, audio], i) => html`<tr><td class="mono">${i + 1}</td><td class="mono nw">${time}</td><td>${size}</td><td>${angle}</td><td>${cam}</td><td class="wrap">${visual}</td><td class="wrap">${audio}</td></tr>`)}</tbody></table></td></tr>`}`; })}</tbody>`)}
+        </table></div>
+      </div>${g && col ? html`<${CellInspector} g=${g} col=${col}/>` : html`<${AgentPanel}/>`}</div></div>`;
+  }
+  /* A cell's inspector: the picture or the player, its versions, where it stands, the review, Lineage; for a take, the
+     Seedance prompt it was shot with, labelled. A reference opens its home in Assets. */
+  function CellInspector({ g, col }) {
+    const c = cellsOf(g), v = c[col], label = COLS.find(([k]) => k === col)[1], at = atOf(col, v || {});
+    const lin = at && lineageOf(g.id, at.kind), ood = at && outOfDateAt(g.id, at);
+    const take = col === "take" && P.takes.find((t) => t.seg === g.id && t.take === v.ver);
+    const vers = v && v.ver ? Array.from({ length: Number(v.ver.slice(1)) }, (_, i) => v.ver[0] + String(i + 1).padStart(v.ver.length - 1, "0")).reverse() : [];
+    const close = () => set({ esel: null, ecol: null, at: null });
+    return html`<aside class="insp" aria-label=${g.id + " " + label}>
+      <div class="ihead"><div style="display:flex;align-items:center;gap:8px"><b class="grow">${g.id} · ${label}</b><button class="ibtn" aria-label="Close" onClick=${close}>${I("x")}</button></div>
+        <small>${col === "refs" ? g.refs.length + " references the take reads" : v.ver + (col === "take" ? " · " + v.count + " takes" : "")}</small>
+        ${col !== "refs" && html`<button class="btn sm" disabled=${!lin} title=${lin ? "" : "Lineage: this sample traces seg03 and what it reads"} onClick=${() => openLineage(lin, "Segments · " + g.id + " " + label)}>${I("tree-structure")}Lineage</button>`}</div>
+      <div class="iscroll">
+        ${col === "refs" && html`<div class="isec"><div class="reflist">${g.refs.map(([name, pic, id]) => html`<button class="refrow" disabled=${!id} title=${id ? "Open in Assets" : "A segment's own reference: it opens on Canvas"} onClick=${() => openHome(id, "Segments · " + g.id)}><img src=${pic} alt=""/><span class="grow">${name}</span>${id && I("arrow-right")}</button>`)}</div></div>`}
+        ${col !== "refs" && html`<div class="isec">${take ? html`<video class="assetbig" src=${take.clip} poster=${take.poster} controls muted playsinline></video>` : html`<img class="assetbig" src=${v.pic} alt=""/>`}</div>
+          <div class="isec"><h4>Versions <span class="muted">${vers.length}</span></h4>
+            <div class="vstrip" role="group" aria-label=${"Versions of " + g.id + " " + label}>${vers.map((x, i) => html`<button aria-pressed=${String(i === 0)} onClick=${() => toast(x + " opens here. This sample holds the newest only.")}>${x}</button>`)}</div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">${Status(v.st)}${ood && Status("stale")}</div>
+            ${v.said && html`<p class="subtle" style="margin:8px 0 0">${v.said}</p>`}
+            ${ood && html`<p class="subtle" style="margin:8px 0 0">Made from ${ood.from}, which is out of date.</p>`}</div>`}
+        ${col !== "refs" && v.st === "you" && (col === "take"
+          ? html`<div class="isec"><h4>Your review</h4><p class="subtle">You watch every take and decide.</p><button class="btn primary sm" onClick=${() => jump({ screen: "review" }, "Segments · " + g.id)}>${I("play")}Watch and decide</button></div>`
+          : html`<div class="isec"><h4>Your review</h4><${ReviewBtns} id=${g.id + "-" + col}/></div>`)}
+        ${col === "take" && html`<div class="isec"><h4>Seedance prompt</h4>${g.spec
+          ? html`<p class="mono subtle" style="font-size:11.5px;margin:0 0 6px">${g.spec.model} · ${g.spec.ratio} · ${g.spec.resolution} · ${g.spec.seconds} s · ${g.spec.images.length} reference images</p><pre class="prompt">${g.spec.prompt}</pre>`
+          : html`<p class="subtle">This sample holds seg01's prompt only.</p>`}</div>`}
+      </div></aside>`;
   }
 
   /* ───── Script: the screenplay's home (IA draft, A3) ─────
@@ -562,6 +634,6 @@
         </div>
       </div><${AgentPanel}/></div></div>`;
   }
-  window.EXTRA = { BackTo, lineageOf, outOfDateAt, lineageInEpisode, outofdate: OutOfDate, script: Script, upload: Upload, story: Story, graph: Graph, cut: Cut, delivery: Delivery, episode: Episode, StopCard, scriptRow };
+  window.EXTRA = { BackTo, lineageOf, outOfDateAt, lineageInEpisode, outofdate: OutOfDate, script: Script, upload: Upload, story: Bible, graph: Graph, cut: Cut, delivery: Delivery, episode: Episode, StopCard, scriptRow };
   window.PD.draw();
 })();

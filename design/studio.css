@@ -18,7 +18,8 @@ p { font-size: inherit; line-height: inherit; color: inherit; margin: 0; }
 /* ── prototype bar (not part of the product) ── */
 /* The prototype's controls: a labelled toggle low in the left rail (above Settings, covering nothing), collapsed; the panel
    opens in the bottom-left corner. Not part of the app. */
-.protobtn { position: fixed; left: 2px; bottom: 96px; z-index: 90; width: 48px; display: grid; justify-items: center; gap: 2px; padding: 6px 0; border-radius: var(--radius-medium); border: 1px dashed var(--border-input); background: var(--surface-container); color: var(--text-muted); font-size: 8.5px; letter-spacing: .02em; cursor: pointer; }
+/* In the rail's empty middle, clear of its foot's links at any height. */
+.protobtn { position: fixed; left: 2px; top: 50%; transform: translateY(-50%); z-index: 90; width: 48px; display: grid; justify-items: center; gap: 2px; padding: 6px 0; border-radius: var(--radius-medium); border: 1px dashed var(--border-input); background: var(--surface-container); color: var(--text-muted); font-size: 8.5px; letter-spacing: .02em; cursor: pointer; }
 .protobtn:hover { color: var(--text-primary); }
 .proto { position: fixed; left: 8px; bottom: 8px; z-index: 90; width: 360px; max-height: calc(100% - 16px); overflow: auto; display: grid; gap: 10px; padding: 12px 14px 14px; border-radius: var(--radius-2xl); border: 1px dashed var(--border-input); background: var(--surface-container); box-shadow: var(--shadow-dialog); font-size: 12px; color: var(--text-muted); }
 .proto .ph { display: flex; align-items: center; } .proto b { color: var(--text-primary); font-weight: 600; } .proto p { margin: 0; line-height: 1.5; }
@@ -533,12 +534,8 @@ input.search:focus { border-color: var(--text-primary); }
 .biblegrid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 16px; padding: 0 16px 32px; }
 .biblegrid .wide { grid-column: 1 / -1; }
 .logline { margin: 0; font: 600 18px/1.5 var(--font-sans); letter-spacing: -.2px; color: var(--text-primary); }
+.tone { margin: 0; font-size: 13px; line-height: 1.5; color: var(--text-secondary); }
 .beats { margin: 0; padding-left: 18px; display: grid; gap: 8px; color: var(--text-secondary); font-size: 13px; line-height: 1.5; }
-.eplist { display: grid; gap: 2px; }
-.eprow { display: grid; grid-template-columns: 30px 56px 150px 1fr; gap: 12px; align-items: center; padding: 6px 8px; border-radius: var(--radius-medium); font-size: 13px; }
-.eprow:hover { background: var(--hover); }
-.eprow img { width: 30px; height: 42px; border-radius: 5px; object-fit: cover; }
-.eprow .mono { font-size: 11.5px; color: var(--text-muted); }
 /* Fix 3: an older version picked by a link; its picture is not in the sample. */
 .vstrip { display: flex; flex-wrap: wrap; gap: 4px; }
 .vstrip button { height: 22px; padding: 0 8px; border-radius: 999px; border: 1px solid var(--border); background: none; color: var(--text-secondary); font: 11px var(--font-mono); cursor: pointer; }
@@ -624,26 +621,46 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
   .crumb > :nth-last-child(n+4) { display: none; } .controls { flex-wrap: wrap; gap: 10px; } .controls .muted { display: none; }
   .epgrid { grid-template-columns: repeat(2, 1fr); } .bar2 .chip { display: none; }
   .formgrid, .anagrid, .biblegrid, .presets { grid-template-columns: 1fr; } .fpanes { grid-template-columns: 1fr; flex: none; padding: 0 16px; } .frev { overflow: auto; } .frevhead { flex-direction: column; align-items: stretch; padding: 16px; } .faccept { margin: 14px 16px 18px; }
-  .body { flex-direction: column; overflow: auto; } .body > .scrollmain { flex: none; overflow: visible; } .body > .insp { flex: none; } .faccept { grid-template-columns: 1fr; } .eprow { grid-template-columns: 30px 48px 1fr; } .eprow .grow { display: none; }
+  .body { flex-direction: column; overflow: auto; } .body > .scrollmain { flex: none; overflow: visible; } .body > .insp { flex: none; } .faccept { grid-template-columns: 1fr; }
 }
 
-/* Episode: its segments scene by scene, the take beside its shot text (reveric's 分镜 list). */
+/* Episode · Segments: Delivery's table, a row per segment and a column per stage (ShotGrid's and ftrack's shot-by-task
+   grid); a cell is the newest version's picture at the project's ratio, its version and its state chip. */
+.deliv.mx td { vertical-align: top; }
+.deliv.mx td, .deliv.mx thead th { padding-left: 6px; padding-right: 6px; }
+.deliv.mx tr.mxscene th { padding: 16px 10px 6px; text-transform: none; letter-spacing: 0; font-size: 12px; color: var(--text-primary); border-bottom: 1px solid var(--border); }
+.deliv.mx tr.mxrow.sel > td { background: var(--selected); }
+.mxseg { display: grid; gap: 4px; justify-items: start; } .mxseg b { color: var(--text-primary); font-size: 12.5px; }
+.mxcell { display: grid; grid-template-columns: 40px auto; gap: 8px; align-items: start; padding: 4px; border: 0; border-radius: var(--radius-medium); background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.mxcell:hover { background: var(--hover); }
+.mxcell[aria-pressed="true"] { box-shadow: inset 0 0 0 2px var(--accent); }
+.mxcell img { width: 40px; aspect-ratio: 9 / 16; border-radius: 5px; object-fit: cover; background: var(--surface-container); }
+.mxmeta { display: grid; gap: 4px; justify-items: start; font-size: 11.5px; }
+.shotlist td.nw { white-space: nowrap; }
+.mxcell.refs { grid-template-columns: auto auto; align-items: center; }
+.mxthumbs { display: flex; } .mxthumbs img { width: 28px; height: 28px; aspect-ratio: auto; border-radius: 50%; border: 2px solid var(--surface); margin-left: -6px; } .mxthumbs img:first-child { margin-left: 0; }
+.mxnone { display: inline-block; padding: 8px 4px; color: var(--text-subtle); font-size: 11.5px; }
+.deliv.mx tr.mxnote td, .deliv.mx tr.mxshots td { padding-top: 0; white-space: normal; }
+.shotlist { width: 100%; border-collapse: collapse; font-size: 12px; }
+.shotlist th { padding: 4px 8px; text-align: left; font-size: 10.5px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: .4px; }
+.shotlist td { padding: 4px 8px; border-top: 1px solid var(--border-subtle); color: var(--text-secondary); }
+.deliv td.wrap, .shotlist td.wrap { white-space: normal; min-width: 180px; }
+/* A disclosure (WAI-ARIA APG Disclosure): the caret and the row's key open what sits under the row. */
+.disc { display: inline-flex; align-items: center; gap: 8px; padding: 4px 6px; border: 0; border-radius: var(--radius-medium); background: none; color: var(--text-secondary); font: inherit; cursor: pointer; }
+.disc:hover { background: var(--hover); } .disc .ic { width: 12px; height: 12px; }
+.disc img { width: 24px; height: 34px; border-radius: 4px; object-fit: cover; }
+.deliv tr.beatsrow td { white-space: normal; padding-top: 0; }
+.delivwrap.flush { padding: 0; }
+/* The cell inspector: a reference opens its home in Assets; the take's Seedance prompt, labelled. */
+.reflist { display: grid; gap: 2px; }
+.refrow { display: flex; align-items: center; gap: 10px; padding: 6px; border: 0; border-radius: var(--radius-medium); background: none; color: var(--text-primary); font: inherit; font-size: 12.5px; text-align: left; cursor: pointer; }
+.refrow:hover:not(:disabled) { background: var(--hover); } .refrow:disabled { cursor: default; color: var(--text-secondary); }
+.refrow img { width: 32px; height: 32px; border-radius: 6px; object-fit: cover; } .refrow .ic { width: 14px; height: 14px; color: var(--text-muted); }
+pre.prompt { margin: 0; padding: 10px; border-radius: var(--radius-medium); background: var(--surface-container); color: var(--text-secondary); font: 11.5px/1.55 var(--font-mono); white-space: pre-wrap; }
 .ephead { display: flex; align-items: baseline; gap: 14px; padding: 4px 16px 14px; }
 .ephead h2 { margin: 0; font-size: 20px; font-weight: 700; }
 .ephead h2 .muted { font-size: 16px; font-weight: 600; }
-.segscene { margin: 0 16px 14px; padding: 14px 16px 6px; }
-.segrow { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 14px; padding: 10px 6px; border-radius: var(--radius-large); align-items: start; }
-.segrow + .segrow { border-top: 1px solid var(--border-subtle); }
-.segrow:hover { background: var(--hover); }
-/* §16: a link lands on the object's home with the object picked (S.esel in the List, S.asel in Assets). */
-.segrow { cursor: pointer; }
-.segrow.sel { box-shadow: inset 0 0 0 2px var(--accent); }
-/* Codex round 3 (fix 3): a segment's versions are tiles; a link to one version lands on its tile, picked. */
-.segrow { grid-template-columns: auto minmax(0, 1fr); }
-.segrow .stiles { display: flex; gap: 6px; }
-.stile { position: relative; padding: 0; border: 0; background: none; border-radius: 6px; cursor: pointer; }
-.stile span { position: absolute; left: 3px; bottom: 3px; padding: 0 4px; border-radius: 4px; background: color-mix(in srgb, var(--canvas) 70%, transparent); color: var(--text-primary); font: 600 9.5px/1.6 var(--font-mono); }
-.stile[aria-pressed="true"] img, .segnode .card > button.on { outline: 2px solid var(--accent); outline-offset: 1px; }
+.segnode .card > button.on { outline: 2px solid var(--accent); outline-offset: 1px; }
 .segnode .card > button { padding: 0; border: 0; font: inherit; color: inherit; text-align: inherit; cursor: pointer; }
 /* A take's inline player (D39): media-chrome's control bar over the foot of the take, on the picked take and on hover;
    the cut room's player tokens (.controls: text-primary on a blurred canvas). */
@@ -661,14 +678,8 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
 .cnode .vbar .vb .ic { width: 13px; height: 13px; }
 .cnode .vbar .vtrack { flex: 1; min-width: 0; height: 3px; border-radius: 999px; background: color-mix(in srgb, var(--text-primary) 25%, transparent); }
 .cnode .vbar .vtrack i { display: block; width: 0; height: 100%; border-radius: inherit; background: var(--text-primary); }
-.segrow .segat { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0 0 6px; font-size: 12px; }
 .backto .ic { width: 14px; height: 14px; }
 .top .backto { margin-left: 6px; flex: none; border: 1px solid var(--border); }
-.segrow img, .segrow video { width: 64px; aspect-ratio: 9 / 16; border-radius: 6px; object-fit: cover; background: var(--surface-container); }
-.segrow .seghead { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; min-width: 0; }
-.segrow .seghead b { font: 600 12.5px var(--font-mono); }
-.segrow .seghead .mono { font-size: 11.5px; }
-.segrow .shottext { margin: 0; font-size: 13px; line-height: 1.6; color: var(--text-secondary); white-space: pre-wrap; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 6; overflow: hidden; }
 
 /* Export (the drama's top bar): a menu of two downloads, each with what it is and how it opens. The panel's look is
    .menu's wherever it is drawn (the app draws it in a popover); the prototype opens it under its button. */

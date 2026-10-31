@@ -46,16 +46,16 @@ window.P = (() => {
     // EP006 on the canvas: scenes, segments, the references each one reads, its board and its latest take
     scenes: [
       { n: 1, place: "apartment", time: "Night", segs: [
-        { id: "seg01", s: 27, cast: ["luca", "ivy"], board: null, take: "t02", still: img("still-s1t2"), accepted: null, st: "you", text: "[0-5s] MS: Luca in the hallway, the blanket folded over his arm.\n[5-12s] MS: he folds it again as he talks: {I said the couch is fine.}\n[12-27s] WS: the living room behind him, Ivy at the window.",
+        { id: "seg01", s: 27, cast: ["luca", "ivy"], board: null, take: "t02", still: img("still-s1t2"), accepted: null, st: "you", shots: [["0-5s", "medium shot", "eye level", "static", "Luca in the hallway, the blanket folded over his arm.", "Room tone."], ["5-12s", "medium shot", "eye level", "static", "He folds it again as he talks.", "Dialogue: {I said the couch is fine.}"], ["12-27s", "wide shot", "eye level", "slow push in", "The living room behind him, Ivy at the window.", "Room tone."]], photo: img("still-s1t1"), photoSt: "accepted", boardSt: "accepted", refs: [["Luca Moreno", img("face-luca"), "luca"], ["Ivy Bell", img("face-ivy"), "ivy"], ["Luca's apartment · Night", img("plate-apartment"), "apartment"], ["First frame v2", img("still-s1t2"), null]], takeN: 2, takeSt: "you", text: "[0-5s] MS: Luca in the hallway, the blanket folded over his arm.\n[5-12s] MS: he folds it again as he talks: {I said the couch is fine.}\n[12-27s] WS: the living room behind him, Ivy at the window.",
           // What drama-cli's spec.json and request.json for t02 say: the take's prompt, its references in order (Image 1, 2, …), its settings, and the versions with what the person decided.
           spec: { model: "sd25", ratio: "9:16", resolution: "480p", seconds: 27,
             images: [img("board-seg02"), img("plate-apartment"), img("cast-luca"), img("cast-ivy")],
             prompt: "Image 1: the storyboard, for the shot structure and camera rhythm; do not adopt its sketch style.\nImage 2: Luca's apartment at night, for the room's layout and the light's direction.\nImage 3: Luca Moreno, base look. Image 4: Ivy Bell, base look.\n[0-9s] Medium shot, Luca in the hallway with the blanket folded over his arm, as Image 3; behind him the living room of Image 2.\n[9-18s] He steps in; Ivy, as Image 4, looks up from the sofa. Dialogue (Luca): {I folded it the way you like.}\n[18-27s] Close-up on Ivy, a small smile.",
             versions: [["t02", "you", ""], ["t01", "back", "He should hold the blanket folded before he speaks."]] } },
-        { id: "seg02", s: 15, cast: ["ivy"], board: img("board-seg02"), take: "t01", still: null, accepted: "t01", st: "accepted", text: "[0-6s] CU: Ivy turns from the window.\n[6-15s] MS: she crosses to the couch and takes the blanket from him." } ] },
+        { id: "seg02", s: 15, cast: ["ivy"], board: img("board-seg02"), take: "t01", still: null, accepted: "t01", st: "accepted", shots: [["0-6s", "close-up", "eye level", "static", "Ivy turns from the window.", "Room tone."], ["6-15s", "medium shot", "eye level", "pan right", "She crosses to the couch and takes the blanket from him.", "Room tone."]], photo: img("still-s1t1"), photoSt: "accepted", boardSt: "accepted", refs: [["Ivy Bell", img("face-ivy"), "ivy"], ["Luca's apartment · Night", img("plate-apartment"), "apartment"]], takeN: 1, takeSt: "accepted", text: "[0-6s] CU: Ivy turns from the window.\n[6-15s] MS: she crosses to the couch and takes the blanket from him." } ] },
       { n: 2, place: "apartment", time: "Day", segs: [
-        { id: "seg03", s: 28, cast: ["luca", "ethan"], board: img("board-seg03"), take: "t02", still: img("still-s3t2"), accepted: "t01", st: "you", text: "[0-8s] CU: Luca's face as the door opens.\n[8-20s] OTS: Ethan sets the case file on the table.\n[20-28s] MS: neither of them sits." },
-        { id: "seg04", s: 22, cast: ["luca", "ethan"], board: img("board-seg04"), take: "t02", still: null, accepted: "t02", st: "accepted", text: "[0-10s] WS: the kitchen, morning light.\n[10-22s] MS: Ethan reads the terms aloud; Luca does not look up." } ] },
+        { id: "seg03", s: 28, cast: ["luca", "ethan"], board: img("board-seg03"), take: "t02", still: img("still-s3t2"), accepted: "t01", st: "you", shots: [["0-8s", "close-up", "eye level", "static", "Luca's face as the door opens.", "Room tone."], ["8-20s", "medium close-up", "eye level", "static", "Ethan sets the case file on the table.", "Dialogue: {Sign it, or I file tomorrow.}"], ["20-28s", "medium shot", "eye level", "slow pull out", "Neither of them sits.", "Room tone."]], photo: img("still-s3t1"), photoSt: "accepted", boardSt: "accepted", refs: [["Luca Moreno", img("face-luca"), "luca"], ["Ethan Cole", img("face-ethan"), "ethan"], ["Luca's apartment · Day", img("plate-apartment"), "apartment"], ["Case file", img("prop-folder"), "file"], ["Blocking v1", img("board-seg03"), null]], takeN: 2, takeSt: "you", text: "[0-8s] CU: Luca's face as the door opens.\n[8-20s] OTS: Ethan sets the case file on the table.\n[20-28s] MS: neither of them sits." },
+        { id: "seg04", s: 22, cast: ["luca", "ethan"], board: img("board-seg04"), take: "t02", still: null, accepted: "t02", st: "accepted", shots: [["0-10s", "wide shot", "eye level", "static", "The kitchen, morning light.", "Room tone."], ["10-22s", "medium shot", "eye level", "static", "Ethan reads the terms aloud; Luca does not look up.", "Dialogue: {Separate rooms. No other partners.}"]], photo: img("still-s3t2"), photoSt: "accepted", boardSt: "accepted", refs: [["Luca Moreno", img("face-luca"), "luca"], ["Ethan Cole", img("face-ethan"), "ethan"], ["Luca's apartment · Day", img("plate-apartment"), "apartment"]], takeN: 2, takeSt: "accepted", text: "[0-10s] WS: the kitchen, morning light.\n[10-22s] MS: Ethan reads the terms aloud; Luca does not look up." } ] },
     ],
     // The take review: the person watches every take and decides.
     takes: [
@@ -117,16 +117,26 @@ Object.assign(window.P, {
     { el: "character", tx: "ETHAN", from: [9], why: "Cue and line split." },
     { el: "dialogue", tx: "Read it before you sign.", from: [9] },
   ],
+  // The bible as drama-cli writes it (bible.json, drama_cli/schemas/bible.py): the logline, the tone, and per episode its
+  // title, summary, end hook and seconds; the beats are the bible's, each [seconds, event], grouped under the episode whose
+  // lines hold them (both carry their screenplay lines). Sample words for the prototype.
   bible: {
+    version: "b0003", accepted: "b0003", written: "EP001–EP012",
     logline: "To keep her inheritance, a florist marries the stranger she bailed out of county jail, and his lawyer brother wants the marriage annulled before the trust pays out.",
-    beats: ["Ivy pays Luca's bail on the morning of her own wedding.", "The Coles learn the groom is out on bail.", "A contract: separate rooms, no other partners, divorce when the trust is released.", "Ethan builds the case for annulment.", "Luca's charge turns out to be someone else's."],
+    tone: "Glossy legal romance, fast and teasing; kisses and no more.",
     eps: [
-      ["EP001", "The Wedding", "Ivy walks down the aisle to a man she met that morning."],
-      ["EP002", "Booked", "How Luca came to be in a cell, told at the front desk."],
-      ["EP003", "Out on Bail", "Walking out of county with a wife he never asked for."],
-      ["EP004", "The Contract", "Three lines on a page, and Ethan reading over their shoulders."],
-      ["EP005", "Separate Rooms", "The first night, and the blanket on the couch."],
-      ["EP006", "Night Shift", "Ethan sets the case file on the table."],
+      { code: "EP001", title: "The Wedding", summary: "Ivy walks down the aisle to a man she met that morning.", seconds: 39, hook: "Margaret Cole stands up when the Reverend asks for objections.",
+        beats: [[12, "Ivy pays Luca's bail on the morning of her own wedding."], [18, "The Coles learn the groom is out on bail."], [9, "Ivy says yes before Margaret can finish."]] },
+      { code: "EP002", title: "Booked", summary: "How Luca came to be in a cell, told at the front desk.", seconds: 30, hook: "The arresting officer's name is the Coles' family lawyer's.",
+        beats: [[12, "Sgt. Dunn reads Luca's charge aloud."], [18, "Luca won't say where he was that night."]] },
+      { code: "EP003", title: "Out on Bail", summary: "Walking out of county with a wife he never asked for.", seconds: 30, hook: "Ethan is waiting at the jail's door.",
+        beats: [[12, "Luca asks why she paid."], [18, "Ivy tells him about the trust."]] },
+      { code: "EP004", title: "The Contract", summary: "Three lines on a page, and Ethan reading over their shoulders.", seconds: 30, hook: "Ethan photographs the last line.",
+        beats: [[12, "A contract: separate rooms, no other partners, divorce when the trust is released."], [18, "Both sign; neither reads it twice."]] },
+      { code: "EP005", title: "Separate Rooms", summary: "The first night, and the blanket on the couch.", seconds: 30, hook: "Luca hears Ivy crying through the wall.",
+        beats: [[12, "Luca takes the couch."], [18, "Ivy brings him a blanket and doesn't leave."]] },
+      { code: "EP006", title: "Night Shift", summary: "Ethan sets the case file on the table.", seconds: 30, hook: "The file holds a photo of Luca with someone else's name on it.",
+        beats: [[12, "Ethan builds the case for annulment."], [18, "He brings the file to the apartment at night."]] },
     ],
   },
   names: { ivy: ["Ivy", "Mrs. Moreno"], luca: ["Luca", "the groom"], ethan: ["Ethan", "Counsel"], margaret: ["Margaret", "Mrs. Cole"], walter: ["Walter"], dunn: ["Sgt. Dunn", "Ray"], hale: ["the Reverend"], tess: ["Tess"] },
