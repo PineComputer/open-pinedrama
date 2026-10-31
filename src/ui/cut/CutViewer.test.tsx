@@ -10,6 +10,7 @@ import { CutViewer, EDITING, WATCH_ONLY, alignedLines, cutLines, cutRows } from 
 
 const cut = (cutPlan?: CutPlan): FileItem => ({
   id: 7,
+  sha: "sha7",
   name: "cut.mp4",
   path: "drama/episodes/EP001/edit/v2/cut.mp4",
   type: "video/mp4",

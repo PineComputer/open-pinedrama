@@ -147,6 +147,7 @@ export function itemIn(episode: string): (row: FileRow) => FileItem {
 function item(row: FileRow, episode: string | undefined): FileItem {
   return {
     id: row.id,
+    sha: row.sha,
     name: row.name,
     path: row.rel_path,
     type: row.type,

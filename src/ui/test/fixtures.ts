@@ -5,7 +5,7 @@ let nextFile = 1;
 
 export function file(fields: Partial<FileItem> & Pick<FileItem, "kind" | "name">): FileItem {
   const id = nextFile++;
-  return { id, path: `drama/${fields.name}`, type: "image/png", size: 1, url: `/api/files/${id}`, createdAt: "2026-10-29T10:00:00Z", ...fields };
+  return { id, sha: `sha${id}`, path: `drama/${fields.name}`, type: "image/png", size: 1, url: `/api/files/${id}`, createdAt: "2026-10-29T10:00:00Z", ...fields };
 }
 
 export function storyboard(segment: string): ReviewItem {

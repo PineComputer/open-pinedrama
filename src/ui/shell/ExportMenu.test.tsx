@@ -9,7 +9,7 @@ import { answer } from "../test/server.ts";
 import { ExportMenu } from "./ExportMenu.tsx";
 
 const drama = { id: "d1", title: "Bride on Bail" } as DramaView;
-const file = (id: number, kind: FileKind, name: string): FileItem => ({ id, name, path: `handoff/${name}`, type: "application/octet-stream", size: 1, kind, url: `/api/files/${id}?v=abc${id}`, createdAt: "2026-10-30T10:00:00Z" });
+const file = (id: number, kind: FileKind, name: string): FileItem => ({ id, sha: `abc${id}`, name, path: `handoff/${name}`, type: "application/octet-stream", size: 1, kind, url: `/api/files/${id}?v=abc${id}`, createdAt: "2026-10-30T10:00:00Z" });
 
 async function open() {
   render(<ExportMenu drama={drama} />);

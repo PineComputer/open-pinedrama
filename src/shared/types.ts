@@ -36,6 +36,13 @@ export type ErrorCode =
   | "review-closed"
   | "answer-missing"
   | "verdicts-missing"
+  | "edit-not-cut"
+  | "edit-base-changed"
+  | "edit-empty"
+  | "edit-take-missing"
+  | "edit-range"
+  | "edit-audio"
+  | "edit-inputs-changed"
   | "send-failed"
   | "review-not-ended"
   | "setup-restarts"
@@ -148,6 +155,8 @@ export interface AppInfo {
 
 export interface FileItem {
   id: number;
+  /** The content's SHA-256, which an edit binds each of its clips to. */
+  sha: string;
   name: string;
   path: string;
   type: string;
@@ -387,6 +396,28 @@ export interface Decision {
    * one (no second decision, no second goal to the agent); another id for a decided review is refused.
    */
   submissionId: string;
+  /** On a cut's review, the maker's edit of it: the next cut, built by the agent with drama-cli edit (Apply). */
+  edit?: CutEdit;
+}
+
+/**
+ * The maker's edit of the cut under review, in the terms of drama-cli edit's cut plan (short_drama
+ * doc/drama-cli/review.md, "Build and inspect a cut"): each clip a segment's take, its in and out in seconds of that
+ * take, and its own sound or silence, in order. `base` is the id of the cut file it was made on.
+ */
+export interface CutEdit {
+  base: number;
+  clips: EditedClip[];
+}
+
+export interface EditedClip {
+  segment: string;
+  take: string;
+  /** The take file's SHA-256 when the maker chose it: the engine sends nothing if the returned file has changed. */
+  sha: string;
+  in: number;
+  out: number;
+  audio: "source" | "silence";
 }
 
 export interface ReviewView extends ReviewSummary {

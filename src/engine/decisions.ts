@@ -13,6 +13,8 @@ export interface DecisionContext {
   paths: Map<number, string>;
   /** A note's own picture → the name it was attached under, in the session's attachments/. */
   images?: Map<number, string>;
+  /** A cut's edit, as the goal that asks the agent to build it (goals.ts, editGoal). */
+  edit?: string;
 }
 
 function percent(value: number): string {
@@ -38,6 +40,8 @@ function where(note: Note, paths: Map<number, string>, images?: Map<number, stri
 export function answerText(decision: Omit<Decision, "submissionId">, context: DecisionContext): string {
   const words = decision.words.trim();
   if (context.kind === "question") return words;
+  // An edit is the maker's own next cut, apart from notes (Codex's IA re-review D1): the goal says it all.
+  if (context.edit) return [`My review of ${context.subject}.`, context.edit, ...(words ? [`In my own words: "${words}"`] : [])].join("\n");
 
   const label = (key: string) => context.labels.get(key) ?? key;
   const approved = decision.items.filter((item) => item.verdict === "approve");

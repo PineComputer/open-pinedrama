@@ -448,6 +448,46 @@ describe("a drama in replay", () => {
     expect([...unreviewed("storyboards"), ...unreviewed("takes"), ...unreviewed("cut")]).not.toContain(true);
   }, 60_000);
 
+  // The maker's edit of a cut (Apply): bound to the cut it was made on and to each take's file, sent once per submission
+  // as the goal to build it with drama-cli edit, and never sent when a take it uses is not the file the maker chose.
+  it("sends a cut's edit once, as the goal to build it, and never on inputs that changed", async () => {
+    const { all, run } = await import("./db.ts");
+    run("update dramas set status = 'done'");
+    fleet.stops = "ask";
+    const form = new FormData();
+    for (const [key, value] of Object.entries({ title: "Edited drama", language: "en", preset: "en-us-live-sfw", screenplayLanguage: "en", screenplay: "0", parallel: "1", perComputer: "1", reviewing: "every" })) form.set(key, value);
+    form.append("files", new File(["EPISODE 1\nLin enters."], "screenplay.txt", { type: "text/plain" }));
+    const { id } = await call<{ id: string }>("POST", "/api/dramas", form);
+    await acceptRewrite(id);
+    const question = await until("the setup question", openReview(id, (item) => item.kind === "question"));
+    await call("POST", `/api/reviews/${question.id}/decision`, { submissionId: crypto.randomUUID(), items: [], words: "He is 32." });
+    for (const kind of ["looks", "references", "storyboards", "takes"]) {
+      const review = await until(kind, openReview(id, (item) => item.kind === kind && (item.episode ?? "EP001") === "EP001"), 30_000);
+      await approveAll(review.id);
+    }
+    const summary = await until("EP001's cut", openReview(id, (item) => item.episode === "EP001" && item.kind === "cut"), 30_000);
+    const review = await call<ReviewView>("GET", `/api/reviews/${summary.id}`);
+    const cut = review.reviewItems[0].files.find((file) => file.kind === "cut")!;
+    const plan = cut.cutPlan && "clips" in cut.cutPlan ? cut.cutPlan : undefined;
+    expect(plan?.clips.length).toBeGreaterThan(0);
+    const takes = (await call<FileItem[]>("GET", `/api/dramas/${id}/files?episode=${review.episodeId}`)).filter((file) => file.kind === "take");
+    const shaOf = (segment: string, take: string) => takes.find((file) => file.segment === segment && file.version === take)!.sha;
+    const clips = [...plan!.clips].reverse().map((clip) => ({ segment: clip.segment, take: clip.take, sha: shaOf(clip.segment, clip.take), in: 0.5, out: clip.end - clip.start, audio: "silence" }));
+    const decision = (edit: unknown) => ({ submissionId: "apply-1", words: "", items: [{ key: review.reviewItems[0].key, verdict: "revise", notes: [] }], edit });
+
+    await expect(call("POST", `/api/reviews/${review.id}/decision`, decision({ base: cut.id, clips: [{ ...clips[0], sha: "not-the-file" }, ...clips.slice(1)] }))).rejects.toThrow("inputs changed");
+    expect(all<{ state: string }>("select state from reviews where id = ?", review.id)[0].state).toBe("open");
+
+    const sent = await call<ReviewView>("POST", `/api/reviews/${review.id}/decision`, decision({ base: cut.id, clips }));
+    const again = await call<ReviewView>("POST", `/api/reviews/${review.id}/decision`, decision({ base: cut.id, clips }));
+    expect([sent.state, again.state].every((state) => ["sending", "answered"].includes(state))).toBe(true);
+    const [row] = all<{ answer: string; decision: string }>("select answer, decision from reviews where id = ?", review.id);
+    expect(row.answer).toContain("drama-cli edit build EP001");
+    expect(row.answer).toContain("drama-cli edit validate EP001");
+    expect(row.answer).toContain(`1. ${takes.find((file) => file.segment === clips[0].segment && file.version === clips[0].take)!.path}, from 0.5 s`);
+    expect(JSON.parse(row.decision).edit.clips.map((clip: { segment: string }) => clip.segment)).toEqual(clips.map((clip) => clip.segment));
+  }, 90_000);
+
   // The maker stops a drama: its Computers stop, nothing new starts, and Try again carries on.
   it("stops when the maker says, and carries on when they try again", async () => {
     const { all, run } = await import("./db.ts");

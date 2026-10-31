@@ -24,7 +24,7 @@ afterEach(() => vi.restoreAllMocks());
 const fixture = (folder: string, name: string) => JSON.parse(readFileSync(path.resolve("fixtures", folder, `${name}.json`), "utf8"));
 const view = (name: string): LineageView => ({ lineage: parseLineage(fixture("lineage", name)), problems: [] });
 const chat = (sessionId: string, label: string, sends: ChatView["sends"]): ChatView => ({ sessionId, label, sends, messages: [] });
-const file = (id: number, relPath: string, type: string): FileItem => ({ id, name: path.posix.basename(relPath), path: relPath, type, size: 1, kind: "other", url: `/api/files/${id}`, createdAt: "2026-10-30T10:00:00Z" });
+const file = (id: number, relPath: string, type: string): FileItem => ({ id, sha: `sha${id}`, name: path.posix.basename(relPath), path: relPath, type, size: 1, kind: "other", url: `/api/files/${id}`, createdAt: "2026-10-30T10:00:00Z" });
 // A look's spec and request come back beside its picture, and first.
 const files = [file(1, "drama/assets/characters/lin/v1/spec.json", "application/json"), file(2, "drama/assets/characters/lin/v1/request.json", "application/json"), file(8, "drama/assets/characters/lin/v1/image-1.jpg", "image/jpeg"), file(7, "drama/episodes/EP001/segments/seg01/t01/video.mp4", "video/mp4")];
 

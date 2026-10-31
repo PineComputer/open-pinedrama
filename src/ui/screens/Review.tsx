@@ -360,7 +360,7 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
   const drama = useResource<DramaView>(review.episode ? `/api/dramas/${review.dramaId}` : null, [`drama:${review.dramaId}`]);
   const spent = drama.data?.episodeRows.find((row) => row.code === review.episode)?.spent;
   // The storyboards beside each take: the episode's files, read once.
-  const episodeFiles = useResource<FileItem[]>(review.episode ? `/api/dramas/${review.dramaId}/files?episode=${review.episode}` : null, [`drama:${review.dramaId}`]);
+  const episodeFiles = useResource<FileItem[]>(review.episodeId ? `/api/dramas/${review.dramaId}/files?episode=${review.episodeId}` : null, [`drama:${review.dramaId}`]);
   // The episode's segments whose take drama-cli's status gives as accepted, outside this review, with the newest take of each.
   const segments = review.episode ? (project.data?.state?.episodes[review.episode]?.segments ?? {}) : {};
   const acceptedBefore = takes
@@ -952,7 +952,7 @@ export function CutRoom({ review, done }: { review: ReviewView; done: () => void
   // The breakdown's lines on the lines track, and the selected segment's take and its spec for Properties.
   const breakdown = useText(review.breakdown ?? review.otherFiles.find((other) => other.kind === "breakdown" && /markdown|text/.test(other.type))).text;
   // drama-cli's asr-align times the lines in this cut (a cut.srt returned with or after it); without it, an estimate.
-  const episodeFiles = useResource<FileItem[]>(review.episode ? `/api/dramas/${review.dramaId}/files?episode=${review.episode}` : null, [`drama:${review.dramaId}`]);
+  const episodeFiles = useResource<FileItem[]>(review.episodeId ? `/api/dramas/${review.dramaId}/files?episode=${review.episodeId}` : null, [`drama:${review.dramaId}`]);
   const srt = useText((episodeFiles.data ?? []).filter((other) => other.kind === "subtitles" && other.createdAt >= file.createdAt).at(-1)).text;
   const lines = srt ? alignedLines(srt) : plan ? cutLines(plan.clips, (segment) => shotListOf(breakdown, segment)) : [];
   const [selected, setSelected] = useState<number>();

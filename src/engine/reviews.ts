@@ -2,14 +2,14 @@
 // a turn ends with a question and becomes answerable only once that turn's files are
 // saved; the maker's decision goes back as one answer to the turn that asked
 // (docs/architecture.md, section 6.2, rules 1 to 3).
-import type { Decision, FileItem, FileKind, ReviewItem, ReviewKind, Reviewing } from "../shared/types.ts";
+import type { CutEdit, Decision, FileItem, FileKind, ReviewItem, ReviewKind, Reviewing } from "../shared/types.ts";
 import { classify } from "./classify.ts";
 import { computerRef, fleet, sessionRef } from "./computers.ts";
 import { answerText } from "./decisions.ts";
 import { StudioError } from "./errors.ts";
 import { all, get, newId, now, nowFor, run, transaction } from "./db.ts";
 import { followTurn, recordTurn } from "./follow.ts";
-import { decisionGoal } from "./goals.ts";
+import { decisionGoal, editGoal } from "./goals.ts";
 import { type FileRow, filesOfStop, toItem, versionNumber } from "./library.ts";
 import { publish } from "./live.ts";
 import { attach, saveRun, sendRun } from "./runs.ts";
@@ -226,6 +226,43 @@ export async function reconcileSending(): Promise<void> {
   }
 }
 
+/**
+ * A cut's edit, checked before anything is sent: made on the cut this review shows (a newer cut, or another, makes it
+ * the maker's to re-check), each clip a take the episode returned, a range in seconds and a sound drama-cli's cut plan
+ * takes. drama-cli itself checks the rest when it builds (short_drama drama_cli/edit.py: hashes, ranges, audio).
+ */
+function editOf(review: ReviewRow, files: FileRow[], edit: CutEdit): { kept: CutEdit; goal: string } {
+  if (review.kind !== "cut") throw new StudioError("edit-not-cut", "Only a cut's review takes an edit.");
+  const base = files.find((file) => file.id === edit?.base && file.kind === "cut");
+  if (!base) throw new StudioError("edit-base-changed", "Your edit was made on another cut than the one under review. Compare it with this cut and re-check it.", 409);
+  // Still the episode's newest cut: a cut that came in since is a new base the maker re-checks against, never skipped.
+  const newest = get<{ id: number }>("select id from files where drama_id = ? and episode_id is ? and kind = 'cut' order by id desc limit 1", review.drama_id, review.episode_id);
+  if (newest?.id !== base.id) throw new StudioError("edit-base-changed", "A newer cut has come in since you made this edit. Compare it with the newer cut and re-check it.", 409);
+  if (!Array.isArray(edit.clips) || !edit.clips.length) throw new StudioError("edit-empty", "An edit needs at least one clip.");
+  const clips = edit.clips.map((clip, index) => {
+    const which = `Clip ${index + 1}`;
+    const take = get<FileRow>(
+      "select * from files where drama_id = ? and episode_id is ? and kind = 'take' and segment = ? and version = ? order by id desc limit 1",
+      review.drama_id,
+      review.episode_id,
+      String(clip?.segment),
+      String(clip?.take),
+    );
+    if (!take) throw new StudioError("edit-take-missing", `${which}: ${clip?.segment} ${clip?.take} isn't a take this episode returned.`);
+    if (clip.sha !== take.sha) throw new StudioError("edit-inputs-changed", `Your draft's inputs changed: ${take.segment} ${take.version} is not the file you chose. Re-check it.`, 409);
+    if (typeof clip.in !== "number" || typeof clip.out !== "number" || !Number.isFinite(clip.in) || !Number.isFinite(clip.out) || clip.in < 0 || clip.out <= clip.in) {
+      throw new StudioError("edit-range", `${which}: in and out are seconds of the take, out after in.`);
+    }
+    if (clip.audio !== "source" && clip.audio !== "silence") throw new StudioError("edit-audio", `${which}: its sound is the take's own (source) or silence.`);
+    return { kept: { segment: take.segment!, take: take.version!, sha: take.sha, in: clip.in, out: clip.out, audio: clip.audio }, path: take.rel_path };
+  });
+  const code = review.episode_id ? episodeCode(episodeRow(review.episode_id)!) : "";
+  return {
+    kept: { base: base.id, clips: clips.map((clip) => clip.kept) },
+    goal: editGoal(code, base.rel_path, clips.map((clip) => ({ path: clip.path, in: clip.kept.in, out: clip.kept.out, audio: clip.kept.audio }))),
+  };
+}
+
 async function send(reviewId: string, decision: Decision): Promise<ReviewRow> {
   const review = reviewRow(reviewId);
   if (!review) throw new StudioError("not-found", "No such review.", 404);
@@ -237,7 +274,9 @@ async function send(reviewId: string, decision: Decision): Promise<ReviewRow> {
   const references = new Map(all<FileRow>("select * from files where drama_id = ? and kind = 'reference'", review.drama_id).map((file) => [file.id, file]));
   // Keep verdicts for this review's items only, and a note's file only if it belongs to that item.
   const itemFiles = new Map(items.map((item) => [item.key, new Set(item.files.map((file) => file.id))]));
+  const edit = decision.edit !== undefined ? editOf(review, files, decision.edit) : undefined;
   const kept: Decision = {
+    ...(edit ? { edit: edit.kept } : {}),
     submissionId: decision.submissionId,
     words: decision.words ?? "",
     items: (decision.items ?? [])
@@ -254,7 +293,7 @@ async function send(reviewId: string, decision: Decision): Promise<ReviewRow> {
   };
   if (review.kind === "question" && !kept.words.trim()) throw new StudioError("answer-missing", "Write an answer first.");
   if (review.kind !== "question" && (!items.length || kept.items.length !== items.length)) throw new StudioError("verdicts-missing", "Give every item a verdict first.");
-  const context = { kind: review.kind, subject: subject(review), labels, paths: new Map(files.map((file) => [file.id, file.rel_path])) };
+  const context = { kind: review.kind, subject: subject(review), labels, paths: new Map(files.map((file) => [file.id, file.rel_path])), edit: edit?.goal };
   const pictures = [...new Set(kept.items.flatMap((item) => item.notes.flatMap((note) => (note.image !== undefined ? [note.image] : []))))].map((id) => references.get(id)!);
 
   // Kept as written for a session that later resumes the work; said again below with where its pictures are.
