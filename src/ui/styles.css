@@ -372,7 +372,7 @@ h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 700; lett
 @media (max-width: 760px) {
 }
 
-/* The Graph (src/ui/graph) is the prototype's markup on studio.css's own rules (.body, .stalebar, .graphwrap,
+/* The Graph (src/ui/graph) is the prototype's markup on studio.css's own rules (.body, .graphwrap,
    .graph, .gcol, .gnode, .glegend, .insp). What React Flow adds needs these: its wires take the prototype's
    .gwires values, its node box keeps the card's size so it can measure it, and the screen keeps a height
    inside the work area. */

@@ -571,8 +571,6 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
 .sendstrip { position: sticky; bottom: 0; display: flex; align-items: center; gap: 12px; padding: 10px 16px; border-top: 1px solid var(--border); background: var(--glass); backdrop-filter: blur(8px); font-size: 12.5px; }
 
 /* ── graph ── */
-.stalebar { margin: 0 16px 12px; display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: var(--radius-large); border: 1px dashed var(--border-input); background: var(--surface-container); font-size: 12.5px; color: var(--text-secondary); flex-wrap: wrap; }
-.stalebar .ic { width: 15px; height: 15px; color: var(--warning-text); }
 .graphwrap { overflow: auto; padding: 0 16px; }
 .graph { position: relative; }
 .gcol { position: absolute; top: 0; font-size: 11px; font-weight: 600; color: var(--text-muted); letter-spacing: .4px; text-transform: uppercase; }

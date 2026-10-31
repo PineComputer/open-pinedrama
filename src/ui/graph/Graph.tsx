@@ -4,19 +4,17 @@
 // whole lineage as picture cards in the pipeline's columns, on React Flow, laid out by elkjs
 // (focus.ts); a click focuses a version; the inspector lists what it was made from and what was
 // made from it. What drama-cli calls stale is said in its words, and what was made from a stale
-// version is marked from its links. Read only. The one action asks the agent to make the stale
-// versions again, through the steering every session takes (POST /api/sessions/:id/chat): an
-// episode's own versions in its session, a shared one in the setup's, since an episode's session
-// never makes a new version of a shared reference (goals.ts). No price is shown.
+// version is marked from its links. Read only: Lineage is a view of an item's relations (IA §16),
+// so asking for a redo lives on the drama's Out of date (OutOfDate.tsx, D21). No price is shown.
 import { type Edge, Handle, type Node, type NodeProps, Position, ReactFlow } from "@xyflow/react";
 import { type CSSProperties, useContext, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { madeFromStale, trace, type Lineage, type LineageNode, type LineageView } from "../../shared/lineage.ts";
 import { nameOf, type Names } from "../../shared/names.ts";
 import { PIPELINE } from "../../shared/pipeline.ts";
-import type { ChatView, FileItem } from "../../shared/types.ts";
+import type { FileItem } from "../../shared/types.ts";
 import { EmptyState } from "../components/EmptyState.tsx";
-import { api, useAction, useResource } from "../api.ts";
+import { useResource } from "../api.ts";
 import { type TKey, useT } from "../i18n.ts";
 import { Icon, type IconName } from "../icons.tsx";
 import { errorText, useNames } from "../labels.ts";
@@ -147,14 +145,12 @@ export function Graph({ dramaId }: { dramaId: string }) {
   const slot = useContext(AsideSlot);
   const view = useResource<LineageView>(`/api/dramas/${dramaId}/lineage`, [`project:${dramaId}`]);
   const files = useResource<FileItem[]>(`/api/dramas/${dramaId}/files`, [`drama:${dramaId}`]);
-  const sessions = useResource<ChatView[]>(`/api/dramas/${dramaId}/sessions`, [`drama:${dramaId}`]);
   const names = useNames(dramaId);
   const navigate = useNavigate();
   const page = usePage();
   // The item picked and the episode in view, as the page's place names them (place.ts).
   const place = usePlace();
   const item = place?.item;
-  const [sent, setSent] = useState(false);
   const [places, setPlaces] = useState<{ key: string; at: Map<string, Point> }>();
   const lineage = view.data?.lineage;
   const nodes = lineage?.nodes ?? [];
@@ -186,23 +182,6 @@ export function Graph({ dramaId }: { dramaId: string }) {
     };
     // key stands for the versions and links shown.
   }, [key]);
-  const stale = nodes.filter((node) => node.fresh === false);
-  // Each stale version goes to the session that may make it again: its episode's, or the setup's for a shared one.
-  const targets = new Map<string, LineageNode[]>();
-  let blocked: string | undefined;
-  for (const node of stale) {
-    const session = sessions.data?.find((chat) => chat.label === (node.where.episode ?? ""));
-    if (!session || session.sends === "none") blocked ??= t("graph.redoNoSession");
-    else if (session.sends === "review") blocked ??= t("graph.redoWaitsReview");
-    else targets.set(session.sessionId, [...(targets.get(session.sessionId) ?? []), node]);
-  }
-  const redo = useAction(async () => {
-    for (const [sessionId, group] of targets) {
-      const lines = group.map((node) => `- ${node.id} ${node.version ?? ""}: ${node.problems.join("; ")}`);
-      await api(`/api/sessions/${sessionId}/chat`, { method: "POST", json: { text: [t("graph.redoText"), ...lines].join("\n") } });
-    }
-    setSent(true);
-  });
 
   if (view.error) return <p className="error">{errorText(view.error, t)}</p>;
   if (!view.data) return null;
@@ -337,25 +316,6 @@ export function Graph({ dramaId }: { dramaId: string }) {
             {t("graph.problem", { error: problem.error })}
           </p>
         ))}
-        {stale.length > 0 && (
-          <div className="stalebar" role="region" aria-label={t("graph.staleTitle", { n: stale.length })}>
-            <Icon name="warning" className="ic" />
-            <span>
-              <b>{t("graph.staleTitle", { n: stale.length })}</b> {stale.map((node) => `${name(node)} ${node.version ?? ""}: ${node.problems.join("; ")}`).join(" · ")} {t("graph.staleWhy")}
-              {sent && <span role="status"> {t("graph.redoSent")}</span>}
-              {redo.error !== undefined && <span className="error"> {errorText(redo.error, t)}</span>}
-            </span>
-            <span className="grow" />
-            <button type="button" className="btn sm" disabled={!sessions.data || blocked !== undefined || redo.busy} aria-describedby={blocked ? "graph-redo-why" : undefined} onClick={() => void redo.run()}>
-              {t("graph.redo")}
-            </button>
-            {blocked && (
-              <span id="graph-redo-why" className="sr-only">
-                {blocked}
-              </span>
-            )}
-          </div>
-        )}
         {/* The plane scrolls, so it takes the keyboard's focus to scroll it (axe, scrollable-region-focusable). */}
         <div ref={wrap} className="graphwrap" role="group" aria-label={t("surface.graph")} tabIndex={0}>
           <div className="graph" style={size}>

@@ -2,8 +2,8 @@
 // focus and its whole lineage as cards named as the bible names them, with their pictures (never a
 // spec or request file); the pipeline's columns; a click to focus and the inspector's lists of what
 // a version was made from and what was made from it; what is stale in drama-cli's own words, and what
-// was made from a stale version; and one way to act: ask the agent to redo them, sent to the session
-// that may. Read-only otherwise, and never a price.
+// was made from a stale version. Read-only, and never a price: a redo is asked on the drama's Out of date
+// (OutOfDate.test.tsx), not here.
 import { screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { readFileSync } from "node:fs";
@@ -13,7 +13,7 @@ import { parseLineage, type LineageView } from "../../shared/lineage.ts";
 import { parseBibleNames } from "../../shared/names.ts";
 import type { ProjectView } from "../../shared/project.ts";
 import type { ChatView, FileItem } from "../../shared/types.ts";
-import { accept, answer, calls } from "../test/server.ts";
+import { answer } from "../test/server.ts";
 import { mockReactFlow } from "../test/react-flow.ts";
 import { Graph } from "./Graph.tsx";
 import { renderAt } from "../test/router.tsx";
@@ -108,10 +108,9 @@ describe("the Graph", () => {
 
   it("says what is stale in drama-cli's own words", async () => {
     engine("time-plate-replaced");
-    await renderAt(<Graph dramaId="d1" />, "/d/d1/out-of-date");
-    const bar = await screen.findByRole("region", { name: /stale/i });
-    expect(bar).toHaveTextContent("EP001 seg01 take t01: Changed selection: assets/scenes/office/times/Day/accepted.json");
+    await renderAt(<Graph dramaId="d1" />, "/d/d1/e/EP001/list?item=episodes%2FEP001%2Fsegments%2Fseg01&view=lineage");
     expect(await card(/^EP001 seg01 take t01/)).toHaveTextContent("Stale");
+    expect(screen.getByRole("region", { name: "State" })).toHaveTextContent("Changed selection: assets/scenes/office/times/Day/accepted.json");
   });
 
   it("marks what was made from a stale version, which drama-cli calls fresh, apart from what drama-cli calls stale", async () => {
@@ -119,35 +118,6 @@ describe("the Graph", () => {
     await renderAt(<Graph dramaId="d1" />, "/d/d1/assets/locations/office?item=assets%2Fscenes%2Foffice%2Ftimes%2FDay&view=lineage");
     expect(await card(/^办公室 · Day v1/)).toHaveTextContent("Stale");
     expect(await card(/^EP001 seg01 take t01/)).toHaveTextContent("Made from a stale version");
-  });
-
-  it("asks the agent to redo them, each in the session that may: an episode's own in its session", async () => {
-    engine("time-plate-replaced");
-    accept("/api/sessions/ep1/chat");
-    await renderAt(<Graph dramaId="d1" />, "/d/d1/out-of-date");
-    await userEvent.click(await screen.findByRole("button", { name: "Ask the agent to redo them" }));
-    await waitFor(() => expect(calls("POST", "/api/sessions/ep1/chat")).toHaveLength(1));
-    const [{ body }] = calls("POST", "/api/sessions/ep1/chat") as { body: { text: string } }[];
-    expect(body.text).toContain("episodes/EP001/segments/seg01 t01: Changed selection: assets/scenes/office/times/Day/accepted.json");
-    expect(calls("POST", "/api/sessions/setup/chat")).toHaveLength(0);
-    expect(await screen.findByRole("status")).toHaveTextContent("Sent to the agent.");
-  });
-
-  it("sends a shared stage's redo to the setup's session", async () => {
-    engine("location-plate-replaced");
-    accept("/api/sessions/setup/chat");
-    await renderAt(<Graph dramaId="d1" />, "/d/d1/out-of-date");
-    await userEvent.click(await screen.findByRole("button", { name: "Ask the agent to redo them" }));
-    await waitFor(() => expect(calls("POST", "/api/sessions/setup/chat")).toHaveLength(1));
-    expect(calls("POST", "/api/sessions/ep1/chat")).toHaveLength(0);
-  });
-
-  it("says why it can't ask while the session waits on the maker's review, and sends nothing", async () => {
-    engine("time-plate-replaced", [chat("setup", "", "run"), chat("ep1", "EP001", "review")]);
-    await renderAt(<Graph dramaId="d1" />, "/d/d1/out-of-date");
-    const ask = await screen.findByRole("button", { name: "Ask the agent to redo them" });
-    await waitFor(() => expect(ask).toHaveAccessibleDescription(/review/i));
-    expect(ask).toBeDisabled();
   });
 
   it("offers no way to make, edit or keep a version, and shows no price", async () => {
