@@ -79,10 +79,12 @@ describe("classify", () => {
     expect(classify("episodes/EP001/breakdown/v2/breakdown.md")).toMatchObject({ kind: "breakdown", episode: "EP001" });
   });
 
-  it("reads the screenplay versions drama-cli records and a rewrite's review, but not the agent's working copy", () => {
+  it("reads the screenplay versions drama-cli records with their review, record and original, but not the agent's working copy", () => {
     expect(classify("drama/screenplay/v2/screenplay.fountain")).toMatchObject({ kind: "screenplay-version", version: "v2" });
     expect(classify("drama/screenplay/v2/review.md")).toMatchObject({ kind: "screenplay-review", version: "v2" });
-    expect(classify("drama/screenplay/v2/validate.json").kind).toBe("other");
+    // Script's compare reads validate's line map and the original it counts (short_drama D172).
+    expect(classify("drama/screenplay/v2/validate.json")).toMatchObject({ kind: "screenplay-validate", version: "v2" });
+    expect(classify("drama/screenplay/v2/original.txt")).toMatchObject({ kind: "screenplay-original", version: "v2" });
     expect(classify("drama/inputs/screenplay.fountain.txt").kind).toBe("other");
   });
 

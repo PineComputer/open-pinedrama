@@ -96,9 +96,9 @@ export function episodePage(dramaId: string, code: string): EpisodePage | undefi
  * kinds existed count too.
  */
 function screenplayVersions(dramaId: string): ScreenplayVersion[] {
-  const found = all<FileRow>("select * from files where drama_id = ? and type like 'text/%' order by id", dramaId)
+  const found = all<FileRow>("select * from files where drama_id = ? and (type like 'text/%' or type = 'application/json') order by id", dramaId)
     .map((row) => ({ row, hints: classify(row.rel_path) }))
-    .filter(({ hints }) => hints.kind === "screenplay-version" || hints.kind === "screenplay-review");
+    .filter(({ hints }) => hints.kind === "screenplay-version" || hints.kind === "screenplay-review" || hints.kind === "screenplay-validate" || hints.kind === "screenplay-original");
   const numbers = [...new Set(found.map(({ hints }) => Number(hints.version!.slice(1))))].sort((a, b) => b - a);
   // Each version's question, the newest, by the version its stop is about: the files the stop shows, its own turn's or
   // earlier ones it names (library.ts, filesOfStop), as the review room reads it (views.ts, ReviewView.rewrite).
@@ -111,12 +111,16 @@ function screenplayVersions(dramaId: string): ScreenplayVersion[] {
     const of = (kind: string) => found.findLast(({ hints }) => hints.kind === kind && hints.version === `v${number}`)?.row;
     const file = of("screenplay-version");
     const review = of("screenplay-review");
+    const validate = of("screenplay-validate");
+    const original = of("screenplay-original");
     const asked = questions.get(`v${number}`);
     const decision = asked?.decision ? (JSON.parse(asked.decision) as Decision) : undefined;
     return {
       version: `v${number}`,
       file: file && toItem(file),
       review: review && toItem(review),
+      validate: validate && toItem(validate),
+      original: original && toItem(original),
       question: asked && { reviewId: asked.id, state: asked.state, words: decision?.words, verdict: decision?.verdict, decidedAt: asked.decided_at ?? undefined },
     };
   });

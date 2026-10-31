@@ -4,7 +4,6 @@ import type { Decision, FileItem, ScreenplayVersion, ScriptPage, SubmissionView 
 import { api, ApiError, useResource } from "../api.ts";
 import { Segmented } from "../components/Segmented.tsx";
 import { Submission, useSubmission } from "../components/Submission.tsx";
-import { FountainDiff } from "../FountainDiff.tsx";
 import { fountainLines } from "../fountainLines.ts";
 import { Icon, type IconName } from "../icons.tsx";
 import { useT } from "../i18n.ts";
@@ -111,6 +110,94 @@ function VersionRow({ version, shown, onShow }: { version: ScreenplayVersion; sh
   );
 }
 
+/** One line of the original with the version's lines it became, as drama-cli's screenplay validate records it (short_drama D172). */
+interface OriginalLine {
+  line: number;
+  text: string;
+  to: number[];
+  kinds: string[];
+}
+
+/** validate.json's lines when they name the version's lines; none for a version recorded before the line map (short_drama D172). */
+function lineMap(text: string | undefined): OriginalLine[] | undefined {
+  if (text === undefined) return undefined;
+  const { lines } = JSON.parse(text) as { lines?: unknown[] };
+  return lines?.every((entry) => typeof entry === "object" && entry !== null && Array.isArray((entry as { to?: unknown }).to)) ? (lines as OriginalLine[]) : undefined;
+}
+
+/**
+ * VS Code's side-by-side diff, aligned by drama-cli's record (D62; Codex round 4, F5): each original line is one row with
+ * every line of the version it became beside it (one to many, many to one), the lines between two of them in their own
+ * row, a hatched filler where a side has none. The rows come from validate.json's `to`, never a diff of ours.
+ */
+function Compare({ original, fountain, map, name, version }: { original: string; fountain: string; map: OriginalLine[]; name: string; version: string }) {
+  const { t } = useT();
+  const [picked, setPicked] = useState<number>();
+  const left = original.split("\n");
+  const right = fountain.split("\n");
+  const range = (a: number, b: number) => Array.from({ length: Math.max(0, b - a + 1) }, (_, k) => a + k);
+  const rows: { a: number[]; b: number[]; entry?: OriginalLine }[] = [];
+  let o = 0;
+  let f = 0;
+  for (const entry of map) {
+    const first = entry.to.length ? Math.min(...entry.to) : f + 1;
+    const a = range(o + 1, entry.line - 1);
+    const b = entry.to.length ? range(f + 1, first - 1) : [];
+    if (a.length || b.length) rows.push({ a, b });
+    const fresh = entry.to.filter((m) => m > f);
+    // An original line whose letters went only into lines already beside an earlier one (two lines joined into one)
+    // joins that row, so each line of the version shows once.
+    const last = rows.at(-1);
+    if (entry.to.length && !fresh.length && !a.length && !b.length && last?.entry) last.a.push(entry.line);
+    else rows.push({ a: [entry.line], b: fresh, entry });
+    o = entry.line;
+    if (entry.to.length) f = Math.max(f, ...entry.to);
+  }
+  if (o < left.length || f < right.length) rows.push({ a: range(o + 1, left.length), b: range(f + 1, right.length) });
+  // A line came back as it was when it became one line with its very text; anything else is a change, tinted.
+  const changed = (entry: OriginalLine) => entry.to.length !== 1 || right[entry.to[0] - 1]?.trim() !== entry.text;
+  const lit = new Set(map.find((entry) => entry.line === picked)?.to ?? []);
+  useEffect(() => {
+    if (picked !== undefined) document.getElementById(`dr-${picked}`)?.scrollIntoView({ block: "nearest" });
+  }, [picked]);
+  return (
+    <div className="diffed" aria-label={t("script.compareOf", { version })}>
+      <div className="dhead">{name}</div>
+      <div className="dhead">
+        screenplay.fountain <span className="tag">{version}</span>
+      </div>
+      {rows.map(({ a, b, entry }, index) => (
+        <div key={index} className="drowpair" id={entry ? `dr-${entry.line}` : undefined}>
+          <div className="dcell a">
+            {a.length ? (
+              a.map((n) => (
+                <button key={n} type="button" className={`drow${entry && changed(entry) ? " chg del" : ""}${picked === n ? " on" : ""}`} disabled={!entry} onClick={() => setPicked(n)}>
+                  <span className="ln">{n}</span>
+                  <span className="tx">{left[n - 1]}</span>
+                </button>
+              ))
+            ) : (
+              <div className="dfill" title={t("script.noOriginalLine")} />
+            )}
+          </div>
+          <div className="dcell b">
+            {b.length ? (
+              b.map((m) => (
+                <div key={m} className={`drow${entry && changed(entry) ? " chg add" : ""}${lit.has(m) ? " on" : ""}`}>
+                  <span className="ln">{m}</span>
+                  <span className="tx">{right[m - 1]}</span>
+                </div>
+              ))
+            ) : (
+              <div className="dfill" title={t(entry ? "script.noneCameBack" : "script.noFountainLine")} />
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 /** drama-cli's episode number in a scene number, #<episode>-<scene># (short_drama doc/drama-cli/write-a-screenplay.md). */
 const episodeOfScene = (text: string) => text.match(/#(\d+)-\d+#\s*$/)?.[1];
 
@@ -121,9 +208,13 @@ function ScriptBody({ dramaId, data, ep, rewriting }: { dramaId: string; data: S
   const original: FileItem | undefined = data.inputs.find((file) => file.id === data.screenplayFile);
   const shown = data.versions.find((version) => search.item === "screenplay" && version.version === search.version) ?? data.versions[0];
   const [picked, setPicked] = useState<View>();
-  const view: View = !shown ? "original" : ep ? "fountain" : (picked ?? "fountain");
   const fountain = useText(shown?.file).text;
   const mine = useDocumentText(original).text;
+  // The compare reads the version's own record: the original as validate checked it, and validate's line map.
+  const checked = useText(shown?.original).text;
+  const validated = useText(shown?.validate).text;
+  const map = lineMap(validated);
+  const comparable = Boolean(map && shown?.original);
   const lines = fountain === undefined ? [] : fountainLines(fountain);
   // An episode's "Episode script" (its Canvas head, ?ep=EPxxx) opens the Fountain at that episode: the section before
   // its first scene, numbered by drama-cli.
@@ -146,7 +237,9 @@ function ScriptBody({ dramaId, data, ep, rewriting }: { dramaId: string; data: S
     ["fountain", "script.viewFountain", "film-strip"],
     ["compare", "script.viewCompare", "square-half"],
   ];
-  const views = VIEWS.filter(([key]) => (key === "original" ? Boolean(original) : key === "fountain" ? Boolean(shown) : Boolean(shown && original)));
+  const views = VIEWS.filter(([key]) => (key === "original" ? Boolean(original) : key === "fountain" ? Boolean(shown) : comparable));
+  // The view picked, while this version has it; the Fountain otherwise, or the original when nothing was recorded.
+  const view: View = !shown ? "original" : ep ? "fountain" : picked && views.some(([key]) => key === picked) ? picked : "fountain";
   return (
     <>
       <div className="scripthead">
@@ -215,8 +308,9 @@ function ScriptBody({ dramaId, data, ep, rewriting }: { dramaId: string; data: S
                 label an icon whose meaning isn't universal) on the design's Segmented, and only the views this version has. */}
             {views.length > 1 && <Segmented label={t("script.view")} value={view} options={views.map(([value, label, icon]) => ({ value, label: t(label), icon }))} onChange={choose} />}
           </div>
-          {view !== "compare" && shown && original?.name.toLowerCase().endsWith(".fountain") && (
-            <p className="muted ednote">{t("script.alreadyFountain", { version: shown.version })}</p>
+          {shown && !comparable && (shown.validate === undefined || validated !== undefined) && <p className="muted ednote">{t("script.noLineMap", { version: shown.version })}</p>}
+          {view !== "compare" && comparable && original?.name.toLowerCase().endsWith(".fountain") && (
+            <p className="muted ednote">{t("script.alreadyFountain", { version: shown!.version })}</p>
           )}
           {view === "fountain" ? (
             <div className="edbody scriptdoc">
@@ -227,7 +321,11 @@ function ScriptBody({ dramaId, data, ep, rewriting }: { dramaId: string; data: S
               )}
             </div>
           ) : view === "compare" ? (
-            mine === undefined || fountain === undefined ? <p className="quiet">{t("loading")}</p> : <FountainDiff original={mine} fountain={fountain} />
+            checked === undefined || fountain === undefined || !map ? (
+              <p className="quiet">{t("loading")}</p>
+            ) : (
+              <Compare original={checked} fountain={fountain} map={map} name={original?.name ?? "original.txt"} version={shown!.version} />
+            )
           ) : (
             <div className="edbody scriptdoc">{mine === undefined ? <p className="quiet">{t(original ? "loading" : "script.none")}</p> : <pre className="original">{mine}</pre>}</div>
           )}

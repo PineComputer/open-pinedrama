@@ -499,7 +499,7 @@
       review: sc.review.replaceAll("screenplay/v1/", "screenplay/v2/").replace("15 | " + was + " … | 22: (unchanged)", "15 | " + was + " … | 22: " + now + " …") };
     return { v1, v2 };
   }
-  /* VS Code's side-by-side diff with drama-cli's alignment (Codex round 4, F5): the rows come from review.md's line map,
+  /* VS Code's side-by-side diff with drama-cli's alignment (Codex round 4, F5): the rows come from validate.json's line map (short_drama D172),
      never a diff of ours. Each mapped original line is one row with every Fountain line it became beside it (one to
      many); the lines between two mapped ones (blank lines, a line the rewrite added) sit in their own row; a side with
      no counterpart is a hatched filler, as VS Code draws one. */

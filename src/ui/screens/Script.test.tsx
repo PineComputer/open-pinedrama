@@ -143,10 +143,10 @@ describe("Script's view switch", () => {
     texts();
     await renderAt(<Script dramaId="d1" />, "/d/d1/script");
     const views = await screen.findByRole("radiogroup", { name: "Show" });
+    // This version has no line map, so Compare isn't offered (the Compare tests below have one).
     expect(within(views).getAllByRole("radio").map((view) => [view.textContent, view.getAttribute("aria-checked")])).toEqual([
       ["Original", "false"],
       ["Fountain", "true"],
-      ["Compare", "false"],
     ]);
     await user.click(within(views).getByRole("radio", { name: "Original" }));
     expect(within(views).getByRole("radio", { name: "Original" })).toHaveAttribute("aria-checked", "true");
@@ -155,13 +155,71 @@ describe("Script's view switch", () => {
     await user.click(within(views).getByRole("radio", { name: "Fountain" }));
     expect(document.querySelector(".fdoc")).toBeInTheDocument();
   });
+});
+
+describe("Script's Compare", () => {
+  // The original as validate checked it and its record (short_drama D172): line 2 became the version's lines 3 and 4,
+  // lines 3 and 4 were joined into line 6, line 5's letters didn't come back.
+  const checked = file({ kind: "screenplay-original", name: "original.txt", type: "text/plain", version: "v2" });
+  const record = file({ kind: "screenplay-validate", name: "validate.json", type: "application/json", version: "v2" });
+  const map = [
+    { line: 1, text: "EPISODE 1", to: [1], kinds: ["section"] },
+    { line: 2, text: "LIN: I run this house.", to: [3, 4], kinds: ["dialogue LIN"] },
+    { line: 3, text: "Wei sets the bowl", to: [6], kinds: ["action"] },
+    { line: 4, text: "down hard.", to: [6], kinds: ["action"] },
+    { line: 5, text: "THE END", to: [], kinds: [] },
+  ];
+  function withMap(lines: unknown[], upload = original) {
+    const data = page(false);
+    answer("/api/dramas/d1/script", { ...data, inputs: [upload], screenplayFile: upload.id, versions: [{ ...data.versions[0], original: checked, validate: record }, data.versions[1]] });
+    texts();
+    server.use(
+      http.get(checked.url, () => HttpResponse.text("EPISODE 1\nLIN: I run this house.\nWei sets the bowl\ndown hard.\nTHE END\n")),
+      http.get(record.url, () => HttpResponse.json({ lines })),
+      http.get(v2.url, () => HttpResponse.text("# Episode 1\n\nLIN\nI run this house.\n\nWei sets the bowl down hard.\n")),
+    );
+  }
+
+  it("sets each original line beside the version's lines drama-cli says it became, each version line once", async () => {
+    const user = userEvent.setup();
+    withMap(map);
+    await renderAt(<Script dramaId="d1" />, "/d/d1/script");
+    await user.click(await screen.findByRole("radio", { name: "Compare" }));
+    const compare = await screen.findByLabelText("The original beside v2, line by line as drama-cli aligned them");
+    const rows = [...compare.querySelectorAll(".drowpair")].map((row) =>
+      [...row.querySelectorAll(".dcell")].map((cell) => [...cell.querySelectorAll(".ln")].map((n) => Number(n.textContent))),
+    );
+    expect(rows).toEqual([
+      [[1], [1]],
+      [[], [2]],
+      [[2], [3, 4]],
+      [[], [5]],
+      [[3, 4], [6]],
+      [[5], []],
+      [[6], [7]],
+    ]);
+    // Clicking an original line marks what it became and brings its row into view (jsdom has no scrolling; stubbed).
+    Element.prototype.scrollIntoView = () => {};
+    try {
+      await user.click(within(compare).getByRole("button", { name: /LIN: I run this house\./ }));
+      expect([...compare.querySelectorAll(".dcell.b .drow.on .ln")].map((n) => n.textContent)).toEqual(["3", "4"]);
+    } finally {
+      Reflect.deleteProperty(Element.prototype, "scrollIntoView");
+    }
+  });
 
   it("says so when the upload was already Fountain, since the original and the version then read alike", async () => {
     const fountainUpload = file({ kind: "screenplay", name: "screenplay.fountain", type: "text/plain" });
-    answer("/api/dramas/d1/script", { ...page(false), inputs: [fountainUpload], screenplayFile: fountainUpload.id });
-    texts();
+    withMap(map, fountainUpload);
     server.use(http.get(fountainUpload.url, () => HttpResponse.text("# Episode 1\n")));
     await renderAt(<Script dramaId="d1" />, "/d/d1/script");
     expect(await screen.findByText("Your upload was already Fountain, so the original and v2 read alike: Compare shows where they differ.")).toBeInTheDocument();
+  });
+
+  it("offers no Compare for a version recorded before the line map, and says so", async () => {
+    withMap(["    1 | EPISODE 1 | section"]);
+    await renderAt(<Script dramaId="d1" />, "/d/d1/script");
+    expect(await screen.findByText("v2 predates the line map: drama-cli recorded no line numbers for it, so there is no compare.")).toBeInTheDocument();
+    expect(screen.queryByRole("radio", { name: "Compare" })).not.toBeInTheDocument();
   });
 });

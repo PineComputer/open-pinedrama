@@ -125,7 +125,10 @@ async function made(session: SessionRow): Promise<string[]> {
   return found;
 }
 
-/** The screenplay versions drama-cli recorded in the setup's project, and their reviews, that the studio doesn't have yet. */
+/** A screenplay version's files as drama-cli's screenplay validate records them (short_drama drama_cli/stages.py, SCREENPLAY_FILE, ORIGINAL_FILE, VALIDATE_FILE, REVIEW_FILE). */
+const SCREENPLAY_FILES: string[] = ["screenplay-version", "screenplay-review", "screenplay-validate", "screenplay-original"];
+
+/** The screenplay versions drama-cli recorded in the setup's project, with their files, that the studio doesn't have yet. */
 async function screenplayVersions(session: SessionRow): Promise<string[]> {
   const computer = computerRow(session.computer_id)!;
   const folders = ["drama/screenplay"];
@@ -139,7 +142,7 @@ async function screenplayVersions(session: SessionRow): Promise<string[]> {
       });
     for (const entry of entries) {
       if (entry.folder) folders.push(entry.path);
-      else if (["screenplay-version", "screenplay-review"].includes(classify(entry.path).kind) && !known(session.drama_id, entry.path)) found.push(entry.path);
+      else if (SCREENPLAY_FILES.includes(classify(entry.path).kind) && !known(session.drama_id, entry.path)) found.push(entry.path);
     }
   }
   return found;

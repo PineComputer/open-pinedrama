@@ -91,6 +91,10 @@ export type FileKind =
   | "screenplay-version"
   /** What a rewrite changed, beside its version (screenplay/vN/review.md), for the maker to read before accepting it. */
   | "screenplay-review"
+  /** validate's record of a version (screenplay/vN/validate.json): each original line with the version's lines it became (short_drama D172). */
+  | "screenplay-validate"
+  /** The original as validate checked it, beside its version (screenplay/vN/original.txt): what its line numbers count. */
+  | "screenplay-original"
   | "look"
   | "location"
   | "prop"
@@ -572,6 +576,10 @@ export interface ScreenplayVersion {
   version: string;
   file?: FileItem;
   review?: FileItem;
+  /** validate's record, whose `lines` align the original with this version (short_drama D172). */
+  validate?: FileItem;
+  /** The original this version was validated against. */
+  original?: FileItem;
   /** The agent's question about this version (the rewrite waiting for the maker), where it stands and the maker's words once decided. */
   question?: { reviewId: string; state: ReviewState; words?: string; verdict?: Verdict; decidedAt?: string };
 }
