@@ -12,7 +12,8 @@ import { CutViewer, alignedLines, cutLines, fmt } from "../cut/CutViewer.tsx";
 import { shotListOf } from "../../shared/shots.ts";
 import { Icon } from "../icons.tsx";
 import { Markdown } from "../Markdown.tsx";
-import { Link, navigate, placeHref, usePath } from "../router.tsx";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { placeLink, useRoute } from "../place.ts";
 import { standing as stageStanding } from "./Canvas.tsx";
 import { Still } from "../Still.tsx";
 import { DocumentView, Pinboard, isDocument, isImage, isVideo, useShotList, useSize, useText, variantLabel } from "../viewing.tsx";
@@ -93,9 +94,10 @@ function Documents({ files }: { files: FileItem[] }) {
 
 function Status({ review }: { review: ReviewView }) {
   const { t } = useT();
+  const navigate = useNavigate();
   const resume = useAction(async () => {
     await api(`/api/reviews/${review.id}/resume`, { method: "POST" });
-    navigate(`/d/${review.dramaId}`);
+    await navigate({ to: "/d/$dramaId/episodes", params: { dramaId: review.dramaId } });
   });
   if (review.state === "saving" || review.state === "sending")
     return (
@@ -181,7 +183,7 @@ function QuestionRoom({ review, done }: { review: ReviewView; done: () => void }
   });
   return (
     <div className="question">
-      <Link to={`/d/${review.dramaId}`} className="crumb">
+      <Link to="/d/$dramaId/episodes" params={{ dramaId: review.dramaId }} className="crumb">
         ← {review.dramaTitle}
         {review.episode ? ` · ${review.episode}` : ""}
       </Link>
@@ -262,8 +264,8 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
   const items = review.reviewItems;
   const open = review.state === "open";
   const takes = review.kind === "takes";
-  // A link may name the item to open at (?item=, as the Canvas's Review does); else the first.
-  const asked = usePath().query.get("item");
+  // A link may name the item to open at by its key (?key=, as the Canvas's Review does); else the first.
+  const asked = useRoute().search.key;
   const [index, setIndex] = useState(() => Math.max(0, items.findIndex((i) => i.key === asked)));
   const [variant, setVariant] = useState(0);
   const [drafts, setDrafts, forgetDrafts] = useDraft<Drafts>(review.id, "items", () =>
@@ -990,7 +992,7 @@ export function CutRoom({ review, done }: { review: ReviewView; done: () => void
                 <input type="range" disabled defaultValue={80} aria-label={t("cut.volume")} />
                 <p className="muted">{t("cut.editingLater")}</p>
               </div>
-              <Link to={placeHref({ dramaId: review.dramaId, surface: "canvas", episode: code })} className={buttonClass({ size: "sm" })}>
+              <Link {...placeLink({ dramaId: review.dramaId, surface: "canvas", episode: code })} className={buttonClass({ size: "sm" })}>
                 <Icon name="flow-arrow" className="ic" />
                 {t("cut.openOnCanvas")}
               </Link>
@@ -1039,13 +1041,14 @@ export function CutRoom({ review, done }: { review: ReviewView; done: () => void
 
 export function Review({ id }: { id: string }) {
   const { t } = useT();
+  const navigate = useNavigate();
   const { data, error } = useResource<ReviewView>(`/api/reviews/${id}`, ["inbox"]);
   const done = useMemo(
     () => () => {
       // On to the next review waiting, or back to the drama.
-      void api<ReviewView>(`/api/reviews/${id}`).then((fresh) => navigate(fresh.nextId ? `/r/${fresh.nextId}` : `/d/${fresh.dramaId}`));
+      void api<ReviewView>(`/api/reviews/${id}`).then((fresh) => navigate(fresh.nextId ? { to: "/r/$reviewId", params: { reviewId: fresh.nextId } } : { to: "/d/$dramaId/episodes", params: { dramaId: fresh.dramaId } }));
     },
-    [id],
+    [id, navigate],
   );
   if (error !== undefined && !data) {
     return (

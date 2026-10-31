@@ -2,7 +2,7 @@ import type { DeliveryRow, Judged } from "../../shared/types.ts";
 import { useResource } from "../api.ts";
 import { useT } from "../i18n.ts";
 import { errorText } from "../labels.ts";
-import { Link } from "../router.tsx";
+import { Link } from "@tanstack/react-router";
 
 function status(review: Judged | undefined): "approve" | "revise" | "waiting" | "none" {
   if (!review) return "none";
@@ -15,9 +15,12 @@ function status(review: Judged | undefined): "approve" | "revise" | "waiting" | 
  * the maker approved. Only an approved cut is offered as the episode's delivery; a review that
  * showed several cuts approves none of them in particular, and says so.
  */
-export function Delivery({ dramaId }: { dramaId: string }) {
+export function Delivery({ dramaId, episode }: { dramaId: string; episode?: string }) {
   const { t } = useT();
-  const { data, error } = useResource<DeliveryRow[]>(`/api/dramas/${dramaId}/delivery`, [`drama:${dramaId}`]);
+  const all = useResource<DeliveryRow[]>(`/api/dramas/${dramaId}/delivery`, [`drama:${dramaId}`]);
+  // An episode's Cut shows its own row; the drama's Delivery every episode's.
+  const data = episode ? all.data?.filter((row) => row.code === episode) : all.data;
+  const error = all.error;
   if (error !== undefined && !data) return <p className="error">{errorText(error, t)}</p>;
   if (!data) return <p className="quiet">{t("loading")}</p>;
   const ready = data.filter((row) => row.accepted).length;
@@ -53,7 +56,7 @@ export function Delivery({ dramaId }: { dramaId: string }) {
               return (
                 <tr key={row.code}>
                   <td>
-                    <Link to={`/d/${dramaId}/e/${row.code}`} className="ep">
+                    <Link to="/d/$dramaId/e/$episodeCode/list" params={{ dramaId: dramaId, episodeCode: row.code }} className="ep">
                       {row.code}
                     </Link>
                     {row.title && <div className="ep-title">{row.title}</div>}

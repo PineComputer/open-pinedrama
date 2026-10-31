@@ -2,7 +2,7 @@
 // board keeps the agent's newest work in view; once the maker moves the board themselves,
 // following pauses until they resume it; the minimap shows the whole board and moves the view.
 import "../test/flow.ts";
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { readFileSync } from "node:fs";
 import path from "node:path";
@@ -14,6 +14,7 @@ import type { DramaView, FileItem } from "../../shared/types.ts";
 import { changed } from "../test/live.ts";
 import { answer } from "../test/server.ts";
 import { Canvas } from "./Canvas.tsx";
+import { renderAt } from "../test/router.tsx";
 
 const fixture = (name: string) => JSON.parse(readFileSync(path.resolve("fixtures/status", `${name}.json`), "utf8"));
 const lineageView = () => ({ lineage: parseLineage(JSON.parse(readFileSync(path.resolve("fixtures/lineage", "shot.json"), "utf8"))), problems: [] });
@@ -54,14 +55,14 @@ afterEach(() => {
 describe("following the agent", () => {
   it("keeps the agent's newest work in view", async () => {
     engine([look, board]);
-    render(<Canvas drama={drama} />);
+    await renderAt(<Canvas drama={drama} />, "/d/d1/canvas");
     expect(await screen.findByRole("button", { name: "Following the agent" })).toHaveAttribute("aria-pressed", "true");
     await waitFor(() => expect(followed()?.textContent).toMatch(/^Storyboard · line-art/));
   });
 
   it("moves on to the work the agent saves next", async () => {
     engine([look]);
-    render(<Canvas drama={drama} />);
+    await renderAt(<Canvas drama={drama} />, "/d/d1/canvas");
     await waitFor(() => expect(followed()?.textContent).toMatch(/^林/));
     engine([look, board]);
     changed("drama:d1");
@@ -71,7 +72,7 @@ describe("following the agent", () => {
   it("pauses when the maker picks an item, and resumes when asked", async () => {
     const user = userEvent.setup();
     engine([look, board]);
-    render(<Canvas drama={drama} />);
+    await renderAt(<Canvas drama={drama} />, "/d/d1/canvas");
     (await screen.findAllByRole("button", { name: /^办公室/ }))[0].focus();
     await user.keyboard("{Enter}");
     const resume = screen.getByRole("button", { name: "Follow the agent" });

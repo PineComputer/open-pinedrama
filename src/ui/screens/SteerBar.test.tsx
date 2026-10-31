@@ -2,7 +2,7 @@
 // review is open, send it back or leave a note for the agent at work on it, or trace its lineage.
 // The canvas steers and never records a verdict: decisions stay in the review room.
 import "../test/flow.ts";
-import { render, screen, waitFor, within } from "@testing-library/react";
+import { screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { readFileSync } from "node:fs";
 import path from "node:path";
@@ -15,6 +15,7 @@ import { storyboardReview } from "../test/fixtures.ts";
 import { http, HttpResponse } from "msw";
 import { accept, answer, calls, sent, server } from "../test/server.ts";
 import { Canvas, PHASE_ONE } from "./Canvas.tsx";
+import { href, renderAt } from "../test/router.tsx";
 
 const fixture = (name: string) => JSON.parse(readFileSync(path.resolve("fixtures/status", `${name}.json`), "utf8"));
 const lineageView = () => ({ lineage: parseLineage(JSON.parse(readFileSync(path.resolve("fixtures/lineage", "shot.json"), "utf8"))), problems: [] });
@@ -78,14 +79,14 @@ describe("the SteerBar", () => {
   it("offers Review only where the item's review is open, at that item", async () => {
     engine([openLooks]);
     answer("/api/reviews/r9", { ...storyboardReview(), id: "r9", kind: "looks", episode: undefined, reviewItems: [{ key: "lin", label: "lin", files: [] }], otherFiles: [] });
-    render(<Canvas drama={drama("working")} />);
+    await renderAt(<Canvas drama={drama("working")} />, "/d/d1/canvas");
     const { bar } = await pick(/^林/);
-    expect(await within(bar).findByRole("link", { name: "Review" })).toHaveAttribute("href", "/r/r9?item=lin");
+    expect(await within(bar).findByRole("link", { name: "Review" })).toHaveAttribute("href", "/r/r9?key=lin");
   });
 
   it("offers no Review where no review holds the item", async () => {
     engine();
-    render(<Canvas drama={drama("working")} />);
+    await renderAt(<Canvas drama={drama("working")} />, "/d/d1/canvas");
     const { bar } = await pick(/^林/);
     expect(within(bar).queryByRole("link", { name: "Review" })).toBeNull();
   });
@@ -93,7 +94,7 @@ describe("the SteerBar", () => {
   it("offers no Review where the open review holds other items", async () => {
     engine([openLooks]);
     answer("/api/reviews/r9", { ...storyboardReview(), id: "r9", kind: "looks", episode: undefined, reviewItems: [{ key: "wei", label: "wei", files: [] }], otherFiles: [] });
-    render(<Canvas drama={drama("working")} />);
+    await renderAt(<Canvas drama={drama("working")} />, "/d/d1/canvas");
     const { bar } = await pick(/^林/);
     expect(await within(bar).findByRole("button", { name: "Send back" })).toBeInTheDocument();
     await new Promise((resolve) => setTimeout(resolve, 50));
@@ -102,7 +103,7 @@ describe("the SteerBar", () => {
 
   it("sends a reasoned send-back to the agent at work, naming the item as the bible does", async () => {
     engine();
-    render(<Canvas drama={drama("working")} />);
+    await renderAt(<Canvas drama={drama("working")} />, "/d/d1/canvas");
     const { user, bar } = await pick(/^林/);
     await user.click(within(bar).getByRole("button", { name: "Send back" }));
     const send = within(bar).getByRole("button", { name: "Send to the agent" });
@@ -118,7 +119,7 @@ describe("the SteerBar", () => {
 
   it("sends a note on a segment to its episode's agent, by episode and segment number", async () => {
     engine();
-    render(<Canvas drama={drama("working")} />);
+    await renderAt(<Canvas drama={drama("working")} />, "/d/d1/canvas");
     const { user, bar } = await pick(/^Storyboard · line-art/);
     await user.click(within(bar).getByRole("button", { name: "Note" }));
     await user.type(within(bar).getByRole("textbox", { name: "Your note" }), "Keep the lamp lit.");
@@ -129,16 +130,16 @@ describe("the SteerBar", () => {
   it("sends back an item under review in its review room, not to the agent", async () => {
     engine([openLooks]);
     answer("/api/reviews/r9", { ...storyboardReview(), id: "r9", kind: "looks", episode: undefined, reviewItems: [{ key: "lin", label: "lin", files: [] }], otherFiles: [] });
-    render(<Canvas drama={drama("working")} />);
+    await renderAt(<Canvas drama={drama("working")} />, "/d/d1/canvas");
     const { bar } = await pick(/^林/);
-    expect(await within(bar).findByRole("link", { name: "Send back in its review" })).toHaveAttribute("href", "/r/r9?item=lin");
+    expect(await within(bar).findByRole("link", { name: "Send back in its review" })).toHaveAttribute("href", "/r/r9?key=lin");
     expect(within(bar).queryByRole("button", { name: "Send back" })).toBeNull();
   });
 
   it("says plainly when the item's agent isn't running, and offers Resume, never queueing the words", async () => {
     const user = userEvent.setup();
     engine();
-    render(<Canvas drama={drama("stopped")} />);
+    await renderAt(<Canvas drama={drama("stopped")} />, "/d/d1/canvas");
     const { bar } = await pick(/^Storyboard · line-art/);
     await user.click(within(bar).getByRole("button", { name: "Send back" }));
     expect(within(bar).getByText(/EP001's agent isn't running: Its Computer stopped/)).toBeInTheDocument();
@@ -151,7 +152,7 @@ describe("the SteerBar", () => {
   it("says so when an episode waits in line, with nothing to resume", async () => {
     const user = userEvent.setup();
     engine();
-    render(<Canvas drama={drama("queued")} />);
+    await renderAt(<Canvas drama={drama("queued")} />, "/d/d1/canvas");
     const { bar } = await pick(/^Storyboard · line-art/);
     await user.click(within(bar).getByRole("button", { name: "Note" }));
     expect(within(bar).getByText(/EP001's agent isn't running: In line/)).toBeInTheDocument();
@@ -161,7 +162,7 @@ describe("the SteerBar", () => {
   it("sends nothing while the agent waits on a review, and points to that review", async () => {
     const user = userEvent.setup();
     engine([], "review", "r5");
-    render(<Canvas drama={drama("working")} />);
+    await renderAt(<Canvas drama={drama("working")} />, "/d/d1/canvas");
     const { bar } = await pick(/^Storyboard · line-art/);
     await user.click(within(bar).getByRole("button", { name: "Note" }));
     expect(await within(bar).findByText(/EP001's agent waits on your review/)).toBeInTheDocument();
@@ -173,27 +174,26 @@ describe("the SteerBar", () => {
   it("sends nothing while the agent waits on an answer", async () => {
     const user = userEvent.setup();
     engine([], "answer");
-    render(<Canvas drama={drama("working")} />);
+    await renderAt(<Canvas drama={drama("working")} />, "/d/d1/canvas");
     const { bar } = await pick(/^林/);
     await user.click(within(bar).getByRole("button", { name: "Send back" }));
     expect(await within(bar).findByText(/The setup's agent waits on your answer/)).toBeInTheDocument();
     expect(within(bar).queryByRole("textbox")).toBeNull();
   });
 
-  it("opens the item's lineage in Graph", async () => {
+  it("opens the item's lineage on its home", async () => {
     engine();
-    render(<Canvas drama={drama("working")} />);
+    const { router } = await renderAt(<Canvas drama={drama("working")} />, "/d/d1/canvas");
     const { user, bar } = await pick(/^林/);
     await user.click(within(bar).getByRole("button", { name: "Lineage" }));
-    // Graph centred on the item's stage, drama-cli's folder (a board id such as character:lin isn't a stage Graph has).
-    expect(location.pathname + location.search).toBe("/d/d1/graph?item=assets%2Fcharacters%2Flin");
-    window.history.pushState(null, "", "/");
+    // Lineage centred on the item's stage, drama-cli's folder (a board id such as character:lin isn't a stage Graph has), on its home.
+    await waitFor(() => expect(href(router)).toBe("/d/d1/assets/characters/lin?view=lineage"));
   });
 
   it("never records a verdict", async () => {
     engine([openLooks]);
     answer("/api/reviews/r9", { ...storyboardReview(), id: "r9", kind: "looks", episode: undefined, reviewItems: [{ key: "lin", label: "lin", files: [] }], otherFiles: [] });
-    render(<Canvas drama={drama("working")} />);
+    await renderAt(<Canvas drama={drama("working")} />, "/d/d1/canvas");
     const { user, bar } = await pick(/^林/);
     await within(bar).findByRole("link", { name: "Review" });
     await user.click(within(await screen.findByRole("region", { name: /what it is made from/ })).getByRole("button", { name: "Close" }));
@@ -240,7 +240,7 @@ describe("a picked item's hand actions and panel (P6.8)", () => {
   it("shows the picture an asset-library id stands for, once drama-cli's record of it has come back", async () => {
     withSpec();
     answer("/api/dramas/d1/assets", { "asset-1": look });
-    render(<Canvas drama={drama("working")} />);
+    await renderAt(<Canvas drama={drama("working")} />, "/d/d1/canvas");
     const { panel } = await panelOf(/^Storyboard · line-art/);
     // Image 2 is asset://asset-1: in the words and among the numbered pictures.
     await waitFor(() => expect(panel.querySelectorAll(".prompt .pchip")[2].querySelector("img")).toHaveAttribute("src", "/f/9?v=1"));
@@ -249,7 +249,7 @@ describe("a picked item's hand actions and panel (P6.8)", () => {
 
   it("labels a node with the model its spec.json names, and with none where no spec came back", async () => {
     withSpec();
-    render(<Canvas drama={drama("working")} />);
+    await renderAt(<Canvas drama={drama("working")} />, "/d/d1/canvas");
     const board = (await screen.findByRole("button", { name: /^Storyboard · line-art/ })).closest(".cnode")!;
     await waitFor(() => expect(board.querySelector(".lab .model")).toHaveTextContent("sd25"));
     const lin = screen.getByRole("button", { name: /^林/ }).closest(".cnode")!;
@@ -258,7 +258,7 @@ describe("a picked item's hand actions and panel (P6.8)", () => {
 
   it("shows the prompt drama-cli sent, each Image N as a chip with the picture it names", async () => {
     withSpec();
-    render(<Canvas drama={drama("working")} />);
+    await renderAt(<Canvas drama={drama("working")} />, "/d/d1/canvas");
     const { panel } = await panelOf(/^Storyboard · line-art/);
     await waitFor(() => expect(within(panel).getByRole("tabpanel").textContent).toContain("She walks in, as in Image 1, past Image 2."));
     const chips = [...panel.querySelectorAll(".prompt .pchip")];
@@ -277,7 +277,7 @@ describe("a picked item's hand actions and panel (P6.8)", () => {
     const lookSpec = { ...spec, id: 12, path: "/work/drama/assets/characters/lin/v1/spec.json", url: "/f/12?v=1" };
     answer("/api/dramas/d1/files", [look, lookSpec]);
     server.use(http.get("/f/12", () => HttpResponse.text(JSON.stringify({ provider: "openai", model: "gpt-image-2", prompt: "A full-body turnaround of 林.", aspect_ratio: "16:9", size: "2K" }))));
-    render(<Canvas drama={drama("working")} />);
+    await renderAt(<Canvas drama={drama("working")} />, "/d/d1/canvas");
     const { panel } = await panelOf(/^林/);
     await waitFor(() => expect(within(panel).getByRole("tabpanel")).toHaveTextContent("A full-body turnaround of 林."));
     expect([...panel.querySelectorAll(".nfoot .pill")].map((pill) => pill.textContent)).toEqual(["gpt-image-2", "16:9 · 2K"]);
@@ -285,14 +285,14 @@ describe("a picked item's hand actions and panel (P6.8)", () => {
 
   it("lists the settings the spec states as the panel's pills, and nothing it doesn't", async () => {
     withSpec();
-    render(<Canvas drama={drama("working")} />);
+    await renderAt(<Canvas drama={drama("working")} />, "/d/d1/canvas");
     const { panel } = await panelOf(/^Storyboard · line-art/);
     await waitFor(() => expect([...panel.querySelectorAll(".nfoot .pill")].map((pill) => pill.textContent)).toEqual(["sd25", "9:16 · 480p · 12s · seed 42"]));
   });
 
   it("shows the request as a JSON tree", async () => {
     withSpec();
-    render(<Canvas drama={drama("working")} />);
+    await renderAt(<Canvas drama={drama("working")} />, "/d/d1/canvas");
     const { user, panel } = await panelOf(/^Storyboard · line-art/);
     await user.click(within(panel).getByRole("tab", { name: "Request" }));
     expect(await within(panel).findByRole("tree", { name: "Request" })).toHaveTextContent(/"sd25"/);
@@ -300,7 +300,7 @@ describe("a picked item's hand actions and panel (P6.8)", () => {
 
   it("says so until the agent returns the version's spec", async () => {
     withBreakdown();
-    render(<Canvas drama={drama("working")} />);
+    await renderAt(<Canvas drama={drama("working")} />, "/d/d1/canvas");
     const { panel } = await panelOf(/^Storyboard · line-art/);
     expect(within(panel).getByRole("tabpanel")).toHaveTextContent("The agent hasn't returned this version's spec.json and request.json.");
   });
@@ -310,7 +310,7 @@ describe("a picked item's hand actions and panel (P6.8)", () => {
     const view = lineageView();
     view.lineage.nodes.find((node) => node.id === "assets/characters/lin")!.problems = ["Changed file: bible/v1/bible.json"];
     answer("/api/dramas/d1/lineage", view);
-    render(<Canvas drama={drama("working")} />);
+    await renderAt(<Canvas drama={drama("working")} />, "/d/d1/canvas");
     const { user, panel } = await panelOf(/^林/);
     await user.click(within(panel).getByRole("tab", { name: "Details" }));
     expect(within(panel).getByRole("tabpanel")).toHaveTextContent(/Why\s*Changed file: bible\/v1\/bible\.json/);
@@ -322,7 +322,7 @@ describe("a picked item's hand actions and panel (P6.8)", () => {
 
   it("says what drama-cli's lineage made it from and what uses it, in the panel's Details", async () => {
     withBreakdown();
-    render(<Canvas drama={drama("working")} />);
+    await renderAt(<Canvas drama={drama("working")} />, "/d/d1/canvas");
     const { user, panel } = await panelOf(/^Take · t01/);
     await user.click(within(panel).getByRole("tab", { name: "Details" }));
     expect(within(panel).getByRole("tabpanel")).toHaveTextContent(/Used by—Reads.*Storyboard · line-art · v1.*林/);
@@ -334,7 +334,7 @@ describe("a picked item's hand actions and panel (P6.8)", () => {
       { turnId: "u1", files: [{ ...look, version: "v1" }], review: { reviewId: "r1", kind: "looks", state: "answered", verdict: "revise", notes: [{ text: "Older, please." }] } },
       { turnId: "u2", files: [{ ...look, version: "v2" }], review: { reviewId: "r2", kind: "looks", state: "answered", verdict: "approve", notes: [] } },
     ] }] }]);
-    render(<Canvas drama={drama("working")} />);
+    await renderAt(<Canvas drama={drama("working")} />, "/d/d1/canvas");
     const { user, panel } = await panelOf(/^林/);
     await user.click(within(panel).getByRole("tab", { name: "Versions" }));
     await waitFor(() => expect(panel.querySelectorAll(".versions > li")).toHaveLength(2));
@@ -346,7 +346,7 @@ describe("a picked item's hand actions and panel (P6.8)", () => {
   it("lists the segment's versions, each with what the maker decided", async () => {
     withBreakdown();
     answer("/api/dramas/d1/episodes/EP001", { segments: [{ key: "seg01", boards: [{ turnId: "u1", files: [{ ...sheet, version: "v1", style: "line-art" }], review: { reviewId: "r1", kind: "storyboards", state: "answered", verdict: "revise", notes: [{ text: "Brighter lamp." }] } }], stills: [], takes: [] }] });
-    render(<Canvas drama={drama("working")} />);
+    await renderAt(<Canvas drama={drama("working")} />, "/d/d1/canvas");
     const { user, panel } = await panelOf(/^Storyboard · line-art/);
     await user.click(within(panel).getByRole("tab", { name: "Versions" }));
     await waitFor(() => expect(panel.querySelector(".versions > li")).not.toBeNull());
@@ -369,7 +369,7 @@ describe("a picked item's hand actions and panel (P6.8)", () => {
         },
       ],
     });
-    render(<Canvas drama={drama("working")} />);
+    await renderAt(<Canvas drama={drama("working")} />, "/d/d1/canvas");
     const versionsOf = async (name: RegExp) => {
       const { user, panel } = await panelOf(name);
       await user.click(within(panel).getByRole("tab", { name: "Versions" }));
@@ -386,7 +386,7 @@ describe("a picked item's hand actions and panel (P6.8)", () => {
 
   it("places the picked node's bar inside the board's visible area, under the pills, and again after a dock", async () => {
     withBreakdown();
-    render(<Canvas drama={drama("working")} />);
+    await renderAt(<Canvas drama={drama("working")} />, "/d/d1/canvas");
     // React Flow writes the viewport and each node's absolute place on the page, and measures its pane as the page lays it out.
     const translate = (element: Element) => (element as HTMLElement).style.transform.match(/translate\((-?[\d.]+)px,\s*(-?[\d.]+)px\)(?:\s*scale\(([\d.]+)\))?/)!.slice(1).map(Number);
     const screen = () => {
@@ -413,7 +413,7 @@ describe("a picked item's hand actions and panel (P6.8)", () => {
   it("says when the versions can't be read, rather than that there are none", async () => {
     withBreakdown();
     server.use(http.get("/api/dramas/d1/episodes/EP001", () => HttpResponse.json({ code: "internal", error: "boom" }, { status: 500 })));
-    render(<Canvas drama={drama("working")} />);
+    await renderAt(<Canvas drama={drama("working")} />, "/d/d1/canvas");
     const { user, panel } = await panelOf(/^Take · t01/);
     await user.click(within(panel).getByRole("tab", { name: "Versions" }));
     expect(await within(panel).findByText("The versions couldn't be read. Try again in a moment.")).toBeInTheDocument();
@@ -422,7 +422,7 @@ describe("a picked item's hand actions and panel (P6.8)", () => {
 
   it("offers the hand actions disabled, saying why, and they do nothing", async () => {
     withBreakdown();
-    render(<Canvas drama={drama("working")} />);
+    await renderAt(<Canvas drama={drama("working")} />, "/d/d1/canvas");
     const { bar } = await pick(/^Storyboard · line-art/);
     const panel = await screen.findByRole("region", { name: /what it is made from/ });
     for (const button of [within(panel).getByRole("button", { name: "Generate" }), within(panel).getByRole("button", { name: "Upload" })]) {
@@ -435,14 +435,14 @@ describe("a picked item's hand actions and panel (P6.8)", () => {
 
   it("downloads the item's picture from its bar", async () => {
     withBreakdown();
-    render(<Canvas drama={drama("working")} />);
+    await renderAt(<Canvas drama={drama("working")} />, "/d/d1/canvas");
     const { bar } = await pick(/^Storyboard · line-art/);
     expect(within(bar).getByRole("link", { name: "Download" })).toHaveAttribute("href", "/f/8?v=1&download=1");
   });
 
   it("moves the minimap aside while a panel is open under its node", async () => {
     withBreakdown();
-    render(<Canvas drama={drama("working")} />);
+    await renderAt(<Canvas drama={drama("working")} />, "/d/d1/canvas");
     expect(await screen.findByRole("img", { name: "Minimap: move the view" })).toBeInTheDocument();
     await panelOf(/^Storyboard · line-art/);
     expect(screen.queryByRole("img", { name: "Minimap: move the view" })).toBeNull();
@@ -450,7 +450,7 @@ describe("a picked item's hand actions and panel (P6.8)", () => {
 
   it("opens the panel under the node, or docked right on asking, and keeps the maker's choice", async () => {
     withBreakdown();
-    const { unmount } = render(<Canvas drama={drama("working")} />);
+    const { unmount } = await renderAt(<Canvas drama={drama("working")} />, "/d/d1/canvas");
     const { user, panel } = await panelOf(/^Storyboard · line-art/);
     expect(panel.closest(".react-flow__node-toolbar")).not.toBeNull();
     await user.click(within(panel).getByRole("button", { name: "Dock right" }));
@@ -459,7 +459,7 @@ describe("a picked item's hand actions and panel (P6.8)", () => {
     expect(docked.closest(".react-flow__node-toolbar")).toBeNull();
     expect(localStorage.getItem("studio.canvas.dock")).toBe("right");
     unmount();
-    render(<Canvas drama={drama("working")} />);
+    await renderAt(<Canvas drama={drama("working")} />, "/d/d1/canvas");
     await pick(/^Storyboard · line-art/);
     expect(await screen.findByRole("region", { name: /what it is made from/ })).toHaveClass("docked");
     localStorage.removeItem("studio.canvas.dock");
@@ -467,7 +467,7 @@ describe("a picked item's hand actions and panel (P6.8)", () => {
 
   it("lets go of the item on Escape, with its bar and panel", async () => {
     withBreakdown();
-    render(<Canvas drama={drama("working")} />);
+    await renderAt(<Canvas drama={drama("working")} />, "/d/d1/canvas");
     const { user } = await pick(/^Storyboard · line-art/);
     await screen.findByRole("region", { name: /what it is made from/ });
     await user.keyboard("{Escape}");

@@ -8,7 +8,7 @@ import { clock, useResource } from "../api.ts";
 import { fountainLines } from "../fountainLines.ts";
 import { Icon } from "../icons.tsx";
 import { useT } from "../i18n.ts";
-import { Link } from "../router.tsx";
+import { Link } from "@tanstack/react-router";
 import { useText } from "../viewing.tsx";
 
 interface Step {
@@ -51,7 +51,7 @@ export function Analyzing({ dramaId }: { dramaId: string }) {
           <p>{t(ready ? "analyzing.readyLede" : "analyzing.lede")}</p>
         </div>
         {ready && (
-          <Link to={`/d/${dramaId}/script`} className="btn lg primary">
+          <Link to="/d/$dramaId/script" params={{ dramaId: dramaId }} className="btn lg primary">
             <Icon name="eye" className="ic" />
             {t("analyzing.review")}
           </Link>

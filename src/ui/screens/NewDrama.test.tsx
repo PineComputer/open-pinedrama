@@ -1,11 +1,12 @@
 // Upload (P5.1): the maker drops one screenplay, chooses how it is made, and starts. The script is
 // the only file a drama takes; a second one replaces the first. Start says what it still needs.
-import { render, screen, waitFor, within } from "@testing-library/react";
+import { screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { setLang } from "../i18n.ts";
 import { answer } from "../test/server.ts";
 import { NewDrama } from "./NewDrama.tsx";
+import { renderAt } from "../test/router.tsx";
 
 const replay = { mode: "replay" as const, version: "0.3.0", dataDir: "/data", stopping: 0 };
 
@@ -45,7 +46,7 @@ describe("Upload", () => {
   it("takes one screenplay: choosing another replaces it", async () => {
     const user = userEvent.setup();
     answer("/api/app", replay);
-    render(<NewDrama />);
+    await renderAt(<NewDrama />);
     const panel = screen.getByRole("region", { name: "Screenplay" });
     expect(within(panel).getByLabelText("Choose a screenplay")).not.toHaveAttribute("multiple");
     await user.upload(within(panel).getByLabelText("Choose a screenplay"), script("first.fountain"));
@@ -59,7 +60,7 @@ describe("Upload", () => {
   it("says what Start still needs, one thing at a time", async () => {
     const user = userEvent.setup();
     answer("/api/app", replay);
-    render(<NewDrama />);
+    await renderAt(<NewDrama />);
     const next = screen.getByRole("complementary", { name: "What happens next" });
     const start = within(next).getByRole("button", { name: "Start" });
     expect(start).toBeDisabled();
@@ -77,7 +78,7 @@ describe("Upload", () => {
     const user = userEvent.setup();
     answer("/api/app", replay);
     const posted = recordStart();
-    render(<NewDrama />);
+    await renderAt(<NewDrama />);
     await user.upload(screen.getByLabelText("Choose a screenplay"), script());
     await user.type(screen.getByRole("textbox", { name: "Title" }), "The Stepmother");
     await user.click(screen.getByRole("button", { name: /English vertical drama/ }));
@@ -88,10 +89,10 @@ describe("Upload", () => {
     expect(posted[0].fields.preset).toBe("en-us-live-sfw");
   });
 
-  it.each(["en", "zh"] as const)("says what happens next, in four steps (%s)", (lang) => {
+  it.each(["en", "zh"] as const)("says what happens next, in four steps (%s)", async (lang) => {
     setLang(lang);
     answer("/api/app", replay);
-    render(<NewDrama />);
+    await renderAt(<NewDrama />);
     const next = screen.getByRole("complementary", { name: lang === "en" ? "What happens next" : "接下来" });
     expect(within(next).getAllByRole("listitem")).toHaveLength(4);
   });

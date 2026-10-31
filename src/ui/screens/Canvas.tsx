@@ -24,7 +24,8 @@ import { type Status, StatusChip } from "../components/StatusChip.tsx";
 import { type TKey, useT } from "../i18n.ts";
 import { Icon } from "../icons.tsx";
 import { headingText, subjectLabel } from "../labels.ts";
-import { Link, navigate, placeHref, placeOf, usePath } from "../router.tsx";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { homeLink, placeLink, usePage, usePlace } from "../place.ts";
 import { Still } from "../Still.tsx";
 import { useText } from "../viewing.tsx";
 import { NodePanel } from "./NodePanel.tsx";
@@ -317,9 +318,10 @@ function Plane({ drama }: { drama: DramaView }) {
   const lineage = lineageView.data?.lineage ?? null;
   const state = project.data?.state ?? null;
   const names = project.data?.names ?? null;
-  // The episode in view and the item picked, as the page's place names them (router.tsx).
-  const { path, query } = usePath();
-  const page = placeOf(path, query);
+  // The episode in view and the item picked, as the page's place names them (place.ts).
+  const navigate = useNavigate();
+  const page = usePlace();
+  const picker = usePage() === "canvasPick";
   const codes = useMemo(() => (state ? Object.keys(state.episodes).sort((a, b) => a.localeCompare(b, "en", { numeric: true })) : []), [state]);
   // The stage the agent saved work for last: the lineage stage whose folder holds the newest file.
   const newest = useMemo(() => {
@@ -329,6 +331,12 @@ function Plane({ drama }: { drama: DramaView }) {
   // One episode per board: the one chosen (the tree, Studio, Graph or the switcher), else the one the agent last saved work for, else the first.
   const code = page?.episode && codes.includes(page.episode) ? page.episode : newest?.where.episode && codes.includes(newest.where.episode) ? newest.where.episode : codes[0];
   const positions = useResource<{ positions: Positions }>(code ? `/api/dramas/${drama.id}/canvas/${code}` : null, [`drama:${drama.id}`]);
+  // The drama's Canvas (the rail's) opens the episode picked here, once what picks it has loaded, on that episode's own Canvas.
+  const named = page?.item;
+  const ready = files.data !== undefined && lineageView.data !== undefined;
+  useEffect(() => {
+    if (picker && code && ready) void navigate({ ...placeLink({ dramaId: drama.id, surface: "canvas", episode: code, item: named }), replace: true });
+  }, [picker, code, ready, named, drama.id, navigate]);
   // An item the link names is shown picked, so the board doesn't follow the agent away from it.
   const [follow, setFollow] = useState(!page?.item);
   const [minimap, setMinimap] = useState(true);
@@ -462,7 +470,7 @@ function Plane({ drama }: { drama: DramaView }) {
 
   if (!state || !code) return <EmptyState title={t("canvas.emptyTitle")}>{t("canvas.emptyText")}</EmptyState>;
   const save = (all: Node[]) => void api(`/api/dramas/${drama.id}/canvas/${code}`, { method: "PUT", json: { positions: Object.fromEntries(all.map((node) => [node.id, node.position])) } });
-  const go = (other: string) => navigate(placeHref({ dramaId: drama.id, surface: "canvas", episode: other }), { replace: true });
+  const go = (other: string) => void navigate({ ...placeLink({ dramaId: drama.id, surface: "canvas", episode: other }), replace: true });
   /**
    * Bring the picked node into the board's visible area at the maker's zoom: its bar's top below the pills, never above
    * the board's top edge (where it would land under what stands over the board, a stop card say), with its panel under
@@ -489,7 +497,7 @@ function Plane({ drama }: { drama: DramaView }) {
   const byId = new Map(mapped.nodes.map((node) => [node.id, node]));
   const labelOf = (id: string) => (byId.get(id)?.data as ItemData | undefined)?.label ?? id;
   const bar = (node: Node<ItemData>) => (
-    <SteerBar drama={drama} node={node.data.item} label={node.data.label} picture={node.data.work} episodeTitle={names?.episodes[code]} lineage={placeHref({ dramaId: drama.id, surface: "graph", episode: node.data.stage.where.episode, item: node.data.stage.id })} />
+    <SteerBar drama={drama} node={node.data.item} label={node.data.label} picture={node.data.work} episodeTitle={names?.episodes[code]} lineage={homeLink(drama.id, node.data.stage.id, "lineage")} />
   );
   const panel = (node: Node<ItemData>) => (
     <NodePanel
@@ -563,7 +571,7 @@ function Plane({ drama }: { drama: DramaView }) {
             </button>
             {drama.waiting > 0 && (
               // What waits for the maker (the reference's "items to confirm"); it opens the drama's review list.
-              <Link to={`/d/${drama.id}/inbox`} className="follow">
+              <Link to="/reviews" search={{ drama: drama.id }} className="follow">
                 <Icon name="list-checks" />
                 {t("canvas.waiting", { n: drama.waiting })}
               </Link>

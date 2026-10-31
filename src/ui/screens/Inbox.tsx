@@ -2,7 +2,7 @@ import type { ReviewSummary } from "../../shared/types.ts";
 import { ago, useResource } from "../api.ts";
 import { type TKey, useT } from "../i18n.ts";
 import { plainText } from "../labels.ts";
-import { Link } from "../router.tsx";
+import { Link } from "@tanstack/react-router";
 import { Still } from "../Still.tsx";
 
 function Asks({ items, dramaId }: { items: ReviewSummary[]; dramaId?: string }) {
@@ -10,7 +10,7 @@ function Asks({ items, dramaId }: { items: ReviewSummary[]; dramaId?: string }) 
   return (
     <div className="queue">
       {items.map((item) => (
-        <Link key={item.id} to={`/r/${item.id}`} className={`ask ${item.state === "ended" ? "ended" : ""}`}>
+        <Link key={item.id} to="/r/$reviewId" params={{ reviewId: item.id }} className={`ask ${item.state === "ended" ? "ended" : ""}`}>
           <div className="thumb">
             <Still still={item.thumb} />
           </div>
@@ -56,14 +56,15 @@ export function InboxList({ dramaId }: { dramaId?: string }) {
   );
 }
 
-export function InboxScreen() {
+/** Reviews: the one queue, or one drama's (IA §16). */
+export function InboxScreen({ dramaId }: { dramaId?: string }) {
   const { t } = useT();
   return (
     <div className="page">
       <div className="head">
         <h1>{t("inbox.title")}</h1>
       </div>
-      <InboxList />
+      <InboxList dramaId={dramaId} />
     </div>
   );
 }

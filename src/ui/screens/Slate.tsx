@@ -8,7 +8,7 @@ import { Menu } from "../components/Menu.tsx";
 import { Icon } from "../icons.tsx";
 import { type TKey, useT } from "../i18n.ts";
 import { countText, errorText, kindLabel, moneyText, plainText } from "../labels.ts";
-import { Link, navigate } from "../router.tsx";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { dropScreenplay } from "./NewDrama.tsx";
 
 type St = "you" | "redline" | "work" | "accepted" | "back";
@@ -124,16 +124,16 @@ function Hero({ waiting, dramas, waitFor, onAll }: { waiting: ReviewSummary[]; d
             <span className="grow" />
             {review ? (
               <>
-                <Link to={`/d/${drama.id}`} className="btn">
+                <Link to="/d/$dramaId/episodes" params={{ dramaId: drama.id }} className="btn">
                   {t("slate.openDrama")}
                 </Link>
-                <Link to={`/r/${review.id}`} className="btn lg primary">
+                <Link to="/r/$reviewId" params={{ reviewId: review.id }} className="btn lg primary">
                   <Icon name="play" className="ic" />
                   {t("slate.review", { kind: t(whatOf(review)) })}
                 </Link>
               </>
             ) : (
-              <Link to={`/d/${drama.id}`} className="btn lg primary">
+              <Link to="/d/$dramaId/episodes" params={{ dramaId: drama.id }} className="btn lg primary">
                 {t("slate.openDrama")}
               </Link>
             )}
@@ -163,7 +163,7 @@ function Hero({ waiting, dramas, waitFor, onAll }: { waiting: ReviewSummary[]; d
               const row = rowOf(item, t, lang);
               return (
                 <li key={item.id}>
-                  <Link to={`/r/${item.id}`} className="wait">
+                  <Link to="/r/$reviewId" params={{ reviewId: item.id }} className="wait">
                     {cover ? <Pic still={cover} /> : <span className="emptythumb" />}
                     <span>
                       <b>{row.title}</b>
@@ -189,7 +189,7 @@ function Card({ drama, redLine, waitFor, onWaitFor }: { drama: DramaCard; redLin
   const planned = facts.scale && facts.length ? Math.round((facts.scale.episodes * Number(facts.length)) / 60) : 0;
   return (
     <div className="pcard">
-      <Link to={`/d/${drama.id}`} className="open">
+      <Link to="/d/$dramaId/episodes" params={{ dramaId: drama.id }} className="open">
         <div className="pic">
           <Cover drama={drama} />
           {total > 0 && (
@@ -236,13 +236,14 @@ function Card({ drama, redLine, waitFor, onWaitFor }: { drama: DramaCard; redLin
  */
 function NewCard() {
   const { t } = useT();
+  const navigate = useNavigate();
   const { getRootProps, isDragActive } = useDropzone({
     multiple: false,
     noClick: true,
     noKeyboard: true,
     onDrop: (files) => {
       if (files[0]) dropScreenplay(files[0]);
-      navigate("/new");
+      void navigate({ to: "/new" });
     },
   });
   return (
@@ -259,6 +260,7 @@ function NewCard() {
 
 export function Slate() {
   const { t, lang } = useT();
+  const navigate = useNavigate();
   const { data, error } = useResource<DramaCard[]>("/api/dramas", ["dramas", "inbox"]);
   const inbox = useResource<ReviewSummary[]>("/api/inbox", ["inbox"]);
   const app = useResource<AppInfo>("/api/app", ["app"]);
@@ -269,7 +271,7 @@ export function Slate() {
   const [waitFor, setWaitFor] = useState<string>();
   const sample = useAction(async () => {
     const { id } = await api<{ id: string }>("/api/dramas/sample", { method: "POST", json: { language: lang } });
-    navigate(`/d/${id}`);
+    void navigate({ to: "/d/$dramaId/episodes", params: { dramaId: id } });
   });
   const dramas = data ?? [];
   // On a project without the drama skill, the way to try the studio on Pine is a rehearsal.

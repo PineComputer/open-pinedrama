@@ -13,7 +13,7 @@ import { Icon } from "../icons.tsx";
 import { type TKey, useT } from "../i18n.ts";
 import { errorText } from "../labels.ts";
 import { Markdown } from "../Markdown.tsx";
-import { Link, navigate } from "../router.tsx";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { Watch } from "../screens/Crew.tsx";
 
 export type AgentMode = "docked" | "floating" | "collapsed";
@@ -97,6 +97,7 @@ function Running({ drama, session, inView, inFlight, onPick }: { drama: DramaVie
 
 export function AgentPanel({ drama, episode, mode, onMode }: { drama: DramaView; episode?: string; mode: Exclude<AgentMode, "collapsed">; onMode: (mode: AgentMode) => void }) {
   const { t, lang } = useT();
+  const navigate = useNavigate();
   const id = drama.id;
   const project = useResource<ProjectView>(`/api/dramas/${id}/project`, [`project:${id}`]);
   const inbox = useResource<ReviewSummary[]>(`/api/inbox?drama=${id}`, ["inbox"]);
@@ -168,7 +169,7 @@ export function AgentPanel({ drama, episode, mode, onMode }: { drama: DramaView;
           </h3>
           {decisions.length ? (
             decisions.map((item) => (
-              <Link key={item.id} to={`/r/${item.id}`} className="dec">
+              <Link key={item.id} to="/r/$reviewId" params={{ reviewId: item.id }} className="dec">
                 {item.thumb?.video ? <video src={`${item.thumb.url}#t=0.5`} muted playsInline preload="metadata" style={{ width: 34, height: 46, borderRadius: 6, objectFit: "cover" }} /> : item.thumb ? <img src={item.thumb.url} alt="" /> : <span />}
                 <span>
                   <b>{[item.episode, t(`kind.${item.kind}` as TKey)].filter(Boolean).join(" · ")}</b>
@@ -237,7 +238,7 @@ export function AgentPanel({ drama, episode, mode, onMode }: { drama: DramaView;
             <h3>{t("agent.next")}</h3>
             <div className="nextchips">
               {decisions.slice(0, 3).map((item) => (
-                <button key={item.id} type="button" onClick={() => navigate(`/r/${item.id}`)}>
+                <button key={item.id} type="button" onClick={() => void navigate({ to: "/r/$reviewId", params: { reviewId: item.id } })}>
                   {t("agent.reviewNext", { what: [item.episode, t(`kind.${item.kind}` as TKey)].filter(Boolean).join(" ") })}
                 </button>
               ))}
@@ -284,7 +285,7 @@ function Composer({ chat, onSent, pinned, onFollow }: { chat?: ChatView; onSent:
       />
       <div className="crow">
         {reviewing ? (
-          <Link to={`/r/${chat.reviewId}`} className="grow">
+          <Link to="/r/$reviewId" params={{ reviewId: reviewing }} className="grow">
             {t("talk.openReview")}
           </Link>
         ) : (

@@ -1,12 +1,13 @@
 // Home, ported from the pro prototype: dense drama cards whose every fact comes from drama-cli's status, the bible or the engine's records,
 // a shelf for each state, and the drama to carry on with even when nothing waits for the maker.
-import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import { fireEvent, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { DramaCard } from "../../shared/types.ts";
 import { answer } from "../test/server.ts";
 import { takeDroppedScreenplay } from "./NewDrama.tsx";
 import { Slate } from "./Slate.tsx";
+import { href, renderAt } from "../test/router.tsx";
 
 const replay = { mode: "replay" as const, version: "0.3.0", dataDir: "/data", stopping: 0 };
 
@@ -38,7 +39,7 @@ describe("Home", () => {
     answer("/api/app", replay);
     answer("/api/inbox", []);
     answer("/api/dramas", [stepmother, bride]);
-    render(<Slate />);
+    await renderAt(<Slate />);
     const tile = await tileOf(/The Stepmother/);
     expect(tile).toHaveTextContent("A stepmother takes over a house that doesn't want her.");
     expect(tile).toHaveTextContent("2 episodes · 5 scenes · 12 segments");
@@ -55,7 +56,7 @@ describe("Home", () => {
     answer("/api/app", replay);
     answer("/api/inbox", []);
     answer("/api/dramas", [{ ...stepmother, cast: ["/api/files/7"], cover: { url: "/api/files/9" } }, { ...bride, cast: ["/api/files/8"] }]);
-    render(<Slate />);
+    await renderAt(<Slate />);
     const withWork = await tileOf(/The Stepmother/);
     expect(withWork.querySelector(".pic img")).toHaveAttribute("src", "/api/files/9");
     const empty = await tileOf(/Bride on Bail/);
@@ -68,7 +69,7 @@ describe("Home", () => {
     answer("/api/app", replay);
     answer("/api/inbox", []);
     answer("/api/dramas", [stepmother, bride]);
-    render(<Slate />);
+    await renderAt(<Slate />);
     const hour = new Date().getHours();
     const greeting = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
     expect(await screen.findByRole("heading", { level: 1, name: greeting })).toBeInTheDocument();
@@ -81,7 +82,7 @@ describe("Home", () => {
       { id: "r2", dramaId: "d1", dramaTitle: "The Stepmother", kind: "question", state: "open", question: "How old?", items: 0, subjects: [], createdAt: "2026-10-30T11:50:00Z" },
     ]);
     answer("/api/dramas", [{ ...stepmother, waiting: 2, cover: { url: "/api/files/9" } }]);
-    render(<Slate />);
+    await renderAt(<Slate />);
     const waiting = await screen.findByRole("list", { name: "Waiting for you" });
     // The take's own picture is left for its review: the row and the card read as one drama.
     for (const row of within(waiting).getAllByRole("link")) expect(row.querySelector("img")).toHaveAttribute("src", "/api/files/9");
@@ -91,7 +92,7 @@ describe("Home", () => {
     answer("/api/app", replay);
     answer("/api/inbox", []);
     answer("/api/dramas", [{ ...stepmother, facts: { ...stepmother.facts, genres: ["Romance", "Contract marriage", "Revenge"] } }]);
-    render(<Slate />);
+    await renderAt(<Slate />);
     const tile = await tileOf(/The Stepmother/);
     expect(within(tile).getByText("Romance")).toBeInTheDocument();
     expect(within(tile).getByText("Contract marriage")).toBeInTheDocument();
@@ -107,7 +108,7 @@ describe("Home", () => {
       { id: "r1", dramaId: "d1", dramaTitle: "The Stepmother", episode: "EP001", kind: "takes", state: "open", question: "Two takes wait.", items: 2, subjects: ["seg01", "seg03"], createdAt: "2026-10-30T11:56:00Z" },
     ]);
     answer("/api/dramas", [{ ...bride, waiting: 1, facts: { lastActivity: "2026-10-27T11:00:00Z" } }, { ...stepmother, waiting: 1 }]);
-    render(<Slate />);
+    await renderAt(<Slate />);
     const hero = await screen.findByRole("region", { name: "The Stepmother" });
     expect(within(hero).getByText("“Two takes wait.”", { selector: "blockquote" })).toBeInTheDocument();
     expect(hero).toHaveTextContent("EP001 · 2 takes wait for you");
@@ -126,7 +127,7 @@ describe("Home", () => {
     answer("/api/app", replay);
     answer("/api/inbox", []);
     answer("/api/dramas", [{ ...bride, facts: { lastActivity: "2026-10-27T11:00:00Z" } }, stepmother]);
-    render(<Slate />);
+    await renderAt(<Slate />);
     const shelf = await screen.findByRole("tabpanel");
     const titles = () => [...shelf.querySelectorAll(".pcard b")].map((title) => title.textContent);
     await waitFor(() => expect(titles()).toEqual(["The Stepmother", "Bride on Bail"]));
@@ -140,13 +141,13 @@ describe("Home", () => {
     answer("/api/app", replay);
     answer("/api/inbox", []);
     answer("/api/dramas", [stepmother]);
-    render(<Slate />);
+    const { router } = await renderAt(<Slate />);
     const card = await within(await screen.findByRole("tabpanel")).findByRole("link", { name: /New drama/ });
     expect(card).toHaveTextContent("Drop a screenplay here");
     expect(card).toHaveTextContent("Fountain, Word, PDF or plain text");
     const file = new File(["EPISODE 1"], "stepmother.fountain");
     fireEvent.drop(card, { dataTransfer: { files: [file], items: [{ kind: "file", type: "", getAsFile: () => file }], types: ["Files"] } });
-    await waitFor(() => expect(location.pathname).toBe("/new"));
+    await waitFor(() => expect(href(router)).toBe("/new"));
     expect(takeDroppedScreenplay()).toBe(file);
     expect(takeDroppedScreenplay()).toBeUndefined();
   });
@@ -155,7 +156,7 @@ describe("Home", () => {
     answer("/api/app", replay);
     answer("/api/inbox", []);
     answer("/api/dramas", [stepmother, bride]);
-    render(<Slate />);
+    await renderAt(<Slate />);
     const tabs = await screen.findByRole("tablist");
     expect(within(tabs).getAllByRole("tab").map((tab) => tab.textContent)).toEqual(["All2", "Needs you0", "At work1", "Finished0"]);
   });
@@ -164,11 +165,11 @@ describe("Home", () => {
     answer("/api/app", replay);
     answer("/api/inbox", []);
     answer("/api/dramas", [bride, stepmother]);
-    render(<Slate />);
+    await renderAt(<Slate />);
     const hero = await screen.findByRole("region", { name: "The Stepmother" });
     expect(hero).toHaveTextContent("Drawing the storyboards for EP001");
     expect(hero).toHaveTextContent(/updated \d+ \w+ ago/);
-    expect(within(hero).getByRole("link", { name: /Open drama/ })).toHaveAttribute("href", "/d/d1");
+    expect(within(hero).getByRole("link", { name: /Open drama/ })).toHaveAttribute("href", "/d/d1/episodes");
   });
 
   it("shows a red line waiting on the maker as its own state, under Needs you", async () => {
@@ -177,7 +178,7 @@ describe("Home", () => {
       { id: "r7", dramaId: "d2", dramaTitle: "Bride on Bail", episode: "EP007", kind: "question", state: "open", question: "A red line.", items: 0, subjects: [], stop: { kind: "red-line" }, createdAt: "2026-10-30T11:58:00Z" },
     ]);
     answer("/api/dramas", [stepmother, { ...bride, status: "production", waiting: 1 }]);
-    render(<Slate />);
+    await renderAt(<Slate />);
     const waiting = await screen.findByRole("list", { name: "Waiting for you" });
     expect(within(waiting).getByRole("link")).toHaveTextContent("Bride on Bail · EP007Red line · 2 min");
     expect((await tileOf(/Bride on Bail/)).parentElement?.querySelector(".st.redline")).toHaveTextContent("Red line");
@@ -192,7 +193,7 @@ describe("Home", () => {
       { id: "r2", dramaId: "d2", dramaTitle: "Bride on Bail", episode: "EP004", kind: "storyboards", state: "open", question: "", items: 6, subjects: [], createdAt: "2026-10-30T11:50:00Z" },
     ]);
     answer("/api/dramas", [{ ...stepmother, waiting: 1 }, { ...bride, status: "production", waiting: 1 }]);
-    render(<Slate />);
+    await renderAt(<Slate />);
     const waiting = await screen.findByRole("list", { name: "Waiting for you" });
     expect(within(waiting).getAllByRole("link")).toHaveLength(2);
     const pill = screen.getByRole("button", { name: "1 need you", description: "Show what waits for you in Bride on Bail" });

@@ -151,11 +151,24 @@ function texts(value: unknown, field: string): string[] {
   return list(value, field).map((item, n) => text(item, join(field, n)));
 }
 
+function parts(match: RegExpMatchArray, names: (keyof Where)[]): Where {
+  return Object.fromEntries(names.flatMap((part, n) => (match[n + 1] === undefined ? [] : [[part, match[n + 1]]])));
+}
+
 function where(kind: LineageKind, id: string, field: string): Where {
-  const [, pattern, parts] = KINDS.find(([name]) => name === kind)!;
+  const [, pattern, names] = KINDS.find(([name]) => name === kind)!;
   const match = id.match(pattern);
   if (!match) throw new LineageError(field, `the folder of a ${kind} stage`);
-  return Object.fromEntries(parts.flatMap((part, n) => (match[n + 1] === undefined ? [] : [[part, match[n + 1]]])));
+  return parts(match, names);
+}
+
+/** A stage's kind and parts read from its id alone, as a link names it; undefined for an id that is no stage folder of drama-cli's. */
+export function stageOf(id: string): { kind: LineageKind; where: Where } | undefined {
+  for (const [kind, pattern, names] of KINDS) {
+    const match = id.match(pattern);
+    if (match) return { kind, where: parts(match, names) };
+  }
+  return undefined;
 }
 
 /** A pair of finite numbers, as the export writes a pos or a size. */

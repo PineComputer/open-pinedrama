@@ -12,9 +12,18 @@ import type { ProjectView } from "../../shared/project.ts";
 import { Icon } from "../icons.tsx";
 import { useT } from "../i18n.ts";
 import { errorText, subjectLabel, useNames } from "../labels.ts";
-import { Link } from "../router.tsx";
+import { Link, linkOptions, useNavigate } from "@tanstack/react-router";
+import { type Page, useRoute } from "../place.ts";
 
 type Shelf = "bible" | "cast" | "scenes" | "props";
+
+// Each shelf's page: the bible is Story's, the assets each their own (IA §16).
+function shelfLink(shelf: Shelf, dramaId: string) {
+  if (shelf === "bible") return linkOptions({ to: "/d/$dramaId/story", params: { dramaId } });
+  if (shelf === "cast") return linkOptions({ to: "/d/$dramaId/assets/characters/{-$assetId}", params: { dramaId } });
+  if (shelf === "scenes") return linkOptions({ to: "/d/$dramaId/assets/locations/{-$assetId}", params: { dramaId } });
+  return linkOptions({ to: "/d/$dramaId/assets/props/{-$assetId}", params: { dramaId } });
+}
 
 /** Where a version stands, by what the maker decided on the review that showed it. */
 function standing(receipt: Receipt | undefined): Status | undefined {
@@ -26,7 +35,7 @@ function standing(receipt: Receipt | undefined): Status | undefined {
 }
 
 /** One character's look: its newest version's picture, where it stands, and the versions before it. */
-function Card({ card, look, names, dramaId }: { card: CastCard; look: CastCard["looks"][number]; names: Names | null; dramaId: string }) {
+function Card({ card, look, names, dramaId, picked }: { card: CastCard; look: CastCard["looks"][number]; names: Names | null; dramaId: string; picked: boolean }) {
   const { t } = useT();
   const [index, setIndex] = useState(0);
   const shown = look.versions[Math.min(index, look.versions.length - 1)];
@@ -39,7 +48,7 @@ function Card({ card, look, names, dramaId }: { card: CastCard; look: CastCard["
   // The design's cast card (design/screens.js, Story; studio.css .castcard): the sheet, where it stands, the name and
   // version, the look, its other names and episodes; its versions to flip through, and the way to its review.
   return (
-    <article className="castcard" aria-label={name}>
+    <article className="castcard" aria-label={name} aria-current={picked || undefined}>
       <a className="pic" href={file.url} target="_blank" rel="noreferrer" style={{ display: "block" }}>
         <img src={file.url} alt="" loading="lazy" />
         {status && <StatusChip status={status} />}
@@ -66,7 +75,7 @@ function Card({ card, look, names, dramaId }: { card: CastCard; look: CastCard["
           <div className="aka">
             <span className="muted">{t("cast.in")}</span>
             {card.episodes.map((code) => (
-              <Link key={code} to={`/d/${dramaId}/e/${code}`} className="tag">
+              <Link key={code} to="/d/$dramaId/e/$episodeCode/list" params={{ dramaId: dramaId, episodeCode: code }} className="tag">
                 {code}
               </Link>
             ))}
@@ -85,7 +94,7 @@ function Card({ card, look, names, dramaId }: { card: CastCard; look: CastCard["
             )}
             <span className="grow" />
             {shown.review && (
-              <Link to={`/r/${shown.review.reviewId}`} className={`btn sm ${status === "you" ? "primary" : "ghost"}`}>
+              <Link to="/r/$reviewId" params={{ reviewId: shown.review.reviewId }} className={`btn sm ${status === "you" ? "primary" : "ghost"}`}>
                 {status === "you" ? t("cast.review") : t("judged.open")}
               </Link>
             )}
@@ -108,7 +117,7 @@ function versionsOf(entry: CastCard["looks"][number] | undefined) {
  * A place as drama-cli scenes draws it, or a key prop as drama-cli props does (the design's .placecard): its plate or
  * picture, where its newest version stands, the bible's name and description, its views and its times of day.
  */
-function PlaceCard({ card, names, dramaId }: { card: CastCard; names: Names | null; dramaId: string }) {
+function PlaceCard({ card, names, dramaId, picked }: { card: CastCard; names: Names | null; dramaId: string; picked: boolean }) {
   const { t } = useT();
   const place = card.kind === "location";
   const plate = card.looks.find((entry) => !entry.look);
@@ -122,7 +131,7 @@ function PlaceCard({ card, names, dramaId }: { card: CastCard; names: Names | nu
   for (const version of plate?.versions ?? []) for (const view of version.files) if (view.style && !views.has(view.style)) views.set(view.style, view);
   const times = card.looks.filter((entry) => entry.look).map((entry) => ({ time: entry.look, file: versionsOf(entry).file }));
   return (
-    <article className="placecard" aria-label={name}>
+    <article className="placecard" aria-label={name} aria-current={picked || undefined}>
       <a className="pic" href={file.url} target="_blank" rel="noreferrer" style={{ display: "block" }}>
         <img src={file.url} alt="" loading="lazy" />
         {status && status !== "accepted" && <StatusChip status={status} />}
@@ -160,14 +169,14 @@ function PlaceCard({ card, names, dramaId }: { card: CastCard; names: Names | nu
           <div className="aka">
             <span className="muted">{t("cast.in")}</span>
             {card.episodes.map((code) => (
-              <Link key={code} to={`/d/${dramaId}/e/${code}`} className="tag">
+              <Link key={code} to="/d/$dramaId/e/$episodeCode/list" params={{ dramaId: dramaId, episodeCode: code }} className="tag">
                 {code}
               </Link>
             ))}
           </div>
         )}
         {newest?.review && status === "you" && (
-          <Link to={`/r/${newest.review.reviewId}`} className="btn primary sm">
+          <Link to="/r/$reviewId" params={{ reviewId: newest.review.reviewId }} className="btn primary sm">
             {t("cast.review")}
           </Link>
         )}
@@ -176,20 +185,26 @@ function PlaceCard({ card, names, dramaId }: { card: CastCard; names: Names | nu
   );
 }
 
+// The shelf each page shows.
+const SHELF_OF: Partial<Record<Page, Shelf>> = { story: "bible", characters: "cast", locations: "scenes", props: "props" };
+
+/** The bible and the assets, on the shelf the page shows with the asset it names picked; compact, the characters alone. */
 export function Cast({ dramaId, compact = false }: { dramaId: string; compact?: boolean }) {
+  const navigate = useNavigate();
+  const route = useRoute();
+  const shelf = SHELF_OF[route.page ?? "story"] ?? "bible";
+  const picked = route.params.assetId;
   const { t } = useT();
   const { data, error } = useResource<CastCard[]>(`/api/dramas/${dramaId}/cast`, [`drama:${dramaId}`]);
   const names = useNames(dramaId);
   const drama = useResource<DramaView>(`/api/dramas/${dramaId}`, [`drama:${dramaId}`]);
   const project = useResource<ProjectView>(`/api/dramas/${dramaId}/project`, [`project:${dramaId}`]);
-  // The Story opens on the bible, as the pro direction's does.
-  const [shelf, setShelf] = useState<Shelf>("bible");
   const characters = (data ?? []).filter((card) => card.kind === "look");
   const places = (data ?? []).filter((card) => card.kind === "location");
   const props = (data ?? []).filter((card) => card.kind === "prop");
   const castGrid = (
     <div className="castgrid">
-      {characters.flatMap((card) => card.looks.map((look) => <Card key={`${card.subject}/${look.look}`} card={card} look={look} names={names} dramaId={dramaId} />))}
+      {characters.flatMap((card) => card.looks.map((look) => <Card key={`${card.subject}/${look.look}`} card={card} look={look} names={names} dramaId={dramaId} picked={card.subject === picked} />))}
     </div>
   );
   if (!data) return <p className={error === undefined ? "quiet" : "error"}>{error === undefined ? t("loading") : errorText(error, t)}</p>;
@@ -221,7 +236,7 @@ export function Cast({ dramaId, compact = false }: { dramaId: string; compact?: 
   ];
   // The design's Story (design/screens.js, Story): underlined tabs with the bible's state at their end, then the shelf.
   return (
-    <TabsPrimitive.Root value={shelf} onValueChange={(next) => setShelf(next as Shelf)}>
+    <TabsPrimitive.Root value={shelf} onValueChange={(next) => void navigate(shelfLink(next as Shelf, dramaId))}>
       <h2 className="sr-only">{t("step.story")}</h2>
       <div style={{ padding: "0 16px" }}>
         <div className="tabsrow" style={{ margin: "4px 0 18px" }}>
@@ -287,7 +302,7 @@ export function Cast({ dramaId, compact = false }: { dramaId: string; compact?: 
                 {episodes.map(([code, title]) => {
                   const frame = drama.data?.episodeRows.find((row) => row.code === code)?.frame;
                   return (
-                    <Link key={code} to={`/d/${dramaId}/e/${code}`} className="eprow">
+                    <Link key={code} to="/d/$dramaId/e/$episodeCode/list" params={{ dramaId: dramaId, episodeCode: code }} className="eprow">
                       {frame ? <img src={frame.url} alt="" /> : <span />}
                       <span className="mono">{code}</span>
                       <b>{title}</b>
@@ -310,7 +325,7 @@ export function Cast({ dramaId, compact = false }: { dramaId: string; compact?: 
         <TabsPrimitive.Content key={shelf} value={shelf}>
           <div className="worldgrid">
             {(shelf === "scenes" ? places : props).map((card) => (
-              <PlaceCard key={card.subject} card={card} names={names} dramaId={dramaId} />
+              <PlaceCard key={card.subject} card={card} names={names} dramaId={dramaId} picked={card.subject === picked} />
             ))}
           </div>
         </TabsPrimitive.Content>

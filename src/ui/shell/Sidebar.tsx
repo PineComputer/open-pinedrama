@@ -2,6 +2,7 @@
 // with its markup and classes: on the studio's pages its places; in a drama the drama, its steps
 // Script · Story · Episodes · Cut with what waits for the maker under each, the episode tree under
 // Episodes, or the setup's steps while it is set up; and at the foot what it has spent.
+import { Link, linkOptions, type LinkOptions, useNavigate } from "@tanstack/react-router";
 import type { ProjectView, SessionReport } from "../../shared/project.ts";
 import type { DramaCard, DramaView, EpisodeRow, ReviewKind, ReviewSummary } from "../../shared/types.ts";
 import { useResource } from "../api.ts";
@@ -10,16 +11,17 @@ import { Icon, type IconName } from "../icons.tsx";
 import { type TKey, useT } from "../i18n.ts";
 import { isSettingUp, moneyText, nowText, scriptWaits, SETUP_STEPS } from "../labels.ts";
 import { Mark } from "../Mark.tsx";
-import { Link, navigate } from "../router.tsx";
+import type { Page } from "../place.ts";
 
 export type Step = "script" | "story" | "episodes" | "cut";
 
-const STEPS: { step: Step; label: TKey; path: string; icon: IconName }[] = [
-  { step: "script", label: "step.script", path: "script", icon: "file-text" },
-  { step: "story", label: "step.story", path: "story", icon: "users" },
-  { step: "episodes", label: "step.episodes", path: "", icon: "film-strip" },
-  { step: "cut", label: "step.cut", path: "cut", icon: "scissors" },
-];
+// Each step's page; a drama's Cut is its Delivery, each episode's cut being in the episode (IA §16).
+const STEPS = [
+  { step: "script", label: "step.script", to: "/d/$dramaId/script", icon: "file-text" },
+  { step: "story", label: "step.story", to: "/d/$dramaId/story", icon: "users" },
+  { step: "episodes", label: "step.episodes", to: "/d/$dramaId/episodes", icon: "film-strip" },
+  { step: "cut", label: "step.cut", to: "/d/$dramaId/delivery", icon: "scissors" },
+] as const satisfies readonly { step: Step; label: TKey; to: LinkOptions["to"]; icon: IconName }[];
 
 type Mark = "you" | "work" | "done" | "line";
 
@@ -30,20 +32,20 @@ function markOf(row: EpisodeRow): Mark {
 }
 
 /** The step a drama's page is on: before there are episodes, its board is the story being made. */
-export function stepOf(drama: DramaView, tab: string): Step | undefined {
+export function stepOf(drama: DramaView, page: Page | undefined): Step | undefined {
   const settingUp = isSettingUp(drama);
-  if (tab === "script" || tab === "analyzing") return "script";
-  if (tab === "story" || (tab === "board" && settingUp)) return "story";
-  if (tab === "cut") return "cut";
-  return tab === "board" || tab === "episode" ? "episodes" : undefined;
+  if (page === "script" || page === "analyzing") return "script";
+  if (page === "story" || page === "characters" || page === "locations" || page === "props" || (page === "episodes" && settingUp)) return "story";
+  if (page === "delivery" || page === "cut") return "cut";
+  return page === "episodes" || page === "list" ? "episodes" : undefined;
 }
 
 /** The studio's pages, as the design's sidebar for Home has them (design/app.js, Side): the dramas and settings; Computers and Usage come in phase 2. */
-export function HomeSidebar({ path, replay }: { path: string; replay: boolean }) {
+export function HomeSidebar({ page, replay }: { page: Page | undefined; replay: boolean }) {
   const { t } = useT();
-  const item = (to: string | null, icon: IconName, label: string, current: boolean) =>
+  const item = (to: LinkOptions | null, icon: IconName, label: string, current: boolean) =>
     to ? (
-      <Link to={to} className="navi" aria-current={current ? "page" : "false"}>
+      <Link {...to} className="navi" aria-current={current ? "page" : "false"}>
         <Icon name={icon} className="ic" />
         {label}
         <span className="end"><Icon name="caret-right" className="ic" /></span>
@@ -65,11 +67,11 @@ export function HomeSidebar({ path, replay }: { path: string; replay: boolean })
       </div>
       <nav className="scroll" aria-label={t("sidebar.places")}>
         <div className="sec">{t("sidebar.studio")}</div>
-        {item("/", "film-strip", t("nav.dramas"), path === "/" || path === "/new")}
+        {item(linkOptions({ to: "/" }), "film-strip", t("nav.dramas"), page === "home" || page === "new")}
         {item(null, "cube", t("nav.computers"), false)}
         <div className="sec">{t("sidebar.account")}</div>
         {item(null, "coins", t("nav.usage"), false)}
-        {item("/settings", "gear-six", t("nav.settings"), path === "/settings")}
+        {item(linkOptions({ to: "/settings" }), "gear-six", t("nav.settings"), page === "settings")}
       </nav>
       <div className="foot">
         <div className="who">
@@ -125,11 +127,12 @@ function Standing({ drama, sessions }: { drama: DramaView; sessions: SessionRepo
 const usd = (value: number) => `$${value.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).replace(/\.00$/, "")}`;
 
 /** A drama's sidebar, as the design's (design/app.js, Side; screens.js, SetupSteps). */
-export function DramaSidebar({ drama, tab, episode }: { drama: DramaView; tab: string; episode?: string }) {
+export function DramaSidebar({ drama, page, episode }: { drama: DramaView; page: Page | undefined; episode?: string }) {
   const { t } = useT();
+  const navigate = useNavigate();
   const others = useResource<DramaCard[]>("/api/dramas", ["dramas"]);
   const project = useResource<ProjectView>(`/api/dramas/${drama.id}/project`, [`project:${drama.id}`]);
-  const step = stepOf(drama, tab);
+  const step = stepOf(drama, page);
   // What waits for the maker under each step: the drama's open reviews, by the step their kind belongs to.
   const reviews = useResource<ReviewSummary[]>(`/api/inbox?drama=${drama.id}`, ["inbox"]);
   const STEP_OF: Record<ReviewKind, Step> = { question: "story", looks: "story", references: "story", storyboards: "episodes", takes: "episodes", cut: "cut" };
@@ -159,8 +162,8 @@ export function DramaSidebar({ drama, tab, episode }: { drama: DramaView; tab: s
           </>
         }
         items={[
-          ...(others.data ?? []).filter((other) => other.id !== drama.id).map((other) => ({ label: other.title, run: () => navigate(`/d/${other.id}`) })),
-          { label: t("sidebar.allDramas"), run: () => navigate("/") },
+          ...(others.data ?? []).filter((other) => other.id !== drama.id).map((other) => ({ label: other.title, run: () => void navigate({ to: "/d/$dramaId/episodes", params: { dramaId: other.id } }) })),
+          { label: t("sidebar.allDramas"), run: () => void navigate({ to: "/" }) },
         ]}
       />
     </div>
@@ -168,9 +171,9 @@ export function DramaSidebar({ drama, tab, episode }: { drama: DramaView; tab: s
   if (settingUp) {
     // The setup's steps, as the design's SetupSteps: Script, Story, Episodes and Cut, each where it stands.
     const reached = drama.setup.reached;
-    const rows: { key: Step; label: TKey; state: "done" | "you" | "work" | "line"; detail: TKey; to?: string }[] = [
-      { key: "script", label: "step.script", state: scriptDone ? "done" : scriptWaits(drama) ? "you" : "work", detail: scriptDone ? "setupSteps.done" : scriptWaits(drama) ? "setupSteps.yourReview" : "setupSteps.checking", to: `/d/${drama.id}/script` },
-      { key: "story", label: "step.story", state: !scriptDone ? "line" : drama.setup.state === "waiting" ? "you" : reached >= 4 ? "done" : "work", detail: !scriptDone ? "setupSteps.afterYourReview" : drama.setup.state === "waiting" ? "setupSteps.yourReview" : "setupSteps.making", to: `/d/${drama.id}/story` },
+    const rows: { key: Step; label: TKey; state: "done" | "you" | "work" | "line"; detail: TKey; to?: LinkOptions }[] = [
+      { key: "script", label: "step.script", state: scriptDone ? "done" : scriptWaits(drama) ? "you" : "work", detail: scriptDone ? "setupSteps.done" : scriptWaits(drama) ? "setupSteps.yourReview" : "setupSteps.checking", to: linkOptions({ to: "/d/$dramaId/script", params: { dramaId: drama.id } }) },
+      { key: "story", label: "step.story", state: !scriptDone ? "line" : drama.setup.state === "waiting" ? "you" : reached >= 4 ? "done" : "work", detail: !scriptDone ? "setupSteps.afterYourReview" : drama.setup.state === "waiting" ? "setupSteps.yourReview" : "setupSteps.making", to: linkOptions({ to: "/d/$dramaId/story", params: { dramaId: drama.id } }) },
       { key: "episodes", label: "step.episodes", state: reached >= 4 ? "work" : "line", detail: reached >= 4 ? "setupSteps.making" : "setupSteps.afterLooks" },
       { key: "cut", label: "step.cut", state: "line", detail: "setupSteps.perEpisode" },
     ];
@@ -182,7 +185,7 @@ export function DramaSidebar({ drama, tab, episode }: { drama: DramaView; tab: s
           <ol className="setup" aria-label={t("rail.steps")}>
             {rows.map((row, n) => (
               <li key={row.key} className={row.state}>
-                <button type="button" disabled={!row.to} aria-current={row.key === step ? "true" : "false"} onClick={() => row.to && navigate(row.to)}>
+                <button type="button" disabled={!row.to} aria-current={row.key === step ? "true" : "false"} onClick={() => row.to && void navigate(row.to)}>
                   <span className="n">{row.state === "done" ? <Icon name="check" className="ic" /> : n + 1}</span>
                   <span>
                     <b>{t(row.label)}</b>
@@ -201,9 +204,9 @@ export function DramaSidebar({ drama, tab, episode }: { drama: DramaView; tab: s
     <aside className="side" aria-label={t("sidebar.label")}>
       {head}
       <nav className="scroll" aria-label={t("rail.steps")}>
-        {STEPS.map(({ step: key, label, path, icon }) => (
+        {STEPS.map(({ step: key, label, to, icon }) => (
           <div key={key} className="contents">
-            <Link to={`/d/${drama.id}${path ? `/${path}` : ""}`} className="navi" aria-current={key === step ? "page" : "false"}>
+            <Link to={to} params={{ dramaId: drama.id }} className="navi" aria-current={key === step ? "page" : "false"}>
               <Icon name={icon} className="ic" />
               {t(label)}
               {needs[key] > 0 ? (
@@ -221,7 +224,7 @@ export function DramaSidebar({ drama, tab, episode }: { drama: DramaView; tab: s
                   return (
                     <li key={row.id}>
                       {/* The name is what the button shows, then where it stands, said rather than shown (WCAG 2.5.3). */}
-                      <button type="button" aria-current={row.code === episode ? "true" : "false"} onClick={() => navigate(`/d/${drama.id}/e/${row.code}`)}>
+                      <button type="button" aria-current={row.code === episode ? "true" : "false"} onClick={() => void navigate({ to: "/d/$dramaId/e/$episodeCode/list", params: { dramaId: drama.id, episodeCode: row.code } })}>
                         <span className="code">{row.code}</span> <span className="now">{nowText(row, t)}</span>
                         <span className="sr-only">, {t(`tree.${mark}` as TKey)}</span>
                         <span className={`dot ${DOT[mark]}`} aria-hidden="true" />

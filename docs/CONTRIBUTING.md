@@ -25,7 +25,8 @@ a UI change starts in `design/` ([D9](decisions.md#d9-2026-10-30--design-is-the-
 | Icons | `src/ui/icons.tsx`: `<Icon name="film-strip" />`, @phosphor-icons/react by the studio's names. Add an icon by adding its Phosphor component to the table there |
 | Components | `src/ui/components/` and `components.css` |
 | The shell | `src/ui/shell/`: `NavRail`, `Sidebar` (`HomeSidebar`, `DramaSidebar`), `TopBar` (`Breadcrumb`, `StopControl`, `DramaBar` with the surface switch and project chips), `AgentPanel` and `AgentBall`, all styled in `shell.css` |
-| Screens | `src/ui/screens/`; a drama's surfaces are tabs of `Drama.tsx`, with `canvas` and `graph` routed at `/d/:id/canvas` and `/d/:id/graph` |
+| Routes | `src/ui/routes.tsx`, TanStack Router's code-based tree: one URL per object's home (IA §16); `src/ui/place.ts` reads and builds the current object (`useRoute`, `usePlace`, `placeLink`, `homeLink`), so code never parses a path |
+| Screens | `src/ui/screens/`; a drama's pages render inside `Drama.tsx`'s frame, which `DramaPage` (`App.tsx`) gives once the drama and what the URL names in it are checked |
 | Words | `src/ui/i18n.ts`, English and Chinese, every key in both |
 | The project's state | `src/shared/project.ts` (drama-cli's status, merged by the engine) and `src/shared/facts.ts` (to do, recent work); names via `useNames` and `subjectLabel` in `src/ui/labels.ts` |
 | The component gallery | `/dev/gallery` (`src/ui/screens/Gallery.tsx`) |

@@ -1,10 +1,11 @@
 // The Episodes board as design/ has it: each card says what waits in the maker's terms ("2 takes wait for you"),
 // the chips filter it, and "Episode order" puts what needs the maker first.
-import { render, screen, within } from "@testing-library/react";
+import { screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 import { type DramaView, type EpisodeRow, STAGES } from "../../shared/types.ts";
 import { Board } from "./Board.tsx";
+import { renderAt } from "../test/router.tsx";
 
 function row(number: number, state: EpisodeRow["state"], waiting?: Pick<EpisodeRow, "waitingFor" | "waitingItems">): EpisodeRow {
   const code = `EP00${number}`;
@@ -18,8 +19,8 @@ const drama = {
 } as unknown as DramaView;
 
 describe("Board", () => {
-  it("says on each card what waits for the maker, as design/'s cards do", () => {
-    render(<Board drama={drama} />);
+  it("says on each card what waits for the maker, as design/'s cards do", async () => {
+    await renderAt(<Board drama={drama} />);
     expect(screen.getByRole("link", { name: "EP002 · Episode 2" })).toHaveTextContent("2 takes wait for you");
     expect(screen.getByRole("link", { name: "EP003 · Episode 3" })).toHaveTextContent("The cut waits for you");
     expect(screen.getByRole("button", { name: /Needs you/ })).toHaveTextContent(/2$/);
@@ -27,7 +28,7 @@ describe("Board", () => {
 
   it("orders the episodes by number, or what needs the maker first", async () => {
     const user = userEvent.setup();
-    render(<Board drama={drama} />);
+    await renderAt(<Board drama={drama} />);
     const codes = () => [...document.querySelectorAll(".epcard .code")].map((code) => code.textContent);
     expect(codes()).toEqual(["EP001", "EP002", "EP003", "EP004"]);
     await user.click(screen.getByRole("button", { name: /Episode order/ }));

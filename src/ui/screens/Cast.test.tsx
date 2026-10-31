@@ -1,12 +1,13 @@
 // The Story: the episodes as the bible titles them, the cast as cards named as the bible names
 // them with their other names and where each stands, the world as places and props; a card
 // waiting for the maker links to its review, as decisions are made there.
-import { render, screen, within } from "@testing-library/react";
+import { screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 import type { CastCard } from "../../shared/types.ts";
 import { answer } from "../test/server.ts";
 import { Cast } from "./Cast.tsx";
+import { renderAt } from "../test/router.tsx";
 
 const file = (id: number, version: string) => ({ id, name: "image-1.png", path: `drama/assets/x/${version}/image-1.png`, type: "image/png", size: 1, kind: "look", url: `/f/${id}`, version, createdAt: "2026-10-30T10:00:00Z" });
 const cast: CastCard[] = [
@@ -46,17 +47,17 @@ describe("the Story", () => {
   it("shows the cast named as the bible names them, with their other names and the episodes they are in", async () => {
     const user = userEvent.setup();
     engine();
-    render(<Cast dramaId="d1" />);
+    await renderAt(<Cast dramaId="d1" />, "/d/d1/story");
     await user.click(await screen.findByRole("tab", { name: /Cast/ }));
     const lin = await screen.findByRole("article", { name: "Lin Xiaoyu" });
     expect(within(lin).getByText("Xiaoyu")).toBeInTheDocument();
-    expect(within(lin).getByRole("link", { name: "EP001" })).toHaveAttribute("href", "/d/d1/e/EP001");
+    expect(within(lin).getByRole("link", { name: "EP001" })).toHaveAttribute("href", "/d/d1/e/EP001/list");
   });
 
   it("links a card waiting for the maker to its review, and shows its earlier versions", async () => {
     const user = userEvent.setup();
     engine();
-    render(<Cast dramaId="d1" />);
+    await renderAt(<Cast dramaId="d1" />, "/d/d1/story");
     await user.click(await screen.findByRole("tab", { name: /Cast/ }));
     const lin = await screen.findByRole("article", { name: "Lin Xiaoyu" });
     expect(within(lin).getByText("Waiting for you")).toBeInTheDocument();
@@ -68,7 +69,7 @@ describe("the Story", () => {
   it("keeps places in Scenes with their description, views and times, props in Props, and the episodes in the bible", async () => {
     const user = userEvent.setup();
     engine();
-    render(<Cast dramaId="d1" />);
+    await renderAt(<Cast dramaId="d1" />, "/d/d1/story");
     await user.click(await screen.findByRole("tab", { name: /Scenes/ }));
     const office = screen.getByRole("article", { name: "Factory office" });
     expect(within(office).getByText("Desks under strip lights.")).toBeInTheDocument();
@@ -78,7 +79,7 @@ describe("the Story", () => {
     await user.click(screen.getByRole("tab", { name: /Props/ }));
     expect(within(screen.getByRole("article", { name: "The letter" })).getByText("A folded letter.")).toBeInTheDocument();
     await user.click(screen.getByRole("tab", { name: /Bible/ }));
-    expect(screen.getByRole("link", { name: /EP001\s*The stepmother arrives/ })).toHaveAttribute("href", "/d/d1/e/EP001");
+    expect(screen.getByRole("link", { name: /EP001\s*The stepmother arrives/ })).toHaveAttribute("href", "/d/d1/e/EP001/list");
   });
 
   it.each([
@@ -88,13 +89,13 @@ describe("the Story", () => {
   ])("says where the bible stands as drama-cli's status gives it (%o)", async (bible, line) => {
     engine();
     answer("/api/dramas/d1/project", { state: { bible: { candidate: null, run: [], errors: [], ...bible }, episodes: {} }, sessions: [], problems: [], names });
-    render(<Cast dramaId="d1" />);
+    await renderAt(<Cast dramaId="d1" />, "/d/d1/story");
     expect(await screen.findByText(line)).toBeInTheDocument();
   });
 
   it("opens on the bible: the logline, the beats and each episode's summary", async () => {
     engine();
-    render(<Cast dramaId="d1" />);
+    await renderAt(<Cast dramaId="d1" />, "/d/d1/story");
     expect(await screen.findByText("A stepmother wins the house.")).toBeInTheDocument();
     expect(within(screen.getByRole("region", { name: "Beats" })).getByText("She arrives.")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /EP001\s*The stepmother arrives\s*She meets the family\./ })).toBeInTheDocument();

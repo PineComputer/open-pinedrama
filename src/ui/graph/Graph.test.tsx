@@ -4,7 +4,7 @@
 // a version was made from and what was made from it; what is stale in drama-cli's own words, and what
 // was made from a stale version; and one way to act: ask the agent to redo them, sent to the session
 // that may. Read-only otherwise, and never a price.
-import { render, screen, waitFor, within } from "@testing-library/react";
+import { screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { readFileSync } from "node:fs";
 import path from "node:path";
@@ -13,10 +13,10 @@ import { parseLineage, type LineageView } from "../../shared/lineage.ts";
 import { parseBibleNames } from "../../shared/names.ts";
 import type { ProjectView } from "../../shared/project.ts";
 import type { ChatView, FileItem } from "../../shared/types.ts";
-import { navigate } from "../router.tsx";
 import { accept, answer, calls } from "../test/server.ts";
 import { mockReactFlow } from "../test/react-flow.ts";
 import { Graph } from "./Graph.tsx";
+import { renderAt } from "../test/router.tsx";
 
 mockReactFlow();
 
@@ -28,7 +28,6 @@ const file = (id: number, relPath: string, type: string): FileItem => ({ id, nam
 const files = [file(1, "drama/assets/characters/lin/v1/spec.json", "application/json"), file(2, "drama/assets/characters/lin/v1/request.json", "application/json"), file(8, "drama/assets/characters/lin/v1/image-1.jpg", "image/jpeg"), file(7, "drama/episodes/EP001/segments/seg01/t01/video.mp4", "video/mp4")];
 
 function engine(name: string, sessions: ChatView[] = [chat("setup", "", "run"), chat("ep1", "EP001", "steer")]) {
-  navigate("/d/d1/graph", { replace: true });
   answer("/api/dramas/d1/lineage", view(name));
   answer("/api/dramas/d1/files", files);
   answer("/api/dramas/d1/sessions", sessions);
@@ -41,7 +40,7 @@ const card = async (name: RegExp) => within(await screen.findByRole("group", { n
 describe("the Graph", () => {
   it("opens on the episode's storyboard, as the prototype does, and draws its lineage as cards named as the bible names them, with their pictures, never a spec", async () => {
     engine("shot");
-    render(<Graph dramaId="d1" />);
+    await renderAt(<Graph dramaId="d1" />, "/d/d1/out-of-date");
     expect(await screen.findByRole("complementary", { name: "EP001 seg01 storyboard (line-art)" })).toBeInTheDocument();
     // The take's lineage holds the look and the plate.
     await userEvent.click(await card(/^EP001 seg01 take/));
@@ -54,7 +53,7 @@ describe("the Graph", () => {
 
   it("heads the columns with the pipeline's names for their kinds", async () => {
     engine("shot");
-    render(<Graph dramaId="d1" />);
+    await renderAt(<Graph dramaId="d1" />, "/d/d1/out-of-date");
     await card(/^EP001 breakdown v1/);
     const headings = [...screen.getByRole("group", { name: "Graph" }).querySelectorAll(".gcol")].map((heading) => heading.textContent);
     expect(headings.some((text) => /storyboard/i.test(text ?? ""))).toBe(true);
@@ -63,7 +62,7 @@ describe("the Graph", () => {
 
   it("focuses a version on a click, and lists all it was made from and all that was made from it", async () => {
     engine("shot");
-    render(<Graph dramaId="d1" />);
+    await renderAt(<Graph dramaId="d1" />, "/d/d1/out-of-date");
     await userEvent.click(await card(/^EP001 seg01 storyboard \(line-art\) v1/));
     expect(await screen.findByRole("complementary", { name: "EP001 seg01 storyboard (line-art)" })).toBeInTheDocument();
     const from = screen.getByRole("region", { name: /^Made from \d/ });
@@ -77,7 +76,7 @@ describe("the Graph", () => {
 
   it("says what is stale in drama-cli's own words", async () => {
     engine("time-plate-replaced");
-    render(<Graph dramaId="d1" />);
+    await renderAt(<Graph dramaId="d1" />, "/d/d1/out-of-date");
     const bar = await screen.findByRole("region", { name: /stale/i });
     expect(bar).toHaveTextContent("EP001 seg01 take t01: Changed selection: assets/scenes/office/times/Day/accepted.json");
     expect(await card(/^EP001 seg01 take t01/)).toHaveTextContent("Stale");
@@ -85,8 +84,7 @@ describe("the Graph", () => {
 
   it("marks what was made from a stale version, which drama-cli calls fresh, apart from what drama-cli calls stale", async () => {
     engine("location-plate-replaced");
-    navigate("/d/d1/graph?item=assets%2Fscenes%2Foffice%2Ftimes%2FDay", { replace: true });
-    render(<Graph dramaId="d1" />);
+    await renderAt(<Graph dramaId="d1" />, "/d/d1/assets/locations/office?item=assets%2Fscenes%2Foffice%2Ftimes%2FDay&view=lineage");
     expect(await card(/^办公室 · Day v1/)).toHaveTextContent("Stale");
     expect(await card(/^EP001 seg01 take t01/)).toHaveTextContent("Made from a stale version");
   });
@@ -94,7 +92,7 @@ describe("the Graph", () => {
   it("asks the agent to redo them, each in the session that may: an episode's own in its session", async () => {
     engine("time-plate-replaced");
     accept("/api/sessions/ep1/chat");
-    render(<Graph dramaId="d1" />);
+    await renderAt(<Graph dramaId="d1" />, "/d/d1/out-of-date");
     await userEvent.click(await screen.findByRole("button", { name: "Ask the agent to redo them" }));
     await waitFor(() => expect(calls("POST", "/api/sessions/ep1/chat")).toHaveLength(1));
     const [{ body }] = calls("POST", "/api/sessions/ep1/chat") as { body: { text: string } }[];
@@ -106,7 +104,7 @@ describe("the Graph", () => {
   it("sends a shared stage's redo to the setup's session", async () => {
     engine("location-plate-replaced");
     accept("/api/sessions/setup/chat");
-    render(<Graph dramaId="d1" />);
+    await renderAt(<Graph dramaId="d1" />, "/d/d1/out-of-date");
     await userEvent.click(await screen.findByRole("button", { name: "Ask the agent to redo them" }));
     await waitFor(() => expect(calls("POST", "/api/sessions/setup/chat")).toHaveLength(1));
     expect(calls("POST", "/api/sessions/ep1/chat")).toHaveLength(0);
@@ -114,7 +112,7 @@ describe("the Graph", () => {
 
   it("says why it can't ask while the session waits on the maker's review, and sends nothing", async () => {
     engine("time-plate-replaced", [chat("setup", "", "run"), chat("ep1", "EP001", "review")]);
-    render(<Graph dramaId="d1" />);
+    await renderAt(<Graph dramaId="d1" />, "/d/d1/out-of-date");
     const ask = await screen.findByRole("button", { name: "Ask the agent to redo them" });
     await waitFor(() => expect(ask).toHaveAccessibleDescription(/review/i));
     expect(ask).toBeDisabled();
@@ -122,7 +120,7 @@ describe("the Graph", () => {
 
   it("offers no way to make, edit or keep a version, and shows no price", async () => {
     engine("time-plate-replaced");
-    const { container } = render(<Graph dramaId="d1" />);
+    const { container } = await renderAt(<Graph dramaId="d1" />, "/d/d1/out-of-date");
     await card(/^EP001 seg01 take t01/);
     const actions = screen.getAllByRole("button").map((button) => button.textContent ?? "");
     expect(actions.filter((text) => /generat|draw|edit|keep|regenerat|\bmake\b/i.test(text))).toEqual([]);
@@ -134,7 +132,7 @@ describe("the Graph", () => {
     answer("/api/dramas/d1/files", []);
     answer("/api/dramas/d1/sessions", []);
     answer("/api/dramas/d1/project", { state: null, sessions: [], problems: [], names: null } satisfies ProjectView);
-    render(<Graph dramaId="d1" />);
+    await renderAt(<Graph dramaId="d1" />, "/d/d1/out-of-date");
     expect(await screen.findByText(/No version has a lineage yet/)).toBeInTheDocument();
   });
 });

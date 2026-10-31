@@ -32,6 +32,7 @@
     "@radix-ui/react-dropdown-menu": "^2.2.1",
     "@radix-ui/react-tooltip": "^1.4.1",
     "@tailwindcss/vite": "4.3.3",
+    "@tanstack/react-router": "1.170.44",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",
     "@testing-library/user-event": "^14.6.8",

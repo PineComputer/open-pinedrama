@@ -14,7 +14,7 @@ import { useT } from "../i18n.ts";
 import { errorText, nowText } from "../labels.ts";
 import { Tooltip } from "../components/Tooltip.tsx";
 import { Icon } from "../icons.tsx";
-import { Link, navigate } from "../router.tsx";
+import { Link, linkOptions, type LinkOptions, useNavigate } from "@tanstack/react-router";
 
 /** The key a review gives the item (src/engine/reviews.ts, itemsOf): a look by its character, a place or prop by its kind and id, a segment's stage by the segment's id, the cut as "cut". */
 function reviewKey(node: Item): string {
@@ -58,10 +58,11 @@ export function SteerBar({
   label: string;
   picture?: FileItem;
   episodeTitle?: string;
-  /** Where its lineage opens: Graph centred on the item's stage (router.tsx, placeHref). */
-  lineage: string;
+  /** Where its lineage opens: the item's home as Lineage, centred on its stage (place.ts, homeLink). */
+  lineage: LinkOptions;
 }) {
   const { t } = useT();
+  const navigate = useNavigate();
   const review = useOpenReview(drama, node);
   const [mode, setMode] = useState<"back" | "note" | null>(null);
   const [words, setWords] = useState("");
@@ -94,7 +95,7 @@ export function SteerBar({
   });
   const resumeEpisode = useAction(() => api(`/api/episodes/${row!.id}/resume`, { method: "POST" }));
   const resumeDrama = useAction(() => api(`/api/dramas/${drama.id}/resume`, { method: "POST" }));
-  const reviewHref = review ? `/r/${review.id}?item=${encodeURIComponent(reviewKey(node))}` : undefined;
+  const reviewHref = review ? linkOptions({ to: "/r/$reviewId", params: { reviewId: review.id }, search: { key: reviewKey(node) } }) : undefined;
 
   return (
     <div className="ds-steer">
@@ -102,11 +103,11 @@ export function SteerBar({
       <div className="nbar" role="toolbar" aria-label={t("steer.label", { item: label })}>
         {reviewHref ? (
           <>
-            <Link to={reviewHref} className={buttonClass({ variant: "primary", size: "sm" })}>
+            <Link {...reviewHref} className={buttonClass({ variant: "primary", size: "sm" })}>
               {t("steer.review")}
             </Link>
             <Tooltip text={t("steer.backInReview")}>
-              <Link to={reviewHref} className={"ibtn"} aria-label={t("steer.backInReview")}>
+              <Link {...reviewHref} className={"ibtn"} aria-label={t("steer.backInReview")}>
                 <Icon name="arrow-counter-clockwise" />
               </Link>
             </Tooltip>
@@ -117,7 +118,7 @@ export function SteerBar({
             <IconButton label={t("steer.note")} icon="note-pencil" on={mode === "note"} aria-pressed={mode === "note"} onClick={() => setMode(mode === "note" ? null : "note")} />
           </>
         )}
-        <IconButton label={t("steer.lineage")} icon="tree-structure" onClick={() => navigate(lineage)} />
+        <IconButton label={t("steer.lineage")} icon="tree-structure" onClick={() => void navigate(lineage)} />
         {picture && (
           <Tooltip text={t("steer.download")}>
             <a className={"ibtn"} href={`${picture.url}&download=1`} aria-label={t("steer.download")}>
@@ -132,7 +133,7 @@ export function SteerBar({
           <div className="off" role="status">
             <span>{t(waits.sends === "review" ? "steer.waitsReview" : waits.sends === "answer" ? "steer.waitsAnswer" : "steer.waitsNone", { who })}</span>
             {waits.sends === "review" && waits.reviewId && (
-              <Link to={`/r/${waits.reviewId}`} className={buttonClass({ size: "sm" })}>
+              <Link to="/r/$reviewId" params={{ reviewId: waits.reviewId }} className={buttonClass({ size: "sm" })}>
                 {t("steer.openWaiting")}
               </Link>
             )}

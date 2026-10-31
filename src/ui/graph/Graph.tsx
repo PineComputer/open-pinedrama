@@ -20,7 +20,8 @@ import { api, useAction, useResource } from "../api.ts";
 import { type TKey, useT } from "../i18n.ts";
 import { Icon, type IconName } from "../icons.tsx";
 import { errorText, useNames } from "../labels.ts";
-import { navigate, placeHref, placeOf as pagePlace, usePath } from "../router.tsx";
+import { useNavigate } from "@tanstack/react-router";
+import { homeLink, usePage, usePlace } from "../place.ts";
 import { AsideSlot } from "../shell/aside.ts";
 import { CARD, layered, lineageOf, type Point } from "./focus.ts";
 
@@ -148,9 +149,10 @@ export function Graph({ dramaId }: { dramaId: string }) {
   const files = useResource<FileItem[]>(`/api/dramas/${dramaId}/files`, [`drama:${dramaId}`]);
   const sessions = useResource<ChatView[]>(`/api/dramas/${dramaId}/sessions`, [`drama:${dramaId}`]);
   const names = useNames(dramaId);
-  const { path, query } = usePath();
-  // The item picked and the episode in view, as the page's place names them (router.tsx).
-  const place = pagePlace(path, query);
+  const navigate = useNavigate();
+  const page = usePage();
+  // The item picked and the episode in view, as the page's place names them (place.ts).
+  const place = usePlace();
   const item = place?.item;
   const [sent, setSent] = useState(false);
   const [places, setPlaces] = useState<{ key: string; at: Map<string, Point> }>();
@@ -208,7 +210,9 @@ export function Graph({ dramaId }: { dramaId: string }) {
     const take = madeFrom(node, "take");
     return take ? posterOf(take) : undefined;
   };
-  const focus = (id: string) => navigate(placeHref({ dramaId, surface: "graph", episode: byId.get(id)?.where.episode, item: id }), { replace: true });
+  // Lineage is a view on the item's home (IA §16): picking another stage opens its home as Lineage, in place of this
+  // one's; from the drama-wide Out of date it is a step Back returns from.
+  const focus = (id: string) => void navigate({ ...homeLink(dramaId, id, "lineage"), replace: page !== "outOfDate" });
   const selected = byId.get(center)!;
   const { up, down } = trace(lineage, center);
   const at = places?.key === key ? places.at : undefined;

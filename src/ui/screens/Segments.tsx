@@ -11,7 +11,8 @@ import { StatusChip } from "../components/StatusChip.tsx";
 import { Icon } from "../icons.tsx";
 import { type TKey, useT } from "../i18n.ts";
 import { headingText } from "../labels.ts";
-import { Link, placeHref } from "../router.tsx";
+import { Link } from "@tanstack/react-router";
+import { placeLink } from "../place.ts";
 import { isVideo, useText } from "../viewing.tsx";
 import { standing } from "./Canvas.tsx";
 
@@ -40,7 +41,7 @@ function Row({ dramaId, code, segment, page, episode, shots, others }: { dramaId
           <span className="grow" />
           {facts && <span className="mono muted">{facts}</span>}
           {/* The segment on the episode's board, picked: its take's stage, drama-cli's episodes/<EP>/segments/<seg> folder (shared/pipeline.ts). */}
-          <Link className="btn sm ghost" to={placeHref({ dramaId, surface: "canvas", episode: code, item: `episodes/${code}/segments/${segment}` })}>
+          <Link className="btn sm ghost" {...placeLink({ dramaId, surface: "canvas", episode: code, item: `episodes/${code}/segments/${segment}` })}>
             {t("segments.onCanvas")}
             <Icon name="arrow-right" className="ic" />
           </Link>

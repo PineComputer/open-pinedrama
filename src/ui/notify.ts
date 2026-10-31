@@ -1,10 +1,10 @@
 // Telling the maker, through the system, when something new waits for them while the
 // studio is in the background. Off until they turn it on in Settings; the choice is kept
 // in this browser (the desktop app will use its own notifications).
+import { useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import type { ReviewSummary } from "../shared/types.ts";
 import { type TKey, useT } from "./i18n.ts";
-import { navigate } from "./router.tsx";
 
 const KEY = "studio.notify";
 
@@ -38,6 +38,7 @@ export function useNotifySetting(): { on: boolean; blocked: boolean; supported: 
 /** Announces each review that opens while the studio is out of sight; a click brings the maker to it. */
 export function useReviewNotifications(waiting: ReviewSummary[] | undefined): void {
   const { t } = useT();
+  const navigate = useNavigate();
   const seen = useRef<Set<string> | undefined>(undefined);
   useEffect(() => {
     if (!waiting) return;
@@ -52,9 +53,9 @@ export function useReviewNotifications(waiting: ReviewSummary[] | undefined): vo
       });
       note.onclick = () => {
         window.focus();
-        navigate(`/r/${item.id}`);
+        void navigate({ to: "/r/$reviewId", params: { reviewId: item.id } });
         note.close();
       };
     }
-  }, [waiting, t]);
+  }, [waiting, t, navigate]);
 }

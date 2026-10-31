@@ -1,14 +1,15 @@
-import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
+import { fireEvent, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { cutReview, file, storyboardReview } from "../test/fixtures.ts";
 import { accept, answer, calls } from "../test/server.ts";
 import { Review } from "./Review.tsx";
+import { renderAt } from "../test/router.tsx";
 
-function open(review = storyboardReview("seg01", "seg02")) {
+async function open(review = storyboardReview("seg01", "seg02"), path = `/r/${review.id}`) {
   answer(`/api/reviews/${review.id}`, review);
   accept(`/api/reviews/${review.id}/decision`);
-  render(<Review id={review.id} />);
+  await renderAt(<Review id={review.id} />, path);
   return review;
 }
 
@@ -17,14 +18,14 @@ describe("the review room for storyboards", () => {
     const spec = file({ kind: "spec", name: "episodes/EP002/storyboard/seg01/v1/spec.json", type: "application/json", episode: "EP002" });
     answer("/api/dramas/d1/files", [spec]);
     answer(spec.url, { provider: "seedream", model: "seedream-5", prompt: "A pier at dawn.", aspect_ratio: "9:16", size: "2K" });
-    open();
+    await open();
     const facts = (await screen.findByRole("heading", { level: 4, name: "Picture" })).parentElement as HTMLElement;
     expect(within(facts).getByText("9:16 · 2K · seedream-5")).toBeInTheDocument();
   });
 
   it("accepts the item in view with A and moves on to the next", async () => {
     const user = userEvent.setup();
-    open();
+    await open();
     const accept = await screen.findByRole("button", { name: "Accept A" });
     expect(accept).toHaveAttribute("aria-pressed", "false");
 
@@ -37,7 +38,7 @@ describe("the review room for storyboards", () => {
 
   it("keeps Send review disabled until every item has a verdict, and one sent back its reason", async () => {
     const user = userEvent.setup();
-    open();
+    await open();
     const send = await screen.findByRole("button", { name: /^Send review/ });
     expect(send).toBeDisabled();
 
@@ -54,7 +55,7 @@ describe("the review room for storyboards", () => {
 
   it("asks once before sending, then sends one decision with each verdict, its reason and the maker's words", async () => {
     const user = userEvent.setup();
-    const review = open();
+    const review = await open();
     await screen.findByRole("button", { name: /^Send review/ });
     await user.keyboard("a");
     await user.click(screen.getByRole("button", { name: "Send back B" }));
@@ -81,24 +82,20 @@ describe("the review room for storyboards", () => {
 
 describe("a link into the review room", () => {
   it("opens at the item it names", async () => {
-    window.history.pushState(null, "", "/r/r1?item=seg02");
-    open();
+    await open(undefined, "/r/r1?key=seg02");
     expect(await screen.findByRole("heading", { level: 2, name: /\bseg02\b/ })).toBeInTheDocument();
-    window.history.pushState(null, "", "/");
   });
 
   it("opens at the first item when it names none it has", async () => {
-    window.history.pushState(null, "", "/r/r1?item=seg09");
-    open();
+    await open(undefined, "/r/r1?key=seg09");
     expect(await screen.findByRole("heading", { level: 2, name: /\bseg01\b/ })).toBeInTheDocument();
-    window.history.pushState(null, "", "/");
   });
 });
 
 describe("the room's keys", () => {
   it("take no shortcut with a modifier: ⌘A selects and ⌘C copies, they never accept or turn to the earlier version", async () => {
     const user = userEvent.setup();
-    open();
+    await open();
     const accept = await screen.findByRole("button", { name: "Accept A" });
     await user.keyboard("{Meta>}a{/Meta}{Control>}a{/Control}");
     expect(accept).toHaveAttribute("aria-pressed", "false");
@@ -110,7 +107,7 @@ describe("the room's keys", () => {
     const review = storyboardReview("seg01", "seg02");
     const photoreal = file({ kind: "storyboard", name: "episodes/EP002/storyboard/seg01/v1/photoreal.png", episode: "EP002", segment: "seg01", style: "photoreal", version: "v1" });
     review.reviewItems[0] = { ...review.reviewItems[0], files: [...review.reviewItems[0].files, photoreal] };
-    open(review);
+    await open(review);
     const variants = await screen.findByRole("radiogroup", { name: "Which picture" });
     within(variants).getByRole("radio", { name: "Line art" }).focus();
     await user.keyboard("{ArrowDown}");
@@ -125,7 +122,7 @@ describe("a storyboard with variants and an earlier version", () => {
     const board = (style: string, version: string) => file({ kind: "storyboard", name: `episodes/EP002/storyboard/seg01/${version}/${style}.png`, episode: "EP002", segment: "seg01", style, version });
     const [lineArt, photoreal, before] = [board("line-art", "v2"), board("photoreal", "v2"), board("line-art", "v1")];
     review.reviewItems = [{ key: "seg01", label: "seg01", files: [lineArt, photoreal], previous: [before], asked: [{ text: "Move the letter to her left hand." }] }];
-    open(review);
+    await open(review);
     const stage = await screen.findByRole("region", { name: "The work in view" });
     const variants = screen.getByRole("radiogroup", { name: "Which picture" });
     expect(within(variants).getAllByRole("radio").map((radio) => radio.textContent)).toEqual(["Line art", "Photoreal"]);
@@ -156,7 +153,7 @@ describe("the review room for takes", () => {
     const review = takes();
     answer(`/api/reviews/${review.id}`, review);
     answer("/api/dramas/d1/files", []);
-    render(<Review id={review.id} />);
+    await renderAt(<Review id={review.id} />);
     const accept = await screen.findByRole("button", { name: "Accept A" });
     expect(accept).toBeDisabled();
     expect(screen.getByText("Watched 0% · Accept unlocks at the end.")).toBeInTheDocument();
@@ -179,7 +176,7 @@ describe("the review room for takes", () => {
     const segment = (current: string, usable: boolean) => ({ current, accepted: usable ? current : null, usable });
     const episode = { segments: { seg01: segment("t02", false), seg02: segment("t01", true) }, storyboards: {}, sceneChains: [{ sceneHeading: "EXT. PIER - DAY", segments: ["seg01", "seg02"] }] };
     answer("/api/dramas/d1/project", { state: { episodes: { [review.episode!]: episode } }, sessions: [], problems: [], names: null });
-    render(<Review id={review.id} />);
+    await renderAt(<Review id={review.id} />);
     const reel = await screen.findByRole("navigation", { name: "To decide" });
     await within(reel).findByRole("heading", { name: `Accepted in ${review.episode}` });
     expect(within(reel).getByText("seg02 · t01")).toBeInTheDocument();
@@ -196,7 +193,7 @@ describe("the review room for takes", () => {
     const accepted = { current: "t01", accepted: "t01", usable: true };
     const episode = { segments: { seg01: { current: "t02", accepted: null, usable: false }, seg02: accepted, seg03: accepted }, storyboards: {}, sceneChains: [] };
     answer("/api/dramas/d1/project", { state: { episodes: { [review.episode!]: episode } }, sessions: [], problems: [], names: null });
-    render(<Review id={review.id} />);
+    await renderAt(<Review id={review.id} />);
     const reel = await screen.findByRole("navigation", { name: "To decide" });
     const row = async (label: string) => (await within(reel).findByText(label)).closest(".ritem") as HTMLElement;
     await waitFor(async () => expect((await row("seg02 · t01")).querySelector("video")).toHaveAttribute("src", `${seg02Take.url}#t=0.5`));
@@ -209,7 +206,7 @@ describe("the review room for takes", () => {
     answer(`/api/reviews/${review.id}`, review);
     answer("/api/dramas/d1/files", []);
     const play = vi.spyOn(HTMLMediaElement.prototype, "play").mockResolvedValue();
-    render(<Review id={review.id} />);
+    await renderAt(<Review id={review.id} />);
     await screen.findByRole("button", { name: "Accept A" });
     (document.activeElement as HTMLElement | null)?.blur();
     await user.keyboard(" ");
@@ -221,7 +218,7 @@ describe("the review room for takes", () => {
     const review = takes();
     answer(`/api/reviews/${review.id}`, review);
     answer("/api/dramas/d1/files", []);
-    render(<Review id={review.id} />);
+    await renderAt(<Review id={review.id} />);
     await screen.findByRole("button", { name: "Send back B" });
     expect(screen.queryByRole("button", { name: "Accept all" })).toBeNull();
   });
@@ -237,7 +234,7 @@ describe("a question the agent asks because drama-cli refused", () => {
       refusals: [{ code: "SetLimitExceeded.max_new_takes", message: "seg01 has had 2 new paid takes, the limit shoot.max_new_takes (2)", param: "shoot.max_new_takes", action: "ask_person" as const }],
     };
     answer(`/api/reviews/${review.id}`, review);
-    render(<Review id={review.id} />);
+    await renderAt(<Review id={review.id} />);
     const stop = await screen.findByRole("region", { name: "shoot.max_new_takes is reached" });
     expect(within(stop).getByText("seg01 has had 2 new paid takes, the limit shoot.max_new_takes (2)")).toBeInTheDocument();
     expect(screen.getByText("drama-cli won't shoot another take of seg01. Shall I raise the limit?")).toBeInTheDocument();
@@ -255,7 +252,7 @@ describe("a question the agent asks because drama-cli refused", () => {
       ],
     };
     answer(`/api/reviews/${review.id}`, review);
-    render(<Review id={review.id} />);
+    await renderAt(<Review id={review.id} />);
     const cards = await screen.findAllByRole("region", { name: /red line|is reached/ });
     expect(cards.map((card) => card.getAttribute("aria-label"))).toEqual(["The screenplay crosses a red line", "shoot.max_new_takes is reached"]);
     expect(within(cards[0]).getByText("Bible v2 is not usable: red line: EP003 scene 4.")).toBeInTheDocument();
@@ -264,7 +261,7 @@ describe("a question the agent asks because drama-cli refused", () => {
   it("says when the refusals the agent returned didn't read", async () => {
     const review = { ...storyboardReview(), kind: "question" as const, question: "Something refused.", reviewItems: [], refusalsError: "The refusals, line 1: the line should be one JSON object." };
     answer(`/api/reviews/${review.id}`, review);
-    render(<Review id={review.id} />);
+    await renderAt(<Review id={review.id} />);
     expect(await screen.findByText(/The refusals, line 1: the line should be one JSON object\./)).toBeInTheDocument();
   });
 });
@@ -286,7 +283,7 @@ describe("the review room for a cut", () => {
   }
 
   it("is the prototype's Cut: the cut on the stage, notes at a time, what it is made from, and the verdict", async () => {
-    const review = open(cutReview());
+    const review = await open(cutReview());
     const stage = await screen.findByRole("region", { name: "The work in view" });
     expect(stage.querySelector("media-controller video")).toHaveAttribute("src", review.reviewItems[0].files[0].url);
     expect(screen.getByText("Notes at a time")).toBeInTheDocument();
@@ -298,7 +295,7 @@ describe("the review room for a cut", () => {
 
   it("sends the cut back once with the maker's reason and every note at its time", async () => {
     const user = userEvent.setup();
-    const review = open(cutReview());
+    const review = await open(cutReview());
     const fileId = review.reviewItems[0].files[0].id;
     for (const [seconds, text] of [[6, "Too dark"], [2, "Cut in sooner"]] as const) {
       await at(seconds);
@@ -330,7 +327,7 @@ describe("the review room for a cut", () => {
 
   it("moves the cut to a note's time from the list, and removes a note", async () => {
     const user = userEvent.setup();
-    open(cutReview());
+    await open(cutReview());
     const video = await at(5);
     await user.type(screen.getByRole("textbox", { name: "Add a note at 0:05" }), "Hold here{Enter}");
     await at(0);
@@ -342,7 +339,7 @@ describe("the review room for a cut", () => {
 
   it("accepts the cut with its notes as remarks", async () => {
     const user = userEvent.setup();
-    const review = open(cutReview());
+    const review = await open(cutReview());
     await at(1);
     await user.type(screen.getByRole("textbox", { name: "Add a note at 0:01" }), "Lovely open{Enter}");
     await user.click(screen.getByRole("button", { name: "Accept cut" }));

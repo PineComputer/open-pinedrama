@@ -31,7 +31,10 @@ test("the Graph traces a version both ways on the sample drama", async ({ page }
     .toBe(true);
   const look = (await lineage())!.nodes.find((node) => node.kind === "look" && !node.where.look)!;
 
-  await page.goto(`/d/${id}/graph?item=${encodeURIComponent(look.id)}`);
+  // Each item's one home (IA §16), where Lineage is a view of it.
+  const home = (node: { kind: string; where: { subject?: string; episode?: string } }) =>
+    node.kind === "look" ? `/d/${id}/assets/characters/${node.where.subject}` : node.kind === "plate" ? `/d/${id}/assets/locations/${node.where.subject}` : `/d/${id}/e/${node.where.episode}/list`;
+  await page.goto(`${home(look)}?view=lineage`);
   const graph = page.getByRole("group", { name: "Graph" });
   // The version in focus, named as the bible names it.
   const focus = graph.locator('button[aria-current="true"]');
@@ -51,7 +54,7 @@ test("the Graph traces a version both ways on the sample drama", async ({ page }
   await expect(page.getByRole("button", { name: /generat|draw|edit|keep|redo/i })).toHaveCount(0);
   expect(await newProblems(page)).toEqual([]);
 
-  // A look, a plate and an episode's storyboard, each focused by a click on its card, then the other views.
+  // A look, a plate and an episode's storyboard, each focused by a click on its card (its home as Lineage), then Canvas and its home.
   // The look and plate are ones the storyboard was made from, so each shows beside the other's focus.
   const { nodes, links } = (await lineage())!;
   const storyboard = nodes.find((node) => node.kind === "storyboard" && node.version)!;
@@ -59,20 +62,16 @@ test("the Graph traces a version both ways on the sample drama", async ({ page }
   const [castLook, plate] = [from("look"), from("plate")];
   const surfaces = page.getByRole("group", { name: "Surface" });
   const query = (url: string) => new URL(url).searchParams;
-  for (const [node, studio] of [
-    [castLook, `/d/${id}/story`],
-    [plate, `/d/${id}/story`],
-    [storyboard, `/d/${id}/e/${storyboard.where.episode}`],
-  ] as const) {
-    await page.goto(`/d/${id}/graph?item=${encodeURIComponent(storyboard.id === node.id ? castLook.id : storyboard.id)}`);
+  for (const node of [castLook, plate, storyboard]) {
+    const other = storyboard.id === node.id ? castLook : storyboard;
+    await page.goto(`${home(other)}?item=${encodeURIComponent(other.id)}&view=lineage`);
     await graph.locator(`.react-flow__node[data-id="${node.id}"] button`).click();
-    await expect.poll(() => query(page.url()).get("item")).toBe(node.id);
-    expect(query(page.url()).get("episode") ?? undefined).toBe(node.where.episode);
+    await expect.poll(() => new URL(page.url()).pathname).toBe(home(node));
+    expect(query(page.url()).get("view")).toBe("lineage");
     await surfaces.getByRole("button", { name: "Canvas" }).click();
-    await expect(page).toHaveURL(new RegExp(`/d/${id}/canvas\\?`));
+    await expect(page).toHaveURL(new RegExp(`/d/${id}/e/${node.where.episode ?? "EP\\d{3}"}/canvas\\?`));
     expect(query(page.url()).get("item")).toBe(node.id);
-    expect(query(page.url()).get("episode") ?? undefined).toBe(node.where.episode);
     await surfaces.getByRole("button", { name: "Studio" }).click();
-    await expect.poll(() => new URL(page.url()).pathname).toBe(studio);
+    await expect.poll(() => new URL(page.url()).pathname).toBe(home(node));
   }
 });

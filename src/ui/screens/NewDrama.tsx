@@ -7,7 +7,7 @@ import { type ScreenplayLanguage, screenplayLanguageOf } from "../../shared/scre
 import { EXTRACTED, extractText, textName } from "../extract.ts";
 import { errorText } from "../labels.ts";
 import { ReviewingChoice } from "../Reviewing.tsx";
-import { navigate } from "../router.tsx";
+import { useNavigate } from "@tanstack/react-router";
 import { Dropzone } from "../components/Dropzone.tsx";
 import { Icon, type IconName } from "../icons.tsx";
 
@@ -146,6 +146,7 @@ type Missing = "new.needFile" | "new.needText" | "new.needTitle" | "new.needLang
  */
 export function NewDrama() {
   const { t, lang } = useT();
+  const navigate = useNavigate();
   const [file, setFile] = useState<File | undefined>(takeDroppedScreenplay);
   const [notFile, setNotFile] = useState(false);
   const [title, setTitle] = useState("");
@@ -207,7 +208,7 @@ export function NewDrama() {
     for (const item of files) form.append("files", item);
     try {
       const { id } = await api<{ id: string }>("/api/dramas", { method: "POST", body: form });
-      navigate(`/d/${id}/analyzing`);
+      void navigate({ to: "/d/$dramaId/analyzing", params: { dramaId: id } });
     } catch (reason) {
       setError(reason);
       setBusy(false);

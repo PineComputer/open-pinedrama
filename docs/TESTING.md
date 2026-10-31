@@ -27,6 +27,9 @@ end-to-end test covers a flow a maker walks, not every branch of it.
   assert the method, the path, how many times, and the body. The answers come from
   `src/ui/test/fixtures.ts`, typed with `src/shared/types.ts`, so a change on either side of
   the contract shows in the tests.
+- **Render at a URL.** A component that links or reads the place renders with
+  `renderAt(ui, path)` (`src/ui/test/router.tsx`): the real route tree on a memory history.
+  Assert where a click went with `href(router)`, never the window's location.
 - **Every state is a fixture**: empty, at work, waiting for the maker, a red line, the budget
   spent, a cap reached, an error. A table of fixtures drives one test per state.
 - **Test every state of a control**: enabled, disabled and why, busy, done.

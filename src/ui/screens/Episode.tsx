@@ -5,7 +5,7 @@ import { useResource } from "../api.ts";
 import { useT } from "../i18n.ts";
 import { errorText, moneyText, nowText } from "../labels.ts";
 import { Icon } from "../icons.tsx";
-import { Link } from "../router.tsx";
+import { Link } from "@tanstack/react-router";
 import { Segments } from "./Segments.tsx";
 
 /** What the maker decided on what a review showed, with the way back to that review. */
@@ -13,7 +13,7 @@ export function JudgedLine({ review }: { review?: Judged }) {
   const { t } = useT();
   if (!review) return <div className="judged quiet">{t("judged.none")}</div>;
   const link = (
-    <Link to={`/r/${review.reviewId}`} className="link inherit">
+    <Link to="/r/$reviewId" params={{ reviewId: review.reviewId }} className="link inherit">
       {t("judged.open")}
     </Link>
   );

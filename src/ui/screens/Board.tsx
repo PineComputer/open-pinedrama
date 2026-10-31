@@ -5,7 +5,7 @@ import { Segmented } from "../components/Segmented.tsx";
 import { type Status, StatusChip } from "../components/StatusChip.tsx";
 import { type TKey, useT } from "../i18n.ts";
 import { errorText, moneyText, nowText, SETUP_STEPS } from "../labels.ts";
-import { Link } from "../router.tsx";
+import { Link, linkOptions } from "@tanstack/react-router";
 import { Still } from "../Still.tsx";
 import { Cast } from "./Cast.tsx";
 import { type ScreenplayLanguage, screenplayLanguageOf } from "../../shared/screenplay-language.ts";
@@ -45,10 +45,10 @@ function Card({ row, wide, dramaId }: { row: EpisodeRow; wide: boolean; dramaId:
   const trouble = row.state === "stopped" || row.state === "failed";
   const chip = chipOf(row);
   // The design's EpisodeCard (design/app.js, Episodes): the card opens the episode, or the review it waits on.
-  const to = row.state === "waiting" && row.reviewId ? `/r/${row.reviewId}` : `/d/${dramaId}/e/${row.code}`;
+  const to = row.state === "waiting" && row.reviewId ? linkOptions({ to: "/r/$reviewId", params: { reviewId: row.reviewId } }) : linkOptions({ to: "/d/$dramaId/e/$episodeCode/list", params: { dramaId, episodeCode: row.code } });
   return (
     <div style={{ display: "grid", gap: 6 }}>
-      <Link to={to} className="epcard" aria-label={row.title ? `${row.code} · ${row.title}` : row.code}>
+      <Link {...to} className="epcard" aria-label={row.title ? `${row.code} · ${row.title}` : row.code}>
         <div className="pic" style={wide ? { aspectRatio: "16 / 9" } : undefined}>
           {row.frame ? <Still still={row.frame} live /> : <span className="empty">{t(row.stages.breakdown.state === "done" ? "board.breakdownDone" : "board.notStarted")}</span>}
           <span className="code">{row.code}</span>
@@ -244,7 +244,7 @@ export function SetupPanel({ drama }: { drama: DramaView }) {
                     {setup.reviewId && (
                       <>
                         {" · "}
-                        <Link to={`/r/${setup.reviewId}`} className="link inherit">
+                        <Link to="/r/$reviewId" params={{ reviewId: setup.reviewId }} className="link inherit">
                           {t("setup.open")}
                         </Link>
                       </>

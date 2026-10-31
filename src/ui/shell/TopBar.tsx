@@ -3,6 +3,7 @@
 // .chip): back, where you are as a breadcrumb, Stop drama and the next review. In a drama, the bar
 // under it holds the surface (Studio, Canvas, Graph) with the selection kept across them, and the
 // drama's preset, format and spend.
+import { Link, type LinkOptions, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import type { DramaView, ReviewSummary } from "../../shared/types.ts";
 import { api, useAction, useResource } from "../api.ts";
@@ -10,23 +11,23 @@ import { Dialog } from "../components/Dialog.tsx";
 import { Icon, type IconName } from "../icons.tsx";
 import { type TKey, useT } from "../i18n.ts";
 import { errorText, moneyText } from "../labels.ts";
-import { Link, match, navigate, placeHref, placeOf, type Surface, usePath } from "../router.tsx";
+import { placeLink, type Surface, usePlace, useRoute } from "../place.ts";
 import type { ProjectView } from "../../shared/project.ts";
 
 
 function SurfaceSwitch({ drama }: { drama: DramaView }) {
   const { t } = useT();
-  const { path, query } = usePath();
-  // The same episode and item on the other surface (router.tsx, Place): an item is never read as an episode.
-  const place = placeOf(path, query) ?? { dramaId: drama.id, surface: "studio" as const };
+  const navigate = useNavigate();
+  // The same episode and item on the other surface (place.ts, Place): an item is never read as an episode.
+  const place = usePlace() ?? { dramaId: drama.id, surface: "list" as const };
   const surface = place.surface;
   const go = (next: Surface) => {
-    if (next !== surface) navigate(placeHref({ ...place, dramaId: drama.id, surface: next }));
+    if (next !== surface) void navigate(placeLink({ ...place, dramaId: drama.id, surface: next }));
   };
   const options: [Surface, TKey, IconName][] = [
-    ["studio", "surface.studio", "squares-four"],
+    ["list", "surface.studio", "squares-four"],
     ["canvas", "surface.canvas", "flow-arrow"],
-    ["graph", "surface.graph", "tree-structure"],
+    ["lineage", "surface.graph", "tree-structure"],
   ];
   // The design's SurfaceSwitch (design/app.js): one pressed button among three.
   return (
@@ -130,9 +131,9 @@ export function StopControl({ drama }: { drama: DramaView }) {
 
 function NextReview({ waiting }: { waiting: ReviewSummary[] }) {
   const { t } = useT();
-  const { path } = usePath();
+  const navigate = useNavigate();
   // On a review, "next" means the one after it.
-  const current = match("/r/:id", path)?.id;
+  const current = useRoute().params.reviewId;
   const others = waiting.filter((item) => item.id !== current);
   return (
     <button
@@ -140,7 +141,7 @@ function NextReview({ waiting }: { waiting: ReviewSummary[] }) {
       className="btn primary sm"
       disabled={!others.length}
       aria-label={`${t("next.label")}, ${t("next.waiting", { n: others.length })}`}
-      onClick={() => navigate(`/r/${others[0].id}`)}
+      onClick={() => void navigate({ to: "/r/$reviewId", params: { reviewId: others[0].id } })}
     >
       {t("next.label")} <span className="n">{others.length}</span>
     </button>
@@ -149,7 +150,7 @@ function NextReview({ waiting }: { waiting: ReviewSummary[] }) {
 
 export interface Crumb {
   label: string;
-  to?: string;
+  to?: LinkOptions;
 }
 
 /** Where you are: each step back a link, the last the page itself. */
@@ -161,7 +162,7 @@ export function Breadcrumb({ crumbs }: { crumbs: Crumb[] }) {
         <span key={n} className="contents">
           {n > 0 && <Icon name="caret-right" className="ic" />}
           {crumb.to && n < crumbs.length - 1 ? (
-            <Link to={crumb.to}>{crumb.label}</Link>
+            <Link {...crumb.to}>{crumb.label}</Link>
           ) : n === crumbs.length - 1 ? (
             <b aria-current="page">{crumb.label}</b>
           ) : (
@@ -175,11 +176,12 @@ export function Breadcrumb({ crumbs }: { crumbs: Crumb[] }) {
 
 export function TopBar({ crumbs, waiting, ready, next, children }: { crumbs: Crumb[]; waiting: ReviewSummary[]; ready: boolean; next: boolean; children?: React.ReactNode }) {
   const { t } = useT();
+  const navigate = useNavigate();
   const back = crumbs.length > 1 ? crumbs[crumbs.length - 2].to : undefined;
   return (
     <header className="top">
       {back && (
-        <button type="button" className="ibtn" aria-label={t("crumb.back")} title={t("crumb.back")} onClick={() => navigate(back)}>
+        <button type="button" className="ibtn" aria-label={t("crumb.back")} title={t("crumb.back")} onClick={() => void navigate(back)}>
           <Icon name="caret-left" className="ic" />
         </button>
       )}

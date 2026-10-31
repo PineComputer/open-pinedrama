@@ -2,7 +2,7 @@
 // work and one waiting: what runs, with Watch and Stop; the decisions waiting; what is to do and
 // the recent work named as the bible names them; the session in view and a line to it; the panel
 // docked, floated and collapsed to its ball; and Stop drama through to Resume.
-import { render, screen, waitFor, within } from "@testing-library/react";
+import { screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { readFileSync } from "node:fs";
 import path from "node:path";
@@ -13,6 +13,7 @@ import type { ChatView, DramaView, EpisodeRow, FileItem, ReviewSummary } from ".
 import { accept, answer, calls } from "../test/server.ts";
 import { AgentBall, AgentPanel } from "./AgentPanel.tsx";
 import { StopControl } from "./TopBar.tsx";
+import { renderAt } from "../test/router.tsx";
 
 // The UI's tests run in jsdom, whose module URLs aren't files: the fixtures are found from the repository's root.
 const fixture = (name: string) => JSON.parse(readFileSync(path.resolve("fixtures/status", `${name}.json`), "utf8"));
@@ -78,7 +79,7 @@ function engine() {
 describe("the agent panel", () => {
   it("shows what runs, the decisions waiting, and what was made, named as the bible names them", async () => {
     engine();
-    render(<AgentPanel drama={drama} mode="docked" onMode={() => {}} />);
+    await renderAt(<AgentPanel drama={drama} mode="docked" onMode={() => {}} />);
     const running = screen.getByRole("region", { name: "Running" });
     expect(within(running).getByRole("button", { name: /EP001\s*Shooting seg01/ })).toBeInTheDocument();
     // A session that waits for the maker is a decision, not something running (the design's Running lists those at work).
@@ -92,14 +93,14 @@ describe("the agent panel", () => {
 
   it("says whose session it follows", async () => {
     engine();
-    render(<AgentPanel drama={drama} episode="EP001" mode="docked" onMode={() => {}} />);
+    await renderAt(<AgentPanel drama={drama} episode="EP001" mode="docked" onMode={() => {}} />);
     expect(await screen.findByText(/^To EP001's session/)).toBeInTheDocument();
   });
 
   it("follows the session in view: its steps, what it said, and a line to it", async () => {
     const user = userEvent.setup();
     engine();
-    render(<AgentPanel drama={drama} episode="EP001" mode="docked" onMode={() => {}} />);
+    await renderAt(<AgentPanel drama={drama} episode="EP001" mode="docked" onMode={() => {}} />);
     const process = (await screen.findByRole("button", { name: /EP001 · Process/ })).parentElement as HTMLElement;
     // The process shows once the sessions are in, with its steps once the session's chat is.
     expect(within(process).getAllByRole("listitem").map((item) => item.textContent)).toEqual(["Compiled the video prompts", "Shooting seg01"]);
@@ -118,7 +119,7 @@ describe("the agent panel", () => {
 
   it("sends the maker to the review a session waits on rather than a line to it", async () => {
     engine();
-    render(<AgentPanel drama={drama} episode="EP002" mode="docked" onMode={() => {}} />);
+    await renderAt(<AgentPanel drama={drama} episode="EP002" mode="docked" onMode={() => {}} />);
     expect(await screen.findByRole("link", { name: "Open the review it waits on" })).toHaveAttribute("href", "/r/r2");
     expect(screen.getByRole("textbox", { name: "Message the agent" })).toBeDisabled();
   });
@@ -126,7 +127,7 @@ describe("the agent panel", () => {
   it("follows the episode in view, and says so when the maker pins another session by hand (Codex's IA review, B3)", async () => {
     const user = userEvent.setup();
     engine();
-    render(<AgentPanel drama={drama} episode="EP002" mode="docked" onMode={() => {}} />);
+    await renderAt(<AgentPanel drama={drama} episode="EP002" mode="docked" onMode={() => {}} />);
     // EP002's session waits on its review: the panel follows it there.
     expect(await screen.findByRole("link", { name: "Open the review it waits on" })).toHaveAttribute("href", "/r/r2");
     await user.click(within(screen.getByRole("region", { name: "Running" })).getByRole("button", { name: /^EP001/ }));
@@ -140,7 +141,7 @@ describe("the agent panel", () => {
     const user = userEvent.setup();
     engine();
     accept("/api/episodes/e1/stop");
-    render(<AgentPanel drama={drama} mode="docked" onMode={() => {}} />);
+    await renderAt(<AgentPanel drama={drama} mode="docked" onMode={() => {}} />);
     await user.click(screen.getByRole("button", { name: "Stop EP001" }));
     const dialog = screen.getByRole("alertdialog", { name: "Stop EP001?" });
     await user.click(within(dialog).getByRole("button", { name: "Cancel" }));
@@ -154,7 +155,7 @@ describe("the agent panel", () => {
     const user = userEvent.setup();
     engine();
     const chosen: string[] = [];
-    const { rerender } = render(<AgentPanel drama={drama} mode="docked" onMode={(mode) => chosen.push(mode)} />);
+    const { rerender } = await renderAt(<AgentPanel drama={drama} mode="docked" onMode={(mode) => chosen.push(mode)} />);
     await user.click(screen.getByRole("button", { name: "Float the panel" }));
     rerender(<AgentPanel drama={drama} mode="floating" onMode={(mode) => chosen.push(mode)} />);
     expect(screen.getByRole("complementary", { name: "Agent" })).toHaveClass("float");
@@ -168,7 +169,7 @@ describe("the agent ball", () => {
   it("says how many decisions wait, turns while an agent works, and opens the panel", async () => {
     const user = userEvent.setup();
     let opened = 0;
-    render(<AgentBall waiting={4} busy onOpen={() => opened++} />);
+    await renderAt(<AgentBall waiting={4} busy onOpen={() => opened++} />);
     const ball = screen.getByRole("button", { name: "Open the agent panel, 4 decisions waiting" });
     expect(ball).toHaveClass("busy");
     expect(ball).toHaveTextContent("4");
@@ -181,7 +182,7 @@ describe("Stop drama", () => {
   it("asks first, and Keep running leaves it running", async () => {
     const user = userEvent.setup();
     accept("/api/dramas/d1/stop");
-    render(<StopControl drama={drama} />);
+    await renderAt(<StopControl drama={drama} />);
     await user.click(screen.getByRole("button", { name: "Stop drama" }));
     const dialog = screen.getByRole("alertdialog", { name: "Stop The Stepmother?" });
     await user.click(within(dialog).getByRole("button", { name: "Keep running" }));
@@ -191,9 +192,9 @@ describe("Stop drama", () => {
     expect(calls("POST", "/api/dramas/d1/stop")).toHaveLength(1);
   });
 
-  it("says Stopping… while its Computers stop, and can't be pressed", () => {
+  it("says Stopping… while its Computers stop, and can't be pressed", async () => {
     const stopping = { ...drama, status: "stopped", crew: [{ ...drama.crew[0], state: "stopping" }] } as DramaView;
-    render(<StopControl drama={stopping} />);
+    await renderAt(<StopControl drama={stopping} />);
     expect(screen.getByRole("button", { name: "Stopping…" })).toBeDisabled();
   });
 
@@ -201,7 +202,7 @@ describe("Stop drama", () => {
     const user = userEvent.setup();
     accept("/api/dramas/d1/resume");
     const stopped = { ...drama, status: "stopped", crew: [] } as unknown as DramaView;
-    render(<StopControl drama={stopped} />);
+    await renderAt(<StopControl drama={stopped} />);
     expect(screen.getByText("Stopped")).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: "Resume" }));
     expect(calls("POST", "/api/dramas/d1/resume")).toHaveLength(1);

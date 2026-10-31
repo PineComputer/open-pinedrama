@@ -47,8 +47,8 @@ for (const theme of ["dark", "light"] as const) {
     const inbox: { id: string; state: string; episode?: string; kind: string }[] = await page.evaluate(async (d) => (await (await fetch(`/api/inbox?drama=${d}`)).json()), bride);
     const takes = inbox.find((r) => r.state === "open" && r.episode === "EP006" && r.kind === "takes");
     const routes: Record<(typeof SCREENS)[number], string> = {
-      home: "/", upload: "/new", analyzing: `/d/${rewriting}/analyzing`, fountain: `/d/${rewriting}/script`, story: `/d/${bride}/story`, episodes: `/d/${bride}`,
-      canvas: `/d/${bride}/canvas?item=EP006`, graph: `/d/${bride}/graph`, review: takes ? `/r/${takes.id}` : `/d/${bride}/review`, cut: `/d/${bride}/cut`,
+      home: "/", upload: "/new", analyzing: `/d/${rewriting}/analyzing`, fountain: `/d/${rewriting}/script`, story: `/d/${bride}/story`, episodes: `/d/${bride}/episodes`,
+      canvas: `/d/${bride}/e/EP006/canvas`, graph: `/d/${bride}/out-of-date`, review: takes ? `/r/${takes.id}` : `/d/${bride}/review`, cut: `/d/${bride}/e/EP001/cut`,
     };
     const rows: string[] = [];
     for (const screen of SCREENS) {

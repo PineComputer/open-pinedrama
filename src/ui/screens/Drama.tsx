@@ -1,21 +1,13 @@
+import { Link } from "@tanstack/react-router";
+import type { ReactNode } from "react";
 import type { AppInfo, DramaView, ReviewSummary, ReviewView } from "../../shared/types.ts";
 import { StopCard } from "../components/StopCard.tsx";
-import { Link } from "../router.tsx";
+import type { Page } from "../place.ts";
 import { api, useAction, useResource } from "../api.ts";
 import { useT } from "../i18n.ts";
-import { errorText, isSettingUp, isSetupScreen } from "../labels.ts";
+import { errorText, isSetupScreen } from "../labels.ts";
 import { Icon } from "../icons.tsx";
 import { DramaBar, stillStopping } from "../shell/TopBar.tsx";
-import { Analyzing } from "./Analyzing.tsx";
-import { Board, SetupPanel } from "./Board.tsx";
-import { Canvas } from "./Canvas.tsx";
-import { Cast } from "./Cast.tsx";
-import { Crew } from "./Crew.tsx";
-import { CutTab } from "./CutTab.tsx";
-import { Graph } from "../graph/Graph.tsx";
-import { Episode } from "./Episode.tsx";
-import { Script } from "./Script.tsx";
-import { InboxList } from "./Inbox.tsx";
 import { buttonClass } from "../components/Button.tsx";
 
 /** What holds the drama up that the maker should know: it belongs to the other mode, or its Computers won't start. */
@@ -25,7 +17,7 @@ export function WaitingStop({ stop }: { stop: ReviewSummary }) {
   const { data } = useResource<ReviewView>(`/api/reviews/${stop.id}`, ["inbox"]);
   return (data?.refusals ?? []).map((refusal, n) => (
     <StopCard key={n} refusal={refusal} episode={stop.episode}>
-      <Link className="btn sm primary" to={`/r/${stop.id}`}>
+      <Link className="btn sm primary" to="/r/$reviewId" params={{ reviewId: stop.id }}>
         {t("stopcard.decide")}
       </Link>
     </StopCard>
@@ -94,34 +86,15 @@ function Notices({ drama }: { drama: DramaView }) {
   );
 }
 
-/** A drama's page: what holds it up, its surface and chips, and the step or surface in view. The shell (App) loads the drama and gives its sidebar. */
-export function Drama({ drama, tab, episode }: { drama: DramaView; tab: string; episode?: string }) {
-  const { t } = useT();
-  const id = drama.id;
-  // Before there are episodes, the setup's progress is the story being made.
-  const settingUp = isSettingUp(drama);
+/** A drama's page: what holds it up, its surface and chips, and the page in view (routes.tsx). The shell (App) loads the drama and gives its sidebar. */
+export function Drama({ drama, page, children }: { drama: DramaView; page: Page | undefined; children: ReactNode }) {
+  // The cut's room is the design's Cut screen, and the setup's Script its Analyzing and Fountain review: no surface bar above them.
+  const room = page === "cut" || page === "delivery";
   return (
     <section className="ds-workin">
-      {/* The cut's room is the design's Cut screen, and the setup's Script its Analyzing and Fountain review: no surface bar above them. */}
-      {tab !== "cut" && !isSetupScreen(drama, tab) && <DramaBar drama={drama} />}
-      {tab !== "cut" && <Notices drama={drama} />}
-      {tab === "board" && (settingUp ? <SetupPanel drama={drama} /> : <Board drama={drama} />)}
-      {tab === "episode" && episode && <Episode key={`${id}/${episode}`} dramaId={id} code={episode} />}
-      {tab === "script" && <Script dramaId={id} />}
-      {tab === "analyzing" && <Analyzing dramaId={id} />}
-      {tab === "story" && (settingUp ? <SetupPanel drama={drama} /> : <Cast dramaId={id} />)}
-      {tab === "cut" && <CutTab dramaId={id} />}
-      {tab === "canvas" && <Canvas drama={drama} />}
-      {tab === "graph" && <Graph dramaId={id} />}
-      {tab === "crew" && <Crew drama={drama} />}
-      {tab === "inbox" && (
-        <>
-          <div className="work-head">
-            <h2>{t("inbox.title")}</h2>
-          </div>
-          <InboxList dramaId={id} />
-        </>
-      )}
+      {!room && !(page && isSetupScreen(drama, page)) && <DramaBar drama={drama} />}
+      {!room && <Notices drama={drama} />}
+      {children}
     </section>
   );
 }
