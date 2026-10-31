@@ -838,3 +838,4 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
 /* What the tree's dots mean (yurun's Y10), one line under it. */
 .treelegend { display: flex; gap: 12px; margin: 2px 0 6px 26px; font-size: 11px; color: var(--text-subtle); }
 .treelegend span { display: inline-flex; align-items: center; gap: 5px; }
+.pagesub { margin: 2px 0 0; font-size: 12.5px; max-width: 72ch; }

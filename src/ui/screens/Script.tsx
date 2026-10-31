@@ -44,6 +44,7 @@ export function Script({ dramaId }: { dramaId: string }) {
       <div className="scripthead">
         <div className="grow">
           <h2 className="pagetitle">{t("step.script")}</h2>
+          <p className="muted pagesub">{t("script.subtitle")}</p>
           {current?.file && <p className="muted">{t(current.pending ? "script.pending" : "script.version", { version: `${current.file.name} ${current.version}` })}</p>}
         </div>
         {rewritten && original && shown === rewritten && (

@@ -84,6 +84,15 @@ describe("the Story", () => {
     expect(within(await screen.findByRole("article", { name: "The letter" })).getByText("A folded letter.")).toBeInTheDocument();
   });
 
+  it("shows the bible on Story before anything is drawn, and says what Story is (Y8)", async () => {
+    answer("/api/dramas/d1/cast", []);
+    answer("/api/dramas/d1/project", { state: null, sessions: [], problems: [], names });
+    await renderAt(<Cast dramaId="d1" />, "/d/d1/story");
+    expect(await screen.findByText("A stepmother wins the house.")).toBeInTheDocument();
+    expect(screen.getByText(/^The bible: logline, beats/)).toBeInTheDocument();
+    expect(screen.queryByText(/appear here as the agent draws them/)).not.toBeInTheDocument();
+  });
+
   it("keeps the bible on Story, a page of its own with no asset tabs (IA §16)", async () => {
     engine();
     await renderAt(<Cast dramaId="d1" />, "/d/d1/story");

@@ -191,7 +191,7 @@
       <div class="body"><div class="scrollmain">
         <div class="bar2"><span class="grow"></span><${ProjectChips}/></div>
         <${StopBanner}/>
-        <div style="padding:0 16px"><div class="tabsrow" style="margin:4px 0 18px">${story ? html`<h2 class="pagetitle">Story</h2>` : html`<div class="utabs" role="tablist">${tabs.map(([k, l, n]) => html`<button role="tab" aria-selected=${String(S.stab === k)} onClick=${() => set({ stab: k })}>${l}${n && html`<small>${n}</small>`}</button>`)}</div>`}
+        <div style="padding:0 16px"><div class="tabsrow" style="margin:4px 0 18px">${story ? html`<div><h2 class="pagetitle">Story</h2><p class="muted pagesub">The bible: logline, beats and the facts of the characters, places and props, drawn from the script.</p></div>` : html`<div class="utabs" role="tablist">${tabs.map(([k, l, n]) => html`<button role="tab" aria-selected=${String(S.stab === k)} onClick=${() => set({ stab: k })}>${l}${n && html`<small>${n}</small>`}</button>`)}</div>`}
           <span class="grow"></span><span class="muted" style="font-size:12px">${story ? "Bible b0003 · accepted · EP001–EP012 written" : "Shared by every episode"}</span></div></div>
         ${S.stab === "bible" && html`<div class="biblegrid">
           <section class="panel"><span class="kick">Logline</span><p class="logline">${P.bible.logline}</p>
@@ -572,7 +572,7 @@
       <div class="body"><div class="scrollmain">
         <div class="bar2"><span class="grow"></span><${ProjectChips}/></div>
         <${StopBanner}/>
-        <div class="scripthead"><div class="grow"><h2 class="pagetitle">Script</h2>
+        <div class="scripthead"><div class="grow"><h2 class="pagetitle">Script</h2><p class="muted pagesub">Your screenplay as the agent rewrote it into Fountain and you accepted it; your original beside it.</p>
             <p class="muted">screenplay.fountain v2 · ${Status("accepted")} accepted in your words: “Yes, this is my script. Day for the second scene.”</p></div>
           <div class="seg" role="group" aria-label="Show"><button aria-pressed=${String(!beside)} onClick=${() => set({ scriptBeside: false })}>Fountain</button><button aria-pressed=${String(!!beside)} onClick=${() => set({ scriptBeside: true })}>Beside your original</button></div></div>
         ${beside ? html`<div class="fpanes scriptpanes"><section class="fpane"><h4>Your file <span class="tag">bride-on-bail.docx</span></h4><ol class="orig">${P.orig.map((l, i) => html`<li><button type="button"><span>${i + 1}</span>${l}</button></li>`)}</ol></section>

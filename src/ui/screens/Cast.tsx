@@ -315,8 +315,9 @@ export function Cast({ dramaId, compact = false }: { dramaId: string; compact?: 
     </div>
   );
   if (!data) return <p className={error === undefined ? "quiet" : "error"}>{error === undefined ? t("loading") : errorText(error, t)}</p>;
-  if (!data.length) return <p className="empty-note">{t("cast.empty")}</p>;
-  if (compact) return castGrid;
+  // Y8: Story is the bible's page whether or not anything has been drawn; an asset shelf says when it is empty.
+  const none = <p className="empty-note" style={{ padding: "0 16px" }}>{t("cast.empty")}</p>;
+  if (compact) return characters.length ? castGrid : none;
   const episodes = Object.entries(names?.episodes ?? {});
   // The bible as drama-cli's status gives it: its version, whether it is accepted, and how many episodes it writes.
   const bible = project.data?.state?.bible;
@@ -348,7 +349,10 @@ export function Cast({ dramaId, compact = false }: { dramaId: string; compact?: 
       <div style={{ padding: "0 16px" }}>
         <div className="tabsrow" style={{ margin: "4px 0 18px" }}>
           {story ? (
-            <h2 className="pagetitle">{t("step.story")}</h2>
+            <div>
+              <h2 className="pagetitle">{t("step.story")}</h2>
+              <p className="muted pagesub">{t("story.subtitle")}</p>
+            </div>
           ) : (
             <TabsPrimitive.List className="utabs" aria-label={t("cast.shelves")}>
               {tabs.map(([value, label, count]) => (
@@ -431,12 +435,13 @@ export function Cast({ dramaId, compact = false }: { dramaId: string; compact?: 
         )}
       </TabsPrimitive.Content>
       <TabsPrimitive.Content value="cast" className={detail ? "assetsplit" : undefined}>
-        {castGrid}
+        {characters.length ? castGrid : none}
         {shelf === "cast" && detail}
       </TabsPrimitive.Content>
       {/* drama-cli's own two stages, as yurun decided: scenes (assets/scenes/<id>) and props (assets/props/<id>). */}
       {(["scenes", "props"] as const).map((shelf) => (
         <TabsPrimitive.Content key={shelf} value={shelf} className={detail ? "assetsplit" : undefined}>
+          {!(shelf === "scenes" ? places : props).length && none}
           <div className="worldgrid">
             {(shelf === "scenes" ? places : props).map((card) => (
               <PlaceCard key={card.subject} card={card} names={names} dramaId={dramaId} picked={card.subject === picked} />

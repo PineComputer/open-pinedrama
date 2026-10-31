@@ -782,7 +782,9 @@ const en = {
   "talk.none": "No agent is at work on this drama.",
   "talk.send": "Send",
 
-  "cast.empty": "The cast appears here as the agent draws it.",
+  "cast.empty": "Characters, locations and props appear here as the agent draws them.",
+  "story.subtitle": "The bible: logline, beats and the facts of the characters, places and props, drawn from the script.",
+  "script.subtitle": "Your screenplay as the agent rewrote it into Fountain and you accepted it; your original beside it.",
   "cast.characters": "Characters",
   "cast.shared": "Shared by every episode",
 
@@ -1815,7 +1817,9 @@ const zh: Record<Key, string> = {
   "talk.none": "这部剧暂时没有在工作的智能体。",
   "talk.send": "发送",
 
-  "cast.empty": "智能体绘制角色后，会出现在这里。",
+  "cast.empty": "智能体绘制角色、地点和道具后，会出现在这里。",
+  "story.subtitle": "设定集：从剧本里整理出的一句话梗概、情节节点，以及角色、地点和道具的设定。",
+  "script.subtitle": "智能体把你的剧本改写成 Fountain、经你确认后的版本；旁边是你的原稿。",
   "cast.characters": "角色",
   "cast.shared": "所有分集共用",
 
