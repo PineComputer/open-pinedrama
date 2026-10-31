@@ -196,7 +196,7 @@
       <div class="body"><div class="scrollmain">
         <div class="bar2"><${SurfaceSwitch}/><span class="grow"></span><${ProjectChips}/></div>
         <div class="stalebar">${I("warning")}<span><b>4 items are stale.</b> Case file v1 was made from bible b0002, and b0003 is accepted. What was made from it is stale until the agent redraws it.</span><span class="grow"></span><button class="btn sm" onClick=${() => toast("Sent to the agent as a steering note: redo the 4 stale items.")}>Ask the agent to redo them</button></div>
-        <div class="graphwrap"><div class="graph" style=${`width:${24 * 2 + 6 * W + 5 * GX}px;height:${24 * 2 + 4 * H + 3 * GY + 24}px`}>
+        <div class="graphwrap" role="group" aria-label="Graph" tabindex="0"><div class="graph" style=${`width:${24 * 2 + 6 * W + 5 * GX}px;height:${24 * 2 + 4 * H + 3 * GY + 24}px`}>
           ${cols.map((c, i) => html`<span class="gcol" style=${`left:${24 + i * (W + GX)}px`}>${c}</span>`)}
           <svg class="gwires" width="100%" height="100%">${GE.map(([a, b]) => { const A = pos(by[a]), B = pos(by[b]); const x1 = A.x + W, y1 = A.y + H / 2 + 24, x2 = B.x, y2 = B.y + H / 2 + 24, m = (x1 + x2) / 2;
             const on = (a === sel.id || up.has(a)) && (b === sel.id || up.has(b)) || (a === sel.id || down.has(a)) && (b === sel.id || down.has(b));

@@ -326,8 +326,9 @@ export function Graph({ dramaId }: { dramaId: string }) {
             )}
           </div>
         )}
-        <div className="graphwrap">
-          <div className="graph" role="group" aria-label={t("surface.graph")} style={size}>
+        {/* The plane scrolls, so it takes the keyboard's focus to scroll it (axe, scrollable-region-focusable). */}
+        <div className="graphwrap" role="group" aria-label={t("surface.graph")} tabIndex={0}>
+          <div className="graph" style={size}>
             {columns.map((column) => (
               <span key={column.x} className="gcol" style={{ left: column.x }}>
                 {column.labels.map((label) => t(label)).join(", ")}
