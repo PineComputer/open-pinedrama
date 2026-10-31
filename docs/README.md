@@ -3,7 +3,9 @@
 The studio's design documents: what each one says, and the rules every document follows. The
 layout and its rules are the ones drama-cli's documentation uses (short_drama `doc/README.md`),
 which merecdesperez44323-lab approved for that repository on 20 October 2026 and asked for here
-on 30 October 2026 ("有专业的文档结构，比如 decision啊…每个决策都要有依据…都要是英语，多用 mermaid").
+on 30 October 2026 ("有专业的文档结构，比如 decision啊…每个决策都要有依据…都要是英语，多用 mermaid"; *a professional
+document structure, such as decisions… every decision needs grounds… all in English, plenty of
+Mermaid*).
 
 ## How these docs are organised
 
@@ -30,8 +32,9 @@ on 30 October 2026 ("有专业的文档结构，比如 decision啊…每个决�
 - **Every concept cites its source**: a file by its path and line, a decision by its number, a
   publication by its reference. A design of our own says "ours", and why.
 - **Quotes are verbatim.** Words in quotation marks are copied exactly from their source; a
-  paraphrase stays reported speech. merecdesperez44323-lab is named by that GitHub id, and the
-  app's user is "the maker".
+  paraphrase stays reported speech. A Chinese quote is followed by an English gloss in italics;
+  the gloss is ours, not part of the quote. merecdesperez44323-lab is named by that GitHub id, and
+  the app's user is "the maker".
 - **Diagrams are Mermaid** <sup>[4](#ref-4)</sup>, in the Markdown itself, so GitHub renders
   them and a change to a diagram shows in a diff.
 - **English only.** Chinese appears only inside a verbatim quote and as the UI's Chinese terms.

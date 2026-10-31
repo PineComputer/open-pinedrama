@@ -23,8 +23,9 @@ this hard:
 - **Money and done work are at stake.** A send-back redraws; a changed look makes storyboards and
   takes out of date. A wrong click costs money or throws away accepted work.
 
-merecdesperez44323-lab's standard for the result: "不能太复杂，要非常 straightforward，符合
-intuitive" <sup>[1](#ref-1)</sup>.
+merecdesperez44323-lab's standard for the result, in a message in Codex's session: "而且不能太复杂，
+要非常 straightforward 符合 intuitive" (*and it must not be too complex: very straightforward,
+intuitive*).
 
 ## How others solve it
 
@@ -83,9 +84,12 @@ link to that home, and the link lands on it with the object selected; Back retur
 place shows a second copy with its own behaviour or state. Lineage is a view of an item's
 relations, not another home for it.
 
-**Source.** merecdesperez44323-lab: "找到一个东西是不是最好就是只能从一个地方找到", then "可以的",
-and "包括 每个东西只有一个家 啥的这种 都是 design principle" (the IA proposal, sections 16 and 17)
-<sup>[1](#ref-1)</sup>; [D16](decisions.md#d16-2026-10-30--the-navigation-a-studio-wide-rail-the-dramas-tree-one-home-per-object).
+**Source.** merecdesperez44323-lab: "找到一个东西是不是最好就是只能从一个地方找到， 而且是符合用户心智
+的， 否则到处都要能找， 用户晕了？" (*isn't it best that a thing can be found in only one place, one
+that fits the user's mental model? Otherwise it must be findable everywhere, and users get lost*),
+then "可以的" (*that works*), and "包括 每个东西只有一个家 啥的这种 都是 design principle" (*including
+"every thing has only one home" and the like: these are all design principles*) (the IA proposal,
+sections 16 and 17) <sup>[1](#ref-1)</sup>; [D16](decisions.md#d16-2026-10-30--the-navigation-a-studio-wide-rail-the-dramas-tree-one-home-per-object).
 
 **How others do it.** VS Code opens a file in one editor, whichever view you found it from
 <sup>[3](#ref-3)</sup>. Object-oriented UX starts from the objects and gives each one a home
@@ -263,7 +267,7 @@ never invented (the IA proposal, section 10).
 screen shows the state; it adds no state of its own.
 
 **Source.** The IA proposal, section 9 <sup>[1](#ref-1)</sup>; merecdesperez44323-lab: "ia & ixa
-还是非常重要的" <sup>[1](#ref-1)</sup>.
+还是非常重要的" (*IA and IxA are still very important*) <sup>[1](#ref-1)</sup>.
 
 **How others do it.** Statecharts describe reactive systems as states and transitions
 <sup>[15](#ref-15)</sup>, and libraries such as XState run them in the UI <sup>[16](#ref-16)</sup>.

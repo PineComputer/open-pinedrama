@@ -5,8 +5,8 @@ captures one decision and its rationale, and a project's records together are it
 <sup>[1](#ref-1), [2](#ref-2)</sup>). Each entry gives the context, the decision, the alternatives
 the record names, its grounds, its consequences, the words it rests on, and where it is recorded.
 Nothing is added that the record does not contain: "none recorded" says so. Words in quotation
-marks are verbatim; merecdesperez44323-lab is named by that GitHub id. Other documents cite an
-entry by its number.
+marks are verbatim, and a Chinese quote is followed by our English gloss in italics;
+merecdesperez44323-lab is named by that GitHub id. Other documents cite an entry by its number.
 
 The entries up to D7 come from the first proposal and build plan (22–24 October 2026); D8 onward
 from the redesign.
@@ -132,7 +132,7 @@ timeline
 - **Grounds.** merecdesperez44323-lab's decision.
 - **Consequences.** `CONTRIBUTING.md`, "Before you start"; a test that no way to generate exists
   (`TESTING.md`, "Product rules are tests").
-- **Words.** "第一期可以只引导"; "就是read only".
+- **Words.** "第一期可以只引导" (*phase 1 can just steer*); "就是read only" (*that is, read only*).
 - **Recorded in.** `REDESIGN_PLAN.md`, "Direction"; `CONTRIBUTING.md`.
 
 ## D9. 2026-10-30 · design/ is the one source of the UI
@@ -147,7 +147,9 @@ timeline
 - **Grounds.** merecdesperez44323-lab's decision; the prototype is the one place the UI is reviewed.
 - **Consequences.** The app imports `design/`'s three stylesheets as they are; `npm run design`
   serves it; `npm run design:diff` compares the two side by side (`design/SCREENS.md`).
-- **Words.** "你如果后边要修改ui， 你先修改设计稿和设计组件啥的啊！！！"
+- **Words.** "你如果后边要修改ui， 你先修改设计稿和设计组件啥的啊！！！" (*if you change the UI from
+  now on, change the design drafts and design components first!!!*); "要系统性！！" (*be
+  systematic!!*); "要专业" (*be professional*).
 - **Recorded in.** Commit 715900c; `CONTRIBUTING.md`, "The design comes first";
   [design principles](design-principles.md#11-design-first).
 
@@ -162,7 +164,11 @@ timeline
 - **Grounds.** At the start of a product, iteration speed matters more than a gate on every change.
 - **Consequences.** `.github/workflows/ci.yml:9` (`branches-ignore`). Full CI and e2e come back
   before release and when the work moves to `main`.
-- **Words.** "为什么一次 ci 要8 min， 暂时把 ci停掉可以吗？最多 20秒就应该搞定的"; "现在刚开始 为什么要做这么重！！！！！"
+- **Words.** "为什么一次 ci 要8 min， 暂时把 ci停掉可以吗？最多 20秒就应该搞定的" (*why does one CI run
+  take 8 min? Can CI be paused for now? It should be done in 20 seconds at most*); "现在刚开始
+  为什么要做这么重！！！！！" (*we are only starting, why make it this heavy!!!!!*); for the tsc gate,
+  "你就参考那个 drama-cli 最多跑一个 什么 py 的什么语法检查啥的" (*follow drama-cli: at most run some
+  syntax check, like its Python one*).
 - **Recorded in.** Commit f4c701e; [design principles](design-principles.md#13-light-process-early).
 
 ## D11. 2026-10-30 · Mature libraries; hand-writing what one covers needs approval
@@ -178,7 +184,12 @@ timeline
 - **Consequences.** React Flow for the Canvas (commit fc1f459, which deleted the hand-written
   camera, zoom, minimap and their tests), shadcn/ui on Radix, media-chrome, WaveSurfer and the
   rest of `CONTRIBUTING.md`, "Building blocks"; TanStack Router (D19).
-- **Words.** "坚决不要自己 ad hoc！！！坚决不要！！！！必须用业内通用的、标准的、流行的、有权威参考的！！！"; "不是 新加依赖要我同意， 是你手写乱七八糟的组件反而是要我同意！！！"; "你要用最少的代码， 用最多的 成熟组件和接口！！！"
+- **Words.** "坚决不要自己 ad hoc！！！坚决不要！！！！必须用业内通用的、标准的、流行的、有权威参考的！！！"
+  (*absolutely nothing ad hoc of our own!!! absolutely not!!!! it must be what the industry
+  commonly uses: standard, popular, with an authoritative reference!!!*); "不是 新加依赖要我同意，
+  是你手写乱七八糟的组件反而是要我同意！！！" (*it is not a new dependency that needs my approval; it
+  is your hand-written, messy components that do!!!*); "你要用最少的代码， 用最多的 成熟组件和接口！！！"
+  (*use the least code, and the most mature components and interfaces!!!*).
 - **Recorded in.** `CONTRIBUTING.md`, "Components to use";
   [design principles](design-principles.md#12-mature-libraries-least-code-of-our-own).
 
@@ -188,10 +199,13 @@ timeline
   own ids, paths, versions, lineage, asset records and cuts made by `drama-cli edit`. Their pictures
   and clips go through Git LFS; a checkout without LFS reads them as no sample.
 - **Alternatives.** None recorded.
-- **Grounds.** None recorded beyond the context.
+- **Grounds.** merecdesperez44323-lab's decision: the samples belong in the repository, so that
+  whoever develops the studio sees what it looks like with real work.
 - **Consequences.** A generated public sample set replaces them before release (`REDESIGN_PLAN.md`,
   "Before release"). No test needs the samples (`TESTING.md`).
-- **Words.** None recorded.
+- **Words.** "肯定要进仓库， 这样别人开发时候也知道什么样子啊" (*they must go in the repository, so
+  others know what it looks like when they develop*); "效果图里的你就直接放在样例数据里啊！！！" (*put
+  what is in the mock-ups straight into the sample data!!!*).
 - **Recorded in.** Commits 42182d9, a81cee6 to 5edb51d; `REUSED.md`, "Replay's sample media".
 
 ## D13. 2026-10-30 · A review decision is taken once, by its submission id
@@ -256,8 +270,14 @@ timeline
   ([design principles](design-principles.md#1-one-home-per-object)).
 - **Consequences.** `design/`'s IA draft (published for review); the port moves routes, e2e specs and
   the samples' links in one change, with no compatibility shims.
-- **Words.** "ia & ixa 还是非常重要的"; "找到一个东西是不是最好就是只能从一个地方找到", then "可以的";
-  "包括 每个东西只有一个家 啥的这种 都是 design principle".
+- **Words.** "ia & ixa 还是非常重要的" (*IA and IxA are still very important*); "是不是要先把
+  IA方案定下来， 然后才是后续？不然可能修bug也白修？" (*shouldn't the IA plan be settled first, and the
+  rest after it? Otherwise fixing bugs may be wasted*); "找到一个东西是不是最好就是只能从一个地方找到，
+  而且是符合用户心智 的， 否则到处都要能找， 用户晕了？" (*isn't it best that a thing can be found in
+  only one place, one that fits the user's mental model? Otherwise it must be findable everywhere,
+  and users get lost*), then "可以的" (*that works*); "包括 每个东西只有一个家 啥的这种 都是 design
+  principle" (*including "every thing has only one home" and the like: these are all design
+  principles*).
 - **Recorded in.** The IA proposal, sections 2–5, 10–12 and 16–17 <sup>[3](#ref-3)</sup>;
   [design principles](design-principles.md).
 
@@ -271,7 +291,9 @@ timeline
 - **Alternatives.** Keep the option as a setting.
 - **Grounds.** drama-cli's rule that the person watches every take and cut and alone accepts the
   photoreal storyboard (short_drama D76, D141; `doc/architecture.md`, section 7.1, item 7; `AGENTS.md`,
-  design rule 10). Auto-approval was a bug against that rule, not a setting.
+  design rule 10), and its architecture, section 7.1, item 7: the person approves "every take and
+  cut" (`doc/architecture.md:222` at short_drama ade90c55); Codex's review, B6 <sup>[4](#ref-4)</sup>.
+  Auto-approval was a bug against that rule, not a setting.
 - **Consequences.** `LEFT` in `src/engine/reviews.ts:160-164`; `flow.test` keeps EP001's takes,
   photoreal storyboards and cut open under every setting.
 - **Words.** None recorded.
@@ -291,7 +313,9 @@ timeline
   the studio.
 - **Consequences.** The phase-1 scope reads "steering, plus editing the cut's spec" (D8). One build
   per Apply, keyed by a submission id (D13).
-- **Words.** None recorded.
+- **Words.** "你先同步把 cut 放上去？因为这个不涉及到 IA" (*put the cut up first, in parallel? It does
+  not involve the IA*), 30 October 2026. merecdesperez44323-lab's approval of the edit-spec design:
+  pending.
 - **Recorded in.** The IA proposal, sections 12.2, 14.2 and 15 (round 2, D1–D3) <sup>[3](#ref-3)</sup>.
 
 ## D19. 2026-10-30 · TanStack Router for typed routes
