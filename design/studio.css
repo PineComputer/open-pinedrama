@@ -484,6 +484,19 @@ input.search:focus { border-color: var(--text-primary); }
 
 /* ── setup steps ── */
 
+/* ── stop cards ── */
+/* The product's StopCard (src/ui/components/StopCard.tsx) until SaysLine replaces its last use: work-02 deletes these rules with it. */
+.stopcard { margin: 0 16px 16px; border-radius: var(--radius-2xl); border: 1px solid var(--border); background: var(--surface); overflow: hidden; }
+/* White letters on the error's red, darkened to 75% so they hold 4.5:1 in every theme (the dark ones' reds are light). */
+.stopcard > header { display: flex; align-items: center; gap: 8px; padding: 9px 16px; font-size: 12px; font-weight: 700; color: #fff; background: color-mix(in srgb, var(--error) 75%, #000); }
+.stopcard.budget > header, .stopcard.cap > header, .stopcard.env > header { background: var(--surface-container-high); color: var(--text-primary); }
+.stopcard > header .ic { width: 15px; height: 15px; }
+.stopcard .sbody { padding: 14px 16px 16px; display: grid; gap: 12px; }
+.stopcard h2 { margin: 0; font-size: 15px; line-height: inherit; font-weight: 700; }
+.stopcard .kv { grid-template-columns: 110px 1fr; }
+.stopcard .said { font-size: 11.5px; line-height: 1.6; padding: 8px 10px; border-radius: var(--radius-medium); background: var(--surface-container); color: var(--text-secondary); word-break: break-word; }
+.stopcard .acts { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
 /* ── upload ── */
 .formgrid { display: grid; grid-template-columns: 1fr 320px; gap: 18px; align-items: start; }
 .fcol { display: grid; gap: 16px; min-width: 0; }
@@ -718,6 +731,8 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
 .arow.failed { background: color-mix(in srgb, var(--error) 8%, var(--surface-container)); align-items: flex-start; }
 .arow.failed .what span, .arow.failed .what small { white-space: normal; } .arow.failed code { font: 11px var(--font-mono); color: var(--text-primary); }
 .arow .what small { color: var(--text-secondary); font-size: 11.5px; line-height: 1.45; }
+.notice-red { margin: 0 16px 12px; padding: 8px 12px; border-radius: var(--radius-large); border: 1px solid color-mix(in srgb, var(--error) 45%, transparent); background: color-mix(in srgb, var(--error) 8%, var(--surface)); display: flex; align-items: center; gap: 10px; font-size: 12.5px; color: var(--text-secondary); }
+.notice-red .ic { width: 16px; height: 16px; color: var(--error); } .notice-red b { color: var(--text-primary); }
 .panel.queue { display: grid; gap: 2px; padding: 8px; }
 .npanel .nstate { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; padding: 0 14px 8px; font-size: 11.5px; color: var(--text-muted); }
 .npanel .nstate .why { display: inline-flex; align-items: center; gap: 4px; color: var(--warning-text); } .npanel .nstate .ic { width: 13px; height: 13px; }
