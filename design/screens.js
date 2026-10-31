@@ -1,7 +1,7 @@
 /* The rest of the flow in the pro direction: Upload, Analyzing, Fountain review, Bible, Graph (lineage) and Cut,
    plus the setup steps. Uses the shell and helpers app.js exposes as window.PD. */
 (() => {
-  const { html, I, S, set, go, own, jump, openHome, openStage, openLineage, stageNode, Submission, submit, toast, money, Status, TopBar, SaysLine, ProjectChips, SPENT_COVERS, useEffect, useRef } = window.PD;
+  const { studioLayout, nowOf, html, I, S, set, go, own, jump, openHome, openStage, openLineage, stageNode, Submission, submit, toast, money, Status, TopBar, SaysLine, ProjectChips, SPENT_COVERS, useEffect, useRef } = window.PD;
 
   /* ───── Upload ───── */
   function Upload() {
@@ -100,7 +100,7 @@
           <div class="lbrow">${cur ? Status(x.st === "stale" ? "accepted" : x.st) : shown === x.accepted ? Status("accepted") : html`<span class="subtle">Not the accepted version.</span>`}${x.problems && Status("stale", "Out of date")}
             <span class="fill"></span><button class="btn sm" disabled=${!lin} title=${lin ? "" : "Lineage: this sample traces seg03 and what it reads"} onClick=${() => { set({ asel: null }); openLineage(lin, x.name + " · Assets"); }}>${I("tree-structure")}Lineage</button></div>
           ${cur && x.st === "you" && html`<div class="lbsec"><h4>Your review</h4>${S.stab === "cast" && html`<div class="finding warn">${I("warning")}<span>warn · The blouse reads as purple; the bible says plum.</span></div>`}<${ReviewBtns} id=${x.id}/></div>`}
-          ${cur && x.st === "back" && html`<div class="lbsec"><div class="finding err">${I("warning-circle")}<span>Sent back by the agent: the observer found an error (a third hand). Redrawing.</span></div></div>`}
+          ${cur && x.st === "back" && html`<div class="lbsec"><div class="finding err">${I("warning-circle")}<span>${studioLayout() ? "Sent back: the observer found an error (a third hand)." : "Sent back by the agent: the observer found an error (a third hand). Redrawing."}</span></div></div>`}
           ${cur && x.problems && html`<div class="lbsec"><h4>Why it's out of date</h4>${x.problems.map((said) => html`<div class="finding warn">${I("warning")}<span>${said}</span></div>`)}</div>`}
           <div class="lbsec"><h4>Versions <span class="muted">${all.length}</span></h4>
             <div class="vstrip" role="group" aria-label=${"Versions of " + x.name}>${all.map((v) => html`<button aria-pressed=${String(v === shown)} onClick=${() => set({ at: { kind: kindOf, ver: v } })}>${v.replace(/^.* /, "")}</button>`)}</div>
@@ -207,7 +207,7 @@
           : home ? html`<button class="btn sm" onClick=${() => { set({ ...home[1], from: { screen: "graph", label } }); try { history.replaceState(null, "", "#" + home[1].screen); } catch (e) { /* the hash is a convenience */ } }}>Open in ${home[0]}</button>` : null}</div>
         <div class="iscroll">
           ${sel.pic && html`<div class="isec"><img src=${sel.pic} alt="" style="width:100%;border-radius:var(--radius-large);max-height:240px;object-fit:cover;object-position:top"/></div>`}
-          <div class="isec"><h4>State</h4>${sel.stale ? html`<div class="finding warn">${I("warning")}<span>${sel.id === "file" ? "Changed file: bible/v3/bible.json" : "Made from Case file v1, which is out of date."} The agent redraws it.</span></div>` : html`<span class="muted">Fresh: made from the accepted versions.</span>`}</div>
+          <div class="isec"><h4>State</h4>${sel.stale ? html`<div class="finding warn">${I("warning")}<span>${sel.id === "file" ? "Changed file: bible/v3/bible.json" : "Made from Case file v1, which is out of date."}${studioLayout() ? "" : " The agent redraws it."}</span></div>` : html`<span class="muted">Fresh: made from the accepted versions.</span>`}</div>
           <div class="isec"><h4>Made from <span class="muted">${up.size}</span></h4>${[...up].map((id) => html`<button class="lrow" onClick=${() => set({ gsel: id })}>${by[id].t}<span class="mono subtle">${by[id].v}</span></button>`)}</div>
           <div class="isec"><h4>Made from it <span class="muted">${down.size}</span></h4>${[...down].map((id) => html`<button class="lrow" onClick=${() => set({ gsel: id })}>${by[id].t}<span class="mono subtle">${by[id].v}</span></button>`)}${!down.size && html`<span class="muted">Nothing yet.</span>`}</div>
         </div></aside></div></div>`;
@@ -245,7 +245,7 @@
     return html`<div class="main">
       <${TopBar} crumbs=${[own.drama(), "Out of date"]}/>
       <div class="body"><div class="scrollmain">
-        <div class="bar2"><span class="delivsum">${items.length ? html`<b>${items.length} items</b> are out of date. Ask the agent in the sidebar to redo them.` : "Nothing is out of date."}</span></div>
+        <div class="bar2"><span class="delivsum">${items.length ? html`<b>${items.length} items</b> are out of date.${studioLayout() ? "" : " Ask the agent in the sidebar to redo them."}` : "Nothing is out of date."}</span></div>
         <${SaysLine}/>
         ${items.length > 0 && html`<div class="delivwrap"><table class="deliv ood"><thead><tr><th>Item</th><th>Version</th><th>Why</th><th aria-label="Lineage"></th></tr></thead>
           <tbody>${group("Assets", "Assets")}${["EP006"].map((ep) => group(ep, "Episodes · " + ep))}</tbody></table></div>`}
@@ -411,7 +411,8 @@
           </div>
           <div class="verdict">${sub ? html`
             <${Submission} id="cutApply" to="EP006's agent" kept="Your edit is kept." onSend=${apply}/>
-            ${sub === "sent" && html`<div class=${"sentcard " + (S.cutTurn || "waiting")}>${I(S.cutTurn === "ready" ? "check-circle" : S.cutTurn === "refused" ? "x-circle" : S.cutTurn === "work" ? "circle-notch" : "clock")}<span class="fill">
+            ${/* The studio layout: what the session is doing with the edit is the panel's; the center shows cut v2 once recorded. */ ""}
+            ${sub === "sent" && (!studioLayout() || S.cutTurn === "ready") && html`<div class=${"sentcard " + (S.cutTurn || "waiting")}>${I(S.cutTurn === "ready" ? "check-circle" : S.cutTurn === "refused" ? "x-circle" : S.cutTurn === "work" ? "circle-notch" : "clock")}<span class="fill">
               <b>${{ waiting: "Waiting for EP006's session", work: "Building cut v2", ready: "Cut v2 waits for your review", refused: "drama-cli refused the edit" }[S.cutTurn || "waiting"]}</b>
               <small>${{ waiting: "Its status shows when it starts on your edit.", work: "EP006's session is at work: drama-cli edit build EP006, then edit validate. drama-cli's edit calls no paid model; Pine bills the agent's turns.", ready: "Made from your edit of cut " + baseV + ". Watch it and decide, as for any cut.", refused: "Clip 2 has no audio; explicitly choose silence. Nothing was built and nothing was spent; your draft is kept." }[S.cutTurn || "waiting"]}</small></span>
               ${S.cutTurn === "ready" && html`<button class="btn sm primary" onClick=${() => toast("Opens EP006 › Cut v2. This sample has only cut v1.")}>Open cut v2</button>`}
@@ -439,7 +440,7 @@
             <td><span class="delivep">${e.cover ? html`<img src=${e.cover} alt=""/>` : html`<span class="noimg"></span>`}<span><b class="mono">${e.code}</b><small>${e.title}</small></span></span></td>
             <td>${c && c.accepted ? html`<button class="linkbtn" onClick=${() => open(e, c.accepted)}>Cut ${c.accepted}</button> <span class="mono muted">${c.acceptedDur} s</span>` : html`<span class="muted">—</span>`}</td>
             <td>${c ? html`<button class="linkbtn" onClick=${() => open(e, c.latest)}>Cut ${c.latest}</button> <span class="mono muted">${c.latestDur} s</span>${e.code === "EP006" && html` <button class="ibtn" title="Lineage" aria-label="Lineage" onClick=${() => openLineage("cut", "Delivery")}>${I("tree-structure")}</button>`}` : html`<span class="muted">No cut yet</span>`}</td>
-            <td>${c ? (c.st === "you" ? Status("you", "Cut " + c.latest + " needs you") : Status("accepted", "Delivered")) : html`<span class="muted">${e.now}</span>`}</td>
+            <td>${c ? (c.st === "you" ? Status("you", "Cut " + c.latest + " needs you") : Status("accepted", "Delivered")) : html`<span class="muted">${nowOf(e)}</span>`}</td>
             <td class="act">${c && c.accepted && html`<button class="btn sm ghost" onClick=${() => toast(`Downloads ${e.code}-cut-${c.accepted}.mp4, the accepted cut.`)}>${I("download-simple")}Download</button>`}</td></tr>`; })}
             <tr class="more"><td colspan="5">EP009–EP024 · 16 episodes in line, no cut yet</td></tr></tbody></table></div>
       </div></div></div>`;
@@ -548,7 +549,7 @@
       accepted: [["done", v2, "accepted in your words: “Yes, this is my script.”", "17:46"], v1back, uploaded],
       // A project set up before drama-cli recorded rewrites: the history says so under the upload, no banner (D67).
       original: [["done", null, html`Original uploaded · ${sc.file}<br/><small class="muted">This project's rewrite wasn't recorded.</small>`, "17:31"]],
-    }[st];
+    }[st].filter(([kind, d]) => !(studioLayout() && kind === "work" && !d));  // the studio layout: a version shows once drama-cli records it; the agent's work on it is the panel's
     const History = html`<ol class="history">${events.map(([kind, d, text, at]) => html`<li class=${kind + (d && d === shown ? " sel" : "")}>
         <span class="dot ${kind === "you" ? "you" : kind === "work" ? "work" : kind === "line" ? "line" : "accepted"}"></span>
         <div class="fill"><span>${d && html`<button class="hver" aria-pressed=${String(d === shown)} title=${"Show " + d.v} onClick=${() => set({ sver: d.v, ssel: null, scriptEp: null })}>${d.v}</button> · `}${text}</span>${at && html`<time>${at}</time>`}
@@ -561,7 +562,7 @@
         <div class="bar2"><span class="fill"></span><${ProjectChips}/></div>
         <${SaysLine}/>
         <div class="scripthead"><div class="fill"><h2 class="pagetitle">Script</h2>
-          <p class="muted pagesub">Your screenplay from upload to acceptance: the agent rewrites it into Fountain, drama-cli validates it, and you accept it. Sample: ${sc.project}'s real files.</p></div></div>
+          <p class="muted pagesub">${studioLayout() ? "Your screenplay's versions as drama-cli recorded them: the original, each Fountain version it validated, and your decision on each." : "Your screenplay from upload to acceptance: the agent rewrites it into Fountain, drama-cli validates it, and you accept it."} Sample: ${sc.project}'s real files.</p></div></div>
         ${S.scriptEp && hasFountain && !target && html`<div class="notice" role="status">${I("info")}<span><b>${S.scriptEp} isn't in this sample's screenplay.</b> The sample is The Stepmother's two episodes; for a real project Script opens at ${S.scriptEp}'s section.</span></div>`}
         <div class="scriptlayout">
           <section class="scripthistory" aria-label="Versions"><h3>${I("stack")}Versions</h3>

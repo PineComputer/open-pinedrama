@@ -13,9 +13,9 @@ window.P = (() => {
     const set = [
       { status: "you", strip: ["d", "d", "d", "d", "y"], now: "Cut v2 waits for you", spent: 14.8, cut: { accepted: "v1", acceptedDur: 86, latest: "v2", latestDur: 84, st: "you" } },
       { status: "you", strip: ["d", "d", "d", "y", ""], now: "2 takes wait for you", spent: 11.4 },
-      { status: "work", strip: ["d", "d", "d", "w", ""], now: "Shooting 4 takes", spent: 8.9 },
+      { status: "work", strip: ["d", "d", "d", "w", ""], now: "Shooting 4 takes", rec: "Storyboards accepted · no take yet", spent: 8.9 },
       { status: "you", strip: ["d", "d", "y", "", ""], now: "6 storyboards wait for you", spent: 2.1 },
-      { status: "work", strip: ["d", "w", "", "", ""], now: "Blocking seg03", spent: 1.2 },
+      { status: "work", strip: ["d", "w", "", "", ""], now: "Blocking seg03", rec: "Breakdown accepted", spent: 1.2 },
       { status: "you", strip: ["d", "d", "d", "y", ""], now: "2 takes wait for you", spent: 2.8, cut: { accepted: null, latest: "v1", latestDur: 15, st: "you" } },
     ][i];
     return set ? { ...base, ...set } : { ...base, strip: i < 8 ? ["d", "", "", "", ""] : ["", "", "", "", ""] };

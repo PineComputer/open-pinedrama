@@ -19,8 +19,18 @@
     agent: (() => { try { const v = localStorage.getItem("studio.agent"); if (v === "open" || v === "closed") return v; } catch (e) { /* storage may be blocked */ } return window.matchMedia("(max-width: 1280px)").matches ? "closed" : "open"; })(),
     cam: { x: 40, y: 96, k: 0.62 }, tool: "hand", toolOpen: false, zoomOpen: false, keysOpen: false, sel: null, dock: (() => { try { return localStorage.getItem("studio.canvas.dock") || "under"; } catch (e) { return "under"; } })(), follow: true, panning: null, minimap: true,
     ti: 0, playing: false, t: 0, watched: {}, maxT: {}, verdict: {}, reason: {}, showPrev: false, subs: {}, outcome: "ok", over: false,
-    state: "normal", proto: false, file: null, preset: null, len: "90", reviewing: "every", budget: "1000", sview: null, ssel: null, sver: null, sform: null, sdraft: "", sdec: null, words: "", stab: "bible", cards: {}, cardWhy: {}, gsel: "ep6seg03", dims: {}, cutT: 0, cutPlaying: false, cutNotes: null, noteDraft: "", cutV: null, cutWhy: "",
+    // The layout: "studio" (the center a human crew's studio, the agent on the right) or "before" (b0324c5's), to compare.
+    layout: "studio", state: "normal", proto: false, file: null, preset: null, len: "90", reviewing: "every", budget: "1000", sview: null, ssel: null, sver: null, sform: null, sdraft: "", sdec: null, words: "", stab: "bible", cards: {}, cardWhy: {}, gsel: "ep6seg03", dims: {}, cutT: 0, cutPlaying: false, cutNotes: null, noteDraft: "", cutV: null, cutWhy: "",
   };
+  /* merecdesperez44323-lab, verbatim: "我觉得最好就是 vscode或者 cursor那种，就是 project就是完全正常的project， 所有 ai agent说的话
+     其实都在右边 ， 然后你比如 claude code， codex也是， 你可以完全用正常的 vs code来打开项目对吧。 那我们这个也是， 我觉得就是studio层面应该和
+     正常的人工做剧 stuido完全一样， 只不过右边是agent。 对不对。 就你中间部分如果加上很多很多agent的那种我觉得就会非常confusing啥的". The center
+     shows the project and each item's state from drama-cli's records, with Accept and Send back on an exact item (Cursor's
+     inline accept and reject); everything the agent says or does is in the right panel. The prototype's Layout control
+     switches back to the layout before it, for comparing. */
+  const studioLayout = () => S.layout !== "before";
+  // An episode's line as a studio reads it: its records' state; what the agent is doing is the panel's.
+  const nowOf = (e) => (studioLayout() && e.rec ? e.rec : e.now);
   let drawing = false;
   const draw = () => { if (!drawing) { drawing = true; requestAnimationFrame(() => { drawing = false; render(html`<${App}/>`, root); }); } };
   const set = (p) => { Object.assign(S, typeof p === "function" ? p(S) : p); draw(); };
@@ -66,7 +76,7 @@
   };
   const Status = (st, label) => {
     const [cls, word, detail] = ST[st] || [st, st, ""];
-    return html`<span class=${"st " + (label ? st : cls)} title=${detail}><i></i>${label || word}</span>`;
+    return html`<span class=${"st " + (label ? st : cls)} title=${studioLayout() && st === "back" ? "Sent back" : detail}><i></i>${label || word}</span>`;
   };
   const Mark = () => html`<span class="mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5 6.6 9.2h2.9L5.4 14.4h3.4L4.5 19.8h6.3V22h2.4v-2.2h6.3l-4.3-5.4h3.4l-4.1-5.2h2.9z"/></svg></span>`;
 
@@ -138,7 +148,7 @@
         <ul class="tree sub">${[["cast", "Characters", P.cast.length], ["scenes", "Locations", P.places.length], ["props", "Props", P.props.length]].map(([k, l, n]) => html`<li><button aria-current=${String(S.screen === "story" && S.stab === k)} onClick=${() => set({ screen: "story", stab: k, asel: null, at: null })}><span class="now">${l}</span><span class="n">${n}</span></button></li>`)}</ul>
         <button class="navi" aria-current=${S.screen === "episodes" ? "page" : "false"} onClick=${() => go("episodes")}>${I("film-strip")}Episodes<span class="cnt">4</span></button>
         <ul class="tree">${P.eps.slice(0, 8).map((e) => html`<li><button aria-current=${String(cur === e.code)} onClick=${() => e.code === "EP006" ? go("canvas") : go("episodes")}>
-          <span class="code">${e.code}</span><span class="now">${e.now}</span><span class=${"dot " + e.status} title=${{ you: "Needs you", work: "Working", accepted: "Done", line: "In line" }[e.status]}></span></button></li>
+          <span class="code">${e.code}</span><span class="now">${nowOf(e)}</span><span class=${"dot " + e.status} title=${{ you: "Needs you", work: "Working", accepted: "Done", line: "In line" }[e.status]}></span></button></li>
           ${cur === e.code && e.cut && html`<li class="treecut"><button aria-current=${String(S.screen === "cut")} onClick=${() => go("cut")}><span class="code">› Cut</span><span class="now">${e.cut.latest}${e.cut.st === "you" ? " waits for you" : ""}</span><span class=${"dot " + e.cut.st}></span></button></li>`}`)}
           <li style="padding:6px 8px;color:var(--text-subtle);font-size:11.5px">EP009–EP024 · 16 in line</li></ul>
         ${/* merecdesperez44323-lab's Y10: what the dots mean, once, at the tree's foot (Nielsen: recognition rather than recall). */ ""}
@@ -151,7 +161,7 @@
       <div class="foot" title=${SPENT_COVERS}>
         <dl class="spend"><dt>Spent</dt><dd class="mono">${money(P.project.spent)}</dd><dt>Reserved</dt><dd class="mono">${money(P.project.inflight)}</dd><dt>Budget</dt><dd class="mono">$1,000</dd></dl>
         <div class="meter"><i style=${`width:${P.project.spent / 10}%`}></i><i class="fly" style=${`width:${P.project.inflight / 10}%`}></i></div>
-        <span>This drama · 2 at work</span>
+        ${!studioLayout() && html`<span>This drama · 2 at work</span>`}
         <span class="subtle" style="font-size:11px">${SPENT_COVERS}</span>
       </div>
     </aside>`;
@@ -181,7 +191,7 @@
     // Lineage sits inside its episode when its item is the episode's or it was opened from there (A2); Out of date is drama-wide.
     const ep = ["canvas", "cut"].includes(S.screen) || (S.screen === "graph" && window.EXTRA.lineageInEpisode());
     const scope = ep ? "EP006" : "the shared project";
-    const from = ep ? "EP006's session · stop at 18:12" : "The setup's session · stop at 17:40";
+    const from = studioLayout() ? (ep ? "Exported 18:12" : "Exported 17:40") : ep ? "EP006's session · stop at 18:12" : "The setup's session · stop at 17:40";
     const name = ep ? "bride-on-bail-ep006" : "bride-on-bail";
     const item = (label, ext, hint, file) => html`<button class="mi" role="menuitem" aria-disabled=${String(none)} title=${none ? why : ""}
         onClick=${() => { if (none) return; set({ exportOpen: false }); toast("Downloaded " + file + "."); }}>
@@ -207,7 +217,7 @@
       ${right}
       <${ExportMenu}/>
       ${/* IA draft (A1): a studio page (Reviews) acts on no one drama, so it has no Stop or Next review; the queue is the way in. */
-        S.screen !== "reviews" && html`<${StopControl}/>
+        S.screen !== "reviews" && html`${!studioLayout() && html`<${StopControl}/>`}
       <button class="btn primary sm" onClick=${() => go("review")} aria-label=${"Next review in " + P.project.title + ", " + n + " waiting"}>Next review <span class="n">${n}</span></button>`}
     </header>`;
   }
@@ -273,6 +283,7 @@
      the first opened), or the session ended on what drama-cli said. No card; Accept and Send back on an exact item stay
      where they are, and Finish on an episode with a cut stays beside its line. */
   function SaysLine() {
+    if (studioLayout()) return null;  // the ball and the panel head carry what waits
     const open = asking(), done = ended(), paused = S.dramaStop === "stopped" ? pending() : [];
     const words = (m) => (m.said ? firstLine(m.said) : html`<span class="muted">the agent asked:</span> ${firstLine(m.ask)}`);
     // Paused while a question waited (master and work-02): it ended with the pause; a pause with nothing pending shows nothing.
@@ -301,7 +312,9 @@
      words, paths included, collapsed (NodePanel's Why in mono). Open, it waits for the answer in the composer below. */
   function Said({ m }) {
     return html`<div class="msg said" id=${m.id} tabindex="-1" aria-label=${"drama-cli said, " + m.code}>
-      <p class="saidhead"><span class="st">${I("info")}drama-cli</span><code>${m.code}</code><span class="fill"></span>${asking().includes(m) ? Status("you", "Waiting for your answer") : html`<span class="muted">${answered(m) ? "Answered" : "Ended"}</span>`}</p>
+      <p class="saidhead"><span class="st">${I("info")}drama-cli</span><span class="fill"></span>${asking().includes(m) ? Status("you", "Waiting for your answer") : html`<span class="muted">${answered(m) ? "Answered" : "Ended"}</span>`}</p>
+      ${/* The code on its own line, whole: beside the two chips a code such as SetLimitExceeded.max_new_versions was cut (work-04, the real build at 1440). */ ""}
+      <code class="saidcode">${m.code}</code>
       <p>${firstLine(m.said)}</p>
       <details class="basedet"><summary>What drama-cli said</summary><span class="why">${m.said}</span></details></div>`;
   }
@@ -311,7 +324,10 @@
     const ep = P.eps[5];
     return html`<span class="ephead"><b>${ep.code}</b><span class="muted">${ep.title}</span>
       <button class="btn sm ghost" onClick=${() => jump({ screen: "script", scriptEp: ep.code }, ep.code)}>${I("file-text")}Episode script</button>
-      ${ep.cut && html`<button class="btn sm ghost" onClick=${() => go("cut")}>${I("scissors")}Cut ${ep.cut.latest}${Status(ep.cut.st, ep.cut.st === "you" ? "Waits for you" : undefined)}</button>`}</span>`;
+      ${ep.cut && html`<button class="btn sm ghost" onClick=${() => go("cut")}>${I("scissors")}Cut ${ep.cut.latest}${Status(ep.cut.st, ep.cut.st === "you" ? "Waits for you" : undefined)}</button>`}
+      ${/* Finish: the producer's verdict on the episode with its cut, an exact item, so it stays in the center (the sample's
+           finishAsks moment: the cut accepted and nothing waits). */ ""}
+      ${studioLayout() && S.state === "finishAsks" && html`<button class="btn sm" onClick=${() => toast(ep.code + " is finished with its latest cut.")}>Finish ${ep.code} with its latest cut</button>`}</span>`;
   }
   function ProjectChips() {
     return html`<span class="chip" title="The preset this drama is made with. Chosen at upload.">${html`<img class="thumb" src=${P.cast[0].face} alt=""/>`}${P.project.preset}</span>
@@ -336,10 +352,36 @@
      the line goes and the status says why: the setup handed the project over; an episode is done; or its Computer
      stopped, and Resume, a run control (D70), continues it in a new session with its files. The sample's sessions:
      EP003 runs, EP006 and EP007 wait, EP005's Computer stopped, the setup has handed over, the rest are done. */
-  const stateOf = (to) => (S.dramaStop ? "none" : asks(to) ? "waiting" : to === "EP003" ? "running" : to === "EP006" || to === "EP007" ? "waiting" : "none");
+  /* The studio layout's sessions list (master, with merecdesperez44323-lab: "应该是一组 agent， 比如 每集有专门的agent，
+     剪辑有专门的agent啥的"; this release names the existing sessions as a crew, no new roles): one row per session, named
+     by what it is, its state, and its current stage in crew words, from drama-cli's records and the engine's session
+     state. Editing is a stage of the episode's session (no separate editor). The sample's sessions. */
+  const crew = () => {
+    const q = (code) => asking().find((m) => m.to === code);
+    const why = (m) => (m.said ? "A question · drama-cli " + m.code : "A question for you");
+    const setupEnded = ["ended", "askedEnded"].includes(S.state);
+    const editing = (S.subs || {}).cutApply === "sent" && S.cutTurn === "work";
+    const rows = [
+      { code: "Setup", name: "Pre-production", role: "screenplay, bible, cast, sets", st: q("Setup") ? "waiting" : setupEnded ? "stopped" : "done",
+        line: q("Setup") ? why(q("Setup")) : setupEnded ? "After drama-cli refused" : "Handed over at 17:46" },
+      { code: "EP001", st: "waiting", line: "Cut v2 to review" },
+      { code: "EP002", st: "waiting", line: "2 takes to review" },
+      { code: "EP003", st: q("EP003") ? "waiting" : "working", line: q("EP003") ? why(q("EP003")) : "Shooting seg04 take 2" },
+      { code: "EP004", st: "waiting", line: "6 storyboards to review" },
+      { code: "EP005", st: "stopped", line: "Its Computer stopped while shooting seg03" },
+      { code: "EP006", st: editing ? "working" : "waiting", line: editing ? "Editing cut v2" : q("EP006") ? "Finish with cut v2?" : "2 takes to review" },
+      { code: "EP007", st: q("EP007") ? "waiting" : "line", line: q("EP007") ? why(q("EP007")) : "#1 in line" },
+      { code: "EP008", st: "line", line: "#2 in line" },
+    ].map((r) => ({ name: r.code, role: "director's unit", ...r, st: S.dramaStop && r.st === "working" ? "paused" : r.st }));
+    const ORDER = ["waiting", "working", "paused", "stopped", "line", "done"];
+    return rows.sort((a, b) => ORDER.indexOf(a.st) - ORDER.indexOf(b.st));
+  };
+  const stateOf = (to) => (studioLayout() ? (S.dramaStop ? "none" : ({ waiting: "waiting", working: "running" })[(crew().find((r) => r.code === to) || {}).st] || "none")
+    : S.dramaStop ? "none" : asks(to) ? "waiting" : to === "EP003" ? "running" : to === "EP006" || to === "EP007" ? "waiting" : "none");
   const whyNone = (to) => (to === "Setup" ? (S.state === "ended" ? "The setup stopped after what drama-cli said below. This version can't reopen it."
     : S.state === "askedEnded" ? "The setup stopped with the question below unanswered. This version can't reopen it." : "The setup handed over the project. This version can't reopen it.")
     : to === "EP005" ? "EP005's Computer stopped. Resume continues it in a new session with its files."
+    : studioLayout() && (crew().find((r) => r.code === to) || {}).st === "line" ? to + " is in line: its session starts when a Computer is free."
     : to + " is done. This version can't reopen a finished episode.");
   const switchTo = (pin) => { const from = talkTo(), next = pin || followed(); set({ pin, drafts: { ...S.drafts, [from || ""]: S.draft }, draft: (S.drafts || {})[next || ""] || "" }); };
   /* In the review room the picture wins (Codex rc3, C13): the sidebar starts collapsed each time the room opens (go resets
@@ -358,7 +400,7 @@
        sample's sessions, each on its Computer (computers.label): Computer 1 runs EP003 (its second session, after
        Computer 2 stopped under its first) and EP006; Computer 2 runs EP007 and ran EP005. */
     // The setup's session runs on Computer 1 while it asks (the sample's agentAsks), as it did before the handover.
-    const ON = { Setup: "Computer 1", EP003: "Computer 1", EP006: "Computer 1", EP007: "Computer 2" };
+    const ON = { Setup: "Computer 1", EP001: "Computer 2", EP002: "Computer 2", EP003: "Computer 1", EP004: "Computer 1", EP006: "Computer 1", EP007: "Computer 2" };
     const OPEN = ["EP003", "EP006", "EP007"];
     const watchName = (code) => { const others = OPEN.filter((c) => c !== code && ON[c] === ON[code]); return "Watch " + ON[code] + "'s desktop" + (others.length ? " (also running " + others.join(", ") + ")" : ""); };
     const stopIt = (code) => set({ dialog: { title: "Stop " + code + "?", body: code === "EP003" ? "4 takes are in flight. They are waited on and recorded, never sent again. The episode stops after them." : "No take is in flight. The episode stops now and can be resumed.", ok: "Stop " + code, danger: true, cancel: "Keep running", run: () => toast(code + " stopped.") } });
@@ -366,11 +408,19 @@
     // What the maker said or decided before the sample's moment, oldest first: the conversation starts with it.
     const EARLIER = { EP006: ["You sent back EP006 seg01 t01: “He should hold the blanket folded before he speaks.”", "You sent back EP006 seg03 t01: “Too wide at the start; we lose Luca's face.”"] };
     const busy = !S.dramaStop;
+    // The studio layout: the ball is the agent's, so its badge counts the sessions waiting for you, and a pause shows on
+    // it, the one sign of it left when the panel is collapsed.
+    if (agentMode() !== "open" && studioLayout()) {
+      const n = crew().filter((r) => r.st === "waiting").length, paused = S.dramaStop === "stopped";
+      return html`<button class=${"ball" + (busy ? " busy" : "")} aria-expanded="false" title=${paused ? "Production is paused · open the agent sidebar (⌥⌘B)" : "Open the agent sidebar (⌥⌘B)"}
+        aria-label=${"Agent" + (paused ? ", production paused" : "") + (n ? ", " + n + " waiting for you" : "")} onClick=${() => setAgent("open")}>${I("robot")}${paused ? html`<span class="badge">${I("pause")}</span>` : n ? html`<span class="badge">${n}</span>` : null}</button>`;
+    }
     if (agentMode() !== "open") return html`<button class=${"ball" + (busy ? " busy" : "")} aria-expanded="false" title="Open the agent sidebar (⌥⌘B)"
       aria-label=${"Agent" + (to ? ", " + (S.pin ? "pinned to " : "following ") + to : "") + (dec.length ? ", " + dec.length + " decisions wait" : "") + (asking().length ? ", " + asking().length + " waiting for your answer" : "")} onClick=${() => setAgent("open")}>${I("robot")}${dec.length ? html`<span class="badge">${dec.length}</span>` : null}</button>`;
     return html`<aside class="agent" id="agent" aria-label="Agent">
-      <div class="ahead"><h2>Agent</h2><span class="fill"></span>
+      <div class="ahead"><h2>Agent</h2><span class="fill"></span>${studioLayout() && html`<${StopControl}/>`}
         <button class="ibtn" aria-label="Collapse the agent sidebar" aria-expanded="true" aria-controls="agent" title="Collapse (⌥⌘B)" onClick=${() => setAgent("closed")}>${I("sidebar-simple", "flipx")}</button></div>
+      ${studioLayout() && S.dramaStop === "stopped" && asking().length === 0 && pending().length > 0 && html`<div class="ascope" role="status"><span class="fill">Paused · it was waiting for your answer<small class="muted">${pending().map((q) => q.to).join(", ")} · Resume above</small></span></div>`}
       <div class="ascope" role="status">${(() => {
         const st = stateOf(to), lead = S.pin ? html`${I("map-pin")}Pinned to` : "Following";
         const dot = st === "running" ? html`<span class="live" aria-hidden="true"></span>` : st === "waiting" ? html`<span class="adot you" aria-hidden="true"></span>` : null;
@@ -382,13 +432,20 @@
           : to === "EP005" ? "Its last session, 1, was on Computer 2 when it stopped." : "";
         return html`${dot}<span class="fill">${words}${under && html`<small class="muted">${under}</small>`}</span>${to === "EP005" && html`<button class="btn sm" onClick=${() => toast("EP005 continues in a new session with its files.")}>Resume</button>`}`;
       })()}</div>
-      <div class="apick">
+      ${studioLayout() && html`<nav class="slist" aria-label="Sessions"><div class="shead"><b>Sessions</b><small class="muted">${crew().filter((r) => r.st === "waiting").length} waiting for you</small></div>
+        ${crew().map((r) => html`<button class="srow" aria-current=${String(r.code === to)} onClick=${() => switchTo(r.code === pageScope ? null : r.code)}>
+          <span class="sname"><b>${r.name}</b><small class="muted">${r.role}</small></span>
+          ${Status({ waiting: "you", working: "work", paused: "paused", stopped: "err", line: "line", done: "accepted" }[r.st], { waiting: "Waiting for you", working: "Working", paused: "Paused", stopped: "Stopped", line: "In line", done: "Done" }[r.st])}
+          <small class="sline">${r.line}</small></button>`)}
+        <div class="srow more">EP009–EP024 · 16 in line</div></nav>`}
+      <div class="apick">${!studioLayout() && html`
         <select class="select" aria-label="Session" value=${to} onChange=${(e) => switchTo(e.target.value === pageScope ? null : e.target.value)}>
           <option value=${pageScope}>${pageScope === "Setup" ? "Setup" : pageScope} (this page)</option>
           ${OPEN.filter((c) => c !== pageScope).map((c) => html`<option value=${c}>${c} · on ${ON[c]} · ${stateOf(c) === "running" ? "at work" : "waits for you"}</option>`)}
           ${/* An episode whose Computer stopped has no session but a Resume: the picker reaches it too. */ ""}
           ${pageScope !== "EP005" && html`<option value="EP005">EP005 · Computer stopped</option>`}
-        </select><span class="fill"></span>
+        </select>`}<span class="fill"></span>
+        ${studioLayout() && S.screen === "canvas" && html`<button class="btn sm ghost" aria-pressed=${String(S.follow)} title="The canvas follows what the agent works on" onClick=${() => set({ follow: !S.follow })}>${S.follow ? "Following on the canvas" : "Follow on the canvas"}</button>`}
         ${stateOf(to) !== "none" && !S.dramaStop && html`<button class="btn sm ghost" aria-label=${watchName(to)} title=${watchName(to)} onClick=${() => toast(watchName(to) + ", view-only.")}>Watch</button>
           <button class="btn sm ghost" aria-label=${"Stop " + to} onClick=${() => stopIt(to)}>Stop</button>`}
       </div>
@@ -453,15 +510,18 @@
     const only = (where) => () => toast("Opens " + where + ". This sample opens EP006 only.");
     const question = (m) => () => { jump({ screen: m.to === "Setup" ? "script" : "canvas" }, back()); openInAgent(m); };
     return [
-      ...asking().map((m) => ({ dr: P.project.title, what: m.to, d: m.said ? "A question · drama-cli " + m.code + " · answer in Agent" : "A question from the agent · answer in Agent",
+      ...(studioLayout() ? [] : asking()).map((m) => ({ dr: P.project.title, what: m.to, d: m.said ? "A question · drama-cli " + m.code + " · answer in Agent" : "A question from the agent · answer in Agent",
         age: "now", thumb: P.eps[0].cover, open: question(m) })),
       { dr: "Bride on Bail", what: "EP006", d: "2 takes · seg01, seg03", age: "4 min", thumb: P.takes[0].poster, open: () => go("review") },
       { dr: "Bride on Bail", what: "Looks and plates", d: "2 items · Margaret Cole, Garden wedding", age: "12 min", thumb: P.cast[3].face, open: () => openHome("margaret", back()) },
       { dr: "Bride on Bail", what: "EP004", d: "6 storyboards · scene 1 and 2", age: "26 min", thumb: "img/board-seg03.jpg", open: only("EP004's Canvas with its 6 storyboards picked") },
       { dr: "Bride on Bail", what: "EP001", d: "Cut v2 · The Wedding", age: "1 h", thumb: P.eps[0].cover, open: only("EP001 › Cut v2") },
-      { dr: "Last Toast", what: "EP007", d: "A question · drama-cli RedLine · answer in Agent", age: "2 h", open: () => toast("Last Toast: only Bride on Bail opens in this direction.") },
+      ...(studioLayout() ? [] : [{ dr: "Last Toast", what: "EP007", d: "A question · drama-cli RedLine · answer in Agent", age: "2 h", open: () => toast("Last Toast: only Bride on Bail opens in this direction.") }]),
     ].map((w) => ({ ...w, pic: cover(w.dr) }));
   };
+  /* The studio layout: a project card's "N need you" counts its reviews and the questions its agent asks; it enters the
+     drama with the panel open at the oldest question, else at the first review (master's decision). */
+  const enterDrama = () => { const q = asking()[0]; if (q) { jump({ screen: q.to === "Setup" ? "script" : "canvas" }, "Home"); openInAgent(q); } else decisions()[0].open(); };
   /* ───── Reviews: every drama's decisions, one queue, one filter (IA draft) ───── */
   function Reviews() {
     const all = waits(), dramas = [...new Set(all.map((w) => w.dr))];
@@ -498,7 +558,9 @@
         ${list.map((p, i) => html`<div class="pcard"><button class="open" onClick=${() => i === 0 || p.t === P.project.title ? go("episodes") : toast(p.t + ": only the first project opens in this direction.")}>
           <div class=${"pic" + (p.format === "16:9" ? " wide" : "")}>${p.cover ? html`<img src=${p.cover} alt=""/>` : html`<span class="emptycover">${I("film-strip")}</span>`}</div>
           <div class="txt"><b>${p.t}</b><small>${p.ago}</small></div></button>
-          ${p.st === "you" || p.st === "redline"
+          ${studioLayout() && p.t === P.project.title && (decisions().length + asking().length)
+            ? html`<button class="st you" title=${"Open " + p.t + (asking().length ? " at its oldest question, in the Agent" : " at its first review")} onClick=${enterDrama}><i></i>${decisions().length + asking().length} need you</button>`
+            : p.st === "you" || p.st === "redline"
             ? html`<button class=${"st " + p.st} title=${"Open Reviews for " + p.t} onClick=${() => set({ waitFor: p.t, screen: "reviews" })}><i></i>${p.lab}</button>`
             : Status(p.st, p.lab)}</div>`)}
       </div>
@@ -522,7 +584,7 @@
           <div class="pic">${e.cover ? html`<img src=${e.cover} alt="" loading="lazy"/>` : html`<span class="empty">${e.n < 9 ? "Breakdown done" : "Not started"}</span>`}
             <span class="code">${e.code}</span>${e.status !== "line" && Status(e.status)}
             <span class="strip">${e.strip.map((s) => html`<i class=${s}></i>`)}</span></div>
-          <b>${e.title}</b><small><span>${e.now}</span><span class="mono">${e.spent ? money(e.spent) : ""}</span></small></button>`)}</div>
+          <b>${e.title}</b><small><span>${nowOf(e)}</span><span class="mono">${e.spent ? money(e.spent) : ""}</span></small></button>`)}</div>
       </div></div></div>`;
   }
 
@@ -654,7 +716,7 @@
         ${open === "details" && node.kind === "shots" && html`<ol class="shotsfull">${node.seg.shots.map(([time, size, angle, camera, visual, audio]) => html`<li><b class="mono">${time}</b> <span class="subtle">${size} · ${angle}</span><p>${camera}</p><p>${visual}</p><p class="subtle">${audio}</p></li>`)}</ol>`}
       </div>
       ${spec && html`<div class="nfoot"><span class="pill mono">${spec.model}</span><span class="pill mono">${[spec.ratio, spec.resolution, spec.seconds + " s"].join(" · ")}</span></div>`}`}
-      <p class="subtle nask">To redo or change it, ask the agent in the sidebar.</p>
+      ${!studioLayout() && html`<p class="subtle nask">To redo or change it, ask the agent in the sidebar.</p>`}
     </div>`;
   }
 
@@ -747,7 +809,7 @@
                         <button class="vb" aria-label="Enter fullscreen mode" onClick=${(e) => { e.stopPropagation(); toast("Plays the take full screen."); }}>${I("corners-out")}</button></div>`}</div>`}</div>`)}
           </div>
         </div>
-        <div class="ctop"><${EpisodeHead}/><button class="follow" aria-pressed=${String(S.follow)} onClick=${() => set({ follow: !S.follow })}>${S.follow && html`<span class="live"></span>`}${S.follow ? "Following the agent" : "Follow the agent"}</button>
+        <div class="ctop"><${EpisodeHead}/>${!studioLayout() && html`<button class="follow" aria-pressed=${String(S.follow)} onClick=${() => set({ follow: !S.follow })}>${S.follow && html`<span class="live"></span>`}${S.follow ? "Following the agent" : "Follow the agent"}</button>`}
           <span class="fill"></span><${ProjectChips}/><${SaysLine}/></div>
         ${sel && (() => {
           // Above the node its action bar. Its panel goes where the board has room, never over the node or its bar: under
@@ -931,6 +993,7 @@
     return html`<section class="proto" aria-label="Prototype controls">
       <div class="ph"><b>Prototype controls</b><span class="fill"></span><button class="ibtn" aria-label="Close the prototype controls" aria-expanded="true" onClick=${() => set({ proto: false })}>${I("x")}</button></div>
       <p>Not part of the app: they set what the sample shows. Phase 1: viewing and deciding, and editing the cut's spec (D70) · Canvas and Lineage read-only · sample project, our own test pictures.</p>
+      <span class="pl">Layout</span><div class="seg" role="group" aria-label="Layout">${[["studio", "Studio + agent right"], ["before", "Before (b0324c5)"]].map(([k, l]) => html`<button aria-pressed=${String((S.layout || "studio") === k)} onClick=${() => set({ layout: k })}>${l}</button>`)}</div>
       <span class="pl">Screen</span><div class="seg wrap" role="group" aria-label="Screen">${[["home", "Home"], ["reviews", "Reviews"], ["upload", "Upload"], ["script", "Script"], ["story", "Bible"], ["episodes", "Episodes"], ["canvas", "Canvas"], ["graph", "Graph"], ["review", "Review"], ["cut", "Cut"], ["delivery", "Delivery"], ["outofdate", "Out of date"]].map(([k, l]) => html`<button aria-pressed=${String(S.screen === k)} onClick=${() => go(k)}>${l}</button>`)}</div>
       <label class="select">State<select aria-label="State" value=${S.state} onChange=${(e) => { const v = e.target.value; set({ state: v, dramaStop: v === "stopping" ? "stopping" : v === "stopped" || v === "pausedAsking" ? "stopped" : null, resumed: false, answered: {}, attach: null, sver: null, sform: null, sdraft: "", sdec: null, subs: { ...(S.subs || {}), script: undefined } }); }}>
         ${[["normal", "Normal"], ["scriptRewriting", "Script: rewriting"], ["scriptYou", "Script: v1 waiting for you"], ["scriptBack", "Script: v1 sent back, v2 rewriting"], ["scriptYou2", "Script: v2 waiting for you"], ["scriptOriginal", "Script: only the original"], ["fresh", "Nothing out of date"], ["cutnewer", "Cut: a newer cut exists"], ["cutinputs", "Cut: draft inputs changed"], ["cutrefused", "Cut: drama-cli refuses the edit"], ["nostop", "No stop yet"], ["stopping", "Stopping"], ["stopped", "Stopped"], ["redline", "drama-cli: red line"], ["budget", "drama-cli: refused (no code)"], ["cap", "drama-cli: cap reached"], ["env", "drama-cli: Pine access denied"], ["several", "drama-cli: two questions open"], ["ended", "drama-cli: setup stopped after two (rc3 T1)"], ["agentAsks", "The agent asks (nothing recorded, rc5 T4)"], ["finishAsks", "The agent asks to finish EP006"], ["pausedAsking", "Paused while drama-cli's question waited"], ["askedEnded", "The agent asked, then the setup stopped"], ["spendlimit", "Pine credits used up"]].map(([k, l]) => html`<option value=${k}>${l}</option>`)}</select></label>
@@ -949,6 +1012,6 @@
   window.addEventListener("keydown", (e) => {
     if (e.code === "KeyB" && e.altKey && (e.metaKey || e.ctrlKey) && !studioPage()) { e.preventDefault(); setAgent(agentMode() === "open" ? "closed" : "open"); }
   });
-  window.PD = { html, I, S, set, go, own, jump, openHome, openStage, openLineage, stageNode, toast, money, Status, TopBar, SaysLine, ProjectChips, AgentPanel, SPENT_COVERS, useEffect, useRef, Mark, draw, Submission, submit, recheck };
+  window.PD = { studioLayout, nowOf, html, I, S, set, go, own, jump, openHome, openStage, openLineage, stageNode, toast, money, Status, TopBar, SaysLine, ProjectChips, AgentPanel, SPENT_COVERS, useEffect, useRef, Mark, draw, Submission, submit, recheck };
   // screens.js draws first, once its screens are registered.
 })();
