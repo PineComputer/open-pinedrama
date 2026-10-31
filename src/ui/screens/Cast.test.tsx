@@ -3,11 +3,17 @@
 // its asset's detail, which links to its review, as decisions are made there.
 import { screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { describe, expect, it } from "vitest";
+import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import type { CastCard } from "../../shared/types.ts";
 import { answer } from "../test/server.ts";
 import { Cast } from "./Cast.tsx";
 import { href, renderAt } from "../test/router.tsx";
+
+// The asset grid lays out its rows by its own width (react-photo-album reads clientWidth); jsdom has no layout, so the
+// grid is given a page's width here.
+const width = Object.getOwnPropertyDescriptor(HTMLElement.prototype, "clientWidth")!;
+beforeAll(() => Object.defineProperty(HTMLElement.prototype, "clientWidth", { configurable: true, get: () => 960 }));
+afterAll(() => Object.defineProperty(HTMLElement.prototype, "clientWidth", width));
 
 const file = (id: number, version: string) => ({ id, name: "image-1.png", path: `drama/assets/x/${version}/image-1.png`, type: "image/png", size: 1, kind: "look", url: `/f/${id}`, version, createdAt: "2026-10-30T10:00:00Z" });
 const cast: CastCard[] = [

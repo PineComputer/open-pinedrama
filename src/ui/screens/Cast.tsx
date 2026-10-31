@@ -2,7 +2,9 @@
 // episodes as the bible titles them, its cast as cards (the newest sheet, where it stands, its
 // other names, the episodes it is in) and its world (places and key props). Every name is the
 // bible's. Decisions are made in the review room: a card waiting for one links there.
-import { useState } from "react";
+import { type Photo, RowsPhotoAlbum } from "react-photo-album";
+import "react-photo-album/rows.css";
+import { useEffect, useState } from "react";
 import type { Names } from "../../shared/names.ts";
 import type { CastCard, DramaView, FileItem, Receipt } from "../../shared/types.ts";
 import { useResource } from "../api.ts";
@@ -70,17 +72,16 @@ const mainOf = (card: CastCard) => card.looks.find((entry) => !entry.look || ent
  * D56's grid card (design/screens.js, Story; Apple Photos and Finder's picture grid, liblib's 资产 library): the picture
  * at its own ratio, the name, the version and where it stands. Everything else is the detail's (progressive disclosure).
  */
-function AssetCard({ card, names, dramaId, picked }: { card: CastCard; names: Names | null; dramaId: string; picked: boolean }) {
+function AssetCard({ card, names, dramaId, picked, width, height }: { card: CastCard; names: Names | null; dramaId: string; picked: boolean; width: number; height: number }) {
   const open = useOpen(card, dramaId);
-  const [ratio, setRatio] = useState<string>();
   const { newest, file } = versionsOf(mainOf(card));
   if (!file) return null;
   const status = standing(newest);
   const name = subjectLabel(names, card.subject, card.kind);
   return (
-    <article className={`assetcard${picked ? " sel" : ""}`} aria-label={name} aria-current={picked || undefined} onClick={open.onClick}>
-      <div className="pic" style={ratio ? { aspectRatio: ratio } : undefined}>
-        <img src={file.url} alt="" loading="lazy" onLoad={(event) => setRatio(`${event.currentTarget.naturalWidth} / ${event.currentTarget.naturalHeight}`)} />
+    <article className={`assetcard${picked ? " sel" : ""}`} aria-label={name} aria-current={picked || undefined} onClick={open.onClick} style={{ width }}>
+      <div className="pic" style={{ height }}>
+        <img src={file.url} alt="" loading="lazy" />
         {status && <StatusChip status={status} />}
       </div>
       <div className="ctxt">
@@ -90,6 +91,54 @@ function AssetCard({ card, names, dramaId, picked }: { card: CastCard; names: Na
         <span className="mono subtle">{file.version}</span>
       </div>
     </article>
+  );
+}
+
+/** Each picture's own size, read once it loads; a picture not loaded yet is laid out at 4:3 until it is. */
+function useSizes(urls: string[]) {
+  const [sizes, setSizes] = useState<Record<string, [number, number]>>({});
+  const key = urls.join("|");
+  useEffect(() => {
+    for (const url of urls) {
+      const image = new Image();
+      image.onload = () => setSizes((known) => (known[url] ? known : { ...known, [url]: [image.naturalWidth, image.naturalHeight] }));
+      image.src = url;
+    }
+    // The list is read through its key, so a re-render with the same pictures loads nothing again.
+  }, [key]);
+  return sizes;
+}
+
+type AssetPhoto = Photo & { card: CastCard };
+
+/**
+ * D56's grid as justified rows (Google Photos, Flickr; react-photo-album's rows layout): each row one height, each card
+ * as wide as its picture's own ratio, so nothing is letterboxed or cropped; the caption sits under the picture.
+ */
+function AssetGrid({ cards, names, dramaId, picked }: { cards: CastCard[]; names: Names | null; dramaId: string; picked?: string }) {
+  const items = cards.flatMap((card) => {
+    const file = versionsOf(mainOf(card)).file;
+    return file ? [{ card, url: file.url }] : [];
+  });
+  const sizes = useSizes(items.map((item) => item.url));
+  const photos: AssetPhoto[] = items.map(({ card, url }) => {
+    const [width, height] = sizes[url] ?? [4, 3];
+    return { key: card.subject, src: url, width, height, card };
+  });
+  return (
+    <div className="assetgrid">
+      <RowsPhotoAlbum
+        photos={photos}
+        targetRowHeight={180}
+        spacing={12}
+        defaultContainerWidth={960}
+        render={{
+          photo: (_, { photo, width, height }) => (
+            <AssetCard key={photo.key} card={photo.card} names={names} dramaId={dramaId} picked={photo.card.subject === picked} width={width} height={height} />
+          ),
+        }}
+      />
+    </div>
   );
 }
 
@@ -243,13 +292,7 @@ export function Cast({ dramaId, compact = false }: { dramaId: string; compact?: 
   const props = (data ?? []).filter((card) => card.kind === "prop");
   const pickedCard = shelf === "bible" ? undefined : (data ?? []).find((card) => SHELF_BY_KIND[card.kind] === shelf && card.subject === picked);
   const detail = pickedCard && <AssetDetail key={pickedCard.subject} card={pickedCard} names={names} dramaId={dramaId} />;
-  const castGrid = (
-    <div className="assetgrid">
-      {characters.map((card) => (
-        <AssetCard key={card.subject} card={card} names={names} dramaId={dramaId} picked={card.subject === picked} />
-      ))}
-    </div>
-  );
+  const castGrid = <AssetGrid cards={characters} names={names} dramaId={dramaId} picked={picked} />;
   if (!data) return <p className={error === undefined ? "quiet" : "error"}>{error === undefined ? t("loading") : errorText(error, t)}</p>;
   // Y8: Story is the bible's page whether or not anything has been drawn; an asset shelf says when it is empty.
   const none = <p className="empty-note" style={{ padding: "0 16px" }}>{t("cast.empty")}</p>;
@@ -371,11 +414,7 @@ export function Cast({ dramaId, compact = false }: { dramaId: string; compact?: 
       </div>
       <div className={detail ? "assetsplit" : undefined}>
         {cards.length ? (
-          <div className="assetgrid">
-            {cards.map((card) => (
-              <AssetCard key={card.subject} card={card} names={names} dramaId={dramaId} picked={card.subject === picked} />
-            ))}
-          </div>
+          <AssetGrid cards={cards} names={names} dramaId={dramaId} picked={picked} />
         ) : (
           none
         )}

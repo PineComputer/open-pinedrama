@@ -826,11 +826,18 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
 .rail .acctdot .av { width: 22px; height: 22px; font-size: 11px; }
 /* D56: Assets as a picture grid plus an inspector (Apple Photos, Finder; liblib's 资产 library). A card is the picture at
    its own ratio, the name, the version and where it stands; the detail holds the rest. */
-.assetgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 16px; padding: 0 16px 80px; align-items: start; }
+/* D56's grid as justified rows (Google Photos, Flickr): one height a row, each card as wide as its picture's ratio, so
+   nothing is letterboxed or cropped. The product lays it out with react-photo-album's rows layout; the design draft with
+   flex-grow by aspect ratio (--r). */
+.assetgrid { padding: 0 16px 80px; min-width: 0; }
+.assetgrid.flexrows { display: flex; flex-wrap: wrap; gap: 12px; }
+.assetgrid.flexrows::after { content: ""; flex-grow: 999999; }
+.assetgrid.flexrows .assetcard { flex: var(--r) 1 calc(var(--r) * 170px); }
+.assetgrid.flexrows .assetcard .pic { aspect-ratio: var(--r); }
+.assetcard .pic { position: relative; background: var(--surface-container); }
+.assetcard .pic img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .assetcard { border-radius: var(--radius-large); border: 1px solid var(--border); background: var(--surface); overflow: hidden; cursor: pointer; }
 .assetcard:hover { border-color: var(--border-input); } .assetcard.sel { box-shadow: inset 0 0 0 2px var(--accent); }
-.assetcard .pic { position: relative; aspect-ratio: 3 / 4; background: var(--surface-container); }
-.assetcard .pic img { width: 100%; height: 100%; object-fit: contain; }
 .assetcard .pic .st { position: absolute; left: 8px; top: 8px; }
 .assetcard .ctxt { display: flex; align-items: baseline; gap: 8px; padding: 8px 10px 10px; min-width: 0; }
 .assetcard .cardname { min-width: 0; color: inherit; text-decoration: none; } .assetcard .cardname b { display: block; font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -843,8 +850,6 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
 .viewstrip small { font-size: 10.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .clamp3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 /* With the detail open the grid keeps several columns, and a tall plate never makes a card taller than the detail. */
-.assetsplit .assetgrid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; }
-.assetcard .pic { max-height: 240px; margin: 0 auto; }
 /* Script (design draft; D62): the page holds the screenplay from upload to acceptance. The views on the
    left, the version history on the right (GitHub's PR timeline; Figma's and Google Docs' version history). */
 .notice { display: flex; gap: 8px; align-items: flex-start; margin: 0 16px 12px; padding: 10px 12px; border-radius: var(--radius-large); border: 1px solid var(--border); background: var(--surface-container); font-size: 12.5px; color: var(--text-secondary); }
