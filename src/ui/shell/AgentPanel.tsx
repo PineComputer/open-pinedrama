@@ -11,7 +11,7 @@ import { Submission, useSubmission } from "../components/Submission.tsx";
 import { Dialog } from "../components/Dialog.tsx";
 import { Icon } from "../icons.tsx";
 import { useT } from "../i18n.ts";
-import { errorText, isPaused, openSession, itemName } from "../labels.ts";
+import { errorText, isPaused, isSettingUp, openSession, itemName } from "../labels.ts";
 import { Markdown } from "../Markdown.tsx";
 import { Link } from "@tanstack/react-router";
 import { Watch } from "../screens/Crew.tsx";
@@ -67,9 +67,16 @@ function sessionTold(records: SessionRecord[], sessionId: string, t: ReturnType<
   const at = records.findIndex((record) => record.id === sessionId);
   if (at < 1) return undefined;
   const before = records[at - 1];
+  const record = records[at]!;
+  // What the session was given, as the engine recorded it (SessionRecord.startedFrom), never assumed (Codex RC2, C4): a
+  // setup restarts from the maker's inputs; only an episode given its last session's pack says its files came back.
+  if (record.startedFrom === "inputs") return t("agent.sessionFromInputs", { n: at + 1 });
   // A Computer restarted under its own label after it stopped keeps its identity, not its files (D72): said as it is.
-  if (before.state === "lost" && before.computer === records[at].computer) return t("agent.sessionRestarted", { n: at + 1, computer: records[at].computer });
-  return t("agent.sessionAfter", { n: at + 1, computer: records[at].computer, before: before.state === "lost" ? t("agent.afterStopped", { computer: before.computer }) : t("agent.afterEnded", { n: at }) });
+  const told =
+    before.state === "lost" && before.computer === record.computer
+      ? t("agent.sessionRestarted", { n: at + 1, computer: record.computer })
+      : t("agent.sessionAfter", { n: at + 1, computer: record.computer, before: before.state === "lost" ? t("agent.afterStopped", { computer: before.computer }) : t("agent.afterEnded", { n: at }) });
+  return record.startedFrom === "episode-pack" ? `${told}; ${t("agent.fromPack")}` : told;
 }
 
 /** Watch and Stop for the session the panel speaks to: Watch says whose desktop it shows and what else it runs. */
@@ -149,7 +156,11 @@ export function AgentPanel({ drama, episode, onCollapse }: { drama: DramaView; e
     : scope === "setup"
       ? drama.status === "setup"
         ? t("agent.setupStarting")
-        : t("agent.setupHandedOver")
+        : // Handed over only where the engine recorded it (SessionRecord.handedOver); a setup stopped before it restarts
+          // from the maker's inputs (Codex RC2, C4).
+          !recordsOf("setup").some((record) => record.handedOver) && isSettingUp(drama)
+          ? t("agent.setupStoppedBefore")
+          : t("agent.setupHandedOver")
       : paused && scopeRow?.state === "stopped"
         ? t("agent.pausedWithProject")
         : scopeRow?.state === "stopped" || scopeRow?.state === "failed"

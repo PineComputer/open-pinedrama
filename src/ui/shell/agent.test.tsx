@@ -108,16 +108,47 @@ describe("the agent panel", () => {
     expect(screen.getByRole("status")).toHaveTextContent("Its last session, 1, was on PC-2 when it stopped.");
   });
 
-  it("says a Computer restarted under its own label kept its identity, not its files (D72)", async () => {
+  it("says a Computer restarted under its own label kept its identity, not its files (D72), and a pack only where one was given", async () => {
     engine();
     answer("/api/dramas/d1/session-history", [
-      { id: "s0", scope: "EP001", computer: "PC-1", state: "lost", createdAt: "2026-10-30T08:00:00Z", closedAt: "2026-10-30T09:00:00Z" },
-      { id: "s1", scope: "EP001", computer: "PC-1", state: "open", createdAt: "2026-10-30T09:30:00Z" },
+      { id: "s0", scope: "EP001", computer: "PC-1", state: "lost", createdAt: "2026-10-30T08:00:00Z", closedAt: "2026-10-30T09:00:00Z", startedFrom: "project", handedOver: false },
+      { id: "s1", scope: "EP001", computer: "PC-1", state: "open", createdAt: "2026-10-30T09:30:00Z", startedFrom: "episode-pack", handedOver: false },
     ]);
     await renderAt(<AgentPanel drama={drama} episode="EP001" onCollapse={() => {}} />);
     const status = screen.getByRole("status");
-    expect(await within(status).findByText(/Session 2 on PC-1, restarted after it stopped; its files came back from the pack/)).toBeInTheDocument();
+    expect(await within(status).findByText(/Session 2 on PC-1, restarted after it stopped; its files came back from its last session's pack/)).toBeInTheDocument();
     expect(status).not.toHaveTextContent("after PC-1 stopped");
+  });
+
+  it("claims no pack for a session the engine didn't give one (Codex RC2, C4)", async () => {
+    engine();
+    answer("/api/dramas/d1/session-history", [
+      { id: "s0", scope: "EP001", computer: "PC-1", state: "lost", createdAt: "2026-10-30T08:00:00Z", closedAt: "2026-10-30T09:00:00Z", startedFrom: "project", handedOver: false },
+      { id: "s1", scope: "EP001", computer: "PC-1", state: "open", createdAt: "2026-10-30T09:30:00Z", startedFrom: "project", handedOver: false },
+    ]);
+    await renderAt(<AgentPanel drama={drama} episode="EP001" onCollapse={() => {}} />);
+    const status = screen.getByRole("status");
+    expect(await within(status).findByText(/Session 2 on PC-1, restarted after it stopped/)).toBeInTheDocument();
+    expect(status).not.toHaveTextContent(/pack/);
+  });
+
+  it("says a setup stopped before it handed over restarts from the screenplay, and its restart that it did (Codex RC2, C4)", async () => {
+    engine();
+    const setupHistory = [{ id: "s0", scope: "setup", computer: "PC-1", state: "lost", createdAt: "2026-10-30T08:00:00Z", closedAt: "2026-10-30T09:00:00Z", startedFrom: "inputs", handedOver: false }];
+    answer("/api/dramas/d1/session-history", setupHistory);
+    const stopped = { ...drama, status: "stopped", setup: { state: "stopped", reached: 1, reason: "by-maker" }, crew: [], episodeRows: [] } as unknown as DramaView;
+    const { unmount } = await renderAt(<AgentPanel drama={stopped} onCollapse={() => {}} />);
+    const status = screen.getByRole("status");
+    expect(await within(status).findByText("Setup stopped before handing over. Resume restarts it from your screenplay.")).toBeInTheDocument();
+    expect(status).not.toHaveTextContent(/handed over the project|can't reopen/);
+    unmount();
+    answer("/api/dramas/d1/session-history", [...setupHistory, { id: "s1", scope: "setup", computer: "PC-1", state: "open", createdAt: "2026-10-30T09:30:00Z", startedFrom: "inputs", handedOver: false }]);
+    answer("/api/sessions/s1/chat", { ...chat("s1", "", "steer"), messages: [] });
+    const resumed = { ...stopped, status: "setup", setup: { state: "working", reached: 1 }, crew: [{ ...drama.crew[0], label: "PC-1", sessions: [{ id: "s1", name: "setup", role: "setup", state: "open", waiting: false }] }] } as unknown as DramaView;
+    await renderAt(<AgentPanel drama={resumed} onCollapse={() => {}} />);
+    const again = screen.getByRole("status");
+    expect(await within(again).findByText(/Session 2, restarted from your screenplay\./)).toBeInTheDocument();
+    expect(again).not.toHaveTextContent(/pack/);
   });
 
   it("shows a step and a message the agent gave in the same words, next to each other in either order, once, as the step", async () => {
