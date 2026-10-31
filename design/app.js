@@ -92,27 +92,28 @@
   const decisions = () => waits().filter((w) => w.dr === P.project.title);
   /* IA draft: the rail is studio-wide only: Dramas, Reviews, Settings. Computers and Usage stay hidden until they work.
      A drama's places are in its sidebar, never here. */
+  /* yurun ("project应该和icon 平铺", "左侧就不需要单独有一个column了"): off a project the studio's nav is the one left
+     column, rows of icon and label side by side (liblib); inside a project it is the icon rail (VS Code's activity bar)
+     beside the project tree, its labels as tooltips. ☰ opens and closes that column, the same everywhere. */
+  const studioPage = () => ["home", "upload", "reviews"].includes(S.screen);
   function Rail() {
     const dramas = !["reviews"].includes(S.screen);
-    return html`<nav class="rail" aria-label="Main">
-      <button class="ibtn" aria-label="Show or hide the sidebar" aria-expanded=${String(narrow() ? !!S.drawer : S.side)} onClick=${() => (narrow() ? set({ drawer: !S.drawer }) : set({ side: !S.side }))}>${I("list")}</button>
+    const wide = studioPage() && S.side && !narrow();
+    const place = (label, icon, current, onClick, extra) => html`<button class=${"ibtn labelled" + (extra ? " railcount" : "")} title=${wide ? undefined : label} aria-label=${extra ? extra.name : undefined} aria-current=${current ? "page" : "false"} onClick=${onClick}>${I(icon)}<span class="raillabel">${label}</span>${extra && extra.badge}</button>`;
+    return html`<nav class=${"rail" + (wide ? " wide" : "")} aria-label="Main">
+      <div class="railhead"><button class="ibtn" aria-label="Show or hide the sidebar" aria-expanded=${String(narrow() ? !!S.drawer : S.side)} onClick=${() => (narrow() ? set({ drawer: !S.drawer }) : set({ side: !S.side }))}>${I("list")}</button>
+        ${wide && html`<span class="brand">${Mark()}<b>Pine Drama</b></span>`}</div>
       <hr/>
-      ${/* yurun's Y1: each place says its name under its icon, as liblib's and astorie's rails do (Apple HIG: icons need a label unless universal). */ ""}
-      <button class="ibtn labelled" aria-current=${dramas ? "page" : "false"} onClick=${() => go("home")}>${I("film-strip")}<span class="raillabel">Projects</span></button>
-      <button class="ibtn labelled railcount" aria-label="Reviews, 5 waiting" aria-current=${S.screen === "reviews" ? "page" : "false"} onClick=${() => set({ waitFor: null, screen: "reviews" })}>${I("list-checks")}<span class="raillabel">Reviews</span><span class="badge">5</span></button>
+      ${place("Projects", "film-strip", dramas, () => go("home"))}
+      ${place("Reviews", "list-checks", S.screen === "reviews", () => set({ waitFor: null, screen: "reviews" }), { name: "Reviews, 5 waiting", badge: html`<span class="badge">5</span>` })}
       <span class="grow"></span>
-      <button class="ibtn labelled" onClick=${() => toast("Settings: notifications, appearance, data.")}>${I("gear-six")}<span class="raillabel">Settings</span></button>
-      <div style="margin-top:6px">${Mark()}</div>
+      ${place("Settings", "gear-six", false, () => toast("Settings: notifications, appearance, data."))}
+      ${!wide && html`<div style="margin-top:6px">${Mark()}</div>`}
     </nav>`;
   }
   function Side() {
-    if (S.screen === "home" || S.screen === "upload" || S.screen === "reviews") return html`<aside class=${"side " + (S.side ? "" : "closed") + (S.drawer ? " drawer-open" : "")} aria-label="Sidebar">
-      <div class="head"><div class="who" style="padding-left:4px">${Mark()}<b style="font-size:14px">Pine Drama</b></div></div>
-      <div class="scroll">
-        ${/* Y2: the projects are Home's grid, their one list; the sidebar keeps the studio's own items. */ ""}
-      </div>
-      <div class="foot"><div class="who"><span class="av">Y</span><span class="grow">Your studio</span>${I("caret-right")}</div></div>
-    </aside>`;
+    // Off a project the rail is the one column (Rail): no second one.
+    if (studioPage()) return null;
     const cur = { episodes: null, episode: "EP006", canvas: "EP006", review: "EP006", cut: "EP006" }[S.screen];
     if (SETUP.includes(S.screen)) return html`<aside class=${"side " + (S.side ? "" : "closed") + (S.drawer ? " drawer-open" : "")} aria-label="Project">
       <div class="head"><button class="proj" onClick=${() => go("home")} title="All dramas"><span class="newthumb">${I("file-text")}</span><span class="grow"><b>${P.project.title}</b><small>Setup · 1 session</small></span>${I("caret-down", "subtle")}</button></div>

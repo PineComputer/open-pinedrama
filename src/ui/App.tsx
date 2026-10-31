@@ -16,7 +16,7 @@ import { Settings } from "./screens/Settings.tsx";
 import { Welcome } from "./screens/Welcome.tsx";
 import { AgentBall, type AgentMode, AgentPanel, useAgentMode } from "./shell/AgentPanel.tsx";
 import { NavRail } from "./shell/NavRail.tsx";
-import { DramaSidebar, HomeSidebar } from "./shell/Sidebar.tsx";
+import { DramaSidebar } from "./shell/Sidebar.tsx";
 import { type Crumb, StopControl, TopBar } from "./shell/TopBar.tsx";
 import { ExportMenu } from "./shell/ExportMenu.tsx";
 import { AsideSlot } from "./shell/aside.ts";
@@ -276,12 +276,22 @@ export function App() {
     crumbs = ofDrama({ label: t("step.assets"), to: linkOptions({ to: "/d/$dramaId/assets/characters/{-$assetId}", params: { dramaId: drama.data.id, assetId: undefined } }) }, { label: t(LABEL[page] ?? "step.assets") });
   else crumbs = ofDrama({ label: t(LABEL[page] ?? "step.episodes") });
 
-  const sidebar = drama.data && dramaId ? <DramaSidebar drama={drama.data} page={page} episode={followed} drawer={narrow} /> : <HomeSidebar page={page} replay={app.data.mode === "replay"} drawer={narrow} />;
+  // Inside a project: the icon rail beside its tree, which ☰ opens and closes (a drawer below 1100 px). Off a project the
+  // rail itself is the studio's one column, which ☰ widens and narrows (NavRail).
+  const inProject = Boolean(drama.data && dramaId);
+  const sidebar = drama.data && dramaId ? <DramaSidebar drama={drama.data} page={page} episode={followed} drawer={narrow} /> : null;
   return (
     // The design's frame (design/app.js, App and each screen): the rail, the sidebar, then the main column, its
     // top bar over a body that holds the work beside the agent's panel.
     <div className="app">
-      <NavRail page={page} waiting={waiting.length} sidebarOpen={narrow ? drawer : sidebarOpen} onToggleSidebar={narrow ? () => setDrawer(!drawer) : toggleSidebar} />
+      <NavRail
+        page={page}
+        waiting={waiting.length}
+        wide={!inProject && sidebarOpen}
+        replay={app.data.mode === "replay"}
+        sidebarOpen={inProject && narrow ? drawer : sidebarOpen}
+        onToggleSidebar={inProject && narrow ? () => setDrawer(!drawer) : toggleSidebar}
+      />
       {(narrow ? drawer : sidebarOpen) && sidebar}
       <div className="main">
         {/* design/'s Home has no top bar: the page starts at the greeting; its Upload's has no Next review. Reviews acts on

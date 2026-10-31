@@ -28,39 +28,6 @@ export function stepOf(drama: DramaView, page: Page | undefined): Step | undefin
 }
 
 /**
- * The studio's sidebar, off any one project: only the studio's own items (yurun's Y2: on Home the main area is the list
- * of projects, so the sidebar doesn't repeat it). Projects, Reviews and Settings are the rail's; Computers and Usage
- * stay hidden until they work (IA §2).
- */
-export function HomeSidebar({ page, replay, drawer }: { page: Page | undefined; replay: boolean; drawer: boolean }) {
-  const { t } = useT();
-  return (
-    <aside className={drawer ? "side drawer-open" : "side"} aria-label={t("sidebar.label")}>
-      <div className="head">
-        <div className="who" style={{ paddingLeft: 4 }}>
-          <Mark size={30} />
-          <b style={{ fontSize: 14 }}>{t("app.name")}</b>
-        </div>
-      </div>
-      <nav className="scroll" aria-label={t("sidebar.places")}>
-        <Link to="/new" className="navi" aria-current={page === "new" ? "page" : "false"}>
-          <Icon name="plus" className="ic" />
-          {t("slate.new")}
-        </Link>
-      </nav>
-      <div className="foot">
-        <div className="who">
-          <span className="av">Y</span>
-          <span className="grow">{t("sidebar.yourStudio")}</span>
-          <Icon name="caret-right" className="ic" />
-        </div>
-        {replay && <span className="muted">{t("mode.replay")}</span>}
-      </div>
-    </aside>
-  );
-}
-
-/**
  * The sidebar's foot, as the design's (design/app.js, Side; BudgetMeter): what the drama has spent
  * against drama-cli's budget, solid, and what is in flight, dashed; how much is in flight and how
  * many episodes are at work, or the setup's step before there are any; and what Spent covers.

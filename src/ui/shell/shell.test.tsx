@@ -8,7 +8,7 @@ import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
 import { type DramaView, type EpisodeRow, type ReviewSummary, STAGES } from "../../shared/types.ts";
 import { NavRail } from "./NavRail.tsx";
-import { DramaSidebar, HomeSidebar } from "./Sidebar.tsx";
+import { DramaSidebar } from "./Sidebar.tsx";
 import { DramaBar, TopBar } from "./TopBar.tsx";
 import { href, renderAt } from "../test/router.tsx";
 import { linkOptions } from "@tanstack/react-router";
@@ -120,7 +120,7 @@ describe("the top bar", () => {
 
 describe("the rail", () => {
   it("is studio-wide: Dramas, Reviews with every drama's count, Settings, and no drama's places (IA §2)", async () => {
-    await renderAt(<NavRail page="list" waiting={3} sidebarOpen onToggleSidebar={() => {}} />, "/d/d1/e/EP002/list");
+    await renderAt(<NavRail page="list" waiting={3} wide={false} replay={false} sidebarOpen onToggleSidebar={() => {}} />, "/d/d1/e/EP002/list");
     const rail = screen.getByRole("navigation", { name: "Places" });
     // Each place says its name under its icon (yurun's Y1); Reviews' name holds its count too (WCAG 2.5.3).
     expect(within(rail).getAllByRole("link").map((link) => [link.textContent, link.getAttribute("aria-current")])).toEqual([
@@ -133,7 +133,7 @@ describe("the rail", () => {
 
   it("marks Reviews on the queue and on a review, and says no count when nothing waits", async () => {
     for (const [page, path] of [["reviews", "/reviews"], ["review", "/r/r1"]] as const) {
-      const { unmount } = await renderAt(<NavRail page={page} waiting={0} sidebarOpen onToggleSidebar={() => {}} />, path);
+      const { unmount } = await renderAt(<NavRail page={page} waiting={0} wide={false} replay={false} sidebarOpen onToggleSidebar={() => {}} />, path);
       const rail = screen.getByRole("navigation", { name: "Places" });
       expect(within(rail).getByRole("link", { name: "Reviews" })).toHaveAttribute("aria-current", "page");
       expect(within(rail).getByRole("link", { name: "Projects" })).toHaveAttribute("aria-current", "false");
@@ -141,10 +141,26 @@ describe("the rail", () => {
     }
   });
 
+  it("is the one left column off a project, icon and label side by side, and an icon rail inside one (yurun; liblib, VS Code)", async () => {
+    const { unmount } = await renderAt(<NavRail page="home" waiting={2} wide replay sidebarOpen onToggleSidebar={() => {}} />, "/");
+    const rail = screen.getByRole("navigation", { name: "Places" });
+    expect(rail).toHaveClass("rail", "wide");
+    expect(within(rail).getByText("Pine Drama")).toBeInTheDocument();
+    expect(within(rail).getByText("Replay · sample work, no spend")).toBeInTheDocument();
+    expect(within(rail).getByRole("link", { name: "Projects" })).not.toHaveAttribute("title");
+    unmount();
+    await renderAt(<NavRail page="list" waiting={2} wide={false} replay sidebarOpen onToggleSidebar={() => {}} />, "/d/d1/e/EP001/list");
+    const icons = screen.getByRole("navigation", { name: "Places" });
+    expect(icons).not.toHaveClass("wide");
+    // Inside a project each place's label is its tooltip, and still its name.
+    expect(within(icons).getByRole("link", { name: "Projects" })).toHaveAttribute("title", "Projects");
+    expect(within(icons).queryByText("Pine Drama")).toBeNull();
+  });
+
   it("opens and closes the sidebar", async () => {
     const user = userEvent.setup();
     let toggled = 0;
-    await renderAt(<NavRail page="home" waiting={0} sidebarOpen onToggleSidebar={() => toggled++} />);
+    await renderAt(<NavRail page="home" waiting={0} wide replay={false} sidebarOpen onToggleSidebar={() => toggled++} />);
     const toggle = screen.getByRole("button", { name: "Hide the sidebar" });
     expect(toggle).toHaveAttribute("aria-expanded", "true");
     await user.click(toggle);
@@ -153,14 +169,6 @@ describe("the rail", () => {
 });
 
 describe("the sidebar", () => {
-  it("on the studio's pages, keeps only the studio's own items: Home's main area is the list of projects (yurun's Y2)", async () => {
-    answer("/api/dramas", [{ id: "d1", title: "The Stepmother", status: "production", waiting: 2 }]);
-    await renderAt(<HomeSidebar page="home" replay drawer={false} />, "/");
-    const places = screen.getByRole("navigation", { name: "The studio" });
-    expect(within(places).getAllByRole("link").map((link) => link.getAttribute("href"))).toEqual(["/new"]);
-    expect(screen.queryByText("The Stepmother")).toBeNull();
-    expect(screen.getByText("Replay · sample work, no spend")).toBeInTheDocument();
-  });
 
   it("is the drama tree: each place once, the shelves and episodes under theirs, then Reviews and Out of date (D16)", async () => {
     answer("/api/reviews", [review("r1"), { ...review("r2"), kind: "looks" }, { ...review("r3"), kind: "cut", episode: "EP003" }, { ...review("r4"), kind: "cut", state: "sent" }]);
