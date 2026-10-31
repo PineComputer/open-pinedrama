@@ -1,6 +1,6 @@
 // The Story: the episodes as the bible titles them, the cast as cards named as the bible names
-// them with their other names and where each stands, the world as places and props; a card
-// waiting for the maker links to its review, as decisions are made there.
+// them with their other names and where each stands, the world as places and props; a card opens
+// its asset's detail, which links to its review, as decisions are made there.
 import { screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
@@ -54,16 +54,21 @@ describe("the Story", () => {
     expect(within(lin).getByRole("link", { name: "EP001" })).toHaveAttribute("href", "/d/d1/e/EP001/list");
   });
 
-  it("links a card waiting for the maker to its review, and shows its earlier versions", async () => {
+  it("opens a card's asset at its home: the detail links to its review and shows its earlier versions (J1)", async () => {
     const user = userEvent.setup();
     engine();
     await renderAt(<Cast dramaId="d1" />, "/d/d1/story");
     await user.click(await screen.findByRole("tab", { name: /Cast/ }));
     const lin = await screen.findByRole("article", { name: "Lin Xiaoyu" });
     expect(within(lin).getByText("Waiting for you")).toBeInTheDocument();
-    expect(within(lin).getByRole("link", { name: "Review" })).toHaveAttribute("href", "/r/r2");
-    await user.click(within(lin).getByRole("button", { name: "v1" }));
-    expect(within(lin).getByText("Sent back")).toBeInTheDocument();
+    expect(within(lin).getByRole("link", { name: "Lin Xiaoyu" })).toHaveAttribute("href", "/d/d1/assets/characters/lin");
+    await user.click(within(lin).getByRole("link", { name: "Lin Xiaoyu" }));
+    const detail = await screen.findByRole("complementary", { name: "Lin Xiaoyu: versions, state and review" });
+    expect(within(detail).getByText("current v2 · none accepted")).toBeInTheDocument();
+    expect(within(detail).getByRole("link", { name: "Review" })).toHaveAttribute("href", "/r/r2");
+    expect(within(detail).getByRole("link", { name: "Lineage" })).toHaveAttribute("href", "/d/d1/assets/characters/lin?view=lineage");
+    await user.click(within(detail).getByRole("button", { name: "v1" }));
+    expect(within(detail).getByText("Sent back")).toBeInTheDocument();
   });
 
   it("keeps places in Locations with their description, views and times, props in Props, and the episodes in the bible", async () => {
@@ -75,7 +80,9 @@ describe("the Story", () => {
     expect(within(office).getByText("Desks under strip lights.")).toBeInTheDocument();
     expect(within(office).getByRole("link", { name: "left side" })).toHaveAttribute("href", "/f/4");
     expect(within(office).getByRole("link", { name: "Night · v2" })).toHaveAttribute("href", "/f/5");
-    expect(within(office).getAllByRole("link")[0]).toHaveAttribute("href", "/f/3");
+    await user.click(within(office).getByRole("link", { name: "Factory office" }));
+    const detail = await screen.findByRole("complementary", { name: "Factory office: versions, state and review" });
+    expect(within(detail).getAllByRole("link").map((link) => link.getAttribute("href"))).toContain("/f/3");
     await user.click(screen.getByRole("tab", { name: /Props/ }));
     expect(within(screen.getByRole("article", { name: "The letter" })).getByText("A folded letter.")).toBeInTheDocument();
     await user.click(screen.getByRole("tab", { name: /Bible/ }));
