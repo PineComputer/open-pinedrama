@@ -55,14 +55,15 @@
   const setSub = (id, st) => set({ subs: { ...(S.subs || {}), [id]: st } });
   const submit = (id) => { setSub(id, "sending"); setTimeout(() => setSub(id, FINDS[S.outcome]), 1200); };
   const recheck = (id) => { setSub(id, "checking"); setTimeout(() => setSub(id, FINDS[S.outcome]), 1200); };
-  /* to: who receives it ("EP006's agent"); onSend: Send again, as the first send went (a confirm, then submit(id)). */
-  function Submission({ id, to, onSend }) {
+  /* to: who receives it ("EP006's agent"); onSend: Send again, as the first send went (a confirm, then submit(id)); kept:
+     what the maker still has when nothing was submitted ("Your draft is kept."), absent when there is nothing (a redo). */
+  function Submission({ id, to, onSend, kept }) {
     const st = (S.subs || {})[id];
     if (!st) return null;
     if (st === "sending" || st === "checking") return html`<span class="subst" role="status">${I("circle-notch")}<span>${st === "sending" ? `Sending to ${to}…` : `Asking whether ${to} has it…`}</span></span>`;
     if (st === "sent") return html`<span class="subst" role="status">${I("check-circle")}<span><b>Sent to ${to}.</b></span></span>`;
     if (st === "unknown") return html`<span class="subst" role="status">${I("warning")}<span><b>No answer yet.</b> <span class="muted">It may have arrived. Check asks whether ${to} has it; it is never sent twice.</span></span><button class="btn sm" onClick=${() => recheck(id)}>Check again</button></span>`;
-    return html`<span class="subst" role="alert">${I("warning-circle")}<span><b>Not submitted.</b> <span class="muted">The engine says it never reached ${to}. Your draft is kept.</span></span><button class="btn sm" onClick=${onSend}>Send again</button></span>`;
+    return html`<span class="subst" role="alert">${I("warning-circle")}<span><b>Not submitted.</b> <span class="muted">The engine says it never reached ${to}.${kept ? " " + kept : ""}</span></span><button class="btn sm" onClick=${onSend}>Send again</button></span>`;
   }
 
   function applyTheme() { document.documentElement.setAttribute("data-palette", "classic"); document.documentElement.setAttribute("data-theme", S.theme); }
@@ -627,10 +628,10 @@
           </div>
           <div style="padding:10px 16px 0;border-top:1px solid var(--border);background:var(--surface-dim)"><input class="search" style="width:100%;height:32px" readonly=${locked} placeholder="Your words for the record, e.g. Approved. seg03 opens on Luca." value=${S.words || ""} onInput=${(e) => step("words", { words: e.target.value })}/></div>
           ${locked
-            ? html`<div class="sendbar sent"><${Submission} id="review" to="EP006's agent" onSend=${confirmSend}/>
+            ? html`<div class="sendbar sent"><${Submission} id="review" to="EP006's agent" onSend=${confirmSend} kept="Your draft is kept."/>
                 ${sendState === "sent" && html`<span class="muted" style="font-size:12px">Your decisions are kept as sent; to change one, tell the agent in the panel.</span>`}</div>`
             : html`<div class="sendbar">
-            ${sendState === "failed" && html`<${Submission} id="review" to="EP006's agent" onSend=${confirmSend}/>`}
+            ${sendState === "failed" && html`<${Submission} id="review" to="EP006's agent" onSend=${confirmSend} kept="Your draft is kept."/>`}
             <span class="pips">${P.takes.map((t) => html`<i class=${S.verdict[t.id] === "accept" ? "a" : S.verdict[t.id] === "back" ? "b" : S.verdict[t.id] === "note" ? "n" : ""}></i>`)}</span>
             <span class="muted grow" style="font-size:12px">${done} of ${P.takes.length} decided${changed ? html` · <b style="color:var(--text-primary)">Draft: ${changed} ${changed === 1 ? "item" : "items"} changed</b>` : ""}</span>
             <button class="btn sm ghost" title="Undo the last change" disabled=${!(S.rhist || []).length} onClick=${() => { const h = [...S.rhist], last = h.pop(); set({ rhist: h, rfield: null, ...last }); }}>Undo</button>
