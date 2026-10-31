@@ -257,24 +257,28 @@ export function dramaView(drama: DramaRow): DramaView {
 }
 
 /**
- * How far the setup has got, by what it has made and what the maker answered (the agent may
- * approve the leads by a plain question, or skip one): 0 reading, 1 asking, 2 drawing the
- * leads, 3 their approval, 4 preparing every episode, 5 the shared references' approval.
- */
-/**
- * The setup panel's step. Once the bible is accepted, drama-cli's report says (setupStep); before
- * it, and in a rehearsal, which has no drama-cli, the turns' files and the reviews do.
+ * How far the setup has got: 0 reading, 1 asking, 2 drawing the leads, 3 their approval, 4 preparing every episode, 5
+ * the shared references' approval. Once the bible is accepted, drama-cli's report says (setupStep); before it, by the
+ * report, the setup is still reading or asking, since no lead is drawn before the bible (an answer, a screenplay sent
+ * back with its verdict included, is no step done: Codex's rc3 run, C9). Before any report, and in a rehearsal, which has
+ * no drama-cli, the turns' files and the reviews say, an answered review counting only if it wasn't a send-back.
  */
 export function setupReached(dramaId: string): number {
   const state = projectView(dramaId).state;
   const step = state ? setupStep(state) : undefined;
   if (step !== undefined) return step;
+  const asked = get<{ n: number }>("select count(*) as n from reviews r join sessions s on s.id = r.session_id where r.drama_id = ? and s.role = 'setup'", dramaId)?.n ?? 0;
+  if (state) return asked ? 1 : 0;
   const made = new Set(all<{ kind: string; look: string | null }>("select kind, look from files where drama_id = ? and episode_id is null", dramaId).map((file) => (file.kind === "look" && file.look && file.look !== "base" ? "state" : file.kind)));
-  const reviews = all<{ kind: string; state: string }>("select r.kind, r.state from reviews r join sessions s on s.id = r.session_id where r.drama_id = ? and s.role = 'setup'", dramaId);
+  const reviews = all<{ kind: string; state: string; decision: string | null }>(
+    "select r.kind, r.state, r.decision from reviews r join sessions s on s.id = r.session_id where r.drama_id = ? and s.role = 'setup'",
+    dramaId,
+  );
+  const sentBack = (review: { decision: string | null }) => review.decision !== null && (JSON.parse(review.decision) as Decision).verdict === "revise";
   if (reviews.some((review) => review.kind === "references")) return 5;
   if (reviews.some((review) => review.kind === "looks" && review.state === "answered") || ["breakdown", "location", "prop", "state"].some((kind) => made.has(kind))) return 4;
   if (reviews.some((review) => review.kind === "looks")) return 3;
-  if (made.has("look") || reviews.some((review) => review.state === "answered")) return 2;
+  if (made.has("look") || reviews.some((review) => review.state === "answered" && !sentBack(review))) return 2;
   return reviews.length ? 1 : 0;
 }
 

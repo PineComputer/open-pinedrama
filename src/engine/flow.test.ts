@@ -787,6 +787,22 @@ describe("a drama in replay", () => {
     }
   }, 30_000);
 
+  // Codex's rc3 run, C9: a screenplay sent back is no step done; the setup is still asking until the bible is accepted.
+  it("keeps the setup at its screenplay after the rewrite is sent back", async () => {
+    const { run } = await import("./db.ts");
+    run("update dramas set status = 'done'");
+    fleet.stops = "ask";
+    const form = new FormData();
+    for (const [key, value] of Object.entries({ title: "Sent back", language: "en", parallel: "1", perComputer: "1", length: "60", preset: "en-us-live-sfw", screenplayLanguage: "en", screenplay: "0" })) form.set(key, value);
+    form.append("files", new File(["EPISODE 1\nLin enters."], "screenplay.txt", { type: "text/plain" }));
+    const { id } = await call<{ id: string }>("POST", "/api/dramas", form);
+    const rewrite = await until("the screenplay rewrite", openReview(id, () => true));
+    expect((await call<DramaView>("GET", `/api/dramas/${id}`)).setup.reached).toBe(1);
+    await call("POST", `/api/reviews/${rewrite.id}/decision`, { submissionId: crypto.randomUUID(), items: [], words: "Keep the VO cues as cue extensions.", verdict: "revise" });
+    expect((await call<DramaView>("GET", `/api/dramas/${id}`)).setup.reached).toBe(1);
+    await call("POST", `/api/dramas/${id}/stop`);
+  }, 30_000);
+
   it("refuses a sample drama it doesn't have", async () => {
     await expect(call("POST", "/api/dramas/sample", { language: "en", sample: "nope" })).rejects.toThrow(/sample-unknown|No sample drama/);
   });
