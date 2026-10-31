@@ -1,5 +1,6 @@
 // What happens when a turn ends: one that stops for the maker becomes a review; otherwise the
-// setup lists the episodes and the drama goes into production, an episode finishes once its
+// setup hands over once drama-cli's report calls its project ready and the drama goes into
+// production (or else stops for the maker), an episode finishes once its
 // cut is accepted, and a turn that stops early or breaks off gets a bounded number of
 // "continue" runs in the same session, where its files still are, then the maker is told.
 // Reaching the maker resets the count.
@@ -15,6 +16,8 @@ import { continueGoal } from "./goals.ts";
 import { publish } from "./live.ts";
 import { type ReviewRow, type SessionRow, drama as dramaRow, episode as episodeRow, episodeCode } from "./records.ts";
 import { projectArchive, startRun } from "./runs.ts";
+import { sessionStatus } from "./status.ts";
+import { readyForProduction } from "../shared/project.ts";
 
 async function close(session: SessionRow) {
   stopEvents(session.id);
@@ -70,43 +73,50 @@ export async function onEnded(session: SessionRow, info: TurnInfo, stop: boolean
   publish(`drama:${session.drama_id}`, "dramas", "reviews");
 }
 
+/**
+ * The setup hands over only a project drama-cli calls ready (shared/project.ts, readyForProduction), by the status report
+ * this very turn returned: an archive and an episode list in the agent's words prove nothing (Codex's rc2 run, C7). Ready
+ * and packed, its episodes are the report's and production starts; ready with only the pack missing, the agent is asked
+ * for the pack. Anything else stops for the maker, with the agent's own words, however they are phrased; a turn that
+ * returned no report says so beside it. A rehearsal returns no report (goals.ts, rehearsed), so it hands over as before,
+ * on its pack and its listed episodes.
+ */
 async function setupEnded(session: SessionRow, info: TurnInfo) {
   const drama = dramaRow(session.drama_id)!;
   if (info.state === "completed") {
     const listed = listedEpisodes(info.summary);
     // Episodes run on copies of the project pre-production packed: no project, no production.
     const packed = projectArchive(drama.id).length > 0;
-    if (listed.length && packed) {
-      for (const item of listed) {
+    if (drama.rehearsal) return rehearsalEnded(session, info, listed, packed);
+    const report = sessionStatus(session.id);
+    const fresh = report?.turnId === info.turnId;
+    if (fresh && readyForProduction(report.state) && packed) {
+      const titles = new Map(listed.map((item) => [item.number, item.title]));
+      const codes = Object.keys(report.state.episodes).sort();
+      for (const code of codes) {
+        const number = Number(code.replace(/^EP/i, ""));
         run(
           "insert into episodes (id, drama_id, number, title, state, updated_at) values (?, ?, ?, ?, 'queued', ?) on conflict(drama_id, number) do nothing",
           newId("ep"),
           drama.id,
-          item.number,
-          item.title,
+          number,
+          titles.get(number) ?? "",
           now(),
         );
       }
-      // What pre-production made for an episode (its breakdown) belongs to it from now on.
-      const byCode = new Map(all<{ id: string; number: number }>("select id, number from episodes where drama_id = ?", drama.id).map((row) => [episodeCode(row), row.id]));
-      for (const file of all<{ id: number; rel_path: string }>("select id, rel_path from files where drama_id = ? and episode_id is null", drama.id)) {
-        const episodeId = byCode.get(classify(file.rel_path).episode ?? "");
-        if (episodeId) run("update files set episode_id = ? where id = ?", episodeId, file.id);
-      }
+      assignBreakdowns(drama.id);
       run("update dramas set status = 'production', note = '', updated_at = ? where id = ?", now(), drama.id);
       await close(session);
       return;
     }
-    if (drama.continues >= MAX_CONTINUES) {
-      askMaker(session, info);
+    if (fresh && readyForProduction(report.state) && drama.continues < MAX_CONTINUES) {
+      run("update dramas set continues = continues + 1 where id = ?", drama.id);
+      await startRun(session, "continue", PACK_PROJECT);
       return;
     }
-    run("update dramas set continues = continues + 1 where id = ?", drama.id);
-    const missing = [
-      packed ? "" : "Pack the whole drama/ folder, records included, into parts of at most 60 MB (`mkdir -p handoff && tar -cf - -C drama . | split -b 60m - handoff/project.tar.part-`) and return the parts.",
-      listed.length ? "" : 'List the drama\'s episodes, one per line, as "EP001: <title>".',
-    ];
-    await startRun(session, "continue", missing.filter(Boolean).join(" "));
+    // Not ready by drama-cli's report: the agent is waiting on the maker, whatever its last paragraph says.
+    run("update dramas set note = ? where id = ?", fresh ? "" : STATUS_MISSING, drama.id);
+    askMaker(session, info);
     return;
   } else if (info.state === "failed" && drama.continues < MAX_CONTINUES) {
     run("update dramas set continues = continues + 1 where id = ?", drama.id);
@@ -120,6 +130,49 @@ async function setupEnded(session: SessionRow, info: TurnInfo) {
     drama.id,
   );
   await close(session);
+}
+
+const PACK_PROJECT = "Pack the whole drama/ folder, records included, into parts of at most 60 MB (`mkdir -p handoff && tar -cf - -C drama . | split -b 60m - handoff/project.tar.part-`) and return the parts.";
+
+/** What the maker is told when a setup turn returned no status report: the studio can't tell whether the setup is ready. */
+const STATUS_MISSING =
+  "This stop came back without drama-cli's status report, so the studio can't tell whether the setup is ready. Ask the agent to run `drama-cli status` and return handoff/status.json.";
+
+/** What pre-production made for an episode (its breakdown) belongs to it from now on. */
+function assignBreakdowns(dramaId: string): void {
+  const byCode = new Map(all<{ id: string; number: number }>("select id, number from episodes where drama_id = ?", dramaId).map((row) => [episodeCode(row), row.id]));
+  for (const file of all<{ id: number; rel_path: string }>("select id, rel_path from files where drama_id = ? and episode_id is null", dramaId)) {
+    const episodeId = byCode.get(classify(file.rel_path).episode ?? "");
+    if (episodeId) run("update files set episode_id = ? where id = ?", episodeId, file.id);
+  }
+}
+
+/** A rehearsal's setup (no drama-cli, so no status report): main's handover, on its pack and its listed episodes. */
+async function rehearsalEnded(session: SessionRow, info: TurnInfo, listed: { number: number; title: string }[], packed: boolean) {
+  const drama = dramaRow(session.drama_id)!;
+  if (listed.length && packed) {
+    for (const item of listed) {
+      run(
+        "insert into episodes (id, drama_id, number, title, state, updated_at) values (?, ?, ?, ?, 'queued', ?) on conflict(drama_id, number) do nothing",
+        newId("ep"),
+        drama.id,
+        item.number,
+        item.title,
+        now(),
+      );
+    }
+    assignBreakdowns(drama.id);
+    run("update dramas set status = 'production', note = '', updated_at = ? where id = ?", now(), drama.id);
+    await close(session);
+    return;
+  }
+  if (drama.continues >= MAX_CONTINUES) {
+    askMaker(session, info);
+    return;
+  }
+  run("update dramas set continues = continues + 1 where id = ?", drama.id);
+  const missing = [packed ? "" : PACK_PROJECT, listed.length ? "" : 'List the drama\'s episodes, one per line, as "EP001: <title>".'];
+  await startRun(session, "continue", missing.filter(Boolean).join(" "));
 }
 
 function cutAccepted(episodeId: string): boolean {

@@ -284,6 +284,22 @@ export interface ProjectView {
   names: Names | null;
 }
 
+/** Whether every episode the report lists has its breakdown usable and nothing it needs missing: what production starts from. */
+function episodesReady(state: Omit<ProjectState, "budget">): boolean {
+  const episodes = Object.values(state.episodes);
+  return episodes.length > 0 && episodes.every((episode) => episode.breakdown.usable && episode.needs?.length === 0);
+}
+
+/**
+ * Whether the setup's project is ready for production, by drama-cli's own report and nothing else: the bible accepted
+ * and usable (drama-cli makes no bible before the screenplay is accepted), at least one episode, and every listed
+ * episode's breakdown usable with no shared reference it needs missing. An archive or an episode list in the agent's
+ * words proves none of it (Codex's rc2 run, C7).
+ */
+export function readyForProduction(state: Omit<ProjectState, "budget">): boolean {
+  return state.bible.accepted !== null && state.bible.usable && episodesReady(state);
+}
+
 /**
  * How far the setup has come, from the report, in the setup panel's steps (2 drawing the leads,
  * 3 approving them, 4 preparing every episode, 5 approving the shared references); undefined
@@ -291,8 +307,7 @@ export interface ProjectView {
  */
 export function setupStep(state: Omit<ProjectState, "budget">): number | undefined {
   if (!state.bible.accepted) return undefined;
-  const episodes = Object.values(state.episodes);
-  if (episodes.length && episodes.every((episode) => episode.breakdown.usable && episode.needs?.length === 0)) return 5;
+  if (episodesReady(state)) return 5;
   const leads = Object.values(state.characters);
   if (!leads.length || leads.some((lead) => lead.current === null)) return 2;
   if (leads.some((lead) => lead.accepted === null)) return 3;

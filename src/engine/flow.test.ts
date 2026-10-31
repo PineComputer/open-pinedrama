@@ -2,7 +2,7 @@
 // its screenplay through pre-production (every breakdown and shared reference approved, the
 // project packed) to accepted cuts, with episodes in parallel on copies of that project,
 // files saved before questions open, and idle timeouts raised while the maker reviews.
-import { mkdtempSync, rmSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
@@ -643,6 +643,49 @@ describe("a drama in replay", () => {
     run("update dramas set status = 'stopped' where id = ?", id);
     expect(["sub-2", "sub-3", "sub-4", "sub-5", "sub-6", "sub-7", "sub-8", "sub-9"].map(kept).filter(Boolean)).toEqual([]);
   }, 60_000);
+
+  // Codex's rc2 run, C7 (qa/rc2-trace/t9-turn-states.json): the setup asks three questions above a last paragraph that
+  // isn't one, and its status report has no bible and no episodes. The studio must stop for the maker, never ask the agent
+  // to pack and list episodes, and never start an episode; whether the turn returned its report or not.
+  it.each([true, false])("stops for the maker when the setup's project isn't ready by drama-cli's report, however the agent phrased it (report returned: %s)", async (reported) => {
+    const { run, all, get } = await import("./db.ts");
+    run("update dramas set status = 'done'");
+    fleet.stops = "ask";
+    const T9 = "Ingestion and screenplay review are complete; no bible, images, forbidden references, storyboards, or video were generated.\n\nThe TXT screenplay was preserved unchanged, and its content matches the supplied PDF after whitespace normalization. The project is initialized in `drama/` with 9:16, 480p, and `budget_usd: null`.\n\nPlease clarify:\n1. Is `51-1 夜 内 家` Episode 51? The source has no Episode 51 heading.\n2. What should the second Episode 10 scene currently labeled `10-1` be numbered?\n3. Are `邵一帆/邵一凡` and later `陈一帆/陈一凡` the same son, with the latter being his renamed form?\n\nOnce clarified, I can create a separate Fountain-form rewrite that preserves the source words and continue only after your review.";
+    const status = readFileSync(path.resolve("fixtures", "status", "new.json"));
+    const played = { run: fleet.run, wait: fleet.wait, openFile: fleet.openFile };
+    const scripted = new Set<string>();
+    fleet.run = async (computer, session, goal, key) => {
+      const info = await played.run.call(fleet, computer, session, goal, key);
+      if (/vertical short drama from my screenplay/.test(goal)) scripted.add(info.turnId);
+      return info;
+    };
+    fleet.wait = async (computer, session, turnId, timeout) =>
+      scripted.has(turnId)
+        ? { turnId, state: "completed", question: "", summary: T9, nextTurnId: "", files: reported ? [{ path: "handoff/status.json", size: status.length, sha256: "", type: "application/json" }] : [], cost: 0.04, media: 0 }
+        : played.wait.call(fleet, computer, session, turnId, timeout);
+    fleet.openFile = async (computer, session, file) =>
+      file === "handoff/status.json" ? new Response(status).body! : played.openFile.call(fleet, computer, session, file);
+    try {
+      const form = new FormData();
+      for (const [key, value] of Object.entries({ title: `T9 ${reported}`, language: "en", parallel: "1", perComputer: "1", length: "60", preset: "zh-cn-live-sfw", screenplayLanguage: "zh", screenplay: "0" })) form.set(key, value);
+      form.append("files", new File(["第1集\n1-1 日 内 家\n人物：邵一帆"], "screenplay.txt", { type: "text/plain" }));
+      const { id } = await call<{ id: string }>("POST", "/api/dramas", form);
+      // A question for the maker, in the agent's own words.
+      const review = await until("the setup's questions", openReview(id, (item) => item.kind === "question"));
+      expect((await call<ReviewView>("GET", `/api/reviews/${review.id}`)).question).toBe(T9);
+      // No run the studio wrote itself (no "pack … list the episodes"), no episode, no production.
+      expect(all("select r.kind from runs r join sessions s on s.id = r.session_id where s.drama_id = ? and r.kind != 'setup'", id)).toEqual([]);
+      const drama = await call<DramaView>("GET", `/api/dramas/${id}`);
+      expect([drama.status, drama.episodeRows.length]).toEqual(["setup", 0]);
+      expect(get("select id from sessions where drama_id = ? and role = 'episode'", id)).toBeUndefined();
+      // Without the report, the maker is told what is missing and what to ask for.
+      expect(get<{ note: string }>("select note from dramas where id = ?", id)!.note).toEqual(reported ? "" : expect.stringMatching(/without drama-cli's status report.*handoff\/status\.json/));
+      await call("POST", `/api/dramas/${id}/stop`);
+    } finally {
+      Object.assign(fleet, played);
+    }
+  }, 30_000);
 
   it("refuses a sample drama it doesn't have", async () => {
     await expect(call("POST", "/api/dramas/sample", { language: "en", sample: "nope" })).rejects.toThrow(/sample-unknown|No sample drama/);
