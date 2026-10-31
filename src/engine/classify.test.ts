@@ -42,6 +42,13 @@ describe("classify", () => {
     expect(classify("drama/spec.json").kind).not.toBe("spec");
   });
 
+  it("knows drama-cli's record of a picture registered in the asset library, by the version it registered", () => {
+    expect(classify("drama/assets/characters/lin/states/S1/v1/asset/asset.json")).toEqual({ kind: "asset", version: "v1" });
+    expect(classify("drama/episodes/EP001/multi_panel_storyboard/seg01/line-art/v3/asset/asset.json")).toEqual({ kind: "asset", version: "v3" });
+    expect(classify("drama/understanding/abc/asset/asset.json").kind).toBe("observation");
+    expect(classify("drama/asset/asset.json").kind).not.toBe("asset");
+  });
+
   it("reads the refusals a stop asks about", () => {
     expect(classify("handoff/refusals.jsonl")).toEqual({ kind: "refusal" });
     expect(classify("work/handoff/refusals.jsonl")).toEqual({ kind: "refusal" });

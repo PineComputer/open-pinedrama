@@ -778,6 +778,7 @@ const en = {
   "export.notYet": "Ready after the agent's next stop returns it.",
   "file.spec": "Job",
   "file.request": "Request",
+  "file.asset": "Asset record",
   "file.refusal": "Refusals",
   "file.other": "File",
 
@@ -1664,6 +1665,7 @@ const zh: Record<Key, string> = {
   "export.notYet": "agent 下一次停下返回后即可下载。",
   "file.spec": "生成参数",
   "file.request": "请求",
+  "file.asset": "素材库记录",
   "file.refusal": "拒绝记录",
   "file.other": "文件",
 

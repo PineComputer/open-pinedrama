@@ -54,7 +54,7 @@ export function itemsOf(kind: ReviewKind, files: FileRow[]): { items: ReviewItem
   const add = (key: string, file: FileRow) => groups.set(key, [...(groups.get(key) ?? []), file]);
   for (const file of files) {
     // The handed-over project, its status, lineage and infinite-canvas export, each version's spec and request, and the refusals a stop asks about: for sessions and the studio, not for the maker's eyes.
-    if (file.kind === "archive" || file.kind === "status" || file.kind === "lineage" || file.kind === "infinite-canvas" || file.kind === "refusal" || file.kind === "spec" || file.kind === "request") continue;
+    if (file.kind === "archive" || file.kind === "status" || file.kind === "lineage" || file.kind === "infinite-canvas" || file.kind === "refusal" || file.kind === "spec" || file.kind === "request" || file.kind === "asset") continue;
     // A cut's plan goes with the cut, as its clips (library.cutPlanOf).
     if (file.kind === "cut-plan") continue;
     if (kind === "looks" && file.kind === "look") add(lookKey(file), file);

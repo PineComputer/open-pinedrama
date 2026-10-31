@@ -55,6 +55,13 @@ describe("a stop's files in its review", () => {
     expect(other).toEqual([]);
   });
 
+  it("leave out drama-cli's record of a picture's asset registration", () => {
+    const look = row("drama/assets/characters/lin/v1/image-1.png", "look", { type: "image/png", subject: "lin", version: "v1" });
+    const { items, other } = reviews.itemsOf("looks", [look, row("drama/assets/characters/lin/v1/asset/asset.json", "asset")]);
+    expect(items[0].files).toHaveLength(1);
+    expect(other).toEqual([]);
+  });
+
   it("leave out the lineage of the project", () => {
     const look = row("drama/assets/characters/lin/v1/image-1.png", "look", { type: "image/png", subject: "lin", version: "v1" });
     const { items, other } = reviews.itemsOf("looks", [look, row("handoff/lineage.json", "lineage")]);
