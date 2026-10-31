@@ -864,7 +864,8 @@ export function CutRoom({ review, done }: { review: ReviewView; done: () => void
   const takeSpec = clip ? (episodeFiles.data ?? []).find((other) => other.kind === "spec" && other.path.endsWith(`/segments/${clip.segment}/${clip.take}/spec.json`)) : undefined;
   const spec = specFacts(useText(takeSpec).text);
   const drama = useResource<DramaView>(`/api/dramas/${review.dramaId}`, [`drama:${review.dramaId}`]);
-  // A second press that lands before the button re-renders busy finds this set: one decision goes, not two.
+  // A second press that lands before the button re-renders busy, or after the decision went, finds this set: one
+  // decision goes, not two. Only a failed send clears it, for the maker to try again.
   const sending = useRef(false);
   const send = useAction(async () => {
     if (sending.current) return;
@@ -873,8 +874,9 @@ export function CutRoom({ review, done }: { review: ReviewView; done: () => void
     const decision: { items: ItemDecision[]; words: string } = { words: "", items: [{ key: item.key, verdict: verdict!, notes: [...why, ...notes] }] };
     try {
       await api(`/api/reviews/${review.id}/decision`, { method: "POST", json: decision });
-    } finally {
+    } catch (failed) {
       sending.current = false;
+      throw failed;
     }
     forgetVerdict();
     forgetNotes();
