@@ -142,7 +142,7 @@ interface ExportNode {
   id: number;
   inputs?: { name: string; link: number | null }[];
   outputs?: { links: number[] | null }[];
-  properties: { id: string; kind: string; section: string; accepted?: string | null; fresh?: boolean | null; problems?: string[] };
+  properties: { id: string; kind: string; section: string; version?: string | null; accepted?: string | null; fresh?: boolean | null; problems?: string[] };
 }
 interface Export {
   nodes: ExportNode[];
@@ -174,10 +174,12 @@ export function lineageAt(progress: ReplayProgress, exported: Uint8Array): Uint8
   const nodes = workflow.nodes.filter(keep);
   // Accepted as this stop's history accepted it: the sample's own export says what its project had accepted when it was
   // exported, which a replay that has the maker accept an episode's takes and cut would otherwise contradict (QA, FITL r2
-  // EP001: Done in the sidebar, its cut and takes waiting on the Canvas).
+  // EP001: Done in the sidebar, its cut and takes waiting on the Canvas). Only where replay drew the export's own version:
+  // replay keeps one storyboard version a segment for both styles, so a style the project redrew alone (r2 EP001 seg04's
+  // photoreal v2) keeps the export's word.
   for (const node of nodes) {
     const stage = made.get(node.properties.id);
-    if (stage) node.properties = { ...node.properties, accepted: stage.accepted };
+    if (stage && stage.version === node.properties.version) node.properties = { ...node.properties, accepted: stage.accepted };
   }
   // What this stop's history leaves out of date, as drama-cli would say it (outOfDate), on the sample's own export too.
   for (const [id, problems] of outOfDate(progress)) {

@@ -108,6 +108,12 @@ describe("replay's lineage", () => {
     // And the other way: what the export had accepted waits for the maker until this stop's history accepts it.
     const waiting = parseLineage(JSON.parse(new TextDecoder().decode(lineageAt(progress, replayLineage(done, returned).bytes))));
     expect(waiting.nodes.find((node) => node.id === "episodes/EP001/edit")).toMatchObject({ version: "v1", accepted: null });
+    // A style the project redrew alone (FITL r2 EP001 seg04's photoreal v2) is no version replay drew: the export's word stands.
+    const redrawn = JSON.parse(new TextDecoder().decode(exported)) as { nodes: { properties: { id: string; version: string; accepted: string | null } }[] };
+    const photoreal = redrawn.nodes.find((node) => node.properties.id === "episodes/EP001/multi_panel_storyboard/seg01/photoreal")!;
+    photoreal.properties = { ...photoreal.properties, version: "v3", accepted: "v3" };
+    const kept = parseLineage(JSON.parse(new TextDecoder().decode(lineageAt(done, new TextEncoder().encode(JSON.stringify(redrawn))))));
+    expect(kept.nodes.find((node) => node.id === "episodes/EP001/multi_panel_storyboard/seg01/photoreal")).toMatchObject({ version: "v3", accepted: "v3" });
   });
 
   it("has no episode stage before the episode's boards are drawn", () => {
