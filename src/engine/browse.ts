@@ -7,7 +7,7 @@ import type { CastCard, Decision, DeliveryRow, EpisodePage, FileItem, Judged, Re
 import { classify } from "./classify.ts";
 import { all, get } from "./db.ts";
 import { readFileSync } from "node:fs";
-import { type FileRow, blobPath, filesOfStop, itemIn, toItem } from "./library.ts";
+import { type FileRow, blobPath, filesOfStop, itemIn, storedWithSha, toItem } from "./library.ts";
 import type { ZipEntry } from "./zip.ts";
 import { type EpisodeRow, type ReviewRow, drama as dramaRow, episodeCode } from "./records.ts";
 import { itemsOf, placeKey, rewriteOf } from "./reviews.ts";
@@ -113,6 +113,7 @@ function screenplayVersions(dramaId: string): ScreenplayVersion[] {
     const review = of("screenplay-review");
     const validate = of("screenplay-validate");
     const original = of("screenplay-original");
+    const source = original && storedWithSha(dramaId, original.sha);
     const asked = questions.get(`v${number}`);
     const decision = asked?.decision ? (JSON.parse(asked.decision) as Decision) : undefined;
     return {
@@ -121,6 +122,7 @@ function screenplayVersions(dramaId: string): ScreenplayVersion[] {
       review: review && toItem(review),
       validate: validate && toItem(validate),
       original: original && toItem(original),
+      source: original && (source ? toItem(source) : null),
       question: asked && { reviewId: asked.id, state: asked.state, words: decision?.words, verdict: decision?.verdict, decidedAt: asked.decided_at ?? undefined },
     };
   });

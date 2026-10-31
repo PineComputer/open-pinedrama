@@ -131,6 +131,33 @@ export function fileRow(id: number): FileRow | undefined {
   return get<FileRow>("select * from files where id = ?", id);
 }
 
+/**
+ * The maker's own stored file of a drama with these bytes: an input, a reference (an answer's file included) or the
+ * studio's extracted text of an uploaded PDF or Word file, never a file a session returned. drama-cli's
+ * screenplay/vN/original.txt is its copy of the config's inputs.screenplay, so the stored file with its SHA-256 is the
+ * original that version was validated against (D75 as amended, B23): an identity, never a guess from a name.
+ * Byte-identical files are one original: the drama's screenplay when it is one of them, else the first stored.
+ */
+export function storedWithSha(dramaId: string, sha: string): FileRow | undefined {
+  return get<FileRow>(
+    "select f.* from files f join dramas d on d.id = f.drama_id where f.drama_id = ? and f.turn_id is null and f.sha = ? order by f.id = d.screenplay_file desc, f.id limit 1",
+    dramaId,
+    sha,
+  );
+}
+
+/**
+ * A screenplay version's original, returned by the setup, makes the stored file it copies the drama's screenplay, and
+ * one of its inputs, so a setup started again is handed it (scheduler.ts beginSetup) and Script shows it. An original
+ * that copies no stored file changes nothing: Script says so (ScreenplayVersion.source).
+ */
+export function followScreenplaySource(dramaId: string, original: FileRow): void {
+  const source = storedWithSha(dramaId, original.sha);
+  if (!source) return;
+  run("update dramas set screenplay_file = ?, updated_at = ? where id = ?", source.id, now(), dramaId);
+  run("insert or ignore into inputs (drama_id, file_id) values (?, ?)", dramaId, source.id);
+}
+
 export function openBlob(row: FileRow, range?: { start: number; end: number }) {
   return createReadStream(blobPath(row.sha), range);
 }

@@ -787,6 +787,84 @@ describe("a drama in replay", () => {
     }
   }, 30_000);
 
+  // Codex's rc5 T5 (C19; D75 as amended, B23): the first upload is an analysis, not a screenplay; the agent asks for one,
+  // the maker attaches it to the answer, and drama-cli validates it as v1, its original.txt byte for byte the attachment.
+  // That file is now the drama's screenplay: after Pause and Resume, the new setup is handed it as the screenplay, not the
+  // first upload. An original that copies none of the drama's files changes nothing, and Script says so.
+  it("starts a setup again from the answer's file that drama-cli validated as the screenplay, not from the first upload", async () => {
+    const { run } = await import("./db.ts");
+    run("update dramas set status = 'done'");
+    fleet.stops = "ask";
+    const analysis = "《前妻攻略》剧本分析：人物关系与卖点，无分场。";
+    const excerpt = "第1集\n1-1 日 内 家\n人物：顾晓月\n顾晓月：今天就搬走。";
+    const say = (summary: string, files: Record<string, string> = {}) => ({ summary, files });
+    const turns = {
+      asks: say("The upload is an analysis of 前妻攻略, not a screenplay: it has no scenes or dialogue. Can you attach the screenplay itself?"),
+      validated: say("Screenplay v1 is ready from your attachment: 1 episode, 1 scene. Will you accept v1?", { "drama/screenplay/v1/original.txt": excerpt, "drama/screenplay/v1/screenplay.fountain": "# 第1集\n\n.日 内 家 #1-1#\n\n@顾晓月\n今天就搬走。\n" }),
+      resumed: say("Screenplay v2 is ready. Will you accept v2?", { "drama/screenplay/v2/original.txt": "顾晓月：今天就搬走。（the agent's own excerpt）" }),
+    };
+    const played = { run: fleet.run, wait: fleet.wait, openFile: fleet.openFile, listFiles: fleet.listFiles };
+    const scripted = new Map<string, (typeof turns)[keyof typeof turns]>();
+    const scriptedSessions = new Set<string>();
+    const setupGoals: string[] = [];
+    // Every turn of this drama's setup is scripted, never played, so no replayed turn is left running under it.
+    fleet.run = async (computer, session, goal, key) => {
+      const setup = /vertical short drama from my screenplay/.test(goal);
+      if (!setup && !scriptedSessions.has(session.name)) return played.run.call(fleet, computer, session, goal, key);
+      if (setup) {
+        setupGoals.push(goal);
+        scriptedSessions.add(session.name);
+      }
+      const turnId = `turn_t5_${key}`;
+      scripted.set(turnId, setup ? (setupGoals.length === 1 ? turns.asks : turns.resumed) : turns.validated);
+      return { turnId, state: "running", question: "", summary: "", nextTurnId: "", files: [], cost: 0, media: 0 };
+    };
+    const bytesOf = (file: string) => [...scripted.values()].map((turn) => turn.files[file]).find((text) => text !== undefined);
+    fleet.wait = async (computer, session, turnId, timeout) => {
+      const turn = scripted.get(turnId);
+      if (!turn) return played.wait.call(fleet, computer, session, turnId, timeout);
+      const files = Object.entries(turn.files).map(([file, text]) => ({ path: file, size: Buffer.byteLength(text), sha256: "", type: "text/plain" }));
+      return { turnId, state: "completed", question: "", summary: turn.summary, nextTurnId: "", files, cost: 0.01, media: 0 };
+    };
+    fleet.openFile = async (computer, session, file) => {
+      const text = bytesOf(file);
+      return text !== undefined ? new Response(text).body! : played.openFile.call(fleet, computer, session, file);
+    };
+    // The scripted sessions' folders hold only what their turns returned, never the replay's own screenplay.
+    fleet.listFiles = async (computer, session, folder) => (scriptedSessions.has(session.name) ? [] : played.listFiles.call(fleet, computer, session, folder));
+    try {
+      const form = new FormData();
+      for (const [key, value] of Object.entries({ title: "T5", language: "zh", parallel: "1", perComputer: "1", length: "60", preset: "zh-cn-live-sfw", screenplayLanguage: "zh", screenplay: "0" })) form.set(key, value);
+      form.append("files", new File([analysis], "前妻攻略-分析.txt", { type: "text/plain" }));
+      const { id } = await call<{ id: string }>("POST", "/api/dramas", form);
+      const first = (await call<ScriptPage>("GET", `/api/dramas/${id}/script`)).screenplayFile;
+      const question = await until("the question for a screenplay", openReview(id, () => true));
+      const attachment = new FormData();
+      attachment.set("file", new File([excerpt], "家里家外-节选.txt", { type: "text/plain" }));
+      const attached = await call<FileItem>("POST", `/api/dramas/${id}/references`, attachment);
+      await call("POST", `/api/reviews/${question.id}/decision`, { submissionId: crypto.randomUUID(), items: [], words: "Here is the screenplay.", file: attached.id });
+      await until("the rewrite of the attachment", openReview(id, (item) => item.id !== question.id));
+      // drama-cli's original.txt copies the attachment: it is the screenplay now, and one of the drama's inputs.
+      const script = await call<ScriptPage>("GET", `/api/dramas/${id}/script`);
+      expect(script.versions[0].source?.id).toBe(attached.id);
+      expect(script.screenplayFile).toBe(attached.id);
+      expect(script.inputs.map((file) => file.id)).toEqual([first, expect.any(Number), attached.id]);
+      // Pause, then Resume: the new setup session is handed the attachment as the screenplay.
+      await call("POST", `/api/dramas/${id}/stop`);
+      await call("POST", `/api/dramas/${id}/resume`);
+      await until("the resumed setup", async () => setupGoals.length === 2 || undefined);
+      expect(setupGoals[1]).toContain(`from my screenplay, attached as reference-${attached.id}-家里家外-节选.txt`);
+      // A version whose original copies none of the drama's files leaves the screenplay as it was, and says so.
+      await until("the resumed setup's v2", async () => (await call<ScriptPage>("GET", `/api/dramas/${id}/script`)).versions.find((version) => version.version === "v2"));
+      const after = await call<ScriptPage>("GET", `/api/dramas/${id}/script`);
+      expect(after.versions.find((version) => version.version === "v2")?.source).toBeNull();
+      expect(after.screenplayFile).toBe(attached.id);
+      await call("POST", `/api/dramas/${id}/stop`);
+    } finally {
+      Object.assign(fleet, played);
+    }
+  }, 30_000);
+
   // Codex's rc3 run, C9: a screenplay sent back is no step done; the setup is still asking until the bible is accepted.
   it("keeps the setup at its screenplay after the rewrite is sent back", async () => {
     const { run } = await import("./db.ts");

@@ -599,6 +599,12 @@ export interface ScreenplayVersion {
   validate?: FileItem;
   /** The original this version was validated against. */
   original?: FileItem;
+  /**
+   * The drama's stored file that original copies, byte for byte (SHA-256): an input, an answer's file or the studio's
+   * extracted text of an upload; null when it copies none of them, so Original can't show it (D75 as amended, B23).
+   * Absent with no original.
+   */
+  source?: FileItem | null;
   /** The agent's question about this version (the rewrite waiting for the maker), where it stands and the maker's words once decided. */
   question?: { reviewId: string; state: ReviewState; words?: string; verdict?: Verdict; decidedAt?: string };
 }
