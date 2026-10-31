@@ -45,16 +45,17 @@ decision needs its grounds… all in English, plenty of Mermaid and the like, th
 |---|---|---|
 | [design-principles.md](design-principles.md) | explanation | the principles every screen and flow follows, each with its source and how others apply it |
 | [architecture.md](architecture.md) | explanation | the whole system: the engine, Pine, drama-cli's handoff, runtime, deployment, crosscutting concepts |
+| [studio/information-architecture.md](studio/information-architecture.md) | explanation | where everything lives: the levels, each object's home, views, routes |
+| [studio/interaction.md](studio/interaction.md) | explanation | how intent becomes an outcome: states, reviews, cut editing, stops and recovery |
+| [studio/design-system.md](studio/design-system.md) | explanation | what screens are made of: tokens, icons, components, the rules every screen keeps |
 | [glossary.md](glossary.md) | reference | every term the documents and screens use, with its Chinese term and source |
 | [decisions.md](decisions.md) | reference | the studio's decisions, dated, with their grounds and the words they rest on |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | how-to | how to change the studio: where things live, the components, the rules the tests keep |
 | [TESTING.md](TESTING.md) | how-to | how the studio is tested, and how to write a test for a change |
 | [REUSED.md](REUSED.md) | reference | the files the studio takes from other projects, and their licences |
 
-`PROPOSAL.md`, `IMPLEMENTATION_PLAN.md` and `REDESIGN_PLAN.md` are being folded into these
-documents (the studio's information architecture, interaction and design system come
-next), and are deleted when the last of them lands.
-`references/` keeps the screenshots of other apps that those documents cite.
+`references/` keeps the screenshots of other apps that
+[information architecture](studio/information-architecture.md) cites.
 
 The studio's UI itself is designed in [`design/`](../design/), the one source of every screen
 ([D9](decisions.md#d9-2026-10-30--design-is-the-one-source-of-the-ui)).

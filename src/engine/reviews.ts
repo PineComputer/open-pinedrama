@@ -1,7 +1,7 @@
 // Questions the agents ask, as reviews the maker works through. A review is created when
 // a turn ends with a question and becomes answerable only once that turn's files are
 // saved; the maker's decision goes back as one answer to the turn that asked
-// (docs/IMPLEMENTATION_PLAN.md, rules 1 to 3).
+// (docs/architecture.md, section 6.2, rules 1 to 3).
 import type { Decision, FileItem, FileKind, ReviewItem, ReviewKind, Reviewing } from "../shared/types.ts";
 import { classify } from "./classify.ts";
 import { computerRef, fleet, sessionRef } from "./computers.ts";

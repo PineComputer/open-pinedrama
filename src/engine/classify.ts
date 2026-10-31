@@ -1,6 +1,6 @@
 // What a returned file probably is, from its path. Pine guarantees a file's path, size,
 // hash and type, not what it shows, so these are hints: every screen also works from the
-// agent's own words and the plain file list (docs/IMPLEMENTATION_PLAN.md, rule 5). The
+// agent's own words and the plain file list (docs/architecture.md, section 6.2, rule 5). The
 // patterns follow the folders the drama skill writes, wherever they sit in the path.
 import type { FileKind } from "../shared/types.ts";
 

@@ -1,5 +1,5 @@
 {
- "about": "Replay's sample pictures and clips, by sample (en and zh for The Stepmother; the Home samples by id) and by the path replay returns them at, with its version as vN and no extension (src/engine/replay-samples.ts). Placeholders from our own test runs, to be replaced by a generated public sample set before release (docs/REDESIGN_PLAN.md). The full sample dramas (paper-vows, late-sunshine) are under full/, which the desktop installer leaves out (electron-builder.config.mjs): they play in development and review builds, and a packaged app draws placeholders for them.",
+ "about": "Replay's sample pictures and clips, by sample (en and zh for The Stepmother; the Home samples by id) and by the path replay returns them at, with its version as vN and no extension (src/engine/replay-samples.ts). Placeholders from our own test runs, to be replaced by a generated public sample set before release (docs/architecture.md, section 11). The full sample dramas (paper-vows, late-sunshine) are under full/, which the desktop installer leaves out (electron-builder.config.mjs): they play in development and review builds, and a packaged app draws placeholders for them.",
  "en": {
   "drama/assets/characters/lin/vN/image-1": "en/lin.jpg",
   "drama/assets/characters/lin/states/S1/vN/image-1": "en/lin.jpg",

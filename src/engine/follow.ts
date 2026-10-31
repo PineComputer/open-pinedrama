@@ -1,6 +1,6 @@
 // Follows the agents' work: each turn to its end, and each open session's events for the
 // chat and the crew view. When a turn ends, its files are copied into the library before
-// anything else happens, because the next turn can change them (plan, rule 1).
+// anything else happens, because the next turn can change them (docs/architecture.md, section 6.2, rule 1).
 import type { FileKind } from "../shared/types.ts";
 import { ENDED, type TurnFile, type TurnInfo } from "./fleet.ts";
 import { computerRef, fleet, markStopped, sessionRef } from "./computers.ts";

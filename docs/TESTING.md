@@ -1,8 +1,7 @@
 # Testing
 
-How the studio is tested, and how to write a test for a change. Every item of the redesign
-([REDESIGN_PLAN.md](REDESIGN_PLAN.md)) starts with a test that fails, and is done when it
-passes. No test reaches the network or Pine, and none costs anything.
+How the studio is tested, and how to write a test for a change. Every change starts with a test
+that fails, and is done when it passes. No test reaches the network or Pine, and none costs anything.
 
 ## Four layers
 

@@ -40,7 +40,7 @@ export function nowText(row: EpisodeRow, t: T): string {
   }
 }
 
-/** The drama's names from its bible (docs/REDESIGN_PLAN.md, P5.5), for every screen that would otherwise show an id; null before a bible. */
+/** The drama's names from its bible (docs/architecture.md, section 8.5), for every screen that would otherwise show an id; null before a bible. */
 export function useNames(dramaId: string | undefined): Names | null {
   const { data } = useResource<ProjectView>(dramaId ? `/api/dramas/${dramaId}/project` : null, [`project:${dramaId}`]);
   return data?.names ?? null;

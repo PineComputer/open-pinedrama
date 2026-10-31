@@ -1,8 +1,9 @@
 # Contributing to the studio redesign
 
-The redesign is built on the `redesign/studio` branch (PR #15). Each part comes in as its own small
-pull request into that branch, green on CI, and its owner on #15 reviews and merges it. A
-milestone is accepted by merecdesperez44323-lab, as [REDESIGN_PLAN.md](REDESIGN_PLAN.md) says.
+The redesign is built on the `redesign/studio` branch (PR #15). A change lands by rebasing onto the
+branch's head, running `npx tsc --noEmit`, and pushing as a fast forward
+([D10](decisions.md#d10-2026-10-30--during-the-sprint-tsc-is-the-gate-and-ci-is-paused-on-redesignstudio));
+a UI change starts in `design/` ([D9](decisions.md#d9-2026-10-30--design-is-the-one-source-of-the-ui)).
 
 ## Before you start
 

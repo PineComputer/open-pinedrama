@@ -2,7 +2,7 @@
 // what can be delivered, and the cast. Read only: the maker decides in reviews, and these
 // pages show what was decided on, which covers the group a review showed, never one file of
 // it (a verdict on seg03's takes is not a choice among them). Files are grouped by path
-// hints; whatever isn't recognised is still listed (docs/IMPLEMENTATION_PLAN.md, rule 5).
+// hints; whatever isn't recognised is still listed (docs/architecture.md, section 6.2, rule 5).
 import type { CastCard, Decision, DeliveryRow, EpisodePage, FileItem, Judged, Receipt, ReviewKind, ScriptPage, SegmentPage } from "../shared/types.ts";
 import { classify } from "./classify.ts";
 import { all, get } from "./db.ts";

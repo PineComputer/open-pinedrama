@@ -1,4 +1,4 @@
-// The canvas's SteerBar (docs/REDESIGN_PLAN.md, P6.3): what the maker can do about the item they
+// The canvas's SteerBar (docs/design-principles.md, section 2): what the maker can do about the item they
 // picked. Review opens the item in its review room when a review holding it is open. Send back
 // (with a reason) and Note go to the agent at work on it as a steering message, naming the item
 // as the bible does; for an item under review they open that review instead, so the canvas never

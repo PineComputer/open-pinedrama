@@ -9,7 +9,9 @@ marks are verbatim, and a Chinese quote is followed by our English gloss in ital
 merecdesperez44323-lab is named by that GitHub id. Other documents cite an entry by its number.
 
 The entries up to D7 come from the first proposal and build plan (22–24 October 2026); D8 onward
-from the redesign.
+from the redesign. Those plans, `PROPOSAL.md`, `IMPLEMENTATION_PLAN.md` and `REDESIGN_PLAN.md`, were
+folded into these documents on 30 October 2026; an entry that cites them cites their text in Git
+history, in `docs/` at commit 07ea708.
 
 ```mermaid
 timeline
@@ -201,8 +203,8 @@ timeline
 - **Alternatives.** None recorded.
 - **Grounds.** merecdesperez44323-lab's decision: the samples belong in the repository, so that
   whoever develops the studio sees what it looks like with real work.
-- **Consequences.** A generated public sample set replaces them before release (`REDESIGN_PLAN.md`,
-  "Before release"). No test needs the samples (`TESTING.md`).
+- **Consequences.** A generated public sample set replaces them before release
+  ([architecture](architecture.md#11-before-release)). No test needs the samples (`TESTING.md`).
 - **Words.** "肯定要进仓库， 这样别人开发时候也知道什么样子啊" (*they must go in the repository, so
   others know what it looks like when they develop*); "效果图里的你就直接放在样例数据里啊！！！" (*put
   what is in the mock-ups straight into the sample data!!!*).

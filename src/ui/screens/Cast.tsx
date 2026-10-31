@@ -1,4 +1,4 @@
-// The drama's Story (docs/REDESIGN_PLAN.md, P5.5; the pro direction's Story screen): its
+// The drama's Story (docs/architecture.md, section 8.5; the pro direction's Story screen): its
 // episodes as the bible titles them, its cast as cards (the newest sheet, where it stands, its
 // other names, the episodes it is in) and its world (places and key props). Every name is the
 // bible's. Decisions are made in the review room: a card waiting for one links there.

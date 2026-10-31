@@ -6,8 +6,8 @@ the storyboards, the takes and the cut, many episodes at once. You review and de
 where they ask: the leads' looks, every episode's storyboards, takes with dialogue, and
 every cut. Everything they return stays in the studio's library.
 
-Design: [docs/PROPOSAL.md](docs/PROPOSAL.md). Build plan and the rules the flow keeps:
-[docs/IMPLEMENTATION_PLAN.md](docs/IMPLEMENTATION_PLAN.md).
+Design: [docs/](docs/README.md), starting with the [architecture](docs/architecture.md) and
+the studio's [information architecture](docs/studio/information-architecture.md).
 
 ## Run it
 

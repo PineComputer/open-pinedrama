@@ -32,7 +32,7 @@ export const REHEARSAL_KIT = path.join(RESOURCES, "fixtures", "rehearsal", "stan
 export const PORT = Number(process.env.STUDIO_PORT ?? 4310);
 
 /**
- * Idle timeouts (docs/IMPLEMENTATION_PLAN.md). Work keeps a Computer running; a question
+ * Idle timeouts (docs/architecture.md, section 6.3). Work keeps a Computer running; a question
  * waiting for the maker doesn't, so a Computer with a waiting session gets longer. The
  * working value covers a question that arrives while the app is closed.
  */

@@ -1,4 +1,4 @@
-// The canvas (docs/REDESIGN_PLAN.md, P6): one episode on an infinite plane, drawn with React Flow
+// The canvas (docs/studio/information-architecture.md, "Views belong to a scope"): one episode on an infinite plane, drawn with React Flow
 // in the pro prototype's markup (design-references/studio-pro, app.js Canvas and studio.css: the
 // labelled picture nodes, the frames, the following pill, the zoom pill, the detail card). Every
 // node and frame stands where drama-cli's own layout puts it (the lineage export's pos, size and
@@ -51,7 +51,7 @@ function standingOf(stage: LineageNode): Status {
 
 /**
  * What a maker may do to an item by hand, as the reference's node bar and panel offer it. Phase 1
- * makes nothing by hand (docs/REDESIGN_PLAN.md, P6.8): each stands disabled, and the canvas takes
+ * makes nothing by hand (docs/decisions.md, D8): each stands disabled, and the canvas takes
  * the handler that does nothing.
  */
 export interface NodeActions {

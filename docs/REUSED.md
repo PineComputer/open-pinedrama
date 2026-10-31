@@ -26,4 +26,4 @@ Stepmother in English and Chinese; Bride on Bail, the pro prototype's pictures; 
 drama-cli productions under `full/<sample>/`: double-life-r4, double-life-ep001, false-intentions-true-love
 (r1 and r2) and houma-ep001-v2), with `samples.json` naming the path each one stands for. The productions'
 files keep drama-cli's own ids, paths and versions, with their lineage from `drama-cli export comfyui`. They are placeholders: a generated public sample set replaces them before release
-([REDESIGN_PLAN.md](REDESIGN_PLAN.md)). They are stored with Git LFS.
+([architecture](architecture.md#11-before-release)). They are stored with Git LFS.

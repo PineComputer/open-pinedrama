@@ -1,5 +1,5 @@
 // The Graph: where each version came from and what was made from it, read from drama-cli's own
-// lineage (docs/REDESIGN_PLAN.md, M7 and P8), drawn as the pro prototype's Graph screen draws it
+// lineage (docs/decisions.md, D4), drawn as the pro prototype's Graph screen draws it
 // (studio-pro/screens.js, Graph; SPEC.md, LineageGraph and StaleBar): the version in focus and its
 // whole lineage as picture cards in the pipeline's columns, on React Flow, laid out by elkjs
 // (focus.ts); a click focuses a version; the inspector lists what it was made from and what was

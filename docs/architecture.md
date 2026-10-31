@@ -310,6 +310,18 @@ Logged once, in [decisions.md](decisions.md).
 recording real turns as the replay; a Computer reaching its running-time limit; updates on an Intel
 Mac, on Windows and on Linux.
 
+## 11. Before release
+
+- A generated public sample set replaces replay's samples from our own test runs
+  (`fixtures/replay/`), on a budget merecdesperez44323-lab sets
+  ([D12](decisions.md#d12-2026-10-30--replays-samples-are-real-drama-cli-runs-in-git-lfs)).
+- The full CI and e2e come back on every pull request
+  ([D10](decisions.md#d10-2026-10-30--during-the-sprint-tsc-is-the-gate-and-ci-is-paused-on-redesignstudio)).
+- The gallery's screenshot baselines (`e2e/screenshots.spec.ts-snapshots/`) are made again on
+  GitHub's runners: they were made on the pine-dev box, and GitHub's ubuntu-latest renders about 1%
+  of their pixels differently, over the spec's 0.2%.
+- The third-party screenshots in `docs/references/` are removed before the repository is public.
+
 ## References
 
 <a id="ref-1"></a>[1] G. Starke, P. Hruschka. *arc42*, the template for architecture
