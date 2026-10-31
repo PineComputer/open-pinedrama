@@ -1,13 +1,15 @@
 // The drama's Assets (docs/architecture.md, section 8.5; design/screens.js, Bible and Assets): its cast as cards (the
 // newest sheet, where it stands, its other names, the episodes it is in) and its world (places and key props). Every
-// name is the bible's. Decisions are made in the review room: a card waiting for one links there.
+// name is the bible's. Where each stands is drama-cli's status (D64); the maker's decisions are made in the review room,
+// and a version's decision shows beside it as the maker's, with the way back to that review.
 import Lightbox from "yet-another-react-lightbox";
 import { type Photo, RowsPhotoAlbum } from "react-photo-album";
 import "react-photo-album/rows.css";
 import { useEffect, useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import type { Names } from "../../shared/names.ts";
-import type { CastCard, FileItem, Receipt } from "../../shared/types.ts";
+import type { ProjectView, StageStatus } from "../../shared/project.ts";
+import type { CastCard, FileItem } from "../../shared/types.ts";
 import { useResource } from "../api.ts";
 import { type Status, StatusChip } from "../components/StatusChip.tsx";
 import { Icon } from "../icons.tsx";
@@ -15,6 +17,8 @@ import { useT } from "../i18n.ts";
 import { errorText, subjectLabel, useNames } from "../labels.ts";
 import { Link, linkOptions, useNavigate } from "@tanstack/react-router";
 import { homeLink, type Page, useRoute } from "../place.ts";
+import { standing } from "./Canvas.tsx";
+import { JudgedLine } from "./NodePanel.tsx";
 
 type Shelf = "cast" | "scenes" | "props";
 
@@ -47,21 +51,32 @@ function useOpen(card: CastCard, dramaId: string) {
   return { to, onClick };
 }
 
-/** Where a version stands, by what the maker decided on the review that showed it. */
-function standing(receipt: Receipt | undefined): Status | undefined {
-  const review = receipt?.review;
-  if (!review) return undefined;
-  if (review.state === "open" || review.state === "saving") return "you";
-  if (review.verdict === "approve") return "accepted";
-  return review.verdict === "revise" ? "back" : undefined;
+type State = ProjectView["state"];
+
+/**
+ * An entry's stage in drama-cli's status (shared/project.ts): a character's base look or one of its further looks
+ * (states/), a place's plate or one of its times of day (times/), a prop. What it says is where the entry stands, never
+ * the studio's review verdicts (D64, amended for Codex rc5 C17: a face accepted by drama-cli read "none accepted").
+ */
+function stageStatus(state: State, card: CastCard, entry: CastCard["looks"][number] | undefined): StageStatus | undefined {
+  if (!state || !entry) return undefined;
+  const inner = entry.look && entry.look !== "base" ? entry.look : undefined;
+  if (card.kind === "look") return inner ? state.characters[card.subject]?.looks[inner] : state.characters[card.subject];
+  if (card.kind === "location") return inner ? state.locations[card.subject]?.times[inner] : state.locations[card.subject];
+  return state.props[card.subject];
 }
 
-/** The newest version of an entry, the one accepted last, and the picture each shows: the plate's sheet, not one of its views. */
+/** Where one version stands by that status: the working one as the stage stands, the accepted one accepted, any other none. */
+function versionStanding(stage: StageStatus | undefined, version: string | undefined): Status | undefined {
+  if (!stage || !version) return undefined;
+  if (version === stage.current) return standing(stage);
+  return version === stage.accepted ? "accepted" : undefined;
+}
+
+/** The newest version of an entry and the picture it shows: the plate's sheet, not one of its views. */
 function versionsOf(entry: CastCard["looks"][number] | undefined) {
-  const sheet = (receipt: Receipt | undefined) => receipt?.files.find((file) => !file.style) ?? receipt?.files[0];
   const newest = entry?.versions[0];
-  const accepted = entry?.versions.find((version) => standing(version) === "accepted");
-  return { newest, file: sheet(newest), accepted: sheet(accepted)?.version };
+  return { newest, file: newest?.files.find((file) => !file.style) ?? newest?.files[0] };
 }
 
 /** The entry a card and the detail open on: a character's base look, a place's plate, a prop's picture. */
@@ -71,11 +86,12 @@ const mainOf = (card: CastCard) => card.looks.find((entry) => !entry.look || ent
  * D56's grid card (design/screens.js, Assets; Apple Photos and Finder's picture grid, liblib's 资产 library): the picture
  * at its own ratio, the name, the version and where it stands. Everything else is the detail's (progressive disclosure).
  */
-function AssetCard({ card, names, dramaId, picked, width, height }: { card: CastCard; names: Names | null; dramaId: string; picked: boolean; width: number; height: number }) {
+function AssetCard({ card, state, names, dramaId, picked, width, height }: { card: CastCard; state: State; names: Names | null; dramaId: string; picked: boolean; width: number; height: number }) {
   const open = useOpen(card, dramaId);
-  const { newest, file } = versionsOf(mainOf(card));
+  const main = mainOf(card);
+  const { file } = versionsOf(main);
   if (!file) return null;
-  const status = standing(newest);
+  const status = versionStanding(stageStatus(state, card, main), file.version);
   const name = subjectLabel(names, card.subject, card.kind);
   return (
     <article className={`assetcard${picked ? " sel" : ""}`} aria-label={name} aria-current={picked || undefined} onClick={open.onClick} style={{ width }}>
@@ -114,7 +130,7 @@ type AssetPhoto = Photo & { card: CastCard };
  * D56's grid as justified rows (Google Photos, Flickr; react-photo-album's rows layout): each row one height, each card
  * as wide as its picture's own ratio, so nothing is letterboxed or cropped; the caption sits under the picture.
  */
-function AssetGrid({ cards, sizedBy = cards, names, dramaId, picked }: { cards: CastCard[]; sizedBy?: CastCard[]; names: Names | null; dramaId: string; picked?: string }) {
+function AssetGrid({ cards, sizedBy = cards, state, names, dramaId, picked }: { cards: CastCard[]; sizedBy?: CastCard[]; state: State; names: Names | null; dramaId: string; picked?: string }) {
   const pictured = (shelf: CastCard[]) =>
     shelf.flatMap((card) => {
       const file = versionsOf(mainOf(card)).file;
@@ -146,7 +162,7 @@ function AssetGrid({ cards, sizedBy = cards, names, dramaId, picked }: { cards: 
         defaultContainerWidth={960}
         render={{
           photo: (_, { photo, width, height }) => (
-            <AssetCard key={photo.key} card={photo.card} names={names} dramaId={dramaId} picked={photo.card.subject === picked} width={width} height={height} />
+            <AssetCard key={photo.key} card={photo.card} state={state} names={names} dramaId={dramaId} picked={photo.card.subject === picked} width={width} height={height} />
           ),
         }}
       />
@@ -159,7 +175,7 @@ function AssetGrid({ cards, sizedBy = cards, names, dramaId, picked }: { cards: 
  * the name, kind and version with where it stands, Review and Lineage, the bible's description clamped to three lines,
  * the episodes it is in, and its versions. Decisions are made in the review room, as everywhere.
  */
-function AssetPanel({ card, names, dramaId, onShow }: { card: CastCard; names: Names | null; dramaId: string; onShow: (file: FileItem | undefined, move?: Move) => void }) {
+function AssetPanel({ card, state, names, dramaId, onShow }: { card: CastCard; state: State; names: Names | null; dramaId: string; onShow: (file: FileItem | undefined, move?: Move) => void }) {
   const { t } = useT();
   const navigate = useNavigate();
   const { search } = useRoute();
@@ -173,13 +189,13 @@ function AssetPanel({ card, names, dramaId, onShow }: { card: CastCard; names: N
   const versions = look?.versions ?? [];
   // The version in view is the URL's (?item=<this look's stage>&version=vN, D48), so the crumbs, a link and Back agree
   // on it; picking one writes it there. Without one, the newest.
-  const stage = look && stageOfEntry(card, look);
-  const named = search.item === stage && search.version ? versions.findIndex((version) => version.files[0]?.version === search.version) : -1;
+  const item = look && stageOfEntry(card, look);
+  const named = search.item === item && search.version ? versions.findIndex((version) => version.files[0]?.version === search.version) : -1;
   const index = Math.max(0, named);
   const pick = (i: number) => {
     move.current = i > index ? "asset-forward" : "asset-backward";
     const version = versions[i]?.files[0]?.version;
-    if (stage && version) void navigate({ ...homeLink(dramaId, stage, "canvas", version), replace: true });
+    if (item && version) void navigate({ ...homeLink(dramaId, item, "canvas", version), replace: true });
   };
   const shown = versions[Math.min(index, versions.length - 1)];
   const sheet = shown?.files.find((file) => !file.style) ?? shown?.files[0];
@@ -190,9 +206,11 @@ function AssetPanel({ card, names, dramaId, onShow }: { card: CastCard; names: N
     move.current = undefined;
   }, [big?.url]);
   const name = subjectLabel(names, card.subject, card.kind);
-  const current = versions[0]?.files[0]?.version;
-  const accepted = versions.find((version) => standing(version) === "accepted")?.files[0]?.version;
-  const status = standing(shown);
+  const stage = stageStatus(state, card, look);
+  const status = versionStanding(stage, sheet?.version);
+  // The maker's decision on the version shown, kept apart from where it stands: the review is waiting, or decided.
+  const review = shown?.review;
+  const waiting = review?.state === "open" || review?.state === "saving";
   const lookName = (entry: CastCard["looks"][number]) =>
     entry.look && entry.look !== "base" ? entry.look : card.kind === "look" ? t("cast.base") : card.kind === "location" ? t("cast.plate") : t("cast.keyProp");
   const description = card.kind === "location" ? names?.descriptions.locations[card.subject] : card.kind === "prop" ? names?.descriptions.props[card.subject] : undefined;
@@ -241,9 +259,9 @@ function AssetPanel({ card, names, dramaId, onShow }: { card: CastCard; names: N
           <div style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
             {status && <StatusChip status={status} />}
             <span className="fill" />
-            {shown?.review && (
-              <Link to="/r/$reviewId" params={{ reviewId: shown.review.reviewId }} className={`btn sm ${status === "you" ? "primary" : "ghost"}`}>
-                {status === "you" ? t("cast.review") : t("judged.open")}
+            {waiting && (
+              <Link to="/r/$reviewId" params={{ reviewId: review.reviewId }} className="btn sm primary">
+                {t("cast.review")}
               </Link>
             )}
             <Link {...homeLink(dramaId, `${STAGE[card.kind]}/${card.subject}`, "lineage")} className="btn sm">
@@ -265,6 +283,12 @@ function AssetPanel({ card, names, dramaId, onShow }: { card: CastCard; names: N
             </>
           )}
         </div>
+        {review && !waiting && (
+          <div className="isec">
+            <h4>{t("asset.yourDecision", { v: sheet?.version ?? "" })}</h4>
+            <JudgedLine review={review} />
+          </div>
+        )}
         {card.episodes.length > 0 && (
           <div className="isec">
             <h4>{t("cast.in")}</h4>
@@ -288,9 +312,17 @@ function AssetPanel({ card, names, dramaId, onShow }: { card: CastCard; names: N
               </button>
             ))}
           </div>
-          <p className="mono subtle" style={{ fontSize: 11.5, margin: "8px 0 0" }}>
-            {[current && t("asset.current", { v: current }), accepted ? t("asset.accepted", { v: accepted }) : t("asset.noneAccepted")].filter(Boolean).join(" · ")}
-          </p>
+          {stage && (
+            <p className="mono subtle" style={{ fontSize: 11.5, margin: "8px 0 0" }}>
+              {[
+                stage.current && t("asset.current", { v: stage.current }),
+                stage.accepted ? t("asset.accepted", { v: stage.accepted }) : t("asset.noneAccepted"),
+                stage.accepted && stage.accepted === stage.current && !stage.usable && t("cast.notUsable", { why: stage.why ?? "" }),
+              ]
+                .filter(Boolean)
+                .join(" · ")}
+            </p>
+          )}
         </div>
       </div>
     </aside>
@@ -306,7 +338,7 @@ type Move = "asset-forward" | "asset-backward" | undefined;
  * (WAI-ARIA APG modal dialog), and its details in a panel beside it (LibTV's asset viewer; Google Photos, Lightroom).
  * The route names the asset, so a link opens it and the arrows move it.
  */
-function AssetViewer({ cards, picked, shelf, names, dramaId }: { cards: CastCard[]; picked: string; shelf: Shelf; names: Names | null; dramaId: string }) {
+function AssetViewer({ cards, picked, shelf, state, names, dramaId }: { cards: CastCard[]; picked: string; shelf: Shelf; state: State; names: Names | null; dramaId: string }) {
   const { t } = useT();
   const navigate = useNavigate();
   const [shown, setShown] = useState<FileItem>();
@@ -328,7 +360,7 @@ function AssetViewer({ cards, picked, shelf, names, dramaId }: { cards: CastCard
       on={{ view: ({ index: next }) => next !== index && void navigate({ ...shelfLink(shelf, dramaId, cards[next].subject), replace: true }) }}
       labels={{ Previous: t("asset.previous"), Next: t("asset.next"), Close: t("asset.close"), Lightbox: t("asset.viewer") }}
       className="assetviewer"
-      render={{ controls: () => <AssetPanel key={picked} card={cards[index]} names={names} dramaId={dramaId} onShow={show} /> }}
+      render={{ controls: () => <AssetPanel key={picked} card={cards[index]} state={state} names={names} dramaId={dramaId} onShow={show} /> }}
     />
   );
 }
@@ -344,12 +376,13 @@ export function Cast({ dramaId, compact = false }: { dramaId: string; compact?: 
   const { t } = useT();
   const { data, error } = useResource<CastCard[]>(`/api/dramas/${dramaId}/cast`, [`drama:${dramaId}`]);
   const names = useNames(dramaId);
+  const state = useResource<ProjectView>(`/api/dramas/${dramaId}/project`, [`project:${dramaId}`]).data?.state ?? null;
   const characters = (data ?? []).filter((card) => card.kind === "look");
   const places = (data ?? []).filter((card) => card.kind === "location");
   const props = (data ?? []).filter((card) => card.kind === "prop");
   const pickedCard = (data ?? []).find((card) => SHELF_BY_KIND[card.kind] === shelf && card.subject === picked);
 
-  const castGrid = <AssetGrid cards={characters} names={names} dramaId={dramaId} picked={picked} />;
+  const castGrid = <AssetGrid cards={characters} state={state} names={names} dramaId={dramaId} picked={picked} />;
   if (!data) return <p className={error === undefined ? "quiet" : "error"}>{error === undefined ? t("loading") : errorText(error, t)}</p>;
   // Y8: an asset shelf says when it is empty.
   const none = <p className="empty-note" style={{ padding: "0 16px" }}>{t("cast.empty")}</p>;
@@ -373,8 +406,8 @@ export function Cast({ dramaId, compact = false }: { dramaId: string; compact?: 
       </div>
       {/* Locations' cards are as big as Props' (merecdesperez44323-lab: "location和props一样大就好了"): their rows take the
           height Props' pictures give theirs, so near-square plates aren't kept small by their own ratio. */}
-      {cards.length ? <AssetGrid cards={cards} sizedBy={shelf === "scenes" && props.length ? props : cards} names={names} dramaId={dramaId} picked={picked} /> : none}
-      {pickedCard && <AssetViewer cards={cards} picked={pickedCard.subject} shelf={shelf} names={names} dramaId={dramaId} />}
+      {cards.length ? <AssetGrid cards={cards} sizedBy={shelf === "scenes" && props.length ? props : cards} state={state} names={names} dramaId={dramaId} picked={picked} /> : none}
+      {pickedCard && <AssetViewer cards={cards} picked={pickedCard.subject} shelf={shelf} state={state} names={names} dramaId={dramaId} />}
     </>
   );
 }

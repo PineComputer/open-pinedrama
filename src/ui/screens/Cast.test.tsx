@@ -1,9 +1,10 @@
 // Assets: the cast as cards named as the bible names them with their other names and where each stands,
 // the world as places and props; a card opens its asset's detail, which links to its review, as decisions are
-// made there. The bible's own page is Bible.test.tsx's.
+// made there. Where each stands is drama-cli's status (D64). The bible's own page is Bible.test.tsx's.
 import { screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import type { ProjectView, StageStatus } from "../../shared/project.ts";
 import type { CastCard } from "../../shared/types.ts";
 import { answer } from "../test/server.ts";
 import { Cast } from "./Cast.tsx";
@@ -43,9 +44,20 @@ const cast: CastCard[] = [
 ];
 const names = { title: "T", characters: { lin: { name: "Lin Xiaoyu", aliases: ["Xiaoyu"] } }, locations: { office: "Factory office" }, props: { letter: "The letter" }, episodes: { EP001: "The stepmother arrives" }, logline: "A stepmother wins the house.", beats: [], summaries: { EP001: "She meets the family." }, endHooks: {}, seconds: {}, lines: {}, descriptions: { locations: { office: "Desks under strip lights." }, props: { letter: "A folded letter." } } };
 
-function engine() {
-  answer("/api/dramas/d1/cast", cast);
-  answer("/api/dramas/d1/project", { state: null, sessions: [], problems: [], names });
+// drama-cli's status for these (shared/project.ts): Lin's v2 made and not accepted, the office's plate and the letter accepted.
+const stage = (current: string, accepted: string | null): StageStatus => ({ current, candidate: accepted === current ? null : current, accepted, usable: accepted === current, run: [], errors: [] });
+const state: NonNullable<ProjectView["state"]> = {
+  preset: "en-us-live-sfw",
+  bible: stage("v1", "v1"),
+  characters: { lin: { ...stage("v2", null), looks: {} } },
+  locations: { office: { ...stage("v1", "v1"), times: { Night: stage("v2", "v2") } } },
+  props: { letter: stage("v1", "v1") },
+  episodes: {},
+};
+
+function engine(cards = cast, status = state) {
+  answer("/api/dramas/d1/cast", cards);
+  answer("/api/dramas/d1/project", { state: status, sessions: [], problems: [], names } satisfies ProjectView);
 }
 
 describe("Assets", () => {
@@ -80,7 +92,7 @@ describe("Assets", () => {
     expect(within(detail).getByRole("link", { name: "Review" })).toHaveAttribute("href", "/r/r2");
     expect(within(detail).getByRole("link", { name: "Lineage" })).toHaveAttribute("href", "/d/d1/assets/characters/lin?view=lineage");
     await user.click(within(detail).getByRole("button", { name: "v1" }));
-    expect(await within(detail).findByText("Sent back")).toBeInTheDocument();
+    expect((await within(detail).findByRole("heading", { name: "Your decision on v1" })).parentElement).toHaveTextContent("Sent back · Review");
     // The version picked is the URL's, so the crumbs and Back agree on it (D48).
     expect(href(router)).toBe("/d/d1/assets/characters/lin?item=assets%2Fcharacters%2Flin&version=v1");
     expect(within(detail).getByRole("button", { name: "v1" })).toHaveAttribute("aria-pressed", "true");
@@ -170,6 +182,34 @@ describe("Assets", () => {
     } finally {
       window.Image = Real;
     }
+  });
+
+  it("shows where each look stands by drama-cli's status, and the maker's decision apart from it (D64; Codex rc5 C17)", async () => {
+    const user = userEvent.setup();
+    // Her face was accepted in drama-cli with no verdict of the maker's; her base sheet the maker approved in a review
+    // drama-cli hasn't accepted. Status says which stands where; the review is the maker's history, shown as theirs.
+    const cai: CastCard = {
+      kind: "look",
+      subject: "cai_xiaoyan",
+      episodes: [],
+      looks: [
+        { look: "base", versions: [{ turnId: "t7", files: [file(7, "v1")] as never, review: { reviewId: "r7", kind: "looks", state: "answered", verdict: "approve", notes: [] } }] },
+        { look: "face", versions: [{ turnId: "t8", files: [file(8, "v1")] as never }] },
+      ],
+    };
+    engine([cai], { ...state, characters: { cai_xiaoyan: { ...stage("v1", null), looks: { face: stage("v1", "v1") } } } });
+    await renderAt(<Cast dramaId="d1" />, "/d/d1/assets/characters");
+    const card = await screen.findByRole("article", { name: "cai_xiaoyan" });
+    expect(within(card).getByText("Waiting for you")).toBeInTheDocument();
+    await user.click(within(card).getByRole("link", { name: "cai_xiaoyan" }));
+    const detail = await screen.findByRole("complementary", { name: "cai_xiaoyan: versions, state and review" });
+    expect(within(detail).getByText("current v1 · none accepted")).toBeInTheDocument();
+    expect(within(detail).getByText("Waiting for you")).toBeInTheDocument();
+    expect(within(detail).getByRole("heading", { name: "Your decision on v1" }).parentElement).toHaveTextContent("Approved · Review");
+    await user.click(within(within(detail).getByRole("group", { name: "Looks" })).getByRole("button", { name: "face" }));
+    expect(await within(detail).findByText("current v1 · accepted v1")).toBeInTheDocument();
+    expect(within(detail).getByText("Accepted")).toBeInTheDocument();
+    expect(within(detail).queryByRole("heading", { name: /Your decision/ })).not.toBeInTheDocument();
   });
 
   it("keeps props on their own shelf", async () => {
