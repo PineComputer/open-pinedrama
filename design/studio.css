@@ -392,6 +392,12 @@ input.search:focus { border-color: var(--text-primary); }
 .sendbar .pips { display: flex; gap: 4px; }
 .sendbar .pips i { width: 22px; height: 4px; border-radius: 2px; background: var(--surface-container-high); }
 .sendbar .pips i.a { background: var(--success); } .sendbar .pips i.b { background: var(--error); } .sendbar .pips i.n { background: var(--text-primary); }
+/* A sent review: the bar says where it went and stays read only (IA draft B2); a failed send keeps the draft, with its line. */
+.sendbar { flex-wrap: wrap; }
+.sendbar.sent { gap: 10px; }
+.sendbar.sent .ic { width: 16px; height: 16px; color: var(--text-secondary); }
+.error-line { flex-basis: 100%; display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--error); }
+.error-line .ic { width: 14px; height: 14px; }
 
 /* ── dialog, toast, banner ── */
 .scrim { position: fixed; inset: 0; background: var(--scrim); display: grid; place-items: center; z-index: 100; padding: 16px; }

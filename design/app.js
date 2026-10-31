@@ -11,7 +11,7 @@
     screen: SCREENS.includes(hash) ? hash : "home", theme: "dark", side: true, tab: "all", filter: "all", waitFor: null, pin: null,
     dialog: null, toasts: [], dramaStop: null, draft: "", chat: [],
     cam: { x: 40, y: 96, k: 0.62 }, tool: "move", toolOpen: false, zoomOpen: false, keysOpen: false, sel: null, dock: (() => { try { return localStorage.getItem("studio.canvas.dock") || "under"; } catch (e) { return "under"; } })(), follow: true, agentOpen: false, panning: null, minimap: true,
-    ti: 0, playing: false, t: 0, watched: {}, maxT: {}, verdict: {}, reason: {}, showPrev: false, sent: false, over: false,
+    ti: 0, playing: false, t: 0, watched: {}, maxT: {}, verdict: {}, reason: {}, showPrev: false, rsend: null, outcome: "ok", over: false,
     state: "normal", file: null, preset: null, len: "90", budget: "1000", ana: 0, tod: null, words: "", stab: "bible", cards: {}, cardWhy: {}, gsel: "ep6seg03", cutT: 0, cutPlaying: false, cutNotes: null, noteDraft: "", cutV: null, cutWhy: "",
   };
   let drawing = false;
@@ -457,10 +457,21 @@
     const onTime = (e) => { const t = e.target.currentTime; const m = Math.max(S.maxT[tk.id] || 0, prev ? 0 : t);
       set({ t, maxT: { ...S.maxT, [tk.id]: m }, watched: !prev && t >= dur - 0.25 ? { ...S.watched, [tk.id]: true } : S.watched }); };
     const seek = (e) => { const r = e.currentTarget.getBoundingClientRect(); const t = Math.max(0, Math.min(dur, ((e.clientX - r.left) / r.width) * dur)); if (vref.current) vref.current.currentTime = t; set({ t }); };
-    // IA draft: each verdict change is one step of the draft, so Undo reverts one and Reset discards them all.
-    const setV = (val) => set({ vhist: [...(S.vhist || []), S.verdict], verdict: { ...S.verdict, [tk.id]: S.verdict[tk.id] === val ? undefined : val } });
+    // IA draft (Codex's re-review D2): every change to the draft is a step: a verdict, a reason, the words. Typing on in
+    // the same field is one step. Undo puts the draft back as it was before the last step; Reset back to nothing.
+    const snap = () => ({ verdict: S.verdict, reason: S.reason, words: S.words || "" });
+    const step = (field, change) => set({ ...change, rhist: S.rfield === field && field !== "verdict" ? S.rhist || [] : [...(S.rhist || []), snap()], rfield: field });
+    const setV = (val) => step("verdict", { verdict: { ...S.verdict, [tk.id]: S.verdict[tk.id] === val ? undefined : val } });
+    // What the draft changes, counted by item (a take with a verdict or a reason) and the words, not by clicks.
+    const changed = P.takes.filter((t) => S.verdict[t.id] || (S.reason[t.id] || "").trim()).length + ((S.words || "").trim() ? 1 : 0);
+    // B2: a review goes draft → sending → sent (the agent is on it, read only), or failed (the draft kept, to send
+    // again under the same submission) or unknown (being checked; it is never sent twice). Nothing sent stays a draft.
+    const sendState = S.rsend;
+    const locked = sendState === "sending" || sendState === "sent" || sendState === "unknown";
+    const outcome = (then) => setTimeout(() => set({ rsend: then === "failed" ? "failed" : then === "unknown" ? "unknown" : "sent" }), 1200);
+    const sendIt = () => { set({ rsend: "sending", rfield: null }); outcome(S.outcome); };
     useEffect(() => {
-      const kd = (e) => { if (/textarea|input/i.test(e.target.tagName) || S.screen !== "review") return;
+      const kd = (e) => { if (/textarea|input/i.test(e.target.tagName) || S.screen !== "review" || ["sending", "sent", "unknown"].includes(S.rsend)) return;
         if (e.key === " ") { e.preventDefault(); set({ playing: !S.playing }); }
         else if (e.key === "a" && S.watched[P.takes[S.ti].id]) setV("accept");
         else if (e.key === "b") setV("back"); else if (e.key === "n") setV("note");
@@ -479,7 +490,7 @@
           <h3>EP006 · waiting for you</h3>
           ${P.takes.map((t, i) => html`<button class="ritem" aria-current=${String(i === S.ti)} onClick=${() => set({ ti: i, showPrev: false })}>
             <img src=${t.poster} alt=""/><span><b>${t.seg} · ${t.take}</b><small>${t.scene.split(" · ").slice(0, 1)} · ${t.dur} s</small>
-            ${S.verdict[t.id] ? Status(S.verdict[t.id] === "accept" ? "accepted" : S.verdict[t.id] === "back" ? "back" : "accepted", S.verdict[t.id] === "accept" ? "Accept" : S.verdict[t.id] === "back" ? "Send back" : "Note") : S.watched[t.id] ? Status("you", "Watched") : Status("you", "Not watched")}</span></button>`)}
+            ${S.verdict[t.id] ? Status(S.verdict[t.id] === "accept" ? "accepted" : S.verdict[t.id] === "back" ? "back" : "accepted", S.verdict[t.id] === "accept" ? "Accept" : S.verdict[t.id] === "back" ? "Send back" : "Accept with note") : S.watched[t.id] ? Status("you", "Watched") : Status("you", "Not watched")}</span></button>`)}
           <h3 style="margin-top:14px">Accepted in EP006</h3>
           <button class="ritem" onClick=${() => toast("seg02 t01 was accepted earlier. Accepted takes open read-only.")}><img src=${"img/cover-ep6.jpg"} alt=""/><span><b>seg02 · t01</b><small>Scene 1 · 15 s</small>${Status("accepted")}</span></button>
         </nav>
@@ -511,19 +522,25 @@
           </div>
           <div class="verdict">
             <div class="vrow">
-              <button class="vbtn acc" aria-pressed=${String(v === "accept")} disabled=${!watched} title=${watched ? "Accept (A)" : "Watch the take to the end first"} onClick=${() => setV("accept")}>${I("check")}Accept</button>
-              <button class="vbtn back" aria-pressed=${String(v === "back")} onClick=${() => setV("back")}>${I("arrow-counter-clockwise")}Send back</button>
-              <button class="vbtn note" aria-pressed=${String(v === "note")} disabled=${!watched} onClick=${() => setV("note")}>${I("note-pencil")}Note</button></div>
-            ${needsWords && html`<textarea placeholder=${v === "back" ? "Why it goes back (required). The agent shoots again with your words." : "Your note, kept with the accepted take."} value=${S.reason[tk.id] || ""} onInput=${(e) => set({ reason: { ...S.reason, [tk.id]: e.target.value } })}></textarea>`}
+              <button class="vbtn acc" aria-pressed=${String(v === "accept")} disabled=${!watched || locked} title=${watched ? "Accept (A)" : "Watch the take to the end first"} onClick=${() => setV("accept")}>${I("check")}Accept</button>
+              <button class="vbtn back" aria-pressed=${String(v === "back")} disabled=${locked} onClick=${() => setV("back")}>${I("arrow-counter-clockwise")}Send back</button>
+              <button class="vbtn note" aria-pressed=${String(v === "note")} disabled=${!watched || locked} title="Accept, with a remark kept with the accepted take (N)" onClick=${() => setV("note")}>${I("note-pencil")}Accept with note</button></div>
+            ${needsWords && html`<textarea readonly=${locked} placeholder=${v === "back" ? "Why it goes back (required). The agent shoots again with your words." : "Your remark, kept with the accepted take."} value=${S.reason[tk.id] || ""} onInput=${(e) => step("reason:" + tk.id, { reason: { ...S.reason, [tk.id]: e.target.value } })}></textarea>`}
             <span class="hint">${I(watched ? "check-circle" : "clock")}${watched ? "Watched to the end." : `Watched ${Math.round(seen)}% · Accept unlocks at the end.`}${v === "back" && " Sending back may shoot a new take."}</span>
-            <span class="hint subtle">Keys: Space play · A accept · B send back · N note · ↑↓ next take</span>
+            <span class="hint subtle">Keys: Space play · A accept · B send back · N accept with note · ↑↓ next take</span>
           </div>
-          <div style="padding:10px 16px 0;border-top:1px solid var(--border);background:var(--surface-dim)"><input class="search" style="width:100%;height:32px" placeholder="Your words for the record, e.g. Approved. seg03 opens on Luca." value=${S.words || ""} onInput=${(e) => set({ words: e.target.value })}/></div>
-          <div class="sendbar"><span class="pips">${P.takes.map((t) => html`<i class=${S.verdict[t.id] === "accept" ? "a" : S.verdict[t.id] === "back" ? "b" : S.verdict[t.id] === "note" ? "n" : ""}></i>`)}</span>
-            <span class="muted grow" style="font-size:12px">${done} of ${P.takes.length} decided${(S.vhist || []).length ? html` · <b style="color:var(--text-primary)">Draft: ${(S.vhist || []).length} changes</b>` : ""}</span>
-            <button class="btn sm ghost" title="Revert the last change" disabled=${!(S.vhist || []).length || S.sent} onClick=${() => { const h = [...S.vhist], last = h.pop(); set({ vhist: h, verdict: last }); }}>Undo</button>
-            <button class="btn sm ghost" title="Discard the draft" disabled=${!(S.vhist || []).length || S.sent} onClick=${() => { set({ verdict: {}, reason: {}, words: "", vhist: [] }); toast("Draft discarded. Nothing was sent."); }}>Reset</button>
-            <button class="btn primary sm" disabled=${done < P.takes.length || S.sent} onClick=${() => set({ dialog: { title: "Send your review?", body: P.takes.map((t) => `${t.seg} ${t.take}: ${S.verdict[t.id] === "accept" ? "Accept" : S.verdict[t.id] === "note" ? "Accept with a note" : "Send back — “" + (S.reason[t.id] || "").trim() + "”"}`).join("\n"), ok: "Send review", cancel: "Keep reviewing", run: () => { set({ sent: true }); toast("Review sent to EP006's agent."); } } })}>Send review</button></div>
+          <div style="padding:10px 16px 0;border-top:1px solid var(--border);background:var(--surface-dim)"><input class="search" style="width:100%;height:32px" readonly=${locked} placeholder="Your words for the record, e.g. Approved. seg03 opens on Luca." value=${S.words || ""} onInput=${(e) => step("words", { words: e.target.value })}/></div>
+          ${sendState === "sending" || sendState === "sent" || sendState === "unknown"
+            ? html`<div class="sendbar sent" role="status">${I(sendState === "sent" ? "check-circle" : "circle-notch")}
+                <span class="grow" style="font-size:12px">${sendState === "sending" ? html`<b>Sending to EP006's agent…</b>` : sendState === "sent" ? html`<b>Sent to EP006 · the agent is on it.</b> <span class="muted">Your decisions are kept as sent; to change one, tell the agent in the panel.</span>` : html`<b>Sent, no answer yet.</b> <span class="muted">Checking whether EP006's agent has it. It is never sent twice.</span>`}</span>
+                ${sendState === "unknown" && html`<button class="btn sm" onClick=${() => { set({ rsend: "sending" }); outcome("sent"); }}>Check again</button>`}</div>`
+            : html`<div class="sendbar">
+            ${sendState === "failed" && html`<span class="error-line" role="alert">${I("warning-circle")}Not sent: the connection dropped. Your draft is kept; send it again.</span>`}
+            <span class="pips">${P.takes.map((t) => html`<i class=${S.verdict[t.id] === "accept" ? "a" : S.verdict[t.id] === "back" ? "b" : S.verdict[t.id] === "note" ? "n" : ""}></i>`)}</span>
+            <span class="muted grow" style="font-size:12px">${done} of ${P.takes.length} decided${changed ? html` · <b style="color:var(--text-primary)">Draft: ${changed} ${changed === 1 ? "item" : "items"} changed</b>` : ""}</span>
+            <button class="btn sm ghost" title="Undo the last change" disabled=${!(S.rhist || []).length} onClick=${() => { const h = [...S.rhist], last = h.pop(); set({ rhist: h, rfield: null, ...last }); }}>Undo</button>
+            <button class="btn sm ghost" title="Discard the whole draft" disabled=${!changed} onClick=${() => { set({ verdict: {}, reason: {}, words: "", rhist: [], rfield: null }); toast("Draft discarded. Nothing was sent."); }}>Reset</button>
+            <button class="btn primary sm" disabled=${done < P.takes.length} onClick=${() => set({ dialog: { title: "Send your review?", body: P.takes.map((t) => `${t.seg} ${t.take}: ${S.verdict[t.id] === "accept" ? "Accept" : S.verdict[t.id] === "note" ? "Accept with note" : "Send back — “" + (S.reason[t.id] || "").trim() + "”"}`).join("\n") + (P.takes.some((t) => S.verdict[t.id] === "back") ? "\nSending back shoots new takes: that spends." : ""), ok: sendState === "failed" ? "Send again" : "Send review", cancel: "Keep reviewing", run: sendIt } })}>${sendState === "failed" ? "Send again" : "Send review"}</button></div>`}
         </aside>
       </div></div>`;
   }
@@ -546,6 +563,8 @@
       <span class="sep"></span>
       <label class="select" style="gap:8px">State<select aria-label="State" value=${S.state} onChange=${(e) => { const v = e.target.value; set({ state: v, dramaStop: v === "stopping" ? "stopping" : v === "stopped" ? "stopped" : null }); }}>
         ${[["normal", "Normal"], ["cutchanged", "Cut changed upstream"], ["nostop", "No stop yet"], ["stopping", "Stopping"], ["stopped", "Stopped"], ["redline", "Red line"], ["budget", "Refused (no code)"], ["cap", "Cap reached"], ["env", "Credentials refused"]].map(([k, l]) => html`<option value=${k}>${l}</option>`)}</select></label>
+      <label class="select" style="gap:8px" title="What happens when something is sent: a review, a Reconcile">Outcome<select aria-label="Outcome" value=${S.outcome} onChange=${(e) => set({ outcome: e.target.value })}>
+        ${[["ok", "Goes through"], ["failed", "Fails"], ["unknown", "Unknown"]].map(([k, l]) => html`<option value=${k}>${l}</option>`)}</select></label>
       <span class="sep"></span>
       <div class="seg" role="group" aria-label="Theme">${[["dark", "Dark", "moon-stars"], ["light", "Light", "sun-dim"]].map(([k, l, ic]) => html`<button aria-pressed=${String(S.theme === k)} onClick=${() => set({ theme: k })}>${I(ic)}${l}</button>`)}</div>
       <span class="sep"></span><span>Phase 1: steering, and editing the cut's spec · Canvas and Lineage read-only · sample project, our own test pictures</span>
