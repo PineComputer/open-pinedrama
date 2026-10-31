@@ -1273,7 +1273,9 @@ timeline
   Out of date's redo buttons ([D22](#d22-2026-10-30--out-of-date-is-redone-by-its-owners-session-one-row-or-the-whole-group),
   [D38](#d38-2026-10-30--redoing-a-shared-reference-takes-a-new-setup-session-after-release)) and the
   Canvas's steer bar and Note ([D8](#d8-2026-10-29--phase-1-steers)) leave the UI. The lanes remove
-  them in their own commits.
+  them in their own commits. On the cut, Accept is one sentence in the maker's own words, required and
+  sent as the decision's words, as drama-cli's `accept` records them; Send back keeps its required
+  reason; both decide on the exact cut version (d7b8509), as Script's do (D62).
 - **Words.** Master's proposal, which merecdesperez44323-lab pasted back and answered "ok.":
   "界面上只保留"对这一项做决定"：在确切的那一项上点"接受"或"退回"，写一句话。点完以后，这条决定也会出现在 agent 的对话里，你在聊天中能看到。" (*the UI keeps only "decide on this item": on the exact item, click Accept or Send back
   and write a sentence; the decision then also appears in the agent's conversation, in the chat*);
@@ -1283,7 +1285,8 @@ timeline
   the project, and "check" when an outcome is unknown, to avoid paying twice*). On the cut, asked
   "成片剪辑保留界面编辑，还是也改成聊天？" (*does the cut keep editing in the UI, or move to the chat too?*),
   merecdesperez44323-lab answered "界面编辑 + 聊天" (*editing in the UI, plus the chat*).
-- **Recorded in.** `short-drama-runs/qa/UI_ACTIONS_RULE.md`; master's note to the docs, 30 October 2026.
+- **Recorded in.** `short-drama-runs/qa/UI_ACTIONS_RULE.md`; master's note to the docs, 30 October 2026;
+  d7b8509 (the cut's Accept, work-07).
 
 ## References
 
