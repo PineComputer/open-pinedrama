@@ -6,7 +6,7 @@ import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import type { CastCard, DeliveryRow, DramaView, EpisodePage, FileItem, ReviewSummary, ReviewView, ScriptPage } from "../shared/types.ts";
+import type { CastCard, ChatView, DeliveryRow, DramaView, EpisodePage, FileItem, ReviewSummary, ReviewView, ScriptPage, SubmissionView } from "../shared/types.ts";
 
 const DATA = mkdtempSync(path.join(tmpdir(), "studio-flow-"));
 process.env.STUDIO_DATA_DIR = DATA;
@@ -573,38 +573,77 @@ describe("a drama in replay", () => {
     expect(projectView(id).names?.descriptions.props.file).toMatch(/manila folder/);
   }, 30_000);
 
-  it("takes a message to the setup's scope after the handover in a new setup session, once per submission, which closes when it hands back (D71)", async () => {
+  it("takes a message to a scope in its open session, or in a new one of that scope, once per submission, within the parallel limit (D71)", async () => {
     const { run, all, get } = await import("./db.ts");
+    const { startClock, stopClock } = await import("./scheduler.ts");
     run("update dramas set status = 'done'");
     fleet.stops = "ask";
     const form = new FormData();
-    for (const [key, value] of Object.entries({ title: "Setup message", language: "en", parallel: "1", perComputer: "1", length: "90", preset: "en-us-live-sfw", screenplayLanguage: "en", screenplay: "0" })) form.set(key, value);
+    for (const [key, value] of Object.entries({ title: "Messages", language: "en", parallel: "1", perComputer: "1", length: "90", preset: "en-us-live-sfw", screenplayLanguage: "en", screenplay: "0" })) form.set(key, value);
     form.append("files", new File(["EPISODE 1\nLin enters."], "screenplay.txt", { type: "text/plain" }));
     const { id } = await call<{ id: string }>("POST", "/api/dramas", form);
-    // While the setup runs, its own session takes messages: none is queued for another.
-    await expect(call("POST", `/api/dramas/${id}/setup-message`, { submissionId: "sub-setup-0", text: "Make the office brighter." })).rejects.toThrow(/setup is still running/);
+    const send = (scope: string, submissionId: string, text = "Make the office brighter.") => call<SubmissionView>("POST", `/api/dramas/${id}/messages`, { scope, submissionId, text });
+    const kept = (submissionId: string) => get<{ state: string }>("select state from scope_messages where id = ?", submissionId)?.state;
+    // The setup's session waits on the screenplay rewrite's verdict, which is given on Script, never in words.
+    const rewrite = await until("the screenplay rewrite", openReview(id, () => true));
+    const setupSession = get<{ session_id: string }>("select session_id from reviews where id = ?", rewrite.id)!.session_id;
+    expect(await call<ChatView>("GET", `/api/sessions/${setupSession}/chat`)).toMatchObject({ sends: "review", reviewId: rewrite.id, rewrite: expect.stringMatching(/^v\d+$/) });
+    await expect(send("setup", "sub-0")).rejects.toThrow(/Decide this in its review/);
+    expect(kept("sub-0")).toBeUndefined();
     await acceptRewrite(id);
+    // Its plain question takes a message as the answer, in the session that asked it.
     const question = await until("the setup question", openReview(id, (item) => item.kind === "question"));
-    await call("POST", `/api/reviews/${question.id}/decision`, { submissionId: crypto.randomUUID(), items: [], words: "He is 32." });
+    const asked = get<{ session_id: string }>("select session_id from reviews where id = ?", question.id)!.session_id;
+    expect(await send("setup", "sub-1", "He is 32.")).toMatchObject({ id: "sub-1", state: "sent", sessionId: asked });
+    expect(get<{ state: string }>("select state from reviews where id = ?", question.id)?.state).not.toBe("open");
     await approveAll((await until("the looks", openReview(id, (item) => item.kind === "looks"))).id);
     await approveAll((await until("the shared references", openReview(id, (item) => item.kind === "references"))).id);
-    await until("the handover", async () => (await call<DramaView>("GET", `/api/dramas/${id}`)).status === "production" || undefined);
-    const setups = () => all<{ id: string; state: string }>("select id, state from sessions where drama_id = ? and role = 'setup' order by created_at", id);
-    await until("the setup session closed", async () => setups().every((session) => session.state !== "open") || undefined);
-    // A message, sent twice under one submission id, is one: a new setup session takes it, with the maker's words as its goal.
-    const ask = { submissionId: "sub-setup-1", text: "Make the office brighter." };
-    expect(await call("POST", `/api/dramas/${id}/setup-message`, ask)).toMatchObject({ id: "sub-setup-1", state: "sent" });
-    expect(await call("POST", `/api/dramas/${id}/setup-message`, ask)).toMatchObject({ id: "sub-setup-1", state: "sent" });
-    expect(await call("GET", "/api/submissions/sub-setup-1")).toMatchObject({ id: "sub-setup-1", state: "sent" });
-    await until("the message done", async () => get<{ state: string }>("select state from setup_messages where id = 'sub-setup-1'")?.state === "done" || undefined);
-    await until("its session closed", async () => setups().every((session) => session.state !== "open") || undefined);
-    expect(setups()).toHaveLength(2);
-    const goal = get<{ goal: string }>("select r.goal from runs r join sessions s on s.id = r.session_id where s.id = ? and r.kind = 'message'", setups()[1].id)?.goal ?? "";
-    expect(goal).toContain("My message:\nMake the office brighter.");
-    // A message with no words is refused before anything is queued.
-    await expect(call("POST", `/api/dramas/${id}/setup-message`, { submissionId: "sub-setup-2", text: " " })).rejects.toThrow(/Write a message first/);
-    expect(get("select id from setup_messages where id = 'sub-setup-2'")).toBeUndefined();
-  }, 30_000);
+    const boards = await until("EP001 storyboards", openReview(id, (item) => item.episode === "EP001" && item.kind === "storyboards"));
+    const sessions = (role: string, episode?: string) =>
+      all<{ id: string; state: string }>(
+        "select s.id, s.state from sessions s left join episodes e on e.id = s.episode_id where s.drama_id = ? and s.role = ? and coalesce(e.number, 0) = ? order by s.created_at",
+        id,
+        role,
+        episode ? Number(episode.slice(2)) : 0,
+      );
+    await until("the setup session closed", async () => sessions("setup").every((session) => session.state !== "open") || undefined);
+    // EP001 at work fills the one place: the setup's scope has no session open and can't start one; EP002 hasn't started;
+    // EP001's session waits on its storyboards, decided in their review.
+    await expect(send("setup", "sub-2")).rejects.toThrow(/sessions are at work/);
+    await expect(send("EP002", "sub-3")).rejects.toThrow(/hasn't started/);
+    await expect(send("EP001", "sub-4")).rejects.toThrow(/Decide this in its review/);
+    await expect(send("EP009", "sub-5")).rejects.toThrow(/no EP009/);
+    await expect(send("setup", "sub-6", " ")).rejects.toThrow(/Write a message first/);
+    expect(["sub-2", "sub-3", "sub-4", "sub-5", "sub-6"].map(kept)).toEqual([undefined, undefined, undefined, undefined, undefined]);
+    // With a place free, a message to the setup's scope, sent twice under one id, is one new setup session's goal, which
+    // goes before the episodes waiting their turn, and closes when it hands the project back.
+    stopClock();
+    await call("PATCH", `/api/dramas/${id}`, { parallel: 2 });
+    expect(await send("setup", "sub-7")).toMatchObject({ id: "sub-7", state: "sent", sessionId: "" });
+    expect(await send("setup", "sub-7")).toMatchObject({ id: "sub-7", state: "sent" });
+    startClock(50);
+    await until("the setup message done", async () => kept("sub-7") === "done" || undefined);
+    expect(await call("GET", "/api/submissions/sub-7")).toMatchObject({ id: "sub-7", state: "sent", sessionId: sessions("setup")[1].id });
+    expect(sessions("setup").map((session) => session.state)).toEqual(["closed", "closed"]);
+    const goalOf = (sessionId: string) => get<{ goal: string }>("select goal from runs where session_id = ? and kind = 'message'", sessionId)?.goal ?? "";
+    expect(goalOf(sessions("setup")[1].id)).toContain("My message:\nMake the office brighter.");
+    // A message to an episode that is done opens one new session of that episode, on the project and its own folder as
+    // last packed, and closes it at its handback; the episode stays done.
+    for (const kind of ["storyboards", "takes", "cut"] as const) await approveAll((kind === "storyboards" ? boards : await until(`EP001 ${kind}`, openReview(id, (item) => item.episode === "EP001" && item.kind === kind))).id);
+    await until("EP001 done", async () => (await call<DramaView>("GET", `/api/dramas/${id}`)).episodeRows.find((row) => row.code === "EP001")?.state === "done" || undefined);
+    stopClock();
+    await call("PATCH", `/api/dramas/${id}`, { parallel: 3 });
+    expect(await send("EP001", "sub-8", "Trim the last shot.")).toMatchObject({ id: "sub-8", state: "sent", sessionId: "" });
+    startClock(50);
+    await until("the episode message done", async () => kept("sub-8") === "done" || undefined);
+    const ep001 = sessions("episode", "EP001");
+    expect(ep001.map((session) => session.state)).toEqual(["closed", "closed"]);
+    const goal = goalOf(ep001[1].id);
+    expect(goal).toContain("My message:\nTrim the last shot.");
+    expect(goal).toContain("attachments/project.tar.part-*");
+    expect(goal).toContain("cat attachments/EP001.tar.part-* | tar -xf - -C drama/episodes/EP001");
+    expect((await call<DramaView>("GET", `/api/dramas/${id}`)).episodeRows.find((row) => row.code === "EP001")?.state).toBe("done");
+  }, 60_000);
 
   it("refuses a sample drama it doesn't have", async () => {
     await expect(call("POST", "/api/dramas/sample", { language: "en", sample: "nope" })).rejects.toThrow(/sample-unknown|No sample drama/);

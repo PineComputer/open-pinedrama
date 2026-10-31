@@ -206,7 +206,7 @@ function handedOver(drama: DramaBrief, code: string, screenplay: string | undefi
 }
 
 /** At each stop, the episode's own folder is packed and returned, so another session can carry on from it. */
-function packEpisode(code: string): string {
+export function packEpisode(code: string): string {
   return `Each time you stop for me or finish, also pack drama/episodes/${code}, records included, into parts of at most 60 MB (\`mkdir -p handoff && tar -cf - -C drama/episodes/${code} . | split -b 60m - handoff/${code}.tar.part-\`) and return those parts too.`;
 }
 
@@ -256,6 +256,31 @@ export function setupMessageGoal(drama: DramaBrief, message: string, screenplay?
     "Do what it asks as the drama skill says, within the script, the bible and the shared looks, locations and key props; change nothing of an episode's own: no breakdown, blocking reference, first-frame reference, storyboard or take.",
     "If you make new versions, stop and ask me to review them, returning them with your question; after I approve, accept them.",
     "Before you finish, pack the whole drama/ folder, records included, into parts of at most 60 MB (`mkdir -p handoff && tar -cf - -C drama . | split -b 60m - handoff/project.tar.part-`), return the parts, and finish with your answer to my message.",
+    writeIn(drama),
+  ]
+    .filter(Boolean)
+    .join("\n");
+}
+
+/**
+ * A message to an episode whose session ended (D71), in a new session of that episode: restore the project handed over and
+ * the episode's own folder as its last session packed it, do what the maker's message asks within the episode, stop for
+ * the maker's review of anything new, as the episode's session did, then pack its folder back and finish.
+ */
+export function episodeMessageGoal(drama: DramaBrief, code: string, attachments: string[], message: string, screenplay?: string): string {
+  const ownFolder = attachments.some((name) => name.startsWith(`${code}.tar.part-`));
+  return [
+    `Use the ${DRAMA_SKILL} skill for episode ${code} of "${drama.title}" in this new session: its session ended, and I have a message about it.`,
+    brief(drama),
+    ...handedOver(drama, code, screenplay),
+    ownFolder
+      ? `The attached ${code}.tar.part-* files are ${code}'s folder as its last session packed it: restore them into drama/episodes/${code} (\`mkdir -p drama/episodes/${code} && cat attachments/${code}.tar.part-* | tar -xf - -C drama/episodes/${code}\`).`
+      : `Nothing of ${code}'s own folder was kept: start from its accepted breakdown.`,
+    `My message:\n${message}`,
+    `Do what it asks as the drama skill says, within ${code}.`,
+    "If you make new storyboards, takes or a cut, stop and ask me to review them as before, returning them with your question, and returning a cut (cut.mp4) with its cut.json.",
+    packEpisode(code),
+    "Finish with your answer to my message.",
     writeIn(drama),
   ]
     .filter(Boolean)

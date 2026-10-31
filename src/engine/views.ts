@@ -26,7 +26,7 @@ import { LENGTHS } from "./goals.ts";
 import { type FileRow, fileUrl, filesOfStop, toItem, versionNumber } from "./library.ts";
 import { type ComputerRow, type DramaRow, type EpisodeRow, type ReviewRow, type SessionRow, episodeCode, latestTurn, session as sessionRow } from "./records.ts";
 import { turnRefusals } from "./refusals.ts";
-import { itemLabel, itemsOf, pendingReview, rewriteOf } from "./reviews.ts";
+import { decidedInReview, itemLabel, itemsOf, pendingReview, rewriteOf } from "./reviews.ts";
 import { projectView } from "./status.ts";
 import { scaleOf } from "../shared/facts.ts";
 import { stopKind } from "../shared/refusal.ts";
@@ -423,7 +423,7 @@ export function chatView(session: SessionRow): ChatView {
     session.state !== "open"
       ? "none"
       : review
-        ? review.kind !== "question"
+        ? decidedInReview(review)
           ? "review"
           : "answer"
         : turn && !turn.ended_at && turn.state !== "answered"
@@ -460,6 +460,7 @@ export function chatView(session: SessionRow): ChatView {
     label: episode ? episodeCode(episode) : "",
     sends,
     reviewId: review && review.state !== "ended" ? review.id : undefined,
+    rewrite: review && review.kind === "question" ? rewriteOf(filesOfStop(review)) : undefined,
     messages,
   };
 }

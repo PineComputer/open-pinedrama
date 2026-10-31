@@ -235,7 +235,7 @@
   const inEpisode = () => ["canvas", "review", "cut"].includes(S.screen) || (S.screen === "graph" && window.EXTRA.lineageInEpisode());
   /* Codex round 4, F4: the script, the bible and the shared assets belong to the setup session (D5), so their pages follow
      it, never an episode's. It ended at the handover; a message starts a new setup session on the project (D38,
-     POST /api/dramas/:id/setup-message), sent once under one submission id. */
+     POST /api/dramas/:id/messages, scope setup; D71), sent once under one submission id. */
   // Every drama page has a scope: its episode, else the project's setup (Script, Bible, Assets, and the pages of no one
   // episode: master's decision). The line always names its target; the picker (Pin) changes it to any episode.
   const followed = () => (inEpisode() ? "EP006" : "Setup");

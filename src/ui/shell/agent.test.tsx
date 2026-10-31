@@ -109,14 +109,15 @@ describe("the agent panel", () => {
     engine();
     answer("/api/dramas/d1/sessions", [chat("s0", "", "none"), chat("s1", "EP001", "steer")]);
     answer("/api/sessions/s0/chat", chat("s0", "", "none"));
-    accept("/api/dramas/d1/setup-message", { id: "sub", sessionId: "", state: "sent" });
+    accept("/api/dramas/d1/messages", { id: "sub", sessionId: "", state: "sent" });
     await renderAt(<AgentPanel drama={drama} setup onCollapse={() => {}} />);
     expect(await screen.findByText(/^The setup session ended when it handed the project over/)).toBeInTheDocument();
     expect(screen.getByText("To a new setup session")).toBeInTheDocument();
     await user.type(screen.getByRole("textbox", { name: /message/i }), "Make Ethan older.");
     await user.click(screen.getByRole("button", { name: "Send" }));
-    await waitFor(() => expect(calls("POST", "/api/dramas/d1/setup-message")).toHaveLength(1));
-    const body = calls("POST", "/api/dramas/d1/setup-message")[0].body as { submissionId: string; text: string };
+    await waitFor(() => expect(calls("POST", "/api/dramas/d1/messages")).toHaveLength(1));
+    const body = calls("POST", "/api/dramas/d1/messages")[0].body as { scope: string; submissionId: string; text: string };
+    expect(body.scope).toBe("setup");
     expect(body.text).toBe("Make Ethan older.");
     expect(body.submissionId).toMatch(/\S/);
     expect(await screen.findByText(/Sent to a new setup session/)).toBeInTheDocument();
@@ -128,7 +129,7 @@ describe("the agent panel", () => {
     engine();
     answer("/api/dramas/d1/sessions", [chat("s0", "", "none")]);
     answer("/api/sessions/s0/chat", chat("s0", "", "none"));
-    server.use(http.post("/api/dramas/d1/setup-message", () => HttpResponse.json({ code: "drama-not-running", error: "The project is stopped: resume it to send a message." }, { status: 409 })));
+    server.use(http.post("/api/dramas/d1/messages", () => HttpResponse.json({ code: "drama-not-running", error: "The project is stopped: resume it to send a message." }, { status: 409 })));
     await renderAt(<AgentPanel drama={drama} setup onCollapse={() => {}} />);
     expect(await screen.findByText("To a new setup session")).toBeInTheDocument();
     await user.type(screen.getByRole("textbox", { name: /message/i }), "Make Ethan older.");
@@ -176,10 +177,13 @@ describe("the agent panel", () => {
     expect(within(process).queryAllByRole("listitem")).toHaveLength(0);
     await user.click(toggle);
     expect(screen.getByText("Shooting the first take now.")).toBeInTheDocument();
-    accept("/api/sessions/s1/chat");
+    accept("/api/dramas/d1/messages", { id: "sub", sessionId: "s1", state: "sent" });
     await user.type(screen.getByRole("textbox", { name: "Message the agent" }), "Keep the letter in her left hand.");
     await user.click(screen.getByRole("button", { name: "Send" }));
-    expect(calls("POST", "/api/sessions/s1/chat").map((call) => call.body)).toEqual([{ text: "Keep the letter in her left hand." }]);
+    // A message to the scope of the session in view, EP001's, under one submission id.
+    const [sent] = calls("POST", "/api/dramas/d1/messages").map((call) => call.body as { scope: string; submissionId: string; text: string });
+    expect(sent).toMatchObject({ scope: "EP001", text: "Keep the letter in her left hand." });
+    expect(sent.submissionId).toMatch(/\S/);
   });
 
   it("sends the maker to the review a session waits on rather than a line to it", async () => {

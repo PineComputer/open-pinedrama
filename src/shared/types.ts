@@ -32,6 +32,8 @@ export type ErrorCode =
   | "submission-missing"
   | "submission-elsewhere"
   | "setup-running"
+  | "episode-not-started"
+  | "limit-full"
   | "drama-not-running"
   | "review-decided"
   | "review-base-changed"
@@ -482,11 +484,14 @@ export interface ChatView {
   label: string;
   /**
    * What a message would do now: answer the waiting question, steer the running turn, or
-   * start a run. "review" when the agent waits on files the maker decides in their review.
+   * start a run. "review" when the agent waits on what the maker decides where it is, by a verdict: files in their review,
+   * or a screenplay rewrite on Script (D62).
    */
   sends: "answer" | "review" | "steer" | "run" | "none";
   /** The review the agent waits on, if any. */
   reviewId?: string;
+  /** The screenplay version the waiting question is about, when it is a rewrite (ReviewView.rewrite). */
+  rewrite?: string;
   messages: ChatMessage[];
 }
 

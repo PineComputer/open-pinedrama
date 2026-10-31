@@ -120,6 +120,14 @@ export function rewriteOf(files: FileRow[]): string | undefined {
   return files.map((file) => classify(file.rel_path)).find((hints) => hints.kind === "screenplay-version")?.version;
 }
 
+/**
+ * Whether a waiting review is decided only where its item is, by a verdict: one with files to look at, or a question on a
+ * screenplay rewrite (D62); the chat answers only a plain question.
+ */
+export function decidedInReview(review: ReviewRow): boolean {
+  return review.kind !== "question" || rewriteOf(filesOfStop(review)) !== undefined;
+}
+
 function subject(review: ReviewRow): string {
   const code = review.episode_id ? episodeCode(episodeRow(review.episode_id)!) : "";
   switch (review.kind) {

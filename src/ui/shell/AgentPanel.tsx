@@ -307,7 +307,7 @@ export function AgentPanel({ drama, episode, setup = false, onCollapse }: { dram
           </section>
         )}
       </div>
-      {setupEnded ? <NewSetupLine dramaId={id} onSent={sessions.reload} /> : <Composer chat={inView && chat.data} chosen={picked?.label ?? episode} onSent={chat.reload} />}
+      {setupEnded ? <NewSetupLine dramaId={id} onSent={sessions.reload} /> : <Composer dramaId={id} chat={inView && chat.data} chosen={picked?.label ?? episode} onSent={chat.reload} />}
     </aside>
   );
 }
@@ -336,7 +336,7 @@ function Decided({ decision, episode }: { decision: DecisionRecord; episode: str
 
 /**
  * The line to a new setup session, once the setup's own has ended at the handover (D38): a message starts one on this
- * project (POST /api/dramas/:id/setup-message), sent once per draft under one submission id with the shared Submission
+ * project (POST /api/dramas/:id/messages, scope setup; D71), sent once per draft under one submission id with the shared Submission
  * states, the engine's refusal in its words. The new session then shows in the sessions, and its conversation with it.
  */
 function NewSetupLine({ dramaId, onSent }: { dramaId: string; onSent: () => void }) {
@@ -344,7 +344,7 @@ function NewSetupLine({ dramaId, onSent }: { dramaId: string; onSent: () => void
   const [text, setText] = useState("");
   const submission = useRef(crypto.randomUUID());
   const { sending, send, check } = useSubmission({
-    submit: () => api(`/api/dramas/${dramaId}/setup-message`, { method: "POST", json: { submissionId: submission.current, text } }),
+    submit: () => api(`/api/dramas/${dramaId}/messages`, { method: "POST", json: { scope: "setup", submissionId: submission.current, text } }),
     // The engine's word on the submission (GET /api/submissions/:id): found is taken; 404 is nothing submitted.
     taken: async () => {
       try {
@@ -386,17 +386,22 @@ function NewSetupLine({ dramaId, onSent }: { dramaId: string; onSent: () => void
   );
 }
 
-/** A line to the session the panel speaks to; with none, it says why: the one pinned or followed has none open, or none is chosen. */
-function Composer({ chat, chosen, onSent }: { chat?: ChatView; chosen?: string; onSent: () => void }) {
+/**
+ * A line to the session the panel speaks to, as a message to its scope (POST /api/dramas/:id/messages; D71), one
+ * submission id per draft; with none, it says why: the one pinned or followed has none open, or none is chosen.
+ */
+function Composer({ dramaId, chat, chosen, onSent }: { dramaId: string; chat?: ChatView; chosen?: string; onSent: () => void }) {
   const { t } = useT();
   const [text, setText] = useState("");
   const [error, setError] = useState<unknown>();
+  const submission = useRef(crypto.randomUUID());
   const send = async () => {
     if (!chat || !text.trim()) return;
     setError(undefined);
     try {
-      await api(`/api/sessions/${chat.sessionId}/chat`, { method: "POST", json: { text } });
+      await api(`/api/dramas/${dramaId}/messages`, { method: "POST", json: { scope: chat.label || "setup", submissionId: submission.current, text } });
       setText("");
+      submission.current = crypto.randomUUID();
       onSent();
     } catch (reason) {
       setError(reason);

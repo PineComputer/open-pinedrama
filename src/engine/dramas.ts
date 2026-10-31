@@ -12,7 +12,7 @@ import { type DramaRow, computer as computerRow, drama as dramaRow, episode as e
 import { StudioError } from "./errors.ts";
 import { PRESETS } from "../shared/presets.ts";
 import { LENGTHS, briefFile } from "./goals.ts";
-import { approveUnreviewed, decide, pendingReview } from "./reviews.ts";
+import { approveUnreviewed, decide, decidedInReview, pendingReview } from "./reviews.ts";
 import { startRun } from "./runs.ts";
 
 export interface NewDrama {
@@ -274,8 +274,9 @@ export async function chat(sessionId: string, text: string): Promise<void> {
   const review = pendingReview(session.id);
   if (review) {
     // The session waits on the maker: a plain question can be answered from here, through the
-    // same gate as the review room; anything to look at is decided in the room, item by item.
-    if (review.kind !== "question") throw new StudioError("decide-in-review", "Decide this in its review, where the files are.", 409);
+    // same gate as the review room; anything to look at is decided in the room, item by item, and a screenplay rewrite on
+    // Script, by its verdict (D62).
+    if (decidedInReview(review)) throw new StudioError("decide-in-review", "Decide this in its review, where the files are.", 409);
     await decide(review.id, { submissionId: newId("sub"), items: [], words: text });
   } else if (turn?.state === "needs_input") {
     throw new StudioError("question-closed", "This question can't be answered any more.", 409);

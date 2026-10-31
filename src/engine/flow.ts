@@ -11,11 +11,11 @@ import type { TurnInfo } from "./fleet.ts";
 import { stopEvents } from "./follow.ts";
 import type { Hints } from "./classify.ts";
 import { inferKind, questionAsked, questionReady } from "./reviews.ts";
-import { continueGoal } from "./goals.ts";
+import { continueGoal, packEpisode } from "./goals.ts";
 import { publish } from "./live.ts";
 import { type ReviewRow, type SessionRow, drama as dramaRow, episode as episodeRow, episodeCode } from "./records.ts";
 import { projectArchive, startRun } from "./runs.ts";
-import { type SetupMessageRow, markSetupMessage, messageOfSession } from "./setup-message.ts";
+import { type MessageRow, markMessage, messageOfSession } from "./scope-messages.ts";
 
 const PACK_PROJECT = "Pack the whole drama/ folder, records included, into parts of at most 60 MB (`mkdir -p handoff && tar -cf - -C drama . | split -b 60m - handoff/project.tar.part-`) and return the parts.";
 
@@ -45,7 +45,8 @@ export function stopsForMaker(session: SessionRow, info: TurnInfo): boolean {
   const hints: Hints[] = info.files.map((file) => classify(file.path));
   // The setup packs the project only once the maker approved what it holds: that turn hands it over.
   if (session.role === "setup" && hints.some((hint) => hint.kind === "archive")) return false;
-  if (session.role === "episode" && session.episode_id && cutAccepted(session.episode_id)) return false;
+  // An episode's own session ends once its cut is accepted; a message's session (D71) at its handback, whatever it stops for.
+  if (session.role === "episode" && session.episode_id && cutAccepted(session.episode_id) && !messageOfSession(session.id)) return false;
   return inferKind(session.role, hints) !== "question" || asks(info.summary);
 }
 
@@ -68,38 +69,42 @@ export async function onEnded(session: SessionRow, info: TurnInfo, stop: boolean
     else run("update episodes set continues = 0 where id = ?", session.episode_id);
     return;
   }
-  if (session.role === "setup") await setupEnded(session, info);
+  const request = messageOfSession(session.id);
+  if (request) await messageEnded(session, info, request);
+  else if (session.role === "setup") await setupEnded(session, info);
   else await episodeEnded(session, info);
   publish(`drama:${session.drama_id}`, "dramas", "reviews");
 }
 
 /**
- * A setup message's session (D71) finishes when it hands the project back, and closes, as the setup's did; short of that
- * it gets the same bounded "continue" runs, then the maker is told; a turn that breaks off for good fails the message.
+ * A message's session (D71) finishes when it hands its scope back, the setup's project or the episode's folder, and
+ * closes, as the setup's did; short of that it gets the same bounded "continue" runs, counted where its scope's are, then
+ * the maker is told; a turn that breaks off for good fails the message.
  */
-async function messageEnded(session: SessionRow, info: TurnInfo, request: SetupMessageRow) {
-  const drama = dramaRow(session.drama_id)!;
+async function messageEnded(session: SessionRow, info: TurnInfo, request: MessageRow) {
+  const episode = session.episode_id ? episodeRow(session.episode_id) : undefined;
   if (info.state === "completed" && info.files.some((file) => classify(file.path).kind === "archive")) {
-    markSetupMessage(request.id, "done");
+    markMessage(request.id, "done");
     await close(session);
     return;
   }
-  if ((info.state === "completed" || info.state === "failed") && drama.continues < MAX_CONTINUES) {
-    run("update dramas set continues = continues + 1 where id = ?", drama.id);
-    await startRun(session, "continue", info.state === "completed" ? PACK_PROJECT : continueGoal(null, true));
+  const continues = episode ? episode.continues : dramaRow(session.drama_id)!.continues;
+  if ((info.state === "completed" || info.state === "failed") && continues < MAX_CONTINUES) {
+    if (episode) run("update episodes set continues = continues + 1, updated_at = ? where id = ?", now(), episode.id);
+    else run("update dramas set continues = continues + 1 where id = ?", session.drama_id);
+    const code = episode ? episodeCode(episode) : null;
+    await startRun(session, "continue", info.state === "failed" ? continueGoal(code, true) : code ? packEpisode(code) : PACK_PROJECT);
     return;
   }
   if (info.state === "completed") {
     askMaker(session, info);
     return;
   }
-  markSetupMessage(request.id, "failed", { note: info.summary ?? "" });
+  markMessage(request.id, "failed", { note: info.summary ?? "" });
   await close(session);
 }
 
 async function setupEnded(session: SessionRow, info: TurnInfo) {
-  const request = messageOfSession(session.id);
-  if (request) return messageEnded(session, info, request);
   const drama = dramaRow(session.drama_id)!;
   if (info.state === "completed") {
     const listed = listedEpisodes(info.summary);

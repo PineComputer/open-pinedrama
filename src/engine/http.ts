@@ -21,7 +21,7 @@ import { appInfo, connectPine, disconnect, useReplay } from "./connection.ts";
 import { retryStarts } from "./computers.ts";
 import { DEFAULT_ENDPOINT } from "./settings.ts";
 import { all, run } from "./db.ts";
-import { chat, chooseInputs, createDrama, desktop, finishEpisode, rehearse, resumeEpisode, sampleDramaId, stopDrama, updateDrama, resumeDrama, stopEpisode } from "./dramas.ts";
+import { chooseInputs, createDrama, desktop, finishEpisode, rehearse, resumeEpisode, sampleDramaId, stopDrama, updateDrama, resumeDrama, stopEpisode } from "./dramas.ts";
 import { StudioError } from "./errors.ts";
 import { sampleScreenplay, STORIES } from "./replay-fleet.ts";
 import { fileRow, openBlob, save, toItem } from "./library.ts";
@@ -31,7 +31,7 @@ import { decide, resumeWithDecision } from "./reviews.ts";
 import { lineageView } from "./lineage.ts";
 import { forgetPositions, positionsOf, readPositions, replacePositions } from "./canvas.ts";
 import { submission } from "./submission.ts";
-import { askSetup } from "./setup-message.ts";
+import { sendMessage } from "./scope-messages.ts";
 import { projectView, sessionStatus } from "./status.ts";
 import { assetPictures, castCards, deliveryRows, episodePage, scriptPage, seasonEntries } from "./browse.ts";
 import { diagnostics } from "./diagnostics.ts";
@@ -416,21 +416,12 @@ export function app(): Hono {
     return session ? c.json(chatView(session)) : c.json(failure("not-found", "No such session."), 404);
   });
 
-  api.post("/api/sessions/:id/chat", async (c) => {
+  // A message to a scope of the drama, the setup's or an episode's (D71): its open session takes it as a chat; with none
+  // open, a new session of that scope does. Once per submission id.
+  api.post("/api/dramas/:id/messages", async (c) => {
     try {
-      const { text } = (await c.req.json()) as { text: string };
-      await chat(c.req.param("id"), text);
-      return c.json(chatView(sessionRow(c.req.param("id"))!));
-    } catch (error) {
-      return fail(c, error);
-    }
-  });
-
-  // A message to the setup's scope after the handover (D71): queued for a new setup session, once per submission id.
-  api.post("/api/dramas/:id/setup-message", async (c) => {
-    try {
-      const { submissionId, text } = (await c.req.json()) as { submissionId: string; text: string };
-      return c.json(askSetup(c.req.param("id"), submissionId, text));
+      const { scope, submissionId, text } = (await c.req.json()) as { scope: string; submissionId: string; text: string };
+      return c.json(await sendMessage(c.req.param("id"), scope, submissionId, text));
     } catch (error) {
       return fail(c, error);
     }
