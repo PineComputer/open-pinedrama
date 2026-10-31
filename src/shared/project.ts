@@ -1,3 +1,4 @@
+import type { LineageNode } from "./lineage.ts";
 import type { Names } from "./names.ts";
 
 // Where a drama's project stands, as drama-cli's own status report says (each stop returns it
@@ -282,6 +283,29 @@ export interface ProjectView {
   problems: { sessionId: string; turnId: string; error: string }[];
   /** The names of the working bible's people, places, props and episodes, from the bible.json a stop returned; null before one has. */
   names: Names | null;
+}
+
+/**
+ * The stage drama-cli's status reports for a lineage node, with its `accepted` field, or undefined where the report
+ * has none (D64, amended for work-03's 4600 retest): a plate's views and floor plan are steps inside its folder
+ * (stages.location_stages) that the report leaves out, video prompts are reported with only `current` and `stale`
+ * ("The video prompts are never accepted", drama-cli v0.7.5 stages.py:4671), and the screenplay and subtitles have no
+ * entry. Read from the report's own shape (parseStatus), so a stage it starts to report is read without a list here.
+ */
+export function reportedStage(state: Omit<ProjectState, "budget">, node: LineageNode): StageStatus | undefined {
+  const { subject, look, time, view, episode, segment, style } = node.where;
+  const ep = episode ? state.episodes[episode] : undefined;
+  if (node.kind === "bible") return state.bible;
+  if (node.kind === "look" && subject) return look ? state.characters[subject]?.looks[look] : state.characters[subject];
+  if (node.kind === "plate" && subject && !view) return time ? state.locations[subject]?.times[time] : state.locations[subject];
+  if (node.kind === "prop" && subject) return state.props[subject];
+  if (node.kind === "breakdown") return ep?.breakdown;
+  if (node.kind === "blocking" && segment) return ep?.blocking[segment];
+  if (node.kind === "first_frame_reference" && segment) return ep?.firstFrames[segment];
+  if (node.kind === "storyboard" && segment && style) return ep?.storyboards[segment]?.[style];
+  if (node.kind === "take" && segment) return ep?.segments[segment];
+  if (node.kind === "cut") return ep?.cut;
+  return undefined;
 }
 
 /** Whether every episode the report lists has its breakdown usable and nothing it needs missing: what production starts from. */

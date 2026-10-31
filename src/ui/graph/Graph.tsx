@@ -12,12 +12,13 @@ import { createPortal } from "react-dom";
 import { madeFromStale, trace, type Lineage, type LineageNode, type LineageView } from "../../shared/lineage.ts";
 import { nameOf, type Names } from "../../shared/names.ts";
 import { PIPELINE } from "../../shared/pipeline.ts";
+import type { ProjectView } from "../../shared/project.ts";
 import type { FileItem } from "../../shared/types.ts";
 import { EmptyState } from "../components/EmptyState.tsx";
 import { useResource } from "../api.ts";
 import { type TKey, useT } from "../i18n.ts";
 import { Icon, type IconName } from "../icons.tsx";
-import { type Chip, errorText, ofLineage, useNames, versionStanding } from "../labels.ts";
+import { type Chip, errorText, nodeStanding, useNames } from "../labels.ts";
 import { StatusChip } from "../components/StatusChip.tsx";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { homeLink, usePage, usePlace } from "../place.ts";
@@ -122,6 +123,8 @@ export function Graph({ dramaId }: { dramaId: string }) {
   const view = useResource<LineageView>(`/api/dramas/${dramaId}/lineage`, [`project:${dramaId}`]);
   const files = useResource<FileItem[]>(`/api/dramas/${dramaId}/files`, [`drama:${dramaId}`]);
   const names = useNames(dramaId);
+  // drama-cli's status, which says which stages take an acceptance (labels.ts, nodeStanding).
+  const project = useResource<ProjectView>(`/api/dramas/${dramaId}/project`, [`project:${dramaId}`]);
   const navigate = useNavigate();
   const page = usePage();
   // The item picked and the episode in view, as the page's place names them (place.ts).
@@ -165,15 +168,10 @@ export function Graph({ dramaId }: { dramaId: string }) {
 
   const marked = madeFromStale(lineage);
   const name = (node: LineageNode) => stageName(node, names, t);
-  // Where a version stands, by the one rule (labels.ts, versionStanding; D64) over drama-cli's lineage, after two facts of
-  // Lineage's own: a version drama-cli calls fresh but made from an out-of-date one says so, and video prompts, which
-  // drama-cli never accepts (it judges them request by request), are compiled once made. Lineage reads no review, so
-  // nothing here waits for the maker: an unaccepted version is "vN · not accepted", never the maker's colour.
-  const standing = (node: LineageNode): Chip | undefined => {
-    if (node.fresh !== false && marked.has(node.id)) return { status: "stale", label: t("graph.madeFromStale") };
-    if (node.kind === "video_prompts" && node.version !== null && node.fresh !== false) return { status: "accepted", label: t("graph.compiled") };
-    return versionStanding(ofLineage(node), undefined, undefined, t);
-  };
+  // Where a version stands, by the one rule (labels.ts, nodeStanding; D64), after Lineage's own fact that a version
+  // drama-cli calls fresh was made from an out-of-date one. Lineage reads no review, so nothing here waits for the maker.
+  const standing = (node: LineageNode): Chip | undefined =>
+    node.fresh !== false && marked.has(node.id) ? { status: "stale", label: t("graph.madeFromStale") } : nodeStanding(project.data?.state ?? null, node, undefined, t);
   const isStale = (id: string) => byId.get(id)?.fresh === false || marked.has(id);
   const fileOf = (node: LineageNode) => (node.shows ? files.data?.find((file) => file.path === `drama/${node.shows}`) : undefined);
   // A video's poster until its first frame loads: a take's, the storyboard it was shot from; a cut's, its first take's.

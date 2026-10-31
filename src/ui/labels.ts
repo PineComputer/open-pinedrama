@@ -2,7 +2,7 @@
 import type { DramaView, EpisodeRow, FileKind, Judged, ReviewKind, SessionView, Spend } from "../shared/types.ts";
 import { nameOf, type Names } from "../shared/names.ts";
 import type { LineageNode, LineageView } from "../shared/lineage.ts";
-import type { ProjectView, StageStatus } from "../shared/project.ts";
+import { type ProjectState, type ProjectView, reportedStage, type StageStatus } from "../shared/project.ts";
 import { ApiError, useResource } from "./api.ts";
 import type { Status } from "./components/StatusChip.tsx";
 import type { TKey, useT } from "./i18n.ts";
@@ -43,6 +43,19 @@ export function versionStanding(stage: Versions | undefined, version: string | n
   if (version && version !== stage.current) return version === stage.accepted ? chip("accepted") : undefined;
   if (stage.stale) return chip("stale");
   return stage.current === stage.accepted ? chip("accepted") : chip("work", t("tree.bible.candidate", { version: stage.current }));
+}
+
+/**
+ * Where a lineage node stands: an acceptance chip (versionStanding over its lineage) only for a stage drama-cli's status
+ * reports with an `accepted` field (shared/project.ts, reportedStage); any other node, a plate's view or video prompts,
+ * shows only whether it is out of date (D64, amended for work-03's 4600 retest: 63 of 70 plate views read "v2 · not
+ * accepted"). The screenplay is the one exception, for now: it takes an acceptance (short_drama D115) but status has no
+ * entry for it (drama-cli v0.7.5 stages.py:4649–4651), so it reads its lineage's `accepted`, as the tree's Script row
+ * does; once drama-cli's status reports the screenplay, delete this exception.
+ */
+export function nodeStanding(state: Omit<ProjectState, "budget"> | null, node: LineageNode, review: Pick<Judged, "state"> | undefined, t: T): Chip | undefined {
+  if (node.kind === "screenplay" || (state && reportedStage(state, node))) return versionStanding(ofLineage(node), undefined, review, t);
+  return node.fresh === false ? { status: "stale", label: t("status.stale") } : undefined;
 }
 
 /** How many items a review holds, in what they are, as design/ counts them: "2 takes", "6 storyboards", "1 item"; nothing for none. */

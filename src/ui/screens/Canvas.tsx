@@ -26,7 +26,7 @@ import { Menu } from "../components/Menu.tsx";
 import { StatusChip } from "../components/StatusChip.tsx";
 import { type TKey, useT } from "../i18n.ts";
 import { Icon } from "../icons.tsx";
-import { type Chip, cutStanding, headingText, ofLineage, openSession, subjectLabel, versionStanding } from "../labels.ts";
+import { type Chip, cutStanding, headingText, nodeStanding, openSession, subjectLabel } from "../labels.ts";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { homeLink, placeLink, shotsItem, usePage, usePlace } from "../place.ts";
 import { useText } from "../viewing.tsx";
@@ -552,7 +552,7 @@ function Plane({ drama }: { drama: DramaView }) {
     // The working version's own review, if a stop returned it to the maker.
     const standingOf = (stage: LineageNode, of: Item) => {
       const review = versionRows(of, stage.where.look ?? stage.where.time, stage.where.style, cast.data, episodePage.data).find((row) => row.version === stage.version)?.receipt.review;
-      return versionStanding(ofLineage(stage), undefined, review, t);
+      return nodeStanding(state, stage, review, t);
     };
     const label = (stage: LineageNode, of: Item) => {
       const version = stage.version ?? "—";
@@ -738,7 +738,7 @@ function Plane({ drama }: { drama: DramaView }) {
           files={files.data ?? []}
           facts={{
             label: shots.data.label,
-            standing: breakdownStage ? versionStanding(ofLineage(breakdownStage), undefined, undefined, t) : { status: "line", label: t("status.line") },
+            standing: breakdownStage ? nodeStanding(state, breakdownStage, undefined, t) : { status: "line", label: t("status.line") },
             kind: t("canvas.shotList"),
             version: breakdownStage?.version ?? "—",
             accepted: breakdownStage?.accepted ?? null,

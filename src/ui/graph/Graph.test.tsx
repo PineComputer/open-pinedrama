@@ -11,7 +11,7 @@ import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { parseLineage, type LineageView } from "../../shared/lineage.ts";
 import { parseBibleNames } from "../../shared/names.ts";
-import type { ProjectView } from "../../shared/project.ts";
+import { parseStatus, type ProjectView } from "../../shared/project.ts";
 import type { ChatView, FileItem } from "../../shared/types.ts";
 import { answer } from "../test/server.ts";
 import { mockReactFlow } from "../test/react-flow.ts";
@@ -32,7 +32,9 @@ function engine(name: string, sessions: ChatView[] = [chat("setup", "", "run"), 
   answer("/api/dramas/d1/lineage", view(name));
   answer("/api/dramas/d1/files", files);
   answer("/api/dramas/d1/sessions", sessions);
-  answer("/api/dramas/d1/project", { state: null, sessions: [], problems: [], names: parseBibleNames(fixture("status", "bible")) } satisfies ProjectView);
+  // drama-cli's status of the same project: the look, the plate and its time, EP001's stages.
+  const { budget: _budget, ...state } = parseStatus(fixture("status", "boards"));
+  answer("/api/dramas/d1/project", { state, sessions: [], problems: [], names: parseBibleNames(fixture("status", "bible")) } satisfies ProjectView);
 }
 
 /** A version's card on the plane, found by its name. */
@@ -68,6 +70,22 @@ describe("the Graph", () => {
     expect(take.querySelector(".st.you")).toBeNull();
     // An accepted one says so.
     expect((await card(/^林 v1/)).querySelector(".st")).toHaveTextContent("Accepted");
+  });
+
+  it("gives an acceptance chip only to a stage drama-cli's status reports: a plate's view shows its version alone, the plate and its time their acceptance (D64; work-03's 4600 retest)", async () => {
+    engine("shot");
+    // A view of the plate at Day, a step inside its folder (drama-cli stages.location_stages) that status doesn't
+    // report and that never takes an acceptance, which the take was made from.
+    const shot = view("shot");
+    const day = shot.lineage!.nodes.find((node) => node.id === "assets/scenes/office/times/Day")!;
+    shot.lineage!.nodes.push({ ...day, id: "assets/scenes/office/times/Day/front", version: "v2", accepted: null, where: { subject: "office", time: "Day", view: "front" } });
+    shot.lineage!.links.push({ from: "assets/scenes/office/times/Day/front", to: "episodes/EP001/segments/seg01" });
+    answer("/api/dramas/d1/lineage", shot);
+    await renderAt(<Graph dramaId="d1" />, "/d/d1/out-of-date");
+    await userEvent.click(await card(/^EP001 seg01 take/));
+    expect((await card(/front v2/)).querySelector(".st")).toBeNull();
+    expect((await card(/^办公室 · Day v1/)).querySelector(".st")).toHaveTextContent("Accepted");
+    expect((await card(/^办公室 v1/)).querySelector(".st")).toHaveTextContent("Accepted");
   });
 
   it("leaves Lineage for the item's one home: a look in Assets, a storyboard in its episode, never Home (IA §16; Codex's IA review, B1)", async () => {
