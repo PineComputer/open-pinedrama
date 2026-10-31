@@ -22,7 +22,7 @@ timeline
   2026-10-23 : D5 pre-production in one session
   2026-10-24 : D6 idle timeouts follow the work : D7 spend shown, never in a goal
   2026-10-29 : D8 phase 1 steers
-  2026-10-30 : D9 design/ is the UI source : D10 tsc gate : D11 mature libraries : D12 real samples in LFS : D13 decisions taken once : D14 credentials stop : D15 Codex review loop : D16 navigation and one home : D17 every take and cut watched : D18 cut editing as an edit spec : D19 TanStack Router : D20 Export by owner : D21 Analyzing and Out of date routes : D22 redo by owner : D23 the asset detail : D24 the cut edit goal : D25 one Submission : D26 crumbs and Back : D27 Reviews : D28 model badge : D29 canvas zoom, inline video : D30 URL rules : D31 agent scope : D32 narrow windows : D33 review options : D34 Episodes filters : D35 every element cites its ground : D36 Delivery is the cuts' home : D37 a picked node zooms : D38 shared redo after release : D39 a take plays on its node : D40 where a stop shows : D41 Script is the screenplay's home : D42 Story and Assets apart
+  2026-10-30 : D9 design/ is the UI source : D10 tsc gate : D11 mature libraries : D12 real samples in LFS : D13 decisions taken once : D14 credentials stop : D15 Codex review loop : D16 navigation and one home : D17 every take and cut watched : D18 cut editing as an edit spec : D19 TanStack Router : D20 Export by owner : D21 Analyzing and Out of date routes : D22 redo by owner : D23 the asset detail : D24 the cut edit goal : D25 one Submission : D26 crumbs and Back : D27 Reviews : D28 model badge : D29 canvas zoom, inline video : D30 URL rules : D31 agent scope : D32 narrow windows : D33 review options : D34 Episodes filters : D35 every element cites its ground : D36 Delivery is the cuts' home : D37 a picked node zooms : D38 shared redo after release : D39 a take plays on its node : D40 where a stop shows : D41 Script is the screenplay's home : D42 Story and Assets apart : D43 stable sample ids : D44 the cut leaves the switch : D45 samples' own screenplays : D46 Project
 ```
 
 ## D1. 2026-10-22 · A desktop app on Electron
@@ -715,6 +715,67 @@ timeline
 - **Consequences.** None beyond Story, Assets and Home.
 - **Words.** None recorded.
 - **Recorded in.** Commit 3c15dc3; work-02's note to the docs.
+
+## D43. 2026-10-30 · A replayed sample keeps its id across rebuilds
+- **Context.** Every rebuild of the QA studio gave each replayed sample a new random id, so a link
+  or an open tab from before showed "It's no longer here" (yurun's bug Y5).
+- **Decision.** A replayed sample drama's id is derived from its sample and language (SHA-256 of
+  `sample:<sample>:<lang>`, 16 hex digits), numbered -2, -3… for further starts in the same studio.
+  Real projects and Pine rehearsals keep random ids.
+- **Alternatives.** None recorded.
+- **Grounds.** Design for failure ([design principles](design-principles.md#9-design-for-failure));
+  yurun's bug Y5 (`qa/yurun-bugs.md`), via master.
+- **Consequences.** open-qa.mjs keeps its seed order fixed, since the numbering follows it.
+- **Words.** None recorded.
+- **Recorded in.** Commit 866221c; work-05's note to the docs.
+
+## D44. 2026-10-30 · The cut leaves the episode's view switch
+- **Context.** An episode's switch read List | Canvas | Cut, though the cut is an object of its
+  own, not a view of the episode.
+- **Decision.** An episode's switch is List | Canvas. The cut is linked from the episode's header
+  ("Cut v1" and its state) and as the episode in view's child row in the project tree.
+- **Alternatives.** None recorded.
+- **Grounds.** Master's decision; the WAI-ARIA tabs pattern (tabs switch views of one thing); one
+  home per object and one action, one meaning ([design principles](design-principles.md)); the IA
+  proposal, section 16 <sup>[3](#ref-3)</sup>; Codex's review, section 5 <sup>[4](#ref-4)</sup>.
+- **Consequences.** [D16](#d16-2026-10-30--the-navigation-a-studio-wide-rail-the-dramas-tree-one-home-per-object)'s
+  "two views" holds.
+- **Words.** None recorded.
+- **Recorded in.** Commit af44899.
+
+## D45. 2026-10-30 · Replay samples carry their own screenplays; legal review before release
+- **Context.** Every replayed drama showed The Stepmother's screenplay (yurun's bug Y7).
+  CONTRIBUTING forbade real scripts and aired material in the repository, while the samples already
+  carry pictures, bibles and cuts from runs that reconstruct aired dramas.
+- **Decision.** Each sample returns its own screenplay or none, never another's: the real runs'
+  original and drama-cli's recorded screenplay, unchanged; Bride on Bail's written from its own
+  episodes; The Stepmother's own. During development the samples are not trimmed; before release they
+  are reviewed for legal use, then replaced or removed. CONTRIBUTING follows this.
+- **Alternatives.** Keeping real screenplays out and showing none for the real runs.
+- **Grounds.** merecdesperez44323-lab's standing rule for samples during development, relayed by
+  master; a project must never show another project's work (one home per object).
+- **Consequences.** [Architecture](architecture.md#11-before-release), "Before release";
+  `fixtures/replay/samples/samples.json`; `screenplayOf` in `src/engine/replay-fleet.ts`.
+- **Words.** "你不要搞 减掉啥的，这些都是上线之后的事儿" (*don't go trimming things; all that is for after
+  launch*), relayed by master.
+- **Recorded in.** Commit 28e569a; master's note to the docs, 30 October 2026.
+
+## D46. 2026-10-30 · The UI's container is a Project
+- **Context.** The UI called its container a Drama (剧目), after Codex's table of terms; the studio
+  makes nothing but dramas, so the word named no container.
+- **Decision.** The UI says Project (项目): one drama-cli project, with its screenplay, config and
+  bible. "drama" stays the internal name in routes (`/d/`), the API and the engine's types until a
+  rename after release. Drama and 剧目 join the retired UI words.
+- **Alternatives.** Drama (剧目), as Codex's review proposed (section 4) <sup>[4](#ref-4)</sup>; this
+  reverses it.
+- **Grounds.** merecdesperez44323-lab's decision.
+- **Consequences.** The [glossary](glossary.md#the-project), [information
+  architecture](studio/information-architecture.md) and the UI's strings say Project.
+- **Words.** "最好叫做 drama projects 啥的， 就是用 projects的概念， 剧目（drama）比较抽象， 因为整个studio就是做
+  drama的" (*better to call them drama projects or the like, using the idea of projects; 剧目 (drama)
+  is too abstract, because the whole studio makes dramas*), relayed by master.
+- **Recorded in.** Commits 69aa244 (rail, sidebar, crumbs, switcher, files, errors), 26fc1e7, 88b76c7
+  and 22ee328; master's note to the docs, 30 October 2026.
 
 ## References
 

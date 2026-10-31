@@ -8,9 +8,9 @@ behind this are the [design principles](../design-principles.md), above all
 
 ## The problem
 
-A drama holds a screenplay, a bible, characters, locations and props, 24 to 80 episodes, their
-scenes, segments, storyboards, takes and cuts, each in versions, and several dramas run at once.
-The first screens offered the same places three ways: the rail held a drama's Script, Story,
+A project holds a screenplay, a bible, characters, locations and props, 24 to 80 episodes, their
+scenes, segments, storyboards, takes and cuts, each in versions, and several projects run at once.
+The first screens offered the same places three ways: the rail held a project's Script, Story,
 Episodes, Canvas, Graph and Cut; the sidebar held them again; a top switch chose Studio, Canvas or
 Graph. Each page worked out "the current object" on its own, so a character's id was read as an
 episode and the studio fell back to Home (Codex's review, B1), and the agent panel showed another
@@ -46,11 +46,11 @@ wasted*) ([D16](../decisions.md#d16-2026-10-30--the-navigation-a-studio-wide-rai
 ```mermaid
 flowchart LR
   subgraph Rail["Rail: studio-wide"]
-    R1[Dramas]
+    R1[Projects]
     R2[Reviews]
     R3[Settings]
   end
-  subgraph Tree["Sidebar: the drama's tree"]
+  subgraph Tree["Sidebar: the project's tree"]
     T1[Script]
     T2[Story]
     T3["Assets › Characters, Locations, Props"]
@@ -70,10 +70,10 @@ flowchart LR
 
 | Level | VS Code's | Holds |
 |---|---|---|
-| Rail | activity bar | Studio-wide places only: Dramas (home), Reviews (every drama's queue), Settings. No drama's places. Computers and Usage are hidden until they work. |
-| Sidebar | explorer | On Home, dramas and shelves. In a drama, its tree: Script · Story · Assets (Characters, Locations, Props) · Episodes · Delivery, with the drama's Reviews and Out of date. It stops at episodes; segments are in the episode's List. |
+| Rail | activity bar | Studio-wide places only: Projects (home), Reviews (every project's queue), Settings. No project's places. Computers and Usage are hidden until they work. |
+| Sidebar | explorer | On Home, projects and shelves. In a project, its tree: Script · Story · Assets (Characters, Locations, Props) · Episodes · Delivery, with the project's Reviews and Out of date. It stops at episodes; segments are in the episode's List. |
 | Content | editor | The selected object's home, in the views it has. |
-| Agent panel | panel | The open drama's sessions, running and waiting, its decisions, activity and the composer. |
+| Agent panel | panel | The open project's sessions, running and waiting, its decisions, activity and the composer. |
 
 Sources: [D16](../decisions.md#d16-2026-10-30--the-navigation-a-studio-wide-rail-the-dramas-tree-one-home-per-object);
 the IA proposal, sections 2, 8.3 and 12 <sup>[1](#ref-1)</sup>.
@@ -82,14 +82,14 @@ the IA proposal, sections 2, 8.3 and 12 <sup>[1](#ref-1)</sup>.
 
 | Object | Its home | Places that link to it |
 |---|---|---|
-| Screenplay and its Fountain versions | Drama › Script | — |
-| Bible, logline, beats | Drama › Story | — |
-| Character, location, prop, and their versions | Drama › Assets › … | an episode canvas's reference node, Lineage, review items |
-| Episode | Drama › Episodes › EPxxx, in two views, List and Canvas | the Episodes board, Home's cards |
+| Screenplay and its Fountain versions | Project › Script | — |
+| Bible, logline, beats | Project › Story | — |
+| Character, location, prop, and their versions | Project › Assets › … | an episode canvas's reference node, Lineage, review items |
+| Episode | Project › Episodes › EPxxx, in two views, List and Canvas | the Episodes board, Home's cards |
 | Segment and its takes | inside its episode: a List row, a Canvas node | review items, Lineage |
 | Cut | EPxxx › Cut | Delivery's rows, review items |
-| Accepted cuts | Drama › Delivery | — |
-| A decision waiting | Reviews, one queue; a drama's Reviews is its filter | Home's "Waiting for you" (the newest four and "See all N"), a card's "N need you", Next review, the agent panel's Decisions |
+| Accepted cuts | Project › Delivery | — |
+| A decision waiting | Reviews, one queue; a project's Reviews is its filter | Home's "Waiting for you" (the newest four and "See all N"), a card's "N need you", Next review, the agent panel's Decisions |
 | What the agent is doing | the agent panel | — |
 
 A link says where it goes and lands on the home with the object selected; Back returns. Search
@@ -106,7 +106,7 @@ and 16 <sup>[1](#ref-1)</sup>.
 
 Setup has its own steps, not views of Script: **Analyzing** and the **Fountain review**
 ([D21](../decisions.md#d21-2026-10-30--analyzing-and-out-of-date-have-drama-level-routes-of-their-own)).
-**Out of date** is a drama-level filter beside Reviews, whose rows link to each item's home. Source:
+**Out of date** is a project-level filter beside Reviews, whose rows link to each item's home. Source:
 the IA proposal, sections 3, 8.4–8.5 and 10 <sup>[1](#ref-1)</sup>.
 
 ## Routes
@@ -118,22 +118,22 @@ Router's, in `src/ui/routes.tsx`; one reader, `usePlace`, and one builder, `plac
 
 | Route | Home |
 |---|---|
-| `/` | Dramas |
-| `/new` | a new drama: upload and preset |
-| `/reviews`, `/reviews?drama=<id>` | the queue, and a drama's filter of it |
+| `/` | Projects |
+| `/new` | a new project: upload and preset |
+| `/reviews`, `/reviews?drama=<id>` | the queue, and a project's filter of it |
 | `/r/$reviewId` | one review room |
 | `/settings` | Settings |
-| `/d/$dramaId/script`, `/story`, `/episodes`, `/delivery` | the drama's places |
+| `/d/$dramaId/script`, `/story`, `/episodes`, `/delivery` | the project's places |
 | `/d/$dramaId/analyzing` | setup: analyzing and the Fountain review |
 | `/d/$dramaId/assets/{characters,locations,props}/$assetId?` | Assets, with one selected |
 | `/d/$dramaId/e/$episodeCode/{list,canvas,cut}` | an episode's views and its cut |
 | `/d/$dramaId/out-of-date` | the Out of date filter |
 | `?item=<drama-cli stage id>&view=lineage` | an item selected on its home, and its Lineage |
 
-Two drama routes remain from before the IA: `/d/$dramaId/crew` and `/d/$dramaId/canvas`, which
+Two project routes remain from before the IA: `/d/$dramaId/crew` and `/d/$dramaId/canvas`, which
 opens the episode it picks on that episode's Canvas.
 
-An episode code is drama-cli's (`EP` and three digits); an item must belong to its drama, and to
+An episode code is drama-cli's (`EP` and three digits); an item must belong to its project, and to
 its episode where it is episode-scoped; anything else is "not found", never a fall back to Home.
 The port moved the e2e specs and the design comparison's URLs in the same change, with no
 compatibility routes (the IA proposal, sections 8.7 and 14.1) <sup>[1](#ref-1)</sup>.

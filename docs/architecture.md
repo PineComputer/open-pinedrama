@@ -312,6 +312,9 @@ Mac, on Windows and on Linux.
 
 ## 11. Before release
 
+- Replay's samples reconstruct aired dramas in their screenplays, bibles and media: a legal review, then
+  they are replaced or removed before the repository is public
+  ([D45](decisions.md#d45-2026-10-30--replay-samples-carry-their-own-screenplays-legal-review-before-release)).
 - A generated public sample set replaces replay's samples from our own test runs
   (`fixtures/replay/`), on a budget merecdesperez44323-lab sets
   ([D12](decisions.md#d12-2026-10-30--replays-samples-are-real-drama-cli-runs-in-git-lfs)).

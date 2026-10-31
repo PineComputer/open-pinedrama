@@ -131,5 +131,8 @@ for 2026-10-23..29.
   `reveric-*.css` files. If a change to them is ever needed, mark it at the top of the file, as
   section 7(c) asks, and list it in REUSED.md. Copy no other Reveric code, images or copy.
 - This repository is public. In code, docs, fixtures, commit messages and PRs: no internal names,
-  no competitors' names, no real scripts or aired material, and no person's real name. Refer to
-  merecdesperez44323-lab by that GitHub id, and to the app's user as "the maker".
+  no person's real name. Refer to merecdesperez44323-lab by that GitHub id, and to the app's user
+  as "the maker". During development the replay samples carry the screenplays, bibles and media of
+  our own runs unchanged, some reconstructing aired dramas; they, and other products' names in the
+  docs, are reviewed for legal use before release
+  ([D45](decisions.md#d45-2026-10-30--replay-samples-carry-their-own-screenplays-legal-review-before-release)).

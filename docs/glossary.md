@@ -13,19 +13,19 @@ merecdesperez44323-lab's decision on them is pending (the IA proposal, section 1
 
 ```mermaid
 flowchart TB
-  Studio --> Drama
-  Drama --> Script
-  Drama --> Story
-  Drama --> Assets
+  Studio --> Project
+  Project --> Script
+  Project --> Story
+  Project --> Assets
   Assets --> Character --> Look
   Assets --> Location
   Assets --> Prop
-  Drama --> Episode
+  Project --> Episode
   Episode --> Scene --> Segment
   Segment --> Storyboard
   Segment --> Take
   Episode --> Cut
-  Drama --> Delivery
+  Project --> Delivery
   Delivery -. accepted cuts .-> Cut
 ```
 
@@ -33,37 +33,37 @@ flowchart TB
 
 | Term | 中文 | Definition | Source |
 |---|---|---|---|
-| **studio** | 工作室 | The app, Pine Drama: a workspace of dramas on one Pine project. The word names nothing else, never a view. | the IA proposal, sections 1 and 4 <sup>[3](#ref-3)</sup> |
+| **studio** | 工作室 | The app, Pine Drama: a workspace of projects on one Pine project. The word names nothing else, never a view. | the IA proposal, sections 1 and 4 <sup>[3](#ref-3)</sup> |
 | **maker** | | The app's user: uploads a screenplay, reviews and steers; never runs drama-cli. | ours: the role the studio serves ([D2](decisions.md#d2-2026-10-22--pines-agent-does-all-processing-the-studio-never-runs-drama-cli)) |
 | **agent** | 智能体 | Pine's agent with Pine's drama skill (drama-cli), which does all processing on a Computer. | [D2](decisions.md#d2-2026-10-22--pines-agent-does-all-processing-the-studio-never-runs-drama-cli) |
 | **Computer** | 云端电脑 | A Pine sandbox that runs up to three sessions; started, stopped or paused, with an idle timeout ([D6](decisions.md#d6-2026-10-24--idle-timeouts-follow-the-work-1-h-working-3-h-waiting-on-the-maker)). How many run at once is a setting, the concurrency. | Pine Computer ([architecture](architecture.md#2-constraints)) |
-| **session** | 会话 | One agent with its own working directory on a Computer, for one drama: one setup session, then one per episode at work. Sessions share no files. | Pine Computer ([architecture](architecture.md#2-constraints)); [D5](decisions.md#d5-2026-10-23--pre-production-in-one-session-episodes-on-copies-of-its-project) |
+| **session** | 会话 | One agent with its own working directory on a Computer, for one project: one setup session, then one per episode at work. Sessions share no files. | Pine Computer ([architecture](architecture.md#2-constraints)); [D5](decisions.md#d5-2026-10-23--pre-production-in-one-session-episodes-on-copies-of-its-project) |
 | **turn**, **goal** | | One agent run, started with a goal (the instructions) and ended at a stop; its returned files are the turn's results. | Pine Computer (`run`, `wait`, `answer`, `steer`) |
 | **stop** | | Where a turn ends and waits on the maker: a review, a question, a red line or a cap. The agent stops for every take, every cut, the photoreal storyboard, any red line, a cap, the screenplay rewrite and questions. | the IA proposal, section 9 <sup>[3](#ref-3)</sup> |
 | **activity** | 执行记录 | A session's progress messages, shown in the agent panel; not a production object. | Codex's review, section 4 <sup>[4](#ref-4)</sup> |
 | **engine** | | The studio's local process that holds the project key, drives Computers and serves the UI's API. | ours ([D1](decisions.md#d1-2026-10-22--a-desktop-app-on-electron), [D3](decisions.md#d3-2026-10-22--one-secret-the-makers-pine-project-key)) |
-| **replay** | | A mode that plays recorded sample dramas without Pine, for trying the studio and for tests. | ours ([D12](decisions.md#d12-2026-10-30--replays-samples-are-real-drama-cli-runs-in-git-lfs)) |
+| **replay** | | A mode that plays recorded sample projects without Pine, for trying the studio and for tests. | ours ([D12](decisions.md#d12-2026-10-30--replays-samples-are-real-drama-cli-runs-in-git-lfs)) |
 | **Spent** | 已花费 | Agent turns and video, as Pine prices them when each turn ends; drama-cli's text and image calls are included at no charge. Shown per drama and episode, never put in a goal. Reserved and Budget are proposed beside it, not yet shown. | [D7](decisions.md#d7-2026-10-24--spend-is-shown-never-put-in-a-goal); the IA proposal, sections 10 and 13 <sup>[3](#ref-3)</sup> |
 
-## The drama
+## The project
 
 | Term | 中文 | Definition | Source |
 |---|---|---|---|
-| **drama** | 剧目 | One logical drama-cli project: one screenplay, one config, one bible. Sessions work on copies of it and return its state, accepted by owner. The UI says drama, never project. | [D16](decisions.md#d16-2026-10-30--the-navigation-a-studio-wide-rail-the-dramas-tree-one-home-per-object); the IA proposal, sections 12.3 and 14.3 <sup>[3](#ref-3)</sup> |
-| **Script** | 剧本 | The drama's page for its screenplay: the original, the Fountain rewrite and their difference. Fountain is the format, not a page. | Codex's review, section 4 <sup>[4](#ref-4)</sup>; [D21](decisions.md#d21-2026-10-30--analyzing-and-out-of-date-have-drama-level-routes-of-their-own) |
-| **Story** | 故事 | The drama's page for the bible's logline and beats; the **bible** (设定集) is the versioned document behind it. | Codex's review, section 4 <sup>[4](#ref-4)</sup>; drama-cli's bible <sup>[2](#ref-2)</sup> |
+| **project** | 项目 | The UI's container: one logical drama-cli project, with its screenplay, config and bible, and the drama it makes. Sessions work on copies of it and return its state, accepted by owner. "drama" stays the internal name in routes (`/d/`), the API and the engine's types until a rename after release. | [D46](decisions.md#d46-2026-10-30--the-uis-container-is-a-project) (reverses Codex's Drama / 剧目); [D16](decisions.md#d16-2026-10-30--the-navigation-a-studio-wide-rail-the-dramas-tree-one-home-per-object); the IA proposal, sections 12.3 and 14.3 <sup>[3](#ref-3)</sup> |
+| **Script** | 剧本 | The project's page for its screenplay: the original, the Fountain rewrite and their difference. Fountain is the format, not a page. | Codex's review, section 4 <sup>[4](#ref-4)</sup>; [D21](decisions.md#d21-2026-10-30--analyzing-and-out-of-date-have-drama-level-routes-of-their-own) |
+| **Story** | 故事 | The project's page for the bible's logline and beats; the **bible** (设定集) is the versioned document behind it. | Codex's review, section 4 <sup>[4](#ref-4)</sup>; drama-cli's bible <sup>[2](#ref-2)</sup> |
 | **Assets** | 素材 | The shared references every episode uses: Characters, Locations, Props. | the IA proposal, section 10 <sup>[3](#ref-3)</sup> |
 | **character**, **look** | 角色，造型 | A character of the bible; a look is one of its outfits (S0, S1…), shown by its readable name with the key kept. | drama-cli's look <sup>[2](#ref-2)</sup>; Codex's review, section 4 <sup>[4](#ref-4)</sup> |
 | **location** | 地点 | A place of the bible, with its location references (drama-cli's plates: views, Day and Night). Not a scene: one location holds many scenes. | the IA proposal, section 10 <sup>[3](#ref-3)</sup> |
 | **prop** | 道具 | A key prop of the bible, with its reference images. | drama-cli's prop <sup>[2](#ref-2)</sup> |
-| **episode** | 集 | One episode of the drama (EP001…), with its breakdown; the main unit of navigation. Its home has two views, List and Canvas. | [D16](decisions.md#d16-2026-10-30--the-navigation-a-studio-wide-rail-the-dramas-tree-one-home-per-object) |
+| **episode** | 集 | One episode of the project's drama (EP001…), with its breakdown; the main unit of navigation. Its home has two views, List and Canvas. | [D16](decisions.md#d16-2026-10-30--the-navigation-a-studio-wide-rail-the-dramas-tree-one-home-per-object) |
 | **scene** | 场戏 | The screenplay's scene, inside an episode. | Codex's review, section 4 <sup>[4](#ref-4)</sup> |
 | **segment** | 片段 | One video request (seg01…), inside a scene; it holds shots (镜头). | drama-cli's segment and shot <sup>[2](#ref-2)</sup> |
 | **blocking**, **first-frame reference**, **storyboard** | 走位图，首帧参考图，分镜 | A segment's pictures before video. Line-art and photoreal storyboards are different items with different uses; the maker alone accepts the photoreal one. | Codex's review, section 4 <sup>[4](#ref-4)</sup>; [D17](decisions.md#d17-2026-10-30--the-maker-watches-every-take-and-every-cut) |
 | **take** | 视频版本 | One video version of a segment (t01, t02…). Not a shot and not a segment. The maker watches every take. | the IA proposal, section 10 <sup>[3](#ref-3)</sup>; [D17](decisions.md#d17-2026-10-30--the-maker-watches-every-take-and-every-cut) |
 | **cut** | 剪辑成片 | An episode's film, in versions (v1, v2…), built by `drama-cli edit` from its edit spec. The maker watches every cut. | the IA proposal, section 10 <sup>[3](#ref-3)</sup>; [D18](decisions.md#d18-2026-10-30--cut-editing-edits-a-draft-of-drama-clis-edit-spec) |
 | **edit spec** | | drama-cli's plan of a cut: each clip's path, sha256, in, out and audio. The studio edits only a draft of it. | [D18](decisions.md#d18-2026-10-30--cut-editing-edits-a-draft-of-drama-clis-edit-spec) |
-| **Delivery** | 交付 | The drama's page of accepted cuts and their downloads. | the IA proposal, section 10 <sup>[3](#ref-3)</sup> |
+| **Delivery** | 交付 | The project's page of accepted cuts and their downloads. | the IA proposal, section 10 <sup>[3](#ref-3)</sup> |
 
 ## Versions and their state
 
@@ -80,7 +80,7 @@ flowchart TB
 
 | Term | 中文 | Definition | Source |
 |---|---|---|---|
-| **Reviews** | 待审 | The one queue of decisions waiting across dramas; a drama's Reviews is a filter of it. | the IA proposal, sections 4 and 16 <sup>[3](#ref-3)</sup> |
+| **Reviews** | 待审 | The one queue of decisions waiting across projects; a project's Reviews is a filter of it. | the IA proposal, sections 4 and 16 <sup>[3](#ref-3)</sup> |
 | **review**, **review room** | 审阅室 | One decision a session waits on (a question, pictures, takes, a cut or a red line), and the page where the maker takes it. | the IA proposal, sections 1 and 4 <sup>[3](#ref-3)</sup> |
 | **Accept**, **Send back**, **Note** | 接受 | Accept accepts this version; Send back asks for a redo, with a reason; Note records a remark only. | [design principles](design-principles.md#2-one-action-one-meaning) |
 | **draft** | | A review's verdicts and notes, or a cut's edit spec, before Send or Apply; it survives leaving the page. | the IA proposal, section 13 <sup>[3](#ref-3)</sup> |
@@ -97,19 +97,19 @@ flowchart TB
 | **refusal** | | drama-cli's failure, as it prints it: code, message, param and action (`reconcile`, `fix_input`, `ask_person`, `retry`). Recovery follows the action; there is no blanket Retry. | drama-cli's errors (`drama_cli/errors.py`); [design principles](design-principles.md#6-errors-give-the-next-step) |
 | **StopCard**, **stop kind** | | The card that lays out a refusal's facts; its kind (red line, cap, credentials, generic) comes from the code. | [D14](decisions.md#d14-2026-10-30--missing-credentials-are-their-own-stop-a-budget-refusal-is-the-generic-card) |
 | **red line** | | Content no preset allows, as drama-cli lists it. One from the screenplay stops work for the maker; one drama-cli introduces always goes back. | drama-cli's red line <sup>[2](#ref-2)</sup> |
-| **cap** | | A limit in the drama's config (`SetLimitExceeded.<key>`); the card names the key and drama-cli's action, `ask_person`. | Codex's re-review, C1 <sup>[5](#ref-5)</sup> |
+| **cap** | | A limit in the project's config (`SetLimitExceeded.<key>`); the card names the key and drama-cli's action, `ask_person`. | Codex's re-review, C1 <sup>[5](#ref-5)</sup> |
 | **reconcile** | | Finding a paid job's result when its outcome is unknown: found, failed or still unknown. Nothing is generated again. | drama-cli's unknown and lost <sup>[2](#ref-2)</sup>; Codex's re-review, C3 <sup>[5](#ref-5)</sup> |
 
 ## Navigation
 
 | Term | 中文 | Definition | Source |
 |---|---|---|---|
-| **rail** | | The studio-wide column: Dramas, Reviews, Settings. No drama's places. | [D16](decisions.md#d16-2026-10-30--the-navigation-a-studio-wide-rail-the-dramas-tree-one-home-per-object); VS Code's activity bar |
-| **drama tree** | | The sidebar inside a drama: Script · Story · Assets · Episodes · Delivery, with the drama's Reviews and Out of date. It stops at episodes. | [D16](decisions.md#d16-2026-10-30--the-navigation-a-studio-wide-rail-the-dramas-tree-one-home-per-object); VS Code's explorer |
+| **rail** | | The studio-wide column: Projects, Reviews, Settings. No project's places. | [D16](decisions.md#d16-2026-10-30--the-navigation-a-studio-wide-rail-the-dramas-tree-one-home-per-object); VS Code's activity bar |
+| **project tree** | | The sidebar inside a project: Script · Story · Assets · Episodes · Delivery, with the project's Reviews and Out of date. It stops at episodes. | [D16](decisions.md#d16-2026-10-30--the-navigation-a-studio-wide-rail-the-dramas-tree-one-home-per-object); VS Code's explorer |
 | **home** | | An object's one page and URL; other places only link to it. | [design principles](design-principles.md#1-one-home-per-object) |
 | **List**, **Canvas** | | An episode's two views: its segments as rows, and as one board in drama-cli's layout. | [D16](decisions.md#d16-2026-10-30--the-navigation-a-studio-wide-rail-the-dramas-tree-one-home-per-object) |
 | **agent panel**, **ball** | | The agent beside whatever is open: sessions, decisions, activity, composer. It folds to the ball in focused rooms and narrow windows. | the IA proposal, sections 2 and 7.5 <sup>[3](#ref-3)</sup> |
-| **current object** | | The drama, episode, item, version and session an action applies to, carried by the route's typed parameters. | [D19](decisions.md#d19-2026-10-30--tanstack-router-for-typed-routes); [design principles](design-principles.md#3-always-clear-what-you-act-on) |
+| **current object** | | The project, episode, item, version and session an action applies to, carried by the route's typed parameters. | [D19](decisions.md#d19-2026-10-30--tanstack-router-for-typed-routes); [design principles](design-principles.md#3-always-clear-what-you-act-on) |
 | **Analyzing**, **Fountain review** | | The setup steps that read the screenplay and review its Fountain rewrite; a process, not a view of Script. | [D21](decisions.md#d21-2026-10-30--analyzing-and-out-of-date-have-drama-level-routes-of-their-own) |
 
 ## Words retired
@@ -121,7 +121,7 @@ flowchart TB
 | To review, Inbox | Reviews | one queue, one name (the IA proposal, section 4) |
 | Crew, Production line | Computers; concurrency is a setting | Crew meant both machines and people (Codex's review, section 4) |
 | World, Cast, Scenes (as asset sections) | Assets: Characters, Locations, Props | a scene is the screenplay's (the IA proposal, section 10) |
-| Project (in the UI) | Drama | drama-cli's word stays in its files (the IA proposal, section 4) |
+| Drama, 剧目 (in the UI) | Project, 项目 | the studio makes nothing but dramas, so the word names no container ([D46](decisions.md#d46-2026-10-30--the-uis-container-is-a-project)) |
 | 镜头, 片段, 成片 for a take | 视频版本 | they are a shot, a segment and a film (Codex's review, section 4) |
 | Fresh, Stale (in the UI) | Up to date, Out of date | one pair for the maker (Codex's re-review, G2) |
 
