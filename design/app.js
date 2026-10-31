@@ -235,18 +235,21 @@
      The session's process, messages and composer follow it together; an unsent draft stays with its own session. */
   const inEpisode = () => ["canvas", "review", "cut"].includes(S.screen) || (S.screen === "graph" && window.EXTRA.lineageInEpisode());
   /* Codex round 4, F4: the script, the bible and the shared assets belong to the setup session (D5), so their pages follow
-     it, never an episode's. It ended at the handover; a message starts a new setup session on the project (D38,
-     POST /api/dramas/:id/messages, scope setup; D71), sent once under one submission id. */
+     it, never an episode's. It ended at the handover, and this version doesn't reopen it. */
   // Every drama page has a scope: its episode, else the project's setup (Script, Bible, Assets, and the pages of no one
   // episode: master's decision). The line always names its target; the picker (Pin) changes it to any episode.
   const followed = () => (inEpisode() ? "EP006" : "Setup");
   const talkTo = () => S.pin || followed();
   const whose = (to) => (to === "Setup" ? "the setup session" : to + "'s session");
   /* One dot, one meaning, as the maker's states have it: working while the scope's session runs, needs you while it waits,
-     none when no session is open (then a message starts a new one: POST /api/dramas/:id/messages). The sample's sessions:
-     EP003 runs, EP006 and EP007 wait, the setup has ended. */
+     none when no session is open. A message reaches only an open session (POST /api/dramas/:id/messages), so with none
+     the line goes and the status says why: the setup handed the project over; an episode is done; or its Computer
+     stopped, and Resume, a run control (D70), continues it in a new session with its files. The sample's sessions:
+     EP003 runs, EP006 and EP007 wait, EP005's Computer stopped, the setup has handed over, the rest are done. */
   const stateOf = (to) => (S.dramaStop ? "none" : to === "EP003" ? "running" : to === "EP006" || to === "EP007" ? "waiting" : "none");
-  const newOf = (to) => (to === "Setup" ? "a new setup session" : "a new " + to + " session");
+  const whyNone = (to) => (to === "Setup" ? "The setup handed over the project. This version can't reopen it."
+    : to === "EP005" ? "EP005's Computer stopped. Resume continues it in a new session with its files."
+    : to + " is done. This version can't reopen a finished episode.");
   const switchTo = (pin) => { const from = talkTo(), next = pin || followed(); set({ pin, drafts: { ...S.drafts, [from || ""]: S.draft }, draft: (S.drafts || {})[next || ""] || "" }); };
   const setAgent = (v) => { set({ agent: v }); try { localStorage.setItem("studio.agent", v); } catch (e) { /* storage may be blocked */ } };
   /* The agent's one form (D32 as amended): a right sidebar like VS Code's Secondary Side Bar and Cursor's agent pane. Open,
@@ -268,7 +271,7 @@
       <div class="ascope" role="status">${(() => {
         const st = stateOf(to), lead = S.pin ? html`${I("map-pin")}Pinned to` : "Following";
         const dot = st === "running" ? html`<span class="live" aria-hidden="true"></span>` : st === "waiting" ? html`<span class="adot you" aria-hidden="true"></span>` : null;
-        const words = st === "none" ? html`<span>No session open: a message starts <b>${newOf(to)}</b></span>`
+        const words = st === "none" ? html`<span>${whyNone(to)}</span>${to === "EP005" && html`<button class="btn sm" onClick=${() => toast("EP005 continues in a new session with its files.")}>Resume</button>`}`
           : html`<span>${lead} <b>${whose(to)}</b>: ${st === "running" ? "working" : "it waits for you"}</span>`;
         const back = S.pin ? html`<button class="btn sm ghost" onClick=${() => switchTo(null)}>${inEpisode() ? "Follow EP006" : "Follow the setup session"}</button>`
           : html`<button class="btn sm ghost" onClick=${() => switchTo("EP007")}>Pin to EP007</button>`;
@@ -316,9 +319,9 @@
           <div class="arow"><div class="what"><b>Margaret Cole base look v3</b><span>waits for you</span></div></div></section>
         <section class="asec"><h3>Next</h3><div class="nextchips"><button onClick=${() => go("review")}>Review EP006 takes</button><button onClick=${() => go("canvas")}>Review looks and plates</button></div></section>
       </div>
-      ${(() => {
-        // The line is always open on a drama page and names its target: the scope's open session, or a new one.
-        const target = stateOf(to) === "none" ? newOf(to) : whose(to);
+      ${stateOf(to) !== "none" && (() => {
+        // The line to the scope's open session, naming it.
+        const target = whose(to);
         const send = () => { set({ chats: { ...S.chats, [to]: [...((S.chats || {})[to] || []), S.draft.trim()] }, draft: "" }); toast("Sent to " + target + "."); };
         return html`<div class="composer"><textarea aria-label="Message" placeholder=${"Message " + target + "…"} value=${S.draft} onInput=${(e) => set({ draft: e.target.value })}
           onKeyDown=${(e) => { if (e.key === "Enter" && (e.metaKey || e.ctrlKey) && S.draft.trim()) send(); }}></textarea>

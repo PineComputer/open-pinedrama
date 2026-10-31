@@ -6,8 +6,8 @@ import { useEffect, useRef, useState } from "react";
 import { recentWork, type WorkItem } from "../../shared/facts.ts";
 import { nameOf, type Names } from "../../shared/names.ts";
 import { type ProjectView, takesInFlight } from "../../shared/project.ts";
-import type { ChatView, DecisionRecord, DramaView, FileItem, MessageView, ReviewSummary, SessionView, SubmissionView } from "../../shared/types.ts";
-import { ago, api, ApiError, useResource } from "../api.ts";
+import type { ChatView, DecisionRecord, DramaView, FileItem, ReviewSummary, SessionView, SubmissionView } from "../../shared/types.ts";
+import { ago, api, ApiError, useAction, useResource } from "../api.ts";
 import { Submission, useSubmission } from "../components/Submission.tsx";
 import { Dialog } from "../components/Dialog.tsx";
 import { Icon } from "../icons.tsx";
@@ -137,28 +137,32 @@ export function AgentPanel({ drama, episode, onCollapse }: { drama: DramaView; e
   // The scope's open session, if any: what the status line and the line's target say.
   const live = openSession(drama, scope);
   const status: "running" | "waiting" | "none" = !live ? "none" : live.waiting ? "waiting" : "running";
-  // With no session open, where the engine refuses a message (scope-messages.ts), the panel says so in the engine's words
-  // instead of offering a send that can only be refused: the setup or an episode whose session is starting, or an episode
-  // in line that hasn't started.
+  // A message reaches only the scope's open session (POST /api/dramas/:id/messages; this version opens none for it). With
+  // none open, the status line says why in the engine's words and no line is offered that can only be refused: an
+  // episode whose Computer stopped (Resume, a run control under D70, continues it in a new session with its files), a
+  // done episode, the setup once it handed the project over, or a session that is starting or hasn't started.
   const scopeRow = row(scope);
-  const blocked = live
+  const closed: string | undefined = live
     ? undefined
     : scope === "setup"
       ? drama.status === "setup"
         ? t("agent.setupStarting")
-        : undefined
-      : scopeRow?.state === "queued"
-        ? t("agent.notStarted", { who: scope })
-        : scopeRow?.state === "working" || scopeRow?.state === "waiting"
-          ? t("agent.sessionStarting", { who: scope })
-          : undefined;
+        : t("agent.setupHandedOver")
+      : scopeRow?.state === "stopped" || scopeRow?.state === "failed"
+        ? t("agent.computerStopped", { who: scope })
+        : scopeRow?.state === "done"
+          ? t("agent.episodeDone", { who: scope })
+          : scopeRow?.state === "queued"
+            ? t("agent.notStarted", { who: scope })
+            : t("agent.sessionStarting", { who: scope });
+  const resumable = !live && scopeRow && (scopeRow.state === "stopped" || scopeRow.state === "failed") ? scopeRow : undefined;
+  const resume = useAction(() => api(`/api/episodes/${resumable!.id}/resume`, { method: "POST" }));
   // The scope's conversation: its open session's, else the newest it had (the setup's chat has no episode label).
   const chats = sessions.data ?? [];
   const label = scope === "setup" ? "" : scope;
   const inView = (live && chats.find((chat) => chat.sessionId === live.id)) ?? chats.find((chat) => chat.label === label);
   const chat = useResource<ChatView>(inView ? `/api/sessions/${inView.sessionId}/chat` : null, inView ? [`session:${inView.sessionId}`] : []);
   const name = (of: string) => (of === "setup" ? t("agent.setupSession") : t("agent.sessionOf", { who: of }));
-  const fresh = (of: string) => (of === "setup" ? t("agent.newSetup") : t("agent.newSessionOf", { who: of }));
   const reload = () => {
     sessions.reload();
     chat.reload();
@@ -171,10 +175,6 @@ export function AgentPanel({ drama, episode, onCollapse }: { drama: DramaView; e
   const steps = (chat.data?.messages ?? []).filter((message) => message.kind === "activity").slice(-7);
   // The conversation, the one log (D70): what the maker said or decided and what the agent said, the newest last;
   // the studio's own goals and the agent's steps are not part of it.
-  // The scope's messages that went to a new session (D71, GET /api/dramas/:id/messages): while one waits, works, or
-  // ended without one, it shows here with where it stands; once its session has it, that session's chat does.
-  const sent = useResource<MessageView[]>(`/api/dramas/${id}/messages?scope=${encodeURIComponent(scope)}`, [`drama:${id}`]);
-  const pending = (sent.data ?? []).filter((message) => message.state !== "done").slice(-5);
   const conversation = (chat.data?.messages ?? []).filter((message) => (message.kind === "input" && !message.brief) || message.kind === "answer" || message.kind === "progress" || message.kind === "question" || message.kind === "result").slice(-8);
   return (
     <aside className="agent" id="agent" aria-label={t("agent.label")}>
@@ -186,24 +186,28 @@ export function AgentPanel({ drama, episode, onCollapse }: { drama: DramaView; e
         </button>
       </div>
       {/* One status line, one dot, as the maker's states read (D31 as amended): working while the scope's session runs,
-          needs you while it waits, no dot when none is open, and then a message starts one. */}
+          needs you while it waits, no dot when none is open, and then why. */}
       <div className="ascope" role="status">
         {status === "running" ? <span className="live" aria-hidden="true" /> : status === "waiting" ? <span className="adot you" aria-hidden="true" /> : null}
         {pinned && <Icon name="map-pin" className="ic" />}
         <span>
-          {blocked
-            ? blocked
-            : status === "none"
-            ? t("agent.noneOpen", { who: fresh(scope) })
+          {closed
+            ? closed
             : t(pinned ? (status === "running" ? "agent.pinnedRunning" : "agent.pinnedWaiting") : status === "running" ? "agent.followRunning" : "agent.followWaiting", { who: name(scope) })}
         </span>
         <span className="grow" />
+        {resumable && (
+          <button type="button" className="btn sm" disabled={resume.busy} onClick={() => void resume.run()}>
+            {t("agent.resume")}
+          </button>
+        )}
         {pinned && (
           <button type="button" className="btn sm ghost" onClick={() => setPinned(undefined)}>
             {t("agent.followScope", { who: name(row(episode) ? episode! : "setup") })}
           </button>
         )}
       </div>
+      {resume.error !== undefined && <p className="error small" style={{ margin: "6px 16px 0" }}>{errorText(resume.error, t)}</p>}
       <div className="ascroll">
         <section className="asec" aria-label={t("agent.sessions")}>
           <h3>
@@ -272,7 +276,7 @@ export function AgentPanel({ drama, episode, onCollapse }: { drama: DramaView; e
             </div>
           </section>
         )}
-        {(conversation.length > 0 || pending.length > 0) && (
+        {conversation.length > 0 && (
           <section className="asec" aria-label={t("agent.conversation")}>
             {conversation.map((message) =>
               message.decision ? (
@@ -285,20 +289,6 @@ export function AgentPanel({ drama, episode, onCollapse }: { drama: DramaView; e
                 <Markdown key={message.id} text={message.text} links={links} className="msg" />
               ),
             )}
-            {pending.map((message) => (
-              <div key={message.id} className="msg you">
-                <p>{message.text}</p>
-                <small className={message.state === "failed" ? "error" : "muted"}>
-                  {message.state === "queued"
-                    ? t("agent.msgQueued", { who: fresh(scope) })
-                    : message.state === "working"
-                      ? t("agent.msgWorking")
-                      : message.state === "stopped"
-                        ? t("agent.msgStopped")
-                        : (message.reason ?? t("agent.msgFailed"))}
-                </small>
-              </div>
-            ))}
           </section>
         )}
         {recent.length > 0 && (
@@ -333,7 +323,7 @@ export function AgentPanel({ drama, episode, onCollapse }: { drama: DramaView; e
           </section>
         )}
       </div>
-      {blocked ? null : <Line dramaId={id} scope={scope} target={live ? name(scope) : fresh(scope)} chat={live ? chat.data : undefined} onSent={reload} />}
+      {live && <Line dramaId={id} scope={scope} target={name(scope)} chat={chat.data} onSent={reload} />}
     </aside>
   );
 }

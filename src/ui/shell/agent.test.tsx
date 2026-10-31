@@ -93,35 +93,47 @@ describe("the agent panel", () => {
   });
 
   // D31 as amended: every drama page has a scope, its episode, else the setup; the line always names its target.
-  it("follows the setup on a page of no episode: with none open, one line says a message starts one, and sends it there", async () => {
-    const user = userEvent.setup();
+  // The sidebar follows the engine of this version: a message reaches only the scope's open session.
+  it("follows the setup on a page of no episode, and once it has handed over, says so with no line to send", async () => {
     engine();
-    accept("/api/dramas/d1/messages", { id: "sub", sessionId: "", state: "sent" });
     await renderAt(<AgentPanel drama={drama} onCollapse={() => {}} />);
     const status = screen.getByRole("status");
-    expect(status).toHaveTextContent("No session open: a message starts a new setup session");
+    expect(status).toHaveTextContent("The setup handed over the project. This version can't reopen it.");
     // No dot when no session is open, and none in the head: one dot, one meaning.
     expect(status.querySelector(".live, .adot")).toBeNull();
     expect(document.querySelector(".ahead .live")).toBeNull();
     // EP001 is at work and EP002 waits, but neither is taken for the page's.
     expect(screen.queryByText(/EP001's session/)).toBeNull();
-    expect(screen.getByText("To a new setup session")).toBeInTheDocument();
-    await user.type(screen.getByRole("textbox", { name: "Message the agent" }), "Make Ethan older.");
-    await user.click(screen.getByRole("button", { name: "Send" }));
-    await waitFor(() => expect(calls("POST", "/api/dramas/d1/messages")).toHaveLength(1));
-    const body = calls("POST", "/api/dramas/d1/messages")[0].body as { scope: string; submissionId: string; text: string };
-    expect(body).toMatchObject({ scope: "setup", text: "Make Ethan older." });
-    expect(body.submissionId).toMatch(/\S/);
-    expect(await screen.findByText(/Sent to a new setup session/)).toBeInTheDocument();
-    expect(screen.getByRole("textbox", { name: "Message the agent" })).toHaveValue("");
+    expect(screen.queryByRole("textbox", { name: "Message the agent" })).toBeNull();
+    expect(screen.queryByText(/a new .* session/)).toBeNull();
   });
 
   it("takes an episode as the scope only if the project has it: on a page naming another, it follows the setup", async () => {
     engine();
     await renderAt(<AgentPanel drama={drama} episode="EP003" onCollapse={() => {}} />);
-    expect(screen.getByRole("status")).toHaveTextContent("No session open: a message starts a new setup session");
-    expect(screen.getByText("To a new setup session")).toBeInTheDocument();
+    expect(screen.getByRole("status")).toHaveTextContent("The setup handed over the project.");
     expect(screen.queryByText(/EP003/)).toBeNull();
+  });
+
+  it("offers Resume where an episode's Computer stopped, a run control, and no line that would be refused", async () => {
+    const user = userEvent.setup();
+    engine();
+    accept("/api/episodes/e3/resume");
+    const stopped = { ...drama, episodeRows: [row(1, "working"), row(2, "waiting"), row(3, "stopped")] } as unknown as DramaView;
+    await renderAt(<AgentPanel drama={stopped} episode="EP003" onCollapse={() => {}} />);
+    expect(screen.getByRole("status")).toHaveTextContent("EP003's Computer stopped. Resume continues it in a new session with its files.");
+    expect(screen.queryByRole("textbox", { name: "Message the agent" })).toBeNull();
+    await user.click(within(screen.getByRole("status")).getByRole("button", { name: "Resume" }));
+    await waitFor(() => expect(calls("POST", "/api/episodes/e3/resume")).toHaveLength(1));
+  });
+
+  it("says a done episode can't be reopened in this version, with no line and no Resume", async () => {
+    engine();
+    const done = { ...drama, episodeRows: [row(1, "working"), row(2, "waiting"), row(3, "done")] } as unknown as DramaView;
+    await renderAt(<AgentPanel drama={done} episode="EP003" onCollapse={() => {}} />);
+    expect(screen.getByRole("status")).toHaveTextContent("EP003 is done. This version can't reopen a finished episode.");
+    expect(screen.queryByRole("textbox", { name: "Message the agent" })).toBeNull();
+    expect(screen.queryByRole("button", { name: "Resume" })).toBeNull();
   });
 
   it("says, in the engine's words, when an episode can't take a message yet, and offers no line that would be refused", async () => {
@@ -136,33 +148,16 @@ describe("the agent panel", () => {
     expect(screen.queryByRole("textbox", { name: "Message the agent" })).toBeNull();
   });
 
-  it("shows a message that went to a new session with where it stands: waiting, stopped with the project, or why it failed (D71)", async () => {
-    engine();
-    answer("/api/dramas/d1/messages", [
-      { id: "m1", scope: "setup", text: "Make Ethan older.", state: "stopped", sessionId: "", at: "2026-10-30T10:00:00Z" },
-      { id: "m2", scope: "setup", text: "Rename the bar.", state: "failed", sessionId: "s9", at: "2026-10-30T10:01:00Z", reason: "The Computer didn't start: out of credits." },
-      { id: "m3", scope: "setup", text: "Add a prop: the ring.", state: "queued", sessionId: "", at: "2026-10-30T10:02:00Z" },
-      { id: "m4", scope: "setup", text: "Done already.", state: "done", sessionId: "s8", at: "2026-10-30T09:00:00Z" },
-    ]);
-    await renderAt(<AgentPanel drama={drama} onCollapse={() => {}} />);
-    const said = await screen.findByRole("region", { name: "Conversation" });
-    expect(within(said).getByText("Make Ethan older.").parentElement).toHaveTextContent("Stopped with the project: send it again to retry");
-    expect(within(said).getByText("Rename the bar.").parentElement).toHaveTextContent("The Computer didn't start: out of credits.");
-    expect(within(said).getByText("Add a prop: the ring.").parentElement).toHaveTextContent("Waiting for a new setup session to start");
-    // One its session took is that session's chat's.
-    expect(within(said).queryByText("Done already.")).toBeNull();
-  });
-
   it("shows the engine's refusal in its words, and keeps the message", async () => {
     const user = userEvent.setup();
     engine();
     server.use(http.post("/api/dramas/d1/messages", () => HttpResponse.json({ code: "drama-not-running", error: "The project is stopped: resume it to send a message." }, { status: 409 })));
-    await renderAt(<AgentPanel drama={drama} onCollapse={() => {}} />);
-    await user.type(screen.getByRole("textbox", { name: "Message the agent" }), "Make Ethan older.");
+    await renderAt(<AgentPanel drama={drama} episode="EP001" onCollapse={() => {}} />);
+    await user.type(await screen.findByRole("textbox", { name: "Message the agent" }), "Keep the letter.");
     await user.click(screen.getByRole("button", { name: "Send" }));
     // The engine's code, worded as labels.ts words it, and the message kept.
     expect(await screen.findByRole("alert")).toHaveTextContent("Not submitted. The project is stopped: resume it first. Your message is kept.");
-    expect(screen.getByRole("textbox", { name: "Message the agent" })).toHaveValue("Make Ethan older.");
+    expect(screen.getByRole("textbox", { name: "Message the agent" })).toHaveValue("Keep the letter.");
   });
 
   it("points a setup waiting on a screenplay rewrite to Script, with no answer box that would be refused", async () => {
