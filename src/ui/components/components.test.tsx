@@ -54,7 +54,7 @@ describe("Button", () => {
         <Button variant="primary" size="lg">Primary</Button>
         <Button>Secondary</Button>
         <Button variant="ghost" size="sm">Ghost</Button>
-        <Button variant="danger" size="sm">Stop drama</Button>
+        <Button variant="danger" size="sm">Stop project</Button>
       </>,
     );
     // design/'s classes (studio.css .btn): secondary and md are the plain .btn.
@@ -62,7 +62,7 @@ describe("Button", () => {
     expect(shape("Primary")).toBe("btn primary lg");
     expect(shape("Secondary")).toBe("btn");
     expect(shape("Ghost")).toBe("btn ghost sm");
-    expect(shape("Stop drama")).toBe("btn danger sm");
+    expect(shape("Stop project")).toBe("btn danger sm");
   });
 });
 

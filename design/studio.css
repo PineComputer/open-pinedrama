@@ -843,3 +843,7 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
 .side .proj video { width: 30px; height: 40px; border-radius: 6px; object-fit: cover; }
 .navi video.dthumb, video.crumbimg { object-fit: cover; }
 .crumb .crumbimg { width: 16px; height: 22px; } .crumb .newthumb.crumbimg .ic { width: 11px; height: 11px; }
+/* yurun's Y1: the rail's places with their names under the icons, compact (liblib, astorie; Apple HIG). */
+.rail .ibtn.labelled { width: 52px; height: 46px; display: grid; grid-template-rows: 20px auto; place-items: center; align-content: center; gap: 2px; padding: 0; }
+.rail .raillabel { font-size: 10px; line-height: 1.1; font-weight: 500; }
+.rail .railcount.labelled .badge { right: 6px; top: 2px; }

@@ -15,7 +15,6 @@ import { Mark } from "../Mark.tsx";
 import type { Page } from "../place.ts";
 import { DramaThumb } from "../components/DramaThumb.tsx";
 import { dramaTree, type Mark as EpisodeMark, markOf } from "./tree.ts";
-import { isRedLine, standing } from "../screens/Slate.tsx";
 
 export type Step = "script" | "story" | "episodes" | "cut";
 
@@ -29,13 +28,12 @@ export function stepOf(drama: DramaView, page: Page | undefined): Step | undefin
 }
 
 /**
- * The studio's sidebar, off any one drama (design/app.js, Side): the dramas, each with where it stands as Home's card
- * says it, and New drama. Settings and Reviews are the rail's; Computers and Usage stay hidden until they work (IA §2).
+ * The studio's sidebar, off any one project: only the studio's own items (yurun's Y2: on Home the main area is the list
+ * of projects, so the sidebar doesn't repeat it). Projects, Reviews and Settings are the rail's; Computers and Usage
+ * stay hidden until they work (IA §2).
  */
-export function HomeSidebar({ page, reviews, replay, drawer }: { page: Page | undefined; reviews: ReviewSummary[]; replay: boolean; drawer: boolean }) {
+export function HomeSidebar({ page, replay, drawer }: { page: Page | undefined; replay: boolean; drawer: boolean }) {
   const { t } = useT();
-  const dramas = useResource<DramaCard[]>("/api/dramas", ["dramas"]);
-  const redLine = new Set(reviews.filter((review) => review.state === "open" && isRedLine(review)).map((review) => review.dramaId));
   return (
     <aside className={drawer ? "side drawer-open" : "side"} aria-label={t("sidebar.label")}>
       <div className="head">
@@ -45,19 +43,6 @@ export function HomeSidebar({ page, reviews, replay, drawer }: { page: Page | un
         </div>
       </div>
       <nav className="scroll" aria-label={t("sidebar.places")}>
-        <div className="sec">{t("nav.dramas")}</div>
-        {(dramas.data ?? []).map((drama) => {
-          const { st, label } = standing(drama, redLine.has(drama.id));
-          return (
-            <Link key={drama.id} to="/d/$dramaId" params={{ dramaId: drama.id }} className="navi">
-              {/* One cover rule (Y6); a drama with nothing to show yet has the designed placeholder (principle "Design states, not screens"). */}
-              <DramaThumb drama={drama} className="dthumb" />
-              <span className="grow">{drama.title}</span>
-              <span className="sr-only">, {t(label, { n: drama.waiting })}</span>
-              <span className={`dot ${st}`} aria-hidden="true" />
-            </Link>
-          );
-        })}
         <Link to="/new" className="navi" aria-current={page === "new" ? "page" : "false"}>
           <Icon name="plus" className="ic" />
           {t("slate.new")}

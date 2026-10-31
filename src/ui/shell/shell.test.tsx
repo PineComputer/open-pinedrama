@@ -1,5 +1,5 @@
 // The shell, used as a maker uses it, on a drama in production with episodes in each state: the
-// studio-wide rail, the drama tree with its counts, the episode tree and where the drama stands, the
+// studio-wide rail, the project tree with its counts, the episode tree and where the project stands, the
 // top bar with the breadcrumb and the next review, and the drama's bar with Back to, an episode's
 // views and its chips.
 import { screen, waitFor, within } from "@testing-library/react";
@@ -79,7 +79,7 @@ describe("the drama's bar", () => {
 
 describe("the top bar", () => {
   const crumbs = [
-    { label: "Dramas", to: linkOptions({ to: "/" }) },
+    { label: "Projects", to: linkOptions({ to: "/" }) },
     { label: "The Stepmother", to: linkOptions({ to: "/d/$dramaId/episodes", params: { dramaId: "d1" } }) },
     { label: "EP002" },
   ];
@@ -88,7 +88,7 @@ describe("the top bar", () => {
     const user = userEvent.setup();
     const { router } = await renderAt(<TopBar crumbs={crumbs} waiting={[]} ready next />, "/d/d1/e/EP002/list");
     const where = screen.getByRole("navigation", { name: "Where this belongs" });
-    expect(within(where).getAllByRole("link").map((link) => link.textContent)).toEqual(["Dramas", "The Stepmother"]);
+    expect(within(where).getAllByRole("link").map((link) => link.textContent)).toEqual(["Projects", "The Stepmother"]);
     expect(within(where).getByText("EP002")).toHaveAttribute("aria-current", "page");
     expect(screen.queryByRole("button", { name: /^Back/ })).toBeNull();
     await user.click(within(where).getByRole("link", { name: "The Stepmother" }));
@@ -122,9 +122,10 @@ describe("the rail", () => {
   it("is studio-wide: Dramas, Reviews with every drama's count, Settings, and no drama's places (IA §2)", async () => {
     await renderAt(<NavRail page="list" waiting={3} sidebarOpen onToggleSidebar={() => {}} />, "/d/d1/e/EP002/list");
     const rail = screen.getByRole("navigation", { name: "Places" });
-    expect(within(rail).getAllByRole("link").map((link) => [link.getAttribute("aria-label"), link.getAttribute("aria-current")])).toEqual([
-      ["Dramas", "page"],
-      ["Reviews, 3 waiting", "false"],
+    // Each place says its name under its icon (yurun's Y1); Reviews' name holds its count too (WCAG 2.5.3).
+    expect(within(rail).getAllByRole("link").map((link) => [link.textContent, link.getAttribute("aria-current")])).toEqual([
+      ["Projects", "page"],
+      ["Reviews3", "false"],
       ["Settings", "false"],
     ]);
     expect(within(rail).getByRole("link", { name: "Reviews, 3 waiting" })).toHaveAttribute("href", "/reviews");
@@ -135,7 +136,7 @@ describe("the rail", () => {
       const { unmount } = await renderAt(<NavRail page={page} waiting={0} sidebarOpen onToggleSidebar={() => {}} />, path);
       const rail = screen.getByRole("navigation", { name: "Places" });
       expect(within(rail).getByRole("link", { name: "Reviews" })).toHaveAttribute("aria-current", "page");
-      expect(within(rail).getByRole("link", { name: "Dramas" })).toHaveAttribute("aria-current", "false");
+      expect(within(rail).getByRole("link", { name: "Projects" })).toHaveAttribute("aria-current", "false");
       unmount();
     }
   });
@@ -152,14 +153,12 @@ describe("the rail", () => {
 });
 
 describe("the sidebar", () => {
-  it("on the studio's pages, lists the dramas as Home's cards stand, and New drama", async () => {
-    const card = (id: string, title: string, more: object) => ({ id, title, status: "production", waiting: 0, episodes: { total: 2, done: 0, waiting: 0, working: 1 }, ...more });
-    answer("/api/dramas", [card("d1", "The Stepmother", { waiting: 2 }), card("d2", "Night Class", {}), card("d3", "Last Toast", {})]);
-    const redLine = { ...review("r9"), dramaId: "d3", kind: "question", stop: { kind: "red-line" } } as unknown as ReviewSummary;
-    await renderAt(<HomeSidebar page="home" reviews={[redLine]} replay drawer={false} />, "/");
+  it("on the studio's pages, keeps only the studio's own items: Home's main area is the list of projects (yurun's Y2)", async () => {
+    answer("/api/dramas", [{ id: "d1", title: "The Stepmother", status: "production", waiting: 2 }]);
+    await renderAt(<HomeSidebar page="home" replay drawer={false} />, "/");
     const places = screen.getByRole("navigation", { name: "The studio" });
-    await waitFor(() => expect(within(places).getAllByRole("link").map((link) => link.textContent)).toEqual(["The Stepmother, 2 need you", "Night Class, Working", "Last Toast, Red line", "New drama"]));
-    expect(within(places).getByRole("link", { name: /^Night Class/ })).toHaveAttribute("href", "/d/d2");
+    expect(within(places).getAllByRole("link").map((link) => link.getAttribute("href"))).toEqual(["/new"]);
+    expect(screen.queryByText("The Stepmother")).toBeNull();
     expect(screen.getByText("Replay · sample work, no spend")).toBeInTheDocument();
   });
 
@@ -244,7 +243,7 @@ describe("the sidebar", () => {
   it("while the drama is set up, says the setup's step at its foot, not empty episode counts", async () => {
     const settingUp = { ...drama, status: "setup", episodes: { total: 0, done: 0, waiting: 0, working: 0 }, setup: { state: "working", reached: 4 }, episodeRows: [] } as unknown as DramaView;
     await renderAt(<DramaSidebar drama={settingUp} page="episodes" drawer={false} />);
-    const standing = screen.getByRole("status", { name: "Where the drama stands" });
+    const standing = screen.getByRole("status", { name: "Where the project stands" });
     expect(standing).toHaveTextContent("Setup · Preparing every episode: breakdowns, looks, places and props");
     expect(standing).not.toHaveTextContent("0 of 0");
   });
@@ -265,7 +264,7 @@ describe("the sidebar", () => {
     const budget = (reservedUsd: number) => ({ budgetUsd: 1000, spentUsd: 0, reservedUsd, remainingUsd: 1000 });
     answer("/api/dramas/d1/project", { state: null, sessions: [{ budget: budget(4.8) }, { budget: budget(2.4) }], problems: [], names: null });
     await renderAt(<DramaSidebar drama={drama} page="episodes" drawer={false} />);
-    const standing = screen.getByRole("status", { name: "Where the drama stands" });
+    const standing = screen.getByRole("status", { name: "Where the project stands" });
     expect(standing).toHaveTextContent("$41.20");
     expect(await within(standing).findByText("/ $1,000")).toBeInTheDocument();
     expect(standing).toHaveTextContent("$7.20 in flight");
@@ -275,7 +274,7 @@ describe("the sidebar", () => {
 
   it("marks a replay's spend as simulated, so it never reads as a charge", async () => {
     await renderAt(<DramaSidebar drama={{ ...drama, mode: "replay" }} page="episodes" drawer={false} />);
-    const standing = screen.getByRole("status", { name: "Where the drama stands" });
+    const standing = screen.getByRole("status", { name: "Where the project stands" });
     expect(within(standing).getByText("Simulated spend")).toBeInTheDocument();
     expect(within(standing).queryByText("Spent")).not.toBeInTheDocument();
   });

@@ -200,17 +200,17 @@ describe("the agent ball", () => {
   });
 });
 
-describe("Stop drama", () => {
+describe("Stop project", () => {
   it("asks first, and Keep running leaves it running", async () => {
     const user = userEvent.setup();
     accept("/api/dramas/d1/stop");
     await renderAt(<StopControl drama={drama} />);
-    await user.click(screen.getByRole("button", { name: "Stop drama" }));
+    await user.click(screen.getByRole("button", { name: "Stop project" }));
     const dialog = screen.getByRole("alertdialog", { name: "Stop The Stepmother?" });
     await user.click(within(dialog).getByRole("button", { name: "Keep running" }));
     expect(calls("POST", "/api/dramas/d1/stop")).toEqual([]);
-    await user.click(screen.getByRole("button", { name: "Stop drama" }));
-    await user.click(within(screen.getByRole("alertdialog", { name: "Stop The Stepmother?" })).getByRole("button", { name: "Stop drama" }));
+    await user.click(screen.getByRole("button", { name: "Stop project" }));
+    await user.click(within(screen.getByRole("alertdialog", { name: "Stop The Stepmother?" })).getByRole("button", { name: "Stop project" }));
     expect(calls("POST", "/api/dramas/d1/stop")).toHaveLength(1);
   });
 

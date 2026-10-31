@@ -276,7 +276,7 @@ export function App() {
     crumbs = ofDrama({ label: t("step.assets"), to: linkOptions({ to: "/d/$dramaId/assets/characters/{-$assetId}", params: { dramaId: drama.data.id, assetId: undefined } }) }, { label: t(LABEL[page] ?? "step.assets") });
   else crumbs = ofDrama({ label: t(LABEL[page] ?? "step.episodes") });
 
-  const sidebar = drama.data && dramaId ? <DramaSidebar drama={drama.data} page={page} episode={followed} drawer={narrow} /> : <HomeSidebar page={page} reviews={queue.data ?? []} replay={app.data.mode === "replay"} drawer={narrow} />;
+  const sidebar = drama.data && dramaId ? <DramaSidebar drama={drama.data} page={page} episode={followed} drawer={narrow} /> : <HomeSidebar page={page} replay={app.data.mode === "replay"} drawer={narrow} />;
   return (
     // The design's frame (design/app.js, App and each screen): the rail, the sidebar, then the main column, its
     // top bar over a body that holds the work beside the agent's panel.

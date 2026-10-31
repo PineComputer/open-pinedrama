@@ -97,10 +97,11 @@
     return html`<nav class="rail" aria-label="Main">
       <button class="ibtn" aria-label="Show or hide the sidebar" aria-expanded=${String(narrow() ? !!S.drawer : S.side)} onClick=${() => (narrow() ? set({ drawer: !S.drawer }) : set({ side: !S.side }))}>${I("list")}</button>
       <hr/>
-      <button class="ibtn" title="Dramas" aria-label="Dramas" aria-current=${dramas ? "page" : "false"} onClick=${() => go("home")}>${I("film-strip")}</button>
-      <button class="ibtn railcount" title="Reviews" aria-label="Reviews, 5 waiting" aria-current=${S.screen === "reviews" ? "page" : "false"} onClick=${() => set({ waitFor: null, screen: "reviews" })}>${I("list-checks")}<span class="badge">5</span></button>
+      ${/* yurun's Y1: each place says its name under its icon, as liblib's and astorie's rails do (Apple HIG: icons need a label unless universal). */ ""}
+      <button class="ibtn labelled" aria-current=${dramas ? "page" : "false"} onClick=${() => go("home")}>${I("film-strip")}<span class="raillabel">Projects</span></button>
+      <button class="ibtn labelled railcount" aria-label="Reviews, 5 waiting" aria-current=${S.screen === "reviews" ? "page" : "false"} onClick=${() => set({ waitFor: null, screen: "reviews" })}>${I("list-checks")}<span class="raillabel">Reviews</span><span class="badge">5</span></button>
       <span class="grow"></span>
-      <button class="ibtn" title="Settings" aria-label="Settings" onClick=${() => toast("Settings: notifications, appearance, data.")}>${I("gear-six")}</button>
+      <button class="ibtn labelled" onClick=${() => toast("Settings: notifications, appearance, data.")}>${I("gear-six")}<span class="raillabel">Settings</span></button>
       <div style="margin-top:6px">${Mark()}</div>
     </nav>`;
   }
