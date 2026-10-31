@@ -207,7 +207,7 @@ export function App() {
   const pathname = useLocation({ select: (location) => location.pathname });
   useEffect(() => setDrawer(false), [pathname]);
   const agentShown = Boolean(drama.data && dramaId);
-  const [agentMode, setAgentMode] = useAgentMode(agentShown);
+  const [agentMode, setAgentMode] = useAgentMode(agentShown, page === "review");
   const { t } = useT();
   useReviewNotifications(queue.data && waiting);
 

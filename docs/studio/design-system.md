@@ -44,7 +44,7 @@ flowchart TB
 | Layer | Where | Rule |
 |---|---|---|
 | Colour, type, space, radii, shadows | `design/themes.css`, `design/tokens.css`, imported as they are | every colour is a token; Reveric's two files are never edited (`CONTRIBUTING.md`, "Licence") |
-| Our layout sizes and motion | `src/ui/theme/base.css` | the rail 52 px, the sidebar 248, the agent panel 360, the inspector 380, the top bar 52 (`design/SPEC.md`, "Theme") |
+| Our layout sizes and motion | `src/ui/theme/base.css` | the rail 52 px, the sidebar 248, the agent panel 360, the inspector 380 (in the review room at most 40% of the room beside the reel, so the picture keeps 60%), the review reel 232, the top bar 52 (`design/SPEC.md`, "Theme") |
 | Theme | `src/ui/theme/theme.ts` | `data-palette="classic"` and `data-theme` (`light` or `dark`) on `<html>`; System follows `prefers-color-scheme`; dark is the default look |
 | Icons | `src/ui/icons.tsx` | Phosphor by the studio's names; add one by adding its component there |
 | Components | `src/ui/components/ui/` (shadcn/ui), `src/ui/components/` (ours) | a wrapper adds only what the studio needs; a component a library covers is not hand-written without approval |

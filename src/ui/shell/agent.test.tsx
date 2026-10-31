@@ -392,8 +392,8 @@ describe("the agent panel", () => {
 });
 
 describe("the agent sidebar's state", () => {
-  function Probe() {
-    const [mode, setMode] = useAgentMode(true);
+  function Probe({ room = false }: { room?: boolean }) {
+    const [mode, setMode] = useAgentMode(true, room);
     return <button type="button" onClick={() => setMode(mode === "open" ? "closed" : "open")}>{mode}</button>;
   }
 
@@ -407,6 +407,24 @@ describe("the agent sidebar's state", () => {
     expect(localStorage.getItem("studio.agent")).toBe("open");
     await user.keyboard("{Control>}{Alt>}b{/Alt}{/Control}");
     expect(localStorage.getItem("studio.agent")).toBe("closed");
+    localStorage.removeItem("studio.agent");
+  });
+
+  it("starts collapsed in the review room, keeps the maker's toggle there to the room, and gives back their choice on leaving (Codex rc3, C13)", async () => {
+    const user = userEvent.setup();
+    localStorage.setItem("studio.agent", "open");
+    const { rerender } = await renderAt(<Probe room />);
+    expect(screen.getByRole("button", { name: "closed" })).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "closed" }));
+    expect(screen.getByRole("button", { name: "open" })).toBeInTheDocument();
+    expect(localStorage.getItem("studio.agent")).toBe("open");
+    await user.click(screen.getByRole("button", { name: "open" }));
+    expect(localStorage.getItem("studio.agent")).toBe("open");
+    rerender(<Probe />);
+    expect(screen.getByRole("button", { name: "open" })).toBeInTheDocument();
+    // Back in the room, it starts collapsed again.
+    rerender(<Probe room />);
+    expect(screen.getByRole("button", { name: "closed" })).toBeInTheDocument();
     localStorage.removeItem("studio.agent");
   });
 });

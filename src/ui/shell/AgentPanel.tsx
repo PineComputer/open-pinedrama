@@ -26,9 +26,11 @@ const isToggle = (event: KeyboardEvent) => event.code === "KeyB" && event.altKey
 /**
  * Whether the agent sidebar is open: the maker's last choice, a convenience kept in this browser; until they choose, a
  * narrow window (1280 px and below) starts with it collapsed (D32). `active` is whether a drama page shows the agent, so
- * the key toggles it only there.
+ * the key toggles it only there. `room`: the review room, where the picture wins (Codex rc3, C13): the sidebar starts
+ * collapsed each time the room opens, what the maker does with it there lasts while they stay, and on leaving their own
+ * choice holds again.
  */
-export function useAgentMode(active: boolean): [AgentMode, (mode: AgentMode) => void] {
+export function useAgentMode(active: boolean, room: boolean): [AgentMode, (mode: AgentMode) => void] {
   const [mode, setMode] = useState<AgentMode>(() => {
     try {
       const saved = localStorage.getItem(MODE);
@@ -38,7 +40,16 @@ export function useAgentMode(active: boolean): [AgentMode, (mode: AgentMode) => 
     }
     return window.matchMedia("(max-width: 1280px)").matches ? "closed" : "open";
   });
+  const [roomMode, setRoomMode] = useState<AgentMode>("closed");
+  // Reset as the room opens, during render (react.dev, "Adjusting some state when a prop changes"), so it never shows open first.
+  const [inRoom, setInRoom] = useState(room);
+  if (room !== inRoom) {
+    setInRoom(room);
+    if (room) setRoomMode("closed");
+  }
+  const shown = room ? roomMode : mode;
   const choose = (next: AgentMode) => {
+    if (room) return setRoomMode(next);
     setMode(next);
     try {
       localStorage.setItem(MODE, next);
@@ -51,12 +62,12 @@ export function useAgentMode(active: boolean): [AgentMode, (mode: AgentMode) => 
     const onKey = (event: KeyboardEvent) => {
       if (!isToggle(event)) return;
       event.preventDefault();
-      choose(mode === "open" ? "closed" : "open");
+      choose(shown === "open" ? "closed" : "open");
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   });
-  return [mode, choose];
+  return [shown, choose];
 }
 
 /**

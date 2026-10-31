@@ -446,7 +446,8 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
   const before = item?.previous?.find((p) => p.kind === latest?.kind && p.style === latest?.style);
   const file = earlier && before ? before : latest;
   const draft = item ? drafts[item.key] : undefined;
-  const space = { width: Math.max(0, stageSize.width - 40), height: Math.max(0, stageSize.height - 40) };
+  // useSize gives the screen's content box, its padding already out (ResizeObserver's contentRect): the picture takes all of it.
+  const space = stageSize;
   // What drama-cli says this version was made with (its spec.json beside it), as the pro direction's inspector shows a take's facts.
   const spec = specFacts(useText(specBeside(file, episodeFiles.data ?? [])).text);
   const shots = useShotList(

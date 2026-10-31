@@ -76,3 +76,23 @@ test("a decision that never reached the engine is checked, said not submitted, a
   expect(sent).toHaveLength(2);
   expect(sent[1]).toBe(sent[0]);
 });
+
+// Codex rc3, C13: at 1440×1000 with the drama tree and the agent open, a 1536×1536 look showed at 88×88. The room gives
+// the picture the room: the agent sidebar starts collapsed there and the inspector takes at most 40% beside the reel.
+// Codex's own case, a square 1536 picture, measured at a laptop's 1440×900 with every default (the maker's choices cleared).
+test("the review room gives a square look at least 480 px at 1440×900 with the default panels", async ({ page }) => {
+  test.setTimeout(120_000);
+  const looks = await looksReview(page);
+  const square = '<svg xmlns="http://www.w3.org/2000/svg" width="1536" height="1536"><rect width="1536" height="1536" fill="#888"/></svg>';
+  for (const file of looks.reviewItems.flatMap((item) => item.files)) await page.route(`**${new URL(file.url, "http://studio").pathname}*`, (route) => route.fulfill({ contentType: "image/svg+xml", body: square }));
+  await page.evaluate(() => localStorage.removeItem("studio.agent"));
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto(`/r/${looks.id}`);
+  const picture = page.locator(".screen img");
+  await expect(picture).toBeVisible();
+  await expect(page.getByRole("complementary", { name: "Agent" })).toHaveCount(0);
+  await expect.poll(async () => {
+    const box = await picture.boundingBox();
+    return box ? Math.min(box.width, box.height) : 0;
+  }).toBeGreaterThanOrEqual(480);
+});

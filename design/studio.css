@@ -1,6 +1,6 @@
 /* Pine Drama Studio, pro direction. Colours, type, spacing and radii come from themes.css and tokens.css;
    every colour here is one of those tokens or a mix of them. */
-:root { --rail: 52px; --side: 248px; --agent: 360px; --insp: 380px; --top: 52px; }
+:root { --rail: 52px; --side: 248px; --agent: 360px; --insp: 380px; --reel: 232px; --top: 52px; }
 * { box-sizing: border-box; }
 html, body, #root { height: 100%; }
 body { margin: 0; background: var(--canvas); color: var(--text-primary); font: var(--type-ui-weight) var(--type-ui-size)/var(--type-ui-line) var(--font-sans); -webkit-font-smoothing: antialiased; }
@@ -310,6 +310,8 @@ input.search:focus { border-color: var(--text-primary); }
 .app:has(> .ball) .scrollmain:not(:has(> .room, .ds-canvas)) { padding-bottom: var(--ball-room); }
 .app:has(> .ball) .insp { padding-bottom: var(--ball-room); }
 .app:has(> .ball) .sendstrip { padding-right: var(--ball-room); }
+/* The agent's words show once: in its open sidebar, else in the review room's inspector (Codex rc3, C13). */
+.app:has(> .agent) .insp .agent-says { display: none; }
 .ball { position: fixed; right: 20px; bottom: 20px; width: 52px; height: 52px; border-radius: 50%; border: 1px solid var(--border-input); background: var(--surface-container-high); color: var(--text-primary); display: grid; place-items: center; cursor: pointer; box-shadow: var(--shadow-overlay); z-index: 31; }
 .ball .ic { width: 24px; height: 24px; }
 .ball .badge { position: absolute; right: -2px; top: -2px; min-width: 20px; height: 20px; border-radius: var(--radius-pill); background: var(--warning-text); color: var(--on-accent); font-size: 11px; font-weight: 700; display: grid; place-items: center; border: 2px solid var(--canvas); }
@@ -357,8 +359,11 @@ input.search:focus { border-color: var(--text-primary); }
 .minimap b { position: absolute; border: 1.5px solid var(--text-primary); border-radius: var(--radius-small); }
 
 /* ── review room ── */
-.room { flex: 1; min-width: 0; display: flex; min-height: 0; background: var(--canvas); }
-.reel { width: 232px; flex: none; border-right: 1px solid var(--border); background: var(--surface-dim); overflow: auto; padding: 12px 10px; display: flex; flex-direction: column; gap: 6px; }
+.room { flex: 1; min-width: 0; display: flex; min-height: 0; background: var(--canvas); container-type: inline-size; }
+/* The picture wins (Codex rc3, C13): beside the items' reel, the inspector takes at most 40% of what is left, so the
+   stage keeps at least 60% of it whatever the window and the sidebars leave the room (container query units). */
+.room > .insp { width: min(var(--insp), calc((100cqi - var(--reel)) * 0.4)); }
+.reel { width: var(--reel); flex: none; border-right: 1px solid var(--border); background: var(--surface-dim); overflow: auto; padding: 12px 10px; display: flex; flex-direction: column; gap: 6px; }
 .reel h3 { margin: 4px 6px 8px; font-size: 11px; font-weight: 600; color: var(--text-muted); letter-spacing: .4px; text-transform: uppercase; }
 .ritem { display: grid; grid-template-columns: 52px 1fr; gap: 10px; align-items: center; padding: 8px; border-radius: var(--radius-medium); border: 0; background: none; color: inherit; text-align: left; cursor: pointer; }
 .ritem:hover { background: var(--hover); }
@@ -608,7 +613,7 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
   .top .hide-s { display: none; }
   .room { flex-direction: column; overflow: auto; } .reel { width: auto; flex-direction: row; border-right: 0; border-bottom: 1px solid var(--border); overflow-x: auto; }
   .reel h3 { display: none; } .ritem { grid-template-columns: 40px 1fr; min-width: 180px; } .ritem img { width: 40px; height: 70px; }
-  .stage { flex: none; height: 72vh; } .screen { min-height: 0; padding: 12px; } .insp { width: auto; border-left: 0; flex: none; } .insp .iscroll { overflow: visible; } .search { width: 100%; }
+  .stage { flex: none; height: 72vh; } .screen { min-height: 0; padding: 12px; } .insp, .room > .insp { width: auto; border-left: 0; flex: none; } .insp .iscroll { overflow: visible; } .search { width: 100%; }
   .crumb > :nth-last-child(n+4) { display: none; } .controls { flex-wrap: wrap; gap: 10px; } .controls .muted { display: none; }
   .epgrid { grid-template-columns: repeat(2, 1fr); } .bar2 .chip { display: none; }
   .formgrid, .biblegrid, .presets { grid-template-columns: 1fr; }

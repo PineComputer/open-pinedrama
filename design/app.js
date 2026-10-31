@@ -24,14 +24,14 @@
   let drawing = false;
   const draw = () => { if (!drawing) { drawing = true; requestAnimationFrame(() => { drawing = false; render(html`<${App}/>`, root); }); } };
   const set = (p) => { Object.assign(S, typeof p === "function" ? p(S) : p); draw(); };
-  const go = (screen) => { set({ screen, sel: null, playing: false, drawer: false, from: null, at: null, asel: null, scriptEp: null }); try { history.replaceState(null, "", "#" + screen); } catch (e) { /* the hash is a convenience */ } };
+  const go = (screen) => { set({ screen, sel: null, playing: false, drawer: false, from: null, at: null, asel: null, scriptEp: null, roomAgent: null }); try { history.replaceState(null, "", "#" + screen); } catch (e) { /* the hash is a convenience */ } };
   /* IA draft (F): below 1100 px the drama tree is a drawer the rail's menu button opens. The agent has one form everywhere,
      a right sidebar, open or collapsed to its icon (setAgent). */
   const narrow = () => window.matchMedia("(max-width: 1100px)").matches;
   /* IA r2 (§16): each object has one home. A link lands on the home with the object selected (S.asel in Assets, S.sel on
      Canvas, S.gsel in Lineage), and remembers where it came from (S.from), so Back returns there. */
   const homeTab = (id) => (P.cast.some((c) => c.id === id) ? "cast" : P.places.some((p) => p.id === id) ? "scenes" : P.props.some((p) => p.id === id) ? "props" : null);
-  const jump = (to, label) => { set({ sel: null, drawer: false, toolOpen: false, zoomOpen: false, ...to, from: { screen: S.screen, sel: S.sel, osel: S.osel, asel: S.asel, at: S.at, label } }); try { history.replaceState(null, "", "#" + to.screen); } catch (e) { /* the hash is a convenience */ } };
+  const jump = (to, label) => { set({ sel: null, drawer: false, toolOpen: false, zoomOpen: false, roomAgent: null, ...to, from: { screen: S.screen, sel: S.sel, osel: S.osel, asel: S.asel, at: S.at, label } }); try { history.replaceState(null, "", "#" + to.screen); } catch (e) { /* the hash is a convenience */ } };
   /* Codex round 3 (fix 3): a link names the object's kind and version as well as its item (S.at = { kind, ver }), so it
      lands on that version, never on the item's newest. Kinds are drama-cli's lineage kinds (look, plate, prop, blocking,
      first_frame_reference, storyboard, take, cut); a plate's view or a storyboard's style rides along as at.view / at.style. */
@@ -253,7 +253,10 @@
     : to === "EP005" ? "EP005's Computer stopped. Resume continues it in a new session with its files."
     : to + " is done. This version can't reopen a finished episode.");
   const switchTo = (pin) => { const from = talkTo(), next = pin || followed(); set({ pin, drafts: { ...S.drafts, [from || ""]: S.draft }, draft: (S.drafts || {})[next || ""] || "" }); };
-  const setAgent = (v) => { set({ agent: v }); try { localStorage.setItem("studio.agent", v); } catch (e) { /* storage may be blocked */ } };
+  /* In the review room the picture wins (Codex rc3, C13): the sidebar starts collapsed each time the room opens (go resets
+     roomAgent), the maker's toggle there lasts while they stay, and their own choice holds again when they leave. */
+  const agentMode = () => (S.screen === "review" ? S.roomAgent || "closed" : S.agent);
+  const setAgent = (v) => { if (S.screen === "review") return set({ roomAgent: v }); set({ agent: v }); try { localStorage.setItem("studio.agent", v); } catch (e) { /* storage may be blocked */ } };
   /* The agent's one form (D32 as amended): a right sidebar like VS Code's Secondary Side Bar and Cursor's agent pane. Open,
      it docks beside the page, which narrows, Canvas included; below 1100 px it lays over the page from the right edge,
      still the sidebar. Collapsed, it is its icon: the robot, a ring while a session works, a badge for decisions.
@@ -273,7 +276,7 @@
     // What the maker said or decided before the sample's moment, oldest first: the conversation starts with it.
     const EARLIER = { EP006: ["You sent back EP006 seg01 t01: “He should hold the blanket folded before he speaks.”", "You sent back EP006 seg03 t01: “Too wide at the start; we lose Luca's face.”"] };
     const busy = !S.dramaStop;
-    if (S.agent !== "open") return html`<button class=${"ball" + (busy ? " busy" : "")} aria-expanded="false" title="Open the agent sidebar (⌥⌘B)"
+    if (agentMode() !== "open") return html`<button class=${"ball" + (busy ? " busy" : "")} aria-expanded="false" title="Open the agent sidebar (⌥⌘B)"
       aria-label=${"Agent" + (to ? ", " + (S.pin ? "pinned to " : "following ") + to : "") + (dec.length ? ", " + dec.length + " decisions wait" : "")} onClick=${() => setAgent("open")}>${I("robot")}${dec.length ? html`<span class="badge">${dec.length}</span>` : null}</button>`;
     return html`<aside class="agent" id="agent" aria-label="Agent">
       <div class="ahead"><h2>Agent</h2><span class="fill"></span>
@@ -840,7 +843,7 @@
       <div class="toasts" aria-live="polite">${S.toasts.map((t) => html`<div class="toast">${t.text}${t.action && html`<button onClick=${t.action.run}>${t.action.label}</button>`}</div>`)}</div>`;
   }
   window.addEventListener("keydown", (e) => {
-    if (e.code === "KeyB" && e.altKey && (e.metaKey || e.ctrlKey) && !studioPage()) { e.preventDefault(); setAgent(S.agent === "open" ? "closed" : "open"); }
+    if (e.code === "KeyB" && e.altKey && (e.metaKey || e.ctrlKey) && !studioPage()) { e.preventDefault(); setAgent(agentMode() === "open" ? "closed" : "open"); }
   });
   window.PD = { html, I, S, set, go, own, jump, openHome, openStage, openLineage, stageNode, toast, money, Status, TopBar, StopBanner, ProjectChips, AgentPanel, SPENT_COVERS, useEffect, useRef, Mark, draw, Submission, submit, recheck };
   // screens.js draws first, once its screens are registered.
