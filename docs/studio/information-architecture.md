@@ -104,8 +104,10 @@ and 16 <sup>[1](#ref-1)</sup>.
 | Episode | **Canvas** alone, in drama-cli's export layout: each segment's group holds its shot list, blocking, storyboards and take, with the shared references it reads, read-only, linking to Assets; its **Cut**. No view switch ([D66](../decisions.md#d66-2026-10-30--an-episode-is-its-canvas-laid-out-as-drama-clis-export); the product keeps List \| Canvas until the port) |
 | An item or version | its detail, with **Lineage** (what it was made from, what was made from it) as a view of the same home, not a peer page |
 
-Setup has its own steps, not views of Script: **Analyzing** and the **Fountain review**
-([D21](../decisions.md#d21-2026-10-30--analyzing-and-out-of-date-have-drama-level-routes-of-their-own)).
+Script holds the whole screenplay process, from the upload and the agent's Fountain rewrite to the
+maker's acceptance; there is no separate Analyzing step or Fountain review ([D62](../decisions.md#d62-2026-10-30--script-is-the-home-of-the-whole-screenplay-process),
+retiring [D21](../decisions.md#d21-2026-10-30--analyzing-and-out-of-date-have-drama-level-routes-of-their-own)'s
+Analyzing route).
 **Out of date** is a project-level filter beside Reviews, whose rows link to each item's home. Source:
 the IA proposal, sections 3, 8.4–8.5 and 10 <sup>[1](#ref-1)</sup>.
 
@@ -124,7 +126,6 @@ Router's, in `src/ui/routes.tsx`; one reader, `usePlace`, and one builder, `plac
 | `/r/$reviewId` | one review room |
 | `/settings` | Settings |
 | `/d/$dramaId/script`, `/bible`, `/episodes`, `/delivery` | the project's places |
-| `/d/$dramaId/analyzing` | setup: analyzing and the Fountain review |
 | `/d/$dramaId/assets/{characters,locations,props}/$assetId?` | Assets, with one selected |
 | `/d/$dramaId/e/$episodeCode/{list,canvas,cut}` | an episode's views and its cut |
 | `/d/$dramaId/out-of-date` | the Out of date filter |

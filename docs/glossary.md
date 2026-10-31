@@ -111,7 +111,6 @@ flowchart TB
 | **Canvas** | | An episode's page: its segments as groups on one board, in drama-cli's export layout. | [D66](decisions.md#d66-2026-10-30--an-episode-is-its-canvas-laid-out-as-drama-clis-export) |
 | **agent panel**, **ball** | | The agent beside whatever is open: sessions, decisions, activity, composer. One form: a right sidebar, open or collapsed to the ball (D32 as amended). | the IA proposal, sections 2 and 7.5 <sup>[3](#ref-3)</sup> |
 | **current object** | | The project, episode, item, version and session an action applies to, carried by the route's typed parameters. | [D19](decisions.md#d19-2026-10-30--tanstack-router-for-typed-routes); [design principles](design-principles.md#3-always-clear-what-you-act-on) |
-| **Analyzing**, **Fountain review** | | The setup steps that read the screenplay and review its Fountain rewrite; a process, not a view of Script. | [D21](decisions.md#d21-2026-10-30--analyzing-and-out-of-date-have-drama-level-routes-of-their-own) |
 
 ## Words retired
 
@@ -126,6 +125,7 @@ flowchart TB
 | 镜头, 片段, 成片 for a take | 视频版本 | they are a shot, a segment and a film (Codex's review, section 4) |
 | Story | Bible | drama-cli's name ([D61](decisions.md#d61-2026-10-30--story-is-renamed-bible-as-drama-cli-calls-it)) |
 | List, Segments (an episode's views) | Canvas | the Canvas in drama-cli's layout holds what they showed ([D66](decisions.md#d66-2026-10-30--an-episode-is-its-canvas-laid-out-as-drama-clis-export)) |
+| Analyzing, Fountain review | Script | the screenplay's whole process is on Script ([D62](decisions.md#d62-2026-10-30--script-is-the-home-of-the-whole-screenplay-process)) |
 | Fresh, Stale (in the UI) | Up to date, Out of date | one pair for the maker (Codex's re-review, G2) |
 
 ## References

@@ -388,7 +388,8 @@ timeline
 - **Consequences.** The router port (D19) carries both routes.
 - **Words.** None recorded.
 - **Recorded in.** work-05's routing brief, relayed to the docs on 30 October 2026.
-
+- **Amended by.** [D62](#d62-2026-10-30--script-is-the-home-of-the-whole-screenplay-process) (7381a9a): the Analyzing route is
+  retired; Start opens Script, which shows the setup's work on the screenplay. Out of date's route stays.
 ## D22. 2026-10-30 · Out of date is redone by its owner's session, one row or the whole group
 - **Context.** Out of date lists items from Assets and from episodes; each was made by a different
   session. The dry run of the IA draft (QA journey 3) found the redo only per group: the maker could
@@ -1097,7 +1098,14 @@ timeline
   version waits; after acceptance the maker asks the agent, which writes a new version that
   drama-cli checks and the maker accepts. Analyzing and the Fountain review fold into
   Script, which replaces [D21](#d21-2026-10-30--analyzing-and-out-of-date-have-drama-level-routes-of-their-own)'s
-  Analyzing route when the draft is ported.
+  Analyzing route when the draft is ported. Ported (7381a9a): Start opens Script, which shows "vN · the
+  agent is rewriting your file into Fountain" while the setup works on the screenplay, with the agent's
+  steps and validate's output in the agent sidebar, shown on Script during setup; the "Setup › Script"
+  and "Fountain review" crumbs are gone. A rewrite question takes an explicit verdict, approve or
+  revise (the item verdicts' names), required by the engine (db1a5f5): the agent is told "I accept
+  screenplay vN … --person "<words>"" or "I send screenplay vN back … "<words>"", the maker's words
+  verbatim, so it never guesses the verdict from the words (master's choice). The review room sends a
+  rewrite question to Script at that version.
 - **Alternatives.** The setup steps as their own route (D21); a horizontal stage line beside the
   vertical tree, which merecdesperez44323-lab rejected.
 - **Grounds.** merecdesperez44323-lab's decision; drama-cli records a version only when it passes:
@@ -1120,7 +1128,8 @@ timeline
   repetitive; shouldn't it simply be a document*); "当然 是否允许用户改是个问题， 暂时先不允许用户改？"
   (*whether to let the user edit is a question; not for now?*), relayed by master.
 - **Recorded in.** Design commits 46b2c73, f12ca5e (the editor), a1fc671 (the decision and
-  Compare) and 0c79dcc (recorded versions only); product commit ca0a623; master's and work-02's notes,
+  Compare) and 0c79dcc (recorded versions only); product commits ca0a623, 7381a9a (Analyzing retired)
+  and db1a5f5 (the explicit verdict); master's and work-02's notes,
   30 October 2026.
 
 ## D63. 2026-10-30 · An episode's views are Segments and Canvas; Segments is a matrix
