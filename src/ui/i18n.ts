@@ -66,7 +66,7 @@ const en = {
   "steer.backText": "Please redo {item}: {words}",
   "steer.noteText": "A note on {item}: {words}",
   "canvas.emptyTitle": "The board fills in as the agent works",
-  "canvas.emptyText": "Cast, places and props stand on the left; episodes follow, scene by scene, once the agent has reported where the drama stands.",
+  "canvas.emptyText": "Cast, places and props stand on the left; episodes follow, scene by scene, once the agent has reported where the project stands.",
   "canvas.unlisted": "Not in a scene yet",
   "canvas.fit": "Fit the board",
   "canvas.zoomIn": "Zoom in",
@@ -779,7 +779,7 @@ const en = {
   "talk.answer": "Answer the agent's question…",
   "talk.steer": "Steer the agent while it works…",
   "talk.run": "Ask for something…",
-  "talk.none": "No agent is at work on this drama.",
+  "talk.none": "No agent is at work on this project.",
   "talk.send": "Send",
 
   "cast.empty": "Characters, locations and props appear here as the agent draws them.",
@@ -1814,7 +1814,7 @@ const zh: Record<Key, string> = {
   "talk.answer": "回答智能体的问题……",
   "talk.steer": "在它工作时给出指引……",
   "talk.run": "提一个要求……",
-  "talk.none": "这部剧暂时没有在工作的智能体。",
+  "talk.none": "这个项目暂时没有在工作的智能体。",
   "talk.send": "发送",
 
   "cast.empty": "智能体绘制角色、地点和道具后，会出现在这里。",
