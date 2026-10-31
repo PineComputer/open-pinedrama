@@ -237,6 +237,9 @@ input.search:focus { border-color: var(--text-primary); }
 .process > button .cnt { margin-left: auto; font-size: 11px; color: var(--text-muted); background: var(--surface-container-high); padding: 1px 7px; border-radius: var(--radius-pill); }
 .msg { font-size: 13px; line-height: 1.6; color: var(--text-primary); padding: 10px 12px; border-radius: var(--radius-large); background: var(--surface-container); margin: 0; }
 .msg.you { background: var(--surface-container-high); margin-left: 40px; }
+/* A decision in the conversation: one line per item decided (AgentPanel, Decided). */
+.msg.decided p { margin: 0; } .msg.decided p + p { margin-top: 4px; }
+.asec .msg + .msg { margin-top: var(--space-sm); }
 .nextchips { display: flex; flex-wrap: wrap; gap: 6px; }
 .nextchips button { height: 28px; padding: 0 12px; border-radius: var(--radius-pill); border: 1px solid var(--border-input); background: var(--surface); color: var(--text-secondary); font-size: 12px; cursor: pointer; }
 .nextchips button:hover { background: var(--hover); color: var(--text-primary); }
@@ -389,7 +392,7 @@ input.search:focus { border-color: var(--text-primary); }
 .prevtake img { width: 46px; height: 82px; border-radius: var(--radius-medium); object-fit: cover; }
 .verdict { flex: none; padding: 14px 16px 16px; border-top: 1px solid var(--border); background: var(--surface-container); display: grid; gap: 10px; }
 /* On the cut the agent's ball sits over the inspector's foot: Send review keeps above it. */
-.verdict .vrow { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.verdict .vrow { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .verdict .vbtn { white-space: nowrap; padding: 0 8px; height: 38px; border-radius: var(--radius-pill); border: 1px solid var(--border-input); background: var(--surface); color: var(--text-secondary); font-weight: 600; font-size: 12.5px; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
 .verdict .vbtn .ic { width: 15px; height: 15px; }
 .verdict .vbtn kbd { font: 600 10px var(--font-mono); color: var(--text-subtle); border: 1px solid var(--border-input); border-radius: var(--radius-small); padding: 0 4px; }
@@ -404,7 +407,7 @@ input.search:focus { border-color: var(--text-primary); }
 .sendbar { flex: none; display: flex; align-items: center; gap: 12px; padding: 10px 16px; border-top: 1px solid var(--border); background: var(--surface-dim); }
 .sendbar .pips { display: flex; gap: 4px; }
 .sendbar .pips i { width: 22px; height: 4px; border-radius: var(--radius-pill); background: var(--surface-container-high); }
-.sendbar .pips i.a { background: var(--success); } .sendbar .pips i.b { background: var(--error); } .sendbar .pips i.n { background: var(--text-primary); }
+.sendbar .pips i.a { background: var(--success); } .sendbar .pips i.b { background: var(--error); }
 /* A sent review: the bar says where it went and stays read only (IA draft B2); a failed send keeps the draft, with its line. */
 .sendbar { flex-wrap: wrap; }
 .sendbar.sent { gap: 10px; }
@@ -552,7 +555,6 @@ input.search:focus { border-color: var(--text-primary); }
 .mini:hover { background: var(--hover); }
 .mini.acc[aria-pressed="true"] { background: var(--success); border-color: var(--success); color: var(--on-accent); }
 .mini.back[aria-pressed="true"] { background: var(--error); border-color: var(--error); color: #fff; }
-.mini.note[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
 input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid var(--border-input); background: var(--surface); color: var(--text-primary); padding: 0 10px; font: 12.5px var(--font-sans); outline: none; }
 .sendstrip { position: sticky; bottom: 0; display: flex; align-items: center; gap: 12px; padding: 10px 16px; border-top: 1px solid var(--border); background: var(--glass); backdrop-filter: blur(8px); font-size: 12.5px; }
 

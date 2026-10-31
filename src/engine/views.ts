@@ -26,7 +26,7 @@ import { LENGTHS } from "./goals.ts";
 import { type FileRow, fileUrl, filesOfStop, toItem, versionNumber } from "./library.ts";
 import { type ComputerRow, type DramaRow, type EpisodeRow, type ReviewRow, type SessionRow, episodeCode, latestTurn, session as sessionRow } from "./records.ts";
 import { turnRefusals } from "./refusals.ts";
-import { itemsOf, pendingReview } from "./reviews.ts";
+import { itemLabel, itemsOf, pendingReview } from "./reviews.ts";
 import { projectView } from "./status.ts";
 import { scaleOf } from "../shared/facts.ts";
 import { stopKind } from "../shared/refusal.ts";
@@ -440,9 +440,17 @@ export function chatView(session: SessionRow): ChatView {
       // A decision on a stop that ended its turn went as a run: its answer, then "carry on".
       const decided = decisions.get(message.text) ?? [...decisions.entries()].find(([answer]) => message.text.startsWith(`${answer}\n\n`))?.[1];
       if (decided) {
-        const items = decided.decision ? ((JSON.parse(decided.decision) as Decision).items ?? []) : [];
-        const revised = items.filter((item) => item.verdict === "revise").length;
-        return { ...message, decision: { reviewId: decided.id, kind: decided.kind, approved: items.length - revised, revised } };
+        const recorded = decided.decision ? (JSON.parse(decided.decision) as Decision) : undefined;
+        // Each item as the maker decided it: its name, the version they saw (the newest of the files it was decided on), the
+        // verdict and the notes they wrote, read from the submission record.
+        const versionOf = (ids: number[]) =>
+          ids.length
+            ? all<{ version: string | null }>(`select version from files where id in (${ids.map(() => "?").join(", ")})`, ...ids)
+                .flatMap((row) => (row.version ? [row.version] : []))
+                .sort((a, b) => versionNumber(b) - versionNumber(a))[0]
+            : undefined;
+        const items = (recorded?.items ?? []).map((item) => ({ label: itemLabel(item.key), version: versionOf(item.base ?? []), verdict: item.verdict, notes: item.notes.map((note) => note.text).filter(Boolean) }));
+        return { ...message, decision: { reviewId: decided.id, kind: decided.kind, words: recorded?.words ?? "", items } };
       }
       return briefs.has(message.text) ? { ...message, brief: true } : message;
     });

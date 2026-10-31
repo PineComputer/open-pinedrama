@@ -61,7 +61,7 @@ The rule and its grounds: [docs/studio/design-system.md](../docs/studio/design-s
 | NodeDetail | .detail | 300 floating card: picture, kv, Review / Lineage, read-only note. | React Flow's node toolbar; LibTV's node detail (Codex's review, section 5; no screenshot yet) |
 | ReviewRoom | .room | Reel 232 · Stage (9:16 player, 60px white play button) · Inspector 380. | Frame.io's review player with comments; [D17](../docs/decisions.md#d17-2026-10-30--the-maker-watches-every-take-and-every-cut) |
 | TakeCompare | .seg in .controls | "t02 · new" / "t01 · earlier". | Frame.io's version stacks and compare; HIG Segmented controls |
-| VerdictBar | .verdict | Accept (success when on) / Send back (error) / Accept with note (accent). Accept stays disabled until the take is watched to the end. A reason is required for Send back. | GitHub's review verdicts (Approve, Request changes, Comment); [principle 2](../docs/design-principles.md#2-one-action-one-meaning) |
+| VerdictBar | .verdict | Accept (success when on) / Send back (error), the two decisions the UI keeps (UI_ACTIONS_RULE), each with one sentence: the maker's words, or the reason. Each decision sent also shows in the agent's conversation. Accept stays disabled until the take is watched to the end. A reason is required for Send back. | GitHub's review verdicts (Approve, Request changes, Comment); [principle 2](../docs/design-principles.md#2-one-action-one-meaning) |
 | SendBar | .sendbar | Pips per item, "n of m decided", "Send review". | GitHub's pending review and Submit review; [D25](../docs/decisions.md#d25-2026-10-30--one-submission-state-for-every-send) |
 | SetupSteps | .setup | 26px numbered circles: you = warning fill, work = pulsing ring. | Material Design's steppers; Nielsen 1, visibility of system status |
 | Dropzone | .dropzone | Dashed, surface-container; over = --selected. | react-dropzone; HIG Drag and drop |
@@ -91,7 +91,7 @@ A tool's name means its own documentation of that feature. "Ours, untested" is c
 walkthrough.
 
 ## Labels (ship as written)
-Accept, Send back, Accept with note, Send review, Next review, Stop drama, Stopping…, Stopped, Resume, Keep running, Stop analyzing, Accept v2, Send v2 back, Upload script, Start, Accept cut, Following the agent / Follow the agent, Episode script, Lineage, Script / Bible / Assets / Episodes / Delivery, Characters / Locations / Props, Out of date.
+Accept, Send back, Send review, Next review, Stop drama, Stopping…, Stopped, Resume, Keep running, Stop analyzing, Accept v2, Send v2 back, Upload script, Start, Accept cut, Following the agent / Follow the agent, Episode script, Lineage, Script / Bible / Assets / Episodes / Delivery, Characters / Locations / Props, Out of date.
 
 Names of things (IA §10): Take / 视频版本 (t01, t02…), never 镜头 (a shot) or 片段 (a segment); Cut / 剪辑成片 (v1, v2…), an episode's versioned film; Delivery / 交付, the drama's accepted cuts; Locations, never Scenes, which stay the screenplay's scenes (场戏).
 

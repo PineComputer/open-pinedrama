@@ -457,8 +457,19 @@ export interface ChatMessage {
   at: string;
   /** An input that was the studio's own goal for a run, not something the maker wrote. */
   brief?: boolean;
-  /** An input that was the maker's decision on a review, sent in the agent's terms. */
-  decision?: { reviewId: string; kind: ReviewKind; approved: number; revised: number };
+  /**
+   * An input that was the maker's decision on a review, sent in the agent's terms; shown as the maker made it, each item
+   * accepted or sent back with its version and reason, and their words (UI_ACTIONS_RULE: the chat is the one log).
+   */
+  decision?: DecisionRecord;
+}
+
+/** A decision as the conversation shows it: the review it answered, the maker's words and each item's verdict. */
+export interface DecisionRecord {
+  reviewId: string;
+  kind: ReviewKind;
+  words: string;
+  items: { label: string; version?: string; verdict: Verdict; notes: string[] }[];
 }
 
 export interface ChatView {

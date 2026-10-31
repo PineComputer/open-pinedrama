@@ -40,6 +40,11 @@ function lookKey(file: Pick<FileRow, "subject" | "look">): string {
   return !file.look || file.look === "base" ? file.subject ?? "?" : `${file.subject}/${file.look}`;
 }
 
+/** What a review item is called: its key without the kind a place or prop carries (seg03, lin, garden/Night, Cut). */
+export function itemLabel(key: string): string {
+  return key === "cut" ? "Cut" : key.replace(/^(location|prop):/, "");
+}
+
 /** Splits a turn's files into the things the maker gives a verdict on, and the rest. */
 /** A place or prop as an item of the shared references: a place at another time of day (Night) is an item of its own. */
 export function placeKey(file: Pick<FileRow, "kind" | "subject" | "look">): string {
@@ -74,7 +79,7 @@ export function itemsOf(kind: ReviewKind, files: FileRow[]): { items: ReviewItem
     .sort(([a], [b]) => rank(a) - rank(b) || a.localeCompare(b, undefined, { numeric: true }))
     .map(([key, rows]) => ({
       key,
-      label: key === "cut" ? "Cut" : key.replace(/^(location|prop):/, ""),
+      label: itemLabel(key),
       files: rows.sort((a, b) => order(a) - order(b) || versionNumber(b.version) - versionNumber(a.version)).map(toItem),
     }));
   return { items, other: other.map(toItem) };

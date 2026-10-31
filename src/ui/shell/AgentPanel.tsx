@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { recentWork, type WorkItem } from "../../shared/facts.ts";
 import { nameOf, type Names } from "../../shared/names.ts";
 import { type ProjectView, takesInFlight } from "../../shared/project.ts";
-import type { ChatView, DramaView, FileItem, ReviewSummary, SessionView } from "../../shared/types.ts";
+import type { ChatView, DecisionRecord, DramaView, FileItem, ReviewSummary, SessionView } from "../../shared/types.ts";
 import { ago, api, useResource } from "../api.ts";
 import { Dialog } from "../components/Dialog.tsx";
 import { Icon } from "../icons.tsx";
@@ -146,10 +146,11 @@ export function AgentPanel({ drama, episode, setup = false, onCollapse }: { dram
   const decisions = (queue.data ?? []).filter((item) => item.state === "open");
   const recent = state ? recentWork(state, files.data ?? [], 6) : [];
   const steps = (chat.data?.messages ?? []).filter((message) => message.kind === "activity").slice(-7);
-  const said = (chat.data?.messages ?? []).filter((message) => message.kind === "progress" || message.kind === "question" || message.kind === "result").slice(-2);
+  // The conversation, the one log (UI_ACTIONS_RULE): what the maker said or decided and what the agent said, the newest last;
+  // the studio's own goals and the agent's steps are not part of it.
+  const conversation = (chat.data?.messages ?? []).filter((message) => (message.kind === "input" && !message.brief) || message.kind === "answer" || message.kind === "progress" || message.kind === "question" || message.kind === "result").slice(-8);
   const working = running.length > 0;
   const who = inView?.label || t("talk.setup");
-  const last = said.at(-1);
   return (
     <aside className="agent" id="agent" aria-label={t("agent.label")}>
       <div className="ahead">
@@ -253,9 +254,19 @@ export function AgentPanel({ drama, episode, setup = false, onCollapse }: { dram
             </div>
           </section>
         )}
-        {last && (
-          <section className="asec">
-            <Markdown text={last.text} links={links} className="msg" />
+        {conversation.length > 0 && (
+          <section className="asec" aria-label={t("agent.conversation")}>
+            {conversation.map((message) =>
+              message.decision ? (
+                <Decided key={message.id} decision={message.decision} episode={chat.data?.label ?? ""} />
+              ) : message.kind === "input" || message.kind === "answer" ? (
+                <p key={message.id} className="msg you">
+                  {message.text}
+                </p>
+              ) : (
+                <Markdown key={message.id} text={message.text} links={links} className="msg" />
+              ),
+            )}
           </section>
         )}
         {setupEnded && (
@@ -303,6 +314,28 @@ export function AgentPanel({ drama, episode, setup = false, onCollapse }: { dram
       </div>
       <Composer chat={setupEnded ? undefined : inView && chat.data} chosen={picked?.label ?? episode} ended={setupEnded} onSent={chat.reload} />
     </aside>
+  );
+}
+
+/**
+ * A decision the maker submitted, as the conversation shows it: each item accepted or sent back, by name and version, with
+ * the reason the maker gave it (its notes), else their words (UI_ACTIONS_RULE: every decision also appears in the chat).
+ */
+function Decided({ decision, episode }: { decision: DecisionRecord; episode: string }) {
+  const { t } = useT();
+  return (
+    <div className="msg you decided">
+      {decision.items.map((item, n) => {
+        const what = [episode, item.label, item.version].filter(Boolean).join(" ");
+        const why = item.verdict === "revise" && item.notes.length ? item.notes.join("; ") : decision.words;
+        return (
+          <p key={n}>
+            {t(item.verdict === "revise" ? "agent.youSentBack" : "agent.youAccepted", { what })}
+            {why ? `: “${why}”` : ""}
+          </p>
+        );
+      })}
+    </div>
   );
 }
 

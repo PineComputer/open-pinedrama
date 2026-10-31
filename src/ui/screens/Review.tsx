@@ -554,9 +554,6 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
       else if (event.key === "b") {
         event.preventDefault();
         sendBack();
-      } else if (event.key === "n" && open) {
-        event.preventDefault();
-        noteInput.current?.focus();
       } else if (event.key === "c" && before) setEarlier((on) => !on);
     };
     window.addEventListener("keydown", onKey);
@@ -911,10 +908,6 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
             <button type="button" className="vbtn back" aria-pressed={draft?.verdict === "revise"} disabled={!open} onClick={sendBack}>
               <Icon name="arrow-counter-clockwise" />
               {t("review.sendBack")} <kbd>B</kbd>
-            </button>
-            <button type="button" className="vbtn note" disabled={!open} onClick={() => noteInput.current?.focus()}>
-              <Icon name="note-pencil" />
-              {t("review.note")} <kbd>N</kbd>
             </button>
           </div>
           {mustWatch && (

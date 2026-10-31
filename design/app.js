@@ -11,7 +11,9 @@
   const hash = (location.hash || "").slice(1);
   const S = {
     screen: SCREENS.includes(hash) ? hash : "home", theme: "dark", tab: "all", filter: "all", waitFor: null, pin: null,
-    dialog: null, toasts: [], dramaStop: null, draft: "", chats: {}, drafts: {}, drawer: false,
+    dialog: null, toasts: [], dramaStop: null, draft: "", drafts: {}, drawer: false,
+    // The conversation each session has had: the maker's words and decisions, the one log (UI_ACTIONS_RULE).
+    chats: { EP006: ["You sent back EP006 seg01 t01: “He should hold the blanket folded before he speaks.”", "You sent back EP006 seg03 t01: “Too wide at the start; we lose Luca's face.”"] },
     // The agent sidebar is open or collapsed to its icon, the viewer's choice kept on this browser; until they choose,
     // narrow windows start collapsed (D32).
     agent: (() => { try { const v = localStorage.getItem("studio.agent"); if (v === "open" || v === "closed") return v; } catch (e) { /* storage may be blocked */ } return window.matchMedia("(max-width: 1280px)").matches ? "closed" : "open"; })(),
@@ -272,11 +274,11 @@
             if (r === "found") return html`<div class="arow"><div class="what"><b>EP005</b><span>Running · collecting seg03's take</span><small>Found: the provider finished seg03's video. The agent collects it and carries on; nothing is generated again.</small></div></div>`;
             return html`<div class="arow failed"><div class="what"><b>EP005</b>
               ${r === "checking" ? html`<span>Checking seg03's request with the provider…</span><small>Nothing is sent again while it checks.</small>`
-              : r === "failed" ? html`<span>seg03's request failed at the provider</span><small>Next: shoot seg03 again. That is one new request, and it spends.</small>`
+              : r === "failed" ? html`<span>seg03's request failed at the provider</span><small>Shooting it again is one new request, and it spends: ask EP005's agent in the conversation.</small>`
               : r === "unknown" ? html`<span>Still unknown: the provider hasn't said</span><small>Nothing is sent again. Check again later; the agent keeps waiting on it.</small>`
               : html`<span>Failed while shooting seg03 · <code>ProviderError.Unknown</code></span><small>drama-cli: the video request's outcome is unknown. It isn't sent again until it is reconciled.</small><small class="subtle">A failed session doesn't mean its jobs failed.</small>`}</div>
               ${r === "checking" ? html`<span class="muted" style="font-size:12px">Checking…</span>`
-              : r === "failed" ? html`<button class="btn sm" onClick=${() => set({ dialog: { title: "Shoot seg03 again?", body: "One new video request for EP005 seg03. It spends.", ok: "Shoot again", cancel: "Not now", run: () => { set({ recon: null }); toast("EP005 seg03 is being shot again."); } } })}>Shoot seg03 again</button>`
+              : r === "failed" ? html`<span class="muted" style="font-size:12px">Ask the agent below to shoot it again.</span>`
               : html`<button class="btn sm" title="drama-cli's recovery for an unknown outcome" onClick=${reconcile}>${r === "unknown" ? "Check again" : "Reconcile"}</button>`}</div>`;
           })()}</section>
         <section class="asec"><h3>Decisions <span class="c">${dec.length}</span></h3>
@@ -297,10 +299,10 @@
             <li class="now">${I("circle-notch")}<span>Waiting for your review</span><time></time></li></ol>`}</div></section>
         <section class="asec"><p class="msg">I shot seg01 again with the blanket folded before Luca speaks, and seg03 again opening on his face, as you asked. Both new takes wait for you.</p></section>`
         : html`<section class="asec"><p class="msg muted">Open an episode, or pin a session, to see its work here and message it.</p></section>`}
+        ${to && (S.chats?.[to] || []).length > 0 && html`<section class="asec" aria-label="Conversation">${S.chats[to].map((m) => html`<p class="msg you">${m}</p>`)}</section>`}
         <section class="asec"><h3>Recent work</h3>
           <div class="arow"><div class="what"><b>EP006 seg03 take t02</b><span>waits for you</span></div></div>
           <div class="arow"><div class="what"><b>Margaret Cole base look v3</b><span>waits for you</span></div></div></section>
-        ${to && (S.chats?.[to] || []).map((m) => html`<section class="asec"><p class="msg you">${m}</p></section>`)}
         <section class="asec"><h3>Next</h3><div class="nextchips"><button onClick=${() => go("review")}>Review EP006 takes</button><button onClick=${() => go("canvas")}>Review looks and plates</button></div></section>
       </div>
       ${(() => {
@@ -689,21 +691,28 @@
     // Codex round 3 (fix 1): the review is one submission (Submission), never sent twice; the draft locks once it may have arrived.
     const sendState = (S.subs || {}).review;
     const locked = !!sendState && sendState !== "failed";
-    const sendIt = () => { set({ rfield: null }); submit("review"); };
+    /* UI_ACTIONS_RULE: every decision also appears in the agent conversation of the session it goes to, as the maker made
+       it: each take accepted (with their words) or sent back (with its reason). Mirrored once the send goes through. */
+    const sendIt = () => {
+      set({ rfield: null }); submit("review");
+      if (S.outcome !== "ok") return;
+      const said = P.takes.map((t) => S.verdict[t.id] === "back" ? `You sent back EP006 ${t.seg} ${t.take}: “${(S.reason[t.id] || "").trim()}”` : `You accepted EP006 ${t.seg} ${t.take}${(S.words || "").trim() ? `: “${S.words.trim()}”` : ""}`);
+      set({ chats: { ...S.chats, EP006: [...((S.chats || {}).EP006 || []), ...said] } });
+    };
     // The first send and Send again ask the same way: the draft may have changed in between.
-    const confirmSend = () => set({ dialog: { title: "Send your review?", body: P.takes.map((t) => `${t.seg} ${t.take}: ${S.verdict[t.id] === "accept" ? "Accept" : S.verdict[t.id] === "note" ? "Accept with note" : "Send back — “" + (S.reason[t.id] || "").trim() + "”"}`).join("\n") + (P.takes.some((t) => S.verdict[t.id] === "back") ? "\nSending back shoots new takes: that spends." : ""), ok: "Send review", cancel: "Keep reviewing", run: sendIt } });
+    const confirmSend = () => set({ dialog: { title: "Send your review?", body: P.takes.map((t) => `${t.seg} ${t.take}: ${S.verdict[t.id] === "accept" ? "Accept" : "Send back — “" + (S.reason[t.id] || "").trim() + "”"}`).join("\n") + (P.takes.some((t) => S.verdict[t.id] === "back") ? "\nSending back shoots new takes: that spends." : ""), ok: "Send review", cancel: "Keep reviewing", run: sendIt } });
     useEffect(() => {
       const kd = (e) => { if (/textarea|input/i.test(e.target.tagName) || S.screen !== "review" || ((S.subs || {}).review && (S.subs || {}).review !== "failed")) return;
         if (e.key === " ") { e.preventDefault(); set({ playing: !S.playing }); }
         else if (e.key === "a" && S.watched[P.takes[S.ti].id]) setV("accept");
-        else if (e.key === "b") setV("back"); else if (e.key === "n") setV("note");
+        else if (e.key === "b") setV("back");
         else if (e.key === "ArrowDown") set({ ti: Math.min(P.takes.length - 1, S.ti + 1), showPrev: false });
         else if (e.key === "ArrowUp") set({ ti: Math.max(0, S.ti - 1), showPrev: false }); };
       window.addEventListener("keydown", kd); return () => window.removeEventListener("keydown", kd);
     }, []);
     const done = P.takes.filter((t) => S.verdict[t.id] && (S.verdict[t.id] !== "back" || (S.reason[t.id] || "").trim())).length;
     const pct = (S.t / dur) * 100, seen = ((S.maxT[tk.id] || 0) / dur) * 100;
-    const needsWords = v === "back" || v === "note";
+    const needsWords = v === "back";
     // IA r2 (§16): the room decides; it is no home. A take, its versions and an accepted take live in their segment in
     // EP006's Canvas, and a character in Assets: the room links there, landing on it, and Back returns to the room.
     const seg = P.scenes.flatMap((sc) => sc.segs).find((g) => g.id === tk.seg);
@@ -717,7 +726,7 @@
           <h3>EP006 · waiting for you</h3>
           ${P.takes.map((t, i) => html`<button class="ritem" aria-current=${String(i === S.ti)} onClick=${() => set({ ti: i, showPrev: false })}>
             <img src=${t.poster} alt=""/><span><b>${t.seg} · ${t.take}</b><small>${t.scene.split(" · ").slice(0, 1)} · ${t.dur} s</small>
-            ${S.verdict[t.id] ? Status(S.verdict[t.id] === "accept" ? "accepted" : S.verdict[t.id] === "back" ? "back" : "accepted", S.verdict[t.id] === "accept" ? "Accept" : S.verdict[t.id] === "back" ? "Send back" : "Accept with note") : S.watched[t.id] ? Status("you", "Watched") : Status("you", "Not watched")}</span></button>`)}
+            ${S.verdict[t.id] ? Status(S.verdict[t.id] === "accept" ? "accepted" : S.verdict[t.id] === "back" ? "back" : "accepted", S.verdict[t.id] === "accept" ? "Accept" : "Send back") : S.watched[t.id] ? Status("you", "Watched") : Status("you", "Not watched")}</span></button>`)}
           <h3 style="margin-top:14px">Accepted in EP006</h3>
           <button class="ritem" title="Open seg02 on EP006's Canvas" onClick=${() => inSeg("seg02", "t01", "Review · EP006 takes")}><img src=${"img/cover-ep6.jpg"} alt=""/><span><b>seg02 · t01</b><small>Scene 1 · 15 s</small>${Status("accepted")}</span></button>
         </nav>
@@ -753,10 +762,10 @@
             <div class="vrow">
               <button class="vbtn acc" aria-pressed=${String(v === "accept")} disabled=${!watched || locked} title=${watched ? "Accept (A)" : "Watch the take to the end first"} onClick=${() => setV("accept")}>${I("check")}Accept</button>
               <button class="vbtn back" aria-pressed=${String(v === "back")} disabled=${locked} onClick=${() => setV("back")}>${I("arrow-counter-clockwise")}Send back</button>
-              <button class="vbtn note" aria-pressed=${String(v === "note")} disabled=${!watched || locked} title="Accept, with a remark kept with the accepted take (N)" onClick=${() => setV("note")}>${I("note-pencil")}Accept with note</button></div>
-            ${needsWords && html`<textarea readonly=${locked} placeholder=${v === "back" ? "Why it goes back (required). The agent shoots again with your words." : "Your remark, kept with the accepted take."} value=${S.reason[tk.id] || ""} onInput=${(e) => step("reason:" + tk.id, { reason: { ...S.reason, [tk.id]: e.target.value } })}></textarea>`}
+</div>
+            ${needsWords && html`<textarea readonly=${locked} placeholder="Why it goes back (required). The agent shoots again with your words." value=${S.reason[tk.id] || ""} onInput=${(e) => step("reason:" + tk.id, { reason: { ...S.reason, [tk.id]: e.target.value } })}></textarea>`}
             <span class="hint">${I(watched ? "check-circle" : "clock")}${watched ? "Watched to the end." : `Watched ${Math.round(seen)}% · Accept unlocks at the end.`}${v === "back" && " Sending back may shoot a new take."}</span>
-            <span class="hint subtle">Keys: Space play · A accept · B send back · N accept with note · ↑↓ next take</span>
+            <span class="hint subtle">Keys: Space play · A accept · B send back · ↑↓ next take</span>
           </div>
           <div style="padding:10px 16px 0;border-top:1px solid var(--border);background:var(--surface-dim)"><input class="search" style="width:100%;height:32px" readonly=${locked} placeholder="Your words for the record, e.g. Approved. seg03 opens on Luca." value=${S.words || ""} onInput=${(e) => step("words", { words: e.target.value })}/></div>
           ${locked
@@ -764,7 +773,7 @@
                 ${sendState === "sent" && html`<span class="muted" style="font-size:12px">Your decisions are kept as sent; to change one, tell the agent in the panel.</span>`}</div>`
             : html`<div class="sendbar">
             ${sendState === "failed" && html`<${Submission} id="review" to="EP006's agent" onSend=${confirmSend} kept="Your draft is kept."/>`}
-            <span class="pips">${P.takes.map((t) => html`<i class=${S.verdict[t.id] === "accept" ? "a" : S.verdict[t.id] === "back" ? "b" : S.verdict[t.id] === "note" ? "n" : ""}></i>`)}</span>
+            <span class="pips">${P.takes.map((t) => html`<i class=${S.verdict[t.id] === "accept" ? "a" : S.verdict[t.id] === "back" ? "b" : ""}></i>`)}</span>
             <span class="muted grow" style="font-size:12px">${done} of ${P.takes.length} decided${changed ? html` · <b style="color:var(--text-primary)">Draft: ${changed} ${changed === 1 ? "item" : "items"} changed</b>` : ""}</span>
             <button class="btn sm ghost" title="Undo the last change" disabled=${!(S.rhist || []).length} onClick=${() => { const h = [...S.rhist], last = h.pop(); set({ rhist: h, rfield: null, ...last }); }}>Undo</button>
             <button class="btn sm ghost" title="Discard the whole draft" disabled=${!changed} onClick=${() => { set({ verdict: {}, reason: {}, words: "", rhist: [], rfield: null }); toast("Draft discarded. Nothing was sent."); }}>Reset</button>

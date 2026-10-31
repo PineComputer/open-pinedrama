@@ -114,6 +114,24 @@ describe("the agent panel", () => {
     expect(await screen.findByText("To the setup session · ended at the handover")).toBeInTheDocument();
   });
 
+  it("shows each decision the maker sent in the conversation, item by item, with its reason (UI_ACTIONS_RULE)", async () => {
+    engine();
+    const decided = chat("s1", "EP001", "steer");
+    decided.messages.push({
+      id: 9,
+      kind: "input",
+      text: "(the agent's terms)",
+      at: "2026-10-30T10:03:00Z",
+      decision: { reviewId: "r1", kind: "takes", words: "Good.", items: [{ label: "seg01", version: "t02", verdict: "approve", notes: [] }, { label: "seg03", version: "t02", verdict: "revise", notes: ["Open on Luca's face."] }] },
+    });
+    answer("/api/sessions/s1/chat", decided);
+    await renderAt(<AgentPanel drama={drama} episode="EP001" onCollapse={() => {}} />);
+    const said = await screen.findByRole("region", { name: "Conversation" });
+    expect(await within(said).findByText("You accepted EP001 seg01 t02: “Good.”")).toBeInTheDocument();
+    expect(within(said).getByText("You sent back EP001 seg03 t02: “Open on Luca's face.”")).toBeInTheDocument();
+    expect(within(said).queryByText("(the agent's terms)")).not.toBeInTheDocument();
+  });
+
   it("says whose session it follows", async () => {
     engine();
     await renderAt(<AgentPanel drama={drama} episode="EP001" onCollapse={() => {}} />);
