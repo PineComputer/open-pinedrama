@@ -36,4 +36,13 @@ describe("Board", () => {
     expect(codes()).toEqual(["EP002", "EP003", "EP001", "EP004"]);
     expect(within(document.querySelector(".filters") as HTMLElement).getByRole("button", { name: /Needs you first/ })).toBeInTheDocument();
   });
+
+  it("filters by the maker's states: Working holds the episodes in line too (design principles, Five maker-facing states)", async () => {
+    const user = userEvent.setup();
+    await renderAt(<Board drama={{ ...drama, episodeRows: [...drama.episodeRows, row(5, "working")] }} />);
+    const chips = within(document.querySelector(".filters") as HTMLElement).getAllByRole("button", { pressed: false }).concat(within(document.querySelector(".filters") as HTMLElement).getAllByRole("button", { pressed: true }));
+    expect(chips.filter((chip) => chip.classList.contains("fchip")).map((chip) => chip.textContent).sort()).toEqual(["All5", "Done1", "Needs you2", "Working2"]);
+    await user.click(screen.getByRole("button", { name: /^Working/ }));
+    expect([...document.querySelectorAll(".epcard .code")].map((code) => code.textContent)).toEqual(["EP004", "EP005"]);
+  });
 });

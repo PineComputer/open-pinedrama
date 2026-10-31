@@ -22,8 +22,6 @@ function chipOf(row: EpisodeRow): { status: Status; label: TKey } {
       return { status: "you", label: "board.filter.you" };
     case "working":
       return { status: "work", label: "board.filter.working" };
-    case "queued":
-      return { status: "line", label: "board.filter.queued" };
     case "done":
       return { status: "accepted", label: "board.done" };
     case "stopped":
@@ -78,12 +76,14 @@ function Card({ row, wide, dramaId }: { row: EpisodeRow; wide: boolean; dramaId:
 /** A stage on the card's strip: done is solid, at work dashed, waiting for the maker in the warning's colour. */
 const STRIP: Record<StageCell["state"], string> = { done: "d", working: "w", review: "y", none: "" };
 
-/** Which episodes the board shows: all, or those in one condition. */
+/**
+ * Which episodes the board shows: all, or those in one of the maker's states (design principles, "Five maker-facing
+ * states"; design/app.js, Episodes): Working holds the episodes in line too, their place in line the card's detail.
+ */
 const FILTERS = {
   all: () => true,
   you: (row: EpisodeRow) => row.state === "waiting" || row.state === "stopped" || row.state === "failed",
-  working: (row: EpisodeRow) => row.state === "working",
-  queued: (row: EpisodeRow) => row.state === "queued",
+  working: (row: EpisodeRow) => row.state === "working" || row.state === "queued",
   done: (row: EpisodeRow) => row.state === "done",
 } satisfies Record<string, (row: EpisodeRow) => boolean>;
 type Filter = keyof typeof FILTERS;
