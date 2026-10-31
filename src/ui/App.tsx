@@ -6,7 +6,7 @@ import type { ProjectView } from "../shared/project.ts";
 import type { AppInfo, DramaView, ReviewSummary, ReviewView } from "../shared/types.ts";
 import { ApiError, useResource } from "./api.ts";
 import { type TKey, useT } from "./i18n.ts";
-import { errorText, isSetupScreen, scriptWaits } from "./labels.ts";
+import { errorText, isSetupScreen, scriptWaits, subjectLabel, useNames } from "./labels.ts";
 import { useReviewNotifications } from "./notify.ts";
 import { type Page, usePlace, useRoute } from "./place.ts";
 import { EmptyState } from "./components/EmptyState.tsx";
@@ -38,6 +38,13 @@ function Gate({ error, onRetry }: { error: unknown; onRetry: () => void }) {
       )}
     </main>
   );
+}
+
+// An asset shelf's own page, with no asset picked: the crumb above a picked asset.
+function shelfOf(page: "characters" | "locations" | "props", dramaId: string) {
+  if (page === "characters") return linkOptions({ to: "/d/$dramaId/assets/characters/{-$assetId}", params: { dramaId, assetId: undefined } });
+  if (page === "locations") return linkOptions({ to: "/d/$dramaId/assets/locations/{-$assetId}", params: { dramaId, assetId: undefined } });
+  return linkOptions({ to: "/d/$dramaId/assets/props/{-$assetId}", params: { dramaId, assetId: undefined } });
 }
 
 // The label each drama page's crumb shows.
@@ -214,7 +221,12 @@ export function App() {
   const filteredBy = useRoute().search.drama;
   // The stage picked in an episode and its version, as drama-cli's status gives it, for the crumbs: "seg03 · Take t02".
   const stage = place?.item && place.episode ? stageOf(place.item) : undefined;
-  const status = useResource<ProjectView>(stage && dramaId ? `/api/dramas/${dramaId}/project` : null, [`project:${dramaId}`]);
+  const status = useResource<ProjectView>((stage || params.assetId) && dramaId ? `/api/dramas/${dramaId}/project` : null, [`project:${dramaId}`]);
+  // D26: an asset's detail ends the crumbs at the asset and its working version, as drama-cli's status names it.
+  const names = useNames(params.assetId ? dramaId : undefined);
+  const assetState = params.assetId && status.data?.state ? { characters: status.data.state.characters, locations: status.data.state.locations, props: status.data.state.props }[page === "characters" || page === "locations" || page === "props" ? page : "props"][params.assetId] : undefined;
+  const assetKind = page === "characters" ? "look" : page === "locations" ? "location" : "prop";
+  const assetCrumb = params.assetId ? { label: [subjectLabel(names, params.assetId, assetKind), assetState?.current].filter(Boolean).join(" · ") } : undefined;
   const stageState = stage?.where.segment && place?.episode ? status.data?.state?.episodes[place.episode] : undefined;
   const version = place?.version ?? (stage && stage.where.segment ? (stage.kind === "take" ? stageState?.segments[stage.where.segment]?.current : stage.kind === "storyboard" && stage.where.style ? stageState?.storyboards[stage.where.segment]?.[stage.where.style]?.current : undefined) : undefined);
   // The cut in view on an episode's Cut: the one its open review shows (CutTab), with its version for the crumbs.
@@ -273,7 +285,11 @@ export function App() {
   else if (drama.data && isSetupScreen(drama.data, page)) crumbs = ofDrama({ label: t("sidebar.setup") }, { label: t(page === "script" && scriptWaits(drama.data) ? "crumb.fountainReview" : "step.script") });
   // An Assets shelf sits under Assets, as the drama tree has it (IA §2): Drama › Assets › Characters.
   else if (drama.data && (page === "characters" || page === "locations" || page === "props"))
-    crumbs = ofDrama({ label: t("step.assets"), to: linkOptions({ to: "/d/$dramaId/assets/characters/{-$assetId}", params: { dramaId: drama.data.id, assetId: undefined } }) }, { label: t(LABEL[page] ?? "step.assets") });
+    crumbs = ofDrama(
+      { label: t("step.assets"), to: linkOptions({ to: "/d/$dramaId/assets/characters/{-$assetId}", params: { dramaId: drama.data.id, assetId: undefined } }) },
+      assetCrumb ? { label: t(LABEL[page] ?? "step.assets"), to: shelfOf(page, drama.data.id) } : { label: t(LABEL[page] ?? "step.assets") },
+      ...(assetCrumb ? [assetCrumb] : []),
+    );
   else crumbs = ofDrama({ label: t(LABEL[page] ?? "step.episodes") });
 
   // Inside a project: the icon rail beside its tree, which ☰ opens and closes (a drawer below 1100 px). Off a project the
