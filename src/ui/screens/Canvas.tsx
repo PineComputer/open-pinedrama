@@ -69,6 +69,8 @@ interface ItemData extends Record<string, unknown> {
   status: Status;
   /** The file drama-cli shows for the working version (the lineage's `shows`): a picture, or a take's or cut's video. */
   work?: FileItem;
+  /** That file's own width and height, once loaded. */
+  size?: [number, number];
   followed: boolean;
 }
 
@@ -84,6 +86,8 @@ const PANEL_HEIGHT = 420;
 const DOCKED = 420;
 /** The board's top the pills take (design/studio.css .ctop: 14 px in, 34 px high, and a margin), which nothing is placed under. */
 const PILLS = 64;
+/** The label's height above a node's card (design/studio.css .cnode .lab: a 22 px chip and a 6 px margin). */
+const LABEL = 28;
 /** The most a pick zooms a node in (D37): its picture readable, its label not past the pills. */
 const READABLE = 1.5;
 
@@ -97,14 +101,8 @@ interface BoardContext {
   files: FileItem[];
   /** The one item picked, whose bar and panel show; none while several are. */
   picked?: string;
-  /** A take's or cut's box ratio: the project's own format ("9:16, 480p" gives "9 / 16"); none where it states no ratio. */
-  ratio?: string;
-}
-
-/** The ratio a project's format states, as CSS's aspect-ratio writes it; none where it states none (never assumed). */
-export function formatRatio(format: string): string | undefined {
-  const stated = /^\s*(\d+)\s*:\s*(\d+)/.exec(format);
-  return stated ? `${stated[1]} / ${stated[2]}` : undefined;
+  /** A node's picture or video says its own size once loaded, so the node takes that ratio. */
+  measure: (id: string, width: number, height: number) => void;
 }
 
 const Board = createContext<BoardContext | null>(null);
@@ -117,7 +115,7 @@ const ICON = { character: "user", location: "image", prop: "cube", blocking: "sq
  * slider, duration, sound, full screen. Muted until the maker turns the sound on, so a hover previews it silently; the
  * bar takes no drag or pan of the board (React Flow's nodrag and nopan).
  */
-function NodePlayer({ url, label, bar, preview }: { url: string; label: string; bar: boolean; preview: boolean }) {
+function NodePlayer({ url, label, bar, preview, onSize }: { url: string; label: string; bar: boolean; preview: boolean; onSize: (width: number, height: number) => void }) {
   const { t } = useT();
   return (
     <MediaController className="player" aria-label={t("canvas.player", { item: label })}>
@@ -128,6 +126,7 @@ function NodePlayer({ url, label, bar, preview }: { url: string; label: string; 
         playsInline
         loop
         preload="metadata"
+        onLoadedMetadata={(event) => onSize(event.currentTarget.videoWidth, event.currentTarget.videoHeight)}
         onMouseEnter={preview ? (event) => void event.currentTarget.play().catch(() => undefined) : undefined}
         onMouseLeave={
           preview
@@ -204,15 +203,21 @@ function ItemNode(props: NodeProps<Node<ItemData>>) {
         <span className="name">{data.label}</span>
         {model && <span className="model">{model}</span>}
         {data.status !== "accepted" && <StatusChip status={data.status} label={t(`status.${data.status}` as TKey)} />}
+        {/* Its size in pixels, in the label's right corner, as liblib's node shows it. */}
+        {data.size && <span className="dims">{t("canvas.size", { w: data.size[0], h: data.size[1] })}</span>}
       </div>
-      {/* A take or cut keeps its whole frame: its box at the project's ratio, the video contained (design/studio.css). */}
+      {/* The picture or video at its own ratio, whole (liblib's node): its box follows the file, the media contained. */}
       <div
-        className={`card${data.stage.kind === "storyboard" ? " board-img" : ""}${video && board.ratio ? " framed" : ""}`}
-        style={video && board.ratio ? { aspectRatio: board.ratio } : undefined}
+        className={`card${data.stage.kind === "storyboard" ? " board-img" : ""}`}
+        style={data.size ? { aspectRatio: `${data.size[0]} / ${data.size[1]}` } : undefined}
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}
       >
-        {video ? <NodePlayer url={data.work!.url} label={data.label} bar={selected || hover} preview={!selected} /> : data.work ? <img src={data.work.url} alt="" draggable={false} /> : <div className="none">{t("canvas.noPicture")}</div>}
+        {video ? (
+          <NodePlayer url={data.work!.url} label={data.label} bar={selected || hover} preview={!selected} onSize={(w, h) => board.measure(id, w, h)} />
+        ) : data.work ? (
+          <img src={data.work.url} alt="" draggable={false} onLoad={(event) => board.measure(id, event.currentTarget.naturalWidth, event.currentTarget.naturalHeight)} />
+        ) : <div className="none">{t("canvas.noPicture")}</div>}
         {video && !(selected || hover) && (
           <span className="play" aria-hidden="true">
             <i>
@@ -435,6 +440,12 @@ function Plane({ drama }: { drama: DramaView }) {
     }
   };
   const target = newest?.id;
+  // Each node's file size, as its picture or video reports it once loaded.
+  const [sizes, setSizes] = useState<Record<string, [number, number]>>({});
+  const measure = (id: string, width: number, height: number) => {
+    if (!width || !height) return;
+    setSizes((known) => (known[id]?.[0] === width && known[id]?.[1] === height ? known : { ...known, [id]: [width, height] }));
+  };
 
   const mapped = useMemo(() => {
     if (!lineage || !code) return { nodes: [] as Node[], edges: [] as Edge[] };
@@ -444,7 +455,9 @@ function Plane({ drama }: { drama: DramaView }) {
     const own = new Set(lineage.nodes.filter((stage) => stage.section.startsWith(`${code} `)).map((stage) => stage.id));
     const linked = new Set(lineage.links.flatMap((link) => (own.has(link.to) ? [link.from] : own.has(link.from) ? [link.to] : [])));
     const shown = lineage.nodes.filter((stage) => own.has(stage.id) || (SHARED.includes(stage.section) && linked.has(stage.id)));
-    const { places, groups } = layout(shown);
+    // Each node at its picture's own ratio, at drama-cli's width: a row is as tall as its tallest (shared/layout.ts).
+    const heightOf = (id: string) => (sizes[id] ? LABEL + Math.round((WIDTH * sizes[id][1]) / sizes[id][0]) : HEIGHT);
+    const { places, groups } = layout(shown, heightOf);
     // The scene's heading as the other screens show it, without Fountain's scene number (labels.ts, headingText).
     const scene = (segment: string) => {
       const heading = state?.episodes[code]?.sceneChains.find((chain) => chain.segments.includes(segment))?.sceneHeading;
@@ -484,8 +497,8 @@ function Plane({ drama }: { drama: DramaView }) {
           expandParent: true,
           position: moved[stage.id] ?? { x: places.get(stage.id)![0] - group.x, y: places.get(stage.id)![1] - group.y },
           width: WIDTH,
-          height: HEIGHT,
-          data: { stage, item: of, label: label(stage, of), status: standingOf(stage), work: stage.shows ? files.data?.find((file) => file.path.endsWith(`/${stage.shows}`)) : undefined, followed: follow && target === stage.id },
+          height: heightOf(stage.id),
+          data: { stage, item: of, label: label(stage, of), status: standingOf(stage), work: stage.shows ? files.data?.find((file) => file.path.endsWith(`/${stage.shows}`)) : undefined, size: sizes[stage.id], followed: follow && target === stage.id },
         },
       ];
     });
@@ -494,7 +507,7 @@ function Plane({ drama }: { drama: DramaView }) {
     return { nodes: [...frames, ...items], edges };
     // t is made anew each render; the words change only with the language.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lineage, state, code, positions.data, files.data, names, follow, target, lang]);
+  }, [lineage, state, code, positions.data, files.data, names, follow, target, lang, sizes]);
 
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
   // New data keeps what the maker picked.
@@ -539,7 +552,8 @@ function Plane({ drama }: { drama: DramaView }) {
     if (picked) place(picked.id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dock, paneWidth, paneHeight, picked?.id]);
-  const [tool, setTool] = useState<Tool>("move");
+  // Hand by default: phase 1 only reads, so dragging moves the board (Figma's view-only mode, liblib's hand); V gives Move.
+  const [tool, setTool] = useState<Tool>("hand");
   // The item the last pick wrote into the URL.
   const written = useRef<string | null>(page?.item ?? null);
   // Where the board stood before a pick zoomed in (D37): letting go returns there; Fit forgets it.
@@ -641,7 +655,7 @@ function Plane({ drama }: { drama: DramaView }) {
   const edges = picked ? mapped.edges.map((edge) => (edge.source === picked.id || edge.target === picked.id ? { ...edge, className: "hot" } : edge)) : mapped.edges;
 
   return (
-    <Board.Provider value={{ pick, dock, bar, panel, files: files.data ?? [], picked: picked?.id, ratio: formatRatio(drama.format) }}>
+    <Board.Provider value={{ pick, dock, bar, panel, files: files.data ?? [], picked: picked?.id, measure }}>
       <section className="ds-canvas" aria-label={t("surface.canvas")}>
         <ReactFlow
           nodes={nodes}

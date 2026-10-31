@@ -262,7 +262,9 @@ input.search:focus { border-color: var(--text-primary); }
 .cnode .card { border-radius: 10px; overflow: hidden; border: 1px solid var(--border); background: var(--surface); cursor: pointer; transition: border-color .12s, box-shadow .12s; }
 .cnode .card:hover { border-color: color-mix(in srgb, var(--text-primary) 45%, var(--border)); }
 .cnode.sel .card { border-color: var(--text-primary); box-shadow: 0 0 0 1px var(--text-primary); }
-.cnode .card img { width: 100%; height: 100%; object-fit: cover; }
+/* A node's picture whole, at its own ratio (liblib's node): contained, never cropped; its size in the label's corner. */
+.cnode .card img { width: 100%; height: 100%; object-fit: contain; }
+.cnode .lab .dims { margin-left: auto; padding-left: 8px; font: 500 10.5px var(--font-mono); color: var(--text-muted); }
 .group { position: absolute; border-radius: var(--radius-2xl); border: 1px solid var(--border); background: color-mix(in srgb, var(--surface) 70%, transparent); }
 .group > .gl { position: absolute; left: 16px; top: 14px; font-size: 13px; font-weight: 600; color: var(--text-muted); }
 .segnode { position: absolute; width: 300px; }

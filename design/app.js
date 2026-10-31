@@ -10,9 +10,9 @@
   const S = {
     screen: SCREENS.includes(hash) ? hash : "home", theme: "dark", tab: "all", filter: "all", waitFor: null, pin: null,
     dialog: null, toasts: [], dramaStop: null, draft: "", chats: {}, drafts: {}, drawer: false,
-    cam: { x: 40, y: 96, k: 0.62 }, tool: "move", toolOpen: false, zoomOpen: false, keysOpen: false, sel: null, dock: (() => { try { return localStorage.getItem("studio.canvas.dock") || "under"; } catch (e) { return "under"; } })(), follow: true, agentOpen: false, panning: null, minimap: true,
+    cam: { x: 40, y: 96, k: 0.62 }, tool: "hand", toolOpen: false, zoomOpen: false, keysOpen: false, sel: null, dock: (() => { try { return localStorage.getItem("studio.canvas.dock") || "under"; } catch (e) { return "under"; } })(), follow: true, agentOpen: false, panning: null, minimap: true,
     ti: 0, playing: false, t: 0, watched: {}, maxT: {}, verdict: {}, reason: {}, showPrev: false, subs: {}, outcome: "ok", over: false,
-    state: "normal", proto: false, file: null, preset: null, len: "90", reviewing: "every", budget: "1000", ana: 0, tod: null, words: "", stab: "bible", cards: {}, cardWhy: {}, gsel: "ep6seg03", cutT: 0, cutPlaying: false, cutNotes: null, noteDraft: "", cutV: null, cutWhy: "",
+    state: "normal", proto: false, file: null, preset: null, len: "90", reviewing: "every", budget: "1000", ana: 0, tod: null, words: "", stab: "bible", cards: {}, cardWhy: {}, gsel: "ep6seg03", dims: {}, cutT: 0, cutPlaying: false, cutNotes: null, noteDraft: "", cutV: null, cutWhy: "",
   };
   let drawing = false;
   const draw = () => { if (!drawing) { drawing = true; requestAnimationFrame(() => { drawing = false; render(html`<${App}/>`, root); }); } };
@@ -406,9 +406,11 @@
      and what the node is; a pill row of drama-cli's settings; the hand controls disabled until phase 2. Read-only. */
   /* Out of date in this sample: the Case file, made from bible b0002 while b0003 is accepted. */
   const outOfDate = (n) => n.st === "stale" || n.stale || n.id === "file";
-  /* A take's or cut's box takes the project's own format as its ratio (its spec, "9:16 · 480p"), so the whole frame shows,
-     letterboxed like every player's; none where the format states no ratio. */
-  const framed = (format) => { const m = /^\s*(\d+)\s*:\s*(\d+)/.exec(format || ""); return m ? `aspect-ratio:${m[1]} / ${m[2]}` : ""; };
+  /* A node's picture or video at its own ratio, whole (liblib's node): the file says its size once loaded, the box follows
+     it, and the size shows in the label's corner. */
+  const sized = (src) => (S.dims[src] ? `aspect-ratio:${S.dims[src][0]} / ${S.dims[src][1]}` : "");
+  const measure = (src) => (e) => { const w = e.target.naturalWidth, h = e.target.naturalHeight; if (w && h && !S.dims[src]) set({ dims: { ...S.dims, [src]: [w, h] } }); };
+  const dims = (src) => S.dims[src] && html`<span class="dims">${S.dims[src][0]} × ${S.dims[src][1]}</span>`;
   function NodePanel({ node: item, style, uses, reads, docked: forced }) {
     // A segment's panel is on its picked version: the storyboard tile shows the storyboard's version, the take tile the take's.
     const at = item.seg ? pickedAt(item.seg) : null, ood = at && window.EXTRA.outOfDateAt(item.id, at);
@@ -508,13 +510,13 @@
             <svg class="wires" width="1" height="1">${EDGES.map(wire)}</svg>
             ${NODES.filter((n) => n.kind === "group").map((g) => html`<div class="group" style=${`left:${g.x}px;top:${g.y}px;width:${g.w}px;height:${g.h}px`}><span class="gl">${g.label}</span></div>`)}
             ${NODES.filter((n) => n.kind !== "group" && n.kind !== "seg").map((n) => html`<div class=${"cnode " + (S.sel === n.id ? "sel" : "")} style=${`left:${n.x}px;top:${n.y - 26}px;width:${n.w}px`}>
-              <div class="lab">${I(n.kind === "cast" ? "user" : n.kind === "place" ? "image" : "cube")}<span class="name">${n.label}</span><span class="model">${n.model}</span>${n.st !== "accepted" ? Status(n.st) : outOfDate(n) && Status("stale")}</div>
-              <div class="card" style=${`height:${n.h}px`} onClick=${() => pick(n)}><img src=${n.pic} alt="" draggable="false"/></div></div>`)}
+              <div class="lab">${I(n.kind === "cast" ? "user" : n.kind === "place" ? "image" : "cube")}<span class="name">${n.label}</span><span class="model">${n.model}</span>${n.st !== "accepted" ? Status(n.st) : outOfDate(n) && Status("stale")}${dims(n.pic)}</div>
+              <div class="card" style=${S.dims[n.pic] ? sized(n.pic) : `height:${n.h}px`} onClick=${() => pick(n)}><img src=${n.pic} alt="" draggable="false" onLoad=${measure(n.pic)}/></div></div>`)}
             ${NODES.filter((n) => n.kind === "seg").map((n) => html`<div class=${"segnode cnode " + (S.sel === n.id ? "sel" : "")} style=${`left:${n.x}px;top:${n.y - 26}px`}>
-              <div class="lab">${I("film-strip")}<span class="name">${n.label}</span><span class="subtle" style="font-weight:500">${n.seg.s} s</span><span class="model">${n.model}</span>${n.st !== "accepted" && Status(n.st)}</div>
+              <div class="lab">${I("film-strip")}<span class="name">${n.label}</span><span class="subtle" style="font-weight:500">${n.seg.s} s</span><span class="model">${n.model}</span>${n.st !== "accepted" && Status(n.st)}${n.seg.still && dims(n.seg.still)}</div>
               <div class="card">
                 ${n.seg.board ? html`<button class=${"board-img" + (S.sel === n.id && pickedAt(n.seg).kind === "storyboard" ? " on" : "")} aria-label=${n.label + " storyboard v1"} onClick=${() => pick(n, { kind: "storyboard", ver: "v1" })}><img src=${n.seg.board} alt="" draggable="false"/><span>board v1</span></button>` : html`<div class="none">board accepted</div>`}
-                ${n.seg.still ? html`<button class=${"take-tile" + (S.sel === n.id && pickedAt(n.seg).kind === "take" ? " on" : "")} style=${framed(P.project.spec)} aria-label=${n.label + " take " + n.seg.take} onClick=${() => pick(n, { kind: "take", ver: n.seg.take })}><img src=${n.seg.still} alt="" draggable="false"/><span>${n.seg.take}</span><span class="play"><i>${I("play")}</i></span></button>
+                ${n.seg.still ? html`<button class=${"take-tile" + (S.sel === n.id && pickedAt(n.seg).kind === "take" ? " on" : "")} style=${sized(n.seg.still)} aria-label=${n.label + " take " + n.seg.take} onClick=${() => pick(n, { kind: "take", ver: n.seg.take })}><img src=${n.seg.still} alt="" draggable="false" onLoad=${measure(n.seg.still)}/><span>${n.seg.take}</span><span class="play"><i>${I("play")}</i></span></button>
                   ${/* The take's inline player (merecdesperez44323-lab, D39): shown on the picked take and on hover, in media-chrome's control bar order,
                      as Premiere's, Frame.io's and YouTube's: play, time, the slider, duration, sound, full screen. Muted until the sound is on. */ ""}
                   <div class=${"vbar" + (S.sel === n.id && pickedAt(n.seg).kind === "take" ? " shown" : "")} role="group" aria-label=${"Play " + n.label + " take " + n.seg.take}>

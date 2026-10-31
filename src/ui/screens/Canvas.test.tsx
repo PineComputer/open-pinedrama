@@ -143,19 +143,19 @@ describe("the canvas", () => {
     expect(screen.queryByRole("img", { name: "Minimap: move the view" })).toBeNull();
   });
 
-  it("switches between Move and Hand from the tool menu and with V and H", async () => {
+  it("opens in Hand, so a drag moves the board, and switches to Move and back from the tool menu and with V and H", async () => {
     const user = userEvent.setup();
     engine(project());
     await renderAt(<Canvas drama={drama} />, "/d/d1/canvas");
     const tool = await screen.findByRole("button", { name: "Tool" });
-    expect(tool).toHaveAttribute("title", "Move");
-    await user.click(tool);
-    await user.click(await screen.findByRole("menuitemradio", { name: /Hand/ }));
     expect(tool).toHaveAttribute("title", "Hand");
-    await user.keyboard("v");
-    await waitFor(() => expect(tool).toHaveAttribute("title", "Move"));
+    await user.click(tool);
+    await user.click(await screen.findByRole("menuitemradio", { name: /Move/ }));
+    expect(tool).toHaveAttribute("title", "Move");
     await user.keyboard("h");
     await waitFor(() => expect(tool).toHaveAttribute("title", "Hand"));
+    await user.keyboard("v");
+    await waitFor(() => expect(tool).toHaveAttribute("title", "Move"));
   });
 
   it("zooms to a preset from the zoom menu", async () => {
