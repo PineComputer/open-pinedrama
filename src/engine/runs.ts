@@ -58,14 +58,18 @@ export function attachmentName(row: FileRow): string {
   return `${base}${ext}`;
 }
 
+// Newest by when Pine started the turn, as the status reports are taken (status.ts), not by when its
+// files were saved: a turn saved late (a retried save, an old turn settled after a restart) is not newer.
+const BY_TURN_START = "join turns t on t.id = f.turn_id order by t.created_at desc, t.rowid desc, f.id desc";
+
 /**
  * The parts of the newest packed project a turn returned: the drama's (no episode) or one episode's.
  * Only a turn whose files were all saved counts: parts saved before its Computer went away are no pack.
  */
 function newestArchive(where: string, ...params: string[]): FileRow[] {
   const newest = get<FileRow>(
-    `select * from files where kind = 'archive' and ${where}
-     and turn_id in (select id from turns where files_saved = 1) order by id desc limit 1`,
+    `select f.* from (select * from files where kind = 'archive' and ${where}
+     and turn_id in (select id from turns where files_saved = 1)) f ${BY_TURN_START} limit 1`,
     ...params,
   );
   return newest ? all<FileRow>(`select * from files where kind = 'archive' and turn_id = ? and ${where} order by rel_path`, newest.turn_id!, ...params) : [];
@@ -84,9 +88,9 @@ export function episodeArchive(episodeId: string): FileRow[] {
 /** The drama's approved references: the newest bible, look, location and prop the setup returned. */
 export function references(dramaId: string): FileRow[] {
   const rows = all<FileRow>(
-    `select f.* from files f join sessions s on s.id = f.session_id
-     where f.drama_id = ? and s.role = 'setup' and f.kind in ('bible', 'look', 'location', 'prop')
-     order by f.id desc`,
+    `select f.* from (select files.* from files join sessions s on s.id = files.session_id
+     where files.drama_id = ? and s.role = 'setup' and files.kind in ('bible', 'look', 'location', 'prop')) f
+     ${BY_TURN_START}`,
     dramaId,
   );
   const newest = new Map<string, FileRow>();
