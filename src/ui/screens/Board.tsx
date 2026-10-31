@@ -109,7 +109,7 @@ export function Board({ drama }: { drama: DramaView }) {
   const wide = /^\s*16\s*:\s*9/.test(drama.format);
   return (
     <>
-      <h2 className="sr-only">{t("step.episodes")}</h2>
+      <h1 className="sr-only">{t("step.episodes")}</h1>
       {rows.length > 0 && (
         // The design's filters (design/app.js, Episodes): a pressed chip per condition, a search, and the episode order.
         <div className="filters">
@@ -227,7 +227,7 @@ export function SetupPanel({ drama }: { drama: DramaView }) {
   return (
     <>
       <div className="work-head">
-        <h2>{t("setup.title")}</h2>
+        <h1>{t("setup.title")}</h1>
       </div>
       <div className="setup-panel">
         <div className="steps">

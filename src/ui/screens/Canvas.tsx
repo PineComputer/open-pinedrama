@@ -789,6 +789,8 @@ function Plane({ drama }: { drama: DramaView }) {
   return (
     <Board.Provider value={{ pick, dock, bar, panel, files: files.data ?? [], picked: picked?.id, measure }}>
       <section className="ds-canvas" aria-label={t("surface.canvas")}>
+        {/* The page's title is the episode its head names (D66), for assistive technology; the head shows it. */}
+        <h1 className="sr-only">{[code, names?.episodes[code]].filter(Boolean).join(" · ")}</h1>
         <ReactFlow
           nodes={nodes}
           edges={edges}

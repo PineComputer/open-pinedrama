@@ -20,6 +20,10 @@ describe("Cut", () => {
     await renderAt(<CutTab dramaId="d1" episode="EP002" />, "/d/d1/e/EP002/cut");
     expect(await screen.findByRole("button", { name: "Accept cut" })).toBeInTheDocument();
     expect(screen.getByText("Notes at a time")).toBeInTheDocument();
+    // One h1, the page's title, with its sections h2 under it (axe page-has-heading-one, heading-order; Codex rc5 C21).
+    const levels = screen.getAllByRole("heading").map((heading) => heading.tagName);
+    expect(levels[0]).toBe("H1");
+    expect(new Set(levels.slice(1))).toEqual(new Set(["H2"]));
   });
 
   it("lists the episodes' cuts when none waits", async () => {
@@ -27,5 +31,6 @@ describe("Cut", () => {
     answer("/api/dramas/d1/delivery", []);
     await renderAt(<CutTab dramaId="d1" episode="EP002" />, "/d/d1/e/EP002/cut");
     expect(await screen.findByText("Episodes appear here once production starts.")).toBeInTheDocument();
+    expect(screen.getAllByRole("heading").map((heading) => [heading.tagName, heading.textContent])).toEqual([["H1", "Cut"]]);
   });
 });

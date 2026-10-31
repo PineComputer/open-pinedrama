@@ -29,6 +29,8 @@ describe("the drama's Out of date", () => {
     engine("location-plate-replaced");
     await renderAt(<OutOfDate dramaId="d1" />, "/d/d1/out-of-date");
     expect(await screen.findByText(/out of date$/)).toHaveTextContent(/^\d+ out of date$/);
+    // One h1, the page's title, with its sections h2 under it (axe page-has-heading-one, heading-order; Codex rc5 C21).
+    expect(screen.getAllByRole("heading").map((heading) => [heading.tagName, heading.textContent])).toEqual([["H1", "Out of date"]]);
     expect(group(/^Assets$/)).toBeInTheDocument();
     expect(group(/^Episodes · EP001$/)).toBeInTheDocument();
     // The plate drama-cli calls stale, its reason in drama-cli's words (classify doesn't know an accepted.json).

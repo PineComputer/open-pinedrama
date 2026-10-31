@@ -27,5 +27,7 @@ describe("Delivery", () => {
     expect(within(second).getByText("No cut yet")).toBeInTheDocument();
     expect(within(second).queryByRole("link", { name: /Download/ })).toBeNull();
     expect(document.querySelector("video")).toBeNull();
+    // One h1, the page's title, with its sections h2 under it (axe page-has-heading-one, heading-order; Codex rc5 C21).
+    expect(screen.getAllByRole("heading").map((heading) => [heading.tagName, heading.textContent])).toEqual([["H1", "Delivery"]]);
   });
 });

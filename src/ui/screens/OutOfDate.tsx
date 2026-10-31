@@ -84,11 +84,14 @@ export function OutOfDate({ dramaId }: { dramaId: string }) {
   const unreadable = lineageUnreadable(view.data, t);
   if (unreadable)
     return (
-      <div className="bar2">
-        <span className="delivsum">
-          <b>{t("ood.unknown")}</b> {unreadable}
-        </span>
-      </div>
+      <>
+        <h1 className="sr-only">{t("tree.outOfDate")}</h1>
+        <div className="bar2">
+          <span className="delivsum">
+            <b>{t("ood.unknown")}</b> {unreadable}
+          </span>
+        </div>
+      </>
     );
   const lineage = view.data.lineage;
   const ids = lineage ? outOfDate(lineage) : new Set<string>();
@@ -140,6 +143,7 @@ export function OutOfDate({ dramaId }: { dramaId: string }) {
   };
   return (
     <>
+      <h1 className="sr-only">{t("tree.outOfDate")}</h1>
       <div className="bar2">
         <span className="delivsum">
           {nodes.length ? (

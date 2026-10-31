@@ -24,6 +24,8 @@ describe("Board", () => {
     expect(screen.getByRole("link", { name: "EP002 · Episode 2" })).toHaveTextContent("2 takes wait for you");
     expect(screen.getByRole("link", { name: "EP003 · Episode 3" })).toHaveTextContent("The cut waits for you");
     expect(screen.getByRole("button", { name: /Needs you/ })).toHaveTextContent(/2$/);
+    // One h1, the page's title, with its sections h2 under it (axe page-has-heading-one, heading-order; Codex rc5 C21).
+    expect(screen.getAllByRole("heading").map((heading) => [heading.tagName, heading.textContent])).toEqual([["H1", "Episodes"]]);
   });
 
   it("while the maker has paused the project, says Paused on an episode stopped with it, with no Resume of its own (D74)", async () => {

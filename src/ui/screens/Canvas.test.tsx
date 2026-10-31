@@ -47,6 +47,9 @@ describe("the canvas", () => {
     await renderAt(<Canvas drama={drama} />, "/d/d1/canvas");
     const board = await screen.findByRole("region", { name: "Canvas" });
     expect(await within(board).findByRole("button", { name: /^林/ })).toBeInTheDocument();
+    // The page's one h1 is the episode (axe page-has-heading-one; Codex rc5 C21).
+    expect(screen.getAllByRole("heading").map((heading) => heading.tagName)).toEqual(["H1"]);
+    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(/^EP001/);
     expect(within(board).getByRole("button", { name: /^办公室 · Day/ })).toBeInTheDocument();
     expect(within(board).queryByRole("button", { name: /^lin\b/ })).toBeNull();
   });

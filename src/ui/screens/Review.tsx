@@ -1086,6 +1086,7 @@ export function CutRoom({ review, done }: { review: ReviewView; done: () => void
 
   return (
     <div className="room is-cut">
+      <h1 className="sr-only">{t("step.cut")}</h1>
       <CutViewer format={drama.data?.format} lines={lines} linesAligned={Boolean(srt)} selected={selected} onSelect={setSelected} file={file} tag={`${code} · ${t("kind.cut").toLowerCase()} ${file.version ?? ""}`.trim()} notes={notes} videoRef={video} onTime={setPlayhead} />
       <aside className="insp" aria-label={t("review.inspector")}>
         <div className="ihead">
@@ -1110,9 +1111,9 @@ export function CutRoom({ review, done }: { review: ReviewView; done: () => void
         <div className="iscroll">
           <Status review={review} />
           <div className="isec">
-            <h4>
+            <h2>
               {t("cut.notesAt")} <span className="muted">{notes.length}</span>
-            </h4>
+            </h2>
             {timed.map(({ note, n }) => (
               <div key={n} className="noterow">
                 <button type="button" className="mono tbtn" aria-label={t("cut.goTo", { time: fmt(note.time ?? 0) })} onClick={() => seek(note.time ?? 0)}>
@@ -1147,9 +1148,9 @@ export function CutRoom({ review, done }: { review: ReviewView; done: () => void
           </div>
           {clip && (
             <div className="isec">
-              <h4>
+              <h2>
                 {t("cut.properties")} <span className="muted">{clip.segment}</span>
-              </h4>
+              </h2>
               <dl className="kv">
                 <dt>{t("cut.segment")}</dt>
                 <dd>{clip.segment}</dd>
@@ -1180,7 +1181,7 @@ export function CutRoom({ review, done }: { review: ReviewView; done: () => void
           )}
           {plan && (
             <div className="isec">
-              <h4>{t("cut.madeFrom")}</h4>
+              <h2>{t("cut.madeFrom")}</h2>
               {plan.clips.map((clip) => (
                 <div key={`${clip.segment}/${clip.start}`} className="lrow plain">
                   {t("cut.take", { segment: clip.segment, take: clip.take })}
@@ -1190,7 +1191,7 @@ export function CutRoom({ review, done }: { review: ReviewView; done: () => void
             </div>
           )}
           <div className="isec" style={{ borderBottom: 0 }}>
-            <h4>{t("cut.whatHappens")}</h4>
+            <h2>{t("cut.whatHappens")}</h2>
             <p className="muted">{t("cut.whatHappensText", { code })}</p>
           </div>
         </div>

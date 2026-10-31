@@ -81,9 +81,9 @@ export function CutEdit({ review, file, clips, files, code }: { review: ReviewVi
           </p>
         )}
         <div className="isec">
-          <h4>
+          <h2>
             {t("edit.basedOn")} <span className="muted">{file.version}</span>
-          </h4>
+          </h2>
           {newer && (
             <div className="basewarn">
               <Icon name="warning" className="ic" />
@@ -175,9 +175,9 @@ export function CutEdit({ review, file, clips, files, code }: { review: ReviewVi
           </details>
         </div>
         <div className="isec">
-          <h4>
+          <h2>
             {t("edit.clips")} <span className="muted">{edit.length}</span>
-          </h4>
+          </h2>
           {edit.map((other, index) => {
             const was = base.find((b) => b.segment === other.segment);
             return (
@@ -205,9 +205,9 @@ export function CutEdit({ review, file, clips, files, code }: { review: ReviewVi
         </div>
         {clip && (
           <div className="isec">
-            <h4>
+            <h2>
               {t("edit.clip")} <span className="muted">{clip.segment}</span>
-            </h4>
+            </h2>
             <div className="propedit">
               <span className="muted">{t("cut.takeLabel")}</span>
               <div className="takes">
@@ -238,9 +238,9 @@ export function CutEdit({ review, file, clips, files, code }: { review: ReviewVi
           </div>
         )}
         <div className="isec" style={{ borderBottom: 0 }}>
-          <h4>
+          <h2>
             {t("edit.changes")} <span className="muted">{changes.length}</span>
-          </h4>
+          </h2>
           {changes.length ? (
             changes.map((change, index) => (
               <div key={index} className="lrow plain">

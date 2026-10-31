@@ -35,7 +35,7 @@ export function Delivery({ dramaId, episode }: { dramaId: string; episode?: stri
   return (
     <>
       <div className="bar2">
-        <h2 className="sr-only">{t("step.delivery")}</h2>
+        <h1 className="sr-only">{t(episode ? "step.cut" : "step.delivery")}</h1>
         {data.length > 0 && <span className="delivsum">{t("delivery.ready", { n: ready, total: data.length })}</span>}
         <span className="fill" />
         {ready > 0 && (

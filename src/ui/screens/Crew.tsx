@@ -50,7 +50,7 @@ export function Crew({ drama }: { drama: DramaView }) {
   return (
     <>
       <div className="work-head">
-        <h2>{t("section.crew")}</h2>
+        <h1>{t("section.crew")}</h1>
       </div>
       {!drama.crew.length ? (
         <p className="empty-note">{t("crew.none")}</p>
