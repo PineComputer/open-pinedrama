@@ -1,7 +1,7 @@
 // What the goals ask the agent to hand back at each stop besides the files under review:
 // drama-cli's own status of the project, which the skill calls the source of truth.
 import { describe, expect, it } from "vitest";
-import { episodeGoal, rehearsed, resumeGoal, setupGoal, type DramaBrief } from "./goals.ts";
+import { editGoal, episodeGoal, rehearsed, resumeGoal, setupGoal, type DramaBrief } from "./goals.ts";
 
 const drama: DramaBrief = {
   title: "The Stepmother",
@@ -120,5 +120,23 @@ describe("each stop returns the project as infinite-canvas's import reads it", (
     const goal = rehearsed(episodeGoal(drama, "EP002", ["project.tar.part-aa"], true, "screenplay.md"));
     expect(goal).toContain("handoff/infinite-canvas.zip");
     expect(goal).toContain("return no handoff/status.json, handoff/lineage.json, handoff/infinite-canvas.zip or handoff/refusals.jsonl");
+  });
+});
+
+describe("the maker's edit of a cut", () => {
+  const goal = editGoal("EP006", "drama/episodes/EP006/edit/v1/cut.mp4", [
+    { path: "drama/episodes/EP006/segments/seg03/t02/video.mp4", in: 1.2, out: 10, audio: "source" },
+    { path: "drama/episodes/EP006/segments/seg01/t02/video.mp4", in: 0, out: 5, audio: "silence" },
+  ]);
+
+  it("lists the clips in the maker's order, with their ranges and sound", () => {
+    expect(goal).toContain("1. drama/episodes/EP006/segments/seg03/t02/video.mp4, from 1.2 s to 10 s, with its own sound");
+    expect(goal).toContain("2. drama/episodes/EP006/segments/seg01/t02/video.mp4, from 0 s to 5 s, silent");
+  });
+
+  it("builds with drama-cli edit and validates, stopping on drama-cli's refusal", () => {
+    expect(goal).toContain("`drama-cli edit build EP006 <the plan> --config drama/drama-cli.cfg.yaml`");
+    expect(goal).toContain("`drama-cli edit validate EP006 --config drama/drama-cli.cfg.yaml`");
+    expect(goal).toContain("If drama-cli refuses my edit, stop and tell me");
   });
 });
