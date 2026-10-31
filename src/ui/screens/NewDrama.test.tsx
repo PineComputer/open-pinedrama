@@ -69,7 +69,7 @@ describe("Upload", () => {
     await user.type(screen.getByRole("textbox", { name: "Title" }), "The Stepmother");
     expect(await within(next).findByText("Choose a preset to start.")).toBeInTheDocument();
     expect(start).toBeDisabled();
-    await user.click(screen.getByRole("button", { name: /English vertical drama/ }));
+    await user.click(screen.getByRole("radio", { name: /English vertical drama/ }));
     expect(within(next).getByText("Starts the setup session.")).toBeInTheDocument();
     expect(start).toBeEnabled();
   });
@@ -81,7 +81,7 @@ describe("Upload", () => {
     await renderAt(<NewDrama />);
     await user.upload(screen.getByLabelText("Choose a screenplay"), script());
     await user.type(screen.getByRole("textbox", { name: "Title" }), "The Stepmother");
-    await user.click(screen.getByRole("button", { name: /English vertical drama/ }));
+    await user.click(screen.getByRole("radio", { name: /English vertical drama/ }));
     await user.click(screen.getByRole("button", { name: "Start" }));
     await waitFor(() => expect(posted).toHaveLength(1));
     expect(posted[0].files).toEqual(["stepmother.fountain"]);

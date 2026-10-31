@@ -1,3 +1,4 @@
+import { RadioGroup, RadioGroupItem } from "../components/ui/radio-group.tsx";
 import { type ReactNode, useEffect, useId, useState } from "react";
 import type { AppInfo, Reviewing } from "../../shared/types.ts";
 import { api, useResource } from "../api.ts";
@@ -103,24 +104,25 @@ export function ScreenplayStructure({ structure, onChoose }: { structure: { lang
 }
 
 /**
- * The design's preset cards (`.presets`, `.preset`): one per template, pressed when chosen; a template drama-cli has
- * no preset for is shown, greyed and not choosable. None is chosen for the maker.
+ * The design's preset cards (`.presets`, `.preset`) on the kit's RadioGroup (Radix; design 70f30d2: one single-choice
+ * control, two uses, with Your reviews): one card per template, a template drama-cli has no preset for shown greyed
+ * and not choosable. None is chosen for the maker.
  */
 export function PresetChoice({ value, onChange }: { value: string; onChange: (preset: string) => void }) {
   const { t } = useT();
   return (
-    <div className="presets" role="group" aria-label={t("new.template")}>
+    <RadioGroup className="presets gap-2.5" aria-label={t("new.template")} value={value} onValueChange={onChange}>
       {TEMPLATES.map(({ key, preset }) => (
-        <button key={key} type="button" className="preset" aria-pressed={preset !== undefined && value === preset} disabled={preset === undefined} onClick={() => preset && onChange(preset)}>
-          <span className="radio" />
+        <label key={key} className="preset" data-disabled={preset === undefined || undefined}>
+          <RadioGroupItem value={preset ?? `soon:${key}`} disabled={preset === undefined} />
           <span className="grow">
             <b>{t(`template.${key}` as TKey)}</b>
             <small>{t(`template.${key}.hint` as TKey)}</small>
             <code>{preset ?? t("new.soon")}</code>
           </span>
-        </button>
+        </label>
       ))}
-    </div>
+    </RadioGroup>
   );
 }
 

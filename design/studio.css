@@ -484,9 +484,9 @@ input.search:focus { border-color: var(--text-primary); }
 .presets { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; } .presets.one { grid-template-columns: 1fr; gap: 8px; color: var(--text-primary); }
 .preset { display: flex; gap: 10px; align-items: flex-start; padding: 12px; border-radius: var(--radius-large); border: 1px solid var(--border); background: var(--surface); text-align: left; color: inherit; cursor: pointer; }
 .preset:hover { background: var(--hover); }
-.preset[data-state="checked"] { border-color: var(--text-primary); box-shadow: 0 0 0 1px var(--text-primary); }
+.preset[data-state="checked"], .preset:has(> [data-state="checked"]) { border-color: var(--text-primary); box-shadow: 0 0 0 1px var(--text-primary); }
 .preset .radio { width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid var(--border-input); margin-top: 2px; flex: none; }
-.preset[data-state="checked"] .radio { border: 5px solid var(--text-primary); }
+.preset[data-state="checked"] .radio, .preset:has(> [data-state="checked"]) .radio { border: 5px solid var(--text-primary); }
 .preset b { display: block; font-size: 13px; } .preset small { display: block; color: var(--text-secondary); font-size: 12px; margin: 2px 0 6px; }
 .preset code { font: 11px var(--font-mono); color: var(--text-secondary); }
 .fields { display: grid; gap: 14px; }
@@ -818,3 +818,4 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
 .assetsplit > .insp { position: sticky; top: 0; max-height: calc(100vh - 140px); margin-right: 16px; border: 1px solid var(--border); border-radius: var(--radius-2xl); overflow: hidden; }
 .castcard .cardname, .placecard .cardname { color: inherit; text-decoration: none; } .castcard .cardname:hover b, .placecard .cardname:hover b { text-decoration: underline; text-underline-offset: 3px; }
 .castcard[aria-current], .placecard[aria-current] { cursor: default; } .castcard, .placecard { cursor: pointer; }
+.preset[data-disabled] { opacity: .5; cursor: not-allowed; } .preset > [data-slot="radio-group-item"] { margin-top: 2px; }
