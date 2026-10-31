@@ -66,3 +66,5 @@
 .npanel.docked [role="tabpanel"] { overflow-y: auto; }
 .ds-steer { display: grid; gap: 8px; justify-items: center; }
 .ds-steer .say, .ds-steer .off, .ds-steer .done { width: 420px; padding: 10px 12px; border-radius: var(--radius-xl); border: 1px solid color-mix(in srgb, var(--text-primary) 12%, transparent); background: var(--glass); backdrop-filter: blur(18px); }
+/* A picture the request sent from the asset library has no file here: its numbered place stays, empty. */
+.npanel .refs .none { display: block; width: 56px; height: 56px; border-radius: 8px; background: var(--surface-container); }

@@ -154,7 +154,9 @@ export function NodePanel({
   const request = useJson(beside(work, files, "request.json"));
   const pictures = sentPictures(raw, files);
   const segment = item.episode !== undefined && item.kind !== "cut";
-  const pills = [spec?.model, spec?.ratio, spec?.resolution, spec?.seconds !== undefined ? t("canvas.seconds", { n: spec.seconds }) : undefined, spec?.seed !== undefined ? t("canvas.seedPill", { n: spec.seed }) : undefined].filter((pill): pill is string => pill !== undefined);
+  // The model in its own pill, then the request's settings in one, as design/'s node panel (after liblib.tv's composer).
+  const settings = [spec?.ratio, spec?.resolution, spec?.seconds !== undefined ? t("canvas.seconds", { n: spec.seconds }) : undefined, spec?.seed !== undefined ? t("canvas.seedPill", { n: spec.seed }) : undefined].filter((part): part is string => part !== undefined);
+  const pills = [spec?.model, settings.length ? settings.join(" · ") : undefined].filter((pill): pill is string => pill !== undefined);
 
   return (
     <section className={`npanel nodrag nowheel${dock === "right" ? " docked" : ""}`} aria-label={t("canvas.panel", { item: facts.label })}>
@@ -174,19 +176,20 @@ export function NodePanel({
         <Tabs.Content value="prompt">
           {spec?.prompt ? (
             <>
-              <div className="prompt">
-                <Prompt text={spec.prompt} pictures={pictures} />
-              </div>
               {pictures.length > 0 && (
                 <ol className="refs">
                   {pictures.map((picture, n) => (
-                    <li key={n}>
-                      {picture ? <img src={picture.url} alt="" /> : <span className="none" />}
-                      <span>{t("canvas.image", { n: n + 1 })}</span>
+                    // Numbered on its corner as the prompt's Image N (design/app.js NodePanel).
+                    <li key={n} title={t("canvas.image", { n: n + 1 })}>
+                      {picture ? <img src={picture.url} alt={t("canvas.image", { n: n + 1 })} /> : <span className="none" />}
+                      <b aria-hidden="true">{n + 1}</b>
                     </li>
                   ))}
                 </ol>
               )}
+              <div className="prompt">
+                <Prompt text={spec.prompt} pictures={pictures} />
+              </div>
             </>
           ) : (
             <p className="subtle">{t("canvas.noSpec")}</p>

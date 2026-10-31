@@ -252,6 +252,9 @@ describe("a picked item's hand actions and panel (P6.8)", () => {
     // A picture sent from the project is the returned file at that path; one from the asset library has none here.
     expect(chips[0].querySelector("img")).toHaveAttribute("src", "/f/9?v=1");
     expect(chips[2].querySelector("img")).toBeNull();
+    // Above the prompt, the pictures it names, numbered as its Image N; one from the asset library keeps its number with no picture.
+    expect([...panel.querySelectorAll(".refs li b")].map((number) => number.textContent)).toEqual(["1", "2"]);
+    expect(panel.querySelector(".refs li:nth-child(2) .none")).not.toBeNull();
   });
 
   it("shows a look's prompt and model too", async () => {
@@ -262,14 +265,14 @@ describe("a picked item's hand actions and panel (P6.8)", () => {
     render(<Canvas drama={drama("working")} />);
     const { panel } = await panelOf(/^林/);
     await waitFor(() => expect(within(panel).getByRole("tabpanel")).toHaveTextContent("A full-body turnaround of 林."));
-    expect([...panel.querySelectorAll(".nfoot .pill")].map((pill) => pill.textContent)).toEqual(["gpt-image-2", "16:9", "2K"]);
+    expect([...panel.querySelectorAll(".nfoot .pill")].map((pill) => pill.textContent)).toEqual(["gpt-image-2", "16:9 · 2K"]);
   });
 
   it("lists the settings the spec states as the panel's pills, and nothing it doesn't", async () => {
     withSpec();
     render(<Canvas drama={drama("working")} />);
     const { panel } = await panelOf(/^Storyboard · line-art/);
-    await waitFor(() => expect([...panel.querySelectorAll(".nfoot .pill")].map((pill) => pill.textContent)).toEqual(["sd25", "9:16", "480p", "12s", "seed 42"]));
+    await waitFor(() => expect([...panel.querySelectorAll(".nfoot .pill")].map((pill) => pill.textContent)).toEqual(["sd25", "9:16 · 480p · 12s · seed 42"]));
   });
 
   it("shows the request as a JSON tree", async () => {
