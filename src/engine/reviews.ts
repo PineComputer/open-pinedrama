@@ -145,6 +145,7 @@ export async function decide(reviewId: string, decision: Decision): Promise<Revi
 /**
  * The kinds of review the studio approves for the maker, by what they chose to review (Reviewing). Never a take or a
  * cut: the maker watches every video version (Take) and every cut (short_drama D76; doc/architecture.md section 7.1).
+ * Storyboards only in line-art: a stop that shows a photoreal storyboard waits (see photoreal below).
  */
 const LEFT: Record<Reviewing, ReviewKind[]> = {
   every: [],
@@ -166,7 +167,11 @@ export async function approveUnreviewed(dramaId?: string): Promise<void> {
     ...(dramaId ? [dramaId] : []),
   );
   for (const review of waiting.filter((row) => LEFT[row.reviewing]?.includes(row.kind))) {
-    const { items } = itemsOf(review.kind, filesOfStop(review));
+    const files = filesOfStop(review);
+    // The person alone reviews the photoreal storyboard (short_drama AGENTS.md design rule 10; D141): a stop that shows
+    // one waits for them, whatever they chose.
+    if (files.some((file) => file.kind === "storyboard" && file.style === "photoreal")) continue;
+    const { items } = itemsOf(review.kind, files);
     await decide(review.id, { words: UNREVIEWED, items: items.map((item) => ({ key: item.key, verdict: "approve", notes: [] })) }).catch((error) =>
       console.error(`review ${review.id}: not approved on its own:`, (error as Error).message),
     );

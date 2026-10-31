@@ -365,9 +365,10 @@ describe("a drama in replay", () => {
     expect(ids(await call<ReviewView>("GET", `/api/reviews/${again.id}`))).toEqual(ids(await call<ReviewView>("GET", `/api/reviews/${first.id}`)));
   }, 30_000);
 
-  // The maker reviews only what they chose: the studio approves the rest as the agent stops for it, but never a take or a
-  // cut. The maker watches every video version (Take) and every cut (short_drama D76), whatever they chose.
-  it("approves on its own what the maker chose not to review, never a take or a cut", async () => {
+  // The maker reviews only what they chose: the studio approves the rest as the agent stops for it, but never a photoreal
+  // storyboard, a take or a cut. The person alone reviews the photoreal storyboard (D141) and watches every video version
+  // (Take) and every cut (D76), whatever they chose.
+  it("approves on its own what the maker chose not to review, never a photoreal storyboard, a take or a cut", async () => {
     const { all, run } = await import("./db.ts");
     run("update dramas set status = 'done'");
     fleet.stops = "ask";
@@ -379,7 +380,12 @@ describe("a drama in replay", () => {
     await acceptRewrite(id);
     const question = await until("the setup question", openReview(id, (item) => item.kind === "question"));
     await call("POST", `/api/reviews/${question.id}/decision`, { items: [], words: "He is 32." });
-    // Looks, references and storyboards go on by themselves; EP001's takes wait for the maker under every setting.
+    // Looks and references go on by themselves. EP001's storyboards show its photoreal boards, so they wait for the maker
+    // under every setting, and so do its takes and its cut.
+    const boards = await until("EP001's storyboards", openReview(id, (item) => item.episode === "EP001" && item.kind === "storyboards"));
+    for (const reviewing of ["key", "none"]) await call("PATCH", `/api/dramas/${id}`, { reviewing });
+    expect((await openReview(id, (item) => item.id === boards.id)())?.state).toBe("open");
+    await approveAll(boards.id);
     const takes = await until("EP001's takes", openReview(id, (item) => item.episode === "EP001" && item.kind === "takes"));
     for (const reviewing of ["key", "none"]) await call("PATCH", `/api/dramas/${id}`, { reviewing });
     expect((await openReview(id, (item) => item.id === takes.id)())?.state).toBe("open");
@@ -389,8 +395,8 @@ describe("a drama in replay", () => {
     expect((await openReview(id, (item) => item.id === cut.id)())?.state).toBe("open");
     const answers = all<{ kind: string; answer: string }>("select kind, answer from reviews where drama_id = ? and state = 'answered'", id);
     const unreviewed = (kind: string) => answers.filter((row) => row.kind === kind).map((row) => row.answer.includes("Approved without review"));
-    expect(["looks", "references", "storyboards"].map((kind) => unreviewed(kind).length > 0 && unreviewed(kind).every(Boolean))).toEqual([true, true, true]);
-    expect([...unreviewed("takes"), ...unreviewed("cut")]).not.toContain(true);
+    expect(["looks", "references"].map((kind) => unreviewed(kind).length > 0 && unreviewed(kind).every(Boolean))).toEqual([true, true]);
+    expect([...unreviewed("storyboards"), ...unreviewed("takes"), ...unreviewed("cut")]).not.toContain(true);
   }, 60_000);
 
   // The maker stops a drama: its Computers stop, nothing new starts, and Try again carries on.
