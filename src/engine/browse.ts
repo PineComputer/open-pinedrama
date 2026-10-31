@@ -7,10 +7,10 @@ import type { CastCard, Decision, DeliveryRow, EpisodePage, FileItem, Judged, Re
 import { classify } from "./classify.ts";
 import { all, get } from "./db.ts";
 import { readFileSync } from "node:fs";
-import { type FileRow, blobPath, itemIn, toItem } from "./library.ts";
+import { type FileRow, blobPath, filesOfStop, itemIn, toItem } from "./library.ts";
 import type { ZipEntry } from "./zip.ts";
 import { type EpisodeRow, type ReviewRow, drama as dramaRow, episodeCode } from "./records.ts";
-import { itemsOf, placeKey } from "./reviews.ts";
+import { itemsOf, placeKey, rewriteOf } from "./reviews.ts";
 import { episodeViews } from "./views.ts";
 
 /** The decision a review recorded on one of the items it showed. */
@@ -92,7 +92,7 @@ export function episodePage(dramaId: string, code: string): EpisodePage | undefi
 
 /**
  * Every screenplay version drama-cli recorded, newest first, each with its rewrite review and the agent's question
- * about it (the turn that recorded it ended asking the maker). Read from each file's path, so files saved before these
+ * about it. Read from each file's path, so files saved before these
  * kinds existed count too.
  */
 function screenplayVersions(dramaId: string): ScreenplayVersion[] {
@@ -100,15 +100,18 @@ function screenplayVersions(dramaId: string): ScreenplayVersion[] {
     .map((row) => ({ row, hints: classify(row.rel_path) }))
     .filter(({ hints }) => hints.kind === "screenplay-version" || hints.kind === "screenplay-review");
   const numbers = [...new Set(found.map(({ hints }) => Number(hints.version!.slice(1))))].sort((a, b) => b - a);
+  // Each version's question, the newest, by the version its stop is about: the files the stop shows, its own turn's or
+  // earlier ones it names (library.ts, filesOfStop), as the review room reads it (views.ts, ReviewView.rewrite).
+  const questions = new Map<string, ReviewRow>();
+  for (const review of all<ReviewRow>("select * from reviews where drama_id = ? and kind = 'question' order by created_at", dramaId)) {
+    const version = rewriteOf(filesOfStop(review));
+    if (version) questions.set(version, review);
+  }
   return numbers.map((number) => {
     const of = (kind: string) => found.findLast(({ hints }) => hints.kind === kind && hints.version === `v${number}`)?.row;
     const file = of("screenplay-version");
     const review = of("screenplay-review");
-    const turns = [...new Set([file, review].flatMap((row) => (row?.turn_id ? [row.turn_id] : [])))];
-    const asked = turns
-      .flatMap((turnId) => all<ReviewRow>("select * from reviews where turn_id = ? and kind = 'question'", turnId))
-      .sort((a, b) => a.created_at.localeCompare(b.created_at))
-      .at(-1);
+    const asked = questions.get(`v${number}`);
     const decision = asked?.decision ? (JSON.parse(asked.decision) as Decision) : undefined;
     return {
       version: `v${number}`,

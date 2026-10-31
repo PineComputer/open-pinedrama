@@ -869,7 +869,7 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
 .whatchanged summary { cursor: pointer; color: var(--text-primary); font-size: 12px; }
 .whatchanged pre { max-height: 320px; overflow: auto; font-size: 11.5px; }
 .scripthistory > details > summary { cursor: pointer; font-size: 12.5px; color: var(--text-secondary); margin-top: 6px; }
-.navi .now { margin-left: auto; font-size: 11.5px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.navi .now { margin-left: auto; font-size: 11.5px; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .navi .dot { flex: none; width: 7px; height: 7px; border-radius: 50%; }
 /* Script as an editor (VS Code's editor title area and diff editor): the open file as a tab, its actions as icon
    buttons; Compare is two panes with a gutter, a changed row tinted, scrolling together. */

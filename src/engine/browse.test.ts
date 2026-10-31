@@ -82,6 +82,12 @@ beforeAll(async () => {
     "insert into reviews (id, drama_id, episode_id, session_id, turn_id, kind, state, question, decision, answer, created_at) values ('r3', 'd1', null, 's1', 't4', 'question', 'open', 'Accept the rewrite?', null, '', ?)",
     at,
   );
+  // v1 was asked about in a later turn that saved no file of its own: its question names v1's file (library.ts, filesOfStop).
+  run(
+    "insert into reviews (id, drama_id, episode_id, session_id, turn_id, kind, state, question, decision, answer, created_at) values ('r4', 'd1', null, 's1', 't7', 'question', 'answered', 'Accept drama/screenplay/v1/screenplay.fountain?', ?, '', ?)",
+    JSON.stringify({ words: "Send it back.", items: [], verdict: "revise" }),
+    at,
+  );
 });
 
 afterAll(() => rmSync(DATA, { recursive: true, force: true }));
@@ -127,7 +133,8 @@ describe("browsing", () => {
     ]);
     // The open review that asks about v2, for the maker to decide on it in Script (D62).
     expect(versions[0].question).toMatchObject({ reviewId: "r3", state: "open" });
-    expect(versions[1].question).toBeUndefined();
+    // A question asked in a later turn is the version's whose file its stop shows, as the review room reads it.
+    expect(versions[1].question).toMatchObject({ reviewId: "r4", state: "answered", words: "Send it back.", verdict: "revise" });
   });
 
   it("names the screenplay the maker marked, for the rewrite to be set beside it", () => {
