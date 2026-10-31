@@ -16,19 +16,21 @@ test("a maker starts the sample drama, answers the agent and reviews the leads",
   await expect(page.getByRole("complementary", { name: "Sidebar" }).getByRole("link", { name: /^Episodes/ })).toHaveAttribute("aria-current", "page");
   expect(await newProblems(page)).toEqual([]);
 
-  // The agent's first stop is its rewrite of the screenplay into Fountain, for the maker to accept in their words.
+  // The agent's first stop is its rewrite of the screenplay into Fountain. The review opens Script at that version, where
+  // the maker accepts it in their own words (D62, D70).
   const rewrite = page.getByRole("button", { name: "Next review, 1 waiting" });
   await expect(rewrite).toBeVisible({ timeout: 30_000 });
   await rewrite.click();
-  await expect(page.getByRole("main").getByText(/I rewrote your screenplay into Fountain/)).toBeVisible();
+  await expect(page).toHaveURL(/\/d\/[^/]+\/script\?item=screenplay&version=v\d+$/);
+  const decision = page.getByRole("group", { name: /^Your decision on v\d+$/ });
+  await decision.getByRole("button", { name: "Accept" }).click();
   expect(await newProblems(page)).toEqual([]);
-  await page.getByRole("textbox", { name: "Your answer" }).fill("Yes, this is my script.");
-  const rewriteQuestion = page.url();
-  await page.getByRole("button", { name: /^Send answer/ }).click();
-  await expect(page).not.toHaveURL(rewriteQuestion);
+  await page.getByRole("textbox", { name: /^Accept v\d+ in your own words/ }).fill("Yes, this is my script.");
+  await page.getByRole("button", { name: /^Accept v\d+$/ }).click();
+  await expect(page.getByText("Sent to the setup session.")).toBeVisible();
 
-  // Then a question, opened from the review queue (the rail's Reviews: the drama is still set up, so its sidebar shows
-  // the setup's steps) once the agent asks it: the screenplay leaves a lead's age open.
+  // Then a question, opened from the review queue (the rail's Reviews) once the agent asks it: the screenplay leaves a
+  // lead's age open.
   await page.getByRole("navigation", { name: "Places" }).getByRole("link", { name: /^Reviews/ }).click();
   const age = page.getByRole("main").getByRole("link", { name: /Wei Zhen's age/ });
   await expect(age).toBeVisible({ timeout: 30_000 });
