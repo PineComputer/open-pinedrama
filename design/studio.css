@@ -518,14 +518,10 @@ input.search:focus { border-color: var(--text-primary); }
 .fl { padding: 1px 0; white-space: pre-wrap; overflow-wrap: anywhere; } .gap { height: 12px; }
 .fl.heading, .fl.section { font-weight: 700; } .fl.character { padding-left: 38%; } .fl.dialogue { padding: 0 18%; } .fl.paren { padding-left: 32%; } .fl.trans { text-align: right; }
 
-/* ── fountain review ── */
-.fdoc .fl { border-radius: 6px; padding: 2px 6px; cursor: pointer; position: relative; }
-.fdoc button.fl { display: block; width: 100%; border: 0; background: none; color: inherit; font-family: inherit; font-size: inherit; line-height: inherit; text-align: left; }
+/* ── Script's Fountain, read-only (D62): no line is a control ── */
+.fdoc .fl { border-radius: 6px; padding: 2px 6px; position: relative; }
 .fdoc .fl.character { padding-left: 38%; } .fdoc .fl.dialogue { padding-left: 18%; padding-right: 18%; } .fdoc .fl.paren { padding-left: 32%; } .fdoc .fl.trans { text-align: right; }
-.fdoc .fl:hover { background: var(--hover); } .fdoc .fl.on { background: var(--selected); }
-.fdoc .fl.ask { background: var(--warning-bg); cursor: default; }
-.fdoc .q { padding: 0 4px; border-radius: 4px; background: var(--warning-text); color: var(--on-accent); }
-.fdoc .why { display: block; margin: 4px 0 2px; font: 12px/1.45 var(--font-sans); color: var(--text-muted); font-weight: 400; }
+.fdoc .fl.on { background: var(--selected); }
 .seg.ask { margin: 6px 0 4px; }
 
 /* ── story ── */
@@ -800,8 +796,6 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
 .pagetitle { margin: 0; font: 700 20px/1.3 var(--font-display); letter-spacing: -.3px; }
 .scripthead { display: flex; align-items: flex-end; gap: 16px; flex-wrap: wrap; padding: 4px 16px 14px; }
 .scripthead p { margin: 4px 0 0; font-size: 12.5px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-.panel.scriptdoc { margin: 0 16px 14px; padding: 18px 22px; }
-.scriptpanes .fdoc .fl { cursor: default; } .scriptpanes .fdoc .fl:hover { background: none; }
 .panel.scriptversions { margin: 0 16px 24px; }
 /* IA draft r2 (F): narrow windows, target 1024 x 800. The drama tree is a drawer below 1100 px, opened by the rail's menu
    button; the agent sidebar, opened there, lays over the page from the right edge: the same sidebar, not a popover (D32). */
@@ -882,7 +876,6 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
 .notice { display: flex; gap: 8px; align-items: flex-start; margin: 0 16px 12px; padding: 10px 12px; border-radius: var(--radius-large); background: var(--surface-container); font-size: 12.5px; color: var(--text-secondary); text-align: left; }
 .notice .ic { width: 16px; height: 16px; flex: none; margin-top: 1px; } .notice b { color: var(--text-primary); }
 .scriptlayout { display: grid; gap: 16px; padding: 0 16px 40px; min-width: 0; }
-.scriptpanes { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; padding: 0; }
 .history { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 0; }
 .history li { display: grid; grid-template-columns: 14px 1fr; gap: 10px; padding: 0 0 14px; position: relative; font-size: 12.5px; color: var(--text-secondary); }
 .history li::before { content: ""; position: absolute; left: 3px; top: 12px; bottom: 0; width: 1px; background: var(--border); }
