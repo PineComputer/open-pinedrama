@@ -1,6 +1,6 @@
-// The canvas's SteerBar (P6.3), used as a maker uses it: pick an item, then Review it where its
-// review is open, send it back or leave a note for the agent at work on it, or trace its lineage.
-// The canvas steers and never records a verdict: decisions stay in the review room.
+// The canvas's node bar and panel, used as a maker uses them: pick an item, then view it, Review it where its
+// review is open (Accept and Send back are decided there, on that exact item), or trace its lineage. Redo, notes
+// and other steering are the agent chat's (UI_ACTIONS_RULE); the canvas never records a verdict.
 import "../test/flow.ts";
 import { fireEvent, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -10,11 +10,11 @@ import { describe, expect, it } from "vitest";
 import { parseLineage } from "../../shared/lineage.ts";
 import { parseBibleNames } from "../../shared/names.ts";
 import { parseStatus, type ProjectView } from "../../shared/project.ts";
-import type { ChatView, DramaView, EpisodeRow, ReviewSummary } from "../../shared/types.ts";
+import type { DramaView, EpisodeRow, ReviewSummary } from "../../shared/types.ts";
 import { storyboardReview } from "../test/fixtures.ts";
 import { http, HttpResponse } from "msw";
-import { accept, answer, calls, sent, server } from "../test/server.ts";
-import { Canvas, PHASE_ONE } from "./Canvas.tsx";
+import { answer, calls, sent, server } from "../test/server.ts";
+import { Canvas } from "./Canvas.tsx";
 import { href, renderAt } from "../test/router.tsx";
 
 const fixture = (name: string) => JSON.parse(readFileSync(path.resolve("fixtures/status", `${name}.json`), "utf8"));
@@ -50,8 +50,7 @@ function project(): ProjectView {
   return { state, sessions: [], problems: [], names: parseBibleNames(fixture("bible")) };
 }
 
-function engine(queue: ReviewSummary[] = [], sends: ChatView["sends"] = "steer", reviewId?: string) {
-  for (const id of ["s0", "s1"]) answer(`/api/sessions/${id}/chat`, { sessionId: id, label: id === "s1" ? "EP001" : "", sends, ...(reviewId ? { reviewId } : {}), messages: [] });
+function engine(queue: ReviewSummary[] = []) {
   answer("/api/dramas/d1/project", project());
   answer("/api/dramas/d1/files", []);
   answer("/api/dramas/d1/lineage", lineageView());
@@ -59,9 +58,6 @@ function engine(queue: ReviewSummary[] = [], sends: ChatView["sends"] = "steer",
   answer("/api/dramas/d1/canvas/EP002", { positions: {} });
   answer("/api/dramas/d1/assets", {});
   answer("/api/reviews", queue);
-  accept("/api/sessions/s0/chat");
-  accept("/api/sessions/s1/chat");
-  accept("/api/episodes/e1/resume");
 }
 
 const openLooks: ReviewSummary = { id: "r9", dramaId: "d1", dramaTitle: "The Stepmother", kind: "looks", state: "open", question: "Ready.", items: 1, subjects: ["Lin Xiaoyu"], createdAt: "2026-10-30T10:00:00Z" };
@@ -82,11 +78,11 @@ async function pick(name: RegExp) {
   // Picked from the keyboard: a mouse press on a node starts React Flow's drag, which jsdom can't drive.
   (await screen.findByRole("button", { name })).focus();
   await user.keyboard("{Enter}");
-  // The bar's buttons and, under them, what a send-back or note asks for.
-  return { user, bar: (await screen.findByRole("toolbar", { name: /^Steer/ })).closest(".ds-steer") as HTMLElement };
+  // The bar above the picked node: Review where its review waits, Lineage, Download.
+  return { user, bar: await screen.findByRole("toolbar", { name: /^Act on / }) };
 }
 
-describe("the SteerBar", () => {
+describe("the node bar", () => {
   it("offers Review only where the item's review is open, at that item", async () => {
     engine([openLooks]);
     answer("/api/reviews/r9", { ...storyboardReview(), id: "r9", kind: "looks", episode: undefined, reviewItems: [{ key: "lin", label: "lin", files: [] }], otherFiles: [] });
@@ -104,7 +100,7 @@ describe("the SteerBar", () => {
     expect(await within(board.bar).findByRole("link", { name: "Review" })).toHaveAttribute("href", "/r/r7?key=seg01");
     await board.user.keyboard("{Escape}");
     const take = await pick(/^Take · t01/);
-    expect(await within(take.bar).findByRole("button", { name: "Send back" })).toBeInTheDocument();
+    expect(await within(take.bar).findByRole("button", { name: "Lineage" })).toBeInTheDocument();
     expect(within(take.bar).queryByRole("link", { name: "Review" })).toBeNull();
   });
 
@@ -120,89 +116,21 @@ describe("the SteerBar", () => {
     answer("/api/reviews/r9", { ...storyboardReview(), id: "r9", kind: "looks", episode: undefined, reviewItems: [{ key: "wei", label: "wei", files: [] }], otherFiles: [] });
     await renderAt(<Canvas drama={drama("working")} />, "/d/d1/canvas");
     const { bar } = await pick(/^林/);
-    expect(await within(bar).findByRole("button", { name: "Send back" })).toBeInTheDocument();
+    expect(await within(bar).findByRole("button", { name: "Lineage" })).toBeInTheDocument();
     await new Promise((resolve) => setTimeout(resolve, 50));
     expect(within(bar).queryByRole("link", { name: "Review" })).toBeNull();
   });
 
-  it("sends a reasoned send-back to the agent at work, naming the item as the bible does", async () => {
+  it("views and decides only: Review, Lineage and Download, and one line to the agent for the rest (UI_ACTIONS_RULE)", async () => {
     engine();
-    await renderAt(<Canvas drama={drama("working")} />, "/d/d1/canvas");
-    const { user, bar } = await pick(/^林/);
-    await user.click(within(bar).getByRole("button", { name: "Send back" }));
-    const send = within(bar).getByRole("button", { name: "Send to the agent" });
-    expect(send).toBeDisabled();
-    await user.type(within(bar).getByRole("textbox", { name: "Why it goes back" }), "She should look older.");
-    await user.click(send);
-    const posted = calls("POST", "/api/sessions/s0/chat");
-    expect(posted).toHaveLength(1);
-    const text = (posted[0].body as { text: string }).text;
-    expect(text).toBe("Please redo 林's look: She should look older.");
-    expect(text).not.toMatch(/\blin\b|assets\/|\//);
-  });
-
-  it("sends a note on a segment to its episode's agent, by episode and segment number", async () => {
-    engine();
-    await renderAt(<Canvas drama={drama("working")} />, "/d/d1/canvas");
-    const { user, bar } = await pick(/^Storyboard · line-art/);
-    await user.click(within(bar).getByRole("button", { name: "Note" }));
-    await user.type(within(bar).getByRole("textbox", { name: "Your note" }), "Keep the lamp lit.");
-    await user.click(within(bar).getByRole("button", { name: "Send to the agent" }));
-    expect((calls("POST", "/api/sessions/s1/chat")[0].body as { text: string }).text).toBe("A note on segment 1 of EP001 (x): Keep the lamp lit.");
-  });
-
-  it("sends back an item under review in its review room, not to the agent", async () => {
-    engine([openLooks]);
-    answer("/api/reviews/r9", { ...storyboardReview(), id: "r9", kind: "looks", episode: undefined, reviewItems: [{ key: "lin", label: "lin", files: [] }], otherFiles: [] });
-    await renderAt(<Canvas drama={drama("working")} />, "/d/d1/canvas");
+    await renderAt(<Canvas drama={drama("working")} />, "/d/d1/e/EP001/canvas");
     const { bar } = await pick(/^林/);
-    expect(await within(bar).findByRole("link", { name: "Send back in its review" })).toHaveAttribute("href", "/r/r9?key=lin");
-    expect(within(bar).queryByRole("button", { name: "Send back" })).toBeNull();
-  });
-
-  it("says plainly when the item's agent isn't running, and offers Resume, never queueing the words", async () => {
-    const user = userEvent.setup();
-    engine();
-    await renderAt(<Canvas drama={drama("stopped")} />, "/d/d1/canvas");
-    const { bar } = await pick(/^Storyboard · line-art/);
-    await user.click(within(bar).getByRole("button", { name: "Send back" }));
-    expect(within(bar).getByText(/EP001's agent isn't running: Its Computer stopped/)).toBeInTheDocument();
-    expect(within(bar).queryByRole("textbox")).toBeNull();
-    await user.click(within(bar).getByRole("button", { name: "Resume EP001" }));
-    expect(calls("POST", "/api/episodes/e1/resume")).toHaveLength(1);
-    expect(sent.filter((request) => request.path.endsWith("/chat"))).toEqual([]);
-  });
-
-  it("says so when an episode waits in line, with nothing to resume", async () => {
-    const user = userEvent.setup();
-    engine();
-    await renderAt(<Canvas drama={drama("queued")} />, "/d/d1/canvas");
-    const { bar } = await pick(/^Storyboard · line-art/);
-    await user.click(within(bar).getByRole("button", { name: "Note" }));
-    expect(within(bar).getByText(/EP001's agent isn't running: In line/)).toBeInTheDocument();
-    expect(within(bar).queryByRole("button", { name: /^Resume/ })).toBeNull();
-  });
-
-  it("sends nothing while the agent waits on a review, and points to that review", async () => {
-    const user = userEvent.setup();
-    engine([], "review", "r5");
-    await renderAt(<Canvas drama={drama("working")} />, "/d/d1/canvas");
-    const { bar } = await pick(/^Storyboard · line-art/);
-    await user.click(within(bar).getByRole("button", { name: "Note" }));
-    expect(await within(bar).findByText(/EP001's agent waits on your review/)).toBeInTheDocument();
-    expect(within(bar).getByRole("link", { name: "Open the review it waits on" })).toHaveAttribute("href", "/r/r5");
-    expect(within(bar).queryByRole("textbox")).toBeNull();
-    expect(sent.filter((request) => request.method === "POST")).toEqual([]);
-  });
-
-  it("sends nothing while the agent waits on an answer", async () => {
-    const user = userEvent.setup();
-    engine([], "answer");
-    await renderAt(<Canvas drama={drama("working")} />, "/d/d1/canvas");
-    const { bar } = await pick(/^林/);
-    await user.click(within(bar).getByRole("button", { name: "Send back" }));
-    expect(await within(bar).findByText(/The setup's agent waits on your answer/)).toBeInTheDocument();
-    expect(within(bar).queryByRole("textbox")).toBeNull();
+    expect(within(bar).getAllByRole("button").map((button) => button.getAttribute("aria-label"))).toEqual(["Lineage"]);
+    for (const gone of [/Send back/, /^Note/, /Resume/, /Upload/, /Generate/]) expect(screen.queryByRole("button", { name: gone })).toBeNull();
+    expect(screen.queryByRole("textbox")).toBeNull();
+    const panel = await screen.findByRole("region", { name: /what it is made from/ });
+    expect(panel).toHaveTextContent("To redo or change it, ask the agent in the sidebar.");
+    expect(sent.filter((request) => request.method !== "GET")).toEqual([]);
   });
 
   it("opens the item's lineage on its home", async () => {
@@ -228,7 +156,7 @@ describe("the SteerBar", () => {
   });
 });
 
-describe("a picked item's hand actions and panel (P6.8)", () => {
+describe("a picked item's panel (P6.8)", () => {
   const breakdown = { id: 7, name: "breakdown.md", path: "/work/drama/episodes/EP001/breakdown/v1/breakdown.md", type: "text/markdown", size: 1, kind: "breakdown", episode: "EP001", url: "/f/7?v=1", createdAt: "2026-10-30T10:00:00Z" };
   const sheet = { id: 8, name: "image-1.png", path: "/work/drama/episodes/EP001/multi_panel_storyboard/seg01/line-art/v1/image-1.png", type: "image/png", size: 1, kind: "storyboard", url: "/f/8?v=1", createdAt: "2026-10-30T10:00:00Z" };
 
@@ -538,23 +466,8 @@ describe("a picked item's hand actions and panel (P6.8)", () => {
     await renderAt(<Canvas drama={drama("working")} />, `/d/d1/e/EP001/canvas?item=${encodeURIComponent(board.id)}&version=v0`);
     const panel = await screen.findByRole("region", { name: /what it is made from/ });
     expect(panel.querySelector(".nstate")).toHaveTextContent("v0, the current is v2 · accepted v2");
-    const bar = (await screen.findByRole("toolbar", { name: /^Steer/ })).closest(".ds-steer") as HTMLElement;
+    const bar = await screen.findByRole("toolbar", { name: /^Act on / });
     expect(within(bar).getByRole("link", { name: "Download" })).toHaveAttribute("href", "/f/20?v=1&download=1");
-  });
-
-  it("offers the hand actions disabled, saying why, and they do nothing", async () => {
-    withBreakdown();
-    await renderAt(<Canvas drama={drama("working")} />, "/d/d1/canvas");
-    const { user, bar } = await pick(/^Storyboard · line-art/);
-    const panel = await screen.findByRole("region", { name: /what it is made from/ });
-    // They stand with what opens on demand, under the prompt, versions, request or details (IA §15).
-    await user.click(within(panel).getByRole("button", { name: "Prompt" }));
-    for (const button of [within(panel).getByRole("button", { name: "Generate" }), within(panel).getByRole("button", { name: "Upload" })]) {
-      expect(button).toBeDisabled();
-      expect(button).toHaveAccessibleDescription(/^Phase 2/);
-    }
-    expect([PHASE_ONE.generate("x"), PHASE_ONE.upload("x")]).toEqual([undefined, undefined]);
-    expect(sent.filter((request) => request.method !== "GET")).toEqual([]);
   });
 
   it("downloads the item's picture from its bar", async () => {
@@ -596,6 +509,6 @@ describe("a picked item's hand actions and panel (P6.8)", () => {
     await screen.findByRole("region", { name: /what it is made from/ });
     await user.keyboard("{Escape}");
     await waitFor(() => expect(screen.queryByRole("region", { name: /what it is made from/ })).toBeNull());
-    expect(screen.queryByRole("toolbar", { name: /^Steer/ })).toBeNull();
+    expect(screen.queryByRole("toolbar", { name: /^Act on / })).toBeNull();
   });
 });

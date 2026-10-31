@@ -14,12 +14,11 @@ import { specBeside, specFacts } from "../../shared/spec.ts";
 import type { CastCard, EpisodePage, FileItem, Judged, Receipt } from "../../shared/types.ts";
 import { Link } from "@tanstack/react-router";
 import { useResource } from "../api.ts";
-import { Button, IconButton } from "../components/Button.tsx";
+import { IconButton } from "../components/Button.tsx";
 import { type Status, StatusChip } from "../components/StatusChip.tsx";
 import { type TKey, useT } from "../i18n.ts";
 import { Icon } from "../icons.tsx";
 import { useText } from "../viewing.tsx";
-import type { NodeActions } from "./Canvas.tsx";
 
 /** The JSON tree in our tokens: react-json-view-lite's own layout classes, with ours for the colours (canvas.css). */
 const JSON_STYLE = {
@@ -217,7 +216,6 @@ export function NodePanel({
   facts,
   dock,
   onDock,
-  actions,
   onClose,
 }: {
   dramaId: string;
@@ -236,7 +234,6 @@ export function NodePanel({
   /** Under the node, the default, or docked at the board's right (design/app.js NodePanel). */
   dock: "under" | "right";
   onDock: (to: "under" | "right") => void;
-  actions: NodeActions;
   onClose: () => void;
 }) {
   const { t } = useT();
@@ -320,22 +317,17 @@ export function NodePanel({
           )}
         </div>
       )}
-      {open && item && (
-      <div className="nfoot">
-        {pills.map((pill) => (
-          <span key={pill} className="pill mono">
-            {pill}
-          </span>
-        ))}
-        <span className="grow" />
-        <Button size="sm" icon="upload" disabledReason={t("canvas.phase2")} onClick={() => actions.upload(item.id)}>
-          {t("canvas.upload")}
-        </Button>
-        <Button size="sm" icon="sparkle" disabledReason={t("canvas.phase2")} onClick={() => actions.generate(item.id)}>
-          {t("canvas.generate")}
-        </Button>
-      </div>
+      {open && pills.length > 0 && (
+        <div className="nfoot">
+          {pills.map((pill) => (
+            <span key={pill} className="pill mono">
+              {pill}
+            </span>
+          ))}
+        </div>
       )}
+      {/* The UI views and decides; to redo or change it, the agent's chat (UI_ACTIONS_RULE, design/app.js .nask). */}
+      <p className="subtle nask">{t("canvas.askAgent")}</p>
     </section>
   );
 }

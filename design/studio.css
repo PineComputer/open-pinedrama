@@ -307,7 +307,7 @@ input.search:focus { border-color: var(--text-primary); }
 .npanel:not(.docked) { overflow-y: auto; align-content: start; }
 .npanel.docked { right: 20px; top: 64px; max-height: calc(100% - 148px); width: 400px; overflow-y: auto; align-content: start; }
 .npanel .needs { margin: 0; font-size: 12.5px; color: var(--text-primary); }
-.npanel .nhome { margin: 0; font-size: 12px; }
+.npanel .nhome, .npanel .nask { margin: 0; font-size: 12px; }
 /* §15 progressive disclosure: prompt, versions, request and details open on demand, one at a time. */
 .npanel .ndisc { display: flex; flex-wrap: wrap; gap: 6px; }
 .npanel .ndisc button { height: 26px; display: inline-flex; align-items: center; gap: 4px; padding: 0 8px 0 10px; border: 1px solid color-mix(in srgb, var(--text-primary) 12%, transparent); border-radius: var(--radius-pill); background: none; color: var(--text-secondary); font-size: 12px; cursor: pointer; }

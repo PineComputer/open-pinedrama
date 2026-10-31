@@ -5,7 +5,7 @@
 // groups, short_drama drama_cli/export.py, layout): the shared Characters, Locations and Props, and
 // this episode's segment groups and cut. React Flow gives the plane, dragging, selection and the
 // viewport; where the maker moved items is kept per episode as the studio's view state. Phase 1
-// only reads: the inspector steers the agent, and the hand actions stand disabled.
+// only views and decides: Review leads to Accept or Send back on the exact item; the rest is the agent chat's.
 import { Background, BackgroundVariant, type Edge, getViewportForBounds, type Viewport, Handle, MiniMap, type Node, type NodeProps, NodeToolbar, Position, ReactFlow, ReactFlowProvider, useKeyPress, useNodesInitialized, useNodesState, useReactFlow, useStore, useViewport } from "@xyflow/react";
 import { createContext, Fragment, type ReactNode, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { DropdownMenu } from "radix-ui";
@@ -30,7 +30,7 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { homeLink, placeLink, usePage, usePlace } from "../place.ts";
 import { useText } from "../viewing.tsx";
 import { NodePanel } from "./NodePanel.tsx";
-import { SteerBar } from "./SteerBar.tsx";
+import { NodeBar } from "./NodeBar.tsx";
 
 type Positions = Record<string, { x: number; y: number }>;
 
@@ -51,17 +51,6 @@ function standingOf(stage: LineageNode): Status {
   return stage.version === stage.accepted ? "accepted" : "you";
 }
 
-/**
- * What a maker may do to an item by hand, as the reference's node bar and panel offer it. Phase 1
- * draws them disabled and makes nothing by hand (docs/decisions.md, D8): the canvas takes the
- * handlers that do nothing, and phase 2 fills them in.
- */
-export interface NodeActions {
-  generate: (id: string) => void;
-  upload: (id: string) => void;
-}
-
-export const PHASE_ONE: NodeActions = { generate: () => {}, upload: () => {} };
 
 interface ItemData extends Record<string, unknown> {
   stage: LineageNode;
@@ -722,7 +711,7 @@ function Plane({ drama }: { drama: DramaView }) {
   const byId = new Map(mapped.nodes.map((node) => [node.id, node]));
   const labelOf = (id: string) => (byId.get(id)?.data as ItemData | undefined)?.label ?? id;
   const bar = (node: Node<ItemData>) => (
-    <SteerBar drama={drama} node={node.data.item} label={node.data.label} picture={workOf(node)} episodeTitle={names?.episodes[code]} lineage={homeLink(drama.id, node.data.stage.id, "lineage", page?.item === node.id ? page.version : undefined)} />
+    <NodeBar drama={drama} node={node.data.item} label={node.data.label} picture={workOf(node)} lineage={homeLink(drama.id, node.data.stage.id, "lineage", page?.item === node.id ? page.version : undefined)} />
   );
   const panel = (picked: Node<ItemData | ShotsData>) => {
     // A segment's shots: the breakdown's facts, its version and where it stands, and the stages it feeds; the rest is the text on the node.
@@ -745,7 +734,6 @@ function Plane({ drama }: { drama: DramaView }) {
           }}
           dock={dock}
           onDock={dockTo}
-          actions={PHASE_ONE}
           onClose={() => pick(null)}
         />
       );
@@ -772,7 +760,6 @@ function Plane({ drama }: { drama: DramaView }) {
       }}
       dock={dock}
       onDock={dockTo}
-      actions={PHASE_ONE}
       onClose={() => pick(null)}
     />
     );

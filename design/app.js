@@ -520,12 +520,8 @@
         ${open === "request" && html`<pre class="mono">${JSON.stringify({ model: spec.model, content: [{ type: "text", text: spec.prompt.slice(0, 60) + "…" }, ...spec.images.map((u) => ({ type: "image_url", image_url: { url: "@" + u }, role: "reference_image" }))], duration: spec.seconds, ratio: spec.ratio, resolution: spec.resolution }, null, 2)}</pre>`}
         ${open === "details" && html`<dl><dt>Kind</dt><dd>${node.role}</dd><dt>Version</dt><dd class="mono">${node.ver}</dd><dt>Used by</dt><dd>${uses || "—"}</dd><dt>Reads</dt><dd>${reads || "—"}</dd>${node.problems && node.problems.length ? html`<dt>Why</dt><dd>${node.problems.map((said) => html`<span class="why">${said}</span>`)}</dd>` : null}</dl>`}
       </div>
-      <div class="nfoot">
-        ${spec && html`<span class="pill mono">${spec.model}</span><span class="pill mono">${[spec.ratio, spec.resolution, spec.seconds + " s"].join(" · ")}</span>`}
-        <span class="grow"></span>
-        <button class="btn sm" disabled title="Phase 2: the agent makes every item for now">${I("upload")}Upload</button>
-        <button class="btn sm" disabled title="Phase 2: the agent makes every item for now">${I("sparkle")}Generate</button>
-      </div>`}
+      ${spec && html`<div class="nfoot"><span class="pill mono">${spec.model}</span><span class="pill mono">${[spec.ratio, spec.resolution, spec.seconds + " s"].join(" · ")}</span></div>`}`}
+      <p class="subtle nask">To redo or change it, ask the agent in the sidebar.</p>
     </div>`;
   }
 
@@ -634,9 +630,9 @@
               ${home
                 // A reference's home is Assets: the canvas links there, with no second copy of its review (§16).
                 ? html`<button class=${"btn sm " + (sel.st === "you" ? "primary" : "ghost")} onClick=${() => openHome(sel.asset || sel.id, from, sel.at)}>${sel.st === "you" ? "Review in Assets" : "Open in Assets"}</button>`
-                : html`${sel.st === "you" && reviewOf(sel, from) ? html`<button class="btn sm primary" onClick=${reviewOf(sel, from)}>Review</button>` : null}
-              <button class="ibtn" title="Send back" aria-label="Send back" onClick=${() => toast("Send back: say why, and the agent redoes it.")}>${I("arrow-counter-clockwise")}</button>
-              <button class="ibtn" title="Note" aria-label="Note" onClick=${() => toast("A note for the agent at work on it.")}>${I("note-pencil")}</button>`}
+                // The UI views and decides (UI_ACTIONS_RULE, merecdesperez44323-lab): Review leads to Accept or Send back on this
+                // exact item; redo, notes and other steering go to the agent sidebar.
+                : html`${sel.st === "you" && reviewOf(sel, from) ? html`<button class="btn sm primary" onClick=${reviewOf(sel, from)}>Review</button>` : null}`}
               <button class="ibtn" title=${gid ? "Lineage" : "Lineage: this sample traces seg03 and what it reads"} aria-label="Lineage" disabled=${!gid} onClick=${() => openLineage(gid, from)}>${I("tree-structure")}</button>
               <button class="ibtn" title="Download" aria-label="Download" onClick=${() => toast("Downloads the picture.")}>${I("download-simple")}</button></div>
             <${NodePanel} node=${sel} uses=${uses} reads=${reads} docked=${at === null} style=${at ? `left:${left}px;width:${W}px;${at}` : ""}/>`;
