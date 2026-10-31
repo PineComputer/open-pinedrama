@@ -1,7 +1,7 @@
 // The Story: the episodes as the bible titles them, the cast as cards named as the bible names
 // them with their other names and where each stands, the world as places and props; a card opens
 // its asset's detail, which links to its review, as decisions are made there.
-import { screen, within } from "@testing-library/react";
+import { screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import type { CastCard } from "../../shared/types.ts";
@@ -11,9 +11,8 @@ import { href, renderAt } from "../test/router.tsx";
 
 // The asset grid lays out its rows by its own width (react-photo-album reads clientWidth); jsdom has no layout, so the
 // grid is given a page's width here.
-const width = Object.getOwnPropertyDescriptor(HTMLElement.prototype, "clientWidth")!;
 beforeAll(() => Object.defineProperty(HTMLElement.prototype, "clientWidth", { configurable: true, get: () => 960 }));
-afterAll(() => Object.defineProperty(HTMLElement.prototype, "clientWidth", width));
+afterAll(() => Reflect.deleteProperty(HTMLElement.prototype, "clientWidth"));
 
 const file = (id: number, version: string) => ({ id, name: "image-1.png", path: `drama/assets/x/${version}/image-1.png`, type: "image/png", size: 1, kind: "look", url: `/f/${id}`, version, createdAt: "2026-10-30T10:00:00Z" });
 const cast: CastCard[] = [
@@ -104,11 +103,22 @@ describe("the Story", () => {
     const strip = within(detail).getByRole("group", { name: "Views" });
     expect(within(strip).getAllByRole("button").map((button) => button.textContent)).toEqual(["Plate", "left side", "Night"]);
     await user.click(within(strip).getByRole("button", { name: "left side" }));
-    expect(detail.querySelector(".assetbig")).toHaveAttribute("src", "/f/4");
+    // The viewer shows the picked view large (yet-another-react-lightbox's slide).
+    expect([...document.querySelectorAll(".assetviewer img")].map((image) => image.getAttribute("src"))).toContain("/f/4");
     expect(within(detail).getByText("Desks under strip lights.")).toHaveClass("clamp3");
     await user.click(within(detail).getByRole("button", { name: "More" }));
     expect(within(detail).getByText("Desks under strip lights.")).not.toHaveClass("clamp3");
     expect(within(detail).queryByText("image-1.png")).not.toBeInTheDocument();
+  });
+
+  it("opens an asset in the viewer, its details beside it, and Esc goes back to the grid (D56)", async () => {
+    const user = userEvent.setup();
+    engine();
+    const { router } = await renderAt(<Cast dramaId="d1" />, "/d/d1/assets/characters/lin");
+    expect(await screen.findByRole("dialog")).toBeInTheDocument();
+    expect(screen.getByRole("complementary", { name: "Lin Xiaoyu: versions, state and review" })).toBeInTheDocument();
+    await user.keyboard("{Escape}");
+    await waitFor(() => expect(href(router)).toBe("/d/d1/assets/characters"));
   });
 
   it("keeps props on their own shelf", async () => {

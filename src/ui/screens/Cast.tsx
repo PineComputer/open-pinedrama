@@ -2,6 +2,8 @@
 // episodes as the bible titles them, its cast as cards (the newest sheet, where it stands, its
 // other names, the episodes it is in) and its world (places and key props). Every name is the
 // bible's. Decisions are made in the review room: a card waiting for one links there.
+import Lightbox from "yet-another-react-lightbox";
+import "yet-another-react-lightbox/styles.css";
 import { type Photo, RowsPhotoAlbum } from "react-photo-album";
 import "react-photo-album/rows.css";
 import { useEffect, useState } from "react";
@@ -150,7 +152,7 @@ function AssetGrid({ cards, names, dramaId, picked }: { cards: CastCard[]; names
  * the name, kind and version with where it stands, Review and Lineage, the bible's description clamped to three lines,
  * the episodes it is in, and its versions. Decisions are made in the review room, as everywhere.
  */
-function AssetDetail({ card, names, dramaId }: { card: CastCard; names: Names | null; dramaId: string }) {
+function AssetPanel({ card, names, dramaId, onShow }: { card: CastCard; names: Names | null; dramaId: string; onShow: (file: FileItem | undefined) => void }) {
   const { t } = useT();
   const navigate = useNavigate();
   const { search } = useRoute();
@@ -171,6 +173,8 @@ function AssetDetail({ card, names, dramaId }: { card: CastCard; names: Names | 
   const shown = versions[Math.min(index, versions.length - 1)];
   const sheet = shown?.files.find((file) => !file.style) ?? shown?.files[0];
   const big = (view && shown?.files.find((file) => file.style === view)) || sheet;
+  // The viewer shows large whatever the panel picks: a version, a view, a look.
+  useEffect(() => onShow(big), [big?.url]);
   const name = subjectLabel(names, card.subject, card.kind);
   const current = versions[0]?.files[0]?.version;
   const accepted = versions.find((version) => standing(version) === "accepted")?.files[0]?.version;
@@ -195,26 +199,20 @@ function AssetDetail({ card, names, dramaId }: { card: CastCard; names: Names | 
       <div className="ihead">
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <b className="grow">{name}</b>
-          <Link {...shelfLink(SHELF_BY_KIND[card.kind], dramaId)} className="ibtn" aria-label={t("asset.close")}>
-            <Icon name="x" className="ic" />
-          </Link>
         </div>
         <small>{[lookName(look!), big?.version].filter(Boolean).join(" · ")}</small>
       </div>
       <div className="iscroll">
-        {big && (
+        {strip.length > 1 && (
           <div className="isec">
-            <img className="assetbig" src={big.url} alt="" />
-            {strip.length > 1 && (
-              <div className="viewstrip" role="group" aria-label={card.kind === "look" ? t("asset.looks") : t("cast.views")}>
-                {strip.map((item) => (
-                  <button key={item.key} type="button" aria-pressed={item.on} onClick={item.pick}>
-                    {item.file ? <img src={item.file.url} alt="" /> : <span className="emptythumb" />}
-                    <small>{item.label}</small>
-                  </button>
-                ))}
-              </div>
-            )}
+            <div className="viewstrip" role="group" aria-label={card.kind === "look" ? t("asset.looks") : t("cast.views")}>
+              {strip.map((item) => (
+                <button key={item.key} type="button" aria-pressed={item.on} onClick={item.pick}>
+                  {item.file ? <img src={item.file.url} alt="" /> : <span className="emptythumb" />}
+                  <small>{item.label}</small>
+                </button>
+              ))}
+            </div>
           </div>
         )}
         <div className="isec">
@@ -277,6 +275,32 @@ function AssetDetail({ card, names, dramaId }: { card: CastCard; names: Names | 
   );
 }
 
+/**
+ * D56's viewer (merecdesperez44323-lab: "弹出大图可以，做吧"): an asset opens in yet-another-react-lightbox, the picture as
+ * large as the window allows at its own ratio on a dimmed backdrop, ← and → through the shelf, Esc back to the grid
+ * (WAI-ARIA APG modal dialog), and its details in a panel beside it (LibTV's asset viewer; Google Photos, Lightroom).
+ * The route names the asset, so a link opens it and the arrows move it.
+ */
+function AssetViewer({ cards, picked, shelf, names, dramaId }: { cards: CastCard[]; picked: string; shelf: Exclude<Shelf, "bible">; names: Names | null; dramaId: string }) {
+  const { t } = useT();
+  const navigate = useNavigate();
+  const [shown, setShown] = useState<FileItem>();
+  const index = cards.findIndex((card) => card.subject === picked);
+  const slides = cards.map((card, i) => ({ src: (i === index && shown?.url) || versionsOf(mainOf(card)).file?.url || "", alt: subjectLabel(names, card.subject, card.kind) }));
+  return (
+    <Lightbox
+      open
+      index={index}
+      slides={slides}
+      close={() => void navigate(shelfLink(shelf, dramaId))}
+      on={{ view: ({ index: next }) => next !== index && void navigate({ ...shelfLink(shelf, dramaId, cards[next].subject), replace: true }) }}
+      labels={{ Previous: t("asset.previous"), Next: t("asset.next"), Close: t("asset.close"), Lightbox: t("asset.viewer") }}
+      className="assetviewer"
+      render={{ controls: () => <AssetPanel key={picked} card={cards[index]} names={names} dramaId={dramaId} onShow={setShown} /> }}
+    />
+  );
+}
+
 // The shelf each page shows.
 const SHELF_OF: Partial<Record<Page, Shelf>> = { story: "bible", characters: "cast", locations: "scenes", props: "props" };
 
@@ -294,7 +318,7 @@ export function Cast({ dramaId, compact = false }: { dramaId: string; compact?: 
   const places = (data ?? []).filter((card) => card.kind === "location");
   const props = (data ?? []).filter((card) => card.kind === "prop");
   const pickedCard = shelf === "bible" ? undefined : (data ?? []).find((card) => SHELF_BY_KIND[card.kind] === shelf && card.subject === picked);
-  const detail = pickedCard && <AssetDetail key={pickedCard.subject} card={pickedCard} names={names} dramaId={dramaId} />;
+
   const castGrid = <AssetGrid cards={characters} names={names} dramaId={dramaId} picked={picked} />;
   if (!data) return <p className={error === undefined ? "quiet" : "error"}>{error === undefined ? t("loading") : errorText(error, t)}</p>;
   // Y8: Story is the bible's page whether or not anything has been drawn; an asset shelf says when it is empty.
@@ -415,14 +439,8 @@ export function Cast({ dramaId, compact = false }: { dramaId: string; compact?: 
           </span>
         </div>
       </div>
-      <div className={detail ? "assetsplit" : undefined}>
-        {cards.length ? (
-          <AssetGrid cards={cards} names={names} dramaId={dramaId} picked={picked} />
-        ) : (
-          none
-        )}
-        {detail}
-      </div>
+      {cards.length ? <AssetGrid cards={cards} names={names} dramaId={dramaId} picked={picked} /> : none}
+      {pickedCard && <AssetViewer cards={cards} picked={pickedCard.subject} shelf={shelf} names={names} dramaId={dramaId} />}
     </>
   );
 }

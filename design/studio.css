@@ -807,10 +807,6 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
 .subst .ic { width: 16px; height: 16px; flex: none; }
 .subst[role="alert"] .ic { color: var(--error); }
 .subst .btn { flex: none; }
-/* J1 in the product: an asset's detail beside its shelf's grid (src/ui/screens/Cast.tsx, AssetDetail). */
-.assetsplit { display: flex; align-items: flex-start; }
-.assetsplit > .assetgrid, .assetsplit > .empty-note { flex: 1; min-width: 0; }
-.assetsplit > .insp { position: sticky; top: 0; max-height: calc(100vh - 140px); margin-right: 16px; border: 1px solid var(--border); border-radius: var(--radius-2xl); overflow: hidden; }
 .preset[data-disabled] { cursor: not-allowed; } .preset > [data-slot="radio-group-item"] { margin-top: 2px; }
 /* The episode's cut, as its child row in the drama tree (IA §16: its own home), under the episode in view. */
 .tree .treecut button { padding-left: 18px; }
@@ -840,7 +836,9 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
 .assetgrid { padding: 0 16px 80px; min-width: 0; }
 .assetgrid.flexrows { display: flex; flex-wrap: wrap; gap: 12px; }
 .assetgrid.flexrows::after { content: ""; flex-grow: 999999; }
-.assetgrid.flexrows .assetcard { flex: var(--r) 1 calc(var(--r) * 230px); max-width: calc(var(--r) * 300px); }
+/* Mirrors the product's rows (targetRowHeight 230, at most four a row): a basis near a 180px row, never under a
+   quarter of the column, so 2–4 fit and a row lands near 200–230px. */
+.assetgrid.flexrows .assetcard { flex: var(--r) 1 max(calc(var(--r) * 180px), calc(25% - 12px)); max-width: calc(var(--r) * 300px); }
 .assetgrid.flexrows .assetcard .pic { aspect-ratio: var(--r); }
 .assetcard .pic { position: relative; background: var(--surface-container); }
 .assetcard .pic img { display: block; width: 100%; height: 100%; object-fit: cover; }
@@ -850,7 +848,6 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
 .assetcard .ctxt { display: flex; align-items: baseline; gap: 8px; padding: 8px 10px 10px; min-width: 0; }
 .assetcard .cardname { min-width: 0; color: inherit; text-decoration: none; } .assetcard .cardname b { display: block; font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .assetcard .ctxt .mono { font-size: 11px; }
-.assetbig { width: 100%; max-height: 300px; object-fit: contain; border-radius: var(--radius-large); background: var(--surface-container); }
 .viewstrip { display: flex; gap: 6px; overflow-x: auto; margin-top: 8px; padding-bottom: 2px; }
 .viewstrip button { flex: none; width: 64px; display: grid; gap: 3px; padding: 0; border: 0; background: none; color: var(--text-secondary); cursor: pointer; text-align: center; }
 .viewstrip img, .viewstrip .emptythumb { width: 64px; height: 48px; object-fit: cover; border-radius: var(--radius-medium); border: 1px solid var(--border); }
@@ -920,3 +917,8 @@ button.drow { cursor: pointer; } button.drow:hover { background: var(--hover); }
 .lbhead { display: flex; align-items: center; gap: 8px; } .lbhead b { font-size: 15px; }
 .lbkind { margin: -12px 0 0; font-size: 12px; } .lbrow { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .lbsec { display: grid; gap: 8px; padding-top: 16px; border-top: 1px solid var(--border-subtle); } .lbsec h4 { margin: 0; font-size: 12px; color: var(--text-muted); }
+/* The product's asset viewer (src/ui/screens/Cast.tsx, yet-another-react-lightbox): the stage leaves the inspector's width
+   on the right, where the details sit docked (Edge, square); the backdrop is the draft's .lbox dim. */
+.assetviewer { --yarl__color_backdrop: color-mix(in srgb, #000 88%, transparent); }
+.assetviewer .yarl__container { right: var(--insp); }
+.assetviewer .insp { position: fixed; top: 0; right: 0; bottom: 0; z-index: 1; background: var(--surface); }
