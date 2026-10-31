@@ -1128,7 +1128,7 @@ timeline
   a gutter, changed rows tinted, one scroll) whose rows are aligned by drama-cli's review.md line map,
   one line to many, with hatched fillers where a side has none: never a diff of the studio's own and
   no scrolling by percentage. There is no outline: Script is the document, and an
-  episode's script scrolls to its section. A change goes through the agent: Send back while a
+  episode's script scrolls to its first scene (365778f; its section until then). A change goes through the agent: Send back while a
   version waits; after acceptance the maker asks the agent, which writes a new version that
   drama-cli checks and the maker accepts. Analyzing and the Fountain review fold into
   Script, which replaces [D21](#d21-2026-10-30--analyzing-and-out-of-date-have-drama-level-routes-of-their-own)'s
@@ -1192,7 +1192,12 @@ timeline
   exactly; drama-cli computes the per-line map (`drama_cli/screenplay.py`, `lined()`) but does not write it.
   Until the pinned drama-cli writes it, the Fountain tab shows the file as plain text, without kind styling,
   and says so in one line, as `graph.staleNoReason` does for a reason drama-cli doesn't give; fountain-js
-  styling is removed, with no fallback. The drama-cli change is briefed separately (master).
+  styling is removed, with no fallback. The drama-cli change is briefed separately (master). Recorded in
+  365778f (work-02): the Fountain tab shows `screenplay.fountain` line for line with the one-line note
+  (`script.noLineKinds`); `src/ui/fountainLines.ts` and the fountain-js dependency are deleted. Without
+  line kinds there is no section to open at, so `?ep=EPxxx` now opens at the episode's first scene, found by
+  the scene number drama-cli writes at a heading's end (`#<episode>-<scene>#`, short_drama
+  `doc/drama-cli/write-a-screenplay.md`), where it had opened at the episode's section.
 - **Amended.** 31 October 2026, 95a8245 (work-02), under D64 as amended for C14: Script shows only
   drama-cli's recorded versions; the "vN · the agent is rewriting your file into Fountain" row and the
   tree's Rewriting state are gone, and the agent's steps stay in the sidebar. The tree's Script row is
