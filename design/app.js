@@ -236,10 +236,16 @@
   /* Codex round 4, F4: the script, the bible and the shared assets belong to the setup session (D5), so their pages follow
      it, never an episode's. It ended at the handover; a message starts a new setup session on the project (D38,
      POST /api/dramas/:id/setup-message), sent once under one submission id. */
-  const setupPage = () => S.screen === "script" || S.screen === "story";
-  const followed = () => (inEpisode() ? "EP006" : setupPage() ? "Setup" : null);
+  // Every drama page has a scope: its episode, else the project's setup (Script, Bible, Assets, and the pages of no one
+  // episode: master's decision). The line always names its target; the picker (Pin) changes it to any episode.
+  const followed = () => (inEpisode() ? "EP006" : "Setup");
   const talkTo = () => S.pin || followed();
   const whose = (to) => (to === "Setup" ? "the setup session" : to + "'s session");
+  /* One dot, one meaning, as the maker's states have it: working while the scope's session runs, needs you while it waits,
+     none when no session is open (then a message starts a new one: POST /api/dramas/:id/messages). The sample's sessions:
+     EP003 runs, EP006 and EP007 wait, the setup has ended. */
+  const stateOf = (to) => (S.dramaStop ? "none" : to === "EP003" ? "running" : to === "EP006" || to === "EP007" ? "waiting" : "none");
+  const newOf = (to) => (to === "Setup" ? "a new setup session" : "a new " + to + " session");
   const switchTo = (pin) => { const from = talkTo(), next = pin || followed(); set({ pin, drafts: { ...S.drafts, [from || ""]: S.draft }, draft: (S.drafts || {})[next || ""] || "" }); };
   const setAgent = (v) => { set({ agent: v }); try { localStorage.setItem("studio.agent", v); } catch (e) { /* storage may be blocked */ } };
   /* The agent's one form (D32 as amended): a right sidebar like VS Code's Secondary Side Bar and Cursor's agent pane. Open,
@@ -256,13 +262,17 @@
     if (S.agent !== "open") return html`<button class=${"ball" + (busy ? " busy" : "")} aria-expanded="false" title="Open the agent sidebar (⌥⌘B)"
       aria-label=${"Agent" + (to ? ", " + (S.pin ? "pinned to " : "following ") + to : "") + (dec.length ? ", " + dec.length + " decisions wait" : "")} onClick=${() => setAgent("open")}>${I("robot")}${dec.length ? html`<span class="badge">${dec.length}</span>` : null}</button>`;
     return html`<aside class="agent" id="agent" aria-label="Agent">
-      <div class="ahead"><span class="live"></span><h2>Agent</h2><span class="grow"></span>
+      <div class="ahead"><h2>Agent</h2><span class="grow"></span>
         <button class="ibtn" aria-label="Collapse the agent sidebar" aria-expanded="true" aria-controls="agent" title="Collapse (⌥⌘B)" onClick=${() => setAgent("closed")}>${I("sidebar-simple", "flipx")}</button></div>
-      <div class="ascope">${S.pin
-        ? html`${I("map-pin")}<span>Pinned to <b>${S.pin}</b></span><span class="grow"></span><button class="btn sm ghost" onClick=${() => switchTo(null)}>${inEpisode() ? "Follow EP006" : setupPage() ? "Follow the setup session" : "Unpin"}</button>`
-        : to === "Setup" ? html`<span class="live"></span><span>Following the <b>setup session</b>: the script, bible and shared assets</span><span class="grow"></span><button class="btn sm ghost" onClick=${() => switchTo("EP007")}>Pin to EP007</button>`
-        : to ? html`<span class="live"></span><span>Following <b>${to}</b>, the episode in view</span><span class="grow"></span><button class="btn sm ghost" onClick=${() => switchTo("EP007")}>Pin to EP007</button>`
-        : html`<span>No episode in view</span><span class="grow"></span><button class="btn sm ghost" onClick=${() => switchTo("EP007")}>Pin to EP007</button>`}</div>
+      <div class="ascope" role="status">${(() => {
+        const st = stateOf(to), lead = S.pin ? html`${I("map-pin")}Pinned to` : "Following";
+        const dot = st === "running" ? html`<span class="live" aria-hidden="true"></span>` : st === "waiting" ? html`<span class="adot you" aria-hidden="true"></span>` : null;
+        const words = st === "none" ? html`<span>No session open: a message starts <b>${newOf(to)}</b></span>`
+          : html`<span>${lead} <b>${whose(to)}</b>: ${st === "running" ? "working" : "it waits for you"}</span>`;
+        const back = S.pin ? html`<button class="btn sm ghost" onClick=${() => switchTo(null)}>${inEpisode() ? "Follow EP006" : "Follow the setup session"}</button>`
+          : html`<button class="btn sm ghost" onClick=${() => switchTo("EP007")}>Pin to EP007</button>`;
+        return html`${dot}${words}<span class="grow"></span>${back}`;
+      })()}</div>
       <div class="ascroll">
         <section class="asec"><h3>Sessions <span class="c">3</span></h3>${runRow("EP003", "Running · shooting 4 takes · 2 back")}
           <div class="arow"><div class="what"><b>EP006</b><span>Waiting · 2 takes wait for you</span></div><button class="btn sm ghost" onClick=${() => go("review")}>Review</button></div>
@@ -289,8 +299,8 @@
             <li>${I("check-circle")}<span>Breakdown EP007: refused, a red line in the screenplay</span><time>1:10</time></li>
             <li class="now">${I("circle-notch")}<span>Waiting for your decision</span><time></time></li></ol>`}</div></section>
         <section class="asec"><p class="msg">drama-cli won't break EP007 down: its scene 4 shows a guard striking Luca in the cell, a red line in the screenplay. It's yours to decide: change the scene in the script, or stop EP007 here. Other episodes carry on.</p></section>`
-        : to === "Setup" ? html`<section class="asec"><p class="msg">The setup session ended when it handed the project over. Write below to start a new setup session on this project for a change to the script, the bible or the shared assets; its work shows here, as the setup's did.</p></section>`
-        : to ? html`<section class="asec"><div class="process"><button aria-expanded=${String(S.procOpen !== false)} onClick=${() => set({ procOpen: S.procOpen === false })}>${I("list-checks")}EP006 · Process<span class="cnt">7 steps</span>${I(S.procOpen === false ? "caret-right" : "caret-down")}</button>
+
+        : to === "EP006" ? html`<section class="asec"><div class="process"><button aria-expanded=${String(S.procOpen !== false)} onClick=${() => set({ procOpen: S.procOpen === false })}>${I("list-checks")}EP006 · Process<span class="cnt">7 steps</span>${I(S.procOpen === false ? "caret-right" : "caret-down")}</button>
           ${S.procOpen !== false && html`<ol class="steps">
             <li>${I("check-circle")}<span>Status <code>drama-cli status</code></span><time>0:02</time></li>
             <li>${I("check-circle")}<span>seg01 shot again: blanket folded first</span><time>2:40</time></li>
@@ -298,7 +308,7 @@
             <li>${I("check-circle")}<span>Downloaded both takes</span><time>0:18</time></li>
             <li class="now">${I("circle-notch")}<span>Waiting for your review</span><time></time></li></ol>`}</div></section>
         <section class="asec"><p class="msg">I shot seg01 again with the blanket folded before Luca speaks, and seg03 again opening on his face, as you asked. Both new takes wait for you.</p></section>`
-        : html`<section class="asec"><p class="msg muted">Open an episode, or pin a session, to see its work here and message it.</p></section>`}
+        : null}
         ${to && (S.chats?.[to] || []).length > 0 && html`<section class="asec" aria-label="Conversation">${S.chats[to].map((m) => html`<p class="msg you">${m}</p>`)}</section>`}
         <section class="asec"><h3>Recent work</h3>
           <div class="arow"><div class="what"><b>EP006 seg03 take t02</b><span>waits for you</span></div></div>
@@ -306,11 +316,12 @@
         <section class="asec"><h3>Next</h3><div class="nextchips"><button onClick=${() => go("review")}>Review EP006 takes</button><button onClick=${() => go("canvas")}>Review looks and plates</button></div></section>
       </div>
       ${(() => {
-        const setup = to === "Setup", can = Boolean(to);
-        const send = () => { set({ chats: { ...S.chats, [to]: [...((S.chats || {})[to] || []), S.draft.trim()] }, draft: "" }); toast(setup ? "Sent to a new setup session." : "Sent to " + to + "'s session."); };
-        return html`<div class="composer"><textarea placeholder=${setup ? "Ask a new setup session for a change…" : to ? "Message " + to + "'s session…" : "Pin a session to message it"} disabled=${!can} value=${S.draft} onInput=${(e) => set({ draft: e.target.value })}
-          onKeyDown=${(e) => { if (e.key === "Enter" && (e.metaKey || e.ctrlKey) && S.draft.trim() && can) send(); }}></textarea>
-        <div class="crow"><span>${setup ? html`To <b>a new setup session</b>` : to ? html`To <b>${to}</b>'s session · ${S.pin ? "pinned" : "the episode in view"}` : "No session chosen"}</span><button class="send" aria-label=${to ? "Send to " + whose(to) : "Send"} disabled=${!can || !S.draft.trim()} onClick=${send}>${I("arrow-up")}</button></div></div>`;
+        // The line is always open on a drama page and names its target: the scope's open session, or a new one.
+        const target = stateOf(to) === "none" ? newOf(to) : whose(to);
+        const send = () => { set({ chats: { ...S.chats, [to]: [...((S.chats || {})[to] || []), S.draft.trim()] }, draft: "" }); toast("Sent to " + target + "."); };
+        return html`<div class="composer"><textarea aria-label="Message" placeholder=${"Message " + target + "…"} value=${S.draft} onInput=${(e) => set({ draft: e.target.value })}
+          onKeyDown=${(e) => { if (e.key === "Enter" && (e.metaKey || e.ctrlKey) && S.draft.trim()) send(); }}></textarea>
+        <div class="crow"><span>To <b>${target}</b></span><button class="send" aria-label=${"Send to " + target} disabled=${!S.draft.trim()} onClick=${send}>${I("arrow-up")}</button></div></div>`;
       })()}
     </aside>`;
   }
