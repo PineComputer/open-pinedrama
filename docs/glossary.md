@@ -52,7 +52,7 @@ flowchart TB
 | **project** | 项目 | The UI's container: one logical drama-cli project, with its screenplay, config and bible, and the drama it makes. Sessions work on copies of it and return its state, accepted by owner. "drama" stays the internal name in routes (`/d/`), the API and the engine's types until a rename after release. | [D46](decisions.md#d46-2026-10-30--the-uis-container-is-a-project) (reverses Codex's Drama / 剧目); [D16](decisions.md#d16-2026-10-30--the-navigation-a-studio-wide-rail-the-dramas-tree-one-home-per-object); the IA proposal, sections 12.3 and 14.3 <sup>[3](#ref-3)</sup> |
 | **project type** | | What a project makes, which sets its workflow and presets. Drama is the only type; ads, films and launch videos are future types, not built. | [D49](decisions.md#d49-2026-10-30--a-project-has-a-type-drama-is-the-only-one) |
 | **Script** | 剧本 | The project's page for its screenplay: the original, the Fountain rewrite and their difference. Fountain is the format, not a page. | Codex's review, section 4 <sup>[4](#ref-4)</sup>; [D21](decisions.md#d21-2026-10-30--analyzing-and-out-of-date-have-drama-level-routes-of-their-own) |
-| **Story** | 故事 | The project's page for the bible's logline and beats; the **bible** (设定集) is the versioned document behind it. | Codex's review, section 4 <sup>[4](#ref-4)</sup>; drama-cli's bible <sup>[2](#ref-2)</sup> |
+| **Bible** | 设定集 | The project's page for the bible, drama-cli's versioned document: its logline, beats and episodes. Formerly Story ([D61](decisions.md#d61-2026-10-30--story-is-renamed-bible-as-drama-cli-calls-it)). | Codex's review, section 4 <sup>[4](#ref-4)</sup>; drama-cli's bible <sup>[2](#ref-2)</sup> |
 | **Assets** | 素材 | The shared references every episode uses: Characters, Locations, Props. | the IA proposal, section 10 <sup>[3](#ref-3)</sup> |
 | **character**, **look** | 角色，造型 | A character of the bible; a look is one of its outfits (S0, S1…), shown by its readable name with the key kept. | drama-cli's look <sup>[2](#ref-2)</sup>; Codex's review, section 4 <sup>[4](#ref-4)</sup> |
 | **location** | 地点 | A place of the bible, with its location references (drama-cli's plates: views, Day and Night). Not a scene: one location holds many scenes. | the IA proposal, section 10 <sup>[3](#ref-3)</sup> |
@@ -124,6 +124,8 @@ flowchart TB
 | World, Cast, Scenes (as asset sections) | Assets: Characters, Locations, Props | a scene is the screenplay's (the IA proposal, section 10) |
 | Drama, 剧目 (in the UI) | Project, 项目 | the studio makes nothing but dramas, so the word names no container ([D46](decisions.md#d46-2026-10-30--the-uis-container-is-a-project)) |
 | 镜头, 片段, 成片 for a take | 视频版本 | they are a shot, a segment and a film (Codex's review, section 4) |
+| Story | Bible | drama-cli's name ([D61](decisions.md#d61-2026-10-30--story-is-renamed-bible-as-drama-cli-calls-it)) |
+| List (an episode's view) | Segments | a matrix of shots, storyboards, references and take ([D63](decisions.md#d63-2026-10-30--an-episodes-views-are-segments-and-canvas-segments-is-a-matrix)) |
 | Fresh, Stale (in the UI) | Up to date, Out of date | one pair for the maker (Codex's re-review, G2) |
 
 ## References

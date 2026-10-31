@@ -323,8 +323,6 @@ Mac, on Windows and on Linux.
 - The gallery's screenshot baselines (`e2e/screenshots.spec.ts-snapshots/`) are made again on
   GitHub's runners: they were made on the pine-dev box, and GitHub's ubuntu-latest renders about 1%
   of their pixels differently, over the spec's 0.2%.
-- Redoing a shared reference after the handover, in a new setup session
-  ([D38](decisions.md#d38-2026-10-30--redoing-a-shared-reference-takes-a-new-setup-session-after-release)).
 - The third-party screenshots in `docs/references/` are removed before the repository is public.
 - The documents name other products (the AI drama and production tools studied in
   [information architecture](studio/information-architecture.md#how-others-solve-it) and the

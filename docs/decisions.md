@@ -22,7 +22,7 @@ timeline
   2026-10-23 : D5 pre-production in one session
   2026-10-24 : D6 idle timeouts follow the work : D7 spend shown, never in a goal
   2026-10-29 : D8 phase 1 steers
-  2026-10-30 : D9 design/ is the UI source : D10 tsc gate : D11 mature libraries : D12 real samples in LFS : D13 decisions taken once : D14 credentials stop : D15 Codex review loop : D16 navigation and one home : D17 every take and cut watched : D18 cut editing as an edit spec : D19 TanStack Router : D20 Export by owner : D21 Analyzing and Out of date routes : D22 redo by owner : D23 the asset detail : D24 the cut edit goal : D25 one Submission : D26 crumbs and Back : D27 Reviews : D28 model badge : D29 canvas zoom, inline video : D30 URL rules : D31 agent scope : D32 narrow windows : D33 review options : D34 Episodes filters : D35 every element cites its ground : D36 Delivery is the cuts' home : D37 a picked node zooms : D38 shared redo after release : D39 a take plays on its node : D40 where a stop shows : D41 Script is the screenplay's home : D42 Story and Assets apart : D43 stable sample ids : D44 the cut leaves the switch : D45 samples' own screenplays : D46 Project : D47 a draft's changed base : D48 the List's ?version : D49 project types : D50 Home cards : D51 one column, rail labels : D52 Home first, disabled : D53 account footer : D54 icon-only rail : D55 the cover follows the format : D56 Assets grid and inspector : D57 no tabs in Assets : D58 Canvas nodes whole : D59 Canvas opens in Hand : D60 replay's freshness
+  2026-10-30 : D9 design/ is the UI source : D10 tsc gate : D11 mature libraries : D12 real samples in LFS : D13 decisions taken once : D14 credentials stop : D15 Codex review loop : D16 navigation and one home : D17 every take and cut watched : D18 cut editing as an edit spec : D19 TanStack Router : D20 Export by owner : D21 Analyzing and Out of date routes : D22 redo by owner : D23 the asset detail : D24 the cut edit goal : D25 one Submission : D26 crumbs and Back : D27 Reviews : D28 model badge : D29 canvas zoom, inline video : D30 URL rules : D31 agent scope : D32 narrow windows : D33 review options : D34 Episodes filters : D35 every element cites its ground : D36 Delivery is the cuts' home : D37 a picked node zooms : D38 shared redo after release : D39 a take plays on its node : D40 where a stop shows : D41 Script is the screenplay's home : D42 Story and Assets apart : D43 stable sample ids : D44 the cut leaves the switch : D45 samples' own screenplays : D46 Project : D47 a draft's changed base : D48 the List's ?version : D49 project types : D50 Home cards : D51 one column, rail labels : D52 Home first, disabled : D53 account footer : D54 icon-only rail : D55 the cover follows the format : D56 Assets grid and inspector : D57 no tabs in Assets : D58 Canvas nodes whole : D59 Canvas opens in Hand : D60 replay's freshness : D61 Bible : D62 Script holds the process : D63 Segments matrix
 ```
 
 ## D1. 2026-10-22 · A desktop app on Electron
@@ -659,6 +659,9 @@ timeline
   [architecture](architecture.md#11-before-release), "Before release".
 - **Words.** None recorded.
 - **Recorded in.** Master's notes to work-05 and the docs, 30 October 2026.
+- **Amended by.** Commit 3bb6353, the same evening: a shared reference's redo after the handover
+  opens a new setup session, from Out of date's shared groups (an impact confirmation, then a review
+  of the new versions).
 
 ## D39. 2026-10-30 · A take or cut plays on its Canvas node
 - **Context.** A take or cut node previewed its video on hover, muted, with no way to play it with
@@ -1012,6 +1015,52 @@ timeline
   session, and while that session waits on a review it offers "Open the review".
 - **Words.** None recorded.
 - **Recorded in.** Commits c93a909 and a1b820e; work-05's notes to the docs.
+
+## D61. 2026-10-30 · Story is renamed Bible, as drama-cli calls it
+- **Context.** The project's page for the bible was called Story (D42), while drama-cli, its files
+  and the glossary call the document the bible.
+- **Decision.** The page is Bible. This supersedes [D42](#d42-2026-10-30--story-and-assets-are-two-pages-homes-shelves-use-the-makers-states)'s
+  name; Bible and Assets stay two pages.
+- **Alternatives.** Story (D42).
+- **Grounds.** merecdesperez44323-lab's decision; names follow drama-cli's (short_drama `AGENTS.md`,
+  design rule 8).
+- **Consequences.** The glossary moves Story to Bible; design first, then the product after Codex's
+  review and merecdesperez44323-lab's yes.
+- **Words.** "肯定啊， 就是和 drama-cli一致啊" (*of course, the same as drama-cli*), relayed by master.
+- **Recorded in.** Master's note to the docs, 30 October 2026.
+
+## D62. 2026-10-30 · Script is the home of the whole screenplay process
+- **Context.** The screenplay's process was spread over Upload, Analyzing, the Fountain review and
+  Script (D21, D41).
+- **Decision.** Script is the one home of the screenplay's process: the upload, drama-cli's check,
+  the agent's revisions into Fountain, the maker's acceptance, and the comparison of what changed.
+  Whether Analyzing and the Fountain review fold into Script is pending work-02's draft in `design/`.
+- **Alternatives.** The setup steps as their own route (D21).
+- **Grounds.** merecdesperez44323-lab's decision; one home per object
+  ([design principles](design-principles.md#1-one-home-per-object)).
+- **Consequences.** Design first, then the product after Codex's review and merecdesperez44323-lab's
+  yes; D21's Analyzing route may change with the draft.
+- **Words.** "script, 这个part就把用户上传、drama-cli修改、revise、变成fountain， 用户确认， 这些在这个part都搞定， 包括对比啥的， 改了啥"
+  (*Script: this part handles the user's upload, drama-cli's changes, the revisions into Fountain and
+  the user's confirmation, all here, including the comparison and what changed*), relayed by master.
+- **Recorded in.** Master's note to the docs, 30 October 2026.
+
+## D63. 2026-10-30 · An episode's views are Segments and Canvas; Segments is a matrix
+- **Context.** An episode's List showed each segment's tiles in a row, without its shots or
+  references side by side.
+- **Decision.** An episode is Segments | Canvas. Segments is a grid: a row per segment, columns for
+  its shots (the breakdown), the line-art storyboard, the photoreal storyboard, the references and
+  the take. The inspector holds the picked item and its Seedance prompt. Lineage stays a view of an
+  item, not a tab. This supersedes the List of
+  [D16](#d16-2026-10-30--the-navigation-a-studio-wide-rail-the-dramas-tree-one-home-per-object)'s
+  List | Canvas.
+- **Alternatives.** The List of segment rows (D16).
+- **Grounds.** merecdesperez44323-lab's decision.
+- **Consequences.** work-04 drafts it in `design/`; the product changes after Codex's review and
+  merecdesperez44323-lab's yes.
+- **Words.** "就是 镜头、线稿、写实、参考图、take。 那我理解就是 一个 矩阵了" (*that is: shots, line art,
+  photoreal, reference pictures, take; so as I understand it, a matrix*), relayed by master.
+- **Recorded in.** Master's note to the docs, 30 October 2026.
 
 ## References
 
