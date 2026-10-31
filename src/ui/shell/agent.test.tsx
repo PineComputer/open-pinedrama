@@ -451,6 +451,10 @@ describe("what drama-cli said, in the conversation (D70)", () => {
     const said = await screen.findByLabelText("drama-cli said, SetLimitExceeded.max_new_versions");
     expect(said).toHaveClass("msg", "said");
     expect(within(said).getByText("Waiting for your answer")).toBeInTheDocument();
+    // The code on its own line under the head, whole, never cut beside the chips (design 818aeca).
+    const code = within(said).getByText("SetLimitExceeded.max_new_versions");
+    expect(code).toHaveClass("saidcode");
+    expect(code.closest(".saidhead")).toBeNull();
     // Cut at the first "; ", the project's folder left out, never reworded.
     expect(within(said).getByText("episodes/EP002/multi_panel_storyboard/seg06/line-art has had 3 new paid versions after its first, the limit defaults.max_new_versions (3)")).toBeInTheDocument();
     await user.click(within(said).getByText("What drama-cli said"));

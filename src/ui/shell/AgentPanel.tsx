@@ -362,10 +362,11 @@ function Said({ refusal, stop, anchor }: { refusal: Refusal; stop: ChatStop; anc
           <Icon name="info" className="ic" />
           drama-cli
         </span>
-        <code>{refusal.code}</code>
         <span className="fill" />
         {stop.state === "open" ? <StatusChip status="you" label={t("said.waiting")} /> : <span className="muted">{t(stop.state === "answered" ? "said.answered" : "said.ended")}</span>}
       </p>
+      {/* The code on its own line, whole: beside the two chips a code such as SetLimitExceeded.max_new_versions was cut (818aeca). */}
+      <code className="saidcode">{refusal.code}</code>
       <p>{firstLine(refusal.message, stop.project)}</p>
       <details className="basedet">
         <summary>{t("said.whole")}</summary>
