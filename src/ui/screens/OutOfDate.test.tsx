@@ -67,6 +67,14 @@ describe("the drama's Out of date", () => {
     expect(calls("GET", "/api/dramas/d1/sessions")).toHaveLength(0);
   });
 
+  it("says a version is out of date, without a reason, when drama-cli's export gives none (v0.7.5)", async () => {
+    engine("location-plate-replaced");
+    const lineage = view("location-plate-replaced").lineage!;
+    answer("/api/dramas/d1/lineage", { lineage: { ...lineage, nodes: lineage.nodes.map((node) => ({ ...node, problems: [] })) }, problems: [] });
+    await renderAt(<OutOfDate dramaId="d1" />, "/d/d1/out-of-date");
+    expect(within(await waitFor(() => row(/Day/))).getByText("drama-cli reports it out of date; this drama-cli version doesn't say why.")).toBeInTheDocument();
+  });
+
   it("keeps the script and the bible apart from the assets", async () => {
     engine("location-plate-replaced");
     const lineage = view("location-plate-replaced").lineage!;

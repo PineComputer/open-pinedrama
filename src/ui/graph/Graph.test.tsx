@@ -113,6 +113,18 @@ describe("the Graph", () => {
     expect(screen.getByRole("region", { name: "State" })).toHaveTextContent("Changed selection: assets/scenes/office/times/Day/accepted.json");
   });
 
+  // drama-cli v0.7.5, the release Pine pins, exports no problems (short_drama #668 adds them): never an empty warning.
+  it("says a version is out of date, without a reason, when drama-cli's export gives none", async () => {
+    const plain = view("time-plate-replaced");
+    answer("/api/dramas/d1/files", files);
+    answer("/api/dramas/d1/sessions", [chat("setup", "", "run"), chat("ep1", "EP001", "steer")]);
+    answer("/api/dramas/d1/project", { state: null, sessions: [], problems: [], names: parseBibleNames(fixture("status", "bible")) } satisfies ProjectView);
+    answer("/api/dramas/d1/lineage", { ...plain, lineage: { ...plain.lineage!, nodes: plain.lineage!.nodes.map((node) => ({ ...node, problems: [] })) } });
+    await renderAt(<Graph dramaId="d1" />, "/d/d1/e/EP001/canvas?item=episodes%2FEP001%2Fsegments%2Fseg01&view=lineage");
+    expect(await card(/^EP001 seg01 take t01/)).toHaveTextContent("Out of date");
+    expect(screen.getByRole("region", { name: "State" })).toHaveTextContent("drama-cli reports it out of date; this drama-cli version doesn't say why.");
+  });
+
   it("marks what was made from a stale version, which drama-cli calls fresh, apart from what drama-cli calls stale", async () => {
     engine("location-plate-replaced");
     await renderAt(<Graph dramaId="d1" />, "/d/d1/assets/locations/office?item=assets%2Fscenes%2Foffice%2Ftimes%2FDay&view=lineage");

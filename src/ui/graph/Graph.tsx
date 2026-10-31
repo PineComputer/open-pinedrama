@@ -281,7 +281,8 @@ export function Graph({ dramaId }: { dramaId: string }) {
           {selected.fresh === false ? (
             <div className="finding warn">
               <Icon name="warning" className="ic" />
-              <span>{selected.problems.join("; ")}</span>
+              {/* drama-cli's words; an export before short_drama #668 (v0.7.5, Pine's pin) gives none. */}
+              <span>{selected.problems.length ? selected.problems.join("; ") : t("graph.staleNoReason")}</span>
             </div>
           ) : marked.has(selected.id) ? (
             <div className="finding warn">

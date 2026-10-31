@@ -117,6 +117,8 @@ export function OutOfDate({ dramaId }: { dramaId: string }) {
   // their exact words under it; the rest as drama-cli wrote them.
   const reason = (node: LineageNode) => {
     if (node.fresh !== false) return madeFrom(node);
+    // An export before short_drama #668 (drama-cli v0.7.5, Pine's pin) gives no reason.
+    if (!node.problems.length) return t("graph.staleNoReason");
     const lines = new Map<string, string[]>();
     const raw: string[] = [];
     for (const problem of node.problems) {
