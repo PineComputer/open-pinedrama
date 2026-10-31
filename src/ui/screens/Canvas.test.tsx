@@ -92,7 +92,7 @@ describe("the canvas", () => {
   it("shows one episode in drama-cli's groups: the cast, the places, and its segments, each with its scene", async () => {
     engine(project());
     render(<Canvas drama={drama} />);
-    expect(await screen.findByRole("group", { name: "EP001 seg01 · INT. OFFICE - DAY #1-1#" })).toBeInTheDocument();
+    expect(await screen.findByRole("group", { name: "EP001 seg01 · INT. OFFICE - DAY" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /^Storyboard · line-art/ })).toBeInTheDocument();
     expect(screen.getByRole("group", { name: "Cast" })).toBeInTheDocument();
     expect(screen.getByRole("group", { name: "Places" })).toBeInTheDocument();
@@ -111,11 +111,11 @@ describe("the canvas", () => {
     render(<Canvas drama={drama} />);
     // EP002 has made nothing yet, so nothing of EP001's, nor the references EP001 used, stands on its board.
     expect(await screen.findByRole("button", { name: "Next episode" })).toBeDisabled();
-    expect(screen.queryByRole("group", { name: "EP001 seg01 · INT. OFFICE - DAY #1-1#" })).toBeNull();
+    expect(screen.queryByRole("group", { name: "EP001 seg01 · INT. OFFICE - DAY" })).toBeNull();
     expect(screen.queryByRole("group", { name: "Cast" })).toBeNull();
     await user.click(screen.getByRole("button", { name: "Previous episode" }));
     expect(location.search).toBe("?item=EP001");
-    expect(await screen.findByRole("group", { name: "EP001 seg01 · INT. OFFICE - DAY #1-1#" })).toBeInTheDocument();
+    expect(await screen.findByRole("group", { name: "EP001 seg01 · INT. OFFICE - DAY" })).toBeInTheDocument();
     window.history.pushState(null, "", "/");
   });
 

@@ -21,7 +21,7 @@ import { Menu } from "../components/Menu.tsx";
 import { type Status, StatusChip } from "../components/StatusChip.tsx";
 import { type TKey, useT } from "../i18n.ts";
 import { Icon } from "../icons.tsx";
-import { subjectLabel } from "../labels.ts";
+import { headingText, subjectLabel } from "../labels.ts";
 import { Link, navigate, usePath } from "../router.tsx";
 import { Still } from "../Still.tsx";
 import { useText } from "../viewing.tsx";
@@ -245,7 +245,11 @@ function Plane({ drama }: { drama: DramaView }) {
     const linked = new Set(lineage.links.flatMap((link) => (own.has(link.to) ? [link.from] : own.has(link.from) ? [link.to] : [])));
     const shown = lineage.nodes.filter((stage) => own.has(stage.id) || (SHARED.includes(stage.section) && linked.has(stage.id)));
     const { places, groups } = layout(shown);
-    const scene = (segment: string) => state?.episodes[code]?.sceneChains.find((chain) => chain.segments.includes(segment))?.sceneHeading;
+    // The scene's heading as the other screens show it, without Fountain's scene number (labels.ts, headingText).
+    const scene = (segment: string) => {
+      const heading = state?.episodes[code]?.sceneChains.find((chain) => chain.segments.includes(segment))?.sceneHeading;
+      return heading && headingText(heading);
+    };
     const title = (group: string) => {
       const shared = { Characters: "look", Locations: "plate", Props: "prop" } as const;
       if (group in shared) return t(PIPELINE[shared[group as keyof typeof shared]].label);
