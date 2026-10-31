@@ -208,6 +208,7 @@ function QuestionRoom({ review, done }: { review: ReviewView; done: () => void }
   });
   return (
     <div className="question">
+      <h1 className="sr-only">{[review.episode, t(`kind.${review.kind}` as TKey)].filter(Boolean).join(" · ")}</h1>
       <Link to="/d/$dramaId/episodes" params={{ dramaId: review.dramaId }} className="crumb">
         ← {review.dramaTitle}
         {review.episode ? ` · ${review.episode}` : ""}
@@ -619,11 +620,13 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
 
   return (
     <div className="room">
+      {/* The room's title, as the reel heads it; sr-only, since the reel names it in sight (and folds away on a phone). */}
+      <h1 className="sr-only">{[review.episode, t(`kind.${review.kind}` as TKey)].filter(Boolean).join(" · ")}</h1>
       <nav className="reel" aria-label={t("review.items")}>
-        <h3>
+        <h2>
           {review.episode ? `${review.episode} · ` : ""}
           {t(`kind.${review.kind}` as TKey)}
-        </h3>
+        </h2>
         {items.map((i, n) => (
           <button key={i.key} type="button" className="ritem" aria-current={n === index} onClick={() => go(n)}>
             <span className="thumb">
@@ -639,7 +642,7 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
         {acceptedBefore.length > 0 && (
           // The episode's takes accepted before this review, as the design's reel lists them after the ones waiting; read only.
           <>
-            <h3 style={{ marginTop: 14 }}>{t("review.acceptedIn", { episode: review.episode ?? "" })}</h3>
+            <h2 style={{ marginTop: 14 }}>{t("review.acceptedIn", { episode: review.episode ?? "" })}</h2>
             {acceptedBefore.map(({ key, version, take }) => (
               // An accepted take lives in its segment (IA §16): the reel links there, never to a read-only copy of its own.
               <Link key={key} {...homeLink(review.dramaId, `episodes/${review.episode}/segments/${key}`)} state={{ backTo: t("review.backPlace", { what: [review.episode, t(`kind.${review.kind}` as TKey)].join(" ") }) }} className="ritem">
@@ -748,7 +751,7 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
           <AgentSays review={review} />
           {item?.asked && (
             <div className="isec asked-before">
-              <h4>{t("review.askedBefore")}</h4>
+              <h3>{t("review.askedBefore")}</h3>
               {item.asked.map((note, n) => (
                 <div key={n} className="asked">
                   {note.time !== undefined && <span className="at">{clock(note.time)} </span>}“{note.text}”
@@ -779,7 +782,7 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
           )}
           {spec && (spec.seconds !== undefined || spec.ratio || spec.model) && (
             <div className="isec">
-              <h4>{t(takes ? "review.take" : "review.image")}</h4>
+              <h3>{t(takes ? "review.take" : "review.image")}</h3>
               <dl className="kv">
                 {spec.seconds !== undefined && (
                   <>
@@ -804,7 +807,7 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
           )}
           {board && (
             <div className="isec">
-              <h4>{t("review.storyboard")}</h4>
+              <h3>{t("review.storyboard")}</h3>
               <a href={board.url} target="_blank" rel="noreferrer" className="ds-board-thumb">
                 <img src={board.url} alt={t("review.storyboardOf", { segment: item?.key ?? "" })} />
               </a>
@@ -812,7 +815,7 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
           )}
           {shots && (
             <div className="isec">
-              <h4>{t("review.shotList")}</h4>
+              <h3>{t("review.shotList")}</h3>
               <ol className="shots">
                 {shots.map((shot, n) => (
                   <li key={shot}>
@@ -825,7 +828,7 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
             </div>
           )}
           <div className="isec">
-            <h4>{t("review.notes")}</h4>
+            <h3>{t("review.notes")}</h3>
             {(draft?.notes ?? []).length === 0 && <span className="quiet small">{file && isVideo(file) ? t("review.noNotesVideo") : t("review.noNotes")}</span>}
             <div className="notes">
               {(draft?.notes ?? []).map((note, n) => {
@@ -913,7 +916,7 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
           </div>
           {takes && (
             <div className="isec">
-              <h4>{t("review.whoDecides")}</h4>
+              <h3>{t("review.whoDecides")}</h3>
               <p className="muted" style={{ margin: 0, fontSize: 12.5, lineHeight: 1.55 }}>
                 {t("review.whoDecidesTakes")}
               </p>

@@ -364,7 +364,7 @@ input.search:focus { border-color: var(--text-primary); }
    stage keeps at least 60% of it whatever the window and the sidebars leave the room (container query units). */
 .room > .insp { width: min(var(--insp), calc((100cqi - var(--reel)) * 0.4)); }
 .reel { width: var(--reel); flex: none; border-right: 1px solid var(--border); background: var(--surface-dim); overflow: auto; padding: 12px 10px; display: flex; flex-direction: column; gap: 6px; }
-.reel h3 { margin: 4px 6px 8px; font-size: 11px; font-weight: 600; color: var(--text-muted); letter-spacing: .4px; text-transform: uppercase; }
+.reel h2 { margin: 4px 6px 8px; font-size: 11px; font-weight: 600; color: var(--text-muted); letter-spacing: .4px; text-transform: uppercase; }
 .ritem { display: grid; grid-template-columns: 52px 1fr; gap: 10px; align-items: center; padding: 8px; border-radius: var(--radius-medium); border: 0; background: none; color: inherit; text-align: left; cursor: pointer; }
 .ritem:hover { background: var(--hover); }
 .ritem[aria-current="true"] { background: var(--selected); }
@@ -399,7 +399,7 @@ input.search:focus { border-color: var(--text-primary); }
 .insp .ihead .btn { margin-top: 10px; }
 .insp .iscroll { flex: 1; overflow: auto; padding: 4px 16px 16px; }
 .isec { padding: 12px 0; border-bottom: 1px solid var(--border-subtle); }
-.isec :is(h2, h4) { margin: 0 0 8px; font-size: 11px; font-weight: 600; color: var(--text-muted); letter-spacing: .4px; text-transform: uppercase; display: flex; align-items: center; gap: 8px; }
+.isec :is(h2, h3, h4) { margin: 0 0 8px; font-size: 11px; font-weight: 600; color: var(--text-muted); letter-spacing: .4px; text-transform: uppercase; display: flex; align-items: center; gap: 8px; }
 .kv { display: grid; grid-template-columns: 90px 1fr; gap: 6px 10px; font-size: 12.5px; }
 .kv dt { color: var(--text-muted); } .kv dd { margin: 0; color: var(--text-primary); font-variant-numeric: tabular-nums; }
 .shots { margin: 0; padding: 0; list-style: none; display: grid; gap: 4px; }
@@ -479,7 +479,7 @@ input.search:focus { border-color: var(--text-primary); }
 .stopcard.budget > header, .stopcard.cap > header, .stopcard.env > header { background: var(--surface-container-high); color: var(--text-primary); }
 .stopcard > header .ic { width: 15px; height: 15px; }
 .stopcard .sbody { padding: 14px 16px 16px; display: grid; gap: 12px; }
-.stopcard h3 { margin: 0; font-size: 15px; font-weight: 700; }
+.stopcard h2 { margin: 0; font-size: 15px; font-weight: 700; }
 .stopcard .kv { grid-template-columns: 110px 1fr; }
 .stopcard .said { font-size: 11.5px; line-height: 1.6; padding: 8px 10px; border-radius: var(--radius-medium); background: var(--surface-container); color: var(--text-secondary); word-break: break-word; }
 .stopcard .acts { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
@@ -612,7 +612,7 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
   .rail { display: none; } .wrap { padding: 20px 16px 40px; } .top { padding-right: 12px; }
   .top .hide-s { display: none; }
   .room { flex-direction: column; overflow: auto; } .reel { width: auto; flex-direction: row; border-right: 0; border-bottom: 1px solid var(--border); overflow-x: auto; }
-  .reel h3 { display: none; } .ritem { grid-template-columns: 40px 1fr; min-width: 180px; } .ritem img { width: 40px; height: 70px; }
+  .reel h2 { display: none; } .ritem { grid-template-columns: 40px 1fr; min-width: 180px; } .ritem img { width: 40px; height: 70px; }
   .stage { flex: none; height: 72vh; } .screen { min-height: 0; padding: 12px; } .insp, .room > .insp { width: auto; border-left: 0; flex: none; } .insp .iscroll { overflow: visible; } .search { width: 100%; }
   .crumb > :nth-last-child(n+4) { display: none; } .controls { flex-wrap: wrap; gap: 10px; } .controls .muted { display: none; }
   .epgrid { grid-template-columns: repeat(2, 1fr); } .bar2 .chip { display: none; }

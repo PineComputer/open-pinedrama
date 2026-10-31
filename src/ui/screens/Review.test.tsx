@@ -21,7 +21,7 @@ describe("the review room for storyboards", () => {
     answer("/api/dramas/d1/files", [spec]);
     answer(spec.url, { provider: "seedream", model: "seedream-5", prompt: "A pier at dawn.", aspect_ratio: "9:16", size: "2K" });
     await open();
-    const facts = (await screen.findByRole("heading", { level: 4, name: "Picture" })).parentElement as HTMLElement;
+    const facts = (await screen.findByRole("heading", { level: 3, name: "Picture" })).parentElement as HTMLElement;
     expect(within(facts).getByText("9:16 · 2K · seedream-5")).toBeInTheDocument();
   });
 
@@ -36,6 +36,12 @@ describe("the review room for storyboards", () => {
     const reel = screen.getByRole("navigation", { name: "To decide" });
     expect(within(reel).getAllByRole("button", { name: /^seg0/ }).map((item) => item.textContent)).toEqual(["seg01 · v1Accepted", "seg02 · v1Not decided"]);
     expect(screen.getByRole("heading", { level: 2, name: /\bseg02\b/ })).toBeInTheDocument();
+    // One h1, the room's title, then its reel and item as h2 and the item's sections h3 (axe page-has-heading-one,
+    // heading-order; Codex rc5 C21).
+    const levels = screen.getAllByRole("heading").map((heading) => Number(heading.tagName.slice(1)) || Number(heading.getAttribute("aria-level")));
+    expect(levels.filter((level) => level === 1)).toEqual([1]);
+    expect(levels[0]).toBe(1);
+    expect(levels.filter((level, n) => n > 0 && level > levels[n - 1]! + 1)).toEqual([]);
   });
 
   it("keeps a draft when a newer version of its item arrives, says so, and sends nothing until the maker chooses (Codex's IA round 3, Conflict)", async () => {
@@ -299,6 +305,8 @@ describe("a question the agent asks because drama-cli refused", () => {
     const stop = await screen.findByRole("region", { name: "shoot.max_new_takes is reached" });
     expect(within(stop).getByText("seg01 has had 2 new paid takes, the limit shoot.max_new_takes (2)")).toBeInTheDocument();
     expect(screen.getByText("drama-cli won't shoot another take of seg01. Shall I raise the limit?")).toBeInTheDocument();
+    // The room's h1, its stop card an h2 under it (Codex rc5 C21).
+    expect(screen.getAllByRole("heading").map((heading) => heading.tagName)).toEqual(["H1", "H2"]);
   });
 
   it("shows each of several refusals as its own stop card, a red line first as drama-cli returned it", async () => {

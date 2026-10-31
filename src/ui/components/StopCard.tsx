@@ -25,7 +25,7 @@ export function StopCard({ refusal, episode, children }: { refusal: Refusal; epi
         {episode && <span className="mono">{episode}</span>}
       </header>
       <div className="sbody">
-        <h3>{title}</h3>
+        <h2>{title}</h2>
         <dl className="kv">
           <dt>{t("stopcard.code")}</dt>
           <dd className="mono">{refusal.code}</dd>
