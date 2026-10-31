@@ -142,11 +142,14 @@ export async function decide(reviewId: string, decision: Decision): Promise<Revi
   }
 }
 
-/** The kinds of review the studio approves for the maker, by what they chose to review (Reviewing). */
+/**
+ * The kinds of review the studio approves for the maker, by what they chose to review (Reviewing). Never a take or a
+ * cut: the maker watches every video version (Take) and every cut (short_drama D76; doc/architecture.md section 7.1).
+ */
 const LEFT: Record<Reviewing, ReviewKind[]> = {
   every: [],
-  key: ["references", "storyboards", "takes"],
-  none: ["looks", "references", "storyboards", "takes", "cut"],
+  key: ["references", "storyboards"],
+  none: ["looks", "references", "storyboards"],
 };
 
 /** What the agent is told, and the record keeps, for a step the maker chose not to review. */

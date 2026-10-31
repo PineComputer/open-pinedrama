@@ -365,35 +365,32 @@ describe("a drama in replay", () => {
     expect(ids(await call<ReviewView>("GET", `/api/reviews/${again.id}`))).toEqual(ids(await call<ReviewView>("GET", `/api/reviews/${first.id}`)));
   }, 30_000);
 
-  // The maker reviews only the cast and the cuts, then nothing: the studio approves the rest as the agent stops for it.
-  it("approves on its own what the maker chose not to review", async () => {
+  // The maker reviews only what they chose: the studio approves the rest as the agent stops for it, but never a take or a
+  // cut. The maker watches every video version (Take) and every cut (short_drama D76), whatever they chose.
+  it("approves on its own what the maker chose not to review, never a take or a cut", async () => {
     const { all, run } = await import("./db.ts");
     run("update dramas set status = 'done'");
     fleet.stops = "ask";
     const form = new FormData();
-    for (const [key, value] of Object.entries({ title: "Unreviewed drama", language: "en", preset: "en-us-live-sfw", screenplayLanguage: "en", screenplay: "0", parallel: "2", perComputer: "1", reviewing: "key" })) form.set(key, value);
+    for (const [key, value] of Object.entries({ title: "Unreviewed drama", language: "en", preset: "en-us-live-sfw", screenplayLanguage: "en", screenplay: "0", parallel: "2", perComputer: "1", reviewing: "none" })) form.set(key, value);
     form.append("files", new File(["EPISODE 1\nLin enters."], "screenplay.txt", { type: "text/plain" }));
     const { id } = await call<{ id: string }>("POST", "/api/dramas", form);
-    // A question always waits for the maker, and so do the leads' looks.
+    // A question always waits for the maker.
     await acceptRewrite(id);
     const question = await until("the setup question", openReview(id, (item) => item.kind === "question"));
     await call("POST", `/api/reviews/${question.id}/decision`, { items: [], words: "He is 32." });
-    await approveAll((await until("the looks", openReview(id, (item) => item.kind === "looks"))).id);
-    // The cut waits too; then the maker stops reviewing, and it goes on with everything after it.
-    await until("EP001's cut", openReview(id, (item) => item.episode === "EP001" && item.kind === "cut"));
-    await call("PATCH", `/api/dramas/${id}`, { reviewing: "none" });
-    await until(
-      "every episode finished",
-      async () => {
-        const view = await call<DramaView>("GET", `/api/dramas/${id}`);
-        return view.episodeRows.length > 0 && view.episodeRows.every((row) => row.state === "done") ? view : undefined;
-      },
-      30_000,
-    );
+    // Looks, references and storyboards go on by themselves; EP001's takes wait for the maker under every setting.
+    const takes = await until("EP001's takes", openReview(id, (item) => item.episode === "EP001" && item.kind === "takes"));
+    for (const reviewing of ["key", "none"]) await call("PATCH", `/api/dramas/${id}`, { reviewing });
+    expect((await openReview(id, (item) => item.id === takes.id)())?.state).toBe("open");
+    await approveAll(takes.id);
+    const cut = await until("EP001's cut", openReview(id, (item) => item.episode === "EP001" && item.kind === "cut"));
+    for (const reviewing of ["key", "none"]) await call("PATCH", `/api/dramas/${id}`, { reviewing });
+    expect((await openReview(id, (item) => item.id === cut.id)())?.state).toBe("open");
     const answers = all<{ kind: string; answer: string }>("select kind, answer from reviews where drama_id = ? and state = 'answered'", id);
-    const unreviewed = (kind: string) => answers.filter((row) => row.kind === kind).every((row) => row.answer.includes("Approved without review"));
-    expect(["references", "storyboards", "takes", "cut"].map(unreviewed)).toEqual([true, true, true, true]);
-    expect(answers.filter((row) => row.kind === "looks").map((row) => row.answer.includes("Approved without review"))).toEqual([false]);
+    const unreviewed = (kind: string) => answers.filter((row) => row.kind === kind).map((row) => row.answer.includes("Approved without review"));
+    expect(["looks", "references", "storyboards"].map((kind) => unreviewed(kind).length > 0 && unreviewed(kind).every(Boolean))).toEqual([true, true, true]);
+    expect([...unreviewed("takes"), ...unreviewed("cut")]).not.toContain(true);
   }, 60_000);
 
   // The maker stops a drama: its Computers stop, nothing new starts, and Try again carries on.
