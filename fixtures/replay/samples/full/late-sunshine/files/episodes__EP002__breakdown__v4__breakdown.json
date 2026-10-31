@@ -1,0 +1,556 @@
+{
+  "episode": "EP002",
+  "title": "The Husband Audition",
+  "segments": [
+    {
+      "id": "seg01",
+      "duration": 24,
+      "location": "ji_ran_office",
+      "scene_heading": "INT. JI RAN'S OFFICE - DAY #2-1#",
+      "time": "Day, bright soft daylight from the windows behind the desk",
+      "characters": [
+        "ji_ran",
+        "xu_banxia",
+        "green_shirt_applicant",
+        "blue_tank_top_applicant",
+        "gray_shirt_applicant",
+        "shirtless_applicant"
+      ],
+      "states": {
+        "ji_ran": "S2",
+        "shirtless_applicant": "S0"
+      },
+      "props": [
+        "dumbbell"
+      ],
+      "first_state": "Ji Ran sits upright in the one black leather executive chair behind the one walnut desk. Her back is to the floor-to-ceiling windows, and she faces the open space in front of the desk. She wears the crimson sleeveless bodycon sheath dress. The desk holds architectural plans, wood samples and a metal figurine. The four applicants stand in one row in the open space in front of the desk, facing her. From the lounge end of the room they stand in this order: GREEN-SHIRT APPLICANT, who holds the small dumbbell at his side, then BLUE-TANK-TOP APPLICANT, then GRAY-SHIRT APPLICANT, then SHIRTLESS APPLICANT in his black T-shirt. Xu Banxia walks from the black leather sofas and the white marble coffee table of the lounge area toward the lounge end of the desk. The office door is in the wall facing the desk. It stands open and empty. The axis runs from the desk to the door wall, and the camera stays on the lounge side of it.",
+      "shots": [
+        {
+          "time": "0-3s",
+          "size": "wide shot",
+          "angle": "eye level",
+          "camera": "Wide shot, slow push in, eye-level, from the lounge side of the room. The desk is at frame right and the row of applicants is at frame left.",
+          "visual": "Xu Banxia walks past the marble coffee table to the lounge end of the walnut desk and bends slightly toward Ji Ran. Ji Ran sits in the leather executive chair, and the four applicants stand in a row in front of the desk.",
+          "audio": "Dialogue (Xu Banxia, in Chinese, brisk and polite): {纪总，候选人都已经到了。} <heels click on the floor>",
+          "characters": [
+            "ji_ran",
+            "xu_banxia",
+            "green_shirt_applicant",
+            "blue_tank_top_applicant",
+            "gray_shirt_applicant",
+            "shirtless_applicant"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "3-5s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up, locked-off camera, eye-level, from the lounge side.",
+          "visual": "Ji Ran leans back in the leather chair with her long legs crossed. Her eyes sweep coolly along the row of men.",
+          "audio": "Dialogue (Ji Ran, in Chinese, flat and clipped): {身高？}",
+          "characters": [
+            "ji_ran"
+          ],
+          "lines": [
+            1
+          ]
+        },
+        {
+          "time": "5-7s",
+          "size": "medium shot",
+          "angle": "low angle",
+          "camera": "Medium shot, quick push in, low angle, from the lounge side.",
+          "visual": "GREEN-SHIRT APPLICANT, at the lounge end of the row, straightens his back and grins eagerly. The small dumbbell hangs in his hand.",
+          "audio": "Dialogue (GREEN-SHIRT APPLICANT, in Chinese, eager): {一米七九。}",
+          "characters": [
+            "green_shirt_applicant"
+          ],
+          "lines": [
+            2
+          ]
+        },
+        {
+          "time": "7-9s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, locked-off camera, eye-level, from the lounge side.",
+          "visual": "Ji Ran's gaze slides one place along the row, and she taps one finger on the walnut desk.",
+          "audio": "Dialogue (Ji Ran, in Chinese, deadpan): {体重？}",
+          "characters": [
+            "ji_ran"
+          ],
+          "lines": [
+            3
+          ]
+        },
+        {
+          "time": "9-11s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, handheld, eye-level, from the lounge side.",
+          "visual": "BLUE-TANK-TOP APPLICANT, second in the row, puffs out his chest and plants his fists on his hips.",
+          "audio": "Dialogue (BLUE-TANK-TOP APPLICANT, in Chinese, hearty): {七十五公斤。}",
+          "characters": [
+            "blue_tank_top_applicant"
+          ],
+          "lines": [
+            4
+          ]
+        },
+        {
+          "time": "11-13s",
+          "size": "medium close-up",
+          "angle": "high angle",
+          "camera": "Medium close-up, slight push in, high angle, from the lounge side.",
+          "visual": "Ji Ran raises one eyebrow and rests her chin on her hand.",
+          "audio": "Dialogue (Ji Ran, in Chinese, dry): {有腹肌？}",
+          "characters": [
+            "ji_ran"
+          ],
+          "lines": [
+            5
+          ]
+        },
+        {
+          "time": "13-15s",
+          "size": "medium shot",
+          "angle": "low angle",
+          "camera": "Medium shot, locked-off camera, low angle, from the lounge side.",
+          "visual": "GRAY-SHIRT APPLICANT, third in the row, smugly pats his stomach through the tight grey T-shirt.",
+          "audio": "Dialogue (GRAY-SHIRT APPLICANT, in Chinese, smug): {八块。}",
+          "characters": [
+            "gray_shirt_applicant"
+          ],
+          "lines": [
+            6
+          ]
+        },
+        {
+          "time": "15-17s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, locked-off camera, eye-level, from the lounge side.",
+          "visual": "Ji Ran presses her glossy lips together to hold back a smile, and the corner of her mouth twitches.",
+          "audio": "",
+          "characters": [
+            "ji_ran"
+          ],
+          "lines": []
+        },
+        {
+          "time": "17-19s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up, quick push in, eye-level, from the lounge side.",
+          "visual": "Ji Ran leans forward over the walnut desk with her forearms on the plans and looks straight at the row.",
+          "audio": "Dialogue (Ji Ran, in Chinese, cool and pointed): {能干吗？}",
+          "characters": [
+            "ji_ran"
+          ],
+          "lines": [
+            7
+          ]
+        },
+        {
+          "time": "19-22s",
+          "size": "wide shot",
+          "angle": "eye level",
+          "camera": "Wide shot, fast pan along the row from the lounge end to the far end, eye-level, from the lounge side.",
+          "visual": "The four applicants start with wide eyes and nod frantically one after another, from GREEN-SHIRT APPLICANT to SHIRTLESS APPLICANT, as the chorus is heard.",
+          "audio": "Dialogue (APPLICANTS, V.O., in Chinese, a ragged startled chorus): {啊？呃能能能。}",
+          "characters": [
+            "green_shirt_applicant",
+            "blue_tank_top_applicant",
+            "gray_shirt_applicant",
+            "shirtless_applicant"
+          ],
+          "lines": [
+            8
+          ]
+        },
+        {
+          "time": "22-24s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, locked-off camera, eye-level, from the lounge side.",
+          "visual": "Ji Ran sits back in the leather chair and lifts one hand in a lazy go-ahead gesture.",
+          "audio": "Dialogue (Ji Ran, in Chinese, flat): {来吧，展示。}",
+          "characters": [
+            "ji_ran"
+          ],
+          "lines": [
+            9
+          ]
+        }
+      ],
+      "light_audio": "Bright soft daylight comes through the floor-to-ceiling windows behind and to the left of the desk, and warm recessed ceiling spots fill in from above. Live sound: quiet office room tone, heels on the floor and the light shuffle of the men's sneakers.",
+      "dialogue": [
+        {
+          "speaker": "xu_banxia",
+          "line": "纪总，候选人都已经到了。"
+        },
+        {
+          "speaker": "ji_ran",
+          "line": "身高？"
+        },
+        {
+          "speaker": "green_shirt_applicant",
+          "line": "一米七九。"
+        },
+        {
+          "speaker": "ji_ran",
+          "line": "体重？"
+        },
+        {
+          "speaker": "blue_tank_top_applicant",
+          "line": "七十五公斤。"
+        },
+        {
+          "speaker": "ji_ran",
+          "line": "有腹肌？"
+        },
+        {
+          "speaker": "gray_shirt_applicant",
+          "line": "八块。"
+        },
+        {
+          "speaker": "ji_ran",
+          "line": "能干吗？"
+        },
+        {
+          "speaker": "applicants",
+          "line": "啊？呃能能能。",
+          "offscreen": true
+        },
+        {
+          "speaker": "ji_ran",
+          "line": "来吧，展示。"
+        }
+      ],
+      "must_hit": [
+        "Xu Banxia reports to Ji Ran at the desk that the candidates have arrived",
+        "Ji Ran questions the men one by one, and each applicant answers in turn",
+        "Ji Ran holds back a smile, then gestures for them to show off"
+      ],
+      "exit_state": "Ji Ran sits in the black leather executive chair behind the walnut desk, her back to the floor-to-ceiling windows, with one hand raised in a go-ahead gesture. The four applicants stand in one row in the open space in front of the desk, facing her. From the lounge end they stand in this order: GREEN-SHIRT APPLICANT holding the small dumbbell at his side, then BLUE-TANK-TOP APPLICANT, then GRAY-SHIRT APPLICANT, then SHIRTLESS APPLICANT still in his black T-shirt. Xu Banxia stands at the lounge end of the desk, facing the applicants. The office door in the wall facing the desk stands open and empty. The camera stays on the lounge side of the desk-to-door axis.",
+      "negative": [
+        "subtitles or garbled text",
+        "readable lettering on the wall sign",
+        "the four applicants speaking in perfect unison as one voice"
+      ]
+    },
+    {
+      "id": "seg02",
+      "duration": 30,
+      "location": "ji_ran_office",
+      "scene_heading": "INT. JI RAN'S OFFICE - DAY #2-1#",
+      "time": "Day, bright soft daylight from the windows behind the desk",
+      "characters": [
+        "green_shirt_applicant",
+        "blue_tank_top_applicant",
+        "gray_shirt_applicant",
+        "shirtless_applicant",
+        "ji_ran",
+        "xu_banxia",
+        "lin_qingyu"
+      ],
+      "states": {
+        "ji_ran": "S2",
+        "shirtless_applicant": "S0>S1",
+        "lin_qingyu": "S1"
+      },
+      "props": [
+        "dumbbell"
+      ],
+      "first_state": "Ji Ran sits in the black leather executive chair behind the walnut desk, her back to the floor-to-ceiling windows, with one hand raised in a go-ahead gesture. The four applicants stand in one row in the open space in front of the desk, facing her. From the lounge end they stand in this order: GREEN-SHIRT APPLICANT holding the small dumbbell at his side, then BLUE-TANK-TOP APPLICANT, then GRAY-SHIRT APPLICANT, then SHIRTLESS APPLICANT still in his black T-shirt. Xu Banxia stands at the lounge end of the desk, facing the applicants. The office door in the wall facing the desk stands open and empty. The camera stays on the lounge side of the desk-to-door axis.",
+      "shots": [
+        {
+          "time": "0-2s",
+          "size": "medium shot",
+          "angle": "low angle",
+          "camera": "Medium shot, handheld, low angle, from the lounge side.",
+          "visual": "GREEN-SHIRT APPLICANT curls the small dumbbell with both hands. His face is screwed up and his arms shake theatrically.",
+          "audio": "Dialogue (GREEN-SHIRT APPLICANT, in Chinese, straining): {唔。}",
+          "characters": [
+            "green_shirt_applicant"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "2-4s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up, quick push in, eye-level, from the lounge side.",
+          "visual": "BLUE-TANK-TOP APPLICANT throws a stiff, awkward punch toward the desk and wobbles off balance.",
+          "audio": "Dialogue (BLUE-TANK-TOP APPLICANT, in Chinese, punchy exhale): {嚯。} <a whoosh of air>",
+          "characters": [
+            "blue_tank_top_applicant"
+          ],
+          "lines": [
+            1
+          ]
+        },
+        {
+          "time": "4-6s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, locked-off camera, eye-level, from the lounge side.",
+          "visual": "GRAY-SHIRT APPLICANT wrestles his tight grey T-shirt up over his stomach, and the fabric gets stuck at his chest.",
+          "audio": "<fabric stretching>",
+          "characters": [
+            "gray_shirt_applicant"
+          ],
+          "lines": []
+        },
+        {
+          "time": "6-9s",
+          "size": "medium shot",
+          "angle": "low angle",
+          "camera": "Medium shot, slow orbit around SHIRTLESS APPLICANT, low angle, staying on the lounge side.",
+          "visual": "SHIRTLESS APPLICANT pulls off his black T-shirt and tosses it aside. He is now bare-chested in orange track trousers. He flexes both biceps and licks his lips.",
+          "audio": "Dialogue (SHIRTLESS APPLICANT, in Chinese, cheesy and drawn out): {啊~yeah。}",
+          "characters": [
+            "shirtless_applicant"
+          ],
+          "lines": [
+            2
+          ]
+        },
+        {
+          "time": "9-11s",
+          "size": "close-up",
+          "angle": "high angle",
+          "camera": "Close-up, locked-off camera, high angle, on the arms of the leather chair.",
+          "visual": "Ji Ran's hands clench the arms of the black leather executive chair.",
+          "audio": "<leather creaks>",
+          "characters": [
+            "ji_ran"
+          ],
+          "lines": []
+        },
+        {
+          "time": "11-13s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up, locked-off camera, eye-level, from the lounge side.",
+          "visual": "Ji Ran covers her forehead with one hand and shuts her eyes.",
+          "audio": "Dialogue (Ji Ran, in Chinese, exasperated sigh): {哎。}",
+          "characters": [
+            "ji_ran"
+          ],
+          "lines": [
+            3
+          ]
+        },
+        {
+          "time": "13-15s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, handheld, eye-level, from the lounge side.",
+          "visual": "Xu Banxia, at the lounge end of the desk, turns her face away from the applicants and hides it behind her hand. Her shoulders shake with embarrassment.",
+          "audio": "",
+          "characters": [
+            "xu_banxia"
+          ],
+          "lines": []
+        },
+        {
+          "time": "15-18s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up, over-the-shoulder shot past Ji Ran's shoulder, eye-level, from the lounge side.",
+          "visual": "Xu Banxia lowers her hand and bends toward Ji Ran with an awkward smile.",
+          "audio": "Dialogue (Xu Banxia, in Chinese, quick and sheepish): {老板，最后一个人迟到了，咱们。}",
+          "characters": [
+            "xu_banxia",
+            "ji_ran"
+          ],
+          "lines": [
+            4
+          ]
+        },
+        {
+          "time": "18-22s",
+          "size": "medium shot",
+          "angle": "low angle",
+          "camera": "Medium shot, tilt up following Ji Ran as she rises, low angle, from the lounge side.",
+          "visual": "Ji Ran pushes up from the leather chair, waves both hands at the row and shields her eyes.",
+          "audio": "Dialogue (Ji Ran, in Chinese, fast and exasperated): {哎呦，不看了不看了，再看眼睛就要瞎了。}",
+          "characters": [
+            "ji_ran"
+          ],
+          "lines": [
+            5
+          ]
+        },
+        {
+          "time": "22-23s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, locked-off camera, eye-level, from the lounge side.",
+          "visual": "Xu Banxia nods quickly behind her gold-rimmed glasses.",
+          "audio": "Dialogue (Xu Banxia, in Chinese, meek): {嗯。}",
+          "characters": [
+            "xu_banxia"
+          ],
+          "lines": [
+            6
+          ]
+        },
+        {
+          "time": "23-25s",
+          "size": "wide shot",
+          "angle": "eye level",
+          "camera": "Wide shot, tracking with Ji Ran from the desk toward the door wall, eye-level, from the lounge side.",
+          "visual": "Ji Ran strides around the lounge end of the walnut desk toward the office door, and the applicants shuffle aside to let her pass.",
+          "audio": "<stiletto heels click fast>",
+          "characters": [
+            "ji_ran",
+            "green_shirt_applicant",
+            "blue_tank_top_applicant",
+            "gray_shirt_applicant",
+            "shirtless_applicant"
+          ],
+          "lines": []
+        },
+        {
+          "time": "25-27s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, whip pan to the doorframe, eye-level, from the lounge side.",
+          "visual": "A hand in a damp denim sleeve slaps against the doorframe of the office door.",
+          "audio": "<a palm hits the doorframe> <heavy panting>",
+          "characters": [
+            "lin_qingyu"
+          ],
+          "lines": []
+        },
+        {
+          "time": "27-30s",
+          "size": "medium close-up",
+          "angle": "low angle",
+          "camera": "Medium close-up, slow push in, low angle, from the lounge side.",
+          "visual": "Lin Qingyu braces himself against the doorframe in his open denim jacket. His hair is wet and sweat beads on his forehead. He looks up at Ji Ran, who stops short in front of him.",
+          "audio": "Dialogue (Lin Qingyu, in Chinese, breathless and sweet): {抱歉，我来晚了。}",
+          "characters": [
+            "lin_qingyu",
+            "ji_ran"
+          ],
+          "lines": [
+            7
+          ]
+        }
+      ],
+      "light_audio": "Bright soft daylight comes through the floor-to-ceiling windows behind the desk, and warm recessed ceiling spots shine from above. The light is a little cooler at the open office door. Live sound: office room tone, the creak of the leather chair, stiletto heels on the floor and heavy panting at the door.",
+      "dialogue": [
+        {
+          "speaker": "green_shirt_applicant",
+          "line": "唔。"
+        },
+        {
+          "speaker": "blue_tank_top_applicant",
+          "line": "嚯。"
+        },
+        {
+          "speaker": "shirtless_applicant",
+          "line": "啊~yeah。"
+        },
+        {
+          "speaker": "ji_ran",
+          "line": "哎。"
+        },
+        {
+          "speaker": "xu_banxia",
+          "line": "老板，最后一个人迟到了，咱们。"
+        },
+        {
+          "speaker": "ji_ran",
+          "line": "哎呦，不看了不看了，再看眼睛就要瞎了。"
+        },
+        {
+          "speaker": "xu_banxia",
+          "line": "嗯。"
+        },
+        {
+          "speaker": "lin_qingyu",
+          "line": "抱歉，我来晚了。"
+        }
+      ],
+      "must_hit": [
+        "The four applicants show off in turn: a dumbbell curl, a punch, a shirt pulled up, and a top pulled off for a flex",
+        "Ji Ran grips the chair arms, covers her forehead, then gets up and heads for the door",
+        "Lin Qingyu appears panting against the doorframe in denim"
+      ],
+      "exit_state": "Ji Ran stands in the open space between the walnut desk and the door wall, near the office door, facing Lin Qingyu. Lin Qingyu leans against the doorframe of the office door, sweating and panting in his rain-damp denim, facing her. The four applicants stand scattered in front of the desk, and SHIRTLESS APPLICANT is bare-chested. Xu Banxia stands at the lounge end of the desk. The camera stays on the lounge side of the desk-to-door axis.",
+      "negative": [
+        "subtitles or garbled text",
+        "applicants naked below the waist",
+        "Lin Qingyu entering through the windows instead of the door"
+      ]
+    },
+    {
+      "id": "seg03",
+      "duration": 4,
+      "location": "ji_ran_office",
+      "scene_heading": "INT. JI RAN'S OFFICE - DAY #2-2#",
+      "time": "Day, soft hazy daylight",
+      "characters": [],
+      "first_state": "The office is seen out of focus, with no person in frame. The one walnut desk stands before the floor-to-ceiling windows, which glow with soft daylight.",
+      "shots": [
+        {
+          "time": "0-2s",
+          "size": "wide shot",
+          "angle": "eye level",
+          "camera": "Wide shot, slow drift across the room, eye-level, shallow focus.",
+          "visual": "The blurred office glows. Soft round points of light drift slowly across the image in front of the floor-to-ceiling windows.",
+          "audio": "",
+          "characters": [],
+          "lines": []
+        },
+        {
+          "time": "2-4s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, slow push in toward the walnut desk, eye-level, shallow focus.",
+          "visual": "The points of light swell and brighten as they float across the hazy walnut desk, until the frame turns bright.",
+          "audio": "",
+          "characters": [],
+          "lines": []
+        }
+      ],
+      "light_audio": "Soft daylight from the floor-to-ceiling windows and bokeh light points. Live sound: faint room tone.",
+      "dialogue": [],
+      "must_hit": [
+        "Soft points of light drift across the blurred office"
+      ],
+      "exit_state": "The frame is bright and blurred with drifting light points, and no person is in frame.",
+      "negative": [
+        "subtitles or garbled text",
+        "any person in frame"
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "type": "title",
+      "text": "EP002 The Husband Audition",
+      "at": "seg01, start"
+    },
+    {
+      "type": "name",
+      "text": "Xu Banxia, secretary",
+      "at": "seg01, shot 1, over Xu Banxia"
+    },
+    {
+      "type": "ending",
+      "text": "To be continued",
+      "at": "seg03, end"
+    }
+  ],
+  "bible_version": "v2"
+}

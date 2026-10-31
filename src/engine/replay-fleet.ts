@@ -601,10 +601,11 @@ function setupScript(lang: Lang, preset: string, story: { id: string; story: Sto
       return {
         progress: say.preparing,
         files: [
-          // Each breakdown at its version, the sample's own text where it has one (its breakdown.md), else replay's.
-          ...say.episodes.map((_, i) => {
-            const at = `drama/episodes/${codeOf(i)}/breakdown/v${firstOf(story.story, `episodes/${codeOf(i)}/breakdown`)}/breakdown.md`;
-            return sample(set, at) ?? { path: at, type: "text/markdown", bytes: text(breakdownOf(say, story.story, i)) };
+          // Each breakdown at its version, the sample's own text where it has one (its breakdown.md), else replay's; and the
+          // sample's own breakdown.json beside it, drama-cli's record the shots are read from, where its source run has one.
+          ...say.episodes.flatMap((_, i) => {
+            const at = `drama/episodes/${codeOf(i)}/breakdown/v${firstOf(story.story, `episodes/${codeOf(i)}/breakdown`)}/breakdown`;
+            return [sample(set, `${at}.md`) ?? { path: `${at}.md`, type: "text/markdown", bytes: text(breakdownOf(say, story.story, i)) }, ...[sample(set, `${at}.json`)].filter((file) => file !== undefined)];
           }),
           ...[...shared.keys()].flatMap(draw),
           ...extrasOf(story.story, set, "setup"),

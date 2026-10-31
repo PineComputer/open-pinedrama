@@ -1,0 +1,621 @@
+{
+  "episode": "EP002",
+  "title": "The Perfect Alibi",
+  "segments": [
+    {
+      "id": "seg01",
+      "duration": 20,
+      "location": "jail_cell",
+      "scene_heading": "2-1 Day | Int. Jail, a cell",
+      "time": "Day, cold flat fluorescent top light with a pale shaft of daylight from the high window",
+      "characters": [
+        "sebastian",
+        "officer"
+      ],
+      "states": {
+        "sebastian": "S0"
+      },
+      "first_state": "Camera on the front-wall side of the cell, looking toward the back wall, the steel bunk along the left wall and the barred cell door in the right wall. Sebastian, in the orange prison-issue top and trousers, lies on his side on the thin grey mattress of the one steel bunk along the left wall, his back to the barred cell door, facing the wall, the folded grey blanket at his feet. Officer is walking up the dim corridor outside, toward the barred cell door in the right wall. The one barred high window is in the back wall; the steel toilet-sink unit stands in the back-right corner by the door.",
+      "shots": [
+        {
+          "time": "0-2s",
+          "size": "extreme wide shot",
+          "angle": "low angle",
+          "camera": "Extreme wide shot, locked-off camera, low angle, establishing insert outside the jail",
+          "visual": "The blocky grey concrete jail building behind a tall chain-link fence topped with coils of razor wire, under a clear sky.",
+          "audio": "<wind rattles the chain-link fence>",
+          "characters": [],
+          "lines": []
+        },
+        {
+          "time": "2-4s",
+          "size": "wide shot",
+          "angle": "high angle",
+          "camera": "Wide shot, slow push in, high angle from the front-wall side of the cell",
+          "visual": "Sebastian lies on the steel bunk along the left wall, his back to the barred cell door, facing the grey-green wall, a shaft of daylight slanting down from the barred high window.",
+          "audio": "<fluorescent light hums>",
+          "characters": [
+            "sebastian"
+          ],
+          "lines": []
+        },
+        {
+          "time": "4-7s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, clean single, eye level from the front-wall side, framing the barred cell door",
+          "visual": "Officer steps up to the barred cell door from the dim corridor, grips a steel bar with one hand and glares toward the bunk.",
+          "audio": "<heavy boots stop, keys jangle> Dialogue (Officer, in English, gruff bark): {Klein, get up.}",
+          "characters": [
+            "officer"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "7-9s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up, clean single, locked-off camera, eye level, framed tight on Sebastian's head and shoulder on the pillow",
+          "visual": "Sebastian lies facing the wall with his eyes open, calm, and does not turn around; the Officer is off screen.",
+          "audio": "Dialogue (Officer, in English, impatient): {It's time to go.}",
+          "characters": [
+            "sebastian"
+          ],
+          "lines": [
+            1
+          ]
+        },
+        {
+          "time": "9-12s",
+          "size": "close-up",
+          "angle": "low angle",
+          "camera": "Close-up, handheld camera, low angle on the Officer through the bars",
+          "visual": "Officer bangs his key ring hard against the steel bars of the cell door, his face red and furious.",
+          "audio": "<metal clangs on the bars> Dialogue (Officer, in English, shouting): {Hurry the fuck up, Klein! I said move it!}",
+          "characters": [
+            "officer"
+          ],
+          "lines": [
+            2
+          ]
+        },
+        {
+          "time": "12-15s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, slow pan from the bunk toward the door, eye level from the front-wall side",
+          "visual": "Sebastian rolls over toward the barred cell door and slowly sits up on the edge of the steel bunk, his feet in the white slip-on canvas shoes on the floor, while the Officer stands at the barred door with his hand on the bars.",
+          "audio": "<bunk springs creak>",
+          "characters": [
+            "sebastian",
+            "officer"
+          ],
+          "lines": []
+        },
+        {
+          "time": "15-17s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up, clean single, locked-off camera, eye level, tight on Sebastian's face and shoulders",
+          "visual": "Sebastian rubs the back of his neck and gives a lazy, amused half-smile toward the door.",
+          "audio": "Dialogue (Sebastian, in English, lazy and teasing): {Geez, officer, what is the rush?}",
+          "characters": [
+            "sebastian"
+          ],
+          "lines": [
+            3
+          ]
+        },
+        {
+          "time": "17-20s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, over-the-shoulder shot from behind Sebastian's shoulder on the front-wall side, toward the barred door",
+          "visual": "Officer turns a key in the lock and slides the barred cell door open, then stands in the open doorway frowning at Sebastian on the bunk.",
+          "audio": "<lock clicks, the steel door slides open> Dialogue (Officer, in English, gruff and disbelieving): {Most people wanna get out of here faster.}",
+          "characters": [
+            "sebastian",
+            "officer"
+          ],
+          "lines": [
+            4
+          ]
+        }
+      ],
+      "light_audio": "Caged fluorescent tube on the ceiling gives cold flat white top light; a pale shaft of daylight slants from the barred high window in the back wall. Live sound: fluorescent hum, distant echoing jail noise, keys, clanging bars.",
+      "dialogue": [
+        {
+          "speaker": "officer",
+          "line": "Klein, get up."
+        },
+        {
+          "speaker": "officer",
+          "line": "It's time to go.",
+          "offscreen": false
+        },
+        {
+          "speaker": "officer",
+          "line": "Hurry the fuck up, Klein! I said move it!"
+        },
+        {
+          "speaker": "sebastian",
+          "line": "Geez, officer, what is the rush?"
+        },
+        {
+          "speaker": "officer",
+          "line": "Most people wanna get out of here faster."
+        }
+      ],
+      "must_hit": [
+        "Sebastian lies on the bunk with his back to the cell door and ignores the Officer",
+        "Officer bangs the bars and shouts",
+        "Sebastian rolls over and slowly sits up"
+      ],
+      "exit_state": "Sebastian, in the orange prison-issue top and trousers, sits on the edge of the steel bunk along the left wall, feet on the floor, facing the barred cell door. Officer stands in the open barred cell doorway in the right wall, facing Sebastian, the key ring in his hand. Camera on the front-wall side.",
+      "negative": [
+        "added or missing characters, spatial jumps",
+        "lettering or text on uniforms",
+        "malformed hands on the bars"
+      ]
+    },
+    {
+      "id": "seg02",
+      "duration": 13,
+      "location": "jail_front_desk",
+      "scene_heading": "2-2 Day | Int. Jail, front desk",
+      "time": "Day, cool even fluorescent top light",
+      "characters": [
+        "sebastian",
+        "officer"
+      ],
+      "states": {
+        "sebastian": "S1"
+      },
+      "props": [
+        "release_form"
+      ],
+      "first_state": "Camera on the exit-door side of the room, near the right-wall end of the chest-high grey front desk, seeing both men in three-quarter view across the desk. Officer stands behind the one front desk, on its back-wall side, by the computer monitor, the release form on a clipboard lying on the desk top in front of him. Sebastian, in his own black collared shirt and black trousers, stands on the front side of the desk facing the Officer, holding his steel-and-black wristwatch. The grey filing cabinets and the round wall clock are on the back wall behind the Officer.",
+      "shots": [
+        {
+          "time": "0-3s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, locked-off camera, eye level from the exit-door side, both men across the front desk",
+          "visual": "Sebastian fastens the steel-and-black wristwatch around his wrist while the Officer picks up the release form on a clipboard from the desk and holds it out to him over the counter.",
+          "audio": "<the watch clasp clicks shut>",
+          "characters": [
+            "sebastian",
+            "officer"
+          ],
+          "lines": []
+        },
+        {
+          "time": "3-5s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up, clean single, eye level, tight on the Officer behind the desk, the filing cabinets behind him",
+          "visual": "Officer points the ballpoint pen at Sebastian, frowning under his bushy moustache.",
+          "audio": "Dialogue (Officer, in English, gruff warning): {Don't drive recklessly again.}",
+          "characters": [
+            "officer"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "5-8s",
+          "size": "close-up",
+          "angle": "high angle",
+          "camera": "Close-up insert, high angle onto the desk top",
+          "visual": "Sebastian's hand, the wristwatch now on it, takes the release form on a clipboard and the black ballpoint pen; the Officer is off screen.",
+          "audio": "Dialogue (Officer, in English, grumbling): {Next time, it won't be just three days.}",
+          "characters": [
+            "sebastian"
+          ],
+          "lines": [
+            1
+          ]
+        },
+        {
+          "time": "8-10s",
+          "size": "medium close-up",
+          "angle": "low angle",
+          "camera": "Medium close-up, clean single, slight low angle, tight on Sebastian's face and shoulders",
+          "visual": "Sebastian raises his eyes from the clipboard to the Officer with a cocky smirk.",
+          "audio": "Dialogue (Sebastian, in English, smooth and teasing): {I can't make any promises, officer.}",
+          "characters": [
+            "sebastian"
+          ],
+          "lines": [
+            2
+          ]
+        },
+        {
+          "time": "10-13s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, slow push in on Sebastian, dirty single with the Officer's shoulder at the frame edge, eye level from the exit-door side",
+          "visual": "Sebastian signs the release form on the clipboard with a flourish and a smile, while the Officer behind the desk shakes his head.",
+          "audio": "<pen scratches on paper>",
+          "characters": [
+            "sebastian",
+            "officer"
+          ],
+          "lines": []
+        }
+      ],
+      "light_audio": "Rectangular fluorescent ceiling panels give cool even top light; faint daylight through the small window of the steel exit door on the right wall. Live sound: fluorescent hum, the wall clock ticking, a distant door buzzer.",
+      "dialogue": [
+        {
+          "speaker": "officer",
+          "line": "Don't drive recklessly again."
+        },
+        {
+          "speaker": "officer",
+          "line": "Next time, it won't be just three days.",
+          "offscreen": false
+        },
+        {
+          "speaker": "sebastian",
+          "line": "I can't make any promises, officer."
+        }
+      ],
+      "must_hit": [
+        "Sebastian, in his own clothes, puts his watch back on",
+        "Officer hands him the release form on a clipboard",
+        "Sebastian signs the form with a smile"
+      ],
+      "exit_state": "Officer stands behind the front desk on its back-wall side, by the computer monitor, shaking his head. Sebastian stands on the front side of the desk facing him, the steel-and-black wristwatch on his wrist, holding the signed release form on a clipboard, smiling. Camera on the exit-door side.",
+      "negative": [
+        "added or missing characters, spatial jumps",
+        "garbled or readable text on the form or uniform",
+        "malformed hands holding the pen"
+      ]
+    },
+    {
+      "id": "seg03",
+      "duration": 15,
+      "location": "jail_street",
+      "scene_heading": "2-3 Day | Ext. Street outside the jail",
+      "time": "Day, bright clear sunlight from high on the left",
+      "characters": [
+        "sebastian",
+        "daniel"
+      ],
+      "states": {
+        "sebastian": "S1"
+      },
+      "props": [
+        "expensive_car"
+      ],
+      "first_state": "Camera on the sidewalk at the bus-stop end, by the young trees, looking along the sidewalk toward the streetlamp, the razor-wire chain-link fence on one side and the curb on the other. Sebastian, in his black collared shirt, black trousers and wristwatch, steps out through the steel pedestrian gate in the fence. The one expensive black car is parked in the parking lane along the curb, its nose toward the streetlamp, its rear passenger door on the sidewalk side. Daniel, in his navy suit and rimless glasses, stands on the sidewalk beside the car's closed rear passenger door, facing the gate.",
+      "shots": [
+        {
+          "time": "0-3s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, clean single, follow camera on Sebastian, eye level from the bus-stop end of the sidewalk",
+          "visual": "Sebastian walks out through the steel pedestrian gate onto the sunny sidewalk, squints at the sky and straightens his shirt collar with both hands.",
+          "audio": "<the steel gate clanks shut behind him>",
+          "characters": [
+            "sebastian"
+          ],
+          "lines": []
+        },
+        {
+          "time": "3-5s",
+          "size": "wide shot",
+          "angle": "eye level",
+          "camera": "Wide shot, locked-off camera, eye level, looking along the sidewalk toward the streetlamp",
+          "visual": "The black expensive car waits at the curb with Daniel standing beside its rear passenger door, hands folded; Sebastian walks along the sidewalk toward him.",
+          "audio": "<distant traffic>",
+          "characters": [
+            "sebastian",
+            "daniel"
+          ],
+          "lines": []
+        },
+        {
+          "time": "5-8s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, slow pan following Sebastian, eye level, both men in profile beside the car",
+          "visual": "Daniel opens the rear passenger door of the car; Sebastian stops at the open door, facing Daniel, one hand resting on the door frame.",
+          "audio": "<car door clicks open> Dialogue (Sebastian, in English, low and smooth): {Daniel, everything going according to plan?}",
+          "characters": [
+            "sebastian",
+            "daniel"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "8-9s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, clean single, eye level, tight on Daniel's face",
+          "visual": "Daniel gives a crisp nod behind his rimless glasses.",
+          "audio": "Dialogue (Daniel, in English, brisk): {Yes, boss.}",
+          "characters": [
+            "daniel"
+          ],
+          "lines": [
+            1
+          ]
+        },
+        {
+          "time": "9-12s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, over-the-shoulder shot from behind Sebastian's shoulder onto Daniel, eye level",
+          "visual": "Daniel, holding the open car door, leans in slightly toward Sebastian and lowers his voice.",
+          "audio": "Dialogue (Daniel, in English, quiet and businesslike): {You being in jail is the perfect alibi.}",
+          "characters": [
+            "sebastian",
+            "daniel"
+          ],
+          "lines": [
+            2
+          ]
+        },
+        {
+          "time": "12-15s",
+          "size": "medium close-up",
+          "angle": "low angle",
+          "camera": "Medium close-up, clean single, slight low angle, tight on Sebastian's face and shoulders, sky behind",
+          "visual": "Sebastian adjusts his wristwatch and a slow, satisfied smirk spreads across his face; Daniel is off screen.",
+          "audio": "Dialogue (Daniel, in English, quiet and assured): {Your father doesn't suspect a thing.}",
+          "characters": [
+            "sebastian"
+          ],
+          "lines": [
+            3
+          ]
+        }
+      ],
+      "light_audio": "Bright sunlight from high on the left, short shadows falling to the right, glints on the black car's chrome. Live sound: light city traffic, wind in the young trees, a distant bird.",
+      "dialogue": [
+        {
+          "speaker": "sebastian",
+          "line": "Daniel, everything going according to plan?"
+        },
+        {
+          "speaker": "daniel",
+          "line": "Yes, boss."
+        },
+        {
+          "speaker": "daniel",
+          "line": "You being in jail is the perfect alibi."
+        },
+        {
+          "speaker": "daniel",
+          "line": "Your father doesn't suspect a thing.",
+          "offscreen": false
+        }
+      ],
+      "must_hit": [
+        "Sebastian walks out of the gate and straightens his collar",
+        "Daniel opens the car door for Sebastian",
+        "Daniel reports that the jail stay is the perfect alibi"
+      ],
+      "exit_state": "The expensive black car is parked at the curb, nose toward the streetlamp, its rear passenger door open on the sidewalk side. Sebastian stands on the sidewalk at the open rear passenger door, one hand on the door frame, facing Daniel, smirking. Daniel stands on the sidewalk beside the open door, holding it, facing Sebastian. Camera on the sidewalk at the bus-stop end.",
+      "negative": [
+        "added or missing characters, spatial jumps",
+        "readable badges or license-plate text on the car",
+        "extra pedestrians"
+      ]
+    },
+    {
+      "id": "seg04",
+      "duration": 18,
+      "location": "jail_street",
+      "scene_heading": "2-3 Day | Ext. Street outside the jail",
+      "time": "Day, bright clear sunlight from high on the left",
+      "characters": [
+        "sebastian",
+        "daniel"
+      ],
+      "states": {
+        "sebastian": "S1"
+      },
+      "props": [
+        "expensive_car"
+      ],
+      "first_state": "The expensive black car is parked at the curb, nose toward the streetlamp, its rear passenger door open on the sidewalk side. Sebastian stands on the sidewalk at the open rear passenger door, one hand on the door frame, facing Daniel, smirking. Daniel stands on the sidewalk beside the open door, holding it, facing Sebastian. Camera on the sidewalk at the bus-stop end.",
+      "shots": [
+        {
+          "time": "0-3s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, locked-off camera, eye level, both men in profile at the open car door",
+          "visual": "Sebastian taps the top of the open car door with his fingers and tilts his head at Daniel.",
+          "audio": "Dialogue (Sebastian, in English, casual and probing): {Oh, and what about the Quinn family? Any issues there?}",
+          "characters": [
+            "sebastian",
+            "daniel"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "3-4s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, clean single, eye level, tight on Daniel's face",
+          "visual": "Daniel shakes his head once.",
+          "audio": "Dialogue (Daniel, in English, crisp): {No.}",
+          "characters": [
+            "daniel"
+          ],
+          "lines": [
+            1
+          ]
+        },
+        {
+          "time": "4-7s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, over-the-shoulder shot from behind Sebastian's shoulder onto Daniel, eye level",
+          "visual": "Daniel straightens his glasses, standing by the open car door, and looks Sebastian in the eye.",
+          "audio": "Dialogue (Daniel, in English, matter-of-fact): {The Quinns have agreed to marry their daughter to you.}",
+          "characters": [
+            "sebastian",
+            "daniel"
+          ],
+          "lines": [
+            2
+          ]
+        },
+        {
+          "time": "7-8s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, clean single, eye level, tight on Sebastian's face",
+          "visual": "Sebastian raises one eyebrow, intrigued.",
+          "audio": "Dialogue (Sebastian, in English, amused murmur): {Huh, interesting.}",
+          "characters": [
+            "sebastian"
+          ],
+          "lines": [
+            3
+          ]
+        },
+        {
+          "time": "8-10s",
+          "size": "medium close-up",
+          "angle": "low angle",
+          "camera": "Medium close-up, dirty single with Daniel's shoulder at the frame edge, slight low angle on Sebastian",
+          "visual": "Sebastian looks off toward the jail fence and his smirk widens.",
+          "audio": "Dialogue (Sebastian, in English, smooth and pleased): {They kept their end of the bargain.}",
+          "characters": [
+            "sebastian",
+            "daniel"
+          ],
+          "lines": [
+            4
+          ]
+        },
+        {
+          "time": "10-13s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, slow push in on both men, eye level from the bus-stop end",
+          "visual": "Sebastian leans in close and whispers into Daniel's ear, a hand on Daniel's shoulder; Daniel listens with his eyes narrowing, then nods.",
+          "audio": "<a low, indistinct whisper>",
+          "characters": [
+            "sebastian",
+            "daniel"
+          ],
+          "lines": []
+        },
+        {
+          "time": "13-14s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, clean single, eye level, tight on Daniel's face",
+          "visual": "Daniel steps back from Sebastian with a firm, loyal nod.",
+          "audio": "Dialogue (Daniel, in English, brisk and certain): {You got it, boss.}",
+          "characters": [
+            "daniel"
+          ],
+          "lines": [
+            5
+          ]
+        },
+        {
+          "time": "14-16s",
+          "size": "medium close-up",
+          "angle": "low angle",
+          "camera": "Medium close-up, clean single, low angle, tight on Sebastian's face and shoulders against the clear sky",
+          "visual": "Sebastian gazes into the distance, his eyes cold and sharp, the lazy smile gone.",
+          "audio": "Dialogue (Sebastian, in English, quiet and confident): {This is the final puzzle piece.}",
+          "characters": [
+            "sebastian"
+          ],
+          "lines": [
+            6
+          ]
+        },
+        {
+          "time": "16-18s",
+          "size": "wide shot",
+          "angle": "eye level",
+          "camera": "Wide shot, locked-off camera, eye level, looking along the sidewalk toward the streetlamp",
+          "visual": "Daniel walks round the back of the car to the driver's door on the road side and puts his hand on the handle, while Sebastian stands at the open rear passenger door with a faint smile.",
+          "audio": "Dialogue (Sebastian, in English, low murmur): {So it begins.} <footsteps on asphalt>",
+          "characters": [
+            "sebastian",
+            "daniel"
+          ],
+          "lines": [
+            7
+          ]
+        }
+      ],
+      "light_audio": "Bright sunlight from high on the left, short shadows falling to the right, glints on the black car's chrome. Live sound: light city traffic, wind in the young trees, footsteps.",
+      "dialogue": [
+        {
+          "speaker": "sebastian",
+          "line": "Oh, and what about the Quinn family? Any issues there?"
+        },
+        {
+          "speaker": "daniel",
+          "line": "No."
+        },
+        {
+          "speaker": "daniel",
+          "line": "The Quinns have agreed to marry their daughter to you."
+        },
+        {
+          "speaker": "sebastian",
+          "line": "Huh, interesting."
+        },
+        {
+          "speaker": "sebastian",
+          "line": "They kept their end of the bargain."
+        },
+        {
+          "speaker": "daniel",
+          "line": "You got it, boss."
+        },
+        {
+          "speaker": "sebastian",
+          "line": "This is the final puzzle piece."
+        },
+        {
+          "speaker": "sebastian",
+          "line": "So it begins."
+        }
+      ],
+      "must_hit": [
+        "Daniel tells Sebastian the Quinns agreed to the marriage",
+        "Sebastian leans in and whispers in Daniel's ear",
+        "Daniel walks round to the driver's door"
+      ],
+      "exit_state": "Sebastian stands on the sidewalk at the open rear passenger door of the expensive black car, facing along the street, a faint smile on his face. Daniel stands at the driver's door on the road side of the car, his hand on the handle. Camera on the sidewalk at the bus-stop end.",
+      "negative": [
+        "added or missing characters, spatial jumps",
+        "readable badges or license-plate text on the car",
+        "subtitles or on-screen text"
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "type": "title",
+      "text": "EP002 The Perfect Alibi",
+      "at": "start of seg01"
+    },
+    {
+      "type": "ending",
+      "text": "To be continued",
+      "at": "end of seg04"
+    }
+  ],
+  "bible_version": "v2"
+}

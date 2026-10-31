@@ -1,0 +1,745 @@
+{
+  "episode": "EP001",
+  "title": "The Corpse Sits Up",
+  "segments": [
+    {
+      "id": "seg01",
+      "duration": 30,
+      "location": "funeral_hall",
+      "time": "Day, cool daylight through the tall left windows and a flat fluorescent wash",
+      "characters": [
+        "si_yi",
+        "bin_ke_jia",
+        "bin_ke_yi"
+      ],
+      "first_state": "Funeral hall. The axis runs from the mourners to the bier. The camera stays on the window side, so the bier is always at screen right and the mourners face screen right. There is one bier at the screen-right end, covered with one white cloth, with one framed black-and-white portrait above it. Paper wreaths stand on wooden stands along both walls. The one pair of double wooden doors is behind the mourners at screen left. Si Yi stands at the head of the bier, facing screen left toward the mourners, hands folded. Si Nian lies still under the white cloth on the bier in burial clothes, feet toward the mourners, out of view in this segment. Si Xin stands in the front row nearest the camera and Zhang Cuimei stands at his far side, both facing the bier and off frame in this segment. Bin Ke Jia and Bin Ke Yi stand side by side in the back row among unnamed mourners, Bin Ke Jia nearer the camera, both facing the bier.",
+      "shots": [
+        {
+          "time": "0-3s",
+          "size": "wide shot",
+          "angle": "high angle",
+          "camera": "Wide shot, high angle from the window side, slow push in toward the bier at screen right",
+          "visual": "The funeral hall in cool daylight shafts. Rows of mourners face the white-draped bier and the framed portrait at screen right, and Si Yi stands at the head of the bier facing them.",
+          "audio": "Dialogue (Si Yi, in Mandarin, slow and ceremonial): {请所有来宾全体肃立，}",
+          "characters": [
+            "si_yi"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "3-5s",
+          "size": "medium shot",
+          "angle": "low angle",
+          "camera": "Medium shot, locked-off camera, low angle on the window side",
+          "visual": "Si Yi stands beside the bier with his hands folded and slowly lowers his head.",
+          "audio": "Dialogue (Si Yi, in Mandarin, slow and ceremonial): {为司家的长女默哀。}",
+          "characters": [
+            "si_yi"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "5-9s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up two-shot, handheld, eye-level from the window side, back row",
+          "visual": "In the back row, Bin Ke Jia leans toward Bin Ke Yi and whispers behind her hand, both still facing the bier.",
+          "audio": "Dialogue (Bin Ke Jia, in Mandarin, curious whisper): {这司先生可是国营化工厂的二把手，}",
+          "characters": [
+            "bin_ke_jia",
+            "bin_ke_yi"
+          ],
+          "lines": [
+            1
+          ]
+        },
+        {
+          "time": "9-11s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, locked-off camera, eye-level from the window side",
+          "visual": "Bin Ke Yi raises one eyebrow and gives a knowing smirk.",
+          "audio": "Dialogue (Bin Ke Jia, in Mandarin, curious whisper): {是城里有头有脸的人物，}",
+          "characters": [
+            "bin_ke_yi"
+          ],
+          "lines": [
+            1
+          ]
+        },
+        {
+          "time": "11-14s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, slight push in, eye-level from the window side",
+          "visual": "Bin Ke Jia glances toward the bier and shakes her head in pity.",
+          "audio": "Dialogue (Bin Ke Jia, in Mandarin, curious whisper): {怎么女儿这么年轻就……}",
+          "characters": [
+            "bin_ke_jia"
+          ],
+          "lines": [
+            1
+          ]
+        },
+        {
+          "time": "14-19s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, over-the-shoulder shot past Bin Ke Jia's shoulder onto Bin Ke Yi, eye-level, window side",
+          "visual": "Bin Ke Yi leans close to Bin Ke Jia's ear and keeps his eyes on the bier.",
+          "audio": "Dialogue (Bin Ke Yi, in Mandarin, smug low murmur): {你没听说啊，司家跟一个农村种地的抱错了孩子，}",
+          "characters": [
+            "bin_ke_jia",
+            "bin_ke_yi"
+          ],
+          "lines": [
+            2
+          ]
+        },
+        {
+          "time": "19-21s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, locked-off camera, eye-level from the window side",
+          "visual": "Bin Ke Jia's eyes widen and she covers her mouth with her hand.",
+          "audio": "Dialogue (Bin Ke Yi, in Mandarin, smug low murmur): {现在亲生女儿找回来了。}",
+          "characters": [
+            "bin_ke_jia"
+          ],
+          "lines": [
+            2
+          ]
+        },
+        {
+          "time": "21-27s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up, handheld, eye-level from the window side",
+          "visual": "Bin Ke Yi tips his chin toward the bier and then toward the front row, lowering his voice further.",
+          "audio": "Dialogue (Bin Ke Yi, in Mandarin, smug low murmur): {死的这个听说要替真千金嫁给乡下离过婚的老男人，}",
+          "characters": [
+            "bin_ke_yi"
+          ],
+          "lines": [
+            2
+          ]
+        },
+        {
+          "time": "27-30s",
+          "size": "medium shot",
+          "angle": "high angle",
+          "camera": "Medium shot, high angle, slow push in on the bier at screen right",
+          "visual": "Insert of the bier: the still white cloth over the body and the black-and-white portrait frame above it, with paper wreaths on both sides.",
+          "audio": "Dialogue (Bin Ke Yi, in Mandarin, smug low murmur): {活活让养母给逼死了！}",
+          "characters": [],
+          "lines": [
+            2
+          ]
+        }
+      ],
+      "light_audio": "Cool diagonal daylight from the tall left windows, flat pale fluorescent overhead light. Live sound: hushed hall, shuffling feet, soft murmurs.",
+      "dialogue": [
+        {
+          "speaker": "si_yi",
+          "line": "请所有来宾全体肃立，为司家的长女默哀。"
+        },
+        {
+          "speaker": "bin_ke_jia",
+          "line": "这司先生可是国营化工厂的二把手，是城里有头有脸的人物，怎么女儿这么年轻就……"
+        },
+        {
+          "speaker": "bin_ke_yi",
+          "line": "你没听说啊，司家跟一个农村种地的抱错了孩子，现在亲生女儿找回来了。死的这个听说要替真千金嫁给乡下离过婚的老男人，活活让养母给逼死了！"
+        }
+      ],
+      "must_hit": [
+        "Si Yi calls the mourners to stand in silence beside the bier",
+        "Bin Ke Jia and Bin Ke Yi whisper the gossip in the back row",
+        "The white-draped bier with the portrait is shown"
+      ],
+      "exit_state": "Funeral hall. The axis runs from the mourners to the bier. The camera stays on the window side, the bier at screen right, the mourners facing screen right. There is one bier at the screen-right end under one white cloth, with one framed portrait above it. Paper wreaths stand along both walls and the double wooden doors are behind the mourners at screen left. Si Yi stands at the head of the bier facing screen left. Si Nian lies still under the white cloth in burial clothes, feet toward the mourners. Si Xin stands in the front row nearest the camera with Zhang Cuimei at his far side, both facing the bier, ready to bow. Bin Ke Jia and Bin Ke Yi stand in the back row, having finished whispering.",
+      "negative": [
+        "Si Nian's face or movement visible in this segment",
+        "readable text on wreath ribbons or portrait",
+        "subtitles"
+      ]
+    },
+    {
+      "id": "seg02",
+      "duration": 28,
+      "location": "funeral_hall",
+      "time": "Day, cool daylight through the tall left windows and a flat fluorescent wash",
+      "characters": [
+        "si_xin",
+        "zhang_cuimei",
+        "si_nian"
+      ],
+      "states": {
+        "si_nian": "S0"
+      },
+      "first_state": "Funeral hall. The axis runs from the mourners to the bier. The camera stays on the window side, the bier at screen right, the mourners facing screen right. There is one bier at the screen-right end under one white cloth, with one framed portrait above it. Paper wreaths stand along both walls and the double wooden doors are behind the mourners at screen left. Si Yi stands at the head of the bier facing screen left, off frame in this segment. Si Nian lies still under the white cloth in burial clothes, feet toward the mourners. Si Xin stands in the front row nearest the camera with Zhang Cuimei at his far side, both facing the bier, ready to bow. Bin Ke Jia and Bin Ke Yi stand in the back row, off frame.",
+      "shots": [
+        {
+          "time": "0-2s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, locked-off camera, eye-level from the window side",
+          "visual": "Si Xin and Zhang Cuimei stand in the front row facing the bier at screen right and begin to bow; Si Yi is off screen.",
+          "audio": "Dialogue (Si Yi, V.O., in Mandarin, slow and ceremonial): {一鞠躬。}",
+          "characters": [
+            "si_xin",
+            "zhang_cuimei"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "2-4s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up insert, locked-off camera, eye-level at the foot of the bier",
+          "visual": "Si Nian's foot in a black cloth slipper, at the edge of the white cloth, twitches once.",
+          "audio": "",
+          "characters": [
+            "si_nian"
+          ],
+          "lines": []
+        },
+        {
+          "time": "4-6s",
+          "size": "close-up",
+          "angle": "low angle",
+          "camera": "Close-up, low angle from the window side",
+          "visual": "Si Xin freezes halfway into his bow, his eyes widening behind his glasses, fixed on the bier.",
+          "audio": "",
+          "characters": [
+            "si_xin"
+          ],
+          "lines": []
+        },
+        {
+          "time": "6-8s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium two-shot, handheld, eye-level from the window side",
+          "visual": "Si Xin grabs Zhang Cuimei's sleeve in panic and pulls her toward him.",
+          "audio": "Dialogue (Si Xin, in Mandarin, panicked whisper): {她好像动了一下。}",
+          "characters": [
+            "si_xin",
+            "zhang_cuimei"
+          ],
+          "lines": [
+            1
+          ]
+        },
+        {
+          "time": "8-10s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up, locked-off camera, eye-level from the window side",
+          "visual": "Zhang Cuimei shakes his hand off her sleeve and rolls her eyes.",
+          "audio": "Dialogue (Zhang Cuimei, in Mandarin, impatient hiss): {你看错了。}",
+          "characters": [
+            "zhang_cuimei"
+          ],
+          "lines": [
+            2
+          ]
+        },
+        {
+          "time": "10-12s",
+          "size": "wide shot",
+          "angle": "high angle",
+          "camera": "Wide shot, high angle from the window side, bier at screen right",
+          "visual": "The front row bows again toward the white-draped bier where Si Nian lies; Si Yi is off screen.",
+          "audio": "Dialogue (Si Yi, V.O., in Mandarin, slow and ceremonial): {二鞠躬。}",
+          "characters": [
+            "si_xin",
+            "zhang_cuimei",
+            "si_nian"
+          ],
+          "lines": [
+            3
+          ]
+        },
+        {
+          "time": "12-14s",
+          "size": "extreme close-up",
+          "angle": "high angle",
+          "camera": "Extreme close-up insert, high angle on the bier",
+          "visual": "The back of Si Nian's hand with the red string bracelet rests on the white cloth, and her fingers flex.",
+          "audio": "",
+          "characters": [
+            "si_nian"
+          ],
+          "lines": []
+        },
+        {
+          "time": "14-16s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, handheld, eye-level from the window side",
+          "visual": "Si Xin jolts upright with a shudder and slaps Zhang Cuimei's arm with his palm.",
+          "audio": "",
+          "characters": [
+            "si_xin",
+            "zhang_cuimei"
+          ],
+          "lines": []
+        },
+        {
+          "time": "16-18s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, quick push in, eye-level from the window side",
+          "visual": "Si Xin's face is pale and sweating, his glasses slipping down his nose.",
+          "audio": "Dialogue (Si Xin, in Mandarin, voice cracking in panic): {她这回真的动了！}",
+          "characters": [
+            "si_xin"
+          ],
+          "lines": [
+            4
+          ]
+        },
+        {
+          "time": "18-20s",
+          "size": "medium close-up",
+          "angle": "low angle",
+          "camera": "Medium close-up, low angle from the window side",
+          "visual": "Zhang Cuimei glances back at the staring guests, flushes and tugs at her black armband.",
+          "audio": "<A dry cough from off screen>",
+          "characters": [
+            "zhang_cuimei"
+          ],
+          "lines": []
+        },
+        {
+          "time": "20-22s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, locked-off camera, eye-level from the window side",
+          "visual": "Si Xin and Zhang Cuimei stiffly bend into the third bow toward the bier; Si Yi is off screen.",
+          "audio": "Dialogue (Si Yi, V.O., in Mandarin, slow and ceremonial): {三鞠……}",
+          "characters": [
+            "si_xin",
+            "zhang_cuimei"
+          ],
+          "lines": [
+            5
+          ]
+        },
+        {
+          "time": "22-25s",
+          "size": "medium shot",
+          "angle": "low angle",
+          "camera": "Medium shot, low angle from the foot of the bier, window side",
+          "visual": "Si Nian sits bolt upright on the bier with her eyes still shut, the white cloth sliding to her waist, and she frowns in annoyance.",
+          "audio": "Dialogue (Si Nian, in Mandarin, groggy and irritated): {埃，吵死了！}",
+          "characters": [
+            "si_nian"
+          ],
+          "lines": [
+            6
+          ]
+        },
+        {
+          "time": "25-28s",
+          "size": "wide shot",
+          "angle": "high angle",
+          "camera": "Wide shot, handheld, high angle from the window side, bier at screen right",
+          "visual": "Mourners scatter toward the walls, Zhang Cuimei falls backward onto the terrazzo floor, and Si Xin stumbles back a step while Si Nian sits upright on the bier.",
+          "audio": "<Screams fill the hall, a body thuds onto the floor>",
+          "characters": [
+            "si_nian",
+            "si_xin",
+            "zhang_cuimei"
+          ],
+          "lines": []
+        }
+      ],
+      "light_audio": "Cool diagonal daylight from the tall left windows, flat pale fluorescent overhead light. Live sound: quiet hall, rustle of bowing clothes, a dry cough, then screams and scattering feet.",
+      "dialogue": [
+        {
+          "speaker": "si_yi",
+          "line": "一鞠躬。",
+          "offscreen": true
+        },
+        {
+          "speaker": "si_xin",
+          "line": "她好像动了一下。"
+        },
+        {
+          "speaker": "zhang_cuimei",
+          "line": "你看错了。"
+        },
+        {
+          "speaker": "si_yi",
+          "line": "二鞠躬。",
+          "offscreen": true
+        },
+        {
+          "speaker": "si_xin",
+          "line": "她这回真的动了！"
+        },
+        {
+          "speaker": "si_yi",
+          "line": "三鞠……",
+          "offscreen": true
+        },
+        {
+          "speaker": "si_nian",
+          "line": "埃，吵死了！"
+        }
+      ],
+      "must_hit": [
+        "Si Nian's foot and then her hand move on the bier while Si Xin notices",
+        "Si Nian sits upright on the bier",
+        "Zhang Cuimei falls to the floor as the mourners scream"
+      ],
+      "exit_state": "Funeral hall, same axis, camera on the window side, the bier at screen right. Si Nian sits upright on the bier in burial clothes, the white cloth at her waist, eyes half shut, frowning. Zhang Cuimei sits on the floor in the front row where she fell, and Si Xin stands half a step back at her side, both facing the bier. Unnamed mourners and Si Yi have fled toward the walls. Paper wreaths line both walls and the double wooden doors are at screen left.",
+      "negative": [
+        "Si Nian opening her eyes before she sits up",
+        "the camera crossing to the bier's far side",
+        "subtitles"
+      ]
+    },
+    {
+      "id": "seg03",
+      "duration": 26,
+      "location": "funeral_hall",
+      "time": "Day, cool daylight through the tall left windows and a flat fluorescent wash",
+      "characters": [
+        "si_nian",
+        "si_xin",
+        "zhang_cuimei"
+      ],
+      "states": {
+        "si_nian": "S0"
+      },
+      "first_state": "Funeral hall, same axis, camera on the window side, the bier at screen right. Si Nian sits upright on the bier in burial clothes, the white cloth at her waist, eyes half shut, frowning. Zhang Cuimei sits on the floor in the front row where she fell, and Si Xin stands half a step back at her side, both facing the bier. Unnamed mourners and Si Yi have fled toward the walls. Paper wreaths line both walls and the one pair of double wooden doors is at screen left.",
+      "shots": [
+        {
+          "time": "0-3s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, locked-off camera, eye-level from the window side",
+          "visual": "Si Nian rubs her eyes with one hand and pats the white cloth beside her, searching for something.",
+          "audio": "Dialogue (Si Nian, in Mandarin, sleepy mumble): {今天有课吗？我手机呢。}",
+          "characters": [
+            "si_nian"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "3-5s",
+          "size": "wide shot",
+          "angle": "low angle",
+          "camera": "Wide shot, low angle from the window side, bier at screen right",
+          "visual": "Si Nian swings her legs off the bier and stands beside it in her burial clothes.",
+          "audio": "",
+          "characters": [
+            "si_nian"
+          ],
+          "lines": []
+        },
+        {
+          "time": "5-7s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, fast push in on her face, eye-level",
+          "visual": "Si Nian's eyes snap fully open and her mouth falls open in shock as she takes in the hall.",
+          "audio": "",
+          "characters": [
+            "si_nian"
+          ],
+          "lines": []
+        },
+        {
+          "time": "7-9s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up, handheld, eye-level from the window side",
+          "visual": "Si Xin points a trembling finger at her, backing away, his glasses crooked.",
+          "audio": "Dialogue (Si Xin, in Mandarin, stammering terror): {你是人是鬼！}",
+          "characters": [
+            "si_xin"
+          ],
+          "lines": [
+            1
+          ]
+        },
+        {
+          "time": "9-12s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, locked-off camera, eye-level from the window side",
+          "visual": "Si Nian looks Si Xin up and down, staring at his grey suit and armband, and points at him.",
+          "audio": "Dialogue (Si Nian, in Mandarin, baffled and cheeky): {你，你们怎么穿成这样啊！}",
+          "characters": [
+            "si_nian"
+          ],
+          "lines": [
+            2
+          ]
+        },
+        {
+          "time": "12-15s",
+          "size": "close-up",
+          "angle": "low angle",
+          "camera": "Close-up, low angle from the window side",
+          "visual": "Si Xin swallows hard and takes another step back, clutching his jacket front.",
+          "audio": "Dialogue (Si Nian, in Mandarin, baffled and cheeky): {这是什么整蛊节目吗？}",
+          "characters": [
+            "si_xin"
+          ],
+          "lines": [
+            2
+          ]
+        },
+        {
+          "time": "15-17s",
+          "size": "wide shot",
+          "angle": "high angle",
+          "camera": "Wide shot, high angle, pan following Si Nian toward screen left",
+          "visual": "Si Nian walks along the paper wreaths toward the mourners, peering around and fingering a white ribbon.",
+          "audio": "",
+          "characters": [
+            "si_nian"
+          ],
+          "lines": []
+        },
+        {
+          "time": "17-19s",
+          "size": "medium shot",
+          "angle": "high angle",
+          "camera": "Medium shot, high angle from the window side",
+          "visual": "Zhang Cuimei scoots backward on the floor on her hands, one hand raised to ward Si Nian off.",
+          "audio": "Dialogue (Zhang Cuimei, in Mandarin, shrieking in fear): {你别过来！}",
+          "characters": [
+            "zhang_cuimei"
+          ],
+          "lines": [
+            3
+          ]
+        },
+        {
+          "time": "19-21s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, rack focus: the focus shifts from the paper flowers in the foreground to Si Nian's face",
+          "visual": "Si Nian leans close to a paper wreath on its stand and studies its white ribbon.",
+          "audio": "",
+          "characters": [
+            "si_nian"
+          ],
+          "lines": []
+        },
+        {
+          "time": "21-23s",
+          "size": "extreme close-up",
+          "angle": "eye level",
+          "camera": "Extreme close-up on her eyes, locked-off camera, eye-level",
+          "visual": "Si Nian's eyes widen in disbelief.",
+          "audio": "Dialogue (Si Nian, in Mandarin, stunned): {一九八七？}",
+          "characters": [
+            "si_nian"
+          ],
+          "lines": [
+            4
+          ]
+        },
+        {
+          "time": "23-26s",
+          "size": "wide shot",
+          "angle": "eye level",
+          "camera": "Wide shot, eye-level from the window side, track following Si Nian to the doors at screen left",
+          "visual": "Si Nian strides in her burial clothes past Si Xin and Zhang Cuimei to the double wooden doors and yanks one open, and daylight floods in as the two turn to stare.",
+          "audio": "<The heavy wooden door creaks open>",
+          "characters": [
+            "si_nian",
+            "si_xin",
+            "zhang_cuimei"
+          ],
+          "lines": []
+        }
+      ],
+      "light_audio": "Cool diagonal daylight from the tall left windows, flat pale fluorescent overhead light, then bright daylight bursting through the opened door. Live sound: frightened murmurs, shuffling, a creaking door.",
+      "dialogue": [
+        {
+          "speaker": "si_nian",
+          "line": "今天有课吗？我手机呢。"
+        },
+        {
+          "speaker": "si_xin",
+          "line": "你是人是鬼！"
+        },
+        {
+          "speaker": "si_nian",
+          "line": "你，你们怎么穿成这样啊！这是什么整蛊节目吗？"
+        },
+        {
+          "speaker": "zhang_cuimei",
+          "line": "你别过来！"
+        },
+        {
+          "speaker": "si_nian",
+          "line": "一九八七？"
+        }
+      ],
+      "must_hit": [
+        "Si Nian stands up beside the bier and opens her eyes in shock",
+        "Si Nian studies a paper wreath",
+        "Si Nian in burial clothes pulls open the double doors"
+      ],
+      "exit_state": "Funeral hall, same axis, camera on the window side. Si Nian stands in the open doorway at screen left in burial clothes, her back to the hall, daylight pouring in. Si Xin stands and Zhang Cuimei sits on the floor in the front row, both turned toward the doors.",
+      "negative": [
+        "readable text on the wreath ribbon",
+        "Si Nian changing out of the burial clothes",
+        "subtitles"
+      ]
+    },
+    {
+      "id": "seg04",
+      "duration": 15,
+      "location": "funeral_home_entrance",
+      "time": "Bright day, strong sun from high front-right",
+      "characters": [
+        "si_nian",
+        "lu_ren_jia"
+      ],
+      "states": {
+        "si_nian": "S0"
+      },
+      "first_state": "Outside the funeral home. The camera stays on the street side facing the building. The grey-brick building with its one pair of heavy double wooden doors is at frame back, and one flight of grey concrete steps leads down toward the camera. The street with a bicycle lane runs across the foreground; cyclists ride from screen right to screen left. Plane trees line the curb, and pedestrians in blue and grey walk past with an old bus in the distance. Si Nian stands in the open doorway at the top of the steps in burial clothes. Lu Ren Jia is off frame at screen right on his bicycle.",
+      "shots": [
+        {
+          "time": "0-3s",
+          "size": "wide shot",
+          "angle": "low angle",
+          "camera": "Wide shot, low angle from the street side, locked-off camera",
+          "visual": "Si Nian steps out of the double wooden doors in her burial clothes and walks down the concrete steps to the street edge, dazed.",
+          "audio": "<Street bustle, bicycle bells>",
+          "characters": [
+            "si_nian"
+          ],
+          "lines": []
+        },
+        {
+          "time": "3-5s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up, handheld, eye-level, slow orbit around Si Nian on the street side",
+          "visual": "Si Nian turns her head, staring at the bicycles, the old bus and the people in blue and grey clothes.",
+          "audio": "",
+          "characters": [
+            "si_nian"
+          ],
+          "lines": []
+        },
+        {
+          "time": "5-7s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, track following Lu Ren Jia from screen right to screen left, eye-level",
+          "visual": "Lu Ren Jia rides his bicycle along the lane past the steps, turns his head and sees Si Nian in burial clothes, and his jaw drops.",
+          "audio": "",
+          "characters": [
+            "lu_ren_jia",
+            "si_nian"
+          ],
+          "lines": []
+        },
+        {
+          "time": "7-9s",
+          "size": "wide shot",
+          "angle": "eye level",
+          "camera": "Wide shot, locked-off camera, eye-level from the street side",
+          "visual": "Lu Ren Jia's front wheel twists and he topples sideways onto the asphalt with his bicycle, his blue cap flying off, while Si Nian stands at the foot of the steps.",
+          "audio": "<A startled yelp, metal clatters on asphalt, a bicycle bell rings>",
+          "characters": [
+            "lu_ren_jia",
+            "si_nian"
+          ],
+          "lines": []
+        },
+        {
+          "time": "9-11s",
+          "size": "medium shot",
+          "angle": "low angle",
+          "camera": "Medium shot, low angle, push in on Si Nian",
+          "visual": "Si Nian drops to her knees on the asphalt and throws both arms up to the sky, tears running down her face.",
+          "audio": "",
+          "characters": [
+            "si_nian"
+          ],
+          "lines": []
+        },
+        {
+          "time": "11-13s",
+          "size": "close-up",
+          "angle": "low angle",
+          "camera": "Close-up, low angle on Si Nian's face against the sky",
+          "visual": "Si Nian laughs through her tears, her face bright with joy.",
+          "audio": "Dialogue (Si Nian, in Mandarin, ecstatic shout): {我穿越了！}",
+          "characters": [
+            "si_nian"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "13-15s",
+          "size": "wide shot",
+          "angle": "high angle",
+          "camera": "Wide shot, high angle from the street side, crane up and pull out",
+          "visual": "Si Nian kneels in the street with her arms raised, Lu Ren Jia sprawls behind his fallen bicycle staring at her, and the 1980s traffic flows around them.",
+          "audio": "<Bicycle bells, distant bus engine>",
+          "characters": [
+            "si_nian",
+            "lu_ren_jia"
+          ],
+          "lines": []
+        }
+      ],
+      "light_audio": "Strong natural daylight from high front-right, short hard shadows on the asphalt. Live sound: 1980s street bustle, bicycle bells, footsteps, a distant bus engine.",
+      "dialogue": [
+        {
+          "speaker": "si_nian",
+          "line": "我穿越了！"
+        }
+      ],
+      "must_hit": [
+        "Si Nian walks out onto the 1980s street in burial clothes",
+        "Lu Ren Jia crashes his bicycle after seeing her",
+        "Si Nian kneels with arms raised to the sky, crying with joy"
+      ],
+      "exit_state": "Si Nian kneels on the asphalt at the foot of the funeral home steps in burial clothes, both arms raised to the sky, laughing through tears; Lu Ren Jia sprawls beside his fallen bicycle at screen left, staring at her; the camera is on the street side facing the building.",
+      "negative": [
+        "modern cars or modern signage",
+        "readable text on walls",
+        "subtitles"
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "type": "title",
+      "text": "第一集",
+      "at": "seg01 start"
+    },
+    {
+      "type": "time",
+      "text": "1987年",
+      "at": "seg01, shot 1 (0-3s)"
+    }
+  ],
+  "bible_version": "v1"
+}

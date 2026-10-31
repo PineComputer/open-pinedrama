@@ -1,0 +1,855 @@
+{
+  "episode": "EP001",
+  "title": "I Choose My Own Man",
+  "segments": [
+    {
+      "id": "seg01",
+      "duration": 10,
+      "location": "ji_ran_office",
+      "scene_heading": "INT. JI RAN'S OFFICE - DAY #1-1#",
+      "time": "Day, soft daylight through the floor-to-ceiling windows",
+      "characters": [
+        "ji_ran"
+      ],
+      "states": {
+        "ji_ran": "S0"
+      },
+      "props": [
+        "pour_over_set"
+      ],
+      "first_state": "Ji Ran stands behind the walnut executive desk, which is centred in front of the floor-to-ceiling windows. She faces the front pin-up wall, with the high-backed black leather chair behind her. She wears the fitted dove-grey silk shirt and the black bodycon pencil skirt. She holds the black gooseneck kettle over the glass V60 dripper, which sits on its glass server at the pour-over station on the desk. The white coffee cup sits on its saucer beside the station. The desktop also holds spread architectural plans, a fan of wood samples and the small brushed-metal figurine. Camera side: in front of the desk, on the pin-up wall side, facing the desk and the windows.",
+      "shots": [
+        {
+          "time": "0-3s",
+          "size": "wide shot",
+          "angle": "eye level",
+          "camera": "Wide shot, fast push in, eye level, from the pin-up wall facing the desk and the windows",
+          "visual": "The sleek office with the city skyline behind the glass. Ji Ran stands behind the walnut desk among the plans and wood samples, pouring a thin stream from the black kettle into the dripper. Her lips stay closed.",
+          "audio": "Dialogue (Su Yaqing, V.O., in Chinese, teasing and sing-song): {听说你爸想让你跟路少泽联姻，} <Water trickles through the paper filter>",
+          "characters": [
+            "ji_ran"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "3-5s",
+          "size": "close-up",
+          "angle": "high angle",
+          "camera": "Close-up insert, locked-off camera, high angle, from the front of the desk looking down at the pour-over station",
+          "visual": "Ji Ran's hand circles the gooseneck kettle, and the water spirals over the coffee grounds in the glass dripper.",
+          "audio": "Dialogue (Su Yaqing, V.O., in Chinese, gossipy): {你当年那么爱他，}",
+          "characters": [
+            "ji_ran"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "5-7s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, locked-off camera, eye level, from the front of the desk",
+          "visual": "Ji Ran sets the kettle down and braces one hand flat on the desk beside the plans. Her mouth stays closed and her expression turns cold.",
+          "audio": "Dialogue (Su Yaqing, V.O., in Chinese, drawn out and mocking): {怎么样是不是很开心啊？}",
+          "characters": [
+            "ji_ran"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "7-10s",
+          "size": "medium close-up",
+          "angle": "low angle",
+          "camera": "Medium close-up, slight push in, low angle, from the front of the desk",
+          "visual": "Ji Ran lifts her eyes toward the pin-up wall with a flat, icy half-smile, her hand still braced on the desk.",
+          "audio": "Dialogue (Ji Ran, in Chinese, deadpan and cold): {开心，他死了我更开心。}",
+          "characters": [
+            "ji_ran"
+          ],
+          "lines": [
+            1
+          ]
+        }
+      ],
+      "light_audio": "Soft daylight from the windows behind the desk, warm recessed ceiling spots and the black task lamp on the desk. Quiet office hum and the trickle of coffee.",
+      "dialogue": [
+        {
+          "speaker": "su_yaqing",
+          "line": "听说你爸想让你跟路少泽联姻，你当年那么爱他，怎么样是不是很开心啊？",
+          "offscreen": true
+        },
+        {
+          "speaker": "ji_ran",
+          "line": "开心，他死了我更开心。",
+          "offscreen": false
+        }
+      ],
+      "must_hit": [
+        "Ji Ran pours water through the coffee filter at her desk",
+        "Ji Ran braces a hand on the desk with a cold expression",
+        "Ji Ran answers coldly"
+      ],
+      "exit_state": "Ji Ran stands behind the walnut executive desk in front of the floor-to-ceiling windows. One hand is braced on the desktop, and she faces the pin-up wall with a cold expression. The kettle rests beside the dripper and server at the pour-over station, and the white cup is on its saucer.",
+      "negative": [
+        "subtitles or garbled text",
+        "malformed hands on the kettle",
+        "added characters"
+      ]
+    },
+    {
+      "id": "seg02",
+      "duration": 18,
+      "location": "ji_family_living_room",
+      "scene_heading": "INT. JI FAMILY LIVING ROOM - DAY #1-2#",
+      "time": "Flashback, warm afternoon sunlight",
+      "characters": [
+        "lu_shaoze",
+        "ji_hongyuan",
+        "ji_ran"
+      ],
+      "states": {
+        "lu_shaoze": "S0",
+        "ji_ran": "S1"
+      },
+      "props": [
+        "document_envelope"
+      ],
+      "first_state": "Ji Hongyuan sits on the long cream leather sofa in front of the French windows, facing the front display cabinets. The low marble-and-gilt coffee table stands in front of him on the beige patterned carpet, and the kraft document envelope lies on it. Lu Shaoze, at 23, stands on the carpet on the near side of the coffee table, facing the sofa with his head bowed. He wears the fitted navy-blue knit polo sweater, the charcoal-grey wool trousers and black derby shoes. The younger Ji Ran, at 22, stands half-hidden behind the white marble column, which is in front of the left wall near the archway. She wears the black knit mini dress, her long hair straight, and peers around the column. Camera side: in front of everyone, on the display-cabinet side, facing the sofa and the windows.",
+      "shots": [
+        {
+          "time": "0-2s",
+          "size": "wide shot",
+          "angle": "eye level",
+          "camera": "Wide shot, locked-off camera, eye level, from the display cabinets facing the French windows",
+          "visual": "Leaves sway outside the sunlit French windows. Ji Hongyuan, on the cream sofa, sweeps the document envelope off the marble table with the back of his hand. It drops onto the carpet at the feet of Lu Shaoze, who keeps his head bowed. Ji Ran peers from behind the marble column by the archway.",
+          "audio": "<A thick envelope thuds onto the carpet>",
+          "characters": [
+            "lu_shaoze",
+            "ji_hongyuan",
+            "ji_ran"
+          ],
+          "lines": []
+        },
+        {
+          "time": "2-7s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, over-the-shoulder shot from behind Lu Shaoze on the display-cabinet side, eye level, facing the sofa",
+          "visual": "Ji Hongyuan leans back on the cream sofa with his arms spread and looks at Lu Shaoze with contempt. Lu Shaoze's shoulder and the back of his head fill the foreground.",
+          "audio": "Dialogue (Ji Hongyuan, in Chinese, slow and final): {我已经给纪然安排好了联姻对象，是陈氏集团的公子，}",
+          "characters": [
+            "ji_hongyuan",
+            "lu_shaoze"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "7-10s",
+          "size": "medium close-up",
+          "angle": "low angle",
+          "camera": "Medium close-up, clean single, locked-off camera, low angle, from the coffee table side facing Lu Shaoze",
+          "visual": "Only Lu Shaoze, framed on the face and shoulders. He keeps his head down, swallows hard and clenches his jaw.",
+          "audio": "Dialogue (Ji Hongyuan, in Chinese, cold): {也给你安排了国外的学校，}",
+          "characters": [
+            "lu_shaoze"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "10-12s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, fast push in, eye level, from the display-cabinet side facing the sofa",
+          "visual": "Ji Hongyuan's narrow eyes stay hard behind his gold-rimmed glasses.",
+          "audio": "Dialogue (Ji Hongyuan, in Chinese, a flat command): {以后，不要再来找纪然。}",
+          "characters": [
+            "ji_hongyuan"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "12-13s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, locked-off camera, eye level, from the display-cabinet side",
+          "visual": "Ji Hongyuan snorts and turns his face away toward the fireplace.",
+          "audio": "Dialogue (Ji Hongyuan, in Chinese, a dismissive grunt): {嗯。}",
+          "characters": [
+            "ji_hongyuan"
+          ],
+          "lines": [
+            1
+          ]
+        },
+        {
+          "time": "13-16s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, follow Lu Shaoze from the coffee table to the archway, eye level, from the display-cabinet side",
+          "visual": "Lu Shaoze stoops, picks up the envelope from the carpet and walks toward the archway by the left wall. He passes the marble column without noticing Ji Ran, who stays hidden behind it with her fists clenched.",
+          "audio": "<Paper crinkles, footsteps on marble>",
+          "characters": [
+            "lu_shaoze",
+            "ji_ran"
+          ],
+          "lines": []
+        },
+        {
+          "time": "16-18s",
+          "size": "medium close-up",
+          "angle": "high angle",
+          "camera": "Medium close-up, clean single, handheld, high angle, from the room's centre facing the left wall",
+          "visual": "Lu Shaoze is gone through the archway. Ji Ran slumps back against the left wall beside the column, a hand on her chest, gasping for breath with wet eyes.",
+          "audio": "<Ragged breathing>",
+          "characters": [
+            "ji_ran"
+          ],
+          "lines": []
+        }
+      ],
+      "light_audio": "Warm afternoon sunlight through the French windows from the back and slightly from the left, and the crystal chandelier. Rustling leaves, quiet villa air, footsteps.",
+      "dialogue": [
+        {
+          "speaker": "ji_hongyuan",
+          "line": "我已经给纪然安排好了联姻对象，是陈氏集团的公子，也给你安排了国外的学校，以后，不要再来找纪然。",
+          "offscreen": false
+        },
+        {
+          "speaker": "ji_hongyuan",
+          "line": "嗯。",
+          "offscreen": false
+        }
+      ],
+      "must_hit": [
+        "Ji Hongyuan pushes the envelope off the table onto the carpet",
+        "Lu Shaoze picks up the envelope and walks past Ji Ran without seeing her",
+        "Ji Ran slumps against the wall struggling to breathe"
+      ],
+      "exit_state": "Ji Hongyuan sits on the cream leather sofa in front of the French windows, his face turned away toward the fireplace. Lu Shaoze has left through the archway by the left wall with the envelope. Ji Ran leans slumped against the left wall beside the marble column, a hand on her chest, breathing hard.",
+      "negative": [
+        "spatial jumps of the marble column and archway",
+        "added or missing characters",
+        "malformed hands"
+      ]
+    },
+    {
+      "id": "seg03",
+      "duration": 14,
+      "location": "ji_ran_office",
+      "scene_heading": "INT. JI RAN'S OFFICE - DAY #1-3#",
+      "time": "Day, soft daylight through the floor-to-ceiling windows",
+      "characters": [
+        "ji_ran"
+      ],
+      "states": {
+        "ji_ran": "S0"
+      },
+      "props": [
+        "pour_over_set"
+      ],
+      "first_state": "Ji Ran stands behind the walnut executive desk in front of the floor-to-ceiling windows, facing the pin-up wall. She wears the dove-grey silk shirt and the black pencil skirt. The white coffee cup, now filled, sits on its saucer at the pour-over station beside the kettle, dripper and server. The plans, wood samples and metal figurine lie across the desktop, and the black leather chair stands behind her. Camera side: in front of the desk, on the pin-up wall side, facing the desk and the windows.",
+      "shots": [
+        {
+          "time": "0-4s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up, slow push in, eye level, from the front of the desk",
+          "visual": "Ji Ran lifts the white cup and sips, her eyes distant and her lips on the rim.",
+          "audio": "Dialogue (Ji Ran, V.O., in Chinese, low and bitter): {五年前，纪宏远逼走路少泽，让我跟陈家联姻。}",
+          "characters": [
+            "ji_ran"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "4-6s",
+          "size": "close-up",
+          "angle": "high angle",
+          "camera": "Close-up insert, locked-off camera, high angle, over the pour-over station",
+          "visual": "Ji Ran's hand sets the cup back down firmly on its saucer.",
+          "audio": "Dialogue (Ji Ran, V.O., in Chinese, cool): {现在路少泽发达了，} <Porcelain clicks>",
+          "characters": [
+            "ji_ran"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "6-9s",
+          "size": "wide shot",
+          "angle": "eye level",
+          "camera": "Wide shot, locked-off camera, eye level, from the pin-up wall facing the desk and the windows",
+          "visual": "Ji Ran turns from the desk toward the floor-to-ceiling windows and the city skyline, her mouth closed.",
+          "audio": "Dialogue (Ji Ran, V.O., in Chinese, scornful): {又迫不及待悔婚，把我塞给路少泽。}",
+          "characters": [
+            "ji_ran"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "9-11s",
+          "size": "medium shot",
+          "angle": "low angle",
+          "camera": "Medium shot, locked-off camera, low angle, from the front of the desk",
+          "visual": "Ji Ran turns back toward the pin-up wall and plants both hands on the desk beside the plans.",
+          "audio": "Dialogue (Ji Ran, V.O., in Chinese, hard): {在他眼里，我永远都只是}",
+          "characters": [
+            "ji_ran"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "11-14s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, slow push in on her eyes, eye level, from the front of the desk",
+          "visual": "Ji Ran's gaze hardens into steely resolve, her lips pressed shut.",
+          "audio": "Dialogue (Ji Ran, V.O., in Chinese, icy): {一个待价而沽的工具。}",
+          "characters": [
+            "ji_ran"
+          ],
+          "lines": [
+            0
+          ]
+        }
+      ],
+      "light_audio": "Daylight from the windows behind the desk, warm ceiling spots and the desk task lamp. Faint city hum through the glass.",
+      "dialogue": [
+        {
+          "speaker": "ji_ran",
+          "line": "五年前，纪宏远逼走路少泽，让我跟陈家联姻。现在路少泽发达了，又迫不及待悔婚，把我塞给路少泽。在他眼里，我永远都只是一个待价而沽的工具。",
+          "offscreen": true
+        }
+      ],
+      "must_hit": [
+        "Ji Ran sips her coffee and sets the cup down",
+        "Ji Ran's gaze hardens in close-up"
+      ],
+      "exit_state": "Ji Ran stands behind the walnut executive desk, both hands planted on it, facing the pin-up wall with a hard gaze. The cup rests on its saucer at the pour-over station.",
+      "negative": [
+        "lip movement during the voice-over",
+        "subtitles or garbled text",
+        "spatial jumps"
+      ]
+    },
+    {
+      "id": "seg04",
+      "duration": 28,
+      "location": "su_living_room",
+      "scene_heading": "INT. SU YAQING'S LIVING ROOM - DAY #1-4#",
+      "time": "Day, soft daylight through sheer curtains",
+      "characters": [
+        "su_yaqing"
+      ],
+      "props": [
+        "su_phone"
+      ],
+      "first_state": "Su Yaqing lounges on the cream bouclé sofa in the middle of the room. The sofa's back is to the curtained windows and it faces the TV wall. She wears the lilac camisole and the white mini skirt, barefoot, and holds the phone up in one hand on a video call. The round travertine coffee table stands in front of the sofa, holding flowers and an empty tablet stand. The brass floor lamp stands beside the sofa. The brass-framed kitchen doorway on the right wall is empty. Camera side: in front of the sofa, on the TV wall side, facing the sofa and the windows.",
+      "shots": [
+        {
+          "time": "0-4s",
+          "size": "wide shot",
+          "angle": "eye level",
+          "camera": "Wide shot, fast push in, eye level, from the TV wall facing the sofa and the windows",
+          "visual": "The bright penthouse living room. Su Yaqing lounges on the cream sofa with her legs tucked up, holding the phone at arm's length and smiling at the call.",
+          "audio": "Dialogue (Ji Ran, V.O., in Chinese, cool and firm): {可惜，现在的纪然，已经不会再任人摆布了。}",
+          "characters": [
+            "su_yaqing"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "4-7s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up, locked-off camera, eye level, from the coffee table side facing the sofa",
+          "visual": "Su Yaqing's eyebrows rise and a delighted grin spreads across her face as she looks at the phone screen.",
+          "audio": "Dialogue (Ji Ran, V.O., in Chinese, crisp): {无论是路少泽也好，还是其他人也罢，}",
+          "characters": [
+            "su_yaqing"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "7-9s",
+          "size": "medium shot",
+          "angle": "high angle",
+          "camera": "Medium shot, locked-off camera, high angle, from the TV wall side",
+          "visual": "Su Yaqing sits up straight on the sofa and pulls the phone closer to her face.",
+          "audio": "Dialogue (Ji Ran, V.O., in Chinese, decisive): {我的男人，我自己选，我要。}",
+          "characters": [
+            "su_yaqing"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "9-11s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, locked-off camera, eye level, from the coffee table side",
+          "visual": "Su Yaqing blinks in amused disbelief and cocks her head.",
+          "audio": "Dialogue (Su Yaqing, in Chinese, amused, rising): {嗯？还选老公？}",
+          "characters": [
+            "su_yaqing"
+          ],
+          "lines": [
+            1
+          ]
+        },
+        {
+          "time": "11-14s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, slow pull out, eye level, from the TV wall facing the sofa",
+          "visual": "Su Yaqing's jaw drops, and she clutches a silk cushion to her chest while staring at the phone.",
+          "audio": "Dialogue (Ji Ran, V.O., in Chinese, matter-of-fact): {对，我要公开招聘面试，海选。}",
+          "characters": [
+            "su_yaqing"
+          ],
+          "lines": [
+            2
+          ]
+        },
+        {
+          "time": "14-19s",
+          "size": "medium close-up",
+          "angle": "low angle",
+          "camera": "Medium close-up, handheld, low angle, from the coffee table side",
+          "visual": "Su Yaqing bursts out laughing, flops back against the cushions and waves her free hand at the phone.",
+          "audio": "Dialogue (Su Yaqing, in Chinese, laughing and teasing): {纪然，亏你想得出来啊，你当这是选秀呢，还海选。}",
+          "characters": [
+            "su_yaqing"
+          ],
+          "lines": [
+            3
+          ]
+        },
+        {
+          "time": "19-24s",
+          "size": "close-up",
+          "angle": "high angle",
+          "camera": "Close-up insert, tilt down following the phone, high angle, over the travertine coffee table",
+          "visual": "Su Yaqing's hand props the phone upright in the tablet stand on the coffee table beside the flowers.",
+          "audio": "Dialogue (Ji Ran, V.O., in Chinese, brisk): {相亲的话效率太慢，太浪费时间，我哪有那么多时间}",
+          "characters": [
+            "su_yaqing"
+          ],
+          "lines": [
+            4
+          ]
+        },
+        {
+          "time": "24-28s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, locked-off camera, eye level, from the TV wall facing the sofa",
+          "visual": "Su Yaqing sits back on the sofa facing the phone on the stand, rolls her eyes playfully and nods along.",
+          "audio": "Dialogue (Ji Ran, V.O., in Chinese, dry with a faint amused lilt): {跟那么多男人周旋，搞个集中面试效率最高喽。}",
+          "characters": [
+            "su_yaqing"
+          ],
+          "lines": [
+            4
+          ]
+        }
+      ],
+      "light_audio": "Soft daylight through the sheer curtains behind the sofa and the brass floor lamp. Quiet penthouse with a faint city outside, and a small speaker tone on Ji Ran's voice.",
+      "dialogue": [
+        {
+          "speaker": "ji_ran",
+          "line": "可惜，现在的纪然，已经不会再任人摆布了。无论是路少泽也好，还是其他人也罢，我的男人，我自己选，我要。",
+          "offscreen": true
+        },
+        {
+          "speaker": "su_yaqing",
+          "line": "嗯？还选老公？",
+          "offscreen": false
+        },
+        {
+          "speaker": "ji_ran",
+          "line": "对，我要公开招聘面试，海选。",
+          "offscreen": true
+        },
+        {
+          "speaker": "su_yaqing",
+          "line": "纪然，亏你想得出来啊，你当这是选秀呢，还海选。",
+          "offscreen": false
+        },
+        {
+          "speaker": "ji_ran",
+          "line": "相亲的话效率太慢，太浪费时间，我哪有那么多时间跟那么多男人周旋，搞个集中面试效率最高喽。",
+          "offscreen": true
+        }
+      ],
+      "must_hit": [
+        "Su Yaqing on the cream sofa on a phone video call",
+        "Su Yaqing laughs at the idea of an open audition",
+        "Su Yaqing props the phone on the tablet stand"
+      ],
+      "exit_state": "Su Yaqing sits on the cream bouclé sofa in the middle of the room, its back to the curtained windows, facing the phone propped on the tablet stand on the round travertine coffee table, which also holds flowers. The brass floor lamp stands beside the sofa. The brass-framed kitchen doorway on the right wall is empty.",
+      "negative": [
+        "added characters",
+        "subtitles or garbled text",
+        "malformed hands on the phone"
+      ]
+    },
+    {
+      "id": "seg05",
+      "duration": 28,
+      "location": "su_living_room",
+      "scene_heading": "INT. SU YAQING'S LIVING ROOM - DAY #1-4#",
+      "time": "Day, soft daylight through sheer curtains",
+      "characters": [
+        "su_yaqing",
+        "lin_qingyu"
+      ],
+      "states": {
+        "lin_qingyu": "S0"
+      },
+      "props": [
+        "su_phone",
+        "glass"
+      ],
+      "first_state": "Su Yaqing sits on the cream bouclé sofa in the middle of the room, its back to the curtained windows, facing the phone propped on the tablet stand on the round travertine coffee table, which also holds flowers. The brass floor lamp stands beside the sofa. The brass-framed kitchen doorway on the right wall is empty.",
+      "shots": [
+        {
+          "time": "0-3s",
+          "size": "medium shot",
+          "angle": "low angle",
+          "camera": "Medium shot, slow push in, low angle, from beside the coffee table facing the sofa",
+          "visual": "Su Yaqing sits forward on the edge of the sofa toward the phone on the stand, her eyes lighting up with an idea.",
+          "audio": "Dialogue (Su Yaqing, in Chinese, eager): {哎，那我弟最近刚好回国了，}",
+          "characters": [
+            "su_yaqing"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "3-7s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, locked-off camera, eye level, from the coffee table side",
+          "visual": "Su Yaqing gives a sly matchmaker's grin and counts the points off on her fingers beside her face.",
+          "audio": "Dialogue (Su Yaqing, in Chinese, coaxing and sing-song): {要不你选他，知根知底的，又听话又懂事多好。}",
+          "characters": [
+            "su_yaqing"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "7-10s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up, locked-off camera, eye level, from the TV wall side facing the sofa",
+          "visual": "Su Yaqing pouts at the phone on the stand.",
+          "audio": "Dialogue (Ji Ran, V.O., in Chinese, dry, brushing it off): {就你那个继母家的弟弟？算了算了，}",
+          "characters": [
+            "su_yaqing"
+          ],
+          "lines": [
+            1
+          ]
+        },
+        {
+          "time": "10-14s",
+          "size": "medium shot",
+          "angle": "high angle",
+          "camera": "Medium shot, tilt up following the phone, high angle, over the travertine coffee table",
+          "visual": "Su Yaqing leans in and lifts the phone off the tablet stand into both hands.",
+          "audio": "Dialogue (Ji Ran, V.O., in Chinese, firm): {豪门联姻水太深，我就算要找，也要找个普通人。}",
+          "characters": [
+            "su_yaqing"
+          ],
+          "lines": [
+            1
+          ]
+        },
+        {
+          "time": "14-16s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, locked-off camera, eye level, from the coffee table side",
+          "visual": "Su Yaqing makes a mock-sulky face at the phone screen.",
+          "audio": "Dialogue (Su Yaqing, in Chinese, mock-wounded): {你们苏家我可招惹不起。}",
+          "characters": [
+            "su_yaqing"
+          ],
+          "lines": [
+            2
+          ]
+        },
+        {
+          "time": "16-22s",
+          "size": "medium shot",
+          "angle": "low angle",
+          "camera": "Medium shot, slow push in, low angle, from beside the coffee table",
+          "visual": "Su Yaqing's teasing smile fades. She nods slowly and settles back into the cushions with a sympathetic frown.",
+          "audio": "Dialogue (Su Yaqing, in Chinese, softening and gentle): {嗯也是，毕竟你父母当年闹成那样，你又被你爸当成联姻工具，}",
+          "characters": [
+            "su_yaqing"
+          ],
+          "lines": [
+            2
+          ]
+        },
+        {
+          "time": "22-24s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, locked-off camera, eye level, from the TV wall facing the sofa",
+          "visual": "Su Yaqing looks up and smiles warmly at the phone, holding it in both hands.",
+          "audio": "Dialogue (Su Yaqing, in Chinese, warm and loyal): {然然，反正不管你做什么，}",
+          "characters": [
+            "su_yaqing"
+          ],
+          "lines": [
+            2
+          ]
+        },
+        {
+          "time": "24-26s",
+          "size": "wide shot",
+          "angle": "eye level",
+          "camera": "Wide shot, locked-off camera, eye level, from the TV wall facing the sofa and the kitchen doorway on the right wall",
+          "visual": "Lin Qingyu steps out of the kitchen into the brass-framed doorway on the right wall, holding a glass of water. Su Yaqing on the sofa keeps smiling at her phone without seeing him.",
+          "audio": "Dialogue (Su Yaqing, in Chinese, warm): {我都支持你。} <Soft footsteps>",
+          "characters": [
+            "su_yaqing",
+            "lin_qingyu"
+          ],
+          "lines": [
+            2
+          ]
+        },
+        {
+          "time": "26-28s",
+          "size": "medium close-up",
+          "angle": "low angle",
+          "camera": "Medium close-up, clean single, slow push in, low angle, from the TV wall side facing the kitchen doorway",
+          "visual": "Only Lin Qingyu, framed on the face and shoulders. He leans against the brass doorframe, sips from the glass and gives a quiet, knowing smile toward the sofa.",
+          "audio": "",
+          "characters": [
+            "lin_qingyu"
+          ],
+          "lines": []
+        }
+      ],
+      "light_audio": "Soft daylight through the sheer curtains, the brass floor lamp, and a glow of white marble from the kitchen. Quiet room, a small speaker tone on Ji Ran's voice, soft footsteps.",
+      "dialogue": [
+        {
+          "speaker": "su_yaqing",
+          "line": "哎，那我弟最近刚好回国了，要不你选他，知根知底的，又听话又懂事多好。",
+          "offscreen": false
+        },
+        {
+          "speaker": "ji_ran",
+          "line": "就你那个继母家的弟弟？算了算了，豪门联姻水太深，我就算要找，也要找个普通人。",
+          "offscreen": true
+        },
+        {
+          "speaker": "su_yaqing",
+          "line": "你们苏家我可招惹不起。嗯也是，毕竟你父母当年闹成那样，你又被你爸当成联姻工具，然然，反正不管你做什么，我都支持你。",
+          "offscreen": false
+        }
+      ],
+      "must_hit": [
+        "Su Yaqing eagerly pitches her brother to the phone",
+        "Su Yaqing tells Ji Ran she supports her, smiling at the phone",
+        "Lin Qingyu stands in the kitchen doorway holding a glass, listening and smiling"
+      ],
+      "exit_state": "Su Yaqing sits on the cream bouclé sofa in the middle of the room, its back to the curtained windows, holding the phone in both hands and smiling at the call. The round travertine coffee table stands in front of her with flowers and the empty tablet stand. The brass floor lamp stands beside the sofa. Lin Qingyu leans in the brass-framed kitchen doorway on the right wall, holding the glass of water, watching her and smiling.",
+      "negative": [
+        "added or missing characters",
+        "spatial jumps of the kitchen doorway",
+        "subtitles or garbled text"
+      ]
+    },
+    {
+      "id": "seg06",
+      "duration": 20,
+      "location": "su_dining_area",
+      "scene_heading": "INT. SU YAQING'S DINING AREA - DAY #1-5#",
+      "time": "Day, daylight through the window on the left wall",
+      "characters": [
+        "lin_qingyu"
+      ],
+      "states": {
+        "lin_qingyu": "S0"
+      },
+      "props": [
+        "lin_phone"
+      ],
+      "first_state": "Lin Qingyu sits in the grey upholstered chair at the window end of the white marble dining table, beside the large window on the left wall. He wears the white cotton hoodie with its sleeves pushed up, the beige drawstring joggers and white sneakers. He holds the black call phone in one hand. On the table are one glass vase of white daisies and one bottle of red wine. The walnut sideboard stands against the back wall, and the open archway to the living room is on the right wall. Camera side: in front of the table, on the plant and wine cabinet side, facing the sideboard.",
+      "shots": [
+        {
+          "time": "0-4s",
+          "size": "wide shot",
+          "angle": "eye level",
+          "camera": "Wide shot, fast push in, eye level, from the wine cabinet facing the table and the sideboard",
+          "visual": "The sunlit dining area with daisies and red wine on the marble table. Lin Qingyu sits at the window end and raises the phone to his ear, and his smile fades.",
+          "audio": "Dialogue (Lin Qingyu, in Chinese, cool and commanding): {阿杰，给我准备一套最普通的大学生衣服，}",
+          "characters": [
+            "lin_qingyu"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "4-7s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up, locked-off camera, eye level, from the table's near side",
+          "visual": "Lin Qingyu glances toward the archway on the right wall, his expression serious, the phone at his ear.",
+          "audio": "Dialogue (Lin Qingyu, in Chinese, low and precise): {再帮我处理一下个人资料，从明天开始，}",
+          "characters": [
+            "lin_qingyu"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "7-9s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, slow push in, eye level, from the table's near side",
+          "visual": "Lin Qingyu's eyes narrow with quiet determination.",
+          "audio": "Dialogue (Lin Qingyu, in Chinese, firm): {我就是一名普通的大学生。}",
+          "characters": [
+            "lin_qingyu"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "9-13s",
+          "size": "medium shot",
+          "angle": "low angle",
+          "camera": "Medium shot, locked-off camera, low angle, from the near side of the marble table past the daisies",
+          "visual": "Lin Qingyu leans forward and lays his free hand flat on the marble table beside the vase of daisies.",
+          "audio": "Dialogue (Lin Qingyu, in Chinese, lowered and stern): {另外，这件事，绝对不能让我姐知道。}",
+          "characters": [
+            "lin_qingyu"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "13-17s",
+          "size": "medium close-up",
+          "angle": "high angle",
+          "camera": "Medium close-up, locked-off camera, high angle, from the wine cabinet side",
+          "visual": "Lin Qingyu keeps his lips closed while he listens. His brow tightens and his fingers tap the marble once.",
+          "audio": "Dialogue (AJIE, V.O., in Chinese, anxious and quick through a phone speaker): {老板，您明天要出席港城的行业高峰论坛，您...}",
+          "characters": [
+            "lin_qingyu"
+          ],
+          "lines": [
+            1
+          ]
+        },
+        {
+          "time": "17-20s",
+          "size": "close-up",
+          "angle": "low angle",
+          "camera": "Close-up, locked-off camera, low angle, from the table's near side",
+          "visual": "Lin Qingyu cuts in without hesitation, and a faint confident smile touches his lips.",
+          "audio": "Dialogue (Lin Qingyu, in Chinese, cool and final): {推了，明天，我要去面试。}",
+          "characters": [
+            "lin_qingyu"
+          ],
+          "lines": [
+            2
+          ]
+        }
+      ],
+      "light_audio": "Daylight through the sheer curtains of the window on the left wall falling across the table, and the brass pendant lamp. Quiet room and a thin phone speaker voice.",
+      "dialogue": [
+        {
+          "speaker": "lin_qingyu",
+          "line": "阿杰，给我准备一套最普通的大学生衣服，再帮我处理一下个人资料，从明天开始，我就是一名普通的大学生。另外，这件事，绝对不能让我姐知道。",
+          "offscreen": false
+        },
+        {
+          "speaker": "ajie",
+          "line": "老板，您明天要出席港城的行业高峰论坛，您...",
+          "offscreen": true
+        },
+        {
+          "speaker": "lin_qingyu",
+          "line": "推了，明天，我要去面试。",
+          "offscreen": false
+        }
+      ],
+      "must_hit": [
+        "Lin Qingyu at the window end of the dining table on a phone call, his expression turning serious",
+        "Lin Qingyu cuts off his assistant with a confident smile"
+      ],
+      "exit_state": "Lin Qingyu sits in the chair at the window end of the white marble dining table beside the window on the left wall, the phone at his ear and a faint confident smile on his face. The vase of daisies and the wine bottle stand on the table, and the archway to the living room is on the right wall.",
+      "negative": [
+        "added characters",
+        "garbled phone screen text",
+        "subtitles"
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "type": "name",
+      "text": "Ji Ran, owner of Jiejian Company",
+      "at": "seg01, shot 1"
+    },
+    {
+      "type": "time",
+      "text": "Five years earlier",
+      "at": "seg02, shot 1"
+    },
+    {
+      "type": "name",
+      "text": "Su Yaqing, heiress of the Su family",
+      "at": "seg04, shot 1"
+    },
+    {
+      "type": "name",
+      "text": "Lin Qingyu, college student",
+      "at": "seg05, shot 8"
+    },
+    {
+      "type": "ending",
+      "text": "To be continued",
+      "at": "seg06, end"
+    }
+  ],
+  "bible_version": "v3"
+}

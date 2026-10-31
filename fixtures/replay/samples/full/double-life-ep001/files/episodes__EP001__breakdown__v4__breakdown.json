@@ -1,0 +1,815 @@
+{
+  "episode": "EP001",
+  "title": "Natalie's Price",
+  "segments": [
+    {
+      "id": "seg01",
+      "duration": 28,
+      "location": "quinn_living_room",
+      "time": "Day, soft natural daylight from the tall windows",
+      "characters": [
+        "natalie",
+        "george",
+        "lauren"
+      ],
+      "first_state": "The master camera is on the near side of the one glass-and-gold coffee table and faces the back wall. Floor-to-ceiling windows with sheer white curtains run along the left wall at frame left. The only entrance, an open rectangular doorway, is in the right wall at frame right. The one white tufted sofa stands against the back wall and faces camera. Directly behind it is an arched alcove holding the marble fireplace and the framed painting; the alcove is not a doorway. One potted fiddle-leaf fig stands on each side of the arch. George sits on the sofa's left end and Lauren sits on the sofa's right end. Both face camera, and their hands rest apart and still on their knees and lap. The two cream armchairs face each other in the foreground, front-left and front-right, with the coffee table between them in front of the sofa. Natalie sits in the front-left armchair, angled toward the sofa, in her blue cardigan, white T-shirt and jeans. Her brown canvas shoulder bag hangs from her shoulder at her side, and her hands rest apart on her knees. The front-right armchair is empty. One flat, uncrumpled hospital statement lies on the coffee table at the end nearest Natalie.",
+      "shots": [
+        {
+          "time": "0-2s",
+          "size": "close-up",
+          "angle": "high angle",
+          "camera": "Close-up, high angle over Natalie's shoulder on the near side, slow push in from her shoulder onto the coffee table. The camera looks down at the glass tabletop, so behind the statement there is only the glass and the ivory rug under it; the sofa lies above frame.",
+          "visual": "Natalie leans forward in the front-left armchair and looks down at the single hospital statement lying flat on the glass-and-gold coffee table. Her hands rest on her knees out of frame.",
+          "audio": "",
+          "characters": [
+            "natalie"
+          ],
+          "lines": []
+        },
+        {
+          "time": "2-4s",
+          "size": "wide shot",
+          "angle": "eye level",
+          "camera": "Wide shot, eye-level, slow push in from the near side of the coffee table toward the sofa, facing the back wall. Behind the sofa are the arched fireplace alcove, the framed painting and the two potted figs. Natalie's front-left armchair is in the foreground at frame left.",
+          "visual": "Natalie sits in the front-left armchair and leans toward the coffee table, her bag hanging from her shoulder. George sits on the left end of the white sofa and Lauren on its right end, both facing camera in the background.",
+          "audio": "Dialogue (Natalie, in English, hesitant and pleading): {Hey, Dad can I borrow $50,000?}",
+          "characters": [
+            "natalie",
+            "george",
+            "lauren"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "4-7s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, eye-level, locked-off from the near side beside the empty front-right armchair, aimed toward the front-left armchair. Natalie is in three-quarter profile in the foreground. Behind her is the sofa's left end with George seated out of focus, and the edge of the left-wall windows. The frame stops short of the sofa's right half, so Lauren lies beyond frame right.",
+          "visual": "Natalie leans forward in the front-left armchair, her hands resting apart on her knees below frame. She looks across the coffee table at her father with glassy eyes. George sits soft-focused on the sofa's left end behind her.",
+          "audio": "Dialogue (Natalie, in English, trembling, earnest): {Mom needs kidney dialysis and we really don't have any money.}",
+          "characters": [
+            "natalie",
+            "george"
+          ],
+          "lines": [
+            1
+          ]
+        },
+        {
+          "time": "7-9s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, eye-level, handheld from the near side facing the back wall, framed tight on George's chest and face on the sofa's left end. Behind him are the white tufted sofa back and the left edge of the fireplace alcove. The sofa's right end, with Lauren, lies beyond frame right.",
+          "visual": "George shifts uneasily on the sofa, his hands still on his knees, and glances sideways toward Lauren beside him.",
+          "audio": "Dialogue (George, in English, hesitant, trailing off): {Natalie, the thing is}",
+          "characters": [
+            "george"
+          ],
+          "lines": [
+            2
+          ]
+        },
+        {
+          "time": "9-12s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up, eye-level, quick push in from the near side facing the back wall on Lauren at the sofa's right end, framed tight on her face and shoulders. Behind her are the sofa back and the potted fig on the right of the arch. The sofa's left end, with George, lies beyond frame left.",
+          "visual": "Lauren sits upright, her hands still in her lap. She raises one arched brow and looks down toward Natalie's front-left armchair with contempt.",
+          "audio": "Dialogue (Lauren, in English, cutting, mock outrage): {How shameless of you to come here and beg us for money?}",
+          "characters": [
+            "lauren"
+          ],
+          "lines": [
+            3
+          ]
+        },
+        {
+          "time": "12-14s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, eye-level, locked-off from the near side by the front-right armchair on Natalie's face in three-quarter profile. The camera faces the left wall, so only the sheer-curtained windows are soft behind her and the sofa lies beyond frame right.",
+          "visual": "Natalie nods quickly toward the sofa and swallows. Her eyes are glassy but no tears fall.",
+          "audio": "Dialogue (Natalie, in English, urgent, earnest): {I'll pay you guys back, I promise.}",
+          "characters": [
+            "natalie"
+          ],
+          "lines": [
+            4
+          ]
+        },
+        {
+          "time": "14-17s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, two-shot, eye-level, locked-off from the near side facing the back wall on the sofa, George on frame left and Lauren on frame right, both facing camera. Behind them are the arched fireplace alcove and the framed painting. Natalie's armchair lies below and beyond frame left.",
+          "visual": "George turns his head toward Lauren and nods timidly toward Natalie's armchair, his hands still on his knees. Lauren sits upright beside him.",
+          "audio": "Dialogue (George, in English, placating, soft): {Lauren, maybe we can let her borrow the money.}",
+          "characters": [
+            "george",
+            "lauren"
+          ],
+          "lines": [
+            5
+          ]
+        },
+        {
+          "time": "17-19s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, eye-level, slight pan from the near side facing the back wall, ending tight on Lauren's chest and face at the sofa's right end. Behind her are the sofa back, the right side of the back wall and the potted fig. The sofa's left end, with George, lies beyond frame left.",
+          "visual": "Lauren's jaw tightens. She turns her face slowly toward George, her red lips pressed thin, her hands still in her lap.",
+          "audio": "Dialogue (George, in English, mumbling): {I mean, it's her mother that's sick.}",
+          "characters": [
+            "lauren"
+          ],
+          "lines": [
+            6
+          ]
+        },
+        {
+          "time": "19-21s",
+          "size": "medium close-up",
+          "angle": "low angle",
+          "camera": "Medium close-up, low angle, locked-off from the near side facing the back wall on Lauren, framed on her face and shoulders. Behind her are the upper back wall and the edge of the framed painting. The sofa's left end, with George, lies beyond frame left.",
+          "visual": "Lauren narrows her grey-green eyes and leans toward George at her side.",
+          "audio": "Dialogue (Lauren, in English, jealous, sharp): {You're still thinking about your ex-wife?}",
+          "characters": [
+            "lauren"
+          ],
+          "lines": [
+            7
+          ]
+        },
+        {
+          "time": "21-22s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, eye-level, quick handheld from the near side facing the back wall, framed tight on George's chest and face. Behind him are the sofa back and the marble mantel at the left of the alcove. The sofa's right end, with Lauren, lies beyond frame right.",
+          "visual": "George shakes his head fast and leans back away from Lauren, his hands still on his knees.",
+          "audio": "Dialogue (George, in English, flustered): {No, no.}",
+          "characters": [
+            "george"
+          ],
+          "lines": [
+            8
+          ]
+        },
+        {
+          "time": "22-25s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, two-shot, eye-level, locked-off from the near side facing the back wall, angled slightly from frame right. Lauren is in the foreground at the sofa's right end and George beside her at frame left. Behind them are the arched fireplace alcove and the framed painting.",
+          "visual": "Lauren leans close to George and stares him down with a cold, fixed gaze, her hands resting still in her lap. George shrinks back on the sofa's left end.",
+          "audio": "Dialogue (Lauren, in English, cold, clipped): {Do I need to remind you this is your family now?}",
+          "characters": [
+            "george",
+            "lauren"
+          ],
+          "lines": [
+            9
+          ]
+        },
+        {
+          "time": "25-28s",
+          "size": "medium shot",
+          "angle": "high angle",
+          "camera": "Medium shot, high angle from the near side looking down on George at the sofa's left end, slow push in, framed on his chest and face. Behind him are only the sofa cushion and the ivory rug. The sofa's right end, with Lauren, lies beyond frame right.",
+          "visual": "George lowers his eyes to the ivory rug and his shoulders sag. His hands lie still on his knees.",
+          "audio": "Dialogue (Lauren, in English, icy, final): {George, without me you'd have nothing.}",
+          "characters": [
+            "george"
+          ],
+          "lines": [
+            10
+          ]
+        }
+      ],
+      "light_audio": "Soft natural daylight comes through the sheer white curtains of the windows on the left wall at frame left and gives warm side light on the seating. The crystal chandelier is unlit and faint warm wall sconces glow. Live sound is the quiet hum of a large room and fabric rustling on the sofa.",
+      "dialogue": [
+        {
+          "speaker": "natalie",
+          "line": "Hey, Dad can I borrow $50,000?"
+        },
+        {
+          "speaker": "natalie",
+          "line": "Mom needs kidney dialysis and we really don't have any money."
+        },
+        {
+          "speaker": "george",
+          "line": "Natalie, the thing is"
+        },
+        {
+          "speaker": "lauren",
+          "line": "How shameless of you to come here and beg us for money?"
+        },
+        {
+          "speaker": "natalie",
+          "line": "I'll pay you guys back, I promise."
+        },
+        {
+          "speaker": "george",
+          "line": "Lauren, maybe we can let her borrow the money."
+        },
+        {
+          "speaker": "george",
+          "line": "I mean, it's her mother that's sick."
+        },
+        {
+          "speaker": "lauren",
+          "line": "You're still thinking about your ex-wife?"
+        },
+        {
+          "speaker": "george",
+          "line": "No, no."
+        },
+        {
+          "speaker": "lauren",
+          "line": "Do I need to remind you this is your family now?"
+        },
+        {
+          "speaker": "lauren",
+          "line": "George, without me you'd have nothing."
+        }
+      ],
+      "must_hit": [
+        "Natalie, in the front-left armchair, asks George and Lauren on the sofa to borrow money, with the hospital statement on the coffee table",
+        "George timidly suggests lending the money and Lauren shuts him down with a cold stare",
+        "George drops his eyes and sags after Lauren says he'd have nothing without her"
+      ],
+      "exit_state": "The camera stays on the near side of the coffee table, facing the back wall, with the windows at frame left and the right-wall doorway at frame right. Natalie sits in the front-left armchair, angled toward the sofa, eyes downcast and glassy but without tears. Her bag hangs from her shoulder and her hands rest apart on her knees. The front-right armchair is empty. George sits slumped on the sofa's left end, facing camera, hands still on his knees. Lauren sits upright on the sofa's right end, facing camera, hands resting still in her lap. The one flat hospital statement lies on the coffee table at the end nearest Natalie.",
+      "negative": [
+        "hands clasped, gripping, rubbing or overlapping each other or an object",
+        "readable text on the hospital statement",
+        "subtitles or captions",
+        "Cassie or any other person in the room"
+      ]
+    },
+    {
+      "id": "seg02",
+      "duration": 17,
+      "location": "quinn_living_room",
+      "time": "Day, soft natural daylight from the tall windows",
+      "characters": [
+        "cassie",
+        "natalie",
+        "lauren"
+      ],
+      "first_state": "The camera stays on the near side of the coffee table, facing the back wall. The windows are at frame left, and the open rectangular doorway in the right wall at frame right is empty. Natalie sits in the front-left armchair, angled toward the sofa, eyes downcast and glassy without tears. Her bag hangs from her shoulder and her hands rest apart on her knees. The front-right armchair is empty. George sits slumped on the sofa's left end with his hands on his knees; every shot is framed to exclude the sofa's left end, so he stays out of frame. Lauren sits upright on the sofa's right end, facing camera, hands resting still in her lap. The one flat hospital statement lies on the coffee table at the end nearest Natalie. The arched fireplace alcove behind the sofa is not a doorway.",
+      "shots": [
+        {
+          "time": "0-2s",
+          "size": "wide shot",
+          "angle": "eye level",
+          "camera": "Wide shot, eye-level, locked-off from the near side just behind Natalie's front-left armchair, turned to face the right wall squarely. Behind Cassie are the pale grey right wall and its open doorway, which fill the frame; the back wall with the sofa lies entirely beyond frame left, so no part of the sofa is in frame.",
+          "visual": "Cassie walks in through the open doorway in the right wall. The empty front-right armchair stands in the mid-ground, and Natalie's shoulder and bag strap fill the foreground at frame left.",
+          "audio": "Dialogue (Cassie, in English, sing-song, mocking): {Aww.} <Heels click on marble>",
+          "characters": [
+            "cassie",
+            "natalie"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "2-6s",
+          "size": "medium shot",
+          "angle": "low angle",
+          "camera": "Medium shot, low angle from the near side beside the front-left armchair, facing the right wall, tilting up from Natalie's shoulder to Cassie's face. Behind Cassie are the upper pale grey right wall, the top of the open doorway and the unlit chandelier. The back wall with the sofa lies beyond frame left and below frame.",
+          "visual": "Cassie stops at the right side of Natalie's armchair, on the coffee-table side, her arms hanging relaxed at her sides. She looks down at Natalie with a smirk.",
+          "audio": "Dialogue (Cassie, in English, saccharine, drawn-out sarcasm): {If it isn’t my loser sister asking for money like a beggar? How pathetic?}",
+          "characters": [
+            "cassie",
+            "natalie"
+          ],
+          "lines": [
+            1
+          ]
+        },
+        {
+          "time": "6-8s",
+          "size": "close-up",
+          "angle": "high angle",
+          "camera": "Close-up, high angle from Cassie's side on the near side, looking down at Natalie's face, locked-off. Behind her are only the cream armchair cushion and the ivory rug; the sofa lies above frame.",
+          "visual": "Natalie lowers her eyes and her lips tremble. Her eyes are glassy, with no tears.",
+          "audio": "",
+          "characters": [
+            "natalie"
+          ],
+          "lines": []
+        },
+        {
+          "time": "8-10s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, eye-level, from the near side facing the left-wall windows, tilting up with Natalie as she stands. Behind her are the sheer-curtained windows. The sofa lies beyond frame right and her hands stay below the lower frame edge.",
+          "visual": "Natalie bends toward the coffee table, takes up the hospital statement below frame and rises from the front-left armchair. Her bag hangs from her shoulder.",
+          "audio": "<Paper rustles>",
+          "characters": [
+            "natalie"
+          ],
+          "lines": []
+        },
+        {
+          "time": "10-12s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, eye-level, tracking backward on the near side ahead of Natalie as she walks toward the right-wall doorway. The camera faces the left-wall windows squarely, framed tight on her face and shoulders, so behind her are only the sheer-curtained windows and Cassie by the armchair; the back wall and the sofa lie beyond frame right.",
+          "visual": "Natalie walks away from the front-left armchair along the near edge of the coffee table toward the doorway. Her face is set and pale, and her hands hang at her sides below frame. Cassie stands out of focus behind her by the armchair.",
+          "audio": "Dialogue (Natalie, in English, low, wounded): {This is a mistake.}",
+          "characters": [
+            "natalie",
+            "cassie"
+          ],
+          "lines": [
+            2
+          ]
+        },
+        {
+          "time": "12-14s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up, eye-level, quick push in from the near side by the front-right armchair on Cassie beside the front-left armchair. The camera faces the left wall, so behind her the sheer-curtained windows fill the background and the sofa lies beyond frame right.",
+          "visual": "Cassie turns her head toward frame right after Natalie and lifts her chin, a scheming glint in her eyes, her hands still at her sides.",
+          "audio": "Dialogue (Cassie, in English, bright, sly): {Wait, we'll give you the money.}",
+          "characters": [
+            "cassie"
+          ],
+          "lines": [
+            3
+          ]
+        },
+        {
+          "time": "14-16s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, eye-level, locked-off from the near side facing the right wall on Natalie at the doorway. Behind her are only the pale grey right wall and the open doorway frame; Cassie and the sofa lie beyond frame left.",
+          "visual": "Natalie stops in mid-step just inside the right-wall doorway and turns her head back over her shoulder toward the room. The hospital statement hangs at her side below frame.",
+          "audio": "",
+          "characters": [
+            "natalie"
+          ],
+          "lines": []
+        },
+        {
+          "time": "16-17s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up, eye-level, whip pan from the near side leftward from the doorway, landing tight on Lauren's face and shoulders at the sofa's right end, facing the back wall. Behind her are the sofa back and the potted fig at the right of the arch. The sofa's left end lies beyond frame left and the right-wall doorway beyond frame right.",
+          "visual": "Lauren snaps her head toward Cassie at the front-left armchair and sits forward in surprise, eyes wide, her hands still in her lap.",
+          "audio": "Dialogue (Lauren, in English, startled): {What?}",
+          "characters": [
+            "lauren"
+          ],
+          "lines": [
+            4
+          ]
+        }
+      ],
+      "light_audio": "Soft natural daylight comes through the sheer curtains of the windows on the left wall at frame left. The chandelier is unlit and faint warm wall sconces glow. Live sound is heels clicking on marble, paper rustling and the quiet room tone of the mansion.",
+      "dialogue": [
+        {
+          "speaker": "cassie",
+          "line": "Aww."
+        },
+        {
+          "speaker": "cassie",
+          "line": "If it isn’t my loser sister asking for money like a beggar? How pathetic?"
+        },
+        {
+          "speaker": "natalie",
+          "line": "This is a mistake."
+        },
+        {
+          "speaker": "cassie",
+          "line": "Wait, we'll give you the money."
+        },
+        {
+          "speaker": "lauren",
+          "line": "What?"
+        }
+      ],
+      "must_hit": [
+        "Cassie walks in through the right-wall doorway and stands over Natalie, mocking her",
+        "Natalie lowers her eyes, takes the hospital statement and walks toward the right-wall doorway",
+        "Natalie stops and turns back when Cassie calls her back"
+      ],
+      "exit_state": "The camera stays on the near side of the coffee table, facing the back wall, windows at frame left. Natalie stands just inside the right-wall doorway at frame right, beside the empty front-right armchair, turned back toward the room. She holds the flat hospital statement at her side, her bag hangs from her shoulder, and her eyes are glassy without tears. Cassie stands at the right side of the empty front-left armchair, on the coffee-table side, facing Natalie toward frame right, arms relaxed at her sides. Lauren sits forward on the sofa's right end, turned toward Cassie, hands still in her lap. George sits on the sofa's left end, out of frame.",
+      "negative": [
+        "George in frame or an empty sofa or empty sofa seat in frame",
+        "hands clasped, gripping or overlapping each other or an object in frame",
+        "anyone entering or leaving through the arched fireplace alcove",
+        "readable text on the hospital statement",
+        "subtitles or captions"
+      ]
+    },
+    {
+      "id": "seg03",
+      "duration": 18,
+      "location": "quinn_living_room",
+      "time": "Day, soft natural daylight from the tall windows",
+      "characters": [
+        "cassie",
+        "natalie",
+        "lauren"
+      ],
+      "first_state": "The camera stays on the near side of the coffee table, facing the back wall, windows at frame left. Natalie stands just inside the right-wall doorway at frame right, beside the empty front-right armchair, turned back toward the room. She holds the flat hospital statement at her side, her bag hangs from her shoulder, and her eyes are glassy without tears. Cassie stands at the right side of the empty front-left armchair, on the coffee-table side, facing Natalie toward frame right, arms relaxed at her sides. Lauren sits forward on the sofa's right end, turned toward Cassie, hands still in her lap. George sits on the sofa's left end; every shot is framed to exclude the sofa's left end, so he stays out of frame.",
+      "shots": [
+        {
+          "time": "0-3s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, two-shot, eye-level, locked-off from the near side, facing the right wall. Behind both of them are the pale grey right wall and the open doorway; the back wall with the sofa lies entirely beyond frame left. Cassie is on frame left by the front-left armchair and Natalie on frame right by the right-wall doorway.",
+          "visual": "Cassie takes a slow half step toward Natalie and tilts her head with a sweet, poisonous smile, her hands at her sides. Natalie faces her with a wary frown, no smile.",
+          "audio": "Dialogue (Cassie, in English, sing-song, triumphant): {If you marry Sebastian Klein in my place.}",
+          "characters": [
+            "cassie",
+            "natalie"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "3-6s",
+          "size": "medium shot",
+          "angle": "low angle",
+          "camera": "Medium shot, low angle from the near side facing the back wall on Lauren at the sofa's right end, slight push in, framed on her chest and face. Behind her are the upper back wall, the edge of the framed painting and the potted fig at the right of the arch. The sofa's left end lies beyond frame left and the right-wall doorway beyond frame right.",
+          "visual": "Lauren sits up straighter and beams proudly toward Cassie, her hands resting still in her lap.",
+          "audio": "Dialogue (Lauren, in English, delighted, haughty): {My daughter is so smart. That's a good idea.}",
+          "characters": [
+            "lauren"
+          ],
+          "lines": [
+            1
+          ]
+        },
+        {
+          "time": "6-9s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, eye-level, locked-off from the near side facing the right wall on Natalie's face as she faces frame left toward Cassie. Behind her is only the pale grey right wall beside the doorway frame.",
+          "visual": "Natalie's eyes widen in disbelief and she draws her head back, her lips parted in shock, no smile. Her hands and the statement stay below frame.",
+          "audio": "Dialogue (Natalie, in English, stunned): {Sebastian Klein? The illegitimate son of the Klein family?}",
+          "characters": [
+            "natalie"
+          ],
+          "lines": [
+            2
+          ]
+        },
+        {
+          "time": "9-11s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, over-the-shoulder shot from the near side behind Cassie's right shoulder onto Natalie at the right-wall doorway, handheld, facing the right wall. Behind Natalie are the pale grey right wall and the open doorway frame; the back wall with the sofa lies beyond frame left.",
+          "visual": "Natalie shakes her head slightly and frowns at Cassie, no smile. Cassie's shoulder and curls fill the foreground.",
+          "audio": "Dialogue (Natalie, in English, incredulous): {Isn't he in jail right now?}",
+          "characters": [
+            "cassie",
+            "natalie"
+          ],
+          "lines": [
+            3
+          ]
+        },
+        {
+          "time": "11-12s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up, eye-level, locked-off from the near side by the front-right armchair on Cassie beside the front-left armchair. The camera faces the left wall, so behind her the sheer-curtained windows fill the background and the sofa lies beyond frame right.",
+          "visual": "Cassie shrugs one shoulder and pops her glossy lips.",
+          "audio": "Dialogue (Cassie, in English, breezy): {Yup.}",
+          "characters": [
+            "cassie"
+          ],
+          "lines": [
+            4
+          ]
+        },
+        {
+          "time": "12-15s",
+          "size": "medium shot",
+          "angle": "low angle",
+          "camera": "Medium shot, low angle on Cassie beside the coffee table, slow orbit on the near side from her front to her right side while the camera keeps facing the left-wall windows. Behind her are the sheer-curtained windows, the upper wall and the unlit chandelier; the sofa stays beyond frame right and below frame.",
+          "visual": "Cassie wrinkles her nose in disgust and tosses her head so her platinum curls swing over her shoulder, her hands at her sides.",
+          "audio": "Dialogue (Cassie, in English, mocking lilt): {He's a dirt bag and a good for nothing loser.}",
+          "characters": [
+            "cassie"
+          ],
+          "lines": [
+            5
+          ]
+        },
+        {
+          "time": "15-17s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, eye-level, locked-off from the near side facing the right wall on Natalie standing by the doorway. Behind her are only the pale grey right wall and the doorway frame; Cassie and the sofa lie beyond frame left.",
+          "visual": "Natalie recoils a half step with wide eyes, shakes her head and presses her lips tight in refusal, no smile. Her hands and the flat statement hang at her side below frame. Cassie is off screen.",
+          "audio": "Dialogue (Cassie, in English, spoiled, matter-of-fact): {That's why I can't marry him.}",
+          "characters": [
+            "natalie"
+          ],
+          "lines": [
+            6
+          ]
+        },
+        {
+          "time": "17-18s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up, eye-level, quick cut from the near side facing the back wall to Lauren at the sofa's right end, framed on her face and shoulders. Behind her are the sofa back and the potted fig at the right of the arch. The sofa's left end lies beyond frame left and the right-wall doorway beyond frame right.",
+          "visual": "Lauren nods firmly with a thin red smile, her hands still in her lap.",
+          "audio": "Dialogue (Lauren, in English, crisp): {That's right.}",
+          "characters": [
+            "lauren"
+          ],
+          "lines": [
+            7
+          ]
+        }
+      ],
+      "light_audio": "Soft natural daylight comes through the sheer curtains of the windows on the left wall at frame left. The chandelier is unlit and faint warm wall sconces glow. Live sound is quiet room tone and fabric rustling.",
+      "dialogue": [
+        {
+          "speaker": "cassie",
+          "line": "If you marry Sebastian Klein in my place."
+        },
+        {
+          "speaker": "lauren",
+          "line": "My daughter is so smart. That's a good idea."
+        },
+        {
+          "speaker": "natalie",
+          "line": "Sebastian Klein? The illegitimate son of the Klein family?"
+        },
+        {
+          "speaker": "natalie",
+          "line": "Isn't he in jail right now?"
+        },
+        {
+          "speaker": "cassie",
+          "line": "Yup."
+        },
+        {
+          "speaker": "cassie",
+          "line": "He's a dirt bag and a good for nothing loser."
+        },
+        {
+          "speaker": "cassie",
+          "line": "That's why I can't marry him."
+        },
+        {
+          "speaker": "lauren",
+          "line": "That's right."
+        }
+      ],
+      "must_hit": [
+        "Cassie offers the money on the condition that Natalie marries Sebastian Klein in her place",
+        "Lauren beams and praises Cassie's idea",
+        "Natalie reacts with shock and refusal: wide eyes, a recoil, a head shake, pressed lips, no smile"
+      ],
+      "exit_state": "The camera stays on the near side of the coffee table, facing the back wall, windows at frame left. Natalie stands just inside the right-wall doorway at frame right, beside the empty front-right armchair, facing the sofa with pressed lips and no smile. Her eyes are glassy without tears, the flat hospital statement is at her side and her bag hangs from her shoulder. Cassie stands at the right side of the empty front-left armchair, on the coffee-table side, arms relaxed at her sides. Lauren sits on the sofa's right end, nodding, hands still in her lap. George sits on the sofa's left end, out of frame.",
+      "negative": [
+        "Natalie smiling",
+        "George in frame or an empty sofa or empty sofa seat in frame",
+        "hands clapping, clasping, gripping or overlapping each other or an object in frame",
+        "readable text on the hospital statement",
+        "subtitles or captions"
+      ]
+    },
+    {
+      "id": "seg04",
+      "duration": 17,
+      "location": "quinn_living_room",
+      "time": "Day, soft natural daylight from the tall windows",
+      "characters": [
+        "lauren",
+        "george",
+        "natalie"
+      ],
+      "first_state": "The camera stays on the near side of the coffee table, facing the back wall, windows at frame left. Natalie stands just inside the right-wall doorway at frame right, beside the empty front-right armchair, facing the sofa with pressed lips and no smile. Her eyes are glassy without tears, the flat hospital statement is at her side and her bag hangs from her shoulder. Cassie stands at the right side of the empty front-left armchair, on the coffee-table side, arms relaxed; every shot is framed to exclude her, so she stays out of frame. Lauren sits on the sofa's right end, facing camera, hands still in her lap. George sits slumped on the sofa's left end beside her, facing camera, hands still on his knees.",
+      "shots": [
+        {
+          "time": "0-2s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, two-shot, eye-level, locked-off, facing the back wall from just beyond the coffee table's far edge, so Cassie stands behind the camera. Framed from the seat cushions up, with the arched fireplace alcove and the framed painting behind the two of them; the right-wall doorway and Natalie lie beyond frame right. George is on frame left and Lauren on frame right, both facing camera.",
+          "visual": "Lauren turns on the sofa toward George and leans in with a cold smile, her hands still in her lap. George sits slumped, his hands on his knees.",
+          "audio": "Dialogue (Lauren, in English, sweetly cold): {Natalie is also your daughter.}",
+          "characters": [
+            "lauren",
+            "george"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "2-5s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up, eye-level, slight push in from beyond the coffee table's far edge, facing the back wall on Lauren, framed on her face and shoulders; Cassie stands behind the camera. Behind Lauren are the sofa back and the potted fig at the right of the arch. The sofa's left end lies beyond frame left and the right-wall doorway with Natalie beyond frame right.",
+          "visual": "Lauren tips her head toward frame right, toward Natalie by the right-wall doorway, and smirks with contempt.",
+          "audio": "Dialogue (Lauren, in English, sneering, mocking): {She can be the one who marries Sebastard De-Klein.}",
+          "characters": [
+            "lauren"
+          ],
+          "lines": [
+            1
+          ]
+        },
+        {
+          "time": "5-7s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, eye-level, handheld from the near side facing the right wall on Natalie by the doorway. Behind her are only the pale grey right wall and the doorway frame; Cassie and the sofa lie beyond frame left.",
+          "visual": "Natalie shakes her head and takes a half step back toward the right-wall doorway, her eyes glassy, no smile. Her hands hang apart at her sides below frame.",
+          "audio": "Dialogue (Natalie, in English, firm but shaky): {No, I'm not going to.}",
+          "characters": [
+            "natalie"
+          ],
+          "lines": [
+            2
+          ]
+        },
+        {
+          "time": "7-11s",
+          "size": "close-up",
+          "angle": "high angle",
+          "camera": "Close-up, high angle from the near side facing the right wall on Natalie's face, slow tilt down from her eyes to her trembling lips. Behind her are only the pale grey right wall and the marble floor. Her hands and the statement stay out of frame.",
+          "visual": "Natalie looks down toward the hospital statement at her side. Her eyes fill with tears that spill down her cheeks, and her mouth stays closed. Cassie is off screen.",
+          "audio": "Dialogue (Cassie, V.O., in English, sing-song, taunting): {Do you want us to pay for your mother's medical bills or not?}",
+          "characters": [
+            "natalie"
+          ],
+          "lines": [
+            3
+          ]
+        },
+        {
+          "time": "11-13s",
+          "size": "medium shot",
+          "angle": "high angle",
+          "camera": "Medium shot, high angle from the near side on George at the sofa's left end, locked-off, framed on his chest and face. Behind him are only the sofa cushion and the ivory rug. The sofa's right end, with Lauren, lies beyond frame right.",
+          "visual": "George keeps his lips pressed shut, turns his eyes away from Natalie and stares at the ivory rug, his hands still on his knees.",
+          "audio": "",
+          "characters": [
+            "george"
+          ],
+          "lines": []
+        },
+        {
+          "time": "13-15s",
+          "size": "medium shot",
+          "angle": "low angle",
+          "camera": "Medium shot, low angle from beyond the coffee table's far edge, facing the back wall on Lauren at the sofa's right end, framed on her from the knees up; Cassie stands behind the camera. Behind her are the upper back wall and the potted fig at the right of the arch. The frame is tight at frame left so the sofa's left end lies beyond it, and tight at frame right at the fig so the right-wall doorway and Natalie lie beyond frame right.",
+          "visual": "Lauren crosses her legs, leans back and lifts her chin expectantly toward Natalie beyond frame right, her hands resting still in her lap.",
+          "audio": "",
+          "characters": [
+            "lauren"
+          ],
+          "lines": []
+        },
+        {
+          "time": "15-17s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, eye-level, locked-off from the near side facing the right wall on Natalie's face. Behind her is only the pale grey right wall beside the doorway frame.",
+          "visual": "Natalie closes her wet eyes and exhales, her shoulders dropping, tear streaks still shining on her cheeks.",
+          "audio": "Dialogue (Natalie, in English, quiet, defeated): {Fine.}",
+          "characters": [
+            "natalie"
+          ],
+          "lines": [
+            4
+          ]
+        }
+      ],
+      "light_audio": "Soft natural daylight comes through the sheer curtains of the windows on the left wall at frame left. The chandelier is unlit and faint warm wall sconces glow. Live sound is quiet room tone and a faint creak of the sofa.",
+      "dialogue": [
+        {
+          "speaker": "lauren",
+          "line": "Natalie is also your daughter."
+        },
+        {
+          "speaker": "lauren",
+          "line": "She can be the one who marries Sebastard De-Klein."
+        },
+        {
+          "speaker": "natalie",
+          "line": "No, I'm not going to."
+        },
+        {
+          "speaker": "cassie",
+          "line": "Do you want us to pay for your mother's medical bills or not?",
+          "offscreen": true
+        },
+        {
+          "speaker": "natalie",
+          "line": "Fine."
+        }
+      ],
+      "must_hit": [
+        "Lauren tells George that Natalie can marry Sebastian instead",
+        "Natalie's tears spill down her cheeks, and George says nothing and avoids her eyes while Lauren waits",
+        "Natalie closes her tearful eyes and gives in"
+      ],
+      "exit_state": "The camera stays on the near side of the coffee table, facing the back wall, windows at frame left. Natalie stands just inside the right-wall doorway at frame right, beside the empty front-right armchair. Her eyes are closed and wet, with tear-streaked cheeks; the flat hospital statement is at her side and her bag hangs from her shoulder. Cassie stands at the right side of the empty front-left armchair, on the coffee-table side, out of frame. Lauren sits back on the sofa's right end with her legs crossed and her hands still in her lap. George sits on the sofa's left end, staring at the rug, hands still on his knees.",
+      "negative": [
+        "Cassie in frame",
+        "George speaking or moving his lips",
+        "hands patting, clasping, gripping or overlapping each other or an object in frame",
+        "Natalie's tears disappearing after they fall",
+        "subtitles or captions"
+      ]
+    },
+    {
+      "id": "seg05",
+      "duration": 7,
+      "location": "quinn_living_room",
+      "time": "Day, soft natural daylight from the tall windows",
+      "characters": [
+        "natalie",
+        "cassie",
+        "lauren"
+      ],
+      "first_state": "The camera stays on the near side of the coffee table, facing the back wall, windows at frame left. Natalie stands just inside the right-wall doorway at frame right, beside the empty front-right armchair. Her eyes are closed and wet, with tear-streaked cheeks; the flat hospital statement is at her side and her bag hangs from her shoulder. Cassie stands at the right side of the empty front-left armchair, on the coffee-table side, arms relaxed at her sides. Lauren sits back on the sofa's right end with her legs crossed and her hands still in her lap. George sits on the sofa's left end, staring at the rug; every shot is framed to exclude the sofa's left end, so he stays out of frame.",
+      "shots": [
+        {
+          "time": "0-3s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up, eye-level, slow push in from the near side facing the right wall on Natalie by the doorway. Behind her are only the pale grey right wall and the doorway frame; Cassie and the sofa lie beyond frame left.",
+          "visual": "Natalie opens her wet eyes and lifts her chin, tear streaks still on her cheeks. Her gaze is steady and resolved, with no smile.",
+          "audio": "Dialogue (Natalie, in English, low, resolved): {I'll marry Sebastian Klein.}",
+          "characters": [
+            "natalie"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "3-5s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, eye-level, locked-off from the near side by the front-right armchair on Cassie beside the front-left armchair. The camera faces the left wall, so behind her the sheer-curtained windows fill the background and the sofa lies beyond frame right.",
+          "visual": "Cassie's glossy pink lips curl into a slow smirk as she looks toward Natalie at frame right.",
+          "audio": "",
+          "characters": [
+            "cassie"
+          ],
+          "lines": []
+        },
+        {
+          "time": "5-7s",
+          "size": "medium shot",
+          "angle": "low angle",
+          "camera": "Medium shot, low angle from the near side facing the back wall on Lauren at the sofa's right end, slight pull out that stops tight on both sides. Behind her are the upper back wall and the potted fig at the right of the arch. The sofa's left end stays beyond frame left and the right-wall doorway with Natalie beyond frame right.",
+          "visual": "Lauren leans back into the sofa and smiles, satisfied, her hands resting still in her lap.",
+          "audio": "",
+          "characters": [
+            "lauren"
+          ],
+          "lines": []
+        }
+      ],
+      "light_audio": "Soft natural daylight comes through the sheer curtains of the windows on the left wall at frame left. The chandelier is unlit and faint warm wall sconces glow. Live sound is quiet room tone.",
+      "dialogue": [
+        {
+          "speaker": "natalie",
+          "line": "I'll marry Sebastian Klein."
+        }
+      ],
+      "must_hit": [
+        "Natalie, still tear-streaked, agrees to marry Sebastian Klein",
+        "Cassie smirks",
+        "Lauren smiles"
+      ],
+      "exit_state": "The camera stays on the near side of the coffee table, facing the back wall, windows at frame left. Natalie stands just inside the right-wall doorway at frame right, resolved, with wet eyes and tear-streaked cheeks. The flat hospital statement is at her side and her bag hangs from her shoulder. Cassie stands at the right side of the empty front-left armchair, on the coffee-table side, smirking. Lauren leans back smiling on the sofa's right end, hands still in her lap. George sits on the sofa's left end, out of frame.",
+      "negative": [
+        "George in frame or an empty sofa seat in frame",
+        "Natalie smiling or Natalie with dry, tearless cheeks",
+        "hands clasping, gripping or overlapping each other or an object in frame",
+        "subtitles or captions"
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "type": "title",
+      "text": "EP001 Natalie's Price",
+      "at": "seg01 start"
+    },
+    {
+      "type": "ending",
+      "text": "To be continued",
+      "at": "seg05 end"
+    }
+  ],
+  "bible_version": "v1"
+}

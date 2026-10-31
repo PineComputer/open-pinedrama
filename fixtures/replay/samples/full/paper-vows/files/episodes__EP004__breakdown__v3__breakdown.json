@@ -1,0 +1,888 @@
+{
+  "episode": "EP004",
+  "title": "Pay Her",
+  "segments": [
+    {
+      "id": "seg01",
+      "duration": 29,
+      "location": "wedding_garden",
+      "scene_heading": "4-1 Day | Ext. Garden of the wedding venue",
+      "time": "Day, bright sunny garden light",
+      "characters": [
+        "natalie",
+        "sebastian",
+        "george",
+        "officiant",
+        "cassie",
+        "lauren",
+        "guest_1",
+        "guest_2"
+      ],
+      "states": {
+        "natalie": "S1",
+        "sebastian": "S2",
+        "cassie": "S1",
+        "lauren": "S1",
+        "george": "S1"
+      },
+      "props": [
+        "gift_box",
+        "bouquet"
+      ],
+      "first_state": "Camera on the aisle in front of the white wooden wedding arch, on the rose-bush side. Natalie, in her ivory bridal gown and short veil, stands under the centre of the arch, holding the one bouquet loosely at her waist and staring at Sebastian. Sebastian, in his black tuxedo, stands beside her under the arch on the boxwood-hedge side, facing her. George, in his charcoal suit, stands beside Natalie under the arch on the rose-bush side, facing down the aisle. The Officiant stands at the centre of the arch just behind the couple, hands clasped, facing down the aisle. Cassie, in her scarlet satin cocktail dress, stands at the head of the aisle a step in front of Natalie on the rose-bush side, holding the one empty white gift box with its lid off. Lauren, in her lilac sheath dress with a small handbag on her arm, stands at the head of the aisle against the front-row chair on the boxwood-hedge side. Two short rows of white folding chairs flank the petal aisle. Natalie's phone lies face up on the seat of the front-row chair on the rose-bush side. On the boxwood-hedge side of the lawn stands one small round white high cocktail table with one silver tray; Guest 1 stands at it on the arch side and Guest 2 on the aisle side, each holding a champagne flute, and Guest 1's pink phone is in the silver clutch under her arm.",
+      "shots": [
+        {
+          "time": "0-3s",
+          "size": "wide shot",
+          "angle": "eye level",
+          "camera": "Wide shot, slow push in from the aisle toward the arch, eye-level, from the rose-bush side",
+          "visual": "Natalie, bouquet at her waist, faces Sebastian under the flower-hung arch, with George beside her on the rose-bush side and the Officiant behind them. Cassie, a step in front of Natalie, tips the empty white gift box toward her with a smirk; Lauren stands against the front-row chair on the hedge side, and Guest 1 and Guest 2 watch from the cocktail table by the hedge with their flutes.",
+          "audio": "Dialogue (Cassie, in English, sugary and mocking): {Nothing. Just like your husband's bank account.}",
+          "characters": [
+            "natalie",
+            "sebastian",
+            "george",
+            "officiant",
+            "cassie",
+            "lauren",
+            "guest_1",
+            "guest_2"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "3-6s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, locked-off camera, eye-level, from the rose-bush side of the aisle",
+          "visual": "Lauren, leaning against the front-row chair on the hedge side, looks Natalie up and down and arches a brow; behind her, out of focus, Guest 1 and Guest 2 stand at the cocktail table with their flutes.",
+          "audio": "Dialogue (Lauren, in English, icy drawl): {A rented dress and a broke groom. At least they match.}",
+          "characters": [
+            "lauren",
+            "guest_1",
+            "guest_2"
+          ],
+          "lines": [
+            1
+          ]
+        },
+        {
+          "time": "6-8s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up, clean single framed tight on face and shoulders, locked-off camera, eye-level",
+          "visual": "Natalie, under the arch, turns her head toward Lauren and holds her stepmother's eyes with a level, cold gaze.",
+          "audio": "Dialogue (Natalie, in English, quiet and cutting): {You picked him.}",
+          "characters": [
+            "natalie"
+          ],
+          "lines": [
+            2
+          ]
+        },
+        {
+          "time": "8-11s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, over-the-shoulder shot from behind Natalie's shoulder, eye-level",
+          "visual": "Sebastian, on the hedge side of the arch, leans slightly toward Natalie with a lazy, amused half-smile, the back of Natalie's veil in the foreground.",
+          "audio": "Dialogue (Sebastian, in English, low and teasing): {Don't worry. My family doesn't like me either.}",
+          "characters": [
+            "sebastian",
+            "natalie"
+          ],
+          "lines": [
+            3
+          ]
+        },
+        {
+          "time": "11-13s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, locked-off camera, eye-level, Sebastian's shoulder at one frame edge and George's arm at the other",
+          "visual": "Natalie, bouquet still at her waist, looks up at Sebastian and a small smile breaks across her face.",
+          "audio": "Dialogue (Natalie, in English, dry and warm): {Good. One less family to impress.}",
+          "characters": [
+            "natalie",
+            "sebastian",
+            "george"
+          ],
+          "lines": [
+            4
+          ]
+        },
+        {
+          "time": "13-16s",
+          "size": "medium shot",
+          "angle": "low angle",
+          "camera": "Medium shot, slight low angle, locked-off camera, the arch drapes framing him",
+          "visual": "The Officiant, hands clasped, looks from Natalie to Sebastian; their shoulders show at both frame edges.",
+          "audio": "Dialogue (Officiant, in English, measured and ceremonial): {Natalie, Sebastian. Are you both ready to marry?}",
+          "characters": [
+            "officiant",
+            "natalie",
+            "sebastian"
+          ],
+          "lines": [
+            5
+          ]
+        },
+        {
+          "time": "16-18s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, clean single on her face, locked-off camera, eye-level",
+          "visual": "Natalie lifts her chin and gives a firm nod, her eyes steady.",
+          "audio": "Dialogue (Natalie, in English, firm): {Yes.}",
+          "characters": [
+            "natalie"
+          ],
+          "lines": [
+            6
+          ]
+        },
+        {
+          "time": "18-20s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up, clean single, slow push in on Sebastian, eye-level",
+          "visual": "Sebastian glances past Natalie toward Cassie and Lauren at the head of the aisle, then back at her with a sly grin.",
+          "audio": "Dialogue (Sebastian, in English, lazy murmur): {Let's give them something to hate.}",
+          "characters": [
+            "sebastian"
+          ],
+          "lines": [
+            7
+          ]
+        },
+        {
+          "time": "20-22s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, locked-off camera, eye-level, from the aisle on the rose-bush side",
+          "visual": "The Officiant opens his clasped hands toward the couple, with Natalie and Sebastian at the frame edges.",
+          "audio": "Dialogue (Officiant, in English, warm and resonant): {Then I pronounce you married.}",
+          "characters": [
+            "officiant",
+            "natalie",
+            "sebastian"
+          ],
+          "lines": [
+            8
+          ]
+        },
+        {
+          "time": "22-25s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, three-shot under the arch, handheld camera, eye-level",
+          "visual": "Sebastian offers Natalie his open hand. Natalie pushes the bouquet into George's hands beside her, ignores Sebastian's hand, grabs his satin lapels and pulls him close.",
+          "audio": "<Fabric rustles>",
+          "characters": [
+            "natalie",
+            "sebastian",
+            "george"
+          ],
+          "lines": []
+        },
+        {
+          "time": "25-27s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, slow orbit around the couple on the aisle side, starting on Natalie's profile and ending on Sebastian's, eye-level",
+          "visual": "Natalie and Sebastian share a brief kiss under the white roses, her hands still holding his lapels.",
+          "audio": "<A few guests gasp softly>",
+          "characters": [
+            "natalie",
+            "sebastian"
+          ],
+          "lines": []
+        },
+        {
+          "time": "27-29s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, locked-off camera, eye-level, from the rose-bush side of the aisle",
+          "visual": "Cassie, in front of the arch on the rose-bush side, lowers the gift box and stares with her lips parted, and Lauren, against the front-row chair on the hedge side, stiffens.",
+          "audio": "",
+          "characters": [
+            "cassie",
+            "lauren"
+          ],
+          "lines": []
+        }
+      ],
+      "light_audio": "High sunlight from the rose-bush side gives warm, soft highlights; the white drapes glow. Live sound: birdsong, leaves rustling, faint murmurs from the guests.",
+      "dialogue": [
+        {
+          "speaker": "cassie",
+          "line": "Nothing. Just like your husband's bank account."
+        },
+        {
+          "speaker": "lauren",
+          "line": "A rented dress and a broke groom. At least they match."
+        },
+        {
+          "speaker": "natalie",
+          "line": "You picked him."
+        },
+        {
+          "speaker": "sebastian",
+          "line": "Don't worry. My family doesn't like me either."
+        },
+        {
+          "speaker": "natalie",
+          "line": "Good. One less family to impress."
+        },
+        {
+          "speaker": "officiant",
+          "line": "Natalie, Sebastian. Are you both ready to marry?"
+        },
+        {
+          "speaker": "natalie",
+          "line": "Yes."
+        },
+        {
+          "speaker": "sebastian",
+          "line": "Let's give them something to hate."
+        },
+        {
+          "speaker": "officiant",
+          "line": "Then I pronounce you married."
+        }
+      ],
+      "must_hit": [
+        "Cassie tips the empty gift box toward Natalie",
+        "Natalie hands her bouquet to George and pulls Sebastian close by his lapels instead of taking his hand",
+        "Natalie and Sebastian share a brief kiss under the arch"
+      ],
+      "exit_state": "Natalie and Sebastian stand close together, face to face, under the centre of the wedding arch, Natalie's hands lowering from his lapels, Sebastian on the boxwood-hedge side. George stands beside Natalie under the arch on the rose-bush side, holding the bouquet. The Officiant stands just behind the couple at the centre of the arch, facing down the aisle. Cassie stands at the head of the aisle a step in front of Natalie on the rose-bush side, holding the empty gift box. Lauren stands at the head of the aisle against the front-row chair on the boxwood-hedge side, her handbag on her arm. Natalie's phone lies face up on the seat of the front-row chair on the rose-bush side. Guest 1 (arch side) and Guest 2 (aisle side) stand at the one small round white high cocktail table on the boxwood-hedge side, each holding a champagne flute, Guest 1's phone in the clutch under her arm.",
+      "negative": [
+        "added or missing characters, spatial jumps",
+        "malformed hands on the lapels, the bouquet or the gift box",
+        "subtitles or garbled text"
+      ]
+    },
+    {
+      "id": "seg02",
+      "duration": 26,
+      "location": "wedding_garden",
+      "scene_heading": "4-1 Day | Ext. Garden of the wedding venue",
+      "time": "Day, bright sunny garden light",
+      "characters": [
+        "cassie",
+        "sebastian",
+        "natalie",
+        "officiant",
+        "guest_2",
+        "guest_1",
+        "george",
+        "lauren"
+      ],
+      "states": {
+        "natalie": "S1",
+        "sebastian": "S2",
+        "cassie": "S1",
+        "lauren": "S1",
+        "george": "S1"
+      },
+      "props": [
+        "gift_box",
+        "champagne_glasses"
+      ],
+      "first_state": "Natalie and Sebastian stand close together, face to face, under the centre of the wedding arch, Natalie's hands lowering from his lapels, Sebastian on the boxwood-hedge side. George stands beside Natalie under the arch on the rose-bush side, holding the bouquet. The Officiant stands just behind the couple at the centre of the arch, facing down the aisle. Cassie stands at the head of the aisle a step in front of Natalie on the rose-bush side, holding the empty gift box. Lauren stands at the head of the aisle against the front-row chair on the boxwood-hedge side, her handbag on her arm. Natalie's phone lies face up on the seat of the front-row chair on the rose-bush side. Guest 1 (arch side) and Guest 2 (aisle side) stand at the one small round white high cocktail table on the boxwood-hedge side, each holding a champagne flute, Guest 1's phone in the clutch under her arm.",
+      "shots": [
+        {
+          "time": "0-4s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, handheld camera following Cassie from in front of Natalie to Sebastian's side, eye-level, from the rose-bush side of the aisle",
+          "visual": "Cassie steps past the front of Natalie to Sebastian's hedge side under the arch and reaches for his arm with a seductive smile, the empty gift box in her other hand; Natalie and the Officiant stand behind them.",
+          "audio": "Dialogue (Cassie, in English, sing-song and flirty): {Didn't know you could do that. Want to try with the prettier sister?}",
+          "characters": [
+            "cassie",
+            "sebastian",
+            "natalie",
+            "officiant"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "4-6s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, three-shot, locked-off camera, eye-level",
+          "visual": "Sebastian steps back out of Cassie's reach to Natalie's side and glances at Natalie; Cassie's hand closes on air and she backs off toward Lauren at the front-row chair on the hedge side.",
+          "audio": "Dialogue (Sebastian, in English, unhurried): {I already did.}",
+          "characters": [
+            "sebastian",
+            "cassie",
+            "natalie"
+          ],
+          "lines": [
+            1
+          ]
+        },
+        {
+          "time": "6-8s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, locked-off camera, eye-level",
+          "visual": "At the cocktail table by the hedge, Guest 2 laughs into her champagne glass while Guest 1 beside her, flute in hand, covers a grin.",
+          "audio": "<A stifled laugh, a glass clinks>",
+          "characters": [
+            "guest_2",
+            "guest_1"
+          ],
+          "lines": []
+        },
+        {
+          "time": "8-10s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, clean single on her face, locked-off camera, eye-level",
+          "visual": "Cassie's smile drops; she flushes and glares toward the cocktail table, her fingers tightening on the gift box.",
+          "audio": "",
+          "characters": [
+            "cassie"
+          ],
+          "lines": []
+        },
+        {
+          "time": "10-12s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, locked-off camera, eye-level, Sebastian's shoulder at one frame edge and George's arm at the other",
+          "visual": "Natalie, under the arch, turns toward Lauren at the front-row chair on the hedge side and holds out her palm; George beside her grips the bouquet.",
+          "audio": "Dialogue (Natalie, in English, steely): {Wedding's over, Lauren. Where's the money?}",
+          "characters": [
+            "natalie",
+            "sebastian",
+            "george"
+          ],
+          "lines": [
+            2
+          ]
+        },
+        {
+          "time": "12-14s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up insert, locked-off camera, eye-level",
+          "visual": "Lauren's hands clutch her small handbag tight against her hip, her diamond ring flashing.",
+          "audio": "",
+          "characters": [
+            "lauren"
+          ],
+          "lines": []
+        },
+        {
+          "time": "14-16s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, locked-off camera, eye-level, from the rose-bush side of the aisle, Cassie's shoulder at the frame edge",
+          "visual": "Lauren, against the front-row chair on the hedge side with Cassie now beside her, lifts her chin with a thin, dismissive smile.",
+          "audio": "Dialogue (Lauren, in English, clipped and cold): {We'll discuss that later.}",
+          "characters": [
+            "lauren",
+            "cassie"
+          ],
+          "lines": [
+            3
+          ]
+        },
+        {
+          "time": "16-18s",
+          "size": "medium shot",
+          "angle": "low angle",
+          "camera": "Medium shot, slight low angle, slow push in on Sebastian, eye-line toward the head of the aisle",
+          "visual": "Sebastian steps up beside Natalie, still on her boxwood-hedge side, and fixes his eyes on Lauren.",
+          "audio": "Dialogue (Sebastian, in English, calm and commanding): {Fifty thousand. You promised. Pay her.}",
+          "characters": [
+            "sebastian",
+            "natalie"
+          ],
+          "lines": [
+            4
+          ]
+        },
+        {
+          "time": "18-21s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, locked-off camera, eye-level, Lauren's shoulder at the frame edge",
+          "visual": "Cassie, beside Lauren at the front-row chair, folds her arms over the gift box and tilts her head with a sneer.",
+          "audio": "Dialogue (Cassie, in English, mocking valley-girl lilt): {Already begging? You two really are perfect together.}",
+          "characters": [
+            "cassie",
+            "lauren"
+          ],
+          "lines": [
+            5
+          ]
+        },
+        {
+          "time": "21-24s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up, clean single, locked-off camera, eye-level",
+          "visual": "Sebastian smiles lazily, his steel-grey eyes moving from Cassie to Lauren.",
+          "audio": "Dialogue (Sebastian, in English, smooth and amused): {Funny. You're the ones who can't afford to keep your word.}",
+          "characters": [
+            "sebastian"
+          ],
+          "lines": [
+            6
+          ]
+        },
+        {
+          "time": "24-26s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, locked-off camera, eye-level, from the rose-bush side of the aisle",
+          "visual": "Lauren's jaw tightens against the front-row chair, and Cassie beside her shoots a glare toward the arch.",
+          "audio": "",
+          "characters": [
+            "lauren",
+            "cassie"
+          ],
+          "lines": []
+        }
+      ],
+      "light_audio": "High sunlight from the rose-bush side, warm soft highlights on the arch and the lawn. Live sound: birdsong, a light breeze in the drapes, guests murmuring.",
+      "dialogue": [
+        {
+          "speaker": "cassie",
+          "line": "Didn't know you could do that. Want to try with the prettier sister?"
+        },
+        {
+          "speaker": "sebastian",
+          "line": "I already did."
+        },
+        {
+          "speaker": "natalie",
+          "line": "Wedding's over, Lauren. Where's the money?"
+        },
+        {
+          "speaker": "lauren",
+          "line": "We'll discuss that later."
+        },
+        {
+          "speaker": "sebastian",
+          "line": "Fifty thousand. You promised. Pay her."
+        },
+        {
+          "speaker": "cassie",
+          "line": "Already begging? You two really are perfect together."
+        },
+        {
+          "speaker": "sebastian",
+          "line": "Funny. You're the ones who can't afford to keep your word."
+        }
+      ],
+      "must_hit": [
+        "Sebastian steps out of Cassie's reach when she grabs for his arm",
+        "Guest 2 laughs into her champagne glass",
+        "Lauren grips her handbag when Natalie asks for the money"
+      ],
+      "exit_state": "Natalie and Sebastian stand side by side under the centre of the wedding arch, facing down the aisle, Sebastian on the boxwood-hedge side of Natalie. George stands beside Natalie under the arch on the rose-bush side, holding the bouquet. The Officiant stands just behind the couple at the centre of the arch. Lauren stands at the head of the aisle against the front-row chair on the boxwood-hedge side, gripping her handbag, and Cassie stands beside her on her arch side, arms folded over the empty gift box. Natalie's phone lies face up on the seat of the front-row chair on the rose-bush side. Guest 1 (arch side) and Guest 2 (aisle side) stand at the one small round white high cocktail table on the boxwood-hedge side, each holding a champagne flute, Guest 1's phone in the clutch under her arm.",
+      "negative": [
+        "added or missing characters, spatial jumps",
+        "malformed hands",
+        "subtitles or garbled text"
+      ]
+    },
+    {
+      "id": "seg03",
+      "duration": 23,
+      "location": "wedding_garden",
+      "scene_heading": "4-1 Day | Ext. Garden of the wedding venue",
+      "time": "Day, bright sunny garden light",
+      "characters": [
+        "guest_1",
+        "guest_2",
+        "lauren",
+        "cassie",
+        "sebastian",
+        "natalie",
+        "george",
+        "officiant"
+      ],
+      "states": {
+        "natalie": "S1",
+        "sebastian": "S2",
+        "cassie": "S1",
+        "lauren": "S1",
+        "george": "S1"
+      },
+      "props": [
+        "lauren_phone",
+        "natalie_phone"
+      ],
+      "first_state": "Natalie and Sebastian stand side by side under the centre of the wedding arch, facing down the aisle, Sebastian on the boxwood-hedge side of Natalie. George stands beside Natalie under the arch on the rose-bush side, holding the bouquet. The Officiant stands just behind the couple at the centre of the arch. Lauren stands at the head of the aisle against the front-row chair on the boxwood-hedge side, gripping her handbag, and Cassie stands beside her on her arch side, arms folded over the empty gift box. Natalie's phone lies face up on the seat of the front-row chair on the rose-bush side. Guest 1 (arch side) and Guest 2 (aisle side) stand at the one small round white high cocktail table on the boxwood-hedge side, each holding a champagne flute, Guest 1's phone in the clutch under her arm.",
+      "shots": [
+        {
+          "time": "0-2s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, locked-off camera, eye-level",
+          "visual": "At the cocktail table by the hedge, Guest 1 sets her flute on the silver tray, pulls her pink phone from her clutch and raises it vertically toward the family to record, and Guest 2 leans in beside her with her champagne glass.",
+          "audio": "<A soft recording beep>",
+          "characters": [
+            "guest_1",
+            "guest_2"
+          ],
+          "lines": []
+        },
+        {
+          "time": "2-4s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, quick whip pan following Lauren's turn, eye-level, Cassie's shoulder at the frame edge",
+          "visual": "Lauren, at the front-row chair on the hedge side, spins toward the cocktail table and jabs a finger at Guest 1, Cassie beside her.",
+          "audio": "Dialogue (Lauren, in English, snapping): {Put that away!}",
+          "characters": [
+            "lauren",
+            "cassie"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "4-7s",
+          "size": "medium shot",
+          "angle": "low angle",
+          "camera": "Medium shot, slight low angle, slow push in on Sebastian",
+          "visual": "Sebastian, beside Natalie under the arch, spreads one hand toward the raised phone with a cool smile, his eyes on Lauren.",
+          "audio": "Dialogue (Sebastian, in English, smooth and cutting): {Smile, Lauren. Tell everyone how you used}",
+          "characters": [
+            "sebastian",
+            "natalie"
+          ],
+          "lines": [
+            1
+          ]
+        },
+        {
+          "time": "7-9s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up, clean single framed tight on face and shoulders, locked-off camera, eye-level",
+          "visual": "Natalie's eyes glisten and her jaw sets as she looks at Lauren.",
+          "audio": "Dialogue (Sebastian, in English, smooth and cutting): {her mother's hospital bill to buy this wedding.}",
+          "characters": [
+            "natalie"
+          ],
+          "lines": [
+            1
+          ]
+        },
+        {
+          "time": "9-11s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, locked-off camera, eye-level, from the rose-bush side of the aisle",
+          "visual": "George crosses from beside Natalie under the arch to Lauren's aisle side at the front-row chair, the bouquet in one hand, and grips her arm with the other, his face set.",
+          "audio": "Dialogue (George, in English, low and unusually firm): {Lauren. Pay her. Now.}",
+          "characters": [
+            "george",
+            "lauren"
+          ],
+          "lines": [
+            2
+          ]
+        },
+        {
+          "time": "11-14s",
+          "size": "close-up",
+          "angle": "high angle",
+          "camera": "Close-up, high angle over her hands, locked-off camera",
+          "visual": "Lauren pulls her phone in its lilac case from her handbag and stabs furiously at the banking transfer page with her thumb.",
+          "audio": "<Sharp screen taps>",
+          "characters": [
+            "lauren"
+          ],
+          "lines": []
+        },
+        {
+          "time": "14-16s",
+          "size": "close-up",
+          "angle": "high angle",
+          "camera": "Close-up insert, high angle, locked-off camera",
+          "visual": "Natalie's phone lights up on the seat of the front-row chair on the rose-bush side, and Natalie's hand lifts it, the bank notification banner on the lock screen.",
+          "audio": "<A phone chimes>",
+          "characters": [
+            "natalie"
+          ],
+          "lines": []
+        },
+        {
+          "time": "16-18s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, locked-off camera, eye-level, from the rose-bush side of the aisle",
+          "visual": "Natalie, now standing at the rose-bush end of the arch beside the front-row chair, looks up from her phone at Lauren; the Officiant stands behind her under the arch.",
+          "audio": "Dialogue (Natalie, in English, cool and satisfied): {Got it.}",
+          "characters": [
+            "natalie",
+            "officiant"
+          ],
+          "lines": [
+            3
+          ]
+        },
+        {
+          "time": "18-21s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up, clean single, locked-off camera, eye-level",
+          "visual": "Sebastian, under the arch, slips his hands into his pockets and gives Lauren a lazy smile.",
+          "audio": "Dialogue (Sebastian, in English, lazy and mocking): {There. Now you can afford to look generous.}",
+          "characters": [
+            "sebastian"
+          ],
+          "lines": [
+            4
+          ]
+        },
+        {
+          "time": "21-23s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, clean single on her face, locked-off camera, eye-level",
+          "visual": "Lauren lowers her phone, her lips pressed into a thin line and her nostrils flaring.",
+          "audio": "",
+          "characters": [
+            "lauren"
+          ],
+          "lines": []
+        }
+      ],
+      "light_audio": "High sunlight from the rose-bush side, warm highlights; the phone screens glow faintly. Live sound: birdsong, the breeze, guests murmuring, screen taps, a notification chime.",
+      "dialogue": [
+        {
+          "speaker": "lauren",
+          "line": "Put that away!"
+        },
+        {
+          "speaker": "sebastian",
+          "line": "Smile, Lauren. Tell everyone how you used her mother's hospital bill to buy this wedding."
+        },
+        {
+          "speaker": "george",
+          "line": "Lauren. Pay her. Now."
+        },
+        {
+          "speaker": "natalie",
+          "line": "Got it."
+        },
+        {
+          "speaker": "sebastian",
+          "line": "There. Now you can afford to look generous."
+        }
+      ],
+      "must_hit": [
+        "Guest 1 raises her phone to record the family",
+        "Lauren taps furiously on her phone to send the money",
+        "Natalie's phone chimes with the transfer notification"
+      ],
+      "exit_state": "Natalie stands at the rose-bush end of the wedding arch beside the front-row chair on the rose-bush side, holding her phone; Sebastian stands beside her under the arch on her boxwood-hedge side, hands in pockets; the Officiant stands just behind them at the centre of the arch. Lauren stands at the head of the aisle against the front-row chair on the boxwood-hedge side, her phone lowered in one hand; Cassie stands beside her on her arch side, arms folded over the empty gift box; George stands on Lauren's aisle side, holding the bouquet. Guest 1, holding up her phone, her flute on the silver tray, and Guest 2, holding a champagne flute, stand at the one small round white high cocktail table on the boxwood-hedge side.",
+      "negative": [
+        "added or missing characters, spatial jumps",
+        "garbled or wrong text on the phone screens",
+        "subtitles"
+      ]
+    },
+    {
+      "id": "seg04",
+      "duration": 19,
+      "location": "wedding_garden",
+      "scene_heading": "4-1 Day | Ext. Garden of the wedding venue",
+      "time": "Day, bright sunny garden light",
+      "characters": [
+        "cassie",
+        "lauren",
+        "george",
+        "guest_1",
+        "guest_2",
+        "natalie",
+        "sebastian",
+        "officiant"
+      ],
+      "states": {
+        "natalie": "S1",
+        "sebastian": "S2",
+        "cassie": "S1",
+        "lauren": "S1",
+        "george": "S1"
+      },
+      "props": [
+        "gift_box",
+        "front_door_key"
+      ],
+      "first_state": "Natalie stands at the rose-bush end of the wedding arch beside the front-row chair on the rose-bush side, holding her phone; Sebastian stands beside her under the arch on her boxwood-hedge side, hands in pockets; the Officiant stands just behind them at the centre of the arch. Lauren stands at the head of the aisle against the front-row chair on the boxwood-hedge side, her phone lowered in one hand; Cassie stands beside her on her arch side, arms folded over the empty gift box; George stands on Lauren's aisle side, holding the bouquet. Guest 1, holding up her phone, her flute on the silver tray, and Guest 2, holding a champagne flute, stand at the one small round white high cocktail table on the boxwood-hedge side.",
+      "shots": [
+        {
+          "time": "0-2s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up insert, locked-off camera, eye-level",
+          "visual": "Cassie's hands crush the empty white gift box into a crumpled shape, its ribbon twisting.",
+          "audio": "<Cardboard crunches>",
+          "characters": [
+            "cassie"
+          ],
+          "lines": []
+        },
+        {
+          "time": "2-4s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, handheld camera tracking backward ahead of Lauren down the aisle, eye-level",
+          "visual": "Lauren turns on her heel from the front-row chair and marches down the petal aisle toward the gravel path, her face rigid.",
+          "audio": "<Heels strike the runner>",
+          "characters": [
+            "lauren"
+          ],
+          "lines": []
+        },
+        {
+          "time": "4-7s",
+          "size": "wide shot",
+          "angle": "high angle",
+          "camera": "Wide shot, high angle from the gravel-path end of the aisle, locked-off camera",
+          "visual": "George lays the bouquet on the front-row chair on the boxwood-hedge side, and he, Cassie with the crumpled box, Guest 1 and Guest 2 hurry down the aisle after Lauren and out onto the gravel path, leaving Natalie, Sebastian and the Officiant alone under the arch.",
+          "audio": "<Footsteps on gravel fade>",
+          "characters": [
+            "george",
+            "cassie",
+            "guest_1",
+            "guest_2",
+            "lauren",
+            "natalie",
+            "sebastian",
+            "officiant"
+          ],
+          "lines": []
+        },
+        {
+          "time": "7-9s",
+          "size": "close-up",
+          "angle": "high angle",
+          "camera": "Close-up insert, high angle on their hands",
+          "visual": "Sebastian places the brass house key into Natalie's open palm.",
+          "audio": "",
+          "characters": [
+            "sebastian",
+            "natalie"
+          ],
+          "lines": []
+        },
+        {
+          "time": "9-11s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, dirty single, Sebastian's shoulder at the frame edge, eye-level",
+          "visual": "Natalie, at the rose-bush end of the arch, looks from the key up to Sebastian with a puzzled frown.",
+          "audio": "Dialogue (Natalie, in English, curious): {What's this?}",
+          "characters": [
+            "natalie",
+            "sebastian"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "11-14s",
+          "size": "medium close-up",
+          "angle": "low angle",
+          "camera": "Medium close-up, slight low angle, slow push in on Sebastian",
+          "visual": "Sebastian leans closer to Natalie with a slow, confident smile.",
+          "audio": "Dialogue (Sebastian, in English, low confident murmur): {Our front door. You're coming home with me tonight.}",
+          "characters": [
+            "sebastian"
+          ],
+          "lines": [
+            1
+          ]
+        },
+        {
+          "time": "14-16s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up insert, locked-off camera, eye-level",
+          "visual": "Natalie's fingers close slowly around the key.",
+          "audio": "",
+          "characters": [
+            "natalie"
+          ],
+          "lines": []
+        },
+        {
+          "time": "16-19s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up, clean single, slow push in to her face, eye-level",
+          "visual": "Natalie raises one brow and meets Sebastian's eyes with a challenging look, the key held to her chest.",
+          "audio": "Dialogue (Natalie, in English, wry and challenging): {Fine. But whose bed am I sleeping in?}",
+          "characters": [
+            "natalie"
+          ],
+          "lines": [
+            2
+          ]
+        }
+      ],
+      "light_audio": "High sunlight from the rose-bush side, warm highlights on the brass key and the white roses. Live sound: footsteps fading on gravel, birdsong, the breeze in the drapes.",
+      "dialogue": [
+        {
+          "speaker": "natalie",
+          "line": "What's this?"
+        },
+        {
+          "speaker": "sebastian",
+          "line": "Our front door. You're coming home with me tonight."
+        },
+        {
+          "speaker": "natalie",
+          "line": "Fine. But whose bed am I sleeping in?"
+        }
+      ],
+      "must_hit": [
+        "Cassie crushes the empty gift box",
+        "Lauren marches away and George, Cassie and the guests follow her out",
+        "Sebastian puts a key in Natalie's hand and she closes her fingers around it"
+      ],
+      "exit_state": "Natalie stands at the rose-bush end of the wedding arch beside the front-row chair on the rose-bush side, the key closed in her hand at her chest and her phone in the other hand, facing Sebastian, who stands close beside her under the arch on her boxwood-hedge side; the Officiant stands just behind them at the centre of the arch. The bouquet lies on the front-row chair on the boxwood-hedge side. Lauren, George, Cassie, Guest 1 and Guest 2 have left down the aisle and out along the gravel path; the aisle and the cocktail table are empty.",
+      "negative": [
+        "added or missing characters, spatial jumps",
+        "malformed hands or a wrong key shape",
+        "subtitles or garbled text"
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "type": "title",
+      "text": "EP004 Pay Her",
+      "at": "seg01 start"
+    },
+    {
+      "type": "caption",
+      "text": "Transfer received: $50,000.",
+      "at": "seg03, shot 7 (14-16s), when Natalie's phone chimes"
+    },
+    {
+      "type": "ending",
+      "text": "To be continued",
+      "at": "seg04 end"
+    }
+  ],
+  "bible_version": "v3"
+}

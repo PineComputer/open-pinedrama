@@ -1,0 +1,689 @@
+{
+  "episode": "EP005",
+  "title": "Boyfriend on Probation",
+  "segments": [
+    {
+      "id": "seg01",
+      "duration": 25,
+      "location": "apartment_corridor",
+      "scene_heading": "INT. APARTMENT CORRIDOR - NIGHT #5-1#",
+      "time": "Night, warm interior corridor light",
+      "characters": [
+        "lu_shaoze",
+        "lin_qingyu",
+        "ji_ran"
+      ],
+      "states": {
+        "lu_shaoze": "S1",
+        "lin_qingyu": "S2",
+        "ji_ran": "S3"
+      },
+      "props": [
+        "grocery_bag",
+        "black_handbag"
+      ],
+      "first_state": "In the short corridor there is one walnut apartment door, Ji Ran's, set in the cream wall panels, with a runner rug along the stone floor and wall sconces glowing on both walls. Ji Ran and Lin Qingyu stand side by side on the runner rug with their backs to Ji Ran's apartment door. Lin Qingyu's right arm is around Ji Ran's waist, and the grocery bag full of greens hangs from his left hand. Ji Ran holds the black handbag on her shoulder. Lu Shaoze stands on the runner rug one step in front of them, facing Ji Ran's apartment door, and glares at Lin Qingyu's arm. The camera stays on the side of the cream wall opposite Ji Ran's apartment door and sees the three in profile.",
+      "shots": [
+        {
+          "time": "0-3s",
+          "size": "wide shot",
+          "angle": "eye level",
+          "camera": "Wide shot, slow push in, eye-level, camera on the wall opposite Ji Ran's door, the three in profile",
+          "visual": "Ji Ran and Lin Qingyu stand in front of Ji Ran's apartment door, his arm around her waist and the grocery bag full of greens in his other hand. Lu Shaoze faces them on the runner rug and fixes his eyes on Lin Qingyu's arm.",
+          "audio": "<Soft hum of the corridor lights>",
+          "characters": [
+            "ji_ran",
+            "lin_qingyu",
+            "lu_shaoze"
+          ],
+          "lines": []
+        },
+        {
+          "time": "3-5s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up, locked-off camera, eye-level, over Lin Qingyu's shoulder onto Lu Shaoze",
+          "visual": "Lu Shaoze jerks his chin at the arm around Ji Ran, and his mouth twists with contempt.",
+          "audio": "Dialogue (Lu Shaoze, in Mandarin, sneering and cold): {你谁啊，手拿开。}",
+          "characters": [
+            "lu_shaoze",
+            "lin_qingyu"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "5-7s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, handheld, eye-level, framing Lin Qingyu and Ji Ran in front of her door",
+          "visual": "Lin Qingyu smiles brightly, takes his right arm from Ji Ran's waist and holds his right hand out toward Lu Shaoze.",
+          "audio": "",
+          "characters": [
+            "lin_qingyu",
+            "ji_ran"
+          ],
+          "lines": []
+        },
+        {
+          "time": "7-11s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up, slow push in on Lin Qingyu, eye-level",
+          "visual": "Lin Qingyu keeps his hand extended and smiles sweetly at Lu Shaoze, with the grocery bag full of greens swinging at his side.",
+          "audio": "Dialogue (Lin Qingyu, in Mandarin, sweet and cheerful): {哟，你好。我是纪然男朋友，林青羽。}",
+          "characters": [
+            "lin_qingyu"
+          ],
+          "lines": [
+            1
+          ]
+        },
+        {
+          "time": "11-14s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, locked-off camera, eye-level, on Ji Ran",
+          "visual": "Ji Ran slides her eyes sideways toward Lin Qingyu, and the corner of her mouth twitches as she holds back a smile.",
+          "audio": "Dialogue (Lin Qingyu, in Mandarin, teasing whine): {哎呀姐姐也真是的，有客人来了，}",
+          "characters": [
+            "ji_ran"
+          ],
+          "lines": [
+            1
+          ]
+        },
+        {
+          "time": "14-17s",
+          "size": "medium shot",
+          "angle": "low angle",
+          "camera": "Medium shot, slight low angle, handheld, on Lin Qingyu",
+          "visual": "Lin Qingyu tilts his head with mock innocence and waves his free hand toward Ji Ran's apartment door.",
+          "audio": "Dialogue (Lin Qingyu, in Mandarin, teasing whine): {怎么不让进家门呢，站在门口说话呢。}",
+          "characters": [
+            "lin_qingyu"
+          ],
+          "lines": [
+            1
+          ]
+        },
+        {
+          "time": "17-19s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, quick push in, eye-level, on Lu Shaoze",
+          "visual": "Lu Shaoze stares at the offered hand without taking it, and his jaw clenches. Out of focus behind him, Lin Qingyu lowers the hand and puts his arm back around Ji Ran's waist.",
+          "audio": "",
+          "characters": [
+            "lu_shaoze"
+          ],
+          "lines": []
+        },
+        {
+          "time": "19-22s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up, over-the-shoulder shot past Ji Ran onto Lu Shaoze, eye-level",
+          "visual": "Lu Shaoze leans toward Ji Ran and presses a hand to his own chest.",
+          "audio": "Dialogue (Lu Shaoze, in Mandarin, indignant and drawling): {纪然，我才是你的联姻对象，}",
+          "characters": [
+            "lu_shaoze",
+            "ji_ran"
+          ],
+          "lines": [
+            2
+          ]
+        },
+        {
+          "time": "22-25s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, locked-off camera, eye-level, two-shot of Ji Ran and Lin Qingyu with Lu Shaoze's pointing arm in the foreground",
+          "visual": "Lu Shaoze jabs a finger at Lin Qingyu, who stays close beside Ji Ran in front of her door with his arm around her waist.",
+          "audio": "Dialogue (Lu Shaoze, in Mandarin, sputtering): {旁边这男的怎么回事啊？}",
+          "characters": [
+            "lu_shaoze",
+            "lin_qingyu",
+            "ji_ran"
+          ],
+          "lines": [
+            2
+          ]
+        }
+      ],
+      "light_audio": "Warm recessed downlights overhead and soft side-glow from the wall sconces; quiet corridor hum and the rustle of the grocery bag.",
+      "dialogue": [
+        {
+          "speaker": "lu_shaoze",
+          "line": "你谁啊，手拿开。"
+        },
+        {
+          "speaker": "lin_qingyu",
+          "line": "哟，你好。我是纪然男朋友，林青羽。 哎呀姐姐也真是的，有客人来了，怎么不让进家门呢，站在门口说话呢。"
+        },
+        {
+          "speaker": "lu_shaoze",
+          "line": "纪然，我才是你的联姻对象，旁边这男的怎么回事啊？"
+        }
+      ],
+      "must_hit": [
+        "Lu Shaoze glares at Lin Qingyu's arm around Ji Ran",
+        "Lin Qingyu smiles and offers his right hand to Lu Shaoze",
+        "Lu Shaoze points at Lin Qingyu"
+      ],
+      "exit_state": "Ji Ran and Lin Qingyu stand side by side on the runner rug with their backs to Ji Ran's apartment door, his right arm around her waist and the grocery bag full of greens in his left hand; Ji Ran has the black handbag on her shoulder. Lu Shaoze stands on the runner rug one step in front of them, facing Ji Ran's apartment door, pointing angrily at Lin Qingyu. The camera stays on the side of the cream wall opposite Ji Ran's apartment door.",
+      "negative": [
+        "subtitles or garbled text",
+        "Lu Shaoze shaking Lin Qingyu's hand",
+        "camera crossing to the door side of the corridor"
+      ]
+    },
+    {
+      "id": "seg02",
+      "duration": 23,
+      "location": "apartment_corridor",
+      "scene_heading": "INT. APARTMENT CORRIDOR - NIGHT #5-1#",
+      "time": "Night, warm interior corridor light",
+      "characters": [
+        "lin_qingyu",
+        "ji_ran",
+        "lu_shaoze"
+      ],
+      "states": {
+        "lin_qingyu": "S2",
+        "ji_ran": "S3",
+        "lu_shaoze": "S1"
+      },
+      "props": [
+        "grocery_bag",
+        "black_handbag"
+      ],
+      "first_state": "Ji Ran and Lin Qingyu stand side by side on the runner rug with their backs to Ji Ran's apartment door, his right arm around her waist and the grocery bag full of greens in his left hand; Ji Ran has the black handbag on her shoulder. Lu Shaoze stands on the runner rug one step in front of them, facing Ji Ran's apartment door, pointing angrily at Lin Qingyu. The camera stays on the side of the cream wall opposite Ji Ran's apartment door.",
+      "shots": [
+        {
+          "time": "0-3s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, locked-off camera, eye-level, two-shot of Ji Ran and Lin Qingyu in front of her door",
+          "visual": "Ji Ran folds her arms and rolls her eyes at Lu Shaoze, while Lin Qingyu keeps his arm around her waist.",
+          "audio": "Dialogue (Ji Ran, in Mandarin, flat and exasperated): {我不都跟你说了吗，}",
+          "characters": [
+            "ji_ran",
+            "lin_qingyu"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "3-6s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, slow push in on Ji Ran, eye-level",
+          "visual": "Ji Ran leans her head toward Lin Qingyu's shoulder and gives Lu Shaoze a cool, steady look.",
+          "audio": "Dialogue (Ji Ran, in Mandarin, cool and clipped): {我已经有男朋友了，正准备结婚。}",
+          "characters": [
+            "ji_ran"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "6-8s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up, handheld, eye-level, over Ji Ran's shoulder onto Lu Shaoze",
+          "visual": "Lu Shaoze's eyes widen, and he takes a sharp step forward on the runner rug.",
+          "audio": "",
+          "characters": [
+            "lu_shaoze",
+            "ji_ran"
+          ],
+          "lines": []
+        },
+        {
+          "time": "8-11s",
+          "size": "medium shot",
+          "angle": "low angle",
+          "camera": "Medium shot, low angle, handheld, on Lu Shaoze",
+          "visual": "Lu Shaoze throws both hands out in disbelief.",
+          "audio": "Dialogue (Lu Shaoze, in Mandarin, rising indignation): {不可能！我们在一块四年，}",
+          "characters": [
+            "lu_shaoze"
+          ],
+          "lines": [
+            1
+          ]
+        },
+        {
+          "time": "11-15s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, quick push in on Lu Shaoze's face, eye-level",
+          "visual": "Lu Shaoze smirks smugly at Ji Ran and taps his own chest.",
+          "audio": "Dialogue (Lu Shaoze, in Mandarin, smug and drawling): {你那么爱我，怎么可能跟别人在一块？}",
+          "characters": [
+            "lu_shaoze"
+          ],
+          "lines": [
+            1
+          ]
+        },
+        {
+          "time": "15-18s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up, locked-off camera, eye-level, on Ji Ran with Lin Qingyu at her shoulder",
+          "visual": "Ji Ran lifts her chin, and Lin Qingyu bites back a grin beside her.",
+          "audio": "Dialogue (Ji Ran, in Mandarin, deadpan): {可我就是跟别人在一起了，}",
+          "characters": [
+            "ji_ran",
+            "lin_qingyu"
+          ],
+          "lines": [
+            2
+          ]
+        },
+        {
+          "time": "18-21s",
+          "size": "close-up",
+          "angle": "low angle",
+          "camera": "Close-up, slight low angle, locked-off camera, on Ji Ran",
+          "visual": "Ji Ran raises one eyebrow at Lu Shaoze in open challenge.",
+          "audio": "Dialogue (Ji Ran, in Mandarin, cutting and sarcastic): {怎么？你咬我啊？}",
+          "characters": [
+            "ji_ran"
+          ],
+          "lines": [
+            2
+          ]
+        },
+        {
+          "time": "21-23s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, locked-off camera, eye-level, on Lu Shaoze",
+          "visual": "Lu Shaoze's mouth falls open, and his hands freeze halfway in the air.",
+          "audio": "",
+          "characters": [
+            "lu_shaoze"
+          ],
+          "lines": []
+        }
+      ],
+      "light_audio": "Warm recessed downlights overhead and soft side-glow from the wall sconces; quiet corridor hum.",
+      "dialogue": [
+        {
+          "speaker": "ji_ran",
+          "line": "我不都跟你说了吗，我已经有男朋友了，正准备结婚。"
+        },
+        {
+          "speaker": "lu_shaoze",
+          "line": "不可能！我们在一块四年，你那么爱我，怎么可能跟别人在一块？"
+        },
+        {
+          "speaker": "ji_ran",
+          "line": "可我就是跟别人在一起了，怎么？你咬我啊？"
+        }
+      ],
+      "must_hit": [
+        "Ji Ran declares she has a boyfriend while Lin Qingyu holds her",
+        "Lu Shaoze protests in disbelief",
+        "Ji Ran challenges Lu Shaoze, and he is left gaping"
+      ],
+      "exit_state": "Ji Ran and Lin Qingyu stand side by side on the runner rug with their backs to Ji Ran's apartment door, his right arm around her waist and the grocery bag full of greens in his left hand; Ji Ran has the black handbag on her shoulder and her arms folded. Lu Shaoze stands on the runner rug one step in front of them, facing Ji Ran's apartment door, gaping. The camera stays on the side of the cream wall opposite Ji Ran's apartment door.",
+      "negative": [
+        "subtitles or garbled text",
+        "camera crossing to the door side of the corridor",
+        "characters speaking at the same time"
+      ]
+    },
+    {
+      "id": "seg03",
+      "duration": 23,
+      "location": "apartment_corridor",
+      "scene_heading": "INT. APARTMENT CORRIDOR - NIGHT #5-1#",
+      "time": "Night, warm interior corridor light",
+      "characters": [
+        "lin_qingyu",
+        "lu_shaoze",
+        "ji_ran"
+      ],
+      "states": {
+        "lin_qingyu": "S2",
+        "lu_shaoze": "S1",
+        "ji_ran": "S3"
+      },
+      "props": [
+        "grocery_bag",
+        "black_handbag"
+      ],
+      "first_state": "Ji Ran and Lin Qingyu stand side by side on the runner rug with their backs to Ji Ran's apartment door, his right arm around her waist and the grocery bag full of greens in his left hand; Ji Ran has the black handbag on her shoulder and her arms folded. Lu Shaoze stands on the runner rug one step in front of them, facing Ji Ran's apartment door, gaping. The camera stays on the side of the cream wall opposite Ji Ran's apartment door.",
+      "shots": [
+        {
+          "time": "0-3s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, slow push in on Lin Qingyu, eye-level",
+          "visual": "Lin Qingyu lets go of Ji Ran and leans toward Lu Shaoze with an exaggerated, concerned frown.",
+          "audio": "Dialogue (Lin Qingyu, in Mandarin, sweet and mock-concerned): {我看你脸色不太好，}",
+          "characters": [
+            "lin_qingyu"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "3-6s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, locked-off camera, eye-level, on Lu Shaoze",
+          "visual": "Lu Shaoze's face reddens, and a vein tightens at his temple.",
+          "audio": "Dialogue (Lin Qingyu, in Mandarin, sweet and mock-concerned): {是不是身体哪里不舒服呀，}",
+          "characters": [
+            "lu_shaoze"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "6-10s",
+          "size": "medium close-up",
+          "angle": "low angle",
+          "camera": "Medium close-up, slight low angle, handheld, on Lin Qingyu",
+          "visual": "Lin Qingyu gives Lu Shaoze an innocent, wide-eyed smile.",
+          "audio": "Dialogue (Lin Qingyu, in Mandarin, teasing lilt): {您年纪也不小了，要多注意身体，才行呀。}",
+          "characters": [
+            "lin_qingyu"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "10-12s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up insert, locked-off camera, eye-level, on Lu Shaoze's shoulder",
+          "visual": "Lin Qingyu's hand pats Lu Shaoze's navy suit shoulder twice.",
+          "audio": "<Two light pats on suit fabric>",
+          "characters": [
+            "lin_qingyu",
+            "lu_shaoze"
+          ],
+          "lines": []
+        },
+        {
+          "time": "12-14s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, handheld whip, eye-level, two-shot of Lu Shaoze and Lin Qingyu",
+          "visual": "Lu Shaoze slaps Lin Qingyu's hand off his shoulder.",
+          "audio": "<A sharp slap of hands>",
+          "characters": [
+            "lu_shaoze",
+            "lin_qingyu"
+          ],
+          "lines": []
+        },
+        {
+          "time": "14-17s",
+          "size": "medium close-up",
+          "angle": "low angle",
+          "camera": "Medium close-up, low angle, handheld, on Lu Shaoze",
+          "visual": "Lu Shaoze jabs his finger back and forth between Ji Ran and Lin Qingyu, his mouth opening and closing without a word, shaking with fury.",
+          "audio": "<An angry, choked exhale>",
+          "characters": [
+            "lu_shaoze"
+          ],
+          "lines": []
+        },
+        {
+          "time": "17-19s",
+          "size": "wide shot",
+          "angle": "eye level",
+          "camera": "Wide shot, locked-off camera, eye-level, down the corridor",
+          "visual": "Lu Shaoze spins round and storms off along the runner rug, away from Ji Ran's apartment door.",
+          "audio": "<Hard footsteps fading down the corridor>",
+          "characters": [
+            "lu_shaoze",
+            "ji_ran",
+            "lin_qingyu"
+          ],
+          "lines": []
+        },
+        {
+          "time": "19-21s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, slow push in, eye-level, two-shot of Ji Ran and Lin Qingyu in front of her door",
+          "visual": "Ji Ran and Lin Qingyu turn their heads and exchange a look.",
+          "audio": "",
+          "characters": [
+            "ji_ran",
+            "lin_qingyu"
+          ],
+          "lines": []
+        },
+        {
+          "time": "21-23s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, locked-off camera, eye-level, on Lin Qingyu",
+          "visual": "Lin Qingyu breaks into a wide, mischievous grin and lifts the grocery bag full of greens.",
+          "audio": "",
+          "characters": [
+            "lin_qingyu"
+          ],
+          "lines": []
+        }
+      ],
+      "light_audio": "Warm recessed downlights overhead and soft side-glow from the wall sconces; corridor hum, a slap, footsteps receding.",
+      "dialogue": [
+        {
+          "speaker": "lin_qingyu",
+          "line": "我看你脸色不太好，是不是身体哪里不舒服呀，您年纪也不小了，要多注意身体，才行呀。"
+        }
+      ],
+      "must_hit": [
+        "Lin Qingyu pats Lu Shaoze's shoulder and Lu Shaoze knocks his hand away",
+        "Lu Shaoze points furiously, speechless, then storms off",
+        "Ji Ran and Lin Qingyu exchange a look and Lin Qingyu grins"
+      ],
+      "exit_state": "Ji Ran and Lin Qingyu stand side by side on the runner rug with their backs to Ji Ran's apartment door, looking at each other; Lin Qingyu grins with the grocery bag full of greens in his left hand, and Ji Ran has the black handbag on her shoulder. Lu Shaoze is gone down the corridor.",
+      "negative": [
+        "subtitles or garbled text",
+        "Lu Shaoze speaking while pointing",
+        "a fistfight"
+      ]
+    },
+    {
+      "id": "seg04",
+      "duration": 6,
+      "location": "city_road",
+      "scene_heading": "EXT. CITY ARTERIAL ROAD - NIGHT #5-2#",
+      "time": "Dusk turning to night, blue-indigo sky",
+      "characters": [],
+      "first_state": "An empty plate of the wide multi-lane arterial road between glass office towers at dusk, with traffic packing the lanes and the streetlights along the median still off.",
+      "shots": [
+        {
+          "time": "0-2s",
+          "size": "extreme wide shot",
+          "angle": "high angle",
+          "camera": "Extreme wide shot, high angle, slow pan across the road",
+          "visual": "Headlights and taillights pack every lane between the glass office towers under a blue dusk sky.",
+          "audio": "<Distant traffic rumble>",
+          "characters": [],
+          "lines": []
+        },
+        {
+          "time": "2-4s",
+          "size": "wide shot",
+          "angle": "low angle",
+          "camera": "Wide shot, low angle, locked-off camera, along the median",
+          "visual": "The streetlights along the median flicker on one after another.",
+          "audio": "<Car horns in the distance>",
+          "characters": [],
+          "lines": []
+        },
+        {
+          "time": "4-6s",
+          "size": "extreme wide shot",
+          "angle": "eye level",
+          "camera": "Extreme wide shot, eye-level, slow push in toward the towers",
+          "visual": "The sky darkens to indigo, and office windows light up above the stream of traffic.",
+          "audio": "<Traffic rumble>",
+          "characters": [],
+          "lines": []
+        }
+      ],
+      "light_audio": "Fading dusk sky, headlights and taillights, streetlights coming on, lit office windows; city traffic rumble.",
+      "dialogue": [],
+      "must_hit": [
+        "Traffic packs the road between office towers",
+        "Streetlights come on as the sky darkens"
+      ],
+      "exit_state": "The arterial road at nightfall, streetlights lit and traffic flowing.",
+      "negative": [
+        "subtitles or garbled text",
+        "readable signs or billboards",
+        "people in close view"
+      ]
+    },
+    {
+      "id": "seg05",
+      "duration": 17,
+      "location": "ji_ran_living_room",
+      "scene_heading": "INT. JI RAN'S LIVING ROOM - NIGHT #5-3#",
+      "time": "Night, warm lamp and pendant light",
+      "characters": [
+        "lin_qingyu",
+        "ji_ran"
+      ],
+      "states": {
+        "lin_qingyu": "S2",
+        "ji_ran": "S3"
+      },
+      "first_state": "The pale linen sofa sits on the patterned rug in front of the single marble-and-glass coffee table, with the open kitchen and its white island behind and the floor lamp beside the sofa. Lin Qingyu sits slouched on the pale sofa. Ji Ran stands on the far side of the marble-and-glass coffee table, opposite him and facing the sofa, with her arms folded. The camera stays at the floor-lamp end of the sofa, seeing both across the coffee table.",
+      "shots": [
+        {
+          "time": "0-3s",
+          "size": "wide shot",
+          "angle": "eye level",
+          "camera": "Wide shot, slow push in, eye-level, from the floor-lamp end of the sofa",
+          "visual": "Lin Qingyu sits slouched on the pale sofa, and Ji Ran stands across the marble-and-glass coffee table from him with her arms folded and city lights in the windows behind.",
+          "audio": "<Quiet room tone>",
+          "characters": [
+            "lin_qingyu",
+            "ji_ran"
+          ],
+          "lines": []
+        },
+        {
+          "time": "3-7s",
+          "size": "medium shot",
+          "angle": "low angle",
+          "camera": "Medium shot, low angle from sofa height, locked-off camera, on Ji Ran",
+          "visual": "Ji Ran looks down at Lin Qingyu with her arms folded and one eyebrow raised.",
+          "audio": "Dialogue (Ji Ran, in Mandarin, cool and skeptical): {你面试都没通过，这次来想干嘛？}",
+          "characters": [
+            "ji_ran"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "7-9s",
+          "size": "medium shot",
+          "angle": "high angle",
+          "camera": "Medium shot, slight high angle, handheld, on Lin Qingyu on the sofa",
+          "visual": "Lin Qingyu sits up straight on the sofa and lifts his eyes to meet Ji Ran's.",
+          "audio": "",
+          "characters": [
+            "lin_qingyu"
+          ],
+          "lines": []
+        },
+        {
+          "time": "9-12s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, slow push in on Lin Qingyu, eye-level",
+          "visual": "Lin Qingyu holds Ji Ran's gaze with a sincere, steady look and a hint of a smile.",
+          "audio": "Dialogue (Lin Qingyu, in Mandarin, earnest and warm): {我来争取一个试用期。}",
+          "characters": [
+            "lin_qingyu"
+          ],
+          "lines": [
+            1
+          ]
+        },
+        {
+          "time": "12-14s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, locked-off camera, eye-level, on Ji Ran",
+          "visual": "Ji Ran's lips part slightly, and her folded arms loosen a little.",
+          "audio": "",
+          "characters": [
+            "ji_ran"
+          ],
+          "lines": []
+        },
+        {
+          "time": "14-17s",
+          "size": "wide shot",
+          "angle": "eye level",
+          "camera": "Wide shot, slow pull out, eye-level, from the floor-lamp end of the sofa",
+          "visual": "Soft glowing light and snowlike flecks drift across the image as Ji Ran and Lin Qingyu look at each other across the coffee table.",
+          "audio": "",
+          "characters": [
+            "ji_ran",
+            "lin_qingyu"
+          ],
+          "lines": []
+        }
+      ],
+      "light_audio": "Warm pendant lights over the kitchen island, the floor lamp beside the sofa and soft ceiling cove light, with city lights beyond the windows; quiet room tone.",
+      "dialogue": [
+        {
+          "speaker": "ji_ran",
+          "line": "你面试都没通过，这次来想干嘛？"
+        },
+        {
+          "speaker": "lin_qingyu",
+          "line": "我来争取一个试用期。"
+        }
+      ],
+      "must_hit": [
+        "Ji Ran stands with arms folded opposite Lin Qingyu on the sofa",
+        "Lin Qingyu sits up and meets her eyes",
+        "Soft light and snowlike flecks drift across the final image"
+      ],
+      "exit_state": "Lin Qingyu sits upright on the pale sofa looking up at Ji Ran; Ji Ran stands on the far side of the marble-and-glass coffee table facing him, arms loosely folded, as soft snowlike flecks drift across the image. The camera stays at the floor-lamp end of the sofa.",
+      "negative": [
+        "subtitles or garbled text",
+        "Ji Ran sitting down",
+        "camera crossing behind the sofa"
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "type": "location",
+      "text": "Ji Ran's home",
+      "at": "seg05, start, over the wide shot of the living room"
+    },
+    {
+      "type": "ending",
+      "text": "To be continued",
+      "at": "seg05, end"
+    }
+  ],
+  "bible_version": "v2"
+}

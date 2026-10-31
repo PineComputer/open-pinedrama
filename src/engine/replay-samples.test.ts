@@ -5,6 +5,7 @@ import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { describe, expect, it, vi } from "vitest";
+import { breakdownShots } from "../shared/breakdown.ts";
 import { sampleKey, samplesFrom } from "./replay-samples.ts";
 
 function folder(files: Record<string, string | Uint8Array>) {
@@ -75,10 +76,27 @@ describe("replay's samples", () => {
     expect(sample("paper-vows", "handoff/infinite-canvas.zip")).toMatchObject({ path: "handoff/infinite-canvas.zip", type: "application/zip" });
   });
 
-  it("are named in replay's own samples.json by the keys sampleKey makes, so every one can be found", () => {
+  it("are named in replay's own samples.json so every one can be found: a key with an extension names a file of that extension", () => {
     const table = JSON.parse(readFileSync(path.join("fixtures/replay/samples/samples.json"), "utf8")) as Record<string, unknown>;
-    const keys = Object.values(table).flatMap((set) => (set && typeof set === "object" ? Object.keys(set) : []));
-    // A key keeps no extension: one with ".mp4" is never looked up, and replay draws its placeholder instead.
-    expect(keys.filter((key) => /\.[a-z0-9]+$/i.test(key))).toEqual([]);
+    const pairs = Object.values(table).flatMap((set) => (set && typeof set === "object" ? Object.entries(set as Record<string, string>) : []));
+    // A key with an extension is looked up exactly (replay asks for that very file); a file of another type under it would be served
+    // as the wrong thing, as a breakdown.md answering for breakdown.json.
+    const ext = (name: string) => name.match(/\.[a-z0-9]+$/i)?.[0];
+    expect(pairs.filter(([key, file]) => ext(key) !== undefined && ext(key) !== ext(file))).toEqual([]);
+  });
+
+  it("find a key with an extension exactly, so a breakdown's .md and .json stand side by side, and an .md never answers for the .json", () => {
+    const table = { s: { "drama/episodes/EP001/breakdown/v2/breakdown.md": "s/b.md", "drama/episodes/EP002/breakdown/v2/breakdown.md": "s/c.md", "drama/episodes/EP001/breakdown/v2/breakdown.json": "s/b.json" } };
+    const sample = samplesFrom(folder({ "samples.json": JSON.stringify(table), "s/b.md": "# EP001", "s/c.md": "# EP002", "s/b.json": '{"segments":[]}' }));
+    expect(sample("s", "drama/episodes/EP001/breakdown/v2/breakdown.md")).toMatchObject({ type: "text/markdown" });
+    expect(sample("s", "drama/episodes/EP001/breakdown/v2/breakdown.json")).toMatchObject({ path: "drama/episodes/EP001/breakdown/v2/breakdown.json", type: "application/json" });
+    expect(sample("s", "drama/episodes/EP002/breakdown/v2/breakdown.json")).toBeUndefined();
+  });
+
+  it("carry each real-run sample's breakdown.json as drama-cli wrote it, which the shots are read from", () => {
+    const table = JSON.parse(readFileSync(path.join("fixtures/replay/samples/samples.json"), "utf8")) as Record<string, Record<string, string>>;
+    const files = Object.values(table).flatMap((set) => (set && typeof set === "object" ? Object.entries(set) : [])).filter(([key]) => key.endsWith("/breakdown.json"));
+    expect(files.length).toBeGreaterThan(0);
+    for (const [key, file] of files) expect(breakdownShots(JSON.parse(readFileSync(path.join("fixtures/replay/samples", file), "utf8"))).size, key).toBeGreaterThan(0);
   });
 });

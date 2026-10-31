@@ -1,0 +1,409 @@
+{
+  "episode": "EP003",
+  "title": "Too Young to Marry",
+  "segments": [
+    {
+      "id": "seg01",
+      "duration": 27,
+      "location": "ji_ran_office",
+      "scene_heading": "INT. JI RAN'S OFFICE - DAY #3-1#",
+      "time": "Day, grey rainy daylight through the floor-to-ceiling windows, warm ceiling spots",
+      "characters": [
+        "lin_qingyu",
+        "ji_ran",
+        "xu_banxia"
+      ],
+      "states": {
+        "lin_qingyu": "S1",
+        "ji_ran": "S2"
+      },
+      "first_state": "Camera on the front-wall side, by the pin-up wall, facing the walnut desk and the walnut door on the right wall; the camera stays on this side throughout. Lin Qingyu stands at the open walnut door on the right wall, just inside it on the pale oak floor, soaked, breathless, hair dripping, facing into the room. Ji Ran stands on the open oak floor a step from the walnut door, facing Lin Qingyu. Xu Banxia stands at the door-side corner of the walnut desk, facing them. There is one walnut desk in front of the floor-to-ceiling windows, one high-backed black leather chair behind it and one walnut door.",
+      "shots": [
+        {
+          "time": "0-2s",
+          "size": "wide shot",
+          "angle": "eye level",
+          "camera": "Wide shot, locked-off camera, eye level, from the pin-up wall facing the walnut desk and the walnut door",
+          "visual": "Rain streaks the floor-to-ceiling windows. Lin Qingyu stands dripping just inside the open walnut door, Ji Ran stands on the oak floor a step from the door facing him, and Xu Banxia stands at the door-side corner of the desk.",
+          "audio": "<Heavy rain drums on the window glass>",
+          "characters": [
+            "lin_qingyu",
+            "ji_ran",
+            "xu_banxia"
+          ],
+          "lines": []
+        },
+        {
+          "time": "2-6s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium front shot, handheld, eye level, from the pin-up wall side angled toward the walnut door, dirty single of Lin Qingyu with Ji Ran's shoulder at the frame edge",
+          "visual": "Lin Qingyu, chest heaving, wet T-shirt clinging to him, pushes his wet fringe back and bows his head apologetically, Ji Ran's shoulder at the frame edge.",
+          "audio": "Dialogue (Lin Qingyu, in Chinese, breathless and apologetic): {抱歉，我来晚了。 没想到今天下这么大雨，}",
+          "characters": [
+            "lin_qingyu",
+            "ji_ran"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "6-10s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up, slow push in on Ji Ran, eye level, from the pin-up wall side angled toward the desk, clean single framed on face and shoulders",
+          "visual": "Ji Ran lets her eyes travel slowly from Lin Qingyu's face down his soaked body.",
+          "audio": "Dialogue (Lin Qingyu, in Chinese, panting, quick): {我自行车链子掉了，一路跑过来的。}",
+          "characters": [
+            "ji_ran"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "10-14s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, locked-off camera, eye level, clean single of Ji Ran framed tight on face and shoulders",
+          "visual": "Ji Ran's mouth stays closed; one corner of her lips lifts in a cool, appraising half-smile.",
+          "audio": "Dialogue (Ji Ran, V.O., in Chinese, cool and amused inner voice): {脸长得好，身材也不错，带出去够有面。}",
+          "characters": [
+            "ji_ran"
+          ],
+          "lines": [
+            1
+          ]
+        },
+        {
+          "time": "14-17s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, follow Xu Banxia from the desk corner to the walnut door, eye level, from the pin-up wall side",
+          "visual": "Xu Banxia presses her lips together to hold in a laugh, walks from the desk corner past Ji Ran and Lin Qingyu, steps out through the walnut door and pulls it shut behind her.",
+          "audio": "<Door clicks shut>",
+          "characters": [
+            "xu_banxia",
+            "ji_ran",
+            "lin_qingyu"
+          ],
+          "lines": []
+        },
+        {
+          "time": "17-20s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, follow Ji Ran around Lin Qingyu, eye level, camera on the pin-up wall side",
+          "visual": "Ji Ran folds her arms and walks slowly around Lin Qingyu, inspecting him, ending in front of him on the desk side, facing him, while he stands just inside the closed door.",
+          "audio": "<Stiletto heels click on the oak floor>",
+          "characters": [
+            "ji_ran",
+            "lin_qingyu"
+          ],
+          "lines": []
+        },
+        {
+          "time": "20-23s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up insert, locked-off camera, eye level, on Lin Qingyu's stomach",
+          "visual": "Ji Ran's finger pokes Lin Qingyu's abdomen through the wet white T-shirt, the fabric denting with each poke.",
+          "audio": "Dialogue (Ji Ran, in Chinese, deadpan counting): {一、二、三、四。 } <Cartoon boing with each poke>",
+          "characters": [
+            "ji_ran",
+            "lin_qingyu"
+          ],
+          "lines": [
+            2
+          ]
+        },
+        {
+          "time": "23-25s",
+          "size": "medium close-up",
+          "angle": "low angle",
+          "camera": "Medium close-up, handheld, low angle on Lin Qingyu, dirty single with Ji Ran's shoulder at the frame edge",
+          "visual": "Lin Qingyu stands stiffly with his arms at his sides, a bead of sweat sliding down his forehead, eyes darting down to her hand.",
+          "audio": "Dialogue (Ji Ran, in Chinese, crisp): {你叫什么名字？}",
+          "characters": [
+            "lin_qingyu",
+            "ji_ran"
+          ],
+          "lines": [
+            2
+          ]
+        },
+        {
+          "time": "25-27s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, over-the-shoulder from behind Ji Ran, eye level, angled toward the walnut door",
+          "visual": "Over Ji Ran's shoulder, Lin Qingyu swallows, a shy flush on his face.",
+          "audio": "Dialogue (Lin Qingyu, in Chinese, stammering): {林、林青羽。}",
+          "characters": [
+            "ji_ran",
+            "lin_qingyu"
+          ],
+          "lines": [
+            3
+          ]
+        }
+      ],
+      "light_audio": "Grey rainy daylight from the floor-to-ceiling windows behind the desk, warm recessed ceiling spots, the black desk lamp; heavy rain on the glass, heel clicks on oak, a door shutting, cartoon boing effects on the pokes.",
+      "dialogue": [
+        {
+          "speaker": "lin_qingyu",
+          "line": "抱歉，我来晚了。 没想到今天下这么大雨，我自行车链子掉了，一路跑过来的。",
+          "offscreen": false
+        },
+        {
+          "speaker": "ji_ran",
+          "line": "脸长得好，身材也不错，带出去够有面。",
+          "offscreen": true
+        },
+        {
+          "speaker": "ji_ran",
+          "line": "一、二、三、四。 你叫什么名字？",
+          "offscreen": false
+        },
+        {
+          "speaker": "lin_qingyu",
+          "line": "林、林青羽。",
+          "offscreen": false
+        }
+      ],
+      "must_hit": [
+        "Soaked Lin Qingyu apologises at the door",
+        "Xu Banxia holds in a laugh, crosses from the desk and shuts the door behind her",
+        "Ji Ran circles Lin Qingyu and pokes his stomach four times"
+      ],
+      "exit_state": "Camera on the front-wall side, by the pin-up wall, facing the walnut desk and the walnut door on the right wall. Lin Qingyu stands on the pale oak floor just inside the closed walnut door, soaked, sweating, facing the desk. Ji Ran stands in front of him on the desk side, arms folded, facing him. Xu Banxia has left through the walnut door, which is shut. The walnut desk and black leather chair stay in front of the floor-to-ceiling windows.",
+      "negative": [
+        "added or missing characters, spatial jumps",
+        "malformed hands and fingers",
+        "subtitles or garbled text"
+      ]
+    },
+    {
+      "id": "seg02",
+      "duration": 21,
+      "location": "ji_ran_office",
+      "scene_heading": "INT. JI RAN'S OFFICE - DAY #3-1#",
+      "time": "Day, grey rainy daylight through the floor-to-ceiling windows, warm ceiling spots",
+      "characters": [
+        "ji_ran",
+        "lin_qingyu"
+      ],
+      "states": {
+        "lin_qingyu": "S1",
+        "ji_ran": "S2"
+      },
+      "first_state": "Camera on the front-wall side, by the pin-up wall, facing the walnut desk and the walnut door on the right wall. Lin Qingyu stands on the pale oak floor just inside the closed walnut door, soaked, sweating, facing the desk. Ji Ran stands in front of him on the desk side, arms folded, facing him. Xu Banxia has left through the walnut door, which is shut. The walnut desk and black leather chair stay in front of the floor-to-ceiling windows.",
+      "shots": [
+        {
+          "time": "0-2s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, over-the-shoulder from behind Lin Qingyu, eye level, angled toward the desk",
+          "visual": "Over Lin Qingyu's wet shoulder, Ji Ran tilts her head, arms folded, sizing him up.",
+          "audio": "Dialogue (Ji Ran, in Chinese, brisk): {嗯，身高？}",
+          "characters": [
+            "lin_qingyu",
+            "ji_ran"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "2-4s",
+          "size": "medium shot",
+          "angle": "low angle",
+          "camera": "Medium shot, locked-off camera, low angle on Lin Qingyu, from the pin-up wall side angled toward the walnut door, clean single",
+          "visual": "Lin Qingyu straightens up to his full height and squares his shoulders.",
+          "audio": "Dialogue (Lin Qingyu, in Chinese, eager): {一米八六。}",
+          "characters": [
+            "lin_qingyu"
+          ],
+          "lines": [
+            1
+          ]
+        },
+        {
+          "time": "4-5s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up, locked-off camera, eye level on Ji Ran, from the pin-up wall side angled toward the desk, clean single",
+          "visual": "Ji Ran glances down at his waist, one brow raised.",
+          "audio": "Dialogue (Ji Ran, in Chinese, clipped): {体重？}",
+          "characters": [
+            "ji_ran"
+          ],
+          "lines": [
+            2
+          ]
+        },
+        {
+          "time": "5-7s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, handheld, eye level, dirty single of Lin Qingyu with Ji Ran's shoulder at the frame edge",
+          "visual": "Lin Qingyu nods quickly, water dripping from his fringe onto his denim jacket.",
+          "audio": "Dialogue (Lin Qingyu, in Chinese, quick): {六十四公斤。}",
+          "characters": [
+            "lin_qingyu",
+            "ji_ran"
+          ],
+          "lines": [
+            3
+          ]
+        },
+        {
+          "time": "7-8s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, slow push in on Ji Ran, eye level, from the pin-up wall side angled toward the desk, clean single",
+          "visual": "Ji Ran unfolds one hand and taps her chin, eyes narrowing.",
+          "audio": "Dialogue (Ji Ran, in Chinese, crisp): {年龄？}",
+          "characters": [
+            "ji_ran"
+          ],
+          "lines": [
+            4
+          ]
+        },
+        {
+          "time": "8-10s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, locked-off camera, eye level, clean single of Lin Qingyu framed tight on face and shoulders",
+          "visual": "Lin Qingyu flashes a bright, boyish, dimpled smile.",
+          "audio": "Dialogue (Lin Qingyu, in Chinese, sunny): {二十一。}",
+          "characters": [
+            "lin_qingyu"
+          ],
+          "lines": [
+            5
+          ]
+        },
+        {
+          "time": "10-12s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, locked-off camera, eye level on Ji Ran, Lin Qingyu's shoulder in the foreground",
+          "visual": "Ji Ran closes her eyes and sighs, her shoulders dropping in disappointment, arms falling to her sides.",
+          "audio": "<A long sigh>",
+          "characters": [
+            "ji_ran",
+            "lin_qingyu"
+          ],
+          "lines": []
+        },
+        {
+          "time": "12-16s",
+          "size": "medium shot",
+          "angle": "low angle",
+          "camera": "Medium shot, locked-off camera, low angle on Ji Ran, from the pin-up wall side angled toward the desk, Lin Qingyu's shoulder at the frame edge",
+          "visual": "Ji Ran turns her head and points past Lin Qingyu toward the walnut door, expression flat.",
+          "audio": "Dialogue (Ji Ran, in Chinese, cool, deadpan): {未到法定婚龄，出门左拐不送。}",
+          "characters": [
+            "ji_ran",
+            "lin_qingyu"
+          ],
+          "lines": [
+            6
+          ]
+        },
+        {
+          "time": "16-18s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, quick push in on Lin Qingyu, eye level, clean single framed tight on face",
+          "visual": "Lin Qingyu's smile freezes, his eyes widen and his mouth falls open.",
+          "audio": "Dialogue (Lin Qingyu, in Chinese, stunned): {啊？}",
+          "characters": [
+            "lin_qingyu"
+          ],
+          "lines": [
+            7
+          ]
+        },
+        {
+          "time": "18-21s",
+          "size": "wide shot",
+          "angle": "eye level",
+          "camera": "Wide shot, slow pull out, eye level, from the pin-up wall facing the desk and the walnut door",
+          "visual": "Ji Ran stands in front of Lin Qingyu with her arm still pointing at the walnut door while he stares at her; the image softens into drifting, glowing light.",
+          "audio": "<Rain patters softly on the glass>",
+          "characters": [
+            "ji_ran",
+            "lin_qingyu"
+          ],
+          "lines": []
+        }
+      ],
+      "light_audio": "Grey rainy daylight from the floor-to-ceiling windows, warm ceiling spots, the desk lamp; soft rain on the glass, a sigh, room quiet; the final shot blooms into soft drifting light.",
+      "dialogue": [
+        {
+          "speaker": "ji_ran",
+          "line": "嗯，身高？",
+          "offscreen": false
+        },
+        {
+          "speaker": "lin_qingyu",
+          "line": "一米八六。",
+          "offscreen": false
+        },
+        {
+          "speaker": "ji_ran",
+          "line": "体重？",
+          "offscreen": false
+        },
+        {
+          "speaker": "lin_qingyu",
+          "line": "六十四公斤。",
+          "offscreen": false
+        },
+        {
+          "speaker": "ji_ran",
+          "line": "年龄？",
+          "offscreen": false
+        },
+        {
+          "speaker": "lin_qingyu",
+          "line": "二十一。",
+          "offscreen": false
+        },
+        {
+          "speaker": "ji_ran",
+          "line": "未到法定婚龄，出门左拐不送。",
+          "offscreen": false
+        },
+        {
+          "speaker": "lin_qingyu",
+          "line": "啊？",
+          "offscreen": false
+        }
+      ],
+      "must_hit": [
+        "Lin Qingyu answers height, weight and age",
+        "Ji Ran sighs and points him to the door",
+        "Lin Qingyu reacts stunned, and the image softens into drifting light"
+      ],
+      "exit_state": "Camera on the front-wall side, by the pin-up wall, facing the walnut desk and the walnut door on the right wall. Lin Qingyu stands on the pale oak floor just inside the closed walnut door, stunned, mouth open, facing Ji Ran. Ji Ran stands in front of him on the desk side, arm pointing at the walnut door. The walnut desk and black leather chair stay in front of the floor-to-ceiling windows; the image is softened into drifting light.",
+      "negative": [
+        "added or missing characters, spatial jumps",
+        "crossing the camera axis",
+        "subtitles or garbled text"
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "type": "ending",
+      "text": "To be continued",
+      "at": "seg02, end"
+    }
+  ],
+  "bible_version": "v3"
+}

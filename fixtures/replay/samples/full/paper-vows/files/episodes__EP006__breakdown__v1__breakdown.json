@@ -1,0 +1,829 @@
+{
+  "episode": "EP006",
+  "title": "Couch Coins",
+  "bible_version": "v3",
+  "segments": [
+    {
+      "id": "seg01",
+      "duration": 27,
+      "location": "sebastian_apartment",
+      "scene_heading": "6-1 Day | Int. Sebastian's apartment, living room",
+      "time": "Day, soft bright sunlight through the floor-to-ceiling window",
+      "characters": [
+        "natalie",
+        "sebastian"
+      ],
+      "states": {
+        "natalie": "S3",
+        "sebastian": "S4"
+      },
+      "props": [
+        "breakfast",
+        "blanket",
+        "dress_bag",
+        "coins"
+      ],
+      "first_state": "Axis runs between the charcoal couch and the round dining table; the camera stays on the front-wall bookshelves side, in front of both. Natalie stands at the round dining table, on its couch side, in the cornflower-blue wrap dress, setting out breakfast: two white plates and two white mugs. Her small nude handbag lies on the round dining table with the two coins beside it. The long white dress bag hangs over the back of one of the two dining chairs. Sebastian stands between the charcoal couch and the round coffee table, facing the dining table, folding the oatmeal-grey knitted blanket. Sebastian's phone lies face down on the round dining table. Natalie's cropped ivory jacket hangs on the wall hooks beside the front door on the left wall.",
+      "shots": [
+        {
+          "time": "0-3s",
+          "size": "wide shot",
+          "angle": "eye level",
+          "camera": "Wide shot, locked-off camera, eye-level, from the bookshelves side; couch on frame left, dining table on frame right",
+          "visual": "Sunlit living room. Natalie sets two plates of scrambled eggs, toast and strawberries on the round dining table. Sebastian, by the charcoal couch, shakes out the oatmeal-grey blanket and starts folding it.",
+          "audio": "<Ceramic plates touch the wooden table>",
+          "characters": [
+            "natalie",
+            "sebastian"
+          ],
+          "lines": []
+        },
+        {
+          "time": "3-5s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, slight push in on Sebastian, eye-level, from the bookshelves side",
+          "visual": "Sebastian folds the blanket in half against his chest and looks across toward the dining table with a lazy half-smile.",
+          "audio": "Dialogue (Sebastian, in English, teasing murmur): {Still want that divorce?}",
+          "characters": [
+            "sebastian"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "5-8s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, locked-off, eye-level, on Natalie at the dining table",
+          "visual": "Natalie sets a mug of black coffee beside a plate without looking up, her jaw set.",
+          "audio": "Dialogue (Natalie, in English, cool and firm): {Eat. One kiss didn't change the contract.}",
+          "characters": [
+            "natalie"
+          ],
+          "lines": [
+            1
+          ]
+        },
+        {
+          "time": "8-10s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, locked-off, eye-level, on Sebastian's face and shoulders",
+          "visual": "Sebastian's smile widens slightly; he drops the folded blanket onto the couch cushions.",
+          "audio": "<Soft thump of the blanket on the couch>",
+          "characters": [
+            "sebastian"
+          ],
+          "lines": []
+        },
+        {
+          "time": "10-12s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, handheld, eye-level, following Natalie's hands",
+          "visual": "Natalie lifts the long white dress bag off the back of the dining chair and drapes it over her left arm.",
+          "audio": "<Nylon garment bag rustles>",
+          "characters": [
+            "natalie"
+          ],
+          "lines": []
+        },
+        {
+          "time": "12-14s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, over-the-shoulder shot from behind Natalie's shoulder toward Sebastian, eye-level",
+          "visual": "Natalie's shoulder and the dress bag fill the frame edge; Sebastian, beyond her by the couch, nods at the bag and raises an eyebrow.",
+          "audio": "Dialogue (Sebastian, in English, amused): {Another wedding already?}",
+          "characters": [
+            "natalie",
+            "sebastian"
+          ],
+          "lines": [
+            2
+          ]
+        },
+        {
+          "time": "14-16s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, reverse over-the-shoulder shot from behind Sebastian's shoulder toward Natalie, eye-level",
+          "visual": "Sebastian's shoulder at the frame edge; Natalie at the dining table smooths the dress bag on her arm, matter-of-fact.",
+          "audio": "Dialogue (Natalie, in English, flat and practical): {Dress return. I need the deposit back.}",
+          "characters": [
+            "sebastian",
+            "natalie"
+          ],
+          "lines": [
+            3
+          ]
+        },
+        {
+          "time": "16-18s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up, clean single, locked-off, eye-level, on Sebastian",
+          "visual": "Sebastian slides his hands into his chino pockets, relaxed and confident.",
+          "audio": "Dialogue (Sebastian, in English, easy): {Keep it. I'll buy it.}",
+          "characters": [
+            "sebastian"
+          ],
+          "lines": [
+            4
+          ]
+        },
+        {
+          "time": "18-20s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, locked-off, eye-level, on Natalie at the dining table",
+          "visual": "Natalie gives a short disbelieving laugh, slings her handbag on her shoulder and picks up the two coins from the table.",
+          "audio": "Dialogue (Natalie, in English, dry sarcasm): {With what? Couch coins?}",
+          "characters": [
+            "natalie"
+          ],
+          "lines": [
+            5
+          ]
+        },
+        {
+          "time": "20-22s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium two-shot, tracking with Natalie from the dining table to the couch, eye-level, from the bookshelves side",
+          "visual": "Natalie walks to Sebastian and ends standing in front of the round coffee table facing him; she takes his hand, turns it palm up and drops the two coins into it.",
+          "audio": "<Two coins clink into a palm>",
+          "characters": [
+            "natalie",
+            "sebastian"
+          ],
+          "lines": []
+        },
+        {
+          "time": "22-23s",
+          "size": "close-up",
+          "angle": "high angle",
+          "camera": "Close-up insert, high angle, locked-off, on Sebastian's open palm",
+          "visual": "Two silver quarters lie in Sebastian's palm.",
+          "audio": "",
+          "characters": [
+            "sebastian"
+          ],
+          "lines": []
+        },
+        {
+          "time": "23-25s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up, clean single, locked-off, eye-level, on Natalie",
+          "visual": "Natalie tilts her head with a small teasing smile, the dress bag over her arm.",
+          "audio": "Dialogue (Natalie, in English, teasing): {Found those under my bag.}",
+          "characters": [
+            "natalie"
+          ],
+          "lines": [
+            6
+          ]
+        },
+        {
+          "time": "25-27s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, clean single, slow push in, eye-level, on Sebastian's face and shoulders",
+          "visual": "Natalie is off screen. Sebastian looks down at the coins, a slow amused smile spreading, and closes his fingers around them.",
+          "audio": "Dialogue (Natalie, in English, teasing): {Don't spend it all at once.}",
+          "characters": [
+            "sebastian"
+          ],
+          "lines": [
+            6
+          ]
+        }
+      ],
+      "light_audio": "Soft bright daylight from the floor-to-ceiling window on the back wall; quiet room tone, faint city hum through the glass, clink of dishes.",
+      "dialogue": [
+        {
+          "speaker": "sebastian",
+          "line": "Still want that divorce?"
+        },
+        {
+          "speaker": "natalie",
+          "line": "Eat. One kiss didn't change the contract."
+        },
+        {
+          "speaker": "sebastian",
+          "line": "Another wedding already?"
+        },
+        {
+          "speaker": "natalie",
+          "line": "Dress return. I need the deposit back."
+        },
+        {
+          "speaker": "sebastian",
+          "line": "Keep it. I'll buy it."
+        },
+        {
+          "speaker": "natalie",
+          "line": "With what? Couch coins?"
+        },
+        {
+          "speaker": "natalie",
+          "line": "Found those under my bag. Don't spend it all at once."
+        }
+      ],
+      "must_hit": [
+        "Natalie sets breakfast on the dining table while Sebastian folds the blanket at the couch",
+        "Natalie picks up the white dress bag",
+        "Natalie drops two coins into Sebastian's palm"
+      ],
+      "exit_state": "Natalie stands in front of the round coffee table facing Sebastian, the dress bag over her left arm and her small nude handbag on her shoulder, in the cornflower-blue wrap dress. Sebastian stands between the charcoal couch and the round coffee table facing her, the two coins closed in his right hand. The folded blanket lies on the couch. Breakfast and Sebastian's phone, face down, are on the round dining table. The cropped ivory jacket hangs on the wall hooks beside the front door.",
+      "negative": [
+        "added or missing characters, spatial jumps",
+        "malformed hands or extra coins",
+        "subtitles or garbled text"
+      ]
+    },
+    {
+      "id": "seg02",
+      "duration": 15,
+      "location": "sebastian_apartment",
+      "scene_heading": "6-1 Day | Int. Sebastian's apartment, living room",
+      "time": "Day, soft bright sunlight through the floor-to-ceiling window",
+      "characters": [
+        "natalie",
+        "sebastian"
+      ],
+      "states": {
+        "natalie": "S3>S4",
+        "sebastian": "S4"
+      },
+      "props": [
+        "dress_bag",
+        "coins",
+        "sebastian_phone"
+      ],
+      "first_state": "Natalie stands in front of the round coffee table facing Sebastian, the dress bag over her left arm and her small nude handbag on her shoulder, in the cornflower-blue wrap dress. Sebastian stands between the charcoal couch and the round coffee table facing her, the two coins closed in his right hand. The folded blanket lies on the couch. Breakfast and Sebastian's phone, face down, are on the round dining table. The cropped ivory jacket hangs on the wall hooks beside the front door.",
+      "shots": [
+        {
+          "time": "0-3s",
+          "size": "wide shot",
+          "angle": "eye level",
+          "camera": "Wide shot, slow pan following Natalie from the coffee table to the front door, eye-level, from the bookshelves side",
+          "visual": "Natalie walks to the front door on the left wall, takes the cropped ivory bouclé jacket off the wall hook and pulls it on over her dress, the dress bag still on her arm; Sebastian stays by the couch watching her.",
+          "audio": "<Heels tap across the oak floor>",
+          "characters": [
+            "natalie",
+            "sebastian"
+          ],
+          "lines": []
+        },
+        {
+          "time": "3-5s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, locked-off, eye-level, on the front door",
+          "visual": "Natalie, now in the open cropped jacket, opens the dark-grey front door, glances back once, steps out and the door swings shut behind her.",
+          "audio": "<Front door clicks shut>",
+          "characters": [
+            "natalie"
+          ],
+          "lines": []
+        },
+        {
+          "time": "5-7s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, tracking with Sebastian from the couch to the dining table, eye-level",
+          "visual": "Sebastian walks to the round dining table and stops on its couch side, opening his hand over the table.",
+          "audio": "<Footsteps on the oak floor>",
+          "characters": [
+            "sebastian"
+          ],
+          "lines": []
+        },
+        {
+          "time": "7-8s",
+          "size": "close-up",
+          "angle": "high angle",
+          "camera": "Close-up insert, high angle, locked-off, on the table top",
+          "visual": "Sebastian's fingers set the two coins down beside his face-down phone.",
+          "audio": "<Coins tap on wood>",
+          "characters": [
+            "sebastian"
+          ],
+          "lines": []
+        },
+        {
+          "time": "8-10s",
+          "size": "medium close-up",
+          "angle": "low angle",
+          "camera": "Medium close-up, low angle, slow tilt up from the table to Sebastian's face",
+          "visual": "Sebastian picks up the phone, taps it and lifts it to his ear; his lazy smile drops into a cold, focused look.",
+          "audio": "<Phone dial tone>",
+          "characters": [
+            "sebastian"
+          ],
+          "lines": []
+        },
+        {
+          "time": "10-13s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, locked-off, eye-level, on Sebastian's face and the phone",
+          "visual": "Sebastian speaks low into the phone, eyes fixed on the closed front door.",
+          "audio": "Dialogue (Sebastian, in English, low commanding murmur): {Find out what the Quinns have been doing to her.}",
+          "characters": [
+            "sebastian"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "13-15s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, locked-off, eye-level, from the bookshelves side",
+          "visual": "Daniel is off screen, his voice coming from the phone. Sebastian lowers the phone from his ear and stands at the dining table.",
+          "audio": "Dialogue (Daniel, V.O., in English, brisk): {On it, boss.}",
+          "characters": [
+            "sebastian"
+          ],
+          "lines": [
+            1
+          ]
+        }
+      ],
+      "light_audio": "Soft bright daylight from the back-wall window; room tone, footsteps, the front door closing, a faint phone tone.",
+      "dialogue": [
+        {
+          "speaker": "sebastian",
+          "line": "Find out what the Quinns have been doing to her."
+        },
+        {
+          "speaker": "daniel",
+          "line": "On it, boss.",
+          "offscreen": true
+        }
+      ],
+      "must_hit": [
+        "Natalie puts on the cropped ivory jacket and leaves through the front door",
+        "Sebastian sets the two coins beside his phone",
+        "Sebastian calls on the phone"
+      ],
+      "exit_state": "Natalie has left through the front door, which is closed. Sebastian stands at the couch side of the round dining table, his phone in his lowered right hand; the two coins lie on the table. The folded blanket lies on the couch.",
+      "negative": [
+        "added or missing characters, spatial jumps",
+        "jacket appearing before she puts it on",
+        "subtitles or garbled text"
+      ]
+    },
+    {
+      "id": "seg03",
+      "duration": 28,
+      "location": "sebastian_apartment",
+      "scene_heading": "6-2 Day | Int. Sebastian's apartment, living room",
+      "time": "Day, soft bright sunlight through the floor-to-ceiling window",
+      "characters": [
+        "daniel",
+        "sebastian"
+      ],
+      "states": {
+        "sebastian": "S4"
+      },
+      "props": [
+        "folder",
+        "hospital_statement",
+        "coins",
+        "sebastian_phone",
+        "daniel_phone"
+      ],
+      "first_state": "Axis runs across the round dining table; the camera stays on the front-wall bookshelves side, in front of both. Sebastian sits in the dining chair on the couch side of the round dining table, facing the kitchenette. Daniel stands on the kitchenette side of the round dining table, facing Sebastian, holding a manila folder, his phone in his jacket. On the cleared table: Sebastian's phone face down with the two coins beside it.",
+      "shots": [
+        {
+          "time": "0-3s",
+          "size": "wide shot",
+          "angle": "eye level",
+          "camera": "Wide shot, locked-off, eye-level, from the bookshelves side; Sebastian on frame left, Daniel on frame right",
+          "visual": "Daniel lays the manila folder on the round dining table in front of Sebastian, who sits in the dining chair.",
+          "audio": "Dialogue (Daniel, in English, crisp report): {Her father left. Natalie and her mother got nothing.}",
+          "characters": [
+            "daniel",
+            "sebastian"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "3-5s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, locked-off, eye-level, on Sebastian at the table",
+          "visual": "Sebastian flips the folder open; a single creased sheet slides out onto the table.",
+          "audio": "<Paper slides across wood>",
+          "characters": [
+            "sebastian"
+          ],
+          "lines": []
+        },
+        {
+          "time": "5-6s",
+          "size": "close-up",
+          "angle": "overhead shot",
+          "camera": "Close-up insert, overhead shot, locked-off, on the table top",
+          "visual": "The hospital statement lies on the table beside the open folder, its header and total legible.",
+          "audio": "",
+          "characters": [],
+          "lines": []
+        },
+        {
+          "time": "6-8s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, over-the-shoulder shot from behind Sebastian's shoulder toward Daniel, eye-level",
+          "visual": "Sebastian's shoulder at the frame edge; Daniel, across the table, adjusts his rimless glasses.",
+          "audio": "Dialogue (Daniel, in English, even): {She's been paying for treatment alone.}",
+          "characters": [
+            "sebastian",
+            "daniel"
+          ],
+          "lines": [
+            1
+          ]
+        },
+        {
+          "time": "8-10s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up, clean single, slow push in, eye-level, on Sebastian",
+          "visual": "Daniel is off screen. Sebastian picks up the hospital statement and reads it, his jaw tightening.",
+          "audio": "Dialogue (Daniel, in English, even): {They offered help only if she took Cassie's place.}",
+          "characters": [
+            "sebastian"
+          ],
+          "lines": [
+            1
+          ]
+        },
+        {
+          "time": "10-12s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, locked-off, eye-level, on Sebastian's face",
+          "visual": "Sebastian lowers the sheet, his steel-grey eyes hard.",
+          "audio": "Dialogue (Sebastian, in English, cold and quiet): {They sold her.}",
+          "characters": [
+            "sebastian"
+          ],
+          "lines": [
+            2
+          ]
+        },
+        {
+          "time": "12-14s",
+          "size": "medium shot",
+          "angle": "high angle",
+          "camera": "Medium shot, high angle, locked-off, over the table",
+          "visual": "Sebastian slips the statement back into the folder, shuts it and presses his palm flat on the cover; Daniel stands across the table.",
+          "audio": "<Folder snaps shut>",
+          "characters": [
+            "sebastian",
+            "daniel"
+          ],
+          "lines": []
+        },
+        {
+          "time": "14-17s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, dirty single on Daniel with Sebastian's shoulder at the frame edge, eye-level",
+          "visual": "Daniel takes his phone out of his jacket.",
+          "audio": "Dialogue (Daniel, in English, businesslike): {The fifty thousand arrived. It won't cover everything.}",
+          "characters": [
+            "daniel",
+            "sebastian"
+          ],
+          "lines": [
+            3
+          ]
+        },
+        {
+          "time": "17-20s",
+          "size": "medium close-up",
+          "angle": "low angle",
+          "camera": "Medium close-up, low angle, locked-off, on Sebastian",
+          "visual": "Sebastian leans back in the dining chair, one hand still on the folder.",
+          "audio": "Dialogue (Sebastian, in English, low order): {Pay the balance. Every future treatment, too.}",
+          "characters": [
+            "sebastian"
+          ],
+          "lines": [
+            4
+          ]
+        },
+        {
+          "time": "20-22s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, locked-off, eye-level, on Daniel",
+          "visual": "Daniel nods once and taps quickly on his phone screen.",
+          "audio": "<Screen taps>",
+          "characters": [
+            "daniel"
+          ],
+          "lines": []
+        },
+        {
+          "time": "22-24s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up insert, locked-off, eye-level, on Daniel's phone screen",
+          "visual": "Daniel's phone shows the payment confirmation with a green check mark.",
+          "audio": "<Soft confirmation chime>",
+          "characters": [
+            "daniel"
+          ],
+          "lines": []
+        },
+        {
+          "time": "24-26s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, over-the-shoulder shot from behind Sebastian's shoulder toward Daniel, eye-level",
+          "visual": "Sebastian's shoulder at the frame edge; Daniel looks up from the phone at him.",
+          "audio": "Dialogue (Daniel, in English, neutral): {What name do I give her?}",
+          "characters": [
+            "sebastian",
+            "daniel"
+          ],
+          "lines": [
+            5
+          ]
+        },
+        {
+          "time": "26-28s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, clean single, locked-off, eye-level, on Sebastian's face and shoulders",
+          "visual": "Sebastian shakes his head slightly.",
+          "audio": "Dialogue (Sebastian, in English, flat): {Not mine.}",
+          "characters": [
+            "sebastian"
+          ],
+          "lines": [
+            6
+          ]
+        }
+      ],
+      "light_audio": "Soft bright daylight from the back-wall window and the glass pendant lamp over the dining table; quiet room tone, paper rustle, phone taps.",
+      "dialogue": [
+        {
+          "speaker": "daniel",
+          "line": "Her father left. Natalie and her mother got nothing."
+        },
+        {
+          "speaker": "daniel",
+          "line": "She's been paying for treatment alone. They offered help only if she took Cassie's place."
+        },
+        {
+          "speaker": "sebastian",
+          "line": "They sold her."
+        },
+        {
+          "speaker": "daniel",
+          "line": "The fifty thousand arrived. It won't cover everything."
+        },
+        {
+          "speaker": "sebastian",
+          "line": "Pay the balance. Every future treatment, too."
+        },
+        {
+          "speaker": "daniel",
+          "line": "What name do I give her?"
+        },
+        {
+          "speaker": "sebastian",
+          "line": "Not mine."
+        }
+      ],
+      "must_hit": [
+        "Daniel puts the folder in front of Sebastian and the hospital statement falls onto the table",
+        "Sebastian closes the folder",
+        "Daniel's phone shows the payment confirmation"
+      ],
+      "exit_state": "Sebastian sits in the dining chair on the couch side of the round dining table, facing the kitchenette, one hand on the closed folder. Daniel stands on the kitchenette side of the round dining table facing him, his phone in his hand. On the table: the closed folder, Sebastian's phone face down and the two coins beside it.",
+      "negative": [
+        "added or missing characters, spatial jumps",
+        "garbled text on the statement or phone",
+        "subtitles"
+      ]
+    },
+    {
+      "id": "seg04",
+      "duration": 22,
+      "location": "sebastian_apartment",
+      "scene_heading": "6-2 Day | Int. Sebastian's apartment, living room",
+      "time": "Day, soft bright sunlight through the floor-to-ceiling window",
+      "characters": [
+        "sebastian",
+        "daniel"
+      ],
+      "states": {
+        "sebastian": "S4"
+      },
+      "props": [
+        "folder",
+        "coins",
+        "sebastian_phone",
+        "daniel_phone",
+        "car_key"
+      ],
+      "first_state": "Sebastian sits in the dining chair on the couch side of the round dining table, facing the kitchenette, one hand on the closed folder. Daniel stands on the kitchenette side of the round dining table facing him, his phone in his hand. On the table: the closed folder, Sebastian's phone face down and the two coins beside it.",
+      "shots": [
+        {
+          "time": "0-3s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium two-shot, locked-off, eye-level, from the bookshelves side",
+          "visual": "Sebastian sits at the dining table; Daniel slips his phone away, takes a black car key fob from his pocket and sets it beside the two coins.",
+          "audio": "Dialogue (Daniel, in English, brisk): {Your car's downstairs.}",
+          "characters": [
+            "sebastian",
+            "daniel"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "3-4s",
+          "size": "close-up",
+          "angle": "overhead shot",
+          "camera": "Close-up insert, overhead shot, locked-off, on the table top",
+          "visual": "The black car key fob lies next to the two silver quarters.",
+          "audio": "",
+          "characters": [],
+          "lines": []
+        },
+        {
+          "time": "4-6s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, locked-off, eye-level, on Sebastian",
+          "visual": "Sebastian picks up the car key and turns it once between his fingers.",
+          "audio": "<Key fob clicks against his watch>",
+          "characters": [
+            "sebastian"
+          ],
+          "lines": []
+        },
+        {
+          "time": "6-8s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, dirty single on Daniel with Sebastian's shoulder at the frame edge, eye-level",
+          "visual": "Daniel folds his hands in front of him, a faint doubtful look behind his glasses.",
+          "audio": "Dialogue (Daniel, in English, dry): {She still thinks you're broke.}",
+          "characters": [
+            "daniel",
+            "sebastian"
+          ],
+          "lines": [
+            1
+          ]
+        },
+        {
+          "time": "8-10s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up, clean single, locked-off, eye-level, on Sebastian",
+          "visual": "Sebastian gives a slow, private smile.",
+          "audio": "Dialogue (Sebastian, in English, lazy amused murmur): {Let her.}",
+          "characters": [
+            "sebastian"
+          ],
+          "lines": [
+            2
+          ]
+        },
+        {
+          "time": "10-12s",
+          "size": "close-up",
+          "angle": "high angle",
+          "camera": "Close-up insert, high angle, following Sebastian's hand",
+          "visual": "Sebastian's hand scoops the two coins off the table and slides them into his chino pocket.",
+          "audio": "<Coins scrape off the wood>",
+          "characters": [
+            "sebastian"
+          ],
+          "lines": []
+        },
+        {
+          "time": "12-14s",
+          "size": "medium shot",
+          "angle": "low angle",
+          "camera": "Medium shot, low angle, tilting up with Sebastian as he rises, from the bookshelves side",
+          "visual": "Sebastian stands up from the dining chair, pocketing his phone with the car key in hand; Daniel looks at him across the table.",
+          "audio": "Dialogue (Daniel, in English, curious): {Where are you going?}",
+          "characters": [
+            "sebastian",
+            "daniel"
+          ],
+          "lines": [
+            3
+          ]
+        },
+        {
+          "time": "14-17s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, slow push in, eye-level, on Sebastian's face",
+          "visual": "Sebastian's eyes turn hard and certain as he looks toward the front door.",
+          "audio": "Dialogue (Sebastian, in English, low and dangerous): {To my wife. Her family had their fun.}",
+          "characters": [
+            "sebastian"
+          ],
+          "lines": [
+            4
+          ]
+        },
+        {
+          "time": "17-19s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, clean single, locked-off, eye-level, on Daniel",
+          "visual": "Sebastian is off screen. Daniel straightens up and gives a small knowing nod.",
+          "audio": "Dialogue (Sebastian, in English, low and dangerous): {Now it's my turn.}",
+          "characters": [
+            "daniel"
+          ],
+          "lines": [
+            4
+          ]
+        },
+        {
+          "time": "19-22s",
+          "size": "wide shot",
+          "angle": "eye level",
+          "camera": "Wide shot, pan following Sebastian from the dining table to the front door, eye-level, from the bookshelves side",
+          "visual": "Sebastian walks past the charcoal couch to the front door on the left wall, opens it and leaves; Daniel stays at the kitchenette side of the dining table.",
+          "audio": "<Front door opens and shuts>",
+          "characters": [
+            "sebastian",
+            "daniel"
+          ],
+          "lines": []
+        }
+      ],
+      "light_audio": "Soft bright daylight from the back-wall window and the glass pendant lamp; room tone, footsteps, the front door closing.",
+      "dialogue": [
+        {
+          "speaker": "daniel",
+          "line": "Your car's downstairs."
+        },
+        {
+          "speaker": "daniel",
+          "line": "She still thinks you're broke."
+        },
+        {
+          "speaker": "sebastian",
+          "line": "Let her."
+        },
+        {
+          "speaker": "daniel",
+          "line": "Where are you going?"
+        },
+        {
+          "speaker": "sebastian",
+          "line": "To my wife. Her family had their fun. Now it's my turn."
+        }
+      ],
+      "must_hit": [
+        "Daniel places the car key beside the two coins and Sebastian picks it up",
+        "Sebastian pockets the two coins",
+        "Sebastian leaves through the front door"
+      ],
+      "exit_state": "Sebastian has left through the front door, which is closed. Daniel stands on the kitchenette side of the round dining table, facing the front door. The closed folder lies on the table.",
+      "negative": [
+        "added or missing characters, spatial jumps",
+        "malformed hands",
+        "subtitles or garbled text"
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "type": "title",
+      "text": "EP006 Couch Coins",
+      "at": "seg01 start"
+    },
+    {
+      "type": "caption",
+      "text": "Hospital payment confirmed.",
+      "at": "seg03, 22-24s, over the phone insert"
+    }
+  ]
+}

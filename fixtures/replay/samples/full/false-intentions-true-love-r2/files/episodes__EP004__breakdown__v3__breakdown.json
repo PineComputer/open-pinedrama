@@ -1,0 +1,611 @@
+{
+  "episode": "EP004",
+  "title": "The Ex at the Door",
+  "segments": [
+    {
+      "id": "seg01",
+      "duration": 25,
+      "location": "apartment_entrance",
+      "scene_heading": "INT. JI RAN'S APARTMENT ENTRANCE - NIGHT #4-1#",
+      "time": "Night, warm interior light from brass sconces and ceiling downlights",
+      "characters": [
+        "lu_shaoze",
+        "ji_ran"
+      ],
+      "states": {
+        "lu_shaoze": "S1",
+        "ji_ran": "S3"
+      },
+      "props": [
+        "handbag"
+      ],
+      "first_state": "Camera at the corridor end of the landing, facing the autumn landscape painting on the back wall. The landing has one pair of brushed-steel elevator doors on the left wall, closed. One tall walnut front door with a black smart lock stands on the right wall. One autumn landscape painting hangs above one slim console table on the back wall, between two brass wall sconces. Lu Shaoze, in his navy double-breasted suit over a black silk shirt, stands at the walnut front door, facing it, with his back to the elevator doors. Ji Ran is inside the closed elevator, about to arrive. She wears her black satin slip dress and carries the black handbag.",
+      "shots": [
+        {
+          "time": "0-2s",
+          "size": "wide shot",
+          "angle": "eye level",
+          "camera": "Wide shot, locked-off camera, eye level, from the corridor end facing the painting",
+          "visual": "Lu Shaoze stands at the walnut front door and smooths his swept-back hair with one hand. The elevator doors behind him across the landing are closed.",
+          "audio": "",
+          "characters": [
+            "lu_shaoze"
+          ],
+          "lines": []
+        },
+        {
+          "time": "2-4s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, handheld camera, eye level, from the corridor end near the elevator doors, facing the walnut front door",
+          "visual": "Lu Shaoze raises his knuckles and knocks on the walnut front door, smiling confidently.",
+          "audio": "<Knuckles knock on wood>",
+          "characters": [
+            "lu_shaoze"
+          ],
+          "lines": []
+        },
+        {
+          "time": "4-6s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, quick pan from the walnut front door to the elevator doors, eye level, from the corridor end",
+          "visual": "The elevator doors slide open and Ji Ran steps out holding the black handbag. Lu Shaoze spins around, startled, and collides with her in the middle of the landing.",
+          "audio": "<Elevator chime, doors slide open, a soft bump>",
+          "characters": [
+            "lu_shaoze",
+            "ji_ran"
+          ],
+          "lines": []
+        },
+        {
+          "time": "6-8s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up two-shot, locked-off camera, eye level, from the corridor end facing the painting",
+          "visual": "The two step apart and stop beneath the autumn landscape painting, Ji Ran on the elevator side and Lu Shaoze on the front-door side. Ji Ran steadies the black handbag on her arm and glares at him.",
+          "audio": "<Heels click on stone>",
+          "characters": [
+            "ji_ran",
+            "lu_shaoze"
+          ],
+          "lines": []
+        },
+        {
+          "time": "8-14s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, over-the-shoulder shot past Ji Ran's shoulder, from the corridor end on the elevator side, facing Lu Shaoze",
+          "visual": "Lu Shaoze tilts his head with a mocking grin and spreads one hand toward Ji Ran.",
+          "audio": "Dialogue (Lu Shaoze, in Mandarin, sneering drawl): {呀，好久不见呀，纪大小姐，您真是贵人事多，这么晚才回家呀。}",
+          "characters": [
+            "ji_ran",
+            "lu_shaoze"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "14-20s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up, slow push in on Ji Ran, eye level, from the corridor end on the front-door side",
+          "visual": "Ji Ran raises one brow and gives a cool, thin smile, her hand resting on the handbag strap.",
+          "audio": "Dialogue (Ji Ran, in Mandarin, dry and cutting): {比不上路少爷您清闲，都有空在别人家门口当门神了。}",
+          "characters": [
+            "ji_ran"
+          ],
+          "lines": [
+            1
+          ]
+        },
+        {
+          "time": "20-25s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, clean single on Lu Shaoze, tight on his face and shoulders, locked-off camera, eye level, from the corridor end on the elevator side",
+          "visual": "Lu Shaoze's grin stiffens and his jaw tightens.",
+          "audio": "Dialogue (Ji Ran, in Mandarin, deadpan): {怎么，路少爷这是刚回国，都找不到自己家门口在哪了？}",
+          "characters": [
+            "lu_shaoze"
+          ],
+          "lines": [
+            1
+          ]
+        }
+      ],
+      "light_audio": "Warm brass sconces on either side of the painting and soft ceiling downlights; quiet building hum, elevator chime, heels on stone.",
+      "dialogue": [
+        {
+          "speaker": "lu_shaoze",
+          "line": "呀，好久不见呀，纪大小姐，您真是贵人事多，这么晚才回家呀。"
+        },
+        {
+          "speaker": "ji_ran",
+          "line": "比不上路少爷您清闲，都有空在别人家门口当门神了。怎么，路少爷这是刚回国，都找不到自己家门口在哪了？"
+        }
+      ],
+      "must_hit": [
+        "Lu Shaoze knocks on the walnut front door",
+        "Ji Ran steps out of the elevator and collides with Lu Shaoze",
+        "They face off beneath the autumn landscape painting"
+      ],
+      "exit_state": "Ji Ran stands beneath the autumn landscape painting on the elevator side of the console table, holding the black handbag, facing Lu Shaoze. Lu Shaoze stands beneath the painting on the front-door side, facing her and the elevator doors, his grin stiff. The elevator doors are closed. Camera on the corridor side, facing the painting.",
+      "negative": [
+        "added or missing characters, spatial jumps",
+        "subtitles or garbled text",
+        "malformed hands"
+      ]
+    },
+    {
+      "id": "seg02",
+      "duration": 26,
+      "location": "apartment_entrance",
+      "scene_heading": "INT. JI RAN'S APARTMENT ENTRANCE - NIGHT #4-1#",
+      "time": "Night, warm interior light from brass sconces and ceiling downlights",
+      "characters": [
+        "lu_shaoze",
+        "ji_ran"
+      ],
+      "states": {
+        "lu_shaoze": "S1",
+        "ji_ran": "S3"
+      },
+      "props": [
+        "handbag"
+      ],
+      "first_state": "Ji Ran stands beneath the autumn landscape painting on the elevator side of the console table, holding the black handbag, facing Lu Shaoze. Lu Shaoze stands beneath the painting on the front-door side, facing her and the elevator doors, his grin stiff. The elevator doors are closed. Camera on the corridor side, facing the painting.",
+      "shots": [
+        {
+          "time": "0-5s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, locked-off camera, eye level, from the corridor end on the elevator side, facing Lu Shaoze",
+          "visual": "Lu Shaoze recovers his smirk, slides a hand into his trouser pocket and leans toward Ji Ran.",
+          "audio": "Dialogue (Lu Shaoze, in Mandarin, mocking): {嘿，听说你跟陈家那婚事黄了，是你踢的人家，}",
+          "characters": [
+            "lu_shaoze"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "5-9s",
+          "size": "close-up",
+          "angle": "high angle",
+          "camera": "Close-up insert, slight high angle, locked-off camera, from the corridor end",
+          "visual": "Ji Ran's fingers tighten hard around the handle of the black handbag, her knuckles going pale.",
+          "audio": "Dialogue (Lu Shaoze, in Mandarin, sneering): {还是你爸觉得陈家不够格，又把人家给甩了？}",
+          "characters": [
+            "ji_ran"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "9-11s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, clean single on Ji Ran's face, slow push in, eye level, from the corridor end on the front-door side",
+          "visual": "Ji Ran's eyes redden and glisten. She presses her lips together and holds her anger in.",
+          "audio": "",
+          "characters": [
+            "ji_ran"
+          ],
+          "lines": []
+        },
+        {
+          "time": "11-14s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up, locked-off camera, eye level, from the corridor end on the front-door side, facing Ji Ran",
+          "visual": "Ji Ran lifts her chin and stares straight at Lu Shaoze.",
+          "audio": "Dialogue (Ji Ran, in Mandarin, cold and restrained): {他怎么样你会不知道吗？}",
+          "characters": [
+            "ji_ran"
+          ],
+          "lines": [
+            1
+          ]
+        },
+        {
+          "time": "14-19s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, over-the-shoulder shot past Lu Shaoze's shoulder, from the corridor end on the front-door side, facing Ji Ran",
+          "visual": "Ji Ran takes one step toward Lu Shaoze and gives a bitter half smile.",
+          "audio": "Dialogue (Ji Ran, in Mandarin, biting): {我爸现在眼中最理想的乘龙快婿不就是你吗，路少爷。}",
+          "characters": [
+            "lu_shaoze",
+            "ji_ran"
+          ],
+          "lines": [
+            1
+          ]
+        },
+        {
+          "time": "19-21s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, clean single on Lu Shaoze, locked-off camera, eye level, from the corridor end on the elevator side",
+          "visual": "Lu Shaoze's smirk falters and he narrows his eyes.",
+          "audio": "Dialogue (Ji Ran, in Mandarin, cool): {可惜啊，让你失望了，}",
+          "characters": [
+            "lu_shaoze"
+          ],
+          "lines": [
+            1
+          ]
+        },
+        {
+          "time": "21-26s",
+          "size": "medium close-up",
+          "angle": "low angle",
+          "camera": "Medium close-up, slight low angle, locked-off camera, from the corridor end on the front-door side, facing Ji Ran",
+          "visual": "Ji Ran tosses her hair back and looks at Lu Shaoze with calm defiance, the black handbag on her arm.",
+          "audio": "Dialogue (Ji Ran, in Mandarin, firm and composed): {我现在有男朋友了，感情很稳定，正准备结婚。}",
+          "characters": [
+            "ji_ran"
+          ],
+          "lines": [
+            1
+          ]
+        }
+      ],
+      "light_audio": "Warm brass sconces and soft ceiling downlights; quiet building hum, faint rustle of clothing.",
+      "dialogue": [
+        {
+          "speaker": "lu_shaoze",
+          "line": "嘿，听说你跟陈家那婚事黄了，是你踢的人家，还是你爸觉得陈家不够格，又把人家给甩了？"
+        },
+        {
+          "speaker": "ji_ran",
+          "line": "他怎么样你会不知道吗？我爸现在眼中最理想的乘龙快婿不就是你吗，路少爷。可惜啊，让你失望了，我现在有男朋友了，感情很稳定，正准备结婚。"
+        }
+      ],
+      "must_hit": [
+        "Ji Ran tightens her grip on the black handbag",
+        "Ji Ran's eyes redden as she holds her anger in",
+        "Ji Ran tells Lu Shaoze she has a boyfriend"
+      ],
+      "exit_state": "Ji Ran stands beneath the autumn landscape painting on the elevator side of the console table, one step closer to Lu Shaoze, holding the black handbag, chin raised. Lu Shaoze stands beneath the painting on the front-door side, facing her and the elevator doors, eyes narrowed. The elevator doors are closed. Camera on the corridor side, facing the painting.",
+      "negative": [
+        "added or missing characters, spatial jumps",
+        "subtitles or garbled text",
+        "malformed hands"
+      ]
+    },
+    {
+      "id": "seg03",
+      "duration": 23,
+      "location": "apartment_entrance",
+      "scene_heading": "INT. JI RAN'S APARTMENT ENTRANCE - NIGHT #4-1#",
+      "time": "Night, warm interior light from brass sconces and ceiling downlights",
+      "characters": [
+        "lu_shaoze",
+        "ji_ran"
+      ],
+      "states": {
+        "lu_shaoze": "S1",
+        "ji_ran": "S3"
+      },
+      "props": [
+        "handbag"
+      ],
+      "first_state": "Ji Ran stands beneath the autumn landscape painting on the elevator side of the console table, one step closer to Lu Shaoze, holding the black handbag, chin raised. Lu Shaoze stands beneath the painting on the front-door side, facing her and the elevator doors, eyes narrowed. The elevator doors are closed. Camera on the corridor side, facing the painting.",
+      "shots": [
+        {
+          "time": "0-3s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up, clean single on Lu Shaoze, locked-off camera, eye level, from the corridor end on the elevator side",
+          "visual": "Lu Shaoze barks a scornful laugh and shakes his head.",
+          "audio": "Dialogue (Lu Shaoze, in Mandarin, scoffing): {男朋友？结婚？纪然，}",
+          "characters": [
+            "lu_shaoze"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "3-6s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot two-shot, locked-off camera, eye level, from the corridor end facing the painting",
+          "visual": "Lu Shaoze leans toward Ji Ran beneath the painting. She holds her ground, the black handbag on her arm.",
+          "audio": "Dialogue (Lu Shaoze, in Mandarin, condescending): {你觉得你这借口谁能信的过？}",
+          "characters": [
+            "lu_shaoze",
+            "ji_ran"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "6-8s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, clean single on Ji Ran's eyes and face, locked-off camera, eye level, from the corridor end on the front-door side",
+          "visual": "Ji Ran narrows her eyes and draws a slow breath through her nose.",
+          "audio": "Dialogue (Lu Shaoze, in Mandarin, sneering): {就你爸那种人，}",
+          "characters": [
+            "ji_ran"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "8-13s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, handheld camera following Lu Shaoze, eye level, from the corridor end on the elevator side",
+          "visual": "Lu Shaoze takes a step closer to Ji Ran, gesturing with an open palm.",
+          "audio": "Dialogue (Lu Shaoze, in Mandarin, mocking): {今天觉得陈家是块肥肉，就敢让你跟人家订婚，}",
+          "characters": [
+            "lu_shaoze"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "13-17s",
+          "size": "medium close-up",
+          "angle": "low angle",
+          "camera": "Medium close-up, slight low angle, locked-off camera, from the corridor end on the elevator side",
+          "visual": "Lu Shaoze ticks a finger in the air with a smug smile.",
+          "audio": "Dialogue (Lu Shaoze, in Mandarin, drawling): {明天觉得陆家有价值，就敢撕毁婚约，}",
+          "characters": [
+            "lu_shaoze"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "17-20s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, over-the-shoulder shot past Ji Ran's shoulder, from the corridor end on the elevator side, facing Lu Shaoze",
+          "visual": "Lu Shaoze spreads both arms wide toward the landing around them.",
+          "audio": "Dialogue (Lu Shaoze, in Mandarin, arrogant): {你去问问，整个锦城，}",
+          "characters": [
+            "ji_ran",
+            "lu_shaoze"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "20-23s",
+          "size": "close-up",
+          "angle": "eye level",
+          "camera": "Close-up, push in on Lu Shaoze's face, eye level, from the corridor end on the elevator side",
+          "visual": "Lu Shaoze leans in close with a cutting sneer and raised eyebrows.",
+          "audio": "Dialogue (Lu Shaoze, in Mandarin, taunting): {有谁家敢跟你们家联姻呀，啊？}",
+          "characters": [
+            "lu_shaoze"
+          ],
+          "lines": [
+            0
+          ]
+        }
+      ],
+      "light_audio": "Warm brass sconces and soft ceiling downlights; quiet building hum, footsteps on stone.",
+      "dialogue": [
+        {
+          "speaker": "lu_shaoze",
+          "line": "男朋友？结婚？纪然，你觉得你这借口谁能信的过？就你爸那种人，今天觉得陈家是块肥肉，就敢让你跟人家订婚，明天觉得陆家有价值，就敢撕毁婚约，你去问问，整个锦城，有谁家敢跟你们家联姻呀，啊？"
+        }
+      ],
+      "must_hit": [
+        "Lu Shaoze mocks Ji Ran's boyfriend claim with a scornful laugh",
+        "Lu Shaoze steps closer to Ji Ran while taunting her"
+      ],
+      "exit_state": "Ji Ran stands beneath the autumn landscape painting on the elevator side of the console table, holding the black handbag, jaw set. Lu Shaoze stands close to her beneath the painting on the front-door side, leaning toward her, facing her and the elevator doors. The elevator doors are closed. Camera on the corridor side, facing the painting.",
+      "negative": [
+        "added or missing characters, spatial jumps",
+        "subtitles or garbled text",
+        "malformed hands"
+      ]
+    },
+    {
+      "id": "seg04",
+      "duration": 29,
+      "location": "apartment_entrance",
+      "scene_heading": "INT. JI RAN'S APARTMENT ENTRANCE - NIGHT #4-1#",
+      "time": "Night, warm interior light from brass sconces and ceiling downlights, turning soft and glowing at the end",
+      "characters": [
+        "lu_shaoze",
+        "ji_ran",
+        "lin_qingyu"
+      ],
+      "states": {
+        "lu_shaoze": "S1",
+        "ji_ran": "S3",
+        "lin_qingyu": "S2"
+      },
+      "props": [
+        "handbag",
+        "grocery_bag"
+      ],
+      "first_state": "Ji Ran stands beneath the autumn landscape painting on the elevator side of the console table, holding the black handbag, jaw set. Lu Shaoze stands close to her beneath the painting on the front-door side, leaning toward her, facing her and the elevator doors. The elevator doors are closed. Camera on the corridor side, facing the painting.",
+      "shots": [
+        {
+          "time": "0-4s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot two-shot, locked-off camera, eye level, from the corridor end facing the painting",
+          "visual": "Lu Shaoze taps his own chest proudly with two fingers, facing Ji Ran beneath the painting.",
+          "audio": "Dialogue (Lu Shaoze, in Mandarin, boastful): {也就是本少我，堂堂路氏集团的继承人，}",
+          "characters": [
+            "lu_shaoze",
+            "ji_ran"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "4-9s",
+          "size": "medium close-up",
+          "angle": "low angle",
+          "camera": "Medium close-up, low angle, slow push in on Lu Shaoze, from the corridor end on the elevator side",
+          "visual": "Lu Shaoze raises his chin and adjusts the peaked lapel of his navy double-breasted suit jacket with a self-satisfied smile.",
+          "audio": "Dialogue (Lu Shaoze, in Mandarin, arrogant drawl): {有的是资金和底气，接得住你爸这种大麻烦，}",
+          "characters": [
+            "lu_shaoze"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "9-13s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot, over-the-shoulder shot past Ji Ran's shoulder, from the corridor end on the elevator side, facing Lu Shaoze",
+          "visual": "Lu Shaoze leans in with a smirk and gives a short smug snort.",
+          "audio": "Dialogue (Lu Shaoze, in Mandarin, smug): {也不怕你这种小麻烦，你说，对吧？哼。}",
+          "characters": [
+            "ji_ran",
+            "lu_shaoze"
+          ],
+          "lines": [
+            0
+          ]
+        },
+        {
+          "time": "13-15s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot two-shot, handheld camera, eye level, from the corridor end facing the painting",
+          "visual": "Lu Shaoze reaches a hand toward Ji Ran's shoulder and she stiffens. Behind her, the elevator doors on the left wall slide open.",
+          "audio": "<Elevator chime, doors slide open>",
+          "characters": [
+            "lu_shaoze",
+            "ji_ran"
+          ],
+          "lines": []
+        },
+        {
+          "time": "15-17s",
+          "size": "close-up",
+          "angle": "low angle",
+          "camera": "Close-up, low angle near the floor, tracking forward from the elevator doors toward the painting",
+          "visual": "Lin Qingyu's white sneakers stride out of the elevator across the pale stone floor toward Ji Ran, the grocery bag full of greens swinging from one hand, bok choy and spring onions spilling from its top.",
+          "audio": "<Quick footsteps on stone, paper bag rustles>",
+          "characters": [
+            "lin_qingyu"
+          ],
+          "lines": []
+        },
+        {
+          "time": "17-19s",
+          "size": "medium shot",
+          "angle": "eye level",
+          "camera": "Medium shot three-shot, locked-off camera, eye level, from the corridor end facing the painting",
+          "visual": "Lin Qingyu steps in beside Ji Ran on the elevator side, slips his free arm protectively around her waist and faces Lu Shaoze, the grocery bag full of greens held in his other hand. Lu Shaoze's reaching hand freezes in midair.",
+          "audio": "",
+          "characters": [
+            "lin_qingyu",
+            "ji_ran",
+            "lu_shaoze"
+          ],
+          "lines": []
+        },
+        {
+          "time": "19-22s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up, dirty single on Lin Qingyu with Ji Ran's shoulder in the foreground, locked-off camera, eye level, from the corridor end on the front-door side",
+          "visual": "Lin Qingyu tilts his head toward Ji Ran with a sweet dimpled smile while his eyes stay cool on Lu Shaoze, the leafy top of the grocery bag at his side.",
+          "audio": "Dialogue (Lin Qingyu, in Mandarin, soft sweet and slightly whiny): {姐姐，我们回家吧，我都饿了。}",
+          "characters": [
+            "lin_qingyu",
+            "ji_ran"
+          ],
+          "lines": [
+            1
+          ]
+        },
+        {
+          "time": "22-24s",
+          "size": "medium close-up",
+          "angle": "eye level",
+          "camera": "Medium close-up, clean single on Lu Shaoze, locked-off camera, eye level, from the corridor end on the elevator side",
+          "visual": "Lu Shaoze slowly lowers his hand, his face frozen in disbelief.",
+          "audio": "",
+          "characters": [
+            "lu_shaoze"
+          ],
+          "lines": []
+        },
+        {
+          "time": "24-26s",
+          "size": "close-up",
+          "angle": "low angle",
+          "camera": "Close-up, slight low angle, locked-off camera, from the corridor end on the front-door side",
+          "visual": "Ji Ran looks up at Lin Qingyu in surprise, her fingers loosening on the black handbag, his arm around her waist.",
+          "audio": "",
+          "characters": [
+            "ji_ran",
+            "lin_qingyu"
+          ],
+          "lines": []
+        },
+        {
+          "time": "26-29s",
+          "size": "wide shot",
+          "angle": "eye level",
+          "camera": "Wide shot, slow pull out from the three, eye level, from the corridor end facing the painting",
+          "visual": "Ji Ran and Lin Qingyu stand together beneath the autumn landscape painting on the elevator side, his arm around her waist and the grocery bag full of greens in his other hand, facing Lu Shaoze on the front-door side. Soft glowing light blooms and drifting flakes float through the landing.",
+          "audio": "<Soft ambient shimmer>",
+          "characters": [
+            "ji_ran",
+            "lin_qingyu",
+            "lu_shaoze"
+          ],
+          "lines": []
+        }
+      ],
+      "light_audio": "Warm brass sconces and ceiling downlights, blooming into a soft dreamy glow with drifting flakes at the end; elevator chime, footsteps on stone, paper bag rustle, quiet building hum.",
+      "dialogue": [
+        {
+          "speaker": "lu_shaoze",
+          "line": "也就是本少我，堂堂路氏集团的继承人，有的是资金和底气，接得住你爸这种大麻烦，也不怕你这种小麻烦，你说，对吧？哼。"
+        },
+        {
+          "speaker": "lin_qingyu",
+          "line": "姐姐，我们回家吧，我都饿了。"
+        }
+      ],
+      "must_hit": [
+        "Lu Shaoze reaches for Ji Ran's shoulder",
+        "Lin Qingyu, holding the grocery bag full of greens in one hand, puts his other arm protectively around Ji Ran's waist and faces Lu Shaoze",
+        "Soft light and drifting flakes fill the final image"
+      ],
+      "exit_state": "Lin Qingyu stands beneath the autumn landscape painting on the elevator side with one arm around Ji Ran's waist and the grocery bag full of greens in his other hand, facing Lu Shaoze. Ji Ran stands at his side holding the black handbag, looking up at him. Lu Shaoze stands on the front-door side, facing them, his hand lowered and his face frozen. Soft glowing light and drifting flakes fill the landing. Camera on the corridor side, facing the painting.",
+      "negative": [
+        "added or missing characters, spatial jumps",
+        "subtitles or garbled text",
+        "malformed hands or arms in the embrace"
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "type": "ending",
+      "text": "To be continued",
+      "at": "seg04, end, over the wide shot with drifting flakes"
+    }
+  ],
+  "bible_version": "v3"
+}
