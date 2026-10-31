@@ -11,7 +11,9 @@ a UI change starts in `design/` ([D9](decisions.md#d9-2026-10-30--design-is-the-
 - One purpose per pull request. Say in it which plan item it does (M5, P6.2, ...).
 - Read [TESTING.md](TESTING.md): every item starts with a test that fails.
 - Phase 1 steers only. Canvas, Graph and the cut viewer read the work and offer Review, Send back
-  with a reason, Note and Lineage. They have no Generate, no prompt editing and no manual drawing.
+  with a reason, Note and Lineage. Nothing is generated, drawn or prompted by hand: the canvas
+  draws each node's Generate and Upload disabled, saying "Phase 2", and their handlers do nothing
+  ([D8](decisions.md#d8-2026-10-29--phase-1-steers)).
   The maker decides every take and every cut.
 
 ## Where things live

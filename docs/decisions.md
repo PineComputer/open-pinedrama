@@ -128,13 +128,24 @@ timeline
 ## D8. 2026-10-29 · Phase 1 steers
 - **Context.** The redesign's scope.
 - **Decision.** In phase 1 the maker steers: Accept, Send back with a reason, Note, Lineage, and a
-  decision on every take and cut. There is no Generate, no prompt editing and no manual drawing,
-  not even disabled. Amended on 30 October 2026: phase 1 also edits the cut's spec (D18).
+  decision on every take and cut. Nothing is generated or edited by hand, and no prompt is edited.
+  Amended on 30 October 2026, twice: phase 1 also edits the cut's spec (D18); and the canvas draws
+  each node's hand actions (Generate, Upload) disabled, each saying "Phase 2", on a typed interface
+  whose phase-1 handlers do nothing, so phase 2 fills the handlers in rather than adding the
+  feature.
 - **Alternatives.** None recorded.
 - **Grounds.** merecdesperez44323-lab's decision.
-- **Consequences.** `CONTRIBUTING.md`, "Before you start"; a test that no way to generate exists
-  (`TESTING.md`, "Product rules are tests").
+- **Consequences.** `CONTRIBUTING.md`, "Before you start"; `NodeActions` and `PHASE_ONE` in
+  `src/ui/screens/Canvas.tsx`; a test that the hand actions are disabled, say why, do nothing and
+  send nothing (`src/ui/screens/SteerBar.test.tsx`, "offers the hand actions disabled, saying why,
+  and they do nothing").
 - **Words.** "第一期可以只引导" (*phase 1 can just steer*); "就是read only" (*that is, read only*).
+  For the hand actions, 30 October 2026: "这个画布没有 infinite canvas"…"就是每个节点还能单独控制啥的，
+  我们上次说这个可以暂时做成比如 点击了没有效果， 但是这个feature是要能支持的，而且这个应该业内都是通用解决方案，
+  咱们没有是不行的" (*this canvas is not an infinite canvas… that is, each node can also be controlled
+  on its own; we said last time this could for now be made so that clicking it has no effect, but
+  the feature must be supported, and this should be the industry's common solution; not having it
+  won't do*).
 - **Recorded in.** `REDESIGN_PLAN.md`, "Direction"; `CONTRIBUTING.md`.
 
 ## D9. 2026-10-30 · design/ is the one source of the UI

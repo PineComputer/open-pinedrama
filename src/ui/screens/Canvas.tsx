@@ -51,8 +51,8 @@ function standingOf(stage: LineageNode): Status {
 
 /**
  * What a maker may do to an item by hand, as the reference's node bar and panel offer it. Phase 1
- * makes nothing by hand (docs/decisions.md, D8): each stands disabled, and the canvas takes
- * the handler that does nothing.
+ * draws them disabled and makes nothing by hand (docs/decisions.md, D8): the canvas takes the
+ * handlers that do nothing, and phase 2 fills them in.
  */
 export interface NodeActions {
   generate: (id: string) => void;

@@ -321,6 +321,10 @@ Mac, on Windows and on Linux.
   GitHub's runners: they were made on the pine-dev box, and GitHub's ubuntu-latest renders about 1%
   of their pixels differently, over the spec's 0.2%.
 - The third-party screenshots in `docs/references/` are removed before the repository is public.
+- The documents name other products (the AI drama and production tools studied in
+  [information architecture](studio/information-architecture.md#how-others-solve-it) and the
+  [design principles](design-principles.md#how-others-solve-it)); they are checked against
+  `CONTRIBUTING.md`'s rule of no competitors' names before the repository is public.
 
 ## References
 

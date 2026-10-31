@@ -43,8 +43,8 @@ end-to-end test covers a flow a maker walks, not every branch of it.
   when it is fixed.
 - **Product rules are tests.** A rule the studio keeps is written as a test that fails if it
   breaks: a preset is never chosen for the maker; the maker decides every take and cut; a
-  take or picture in flight is waited on, never sent again; phase 1 offers no way to
-  generate or edit an item by hand.
+  take or picture in flight is waited on, never sent again; phase 1 generates and edits
+  nothing by hand: its hand actions are disabled, say why, and do nothing.
 - **A test must fail without the change.** Before calling a test done, break the code it
   guards and watch it fail.
 - **Never weaken, skip or delete a test to get a green run.** If a test is wrong, say why in
