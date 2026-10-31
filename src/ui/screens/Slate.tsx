@@ -72,7 +72,7 @@ function byActivity(dramas: DramaCard[]): DramaCard[] {
 }
 
 /**
- * What waits for the maker, newest first, as a compact strip above the grid (yurun's Y4: the projects are the grid's,
+ * What waits for the maker, newest first, as a compact strip above the grid (D50: the projects are the grid's,
  * once each; design/app.js Home, .waitstrip). Each row opens its review; See all opens Reviews, the one queue (IA §16).
  */
 function Waiting({ waiting, dramas }: { waiting: ReviewSummary[]; dramas: DramaCard[] }) {
@@ -118,7 +118,7 @@ function Card({ drama, redLine }: { drama: DramaCard; redLine: boolean }) {
   const { t, lang } = useT();
   const where = standing(drama, redLine);
   const { facts } = drama;
-  // yurun's round 2: a cover, a title and a time (liblib's project grid); the rest is the project's own, a step away.
+  // D50: a cover, a title and a time (liblib's project grid); the rest is the project's own, a step away.
   return (
     <div className="pcard">
       <Link to="/d/$dramaId/episodes" params={{ dramaId: drama.id }} className="open">

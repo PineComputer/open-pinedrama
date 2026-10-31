@@ -35,7 +35,7 @@ beforeEach(() => vi.useFakeTimers({ now: new Date("2026-10-30T12:00:00Z"), shoul
 afterEach(() => vi.useRealTimers());
 
 describe("Home", () => {
-  it("shows on each card its cover, its title and when it was last worked on, nothing more (yurun's round 2)", async () => {
+  it("shows on each card its cover, its title and when it was last worked on, nothing more (D50)", async () => {
     answer("/api/app", replay);
     answer("/api/reviews", []);
     answer("/api/dramas", [stepmother, bride]);
@@ -61,7 +61,7 @@ describe("Home", () => {
     expect(empty.querySelector(".emptycover")).toHaveTextContent("Bride on Bail");
   });
 
-  it("is titled Projects, the studio's name for the container (yurun's words)", async () => {
+  it("is titled Projects, the studio's name for the container (D46)", async () => {
     answer("/api/app", replay);
     answer("/api/reviews", []);
     answer("/api/dramas", [stepmother, bride]);

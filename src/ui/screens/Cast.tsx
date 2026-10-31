@@ -438,7 +438,7 @@ export function Cast({ dramaId, compact = false }: { dramaId: string; compact?: 
         {characters.length ? castGrid : none}
         {shelf === "cast" && detail}
       </TabsPrimitive.Content>
-      {/* drama-cli's own two stages, as yurun decided: scenes (assets/scenes/<id>) and props (assets/props/<id>). */}
+      {/* drama-cli's own two stages: scenes (assets/scenes/<id>) and props (assets/props/<id>). */}
       {(["scenes", "props"] as const).map((shelf) => (
         <TabsPrimitive.Content key={shelf} value={shelf} className={detail ? "assetsplit" : undefined}>
           {!(shelf === "scenes" ? places : props).length && none}
