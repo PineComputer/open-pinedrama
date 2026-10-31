@@ -576,6 +576,19 @@ timeline
   still pending ([information architecture](studio/information-architecture.md#narrow-windows)).
 - **Words.** None recorded.
 - **Recorded in.** Commit a07d9fa.
+- **Amended.** 30 October 2026, b6ee7a0: the agent has one form, a right sidebar on every project
+  page, open (the page narrows, the Canvas included) or collapsed to the ball (its robot, busy ring
+  and badge). There is no floating popover anywhere. Below 1100 px the opened sidebar overlays from
+  the right edge. The choice persists per viewer (browser storage); with no saved choice, a window of
+  1280 px or less starts collapsed. ⌥⌘B (Ctrl+Alt+B) toggles it. Grounds: merecdesperez44323-lab's
+  request; VS Code's Secondary Side Bar (View: Toggle Secondary Side Bar, ⌥⌘B); Cursor's agent pane;
+  one action, one meaning ([design principles](design-principles.md#2-one-action-one-meaning)).
+  Words: "右边 agent这里， 有时候是侧边栏， 有时候是一个ai头像， 有时候是popup 浮窗， 这个有点儿不好。。。是不是定下来一种，
+  比如就是 一直都是侧边栏，而且可以收起来啥的那种？就你那个 icon 然后转圈圈的也挺好的 比如可以收起来就变成你那个icon了，
+  点击就变成侧边栏了？" (*the agent on the right is sometimes a sidebar, sometimes an AI avatar, sometimes a
+  pop-up float; that's not good… settle on one, say always a sidebar that can be collapsed? Your icon
+  with its spinning ring is nice too: collapsed it becomes that icon, and a click makes it the
+  sidebar again?*), relayed by master.
 
 ## D33. 2026-10-30 · The review options name what the maker watches
 - **Context.** "Your reviews" named its options by policy, not by what the maker would see.
