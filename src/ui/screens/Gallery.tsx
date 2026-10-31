@@ -104,7 +104,7 @@ export default function Gallery() {
       <Section title="Tabs">
         <TabsPrimitive.Root defaultValue="bible">
           <div className="tabsrow">
-            <TabsPrimitive.List className="utabs" aria-label="Story">
+            <TabsPrimitive.List className="utabs" aria-label="Bible">
               {[
                 ["bible", "Bible", undefined],
                 ["cast", "Cast", 8],

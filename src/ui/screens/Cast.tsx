@@ -1,28 +1,25 @@
-// The drama's Story (docs/architecture.md, section 8.5; the pro direction's Story screen): its
-// episodes as the bible titles them, its cast as cards (the newest sheet, where it stands, its
-// other names, the episodes it is in) and its world (places and key props). Every name is the
-// bible's. Decisions are made in the review room: a card waiting for one links there.
+// The drama's Assets (docs/architecture.md, section 8.5; design/screens.js, Bible and Assets): its cast as cards (the
+// newest sheet, where it stands, its other names, the episodes it is in) and its world (places and key props). Every
+// name is the bible's. Decisions are made in the review room: a card waiting for one links there.
 import Lightbox from "yet-another-react-lightbox";
 import { type Photo, RowsPhotoAlbum } from "react-photo-album";
 import "react-photo-album/rows.css";
 import { useEffect, useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import type { Names } from "../../shared/names.ts";
-import type { CastCard, DramaView, FileItem, Receipt } from "../../shared/types.ts";
+import type { CastCard, FileItem, Receipt } from "../../shared/types.ts";
 import { useResource } from "../api.ts";
 import { type Status, StatusChip } from "../components/StatusChip.tsx";
-import type { ProjectView } from "../../shared/project.ts";
 import { Icon } from "../icons.tsx";
 import { useT } from "../i18n.ts";
 import { errorText, subjectLabel, useNames } from "../labels.ts";
 import { Link, linkOptions, useNavigate } from "@tanstack/react-router";
 import { homeLink, type Page, useRoute } from "../place.ts";
 
-type Shelf = "bible" | "cast" | "scenes" | "props";
+type Shelf = "cast" | "scenes" | "props";
 
-// Each shelf's page: the bible is Story's, the assets each their own (IA §16), with one asset's detail open or none.
+// Each shelf's page: the assets each their own (IA §16), with one asset's detail open or none. The bible has its own page (Bible.tsx).
 function shelfLink(shelf: Shelf, dramaId: string, assetId?: string) {
-  if (shelf === "bible") return linkOptions({ to: "/d/$dramaId/story", params: { dramaId } });
   if (shelf === "cast") return linkOptions({ to: "/d/$dramaId/assets/characters/{-$assetId}", params: { dramaId, assetId } });
   if (shelf === "scenes") return linkOptions({ to: "/d/$dramaId/assets/locations/{-$assetId}", params: { dramaId, assetId } });
   return linkOptions({ to: "/d/$dramaId/assets/props/{-$assetId}", params: { dramaId, assetId } });
@@ -71,7 +68,7 @@ function versionsOf(entry: CastCard["looks"][number] | undefined) {
 const mainOf = (card: CastCard) => card.looks.find((entry) => !entry.look || entry.look === "base") ?? card.looks[0];
 
 /**
- * D56's grid card (design/screens.js, Story; Apple Photos and Finder's picture grid, liblib's 资产 library): the picture
+ * D56's grid card (design/screens.js, Assets; Apple Photos and Finder's picture grid, liblib's 资产 library): the picture
  * at its own ratio, the name, the version and where it stands. Everything else is the detail's (progressive disclosure).
  */
 function AssetCard({ card, names, dramaId, picked, width, height }: { card: CastCard; names: Names | null; dramaId: string; picked: boolean; width: number; height: number }) {
@@ -299,7 +296,7 @@ type Move = "asset-forward" | "asset-backward" | undefined;
  * (WAI-ARIA APG modal dialog), and its details in a panel beside it (LibTV's asset viewer; Google Photos, Lightroom).
  * The route names the asset, so a link opens it and the arrows move it.
  */
-function AssetViewer({ cards, picked, shelf, names, dramaId }: { cards: CastCard[]; picked: string; shelf: Exclude<Shelf, "bible">; names: Names | null; dramaId: string }) {
+function AssetViewer({ cards, picked, shelf, names, dramaId }: { cards: CastCard[]; picked: string; shelf: Shelf; names: Names | null; dramaId: string }) {
   const { t } = useT();
   const navigate = useNavigate();
   const [shown, setShown] = useState<FileItem>();
@@ -327,129 +324,29 @@ function AssetViewer({ cards, picked, shelf, names, dramaId }: { cards: CastCard
 }
 
 // The shelf each page shows.
-const SHELF_OF: Partial<Record<Page, Shelf>> = { story: "bible", characters: "cast", locations: "scenes", props: "props" };
+const SHELF_OF: Partial<Record<Page, Shelf>> = { characters: "cast", locations: "scenes", props: "props" };
 
-/** The bible and the assets, on the shelf the page shows with the asset it names picked; compact, the characters alone. */
+/** The assets, on the shelf the page shows with the asset it names picked; compact, the characters alone. */
 export function Cast({ dramaId, compact = false }: { dramaId: string; compact?: boolean }) {
   const route = useRoute();
-  const shelf = SHELF_OF[route.page ?? "story"] ?? "bible";
+  const shelf = (route.page && SHELF_OF[route.page]) ?? "cast";
   const picked = route.params.assetId;
   const { t } = useT();
   const { data, error } = useResource<CastCard[]>(`/api/dramas/${dramaId}/cast`, [`drama:${dramaId}`]);
   const names = useNames(dramaId);
-  const drama = useResource<DramaView>(`/api/dramas/${dramaId}`, [`drama:${dramaId}`]);
-  const project = useResource<ProjectView>(`/api/dramas/${dramaId}/project`, [`project:${dramaId}`]);
   const characters = (data ?? []).filter((card) => card.kind === "look");
   const places = (data ?? []).filter((card) => card.kind === "location");
   const props = (data ?? []).filter((card) => card.kind === "prop");
-  const pickedCard = shelf === "bible" ? undefined : (data ?? []).find((card) => SHELF_BY_KIND[card.kind] === shelf && card.subject === picked);
+  const pickedCard = (data ?? []).find((card) => SHELF_BY_KIND[card.kind] === shelf && card.subject === picked);
 
   const castGrid = <AssetGrid cards={characters} names={names} dramaId={dramaId} picked={picked} />;
   if (!data) return <p className={error === undefined ? "quiet" : "error"}>{error === undefined ? t("loading") : errorText(error, t)}</p>;
-  // Y8: Story is the bible's page whether or not anything has been drawn; an asset shelf says when it is empty.
+  // Y8: an asset shelf says when it is empty.
   const none = <p className="empty-note" style={{ padding: "0 16px" }}>{t("cast.empty")}</p>;
   if (compact) return characters.length ? castGrid : none;
-  const episodes = Object.entries(names?.episodes ?? {});
-  // The bible as drama-cli's status gives it: its version, whether it is accepted, and how many episodes it writes.
-  const bible = project.data?.state?.bible;
-  const written = bible?.coverage?.episodes ?? 0;
-  const total = drama.data?.episodeRows.length ?? episodes.length;
-  // Whether the working version is the accepted one (drama-cli's current against accepted), the accepted one when it
-  // isn't, and why the bible can't be used when drama-cli says so; never the mere presence of an accepted version.
-  const standing = !bible?.current
-    ? []
-    : bible.current !== bible.accepted
-      ? [t("cast.notAccepted"), bible.accepted ? t("cast.acceptedVersion", { v: bible.accepted }) : ""]
-      : [t("cast.accepted"), !bible.usable ? t("cast.notUsable", { why: bible.why ?? "" }) : ""];
-  const meta = bible?.current
-    ? [t("cast.bibleVersion", { v: bible.current }), ...standing, written ? t("cast.writtenRange", { last: `EP${String(written).padStart(3, "0")}` }) : ""].filter(Boolean).join(" · ")
-    : "";
-  // Under the logline, as the design has them: the genres the maker's notes state, and the episodes × their length.
-  const facts = drama.data?.facts;
-  const tags = [...(facts?.genres ?? []), ...(facts?.scale && facts.length ? [t("cast.format", { n: facts.scale.episodes, s: facts.length })] : [])];
   // D57: the drama tree is how Assets is navigated (Characters, Locations, Props are its rows, as Episodes' are), so the
-  // page has no tabs of its own: a plain heading with the count, shared by every episode. Story is the bible's page.
-  const shelves: Record<Exclude<Shelf, "bible">, [string, CastCard[]]> = { cast: [t("cast.characters"), characters], scenes: [t("cast.locations"), places], props: [t("cast.props"), props] };
-  if (shelf === "bible")
-    return (
-      <>
-        <div style={{ padding: "0 16px" }}>
-          <div className="tabsrow" style={{ margin: "4px 0 18px" }}>
-            <div>
-              <h2 className="pagetitle">{t("step.story")}</h2>
-              <p className="muted pagesub">{t("story.subtitle")}</p>
-            </div>
-            <span className="grow" />
-            {meta && (
-              <span className="muted" style={{ fontSize: 12 }}>
-                {meta}
-              </span>
-            )}
-          </div>
-        </div>
-        {episodes.length || names?.logline ? (
-        <div className="biblegrid">
-          {names?.logline && (
-            <section className="panel">
-              <span className="kick">{t("cast.logline")}</span>
-              <p className="logline">{names.logline}</p>
-              {tags.length > 0 && (
-                <div className="tags" style={{ display: "flex", gap: 6, marginTop: 12 }}>
-                  {tags.map((tag) => (
-                    <span key={tag} className="tag">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              )}
-            </section>
-          )}
-          {names && names.beats.length > 0 && (
-            <section className="panel" aria-label={t("cast.beats")}>
-              <h3>
-                <Icon name="list-numbers" className="ic" />
-                {t("cast.beats")}
-              </h3>
-              <ol className="beats">
-                {names.beats.map((beat, n) => (
-                  <li key={n}>{beat}</li>
-                ))}
-              </ol>
-            </section>
-          )}
-          <section className="panel wide" aria-label={t("cast.episodes")}>
-            <h3>
-              <Icon name="film-strip" className="ic" />
-              {t("cast.episodes")}
-              <span className="grow" />
-              {written > 0 && (
-                <span className="muted" style={{ fontSize: 11.5, fontWeight: 500 }}>
-                  {t("cast.writtenOf", { n: written, total })}
-                </span>
-              )}
-            </h3>
-            <div className="eplist">
-              {episodes.map(([code, title]) => {
-                const frame = drama.data?.episodeRows.find((row) => row.code === code)?.frame;
-                return (
-                  <Link key={code} to="/d/$dramaId/e/$episodeCode/canvas" params={{ dramaId: dramaId, episodeCode: code }} className="eprow">
-                    {frame ? <img src={frame.url} alt="" /> : <span />}
-                    <span className="mono">{code}</span>
-                    <b>{title}</b>
-                    <span className="muted grow">{names?.summaries[code]}</span>
-                  </Link>
-                );
-              })}
-            </div>
-          </section>
-        </div>
-      ) : (
-        <p className="empty-note" style={{ padding: "0 16px" }}>
-          {t("cast.noBible")}
-        </p>
-      )}
-      </>
-    );
+  // page has no tabs of its own: a plain heading with the count, shared by every episode.
+  const shelves: Record<Shelf, [string, CastCard[]]> = { cast: [t("cast.characters"), characters], scenes: [t("cast.locations"), places], props: [t("cast.props"), props] };
   const [label, cards] = shelves[shelf];
   return (
     <>

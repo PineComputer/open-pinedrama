@@ -1,6 +1,6 @@
 // The sidebar beside the rail, ported from the design (design/app.js, Side; screens.js, SetupSteps)
 // with its markup and classes: on the studio's pages its places; in a drama the drama, its steps
-// Script · Story · Episodes · Cut with what waits for the maker under each, the episode tree under
+// Script · Bible · Episodes · Cut with what waits for the maker under each, the episode tree under
 // Episodes, or the setup's steps while it is set up; and at the foot what it has spent.
 import { Link, linkOptions, type LinkOptions, useNavigate } from "@tanstack/react-router";
 import type { LineageView } from "../../shared/lineage.ts";
@@ -16,13 +16,13 @@ import type { Page } from "../place.ts";
 import { DramaThumb } from "../components/DramaThumb.tsx";
 import { dramaTree, type Mark as EpisodeMark, markOf } from "./tree.ts";
 
-export type Step = "script" | "story" | "episodes" | "cut";
+export type Step = "script" | "bible" | "episodes" | "cut";
 
-/** The step a drama's page is on: before there are episodes, its board is the story being made. */
+/** The step a drama's page is on: before there are episodes, its board is the bible being made. */
 export function stepOf(drama: DramaView, page: Page | undefined): Step | undefined {
   const settingUp = isSettingUp(drama);
   if (page === "script" || page === "analyzing") return "script";
-  if (page === "story" || page === "characters" || page === "locations" || page === "props" || (page === "episodes" && settingUp)) return "story";
+  if (page === "bible" || page === "characters" || page === "locations" || page === "props" || (page === "episodes" && settingUp)) return "bible";
   if (page === "delivery" || page === "cut") return "cut";
   return page === "episodes" || page === "canvas" ? "episodes" : undefined;
 }
@@ -112,11 +112,11 @@ export function DramaSidebar({ drama, page, episode, drawer }: { drama: DramaVie
     </div>
   );
   if (settingUp) {
-    // The setup's steps, as the design's SetupSteps: Script, Story, Episodes and Cut, each where it stands.
+    // The setup's steps, as the design's SetupSteps: Script, Bible, Episodes and Cut, each where it stands.
     const reached = drama.setup.reached;
     const rows: { key: Step; label: TKey; state: "done" | "you" | "work" | "line"; detail: TKey; to?: LinkOptions }[] = [
       { key: "script", label: "step.script", state: scriptDone ? "done" : scriptWaits(drama) ? "you" : "work", detail: scriptDone ? "setupSteps.done" : scriptWaits(drama) ? "setupSteps.yourReview" : "setupSteps.checking", to: linkOptions({ to: "/d/$dramaId/script", params: { dramaId: drama.id } }) },
-      { key: "story", label: "step.story", state: !scriptDone ? "line" : drama.setup.state === "waiting" ? "you" : reached >= 4 ? "done" : "work", detail: !scriptDone ? "setupSteps.afterYourReview" : drama.setup.state === "waiting" ? "setupSteps.yourReview" : "setupSteps.making", to: linkOptions({ to: "/d/$dramaId/story", params: { dramaId: drama.id } }) },
+      { key: "bible", label: "step.bible", state: !scriptDone ? "line" : drama.setup.state === "waiting" ? "you" : reached >= 4 ? "done" : "work", detail: !scriptDone ? "setupSteps.afterYourReview" : drama.setup.state === "waiting" ? "setupSteps.yourReview" : "setupSteps.making", to: linkOptions({ to: "/d/$dramaId/bible", params: { dramaId: drama.id } }) },
       { key: "episodes", label: "step.episodes", state: reached >= 4 ? "work" : "line", detail: reached >= 4 ? "setupSteps.making" : "setupSteps.afterLooks" },
       { key: "cut", label: "step.cut", state: "line", detail: "setupSteps.perEpisode" },
     ];
@@ -171,9 +171,9 @@ export function DramaSidebar({ drama, page, episode, drawer }: { drama: DramaVie
           {t("step.script")}
           {needs(tree.needs.script) || (scriptDone && <span className="end"><Icon name="check" className="ic" /></span>)}
         </Link>
-        <Link to="/d/$dramaId/story" params={params} className="navi" aria-current={at(page === "story")}>
+        <Link to="/d/$dramaId/bible" params={params} className="navi" aria-current={at(page === "bible")}>
           <Icon name="book-open" className="ic" />
-          {t("step.story")}
+          {t("step.bible")}
         </Link>
         <Link to="/d/$dramaId/assets/characters/{-$assetId}" params={{ dramaId, assetId: undefined }} className="navi" aria-current={at(onShelf)}>
           <Icon name="stack" className="ic" />

@@ -9,6 +9,7 @@ import { isSettingUp } from "./labels.ts";
 import { Analyzing } from "./screens/Analyzing.tsx";
 import { Board, SetupPanel } from "./screens/Board.tsx";
 import { Canvas } from "./screens/Canvas.tsx";
+import { Bible } from "./screens/Bible.tsx";
 import { Cast } from "./screens/Cast.tsx";
 import { Crew } from "./screens/Crew.tsx";
 import { CutTab } from "./screens/CutTab.tsx";
@@ -93,12 +94,12 @@ const episodesRoute = createRoute({
 const scriptRoute = createRoute({ ...leaf("script"), staticData: { page: "script" }, component: () => <Script dramaId={useDrama().id} /> });
 // Analyzing and the Fountain review are setup steps, a process like the review room, not views of Script's (D21).
 const analyzingRoute = createRoute({ ...leaf("analyzing"), staticData: { page: "analyzing" }, component: () => <Analyzing dramaId={useDrama().id} /> });
-const storyRoute = createRoute({
-  ...leaf("story"),
-  staticData: { page: "story" },
-  component: function StoryPage() {
+const bibleRoute = createRoute({
+  ...leaf("bible"),
+  staticData: { page: "bible" },
+  component: function BiblePage() {
     const drama = useDrama();
-    return isSettingUp(drama) ? <SetupPanel drama={drama} /> : <Cast dramaId={drama.id} />;
+    return isSettingUp(drama) ? <SetupPanel drama={drama} /> : <Bible dramaId={drama.id} />;
   },
 });
 const charactersRoute = createRoute({
@@ -171,7 +172,7 @@ const routeTree = rootRoute.addChildren([
     episodesRoute,
     scriptRoute,
     analyzingRoute,
-    storyRoute,
+    bibleRoute,
     charactersRoute,
     locationsRoute,
     propsRoute,

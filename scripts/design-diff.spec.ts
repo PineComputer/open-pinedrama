@@ -51,7 +51,7 @@ for (const theme of ["dark", "light"] as const) {
     const takes = queue.find((r) => r.state === "open" && r.episode === "EP006" && r.kind === "takes");
     const routes: Record<(typeof SCREENS)[number], string> = {
       Home: "/", Reviews: "/reviews", Upload: "/new", Script: `/d/${rewriting}/script`,
-      Bible: `/d/${bride}/story`, Episodes: `/d/${bride}/episodes`, Canvas: `/d/${bride}/e/EP006/canvas`,
+      Bible: `/d/${bride}/bible`, Episodes: `/d/${bride}/episodes`, Canvas: `/d/${bride}/e/EP006/canvas`,
       Review: takes ? `/r/${takes.id}` : "/reviews", Cut: `/d/${bride}/e/EP001/cut`, Delivery: `/d/${bride}/delivery`, "Out of date": `/d/${bride}/out-of-date`,
     };
     const rows: string[] = [];

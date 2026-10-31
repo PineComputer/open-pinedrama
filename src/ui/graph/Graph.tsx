@@ -266,7 +266,7 @@ export function Graph({ dramaId }: { dramaId: string }) {
             // Named as the home is (design/'s "Open in …"): an episode's cut is EPxxx › Cut, apart from its List.
             where: selected.where.episode
               ? selected.kind === "cut" ? `${selected.where.episode} › ${t("step.cut")}` : selected.where.episode
-              : t(selected.kind === "screenplay" ? "step.script" : selected.kind === "bible" ? "step.story" : "step.assets"),
+              : t(selected.kind === "screenplay" ? "step.script" : selected.kind === "bible" ? "step.bible" : "step.assets"),
           })}
         </Link>
       </div>

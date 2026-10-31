@@ -51,7 +51,7 @@ function shelfOf(page: "characters" | "locations" | "props", dramaId: string) {
 const LABEL: Partial<Record<Page, TKey>> = {
   script: "step.script",
   analyzing: "step.script",
-  story: "step.story",
+  bible: "step.bible",
   characters: "cast.characters",
   locations: "cast.locations",
   props: "cast.props",

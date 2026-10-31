@@ -1,6 +1,6 @@
 // The drama's Out of date (D21; design/screens.js, OutOfDate): what drama-cli calls stale and what was made from it
 // (shared/lineage.ts, outOfDate, the sidebar's count), a row each that opens the item's one home or its Lineage there
-// (IA §16), grouped by the session that redoes them: the setup's for the story and the assets, each episode's for its
+// (IA §16), grouped by the session that redoes them: the setup's for the script, the bible and the assets, each episode's for its
 // own. A redo remakes, so it spends: it asks first with its impact (§15), and is one submission (Submission.tsx).
 import { Link, useRouter } from "@tanstack/react-router";
 import { useRef, useState } from "react";
@@ -32,7 +32,7 @@ const ICON: Record<LineageKind, IconName> = {
   subtitles: "subtitles",
 };
 
-// The order the draft's groups list them in: the story, then the assets in the tabs' order.
+// The order the draft's groups list them in: the script and the bible, then the assets in the tabs' order.
 type T = ReturnType<typeof useT>["t"];
 
 const SETUP_ORDER: LineageKind[] = ["screenplay", "bible", "look", "plate", "prop"];
@@ -137,11 +137,11 @@ export function OutOfDate({ dramaId }: { dramaId: string }) {
   const order = (a: LineageNode, b: LineageNode) => a.column - b.column || (a.where.segment ?? "").localeCompare(b.where.segment ?? "", "en", { numeric: true }) || a.id.localeCompare(b.id);
   const setup = nodes.filter((node) => !node.where.episode).sort((a, b) => SETUP_ORDER.indexOf(a.kind) - SETUP_ORDER.indexOf(b.kind) || a.id.localeCompare(b.id));
   const codes = [...new Set(nodes.flatMap((node) => (node.where.episode ? [node.where.episode] : [])))].sort();
-  // The setup's: the story (screenplay, bible) and the assets, each under its own name (IA §1).
-  const story = setup.filter((node) => node.kind === "screenplay" || node.kind === "bible");
-  const assets = setup.filter((node) => !story.includes(node));
+  // The setup's: the script and the bible, then the assets, each under its own name (IA §1).
+  const written = setup.filter((node) => node.kind === "screenplay" || node.kind === "bible");
+  const assets = setup.filter((node) => !written.includes(node));
   const groups: Group[] = [
-    ...(story.length ? [{ key: "story", head: t("step.story"), owner: "", rows: story }] : []),
+    ...(written.length ? [{ key: "written", head: t("ood.scriptBible"), owner: "", rows: written }] : []),
     ...(assets.length ? [{ key: "assets", head: t("ood.assets"), owner: "", rows: assets }] : []),
     ...codes.map((code) => ({ key: code, head: t("ood.episode", { code }), owner: code, rows: nodes.filter((node) => node.where.episode === code).sort(order) })),
   ];

@@ -125,15 +125,15 @@ describe("the drama's Out of date", () => {
     expect(within(group(/^Assets/)).getByRole("link", { name: "Open the review" })).toHaveAttribute("href", "/r/r7");
   });
 
-  it("keeps the story apart from the assets, both the setup's", async () => {
+  it("keeps the script and the bible apart from the assets, all the setup's", async () => {
     engine("location-plate-replaced");
     const lineage = view("location-plate-replaced").lineage!;
     answer("/api/dramas/d1/lineage", { lineage: { ...lineage, nodes: lineage.nodes.map((node) => (node.id === "bible" ? { ...node, fresh: false, problems: ["Changed file: screenplay/v2/screenplay.fountain"] } : node)) }, problems: [] });
     await renderAt(<OutOfDate dramaId="d1" />, "/d/d1/out-of-date");
-    const story = await waitFor(() => group(/^Story$/));
-    expect(within(story).getByRole("button", { name: "Ask the setup's agent to redo them" })).toBeInTheDocument();
+    const written = await waitFor(() => group(/^Script and bible$/));
+    expect(within(written).getByRole("button", { name: "Ask the setup's agent to redo them" })).toBeInTheDocument();
     expect(within(row(/bible/i)).getByText("An input changed: Screenplay v2")).toBeInTheDocument();
-    expect(group(/^Assets$/)).not.toBe(story);
+    expect(group(/^Assets$/)).not.toBe(written);
   });
 
   it("says when nothing is out of date, with no action", async () => {

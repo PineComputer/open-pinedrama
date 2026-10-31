@@ -1,6 +1,6 @@
-// The Story: the episodes as the bible titles them, the cast as cards named as the bible names
-// them with their other names and where each stands, the world as places and props; a card opens
-// its asset's detail, which links to its review, as decisions are made there.
+// Assets: the cast as cards named as the bible names them with their other names and where each stands,
+// the world as places and props; a card opens its asset's detail, which links to its review, as decisions are
+// made there. The bible's own page is Bible.test.tsx's.
 import { screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
@@ -41,14 +41,14 @@ const cast: CastCard[] = [
   },
   { kind: "prop", subject: "letter", episodes: [], looks: [{ look: "", versions: [{ turnId: "t6", files: [file(6, "v1")] as never }] }] },
 ];
-const names = { title: "T", characters: { lin: { name: "Lin Xiaoyu", aliases: ["Xiaoyu"] } }, locations: { office: "Factory office" }, props: { letter: "The letter" }, episodes: { EP001: "The stepmother arrives" }, logline: "A stepmother wins the house.", beats: ["She arrives."], summaries: { EP001: "She meets the family." }, descriptions: { locations: { office: "Desks under strip lights." }, props: { letter: "A folded letter." } } };
+const names = { title: "T", characters: { lin: { name: "Lin Xiaoyu", aliases: ["Xiaoyu"] } }, locations: { office: "Factory office" }, props: { letter: "The letter" }, episodes: { EP001: "The stepmother arrives" }, logline: "A stepmother wins the house.", beats: [], summaries: { EP001: "She meets the family." }, endHooks: {}, seconds: {}, lines: {}, descriptions: { locations: { office: "Desks under strip lights." }, props: { letter: "A folded letter." } } };
 
 function engine() {
   answer("/api/dramas/d1/cast", cast);
   answer("/api/dramas/d1/project", { state: null, sessions: [], problems: [], names });
 }
 
-describe("the Story", () => {
+describe("Assets", () => {
   it("shows a card as the picture, the name, the version and where it stands, and the rest in the detail (D56)", async () => {
     const user = userEvent.setup();
     engine();
@@ -148,40 +148,5 @@ describe("the Story", () => {
     engine();
     await renderAt(<Cast dramaId="d1" />, "/d/d1/assets/props");
     expect(await screen.findByRole("article", { name: "The letter" })).toBeInTheDocument();
-  });
-
-  it("shows the bible on Story before anything is drawn, and says what Story is (Y8)", async () => {
-    answer("/api/dramas/d1/cast", []);
-    answer("/api/dramas/d1/project", { state: null, sessions: [], problems: [], names });
-    await renderAt(<Cast dramaId="d1" />, "/d/d1/story");
-    expect(await screen.findByText("A stepmother wins the house.")).toBeInTheDocument();
-    expect(screen.getByText(/^The bible: logline, beats/)).toBeInTheDocument();
-    expect(screen.queryByText(/appear here as the agent draws them/)).not.toBeInTheDocument();
-  });
-
-  it("keeps the bible on Story, a page of its own with no asset tabs (IA §16)", async () => {
-    engine();
-    await renderAt(<Cast dramaId="d1" />, "/d/d1/story");
-    expect(await screen.findByRole("link", { name: /EP001\s*The stepmother arrives/ })).toHaveAttribute("href", "/d/d1/e/EP001/canvas");
-    expect(screen.queryByRole("tab")).not.toBeInTheDocument();
-  });
-
-  it.each([
-    [{ current: "v1", accepted: "v1", usable: true }, "Bible v1 · accepted"],
-    [{ current: "v2", accepted: "v1", usable: false, why: "v2 waits for your review" }, "Bible v2 · not yet accepted · v1 accepted"],
-    [{ current: "v2", accepted: "v2", usable: false, why: "made from a screenplay that changed" }, "Bible v2 · accepted · not usable: made from a screenplay that changed"],
-  ])("says where the bible stands as drama-cli's status gives it (%o)", async (bible, line) => {
-    engine();
-    answer("/api/dramas/d1/project", { state: { bible: { candidate: null, run: [], errors: [], ...bible }, episodes: {} }, sessions: [], problems: [], names });
-    await renderAt(<Cast dramaId="d1" />, "/d/d1/story");
-    expect(await screen.findByText(line)).toBeInTheDocument();
-  });
-
-  it("opens on the bible: the logline, the beats and each episode's summary", async () => {
-    engine();
-    await renderAt(<Cast dramaId="d1" />, "/d/d1/story");
-    expect(await screen.findByText("A stepmother wins the house.")).toBeInTheDocument();
-    expect(within(screen.getByRole("region", { name: "Beats" })).getByText("She arrives.")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /EP001\s*The stepmother arrives\s*She meets the family\./ })).toBeInTheDocument();
   });
 });

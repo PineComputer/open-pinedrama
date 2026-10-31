@@ -17,7 +17,7 @@ function Rewrite({ original, rewrite, reviewId }: { original: FileItem; rewrite:
 
 /**
  * Script, the screenplay's one home (IA §16; design/screens.js, Script): the screenplay drama-cli recorded, on its own or
- * beside the maker's original, and its versions with what the maker gave. The bible lives in Story and each breakdown in
+ * beside the maker's original, and its versions with what the maker gave. The bible lives in Bible and each breakdown in
  * its episode. While the agent's question about a rewrite is open, Script is that review (P5.4).
  */
 export function Script({ dramaId }: { dramaId: string }) {

@@ -14,12 +14,29 @@ export interface Names {
   episodes: Record<string, string>;
   /** The story in a sentence; none where the bible has no logline. */
   logline?: string;
-  /** What happens, beat by beat (each beat's event). */
-  beats: string[];
+  /** The overall style and explicitness, in English; none where the bible has none. */
+  tone?: string;
+  /** What happens, beat by beat: its event, its seconds on screen and its screenplay lines (bible.py's Beat). */
+  beats: Beat[];
   /** Each episode's summary, by its id, where the bible gives one. */
   summaries: Record<string, string>;
+  /** Each episode's end hook, by its id, where the bible gives one. */
+  endHooks: Record<string, string>;
+  /** Each episode's seconds, the sum of its beats (est_seconds), by its id, where the bible gives them. */
+  seconds: Record<string, number>;
+  /** Each episode's first and last screenplay line, by its id, where the bible gives them: its beats lie within them. */
+  lines: Record<string, Lines>;
   /** Each place's and key prop's description, by its id, where the bible gives one (bible.py's Location and Prop). */
   descriptions: { locations: Record<string, string>; props: Record<string, string> };
+}
+
+/** [first, last] screenplay line numbers (bible.py's LineRange). */
+export type Lines = [number, number];
+
+export interface Beat {
+  event: string;
+  seconds: number;
+  lines: Lines;
 }
 
 export class NamesError extends Error {
@@ -56,8 +73,25 @@ function byId<T>(value: unknown, field: string, read: (entry: Raw, at: string) =
   );
 }
 
+function number(value: unknown, field: string): number {
+  if (typeof value !== "number" || !Number.isFinite(value)) throw new NamesError(field, "a number");
+  return value;
+}
+
+function lineRange(value: unknown, field: string): Lines {
+  const pair = list(value, field);
+  if (pair.length !== 2) throw new NamesError(field, "[first, last] line numbers");
+  return [number(pair[0], `${field}.0`), number(pair[1], `${field}.1`)];
+}
+
 /** The entries a field gives, without those it leaves out. */
-const given = (entries: Record<string, string | undefined>) => Object.fromEntries(Object.entries(entries).filter((pair): pair is [string, string] => pair[1] !== undefined));
+const given = <T>(entries: Record<string, T | undefined>) => Object.fromEntries(Object.entries(entries).filter((pair): pair is [string, T] => pair[1] !== undefined));
+
+/** An episode's beats: those whose lines lie within the episode's (drama-cli puts each beat within one episode). */
+export function beatsOf(names: Names, episode: string): Beat[] {
+  const range = names.lines[episode];
+  return range ? names.beats.filter((beat) => beat.lines[0] >= range[0] && beat.lines[1] <= range[1]) : [];
+}
 
 export function parseBibleNames(bible: unknown): Names {
   const raw = object(bible, "");
@@ -72,8 +106,18 @@ export function parseBibleNames(bible: unknown): Names {
     props: raw.props === undefined ? {} : byId(raw.props, "props", (entry, at) => text(entry.name, `${at}.name`)),
     episodes: byId(raw.episodes, "episodes", (entry, at) => text(entry.title, `${at}.title`)),
     logline: raw.logline === undefined ? undefined : text(raw.logline, "logline"),
-    beats: raw.beats === undefined ? [] : list(raw.beats, "beats").map((beat, n) => text(object(beat, `beats.${n}`).event, `beats.${n}.event`)),
+    tone: raw.tone === undefined ? undefined : text(raw.tone, "tone"),
+    beats:
+      raw.beats === undefined
+        ? []
+        : list(raw.beats, "beats").map((entry, n) => {
+            const beat = object(entry, `beats.${n}`);
+            return { event: text(beat.event, `beats.${n}.event`), seconds: number(beat.seconds, `beats.${n}.seconds`), lines: lineRange(beat.lines, `beats.${n}.lines`) };
+          }),
     summaries: given(byId(raw.episodes, "episodes", (entry, at) => (entry.summary === undefined ? undefined : text(entry.summary, `${at}.summary`)))),
+    endHooks: given(byId(raw.episodes, "episodes", (entry, at) => (entry.end_hook === undefined ? undefined : text(entry.end_hook, `${at}.end_hook`)))),
+    seconds: given(byId(raw.episodes, "episodes", (entry, at) => (entry.est_seconds === undefined ? undefined : number(entry.est_seconds, `${at}.est_seconds`)))),
+    lines: given(byId(raw.episodes, "episodes", (entry, at) => (entry.lines === undefined ? undefined : lineRange(entry.lines, `${at}.lines`)))),
     descriptions: {
       locations: given(byId(raw.locations, "locations", (entry, at) => (entry.description === undefined ? undefined : text(entry.description, `${at}.description`)))),
       props: raw.props === undefined ? {} : given(byId(raw.props, "props", (entry, at) => (entry.description === undefined ? undefined : text(entry.description, `${at}.description`)))),

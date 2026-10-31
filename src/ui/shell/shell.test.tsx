@@ -54,8 +54,8 @@ describe("the drama's bar", () => {
     expect(screen.getByText("$41.20")).toBeInTheDocument();
   });
 
-  it("has no view switch: an episode's one view is its Canvas (D66), and Story, Assets, the board and Delivery are one page each", async () => {
-    for (const path of ["/d/d1/e/EP002/canvas?item=episodes%2FEP002%2Fsegments%2Fseg01", "/d/d1/story", "/d/d1/assets/characters/ivy", "/d/d1/episodes", "/d/d1/delivery", "/d/d1/e/EP002/canvas?item=episodes%2FEP002%2Fsegments%2Fseg01&view=lineage"]) {
+  it("has no view switch: an episode's one view is its Canvas (D66), and Bible, Assets, the board and Delivery are one page each", async () => {
+    for (const path of ["/d/d1/e/EP002/canvas?item=episodes%2FEP002%2Fsegments%2Fseg01", "/d/d1/bible", "/d/d1/assets/characters/ivy", "/d/d1/episodes", "/d/d1/delivery", "/d/d1/e/EP002/canvas?item=episodes%2FEP002%2Fsegments%2Fseg01&view=lineage"]) {
       const { unmount } = await renderAt(<DramaBar drama={drama} />, path);
       expect(screen.queryByRole("group", { name: /view$/ })).toBeNull();
       unmount();
@@ -176,7 +176,7 @@ describe("the sidebar", () => {
     const tree = screen.getByRole("navigation", { name: "The Stepmother" });
     expect(within(tree).getAllByRole("link").map((link) => link.getAttribute("href"))).toEqual([
       "/d/d1/script",
-      "/d/d1/story",
+      "/d/d1/bible",
       "/d/d1/assets/characters",
       "/d/d1/episodes",
       "/d/d1/delivery",
@@ -261,7 +261,7 @@ describe("the sidebar", () => {
     const steps = screen.getByRole("list", { name: "Steps" });
     expect(within(steps).getAllByRole("listitem").map((step) => [step.className, step.textContent])).toEqual([
       ["you", "1ScriptYour review"],
-      ["line", "2StoryAfter your review"],
+      ["line", "2BibleAfter your review"],
       ["line", "3EpisodesAfter the looks"],
       ["line", "4CutPer episode"],
     ]);

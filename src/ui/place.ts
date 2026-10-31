@@ -16,7 +16,7 @@ export type Page =
   | "episodes"
   | "script"
   | "analyzing"
-  | "story"
+  | "bible"
   | "characters"
   | "locations"
   | "props"
@@ -53,7 +53,7 @@ type Shelf = keyof typeof SHELF;
 /** The page that shows a route's whole object: the page whose path already names the item. */
 function named(page: Page | undefined, params: { assetId?: string }): string | undefined {
   if (page === "script") return "screenplay";
-  if (page === "story") return "bible";
+  if (page === "bible") return "bible";
   if ((page === "characters" || page === "locations" || page === "props") && params.assetId) return `assets/${SHELF[page]}/${params.assetId}`;
   return undefined;
 }
@@ -91,7 +91,7 @@ export function homeLink(dramaId: string, item: string, surface: Surface = "canv
     case "screenplay":
       return linkOptions({ to: "/d/$dramaId/script", params: { dramaId }, search: { item: version && item, version, view } });
     case "bible":
-      return linkOptions({ to: "/d/$dramaId/story", params: { dramaId }, search: { item: version && item, version, view } });
+      return linkOptions({ to: "/d/$dramaId/bible", params: { dramaId }, search: { item: version && item, version, view } });
     case "look":
     case "plate":
     case "prop": {

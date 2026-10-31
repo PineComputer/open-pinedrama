@@ -123,7 +123,7 @@ Router's, in `src/ui/routes.tsx`; one reader, `usePlace`, and one builder, `plac
 | `/reviews`, `/reviews?drama=<id>` | the queue, and a project's filter of it |
 | `/r/$reviewId` | one review room |
 | `/settings` | Settings |
-| `/d/$dramaId/script`, `/story`, `/episodes`, `/delivery` | the project's places |
+| `/d/$dramaId/script`, `/bible`, `/episodes`, `/delivery` | the project's places |
 | `/d/$dramaId/analyzing` | setup: analyzing and the Fountain review |
 | `/d/$dramaId/assets/{characters,locations,props}/$assetId?` | Assets, with one selected |
 | `/d/$dramaId/e/$episodeCode/{list,canvas,cut}` | an episode's views and its cut |

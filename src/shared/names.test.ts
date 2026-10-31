@@ -2,7 +2,7 @@
 // them (the screenplay's own script), and its episodes' titles, keyed by id.
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { nameOf, NamesError, parseBibleNames } from "./names.ts";
+import { beatsOf, nameOf, NamesError, parseBibleNames } from "./names.ts";
 
 function bible(): Record<string, any> {
   return JSON.parse(readFileSync(new URL("../../fixtures/status/bible.json", import.meta.url), "utf8"));
@@ -17,8 +17,12 @@ describe("a bible's names", () => {
       props: {},
       episodes: { EP001: "x" },
       logline: "l",
-      beats: ["greeting"],
+      tone: "t",
+      beats: [{ event: "greeting", seconds: 10, lines: [1, 7] }],
       summaries: { EP001: "s" },
+      endHooks: { EP001: "h" },
+      seconds: { EP001: 10 },
+      lines: { EP001: [1, 7] },
       descriptions: { locations: { office: "desks" }, props: {} },
     });
   });
@@ -38,6 +42,24 @@ describe("a bible's names", () => {
     expect(() => parseBibleNames(value)).toThrow(NamesError);
     expect(() => parseBibleNames(value)).toThrow(/characters\.0\.name/);
     expect(() => parseBibleNames("not a bible")).toThrow(NamesError);
+  });
+
+  it("refuse a beat without its screenplay lines, naming the field", () => {
+    const value = bible();
+    delete value.beats[0].lines;
+    expect(() => parseBibleNames(value)).toThrow(/beats\.0\.lines/);
+  });
+});
+
+describe("an episode's beats", () => {
+  it("are the bible's beats whose lines lie within the episode's, in order", () => {
+    const value = bible();
+    value.episodes.push({ id: "EP002", title: "y", summary: "s2", est_seconds: 8, end_hook: "h2", lines: [8, 12] });
+    value.beats.push({ lines: [8, 9], seconds: 5, event: "a" }, { lines: [10, 12], seconds: 3, event: "b" });
+    const names = parseBibleNames(value);
+    expect(beatsOf(names, "EP001").map((beat) => beat.event)).toEqual(["greeting"]);
+    expect(beatsOf(names, "EP002").map((beat) => beat.event)).toEqual(["a", "b"]);
+    expect(beatsOf(names, "EP003")).toEqual([]);
   });
 });
 
