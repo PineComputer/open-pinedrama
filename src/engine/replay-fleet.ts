@@ -196,6 +196,11 @@ interface DramaData {
   episodes: { title: Both<string>; segments: { id: string; heading: Both<string>; shots: Both<string[]>; uses?: string[] }[]; cut?: { segment: string; in: number; out: number }[] }[];
   /** A red line in the screenplay: the episode whose bible range names it stops on drama-cli's refusal (RedLine) and asks the maker. */
   redLine?: { episode: string; line: Both<string> };
+  /**
+   * A sample with no source project (the pro prototype's drama) has no screenplay of its own: replay writes one from its
+   * episodes, their scene headings and shots (screenplayOf). A sample from a real run brings its own (samples.json).
+   */
+  derivedScreenplay?: boolean;
 }
 
 /** A sample drama in one language. */
@@ -213,6 +218,7 @@ interface Story {
   props: { id: string; name: string; description: string }[];
   episodes: { title: string; segments: { id: string; heading: string; shots: string[]; uses?: string[] }[]; cut?: { segment: string; in: number; out: number }[] }[];
   redLine?: { episode: string; line: string };
+  derivedScreenplay?: boolean;
 }
 
 const inLanguage = (d: DramaData, lang: Lang): Story => ({
@@ -229,6 +235,7 @@ const inLanguage = (d: DramaData, lang: Lang): Story => ({
   props: d.props.map((p) => ({ id: p.id, name: p.name[lang], description: p.description[lang] })),
   episodes: d.episodes.map((e) => ({ title: e.title[lang], segments: e.segments.map((s) => ({ id: s.id, heading: s.heading[lang], shots: s.shots[lang], ...(s.uses ? { uses: s.uses } : {}) })), ...(e.cut ? { cut: e.cut } : {}) })),
   ...(d.redLine ? { redLine: { episode: d.redLine.episode, line: d.redLine.line[lang] } } : {}),
+  ...(d.derivedScreenplay ? { derivedScreenplay: true } : {}),
 });
 
 /** The number an item is first drawn at: its version in the project the sample comes from, else 1 (v1, t01). */
@@ -441,11 +448,49 @@ const bibleJson = (say: Say, version: string): Out => ({
 });
 
 /**
- * The sample screenplay (fixtures/replay/sample-screenplay.<lang>.md) as drama-cli's screenplay
- * rewrite returns it: the Fountain and its review (fixtures/replay/rewrite/<lang>/), as version v1.
+ * A sample's screenplay in Fountain (fountain.io/syntax), written from its own episodes: each episode a section with its title as
+ * a synopsis, each run of segments under one heading a scene numbered as drama-cli numbers them (#episode-scene#), each shot an
+ * action line. A heading that doesn't start with INT. or EXT. is forced with a leading period, as the zh sample's own screenplay
+ * forces its Chinese headings. Only for a sample with no screenplay of its own (DramaData.derivedScreenplay): nothing is invented.
  */
-const rewriteFiles = (lang: Lang): Out[] =>
-  ["screenplay.fountain", "review.md"].map((name) => ({ path: `drama/screenplay/v1/${name}`, type: typeOf(name), bytes: readFileSync(path.join(FIXTURES, "rewrite", lang, name)) }));
+export function screenplayOf(story: Story, lang: Lang): string {
+  const lines: string[] = [];
+  story.episodes.forEach((episode, i) => {
+    lines.push(lang === "zh" ? `# 第${i + 1}集` : `# Episode ${i + 1}`, "", `= ${episode.title}`, "");
+    let scene = 0;
+    let heading = "";
+    for (const segment of episode.segments) {
+      if (segment.heading !== heading) {
+        heading = segment.heading;
+        scene += 1;
+        lines.push(`${/^(INT|EXT)[.\s]/i.test(heading) ? "" : "."}${heading} #${i + 1}-${scene}#`, "");
+      }
+      for (const shot of segment.shots) lines.push(shot, "");
+    }
+  });
+  return lines.join("\n");
+}
+
+/**
+ * The sample's own screenplay as drama-cli's rewrite returns it, at version v1: the Fountain and its review where the sample has
+ * them (samples.json), the one written from its episodes where it has no screenplay of its own, else none. Never another sample's.
+ */
+const rewriteFiles = (story: Story, set: string, lang: Lang): Out[] =>
+  story.derivedScreenplay
+    ? [{ path: "drama/screenplay/v1/screenplay.fountain", type: typeOf("screenplay.fountain"), bytes: text(screenplayOf(story, lang)) }]
+    : ["screenplay.fountain", "review.md"].flatMap((name) => sample(set, `drama/screenplay/v1/${name}`) ?? []);
+
+/**
+ * The screenplay a sample drama starts from, as the maker would upload it: the sample's own original (samples.json,
+ * inputs/screenplay), or for a sample with no screenplay of its own the one written from its episodes.
+ */
+export function sampleScreenplay(id: string, lang: Lang): { name: string; bytes: Uint8Array } {
+  const story = STORIES[id][lang];
+  if (story.derivedScreenplay) return { name: "screenplay.md", bytes: text(screenplayOf(story, lang)) };
+  const own = sample(pictures(id, lang), "inputs/screenplay.md");
+  if (!own) throw new Error(`Replay's sample ${id} has no screenplay of its own (fixtures/replay/samples/samples.json, inputs/screenplay).`);
+  return { name: path.basename(own.path), bytes: own.bytes };
+}
 
 /**
  * The lineage a stop hands back: a sample drama's own, drama-cli's export of the project it comes from
@@ -523,7 +568,7 @@ function setupScript(lang: Lang, preset: string, story: { id: string; story: Sto
     // The first stop: the screenplay rewritten into drama-cli's Fountain, with its review, for the maker to accept; any answer goes on.
     if (stage === "start") {
       stage = "rewrite";
-      return { progress: say.rewriting, files: rewriteFiles(lang), ask: say.askRewrite };
+      return { progress: say.rewriting, files: rewriteFiles(story.story, set, lang), ask: say.askRewrite };
     }
     if (stage === "rewrite") {
       stage = "asked";

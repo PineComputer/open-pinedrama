@@ -7,7 +7,7 @@
 // come only from the studio's own origin. Files the agents returned are served so they
 // can't act as pages of the studio: unknown types download, and none may run scripts.
 import { randomBytes, timingSafeEqual } from "node:crypto";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync } from "node:fs";
 import path from "node:path";
 import { Readable } from "node:stream";
 import { serveStatic } from "@hono/node-server/serve-static";
@@ -15,14 +15,15 @@ import { Hono, type Context } from "hono";
 import { getCookie, setCookie } from "hono/cookie";
 import { streamSSE } from "hono/streaming";
 import type { ApiFailure, AppInfo, Decision, ErrorCode, LiveMessage } from "../shared/types.ts";
-import { FIXTURES, UI_DIR } from "./config.ts";
+import { UI_DIR } from "./config.ts";
+import { typeOf } from "./classify.ts";
 import { appInfo, connectPine, disconnect, useReplay } from "./connection.ts";
 import { retryStarts } from "./computers.ts";
 import { DEFAULT_ENDPOINT } from "./settings.ts";
 import { all, run } from "./db.ts";
 import { chat, chooseInputs, createDrama, desktop, finishEpisode, rehearse, resumeEpisode, sampleDramaId, stopDrama, updateDrama, resumeDrama, stopEpisode } from "./dramas.ts";
 import { StudioError } from "./errors.ts";
-import { STORIES } from "./replay-fleet.ts";
+import { sampleScreenplay, STORIES } from "./replay-fleet.ts";
 import { fileRow, openBlob, save, toItem } from "./library.ts";
 import { publish, subscribe } from "./live.ts";
 import { drama as dramaRow, review as reviewRow, session as sessionRow, type SessionRow } from "./records.ts";
@@ -185,7 +186,6 @@ export function app(): Hono {
       const zh = language !== "en";
       const story = STORIES[sample];
       if (!story) throw new StudioError("sample-unknown", `No sample drama "${sample}"; there are ${Object.keys(STORIES).join(", ")}.`);
-      const name = `sample-screenplay.${zh ? "zh" : "en"}.md`;
       const id = await createDrama({
         // In replay a sample keeps its id across rebuilds (sampleDramaId); a rehearsal on Pine is a real drama.
         ...(mode === "replay" ? { id: sampleDramaId(sample, zh ? "zh" : "en") } : {}),
@@ -196,7 +196,7 @@ export function app(): Hono {
         perComputer: 1,
         notes: `${zh ? "类型" : "Genres"}: ${story[zh ? "zh" : "en"].genres.join(zh ? "、" : ", ")}`,
         length: "60",
-        files: [{ name, type: "text/markdown", bytes: readFileSync(path.join(FIXTURES, name)) }],
+        files: [(({ name, bytes }) => ({ name, type: typeOf(name), bytes }))(sampleScreenplay(sample, zh ? "zh" : "en"))],
         rehearsal: mode === "pine",
         preset: mode === "pine" ? "" : zh ? "zh-cn-live-sfw" : "en-us-live-sfw",
         screenplayLanguage: zh ? "zh" : "en",

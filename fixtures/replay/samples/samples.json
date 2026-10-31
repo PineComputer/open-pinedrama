@@ -54,7 +54,10 @@
   "drama/episodes/EP006/segments/seg01/t02/video": "en/seg01-t02.mp4",
   "drama/episodes/EP006/segments/seg02/t01/video": "en/seg02-t01.mp4",
   "drama/episodes/EP006/segments/seg03/t01/video": "en/seg03-t01.mp4",
-  "drama/episodes/EP006/edit/vN/cut": "en/cut.mp4"
+  "drama/episodes/EP006/edit/vN/cut": "en/cut.mp4",
+  "inputs/screenplay": "en/inputs/screenplay.md",
+  "drama/screenplay/vN/screenplay": "en/screenplay/screenplay.fountain",
+  "drama/screenplay/vN/review": "en/screenplay/review.md"
  },
  "zh": {
   "drama/assets/characters/lin/vN/image-1": "zh/lin.jpg",
@@ -104,7 +107,10 @@
   "drama/episodes/EP006/segments/seg01/t01/video": "zh/seg01-t01.mp4",
   "drama/episodes/EP006/segments/seg02/t01/video": "zh/seg02-t01.mp4",
   "drama/episodes/EP006/segments/seg03/t01/video": "zh/seg03-t01.mp4",
-  "drama/episodes/EP006/edit/vN/cut": "zh/cut.mp4"
+  "drama/episodes/EP006/edit/vN/cut": "zh/cut.mp4",
+  "inputs/screenplay": "zh/inputs/screenplay.md",
+  "drama/screenplay/vN/screenplay": "zh/screenplay/screenplay.fountain",
+  "drama/screenplay/vN/review": "zh/screenplay/review.md"
  },
  "bride-on-bail": {
   "drama/assets/characters/dunn/vN/asset/asset": "full/bride-on-bail/specs/assets__characters__dunn__asset__asset.json",
@@ -785,7 +791,8 @@
   "drama/episodes/EP006/segments/seg04/t02/spec": "full/paper-vows/files/episodes__EP006__segments__seg04__t02__spec.json",
   "drama/episodes/EP006/segments/seg04/t02/video": "full/paper-vows/files/episodes__EP006__segments__seg04__t02__video.mp4",
   "drama/episodes/EP006/video_prompts/v2/prompts": "full/paper-vows/files/episodes__EP006__video_prompts__v2__prompts.md",
-  "handoff/lineage": "full/paper-vows/lineage.json"
+  "handoff/lineage": "full/paper-vows/lineage.json",
+  "inputs/screenplay": "full/paper-vows/inputs/screenplay.md"
  },
  "late-sunshine": {
   "drama/assets/characters/blue_tank_top_applicant/v1/asset/asset": "full/late-sunshine/files/assets__characters__blue_tank_top_applicant__v1__asset__asset.json",
@@ -1421,7 +1428,9 @@
   "drama/episodes/EP005/segments/seg05/t01/spec": "full/late-sunshine/files/episodes__EP005__segments__seg05__t01__spec.json",
   "drama/episodes/EP005/segments/seg05/t01/video": "full/late-sunshine/files/episodes__EP005__segments__seg05__t01__video.mp4",
   "drama/episodes/EP005/video_prompts/v1/prompts": "full/late-sunshine/files/episodes__EP005__video_prompts__v1__prompts.md",
-  "handoff/lineage": "full/late-sunshine/lineage.json"
+  "handoff/lineage": "full/late-sunshine/lineage.json",
+  "inputs/screenplay": "full/late-sunshine/inputs/screenplay-EP001-EP005.fountain",
+  "drama/screenplay/vN/screenplay": "full/late-sunshine/screenplay/screenplay.fountain"
  },
  "double-life-ep001": {
   "drama/assets/characters/cassie/v1/asset/asset": "full/double-life-ep001/files/assets__characters__cassie__v1__asset__asset.json",
@@ -1487,7 +1496,8 @@
   "drama/episodes/EP001/segments/seg05/t02/spec": "full/double-life-ep001/files/episodes__EP001__segments__seg05__t02__spec.json",
   "drama/episodes/EP001/segments/seg05/t02/video": "full/double-life-ep001/files/episodes__EP001__segments__seg05__t02__video.mp4",
   "drama/episodes/EP001/video_prompts/v2/prompts": "full/double-life-ep001/files/episodes__EP001__video_prompts__v2__prompts.md",
-  "handoff/lineage": "full/double-life-ep001/lineage.json"
+  "handoff/lineage": "full/double-life-ep001/lineage.json",
+  "inputs/screenplay": "full/double-life-ep001/inputs/screenplay.md"
  },
  "houma-ep001-v2": {
   "drama/assets/characters/bin_ke_jia/v1/asset/asset": "full/houma-ep001-v2/files/assets__characters__bin_ke_jia__v1__asset__asset.json",
@@ -1564,7 +1574,8 @@
   "drama/episodes/EP001/segments/seg04/t01/spec": "full/houma-ep001-v2/files/episodes__EP001__segments__seg04__t01__spec.json",
   "drama/episodes/EP001/segments/seg04/t01/video": "full/houma-ep001-v2/files/episodes__EP001__segments__seg04__t01__video.mp4",
   "drama/episodes/EP001/video_prompts/v1/prompts": "full/houma-ep001-v2/files/episodes__EP001__video_prompts__v1__prompts.md",
-  "handoff/lineage": "full/houma-ep001-v2/lineage.json"
+  "handoff/lineage": "full/houma-ep001-v2/lineage.json",
+  "inputs/screenplay": "full/houma-ep001-v2/inputs/screenplay.md"
  },
  "false-intentions-true-love-r2": {
   "drama/assets/characters/blue_tank_top_applicant/v2/asset/asset": "full/false-intentions-true-love-r2/files/assets__characters__blue_tank_top_applicant__v2__asset__asset.json",
@@ -2195,6 +2206,8 @@
   "drama/episodes/EP005/segments/seg04/t01/spec": "full/false-intentions-true-love-r2/files/episodes__EP005__segments__seg04__t01__spec.json",
   "drama/episodes/EP005/segments/seg04/t01/video": "full/false-intentions-true-love-r2/files/episodes__EP005__segments__seg04__t01__video.mp4",
   "drama/episodes/EP005/video_prompts/v1/prompts": "full/false-intentions-true-love-r2/files/episodes__EP005__video_prompts__v1__prompts.md",
-  "handoff/lineage": "full/false-intentions-true-love-r2/lineage.json"
+  "handoff/lineage": "full/false-intentions-true-love-r2/lineage.json",
+  "inputs/screenplay": "full/false-intentions-true-love-r2/inputs/screenplay-EP001-EP005.fountain",
+  "drama/screenplay/vN/screenplay": "full/false-intentions-true-love-r2/screenplay/screenplay.fountain"
  }
 }

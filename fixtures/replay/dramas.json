@@ -2451,7 +2451,8 @@
     "assets/scenes/cell/front/v1/image-1.jpg",
     "assets/scenes/street/front/v1/image-1.jpg"
    ]
-  }
+  },
+  "derivedScreenplay": true
  },
  "paper-vows": {
   "title": {
