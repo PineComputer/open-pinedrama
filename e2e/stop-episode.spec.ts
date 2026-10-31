@@ -26,8 +26,12 @@ test("stopping one episode leaves the others going, and Resume puts it back in l
   expect(open.map((item) => item.episode)).not.toContain("EP002");
   expect(open.map((item) => item.episode)).toContain("EP001");
 
+  // Resume puts it back in line, first among those waiting their turn: the place Stop freed may already have gone to the
+  // next episode, so it is either at work again or first in line, never left stopped.
   await call(page, `/api/episodes/${(await row("EP002")).id}/resume`, {});
-  await review(page, id, "storyboards", "EP002");
+  const resumed = await row("EP002");
+  if (resumed.state === "queued") expect(resumed.position).toBe(1);
+  else expect(["working", "waiting"]).toContain(resumed.state);
   expect((await drama()).status).toBe("production");
 });
 
