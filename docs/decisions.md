@@ -405,7 +405,7 @@ timeline
   one home per object, rule 2 ([design principles](design-principles.md#1-one-home-per-object));
   drama-cli's own reasons (short_drama `drama_cli/artifacts.py`).
 - **Consequences.** The set is the drama tree's count: drama-cli's stale items plus what was made
-  from them (`outOfDate`, `src/shared/lineage.ts`). Per-row "Redo this" is being built.
+  from them (`outOfDate`, `src/shared/lineage.ts`). Per-row "Redo this" landed in c72fad6.
 - **Words.** None recorded.
 - **Recorded in.** Commits e3e05a9 and c72fad6 (the list), 420a21d (one submission per owner);
   work-02's, work-05's and master's notes to the docs, 30 October 2026.
@@ -438,7 +438,7 @@ timeline
     says stream copy can't join the clips), then `drama-cli edit validate`; on a refusal it stops
     with drama-cli's message. The result returns as a new cut version for review.
   - A newer cut is never re-based inside the old review: Edit offers Compare and Discard, and the
-    newer cut is edited in its own review (ours, untested).
+    newer cut is edited in its own review: work-07's choice, which master accepted as "cleaner".
   - The cost line says what is true: drama-cli's edit calls no paid model, and Pine bills the
     agent's turns.
 - **Alternatives.** Re-basing a draft onto the newest cut silently.
@@ -476,7 +476,8 @@ timeline
 - **Grounds.** [D13](#d13-2026-10-30--a-review-decision-is-taken-once-by-its-submission-id); Codex's
   round 3, fix 1; Stripe's idempotent requests
   ([design principles](design-principles.md#9-design-for-failure)).
-- **Consequences.** Reviews, Cut and Out of date show the same states.
+- **Consequences.** Reviews, Cut and Out of date show the same states; the cut's Send review uses
+  it too (a04e08f).
 - **Words.** None recorded.
 - **Recorded in.** Design e379653 and 3b5e851; engine 420a21d.
 
@@ -517,10 +518,10 @@ timeline
   needs the maker behind progressive disclosure, which would hide a node's model (`sd25`).
 - **Decision.** A canvas node keeps its model badge beside its name.
 - **Alternatives.** The model in the inspector only.
-- **Grounds.** merecdesperez44323-lab approved the node labels earlier, model included (master's
-  note, 30 October 2026).
+- **Grounds.** Astorie and LibTV show the model on their nodes (master's note); the labels design,
+  badge included, was shown to merecdesperez44323-lab, who said to continue.
 - **Consequences.** `design/app.js`, the canvas node's `.model`.
-- **Words.** None recorded.
+- **Words.** None beyond "you can continue", after the labels design was shown.
 - **Recorded in.** Master's note to the docs, 30 October 2026.
 
 ## D29. 2026-10-30 · Picking a canvas node zooms it to a readable size; video plays inline
@@ -533,8 +534,8 @@ timeline
   controls (D11).
 - **Consequences.** Being built.
 - **Words.** "do you think it's possible when we click the nodes on canvas , the node zoom in on the
-  screen to be human friendly to view. and also do you think we can add something like this:"…"play,
-  time slider, sound, full screen" (relayed by master; not in a transcript the docs can read).
+  screen to be human friendly to view. and also do you think we can add something like this:  p ,
+  play, time slider, sound, full screen" (relayed by master, verbatim; the stray "p" is theirs).
 - **Recorded in.** Master's note to the docs, 30 October 2026.
 
 ## D30. 2026-10-30 · URLs are validated against the drama; the current object comes from the route
@@ -615,8 +616,8 @@ timeline
   every name and rule (short_drama `AGENTS.md`).
 - **Consequences.** [Design principle 14](design-principles.md#14-every-element-cites-its-ground);
   `CONTRIBUTING.md`, "The design comes first"; a "Ground" column in `design/SPEC.md`.
-- **Words.** "never ad-hoc, randomly puting things here and there, randomly add some elements ,some buttons, some styles on the fly  i think , we need to be professiona"; "it's way much better to find some reference to do someting. just like drama-cli."; and, as master relayed it, "follow the design rule & dev rule in
-  doc. follow the decisions .md just like drama-cli".
+- **Words.** "never ad-hoc, randomly puting things here and there, randomly add some elements ,some buttons, some styles on the fly  i think , we need to be professiona"; "it's way much better to find some reference to do someting. just like drama-cli."; and "and btw: follow the design rule & dev rule in doc. follow
+  the decisions .md just like drama-cli" (relayed by master, verbatim).
 - **Recorded in.** Master's notes to the docs and the lanes, 30 October 2026.
 
 ## References
