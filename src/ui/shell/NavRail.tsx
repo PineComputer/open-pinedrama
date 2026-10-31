@@ -14,12 +14,19 @@ import type { Page } from "../place.ts";
 export function NavRail({ page, waiting, wide, replay, sidebarOpen, onToggleSidebar }: { page: Page | undefined; waiting: number; wide: boolean; replay: boolean; sidebarOpen: boolean; onToggleSidebar: () => void }) {
   const { t } = useT();
   const queue = page === "reviews" || page === "review";
-  // The count is said in the name as well as shown (WCAG 2.5.3: the name holds the visible text).
+  // The name is the visible text, the count in it and then said for what it is ("Reviews 2 waiting"): WCAG 2.5.3, and
+  // axe's label-content-name-mismatch, which an aria-label of other words fails.
   const place = (to: "/" | "/reviews" | "/settings", icon: IconName, label: string, current: boolean, count?: number) => (
-    <Link to={to} className={count !== undefined ? "ibtn labelled railcount" : "ibtn labelled"} title={wide ? undefined : label} aria-label={count ? t("rail.reviewsWaiting", { n: count }) : undefined} aria-current={current ? "page" : "false"}>
+    <Link to={to} className={count !== undefined ? "ibtn labelled railcount" : "ibtn labelled"} title={wide ? undefined : label} aria-current={current ? "page" : "false"}>
       <Icon name={icon} className="ic" />
       <span className="raillabel">{label}</span>
-      {count ? <span className="badge">{count}</span> : null}
+      {count ? (
+        <>
+          {" "}
+          <span className="badge">{count}</span>{" "}
+          <span className="sr-only">{t("rail.waiting")}</span>
+        </>
+      ) : null}
     </Link>
   );
   return (

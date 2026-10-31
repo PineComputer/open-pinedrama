@@ -125,10 +125,10 @@ describe("the rail", () => {
     // Each place says its name under its icon (yurun's Y1); Reviews' name holds its count too (WCAG 2.5.3).
     expect(within(rail).getAllByRole("link").map((link) => [link.textContent, link.getAttribute("aria-current")])).toEqual([
       ["Projects", "page"],
-      ["Reviews3", "false"],
+      ["Reviews 3 waiting", "false"],
       ["Settings", "false"],
     ]);
-    expect(within(rail).getByRole("link", { name: "Reviews, 3 waiting" })).toHaveAttribute("href", "/reviews");
+    expect(within(rail).getByRole("link", { name: "Reviews 3 waiting" })).toHaveAttribute("href", "/reviews");
   });
 
   it("marks Reviews on the queue and on a review, and says no count when nothing waits", async () => {
