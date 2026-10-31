@@ -92,7 +92,7 @@ flowchart TB
 | **Reset**, **Undo** | | Reset discards the draft; Undo reverts its last step. | the IA proposal, section 14.7 <sup>[3](#ref-3)</sup> |
 | **submission id** | | The id one sending of a draft carries, so a retry, a refresh or a second window takes effect once. | [D13](decisions.md#d13-2026-10-30--a-review-decision-is-taken-once-by-its-submission-id); Stripe's idempotency key |
 | **pause**, **resume** | 暂停，恢复 | The project's Pause production (StopControl): nothing new starts, every running Computer stops now, nothing more is billed, everything made stays; Resume carries on from where each episode stopped. Reversible, not an end and not a delete. Not the agent's **stop** (where a turn waits on the maker). | main's stopDrama and resume (src/engine/dramas.ts) |
-| **steer** | | A message to a running agent, sent in the agent chat; with Stop and Resume, how the maker directs work between reviews. The studio has no steer buttons of its own ([D70](decisions.md#d70-2026-10-30--the-ui-decides-the-chat-acts)). | Pine Computer (`steer`) |
+| **steer** | | A message to a running agent, sent in the agent chat; with Pause production and Resume, how the maker directs work between reviews. The studio has no steer buttons of its own ([D70](decisions.md#d70-2026-10-30--the-ui-decides-the-chat-acts)). | Pine Computer (`steer`) |
 | **Following**, **Pinned** | | The agent panel's recipient: "Following EP006" (the episode in view) by default, "Pinned to EP007" when chosen. | the IA proposal, section 13 <sup>[3](#ref-3)</sup> |
 
 ## Stops and recovery
@@ -131,6 +131,7 @@ flowchart TB
 | List, Segments (an episode's views) | Canvas | the Canvas in drama-cli's layout holds what they showed ([D66](decisions.md#d66-2026-10-30--an-episode-is-its-canvas-laid-out-as-drama-clis-export)) |
 | Analyzing, Fountain review | Script | the screenplay's whole process is on Script ([D62](decisions.md#d62-2026-10-30--script-is-the-home-of-the-whole-screenplay-process)) |
 | Fresh, Stale (in the UI) | Up to date, Out of date | one pair for the maker (Codex's re-review, G2) |
+| Stop project | Pause production | it pauses, and Resume carries on ([D74](decisions.md#d74-2026-10-31--stop-project-is-pause-production-a-pause-that-says-what-it-does)) |
 
 ## References
 

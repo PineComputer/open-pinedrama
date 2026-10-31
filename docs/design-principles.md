@@ -349,7 +349,7 @@ latest.
 
 **Rule.** The agent runs drama-cli between stops. It stops for every take, every cut, the photoreal
 storyboard, any red line, a cap, the screenplay rewrite, and questions. The maker steers by
-verdicts on the exact item, messages in the agent chat, Stop and Resume, and the cut's edit spec
+verdicts on the exact item, messages in the agent chat, Pause production and Resume, and the cut's edit spec
 ([D70](decisions.md#d70-2026-10-30--the-ui-decides-the-chat-acts)), and never generates by hand in phase 1. Every outcome is a version with its records, reviewable before it is used.
 
 **Source.** The IA proposal, section 9 <sup>[1](#ref-1)</sup>;
@@ -456,7 +456,7 @@ comes first"; `design/SPEC.md` gives each component its ground.
 
 **Rule.** The UI keeps the maker's decisions and a few controls; everything that asks the agent to do
 something goes through the agent chat. Kept: Accept and Send back on the exact item and version, each
-with one sentence, every decision also shown in that session's conversation; Stop and Resume;
+with one sentence, every decision also shown in that session's conversation; Pause production and Resume;
 Reconcile where an outcome is unknown; the cut's editor, with the chat; starting a project, export,
 navigation and viewing. Removed: redo, note, steer, regenerate and "ask to change" buttons. Where one
 stood, at most one line points to the agent sidebar. The principle's name is ours.

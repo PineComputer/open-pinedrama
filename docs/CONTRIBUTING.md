@@ -11,7 +11,7 @@ a UI change starts in `design/` ([D9](decisions.md#d9-2026-10-30--design-is-the-
 - One purpose per pull request. Say in it which plan item it does (M5, P6.2, ...).
 - Read [TESTING.md](TESTING.md): every item starts with a test that fails.
 - The UI decides; the chat acts ([D70](decisions.md#d70-2026-10-30--the-ui-decides-the-chat-acts)). A screen keeps Accept and Send back on the exact
-  item and version (each with one sentence), Stop and Resume and the other run controls (Retry,
+  item and version (each with one sentence), Pause production and Resume and the other run controls (Retry,
   Rehearse), Reconcile, the cut's editor, starting a project, export, and viewing (Review into an
   item's own review, Lineage, Download). Redo, note, steer, regenerate and "ask to change" go to the
   agent chat; where such a button stood, at most one line points to it. Nothing is generated, drawn

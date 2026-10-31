@@ -167,15 +167,17 @@ Recovery follows drama-cli's action; there is no blanket Retry
 | An unknown paid outcome | "Finding the job's result — nothing will be generated again" | Reconcile: found, failed or still unknown |
 | Any other refusal | drama-cli's words, verbatim | the action drama-cli names |
 
-**Stop and Resume** work per drama and per episode: Stop confirms, naming what stops; its Computers
-stop and nothing new starts; Resume carries on from where it left. A failed session does not mean
+**Pause production and Resume** work per project, and a session's own Stop and Resume per episode
+([D74](../decisions.md#d74-2026-10-31--stop-project-is-pause-production-a-pause-that-says-what-it-does)):
+Pause confirms with what it stops, that nothing new starts, nothing more is billed and nothing is deleted;
+paused is one state, a Paused chip with Resume; Resume carries on from where each episode stopped. A failed session does not mean
 its submitted jobs failed, and nothing is paid for twice.
 
 ## Confirmation and feedback
 
 Only an action that spends more or changes done work asks first, with a one-line impact: sending
 back a look that 61 segments use shows what would be redone before it goes. Every Send, Apply,
-Stop or Resume confirms in place, as a state that persists, not only a toast, or shows drama-cli's
+Pause, Stop or Resume confirms in place, as a state that persists, not only a toast, or shows drama-cli's
 refusal ([design principles](../design-principles.md#5-confirm-only-when-spend-grows-or-done-work-is-affected)).
 
 ## Acceptance: three flows

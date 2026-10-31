@@ -586,6 +586,12 @@ timeline
 - **Amended.** 30 October 2026, 9579a5a: the agent sidebar is only the conversation with one session: its
   status line, the session picker with Watch and Stop, the conversation and the message line. Decisions,
   Recent work and Next leave it: a decision's one home is Reviews ([D16](#d16-2026-10-30--the-navigation-a-studio-wide-rail-the-dramas-tree-one-home-per-object)).
+- **Amended.** 31 October 2026, 1533a3f and 69c4dda (work-04): the conversation is the one log
+  ([D70](#d70-2026-10-30--the-ui-decides-the-chat-acts)), so each of the agent's steps is one compact line in
+  place among the messages, in time order (checked when done, turning while the session works on it); the
+  separate process card is gone. A step and a progress message in the same words, next to each other in
+  either order, show once, as the step. Master had seen the steps twice in 9579a5a, in the card and again
+  as bubbles.
 ## D32. 2026-10-30 · Narrow windows: the sidebar is a drawer, the agent is the ball
 - **Context.** Codex's re-review found the agent lost at 1280 px (F, H).
 - **Decision.** Below 1100 px the sidebar opens as a drawer; at 1280 px and below the agent panel
@@ -1314,7 +1320,7 @@ timeline
   to the agent beside its chat.
 - **Decision.** The UI keeps: Accept and Send back on the exact item and version, each with one
   sentence (the maker's words or a reason), every decision also shown in the agent conversation of
-  the session it goes to; Stop and Resume, and the run controls of their class (Episodes' Retry,
+  the session it goes to; Pause production and Resume (named Stop until [D74](#d74-2026-10-31--stop-project-is-pause-production-a-pause-that-says-what-it-does)), and the run controls of their class (Episodes' Retry,
   Rehearse for a stopped setup; master's call); Reconcile ("Check again") where an outcome is unknown, so
   nothing is paid for twice; the cut's editor (timeline and edit spec) with the chat; and starting a
   project (upload, preset, budget), export and download, navigation and viewing. Everything else
@@ -1426,6 +1432,34 @@ timeline
 - **Words.** None recorded.
 - **Recorded in.** Commits fb80b8c (`reviewId` in `src/engine/reviews.ts`, its test in `src/engine/flow.test.ts`)
   and 0e6f0f0 (the not-found wording, work-04).
+
+## D74. 2026-10-31 · "Stop project" is "Pause production", a pause that says what it does
+- **Context.** merecdesperez44323-lab didn't understand the top bar's "Stop project": "这个有点儿费解 …
+  是说不要再做剧了吗？" (*this is a bit puzzling … does it mean stop making the drama?*). The engine's stop
+  (main's `stopDrama` and `resume`, `src/engine/dramas.ts`) is a pause: the project's status becomes
+  stopped, nothing new starts, every running Computer stops now, nothing more is billed, everything made
+  stays, and Resume carries on.
+- **Decision.** The control is named for what it does: **Pause production**, a secondary button with a
+  pause icon, not red. Its title counts what is working, from the engine's crew ("2 Computers working",
+  "1 Computer working", "No Computer running: work resumes when you answer a review"). Its confirm states
+  the facts: the working Computers stop now at their last saved pack, nothing new starts, nothing more is
+  billed, nothing is deleted, and Resume carries on from where each episode stopped; confirm "Pause
+  production", cancel "Keep working". While Computers stop it reads "Pausing…". Paused is one state: a
+  neutral Paused chip and Resume in the top bar. A pause the maker chose (reason `by-maker`) adds no
+  banner; a stop the engine made for a reason of its own (a missing skill, a failure) keeps its banner,
+  with why and the way on. A done project has no control. The API is unchanged (`POST /api/dramas/:id/stop`,
+  `POST /api/dramas/:id/resume`). A session's own Stop, in the agent sidebar's picker, keeps its name.
+- **Alternatives.** "Stop project" in red, which read as ending the drama.
+- **Grounds.** main's `stopDrama` and `resume`; Apple's HIG keeps red for destructive actions; one state,
+  said once ([D31](#d31-2026-10-30--the-agent-panel-speaks-to-the-pinned-session-else-the-episode-in-view),
+  as amended).
+- **Consequences.** D70's "Stop and Resume" reads "Pause production and Resume". The words follow: Home's
+  card says "You paused production"; a message sent while paused gets "Production is paused: resume it
+  first" (en and zh). The glossary's **pause**, **resume** row (d5a6796); `design/SPEC.md`, StopControl,
+  StopBanner and Labels.
+- **Words.** As in the context, from d5a6796's message.
+- **Recorded in.** Commits d5a6796 (the control, its dialog and design/, work-04) and 8fb7f72 (no banner
+  for the maker's pause, the neutral chip, the words; `Drama.test.tsx`).
 
 ## References
 
