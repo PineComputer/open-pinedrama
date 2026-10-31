@@ -30,6 +30,7 @@ export type ErrorCode =
   | "question-closed"
   | "decide-in-review"
   | "submission-missing"
+  | "submission-elsewhere"
   | "review-decided"
   | "review-saving"
   | "review-closed"
@@ -362,6 +363,19 @@ export interface ItemDecision {
   key: string;
   verdict: Verdict;
   notes: Note[];
+}
+
+/**
+ * A request the maker sent a session as one steering note (the Out of date page's redo): the engine sends a submission
+ * once. sending: on its way, or sent with no answer (it may have arrived); sent: the session took it; refused: the engine
+ * says it never reached the session, so the same submission may be sent again.
+ */
+export interface SubmissionView {
+  id: string;
+  sessionId: string;
+  state: "sending" | "sent" | "refused";
+  /** Why it was refused, in the engine's words. */
+  message?: string;
 }
 
 export interface Decision {

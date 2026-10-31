@@ -193,6 +193,17 @@ create table if not exists refusals (
   saved_at text not null
 );
 
+-- A steering note the maker submitted to a session (redo.ts), sent at most once per id.
+create table if not exists submissions (
+  id text primary key,
+  session_id text not null,
+  text text not null,
+  state text not null,
+  message text,
+  created_at text not null,
+  updated_at text not null
+);
+
 -- Where the maker moved the canvas's nodes (canvas.ts): view state, never production state.
 create table if not exists canvas_positions (
   drama_id text not null,

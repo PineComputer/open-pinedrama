@@ -29,6 +29,7 @@ import { drama as dramaRow, review as reviewRow, session as sessionRow, type Ses
 import { decide, resumeWithDecision } from "./reviews.ts";
 import { lineageView } from "./lineage.ts";
 import { forgetPositions, positionsOf, readPositions, replacePositions } from "./canvas.ts";
+import { redo, submission } from "./redo.ts";
 import { projectView, sessionStatus } from "./status.ts";
 import { assetPictures, castCards, deliveryRows, episodePage, scriptPage, seasonEntries } from "./browse.ts";
 import { diagnostics } from "./diagnostics.ts";
@@ -420,6 +421,20 @@ export function app(): Hono {
     } catch (error) {
       return fail(c, error);
     }
+  });
+
+  api.post("/api/sessions/:id/redo", async (c) => {
+    try {
+      const { submissionId, text } = (await c.req.json()) as { submissionId: string; text: string };
+      return c.json(await redo(c.req.param("id"), submissionId, text));
+    } catch (error) {
+      return fail(c, error);
+    }
+  });
+
+  api.get("/api/submissions/:id", (c) => {
+    const found = submission(c.req.param("id"));
+    return found ? c.json(found) : c.json(failure("not-found", "No such submission."), 404);
   });
 
   api.post("/api/sessions/:id/desktop", async (c) => {
