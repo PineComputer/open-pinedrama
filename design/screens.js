@@ -1,7 +1,7 @@
 /* The rest of the flow in the pro direction: Upload, Analyzing, Fountain review, Bible, Graph (lineage) and Cut,
    plus the setup steps and the stop cards. Uses the shell and helpers app.js exposes as window.PD. */
 (() => {
-  const { html, I, S, set, go, own, jump, openHome, openStage, openLineage, stagesOf, pickedAt, Submission, submit, toast, money, Status, TopBar, StopBanner, ProjectChips, AgentPanel, SPENT_COVERS, useEffect, useRef } = window.PD;
+  const { html, I, S, set, go, own, jump, openHome, openStage, openLineage, stageNode, Submission, submit, toast, money, Status, TopBar, StopBanner, ProjectChips, AgentPanel, SPENT_COVERS, useEffect, useRef } = window.PD;
 
   /* ───── stop cards: drama-cli's refusal shown as data ───── */
   function StopCard({ kind }) {
@@ -195,7 +195,7 @@
     const crumbs = [own.drama(), ...(sel.episode ? [own.ep()] : tab ? [own.assets(), own.tab(tab)] : sel.home ? [[sel.home[0], () => set({ ...sel.home[1], from: null })]] : []), sel.t.replace(/^EP006 /, "") + " · " + sel.v, "Lineage"];
     // Lineage is a view of relations, not a home (§16): the inspector links to where the object lives.
     const at = { kind: sel.k, ver: sel.v };
-    const home = sel.ep ? ["EP006 · " + sel.ep, { screen: "canvas", sel: sel.ep, at }] : sel.home && [sel.home[0], { ...sel.home[1], at }];
+    const home = sel.ep ? ["EP006 · " + sel.ep, { screen: "canvas", sel: stageNode(sel.ep, at), at }] : sel.home && [sel.home[0], { ...sel.home[1], at }];
     const label = "Lineage · " + sel.t;
     return html`<div class="main">
       <${TopBar} crumbs=${crumbs}/>
@@ -239,7 +239,8 @@
     { id: "cut", group: "EP006", kind: "Cut", icon: "scissors", t: "EP006 cut", v: "v1", full: "EP006 cut v1", from: "seg03 take t02", gid: "cut", home: () => jump({ screen: "cut", at: { kind: "cut", ver: "v1" } }, "Out of date") },
   ];
   /* The Out of date row of a segment's stage version, if it has one. */
-  const outOfDateAt = (seg, at) => OOD.find((r) => r.t === seg && r.kind.toLowerCase() === at.kind && r.v === at.ver);
+  // The sample's out-of-date storyboard is the line-art one.
+  const outOfDateAt = (seg, at) => OOD.find((r) => r.t === seg && r.kind.toLowerCase() === at.kind && r.v === at.ver && (!at.style || at.style === "line-art"));
   function OutOfDate() {
     const items = S.state === "fresh" ? [] : OOD;
     // Leaving for a home or Lineage marks the row (its own key, apart from Canvas's pick), so Back returns to it.

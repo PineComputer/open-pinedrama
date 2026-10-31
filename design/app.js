@@ -31,10 +31,9 @@
   const current = (id) => [...P.cast, ...P.places, ...P.props].find((x) => x.id === id);
   const openHome = (id, label, at) => jump({ screen: "story", stab: homeTab(id), asel: id, at: at || { kind: KIND[homeTab(id)], ver: current(id).ver } }, label);
   /* A segment's stage version, on its episode's Canvas, picked. */
-  const openStage = (id, at, label) => jump({ screen: "canvas", sel: id, at }, label);
-  /* A segment's versions, one tile each, as Canvas shows them; the take is the one picked by default. */
-  const stagesOf = (g) => [g.board && { kind: "storyboard", ver: "v1", pic: g.board }, g.still && { kind: "take", ver: g.take, pic: g.still }].filter(Boolean);
-  const pickedAt = (g) => (S.at && ["storyboard", "take"].includes(S.at.kind) ? S.at : stagesOf(g).slice(-1)[0]);
+  const openStage = (id, at, label) => jump({ screen: "canvas", sel: stageNode(id, at), at }, label);
+  /* The Canvas node of a segment's stage (board(): `${seg}/${kind}`), the take when none is named. */
+  const stageNode = (seg, at) => `${seg}/${!at ? "take" : at.style === "photoreal" ? "photoreal" : at.kind}`;
   const openLineage = (gid, label) => jump({ screen: "graph", gsel: gid }, label);
   /* Round 3 (Codex, merecdesperez44323-lab): the crumbs say where an object belongs, each ancestor a link to its home; where you came
      from is only ever "Back to …" (BackTo). The drama shows its cover and name first, so it's clear which one is open. */
@@ -374,25 +373,64 @@
   }
 
   /* ───── Canvas ───── */
-  const NODES = (() => {
-    const n = [];
-    P.cast.slice(0, 5).forEach((c, i) => n.push({ id: c.id, kind: "cast", x: 0, y: i * 196, w: 300, h: 168, pic: c.sheet, label: c.name, st: c.st, ver: c.ver, accepted: c.accepted, role: c.role, model: "gpt-image-2.5", problems: c.problems }));
-    P.places.slice(0, 2).forEach((p, i) => n.push({ id: p.id, kind: "place", x: 400, y: i * 380, w: 190, h: 338, pic: p.pic, label: p.name, st: p.st, ver: p.ver, accepted: p.accepted, model: "gpt-image-2.5", role: "Plate · " + p.times.map(([t]) => t).join(" · ") }));
-    n.push({ id: "file", kind: "prop", x: 400, y: 770, w: 190, h: 200, pic: P.props[0].pic, label: "Case file", st: "accepted", ver: "v1", accepted: P.props[0].accepted, role: "Key prop", model: "gpt-image-2.5" });
-    let gy = 0;
-    P.scenes.forEach((sc, gi) => {
-      const g = { id: "g" + sc.n, kind: "group", x: 700, y: gy, w: 360, h: 64 + sc.segs.length * 236, label: `Scene ${sc.n} · Luca's apartment · ${sc.time}` };
-      n.push(g);
-      sc.segs.forEach((s, i) => n.push({ id: s.id, kind: "seg", x: 730, y: gy + 64 + i * 236, w: 300, h: 196, seg: s, label: `EP006 ${s.id}`, st: s.st, ver: s.take, accepted: s.accepted, model: "sd25", role: s.s + " s · " + s.cast.length + " in frame" }));
-      gy += g.h + 40;
+  /* The episode's one view (merecdesperez44323-lab: "还不如就直接canvas"): drama-cli's own board, as `drama-cli export
+     comfyui` lays it out (short_drama drama_cli/export.py, section() and layout(), the port in src/shared/layout.ts): the
+     Characters, Locations and Props groups two to a row on the left; one group per segment, four to a row, its stages in
+     drama-cli's column order (blocking, the line-art and photoreal storyboards, the take); the cut alone on the right.
+     One difference is ours: the export draws the episode's breakdown as one text node in the Text group; here each
+     segment's shots are a text node at the start of its group, so the shots read beside the pictures they made (SPEC).
+     Each node is drama-cli's width at its file's own ratio (D58); a row is as tall as its tallest. */
+  const W = 300, GAP = 60, PAD = 20, TITLE = 50, LABEL = 26, CARD = 340;
+  const ICON = { cast: "user", place: "image", prop: "cube", shots: "list-numbers", blocking: "squares-four", storyboard: "squares-four", photoreal: "image", take: "film-strip", cut: "scissors" };
+  function board() {
+    const seen = (src) => S.dims[src] && Math.round((W * S.dims[src][1]) / S.dims[src][0]);
+    const nodes = [], groups = [];
+    const scene = Object.fromEntries(P.scenes.flatMap((sc) => sc.segs.map((g) => [g.id, `Scene ${sc.n} · ${(P.places.find((p) => p.id === sc.place) || {}).name || sc.place} · ${sc.time}`])));
+    const node = (n) => ({ w: W, h: n.pic ? seen(n.pic) || CARD : n.h || CARD, ...n });
+    const sections = [
+      ["Characters", P.cast.slice(0, 5).map((c) => node({ id: c.id, kind: "cast", pic: c.sheet, label: c.name, st: c.st, ver: c.ver, accepted: c.accepted, role: c.role, model: "gpt-image-2.5", problems: c.problems }))],
+      ["Locations", P.places.slice(0, 2).map((p) => node({ id: p.id, kind: "place", pic: p.pic, label: p.name, st: p.st, ver: p.ver, accepted: p.accepted, model: "gpt-image-2.5", role: "Plate · " + p.times.map(([t]) => t).join(" · ") }))],
+      ["Props", [node({ id: "file", kind: "prop", pic: P.props[0].pic, label: "Case file", st: "accepted", ver: "v1", accepted: P.props[0].accepted, role: "Key prop", model: "gpt-image-2.5" })]],
+    ];
+    const segments = P.scenes.flatMap((sc) => sc.segs).map((g) => {
+      const at = (kind, ver) => ({ seg: g, at: { kind, ver } });
+      const blocking = (g.refs || []).find(([name]) => /^Blocking/.test(name));
+      return [`EP006 ${g.id}`, [
+        node({ id: `${g.id}/shots`, kind: "shots", label: "Shots", st: "accepted", ver: "v1", accepted: "v1", role: "Shot list · breakdown.json", h: 52 + g.shots.length * 84, seg: g }),
+        blocking && node({ id: `${g.id}/blocking`, kind: "blocking", pic: blocking[1], label: "Blocking", st: "accepted", ver: "v1", accepted: "v1", role: "Blocking reference", model: "gpt-image-2.5", ...at("blocking", "v1") }),
+        node({ id: `${g.id}/storyboard`, kind: "storyboard", pic: g.board, label: "Storyboard · line-art", st: g.boardSt || "accepted", ver: "v1", accepted: "v1", role: "Storyboard · line-art", model: "gpt-image-2.5", ...at("storyboard", "v1"), at: { kind: "storyboard", ver: "v1", style: "line-art" } }),
+        g.photo && node({ id: `${g.id}/photoreal`, kind: "photoreal", pic: g.photo, label: "Storyboard · photoreal", st: g.photoSt || "accepted", ver: "v1", accepted: "v1", role: "Storyboard · photoreal", model: "gpt-image-2.5", seg: g, at: { kind: "storyboard", ver: "v1", style: "photoreal" } }),
+        node({ id: `${g.id}/take`, kind: "take", pic: g.still, label: `Take · ${g.take}`, st: g.st, ver: g.take, accepted: g.accepted, role: `${g.s} s · ${g.cast.length} in frame`, model: "sd25", ...at("take", g.take) }),
+      ].filter(Boolean), scene[g.id]];
     });
-    return n;
-  })();
-  const EDGES = (() => {
-    const e = [];
-    P.scenes.forEach((sc) => sc.segs.forEach((s) => { s.cast.forEach((c) => e.push([c, s.id])); e.push(["apartment", s.id]); if (s.id === "seg03") e.push(["file", s.id]); }));
-    return e;
-  })();
+    const place = (title, x, y, list, perRow, label) => {
+      let row = y;
+      for (let s = 0; s < list.length; s += perRow) {
+        const members = list.slice(s, s + perRow);
+        members.forEach((n, i) => nodes.push({ ...n, x: x + i * (W + GAP), y: row + LABEL }));
+        row += Math.max(...members.map((n) => LABEL + n.h)) + GAP;
+      }
+      const width = Math.min(list.length, perRow) * (W + GAP) - GAP, height = row - GAP - y;
+      groups.push({ id: "g:" + title, kind: "group", x: x - PAD, y: y - TITLE - PAD, w: width + 2 * PAD, h: height + TITLE + 2 * PAD, label: label ? `${title} · ${label}` : title });
+      return y + height + TITLE + 2 * PAD + GAP;
+    };
+    let y = 0;
+    for (const [title, list] of sections) y = place(title, 0, y + TITLE + PAD, list, 2);
+    let x = 2 * (W + GAP) + 2 * PAD + GAP;
+    y = TITLE + PAD;
+    for (const [title, list, label] of segments) y = place(title, x, y, list, 4, label) + TITLE + PAD;
+    x += 4 * (W + GAP) + 2 * PAD + GAP;
+    place("EP006 cut", x, TITLE + PAD, [node({ id: "cut", kind: "cut", pic: "img/cover-ep6.jpg", label: "Cut · v1", st: "you", ver: "v1", accepted: null, role: "EP006 cut", model: "drama-cli edit" })], 1);
+    // drama-cli's lineage, as the canvas draws it: a segment's references feed its take, its stages feed each other in order, the takes feed the cut.
+    const edges = [];
+    for (const [, list] of segments) {
+      const g = list[0].seg, chain = list.map((n) => n.id);
+      chain.slice(1).forEach((id, i) => edges.push([chain[i], id]));
+      (g.refs || []).filter(([, , asset]) => asset).forEach(([, , asset]) => nodes.some((n) => n.id === asset) && edges.push([asset, `${g.id}/take`]));
+      edges.push([`${g.id}/take`, "cut"]);
+    }
+    return { nodes: [...groups, ...nodes], edges };
+  }
   /* The picked node's panel, directly under it, as infinite-canvas's prompt panel and astorie's node panel stand (glass): the prompt
      with each Image N as a chip of that picture and the pictures it names, the versions with what the person decided, request.json,
      and what the node is; a pill row of drama-cli's settings; the hand controls disabled until phase 2. Read-only. */
@@ -404,16 +442,14 @@
   const measure = (src) => (e) => { const w = e.target.naturalWidth, h = e.target.naturalHeight; if (w && h && !S.dims[src]) set({ dims: { ...S.dims, [src]: [w, h] } }); };
   const dims = (src) => S.dims[src] && html`<span class="dims">${S.dims[src][0]} × ${S.dims[src][1]}</span>`;
   function NodePanel({ node: item, style, uses, reads, docked: forced }) {
-    // A segment's panel is on its picked version: the storyboard tile shows the storyboard's version, the take tile the take's.
-    const at = item.seg ? pickedAt(item.seg) : null, ood = at && window.EXTRA.outOfDateAt(item.id, at);
-    const node = !at ? item : at.kind === "storyboard"
-      ? { ...item, label: item.label + " · storyboard " + at.ver, ver: at.ver, accepted: at.ver, st: "accepted", stale: !!ood, seg: null }
-      : { ...item, label: item.label + " · take " + at.ver, stale: !!ood };
-    const spec = node.seg && node.seg.spec;
+    // Each stage is its own node, on its own version (S.at, which a link may name).
+    const at = item.at, ood = at && item.seg && window.EXTRA.outOfDateAt(item.seg.id, at);
+    const node = { ...item, label: item.seg ? `EP006 ${item.seg.id} · ${item.label}` : item.label, stale: !!ood };
+    const spec = node.kind === "take" && node.seg.spec;
     // A shared reference's home is Assets (§16): its versions, prompt and review live there, and the canvas only links to it.
     const home = homeTab(node.id);
     const open = S.dtab;
-    const parts = home ? [] : [["prompt", "Prompt"], ...(spec ? [["versions", "Versions"], ["request", "Request"]] : []), ["details", "Details"]];
+    const parts = home ? [] : node.kind === "shots" ? [["details", "Details"]] : [["prompt", "Prompt"], ...(spec ? [["versions", "Versions"], ["request", "Request"]] : []), ["details", "Details"]];
     const chips = (line) => line.split(/(Image \d+)/).map((part) => { const m = part.match(/^Image (\d+)$/); return m ? html`<span class="pchip"><img src=${spec.images[m[1] - 1]} alt=""/>${part}</span>` : part; });
     // Under the node by default, the industry's convention; docked right on asking, or when the board has no room for it
     // above or below the node. The viewer's choice is kept in this browser.
@@ -450,6 +486,7 @@
 
   function Canvas() {
     const ref = useRef(null);
+    const { nodes: NODES, edges: EDGES } = board();
     const byId = Object.fromEntries(NODES.map((n) => [n.id, n]));
     const { x, y, k } = S.cam;
     // B5: a picked node is placed under the pills with its bar above it and room for its panel below (or beside, docked).
@@ -463,13 +500,13 @@
     const readable = (n) => { const el = ref.current; if (!el) return k;
       const roomH = el.clientHeight - PILLS - BAR - (S.dock === "right" ? 0 : 10 + PANEL) - 16, roomW = el.clientWidth - (S.dock === "right" ? DOCKED : 0) - 80;
       return Math.min(1.5, roomH / ((n.h || 196) + 26), roomW / (n.w || 300)); };
-    const pick = (n, at) => set({ sel: n.id, at: at || null, follow: false, camBack: S.camBack || S.cam, cam: place(n, readable(n)) });
+    const pick = (n, at) => set({ sel: n.id, at: at || n.at || null, follow: false, camBack: S.camBack || S.cam, cam: place(n, readable(n)) });
     const letGo = () => set({ sel: null, cam: S.camBack || S.cam, camBack: null });
     // Arriving with a pick (Back from Lineage or Assets, or the List's selection) places it, as a click would.
     useEffect(() => { const n = S.sel && byId[S.sel]; if (n) pick(n, S.at); }, []);
     useEffect(() => {
       if (!S.follow) return;
-      const order = ["seg01", "seg03", "seg04", "seg02"]; let i = 0;
+      const order = ["seg01/take", "seg03/take", "seg04/take", "seg02/take"]; let i = 0;
       const t = setInterval(() => { if (!S.follow || S.screen !== "canvas") return; const n = byId[order[i++ % order.length]]; const el = ref.current; if (!el) return;
         set({ cam: place(n, 0.62), sel: n.id }); }, 6000);
       return () => clearInterval(t);
@@ -490,7 +527,12 @@
     const wheel = (e) => { e.preventDefault(); const r = ref.current.getBoundingClientRect(); const mx = e.clientX - r.left, my = e.clientY - r.top;
       const nk = Math.min(1.6, Math.max(0.25, k * (e.deltaY < 0 ? 1.1 : 0.9))); set({ follow: false, cam: { k: nk, x: mx - (mx - x) * (nk / k), y: my - (my - y) * (nk / k) } }); };
     const zoom = (f) => set({ follow: false, cam: { ...S.cam, k: Math.min(1.6, Math.max(0.25, k * f)) } });
-    const fit = () => set({ follow: false, camBack: null, cam: { x: 40, y: 96, k: 0.62 } });
+    // The board's extent, for Fit and the minimap: every group and node.
+    const left = Math.min(...NODES.map((n) => n.x)), top = Math.min(...NODES.map((n) => n.y - (n.kind === "group" ? 0 : LABEL)));
+    const right = Math.max(...NODES.map((n) => n.x + n.w)), bottom = Math.max(...NODES.map((n) => n.y + n.h));
+    const fitted = () => { const el = ref.current, bw = el ? el.clientWidth : 1100, bh = el ? el.clientHeight : 800;
+      const kk = Math.min(1, (bw - 80) / (right - left), (bh - 160) / (bottom - top)); return { k: kk, x: 40 - left * kk, y: 80 - top * kk }; };
+    const fit = () => set({ follow: false, camBack: null, cam: fitted() });
     const wire = ([a, b]) => { const A = byId[a], B = byId[b]; const x1 = A.x + A.w, y1 = A.y + A.h / 2, x2 = B.x, y2 = B.y + B.h / 2; const m = (x1 + x2) / 2;
       return html`<path class=${S.sel === a || S.sel === b ? "hot" : ""} d=${`M${x1},${y1} C${m},${y1} ${m},${y2} ${x2},${y2}`}/>`; };
     const sel = S.sel && byId[S.sel];
@@ -498,24 +540,27 @@
       <${TopBar} crumbs=${[own.drama(), ...(sel && sel.kind === "seg" ? [own.ep(), sel.id + (S.at ? " · " + S.at.kind + " " + S.at.ver : "")] : sel && homeTab(sel.id) ? [own.assets(), own.tab(homeTab(sel.id)), sel.label + " · " + sel.ver] : ["EP006"])]}/>
       <div class="body" style="position:relative">
         <div class=${"board " + (S.panning ? "panning" : "")} style=${`--grid:${48 * k}px;--gx:${x % (48 * k)}px;--gy:${y % (48 * k)}px;--dot:${k < 0.12 ? 0.8 : 1.15}px`} ref=${ref} onPointerDown=${down} onPointerMove=${move} onPointerUp=${up} onPointerLeave=${up} onWheel=${wheel}>
-          <div class="layer" style=${`transform:translate(${x}px,${y}px) scale(${k})`}>
+          <div class=${"layer" + (k < 0.35 ? " far" : "")} style=${`transform:translate(${x}px,${y}px) scale(${k})`}>
             <svg class="wires" width="1" height="1">${EDGES.map(wire)}</svg>
             ${NODES.filter((n) => n.kind === "group").map((g) => html`<div class="group" style=${`left:${g.x}px;top:${g.y}px;width:${g.w}px;height:${g.h}px`}><span class="gl">${g.label}</span></div>`)}
-            ${NODES.filter((n) => n.kind !== "group" && n.kind !== "seg").map((n) => html`<div class=${"cnode " + (S.sel === n.id ? "sel" : "")} style=${`left:${n.x}px;top:${n.y - 26}px;width:${n.w}px`}>
-              <div class="lab">${I(n.kind === "cast" ? "user" : n.kind === "place" ? "image" : "cube")}<span class="name">${n.label}</span><span class="model">${n.model}</span>${n.st !== "accepted" ? Status(n.st) : outOfDate(n) && Status("stale")}${dims(n.pic)}</div>
-              <div class="card" style=${S.dims[n.pic] ? sized(n.pic) : `height:${n.h}px`} onClick=${() => pick(n)}><img src=${n.pic} alt="" draggable="false" onLoad=${measure(n.pic)}/></div></div>`)}
-            ${NODES.filter((n) => n.kind === "seg").map((n) => html`<div class=${"segnode cnode " + (S.sel === n.id ? "sel" : "")} style=${`left:${n.x}px;top:${n.y - 26}px`}>
-              <div class="lab">${I("film-strip")}<span class="name">${n.label}</span><span class="subtle" style="font-weight:500">${n.seg.s} s</span><span class="model">${n.model}</span>${n.st !== "accepted" && Status(n.st)}${n.seg.still && dims(n.seg.still)}</div>
-              <div class="card">
-                ${n.seg.board ? html`<button class=${"board-img" + (S.sel === n.id && pickedAt(n.seg).kind === "storyboard" ? " on" : "")} aria-label=${n.label + " storyboard v1"} onClick=${() => pick(n, { kind: "storyboard", ver: "v1" })}><img src=${n.seg.board} alt="" draggable="false"/><span>board v1</span></button>` : html`<div class="none">board accepted</div>`}
-                ${n.seg.still ? html`<button class=${"take-tile" + (S.sel === n.id && pickedAt(n.seg).kind === "take" ? " on" : "")} style=${sized(n.seg.still)} aria-label=${n.label + " take " + n.seg.take} onClick=${() => pick(n, { kind: "take", ver: n.seg.take })}><img src=${n.seg.still} alt="" draggable="false" onLoad=${measure(n.seg.still)}/><span>${n.seg.take}</span><span class="play"><i>${I("play")}</i></span></button>
-                  ${/* The take's inline player (merecdesperez44323-lab, D39): shown on the picked take and on hover, in media-chrome's control bar order,
-                     as Premiere's, Frame.io's and YouTube's: play, time, the slider, duration, sound, full screen. Muted until the sound is on. */ ""}
-                  <div class=${"vbar" + (S.sel === n.id && pickedAt(n.seg).kind === "take" ? " shown" : "")} role="group" aria-label=${"Play " + n.label + " take " + n.seg.take}>
-                    <button class="vb" aria-label="Play" onClick=${() => toast("Plays the take here, muted until you turn the sound on.")}>${I("play")}</button>
-                    <span class="vt">0:00</span><span class="vtrack"><i></i></span><span class="vt">0:${String(n.seg.s).padStart(2, "0")}</span>
-                    <button class="vb" aria-label="Unmute" onClick=${() => toast("Turns the take's sound on.")}>${I("speaker-slash")}</button>
-                    <button class="vb" aria-label="Enter fullscreen mode" onClick=${() => toast("Plays the take full screen.")}>${I("corners-out")}</button></div>` : html`<div class="none">${n.seg.take} accepted</div>`}</div></div>`)}
+            ${NODES.filter((n) => n.kind !== "group").map((n) => html`<div class=${"cnode is-" + n.kind + (S.sel === n.id ? " sel" : "")} style=${`left:${n.x}px;top:${n.y - LABEL}px;width:${n.w}px`}>
+              <div class="lab">${I(ICON[n.kind])}<span class="name">${n.label}</span>${n.model && html`<span class="model">${n.model}</span>`}${n.st !== "accepted" ? Status(n.st) : outOfDate(n) && Status("stale")}${n.pic && dims(n.pic)}</div>
+              ${n.kind === "shots"
+                // A segment's shots, as breakdown.json's Shot gives them: time, size, angle, camera, then what is seen and heard.
+                // Far out it keeps its title bar only, as ComfyUI collapses a node (and the export draws text).
+                ? html`<div class="card shotlist" style=${`height:${n.h}px`} onClick=${() => pick(n)}>
+                    <b class="stitle">${n.seg.shots.length} shots · ${n.seg.s} s</b>
+                    <ol class="srows">${n.seg.shots.map(([time, size, angle, camera, visual, audio]) => html`<li><span class="mono">${time}</span><span class="sfacts">${size} · ${angle} · ${camera}</span><span class="svis">${visual}</span><span class="saud">${audio}</span></li>`)}</ol></div>`
+                : html`<div class="card" style=${n.pic && S.dims[n.pic] ? sized(n.pic) : `height:${n.h}px`} onClick=${() => pick(n)}>
+                    ${n.pic ? html`<img src=${n.pic} alt="" draggable="false" onLoad=${measure(n.pic)}/>` : html`<div class="none">${n.kind === "take" ? n.ver + " accepted" : "accepted"}</div>`}
+                    ${n.kind === "take" && n.pic && html`<span class="play"><i>${I("play")}</i></span>
+                      ${/* The take's inline player (D39): on the picked take and on hover, in media-chrome's control bar order, as
+                         Premiere's, Frame.io's and YouTube's: play, time, the slider, duration, sound, full screen. Muted until the sound is on. */ ""}
+                      <div class=${"vbar" + (S.sel === n.id ? " shown" : "")} role="group" aria-label=${"Play " + n.seg.id + " take " + n.ver}>
+                        <button class="vb" aria-label="Play" onClick=${(e) => { e.stopPropagation(); toast("Plays the take here, muted until you turn the sound on."); }}>${I("play")}</button>
+                        <span class="vt">0:00</span><span class="vtrack"><i></i></span><span class="vt">0:${String(n.seg.s).padStart(2, "0")}</span>
+                        <button class="vb" aria-label="Unmute" onClick=${(e) => { e.stopPropagation(); toast("Turns the take's sound on."); }}>${I("speaker-slash")}</button>
+                        <button class="vb" aria-label="Enter fullscreen mode" onClick=${(e) => { e.stopPropagation(); toast("Plays the take full screen."); }}>${I("corners-out")}</button></div>`}</div>`}</div>`)}
           </div>
         </div>
         <div class="ctop"><${EpisodeHead}/><button class="follow" aria-pressed=${String(S.follow)} onClick=${() => set({ follow: !S.follow })}>${S.follow && html`<span class="live"></span>`}${S.follow ? "Following the agent" : "Follow the agent"}</button>
@@ -530,7 +575,7 @@
           const below = bh - bottom - 10 - 12, above = barTop - 8 - PILLS;
           const at = S.dock === "right" ? "" : below >= MIN ? `top:${bottom + 10}px;max-height:${below}px` : above >= MIN ? `bottom:${bh - barTop + 8}px;max-height:${above}px` : null;
           const uses = EDGES.filter((e) => e[0] === sel.id).map((e) => e[1]).join(", "), reads = EDGES.filter((e) => e[1] === sel.id).map((e) => byId[e[0]].label).join(", ");
-          const home = homeTab(sel.id), stage = sel.seg ? pickedAt(sel.seg) : null, gid = window.EXTRA.lineageOf(sel.id, stage && stage.kind), from = "Canvas · " + sel.label + (stage ? " · " + stage.kind + " " + stage.ver : "");
+          const home = homeTab(sel.id), stage = sel.at || null, gid = sel.kind === "shots" ? undefined : window.EXTRA.lineageOf(sel.seg ? sel.seg.id : sel.id, stage && stage.kind), from = "Canvas · " + sel.label + (stage ? " · " + stage.kind + " " + stage.ver : "");
           return html`<div class="nbar" role="toolbar" aria-label=${"Act on " + sel.label} style=${`left:${Math.max(12, cx - 150)}px;top:${barTop}px`}>
               ${home
                 // A reference's home is Assets: the canvas links there, with no second copy of its review (§16).
@@ -542,8 +587,9 @@
               <button class="ibtn" title="Download" aria-label="Download" onClick=${() => toast("Downloads the picture.")}>${I("download-simple")}</button></div>
             <${NodePanel} node=${sel} uses=${uses} reads=${reads} docked=${at === null} style=${at ? `left:${left}px;width:${W}px;${at}` : ""}/>`;
         })()}
-        ${S.minimap && html`<div class="minimap" aria-hidden="true">${NODES.filter((n) => n.kind !== "group").map((n) => html`<i style=${`left:${8 + n.x * 0.11}px;top:${8 + n.y * 0.08}px;width:${n.w * 0.11}px;height:${n.h * 0.08}px`}></i>`)}
-          <b style=${`left:${8 - x * 0.11 / k}px;top:${8 - y * 0.08 / k}px;width:${(ref.current ? ref.current.clientWidth : 900) * 0.11 / k}px;height:${(ref.current ? ref.current.clientHeight : 600) * 0.08 / k}px`}></b></div>`}
+        ${S.minimap && html`<div class="minimap" aria-hidden="true">${(() => { const m = Math.min(152 / (right - left), 88 / (bottom - top)), at = (px, o) => 8 + (px - o) * m;
+            return html`${NODES.filter((n) => n.kind !== "group").map((n) => html`<i style=${`left:${at(n.x, left)}px;top:${at(n.y, top)}px;width:${n.w * m}px;height:${n.h * m}px`}></i>`)}
+          <b style=${`left:${at(-x / k, left)}px;top:${at(-y / k, top)}px;width:${(ref.current ? ref.current.clientWidth : 900) * m / k}px;height:${(ref.current ? ref.current.clientHeight : 600) * m / k}px`}></b>`; })()}</div>`}
         ${S.toolOpen && html`<div class="menu tmenu" role="menu" aria-label="Tools">
           ${[["move", "cursor", "Move", "V"], ["hand", "hand", "Hand", "H"]].map(([k, ic, l, key]) => html`<button class="mi row" role="menuitemradio" aria-checked=${String(S.tool === k)} onClick=${() => set({ tool: k, toolOpen: false })}>${I(ic)}<b>${l}</b><kbd>${key}</kbd></button>`)}</div>`}
         ${S.zoomOpen && html`<div class="menu zmenu" role="menu" aria-label="Zoom">
@@ -561,7 +607,7 @@
           <button class="z" aria-label="Zoom" aria-haspopup="menu" aria-expanded=${String(S.zoomOpen)} onClick=${() => set({ zoomOpen: !S.zoomOpen, toolOpen: false })}>${Math.round(k * 100)}%</button>
           <button class="ibtn" title="Zoom in" aria-label="Zoom in" onClick=${() => zoom(1.15)}>${I("plus")}</button>
           <button class=${"ibtn " + (S.minimap ? "on" : "")} title="Minimap" aria-label="Minimap" onClick=${() => set({ minimap: !S.minimap })}>${I("map-pin")}</button>
-          <button class="ibtn" title="Lay out again" aria-label="Lay out again" onClick=${() => { set({ cam: { x: 40, y: 96, k: 0.62 } }); toast("Every node back where drama-cli's layout puts it."); }}>${I("tree-structure")}</button>
+          <button class="ibtn" title="Lay out again" aria-label="Lay out again" onClick=${() => { set({ cam: fitted() }); toast("Every node back where drama-cli's layout puts it."); }}>${I("tree-structure")}</button>
           <button class="ibtn" title="Shortcuts (?)" aria-label="Shortcuts" onClick=${() => set({ keysOpen: true })}>${I("question")}</button></div>
         ${S.keysOpen && html`<div class="scrim" onClick=${(e) => { if (e.target === e.currentTarget) set({ keysOpen: false }); }}>
           <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="keys-t"><h2 id="keys-t">Canvas shortcuts</h2>
@@ -712,6 +758,6 @@
     return html`<div class="app"><${Rail}/><${Side}/>${main}</div><${Proto}/><${Dialog}/>
       <div class="toasts" aria-live="polite">${S.toasts.map((t) => html`<div class="toast">${t.text}${t.action && html`<button onClick=${t.action.run}>${t.action.label}</button>`}</div>`)}</div>`;
   }
-  window.PD = { html, I, S, set, go, own, jump, openHome, openStage, openLineage, stagesOf, pickedAt, toast, money, Status, TopBar, StopBanner, ProjectChips, AgentPanel, SPENT_COVERS, useEffect, useRef, Mark, draw, Submission, submit, recheck };
+  window.PD = { html, I, S, set, go, own, jump, openHome, openStage, openLineage, stageNode, toast, money, Status, TopBar, StopBanner, ProjectChips, AgentPanel, SPENT_COVERS, useEffect, useRef, Mark, draw, Submission, submit, recheck };
   // screens.js draws first, once its screens are registered.
 })();

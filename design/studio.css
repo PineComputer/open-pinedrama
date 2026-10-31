@@ -271,17 +271,6 @@ input.search:focus { border-color: var(--text-primary); }
 .cnode .lab .dims { margin-left: auto; padding-left: 8px; font: 500 10.5px var(--font-mono); color: var(--text-muted); }
 .group { position: absolute; border-radius: var(--radius-2xl); border: 1px solid var(--border); background: color-mix(in srgb, var(--surface) 70%, transparent); }
 .group > .gl { position: absolute; left: 16px; top: 14px; font-size: 13px; font-weight: 600; color: var(--text-muted); }
-.segnode { position: absolute; width: 300px; }
-.segnode .card { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 6px; height: 196px; }
-.segnode .card > :is(div, button):not(.vbar) { position: relative; border-radius: 6px; overflow: hidden; background: var(--surface-container); }
-.segnode .card > :is(div, button):not(.vbar) img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
-.segnode .card > .board-img { background: #fff; }
-.segnode .card > .board-img img { object-fit: contain; }
-.segnode .card > :is(div, button):not(.vbar) > span:not(.play) { position: absolute; left: 5px; bottom: 5px; font: 600 10px var(--font-mono); padding: 2px 5px; border-radius: 4px; background: color-mix(in srgb, var(--canvas) 72%, transparent); color: var(--text-primary); }
-.segnode .card > div.none { display: grid; place-items: center; color: var(--text-subtle); font-size: 11px; }
-.segnode .play { position: absolute; inset: 0; display: grid; place-items: center; }
-.segnode .play i { width: 32px; height: 32px; border-radius: 50%; background: color-mix(in srgb, var(--canvas) 55%, transparent); display: grid; place-items: center; color: var(--text-primary); border: 1px solid color-mix(in srgb, var(--text-primary) 25%, transparent); }
-.segnode .play .ic { width: 14px; height: 14px; }
 .ctool { position: absolute; left: 16px; bottom: 16px; display: flex; align-items: center; gap: 2px; padding: 4px; border-radius: var(--radius-pill); background: var(--surface-container); border: 1px solid var(--border); box-shadow: var(--shadow-overlay); }
 .ctool .ibtn { width: 32px; height: 32px; border-radius: 999px; }
 .ctool .ibtn .ic { width: 17px; height: 17px; }
@@ -635,19 +624,24 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
 /* The episode's head over its Canvas: code and title, its script, its cut (EpisodeHead). */
 .ephead { display: flex; align-items: center; gap: 10px; padding: 4px 6px 4px 12px; border-radius: var(--radius-pill); background: color-mix(in srgb, var(--canvas) 80%, transparent); backdrop-filter: blur(8px); }
 .ephead b { font-size: 14px; font-weight: 700; } .ephead .muted { font-size: 13px; }
-.segnode .card > button.on { outline: 2px solid var(--accent); outline-offset: 1px; }
-.segnode .card > button { padding: 0; border: 0; font: inherit; color: inherit; text-align: inherit; cursor: pointer; }
 /* A take's inline player (D39): media-chrome's control bar over the foot of the take, on the picked take and on hover;
-   the cut room's player tokens (.controls: text-primary on a blurred canvas). */
-.segnode .card > .take-tile, .segnode .card > .vbar { grid-area: 1 / 2; }
-/* The take keeps its whole frame: its box at the project's ratio, the picture contained and letterboxed in the
-   players' black, on the node and full screen alike (YouTube, Premiere and Frame.io letterbox or pillarbox). */
-.segnode .card:has(> .take-tile) { grid-template-columns: 1fr auto; }
-.segnode .card > .take-tile { height: 100%; background: #000; }
-/* The bar fits the take's width, never widens it (CSS Containment, inline-size). */
-.segnode .card > .vbar { contain: inline-size; overflow: hidden; }
-.segnode .card > button.take-tile img, .cnode .card video { object-fit: contain; background: #000; }
-.cnode .vbar { align-self: end; justify-self: stretch; position: relative; z-index: 2; margin: 4px; display: none; align-items: center; gap: 4px; padding: 2px 6px; border-radius: 8px; background: color-mix(in srgb, var(--canvas) 72%, transparent); backdrop-filter: blur(10px); color: var(--text-primary); font: 600 10px var(--font-mono); }
+   the cut room's player tokens (.controls: text-primary on a blurred canvas). The take and the cut sit on the players'
+   black, whole (D58). */
+.cnode.is-take .card, .cnode.is-cut .card { background: #000; }
+.cnode .card { position: relative; }
+.cnode .card .none { display: grid; place-items: center; height: 100%; color: var(--text-subtle); font-size: 11px; }
+.cnode .play { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; }
+.cnode .play i { width: 32px; height: 32px; border-radius: 50%; background: color-mix(in srgb, var(--canvas) 55%, transparent); display: grid; place-items: center; color: var(--text-primary); border: 1px solid color-mix(in srgb, var(--text-primary) 25%, transparent); }
+.cnode .play .ic { width: 14px; height: 14px; }
+/* A segment's shot list (ours, beside the pictures it made; SPEC): breakdown.json's shots as text, each its time, size,
+   angle and camera, then what is seen and heard. Far out only its title bar shows, as ComfyUI collapses a node. */
+.cnode .card.shotlist { display: grid; align-content: start; gap: 8px; padding: 10px 12px; overflow: hidden; }
+.cnode .shotlist .stitle { font-size: 12px; font-weight: 600; color: var(--text-primary); }
+.cnode .shotlist .srows { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.cnode .shotlist li { display: grid; gap: 2px; font-size: 11.5px; line-height: 1.4; color: var(--text-secondary); }
+.cnode .shotlist .sfacts { color: var(--text-muted); } .cnode .shotlist .saud { color: var(--text-subtle); }
+.layer.far .cnode .shotlist .srows { display: none; }
+.cnode .vbar { position: absolute; left: 4px; right: 4px; bottom: 4px; z-index: 2; display: none; align-items: center; gap: 4px; padding: 2px 6px; border-radius: 8px; background: color-mix(in srgb, var(--canvas) 72%, transparent); backdrop-filter: blur(10px); color: var(--text-primary); font: 600 10px var(--font-mono); }
 .cnode .card:hover .vbar, .cnode .vbar.shown { display: flex; }
 .cnode .vbar .vb { width: 22px; height: 22px; padding: 0; border: 0; border-radius: 50%; background: none; color: inherit; display: grid; place-items: center; cursor: pointer; }
 .cnode .vbar .vb .ic { width: 13px; height: 13px; }
