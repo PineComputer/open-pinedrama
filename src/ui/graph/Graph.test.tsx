@@ -36,7 +36,7 @@ function engine(name: string, sessions: ChatView[] = [chat("setup", "", "run"), 
 }
 
 /** A version's card on the plane, found by its name. */
-const card = async (name: RegExp) => within(await screen.findByRole("group", { name: "Graph" })).findByRole("button", { name });
+const card = async (name: RegExp) => within(await screen.findByRole("group", { name: "Lineage" })).findByRole("button", { name });
 
 describe("the Graph", () => {
   it("opens on the episode's storyboard, as the prototype does, and draws its lineage as cards named as the bible names them, with their pictures, never a spec", async () => {
@@ -76,7 +76,7 @@ describe("the Graph", () => {
     engine("shot");
     await renderAt(<Graph dramaId="d1" />, "/d/d1/out-of-date");
     await card(/^EP001 breakdown v1/);
-    const headings = [...screen.getByRole("group", { name: "Graph" }).querySelectorAll(".gcol")].map((heading) => heading.textContent);
+    const headings = [...screen.getByRole("group", { name: "Lineage" }).querySelectorAll(".gcol")].map((heading) => heading.textContent);
     expect(headings.some((text) => /storyboard/i.test(text ?? ""))).toBe(true);
     expect(headings.some((text) => /bible/i.test(text ?? ""))).toBe(true);
   });
@@ -109,15 +109,15 @@ describe("the Graph", () => {
   it("says what is stale in drama-cli's own words", async () => {
     engine("time-plate-replaced");
     await renderAt(<Graph dramaId="d1" />, "/d/d1/e/EP001/list?item=episodes%2FEP001%2Fsegments%2Fseg01&view=lineage");
-    expect(await card(/^EP001 seg01 take t01/)).toHaveTextContent("Stale");
+    expect(await card(/^EP001 seg01 take t01/)).toHaveTextContent("Out of date");
     expect(screen.getByRole("region", { name: "State" })).toHaveTextContent("Changed selection: assets/scenes/office/times/Day/accepted.json");
   });
 
   it("marks what was made from a stale version, which drama-cli calls fresh, apart from what drama-cli calls stale", async () => {
     engine("location-plate-replaced");
     await renderAt(<Graph dramaId="d1" />, "/d/d1/assets/locations/office?item=assets%2Fscenes%2Foffice%2Ftimes%2FDay&view=lineage");
-    expect(await card(/^办公室 · Day v1/)).toHaveTextContent("Stale");
-    expect(await card(/^EP001 seg01 take t01/)).toHaveTextContent("Made from a stale version");
+    expect(await card(/^办公室 · Day v1/)).toHaveTextContent("Out of date");
+    expect(await card(/^EP001 seg01 take t01/)).toHaveTextContent("Made from an out-of-date version");
   });
 
   it("offers no way to make, edit or keep a version, and shows no price", async () => {
