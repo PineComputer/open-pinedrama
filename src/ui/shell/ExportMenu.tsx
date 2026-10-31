@@ -44,7 +44,7 @@ export function ExportMenu({ drama }: { drama: DramaView }) {
             );
             return file ? (
               <Menu.Item key={item.kind} asChild>
-                <a className="mi" href={`${file.url}?download=${encodeURIComponent(item.name)}`} download={item.name}>
+                <a className="mi" href={`${file.url}${file.url.includes("?") ? "&" : "?"}download=${encodeURIComponent(item.name)}`} download={item.name}>
                   {body}
                 </a>
               </Menu.Item>
