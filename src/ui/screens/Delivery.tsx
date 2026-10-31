@@ -17,7 +17,7 @@ function status(review: Judged | undefined): "approve" | "revise" | "waiting" | 
 const CHIP: Record<ReturnType<typeof status>, Status> = { approve: "accepted", revise: "back", waiting: "you", none: "line" };
 
 /**
- * Drama › Delivery, the one home of the accepted cuts across episodes (IA §16; design/screens.js, Delivery): each
+ * Project › Delivery, the one home of the accepted cuts across episodes (IA §16; design/screens.js, Delivery): each
  * episode's delivered cut and its latest, with the latest's review status. A row links to its episode's Cut, which
  * plays it; there is no second player here. Only an approved cut is offered as the episode's delivery; a review that
  * showed several cuts approves none of them in particular, and says so.

@@ -506,7 +506,7 @@
         </aside></div></div>`;
   }
 
-  /* ───── Delivery: Drama › Delivery, the one home of the accepted cuts across episodes (IA §16). A row links to its
+  /* ───── Delivery: Project › Delivery, the one home of the accepted cuts across episodes (IA §16). A row links to its
      episode's Cut, which plays it; there is no second player here. ───── */
   function Delivery() {
     const open = (e, v) => (e.code === "EP006" ? go("cut") : toast(`Opens ${e.code} › Cut ${v}. Only EP006's cut opens in this sample.`));
