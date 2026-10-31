@@ -38,7 +38,7 @@
     return html`<div class="main">
       <header class="top"><button class="ibtn" aria-label="Back" onClick=${() => go("home")}>${I("caret-left")}</button><div class="crumb"><span>Projects</span>${I("caret-right")}<b>New project</b></div><span class="grow"></span></header>
       <div class="scrollmain"><div class="wrap" style="max-width:1040px">
-        <div class="greet"><div class="grow"><h1>New project</h1><p>Check the file, choose how it is made, and start. drama-cli's screenplay check is free; the agent's turns are billed from the start.</p></div></div>
+        <div class="greet"><div class="grow"><h1>New project</h1><p>Check the file, choose how it is made, and start. drama-cli's screenplay validate is free; the agent's turns are billed from the start.</p></div></div>
         <div class="formgrid">
           <div class="fcol">
             <section class="panel"><h3>${I("file-text")}Screenplay</h3>
@@ -488,65 +488,112 @@
      The sample is The Stepmother's real files (P.script); its states are the Prototype controls' "Script: …" states. */
   const SCRIPT_STATES = { scriptRewriting: "rewriting", scriptFailed: "failed", scriptYou: "you", scriptOriginal: "original" };
   const scriptState = () => SCRIPT_STATES[S.state] || "accepted";
-  // drama-cli's screenplay check (drama_cli/screenplay.py, _slug's scene_time rule), with this sample's values: what the
-  // check says when a rewrite keeps the original's "MORNING".
+  // drama-cli's screenplay validate (drama_cli/screenplay.py, _slug's scene_time rule), with this sample's values: what
+  // it says when a rewrite keeps the original's "MORNING".
   const CHECK_FAILED = "line 3 · scene_time · the scene heading's time is 'MORNING': write DAY or NIGHT, and put a finer time in the action after it";
   // The Script row in the project tree says the same, as an episode row does (now-line + dot, the five maker states).
   const scriptRow = () => ({ rewriting: ["Rewriting", "work"], failed: ["Rewriting", "work"], you: ["Waiting for you", "you"], accepted: ["Accepted", "accepted"], original: ["Original only", "accepted"] })[scriptState()];
+  /* The sample's versions (Codex round 4, F3: v1 check failed → v2 ready → v2 accepted, v1 kept). v2 is The Stepmother's
+     recorded rewrite and review.md (P.script), renumbered v2; v1 is example values: the same rewrite with the original's
+     "MORNING" kept in line 3's heading, the line drama-cli refuses. Each version carries its own document, review.md and
+     line map, so whatever is selected shows its own. */
+  function scriptVersions() {
+    const sc = P.script, kept = "INT. TENEMENT FLAT - MORNING #1-1#", fixed = "INT. TENEMENT FLAT - DAY #1-1#";
+    const v2 = { v: "v2", text: sc.fountainText, fl: sc.fountain, map: sc.map, review: sc.review.replaceAll("screenplay/v1/", "screenplay/v2/") };
+    const v1 = { v: "v1", text: sc.fountainText.replace(fixed, kept), fl: sc.fountain.map((l) => (l.text === fixed ? { ...l, text: kept } : l)),
+      map: sc.map.map((r) => (r.o === 5 ? { ...r, became: "3: " + kept } : r)), review: sc.review.replace("3: " + fixed, "3: " + kept) };
+    return { v1, v2 };
+  }
+  /* VS Code's side-by-side diff with drama-cli's alignment (Codex round 4, F5): the rows come from review.md's line map,
+     never a diff of ours. Each mapped original line is one row with every Fountain line it became beside it (one to
+     many); the lines between two mapped ones (blank lines, a line the rewrite added) sit in their own row; a side with
+     no counterpart is a hatched filler, as VS Code draws one. */
+  function alignRows(map, origCount, fountainCount) {
+    const range = (a, b) => Array.from({ length: Math.max(0, b - a + 1) }, (_, k) => a + k);
+    const rows = [];
+    let o = 0, f = 0;
+    for (const r of [...map].sort((x, y) => x.o - y.o)) {
+      const first = r.to.length ? Math.min(...r.to) : f + 1;
+      const a = range(o + 1, r.o - 1), b = r.to.length ? range(f + 1, first - 1) : [];
+      if (a.length || b.length) rows.push({ a, b });
+      rows.push({ a: [r.o], b: r.to, r });
+      o = r.o;
+      if (r.to.length) f = Math.max(...r.to);
+    }
+    const a = range(o + 1, origCount), b = range(f + 1, fountainCount);
+    if (a.length || b.length) rows.push({ a, b });
+    return rows;
+  }
   function Script() {
-    const sc = P.script, st = scriptState();
-    const fl = sc.fountain, map = sc.map;
-    const hasFountain = st !== "rewriting" && st !== "original";
-    // An episode's "Episode script" (Segments) opens Script's document scrolled to that episode's section.
+    const sc = P.script, st = scriptState(), { v1, v2 } = scriptVersions();
+    // The maker's decision on the waiting version, once confirmed, and its one submission (app.js Submission).
+    const sub = (S.subs || {}).script, dec = S.sdec;
+    const decided = st === "you" && dec && sub === "sent" ? dec.kind : null;
+    // The versions with a document, oldest first, and where each stands.
+    const docs = { rewriting: [], failed: [v1], you: [v1, v2], accepted: [v1, v2], original: [] }[st];
+    const shown = docs.find((d) => d.v === S.sver) || docs[docs.length - 1];
+    const hasFountain = !!shown;
+    const fl = shown?.fl || [], map = shown?.map || [];
+    // An episode's "Episode script" (its Canvas head) opens Script's document scrolled to that episode's section.
     const epNum = S.scriptEp ? Number(S.scriptEp.replace(/\D/g, "")) : null;
     const view = S.scriptEp && hasFountain ? "fountain" : S.sview && (hasFountain || S.sview === "original") ? S.sview : hasFountain ? "fountain" : "original";
     const sectionAt = epNum && fl.findIndex((l) => l.el === "section" && Number(l.text.replace(/\D/g, "")) === epNum);
     const target = sectionAt !== null && sectionAt >= 0 ? sectionAt : null;
     useEffect(() => { if (target !== null && view === "fountain") document.getElementById("fl-" + target)?.scrollIntoView({ block: "start", behavior: "smooth" }); }, [S.scriptEp, view]);
-    // What changed is drama-cli's record, review.md's line map, never a diff of our own: an original line it rewrote, and
-    // the Fountain lines it became.
-    const changed = new Set(map.filter((r) => !r.same).map((r) => r.o));
-    const became = new Set(map.filter((r) => !r.same).flatMap((r) => r.to.map((n) => n - 1)));
-    const lit = S.ssel ? new Set((map.find((r) => r.o === S.ssel) || { to: [] }).to.map((n) => n - 1)) : new Set();
-    const Line = (l, i) => (l.gap ? html`<div class="gap"></div>` : html`<div id=${"fl-" + i} class=${"fl " + l.el + (lit.has(l.source) ? " on" : "")}>${l.text}</div>`);
-    // VS Code's diff editor: two panes, line numbers in the gutter, a changed row tinted, the panes scrolling together.
-    const sync = (from) => (e) => { const other = e.currentTarget.parentElement.querySelector(from === "a" ? ".dpane.b" : ".dpane.a"); const a = e.currentTarget;
-      if (other && !other.dataset.syncing) { a.dataset.syncing = "1"; other.scrollTop = (a.scrollTop / Math.max(1, a.scrollHeight - a.clientHeight)) * (other.scrollHeight - other.clientHeight); requestAnimationFrame(() => delete a.dataset.syncing); } };
+    // Clicking an original line brings the row with its Fountain lines into view, side by side.
+    useEffect(() => { if (S.ssel && view === "compare") document.getElementById("dr-" + S.ssel)?.scrollIntoView({ block: "nearest", behavior: "smooth" }); }, [S.ssel, view]);
+    const lit = S.ssel ? new Set((map.find((r) => r.o === S.ssel) || { to: [] }).to) : new Set();
+    const Line = (l, i) => (l.gap ? html`<div class="gap"></div>` : html`<div id=${"fl-" + i} class=${"fl " + l.el + (lit.has(l.source + 1) ? " on" : "")}>${l.text}</div>`);
     const origLines = sc.original.split("\n");
-    const fountainRows = sc.fountainText.split("\n");
-    const review = html`<details class="whatchanged"><summary>What changed</summary><pre class="document plain">${sc.review}</pre></details>`;
+    const fountainRows = (shown?.text || "").split("\n");
+    const review = (d) => html`<details class="whatchanged"><summary>What changed in ${d.v}</summary><pre class="document plain">${d.review}</pre></details>`;
+    // Accept and Send back are peer decisions on the version that waits (Codex round 4, F3): Accept needs your words,
+    // Send back a reason; either is one submission to the setup session (the agent panel's recipient for Script), its state the shared Submission's.
+    const form = st === "you" && !decided && S.sform;
+    const draft = S.sdraft || "";
+    const locked = sub && sub !== "failed";
+    const confirm = () => { set({ sdec: { kind: form, words: draft.trim() } }); submit("script"); };
+    const Decide = html`<div class="sdecide">
+        <div class="fbtns" role="group" aria-label="Your decision on v2">
+          <button class="btn sm" aria-pressed=${String(form === "accept")} disabled=${locked} onClick=${() => form !== "accept" && set({ sform: "accept", sdraft: "" })}>${I("check")}Accept</button>
+          <button class="btn sm" aria-pressed=${String(form === "back")} disabled=${locked} onClick=${() => form !== "back" && set({ sform: "back", sdraft: "" })}>${I("arrow-counter-clockwise")}Send back</button></div>
+        ${form && html`<label class="sfield"><span>${form === "accept" ? "Accept v2 in your own words (required)" : "Why it goes back (required)"}</span>
+          <textarea readonly=${locked} placeholder=${form === "accept" ? "e.g. “Yes, this is my script.”" : "e.g. “Keep MORNING in EP001's action line.”"} value=${draft} onInput=${(e) => set({ sdraft: e.target.value })}></textarea></label>
+          <div class="fbtns">${!sub && html`<button class="btn sm primary" disabled=${draft.trim().length < 3} onClick=${confirm}>${form === "accept" ? "Accept v2" : "Send v2 back"}</button>
+            <button class="btn sm ghost" onClick=${() => set({ sform: null })}>Cancel</button>`}
+            <${Submission} id="script" to="the setup session" kept="Your words are kept." onSend=${confirm}/></div>`}</div>`;
     // The history, newest on top (GitHub's pull-request timeline; Figma's and Google Docs' version history): each step as
-    // drama-cli recorded it, drama-cli's own words where it refused.
+    // drama-cli recorded it, drama-cli's own words where it refused. A version's row selects it: the editor, its tab and
+    // What changed then show that version.
+    const failedV1 = ["err", v1, html`drama-cli screenplay validate failed: <code>${CHECK_FAILED}</code> <span class="subtle">(example values)</span>`, "17:38"];
+    const uploaded = ["done", null, "Original uploaded · " + sc.file, "17:31"];
     const events = {
-      rewriting: [["work", "v1 · the agent is rewriting your file into Fountain", null], ["done", "Original uploaded · " + sc.file, "17:31"]],
-      failed: [["work", "v2 · the agent revises it, then drama-cli checks again", null],
-        ["err", html`v1 · check failed: <code>${CHECK_FAILED}</code> <span class="subtle">(example values)</span>`, "17:38"], ["done", "Original uploaded · " + sc.file, "17:31"]],
-      you: [["you", html`v1 · check passed · <b>waiting for you</b>`, "17:38", true], ["done", "Original uploaded · " + sc.file, "17:31"]],
-      accepted: [["done", "v1 · accepted in your words: “Yes, this is my script.”", "17:40"], ["done", "v1 · check passed (drama-cli screenplay check)", "17:38", true], ["done", "Original uploaded · " + sc.file, "17:31"]],
-      original: [["done", "Original uploaded · " + sc.file, "17:31"]],
+      rewriting: [["work", null, "v1 · the agent is rewriting your file into Fountain", null], uploaded],
+      failed: [["work", null, "v2 · the agent revises v1, then drama-cli validates it again", null], failedV1, uploaded],
+      you: decided === "back" ? [["work", null, "v3 · the agent revises v2 with your reason", null], ["done", v2, html`sent back with your reason: “${dec.words}”`, "17:46"], failedV1, uploaded]
+        : decided === "accept" ? [["done", v2, html`accepted in your words: “${dec.words}”`, "17:46"], failedV1, uploaded]
+        : [["you", v2, html`drama-cli screenplay validate passed · <b>waiting for you</b>`, "17:44"], failedV1, uploaded],
+      accepted: [["done", v2, "accepted in your words: “Yes, this is my script.”", "17:46"], failedV1, uploaded],
+      original: [uploaded],
     }[st];
-    const History = html`<ol class="history">${events.map(([kind, text, at, withReview]) => html`<li class=${kind}>
+    const History = html`<ol class="history">${events.map(([kind, d, text, at]) => html`<li class=${kind + (d && d === shown ? " sel" : "")}>
         <span class="dot ${kind === "you" ? "you" : kind === "work" ? "work" : kind === "err" ? "redline" : "accepted"}"></span>
-        <div class="grow"><span>${text}</span>${at && html`<time>${at}</time>`}
-          ${withReview && review}
-          ${kind === "you" && html`<button class="btn sm primary" onClick=${() => set({ sview: "compare", saccept: true })}>Accept</button>`}</div></li>`)}</ol>`;
+        <div class="grow"><span>${d && html`<button class="hver" aria-pressed=${String(d === shown)} title=${"Show " + d.v} onClick=${() => set({ sver: d.v, ssel: null, scriptEp: null })}>${d.v}</button> · `}${text}</span>${at && html`<time>${at}</time>`}
+          ${d && d === shown && review(d)}
+          ${kind === "you" && Decide}</div></li>`)}</ol>`;
+    const accepted = st === "accepted" || decided === "accept";
     return html`<div class="main">
       <${TopBar} crumbs=${[own.drama(), "Script"]}/>
       <div class="body"><div class="scrollmain">
         <div class="bar2"><span class="grow"></span><${ProjectChips}/></div>
         <${StopBanner}/>
         <div class="scripthead"><div class="grow"><h2 class="pagetitle">Script</h2>
-          <p class="muted pagesub">Your screenplay from upload to acceptance: the agent rewrites it into Fountain, drama-cli checks it, and you accept it. Sample: ${sc.project}'s real files.</p></div></div>
+          <p class="muted pagesub">Your screenplay from upload to acceptance: the agent rewrites it into Fountain, drama-cli validates it, and you accept it. Sample: ${sc.project}'s real files.</p></div></div>
         ${S.scriptEp && hasFountain && !target && html`<div class="notice" role="status">${I("info")}<span><b>${S.scriptEp} isn't in this sample's screenplay.</b> The sample is The Stepmother's two episodes; for a real project Script opens at ${S.scriptEp}'s section.</span></div>`}
         ${st === "original" && html`<div class="notice" role="status">${I("info")}<span><b>Only the original was recorded for this project.</b> It was set up before drama-cli kept the rewrite, its check and your acceptance, so there are none to show.</span></div>`}
         <div class="scriptlayout">
           <section class="scripthistory" aria-label="Versions"><h3>${I("stack")}Versions</h3>
-            ${st === "accepted" ? html`<details><summary>Accepted v1 · 3 steps</summary>${History}</details>` : History}</section>
-          ${st === "you" && S.saccept && html`<div class="faccept">
-            <textarea placeholder="Accept the rewrite in your own words, e.g. “Yes, this is my script.” (required)" value=${S.words} onInput=${(e) => set({ words: e.target.value })}></textarea>
-            <div class="fbtns"><button class="btn" onClick=${() => toast("Sent back to the agent with your words.")}>${I("arrow-counter-clockwise")}Send back</button>
-              <button class="btn primary" disabled=${S.words.trim().length < 3} onClick=${() => { toast("Rewrite accepted, with your words. The agent starts the bible."); set({ state: "normal", saccept: false }); }}>${I("check")}Accept the rewrite</button></div>
-            <small class="muted">${S.words.trim().length < 3 ? "Accepting needs your own words." : "Your words are recorded with the accepted file."}</small></div>`}
+            ${accepted ? html`<details open=${!!S.sver}><summary>Accepted v2 · ${events.length} steps</summary>${History}</details>` : History}</section>
           ${/* One editor surface, VS Code's way: the tab bar and the document under it share one border and one radius;
                no card inside it. */ ""}
           <section class="editor" aria-label="Script">
@@ -554,17 +601,19 @@
                an icon-only toolbar button has a tooltip and a name). */ ""}
           <div class="edbar"><div class="edtab" role="tab" aria-selected="true">${I(view === "original" ? "file-text" : view === "compare" ? "square-half" : "film-strip")}
               <b>${view === "compare" ? sc.file + " ↔ screenplay.fountain" : view === "original" ? sc.file : "screenplay.fountain"}</b>
-              ${view !== "original" && html`<span class="tag">v1</span>`}
+              ${view !== "original" && shown && html`<span class="tag">${shown.v}</span>`}
               ${/* Read-only for now (VS Code's read-only editor, files.readonly): a change goes through the agent, Send back
-                   while a version waits for you, or ask the agent after acceptance; drama-cli checks the new version. */ ""}
-              <span class="ro" title="Read-only: ask the agent for a change; it writes a new version that drama-cli checks and you accept">${I("lock-simple")}Read-only</span></div>
+                   while a version waits for you, or ask the agent after acceptance; drama-cli validates the new version. */ ""}
+              <span class="ro" title="Read-only: ask the agent for a change; it writes a new version that drama-cli validates and you accept">${I("lock-simple")}Read-only</span></div>
             <span class="grow"></span>
             ${[["original", "Show the original", "file-text"], ["fountain", "Show the Fountain", "film-strip"], ["compare", "Compare the original and the Fountain", "square-half"]].map(([k, l, ic]) =>
               html`<button class="ibtn" title=${!hasFountain && k !== "original" ? l + " · no Fountain recorded yet" : l} aria-label=${l} aria-pressed=${String(view === k)} disabled=${!hasFountain && k !== "original"} onClick=${() => set({ sview: k, scriptEp: null })}>${I(ic)}</button>`)}</div>
           ${view === "fountain" ? html`<div class="edbody scriptdoc"><div class="fdoc">${fl.map(Line)}</div></div>`
-            : view === "compare" ? html`<div class="diffed" aria-label="Changes: the original beside the Fountain">
-                <div class="dpane a" onScroll=${sync("a")}><div class="dhead">${sc.file}</div>${origLines.map((t, i) => html`<button type="button" class=${"drow" + (changed.has(i + 1) ? " chg del" : "") + (S.ssel === i + 1 ? " on" : "")} onClick=${() => set({ ssel: i + 1 })}><span class="ln">${i + 1}</span><span class="tx">${t}</span></button>`)}</div>
-                <div class="dpane b" onScroll=${sync("b")}><div class="dhead">screenplay.fountain <span class="tag">v1</span></div>${fountainRows.map((t, i) => html`<div class=${"drow" + (became.has(i) ? " chg add" : "") + (lit.has(i) ? " on" : "")}><span class="ln">${i + 1}</span><span class="tx">${t}</span></div>`)}</div>
+            : view === "compare" ? html`<div class="diffed" aria-label=${"Changes: the original beside the Fountain " + shown.v}>
+                <div class="dhead">${sc.file}</div><div class="dhead">screenplay.fountain <span class="tag">${shown.v}</span></div>
+                ${alignRows(map, origLines.length, fountainRows.length).map(({ a, b, r }) => html`<div class="drowpair" id=${r ? "dr-" + r.o : undefined}>
+                  <div class="dcell a">${a.length ? a.map((n) => html`<button type="button" class=${"drow" + (r && !r.same ? " chg del" : "") + (S.ssel === n ? " on" : "")} disabled=${!r} onClick=${() => set({ ssel: n })}><span class="ln">${n}</span><span class="tx">${origLines[n - 1]}</span></button>`) : html`<div class="dfill" title="No line in the original"></div>`}</div>
+                  <div class="dcell b">${b.length ? b.map((n) => html`<div class=${"drow" + (r && !r.same ? " chg add" : "") + (lit.has(n) ? " on" : "")}><span class="ln">${n}</span><span class="tx">${fountainRows[n - 1]}</span></div>`) : html`<div class="dfill" title=${r ? "None of its letters came back (review.md: -)" : "No line in the Fountain"}></div>`}</div></div>`)}
                 ${S.ssel && html`<p class="muted dnote">Line ${S.ssel} became: <code>${(map.find((r) => r.o === S.ssel) || { became: "a blank line" }).became}</code> · drama-cli's record (review.md)</p>`}</div>`
             : html`<div class="edbody scriptdoc"><pre class="original">${sc.original}</pre></div>`}
           </section>
