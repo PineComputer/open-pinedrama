@@ -230,7 +230,7 @@
   /* ───── Canvas ───── */
   const NODES = (() => {
     const n = [];
-    P.cast.slice(0, 5).forEach((c, i) => n.push({ id: c.id, kind: "cast", x: 0, y: i * 196, w: 300, h: 168, pic: c.sheet, label: c.name, st: c.st, ver: c.ver, role: c.role, model: "gpt-image-2.5" }));
+    P.cast.slice(0, 5).forEach((c, i) => n.push({ id: c.id, kind: "cast", x: 0, y: i * 196, w: 300, h: 168, pic: c.sheet, label: c.name, st: c.st, ver: c.ver, role: c.role, model: "gpt-image-2.5", problems: c.problems }));
     P.places.slice(0, 2).forEach((p, i) => n.push({ id: p.id, kind: "place", x: 400, y: i * 380, w: 190, h: 338, pic: p.pic, label: p.name, st: p.st, ver: p.ver, model: "gpt-image-2.5", role: "Plate · " + p.times.map(([t]) => t).join(" · ") }));
     n.push({ id: "file", kind: "prop", x: 400, y: 770, w: 190, h: 200, pic: P.props[0].pic, label: "Case file", st: "accepted", ver: "v1", role: "Key prop", model: "gpt-image-2.5" });
     let gy = 0;
@@ -268,7 +268,7 @@
           <ol class="refs">${spec.images.map((u, i) => html`<li><img src=${u} alt=""/><span>Image ${i + 1}</span></li>`)}</ol>` : html`<p class="subtle">The agent hasn't returned this version's spec.json and request.json.</p>`)}
         ${tab === "versions" && html`<ol class="versions">${spec.versions.map(([v, st, said]) => html`<li><b class="mono">${v}</b>${Status(st)}${said && html`<span class="subtle">${said}</span>`}</li>`)}</ol>`}
         ${tab === "request" && html`<pre class="mono">${JSON.stringify({ model: spec.model, content: [{ type: "text", text: spec.prompt.slice(0, 60) + "…" }, ...spec.images.map((u) => ({ type: "image_url", image_url: { url: "@" + u }, role: "reference_image" }))], duration: spec.seconds, ratio: spec.ratio, resolution: spec.resolution }, null, 2)}</pre>`}
-        ${tab === "details" && html`<dl><dt>Kind</dt><dd>${node.role}</dd><dt>Version</dt><dd class="mono">${node.ver}</dd><dt>Used by</dt><dd>${uses || "—"}</dd><dt>Reads</dt><dd>${reads || "—"}</dd></dl>`}
+        ${tab === "details" && html`<dl><dt>Kind</dt><dd>${node.role}</dd><dt>Version</dt><dd class="mono">${node.ver}</dd><dt>Used by</dt><dd>${uses || "—"}</dd><dt>Reads</dt><dd>${reads || "—"}</dd>${node.problems && node.problems.length ? html`<dt>Why</dt><dd>${node.problems.map((said) => html`<span class="why">${said}</span>`)}</dd>` : null}</dl>`}
       </div>
       <div class="nfoot">
         ${spec && [spec.model, spec.ratio, spec.resolution, spec.seconds + " s"].map((v) => html`<span class="pill mono">${v}</span>`)}

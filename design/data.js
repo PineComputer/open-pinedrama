@@ -28,7 +28,7 @@ window.P = (() => {
       { id: "luca", name: "Luca Moreno", role: "Lead · base look", ver: "S0 v2", st: "accepted", sheet: img("cast-luca"), face: img("face-luca") },
       { id: "ethan", name: "Ethan Cole", role: "Base look", ver: "S0 v1", st: "accepted", sheet: img("cast-ethan"), face: img("face-ethan") },
       { id: "margaret", name: "Margaret Cole", role: "Base look", ver: "S0 v3", st: "you", warn: 1, sheet: img("cast-margaret"), face: img("face-margaret") },
-      { id: "walter", name: "Walter Cole", role: "Base look", ver: "S0 v3", st: "accepted", sheet: img("cast-walter"), face: img("face-walter") },
+      { id: "walter", name: "Walter Cole", role: "Base look", ver: "S0 v3", st: "stale", problems: ["Changed file: bible/v3/bible.json"], sheet: img("cast-walter"), face: img("face-walter") },
       { id: "dunn", name: "Sgt. Ray Dunn", role: "Base look", ver: "S0 v1", st: "accepted", sheet: img("cast-dunn"), face: img("face-dunn") },
       { id: "hale", name: "Reverend Hale", role: "Base look", ver: "S0 v1", st: "work", sheet: img("cast-hale"), face: img("face-hale") },
       { id: "tess", name: "Tess Park", role: "Base look", ver: "S0 v1", st: "back", err: 1, sheet: img("cast-tess"), face: img("face-tess") },
