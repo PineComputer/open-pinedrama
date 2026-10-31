@@ -44,9 +44,9 @@ afterAll(() => rmSync(DATA, { recursive: true, force: true }));
 describe("a cut's clips", () => {
   it("follow one another, each as long as its out less its in", () => {
     expect(cut.readCutPlan(plan([clip("seg01", "t02", 0, 30.04), clip("seg02", "t01", 1.5, 10), clip("seg03", "t01", 0, 4)])).clips).toEqual([
-      { segment: "seg01", take: "t02", start: 0, end: 30.04 },
-      { segment: "seg02", take: "t01", start: 30.04, end: 38.54 },
-      { segment: "seg03", take: "t01", start: 38.54, end: 42.54 },
+      { segment: "seg01", take: "t02", start: 0, end: 30.04, in: 0, out: 30.04, audio: "source" as const },
+      { segment: "seg02", take: "t01", start: 30.04, end: 38.54, in: 1.5, out: 10, audio: "source" as const },
+      { segment: "seg03", take: "t01", start: 38.54, end: 42.54, in: 0, out: 4, audio: "source" as const },
     ]);
   });
 
@@ -57,7 +57,7 @@ describe("a cut's clips", () => {
 
   it("take a segment's take wherever the project sits", () => {
     expect(cut.readCutPlan(plan([{ ...clip("seg02a", "t03", 0, 2), path: "drama/episodes/EP001/segments/seg02a/t03/video.mp4" }])).clips).toEqual([
-      { segment: "seg02a", take: "t03", start: 0, end: 2 },
+      { segment: "seg02a", take: "t03", start: 0, end: 2, in: 0, out: 2, audio: "source" as const },
     ]);
   });
 
@@ -93,8 +93,8 @@ describe("a cut's file", () => {
     expect(item(video).cutPlan).toEqual({
       fps: 24,
       clips: [
-        { segment: "seg01", take: "t01", start: 0, end: 4 },
-        { segment: "seg02", take: "t01", start: 4, end: 7 },
+        { segment: "seg01", take: "t01", start: 0, end: 4, in: 0, out: 4, audio: "source" as const },
+        { segment: "seg02", take: "t01", start: 4, end: 7, in: 0, out: 3, audio: "source" as const },
       ],
     });
   });
@@ -120,7 +120,7 @@ describe("a cut's file", () => {
     ];
     const { items, other } = reviews.itemsOf("cut", rows);
     expect(items.map((entry) => entry.files.map((file) => file.name))).toEqual([["cut.mp4"]]);
-    expect(items[0].files[0].cutPlan).toEqual({ fps: 24, clips: [{ segment: "seg01", take: "t01", start: 0, end: 4 }] });
+    expect(items[0].files[0].cutPlan).toEqual({ fps: 24, clips: [{ segment: "seg01", take: "t01", start: 0, end: 4, in: 0, out: 4, audio: "source" as const }] });
     expect(other).toEqual([]);
   });
 });

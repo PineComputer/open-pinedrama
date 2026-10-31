@@ -182,6 +182,11 @@ export interface CutClip {
   take: string;
   start: number;
   end: number;
+  /** Where the clip starts and ends in its take, in seconds (cut.json's in and out). */
+  in: number;
+  out: number;
+  /** Its sound: the take's own, silence, or another source a schema-2 plan pins (drama_cli/edit.py). */
+  audio: "source" | "silence" | "pinned";
 }
 
 /** A cut's clips as drama-cli's plan of it lists them, with the cut's frame rate, or why that plan doesn't read. */

@@ -9,6 +9,7 @@ import { Segmented } from "../components/Segmented.tsx";
 import { StatusChip } from "../components/StatusChip.tsx";
 import { StopCard } from "../components/StopCard.tsx";
 import { Submission, useSubmission } from "../components/Submission.tsx";
+import { CutEdit } from "../cut/CutEdit.tsx";
 import { CutViewer, alignedLines, cutLines, fmt } from "../cut/CutViewer.tsx";
 import { shotListOf } from "../../shared/shots.ts";
 import { Icon } from "../icons.tsx";
@@ -956,6 +957,8 @@ export function CutRoom({ review, done }: { review: ReviewView; done: () => void
   const srt = useText((episodeFiles.data ?? []).filter((other) => other.kind === "subtitles" && other.createdAt >= file.createdAt).at(-1)).text;
   const lines = srt ? alignedLines(srt) : plan ? cutLines(plan.clips, (segment) => shotListOf(breakdown, segment)) : [];
   const [selected, setSelected] = useState<number>();
+  // Review (notes and a verdict) and Edit (a draft of the cut's edit spec) are two things (Codex's IA re-review D1).
+  const [tab, setTab] = useState<"review" | "edit">("review");
   const clip = selected !== undefined ? plan?.clips[selected] : undefined;
   const takeSpec = clip ? (episodeFiles.data ?? []).find((other) => other.kind === "spec" && other.path.endsWith(`/segments/${clip.segment}/${clip.take}/spec.json`)) : undefined;
   const spec = specFacts(useText(takeSpec).text);
@@ -995,7 +998,20 @@ export function CutRoom({ review, done }: { review: ReviewView; done: () => void
             {code} · {t("kind.cut").toLowerCase()} {file.version}
           </b>
           {plan && <small>{t("cut.length", { length: length.toFixed(1), n: plan.clips.length })}</small>}
+          <Segmented
+            label={t("edit.tabs")}
+            value={tab}
+            onChange={setTab}
+            options={[
+              { value: "review", label: t("edit.tabReview") },
+              { value: "edit", label: t("edit.tabEdit") },
+            ]}
+          />
         </div>
+        {tab === "edit" && plan ? (
+          <CutEdit review={review} file={file} clips={plan.clips} files={episodeFiles.data ?? []} code={code} />
+        ) : (
+          <>
         <div className="iscroll">
           <Status review={review} />
           <div className="isec">
@@ -1051,23 +1067,19 @@ export function CutRoom({ review, done }: { review: ReviewView; done: () => void
                 <dt>{t("cut.picture")}</dt>
                 <dd>{[spec?.ratio, spec?.resolution, plan?.fps ? `${plan.fps} fps` : undefined].filter(Boolean).join(" · ") || "—"}</dd>
               </dl>
-              {/* Phase 2 edits these; drawn off now, as the design has them. */}
-              <div className="propoff">
-                <span className="muted">{t("cut.speed")}</span>
-                <div className="seg" aria-disabled="true">
-                  {["0.5×", "1×", "1.5×", "2×"].map((speed) => (
-                    <button key={speed} type="button" disabled aria-pressed={speed === "1×"}>
-                      {speed}
-                    </button>
-                  ))}
-                </div>
-                <span className="muted">{t("cut.volume")}</span>
-                <input type="range" disabled defaultValue={80} aria-label={t("cut.volume")} />
-                <p className="muted">{t("cut.editingLater")}</p>
-              </div>
               <Link {...placeLink({ dramaId: review.dramaId, surface: "canvas", episode: code })} className={buttonClass({ size: "sm" })}>
                 <Icon name="flow-arrow" className="ic" />
                 {t("cut.openOnCanvas")}
+              </Link>
+              {open && plan && (
+                <button type="button" className={buttonClass({ size: "sm" })} onClick={() => setTab("edit")}>
+                  <Icon name="scissors" className="ic" />
+                  {t("edit.thisClip")}
+                </button>
+              )}
+              <Link {...homeLink(review.dramaId, `episodes/${code}/edit`, "lineage")} className={buttonClass({ size: "sm", variant: "ghost" })}>
+                <Icon name="tree-structure" className="ic" />
+                {t("edit.lineage")}
               </Link>
             </div>
           )}
@@ -1107,6 +1119,8 @@ export function CutRoom({ review, done }: { review: ReviewView; done: () => void
             </Button>
           )}
         </div>
+          </>
+        )}
       </aside>
     </div>
   );

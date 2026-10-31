@@ -26,9 +26,9 @@ const cut = (cutPlan?: CutPlan): FileItem => ({
 const PLAN = {
   fps: 24,
   clips: [
-    { segment: "seg01", take: "t02", start: 0, end: 4 },
-    { segment: "seg02", take: "t01", start: 4, end: 6 },
-    { segment: "seg03", take: "t01", start: 6, end: 8 },
+    { segment: "seg01", take: "t02", start: 0, end: 4, in: 0, out: 4, audio: "source" as const },
+    { segment: "seg02", take: "t01", start: 4, end: 6, in: 0, out: 2, audio: "source" as const },
+    { segment: "seg03", take: "t01", start: 6, end: 8, in: 0, out: 2, audio: "source" as const },
   ],
 };
 

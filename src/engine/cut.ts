@@ -17,13 +17,15 @@ export function readCutPlan(plan: unknown): { clips: CutClip[]; fps: number } {
   const timed = clips.map((clip: unknown, index) => {
     const which = `clip ${index + 1} of cut.json`;
     if (!clip || typeof clip !== "object") throw new Error(`${which} is not an object`);
-    const { path, in: from, out } = clip as Record<string, unknown>;
+    const { path, in: from, out, audio } = clip as Record<string, unknown>;
     const take = typeof path === "string" ? classify(path) : undefined;
     if (take?.kind !== "take" || !take.segment || !take.version) throw new Error(`${which} is not a segment's take: ${JSON.stringify(path)}`);
     if (typeof from !== "number" || typeof out !== "number" || !Number.isFinite(from) || !Number.isFinite(out) || from < 0 || out <= from) {
       throw new Error(`${which} has no in and out in seconds, out after in: ${JSON.stringify({ in: from, out })}`);
     }
-    const entry = { segment: take.segment, take: take.version, start, end: start + out - from };
+    const sound: CutClip["audio"] | undefined = audio === "source" || audio === "silence" ? audio : audio && typeof audio === "object" ? "pinned" : undefined;
+    if (!sound) throw new Error(`${which} has no audio, source, silence or a pinned source: ${JSON.stringify(audio)}`);
+    const entry = { segment: take.segment, take: take.version, start, end: start + out - from, in: from, out, audio: sound };
     start = entry.end;
     return entry;
   });
