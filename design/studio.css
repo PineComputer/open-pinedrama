@@ -306,11 +306,14 @@ input.search:focus { border-color: var(--text-primary); }
 .npanel [role="tabpanel"] { display: grid; gap: 10px; max-height: 240px; overflow-y: auto; font-size: 12.5px; }
 .npanel .prompt { display: grid; gap: 6px; line-height: 1.6; color: var(--text-primary); }
 .npanel .prompt p { margin: 0; }
-.pchip { display: inline-flex; align-items: center; gap: 4px; height: 20px; padding: 0 6px 0 2px; margin: 0 1px; border-radius: 6px; background: color-mix(in srgb, var(--text-primary) 10%, transparent); color: var(--text-primary); font-weight: 600; vertical-align: middle; }
-.pchip img { width: 16px; height: 16px; border-radius: 4px; object-fit: cover; object-position: top; }
+/* A reference in the prompt as liblib.tv shows it: its picture and its name in one bordered chip, inline in the words. */
+.pchip { display: inline-flex; align-items: center; gap: 5px; height: 26px; padding: 0 8px 0 2px; margin: 0 2px; border-radius: 8px; border: 1px solid color-mix(in srgb, var(--text-primary) 14%, transparent); background: color-mix(in srgb, var(--text-primary) 7%, transparent); color: var(--text-primary); font-weight: 600; vertical-align: middle; }
+.pchip img { width: 22px; height: 22px; border-radius: 6px; object-fit: cover; object-position: top; }
 .npanel .refs { display: flex; gap: 8px; margin: 0; padding: 0; list-style: none; }
-.npanel .refs li { display: grid; gap: 3px; width: 56px; font-size: 10.5px; color: var(--text-muted); }
+/* The pictures the prompt names, numbered on their corner as the prompt's Image N, as liblib.tv numbers them. */
+.npanel .refs li { position: relative; width: 56px; height: 56px; }
 .npanel .refs img { width: 56px; height: 56px; border-radius: 8px; object-fit: cover; object-position: top; }
+.npanel .refs li b { position: absolute; left: 4px; top: 4px; min-width: 18px; height: 18px; padding: 0 4px; border-radius: 999px; display: grid; place-items: center; background: color-mix(in srgb, var(--canvas) 70%, transparent); color: var(--text-primary); font: 600 10.5px var(--font-mono); }
 .npanel dl { margin: 0; display: grid; grid-template-columns: 76px 1fr; gap: 6px 10px; font-size: 12px; }
 .npanel dt { color: var(--text-muted); } .npanel dd { margin: 0; color: var(--text-secondary); }
 /* Why a version is stale, in drama-cli's own words (its lineage's `problems`), one line each. */
