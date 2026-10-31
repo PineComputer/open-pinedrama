@@ -572,7 +572,14 @@ timeline
 - **Consequences.** None beyond the panel.
 - **Words.** None recorded.
 - **Recorded in.** Commit a07d9fa.
-
+- **Amended.** 30 October 2026, d873dc4 (design; the product follows): every project page has a scope,
+  its episode, else the setup for a page with no one episode (master's decision). The sidebar shows
+  one status line with one dot: working, waits for you, or no dot and "No session open: a message
+  starts a new <scope> session". Its message box is always enabled and names its target, sending
+  through `POST /api/dramas/:id/messages` with the scope ([D71](#d71-2026-10-30--a-message-to-the-setups-scope-opens-a-new-setup-session)
+  for the setup); the Pin picker changes the scope. Words: "右边栏的agent好像不能用？说没有open session，
+  但是上边又是绿色的灯， 这个是不是比较矛盾" (*the agent in the right sidebar seems unusable: it says no open
+  session, yet the light above is green; isn't that contradictory?*), relayed by master.
 ## D32. 2026-10-30 · Narrow windows: the sidebar is a drawer, the agent is the ball
 - **Context.** Codex's re-review found the agent lost at 1280 px (F, H).
 - **Decision.** Below 1100 px the sidebar opens as a drawer; at 1280 px and below the agent panel
