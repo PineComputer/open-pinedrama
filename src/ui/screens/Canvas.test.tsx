@@ -203,6 +203,23 @@ describe("the canvas", () => {
     expect(document.querySelector('.react-flow__edge[data-id="shots:EP001 seg01>episodes/EP001/multi_panel_storyboard/seg01/line-art"]')).not.toBeNull();
   });
 
+  it("says on the shots where the breakdown stands, as every node does: no chip once accepted (design/app.js, the node label; D66)", async () => {
+    const shot = { time: "0-3s", size: "wide shot", angle: "eye level", camera: "Static wide shot.", visual: "林 walks into the office.", audio: "Room tone." };
+    const breakdown = { id: 50, name: "breakdown.json", path: "/work/drama/episodes/EP001/breakdown/v1/breakdown.json", type: "application/json", size: 1, kind: "breakdown", episode: "EP001", url: "/f/50", createdAt: "2026-10-30T10:00:00Z" } as unknown as FileItem;
+    engine(project(), [breakdown]);
+    server.use(http.get("/f/50", () => HttpResponse.text(JSON.stringify({ episode: "EP001", title: "x", segments: [{ id: "seg01", dialogue: [], shots: [shot] }] }))));
+    const label = async () => ((await screen.findByText("1 shots · 3 s")).closest(".react-flow__node") as HTMLElement).querySelector(".lab")!;
+    const { unmount } = await renderAt(<Canvas drama={drama} />, "/d/d1/e/EP001/canvas");
+    expect((await label()).querySelector(".st")).toBeNull();
+    unmount();
+    // The breakdown's v1 not accepted in drama-cli's lineage, as status reports the breakdown: the shots say so.
+    const view = lineageView();
+    view.lineage.nodes.find((node) => node.id === "episodes/EP001/breakdown")!.accepted = null;
+    answer("/api/dramas/d1/lineage", view);
+    await renderAt(<Canvas drama={drama} />, "/d/d1/e/EP001/canvas");
+    await waitFor(async () => expect((await label()).querySelector(".st")).toHaveTextContent("v1 · not accepted"));
+  });
+
   it("shows of the shared looks, plates and props only those the episode's stages were made from, where drama-cli put them", async () => {
     engine(project());
     await renderAt(<Canvas drama={drama} />, "/d/d1/canvas");

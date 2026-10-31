@@ -214,6 +214,8 @@ function ItemNode(props: NodeProps<Node<ItemData>>) {
 /** A segment's shots: the text node at the start of its group (D66), what breakdown.json says of them. */
 interface ShotsData extends Record<string, unknown> {
   label: string;
+  /** Where the episode's breakdown stands, which the shots are (labels.ts, nodeStanding). */
+  standing?: Chip;
   shots?: Shot[];
   /** Why the breakdown couldn't be read, in drama-cli's words or the parser's. */
   error?: string;
@@ -247,6 +249,8 @@ function ShotsNode(props: NodeProps<Node<ShotsData>>) {
       <div className="lab" role="button" tabIndex={0} aria-pressed={selected} onClick={() => board.pick(id)} onKeyDown={(event) => event.key === "Enter" && board.pick(id)}>
         <Icon name="list-numbers" />
         <span className="name">{data.label}</span>
+        {/* Where the breakdown stands, as every node says it: no chip once accepted (design/app.js, Canvas's node label). */}
+        {data.standing && data.standing.status !== "accepted" && <StatusChip {...data.standing} />}
       </div>
       <div className="card shotlist" onClick={() => board.pick(id)} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
         {data.error ? (
@@ -590,7 +594,7 @@ function Plane({ drama }: { drama: DramaView }) {
     const shotNodes: Node<ShotsData>[] = segments.flatMap((section) => {
       const group = groups.find((one) => one.title === section)!;
       const id = shotsId(section);
-      return [{ id, type: "shots", parentId: `group:${section}`, expandParent: true, position: moved[id] ?? { x: places.get(id)![0] - group.x, y: places.get(id)![1] - group.y }, width: WIDTH, height: heightOf(id), data: { label: t("canvas.shots"), shots: shotsOf.shots?.get(segmentOf(section)), error: shotsOf.error } }];
+      return [{ id, type: "shots", parentId: `group:${section}`, expandParent: true, position: moved[id] ?? { x: places.get(id)![0] - group.x, y: places.get(id)![1] - group.y }, width: WIDTH, height: heightOf(id), data: { label: t("canvas.shots"), standing: breakdownStage ? nodeStanding(state, breakdownStage, undefined, t) : undefined, shots: shotsOf.shots?.get(segmentOf(section)), error: shotsOf.error } }];
     });
     const drawn = new Set(items.map((node) => node.id));
     const sectionOf = new Map(shown.map((stage) => [stage.id, stage.section]));
@@ -738,7 +742,7 @@ function Plane({ drama }: { drama: DramaView }) {
           files={files.data ?? []}
           facts={{
             label: shots.data.label,
-            standing: breakdownStage ? nodeStanding(state, breakdownStage, undefined, t) : { status: "line", label: t("status.line") },
+            standing: shots.data.standing ?? { status: "line", label: t("status.line") },
             kind: t("canvas.shotList"),
             version: breakdownStage?.version ?? "—",
             accepted: breakdownStage?.accepted ?? null,
