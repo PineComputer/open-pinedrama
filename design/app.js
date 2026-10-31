@@ -100,14 +100,15 @@
   /* Export: the drama as other tools read it, downloaded from what the agent's stops return (handoff/lineage.json,
      handoff/infinite-canvas.zip, written by drama-cli export). Disabled, with why, until a stop has returned them. */
   /* IA draft: Export gives what its owner made, never whichever session returned last. In an episode
-     (its List, Canvas or Cut) it is that episode's own export, the newest by when its session's turn
+     (its List, Canvas, Cut, or Lineage opened from one of its items) it is that episode's own export, the newest by when its session's turn
      started: the shared project and that episode. Elsewhere it is the shared project, the setup's.
      Each says which session made it, and when. */
   function ExportMenu() {
     if (["home", "upload", "reviews"].includes(S.screen)) return null;
     const none = S.state === "nostop";
     const why = "Ready after the agent's next stop returns it.";
-    const ep = ["episode", "canvas", "cut"].includes(S.screen);
+    // Lineage opened from an item sits inside its episode; "Out of date" (S.stale) is drama-wide.
+    const ep = ["episode", "canvas", "cut"].includes(S.screen) || (S.screen === "graph" && !S.stale);
     const scope = ep ? "EP006" : "the shared project";
     const from = ep ? "EP006's session · stop at 18:12" : "The setup's session · stop at 17:40";
     const name = ep ? "bride-on-bail-ep006" : "bride-on-bail";
