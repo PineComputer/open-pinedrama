@@ -118,7 +118,7 @@ export function SteerBar({
             <IconButton label={t("steer.note")} icon="note-pencil" on={mode === "note"} aria-pressed={mode === "note"} onClick={() => setMode(mode === "note" ? null : "note")} />
           </>
         )}
-        <IconButton label={t("steer.lineage")} icon="tree-structure" onClick={() => void navigate(lineage)} />
+        <IconButton label={t("steer.lineage")} icon="tree-structure" onClick={() => void navigate({ ...lineage, state: { backTo: `${t("surface.canvas")} · ${label}` } })} />
         {picture && (
           <Tooltip text={t("steer.download")}>
             <a className={"ibtn"} href={`${picture.url}&download=1`} aria-label={t("steer.download")}>

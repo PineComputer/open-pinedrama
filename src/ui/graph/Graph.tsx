@@ -206,7 +206,8 @@ export function Graph({ dramaId }: { dramaId: string }) {
   };
   // Lineage is a view on the item's home (IA §16): picking another stage opens its home as Lineage, in place of this
   // one's; from the drama-wide Out of date it is a step Back returns from.
-  const focus = (id: string) => void navigate({ ...homeLink(dramaId, id, "lineage"), replace: page !== "outOfDate" });
+  // Another stage's Lineage replaces this one, so it keeps where Back returns to.
+  const focus = (id: string) => void navigate({ ...homeLink(dramaId, id, "lineage"), replace: page !== "outOfDate", state: (prev) => prev });
   const selected = byId.get(center)!;
   const { up, down } = trace(lineage, center);
   const at = places?.key === key ? places.at : undefined;
@@ -260,7 +261,7 @@ export function Graph({ dramaId }: { dramaId: string }) {
           {t(`graph.kind.${selected.kind}` as TKey)} · {selected.version ?? t("graph.noVersion")}
         </small>
         {/* Lineage is a view of the item, not its home (IA §16): the way out is to where it lives (design/'s "Open in …"). */}
-        <Link {...homeLink(dramaId, selected.id)} className="btn sm">
+        <Link {...homeLink(dramaId, selected.id)} state={{ backTo: `${t("steer.lineage")} · ${name(selected)}` }} className="btn sm">
           {t("graph.openIn", {
             // Named as the home is (design/'s "Open in …"): an episode's cut is EPxxx › Cut, apart from its List.
             where: selected.where.episode

@@ -1075,7 +1075,7 @@ export function CutRoom({ review, done }: { review: ReviewView; done: () => void
                   {t("edit.thisClip")}
                 </button>
               )}
-              <Link {...homeLink(review.dramaId, `episodes/${code}/edit`, "lineage")} className={buttonClass({ size: "sm", variant: "ghost" })}>
+              <Link {...homeLink(review.dramaId, `episodes/${code}/edit`, "lineage")} state={{ backTo: `${code} › ${t("step.cut")}` }} className={buttonClass({ size: "sm", variant: "ghost" })}>
                 <Icon name="tree-structure" className="ic" />
                 {t("edit.lineage")}
               </Link>

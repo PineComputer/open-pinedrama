@@ -79,7 +79,7 @@ function Row({ dramaId, code, segment, page, episode, shots, others, item, stale
           {facts && <span className="mono muted">{facts}</span>}
           {/* Lineage of the stage picked, as a view on this home (IA §16). */}
           {shown && (
-            <Link className="ibtn" title={t("segments.lineageOf", { what: `${t(shown.kind === "take" ? "segments.take" : "segments.board")} ${shown.version}` })} aria-label={t("segments.lineage")} {...homeLink(dramaId, shown.stage, "lineage")} onClick={(event) => event.stopPropagation()}>
+            <Link className="ibtn" title={t("segments.lineageOf", { what: `${t(shown.kind === "take" ? "segments.take" : "segments.board")} ${shown.version}` })} aria-label={t("segments.lineage")} {...homeLink(dramaId, shown.stage, "lineage")} state={{ backTo: `${t("view.list")} · ${segment} ${t(shown.kind === "take" ? "segments.take" : "segments.board")} ${shown.version}` }} onClick={(event) => event.stopPropagation()}>
               <Icon name="tree-structure" className="ic" />
             </Link>
           )}

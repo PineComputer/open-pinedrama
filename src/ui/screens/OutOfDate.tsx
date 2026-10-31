@@ -203,7 +203,7 @@ export function OutOfDate({ dramaId }: { dramaId: string }) {
                         <span className="delivep">
                           <Icon name={ICON[node.kind]} className="ic" />
                           <span>
-                            <Link {...homeLink(dramaId, node.id)} className="linkbtn" onClick={() => mark(node)}>
+                            <Link {...homeLink(dramaId, node.id)} state={{ backTo: t("tree.outOfDate") }} className="linkbtn" onClick={() => mark(node)}>
                               {stageName(node, names, t)}
                             </Link>
                             <small>{t(`graph.kind.${node.kind}` as TKey)}</small>
@@ -214,7 +214,7 @@ export function OutOfDate({ dramaId }: { dramaId: string }) {
                       <td className="why">{reason(node)}</td>
                       <td className="act">
                         <Redo dramaId={dramaId} rows={[node]} label={t("ood.redoThis")} owner={owner} session={session} blocked={blocked} />
-                        <Link {...homeLink(dramaId, node.id, "lineage")} className="ibtn" aria-label={t("steer.lineage")} title={t("steer.lineage")} onClick={() => mark(node)}>
+                        <Link {...homeLink(dramaId, node.id, "lineage")} state={{ backTo: t("tree.outOfDate") }} className="ibtn" aria-label={t("steer.lineage")} title={t("steer.lineage")} onClick={() => mark(node)}>
                           <Icon name="tree-structure" className="ic" />
                         </Link>
                       </td>

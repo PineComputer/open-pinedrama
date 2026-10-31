@@ -211,7 +211,7 @@ function AssetDetail({ card, names, dramaId }: { card: CastCard; names: Names | 
           </Link>
         </div>
         <small>{[lookName(look!), file?.version].filter(Boolean).join(" · ")}</small>
-        <Link {...homeLink(dramaId, `${STAGE[card.kind]}/${card.subject}`, "lineage")} className="btn sm">
+        <Link {...homeLink(dramaId, `${STAGE[card.kind]}/${card.subject}`, "lineage")} state={{ backTo: name }} className="btn sm">
           <Icon name="tree-structure" className="ic" />
           {t("asset.lineage")}
         </Link>

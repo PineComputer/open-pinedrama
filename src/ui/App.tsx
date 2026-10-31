@@ -55,7 +55,7 @@ const LABEL: Partial<Record<Page, TKey>> = {
 };
 
 // The pages that need the room: a docked agent shows as the ball there (Agent, below).
-const ROOMS: Page[] = ["canvasPick", "canvas", "outOfDate", "cut", "delivery", "review"];
+const ROOMS: Page[] = ["canvasPick", "canvas", "cut", "delivery", "review"];
 
 const SIDEBAR = "studio.sidebar";
 

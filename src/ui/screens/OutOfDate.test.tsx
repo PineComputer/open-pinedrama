@@ -52,6 +52,8 @@ describe("the drama's Out of date", () => {
     expect(within(plate).getByRole("link", { name: "Lineage" })).toHaveAttribute("href", "/d/d1/assets/locations/office?item=assets%2Fscenes%2Foffice%2Ftimes%2FDay&view=lineage");
     await user.click(within(plate).getByRole("link", { name: "Lineage" }));
     await waitFor(() => expect(href(router)).toBe("/d/d1/assets/locations/office?item=assets%2Fscenes%2Foffice%2Ftimes%2FDay&view=lineage"));
+    // The top bar's Back to says where Back returns (TopBar.tsx, BackTo).
+    expect(router.state.location.state.backTo).toBe("Out of date");
     // Back lands on this page with the row marked (the history entry; the app's router follows it on popstate).
     router.history.back();
     expect(router.history.location.pathname + router.history.location.search).toBe("/d/d1/out-of-date?item=assets%2Fscenes%2Foffice%2Ftimes%2FDay");

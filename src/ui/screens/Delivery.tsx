@@ -90,7 +90,7 @@ export function Delivery({ dramaId, episode }: { dramaId: string; episode?: stri
                           <Link {...cut(row.code)} className="linkbtn">
                             {row.latest.file.version ?? row.latest.file.name}
                           </Link>{" "}
-                          <Link {...homeLink(dramaId, `episodes/${row.code}/edit`, "lineage")} className="ibtn" aria-label={t("edit.lineage")} title={t("edit.lineage")}>
+                          <Link {...homeLink(dramaId, `episodes/${row.code}/edit`, "lineage")} state={{ backTo: t("step.delivery") }} className="ibtn" aria-label={t("edit.lineage")} title={t("edit.lineage")}>
                             <Icon name="tree-structure" className="ic" />
                           </Link>
                         </>
