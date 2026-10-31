@@ -12,7 +12,7 @@ import { Submission, useSubmission } from "../components/Submission.tsx";
 import { Dialog } from "../components/Dialog.tsx";
 import { Icon } from "../icons.tsx";
 import { type TKey, useT } from "../i18n.ts";
-import { errorText, openSession } from "../labels.ts";
+import { errorText, openSession, itemName } from "../labels.ts";
 import { Markdown } from "../Markdown.tsx";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { Watch } from "../screens/Crew.tsx";
@@ -276,7 +276,7 @@ export function AgentPanel({ drama, episode, onCollapse }: { drama: DramaView; e
           <section className="asec" aria-label={t("agent.conversation")}>
             {conversation.map((message) =>
               message.decision ? (
-                <Decided key={message.id} decision={message.decision} episode={chat.data?.label ?? ""} />
+                <Decided key={message.id} decision={message.decision} episode={chat.data?.label ?? ""} names={names} />
               ) : message.kind === "input" || message.kind === "answer" ? (
                 <p key={message.id} className="msg you">
                   {message.text}
@@ -342,12 +342,12 @@ export function AgentPanel({ drama, episode, onCollapse }: { drama: DramaView; e
  * A decision the maker submitted, as the conversation shows it: each item accepted or sent back, by name and version, with
  * the reason the maker gave it (its notes), else their words (D70: every decision also appears in the chat).
  */
-function Decided({ decision, episode }: { decision: DecisionRecord; episode: string }) {
+function Decided({ decision, episode, names }: { decision: DecisionRecord; episode: string; names: Names | null }) {
   const { t } = useT();
   return (
     <div className="msg you decided">
       {decision.items.map((item, n) => {
-        const what = [episode, item.label, item.version].filter(Boolean).join(" ");
+        const what = [episode, itemName(names, item.key, t), item.version].filter(Boolean).join(" ");
         const why = item.verdict === "revise" && item.notes.length ? item.notes.join("; ") : decision.words;
         return (
           <p key={n}>

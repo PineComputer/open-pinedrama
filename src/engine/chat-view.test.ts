@@ -58,8 +58,8 @@ describe("a session's chat", () => {
       kind: "takes",
       words: "Good, seg01 is it.",
       items: [
-        { label: "seg01", version: "t02", verdict: "approve", notes: [] },
-        { label: "seg03", version: "t02", verdict: "revise", notes: ["Open on Luca's face."] },
+        { key: "seg01", version: "t02", verdict: "approve", notes: [] },
+        { key: "seg03", version: "t02", verdict: "revise", notes: ["Open on Luca's face."] },
       ],
     });
     expect(said.decision).toBeUndefined();

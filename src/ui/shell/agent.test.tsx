@@ -184,7 +184,7 @@ describe("the agent panel", () => {
       kind: "input",
       text: "(the agent's terms)",
       at: "2026-10-30T10:03:00Z",
-      decision: { reviewId: "r1", kind: "takes", words: "Good.", items: [{ label: "seg01", version: "t02", verdict: "approve", notes: [] }, { label: "seg03", version: "t02", verdict: "revise", notes: ["Open on Luca's face."] }] },
+      decision: { reviewId: "r1", kind: "takes", words: "Good.", items: [{ key: "seg01", version: "t02", verdict: "approve", notes: [] }, { key: "seg03", version: "t02", verdict: "revise", notes: ["Open on Luca's face."] }] },
     });
     answer("/api/sessions/s1/chat", decided);
     await renderAt(<AgentPanel drama={drama} episode="EP001" onCollapse={() => {}} />);
@@ -192,6 +192,25 @@ describe("the agent panel", () => {
     expect(await within(said).findByText("You accepted EP001 seg01 t02: “Good.”")).toBeInTheDocument();
     expect(within(said).getByText("You sent back EP001 seg03 t02: “Open on Luca's face.”")).toBeInTheDocument();
     expect(within(said).queryByText("(the agent's terms)")).not.toBeInTheDocument();
+  });
+
+  it("names a decided look or place as the bible names it, never by drama-cli's key", async () => {
+    engine();
+    const decided = chat("s1", "EP001", "steer");
+    decided.messages.push({
+      id: 9,
+      kind: "input",
+      text: "(the agent's terms)",
+      at: "2026-10-30T10:03:00Z",
+      decision: { reviewId: "r1", kind: "references", words: "Approved.", items: [{ key: "lin", version: "v1", verdict: "approve", notes: [] }, { key: "lin/S1", version: "v2", verdict: "approve", notes: [] }, { key: "location:office", version: "v1", verdict: "approve", notes: [] }] },
+    });
+    answer("/api/sessions/s1/chat", decided);
+    await renderAt(<AgentPanel drama={drama} episode="EP001" onCollapse={() => {}} />);
+    const said = await screen.findByRole("region", { name: "Conversation" });
+    expect(await within(said).findByText("You accepted EP001 林 · base look v1: “Approved.”")).toBeInTheDocument();
+    expect(within(said).getByText("You accepted EP001 林 · S1 v2: “Approved.”")).toBeInTheDocument();
+    expect(within(said).getByText("You accepted EP001 办公室 v1: “Approved.”")).toBeInTheDocument();
+    expect(within(said).queryByText(/\blin\b/)).toBeNull();
   });
 
   it("says, with one dot, that the episode's session is working, and names it on the line", async () => {

@@ -496,7 +496,8 @@ export interface DecisionRecord {
   reviewId: string;
   kind: ReviewKind;
   words: string;
-  items: { label: string; version?: string; verdict: Verdict; notes: string[] }[];
+  /** Each item by its review key (seg03, lin, lin/S1, location:garden, cut), named as the UI names it (labels.ts). */
+  items: { key: string; version?: string; verdict: Verdict; notes: string[] }[];
 }
 
 export interface ChatView {

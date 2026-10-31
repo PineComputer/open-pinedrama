@@ -55,6 +55,19 @@ export function subjectLabel(names: Names | null, subject: string, kind?: "look"
   return nameOf(names, which, (tagged ? tagged[2] : subject).replace("/", " "));
 }
 
+/**
+ * A review item as a person reads it, by its key (reviews.ts, itemsOf): a segment by its id, the cut as the cut, a place or
+ * prop by the bible's name, a character's look by the bible's name and the look, "base look" for the base one, as Assets
+ * names them; never drama-cli's bare key.
+ */
+export function itemName(names: Names | null, key: string, t: T): string {
+  if (key === "cut") return t("kind.cut");
+  if (/^seg\d/i.test(key)) return key;
+  if (/^(location|prop):/.test(key)) return subjectLabel(names, key);
+  const [subject, look] = key.split("/");
+  return `${nameOf(names, "character", subject)} · ${look ?? t("agent.baseLook")}`;
+}
+
 /** Markdown said as plain words, for a one-line preview: link labels, no markup. */
 /**
  * The session open on a scope (the setup, or an episode by its code), if any: the one answer the agent sidebar's status

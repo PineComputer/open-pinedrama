@@ -450,7 +450,7 @@ export function chatView(session: SessionRow): ChatView {
                 .flatMap((row) => (row.version ? [row.version] : []))
                 .sort((a, b) => versionNumber(b) - versionNumber(a))[0]
             : undefined;
-        const items = (recorded?.items ?? []).map((item) => ({ label: itemLabel(item.key), version: versionOf(item.base ?? []), verdict: item.verdict, notes: item.notes.map((note) => note.text).filter(Boolean) }));
+        const items = (recorded?.items ?? []).map((item) => ({ key: item.key, version: versionOf(item.base ?? []), verdict: item.verdict, notes: item.notes.map((note) => note.text).filter(Boolean) }));
         return { ...message, decision: { reviewId: decided.id, kind: decided.kind, words: recorded?.words ?? "", items } };
       }
       return briefs.has(message.text) ? { ...message, brief: true } : message;
