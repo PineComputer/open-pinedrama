@@ -15,7 +15,7 @@
 .ds-gallery-head { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
 .ds-gallery-head h1 { font: 700 var(--type-display-size)/1.3 var(--font-display); letter-spacing: -0.02em; margin: 0; }
 .ds-gallery-section { display: grid; gap: 12px; }
-.ds-gallery-section h2 { font: 600 var(--type-ui-tiny-size)/1.3 var(--font-sans); letter-spacing: 0.4px; text-transform: uppercase; color: var(--text-muted); margin: 0; }
+.ds-gallery-section > h2 { font: 600 var(--type-ui-tiny-size)/1.3 var(--font-sans); letter-spacing: 0.4px; text-transform: uppercase; color: var(--text-muted); margin: 0; }
 .ds-gallery-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
 .ds-gallery-row > .ds-empty { flex: 1 1 100%; }
 .ds-gallery-note { color: var(--text-secondary); margin: 12px 0 0; }
