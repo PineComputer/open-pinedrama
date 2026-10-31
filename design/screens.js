@@ -132,18 +132,21 @@
     const setv = (val) => set({ cards: { ...S.cards, [id]: v === val ? undefined : val } });
     return html`<div class="cardacts"><button class=${"mini acc"} aria-pressed=${String(v === "accept")} onClick=${() => setv("accept")}>${I("check")}Accept</button>
       <button class="mini back" aria-pressed=${String(v === "back")} onClick=${() => setv("back")}>${I("arrow-counter-clockwise")}Send back</button>
-      <button class="mini note" aria-pressed=${String(v === "note")} onClick=${() => setv("note")}>${I("note-pencil")}Note</button></div>
-      ${(v === "back" || v === "note") && html`<input class="why" placeholder=${v === "back" ? "Why it goes back (required)" : "Your note"} value=${S.cardWhy[id] || ""} onInput=${(e) => set({ cardWhy: { ...S.cardWhy, [id]: e.target.value } })}/>`}`;
+      <button class="mini note" aria-pressed=${String(v === "note")} onClick=${() => setv("note")}>${I("note-pencil")}Accept with note</button></div>
+      ${(v === "back" || v === "note") && html`<input class="why" placeholder=${v === "back" ? "Why it goes back (required)" : "Your note, kept with the accepted version"} value=${S.cardWhy[id] || ""} onInput=${(e) => set({ cardWhy: { ...S.cardWhy, [id]: e.target.value } })}/>`}`;
   }
   function Story() {
     // IA draft (§16): Story is the bible's home; Assets is the home of characters, locations and props, with its own tabs.
     const story = (S.stab || "bible") === "bible";
     const tabs = story ? [] : [["cast", "Characters", P.cast.length], ["scenes", "Locations", P.places.length], ["props", "Props", P.props.length]];
+    // §16: a link lands here with its object picked (S.asel), marked and scrolled into view.
+    useEffect(() => { if (S.asel) document.querySelector(`[data-asset="${S.asel}"]`)?.scrollIntoView({ block: "center" }); }, [S.asel, S.stab]);
+    const picked = (id) => ({ "data-asset": id, "aria-current": S.asel === id ? "true" : undefined });
     const open = ["margaret", "garden"], decided = open.filter((k) => S.cards[k] && (S.cards[k] !== "back" || (S.cardWhy[k] || "").trim())).length;
     return html`<div class="main">
       <${TopBar} crumbs=${(S.stab || "bible") === "bible" ? [P.project.title, "Story"] : [P.project.title, "Assets", { cast: "Characters", scenes: "Locations", props: "Props" }[S.stab]]}/>
       <div class="body"><div class="scrollmain">
-        <div class="bar2"><${EpisodeViews}/><span class="grow"></span><${ProjectChips}/></div>
+        <div class="bar2"><${BackTo}/><span class="grow"></span><${ProjectChips}/></div>
         <${StopBanner}/>
         <div style="padding:0 16px"><div class="tabsrow" style="margin:4px 0 18px">${story ? html`<h2 class="pagetitle">Story</h2>` : html`<div class="utabs" role="tablist">${tabs.map(([k, l, n]) => html`<button role="tab" aria-selected=${String(S.stab === k)} onClick=${() => set({ stab: k })}>${l}${n && html`<small>${n}</small>`}</button>`)}</div>`}
           <span class="grow"></span><span class="muted" style="font-size:12px">${story ? "Bible b0003 · accepted · EP001–EP012 written" : "Shared by every episode"}</span></div></div>
@@ -154,7 +157,7 @@
           <section class="panel wide"><h3>${I("film-strip")}Episodes<span class="grow"></span><span class="muted" style="font-size:11.5px;font-weight:500">12 of 24 written · the next range is written when EP007 starts</span></h3>
             <div class="eplist">${P.bible.eps.map(([c, t, s], i) => html`<div class="eprow"><img src=${P.eps[i].cover} alt=""/><span class="mono">${c}</span><b>${t}</b><span class="muted grow">${s}</span></div>`)}</div></section>
         </div>`}
-        ${S.stab === "cast" && html`<div class="castgrid">${P.cast.map((c) => html`<article class="castcard">
+        ${S.stab === "cast" && html`<div class="castgrid">${P.cast.map((c) => html`<article class=${"castcard" + (S.asel === c.id ? " sel" : "")} ...${picked(c.id)}>
           <div class="pic"><img src=${c.sheet} alt=""/>${Status(c.st, c.st === "back" ? "Sent back · 1 error" : c.st === "you" ? "Waiting for you · 1 warn" : undefined)}</div>
           <div class="ctxt"><div style="display:flex;align-items:baseline;gap:8px"><b class="grow">${c.name}</b><span class="mono subtle" style="font-size:11px">${c.ver}</span></div>
             <small class="muted">${c.role}</small>
@@ -162,14 +165,14 @@
             ${c.st === "you" && html`<div class="finding warn">${I("warning")}<span>warn · The blouse reads as purple; the bible says plum.</span></div><${ReviewBtns} id=${c.id}/>`}
             ${c.st === "back" && html`<div class="finding err">${I("warning-circle")}<span>Sent back by the agent: the observer found an error (a third hand). Redrawing.</span></div>`}
           </div></article>`)}</div>`}
-        ${S.stab === "scenes" && html`<div class="worldgrid">${P.places.map((p) => html`<article class="placecard">
+        ${S.stab === "scenes" && html`<div class="worldgrid">${P.places.map((p) => html`<article class=${"placecard" + (S.asel === p.id ? " sel" : "")} ...${picked(p.id)}>
           <div class="pic"><img src=${p.pic} alt=""/>${p.st !== "accepted" && Status(p.st)}</div>
           <div class="ctxt"><div style="display:flex;align-items:baseline;gap:8px"><b class="grow">${p.name}</b><span class="mono subtle" style="font-size:11px">${p.ver}</span></div>
             <p class="desc">${p.desc}</p>
             <div class="aka"><span class="muted">Views</span>${p.views.map((v) => html`<span class="tag">${v}</span>`)}</div>
             <div class="aka"><span class="muted">Times</span>${p.times.map(([t, v]) => html`<span class="tag">${t} · ${v}</span>`)}</div>
             ${p.st === "you" && html`<${ReviewBtns} id=${p.id}/>`}</div></article>`)}</div>`}
-        ${S.stab === "props" && html`<div class="worldgrid">${P.props.map((p) => html`<article class="placecard"><div class="pic"><img src=${p.pic} alt=""/>${p.st !== "accepted" && Status(p.st)}</div>
+        ${S.stab === "props" && html`<div class="worldgrid">${P.props.map((p) => html`<article class=${"placecard" + (S.asel === p.id ? " sel" : "")} ...${picked(p.id)}><div class="pic"><img src=${p.pic} alt=""/>${p.st !== "accepted" && Status(p.st)}</div>
           <div class="ctxt"><div style="display:flex;align-items:baseline;gap:8px"><b class="grow">${p.name}</b><span class="mono subtle" style="font-size:11px">${p.ver}</span></div><small class="muted">Key prop</small><p class="desc">${p.desc}</p></div></article>`)}</div>`}
         ${S.stab !== "bible" && html`<div class="sendstrip"><span class="muted">Looks and plates · ${decided} of 2 decided</span><span class="grow"></span>
           <button class="btn primary sm" disabled=${decided < 2} onClick=${() => toast("Review sent: Margaret Cole and Garden wedding.")}>Send review</button></div>`}
