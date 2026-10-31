@@ -158,7 +158,7 @@ describe("Home", () => {
     answer("/api/dramas", [stepmother, bride]);
     await renderAt(<Slate />);
     const tabs = await screen.findByRole("tablist");
-    expect(within(tabs).getAllByRole("tab").map((tab) => tab.textContent)).toEqual(["All2", "Needs you0", "At work1", "Finished0"]);
+    expect(within(tabs).getAllByRole("tab").map((tab) => tab.textContent)).toEqual(["All2", "Needs you0", "Working1", "Done0"]);
   });
 
   it("offers the latest drama to carry on with, and the agent's last line, when nothing waits", async () => {

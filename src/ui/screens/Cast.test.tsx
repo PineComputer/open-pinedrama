@@ -45,10 +45,8 @@ function engine() {
 
 describe("the Story", () => {
   it("shows the cast named as the bible names them, with their other names and the episodes they are in", async () => {
-    const user = userEvent.setup();
     engine();
-    await renderAt(<Cast dramaId="d1" />, "/d/d1/story");
-    await user.click(await screen.findByRole("tab", { name: /Cast/ }));
+    await renderAt(<Cast dramaId="d1" />, "/d/d1/assets/characters");
     const lin = await screen.findByRole("article", { name: "Lin Xiaoyu" });
     expect(within(lin).getByText("Xiaoyu")).toBeInTheDocument();
     expect(within(lin).getByRole("link", { name: "EP001" })).toHaveAttribute("href", "/d/d1/e/EP001/list");
@@ -57,8 +55,7 @@ describe("the Story", () => {
   it("opens a card's asset at its home: the detail links to its review and shows its earlier versions (J1)", async () => {
     const user = userEvent.setup();
     engine();
-    await renderAt(<Cast dramaId="d1" />, "/d/d1/story");
-    await user.click(await screen.findByRole("tab", { name: /Cast/ }));
+    await renderAt(<Cast dramaId="d1" />, "/d/d1/assets/characters");
     const lin = await screen.findByRole("article", { name: "Lin Xiaoyu" });
     expect(within(lin).getByText("Waiting for you")).toBeInTheDocument();
     expect(within(lin).getByRole("link", { name: "Lin Xiaoyu" })).toHaveAttribute("href", "/d/d1/assets/characters/lin");
@@ -71,12 +68,11 @@ describe("the Story", () => {
     expect(within(detail).getByText("Sent back")).toBeInTheDocument();
   });
 
-  it("keeps places in Locations with their description, views and times, props in Props, and the episodes in the bible", async () => {
+  it("keeps places in Locations with their description, views and times, and props in Props", async () => {
     const user = userEvent.setup();
     engine();
-    await renderAt(<Cast dramaId="d1" />, "/d/d1/story");
-    await user.click(await screen.findByRole("tab", { name: /Locations/ }));
-    const office = screen.getByRole("article", { name: "Factory office" });
+    await renderAt(<Cast dramaId="d1" />, "/d/d1/assets/locations");
+    const office = await screen.findByRole("article", { name: "Factory office" });
     expect(within(office).getByText("Desks under strip lights.")).toBeInTheDocument();
     expect(within(office).getByRole("link", { name: "left side" })).toHaveAttribute("href", "/f/4");
     expect(within(office).getByRole("link", { name: "Night · v2" })).toHaveAttribute("href", "/f/5");
@@ -84,9 +80,14 @@ describe("the Story", () => {
     const detail = await screen.findByRole("complementary", { name: "Factory office: versions, state and review" });
     expect(within(detail).getAllByRole("link").map((link) => link.getAttribute("href"))).toContain("/f/3");
     await user.click(screen.getByRole("tab", { name: /Props/ }));
-    expect(within(screen.getByRole("article", { name: "The letter" })).getByText("A folded letter.")).toBeInTheDocument();
-    await user.click(screen.getByRole("tab", { name: /Bible/ }));
-    expect(screen.getByRole("link", { name: /EP001\s*The stepmother arrives/ })).toHaveAttribute("href", "/d/d1/e/EP001/list");
+    expect(within(await screen.findByRole("article", { name: "The letter" })).getByText("A folded letter.")).toBeInTheDocument();
+  });
+
+  it("keeps the bible on Story, a page of its own with no asset tabs (IA §16)", async () => {
+    engine();
+    await renderAt(<Cast dramaId="d1" />, "/d/d1/story");
+    expect(await screen.findByRole("link", { name: /EP001\s*The stepmother arrives/ })).toHaveAttribute("href", "/d/d1/e/EP001/list");
+    expect(screen.queryByRole("tab")).not.toBeInTheDocument();
   });
 
   it.each([

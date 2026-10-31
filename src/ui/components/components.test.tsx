@@ -85,7 +85,7 @@ describe("StatusChip", () => {
     ["you", "Waiting for you"],
     ["accepted", "Accepted"],
     ["back", "Sent back"],
-    ["stale", "Stale"],
+    ["stale", "Out of date"],
     ["redline", "Red line"],
     ["failed", "Failed"],
   ] as const)("says %s as “%s”", (status, words) => {

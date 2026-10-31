@@ -333,30 +333,34 @@ export function Cast({ dramaId, compact = false }: { dramaId: string; compact?: 
   // Under the logline, as the design has them: the genres the maker's notes state, and the episodes × their length.
   const facts = drama.data?.facts;
   const tags = [...(facts?.genres ?? []), ...(facts?.scale && facts.length ? [t("cast.format", { n: facts.scale.episodes, s: facts.length })] : [])];
-  const tabs: [Shelf, string, number | undefined][] = [
-    ["bible", t("cast.bible"), undefined],
-    ["cast", t("cast.cast"), characters.length],
+  const tabs: [Shelf, string, number][] = [
+    ["cast", t("cast.characters"), characters.length],
     ["scenes", t("cast.locations"), places.length],
     ["props", t("cast.props"), props.length],
   ];
-  // The design's Story (design/screens.js, Story): underlined tabs with the bible's state at their end, then the shelf.
+  // The design's Story and Assets (design/screens.js, Story): two homes (IA §16), the bible's page titled Story with its
+  // state, and Assets with its three tabs, shared by every episode.
+  const story = shelf === "bible";
   return (
     <TabsPrimitive.Root value={shelf} onValueChange={(next) => void navigate(shelfLink(next as Shelf, dramaId))}>
-      <h2 className="sr-only">{t("step.story")}</h2>
       <div style={{ padding: "0 16px" }}>
         <div className="tabsrow" style={{ margin: "4px 0 18px" }}>
-          <TabsPrimitive.List className="utabs" aria-label={t("cast.shelves")}>
-            {tabs.map(([value, label, count]) => (
-              <TabsPrimitive.Trigger key={value} value={value}>
-                {label}
-                {count !== undefined && <small> {count}</small>}
-              </TabsPrimitive.Trigger>
-            ))}
-          </TabsPrimitive.List>
+          {story ? (
+            <h2 className="pagetitle">{t("step.story")}</h2>
+          ) : (
+            <TabsPrimitive.List className="utabs" aria-label={t("cast.shelves")}>
+              {tabs.map(([value, label, count]) => (
+                <TabsPrimitive.Trigger key={value} value={value}>
+                  {label}
+                  <small> {count}</small>
+                </TabsPrimitive.Trigger>
+              ))}
+            </TabsPrimitive.List>
+          )}
           <span className="grow" />
-          {meta && (
+          {(story ? meta : t("cast.shared")) && (
             <span className="muted" style={{ fontSize: 12 }}>
-              {meta}
+              {story ? meta : t("cast.shared")}
             </span>
           )}
         </div>
