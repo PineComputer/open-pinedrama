@@ -20,7 +20,7 @@ timeline
   2026-10-23 : D5 pre-production in one session
   2026-10-24 : D6 idle timeouts follow the work : D7 spend shown, never in a goal
   2026-10-29 : D8 phase 1 steers
-  2026-10-30 : D9 design/ is the UI source : D10 tsc gate : D11 mature libraries : D12 real samples in LFS : D13 decisions taken once : D14 credentials stop : D15 Codex review loop : D16 navigation and one home : D17 every take and cut watched : D18 cut editing as an edit spec : D19 TanStack Router : D20 Export by owner : D21 Analyzing and Out of date routes : D22 redo by owner : D23 the asset detail : D24 the cut edit goal : D25 one Submission : D26 crumbs and Back : D27 Reviews : D28 model badge : D29 canvas zoom, inline video : D30 URL rules : D31 agent scope : D32 narrow windows : D33 review options : D34 Episodes filters : D35 every element cites its ground : D36 Delivery is the cuts' home
+  2026-10-30 : D9 design/ is the UI source : D10 tsc gate : D11 mature libraries : D12 real samples in LFS : D13 decisions taken once : D14 credentials stop : D15 Codex review loop : D16 navigation and one home : D17 every take and cut watched : D18 cut editing as an edit spec : D19 TanStack Router : D20 Export by owner : D21 Analyzing and Out of date routes : D22 redo by owner : D23 the asset detail : D24 the cut edit goal : D25 one Submission : D26 crumbs and Back : D27 Reviews : D28 model badge : D29 canvas zoom, inline video : D30 URL rules : D31 agent scope : D32 narrow windows : D33 review options : D34 Episodes filters : D35 every element cites its ground : D36 Delivery is the cuts' home : D37 where a stop shows
 ```
 
 ## D1. 2026-10-22 · A desktop app on Electron
@@ -464,6 +464,20 @@ timeline
 - **Words.** None recorded.
 - **Recorded in.** work-07's notes, 30 October 2026; commit 7e51b8e.
 
+## D37. 2026-10-30 · A stop shows in full where it belongs, as a notice elsewhere
+- **Context.** EP007's red-line StopCard showed in full on every Bride on Bail page, Assets and
+  Lineage included (QA, 30 October 2026).
+- **Decision.** A stop that belongs to one episode is the full StopCard in that episode only; on
+  every other page of the drama it is a compact notice with "Open EPxxx". A stop that belongs to
+  the whole drama stays the full card everywhere in it.
+- **Alternatives.** The full card on every page.
+- **Grounds.** The IA proposal, section 10 (cross-episode stops as a compact notice)
+  <sup>[3](#ref-3)</sup>; [interaction](studio/interaction.md#stops-and-recovery), the stops table;
+  one home per object ([design principles](design-principles.md#1-one-home-per-object)).
+- **Consequences.** None beyond the StopCard and its notice.
+- **Words.** None recorded.
+- **Recorded in.** work-04's note to the docs, 30 October 2026.
+
 ## D25. 2026-10-30 · One Submission state for every send
 - **Context.** A review's send, a cut's Apply and a redo each go to an agent and can time out.
   Codex's third round asked that an unknown outcome be checked, never sent again.
@@ -477,7 +491,10 @@ timeline
   round 3, fix 1; Stripe's idempotent requests
   ([design principles](design-principles.md#9-design-for-failure)).
 - **Consequences.** Reviews, Cut and Out of date show the same states; the cut's Send review uses
-  it too (a04e08f).
+  it too (a04e08f). A review's decision is found again by its submission: `GET /api/submissions/:id`
+  answers for review decisions too (sending, sent; none means not taken), and the room keeps its
+  submission id with the draft, so a reopened room checks before it ever sends again (Codex's
+  round 3, Interrupt).
 - **Words.** None recorded.
 - **Recorded in.** Design e379653 and 3b5e851; engine 420a21d.
 
@@ -576,8 +593,9 @@ timeline
   is the ball. Media queries go through usehooks-ts 3.1.1, pinned.
 - **Alternatives.** Hand-written media queries.
 - **Grounds.** The IA proposal, round 2, F <sup>[3](#ref-3)</sup>; D11.
-- **Consequences.** The smallest supported window is still pending
-  ([information architecture](studio/information-architecture.md#narrow-windows)).
+- **Consequences.** In a review room at 1280 px and below, the send bar keeps the ball's corner
+  clear, so Send and Send again stay reachable (found by e2e). The smallest supported window is
+  still pending ([information architecture](studio/information-architecture.md#narrow-windows)).
 - **Words.** None recorded.
 - **Recorded in.** Commit a07d9fa.
 
