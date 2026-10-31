@@ -1132,9 +1132,10 @@ timeline
   version waits; after acceptance the maker asks the agent, which writes a new version that
   drama-cli checks and the maker accepts. Analyzing and the Fountain review fold into
   Script, which replaces [D21](#d21-2026-10-30--analyzing-and-out-of-date-have-drama-level-routes-of-their-own)'s
-  Analyzing route when the draft is ported. Ported (7381a9a): Start opens Script, which shows "vN · the
-  agent is rewriting your file into Fountain" while the setup works on the screenplay, with the agent's
-  steps and validate's output in the agent sidebar, shown on Script during setup; the "Setup › Script"
+  Analyzing route when the draft is ported. Ported (7381a9a): Start opens Script, which showed "vN · the
+  agent is rewriting your file into Fountain" while the setup worked on the screenplay (superseded by
+  95a8245, below), with the agent's steps and validate's output in the agent sidebar, shown on Script
+  during setup; the "Setup › Script"
   and "Fountain review" crumbs are gone. A rewrite question takes an explicit verdict, approve or
   revise (the item verdicts' names), required by the engine (db1a5f5): the agent is told "I accept the rewrite (screenplay vN). My words: "…"" or "Send the rewrite
   (screenplay vN) back. What to change: "…"", the maker's words verbatim and no drama-cli command named
@@ -1192,6 +1193,13 @@ timeline
   Until the pinned drama-cli writes it, the Fountain tab shows the file as plain text, without kind styling,
   and says so in one line, as `graph.staleNoReason` does for a reason drama-cli doesn't give; fountain-js
   styling is removed, with no fallback. The drama-cli change is briefed separately (master).
+- **Amended.** 31 October 2026, 95a8245 (work-02), under D64 as amended for C14: Script shows only
+  drama-cli's recorded versions; the "vN · the agent is rewriting your file into Fountain" row and the
+  tree's Rewriting state are gone, and the agent's steps stay in the sidebar. The tree's Script row is
+  Accepted only when drama-cli's lineage records the screenplay's working version as accepted (its status
+  has no screenplay entry, short_drama `drama_cli/stages.py`, status), Waiting while the agent's question
+  on a version is open, and Original only with no version. "This project's rewrite wasn't recorded." shows
+  only once the setup is over.
 ## D63. 2026-10-30 · An episode's views are Segments and Canvas; Segments is a matrix
 - **Context.** An episode's List showed each segment's tiles in a row, without its shots or
   references side by side.
@@ -1243,7 +1251,9 @@ timeline
   accepted, usable v4 for as long as the setup ran (`routes.tsx:116`; C16); a character's face read "current
   v1 · none accepted" while status recorded it accepted and usable, because Assets read acceptance from the
   studio's review verdicts (`src/ui/screens/Cast.tsx:50–56`, `193–194`; C17). Evidence:
-  `short-drama-runs/qa/codex-e2e-rc2.md`, "rc5".
+  `short-drama-runs/qa/codex-e2e-rc2.md`, "rc5". Fixed for C14 in 95a8245 (work-02): no rewrite is
+  inferred from a running setup; the tree's Script row reads drama-cli's lineage and its Bible row
+  status.bible (Not started, Accepted, or "vN · not accepted").
 
 ## D65. 2026-10-30 · The tree's current row is a tint, without an accent bar
 - **Context.** The project tree marked its current row with a curved accent bar on its left
