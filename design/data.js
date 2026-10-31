@@ -25,36 +25,37 @@ window.P = (() => {
     eps,
     cast: [
       { id: "ivy", name: "Ivy Bell", role: "Lead · base look", ver: "S0 v1", st: "accepted", sheet: img("cast-ivy"), face: img("face-ivy") },
-      { id: "luca", name: "Luca Moreno", role: "Lead · base look", ver: "S0 v2", st: "accepted", sheet: img("cast-luca"), face: img("face-luca") },
-      { id: "ethan", name: "Ethan Cole", role: "Base look", ver: "S0 v1", st: "accepted", sheet: img("cast-ethan"), face: img("face-ethan") },
-      { id: "margaret", name: "Margaret Cole", role: "Base look", ver: "S0 v3", st: "you", warn: 1, sheet: img("cast-margaret"), face: img("face-margaret") },
-      { id: "walter", name: "Walter Cole", role: "Base look", ver: "S0 v3", st: "stale", problems: ["Changed file: bible/v3/bible.json"], sheet: img("cast-walter"), face: img("face-walter") },
-      { id: "dunn", name: "Sgt. Ray Dunn", role: "Base look", ver: "S0 v1", st: "accepted", sheet: img("cast-dunn"), face: img("face-dunn") },
-      { id: "hale", name: "Reverend Hale", role: "Base look", ver: "S0 v1", st: "work", sheet: img("cast-hale"), face: img("face-hale") },
-      { id: "tess", name: "Tess Park", role: "Base look", ver: "S0 v1", st: "back", err: 1, sheet: img("cast-tess"), face: img("face-tess") },
+      { id: "luca", name: "Luca Moreno", role: "Lead · base look", ver: "S0 v2", accepted: "S0 v2", st: "accepted", sheet: img("cast-luca"), face: img("face-luca") },
+      { id: "ethan", name: "Ethan Cole", role: "Base look", ver: "S0 v1", accepted: "S0 v1", st: "accepted", sheet: img("cast-ethan"), face: img("face-ethan") },
+      { id: "margaret", name: "Margaret Cole", role: "Base look", ver: "S0 v3", accepted: "S0 v2", st: "you", warn: 1, sheet: img("cast-margaret"), face: img("face-margaret") },
+      { id: "walter", name: "Walter Cole", role: "Base look", ver: "S0 v3", accepted: "S0 v3", st: "stale", problems: ["Changed file: bible/v3/bible.json"], sheet: img("cast-walter"), face: img("face-walter") },
+      { id: "dunn", name: "Sgt. Ray Dunn", role: "Base look", ver: "S0 v1", accepted: "S0 v1", st: "accepted", sheet: img("cast-dunn"), face: img("face-dunn") },
+      { id: "hale", name: "Reverend Hale", role: "Base look", ver: "S0 v1", accepted: null, st: "work", sheet: img("cast-hale"), face: img("face-hale") },
+      { id: "tess", name: "Tess Park", role: "Base look", ver: "S0 v1", accepted: null, st: "back", err: 1, sheet: img("cast-tess"), face: img("face-tess") },
     ],
     places: [
-      { id: "apartment", name: "Luca's apartment", desc: "A one-bedroom walk-up over a laundromat: a sofa bed, a desk under the window, case files stacked by the door.", ver: "v2", st: "accepted", pic: img("plate-apartment"), views: ["floor plan", "front", "back", "left side", "right side"], times: [["Night", "v1"]] },
-      { id: "house", name: "Cole house · living room", desc: "The Coles' living room: a fireplace, family photographs on the mantel, a bay window onto the street.", ver: "v5", st: "accepted", pic: img("plate-house"), views: ["floor plan", "front", "back", "left side", "right side"], times: [["Day", "v2"], ["Night", "v1"]] },
-      { id: "garden", name: "Garden wedding", desc: "A rented garden set for a small wedding: white chairs in rows, an arch of roses, a string quartet's stands.", ver: "v1", st: "you", pic: img("plate-garden"), views: ["floor plan", "front", "back", "left side", "right side"], times: [["Day", "v1"]] },
-      { id: "desk", name: "County jail · front desk", desc: "The jail's front desk behind bulletproof glass, a bench for visitors, a clock over the door.", ver: "v1", st: "accepted", pic: img("plate-desk"), views: ["floor plan", "front", "back", "left side", "right side"], times: [["Day", "v1"]] },
-      { id: "cell", name: "County jail · cell", desc: "A two-bunk cell, a steel toilet, a slit window high in the back wall.", ver: "v1", st: "accepted", pic: img("plate-cell"), views: ["floor plan", "front", "back", "left side", "right side"], times: [["Day", "v1"]] },
-      { id: "street", name: "Jail street", desc: "The street outside the county jail: a bail bonds office, a bus stop, parked cruisers.", ver: "v1", st: "accepted", pic: img("plate-street"), views: ["floor plan", "front", "back", "left side", "right side"], times: [["Day", "v1"]] },
+      { id: "apartment", name: "Luca's apartment", desc: "A one-bedroom walk-up over a laundromat: a sofa bed, a desk under the window, case files stacked by the door.", ver: "v2", accepted: "v2", st: "accepted", pic: img("plate-apartment"), views: ["floor plan", "front", "back", "left side", "right side"], times: [["Night", "v1"]] },
+      { id: "house", name: "Cole house · living room", desc: "The Coles' living room: a fireplace, family photographs on the mantel, a bay window onto the street.", ver: "v5", accepted: "v5", st: "accepted", pic: img("plate-house"), views: ["floor plan", "front", "back", "left side", "right side"], times: [["Day", "v2"], ["Night", "v1"]] },
+      { id: "garden", name: "Garden wedding", desc: "A rented garden set for a small wedding: white chairs in rows, an arch of roses, a string quartet's stands.", ver: "v1", accepted: null, st: "you", pic: img("plate-garden"), views: ["floor plan", "front", "back", "left side", "right side"], times: [["Day", "v1"]] },
+      { id: "desk", name: "County jail · front desk", desc: "The jail's front desk behind bulletproof glass, a bench for visitors, a clock over the door.", ver: "v1", accepted: "v1", st: "accepted", pic: img("plate-desk"), views: ["floor plan", "front", "back", "left side", "right side"], times: [["Day", "v1"]] },
+      { id: "cell", name: "County jail · cell", desc: "A two-bunk cell, a steel toilet, a slit window high in the back wall.", ver: "v1", accepted: "v1", st: "accepted", pic: img("plate-cell"), views: ["floor plan", "front", "back", "left side", "right side"], times: [["Day", "v1"]] },
+      { id: "street", name: "Jail street", desc: "The street outside the county jail: a bail bonds office, a bus stop, parked cruisers.", ver: "v1", accepted: "v1", st: "accepted", pic: img("plate-street"), views: ["floor plan", "front", "back", "left side", "right side"], times: [["Day", "v1"]] },
     ],
-    props: [{ id: "file", name: "Case file", desc: "A worn manila folder, the case number in marker on its tab, papers sticking out.", ver: "v1", st: "accepted", pic: img("prop-folder") }],
+    props: [{ id: "file", name: "Case file", desc: "A worn manila folder, the case number in marker on its tab, papers sticking out.", ver: "v1", accepted: "v1", st: "accepted", pic: img("prop-folder") }],
+    // What drama-cli's status says each one's accepted version is ("accepted", null for none): never inferred from the current one.
     // EP006 on the canvas: scenes, segments, the references each one reads, its board and its latest take
     scenes: [
       { n: 1, place: "apartment", time: "Night", segs: [
-        { id: "seg01", s: 27, cast: ["luca", "ivy"], board: null, take: "t02", still: img("still-s1t2"), st: "you", text: "[0-5s] MS: Luca in the hallway, the blanket folded over his arm.\n[5-12s] MS: he folds it again as he talks: {I said the couch is fine.}\n[12-27s] WS: the living room behind him, Ivy at the window.",
+        { id: "seg01", s: 27, cast: ["luca", "ivy"], board: null, take: "t02", still: img("still-s1t2"), accepted: null, st: "you", text: "[0-5s] MS: Luca in the hallway, the blanket folded over his arm.\n[5-12s] MS: he folds it again as he talks: {I said the couch is fine.}\n[12-27s] WS: the living room behind him, Ivy at the window.",
           // What drama-cli's spec.json and request.json for t02 say: the take's prompt, its references in order (Image 1, 2, …), its settings, and the versions with what the person decided.
           spec: { model: "sd25", ratio: "9:16", resolution: "480p", seconds: 27,
             images: [img("board-seg02"), img("plate-apartment"), img("cast-luca"), img("cast-ivy")],
             prompt: "Image 1: the storyboard, for the shot structure and camera rhythm; do not adopt its sketch style.\nImage 2: Luca's apartment at night, for the room's layout and the light's direction.\nImage 3: Luca Moreno, base look. Image 4: Ivy Bell, base look.\n[0-9s] Medium shot, Luca in the hallway with the blanket folded over his arm, as Image 3; behind him the living room of Image 2.\n[9-18s] He steps in; Ivy, as Image 4, looks up from the sofa. Dialogue (Luca): {I folded it the way you like.}\n[18-27s] Close-up on Ivy, a small smile.",
-            versions: [["t02", "you", ""], ["t01", "revise", "He should hold the blanket folded before he speaks."]] } },
-        { id: "seg02", s: 15, cast: ["ivy"], board: img("board-seg02"), take: "t01", still: null, st: "accepted", text: "[0-6s] CU: Ivy turns from the window.\n[6-15s] MS: she crosses to the couch and takes the blanket from him." } ] },
+            versions: [["t02", "you", ""], ["t01", "back", "He should hold the blanket folded before he speaks."]] } },
+        { id: "seg02", s: 15, cast: ["ivy"], board: img("board-seg02"), take: "t01", still: null, accepted: "t01", st: "accepted", text: "[0-6s] CU: Ivy turns from the window.\n[6-15s] MS: she crosses to the couch and takes the blanket from him." } ] },
       { n: 2, place: "apartment", time: "Day", segs: [
-        { id: "seg03", s: 28, cast: ["luca", "ethan"], board: img("board-seg03"), take: "t02", still: img("still-s3t2"), st: "you", text: "[0-8s] CU: Luca's face as the door opens.\n[8-20s] OTS: Ethan sets the case file on the table.\n[20-28s] MS: neither of them sits." },
-        { id: "seg04", s: 22, cast: ["luca", "ethan"], board: img("board-seg04"), take: "t02", still: null, st: "accepted", text: "[0-10s] WS: the kitchen, morning light.\n[10-22s] MS: Ethan reads the terms aloud; Luca does not look up." } ] },
+        { id: "seg03", s: 28, cast: ["luca", "ethan"], board: img("board-seg03"), take: "t02", still: img("still-s3t2"), accepted: "t01", st: "you", text: "[0-8s] CU: Luca's face as the door opens.\n[8-20s] OTS: Ethan sets the case file on the table.\n[20-28s] MS: neither of them sits." },
+        { id: "seg04", s: 22, cast: ["luca", "ethan"], board: img("board-seg04"), take: "t02", still: null, accepted: "t02", st: "accepted", text: "[0-10s] WS: the kitchen, morning light.\n[10-22s] MS: Ethan reads the terms aloud; Luca does not look up." } ] },
     ],
     // The take review: the person watches every take and decides.
     takes: [

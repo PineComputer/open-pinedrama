@@ -283,14 +283,14 @@
   /* ───── Canvas ───── */
   const NODES = (() => {
     const n = [];
-    P.cast.slice(0, 5).forEach((c, i) => n.push({ id: c.id, kind: "cast", x: 0, y: i * 196, w: 300, h: 168, pic: c.sheet, label: c.name, st: c.st, ver: c.ver, role: c.role, model: "gpt-image-2.5", problems: c.problems }));
-    P.places.slice(0, 2).forEach((p, i) => n.push({ id: p.id, kind: "place", x: 400, y: i * 380, w: 190, h: 338, pic: p.pic, label: p.name, st: p.st, ver: p.ver, model: "gpt-image-2.5", role: "Plate · " + p.times.map(([t]) => t).join(" · ") }));
-    n.push({ id: "file", kind: "prop", x: 400, y: 770, w: 190, h: 200, pic: P.props[0].pic, label: "Case file", st: "accepted", ver: "v1", role: "Key prop", model: "gpt-image-2.5" });
+    P.cast.slice(0, 5).forEach((c, i) => n.push({ id: c.id, kind: "cast", x: 0, y: i * 196, w: 300, h: 168, pic: c.sheet, label: c.name, st: c.st, ver: c.ver, accepted: c.accepted, role: c.role, model: "gpt-image-2.5", problems: c.problems }));
+    P.places.slice(0, 2).forEach((p, i) => n.push({ id: p.id, kind: "place", x: 400, y: i * 380, w: 190, h: 338, pic: p.pic, label: p.name, st: p.st, ver: p.ver, accepted: p.accepted, model: "gpt-image-2.5", role: "Plate · " + p.times.map(([t]) => t).join(" · ") }));
+    n.push({ id: "file", kind: "prop", x: 400, y: 770, w: 190, h: 200, pic: P.props[0].pic, label: "Case file", st: "accepted", ver: "v1", accepted: P.props[0].accepted, role: "Key prop", model: "gpt-image-2.5" });
     let gy = 0;
     P.scenes.forEach((sc, gi) => {
       const g = { id: "g" + sc.n, kind: "group", x: 700, y: gy, w: 360, h: 64 + sc.segs.length * 236, label: `Scene ${sc.n} · Luca's apartment · ${sc.time}` };
       n.push(g);
-      sc.segs.forEach((s, i) => n.push({ id: s.id, kind: "seg", x: 730, y: gy + 64 + i * 236, w: 300, h: 196, seg: s, label: `EP006 ${s.id}`, st: s.st, ver: s.take, model: "sd25", role: s.s + " s · " + s.cast.length + " in frame" }));
+      sc.segs.forEach((s, i) => n.push({ id: s.id, kind: "seg", x: 730, y: gy + 64 + i * 236, w: 300, h: 196, seg: s, label: `EP006 ${s.id}`, st: s.st, ver: s.take, accepted: s.accepted, model: "sd25", role: s.s + " s · " + s.cast.length + " in frame" }));
       gy += g.h + 40;
     });
     return n;
@@ -317,10 +317,10 @@
         <button class="ibtn" aria-label="Close" onClick=${() => set({ sel: null })}>${I("x")}</button></div>
       ${(() => {
         // IA draft: the two status axes. Review (accepted / sent back / waiting) and freshness (up to date / out of date, with
-        // drama-cli's reason); "current vN · accepted vM" when the newest version isn't the accepted one.
-        const prev = (v) => String(v || "").replace(/(t|v)(\d+)$/, (m, p, n) => p + String(Math.max(1, n - 1)).padStart(p === "t" ? 2 : 1, "0"));
+        // drama-cli's reason). The accepted version is drama-cli's status's (node.accepted), never the one before the current.
+        const acc = node.accepted === node.ver ? "accepted" : node.accepted ? `accepted ${node.accepted}` : "none accepted";
         const why = node.problems ? node.problems.join("; ") : node.id === "file" ? "Changed file: bible/v3/bible.json" : "";
-        return html`<div class="nstate">${node.st === "you" && node.ver ? html`<span class="mono">current ${node.ver} · accepted ${prev(node.ver)}</span>` : html`<span class="mono">current ${node.ver || "v1"} · accepted</span>`}${why && html`<span class="why">${I("warning")}${why}</span>`}</div>`;
+        return html`<div class="nstate"><span class="mono">current ${node.ver || "v1"} · ${acc}</span>${why && html`<span class="why">${I("warning")}${why}</span>`}</div>`;
       })()}
       <div class="utabs" role="tablist">${tabs.map(([k, l]) => html`<button role="tab" aria-selected=${String(tab === k)} onClick=${() => set({ dtab: k })}>${l}</button>`)}</div>
       <div role="tabpanel">
