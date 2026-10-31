@@ -79,7 +79,8 @@ as `@/components/ui/...`, and themed with Reveric's tokens in `src/ui/index.css`
 - **Relative times**: `ago()` on date-fns.
 
 Our stylesheets sit in Tailwind's `base` and `components` layers (`index.css`), so a utility
-on a component wins over them.
+on a component wins over them. A library's stylesheet is imported into `layer(components)` too (b7f3622): unlayered CSS
+beats every layered rule, so a library's own styles would otherwise win over ours.
 
 ### Building blocks
 

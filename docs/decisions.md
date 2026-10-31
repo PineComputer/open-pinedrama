@@ -961,10 +961,16 @@ timeline
   a docked panel beside it: the name, the look and version, the state, Review and Lineage, the
   versions (picking one shows it large), the bible's description clamped to three lines with More,
   and the episodes it is in. The inspector beside the grid is gone: one place to view an asset.
-  "Its files" is removed. This refines
+  "Its files" is removed. A look, view or version picked in the viewer slides in with the View
+  Transition API (the picture alone, its direction from the strip's order, 250 ms ease-out; none
+  under Reduce Motion, instant where the API is missing), while ← and → between assets keep the
+  viewer's swipe: master chose this over making the looks slides, which would change what ← and →
+  step through. The viewer's controls sit on a dark pill at 60% black, which keeps WCAG 2.2's 1.4.11
+  contrast over white plates. This refines
   [D23](#d23-2026-10-30--an-assets-one-home-is-its-detail-in-assets).
 - **Alternatives.** None recorded.
-- **Grounds.** merecdesperez44323-lab's decision; Google Photos' and Flickr's justified rows; mature
+- **Grounds.** merecdesperez44323-lab's decision; the View Transition API; WCAG 2.2, 1.4.11
+  Non-text Contrast; Google Photos' and Flickr's justified rows; mature
   libraries ([design principles](design-principles.md#12-mature-libraries-least-code-of-our-own));
   LibTV's asset viewer, Google Photos' and Lightroom's lightbox; the WAI-ARIA modal dialog;
   liblib's asset library; progressive disclosure
@@ -972,9 +978,11 @@ timeline
 - **Consequences.** None beyond Assets.
 - **Words.** "这个我觉得太丑了， 这么老长的文字… 咋办" (*I think this is too ugly, such long text… what to do*),
   relayed by master; and "这些排版 ui， 一坨大黑边， 很难看啊。。。" (*this layout has big black bands, it looks
-  awful…*); and "弹出大图可以，做吧" (*a pop-up large picture is fine, do it*), relayed by master.
+  awful…*); "弹出大图可以，做吧" (*a pop-up large picture is fine, do it*); and "这里点击右上角切换不同照片时候最好能有一点点 move的动效啥的。。现在直接啥效果也没有直接替换，
+  交互比较难受" (*switching photos from the top right here should have a little movement… now it just
+  swaps with no effect at all, which feels bad*), relayed by master.
 - **Recorded in.** Commits 0934071, e5ee6a7 (justified rows) and 0563502, 0ae52a9 (the viewer;
-  design and product); work-02's notes to the docs.
+  design and product), 368dfb9 (the transition and the controls' pill); work-02's notes to the docs.
 
 ## D57. 2026-10-30 · Assets has no tabs; the project tree is its navigation
 - **Context.** Assets offered Characters, Locations and Props twice: as rows in the project tree and
