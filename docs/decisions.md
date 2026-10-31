@@ -865,7 +865,8 @@ timeline
     ([D32](#d32-2026-10-30--narrow-windows-the-sidebar-is-a-drawer-the-agent-is-the-ball)). This
     replaces [D51](#d51-2026-10-30--home-has-one-column-the-rail-shows-each-icon-with-its-label)'s
     ☰ everywhere.
-  - Home is first in the rail, disabled (`aria-disabled`, not a link, out of the tab order), with the
+  - Home is first in the rail, a disabled button (out of the tab order; WCAG 2.2, 1.4.3 exempts its
+    contrast as an inactive control), with the
     tooltip "Coming later: a gallery of sample projects", as phase 2's hand actions are drawn disabled with their reason
     ([D8](#d8-2026-10-29--phase-1-steers)).
   - The future Home is a gallery of predefined sample projects to start from.
@@ -882,25 +883,29 @@ timeline
   left to spend, or where to get help.
 - **Decision.** The rail's footer holds the Pine Computer account (avatar and the Pine project), the
   credits with Top up (Pine's billing page), a reached spend limit as a problem with its next step,
-  and "Pine Computer community" (Discord). In `design/` only: Pine's portal API has no account or
-  balance endpoint, so nothing is shown until it has one, and the community link waits for its URL.
+  and the Pine Computer community. The community links are built: Discord
+  (https://discord.gg/JxAHeXhvF) and X (https://x.com/pine_computer), opened in the system browser.
+  The account and credits stay in `design/` only: Pine's portal API has no account or balance
+  endpoint, so nothing is shown until it has one.
 - **Alternatives.** None recorded.
 - **Grounds.** merecdesperez44323-lab's request, via master; liblib's and Astorie's account footers;
   Apple's HIG, Sidebars (a footer for account items); errors give the next step
   ([design principles](design-principles.md#6-errors-give-the-next-step)).
-- **Consequences.** Not ported until Pine's portal offers the account and balance.
+- **Consequences.** The account and credits are not ported until Pine's portal offers them.
 - **Words.** None recorded.
-- **Recorded in.** Design commit 7ea1a05; work-04's note to the docs.
+- **Recorded in.** Design commit 7ea1a05; the community links in 57fd287; work-04's notes to the docs.
 
 ## D54. 2026-10-30 · The rail is icon-only on every screen
 - **Context.** After D51, the rail showed labelled rows on Home and icons only inside a project:
   two looks for one control, and a labelled column costs width.
-- **Decision.** The rail is icons only, on every screen; each place's label is its tooltip and its
-  accessible name. This replaces [D51](#d51-2026-10-30--home-has-one-column-the-rail-shows-each-icon-with-its-label)'s
+- **Decision.** The rail is icons only, on every screen: Home (disabled), Projects, Reviews (its
+  count in its name), and the community and Settings at its foot. Each place's label is its tooltip
+  and its accessible name; the current place is the icon's pill. Inside a project the rail stands
+  beside the tree; the ☰ shows only below 1100 px inside a project. This replaces [D51](#d51-2026-10-30--home-has-one-column-the-rail-shows-each-icon-with-its-label)'s
   labelled rail off a project.
 - **Alternatives.** Labels under the icons (Slack); labelled rows (liblib).
-- **Grounds.** merecdesperez44323-lab's decision; VS Code's activity bar; WCAG 2.2, 2.5.3 Label in
-  Name, for the accessible names.
+- **Grounds.** merecdesperez44323-lab's decision; VS Code's activity bar; Apple's HIG, icon-only
+  buttons; WCAG 2.2, 2.5.3 Label in Name, for the accessible names.
 - **Consequences.** A new maker hovers to learn each icon; with three or four places, master judged
   the cost small.
 - **Words.** master: "只要图标，鼠标悬停显示文字（VS Code 的做法）：最省地方，也最干净；缺点是新用户得悬停才知道每个图标是什么。现在只有三四个图标，问题不大。"
