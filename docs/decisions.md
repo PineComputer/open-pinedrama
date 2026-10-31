@@ -858,21 +858,23 @@ timeline
 - **Context.** The ☰ at the top of the rail did nothing a maker needed at full width, and the rail
   had no place for the studio's own home above the projects.
 - **Decision.**
-  - The ☰ shows only below 1100 px, where it opens the drawer
+  - On a wide window there is no ☰: the column (the studio's places off a project, the tree inside
+    one) is always shown, and the stored open or closed preference is deleted. The ☰ shows only below
+    1100 px, where it opens the drawer
     ([D32](#d32-2026-10-30--narrow-windows-the-sidebar-is-a-drawer-the-agent-is-the-ball)). This
     replaces [D51](#d51-2026-10-30--home-has-one-column-the-rail-shows-each-icon-with-its-label)'s
     ☰ everywhere.
-  - Home is first in the rail, disabled, with the tooltip "Coming later: a gallery of sample
-    projects", as phase 2's hand actions are drawn disabled with their reason
+  - Home is first in the rail, disabled (`aria-disabled`, not a link, out of the tab order), with the
+    tooltip "Coming later: a gallery of sample projects", as phase 2's hand actions are drawn disabled with their reason
     ([D8](#d8-2026-10-29--phase-1-steers)).
   - The future Home is a gallery of predefined sample projects to start from.
 - **Alternatives.** None recorded.
-- **Grounds.** merecdesperez44323-lab's decision.
+- **Grounds.** merecdesperez44323-lab's decision; Apple's HIG, Sidebars; Material's navigation drawer.
 - **Consequences.** The gallery is future work; nothing behind Home is built now.
 - **Words.** "i think it's meaningless for this icon on the left top corner. also i think you need to
   have a home page top of the drama project icon. and in the future we should have some pre-defined
   project as gallary. currently just put Home and make if gray and not clicable", relayed by master.
-- **Recorded in.** Master's note to the docs, 30 October 2026; work-04 builds it.
+- **Recorded in.** Commit 2778a0d; master's and work-04's notes, 30 October 2026.
 
 ## References
 
