@@ -8,7 +8,7 @@ const SCRIPT = "EPISODE 1\n\nINT. TENEMENT FLAT - DAY #1-1#\n\nLIN stands in the
 
 test("a maker uploads one screenplay, chooses a preset and starts", async ({ page }) => {
   await page.goto(`/api/open?ticket=${TOKEN}`);
-  await page.getByRole("link", { name: /^New project/ }).click();
+  await page.getByRole("link", { name: /^New drama project/ }).click();
   await expect(page).toHaveURL(/\/new$/);
   const next = page.getByRole("complementary", { name: "What happens next" });
   await expect(next.getByRole("button", { name: "Start" })).toBeDisabled();

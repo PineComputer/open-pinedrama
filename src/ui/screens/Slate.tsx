@@ -7,7 +7,7 @@ import { ago, api, since, useAction, useResource } from "../api.ts";
 import { Menu } from "../components/Menu.tsx";
 import { Icon } from "../icons.tsx";
 import { type TKey, useT } from "../i18n.ts";
-import { countText, errorText, kindLabel, moneyText } from "../labels.ts";
+import { countText, errorText } from "../labels.ts";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { dropScreenplay } from "./NewDrama.tsx";
 
@@ -117,38 +117,17 @@ function Waiting({ waiting, dramas }: { waiting: ReviewSummary[]; dramas: DramaC
 function Card({ drama, redLine }: { drama: DramaCard; redLine: boolean }) {
   const { t, lang } = useT();
   const where = standing(drama, redLine);
-  const { total, done } = drama.episodes;
   const { facts } = drama;
-  // Planned: the episodes drama-cli lists, at the length the maker asked; neither guessed.
-  const planned = facts.scale && facts.length ? Math.round((facts.scale.episodes * Number(facts.length)) / 60) : 0;
+  // yurun's round 2: a cover, a title and a time (liblib's project grid); the rest is the project's own, a step away.
   return (
     <div className="pcard">
       <Link to="/d/$dramaId/episodes" params={{ dramaId: drama.id }} className="open">
         <div className="pic">
           <Cover drama={drama} />
-          {total > 0 && (
-            <span className="bar">
-              <i style={{ width: `${(done / total) * 100}%` }} />
-            </span>
-          )}
         </div>
         <div className="txt">
           <b>{drama.title}</b>
-          {facts.logline && <small className="logline">{facts.logline}</small>}
-          <small>{[facts.scale ? t("drama.scale", facts.scale) : "", kindLabel(drama, t), planned ? t("drama.planned", { n: planned }) : ""].filter(Boolean).join(" · ")}</small>
-          <small>
-            {[facts.lastActivity ? ago(facts.lastActivity, lang) : "", drama.spent.total > 0 ? t("slate.spent", { amount: moneyText(drama.spent, t, lang) }) : ""].filter(Boolean).join(" · ")}
-          </small>
-          {facts.genres && (
-            <div className="tags">
-              {facts.genres.slice(0, 2).map((genre) => (
-                <span key={genre} className="tag">
-                  {genre}
-                </span>
-              ))}
-              {facts.genres.length > 2 && <span className="tag">+{facts.genres.length - 2}</span>}
-            </div>
-          )}
+          {facts.lastActivity && <small>{ago(facts.lastActivity, lang)}</small>}
         </div>
       </Link>
       {/* design/'s "N need you" or "Red line" pill opens Reviews filtered to this drama (IA §16: a drama's Reviews is a
@@ -184,11 +163,15 @@ function NewCard() {
   return (
     // react-dropzone marks its root role="presentation"; the card stays the link it is.
     <Link to="/new" {...getRootProps({ className: `newcard ${isDragActive ? "over" : ""}`, role: "link" })}>
-      <span className="plus">
-        <Icon name="plus" className="ic" />
+      <span className="pic">
+        <span className="plus">
+          <Icon name="plus" className="ic" />
+        </span>
       </span>
-      <b>{t("slate.new")}</b>
-      <small>{t("slate.newHint")}</small>
+      <span className="txt">
+        <b>{t("slate.new")}</b>
+        <small>{t("slate.newHint")}</small>
+      </span>
     </Link>
   );
 }

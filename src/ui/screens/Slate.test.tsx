@@ -35,21 +35,17 @@ beforeEach(() => vi.useFakeTimers({ now: new Date("2026-10-30T12:00:00Z"), shoul
 afterEach(() => vi.useRealTimers());
 
 describe("Home", () => {
-  it("shows on each card what drama-cli and the bible say, and leaves out what isn't known", async () => {
+  it("shows on each card its cover, its title and when it was last worked on, nothing more (yurun's round 2)", async () => {
     answer("/api/app", replay);
     answer("/api/reviews", []);
     answer("/api/dramas", [stepmother, bride]);
     await renderAt(<Slate />);
     const tile = await tileOf(/The Stepmother/);
-    expect(tile).toHaveTextContent("A stepmother takes over a house that doesn't want her.");
-    expect(tile).toHaveTextContent("2 episodes · 5 scenes · 12 segments");
-    expect(tile).toHaveTextContent("about 2 min planned");
-    expect(tile).toHaveTextContent("English vertical drama");
-    expect(tile).toHaveTextContent("5 minutes ago");
-    expect(within(tile).getByText("Family")).toHaveClass("tag");
-    expect(within(tile).getByText("Period")).toBeInTheDocument();
+    expect(tile.querySelector(".txt")).toHaveTextContent(/^The Stepmother5 minutes ago$/);
+    expect(tile).not.toHaveTextContent("A stepmother takes over a house that doesn't want her.");
+    expect(tile.querySelector(".tag")).toBeNull();
     const other = await tileOf(/Bride on Bail/);
-    expect(other).not.toHaveTextContent(/scenes|segments|planned|ago/);
+    expect(other.querySelector(".txt")).toHaveTextContent(/^Bride on Bail$/);
   });
 
   it("makes a poster of the drama's own work when it has some, else the empty cover, never its leads' sheets", async () => {
@@ -86,18 +82,6 @@ describe("Home", () => {
     for (const row of within(waiting).getAllByRole("link")) expect(row.querySelector("img")).toHaveAttribute("src", "/api/files/9");
   });
 
-  it("shows at most two genres on a card, and how many more", async () => {
-    answer("/api/app", replay);
-    answer("/api/reviews", []);
-    answer("/api/dramas", [{ ...stepmother, facts: { ...stepmother.facts, genres: ["Romance", "Contract marriage", "Revenge"] } }]);
-    await renderAt(<Slate />);
-    const tile = await tileOf(/The Stepmother/);
-    expect(within(tile).getByText("Romance")).toBeInTheDocument();
-    expect(within(tile).getByText("Contract marriage")).toBeInTheDocument();
-    expect(within(tile).queryByText("Revenge")).not.toBeInTheDocument();
-    expect(within(tile).getByText("+1")).toBeInTheDocument();
-  });
-
   it("shows what waits as a strip above the grid, newest first, each project once in the grid (Y4)", async () => {
     answer("/api/app", replay);
     answer("/api/reviews", [
@@ -132,17 +116,16 @@ describe("Home", () => {
     expect(screen.getByRole("button", { name: /Title/ })).toBeInTheDocument();
   });
 
-  it("leads the grid with New project, a drop target that opens Upload with the dropped screenplay (Y3)", async () => {
+  it("leads the grid with New drama project, a drop target that opens Upload with the dropped screenplay (Y3)", async () => {
     answer("/api/app", replay);
     answer("/api/reviews", []);
     answer("/api/dramas", [stepmother]);
     const { router } = await renderAt(<Slate />);
     const shelf = await screen.findByRole("tabpanel");
-    const card = await within(shelf).findByRole("link", { name: /New project/ });
+    const card = await within(shelf).findByRole("link", { name: /New drama project/ });
     expect(shelf.firstElementChild).toBe(card);
     expect(screen.queryByRole("link", { name: "Upload script" })).not.toBeInTheDocument();
     expect(card).toHaveTextContent("Drop a screenplay here");
-    expect(card).toHaveTextContent("Fountain, Word, PDF or plain text");
     const file = new File(["EPISODE 1"], "stepmother.fountain");
     fireEvent.drop(card, { dataTransfer: { files: [file], items: [{ kind: "file", type: "", getAsFile: () => file }], types: ["Files"] } });
     await waitFor(() => expect(href(router)).toBe("/new"));

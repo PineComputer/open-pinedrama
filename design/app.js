@@ -341,10 +341,10 @@
       <div class="cards">
         <button class=${"newcard " + (S.over ? "over" : "")} onClick=${upload}
           onDragOver=${(e) => { e.preventDefault(); if (!S.over) set({ over: true }); }} onDragLeave=${() => set({ over: false })} onDrop=${(e) => { e.preventDefault(); set({ over: false }); upload(); }}>
-          <span class="plus">${I("plus")}</span><b>New project</b><small>Drop a screenplay here<br/>Fountain, Word, PDF or plain text</small></button>
+          <span class="pic"><span class="plus">${I("plus")}</span></span><span class="txt"><b>New drama project</b><small>Drop a screenplay here</small></span></button>
         ${list.map((p, i) => html`<div class="pcard"><button class="open" onClick=${() => i === 0 || p.t === P.project.title ? go("episodes") : toast(p.t + ": only the first project opens in this direction.")}>
-          <div class="pic"><img src=${p.cover} alt=""/><span class="bar"><i style=${`width:${p.p}%`}></i></span></div>
-          <div class="txt"><b>${p.t}</b><small>${p.m}</small><small>${p.spent} spent</small><div class="tags">${p.tags.map((t) => html`<span class="tag">${t}</span>`)}</div></div></button>
+          <div class="pic"><img src=${p.cover} alt=""/></div>
+          <div class="txt"><b>${p.t}</b><small>${p.ago}</small></div></button>
           ${p.st === "you" || p.st === "redline"
             ? html`<button class=${"st " + p.st} title=${"Open Reviews for " + p.t} onClick=${() => set({ waitFor: p.t, screen: "reviews" })}><i></i>${p.lab}</button>`
             : Status(p.st, p.lab)}</div>`)}
