@@ -1,6 +1,6 @@
 /* Pine Drama Studio, pro direction. Colours, type, spacing and radii come from themes.css and tokens.css;
    every colour here is one of those tokens or a mix of them. */
-:root { --rail: 52px; --side: 248px; --agent: 360px; --insp: 380px; --top: 52px; --proto: 40px; }
+:root { --rail: 52px; --side: 248px; --agent: 360px; --insp: 380px; --top: 52px; }
 * { box-sizing: border-box; }
 html, body, #root { height: 100%; }
 body { margin: 0; background: var(--canvas); color: var(--text-primary); font: var(--type-ui-weight) var(--type-ui-size)/var(--type-ui-line) var(--font-sans); -webkit-font-smoothing: antialiased; }
@@ -16,10 +16,14 @@ p { font-size: inherit; line-height: inherit; color: inherit; margin: 0; }
 .grow { flex: 1; min-width: 0; }
 
 /* ── prototype bar (not part of the product) ── */
-.proto { height: var(--proto); display: flex; align-items: center; gap: 10px; padding: 0 14px; background: var(--surface-container); border-bottom: 1px solid var(--border); font-size: 12px; color: var(--text-muted); overflow-x: auto; white-space: nowrap; }
-.proto b { color: var(--text-primary); font-weight: 600; }
-.proto .sep { width: 1px; height: 16px; background: var(--border); flex: none; }
-.app { height: calc(100% - var(--proto)); display: flex; min-height: 0; }
+/* The prototype's controls: a labelled toggle low in the left rail (above Settings, covering nothing), collapsed; the panel
+   opens in the bottom-left corner. Not part of the app. */
+.protobtn { position: fixed; left: 2px; bottom: 96px; z-index: 90; width: 48px; display: grid; justify-items: center; gap: 2px; padding: 6px 0; border-radius: var(--radius-medium); border: 1px dashed var(--border-input); background: var(--surface-container); color: var(--text-muted); font-size: 8.5px; letter-spacing: .02em; cursor: pointer; }
+.protobtn:hover { color: var(--text-primary); }
+.proto { position: fixed; left: 8px; bottom: 8px; z-index: 90; width: 360px; max-height: calc(100% - 16px); overflow: auto; display: grid; gap: 10px; padding: 12px 14px 14px; border-radius: var(--radius-2xl); border: 1px dashed var(--border-input); background: var(--surface-container); box-shadow: var(--shadow-dialog); font-size: 12px; color: var(--text-muted); }
+.proto .ph { display: flex; align-items: center; } .proto b { color: var(--text-primary); font-weight: 600; } .proto p { margin: 0; line-height: 1.5; }
+.proto .pl { margin-bottom: -6px; } .proto .seg.wrap { flex-wrap: wrap; border-radius: var(--radius-large); } .proto .select { justify-content: space-between; }
+.app { height: 100%; display: flex; min-height: 0; }
 
 /* ── buttons ── */
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 32px; padding: 0 14px; border-radius: var(--radius-button); border: 1px solid var(--border-input); background: transparent; color: var(--text-secondary); font-size: 12.5px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: background .12s, border-color .12s, color .12s; }
@@ -113,6 +117,10 @@ a.tag:hover { background: var(--hover); color: var(--text-primary); }
 .crumb { display: flex; align-items: center; gap: 6px; min-width: 0; font-size: 13px; color: var(--text-muted); white-space: nowrap; }
 .crumb b { color: var(--text-primary); font-weight: 600; }
 .crumb .ic { width: 12px; height: 12px; color: var(--text-subtle); }
+/* Round 3: each ancestor links to its home; the drama leads with its cover. */
+.crumblink { display: inline-flex; align-items: center; gap: 6px; border: 0; padding: 0; background: none; color: inherit; font: inherit; cursor: pointer; }
+.crumblink:hover { color: var(--text-primary); text-decoration: underline; text-underline-offset: 3px; }
+.crumbimg { width: 16px; height: 22px; border-radius: 3px; object-fit: cover; }
 .bar2 { flex: none; display: flex; align-items: center; gap: 10px; padding: 12px 16px; flex-wrap: wrap; }
 .body { flex: 1; min-height: 0; display: flex; }
 .scrollmain { flex: 1; min-width: 0; overflow: auto; }
@@ -271,11 +279,11 @@ input.search:focus { border-color: var(--text-primary); }
 .group > .gl { position: absolute; left: 16px; top: 14px; font-size: 13px; font-weight: 600; color: var(--text-muted); }
 .segnode { position: absolute; width: 300px; }
 .segnode .card { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 6px; height: 196px; }
-.segnode .card > div { position: relative; border-radius: 6px; overflow: hidden; background: var(--surface-container); }
-.segnode .card > div img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
-.segnode .card > div.board-img { background: #fff; }
-.segnode .card > div.board-img img { object-fit: contain; }
-.segnode .card > div > span:not(.play) { position: absolute; left: 5px; bottom: 5px; font: 600 10px var(--font-mono); padding: 2px 5px; border-radius: 4px; background: color-mix(in srgb, var(--canvas) 72%, transparent); color: var(--text-primary); }
+.segnode .card > :is(div, button) { position: relative; border-radius: 6px; overflow: hidden; background: var(--surface-container); }
+.segnode .card > :is(div, button) img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
+.segnode .card > .board-img { background: #fff; }
+.segnode .card > .board-img img { object-fit: contain; }
+.segnode .card > :is(div, button) > span:not(.play) { position: absolute; left: 5px; bottom: 5px; font: 600 10px var(--font-mono); padding: 2px 5px; border-radius: 4px; background: color-mix(in srgb, var(--canvas) 72%, transparent); color: var(--text-primary); }
 .segnode .card > div.none { display: grid; place-items: center; color: var(--text-subtle); font-size: 11px; }
 .segnode .play { position: absolute; inset: 0; display: grid; place-items: center; }
 .segnode .play i { width: 32px; height: 32px; border-radius: 50%; background: color-mix(in srgb, var(--canvas) 55%, transparent); display: grid; place-items: center; color: var(--text-primary); border: 1px solid color-mix(in srgb, var(--text-primary) 25%, transparent); }
@@ -300,11 +308,17 @@ input.search:focus { border-color: var(--text-primary); }
 .npanel { display: grid; gap: 10px; padding: 12px 14px; border-radius: var(--radius-2xl); }
 .npanel .nhead { display: flex; align-items: center; gap: 8px; font-size: 13.5px; }
 /* Docked right: the same panel, full height at the board's right edge. */
-.npanel.docked { right: 20px; top: 64px; bottom: 84px; width: 400px; grid-template-rows: auto auto 1fr auto; }
-.npanel.docked [role="tabpanel"] { max-height: none; min-height: 0; align-content: start; }
-.npanel .utabs { gap: 16px; border-bottom: 1px solid color-mix(in srgb, var(--text-primary) 10%, transparent); }
-.npanel .utabs button { height: 30px; font-size: 12px; }
-.npanel [role="tabpanel"] { display: grid; gap: 10px; max-height: 240px; overflow-y: auto; font-size: 12.5px; }
+.npanel:not(.docked) { overflow-y: auto; align-content: start; }
+.npanel.docked { right: 20px; top: 64px; max-height: calc(100% - 148px); width: 400px; overflow-y: auto; align-content: start; }
+.npanel .needs { margin: 0; font-size: 12.5px; color: var(--text-primary); }
+.npanel .nhome { margin: 0; font-size: 12px; }
+/* §15 progressive disclosure: prompt, versions, request and details open on demand, one at a time. */
+.npanel .ndisc { display: flex; flex-wrap: wrap; gap: 6px; }
+.npanel .ndisc button { height: 26px; display: inline-flex; align-items: center; gap: 4px; padding: 0 8px 0 10px; border: 1px solid color-mix(in srgb, var(--text-primary) 12%, transparent); border-radius: 999px; background: none; color: var(--text-secondary); font-size: 12px; cursor: pointer; }
+.npanel .ndisc button .ic { width: 12px; height: 12px; }
+.npanel .ndisc button[aria-expanded="true"] { background: color-mix(in srgb, var(--text-primary) 8%, transparent); color: var(--text-primary); font-weight: 600; }
+.npanel .npart { display: grid; gap: 10px; max-height: 240px; overflow-y: auto; font-size: 12.5px; }
+.npanel.docked .npart { max-height: none; }
 .npanel .prompt { display: grid; gap: 6px; line-height: 1.6; color: var(--text-primary); }
 .npanel .prompt p { margin: 0; }
 /* A reference in the prompt as liblib.tv shows it: its picture and its name in one bordered chip, inline in the words. */
@@ -361,6 +375,7 @@ input.search:focus { border-color: var(--text-primary); }
 .insp .ihead { padding: 14px 16px 12px; border-bottom: 1px solid var(--border); }
 .insp .ihead b { font-size: 14px; font-weight: 700; }
 .insp .ihead small { display: block; color: var(--text-muted); font-size: 11.5px; margin-top: 2px; }
+.insp .ihead .btn { margin-top: 10px; }
 .insp .iscroll { flex: 1; overflow: auto; padding: 4px 16px 16px; }
 .isec { padding: 12px 0; border-bottom: 1px solid var(--border-subtle); }
 .isec h4 { margin: 0 0 8px; font-size: 11px; font-weight: 600; color: var(--text-muted); letter-spacing: .4px; text-transform: uppercase; display: flex; align-items: center; gap: 8px; }
@@ -392,6 +407,12 @@ input.search:focus { border-color: var(--text-primary); }
 .sendbar .pips { display: flex; gap: 4px; }
 .sendbar .pips i { width: 22px; height: 4px; border-radius: 2px; background: var(--surface-container-high); }
 .sendbar .pips i.a { background: var(--success); } .sendbar .pips i.b { background: var(--error); } .sendbar .pips i.n { background: var(--text-primary); }
+/* A sent review: the bar says where it went and stays read only (IA draft B2); a failed send keeps the draft, with its line. */
+.sendbar { flex-wrap: wrap; }
+.sendbar.sent { gap: 10px; }
+.sendbar.sent .ic { width: 16px; height: 16px; color: var(--text-secondary); }
+.error-line { flex-basis: 100%; display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--error); }
+.error-line .ic { width: 14px; height: 14px; }
 
 /* ── dialog, toast, banner ── */
 .scrim { position: fixed; inset: 0; background: var(--scrim); display: grid; place-items: center; z-index: 100; padding: 16px; }
@@ -460,16 +481,16 @@ input.search:focus { border-color: var(--text-primary); }
 .filerow { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: var(--radius-large); background: var(--surface-container); }
 .filerow > .ic { width: 22px; height: 22px; color: var(--text-secondary); }
 .filerow b { display: block; font-size: 13px; } .filerow small { color: var(--text-muted); font-size: 12px; }
-.presets { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.presets { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; } .presets.one { grid-template-columns: 1fr; gap: 8px; color: var(--text-primary); }
 .preset { display: flex; gap: 10px; align-items: flex-start; padding: 12px; border-radius: var(--radius-large); border: 1px solid var(--border); background: var(--surface); text-align: left; color: inherit; cursor: pointer; }
 .preset:hover { background: var(--hover); }
-.preset[aria-pressed="true"] { border-color: var(--text-primary); box-shadow: 0 0 0 1px var(--text-primary); }
+.preset[data-state="checked"] { border-color: var(--text-primary); box-shadow: 0 0 0 1px var(--text-primary); }
 .preset .radio { width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid var(--border-input); margin-top: 2px; flex: none; }
-.preset[aria-pressed="true"] .radio { border: 5px solid var(--text-primary); }
+.preset[data-state="checked"] .radio { border: 5px solid var(--text-primary); }
 .preset b { display: block; font-size: 13px; } .preset small { display: block; color: var(--text-secondary); font-size: 12px; margin: 2px 0 6px; }
 .preset code { font: 11px var(--font-mono); color: var(--text-secondary); }
 .fields { display: grid; gap: 14px; }
-.fields label { display: grid; gap: 6px; font-size: 12px; color: var(--text-muted); }
+.fields label, .fields .field { display: grid; gap: 6px; font-size: 12px; color: var(--text-muted); }
 .inputwrap { display: inline-flex; align-items: center; gap: 4px; height: 36px; width: 180px; padding: 0 12px; border-radius: var(--radius-large); border: 1px solid var(--border-input); background: var(--surface); color: var(--text-muted); font: 13px var(--font-mono); }
 .inputwrap input { border: 0; outline: none; background: none; color: var(--text-primary); font: inherit; width: 100%; }
 .next { position: sticky; top: 16px; display: grid; gap: 14px; }
@@ -527,6 +548,11 @@ input.search:focus { border-color: var(--text-primary); }
 .castcard .pic { position: relative; aspect-ratio: 16/9; background: var(--surface-container); }
 .castcard .pic img, .placecard .pic img { width: 100%; height: 100%; object-fit: cover; }
 .castcard .pic .st, .placecard .pic .st { position: absolute; left: 8px; top: 8px; }
+/* Fix 3: an older version picked by a link; its picture is not in the sample. */
+.castcard .pic .empty, .placecard .pic .empty { position: absolute; inset: 0; display: grid; place-items: center; padding: 12px; text-align: center; color: var(--text-subtle); font-size: 12px; }
+.vstrip { display: flex; flex-wrap: wrap; gap: 4px; }
+.vstrip button { height: 22px; padding: 0 8px; border-radius: 999px; border: 1px solid var(--border); background: none; color: var(--text-secondary); font: 11px var(--font-mono); cursor: pointer; }
+.vstrip button[aria-pressed="true"] { border-color: var(--text-primary); color: var(--text-primary); }
 .ctxt { padding: 12px 14px 14px; display: grid; gap: 6px; }
 .ctxt b { font-size: 14px; font-weight: 700; }
 .aka { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-size: 11.5px; }
@@ -609,7 +635,7 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
   .room { flex-direction: column; overflow: auto; } .reel { width: auto; flex-direction: row; border-right: 0; border-bottom: 1px solid var(--border); overflow-x: auto; }
   .reel h3 { display: none; } .ritem { grid-template-columns: 40px 1fr; min-width: 180px; } .ritem img { width: 40px; height: 70px; }
   .stage { flex: none; height: 72vh; } .screen { min-height: 0; padding: 12px; } .insp { width: auto; border-left: 0; flex: none; } .insp .iscroll { overflow: visible; } .search { width: 100%; }
-  .crumb > span, .crumb > .ic { display: none; } .controls { flex-wrap: wrap; gap: 10px; } .controls .muted { display: none; }
+  .crumb > :nth-last-child(n+4) { display: none; } .controls { flex-wrap: wrap; gap: 10px; } .controls .muted { display: none; }
   .epgrid { grid-template-columns: repeat(2, 1fr); } .bar2 .chip { display: none; }
   .formgrid, .anagrid, .biblegrid, .presets { grid-template-columns: 1fr; } .fpanes { grid-template-columns: 1fr; flex: none; padding: 0 16px; } .frev { overflow: auto; } .frevhead { flex-direction: column; align-items: stretch; padding: 16px; } .faccept { margin: 14px 16px 18px; }
   .body { flex-direction: column; overflow: auto; } .body > .scrollmain { flex: none; overflow: visible; } .body > .insp { flex: none; } .faccept { grid-template-columns: 1fr; } .eprow { grid-template-columns: 30px 48px 1fr; } .eprow .grow { display: none; }
@@ -623,6 +649,19 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
 .segrow { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 14px; padding: 10px 6px; border-radius: var(--radius-large); align-items: start; }
 .segrow + .segrow { border-top: 1px solid var(--border-subtle); }
 .segrow:hover { background: var(--hover); }
+/* §16: a link lands on the object's home with the object picked (S.esel in the List, S.asel in Assets). */
+.segrow { cursor: pointer; }
+.segrow.sel, .castcard.sel, .placecard.sel { box-shadow: inset 0 0 0 2px var(--accent); }
+/* Codex round 3 (fix 3): a segment's versions are tiles; a link to one version lands on its tile, picked. */
+.segrow { grid-template-columns: auto minmax(0, 1fr); }
+.segrow .stiles { display: flex; gap: 6px; }
+.stile { position: relative; padding: 0; border: 0; background: none; border-radius: 6px; cursor: pointer; }
+.stile span { position: absolute; left: 3px; bottom: 3px; padding: 0 4px; border-radius: 4px; background: color-mix(in srgb, var(--canvas) 70%, transparent); color: var(--text-primary); font: 600 9.5px/1.6 var(--font-mono); }
+.stile[aria-pressed="true"] img, .segnode .card > button.on { outline: 2px solid var(--accent); outline-offset: 1px; }
+.segnode .card > button { padding: 0; border: 0; font: inherit; color: inherit; text-align: inherit; cursor: pointer; }
+.segrow .segat { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0 0 6px; font-size: 12px; }
+.backto .ic { width: 14px; height: 14px; }
+.top .backto { margin-left: 6px; flex: none; border: 1px solid var(--border); }
 .segrow img, .segrow video { width: 64px; aspect-ratio: 9 / 16; border-radius: 6px; object-fit: cover; background: var(--surface-container); }
 .segrow .seghead { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; min-width: 0; }
 .segrow .seghead b { font: 600 12.5px var(--font-mono); }
@@ -640,6 +679,9 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
 .menu .mi small { color: var(--text-secondary); font-size: 11.5px; line-height: 1.4; }
 .menu .mi[aria-disabled="true"] { cursor: not-allowed; }
 .menu .mi[aria-disabled="true"] b { color: var(--text-secondary); }
+/* A menu's head: whose it is, and which session made it when (the Export menu, IA draft). */
+.menu .mh { display: grid; gap: 2px; padding: 8px 10px 6px; border-bottom: 1px solid var(--border); margin-bottom: 4px; font-size: 12.5px; }
+.menu .mh small { color: var(--text-secondary); font-size: 11.5px; }
 
 /* The canvas's tool and zoom menus, above its toolbar (after liblib.tv's), and its shortcut list. */
 .tmenu, .zmenu { position: absolute; left: 16px; bottom: 64px; width: 220px; }
@@ -657,3 +699,115 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
 .dialog dl.keys { display: grid; grid-template-columns: max-content 1fr; gap: 8px 16px; margin: 0 0 12px; font-size: 13px; }
 .dialog dl.keys dt { margin: 0; } .dialog dl.keys dd { margin: 0; color: var(--text-secondary); }
 .dialog dl.keys dt kbd { margin: 0; padding: 2px 8px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface-container); color: var(--text-primary); }
+
+/* ── IA draft (design/ia-draft, for yurun's decision): the studio-wide rail, the drama tree, the agent's scope,
+   session states, the two status axes, drafts and the compact cross-episode notice ── */
+.rail .railcount { position: relative; }
+.rail .railcount .badge { position: absolute; right: 0; top: 0; min-width: 16px; height: 16px; padding: 0 4px; border-radius: 999px; background: var(--warning-text); color: var(--on-accent); font-size: 10px; font-weight: 700; display: grid; place-items: center; }
+.navi .dthumb { width: 22px; height: 28px; border-radius: 4px; object-fit: cover; object-position: top; flex: none; }
+.navi .n { margin-left: auto; color: var(--text-muted); font: 600 11px var(--font-mono); }
+.tree.sub button { grid-template-columns: 1fr auto; }
+.tree.sub .n { font: 11px var(--font-mono); color: var(--text-subtle); }
+.sidehr { border: 0; border-top: 1px solid var(--border); margin: 8px 6px; }
+.side .foot .spend { margin: 0; display: grid; grid-template-columns: 1fr auto; gap: 2px 8px; }
+.side .foot .spend dt { color: var(--text-muted); } .side .foot .spend dd { margin: 0; color: var(--text-primary); text-align: right; }
+.agent .ascope { flex: none; display: flex; align-items: center; gap: 8px; padding: 8px 10px 8px 16px; border-bottom: 1px solid var(--border); font-size: 12px; color: var(--text-secondary); }
+.agent .ascope b { color: var(--text-primary); } .agent .ascope .ic { width: 14px; height: 14px; }
+.arow.failed { background: color-mix(in srgb, var(--error) 8%, var(--surface-container)); align-items: flex-start; }
+.arow.failed .what span, .arow.failed .what small { white-space: normal; } .arow.failed code { font: 11px var(--font-mono); color: var(--text-primary); }
+.arow .what small { color: var(--text-secondary); font-size: 11.5px; line-height: 1.45; }
+.notice-red { margin: 0 16px 12px; padding: 8px 12px; border-radius: var(--radius-large); border: 1px solid color-mix(in srgb, var(--error) 45%, transparent); background: color-mix(in srgb, var(--error) 8%, var(--surface)); display: flex; align-items: center; gap: 10px; font-size: 12.5px; color: var(--text-secondary); }
+.notice-red .ic { width: 16px; height: 16px; color: var(--error); } .notice-red b { color: var(--text-primary); }
+.hero .right .seeall { margin-top: auto; align-self: flex-start; display: inline-flex; align-items: center; gap: 4px; padding: 6px 8px; border: 0; border-radius: var(--radius-medium); background: none; color: var(--text-secondary); font: 600 12px var(--font-sans); cursor: pointer; }
+.hero .right .seeall:hover { background: var(--hover); color: var(--text-primary); } .hero .right .seeall .ic { width: 13px; height: 13px; }
+.panel.queue { display: grid; gap: 2px; padding: 8px; }
+.npanel .nstate { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; padding: 0 14px 8px; font-size: 11.5px; color: var(--text-muted); }
+.npanel .nstate .why { display: inline-flex; align-items: center; gap: 4px; color: var(--warning-text); } .npanel .nstate .ic { width: 13px; height: 13px; }
+.npanel .nhead .st + .st { margin-left: 4px; }
+.draftbar { display: flex; align-items: center; gap: 8px; padding-top: 10px; margin-top: 4px; border-top: 1px solid var(--border); font-size: 12px; color: var(--text-secondary); }
+.draftbar b { color: var(--text-primary); }
+/* Cut (IA draft r2): Review and Edit are two tabs. Edit shows the draft of drama-cli's edit spec, its base, and Apply's states. */
+.seg .cnt { min-width: 16px; height: 16px; padding: 0 4px; border-radius: 999px; background: var(--warning-text); color: var(--on-accent); font-size: 10px; font-weight: 700; display: inline-grid; place-items: center; }
+.draftnote { display: flex; align-items: center; gap: 6px; margin: 0 0 6px; font-size: 11.5px; color: var(--text-muted); } .draftnote .ic { width: 13px; height: 13px; }
+.tlseg.edit { cursor: default; }
+.tlseg.edit span { left: 12px; }
+.tlseg.chg { border: 2px dashed var(--warning-text); }
+.tlseg.chg.on { border-style: solid; }
+.tlseg .hdl { position: absolute; top: 0; bottom: 0; width: 7px; background: var(--text-primary); opacity: .85; }
+.tlseg .hdl.l { left: 0; border-radius: 6px 0 0 6px; } .tlseg .hdl.r { right: 0; border-radius: 0 6px 6px 0; }
+.tlseg span .ic { width: 11px; height: 11px; vertical-align: -1px; }
+.basewarn, .baseok { display: flex; gap: 8px; align-items: flex-start; padding: 8px 10px; margin-bottom: 6px; border-radius: var(--radius-medium); background: var(--warning-bg); color: var(--warning-text); font-size: 12px; }
+.basewarn.err { background: color-mix(in srgb, var(--error) 10%, transparent); color: var(--error); }
+.baseok { background: color-mix(in srgb, var(--success) 10%, transparent); color: var(--success); }
+.basewarn .ic, .baseok .ic { width: 15px; height: 15px; flex: none; margin-top: 1px; }
+.basewarn b, .baseok b { display: block; color: inherit; } .basewarn small, .baseok small { display: block; color: var(--text-secondary); line-height: 1.45; margin-top: 2px; }
+.cmp { width: 100%; margin-top: 10px; border-collapse: collapse; font-size: 12px; }
+.cmp th, .cmp td { padding: 5px 6px; border-bottom: 1px solid var(--border-subtle); text-align: left; color: var(--text-secondary); }
+.cmp th { font-weight: 600; color: var(--text-muted); font-size: 11px; }
+.cmp tr.add td:last-child { color: var(--warning-text); font-weight: 600; }
+.basedet { margin-top: 8px; font-size: 12px; color: var(--text-muted); } .basedet summary { cursor: pointer; } .basedet .kv { margin-top: 6px; }
+.cliprow { display: flex; align-items: center; gap: 2px; border-radius: var(--radius-medium); }
+.cliprow.on { background: var(--selected); }
+.clipmain { flex: 1; min-width: 0; display: flex; align-items: center; gap: 10px; padding: 6px; border: 0; background: none; color: inherit; text-align: left; cursor: pointer; }
+.clipmain img { width: 27px; height: 48px; border-radius: 4px; object-fit: cover; }
+.clipmain b { display: block; font-size: 12.5px; } .clipmain small { color: var(--text-muted); font-size: 11px; }
+.chgdot { width: 8px; height: 8px; border-radius: 50%; background: var(--warning-text); flex: none; }
+.propedit { display: grid; grid-template-columns: 56px 1fr; align-items: center; gap: 8px 10px; font-size: 12.5px; }
+.propedit input[type=number] { width: 96px; height: 30px; padding: 0 8px; border-radius: var(--radius-medium); border: 1px solid var(--border-input); background: var(--surface); color: var(--text-primary); }
+.propedit p { grid-column: 1 / -1; margin: 4px 0 0; font-size: 11.5px; line-height: 1.5; }
+.takes { display: flex; gap: 8px; }
+.take { display: grid; gap: 2px; padding: 4px; border-radius: var(--radius-medium); border: 1px solid var(--border-input); background: var(--surface); color: var(--text-primary); cursor: pointer; font-size: 11.5px; text-align: left; }
+.take img { width: 54px; height: 96px; object-fit: cover; border-radius: 4px; }
+.take small { color: var(--text-muted); }
+.take.on { border: 2px solid var(--text-primary); }
+.take:disabled { opacity: .45; cursor: not-allowed; }
+.sentcard { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: var(--radius-large); border: 1px solid var(--border-input); background: var(--surface); font-size: 12.5px; }
+.sentcard > .ic { width: 18px; height: 18px; flex: none; }
+.sentcard b { display: block; color: var(--text-primary); } .sentcard small { display: block; color: var(--text-muted); line-height: 1.45; margin-top: 2px; }
+.sentcard.accept > .ic, .sentcard.ready > .ic { color: var(--success); }
+.sentcard.refused > .ic { color: var(--error); }
+.sentcard.waiting > .ic { color: var(--text-muted); }
+.sentcard.work > .ic { animation: spin 1.2s linear infinite; }
+/* Delivery: one row per episode, linking to its Cut. */
+.delivsum { font-size: 13px; color: var(--text-secondary); } .delivsum b { color: var(--text-primary); }
+.delivwrap { padding: 0 16px 24px; overflow-x: auto; }
+.deliv { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+.deliv th { padding: 8px 10px; text-align: left; font-size: 11px; font-weight: 600; color: var(--text-muted); letter-spacing: .4px; text-transform: uppercase; border-bottom: 1px solid var(--border); }
+.deliv td { padding: 8px 10px; border-bottom: 1px solid var(--border-subtle); color: var(--text-secondary); vertical-align: middle; white-space: nowrap; }
+.deliv td.act { text-align: right; }
+.deliv tr.more td { color: var(--text-subtle); font-size: 11.5px; }
+.delivep { display: flex; align-items: center; gap: 10px; }
+.delivep img, .delivep .noimg { width: 27px; height: 48px; border-radius: 4px; object-fit: cover; background: var(--surface-container); }
+.delivep b { display: block; color: var(--text-primary); font-size: 12px; } .delivep small { color: var(--text-muted); }
+.linkbtn { border: 0; padding: 0; background: none; color: var(--text-primary); font: inherit; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+/* Out of date (screens.js, OutOfDate): Delivery's table, a group's row with its owner's action, the reason wrapping. */
+.deliv tr.grp td { padding-top: 16px; color: var(--text-primary); }
+.deliv.ood td.why { white-space: normal; min-width: 240px; }
+.deliv.ood .delivep .ic { width: 18px; height: 18px; color: var(--text-muted); }
+.deliv.ood .delivep .linkbtn { display: block; font-size: 12px; }
+.deliv tr.sel td { background: var(--surface-container); }
+.arow.failed .what .subtle { color: var(--text-muted); font-size: 11px; }
+.dot.redline { background: var(--error); }
+/* IA draft r2: the Script page and Story's title */
+.pagetitle { margin: 0; font: 700 20px/1.3 var(--font-display); letter-spacing: -.3px; }
+.scripthead { display: flex; align-items: flex-end; gap: 16px; flex-wrap: wrap; padding: 4px 16px 14px; }
+.scripthead p { margin: 4px 0 0; font-size: 12.5px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.panel.scriptdoc { margin: 0 16px 14px; padding: 18px 22px; }
+.scriptpanes { padding: 0 16px; margin-bottom: 14px; grid-template-columns: 1fr 1.3fr; }
+.scriptpanes .fdoc .fl { cursor: default; } .scriptpanes .fdoc .fl:hover { background: none; }
+.panel.scriptversions { margin: 0 16px 24px; }
+/* IA draft r2 (F): narrow windows. The same drama tree as a drawer below 1100 px, opened by the rail's menu button; the
+   agent as its ball at 1280 px and below, opening the same panel as a float. Target 1024 x 800. */
+.agentball { display: none; }
+@media (max-width: 1280px) {
+  .body { position: relative; }
+  .agentball { display: grid; }
+}
+@media (max-width: 1100px) {
+  .side.drawer-open { display: flex; position: fixed; left: var(--rail); top: 0; bottom: 0; z-index: 60; box-shadow: var(--shadow-dialog); }
+}
+/* Codex round 3 (fix 1): one submission's state (app.js, Submission), wherever something is sent. */
+.subst { display: inline-flex; align-items: center; gap: 8px; min-width: 0; font-size: 12px; }
+.subst .ic { width: 16px; height: 16px; flex: none; }
+.subst[role="alert"] .ic { color: var(--error); }
+.subst .btn { flex: none; }

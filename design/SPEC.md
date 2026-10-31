@@ -25,7 +25,7 @@ Phosphor regular, 70 names (icons.js). Sizes: 16 default, 18 in IconButton and N
 | Sidebar | .side | 248, surface-dim, collapsible from the rail's first button. Holds the project head, nav items (.navi, 36 high, count badge in warning-text), EpisodeTree (.tree, 28-high rows: code, now-line, dot) and a BudgetMeter foot. |
 | Breadcrumb | .crumb | 13px, last item text-primary/600, caret separators. Phone: last item only. |
 | TopBar | .top | 52 high: back, Breadcrumb, then StopControl and NextReview (primary sm with count). |
-| SurfaceSwitch | .seg in .bar2 | Studio / Canvas / Graph. |
+| EpisodeViews | .seg in .bar2 | List / Canvas, inside an episode only. Story, Assets, Episodes and Delivery have no view switch; Lineage opens from an item (IA §3). |
 | ProjectChip | .chip | 34 high pill, surface-container; preset (26px face), spec, spent (tooltip: "Agent turns and video, priced when each turn ends."). |
 | BudgetMeter | .meter | 4px track; solid = spent, dashed = in flight. |
 | StopControl | in .top | "Stop drama" (danger sm) → Dialog → "Stopping…" (disabled, spinner) → "Stopped" chip + "Resume". |
@@ -43,21 +43,26 @@ Phosphor regular, 70 names (icons.js). Sizes: 16 default, 18 in IconButton and N
 | NodeDetail | .detail | 300 floating card: picture, kv, Review / Lineage, read-only note. |
 | ReviewRoom | .room | Reel 232 · Stage (9:16 player, 60px white play button) · Inspector 380. |
 | TakeCompare | .seg in .controls | "t02 · new" / "t01 · earlier". |
-| VerdictBar | .verdict | Accept (success when on) / Send back (error) / Note (accent). Accept stays disabled until the take is watched to the end. A reason is required for Send back. |
+| VerdictBar | .verdict | Accept (success when on) / Send back (error) / Accept with note (accent). Accept stays disabled until the take is watched to the end. A reason is required for Send back. |
 | SendBar | .sendbar | Pips per item, "n of m decided", "Send review". |
 | SetupSteps | .setup | 26px numbered circles: you = warning fill, work = pulsing ring. |
 | Dropzone | .dropzone | Dashed, surface-container; over = --selected. |
-| PresetPicker | .preset | Radio cards, 2 columns. Shows no recommendation (the person chooses). |
+| PresetPicker | .presets › .preset | The kit's RadioGroup (Radix: role radio, aria-checked, data-state) as cards, 2 columns. Shows no recommendation (the person chooses). |
+| ReviewingChoice | .presets.one › .preset | The same RadioGroup, one column: "Your reviews", each option its label and hint. |
 | FountainDiff | .fpanes | "Your file" (numbered) · "Fountain" (screenplay.md). Clicking a line highlights both sides. A question line uses warning-bg with Day/Night Segmented. |
 | AcceptInWords | .faccept | Textarea plus Send back and "Accept the rewrite". Accept needs the answer and the words. |
-| CastCard | .castcard | 16:9 sheet; name, version, role, "Also called" tags, Finding, card verdicts (.mini). |
-| PlateCard | .placecard | 9:14 picture. |
+| CastCard | .castcard | A character in Assets › Characters. 16:9 sheet; name, version, role, "Also called" tags, Finding, card verdicts (.mini). |
+| PlateCard | .placecard | A location in Assets › Locations. 9:14 picture. |
 | Finding | .finding | warn (warning-bg) / err (deletion-bg), 14px icon. |
 | LineageGraph | .graph | Columns: Screenplay · Bible · Looks, plates, props · Storyboards · Takes · Cut. Nodes 156×112: the picture over two lines, the name on the first (ellipsised past the card's width), the version and state chip on the second. Upstream and downstream wires turn solid text-primary; stale is dashed; unrelated nodes drop to 40% opacity. |
 | ExportMenu | .exportmenu, .menu, .mi | In the drama's top bar, before Stop. Two downloads: ComfyUI workflow (.json, the lineage each stop returns) and infinite-canvas (.zip, with the hint "Open infinite-canvas → Import → choose this file"). Each is disabled, saying why, until a stop has returned its file. |
-| StaleBar | .stalebar | Dashed. Gives the reason from the export; never a cost. One action: "Ask the agent to redo them", sent as a steering note. No "Keep as is": drama-cli has no action for keeping a stale item. |
+| OutOfDate | .deliv.ood | The drama's Out of date page: one row per item (kind, name, version, the reason in drama-cli's words, its `problems` verbatim, or "Made from …, which is out of date" for what drama-cli calls fresh but was made from an out-of-date version). Groups: Assets, then each episode. The row opens the item's home, its Lineage button the item's Lineage; Back returns with the row marked. One action per group, to the session that owns it: "Ask the setup's agent to redo them", "Ask EP006's agent to redo them". Remaking spends, so it confirms first with its impact ("EP006's agent will remake 3 items: …. It spends from the drama's budget; the earlier versions stay.") and is one submission whose state stays on the group's row, shown by the shared Submission (sending, sent, not submitted: Send again, or no answer: Check, never sent twice); never a price, and no "Keep as is": drama-cli has no action for keeping an out-of-date item. Empty: "Nothing is out of date.", and the sidebar shows no count. |
 | CutTimeline | .tl | Segment strips by length, NotePins (18px warning circles) at their times, and a playhead. |
 | NoteList | .noterow / .addnote | Times in a warning-bg mono button that seeks; adds at the playhead with Enter. |
 
 ## Labels (ship as written)
-Accept, Send back, Note, Send review, Next review, Stop drama, Stopping…, Stopped, Resume, Keep running, Stop analyzing, Review the rewrite, Accept the rewrite, Upload script, Start, Accept cut, Following the agent / Follow the agent, Studio / Canvas / Graph, Bible / Cast / World.
+Accept, Send back, Accept with note, Send review, Next review, Stop drama, Stopping…, Stopped, Resume, Keep running, Stop analyzing, Review the rewrite, Accept the rewrite, Upload script, Start, Accept cut, Following the agent / Follow the agent, List / Canvas, Lineage, Script / Story / Assets / Episodes / Delivery, Characters / Locations / Props, Out of date.
+
+Names of things (IA §10): Take / 视频版本 (t01, t02…), never 镜头 (a shot) or 片段 (a segment); Cut / 剪辑成片 (v1, v2…), an episode's versioned film; Delivery / 交付, the drama's accepted cuts; Locations, never Scenes, which stay the screenplay's scenes (场戏).
+
+"Studio" names the app only. Graph, World and Bible / Cast / World as navigation are retired: the bible lives in Story, and Lineage is a view of an item, not a page (IA §3, §10, §16).
