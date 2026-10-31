@@ -1273,7 +1273,9 @@ timeline
   Canvas's `standing()` and `standingOf()` are deleted. Lineage in e2d20ba (work-04): `Graph.tsx` reads
   `versionStanding` too, through `ofLineage`, and its `standingOf` is deleted; an unaccepted version reads
   "vN · not accepted" in the work colour, not the maker's amber; "Made from an out-of-date version" stays as
-  a fact of Lineage's own (the video prompts' "Compiled" did too, until e35dc79).
+  a fact of Lineage's own (the video prompts' "Compiled" did too, until e35dc79). For C16, 57c6621
+  (work-05): Bible's page always shows the bible drama-cli returned; the setup's progress stays on Episodes
+  and in the sidebar, as it does for Assets.
 - **Amended.** 31 October 2026, master's decision on work-03's retest (C17): a Lineage node shows an
   acceptance chip only when drama-cli's status reports that stage with an `accepted` field; otherwise it
   shows its version and freshness only. The video prompts, which status reports with `current` and `stale`
@@ -1583,6 +1585,13 @@ timeline
   again from the first upload, which asked for a screenplay once more (`src/engine/scheduler.ts:190`,
   `211–219`; C19). main restarts a setup from `screenplay_file` too, but has no answer attachment: the defect
   is ours, from B18 meeting main's restart rule (`short-drama-runs/qa/ENGINE_DIFF_AUDIT.md`, B23).
+  Recorded in 26b8f0f (work-05, C19 and B23): when a turn returns `screenplay/vN/original.txt`, the engine
+  makes the maker's stored file with the same SHA-256 (never a returned file) the drama's `screenplay_file`
+  and one of its inputs, which beginSetup hands over, a restart after Pause included; a version carries
+  `source`, that file as a FileItem, or null when its original copies none of them. And in 6160460 (work-02,
+  C18): Script › Original shows the selected version's `source`; a null source keeps the upload with one
+  editor note, "drama-cli validated vN against a text that isn't one of this project's files; Original shows
+  <name>."; a version with no original.txt, or no version yet, shows the upload with no note.
 
 ## References
 
