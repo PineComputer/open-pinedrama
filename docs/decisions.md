@@ -1468,6 +1468,31 @@ timeline
 - **Recorded in.** Commits d5a6796 (the control, its dialog and design/, work-04) and 8fb7f72 (no banner
   for the maker's pause, the neutral chip, the words; `Drama.test.tsx`).
 
+## D75. 2026-10-31 · An answer to the agent's question can carry one file
+- **Context.** When the agent asks for a different file (Codex's end-to-end review of rc2, C3: a
+  synopsis came and a screenplay is needed), the maker could answer only in words.
+- **Decision.** The answer form of the agent's own question has "Attach a file" beside Send answer:
+  one file, with Remove, and the words still required. The file is stored with the project as kind
+  `reference` through `POST /api/dramas/:id/references`, the route note pictures use, which now also
+  takes a screenplay file (.txt .md .markdown .fountain .fdx .docx .pdf .doc; 20 MiB); its error
+  `not-an-image` is renamed `unsupported-file`. The decision carries the file's id, and the engine
+  accepts it only on a plain question, which binds it to that exact question: it is refused on a
+  rewrite's verdict (Script owns those) and on a review of items (`file-not-asked`), and when it isn't
+  a file of this project (`file-missing`). The file goes to the session with the answer through
+  `attach()`, and the answer gains one line: "The file I attached: attachments/<name>". A note's
+  picture must be an image file.
+- **Alternatives.** Answering in words only, with the file uploaded some other way.
+- **Grounds.** Codex's rc2 review, C3; master's go on work-02's proposal. The UI decides and the chat
+  acts ([D70](#d70-2026-10-30--the-ui-decides-the-chat-acts)): this is part of an answer, not a new
+  action.
+- **Consequences.** It changes what a session receives (one attachment, one line), so it is in the
+  engine audit as B18 (`short-drama-runs/qa/ENGINE_DIFF_AUDIT.md`, work-05) for Dylan. Script shows the
+  question that asks for the file ([D62](#d62-2026-10-30--script-is-the-home-of-the-whole-screenplay-process),
+  as amended, 8eda77f).
+- **Words.** Master: "C3 attachment: GO, as proposed. It reuses the reference-picture path, binds the
+  file to that exact question, and keeps words required."
+- **Recorded in.** Commit a5d01c2 (work-02).
+
 ## References
 
 <a id="ref-1"></a>[1] G. Starke, P. Hruschka. *arc42*, section 9, "Architecture decisions".
