@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import type { AppInfo, DramaView, ReviewSummary, ReviewView } from "../../shared/types.ts";
 import { StopCard } from "../components/StopCard.tsx";
-import type { Page } from "../place.ts";
+import { type Page, usePlace } from "../place.ts";
 import { api, useAction, useResource } from "../api.ts";
 import { useT } from "../i18n.ts";
 import { errorText, isSetupScreen } from "../labels.ts";
@@ -33,6 +33,7 @@ function Notices({ drama }: { drama: DramaView }) {
   // Held during production (the setup panel says so before there are episodes).
   const held = drama.status === "stopped" && drama.episodeRows.length > 0;
   const queue = useResource<ReviewSummary[]>("/api/reviews", ["reviews"]);
+  const place = usePlace();
   const stops = (queue.data ?? []).filter((review) => review.dramaId === drama.id && review.stop);
   const elsewhere = app.data !== undefined && app.data.mode !== "none" && app.data.mode !== drama.mode;
   return (
@@ -40,9 +41,24 @@ function Notices({ drama }: { drama: DramaView }) {
       {elsewhere && <p className="notice">{t(drama.mode === "replay" ? "otherMode.replayNote" : "otherMode.pineNote")}</p>}
       {drama.rehearsal && !elsewhere && <p className="notice quiet-notice">{t("rehearsal.note")}</p>}
       {drama.atLimit !== undefined && !drama.stalled && <p className="notice">{t("limit.note", { n: drama.atLimit })}</p>}
-      {stops.map((stop) => (
-        <WaitingStop key={stop.id} stop={stop} />
-      ))}
+      {/* IA §10: a stop in one episode is the full StopCard in that episode only; elsewhere a compact notice that opens it
+          (design/app.js, StopBanner). A stop of the whole drama (no episode) is the full card on every page. */}
+      {stops.map((stop) =>
+        stop.episode && stop.episode !== place?.episode ? (
+          <div key={stop.id} className="notice-red" role="status">
+            <Icon name="warning" className="ic" />
+            <span>
+              <b>{t(stop.stop?.kind === "red-line" ? "stop.elsewhereRedLine" : "stop.elsewhere", { episode: stop.episode })}</b> {t("stop.othersCarryOn")}
+            </span>
+            <span className="grow" />
+            <Link className="btn sm" to="/d/$dramaId/e/$episodeCode/list" params={{ dramaId: drama.id, episodeCode: stop.episode }}>
+              {t("stop.openEpisode", { episode: stop.episode })}
+            </Link>
+          </div>
+        ) : (
+          <WaitingStop key={stop.id} stop={stop} />
+        ),
+      )}
       {/* The design's StopBanner (design/app.js): dashed while its Computers stop, solid once stopped, with Resume. */}
       {stillStopping(drama) && (
         <div className="banner" role="status">
