@@ -1114,7 +1114,9 @@ timeline
 - **Decision.** An episode's page is its Canvas alone, laid out as drama-cli's export lays it out
   (short_drama `drama_cli/export.py:46-98`, `section()` and `layout()`): each segment's group holds its
   shot list (breakdown.json), then its blocking, line-art storyboard, photoreal storyboard and take.
-  An episode has no view switch. This supersedes
+  An episode has no view switch: an episode head (its code and title, the episode's script, its Cut
+  and version) stands over the Canvas, and a link lands on the Canvas with its node picked. This
+  supersedes
   [D63](#d63-2026-10-30--an-episodes-views-are-segments-and-canvas-segments-is-a-matrix) and the List
   of [D16](#d16-2026-10-30--the-navigation-a-studio-wide-rail-the-dramas-tree-one-home-per-object).
 - **Alternatives.** The Segments matrix (D63); a List.
@@ -1129,7 +1131,7 @@ timeline
   three shot lists on the canvas?*) and "因为你现在左边那个表格， 太 ad hoc， 太冗余了， 还不如就直接canvas"
   (*because the table on the left now is too ad hoc, too redundant; better to go straight to the
   canvas*), relayed by master.
-- **Recorded in.** Master's note to the docs, 30 October 2026.
+- **Recorded in.** Design commit 2c9ab0a; master's and work-04's notes, 30 October 2026.
 
 ## References
 

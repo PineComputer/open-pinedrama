@@ -30,8 +30,7 @@ summary for this head.
 | Script | Script · screens.js `Script` | `/d/<id>/script` (the product keeps `/d/<id>/analyzing` until the port) | work-02 | 3% / 3% at 429cf32, before the draft | `design/` 46b2c73 folds Analyzing and the Fountain review into Script (D62); the product not yet ported | Y7 retest: each project shows its own screenplay (28e569a) |
 | Bible / Assets | Bible · screens.js `Bible` (screen key `story`) | `/d/<id>/story`, `/d/<id>/assets/<shelf>/<asset>?` | work-02 | 4% / 4% | J1 step 5: after picking v1 the crumbs still end "· v2" | yes: J1 (the asset's detail and its versions) |
 | Episodes | Episodes · app.js `Episodes` | `/d/<id>/episodes` | work-04 | 25% / 26% | not read yet | Y10 retest (the tree's count and dots) |
-| Episode (Segments; the product's List until the port) | Episode · screens.js `Episode` | `/d/<id>/e/<code>/list` | work-04 | 8% / 5% | not read yet | yes: J2 (a take picked, kept across List and Canvas, Lineage and Back to) |
-| Canvas | Canvas · app.js `Canvas` | `/d/<id>/e/<code>/canvas` | work-06 | 26% / 21% | not read yet | yes: J2 step 5 (the picked take stays picked) |
+| Canvas (the episode's one page, D66) | Canvas · app.js `Canvas` | `/d/<id>/e/<code>/canvas` (the product's `/list` goes at the port) | work-06 | 26% / 21% | not read yet | yes: J2 step 5 (the picked take stays picked) |
 | Review | Review · app.js `Review` | `/r/<review id>` | work-04 | 8% / 4% | not read yet | no walk at this head |
 | Cut | Cut · screens.js `Cut` | `/d/<id>/e/<code>/cut` | work-07 | 15% / 16% | not read yet | no walk at this head |
 | Delivery | Delivery · screens.js `Delivery` | `/d/<id>/delivery` | work-07 | 4% / 4% | not read yet | no walk at this head |
