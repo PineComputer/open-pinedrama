@@ -86,12 +86,12 @@ describe("the agent panel", () => {
     await renderAt(<AgentPanel drama={two} episode="EP001" onCollapse={() => {}} />);
     expect(screen.getByRole("status")).toHaveTextContent("on Computer 1");
     // Computer 1 runs EP001 and EP002; Computer 2 the setup alone.
-    expect(screen.getByRole("button", { name: "Watch Computer 1's desktop (also running EP002)" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Watch the Computer desktop of Computer 1 (also running EP002)" })).toBeInTheDocument();
     // The picker lists the other open sessions, each with its Computer.
     const picker = screen.getByRole("combobox", { name: "Session" });
     expect(within(picker).getAllByRole("option").map((option) => option.textContent)).toEqual(["EP001 (this page)", "EP002 · on Computer 1 · waits for you", "Setup · on Computer 2 · at work"]);
     await user.selectOptions(picker, "setup");
-    expect(screen.getByRole("button", { name: "Watch Computer 2's desktop" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Watch the Computer desktop of Computer 2" })).toBeInTheDocument();
   });
 
   it("tells which session of its scope it is and what came before it, and how a scope's last session ended", async () => {
