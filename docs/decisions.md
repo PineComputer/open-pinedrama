@@ -20,7 +20,7 @@ timeline
   2026-10-23 : D5 pre-production in one session
   2026-10-24 : D6 idle timeouts follow the work : D7 spend shown, never in a goal
   2026-10-29 : D8 phase 1 steers
-  2026-10-30 : D9 design/ is the UI source : D10 tsc gate : D11 mature libraries : D12 real samples in LFS : D13 decisions taken once : D14 credentials stop : D15 Codex review loop : D16 navigation and one home : D17 every take and cut watched : D18 cut editing as an edit spec : D19 TanStack Router : D20 Export by owner : D21 Analyzing and Out of date routes : D22 redo by owner : D23 the asset detail : D24 the cut edit goal : D25 one Submission : D26 crumbs and Back : D27 Reviews : D28 model badge : D29 canvas zoom, inline video : D30 URL rules : D31 agent scope : D32 narrow windows : D33 review options : D34 Episodes filters
+  2026-10-30 : D9 design/ is the UI source : D10 tsc gate : D11 mature libraries : D12 real samples in LFS : D13 decisions taken once : D14 credentials stop : D15 Codex review loop : D16 navigation and one home : D17 every take and cut watched : D18 cut editing as an edit spec : D19 TanStack Router : D20 Export by owner : D21 Analyzing and Out of date routes : D22 redo by owner : D23 the asset detail : D24 the cut edit goal : D25 one Submission : D26 crumbs and Back : D27 Reviews : D28 model badge : D29 canvas zoom, inline video : D30 URL rules : D31 agent scope : D32 narrow windows : D33 review options : D34 Episodes filters : D35 every element cites its ground
 ```
 
 ## D1. 2026-10-22 · A desktop app on Electron
@@ -577,6 +577,22 @@ timeline
 - **Consequences.** None beyond the board.
 - **Words.** None recorded.
 - **Recorded in.** Design 2f2a07b (`design/app.js`, Episodes).
+
+## D35. 2026-10-30 · Every UI element and behaviour cites its ground
+- **Context.** Elements, buttons and styles had been added as each lane saw fit, without a source.
+- **Decision.** Every UI element and behaviour cites its ground, in order of strength: a platform
+  or standards guideline (Apple's HIG, the WAI-ARIA Authoring Practices, WCAG 2.2, Nielsen's
+  heuristics); an established tool doing the same job; one of our design principles; or "ours,
+  untested", checked in the next Codex walkthrough. Every design change carries a checklist: what
+  changes, its ground, what it reuses from `design/`, and its D-entry.
+- **Alternatives.** None recorded.
+- **Grounds.** merecdesperez44323-lab's rule, after drama-cli's practice of citing a source for
+  every name and rule (short_drama `AGENTS.md`).
+- **Consequences.** [Design principle 14](design-principles.md#14-every-element-cites-its-ground);
+  `CONTRIBUTING.md`, "The design comes first"; a "Ground" column in `design/SPEC.md`.
+- **Words.** "never ad-hoc, randomly puting things here and there, randomly add some elements ,some buttons, some styles on the fly  i think , we need to be professiona"; "it's way much better to find some reference to do someting. just like drama-cli."; and, as master relayed it, "follow the design rule & dev rule in
+  doc. follow the decisions .md just like drama-cli".
+- **Recorded in.** Master's notes to the docs and the lanes, 30 October 2026.
 
 ## References
 

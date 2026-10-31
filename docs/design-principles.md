@@ -71,6 +71,7 @@ flowchart LR
     P11[11 Design first]
     P12[12 Mature libraries]
     P13[13 Light process early]
+    P14[14 Every element cites its ground]
   end
   P8 --> P4
   P9 --> P6
@@ -384,6 +385,37 @@ cycle <sup>[19](#ref-19)</sup>.
 **In the studio.** `npx tsc --noEmit` before a fast-forward push; box-ci runs the full suite and e2e
 on head every hour.
 
+## 14. Every element cites its ground
+
+**Rule.** Every UI element and behaviour cites its ground, in this order of strength:
+
+1. A platform or standards guideline, by section: Apple's Human Interface Guidelines for macOS (this
+   is a desktop app) <sup>[20](#ref-20)</sup>; the WAI-ARIA Authoring Practices for each widget
+   pattern (tabs, radio group, menu, dialog, tree, slider) <sup>[21](#ref-21)</sup>; WCAG 2.2 for
+   contrast, names and focus <sup>[22](#ref-22)</sup>; Nielsen's ten heuristics
+   <sup>[4](#ref-4)</sup>.
+2. An established tool doing the same job, by its documentation or a screenshot in `references/`:
+   Figma or React Flow for canvas zoom and selection; Premiere, DaVinci Resolve or Frame.io for player
+   controls, timelines and review; VS Code for the activity bar, sidebar, editor and panel; Linear for
+   queues; the AI drama tools in `references/`.
+3. One of the principles above, by name.
+4. Only when none fits: "ours, untested", with the reason; it is checked in the next Codex
+   walkthrough.
+
+Never: a one-off style, colour, spacing or control outside `design/`'s tokens and kit; a button
+without a defined action and state; a second way to do something that already has one.
+
+**Source.** merecdesperez44323-lab, 30 October 2026: "never ad-hoc, randomly puting things here and there, randomly add some elements ,some buttons, some styles on the fly  i think , we need to be professiona", and "it's way much better to find some reference to do someting. just like drama-cli."
+([D35](decisions.md#d35-2026-10-30--every-ui-element-and-behaviour-cites-its-ground)).
+
+**How others do it.** drama-cli cites an official document, an established tool or its own design
+for every name, format and rule (short_drama `AGENTS.md`, design rule 8 and coding rule 3); design
+systems such as Apple's and Material state each component's use and behaviour before it is built
+<sup>[20](#ref-20)</sup>.
+
+**In the studio.** Every design change carries the checklist in `CONTRIBUTING.md`, "The design
+comes first"; `design/SPEC.md` gives each component its ground.
+
 ## References
 
 <a id="ref-1"></a>[1] master. *Studio information architecture: master's proposal*, 30 October 2026,
@@ -439,3 +471,9 @@ https://stately.ai/docs/state-machines-and-statecharts
 <a id="ref-18"></a>[18] D. McKinley. *Choose Boring Technology*, 2015. https://boringtechnology.club/
 
 <a id="ref-19"></a>[19] R. Singer. *Shape Up*, Basecamp, 2019. https://basecamp.com/shapeup
+
+<a id="ref-20"></a>[20] Apple. *Human Interface Guidelines*. https://developer.apple.com/design/human-interface-guidelines
+
+<a id="ref-21"></a>[21] W3C. *ARIA Authoring Practices Guide*, "Patterns". https://www.w3.org/WAI/ARIA/apg/patterns/
+
+<a id="ref-22"></a>[22] W3C. *Web Content Accessibility Guidelines (WCAG) 2.2*. https://www.w3.org/TR/WCAG22/

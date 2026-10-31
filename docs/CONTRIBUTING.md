@@ -40,6 +40,21 @@ there first, approved, then ported to the screens with the same DOM and class na
 only brings a screen in line with `design/` needs no design step; no PR adds UI that `design/`
 doesn't have.
 
+Every design change states, in its commit or pull request
+([design principles](design-principles.md#14-every-element-cites-its-ground)):
+
+- [ ] **What changes.**
+- [ ] **Its ground,** the strongest that fits: a platform or standards guideline by section (Apple's
+  HIG, the WAI-ARIA Authoring Practices pattern, WCAG 2.2, Nielsen's heuristics); an established
+  tool doing the same job, by its docs or a screenshot in `references/`; one of our principles by
+  name; or "ours, untested" with the reason, to be checked in the next Codex walkthrough.
+- [ ] **What it reuses** from `design/`: the component, token or pattern; a new one needs a reason.
+- [ ] **The D-entry,** if it is a product decision ([decisions.md](decisions.md)).
+
+Never a one-off style, colour, spacing or control outside `design/`'s tokens and kit; never a
+button without a defined action and state; never a second way to do something that already has
+one.
+
 ## Components to use
 
 Use a mature library for every job one covers, and write only the glue: drama-cli's data, the
