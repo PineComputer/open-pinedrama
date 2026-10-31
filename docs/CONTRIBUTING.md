@@ -99,6 +99,7 @@ for 2026-10-23..29.
 | Diff | diff (jsdiff) | 186.9 M | Reveric's diffutil_dart |
 | Fountain lines | fountain-js 1.2.4 | 15.5 k | none; the alternative is a Fountain parser of our own |
 | Video | media-chrome | 5.5 M | Reveric's video_player and fvp |
+| Justified picture rows (Assets) | react-photo-album 3.6.2 | 208.7 k | the asset grid's letterboxed cells ([D56](decisions.md#d56-2026-10-30--assets-is-a-picture-grid-with-an-inspector)) |
 | Edit timeline | @xzdarcy/react-timeline-editor | 15 k | Reveric's ~5,000 hand-written lines. It's the least used here, though still more than hand-written. |
 
 **Still hand-written, awaiting merecdesperez44323-lab's approval:**

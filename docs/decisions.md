@@ -936,20 +936,27 @@ timeline
 
 ## D56. 2026-10-30 · Assets is a picture grid with an inspector
 - **Context.** Assets' cards carried long descriptions and tags; the detail listed an asset's files.
-- **Decision.** A card is the picture at its own ratio, the name, the version and the status pill,
+- **Decision.** The grid is justified rows, as Google Photos and Flickr lay theirs out: one height
+  per row, each card as wide as its picture's own ratio, the card exactly the picture and its
+  caption, with no letterbox and no crop (react-photo-album 3.6.2, pinned). A card is the picture,
+  the name, the version and the status pill,
   one card per asset (a character is one card; its looks are in the detail). The detail has one
   large picture with a labelled strip under it (a place's plate views and times; a character's
   looks), the state, Review and Lineage, the bible's description clamped to three lines with More,
   the episodes it is in, and its versions. "Its files" is removed. This refines
   [D23](#d23-2026-10-30--an-assets-one-home-is-its-detail-in-assets).
 - **Alternatives.** None recorded.
-- **Grounds.** merecdesperez44323-lab's decision; Apple Photos' and Finder's grid with an inspector;
+- **Grounds.** merecdesperez44323-lab's decision; Google Photos' and Flickr's justified rows; mature
+  libraries ([design principles](design-principles.md#12-mature-libraries-least-code-of-our-own));
+  Apple Photos' and Finder's grid with an inspector;
   liblib's asset library; progressive disclosure
   ([design principles](design-principles.md#7-progressive-disclosure)).
 - **Consequences.** None beyond Assets.
 - **Words.** "这个我觉得太丑了， 这么老长的文字… 咋办" (*I think this is too ugly, such long text… what to do*),
-  relayed by master.
-- **Recorded in.** Commit 0934071 (design and product); work-02's note to the docs.
+  relayed by master; and "这些排版 ui， 一坨大黑边， 很难看啊。。。" (*this layout has big black bands, it looks
+  awful…*), relayed by master.
+- **Recorded in.** Commits 0934071 and e5ee6a7 (justified rows; design and product); work-02's notes
+  to the docs.
 
 ## D57. 2026-10-30 · Assets has no tabs; the project tree is its navigation
 - **Context.** Assets offered Characters, Locations and Props twice: as rows in the project tree and
