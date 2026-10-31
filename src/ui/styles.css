@@ -14,7 +14,7 @@ html, body { margin: 0; background: var(--canvas); color: var(--text-primary); f
 h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 700; letter-spacing: -0.015em; }
 
 /* A count of what needs the maker. */
-.seal { display: inline-grid; place-items: center; width: 24px; height: 24px; background: var(--warning-text); color: var(--surface); font: 600 14px/1 var(--font-sans); border-radius: 2px; }
+.seal { display: inline-grid; place-items: center; width: 24px; height: 24px; background: var(--warning-text); color: var(--surface); font: 600 14px/1 var(--font-sans); border-radius: var(--radius-small); }
 
 /* Buttons: one ink primary per view, the rest quiet. */
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; height: 32px; padding: 0 14px; border: 1px solid var(--border-input); border-radius: var(--radius-button); background: transparent; color: var(--text-secondary); cursor: pointer; font: 600 12.5px/1 var(--font-sans); white-space: nowrap; transition: background var(--d1) ease, border-color var(--d1) ease, color var(--d1) ease; }
@@ -30,7 +30,7 @@ h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 700; lett
 .btn.small { height: 26px; padding: 0 10px; font-size: 11.5px; }
 .link { background: none; border: 0; padding: 0; cursor: pointer; color: var(--text-secondary); text-decoration: underline; text-decoration-color: var(--border-input); text-underline-offset: 3px; }
 .link:hover { color: var(--text-primary); text-decoration-color: var(--text-primary); }
-.key { font: 600 10.5px/1 var(--font-sans); padding: 3px 5px; border: 1px solid currentColor; border-radius: 2px; opacity: 0.55; }
+.key { font: 600 10.5px/1 var(--font-sans); padding: 3px 5px; border: 1px solid currentColor; border-radius: var(--radius-small); opacity: 0.55; }
 
 /* Bar */
 
@@ -288,13 +288,13 @@ h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 700; lett
 .document p { margin: 0 0 12px; }
 .document ul, .document ol { margin: 0 0 14px; padding-left: 22px; }
 .document li { margin: 2px 0; }
-.document code { font: 13.5px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--surface-container); padding: 1px 4px; border-radius: 2px; }
+.document code { font: 13.5px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--surface-container); padding: 1px 4px; border-radius: var(--radius-small); }
 .document hr { border: 0; border-top: 1px solid var(--border); margin: 24px 0; }
 .document.plain { white-space: pre-wrap; margin: 0; font-size: 15px; }
 
 /* Delivery: every episode's latest cut, and the one approved. */
 .delivery .cut-line { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-.chip { font-size: 12.5px; padding: 2px 7px; border-radius: 2px; background: var(--surface-container); color: var(--text-muted); }
+.chip { font-size: 12.5px; padding: 2px 7px; border-radius: var(--radius-pill); background: var(--surface-container); color: var(--text-muted); }
 .chip.approve { background: var(--surface-container-high); color: var(--text-primary); }
 .chip.revise { background: var(--warning-bg); color: var(--error); }
 .chip.waiting { background: var(--warning-text); color: var(--surface); }
@@ -315,7 +315,7 @@ h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 700; lett
 .speech p, .speech ul, .speech ol { margin: 0 0 0.55em; }
 .speech ul, .speech ol { padding-left: 1.2em; }
 .speech h2, .speech h3, .speech h4 { font: inherit; font-weight: 600; margin: 0.6em 0 0.3em; }
-.speech code { font: 0.86em/1 ui-monospace, "SF Mono", Menlo, monospace; font-style: normal; background: var(--surface-container); padding: 1px 4px; border-radius: 2px; overflow-wrap: anywhere; }
+.speech code { font: 0.86em/1 ui-monospace, "SF Mono", Menlo, monospace; font-style: normal; background: var(--surface-container); padding: 1px 4px; border-radius: var(--radius-small); overflow-wrap: anywhere; }
 .speech .named { border-bottom: 1px dotted var(--text-subtle); }
 .speech .link { color: inherit; }
 
@@ -326,7 +326,7 @@ h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 700; lett
 /* A note's own picture: what the maker wants used or matched. */
 .note-tools { display: flex; align-items: center; gap: 14px; margin-top: 6px; }
 .note-picture { display: inline-flex; align-items: center; gap: 10px; }
-.note-picture img { display: block; width: 56px; height: 56px; object-fit: cover; border-radius: 2px; border: 1px solid var(--border-input); }
+.note-picture img { display: block; width: 56px; height: 56px; object-fit: cover; border-radius: var(--radius-medium); border: 1px solid var(--border-input); }
 .note .note-picture, .asked-before .note-picture { display: flex; width: fit-content; margin-top: 6px; }
 
 /* The episodes a character, place or prop appears in, by their breakdowns. */
@@ -341,7 +341,7 @@ h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 700; lett
 .documents details { border-top: 1px solid var(--border); padding: 8px 0; }
 .documents summary { cursor: pointer; font: 500 14px/1.4 var(--font-sans); }
 .documents .document.plain { max-height: 60vh; overflow: auto; margin-top: 8px; }
-.document pre.fenced { font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--surface-container); padding: 10px 12px; border-radius: 2px; overflow-x: auto; white-space: pre; margin: 0 0 14px; }
+.document pre.fenced { font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--surface-container); padding: 10px 12px; border-radius: var(--radius-medium); overflow-x: auto; white-space: pre; margin: 0 0 14px; }
 
 
 /* The episodes board (the spec's FilterChip and EpisodeCard). */
@@ -350,7 +350,7 @@ h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 700; lett
 
 /* The review room (the spec's ReviewRoom): the items on a reel to the left, the work on a stage
    in the middle, the inspector with the verdict bar to the right, and the send bar along the foot. */
-.ritem .thumb { position: relative; width: 52px; height: 92px; border-radius: 6px; overflow: hidden; background: var(--surface-container); }
+.ritem .thumb { position: relative; width: 52px; height: 92px; border-radius: var(--radius-medium); overflow: hidden; background: var(--surface-container); }
 .ritem .what { display: grid; gap: 4px; justify-items: start; min-width: 0; }
 /* In the room the agent's words open the inspector, as the pro direction's has them, label above, so the stage is the picture's alone. */
 .insp .agent-says { grid-template-columns: minmax(0, 1fr); gap: 4px; padding: 12px 0; background: none; }
@@ -359,7 +359,7 @@ h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 700; lett
 .ds-stage-bar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 12px 18px 0; }
 /* media-chrome's time range drawn as the design's .track (design/studio.css: .rail2, .pos, .knob): its own track
    transparent over the design's rail and the watched (.seen) bar. */
-.track media-time-range { position: absolute; inset: 0; width: 100%; height: 26px; background: none; --media-control-background: transparent; --media-control-hover-background: transparent; --media-range-padding: 0; --media-range-track-height: 4px; --media-range-track-border-radius: 999px; --media-range-track-background: transparent; --media-range-bar-color: var(--text-primary); --media-time-range-buffered-color: transparent; --media-range-thumb-width: 12px; --media-range-thumb-height: 12px; --media-range-thumb-background: var(--text-primary); --media-preview-time-text-shadow: none; }
+.track media-time-range { position: absolute; inset: 0; width: 100%; height: 26px; background: none; --media-control-background: transparent; --media-control-hover-background: transparent; --media-range-padding: 0; --media-range-track-height: 4px; --media-range-track-border-radius: var(--radius-pill); --media-range-track-background: transparent; --media-range-bar-color: var(--text-primary); --media-time-range-buffered-color: transparent; --media-range-thumb-width: 12px; --media-range-thumb-height: 12px; --media-range-thumb-background: var(--text-primary); --media-preview-time-text-shadow: none; }
 /* A version's facts as label and value, as the pro direction's inspector lists a take's (.kv). */
 .ds-board-thumb img { width: 100%; border-radius: var(--radius-medium); border: 1px solid var(--border); background: #fff; }
 .ds-note-input { width: 100%; min-height: 64px; border-radius: var(--radius-large); border: 1px solid var(--border-input); background: var(--surface); color: var(--text-primary); padding: 8px 10px; font: 13px/1.5 var(--font-sans); resize: vertical; outline: none; }
@@ -392,9 +392,9 @@ h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 700; lett
 /* Home, ported from the pro prototype: what studio.css doesn't have for real data. A drama with no take or photoreal
    board yet has the designed empty cover, its title as type; a look's thumbnail is cropped to the sheet's close-up;
    the search is a real input; the logline stays on one line. */
-.wait .emptythumb { width: 38px; height: 52px; border-radius: 6px; background: var(--surface-container); }
+.wait .emptythumb { width: 38px; height: 52px; border-radius: var(--radius-small); background: var(--surface-container); }
 .pcard .pic video, .wait video { width: 100%; height: 100%; object-fit: cover; }
-.wait video { width: 38px; height: 52px; border-radius: 6px; object-position: top; }
+.wait video { width: 38px; height: 52px; border-radius: var(--radius-small); object-position: top; }
 .search input { flex: 1; min-width: 0; border: 0; background: none; outline: none; color: var(--text-primary); font: inherit; }
 .search input::placeholder { color: var(--text-secondary); }
 

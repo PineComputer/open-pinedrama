@@ -51,6 +51,7 @@
   --radius-sm: var(--radius-small);
   --radius-md: var(--radius-medium);
   --radius-lg: var(--radius-large);
+  --radius-xl: var(--radius-2xl);
 }
 
 @layer base {
