@@ -190,7 +190,10 @@ async function scenario(title: string) {
   costless(setup);
   expect(drama.episodeRows.every((row) => row.stages.breakdown.state === "done")).toBe(true);
   const boards = await until("EP001 storyboards", openReview(id, (item) => item.episode === "EP001" && item.kind === "storyboards"));
-  expect((await call<ReviewView>("GET", `/api/reviews/${boards.id}`)).breakdown?.path).toBe("drama/episodes/EP001/breakdown/v1/breakdown.md");
+  const boardsView = await call<ReviewView>("GET", `/api/reviews/${boards.id}`);
+  expect(boardsView.breakdown?.path).toBe("drama/episodes/EP001/breakdown/v1/breakdown.md");
+  // Its row's picture is a storyboard, not the blocking beside it.
+  expect(boardsView.reviewItems.flatMap((item) => item.files).find((file) => file.url === boards.thumb?.url)?.kind).toBe("storyboard");
 
   // EP001 through storyboards, takes and the cut; then EP003 takes its place.
   for (const kind of ["storyboards", "takes", "cut"] as const) {

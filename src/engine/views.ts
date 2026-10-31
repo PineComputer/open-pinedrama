@@ -318,7 +318,11 @@ function summary(review: ReviewRow): ReviewSummary {
   const files = filesOfStop(review);
   const { items } = itemsOf(review.kind, files);
   const [refusal] = turnRefusals(review.turn_id).refusals;
-  const image = files.find((file) => file.type.startsWith("image/")) ?? files.find((file) => file.type.startsWith("video/"));
+  // The row's picture is of what the review is about, in REVIEWED_KINDS's order (a storyboard before its blocking).
+  const reviewed = REVIEWED_KINDS[review.kind] ?? [];
+  const rank = (file: FileRow) => (reviewed.includes(file.kind) ? reviewed.indexOf(file.kind) : reviewed.length);
+  const best = (type: string) => files.filter((file) => file.type.startsWith(type)).sort((a, b) => rank(a) - rank(b))[0];
+  const image = best("image/") ?? best("video/");
   const episode = review.episode_id ? get<EpisodeRow>("select * from episodes where id = ?", review.episode_id) : undefined;
   return {
     id: review.id,
