@@ -61,13 +61,15 @@
             <section class="panel"><h3>${I("clock")}Episodes and budget</h3>
               <div class="fields">
                 <label><span>Episode length</span><div class="seg">${["60", "90", "120"].map((v) => html`<button aria-pressed=${String(S.len === v)} onClick=${() => set({ len: v })}>${v} s</button>`)}</div></label>
-                ${/* What the maker reviews; the studio approves the rest (the product's ReviewingChoice, its texts verbatim). */ ""}
-                <div class="field"><span>Your reviews</span><div class="seg" role="group" aria-label="Your reviews">${[["every", "Every step"], ["key", "Looks, photoreal storyboards, takes and cuts"], ["none", "Photoreal storyboards, takes and cuts"]].map(([v, l]) => html`<button aria-pressed=${String(S.reviewing === v)} onClick=${() => set({ reviewing: v })}>${l}</button>`)}</div>
-                  <small class="muted">${{
-                    every: "You approve the leads' looks, the shared references, and each episode's storyboards, takes and cut.",
-                    key: "You approve the leads' looks and every photoreal storyboard, and watch every take and cut. The shared references and line-art storyboards go on as the agent makes them.",
-                    none: "You approve every photoreal storyboard, watch every take and cut, and answer the agent's questions. The leads' looks, the shared references and line-art storyboards go on as the agent makes them.",
-                  }[S.reviewing]}</small></div>
+                ${/* What the maker reviews; the studio approves the rest (the product's ReviewingChoice, its texts verbatim).
+                     The DOM is Radix RadioGroup's (role radio, aria-checked, data-state), which the port uses for the keys. */ ""}
+                <div class="field"><span>Your reviews</span>
+                  <div class="presets one" role="radiogroup" aria-label="Your reviews">${[
+                    ["every", "Every step", "You approve the leads' looks, the shared references, and each episode's storyboards, takes and cut."],
+                    ["key", "Looks, photoreal storyboards, takes and cuts", "You approve the leads' looks and every photoreal storyboard, and watch every take and cut. The shared references and line-art storyboards go on as the agent makes them."],
+                    ["none", "Photoreal storyboards, takes and cuts", "You approve every photoreal storyboard, watch every take and cut, and answer the agent's questions. The leads' looks, the shared references and line-art storyboards go on as the agent makes them."],
+                  ].map(([v, l, hint]) => html`<button type="button" class="preset" role="radio" aria-checked=${String(S.reviewing === v)} data-state=${S.reviewing === v ? "checked" : "unchecked"} tabindex=${S.reviewing === v ? 0 : -1} onClick=${() => set({ reviewing: v })}>
+                    <span class="radio"></span><span class="grow"><b>${l}</b><small>${hint}</small></span></button>`)}</div></div>
                 <label><span>Budget</span><div class="inputwrap">$<input value=${S.budget} inputmode="decimal" onInput=${(e) => set({ budget: e.target.value })}/></div><small class="muted">${SPENT_COVERS} The drama stops and asks you when it is spent.</small></label>
               </div></section>
           </div>
