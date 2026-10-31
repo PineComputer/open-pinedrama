@@ -34,7 +34,9 @@ function Notices({ drama }: { drama: DramaView }) {
   const held = drama.status === "stopped" && drama.episodeRows.length > 0;
   const queue = useResource<ReviewSummary[]>("/api/reviews", ["reviews"]);
   const place = usePlace();
-  const stops = (queue.data ?? []).filter((review) => review.dramaId === drama.id && review.stop);
+  // A stop asks the maker only while its review is open; once it ended it is history, where its item keeps it (Script's
+  // history for the setup's), never a card to act on (D64 as amended).
+  const stops = (queue.data ?? []).filter((review) => review.dramaId === drama.id && review.stop && review.state === "open");
   const elsewhere = app.data !== undefined && app.data.mode !== "none" && app.data.mode !== drama.mode;
   return (
     <>

@@ -45,6 +45,26 @@ describe("a stop waiting on the maker", () => {
   });
 });
 
+describe("a stop whose question ended", () => {
+  it("is no card to act on: the refusal is history, kept where its item is (rc5 T3; D64 as amended)", async () => {
+    // rc5 T3: drama-cli refused the .docx in the turn that then returned v1 and v2; the question it asked ended.
+    const stop: ReviewSummary = { id: "rev_t3", dramaId: "d1", dramaTitle: "裴总", kind: "question", state: "ended", question: "v2 is not accepted.", items: 0, subjects: [], stop: { kind: "ask" }, createdAt: "2026-10-31T10:10:27Z" };
+    answer("/api/reviews", [stop]);
+    answer("/api/reviews/rev_t3", { ...stop, refusals: [{ code: "InvalidParameter.file", message: "The screenplay 剧本.docx is not readable UTF-8 text.", param: "file", action: "fix_input" }] });
+    const drama = { id: "d1", mode: "replay", title: "裴总", status: "stopped", format: "9:16, 480p", spent: { total: 0, media: 0 }, crew: [], episodeRows: [], setup: { state: "stopped", reached: 1, reason: "by-maker" } } as unknown as DramaView;
+    await renderAt(
+      <Drama drama={drama} page="script">
+        <p>Script</p>
+      </Drama>,
+      "/d/d1/script",
+    );
+    expect(await screen.findByText("Script")).toBeInTheDocument();
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    expect(screen.queryByText("The screenplay 剧本.docx is not readable UTF-8 text.")).toBeNull();
+    expect(screen.queryByRole("link", { name: "Decide in your words" })).toBeNull();
+  });
+});
+
 describe("a stopped drama", () => {
   const stopped = (reason: string) => ({ id: "d1", mode: "replay", title: "Bride on Bail", status: "stopped", format: "9:16, 480p", spent: { total: 0, media: 0 }, crew: [], episodeRows: [{ code: "EP001", state: "waiting" }], setup: { state: "stopped", reached: 5, reason } }) as unknown as DramaView;
 

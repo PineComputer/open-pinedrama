@@ -101,9 +101,7 @@ const scriptRoute = createRoute({
   },
   component: function ScriptPage() {
     const drama = useDrama();
-    // The setup waiting on the maker's answer: its question, which Script shows when no version is recorded yet.
-    const asking = isSettingUp(drama) && drama.setup.state === "waiting" ? drama.setup.reviewId : undefined;
-    return <Script dramaId={drama.id} ep={scriptRoute.useSearch().ep} settingUp={isSettingUp(drama)} asking={asking} />;
+    return <Script dramaId={drama.id} ep={scriptRoute.useSearch().ep} settingUp={isSettingUp(drama)} />;
   },
 });
 // The bible's home is the bible, as drama-cli's status and the bible it returned say, however far the setup has got: a

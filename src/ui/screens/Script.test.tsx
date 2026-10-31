@@ -6,7 +6,7 @@ import { screen, waitFor, within } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
-import type { ScriptPage } from "../../shared/types.ts";
+import type { ReviewSummary, ScriptPage } from "../../shared/types.ts";
 import { file } from "../test/fixtures.ts";
 import { href, renderAt } from "../test/router.tsx";
 import { accept, answer, calls, server } from "../test/server.ts";
@@ -26,6 +26,11 @@ function page(waiting: boolean): ScriptPage {
       { version: "v1", file: v1 },
     ],
   };
+}
+
+/** The setup's question as the reviews list gives it: the drama's, no episode. */
+function question(id: string, state: ReviewSummary["state"], words: string): ReviewSummary {
+  return { id, dramaId: "d1", dramaTitle: "家里家外", kind: "question", state, question: words, items: 0, subjects: [], createdAt: "2026-10-31T10:13:25Z" };
 }
 
 function texts() {
@@ -88,10 +93,12 @@ describe("Script", () => {
   });
 
   it("gives the agent's question about the upload, before any version, in place of 'not recorded', with the way to answer", async () => {
+    const asked = question("r9", "open", "The file is a synopsis, not a screenplay. Please provide the finished screenplay.");
     answer("/api/dramas/d1/script", { inputs: [original], screenplayFile: original.id, versions: [] });
-    answer("/api/reviews/r9", { id: "r9", question: "The file is a synopsis, not a screenplay. Please provide the finished screenplay." });
+    answer("/api/reviews", [asked]);
+    answer("/api/reviews/r9", { ...asked, refusals: [] });
     texts();
-    await renderAt(<Script dramaId="d1" settingUp asking="r9" />, "/d/d1/script");
+    await renderAt(<Script dramaId="d1" settingUp />, "/d/d1/script");
     const versions = await screen.findByRole("region", { name: "Versions" });
     expect(await within(versions).findByText("The file is a synopsis, not a screenplay. Please provide the finished screenplay.")).toBeInTheDocument();
     expect(within(versions).getByText("The agent asks you about your file")).toBeInTheDocument();
@@ -187,6 +194,52 @@ describe("Script, while the setup runs", () => {
     const versions = await screen.findByRole("region", { name: "Versions" });
     expect(within(versions).getAllByRole("listitem")).toHaveLength(1);
     expect(screen.queryByText("This project's rewrite wasn't recorded.")).not.toBeInTheDocument();
+  });
+});
+
+describe("Script's history, when the screenplay work stopped (D64 as amended)", () => {
+  it("keeps the setup's ended question as why it stopped, before any version: dated, read-only, nothing to act on (rc5 T4)", async () => {
+    // rc5 T4: the conversion wasn't ready (日/夜 unresolved), so no version was recorded, and the question ended at the pause.
+    const words = "The Fountain conversion is not yet ready: the validator requires either 日 (day) or 夜 (night) for both scene 2-1 and scene 2-2.";
+    const asked = question("rev_t4", "ended", words);
+    answer("/api/dramas/d1/script", { inputs: [original], screenplayFile: original.id, versions: [] });
+    answer("/api/reviews", [asked]);
+    answer("/api/reviews/rev_t4", { ...asked, refusals: [] });
+    texts();
+    await renderAt(<Script dramaId="d1" />, "/d/d1/script");
+    const versions = await screen.findByRole("region", { name: "Versions" });
+    expect(await within(versions).findByText(words)).toBeInTheDocument();
+    const row = within(versions).getByText("The agent asked, and the question ended unanswered").closest("li")!;
+    expect(row.querySelector("time")).toHaveAttribute("dateTime", "2026-10-31T10:13:25Z");
+    expect(within(row).queryByRole("link")).toBeNull();
+    expect(within(row).queryByRole("button")).toBeNull();
+  });
+
+  it("keeps an ended question's refusal under the version it came with, never as a card to act on (rc5 T3)", async () => {
+    // rc5 T3: one turn returned drama-cli's refusal of the .docx, then v1 and v2, and asked; the question then ended.
+    const asked = question("rev_t3", "ended", "The six-episode Fountain v2 passes the structural check, but is not accepted.");
+    const refusal = { code: "InvalidParameter.file", message: "The screenplay 剧本.docx is not readable UTF-8 text.", param: "file", action: "fix_input" };
+    answer("/api/dramas/d1/script", {
+      inputs: [original],
+      screenplayFile: original.id,
+      versions: [
+        { version: "v2", file: v2, question: { reviewId: "rev_t3", state: "ended" } },
+        { version: "v1", file: v1 },
+      ],
+    });
+    answer("/api/reviews/rev_t3", { ...asked, refusals: [refusal] });
+    texts();
+    await renderAt(<Script dramaId="d1" />, "/d/d1/script");
+    const versions = await screen.findByRole("region", { name: "Versions" });
+    const said = await within(versions).findByText("InvalidParameter.file");
+    const rows = within(versions).getAllByRole("listitem");
+    // Newest first: v2, the question it came with, v1, the upload.
+    expect(rows.indexOf(said.closest("li")!)).toBe(1);
+    expect(rows[0]).toHaveTextContent("v2");
+    expect(rows[2]).toHaveTextContent("v1");
+    expect(rows[1]).toHaveTextContent("The screenplay 剧本.docx is not readable UTF-8 text.");
+    expect(within(rows[1]!).queryByRole("link")).toBeNull();
+    expect(within(rows[1]!).queryByRole("button")).toBeNull();
   });
 });
 
