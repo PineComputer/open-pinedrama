@@ -643,6 +643,19 @@ describe("a drama in replay", () => {
     expect(goal).toContain("attachments/project.tar.part-*");
     expect(goal).toContain("cat attachments/EP001.tar.part-* | tar -xf - -C drama/episodes/EP001");
     expect((await call<DramaView>("GET", `/api/dramas/${id}`)).episodeRows.find((row) => row.code === "EP001")?.state).toBe("done");
+    // Stopping the drama ends a message waiting for its new session, which holds no place after Resume and isn't reopened:
+    // with every episode back in line, the one place is free for the next message.
+    stopClock();
+    await call("PATCH", `/api/dramas/${id}`, { parallel: 10 });
+    expect(await send("setup", "sub-9")).toMatchObject({ id: "sub-9", state: "sent", sessionId: "" });
+    await call("POST", `/api/dramas/${id}/stop`);
+    expect(kept("sub-9")).toBe("stopped");
+    await call("POST", `/api/dramas/${id}/resume`);
+    await call("PATCH", `/api/dramas/${id}`, { parallel: 1 });
+    expect(await send("setup", "sub-10")).toMatchObject({ id: "sub-10", state: "sent", sessionId: "" });
+    expect(kept("sub-9")).toBe("stopped");
+    await call("POST", `/api/dramas/${id}/stop`);
+    startClock(50);
   }, 60_000);
 
   it("refuses a sample drama it doesn't have", async () => {

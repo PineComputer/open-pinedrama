@@ -351,7 +351,7 @@ function startMessage(drama: DramaRow, request: MessageRow, computer: ComputerRo
           failures.delete(`message:${request.id}`);
           markMessage(request.id, "failed", { sessionId: null, note: message(error) });
         } else {
-          run("update scope_messages set state = 'queued', session_id = null, updated_at = ? where id = ?", now(), request.id);
+          run("update scope_messages set state = 'queued', session_id = null, updated_at = ? where id = ? and state = 'working'", now(), request.id);
         }
       }
       throw error;

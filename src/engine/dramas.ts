@@ -10,6 +10,7 @@ import { save } from "./library.ts";
 import { publish } from "./live.ts";
 import { type DramaRow, computer as computerRow, drama as dramaRow, episode as episodeRow, latestTurn, session as sessionRow } from "./records.ts";
 import { StudioError } from "./errors.ts";
+import { stopMessages } from "./scope-messages.ts";
 import { PRESETS } from "../shared/presets.ts";
 import { LENGTHS, briefFile } from "./goals.ts";
 import { approveUnreviewed, decide, decidedInReview, pendingReview } from "./reviews.ts";
@@ -241,7 +242,10 @@ export async function stopDrama(id: string): Promise<void> {
   const drama = dramaRow(id);
   if (!drama) throw new StudioError("not-found", "No such drama.", 404);
   if (drama.status === "done") throw new StudioError("drama-done", "The drama is finished.", 409);
-  run("update dramas set status = 'stopped', reason = 'by-maker', note = '', updated_at = ? where id = ?", now(), id);
+  transaction(() => {
+    run("update dramas set status = 'stopped', reason = 'by-maker', note = '', updated_at = ? where id = ?", now(), id);
+    stopMessages(id);
+  });
   publish(`drama:${id}`, "dramas");
   const stops = await Promise.allSettled(runningComputers(id).map((row) => stopComputer(row)));
   const failed = stops.find((result) => result.status === "rejected");

@@ -17,8 +17,11 @@ export interface MessageRow {
   scope: string;
   episode_id: string | null;
   text: string;
-  /** sending/sent: to an open session; queued, working, done or failed: for a new one. */
-  state: "sending" | "sent" | "queued" | "working" | "done" | "failed";
+  /**
+   * sending/sent: to an open session; queued, working, done or failed: for a new one; stopped: queued or working when the
+   * maker stopped the drama, never reopened (the maker sends it again).
+   */
+  state: "sending" | "sent" | "queued" | "working" | "done" | "failed" | "stopped";
   session_id: string | null;
   note: string | null;
 }
@@ -83,15 +86,21 @@ export async function sendMessage(dramaId: string, scope: string, submissionId: 
   return view(message(submissionId)!);
 }
 
+/** A stopped message stays stopped: a start or a turn still settling after the drama stopped doesn't bring it back. */
 export function markMessage(id: string, state: MessageRow["state"], fields: { sessionId?: string | null; note?: string } = {}): void {
   run(
-    "update scope_messages set state = ?, session_id = coalesce(?, session_id), note = coalesce(?, note), updated_at = ? where id = ?",
+    "update scope_messages set state = ?, session_id = coalesce(?, session_id), note = coalesce(?, note), updated_at = ? where id = ? and state != 'stopped'",
     state,
     fields.sessionId ?? null,
     fields.note ?? null,
     now(),
     id,
   );
+}
+
+/** The drama stopped: its messages waiting for or running in a new session end, so none holds a place after Resume. */
+export function stopMessages(dramaId: string): void {
+  run("update scope_messages set state = 'stopped', updated_at = ? where drama_id = ? and state in ('queued', 'working')", now(), dramaId);
 }
 
 /** The submission view of a message, for GET /api/submissions/:id. */
