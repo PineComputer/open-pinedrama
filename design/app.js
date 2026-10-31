@@ -22,8 +22,18 @@
   const toast = (text, action) => { const id = ++tid; set({ toasts: [...S.toasts, { id, text, action }] }); setTimeout(() => set({ toasts: S.toasts.filter((t) => t.id !== id) }), 4200); };
   const money = (n) => "$" + n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   const I = (name, cls) => html`<span class=${"ic " + (cls || "")} dangerouslySetInnerHTML=${{ __html: `<svg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">${window.ICONS[name] || ""}</svg>` }}></span>`;
-  const ST = { you: "Waiting for you", work: "At work", accepted: "Accepted", back: "Sent back", line: "In line", stale: "Stale", redline: "Red line", err: "1 error" };
-  const Status = (st, label) => html`<span class=${"st " + st}><i></i>${label || ST[st]}</span>`;
+  /* IA draft (§15): the maker sees five states: working · needs you · paused · problem · done. Every internal state maps
+     onto one of them, and its own detail is the chip's title, on demand. A chip given its own words keeps them. */
+  const ST = {
+    work: ["work", "Working", "At work"], line: ["work", "Working", "In line"], back: ["work", "Working", "Sent back: the agent redoes it"],
+    you: ["you", "Needs you", "Waiting for you"], redline: ["redline", "Needs you", "A red line in the screenplay: yours to decide"],
+    paused: ["line", "Paused", "Stopped; resume when you want"], err: ["err", "Problem", "Something failed; open it for the next step"],
+    accepted: ["accepted", "Done", "Accepted"], stale: ["stale", "Out of date", "Made from an input that has changed since"],
+  };
+  const Status = (st, label) => {
+    const [cls, word, detail] = ST[st] || [st, st, ""];
+    return html`<span class=${"st " + (label ? st : cls)} title=${detail}><i></i>${label || word}</span>`;
+  };
   const Mark = () => html`<span class="mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5 6.6 9.2h2.9L5.4 14.4h3.4L4.5 19.8h6.3V22h2.4v-2.2h6.3l-4.3-5.4h3.4l-4.1-5.2h2.9z"/></svg></span>`;
 
   function applyTheme() { document.documentElement.setAttribute("data-palette", "classic"); document.documentElement.setAttribute("data-theme", S.theme); }
@@ -132,8 +142,9 @@
       <span class="grow"></span>
       ${right}
       <${ExportMenu}/>
-      <${StopControl}/>
-      <button class="btn primary sm" onClick=${() => go("review")} aria-label=${"Next review, " + n + " waiting"}>Next review <span class="n">${n}</span></button>
+      ${/* IA draft (A1): a studio page (Reviews) acts on no one drama, so it has no Stop or Next review; the queue is the way in. */
+        S.screen !== "reviews" && html`<${StopControl}/>
+      <button class="btn primary sm" onClick=${() => go("review")} aria-label=${"Next review in " + P.project.title + ", " + n + " waiting"}>Next review <span class="n">${n}</span></button>`}
     </header>`;
   }
   function StopBanner() {
@@ -224,7 +235,7 @@
   }
   /* ───── Home ───── */
   function Home() {
-    const tabs = [["all", "All", 4], ["you", "Needs you", 1], ["work", "At work", 1], ["done", "Finished", 1]];
+    const tabs = [["all", "All", 4], ["you", "Needs you", 2], ["work", "Working", 1], ["done", "Done", 1]];
     const list = P.projects.filter((p) => S.tab === "all" || (S.tab === "you" ? p.st === "you" || p.st === "redline" : S.tab === "work" ? p.st === "work" : p.st === "accepted"));
     const upload = () => go("upload");
     return html`<div class="main"><div class="scrollmain"><div class="wrap">
@@ -262,8 +273,9 @@
 
   /* ───── Episodes board ───── */
   function Episodes() {
-    const f = [["all", "All", 24], ["you", "Needs you", 3], ["work", "At work", 2], ["line", "In line", 18], ["done", "Done", 0]];
-    const list = P.eps.filter((e) => S.filter === "all" || e.status === S.filter);
+    const f = [["all", "All", 24], ["you", "Needs you", 3], ["work", "Working", 20], ["done", "Done", 0]];
+    // "Working" holds the episodes in line too: their place in line is the card's detail.
+    const list = P.eps.filter((e) => S.filter === "all" || e.status === S.filter || (S.filter === "work" && e.status === "line"));
     const open = (e) => e.code === "EP006" ? go("episode") : toast(e.code + ": only EP006 opens in this direction.");
     return html`<div class="main">
       <${TopBar} crumbs=${[P.project.title, "Episodes"]}/>
@@ -274,7 +286,7 @@
           <span class="grow"></span><span class="search" style="width:200px">${I("magnifying-glass")}Find an episode…</span><button class="select">Episode order ${I("caret-down")}</button></div>
         <div class="epgrid">${list.map((e) => html`<button class="epcard" onClick=${() => open(e)}>
           <div class="pic">${e.cover ? html`<img src=${e.cover} alt="" loading="lazy"/>` : html`<span class="empty">${e.n < 9 ? "Breakdown done" : "Not started"}</span>`}
-            <span class="code">${e.code}</span>${e.status !== "line" && Status(e.status === "you" ? "you" : "work", e.status === "you" ? "Needs you" : "At work")}
+            <span class="code">${e.code}</span>${e.status !== "line" && Status(e.status)}
             <span class="strip">${e.strip.map((s) => html`<i class=${s}></i>`)}</span></div>
           <b>${e.title}</b><small><span>${e.now}</span><span class="mono">${e.spent ? money(e.spent) : ""}</span></small></button>`)}</div>
       </div><${AgentPanel}/></div></div>`;

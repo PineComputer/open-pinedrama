@@ -196,7 +196,7 @@
       <${StopBanner}/>
       <div class="body"><div class="scrollmain">
         <div class="bar2"><${EpisodeViews}/><span class="grow"></span><${ProjectChips}/></div>
-        <div class="stalebar">${I("warning")}<span><b>4 items are stale.</b> Case file v1 was made from bible b0002, and b0003 is accepted. What was made from it is stale until the agent redraws it.</span><span class="grow"></span><button class="btn sm" onClick=${() => toast("Sent to the agent as a steering note: redo the 4 stale items.")}>Ask the agent to redo them</button></div>
+        <div class="stalebar">${I("warning")}<span><b>4 items are out of date.</b> Case file v1 was made from bible b0002, and b0003 is accepted. What was made from it is out of date until the agent redraws it.</span><span class="grow"></span><button class="btn sm" onClick=${() => toast("Sent to the agent as a steering note: redo the 4 out-of-date items.")}>Ask the agent to redo them</button></div>
         <div class="graphwrap" role="group" aria-label="Graph" tabindex="0"><div class="graph" style=${`width:${24 * 2 + 6 * W + 5 * GX}px;height:${24 * 2 + 4 * H + 3 * GY + 24}px`}>
           ${cols.map((c, i) => html`<span class="gcol" style=${`left:${24 + i * (W + GX)}px`}>${c}</span>`)}
           <svg class="gwires" width="100%" height="100%">${GE.map(([a, b]) => { const A = pos(by[a]), B = pos(by[b]); const x1 = A.x + W, y1 = A.y + H / 2 + 24, x2 = B.x, y2 = B.y + H / 2 + 24, m = (x1 + x2) / 2;
@@ -205,9 +205,9 @@
           ${G.map((n) => { const p = pos(n), rel = n.id === sel.id ? "sel" : up.has(n.id) ? "up" : down.has(n.id) ? "down" : "dim";
             return html`<button class=${"gnode " + rel + (n.stale ? " stale" : "")} style=${`left:${p.x}px;top:${p.y + 24}px;width:${W}px;height:${H}px`} onClick=${() => set({ gsel: n.id })}>
               <span class="gpic">${n.pic ? html`<img src=${n.pic} alt=""/>` : I(n.icon)}</span>
-              <span class="gtxt"><b>${n.t}</b><span class="mono">${n.v}</span>${n.stale ? html`<span class="st stale"><i></i>Stale</span>` : html`<span class="st accepted"><i></i>Accepted</span>`}</span></button>`; })}
+              <span class="gtxt"><b>${n.t}</b><span class="mono">${n.v}</span>${n.stale ? html`<span class="st stale"><i></i>Out of date</span>` : html`<span class="st accepted"><i></i>Accepted</span>`}</span></button>`; })}
         </div></div>
-        <div class="glegend"><span><i class="l up"></i>Made from (upstream)</span><span><i class="l down"></i>Made from it (downstream)</span><span><i class="l stale"></i>Stale</span><span class="subtle">Read-only. Click a version to trace it.</span></div>
+        <div class="glegend"><span><i class="l up"></i>Made from (upstream)</span><span><i class="l down"></i>Made from it (downstream)</span><span><i class="l stale"></i>Out of date</span><span class="subtle">Read-only. Click a version to trace it.</span></div>
       </div>
       <aside class="insp"><div class="ihead"><b>${sel.t}</b><small>${sel.k} · ${sel.v}</small></div>
         <div class="iscroll">
