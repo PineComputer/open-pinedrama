@@ -137,12 +137,12 @@ sections 16 and 17) <sup>[1](#ref-1)</sup>; [D16](decisions.md#d16-2026-10-30--t
 ```mermaid
 flowchart TB
   subgraph Homes
-    Script["Drama › Script<br/>screenplay"]
-    Story["Drama › Story<br/>bible, logline, beats"]
-    Assets["Drama › Assets › …<br/>characters, locations, props"]
+    Script["Project › Script<br/>screenplay"]
+    Bible["Project › Bible<br/>logline, tone, episodes"]
+    Assets["Project › Assets › …<br/>characters, locations, props"]
     Episode["Project › Episodes › EPxxx<br/>Canvas"]
     Cut["EPxxx › Cut"]
-    Delivery["Drama › Delivery<br/>accepted cuts"]
+    Delivery["Project › Delivery<br/>accepted cuts"]
     Reviews["Reviews<br/>one queue"]
     Agent["Agent panel"]
   end
@@ -156,7 +156,7 @@ flowchart TB
   Preview["Home's Waiting for you, card pills, Next review"] -.link.-> Reviews
 ```
 
-A drama's Reviews is a filter of the one queue, not a second queue. The old rail Canvas beside the
+A project's Reviews is a filter of the one queue, not a second queue. The old rail Canvas beside the
 drama's own Canvas is the anti-pattern this rule removes. Search (⌘K, later) is the one universal
 finder and lands on homes.
 

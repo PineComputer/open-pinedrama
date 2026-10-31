@@ -52,7 +52,7 @@ flowchart LR
   end
   subgraph Tree["Sidebar: the project's tree"]
     T1[Script]
-    T2[Story]
+    T2[Bible]
     T3["Assets › Characters, Locations, Props"]
     T4["Episodes › EP001…"]
     T5[Delivery]
@@ -71,7 +71,7 @@ flowchart LR
 | Level | VS Code's | Holds |
 |---|---|---|
 | Rail | activity bar | Studio-wide places only: Projects (home), Reviews (every project's queue), Settings. No project's places. Computers and Usage are hidden until they work. |
-| Sidebar | explorer | On Home, projects and shelves. In a project, its tree: Script · Story · Assets (Characters, Locations, Props) · Episodes · Delivery, with the project's Reviews and Out of date. It stops at episodes; segments are in the episode's List. |
+| Sidebar | explorer | On Home, projects and shelves. In a project, its tree: Script · Bible · Assets (Characters, Locations, Props) · Episodes · Delivery, with the project's Reviews and Out of date. It stops at episodes; segments are in the episode's List. |
 | Content | editor | The selected object's home, in the views it has. |
 | Agent panel | panel | The open project's sessions, running and waiting, its decisions, activity and the composer. |
 
@@ -83,7 +83,7 @@ the IA proposal, sections 2, 8.3 and 12 <sup>[1](#ref-1)</sup>.
 | Object | Its home | Places that link to it |
 |---|---|---|
 | Screenplay and its Fountain versions | Project › Script | — |
-| Bible, logline, beats | Project › Story | — |
+| Bible: logline, tone, episodes | Project › Bible ([D61](../decisions.md#d61-2026-10-30--story-is-renamed-bible-as-drama-cli-calls-it)) | — |
 | Character, location, prop, and their versions | Project › Assets › … | an episode canvas's reference node, Lineage, review items |
 | Episode | Project › Episodes › EPxxx, its Canvas ([D66](../decisions.md#d66-2026-10-30--an-episode-is-its-canvas-laid-out-as-drama-clis-export)) | the Episodes board, Home's cards |
 | Segment and its takes | inside its episode: a group on its Canvas | review items, Lineage |
@@ -100,7 +100,7 @@ and 16 <sup>[1](#ref-1)</sup>.
 
 | Scope | Views |
 |---|---|
-| Drama | Script, Story, Assets, Episodes (a board of episode cards), Delivery |
+| Project | Script, Bible, Assets, Episodes (a board of episode cards), Delivery |
 | Episode | **Canvas** alone, in drama-cli's export layout: each segment's group holds its shot list, blocking, storyboards and take, with the shared references it reads, read-only, linking to Assets; its **Cut**. No view switch ([D66](../decisions.md#d66-2026-10-30--an-episode-is-its-canvas-laid-out-as-drama-clis-export); the product keeps List \| Canvas until the port) |
 | An item or version | its detail, with **Lineage** (what it was made from, what was made from it) as a view of the same home, not a peer page |
 

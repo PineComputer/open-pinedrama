@@ -1121,8 +1121,8 @@ timeline
 - **Decision.** The studio is a visualization of drama-cli's work, plus the points where the maker
   decides. Each page maps to drama-cli's stages and records: Script to the screenplay, `screenplay
   validate` and its accepted versions; Bible to `bible`; Assets to `cast`, `scenes` and `props`; an
-  episode's Segments to `breakdown`, the storyboards (line-art, photoreal), references and takes
-  (`shoot`); Cut to `edit`; Reviews to the decisions `accept` records; Out of date to drama-cli's
+  episode's Canvas ([D66](#d66-2026-10-30--an-episode-is-its-canvas-laid-out-as-drama-clis-export)) to
+  `breakdown`, the blocking, the storyboards (line-art, photoreal) and the takes (`shoot`); Cut to `edit`; Reviews to the decisions `accept` records; Out of date to drama-cli's
   staleness. Names follow drama-cli; the studio invents no page, state or data of its own; machinery
   (request specs, prompts) appears only on demand, in an item's detail.
 - **Alternatives.** None recorded.
