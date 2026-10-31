@@ -22,7 +22,7 @@ timeline
   2026-10-23 : D5 pre-production in one session
   2026-10-24 : D6 idle timeouts follow the work : D7 spend shown, never in a goal
   2026-10-29 : D8 phase 1 steers
-  2026-10-30 : D9 design/ is the UI source : D10 tsc gate : D11 mature libraries : D12 real samples in LFS : D13 decisions taken once : D14 credentials stop : D15 Codex review loop : D16 navigation and one home : D17 every take and cut watched : D18 cut editing as an edit spec : D19 TanStack Router : D20 Export by owner : D21 Analyzing and Out of date routes : D22 redo by owner : D23 the asset detail : D24 the cut edit goal : D25 one Submission : D26 crumbs and Back : D27 Reviews : D28 model badge : D29 canvas zoom, inline video : D30 URL rules : D31 agent scope : D32 narrow windows : D33 review options : D34 Episodes filters : D35 every element cites its ground : D36 Delivery is the cuts' home : D37 a picked node zooms : D38 shared redo after release : D39 a take plays on its node : D40 where a stop shows : D41 Script is the screenplay's home : D42 Story and Assets apart : D43 stable sample ids : D44 the cut leaves the switch : D45 samples' own screenplays : D46 Project
+  2026-10-30 : D9 design/ is the UI source : D10 tsc gate : D11 mature libraries : D12 real samples in LFS : D13 decisions taken once : D14 credentials stop : D15 Codex review loop : D16 navigation and one home : D17 every take and cut watched : D18 cut editing as an edit spec : D19 TanStack Router : D20 Export by owner : D21 Analyzing and Out of date routes : D22 redo by owner : D23 the asset detail : D24 the cut edit goal : D25 one Submission : D26 crumbs and Back : D27 Reviews : D28 model badge : D29 canvas zoom, inline video : D30 URL rules : D31 agent scope : D32 narrow windows : D33 review options : D34 Episodes filters : D35 every element cites its ground : D36 Delivery is the cuts' home : D37 a picked node zooms : D38 shared redo after release : D39 a take plays on its node : D40 where a stop shows : D41 Script is the screenplay's home : D42 Story and Assets apart : D43 stable sample ids : D44 the cut leaves the switch : D45 samples' own screenplays : D46 Project : D47 a draft's changed base : D48 the List's ?version
 ```
 
 ## D1. 2026-10-22 · A desktop app on Electron
@@ -776,6 +776,33 @@ timeline
   is too abstract, because the whole studio makes dramas*), relayed by master.
 - **Recorded in.** Commits 69aa244 (rail, sidebar, crumbs, switcher, files, errors), 26fc1e7, 88b76c7
   and 22ee328; master's note to the docs, 30 October 2026.
+
+## D47. 2026-10-30 · A draft whose base changed is kept and decided on, never sent as is
+- **Context.** While the maker drafts a review, the agent can return a newer version of an item
+  (the IA proposal's Conflict flow, section 15) <sup>[3](#ref-3)</sup>.
+- **Decision.** Each drafted review item records its base, the files it showed when the draft
+  began. When a newer version arrives the draft is kept and offers Compare, Keep drafting and
+  Discard; Send is refused until the maker has resolved it. The engine does not check the base
+  itself yet.
+- **Alternatives.** Applying the draft to the newer version silently.
+- **Grounds.** Codex's round 3, Conflict; master's decision; design for failure
+  ([design principles](design-principles.md#9-design-for-failure)).
+- **Consequences.** The cut's edit keeps the same rule in the engine (D24).
+- **Words.** None recorded.
+- **Recorded in.** Commit b0187fa.
+
+## D48. 2026-10-30 · The Episode List shows the version a link names
+- **Context.** A link to an older version (from a review or Lineage) landed on the List showing the
+  newest one.
+- **Decision.** The List reads `?version`: the pressed tile shows the linked version and says "the
+  current is …"; On Canvas, Lineage and the crumbs keep it.
+- **Alternatives.** None recorded.
+- **Grounds.** Codex's round 3, fix 3; always clear what you act on
+  ([design principles](design-principles.md#3-always-clear-what-you-act-on)).
+- **Consequences.** [D30](#d30-2026-10-30--urls-are-validated-against-the-drama-the-current-object-comes-from-the-route)'s
+  `?item` gains a version.
+- **Words.** None recorded.
+- **Recorded in.** Commits fd99ca1 and 6b35cc7.
 
 ## References
 
