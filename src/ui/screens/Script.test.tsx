@@ -47,7 +47,7 @@ describe("Script", () => {
       ["v1", "false"],
     ]);
     expect(within(versions).getByText(/accepted in your words: “Yes, this is my script\.”/)).toBeInTheDocument();
-    expect(screen.getByRole("tab")).toHaveTextContent("screenplay.fountainv2Read-only");
+    expect(document.querySelector(".edtab")).toHaveTextContent("screenplay.fountainv2Read-only");
   });
 
   it("shows the version picked in its history, and the URL names it (D48)", async () => {
@@ -58,7 +58,7 @@ describe("Script", () => {
     await user.click(await screen.findByRole("button", { name: "v1" }));
     expect(await screen.findByText("INT. TENEMENT FLAT - MORNING #1-1#")).toBeInTheDocument();
     expect(href(router)).toBe("/d/d1/script?item=screenplay&version=v1");
-    expect(screen.getByRole("tab")).toHaveTextContent("v1");
+    expect(document.querySelector(".edtab")).toHaveTextContent("v1");
   });
 
   it("shows the maker's original as it is, line breaks kept", async () => {

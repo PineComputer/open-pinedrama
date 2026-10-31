@@ -31,6 +31,6 @@ test("a maker uploads one screenplay, chooses a preset and starts", async ({ pag
   const decision = page.getByRole("group", { name: /^Your decision on v\d+$/ });
   await expect(decision.getByRole("button", { name: "Accept" })).toBeInViewport();
   await expect(decision.getByRole("button", { name: "Send back" })).toBeVisible();
-  await expect(page.getByRole("tab")).toContainText("screenplay.fountain");
+  await expect(page.locator(".edtab")).toContainText("screenplay.fountain");
   expect(await newProblems(page)).toEqual([]);
 });

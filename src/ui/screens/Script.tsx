@@ -195,7 +195,7 @@ function ScriptBody({ dramaId, data, ep, rewriting }: { dramaId: string; data: S
         {/* One editor surface, VS Code's way: the open file as a tab, its actions as icon buttons (Apple HIG: a tooltip and a name). */}
         <section className="editor" aria-label={t("step.script")}>
           <div className="edbar">
-            <div className="edtab" role="tab" aria-selected="true">
+            <div className="edtab">
               <Icon name={view === "original" ? "file-text" : view === "compare" ? "square-half" : "film-strip"} className="ic" />
               <b>{view === "compare" ? `${original?.name ?? ""} ↔ screenplay.fountain` : view === "original" ? (original?.name ?? "") : "screenplay.fountain"}</b>
               {view !== "original" && shown && <span className="tag">{shown.version}</span>}
