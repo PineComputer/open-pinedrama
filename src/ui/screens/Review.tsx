@@ -18,7 +18,7 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { homeLink, placeLink, useRoute } from "../place.ts";
 import { standing as stageStanding } from "./Canvas.tsx";
 import { Still } from "../Still.tsx";
-import { DocumentView, Pinboard, isDocument, isImage, isVideo, useShotList, useSize, useText, variantLabel } from "../viewing.tsx";
+import { DocumentView, Pinboard, formatRatio, isDocument, isImage, isVideo, useShotList, useSize, useText, variantLabel } from "../viewing.tsx";
 import { specBeside, specFacts } from "../../shared/spec.ts";
 import type { ProjectView } from "../../shared/project.ts";
 
@@ -640,7 +640,7 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
         <div className="screen" ref={stage}>
           {file && isImage(file) && <Pinboard key={file.id} file={file} notes={earlier ? (item?.asked ?? []) : (draft?.notes ?? [])} draft={!earlier && pending?.fileId === file.id ? pending : undefined} space={space} onPin={pin} />}
           {playing && (
-            <MediaController id={controller} className="player">
+            <MediaController id={controller} className="player" style={{ aspectRatio: formatRatio(drama.data?.format) }}>
               <video
                 slot="media"
                 ref={video}

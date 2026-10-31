@@ -12,6 +12,15 @@ type T = ReturnType<typeof useT>["t"];
 export const isImage = (file: FileItem) => file.type.startsWith("image/");
 export const isVideo = (file: FileItem) => file.type.startsWith("video/");
 
+/**
+ * A player's box at the project's picture ratio, from its format as the maker gave it ("9:16, 480p"): the box is the
+ * frame, and the video in it is contained, never cropped (design/studio.css, .player).
+ */
+export function formatRatio(format: string | undefined): string | undefined {
+  const match = format?.match(/^\s*(\d+(?:\.\d+)?)\s*:\s*(\d+(?:\.\d+)?)/);
+  return match ? `${match[1]} / ${match[2]}` : undefined;
+}
+
 export function variantLabel(file: FileItem, t: T): string {
   if (file.kind === "blocking") return t("review.variant.blocking");
   if (file.kind === "frame") return t("review.variant.frame");

@@ -339,7 +339,10 @@ input.search:focus { border-color: var(--text-primary); }
 .stage { flex: 1; min-width: 0; display: flex; flex-direction: column; min-height: 0; }
 .screen { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; gap: 20px; padding: 20px; }
 .player { height: 100%; max-height: 640px; aspect-ratio: 9/16; position: relative; border-radius: 12px; overflow: hidden; background: #000; box-shadow: 0 0 0 1px var(--border); }
-.player video { width: 100%; height: 100%; object-fit: cover; }
+/* The box is the project's frame (9:16 here; the studio sets it from the format); the video is contained, never
+   cropped, and fullscreen pillarboxes the whole frame (the UA fills the screen with the fullscreen element). */
+.player video { width: 100%; height: 100%; object-fit: contain; }
+.player:fullscreen { max-height: none; border-radius: 0; box-shadow: none; }
 .player .tag2 { position: absolute; left: 10px; top: 10px; font: 600 11px var(--font-mono); padding: 3px 7px; border-radius: 5px; background: rgba(0,0,0,.55); color: #fff; }
 .player .bigplay { position: absolute; inset: 0; display: grid; place-items: center; border: 0; background: none; cursor: pointer; }
 .player .bigplay i { width: 60px; height: 60px; border-radius: 50%; background: #fff; color: #000; display: grid; place-items: center; }

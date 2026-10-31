@@ -7,6 +7,7 @@ import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { CutPlan, FileItem } from "../../shared/types.ts";
 import { CutViewer, EDITING, WATCH_ONLY, alignedLines, cutLines, cutRows } from "./CutViewer.tsx";
+import { formatRatio } from "../viewing.tsx";
 
 const cut = (cutPlan?: CutPlan): FileItem => ({
   id: 7,
@@ -153,5 +154,16 @@ describe("CutViewer", () => {
   it("says what is wrong when the cut's segment list doesn't read", () => {
     const { page } = view(cut({ error: "cut.json lists no clips" }));
     expect(page.getByText("The cut's segment list doesn't read: cut.json lists no clips")).toBeInTheDocument();
+  });
+});
+
+describe("the player's frame", () => {
+  // The box is the project's frame and the video is contained in it (design/studio.css, .player): a 9:16 project's
+  // vertical take is never cropped, in the room or fullscreen.
+  it("is the project's picture ratio from its format", () => {
+    expect(formatRatio("9:16, 480p")).toBe("9 / 16");
+    expect(formatRatio("16:9, 720p")).toBe("16 / 9");
+    expect(formatRatio(undefined)).toBeUndefined();
+    expect(formatRatio("480p")).toBeUndefined();
   });
 });

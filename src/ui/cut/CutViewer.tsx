@@ -19,6 +19,7 @@ import SrtParser from "srt-parser-2";
 import type { CutClip, FileItem, Note } from "../../shared/types.ts";
 import { Icon } from "../icons.tsx";
 import { useT } from "../i18n.ts";
+import { formatRatio } from "../viewing.tsx";
 
 type TimelineRow = EditData["editorData"][number];
 type TimelineAction = TimelineRow["actions"][number];
@@ -228,7 +229,7 @@ export function CutViewer({ file, tag, notes = [], onTime, videoRef, actions = W
   return (
     <section className="stage" aria-label={t("review.stage")}>
       <div className="screen">
-        <MediaController id={controller} className="player" {...(fps ? { keyboardforwardseekoffset: String(1 / fps), keyboardbackwardseekoffset: String(1 / fps) } : {})}>
+        <MediaController id={controller} className="player" style={{ aspectRatio: formatRatio(format) }} {...(fps ? { keyboardforwardseekoffset: String(1 / fps), keyboardbackwardseekoffset: String(1 / fps) } : {})}>
           <video slot="media" ref={(node) => { video.current = node; setElement(node); }} src={file.url} playsInline preload="metadata" onTimeUpdate={(event) => moved(event.currentTarget.currentTime)} onSeeked={(event) => moved(event.currentTarget.currentTime)} />
           <span className="tag2">{tag}</span>
           <MediaPlayButton {...joined} className="bigplay" noTooltip>
