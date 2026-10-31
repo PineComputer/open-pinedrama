@@ -263,9 +263,12 @@ function QuestionRoom({ review, done }: { review: ReviewView; done: () => void }
                     </button>
                   </span>
                 ) : (
-                  <button className="link small" disabled={upload.busy || send.busy} onClick={() => picker.current?.click()}>
-                    {upload.busy ? t("review.addingPicture") : t("review.attachFile")}
-                  </button>
+                  <>
+                    <button className="link small" disabled={upload.busy || send.busy} onClick={() => picker.current?.click()}>
+                      {upload.busy ? t("review.addingPicture") : t("review.attachFile")}
+                    </button>
+                    <span className="quiet small">{t("review.attachHint")}</span>
+                  </>
                 )}
                 <input
                   ref={picker}

@@ -6,7 +6,7 @@ import { mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { MAX_ATTACHMENT, MAX_ATTACHMENT_MIB } from "../shared/types.ts";
+import { MAX_ATTACHMENT, MAX_ATTACHMENT_MIB, MAX_REFERENCE, MAX_REFERENCE_MIB } from "../shared/types.ts";
 import type { CastCard, ChatView, DeliveryRow, DramaView, EpisodePage, FileItem, ReviewSummary, ReviewView, ScriptPage, SessionRecord, SubmissionView } from "../shared/types.ts";
 
 const DATA = mkdtempSync(path.join(tmpdir(), "studio-flow-"));
@@ -103,10 +103,10 @@ async function scenario(title: string) {
   const screenplay = new FormData();
   screenplay.set("file", new File(["EPISODE 1\nLin enters. Wei waits."], "full-screenplay.pdf", { type: "application/pdf" }));
   const attached = await call<FileItem>("POST", `/api/dramas/${id}/references`, screenplay);
-  // The route refuses what a Computer can't be handed, and says that limit, the one constant.
+  // The route keeps main's limit, and says it from its constant.
   const huge = new FormData();
-  huge.set("file", new File([new Uint8Array(MAX_ATTACHMENT + 1)], "huge.pdf", { type: "application/pdf" }));
-  await expect(call("POST", `/api/dramas/${id}/references`, huge)).rejects.toThrow(`huge.pdf is over ${MAX_ATTACHMENT_MIB} MiB`);
+  huge.set("file", new File([new Uint8Array(MAX_REFERENCE + 1)], "huge.pdf", { type: "application/pdf" }));
+  await expect(call("POST", `/api/dramas/${id}/references`, huge)).rejects.toThrow(`huge.pdf is over ${MAX_REFERENCE_MIB} MiB`);
   await expect(
     call("POST", `/api/reviews/${rewrite.id}/decision`, { submissionId: crypto.randomUUID(), items: [], words: "Yes, this is my script.", verdict: "approve", file: attached.id }),
   ).rejects.toThrow("Only an answer to the agent's question");
@@ -296,6 +296,14 @@ expect(archive.includes(Buffer.from(`${title}/EP002`))).toBe(false);
 
 describe("a drama in replay", () => {
   it("goes from a screenplay to accepted cuts, two episodes at a time", () => scenario("Test drama"), 30_000);
+
+  it("refuses a screenplay over what a Computer can be handed, saying that limit from its constant", async () => {
+    const form = new FormData();
+    form.set("title", "Too large");
+    form.set("screenplay", "0");
+    form.append("files", new File([new Uint8Array(MAX_ATTACHMENT + 1)], "huge.pdf", { type: "application/pdf" }));
+    await expect(call("POST", "/api/dramas", form)).rejects.toThrow(`huge.pdf is over ${MAX_ATTACHMENT_MIB} MiB`);
+  });
 
   // Pine's agent may stop for the maker by ending its turn, files and question in its summary,
   // rather than asking: the same reviews open, and each decision goes as the session's next run.

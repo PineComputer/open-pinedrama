@@ -327,6 +327,8 @@ describe("a question the agent asks because drama-cli refused", () => {
     accept(`/api/dramas/${review.dramaId}/references`, stored);
     accept(`/api/reviews/${review.id}/decision`, review);
     await renderAt(<Review id={review.id} />);
+    // The references route's limit, from its constant (main's 20 MiB).
+    expect(await screen.findByText("A screenplay or a picture, up to 20 MiB.")).toBeInTheDocument();
     await user.upload(await screen.findByLabelText("Attach a file"), new File(["%PDF-1.4"], "full-screenplay.pdf", { type: "application/pdf" }));
     expect(await screen.findByText("full-screenplay.pdf")).toBeInTheDocument();
     // Words are still required.

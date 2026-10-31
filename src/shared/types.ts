@@ -4,9 +4,12 @@ import type { Refusal, StopKind } from "./refusal.ts";
 
 export type Mode = "pine" | "replay";
 
-/** Pine's limit on a file given to a session or returned by a turn, in MiB: the one number every upload and message uses. */
+/** Pine's limit on a file given to a session or returned by a turn, in MiB: New drama's upload and attach() keep to it. */
 export const MAX_ATTACHMENT_MIB = 64;
 export const MAX_ATTACHMENT = MAX_ATTACHMENT_MIB * 1024 * 1024;
+/** The references route's limit, in MiB (main's, f6ec20c): a note's picture, or the file an answer carries. */
+export const MAX_REFERENCE_MIB = 20;
+export const MAX_REFERENCE = MAX_REFERENCE_MIB * 1024 * 1024;
 
 /** What went wrong, for the UI to say in the maker's language (src/engine/errors.ts). */
 export type ErrorCode =
@@ -19,6 +22,7 @@ export type ErrorCode =
   | "sample-unknown"
   | "length-missing"
   | "file-too-large"
+  | "reference-too-large"
   | "not-found"
   | "episode-busy"
   | "episode-not-running"
