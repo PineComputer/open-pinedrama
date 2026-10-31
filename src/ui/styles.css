@@ -86,7 +86,8 @@ h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 700; lett
 
 /* Drama: a rail of sections beside the work */
 /* The rail keeps to its track: a long title wraps rather than widening it over the work. */
-.work-head { display: flex; align-items: center; gap: 12px 20px; flex-wrap: wrap; margin-bottom: 18px; }
+/* A drama page's blocks each bring the page's 16px edge, as the design's do (.filters, .epgrid; shell.css, .ds-workin). */
+.work-head { display: flex; align-items: center; gap: 12px 20px; flex-wrap: wrap; margin-bottom: 18px; padding: 0 16px; }
 .work-head h1 { font: 700 var(--type-heading-size)/1.3 var(--font-display); }
 .work-head .facts { color: var(--text-muted); }
 .tune { display: grid; gap: 18px; padding: 18px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
@@ -115,7 +116,7 @@ h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 700; lett
 .sheet-foot { margin-top: 16px; color: var(--text-muted); font-size: 13.5px; }
 
 /* Setup */
-.setup-panel { display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 48px; align-items: start; }
+.setup-panel { display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 48px; align-items: start; padding: 0 16px 40px; }
 .steps { display: grid; }
 .step { display: grid; grid-template-columns: 34px 1fr; gap: 4px 0; padding: 14px 0; border-bottom: 1px solid var(--border); color: var(--text-muted); }
 .step .n { font: 400 20px/1 var(--font-sans); font-variant-numeric: oldstyle-nums; }
@@ -147,7 +148,7 @@ h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 700; lett
 .ask.ended { opacity: 0.6; }
 
 /* Crew */
-.crew { display: grid; border-top: 1px solid var(--text-primary); }
+.crew { display: grid; margin: 0 16px; border-top: 1px solid var(--text-primary); }
 .machine { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 20px; padding: 18px 0; border-bottom: 1px solid var(--border); }
 .machine .name { font: 500 20px/1.1 var(--font-sans); }
 .machine .state { margin-top: 4px; font-size: 13px; color: var(--text-muted); }
