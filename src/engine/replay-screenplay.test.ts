@@ -68,7 +68,9 @@ describe("a sample's screenplay", () => {
     await fleet.createComputer(credentials);
     const ref = { id } as Parameters<ReplayFleet["createSession"]>[0];
     const session = await fleet.createSession(ref);
-    await fleet.wait(ref, session, (await fleet.run(ref, session, `Make a vertical short drama from my screenplay. Title: ${STORIES["double-life-rewrite"].en.title}.`, "k")).turnId, 60_000);
+    const turn = await fleet.wait(ref, session, (await fleet.run(ref, session, `Make a vertical short drama from my screenplay. Title: ${STORIES["double-life-rewrite"].en.title}.`, "k")).turnId, 60_000);
+    // The agent asks about this screenplay, with drama-cli's own counts, not The Stepmother's.
+    expect(turn.question).toContain("6 episodes, 9 scenes");
     const read = async (file: string) => new TextDecoder().decode(new Uint8Array(await new Response(await fleet.openFile(ref, session, file)).arrayBuffer()));
     const validate = JSON.parse(await read("drama/screenplay/v1/validate.json")) as { rewrite: boolean; lines: { to: number[] }[] };
     expect(validate.rewrite).toBe(true);

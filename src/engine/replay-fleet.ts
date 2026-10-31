@@ -298,6 +298,8 @@ const words = (s: Story) => {
     cast: s.cast.map((c) => ({ id: c.id, name: c.name })),
     episodes: s.episodes.map((e) => e.title),
     rewriting: ["Reading the screenplay and the notes", "Rewriting the screenplay into Fountain", "Checking the rewrite with drama-cli"],
+    askRewriteCounted: (episodes: number, scenes: number) =>
+      `I rewrote your screenplay into Fountain, the form drama-cli reads, and drama-cli checked it: ${episodes} episodes, ${scenes} scenes, ready. Please read screenplay/v1/review.md, then accept the rewrite in your own words, or tell me what to change. Do you accept the rewrite?`,
     askRewrite: "I rewrote your screenplay into Fountain, the form drama-cli reads, and drama-cli checked it: 2 episodes, 2 scenes, ready. Its words are unchanged, but two headings changed form: drama-cli takes DAY or NIGHT, so MORNING became DAY and DUSK became NIGHT, and the title line went. Please read screenplay/v1/review.md, then accept the rewrite in your own words, or tell me what to change. Do you accept the rewrite?",
     reading: ["Checking every character's age and gender"],
     askAge: `The screenplay doesn't give ${b.name}'s age. How old is he, and should he read older than ${a.name}?`,
@@ -355,6 +357,8 @@ const words = (s: Story) => {
     cast: s.cast.map((c) => ({ id: c.id, name: c.name })),
     episodes: s.episodes.map((e) => e.title),
     rewriting: ["阅读剧本和备注", "把剧本改写成 Fountain", "用 drama-cli 检查改写"],
+    askRewriteCounted: (episodes: number, scenes: number) =>
+      `我把你的剧本改写成了 drama-cli 读的 Fountain 格式，drama-cli 检查通过：${episodes} 集、${scenes} 场，可以开始。请看 screenplay/v1/review.md，然后用你自己的话确认改写，或者告诉我要改什么。你接受这个改写吗？`,
     askRewrite: "我把你的剧本改写成了 drama-cli 读的 Fountain 格式，drama-cli 检查通过：2 集、2 场，可以开始。台词和动作一字没改，但有两处场景标题改了格式：drama-cli 只认日或夜，所以“清晨”写成了日，“傍晚”写成了夜，标题行也去掉了。请看 screenplay/v1/review.md，然后用你自己的话确认改写，或者告诉我要改什么。你接受这个改写吗？",
     reading: ["核对每个角色的年龄和性别"],
     askAge: `剧本里没有写${b.name}的年龄。他多大？要不要显得比${a.name}年长？`,
@@ -487,6 +491,23 @@ const rewriteFiles = (story: Story, set: string, lang: Lang): Out[] =>
     : ["screenplay.fountain", "review.md", "validate.json", "original.txt"].flatMap((name) => sample(set, `drama/screenplay/v1/${name}`) ?? []);
 
 /**
+ * The agent's question at the rewrite, about this sample's own screenplay: The Stepmother's own words for The Stepmother (its sets
+ * are the languages); for another sample, the counts drama-cli's validate.json states where the sample carries one, else the counts
+ * of the screenplay replay wrote from its episodes. Never another sample's numbers.
+ */
+function rewriteQuestion(story: Story, set: string, lang: Lang, files: Out[], say: { askRewrite: string; askRewriteCounted: (episodes: number, scenes: number) => string }): string {
+  if (set === lang) return say.askRewrite;
+  const validate = files.find((file) => file.path.endsWith("/validate.json"));
+  if (validate) {
+    const { summary } = JSON.parse(new TextDecoder().decode(validate.bytes)) as { summary: { episodes: number; scenes: number } };
+    return say.askRewriteCounted(summary.episodes, summary.scenes);
+  }
+  // Counted as screenplayOf numbers them: a new scene wherever the heading changes.
+  const scenes = story.episodes.reduce((n, episode) => n + episode.segments.filter((segment, i) => i === 0 || segment.heading !== episode.segments[i - 1].heading).length, 0);
+  return say.askRewriteCounted(story.episodes.length, scenes);
+}
+
+/**
  * The screenplay a sample drama starts from, as the maker would upload it: the sample's own original (samples.json,
  * inputs/screenplay), or for a sample with no screenplay of its own the one written from its episodes.
  */
@@ -574,7 +595,8 @@ function setupScript(lang: Lang, preset: string, story: { id: string; story: Sto
     // The first stop: the screenplay rewritten into drama-cli's Fountain, with its review, for the maker to accept; any answer goes on.
     if (stage === "start") {
       stage = "rewrite";
-      return { progress: say.rewriting, files: rewriteFiles(story.story, set, lang), ask: say.askRewrite };
+      const files = rewriteFiles(story.story, set, lang);
+      return { progress: say.rewriting, files, ask: rewriteQuestion(story.story, set, lang, files, say) };
     }
     if (stage === "rewrite") {
       stage = "asked";
