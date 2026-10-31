@@ -1,9 +1,9 @@
 import { MediaController, MediaPlayButton, MediaTimeRange } from "media-chrome/react";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
-import type { FileItem, ItemDecision, Note, ReviewItem, ReviewView, Verdict } from "../../shared/types.ts";
+import type { DramaView, FileItem, ItemDecision, Note, ReviewItem, ReviewView, Verdict } from "../../shared/types.ts";
 import { api, clock, useAction, useResource } from "../api.ts";
 import { type TKey, useT } from "../i18n.ts";
-import { errorText, fileKind, subjectLabel, useNames } from "../labels.ts";
+import { errorText, fileKind, moneyText, subjectLabel, useNames } from "../labels.ts";
 import { Button } from "../components/Button.tsx";
 import { Segmented } from "../components/Segmented.tsx";
 import { StatusChip } from "../components/StatusChip.tsx";
@@ -252,7 +252,7 @@ function QuestionRoom({ review, done }: { review: ReviewView; done: () => void }
 const WATCHED = 0.98;
 
 function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
-  const { t } = useT();
+  const { t, lang } = useT();
   const names = useNames(review.dramaId);
   const items = review.reviewItems;
   const open = review.state === "open";
@@ -301,6 +301,9 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
     const n = chains.findIndex((chain) => chain.segments.includes(key));
     return n < 0 ? undefined : t("review.sceneLine", { n: n + 1, heading: chains[n].sceneHeading });
   };
+  // What the episode has spent so far, as the design's inspector shows it under a take.
+  const drama = useResource<DramaView>(review.episode ? `/api/dramas/${review.dramaId}` : null, [`drama:${review.dramaId}`]);
+  const spent = drama.data?.episodeRows.find((row) => row.code === review.episode)?.spent;
   // The storyboards beside each take: the episode's files, read once.
   const episodeFiles = useResource<FileItem[]>(review.episode ? `/api/dramas/${review.dramaId}/files?episode=${review.episode}` : null, [`drama:${review.dramaId}`]);
 
@@ -593,23 +596,23 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
           {spec && (spec.seconds !== undefined || spec.ratio || spec.model) && (
             <div className="isec">
               <h4>{t(takes ? "review.take" : "review.image")}</h4>
-              <dl className="ds-kv">
+              <dl className="kv">
                 {spec.seconds !== undefined && (
                   <>
                     <dt>{t("review.length")}</dt>
                     <dd>{t("segments.seconds", { n: spec.seconds })}</dd>
                   </>
                 )}
-                {(spec.ratio || spec.resolution) && (
+                {(spec.ratio || spec.resolution || spec.model) && (
                   <>
                     <dt>{t("review.spec")}</dt>
-                    <dd>{[spec.ratio, spec.resolution].filter(Boolean).join(" · ")}</dd>
+                    <dd>{[spec.ratio, spec.resolution, spec.model].filter(Boolean).join(" · ")}</dd>
                   </>
                 )}
-                {spec.model && (
+                {spent && spent.total > 0 && (
                   <>
-                    <dt>{t("review.model")}</dt>
-                    <dd className="mono">{spec.model}</dd>
+                    <dt>{t("review.episodeSoFar")}</dt>
+                    <dd title={t("spent.about")}>{moneyText(spent, t, lang)}</dd>
                   </>
                 )}
               </dl>
@@ -626,9 +629,12 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
           {shots && (
             <div className="isec">
               <h4>{t("review.shotList")}</h4>
-              <ol className="ds-shots">
-                {shots.map((shot) => (
-                  <li key={shot}>{shot}</li>
+              <ol className="shots">
+                {shots.map((shot, n) => (
+                  <li key={shot}>
+                    <span>{String(n + 1).padStart(2, "0")}</span>
+                    {shot}
+                  </li>
                 ))}
               </ol>
             </div>
@@ -723,7 +729,9 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
           {takes && (
             <div className="isec">
               <h4>{t("review.whoDecides")}</h4>
-              <p className="quiet small">{t("review.whoDecidesTakes")}</p>
+              <p className="muted" style={{ margin: 0, fontSize: 12.5, lineHeight: 1.55 }}>
+                {t("review.whoDecidesTakes")}
+              </p>
             </div>
           )}
           <Returned files={review.otherFiles} />

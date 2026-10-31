@@ -168,7 +168,6 @@ h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 700; lett
 .pin { position: absolute; transform: translate(-50%, -50%); width: 24px; height: 24px; border-radius: 50%; background: var(--warning-text); color: var(--surface); font: 700 12px/24px var(--font-sans); text-align: center; box-shadow: 0 0 0 3px color-mix(in srgb, var(--shadow-base) 70%, transparent); pointer-events: none; animation: drop 0.35s var(--ease) both; }
 .pin.draft { background: transparent; border: 2px dashed var(--surface); }
 @keyframes drop { from { opacity: 0; transform: translate(-50%, -70%); } }
-.ds-shots { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; font: 400 15px/1.45 var(--font-sans); color: var(--text-secondary); }
 .notes { display: grid; gap: 10px; }
 .note { display: grid; grid-template-columns: 24px minmax(0, 1fr) auto; gap: 10px; align-items: start; }
 .note .dot { width: 22px; height: 22px; border-radius: 50%; background: var(--warning-text); color: var(--surface); font: 700 11.5px/22px var(--font-sans); text-align: center; }
@@ -261,7 +260,6 @@ h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 700; lett
 .sheet .frame, .queue .thumb, .reel .frame { position: relative; overflow: hidden; }
 .ended-asks { margin-top: 48px; display: grid; gap: 12px; }
 .ended-asks .queue { opacity: 0.8; }
-.asked-before .ds-shots li { color: var(--text-primary); }
 .asked-before .at { color: var(--text-muted); font-variant-numeric: tabular-nums; }
 /* The screenplay's first lines, set on the manuscript once it is dropped in. */
 .format-tip { margin-top: 22px; font-size: 13px; color: var(--text-muted); }
@@ -375,9 +373,6 @@ h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 700; lett
    transparent over the design's rail and the watched (.seen) bar. */
 .track media-time-range { position: absolute; inset: 0; width: 100%; height: 26px; background: none; --media-control-background: transparent; --media-control-hover-background: transparent; --media-range-padding: 0; --media-range-track-height: 4px; --media-range-track-border-radius: 999px; --media-range-track-background: transparent; --media-range-bar-color: var(--text-primary); --media-time-range-buffered-color: transparent; --media-range-thumb-width: 12px; --media-range-thumb-height: 12px; --media-range-thumb-background: var(--text-primary); --media-preview-time-text-shadow: none; }
 /* A version's facts as label and value, as the pro direction's inspector lists a take's (.kv). */
-.ds-kv { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 6px 10px; margin: 0; font-size: 12.5px; }
-.ds-kv dt { color: var(--text-muted); }
-.ds-kv dd { margin: 0; color: var(--text-primary); overflow-wrap: anywhere; }
 .ds-board-thumb img { width: 100%; border-radius: var(--radius-medium); border: 1px solid var(--border); background: #fff; }
 .ds-note-input { width: 100%; min-height: 64px; border-radius: var(--radius-large); border: 1px solid var(--border-input); background: var(--surface); color: var(--text-primary); padding: 8px 10px; font: 13px/1.5 var(--font-sans); resize: vertical; outline: none; }
 .ds-note-input:focus { border-color: var(--text-primary); }

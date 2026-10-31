@@ -19,8 +19,7 @@ describe("the review room for storyboards", () => {
     answer(spec.url, { provider: "seedream", model: "seedream-5", prompt: "A pier at dawn.", aspect_ratio: "9:16", size: "2K" });
     open();
     const facts = (await screen.findByRole("heading", { level: 4, name: "Picture" })).parentElement as HTMLElement;
-    expect(within(facts).getByText("9:16 · 2K")).toBeInTheDocument();
-    expect(within(facts).getByText("seedream-5")).toBeInTheDocument();
+    expect(within(facts).getByText("9:16 · 2K · seedream-5")).toBeInTheDocument();
   });
 
   it("accepts the item in view with A and moves on to the next", async () => {
