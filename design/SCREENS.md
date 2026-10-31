@@ -16,7 +16,7 @@ Each screen has two separate answers. Ported is neither of them.
 - **Prototype anchor:** the screen as the prototype opens it (`index.html`, the "Screen" switch in its
   Prototype controls: `S.screen`), and the function in `screens.js` or `app.js` that draws it.
 
-Head: 429cf32 (2026-10-30 21:38 PDT). design:diff on 4600 at 429cf32 against `design/` at the same head (14 screens, the
+Head: 429cf32 (2026-10-30 21:34 PDT). design:diff on 4600 at 429cf32 against `design/` at the same head (14 screens, the
 prototype's controls folded away for the shots); the pairs were not yet read one by one, so "Open differences" lists only what
 the QA journeys found. Behaviour: the three IA journeys recorded on 4600 at a1b820e
 (`short-drama-runs/design-references/ia-draft/journeys/README.md`). The e2e specs run on pine-dev (box-ci); see its newest
