@@ -355,6 +355,7 @@ function Plane({ drama }: { drama: DramaView }) {
     <NodePanel
       dramaId={drama.id}
       item={node.data.item}
+      look={node.data.stage.where.look ?? node.data.stage.where.time}
       work={node.data.work}
       files={files.data ?? []}
       facts={{

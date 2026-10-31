@@ -9,7 +9,7 @@ import { collapseAllNested, defaultStyles, JsonView } from "react-json-view-lite
 import "react-json-view-lite/dist/index.css";
 import type { Item } from "../../shared/pipeline.ts";
 import { specBeside, specFacts } from "../../shared/spec.ts";
-import type { EpisodePage, FileItem, Receipt } from "../../shared/types.ts";
+import type { CastCard, EpisodePage, FileItem, Receipt } from "../../shared/types.ts";
 import { useResource } from "../api.ts";
 import { Tabs } from "radix-ui";
 import { Button, IconButton } from "../components/Button.tsx";
@@ -54,7 +54,7 @@ function useJson(file: FileItem | undefined): unknown {
  * The pictures a spec's request sends, in order: the request's Image 1, Image 2… are its
  * reference images in the order of `content` (reference/byteplus/docs/seedance-2-5-prompt-guide.md,
  * binding references in the text prompt). A picture drama-cli sent from the project (`@<path>`)
- * is matched to the returned file at the same project path; one sent from the asset library
+ * (`@assets/…`, or an older run's absolute `@/…/assets/…`) is matched to the returned file at the same project path; one sent from the asset library
  * (`asset://`) has no file here.
  */
 function sentPictures(spec: unknown, files: FileItem[]): (FileItem | undefined)[] {
@@ -63,10 +63,9 @@ function sentPictures(spec: unknown, files: FileItem[]): (FileItem | undefined)[
     .filter((part) => part?.type === "image_url")
     .map((part) => {
       const url = part.image_url?.url ?? "";
-      const at = url.search(/\/(assets|episodes)\//);
-      if (!url.startsWith("@") || at < 0) return undefined;
-      const tail = url.slice(at);
-      return files.find((file) => file.path.endsWith(tail));
+      // drama-cli writes a project picture relative to the project (@assets/…) or, from an older run, by its absolute path (@/…/assets/…).
+      const tail = url.startsWith("@") ? url.slice(1).match(/(?:^|\/)((?:assets|episodes)\/.+)$/)?.[1] : undefined;
+      return tail ? files.find((file) => file.path.endsWith(`/${tail}`)) : undefined;
     });
 }
 
@@ -93,12 +92,30 @@ function Prompt({ text, pictures }: { text: string; pictures: (FileItem | undefi
   );
 }
 
-/** The versions of a segment the stops returned, newest first, each with what the maker decided. */
-function Versions({ dramaId, item }: { dramaId: string; item: Item }) {
+/** The kind of cast card that holds a shared reference's versions (engine/browse.ts castCards). */
+const CARD = { character: "look", location: "location", prop: "prop" } as const;
+
+/**
+ * The versions of the item the stops returned, newest first, each with what the maker decided: a shared reference's from
+ * its cast card (by its look, or a place's time of day, "" for its plate), a segment's takes and storyboards from its
+ * episode's page, an episode's cut from that page's cuts.
+ */
+function Versions({ dramaId, item, look }: { dramaId: string; item: Item; look?: string }) {
   const { t } = useT();
-  const page = useResource<EpisodePage>(`/api/dramas/${dramaId}/episodes/${item.episode}`, [`drama:${dramaId}`]);
-  const segment = page.data?.segments.find((one) => one.key === item.subject);
-  const rows: { what: string; receipt: Receipt }[] = [...(segment?.takes ?? []).map((receipt) => ({ what: t("canvas.versionTake"), receipt })), ...(segment?.boards ?? []).map((receipt) => ({ what: t("canvas.versionBoard"), receipt }))];
+  const shared = item.kind === "character" || item.kind === "location" || item.kind === "prop";
+  const cast = useResource<CastCard[]>(shared ? `/api/dramas/${dramaId}/cast` : null, [`drama:${dramaId}`]);
+  const page = useResource<EpisodePage>(shared ? null : `/api/dramas/${dramaId}/episodes/${item.episode}`, [`drama:${dramaId}`]);
+  let rows: { what: string; receipt: Receipt }[];
+  if (shared) {
+    const card = cast.data?.find((one) => one.kind === CARD[item.kind as keyof typeof CARD] && one.subject === item.subject);
+    const which = look ?? (item.kind === "character" ? "base" : "");
+    rows = [...(card?.looks.find((one) => one.look === which)?.versions ?? [])].reverse().map((receipt) => ({ what: t("canvas.version"), receipt }));
+  } else if (item.kind === "cut") {
+    rows = (page.data?.cuts ?? []).map((receipt) => ({ what: t("canvas.versionCut"), receipt }));
+  } else {
+    const segment = page.data?.segments.find((one) => one.key === item.subject);
+    rows = [...(segment?.takes ?? []).map((receipt) => ({ what: t("canvas.versionTake"), receipt })), ...(segment?.boards ?? []).map((receipt) => ({ what: t("canvas.versionBoard"), receipt }))];
+  }
   if (!rows.length) return <p className="quiet">{t("canvas.noVersions")}</p>;
   return (
     <ol className="versions">
@@ -128,6 +145,7 @@ export interface PanelFacts {
 export function NodePanel({
   dramaId,
   item,
+  look,
   work,
   files,
   facts,
@@ -138,6 +156,8 @@ export function NodePanel({
 }: {
   dramaId: string;
   item: Item;
+  /** A character's look (S1…) or a place's time of day (Night), as the lineage names the stage; none for a base look or a plate. */
+  look?: string;
   work?: FileItem;
   files: FileItem[];
   facts: PanelFacts;
@@ -153,7 +173,6 @@ export function NodePanel({
   const raw = useJson(specFile);
   const request = useJson(beside(work, files, "request.json"));
   const pictures = sentPictures(raw, files);
-  const segment = item.episode !== undefined && item.kind !== "cut";
   // The model in its own pill, then the request's settings in one, as design/'s node panel (after liblib.tv's composer).
   const settings = [spec?.ratio, spec?.resolution, spec?.seconds !== undefined ? t("canvas.seconds", { n: spec.seconds }) : undefined, spec?.seed !== undefined ? t("canvas.seedPill", { n: spec.seed }) : undefined].filter((part): part is string => part !== undefined);
   const pills = [spec?.model, settings.length ? settings.join(" · ") : undefined].filter((pill): pill is string => pill !== undefined);
@@ -169,7 +188,7 @@ export function NodePanel({
       <Tabs.Root defaultValue="prompt" className="ntabs">
         <Tabs.List className="utabs">
           <Tabs.Trigger value="prompt">{t("canvas.tab.prompt")}</Tabs.Trigger>
-          {segment && <Tabs.Trigger value="versions">{t("canvas.tab.versions")}</Tabs.Trigger>}
+          <Tabs.Trigger value="versions">{t("canvas.tab.versions")}</Tabs.Trigger>
           <Tabs.Trigger value="request">{t("canvas.tab.request")}</Tabs.Trigger>
           <Tabs.Trigger value="details">{t("canvas.tab.details")}</Tabs.Trigger>
         </Tabs.List>
@@ -195,11 +214,9 @@ export function NodePanel({
             <p className="subtle">{t("canvas.noSpec")}</p>
           )}
         </Tabs.Content>
-        {segment && (
-          <Tabs.Content value="versions">
-            <Versions dramaId={dramaId} item={item} />
-          </Tabs.Content>
-        )}
+        <Tabs.Content value="versions">
+          <Versions dramaId={dramaId} item={item} look={look} />
+        </Tabs.Content>
         <Tabs.Content value="request">
           {request && typeof request === "object" ? <JsonView data={request as object} shouldExpandNode={collapseAllNested} style={JSON_STYLE} aria-label={t("canvas.tab.request")} /> : <p className="subtle">{t("canvas.noSpec")}</p>}
         </Tabs.Content>

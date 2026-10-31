@@ -223,6 +223,8 @@ describe("a picked item's hand actions and panel (P6.8)", () => {
       { type: "text", text: "Image 1: 林's look.\nShe walks in, as in Image 1, past Image 2." },
       { type: "image_url", image_url: { url: "@/Users/maker/drama/assets/characters/lin/v1/image-1.jpg" }, role: "reference_image" },
       { type: "image_url", image_url: { url: "asset://asset-1" }, role: "reference_image" },
+      // As drama-cli writes a project picture today: relative to the project.
+      { type: "image_url", image_url: { url: "@assets/characters/lin/v1/image-1.jpg" }, role: "reference_image" },
     ];
     server.use(http.get("/f/10", () => HttpResponse.text(JSON.stringify({ model: "sd25", content, duration: 12, ratio: "9:16", resolution: "480p", seed: 42 }))));
     server.use(http.get("/f/11", () => HttpResponse.text(JSON.stringify({ model: "sd25", content, duration: 12 }))));
@@ -253,7 +255,8 @@ describe("a picked item's hand actions and panel (P6.8)", () => {
     expect(chips[0].querySelector("img")).toHaveAttribute("src", "/f/9?v=1");
     expect(chips[2].querySelector("img")).toBeNull();
     // Above the prompt, the pictures it names, numbered as its Image N; one from the asset library keeps its number with no picture.
-    expect([...panel.querySelectorAll(".refs li b")].map((number) => number.textContent)).toEqual(["1", "2"]);
+    expect([...panel.querySelectorAll(".refs li b")].map((number) => number.textContent)).toEqual(["1", "2", "3"]);
+    expect(panel.querySelector(".refs li:nth-child(3) img")).toHaveAttribute("src", "/f/9?v=1");
     expect(panel.querySelector(".refs li:nth-child(2) .none")).not.toBeNull();
   });
 
@@ -311,6 +314,21 @@ describe("a picked item's hand actions and panel (P6.8)", () => {
     const { user, panel } = await panelOf(/^Take · t01/);
     await user.click(within(panel).getByRole("tab", { name: "Details" }));
     expect(within(panel).getByRole("tabpanel")).toHaveTextContent(/Used by—Reads.*Storyboard · line-art · v1.*林/);
+  });
+
+  it("lists a look's versions from its cast card, newest first, each with what the maker decided", async () => {
+    withSpec();
+    answer("/api/dramas/d1/cast", [{ kind: "look", subject: "lin", episodes: [], looks: [{ look: "base", versions: [
+      { turnId: "u1", files: [{ ...look, version: "v1" }], review: { reviewId: "r1", kind: "looks", state: "answered", verdict: "revise", notes: [{ text: "Older, please." }] } },
+      { turnId: "u2", files: [{ ...look, version: "v2" }], review: { reviewId: "r2", kind: "looks", state: "answered", verdict: "approve", notes: [] } },
+    ] }] }]);
+    render(<Canvas drama={drama("working")} />);
+    const { user, panel } = await panelOf(/^林/);
+    await user.click(within(panel).getByRole("tab", { name: "Versions" }));
+    await waitFor(() => expect(panel.querySelectorAll(".versions > li")).toHaveLength(2));
+    const [newest, older] = [...panel.querySelectorAll(".versions > li")];
+    expect(newest).toHaveTextContent(/Version · v2.*Approved/);
+    expect(older).toHaveTextContent(/Version · v1.*Sent back.*Older, please\./);
   });
 
   it("lists the segment's versions, each with what the maker decided", async () => {
