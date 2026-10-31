@@ -349,8 +349,8 @@ latest.
 
 **Rule.** The agent runs drama-cli between stops. It stops for every take, every cut, the photoreal
 storyboard, any red line, a cap, the screenplay rewrite, and questions. The maker steers by
-verdicts, notes, messages, Stop and Resume, and the cut's edit spec, and never generates by hand in
-phase 1. Every outcome is a version with its records, reviewable before it is used.
+verdicts on the exact item, messages in the agent chat, Stop and Resume, and the cut's edit spec
+([D70](decisions.md#d70-2026-10-30--the-ui-decides-the-chat-acts)), and never generates by hand in phase 1. Every outcome is a version with its records, reviewable before it is used.
 
 **Source.** The IA proposal, section 9 <sup>[1](#ref-1)</sup>;
 [D8](decisions.md#d8-2026-10-29--phase-1-steers),

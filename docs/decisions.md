@@ -1264,7 +1264,8 @@ timeline
   to the agent beside its chat.
 - **Decision.** The UI keeps: Accept and Send back on the exact item and version, each with one
   sentence (the maker's words or a reason), every decision also shown in the agent conversation of
-  the session it goes to; Stop and Resume; Reconcile ("Check again") where an outcome is unknown, so
+  the session it goes to; Stop and Resume, and the run controls of their class (Episodes' Retry,
+  Rehearse for a stopped setup; master's call); Reconcile ("Check again") where an outcome is unknown, so
   nothing is paid for twice; the cut's editor (timeline and edit spec) with the chat; and starting a
   project (upload, preset, budget), export and download, navigation and viewing. Everything else
   goes through the agent chat: redo and remake buttons (Out of date's rows and groups, the shared
@@ -1292,6 +1293,8 @@ timeline
   "成片剪辑保留界面编辑，还是也改成聊天？" (*does the cut keep editing in the UI, or move to the chat too?*),
   merecdesperez44323-lab answered "界面编辑 + 聊天" (*editing in the UI, plus the chat*).
 - **Recorded in.** `short-drama-runs/qa/UI_ACTIONS_RULE.md`; master's note to the docs, 30 October 2026;
+  808365f (work-04: the conversation shows each decision from its submission record; the review
+  keeps Accept and Send back; "Accept with note" and the agent panel's "Shoot seg03 again" removed);
   d7b8509 (the cut's Accept, work-07); 0331bf4 (the Canvas, work-06: the node bar, renamed from the steer bar,
   keeps Review into the item's own review (D69), Lineage and Download; Send back, Note, the steering box and
   its sends, Resume and the disabled Upload and Generate leave it; one line points to the agent: "To redo or

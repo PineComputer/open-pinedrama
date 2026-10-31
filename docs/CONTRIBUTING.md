@@ -10,10 +10,12 @@ a UI change starts in `design/` ([D9](decisions.md#d9-2026-10-30--design-is-the-
 - Branch from `redesign/studio`, in a worktree of your own. Rebase onto it; don't merge it in.
 - One purpose per pull request. Say in it which plan item it does (M5, P6.2, ...).
 - Read [TESTING.md](TESTING.md): every item starts with a test that fails.
-- Phase 1 steers only. Canvas, Graph and the cut viewer read the work and offer Review, Send back
-  with a reason, Note and Lineage. Nothing is generated, drawn or prompted by hand: the canvas
-  draws each node's Generate and Upload disabled, saying "Phase 2", and their handlers do nothing
-  ([D8](decisions.md#d8-2026-10-29--phase-1-steers)).
+- The UI decides; the chat acts ([D70](decisions.md#d70-2026-10-30--the-ui-decides-the-chat-acts)). A screen keeps Accept and Send back on the exact
+  item and version (each with one sentence), Stop and Resume and the other run controls (Retry,
+  Rehearse), Reconcile, the cut's editor, starting a project, export, and viewing (Review into an
+  item's own review, Lineage, Download). Redo, note, steer, regenerate and "ask to change" go to the
+  agent chat; where such a button stood, at most one line points to it. Nothing is generated, drawn
+  or prompted by hand ([D8](decisions.md#d8-2026-10-29--phase-1-steers)).
   The maker decides every take and every cut.
 
 ## Where things live
