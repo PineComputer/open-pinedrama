@@ -136,6 +136,23 @@ describe("the agent panel", () => {
     expect(screen.queryByRole("textbox", { name: "Message the agent" })).toBeNull();
   });
 
+  it("shows a message that went to a new session with where it stands: waiting, stopped with the project, or why it failed (D71)", async () => {
+    engine();
+    answer("/api/dramas/d1/messages", [
+      { id: "m1", scope: "setup", text: "Make Ethan older.", state: "stopped", sessionId: "", at: "2026-10-30T10:00:00Z" },
+      { id: "m2", scope: "setup", text: "Rename the bar.", state: "failed", sessionId: "s9", at: "2026-10-30T10:01:00Z", reason: "The Computer didn't start: out of credits." },
+      { id: "m3", scope: "setup", text: "Add a prop: the ring.", state: "queued", sessionId: "", at: "2026-10-30T10:02:00Z" },
+      { id: "m4", scope: "setup", text: "Done already.", state: "done", sessionId: "s8", at: "2026-10-30T09:00:00Z" },
+    ]);
+    await renderAt(<AgentPanel drama={drama} onCollapse={() => {}} />);
+    const said = await screen.findByRole("region", { name: "Conversation" });
+    expect(within(said).getByText("Make Ethan older.").parentElement).toHaveTextContent("Stopped with the project: send it again to retry");
+    expect(within(said).getByText("Rename the bar.").parentElement).toHaveTextContent("The Computer didn't start: out of credits.");
+    expect(within(said).getByText("Add a prop: the ring.").parentElement).toHaveTextContent("Waiting for a new setup session to start");
+    // One its session took is that session's chat's.
+    expect(within(said).queryByText("Done already.")).toBeNull();
+  });
+
   it("shows the engine's refusal in its words, and keeps the message", async () => {
     const user = userEvent.setup();
     engine();

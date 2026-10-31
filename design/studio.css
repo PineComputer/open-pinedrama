@@ -241,6 +241,8 @@ input.search:focus { border-color: var(--text-primary); }
 .msg.you { background: var(--surface-container-high); margin-left: 40px; }
 /* A decision in the conversation: one line per item decided (AgentPanel, Decided). */
 .msg.decided p { margin: 0; } .msg.decided p + p { margin-top: 4px; }
+/* A message to a new session, with where it stands under it (AgentPanel). */
+.msg.you p { margin: 0; } .msg.you small { display: block; margin-top: 4px; font-size: 11.5px; }
 .asec .msg + .msg { margin-top: var(--space-sm); }
 .nextchips { display: flex; flex-wrap: wrap; gap: 6px; }
 .nextchips button { height: 28px; padding: 0 12px; border-radius: var(--radius-pill); border: 1px solid var(--border-input); background: var(--surface); color: var(--text-secondary); font-size: 12px; cursor: pointer; }

@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { recentWork, type WorkItem } from "../../shared/facts.ts";
 import { nameOf, type Names } from "../../shared/names.ts";
 import { type ProjectView, takesInFlight } from "../../shared/project.ts";
-import type { ChatView, DecisionRecord, DramaView, FileItem, ReviewSummary, SessionView, SubmissionView } from "../../shared/types.ts";
+import type { ChatView, DecisionRecord, DramaView, FileItem, MessageView, ReviewSummary, SessionView, SubmissionView } from "../../shared/types.ts";
 import { ago, api, ApiError, useResource } from "../api.ts";
 import { Submission, useSubmission } from "../components/Submission.tsx";
 import { Dialog } from "../components/Dialog.tsx";
@@ -171,6 +171,10 @@ export function AgentPanel({ drama, episode, onCollapse }: { drama: DramaView; e
   const steps = (chat.data?.messages ?? []).filter((message) => message.kind === "activity").slice(-7);
   // The conversation, the one log (D70): what the maker said or decided and what the agent said, the newest last;
   // the studio's own goals and the agent's steps are not part of it.
+  // The scope's messages that went to a new session (D71, GET /api/dramas/:id/messages): while one waits, works, or
+  // ended without one, it shows here with where it stands; once its session has it, that session's chat does.
+  const sent = useResource<MessageView[]>(`/api/dramas/${id}/messages?scope=${encodeURIComponent(scope)}`, [`drama:${id}`]);
+  const pending = (sent.data ?? []).filter((message) => message.state !== "done").slice(-5);
   const conversation = (chat.data?.messages ?? []).filter((message) => (message.kind === "input" && !message.brief) || message.kind === "answer" || message.kind === "progress" || message.kind === "question" || message.kind === "result").slice(-8);
   return (
     <aside className="agent" id="agent" aria-label={t("agent.label")}>
@@ -268,7 +272,7 @@ export function AgentPanel({ drama, episode, onCollapse }: { drama: DramaView; e
             </div>
           </section>
         )}
-        {conversation.length > 0 && (
+        {(conversation.length > 0 || pending.length > 0) && (
           <section className="asec" aria-label={t("agent.conversation")}>
             {conversation.map((message) =>
               message.decision ? (
@@ -281,6 +285,20 @@ export function AgentPanel({ drama, episode, onCollapse }: { drama: DramaView; e
                 <Markdown key={message.id} text={message.text} links={links} className="msg" />
               ),
             )}
+            {pending.map((message) => (
+              <div key={message.id} className="msg you">
+                <p>{message.text}</p>
+                <small className={message.state === "failed" ? "error" : "muted"}>
+                  {message.state === "queued"
+                    ? t("agent.msgQueued", { who: fresh(scope) })
+                    : message.state === "working"
+                      ? t("agent.msgWorking")
+                      : message.state === "stopped"
+                        ? t("agent.msgStopped")
+                        : (message.reason ?? t("agent.msgFailed"))}
+                </small>
+              </div>
+            ))}
           </section>
         )}
         {recent.length > 0 && (
