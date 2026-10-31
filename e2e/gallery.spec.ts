@@ -5,7 +5,7 @@ import { TOKEN } from "../playwright.config.ts";
 import { newProblems } from "./axe.ts";
 
 // design/SPEC.md's components, as the gallery shows them.
-const COMPONENTS = ["Button", "IconButton", "StatusChip", "Segmented", "Tabs", "FilterChip", "Dialog, Menu, Tooltip, Toast", "EmptyState", "StopBanner", "StopCard", "BudgetMeter"];
+const COMPONENTS = ["Button", "IconButton", "StatusChip", "Segmented", "Tabs", "FilterChip", "Dialog, Menu, Tooltip, Toast", "EmptyState", "StopControl", "StopBanner", "StopCard", "BudgetMeter"];
 
 test("the gallery shows every component, and axe finds nothing", async ({ page }) => {
   await page.goto(`/api/open?ticket=${TOKEN}`);
@@ -31,7 +31,7 @@ test("its dialog and menu work by keyboard", async ({ page }) => {
   await page.goto(`/api/open?ticket=${TOKEN}`);
   await page.goto("/dev/gallery");
   await page.getByRole("button", { name: "Open a dialog" }).click();
-  const dialog = page.getByRole("alertdialog", { name: "Stop the drama?" });
+  const dialog = page.getByRole("alertdialog", { name: "Pause production of Bride on Bail?" });
   await expect(dialog).toBeVisible();
   expect(await newProblems(page, ".dialog")).toEqual([]);
   await page.keyboard.press("Escape");

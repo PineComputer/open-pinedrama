@@ -15,6 +15,8 @@ import { type Status, StatusChip } from "../components/StatusChip.tsx";
 import { StopCard } from "../components/StopCard.tsx";
 import { Tooltip } from "../components/Tooltip.tsx";
 import { Icon } from "../icons.tsx";
+import type { DramaView } from "../../shared/types.ts";
+import { StopControl } from "../shell/TopBar.tsx";
 import { applyTheme, type ThemeChoice, themeChoice } from "../theme/theme.ts";
 
 // The three kinds of stop, in drama-cli's words (shared/refusal.ts).
@@ -25,6 +27,15 @@ const STOPS: Refusal[] = [
 ];
 
 const STATUSES: Status[] = ["work", "line", "you", "accepted", "back", "stale", "redline", "failed"];
+
+// StopControl's states (D74), drawn by the product's own component: running with two Computers working, pausing while
+// they stop, and paused. Only the fields it reads.
+const computer = (state: string) => ({ id: state, label: "PC-1", state, sessions: [{ id: `s-${state}`, state: "open", waiting: false }] });
+const PAUSE_STATES = [
+  { status: "production", crew: [computer("running"), { ...computer("running"), id: "running-2" }] },
+  { status: "stopped", crew: [computer("stopping")] },
+  { status: "stopped", crew: [] },
+].map((drama, n) => ({ ...drama, id: `gallery-${n}`, title: "Bride on Bail" }) as unknown as DramaView);
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
@@ -55,8 +66,7 @@ export default function Gallery() {
         <button type="button" className="btn">Secondary</button>
         <button type="button" className="btn ghost">Ghost</button>
         <button type="button" className="btn sm danger">
-          <Icon name="stop" className="ic" />
-          Stop drama
+          Stop the episode
         </button>
         <button type="button" className="btn lg primary">
           <Icon name="upload" className="ic" />
@@ -144,7 +154,14 @@ export default function Gallery() {
         <button type="button" className="btn" onClick={() => setDialog(true)}>
           Open a dialog
         </button>
-        <Dialog open={dialog} onOpenChange={setDialog} title="Stop the drama?" description="Every Computer it has running stops. What they made stays." confirm={{ label: "Stop it", danger: true, run: () => toast("Stopped.") }} />
+        <Dialog
+          open={dialog}
+          onOpenChange={setDialog}
+          title="Pause production of Bride on Bail?"
+          description="The 2 Computers working stop now; their work stops at its last saved pack. Nothing new starts and nothing more is billed. Nothing is deleted. Resume carries on from where each episode stopped."
+          cancel="Keep working"
+          confirm={{ label: "Pause production", run: () => toast("Paused.") }}
+        />
         <Menu label="More" items={[{ label: "Lineage", run: () => toast("Lineage.") }, { label: "Download", run: () => toast("Downloaded.") }, { label: "Not now", run: () => undefined, disabled: true }]} />
         <Tooltip text="Spent of budget">
           <button type="button" className="btn">
@@ -162,19 +179,25 @@ export default function Gallery() {
         </EmptyState>
       </Section>
 
+      <Section title="StopControl">
+        {PAUSE_STATES.map((drama) => (
+          <div key={drama.id} style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <StopControl drama={drama} />
+          </div>
+        ))}
+      </Section>
+
       <Section title="StopBanner">
-        <div style={{ flex: "1 1 100%", display: "grid", gap: 8 }}>
-          <div className="banner" role="status">
-            <Icon name="circle-notch" className="ic" />
-            <b>Stopping — keep the app open</b>
-          </div>
-          <div className="banner done">
-            <b>Bride on Bail is stopped</b>
-            <span className="grow">Nothing runs and nothing is spent until you resume.</span>
-            <button type="button" className="btn sm primary">
-              Resume
-            </button>
-          </div>
+        {/* Only a stop the engine made for a reason of its own (Drama.tsx); a pause by the maker has none (D74). */}
+        <div className="banner done" style={{ flex: "1 1 100%" }}>
+          <b>Bride on Bail is stopped</b>
+          <span className="grow">Your Pine project doesn't offer the drama skill yet, so nothing was started. Ask Pine to turn it on for the project, then try again.</span>
+          <button type="button" className="btn sm">
+            Rehearse instead
+          </button>
+          <button type="button" className="btn sm primary">
+            Resume
+          </button>
         </div>
       </Section>
 
