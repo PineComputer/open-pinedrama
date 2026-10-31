@@ -72,4 +72,10 @@ describe("replay's status report", () => {
     const cut = episode({ segments, boards: { seg01: v1, seg02: v1 }, takes: { seg01: { count: 1, accepted: true }, seg02: { count: 1, accepted: true } }, cut: { current: "v1", accepted: "v1" } });
     expect(cut.cut).toMatchObject({ accepted: "v1", usable: true });
   });
+
+  it("reports each first-frame reference the recording returns, per segment folder, as drama-cli does (stages.py:4679)", () => {
+    const state = read({ preset: "", bible: "v1", looks: { lin: v1 }, references: {}, episodes: { EP001: { segments, boards: { seg01: v1, seg02: v1 }, firstFrames: { seg01: "v1" } } } });
+    expect(state.episodes.EP001.firstFrames.seg01).toMatchObject({ current: "v1", accepted: "v1", usable: true });
+    expect(state.episodes.EP001.firstFrames.seg02).toBeUndefined();
+  });
 });

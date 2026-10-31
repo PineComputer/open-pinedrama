@@ -246,6 +246,9 @@ const inLanguage = (d: DramaData, lang: Lang): Story => ({
 /** The number an item is first drawn at: its version in the project the sample comes from, else 1 (v1, t01). */
 const firstOf = (s: Story, path: string) => Number((s.versions[path] ?? "v1").slice(1));
 
+/** A first-frame reference among a sample's extras: its segment and version (drama-cli's episodes/<EP>/first_frame_reference/<seg>/<vN>/). */
+const FIRST_FRAME = /^episodes\/[^/]+\/first_frame_reference\/([^/]+)\/(v\d+)\//;
+
 /** The sample's own files a stop returns beside what replay draws (DramaData.extras), each picture with what drama-cli keeps beside it. */
 const extrasOf = (s: Story, set: string, stop: string): Out[] =>
   (s.extras[stop] ?? []).flatMap((rel) => {
@@ -790,6 +793,9 @@ export function episodeScript(code: string, lang: Lang, preset: string, story: {
       ...madeOf(story.story, episode, code),
       boards: Object.fromEntries(ids.map((id) => [id, { current: `v${boardVersion.get(id)}`, accepted: boardAccepted.has(id) ? `v${boardAccepted.get(id)}` : null }])),
     };
+    // The first-frame references the recording returns with the storyboards (extrasOf), at their versions.
+    const frames = started ? (story.story.extras[code] ?? []).map((rel) => FIRST_FRAME.exec(rel)).filter((found) => found !== null) : [];
+    if (frames.length) own.firstFrames = Object.fromEntries(frames.map(([, segment, version]) => [segment, version]));
     if (takes.size) own.takes = Object.fromEntries([...takes].map(([id, count]) => [id, { count, accepted: takeAccepted.has(id), board: `v${shotFrom.get(id)}` }]));
     if (stage === "cut" || stage === "done") own.cut = { current: `v${cut}`, accepted: cutAccepted ? `v${cut}` : null };
     const accepted = (path: string): Made => ({ current: `v${firstOf(story.story, path)}`, accepted: `v${firstOf(story.story, path)}` });

@@ -15,6 +15,13 @@ async function firstStop(goal: string) {
 }
 
 describe("a sample drama from a real run", () => {
+  it("reports the first-frame references its storyboards stop returns, as drama-cli's status does", async () => {
+    const { turn, read } = await firstStop("Make episode EP004 of False Intentions, True Love (r2). Title: False Intentions, True Love (r2).");
+    expect(turn.files.some((file) => file.path.includes("/first_frame_reference/seg01/"))).toBe(true);
+    const status = JSON.parse(await read("handoff/status.json")) as { episodes: Record<string, { first_frame_reference: Record<string, { accepted: string | null }> }> };
+    expect(status.episodes.EP004.first_frame_reference.seg01).toMatchObject({ accepted: "v1" });
+  }, 60_000);
+
   it("is played by its own title, apart from another run of the same screenplay", async () => {
     // double-life-ep001's EP001 has five segments; paper-vows' (another run of the screenplay) three.
     const r1 = await firstStop("Make episode EP001 of The Double Life of My Billionaire Husband (r1). Title: The Double Life of My Billionaire Husband (r1).");

@@ -22,6 +22,8 @@ export interface EpisodeMade {
   uses?: Record<string, string[]>;
   /** Each segment's storyboards, once drawn, by segment: line-art and photoreal share a version; its blocking reference is accepted with them. */
   boards?: Record<string, Made>;
+  /** Each segment's first-frame reference the recording returns with its storyboards (DramaData.extras), by segment: its version, accepted as its blocking is. */
+  firstFrames?: Record<string, string>;
   /** The takes made of each segment, t01 first, whether its newest is accepted, and the storyboard version it was shot from. */
   takes?: Record<string, { count: number; accepted: boolean; board?: string }>;
   cut?: Made;
@@ -73,7 +75,8 @@ function episode(code: string, made: EpisodeMade, references: Record<string, Ref
     edit: stage(`${base}/edit`, made.cut ?? none),
     video_prompts: { current: takes ? "v1" : null, stale: [] },
     blocking: made.boards ? each((segment) => stage(`${base}/blocking/${segment}`, accepted("v1"))) : {},
-    first_frame_reference: {},
+    // drama-cli reports a first-frame reference per segment folder, as it does a blocking (v0.7.5 drama_cli/stages.py:4679).
+    first_frame_reference: made.boards && made.firstFrames ? Object.fromEntries(Object.entries(made.firstFrames).map(([segment, version]) => [segment, stage(`${base}/first_frame_reference/${segment}`, accepted(version))])) : {},
     multi_panel_storyboard: made.boards
       ? each((segment) => Object.fromEntries((made.styles ?? STYLES).map((style) => [style, stage(`${base}/multi_panel_storyboard/${segment}/${style}`, made.boards![segment])])))
       : {},
