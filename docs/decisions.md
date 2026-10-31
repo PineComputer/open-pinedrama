@@ -1001,9 +1001,9 @@ timeline
 - **Decision.** Replay marks a stage out of date when a selection it pinned has changed, in
   drama-cli's words ("Changed selection: …/accepted.json", "…/current.json"), on its own exports and
   the samples'. A sample's recorded history may redraw a storyboard after its take
-  (`boardsAfterTakes` in dramas.json): Bride on Bail's EP006 redraws seg03's storyboard as v2 once
-  its takes review is answered, whatever the answer, so seg03's take and what was made from it are
-  out of date. The event is scripted; no answer's text is read for intent.
+  (`boardsAfterTakes` in dramas.json): Bride on Bail's EP006 redraws seg04's storyboard as v2 when
+  its first takes review accepts seg04's take, so seg04's take t01 and what was made from it are out
+  of date while EP006 waits at its second takes review. The event is scripted; no answer's text is read for intent.
 - **Alternatives.** None recorded.
 - **Grounds.** drama-cli's freshness rule: a version is stale when a selection it pinned changed
   (short_drama `doc/drama-cli/design.md:76`, its D85, `drama_cli/artifacts.py:234`); master's rule:
@@ -1011,7 +1011,7 @@ timeline
 - **Consequences.** Out of date lists EP006's take under its episode; its Redo this goes to EP006's
   session, and while that session waits on a review it offers "Open the review".
 - **Words.** None recorded.
-- **Recorded in.** Commit c93a909; work-05's note to the docs.
+- **Recorded in.** Commits c93a909 and a1b820e; work-05's notes to the docs.
 
 ## References
 
