@@ -207,7 +207,7 @@
       ? html`<div class="banner" role="status">${I("circle-notch")}<b>Stopping — keep the app open</b><span>Waiting on EP003's 4 takes in flight. They are recorded when they come back, never shot again.</span></div>`
       : html`<div class="banner done"><b>${P.project.title} is stopped</b><span class="grow">No agent turn runs and nothing new is sent until you resume.</span><button class="btn sm primary" onClick=${resume}>Resume</button></div>`;
   }
-  /* The episode's head over its Canvas, the episode's one page (D-entry pending: merecdesperez44323-lab dropped the
+  /* The episode's head over its Canvas, the episode's one page (D66: merecdesperez44323-lab dropped the
      Segments table, "还不如就直接canvas"): its code and title, its script, and its cut, an object with its own home. */
   function EpisodeHead() {
     const ep = P.eps[5];
