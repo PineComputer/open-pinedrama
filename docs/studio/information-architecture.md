@@ -73,7 +73,7 @@ flowchart LR
 | Rail | activity bar | Studio-wide places only: Projects (home), Reviews (every project's queue), Settings. No project's places. Computers and Usage are hidden until they work. |
 | Sidebar | explorer | On Home, projects and shelves. In a project, its tree: Script · Bible · Assets (Characters, Locations, Props) · Episodes · Delivery, with the project's Reviews and Out of date. It stops at episodes; segments are in the episode's List. |
 | Content | editor | The selected object's home, in the views it has. |
-| Agent panel | panel | The open project's sessions, running and waiting, its decisions, activity and the composer. |
+| Agent panel | panel | The conversation with one session: its status line, a picker of the open sessions with Watch and Stop, the conversation, and the line to it (9579a5a). Decisions live in Reviews. |
 
 Sources: [D16](../decisions.md#d16-2026-10-30--the-navigation-a-studio-wide-rail-the-dramas-tree-one-home-per-object);
 the IA proposal, sections 2, 8.3 and 12 <sup>[1](#ref-1)</sup>.
@@ -142,8 +142,8 @@ compatibility routes (the IA proposal, sections 8.7 and 14.1) <sup>[1](#ref-1)</
 ## The agent's scope
 
 The agent panel follows the episode in view by default, "Following EP006"; the maker can pin it,
-"Pinned to EP007", and a pinned session moves its activity, messages and composer together. The
-composer always names its recipient. It has one form on every drama page, a right sidebar like
+"Pinned to EP007", and the status line, the conversation and the line move together. The line
+always names its recipient. It has one form on every drama page, a right sidebar like
 VS Code's Secondary Side Bar: open beside the page, which narrows (Canvas and the rooms included),
 or collapsed to the ball; the maker's choice is kept, and ⌥⌘B / Ctrl+Alt+B toggles it (D32 as
 amended; merecdesperez44323-lab asked for one form). Source: the IA proposal, sections
