@@ -172,11 +172,11 @@ export function AgentPanel({ drama, episode, onCollapse }: { drama: DramaView; e
   const names = project.data?.names ?? null;
   const state = project.data?.state ?? null;
   // The conversation, the one log (D70): what the maker said or decided, what the agent said, and its steps in place, the
-  // newest last; the studio's own goals are not part of it. A step and a message the agent gave in the same words, one
-  // after the other, are one event: shown once, as the step.
+  // newest last; the studio's own goals are not part of it. A step and a message the agent gave in the same words, next to
+  // each other in either order, are one event: shown once, as the step.
   const conversation = (chat.data?.messages ?? [])
     .filter((message) => (message.kind === "input" && !message.brief) || message.kind === "answer" || message.kind === "activity" || message.kind === "progress" || message.kind === "question" || message.kind === "result")
-    .filter((message, n, all) => !(message.kind === "progress" && n > 0 && all[n - 1].kind === "activity" && all[n - 1].text === message.text))
+    .filter((message, n, all) => !(message.kind === "progress" && [all[n - 1], all[n + 1]].some((next) => next?.kind === "activity" && next.text === message.text)))
     .slice(-20);
   const lastStep = conversation.findLast((message) => message.kind === "activity");
   // The newest at the bottom, in view, as chat apps keep it.

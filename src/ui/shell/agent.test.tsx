@@ -119,14 +119,22 @@ describe("the agent panel", () => {
     expect(status).not.toHaveTextContent("after PC-1 stopped");
   });
 
-  it("shows a step and a message the agent gave in the same words, one after the other, once, as the step", async () => {
+  it("shows a step and a message the agent gave in the same words, next to each other in either order, once, as the step", async () => {
     engine();
     const twice = chat("s1", "EP001", "steer");
-    twice.messages.push({ id: 4, kind: "activity", text: "Redrawing seg04's storyboard", at: "2026-10-30T10:03:00Z" }, { id: 5, kind: "progress", text: "Redrawing seg04's storyboard", at: "2026-10-30T10:03:01Z" });
+    // In either order: replay sends the message first, then the step.
+    twice.messages.push(
+      { id: 4, kind: "activity", text: "Redrawing seg04's storyboard", at: "2026-10-30T10:03:00Z" },
+      { id: 5, kind: "progress", text: "Redrawing seg04's storyboard", at: "2026-10-30T10:03:01Z" },
+      { id: 6, kind: "progress", text: "Shooting another take of seg01", at: "2026-10-30T10:04:00Z" },
+      { id: 7, kind: "activity", text: "Shooting another take of seg01", at: "2026-10-30T10:04:01Z" },
+    );
     answer("/api/sessions/s1/chat", twice);
     await renderAt(<AgentPanel drama={drama} episode="EP001" onCollapse={() => {}} />);
     const said = await screen.findByRole("region", { name: "Conversation" });
     expect(await within(said).findAllByText("Redrawing seg04's storyboard")).toHaveLength(1);
+    expect(within(said).getAllByText("Shooting another take of seg01")).toHaveLength(1);
+    expect(within(said).getByText("Shooting another take of seg01").closest(".astep")).not.toBeNull();
   });
 
   it("is the conversation with one session and nothing else: Decisions, Recent work and Next have their own homes", async () => {
