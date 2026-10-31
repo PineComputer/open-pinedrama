@@ -57,6 +57,8 @@ describe("Assets", () => {
     expect(screen.queryByRole("tab")).not.toBeInTheDocument();
     const lin = await screen.findByRole("article", { name: "Lin Xiaoyu" });
     expect(lin.querySelector(".ctxt")).toHaveTextContent(/^Lin Xiaoyuv2$/);
+    // The whole name, never cut: it wraps in the card, and the link carries it as its title too (Codex round 4, F7).
+    expect(within(lin).getByRole("link", { name: "Lin Xiaoyu" })).toHaveAttribute("title", "Lin Xiaoyu");
     expect(within(lin).queryByRole("link", { name: "EP001" })).not.toBeInTheDocument();
     await user.click(within(lin).getByRole("link", { name: "Lin Xiaoyu" }));
     const detail = await screen.findByRole("complementary", { name: "Lin Xiaoyu: versions, state and review" });

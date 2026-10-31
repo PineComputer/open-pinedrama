@@ -40,6 +40,14 @@ describe("the Bible", () => {
     expect(screen.getByRole("heading", { name: "Bible" })).toBeInTheDocument();
   });
 
+  it("shows an episode's seconds rounded for reading, drama-cli's exact est_seconds in its title", async () => {
+    answer("/api/dramas/d1/project", { state: null, sessions: [], problems: [], names: { ...names, seconds: { EP001: 153.75, EP002: 20 } } });
+    await renderAt(<Bible dramaId="d1" />, "/d/d1/bible");
+    const table = within(await screen.findByRole("region", { name: "Episodes" }));
+    const cell = table.getByText("154 s");
+    expect(cell).toHaveAttribute("title", "153.75 s");
+  });
+
   it("lists each episode's title, summary, end hook and seconds, and opens its own beats under it", async () => {
     const user = userEvent.setup();
     engine();

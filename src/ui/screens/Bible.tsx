@@ -104,12 +104,15 @@ export function Bible({ dramaId }: { dramaId: string }) {
                               <span className="mono">{code}</span>
                             </button>
                           </td>
-                          <td>
+                          <td className="ttl">
                             <b>{title}</b>
                           </td>
                           <td className="wrap">{names.summaries[code]}</td>
                           <td className="wrap">{names.endHooks[code]}</td>
-                          <td className="mono">{names.seconds[code]}</td>
+                          {/* drama-cli's est_seconds, the sum of its beats, rounded for reading; the exact value in its title. */}
+                          <td className="num mono" title={names.seconds[code] !== undefined ? `${names.seconds[code]} s` : undefined}>
+                            {names.seconds[code] !== undefined && t("bible.secondsValue", { n: Math.round(names.seconds[code]) })}
+                          </td>
                         </tr>
                         {shown && (
                           <tr className="beatsrow" id={`beats-${code}`}>

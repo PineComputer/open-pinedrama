@@ -84,7 +84,7 @@ function AssetCard({ card, names, dramaId, picked, width, height }: { card: Cast
         {status && <StatusChip status={status} />}
       </div>
       <div className="ctxt">
-        <Link {...open.to} className="grow cardname">
+        <Link {...open.to} className="grow cardname" title={name}>
           <b>{name}</b>
         </Link>
         <span className="mono subtle">{file.version}</span>
