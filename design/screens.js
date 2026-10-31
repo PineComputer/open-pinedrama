@@ -198,7 +198,7 @@
   function BackTo() {
     const f = S.from;
     if (!f) return null;
-    const back = () => { set({ screen: f.screen, sel: f.sel, esel: f.esel, from: null }); try { history.replaceState(null, "", "#" + f.screen); } catch (e) { /* the hash is a convenience */ } };
+    const back = () => { set({ screen: f.screen, sel: f.sel, esel: f.esel, asel: null, from: null }); try { history.replaceState(null, "", "#" + f.screen); } catch (e) { /* the hash is a convenience */ } };
     return html`<button class="btn sm ghost backto" onClick=${back}>${I("arrow-left")}Back to ${f.label}</button>`;
   }
   const GE = [["sp", "bible"], ["bible", "luca"], ["bible", "ethan"], ["bible", "apt"], ["bible", "file"], ["luca", "ep6seg03"], ["ethan", "ep6seg03"], ["apt", "ep6seg03"], ["file", "ep6seg03"], ["ep6seg03", "take"], ["take", "cut"]];

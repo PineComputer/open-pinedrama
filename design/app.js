@@ -551,6 +551,11 @@
     const done = P.takes.filter((t) => S.verdict[t.id] && (S.verdict[t.id] !== "back" || (S.reason[t.id] || "").trim())).length;
     const pct = (S.t / dur) * 100, seen = ((S.maxT[tk.id] || 0) / dur) * 100;
     const needsWords = v === "back" || v === "note";
+    // IA r2 (§16): the room decides; it is no home. A take, its versions and an accepted take live in their segment in
+    // EP006's List, and a character in Assets: the room links there, landing on it, and Back returns to the room.
+    const seg = P.scenes.flatMap((sc) => sc.segs).find((g) => g.id === tk.seg);
+    const inSeg = (id, label) => jump({ screen: "episode", esel: id }, label);
+    const here = "Review · " + tk.seg + " " + tk.take;
     return html`<div class="main">
       <${TopBar} crumbs=${[P.project.title, "EP006", "Takes"]} right=${html`<span class="muted hide-s" style="font-size:12px">${P.takes.length - done} of ${P.takes.length} waiting</span>`}/>
       <${StopBanner}/>
@@ -561,7 +566,7 @@
             <img src=${t.poster} alt=""/><span><b>${t.seg} · ${t.take}</b><small>${t.scene.split(" · ").slice(0, 1)} · ${t.dur} s</small>
             ${S.verdict[t.id] ? Status(S.verdict[t.id] === "accept" ? "accepted" : S.verdict[t.id] === "back" ? "back" : "accepted", S.verdict[t.id] === "accept" ? "Accept" : S.verdict[t.id] === "back" ? "Send back" : "Accept with note") : S.watched[t.id] ? Status("you", "Watched") : Status("you", "Not watched")}</span></button>`)}
           <h3 style="margin-top:14px">Accepted in EP006</h3>
-          <button class="ritem" onClick=${() => toast("seg02 t01 was accepted earlier. Accepted takes open read-only.")}><img src=${"img/cover-ep6.jpg"} alt=""/><span><b>seg02 · t01</b><small>Scene 1 · 15 s</small>${Status("accepted")}</span></button>
+          <button class="ritem" title="Open seg02 in EP006's List" onClick=${() => inSeg("seg02", "Review · EP006 takes")}><img src=${"img/cover-ep6.jpg"} alt=""/><span><b>seg02 · t01</b><small>Scene 1 · 15 s</small>${Status("accepted")}</span></button>
         </nav>
         <section class="stage" aria-label="Stage">
           <div class="screen">
@@ -581,11 +586,13 @@
           </div>
         </section>
         <aside class="insp" aria-label="Inspector">
-          <div class="ihead"><b>EP006 ${tk.seg} · take ${tk.take}</b><small>${tk.scene}</small></div>
+          <div class="ihead"><b>EP006 ${tk.seg} · take ${tk.take}</b><small>${tk.scene}</small>
+            <button class="btn sm" onClick=${() => inSeg(tk.seg, here)}>Open ${tk.seg} in EP006</button></div>
           <div class="iscroll">
             <div class="isec"><h4>What you asked last time</h4><div class="asked">“${tk.prev.said}”</div>
               <button class="prevtake" onClick=${() => set({ showPrev: !prev })}><img src=${tk.prev.poster} alt=""/><span><b class="mono" style="font-size:12px">${tk.prev.take} · sent back by you</b><small class="muted" style="display:block;font-size:11.5px">${prev ? "Showing it on the stage" : "Play it on the stage to compare"}</small></span></button></div>
-            <div class="isec"><h4>Take</h4><dl class="kv"><dt>Length</dt><dd>${tk.dur} s planned · ${tk.dur} s shot</dd><dt>Spec</dt><dd>${P.project.spec}</dd><dt>In frame</dt><dd>${tk.seg === "seg01" ? "Luca Moreno" : "Luca Moreno, Ethan Cole"}</dd><dt>Episode so far</dt><dd title=${SPENT_COVERS}>${money(P.eps[5].spent)} spent</dd></dl></div>
+            <div class="isec"><h4>Take</h4><dl class="kv"><dt>Length</dt><dd>${tk.dur} s planned · ${tk.dur} s shot</dd><dt>Spec</dt><dd>${P.project.spec}</dd><dt>Episode so far</dt><dd title=${SPENT_COVERS}>${money(P.eps[5].spent)} spent</dd></dl></div>
+            <div class="isec"><h4>In frame</h4>${seg.cast.map((id) => P.cast.find((c) => c.id === id)).map((c) => html`<button class="lrow" title=${"Open " + c.name + " in Assets"} onClick=${() => openHome(c.id, here)}>${c.name}${I("caret-right")}</button>`)}</div>
             <div class="isec"><h4>Shots</h4><ol class="shots">${tk.shots.map((s, i) => html`<li><span>${String(i + 1).padStart(2, "0")}</span>${s}</li>`)}</ol></div>
             <div class="isec" style="border-bottom:0"><h4>Who decides</h4><p class="muted" style="margin:0;font-size:12.5px;line-height:1.55">You watch every video version (Take) and decide. No model checks a Take for you. Accept unlocks once you have watched it to the end.</p></div>
           </div>
