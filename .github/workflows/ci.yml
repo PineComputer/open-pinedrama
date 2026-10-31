@@ -5,7 +5,7 @@ name: CI
 
 on:
   pull_request:
-    # Paused for the redesign sprint (yurun, 2026-10-30): its PRs land on the local gate; main keeps CI.
+    # Paused for the redesign sprint (merecdesperez44323-lab, 2026-10-30; D10): its PRs land on the local gate; main keeps CI.
     branches-ignore: [redesign/studio]
   workflow_call:
 
