@@ -1266,7 +1266,10 @@ timeline
   not accepted", as the Bible row does, even when the maker approved it, and that approval shows only under
   "Your decision on vN". The Canvas in 0f862ad (work-04): `labels.ts` `versionStanding` is the one status → chip
   rule for Assets, the Canvas (nodes, the shots card, the node panel) and the review's "accepted before"; the
-  Canvas's `standing()` and `standingOf()` are deleted.
+  Canvas's `standing()` and `standingOf()` are deleted. Lineage in e2d20ba (work-04): `Graph.tsx` reads
+  `versionStanding` too, through `ofLineage`, and its `standingOf` is deleted; an unaccepted version reads
+  "vN · not accepted" in the work colour, not the maker's amber; "Made from an out-of-date version" and the
+  video prompts' "Compiled" stay as Lineage's own facts.
 
 ## D65. 2026-10-30 · The tree's current row is a tint, without an accent bar
 - **Context.** The project tree marked its current row with a curved accent bar on its left
