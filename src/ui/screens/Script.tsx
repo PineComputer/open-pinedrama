@@ -1,6 +1,6 @@
-import { useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import type { Decision, FileItem, ScreenplayVersion, ScriptPage, SubmissionView } from "../../shared/types.ts";
+import type { Decision, FileItem, ReviewView, ScreenplayVersion, ScriptPage, SubmissionView } from "../../shared/types.ts";
 import { api, ApiError, useResource } from "../api.ts";
 import { Missing } from "../components/Missing.tsx";
 import { Segmented } from "../components/Segmented.tsx";
@@ -203,7 +203,31 @@ function Compare({ original, fountain, map, name, version }: { original: string;
 /** drama-cli's episode number in a scene number, #<episode>-<scene># (short_drama doc/drama-cli/write-a-screenplay.md). */
 const episodeOfScene = (text: string) => text.match(/#(\d+)-\d+#\s*$/)?.[1];
 
-function ScriptBody({ dramaId, data, ep, rewriting }: { dramaId: string; data: ScriptPage; ep?: string; rewriting: boolean }) {
+/**
+ * The setup's question about the upload before any version was recorded (a synopsis, not a screenplay, say): the agent's
+ * own words in the history, in place of "not recorded", and the way to answer them.
+ */
+function AskedRow({ reviewId }: { reviewId: string }) {
+  const { t } = useT();
+  const { data } = useResource<ReviewView>(`/api/reviews/${reviewId}`, ["reviews"]);
+  return (
+    <li className="you">
+      <span className="dot you" />
+      <div className="grow">
+        <b>{t("script.asked")}</b>
+        <details className="whatchanged" open>
+          <summary>{t("script.askedWords")}</summary>
+          <pre className="document plain">{data?.question ?? t("loading")}</pre>
+        </details>
+        <Link className="btn sm" to="/r/$reviewId" params={{ reviewId }}>
+          {t("script.answer")}
+        </Link>
+      </div>
+    </li>
+  );
+}
+
+function ScriptBody({ dramaId, data, ep, rewriting, asking }: { dramaId: string; data: ScriptPage; ep?: string; rewriting: boolean; asking?: string }) {
   const { t } = useT();
   const { search } = useRoute();
   const navigate = useNavigate();
@@ -274,6 +298,8 @@ function ScriptBody({ dramaId, data, ep, rewriting }: { dramaId: string; data: S
                 </div>
               </li>
             )}
+            {/* A question on a version is that version's row; one before any version is about the upload. */}
+            {asking && !data.versions.length && <AskedRow reviewId={asking} />}
             {data.versions.map((version) => (
               <VersionRow key={version.version} version={version} shown={version === shown} onShow={() => show(version)} />
             ))}
@@ -292,7 +318,7 @@ function ScriptBody({ dramaId, data, ep, rewriting }: { dramaId: string; data: S
                     <span>{t("script.uploaded", { name: original.name })}</span>
                   )}
                   {/* A project set up before drama-cli recorded rewrites: the history says so where the versions would be. */}
-                  {!data.versions.length && !rewriting && <small className="muted">{t("script.notRecorded")}</small>}
+                  {!data.versions.length && !rewriting && !asking && <small className="muted">{t("script.notRecorded")}</small>}
                 </div>
               </li>
             )}
@@ -360,7 +386,7 @@ function ScriptBody({ dramaId, data, ep, rewriting }: { dramaId: string; data: S
  * one in a read-only editor, as Fountain, as the maker's original, or the two compared. The selected version is the
  * URL's (?item=screenplay&version=vN, D48).
  */
-export function Script({ dramaId, ep, rewriting = false }: { dramaId: string; ep?: string; rewriting?: boolean }) {
+export function Script({ dramaId, ep, rewriting = false, asking }: { dramaId: string; ep?: string; rewriting?: boolean; asking?: string }) {
   const { t } = useT();
   const { search } = useRoute();
   const { data, error } = useResource<ScriptPage>(`/api/dramas/${dramaId}/script`, [`drama:${dramaId}`]);
@@ -370,5 +396,5 @@ export function Script({ dramaId, ep, rewriting = false }: { dramaId: string; ep
   if (search.item !== undefined && search.item !== "screenplay") return <Missing dramaId={dramaId} what={search.item} />;
   if (search.version !== undefined && !data.versions.some((version) => version.version === search.version))
     return <Missing dramaId={dramaId} what={`screenplay ${search.version}`} />;
-  return <ScriptBody dramaId={dramaId} data={data} ep={ep} rewriting={rewriting} />;
+  return <ScriptBody dramaId={dramaId} data={data} ep={ep} rewriting={rewriting} asking={asking} />;
 }

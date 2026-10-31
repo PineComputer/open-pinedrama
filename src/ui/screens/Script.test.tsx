@@ -80,6 +80,18 @@ describe("Script", () => {
     expect(screen.queryByText("Loading…")).not.toBeInTheDocument();
   });
 
+  it("gives the agent's question about the upload, before any version, in place of 'not recorded', with the way to answer", async () => {
+    answer("/api/dramas/d1/script", { inputs: [original], screenplayFile: original.id, versions: [] });
+    answer("/api/reviews/r9", { id: "r9", question: "The file is a synopsis, not a screenplay. Please provide the finished screenplay." });
+    texts();
+    await renderAt(<Script dramaId="d1" asking="r9" />, "/d/d1/script");
+    const versions = await screen.findByRole("region", { name: "Versions" });
+    expect(await within(versions).findByText("The file is a synopsis, not a screenplay. Please provide the finished screenplay.")).toBeInTheDocument();
+    expect(within(versions).getByText("The agent asks you about your file")).toBeInTheDocument();
+    expect(within(versions).getByRole("link", { name: "Answer the agent" })).toHaveAttribute("href", "/r/r9");
+    expect(within(versions).queryByText("This project's rewrite wasn't recorded.")).not.toBeInTheDocument();
+  });
+
   it("names a Word or PDF upload's text as extracted from it, and links the file kept in the library", async () => {
     const text = file({ kind: "screenplay", name: "stepmother.txt", type: "text/plain" });
     const pdf = file({ kind: "screenplay", name: "stepmother.pdf", type: "application/pdf" });
