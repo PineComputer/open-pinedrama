@@ -22,7 +22,7 @@ timeline
   2026-10-23 : D5 pre-production in one session
   2026-10-24 : D6 idle timeouts follow the work : D7 spend shown, never in a goal
   2026-10-29 : D8 phase 1 steers
-  2026-10-30 : D9 design/ is the UI source : D10 tsc gate : D11 mature libraries : D12 real samples in LFS : D13 decisions taken once : D14 credentials stop : D15 Codex review loop : D16 navigation and one home : D17 every take and cut watched : D18 cut editing as an edit spec : D19 TanStack Router : D20 Export by owner : D21 Analyzing and Out of date routes : D22 redo by owner : D23 the asset detail : D24 the cut edit goal : D25 one Submission : D26 crumbs and Back : D27 Reviews : D28 model badge : D29 canvas zoom, inline video : D30 URL rules : D31 agent scope : D32 narrow windows : D33 review options : D34 Episodes filters : D35 every element cites its ground : D36 Delivery is the cuts' home : D37 a picked node zooms : D38 shared redo after release : D39 a take plays on its node : D40 where a stop shows : D41 Script is the screenplay's home : D42 Story and Assets apart : D43 stable sample ids : D44 the cut leaves the switch : D45 samples' own screenplays : D46 Project : D47 a draft's changed base : D48 the List's ?version
+  2026-10-30 : D9 design/ is the UI source : D10 tsc gate : D11 mature libraries : D12 real samples in LFS : D13 decisions taken once : D14 credentials stop : D15 Codex review loop : D16 navigation and one home : D17 every take and cut watched : D18 cut editing as an edit spec : D19 TanStack Router : D20 Export by owner : D21 Analyzing and Out of date routes : D22 redo by owner : D23 the asset detail : D24 the cut edit goal : D25 one Submission : D26 crumbs and Back : D27 Reviews : D28 model badge : D29 canvas zoom, inline video : D30 URL rules : D31 agent scope : D32 narrow windows : D33 review options : D34 Episodes filters : D35 every element cites its ground : D36 Delivery is the cuts' home : D37 a picked node zooms : D38 shared redo after release : D39 a take plays on its node : D40 where a stop shows : D41 Script is the screenplay's home : D42 Story and Assets apart : D43 stable sample ids : D44 the cut leaves the switch : D45 samples' own screenplays : D46 Project : D47 a draft's changed base : D48 the List's ?version : D49 project types : D50 Home cards : D51 one column, rail labels
 ```
 
 ## D1. 2026-10-22 · A desktop app on Electron
@@ -806,6 +806,49 @@ timeline
   `?item` gains a version.
 - **Words.** None recorded.
 - **Recorded in.** Commits fd99ca1 and 6b35cc7.
+
+## D49. 2026-10-30 · A project has a type; Drama is the only one
+- **Context.** Other kinds of video (ads, films, launch videos) would each need a workflow of their
+  own; merecdesperez44323-lab asked whether the container should say what kind it is.
+- **Decision.** The container stays a Project ([D46](#d46-2026-10-30--the-uis-container-is-a-project)).
+  Its type is Drama, the only one, named where a project is created ("New drama project") and in a
+  project's header. Other types are future, each with its own workflow and preset family; no type
+  system is built now.
+- **Alternatives.** A type system now, with Drama as its first entry.
+- **Grounds.** merecdesperez44323-lab's question, answered by master; add nothing you do not need
+  (`CONTRIBUTING.md`).
+- **Consequences.** The [glossary](glossary.md#the-project) names the project type.
+- **Words.** "我觉得project应该和icon 平铺？应该叫做 Drama project 比较好？这样我们未来可以拓展比如 ads projects？ movie
+  project啥的？launch video project啥的？ 你觉得呢， 因为每个类型不太一样工作流" (*I think "project" should sit beside
+  the icon? Better to call it a Drama project? So we can extend later to ads projects, movie projects,
+  launch video projects? What do you think, since each type has a different workflow*), relayed by
+  master.
+- **Recorded in.** Master's note to the docs, 30 October 2026.
+
+## D50. 2026-10-30 · A Home card is a cover, a title and a time
+- **Context.** Home's project cards were tall and thin, carrying a logline, counts, spend and tags.
+- **Decision.** A card is a 16:9 cover with a status pill on it, the title and the time.
+- **Alternatives.** None recorded.
+- **Grounds.** merecdesperez44323-lab's decision; progressive disclosure
+  ([design principles](design-principles.md#7-progressive-disclosure)).
+- **Consequences.** The rest of a project's facts are in the project.
+- **Words.** "每个block 太thin & long了， 不好看，应该就是一个 cover， 下边一个 title， 一个时间就好了" (*each block is
+  too thin and long, not good-looking; it should just be a cover with a title and a time under it*),
+  relayed by master.
+- **Recorded in.** Master's note to the docs, 30 October 2026.
+
+## D51. 2026-10-30 · Home has one column; the rail shows each icon with its label
+- **Context.** Home kept a sidebar column whose only item was New project, already the grid's first
+  card (yurun's bugs Y2, Y3).
+- **Decision.** Home has no sidebar column. The rail shows each place as its icon and label side by
+  side.
+- **Alternatives.** None recorded.
+- **Grounds.** merecdesperez44323-lab's decision; a second way to do something that already has one
+  is never added ([design principles](design-principles.md#14-every-element-cites-its-ground)).
+- **Consequences.** None beyond Home and the rail.
+- **Words.** "这个区域有new project就够了， 左侧就不需要单独有一个column了" (*New project in this area is enough;
+  the left needs no column of its own*), relayed by master.
+- **Recorded in.** Master's note to the docs, 30 October 2026.
 
 ## References
 
