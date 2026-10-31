@@ -1274,6 +1274,13 @@ timeline
   `versionStanding` too, through `ofLineage`, and its `standingOf` is deleted; an unaccepted version reads
   "vN · not accepted" in the work colour, not the maker's amber; "Made from an out-of-date version" and the
   video prompts' "Compiled" stay as Lineage's own facts.
+- **Amended.** 31 October 2026, master's decision on work-03's retest (C17): a Lineage node shows an
+  acceptance chip only when drama-cli's status reports that stage; otherwise it shows its version and
+  freshness only. drama-cli's lineage writes `accepted` as null whenever a stage's folder has no
+  accepted.json (v0.7.5 `drama_cli/lineage.py:80–84`), so it cannot tell "not accepted yet" from "never takes
+  an acceptance", while status lists the stages that take one. On FITL r2 EP001's cut, 63 of 70 plate views
+  (a plate's steps inside its folder, `stages.location_stages`, which status does not report) had read "v2 ·
+  not accepted" on a finished episode. Assigned to work-04 (`Graph.tsx`).
 
 ## D65. 2026-10-30 · The tree's current row is a tint, without an accent bar
 - **Context.** The project tree marked its current row with a curved accent bar on its left
