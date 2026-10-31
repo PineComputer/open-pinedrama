@@ -105,6 +105,7 @@ export function AgentPanel({ drama, episode, mode, onMode }: { drama: DramaView;
   // What runs, as the design's Running lists it: the sessions at work; one that waits for the maker is a decision instead.
   const running = drama.crew.flatMap((computer) => computer.sessions.filter((session) => session.state === "open" && !session.waiting));
   const [picked, setPicked] = useState<string>();
+  const [processOpen, setProcessOpen] = useState(true);
   // The session in view: the one picked, else the episode's in view, else one at work (its process shows), else one that asks, else the first.
   const chats = sessions.data ?? [];
   const inView =
@@ -181,23 +182,27 @@ export function AgentPanel({ drama, episode, mode, onMode }: { drama: DramaView;
         {inView && steps.length > 0 && (
           <section className="asec">
             <div className="process">
-              <button type="button">
+              {/* A disclosure, as design/'s: the steps fold away under their heading. */}
+              <button type="button" aria-expanded={processOpen} onClick={() => setProcessOpen((was) => !was)}>
                 <Icon name="list-checks" className="ic" />
                 {t("agent.process", { who })}
                 <span className="cnt">{steps.length === 1 ? t("agent.stepOne") : t("agent.stepsCount", { n: steps.length })}</span>
+                <Icon name={processOpen ? "caret-down" : "caret-right"} className="ic" />
               </button>
-              <ol className="steps">
-                {steps.map((step, n) => {
-                  const now = n === steps.length - 1 && working;
-                  return (
-                    <li key={step.id} className={now ? "now" : undefined}>
-                      <Icon name={now ? "circle-notch" : "check-circle"} className="ic" />
-                      <span>{step.text}</span>
-                      <time />
-                    </li>
-                  );
-                })}
-              </ol>
+              {processOpen && (
+                <ol className="steps">
+                  {steps.map((step, n) => {
+                    const now = n === steps.length - 1 && working;
+                    return (
+                      <li key={step.id} className={now ? "now" : undefined}>
+                        <Icon name={now ? "circle-notch" : "check-circle"} className="ic" />
+                        <span>{step.text}</span>
+                        <time />
+                      </li>
+                    );
+                  })}
+                </ol>
+              )}
             </div>
           </section>
         )}

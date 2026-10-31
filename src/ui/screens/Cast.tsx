@@ -200,8 +200,15 @@ export function Cast({ dramaId, compact = false }: { dramaId: string; compact?: 
   const bible = project.data?.state?.bible;
   const written = bible?.coverage?.episodes ?? 0;
   const total = drama.data?.episodeRows.length ?? episodes.length;
+  // Whether the working version is the accepted one (drama-cli's current against accepted), the accepted one when it
+  // isn't, and why the bible can't be used when drama-cli says so; never the mere presence of an accepted version.
+  const standing = !bible?.current
+    ? []
+    : bible.current !== bible.accepted
+      ? [t("cast.notAccepted"), bible.accepted ? t("cast.acceptedVersion", { v: bible.accepted }) : ""]
+      : [t("cast.accepted"), !bible.usable ? t("cast.notUsable", { why: bible.why ?? "" }) : ""];
   const meta = bible?.current
-    ? [t("cast.bibleVersion", { v: bible.current }), bible.accepted ? t("cast.accepted") : t("cast.notAccepted"), written ? t("cast.writtenRange", { last: `EP${String(written).padStart(3, "0")}` }) : ""].filter(Boolean).join(" · ")
+    ? [t("cast.bibleVersion", { v: bible.current }), ...standing, written ? t("cast.writtenRange", { last: `EP${String(written).padStart(3, "0")}` }) : ""].filter(Boolean).join(" · ")
     : "";
   // Under the logline, as the design has them: the genres the maker's notes state, and the episodes × their length.
   const facts = drama.data?.facts;

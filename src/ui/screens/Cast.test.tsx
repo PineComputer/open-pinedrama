@@ -81,6 +81,17 @@ describe("the Story", () => {
     expect(screen.getByRole("link", { name: /EP001\s*The stepmother arrives/ })).toHaveAttribute("href", "/d/d1/e/EP001");
   });
 
+  it.each([
+    [{ current: "v1", accepted: "v1", usable: true }, "Bible v1 · accepted"],
+    [{ current: "v2", accepted: "v1", usable: false, why: "v2 waits for your review" }, "Bible v2 · not yet accepted · v1 accepted"],
+    [{ current: "v2", accepted: "v2", usable: false, why: "made from a screenplay that changed" }, "Bible v2 · accepted · not usable: made from a screenplay that changed"],
+  ])("says where the bible stands as drama-cli's status gives it (%o)", async (bible, line) => {
+    engine();
+    answer("/api/dramas/d1/project", { state: { bible: { candidate: null, run: [], errors: [], ...bible }, episodes: {} }, sessions: [], problems: [], names });
+    render(<Cast dramaId="d1" />);
+    expect(await screen.findByText(line)).toBeInTheDocument();
+  });
+
   it("opens on the bible: the logline, the beats and each episode's summary", async () => {
     engine();
     render(<Cast dramaId="d1" />);

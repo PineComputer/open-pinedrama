@@ -41,3 +41,15 @@ describe("Script, with a rewrite", () => {
     expect(screen.queryByRole("button", { name: "Accept the rewrite" })).not.toBeInTheDocument();
   });
 });
+
+describe("Script", () => {
+  it("opens on the screenplay drama-cli recorded, not on the bible", async () => {
+    const fountain = file({ kind: "screenplay-version", name: "screenplay/v1/screenplay.fountain", type: "text/plain", version: "v1" });
+    const bible = file({ kind: "bible", name: "bible/v1/bible.md", type: "text/markdown", version: "v1" });
+    answer("/api/dramas/d1/script", { inputs: [], screenplay: { version: "v1", file: fountain, pending: false }, bible, breakdowns: [] } as never);
+    server.use(http.get(fountain.url, () => HttpResponse.text("INT. TENEMENT FLAT - DAY\n")), http.get(bible.url, () => HttpResponse.text("# Bible\n")));
+    render(<Script dramaId="d1" />);
+    const nav = await screen.findByRole("navigation");
+    expect(within(nav).getAllByRole("button").filter((button) => button.getAttribute("aria-current") === "true").map((button) => button.textContent)).toEqual(["v1, as drama-cli recorded it"]);
+  });
+});

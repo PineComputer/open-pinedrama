@@ -103,6 +103,12 @@ describe("the agent panel", () => {
     const process = (await screen.findByRole("button", { name: /EP001 · Process/ })).parentElement as HTMLElement;
     // The process shows once the sessions are in, with its steps once the session's chat is.
     expect(within(process).getAllByRole("listitem").map((item) => item.textContent)).toEqual(["Compiled the video prompts", "Shooting seg01"]);
+    // A disclosure: its steps fold away under it.
+    const toggle = within(process).getByRole("button", { expanded: true });
+    await user.click(toggle);
+    expect(toggle).toHaveAttribute("aria-expanded", "false");
+    expect(within(process).queryAllByRole("listitem")).toHaveLength(0);
+    await user.click(toggle);
     expect(screen.getByText("Shooting the first take now.")).toBeInTheDocument();
     accept("/api/sessions/s1/chat");
     await user.type(screen.getByRole("textbox", { name: "Message the agent" }), "Keep the letter in her left hand.");

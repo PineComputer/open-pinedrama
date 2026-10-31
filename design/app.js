@@ -153,13 +153,13 @@
         <section class="asec"><h3>Running <span class="c">2</span></h3>${runRow("EP003", "Shooting 4 takes · 2 back")}${runRow("EP005", "Blocking seg03")}</section>
         <section class="asec"><h3>Decisions <span class="c">${dec.length}</span></h3>
           ${dec.map((d) => html`<button class="dec" onClick=${() => go(d.go)}><img src=${d.pic} alt=""/><span><b>${d.t}</b><small>${d.d}</small></span><span class="age">${d.age}</span></button>`)}</section>
-        <section class="asec"><div class="process"><button onClick=${() => {}}>${I("list-checks")}EP006 · Process<span class="cnt">7 steps</span></button>
-          <ol class="steps">
+        <section class="asec"><div class="process"><button aria-expanded=${String(S.procOpen !== false)} onClick=${() => set({ procOpen: S.procOpen === false })}>${I("list-checks")}EP006 · Process<span class="cnt">7 steps</span>${I(S.procOpen === false ? "caret-right" : "caret-down")}</button>
+          ${S.procOpen !== false && html`<ol class="steps">
             <li>${I("check-circle")}<span>Status <code>drama-cli status</code></span><time>0:02</time></li>
             <li>${I("check-circle")}<span>seg01 shot again: blanket folded first</span><time>2:40</time></li>
             <li>${I("check-circle")}<span>seg03 shot again: opens on Luca</span><time>2:12</time></li>
             <li>${I("check-circle")}<span>Downloaded both takes</span><time>0:18</time></li>
-            <li class="now">${I("circle-notch")}<span>Waiting for your review</span><time></time></li></ol></div></section>
+            <li class="now">${I("circle-notch")}<span>Waiting for your review</span><time></time></li></ol>`}</div></section>
         <section class="asec"><p class="msg">I shot seg01 again with the blanket folded before Luca speaks, and seg03 again opening on his face, as you asked. Both new takes wait for you.</p></section>
         <section class="asec"><h3>Recent work</h3>
           <div class="arow"><div class="what"><b>EP006 seg03 take t02</b><span>waits for you</span></div></div>

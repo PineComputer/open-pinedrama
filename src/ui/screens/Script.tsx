@@ -39,7 +39,8 @@ export function Script({ dramaId }: { dramaId: string }) {
   const original: FileItem | undefined = data.inputs.find((file) => file.id === data.screenplayFile);
   const rewritten = current?.file && original && original.id !== current.file.id ? current.file : undefined;
   if (rewritten && original && current?.reviewId) return <Rewrite key={rewritten.id} original={original} rewrite={rewritten} reviewId={current.reviewId} />;
-  const shown = docs.find((doc) => doc.file.id === picked) ?? docs.find((doc) => doc.group === "bible") ?? docs.find((doc) => doc.group === "screenplay") ?? docs[0];
+  // Script opens on the screenplay drama-cli recorded, as its name says; the bible has its own place in Story.
+  const shown = docs.find((doc) => doc.file.id === picked) ?? docs.find((doc) => doc.group === "screenplay") ?? docs[0];
   const groups: [string, string][] = [
     ["screenplay", t("script.current")],
     ["inputs", t("script.inputs")],
