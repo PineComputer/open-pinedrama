@@ -33,6 +33,9 @@ describe("Board", () => {
     // An engine stop keeps its own words.
     expect(screen.getByRole("link", { name: "EP003 · Episode 3" })).toHaveTextContent("Its Computer failed to start.");
     expect(screen.queryByRole("button", { name: "Resume" })).toBeNull();
+    // The tree's rule (tree.ts markOf): a paused episode doesn't need the maker; it is in All only.
+    expect(screen.getByRole("button", { name: /^Needs you/ })).toHaveTextContent(/0$/);
+    expect(screen.getByRole("button", { name: /^All/ })).toHaveTextContent(/3$/);
   });
 
   it("offers an episode's own Resume where its Computer stopped while the project runs", async () => {

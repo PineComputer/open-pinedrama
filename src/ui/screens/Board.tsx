@@ -14,6 +14,7 @@ import { PresetChoice, ScreenplayStructure } from "./NewDrama.tsx";
 import { buttonClass } from "../components/Button.tsx";
 import { Icon } from "../icons.tsx";
 import { Menu } from "../components/Menu.tsx";
+import { type Mark, markOf } from "../shell/tree.ts";
 
 /** Where an episode stands, as its card's chip says it; paused with the project (isPaused), Paused. */
 function chipOf(row: EpisodeRow, paused: boolean): { status: Status; label: TKey } {
@@ -79,26 +80,30 @@ const STRIP: Record<StageCell["state"], string> = { done: "d", working: "w", rev
 
 /**
  * Which episodes the board shows: all, or those in one of the maker's states (design principles, "Five maker-facing
- * states"; design/app.js, Episodes): Working holds the episodes in line too, their place in line the card's detail.
+ * states"; design/app.js, Episodes), by the mark the sidebar tree's dot shows (tree.ts markOf), so the two agree:
+ * Working holds the episodes in line too, their place in line the card's detail; an episode paused with the project is
+ * in All only (D74).
  */
 const FILTERS = {
   all: () => true,
-  you: (row: EpisodeRow) => row.state === "waiting" || row.state === "stopped" || row.state === "failed",
-  working: (row: EpisodeRow) => row.state === "working" || row.state === "queued",
-  done: (row: EpisodeRow) => row.state === "done",
-} satisfies Record<string, (row: EpisodeRow) => boolean>;
+  you: (mark: Mark) => mark === "you",
+  working: (mark: Mark) => mark === "work" || mark === "line",
+  done: (mark: Mark) => mark === "done",
+} satisfies Record<string, (mark: Mark) => boolean>;
 type Filter = keyof typeof FILTERS;
 
 export function Board({ drama }: { drama: DramaView }) {
   const { t } = useT();
   const rows = drama.episodeRows;
+  const paused = isPaused(drama);
+  const shows = (key: Filter) => (row: EpisodeRow) => FILTERS[key](markOf(row, paused));
   const [filter, setFilter] = useState<Filter>("all");
   const [find, setFind] = useState("");
   // The design's "Episode order": by number, or what needs the maker first.
   const [order, setOrder] = useState<"number" | "needs">("number");
-  const needsFirst = (row: EpisodeRow) => (FILTERS.you(row) ? 0 : 1);
+  const needsFirst = (row: EpisodeRow) => (shows("you")(row) ? 0 : 1);
   const shown = rows
-    .filter(FILTERS[filter])
+    .filter(shows(filter))
     .filter((row) => `${row.code} ${row.title}`.toLowerCase().includes(find.trim().toLowerCase()))
     .sort((x, y) => (order === "needs" ? needsFirst(x) - needsFirst(y) : 0) || x.number - y.number);
   const wide = /^\s*16\s*:\s*9/.test(drama.format);
@@ -111,7 +116,7 @@ export function Board({ drama }: { drama: DramaView }) {
           {(Object.keys(FILTERS) as Filter[]).map((key) => (
             <button key={key} type="button" className="fchip" aria-pressed={filter === key} onClick={() => setFilter(key)}>
               {t(`board.filter.${key}` as TKey)}
-              <small>{rows.filter(FILTERS[key]).length}</small>
+              <small>{rows.filter(shows(key)).length}</small>
             </button>
           ))}
           <span className="grow" />
@@ -140,7 +145,7 @@ export function Board({ drama }: { drama: DramaView }) {
       ) : (
         <div className="epgrid">
           {shown.map((row) => (
-            <Card key={row.id} row={row} wide={wide} dramaId={drama.id} paused={isPaused(drama)} />
+            <Card key={row.id} row={row} wide={wide} dramaId={drama.id} paused={paused} />
           ))}
         </div>
       )}
