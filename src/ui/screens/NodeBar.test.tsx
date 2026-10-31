@@ -276,6 +276,16 @@ describe("a picked item's panel (P6.8)", () => {
     expect(take.panel.querySelector(".nstate .why")).toBeNull();
   });
 
+  it("says a version is stale without a reason where drama-cli's export gives none, as Lineage and Out of date say (short_drama #668)", async () => {
+    withBreakdown();
+    const view = lineageView();
+    Object.assign(view.lineage.nodes.find((node) => node.id === "assets/characters/lin")!, { fresh: false, problems: [] });
+    answer("/api/dramas/d1/lineage", view);
+    await renderAt(<Canvas drama={drama("working")} />, "/d/d1/canvas");
+    const { panel } = await panelOf(/^林/);
+    expect(panel.querySelector(".nstate .why")).toHaveTextContent("drama-cli reports it out of date; this drama-cli version doesn't say why.");
+  });
+
   it("says what drama-cli's lineage made it from and what uses it, in the panel's Details", async () => {
     withBreakdown();
     await renderAt(<Canvas drama={drama("working")} />, "/d/d1/canvas");

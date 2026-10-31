@@ -748,6 +748,7 @@ function Plane({ drama }: { drama: DramaView }) {
             accepted: breakdownStage?.accepted ?? null,
             usedBy: mapped.edges.filter((edge) => edge.source === shots.id).map((edge) => labelOf(edge.target)).join(", "),
             reads: "",
+            fresh: breakdownStage?.fresh ?? null,
             problems: breakdownStage?.problems ?? [],
           }}
           shots={shots.data.shots}
@@ -776,6 +777,7 @@ function Plane({ drama }: { drama: DramaView }) {
         accepted: node.data.stage.accepted,
         usedBy: mapped.edges.filter((edge) => edge.source === node.id).map((edge) => labelOf(edge.target)).join(", "),
         reads: mapped.edges.filter((edge) => edge.target === node.id).map((edge) => labelOf(edge.source)).join(", "),
+        fresh: node.data.stage.fresh,
         problems: node.data.stage.problems,
       }}
       ask={ask}

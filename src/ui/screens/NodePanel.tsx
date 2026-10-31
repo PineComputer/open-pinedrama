@@ -202,6 +202,8 @@ export interface PanelFacts {
   accepted: string | null;
   usedBy: string;
   reads: string;
+  /** Whether drama-cli calls the working version fresh, as the lineage says; null when it has nothing to judge it by. */
+  fresh: boolean | null;
   /** Why the version isn't fresh or isn't accepted, in drama-cli's own words (the lineage node's problems). */
   problems: string[];
 }
@@ -255,6 +257,8 @@ export function NodePanel({
   const pills = [spec?.model, settings.length ? settings.join(" · ") : undefined].filter((pill): pill is string => pill !== undefined);
   const [open, setOpen] = useState<Part | null>(null);
   const accepted = facts.accepted === on ? t("canvas.accepted") : facts.accepted ? t("canvas.acceptedOther", { v: facts.accepted }) : t("canvas.noneAccepted");
+  // drama-cli's words; an export before short_drama #668 (v0.7.5, Pine's pin) says it is stale and not why, as Lineage and Out of date say.
+  const why = facts.problems.length ? facts.problems.join("; ") : facts.fresh === false ? t("graph.staleNoReason") : undefined;
   const needs = facts.status === "you" ? "canvas.needs.you" : facts.status === "stale" ? "canvas.needs.stale" : facts.status === "back" ? "canvas.needs.back" : undefined;
 
   return (
@@ -269,10 +273,10 @@ export function NodePanel({
         <span className="mono">
           {on === facts.version ? t("canvas.current", { v: on }) : t("canvas.earlier", { v: on, current: facts.version })} · {accepted}
         </span>
-        {facts.problems.length > 0 && (
+        {why && (
           <span className="why">
             <Icon name="warning" />
-            {facts.problems.join("; ")}
+            {why}
           </span>
         )}
       </div>
