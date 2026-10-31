@@ -353,11 +353,19 @@
     const takeOf = (seg, take) => (c.takes[seg] || []).find(([t]) => t === take) || [take, 0, "", ""];
     const blocked = (S.state === "cutnewer" && !rebased) || S.state === "cutinputs";
     const dur = tab === "edit" ? ed.reduce((a, x) => a + (x.out - x.in), 0) : c.dur;
-    const apply = () => {
-      set({ cutApply: "sending" });
-      setTimeout(() => set({ cutApply: "building" }), 900);
-      setTimeout(() => set({ cutApply: { ok: "ready", refused: "failed", unknown: "unknown" }[S.outcome] }), 4200);
-    };
+    // Apply is one submission to EP006's agent (the shared Submission: sending → sent, or unknown → checked, or not
+    // submitted → Send again). What follows sent is the turn's, read from the session's status: at work only when the
+    // status says so, then cut v2 waiting, or drama-cli's refusal of the edit, which is a result, not a failed send.
+    const sub = (S.subs || {}).cutApply;
+    const apply = () => submit("cutApply");
+    // What was sent stays as sent (B2): the draft is read only until it comes back not submitted or refused.
+    const edLocked = !!sub && sub !== "failed" && S.cutTurn !== "refused";
+    useEffect(() => {
+      if (sub !== "sent" || S.cutTurn) return;
+      const a = setTimeout(() => set({ cutTurn: "work" }), 1500);
+      const b = setTimeout(() => set({ cutTurn: S.state === "cutrefused" ? "refused" : "ready" }), 5000);
+      return () => { clearTimeout(a); clearTimeout(b); };
+    }, [sub]);
     const discard = () => { set({ cutEd: cutBase(), cutEdHist: [], cutRebased: false, cutCheck: null, cutCompare: false }); toast("Draft discarded. Nothing was applied."); };
     let acc = 0;
     return html`<div class="main">
@@ -404,9 +412,10 @@
             <div class="isec" style="border-bottom:0"><h4>What happens</h4><p class="muted" style="font-size:12.5px;line-height:1.55">You watch every cut and decide; no model checks a cut for you. Send back, and your notes go to the agent, which plans the cut again; building a cut is free. Accept, and this is EP006's delivered cut, listed in Delivery.</p></div>
           </div>
           <div class="verdict">${sent ? html`
-            <div class=${"sentcard " + sent}>${I(sent === "accept" ? "check-circle" : "paper-plane-tilt")}<span class="grow"><b>${sent === "accept" ? "Accepted · EP006 cut v1 is delivered" : "Sent back · waiting for the agent"}</b>
+            <${Submission} id="cutReview" to="EP006's agent" kept="Your review is kept." onSend=${() => submit("cutReview")}/>
+            ${(S.subs || {}).cutReview === "sent" && html`<div class=${"sentcard " + sent}>${I(sent === "accept" ? "check-circle" : "paper-plane-tilt")}<span class="grow"><b>${sent === "accept" ? "Accepted · EP006 cut v1 is delivered" : "Sent back · waiting for the agent"}</b>
               <small>${sent === "accept" ? "It is listed in Delivery." : `Your ${rev.notes.length} notes and reason went with it. A new cut comes back here for review.`}</small></span>
-              ${sent === "accept" && html`<button class="btn sm" onClick=${() => go("delivery")}>Open Delivery</button>`}</div>` : html`
+              ${sent === "accept" && html`<button class="btn sm" onClick=${() => go("delivery")}>Open Delivery</button>`}</div>`}` : html`
             <div class="vrow" style="grid-template-columns:1fr 1fr">
               <button class="vbtn acc" aria-pressed=${String(rev.v === "accept")} disabled=${!watched} title=${watched ? "Accept" : "Watch the cut to the end first"} onClick=${() => revDo({ cutV: rev.v === "accept" ? null : "accept" })}>${I("check")}Accept cut</button>
               <button class="vbtn back" aria-pressed=${String(rev.v === "back")} onClick=${() => revDo({ cutV: rev.v === "back" ? null : "back" })}>${I("arrow-counter-clockwise")}Send back</button></div>
@@ -415,9 +424,9 @@
             <div class="draftbar"><span>${revChanged ? html`<b>Your review is a draft</b>` : "No review yet"}</span><span class="grow"></span>
               <button class="btn sm ghost" title="Undo your last step" disabled=${!revHist.length} onClick=${() => set({ cutRevHist: revHist.slice(0, -1), ...{ cutNotes: revHist[revHist.length - 1].notes, cutV: revHist[revHist.length - 1].v, cutWhy: revHist[revHist.length - 1].why } })}>Undo</button>
               <button class="btn sm ghost" title="Back to how the review started" disabled=${!revChanged} onClick=${() => { revSet(revStart); set({ cutRevHist: [] }); }}>Reset</button>
-              <button class="btn sm primary" disabled=${!rev.v || (rev.v === "back" && !rev.why.trim())} onClick=${() => set({ cutSent: rev.v, cutPlaying: false })}>Send review</button></div>`}</div>`
+              <button class="btn sm primary" disabled=${!rev.v || (rev.v === "back" && !rev.why.trim())} onClick=${() => { set({ cutSent: rev.v, cutPlaying: false }); submit("cutReview"); }}>Send review</button></div>`}</div>`
           : html`
-          <div class="iscroll">
+          <div class="iscroll" inert=${edLocked}>${edLocked && html`<p class="draftnote" style="margin:10px 0 0">${I("lock-simple")}<span>This edit is sent; it is read only. A new edit starts once cut v2 is in, or from this draft if it comes back.</span></p>`}
             <div class="isec"><h4>Based on <span class="muted">cut ${baseV}</span></h4>
               ${S.state === "cutnewer" && !rebased && html`<div class="basewarn">${I("warning")}<span class="grow"><b>A newer cut exists</b><small>Cut ${c.newer.v} came in after you started this draft on cut ${c.base.v}. Nothing your draft uses has changed.</small></span></div>`}
               ${S.state === "cutinputs" && html`<div class="basewarn err">${I("warning")}<span class="grow"><b>Your draft's inputs changed</b><small>seg03 · t02, which your draft trims, is no longer accepted: its storyboard changed after you accepted it. There is no newer cut.</small></span></div>`}
@@ -450,13 +459,13 @@
               ${diff.length ? diff.map(([k, d]) => html`<div class="lrow static"><span>${k}</span><span class="mono">${d}</span></div>`) : html`<p class="muted" style="margin:0;font-size:12.5px">No edits. The draft matches cut ${baseV}.</p>`}
               <p class="muted" style="margin:8px 0 0;font-size:11.5px">Your timed notes are not edits: they stay on Review.</p></div>
           </div>
-          <div class="verdict">${S.cutApply ? html`
-            <div class=${"sentcard " + S.cutApply}>${I(S.cutApply === "ready" ? "check-circle" : S.cutApply === "failed" ? "x-circle" : S.cutApply === "unknown" ? "warning" : "circle-notch")}<span class="grow">
-              <b>${{ sending: "Sending your edit…", building: "Building cut v2", ready: "Cut v2 waits for your review", failed: "drama-cli refused the edit", unknown: "Outcome unknown" }[S.cutApply]}</b>
-              <small>${{ sending: "Handing the spec to the agent.", building: "The agent runs drama-cli edit build EP006, then edit validate. Building a cut is free.", ready: "Made from your edit of cut " + baseV + ". Watch it and decide, as for any cut.", failed: "Clip 2 has no audio; explicitly choose silence. Nothing was built and nothing was spent; your draft is kept.", unknown: "The agent's answer never came. Check asks drama-cli whether cut v2 was built; the edit is not sent again until that is known." }[S.cutApply]}</small></span>
-              ${S.cutApply === "ready" && html`<button class="btn sm primary" onClick=${() => toast("Opens EP006 › Cut v2. This sample has only cut v1.")}>Open cut v2</button>`}
-              ${S.cutApply === "unknown" && html`<button class="btn sm" onClick=${() => { set({ cutApply: "building" }); setTimeout(() => set({ cutApply: "ready" }), 1500); }}>Check</button>`}
-              ${S.cutApply === "failed" && html`<button class="btn sm" onClick=${() => set({ cutApply: null, cutSel: 1 })}>Back to the draft</button>`}</div>` : html`
+          <div class="verdict">${sub ? html`
+            <${Submission} id="cutApply" to="EP006's agent" kept="Your edit is kept." onSend=${apply}/>
+            ${sub === "sent" && html`<div class=${"sentcard " + (S.cutTurn || "waiting")}>${I(S.cutTurn === "ready" ? "check-circle" : S.cutTurn === "refused" ? "x-circle" : S.cutTurn === "work" ? "circle-notch" : "clock")}<span class="grow">
+              <b>${{ waiting: "Waiting for EP006's session", work: "Building cut v2", ready: "Cut v2 waits for your review", refused: "drama-cli refused the edit" }[S.cutTurn || "waiting"]}</b>
+              <small>${{ waiting: "Its status shows when it starts on your edit.", work: "EP006's session is at work: drama-cli edit build EP006, then edit validate. Building a cut is free.", ready: "Made from your edit of cut " + baseV + ". Watch it and decide, as for any cut.", refused: "Clip 2 has no audio; explicitly choose silence. Nothing was built and nothing was spent; your draft is kept." }[S.cutTurn || "waiting"]}</small></span>
+              ${S.cutTurn === "ready" && html`<button class="btn sm primary" onClick=${() => toast("Opens EP006 › Cut v2. This sample has only cut v1.")}>Open cut v2</button>`}
+              ${S.cutTurn === "refused" && html`<button class="btn sm" onClick=${() => set({ subs: { ...S.subs, cutApply: undefined }, cutTurn: null, cutSel: 1 })}>Back to the draft</button>`}</div>`}` : html`
             <div class="draftbar" style="border-top:0;margin-top:0;padding-top:0"><span>${diff.length ? html`<b>Draft · ${diff.length} edit${diff.length > 1 ? "s" : ""}</b>` : "No edits"}</span><span class="grow"></span>
               <button class="btn sm ghost" title="Undo your last edit" disabled=${!edHist.length} onClick=${() => set({ cutEd: edHist[edHist.length - 1], cutEdHist: edHist.slice(0, -1) })}>Undo</button>
               <button class="btn sm ghost" title=${"Back to cut " + baseV + " with no edits"} disabled=${!diff.length} onClick=${() => edDo(base)}>Reset</button>

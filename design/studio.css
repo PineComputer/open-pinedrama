@@ -750,8 +750,9 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
 .sentcard > .ic { width: 18px; height: 18px; flex: none; }
 .sentcard b { display: block; color: var(--text-primary); } .sentcard small { display: block; color: var(--text-muted); line-height: 1.45; margin-top: 2px; }
 .sentcard.accept > .ic, .sentcard.ready > .ic { color: var(--success); }
-.sentcard.failed > .ic { color: var(--error); }
-.sentcard.sending > .ic, .sentcard.building > .ic { animation: spin 1.2s linear infinite; }
+.sentcard.refused > .ic { color: var(--error); }
+.sentcard.waiting > .ic { color: var(--text-muted); }
+.sentcard.work > .ic { animation: spin 1.2s linear infinite; }
 /* Delivery: one row per episode, linking to its Cut. */
 .delivsum { font-size: 13px; color: var(--text-secondary); } .delivsum b { color: var(--text-primary); }
 .delivwrap { padding: 0 16px 24px; overflow-x: auto; }
