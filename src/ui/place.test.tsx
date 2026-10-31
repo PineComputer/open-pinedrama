@@ -122,6 +122,22 @@ describe("a drama's page", () => {
     expect(screen.queryByText(/This project has no/)).not.toBeInTheDocument();
   });
 
+  it("says what drama-cli recorded of the screenplay and the bible, not a rewrite, while the setup runs bible after v1 is accepted (D64; Codex rc5 C14)", async () => {
+    engine();
+    // rc5 T1: v1 accepted (drama-cli's lineage), the setup working on `bible`, whose v1 status says is not accepted yet.
+    answer("/api/dramas/d1", { ...drama, status: "setup", episodes: { total: 0, done: 0, waiting: 0, working: 0 }, setup: { state: "working", reached: 1 }, episodeRows: [] });
+    answer("/api/dramas/d1/lineage", { lineage: { nodes: [{ id: "screenplay", kind: "screenplay", version: "v1", accepted: "v1", fresh: true, where: {} }], links: [], groups: [] }, problems: [] });
+    answer("/api/dramas/d1/project", { state: { bible: { current: "v1", candidate: "v1", accepted: null, usable: false, run: [], errors: [] }, characters: {}, locations: {}, props: {}, episodes: {} }, sessions: [], problems: [], names: null });
+    answer("/api/dramas/d1/cast", []);
+    answer("/api/dramas/d1/script", { inputs: [], screenplayFile: null, versions: [{ version: "v1", question: { reviewId: "r1", state: "answered", words: "Yes.", verdict: "approve" } }] });
+    render(<RouterProvider router={studioRouter(createMemoryHistory({ initialEntries: ["/d/d1/script"] }))} />);
+    const tree = await screen.findByRole("navigation", { name: drama.title });
+    await waitFor(() => expect(screen.getByRole("link", { name: /^Script/ })).toHaveTextContent("ScriptAccepted"));
+    await waitFor(() => expect(screen.getByRole("link", { name: /^Bible/ })).toHaveTextContent("Biblev1 · not accepted"));
+    expect(tree).not.toHaveTextContent("Rewriting");
+    expect(screen.getByRole("region", { name: "Versions" })).not.toHaveTextContent(/v2|rewriting/);
+  });
+
   it.each([
     ["a screenplay version drama-cli didn't record", "/d/d1/script?item=screenplay&version=v9", "screenplay v9"],
     ["another item on Script", "/d/d1/script?item=bible", "bible"],

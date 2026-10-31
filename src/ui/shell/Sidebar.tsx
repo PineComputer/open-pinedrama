@@ -14,7 +14,7 @@ import { cutStanding, isPaused, isSettingUp, moneyText, nowText, SETUP_STEPS } f
 import { Mark } from "../Mark.tsx";
 import type { Page } from "../place.ts";
 import { DramaThumb } from "../components/DramaThumb.tsx";
-import { dramaTree, type Mark as EpisodeMark, markOf, scriptNow } from "./tree.ts";
+import { bibleNow, dramaTree, type Mark as EpisodeMark, markOf, scriptNow } from "./tree.ts";
 
 /**
  * The sidebar's foot, as the design's (design/app.js, Side; BudgetMeter): what the drama has spent
@@ -70,7 +70,9 @@ export function DramaSidebar({ drama, page, episode, drawer }: { drama: DramaVie
   const lineage = useResource<LineageView>(`/api/dramas/${drama.id}/lineage`, [`project:${drama.id}`]);
   const tree = dramaTree({ cast: cast.data ?? [], reviews: reviews.data ?? [], lineage: lineage.data?.lineage ?? null, rows: drama.episodeRows, paused: isPaused(drama) });
   const script = useResource<ScriptPage>(`/api/dramas/${drama.id}/script`, [`drama:${drama.id}`]);
-  const scriptRow = script.data && scriptNow(script.data.versions, isSettingUp(drama) && drama.setup.state === "working" && drama.setup.reached <= 1);
+  // Script's and Bible's rows say what drama-cli recorded of them, its lineage and its status (D64), once each has loaded.
+  const scriptRow = script.data && lineage.data && scriptNow(script.data.versions, lineage.data.lineage);
+  const bibleRow = project.data && bibleNow(project.data.state?.bible);
   // The tree folds the episodes that only wait in line at its end into one line ("EP009–EP024 · 16 in line"), as the design does.
   const lineStart = drama.episodeRows.findLastIndex((row) => row.state !== "queued") + 1;
   const folded = drama.episodeRows.length - lineStart > 1 ? drama.episodeRows.slice(lineStart) : [];
@@ -134,7 +136,7 @@ export function DramaSidebar({ drama, page, episode, drawer }: { drama: DramaVie
           {t("step.script")}
           {scriptRow && (
             <>
-              <span className="now">{t(`tree.script.${scriptRow.now}`)}</span>
+              <span className="now">{t(scriptRow.now === "accepted" ? "tree.accepted" : `tree.script.${scriptRow.now}`)}</span>
               <span className={`dot ${DOT[scriptRow.mark]}`} aria-hidden="true" />
             </>
           )}
@@ -142,7 +144,12 @@ export function DramaSidebar({ drama, page, episode, drawer }: { drama: DramaVie
         <Link to="/d/$dramaId/bible" params={params} className="navi" aria-current={at(page === "bible")}>
           <Icon name="book-open" className="ic" />
           {t("step.bible")}
-          {settingUp && drama.setup.reached < 2 && notStarted}
+          {bibleRow && (
+            <>
+              <span className="now">{bibleRow.version ? t("tree.bible.candidate", { version: bibleRow.version }) : t(bibleRow.now === "accepted" ? "tree.accepted" : "tree.notStarted")}</span>
+              <span className={`dot ${DOT[bibleRow.mark]}`} aria-hidden="true" />
+            </>
+          )}
         </Link>
         <Link to="/d/$dramaId/assets/characters/{-$assetId}" params={{ dramaId, assetId: undefined }} className="navi" aria-current={at(onShelf)}>
           <Icon name="stack" className="ic" />

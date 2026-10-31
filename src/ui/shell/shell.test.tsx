@@ -269,11 +269,13 @@ describe("the sidebar", () => {
     const waiting = { ...drama, status: "setup", setup: { state: "waiting", reached: 1 }, episodeRows: [] } as unknown as DramaView;
     answer("/api/dramas/d1/script", { inputs: [], screenplayFile: null, versions: [{ version: "v1", question: { reviewId: "r1", state: "open" } }] });
     answer("/api/dramas/d1/cast", []);
+    answer("/api/dramas/d1/lineage", { lineage: null, problems: [] });
+    answer("/api/dramas/d1/project", { state: { bible: { current: null, candidate: null, accepted: null, usable: false, run: [], errors: [] }, characters: {}, locations: {}, props: {}, episodes: {} }, sessions: [], problems: [], names: null });
     await renderAt(<DramaSidebar drama={waiting} page="script" drawer={false} />);
     const tree = screen.getByRole("navigation", { name: waiting.title });
     expect(await within(tree).findByRole("link", { name: /^Script/ })).toHaveTextContent("ScriptWaiting for you");
     await waitFor(() => expect(within(tree).getByRole("link", { name: /^Assets/ })).toHaveTextContent("AssetsNot started"));
-    expect(within(tree).getByRole("link", { name: /^Bible/ })).toHaveTextContent("BibleNot started");
+    await waitFor(() => expect(within(tree).getByRole("link", { name: /^Bible/ })).toHaveTextContent("BibleNot started"));
     expect(within(tree).getByRole("link", { name: /^Episodes/ })).toHaveTextContent("EpisodesNot started");
     expect(screen.queryByRole("list", { name: "Steps" })).not.toBeInTheDocument();
   });

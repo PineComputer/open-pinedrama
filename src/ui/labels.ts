@@ -97,14 +97,6 @@ export function isSettingUp(drama: Pick<DramaView, "status" | "episodeRows">): b
   return drama.status === "setup" || (drama.status === "stopped" && !drama.episodeRows.length);
 }
 
-/**
- * Whether the setup waits on the maker's review of the screenplay: it waits at its first question
- * (drama.setup.reached 1, "asking"), which is the rewrite's (design/screens.js, SetupSteps: Script, Your review).
- */
-export function scriptWaits(drama: Pick<DramaView, "status" | "episodeRows" | "setup">): boolean {
-  return isSettingUp(drama) && drama.setup.state === "waiting" && drama.setup.reached <= 1;
-}
-
 /** A scene heading as a person reads it: without the scene number Fountain writes at its end between #s (fountain.io, "Scene Numbers"). */
 export function headingText(heading: string): string {
   return heading.replace(/\s*#[^#\n]*#\s*$/, "");

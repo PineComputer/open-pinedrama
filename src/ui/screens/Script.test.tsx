@@ -84,7 +84,7 @@ describe("Script", () => {
     answer("/api/dramas/d1/script", { inputs: [original], screenplayFile: original.id, versions: [] });
     answer("/api/reviews/r9", { id: "r9", question: "The file is a synopsis, not a screenplay. Please provide the finished screenplay." });
     texts();
-    await renderAt(<Script dramaId="d1" asking="r9" />, "/d/d1/script");
+    await renderAt(<Script dramaId="d1" settingUp asking="r9" />, "/d/d1/script");
     const versions = await screen.findByRole("region", { name: "Versions" });
     expect(await within(versions).findByText("The file is a synopsis, not a screenplay. Please provide the finished screenplay.")).toBeInTheDocument();
     expect(within(versions).getByText("The agent asks you about your file")).toBeInTheDocument();
@@ -172,12 +172,13 @@ describe("Script, a version waiting for the maker", () => {
   });
 });
 
-describe("Script, while the agent rewrites", () => {
-  it("says which version the agent is writing, above those recorded, and not that only the original exists", async () => {
+describe("Script, while the setup runs", () => {
+  it("shows the original and no version drama-cli hasn't recorded, and doesn't say the rewrite went unrecorded (D64)", async () => {
     answer("/api/dramas/d1/script", { inputs: [original], screenplayFile: original.id, versions: [] });
     texts();
-    await renderAt(<Script dramaId="d1" rewriting />, "/d/d1/script");
-    expect(await screen.findByText("v1 · the agent is rewriting your file into Fountain")).toBeInTheDocument();
+    await renderAt(<Script dramaId="d1" settingUp />, "/d/d1/script");
+    const versions = await screen.findByRole("region", { name: "Versions" });
+    expect(within(versions).getAllByRole("listitem")).toHaveLength(1);
     expect(screen.queryByText("This project's rewrite wasn't recorded.")).not.toBeInTheDocument();
   });
 });

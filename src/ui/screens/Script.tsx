@@ -227,7 +227,7 @@ function AskedRow({ reviewId }: { reviewId: string }) {
   );
 }
 
-function ScriptBody({ dramaId, data, ep, rewriting, asking }: { dramaId: string; data: ScriptPage; ep?: string; rewriting: boolean; asking?: string }) {
+function ScriptBody({ dramaId, data, ep, settingUp, asking }: { dramaId: string; data: ScriptPage; ep?: string; settingUp: boolean; asking?: string }) {
   const { t } = useT();
   const { search } = useRoute();
   const navigate = useNavigate();
@@ -290,14 +290,6 @@ function ScriptBody({ dramaId, data, ep, rewriting, asking }: { dramaId: string;
             {t("script.versions")}
           </h3>
           <ol className="history">
-            {rewriting && (
-              <li className="work">
-                <span className="dot work" />
-                <div className="fill">
-                  <span>{t("script.rewriting", { version: `v${data.versions.length + 1}` })}</span>
-                </div>
-              </li>
-            )}
             {/* A question on a version is that version's row; one before any version is about the upload. */}
             {asking && !data.versions.length && <AskedRow reviewId={asking} />}
             {data.versions.map((version) => (
@@ -318,7 +310,7 @@ function ScriptBody({ dramaId, data, ep, rewriting, asking }: { dramaId: string;
                     <span>{t("script.uploaded", { name: original.name })}</span>
                   )}
                   {/* A project set up before drama-cli recorded rewrites: the history says so where the versions would be. */}
-                  {!data.versions.length && !rewriting && !asking && <small className="muted">{t("script.notRecorded")}</small>}
+                  {!data.versions.length && !settingUp && <small className="muted">{t("script.notRecorded")}</small>}
                 </div>
               </li>
             )}
@@ -386,7 +378,7 @@ function ScriptBody({ dramaId, data, ep, rewriting, asking }: { dramaId: string;
  * one in a read-only editor, as Fountain, as the maker's original, or the two compared. The selected version is the
  * URL's (?item=screenplay&version=vN, D48).
  */
-export function Script({ dramaId, ep, rewriting = false, asking }: { dramaId: string; ep?: string; rewriting?: boolean; asking?: string }) {
+export function Script({ dramaId, ep, settingUp = false, asking }: { dramaId: string; ep?: string; settingUp?: boolean; asking?: string }) {
   const { t } = useT();
   const { search } = useRoute();
   const { data, error } = useResource<ScriptPage>(`/api/dramas/${dramaId}/script`, [`drama:${dramaId}`]);
@@ -396,5 +388,5 @@ export function Script({ dramaId, ep, rewriting = false, asking }: { dramaId: st
   if (search.item !== undefined && search.item !== "screenplay") return <Missing dramaId={dramaId} what={search.item} />;
   if (search.version !== undefined && !data.versions.some((version) => version.version === search.version))
     return <Missing dramaId={dramaId} what={`screenplay ${search.version}`} />;
-  return <ScriptBody dramaId={dramaId} data={data} ep={ep} rewriting={rewriting} asking={asking} />;
+  return <ScriptBody dramaId={dramaId} data={data} ep={ep} settingUp={settingUp} asking={asking} />;
 }

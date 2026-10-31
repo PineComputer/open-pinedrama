@@ -2,6 +2,7 @@
 // each of the drama's places, how many characters, locations and props its Assets shelves hold, its open reviews and
 // what is out of date. Each count comes from the resource the place itself shows, so the tree and the page agree.
 import { type Lineage, outOfDate } from "../../shared/lineage.ts";
+import type { BibleStatus } from "../../shared/project.ts";
 import type { CastCard, EpisodeRow, ReviewKind, ReviewSummary, ScreenplayVersion } from "../../shared/types.ts";
 
 export type TreePlace = "assets" | "delivery";
@@ -39,15 +40,26 @@ const PLACE: Partial<Record<ReviewKind, TreePlace>> = { looks: "assets", referen
 
 /**
  * Where the screenplay stands, for the tree's Script row, as an episode row says it (design/screens.js, scriptRow; the
- * five maker states' dots), from the versions Script shows: the version that waits for the maker, the agent rewriting,
- * accepted only by a recorded acceptance (an approve verdict), or only the original when no version was recorded.
+ * five maker states' dots): the version that waits for the maker's answer, accepted only as drama-cli's lineage records
+ * it (its screenplay node's working version is the accepted one), or only the original when no version was recorded.
+ * Never a rewrite the studio infers from a running setup (D64 as amended for C14).
  */
-export function scriptNow(versions: ScreenplayVersion[], rewriting: boolean): { now: "waiting" | "rewriting" | "accepted" | "original"; mark: Mark } | undefined {
+export function scriptNow(versions: ScreenplayVersion[], lineage: Lineage | null): { now: "waiting" | "accepted" | "original"; mark: Mark } | undefined {
   if (versions.some((version) => version.question?.state === "open")) return { now: "waiting", mark: "you" };
-  if (rewriting) return { now: "rewriting", mark: "work" };
-  if (versions.some((version) => version.question?.verdict === "approve")) return { now: "accepted", mark: "done" };
+  const screenplay = lineage?.nodes.find((node) => node.kind === "screenplay");
+  if (screenplay?.accepted && screenplay.accepted === screenplay.version) return { now: "accepted", mark: "done" };
   if (!versions.length) return { now: "original", mark: "line" };
   return undefined;
+}
+
+/**
+ * Where the bible stands, for the tree's Bible row, from drama-cli's status of it (D64 as amended for C14): not started
+ * before a working version, accepted when the working version is the accepted one, otherwise that version, not accepted.
+ */
+export function bibleNow(bible: BibleStatus | undefined): { now: "notStarted" | "accepted" | "candidate"; version?: string; mark: Mark } {
+  if (!bible?.current) return { now: "notStarted", mark: "line" };
+  if (bible.accepted === bible.current) return { now: "accepted", mark: "done" };
+  return { now: "candidate", version: bible.current, mark: "work" };
 }
 
 export function dramaTree({ cast, reviews, lineage, rows, paused }: { cast: CastCard[]; reviews: ReviewSummary[]; lineage: Lineage | null; rows: EpisodeRow[]; paused: boolean }): DramaTree {

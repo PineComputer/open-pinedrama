@@ -101,11 +101,9 @@ const scriptRoute = createRoute({
   },
   component: function ScriptPage() {
     const drama = useDrama();
-    // The setup at the screenplay, working: the agent is rewriting it (a first version, or the next after a Send back).
-    const rewriting = isSettingUp(drama) && drama.setup.state === "working" && drama.setup.reached <= 1;
     // The setup waiting on the maker's answer: its question, which Script shows when no version is recorded yet.
     const asking = isSettingUp(drama) && drama.setup.state === "waiting" ? drama.setup.reviewId : undefined;
-    return <Script dramaId={drama.id} ep={scriptRoute.useSearch().ep} rewriting={rewriting} asking={asking} />;
+    return <Script dramaId={drama.id} ep={scriptRoute.useSearch().ep} settingUp={isSettingUp(drama)} asking={asking} />;
   },
 });
 const bibleRoute = createRoute({

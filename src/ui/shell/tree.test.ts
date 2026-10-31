@@ -2,7 +2,7 @@
 import { describe, expect, it } from "vitest";
 import type { Lineage, LineageKind, LineageNode } from "../../shared/lineage.ts";
 import { type CastCard, type EpisodeRow, type ReviewKind, type ReviewState, type ReviewSummary, type ScreenplayVersion, STAGES } from "../../shared/types.ts";
-import { dramaTree, markOf, scriptNow } from "./tree.ts";
+import { bibleNow, dramaTree, markOf, scriptNow } from "./tree.ts";
 
 function review(kind: ReviewKind, state: ReviewState = "open", episode?: string): ReviewSummary {
   return { id: `${kind}-${episode ?? "drama"}-${state}`, dramaId: "d1", dramaTitle: "The Stepmother", episode, kind, state, question: "", items: 1, subjects: [], createdAt: "2026-10-30T10:00:00Z" };
@@ -63,18 +63,29 @@ describe("the drama tree", () => {
     expect(dramaTree({ cast: [], reviews: [], lineage: null, rows, paused: true }).episodes).toBe(1);
   });
 
-  it("says where the screenplay stands on Script's row, as an episode row does", () => {
+  it("says where the screenplay stands on Script's row, as an episode row does, accepted only as drama-cli's lineage records it (D64)", () => {
     const version = (state?: "open" | "answered", verdict?: "approve" | "revise"): ScreenplayVersion => ({ version: "v1", question: state && { reviewId: "r1", state, verdict } });
-    expect(scriptNow([version("open")], false)).toEqual({ now: "waiting", mark: "you" });
-    expect(scriptNow([version("answered", "revise")], true)).toEqual({ now: "rewriting", mark: "work" });
-    expect(scriptNow([version("answered", "approve")], false)).toEqual({ now: "accepted", mark: "done" });
-    expect(scriptNow([], true)).toEqual({ now: "rewriting", mark: "work" });
+    const screenplay = (accepted: string | null) => ({ nodes: [{ id: "screenplay", kind: "screenplay", version: "v1", accepted, fresh: true }], links: [], groups: [] }) as unknown as Lineage;
+    expect(scriptNow([version("open")], screenplay(null))).toEqual({ now: "waiting", mark: "you" });
+    expect(scriptNow([version("answered", "approve")], screenplay("v1"))).toEqual({ now: "accepted", mark: "done" });
+    // The maker's approve verdict is history: until drama-cli records the acceptance, the row says nothing it doesn't know.
+    expect(scriptNow([version("answered", "approve")], screenplay(null))).toBeUndefined();
+    expect(scriptNow([version("answered", "revise")], screenplay(null))).toBeUndefined();
   });
 
   it("never says Accepted without a recorded acceptance: a project with no recorded version is Original only, waiting in line", () => {
     // The Double Life (r4), past its setup with episodes made, recorded no screenplay version.
-    expect(scriptNow([], false)).toEqual({ now: "original", mark: "line" });
+    expect(scriptNow([], null)).toEqual({ now: "original", mark: "line" });
     // A version answered before the verdict existed is no recorded acceptance either.
-    expect(scriptNow([{ version: "v1", question: { reviewId: "r1", state: "answered", words: "Yes." } }], false)).toBeUndefined();
+    expect(scriptNow([{ version: "v1", question: { reviewId: "r1", state: "answered", words: "Yes." } }], null)).toBeUndefined();
+  });
+
+  it("says where the bible stands on Bible's row from drama-cli's status of it (D64)", () => {
+    const bible = (current: string | null, accepted: string | null) => ({ current, candidate: accepted === current ? null : current, accepted, usable: accepted !== null, run: [], errors: [] });
+    expect(bibleNow(undefined)).toEqual({ now: "notStarted", mark: "line" });
+    expect(bibleNow(bible(null, null))).toEqual({ now: "notStarted", mark: "line" });
+    // Codex rc5 T11: status said candidate v7 while the tree said Not started.
+    expect(bibleNow(bible("v7", null))).toEqual({ now: "candidate", version: "v7", mark: "work" });
+    expect(bibleNow(bible("v4", "v4"))).toEqual({ now: "accepted", mark: "done" });
   });
 });

@@ -24,7 +24,7 @@ test("a maker uploads one screenplay, chooses a preset and starts", async ({ pag
   expect(await newProblems(page)).toEqual([]);
 
   await next.getByRole("button", { name: "Start" }).click();
-  // Script holds the setup's first steps (D62): the agent rewriting, then the version that waits, decided on with Accept
+  // Script holds the setup's first steps (D62): the version that waits, decided on with Accept
   // and Send back as peers in its history.
   await expect(page).toHaveURL(/\/d\/[^/]+\/script$/);
   expect(await newProblems(page)).toEqual([]);
