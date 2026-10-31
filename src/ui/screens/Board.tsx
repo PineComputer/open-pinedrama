@@ -119,7 +119,7 @@ export function Board({ drama }: { drama: DramaView }) {
               <small>{rows.filter(shows(key)).length}</small>
             </button>
           ))}
-          <span className="grow" />
+          <span className="fill" />
           <label className="search" style={{ width: 200 }}>
             <Icon name="magnifying-glass" className="ic" />
             <input type="search" value={find} placeholder={t("board.find")} aria-label={t("board.find")} onChange={(event) => setFind(event.target.value)} />

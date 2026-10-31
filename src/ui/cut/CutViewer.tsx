@@ -253,7 +253,7 @@ export function CutViewer({ file, tag, notes = [], onTime, videoRef, actions = W
           <span className="t">
             {time.toFixed(1)}s <small>/ {length.toFixed(1)}s</small>
           </span>
-          <span className="grow" />
+          <span className="fill" />
           <span className="muted">{[...(format ? format.split(/,\s*/) : []), fps ? `${fps} fps` : "", t("cut.segmentsCount", { n: clips.length })].filter(Boolean).join(" · ")}</span>
         </div>
         {!plan && <p className="muted">{t("cut.noPlan")}</p>}

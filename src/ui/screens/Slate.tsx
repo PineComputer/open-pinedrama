@@ -88,7 +88,7 @@ function Waiting({ waiting, dramas }: { waiting: ReviewSummary[]; dramas: DramaC
     <section className="waitstrip" aria-labelledby="waiting-title">
       <div className="wh">
         <h3 id="waiting-title">{t("slate.waiting")}</h3>
-        <span className="grow" />
+        <span className="fill" />
         <Link to="/reviews" className="seeall">
           {t("slate.seeAll", { n: waiting.length })}
           <Icon name="caret-right" className="ic" />
@@ -211,7 +211,7 @@ export function Slate() {
   return (
     <div className="wrap">
       <div className="greet">
-        <div className="grow">
+        <div className="fill">
           <h1>{t("slate.title")}</h1>
           {dramas.length > 0 && <p>{waiting.length ? t("slate.decisions", { n: waiting.length }) : t("slate.facts", { a: counts.work + counts.you, b: 0 })}</p>}
         </div>
@@ -247,7 +247,7 @@ export function Slate() {
               </button>
             ))}
           </div>
-          <span className="grow" />
+          <span className="fill" />
           <label className="search">
             <Icon name="magnifying-glass" className="ic" />
             <input type="search" placeholder={t("slate.find")} aria-label={t("slate.find")} value={find} onChange={(event) => setFind(event.target.value)} />

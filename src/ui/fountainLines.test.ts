@@ -18,7 +18,7 @@ describe("fountainLines", () => {
       { el: "paren", text: "(quietly)", source: 10 },
       { el: "dialogue", text: "Open it.", source: 11 },
       { gap: true },
-      { el: "transition", text: "CUT TO:", source: 13 },
+      { el: "trans", text: "CUT TO:", source: 13 },
     ]);
   });
 });

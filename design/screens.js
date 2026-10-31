@@ -24,7 +24,7 @@
         acts: [["Check your Pine access", "primary"], ["Answer the agent", ""]], note: "Nothing new was generated. Requests already sent are checked, never sent again. You never handle provider keys on Pine." },
     }[kind];
     return html`<section class=${"stopcard " + kind} aria-label=${K.head}>
-      <header>${I(K.icon)}<span>${K.head}</span><span class="grow"></span><span class="mono">${{ cap: "EP004", redline: "EP007" }[kind] || ""}</span></header>
+      <header>${I(K.icon)}<span>${K.head}</span><span class="fill"></span><span class="mono">${{ cap: "EP004", redline: "EP007" }[kind] || ""}</span></header>
       <div class="sbody"><h3>${K.title}</h3>
         <dl class="kv"><dt>Code</dt><dd class="mono">${K.code}</dd><dt>drama-cli said</dt><dd class="said mono">${K.said}</dd></dl>
         <div class="acts">${K.acts.map(([l, c]) => html`<button class=${"btn sm " + c} onClick=${() => toast("Prototype: " + l + ".")}>${l}</button>`)}<span class="subtle" style="font-size:11.5px">${K.note}</span></div>
@@ -36,19 +36,19 @@
     const ready = S.file && S.preset;
     const pick = () => set({ file: { name: "bride-on-bail.docx", size: "212 KB", pages: 41 } });
     return html`<div class="main">
-      <header class="top"><button class="ibtn" aria-label="Back" onClick=${() => go("home")}>${I("caret-left")}</button><div class="crumb"><span>Projects</span>${I("caret-right")}<b>New project</b></div><span class="grow"></span></header>
+      <header class="top"><button class="ibtn" aria-label="Back" onClick=${() => go("home")}>${I("caret-left")}</button><div class="crumb"><span>Projects</span>${I("caret-right")}<b>New project</b></div><span class="fill"></span></header>
       <div class="scrollmain"><div class="wrap" style="max-width:1040px">
-        <div class="greet"><div class="grow"><h1>New project</h1><p>Check the file, choose how it is made, and start. drama-cli's screenplay validate is free; the agent's turns are billed from the start.</p></div></div>
+        <div class="greet"><div class="fill"><h1>New project</h1><p>Check the file, choose how it is made, and start. drama-cli's screenplay validate is free; the agent's turns are billed from the start.</p></div></div>
         <div class="formgrid">
           <div class="fcol">
             <section class="panel"><h3>${I("file-text")}Screenplay</h3>
-              ${S.file ? html`<div class="filerow">${I("file-text")}<span class="grow"><b>${S.file.name}</b><small>${S.file.size} · ${S.file.pages} pages · Word</small></span><button class="btn sm ghost" onClick=${() => set({ file: null })}>Replace</button></div>`
+              ${S.file ? html`<div class="filerow">${I("file-text")}<span class="fill"><b>${S.file.name}</b><small>${S.file.size} · ${S.file.pages} pages · Word</small></span><button class="btn sm ghost" onClick=${() => set({ file: null })}>Replace</button></div>`
                 : html`<button class=${"dropzone " + (S.over ? "over" : "")} onClick=${pick} onDragOver=${(e) => { e.preventDefault(); if (!S.over) set({ over: true }); }} onDragLeave=${() => set({ over: false })} onDrop=${(e) => { e.preventDefault(); set({ over: false }); pick(); }}>
                   <span class="plus">${I("upload")}</span><b>Drop your screenplay</b><small>Fountain, Word, PDF or plain text · or click to choose</small></button>`}
             </section>
             <section class="panel"><h3>${I("sliders-horizontal")}Preset</h3><p class="muted" style="margin-bottom:10px">How the drama is made: language, look and audience. You choose; it can't be changed later.</p>
               <div class="presets" role="radiogroup" aria-label="Preset">${P.presets.map((p, i) => html`<label class="preset"><button type="button" class="radio" role="radio" data-slot="radio-group-item" aria-checked=${String(S.preset === p.id)} data-state=${S.preset === p.id ? "checked" : "unchecked"} tabindex=${S.preset ? (S.preset === p.id ? 0 : -1) : (i === 0 ? 0 : -1)} onClick=${() => set({ preset: p.id })}></button>
-                <span class="grow"><b>${p.t}</b><small>${p.d}</small><code>${p.id}</code></span></label>`)}</div></section>
+                <span class="fill"><b>${p.t}</b><small>${p.d}</small><code>${p.id}</code></span></label>`)}</div></section>
             <section class="panel"><h3>${I("clock")}Episodes and budget</h3>
               <div class="fields">
                 <label><span>Episode length</span><div class="seg">${["60", "90", "120"].map((v) => html`<button aria-pressed=${String(S.len === v)} onClick=${() => set({ len: v })}>${v} s</button>`)}</div></label>
@@ -60,7 +60,7 @@
                     ["key", "Looks, photoreal storyboards, takes and cuts", "You approve the leads' looks and every photoreal storyboard, and watch every take and cut. The shared references and line-art storyboards go on as the agent makes them."],
                     ["none", "Photoreal storyboards, takes and cuts", "You approve every photoreal storyboard, watch every take and cut, and answer the agent's questions. The leads' looks, the shared references and line-art storyboards go on as the agent makes them."],
                   ].map(([v, l, hint]) => html`<label class="preset"><button type="button" class="radio" role="radio" data-slot="radio-group-item" aria-checked=${String(S.reviewing === v)} data-state=${S.reviewing === v ? "checked" : "unchecked"} tabindex=${S.reviewing === v ? 0 : -1} onClick=${() => set({ reviewing: v })}></button>
-                    <span class="grow"><b>${l}</b><small>${hint}</small></span></label>`)}</div></div>
+                    <span class="fill"><b>${l}</b><small>${hint}</small></span></label>`)}</div></div>
                 <label><span>Budget</span><div class="inputwrap">$<input value=${S.budget} inputmode="decimal" onInput=${(e) => set({ budget: e.target.value })}/></div><small class="muted">${SPENT_COVERS} The drama stops and asks you when it is spent.</small></label>
               </div></section>
           </div>
@@ -99,7 +99,7 @@
     const versionsOf = (x) => { const [, pre, n] = x.ver.match(/^(.*?)v(\d+)$/); return Array.from({ length: Number(n) }, (_, i) => pre + "v" + (i + 1)); };
     const shownOf = (x) => (S.asel === x.id && S.at && S.at.ver && versionsOf(x).includes(S.at.ver) ? S.at.ver : x.ver);
     const head = (x) => { const shown = shownOf(x); return html`
-      <div style="display:flex;align-items:baseline;gap:8px"><b class="grow">${x.name}</b><span class="mono subtle" style="font-size:11px">${shown}</span>
+      <div style="display:flex;align-items:baseline;gap:8px"><b class="fill">${x.name}</b><span class="mono subtle" style="font-size:11px">${shown}</span>
         ${shown !== x.ver && html`<span class="mono muted" style="font-size:11px">current ${x.ver}</span>`}</div>`; };
     /* J1: an asset's one home is its card here, opened in the viewer below: its versions, state, findings and review,
        and Lineage. The canvas and Lineage link to it. */
@@ -123,10 +123,10 @@
             <button class="lbnav next" aria-label="Next asset" title="Next (→)" onClick=${() => step(1)}>${I("caret-right")}</button>`}
           <span class="lbcount mono">${i + 1} / ${list.length}</span></div>
         <aside class="lbpanel" aria-label="Details">
-          <div class="lbhead"><b class="grow">${x.name}</b><button class="ibtn" aria-label="Close (Esc)" title="Close (Esc)" onClick=${close}>${I("x")}</button></div>
+          <div class="lbhead"><b class="fill">${x.name}</b><button class="ibtn" aria-label="Close (Esc)" title="Close (Esc)" onClick=${close}>${I("x")}</button></div>
           <p class="muted lbkind">${kind} · ${kindOf} ${shown}</p>
           <div class="lbrow">${cur ? Status(x.st === "stale" ? "accepted" : x.st) : shown === x.accepted ? Status("accepted") : html`<span class="subtle">Not the accepted version.</span>`}${x.problems && Status("stale", "Out of date")}
-            <span class="grow"></span><button class="btn sm" disabled=${!lin} title=${lin ? "" : "Lineage: this sample traces seg03 and what it reads"} onClick=${() => { set({ asel: null }); openLineage(lin, x.name + " · Assets"); }}>${I("tree-structure")}Lineage</button></div>
+            <span class="fill"></span><button class="btn sm" disabled=${!lin} title=${lin ? "" : "Lineage: this sample traces seg03 and what it reads"} onClick=${() => { set({ asel: null }); openLineage(lin, x.name + " · Assets"); }}>${I("tree-structure")}Lineage</button></div>
           ${cur && x.st === "you" && html`<div class="lbsec"><h4>Your review</h4>${S.stab === "cast" && html`<div class="finding warn">${I("warning")}<span>warn · The blouse reads as purple; the bible says plum.</span></div>`}<${ReviewBtns} id=${x.id}/></div>`}
           ${cur && x.st === "back" && html`<div class="lbsec"><div class="finding err">${I("warning-circle")}<span>Sent back by the agent: the observer found an error (a third hand). Redrawing.</span></div></div>`}
           ${cur && x.problems && html`<div class="lbsec"><h4>Why it's out of date</h4>${x.problems.map((said) => html`<div class="finding warn">${I("warning")}<span>${said}</span></div>`)}</div>`}
@@ -144,16 +144,16 @@
     return html`<div class="main">
       <${TopBar} crumbs=${(S.stab || "bible") === "bible" ? [own.drama(), "Bible"] : [own.drama(), own.assets(), ...(asset ? [own.tab(S.stab), asset.name + " · " + shownOf(asset)] : [own.tab(S.stab)[0]])]}/>
       <div class="body"><div class="scrollmain">
-        <div class="bar2"><span class="grow"></span><${ProjectChips}/></div>
+        <div class="bar2"><span class="fill"></span><${ProjectChips}/></div>
         <${StopBanner}/>
         <div style="padding:0 16px"><div class="tabsrow" style="margin:4px 0 18px">${story ? html`<div><h2 class="pagetitle">Bible</h2><p class="muted pagesub">The logline, and for each episode its title, summary, end hook and beats, written from your script.</p></div>` : html`<h2 class="pagetitle">${{ cast: "Characters", scenes: "Locations", props: "Props" }[S.stab]} <span class="muted">· ${{ cast: P.cast, scenes: P.places, props: P.props }[S.stab].length}</span></h2>`}
-          <span class="grow"></span><span class="muted" style="font-size:12px">${story ? `${P.bible.version} · accepted · covers ${P.bible.covers}, the whole screenplay` : "Shared by every episode"}</span></div></div>
+          <span class="fill"></span><span class="muted" style="font-size:12px">${story ? `${P.bible.version} · accepted · covers ${P.bible.covers}, the whole screenplay` : "Shared by every episode"}</span></div></div>
         ${/* The bible as drama-cli writes it (bible.json): the logline and the tone, then one row per episode with its title,
              summary, end hook and seconds; each episode's beats open under it (WAI-ARIA APG Disclosure), so the beats read as that episode's. */ ""}
         ${S.stab === "bible" && html`<div class="biblegrid">
           <section class="panel wide"><span class="kick">Logline</span><p class="logline">${P.bible.logline}</p>
             <span class="kick" style="margin-top:14px">Tone</span><p class="tone">${P.bible.tone}</p></section>
-          <section class="panel wide"><h3>${I("film-strip")}Episodes<span class="grow"></span><span class="muted" style="font-size:11.5px;font-weight:500">${P.bible.eps.length} of 24 shown in this sample</span></h3>
+          <section class="panel wide"><h3>${I("film-strip")}Episodes<span class="fill"></span><span class="muted" style="font-size:11.5px;font-weight:500">${P.bible.eps.length} of 24 shown in this sample</span></h3>
             <div class="delivwrap flush"><table class="deliv bibleeps"><thead><tr><th>Episode</th><th>Title</th><th>Summary</th><th>End hook</th><th>Seconds</th></tr></thead>
               <tbody>${P.bible.eps.map((e, i) => { const open = (S.beatsOpen || {})[e.code];
                 return html`<tr><td><button class="disc" aria-expanded=${String(!!open)} aria-controls=${"beats-" + e.code} onClick=${() => set({ beatsOpen: { ...(S.beatsOpen || {}), [e.code]: !open } })}>${I(open ? "caret-down" : "caret-right")}<img src=${P.eps[i].cover} alt=""/><span class="mono">${e.code}</span></button></td>
@@ -164,7 +164,7 @@
         ${S.stab !== "bible" && html`<div class=${"assetgrid flexrows " + S.stab}>${{ cast: P.cast, scenes: P.places, props: P.props }[S.stab].map((x) => html`<article style=${"--r:" + (S.stab === "cast" ? 960 / 540 : S.stab === "scenes" ? 960 / 1706 : 480 / 854)} class=${"assetcard" + (S.asel === x.id ? " sel" : "")} ...${picked(x.id)} ...${openCard(x.id)}>
           ${pic(x, x.sheet || x.pic, x.st !== "accepted" ? Status(x.st) : Status("accepted"))}
           <div class="ctxt"><span class="cardname" title=${x.name}><b>${x.name}</b></span><span class="mono subtle">${shownOf(x)}</span></div></article>`)}</div>`}
-        ${S.stab !== "bible" && html`<div class="sendstrip"><span class="muted">Looks and plates · ${decided} of 2 decided</span><span class="grow"></span>
+        ${S.stab !== "bible" && html`<div class="sendstrip"><span class="muted">Looks and plates · ${decided} of 2 decided</span><span class="fill"></span>
           <button class="btn primary sm" disabled=${decided < 2} onClick=${() => toast("Review sent: Margaret Cole and Garden wedding.")}>Send review</button></div>`}
       </div></div>
       ${asset && html`<${AssetViewer} x=${asset} list=${{ cast: P.cast, scenes: P.places, props: P.props }[S.stab]}/>`}</div>`;
@@ -217,7 +217,7 @@
       <${TopBar} crumbs=${crumbs}/>
       <${StopBanner}/>
       <div class="body"><div class="scrollmain">
-        <div class="bar2"><span class="grow"></span><${ProjectChips}/></div>
+        <div class="bar2"><span class="fill"></span><${ProjectChips}/></div>
         <div class="graphwrap" role="group" aria-label="Graph" tabindex="0"><div class="graph" style=${`width:${24 * 2 + 6 * W + 5 * GX}px;height:${24 * 2 + 4 * H + 3 * GY + 24}px`}>
           ${cols.map((c, i) => html`<span class="gcol" style=${`left:${24 + i * (W + GX)}px`}>${c}</span>`)}
           <svg class="gwires" width="100%" height="100%">${GE.map(([a, b]) => { const A = pos(by[a]), B = pos(by[b]); const x1 = A.x + W, y1 = A.y + H / 2 + 24, x2 = B.x, y2 = B.y + H / 2 + 24, m = (x1 + x2) / 2;
@@ -354,7 +354,7 @@
             ${!S.cutPlaying && html`<button class="bigplay" aria-label="Play" onClick=${() => set({ cutPlaying: true })}><i>${I("play")}</i></button>`}</div></div>
           <div class="cuttl">
             <div class="controls" style="border-top:0;padding:0 0 8px"><button class="pp" aria-label=${S.cutPlaying ? "Pause" : "Play"} onClick=${() => set({ cutPlaying: !S.cutPlaying })}>${I(S.cutPlaying ? "pause" : "play")}</button>
-              <span class="t">${S.cutT.toFixed(1)}s <small>/ ${c.dur.toFixed(1)}s</small></span><span class="grow"></span><span class="muted" style="font-size:11.5px">9:16 · 480p · subtitles from the screenplay · muted in this prototype</span></div>
+              <span class="t">${S.cutT.toFixed(1)}s <small>/ ${c.dur.toFixed(1)}s</small></span><span class="fill"></span><span class="muted" style="font-size:11.5px">9:16 · 480p · subtitles from the screenplay · muted in this prototype</span></div>
             ${tab === "edit" && html`<p class="draftnote">${I("scissors")}<span>Your draft, ${dur.toFixed(1)} s, drawn from its spec. The picture above stays cut ${baseV} until the agent builds the draft.</span></p>`}
             <div class="tl" onClick=${(e) => { if (tab === "edit") return; const r = e.currentTarget.getBoundingClientRect(); seek(Math.max(0, Math.min(c.dur, ((e.clientX - r.left) / r.width) * c.dur))); }}>
               <div class="tlsegs">${tab === "edit"
@@ -376,19 +376,19 @@
           ${tab === "review" ? html`
           <div class="iscroll">
             <div class="isec"><h4>Notes at a time <span class="muted">${rev.notes.length}</span></h4>
-              ${rev.notes.map((n, i) => html`<div class="noterow"><button class="mono tbtn" onClick=${() => seek(n.t)}>${fmt(n.t)}</button><span class="grow">${n.text}</span>${!sent && html`<button class="ibtn" aria-label="Remove note" onClick=${() => revDo({ cutNotes: rev.notes.filter((_, j) => j !== i) })}>${I("x")}</button>`}</div>`)}
+              ${rev.notes.map((n, i) => html`<div class="noterow"><button class="mono tbtn" onClick=${() => seek(n.t)}>${fmt(n.t)}</button><span class="fill">${n.text}</span>${!sent && html`<button class="ibtn" aria-label="Remove note" onClick=${() => revDo({ cutNotes: rev.notes.filter((_, j) => j !== i) })}>${I("x")}</button>`}</div>`)}
               ${!sent && html`<div class="addnote"><span class="mono">${fmt(S.cutT)}</span><input placeholder="Add a note at the playhead…" value=${S.noteDraft} onInput=${(e) => set({ noteDraft: e.target.value })}
                 onKeyDown=${(e) => { if (e.key === "Enter" && S.noteDraft.trim()) revDo({ cutNotes: [...rev.notes, { t: S.cutT, text: S.noteDraft.trim() }].sort((a, b) => a.t - b.t), noteDraft: "" }); }}/></div>`}
               <p class="muted" style="margin:8px 0 0;font-size:11.5px">Notes go to the agent with Send back. To change the cut yourself, use Edit.</p></div>
             ${S.cutSel != null && c.segs[S.cutSel] && (() => { const [seg, take, d] = c.segs[S.cutSel]; return html`<div class="isec"><h4>Properties <span class="muted">${seg}</span></h4>
               <dl class="kv"><dt>Segment</dt><dd>${seg}</dd><dt>Take</dt><dd>${take}</dd><dt>Model</dt><dd>${c.spec.model}</dd><dt>Duration</dt><dd class="mono">${d} s</dd><dt>Picture</dt><dd>${c.spec.ratio} · ${c.spec.resolution} · ${c.spec.fps} fps</dd></dl>
               <div style="display:flex;gap:8px;margin-top:10px"><button class="btn sm" onClick=${() => set({ cutTab: "edit" })}>${I("scissors")}Edit this clip</button><button class="btn sm ghost" onClick=${() => go("canvas")}>${I("flow-arrow")}Open on Canvas</button><button class="btn sm ghost" onClick=${() => openLineage("cut", "EP006 › Cut v1")}>${I("tree-structure")}Lineage</button></div></div>`; })()}
-            <div class="isec"><h4>Made from</h4>${c.segs.map(([s, t, d]) => html`<div class="lrow static">${s} · take ${t}<span class="mono muted">${d} s</span></div>`)}</div>
+            <div class="isec"><h4>Made from</h4>${c.segs.map(([s, t, d]) => html`<div class="lrow plain">${s} · take ${t}<span class="mono muted">${d} s</span></div>`)}</div>
             <div class="isec" style="border-bottom:0"><h4>What happens</h4><p class="muted" style="font-size:12.5px;line-height:1.55">You watch every cut and decide; no model checks a cut for you. Send back, and your notes go to the agent, which plans the cut again: drama-cli's edit calls no paid model, and Pine bills the agent's turns. Accept, and this is EP006's delivered cut, listed in Delivery.</p></div>
           </div>
           <div class="verdict">${sent ? html`
             <${Submission} id="cutReview" to="EP006's agent" kept="Your review is kept." onSend=${() => submit("cutReview")}/>
-            ${(S.subs || {}).cutReview === "sent" && html`<div class=${"sentcard " + sent}>${I(sent === "accept" ? "check-circle" : "paper-plane-tilt")}<span class="grow"><b>${sent === "accept" ? "Accepted · EP006 cut v1 is delivered" : "Sent back · waiting for the agent"}</b>
+            ${(S.subs || {}).cutReview === "sent" && html`<div class=${"sentcard " + sent}>${I(sent === "accept" ? "check-circle" : "paper-plane-tilt")}<span class="fill"><b>${sent === "accept" ? "Accepted · EP006 cut v1 is delivered" : "Sent back · waiting for the agent"}</b>
               <small>${sent === "accept" ? "It is listed in Delivery." : `Your ${rev.notes.length} notes and reason went with it. A new cut comes back here for review.`}</small></span>
               ${sent === "accept" && html`<button class="btn sm" onClick=${() => go("delivery")}>Open Delivery</button>`}</div>`}` : html`
             <div class="vrow" style="grid-template-columns:1fr 1fr">
@@ -399,17 +399,17 @@
                  records the person's words), a reason to send back. As Script's (D62). */ ""}
             ${rev.v === "accept" && html`<textarea placeholder=${`Accept cut ${c.base.v} in your own words (required), e.g. “Yes, deliver this cut.”`} value=${rev.words} onFocus=${() => set({ cutRevHist: [...revHist, rev] })} onInput=${(e) => set({ cutWords: e.target.value })}></textarea>`}
             ${rev.v === "back" && html`<textarea placeholder="Why it goes back (required). Your timed notes go with it." value=${rev.why} onFocus=${() => set({ cutRevHist: [...revHist, rev] })} onInput=${(e) => set({ cutWhy: e.target.value })}></textarea>`}
-            <div class="draftbar"><span>${revChanged ? html`<b>Your review is a draft</b>` : "No review yet"}</span><span class="grow"></span>
+            <div class="draftbar"><span>${revChanged ? html`<b>Your review is a draft</b>` : "No review yet"}</span><span class="fill"></span>
               <button class="btn sm ghost" title="Undo your last step" disabled=${!revHist.length} onClick=${() => set({ cutRevHist: revHist.slice(0, -1), ...{ cutNotes: revHist[revHist.length - 1].notes, cutV: revHist[revHist.length - 1].v, cutWhy: revHist[revHist.length - 1].why, cutWords: revHist[revHist.length - 1].words } })}>Undo</button>
               <button class="btn sm ghost" title="Back to how the review started" disabled=${!revChanged} onClick=${() => { revSet(revStart); set({ cutRevHist: [] }); }}>Reset</button>
               <button class="btn sm primary" disabled=${!rev.v || (rev.v === "back" ? !rev.why.trim() : !rev.words.trim())} onClick=${() => { set({ cutSent: rev.v, cutPlaying: false }); submit("cutReview"); }}>Send review</button></div>`}</div>`
           : html`
           <div class="iscroll" inert=${edLocked}>${edLocked && html`<p class="draftnote" style="margin:10px 0 0">${I("lock-simple")}<span>This edit is sent; it is read only. A new edit starts once cut v2 is in, or from this draft if it comes back.</span></p>`}
             <div class="isec"><h4>Based on <span class="muted">cut ${baseV}</span></h4>
-              ${S.state === "cutnewer" && !rebased && html`<div class="basewarn">${I("warning")}<span class="grow"><b>A newer cut exists</b><small>Cut ${c.newer.v} came in after you started this draft on cut ${c.base.v}. Nothing your draft uses has changed.</small></span></div>`}
-              ${S.state === "cutinputs" && html`<div class="basewarn err">${I("warning")}<span class="grow"><b>Your draft's inputs changed</b><small>seg03 · t02, which your draft trims, is no longer accepted: its storyboard changed after you accepted it. There is no newer cut.</small></span></div>`}
-              ${rebased && html`<div class="baseok">${I("check-circle")}<span class="grow"><b>Re-checked against cut ${c.newer.v}</b><small>Your ${diff.length === 1 ? "change applies" : diff.length + " changes apply"} to it as before; it is your draft's base now.</small></span></div>`}
-              ${S.state === "cutinputs" && S.cutCheck && html`<div class="basewarn err"><span class="grow"><b>Re-checked: Apply waits</b><small>seg03 has no accepted take now, so your trim of it can't be built. Keep the draft until seg03's new take is accepted, or discard it.</small></span></div>`}
+              ${S.state === "cutnewer" && !rebased && html`<div class="basewarn">${I("warning")}<span class="fill"><b>A newer cut exists</b><small>Cut ${c.newer.v} came in after you started this draft on cut ${c.base.v}. Nothing your draft uses has changed.</small></span></div>`}
+              ${S.state === "cutinputs" && html`<div class="basewarn err">${I("warning")}<span class="fill"><b>Your draft's inputs changed</b><small>seg03 · t02, which your draft trims, is no longer accepted: its storyboard changed after you accepted it. There is no newer cut.</small></span></div>`}
+              ${rebased && html`<div class="baseok">${I("check-circle")}<span class="fill"><b>Re-checked against cut ${c.newer.v}</b><small>Your ${diff.length === 1 ? "change applies" : diff.length + " changes apply"} to it as before; it is your draft's base now.</small></span></div>`}
+              ${S.state === "cutinputs" && S.cutCheck && html`<div class="basewarn err"><span class="fill"><b>Re-checked: Apply waits</b><small>seg03 has no accepted take now, so your trim of it can't be built. Keep the draft until seg03's new take is accepted, or discard it.</small></span></div>`}
               ${blocked && html`<div style="display:flex;gap:8px;margin-top:8px">
                 <button class="btn sm" aria-pressed=${String(!!S.cutCompare)} onClick=${() => set({ cutCompare: !S.cutCompare })}>${I("eye")}Compare</button>
                 <button class="btn sm" disabled=${S.state === "cutinputs" && S.cutCheck} onClick=${() => S.state === "cutnewer"
@@ -423,7 +423,7 @@
               <details class="basedet"><summary>What the draft rests on</summary><dl class="kv"><dt>Cut</dt><dd class="mono">${baseV} · ${rebased ? c.newer.sha : c.base.sha}</dd>${c.base.inputs.map(([k, h]) => html`<dt>${k}</dt><dd class="mono">sha256 ${h}…</dd>`)}</dl></details></div>
             <div class="isec"><h4>Clips in order <span class="muted">${ed.length}</span></h4>
               ${ed.map((x, i) => { const b = base.find((y) => y.seg === x.seg), chg = !b || !sameClip(b, x); return html`<div class=${"cliprow" + (S.cutSel === i ? " on" : "")}>
-                <button class="clipmain" onClick=${() => set({ cutSel: i })}><img src=${takeOf(x.seg, x.take)[2]} alt=""/><span class="grow"><b>${x.seg} · ${x.take}</b><small class="mono">${x.in.toFixed(1)}–${x.out.toFixed(1)} s${x.audio === "silence" ? " · silence" : ""}</small></span>${chg && html`<span class="chgdot" title="Edited"></span>`}</button>
+                <button class="clipmain" onClick=${() => set({ cutSel: i })}><img src=${takeOf(x.seg, x.take)[2]} alt=""/><span class="fill"><b>${x.seg} · ${x.take}</b><small class="mono">${x.in.toFixed(1)}–${x.out.toFixed(1)} s${x.audio === "silence" ? " · silence" : ""}</small></span>${chg && html`<span class="chgdot" title="Edited"></span>`}</button>
                 <button class="ibtn" aria-label=${"Move " + x.seg + " earlier"} disabled=${i === 0} onClick=${() => move(i, -1)}>${I("caret-up")}</button>
                 <button class="ibtn" aria-label=${"Move " + x.seg + " later"} disabled=${i === ed.length - 1} onClick=${() => move(i, 1)}>${I("caret-down")}</button></div>`; })}</div>
             ${ed[S.cutSel] && (() => { const x = ed[S.cutSel], i = S.cutSel, len = takeOf(x.seg, x.take)[1]; return html`<div class="isec"><h4>Clip <span class="muted">${x.seg}</span></h4>
@@ -434,17 +434,17 @@
                 <span class="muted">Sound</span><div class="seg">${["source", "silence"].map((a) => html`<button aria-pressed=${String(x.audio === a)} onClick=${() => put(i, { audio: a })}>${a === "source" ? "Take's sound" : "Silence"}</button>`)}</div>
                 <p class="muted">Phase 1 edits what drama-cli's edit takes: an accepted take, the order, in and out, and the take's sound or silence. A start off a keyframe is re-encoded when the agent builds it.</p></div></div>`; })()}
             <div class="isec" style="border-bottom:0"><h4>Changes <span class="muted">${diff.length} against cut ${baseV}</span></h4>
-              ${diff.length ? diff.map(([k, d]) => html`<div class="lrow static"><span>${k}</span><span class="mono">${d}</span></div>`) : html`<p class="muted" style="margin:0;font-size:12.5px">No edits. The draft matches cut ${baseV}.</p>`}
+              ${diff.length ? diff.map(([k, d]) => html`<div class="lrow plain"><span>${k}</span><span class="mono">${d}</span></div>`) : html`<p class="muted" style="margin:0;font-size:12.5px">No edits. The draft matches cut ${baseV}.</p>`}
               <p class="muted" style="margin:8px 0 0;font-size:11.5px">Your timed notes are not edits: they stay on Review.</p></div>
           </div>
           <div class="verdict">${sub ? html`
             <${Submission} id="cutApply" to="EP006's agent" kept="Your edit is kept." onSend=${apply}/>
-            ${sub === "sent" && html`<div class=${"sentcard " + (S.cutTurn || "waiting")}>${I(S.cutTurn === "ready" ? "check-circle" : S.cutTurn === "refused" ? "x-circle" : S.cutTurn === "work" ? "circle-notch" : "clock")}<span class="grow">
+            ${sub === "sent" && html`<div class=${"sentcard " + (S.cutTurn || "waiting")}>${I(S.cutTurn === "ready" ? "check-circle" : S.cutTurn === "refused" ? "x-circle" : S.cutTurn === "work" ? "circle-notch" : "clock")}<span class="fill">
               <b>${{ waiting: "Waiting for EP006's session", work: "Building cut v2", ready: "Cut v2 waits for your review", refused: "drama-cli refused the edit" }[S.cutTurn || "waiting"]}</b>
               <small>${{ waiting: "Its status shows when it starts on your edit.", work: "EP006's session is at work: drama-cli edit build EP006, then edit validate. drama-cli's edit calls no paid model; Pine bills the agent's turns.", ready: "Made from your edit of cut " + baseV + ". Watch it and decide, as for any cut.", refused: "Clip 2 has no audio; explicitly choose silence. Nothing was built and nothing was spent; your draft is kept." }[S.cutTurn || "waiting"]}</small></span>
               ${S.cutTurn === "ready" && html`<button class="btn sm primary" onClick=${() => toast("Opens EP006 › Cut v2. This sample has only cut v1.")}>Open cut v2</button>`}
               ${S.cutTurn === "refused" && html`<button class="btn sm" onClick=${() => set({ subs: { ...S.subs, cutApply: undefined }, cutTurn: null, cutSel: 1 })}>Back to the draft</button>`}</div>`}` : html`
-            <div class="draftbar" style="border-top:0;margin-top:0;padding-top:0"><span>${diff.length ? html`<b>Draft · ${diff.length} edit${diff.length > 1 ? "s" : ""}</b>` : "No edits"}</span><span class="grow"></span>
+            <div class="draftbar" style="border-top:0;margin-top:0;padding-top:0"><span>${diff.length ? html`<b>Draft · ${diff.length} edit${diff.length > 1 ? "s" : ""}</b>` : "No edits"}</span><span class="fill"></span>
               <button class="btn sm ghost" title="Undo your last edit" disabled=${!edHist.length} onClick=${() => set({ cutEd: edHist[edHist.length - 1], cutEdHist: edHist.slice(0, -1) })}>Undo</button>
               <button class="btn sm ghost" title=${"Back to cut " + baseV + " with no edits"} disabled=${!diff.length} onClick=${() => edDo(base)}>Reset</button>
               <button class="btn sm primary" disabled=${!diff.length || blocked} title=${blocked ? "Compare and re-check the draft first" : "The agent builds it; cut v2 comes back for review"} onClick=${apply}>${I("paper-plane-tilt")}Apply</button></div>`}</div>`}
@@ -459,7 +459,7 @@
     return html`<div class="main">
       <${TopBar} crumbs=${[own.drama(), "Delivery"]}/>
       <div class="body"><div class="scrollmain">
-        <div class="bar2"><span class="delivsum"><b>${delivered.length} of ${P.project.episodes}</b> episodes delivered · ${waiting.length} cuts wait for you</span><span class="grow"></span>
+        <div class="bar2"><span class="delivsum"><b>${delivered.length} of ${P.project.episodes}</b> episodes delivered · ${waiting.length} cuts wait for you</span><span class="fill"></span>
           <button class="btn sm" disabled=${!delivered.length} onClick=${() => toast(`Downloads the ${delivered.length} accepted cut${delivered.length > 1 ? "s" : ""} as one zip, each file named by episode and cut version.`)}>${I("download-simple")}Download accepted (${delivered.length})</button></div>
         <${StopBanner}/>
         <div class="delivwrap"><table class="deliv"><thead><tr><th>Episode</th><th>Delivered cut</th><th>Latest cut</th><th>Status</th><th aria-label="Download"></th></tr></thead>
@@ -579,16 +579,16 @@
     }[st];
     const History = html`<ol class="history">${events.map(([kind, d, text, at]) => html`<li class=${kind + (d && d === shown ? " sel" : "")}>
         <span class="dot ${kind === "you" ? "you" : kind === "work" ? "work" : kind === "line" ? "line" : "accepted"}"></span>
-        <div class="grow"><span>${d && html`<button class="hver" aria-pressed=${String(d === shown)} title=${"Show " + d.v} onClick=${() => set({ sver: d.v, ssel: null, scriptEp: null })}>${d.v}</button> · `}${text}</span>${at && html`<time>${at}</time>`}
+        <div class="fill"><span>${d && html`<button class="hver" aria-pressed=${String(d === shown)} title=${"Show " + d.v} onClick=${() => set({ sver: d.v, ssel: null, scriptEp: null })}>${d.v}</button> · `}${text}</span>${at && html`<time>${at}</time>`}
           ${d && d === shown && review(d)}
           ${kind === "you" && Decide}</div></li>`)}</ol>`;
     const accepted = st === "accepted" || decided === "accept";
     return html`<div class="main">
       <${TopBar} crumbs=${[own.drama(), "Script"]}/>
       <div class="body"><div class="scrollmain">
-        <div class="bar2"><span class="grow"></span><${ProjectChips}/></div>
+        <div class="bar2"><span class="fill"></span><${ProjectChips}/></div>
         <${StopBanner}/>
-        <div class="scripthead"><div class="grow"><h2 class="pagetitle">Script</h2>
+        <div class="scripthead"><div class="fill"><h2 class="pagetitle">Script</h2>
           <p class="muted pagesub">Your screenplay from upload to acceptance: the agent rewrites it into Fountain, drama-cli validates it, and you accept it. Sample: ${sc.project}'s real files.</p></div></div>
         ${S.scriptEp && hasFountain && !target && html`<div class="notice" role="status">${I("info")}<span><b>${S.scriptEp} isn't in this sample's screenplay.</b> The sample is The Stepmother's two episodes; for a real project Script opens at ${S.scriptEp}'s section.</span></div>`}
         <div class="scriptlayout">
@@ -605,7 +605,7 @@
               ${/* Read-only for now (VS Code's read-only editor, files.readonly): a change goes through the agent, Send back
                    while a version waits for you, or ask the agent after acceptance; drama-cli validates the new version. */ ""}
               <span class="ro" title="Read-only: ask the agent for a change; it writes a new version that drama-cli validates and you accept">${I("lock-simple")}Read-only</span></div>
-            <span class="grow"></span>
+            <span class="fill"></span>
             ${/* The view switch is the editor's primary control: each choice names itself beside its icon (Apple HIG: label an
                  icon whose meaning isn't universal), on Segmented, and only the views this version has. */ ""}
             ${hasFountain && html`<div class="seg" role="group" aria-label="Show">${[["original", "Original", "file-text"], ["fountain", "Fountain", "film-strip"], ["compare", "Compare", "square-half"]].map(([k, l, ic]) =>

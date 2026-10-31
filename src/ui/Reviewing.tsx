@@ -17,7 +17,7 @@ export function ReviewingChoice({ value, onChange }: { value: Reviewing; onChang
         {CHOICES.map((choice) => (
           <label key={choice} className="preset">
             <RadioGroupItem value={choice} />
-            <span className="grow">
+            <span className="fill">
               <b>{t(`reviewing.${choice}`)}</b>
               <small>{t(`reviewing.${choice}Hint`)}</small>
             </span>

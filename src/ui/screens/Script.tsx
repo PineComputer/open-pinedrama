@@ -91,7 +91,7 @@ function VersionRow({ version, shown, onShow }: { version: ScreenplayVersion; sh
   return (
     <li className={(waiting ? "you" : "done") + (shown ? " sel" : "")}>
       <span className={`dot ${waiting ? "you" : "accepted"}`} />
-      <div className="grow">
+      <div className="fill">
         <span>
           <button type="button" className="hver" aria-pressed={shown} title={t("script.showVersion", { version: version.version })} onClick={onShow}>
             {version.version}
@@ -213,7 +213,7 @@ function AskedRow({ reviewId }: { reviewId: string }) {
   return (
     <li className="you">
       <span className="dot you" />
-      <div className="grow">
+      <div className="fill">
         <b>{t("script.asked")}</b>
         <details className="whatchanged" open>
           <summary>{t("script.askedWords")}</summary>
@@ -272,7 +272,7 @@ function ScriptBody({ dramaId, data, ep, rewriting, asking }: { dramaId: string;
   return (
     <>
       <div className="scripthead">
-        <div className="grow">
+        <div className="fill">
           <h2 className="pagetitle">{t("step.script")}</h2>
           <p className="muted pagesub">{t("script.subtitle")}</p>
         </div>
@@ -293,7 +293,7 @@ function ScriptBody({ dramaId, data, ep, rewriting, asking }: { dramaId: string;
             {rewriting && (
               <li className="work">
                 <span className="dot work" />
-                <div className="grow">
+                <div className="fill">
                   <span>{t("script.rewriting", { version: `v${data.versions.length + 1}` })}</span>
                 </div>
               </li>
@@ -306,7 +306,7 @@ function ScriptBody({ dramaId, data, ep, rewriting, asking }: { dramaId: string;
             {original && (
               <li className="done">
                 <span className="dot accepted" />
-                <div className="grow">
+                <div className="fill">
                   {source ? (
                     <span>
                       {t("script.extractedFrom")}{" "}
@@ -338,7 +338,7 @@ function ScriptBody({ dramaId, data, ep, rewriting, asking }: { dramaId: string;
                 {t("script.readOnly")}
               </span>
             </div>
-            <span className="grow" />
+            <span className="fill" />
             {/* The view switch is the editor's primary control, so each choice says its name beside its icon (Apple HIG:
                 label an icon whose meaning isn't universal) on the design's Segmented, and only the views this version has. */}
             {views.length > 1 && <Segmented label={t("script.view")} value={view} options={views.map(([value, label, icon]) => ({ value, label: t(label), icon }))} onChange={choose} />}

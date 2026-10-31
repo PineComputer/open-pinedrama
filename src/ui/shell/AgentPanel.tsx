@@ -192,7 +192,7 @@ export function AgentPanel({ drama, episode, onCollapse }: { drama: DramaView; e
     <aside className="agent" id="agent" aria-label={t("agent.label")}>
       <div className="ahead">
         <h2>{t("agent.title")}</h2>
-        <span className="grow" />
+        <span className="fill" />
         <button type="button" className="ibtn" aria-label={t("agent.collapse")} aria-expanded="true" aria-controls="agent" title={t("agent.collapseKey")} onClick={onCollapse}>
           <Icon name="sidebar-simple" className="ic flipx" />
         </button>
@@ -203,7 +203,7 @@ export function AgentPanel({ drama, episode, onCollapse }: { drama: DramaView; e
       <div className="ascope" role="status">
         {status === "running" ? <span className="live" aria-hidden="true" /> : status === "waiting" ? <span className="adot you" aria-hidden="true" /> : null}
         {pinned && <Icon name="map-pin" className="ic" />}
-        <span className="grow">
+        <span className="fill">
           {closed ? (
             closed
           ) : live && chat.data?.sends === "review" && chat.data.reviewId ? (
@@ -253,7 +253,7 @@ export function AgentPanel({ drama, episode, onCollapse }: { drama: DramaView; e
               </option>
             ))}
         </select>
-        <span className="grow" />
+        <span className="fill" />
         {live && liveComputer && <SessionActions drama={drama} session={live} computer={liveComputer} inFlight={live.episode && state?.episodes[live.episode] ? takesInFlight(state.episodes[live.episode]) : 0} />}
       </div>
       {resume.error !== undefined && <p className="error small" style={{ margin: "6px 16px 0" }}>{errorText(resume.error, t)}</p>}
@@ -354,7 +354,7 @@ function Line({ dramaId, scope, target, chat, onSent }: { dramaId: string; scope
         }}
       />
       <div className="crow">
-        <span className="grow">{t("agent.toWho", { who: target })}</span>
+        <span className="fill">{t("agent.toWho", { who: target })}</span>
         <button type="button" className="send" aria-label={t("talk.send")} disabled={!text.trim() || busy} onClick={() => void send()}>
           <Icon name="arrow-up" className="ic" />
         </button>

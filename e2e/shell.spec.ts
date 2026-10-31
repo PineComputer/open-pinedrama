@@ -84,7 +84,7 @@ test("an episode chosen in the tree stays selected across the surfaces", async (
         const nav = top.querySelector(".crumb")!;
         const items = [...nav.querySelectorAll("*")].map((el) => el.getBoundingClientRect()).filter((box) => box.width > 0);
         const shown = getComputedStyle(nav).overflowX !== "visible" ? nav.getBoundingClientRect().right : Math.max(...items.map((box) => box.right));
-        const actions = [...top.children].filter((el) => !el.matches(".crumb, .grow") && el.getBoundingClientRect().width > 0);
+        const actions = [...top.children].filter((el) => !el.matches(".crumb, .fill") && el.getBoundingClientRect().width > 0);
         return {
           crumbRight: shown,
           actionsLeft: Math.min(...actions.map((el) => el.getBoundingClientRect().left)),

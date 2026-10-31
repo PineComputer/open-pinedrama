@@ -17,7 +17,8 @@ const ELEMENT: Record<string, string> = {
   character: "character",
   parenthetical: "paren",
   dialogue: "dialogue",
-  transition: "transition",
+  // Fountain's Transition (fountain.io), not .transition: that is a Tailwind utility (css-names.test.ts).
+  transition: "trans",
 };
 const BLOCK = new Set(["section", "scene_heading", "action", "centered", "lyrics", "dialogue_begin", "transition", "page_break"]);
 

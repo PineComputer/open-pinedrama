@@ -130,7 +130,7 @@ function Status({ review }: { review: ReviewView }) {
   if (review.state === "ended")
     return (
       <div className="status-line ended">
-        <span className="grow">{t("review.ended")}</span>
+        <span className="fill">{t("review.ended")}</span>
         {review.episode && (
           <button className="link inherit" disabled={resume.busy} onClick={() => void resume.run()}>
             {t("review.continue")}
@@ -1078,7 +1078,7 @@ export function CutRoom({ review, done }: { review: ReviewView; done: () => void
                 <button type="button" className="mono tbtn" aria-label={t("cut.goTo", { time: fmt(note.time ?? 0) })} onClick={() => seek(note.time ?? 0)}>
                   {fmt(note.time ?? 0)}
                 </button>
-                <span className="grow">{note.text}</span>
+                <span className="fill">{note.text}</span>
                 {open && (
                   <button type="button" className="ibtn" aria-label={t("cut.remove", { time: fmt(note.time ?? 0) })} onClick={() => setNotes((current) => current.filter((_, k) => k !== n))}>
                     <Icon name="x" className="ic" />
@@ -1142,7 +1142,7 @@ export function CutRoom({ review, done }: { review: ReviewView; done: () => void
             <div className="isec">
               <h4>{t("cut.madeFrom")}</h4>
               {plan.clips.map((clip) => (
-                <div key={`${clip.segment}/${clip.start}`} className="lrow static">
+                <div key={`${clip.segment}/${clip.start}`} className="lrow plain">
                   {t("cut.take", { segment: clip.segment, take: clip.take })}
                   <span className="mono muted">{(clip.end - clip.start).toFixed(1)} s</span>
                 </div>

@@ -87,7 +87,7 @@ export function CutEdit({ review, file, clips, files, code }: { review: ReviewVi
           {newer && (
             <div className="basewarn">
               <Icon name="warning" className="ic" />
-              <span className="grow">
+              <span className="fill">
                 <b>{t("edit.newer")}</b>
                 <small>{t("edit.newerWhy", { base: file.version ?? "", newer: newer.version ?? "" })}</small>
               </span>
@@ -96,7 +96,7 @@ export function CutEdit({ review, file, clips, files, code }: { review: ReviewVi
           {changed.length > 0 && (
             <div className="basewarn err">
               <Icon name="warning" className="ic" />
-              <span className="grow">
+              <span className="fill">
                 <b>{t("edit.inputs")}</b>
                 <small>{t("edit.inputsWhy", { clips: changed.map((other) => `${other.segment} · ${other.take}`).join(", ") })}</small>
               </span>
@@ -183,7 +183,7 @@ export function CutEdit({ review, file, clips, files, code }: { review: ReviewVi
             return (
               <div key={other.segment} className={`cliprow${index === selected ? " on" : ""}`}>
                 <button type="button" className="clipmain" onClick={() => setSelected(index)}>
-                  <span className="grow">
+                  <span className="fill">
                     <b>
                       {other.segment} · {other.take}
                     </b>
@@ -243,7 +243,7 @@ export function CutEdit({ review, file, clips, files, code }: { review: ReviewVi
           </h4>
           {changes.length ? (
             changes.map((change, index) => (
-              <div key={index} className="lrow static">
+              <div key={index} className="lrow plain">
                 <span>{change.what}</span>
                 <span className="mono">{change.change}</span>
               </div>
@@ -260,7 +260,7 @@ export function CutEdit({ review, file, clips, files, code }: { review: ReviewVi
         {!locked && (
           <div className="draftbar" style={{ borderTop: 0, marginTop: 0, paddingTop: 0 }}>
             <span>{changes.length ? <b>{t("edit.draft", { n: changes.length })}</b> : t("edit.none")}</span>
-            <span className="grow" />
+            <span className="fill" />
             <button
               type="button"
               className="btn sm ghost"

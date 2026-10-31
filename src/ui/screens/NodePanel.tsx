@@ -260,7 +260,7 @@ export function NodePanel({
   return (
     <section className={`npanel nodrag nowheel${dock === "right" ? " docked" : ""}`} aria-label={t("canvas.panel", { item: facts.label })}>
       <div className="nhead">
-        <b className="grow">{facts.label}</b>
+        <b className="fill">{facts.label}</b>
         <StatusChip status={facts.status} label={t(`status.${facts.status}` as TKey)} />
         {dock === "right" ? <IconButton label={t("canvas.dockUnder")} icon="square-half-bottom" onClick={() => onDock("under")} /> : <IconButton label={t("canvas.dockRight")} icon="square-half" onClick={() => onDock("right")} />}
         <IconButton label={t("steer.close")} icon="x" onClick={onClose} />

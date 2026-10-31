@@ -85,7 +85,7 @@ export function DramaSidebar({ drama, page, episode, drawer }: { drama: DramaVie
         trigger={
           <>
             <DramaThumb drama={drama} />
-            <span className="grow">
+            <span className="fill">
               <b>{drama.title}</b>
               <small>{settingUp ? t("sidebar.setupSession") : [episodes.total ? t("sidebar.episodes", { n: episodes.total }) : "", drama.format].filter(Boolean).join(" · ")}</small>
             </span>

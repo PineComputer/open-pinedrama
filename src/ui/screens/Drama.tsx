@@ -50,7 +50,7 @@ function Notices({ drama }: { drama: DramaView }) {
             <span>
               <b>{t(stop.stop?.kind === "red-line" ? "stop.elsewhereRedLine" : "stop.elsewhere", { episode: stop.episode })}</b> {t("stop.othersCarryOn")}
             </span>
-            <span className="grow" />
+            <span className="fill" />
             <Link className="btn sm" to="/d/$dramaId/e/$episodeCode/canvas" params={{ dramaId: drama.id, episodeCode: stop.episode }}>
               {t("stop.openEpisode", { episode: stop.episode })}
             </Link>
@@ -64,7 +64,7 @@ function Notices({ drama }: { drama: DramaView }) {
       {held && !stillStopping(drama) && drama.setup.reason !== "by-maker" && (drama.setup.reason || drama.setup.note) && (
         <div className="banner done">
           <b>{t("stop.isStopped", { title: drama.title })}</b>
-          <span className="grow">
+          <span className="fill">
             {drama.setup.reason ? t(`setup.held.${drama.setup.reason}`) : drama.setup.note ?? t("board.stopped")}
             {drama.setup.reason === "no-drama-skill" && ` ${t("setup.rehearseHint")}`}
           </span>

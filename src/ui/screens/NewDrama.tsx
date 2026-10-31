@@ -115,7 +115,7 @@ export function PresetChoice({ value, onChange }: { value: string; onChange: (pr
       {TEMPLATES.map(({ key, preset }) => (
         <label key={key} className="preset" data-disabled={preset === undefined || undefined}>
           <RadioGroupItem value={preset ?? `soon:${key}`} disabled={preset === undefined} />
-          <span className="grow">
+          <span className="fill">
             <b>{t(`template.${key}` as TKey)}</b>
             <small>{t(`template.${key}.hint` as TKey)}</small>
             <code>{preset ?? t("new.soon")}</code>
@@ -231,7 +231,7 @@ export function NewDrama() {
   return (
     <div className="wrap" style={{ maxWidth: 1040 }}>
       <div className="greet">
-        <div className="grow">
+        <div className="fill">
           <h1>{t("new.title")}</h1>
           <p>{t("new.lede")}</p>
         </div>
@@ -246,7 +246,7 @@ export function NewDrama() {
               {file ? (
                 <div className="filerow">
                   <Icon name="file-text" className="ic" />
-                  <span className="grow">
+                  <span className="fill">
                     <b>{file.name}</b>
                     <small>{Math.max(1, Math.round(file.size / 1024))} KB</small>
                   </span>

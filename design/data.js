@@ -111,7 +111,7 @@ Object.assign(window.P, {
     { el: "paren", tx: "(not turning)", from: [5] },
     { el: "dialogue", tx: "We said separate rooms.", from: [5] },
     { gap: 1 },
-    { el: "transition", tx: "CUT TO:", from: [6], why: "Transition in Fountain form." },
+    { el: "trans", tx: "CUT TO:", from: [6], why: "Transition in Fountain form." },
     { gap: 1 },
     { el: "heading", tx: "INT. LUCA'S APARTMENT - ? #6-2#", from: [7], ask: true, why: "“morning” is not Day or Night as written; tell the agent which." },
     { gap: 1 },

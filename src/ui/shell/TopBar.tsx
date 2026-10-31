@@ -46,7 +46,7 @@ export function DramaBar({ drama }: { drama: DramaView }) {
   const cap = project.data?.sessions[0]?.budget.budgetUsd ?? null;
   return (
     <div className="bar2">
-      <span className="grow" />
+      <span className="fill" />
       {drama.preset && (
         <span className="chip plain" title={t("chip.preset")}>
           <Icon name="sparkle" className="ic" />
@@ -193,7 +193,7 @@ export function TopBar({ crumbs, waiting, ready, next, children }: { crumbs: Cru
     <header className="top">
       <Breadcrumb crumbs={crumbs} />
       <BackTo />
-      <span className="grow" />
+      <span className="fill" />
       {children}
       {next && ready && <NextReview waiting={waiting} />}
     </header>

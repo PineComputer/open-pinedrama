@@ -191,7 +191,7 @@ export default function Gallery() {
         {/* Only a stop the engine made for a reason of its own (Drama.tsx); a pause by the maker has none (D74). */}
         <div className="banner done" style={{ flex: "1 1 100%" }}>
           <b>Bride on Bail is stopped</b>
-          <span className="grow">Your Pine project doesn't offer the drama skill yet, so nothing was started. Ask Pine to turn it on for the project, then try again.</span>
+          <span className="fill">Your Pine project doesn't offer the drama skill yet, so nothing was started. Ask Pine to turn it on for the project, then try again.</span>
           <button type="button" className="btn sm">
             Rehearse instead
           </button>

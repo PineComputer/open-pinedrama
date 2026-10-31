@@ -27,7 +27,7 @@ export function Watch({ session, onClose }: { session: SessionView; onClose: () 
         <span className="who">{session.episode ?? t("crew.setup")}</span>
         <span className="doing">{session.activity}</span>
         {/* The desktop shows only what is drawn on it; drama-cli works in a shell, so most work leaves it blank (Codex RC2). */}
-        <span className="grow quiet small">{t("crew.watchNote")}</span>
+        <span className="fill quiet small">{t("crew.watchNote")}</span>
         <button className="link" onClick={onClose}>
           {t("crew.close")}
         </button>

@@ -13,7 +13,7 @@ p { font-size: inherit; line-height: inherit; color: inherit; margin: 0; }
 .mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
 .muted { color: var(--text-muted); }
 .subtle { color: var(--text-subtle); }
-.grow { flex: 1; min-width: 0; }
+.fill { flex: 1; min-width: 0; }
 
 /* ── prototype bar (not part of the product) ── */
 /* The prototype's controls: a labelled toggle low in the left rail (above Settings, covering nothing), collapsed; the panel
@@ -125,7 +125,7 @@ a.tag:hover { background: var(--hover); color: var(--text-primary); }
    bar's actions keep their size; the middle crumbs shrink first, to "…"; then the drama's title ellipsizes; the current
    page keeps its name longest. Each crumb keeps its whole name in the DOM and as its title. */
 .top > .crumb { flex: 0 1 auto; overflow: hidden; }
-.top > :not(.crumb):not(.grow) { flex-shrink: 0; }
+.top > :not(.crumb):not(.fill) { flex-shrink: 0; }
 .crumb > :not(.ic) { min-width: 0; display: inline-flex; align-items: center; gap: 6px; }
 .crumb .ctext { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .crumb > :not(.ic):not(:first-child):not(:last-child) { flex: 0 1000 auto; min-width: 1.6em; }
@@ -460,7 +460,7 @@ input.search:focus { border-color: var(--text-primary); }
 /* A list row's hover fill bleeds into its surface's padding, so its words keep the section heading's left edge. */
 .lrow { width: calc(100% + 2 * var(--space-sm)); margin: 0 calc(-1 * var(--space-sm)); display: flex; justify-content: space-between; gap: 8px; padding: var(--space-sm); border: 0; border-radius: var(--radius-medium); background: none; color: var(--text-secondary); font-size: 12.5px; text-align: left; cursor: pointer; }
 .lrow:hover { background: var(--hover); color: var(--text-primary); }
-.lrow.static { cursor: default; } .lrow.static:hover { background: none; }
+.lrow.plain { cursor: default; } .lrow.plain:hover { background: none; }
 /* A row's version reads at 4.5:1 on its hover ground too (axe): --text-subtle reaches it on the surfaces, not on --hover. */
 .lrow .mono.subtle { color: var(--text-secondary); }
 .newthumb { width: 30px; height: 40px; border-radius: var(--radius-small); background: var(--surface-container-high); display: grid; place-items: center; color: var(--text-muted); }
@@ -511,12 +511,12 @@ input.search:focus { border-color: var(--text-primary); }
 
 .fdoc { font: 13px/1.55 "Courier Prime", ui-monospace, Menlo, monospace; color: var(--text-primary); }
 .fl { padding: 1px 0; white-space: pre-wrap; overflow-wrap: anywhere; } .gap { height: 12px; }
-.fl.heading, .fl.section { font-weight: 700; } .fl.character { padding-left: 38%; } .fl.dialogue { padding: 0 18%; } .fl.paren { padding-left: 32%; } .fl.transition { text-align: right; }
+.fl.heading, .fl.section { font-weight: 700; } .fl.character { padding-left: 38%; } .fl.dialogue { padding: 0 18%; } .fl.paren { padding-left: 32%; } .fl.trans { text-align: right; }
 
 /* ── fountain review ── */
 .fdoc .fl { border-radius: 6px; padding: 2px 6px; cursor: pointer; position: relative; }
 .fdoc button.fl { display: block; width: 100%; border: 0; background: none; color: inherit; font-family: inherit; font-size: inherit; line-height: inherit; text-align: left; }
-.fdoc .fl.character { padding-left: 38%; } .fdoc .fl.dialogue { padding-left: 18%; padding-right: 18%; } .fdoc .fl.paren { padding-left: 32%; } .fdoc .fl.transition { text-align: right; }
+.fdoc .fl.character { padding-left: 38%; } .fdoc .fl.dialogue { padding-left: 18%; padding-right: 18%; } .fdoc .fl.paren { padding-left: 32%; } .fdoc .fl.trans { text-align: right; }
 .fdoc .fl:hover { background: var(--hover); } .fdoc .fl.on { background: var(--selected); }
 .fdoc .fl.ask { background: var(--warning-bg); cursor: default; }
 .fdoc .q { padding: 0 4px; border-radius: 4px; background: var(--warning-text); color: var(--on-accent); }
@@ -711,7 +711,7 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
 /* The status line's second line (the session's Computer and history, or how the last one ended), and the picker row
    with Watch and Stop for the session the panel speaks to (AgentPanel). */
 .agent .ascope small { display: block; margin-top: 2px; font-size: 11.5px; }
-.agent .ascope .grow > a { color: var(--text-primary); text-decoration: underline; text-underline-offset: 3px; }
+.agent .ascope .fill > a { color: var(--text-primary); text-decoration: underline; text-underline-offset: 3px; }
 .agent .apick { flex: none; display: flex; align-items: center; gap: var(--space-sm); padding: var(--space-sm) var(--space-2xl); border-bottom: 1px solid var(--border); }
 .agent .apick .select { min-width: 0; max-width: 220px; } .agent .ascope .ic { width: 14px; height: 14px; }
 .arow.failed { background: color-mix(in srgb, var(--error) 8%, var(--surface-container)); align-items: flex-start; }
@@ -883,7 +883,7 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
 .history li::before { content: ""; position: absolute; left: 3px; top: 12px; bottom: 0; width: 1px; background: var(--border); }
 .history li:last-child::before { display: none; }
 .history .dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 4px; position: relative; z-index: 1; }
-.history .grow { display: grid; gap: 4px; }
+.history .fill { display: grid; gap: 4px; }
 /* A version's row selects it (the editor shows the selected version); its label is the button. */
 .hver { border: 0; background: none; padding: 0 2px; font: 600 12.5px var(--font-mono); color: var(--text-primary); cursor: pointer; border-radius: var(--radius-small); text-decoration: underline dotted; text-underline-offset: 3px; }
 .hver[aria-pressed="true"] { text-decoration: none; background: var(--selected); }

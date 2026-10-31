@@ -41,7 +41,7 @@ export function NavRail({ page, waiting, replay, drawerToggle, drawer, onToggleD
       </button>
       {place("/", "film-strip", t("nav.dramas"), !queue && page !== "settings")}
       {place("/reviews", "list-checks", t("nav.reviews"), queue, waiting)}
-      <span className="grow" />
+      <span className="fill" />
       {replay && (
         // A note named by its full words (it holds "Replay", so the name holds the visible text: WCAG 2.5.3).
         <span className="railtag" role="note" aria-label={t("mode.replay")} title={t("mode.replay")}>

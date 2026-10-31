@@ -21,7 +21,7 @@ export function StopCard({ refusal, episode, children }: { refusal: Refusal; epi
       <header>
         <Icon name={icon} className="ic" />
         <span>{t(`stopcard.kind.${kind.kind}`)}</span>
-        <span className="grow" />
+        <span className="fill" />
         {episode && <span className="mono">{episode}</span>}
       </header>
       <div className="sbody">

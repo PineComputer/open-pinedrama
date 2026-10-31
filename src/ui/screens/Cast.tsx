@@ -84,7 +84,7 @@ function AssetCard({ card, names, dramaId, picked, width, height }: { card: Cast
         {status && <StatusChip status={status} />}
       </div>
       <div className="ctxt">
-        <Link {...open.to} className="grow cardname" title={name}>
+        <Link {...open.to} className="fill cardname" title={name}>
           <b>{name}</b>
         </Link>
         <span className="mono subtle">{file.version}</span>
@@ -212,7 +212,7 @@ function AssetPanel({ card, names, dramaId, onShow }: { card: CastCard; names: N
     <aside className="insp" aria-label={t("asset.detail", { name })}>
       <div className="ihead">
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <b className="grow">{name}</b>
+          <b className="fill">{name}</b>
         </div>
         <small>{[lookName(look!), big?.version].filter(Boolean).join(" · ")}</small>
       </div>
@@ -240,7 +240,7 @@ function AssetPanel({ card, names, dramaId, onShow }: { card: CastCard; names: N
         <div className="isec">
           <div style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "center" }}>
             {status && <StatusChip status={status} />}
-            <span className="grow" />
+            <span className="fill" />
             {shown?.review && (
               <Link to="/r/$reviewId" params={{ reviewId: shown.review.reviewId }} className={`btn sm ${status === "you" ? "primary" : "ghost"}`}>
                 {status === "you" ? t("cast.review") : t("judged.open")}
@@ -365,7 +365,7 @@ export function Cast({ dramaId, compact = false }: { dramaId: string; compact?: 
           <h2 className="pagetitle">
             {label} <span className="muted">· {cards.length}</span>
           </h2>
-          <span className="grow" />
+          <span className="fill" />
           <span className="muted" style={{ fontSize: 12 }}>
             {t("cast.shared")}
           </span>

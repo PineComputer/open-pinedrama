@@ -45,7 +45,7 @@ export function Bible({ dramaId }: { dramaId: string }) {
             <h2 className="pagetitle">{t("step.bible")}</h2>
             <p className="muted pagesub">{t("bible.subtitle")}</p>
           </div>
-          <span className="grow" />
+          <span className="fill" />
           {meta && (
             <span className="muted" style={{ fontSize: 12 }}>
               {meta}

@@ -14,7 +14,7 @@ function Asks({ items, dramaId }: { items: ReviewSummary[]; dramaId?: string }) 
           <div className="thumb">
             <Still still={item.thumb} />
           </div>
-          <div className="shrink">
+          <div className="min-w-0">
             <div className="what">
               {t(`kind.${item.kind}` as TKey)}
               {item.episode && <span className="quiet"> · {item.episode}</span>}

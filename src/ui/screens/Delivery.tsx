@@ -37,7 +37,7 @@ export function Delivery({ dramaId, episode }: { dramaId: string; episode?: stri
       <div className="bar2">
         <h2 className="sr-only">{t("step.delivery")}</h2>
         {data.length > 0 && <span className="delivsum">{t("delivery.ready", { n: ready, total: data.length })}</span>}
-        <span className="grow" />
+        <span className="fill" />
         {ready > 0 && (
           <a className={buttonClass({ size: "sm" })} href={`/api/dramas/${dramaId}/season.zip`} download>
             <Icon name="download-simple" className="ic" />
