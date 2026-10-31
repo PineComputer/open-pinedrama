@@ -576,8 +576,8 @@ timeline
   its episode, else the setup for a page with no one episode (master's decision). The sidebar shows
   one status line with one dot: working, waits for you, or no dot and "No session open: a message
   starts a new <scope> session". Its message box is always enabled and names its target, sending
-  through `POST /api/dramas/:id/messages` with the scope ([D71](#d71-2026-10-30--a-message-to-the-setups-scope-opens-a-new-setup-session)
-  for the setup); the Pin picker changes the scope. Words: "右边栏的agent好像不能用？说没有open session，
+  through `POST /api/dramas/:id/messages` with the scope ([D71](#d71-2026-10-30--a-message-to-the-setups-scope-opens-a-new-setup-session),
+  as amended by 13551f2); the Pin picker changes the scope. Words: "右边栏的agent好像不能用？说没有open session，
   但是上边又是绿色的灯， 这个是不是比较矛盾" (*the agent in the right sidebar seems unusable: it says no open
   session, yet the light above is green; isn't that contradictory?*), relayed by master.
 ## D32. 2026-10-30 · Narrow windows: the sidebar is a drawer, the agent is the ball
@@ -1340,7 +1340,15 @@ timeline
 - **Consequences.** D38's shared redo becomes this general case.
 - **Words.** None recorded.
 - **Recorded in.** Commit d097690; work-05's note to the docs.
-
+- **Amended.** 30 October 2026, 13551f2 (master's brief): one route for a message to any scope,
+  `POST /api/dramas/:id/messages` with `{scope: "setup" | "EPxxx", submissionId, text}`. The scope's open
+  session takes it as a chat message; with none open, a new session of that scope is queued within the
+  parallel limit (the setup on the newest project pack, an episode on the project and its own pack),
+  the message verbatim as its goal, closed at its handback. It is refused as `limit-full`,
+  `episode-not-started`, `setup-running`, `decide-in-review`, `not-found`, `message-empty` or
+  `drama-not-running`. `POST /api/sessions/:id/chat` and `/setup-message` are removed. A screenplay
+  rewrite question is decided only on Script: the chat refuses it with `decide-in-review`
+  ([D62](#d62-2026-10-30--script-is-the-home-of-the-whole-screenplay-process)). No words recorded.
 ## References
 
 <a id="ref-1"></a>[1] G. Starke, P. Hruschka. *arc42*, section 9, "Architecture decisions".
