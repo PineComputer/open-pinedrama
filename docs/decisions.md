@@ -940,23 +940,27 @@ timeline
   per row, each card as wide as its picture's own ratio, the card exactly the picture and its
   caption, with no letterbox and no crop (react-photo-album 3.6.2, pinned). A card is the picture,
   the name, the version and the status pill,
-  one card per asset (a character is one card; its looks are in the detail). The detail has one
-  large picture with a labelled strip under it (a place's plate views and times; a character's
-  looks), the state, Review and Lineage, the bible's description clamped to three lines with More,
-  the episodes it is in, and its versions. "Its files" is removed. This refines
+  one card per asset (a character is one card; its looks are in the viewer). An asset opens in a
+  lightbox viewer (yet-another-react-lightbox 3.32.2, pinned; 3.33.0 was a day old): the picture as
+  large as the window allows at its own ratio on a dimmed backdrop; ← and → step through the shelf and
+  update the route; Esc closes back to the grid, as the WAI-ARIA modal dialog does. Its details sit in
+  a docked panel beside it: the name, the look and version, the state, Review and Lineage, the
+  versions (picking one shows it large), the bible's description clamped to three lines with More,
+  and the episodes it is in. The inspector beside the grid is gone: one place to view an asset.
+  "Its files" is removed. This refines
   [D23](#d23-2026-10-30--an-assets-one-home-is-its-detail-in-assets).
 - **Alternatives.** None recorded.
 - **Grounds.** merecdesperez44323-lab's decision; Google Photos' and Flickr's justified rows; mature
   libraries ([design principles](design-principles.md#12-mature-libraries-least-code-of-our-own));
-  Apple Photos' and Finder's grid with an inspector;
+  LibTV's asset viewer, Google Photos' and Lightroom's lightbox; the WAI-ARIA modal dialog;
   liblib's asset library; progressive disclosure
   ([design principles](design-principles.md#7-progressive-disclosure)).
 - **Consequences.** None beyond Assets.
 - **Words.** "这个我觉得太丑了， 这么老长的文字… 咋办" (*I think this is too ugly, such long text… what to do*),
   relayed by master; and "这些排版 ui， 一坨大黑边， 很难看啊。。。" (*this layout has big black bands, it looks
-  awful…*), relayed by master.
-- **Recorded in.** Commits 0934071 and e5ee6a7 (justified rows; design and product); work-02's notes
-  to the docs.
+  awful…*); and "弹出大图可以，做吧" (*a pop-up large picture is fine, do it*), relayed by master.
+- **Recorded in.** Commits 0934071, e5ee6a7 (justified rows) and 0563502, 0ae52a9 (the viewer;
+  design and product); work-02's notes to the docs.
 
 ## D57. 2026-10-30 · Assets has no tabs; the project tree is its navigation
 - **Context.** Assets offered Characters, Locations and Props twice: as rows in the project tree and
