@@ -782,14 +782,17 @@ timeline
   (the IA proposal's Conflict flow, section 15) <sup>[3](#ref-3)</sup>.
 - **Decision.** Each drafted review item records its base, the files it showed when the draft
   began. When a newer version arrives the draft is kept and offers Compare, Keep drafting and
-  Discard; Send is refused until the maker has resolved it. The engine does not check the base
-  itself yet.
+  Discard; Send is refused until the maker has resolved it. The engine refuses it too: every decision
+  item carries its `base`, and a decision whose base is missing or differs from the item's current
+  files is refused (409, `review-base-changed`) before the review is claimed, so nothing is sent and
+  the review stays open, as the cut's edit is (D24).
 - **Alternatives.** Applying the draft to the newer version silently.
-- **Grounds.** Codex's round 3, Conflict; master's decision; design for failure
+- **Grounds.** Codex's round 3, Conflict; master's rule that the engine itself must refuse, as the
+  cut's edit does; design for failure
   ([design principles](design-principles.md#9-design-for-failure)).
-- **Consequences.** The cut's edit keeps the same rule in the engine (D24).
+- **Consequences.** open-qa.mjs's decisions send `base`.
 - **Words.** None recorded.
-- **Recorded in.** Commit b0187fa.
+- **Recorded in.** Commits b0187fa (the draft) and 6fa2334 (the engine).
 
 ## D48. 2026-10-30 · The Episode List shows the version a link names
 - **Context.** A link to an older version (from a review or Lineage) landed on the List showing the
