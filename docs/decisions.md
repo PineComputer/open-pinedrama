@@ -22,7 +22,7 @@ timeline
   2026-10-23 : D5 pre-production in one session
   2026-10-24 : D6 idle timeouts follow the work : D7 spend shown, never in a goal
   2026-10-29 : D8 phase 1 steers
-  2026-10-30 : D9 design/ is the UI source : D10 tsc gate : D11 mature libraries : D12 real samples in LFS : D13 decisions taken once : D14 credentials stop : D15 Codex review loop : D16 navigation and one home : D17 every take and cut watched : D18 cut editing as an edit spec : D19 TanStack Router : D20 Export by owner : D21 Analyzing and Out of date routes : D22 redo by owner : D23 the asset detail : D24 the cut edit goal : D25 one Submission : D26 crumbs and Back : D27 Reviews : D28 model badge : D29 canvas zoom, inline video : D30 URL rules : D31 agent scope : D32 narrow windows : D33 review options : D34 Episodes filters : D35 every element cites its ground : D36 Delivery is the cuts' home : D37 a picked node zooms : D38 shared redo after release : D39 a take plays on its node : D40 where a stop shows : D41 Script is the screenplay's home : D42 Story and Assets apart : D43 stable sample ids : D44 the cut leaves the switch : D45 samples' own screenplays : D46 Project : D47 a draft's changed base : D48 the List's ?version : D49 project types : D50 Home cards : D51 one column, rail labels : D52 Home first, disabled : D53 account footer : D54 icon-only rail : D55 the cover follows the format : D56 Assets grid and inspector : D57 no tabs in Assets : D58 Canvas nodes whole : D59 Canvas opens in Hand : D60 replay's freshness : D61 Bible : D62 Script holds the process : D63 Segments matrix : D64 a visualization of drama-cli : D65 no accent bar : D66 an episode is its Canvas : D67 shape and alignment : D68 recorded edges only : D69 review by identity : D70 the UI decides, the chat acts : D71 the setup's scope opens a session
+  2026-10-30 : D9 design/ is the UI source : D10 tsc gate : D11 mature libraries : D12 real samples in LFS : D13 decisions taken once : D14 credentials stop : D15 Codex review loop : D16 navigation and one home : D17 every take and cut watched : D18 cut editing as an edit spec : D19 TanStack Router : D20 Export by owner : D21 Analyzing and Out of date routes : D22 redo by owner : D23 the asset detail : D24 the cut edit goal : D25 one Submission : D26 crumbs and Back : D27 Reviews : D28 model badge : D29 canvas zoom, inline video : D30 URL rules : D31 agent scope : D32 narrow windows : D33 review options : D34 Episodes filters : D35 every element cites its ground : D36 Delivery is the cuts' home : D37 a picked node zooms : D38 shared redo after release : D39 a take plays on its node : D40 where a stop shows : D41 Script is the screenplay's home : D42 Story and Assets apart : D43 stable sample ids : D44 the cut leaves the switch : D45 samples' own screenplays : D46 Project : D47 a draft's changed base : D48 the List's ?version : D49 project types : D50 Home cards : D51 one column, rail labels : D52 Home first, disabled : D53 account footer : D54 icon-only rail : D55 the cover follows the format : D56 Assets grid and inspector : D57 no tabs in Assets : D58 Canvas nodes whole : D59 Canvas opens in Hand : D60 replay's freshness : D61 Bible : D62 Script holds the process : D63 Segments matrix : D64 a visualization of drama-cli : D65 no accent bar : D66 an episode is its Canvas : D67 shape and alignment : D68 recorded edges only : D69 review by identity : D70 the UI decides, the chat acts : D71 the setup's scope opens a session : D72 Computers, sessions, scopes
 ```
 
 ## D1. 2026-10-22 · A desktop app on Electron
@@ -1377,6 +1377,27 @@ timeline
   failed with the engine's reason, stopped), so the conversation shows a stopped message as stopped.
   Master's words: "the conversation must show a stopped message as stopped, not 'sent'"; the failed
   reason was work-04's request. No words from merecdesperez44323-lab.
+- **Amended by.** [D72](#d72-2026-10-30--computers-sessions-and-their-scopes-are-objects-the-tag-follows-mains-engine): reverted for the tag (c3cc6f0); a message reaches only its scope's open session.
+## D72. 2026-10-30 · Computers, sessions and their scopes are objects; the tag follows main's engine
+- **Context.** A message to a finished episode had opened a new session on a new Computer (Codex's
+  round 4; the engine diff audit, B1), and no document said how a Computer, a session and the work it
+  does relate, or what survives a Computer that stops.
+- **Decision.** The studio models them as objects ([architecture](architecture.md#64-computers-sessions-and-their-scopes)):
+  a project's Computers (its pool), each running sessions; each session working on one scope, the setup
+  or one episode; a pack carrying a scope's work from one session to the next. The maker talks to a
+  session, addressed by its scope, never to a Computer. For this tag the engine follows main's: a message
+  reaches only its scope's open session, and an episode is resumed only when it is stopped or failed.
+- **Alternatives.** Reopening a done episode by a message, which opened a new session (the audit's B1,
+  reverted for the tag in c3cc6f0).
+- **Grounds.** merecdesperez44323-lab's request, reporting how Pine's engine owner describes Pine's
+  Computers; main's engine, cited by file and line in the architecture.
+- **Consequences.** The UI shows which Computer a session runs on (work-04). Waiting for Pine's engine
+  owner: the audit's B4, B5, B7, B8 and B9, and reopening a done episode.
+- **Words.** merecdesperez44323-lab, reporting Pine's engine owner, relayed by master: "这台剧做完了，然后它那个电脑会现在设置的，会等3个小时，等完3个小时他就stop掉了，Stop掉他那个电脑，因为它就是runtime环境嘛，然后中间的那些文件它就不存了。" (*when this drama is done, its Computer, as now set, waits 3 hours, then it stops; it stops that Computer, because it is a runtime environment, and the intermediate files are not kept*); "关了之后，你可以再起再起，但起的就是新的了，已经不是那台了。然后，上面一些中间文件就没了。然后，[Pine's engine owner]说现在魅上代码已经实现了，就是说，如果这时候起的是新的的话，会自动把这一集的东西再传到新开的那台电脑上去。" (*after it is off you can start it again, but what starts is new, no longer that one, and the intermediate files on it are gone; and [Pine's engine owner] says main's code now does it: if a new one starts, the episode's things are sent again to the newly opened Computer*); "只不过就是说要再启一台电脑这样子，但它启动电脑很快，大概就几秒钟" (*it only means starting another Computer, but a Computer starts fast, in a few seconds*); "咱们如果就只改UI的话，只要别break它那个设计就行 … 我们这个版本先改UI，打tag … 先不大改" (*if we only change the UI, just don't break that design … for this version we change the UI first and tag it … no big changes yet*); "其实核心就是面向对象去建模儿嘛 … 现在就是在旅顺和computer之间的关系就好了" (*the core is modelling it as objects … right now just the relationship between the task (旅顺, most likely 任务 as transcribed) and the Computer*). The
+  name of Pine's engine owner is replaced by that role, since this repository names no person.
+- **Recorded in.** Commit c3cc6f0 (the revert); `short-drama-runs/qa/ENGINE_DIFF_AUDIT.md`; master's
+  note to the docs, 30 October 2026.
+
 ## References
 
 <a id="ref-1"></a>[1] G. Starke, P. Hruschka. *arc42*, section 9, "Architecture decisions".

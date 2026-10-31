@@ -244,6 +244,117 @@ Near the end of a start's running time a Computer takes no new session and stops
 close. A turn that breaks off carries on in the same session, within a bounded number of "continue"
 runs.
 
+### 6.4 Computers, sessions and their scopes
+
+A project's work runs in sessions on Pine Computers. The maker never talks to a Computer: every
+message, decision and Resume goes to a session, named by its scope, the setup or one episode
+([D72](decisions.md#d72-2026-10-30--computers-sessions-and-their-scopes-are-objects-the-tag-follows-mains-engine)). The rules below are main's engine, which this tag follows; each
+cites main's code (open-pinedrama `main`, 58b1eb0).
+
+```mermaid
+classDiagram
+  direction LR
+  class Project {
+    parallel
+    per_computer
+  }
+  class Computer {
+    state
+    idle timeout
+  }
+  class Session {
+    role: setup | episode
+    state
+  }
+  class Scope {
+    the setup, or one Episode
+  }
+  class Episode {
+    EPxxx
+    state
+  }
+  class Pack {
+    handoff/project.tar.part-*
+    handoff/EPxxx.tar.part-*
+  }
+  class Review {
+    the session's stop
+  }
+  Project "1" --> "*" Computer : its pool
+  Computer "1" --> "*" Session : at most per_computer at once
+  Session "*" --> "1" Scope : works on
+  Episode "1" --> "*" Session : over time; a resume opens a new one
+  Session ..> Pack : restores, then packs at each stop
+  Session "1" --> "0..1" Review : waits on
+```
+
+- **The pool.** A project uses up to `ceil(parallel / per_computer)` Computers; a session goes to a
+  running Computer with room (`load < per_computer`), else a stopped one is started again, else a new
+  one, within the project's limit (main `src/engine/scheduler.ts:102-109`, `:128-135`).
+  `per_computer` is 1 to 3 (`dramas.ts:92`). Sessions on one Computer share no files
+  (`docs/IMPLEMENTATION_PLAN.md:113`).
+- **A scope's work travels as a pack.** The setup packs the project into `handoff/project.tar.part-*`
+  and hands it over; an episode packs its folder at each stop as `handoff/EPxxx.tar.part-*`. A new
+  episode session gets the project's parts, and on a resume also its own pack
+  (`scheduler.ts:286-297`; `IMPLEMENTATION_PLAN.md:115-116`).
+- **Who the maker talks to.** A message goes to a session only while it is open on a running Computer
+  (`dramas.ts:221-226`, `chat()`); a waiting question is answered from there, anything with files is
+  decided in its review.
+
+```mermaid
+stateDiagram-v2
+  direction LR
+  state "Computer" as C {
+    [*] --> starting
+    starting --> running
+    running --> stopping: idle timeout, Stop, or near its running-time limit
+    stopping --> stopped
+    stopped --> starting: started again for new work
+    running --> failed
+    failed --> starting: retried with backoff
+  }
+```
+
+A Computer's idle timeout is 1 hour while it works and 3 hours while any of its sessions waits on the
+maker (`config.ts:39-40`; `scheduler.ts:375`). When it stops, its sessions' working files are gone:
+it is a runtime environment. Started again, it keeps its identity, its saved credentials
+(`computers.ts:193-200`), not its files; a session continues only from the pack attached to it, and a
+Computer starts in seconds.
+
+```mermaid
+stateDiagram-v2
+  direction LR
+  state "Session" as S {
+    [*] --> open
+    open --> open: working, then waiting on the maker
+    open --> closed: the setup hands over, or the episode's cut is accepted
+    open --> lost: its Computer stopped
+  }
+  state "Episode" as E {
+    [*] --> queued
+    queued --> working: a session opens
+    working --> waiting: a stop for the maker
+    waiting --> working: the maker decides
+    working --> done: its cut accepted
+    working --> stopped
+    waiting --> stopped
+    working --> failed
+    stopped --> queued: Resume
+    failed --> queued: Resume
+  }
+```
+
+- A session closes when the setup hands over its project (`flow.ts:44`, `:97`) or when its episode's
+  cut is accepted, which makes the episode done (`flow.ts:136-137`). A done episode has no session.
+- Resume applies only to a stopped or failed episode; it queues it again with its pack, so a new
+  session opens (`dramas.ts:151-156`; `scheduler.ts:286-297`).
+- States: Computer `records.ts:60`, session role and state `records.ts:76`, `:78`, episode
+  `src/shared/types.ts:60`.
+
+**What the UI shows.** Each session row names the Computer it runs on (work-04). **Waiting for Pine's
+engine owner:** the engine diff audit's B4, B5, B7, B8 and B9 (`short-drama-runs/qa/ENGINE_DIFF_AUDIT.md`),
+and reopening a done episode by a message.
+
 ## 7. Deployment
 
 | Host | How it runs |
