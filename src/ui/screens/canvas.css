@@ -50,7 +50,7 @@
 .ds-canvas .cnode .lab .name { overflow: hidden; text-overflow: ellipsis; }
 .ds-canvas .cnode .card { position: relative; flex: 1; min-height: 0; }
 .ds-canvas .cnode .card .still { object-position: top; background-position: top; }
-/* A take's or cut's inline player (D38): media-chrome's controller fills the card, its video as the still was; its control
+/* A take's or cut's inline player (D39): media-chrome's controller fills the card, its video as the still was; its control
    bar is design/'s .vbar over the card's foot, media-chrome's parts given the bar's look through their own properties. */
 .ds-canvas .cnode .card .player { display: block; width: 100%; height: 100%; --media-control-background: transparent; --media-control-hover-background: transparent; --media-primary-color: var(--text-primary); }
 .ds-canvas .cnode .card .player video { width: 100%; height: 100%; object-fit: cover; object-position: top; }

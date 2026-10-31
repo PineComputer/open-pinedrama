@@ -441,7 +441,7 @@ describe("a picked item's hand actions and panel (P6.8)", () => {
     restore();
   });
 
-  it("plays a take on its node: media-chrome's bar on hover and on the picked node, in the editors' order, muted (D38)", async () => {
+  it("plays a take on its node: media-chrome's bar on hover and on the picked node, in the editors' order, muted (D39)", async () => {
     engine();
     const take = { id: 30, name: "video.mp4", path: "/work/drama/episodes/EP001/segments/seg01/t01/video.mp4", type: "video/mp4", size: 1, kind: "take", url: "/f/30?v=1", createdAt: "2026-10-30T10:00:00Z" };
     answer("/api/dramas/d1/files", [take]);

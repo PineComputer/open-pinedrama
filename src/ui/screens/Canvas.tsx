@@ -104,7 +104,7 @@ const Board = createContext<BoardContext | null>(null);
 const ICON = { character: "user", location: "image", prop: "cube", blocking: "squares-four", frame: "image-square", segment: "grid-nine", take: "film-strip", cut: "scissors" } as const;
 
 /**
- * A take's or cut's inline player (D38; design/app.js, the take's .vbar): media-chrome's controller around the video,
+ * A take's or cut's inline player (D39; design/app.js, the take's .vbar): media-chrome's controller around the video,
  * its control bar on the picked node and on hover, in the order Premiere, Frame.io and YouTube give it: play, time, the
  * slider, duration, sound, full screen. Muted until the maker turns the sound on, so a hover previews it silently; the
  * bar takes no drag or pan of the board (React Flow's nodrag and nopan).

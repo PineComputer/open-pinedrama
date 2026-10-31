@@ -670,7 +670,7 @@ timeline
   to view", as master relayed it.
 - **Recorded in.** Master's note to work-06, 30 October 2026.
 
-## D38. 2026-10-30 · A take or cut plays on its Canvas node
+## D39. 2026-10-30 · A take or cut plays on its Canvas node
 - **Context.** A take or cut node previewed its video on hover, muted, with no way to play it with
   sound, scrub it or see it large without leaving the board.
 - **Decision.** A take or cut node carries an inline player: media-chrome's controller around the

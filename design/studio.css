@@ -658,7 +658,7 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
 .stile span { position: absolute; left: 3px; bottom: 3px; padding: 0 4px; border-radius: 4px; background: color-mix(in srgb, var(--canvas) 70%, transparent); color: var(--text-primary); font: 600 9.5px/1.6 var(--font-mono); }
 .stile[aria-pressed="true"] img, .segnode .card > button.on { outline: 2px solid var(--accent); outline-offset: 1px; }
 .segnode .card > button { padding: 0; border: 0; font: inherit; color: inherit; text-align: inherit; cursor: pointer; }
-/* A take's inline player (D38): media-chrome's control bar over the foot of the take, on the picked take and on hover;
+/* A take's inline player (D39): media-chrome's control bar over the foot of the take, on the picked take and on hover;
    the cut room's player tokens (.controls: text-primary on a blurred canvas). */
 .segnode .card > .take-tile, .segnode .card > .vbar { grid-area: 1 / 2; }
 .cnode .vbar { align-self: end; justify-self: stretch; position: relative; z-index: 2; margin: 4px; display: none; align-items: center; gap: 4px; padding: 2px 6px; border-radius: 8px; background: color-mix(in srgb, var(--canvas) 72%, transparent); backdrop-filter: blur(10px); color: var(--text-primary); font: 600 10px var(--font-mono); }
