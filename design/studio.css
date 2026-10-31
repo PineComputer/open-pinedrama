@@ -832,3 +832,6 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
 .castcard .cardname, .placecard .cardname { color: inherit; text-decoration: none; } .castcard .cardname:hover b, .placecard .cardname:hover b { text-decoration: underline; text-underline-offset: 3px; }
 .castcard[aria-current], .placecard[aria-current] { cursor: default; } .castcard, .placecard { cursor: pointer; }
 .preset[data-disabled] { cursor: not-allowed; } .preset > [data-slot="radio-group-item"] { margin-top: 2px; }
+/* The episode's cut, as its child row in the drama tree (IA §16: its own home), under the episode in view. */
+.tree .treecut button { padding-left: 18px; }
+.tree .treecut .code { color: var(--text-subtle); }

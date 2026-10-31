@@ -6,7 +6,7 @@ import { screen, waitFor, within } from "@testing-library/react";
 import { answer } from "../test/server.ts";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
-import type { DramaView, EpisodeRow, ReviewSummary } from "../../shared/types.ts";
+import { type DramaView, type EpisodeRow, type ReviewSummary, STAGES } from "../../shared/types.ts";
 import { NavRail } from "./NavRail.tsx";
 import { DramaSidebar, HomeSidebar } from "./Sidebar.tsx";
 import { DramaBar, TopBar } from "./TopBar.tsx";
@@ -15,7 +15,7 @@ import { linkOptions } from "@tanstack/react-router";
 
 function row(number: number, state: EpisodeRow["state"]): EpisodeRow {
   const code = `EP00${number}`;
-  return { id: `e${number}`, number, code, title: `Episode ${number}`, state, stages: {} as EpisodeRow["stages"], spent: { total: 0, media: 0, partial: false }, updatedAt: "2026-10-30T10:00:00Z", ...(state === "waiting" ? { waitingFor: "storyboards" as const, waitingItems: 6 } : {}) };
+  return { id: `e${number}`, number, code, title: `Episode ${number}`, state, stages: Object.fromEntries(STAGES.map((stage) => [stage, { state: "none" }])) as EpisodeRow["stages"], spent: { total: 0, media: 0, partial: false }, updatedAt: "2026-10-30T10:00:00Z", ...(state === "waiting" ? { waitingFor: "storyboards" as const, waitingItems: 6 } : {}) };
 }
 
 const drama = {
@@ -54,14 +54,13 @@ describe("the drama's bar", () => {
     expect(screen.getByText("$41.20")).toBeInTheDocument();
   });
 
-  it("inside an episode, switches between its List, Canvas and Cut, keeping the item picked (IA §3)", async () => {
+  it("inside an episode, switches between its List and Canvas, keeping the item picked; the cut is not a view (IA §3)", async () => {
     const user = userEvent.setup();
     const { router } = await renderAt(<DramaBar drama={drama} />, "/d/d1/e/EP002/list?item=episodes%2FEP002%2Fsegments%2Fseg01");
     const views = screen.getByRole("group", { name: "EP002 view" });
     expect(within(views).getAllByRole("button").map((button) => [button.textContent, button.getAttribute("aria-pressed")])).toEqual([
       ["List", "true"],
       ["Canvas", "false"],
-      ["Cut", "false"],
     ]);
     await user.click(within(views).getByRole("button", { name: "Canvas" }));
     await waitFor(() => expect(href(router)).toBe("/d/d1/e/EP002/canvas?item=episodes%2FEP002%2Fsegments%2Fseg01"));
@@ -225,6 +224,16 @@ describe("the sidebar", () => {
     const tree = screen.getByRole("list", { name: "Episodes" });
     expect(within(tree).getAllByRole("button").map((button) => button.textContent?.slice(0, 5))).toEqual(["EP001", "EP002", "EP003"]);
     expect(within(tree).getByText("EP004–EP005 · 2 in line")).toBeInTheDocument();
+  });
+
+  it("shows the episode in view's cut as its child row, with where it stands, and opens it (IA §16)", async () => {
+    const user = userEvent.setup();
+    const withCut = { ...drama, episodeRows: drama.episodeRows.map((r) => (r.code === "EP003" ? { ...r, stages: { ...r.stages, cut: { state: "review" } } } : r)) } as DramaView;
+    const { router } = await renderAt(<DramaSidebar drama={withCut} page="list" episode="EP003" drawer={false} />, "/d/d1/e/EP003/list");
+    const cut = within(screen.getByRole("list", { name: "Episodes" })).getByRole("button", { name: /^› Cut/ });
+    expect(cut).toHaveTextContent("Waiting for you");
+    await user.click(cut);
+    await waitFor(() => expect(href(router)).toBe("/d/d1/e/EP003/cut"));
   });
 
   it("marks the episode in view", async () => {

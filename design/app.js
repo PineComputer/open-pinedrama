@@ -130,7 +130,8 @@
         <ul class="tree sub">${[["cast", "Characters", P.cast.length], ["scenes", "Locations", P.places.length], ["props", "Props", P.props.length]].map(([k, l, n]) => html`<li><button aria-current=${String(S.screen === "story" && S.stab === k)} onClick=${() => set({ screen: "story", stab: k, asel: null, at: null })}><span class="now">${l}</span><span class="n">${n}</span></button></li>`)}</ul>
         <button class="navi" aria-current=${S.screen === "episodes" ? "page" : "false"} onClick=${() => go("episodes")}>${I("film-strip")}Episodes<span class="cnt">4</span></button>
         <ul class="tree">${P.eps.slice(0, 8).map((e) => html`<li><button aria-current=${String(cur === e.code)} onClick=${() => e.code === "EP006" ? go("episode") : go("episodes")}>
-          <span class="code">${e.code}</span><span class="now">${e.now}</span><span class=${"dot " + e.status}></span></button></li>`)}
+          <span class="code">${e.code}</span><span class="now">${e.now}</span><span class=${"dot " + e.status}></span></button></li>
+          ${cur === e.code && e.cut && html`<li class="treecut"><button aria-current=${String(S.screen === "cut")} onClick=${() => go("cut")}><span class="code">› Cut</span><span class="now">${e.cut.latest}${e.cut.st === "you" ? " waits for you" : ""}</span><span class=${"dot " + e.cut.st}></span></button></li>`}`)}
           <li style="padding:6px 8px;color:var(--text-subtle);font-size:11.5px">EP009–EP024 · 16 in line</li></ul>
         <button class="navi" aria-current=${S.screen === "delivery" ? "page" : "false"} onClick=${() => go("delivery")}>${I("scissors")}Delivery<span class="cnt">1</span></button>
         <hr class="sidehr"/>
@@ -206,9 +207,10 @@
   /* IA draft: an episode's two views. Story, Assets, the board and Delivery have none; Lineage opens from an item. */
   function EpisodeViews() {
     if (S.screen !== "episode" && S.screen !== "canvas") return null;
-    // EP006 › Cut is the episode's cut (IA §16): a link to its home, beside the episode's two views.
+    // Two views of one episode, one selection (master's decision: Cut leaves the switch; WAI-ARIA APG tabs switch panels
+    // of one thing). The episode's cut is another object with its own home: the header's link and the tree's row.
     return html`<div class="seg" role="group" aria-label="EP006 view">
-      ${[["List", "list-bullets", "episode"], ["Canvas", "flow-arrow", "canvas"], ["Cut", "scissors", "cut"]].map(([l, ic, sc]) =>
+      ${[["List", "list-bullets", "episode"], ["Canvas", "flow-arrow", "canvas"]].map(([l, ic, sc]) =>
         html`<button aria-pressed=${String(S.screen === sc)} onClick=${() => { const on = S.sel || S.esel, at = S.at; go(sc); set({ sel: sc === "canvas" ? on : null, esel: on, at }); }}>${I(ic)}${l}</button>`)}
     </div>`;
   }

@@ -260,7 +260,7 @@ export function DramaSidebar({ drama, page, episode, drawer }: { drama: DramaVie
           <ul className="tree" aria-label={t("tree.label")}>
             {shownRows.map((row) => {
               const mark = markOf(row);
-              return (
+              return [
                 <li key={row.id}>
                   {/* The name is what the button shows, then where it stands, said rather than shown (WCAG 2.5.3). */}
                   <button type="button" aria-current={row.code === episode ? "true" : "false"} onClick={() => void navigate({ to: "/d/$dramaId/e/$episodeCode/list", params: { dramaId, episodeCode: row.code } })}>
@@ -268,8 +268,17 @@ export function DramaSidebar({ drama, page, episode, drawer }: { drama: DramaVie
                     <span className="sr-only">, {t(`tree.${mark}` as TKey)}</span>
                     <span className={`dot ${DOT[mark]}`} aria-hidden="true" />
                   </button>
-                </li>
-              );
+                </li>,
+                // The episode in view's cut, its own object with its own home (IA §16), as its child row.
+                row.code === episode && row.stages.cut.state !== "none" && (
+                  <li key={`${row.id}-cut`} className="treecut">
+                    <button type="button" aria-current={page === "cut" ? "true" : "false"} onClick={() => void navigate({ to: "/d/$dramaId/e/$episodeCode/cut", params: { dramaId, episodeCode: row.code } })}>
+                      <span className="code">› {t("step.cut")}</span> <span className="now">{t(`status.${CUT[row.stages.cut.state]}` as TKey)}</span>
+                      <span className={`dot ${DOT_OF[CUT[row.stages.cut.state]]}`} aria-hidden="true" />
+                    </button>
+                  </li>
+                ),
+              ];
             })}
             {folded.length > 0 && (
               <li style={{ padding: "6px 8px", color: "var(--text-muted)", fontSize: 11.5 }}>
@@ -301,3 +310,6 @@ export function DramaSidebar({ drama, page, episode, drawer }: { drama: DramaVie
 }
 
 const DOT: Record<Mark, string> = { you: "you", work: "work", done: "accepted", line: "line" };
+// A cut's stage as the maker's state (principle "Five maker-facing states"), and its dot.
+const CUT = { review: "you", working: "work", done: "accepted" } as const;
+const DOT_OF = { you: "you", work: "work", accepted: "accepted" } as const;

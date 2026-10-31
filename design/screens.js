@@ -542,7 +542,10 @@
       <div class="body"><div class="scrollmain">
         <div class="bar2"><${EpisodeViews}/><span class="grow"></span><${ProjectChips}/></div>
         <${StopBanner}/>
-        <div class="ephead"><h2>${ep.code}<span class="muted"> · ${ep.title}</span></h2><span class="muted">${ep.now}</span><span class="grow"></span><span class="mono muted">${money(ep.spent)}</span></div>
+        <div class="ephead"><h2>${ep.code}<span class="muted"> · ${ep.title}</span></h2><span class="muted">${ep.now}</span><span class="grow"></span>
+          ${/* The episode's cut, its own object (IA §16; master's decision): a link to its home with its state, apart from the views. */ ""}
+          ${ep.cut && html`<button class="btn sm ghost" onClick=${() => go("cut")}>${I("scissors")}Cut ${ep.cut.latest}${Status(ep.cut.st, ep.cut.st === "you" ? "Waits for you" : undefined)}</button>`}
+          <span class="mono muted">${money(ep.spent)}</span></div>
         ${P.scenes.map((sc) => html`<section class="panel segscene"><h3>${I("film-strip")}Scene ${sc.n} · ${place(sc.place)} · ${sc.time}<span class="grow"></span>
             <span class="muted" style="font-size:11.5px;font-weight:500">${sc.segs.filter((g) => g.st === "accepted").length} of ${sc.segs.length} accepted</span></h3>
           ${sc.segs.map((g) => { const on = S.esel === g.id, at = pickedAt(g), ood = on && at && outOfDateAt(g.id, at); return html`<div class=${"segrow" + (on ? " sel" : "")} aria-current=${String(on)} onClick=${() => set({ esel: g.id, at: null })}>

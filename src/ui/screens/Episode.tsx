@@ -2,7 +2,8 @@
 // where it stands and what it has spent, then its segments scene by scene.
 import type { EpisodePage, Judged } from "../../shared/types.ts";
 import { useResource } from "../api.ts";
-import { useT } from "../i18n.ts";
+import { type TKey, useT } from "../i18n.ts";
+import { StatusChip } from "../components/StatusChip.tsx";
 import { errorText, moneyText, nowText } from "../labels.ts";
 import { Icon } from "../icons.tsx";
 import { Link } from "@tanstack/react-router";
@@ -56,6 +57,10 @@ export function Episode({ dramaId, code }: { dramaId: string; code: string }) {
   if (error !== undefined && !page) return <p className="error">{errorText(error, t)}</p>;
   if (!page) return <p className="quiet">{t("loading")}</p>;
   const { row } = page;
+  // The newest cut and where it stands, from the episode's cut stage: waiting for the maker, at work, or accepted.
+  const stage = row.stages.cut.state;
+  const version = page.cuts[0]?.files[0]?.version;
+  const cut = stage !== "none" && version ? { version, status: (stage === "review" ? "you" : stage === "done" ? "accepted" : "work") as "you" | "accepted" | "work" } : undefined;
   return (
     <>
       <div className="ephead">
@@ -65,6 +70,14 @@ export function Episode({ dramaId, code }: { dramaId: string; code: string }) {
         </h2>
         <span className="muted">{nowText(row, t)}</span>
         <span className="grow" />
+        {/* The episode's cut, its own object (IA §16): a link to its home with where it stands, apart from the views. */}
+        {cut && (
+          <Link className="btn sm ghost" to="/d/$dramaId/e/$episodeCode/cut" params={{ dramaId, episodeCode: row.code }}>
+            <Icon name="scissors" className="ic" />
+            {t("step.cut")} {cut.version}
+            <StatusChip status={cut.status} label={t(`status.${cut.status}` as TKey)} />
+          </Link>
+        )}
         {row.spent.total > 0 && (
           <span className="mono muted" title={t("spent.about")}>
             {moneyText(row.spent, t, lang)}
