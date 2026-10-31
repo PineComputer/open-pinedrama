@@ -45,10 +45,11 @@ describe("StopCard on drama-cli's refusals", () => {
 
   // drama_cli/errors.py describe: an env.ConfigError is InvalidParameter.env, param --env, action fix_input;
   // drama_cli/env.py words a missing key as "Missing credential: set <NAME> in <the .env>".
-  it("shows missing credentials as one to read: --env is no limit to raise", () => {
+  it("shows missing credentials as their own stop: --env is no limit to raise", () => {
     const said = "Missing credential: set ARK_API_KEY in /work/drama/.env";
     card(`{"error": {"code": "InvalidParameter.env", "message": "${said}", "param": "--env", "action": "fix_input"}}`);
-    const stop = screen.getByRole("region", { name: "The agent needs you to read this" });
+    const stop = screen.getByRole("region", { name: "A provider's credentials are missing" });
+    expect(within(stop).getByText("Credentials refused")).toBeInTheDocument();
     expect(within(stop).getByText("InvalidParameter.env")).toBeInTheDocument();
     expect(within(stop).getByText(said)).toBeInTheDocument();
     expect(within(stop).queryByText("Limit")).toBeNull();

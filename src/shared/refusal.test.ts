@@ -54,6 +54,12 @@ describe("the kind of stop a refusal makes", () => {
     expect(kind(parseRefusals(line(RED_LINE))[0])).toEqual({ kind: "red-line" });
   });
 
+  it("is credentials for drama-cli's InvalidParameter.env, and only that one of the InvalidParameter family", () => {
+    const env = { code: "InvalidParameter.env", message: "Missing credential: set ARK_API_KEY in /work/drama/.env", param: "--env", action: "fix_input" };
+    expect(kind(parseRefusals(line(env))[0])).toEqual({ kind: "env" });
+    expect(kind(parseRefusals(line({ ...env, code: "InvalidParameter.config", param: "--config" }))[0])).toEqual({ kind: "ask" });
+  });
+
   it("is a cap for a SetLimitExceeded, with the config key to raise", () => {
     expect(kind(parseRefusals(line(CAP))[0])).toEqual({ kind: "cap", key: "defaults.max_new_versions" });
   });

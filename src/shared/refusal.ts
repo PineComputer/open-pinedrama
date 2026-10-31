@@ -25,7 +25,7 @@ export interface Refusal {
  *   the maker reads.
  * A budget is never a refusal here: the goals set drama-cli's budget to none (goals.ts NO_CAP).
  */
-export type StopKind = { kind: "red-line" } | { kind: "cap"; key: string } | { kind: "ask" };
+export type StopKind = { kind: "red-line" } | { kind: "cap"; key: string } | { kind: "env" } | { kind: "ask" };
 
 export class RefusalError extends Error {
   constructor(line: number, field: string, expected: string) {
@@ -68,5 +68,7 @@ export function stopKind(refusal: Refusal): StopKind {
   const family = refusal.code.split(".", 1)[0];
   if (family === "RedLine") return { kind: "red-line" };
   if (family === "SetLimitExceeded" && refusal.param) return { kind: "cap", key: refusal.param };
+  // A credential missing or unreadable in the drama's .env (short_drama drama_cli/errors.py, describe: env.ConfigError).
+  if (refusal.code === "InvalidParameter.env") return { kind: "env" };
   return { kind: "ask" };
 }

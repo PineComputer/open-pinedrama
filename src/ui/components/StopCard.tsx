@@ -12,13 +12,14 @@ import { useT } from "../i18n.ts";
 export function StopCard({ refusal, episode, children }: { refusal: Refusal; episode?: string; children?: ReactNode }) {
   const { t } = useT();
   const kind = stopKind(refusal);
-  const title = kind.kind === "red-line" ? t("stopcard.redLine") : kind.kind === "cap" ? t("stopcard.cap", { key: kind.key }) : t("stopcard.ask");
-  // The design's StopCard (design/screens.js): a red line on the error's header; a cap or another refusal on a quiet one.
+  const title = kind.kind === "red-line" ? t("stopcard.redLine") : kind.kind === "cap" ? t("stopcard.cap", { key: kind.key }) : kind.kind === "env" ? t("stopcard.env") : t("stopcard.ask");
+  // The design's StopCard (design/screens.js): a red line on the error's header; a cap, credentials or another refusal on a quiet one.
   const look = kind.kind === "red-line" ? "redline" : kind.kind === "cap" ? "cap" : "env";
+  const icon = kind.kind === "red-line" ? "warning" : kind.kind === "cap" ? "stack" : kind.kind === "env" ? "lock-simple" : "info";
   return (
     <section className={`stopcard ${look}`} aria-label={title}>
       <header>
-        <Icon name={kind.kind === "red-line" ? "warning" : kind.kind === "cap" ? "lock-simple" : "info"} className="ic" />
+        <Icon name={icon} className="ic" />
         <span>{t(`stopcard.kind.${kind.kind}`)}</span>
         <span className="grow" />
         {episode && <span className="mono">{episode}</span>}
