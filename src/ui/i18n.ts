@@ -446,7 +446,7 @@ const en = {
   "drama.casting": "Casting",
   "drama.stopped": "Stopped",
   "drama.redLine": "Red line",
-  "drama.finished": "Finished",
+  "drama.finished": "Done",
   "drama.needs": "{n} need you",
   "drama.atWork": "Working",
 

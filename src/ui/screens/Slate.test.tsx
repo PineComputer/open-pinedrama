@@ -133,6 +133,14 @@ describe("Home", () => {
     expect(takeDroppedScreenplay()).toBeUndefined();
   });
 
+  it("says Done on a finished project's pill, the five states' word (design principle 4)", async () => {
+    answer("/api/app", replay);
+    answer("/api/reviews", []);
+    answer("/api/dramas", [{ ...stepmother, status: "done", waiting: 0 }]);
+    await renderAt(<Slate />);
+    expect((await tileOf(/The Stepmother/)).parentElement?.querySelector(".st")).toHaveTextContent("Done");
+  });
+
   it("has the prototype's shelves, a stopped drama under All only", async () => {
     answer("/api/app", replay);
     answer("/api/reviews", []);
