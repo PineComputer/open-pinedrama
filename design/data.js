@@ -128,6 +128,8 @@ Object.assign(window.P, {
   cut: { dur: 15, src: "clips/cut-ep6.mp4", segs: [["seg01", "t02", 5, "img/still-s1t2.jpg"], ["seg03", "t02", 10, "img/still-s3t2.jpg"]],
     // What drama-cli made each take from (its spec.json), and the breakdown's lines at their times in the cut.
     spec: { model: "Seedance 2.5", resolution: "480p", ratio: "9:16", fps: 24 },
+    // Each segment's takes the cut may use, with their length in seconds and a poster frame (editing swaps among them).
+    takes: { seg01: [["t01", 6, "img/still-s1t1.jpg"], ["t02", 5, "img/still-s1t2.jpg"]], seg03: [["t01", 11, "img/still-s3t1.jpg"], ["t02", 10, "img/still-s3t2.jpg"]] },
     lines: [[0.6, 2.2, "Luca: You kept it."], [3.4, 1.6, "Ethan: Every page."], [6.2, 2.8, "Luca: Then read me the last one."], [11.4, 2.4, "Ethan: It ends with your name."]],
     notes: [{ t: 3.2, text: "Hold on the blanket a beat longer." }, { t: 11, text: "The cut to the file is too early." }] },
 });

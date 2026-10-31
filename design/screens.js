@@ -220,6 +220,15 @@
   /* ───── Cut ───── */
   function Cut() {
     const vref = useRef(null), c = P.cut, notes = S.cutNotes || c.notes;
+    // Editing changes the cut's edit spec, the plan drama-cli builds a cut from (drama_cli/edit.py): each clip's take,
+    // its in and out, and its audio, source or silence. Apply edit hands the spec to the agent, which builds it.
+    const spec0 = c.segs.map(([seg, take, d]) => ({ seg, take, in: 0, out: d, audio: "source" }));
+    const ed = S.cutEd || spec0;
+    const changes = ed.filter((x, i) => JSON.stringify(x) !== JSON.stringify(spec0.find((y) => y.seg === x.seg)) || spec0[i]?.seg !== x.seg).length;
+    const put = (i, patch) => set({ cutEd: ed.map((x, j) => (j === i ? { ...x, ...patch } : x)) });
+    const pic = (seg, take) => (c.takes[seg] || []).find(([t]) => t === take)?.[2];
+    const len = (seg, take) => (c.takes[seg] || []).find(([t]) => t === take)?.[1] ?? 0;
+    const dur = S.cutEdit ? ed.reduce((a, x) => a + (x.out - x.in), 0) : c.dur;
     useEffect(() => { const el = vref.current; if (!el) return; if (S.cutPlaying) el.play().catch(() => set({ cutPlaying: false })); else el.pause(); });
     const seek = (t) => { if (vref.current) vref.current.currentTime = t; set({ cutT: t }); };
     const fmt = (t) => "0:" + String(Math.floor(t)).padStart(2, "0");
@@ -235,9 +244,16 @@
             ${!S.cutPlaying && html`<button class="bigplay" aria-label="Play" onClick=${() => set({ cutPlaying: true })}><i>${I("play")}</i></button>`}</div></div>
           <div class="cuttl">
             <div class="controls" style="border-top:0;padding:0 0 8px"><button class="pp" aria-label=${S.cutPlaying ? "Pause" : "Play"} onClick=${() => set({ cutPlaying: !S.cutPlaying })}>${I(S.cutPlaying ? "pause" : "play")}</button>
-              <span class="t">${S.cutT.toFixed(1)}s <small>/ ${c.dur.toFixed(1)}s</small></span><span class="grow"></span><span class="muted" style="font-size:11.5px">9:16 · 480p · subtitles from the screenplay · muted in this prototype</span></div>
+              <span class="t">${S.cutT.toFixed(1)}s <small>/ ${c.dur.toFixed(1)}s</small></span><span class="grow"></span><span class="muted" style="font-size:11.5px">9:16 · 480p · subtitles from the screenplay · muted in this prototype</span>
+              <button class=${"btn sm" + (S.cutEdit ? " on" : "")} aria-pressed=${String(!!S.cutEdit)} onClick=${() => set({ cutEdit: !S.cutEdit, cutSel: S.cutSel ?? 0 })}>${I("scissors")}Edit cut</button></div>
+            ${S.cutEdit && html`<div class="editbar"><b>Editing the cut</b><span class="muted">${changes ? `${changes} change${changes > 1 ? "s" : ""}` : "no changes yet"} · ${dur.toFixed(1)} s</span><span class="grow"></span>
+              <button class="btn sm ghost" disabled=${!changes} onClick=${() => set({ cutEd: null })}>Reset</button>
+              <button class="btn sm primary" disabled=${!changes} onClick=${() => { set({ cutEdit: false }); toast("Edit sent: the agent builds it with drama-cli; it comes back as cut v2 for your review."); }}>${I("paper-plane-tilt")}Apply edit</button></div>`}
             <div class="tl" onClick=${(e) => { const r = e.currentTarget.getBoundingClientRect(); seek(Math.max(0, Math.min(c.dur, ((e.clientX - r.left) / r.width) * c.dur))); }}>
-              <div class="tlsegs">${c.segs.map(([s, t, d, pic], i) => { const left = acc; acc += d; return html`<button class=${"tlseg" + (S.cutSel === i ? " on" : "")} style=${`left:${(left / c.dur) * 100}%;width:${(d / c.dur) * 100}%;background-image:url(${pic})`} onClick=${(e) => { e.stopPropagation(); set({ cutSel: i }); seek(left); }}><span>${s} · ${t}</span></button>`; })}</div>
+              <div class="tlsegs">${S.cutEdit
+                ? ed.map((x, i) => { const left = acc; const d = x.out - x.in; acc += d; return html`<button class=${"tlseg edit" + (S.cutSel === i ? " on" : "")} title="Drag to move; drag an edge to trim" style=${`left:${(left / dur) * 100}%;width:${(d / dur) * 100}%;background-image:url(${pic(x.seg, x.take)})`} onClick=${(e) => { e.stopPropagation(); set({ cutSel: i }); }}>
+                    <i class="hdl l"></i><i class="hdl r"></i><span>${x.seg} · ${x.take}${x.audio === "silence" ? html` ${I("speaker-slash")}` : ""}</span></button>`; })
+                : c.segs.map(([s, t, d, pic], i) => { const left = acc; acc += d; return html`<button class=${"tlseg" + (S.cutSel === i ? " on" : "")} style=${`left:${(left / c.dur) * 100}%;width:${(d / c.dur) * 100}%;background-image:url(${pic})`} onClick=${(e) => { e.stopPropagation(); set({ cutSel: i }); seek(left); }}><span>${s} · ${t}</span></button>`; })}</div>
               ${notes.map((n) => html`<span class="pin" style=${`left:${(n.t / c.dur) * 100}%`} title=${n.text}>${I("note-pencil")}</span>`)}
               <span class="head" style=${`left:${(S.cutT / c.dur) * 100}%`}></span></div>
             <div class="tracks">
@@ -252,13 +268,20 @@
               ${notes.map((n, i) => html`<div class="noterow"><button class="mono tbtn" onClick=${() => seek(n.t)}>${fmt(n.t)}</button><span class="grow">${n.text}</span><button class="ibtn" aria-label="Remove note" onClick=${() => set({ cutNotes: notes.filter((_, j) => j !== i) })}>${I("x")}</button></div>`)}
               <div class="addnote"><span class="mono">${fmt(S.cutT)}</span><input placeholder="Add a note at the playhead…" value=${S.noteDraft} onInput=${(e) => set({ noteDraft: e.target.value })}
                 onKeyDown=${(e) => { if (e.key === "Enter" && S.noteDraft.trim()) set({ cutNotes: [...notes, { t: S.cutT, text: S.noteDraft.trim() }].sort((a, b) => a.t - b.t), noteDraft: "" }); }}/></div></div>
-            ${S.cutSel != null && c.segs[S.cutSel] && (() => { const [seg, take, d] = c.segs[S.cutSel]; return html`<div class="isec"><h4>Properties <span class="muted">${seg}</span></h4>
+            ${S.cutEdit && ed[S.cutSel] && (() => { const x = ed[S.cutSel], i = S.cutSel; return html`<div class="isec"><h4>Edit <span class="muted">${x.seg}</span></h4>
+              <div class="propedit">
+                <span class="muted">Take</span><div class="takes">${(c.takes[x.seg] || []).map(([t, d, p]) => html`<button class=${"take" + (t === x.take ? " on" : "")} aria-pressed=${String(t === x.take)} onClick=${() => put(i, { take: t, in: 0, out: d })}><img src=${p} alt=""/><b>${t}</b><small class="mono">${d} s</small></button>`)}</div>
+                <span class="muted">In</span><input class="mono" type="number" step="0.04" min="0" max=${x.out - 0.04} value=${x.in} onInput=${(e) => put(i, { in: Math.max(0, Math.min(x.out - 0.04, Number(e.target.value))) })}/>
+                <span class="muted">Out</span><input class="mono" type="number" step="0.04" min=${x.in + 0.04} max=${len(x.seg, x.take)} value=${x.out} onInput=${(e) => put(i, { out: Math.min(len(x.seg, x.take), Math.max(x.in + 0.04, Number(e.target.value))) })}/>
+                <span class="muted">Audio</span><div class="seg">${["source", "silence"].map((a) => html`<button aria-pressed=${String(x.audio === a)} onClick=${() => put(i, { audio: a })}>${a === "source" ? "Take's sound" : "Silence"}</button>`)}</div>
+                <p class="muted">A trim that doesn't start on a keyframe is re-encoded when the agent builds it. Speed, volume and transitions aren't in drama-cli's edit, so they aren't here.</p></div></div>`; })()}
+            ${!S.cutEdit && S.cutSel != null && c.segs[S.cutSel] && (() => { const [seg, take, d] = c.segs[S.cutSel]; return html`<div class="isec"><h4>Properties <span class="muted">${seg}</span></h4>
               <dl class="kv"><dt>Segment</dt><dd>${seg}</dd><dt>Take</dt><dd>${take}</dd><dt>Model</dt><dd>${c.spec.model}</dd><dt>Duration</dt><dd class="mono">${d} s</dd><dt>Picture</dt><dd>${c.spec.ratio} · ${c.spec.resolution} · ${c.spec.fps} fps</dd></dl>
               <div class="propoff"><span class="muted">Speed</span><div class="seg" aria-disabled="true">${["0.5×", "1×", "1.5×", "2×"].map((x) => html`<button disabled aria-pressed=${String(x === "1×")}>${x}</button>`)}</div>
                 <span class="muted">Volume</span><input type="range" disabled value="80" aria-label="Volume"/>
                 <p class="muted">drama-cli makes every cut; editing here comes later.</p></div>
               <button class="btn sm" onClick=${() => go("canvas")}>${I("flow-arrow")}Open on Canvas</button></div>`; })()}
-            <div class="isec"><h4>Made from</h4>${c.segs.map(([s, t, d]) => html`<div class="lrow static">${s} · take ${t}<span class="mono subtle">${d} s</span></div>`)}</div>
+            <div class="isec"><h4>Made from</h4>${c.segs.map(([s, t, d]) => html`<div class="lrow static">${s} · take ${t}<span class="mono muted">${d} s</span></div>`)}</div>
             <div class="isec" style="border-bottom:0"><h4>What happens</h4><p class="muted" style="font-size:12.5px;line-height:1.55">Send back with your notes and the agent plans the cut again; building a cut is free. Accept, and EP006 is delivered.</p></div>
           </div>
           <div class="verdict"><div class="vrow" style="grid-template-columns:1fr 1fr">
