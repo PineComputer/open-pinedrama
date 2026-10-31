@@ -22,7 +22,7 @@ timeline
   2026-10-23 : D5 pre-production in one session
   2026-10-24 : D6 idle timeouts follow the work : D7 spend shown, never in a goal
   2026-10-29 : D8 phase 1 steers
-  2026-10-30 : D9 design/ is the UI source : D10 tsc gate : D11 mature libraries : D12 real samples in LFS : D13 decisions taken once : D14 credentials stop : D15 Codex review loop : D16 navigation and one home : D17 every take and cut watched : D18 cut editing as an edit spec : D19 TanStack Router : D20 Export by owner : D21 Analyzing and Out of date routes : D22 redo by owner : D23 the asset detail : D24 the cut edit goal : D25 one Submission : D26 crumbs and Back : D27 Reviews : D28 model badge : D29 canvas zoom, inline video : D30 URL rules : D31 agent scope : D32 narrow windows : D33 review options : D34 Episodes filters : D35 every element cites its ground : D36 Delivery is the cuts' home : D37 a picked node zooms : D38 shared redo after release : D39 a take plays on its node : D40 where a stop shows : D41 Script is the screenplay's home : D42 Story and Assets apart : D43 stable sample ids : D44 the cut leaves the switch : D45 samples' own screenplays : D46 Project : D47 a draft's changed base : D48 the List's ?version : D49 project types : D50 Home cards : D51 one column, rail labels : D52 Home first, disabled : D53 account footer : D54 icon-only rail : D55 the cover follows the format
+  2026-10-30 : D9 design/ is the UI source : D10 tsc gate : D11 mature libraries : D12 real samples in LFS : D13 decisions taken once : D14 credentials stop : D15 Codex review loop : D16 navigation and one home : D17 every take and cut watched : D18 cut editing as an edit spec : D19 TanStack Router : D20 Export by owner : D21 Analyzing and Out of date routes : D22 redo by owner : D23 the asset detail : D24 the cut edit goal : D25 one Submission : D26 crumbs and Back : D27 Reviews : D28 model badge : D29 canvas zoom, inline video : D30 URL rules : D31 agent scope : D32 narrow windows : D33 review options : D34 Episodes filters : D35 every element cites its ground : D36 Delivery is the cuts' home : D37 a picked node zooms : D38 shared redo after release : D39 a take plays on its node : D40 where a stop shows : D41 Script is the screenplay's home : D42 Story and Assets apart : D43 stable sample ids : D44 the cut leaves the switch : D45 samples' own screenplays : D46 Project : D47 a draft's changed base : D48 the List's ?version : D49 project types : D50 Home cards : D51 one column, rail labels : D52 Home first, disabled : D53 account footer : D54 icon-only rail : D55 the cover follows the format : D56 Assets grid and inspector : D57 no tabs in Assets
 ```
 
 ## D1. 2026-10-22 · A desktop app on Electron
@@ -930,6 +930,39 @@ timeline
 - **Words.** "i think we can use 竖屏 here. 本来短剧就是竖屏，这里横屏比较奇怪" (*use portrait here; short
   dramas are portrait to begin with, so landscape is odd here*), relayed by master.
 - **Recorded in.** Commit 43783d9 (design and product); work-02's note to the docs.
+
+## D56. 2026-10-30 · Assets is a picture grid with an inspector
+- **Context.** Assets' cards carried long descriptions and tags; the detail listed an asset's files.
+- **Decision.** A card is the picture at its own ratio, the name, the version and the status pill,
+  one card per asset (a character is one card; its looks are in the detail). The detail has one
+  large picture with a labelled strip under it (a place's plate views and times; a character's
+  looks), the state, Review and Lineage, the bible's description clamped to three lines with More,
+  the episodes it is in, and its versions. "Its files" is removed. This refines
+  [D23](#d23-2026-10-30--an-assets-one-home-is-its-detail-in-assets).
+- **Alternatives.** None recorded.
+- **Grounds.** merecdesperez44323-lab's decision; Apple Photos' and Finder's grid with an inspector;
+  liblib's asset library; progressive disclosure
+  ([design principles](design-principles.md#7-progressive-disclosure)).
+- **Consequences.** None beyond Assets.
+- **Words.** "这个我觉得太丑了， 这么老长的文字… 咋办" (*I think this is too ugly, such long text… what to do*),
+  relayed by master.
+- **Recorded in.** Commit 0934071 (design and product); work-02's note to the docs.
+
+## D57. 2026-10-30 · Assets has no tabs; the project tree is its navigation
+- **Context.** Assets offered Characters, Locations and Props twice: as rows in the project tree and
+  as tabs on the page.
+- **Decision.** The tree's Characters, Locations and Props rows are the navigation, as Episodes'
+  children are; the page shows a plain heading with its count ("Locations · 6") and "Shared by every
+  episode".
+- **Alternatives.** Tabs on the page.
+- **Grounds.** merecdesperez44323-lab's decision; one action, one meaning
+  ([design principles](design-principles.md#2-one-action-one-meaning)); never a second way to do
+  something ([D35](#d35-2026-10-30--every-ui-element-and-behaviour-cites-its-ground)); VS Code's
+  explorer.
+- **Consequences.** None beyond Assets.
+- **Words.** "这里菜单既有竖着的又有横着的" (*the menus here are both vertical and horizontal*), relayed by
+  master.
+- **Recorded in.** Commit 0934071; work-02's note to the docs.
 
 ## References
 
