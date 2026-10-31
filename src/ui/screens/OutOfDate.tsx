@@ -1,15 +1,11 @@
 // The drama's Out of date (D21; design/screens.js, OutOfDate): what drama-cli calls stale and what was made from it
 // (shared/lineage.ts, outOfDate, the sidebar's count), a row each that opens the item's one home or its Lineage there
-// (IA §16), grouped by the session that redoes them: the setup's for the script, the bible and the assets, each episode's for its
-// own. A redo remakes, so it spends: it asks first with its impact (§15), and is one submission (Submission.tsx).
+// (IA §16), grouped: the script and the bible, the assets, then each episode. A view: redoing is asked of the agent in
+// the sidebar, as every request beyond deciding on an item is (UI actions rule, merecdesperez44323-lab 10-30).
 import { Link, useRouter } from "@tanstack/react-router";
-import { useRef, useState } from "react";
 import { classify } from "../../engine/classify.ts";
 import { type LineageKind, type LineageNode, type LineageView, outOfDate, stageOf } from "../../shared/lineage.ts";
-import type { ChatView, SubmissionView } from "../../shared/types.ts";
-import { api, ApiError, useResource } from "../api.ts";
-import { Dialog } from "../components/Dialog.tsx";
-import { Submission, useSubmission } from "../components/Submission.tsx";
+import { useResource } from "../api.ts";
 import { stageName } from "../graph/Graph.tsx";
 import { Icon, type IconName } from "../icons.tsx";
 import { type TKey, useT } from "../i18n.ts";
@@ -73,59 +69,13 @@ export function readable(problem: string, t: T, acceptedOf: (stage: string) => s
 interface Group {
   key: string;
   head: string;
-  /** The session label that owns it (ChatView.label): empty for the setup's. */
-  owner: string;
   rows: LineageNode[];
-}
-
-/**
- * One submission, sent once under its id: a steering note to the owner's open session (engine/redo.ts), or, for a shared
- * reference once the setup has handed over, a new setup session's goal (engine/shared-redo.ts, D38).
- */
-function Redo({ dramaId, rows, label, owner, session, shared, blocked }: { dramaId: string; rows: LineageNode[]; label: string; owner: string; session?: string; shared: boolean; blocked?: string }) {
-  const { t } = useT();
-  const names = useNames(dramaId);
-  const [asking, setAsking] = useState(false);
-  const id = useRef(crypto.randomUUID());
-  const text = [t("graph.redoText"), ...rows.map((node) => `- ${node.id} ${node.version ?? ""}: ${node.problems.join("; ")}`)].join("\n");
-  const { sending, send, check } = useSubmission({
-    submit: () => api<SubmissionView>(shared ? `/api/dramas/${dramaId}/shared-redo` : `/api/sessions/${session}/redo`, { method: "POST", json: { submissionId: id.current, text } }),
-    taken: () =>
-      api<SubmissionView>(`/api/submissions/${id.current}`).then(
-        (found) => found.state !== "refused",
-        (error: unknown) => {
-          if (error instanceof ApiError && error.status === 404) return false;
-          throw error;
-        },
-      ),
-  });
-  const items = rows.map((node) => `${stageName(node, names, t)} ${node.version ?? ""}`.trim()).join(", ");
-  return (
-    <>
-      {sending.state === "idle" ? (
-        <button type="button" className="btn sm" disabled={blocked !== undefined} title={blocked} onClick={() => setAsking(true)}>
-          {label}
-        </button>
-      ) : (
-        <Submission sending={sending} to={owner} onSend={() => setAsking(true)} onCheck={() => void check()} />
-      )}
-      <Dialog
-        open={asking}
-        onOpenChange={setAsking}
-        title={t("ood.confirmTitle", { owner })}
-        description={t(shared ? "ood.impactShared" : "ood.impact", { owner, items })}
-        confirm={{ label: t("ood.confirm"), run: () => void send() }}
-        cancel={t("ood.notNow")}
-      />
-    </>
-  );
 }
 
 export function OutOfDate({ dramaId }: { dramaId: string }) {
   const { t } = useT();
   const router = useRouter();
   const view = useResource<LineageView>(`/api/dramas/${dramaId}/lineage`, [`project:${dramaId}`]);
-  const sessions = useResource<ChatView[]>(`/api/dramas/${dramaId}/sessions`, [`drama:${dramaId}`]);
   const names = useNames(dramaId);
   const marked = useRoute().search.item;
   if (view.error !== undefined && !view.data) return <p className="error">{errorText(view.error, t)}</p>;
@@ -141,20 +91,10 @@ export function OutOfDate({ dramaId }: { dramaId: string }) {
   const written = setup.filter((node) => node.kind === "screenplay" || node.kind === "bible");
   const assets = setup.filter((node) => !written.includes(node));
   const groups: Group[] = [
-    ...(written.length ? [{ key: "written", head: t("ood.scriptBible"), owner: "", rows: written }] : []),
-    ...(assets.length ? [{ key: "assets", head: t("ood.assets"), owner: "", rows: assets }] : []),
-    ...codes.map((code) => ({ key: code, head: t("ood.episode", { code }), owner: code, rows: nodes.filter((node) => node.where.episode === code).sort(order) })),
+    ...(written.length ? [{ key: "written", head: t("ood.scriptBible"), rows: written }] : []),
+    ...(assets.length ? [{ key: "assets", head: t("ood.assets"), rows: assets }] : []),
+    ...codes.map((code) => ({ key: code, head: t("ood.episode", { code }), rows: nodes.filter((node) => node.where.episode === code).sort(order) })),
   ];
-  // Who redoes a group, and why it can't be asked now (Graph's own reasons: no session open, or one waiting on a review).
-  const ownerOf = (group: Group, shared: boolean) => (group.owner ? t("ood.ownerEpisode", { code: group.owner }) : shared ? t("ood.ownerNewSetup") : t("ood.ownerSetup"));
-  const sessionOf = (group: Group) => {
-    const session = sessions.data?.find((chat) => chat.label === group.owner);
-    // Once the setup has handed over, a shared reference's redo opens a new setup session (D38); an episode's needs its own.
-    const closed = !session || session.sends === "none";
-    const shared = closed && !group.owner;
-    const blocked = !sessions.data ? t("loading") : shared ? undefined : closed ? t("graph.redoNoSession") : session.sends === "review" ? t("graph.redoWaitsReview") : undefined;
-    return { session: session?.sessionId, shared, blocked, review: session?.sends === "review" ? session.reviewId : undefined };
-  };
   // Our own words for what drama-cli calls fresh but was made from an out-of-date version: the version it was made from.
   const madeFrom = (node: LineageNode) => {
     const from = lineage?.links.find((link) => link.to === node.id && ids.has(link.from));
@@ -189,7 +129,15 @@ export function OutOfDate({ dramaId }: { dramaId: string }) {
   return (
     <>
       <div className="bar2">
-        <span className="delivsum">{nodes.length ? <b>{t("ood.count", { n: nodes.length })}</b> : t("ood.none")}</span>
+        <span className="delivsum">
+          {nodes.length ? (
+            <>
+              <b>{t("ood.count", { n: nodes.length })}</b> {t("ood.askAgent")}
+            </>
+          ) : (
+            t("ood.none")
+          )}
+        </span>
       </div>
       {nodes.length > 0 && (
         <div className="delivwrap">
@@ -204,23 +152,10 @@ export function OutOfDate({ dramaId }: { dramaId: string }) {
             </thead>
             <tbody>
               {groups.map((group) => {
-                const { session, shared, blocked, review } = sessionOf(group);
-                const owner = ownerOf(group, shared);
                 return [
                   <tr key={group.key} className="grp">
-                    <td colSpan={3}>
+                    <td colSpan={4}>
                       <b>{group.head}</b>
-                    </td>
-                    <td className="act">
-                      {/* The reason it can't be asked, said where the action would be (principle 6: errors give the next step). */}
-                      {blocked && <span className="muted">{blocked} </span>}
-                      {/* What waits first opens from here, and Back returns (principle 6; Nielsen, "help users recognize, diagnose, and recover from errors"). */}
-                      {review && (
-                        <Link to="/r/$reviewId" params={{ reviewId: review }} state={{ backTo: t("tree.outOfDate") }} className="linkbtn">
-                          {t("ood.openReview")}
-                        </Link>
-                      )}{" "}
-                      <Redo dramaId={dramaId} rows={group.rows} label={t("ood.redoAll", { owner })} owner={owner} session={session} shared={shared} blocked={blocked} />
                     </td>
                   </tr>,
                   ...group.rows.map((node) => (
@@ -239,7 +174,6 @@ export function OutOfDate({ dramaId }: { dramaId: string }) {
                       <td className="mono">{node.version ?? t("graph.noVersion")}</td>
                       <td className="why">{reason(node)}</td>
                       <td className="act">
-                        <Redo dramaId={dramaId} rows={[node]} label={t("ood.redoThis")} owner={owner} session={session} shared={shared} blocked={blocked} />
                         <Link {...homeLink(dramaId, node.id, "lineage")} state={{ backTo: t("tree.outOfDate") }} className="ibtn" aria-label={t("steer.lineage")} title={t("steer.lineage")} onClick={() => mark(node)}>
                           <Icon name="tree-structure" className="ic" />
                         </Link>

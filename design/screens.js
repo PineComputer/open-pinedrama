@@ -261,28 +261,19 @@
     const items = S.state === "fresh" ? [] : OOD;
     // Leaving for a home or Lineage marks the row (its own key, apart from Canvas's pick), so Back returns to it.
     const leave = (r, to) => { set({ osel: r.id }); to(); };
-    const owner = (g) => (g === "Assets" ? "the setup's agent" : g + "'s agent");
-    // A redo remakes items, which spends: it asks first with its impact (§15), and is one submission to the owner's session
-    // (§14.6), its state the shared Submission's (app.js). The button shows only while nothing is submitted; after a refusal
-    // Submission's Send again is the one action, and it asks again.
-    const redo = (g, rows) => set({ dialog: { title: `Ask ${owner(g)} to redo ${rows.length} items?`,
-      body: `${owner(g)[0].toUpperCase() + owner(g).slice(1)} will remake ${rows.length} items: ${rows.map((r) => r.full).join(", ")}. It spends from the project's budget; the earlier versions stay.`,
-      ok: "Ask to redo", cancel: "Not now", run: () => submit("redo:" + g) } });
-    const state = (g, rows) => ((S.subs || {})["redo:" + g]
-      ? html`<${Submission} id=${"redo:" + g} to=${owner(g)} onSend=${() => redo(g, rows)}/>`
-      : html`<button class="btn sm" onClick=${() => redo(g, rows)}>Ask ${owner(g)} to redo them</button>`);
+    // A view (UI actions rule, merecdesperez44323-lab 10-30): redoing is asked of the agent in the sidebar, not here.
     const row = (r) => html`<tr class=${S.osel === r.id ? "sel" : ""}>
       <td><span class="delivep">${I(r.icon)}<span><button class="linkbtn" onClick=${() => leave(r, r.home)}>${r.t}</button><small>${r.kind}</small></span></span></td>
       <td class="mono">${r.v}</td>
       <td class="why">${r.why || `Made from ${r.from}, which is out of date.`}</td>
       <td class="act"><button class="ibtn" title=${r.gid ? "Lineage" : "Lineage: this sample traces seg03 and what it reads"} aria-label="Lineage" disabled=${!r.gid} onClick=${() => leave(r, () => openLineage(r.gid, "Out of date"))}>${I("tree-structure")}</button></td></tr>`;
     const group = (g, head) => { const rows = items.filter((r) => r.group === g); return rows.length ? html`
-      <tr class="grp"><td colspan="3"><b>${head}</b></td><td class="act">${state(g, rows)}</td></tr>
+      <tr class="grp"><td colspan="4"><b>${head}</b></td></tr>
       ${rows.map(row)}` : null; };
     return html`<div class="main">
       <${TopBar} crumbs=${[own.drama(), "Out of date"]}/>
       <div class="body"><div class="scrollmain">
-        <div class="bar2"><span class="delivsum">${items.length ? html`<b>${items.length} items</b> are out of date. The agent that made each one redoes it.` : "Nothing is out of date."}</span></div>
+        <div class="bar2"><span class="delivsum">${items.length ? html`<b>${items.length} items</b> are out of date. Ask the agent in the sidebar to redo them.` : "Nothing is out of date."}</span></div>
         <${StopBanner}/>
         ${items.length > 0 && html`<div class="delivwrap"><table class="deliv ood"><thead><tr><th>Item</th><th>Version</th><th>Why</th><th aria-label="Lineage"></th></tr></thead>
           <tbody>${group("Assets", "Assets")}${["EP006"].map((ep) => group(ep, "Episodes · " + ep))}</tbody></table></div>`}
