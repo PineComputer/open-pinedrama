@@ -195,7 +195,21 @@
       <div class="ascroll">
         <section class="asec"><h3>Sessions <span class="c">3</span></h3>${runRow("EP003", "Running · shooting 4 takes · 2 back")}
           <div class="arow"><div class="what"><b>EP006</b><span>Waiting · 2 takes wait for you</span></div><button class="btn sm ghost" onClick=${() => go("review")}>Review</button></div>
-          <div class="arow failed"><div class="what"><b>EP005</b><span>Failed while shooting seg03 · <code>ProviderError.Unknown</code></span><small>drama-cli: the video request's outcome is unknown. It isn't sent again until it is reconciled.</small><small class="subtle">A failed session doesn't mean its jobs failed.</small></div><button class="btn sm" title="drama-cli's recovery for this refusal" onClick=${() => toast("Reconciling EP005 seg03: the agent asks the provider what became of the request; nothing is resubmitted.")}>Reconcile</button></div></section>
+          ${(() => {
+            // C3: Reconcile asks the provider what became of the request and ends in one of three outcomes, each saying what
+            // happens next (the prototype's Outcome control picks which); it never resubmits on its own.
+            const r = S.recon;
+            const reconcile = () => { set({ recon: "checking" }); setTimeout(() => set({ recon: S.outcome === "failed" ? "failed" : S.outcome === "unknown" ? "unknown" : "found" }), 1200); };
+            if (r === "found") return html`<div class="arow"><div class="what"><b>EP005</b><span>Running · collecting seg03's take</span><small>Found: the provider finished seg03's video. The agent collects it and carries on; nothing is generated again.</small></div></div>`;
+            return html`<div class="arow failed"><div class="what"><b>EP005</b>
+              ${r === "checking" ? html`<span>Checking seg03's request with the provider…</span><small>Nothing is sent again while it checks.</small>`
+              : r === "failed" ? html`<span>seg03's request failed at the provider</span><small>Next: shoot seg03 again. That is one new request, and it spends.</small>`
+              : r === "unknown" ? html`<span>Still unknown: the provider hasn't said</span><small>Nothing is sent again. Check again later; the agent keeps waiting on it.</small>`
+              : html`<span>Failed while shooting seg03 · <code>ProviderError.Unknown</code></span><small>drama-cli: the video request's outcome is unknown. It isn't sent again until it is reconciled.</small><small class="subtle">A failed session doesn't mean its jobs failed.</small>`}</div>
+              ${r === "checking" ? html`<span class="muted" style="font-size:12px">Checking…</span>`
+              : r === "failed" ? html`<button class="btn sm" onClick=${() => set({ dialog: { title: "Shoot seg03 again?", body: "One new video request for EP005 seg03. It spends.", ok: "Shoot again", cancel: "Not now", run: () => { set({ recon: null }); toast("EP005 seg03 is being shot again."); } } })}>Shoot seg03 again</button>`
+              : html`<button class="btn sm" title="drama-cli's recovery for an unknown outcome" onClick=${reconcile}>${r === "unknown" ? "Check again" : "Reconcile"}</button>`}</div>`;
+          })()}</section>
         <section class="asec"><h3>Decisions <span class="c">${dec.length}</span></h3>
           ${dec.map((d) => html`<button class="dec" onClick=${() => go(d.go)}><img src=${d.pic} alt=""/><span><b>${d.t}</b><small>${d.d}</small></span><span class="age">${d.age}</span></button>`)}</section>
         ${ep7 ? html`<section class="asec"><div class="process"><button onClick=${() => {}}>${I("list-checks")}EP007 · Process<span class="cnt">3 steps</span></button>
@@ -584,7 +598,7 @@
       <div class="seg" role="group" aria-label="Screen">${[["home", "Home"], ["reviews", "Reviews"], ["upload", "Upload"], ["analyzing", "Analyzing"], ["fountain", "Fountain"], ["script", "Script"], ["story", "Story"], ["episodes", "Episodes"], ["episode", "Episode"], ["canvas", "Canvas"], ["graph", "Graph"], ["review", "Review"], ["cut", "Cut"]].map(([k, l]) => html`<button aria-pressed=${String(S.screen === k)} onClick=${() => go(k)}>${l}</button>`)}</div>
       <span class="sep"></span>
       <label class="select" style="gap:8px">State<select aria-label="State" value=${S.state} onChange=${(e) => { const v = e.target.value; set({ state: v, dramaStop: v === "stopping" ? "stopping" : v === "stopped" ? "stopped" : null }); }}>
-        ${[["normal", "Normal"], ["cutchanged", "Cut changed upstream"], ["nostop", "No stop yet"], ["stopping", "Stopping"], ["stopped", "Stopped"], ["redline", "Red line"], ["budget", "Refused (no code)"], ["cap", "Cap reached"], ["env", "Credentials refused"]].map(([k, l]) => html`<option value=${k}>${l}</option>`)}</select></label>
+        ${[["normal", "Normal"], ["cutchanged", "Cut changed upstream"], ["nostop", "No stop yet"], ["stopping", "Stopping"], ["stopped", "Stopped"], ["redline", "Red line"], ["budget", "Refused (no code)"], ["cap", "Cap reached"], ["env", "Pine access denied"]].map(([k, l]) => html`<option value=${k}>${l}</option>`)}</select></label>
       <label class="select" style="gap:8px" title="What happens when something is sent: a review, a Reconcile">Outcome<select aria-label="Outcome" value=${S.outcome} onChange=${(e) => set({ outcome: e.target.value })}>
         ${[["ok", "Goes through"], ["failed", "Fails"], ["unknown", "Unknown"]].map(([k, l]) => html`<option value=${k}>${l}</option>`)}</select></label>
       <span class="sep"></span>

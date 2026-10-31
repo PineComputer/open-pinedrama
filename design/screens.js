@@ -24,10 +24,13 @@
         acts: [["Answer the agent", "primary"], ["Stop the drama", "danger"]], note: "Work in flight is waited on and recorded, never sent again." },
       cap: { icon: "stack", head: "Stopped · limit reached", title: "EP004 seg06's storyboard reached its limit of new versions", code: "SetLimitExceeded.max_new_versions",
         said: "episodes/EP004/multi_panel_storyboard/seg06/line-art has had 3 new paid versions after its first, the limit defaults.max_new_versions (3); ask the person before making it again: they lift the limit for that item by raising defaults.max_new_versions in the config, then set it back; then run drama-cli storyboard --config drama-cli.cfg.yaml EP004 seg06",
-        acts: [["Allow one more version of seg06", "primary"], ["Review its versions", ""]], note: "Allowing raises the limit for this item, runs it once, then sets the limit back." },
-      env: { icon: "lock-simple", head: "Stopped · credentials refused", title: "The video provider's credentials are missing", code: "InvalidParameter.env",
-        said: "Missing credential: set ARK_API_KEY in ~/dramas/bride-on-bail/.env",
-        acts: [["Open Computer settings", "primary"], ["Try again", ""]], note: "Nothing was sent or spent. The key is never shown here." },
+        // drama-cli's action for a cap is ask_person (drama_cli/errors.py): the maker answers; the studio invents no one-time allowance.
+        acts: [["Answer the agent", "primary"], ["See seg06's versions", ""]], note: "drama-cli asks you before it spends again. Say in your answer whether to raise the limit, as drama-cli describes, or to stop here; the agent follows drama-cli's steps." },
+      // On Pine the provider keys are Pine's (doc/drama-cli/module.md): a refusal of access points to the Pine session's access,
+      // never to a key the maker sets. drama-cli's AccessDenied.ModuleRuntime is ask_person (drama_cli/pine_runtime_client.py).
+      env: { icon: "lock-simple", head: "Stopped · Pine access denied", title: "Pine refused this session's access", code: "AccessDenied.ModuleRuntime",
+        said: "Pine returned HTTP 403: session or generation access is denied; restore access and check the active turn before continuing",
+        acts: [["Check your Pine access", "primary"], ["Answer the agent", ""]], note: "Nothing new was generated. Requests already sent are checked, never sent again. You never handle provider keys on Pine." },
     }[kind];
     return html`<section class=${"stopcard " + kind} aria-label=${K.head}>
       <header>${I(K.icon)}<span>${K.head}</span><span class="grow"></span><span class="mono">${{ cap: "EP004", redline: "EP007" }[kind] || ""}</span></header>
@@ -223,6 +226,8 @@
   /* ───── Cut ───── */
   function Cut() {
     const vref = useRef(null), c = P.cut, notes = S.cutNotes || c.notes;
+    // D2: each note added or removed is a step; Undo puts the notes back as before the last one, whatever its place in the list.
+    const noteStep = (next) => set({ cutHist: [...(S.cutHist || []), notes], cutNotes: next });
     useEffect(() => { const el = vref.current; if (!el) return; if (S.cutPlaying) el.play().catch(() => set({ cutPlaying: false })); else el.pause(); });
     const seek = (t) => { if (vref.current) vref.current.currentTime = t; set({ cutT: t }); };
     const fmt = (t) => "0:" + String(Math.floor(t)).padStart(2, "0");
@@ -233,7 +238,7 @@
       <div class="room is-cut">
         <section class="stage">
           <div class="screen"><div class="player">
-            <video ref=${vref} src=${c.src} poster="img/still-s1t2.jpg" muted playsinline preload="metadata" onTimeUpdate=${(e) => set({ cutT: e.target.currentTime })} onEnded=${() => set({ cutPlaying: false })}></video>
+            <video ref=${vref} src=${c.src} poster="img/still-s1t2.jpg" muted playsinline preload="metadata" onTimeUpdate=${(e) => set({ cutT: e.target.currentTime, cutMax: Math.max(S.cutMax || 0, e.target.currentTime) })} onEnded=${() => set({ cutPlaying: false, cutMax: c.dur })}></video>
             <span class="tag2">EP006 · cut v1</span>
             ${!S.cutPlaying && html`<button class="bigplay" aria-label="Play" onClick=${() => set({ cutPlaying: true })}><i>${I("play")}</i></button>`}</div></div>
           <div class="cuttl">
@@ -252,9 +257,9 @@
         <aside class="insp"><div class="ihead"><b>EP006 · cut v1</b><small>${c.dur} s of 90 s planned · 2 of 4 segments in this sample</small></div>
           <div class="iscroll">
             <div class="isec"><h4>Notes at a time <span class="muted">${notes.length}</span></h4>
-              ${notes.map((n, i) => html`<div class="noterow"><button class="mono tbtn" onClick=${() => seek(n.t)}>${fmt(n.t)}</button><span class="grow">${n.text}</span><button class="ibtn" aria-label="Remove note" onClick=${() => set({ cutNotes: notes.filter((_, j) => j !== i) })}>${I("x")}</button></div>`)}
+              ${notes.map((n, i) => html`<div class="noterow"><button class="mono tbtn" onClick=${() => seek(n.t)}>${fmt(n.t)}</button><span class="grow">${n.text}</span><button class="ibtn" aria-label="Remove note" onClick=${() => noteStep(notes.filter((_, j) => j !== i))}>${I("x")}</button></div>`)}
               <div class="addnote"><span class="mono">${fmt(S.cutT)}</span><input placeholder="Add a note at the playhead…" value=${S.noteDraft} onInput=${(e) => set({ noteDraft: e.target.value })}
-                onKeyDown=${(e) => { if (e.key === "Enter" && S.noteDraft.trim()) set({ cutNotes: [...notes, { t: S.cutT, text: S.noteDraft.trim() }].sort((a, b) => a.t - b.t), noteDraft: "" }); }}/></div></div>
+                onKeyDown=${(e) => { if (e.key === "Enter" && S.noteDraft.trim()) { noteStep([...notes, { t: S.cutT, text: S.noteDraft.trim() }].sort((a, b) => a.t - b.t)); set({ noteDraft: "" }); } }}/></div></div>
             ${S.cutSel != null && c.segs[S.cutSel] && (() => { const [seg, take, d] = c.segs[S.cutSel]; return html`<div class="isec"><h4>Properties <span class="muted">${seg}</span></h4>
               <dl class="kv"><dt>Segment</dt><dd>${seg}</dd><dt>Take</dt><dd>${take}</dd><dt>Model</dt><dd>${c.spec.model}</dd><dt>Duration</dt><dd class="mono">${d} s</dd><dt>Picture</dt><dd>${c.spec.ratio} · ${c.spec.resolution} · ${c.spec.fps} fps</dd></dl>
               <div class="propoff"><span class="muted">Speed</span><div class="seg" aria-disabled="true">${["0.5×", "1×", "1.5×", "2×"].map((x) => html`<button disabled aria-pressed=${String(x === "1×")}>${x}</button>`)}</div>
@@ -262,22 +267,27 @@
                 <p class="muted">drama-cli makes every cut; editing here comes later.</p></div>
               <button class="btn sm" onClick=${() => go("canvas")}>${I("flow-arrow")}Open on Canvas</button></div>`; })()}
             <div class="isec"><h4>Made from</h4>${c.segs.map(([s, t, d]) => html`<div class="lrow static">${s} · take ${t}<span class="mono subtle">${d} s</span></div>`)}</div>
-            <div class="isec" style="border-bottom:0"><h4>What happens</h4><p class="muted" style="font-size:12.5px;line-height:1.55">Send back with your notes and the agent plans the cut again; building a cut is free. Accept, and EP006 is delivered.</p></div>
+            <div class="isec" style="border-bottom:0"><h4>What happens</h4><p class="muted" style="font-size:12.5px;line-height:1.55">You watch every cut and decide; no model checks a cut for you. Send back with your notes and the agent plans the cut again; building a cut is free. Accept, and EP006 is delivered.</p></div>
           </div>
-          <div class="verdict"><div class="vrow" style="grid-template-columns:1fr 1fr">
-            <button class="vbtn acc" aria-pressed=${String(S.cutV === "accept")} onClick=${() => set({ cutV: S.cutV === "accept" ? null : "accept" })}>${I("check")}Accept cut</button>
+          ${(() => {
+            // B3: as with a take, you watch every cut: Accept waits until it has played to the end.
+            const cutWatched = (S.cutMax || 0) >= c.dur - 0.25;
+            return html`<div class="verdict"><div class="vrow" style="grid-template-columns:1fr 1fr">
+            <button class="vbtn acc" aria-pressed=${String(S.cutV === "accept")} disabled=${!cutWatched} title=${cutWatched ? "Accept the cut" : "Watch the cut to the end first"} onClick=${() => set({ cutV: S.cutV === "accept" ? null : "accept" })}>${I("check")}Accept cut</button>
             <button class="vbtn back" aria-pressed=${String(S.cutV === "back")} onClick=${() => set({ cutV: S.cutV === "back" ? null : "back" })}>${I("arrow-counter-clockwise")}Send back</button></div>
             ${S.cutV === "back" && html`<textarea placeholder="Why it goes back (required). Your timed notes go with it." value=${S.cutWhy} onInput=${(e) => set({ cutWhy: e.target.value })}></textarea>`}
+            <span class="hint">${I(cutWatched ? "check-circle" : "clock")}${cutWatched ? "Watched to the end." : `Watched ${Math.round(((S.cutMax || 0) / c.dur) * 100)}% · Accept unlocks at the end.`}</span>
             <button class="btn primary" disabled=${!S.cutV || (S.cutV === "back" && !S.cutWhy.trim())} onClick=${() => toast(S.cutV === "accept" ? "EP006 cut accepted." : "Cut sent back with " + notes.length + " notes.")}>Send review</button>
             ${(() => {
               // IA draft: edits are a draft of drama-cli's own edit spec until Apply; the agent builds and validates it.
-              const n = notes.length - c.notes.length, moved = S.state === "cutchanged";
+              // What the draft changes against cut v1's notes: each added and each removed, not the difference in length.
+              const n = notes.filter((x) => !c.notes.includes(x)).length + c.notes.filter((x) => !notes.includes(x)).length, moved = S.state === "cutchanged";
               return html`<div class="draftbar"><span>Edit spec · based on cut v1 · ${n > 0 ? html`<b>Draft: ${n} changes</b>` : "no changes"}</span><span class="grow"></span>
-                <button class="btn sm ghost" title="Revert the last change" disabled=${n <= 0} onClick=${() => set({ cutNotes: notes.slice(0, -1) })}>Undo</button>
-                <button class="btn sm ghost" title="Discard the draft" disabled=${n <= 0} onClick=${() => { set({ cutNotes: null }); toast("Draft discarded. Nothing was applied."); }}>Reset</button>
+                <button class="btn sm ghost" title="Undo the last change" disabled=${!(S.cutHist || []).length} onClick=${() => { const h = [...S.cutHist], last = h.pop(); set({ cutHist: h, cutNotes: last === c.notes ? null : last }); }}>Undo</button>
+                <button class="btn sm ghost" title="Discard the whole draft, its text too" disabled=${n <= 0 && !(S.cutWhy || "").trim()} onClick=${() => { set({ cutNotes: null, cutHist: [], cutWhy: "" }); toast("Draft discarded. Nothing was applied."); }}>Reset</button>
                 <button class="btn sm" disabled=${n <= 0 || moved} onClick=${() => toast("Applied: the agent runs drama-cli edit build and edit validate; cut v2 comes back for your review.")}>Apply</button></div>
                 ${moved && html`<p class="draftwarn">${I("warning")}The cut changed since you started (cut v2 is in). Re-check your draft against it before Apply.</p>`}`;
-            })()}</div>
+            })()}</div>`; })()}
         </aside></div></div>`;
   }
 
