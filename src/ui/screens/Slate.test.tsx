@@ -185,8 +185,7 @@ describe("Home", () => {
     expect(within(screen.getByRole("tablist")).getByRole("tab", { name: /Needs you/ })).toHaveTextContent("1");
   });
 
-  it("narrows Waiting for you to a drama from its card's pill, and back to every drama", async () => {
-    const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
+  it("opens Reviews for a drama from its card's pill, and the whole queue from See all (IA §16)", async () => {
     answer("/api/app", replay);
     answer("/api/reviews", [
       { id: "r1", dramaId: "d1", dramaTitle: "The Stepmother", episode: "EP001", kind: "takes", state: "open", question: "", items: 2, subjects: ["seg01", "seg03"], createdAt: "2026-10-30T11:56:00Z" },
@@ -196,12 +195,7 @@ describe("Home", () => {
     await renderAt(<Slate />);
     const waiting = await screen.findByRole("list", { name: "Waiting for you" });
     expect(within(waiting).getAllByRole("link")).toHaveLength(2);
-    const pill = screen.getByRole("button", { name: "1 need you", description: "Show what waits for you in Bride on Bail" });
-    await user.click(pill);
-    expect(pill).toHaveAttribute("aria-pressed", "true");
-    expect(within(waiting).getAllByRole("link").map((row) => row.textContent)).toEqual([expect.stringContaining("Bride on Bail · EP004")]);
-    await user.click(screen.getByRole("button", { name: "Show every drama's" }));
-    expect(within(waiting).getAllByRole("link")).toHaveLength(2);
-    expect(pill).toHaveAttribute("aria-pressed", "false");
+    expect(screen.getByRole("link", { name: "1 need you", description: "Open Reviews for Bride on Bail" })).toHaveAttribute("href", "/reviews?drama=d2");
+    expect(screen.getByRole("link", { name: "See all 2 in Reviews" })).toHaveAttribute("href", "/reviews");
   });
 });

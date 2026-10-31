@@ -87,12 +87,11 @@ function byActivity(dramas: DramaCard[]): DramaCard[] {
 }
 
 /** The prototype's .hero: the drama worked on last, its waiting review first; beside it, what waits, newest first. */
-function Hero({ waiting, dramas, waitFor, onAll }: { waiting: ReviewSummary[]; dramas: DramaCard[]; waitFor?: string; onAll: () => void }) {
+function Hero({ waiting, dramas }: { waiting: ReviewSummary[]; dramas: DramaCard[] }) {
   const { t, lang } = useT();
   const drama = byActivity(dramas)[0];
   if (!drama) return null;
   const review = waiting.find((item) => item.dramaId === drama.id);
-  const filtered = waitFor ? dramas.find((entry) => entry.id === waitFor) : undefined;
   const where = standing(drama, waiting.some((item) => item.dramaId === drama.id && isRedLine(item)));
   const line = review?.question || drama.facts.lastLine;
   const { total, done } = drama.episodes;
@@ -143,18 +142,9 @@ function Hero({ waiting, dramas, waitFor, onAll }: { waiting: ReviewSummary[]; d
       <div className="right">
         <h3>
           <span id="waiting-title">{t("slate.waiting")}</span>
-          {filtered && (
-            <span className="tag">
-              {filtered.title}
-              <button type="button" aria-label={t("slate.waitsAll")} onClick={onAll}>
-                <Icon name="x" className="ic" />
-              </button>
-            </span>
-          )}
         </h3>
         <ul aria-labelledby="waiting-title">
           {waiting
-            .filter((item) => !waitFor || item.dramaId === waitFor)
             .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
             .slice(0, 4)
             .map((item) => {
@@ -174,13 +164,20 @@ function Hero({ waiting, dramas, waitFor, onAll }: { waiting: ReviewSummary[]; d
               );
             })}
         </ul>
+        {/* IA §16: the preview's home is Reviews, the one queue; this is the way there. */}
+        {waiting.length > 0 && (
+          <Link to="/reviews" className="seeall">
+            {t("slate.seeAll", { n: waiting.length })}
+            <Icon name="caret-right" className="ic" />
+          </Link>
+        )}
       </div>
     </section>
   );
 }
 
 /** The prototype's .pcard: the cover with its status and progress, then the title, what it is, its spend and two tags. */
-function Card({ drama, redLine, waitFor, onWaitFor }: { drama: DramaCard; redLine: boolean; waitFor?: string; onWaitFor: (id?: string) => void }) {
+function Card({ drama, redLine }: { drama: DramaCard; redLine: boolean }) {
   const { t, lang } = useT();
   const where = standing(drama, redLine);
   const { total, done } = drama.episodes;
@@ -217,12 +214,13 @@ function Card({ drama, redLine, waitFor, onWaitFor }: { drama: DramaCard; redLin
           )}
         </div>
       </Link>
-      {/* design/'s "N need you" or "Red line" pill narrows Waiting for you to this drama: a sibling of the link, not inside it. */}
+      {/* design/'s "N need you" or "Red line" pill opens Reviews filtered to this drama (IA §16: a drama's Reviews is a
+          filter of the one queue): a sibling of the card's link, not inside it. */}
       {where.st === "you" || where.st === "redline" ? (
-        <button type="button" className={`st ${where.st}`} aria-pressed={waitFor === drama.id} title={t("slate.waitsFor", { title: drama.title })} onClick={() => onWaitFor(waitFor === drama.id ? undefined : drama.id)}>
+        <Link to="/reviews" search={{ drama: drama.id }} className={`st ${where.st}`} title={t("slate.waitsFor", { title: drama.title })}>
           <i />
           {t(where.label, { n: drama.waiting })}
-        </button>
+        </Link>
       ) : (
         <Status st={where.st} label={t(where.label, { n: drama.waiting })} />
       )}
@@ -267,8 +265,6 @@ export function Slate() {
   const [shelf, setShelf] = useState<Shelf>("all");
   const [find, setFind] = useState("");
   const [sort, setSort] = useState<"edited" | "title">("edited");
-  // design/'s card pill: Waiting for you narrowed to one drama.
-  const [waitFor, setWaitFor] = useState<string>();
   const sample = useAction(async () => {
     const { id } = await api<{ id: string }>("/api/dramas/sample", { method: "POST", json: { language: lang } });
     void navigate({ to: "/d/$dramaId/episodes", params: { dramaId: id } });
@@ -317,7 +313,7 @@ export function Slate() {
           </button>
         </div>
       )}
-      <Hero waiting={waiting} dramas={dramas} waitFor={waitFor} onAll={() => setWaitFor(undefined)} />
+      <Hero waiting={waiting} dramas={dramas} />
       {dramas.length > 0 && (
         <div className="tabsrow">
           <div className="utabs" role="tablist" aria-label={t("slate.shelves")}>
@@ -351,7 +347,7 @@ export function Slate() {
       )}
       <div className="cards" role="tabpanel" aria-label={t("slate.shelves")}>
         {shown.map((drama) => (
-          <Card key={drama.id} drama={drama} redLine={redLines.has(drama.id)} waitFor={waitFor} onWaitFor={setWaitFor} />
+          <Card key={drama.id} drama={drama} redLine={redLines.has(drama.id)} />
         ))}
         {(shelf === "all" && !find) || dramas.length === 0 ? <NewCard /> : null}
       </div>
