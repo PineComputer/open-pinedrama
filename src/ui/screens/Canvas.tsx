@@ -423,6 +423,10 @@ function Plane({ drama }: { drama: DramaView }) {
     () => setNodes((before) => mapped.nodes.map((node) => ({ ...node, selected: before.find((one) => one.id === node.id)?.selected ?? node.id === page?.item }))),
     [mapped.nodes, setNodes, page?.item],
   );
+  // The pick is the URL's (Codex round 3, fix 3): a link, or Back, picks the item it names.
+  useEffect(() => {
+    if (page?.item) setNodes((all) => all.map((node) => ({ ...node, selected: node.id === page.item })));
+  }, [page?.item, setNodes]);
   // A board opens fitted to the episode, as the prototype's does; following then moves only to work saved after that.
   const opened = useRef<string>(undefined);
   const centred = useRef<string>(undefined);
@@ -457,6 +461,8 @@ function Plane({ drama }: { drama: DramaView }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dock, paneWidth, paneHeight, picked?.id]);
   const [tool, setTool] = useState<Tool>("move");
+  // The item the last pick wrote into the URL.
+  const written = useRef<string | null>(page?.item ?? null);
   const [keysOpen, setKeysOpen] = useState(false);
   useCanvasKeys({
     tool: setTool,
@@ -488,16 +494,32 @@ function Plane({ drama }: { drama: DramaView }) {
     const centre = (paneWidth - (dock === "right" ? DOCKED : 0)) / 2;
     void flow.setViewport({ x: centre - (x + w / 2) * zoom, y: top + BAR - y * zoom, zoom }, { duration: 400 });
   };
+  // A pick goes into the URL, replacing it, so Back from where the bar leads (Lineage, a home) returns to it.
   const pick = (id: string | null) => {
     setFollow(false);
     setNodes((all) => all.map((node) => ({ ...node, selected: node.id === id })));
     if (id) place(id);
+    // The drama's Canvas is on its way to the episode's (the effect above), which then holds the pick. One pick, one
+    // navigation: a key on a node reaches both its label and React Flow's own selection.
+    if (picker || written.current === id) return;
+    written.current = id;
+    void navigate({ ...placeLink({ dramaId: drama.id, surface: "canvas", episode: code, item: id ?? undefined }), replace: true });
+  };
+  // The version the panel is on: the one the URL names for the picked item, else its working version; and that version's
+  // file, which drama-cli keeps in the version's own folder under the stage (the lineage's shows: <stage>/<version>/<file>).
+  const onVersion = (stage: LineageNode) => (page?.item === stage.id && page.version ? page.version : (stage.version ?? "—"));
+  const workOf = (node: Node<ItemData>) => {
+    const { stage, work } = node.data;
+    const on = onVersion(stage);
+    if (on === stage.version || !stage.shows) return work;
+    const name = stage.shows.slice(stage.shows.lastIndexOf("/") + 1);
+    return files.data?.find((file) => file.path.endsWith(`/${stage.id}/${on}/${name}`));
   };
   const at = codes.indexOf(code);
   const byId = new Map(mapped.nodes.map((node) => [node.id, node]));
   const labelOf = (id: string) => (byId.get(id)?.data as ItemData | undefined)?.label ?? id;
   const bar = (node: Node<ItemData>) => (
-    <SteerBar drama={drama} node={node.data.item} label={node.data.label} picture={node.data.work} episodeTitle={names?.episodes[code]} lineage={homeLink(drama.id, node.data.stage.id, "lineage")} />
+    <SteerBar drama={drama} node={node.data.item} label={node.data.label} picture={workOf(node)} episodeTitle={names?.episodes[code]} lineage={homeLink(drama.id, node.data.stage.id, "lineage", page?.item === node.id ? page.version : undefined)} />
   );
   const panel = (node: Node<ItemData>) => (
     <NodePanel
@@ -505,13 +527,15 @@ function Plane({ drama }: { drama: DramaView }) {
       item={node.data.item}
       look={node.data.stage.where.look ?? node.data.stage.where.time}
       style={node.data.stage.where.style}
-      work={node.data.work}
+      on={onVersion(node.data.stage)}
+      work={workOf(node)}
       files={files.data ?? []}
       facts={{
         label: node.data.label,
         status: node.data.status,
         kind: t(PIPELINE[node.data.stage.kind].label),
         version: node.data.stage.version ?? "—",
+        accepted: node.data.stage.accepted,
         usedBy: mapped.edges.filter((edge) => edge.source === node.id).map((edge) => labelOf(edge.target)).join(", "),
         reads: mapped.edges.filter((edge) => edge.target === node.id).map((edge) => labelOf(edge.source)).join(", "),
         problems: node.data.stage.problems,

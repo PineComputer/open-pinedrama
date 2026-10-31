@@ -1,20 +1,22 @@
 // The picked node's panel, directly under it (design/app.js NodePanel; infinite-canvas's prompt
-// panel and astorie's node panel stand there), read only, in Radix's Tabs with the design's classes.
+// panel and astorie's node panel stand there), read only, in the design's classes. By default it says where the
+// version stands and what needs the maker; the prompt, versions, request and details open on demand, one at a
+// time (IA §15, progressive disclosure: a disclosure button each, WAI-ARIA's disclosure pattern).
 // The prompt and the pill row are what drama-cli's spec.json for the working version says
 // (shared/spec.ts); Versions are the receipts the episode page lists, each with the maker's verdict;
 // Request is the request.json drama-cli sent, in react-json-view-lite's tree; Details are what the
 // node is, what uses it and what it reads. Every hand control stands disabled (NodeActions).
-import { Fragment, useContext, useMemo } from "react";
+import { Fragment, useMemo, useState } from "react";
 import { collapseAllNested, defaultStyles, JsonView } from "react-json-view-lite";
 import "react-json-view-lite/dist/index.css";
 import type { Item } from "../../shared/pipeline.ts";
 import { specBeside, specFacts } from "../../shared/spec.ts";
 import type { CastCard, EpisodePage, FileItem, Receipt } from "../../shared/types.ts";
 import { useResource } from "../api.ts";
-import { Tabs } from "radix-ui";
 import { Button, IconButton } from "../components/Button.tsx";
 import { type Status, StatusChip } from "../components/StatusChip.tsx";
 import { type TKey, useT } from "../i18n.ts";
+import { Icon } from "../icons.tsx";
 import { useText } from "../viewing.tsx";
 import { JudgedLine } from "./Episode.tsx";
 import type { NodeActions } from "./Canvas.tsx";
@@ -104,7 +106,7 @@ const CARD = { character: "look", location: "location", prop: "prop" } as const;
  * lineage, not its versions); an episode's cut from that page's cuts. While the record loads, or if it can't be read, it
  * says so rather than "none".
  */
-function Versions({ dramaId, item, look, style }: { dramaId: string; item: Item; look?: string; style?: string }) {
+function Versions({ dramaId, item, look, style, on }: { dramaId: string; item: Item; look?: string; style?: string; on: string }) {
   const { t } = useT();
   const shared = item.kind === "character" || item.kind === "location" || item.kind === "prop";
   const cast = useResource<CastCard[]>(shared ? `/api/dramas/${dramaId}/cast` : null, [`drama:${dramaId}`]);
@@ -134,7 +136,7 @@ function Versions({ dramaId, item, look, style }: { dramaId: string; item: Item;
   return (
     <ol className="versions">
       {rows.map(({ receipt, version }) => (
-        <li key={receipt.turnId}>
+        <li key={receipt.turnId} aria-current={version === on || undefined}>
           <b>
             {t("canvas.version")} · {version ?? "—"}
           </b>
@@ -145,11 +147,17 @@ function Versions({ dramaId, item, look, style }: { dramaId: string; item: Item;
   );
 }
 
+/** What opens on demand, one at a time. */
+const PARTS = ["prompt", "versions", "request", "details"] as const;
+type Part = (typeof PARTS)[number];
+
 export interface PanelFacts {
   label: string;
   status: Status;
   kind: string;
+  /** The working version, and the one accepted, as drama-cli's lineage says. */
   version: string;
+  accepted: string | null;
   usedBy: string;
   reads: string;
   /** Why the version isn't fresh or isn't accepted, in drama-cli's own words (the lineage node's problems). */
@@ -161,6 +169,7 @@ export function NodePanel({
   item,
   look,
   style,
+  on,
   work,
   files,
   facts,
@@ -175,6 +184,9 @@ export function NodePanel({
   look?: string;
   /** A storyboard's style (line-art, photoreal), as the lineage names the stage. */
   style?: string;
+  /** The version the panel is on: the one a link names (Codex round 3, fix 3), else the working one. */
+  on: string;
+  /** The file drama-cli shows for that version. */
   work?: FileItem;
   files: FileItem[];
   facts: PanelFacts;
@@ -194,6 +206,9 @@ export function NodePanel({
   // The model in its own pill, then the request's settings in one, as design/'s node panel (after liblib.tv's composer).
   const settings = [spec?.ratio, spec?.resolution, spec?.seconds !== undefined ? t("canvas.seconds", { n: spec.seconds }) : undefined, spec?.seed !== undefined ? t("canvas.seedPill", { n: spec.seed }) : undefined].filter((part): part is string => part !== undefined);
   const pills = [spec?.model, settings.length ? settings.join(" · ") : undefined].filter((pill): pill is string => pill !== undefined);
+  const [open, setOpen] = useState<Part | null>(null);
+  const accepted = facts.accepted === on ? t("canvas.accepted") : facts.accepted ? t("canvas.acceptedOther", { v: facts.accepted }) : t("canvas.noneAccepted");
+  const needs = facts.status === "you" ? "canvas.needs.you" : facts.status === "stale" ? "canvas.needs.stale" : facts.status === "back" ? "canvas.needs.back" : undefined;
 
   return (
     <section className={`npanel nodrag nowheel${dock === "right" ? " docked" : ""}`} aria-label={t("canvas.panel", { item: facts.label })}>
@@ -203,66 +218,66 @@ export function NodePanel({
         {dock === "right" ? <IconButton label={t("canvas.dockUnder")} icon="square-half-bottom" onClick={() => onDock("under")} /> : <IconButton label={t("canvas.dockRight")} icon="square-half" onClick={() => onDock("right")} />}
         <IconButton label={t("steer.close")} icon="x" onClick={onClose} />
       </div>
-      <Tabs.Root defaultValue="prompt" className="ntabs">
-        <Tabs.List className="utabs">
-          <Tabs.Trigger value="prompt">{t("canvas.tab.prompt")}</Tabs.Trigger>
-          <Tabs.Trigger value="versions">{t("canvas.tab.versions")}</Tabs.Trigger>
-          <Tabs.Trigger value="request">{t("canvas.tab.request")}</Tabs.Trigger>
-          <Tabs.Trigger value="details">{t("canvas.tab.details")}</Tabs.Trigger>
-        </Tabs.List>
-        <Tabs.Content value="prompt">
-          {spec?.prompt ? (
-            <>
-              {pictures.length > 0 && (
-                <ol className="refs">
-                  {pictures.map((picture, n) => (
-                    // Numbered on its corner as the prompt's Image N (design/app.js NodePanel).
-                    <li key={n} title={t("canvas.image", { n: n + 1 })}>
-                      {picture ? <img src={picture.url} alt={t("canvas.image", { n: n + 1 })} /> : <span className="none" />}
-                      <b aria-hidden="true">{n + 1}</b>
-                    </li>
-                  ))}
-                </ol>
-              )}
-              <div className="prompt">
-                <Prompt text={spec.prompt} pictures={pictures} />
-              </div>
-            </>
-          ) : (
-            <p className="subtle">{t("canvas.noSpec")}</p>
-          )}
-        </Tabs.Content>
-        <Tabs.Content value="versions">
-          <Versions dramaId={dramaId} item={item} look={look} style={style} />
-        </Tabs.Content>
-        <Tabs.Content value="request">
-          {request && typeof request === "object" ? <JsonView data={request as object} shouldExpandNode={collapseAllNested} style={JSON_STYLE} aria-label={t("canvas.tab.request")} /> : <p className="subtle">{t("canvas.noSpec")}</p>}
-        </Tabs.Content>
-        <Tabs.Content value="details">
-          <dl>
-            <dt>{t("canvas.kind")}</dt>
-            <dd>{facts.kind}</dd>
-            <dt>{t("canvas.version")}</dt>
-            <dd className="mono">{facts.version}</dd>
-            <dt>{t("canvas.usedBy")}</dt>
-            <dd>{facts.usedBy || "—"}</dd>
-            <dt>{t("canvas.reads")}</dt>
-            <dd>{facts.reads || "—"}</dd>
-            {facts.problems.length > 0 && (
+      <div className="nstate">
+        <span className="mono">
+          {on === facts.version ? t("canvas.current", { v: on }) : t("canvas.earlier", { v: on, current: facts.version })} · {accepted}
+        </span>
+        {facts.problems.length > 0 && (
+          <span className="why">
+            <Icon name="warning" />
+            {facts.problems.join("; ")}
+          </span>
+        )}
+      </div>
+      {needs && <p className="needs">{t(needs)}</p>}
+      <div className="ndisc">
+        {PARTS.map((part) => (
+          <button key={part} type="button" aria-expanded={open === part} aria-controls="npart" onClick={() => setOpen(open === part ? null : part)}>
+            {t(`canvas.tab.${part}`)}
+            <Icon name={open === part ? "caret-up" : "caret-down"} />
+          </button>
+        ))}
+      </div>
+      {open && (
+        <div id="npart" className="npart" role="region" aria-label={t(`canvas.tab.${open}`)}>
+          {open === "prompt" &&
+            (spec?.prompt ? (
               <>
-                <dt>{t("canvas.why")}</dt>
-                <dd>
-                  {facts.problems.map((said) => (
-                    <span key={said} className="why">
-                      {said}
-                    </span>
-                  ))}
-                </dd>
+                {pictures.length > 0 && (
+                  <ol className="refs">
+                    {pictures.map((picture, n) => (
+                      // Numbered on its corner as the prompt's Image N (design/app.js NodePanel).
+                      <li key={n} title={t("canvas.image", { n: n + 1 })}>
+                        {picture ? <img src={picture.url} alt={t("canvas.image", { n: n + 1 })} /> : <span className="none" />}
+                        <b aria-hidden="true">{n + 1}</b>
+                      </li>
+                    ))}
+                  </ol>
+                )}
+                <div className="prompt">
+                  <Prompt text={spec.prompt} pictures={pictures} />
+                </div>
               </>
-            )}
-          </dl>
-        </Tabs.Content>
-      </Tabs.Root>
+            ) : (
+              <p className="subtle">{t("canvas.noSpec")}</p>
+            ))}
+          {open === "versions" && <Versions dramaId={dramaId} item={item} look={look} style={style} on={on} />}
+          {open === "request" && (request && typeof request === "object" ? <JsonView data={request as object} shouldExpandNode={collapseAllNested} style={JSON_STYLE} aria-label={t("canvas.tab.request")} /> : <p className="subtle">{t("canvas.noSpec")}</p>)}
+          {open === "details" && (
+            <dl>
+              <dt>{t("canvas.kind")}</dt>
+              <dd>{facts.kind}</dd>
+              <dt>{t("canvas.version")}</dt>
+              <dd className="mono">{on}</dd>
+              <dt>{t("canvas.usedBy")}</dt>
+              <dd>{facts.usedBy || "—"}</dd>
+              <dt>{t("canvas.reads")}</dt>
+              <dd>{facts.reads || "—"}</dd>
+            </dl>
+          )}
+        </div>
+      )}
+      {open && (
       <div className="nfoot">
         {pills.map((pill) => (
           <span key={pill} className="pill mono">
@@ -277,6 +292,7 @@ export function NodePanel({
           {t("canvas.generate")}
         </Button>
       </div>
+      )}
     </section>
   );
 }

@@ -60,10 +60,7 @@
 .react-flow__node-toolbar .nbar, .react-flow__node-toolbar .npanel { position: static; }
 .react-flow__node-toolbar .npanel { width: 560px; }
 .npanel { grid-template-columns: minmax(0, 1fr); white-space: normal; }
-/* Radix's Tabs root stands between the panel and its tab list and panel: it is the row that scrolls when the panel is docked. */
-.npanel .ntabs { display: grid; gap: 10px; min-height: 0; grid-template-rows: auto minmax(0, 1fr); }
-.npanel .ntabs, .npanel [role="tabpanel"], .npanel .prompt { grid-template-columns: minmax(0, 1fr); }
-.npanel.docked [role="tabpanel"] { overflow-y: auto; }
+.npanel .npart, .npanel .prompt { grid-template-columns: minmax(0, 1fr); }
 .ds-steer { display: grid; gap: 8px; justify-items: center; }
 .ds-steer .say, .ds-steer .off, .ds-steer .done { width: 420px; padding: 10px 12px; border-radius: var(--radius-xl); border: 1px solid color-mix(in srgb, var(--text-primary) 12%, transparent); background: var(--glass); backdrop-filter: blur(18px); }
 /* A picture the request sent from the asset library has no file here: its numbered place stays, empty. */

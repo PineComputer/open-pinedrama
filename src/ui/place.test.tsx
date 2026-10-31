@@ -32,6 +32,15 @@ describe("a drama page's place", () => {
     expect(hrefOf({ dramaId: "d1", surface: "list", ...picked })).toBe(home);
   });
 
+  it.each<[string, Place, string]>([
+    ["List", { dramaId: "d1", surface: "list", episode: "EP006", item: "episodes/EP006/multi_panel_storyboard/seg03/line-art", version: "v1" }, "/d/d1/e/EP006/list?item=episodes%2FEP006%2Fmulti_panel_storyboard%2Fseg03%2Fline-art&version=v1"],
+    ["Canvas", { dramaId: "d1", surface: "canvas", episode: "EP006", item: "episodes/EP006/segments/seg03", version: "t02" }, "/d/d1/e/EP006/canvas?item=episodes%2FEP006%2Fsegments%2Fseg03&version=t02"],
+    ["Lineage", { dramaId: "d1", surface: "lineage", item: "episodes/EP006/edit", version: "v1" }, "/d/d1/e/EP006/cut?item=episodes%2FEP006%2Fedit&version=v1&view=lineage"],
+    ["a character's home", { dramaId: "d1", surface: "list", item: "assets/characters/ivy", version: "v2" }, "/d/d1/assets/characters/ivy?item=assets%2Fcharacters%2Fivy&version=v2"],
+  ])("keeps the version a link names on %s (Codex round 3, fix 3)", (_, place, href) => {
+    expect(hrefOf(place)).toBe(href);
+  });
+
   it("opens an episode on its List, and Lineage with nothing picked on the drama's Out of date", () => {
     expect(hrefOf({ dramaId: "d1", surface: "list", episode: "EP002" })).toBe("/d/d1/e/EP002/list");
     expect(hrefOf({ dramaId: "d1", surface: "list" })).toBe("/d/d1/episodes");
@@ -54,6 +63,8 @@ describe("the routes", () => {
     ["an item that is no stage", "/d/d1/episodes?item=ivy"],
     ["another episode's item", "/d/d1/e/EP002/list?item=episodes%2FEP003%2Fbreakdown"],
     ["a view the studio hasn't", "/d/d1/episodes?view=grid"],
+    ["a version that isn't drama-cli's", "/d/d1/e/EP006/list?item=episodes%2FEP006%2Fsegments%2Fseg03&version=latest"],
+    ["a version of no item", "/d/d1/e/EP006/list?version=t02"],
   ])("say Not found for %s", async (_, path) => {
     expect((await load(path)).matches.some((match) => match.status === "notFound")).toBe(true);
   });

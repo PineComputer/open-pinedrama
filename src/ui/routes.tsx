@@ -60,13 +60,15 @@ const galleryRoute = createRoute({
   component: GalleryPage,
 });
 
-// A drama's page: what is picked on it (a drama-cli stage id) and whether it shows as Lineage.
+// A drama's page: what is picked on it (a drama-cli stage id), which of its versions (none: the working one), and
+// whether it shows as Lineage. A version is the lineage's own (shared/lineage.ts LineageNode.version, "vN or tNN").
 const dramaRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/d/$dramaId",
-  validateSearch: (search: Record<string, unknown>): { item?: string; view?: string } => ({ item: text(search.item), view: text(search.view) }),
+  validateSearch: (search: Record<string, unknown>): { item?: string; version?: string; view?: string } => ({ item: text(search.item), version: text(search.version), view: text(search.view) }),
   beforeLoad: ({ search }) => {
     if (search.item !== undefined && !stageOf(search.item)) throw notFound({ data: { what: search.item } });
+    if (search.version !== undefined && (search.item === undefined || !/^(v[0-9]+|t[0-9]{2,})$/.test(search.version))) throw notFound({ data: { what: `version=${search.version}` } });
     if (search.view !== undefined && search.view !== "lineage") throw notFound({ data: { what: `view=${search.view}` } });
   },
   notFoundComponent: MissingObject,
