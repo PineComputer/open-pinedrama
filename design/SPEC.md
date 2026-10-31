@@ -63,4 +63,6 @@ Phosphor regular, 70 names (icons.js). Sizes: 16 default, 18 in IconButton and N
 ## Labels (ship as written)
 Accept, Send back, Accept with note, Send review, Next review, Stop drama, Stopping…, Stopped, Resume, Keep running, Stop analyzing, Review the rewrite, Accept the rewrite, Upload script, Start, Accept cut, Following the agent / Follow the agent, List / Canvas, Lineage, Script / Story / Assets / Episodes / Delivery, Characters / Locations / Props, Out of date.
 
+Names of things (IA §10): Take / 视频版本 (t01, t02…), never 镜头 (a shot) or 片段 (a segment); Cut / 剪辑成片 (v1, v2…), an episode's versioned film; Delivery / 交付, the drama's accepted cuts; Locations, never Scenes, which stay the screenplay's scenes (场戏).
+
 "Studio" names the app only. Graph, World and Bible / Cast / World as navigation are retired: the bible lives in Story, and Lineage is a view of an item, not a page (IA §3, §10, §16).
