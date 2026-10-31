@@ -1,8 +1,7 @@
-// A question the maker answers before anything happens: shadcn/ui's AlertDialog (focus kept inside,
-// Escape closes, focus goes back to what opened it). A danger is filled in the error's colour: outlined,
-// it falls under 4.5:1 on the dialog's footer (axe).
+// A question the maker answers before anything happens: Radix's AlertDialog (focus kept inside, Escape
+// closes, focus goes back to what opened it). A danger is filled, as the design's is (studio.css .dialog .btn.danger).
 import { type ReactNode, useEffect, useRef } from "react";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import { AlertDialog as AlertDialogPrimitive } from "radix-ui";
 import { useT } from "../i18n.ts";
 
 export function Dialog({
@@ -29,28 +28,40 @@ export function Dialog({
   useEffect(() => {
     if (open) opener.current = document.activeElement as HTMLElement | null;
   }, [open]);
+  // The design's dialog (design/app.js, Dialog; studio.css .scrim, .dialog), drawn by Radix's AlertDialog
+  // primitive with its content inside the overlay, as Radix's scrollable-overlay example nests them.
   return (
-    <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent
-        onCloseAutoFocus={(event) => {
-          event.preventDefault();
-          opener.current?.focus();
-        }}
-      >
-        <AlertDialogHeader>
-          <AlertDialogTitle>{title}</AlertDialogTitle>
-          <AlertDialogDescription>{description}</AlertDialogDescription>
-        </AlertDialogHeader>
-        {children}
-        <AlertDialogFooter>
-          <AlertDialogCancel>{cancel ?? t("dialog.cancel")}</AlertDialogCancel>
-          {confirm && (
-            <AlertDialogAction className={confirm.danger ? "bg-destructive text-primary-foreground hover:bg-destructive/90" : undefined} onClick={confirm.run}>
-              {confirm.label}
-            </AlertDialogAction>
-          )}
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+    <AlertDialogPrimitive.Root open={open} onOpenChange={onOpenChange}>
+      <AlertDialogPrimitive.Portal>
+        <AlertDialogPrimitive.Overlay className="scrim">
+          <AlertDialogPrimitive.Content
+            className="dialog"
+            onCloseAutoFocus={(event) => {
+              event.preventDefault();
+              opener.current?.focus();
+            }}
+          >
+            <AlertDialogPrimitive.Title asChild>
+              <h2>{title}</h2>
+            </AlertDialogPrimitive.Title>
+            <AlertDialogPrimitive.Description asChild>
+              <p>{description}</p>
+            </AlertDialogPrimitive.Description>
+            {children}
+            <div className="acts">
+              <AlertDialogPrimitive.Cancel className="btn">{cancel ?? t("dialog.cancel")}</AlertDialogPrimitive.Cancel>
+              {confirm && (
+                <AlertDialogPrimitive.Action
+                  className={`btn ${confirm.danger ? "danger" : "primary"}`}
+                  onClick={confirm.run}
+                >
+                  {confirm.label}
+                </AlertDialogPrimitive.Action>
+              )}
+            </div>
+          </AlertDialogPrimitive.Content>
+        </AlertDialogPrimitive.Overlay>
+      </AlertDialogPrimitive.Portal>
+    </AlertDialogPrimitive.Root>
   );
 }

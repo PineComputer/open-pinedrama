@@ -435,7 +435,7 @@
           <p>The agent rewrites it into Fountain and checks it. You review what changed before anything is spent.</p>`}
         ${d.body && html`<p style="white-space:pre-line">${d.body}</p>`}
         <div class="acts"><button class="btn" onClick=${() => set({ dialog: null })}>${d.cancel || "Cancel"}</button>
-          <button class=${"btn " + (d.danger ? "danger" : "primary")} style=${d.danger ? "background:var(--error);color:#fff;border-color:var(--error)" : ""} onClick=${() => { set({ dialog: null }); d.run && d.run(); }}>${d.ok}</button></div></div></div>`;
+          <button class=${"btn " + (d.danger ? "danger" : "primary")} onClick=${() => { set({ dialog: null }); d.run && d.run(); }}>${d.ok}</button></div></div></div>`;
   }
   function Proto() {
     return html`<div class="proto" role="navigation" aria-label="Prototype">

@@ -384,6 +384,7 @@ input.search:focus { border-color: var(--text-primary); }
 .dialog h2 { margin: 0 0 8px; font-size: 15px; font-weight: 700; }
 .dialog p { margin: 0 0 16px; color: var(--text-secondary); font-size: 13px; line-height: 1.6; }
 .dialog .acts { display: flex; justify-content: flex-end; gap: 8px; }
+.dialog .acts .btn.danger { background: color-mix(in srgb, var(--error) 75%, #000); border-color: transparent; color: #fff; }
 .drop { border: 1px dashed var(--border-input); border-radius: var(--radius-large); padding: 28px 16px; display: grid; place-items: center; gap: 8px; text-align: center; color: var(--text-muted); margin-bottom: 16px; cursor: pointer; }
 .drop .ic { width: 26px; height: 26px; color: var(--text-secondary); }
 .drop b { color: var(--text-primary); }
@@ -424,7 +425,8 @@ input.search:focus { border-color: var(--text-primary); }
 
 /* ── stop cards ── */
 .stopcard { margin: 0 16px 14px; border-radius: var(--radius-2xl); border: 1px solid var(--border); background: var(--surface); overflow: hidden; }
-.stopcard > header { display: flex; align-items: center; gap: 8px; padding: 9px 16px; font-size: 12px; font-weight: 700; color: #fff; background: var(--error); }
+/* White letters on the error's red, darkened to 75% so they hold 4.5:1 in every theme (the dark ones' reds are light). */
+.stopcard > header { display: flex; align-items: center; gap: 8px; padding: 9px 16px; font-size: 12px; font-weight: 700; color: #fff; background: color-mix(in srgb, var(--error) 75%, #000); }
 .stopcard.budget > header, .stopcard.cap > header, .stopcard.env > header { background: var(--surface-container-high); color: var(--text-primary); }
 .stopcard > header .ic { width: 15px; height: 15px; }
 .stopcard .sbody { padding: 14px 16px 16px; display: grid; gap: 12px; }

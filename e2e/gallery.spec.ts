@@ -32,7 +32,7 @@ test("its dialog and menu work by keyboard", async ({ page }) => {
   await page.getByRole("button", { name: "Open a dialog" }).click();
   const dialog = page.getByRole("alertdialog", { name: "Stop the drama?" });
   await expect(dialog).toBeVisible();
-  expect(await newProblems(page, "[data-slot=alert-dialog-content]")).toEqual([]);
+  expect(await newProblems(page, ".dialog")).toEqual([]);
   await page.keyboard.press("Escape");
   await expect(dialog).toBeHidden();
   // Closing gives the focus back to what opened it; only then is it moved on, or the return lands after the move.
