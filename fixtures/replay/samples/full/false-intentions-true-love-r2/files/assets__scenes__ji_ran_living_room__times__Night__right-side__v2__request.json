@@ -8,6 +8,6 @@
   "output_compression": 100,
   "moderation": "low",
   "input_images": [
-    "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/ji_ran_living_room/v2/right-side.jpg"
+    "assets/scenes/ji_ran_living_room/v2/right-side.jpg"
   ]
 }

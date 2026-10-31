@@ -8,13 +8,13 @@
   "output_compression": 100,
   "moderation": "low",
   "input_images": [
-    "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/episodes/EP005/blocking/seg02/v1/view.png",
-    "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/characters/lu_shaoze/states/S1/v2/image-1.jpg",
-    "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/characters/ji_ran/states/S3/v2/image-1.jpg",
-    "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/characters/lin_qingyu/states/S2/v1/image-1.jpg",
-    "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/apartment_entrance/v2/back.jpg",
-    "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/apartment_entrance/v2/left-side.jpg",
-    "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/apartment_entrance/v2/right-side.jpg",
-    "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/apartment_entrance/v2/floor-plan.jpg"
+    "episodes/EP005/blocking/seg02/v1/view.png",
+    "assets/characters/lu_shaoze/states/S1/v2/image-1.jpg",
+    "assets/characters/ji_ran/states/S3/v2/image-1.jpg",
+    "assets/characters/lin_qingyu/states/S2/v1/image-1.jpg",
+    "assets/scenes/apartment_entrance/v2/back.jpg",
+    "assets/scenes/apartment_entrance/v2/left-side.jpg",
+    "assets/scenes/apartment_entrance/v2/right-side.jpg",
+    "assets/scenes/apartment_entrance/v2/floor-plan.jpg"
   ]
 }

@@ -3863,6 +3863,298 @@
     "职场"
    ]
   },
+  "versions": {
+   "assets/characters/blue_tank_top_applicant": "v1",
+   "assets/characters/gray_shirt_applicant": "v1",
+   "assets/characters/green_shirt_applicant": "v1",
+   "assets/characters/ji_hongyuan": "v1",
+   "assets/characters/ji_ran": "v1",
+   "assets/characters/ji_ran/states/S1": "v2",
+   "assets/characters/ji_ran/states/S2": "v2",
+   "assets/characters/ji_ran/states/S3": "v1",
+   "assets/characters/lin_qingyu": "v1",
+   "assets/characters/lin_qingyu/states/S1": "v1",
+   "assets/characters/lin_qingyu/states/S2": "v1",
+   "assets/characters/lu_shaoze": "v1",
+   "assets/characters/lu_shaoze/states/S1": "v1",
+   "assets/characters/shirtless_applicant": "v1",
+   "assets/characters/shirtless_applicant/states/S1": "v1",
+   "assets/characters/su_yaqing": "v1",
+   "assets/characters/xu_banxia": "v1",
+   "assets/props/black_handbag": "v1",
+   "assets/props/coffee_cup": "v1",
+   "assets/props/document_envelope": "v1",
+   "assets/props/dumbbell": "v1",
+   "assets/props/grocery_bag": "v1",
+   "assets/props/lin_glass": "v1",
+   "assets/props/lin_phone": "v1",
+   "assets/props/pour_over_set": "v1",
+   "assets/props/su_phone": "v1",
+   "assets/scenes/apartment_corridor": "v1",
+   "assets/scenes/apartment_corridor/back": "v1",
+   "assets/scenes/apartment_corridor/floor-plan": "v1",
+   "assets/scenes/apartment_corridor/front": "v1",
+   "assets/scenes/apartment_corridor/left-side": "v1",
+   "assets/scenes/apartment_corridor/right-side": "v1",
+   "assets/scenes/apartment_corridor/times/Night": "v1",
+   "assets/scenes/apartment_corridor/times/Night/back": "v1",
+   "assets/scenes/apartment_corridor/times/Night/front": "v1",
+   "assets/scenes/apartment_corridor/times/Night/left-side": "v1",
+   "assets/scenes/apartment_corridor/times/Night/right-side": "v1",
+   "assets/scenes/apartment_entrance": "v1",
+   "assets/scenes/apartment_entrance/back": "v1",
+   "assets/scenes/apartment_entrance/floor-plan": "v1",
+   "assets/scenes/apartment_entrance/front": "v1",
+   "assets/scenes/apartment_entrance/left-side": "v1",
+   "assets/scenes/apartment_entrance/right-side": "v1",
+   "assets/scenes/apartment_entrance/times/Night": "v1",
+   "assets/scenes/apartment_entrance/times/Night/back": "v1",
+   "assets/scenes/apartment_entrance/times/Night/front": "v1",
+   "assets/scenes/apartment_entrance/times/Night/left-side": "v1",
+   "assets/scenes/apartment_entrance/times/Night/right-side": "v1",
+   "assets/scenes/city_road": "v1",
+   "assets/scenes/city_road/back": "v1",
+   "assets/scenes/city_road/floor-plan": "v1",
+   "assets/scenes/city_road/front": "v1",
+   "assets/scenes/city_road/left-side": "v1",
+   "assets/scenes/city_road/right-side": "v1",
+   "assets/scenes/city_road/times/Night": "v1",
+   "assets/scenes/city_road/times/Night/back": "v1",
+   "assets/scenes/city_road/times/Night/front": "v1",
+   "assets/scenes/city_road/times/Night/left-side": "v1",
+   "assets/scenes/city_road/times/Night/right-side": "v1",
+   "assets/scenes/ji_family_living_room": "v1",
+   "assets/scenes/ji_family_living_room/back": "v1",
+   "assets/scenes/ji_family_living_room/floor-plan": "v1",
+   "assets/scenes/ji_family_living_room/front": "v1",
+   "assets/scenes/ji_family_living_room/left-side": "v1",
+   "assets/scenes/ji_family_living_room/right-side": "v1",
+   "assets/scenes/ji_family_living_room/times/Day": "v1",
+   "assets/scenes/ji_family_living_room/times/Day/back": "v1",
+   "assets/scenes/ji_family_living_room/times/Day/front": "v1",
+   "assets/scenes/ji_family_living_room/times/Day/left-side": "v1",
+   "assets/scenes/ji_family_living_room/times/Day/right-side": "v1",
+   "assets/scenes/ji_ran_living_room": "v1",
+   "assets/scenes/ji_ran_living_room/back": "v1",
+   "assets/scenes/ji_ran_living_room/floor-plan": "v1",
+   "assets/scenes/ji_ran_living_room/front": "v1",
+   "assets/scenes/ji_ran_living_room/left-side": "v1",
+   "assets/scenes/ji_ran_living_room/right-side": "v1",
+   "assets/scenes/ji_ran_living_room/times/Night": "v1",
+   "assets/scenes/ji_ran_living_room/times/Night/back": "v1",
+   "assets/scenes/ji_ran_living_room/times/Night/front": "v1",
+   "assets/scenes/ji_ran_living_room/times/Night/left-side": "v1",
+   "assets/scenes/ji_ran_living_room/times/Night/right-side": "v1",
+   "assets/scenes/ji_ran_office": "v1",
+   "assets/scenes/ji_ran_office/back": "v1",
+   "assets/scenes/ji_ran_office/floor-plan": "v1",
+   "assets/scenes/ji_ran_office/front": "v1",
+   "assets/scenes/ji_ran_office/left-side": "v1",
+   "assets/scenes/ji_ran_office/right-side": "v1",
+   "assets/scenes/ji_ran_office/times/Day": "v1",
+   "assets/scenes/ji_ran_office/times/Day/back": "v1",
+   "assets/scenes/ji_ran_office/times/Day/front": "v1",
+   "assets/scenes/ji_ran_office/times/Day/left-side": "v1",
+   "assets/scenes/ji_ran_office/times/Day/right-side": "v1",
+   "assets/scenes/su_dining_area": "v1",
+   "assets/scenes/su_dining_area/back": "v1",
+   "assets/scenes/su_dining_area/floor-plan": "v1",
+   "assets/scenes/su_dining_area/front": "v1",
+   "assets/scenes/su_dining_area/left-side": "v1",
+   "assets/scenes/su_dining_area/right-side": "v1",
+   "assets/scenes/su_dining_area/times/Day": "v1",
+   "assets/scenes/su_dining_area/times/Day/back": "v1",
+   "assets/scenes/su_dining_area/times/Day/front": "v1",
+   "assets/scenes/su_dining_area/times/Day/left-side": "v1",
+   "assets/scenes/su_dining_area/times/Day/right-side": "v1",
+   "assets/scenes/su_living_room": "v1",
+   "assets/scenes/su_living_room/back": "v1",
+   "assets/scenes/su_living_room/floor-plan": "v1",
+   "assets/scenes/su_living_room/front": "v1",
+   "assets/scenes/su_living_room/left-side": "v1",
+   "assets/scenes/su_living_room/right-side": "v1",
+   "assets/scenes/su_living_room/times/Day": "v1",
+   "assets/scenes/su_living_room/times/Day/back": "v1",
+   "assets/scenes/su_living_room/times/Day/front": "v1",
+   "assets/scenes/su_living_room/times/Day/left-side": "v1",
+   "assets/scenes/su_living_room/times/Day/right-side": "v1",
+   "bible": "v2",
+   "episodes/EP001/blocking/seg01": "v1",
+   "episodes/EP001/blocking/seg02": "v1",
+   "episodes/EP001/blocking/seg03": "v1",
+   "episodes/EP001/blocking/seg04": "v1",
+   "episodes/EP001/blocking/seg05": "v1",
+   "episodes/EP001/blocking/seg06": "v1",
+   "episodes/EP001/blocking/seg07": "v1",
+   "episodes/EP001/breakdown": "v2",
+   "episodes/EP001/edit": "v1",
+   "episodes/EP001/first_frame_reference/seg04": "v1",
+   "episodes/EP001/multi_panel_storyboard/seg01/line-art": "v1",
+   "episodes/EP001/multi_panel_storyboard/seg01/photoreal": "v1",
+   "episodes/EP001/multi_panel_storyboard/seg02/line-art": "v1",
+   "episodes/EP001/multi_panel_storyboard/seg02/photoreal": "v1",
+   "episodes/EP001/multi_panel_storyboard/seg03/line-art": "v1",
+   "episodes/EP001/multi_panel_storyboard/seg03/photoreal": "v1",
+   "episodes/EP001/multi_panel_storyboard/seg04/line-art": "v1",
+   "episodes/EP001/multi_panel_storyboard/seg04/photoreal": "v2",
+   "episodes/EP001/multi_panel_storyboard/seg05/line-art": "v1",
+   "episodes/EP001/multi_panel_storyboard/seg05/photoreal": "v2",
+   "episodes/EP001/multi_panel_storyboard/seg06/line-art": "v1",
+   "episodes/EP001/multi_panel_storyboard/seg06/photoreal": "v1",
+   "episodes/EP001/multi_panel_storyboard/seg07/line-art": "v1",
+   "episodes/EP001/multi_panel_storyboard/seg07/photoreal": "v1",
+   "episodes/EP001/segments/seg01": "t01",
+   "episodes/EP001/segments/seg02": "t01",
+   "episodes/EP001/segments/seg03": "t01",
+   "episodes/EP001/segments/seg04": "t02",
+   "episodes/EP001/segments/seg07": "t01",
+   "episodes/EP001/video_prompts": "v2",
+   "episodes/EP002/blocking/seg01": "v1",
+   "episodes/EP002/blocking/seg02": "v1",
+   "episodes/EP002/breakdown": "v4",
+   "episodes/EP002/edit": "v1",
+   "episodes/EP002/first_frame_reference/seg01": "v1",
+   "episodes/EP002/multi_panel_storyboard/seg01/line-art": "v1",
+   "episodes/EP002/multi_panel_storyboard/seg01/photoreal": "v1",
+   "episodes/EP002/multi_panel_storyboard/seg02/line-art": "v1",
+   "episodes/EP002/multi_panel_storyboard/seg02/photoreal": "v1",
+   "episodes/EP002/multi_panel_storyboard/seg03/line-art": "v1",
+   "episodes/EP002/multi_panel_storyboard/seg03/photoreal": "v1",
+   "episodes/EP002/segments/seg01": "t01",
+   "episodes/EP002/segments/seg03": "t01",
+   "episodes/EP002/video_prompts": "v1",
+   "episodes/EP003/blocking/seg01": "v1",
+   "episodes/EP003/blocking/seg02": "v1",
+   "episodes/EP003/breakdown": "v2",
+   "episodes/EP003/first_frame_reference/seg01": "v1",
+   "episodes/EP003/multi_panel_storyboard/seg01/line-art": "v1",
+   "episodes/EP003/multi_panel_storyboard/seg01/photoreal": "v1",
+   "episodes/EP003/multi_panel_storyboard/seg02/line-art": "v1",
+   "episodes/EP003/multi_panel_storyboard/seg02/photoreal": "v1",
+   "episodes/EP003/segments/seg01": "t02",
+   "episodes/EP003/video_prompts": "v2",
+   "episodes/EP004/blocking/seg01": "v1",
+   "episodes/EP004/blocking/seg02": "v1",
+   "episodes/EP004/blocking/seg03": "v1",
+   "episodes/EP004/blocking/seg04": "v1",
+   "episodes/EP004/breakdown": "v3",
+   "episodes/EP004/multi_panel_storyboard/seg01/line-art": "v1",
+   "episodes/EP004/multi_panel_storyboard/seg01/photoreal": "v1",
+   "episodes/EP004/multi_panel_storyboard/seg02/line-art": "v1",
+   "episodes/EP004/multi_panel_storyboard/seg02/photoreal": "v1",
+   "episodes/EP004/multi_panel_storyboard/seg03/line-art": "v1",
+   "episodes/EP004/multi_panel_storyboard/seg03/photoreal": "v1",
+   "episodes/EP004/multi_panel_storyboard/seg04/line-art": "v1",
+   "episodes/EP004/multi_panel_storyboard/seg04/photoreal": "v1",
+   "episodes/EP004/segments/seg01": "t01",
+   "episodes/EP004/video_prompts": "v1",
+   "episodes/EP005/blocking/seg01": "v1",
+   "episodes/EP005/blocking/seg02": "v2",
+   "episodes/EP005/blocking/seg03": "v2",
+   "episodes/EP005/blocking/seg05": "v1",
+   "episodes/EP005/breakdown": "v3",
+   "episodes/EP005/edit": "v1",
+   "episodes/EP005/multi_panel_storyboard/seg01/line-art": "v1",
+   "episodes/EP005/multi_panel_storyboard/seg01/photoreal": "v1",
+   "episodes/EP005/multi_panel_storyboard/seg02/line-art": "v2",
+   "episodes/EP005/multi_panel_storyboard/seg02/photoreal": "v2",
+   "episodes/EP005/multi_panel_storyboard/seg03/line-art": "v3",
+   "episodes/EP005/multi_panel_storyboard/seg03/photoreal": "v3",
+   "episodes/EP005/multi_panel_storyboard/seg04/line-art": "v1",
+   "episodes/EP005/multi_panel_storyboard/seg04/photoreal": "v1",
+   "episodes/EP005/multi_panel_storyboard/seg05/line-art": "v1",
+   "episodes/EP005/multi_panel_storyboard/seg05/photoreal": "v1",
+   "episodes/EP005/segments/seg01": "t01",
+   "episodes/EP005/segments/seg04": "t01",
+   "episodes/EP005/segments/seg05": "t01",
+   "episodes/EP005/video_prompts": "v1",
+   "screenplay": "v1"
+  },
+  "extras": {
+   "setup": [
+    "assets/scenes/apartment_corridor/back/v1/image-1.jpg",
+    "assets/scenes/apartment_corridor/floor-plan/v1/image-1.jpg",
+    "assets/scenes/apartment_corridor/front/v1/image-1.jpg",
+    "assets/scenes/apartment_corridor/left-side/v1/image-1.jpg",
+    "assets/scenes/apartment_corridor/right-side/v1/image-1.jpg",
+    "assets/scenes/apartment_corridor/times/Night/back/v1/image-1.jpg",
+    "assets/scenes/apartment_corridor/times/Night/front/v1/image-1.jpg",
+    "assets/scenes/apartment_corridor/times/Night/left-side/v1/image-1.jpg",
+    "assets/scenes/apartment_corridor/times/Night/right-side/v1/image-1.jpg",
+    "assets/scenes/apartment_entrance/back/v1/image-1.jpg",
+    "assets/scenes/apartment_entrance/floor-plan/v1/image-1.jpg",
+    "assets/scenes/apartment_entrance/front/v1/image-1.jpg",
+    "assets/scenes/apartment_entrance/left-side/v1/image-1.jpg",
+    "assets/scenes/apartment_entrance/right-side/v1/image-1.jpg",
+    "assets/scenes/apartment_entrance/times/Night/back/v1/image-1.jpg",
+    "assets/scenes/apartment_entrance/times/Night/front/v1/image-1.jpg",
+    "assets/scenes/apartment_entrance/times/Night/left-side/v1/image-1.jpg",
+    "assets/scenes/apartment_entrance/times/Night/right-side/v1/image-1.jpg",
+    "assets/scenes/city_road/back/v1/image-1.jpg",
+    "assets/scenes/city_road/floor-plan/v1/image-1.jpg",
+    "assets/scenes/city_road/front/v1/image-1.jpg",
+    "assets/scenes/city_road/left-side/v1/image-1.jpg",
+    "assets/scenes/city_road/right-side/v1/image-1.jpg",
+    "assets/scenes/city_road/times/Night/back/v1/image-1.jpg",
+    "assets/scenes/city_road/times/Night/front/v1/image-1.jpg",
+    "assets/scenes/city_road/times/Night/left-side/v1/image-1.jpg",
+    "assets/scenes/city_road/times/Night/right-side/v1/image-1.jpg",
+    "assets/scenes/ji_family_living_room/back/v1/image-1.jpg",
+    "assets/scenes/ji_family_living_room/floor-plan/v1/image-1.jpg",
+    "assets/scenes/ji_family_living_room/front/v1/image-1.jpg",
+    "assets/scenes/ji_family_living_room/left-side/v1/image-1.jpg",
+    "assets/scenes/ji_family_living_room/right-side/v1/image-1.jpg",
+    "assets/scenes/ji_family_living_room/times/Day/back/v1/image-1.jpg",
+    "assets/scenes/ji_family_living_room/times/Day/front/v1/image-1.jpg",
+    "assets/scenes/ji_family_living_room/times/Day/left-side/v1/image-1.jpg",
+    "assets/scenes/ji_family_living_room/times/Day/right-side/v1/image-1.jpg",
+    "assets/scenes/ji_ran_living_room/back/v1/image-1.jpg",
+    "assets/scenes/ji_ran_living_room/floor-plan/v1/image-1.jpg",
+    "assets/scenes/ji_ran_living_room/front/v1/image-1.jpg",
+    "assets/scenes/ji_ran_living_room/left-side/v1/image-1.jpg",
+    "assets/scenes/ji_ran_living_room/right-side/v1/image-1.jpg",
+    "assets/scenes/ji_ran_living_room/times/Night/back/v1/image-1.jpg",
+    "assets/scenes/ji_ran_living_room/times/Night/front/v1/image-1.jpg",
+    "assets/scenes/ji_ran_living_room/times/Night/left-side/v1/image-1.jpg",
+    "assets/scenes/ji_ran_living_room/times/Night/right-side/v1/image-1.jpg",
+    "assets/scenes/ji_ran_office/back/v1/image-1.jpg",
+    "assets/scenes/ji_ran_office/floor-plan/v1/image-1.jpg",
+    "assets/scenes/ji_ran_office/front/v1/image-1.jpg",
+    "assets/scenes/ji_ran_office/left-side/v1/image-1.jpg",
+    "assets/scenes/ji_ran_office/right-side/v1/image-1.jpg",
+    "assets/scenes/ji_ran_office/times/Day/back/v1/image-1.jpg",
+    "assets/scenes/ji_ran_office/times/Day/front/v1/image-1.jpg",
+    "assets/scenes/ji_ran_office/times/Day/left-side/v1/image-1.jpg",
+    "assets/scenes/ji_ran_office/times/Day/right-side/v1/image-1.jpg",
+    "assets/scenes/su_dining_area/back/v1/image-1.jpg",
+    "assets/scenes/su_dining_area/floor-plan/v1/image-1.jpg",
+    "assets/scenes/su_dining_area/front/v1/image-1.jpg",
+    "assets/scenes/su_dining_area/left-side/v1/image-1.jpg",
+    "assets/scenes/su_dining_area/right-side/v1/image-1.jpg",
+    "assets/scenes/su_dining_area/times/Day/back/v1/image-1.jpg",
+    "assets/scenes/su_dining_area/times/Day/front/v1/image-1.jpg",
+    "assets/scenes/su_dining_area/times/Day/left-side/v1/image-1.jpg",
+    "assets/scenes/su_dining_area/times/Day/right-side/v1/image-1.jpg",
+    "assets/scenes/su_living_room/back/v1/image-1.jpg",
+    "assets/scenes/su_living_room/floor-plan/v1/image-1.jpg",
+    "assets/scenes/su_living_room/front/v1/image-1.jpg",
+    "assets/scenes/su_living_room/left-side/v1/image-1.jpg",
+    "assets/scenes/su_living_room/right-side/v1/image-1.jpg",
+    "assets/scenes/su_living_room/times/Day/back/v1/image-1.jpg",
+    "assets/scenes/su_living_room/times/Day/front/v1/image-1.jpg",
+    "assets/scenes/su_living_room/times/Day/left-side/v1/image-1.jpg",
+    "assets/scenes/su_living_room/times/Day/right-side/v1/image-1.jpg"
+   ],
+   "EP001": [
+    "episodes/EP001/first_frame_reference/seg04/v1/image-1.jpg"
+   ],
+   "EP002": [
+    "episodes/EP002/first_frame_reference/seg01/v1/image-1.jpg"
+   ],
+   "EP003": [
+    "episodes/EP003/first_frame_reference/seg01/v1/image-1.jpg"
+   ]
+  },
   "ago": 380,
   "cast": [
    {
@@ -3897,6 +4189,64 @@
     ]
    },
    {
+    "id": "su_yaqing",
+    "name": {
+     "en": "Su Yaqing",
+     "zh": "Su Yaqing"
+    },
+    "short": {
+     "en": "Su Yaqing",
+     "zh": "Su Yaqing"
+    }
+   },
+   {
+    "id": "lu_shaoze",
+    "name": {
+     "en": "路少泽",
+     "zh": "路少泽"
+    },
+    "short": {
+     "en": "路少泽",
+     "zh": "路少泽"
+    },
+    "looks": [
+     "S1"
+    ]
+   },
+   {
+    "id": "ji_hongyuan",
+    "name": {
+     "en": "纪宏远",
+     "zh": "纪宏远"
+    },
+    "short": {
+     "en": "纪宏远",
+     "zh": "纪宏远"
+    }
+   },
+   {
+    "id": "xu_banxia",
+    "name": {
+     "en": "许半夏",
+     "zh": "许半夏"
+    },
+    "short": {
+     "en": "许半夏",
+     "zh": "许半夏"
+    }
+   },
+   {
+    "id": "green_shirt_applicant",
+    "name": {
+     "en": "GREEN-SHIRT APPLICANT",
+     "zh": "GREEN-SHIRT APPLICANT"
+    },
+    "short": {
+     "en": "GREEN-SHIRT APPLICANT",
+     "zh": "GREEN-SHIRT APPLICANT"
+    }
+   },
+   {
     "id": "blue_tank_top_applicant",
     "name": {
      "en": "BLUE-TANK-TOP APPLICANT",
@@ -3919,42 +4269,6 @@
     }
    },
    {
-    "id": "green_shirt_applicant",
-    "name": {
-     "en": "GREEN-SHIRT APPLICANT",
-     "zh": "GREEN-SHIRT APPLICANT"
-    },
-    "short": {
-     "en": "GREEN-SHIRT APPLICANT",
-     "zh": "GREEN-SHIRT APPLICANT"
-    }
-   },
-   {
-    "id": "ji_hongyuan",
-    "name": {
-     "en": "纪宏远",
-     "zh": "纪宏远"
-    },
-    "short": {
-     "en": "纪宏远",
-     "zh": "纪宏远"
-    }
-   },
-   {
-    "id": "lu_shaoze",
-    "name": {
-     "en": "路少泽",
-     "zh": "路少泽"
-    },
-    "short": {
-     "en": "路少泽",
-     "zh": "路少泽"
-    },
-    "looks": [
-     "S1"
-    ]
-   },
-   {
     "id": "shirtless_applicant",
     "name": {
      "en": "SHIRTLESS APPLICANT",
@@ -3967,28 +4281,6 @@
     "looks": [
      "S1"
     ]
-   },
-   {
-    "id": "su_yaqing",
-    "name": {
-     "en": "Su Yaqing",
-     "zh": "Su Yaqing"
-    },
-    "short": {
-     "en": "Su Yaqing",
-     "zh": "Su Yaqing"
-    }
-   },
-   {
-    "id": "xu_banxia",
-    "name": {
-     "en": "许半夏",
-     "zh": "许半夏"
-    },
-    "short": {
-     "en": "许半夏",
-     "zh": "许半夏"
-    }
    }
   ],
   "places": [
@@ -3998,13 +4290,13 @@
      "en": "APARTMENT CORRIDOR",
      "zh": "APARTMENT CORRIDOR"
     },
-    "times": [
-     "Night"
-    ],
     "description": {
      "en": "Short, elegant residential corridor outside Ji Ran's door at night. Cream wall panels with a wood trim line it, with a runner rug on a stone floor and doors set at intervals. Warm recessed downlights run overhead, with soft side-glow from wall sconces.",
      "zh": "Short, elegant residential corridor outside Ji Ran's door at night. Cream wall panels with a wood trim line it, with a runner rug on a stone floor and doors set at intervals. Warm recessed downlights run overhead, with soft side-glow from wall sconces."
-    }
+    },
+    "times": [
+     "Night"
+    ]
    },
    {
     "id": "apartment_entrance",
@@ -4012,13 +4304,13 @@
      "en": "JI RAN'S APARTMENT ENTRANCE",
      "zh": "JI RAN'S APARTMENT ENTRANCE"
     },
-    "times": [
-     "Night"
-    ],
     "description": {
      "en": "Upscale downtown apartment lobby landing on Ji Ran's floor at night. Brushed-steel elevator doors stand opposite a heavy walnut front door with a smart lock. The floor is polished stone, and a framed autumn landscape painting in amber tones hangs on the wall. Warm ceiling downlights fall from above, a soft wall sconce glows beside the painting and cooler light spills from the elevator when it opens.",
      "zh": "Upscale downtown apartment lobby landing on Ji Ran's floor at night. Brushed-steel elevator doors stand opposite a heavy walnut front door with a smart lock. The floor is polished stone, and a framed autumn landscape painting in amber tones hangs on the wall. Warm ceiling downlights fall from above, a soft wall sconce glows beside the painting and cooler light spills from the elevator when it opens."
-    }
+    },
+    "times": [
+     "Night"
+    ]
    },
    {
     "id": "city_road",
@@ -4026,13 +4318,13 @@
      "en": "CITY ARTERIAL ROAD",
      "zh": "CITY ARTERIAL ROAD"
     },
-    "times": [
-     "Night"
-    ],
     "description": {
      "en": "Wide multi-lane arterial road in a modern Chinese city at dusk, lined with glass office towers. Traffic packs the lanes with headlights and taillights. The sky darkens from blue to indigo, streetlights flicker on along the median and lit office windows glow from above.",
      "zh": "Wide multi-lane arterial road in a modern Chinese city at dusk, lined with glass office towers. Traffic packs the lanes with headlights and taillights. The sky darkens from blue to indigo, streetlights flicker on along the median and lit office windows glow from above."
-    }
+    },
+    "times": [
+     "Night"
+    ]
    },
    {
     "id": "ji_family_living_room",
@@ -4040,13 +4332,13 @@
      "en": "JI FAMILY LIVING ROOM",
      "zh": "JI FAMILY LIVING ROOM"
     },
-    "times": [
-     "Day"
-    ],
     "description": {
      "en": "Grand living room of a contemporary luxury mansion, seen five years earlier. The floors are polished cream marble, white marble columns stand along one side and a wall runs behind them. A long beige sofa faces a low marble-and-gold coffee table on a thick ivory carpet. Tall French windows look out on garden trees whose leaves sway in warm sunlight. Golden afternoon sun streams through the windows from the right, casting warm leaf-dappled light. A crystal chandelier hangs overhead.",
      "zh": "Grand living room of a contemporary luxury mansion, seen five years earlier. The floors are polished cream marble, white marble columns stand along one side and a wall runs behind them. A long beige sofa faces a low marble-and-gold coffee table on a thick ivory carpet. Tall French windows look out on garden trees whose leaves sway in warm sunlight. Golden afternoon sun streams through the windows from the right, casting warm leaf-dappled light. A crystal chandelier hangs overhead."
-    }
+    },
+    "times": [
+     "Day"
+    ]
    },
    {
     "id": "ji_ran_living_room",
@@ -4054,13 +4346,13 @@
      "en": "JI RAN'S LIVING ROOM",
      "zh": "JI RAN'S LIVING ROOM"
     },
-    "times": [
-     "Night"
-    ],
     "description": {
      "en": "Spacious, stylish downtown apartment living room at night. A pale linen sofa sits on a patterned geometric rug, before a marble-and-glass coffee table. Behind it is an open kitchen with a white island and pendant lights. Floor-to-ceiling windows show city lights behind. Warm light comes from the pendants over the kitchen island, a floor lamp beside the sofa on the left and soft cove lighting in the ceiling.",
      "zh": "Spacious, stylish downtown apartment living room at night. A pale linen sofa sits on a patterned geometric rug, before a marble-and-glass coffee table. Behind it is an open kitchen with a white island and pendant lights. Floor-to-ceiling windows show city lights behind. Warm light comes from the pendants over the kitchen island, a floor lamp beside the sofa on the left and soft cove lighting in the ceiling."
-    }
+    },
+    "times": [
+     "Night"
+    ]
    },
    {
     "id": "ji_ran_office",
@@ -4068,13 +4360,13 @@
      "en": "JI RAN'S OFFICE",
      "zh": "JI RAN'S OFFICE"
     },
-    "times": [
-     "Day"
-    ],
     "description": {
      "en": "Sleek, spacious contemporary executive office of a design company, in warm walnut, white and grey. A large walnut desk is covered with architectural plans, wood samples, a metal figurine and a pour-over coffee station. Behind it stands a black leather executive chair. To one side are a lounge area of black leather sofas and armchairs around a white marble coffee table, and a wall sign reading 'JUST DO IT'. The door is on the side wall facing the desk, with open space in front of the desk for standing visitors. Floor-to-ceiling windows behind the desk let in bright, soft daylight from behind and to the left of the desk. Warm recessed ceiling spots and a brass desk lamp fill in from above.",
      "zh": "Sleek, spacious contemporary executive office of a design company, in warm walnut, white and grey. A large walnut desk is covered with architectural plans, wood samples, a metal figurine and a pour-over coffee station. Behind it stands a black leather executive chair. To one side are a lounge area of black leather sofas and armchairs around a white marble coffee table, and a wall sign reading 'JUST DO IT'. The door is on the side wall facing the desk, with open space in front of the desk for standing visitors. Floor-to-ceiling windows behind the desk let in bright, soft daylight from behind and to the left of the desk. Warm recessed ceiling spots and a brass desk lamp fill in from above."
-    }
+    },
+    "times": [
+     "Day"
+    ]
    },
    {
     "id": "su_dining_area",
@@ -4082,13 +4374,13 @@
      "en": "SU YAQING'S DINING AREA",
      "zh": "SU YAQING'S DINING AREA"
     },
-    "times": [
-     "Day"
-    ],
     "description": {
      "en": "Elegant dining nook in the same luxury apartment. A round white marble table holds a vase of daisies and a wine bottle, with upholstered dining chairs around it. A chair beside it stands by a tall window. Soft daylight comes through the window from the side, and a modern brass pendant lamp hangs above the table.",
      "zh": "Elegant dining nook in the same luxury apartment. A round white marble table holds a vase of daisies and a wine bottle, with upholstered dining chairs around it. A chair beside it stands by a tall window. Soft daylight comes through the window from the side, and a modern brass pendant lamp hangs above the table."
-    }
+    },
+    "times": [
+     "Day"
+    ]
    },
    {
     "id": "su_living_room",
@@ -4096,13 +4388,13 @@
      "en": "SU YAQING'S LIVING ROOM",
      "zh": "SU YAQING'S LIVING ROOM"
     },
-    "times": [
-     "Day"
-    ],
     "description": {
      "en": "Spacious, stylish living room of an heiress's luxury apartment. A cream bouclé sofa with pastel cushions faces a low glass coffee table on a soft pale rug. A doorway at the back opens to the kitchen. Bright daylight falls from large windows on the left, and warm floor lamps glow softly at the sofa's ends.",
      "zh": "Spacious, stylish living room of an heiress's luxury apartment. A cream bouclé sofa with pastel cushions faces a low glass coffee table on a soft pale rug. A doorway at the back opens to the kitchen. Bright daylight falls from large windows on the left, and warm floor lamps glow softly at the sofa's ends."
-    }
+    },
+    "times": [
+     "Day"
+    ]
    }
   ],
   "props": [
@@ -4386,6 +4678,33 @@
        ]
       }
      }
+    ],
+    "cut": [
+     {
+      "segment": "seg01",
+      "in": 0,
+      "out": 14.041667
+     },
+     {
+      "segment": "seg02",
+      "in": 0,
+      "out": 27.041667
+     },
+     {
+      "segment": "seg03",
+      "in": 0,
+      "out": 17.041667
+     },
+     {
+      "segment": "seg04",
+      "in": 0,
+      "out": 23.041667
+     },
+     {
+      "segment": "seg07",
+      "in": 0,
+      "out": 27.041667
+     }
     ]
    },
    {
@@ -4460,6 +4779,18 @@
         "The points of light swell and brighten as they float across the hazy walnut desk, until the frame turns bright."
        ]
       }
+     }
+    ],
+    "cut": [
+     {
+      "segment": "seg01",
+      "in": 0,
+      "out": 24.041667
+     },
+     {
+      "segment": "seg03",
+      "in": 0,
+      "out": 4.041667
      }
     ]
    },
@@ -4754,287 +5085,26 @@
        ]
       }
      }
+    ],
+    "cut": [
+     {
+      "segment": "seg01",
+      "in": 0,
+      "out": 25.041667
+     },
+     {
+      "segment": "seg04",
+      "in": 0,
+      "out": 6.041667
+     },
+     {
+      "segment": "seg05",
+      "in": 0,
+      "out": 17.041667
+     }
     ]
    }
-  ],
-  "versions": {
-   "bible": "v2",
-   "assets/characters/blue_tank_top_applicant": "v1",
-   "assets/characters/gray_shirt_applicant": "v1",
-   "assets/characters/green_shirt_applicant": "v1",
-   "assets/characters/ji_hongyuan": "v1",
-   "assets/characters/ji_ran": "v1",
-   "assets/characters/ji_ran/states/S1": "v2",
-   "assets/characters/ji_ran/states/S2": "v2",
-   "assets/characters/ji_ran/states/S3": "v1",
-   "assets/characters/lin_qingyu": "v1",
-   "assets/characters/lin_qingyu/states/S1": "v1",
-   "assets/characters/lin_qingyu/states/S2": "v1",
-   "assets/characters/lu_shaoze": "v1",
-   "assets/characters/lu_shaoze/states/S1": "v1",
-   "assets/characters/shirtless_applicant": "v1",
-   "assets/characters/shirtless_applicant/states/S1": "v1",
-   "assets/characters/su_yaqing": "v1",
-   "assets/characters/xu_banxia": "v1",
-   "assets/props/black_handbag": "v1",
-   "assets/props/coffee_cup": "v1",
-   "assets/props/document_envelope": "v1",
-   "assets/props/dumbbell": "v1",
-   "assets/props/grocery_bag": "v1",
-   "assets/props/lin_glass": "v1",
-   "assets/props/lin_phone": "v1",
-   "assets/props/pour_over_set": "v1",
-   "assets/props/su_phone": "v1",
-   "assets/scenes/apartment_corridor": "v1",
-   "assets/scenes/apartment_corridor/back": "v1",
-   "assets/scenes/apartment_corridor/floor-plan": "v1",
-   "assets/scenes/apartment_corridor/front": "v1",
-   "assets/scenes/apartment_corridor/left-side": "v1",
-   "assets/scenes/apartment_corridor/right-side": "v1",
-   "assets/scenes/apartment_corridor/times/Night": "v1",
-   "assets/scenes/apartment_corridor/times/Night/back": "v1",
-   "assets/scenes/apartment_corridor/times/Night/front": "v1",
-   "assets/scenes/apartment_corridor/times/Night/left-side": "v1",
-   "assets/scenes/apartment_corridor/times/Night/right-side": "v1",
-   "assets/scenes/apartment_entrance": "v1",
-   "assets/scenes/apartment_entrance/back": "v1",
-   "assets/scenes/apartment_entrance/floor-plan": "v1",
-   "assets/scenes/apartment_entrance/front": "v1",
-   "assets/scenes/apartment_entrance/left-side": "v1",
-   "assets/scenes/apartment_entrance/right-side": "v1",
-   "assets/scenes/apartment_entrance/times/Night": "v1",
-   "assets/scenes/apartment_entrance/times/Night/back": "v1",
-   "assets/scenes/apartment_entrance/times/Night/front": "v1",
-   "assets/scenes/apartment_entrance/times/Night/left-side": "v1",
-   "assets/scenes/apartment_entrance/times/Night/right-side": "v1",
-   "assets/scenes/city_road": "v1",
-   "assets/scenes/city_road/back": "v1",
-   "assets/scenes/city_road/floor-plan": "v1",
-   "assets/scenes/city_road/front": "v1",
-   "assets/scenes/city_road/left-side": "v1",
-   "assets/scenes/city_road/right-side": "v1",
-   "assets/scenes/city_road/times/Night": "v1",
-   "assets/scenes/city_road/times/Night/back": "v1",
-   "assets/scenes/city_road/times/Night/front": "v1",
-   "assets/scenes/city_road/times/Night/left-side": "v1",
-   "assets/scenes/city_road/times/Night/right-side": "v1",
-   "assets/scenes/ji_family_living_room": "v1",
-   "assets/scenes/ji_family_living_room/back": "v1",
-   "assets/scenes/ji_family_living_room/floor-plan": "v1",
-   "assets/scenes/ji_family_living_room/front": "v1",
-   "assets/scenes/ji_family_living_room/left-side": "v1",
-   "assets/scenes/ji_family_living_room/right-side": "v1",
-   "assets/scenes/ji_family_living_room/times/Day": "v1",
-   "assets/scenes/ji_family_living_room/times/Day/back": "v1",
-   "assets/scenes/ji_family_living_room/times/Day/front": "v1",
-   "assets/scenes/ji_family_living_room/times/Day/left-side": "v1",
-   "assets/scenes/ji_family_living_room/times/Day/right-side": "v1",
-   "assets/scenes/ji_ran_living_room": "v1",
-   "assets/scenes/ji_ran_living_room/back": "v1",
-   "assets/scenes/ji_ran_living_room/floor-plan": "v1",
-   "assets/scenes/ji_ran_living_room/front": "v1",
-   "assets/scenes/ji_ran_living_room/left-side": "v1",
-   "assets/scenes/ji_ran_living_room/right-side": "v1",
-   "assets/scenes/ji_ran_living_room/times/Night": "v1",
-   "assets/scenes/ji_ran_living_room/times/Night/back": "v1",
-   "assets/scenes/ji_ran_living_room/times/Night/front": "v1",
-   "assets/scenes/ji_ran_living_room/times/Night/left-side": "v1",
-   "assets/scenes/ji_ran_living_room/times/Night/right-side": "v1",
-   "assets/scenes/ji_ran_office": "v1",
-   "assets/scenes/ji_ran_office/back": "v1",
-   "assets/scenes/ji_ran_office/floor-plan": "v1",
-   "assets/scenes/ji_ran_office/front": "v1",
-   "assets/scenes/ji_ran_office/left-side": "v1",
-   "assets/scenes/ji_ran_office/right-side": "v1",
-   "assets/scenes/ji_ran_office/times/Day": "v1",
-   "assets/scenes/ji_ran_office/times/Day/back": "v1",
-   "assets/scenes/ji_ran_office/times/Day/front": "v1",
-   "assets/scenes/ji_ran_office/times/Day/left-side": "v1",
-   "assets/scenes/ji_ran_office/times/Day/right-side": "v1",
-   "assets/scenes/su_dining_area": "v1",
-   "assets/scenes/su_dining_area/back": "v1",
-   "assets/scenes/su_dining_area/floor-plan": "v1",
-   "assets/scenes/su_dining_area/front": "v1",
-   "assets/scenes/su_dining_area/left-side": "v1",
-   "assets/scenes/su_dining_area/right-side": "v1",
-   "assets/scenes/su_dining_area/times/Day": "v1",
-   "assets/scenes/su_dining_area/times/Day/back": "v1",
-   "assets/scenes/su_dining_area/times/Day/front": "v1",
-   "assets/scenes/su_dining_area/times/Day/left-side": "v1",
-   "assets/scenes/su_dining_area/times/Day/right-side": "v1",
-   "assets/scenes/su_living_room": "v1",
-   "assets/scenes/su_living_room/back": "v1",
-   "assets/scenes/su_living_room/floor-plan": "v1",
-   "assets/scenes/su_living_room/front": "v1",
-   "assets/scenes/su_living_room/left-side": "v1",
-   "assets/scenes/su_living_room/right-side": "v1",
-   "assets/scenes/su_living_room/times/Day": "v1",
-   "assets/scenes/su_living_room/times/Day/back": "v1",
-   "assets/scenes/su_living_room/times/Day/front": "v1",
-   "assets/scenes/su_living_room/times/Day/left-side": "v1",
-   "assets/scenes/su_living_room/times/Day/right-side": "v1",
-   "episodes/EP001/blocking/seg01": "v1",
-   "episodes/EP001/blocking/seg02": "v1",
-   "episodes/EP001/blocking/seg03": "v1",
-   "episodes/EP001/blocking/seg04": "v1",
-   "episodes/EP001/blocking/seg05": "v1",
-   "episodes/EP001/blocking/seg06": "v1",
-   "episodes/EP001/blocking/seg07": "v1",
-   "episodes/EP001/first_frame_reference/seg04": "v1",
-   "episodes/EP001/multi_panel_storyboard/seg01/line-art": "v1",
-   "episodes/EP001/multi_panel_storyboard/seg01/photoreal": "v1",
-   "episodes/EP001/multi_panel_storyboard/seg02/line-art": "v1",
-   "episodes/EP001/multi_panel_storyboard/seg02/photoreal": "v1",
-   "episodes/EP001/multi_panel_storyboard/seg03/line-art": "v1",
-   "episodes/EP001/multi_panel_storyboard/seg03/photoreal": "v1",
-   "episodes/EP001/multi_panel_storyboard/seg04/line-art": "v1",
-   "episodes/EP001/multi_panel_storyboard/seg04/photoreal": "v2",
-   "episodes/EP001/multi_panel_storyboard/seg05/line-art": "v1",
-   "episodes/EP001/multi_panel_storyboard/seg05/photoreal": "v2",
-   "episodes/EP001/multi_panel_storyboard/seg06/line-art": "v1",
-   "episodes/EP001/multi_panel_storyboard/seg06/photoreal": "v1",
-   "episodes/EP001/multi_panel_storyboard/seg07/line-art": "v1",
-   "episodes/EP001/multi_panel_storyboard/seg07/photoreal": "v1",
-   "episodes/EP001/segments/seg01": "t01",
-   "episodes/EP001/segments/seg02": "t01",
-   "episodes/EP001/segments/seg03": "t01",
-   "episodes/EP001/segments/seg04": "t02",
-   "episodes/EP001/segments/seg07": "t01",
-   "episodes/EP002/blocking/seg01": "v1",
-   "episodes/EP002/blocking/seg02": "v1",
-   "episodes/EP002/first_frame_reference/seg01": "v1",
-   "episodes/EP002/multi_panel_storyboard/seg01/line-art": "v1",
-   "episodes/EP002/multi_panel_storyboard/seg01/photoreal": "v1",
-   "episodes/EP002/multi_panel_storyboard/seg02/line-art": "v1",
-   "episodes/EP002/multi_panel_storyboard/seg02/photoreal": "v1",
-   "episodes/EP002/multi_panel_storyboard/seg03/line-art": "v1",
-   "episodes/EP002/multi_panel_storyboard/seg03/photoreal": "v1",
-   "episodes/EP002/segments/seg01": "t01",
-   "episodes/EP002/segments/seg03": "t01",
-   "episodes/EP003/blocking/seg01": "v1",
-   "episodes/EP003/blocking/seg02": "v1",
-   "episodes/EP003/first_frame_reference/seg01": "v1",
-   "episodes/EP003/multi_panel_storyboard/seg01/line-art": "v1",
-   "episodes/EP003/multi_panel_storyboard/seg01/photoreal": "v1",
-   "episodes/EP003/multi_panel_storyboard/seg02/line-art": "v1",
-   "episodes/EP003/multi_panel_storyboard/seg02/photoreal": "v1",
-   "episodes/EP003/segments/seg01": "t02",
-   "episodes/EP004/blocking/seg01": "v1",
-   "episodes/EP004/blocking/seg02": "v1",
-   "episodes/EP004/blocking/seg03": "v1",
-   "episodes/EP004/blocking/seg04": "v1",
-   "episodes/EP004/multi_panel_storyboard/seg01/line-art": "v1",
-   "episodes/EP004/multi_panel_storyboard/seg01/photoreal": "v1",
-   "episodes/EP004/multi_panel_storyboard/seg02/line-art": "v1",
-   "episodes/EP004/multi_panel_storyboard/seg02/photoreal": "v1",
-   "episodes/EP004/multi_panel_storyboard/seg03/line-art": "v1",
-   "episodes/EP004/multi_panel_storyboard/seg03/photoreal": "v1",
-   "episodes/EP004/multi_panel_storyboard/seg04/line-art": "v1",
-   "episodes/EP004/multi_panel_storyboard/seg04/photoreal": "v1",
-   "episodes/EP004/segments/seg01": "t01",
-   "episodes/EP005/blocking/seg01": "v1",
-   "episodes/EP005/blocking/seg02": "v2",
-   "episodes/EP005/blocking/seg03": "v2",
-   "episodes/EP005/blocking/seg05": "v1",
-   "episodes/EP005/multi_panel_storyboard/seg01/line-art": "v1",
-   "episodes/EP005/multi_panel_storyboard/seg01/photoreal": "v1",
-   "episodes/EP005/multi_panel_storyboard/seg02/line-art": "v2",
-   "episodes/EP005/multi_panel_storyboard/seg02/photoreal": "v2",
-   "episodes/EP005/multi_panel_storyboard/seg03/line-art": "v3",
-   "episodes/EP005/multi_panel_storyboard/seg03/photoreal": "v3",
-   "episodes/EP005/multi_panel_storyboard/seg04/line-art": "v1",
-   "episodes/EP005/multi_panel_storyboard/seg04/photoreal": "v1",
-   "episodes/EP005/multi_panel_storyboard/seg05/line-art": "v1",
-   "episodes/EP005/multi_panel_storyboard/seg05/photoreal": "v1",
-   "episodes/EP005/segments/seg01": "t01",
-   "episodes/EP005/segments/seg04": "t01",
-   "episodes/EP005/segments/seg05": "t01"
-  },
-  "extras": {
-   "setup": [
-    "assets/scenes/apartment_corridor/back/v1/image-1.jpg",
-    "assets/scenes/apartment_corridor/floor-plan/v1/image-1.jpg",
-    "assets/scenes/apartment_corridor/front/v1/image-1.jpg",
-    "assets/scenes/apartment_corridor/left-side/v1/image-1.jpg",
-    "assets/scenes/apartment_corridor/right-side/v1/image-1.jpg",
-    "assets/scenes/apartment_corridor/times/Night/back/v1/image-1.jpg",
-    "assets/scenes/apartment_corridor/times/Night/front/v1/image-1.jpg",
-    "assets/scenes/apartment_corridor/times/Night/left-side/v1/image-1.jpg",
-    "assets/scenes/apartment_corridor/times/Night/right-side/v1/image-1.jpg",
-    "assets/scenes/apartment_entrance/back/v1/image-1.jpg",
-    "assets/scenes/apartment_entrance/floor-plan/v1/image-1.jpg",
-    "assets/scenes/apartment_entrance/front/v1/image-1.jpg",
-    "assets/scenes/apartment_entrance/left-side/v1/image-1.jpg",
-    "assets/scenes/apartment_entrance/right-side/v1/image-1.jpg",
-    "assets/scenes/apartment_entrance/times/Night/back/v1/image-1.jpg",
-    "assets/scenes/apartment_entrance/times/Night/front/v1/image-1.jpg",
-    "assets/scenes/apartment_entrance/times/Night/left-side/v1/image-1.jpg",
-    "assets/scenes/apartment_entrance/times/Night/right-side/v1/image-1.jpg",
-    "assets/scenes/city_road/back/v1/image-1.jpg",
-    "assets/scenes/city_road/floor-plan/v1/image-1.jpg",
-    "assets/scenes/city_road/front/v1/image-1.jpg",
-    "assets/scenes/city_road/left-side/v1/image-1.jpg",
-    "assets/scenes/city_road/right-side/v1/image-1.jpg",
-    "assets/scenes/city_road/times/Night/back/v1/image-1.jpg",
-    "assets/scenes/city_road/times/Night/front/v1/image-1.jpg",
-    "assets/scenes/city_road/times/Night/left-side/v1/image-1.jpg",
-    "assets/scenes/city_road/times/Night/right-side/v1/image-1.jpg",
-    "assets/scenes/ji_family_living_room/back/v1/image-1.jpg",
-    "assets/scenes/ji_family_living_room/floor-plan/v1/image-1.jpg",
-    "assets/scenes/ji_family_living_room/front/v1/image-1.jpg",
-    "assets/scenes/ji_family_living_room/left-side/v1/image-1.jpg",
-    "assets/scenes/ji_family_living_room/right-side/v1/image-1.jpg",
-    "assets/scenes/ji_family_living_room/times/Day/back/v1/image-1.jpg",
-    "assets/scenes/ji_family_living_room/times/Day/front/v1/image-1.jpg",
-    "assets/scenes/ji_family_living_room/times/Day/left-side/v1/image-1.jpg",
-    "assets/scenes/ji_family_living_room/times/Day/right-side/v1/image-1.jpg",
-    "assets/scenes/ji_ran_living_room/back/v1/image-1.jpg",
-    "assets/scenes/ji_ran_living_room/floor-plan/v1/image-1.jpg",
-    "assets/scenes/ji_ran_living_room/front/v1/image-1.jpg",
-    "assets/scenes/ji_ran_living_room/left-side/v1/image-1.jpg",
-    "assets/scenes/ji_ran_living_room/right-side/v1/image-1.jpg",
-    "assets/scenes/ji_ran_living_room/times/Night/back/v1/image-1.jpg",
-    "assets/scenes/ji_ran_living_room/times/Night/front/v1/image-1.jpg",
-    "assets/scenes/ji_ran_living_room/times/Night/left-side/v1/image-1.jpg",
-    "assets/scenes/ji_ran_living_room/times/Night/right-side/v1/image-1.jpg",
-    "assets/scenes/ji_ran_office/back/v1/image-1.jpg",
-    "assets/scenes/ji_ran_office/floor-plan/v1/image-1.jpg",
-    "assets/scenes/ji_ran_office/front/v1/image-1.jpg",
-    "assets/scenes/ji_ran_office/left-side/v1/image-1.jpg",
-    "assets/scenes/ji_ran_office/right-side/v1/image-1.jpg",
-    "assets/scenes/ji_ran_office/times/Day/back/v1/image-1.jpg",
-    "assets/scenes/ji_ran_office/times/Day/front/v1/image-1.jpg",
-    "assets/scenes/ji_ran_office/times/Day/left-side/v1/image-1.jpg",
-    "assets/scenes/ji_ran_office/times/Day/right-side/v1/image-1.jpg",
-    "assets/scenes/su_dining_area/back/v1/image-1.jpg",
-    "assets/scenes/su_dining_area/floor-plan/v1/image-1.jpg",
-    "assets/scenes/su_dining_area/front/v1/image-1.jpg",
-    "assets/scenes/su_dining_area/left-side/v1/image-1.jpg",
-    "assets/scenes/su_dining_area/right-side/v1/image-1.jpg",
-    "assets/scenes/su_dining_area/times/Day/back/v1/image-1.jpg",
-    "assets/scenes/su_dining_area/times/Day/front/v1/image-1.jpg",
-    "assets/scenes/su_dining_area/times/Day/left-side/v1/image-1.jpg",
-    "assets/scenes/su_dining_area/times/Day/right-side/v1/image-1.jpg",
-    "assets/scenes/su_living_room/back/v1/image-1.jpg",
-    "assets/scenes/su_living_room/floor-plan/v1/image-1.jpg",
-    "assets/scenes/su_living_room/front/v1/image-1.jpg",
-    "assets/scenes/su_living_room/left-side/v1/image-1.jpg",
-    "assets/scenes/su_living_room/right-side/v1/image-1.jpg",
-    "assets/scenes/su_living_room/times/Day/back/v1/image-1.jpg",
-    "assets/scenes/su_living_room/times/Day/front/v1/image-1.jpg",
-    "assets/scenes/su_living_room/times/Day/left-side/v1/image-1.jpg",
-    "assets/scenes/su_living_room/times/Day/right-side/v1/image-1.jpg"
-   ],
-   "EP001": [
-    "episodes/EP001/first_frame_reference/seg04/v1/image-1.jpg"
-   ],
-   "EP002": [
-    "episodes/EP002/first_frame_reference/seg01/v1/image-1.jpg"
-   ],
-   "EP003": [
-    "episodes/EP003/first_frame_reference/seg01/v1/image-1.jpg"
-   ]
-  }
+  ]
  },
  "double-life-ep001": {
   "title": {
@@ -5730,6 +5800,7 @@
    "episodes/EP001/blocking/seg05": "v1",
    "episodes/EP001/blocking/seg06": "v1",
    "episodes/EP001/breakdown": "v3",
+   "episodes/EP001/edit": "v1",
    "episodes/EP001/first_frame_reference/seg01": "v1",
    "episodes/EP001/first_frame_reference/seg02": "v1",
    "episodes/EP001/first_frame_reference/seg03": "v1",
@@ -5757,6 +5828,7 @@
    "episodes/EP002/blocking/seg01": "v1",
    "episodes/EP002/blocking/seg02": "v1",
    "episodes/EP002/breakdown": "v3",
+   "episodes/EP002/edit": "v1",
    "episodes/EP002/first_frame_reference/seg01": "v1",
    "episodes/EP002/first_frame_reference/seg02": "v1",
    "episodes/EP002/multi_panel_storyboard/seg01/line-art": "v2",
@@ -5802,6 +5874,7 @@
    "episodes/EP005/blocking/seg02": "v1",
    "episodes/EP005/blocking/seg04": "v1",
    "episodes/EP005/breakdown": "v3",
+   "episodes/EP005/edit": "v1",
    "episodes/EP005/first_frame_reference/seg01": "v1",
    "episodes/EP005/first_frame_reference/seg02": "v1",
    "episodes/EP005/first_frame_reference/seg04": "v1",
@@ -5931,6 +6004,21 @@
     ]
    },
    {
+    "id": "lin_qingyu",
+    "name": {
+     "en": "Lin Qingyu",
+     "zh": "Lin Qingyu"
+    },
+    "short": {
+     "en": "Lin Qingyu",
+     "zh": "Lin Qingyu"
+    },
+    "looks": [
+     "S1",
+     "S2"
+    ]
+   },
+   {
     "id": "su_yaqing",
     "name": {
      "en": "Su Yaqing",
@@ -5964,21 +6052,6 @@
     },
     "looks": [
      "S1"
-    ]
-   },
-   {
-    "id": "lin_qingyu",
-    "name": {
-     "en": "Lin Qingyu",
-     "zh": "Lin Qingyu"
-    },
-    "short": {
-     "en": "Lin Qingyu",
-     "zh": "Lin Qingyu"
-    },
-    "looks": [
-     "S1",
-     "S2"
     ]
    },
    {
@@ -6047,13 +6120,13 @@
      "en": "INT. JI RAN'S APARTMENT ENTRANCE",
      "zh": "INT. JI RAN'S APARTMENT ENTRANCE"
     },
-    "times": [
-     "Night"
-    ],
     "description": {
      "en": "The private elevator landing and entrance hall outside Ji Ran's apartment in a luxury contemporary downtown building at night, in warm beige stone and dark wood. It is used by both the APARTMENT ENTRANCE and APARTMENT CORRIDOR scene headings as one continuous place. Left wall: brushed-steel elevator doors, the way in from the building. Right wall, directly opposite the elevator: the apartment's tall dark walnut front door with a black smart lock and brass handle. Back wall, facing the camera: a large framed autumn landscape painting of golden trees, hung above a slim dark-wood console table and lit by two brass wall sconces on either side of it. Front wall, behind the camera: a continuation of the stone corridor. The floor is polished pale stone, with clear open floor between the elevator doors and the front door. Light comes from the warm sconces on the back wall and soft downlights in the ceiling.",
      "zh": "The private elevator landing and entrance hall outside Ji Ran's apartment in a luxury contemporary downtown building at night, in warm beige stone and dark wood. It is used by both the APARTMENT ENTRANCE and APARTMENT CORRIDOR scene headings as one continuous place. Left wall: brushed-steel elevator doors, the way in from the building. Right wall, directly opposite the elevator: the apartment's tall dark walnut front door with a black smart lock and brass handle. Back wall, facing the camera: a large framed autumn landscape painting of golden trees, hung above a slim dark-wood console table and lit by two brass wall sconces on either side of it. Front wall, behind the camera: a continuation of the stone corridor. The floor is polished pale stone, with clear open floor between the elevator doors and the front door. Light comes from the warm sconces on the back wall and soft downlights in the ceiling."
-    }
+    },
+    "times": [
+     "Night"
+    ]
    },
    {
     "id": "city_road",
@@ -6061,13 +6134,13 @@
      "en": "EXT. CITY ARTERIAL ROAD",
      "zh": "EXT. CITY ARTERIAL ROAD"
     },
-    "times": [
-     "Night"
-    ],
     "description": {
      "en": "A wide, multi-lane contemporary city arterial road at dusk, seen from a raised vantage. Back side: the road runs straight away from the camera to a vanishing point between glass office towers, under a deep blue and orange dusk sky. Left side: a row of tall glass office towers with lit windows above a tree-lined sidewalk and a line of streetlights. Right side: a matching row of towers and streetlights. Front side, behind the camera: the overpass the view is taken from. The lanes are packed with traffic, white headlights coming towards the camera and red tail-lights going away. Light comes from the dusk sky, the streetlamps flickering on along both sides, and the headlights.",
      "zh": "A wide, multi-lane contemporary city arterial road at dusk, seen from a raised vantage. Back side: the road runs straight away from the camera to a vanishing point between glass office towers, under a deep blue and orange dusk sky. Left side: a row of tall glass office towers with lit windows above a tree-lined sidewalk and a line of streetlights. Right side: a matching row of towers and streetlights. Front side, behind the camera: the overpass the view is taken from. The lanes are packed with traffic, white headlights coming towards the camera and red tail-lights going away. Light comes from the dusk sky, the streetlamps flickering on along both sides, and the headlights."
-    }
+    },
+    "times": [
+     "Night"
+    ]
    },
    {
     "id": "ji_family_living_room",
@@ -6075,13 +6148,13 @@
      "en": "INT. JI FAMILY LIVING ROOM",
      "zh": "INT. JI FAMILY LIVING ROOM"
     },
-    "times": [
-     "Day"
-    ],
     "description": {
      "en": "A grand, contemporary villa living room in cream, gold and white marble. Back wall: tall French windows onto a garden of leafy trees, flooding the room with warm afternoon sunlight from the back and slightly from the left, with leaves swaying outside. Centred before these windows is a long cream leather sofa with its back to them, facing the camera. In front of it is a low marble-and-gilt coffee table on a large beige patterned carpet. Left wall: a fat white marble column stands in front of it near the back corner, with an open archway to the entrance hall behind it, the way in and out. Right wall: a marble fireplace with a large abstract painting above it, flanked by a cream armchair. Front wall, behind the camera: built-in display cabinets. Light comes from the sunlight through the back windows and a crystal chandelier overhead.",
      "zh": "A grand, contemporary villa living room in cream, gold and white marble. Back wall: tall French windows onto a garden of leafy trees, flooding the room with warm afternoon sunlight from the back and slightly from the left, with leaves swaying outside. Centred before these windows is a long cream leather sofa with its back to them, facing the camera. In front of it is a low marble-and-gilt coffee table on a large beige patterned carpet. Left wall: a fat white marble column stands in front of it near the back corner, with an open archway to the entrance hall behind it, the way in and out. Right wall: a marble fireplace with a large abstract painting above it, flanked by a cream armchair. Front wall, behind the camera: built-in display cabinets. Light comes from the sunlight through the back windows and a crystal chandelier overhead."
-    }
+    },
+    "times": [
+     "Day"
+    ]
    },
    {
     "id": "ji_ran_living_room",
@@ -6089,13 +6162,13 @@
      "en": "INT. JI RAN'S LIVING ROOM",
      "zh": "INT. JI RAN'S LIVING ROOM"
     },
-    "times": [
-     "Night"
-    ],
     "description": {
      "en": "A spacious, stylish contemporary downtown apartment living room at night, in pale stone, warm oak and glass. Back wall: floor-to-ceiling windows with sheer curtains and a glittering night city view, which gives a cool glow from behind. Left wall: the opening to the entrance hallway, the way in, and a large abstract canvas. Right wall: an open-plan kitchen with white cabinetry and a long marble island with three bar stools, lit by a pendant above. In the middle of the room, on a large patterned rug, a long pale-oatmeal sofa stands with its back to the left wall, facing the open kitchen on the right wall. In front of it is a low marble-and-glass coffee table, with open floor between the coffee table and the kitchen island. Front wall, behind the camera: a low TV console. Warm light also comes from a brass arc floor lamp beside the sofa and soft cove lighting in the ceiling.",
      "zh": "A spacious, stylish contemporary downtown apartment living room at night, in pale stone, warm oak and glass. Back wall: floor-to-ceiling windows with sheer curtains and a glittering night city view, which gives a cool glow from behind. Left wall: the opening to the entrance hallway, the way in, and a large abstract canvas. Right wall: an open-plan kitchen with white cabinetry and a long marble island with three bar stools, lit by a pendant above. In the middle of the room, on a large patterned rug, a long pale-oatmeal sofa stands with its back to the left wall, facing the open kitchen on the right wall. In front of it is a low marble-and-glass coffee table, with open floor between the coffee table and the kitchen island. Front wall, behind the camera: a low TV console. Warm light also comes from a brass arc floor lamp beside the sofa and soft cove lighting in the ceiling."
-    }
+    },
+    "times": [
+     "Night"
+    ]
    },
    {
     "id": "ji_ran_office",
@@ -6103,13 +6176,13 @@
      "en": "INT. JI RAN'S OFFICE",
      "zh": "INT. JI RAN'S OFFICE"
     },
-    "times": [
-     "Day"
-    ],
     "description": {
      "en": "A sleek, modern, contemporary corner office of a high-end architecture and design firm on a high floor, in warm walnut, black leather and white marble. Back wall: floor-to-ceiling glass windows over a daytime city skyline, the main light source, throwing soft daylight from behind towards the camera. A big walnut executive desk stands centred in front of these windows, facing the camera, with a high-backed black leather chair with padded arms behind it. The desktop holds rolled and spread architectural plans, a fan of wood samples, a small brushed-metal abstract figurine and a pour-over coffee station. Left wall: tall walnut shelving with architectural models and material samples, and at its centre a framed black-and-white typographic sign reading \"JUST DO IT.\" In front of the left wall stands the seating area: a tan leather sofa against the shelving, two tan leather armchairs facing each other, and a low white marble coffee table between them. Right wall: a tall walnut door near the front corner, the way in, and a slim console with a plant next to it. Front wall, behind the camera: a pin-up wall of drawings. The open floor between the desk and the right-wall door is a clear space of pale oak flooring. Additional light comes from warm recessed ceiling spots and a black task lamp on the desk.",
      "zh": "A sleek, modern, contemporary corner office of a high-end architecture and design firm on a high floor, in warm walnut, black leather and white marble. Back wall: floor-to-ceiling glass windows over a daytime city skyline, the main light source, throwing soft daylight from behind towards the camera. A big walnut executive desk stands centred in front of these windows, facing the camera, with a high-backed black leather chair with padded arms behind it. The desktop holds rolled and spread architectural plans, a fan of wood samples, a small brushed-metal abstract figurine and a pour-over coffee station. Left wall: tall walnut shelving with architectural models and material samples, and at its centre a framed black-and-white typographic sign reading \"JUST DO IT.\" In front of the left wall stands the seating area: a tan leather sofa against the shelving, two tan leather armchairs facing each other, and a low white marble coffee table between them. Right wall: a tall walnut door near the front corner, the way in, and a slim console with a plant next to it. Front wall, behind the camera: a pin-up wall of drawings. The open floor between the desk and the right-wall door is a clear space of pale oak flooring. Additional light comes from warm recessed ceiling spots and a black task lamp on the desk."
-    }
+    },
+    "times": [
+     "Day"
+    ]
    },
    {
     "id": "su_dining_area",
@@ -6117,13 +6190,13 @@
      "en": "INT. SU YAQING'S DINING AREA",
      "zh": "INT. SU YAQING'S DINING AREA"
     },
-    "times": [
-     "Day"
-    ],
     "description": {
      "en": "The elegant dining area of the same contemporary penthouse. A rectangular white marble dining table stands in the middle of the room, running from the left wall towards the right wall, with upholstered grey chairs around it. On the table are a glass vase of white daisies and a bottle of red wine. Left wall: a large window with sheer curtains, the main light source, casting daylight across the table from the left; one chair stands at the window end of the table. Back wall: a low walnut sideboard with decanters and a large framed print. Right wall: an open archway back to the living room, the way in. Front wall, behind the camera: a tall plant and a wine cabinet. A brass linear pendant lamp hangs over the table.",
      "zh": "The elegant dining area of the same contemporary penthouse. A rectangular white marble dining table stands in the middle of the room, running from the left wall towards the right wall, with upholstered grey chairs around it. On the table are a glass vase of white daisies and a bottle of red wine. Left wall: a large window with sheer curtains, the main light source, casting daylight across the table from the left; one chair stands at the window end of the table. Back wall: a low walnut sideboard with decanters and a large framed print. Right wall: an open archway back to the living room, the way in. Front wall, behind the camera: a tall plant and a wine cabinet. A brass linear pendant lamp hangs over the table."
-    }
+    },
+    "times": [
+     "Day"
+    ]
    },
    {
     "id": "su_living_room",
@@ -6131,13 +6204,13 @@
      "en": "INT. SU YAQING'S LIVING ROOM",
      "zh": "INT. SU YAQING'S LIVING ROOM"
     },
-    "times": [
-     "Day"
-    ],
     "description": {
      "en": "A bright, spacious, stylish contemporary downtown penthouse living room in cream, gold and soft grey. Back wall: wide windows with sheer white curtains letting in soft daylight from behind. A plush cream bouclé sofa stands in the middle of the room with its back to these windows, facing the camera, with silk cushions. In front of it is a round travertine coffee table holding flowers and a tablet stand on a pale rug. Right wall: an open doorway into the kitchen, framed in brushed brass, with a glimpse of white marble counters. Left wall: the opening to the entrance hallway, the way in, beside a low gold-legged console with a mirror. Front wall, behind the camera: a TV wall. Light comes from the window daylight and a modern brass floor lamp beside the sofa.",
      "zh": "A bright, spacious, stylish contemporary downtown penthouse living room in cream, gold and soft grey. Back wall: wide windows with sheer white curtains letting in soft daylight from behind. A plush cream bouclé sofa stands in the middle of the room with its back to these windows, facing the camera, with silk cushions. In front of it is a round travertine coffee table holding flowers and a tablet stand on a pale rug. Right wall: an open doorway into the kitchen, framed in brushed brass, with a glimpse of white marble counters. Left wall: the opening to the entrance hallway, the way in, beside a low gold-legged console with a mirror. Front wall, behind the camera: a TV wall. Light comes from the window daylight and a modern brass floor lamp beside the sofa."
-    }
+    },
+    "times": [
+     "Day"
+    ]
    }
   ],
   "props": [
@@ -6381,6 +6454,33 @@
        ]
       }
      }
+    ],
+    "cut": [
+     {
+      "segment": "seg01",
+      "in": 0,
+      "out": 10.041667
+     },
+     {
+      "segment": "seg02",
+      "in": 0,
+      "out": 18.041667
+     },
+     {
+      "segment": "seg03",
+      "in": 0,
+      "out": 14.041667
+     },
+     {
+      "segment": "seg04",
+      "in": 0,
+      "out": 28.041667
+     },
+     {
+      "segment": "seg06",
+      "in": 0,
+      "out": 20.041667
+     }
     ]
    },
    {
@@ -6453,6 +6553,18 @@
         "Soft golden points of out-of-focus light drift slowly across the blurred daylight of the windows."
        ]
       }
+     }
+    ],
+    "cut": [
+     {
+      "segment": "seg01",
+      "in": 0,
+      "out": 26.041667
+     },
+     {
+      "segment": "seg03",
+      "in": 0,
+      "out": 4.041667
      }
     ]
    },
@@ -6717,6 +6829,18 @@
         "Ji Ran's lips part slightly and her folded arms loosen as soft light and snowlike flecks drift across the image."
        ]
       }
+     }
+    ],
+    "cut": [
+     {
+      "segment": "seg03",
+      "in": 0,
+      "out": 4.041667
+     },
+     {
+      "segment": "seg04",
+      "in": 0,
+      "out": 14.041667
      }
     ]
    }

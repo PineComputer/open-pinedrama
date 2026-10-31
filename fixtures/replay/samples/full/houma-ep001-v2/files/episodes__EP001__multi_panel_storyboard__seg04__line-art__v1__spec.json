@@ -5,8 +5,8 @@
   "aspect_ratio": "9:16",
   "size": "2K",
   "images": [
-    "/Users/yurun/RunVid/short-drama-runs/houma-ep001-v2/assets/characters/si_nian/v2/image-1.jpg",
-    "/Users/yurun/RunVid/short-drama-runs/houma-ep001-v2/assets/characters/lu_ren_jia/v1/image-1.jpg",
-    "/Users/yurun/RunVid/short-drama-runs/houma-ep001-v2/assets/scenes/funeral_home_entrance/v3/image-1.jpg"
+    "assets/characters/si_nian/v2/image-1.jpg",
+    "assets/characters/lu_ren_jia/v1/image-1.jpg",
+    "assets/scenes/funeral_home_entrance/v3/image-1.jpg"
   ]
 }

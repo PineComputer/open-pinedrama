@@ -15,8 +15,8 @@
     {
       "type": "image_url",
       "image_url": {
-        "url": "@/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/apartment_entrance/times/Night/v2/front.jpg",
-        "path": "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/apartment_entrance/times/Night/v2/front.jpg",
+        "url": "@assets/scenes/apartment_entrance/times/Night/v2/front.jpg",
+        "path": "assets/scenes/apartment_entrance/times/Night/v2/front.jpg",
         "sha256": "1485ce53720cd317ef00435f348e6e1ac496b73df00b96fd0746590caef14a10"
       },
       "role": "reference_image"
@@ -24,8 +24,8 @@
     {
       "type": "image_url",
       "image_url": {
-        "url": "@/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/apartment_entrance/times/Night/v2/back.jpg",
-        "path": "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/apartment_entrance/times/Night/v2/back.jpg",
+        "url": "@assets/scenes/apartment_entrance/times/Night/v2/back.jpg",
+        "path": "assets/scenes/apartment_entrance/times/Night/v2/back.jpg",
         "sha256": "f40e4261115a90051384e05d696dc3b15ac5a30ac4c0626bf45c4a43fafa6a1c"
       },
       "role": "reference_image"
@@ -33,8 +33,8 @@
     {
       "type": "image_url",
       "image_url": {
-        "url": "@/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/apartment_entrance/times/Night/v2/left-side.jpg",
-        "path": "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/apartment_entrance/times/Night/v2/left-side.jpg",
+        "url": "@assets/scenes/apartment_entrance/times/Night/v2/left-side.jpg",
+        "path": "assets/scenes/apartment_entrance/times/Night/v2/left-side.jpg",
         "sha256": "0b28e7c31f6fef7f053d22383416719cce9a4e23fde05f99c396272ff060db8f"
       },
       "role": "reference_image"
@@ -42,8 +42,8 @@
     {
       "type": "image_url",
       "image_url": {
-        "url": "@/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/apartment_entrance/times/Night/v2/right-side.jpg",
-        "path": "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/apartment_entrance/times/Night/v2/right-side.jpg",
+        "url": "@assets/scenes/apartment_entrance/times/Night/v2/right-side.jpg",
+        "path": "assets/scenes/apartment_entrance/times/Night/v2/right-side.jpg",
         "sha256": "feceedc1d84511446afade553fc733c752383fa8d41bd5e340b7f7d07d4f6837"
       },
       "role": "reference_image"
@@ -51,8 +51,8 @@
     {
       "type": "image_url",
       "image_url": {
-        "url": "@/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/apartment_entrance/times/Night/v2/floor-plan.jpg",
-        "path": "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/apartment_entrance/times/Night/v2/floor-plan.jpg",
+        "url": "@assets/scenes/apartment_entrance/times/Night/v2/floor-plan.jpg",
+        "path": "assets/scenes/apartment_entrance/times/Night/v2/floor-plan.jpg",
         "sha256": "32f669bbfc17de172f46713352fe42d5f5dc61c2da77cd580fcea9655f8802c1"
       },
       "role": "reference_image"

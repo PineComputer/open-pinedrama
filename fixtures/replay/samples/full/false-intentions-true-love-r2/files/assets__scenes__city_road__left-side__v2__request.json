@@ -8,7 +8,7 @@
   "output_compression": 100,
   "moderation": "low",
   "input_images": [
-    "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/city_road/floor-plan/v2/image-1.jpg",
-    "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/city_road/front/v2/image-1.jpg"
+    "assets/scenes/city_road/floor-plan/v2/image-1.jpg",
+    "assets/scenes/city_road/front/v2/image-1.jpg"
   ]
 }

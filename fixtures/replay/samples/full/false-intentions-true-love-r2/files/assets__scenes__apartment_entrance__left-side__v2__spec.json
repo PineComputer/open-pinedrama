@@ -6,7 +6,7 @@
   "size": "1152x2048",
   "quality": "high",
   "images": [
-    "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/apartment_entrance/floor-plan/v2/image-1.jpg",
-    "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/apartment_entrance/front/v2/image-1.jpg"
+    "assets/scenes/apartment_entrance/floor-plan/v2/image-1.jpg",
+    "assets/scenes/apartment_entrance/front/v2/image-1.jpg"
   ]
 }

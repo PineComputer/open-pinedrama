@@ -15,8 +15,8 @@
     {
       "type": "image_url",
       "image_url": {
-        "url": "@/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/city_road/times/Night/v2/front.jpg",
-        "path": "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/city_road/times/Night/v2/front.jpg",
+        "url": "@assets/scenes/city_road/times/Night/v2/front.jpg",
+        "path": "assets/scenes/city_road/times/Night/v2/front.jpg",
         "sha256": "82a7de580d01208de36b33d5a8425c323310dc2861ff1c4ae7d18fabb73f7d78"
       },
       "role": "reference_image"
@@ -24,8 +24,8 @@
     {
       "type": "image_url",
       "image_url": {
-        "url": "@/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/city_road/times/Night/v2/back.jpg",
-        "path": "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/city_road/times/Night/v2/back.jpg",
+        "url": "@assets/scenes/city_road/times/Night/v2/back.jpg",
+        "path": "assets/scenes/city_road/times/Night/v2/back.jpg",
         "sha256": "29c82a1a1c5b3dc670a520dfe17f2a2111c20244c4b3a94ea218f7c0df3cb3f8"
       },
       "role": "reference_image"
@@ -33,8 +33,8 @@
     {
       "type": "image_url",
       "image_url": {
-        "url": "@/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/city_road/times/Night/v2/left-side.jpg",
-        "path": "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/city_road/times/Night/v2/left-side.jpg",
+        "url": "@assets/scenes/city_road/times/Night/v2/left-side.jpg",
+        "path": "assets/scenes/city_road/times/Night/v2/left-side.jpg",
         "sha256": "c0b26b2f6bd83f3a9565259ff5b421f6cdd93162d20ecdb71c132d93e59422fe"
       },
       "role": "reference_image"
@@ -42,8 +42,8 @@
     {
       "type": "image_url",
       "image_url": {
-        "url": "@/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/city_road/times/Night/v2/right-side.jpg",
-        "path": "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/city_road/times/Night/v2/right-side.jpg",
+        "url": "@assets/scenes/city_road/times/Night/v2/right-side.jpg",
+        "path": "assets/scenes/city_road/times/Night/v2/right-side.jpg",
         "sha256": "288dea04f8cd68faf547b2c800e43e5ad2f87872442b7d0aff85ebe0b34de815"
       },
       "role": "reference_image"
@@ -51,8 +51,8 @@
     {
       "type": "image_url",
       "image_url": {
-        "url": "@/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/city_road/times/Night/v2/floor-plan.jpg",
-        "path": "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/city_road/times/Night/v2/floor-plan.jpg",
+        "url": "@assets/scenes/city_road/times/Night/v2/floor-plan.jpg",
+        "path": "assets/scenes/city_road/times/Night/v2/floor-plan.jpg",
         "sha256": "abc7ab64c66131440427f0e9b1f9cfd65a5d7d8d8a216ff8e41060d5d83b17df"
       },
       "role": "reference_image"

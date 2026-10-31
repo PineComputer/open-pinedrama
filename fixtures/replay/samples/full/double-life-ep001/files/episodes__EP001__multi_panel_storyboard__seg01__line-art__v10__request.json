@@ -5,7 +5,7 @@
   "response_format": "url",
   "watermark": false,
   "input_images": [
-    "/Users/yurun/RunVid/short_drama/outputs/projects/double-life-ep001/episodes/EP001/multi_panel_storyboard/seg01/line-art/v10/crop.png",
-    "/Users/yurun/RunVid/short_drama/outputs/projects/double-life-ep001/assets/characters/george/v1/image-1.jpg"
+    "episodes/EP001/multi_panel_storyboard/seg01/line-art/v10/crop.png",
+    "assets/characters/george/v1/image-1.jpg"
   ]
 }

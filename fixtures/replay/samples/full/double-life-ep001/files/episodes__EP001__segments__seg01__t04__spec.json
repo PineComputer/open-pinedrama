@@ -15,7 +15,7 @@
     {
       "type": "image_url",
       "image_url": {
-        "url": "@/Users/yurun/RunVid/short_drama/outputs/projects/double-life-ep001/assets/scenes/quinn_living_room/v1/image-1.jpg"
+        "url": "@assets/scenes/quinn_living_room/v1/image-1.jpg"
       },
       "role": "reference_image"
     },

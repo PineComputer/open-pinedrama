@@ -5,10 +5,10 @@
   "aspect_ratio": "9:16",
   "size": "2K",
   "images": [
-    "/Users/yurun/RunVid/short-drama-runs/houma-ep001-v2/episodes/EP001/multi_panel_storyboard/seg01/line-art/v3/image-1.jpg",
-    "/Users/yurun/RunVid/short-drama-runs/houma-ep001-v2/assets/characters/si_yi/v2/image-1.jpg",
-    "/Users/yurun/RunVid/short-drama-runs/houma-ep001-v2/assets/characters/bin_ke_jia/v1/image-1.jpg",
-    "/Users/yurun/RunVid/short-drama-runs/houma-ep001-v2/assets/characters/bin_ke_yi/v1/image-1.jpg",
-    "/Users/yurun/RunVid/short-drama-runs/houma-ep001-v2/assets/scenes/funeral_hall/v3/image-1.jpg"
+    "episodes/EP001/multi_panel_storyboard/seg01/line-art/v3/image-1.jpg",
+    "assets/characters/si_yi/v2/image-1.jpg",
+    "assets/characters/bin_ke_jia/v1/image-1.jpg",
+    "assets/characters/bin_ke_yi/v1/image-1.jpg",
+    "assets/scenes/funeral_hall/v3/image-1.jpg"
   ]
 }

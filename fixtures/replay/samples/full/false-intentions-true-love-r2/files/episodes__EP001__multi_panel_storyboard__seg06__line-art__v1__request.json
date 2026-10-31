@@ -8,13 +8,13 @@
   "output_compression": 100,
   "moderation": "low",
   "input_images": [
-    "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/characters/lin_qingyu/v3/image-1.jpg",
-    "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/su_dining_area/v2/front.jpg",
-    "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/su_dining_area/v2/back.jpg",
-    "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/su_dining_area/v2/left-side.jpg",
-    "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/su_dining_area/v2/right-side.jpg",
-    "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/su_dining_area/v2/floor-plan.jpg",
-    "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/episodes/EP001/blocking/seg06/v1/image-1.jpg",
-    "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/props/lin_phone/v2/image-1.jpg"
+    "assets/characters/lin_qingyu/v3/image-1.jpg",
+    "assets/scenes/su_dining_area/v2/front.jpg",
+    "assets/scenes/su_dining_area/v2/back.jpg",
+    "assets/scenes/su_dining_area/v2/left-side.jpg",
+    "assets/scenes/su_dining_area/v2/right-side.jpg",
+    "assets/scenes/su_dining_area/v2/floor-plan.jpg",
+    "episodes/EP001/blocking/seg06/v1/image-1.jpg",
+    "assets/props/lin_phone/v2/image-1.jpg"
   ]
 }

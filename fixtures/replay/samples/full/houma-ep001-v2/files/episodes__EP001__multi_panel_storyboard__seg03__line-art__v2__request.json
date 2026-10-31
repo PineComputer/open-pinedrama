@@ -5,9 +5,9 @@
   "response_format": "b64_json",
   "watermark": false,
   "input_images": [
-    "/Users/yurun/RunVid/short-drama-runs/houma-ep001-v2/assets/characters/si_nian/v2/image-1.jpg",
-    "/Users/yurun/RunVid/short-drama-runs/houma-ep001-v2/assets/characters/si_xin/v1/image-1.jpg",
-    "/Users/yurun/RunVid/short-drama-runs/houma-ep001-v2/assets/characters/zhang_cuimei/v2/image-1.jpg",
-    "/Users/yurun/RunVid/short-drama-runs/houma-ep001-v2/assets/scenes/funeral_hall/v3/image-1.jpg"
+    "assets/characters/si_nian/v2/image-1.jpg",
+    "assets/characters/si_xin/v1/image-1.jpg",
+    "assets/characters/zhang_cuimei/v2/image-1.jpg",
+    "assets/scenes/funeral_hall/v3/image-1.jpg"
   ]
 }

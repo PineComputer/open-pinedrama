@@ -15,7 +15,7 @@
     {
       "type": "image_url",
       "image_url": {
-        "url": "@/Users/yurun/RunVid/short-drama-runs/houma-ep001-v2/assets/scenes/funeral_home_entrance/v3/image-1.jpg"
+        "url": "@assets/scenes/funeral_home_entrance/v3/image-1.jpg"
       },
       "role": "reference_image"
     },

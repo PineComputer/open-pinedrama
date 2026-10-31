@@ -15,8 +15,8 @@
     {
       "type": "image_url",
       "image_url": {
-        "url": "@/Users/yurun/RunVid/short_drama/outputs/projects/double-life-ep001/assets/scenes/quinn_living_room/v1/image-1.jpg",
-        "path": "/Users/yurun/RunVid/short_drama/outputs/projects/double-life-ep001/assets/scenes/quinn_living_room/v1/image-1.jpg",
+        "url": "@assets/scenes/quinn_living_room/v1/image-1.jpg",
+        "path": "assets/scenes/quinn_living_room/v1/image-1.jpg",
         "sha256": "4e798dddc77751cfaa5c834a788c0d7d467df67546107f85c5dc9697dc928c8c"
       },
       "role": "reference_image"

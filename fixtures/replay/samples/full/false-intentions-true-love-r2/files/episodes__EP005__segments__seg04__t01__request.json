@@ -15,8 +15,8 @@
     {
       "type": "image_url",
       "image_url": {
-        "url": "@/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/ji_ran_living_room/times/Night/v2/front.jpg",
-        "path": "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/ji_ran_living_room/times/Night/v2/front.jpg",
+        "url": "@assets/scenes/ji_ran_living_room/times/Night/v2/front.jpg",
+        "path": "assets/scenes/ji_ran_living_room/times/Night/v2/front.jpg",
         "sha256": "c4be37ec33b8f99ebd6d17ea419bfbe662db3d5870a4750907e88710ccdc068a"
       },
       "role": "reference_image"
@@ -24,8 +24,8 @@
     {
       "type": "image_url",
       "image_url": {
-        "url": "@/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/ji_ran_living_room/times/Night/v2/back.jpg",
-        "path": "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/ji_ran_living_room/times/Night/v2/back.jpg",
+        "url": "@assets/scenes/ji_ran_living_room/times/Night/v2/back.jpg",
+        "path": "assets/scenes/ji_ran_living_room/times/Night/v2/back.jpg",
         "sha256": "7152601b34f448fe4e1d0f7654dbdbd1533be25e5d7937df9ac604fff65bc809"
       },
       "role": "reference_image"
@@ -33,8 +33,8 @@
     {
       "type": "image_url",
       "image_url": {
-        "url": "@/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/ji_ran_living_room/times/Night/v2/left-side.jpg",
-        "path": "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/ji_ran_living_room/times/Night/v2/left-side.jpg",
+        "url": "@assets/scenes/ji_ran_living_room/times/Night/v2/left-side.jpg",
+        "path": "assets/scenes/ji_ran_living_room/times/Night/v2/left-side.jpg",
         "sha256": "85271539e6708cdf70196ae89ed54612c6c7df602009f20784bd7fdf4cfaecfb"
       },
       "role": "reference_image"
@@ -42,8 +42,8 @@
     {
       "type": "image_url",
       "image_url": {
-        "url": "@/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/ji_ran_living_room/times/Night/v2/right-side.jpg",
-        "path": "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/ji_ran_living_room/times/Night/v2/right-side.jpg",
+        "url": "@assets/scenes/ji_ran_living_room/times/Night/v2/right-side.jpg",
+        "path": "assets/scenes/ji_ran_living_room/times/Night/v2/right-side.jpg",
         "sha256": "4aa069cbd686e637b558433f87699cee3a9f0994b725eff7e2e206120ac90966"
       },
       "role": "reference_image"
@@ -51,8 +51,8 @@
     {
       "type": "image_url",
       "image_url": {
-        "url": "@/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/ji_ran_living_room/times/Night/v2/floor-plan.jpg",
-        "path": "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/ji_ran_living_room/times/Night/v2/floor-plan.jpg",
+        "url": "@assets/scenes/ji_ran_living_room/times/Night/v2/floor-plan.jpg",
+        "path": "assets/scenes/ji_ran_living_room/times/Night/v2/floor-plan.jpg",
         "sha256": "b8c7c0b6a75fb48e58fee7dd66c61334b81eaed16a59e1a980accef4006fb9b9"
       },
       "role": "reference_image"

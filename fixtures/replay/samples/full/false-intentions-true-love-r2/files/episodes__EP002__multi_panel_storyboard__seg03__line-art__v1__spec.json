@@ -6,10 +6,10 @@
   "size": "1152x2048",
   "quality": "high",
   "images": [
-    "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/ji_ran_office/v2/front.jpg",
-    "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/ji_ran_office/v2/back.jpg",
-    "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/ji_ran_office/v2/left-side.jpg",
-    "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/ji_ran_office/v2/right-side.jpg",
-    "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/ji_ran_office/v2/floor-plan.jpg"
+    "assets/scenes/ji_ran_office/v2/front.jpg",
+    "assets/scenes/ji_ran_office/v2/back.jpg",
+    "assets/scenes/ji_ran_office/v2/left-side.jpg",
+    "assets/scenes/ji_ran_office/v2/right-side.jpg",
+    "assets/scenes/ji_ran_office/v2/floor-plan.jpg"
   ]
 }

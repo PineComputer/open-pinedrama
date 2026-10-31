@@ -15,8 +15,8 @@
     {
       "type": "image_url",
       "image_url": {
-        "url": "@/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/su_living_room/times/Day/v2/front.jpg",
-        "path": "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/su_living_room/times/Day/v2/front.jpg",
+        "url": "@assets/scenes/su_living_room/times/Day/v2/front.jpg",
+        "path": "assets/scenes/su_living_room/times/Day/v2/front.jpg",
         "sha256": "553b508c0ac39aa5f94a15fc33753f725e3094e2937a92f2600a119d72ca49b3"
       },
       "role": "reference_image"
@@ -24,8 +24,8 @@
     {
       "type": "image_url",
       "image_url": {
-        "url": "@/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/su_living_room/times/Day/v2/back.jpg",
-        "path": "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/su_living_room/times/Day/v2/back.jpg",
+        "url": "@assets/scenes/su_living_room/times/Day/v2/back.jpg",
+        "path": "assets/scenes/su_living_room/times/Day/v2/back.jpg",
         "sha256": "c3104dd63185f1f30cbc2c2bd86e94e99a4ba459c66eb1de3de9cb6dab012096"
       },
       "role": "reference_image"
@@ -33,8 +33,8 @@
     {
       "type": "image_url",
       "image_url": {
-        "url": "@/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/su_living_room/times/Day/v2/left-side.jpg",
-        "path": "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/su_living_room/times/Day/v2/left-side.jpg",
+        "url": "@assets/scenes/su_living_room/times/Day/v2/left-side.jpg",
+        "path": "assets/scenes/su_living_room/times/Day/v2/left-side.jpg",
         "sha256": "f18d3831aebb015f68bca15b7baba4d7636cd41cbf582c411391d1d3e7545f56"
       },
       "role": "reference_image"
@@ -42,8 +42,8 @@
     {
       "type": "image_url",
       "image_url": {
-        "url": "@/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/su_living_room/times/Day/v2/right-side.jpg",
-        "path": "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/su_living_room/times/Day/v2/right-side.jpg",
+        "url": "@assets/scenes/su_living_room/times/Day/v2/right-side.jpg",
+        "path": "assets/scenes/su_living_room/times/Day/v2/right-side.jpg",
         "sha256": "8114995f67c455d4e813d1a40eaacdc23a71932e1a5f0480b3e154c0b4f04014"
       },
       "role": "reference_image"
@@ -51,8 +51,8 @@
     {
       "type": "image_url",
       "image_url": {
-        "url": "@/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/su_living_room/times/Day/v2/floor-plan.jpg",
-        "path": "/Users/yurun/RunVid/short_drama/outputs/projects/false-intentions-true-love-r2/assets/scenes/su_living_room/times/Day/v2/floor-plan.jpg",
+        "url": "@assets/scenes/su_living_room/times/Day/v2/floor-plan.jpg",
+        "path": "assets/scenes/su_living_room/times/Day/v2/floor-plan.jpg",
         "sha256": "cdab4e831560d3e91ec6a914018da2fd0c6ccea57b37c2332654233310d44494"
       },
       "role": "reference_image"

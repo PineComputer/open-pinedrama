@@ -5,9 +5,9 @@
   "response_format": "url",
   "watermark": false,
   "input_images": [
-    "/Users/yurun/RunVid/short_drama/outputs/projects/double-life-ep001/assets/characters/natalie/v1/image-1.jpg",
-    "/Users/yurun/RunVid/short_drama/outputs/projects/double-life-ep001/assets/characters/cassie/v1/image-1.jpg",
-    "/Users/yurun/RunVid/short_drama/outputs/projects/double-life-ep001/assets/characters/lauren/v1/image-1.jpg",
-    "/Users/yurun/RunVid/short_drama/outputs/projects/double-life-ep001/assets/scenes/quinn_living_room/v1/image-1.jpg"
+    "assets/characters/natalie/v1/image-1.jpg",
+    "assets/characters/cassie/v1/image-1.jpg",
+    "assets/characters/lauren/v1/image-1.jpg",
+    "assets/scenes/quinn_living_room/v1/image-1.jpg"
   ]
 }

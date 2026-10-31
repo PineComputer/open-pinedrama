@@ -1,6 +1,6 @@
 {
- "last_node_id": 202,
- "last_link_id": 636,
+ "last_node_id": 205,
+ "last_link_id": 646,
  "nodes": [
   {
    "id": 1,
@@ -24,15 +24,15 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      328,
       333,
-      344,
-      350,
-      359,
+      338,
+      351,
+      357,
       366,
-      377,
-      396,
-      408
+      373,
+      384,
+      403,
+      415
      ]
     }
    ],
@@ -74,15 +74,15 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      329,
       334,
-      345,
-      351,
-      360,
+      339,
+      352,
+      358,
       367,
-      378,
-      397,
-      409
+      374,
+      385,
+      404,
+      416
      ]
     }
    ],
@@ -124,15 +124,15 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      327,
       332,
-      343,
-      349,
-      358,
+      337,
+      350,
+      356,
       365,
-      376,
-      395,
-      407
+      372,
+      383,
+      402,
+      414
      ]
     }
    ],
@@ -175,10 +175,10 @@
      "type": "DRAMA_CLI_FILE",
      "links": [
       180,
-      207,
-      213,
-      275,
-      305
+      212,
+      218,
+      280,
+      310
      ]
     }
    ],
@@ -225,13 +225,13 @@
       3,
       177,
       183,
-      196,
       201,
-      218,
+      206,
       223,
-      269,
-      282,
-      299
+      228,
+      274,
+      287,
+      304
      ]
     }
    ],
@@ -281,10 +281,10 @@
      "type": "DRAMA_CLI_FILE",
      "links": [
       181,
-      208,
-      214,
-      276,
-      306
+      213,
+      219,
+      281,
+      311
      ]
     }
    ],
@@ -333,24 +333,24 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      325,
-      336,
+      330,
       341,
-      347,
-      356,
-      370,
-      381,
-      393,
-      405,
-      419,
-      421,
-      427,
-      430,
-      435,
-      438,
+      348,
+      354,
+      363,
+      377,
+      388,
+      400,
+      412,
+      426,
+      428,
+      434,
+      437,
       442,
-      451,
-      458
+      445,
+      449,
+      458,
+      465
      ]
     }
    ],
@@ -399,35 +399,35 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      463,
-      466,
-      469,
-      472,
-      475,
-      480,
-      485,
-      490,
-      495,
-      500,
-      505,
+      470,
+      473,
+      476,
+      479,
+      482,
+      487,
+      492,
+      497,
+      502,
+      507,
       512,
-      523,
-      529,
-      541,
-      544,
-      549,
-      552,
-      555,
-      562,
-      568,
-      575,
-      583,
-      590,
-      598,
-      602,
+      519,
+      530,
+      536,
+      548,
+      551,
+      556,
+      559,
+      565,
+      572,
+      578,
+      585,
+      593,
+      600,
+      608,
       612,
-      619,
-      627
+      622,
+      629,
+      637
      ]
     }
    ],
@@ -473,12 +473,12 @@
       5,
       190,
       192,
-      245,
-      251,
+      250,
       256,
-      260,
-      293,
-      319
+      261,
+      265,
+      298,
+      324
      ]
     }
    ],
@@ -527,19 +527,19 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      338,
-      372,
-      383,
-      414,
-      417,
-      422,
-      425,
-      428,
-      433,
-      439,
-      443,
-      449,
-      456
+      343,
+      379,
+      390,
+      421,
+      424,
+      429,
+      432,
+      435,
+      440,
+      446,
+      450,
+      456,
+      463
      ]
     }
    ],
@@ -588,25 +588,25 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      473,
-      506,
+      480,
       513,
-      537,
-      540,
-      543,
+      520,
+      544,
       547,
-      551,
+      550,
       554,
-      561,
-      567,
-      574,
-      581,
-      588,
-      597,
-      601,
+      558,
+      564,
+      571,
+      577,
+      584,
+      591,
+      598,
+      607,
       611,
-      618,
-      626
+      621,
+      628,
+      636
      ]
     }
    ],
@@ -650,10 +650,10 @@
      "links": [
       6,
       179,
-      206,
-      212,
-      274,
-      304
+      211,
+      217,
+      279,
+      309
      ]
     }
    ],
@@ -702,31 +702,31 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      462,
-      465,
-      468,
-      471,
-      474,
-      479,
-      484,
-      489,
-      494,
-      499,
-      504,
+      469,
+      472,
+      475,
+      478,
+      481,
+      486,
+      491,
+      496,
+      501,
+      506,
       511,
-      522,
-      528,
-      539,
-      545,
-      548,
-      553,
-      560,
-      569,
-      576,
-      582,
-      589,
-      610,
-      625
+      518,
+      529,
+      535,
+      546,
+      552,
+      555,
+      563,
+      570,
+      579,
+      586,
+      592,
+      599,
+      620,
+      635
      ]
     }
    ],
@@ -769,15 +769,15 @@
      "type": "DRAMA_CLI_FILE",
      "links": [
       7,
-      330,
       335,
-      346,
-      352,
-      361,
+      340,
+      353,
+      359,
       368,
-      379,
-      398,
-      410
+      375,
+      386,
+      405,
+      417
      ]
     }
    ],
@@ -826,9 +826,9 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      369,
-      380,
-      413
+      376,
+      387,
+      420
      ]
     }
    ],
@@ -873,15 +873,15 @@
       185,
       187,
       189,
-      195,
-      228,
-      232,
-      236,
-      240,
-      244,
-      250,
-      287,
-      313
+      200,
+      233,
+      237,
+      241,
+      245,
+      249,
+      255,
+      292,
+      318
      ]
     }
    ],
@@ -923,21 +923,21 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      326,
-      337,
+      331,
       342,
-      348,
-      357,
-      371,
-      382,
-      394,
-      406,
-      418,
-      426,
-      429,
-      434,
-      450,
-      457
+      349,
+      355,
+      364,
+      378,
+      389,
+      401,
+      413,
+      425,
+      433,
+      436,
+      441,
+      457,
+      464
      ]
     }
    ],
@@ -979,24 +979,24 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      478,
-      483,
-      488,
-      493,
-      498,
-      503,
-      509,
+      485,
+      490,
+      495,
+      500,
+      505,
+      510,
       516,
-      521,
-      527,
-      559,
-      566,
-      573,
-      580,
-      587,
-      594,
-      609,
-      624
+      523,
+      528,
+      534,
+      569,
+      576,
+      583,
+      590,
+      597,
+      604,
+      619,
+      634
      ]
     }
    ],
@@ -1038,13 +1038,13 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      200,
       205,
-      221,
+      210,
       226,
-      268,
-      280,
-      298
+      231,
+      273,
+      285,
+      303
      ]
     }
    ],
@@ -1086,10 +1086,10 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      211,
-      217,
-      273,
-      303
+      216,
+      222,
+      278,
+      308
      ]
     }
    ],
@@ -1131,12 +1131,12 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      355,
-      364,
-      375,
-      386,
-      392,
-      404
+      362,
+      371,
+      382,
+      393,
+      399,
+      411
      ]
     }
    ],
@@ -1178,17 +1178,17 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      510,
       517,
-      536,
-      558,
-      565,
-      572,
-      579,
-      586,
-      593,
-      608,
-      623
+      524,
+      543,
+      568,
+      575,
+      582,
+      589,
+      596,
+      603,
+      618,
+      633
      ]
     }
    ],
@@ -1230,9 +1230,9 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      249,
-      255,
-      318
+      254,
+      260,
+      323
      ]
     }
    ],
@@ -1274,10 +1274,10 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      259,
-      263,
-      292,
-      323
+      264,
+      268,
+      297,
+      328
      ]
     }
    ],
@@ -1319,13 +1319,13 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      199,
       204,
-      222,
+      209,
       227,
-      267,
-      281,
-      297
+      232,
+      272,
+      286,
+      302
      ]
     }
    ],
@@ -1367,14 +1367,14 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      231,
-      235,
-      239,
-      243,
+      236,
+      240,
+      244,
       248,
-      254,
-      286,
-      312
+      253,
+      259,
+      291,
+      317
      ]
     }
    ],
@@ -1452,15 +1452,15 @@
       26,
       27,
       28,
-      538,
-      542,
-      546,
-      556,
-      563,
-      570,
-      577,
-      584,
-      591
+      545,
+      549,
+      553,
+      566,
+      573,
+      580,
+      587,
+      594,
+      601
      ]
     }
    ],
@@ -1796,8 +1796,8 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      606,
-      621
+      616,
+      631
      ]
     }
    ],
@@ -2071,18 +2071,18 @@
       47,
       48,
       49,
-      461,
-      464,
-      467,
-      470,
-      476,
-      481,
-      486,
-      491,
-      496,
-      501,
-      507,
-      514
+      468,
+      471,
+      474,
+      477,
+      483,
+      488,
+      493,
+      498,
+      503,
+      508,
+      514,
+      521
      ]
     }
    ],
@@ -2418,8 +2418,8 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      519,
-      525
+      526,
+      532
      ]
     }
    ],
@@ -2693,8 +2693,8 @@
       68,
       69,
       70,
-      595,
-      596
+      605,
+      606
      ]
     }
    ],
@@ -3030,8 +3030,8 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      614,
-      633
+      624,
+      643
      ]
     }
    ],
@@ -3306,8 +3306,8 @@
       90,
       91,
       178,
-      209,
-      215
+      214,
+      220
      ]
     }
    ],
@@ -3643,8 +3643,8 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      271,
-      301
+      276,
+      306
      ]
     }
    ],
@@ -3918,9 +3918,9 @@
       110,
       111,
       112,
-      550,
-      599,
-      603
+      557,
+      609,
+      613
      ]
     }
    ],
@@ -4256,8 +4256,8 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      616,
-      635
+      626,
+      645
      ]
     }
    ],
@@ -4533,24 +4533,24 @@
       133,
       176,
       182,
-      197,
       202,
-      219,
+      207,
       224,
-      324,
-      331,
-      353,
-      362,
-      373,
-      384,
-      387,
-      388,
-      416,
-      420,
-      431,
-      436,
-      440,
-      444
+      229,
+      329,
+      336,
+      360,
+      369,
+      380,
+      391,
+      394,
+      395,
+      423,
+      427,
+      438,
+      443,
+      447,
+      451
      ]
     }
    ],
@@ -4886,16 +4886,16 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      265,
-      278,
-      295,
-      339,
-      390,
-      400,
-      402,
-      423,
-      447,
-      454
+      270,
+      283,
+      300,
+      346,
+      397,
+      407,
+      409,
+      430,
+      454,
+      461
      ]
     }
    ],
@@ -5170,8 +5170,8 @@
       153,
       154,
       191,
-      257,
-      261
+      262,
+      266
      ]
     }
    ],
@@ -5507,8 +5507,8 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      290,
-      321
+      295,
+      326
      ]
     }
    ],
@@ -5785,12 +5785,12 @@
       184,
       186,
       188,
-      229,
-      233,
-      237,
-      241,
+      234,
+      238,
+      242,
       246,
-      252
+      251,
+      257
      ]
     }
    ],
@@ -6126,9 +6126,9 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      193,
-      284,
-      310
+      198,
+      289,
+      315
      ]
     }
    ],
@@ -6419,10 +6419,10 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      198,
       203,
-      266,
-      296
+      208,
+      271,
+      301
      ]
     }
    ],
@@ -6490,10 +6490,10 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      210,
-      216,
-      272,
-      302
+      215,
+      221,
+      277,
+      307
      ]
     }
    ],
@@ -6549,10 +6549,10 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      220,
       225,
-      279,
-      308
+      230,
+      284,
+      313
      ]
     }
    ],
@@ -6608,11 +6608,11 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      194,
-      230,
-      234,
-      285,
-      311
+      199,
+      235,
+      239,
+      290,
+      316
      ]
     }
    ],
@@ -6668,9 +6668,9 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      238,
-      242,
-      315
+      243,
+      247,
+      320
      ]
     }
    ],
@@ -6732,9 +6732,9 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      247,
-      253,
-      317
+      252,
+      258,
+      322
      ]
     }
    ],
@@ -6790,10 +6790,10 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      258,
-      262,
-      291,
-      322
+      263,
+      267,
+      296,
+      327
      ]
     }
    ],
@@ -6859,10 +6859,10 @@
   {
    "id": 124,
    "type": "DramaCliStep",
-   "title": "EP001 seg04 first-frame reference",
+   "title": "EP001 cut",
    "pos": [
-    1180,
-    1750
+    2360,
+    70
    ],
    "size": [
     300,
@@ -6873,22 +6873,91 @@
    "mode": 0,
    "inputs": [
     {
-     "name": "assets/scenes/su_living_room/times/Day",
+     "name": "episodes/EP001/segments/seg01",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "link": 193
     },
     {
-     "name": "episodes/EP001/blocking/seg04",
+     "name": "episodes/EP001/segments/seg02",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "link": 194
     },
     {
-     "name": "assets/characters/su_yaqing",
+     "name": "episodes/EP001/segments/seg03",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "link": 195
+    },
+    {
+     "name": "episodes/EP001/segments/seg04",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 196
+    },
+    {
+     "name": "episodes/EP001/segments/seg07",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 197
+    }
+   ],
+   "outputs": [
+    {
+     "name": "file",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "links": []
+    }
+   ],
+   "properties": {
+    "id": "episodes/EP001/edit",
+    "kind": "cut",
+    "column": 7,
+    "version": "v1",
+    "accepted": null,
+    "fresh": true,
+    "shows": "episodes/EP001/edit/v1/cut.mp4",
+    "reads": [],
+    "problems": [],
+    "label": "EP001 cut",
+    "section": "EP001 cut"
+   }
+  },
+  {
+   "id": 125,
+   "type": "DramaCliStep",
+   "title": "EP001 seg04 first-frame reference",
+   "pos": [
+    1180,
+    1750
+   ],
+   "size": [
+    300,
+    340
+   ],
+   "flags": {},
+   "order": 124,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "assets/scenes/su_living_room/times/Day",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 198
+    },
+    {
+     "name": "episodes/EP001/blocking/seg04",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 199
+    },
+    {
+     "name": "assets/characters/su_yaqing",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 200
     }
    ],
    "outputs": [
@@ -6897,7 +6966,7 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      288
+      293
      ]
     }
    ],
@@ -6919,86 +6988,11 @@
    }
   },
   {
-   "id": 125,
+   "id": 126,
    "type": "DramaCliStep",
    "title": "EP001 seg01 line-art",
    "pos": [
     1180,
-    70
-   ],
-   "size": [
-    300,
-    340
-   ],
-   "flags": {},
-   "order": 124,
-   "mode": 0,
-   "inputs": [
-    {
-     "name": "assets/characters/ji_ran",
-     "label": " ",
-     "type": "DRAMA_CLI_FILE",
-     "link": 196
-    },
-    {
-     "name": "assets/scenes/ji_ran_office",
-     "label": " ",
-     "type": "DRAMA_CLI_FILE",
-     "link": 197
-    },
-    {
-     "name": "episodes/EP001/blocking/seg01",
-     "label": " ",
-     "type": "DRAMA_CLI_FILE",
-     "link": 198
-    },
-    {
-     "name": "assets/props/pour_over_set",
-     "label": " ",
-     "type": "DRAMA_CLI_FILE",
-     "link": 199
-    },
-    {
-     "name": "assets/props/coffee_cup",
-     "label": " ",
-     "type": "DRAMA_CLI_FILE",
-     "link": 200
-    }
-   ],
-   "outputs": [
-    {
-     "name": "file",
-     "label": " ",
-     "type": "DRAMA_CLI_FILE",
-     "links": [
-      264,
-      294
-     ]
-    }
-   ],
-   "properties": {
-    "id": "episodes/EP001/multi_panel_storyboard/seg01/line-art",
-    "kind": "storyboard",
-    "column": 4,
-    "version": "v1",
-    "accepted": "v1",
-    "fresh": true,
-    "shows": "episodes/EP001/multi_panel_storyboard/seg01/line-art/v1/image-1.jpg",
-    "reads": [
-     "bible",
-     "episodes/EP001/breakdown"
-    ],
-    "problems": [],
-    "label": "EP001 seg01 line-art",
-    "section": "EP001 seg01"
-   }
-  },
-  {
-   "id": 126,
-   "type": "DramaCliStep",
-   "title": "EP001 seg01 photoreal",
-   "pos": [
-    1540,
     70
    ],
    "size": [
@@ -7045,6 +7039,81 @@
      "name": "file",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
+     "links": [
+      269,
+      299
+     ]
+    }
+   ],
+   "properties": {
+    "id": "episodes/EP001/multi_panel_storyboard/seg01/line-art",
+    "kind": "storyboard",
+    "column": 4,
+    "version": "v1",
+    "accepted": "v1",
+    "fresh": true,
+    "shows": "episodes/EP001/multi_panel_storyboard/seg01/line-art/v1/image-1.jpg",
+    "reads": [
+     "bible",
+     "episodes/EP001/breakdown"
+    ],
+    "problems": [],
+    "label": "EP001 seg01 line-art",
+    "section": "EP001 seg01"
+   }
+  },
+  {
+   "id": 127,
+   "type": "DramaCliStep",
+   "title": "EP001 seg01 photoreal",
+   "pos": [
+    1540,
+    70
+   ],
+   "size": [
+    300,
+    340
+   ],
+   "flags": {},
+   "order": 126,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "assets/characters/ji_ran",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 206
+    },
+    {
+     "name": "assets/scenes/ji_ran_office",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 207
+    },
+    {
+     "name": "episodes/EP001/blocking/seg01",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 208
+    },
+    {
+     "name": "assets/props/pour_over_set",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 209
+    },
+    {
+     "name": "assets/props/coffee_cup",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 210
+    }
+   ],
+   "outputs": [
+    {
+     "name": "file",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
      "links": []
     }
    ],
@@ -7066,7 +7135,7 @@
    }
   },
   {
-   "id": 127,
+   "id": 128,
    "type": "DramaCliStep",
    "title": "EP001 seg02 line-art",
    "pos": [
@@ -7078,44 +7147,44 @@
     340
    ],
    "flags": {},
-   "order": 126,
+   "order": 127,
    "mode": 0,
    "inputs": [
     {
      "name": "assets/characters/lu_shaoze",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 206
+     "link": 211
     },
     {
      "name": "assets/characters/ji_hongyuan",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 207
+     "link": 212
     },
     {
      "name": "assets/characters/ji_ran/states/S1",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 208
+     "link": 213
     },
     {
      "name": "assets/scenes/ji_family_living_room",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 209
+     "link": 214
     },
     {
      "name": "episodes/EP001/blocking/seg02",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 210
+     "link": 215
     },
     {
      "name": "assets/props/document_envelope",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 211
+     "link": 216
     }
    ],
    "outputs": [
@@ -7124,8 +7193,8 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      270,
-      300
+      275,
+      305
      ]
     }
    ],
@@ -7147,7 +7216,7 @@
    }
   },
   {
-   "id": 128,
+   "id": 129,
    "type": "DramaCliStep",
    "title": "EP001 seg02 photoreal",
    "pos": [
@@ -7159,44 +7228,44 @@
     340
    ],
    "flags": {},
-   "order": 127,
+   "order": 128,
    "mode": 0,
    "inputs": [
     {
      "name": "assets/characters/lu_shaoze",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 212
+     "link": 217
     },
     {
      "name": "assets/characters/ji_hongyuan",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 213
+     "link": 218
     },
     {
      "name": "assets/characters/ji_ran/states/S1",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 214
+     "link": 219
     },
     {
      "name": "assets/scenes/ji_family_living_room",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 215
+     "link": 220
     },
     {
      "name": "episodes/EP001/blocking/seg02",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 216
+     "link": 221
     },
     {
      "name": "assets/props/document_envelope",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 217
+     "link": 222
     }
    ],
    "outputs": [
@@ -7225,86 +7294,11 @@
    }
   },
   {
-   "id": 129,
+   "id": 130,
    "type": "DramaCliStep",
    "title": "EP001 seg03 line-art",
    "pos": [
     1180,
-    1190
-   ],
-   "size": [
-    300,
-    340
-   ],
-   "flags": {},
-   "order": 128,
-   "mode": 0,
-   "inputs": [
-    {
-     "name": "assets/characters/ji_ran",
-     "label": " ",
-     "type": "DRAMA_CLI_FILE",
-     "link": 218
-    },
-    {
-     "name": "assets/scenes/ji_ran_office",
-     "label": " ",
-     "type": "DRAMA_CLI_FILE",
-     "link": 219
-    },
-    {
-     "name": "episodes/EP001/blocking/seg03",
-     "label": " ",
-     "type": "DRAMA_CLI_FILE",
-     "link": 220
-    },
-    {
-     "name": "assets/props/coffee_cup",
-     "label": " ",
-     "type": "DRAMA_CLI_FILE",
-     "link": 221
-    },
-    {
-     "name": "assets/props/pour_over_set",
-     "label": " ",
-     "type": "DRAMA_CLI_FILE",
-     "link": 222
-    }
-   ],
-   "outputs": [
-    {
-     "name": "file",
-     "label": " ",
-     "type": "DRAMA_CLI_FILE",
-     "links": [
-      277,
-      307
-     ]
-    }
-   ],
-   "properties": {
-    "id": "episodes/EP001/multi_panel_storyboard/seg03/line-art",
-    "kind": "storyboard",
-    "column": 4,
-    "version": "v1",
-    "accepted": "v1",
-    "fresh": true,
-    "shows": "episodes/EP001/multi_panel_storyboard/seg03/line-art/v1/image-1.jpg",
-    "reads": [
-     "bible",
-     "episodes/EP001/breakdown"
-    ],
-    "problems": [],
-    "label": "EP001 seg03 line-art",
-    "section": "EP001 seg03"
-   }
-  },
-  {
-   "id": 130,
-   "type": "DramaCliStep",
-   "title": "EP001 seg03 photoreal",
-   "pos": [
-    1540,
     1190
    ],
    "size": [
@@ -7351,6 +7345,81 @@
      "name": "file",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
+     "links": [
+      282,
+      312
+     ]
+    }
+   ],
+   "properties": {
+    "id": "episodes/EP001/multi_panel_storyboard/seg03/line-art",
+    "kind": "storyboard",
+    "column": 4,
+    "version": "v1",
+    "accepted": "v1",
+    "fresh": true,
+    "shows": "episodes/EP001/multi_panel_storyboard/seg03/line-art/v1/image-1.jpg",
+    "reads": [
+     "bible",
+     "episodes/EP001/breakdown"
+    ],
+    "problems": [],
+    "label": "EP001 seg03 line-art",
+    "section": "EP001 seg03"
+   }
+  },
+  {
+   "id": 131,
+   "type": "DramaCliStep",
+   "title": "EP001 seg03 photoreal",
+   "pos": [
+    1540,
+    1190
+   ],
+   "size": [
+    300,
+    340
+   ],
+   "flags": {},
+   "order": 130,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "assets/characters/ji_ran",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 228
+    },
+    {
+     "name": "assets/scenes/ji_ran_office",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 229
+    },
+    {
+     "name": "episodes/EP001/blocking/seg03",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 230
+    },
+    {
+     "name": "assets/props/coffee_cup",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 231
+    },
+    {
+     "name": "assets/props/pour_over_set",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 232
+    }
+   ],
+   "outputs": [
+    {
+     "name": "file",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
      "links": []
     }
    ],
@@ -7372,7 +7441,7 @@
    }
   },
   {
-   "id": 131,
+   "id": 132,
    "type": "DramaCliStep",
    "title": "EP001 seg04 line-art",
    "pos": [
@@ -7384,32 +7453,32 @@
     340
    ],
    "flags": {},
-   "order": 130,
+   "order": 131,
    "mode": 0,
    "inputs": [
     {
      "name": "assets/characters/su_yaqing",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 228
+     "link": 233
     },
     {
      "name": "assets/scenes/su_living_room",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 229
+     "link": 234
     },
     {
      "name": "episodes/EP001/blocking/seg04",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 230
+     "link": 235
     },
     {
      "name": "assets/props/su_phone",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 231
+     "link": 236
     }
    ],
    "outputs": [
@@ -7418,8 +7487,8 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      283,
-      309
+      288,
+      314
      ]
     }
    ],
@@ -7441,7 +7510,7 @@
    }
   },
   {
-   "id": 132,
+   "id": 133,
    "type": "DramaCliStep",
    "title": "EP001 seg04 photoreal",
    "pos": [
@@ -7453,32 +7522,32 @@
     340
    ],
    "flags": {},
-   "order": 131,
+   "order": 132,
    "mode": 0,
    "inputs": [
     {
      "name": "assets/characters/su_yaqing",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 232
+     "link": 237
     },
     {
      "name": "assets/scenes/su_living_room",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 233
+     "link": 238
     },
     {
      "name": "episodes/EP001/blocking/seg04",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 234
+     "link": 239
     },
     {
      "name": "assets/props/su_phone",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 235
+     "link": 240
     }
    ],
    "outputs": [
@@ -7507,7 +7576,7 @@
    }
   },
   {
-   "id": 133,
+   "id": 134,
    "type": "DramaCliStep",
    "title": "EP001 seg05 line-art",
    "pos": [
@@ -7519,32 +7588,32 @@
     340
    ],
    "flags": {},
-   "order": 132,
+   "order": 133,
    "mode": 0,
    "inputs": [
     {
      "name": "assets/characters/su_yaqing",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 236
+     "link": 241
     },
     {
      "name": "assets/scenes/su_living_room",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 237
+     "link": 242
     },
     {
      "name": "episodes/EP001/blocking/seg05",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 238
+     "link": 243
     },
     {
      "name": "assets/props/su_phone",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 239
+     "link": 244
     }
    ],
    "outputs": [
@@ -7553,7 +7622,7 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      314
+      319
      ]
     }
    ],
@@ -7575,7 +7644,7 @@
    }
   },
   {
-   "id": 134,
+   "id": 135,
    "type": "DramaCliStep",
    "title": "EP001 seg05 photoreal",
    "pos": [
@@ -7587,32 +7656,32 @@
     340
    ],
    "flags": {},
-   "order": 133,
+   "order": 134,
    "mode": 0,
    "inputs": [
     {
      "name": "assets/characters/su_yaqing",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 240
+     "link": 245
     },
     {
      "name": "assets/scenes/su_living_room",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 241
+     "link": 246
     },
     {
      "name": "episodes/EP001/blocking/seg05",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 242
+     "link": 247
     },
     {
      "name": "assets/props/su_phone",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 243
+     "link": 248
     }
    ],
    "outputs": [
@@ -7641,7 +7710,7 @@
    }
   },
   {
-   "id": 135,
+   "id": 136,
    "type": "DramaCliStep",
    "title": "EP001 seg06 line-art",
    "pos": [
@@ -7653,44 +7722,44 @@
     340
    ],
    "flags": {},
-   "order": 134,
+   "order": 135,
    "mode": 0,
    "inputs": [
     {
      "name": "assets/characters/su_yaqing",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 244
+     "link": 249
     },
     {
      "name": "assets/characters/lin_qingyu",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 245
+     "link": 250
     },
     {
      "name": "assets/scenes/su_living_room",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 246
+     "link": 251
     },
     {
      "name": "episodes/EP001/blocking/seg06",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 247
+     "link": 252
     },
     {
      "name": "assets/props/su_phone",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 248
+     "link": 253
     },
     {
      "name": "assets/props/lin_glass",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 249
+     "link": 254
     }
    ],
    "outputs": [
@@ -7699,7 +7768,7 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      316
+      321
      ]
     }
    ],
@@ -7721,7 +7790,7 @@
    }
   },
   {
-   "id": 136,
+   "id": 137,
    "type": "DramaCliStep",
    "title": "EP001 seg06 photoreal",
    "pos": [
@@ -7733,44 +7802,44 @@
     340
    ],
    "flags": {},
-   "order": 135,
+   "order": 136,
    "mode": 0,
    "inputs": [
     {
      "name": "assets/characters/su_yaqing",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 250
+     "link": 255
     },
     {
      "name": "assets/characters/lin_qingyu",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 251
+     "link": 256
     },
     {
      "name": "assets/scenes/su_living_room",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 252
+     "link": 257
     },
     {
      "name": "episodes/EP001/blocking/seg06",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 253
+     "link": 258
     },
     {
      "name": "assets/props/su_phone",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 254
+     "link": 259
     },
     {
      "name": "assets/props/lin_glass",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 255
+     "link": 260
     }
    ],
    "outputs": [
@@ -7799,7 +7868,7 @@
    }
   },
   {
-   "id": 137,
+   "id": 138,
    "type": "DramaCliStep",
    "title": "EP001 seg07 line-art",
    "pos": [
@@ -7811,32 +7880,32 @@
     340
    ],
    "flags": {},
-   "order": 136,
+   "order": 137,
    "mode": 0,
    "inputs": [
     {
      "name": "assets/characters/lin_qingyu",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 256
+     "link": 261
     },
     {
      "name": "assets/scenes/su_dining_area",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 257
+     "link": 262
     },
     {
      "name": "episodes/EP001/blocking/seg07",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 258
+     "link": 263
     },
     {
      "name": "assets/props/lin_phone",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 259
+     "link": 264
     }
    ],
    "outputs": [
@@ -7845,8 +7914,8 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      289,
-      320
+      294,
+      325
      ]
     }
    ],
@@ -7868,7 +7937,7 @@
    }
   },
   {
-   "id": 138,
+   "id": 139,
    "type": "DramaCliStep",
    "title": "EP001 seg07 photoreal",
    "pos": [
@@ -7880,32 +7949,32 @@
     340
    ],
    "flags": {},
-   "order": 137,
+   "order": 138,
    "mode": 0,
    "inputs": [
     {
      "name": "assets/characters/lin_qingyu",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 260
+     "link": 265
     },
     {
      "name": "assets/scenes/su_dining_area",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 261
+     "link": 266
     },
     {
      "name": "episodes/EP001/blocking/seg07",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 262
+     "link": 267
     },
     {
      "name": "assets/props/lin_phone",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 263
+     "link": 268
     }
    ],
    "outputs": [
@@ -7934,7 +8003,7 @@
    }
   },
   {
-   "id": 139,
+   "id": 140,
    "type": "DramaCliStep",
    "title": "EP001 seg01 take",
    "pos": [
@@ -7946,44 +8015,44 @@
     340
    ],
    "flags": {},
-   "order": 138,
+   "order": 139,
    "mode": 0,
    "inputs": [
     {
      "name": "episodes/EP001/multi_panel_storyboard/seg01/line-art",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 264
+     "link": 269
     },
     {
      "name": "assets/scenes/ji_ran_office/times/Day",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 265
+     "link": 270
     },
     {
      "name": "episodes/EP001/blocking/seg01",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 266
+     "link": 271
     },
     {
      "name": "assets/props/pour_over_set",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 267
+     "link": 272
     },
     {
      "name": "assets/props/coffee_cup",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 268
+     "link": 273
     },
     {
      "name": "assets/characters/ji_ran",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 269
+     "link": 274
     }
    ],
    "outputs": [
@@ -7991,7 +8060,9 @@
      "name": "file",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "links": []
+     "links": [
+      193
+     ]
     }
    ],
    "properties": {
@@ -8013,7 +8084,7 @@
    }
   },
   {
-   "id": 140,
+   "id": 141,
    "type": "DramaCliStep",
    "title": "EP001 seg02 take",
    "pos": [
@@ -8025,50 +8096,50 @@
     340
    ],
    "flags": {},
-   "order": 139,
+   "order": 140,
    "mode": 0,
    "inputs": [
     {
      "name": "episodes/EP001/multi_panel_storyboard/seg02/line-art",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 270
+     "link": 275
     },
     {
      "name": "assets/scenes/ji_family_living_room/times/Day",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 271
+     "link": 276
     },
     {
      "name": "episodes/EP001/blocking/seg02",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 272
+     "link": 277
     },
     {
      "name": "assets/props/document_envelope",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 273
+     "link": 278
     },
     {
      "name": "assets/characters/lu_shaoze",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 274
+     "link": 279
     },
     {
      "name": "assets/characters/ji_hongyuan",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 275
+     "link": 280
     },
     {
      "name": "assets/characters/ji_ran/states/S1",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 276
+     "link": 281
     }
    ],
    "outputs": [
@@ -8076,7 +8147,9 @@
      "name": "file",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "links": []
+     "links": [
+      194
+     ]
     }
    ],
    "properties": {
@@ -8098,7 +8171,7 @@
    }
   },
   {
-   "id": 141,
+   "id": 142,
    "type": "DramaCliStep",
    "title": "EP001 seg03 take",
    "pos": [
@@ -8110,44 +8183,44 @@
     340
    ],
    "flags": {},
-   "order": 140,
+   "order": 141,
    "mode": 0,
    "inputs": [
     {
      "name": "episodes/EP001/multi_panel_storyboard/seg03/line-art",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 277
+     "link": 282
     },
     {
      "name": "assets/scenes/ji_ran_office/times/Day",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 278
+     "link": 283
     },
     {
      "name": "episodes/EP001/blocking/seg03",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 279
+     "link": 284
     },
     {
      "name": "assets/props/coffee_cup",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 280
+     "link": 285
     },
     {
      "name": "assets/props/pour_over_set",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 281
+     "link": 286
     },
     {
      "name": "assets/characters/ji_ran",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 282
+     "link": 287
     }
    ],
    "outputs": [
@@ -8155,7 +8228,9 @@
      "name": "file",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "links": []
+     "links": [
+      195
+     ]
     }
    ],
    "properties": {
@@ -8177,7 +8252,7 @@
    }
   },
   {
-   "id": 142,
+   "id": 143,
    "type": "DramaCliStep",
    "title": "EP001 seg04 take",
    "pos": [
@@ -8189,44 +8264,44 @@
     340
    ],
    "flags": {},
-   "order": 141,
+   "order": 142,
    "mode": 0,
    "inputs": [
     {
      "name": "episodes/EP001/multi_panel_storyboard/seg04/line-art",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 283
+     "link": 288
     },
     {
      "name": "assets/scenes/su_living_room/times/Day",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 284
+     "link": 289
     },
     {
      "name": "episodes/EP001/blocking/seg04",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 285
+     "link": 290
     },
     {
      "name": "assets/props/su_phone",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 286
+     "link": 291
     },
     {
      "name": "assets/characters/su_yaqing",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 287
+     "link": 292
     },
     {
      "name": "episodes/EP001/first_frame_reference/seg04",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 288
+     "link": 293
     }
    ],
    "outputs": [
@@ -8234,7 +8309,9 @@
      "name": "file",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "links": []
+     "links": [
+      196
+     ]
     }
    ],
    "properties": {
@@ -8256,7 +8333,7 @@
    }
   },
   {
-   "id": 143,
+   "id": 144,
    "type": "DramaCliStep",
    "title": "EP001 seg07 take",
    "pos": [
@@ -8268,38 +8345,38 @@
     340
    ],
    "flags": {},
-   "order": 142,
+   "order": 143,
    "mode": 0,
    "inputs": [
     {
      "name": "episodes/EP001/multi_panel_storyboard/seg07/line-art",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 289
+     "link": 294
     },
     {
      "name": "assets/scenes/su_dining_area/times/Day",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 290
+     "link": 295
     },
     {
      "name": "episodes/EP001/blocking/seg07",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 291
+     "link": 296
     },
     {
      "name": "assets/props/lin_phone",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 292
+     "link": 297
     },
     {
      "name": "assets/characters/lin_qingyu",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 293
+     "link": 298
     }
    ],
    "outputs": [
@@ -8307,7 +8384,9 @@
      "name": "file",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "links": []
+     "links": [
+      197
+     ]
     }
    ],
    "properties": {
@@ -8329,7 +8408,7 @@
    }
   },
   {
-   "id": 144,
+   "id": 145,
    "type": "DramaCliStep",
    "title": "EP001 video prompts",
    "pos": [
@@ -8343,188 +8422,188 @@
    "flags": {
     "collapsed": true
    },
-   "order": 143,
+   "order": 144,
    "mode": 0,
    "inputs": [
     {
      "name": "episodes/EP001/multi_panel_storyboard/seg01/line-art",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 294
+     "link": 299
     },
     {
      "name": "assets/scenes/ji_ran_office/times/Day",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 295
+     "link": 300
     },
     {
      "name": "episodes/EP001/blocking/seg01",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 296
+     "link": 301
     },
     {
      "name": "assets/props/pour_over_set",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 297
+     "link": 302
     },
     {
      "name": "assets/props/coffee_cup",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 298
+     "link": 303
     },
     {
      "name": "assets/characters/ji_ran",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 299
+     "link": 304
     },
     {
      "name": "episodes/EP001/multi_panel_storyboard/seg02/line-art",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 300
+     "link": 305
     },
     {
      "name": "assets/scenes/ji_family_living_room/times/Day",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 301
+     "link": 306
     },
     {
      "name": "episodes/EP001/blocking/seg02",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 302
+     "link": 307
     },
     {
      "name": "assets/props/document_envelope",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 303
+     "link": 308
     },
     {
      "name": "assets/characters/lu_shaoze",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 304
+     "link": 309
     },
     {
      "name": "assets/characters/ji_hongyuan",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 305
+     "link": 310
     },
     {
      "name": "assets/characters/ji_ran/states/S1",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 306
+     "link": 311
     },
     {
      "name": "episodes/EP001/multi_panel_storyboard/seg03/line-art",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 307
+     "link": 312
     },
     {
      "name": "episodes/EP001/blocking/seg03",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 308
+     "link": 313
     },
     {
      "name": "episodes/EP001/multi_panel_storyboard/seg04/line-art",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 309
+     "link": 314
     },
     {
      "name": "assets/scenes/su_living_room/times/Day",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 310
+     "link": 315
     },
     {
      "name": "episodes/EP001/blocking/seg04",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 311
+     "link": 316
     },
     {
      "name": "assets/props/su_phone",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 312
+     "link": 317
     },
     {
      "name": "assets/characters/su_yaqing",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 313
+     "link": 318
     },
     {
      "name": "episodes/EP001/multi_panel_storyboard/seg05/line-art",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 314
+     "link": 319
     },
     {
      "name": "episodes/EP001/blocking/seg05",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 315
+     "link": 320
     },
     {
      "name": "episodes/EP001/multi_panel_storyboard/seg06/line-art",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 316
+     "link": 321
     },
     {
      "name": "episodes/EP001/blocking/seg06",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 317
+     "link": 322
     },
     {
      "name": "assets/props/lin_glass",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 318
+     "link": 323
     },
     {
      "name": "assets/characters/lin_qingyu",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 319
+     "link": 324
     },
     {
      "name": "episodes/EP001/multi_panel_storyboard/seg07/line-art",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 320
+     "link": 325
     },
     {
      "name": "assets/scenes/su_dining_area/times/Day",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 321
+     "link": 326
     },
     {
      "name": "episodes/EP001/blocking/seg07",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 322
+     "link": 327
     },
     {
      "name": "assets/props/lin_phone",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 323
+     "link": 328
     }
    ],
    "outputs": [
@@ -8553,7 +8632,7 @@
    }
   },
   {
-   "id": 145,
+   "id": 146,
    "type": "DramaCliStep",
    "title": "EP002 seg01 blocking",
    "pos": [
@@ -8565,101 +8644,23 @@
     340
    ],
    "flags": {},
-   "order": 144,
-   "mode": 0,
-   "inputs": [
-    {
-     "name": "assets/scenes/ji_ran_office",
-     "label": " ",
-     "type": "DRAMA_CLI_FILE",
-     "link": 324
-    },
-    {
-     "name": "assets/characters/ji_ran/states/S2",
-     "label": " ",
-     "type": "DRAMA_CLI_FILE",
-     "link": 325
-    },
-    {
-     "name": "assets/characters/xu_banxia",
-     "label": " ",
-     "type": "DRAMA_CLI_FILE",
-     "link": 326
-    },
-    {
-     "name": "assets/characters/green_shirt_applicant",
-     "label": " ",
-     "type": "DRAMA_CLI_FILE",
-     "link": 327
-    },
-    {
-     "name": "assets/characters/blue_tank_top_applicant",
-     "label": " ",
-     "type": "DRAMA_CLI_FILE",
-     "link": 328
-    },
-    {
-     "name": "assets/characters/gray_shirt_applicant",
-     "label": " ",
-     "type": "DRAMA_CLI_FILE",
-     "link": 329
-    },
-    {
-     "name": "assets/characters/shirtless_applicant",
-     "label": " ",
-     "type": "DRAMA_CLI_FILE",
-     "link": 330
-    }
-   ],
-   "outputs": [
-    {
-     "name": "file",
-     "label": " ",
-     "type": "DRAMA_CLI_FILE",
-     "links": [
-      340,
-      354,
-      363,
-      391,
-      403
-     ]
-    }
-   ],
-   "properties": {
-    "id": "episodes/EP002/blocking/seg01",
-    "kind": "blocking",
-    "column": 3,
-    "version": "v1",
-    "accepted": "v1",
-    "fresh": true,
-    "shows": "episodes/EP002/blocking/seg01/v1/image-1.jpg",
-    "reads": [
-     "bible",
-     "episodes/EP002/breakdown"
-    ],
-    "problems": [],
-    "label": "EP002 seg01 blocking",
-    "section": "EP002 seg01"
-   }
-  },
-  {
-   "id": 146,
-   "type": "DramaCliStep",
-   "title": "EP002 seg02 blocking",
-   "pos": [
-    820,
-    5350
-   ],
-   "size": [
-    300,
-    340
-   ],
-   "flags": {},
    "order": 145,
    "mode": 0,
    "inputs": [
     {
      "name": "assets/scenes/ji_ran_office",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 329
+    },
+    {
+     "name": "assets/characters/ji_ran/states/S2",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 330
+    },
+    {
+     "name": "assets/characters/xu_banxia",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "link": 331
@@ -8687,24 +8688,6 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "link": 335
-    },
-    {
-     "name": "assets/characters/ji_ran/states/S2",
-     "label": " ",
-     "type": "DRAMA_CLI_FILE",
-     "link": 336
-    },
-    {
-     "name": "assets/characters/xu_banxia",
-     "label": " ",
-     "type": "DRAMA_CLI_FILE",
-     "link": 337
-    },
-    {
-     "name": "assets/characters/lin_qingyu/states/S1",
-     "label": " ",
-     "type": "DRAMA_CLI_FILE",
-     "link": 338
     }
    ],
    "outputs": [
@@ -8713,9 +8696,105 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      374,
-      385,
-      412
+      347,
+      361,
+      370,
+      398,
+      410
+     ]
+    }
+   ],
+   "properties": {
+    "id": "episodes/EP002/blocking/seg01",
+    "kind": "blocking",
+    "column": 3,
+    "version": "v1",
+    "accepted": "v1",
+    "fresh": true,
+    "shows": "episodes/EP002/blocking/seg01/v1/image-1.jpg",
+    "reads": [
+     "bible",
+     "episodes/EP002/breakdown"
+    ],
+    "problems": [],
+    "label": "EP002 seg01 blocking",
+    "section": "EP002 seg01"
+   }
+  },
+  {
+   "id": 147,
+   "type": "DramaCliStep",
+   "title": "EP002 seg02 blocking",
+   "pos": [
+    820,
+    5350
+   ],
+   "size": [
+    300,
+    340
+   ],
+   "flags": {},
+   "order": 146,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "assets/scenes/ji_ran_office",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 336
+    },
+    {
+     "name": "assets/characters/green_shirt_applicant",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 337
+    },
+    {
+     "name": "assets/characters/blue_tank_top_applicant",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 338
+    },
+    {
+     "name": "assets/characters/gray_shirt_applicant",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 339
+    },
+    {
+     "name": "assets/characters/shirtless_applicant",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 340
+    },
+    {
+     "name": "assets/characters/ji_ran/states/S2",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 341
+    },
+    {
+     "name": "assets/characters/xu_banxia",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 342
+    },
+    {
+     "name": "assets/characters/lin_qingyu/states/S1",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 343
+    }
+   ],
+   "outputs": [
+    {
+     "name": "file",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "links": [
+      381,
+      392,
+      419
      ]
     }
    ],
@@ -8737,7 +8816,7 @@
    }
   },
   {
-   "id": 147,
+   "id": 148,
    "type": "DramaCliStep",
    "title": "EP002 breakdown",
    "pos": [
@@ -8751,7 +8830,7 @@
    "flags": {
     "collapsed": true
    },
-   "order": 146,
+   "order": 147,
    "mode": 0,
    "inputs": [],
    "outputs": [
@@ -8779,7 +8858,58 @@
    }
   },
   {
-   "id": 148,
+   "id": 149,
+   "type": "DramaCliStep",
+   "title": "EP002 cut",
+   "pos": [
+    2360,
+    630
+   ],
+   "size": [
+    300,
+    340
+   ],
+   "flags": {},
+   "order": 148,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "episodes/EP002/segments/seg01",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 344
+    },
+    {
+     "name": "episodes/EP002/segments/seg03",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 345
+    }
+   ],
+   "outputs": [
+    {
+     "name": "file",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "links": []
+    }
+   ],
+   "properties": {
+    "id": "episodes/EP002/edit",
+    "kind": "cut",
+    "column": 7,
+    "version": "v1",
+    "accepted": null,
+    "fresh": true,
+    "shows": "episodes/EP002/edit/v1/cut.mp4",
+    "reads": [],
+    "problems": [],
+    "label": "EP002 cut",
+    "section": "EP002 cut"
+   }
+  },
+  {
+   "id": 150,
    "type": "DramaCliStep",
    "title": "EP002 seg01 first-frame reference",
    "pos": [
@@ -8791,56 +8921,56 @@
     340
    ],
    "flags": {},
-   "order": 147,
+   "order": 149,
    "mode": 0,
    "inputs": [
     {
      "name": "assets/scenes/ji_ran_office/times/Day",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 339
+     "link": 346
     },
     {
      "name": "episodes/EP002/blocking/seg01",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 340
+     "link": 347
     },
     {
      "name": "assets/characters/ji_ran/states/S2",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 341
+     "link": 348
     },
     {
      "name": "assets/characters/xu_banxia",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 342
+     "link": 349
     },
     {
      "name": "assets/characters/green_shirt_applicant",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 343
+     "link": 350
     },
     {
      "name": "assets/characters/blue_tank_top_applicant",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 344
+     "link": 351
     },
     {
      "name": "assets/characters/gray_shirt_applicant",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 345
+     "link": 352
     },
     {
      "name": "assets/characters/shirtless_applicant",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 346
+     "link": 353
     }
    ],
    "outputs": [
@@ -8869,7 +8999,7 @@
    }
   },
   {
-   "id": 149,
+   "id": 151,
    "type": "DramaCliStep",
    "title": "EP002 seg01 line-art",
    "pos": [
@@ -8881,62 +9011,62 @@
     340
    ],
    "flags": {},
-   "order": 148,
+   "order": 150,
    "mode": 0,
    "inputs": [
     {
      "name": "assets/characters/ji_ran/states/S2",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 347
+     "link": 354
     },
     {
      "name": "assets/characters/xu_banxia",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 348
+     "link": 355
     },
     {
      "name": "assets/characters/green_shirt_applicant",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 349
+     "link": 356
     },
     {
      "name": "assets/characters/blue_tank_top_applicant",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 350
+     "link": 357
     },
     {
      "name": "assets/characters/gray_shirt_applicant",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 351
+     "link": 358
     },
     {
      "name": "assets/characters/shirtless_applicant",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 352
+     "link": 359
     },
     {
      "name": "assets/scenes/ji_ran_office",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 353
+     "link": 360
     },
     {
      "name": "episodes/EP002/blocking/seg01",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 354
+     "link": 361
     },
     {
      "name": "assets/props/dumbbell",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 355
+     "link": 362
     }
    ],
    "outputs": [
@@ -8945,8 +9075,8 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      389,
-      401
+      396,
+      408
      ]
     }
    ],
@@ -8968,7 +9098,7 @@
    }
   },
   {
-   "id": 150,
+   "id": 152,
    "type": "DramaCliStep",
    "title": "EP002 seg01 photoreal",
    "pos": [
@@ -8980,62 +9110,62 @@
     340
    ],
    "flags": {},
-   "order": 149,
+   "order": 151,
    "mode": 0,
    "inputs": [
     {
      "name": "assets/characters/ji_ran/states/S2",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 356
+     "link": 363
     },
     {
      "name": "assets/characters/xu_banxia",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 357
+     "link": 364
     },
     {
      "name": "assets/characters/green_shirt_applicant",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 358
+     "link": 365
     },
     {
      "name": "assets/characters/blue_tank_top_applicant",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 359
+     "link": 366
     },
     {
      "name": "assets/characters/gray_shirt_applicant",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 360
+     "link": 367
     },
     {
      "name": "assets/characters/shirtless_applicant",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 361
+     "link": 368
     },
     {
      "name": "assets/scenes/ji_ran_office",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 362
+     "link": 369
     },
     {
      "name": "episodes/EP002/blocking/seg01",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 363
+     "link": 370
     },
     {
      "name": "assets/props/dumbbell",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 364
+     "link": 371
     }
    ],
    "outputs": [
@@ -9064,7 +9194,7 @@
    }
   },
   {
-   "id": 151,
+   "id": 153,
    "type": "DramaCliStep",
    "title": "EP002 seg02 line-art",
    "pos": [
@@ -9076,74 +9206,74 @@
     340
    ],
    "flags": {},
-   "order": 150,
+   "order": 152,
    "mode": 0,
    "inputs": [
     {
      "name": "assets/characters/green_shirt_applicant",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 365
+     "link": 372
     },
     {
      "name": "assets/characters/blue_tank_top_applicant",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 366
+     "link": 373
     },
     {
      "name": "assets/characters/gray_shirt_applicant",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 367
+     "link": 374
     },
     {
      "name": "assets/characters/shirtless_applicant",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 368
+     "link": 375
     },
     {
      "name": "assets/characters/shirtless_applicant/states/S1",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 369
+     "link": 376
     },
     {
      "name": "assets/characters/ji_ran/states/S2",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 370
+     "link": 377
     },
     {
      "name": "assets/characters/xu_banxia",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 371
+     "link": 378
     },
     {
      "name": "assets/characters/lin_qingyu/states/S1",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 372
+     "link": 379
     },
     {
      "name": "assets/scenes/ji_ran_office",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 373
+     "link": 380
     },
     {
      "name": "episodes/EP002/blocking/seg02",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 374
+     "link": 381
     },
     {
      "name": "assets/props/dumbbell",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 375
+     "link": 382
     }
    ],
    "outputs": [
@@ -9152,7 +9282,7 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      411
+      418
      ]
     }
    ],
@@ -9174,7 +9304,7 @@
    }
   },
   {
-   "id": 152,
+   "id": 154,
    "type": "DramaCliStep",
    "title": "EP002 seg02 photoreal",
    "pos": [
@@ -9186,74 +9316,74 @@
     340
    ],
    "flags": {},
-   "order": 151,
+   "order": 153,
    "mode": 0,
    "inputs": [
     {
      "name": "assets/characters/green_shirt_applicant",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 376
+     "link": 383
     },
     {
      "name": "assets/characters/blue_tank_top_applicant",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 377
+     "link": 384
     },
     {
      "name": "assets/characters/gray_shirt_applicant",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 378
+     "link": 385
     },
     {
      "name": "assets/characters/shirtless_applicant",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 379
+     "link": 386
     },
     {
      "name": "assets/characters/shirtless_applicant/states/S1",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 380
+     "link": 387
     },
     {
      "name": "assets/characters/ji_ran/states/S2",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 381
+     "link": 388
     },
     {
      "name": "assets/characters/xu_banxia",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 382
+     "link": 389
     },
     {
      "name": "assets/characters/lin_qingyu/states/S1",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 383
+     "link": 390
     },
     {
      "name": "assets/scenes/ji_ran_office",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 384
+     "link": 391
     },
     {
      "name": "episodes/EP002/blocking/seg02",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 385
+     "link": 392
     },
     {
      "name": "assets/props/dumbbell",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 386
+     "link": 393
     }
    ],
    "outputs": [
@@ -9282,7 +9412,7 @@
    }
   },
   {
-   "id": 153,
+   "id": 155,
    "type": "DramaCliStep",
    "title": "EP002 seg03 line-art",
    "pos": [
@@ -9294,14 +9424,14 @@
     340
    ],
    "flags": {},
-   "order": 152,
+   "order": 154,
    "mode": 0,
    "inputs": [
     {
      "name": "assets/scenes/ji_ran_office",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 387
+     "link": 394
     }
    ],
    "outputs": [
@@ -9310,8 +9440,8 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      399,
-      415
+      406,
+      422
      ]
     }
    ],
@@ -9333,7 +9463,7 @@
    }
   },
   {
-   "id": 154,
+   "id": 156,
    "type": "DramaCliStep",
    "title": "EP002 seg03 photoreal",
    "pos": [
@@ -9345,14 +9475,14 @@
     340
    ],
    "flags": {},
-   "order": 153,
+   "order": 155,
    "mode": 0,
    "inputs": [
     {
      "name": "assets/scenes/ji_ran_office",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 388
+     "link": 395
     }
    ],
    "outputs": [
@@ -9381,7 +9511,7 @@
    }
   },
   {
-   "id": 155,
+   "id": 157,
    "type": "DramaCliStep",
    "title": "EP002 seg01 take",
    "pos": [
@@ -9393,68 +9523,68 @@
     340
    ],
    "flags": {},
-   "order": 154,
+   "order": 156,
    "mode": 0,
    "inputs": [
     {
      "name": "episodes/EP002/multi_panel_storyboard/seg01/line-art",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 389
+     "link": 396
     },
     {
      "name": "assets/scenes/ji_ran_office/times/Day",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 390
+     "link": 397
     },
     {
      "name": "episodes/EP002/blocking/seg01",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 391
+     "link": 398
     },
     {
      "name": "assets/props/dumbbell",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 392
+     "link": 399
     },
     {
      "name": "assets/characters/ji_ran/states/S2",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 393
+     "link": 400
     },
     {
      "name": "assets/characters/xu_banxia",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 394
+     "link": 401
     },
     {
      "name": "assets/characters/green_shirt_applicant",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 395
+     "link": 402
     },
     {
      "name": "assets/characters/blue_tank_top_applicant",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 396
+     "link": 403
     },
     {
      "name": "assets/characters/gray_shirt_applicant",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 397
+     "link": 404
     },
     {
      "name": "assets/characters/shirtless_applicant",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 398
+     "link": 405
     }
    ],
    "outputs": [
@@ -9462,7 +9592,9 @@
      "name": "file",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "links": []
+     "links": [
+      344
+     ]
     }
    ],
    "properties": {
@@ -9484,7 +9616,7 @@
    }
   },
   {
-   "id": 156,
+   "id": 158,
    "type": "DramaCliStep",
    "title": "EP002 seg03 take",
    "pos": [
@@ -9496,20 +9628,20 @@
     340
    ],
    "flags": {},
-   "order": 155,
+   "order": 157,
    "mode": 0,
    "inputs": [
     {
      "name": "episodes/EP002/multi_panel_storyboard/seg03/line-art",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 399
+     "link": 406
     },
     {
      "name": "assets/scenes/ji_ran_office/times/Day",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 400
+     "link": 407
     }
    ],
    "outputs": [
@@ -9517,7 +9649,9 @@
      "name": "file",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "links": []
+     "links": [
+      345
+     ]
     }
    ],
    "properties": {
@@ -9539,7 +9673,7 @@
    }
   },
   {
-   "id": 157,
+   "id": 159,
    "type": "DramaCliStep",
    "title": "EP002 video prompts",
    "pos": [
@@ -9553,98 +9687,98 @@
    "flags": {
     "collapsed": true
    },
-   "order": 156,
+   "order": 158,
    "mode": 0,
    "inputs": [
     {
      "name": "episodes/EP002/multi_panel_storyboard/seg01/line-art",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 401
+     "link": 408
     },
     {
      "name": "assets/scenes/ji_ran_office/times/Day",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 402
+     "link": 409
     },
     {
      "name": "episodes/EP002/blocking/seg01",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 403
+     "link": 410
     },
     {
      "name": "assets/props/dumbbell",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 404
+     "link": 411
     },
     {
      "name": "assets/characters/ji_ran/states/S2",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 405
+     "link": 412
     },
     {
      "name": "assets/characters/xu_banxia",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 406
+     "link": 413
     },
     {
      "name": "assets/characters/green_shirt_applicant",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 407
+     "link": 414
     },
     {
      "name": "assets/characters/blue_tank_top_applicant",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 408
+     "link": 415
     },
     {
      "name": "assets/characters/gray_shirt_applicant",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 409
+     "link": 416
     },
     {
      "name": "assets/characters/shirtless_applicant",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 410
+     "link": 417
     },
     {
      "name": "episodes/EP002/multi_panel_storyboard/seg02/line-art",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 411
+     "link": 418
     },
     {
      "name": "episodes/EP002/blocking/seg02",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 412
+     "link": 419
     },
     {
      "name": "assets/characters/shirtless_applicant/states/S1",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 413
+     "link": 420
     },
     {
      "name": "assets/characters/lin_qingyu/states/S1",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 414
+     "link": 421
     },
     {
      "name": "episodes/EP002/multi_panel_storyboard/seg03/line-art",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 415
+     "link": 422
     }
    ],
    "outputs": [
@@ -9673,7 +9807,7 @@
    }
   },
   {
-   "id": 158,
+   "id": 160,
    "type": "DramaCliStep",
    "title": "EP003 seg01 blocking",
    "pos": [
@@ -9685,32 +9819,32 @@
     340
    ],
    "flags": {},
-   "order": 157,
+   "order": 159,
    "mode": 0,
    "inputs": [
     {
      "name": "assets/scenes/ji_ran_office",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 416
+     "link": 423
     },
     {
      "name": "assets/characters/lin_qingyu/states/S1",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 417
+     "link": 424
     },
     {
      "name": "assets/characters/xu_banxia",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 418
+     "link": 425
     },
     {
      "name": "assets/characters/ji_ran/states/S2",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 419
+     "link": 426
     }
    ],
    "outputs": [
@@ -9719,11 +9853,11 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      424,
-      432,
-      437,
-      448,
-      455
+      431,
+      439,
+      444,
+      455,
+      462
      ]
     }
    ],
@@ -9745,7 +9879,7 @@
    }
   },
   {
-   "id": 159,
+   "id": 161,
    "type": "DramaCliStep",
    "title": "EP003 seg02 blocking",
    "pos": [
@@ -9757,26 +9891,26 @@
     340
    ],
    "flags": {},
-   "order": 158,
+   "order": 160,
    "mode": 0,
    "inputs": [
     {
      "name": "assets/scenes/ji_ran_office",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 420
+     "link": 427
     },
     {
      "name": "assets/characters/ji_ran/states/S2",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 421
+     "link": 428
     },
     {
      "name": "assets/characters/lin_qingyu/states/S1",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 422
+     "link": 429
     }
    ],
    "outputs": [
@@ -9785,9 +9919,9 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      441,
-      445,
-      460
+      448,
+      452,
+      467
      ]
     }
    ],
@@ -9809,7 +9943,7 @@
    }
   },
   {
-   "id": 160,
+   "id": 162,
    "type": "DramaCliStep",
    "title": "EP003 breakdown",
    "pos": [
@@ -9823,7 +9957,7 @@
    "flags": {
     "collapsed": true
    },
-   "order": 159,
+   "order": 161,
    "mode": 0,
    "inputs": [],
    "outputs": [
@@ -9851,7 +9985,7 @@
    }
   },
   {
-   "id": 161,
+   "id": 163,
    "type": "DramaCliStep",
    "title": "EP003 seg01 first-frame reference",
    "pos": [
@@ -9863,38 +9997,38 @@
     340
    ],
    "flags": {},
-   "order": 160,
+   "order": 162,
    "mode": 0,
    "inputs": [
     {
      "name": "assets/scenes/ji_ran_office/times/Day",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 423
+     "link": 430
     },
     {
      "name": "episodes/EP003/blocking/seg01",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 424
+     "link": 431
     },
     {
      "name": "assets/characters/lin_qingyu/states/S1",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 425
+     "link": 432
     },
     {
      "name": "assets/characters/xu_banxia",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 426
+     "link": 433
     },
     {
      "name": "assets/characters/ji_ran/states/S2",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 427
+     "link": 434
     }
    ],
    "outputs": [
@@ -9903,7 +10037,7 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      452
+      459
      ]
     }
    ],
@@ -9925,7 +10059,7 @@
    }
   },
   {
-   "id": 162,
+   "id": 164,
    "type": "DramaCliStep",
    "title": "EP003 seg01 line-art",
    "pos": [
@@ -9937,38 +10071,38 @@
     340
    ],
    "flags": {},
-   "order": 161,
+   "order": 163,
    "mode": 0,
    "inputs": [
     {
      "name": "assets/characters/lin_qingyu/states/S1",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 428
+     "link": 435
     },
     {
      "name": "assets/characters/xu_banxia",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 429
+     "link": 436
     },
     {
      "name": "assets/characters/ji_ran/states/S2",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 430
+     "link": 437
     },
     {
      "name": "assets/scenes/ji_ran_office",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 431
+     "link": 438
     },
     {
      "name": "episodes/EP003/blocking/seg01",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 432
+     "link": 439
     }
    ],
    "outputs": [
@@ -9977,8 +10111,8 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      446,
-      453
+      453,
+      460
      ]
     }
    ],
@@ -10000,7 +10134,7 @@
    }
   },
   {
-   "id": 163,
+   "id": 165,
    "type": "DramaCliStep",
    "title": "EP003 seg01 photoreal",
    "pos": [
@@ -10012,38 +10146,38 @@
     340
    ],
    "flags": {},
-   "order": 162,
+   "order": 164,
    "mode": 0,
    "inputs": [
     {
      "name": "assets/characters/lin_qingyu/states/S1",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 433
+     "link": 440
     },
     {
      "name": "assets/characters/xu_banxia",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 434
+     "link": 441
     },
     {
      "name": "assets/characters/ji_ran/states/S2",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 435
+     "link": 442
     },
     {
      "name": "assets/scenes/ji_ran_office",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 436
+     "link": 443
     },
     {
      "name": "episodes/EP003/blocking/seg01",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 437
+     "link": 444
     }
    ],
    "outputs": [
@@ -10072,7 +10206,7 @@
    }
   },
   {
-   "id": 164,
+   "id": 166,
    "type": "DramaCliStep",
    "title": "EP003 seg02 line-art",
    "pos": [
@@ -10084,32 +10218,32 @@
     340
    ],
    "flags": {},
-   "order": 163,
+   "order": 165,
    "mode": 0,
    "inputs": [
     {
      "name": "assets/characters/ji_ran/states/S2",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 438
+     "link": 445
     },
     {
      "name": "assets/characters/lin_qingyu/states/S1",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 439
+     "link": 446
     },
     {
      "name": "assets/scenes/ji_ran_office",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 440
+     "link": 447
     },
     {
      "name": "episodes/EP003/blocking/seg02",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 441
+     "link": 448
     }
    ],
    "outputs": [
@@ -10118,7 +10252,7 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      459
+      466
      ]
     }
    ],
@@ -10140,7 +10274,7 @@
    }
   },
   {
-   "id": 165,
+   "id": 167,
    "type": "DramaCliStep",
    "title": "EP003 seg02 photoreal",
    "pos": [
@@ -10152,32 +10286,32 @@
     340
    ],
    "flags": {},
-   "order": 164,
+   "order": 166,
    "mode": 0,
    "inputs": [
     {
      "name": "assets/characters/ji_ran/states/S2",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 442
+     "link": 449
     },
     {
      "name": "assets/characters/lin_qingyu/states/S1",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 443
+     "link": 450
     },
     {
      "name": "assets/scenes/ji_ran_office",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 444
+     "link": 451
     },
     {
      "name": "episodes/EP003/blocking/seg02",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 445
+     "link": 452
     }
    ],
    "outputs": [
@@ -10206,7 +10340,7 @@
    }
   },
   {
-   "id": 166,
+   "id": 168,
    "type": "DramaCliStep",
    "title": "EP003 seg01 take",
    "pos": [
@@ -10218,94 +10352,7 @@
     340
    ],
    "flags": {},
-   "order": 165,
-   "mode": 0,
-   "inputs": [
-    {
-     "name": "episodes/EP003/multi_panel_storyboard/seg01/line-art",
-     "label": " ",
-     "type": "DRAMA_CLI_FILE",
-     "link": 446
-    },
-    {
-     "name": "assets/scenes/ji_ran_office/times/Day",
-     "label": " ",
-     "type": "DRAMA_CLI_FILE",
-     "link": 447
-    },
-    {
-     "name": "episodes/EP003/blocking/seg01",
-     "label": " ",
-     "type": "DRAMA_CLI_FILE",
-     "link": 448
-    },
-    {
-     "name": "assets/characters/lin_qingyu/states/S1",
-     "label": " ",
-     "type": "DRAMA_CLI_FILE",
-     "link": 449
-    },
-    {
-     "name": "assets/characters/xu_banxia",
-     "label": " ",
-     "type": "DRAMA_CLI_FILE",
-     "link": 450
-    },
-    {
-     "name": "assets/characters/ji_ran/states/S2",
-     "label": " ",
-     "type": "DRAMA_CLI_FILE",
-     "link": 451
-    },
-    {
-     "name": "episodes/EP003/first_frame_reference/seg01",
-     "label": " ",
-     "type": "DRAMA_CLI_FILE",
-     "link": 452
-    }
-   ],
-   "outputs": [
-    {
-     "name": "file",
-     "label": " ",
-     "type": "DRAMA_CLI_FILE",
-     "links": []
-    }
-   ],
-   "properties": {
-    "id": "episodes/EP003/segments/seg01",
-    "kind": "take",
-    "column": 6,
-    "version": "t02",
-    "accepted": null,
-    "fresh": true,
-    "shows": "episodes/EP003/segments/seg01/t02/video.mp4",
-    "reads": [
-     "bible",
-     "episodes/EP003/breakdown",
-     "episodes/EP003/video_prompts"
-    ],
-    "problems": [],
-    "label": "EP003 seg01 take",
-    "section": "EP003 seg01"
-   }
-  },
-  {
-   "id": 167,
-   "type": "DramaCliStep",
-   "title": "EP003 video prompts",
-   "pos": [
-    0,
-    880
-   ],
-   "size": [
-    300,
-    340
-   ],
-   "flags": {
-    "collapsed": true
-   },
-   "order": 166,
+   "order": 167,
    "mode": 0,
    "inputs": [
     {
@@ -10345,16 +10392,103 @@
      "link": 458
     },
     {
-     "name": "episodes/EP003/multi_panel_storyboard/seg02/line-art",
+     "name": "episodes/EP003/first_frame_reference/seg01",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "link": 459
+    }
+   ],
+   "outputs": [
+    {
+     "name": "file",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "links": []
+    }
+   ],
+   "properties": {
+    "id": "episodes/EP003/segments/seg01",
+    "kind": "take",
+    "column": 6,
+    "version": "t02",
+    "accepted": null,
+    "fresh": true,
+    "shows": "episodes/EP003/segments/seg01/t02/video.mp4",
+    "reads": [
+     "bible",
+     "episodes/EP003/breakdown",
+     "episodes/EP003/video_prompts"
+    ],
+    "problems": [],
+    "label": "EP003 seg01 take",
+    "section": "EP003 seg01"
+   }
+  },
+  {
+   "id": 169,
+   "type": "DramaCliStep",
+   "title": "EP003 video prompts",
+   "pos": [
+    0,
+    880
+   ],
+   "size": [
+    300,
+    340
+   ],
+   "flags": {
+    "collapsed": true
+   },
+   "order": 168,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "episodes/EP003/multi_panel_storyboard/seg01/line-art",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 460
+    },
+    {
+     "name": "assets/scenes/ji_ran_office/times/Day",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 461
+    },
+    {
+     "name": "episodes/EP003/blocking/seg01",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 462
+    },
+    {
+     "name": "assets/characters/lin_qingyu/states/S1",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 463
+    },
+    {
+     "name": "assets/characters/xu_banxia",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 464
+    },
+    {
+     "name": "assets/characters/ji_ran/states/S2",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 465
+    },
+    {
+     "name": "episodes/EP003/multi_panel_storyboard/seg02/line-art",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 466
     },
     {
      "name": "episodes/EP003/blocking/seg02",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 460
+     "link": 467
     }
    ],
    "outputs": [
@@ -10383,7 +10517,7 @@
    }
   },
   {
-   "id": 168,
+   "id": 170,
    "type": "DramaCliStep",
    "title": "EP004 seg01 blocking",
    "pos": [
@@ -10395,26 +10529,26 @@
     340
    ],
    "flags": {},
-   "order": 167,
+   "order": 169,
    "mode": 0,
    "inputs": [
     {
      "name": "assets/scenes/apartment_entrance",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 461
+     "link": 468
     },
     {
      "name": "assets/characters/lu_shaoze/states/S1",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 462
+     "link": 469
     },
     {
      "name": "assets/characters/ji_ran/states/S3",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 463
+     "link": 470
     }
    ],
    "outputs": [
@@ -10423,10 +10557,10 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      477,
-      482,
-      520,
-      526
+      484,
+      489,
+      527,
+      533
      ]
     }
    ],
@@ -10448,7 +10582,7 @@
    }
   },
   {
-   "id": 169,
+   "id": 171,
    "type": "DramaCliStep",
    "title": "EP004 seg02 blocking",
    "pos": [
@@ -10460,26 +10594,26 @@
     340
    ],
    "flags": {},
-   "order": 168,
+   "order": 170,
    "mode": 0,
    "inputs": [
     {
      "name": "assets/scenes/apartment_entrance",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 464
+     "link": 471
     },
     {
      "name": "assets/characters/lu_shaoze/states/S1",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 465
+     "link": 472
     },
     {
      "name": "assets/characters/ji_ran/states/S3",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 466
+     "link": 473
     }
    ],
    "outputs": [
@@ -10488,9 +10622,9 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      487,
-      492,
-      531
+      494,
+      499,
+      538
      ]
     }
    ],
@@ -10512,7 +10646,7 @@
    }
   },
   {
-   "id": 170,
+   "id": 172,
    "type": "DramaCliStep",
    "title": "EP004 seg03 blocking",
    "pos": [
@@ -10524,26 +10658,26 @@
     340
    ],
    "flags": {},
-   "order": 169,
+   "order": 171,
    "mode": 0,
    "inputs": [
     {
      "name": "assets/scenes/apartment_entrance",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 467
+     "link": 474
     },
     {
      "name": "assets/characters/lu_shaoze/states/S1",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 468
+     "link": 475
     },
     {
      "name": "assets/characters/ji_ran/states/S3",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 469
+     "link": 476
     }
    ],
    "outputs": [
@@ -10552,9 +10686,9 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      497,
-      502,
-      533
+      504,
+      509,
+      540
      ]
     }
    ],
@@ -10576,7 +10710,7 @@
    }
   },
   {
-   "id": 171,
+   "id": 173,
    "type": "DramaCliStep",
    "title": "EP004 seg04 blocking",
    "pos": [
@@ -10588,32 +10722,32 @@
     340
    ],
    "flags": {},
-   "order": 170,
+   "order": 172,
    "mode": 0,
    "inputs": [
     {
      "name": "assets/scenes/apartment_entrance",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 470
+     "link": 477
     },
     {
      "name": "assets/characters/lu_shaoze/states/S1",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 471
+     "link": 478
     },
     {
      "name": "assets/characters/ji_ran/states/S3",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 472
+     "link": 479
     },
     {
      "name": "assets/characters/lin_qingyu/states/S2",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 473
+     "link": 480
     }
    ],
    "outputs": [
@@ -10622,9 +10756,9 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      508,
       515,
-      535
+      522,
+      542
      ]
     }
    ],
@@ -10646,7 +10780,7 @@
    }
   },
   {
-   "id": 172,
+   "id": 174,
    "type": "DramaCliStep",
    "title": "EP004 breakdown",
    "pos": [
@@ -10660,7 +10794,7 @@
    "flags": {
     "collapsed": true
    },
-   "order": 171,
+   "order": 173,
    "mode": 0,
    "inputs": [],
    "outputs": [
@@ -10688,7 +10822,7 @@
    }
   },
   {
-   "id": 173,
+   "id": 175,
    "type": "DramaCliStep",
    "title": "EP004 seg01 line-art",
    "pos": [
@@ -10700,38 +10834,38 @@
     340
    ],
    "flags": {},
-   "order": 172,
+   "order": 174,
    "mode": 0,
    "inputs": [
     {
      "name": "assets/characters/lu_shaoze/states/S1",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 474
+     "link": 481
     },
     {
      "name": "assets/characters/ji_ran/states/S3",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 475
+     "link": 482
     },
     {
      "name": "assets/scenes/apartment_entrance",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 476
+     "link": 483
     },
     {
      "name": "episodes/EP004/blocking/seg01",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 477
+     "link": 484
     },
     {
      "name": "assets/props/black_handbag",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 478
+     "link": 485
     }
    ],
    "outputs": [
@@ -10740,8 +10874,8 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      518,
-      524
+      525,
+      531
      ]
     }
    ],
@@ -10763,7 +10897,7 @@
    }
   },
   {
-   "id": 174,
+   "id": 176,
    "type": "DramaCliStep",
    "title": "EP004 seg01 photoreal",
    "pos": [
@@ -10775,38 +10909,38 @@
     340
    ],
    "flags": {},
-   "order": 173,
+   "order": 175,
    "mode": 0,
    "inputs": [
     {
      "name": "assets/characters/lu_shaoze/states/S1",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 479
+     "link": 486
     },
     {
      "name": "assets/characters/ji_ran/states/S3",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 480
+     "link": 487
     },
     {
      "name": "assets/scenes/apartment_entrance",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 481
+     "link": 488
     },
     {
      "name": "episodes/EP004/blocking/seg01",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 482
+     "link": 489
     },
     {
      "name": "assets/props/black_handbag",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 483
+     "link": 490
     }
    ],
    "outputs": [
@@ -10835,7 +10969,7 @@
    }
   },
   {
-   "id": 175,
+   "id": 177,
    "type": "DramaCliStep",
    "title": "EP004 seg02 line-art",
    "pos": [
@@ -10847,38 +10981,38 @@
     340
    ],
    "flags": {},
-   "order": 174,
+   "order": 176,
    "mode": 0,
    "inputs": [
     {
      "name": "assets/characters/lu_shaoze/states/S1",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 484
+     "link": 491
     },
     {
      "name": "assets/characters/ji_ran/states/S3",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 485
+     "link": 492
     },
     {
      "name": "assets/scenes/apartment_entrance",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 486
+     "link": 493
     },
     {
      "name": "episodes/EP004/blocking/seg02",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 487
+     "link": 494
     },
     {
      "name": "assets/props/black_handbag",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 488
+     "link": 495
     }
    ],
    "outputs": [
@@ -10887,7 +11021,7 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      530
+      537
      ]
     }
    ],
@@ -10909,7 +11043,7 @@
    }
   },
   {
-   "id": 176,
+   "id": 178,
    "type": "DramaCliStep",
    "title": "EP004 seg02 photoreal",
    "pos": [
@@ -10921,38 +11055,38 @@
     340
    ],
    "flags": {},
-   "order": 175,
+   "order": 177,
    "mode": 0,
    "inputs": [
     {
      "name": "assets/characters/lu_shaoze/states/S1",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 489
+     "link": 496
     },
     {
      "name": "assets/characters/ji_ran/states/S3",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 490
+     "link": 497
     },
     {
      "name": "assets/scenes/apartment_entrance",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 491
+     "link": 498
     },
     {
      "name": "episodes/EP004/blocking/seg02",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 492
+     "link": 499
     },
     {
      "name": "assets/props/black_handbag",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 493
+     "link": 500
     }
    ],
    "outputs": [
@@ -10981,7 +11115,7 @@
    }
   },
   {
-   "id": 177,
+   "id": 179,
    "type": "DramaCliStep",
    "title": "EP004 seg03 line-art",
    "pos": [
@@ -10993,38 +11127,38 @@
     340
    ],
    "flags": {},
-   "order": 176,
+   "order": 178,
    "mode": 0,
    "inputs": [
     {
      "name": "assets/characters/lu_shaoze/states/S1",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 494
+     "link": 501
     },
     {
      "name": "assets/characters/ji_ran/states/S3",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 495
+     "link": 502
     },
     {
      "name": "assets/scenes/apartment_entrance",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 496
+     "link": 503
     },
     {
      "name": "episodes/EP004/blocking/seg03",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 497
+     "link": 504
     },
     {
      "name": "assets/props/black_handbag",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 498
+     "link": 505
     }
    ],
    "outputs": [
@@ -11033,7 +11167,7 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      532
+      539
      ]
     }
    ],
@@ -11055,7 +11189,7 @@
    }
   },
   {
-   "id": 178,
+   "id": 180,
    "type": "DramaCliStep",
    "title": "EP004 seg03 photoreal",
    "pos": [
@@ -11067,38 +11201,38 @@
     340
    ],
    "flags": {},
-   "order": 177,
+   "order": 179,
    "mode": 0,
    "inputs": [
     {
      "name": "assets/characters/lu_shaoze/states/S1",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 499
+     "link": 506
     },
     {
      "name": "assets/characters/ji_ran/states/S3",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 500
+     "link": 507
     },
     {
      "name": "assets/scenes/apartment_entrance",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 501
+     "link": 508
     },
     {
      "name": "episodes/EP004/blocking/seg03",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 502
+     "link": 509
     },
     {
      "name": "assets/props/black_handbag",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 503
+     "link": 510
     }
    ],
    "outputs": [
@@ -11127,7 +11261,7 @@
    }
   },
   {
-   "id": 179,
+   "id": 181,
    "type": "DramaCliStep",
    "title": "EP004 seg04 line-art",
    "pos": [
@@ -11139,93 +11273,7 @@
     340
    ],
    "flags": {},
-   "order": 178,
-   "mode": 0,
-   "inputs": [
-    {
-     "name": "assets/characters/lu_shaoze/states/S1",
-     "label": " ",
-     "type": "DRAMA_CLI_FILE",
-     "link": 504
-    },
-    {
-     "name": "assets/characters/ji_ran/states/S3",
-     "label": " ",
-     "type": "DRAMA_CLI_FILE",
-     "link": 505
-    },
-    {
-     "name": "assets/characters/lin_qingyu/states/S2",
-     "label": " ",
-     "type": "DRAMA_CLI_FILE",
-     "link": 506
-    },
-    {
-     "name": "assets/scenes/apartment_entrance",
-     "label": " ",
-     "type": "DRAMA_CLI_FILE",
-     "link": 507
-    },
-    {
-     "name": "episodes/EP004/blocking/seg04",
-     "label": " ",
-     "type": "DRAMA_CLI_FILE",
-     "link": 508
-    },
-    {
-     "name": "assets/props/black_handbag",
-     "label": " ",
-     "type": "DRAMA_CLI_FILE",
-     "link": 509
-    },
-    {
-     "name": "assets/props/grocery_bag",
-     "label": " ",
-     "type": "DRAMA_CLI_FILE",
-     "link": 510
-    }
-   ],
-   "outputs": [
-    {
-     "name": "file",
-     "label": " ",
-     "type": "DRAMA_CLI_FILE",
-     "links": [
-      534
-     ]
-    }
-   ],
-   "properties": {
-    "id": "episodes/EP004/multi_panel_storyboard/seg04/line-art",
-    "kind": "storyboard",
-    "column": 4,
-    "version": "v1",
-    "accepted": "v1",
-    "fresh": true,
-    "shows": "episodes/EP004/multi_panel_storyboard/seg04/line-art/v1/image-1.jpg",
-    "reads": [
-     "bible",
-     "episodes/EP004/breakdown"
-    ],
-    "problems": [],
-    "label": "EP004 seg04 line-art",
-    "section": "EP004 seg04"
-   }
-  },
-  {
-   "id": 180,
-   "type": "DramaCliStep",
-   "title": "EP004 seg04 photoreal",
-   "pos": [
-    1540,
-    9670
-   ],
-   "size": [
-    300,
-    340
-   ],
-   "flags": {},
-   "order": 179,
+   "order": 180,
    "mode": 0,
    "inputs": [
     {
@@ -11276,6 +11324,92 @@
      "name": "file",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
+     "links": [
+      541
+     ]
+    }
+   ],
+   "properties": {
+    "id": "episodes/EP004/multi_panel_storyboard/seg04/line-art",
+    "kind": "storyboard",
+    "column": 4,
+    "version": "v1",
+    "accepted": "v1",
+    "fresh": true,
+    "shows": "episodes/EP004/multi_panel_storyboard/seg04/line-art/v1/image-1.jpg",
+    "reads": [
+     "bible",
+     "episodes/EP004/breakdown"
+    ],
+    "problems": [],
+    "label": "EP004 seg04 line-art",
+    "section": "EP004 seg04"
+   }
+  },
+  {
+   "id": 182,
+   "type": "DramaCliStep",
+   "title": "EP004 seg04 photoreal",
+   "pos": [
+    1540,
+    9670
+   ],
+   "size": [
+    300,
+    340
+   ],
+   "flags": {},
+   "order": 181,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "assets/characters/lu_shaoze/states/S1",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 518
+    },
+    {
+     "name": "assets/characters/ji_ran/states/S3",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 519
+    },
+    {
+     "name": "assets/characters/lin_qingyu/states/S2",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 520
+    },
+    {
+     "name": "assets/scenes/apartment_entrance",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 521
+    },
+    {
+     "name": "episodes/EP004/blocking/seg04",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 522
+    },
+    {
+     "name": "assets/props/black_handbag",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 523
+    },
+    {
+     "name": "assets/props/grocery_bag",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 524
+    }
+   ],
+   "outputs": [
+    {
+     "name": "file",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
      "links": []
     }
    ],
@@ -11297,7 +11431,7 @@
    }
   },
   {
-   "id": 181,
+   "id": 183,
    "type": "DramaCliStep",
    "title": "EP004 seg01 take",
    "pos": [
@@ -11309,44 +11443,44 @@
     340
    ],
    "flags": {},
-   "order": 180,
+   "order": 182,
    "mode": 0,
    "inputs": [
     {
      "name": "episodes/EP004/multi_panel_storyboard/seg01/line-art",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 518
+     "link": 525
     },
     {
      "name": "assets/scenes/apartment_entrance/times/Night",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 519
+     "link": 526
     },
     {
      "name": "episodes/EP004/blocking/seg01",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 520
+     "link": 527
     },
     {
      "name": "assets/props/black_handbag",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 521
+     "link": 528
     },
     {
      "name": "assets/characters/lu_shaoze/states/S1",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 522
+     "link": 529
     },
     {
      "name": "assets/characters/ji_ran/states/S3",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 523
+     "link": 530
     }
    ],
    "outputs": [
@@ -11376,7 +11510,7 @@
    }
   },
   {
-   "id": 182,
+   "id": 184,
    "type": "DramaCliStep",
    "title": "EP004 video prompts",
    "pos": [
@@ -11390,92 +11524,92 @@
    "flags": {
     "collapsed": true
    },
-   "order": 181,
+   "order": 183,
    "mode": 0,
    "inputs": [
     {
      "name": "episodes/EP004/multi_panel_storyboard/seg01/line-art",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 524
+     "link": 531
     },
     {
      "name": "assets/scenes/apartment_entrance/times/Night",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 525
+     "link": 532
     },
     {
      "name": "episodes/EP004/blocking/seg01",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 526
+     "link": 533
     },
     {
      "name": "assets/props/black_handbag",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 527
+     "link": 534
     },
     {
      "name": "assets/characters/lu_shaoze/states/S1",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 528
+     "link": 535
     },
     {
      "name": "assets/characters/ji_ran/states/S3",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 529
+     "link": 536
     },
     {
      "name": "episodes/EP004/multi_panel_storyboard/seg02/line-art",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 530
+     "link": 537
     },
     {
      "name": "episodes/EP004/blocking/seg02",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 531
+     "link": 538
     },
     {
      "name": "episodes/EP004/multi_panel_storyboard/seg03/line-art",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 532
+     "link": 539
     },
     {
      "name": "episodes/EP004/blocking/seg03",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 533
+     "link": 540
     },
     {
      "name": "episodes/EP004/multi_panel_storyboard/seg04/line-art",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 534
+     "link": 541
     },
     {
      "name": "episodes/EP004/blocking/seg04",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 535
+     "link": 542
     },
     {
      "name": "assets/props/grocery_bag",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 536
+     "link": 543
     },
     {
      "name": "assets/characters/lin_qingyu/states/S2",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 537
+     "link": 544
     }
    ],
    "outputs": [
@@ -11504,7 +11638,7 @@
    }
   },
   {
-   "id": 183,
+   "id": 185,
    "type": "DramaCliStep",
    "title": "EP005 seg01 blocking",
    "pos": [
@@ -11516,32 +11650,32 @@
     340
    ],
    "flags": {},
-   "order": 182,
+   "order": 184,
    "mode": 0,
    "inputs": [
     {
      "name": "assets/scenes/apartment_corridor",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 538
+     "link": 545
     },
     {
      "name": "assets/characters/lu_shaoze/states/S1",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 539
+     "link": 546
     },
     {
      "name": "assets/characters/lin_qingyu/states/S2",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 540
+     "link": 547
     },
     {
      "name": "assets/characters/ji_ran/states/S3",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 541
+     "link": 548
     }
    ],
    "outputs": [
@@ -11550,10 +11684,10 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      557,
-      564,
-      607,
-      622
+      567,
+      574,
+      617,
+      632
      ]
     }
    ],
@@ -11575,7 +11709,7 @@
    }
   },
   {
-   "id": 184,
+   "id": 186,
    "type": "DramaCliStep",
    "title": "EP005 seg02 blocking",
    "pos": [
@@ -11587,32 +11721,32 @@
     340
    ],
    "flags": {},
-   "order": 183,
+   "order": 185,
    "mode": 0,
    "inputs": [
     {
      "name": "assets/scenes/apartment_corridor",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 542
+     "link": 549
     },
     {
      "name": "assets/characters/lin_qingyu/states/S2",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 543
+     "link": 550
     },
     {
      "name": "assets/characters/ji_ran/states/S3",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 544
+     "link": 551
     },
     {
      "name": "assets/characters/lu_shaoze/states/S1",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 545
+     "link": 552
     }
    ],
    "outputs": [
@@ -11621,9 +11755,9 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      571,
-      578,
-      629
+      581,
+      588,
+      639
      ]
     }
    ],
@@ -11645,7 +11779,7 @@
    }
   },
   {
-   "id": 185,
+   "id": 187,
    "type": "DramaCliStep",
    "title": "EP005 seg03 blocking",
    "pos": [
@@ -11657,32 +11791,32 @@
     340
    ],
    "flags": {},
-   "order": 184,
+   "order": 186,
    "mode": 0,
    "inputs": [
     {
      "name": "assets/scenes/apartment_corridor",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 546
+     "link": 553
     },
     {
      "name": "assets/characters/lin_qingyu/states/S2",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 547
+     "link": 554
     },
     {
      "name": "assets/characters/lu_shaoze/states/S1",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 548
+     "link": 555
     },
     {
      "name": "assets/characters/ji_ran/states/S3",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 549
+     "link": 556
     }
    ],
    "outputs": [
@@ -11691,9 +11825,9 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      585,
-      592,
-      631
+      595,
+      602,
+      641
      ]
     }
    ],
@@ -11715,7 +11849,7 @@
    }
   },
   {
-   "id": 186,
+   "id": 188,
    "type": "DramaCliStep",
    "title": "EP005 seg05 blocking",
    "pos": [
@@ -11727,26 +11861,26 @@
     340
    ],
    "flags": {},
-   "order": 185,
+   "order": 187,
    "mode": 0,
    "inputs": [
     {
      "name": "assets/scenes/ji_ran_living_room",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 550
+     "link": 557
     },
     {
      "name": "assets/characters/lin_qingyu/states/S2",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 551
+     "link": 558
     },
     {
      "name": "assets/characters/ji_ran/states/S3",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 552
+     "link": 559
     }
    ],
    "outputs": [
@@ -11755,10 +11889,10 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      600,
-      604,
-      617,
-      636
+      610,
+      614,
+      627,
+      646
      ]
     }
    ],
@@ -11780,7 +11914,7 @@
    }
   },
   {
-   "id": 187,
+   "id": 189,
    "type": "DramaCliStep",
    "title": "EP005 breakdown",
    "pos": [
@@ -11794,7 +11928,7 @@
    "flags": {
     "collapsed": true
    },
-   "order": 186,
+   "order": 188,
    "mode": 0,
    "inputs": [],
    "outputs": [
@@ -11822,7 +11956,64 @@
    }
   },
   {
-   "id": 188,
+   "id": 190,
+   "type": "DramaCliStep",
+   "title": "EP005 cut",
+   "pos": [
+    2360,
+    1190
+   ],
+   "size": [
+    300,
+    340
+   ],
+   "flags": {},
+   "order": 189,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "episodes/EP005/segments/seg01",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 560
+    },
+    {
+     "name": "episodes/EP005/segments/seg04",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 561
+    },
+    {
+     "name": "episodes/EP005/segments/seg05",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "link": 562
+    }
+   ],
+   "outputs": [
+    {
+     "name": "file",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "links": []
+    }
+   ],
+   "properties": {
+    "id": "episodes/EP005/edit",
+    "kind": "cut",
+    "column": 7,
+    "version": "v1",
+    "accepted": null,
+    "fresh": true,
+    "shows": "episodes/EP005/edit/v1/cut.mp4",
+    "reads": [],
+    "problems": [],
+    "label": "EP005 cut",
+    "section": "EP005 cut"
+   }
+  },
+  {
+   "id": 191,
    "type": "DramaCliStep",
    "title": "EP005 seg01 line-art",
    "pos": [
@@ -11834,50 +12025,50 @@
     340
    ],
    "flags": {},
-   "order": 187,
+   "order": 190,
    "mode": 0,
    "inputs": [
     {
      "name": "assets/characters/lu_shaoze/states/S1",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 553
+     "link": 563
     },
     {
      "name": "assets/characters/lin_qingyu/states/S2",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 554
+     "link": 564
     },
     {
      "name": "assets/characters/ji_ran/states/S3",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 555
+     "link": 565
     },
     {
      "name": "assets/scenes/apartment_corridor",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 556
+     "link": 566
     },
     {
      "name": "episodes/EP005/blocking/seg01",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 557
+     "link": 567
     },
     {
      "name": "assets/props/grocery_bag",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 558
+     "link": 568
     },
     {
      "name": "assets/props/black_handbag",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 559
+     "link": 569
     }
    ],
    "outputs": [
@@ -11886,8 +12077,8 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      605,
-      620
+      615,
+      630
      ]
     }
    ],
@@ -11909,7 +12100,7 @@
    }
   },
   {
-   "id": 189,
+   "id": 192,
    "type": "DramaCliStep",
    "title": "EP005 seg01 photoreal",
    "pos": [
@@ -11921,50 +12112,50 @@
     340
    ],
    "flags": {},
-   "order": 188,
+   "order": 191,
    "mode": 0,
    "inputs": [
     {
      "name": "assets/characters/lu_shaoze/states/S1",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 560
+     "link": 570
     },
     {
      "name": "assets/characters/lin_qingyu/states/S2",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 561
+     "link": 571
     },
     {
      "name": "assets/characters/ji_ran/states/S3",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 562
+     "link": 572
     },
     {
      "name": "assets/scenes/apartment_corridor",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 563
+     "link": 573
     },
     {
      "name": "episodes/EP005/blocking/seg01",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 564
+     "link": 574
     },
     {
      "name": "assets/props/grocery_bag",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 565
+     "link": 575
     },
     {
      "name": "assets/props/black_handbag",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 566
+     "link": 576
     }
    ],
    "outputs": [
@@ -11993,7 +12184,7 @@
    }
   },
   {
-   "id": 190,
+   "id": 193,
    "type": "DramaCliStep",
    "title": "EP005 seg02 line-art",
    "pos": [
@@ -12005,50 +12196,50 @@
     340
    ],
    "flags": {},
-   "order": 189,
+   "order": 192,
    "mode": 0,
    "inputs": [
     {
      "name": "assets/characters/lin_qingyu/states/S2",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 567
+     "link": 577
     },
     {
      "name": "assets/characters/ji_ran/states/S3",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 568
+     "link": 578
     },
     {
      "name": "assets/characters/lu_shaoze/states/S1",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 569
+     "link": 579
     },
     {
      "name": "assets/scenes/apartment_corridor",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 570
+     "link": 580
     },
     {
      "name": "episodes/EP005/blocking/seg02",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 571
+     "link": 581
     },
     {
      "name": "assets/props/grocery_bag",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 572
+     "link": 582
     },
     {
      "name": "assets/props/black_handbag",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 573
+     "link": 583
     }
    ],
    "outputs": [
@@ -12057,7 +12248,7 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      628
+      638
      ]
     }
    ],
@@ -12079,7 +12270,7 @@
    }
   },
   {
-   "id": 191,
+   "id": 194,
    "type": "DramaCliStep",
    "title": "EP005 seg02 photoreal",
    "pos": [
@@ -12091,50 +12282,50 @@
     340
    ],
    "flags": {},
-   "order": 190,
+   "order": 193,
    "mode": 0,
    "inputs": [
     {
      "name": "assets/characters/lin_qingyu/states/S2",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 574
+     "link": 584
     },
     {
      "name": "assets/characters/ji_ran/states/S3",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 575
+     "link": 585
     },
     {
      "name": "assets/characters/lu_shaoze/states/S1",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 576
+     "link": 586
     },
     {
      "name": "assets/scenes/apartment_corridor",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 577
+     "link": 587
     },
     {
      "name": "episodes/EP005/blocking/seg02",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 578
+     "link": 588
     },
     {
      "name": "assets/props/grocery_bag",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 579
+     "link": 589
     },
     {
      "name": "assets/props/black_handbag",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 580
+     "link": 590
     }
    ],
    "outputs": [
@@ -12163,7 +12354,7 @@
    }
   },
   {
-   "id": 192,
+   "id": 195,
    "type": "DramaCliStep",
    "title": "EP005 seg03 line-art",
    "pos": [
@@ -12175,50 +12366,50 @@
     340
    ],
    "flags": {},
-   "order": 191,
+   "order": 194,
    "mode": 0,
    "inputs": [
     {
      "name": "assets/characters/lin_qingyu/states/S2",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 581
+     "link": 591
     },
     {
      "name": "assets/characters/lu_shaoze/states/S1",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 582
+     "link": 592
     },
     {
      "name": "assets/characters/ji_ran/states/S3",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 583
+     "link": 593
     },
     {
      "name": "assets/scenes/apartment_corridor",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 584
+     "link": 594
     },
     {
      "name": "episodes/EP005/blocking/seg03",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 585
+     "link": 595
     },
     {
      "name": "assets/props/grocery_bag",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 586
+     "link": 596
     },
     {
      "name": "assets/props/black_handbag",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 587
+     "link": 597
     }
    ],
    "outputs": [
@@ -12227,7 +12418,7 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      630
+      640
      ]
     }
    ],
@@ -12249,7 +12440,7 @@
    }
   },
   {
-   "id": 193,
+   "id": 196,
    "type": "DramaCliStep",
    "title": "EP005 seg03 photoreal",
    "pos": [
@@ -12261,50 +12452,50 @@
     340
    ],
    "flags": {},
-   "order": 192,
+   "order": 195,
    "mode": 0,
    "inputs": [
     {
      "name": "assets/characters/lin_qingyu/states/S2",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 588
+     "link": 598
     },
     {
      "name": "assets/characters/lu_shaoze/states/S1",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 589
+     "link": 599
     },
     {
      "name": "assets/characters/ji_ran/states/S3",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 590
+     "link": 600
     },
     {
      "name": "assets/scenes/apartment_corridor",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 591
+     "link": 601
     },
     {
      "name": "episodes/EP005/blocking/seg03",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 592
+     "link": 602
     },
     {
      "name": "assets/props/grocery_bag",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 593
+     "link": 603
     },
     {
      "name": "assets/props/black_handbag",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 594
+     "link": 604
     }
    ],
    "outputs": [
@@ -12333,7 +12524,7 @@
    }
   },
   {
-   "id": 194,
+   "id": 197,
    "type": "DramaCliStep",
    "title": "EP005 seg04 line-art",
    "pos": [
@@ -12345,14 +12536,14 @@
     340
    ],
    "flags": {},
-   "order": 193,
+   "order": 196,
    "mode": 0,
    "inputs": [
     {
      "name": "assets/scenes/city_road",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 595
+     "link": 605
     }
    ],
    "outputs": [
@@ -12361,8 +12552,8 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      613,
-      632
+      623,
+      642
      ]
     }
    ],
@@ -12384,7 +12575,7 @@
    }
   },
   {
-   "id": 195,
+   "id": 198,
    "type": "DramaCliStep",
    "title": "EP005 seg04 photoreal",
    "pos": [
@@ -12396,14 +12587,14 @@
     340
    ],
    "flags": {},
-   "order": 194,
+   "order": 197,
    "mode": 0,
    "inputs": [
     {
      "name": "assets/scenes/city_road",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 596
+     "link": 606
     }
    ],
    "outputs": [
@@ -12432,7 +12623,7 @@
    }
   },
   {
-   "id": 196,
+   "id": 199,
    "type": "DramaCliStep",
    "title": "EP005 seg05 line-art",
    "pos": [
@@ -12444,32 +12635,32 @@
     340
    ],
    "flags": {},
-   "order": 195,
+   "order": 198,
    "mode": 0,
    "inputs": [
     {
      "name": "assets/characters/lin_qingyu/states/S2",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 597
+     "link": 607
     },
     {
      "name": "assets/characters/ji_ran/states/S3",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 598
+     "link": 608
     },
     {
      "name": "assets/scenes/ji_ran_living_room",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 599
+     "link": 609
     },
     {
      "name": "episodes/EP005/blocking/seg05",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 600
+     "link": 610
     }
    ],
    "outputs": [
@@ -12478,8 +12669,8 @@
      "label": " ",
      "type": "DRAMA_CLI_FILE",
      "links": [
-      615,
-      634
+      625,
+      644
      ]
     }
    ],
@@ -12501,7 +12692,7 @@
    }
   },
   {
-   "id": 197,
+   "id": 200,
    "type": "DramaCliStep",
    "title": "EP005 seg05 photoreal",
    "pos": [
@@ -12513,32 +12704,32 @@
     340
    ],
    "flags": {},
-   "order": 196,
+   "order": 199,
    "mode": 0,
    "inputs": [
     {
      "name": "assets/characters/lin_qingyu/states/S2",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 601
+     "link": 611
     },
     {
      "name": "assets/characters/ji_ran/states/S3",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 602
+     "link": 612
     },
     {
      "name": "assets/scenes/ji_ran_living_room",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 603
+     "link": 613
     },
     {
      "name": "episodes/EP005/blocking/seg05",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 604
+     "link": 614
     }
    ],
    "outputs": [
@@ -12567,7 +12758,7 @@
    }
   },
   {
-   "id": 198,
+   "id": 201,
    "type": "DramaCliStep",
    "title": "EP005 seg01 take",
    "pos": [
@@ -12579,56 +12770,56 @@
     340
    ],
    "flags": {},
-   "order": 197,
+   "order": 200,
    "mode": 0,
    "inputs": [
     {
      "name": "episodes/EP005/multi_panel_storyboard/seg01/line-art",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 605
+     "link": 615
     },
     {
      "name": "assets/scenes/apartment_corridor/times/Night",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 606
+     "link": 616
     },
     {
      "name": "episodes/EP005/blocking/seg01",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 607
+     "link": 617
     },
     {
      "name": "assets/props/grocery_bag",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 608
+     "link": 618
     },
     {
      "name": "assets/props/black_handbag",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 609
+     "link": 619
     },
     {
      "name": "assets/characters/lu_shaoze/states/S1",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 610
+     "link": 620
     },
     {
      "name": "assets/characters/lin_qingyu/states/S2",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 611
+     "link": 621
     },
     {
      "name": "assets/characters/ji_ran/states/S3",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 612
+     "link": 622
     }
    ],
    "outputs": [
@@ -12636,7 +12827,9 @@
      "name": "file",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "links": []
+     "links": [
+      560
+     ]
     }
    ],
    "properties": {
@@ -12658,7 +12851,7 @@
    }
   },
   {
-   "id": 199,
+   "id": 202,
    "type": "DramaCliStep",
    "title": "EP005 seg04 take",
    "pos": [
@@ -12670,20 +12863,20 @@
     340
    ],
    "flags": {},
-   "order": 198,
+   "order": 201,
    "mode": 0,
    "inputs": [
     {
      "name": "episodes/EP005/multi_panel_storyboard/seg04/line-art",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 613
+     "link": 623
     },
     {
      "name": "assets/scenes/city_road/times/Night",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 614
+     "link": 624
     }
    ],
    "outputs": [
@@ -12691,7 +12884,9 @@
      "name": "file",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "links": []
+     "links": [
+      561
+     ]
     }
    ],
    "properties": {
@@ -12713,7 +12908,7 @@
    }
   },
   {
-   "id": 200,
+   "id": 203,
    "type": "DramaCliStep",
    "title": "EP005 seg05 take",
    "pos": [
@@ -12725,38 +12920,38 @@
     340
    ],
    "flags": {},
-   "order": 199,
+   "order": 202,
    "mode": 0,
    "inputs": [
     {
      "name": "episodes/EP005/multi_panel_storyboard/seg05/line-art",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 615
+     "link": 625
     },
     {
      "name": "assets/scenes/ji_ran_living_room/times/Night",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 616
+     "link": 626
     },
     {
      "name": "episodes/EP005/blocking/seg05",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 617
+     "link": 627
     },
     {
      "name": "assets/characters/lin_qingyu/states/S2",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 618
+     "link": 628
     },
     {
      "name": "assets/characters/ji_ran/states/S3",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 619
+     "link": 629
     }
    ],
    "outputs": [
@@ -12764,7 +12959,9 @@
      "name": "file",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "links": []
+     "links": [
+      562
+     ]
     }
    ],
    "properties": {
@@ -12786,7 +12983,7 @@
    }
   },
   {
-   "id": 201,
+   "id": 204,
    "type": "DramaCliStep",
    "title": "EP005 video prompts",
    "pos": [
@@ -12800,110 +12997,110 @@
    "flags": {
     "collapsed": true
    },
-   "order": 200,
+   "order": 203,
    "mode": 0,
    "inputs": [
     {
      "name": "episodes/EP005/multi_panel_storyboard/seg01/line-art",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 620
+     "link": 630
     },
     {
      "name": "assets/scenes/apartment_corridor/times/Night",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 621
+     "link": 631
     },
     {
      "name": "episodes/EP005/blocking/seg01",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 622
+     "link": 632
     },
     {
      "name": "assets/props/grocery_bag",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 623
+     "link": 633
     },
     {
      "name": "assets/props/black_handbag",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 624
+     "link": 634
     },
     {
      "name": "assets/characters/lu_shaoze/states/S1",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 625
+     "link": 635
     },
     {
      "name": "assets/characters/lin_qingyu/states/S2",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 626
+     "link": 636
     },
     {
      "name": "assets/characters/ji_ran/states/S3",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 627
+     "link": 637
     },
     {
      "name": "episodes/EP005/multi_panel_storyboard/seg02/line-art",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 628
+     "link": 638
     },
     {
      "name": "episodes/EP005/blocking/seg02",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 629
+     "link": 639
     },
     {
      "name": "episodes/EP005/multi_panel_storyboard/seg03/line-art",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 630
+     "link": 640
     },
     {
      "name": "episodes/EP005/blocking/seg03",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 631
+     "link": 641
     },
     {
      "name": "episodes/EP005/multi_panel_storyboard/seg04/line-art",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 632
+     "link": 642
     },
     {
      "name": "assets/scenes/city_road/times/Night",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 633
+     "link": 643
     },
     {
      "name": "episodes/EP005/multi_panel_storyboard/seg05/line-art",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 634
+     "link": 644
     },
     {
      "name": "assets/scenes/ji_ran_living_room/times/Night",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 635
+     "link": 645
     },
     {
      "name": "episodes/EP005/blocking/seg05",
      "label": " ",
      "type": "DRAMA_CLI_FILE",
-     "link": 636
+     "link": 646
     }
    ],
    "outputs": [
@@ -12932,7 +13129,7 @@
    }
   },
   {
-   "id": 202,
+   "id": 205,
    "type": "DramaCliStep",
    "title": "screenplay",
    "pos": [
@@ -12946,7 +13143,7 @@
    "flags": {
     "collapsed": true
    },
-   "order": 201,
+   "order": 204,
    "mode": 0,
    "inputs": [],
    "outputs": [
@@ -14511,7 +14708,7 @@
   ],
   [
    193,
-   110,
+   140,
    0,
    124,
    0,
@@ -14519,7 +14716,7 @@
   ],
   [
    194,
-   119,
+   141,
    0,
    124,
    1,
@@ -14527,7 +14724,7 @@
   ],
   [
    195,
-   16,
+   142,
    0,
    124,
    2,
@@ -14535,42 +14732,42 @@
   ],
   [
    196,
-   5,
+   143,
+   0,
+   124,
+   3,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   197,
+   144,
+   0,
+   124,
+   4,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   198,
+   110,
    0,
    125,
    0,
    "DRAMA_CLI_FILE"
   ],
   [
-   197,
-   82,
+   199,
+   119,
    0,
    125,
    1,
    "DRAMA_CLI_FILE"
   ],
   [
-   198,
-   116,
+   200,
+   16,
    0,
    125,
    2,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   199,
-   25,
-   0,
-   125,
-   3,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   200,
-   19,
-   0,
-   125,
-   4,
    "DRAMA_CLI_FILE"
   ],
   [
@@ -14615,7 +14812,7 @@
   ],
   [
    206,
-   12,
+   5,
    0,
    127,
    0,
@@ -14623,7 +14820,7 @@
   ],
   [
    207,
-   4,
+   82,
    0,
    127,
    1,
@@ -14631,7 +14828,7 @@
   ],
   [
    208,
-   6,
+   116,
    0,
    127,
    2,
@@ -14639,7 +14836,7 @@
   ],
   [
    209,
-   60,
+   25,
    0,
    127,
    3,
@@ -14647,7 +14844,7 @@
   ],
   [
    210,
-   117,
+   19,
    0,
    127,
    4,
@@ -14655,14 +14852,6 @@
   ],
   [
    211,
-   20,
-   0,
-   127,
-   5,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   212,
    12,
    0,
    128,
@@ -14670,7 +14859,7 @@
    "DRAMA_CLI_FILE"
   ],
   [
-   213,
+   212,
    4,
    0,
    128,
@@ -14678,7 +14867,7 @@
    "DRAMA_CLI_FILE"
   ],
   [
-   214,
+   213,
    6,
    0,
    128,
@@ -14686,7 +14875,7 @@
    "DRAMA_CLI_FILE"
   ],
   [
-   215,
+   214,
    60,
    0,
    128,
@@ -14694,7 +14883,7 @@
    "DRAMA_CLI_FILE"
   ],
   [
-   216,
+   215,
    117,
    0,
    128,
@@ -14702,7 +14891,7 @@
    "DRAMA_CLI_FILE"
   ],
   [
-   217,
+   216,
    20,
    0,
    128,
@@ -14710,43 +14899,51 @@
    "DRAMA_CLI_FILE"
   ],
   [
-   218,
-   5,
+   217,
+   12,
    0,
    129,
    0,
    "DRAMA_CLI_FILE"
   ],
   [
-   219,
-   82,
+   218,
+   4,
    0,
    129,
    1,
    "DRAMA_CLI_FILE"
   ],
   [
-   220,
-   118,
+   219,
+   6,
    0,
    129,
    2,
    "DRAMA_CLI_FILE"
   ],
   [
-   221,
-   19,
+   220,
+   60,
    0,
    129,
    3,
    "DRAMA_CLI_FILE"
   ],
   [
-   222,
-   25,
+   221,
+   117,
    0,
    129,
    4,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   222,
+   20,
+   0,
+   129,
+   5,
    "DRAMA_CLI_FILE"
   ],
   [
@@ -14791,7 +14988,7 @@
   ],
   [
    228,
-   16,
+   5,
    0,
    131,
    0,
@@ -14799,7 +14996,7 @@
   ],
   [
    229,
-   104,
+   82,
    0,
    131,
    1,
@@ -14807,7 +15004,7 @@
   ],
   [
    230,
-   119,
+   118,
    0,
    131,
    2,
@@ -14815,7 +15012,7 @@
   ],
   [
    231,
-   26,
+   19,
    0,
    131,
    3,
@@ -14823,6 +15020,14 @@
   ],
   [
    232,
+   25,
+   0,
+   131,
+   4,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   233,
    16,
    0,
    132,
@@ -14830,7 +15035,7 @@
    "DRAMA_CLI_FILE"
   ],
   [
-   233,
+   234,
    104,
    0,
    132,
@@ -14838,7 +15043,7 @@
    "DRAMA_CLI_FILE"
   ],
   [
-   234,
+   235,
    119,
    0,
    132,
@@ -14846,7 +15051,7 @@
    "DRAMA_CLI_FILE"
   ],
   [
-   235,
+   236,
    26,
    0,
    132,
@@ -14854,31 +15059,31 @@
    "DRAMA_CLI_FILE"
   ],
   [
-   236,
+   237,
    16,
    0,
    133,
    0,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   237,
-   104,
-   0,
-   133,
-   1,
    "DRAMA_CLI_FILE"
   ],
   [
    238,
-   120,
+   104,
+   0,
+   133,
+   1,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   239,
+   119,
    0,
    133,
    2,
    "DRAMA_CLI_FILE"
   ],
   [
-   239,
+   240,
    26,
    0,
    133,
@@ -14886,7 +15091,7 @@
    "DRAMA_CLI_FILE"
   ],
   [
-   240,
+   241,
    16,
    0,
    134,
@@ -14894,7 +15099,7 @@
    "DRAMA_CLI_FILE"
   ],
   [
-   241,
+   242,
    104,
    0,
    134,
@@ -14902,7 +15107,7 @@
    "DRAMA_CLI_FILE"
   ],
   [
-   242,
+   243,
    120,
    0,
    134,
@@ -14910,7 +15115,7 @@
    "DRAMA_CLI_FILE"
   ],
   [
-   243,
+   244,
    26,
    0,
    134,
@@ -14918,19 +15123,11 @@
    "DRAMA_CLI_FILE"
   ],
   [
-   244,
+   245,
    16,
    0,
    135,
    0,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   245,
-   9,
-   0,
-   135,
-   1,
    "DRAMA_CLI_FILE"
   ],
   [
@@ -14938,15 +15135,15 @@
    104,
    0,
    135,
-   2,
+   1,
    "DRAMA_CLI_FILE"
   ],
   [
    247,
-   121,
+   120,
    0,
    135,
-   3,
+   2,
    "DRAMA_CLI_FILE"
   ],
   [
@@ -14954,19 +15151,11 @@
    26,
    0,
    135,
-   4,
+   3,
    "DRAMA_CLI_FILE"
   ],
   [
    249,
-   23,
-   0,
-   135,
-   5,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   250,
    16,
    0,
    136,
@@ -14974,7 +15163,7 @@
    "DRAMA_CLI_FILE"
   ],
   [
-   251,
+   250,
    9,
    0,
    136,
@@ -14982,7 +15171,7 @@
    "DRAMA_CLI_FILE"
   ],
   [
-   252,
+   251,
    104,
    0,
    136,
@@ -14990,7 +15179,7 @@
    "DRAMA_CLI_FILE"
   ],
   [
-   253,
+   252,
    121,
    0,
    136,
@@ -14998,7 +15187,7 @@
    "DRAMA_CLI_FILE"
   ],
   [
-   254,
+   253,
    26,
    0,
    136,
@@ -15006,11 +15195,19 @@
    "DRAMA_CLI_FILE"
   ],
   [
-   255,
+   254,
    23,
    0,
    136,
    5,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   255,
+   16,
+   0,
+   137,
+   0,
    "DRAMA_CLI_FILE"
   ],
   [
@@ -15018,35 +15215,43 @@
    9,
    0,
    137,
-   0,
+   1,
    "DRAMA_CLI_FILE"
   ],
   [
    257,
-   93,
+   104,
    0,
    137,
-   1,
+   2,
    "DRAMA_CLI_FILE"
   ],
   [
    258,
-   122,
-   0,
-   137,
-   2,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   259,
-   24,
+   121,
    0,
    137,
    3,
    "DRAMA_CLI_FILE"
   ],
   [
+   259,
+   26,
+   0,
+   137,
+   4,
+   "DRAMA_CLI_FILE"
+  ],
+  [
    260,
+   23,
+   0,
+   137,
+   5,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   261,
    9,
    0,
    138,
@@ -15054,7 +15259,7 @@
    "DRAMA_CLI_FILE"
   ],
   [
-   261,
+   262,
    93,
    0,
    138,
@@ -15062,264 +15267,256 @@
    "DRAMA_CLI_FILE"
   ],
   [
-   262,
+   263,
    122,
    0,
    138,
    2,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   263,
-   24,
-   0,
-   138,
-   3,
    "DRAMA_CLI_FILE"
   ],
   [
    264,
-   125,
+   24,
    0,
-   139,
-   0,
+   138,
+   3,
    "DRAMA_CLI_FILE"
   ],
   [
    265,
-   88,
+   9,
    0,
    139,
-   1,
+   0,
    "DRAMA_CLI_FILE"
   ],
   [
    266,
-   116,
+   93,
    0,
    139,
-   2,
+   1,
    "DRAMA_CLI_FILE"
   ],
   [
    267,
-   25,
+   122,
    0,
    139,
-   3,
+   2,
    "DRAMA_CLI_FILE"
   ],
   [
    268,
-   19,
+   24,
    0,
    139,
-   4,
+   3,
    "DRAMA_CLI_FILE"
   ],
   [
    269,
-   5,
+   126,
    0,
-   139,
-   5,
+   140,
+   0,
    "DRAMA_CLI_FILE"
   ],
   [
    270,
-   127,
+   88,
    0,
    140,
-   0,
+   1,
    "DRAMA_CLI_FILE"
   ],
   [
    271,
-   66,
+   116,
    0,
    140,
-   1,
+   2,
    "DRAMA_CLI_FILE"
   ],
   [
    272,
-   117,
+   25,
    0,
    140,
-   2,
+   3,
    "DRAMA_CLI_FILE"
   ],
   [
    273,
-   20,
+   19,
    0,
    140,
-   3,
+   4,
    "DRAMA_CLI_FILE"
   ],
   [
    274,
-   12,
+   5,
    0,
    140,
-   4,
+   5,
    "DRAMA_CLI_FILE"
   ],
   [
    275,
-   4,
+   128,
    0,
-   140,
-   5,
+   141,
+   0,
    "DRAMA_CLI_FILE"
   ],
   [
    276,
-   6,
+   66,
    0,
-   140,
-   6,
+   141,
+   1,
    "DRAMA_CLI_FILE"
   ],
   [
    277,
-   129,
+   117,
    0,
    141,
-   0,
+   2,
    "DRAMA_CLI_FILE"
   ],
   [
    278,
-   88,
+   20,
    0,
    141,
-   1,
+   3,
    "DRAMA_CLI_FILE"
   ],
   [
    279,
-   118,
+   12,
    0,
    141,
-   2,
+   4,
    "DRAMA_CLI_FILE"
   ],
   [
    280,
-   19,
+   4,
    0,
    141,
-   3,
+   5,
    "DRAMA_CLI_FILE"
   ],
   [
    281,
-   25,
+   6,
    0,
    141,
-   4,
+   6,
    "DRAMA_CLI_FILE"
   ],
   [
    282,
-   5,
+   130,
    0,
-   141,
-   5,
+   142,
+   0,
    "DRAMA_CLI_FILE"
   ],
   [
    283,
-   131,
-   0,
-   142,
-   0,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   284,
-   110,
+   88,
    0,
    142,
    1,
    "DRAMA_CLI_FILE"
   ],
   [
-   285,
-   119,
+   284,
+   118,
    0,
    142,
    2,
    "DRAMA_CLI_FILE"
   ],
   [
-   286,
-   26,
+   285,
+   19,
    0,
    142,
    3,
    "DRAMA_CLI_FILE"
   ],
   [
-   287,
-   16,
+   286,
+   25,
    0,
    142,
    4,
    "DRAMA_CLI_FILE"
   ],
   [
-   288,
-   124,
+   287,
+   5,
    0,
    142,
    5,
    "DRAMA_CLI_FILE"
   ],
   [
-   289,
-   137,
+   288,
+   132,
    0,
    143,
    0,
    "DRAMA_CLI_FILE"
   ],
   [
-   290,
-   99,
+   289,
+   110,
    0,
    143,
    1,
    "DRAMA_CLI_FILE"
   ],
   [
-   291,
-   122,
+   290,
+   119,
    0,
    143,
    2,
    "DRAMA_CLI_FILE"
   ],
   [
-   292,
-   24,
+   291,
+   26,
    0,
    143,
    3,
    "DRAMA_CLI_FILE"
   ],
   [
-   293,
-   9,
+   292,
+   16,
    0,
    143,
    4,
    "DRAMA_CLI_FILE"
   ],
   [
-   294,
+   293,
    125,
+   0,
+   143,
+   5,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   294,
+   138,
    0,
    144,
    0,
@@ -15327,7 +15524,7 @@
   ],
   [
    295,
-   88,
+   99,
    0,
    144,
    1,
@@ -15335,7 +15532,7 @@
   ],
   [
    296,
-   116,
+   122,
    0,
    144,
    2,
@@ -15343,7 +15540,7 @@
   ],
   [
    297,
-   25,
+   24,
    0,
    144,
    3,
@@ -15351,7 +15548,7 @@
   ],
   [
    298,
-   19,
+   9,
    0,
    144,
    4,
@@ -15359,266 +15556,266 @@
   ],
   [
    299,
-   5,
+   126,
    0,
-   144,
-   5,
+   145,
+   0,
    "DRAMA_CLI_FILE"
   ],
   [
    300,
-   127,
+   88,
    0,
-   144,
-   6,
+   145,
+   1,
    "DRAMA_CLI_FILE"
   ],
   [
    301,
-   66,
+   116,
    0,
-   144,
-   7,
+   145,
+   2,
    "DRAMA_CLI_FILE"
   ],
   [
    302,
-   117,
+   25,
    0,
-   144,
-   8,
+   145,
+   3,
    "DRAMA_CLI_FILE"
   ],
   [
    303,
-   20,
+   19,
    0,
-   144,
-   9,
+   145,
+   4,
    "DRAMA_CLI_FILE"
   ],
   [
    304,
-   12,
-   0,
-   144,
-   10,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   305,
-   4,
-   0,
-   144,
-   11,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   306,
-   6,
-   0,
-   144,
-   12,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   307,
-   129,
-   0,
-   144,
-   13,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   308,
-   118,
-   0,
-   144,
-   14,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   309,
-   131,
-   0,
-   144,
-   15,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   310,
-   110,
-   0,
-   144,
-   16,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   311,
-   119,
-   0,
-   144,
-   17,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   312,
-   26,
-   0,
-   144,
-   18,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   313,
-   16,
-   0,
-   144,
-   19,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   314,
-   133,
-   0,
-   144,
-   20,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   315,
-   120,
-   0,
-   144,
-   21,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   316,
-   135,
-   0,
-   144,
-   22,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   317,
-   121,
-   0,
-   144,
-   23,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   318,
-   23,
-   0,
-   144,
-   24,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   319,
-   9,
-   0,
-   144,
-   25,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   320,
-   137,
-   0,
-   144,
-   26,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   321,
-   99,
-   0,
-   144,
-   27,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   322,
-   122,
-   0,
-   144,
-   28,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   323,
-   24,
-   0,
-   144,
-   29,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   324,
-   82,
-   0,
-   145,
-   0,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   325,
-   7,
-   0,
-   145,
-   1,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   326,
-   17,
-   0,
-   145,
-   2,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   327,
-   3,
-   0,
-   145,
-   3,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   328,
-   1,
-   0,
-   145,
-   4,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   329,
-   2,
+   5,
    0,
    145,
    5,
    "DRAMA_CLI_FILE"
   ],
   [
-   330,
-   14,
+   305,
+   128,
    0,
    145,
    6,
    "DRAMA_CLI_FILE"
   ],
   [
-   331,
+   306,
+   66,
+   0,
+   145,
+   7,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   307,
+   117,
+   0,
+   145,
+   8,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   308,
+   20,
+   0,
+   145,
+   9,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   309,
+   12,
+   0,
+   145,
+   10,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   310,
+   4,
+   0,
+   145,
+   11,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   311,
+   6,
+   0,
+   145,
+   12,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   312,
+   130,
+   0,
+   145,
+   13,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   313,
+   118,
+   0,
+   145,
+   14,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   314,
+   132,
+   0,
+   145,
+   15,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   315,
+   110,
+   0,
+   145,
+   16,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   316,
+   119,
+   0,
+   145,
+   17,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   317,
+   26,
+   0,
+   145,
+   18,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   318,
+   16,
+   0,
+   145,
+   19,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   319,
+   134,
+   0,
+   145,
+   20,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   320,
+   120,
+   0,
+   145,
+   21,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   321,
+   136,
+   0,
+   145,
+   22,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   322,
+   121,
+   0,
+   145,
+   23,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   323,
+   23,
+   0,
+   145,
+   24,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   324,
+   9,
+   0,
+   145,
+   25,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   325,
+   138,
+   0,
+   145,
+   26,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   326,
+   99,
+   0,
+   145,
+   27,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   327,
+   122,
+   0,
+   145,
+   28,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   328,
+   24,
+   0,
+   145,
+   29,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   329,
    82,
    0,
    146,
    0,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   330,
+   7,
+   0,
+   146,
+   1,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   331,
+   17,
+   0,
+   146,
+   2,
    "DRAMA_CLI_FILE"
   ],
   [
@@ -15626,7 +15823,7 @@
    3,
    0,
    146,
-   1,
+   3,
    "DRAMA_CLI_FILE"
   ],
   [
@@ -15634,7 +15831,7 @@
    1,
    0,
    146,
-   2,
+   4,
    "DRAMA_CLI_FILE"
   ],
   [
@@ -15642,7 +15839,7 @@
    2,
    0,
    146,
-   3,
+   5,
    "DRAMA_CLI_FILE"
   ],
   [
@@ -15650,555 +15847,515 @@
    14,
    0,
    146,
-   4,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   336,
-   7,
-   0,
-   146,
-   5,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   337,
-   17,
-   0,
-   146,
    6,
    "DRAMA_CLI_FILE"
   ],
   [
-   338,
-   10,
+   336,
+   82,
    0,
-   146,
-   7,
+   147,
+   0,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   337,
+   3,
+   0,
+   147,
+   1,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   338,
+   1,
+   0,
+   147,
+   2,
    "DRAMA_CLI_FILE"
   ],
   [
    339,
-   88,
+   2,
    0,
-   148,
-   0,
+   147,
+   3,
    "DRAMA_CLI_FILE"
   ],
   [
    340,
-   145,
+   14,
    0,
-   148,
-   1,
+   147,
+   4,
    "DRAMA_CLI_FILE"
   ],
   [
    341,
    7,
    0,
-   148,
-   2,
+   147,
+   5,
    "DRAMA_CLI_FILE"
   ],
   [
    342,
    17,
    0,
-   148,
-   3,
+   147,
+   6,
    "DRAMA_CLI_FILE"
   ],
   [
    343,
-   3,
+   10,
    0,
-   148,
-   4,
+   147,
+   7,
    "DRAMA_CLI_FILE"
   ],
   [
    344,
-   1,
+   157,
    0,
-   148,
-   5,
+   149,
+   0,
    "DRAMA_CLI_FILE"
   ],
   [
    345,
-   2,
+   158,
    0,
-   148,
-   6,
+   149,
+   1,
    "DRAMA_CLI_FILE"
   ],
   [
    346,
-   14,
+   88,
    0,
-   148,
-   7,
+   150,
+   0,
    "DRAMA_CLI_FILE"
   ],
   [
    347,
-   7,
+   146,
    0,
-   149,
-   0,
+   150,
+   1,
    "DRAMA_CLI_FILE"
   ],
   [
    348,
-   17,
+   7,
    0,
-   149,
-   1,
+   150,
+   2,
    "DRAMA_CLI_FILE"
   ],
   [
    349,
-   3,
+   17,
    0,
-   149,
-   2,
+   150,
+   3,
    "DRAMA_CLI_FILE"
   ],
   [
    350,
-   1,
-   0,
-   149,
    3,
+   0,
+   150,
+   4,
    "DRAMA_CLI_FILE"
   ],
   [
    351,
-   2,
+   1,
    0,
-   149,
-   4,
+   150,
+   5,
    "DRAMA_CLI_FILE"
   ],
   [
    352,
-   14,
+   2,
    0,
-   149,
-   5,
+   150,
+   6,
    "DRAMA_CLI_FILE"
   ],
   [
    353,
-   82,
+   14,
    0,
-   149,
-   6,
+   150,
+   7,
    "DRAMA_CLI_FILE"
   ],
   [
    354,
-   145,
-   0,
-   149,
    7,
+   0,
+   151,
+   0,
    "DRAMA_CLI_FILE"
   ],
   [
    355,
-   21,
+   17,
    0,
-   149,
-   8,
+   151,
+   1,
    "DRAMA_CLI_FILE"
   ],
   [
    356,
-   7,
+   3,
    0,
-   150,
-   0,
+   151,
+   2,
    "DRAMA_CLI_FILE"
   ],
   [
    357,
-   17,
-   0,
-   150,
    1,
+   0,
+   151,
+   3,
    "DRAMA_CLI_FILE"
   ],
   [
    358,
-   3,
-   0,
-   150,
-   2,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   359,
-   1,
-   0,
-   150,
-   3,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   360,
    2,
    0,
-   150,
+   151,
    4,
    "DRAMA_CLI_FILE"
   ],
   [
-   361,
+   359,
    14,
    0,
-   150,
+   151,
    5,
    "DRAMA_CLI_FILE"
   ],
   [
-   362,
+   360,
    82,
    0,
-   150,
+   151,
    6,
    "DRAMA_CLI_FILE"
   ],
   [
-   363,
-   145,
+   361,
+   146,
    0,
-   150,
+   151,
    7,
    "DRAMA_CLI_FILE"
   ],
   [
-   364,
+   362,
    21,
    0,
-   150,
+   151,
    8,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   363,
+   7,
+   0,
+   152,
+   0,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   364,
+   17,
+   0,
+   152,
+   1,
    "DRAMA_CLI_FILE"
   ],
   [
    365,
    3,
    0,
-   151,
-   0,
+   152,
+   2,
    "DRAMA_CLI_FILE"
   ],
   [
    366,
    1,
    0,
-   151,
-   1,
+   152,
+   3,
    "DRAMA_CLI_FILE"
   ],
   [
    367,
    2,
    0,
-   151,
-   2,
+   152,
+   4,
    "DRAMA_CLI_FILE"
   ],
   [
    368,
    14,
    0,
-   151,
-   3,
+   152,
+   5,
    "DRAMA_CLI_FILE"
   ],
   [
    369,
-   15,
+   82,
    0,
-   151,
-   4,
+   152,
+   6,
    "DRAMA_CLI_FILE"
   ],
   [
    370,
-   7,
+   146,
    0,
-   151,
-   5,
+   152,
+   7,
    "DRAMA_CLI_FILE"
   ],
   [
    371,
-   17,
+   21,
    0,
-   151,
-   6,
+   152,
+   8,
    "DRAMA_CLI_FILE"
   ],
   [
    372,
-   10,
-   0,
-   151,
-   7,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   373,
-   82,
-   0,
-   151,
-   8,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   374,
-   146,
-   0,
-   151,
-   9,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   375,
-   21,
-   0,
-   151,
-   10,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   376,
    3,
-   0,
-   152,
-   0,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   377,
-   1,
-   0,
-   152,
-   1,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   378,
-   2,
-   0,
-   152,
-   2,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   379,
-   14,
-   0,
-   152,
-   3,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   380,
-   15,
-   0,
-   152,
-   4,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   381,
-   7,
-   0,
-   152,
-   5,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   382,
-   17,
-   0,
-   152,
-   6,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   383,
-   10,
-   0,
-   152,
-   7,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   384,
-   82,
-   0,
-   152,
-   8,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   385,
-   146,
-   0,
-   152,
-   9,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   386,
-   21,
-   0,
-   152,
-   10,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   387,
-   82,
    0,
    153,
    0,
    "DRAMA_CLI_FILE"
   ],
   [
-   388,
+   373,
+   1,
+   0,
+   153,
+   1,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   374,
+   2,
+   0,
+   153,
+   2,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   375,
+   14,
+   0,
+   153,
+   3,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   376,
+   15,
+   0,
+   153,
+   4,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   377,
+   7,
+   0,
+   153,
+   5,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   378,
+   17,
+   0,
+   153,
+   6,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   379,
+   10,
+   0,
+   153,
+   7,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   380,
    82,
+   0,
+   153,
+   8,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   381,
+   147,
+   0,
+   153,
+   9,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   382,
+   21,
+   0,
+   153,
+   10,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   383,
+   3,
    0,
    154,
    0,
    "DRAMA_CLI_FILE"
   ],
   [
+   384,
+   1,
+   0,
+   154,
+   1,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   385,
+   2,
+   0,
+   154,
+   2,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   386,
+   14,
+   0,
+   154,
+   3,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   387,
+   15,
+   0,
+   154,
+   4,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   388,
+   7,
+   0,
+   154,
+   5,
+   "DRAMA_CLI_FILE"
+  ],
+  [
    389,
-   149,
+   17,
    0,
-   155,
-   0,
+   154,
+   6,
    "DRAMA_CLI_FILE"
   ],
   [
    390,
-   88,
+   10,
    0,
-   155,
-   1,
+   154,
+   7,
    "DRAMA_CLI_FILE"
   ],
   [
    391,
-   145,
+   82,
    0,
-   155,
-   2,
+   154,
+   8,
    "DRAMA_CLI_FILE"
   ],
   [
    392,
-   21,
+   147,
    0,
-   155,
-   3,
+   154,
+   9,
    "DRAMA_CLI_FILE"
   ],
   [
    393,
-   7,
+   21,
    0,
-   155,
-   4,
+   154,
+   10,
    "DRAMA_CLI_FILE"
   ],
   [
    394,
-   17,
+   82,
    0,
    155,
-   5,
+   0,
    "DRAMA_CLI_FILE"
   ],
   [
    395,
-   3,
+   82,
    0,
-   155,
-   6,
+   156,
+   0,
    "DRAMA_CLI_FILE"
   ],
   [
    396,
-   1,
+   151,
    0,
-   155,
-   7,
+   157,
+   0,
    "DRAMA_CLI_FILE"
   ],
   [
    397,
-   2,
+   88,
    0,
-   155,
-   8,
+   157,
+   1,
    "DRAMA_CLI_FILE"
   ],
   [
    398,
-   14,
-   0,
-   155,
-   9,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   399,
-   153,
-   0,
-   156,
-   0,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   400,
-   88,
-   0,
-   156,
-   1,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   401,
-   149,
-   0,
-   157,
-   0,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   402,
-   88,
-   0,
-   157,
-   1,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   403,
-   145,
+   146,
    0,
    157,
    2,
    "DRAMA_CLI_FILE"
   ],
   [
-   404,
+   399,
    21,
    0,
    157,
@@ -16206,7 +16363,7 @@
    "DRAMA_CLI_FILE"
   ],
   [
-   405,
+   400,
    7,
    0,
    157,
@@ -16214,7 +16371,7 @@
    "DRAMA_CLI_FILE"
   ],
   [
-   406,
+   401,
    17,
    0,
    157,
@@ -16222,7 +16379,7 @@
    "DRAMA_CLI_FILE"
   ],
   [
-   407,
+   402,
    3,
    0,
    157,
@@ -16230,7 +16387,7 @@
    "DRAMA_CLI_FILE"
   ],
   [
-   408,
+   403,
    1,
    0,
    157,
@@ -16238,7 +16395,7 @@
    "DRAMA_CLI_FILE"
   ],
   [
-   409,
+   404,
    2,
    0,
    157,
@@ -16246,7 +16403,7 @@
    "DRAMA_CLI_FILE"
   ],
   [
-   410,
+   405,
    14,
    0,
    157,
@@ -16254,251 +16411,291 @@
    "DRAMA_CLI_FILE"
   ],
   [
-   411,
-   151,
-   0,
-   157,
-   10,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   412,
-   146,
-   0,
-   157,
-   11,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   413,
-   15,
-   0,
-   157,
-   12,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   414,
-   10,
-   0,
-   157,
-   13,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   415,
-   153,
-   0,
-   157,
-   14,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   416,
-   82,
+   406,
+   155,
    0,
    158,
    0,
    "DRAMA_CLI_FILE"
   ],
   [
-   417,
-   10,
+   407,
+   88,
    0,
    158,
    1,
    "DRAMA_CLI_FILE"
   ],
   [
-   418,
-   17,
+   408,
+   151,
    0,
-   158,
+   159,
+   0,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   409,
+   88,
+   0,
+   159,
+   1,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   410,
+   146,
+   0,
+   159,
    2,
    "DRAMA_CLI_FILE"
   ],
   [
-   419,
-   7,
+   411,
+   21,
    0,
-   158,
+   159,
    3,
    "DRAMA_CLI_FILE"
   ],
   [
-   420,
-   82,
+   412,
+   7,
    0,
    159,
+   4,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   413,
+   17,
    0,
+   159,
+   5,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   414,
+   3,
+   0,
+   159,
+   6,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   415,
+   1,
+   0,
+   159,
+   7,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   416,
+   2,
+   0,
+   159,
+   8,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   417,
+   14,
+   0,
+   159,
+   9,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   418,
+   153,
+   0,
+   159,
+   10,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   419,
+   147,
+   0,
+   159,
+   11,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   420,
+   15,
+   0,
+   159,
+   12,
    "DRAMA_CLI_FILE"
   ],
   [
    421,
-   7,
+   10,
    0,
    159,
-   1,
+   13,
    "DRAMA_CLI_FILE"
   ],
   [
    422,
-   10,
+   155,
    0,
    159,
-   2,
+   14,
    "DRAMA_CLI_FILE"
   ],
   [
    423,
-   88,
+   82,
    0,
-   161,
+   160,
    0,
    "DRAMA_CLI_FILE"
   ],
   [
    424,
-   158,
+   10,
    0,
-   161,
+   160,
    1,
    "DRAMA_CLI_FILE"
   ],
   [
    425,
-   10,
+   17,
    0,
-   161,
+   160,
    2,
    "DRAMA_CLI_FILE"
   ],
   [
    426,
-   17,
+   7,
    0,
-   161,
+   160,
    3,
    "DRAMA_CLI_FILE"
   ],
   [
    427,
-   7,
+   82,
    0,
    161,
-   4,
+   0,
    "DRAMA_CLI_FILE"
   ],
   [
    428,
-   10,
+   7,
    0,
-   162,
-   0,
+   161,
+   1,
    "DRAMA_CLI_FILE"
   ],
   [
    429,
-   17,
+   10,
    0,
-   162,
-   1,
+   161,
+   2,
    "DRAMA_CLI_FILE"
   ],
   [
    430,
-   7,
+   88,
    0,
-   162,
-   2,
+   163,
+   0,
    "DRAMA_CLI_FILE"
   ],
   [
    431,
-   82,
+   160,
    0,
-   162,
-   3,
+   163,
+   1,
    "DRAMA_CLI_FILE"
   ],
   [
    432,
-   158,
+   10,
    0,
-   162,
-   4,
+   163,
+   2,
    "DRAMA_CLI_FILE"
   ],
   [
    433,
-   10,
-   0,
-   163,
-   0,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   434,
    17,
-   0,
-   163,
-   1,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   435,
-   7,
-   0,
-   163,
-   2,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   436,
-   82,
    0,
    163,
    3,
    "DRAMA_CLI_FILE"
   ],
   [
-   437,
-   158,
+   434,
+   7,
    0,
    163,
    4,
    "DRAMA_CLI_FILE"
   ],
   [
-   438,
-   7,
+   435,
+   10,
    0,
    164,
    0,
    "DRAMA_CLI_FILE"
   ],
   [
-   439,
-   10,
+   436,
+   17,
    0,
    164,
    1,
    "DRAMA_CLI_FILE"
   ],
   [
-   440,
-   82,
+   437,
+   7,
    0,
    164,
    2,
    "DRAMA_CLI_FILE"
   ],
   [
-   441,
-   159,
+   438,
+   82,
    0,
    164,
    3,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   439,
+   160,
+   0,
+   164,
+   4,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   440,
+   10,
+   0,
+   165,
+   0,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   441,
+   17,
+   0,
+   165,
+   1,
    "DRAMA_CLI_FILE"
   ],
   [
@@ -16506,94 +16703,94 @@
    7,
    0,
    165,
-   0,
+   2,
    "DRAMA_CLI_FILE"
   ],
   [
    443,
-   10,
+   82,
    0,
    165,
-   1,
+   3,
    "DRAMA_CLI_FILE"
   ],
   [
    444,
-   82,
+   160,
    0,
    165,
-   2,
+   4,
    "DRAMA_CLI_FILE"
   ],
   [
    445,
-   159,
-   0,
-   165,
-   3,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   446,
-   162,
+   7,
    0,
    166,
    0,
    "DRAMA_CLI_FILE"
   ],
   [
-   447,
-   88,
+   446,
+   10,
    0,
    166,
    1,
    "DRAMA_CLI_FILE"
   ],
   [
-   448,
-   158,
+   447,
+   82,
    0,
    166,
    2,
    "DRAMA_CLI_FILE"
   ],
   [
-   449,
-   10,
+   448,
+   161,
    0,
    166,
    3,
    "DRAMA_CLI_FILE"
   ],
   [
-   450,
-   17,
+   449,
+   7,
    0,
-   166,
-   4,
+   167,
+   0,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   450,
+   10,
+   0,
+   167,
+   1,
    "DRAMA_CLI_FILE"
   ],
   [
    451,
-   7,
+   82,
    0,
-   166,
-   5,
+   167,
+   2,
    "DRAMA_CLI_FILE"
   ],
   [
    452,
    161,
    0,
-   166,
-   6,
+   167,
+   3,
    "DRAMA_CLI_FILE"
   ],
   [
    453,
-   162,
+   164,
    0,
-   167,
+   168,
    0,
    "DRAMA_CLI_FILE"
   ],
@@ -16601,15 +16798,15 @@
    454,
    88,
    0,
-   167,
+   168,
    1,
    "DRAMA_CLI_FILE"
   ],
   [
    455,
-   158,
+   160,
    0,
-   167,
+   168,
    2,
    "DRAMA_CLI_FILE"
   ],
@@ -16617,7 +16814,7 @@
    456,
    10,
    0,
-   167,
+   168,
    3,
    "DRAMA_CLI_FILE"
   ],
@@ -16625,7 +16822,7 @@
    457,
    17,
    0,
-   167,
+   168,
    4,
    "DRAMA_CLI_FILE"
   ],
@@ -16633,364 +16830,340 @@
    458,
    7,
    0,
-   167,
+   168,
    5,
    "DRAMA_CLI_FILE"
   ],
   [
    459,
-   164,
+   163,
    0,
-   167,
+   168,
    6,
    "DRAMA_CLI_FILE"
   ],
   [
    460,
-   159,
+   164,
    0,
-   167,
-   7,
+   169,
+   0,
    "DRAMA_CLI_FILE"
   ],
   [
    461,
-   38,
+   88,
    0,
-   168,
-   0,
+   169,
+   1,
    "DRAMA_CLI_FILE"
   ],
   [
    462,
-   13,
+   160,
    0,
-   168,
-   1,
+   169,
+   2,
    "DRAMA_CLI_FILE"
   ],
   [
    463,
-   8,
-   0,
-   168,
-   2,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   464,
-   38,
+   10,
    0,
    169,
-   0,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   465,
-   13,
-   0,
-   169,
-   1,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   466,
-   8,
-   0,
-   169,
-   2,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   467,
-   38,
-   0,
-   170,
-   0,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   468,
-   13,
-   0,
-   170,
-   1,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   469,
-   8,
-   0,
-   170,
-   2,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   470,
-   38,
-   0,
-   171,
-   0,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   471,
-   13,
-   0,
-   171,
-   1,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   472,
-   8,
-   0,
-   171,
-   2,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   473,
-   11,
-   0,
-   171,
    3,
    "DRAMA_CLI_FILE"
   ],
   [
-   474,
+   464,
+   17,
+   0,
+   169,
+   4,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   465,
+   7,
+   0,
+   169,
+   5,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   466,
+   166,
+   0,
+   169,
+   6,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   467,
+   161,
+   0,
+   169,
+   7,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   468,
+   38,
+   0,
+   170,
+   0,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   469,
    13,
    0,
-   173,
+   170,
+   1,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   470,
+   8,
+   0,
+   170,
+   2,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   471,
+   38,
+   0,
+   171,
+   0,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   472,
+   13,
+   0,
+   171,
+   1,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   473,
+   8,
+   0,
+   171,
+   2,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   474,
+   38,
+   0,
+   172,
    0,
    "DRAMA_CLI_FILE"
   ],
   [
    475,
-   8,
+   13,
    0,
-   173,
+   172,
    1,
    "DRAMA_CLI_FILE"
   ],
   [
    476,
-   38,
+   8,
    0,
-   173,
+   172,
    2,
    "DRAMA_CLI_FILE"
   ],
   [
    477,
-   168,
+   38,
    0,
    173,
-   3,
+   0,
    "DRAMA_CLI_FILE"
   ],
   [
    478,
-   18,
+   13,
    0,
    173,
-   4,
+   1,
    "DRAMA_CLI_FILE"
   ],
   [
    479,
-   13,
+   8,
    0,
-   174,
-   0,
+   173,
+   2,
    "DRAMA_CLI_FILE"
   ],
   [
    480,
-   8,
+   11,
    0,
-   174,
-   1,
+   173,
+   3,
    "DRAMA_CLI_FILE"
   ],
   [
    481,
-   38,
+   13,
    0,
-   174,
-   2,
+   175,
+   0,
    "DRAMA_CLI_FILE"
   ],
   [
    482,
-   168,
+   8,
    0,
-   174,
-   3,
+   175,
+   1,
    "DRAMA_CLI_FILE"
   ],
   [
    483,
-   18,
+   38,
    0,
-   174,
-   4,
+   175,
+   2,
    "DRAMA_CLI_FILE"
   ],
   [
    484,
-   13,
+   170,
    0,
    175,
-   0,
+   3,
    "DRAMA_CLI_FILE"
   ],
   [
    485,
-   8,
+   18,
    0,
    175,
-   1,
+   4,
    "DRAMA_CLI_FILE"
   ],
   [
    486,
-   38,
+   13,
    0,
-   175,
-   2,
+   176,
+   0,
    "DRAMA_CLI_FILE"
   ],
   [
    487,
-   169,
+   8,
    0,
-   175,
-   3,
+   176,
+   1,
    "DRAMA_CLI_FILE"
   ],
   [
    488,
-   18,
+   38,
    0,
-   175,
-   4,
+   176,
+   2,
    "DRAMA_CLI_FILE"
   ],
   [
    489,
-   13,
+   170,
    0,
    176,
-   0,
+   3,
    "DRAMA_CLI_FILE"
   ],
   [
    490,
-   8,
+   18,
    0,
    176,
-   1,
+   4,
    "DRAMA_CLI_FILE"
   ],
   [
    491,
-   38,
+   13,
    0,
-   176,
-   2,
+   177,
+   0,
    "DRAMA_CLI_FILE"
   ],
   [
    492,
-   169,
+   8,
    0,
-   176,
-   3,
+   177,
+   1,
    "DRAMA_CLI_FILE"
   ],
   [
    493,
-   18,
+   38,
    0,
-   176,
-   4,
+   177,
+   2,
    "DRAMA_CLI_FILE"
   ],
   [
    494,
-   13,
+   171,
    0,
    177,
-   0,
+   3,
    "DRAMA_CLI_FILE"
   ],
   [
    495,
-   8,
+   18,
    0,
    177,
-   1,
+   4,
    "DRAMA_CLI_FILE"
   ],
   [
    496,
-   38,
+   13,
    0,
-   177,
-   2,
+   178,
+   0,
    "DRAMA_CLI_FILE"
   ],
   [
    497,
-   170,
+   8,
    0,
-   177,
-   3,
+   178,
+   1,
    "DRAMA_CLI_FILE"
   ],
   [
    498,
-   18,
+   38,
    0,
-   177,
-   4,
+   178,
+   2,
    "DRAMA_CLI_FILE"
   ],
   [
    499,
-   13,
+   171,
    0,
    178,
-   0,
+   3,
    "DRAMA_CLI_FILE"
   ],
   [
    500,
-   8,
-   0,
-   178,
-   1,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   501,
-   38,
-   0,
-   178,
-   2,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   502,
-   170,
-   0,
-   178,
-   3,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   503,
    18,
    0,
    178,
@@ -16998,7 +17171,7 @@
    "DRAMA_CLI_FILE"
   ],
   [
-   504,
+   501,
    13,
    0,
    179,
@@ -17006,7 +17179,7 @@
    "DRAMA_CLI_FILE"
   ],
   [
-   505,
+   502,
    8,
    0,
    179,
@@ -17014,50 +17187,74 @@
    "DRAMA_CLI_FILE"
   ],
   [
-   506,
-   11,
+   503,
+   38,
    0,
    179,
    2,
    "DRAMA_CLI_FILE"
   ],
   [
-   507,
-   38,
+   504,
+   172,
    0,
    179,
    3,
    "DRAMA_CLI_FILE"
   ],
   [
-   508,
-   171,
+   505,
+   18,
    0,
    179,
    4,
    "DRAMA_CLI_FILE"
   ],
   [
-   509,
-   18,
+   506,
+   13,
    0,
-   179,
-   5,
+   180,
+   0,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   507,
+   8,
+   0,
+   180,
+   1,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   508,
+   38,
+   0,
+   180,
+   2,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   509,
+   172,
+   0,
+   180,
+   3,
    "DRAMA_CLI_FILE"
   ],
   [
    510,
-   22,
+   18,
    0,
-   179,
-   6,
+   180,
+   4,
    "DRAMA_CLI_FILE"
   ],
   [
    511,
    13,
    0,
-   180,
+   181,
    0,
    "DRAMA_CLI_FILE"
   ],
@@ -17065,7 +17262,7 @@
    512,
    8,
    0,
-   180,
+   181,
    1,
    "DRAMA_CLI_FILE"
   ],
@@ -17073,7 +17270,7 @@
    513,
    11,
    0,
-   180,
+   181,
    2,
    "DRAMA_CLI_FILE"
   ],
@@ -17081,15 +17278,15 @@
    514,
    38,
    0,
-   180,
+   181,
    3,
    "DRAMA_CLI_FILE"
   ],
   [
    515,
-   171,
+   173,
    0,
-   180,
+   181,
    4,
    "DRAMA_CLI_FILE"
   ],
@@ -17097,7 +17294,7 @@
    516,
    18,
    0,
-   180,
+   181,
    5,
    "DRAMA_CLI_FILE"
   ],
@@ -17105,240 +17302,240 @@
    517,
    22,
    0,
-   180,
+   181,
    6,
    "DRAMA_CLI_FILE"
   ],
   [
    518,
-   173,
+   13,
    0,
-   181,
+   182,
    0,
    "DRAMA_CLI_FILE"
   ],
   [
    519,
-   44,
+   8,
    0,
-   181,
+   182,
    1,
    "DRAMA_CLI_FILE"
   ],
   [
    520,
-   168,
+   11,
    0,
-   181,
+   182,
    2,
    "DRAMA_CLI_FILE"
   ],
   [
    521,
-   18,
+   38,
    0,
-   181,
+   182,
    3,
    "DRAMA_CLI_FILE"
   ],
   [
    522,
-   13,
+   173,
    0,
-   181,
+   182,
    4,
    "DRAMA_CLI_FILE"
   ],
   [
    523,
-   8,
+   18,
    0,
-   181,
+   182,
    5,
    "DRAMA_CLI_FILE"
   ],
   [
    524,
-   173,
-   0,
-   182,
-   0,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   525,
-   44,
-   0,
-   182,
-   1,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   526,
-   168,
-   0,
-   182,
-   2,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   527,
-   18,
-   0,
-   182,
-   3,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   528,
-   13,
-   0,
-   182,
-   4,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   529,
-   8,
-   0,
-   182,
-   5,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   530,
-   175,
+   22,
    0,
    182,
    6,
    "DRAMA_CLI_FILE"
   ],
   [
-   531,
-   169,
+   525,
+   175,
    0,
-   182,
-   7,
+   183,
+   0,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   526,
+   44,
+   0,
+   183,
+   1,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   527,
+   170,
+   0,
+   183,
+   2,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   528,
+   18,
+   0,
+   183,
+   3,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   529,
+   13,
+   0,
+   183,
+   4,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   530,
+   8,
+   0,
+   183,
+   5,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   531,
+   175,
+   0,
+   184,
+   0,
    "DRAMA_CLI_FILE"
   ],
   [
    532,
-   177,
+   44,
    0,
-   182,
-   8,
+   184,
+   1,
    "DRAMA_CLI_FILE"
   ],
   [
    533,
    170,
    0,
-   182,
-   9,
+   184,
+   2,
    "DRAMA_CLI_FILE"
   ],
   [
    534,
-   179,
+   18,
    0,
-   182,
-   10,
+   184,
+   3,
    "DRAMA_CLI_FILE"
   ],
   [
    535,
-   171,
+   13,
    0,
-   182,
-   11,
+   184,
+   4,
    "DRAMA_CLI_FILE"
   ],
   [
    536,
-   22,
+   8,
    0,
-   182,
-   12,
+   184,
+   5,
    "DRAMA_CLI_FILE"
   ],
   [
    537,
-   11,
+   177,
    0,
-   182,
-   13,
+   184,
+   6,
    "DRAMA_CLI_FILE"
   ],
   [
    538,
-   27,
+   171,
    0,
-   183,
-   0,
+   184,
+   7,
    "DRAMA_CLI_FILE"
   ],
   [
    539,
-   13,
+   179,
    0,
-   183,
-   1,
+   184,
+   8,
    "DRAMA_CLI_FILE"
   ],
   [
    540,
-   11,
+   172,
    0,
-   183,
-   2,
+   184,
+   9,
    "DRAMA_CLI_FILE"
   ],
   [
    541,
-   8,
+   181,
    0,
-   183,
-   3,
+   184,
+   10,
    "DRAMA_CLI_FILE"
   ],
   [
    542,
-   27,
+   173,
    0,
    184,
-   0,
+   11,
    "DRAMA_CLI_FILE"
   ],
   [
    543,
-   11,
+   22,
    0,
    184,
-   1,
+   12,
    "DRAMA_CLI_FILE"
   ],
   [
    544,
-   8,
+   11,
    0,
    184,
-   2,
+   13,
    "DRAMA_CLI_FILE"
   ],
   [
    545,
-   13,
-   0,
-   184,
-   3,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   546,
    27,
    0,
    185,
    0,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   546,
+   13,
+   0,
+   185,
+   1,
    "DRAMA_CLI_FILE"
   ],
   [
@@ -17346,19 +17543,11 @@
    11,
    0,
    185,
-   1,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   548,
-   13,
-   0,
-   185,
    2,
    "DRAMA_CLI_FILE"
   ],
   [
-   549,
+   548,
    8,
    0,
    185,
@@ -17366,15 +17555,15 @@
    "DRAMA_CLI_FILE"
   ],
   [
-   550,
-   71,
+   549,
+   27,
    0,
    186,
    0,
    "DRAMA_CLI_FILE"
   ],
   [
-   551,
+   550,
    11,
    0,
    186,
@@ -17382,7 +17571,7 @@
    "DRAMA_CLI_FILE"
   ],
   [
-   552,
+   551,
    8,
    0,
    186,
@@ -17390,10 +17579,18 @@
    "DRAMA_CLI_FILE"
   ],
   [
-   553,
+   552,
    13,
    0,
-   188,
+   186,
+   3,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   553,
+   27,
+   0,
+   187,
    0,
    "DRAMA_CLI_FILE"
   ],
@@ -17401,540 +17598,500 @@
    554,
    11,
    0,
-   188,
+   187,
    1,
    "DRAMA_CLI_FILE"
   ],
   [
    555,
-   8,
+   13,
    0,
-   188,
+   187,
    2,
    "DRAMA_CLI_FILE"
   ],
   [
    556,
-   27,
+   8,
    0,
-   188,
+   187,
    3,
    "DRAMA_CLI_FILE"
   ],
   [
    557,
-   183,
+   71,
    0,
    188,
-   4,
+   0,
    "DRAMA_CLI_FILE"
   ],
   [
    558,
-   22,
+   11,
    0,
    188,
-   5,
+   1,
    "DRAMA_CLI_FILE"
   ],
   [
    559,
-   18,
+   8,
    0,
    188,
-   6,
+   2,
    "DRAMA_CLI_FILE"
   ],
   [
    560,
-   13,
+   201,
    0,
-   189,
+   190,
    0,
    "DRAMA_CLI_FILE"
   ],
   [
    561,
-   11,
+   202,
    0,
-   189,
+   190,
    1,
    "DRAMA_CLI_FILE"
   ],
   [
    562,
-   8,
+   203,
    0,
-   189,
+   190,
    2,
    "DRAMA_CLI_FILE"
   ],
   [
    563,
-   27,
+   13,
    0,
-   189,
-   3,
+   191,
+   0,
    "DRAMA_CLI_FILE"
   ],
   [
    564,
-   183,
+   11,
    0,
-   189,
-   4,
+   191,
+   1,
    "DRAMA_CLI_FILE"
   ],
   [
    565,
-   22,
+   8,
    0,
-   189,
-   5,
+   191,
+   2,
    "DRAMA_CLI_FILE"
   ],
   [
    566,
-   18,
+   27,
    0,
-   189,
-   6,
+   191,
+   3,
    "DRAMA_CLI_FILE"
   ],
   [
    567,
-   11,
+   185,
    0,
-   190,
-   0,
+   191,
+   4,
    "DRAMA_CLI_FILE"
   ],
   [
    568,
-   8,
+   22,
    0,
-   190,
-   1,
+   191,
+   5,
    "DRAMA_CLI_FILE"
   ],
   [
    569,
-   13,
+   18,
    0,
-   190,
-   2,
+   191,
+   6,
    "DRAMA_CLI_FILE"
   ],
   [
    570,
-   27,
+   13,
    0,
-   190,
-   3,
+   192,
+   0,
    "DRAMA_CLI_FILE"
   ],
   [
    571,
-   184,
+   11,
    0,
-   190,
-   4,
+   192,
+   1,
    "DRAMA_CLI_FILE"
   ],
   [
    572,
-   22,
+   8,
    0,
-   190,
-   5,
+   192,
+   2,
    "DRAMA_CLI_FILE"
   ],
   [
    573,
-   18,
+   27,
    0,
-   190,
-   6,
+   192,
+   3,
    "DRAMA_CLI_FILE"
   ],
   [
    574,
-   11,
+   185,
    0,
-   191,
-   0,
+   192,
+   4,
    "DRAMA_CLI_FILE"
   ],
   [
    575,
-   8,
+   22,
    0,
-   191,
-   1,
+   192,
+   5,
    "DRAMA_CLI_FILE"
   ],
   [
    576,
-   13,
+   18,
    0,
-   191,
-   2,
+   192,
+   6,
    "DRAMA_CLI_FILE"
   ],
   [
    577,
-   27,
+   11,
    0,
-   191,
-   3,
+   193,
+   0,
    "DRAMA_CLI_FILE"
   ],
   [
    578,
-   184,
+   8,
    0,
-   191,
-   4,
+   193,
+   1,
    "DRAMA_CLI_FILE"
   ],
   [
    579,
-   22,
+   13,
    0,
-   191,
-   5,
+   193,
+   2,
    "DRAMA_CLI_FILE"
   ],
   [
    580,
-   18,
+   27,
    0,
-   191,
-   6,
+   193,
+   3,
    "DRAMA_CLI_FILE"
   ],
   [
    581,
-   11,
+   186,
    0,
-   192,
-   0,
+   193,
+   4,
    "DRAMA_CLI_FILE"
   ],
   [
    582,
-   13,
+   22,
    0,
-   192,
-   1,
+   193,
+   5,
    "DRAMA_CLI_FILE"
   ],
   [
    583,
-   8,
+   18,
    0,
-   192,
-   2,
+   193,
+   6,
    "DRAMA_CLI_FILE"
   ],
   [
    584,
-   27,
-   0,
-   192,
-   3,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   585,
-   185,
-   0,
-   192,
-   4,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   586,
-   22,
-   0,
-   192,
-   5,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   587,
-   18,
-   0,
-   192,
-   6,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   588,
    11,
-   0,
-   193,
-   0,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   589,
-   13,
-   0,
-   193,
-   1,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   590,
-   8,
-   0,
-   193,
-   2,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   591,
-   27,
-   0,
-   193,
-   3,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   592,
-   185,
-   0,
-   193,
-   4,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   593,
-   22,
-   0,
-   193,
-   5,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   594,
-   18,
-   0,
-   193,
-   6,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   595,
-   49,
    0,
    194,
    0,
    "DRAMA_CLI_FILE"
   ],
   [
-   596,
-   49,
+   585,
+   8,
+   0,
+   194,
+   1,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   586,
+   13,
+   0,
+   194,
+   2,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   587,
+   27,
+   0,
+   194,
+   3,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   588,
+   186,
+   0,
+   194,
+   4,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   589,
+   22,
+   0,
+   194,
+   5,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   590,
+   18,
+   0,
+   194,
+   6,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   591,
+   11,
    0,
    195,
    0,
    "DRAMA_CLI_FILE"
   ],
   [
+   592,
+   13,
+   0,
+   195,
+   1,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   593,
+   8,
+   0,
+   195,
+   2,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   594,
+   27,
+   0,
+   195,
+   3,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   595,
+   187,
+   0,
+   195,
+   4,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   596,
+   22,
+   0,
+   195,
+   5,
+   "DRAMA_CLI_FILE"
+  ],
+  [
    597,
-   11,
+   18,
    0,
-   196,
-   0,
+   195,
+   6,
    "DRAMA_CLI_FILE"
   ],
   [
    598,
-   8,
+   11,
    0,
    196,
-   1,
+   0,
    "DRAMA_CLI_FILE"
   ],
   [
    599,
-   71,
+   13,
    0,
    196,
-   2,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   600,
-   186,
-   0,
-   196,
-   3,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   601,
-   11,
-   0,
-   197,
-   0,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   602,
-   8,
-   0,
-   197,
    1,
    "DRAMA_CLI_FILE"
   ],
   [
-   603,
-   71,
+   600,
+   8,
    0,
-   197,
+   196,
    2,
    "DRAMA_CLI_FILE"
   ],
   [
-   604,
-   186,
+   601,
+   27,
    0,
-   197,
+   196,
    3,
    "DRAMA_CLI_FILE"
   ],
   [
-   605,
-   188,
+   602,
+   187,
    0,
-   198,
+   196,
+   4,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   603,
+   22,
+   0,
+   196,
+   5,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   604,
+   18,
+   0,
+   196,
+   6,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   605,
+   49,
+   0,
+   197,
    0,
    "DRAMA_CLI_FILE"
   ],
   [
    606,
-   33,
+   49,
    0,
    198,
-   1,
+   0,
    "DRAMA_CLI_FILE"
   ],
   [
    607,
-   183,
+   11,
    0,
-   198,
-   2,
+   199,
+   0,
    "DRAMA_CLI_FILE"
   ],
   [
    608,
-   22,
+   8,
    0,
-   198,
-   3,
+   199,
+   1,
    "DRAMA_CLI_FILE"
   ],
   [
    609,
-   18,
+   71,
    0,
-   198,
-   4,
+   199,
+   2,
    "DRAMA_CLI_FILE"
   ],
   [
    610,
-   13,
+   188,
    0,
-   198,
-   5,
+   199,
+   3,
    "DRAMA_CLI_FILE"
   ],
   [
    611,
    11,
    0,
-   198,
-   6,
+   200,
+   0,
    "DRAMA_CLI_FILE"
   ],
   [
    612,
    8,
    0,
-   198,
-   7,
+   200,
+   1,
    "DRAMA_CLI_FILE"
   ],
   [
    613,
-   194,
-   0,
-   199,
-   0,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   614,
-   55,
-   0,
-   199,
-   1,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   615,
-   196,
-   0,
-   200,
-   0,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   616,
-   77,
-   0,
-   200,
-   1,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   617,
-   186,
+   71,
    0,
    200,
    2,
    "DRAMA_CLI_FILE"
   ],
   [
-   618,
-   11,
+   614,
+   188,
    0,
    200,
    3,
    "DRAMA_CLI_FILE"
   ],
   [
-   619,
-   8,
-   0,
-   200,
-   4,
-   "DRAMA_CLI_FILE"
-  ],
-  [
-   620,
-   188,
+   615,
+   191,
    0,
    201,
    0,
    "DRAMA_CLI_FILE"
   ],
   [
-   621,
+   616,
    33,
    0,
    201,
@@ -17942,15 +18099,15 @@
    "DRAMA_CLI_FILE"
   ],
   [
-   622,
-   183,
+   617,
+   185,
    0,
    201,
    2,
    "DRAMA_CLI_FILE"
   ],
   [
-   623,
+   618,
    22,
    0,
    201,
@@ -17958,7 +18115,7 @@
    "DRAMA_CLI_FILE"
   ],
   [
-   624,
+   619,
    18,
    0,
    201,
@@ -17966,7 +18123,7 @@
    "DRAMA_CLI_FILE"
   ],
   [
-   625,
+   620,
    13,
    0,
    201,
@@ -17974,7 +18131,7 @@
    "DRAMA_CLI_FILE"
   ],
   [
-   626,
+   621,
    11,
    0,
    201,
@@ -17982,7 +18139,7 @@
    "DRAMA_CLI_FILE"
   ],
   [
-   627,
+   622,
    8,
    0,
    201,
@@ -17990,74 +18147,194 @@
    "DRAMA_CLI_FILE"
   ],
   [
-   628,
-   190,
+   623,
+   197,
    0,
-   201,
-   8,
+   202,
+   0,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   624,
+   55,
+   0,
+   202,
+   1,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   625,
+   199,
+   0,
+   203,
+   0,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   626,
+   77,
+   0,
+   203,
+   1,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   627,
+   188,
+   0,
+   203,
+   2,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   628,
+   11,
+   0,
+   203,
+   3,
    "DRAMA_CLI_FILE"
   ],
   [
    629,
-   184,
+   8,
    0,
-   201,
-   9,
+   203,
+   4,
    "DRAMA_CLI_FILE"
   ],
   [
    630,
-   192,
+   191,
    0,
-   201,
-   10,
+   204,
+   0,
    "DRAMA_CLI_FILE"
   ],
   [
    631,
-   185,
+   33,
    0,
-   201,
-   11,
+   204,
+   1,
    "DRAMA_CLI_FILE"
   ],
   [
    632,
-   194,
+   185,
    0,
-   201,
-   12,
+   204,
+   2,
    "DRAMA_CLI_FILE"
   ],
   [
    633,
-   55,
+   22,
    0,
-   201,
-   13,
+   204,
+   3,
    "DRAMA_CLI_FILE"
   ],
   [
    634,
-   196,
+   18,
    0,
-   201,
-   14,
+   204,
+   4,
    "DRAMA_CLI_FILE"
   ],
   [
    635,
-   77,
+   13,
    0,
-   201,
-   15,
+   204,
+   5,
    "DRAMA_CLI_FILE"
   ],
   [
    636,
+   11,
+   0,
+   204,
+   6,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   637,
+   8,
+   0,
+   204,
+   7,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   638,
+   193,
+   0,
+   204,
+   8,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   639,
    186,
    0,
-   201,
+   204,
+   9,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   640,
+   195,
+   0,
+   204,
+   10,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   641,
+   187,
+   0,
+   204,
+   11,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   642,
+   197,
+   0,
+   204,
+   12,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   643,
+   55,
+   0,
+   204,
+   13,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   644,
+   199,
+   0,
+   204,
+   14,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   645,
+   77,
+   0,
+   204,
+   15,
+   "DRAMA_CLI_FILE"
+  ],
+  [
+   646,
+   188,
+   0,
+   204,
    16,
    "DRAMA_CLI_FILE"
   ]
@@ -18337,6 +18614,39 @@
     1420,
     430
    ]
+  },
+  {
+   "id": 26,
+   "title": "EP001 cut",
+   "font_size": 24,
+   "bounding": [
+    2340,
+    0,
+    340,
+    430
+   ]
+  },
+  {
+   "id": 27,
+   "title": "EP002 cut",
+   "font_size": 24,
+   "bounding": [
+    2340,
+    560,
+    340,
+    430
+   ]
+  },
+  {
+   "id": 28,
+   "title": "EP005 cut",
+   "font_size": 24,
+   "bounding": [
+    2340,
+    1120,
+    340,
+    430
+   ]
   }
  ],
  "config": {},
@@ -18349,7 +18659,7 @@
    ]
   },
   "drama_cli": {
-   "project": "/work/drama"
+   "project": "."
   }
  },
  "version": 0.4
