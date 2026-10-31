@@ -394,7 +394,7 @@
      segment's shots are a text node at the start of its group, so the shots read beside the pictures they made (SPEC).
      Each node is drama-cli's width at its file's own ratio (D58); a row is as tall as its tallest. */
   const W = 300, GAP = 60, PAD = 20, TITLE = 50, LABEL = 26, CARD = 340;
-  const ICON = { cast: "user", place: "image", prop: "cube", shots: "list-numbers", blocking: "squares-four", storyboard: "squares-four", photoreal: "image", take: "film-strip", cut: "scissors" };
+  const ICON = { cast: "user", place: "image", prop: "cube", shots: "list-numbers", blocking: "squares-four", frame: "image-square", storyboard: "squares-four", photoreal: "image", take: "film-strip", cut: "scissors" };
   function board() {
     const seen = (src) => S.dims[src] && Math.round((W * S.dims[src][1]) / S.dims[src][0]);
     const nodes = [], groups = [];
@@ -402,15 +402,22 @@
     const node = (n) => ({ w: W, h: n.pic ? seen(n.pic) || CARD : n.h || CARD, ...n });
     const sections = [
       ["Characters", P.cast.slice(0, 5).map((c) => node({ id: c.id, kind: "cast", pic: c.sheet, label: c.name, st: c.st, ver: c.ver, accepted: c.accepted, role: c.role, model: "gpt-image-2.5", problems: c.problems }))],
-      ["Locations", P.places.slice(0, 2).map((p) => node({ id: p.id, kind: "place", pic: p.pic, label: p.name, st: p.st, ver: p.ver, accepted: p.accepted, model: "gpt-image-2.5", role: "Plate · " + p.times.map(([t]) => t).join(" · ") }))],
+      // A location's plate and, edited from it, its plate at each time of day the episode's scenes ask for: two stages,
+      // `assets/scenes/<id>` and `assets/scenes/<id>/times/<Day|Night>` (image-references.md, section 1: LP, TP).
+      ["Locations", P.places.slice(0, 2).flatMap((p) => [
+        node({ id: p.id, kind: "place", pic: p.pic, label: p.name, st: p.st, ver: p.ver, accepted: p.accepted, model: "gpt-image-2.5", role: "Plate" }),
+        ...[...new Set(P.scenes.filter((sc) => sc.place === p.id).map((sc) => sc.time))].map((time) =>
+          node({ id: `${p.id}/times/${time}`, kind: "place", asset: p.id, label: `${p.name} · ${time}`, st: "accepted", ver: "v1", accepted: "v1", model: "gpt-image-2.5", role: `Plate at ${time}, edited from the plate`, at: { kind: "plate", ver: "v1", time } })),
+      ])],
       ["Props", [node({ id: "file", kind: "prop", pic: P.props[0].pic, label: "Case file", st: "accepted", ver: "v1", accepted: P.props[0].accepted, role: "Key prop", model: "gpt-image-2.5" })]],
     ];
     const segments = P.scenes.flatMap((sc) => sc.segs).map((g) => {
       const at = (kind, ver) => ({ seg: g, at: { kind, ver } });
-      const blocking = (g.refs || []).find(([name]) => /^Blocking/.test(name));
+      const blocking = (g.refs || []).find(([name]) => /^Blocking/.test(name)), frame = (g.refs || []).find(([name]) => /^First frame/.test(name));
       return [`EP006 ${g.id}`, [
         node({ id: `${g.id}/shots`, kind: "shots", label: "Shots", st: "accepted", ver: "v1", accepted: "v1", role: "Shot list · breakdown.json", h: 52 + g.shots.length * 84, seg: g }),
         blocking && node({ id: `${g.id}/blocking`, kind: "blocking", pic: blocking[1], label: "Blocking", st: "accepted", ver: "v1", accepted: "v1", role: "Blocking reference", model: "gpt-image-2.5", ...at("blocking", "v1") }),
+        frame && node({ id: `${g.id}/frame`, kind: "frame", pic: frame[1], label: "First frame", st: "accepted", ver: frame[0].split(" ").pop(), accepted: frame[0].split(" ").pop(), role: "First-frame reference", model: "gpt-image-2.5", ...at("first_frame_reference", frame[0].split(" ").pop()) }),
         node({ id: `${g.id}/storyboard`, kind: "storyboard", pic: g.board, label: "Storyboard · line-art", st: g.boardSt || "accepted", ver: "v1", accepted: "v1", role: "Storyboard · line-art", model: "gpt-image-2.5", ...at("storyboard", "v1"), at: { kind: "storyboard", ver: "v1", style: "line-art" } }),
         g.photo && node({ id: `${g.id}/photoreal`, kind: "photoreal", pic: g.photo, label: "Storyboard · photoreal", st: g.photoSt || "accepted", ver: "v1", accepted: "v1", role: "Storyboard · photoreal", model: "gpt-image-2.5", seg: g, at: { kind: "storyboard", ver: "v1", style: "photoreal" } }),
         node({ id: `${g.id}/take`, kind: "take", pic: g.still, label: `Take · ${g.take}`, st: g.st, ver: g.take, accepted: g.accepted, role: `${g.s} s · ${g.cast.length} in frame`, model: "sd25", ...at("take", g.take) }),
@@ -434,13 +441,26 @@
     for (const [title, list, label] of segments) y = place(title, x, y, list, 4, label) + TITLE + PAD;
     x += 4 * (W + GAP) + 2 * PAD + GAP;
     place("EP006 cut", x, TITLE + PAD, [node({ id: "cut", kind: "cut", pic: "img/cover-ep6.jpg", label: "Cut · v1", st: "you", ver: "v1", accepted: null, role: "EP006 cut", model: "drama-cli edit" })], 1);
-    // drama-cli's lineage, as the canvas draws it: a segment's references feed its take, its stages feed each other in order, the takes feed the cut.
-    const edges = [];
-    for (const [, list] of segments) {
-      const g = list[0].seg, chain = list.map((n) => n.id);
-      chain.slice(1).forEach((id, i) => edges.push([chain[i], id]));
-      (g.refs || []).filter(([, , asset]) => asset).forEach(([, , asset]) => nodes.some((n) => n.id === asset) && edges.push([asset, `${g.id}/take`]));
-      edges.push([`${g.id}/take`, "cut"]);
+    // Only what drama-cli records: "is made from the accepted version of", each stage's manifest pinning the files it used
+    // (short_drama doc/drama-cli/image-references.md, section 1; lineage.json's links). Never the order of the row: the
+    // photoreal storyboard is for the person only and feeds nothing (image-references.md:54, D141); the blocking
+    // reference and both storyboards take the location's plate, the first frame and the video its plate at the
+    // segment's time of day (image-references.md:53, D122); the take is made from the video request, which takes the
+    // line-art storyboard, the time plate, the blocking, the look sheets and the props; the cut from the takes.
+    const edges = [], has = new Set(nodes.map((n) => n.id));
+    const edge = (from, to) => has.has(from) && has.has(to) && edges.push([from, to]);
+    for (const sc of P.scenes) for (const g of sc.segs) {
+      const s = (kind) => `${g.id}/${kind}`, plate = sc.place, timed = `${sc.place}/times/${sc.time}`;
+      const props = (g.refs || []).map(([, , asset]) => asset).filter((asset) => P.props.some((p) => p.id === asset));
+      for (const to of ["blocking", "frame", "storyboard", "photoreal", "take"]) edge(s("shots"), s(to));
+      for (const to of ["blocking", "storyboard", "photoreal"]) edge(plate, s(to));
+      for (const to of ["frame", "take"]) edge(timed, s(to));
+      for (const look of g.cast) for (const to of ["blocking", "frame", "storyboard", "photoreal", "take"]) edge(look, s(to));
+      for (const to of ["frame", "storyboard", "photoreal", "take"]) edge(s("blocking"), s(to));
+      for (const prop of props) for (const to of ["storyboard", "photoreal", "take"]) edge(prop, s(to));
+      edge(s("storyboard"), s("take"));
+      edge(s("frame"), s("take"));
+      edge(s("take"), "cut");
     }
     return { nodes: [...groups, ...nodes], edges };
   }
@@ -462,7 +482,7 @@
     const missing = node.kind !== "shots" && !node.pic;
     const spec = node.kind === "take" && node.seg.spec;
     // A shared reference's home is Assets (§16): its versions, prompt and review live there, and the canvas only links to it.
-    const home = homeTab(node.id);
+    const home = homeTab(node.asset || node.id);
     const open = S.dtab;
     const parts = home ? [] : node.kind === "shots" || missing ? [["details", "Details"]] : [["prompt", "Prompt"], ...(spec ? [["versions", "Versions"], ["request", "Request"]] : []), ["details", "Details"]];
     const chips = (line) => line.split(/(Image \d+)/).map((part) => { const m = part.match(/^Image (\d+)$/); return m ? html`<span class="pchip"><img src=${spec.images[m[1] - 1]} alt=""/>${part}</span>` : part; });
@@ -473,7 +493,8 @@
     const acc = node.accepted === node.ver ? "accepted" : node.accepted ? `accepted ${node.accepted}` : "none accepted";
     const why = node.problems ? node.problems.join("; ") : node.id === "file" ? "Changed file: bible/v3/bible.json" : ood ? `Made from ${ood.from}, which is out of date` : "";
     // §15 progressive disclosure: by default its state and what needs the maker; prompt, versions, request and details on demand.
-    const needs = node.st === "you" ? (home ? "Waits for your review in Assets." : `Take ${node.ver} waits for you: watch it, then accept, send back or note.`)
+    // What waits, named as the object it is (Codex round 4, F2): a take, the cut, a storyboard.
+    const needs = node.st === "you" ? (home ? "Waits for your review in Assets." : node.kind === "take" ? `Take ${node.ver} waits for you: watch it, then accept, send back or note.` : node.kind === "cut" ? `Cut ${node.ver} waits for you: watch it, then accept or send back.` : `${node.label} ${node.ver} waits for your review.`)
       : outOfDate(node) ? "Nothing for you: the agent redraws what is out of date." : node.st === "back" ? "Nothing for you: the agent redoes it." : "";
     return html`<div class=${"npanel" + (docked ? " docked" : "")} role="dialog" aria-label=${node.label} style=${style}>
       <div class="nhead"><b class="grow">${node.label}</b>${!missing && html`${Status(node.st === "stale" ? "accepted" : node.st)}${outOfDate(node) ? Status("stale", "Out of date") : Status("line", "Up to date")}`}
@@ -481,7 +502,7 @@
         <button class="ibtn" aria-label="Close" onClick=${() => set({ sel: null, cam: S.camBack || S.cam, camBack: null })}>${I("x")}</button></div>
       ${missing ? html`<p class="needs">Not in this sample: the replay has no picture of this stage.</p>` : html`<div class="nstate"><span class="mono">current ${node.ver || "v1"} · ${acc}</span>${why && html`<span class="why">${I("warning")}${why}</span>`}</div>
       ${needs && html`<p class="needs">${needs}</p>`}`}
-      ${home ? html`<p class="subtle nhome">Its versions, prompt and review: <button class="linkbtn" onClick=${() => openHome(node.id, "EP006 · Canvas")}>Assets › ${{ cast: "Characters", scenes: "Locations", props: "Props" }[home]} › ${node.label}</button></p>`
+      ${home ? html`<p class="subtle nhome">Its versions, prompt and review: <button class="linkbtn" onClick=${() => openHome(node.asset || node.id, "EP006 · Canvas", node.at)}>Assets › ${{ cast: "Characters", scenes: "Locations", props: "Props" }[home]} › ${node.label}</button></p>`
         : html`<div class="ndisc">${parts.map(([k, l]) => html`<button aria-expanded=${String(open === k)} aria-controls="npart" onClick=${() => set({ dtab: open === k ? null : k })}>${l}${I(open === k ? "caret-up" : "caret-down")}</button>`)}</div>`}
       ${!home && open && html`<div id="npart" class="npart" role="region" aria-label=${parts.find(([k]) => k === open)[1]}>
         ${open === "prompt" && (spec ? html`<ol class="refs">${spec.images.map((u, i) => html`<li title=${"Image " + (i + 1)}><img src=${u} alt=""/><b>${i + 1}</b></li>`)}</ol>
@@ -503,6 +524,15 @@
     const ref = useRef(null);
     const { nodes: NODES, edges: EDGES } = board();
     const byId = Object.fromEntries(NODES.map((n) => [n.id, n]));
+    const nameOf = (id) => (byId[id].seg ? `${byId[id].seg.id} · ${byId[id].label}` : byId[id].label);
+    // Review goes to the selected object's own review, by its identity (Codex round 4, F2): a take to that take in the
+    // review room, the cut to its version in the Cut room, a storyboard to its review in the queue; none for another.
+    const reviewOf = (n, from) => {
+      if (n.kind === "take") { const ti = P.takes.findIndex((t) => t.seg === n.seg.id && t.take === n.ver); return ti < 0 ? null : () => { set({ ti, showPrev: false }); jump({ screen: "review" }, from); }; }
+      if (n.kind === "cut") return () => jump({ screen: "cut", at: { kind: "cut", ver: n.ver } }, from);
+      if (n.kind === "storyboard" || n.kind === "photoreal") return () => jump({ screen: "reviews" }, from);
+      return null;
+    };
     const { x, y, k } = S.cam;
     // B5: a picked node is placed under the pills with its bar above it and room for its panel below (or beside, docked).
     const PILLS = 64, BAR = 46, PANEL = 220, DOCKED = 440;
@@ -552,7 +582,7 @@
       return html`<path class=${S.sel === a || S.sel === b ? "hot" : ""} d=${`M${x1},${y1} C${m},${y1} ${m},${y2} ${x2},${y2}`}/>`; };
     const sel = S.sel && byId[S.sel];
     return html`<div class="main">
-      <${TopBar} crumbs=${[own.drama(), ...(sel && sel.kind === "seg" ? [own.ep(), sel.id + (S.at ? " · " + S.at.kind + " " + S.at.ver : "")] : sel && homeTab(sel.id) ? [own.assets(), own.tab(homeTab(sel.id)), sel.label + " · " + sel.ver] : ["EP006"])]}/>
+      <${TopBar} crumbs=${[own.drama(), ...(sel && sel.seg ? [own.ep(), `${sel.seg.id} · ${sel.label} ${sel.ver}`] : sel && homeTab(sel.asset || sel.id) ? [own.assets(), own.tab(homeTab(sel.asset || sel.id)), sel.label + " · " + sel.ver] : ["EP006"])]}/>
       <div class="body" style="position:relative">
         <div class=${"board " + (S.panning ? "panning" : "")} style=${`--grid:${48 * k}px;--gx:${x % (48 * k)}px;--gy:${y % (48 * k)}px;--dot:${k < 0.12 ? 0.8 : 1.15}px`} ref=${ref} onPointerDown=${down} onPointerMove=${move} onPointerUp=${up} onPointerLeave=${up} onWheel=${wheel}>
           <div class=${"layer" + (k < 0.35 ? " far" : "")} style=${`transform:translate(${x}px,${y}px) scale(${k})`}>
@@ -589,13 +619,13 @@
           const barTop = Math.max(PILLS, top - BAR), left = Math.max(12, Math.min(bw - W - 12, cx - W / 2));
           const below = bh - bottom - 10 - 12, above = barTop - 8 - PILLS;
           const at = S.dock === "right" ? "" : below >= MIN ? `top:${bottom + 10}px;max-height:${below}px` : above >= MIN ? `bottom:${bh - barTop + 8}px;max-height:${above}px` : null;
-          const uses = EDGES.filter((e) => e[0] === sel.id).map((e) => e[1]).join(", "), reads = EDGES.filter((e) => e[1] === sel.id).map((e) => byId[e[0]].label).join(", ");
-          const home = homeTab(sel.id), stage = sel.at || null, gid = sel.kind === "shots" ? undefined : window.EXTRA.lineageOf(sel.seg ? sel.seg.id : sel.id, stage && stage.kind), from = "Canvas · " + sel.label + (stage ? " · " + stage.kind + " " + stage.ver : "");
+          const uses = EDGES.filter((e) => e[0] === sel.id).map((e) => nameOf(e[1])).join(", "), reads = EDGES.filter((e) => e[1] === sel.id).map((e) => nameOf(e[0])).join(", ");
+          const home = homeTab(sel.asset || sel.id), stage = sel.at || null, gid = sel.kind === "shots" || sel.kind === "photoreal" ? undefined : window.EXTRA.lineageOf(sel.seg ? sel.seg.id : sel.id, stage && stage.kind), from = "Canvas · " + sel.label + (stage ? " · " + stage.kind + " " + stage.ver : "");
           return html`<div class="nbar" role="toolbar" aria-label=${"Act on " + sel.label} style=${`left:${Math.max(12, cx - 150)}px;top:${barTop}px`}>
               ${home
                 // A reference's home is Assets: the canvas links there, with no second copy of its review (§16).
-                ? html`<button class=${"btn sm " + (sel.st === "you" ? "primary" : "ghost")} onClick=${() => openHome(sel.id, from)}>${sel.st === "you" ? "Review in Assets" : "Open in Assets"}</button>`
-                : html`${sel.st === "you" && (!stage || stage.kind === "take") ? html`<button class="btn sm primary" onClick=${() => go("review")}>Review</button>` : null}
+                ? html`<button class=${"btn sm " + (sel.st === "you" ? "primary" : "ghost")} onClick=${() => openHome(sel.asset || sel.id, from, sel.at)}>${sel.st === "you" ? "Review in Assets" : "Open in Assets"}</button>`
+                : html`${sel.st === "you" && reviewOf(sel, from) ? html`<button class="btn sm primary" onClick=${reviewOf(sel, from)}>Review</button>` : null}
               <button class="ibtn" title="Send back" aria-label="Send back" onClick=${() => toast("Send back: say why, and the agent redoes it.")}>${I("arrow-counter-clockwise")}</button>
               <button class="ibtn" title="Note" aria-label="Note" onClick=${() => toast("A note for the agent at work on it.")}>${I("note-pencil")}</button>`}
               <button class="ibtn" title=${gid ? "Lineage" : "Lineage: this sample traces seg03 and what it reads"} aria-label="Lineage" disabled=${!gid} onClick=${() => openLineage(gid, from)}>${I("tree-structure")}</button>
