@@ -1,5 +1,5 @@
 /* Pine Drama Studio, pro direction: Home, Episodes board, Canvas and the take Review room.
-   Phase 1 is steering only: Accept, Send back with a reason, Note, Stop and messages to the agent. Canvas is read-only. */
+   Phase 1 views and decides (D70): Accept or Send back on the exact item, Stop, the cut's edit, and the agent chat for the rest. */
 (() => {
   const { html, render, useEffect, useRef } = window.htmPreact;
   const root = document.getElementById("root");
@@ -799,7 +799,7 @@
     if (!S.proto) return html`<button class="protobtn" aria-label="Prototype controls" title="Prototype controls: not part of the app" aria-expanded="false" onClick=${() => set({ proto: true })}>${I("sliders-horizontal")}Prototype</button>`;
     return html`<section class="proto" aria-label="Prototype controls">
       <div class="ph"><b>Prototype controls</b><span class="grow"></span><button class="ibtn" aria-label="Close the prototype controls" aria-expanded="true" onClick=${() => set({ proto: false })}>${I("x")}</button></div>
-      <p>Not part of the app: they set what the sample shows. Phase 1: steering, and editing the cut's spec · Canvas and Lineage read-only · sample project, our own test pictures.</p>
+      <p>Not part of the app: they set what the sample shows. Phase 1: viewing and deciding, and editing the cut's spec (D70) · Canvas and Lineage read-only · sample project, our own test pictures.</p>
       <span class="pl">Screen</span><div class="seg wrap" role="group" aria-label="Screen">${[["home", "Home"], ["reviews", "Reviews"], ["upload", "Upload"], ["script", "Script"], ["story", "Bible"], ["episodes", "Episodes"], ["canvas", "Canvas"], ["graph", "Graph"], ["review", "Review"], ["cut", "Cut"], ["delivery", "Delivery"], ["outofdate", "Out of date"]].map(([k, l]) => html`<button aria-pressed=${String(S.screen === k)} onClick=${() => go(k)}>${l}</button>`)}</div>
       <label class="select">State<select aria-label="State" value=${S.state} onChange=${(e) => { const v = e.target.value; set({ state: v, dramaStop: v === "stopping" ? "stopping" : v === "stopped" ? "stopped" : null, sver: null, sform: null, sdraft: "", sdec: null, subs: { ...(S.subs || {}), script: undefined } }); }}>
         ${[["normal", "Normal"], ["scriptRewriting", "Script: rewriting"], ["scriptYou", "Script: v1 waiting for you"], ["scriptBack", "Script: v1 sent back, v2 rewriting"], ["scriptYou2", "Script: v2 waiting for you"], ["scriptOriginal", "Script: only the original"], ["fresh", "Nothing out of date"], ["cutnewer", "Cut: a newer cut exists"], ["cutinputs", "Cut: draft inputs changed"], ["cutrefused", "Cut: drama-cli refuses the edit"], ["nostop", "No stop yet"], ["stopping", "Stopping"], ["stopped", "Stopped"], ["redline", "Red line"], ["budget", "Refused (no code)"], ["cap", "Cap reached"], ["env", "Pine access denied"], ["spendlimit", "Pine credits used up"]].map(([k, l]) => html`<option value=${k}>${l}</option>`)}</select></label>
