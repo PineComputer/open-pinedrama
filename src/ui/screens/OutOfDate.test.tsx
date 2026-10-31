@@ -25,7 +25,7 @@ function engine(name: string, sessions: ChatView[] = [chat("setup", "", "run"), 
   answer("/api/dramas/d1/project", { state: null, sessions: [], problems: [], names: parseBibleNames(fixture("status", "bible")) });
 }
 
-const group = (name: RegExp) => screen.getByText(name).closest("tr")!;
+const group = (name: RegExp) => screen.getByText(name, { selector: "b" }).closest("tr")!;
 const row = (name: RegExp) => screen.getByRole("link", { name }).closest("tr")!;
 
 describe("the drama's Out of date", () => {
@@ -91,6 +91,15 @@ describe("the drama's Out of date", () => {
     expect(again.submissionId).toBe(first.submissionId);
     expect(first.text).toContain("episodes/EP001/segments/seg01 t01");
     expect(first.text).not.toContain("blocking");
+  });
+
+  it("says a shared reference can't be redone once the setup has handed over, while an episode's still can", async () => {
+    engine("location-plate-replaced", [chat("setup", "", "none"), chat("ep1", "EP001", "steer")]);
+    await renderAt(<OutOfDate dramaId="d1" />, "/d/d1/out-of-date");
+    const assets = await waitFor(() => group(/^Assets/));
+    expect(await within(assets).findByText("Shared references are redone in a new setup session. Not available yet.")).toBeInTheDocument();
+    expect(within(assets).getByRole("button", { name: "Ask the setup's agent to redo them" })).toBeDisabled();
+    expect(within(row(/take/i)).getByRole("button", { name: "Redo this" })).toBeEnabled();
   });
 
   it("can't ask while the owner's session waits on a review, and says why", async () => {

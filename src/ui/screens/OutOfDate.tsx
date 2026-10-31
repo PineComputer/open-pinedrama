@@ -141,7 +141,10 @@ export function OutOfDate({ dramaId }: { dramaId: string }) {
   const ownerOf = (group: Group) => (group.owner ? t("ood.ownerEpisode", { code: group.owner }) : t("ood.ownerSetup"));
   const sessionOf = (group: Group) => {
     const session = sessions.data?.find((chat) => chat.label === group.owner);
-    const blocked = !sessions.data ? t("loading") : !session || session.sends === "none" ? t("graph.redoNoSession") : session.sends === "review" ? t("graph.redoWaitsReview") : undefined;
+    // Once the setup has handed over, no session takes a shared reference's redo: a new setup session will (decided 10-30,
+    // not built yet), so it says so rather than promising one.
+    const closed = !session || session.sends === "none";
+    const blocked = !sessions.data ? t("loading") : closed ? t(group.owner ? "graph.redoNoSession" : "ood.sharedLater") : session.sends === "review" ? t("graph.redoWaitsReview") : undefined;
     return { session: session?.sessionId, blocked };
   };
   // Our own words for what drama-cli calls fresh but was made from an out-of-date version: the version it was made from.
@@ -194,6 +197,8 @@ export function OutOfDate({ dramaId }: { dramaId: string }) {
                       <b>{group.head}</b>
                     </td>
                     <td className="act">
+                      {/* The reason it can't be asked, said where the action would be (principle 6: errors give the next step). */}
+                      {blocked && <span className="muted">{blocked} </span>}
                       <Redo dramaId={dramaId} rows={group.rows} label={t("ood.redoAll", { owner })} owner={owner} session={session} blocked={blocked} />
                     </td>
                   </tr>,
