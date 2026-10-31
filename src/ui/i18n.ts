@@ -1475,7 +1475,7 @@ const zh: Record<Key, string> = {
   "reviewing.every": "每一步",
   "reviewing.key": "造型、写实分镜、视频版本和剪辑成片",
   "reviewing.none": "写实分镜、视频版本和剪辑成片",
-  "reviewing.everyHint": "主角造型、共用参考，以及每集的分镜、镜头和成片，都由你批准。",
+  "reviewing.everyHint": "主角造型、共用参考，以及每集的分镜、视频版本和剪辑成片，都由你批准。",
   "reviewing.keyHint": "主角造型和每张写实分镜由你批准，每个视频版本和剪辑成片都由你看过。共用参考和线稿分镜按智能体做出的直接继续。",
   "reviewing.noneHint": "每张写实分镜由你批准，每个视频版本和剪辑成片都由你看过，智能体的提问由你回答。主角造型、共用参考和线稿分镜按智能体做出的直接继续。",
   "tune.cancel": "取消",
