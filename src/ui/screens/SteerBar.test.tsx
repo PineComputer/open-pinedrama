@@ -233,6 +233,15 @@ describe("a picked item's hand actions and panel (P6.8)", () => {
     return { ...picked, panel: await screen.findByRole("region", { name: /what it is made from/ }) };
   }
 
+  it("labels a node with the model its spec.json names, and with none where no spec came back", async () => {
+    withSpec();
+    render(<Canvas drama={drama("working")} />);
+    const board = (await screen.findByRole("button", { name: /^Storyboard · line-art/ })).closest(".cnode")!;
+    await waitFor(() => expect(board.querySelector(".lab .model")).toHaveTextContent("sd25"));
+    const lin = screen.getByRole("button", { name: /^林/ }).closest(".cnode")!;
+    expect(lin.querySelector(".lab .model")).toBeNull();
+  });
+
   it("shows the prompt drama-cli sent, each Image N as a chip with the picture it names", async () => {
     withSpec();
     render(<Canvas drama={drama("working")} />);

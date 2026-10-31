@@ -12,6 +12,7 @@ import { HEIGHT, layout, WIDTH } from "../../shared/layout.ts";
 import type { LineageNode, LineageView } from "../../shared/lineage.ts";
 import { type Item, itemOf, PIPELINE } from "../../shared/pipeline.ts";
 import type { ProjectView, StageStatus } from "../../shared/project.ts";
+import { specBeside, specFacts } from "../../shared/spec.ts";
 import type { DramaView, FileItem } from "../../shared/types.ts";
 import { api, useResource } from "../api.ts";
 import { IconButton } from "../components/Button.tsx";
@@ -23,6 +24,7 @@ import { Icon } from "../icons.tsx";
 import { subjectLabel } from "../labels.ts";
 import { Link, navigate, usePath } from "../router.tsx";
 import { Still } from "../Still.tsx";
+import { useText } from "../viewing.tsx";
 import { NodePanel } from "./NodePanel.tsx";
 import { SteerBar } from "./SteerBar.tsx";
 import { buttonVariants } from "@/components/ui/button";
@@ -85,6 +87,8 @@ interface BoardContext {
   /** The bar above the picked node and its panel, as the canvas renders them for it. */
   bar: (node: Node<ItemData>) => ReactNode;
   panel: (node: Node<ItemData>) => ReactNode;
+  /** The files the stops returned, where each node's spec.json is found beside its picture. */
+  files: FileItem[];
 }
 
 const Board = createContext<BoardContext | null>(null);
@@ -97,6 +101,8 @@ function ItemNode(props: NodeProps<Node<ItemData>>) {
   const { t } = useT();
   const board = useContext(Board)!;
   const video = data.work?.type.startsWith("video/");
+  // The model that made it, as the version's spec.json names it (design/app.js, the node's label); none without a spec.
+  const model = specFacts(useText(specBeside(data.work, board.files)).text)?.model;
   // The panel under the node stays inside the board: aligned to the node's side where centring would cross the board's edge.
   const { x, zoom } = useViewport();
   const paneWidth = useStore((store) => store.width);
@@ -117,6 +123,7 @@ function ItemNode(props: NodeProps<Node<ItemData>>) {
       <div className="lab" role="button" tabIndex={0} aria-pressed={selected} onClick={() => board.pick(id)} onKeyDown={(event) => event.key === "Enter" && board.pick(id)}>
         <Icon name={ICON[data.item.kind]} />
         <span className="name">{data.label}</span>
+        {model && <span className="model">{model}</span>}
         {data.status !== "accepted" && <StatusChip status={data.status} label={t(`status.${data.status}` as TKey)} />}
       </div>
       <div className={`card${data.stage.kind === "storyboard" ? " board-img" : ""}`}>
@@ -364,7 +371,7 @@ function Plane({ drama }: { drama: DramaView }) {
   const edges = picked ? mapped.edges.map((edge) => (edge.source === picked.id || edge.target === picked.id ? { ...edge, className: "hot" } : edge)) : mapped.edges;
 
   return (
-    <Board.Provider value={{ pick, dock, bar, panel }}>
+    <Board.Provider value={{ pick, dock, bar, panel, files: files.data ?? [] }}>
       <section className="ds-canvas" aria-label={t("surface.canvas")}>
         <ReactFlow
           nodes={nodes}
