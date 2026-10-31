@@ -23,10 +23,14 @@ import { type ReviewRow, type SessionRow, type TurnRow, computer as computerRow,
  * for every episode. An episode asks about its own work, or about a reference the maker let
  * it make that setup didn't (a look the image model refused then). With nothing to look at,
  * it is a question answered in words, whatever its words mention: a review with no items
- * would send an empty decision.
+ * would send an empty decision. A stop that returns drama-cli's refusals is about them, the
+ * agent asks because a command refused (goals.ts RETURN_REFUSALS), so it is a question too,
+ * whatever else it returned: those files are shown beside it, never put to a verdict
+ * (Codex's rc3 run, C11: a question about artifact access that came with three images).
  */
 export function inferKind(role: SessionRow["role"], files: (Pick<FileRow, "kind"> & { look?: string | null })[]): ReviewKind {
   const kinds = new Set(files.map((file) => file.kind));
+  if (kinds.has("refusal")) return "question";
   if (role !== "setup") {
     if (kinds.has("cut")) return "cut";
     if (kinds.has("take")) return "takes";

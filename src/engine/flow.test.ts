@@ -738,6 +738,55 @@ describe("a drama in replay", () => {
     }
   }, 30_000);
 
+  // Codex's rc3 run, C11 (qa/rc2-trace/rc3-t1-upload-refusal.json, rc3-t1-refusals.jsonl): the agent asks for artifact
+  // access, says no approval is asked yet, and returns the faces and look it made with drama-cli's refusals. The stop is
+  // about the refusal: a question answered in words, its pictures beside it, no verdicts, never approved on its own.
+  it("asks a question that came with drama-cli's refusals in words, whatever pictures it returned, even when nothing is reviewed", async () => {
+    const { run } = await import("./db.ts");
+    run("update dramas set status = 'done'");
+    fleet.stops = "ask";
+    const C11 = "Lead-look generation is blocked by a Computer artifact-access problem, not by content review. The Chen Haiqing base-look image was already drawn and paid, but its asset-library upload failed; the exact recovery command also refused. `pine-artifact ls` reports: “this session has no artifact access; the session's creator can give it artifact_access.” Please have the session creator grant artifact access, then I can reconcile the existing paid image, generate 蔡晓艳’s base look, review both lead sheets, and stop for your approval. I will not redraw the paid Chen Haiqing sheet.\n\nCompleted before the block: screenplay v2 accepted with your words; the complete two-episode bible v1 generated and accepted; both lead face masters generated, understood, and accepted. The bible’s generated timing estimates are EP001 198.8s and EP002 185.6s because the full source dialogue is retained, versus the brief’s 50–70s guide.\n\nFiles for review and studio handoff:\n- [bible.md](drama/bible/v1/bible.md)\n- [bible.json](drama/bible/v1/bible.json)\n- [bible request.json](drama/bible/v1/request.json)\n- [Chen Haiqing face](drama/assets/characters/chen_haiqing/states/face/v1/image-1.jpg), [spec.json](drama/assets/characters/chen_haiqing/states/face/v1/spec.json), [request.json](drama/assets/characters/chen_haiqing/states/face/v1/request.json), [understanding.json](drama/understanding/image-cast-132adc9c2d61/understanding.json)\n- [Cai Xiaoyan face](drama/assets/characters/cai_xiaoyan/states/face/v1/image-1.jpg), [spec.json](drama/assets/characters/cai_xiaoyan/states/face/v1/spec.json), [request.json](drama/assets/characters/cai_xiaoyan/states/face/v1/request.json), [understanding.json](drama/understanding/image-cast-4b67368f131f/understanding.json)\n- [Chen Haiqing base look image](drama/assets/characters/chen_haiqing/v1/image-1.jpg), [spec.json](drama/assets/characters/chen_haiqing/v1/spec.json), [request.json](drama/assets/characters/chen_haiqing/v1/request.json) — asset registration is the blocked step\n- [status.json](handoff/status.json), [lineage.json](handoff/lineage.json), [infinite-canvas.zip](handoff/infinite-canvas.zip), [refusals.jsonl](handoff/refusals.jsonl)\n\nPlease reply once artifact access is available; no approval of the incomplete lead looks is being requested yet.";
+    const pictures = ["drama/assets/characters/chen_haiqing/states/face/v1/image-1.jpg", "drama/assets/characters/cai_xiaoyan/states/face/v1/image-1.jpg", "drama/assets/characters/chen_haiqing/v1/image-1.jpg"];
+    const served: Record<string, Uint8Array<ArrayBuffer>> = {
+      ...Object.fromEntries(pictures.map((picture) => [picture, new Uint8Array([255, 216, 255, 224])])),
+      "handoff/refusals.jsonl": new TextEncoder().encode("{\"error\": {\"code\": \"UploadFailed\", \"message\": \"/var/lib/sandbox/sessions/amber-grove-f3d957/files/drama/assets/characters/chen_haiqing/v1/image-1.jpg is drawn and paid, but its upload failed (Refused: Cannot determine Pine artifact access before provider submission; run pine-artifact status and fix its error before retrying): do not draw it again, recover the upload: run: drama-cli asset create /var/lib/sandbox/sessions/amber-grove-f3d957/files/drama/assets/characters/chen_haiqing/v1/image-1.jpg --out /var/lib/sandbox/sessions/amber-grove-f3d957/files/drama/assets/characters/chen_haiqing/v1/asset --name 'drama chen_haiqing S0 v1' --config /var/lib/sandbox/sessions/amber-grove-f3d957/files/drama/drama-cli.cfg.yaml\", \"param\": null, \"action\": \"reconcile\"}}\n{\"error\": {\"code\": \"Refused\", \"message\": \"Cannot determine Pine artifact access before provider submission; run pine-artifact status and fix its error before retrying\", \"param\": null, \"action\": null}}\n"),
+      "handoff/status.json": new Uint8Array(readFileSync(path.resolve("fixtures", "status", "new.json"))),
+    };
+    const played = { run: fleet.run, wait: fleet.wait, openFile: fleet.openFile };
+    const scripted = new Set<string>();
+    fleet.run = async (computer, session, goal, key) => {
+      const info = await played.run.call(fleet, computer, session, goal, key);
+      if (/vertical short drama from my screenplay/.test(goal)) scripted.add(info.turnId);
+      return info;
+    };
+    fleet.wait = async (computer, session, turnId, timeout) =>
+      scripted.has(turnId)
+        ? { turnId, state: "completed", question: "", summary: C11, nextTurnId: "", files: Object.entries(served).map(([file, bytes]) => ({ path: file, size: bytes.length, sha256: "", type: file.endsWith(".jpg") ? "image/jpeg" : "application/octet-stream" })), cost: 0.05, media: 0 }
+        : played.wait.call(fleet, computer, session, turnId, timeout);
+    fleet.openFile = async (computer, session, file) => (served[file] ? new Response(served[file]).body! : played.openFile.call(fleet, computer, session, file));
+    try {
+      const form = new FormData();
+      for (const [key, value] of Object.entries({ title: "C11", language: "en", parallel: "1", perComputer: "1", length: "60", reviewing: "none", preset: "zh-cn-live-sfw", screenplayLanguage: "zh", screenplay: "0" })) form.set(key, value);
+      form.append("files", new File(["第1集\n1-1 日 内 家\n人物：陈海清"], "screenplay.txt", { type: "text/plain" }));
+      const { id } = await call<{ id: string }>("POST", "/api/dramas", form);
+      const asked = await until("the question", openReview(id, () => true));
+      const view = await call<ReviewView>("GET", `/api/reviews/${asked.id}`);
+      expect(view.kind).toBe("question");
+      expect(view.reviewItems).toEqual([]);
+      // The pictures are there to look at, beside the question.
+      expect(view.otherFiles.filter((file) => file.kind === "look").map((file) => file.path).sort()).toEqual([...pictures].sort());
+      // Nothing is reviewed in this drama, and still the question waits for the maker.
+      await new Promise((resolve) => setTimeout(resolve, 300));
+      expect((await call<ReviewView>("GET", `/api/reviews/${asked.id}`)).state).toBe("open");
+      // Words answer it, with no verdict on any picture.
+      const answered = await call<ReviewView>("POST", `/api/reviews/${asked.id}/decision`, { submissionId: crypto.randomUUID(), items: [], words: "Artifact access is granted now." });
+      expect(answered.answer).toBe("Artifact access is granted now.");
+      await call("POST", `/api/dramas/${id}/stop`);
+    } finally {
+      Object.assign(fleet, played);
+    }
+  }, 30_000);
+
   it("refuses a sample drama it doesn't have", async () => {
     await expect(call("POST", "/api/dramas/sample", { language: "en", sample: "nope" })).rejects.toThrow(/sample-unknown|No sample drama/);
   });
