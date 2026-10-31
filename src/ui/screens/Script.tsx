@@ -25,10 +25,11 @@ function Decide({ reviewId, version }: { reviewId: string; version: string }) {
   const submission = useRef(crypto.randomUUID());
   const { sending, send, check } = useSubmission({
     submit: () => api(`/api/reviews/${reviewId}/decision`, { method: "POST", json: { submissionId: submission.current, items: [], words: words.trim() } }),
-    // The engine's word on that submission (GET /api/submissions/:id): none, or refused, means nothing was taken.
+    // The engine's word on that submission (GET /api/submissions/:id): none means nothing was taken.
     taken: async () => {
       try {
-        return (await api<SubmissionView>(`/api/submissions/${encodeURIComponent(submission.current)}`)).state !== "refused";
+        await api<SubmissionView>(`/api/submissions/${encodeURIComponent(submission.current)}`);
+        return true;
       } catch (error) {
         if (error instanceof ApiError && error.status === 404) return false;
         throw error;

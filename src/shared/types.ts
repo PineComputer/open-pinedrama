@@ -388,16 +388,13 @@ export interface ItemDecision {
 }
 
 /**
- * A request the maker sent a session as one steering note (the Out of date page's redo): the engine sends a submission
- * once. sending: on its way, or sent with no answer (it may have arrived); sent: the session took it; refused: the engine
- * says it never reached the session, so the same submission may be sent again.
+ * What the engine took of one submission, a review's decision or a message to the setup's scope (submission.ts): sending,
+ * on its way to the session; sent, taken. No submission (404) means nothing was taken, so it may be sent again.
  */
 export interface SubmissionView {
   id: string;
   sessionId: string;
-  state: "sending" | "sent" | "refused";
-  /** Why it was refused, in the engine's words. */
-  message?: string;
+  state: "sending" | "sent";
 }
 
 export interface Decision {

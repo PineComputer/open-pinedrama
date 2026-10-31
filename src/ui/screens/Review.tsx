@@ -311,11 +311,12 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
         json: { submissionId: submission.current, words, items: items.map((i) => ({ key: i.key, verdict: drafts[i.key]?.verdict ?? "approve", notes: drafts[i.key]?.notes ?? [], base: bases[i.key] ?? idsOf(i) })) } satisfies Decision,
       });
     },
-    // The engine's word on that submission (GET /api/submissions/:id): taken while it is sent or being sent; none, or
-    // refused, means nothing was taken.
+    // The engine's word on that submission (GET /api/submissions/:id): taken while it is sent or being sent; none means
+    // nothing was taken.
     taken: async () => {
       try {
-        return (await api<SubmissionView>(`/api/submissions/${encodeURIComponent(submission.current)}`)).state !== "refused";
+        await api<SubmissionView>(`/api/submissions/${encodeURIComponent(submission.current)}`);
+        return true;
       } catch (error) {
         if (error instanceof ApiError && error.status === 404) return false;
         throw error;

@@ -193,17 +193,6 @@ create table if not exists refusals (
   saved_at text not null
 );
 
--- A steering note the maker submitted to a session (redo.ts), sent at most once per id.
-create table if not exists submissions (
-  id text primary key,
-  session_id text not null,
-  text text not null,
-  state text not null,
-  message text,
-  created_at text not null,
-  updated_at text not null
-);
-
 -- A message to the setup's scope after the handover (setup-message.ts, D38), by its submission id: queued until a new
 -- setup session takes it, working while that session runs, then done or failed.
 create table if not exists setup_messages (
