@@ -72,11 +72,13 @@ const json = (p: string, value: unknown): Out => ({ path: p, type: "application/
 /**
  * A picture's or take's spec.json and request.json in its version's folder, as drama-cli writes them, and its
  * asset-library record (asset/asset.json, whose Id a request names as asset://<Id>): the sample's, copied from the run it
- * comes from, where it has them; else a spec of drama-cli's shape for the placeholder.
+ * comes from, where it has them. Only a placeholder picture gets a spec of drama-cli's shape written for it; a real
+ * picture whose run left no spec gets none, rather than words drama-cli never wrote.
  */
 const specs = (set: string, dir: string, placeholder: Record<string, unknown>): Out[] => {
-  const own = [`${dir}/request.json`, `${dir}/asset/asset.json`].flatMap((p) => sample(set, p) ?? []);
-  return [sample(set, `${dir}/spec.json`) ?? json(`${dir}/spec.json`, placeholder), ...own];
+  const own = [`${dir}/spec.json`, `${dir}/request.json`, `${dir}/asset/asset.json`].flatMap((p) => sample(set, p) ?? []);
+  const real = sample(set, `${dir}/image-1.svg`) ?? sample(set, `${dir}/video.mp4`);
+  return own.length || real ? own : [json(`${dir}/spec.json`, placeholder)];
 };
 /** A placeholder picture's spec: drama-cli's image spec, with the samples' model (fixtures/replay/samples/full). */
 const imageSpec = (prompt: string, aspect: "16:9" | "9:16") => ({ provider: "openai", model: "gpt-image-2.5-sunburst", prompt, aspect_ratio: aspect, size: aspect === "16:9" ? "2048x1152" : "1152x2048", quality: "high" });

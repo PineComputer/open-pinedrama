@@ -1,0 +1,13 @@
+{
+  "model": "gpt-image-2.5-sunburst",
+  "prompt": "Image 1 is the floor plan of this room seen from above: its bottom edge is the front wall, its top edge the back wall, its left edge the left wall and its right edge the right wall. Generate one photorealistic cinematic still of this room, the front view (the establishing view): the camera stands at the centre of the front wall, at eye level, facing the back wall, with a 35mm lens and natural textures. The room layout and furniture placement should exactly match Image 1. The place is completely empty of people: no person, figure, silhouette, mannequin or reflection of a person anywhere, including behind glass, through doorways and in the distance. Location: Jail, front desk. A present-day jail processing and release area with beige walls and a grey linoleum floor. A chest-high grey laminate front desk runs across the room, parallel to the back wall and a few steps in front of it, with a computer monitor and a tray on its top. Back wall: grey metal filing cabinets, a plain round wall clock and, at the back wall's left end, a heavy steel security door with a small wire-glass pane, which leads back to the cells. Right wall: a heavy steel exit door with a push bar and a small wire-glass window, the way out to the street. Left wall: a row of small grey steel property lockers and a steel bench bolted to the floor beneath them. Front wall (behind the camera): a cork notice board. Rectangular fluorescent ceiling panels give cool, even top light, and daylight comes in faintly through the exit door's small window on the right wall. Show only this place as described: the doors, windows and openings it names lead nowhere new, with no other exit, courtyard, corridor or outdoor view added. Light it with the sources the description names, from their direction, at a neutral daylight white balance so that whites are white; only lamps the description names may glow warm.\n\nAvoid: people or silhouettes, readable text, labels, signs with letters or numbers, logos, watermark.\n",
+  "n": 1,
+  "size": "1152x2048",
+  "quality": "high",
+  "output_format": "jpeg",
+  "output_compression": 100,
+  "moderation": "low",
+  "input_images": [
+    "assets/scenes/jail_front_desk/floor-plan/v1/image-1.jpg"
+  ]
+}

@@ -15,5 +15,5 @@ The person accepted AGPL for the Studio on 2026-10-30. The Studio carries a NOTI
 - No Reveric JSX or other CSS: studio.css and app.js are new. They follow Reveric's layout and measurements, taken from its screenshots and SYSTEM.md.
 
 ## Our own material
-- The pictures and clips in img/ and clips/ are stills and muted clips from our own Double Life test run (short-drama-runs/ab-night-plate). They are also the Studio's Bride on Bail replay sample, in the open-pinedrama repo under LFS (fixtures/replay/samples/full/bride-on-bail/), at yurun's request (2026-10-30).
+- The pictures and clips in img/ and clips/ are stills and muted clips from our own Double Life test run (short-drama-runs/ab-night-plate). They are also the Studio's Bride on Bail replay sample, in the open-pinedrama repo under LFS (fixtures/replay/samples/full/bride-on-bail/), at merecdesperez44323-lab's request (2026-10-30). Each look sheet, plate view, prop and storyboard is matched to its version in that run by picture hash, and carries the run's own spec.json, request.json and asset record (`specs/`, without the BytePlus account's GroupId and ProjectName); the take stills and clips match no version there, so they carry no spec.
 - The brand mark (pine tree) is our own SVG.

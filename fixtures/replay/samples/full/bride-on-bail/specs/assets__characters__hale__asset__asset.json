@@ -1,0 +1,11 @@
+{
+ "Id": "asset-20261023183335-r5q8t",
+ "Name": "double-life-r4 officiant base v1",
+ "AssetType": "Image",
+ "Status": "Active",
+ "Moderation": {
+  "Strategy": "Default"
+ },
+ "CreateTime": "2026-10-23T10:33:37Z",
+ "UpdateTime": "2026-10-23T10:33:39Z"
+}

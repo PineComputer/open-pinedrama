@@ -32,4 +32,15 @@ describe("a sample drama from a real run", () => {
     expect(record).not.toHaveProperty("GroupId");
     expect(record).not.toHaveProperty("ProjectName");
   }, 60_000);
+
+  it("gives a real picture its run's spec, and invents one only for a placeholder", async () => {
+    // Bride on Bail's EP006 boards seg02-seg04 are drama-cli's from ab-night-plate; seg01's is replay's placeholder.
+    const { turn, read } = await firstStop("Make episode EP006 of Bride on Bail. Title: Bride on Bail.");
+    const spec = async (seg: string) => JSON.parse(await read(turn.files.find((file) => file.path.endsWith(`/${seg}/line-art/v1/spec.json`))!.path));
+    // drama-cli's prompt lays the panels out on a grid and comes with its request; replay's placeholder spec does neither.
+    expect((await spec("seg02")).prompt).toContain("divided into a grid");
+    expect(turn.files.some((file) => file.path.endsWith("/seg02/line-art/v1/request.json"))).toBe(true);
+    expect((await spec("seg01")).prompt).not.toContain("divided into a grid");
+    expect(turn.files.some((file) => file.path.endsWith("/seg01/line-art/v1/request.json"))).toBe(false);
+  }, 60_000);
 });

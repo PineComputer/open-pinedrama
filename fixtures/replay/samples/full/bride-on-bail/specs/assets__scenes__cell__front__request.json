@@ -1,0 +1,13 @@
+{
+  "model": "gpt-image-2.5-sunburst",
+  "prompt": "Image 1 is the floor plan of this room seen from above: its bottom edge is the front wall, its top edge the back wall, its left edge the left wall and its right edge the right wall. Generate one photorealistic cinematic still of this room, the front view (the establishing view): the camera stands at the centre of the front wall, at eye level, facing the back wall, with a 35mm lens and natural textures. The room layout and furniture placement should exactly match Image 1. The place is completely empty of people: no person, figure, silhouette, mannequin or reflection of a person anywhere, including behind glass, through doorways and in the distance. Location: Jail, a cell. A narrow, present-day concrete jail cell painted dull grey-green, with a scuffed grey concrete floor. Back wall: a small high rectangular window with steel bars, through which a pale shaft of daylight slants down into the cell. Left wall: a steel bunk bolted lengthwise along the wall, with a thin grey mattress, a folded grey wool blanket and a flat pillow. Right wall: the barred steel cell door, the only way in, which opens onto a dim corridor; beside it in the back-right corner stands a stainless-steel toilet-sink unit. Front wall (behind the camera): bare concrete with a small steel shelf. A caged fluorescent tube on the ceiling gives a flat, cold white top light. Show only this place as described: the doors, windows and openings it names lead nowhere new, with no other exit, courtyard, corridor or outdoor view added. Light it with the sources the description names, from their direction, at a neutral daylight white balance so that whites are white; only lamps the description names may glow warm.\n\nAvoid: people or silhouettes, readable text, labels, signs with letters or numbers, logos, watermark.\n",
+  "n": 1,
+  "size": "1152x2048",
+  "quality": "high",
+  "output_format": "jpeg",
+  "output_compression": 100,
+  "moderation": "low",
+  "input_images": [
+    "assets/scenes/jail_cell/floor-plan/v1/image-1.jpg"
+  ]
+}

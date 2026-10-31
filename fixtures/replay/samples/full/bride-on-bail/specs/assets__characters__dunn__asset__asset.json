@@ -1,0 +1,11 @@
+{
+ "Id": "asset-20261022180000-6s8cf",
+ "Name": "double-life-r4 officer base v1",
+ "AssetType": "Image",
+ "Status": "Active",
+ "Moderation": {
+  "Strategy": "Default"
+ },
+ "CreateTime": "2026-10-22T10:00:01Z",
+ "UpdateTime": "2026-10-22T10:00:04Z"
+}
