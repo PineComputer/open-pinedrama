@@ -167,7 +167,7 @@ describe("the rail", () => {
 
   it("says it's a replay, with what that means as its tooltip", async () => {
     await rail({ replay: true });
-    expect(screen.getByText("Replay")).toHaveAttribute("title", "Replay · sample work, no spend");
+    expect(screen.getByRole("note", { name: "Replay · sample work, no spend" })).toHaveTextContent("Replay");
   });
 
   it("opens and closes a narrow project page's tree with ☰", async () => {

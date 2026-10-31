@@ -6,7 +6,8 @@ import { newProblems } from "./axe.ts";
 
 test("a maker starts the sample drama, answers the agent and reviews the leads", async ({ page }) => {
   await page.goto(`/api/open?ticket=${TOKEN}`);
-  await expect(page.getByText("Replay · sample work, no spend")).toBeVisible();
+  // The rail says it's a replay, its full words as the tag's tooltip (NavRail, D51 as amended).
+  await expect(page.getByRole("navigation", { name: "Places" }).getByRole("note", { name: "Replay · sample work, no spend" })).toBeVisible();
   expect(await newProblems(page)).toEqual([]);
 
   await page.getByRole("button", { name: "Start the sample project" }).click();
