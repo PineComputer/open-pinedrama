@@ -111,26 +111,27 @@ function currentScreenplay(dramaId: string): ScriptPage["screenplay"] {
   return { version: `v${newest}`, file: file && toItem(file), review: review && toItem(review), pending: waiting.length > 0, reviewId };
 }
 
-/** The drama as text: what the maker gave, the newest bible, and each episode's newest breakdown, listed or not yet. */
+/**
+ * Script, the screenplay's one home (IA §16): what the maker gave and the screenplay drama-cli recorded. The bible is
+ * Story's and each breakdown its episode's.
+ */
 export function scriptPage(dramaId: string): ScriptPage {
   const inputs = all<FileRow>("select f.* from files f join inputs i on i.file_id = f.id where i.drama_id = ? order by f.id", dramaId);
-  const texts = all<FileRow>("select * from files where drama_id = ? and kind in ('bible', 'breakdown') and type like 'text/%' order by id", dramaId);
-  const titles = new Map(all<EpisodeRow>("select * from episodes where drama_id = ?", dramaId).map((row) => [episodeCode(row), row.title]));
-  const breakdowns = new Map<string, FileRow>();
-  for (const row of texts) {
-    const code = row.kind === "breakdown" ? classify(row.rel_path).episode : undefined;
-    if (code) breakdowns.set(code, row);
-  }
-  const bible = texts.findLast((row) => row.kind === "bible");
   return {
     inputs: inputs.map(toItem),
     screenplayFile: get<{ screenplay_file: number | null }>("select screenplay_file from dramas where id = ?", dramaId)?.screenplay_file ?? null,
     screenplay: currentScreenplay(dramaId),
-    bible: bible ? toItem(bible) : undefined,
-    breakdowns: [...breakdowns.entries()]
-      .sort(([a], [b]) => a.localeCompare(b, undefined, { numeric: true }))
-      .map(([code, row]) => ({ code, title: titles.get(code) || undefined, file: itemIn(code)(row) })),
   };
+}
+
+/** Each episode's newest text breakdown, by episode code: where a character, place or prop appears. */
+function breakdownsOf(dramaId: string): { code: string; file: FileRow }[] {
+  const newest = new Map<string, FileRow>();
+  for (const row of all<FileRow>("select * from files where drama_id = ? and kind = 'breakdown' and type like 'text/%' order by id", dramaId)) {
+    const code = classify(row.rel_path).episode;
+    if (code) newest.set(code, row);
+  }
+  return [...newest.entries()].sort(([a], [b]) => a.localeCompare(b, undefined, { numeric: true })).map(([code, file]) => ({ code, file }));
 }
 
 /**
@@ -267,7 +268,7 @@ export function castCards(dramaId: string): CastCard[] {
     }
   }
   const order = { look: 0, location: 1, prop: 2 };
-  const breakdowns = scriptPage(dramaId).breakdowns.map((entry) => ({ code: entry.code, text: textOf(entry.file.id) }));
+  const breakdowns = breakdownsOf(dramaId).map((entry) => ({ code: entry.code, text: textOf(entry.file.id) }));
   return [...cards.values()]
     .map((card) => ({
       ...card,

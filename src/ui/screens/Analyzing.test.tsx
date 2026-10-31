@@ -25,7 +25,7 @@ const reading = setup([
 describe("Analyzing", () => {
   it("names each step the agent reported, once each, the newest under way, with how long each took", async () => {
     answer("/api/dramas/d1/sessions", reading);
-    answer("/api/dramas/d1/script", { inputs: [], screenplayFile: null, breakdowns: [] } satisfies ScriptPage);
+    answer("/api/dramas/d1/script", { inputs: [], screenplayFile: null } satisfies ScriptPage);
     await renderAt(<Analyzing dramaId="d1" />);
     expect(await screen.findByRole("heading", { name: "Analyzing your script" })).toBeInTheDocument();
     const steps = screen.getByRole("list", { name: "Process" });
@@ -37,7 +37,7 @@ describe("Analyzing", () => {
 
   it("offers the rewrite to review once it waits for the maker, the last step timed to the stop, with the Fountain so far", async () => {
     answer("/api/dramas/d1/sessions", setup([["activity", "Rewriting it into Fountain", "2026-10-30T10:01:10Z"], ["question", "Accept the rewrite?", "2026-10-30T10:02:00Z"]], "answer"));
-    answer("/api/dramas/d1/script", { inputs: [], screenplayFile: null, screenplay: { version: "v1", file: rewrite, pending: true, reviewId: "r3" }, breakdowns: [] } satisfies ScriptPage);
+    answer("/api/dramas/d1/script", { inputs: [], screenplayFile: null, screenplay: { version: "v1", file: rewrite, pending: true, reviewId: "r3" } } satisfies ScriptPage);
     server.use(http.get(rewrite.url, () => HttpResponse.text("INT. TENEMENT FLAT - DAY #1-1#\n\nLin stands in the doorway.\n")));
     await renderAt(<Analyzing dramaId="d1" />);
     expect(await screen.findByRole("heading", { name: "Your Fountain is ready" })).toBeInTheDocument();

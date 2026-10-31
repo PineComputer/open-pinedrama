@@ -245,8 +245,8 @@ expect(archive.length).toBe(Number(zip.headers.get("content-length")));
 expect(archive.includes(Buffer.from(`${title}/EP001`))).toBe(true);
 expect(archive.includes(Buffer.from(`${title}/EP002`))).toBe(false);
   const script = await call<ScriptPage>("GET", `/api/dramas/${id}/script`);
-  expect(script.bible?.kind).toBe("bible");
-  expect(script.breakdowns.map((entry) => entry.code)).toEqual(["EP001", "EP002", "EP003", "EP004", "EP005", "EP006"]);
+  // Script is the screenplay's home (IA §16): the bible and the breakdowns are Story's and the episodes'.
+  expect(Object.keys(script).sort()).toEqual(["inputs", "screenplay", "screenplayFile"]);
   // The maker's screenplay, and the brief the studio wrote from New drama.
   expect(script.inputs.map((file) => file.name)).toEqual(["screenplay.txt", "brief.md"]);
   const cast = await call<CastCard[]>("GET", `/api/dramas/${id}/cast`);

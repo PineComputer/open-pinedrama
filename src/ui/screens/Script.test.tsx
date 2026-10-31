@@ -13,7 +13,7 @@ const original = file({ kind: "screenplay", name: "stepmother.txt", type: "text/
 const rewrite = file({ kind: "screenplay-version", name: "screenplay.fountain", type: "text/plain", version: "v2" });
 
 function page(pending: boolean): ScriptPage {
-  return { inputs: [original], screenplayFile: original.id, screenplay: { version: "v2", file: rewrite, pending, reviewId: pending ? "r3" : undefined }, breakdowns: [] };
+  return { inputs: [original], screenplayFile: original.id, screenplay: { version: "v2", file: rewrite, pending, reviewId: pending ? "r3" : undefined } };
 }
 
 function texts() {
@@ -44,15 +44,14 @@ describe("Script, with a rewrite", () => {
 });
 
 describe("Script", () => {
-  it("is the screenplay's home: it opens on the version drama-cli recorded, and the bible is not here (IA §16)", async () => {
+  it("is the screenplay's home: it opens on the version drama-cli recorded (IA §16)", async () => {
     const fountain = file({ kind: "screenplay-version", name: "screenplay/v1/screenplay.fountain", type: "text/plain", version: "v1" });
-    const bible = file({ kind: "bible", name: "bible/v1/bible.md", type: "text/markdown", version: "v1" });
-    answer("/api/dramas/d1/script", { inputs: [], screenplay: { version: "v1", file: fountain, pending: false }, bible, breakdowns: [] } as never);
-    server.use(http.get(fountain.url, () => HttpResponse.text("INT. TENEMENT FLAT - DAY\n")), http.get(bible.url, () => HttpResponse.text("# Bible\n")));
+    answer("/api/dramas/d1/script", { inputs: [], screenplayFile: null, screenplay: { version: "v1", file: fountain, pending: false } } satisfies ScriptPage);
+    server.use(http.get(fountain.url, () => HttpResponse.text("INT. TENEMENT FLAT - DAY\n")));
     render(<Script dramaId="d1" />);
     const versions = await screen.findByRole("region", { name: "Versions" });
     expect(within(versions).getAllByRole("button").map((button) => [button.textContent, button.getAttribute("aria-current")])).toEqual([["v1, as drama-cli recorded itv1", "true"]]);
-    expect(screen.queryByText(/Bible/)).not.toBeInTheDocument();
+    expect(await screen.findByText("INT. TENEMENT FLAT - DAY")).toBeInTheDocument();
   });
 
   it("shows a rewrite on its own or beside the maker's original", async () => {
