@@ -145,7 +145,7 @@ export function OutOfDate({ dramaId }: { dramaId: string }) {
     // not built yet), so it says so rather than promising one.
     const closed = !session || session.sends === "none";
     const blocked = !sessions.data ? t("loading") : closed ? t(group.owner ? "graph.redoNoSession" : "ood.sharedLater") : session.sends === "review" ? t("graph.redoWaitsReview") : undefined;
-    return { session: session?.sessionId, blocked };
+    return { session: session?.sessionId, blocked, review: session?.sends === "review" ? session.reviewId : undefined };
   };
   // Our own words for what drama-cli calls fresh but was made from an out-of-date version: the version it was made from.
   const madeFrom = (node: LineageNode) => {
@@ -189,7 +189,7 @@ export function OutOfDate({ dramaId }: { dramaId: string }) {
             </thead>
             <tbody>
               {groups.map((group) => {
-                const { session, blocked } = sessionOf(group);
+                const { session, blocked, review } = sessionOf(group);
                 const owner = ownerOf(group);
                 return [
                   <tr key={group.key} className="grp">
@@ -199,6 +199,12 @@ export function OutOfDate({ dramaId }: { dramaId: string }) {
                     <td className="act">
                       {/* The reason it can't be asked, said where the action would be (principle 6: errors give the next step). */}
                       {blocked && <span className="muted">{blocked} </span>}
+                      {/* What waits first opens from here, and Back returns (principle 6; Nielsen, "help users recognize, diagnose, and recover from errors"). */}
+                      {review && (
+                        <Link to="/r/$reviewId" params={{ reviewId: review }} state={{ backTo: t("tree.outOfDate") }} className="linkbtn">
+                          {t("ood.openReview")}
+                        </Link>
+                      )}{" "}
                       <Redo dramaId={dramaId} rows={group.rows} label={t("ood.redoAll", { owner })} owner={owner} session={session} blocked={blocked} />
                     </td>
                   </tr>,

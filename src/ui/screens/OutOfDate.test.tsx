@@ -103,11 +103,13 @@ describe("the drama's Out of date", () => {
   });
 
   it("can't ask while the owner's session waits on a review, and says why", async () => {
-    engine("location-plate-replaced", [chat("setup", "", "review"), chat("ep1", "EP001", "steer")]);
+    engine("location-plate-replaced", [{ ...chat("setup", "", "review"), reviewId: "r7" }, chat("ep1", "EP001", "steer")]);
     await renderAt(<OutOfDate dramaId="d1" />, "/d/d1/out-of-date");
     const button = within(await waitFor(() => group(/^Assets$/))).getByRole("button", { name: "Ask the setup's agent to redo them" });
     await waitFor(() => expect(button).toBeDisabled());
     expect(button).toHaveAttribute("title", "The agent waits on your review first: decide it, then ask.");
+    // The next step: the review that waits, opened from here.
+    expect(within(group(/^Assets/)).getByRole("link", { name: "Open the review" })).toHaveAttribute("href", "/r/r7");
   });
 
   it("keeps the story apart from the assets, both the setup's", async () => {
