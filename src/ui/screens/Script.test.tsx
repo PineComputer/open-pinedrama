@@ -80,6 +80,18 @@ describe("Script", () => {
     expect(screen.queryByText("Loading…")).not.toBeInTheDocument();
   });
 
+  it("names a Word or PDF upload's text as extracted from it, and links the file kept in the library", async () => {
+    const text = file({ kind: "screenplay", name: "stepmother.txt", type: "text/plain" });
+    const pdf = file({ kind: "screenplay", name: "stepmother.pdf", type: "application/pdf" });
+    answer("/api/dramas/d1/script", { inputs: [text, pdf], screenplayFile: text.id, versions: [] });
+    server.use(http.get(text.url, () => HttpResponse.text("EPISODE 1\n")));
+    await renderAt(<Script dramaId="d1" />, "/d/d1/script");
+    const versions = await screen.findByRole("region", { name: "Versions" });
+    expect(within(versions).getByText(/^Text extracted from/)).toHaveTextContent("Text extracted from stepmother.pdf");
+    expect(within(versions).getByRole("link", { name: "stepmother.pdf" })).toHaveAttribute("href", `${pdf.url}&download=1`);
+    expect(within(versions).queryByText(/Original uploaded/)).not.toBeInTheDocument();
+  });
+
   it("says so when the original's fetch fails, never loading on", async () => {
     answer("/api/dramas/d1/script", { inputs: [original], screenplayFile: original.id, versions: [] });
     server.use(http.get(original.url, () => new HttpResponse(null, { status: 500 })));

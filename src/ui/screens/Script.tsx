@@ -5,6 +5,7 @@ import { api, ApiError, useResource } from "../api.ts";
 import { Missing } from "../components/Missing.tsx";
 import { Segmented } from "../components/Segmented.tsx";
 import { Submission, useSubmission } from "../components/Submission.tsx";
+import { EXTRACTED, textName } from "../extract.ts";
 import { fountainLines } from "../fountainLines.ts";
 import { Icon, type IconName } from "../icons.tsx";
 import { useT } from "../i18n.ts";
@@ -207,6 +208,9 @@ function ScriptBody({ dramaId, data, ep, rewriting }: { dramaId: string; data: S
   const { search } = useRoute();
   const navigate = useNavigate();
   const original: FileItem | undefined = data.inputs.find((file) => file.id === data.screenplayFile);
+  // New drama sends a Word or PDF screenplay as its text and keeps the file it came from beside it, in the library
+  // (NewDrama.tsx, start; extract.ts, textName): the original is then that text, and the file is linked, not copied.
+  const source = original && data.inputs.find((file) => file !== original && EXTRACTED.test(file.name) && textName(file.name) === original.name);
   const shown = data.versions.find((version) => search.item === "screenplay" && version.version === search.version) ?? data.versions[0];
   const [picked, setPicked] = useState<View>();
   const fountain = useText(shown?.file).text;
@@ -277,7 +281,16 @@ function ScriptBody({ dramaId, data, ep, rewriting }: { dramaId: string; data: S
               <li className="done">
                 <span className="dot accepted" />
                 <div className="grow">
-                  <span>{t("script.uploaded", { name: original.name })}</span>
+                  {source ? (
+                    <span>
+                      {t("script.extractedFrom")}{" "}
+                      <a className="link" href={`${source.url}&download=1`} title={t("episode.download")}>
+                        {source.name}
+                      </a>
+                    </span>
+                  ) : (
+                    <span>{t("script.uploaded", { name: original.name })}</span>
+                  )}
                   {/* A project set up before drama-cli recorded rewrites: the history says so where the versions would be. */}
                   {!data.versions.length && !rewriting && <small className="muted">{t("script.notRecorded")}</small>}
                 </div>
