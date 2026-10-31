@@ -88,7 +88,9 @@
     // IA draft (§16), named as drama-cli names it: Bible is the bible's home; Assets is the home of characters, locations and props, with its own tabs.
     const story = (S.stab || "bible") === "bible";
     // §16: a link lands here with its object picked (S.asel), marked and scrolled into view.
-    useEffect(() => { if (S.asel) document.querySelector(`[data-asset="${S.asel}"]`)?.scrollIntoView({ block: "center" }); }, [S.asel, S.stab]);
+    // Only the page's own column scrolls (scrollIntoView would move every scrolling ancestor).
+    useEffect(() => { const card = S.asel && document.querySelector(`[data-asset="${S.asel}"]`), box = card && card.closest(".scrollmain"); if (!box) return;
+      const r = card.getBoundingClientRect(), b = box.getBoundingClientRect(); box.scrollTop += r.top - b.top - (b.height - r.height) / 2; }, [S.asel, S.stab]);
     const picked = (id) => ({ "data-asset": id, "aria-current": S.asel === id ? "true" : undefined });
     /* Codex round 3 (fix 3): a link that names an older version (S.at.ver) shows that version on the card, with the
        current one beside it. Versions are numbered v1… in order and kept (drama-cli appends, never rewrites), so the
@@ -232,7 +234,7 @@
         ${sel.of && !sel.ep ? html`<button class="btn sm" onClick=${() => openHome(sel.of, label, at)}>Open in Assets</button>`
           : home ? html`<button class="btn sm" onClick=${() => { set({ ...home[1], from: { screen: "graph", label } }); try { history.replaceState(null, "", "#" + home[1].screen); } catch (e) { /* the hash is a convenience */ } }}>Open in ${home[0]}</button>` : null}</div>
         <div class="iscroll">
-          ${sel.pic && html`<div class="isec"><img src=${sel.pic} alt="" style="width:100%;border-radius:10px;max-height:240px;object-fit:cover;object-position:top"/></div>`}
+          ${sel.pic && html`<div class="isec"><img src=${sel.pic} alt="" style="width:100%;border-radius:var(--radius-large);max-height:240px;object-fit:cover;object-position:top"/></div>`}
           <div class="isec"><h4>State</h4>${sel.stale ? html`<div class="finding warn">${I("warning")}<span>${sel.id === "file" ? "Changed file: bible/v3/bible.json" : "Made from Case file v1, which is out of date."} The agent redraws it.</span></div>` : html`<span class="muted">Fresh: made from the accepted versions.</span>`}</div>
           <div class="isec"><h4>Made from <span class="muted">${up.size}</span></h4>${[...up].map((id) => html`<button class="lrow" onClick=${() => set({ gsel: id })}>${by[id].t}<span class="mono subtle">${by[id].v}</span></button>`)}</div>
           <div class="isec"><h4>Made from it <span class="muted">${down.size}</span></h4>${[...down].map((id) => html`<button class="lrow" onClick=${() => set({ gsel: id })}>${by[id].t}<span class="mono subtle">${by[id].v}</span></button>`)}${!down.size && html`<span class="muted">Nothing yet.</span>`}</div>

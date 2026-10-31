@@ -3,6 +3,9 @@
 (() => {
   const { html, render, useEffect, useRef } = window.htmPreact;
   const root = document.getElementById("root");
+  // The "Loading…" placeholder goes before the first render: Preact appends beside it, and the leftover line made the
+  // page 66 px taller than the window, so a scrollIntoView shifted the whole frame up.
+  root.replaceChildren();
   const SPENT_COVERS = "Agent turns and video, priced when each turn ends.";
   const SCREENS = ["home", "reviews", "upload", "script", "story", "episodes", "canvas", "graph", "review", "cut", "delivery", "outofdate"];
   const hash = (location.hash || "").slice(1);
@@ -333,7 +336,7 @@
     return html`<div class="main"><div class="scrollmain"><div class="wrap">
       <div class="greet"><div class="grow"><h1>Projects</h1><p>5 decisions wait for you across 2 projects.</p></div></div>
       <section class="waitstrip" aria-labelledby="waiting-title"><div class="wh"><h3 id="waiting-title">Waiting for you</h3><span class="grow"></span>
-          <button class="seeall" onClick=${() => set({ waitFor: null, screen: "reviews" })}>See all ${waits().length} in Reviews ${I("caret-right")}</button></div>
+          <button class="btn sm ghost" onClick=${() => set({ waitFor: null, screen: "reviews" })}>See all ${waits().length} in Reviews ${I("caret-right")}</button></div>
         <ul>${waits().slice(0, 4).map((w) => html`<li><button class="wait" onClick=${w.open}><img src=${w.pic} alt=""/><span><b>${w.dr} · ${w.what}</b><small>${w.d} · ${w.age}</small></span></button></li>`)}</ul></section>
       <div class="tabsrow"><div class="utabs" role="tablist">${tabs.map(([k, l, n]) => html`<button role="tab" aria-selected=${String(S.tab === k)} onClick=${() => set({ tab: k })}>${l}<small>${n}</small></button>`)}</div>
         <span class="grow"></span><span class="search">${I("magnifying-glass")}Search projects…</span><button class="select">Last edited ${I("caret-down")}</button></div>

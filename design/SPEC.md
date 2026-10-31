@@ -15,11 +15,11 @@ The rule and its grounds: [docs/studio/design-system.md](../docs/studio/design-s
 
 | Role | Radius | Elements |
 |---|---|---|
-| Press or read | `--radius-pill` | Button, IconButton, StatusChip, chips, Segmented, badges and counts, tags, the search field, progress and meter tracks, Toast |
+| Press or read | `--radius-pill` | Button, IconButton, StatusChip, chips, Segmented, badges and counts, tags (a code or time over a picture or a clip), progress, meter and step tracks, Toast |
 | Surface | `--radius-2xl` | Panel, Dialog, StopCard, menus and popovers, a floating inspector, the agent panel's cards that stand alone on the ground |
 | Card of work | `--radius-large` | DramaCard, AssetCard, an EpisodeCard's cover, a CanvasNode's card, players and big pictures in an inspector |
-| Inside a surface | `--radius-medium` | inputs and textareas, rows with a hover or selected fill (tree, nav items, list rows, menu items), Finding, code and prompt blocks, thumbnails from 40 px |
-| Mark | `--radius-small` | thumbnails under 40 px, timeline clips, a tile's label |
+| Control or row | `--radius-medium` | inputs, textareas, selects and the search field, the agent's composer, rows with a hover or selected fill (tree, nav items, list rows, review reel items, menu items, radio choices such as the presets), Finding, code and prompt blocks, thumbnails from 40 px, the brand mark |
+| Mark | `--radius-small` | thumbnails under 40 px, timeline clips and tracks, keyboard keys |
 | Circle | `50%` | faces, status dots |
 | Edge | `0` | the rail, the sidebar, the top bar, a docked inspector or agent panel, a table's rows, a strip across a surface's full width |
 
