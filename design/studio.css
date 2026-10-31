@@ -938,7 +938,7 @@ button.drow { cursor: pointer; } button.drow:hover { background: var(--hover); }
 .editor .edbar { padding: 0 6px 0 0; background: var(--surface-container); }
 .editor .edtab { border: 0; border-right: 1px solid var(--border); border-radius: 0; margin: 0; padding: 10px 14px; background: var(--surface); }
 .editor .edbody { padding: 16px 20px; }
-.editor .original { margin: 0; white-space: pre-wrap; font: 13px/1.6 var(--font-mono); color: var(--text-primary); }
+.editor .original, .editor .fountain { margin: 0; white-space: pre-wrap; font: 13px/1.6 var(--font-mono); color: var(--text-primary); }
 .editor .diffed { border: 0; border-radius: 0; }
 /* The asset viewer: a lightbox (LibTV's asset viewer; Google Photos, Lightroom; yet-another-react-lightbox in the
    product). The picture is an <img> held to the stage, so it keeps its own ratio and no band is painted into it; the

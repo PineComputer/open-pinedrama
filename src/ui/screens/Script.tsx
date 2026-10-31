@@ -6,7 +6,6 @@ import { Missing } from "../components/Missing.tsx";
 import { Segmented } from "../components/Segmented.tsx";
 import { Submission, useSubmission } from "../components/Submission.tsx";
 import { EXTRACTED, textName } from "../extract.ts";
-import { fountainLines } from "../fountainLines.ts";
 import { Icon, type IconName } from "../icons.tsx";
 import { useT } from "../i18n.ts";
 import { errorText } from "../labels.ts";
@@ -244,12 +243,12 @@ function ScriptBody({ dramaId, data, ep, settingUp, asking }: { dramaId: string;
   const validated = useText(shown?.validate).text;
   const map = lineMap(validated);
   const comparable = Boolean(map && shown?.original);
-  const lines = fountain === undefined ? [] : fountainLines(fountain);
-  // An episode's "Episode script" (its Canvas head, ?ep=EPxxx) opens the Fountain at that episode: the section before
-  // its first scene, numbered by drama-cli.
-  const first = ep ? lines.findIndex((line) => !line.gap && line.el === "heading" && Number(episodeOfScene(line.text)) === Number(ep.slice(2))) : -1;
-  const section = first < 0 ? -1 : lines.findLastIndex((line, index) => index <= first && !line.gap && line.el === "section");
-  const target = section >= 0 ? section : first;
+  // The Fountain as the file's own lines: which kind each line is comes only from drama-cli's record of it, which this
+  // drama-cli doesn't write, so no parser of the studio's guesses one (D62 as amended for C15).
+  const lines = fountain === undefined ? [] : fountain.replace(/\r/g, "").split("\n");
+  // An episode's "Episode script" (its Canvas head, ?ep=EPxxx) opens the Fountain at that episode's first scene, by
+  // the scene number drama-cli writes at a heading's end.
+  const target = ep ? lines.findIndex((line) => Number(episodeOfScene(line)) === Number(ep.slice(2))) : -1;
   useEffect(() => {
     if (target >= 0) document.getElementById(`fl-${target}`)?.scrollIntoView({ block: "start" });
   }, [target, fountain]);
@@ -336,6 +335,7 @@ function ScriptBody({ dramaId, data, ep, settingUp, asking }: { dramaId: string;
             {views.length > 1 && <Segmented label={t("script.view")} value={view} options={views.map(([value, label, icon]) => ({ value, label: t(label), icon }))} onChange={choose} />}
           </div>
           {shown && !comparable && (shown.validate === undefined || validated !== undefined) && <p className="muted ednote">{t("script.noLineMap", { version: shown.version })}</p>}
+          {view === "fountain" && shown && <p className="muted ednote">{t("script.noLineKinds")}</p>}
           {view !== "compare" && comparable && original?.name.toLowerCase().endsWith(".fountain") && (
             <p className="muted ednote">{t("script.alreadyFountain", { version: shown!.version })}</p>
           )}
@@ -344,7 +344,14 @@ function ScriptBody({ dramaId, data, ep, settingUp, asking }: { dramaId: string;
               {fountain === undefined ? (
                 <p className="quiet">{t("loading")}</p>
               ) : (
-                <div className="fdoc">{lines.map((line, index) => (line.gap ? <div key={index} className="gap" /> : <div key={index} id={`fl-${index}`} className={`fl ${line.el}`}>{line.text}</div>))}</div>
+                <pre className="fountain">
+                  {lines.map((line, index) => (
+                    <span key={index} id={`fl-${index}`}>
+                      {line}
+                      {"\n"}
+                    </span>
+                  ))}
+                </pre>
               )}
             </div>
           ) : view === "compare" ? (

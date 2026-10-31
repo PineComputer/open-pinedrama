@@ -113,7 +113,7 @@ describe("Script", () => {
     expect(screen.queryByText("Loading…")).not.toBeInTheDocument();
   });
 
-  it("opens at an episode's section when an episode asks for it (?ep=)", async () => {
+  it("opens at an episode's first scene when an episode asks for it (?ep=), by the scene number drama-cli writes", async () => {
     answer("/api/dramas/d1/script", page(false));
     texts();
     const scrolled: string[] = [];
@@ -122,7 +122,7 @@ describe("Script", () => {
     };
     try {
       await renderAt(<Script dramaId="d1" ep="EP002" />, "/d/d1/script");
-      await waitFor(() => expect(scrolled).toEqual(["# Episode 2"]));
+      await waitFor(() => expect(scrolled).toEqual(["EXT. FACTORY GATE - NIGHT #2-1#\n"]));
     } finally {
       Reflect.deleteProperty(Element.prototype, "scrollIntoView");
     }
@@ -183,6 +183,18 @@ describe("Script, while the setup runs", () => {
   });
 });
 
+describe("Script's Fountain", () => {
+  it("shows the file as it is, line for line, and says this drama-cli records no line kinds (D62 as amended; Codex rc5 C15)", async () => {
+    // rc5 T1's lines that fountain-js read as character cues and dialogue, where drama-cli's table has actions and Cai's line.
+    const file = "1981 年，长江中上游洪水灾害后。\n\nΔ陈海清拾起推车\n\n[[旁白]]\n@蔡晓磊\n你回来了？\n";
+    answer("/api/dramas/d1/script", { inputs: [original], screenplayFile: original.id, versions: [{ version: "v1", file: v1 }] });
+    server.use(http.get(original.url, () => HttpResponse.text("")), http.get(v1.url, () => HttpResponse.text(file)));
+    await renderAt(<Script dramaId="d1" />, "/d/d1/script");
+    await waitFor(() => expect(document.querySelector("pre.fountain")?.textContent).toBe(`${file}\n`));
+    expect(screen.getByText("This drama-cli version doesn't record what kind each line is, so the Fountain shows as plain text.")).toBeInTheDocument();
+  });
+});
+
 describe("Script's view switch", () => {
   it("names each view beside its icon, and the one picked is the one shown (Apple HIG, labelled icons)", async () => {
     const user = userEvent.setup();
@@ -198,9 +210,9 @@ describe("Script's view switch", () => {
     await user.click(within(views).getByRole("radio", { name: "Original" }));
     expect(within(views).getByRole("radio", { name: "Original" })).toHaveAttribute("aria-checked", "true");
     await waitFor(() => expect(document.querySelector("pre.original")).toBeInTheDocument());
-    expect(document.querySelector(".fdoc")).not.toBeInTheDocument();
+    expect(document.querySelector("pre.fountain")).not.toBeInTheDocument();
     await user.click(within(views).getByRole("radio", { name: "Fountain" }));
-    expect(document.querySelector(".fdoc")).toBeInTheDocument();
+    expect(document.querySelector("pre.fountain")).toBeInTheDocument();
   });
 });
 

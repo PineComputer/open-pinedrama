@@ -99,7 +99,6 @@ for 2026-10-23..29.
 | Graph layout | d3-force 3.0.0 | 34.8 M | our column layout |
 | Long lists | @tanstack/react-virtual 3.14.21 | 39.2 M | none |
 | File drop | react-dropzone 20.1.3 | 19.4 M | Reveric's file_selector and super_drag_and_drop; our drop handlers |
-| Fountain lines | fountain-js 1.2.4 | 15.5 k | none; the alternative is a Fountain parser of our own |
 | Video | media-chrome | 5.5 M | Reveric's video_player and fvp |
 | Justified picture rows (Assets) | react-photo-album 3.6.2 | 208.7 k | the asset grid's letterboxed cells ([D56](decisions.md#d56-2026-10-30--assets-is-a-picture-grid-with-an-inspector)) |
 | Picture viewer (Assets) | yet-another-react-lightbox 3.32.2 | 932.0 k | the inspector beside the grid ([D56](decisions.md#d56-2026-10-30--assets-is-a-picture-grid-with-an-inspector)) |

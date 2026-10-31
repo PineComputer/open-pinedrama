@@ -50,7 +50,6 @@
     "electron-updater": "6.8.10",
     "elkjs": "0.12.0",
     "esbuild": "0.28.2",
-    "fountain-js": "1.2.4",
     "hono": "^4.13.13",
     "js-yaml": "^4.3.2",
     "jsdom": "^30.1.3",
