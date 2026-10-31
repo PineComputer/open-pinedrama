@@ -93,13 +93,22 @@ describe("the drama's Out of date", () => {
     expect(first.text).not.toContain("blocking");
   });
 
-  it("says a shared reference can't be redone once the setup has handed over, while an episode's still can", async () => {
+  it("redoes a shared reference in a new setup session once the setup has handed over, asking first with its impact (D38)", async () => {
+    const user = userEvent.setup();
     engine("location-plate-replaced", [chat("setup", "", "none"), chat("ep1", "EP001", "steer")]);
+    server.use(http.post("/api/dramas/d1/shared-redo", async ({ request }) => HttpResponse.json({ id: ((await request.json()) as { submissionId: string }).submissionId, sessionId: "", state: "sent" })));
     await renderAt(<OutOfDate dramaId="d1" />, "/d/d1/out-of-date");
     const assets = await waitFor(() => group(/^Assets/));
-    expect(await within(assets).findByText("Shared references are redone in a new setup session. Not available yet.")).toBeInTheDocument();
-    expect(within(assets).getByRole("button", { name: "Ask the setup's agent to redo them" })).toBeDisabled();
-    expect(within(row(/take/i)).getByRole("button", { name: "Redo this" })).toBeEnabled();
+    const ask = within(assets).getByRole("button", { name: "Ask a new setup session to redo them" });
+    await waitFor(() => expect(ask).toBeEnabled());
+    await user.click(ask);
+    const dialog = await screen.findByRole("alertdialog");
+    expect(dialog).toHaveTextContent(/A new setup session will remake .*Day.* and ask you to review them\..*what the episodes made from them shows out of date\./);
+    await user.click(within(dialog).getByRole("button", { name: "Ask to redo" }));
+    expect(await within(assets).findByText("Sent to a new setup session.")).toBeInTheDocument();
+    const sent = calls("POST", "/api/dramas/d1/shared-redo");
+    expect(sent).toHaveLength(1);
+    expect((sent[0].body as { text: string }).text).toContain("- assets/scenes/office/times/Day v1:");
   });
 
   it("can't ask while the owner's session waits on a review, and says why", async () => {

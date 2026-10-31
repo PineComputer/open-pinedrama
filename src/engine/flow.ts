@@ -15,6 +15,9 @@ import { continueGoal } from "./goals.ts";
 import { publish } from "./live.ts";
 import { type ReviewRow, type SessionRow, drama as dramaRow, episode as episodeRow, episodeCode } from "./records.ts";
 import { projectArchive, startRun } from "./runs.ts";
+import { type SharedRedoRow, markRedo, redoOfSession } from "./shared-redo.ts";
+
+const PACK_PROJECT = "Pack the whole drama/ folder, records included, into parts of at most 60 MB (`mkdir -p handoff && tar -cf - -C drama . | split -b 60m - handoff/project.tar.part-`) and return the parts.";
 
 async function close(session: SessionRow) {
   stopEvents(session.id);
@@ -70,7 +73,33 @@ export async function onEnded(session: SessionRow, info: TurnInfo, stop: boolean
   publish(`drama:${session.drama_id}`, "dramas", "reviews");
 }
 
+/**
+ * A shared redo's session (D38) finishes when it hands the project back, and closes, as the setup's did; short of that it
+ * gets the same bounded "continue" runs, then the maker is told; a turn that breaks off for good fails the redo.
+ */
+async function redoEnded(session: SessionRow, info: TurnInfo, redo: SharedRedoRow) {
+  const drama = dramaRow(session.drama_id)!;
+  if (info.state === "completed" && info.files.some((file) => classify(file.path).kind === "archive")) {
+    markRedo(redo.id, "done");
+    await close(session);
+    return;
+  }
+  if ((info.state === "completed" || info.state === "failed") && drama.continues < MAX_CONTINUES) {
+    run("update dramas set continues = continues + 1 where id = ?", drama.id);
+    await startRun(session, "continue", info.state === "completed" ? PACK_PROJECT : continueGoal(null, true));
+    return;
+  }
+  if (info.state === "completed") {
+    askMaker(session, info);
+    return;
+  }
+  markRedo(redo.id, "failed", { note: info.summary ?? "" });
+  await close(session);
+}
+
 async function setupEnded(session: SessionRow, info: TurnInfo) {
+  const redo = redoOfSession(session.id);
+  if (redo) return redoEnded(session, info, redo);
   const drama = dramaRow(session.drama_id)!;
   if (info.state === "completed") {
     const listed = listedEpisodes(info.summary);
@@ -103,7 +132,7 @@ async function setupEnded(session: SessionRow, info: TurnInfo) {
     }
     run("update dramas set continues = continues + 1 where id = ?", drama.id);
     const missing = [
-      packed ? "" : "Pack the whole drama/ folder, records included, into parts of at most 60 MB (`mkdir -p handoff && tar -cf - -C drama . | split -b 60m - handoff/project.tar.part-`) and return the parts.",
+      packed ? "" : PACK_PROJECT,
       listed.length ? "" : 'List the drama\'s episodes, one per line, as "EP001: <title>".',
     ];
     await startRun(session, "continue", missing.filter(Boolean).join(" "));

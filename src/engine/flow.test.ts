@@ -568,6 +568,43 @@ describe("a drama in replay", () => {
     expect(projectView(id).names?.descriptions.props.file).toMatch(/manila folder/);
   }, 30_000);
 
+  it("redoes a shared reference after the handover in a new setup session, once per submission, which closes when it hands back (D38)", async () => {
+    const { run, all, get } = await import("./db.ts");
+    run("update dramas set status = 'done'");
+    fleet.stops = "ask";
+    const form = new FormData();
+    for (const [key, value] of Object.entries({ title: "Shared redo", language: "en", parallel: "1", perComputer: "1", length: "90", preset: "en-us-live-sfw", screenplayLanguage: "en", screenplay: "0" })) form.set(key, value);
+    form.append("files", new File(["EPISODE 1\nLin enters."], "screenplay.txt", { type: "text/plain" }));
+    const { id } = await call<{ id: string }>("POST", "/api/dramas", form);
+    await acceptRewrite(id);
+    const question = await until("the setup question", openReview(id, (item) => item.kind === "question"));
+    await call("POST", `/api/reviews/${question.id}/decision`, { submissionId: crypto.randomUUID(), items: [], words: "He is 32." });
+    await approveAll((await until("the looks", openReview(id, (item) => item.kind === "looks"))).id);
+    await approveAll((await until("the shared references", openReview(id, (item) => item.kind === "references"))).id);
+    await until("the handover", async () => (await call<DramaView>("GET", `/api/dramas/${id}`)).status === "production" || undefined);
+    const setups = () => all<{ id: string; state: string }>("select id, state from sessions where drama_id = ? and role = 'setup' order by created_at", id);
+    await until("the setup session closed", async () => setups().every((session) => session.state !== "open") || undefined);
+    // Its redo, asked twice under one submission id, is one: queued for a new setup session.
+    const ask = { submissionId: "sub-shared-1", text: "Make these again:\n- assets/scenes/home v1: Changed file: bible/v1/bible.json" };
+    expect(await call("POST", `/api/dramas/${id}/shared-redo`, ask)).toMatchObject({ id: "sub-shared-1", state: "sent" });
+    expect(await call("POST", `/api/dramas/${id}/shared-redo`, ask)).toMatchObject({ id: "sub-shared-1", state: "sent" });
+    expect(await call("GET", "/api/submissions/sub-shared-1")).toMatchObject({ id: "sub-shared-1", state: "sent" });
+    // The new setup session redraws the plate for the maker's review…
+    const review = await until("the redrawn plate", openReview(id, (item) => item.kind === "references"));
+    const view = await call<ReviewView>("GET", `/api/reviews/${review.id}`);
+    expect(view.reviewItems.map((item) => item.key)).toEqual(["location:home"]);
+    expect(view.reviewItems[0].files[0].version).toBe("v2");
+    expect(setups()).toHaveLength(2);
+    // …and once approved, hands the project back and closes, its redo done.
+    await approveAll(review.id);
+    await until("the redo done", async () => get<{ state: string }>("select state from shared_redos where id = 'sub-shared-1'")?.state === "done" || undefined);
+    await until("its session closed", async () => setups().every((session) => session.state !== "open") || undefined);
+    expect(setups()).toHaveLength(2);
+    // A redo that names nothing is refused before anything is queued.
+    await expect(call("POST", `/api/dramas/${id}/shared-redo`, { submissionId: "sub-shared-2", text: "" })).rejects.toThrow(/Name what to redo/);
+    expect(get("select id from shared_redos where id = 'sub-shared-2'")).toBeUndefined();
+  }, 30_000);
+
   it("refuses a sample drama it doesn't have", async () => {
     await expect(call("POST", "/api/dramas/sample", { language: "en", sample: "nope" })).rejects.toThrow(/sample-unknown|No sample drama/);
   });

@@ -73,15 +73,18 @@ interface Group {
   rows: LineageNode[];
 }
 
-/** One submission: a steering note to the owner's session, sent once under its id (engine/redo.ts). */
-function Redo({ dramaId, rows, label, owner, session, blocked }: { dramaId: string; rows: LineageNode[]; label: string; owner: string; session?: string; blocked?: string }) {
+/**
+ * One submission, sent once under its id: a steering note to the owner's open session (engine/redo.ts), or, for a shared
+ * reference once the setup has handed over, a new setup session's goal (engine/shared-redo.ts, D38).
+ */
+function Redo({ dramaId, rows, label, owner, session, shared, blocked }: { dramaId: string; rows: LineageNode[]; label: string; owner: string; session?: string; shared: boolean; blocked?: string }) {
   const { t } = useT();
   const names = useNames(dramaId);
   const [asking, setAsking] = useState(false);
   const id = useRef(crypto.randomUUID());
   const text = [t("graph.redoText"), ...rows.map((node) => `- ${node.id} ${node.version ?? ""}: ${node.problems.join("; ")}`)].join("\n");
   const { sending, send, check } = useSubmission({
-    submit: () => api<SubmissionView>(`/api/sessions/${session}/redo`, { method: "POST", json: { submissionId: id.current, text } }),
+    submit: () => api<SubmissionView>(shared ? `/api/dramas/${dramaId}/shared-redo` : `/api/sessions/${session}/redo`, { method: "POST", json: { submissionId: id.current, text } }),
     taken: () =>
       api<SubmissionView>(`/api/submissions/${id.current}`).then(
         (found) => found.state !== "refused",
@@ -105,7 +108,7 @@ function Redo({ dramaId, rows, label, owner, session, blocked }: { dramaId: stri
         open={asking}
         onOpenChange={setAsking}
         title={t("ood.confirmTitle", { owner })}
-        description={t("ood.impact", { owner, items })}
+        description={t(shared ? "ood.impactShared" : "ood.impact", { owner, items })}
         confirm={{ label: t("ood.confirm"), run: () => void send() }}
         cancel={t("ood.notNow")}
       />
@@ -138,14 +141,14 @@ export function OutOfDate({ dramaId }: { dramaId: string }) {
     ...codes.map((code) => ({ key: code, head: t("ood.episode", { code }), owner: code, rows: nodes.filter((node) => node.where.episode === code).sort(order) })),
   ];
   // Who redoes a group, and why it can't be asked now (Graph's own reasons: no session open, or one waiting on a review).
-  const ownerOf = (group: Group) => (group.owner ? t("ood.ownerEpisode", { code: group.owner }) : t("ood.ownerSetup"));
+  const ownerOf = (group: Group, shared: boolean) => (group.owner ? t("ood.ownerEpisode", { code: group.owner }) : shared ? t("ood.ownerNewSetup") : t("ood.ownerSetup"));
   const sessionOf = (group: Group) => {
     const session = sessions.data?.find((chat) => chat.label === group.owner);
-    // Once the setup has handed over, no session takes a shared reference's redo: a new setup session will (decided 10-30,
-    // not built yet), so it says so rather than promising one.
+    // Once the setup has handed over, a shared reference's redo opens a new setup session (D38); an episode's needs its own.
     const closed = !session || session.sends === "none";
-    const blocked = !sessions.data ? t("loading") : closed ? t(group.owner ? "graph.redoNoSession" : "ood.sharedLater") : session.sends === "review" ? t("graph.redoWaitsReview") : undefined;
-    return { session: session?.sessionId, blocked, review: session?.sends === "review" ? session.reviewId : undefined };
+    const shared = closed && !group.owner;
+    const blocked = !sessions.data ? t("loading") : shared ? undefined : closed ? t("graph.redoNoSession") : session.sends === "review" ? t("graph.redoWaitsReview") : undefined;
+    return { session: session?.sessionId, shared, blocked, review: session?.sends === "review" ? session.reviewId : undefined };
   };
   // Our own words for what drama-cli calls fresh but was made from an out-of-date version: the version it was made from.
   const madeFrom = (node: LineageNode) => {
@@ -189,8 +192,8 @@ export function OutOfDate({ dramaId }: { dramaId: string }) {
             </thead>
             <tbody>
               {groups.map((group) => {
-                const { session, blocked, review } = sessionOf(group);
-                const owner = ownerOf(group);
+                const { session, shared, blocked, review } = sessionOf(group);
+                const owner = ownerOf(group, shared);
                 return [
                   <tr key={group.key} className="grp">
                     <td colSpan={3}>
@@ -205,7 +208,7 @@ export function OutOfDate({ dramaId }: { dramaId: string }) {
                           {t("ood.openReview")}
                         </Link>
                       )}{" "}
-                      <Redo dramaId={dramaId} rows={group.rows} label={t("ood.redoAll", { owner })} owner={owner} session={session} blocked={blocked} />
+                      <Redo dramaId={dramaId} rows={group.rows} label={t("ood.redoAll", { owner })} owner={owner} session={session} shared={shared} blocked={blocked} />
                     </td>
                   </tr>,
                   ...group.rows.map((node) => (
@@ -224,7 +227,7 @@ export function OutOfDate({ dramaId }: { dramaId: string }) {
                       <td className="mono">{node.version ?? t("graph.noVersion")}</td>
                       <td className="why">{reason(node)}</td>
                       <td className="act">
-                        <Redo dramaId={dramaId} rows={[node]} label={t("ood.redoThis")} owner={owner} session={session} blocked={blocked} />
+                        <Redo dramaId={dramaId} rows={[node]} label={t("ood.redoThis")} owner={owner} session={session} shared={shared} blocked={blocked} />
                         <Link {...homeLink(dramaId, node.id, "lineage")} state={{ backTo: t("tree.outOfDate") }} className="ibtn" aria-label={t("steer.lineage")} title={t("steer.lineage")} onClick={() => mark(node)}>
                           <Icon name="tree-structure" className="ic" />
                         </Link>

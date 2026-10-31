@@ -94,7 +94,7 @@ create table if not exists sessions (
 create table if not exists runs (
   key text primary key,
   session_id text not null,
-  kind text not null,               -- setup | episode | resume | continue | chat
+  kind text not null,               -- setup | episode | resume | continue | chat | redo
   goal text not null,
   turn_id text,
   created_at text not null
@@ -200,6 +200,19 @@ create table if not exists submissions (
   text text not null,
   state text not null,
   message text,
+  created_at text not null,
+  updated_at text not null
+);
+
+-- A shared reference's redo after the handover (shared-redo.ts, D38), by its submission id: queued until a new setup
+-- session takes it, working while that session runs, then done or failed.
+create table if not exists shared_redos (
+  id text primary key,
+  drama_id text not null,
+  text text not null,
+  state text not null,
+  session_id text,
+  note text,
   created_at text not null,
   updated_at text not null
 );

@@ -31,6 +31,8 @@ export type ErrorCode =
   | "decide-in-review"
   | "submission-missing"
   | "submission-elsewhere"
+  | "setup-running"
+  | "drama-not-running"
   | "review-decided"
   | "review-base-changed"
   | "review-saving"

@@ -182,13 +182,18 @@ export const RETURN_REFUSALS =
   "When you stop to ask me because a drama-cli command refused, also save each refusal you ask me about, exactly the JSON line the command printed (`{\"error\": ...}`), one per line, in handoff/refusals.jsonl, written afresh at each such stop, and return it with your other files; at any other stop, return none. It is for the studio; don't ask me about it.";
 
 /** How an episode session takes up the drama's project, and the bounds it keeps to. */
-function handedOver(drama: DramaBrief, code: string, screenplay: string | undefined): string[] {
+/** How a new session restores the project last handed over, into its own work directory. */
+function restoreProject(drama: DramaBrief, screenplay: string | undefined): string {
   // screenplay: its name in the project (projectScreenplay); undefined for a drama made before the studio chose the inputs.
+  return screenplay
+    ? `Restore it into the work directory's drama/ folder and point its config at that folder, keeping its settings: \`mkdir -p drama && cat attachments/project.tar.part-* | tar -xf - -C drama && ${init(drama, screenplay)}\`. Check it with \`drama-cli status --config drama/drama-cli.cfg.yaml\`.`
+    : "Restore it into the work directory's drama/ folder (`mkdir -p drama && cat attachments/project.tar.part-* | tar -xf - -C drama`), point its config at that folder and its screenplay.md and brief.md with `drama-cli init`, keeping its settings and preset, and check it with `drama-cli status`.";
+}
+
+function handedOver(drama: DramaBrief, code: string, screenplay: string | undefined): string[] {
   return [
     "The attached project.tar.part-* files are the drama's drama-cli project, with its bible, every breakdown and every look, location and key prop accepted.",
-    screenplay
-      ? `Restore it into the work directory's drama/ folder and point its config at that folder, keeping its settings: \`mkdir -p drama && cat attachments/project.tar.part-* | tar -xf - -C drama && ${init(drama, screenplay)}\`. Check it with \`drama-cli status --config drama/drama-cli.cfg.yaml\`.`
-      : "Restore it into the work directory's drama/ folder (`mkdir -p drama && cat attachments/project.tar.part-* | tar -xf - -C drama`), point its config at that folder and its screenplay.md and brief.md with `drama-cli init`, keeping its settings and preset, and check it with `drama-cli status`.",
+    restoreProject(drama, screenplay),
     NO_CAP,
     RETURN_STATUS,
     RETURN_LINEAGE,
@@ -225,6 +230,31 @@ export function episodeGoal(drama: DramaBrief, code: string, attachments: string
       : [`The attached bible and images are the approved references: ${attachments.join(", ")}. Use them as they are; do not redesign the cast, locations or props.`]),
     ...EPISODE_STOPS,
     handoff ? packEpisode(code) : "",
+    writeIn(drama),
+  ]
+    .filter(Boolean)
+    .join("\n");
+}
+
+/**
+ * A shared reference redone after the handover (D38), in a new setup session: restore the project last handed over, make
+ * the named looks, locations or props again as the skill says, stop for the maker's review of the new versions, and once
+ * approved, hand the project back and finish. Episodes keep the copies they work on (D5), so nothing else is touched.
+ */
+export function sharedRedoGoal(drama: DramaBrief, request: string, screenplay?: string): string {
+  return [
+    `Use the ${DRAMA_SKILL} skill to make shared references of "${drama.title}" again in this new session; the setup session ended.`,
+    brief(drama),
+    "The attached project.tar.part-* files are the drama's drama-cli project as it was last handed over.",
+    restoreProject(drama, screenplay),
+    NO_CAP,
+    RETURN_STATUS,
+    RETURN_LINEAGE,
+    RETURN_SPECS,
+    request,
+    "Make only those looks, locations and key props again, each as a new version; change nothing else: no bible, breakdown, blocking reference, first-frame reference, storyboard or take.",
+    "Stop and ask me to review the new versions, returning them with your question.",
+    "After I approve, accept them, pack the whole drama/ folder, records included, into parts of at most 60 MB (`mkdir -p handoff && tar -cf - -C drama . | split -b 60m - handoff/project.tar.part-`), return the parts, and finish.",
     writeIn(drama),
   ]
     .filter(Boolean)

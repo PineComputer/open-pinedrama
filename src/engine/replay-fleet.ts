@@ -312,6 +312,7 @@ const words = (s: Story) => {
     redrawReference: (key: string) => `Redrawing ${key}`,
     askReferencesAgain: (keys: string[]) => `I redrew ${keys.join(", ")}. Please look again.`,
     packing: ["Packing the project for the episodes"],
+    handedBack: "The shared references are redone and approved, and the project is packed again.",
     castDone: "The cast and the shared references are approved, and the project is packed for the episodes.\n\nEpisodes:",
     restoring: (code: string) => [`Restoring the drama's project for ${code}`, "Drawing the blocking references", "Drawing the multi-panel storyboards", "Observing the storyboards"],
     askBoards: (code: string, n: number) => `${code}'s storyboards are ready for your review: ${n} segments. The observer noted that seg01 panel 4 shows a third person in the background.`,
@@ -368,6 +369,7 @@ const words = (s: Story) => {
     redrawReference: (key: string) => `重画 ${key}`,
     askReferencesAgain: (keys: string[]) => `我重画了 ${keys.join("、")}，请再看一下。`,
     packing: ["打包项目，交给各集"],
+    handedBack: "共用参考已重做并审定，项目已重新打包。",
     castDone: "角色与共用参考已审定，项目已打包，交给各集。\n\n分集：",
     restoring: (code: string) => [`为 ${code} 恢复剧目项目`, "绘制站位参考", "绘制多格分镜", "检查分镜"],
     askBoards: (code: string, n: number) => `${code} 的分镜已完成，请审阅：共 ${n} 段。观察员注意到，seg01 第 4 格的背景里多了一个人。`,
@@ -786,6 +788,54 @@ export function episodeScript(code: string, lang: Lang, preset: string, story: {
   };
 }
 
+/**
+ * A shared redo after the handover (goals.ts, sharedRedoGoal; D38): every look, location or prop its goal lists (one
+ * "- <asset path> …" line each, the studio's own redo text) is drawn again, a version on from the one handed over, for the
+ * maker's review; a "Revise:" draws them again; an approval packs the project and hands it back.
+ */
+function sharedRedoScript(goal: string, lang: Lang, preset: string, story: { id: string; story: Story }): Player {
+  const say = words(story.story)[lang];
+  const set = pictures(story.id, lang);
+  const all = [
+    ...story.story.cast.slice(0, 2).map((c) => ({ key: c.id, path: `assets/characters/${c.id}`, draw: (v: string) => lookSheet(c.name, "base", v) })),
+    ...sharedOf(story.story),
+  ];
+  const asked = all.filter((reference) => new RegExp(`^- ${reference.path} `, "m").test(goal));
+  const version = new Map(asked.map((reference) => [reference.path, firstOf(story.story, reference.path)]));
+  let approved = false;
+  const draw = (reference: Shared) => {
+    const v = version.get(reference.path)! + 1;
+    version.set(reference.path, v);
+    const dir = `drama/${reference.path}/v${v}`;
+    return [art(set, `${dir}/image-1.svg`, reference.draw(`v${v}`)), ...specs(set, dir, imageSpec(`Reference image of ${reference.key}.`, reference.path.startsWith("assets/characters/") ? "16:9" : "9:16"))];
+  };
+  const made = (path: string): Made => {
+    const first = `v${firstOf(story.story, path)}`;
+    return version.has(path) ? { current: `v${version.get(path)}`, accepted: approved ? `v${version.get(path)}` : first } : { current: first, accepted: first };
+  };
+  const progress = (): ReplayProgress => ({
+    preset,
+    bible: story.story.versions.bible ?? "v1",
+    looks: Object.fromEntries(story.story.cast.slice(0, 2).map((c) => [c.id, made(`assets/characters/${c.id}`)])),
+    references: Object.fromEntries(sharedOf(story.story).map((reference) => [reference.key, { ...made(reference.path), path: reference.path }])),
+    episodes: Object.fromEntries(story.story.episodes.map((e, i) => [codeOf(i), madeOf(story.story, e, codeOf(i))])),
+  });
+  let stops = 0;
+  const play = (answer: string): Step => {
+    if (stops++ === 0 || revisedKeys(answer).length) {
+      return { progress: asked.map((reference) => say.redrawReference(reference.key)), files: asked.flatMap(draw), ask: say.askReferencesAgain(asked.map((reference) => reference.key)) };
+    }
+    approved = true;
+    return { progress: say.packing, files: [archive("project")], summary: say.handedBack };
+  };
+  const returned: string[] = [];
+  return (answer) => {
+    const step = play(answer);
+    returned.push(...step.files.map((file) => file.path));
+    return { ...step, files: [...step.files, replayStatus(progress()), lineageOf(set, progress(), returned)] };
+  };
+}
+
 function chatScript(goal: string, lang: Lang): Player {
   const say = words(Object.values(STORIES)[0][lang])[lang];
   return () => ({ progress: say.readingMessage, files: [], summary: say.noted(goal) });
@@ -799,6 +849,7 @@ function scriptFor(goal: string, lang: Lang): Player {
   const story = storyOf(goal, lang);
   if (/make episode|continue episode/i.test(goal) && episode) return episodeScript(episode[1], lang, preset, story);
   if (/vertical short drama from my screenplay/i.test(goal)) return setupScript(lang, preset, story);
+  if (/make shared references of .+ again/i.test(goal)) return sharedRedoScript(goal, lang, preset, story);
   return chatScript(goal, lang);
 }
 

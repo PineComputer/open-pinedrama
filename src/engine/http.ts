@@ -31,6 +31,7 @@ import { decide, resumeWithDecision } from "./reviews.ts";
 import { lineageView } from "./lineage.ts";
 import { forgetPositions, positionsOf, readPositions, replacePositions } from "./canvas.ts";
 import { redo, submission } from "./redo.ts";
+import { askSharedRedo } from "./shared-redo.ts";
 import { projectView, sessionStatus } from "./status.ts";
 import { assetPictures, castCards, deliveryRows, episodePage, scriptPage, seasonEntries } from "./browse.ts";
 import { diagnostics } from "./diagnostics.ts";
@@ -429,6 +430,16 @@ export function app(): Hono {
     try {
       const { submissionId, text } = (await c.req.json()) as { submissionId: string; text: string };
       return c.json(await redo(c.req.param("id"), submissionId, text));
+    } catch (error) {
+      return fail(c, error);
+    }
+  });
+
+  // A shared reference's redo after the handover (D38): queued for a new setup session, once per submission id.
+  api.post("/api/dramas/:id/shared-redo", async (c) => {
+    try {
+      const { submissionId, text } = (await c.req.json()) as { submissionId: string; text: string };
+      return c.json(askSharedRedo(c.req.param("id"), submissionId, text));
     } catch (error) {
       return fail(c, error);
     }
