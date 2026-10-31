@@ -138,6 +138,18 @@ describe("a drama's page", () => {
     expect(screen.getByRole("region", { name: "Versions" })).not.toHaveTextContent(/v2|rewriting/);
   });
 
+  it("says a screenplay version the maker accepted and drama-cli hasn't is not accepted, on the row and on Script (D64; work-03's rc5 retest)", async () => {
+    engine();
+    answer("/api/dramas/d1", { ...drama, status: "setup", episodes: { total: 0, done: 0, waiting: 0, working: 0 }, setup: { state: "working", reached: 1 }, episodeRows: [] });
+    answer("/api/dramas/d1/lineage", { lineage: { nodes: [{ id: "screenplay", kind: "screenplay", version: "v1", accepted: null, fresh: true, where: {} }], links: [], groups: [] }, problems: [] });
+    answer("/api/dramas/d1/project", { state: { bible: { current: null, candidate: null, accepted: null, usable: false, run: [], errors: [] }, characters: {}, locations: {}, props: {}, episodes: {} }, sessions: [], problems: [], names: null });
+    answer("/api/dramas/d1/cast", []);
+    answer("/api/dramas/d1/script", { inputs: [], screenplayFile: null, versions: [{ version: "v1", question: { reviewId: "r1", state: "answered", words: "Yes.", verdict: "approve" } }] });
+    render(<RouterProvider router={studioRouter(createMemoryHistory({ initialEntries: ["/d/d1/script"] }))} />);
+    await waitFor(() => expect(screen.getByRole("link", { name: /^Script/ })).toHaveTextContent("Scriptv1 · not accepted"));
+    await waitFor(() => expect(screen.getByRole("region", { name: "Versions" })).toHaveTextContent("v1 · not accepted"));
+  });
+
   it.each([
     ["a screenplay version drama-cli didn't record", "/d/d1/script?item=screenplay&version=v9", "screenplay v9"],
     ["another item on Script", "/d/d1/script?item=bible", "bible"],

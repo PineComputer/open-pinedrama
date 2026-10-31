@@ -8,7 +8,9 @@ import { Submission, useSubmission } from "../components/Submission.tsx";
 import { EXTRACTED, textName } from "../extract.ts";
 import { Icon, type IconName } from "../icons.tsx";
 import { useT } from "../i18n.ts";
-import { errorText } from "../labels.ts";
+import type { LineageView } from "../../shared/lineage.ts";
+import { StatusChip } from "../components/StatusChip.tsx";
+import { errorText, ofLineage, type Versions, versionStanding } from "../labels.ts";
 import { homeLink, useRoute } from "../place.ts";
 import { Unreadable, isDocument, useDocumentText, useText } from "../viewing.tsx";
 
@@ -80,9 +82,14 @@ function Decide({ reviewId, version }: { reviewId: string; version: string }) {
   );
 }
 
-/** One version's row in the history (GitHub's pull-request timeline): its label selects it, and its review.md opens under it. */
-function VersionRow({ version, shown, onShow }: { version: ScreenplayVersion; shown: boolean; onShow: () => void }) {
+/**
+ * One version's row in the history (GitHub's pull-request timeline): its label selects it, its chip says where it stands
+ * by the one status → chip rule (labels.ts versionStanding, on drama-cli's lineage; D64), the maker's decision on it is
+ * history in their words, and its review.md opens under it.
+ */
+function VersionRow({ version, stage, shown, onShow }: { version: ScreenplayVersion; stage: Versions | undefined; shown: boolean; onShow: () => void }) {
   const { t } = useT();
+  const chip = versionStanding(stage, version.version, version.question, t);
   const review = useText(shown ? version.review : undefined).text;
   const question = version.question;
   const waiting = question?.state === "open";
@@ -96,8 +103,9 @@ function VersionRow({ version, shown, onShow }: { version: ScreenplayVersion; sh
             {version.version}
           </button>
           {" · "}
-          {decided ? t(question.verdict === "revise" ? "script.sentBack" : "script.accepted", { words: question.words! }) : waiting ? <b>{t("script.waiting")}</b> : t("script.recorded")}
+          {decided ? t(question.verdict === "revise" ? "script.sentBack" : "script.accepted", { words: question.words! }) : t("script.recorded")}
         </span>
+        {chip && <StatusChip {...chip} />}
         {question?.decidedAt && <time>{question.decidedAt.slice(11, 16)}</time>}
         {shown && version.review && (
           <details className="whatchanged">
@@ -226,7 +234,7 @@ function AskedRow({ reviewId }: { reviewId: string }) {
   );
 }
 
-function ScriptBody({ dramaId, data, ep, settingUp, asking }: { dramaId: string; data: ScriptPage; ep?: string; settingUp: boolean; asking?: string }) {
+function ScriptBody({ dramaId, data, stage, ep, settingUp, asking }: { dramaId: string; data: ScriptPage; stage: Versions | undefined; ep?: string; settingUp: boolean; asking?: string }) {
   const { t } = useT();
   const { search } = useRoute();
   const navigate = useNavigate();
@@ -292,7 +300,7 @@ function ScriptBody({ dramaId, data, ep, settingUp, asking }: { dramaId: string;
             {/* A question on a version is that version's row; one before any version is about the upload. */}
             {asking && !data.versions.length && <AskedRow reviewId={asking} />}
             {data.versions.map((version) => (
-              <VersionRow key={version.version} version={version} shown={version === shown} onShow={() => show(version)} />
+              <VersionRow key={version.version} version={version} stage={stage} shown={version === shown} onShow={() => show(version)} />
             ))}
             {original && (
               <li className="done">
@@ -389,11 +397,14 @@ export function Script({ dramaId, ep, settingUp = false, asking }: { dramaId: st
   const { t } = useT();
   const { search } = useRoute();
   const { data, error } = useResource<ScriptPage>(`/api/dramas/${dramaId}/script`, [`drama:${dramaId}`]);
+  // drama-cli's record of the screenplay's versions, its lineage's screenplay node (its status has none).
+  const lineage = useResource<LineageView>(`/api/dramas/${dramaId}/lineage`, [`project:${dramaId}`]);
+  const screenplay = lineage.data?.lineage?.nodes.find((node) => node.kind === "screenplay");
   if (error !== undefined && !data) return <p className="error">{errorText(error, t)}</p>;
   if (!data) return <p className="quiet">{t("loading")}</p>;
   // Script's own item is the screenplay, at a version drama-cli recorded; anything else a link names isn't here.
   if (search.item !== undefined && search.item !== "screenplay") return <Missing dramaId={dramaId} what={search.item} />;
   if (search.version !== undefined && !data.versions.some((version) => version.version === search.version))
     return <Missing dramaId={dramaId} what={`screenplay ${search.version}`} />;
-  return <ScriptBody dramaId={dramaId} data={data} ep={ep} settingUp={settingUp} asking={asking} />;
+  return <ScriptBody dramaId={dramaId} data={data} stage={screenplay && ofLineage(screenplay)} ep={ep} settingUp={settingUp} asking={asking} />;
 }

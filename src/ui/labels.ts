@@ -32,7 +32,7 @@ export interface Chip {
  * Where one version of a stage stands, as its chip says it (D64, amended; Codex rc5 C17). Waiting for you only while a
  * review of that very version is open; otherwise drama-cli's word, whatever the maker decided, whose decision is
  * history shown as theirs: none made is in line; the working version out of date, accepted, or "vN · not accepted" as
- * the Bible row says it (tree.ts bibleNow), the next step being the agent's; an earlier version accepted only if it is
+ * the Bible row says it (tree.ts bibleChip), the next step being the agent's; an earlier version accepted only if it is
  * the accepted one, else no chip. No version given means the working one.
  */
 export function versionStanding(stage: Versions | undefined, version: string | null | undefined, review: Pick<Judged, "state"> | undefined, t: T): Chip | undefined {
