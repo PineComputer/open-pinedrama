@@ -1355,6 +1355,11 @@ timeline
   queued for, or working in, a new session; their state becomes "stopped", which is final (the word
   episodes and projects already use). Resume reopens none; the maker sends again. Master's words: "nothing
   is reopened silently: the maker sends again if they want". No words from merecdesperez44323-lab.
+- **Amended.** 30 October 2026, bfad291 and f0520d1 (master's brief): `GET /api/dramas/:id/messages?scope=`
+  lists a scope's messages that went to a new session, each with its state (queued, working, done,
+  failed with the engine's reason, stopped), so the conversation shows a stopped message as stopped.
+  Master's words: "the conversation must show a stopped message as stopped, not 'sent'"; the failed
+  reason was work-04's request. No words from merecdesperez44323-lab.
 ## References
 
 <a id="ref-1"></a>[1] G. Starke, P. Hruschka. *arc42*, section 9, "Architecture decisions".
