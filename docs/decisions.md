@@ -1474,7 +1474,8 @@ timeline
 - **Decision.** The answer form of the agent's own question has "Attach a file" beside Send answer:
   one file, with Remove, and the words still required. The file is stored with the project as kind
   `reference` through `POST /api/dramas/:id/references`, the route note pictures use, which now also
-  takes a screenplay file (.txt .md .markdown .fountain .fdx .docx .pdf .doc; 20 MiB); its error
+  takes a screenplay file (.txt .md .markdown .fountain .fdx .docx .pdf .doc; up to 64 MiB, what a Computer can be handed, from one constant,
+  `MAX_ATTACHMENT_MIB` in `src/shared/types.ts`, that every message names, 5626d88); its error
   `not-an-image` is renamed `unsupported-file`. The decision carries the file's id, and the engine
   accepts it only on a plain question, which binds it to that exact question: it is refused on a
   rewrite's verdict (Script owns those) and on a review of items (`file-not-asked`), and when it isn't
@@ -1491,7 +1492,7 @@ timeline
   as amended, 8eda77f).
 - **Words.** Master: "C3 attachment: GO, as proposed. It reuses the reference-picture path, binds the
   file to that exact question, and keeps words required."
-- **Recorded in.** Commit a5d01c2 (work-02).
+- **Recorded in.** Commits a5d01c2 and 5626d88 (the limit, master's ask; work-02).
 
 ## References
 
