@@ -205,7 +205,8 @@ export function App() {
   const names = useNames(params.assetId ? dramaId : undefined);
   const assetState = params.assetId && status.data?.state ? { characters: status.data.state.characters, locations: status.data.state.locations, props: status.data.state.props }[page === "characters" || page === "locations" || page === "props" ? page : "props"][params.assetId] : undefined;
   const assetKind = page === "characters" ? "look" : page === "locations" ? "location" : "prop";
-  const assetCrumb = params.assetId ? { label: [subjectLabel(names, params.assetId, assetKind), assetState?.current].filter(Boolean).join(" · ") } : undefined;
+  // The version in view, where the URL names one (the detail writes it, D48), else drama-cli's working version.
+  const assetCrumb = params.assetId ? { label: [subjectLabel(names, params.assetId, assetKind), place?.version ?? assetState?.current].filter(Boolean).join(" · ") } : undefined;
   const stageState = stage?.where.segment && place?.episode ? status.data?.state?.episodes[place.episode] : undefined;
   const version = place?.version ?? (stage && stage.where.segment ? (stage.kind === "take" ? stageState?.segments[stage.where.segment]?.current : stage.kind === "storyboard" && stage.where.style ? stageState?.storyboards[stage.where.segment]?.[stage.where.style]?.current : undefined) : undefined);
   // The cut in view on an episode's Cut: the one its open review shows (CutTab), with its version for the crumbs.

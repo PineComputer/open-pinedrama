@@ -7,7 +7,7 @@ import { describe, expect, it } from "vitest";
 import type { CastCard } from "../../shared/types.ts";
 import { answer } from "../test/server.ts";
 import { Cast } from "./Cast.tsx";
-import { renderAt } from "../test/router.tsx";
+import { href, renderAt } from "../test/router.tsx";
 
 const file = (id: number, version: string) => ({ id, name: "image-1.png", path: `drama/assets/x/${version}/image-1.png`, type: "image/png", size: 1, kind: "look", url: `/f/${id}`, version, createdAt: "2026-10-30T10:00:00Z" });
 const cast: CastCard[] = [
@@ -62,7 +62,7 @@ describe("the Story", () => {
   it("opens a card's asset at its home: the detail links to its review and shows its earlier versions (J1)", async () => {
     const user = userEvent.setup();
     engine();
-    await renderAt(<Cast dramaId="d1" />, "/d/d1/assets/characters");
+    const { router } = await renderAt(<Cast dramaId="d1" />, "/d/d1/assets/characters");
     const lin = await screen.findByRole("article", { name: "Lin Xiaoyu" });
     expect(within(lin).getByText("Waiting for you")).toBeInTheDocument();
     expect(within(lin).getByRole("link", { name: "Lin Xiaoyu" })).toHaveAttribute("href", "/d/d1/assets/characters/lin");
@@ -73,7 +73,18 @@ describe("the Story", () => {
     expect(within(detail).getByRole("link", { name: "Review" })).toHaveAttribute("href", "/r/r2");
     expect(within(detail).getByRole("link", { name: "Lineage" })).toHaveAttribute("href", "/d/d1/assets/characters/lin?view=lineage");
     await user.click(within(detail).getByRole("button", { name: "v1" }));
-    expect(within(detail).getByText("Sent back")).toBeInTheDocument();
+    expect(await within(detail).findByText("Sent back")).toBeInTheDocument();
+    // The version picked is the URL's, so the crumbs and Back agree on it (D48).
+    expect(href(router)).toBe("/d/d1/assets/characters/lin?item=assets%2Fcharacters%2Flin&version=v1");
+    expect(within(detail).getByRole("button", { name: "v1" })).toHaveAttribute("aria-pressed", "true");
+  });
+
+  it("opens an asset at the version a link names (D48)", async () => {
+    engine();
+    await renderAt(<Cast dramaId="d1" />, "/d/d1/assets/characters/lin?item=assets%2Fcharacters%2Flin&version=v1");
+    const detail = await screen.findByRole("complementary", { name: "Lin Xiaoyu: versions, state and review" });
+    expect(within(detail).getByRole("button", { name: "v1" })).toHaveAttribute("aria-pressed", "true");
+    expect(within(detail).getByText("Base look · v1")).toBeInTheDocument();
   });
 
   it("shows a place's views and times as a strip under its picture, and its description clamped with More (D56)", async () => {

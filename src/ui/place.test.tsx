@@ -2,7 +2,7 @@
 // keeps both and an asset's id is never taken for an episode (Codex's IA review, B1); a link lands on the item's one
 // home (IA §16); a URL that names an episode or item the drama can't have says so (Codex's rebuttal, IA §14.1).
 import { createMemoryHistory, RouterProvider } from "@tanstack/react-router";
-import { render, screen, waitFor } from "@testing-library/react";
+import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import type { DramaView } from "../shared/types.ts";
 import { homeLink, type Place, placeLink } from "./place.ts";
@@ -102,6 +102,23 @@ describe("a drama's page", () => {
     render(<RouterProvider router={studioRouter(createMemoryHistory({ initialEntries: [path] }))} />);
     expect(await screen.findByText(`This project has no ${what}.`)).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Back to the project" })).toHaveAttribute("href", "/d/d1/episodes");
+  });
+
+  it("ends an asset's crumbs at the version in view, the one the URL names, else drama-cli's working one (D26, D48; QA J1)", async () => {
+    engine();
+    answer("/api/dramas/d1/lineage", { lineage: { nodes: [{ id: "assets/characters/luca", kind: "look", where: { subject: "luca" } }], links: [], groups: [] }, problems: [] });
+    answer("/api/dramas/d1/project", { state: { bible: null, characters: { luca: { current: "v2", accepted: "v2" } }, locations: {}, props: {}, episodes: {} }, sessions: [], problems: [], names: null });
+    answer("/api/dramas/d1/cast", []);
+    const crumbs = () => screen.getByRole("navigation", { name: "Where this belongs" });
+    const at = async (path: string) => {
+      render(<RouterProvider router={studioRouter(createMemoryHistory({ initialEntries: [path] }))} />);
+      return waitFor(() => expect(crumbs().textContent).toMatch(/luca · v\d$/));
+    };
+    await at("/d/d1/assets/characters/luca");
+    expect(crumbs().textContent).toMatch(/luca · v2$/);
+    cleanup();
+    await at("/d/d1/assets/characters/luca?item=assets%2Fcharacters%2Fluca&version=v1");
+    expect(crumbs().textContent).toMatch(/luca · v1$/);
   });
 
   it("has the project's lineage before a pick names an item, so the page isn't swapped for Loading (and the board remounted)", async () => {

@@ -26,6 +26,13 @@ function shelfLink(shelf: Shelf, dramaId: string, assetId?: string) {
 
 // drama-cli's stage folder for an asset (shared/lineage.ts, KINDS): what Lineage traces.
 const STAGE: Record<CastCard["kind"], string> = { look: "assets/characters", location: "assets/scenes", prop: "assets/props" };
+
+/** A look's, plate's or prop's own stage folder, as drama-cli names it (shared/lineage.ts, KINDS): a further look or a time of day below its subject. */
+function stageOfEntry(card: CastCard, entry: CastCard["looks"][number]): string {
+  const base = `${STAGE[card.kind]}/${card.subject}`;
+  if (!entry.look || entry.look === "base") return base;
+  return card.kind === "look" ? `${base}/states/${entry.look}` : card.kind === "location" ? `${base}/times/${entry.look}` : base;
+}
 const SHELF_BY_KIND: Record<CastCard["kind"], Shelf> = { look: "cast", location: "scenes", prop: "props" };
 
 /** A card opens its asset's detail (J1): its name is the link, and a click anywhere on the card follows it. */
@@ -93,12 +100,22 @@ function AssetCard({ card, names, dramaId, picked }: { card: CastCard; names: Na
  */
 function AssetDetail({ card, names, dramaId }: { card: CastCard; names: Names | null; dramaId: string }) {
   const { t } = useT();
+  const navigate = useNavigate();
+  const { search } = useRoute();
   const [lookIndex, setLookIndex] = useState(Math.max(0, card.looks.indexOf(mainOf(card)!)));
-  const [index, setIndex] = useState(0);
   const [view, setView] = useState("");
   const [more, setMore] = useState(false);
   const look = card.looks[lookIndex];
   const versions = look?.versions ?? [];
+  // The version in view is the URL's (?item=<this look's stage>&version=vN, D48), so the crumbs, a link and Back agree
+  // on it; picking one writes it there. Without one, the newest.
+  const stage = look && stageOfEntry(card, look);
+  const named = search.item === stage && search.version ? versions.findIndex((version) => version.files[0]?.version === search.version) : -1;
+  const index = Math.max(0, named);
+  const pick = (i: number) => {
+    const version = versions[i]?.files[0]?.version;
+    if (stage && version) void navigate({ ...homeLink(dramaId, stage, "list", version), replace: true });
+  };
   const shown = versions[Math.min(index, versions.length - 1)];
   const sheet = shown?.files.find((file) => !file.style) ?? shown?.files[0];
   const big = (view && shown?.files.find((file) => file.style === view)) || sheet;
@@ -113,12 +130,12 @@ function AssetDetail({ card, names, dramaId }: { card: CastCard; names: Names | 
   // The strip: a character's looks; a place's plate, its views and its other times of day; a prop has none.
   const strip: { key: string; label: string; file: FileItem | undefined; pick: () => void; on: boolean }[] =
     card.kind === "look"
-      ? card.looks.map((entry, i) => ({ key: entry.look || "base", label: lookName(entry), file: versionsOf(entry).file, pick: () => (setLookIndex(i), setIndex(0), setView("")), on: i === lookIndex }))
+      ? card.looks.map((entry, i) => ({ key: entry.look || "base", label: lookName(entry), file: versionsOf(entry).file, pick: () => (setLookIndex(i), setView("")), on: i === lookIndex }))
       : card.kind === "location"
         ? [
             ...(sheet ? [{ key: "plate", label: lookName(look!), file: sheet, pick: () => setView(""), on: !view }] : []),
             ...(shown?.files.filter((file) => file.style) ?? []).map((file) => ({ key: file.style!, label: file.style!.replace(/-/g, " "), file, pick: () => setView(file.style!), on: view === file.style })),
-            ...card.looks.map((entry, i) => ({ entry, i })).filter(({ i }) => i !== lookIndex).map(({ entry, i }) => ({ key: `time-${entry.look}`, label: lookName(entry), file: versionsOf(entry).file, pick: () => (setLookIndex(i), setIndex(0), setView("")), on: false })),
+            ...card.looks.map((entry, i) => ({ entry, i })).filter(({ i }) => i !== lookIndex).map(({ entry, i }) => ({ key: `time-${entry.look}`, label: lookName(entry), file: versionsOf(entry).file, pick: () => (setLookIndex(i), setView("")), on: false })),
           ]
         : [];
   return (
@@ -194,7 +211,7 @@ function AssetDetail({ card, names, dramaId }: { card: CastCard; names: Names | 
           </h4>
           <div className="vstrip" role="group" aria-label={t("cast.versions", { name })}>
             {versions.map((version, i) => (
-              <button key={version.turnId} type="button" aria-pressed={i === index} onClick={() => setIndex(i)}>
+              <button key={version.turnId} type="button" aria-pressed={i === index} onClick={() => pick(i)}>
                 {version.files[0]?.version ?? i + 1}
               </button>
             ))}
