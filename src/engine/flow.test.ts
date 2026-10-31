@@ -655,6 +655,9 @@ describe("a drama in replay", () => {
       ["sub-7", "done"],
       ["sub-9", "stopped"],
     ]);
+    // A message that failed says why, in the engine's words.
+    run("update scope_messages set state = 'failed', note = 'Its Computer would not start.' where id = 'sub-7'");
+    expect((await call<MessageView[]>("GET", `/api/dramas/${id}/messages?scope=setup`))[0]).toMatchObject({ id: "sub-7", state: "failed", reason: "Its Computer would not start." });
     await call("POST", `/api/dramas/${id}/resume`);
     await call("PATCH", `/api/dramas/${id}`, { parallel: 1 });
     expect(await send("setup", "sub-10")).toMatchObject({ id: "sub-10", state: "sent", sessionId: "" });

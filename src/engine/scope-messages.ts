@@ -113,6 +113,7 @@ export function scopeMessages(dramaId: string, scope: string): MessageView[] {
     state: row.state as MessageView["state"],
     sessionId: row.session_id ?? "",
     at: row.created_at,
+    ...(row.state === "failed" ? { reason: row.note ?? "" } : {}),
   }));
 }
 

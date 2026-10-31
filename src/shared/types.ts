@@ -412,6 +412,8 @@ export interface MessageView {
   /** The new session it went to; empty until one opens. */
   sessionId: string;
   at: string;
+  /** Why it failed, in the engine's words: the start's error, or what the agent said when its turn broke off for good. */
+  reason?: string;
 }
 
 export interface Decision {
