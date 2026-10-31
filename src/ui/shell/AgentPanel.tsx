@@ -2,12 +2,13 @@
 // and classes: what runs, with Watch and Stop; the decisions waiting; the process of the session in
 // view and what it last said; recent work; the next steps; and a line to that session. Its one form
 // (D32 as amended): a right sidebar, open or collapsed to the ball. Phase 1 steers only: nothing here edits the work.
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { recentWork, type WorkItem } from "../../shared/facts.ts";
 import { nameOf, type Names } from "../../shared/names.ts";
 import { type ProjectView, takesInFlight } from "../../shared/project.ts";
-import type { ChatView, DecisionRecord, DramaView, FileItem, ReviewSummary, SessionView } from "../../shared/types.ts";
-import { ago, api, useResource } from "../api.ts";
+import type { ChatView, DecisionRecord, DramaView, FileItem, ReviewSummary, SessionView, SubmissionView } from "../../shared/types.ts";
+import { ago, api, ApiError, useResource } from "../api.ts";
+import { Submission, useSubmission } from "../components/Submission.tsx";
 import { Dialog } from "../components/Dialog.tsx";
 import { Icon } from "../icons.tsx";
 import { type TKey, useT } from "../i18n.ts";
@@ -270,14 +271,8 @@ export function AgentPanel({ drama, episode, setup = false, onCollapse }: { dram
           </section>
         )}
         {setupEnded && (
-          // D38: what a new setup session can do after the handover is redraw out-of-date shared references, from Out of date.
           <section className="asec">
-            <p className="msg">
-              {t("agent.setupEnded")}{" "}
-              <Link to="/d/$dramaId/out-of-date" params={{ dramaId: id }}>
-                {t("agent.setupRecovery")}
-              </Link>
-            </p>
+            <p className="msg">{t("agent.setupEnded")}</p>
           </section>
         )}
         {recent.length > 0 && (
@@ -312,7 +307,7 @@ export function AgentPanel({ drama, episode, setup = false, onCollapse }: { dram
           </section>
         )}
       </div>
-      <Composer chat={setupEnded ? undefined : inView && chat.data} chosen={picked?.label ?? episode} ended={setupEnded} onSent={chat.reload} />
+      {setupEnded ? <NewSetupLine dramaId={id} onSent={sessions.reload} /> : <Composer chat={inView && chat.data} chosen={picked?.label ?? episode} onSent={chat.reload} />}
     </aside>
   );
 }
@@ -339,10 +334,60 @@ function Decided({ decision, episode }: { decision: DecisionRecord; episode: str
   );
 }
 
-/** A line to the session in view: it answers, steers or starts a run, as the session stands. */
+/**
+ * The line to a new setup session, once the setup's own has ended at the handover (D38): a message starts one on this
+ * project (POST /api/dramas/:id/setup-message), sent once per draft under one submission id with the shared Submission
+ * states, the engine's refusal in its words. The new session then shows in the sessions, and its conversation with it.
+ */
+function NewSetupLine({ dramaId, onSent }: { dramaId: string; onSent: () => void }) {
+  const { t } = useT();
+  const [text, setText] = useState("");
+  const submission = useRef(crypto.randomUUID());
+  const { sending, send, check } = useSubmission({
+    submit: () => api(`/api/dramas/${dramaId}/setup-message`, { method: "POST", json: { submissionId: submission.current, text } }),
+    // The engine's word on the submission (GET /api/submissions/:id): found is taken; 404 is nothing submitted.
+    taken: async () => {
+      try {
+        await api<SubmissionView>(`/api/submissions/${encodeURIComponent(submission.current)}`);
+        return true;
+      } catch (error) {
+        if (error instanceof ApiError && error.status === 404) return false;
+        throw error;
+      }
+    },
+  });
+  useEffect(() => {
+    if (sending.state !== "sent") return;
+    setText("");
+    submission.current = crypto.randomUUID();
+    onSent();
+  }, [sending.state]);
+  const busy = sending.state === "sending" || sending.state === "checking";
+  return (
+    <div className="composer">
+      <textarea
+        aria-label={t("agent.message")}
+        value={text}
+        disabled={busy}
+        placeholder={t("agent.askNewSetup")}
+        onChange={(event) => setText(event.target.value)}
+        onKeyDown={(event) => {
+          if (event.key === "Enter" && (event.metaKey || event.ctrlKey) && text.trim() && !busy) void send();
+        }}
+      />
+      <div className="crow">
+        <span className="grow">{t("agent.toNewSetup")}</span>
+        <button type="button" className="send" aria-label={t("talk.send")} disabled={!text.trim() || busy} onClick={() => void send()}>
+          <Icon name="arrow-up" className="ic" />
+        </button>
+      </div>
+      <Submission sending={sending} to={t("agent.newSetup")} kept={t("agent.messageKept")} onSend={() => void send()} onCheck={() => void check()} />
+    </div>
+  );
+}
+
 /** A line to the session the panel speaks to; with none, it says why: the one pinned or followed has none open, or none is chosen. */
-/** `ended`: the panel follows the setup session, which ended at the handover; the line says so and takes nothing. */
-function Composer({ chat, chosen, ended, onSent }: { chat?: ChatView; chosen?: string; ended: boolean; onSent: () => void }) {
+function Composer({ chat, chosen, onSent }: { chat?: ChatView; chosen?: string; onSent: () => void }) {
   const { t } = useT();
   const [text, setText] = useState("");
   const [error, setError] = useState<unknown>();
@@ -359,7 +404,7 @@ function Composer({ chat, chosen, ended, onSent }: { chat?: ChatView; chosen?: s
   };
   // Waiting on the maker's review, the session takes no message: the line says so and opens the review.
   const reviewing = chat?.sends === "review" && chat.reviewId;
-  const placeholder = ended ? t("agent.setupClosed") : !chat ? t("talk.pick") : reviewing ? t("talk.inReview") : chat.sends === "answer" ? t("talk.answer") : chat.sends === "steer" ? t("talk.steer") : t("talk.run");
+  const placeholder = !chat ? t("talk.pick") : reviewing ? t("talk.inReview") : chat.sends === "answer" ? t("talk.answer") : chat.sends === "steer" ? t("talk.steer") : t("talk.run");
   return (
     <div className="composer">
       <textarea
@@ -378,7 +423,7 @@ function Composer({ chat, chosen, ended, onSent }: { chat?: ChatView; chosen?: s
             {t("talk.openReview")}
           </Link>
         ) : (
-          <span className="grow">{ended ? t("agent.toSetupEnded") : chat ? (chat.label ? t("agent.to", { who: chat.label }) : t("agent.toSetup")) : chosen ? t("talk.noSessionFor", { who: chosen }) : t("talk.noSession")}</span>
+          <span className="grow">{chat ? (chat.label ? t("agent.to", { who: chat.label }) : t("agent.toSetup")) : chosen ? t("talk.noSessionFor", { who: chosen }) : t("talk.noSession")}</span>
         )}
         {error !== undefined && <span className="error small">{errorText(error, t)}</span>}
         <button type="button" className="send" aria-label={t("talk.send")} disabled={!text.trim()} onClick={() => void send()}>

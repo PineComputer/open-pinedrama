@@ -10,7 +10,8 @@ import { describe, expect, it } from "vitest";
 import { parseBibleNames } from "../../shared/names.ts";
 import { parseStatus, type ProjectView } from "../../shared/project.ts";
 import type { ChatView, DramaView, EpisodeRow, FileItem, ReviewSummary } from "../../shared/types.ts";
-import { accept, answer, calls } from "../test/server.ts";
+import { http, HttpResponse } from "msw";
+import { accept, answer, calls, server } from "../test/server.ts";
 import { AgentBall, AgentPanel, useAgentMode } from "./AgentPanel.tsx";
 import { StopControl } from "./TopBar.tsx";
 import { renderAt } from "../test/router.tsx";
@@ -103,15 +104,38 @@ describe("the agent panel", () => {
     expect(screen.getByRole("textbox", { name: /message/i })).toBeEnabled();
   });
 
-  it("says when the setup session has ended, what a new one can do, and where", async () => {
+  it("after the handover, starts a new setup session with the maker's message, sent once per draft (D38)", async () => {
+    const user = userEvent.setup();
     engine();
     answer("/api/dramas/d1/sessions", [chat("s0", "", "none"), chat("s1", "EP001", "steer")]);
     answer("/api/sessions/s0/chat", chat("s0", "", "none"));
+    accept("/api/dramas/d1/setup-message", { id: "sub", sessionId: "", state: "sent" });
     await renderAt(<AgentPanel drama={drama} setup onCollapse={() => {}} />);
     expect(await screen.findByText(/^The setup session ended when it handed the project over/)).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Open Out of date" })).toHaveAttribute("href", "/d/d1/out-of-date");
-    expect(screen.getByRole("textbox", { name: /message/i })).toBeDisabled();
-    expect(await screen.findByText("To the setup session · ended at the handover")).toBeInTheDocument();
+    expect(screen.getByText("To a new setup session")).toBeInTheDocument();
+    await user.type(screen.getByRole("textbox", { name: /message/i }), "Make Ethan older.");
+    await user.click(screen.getByRole("button", { name: "Send" }));
+    await waitFor(() => expect(calls("POST", "/api/dramas/d1/setup-message")).toHaveLength(1));
+    const body = calls("POST", "/api/dramas/d1/setup-message")[0].body as { submissionId: string; text: string };
+    expect(body.text).toBe("Make Ethan older.");
+    expect(body.submissionId).toMatch(/\S/);
+    expect(await screen.findByText(/Sent to a new setup session/)).toBeInTheDocument();
+    expect(screen.getByRole("textbox", { name: /message/i })).toHaveValue("");
+  });
+
+  it("shows the engine's refusal in its words, and keeps the message", async () => {
+    const user = userEvent.setup();
+    engine();
+    answer("/api/dramas/d1/sessions", [chat("s0", "", "none")]);
+    answer("/api/sessions/s0/chat", chat("s0", "", "none"));
+    server.use(http.post("/api/dramas/d1/setup-message", () => HttpResponse.json({ code: "drama-not-running", error: "The project is stopped: resume it to send a message." }, { status: 409 })));
+    await renderAt(<AgentPanel drama={drama} setup onCollapse={() => {}} />);
+    expect(await screen.findByText("To a new setup session")).toBeInTheDocument();
+    await user.type(screen.getByRole("textbox", { name: /message/i }), "Make Ethan older.");
+    await user.click(screen.getByRole("button", { name: "Send" }));
+    // The engine's code, worded as labels.ts words it, and the message kept.
+    expect(await screen.findByRole("alert")).toHaveTextContent("Not submitted. The project is stopped: resume it first. Your message is kept.");
+    expect(screen.getByRole("textbox", { name: /message/i })).toHaveValue("Make Ethan older.");
   });
 
   it("shows each decision the maker sent in the conversation, item by item, with its reason (D70)", async () => {
