@@ -157,15 +157,33 @@
     const kindOf = { cast: "look", scenes: "plate", props: "prop" }[S.stab];
     const versionsOf = (x) => { const [, pre, n] = x.ver.match(/^(.*?)v(\d+)$/); return Array.from({ length: Number(n) }, (_, i) => pre + "v" + (i + 1)); };
     const shownOf = (x) => (S.asel === x.id && S.at && S.at.ver && versionsOf(x).includes(S.at.ver) ? S.at.ver : x.ver);
-    const head = (x) => { const shown = shownOf(x), all = versionsOf(x); return html`
+    const head = (x) => { const shown = shownOf(x); return html`
       <div style="display:flex;align-items:baseline;gap:8px"><b class="grow">${x.name}</b><span class="mono subtle" style="font-size:11px">${shown}</span>
-        ${shown !== x.ver && html`<span class="mono muted" style="font-size:11px">current ${x.ver}</span>`}</div>
-      ${all.length > 1 && html`<div class="vstrip" role="group" aria-label=${"Versions of " + x.name}>${all.map((v) => html`<button aria-pressed=${String(v === shown)} onClick=${() => set({ asel: x.id, at: { kind: kindOf, ver: v } })}>${v.replace(/^.* /, "")}</button>`)}</div>`}`; };
+        ${shown !== x.ver && html`<span class="mono muted" style="font-size:11px">current ${x.ver}</span>`}</div>`; };
+    /* J1: an asset's one home is its card here, opened as a detail beside the grid (as Lineage's inspector sits beside
+       its graph): its versions, state, findings and review, its spec, and Lineage. The canvas and Lineage link to it. */
+    const openCard = (id) => ({ role: "button", tabindex: 0, onClick: () => set({ asel: id, at: null }), onKeyDown: (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); set({ asel: id, at: null }); } } });
+    const AssetDetail = ({ x }) => { const shown = shownOf(x), all = versionsOf(x), cur = shown === x.ver, lin = lineageOf(x.id);
+      const src = x.sheet || x.pic, kind = { cast: "Character", scenes: "Location", props: "Prop" }[S.stab];
+      return html`<aside class="insp" aria-label=${x.name}>
+        <div class="ihead"><div style="display:flex;align-items:center;gap:8px"><b class="grow">${x.name}</b><button class="ibtn" aria-label="Close" onClick=${() => set({ asel: null, at: null })}>${I("x")}</button></div>
+          <small>${kind} · ${kindOf} ${shown}</small>
+          <button class="btn sm" disabled=${!lin} title=${lin ? "" : "Lineage: this sample traces seg03 and what it reads"} onClick=${() => openLineage(lin, x.name + " · Assets")}>${I("tree-structure")}Lineage</button></div>
+        <div class="iscroll">
+          <div class="isec">${cur ? html`<img src=${src} alt="" style="width:100%;border-radius:10px;max-height:240px;object-fit:cover;object-position:top"/>` : html`<p class="subtle">${shown}'s picture isn't in this sample.</p>`}</div>
+          <div class="isec"><h4>Versions <span class="muted">${all.length}</span></h4>
+            <div class="vstrip" role="group" aria-label=${"Versions of " + x.name}>${all.map((v) => html`<button aria-pressed=${String(v === shown)} onClick=${() => set({ at: { kind: kindOf, ver: v } })}>${v.replace(/^.* /, "")}</button>`)}</div>
+            <p class="mono subtle" style="font-size:11.5px;margin:8px 0 6px">current ${x.ver} · ${x.accepted ? "accepted " + x.accepted : "none accepted"}</p>
+            <div style="display:flex;gap:6px;flex-wrap:wrap">${cur ? Status(x.st === "stale" ? "accepted" : x.st) : shown === x.accepted ? Status("accepted") : html`<span class="subtle">Not the accepted version.</span>`}${x.problems && Status("stale", "Out of date")}</div></div>
+          ${cur && x.problems && html`<div class="isec"><h4>Why it's out of date</h4>${x.problems.map((said) => html`<div class="finding warn">${I("warning")}<span>${said}</span></div>`)}<p class="subtle">The agent redraws it.</p></div>`}
+          ${cur && x.st === "you" && html`<div class="isec"><h4>Your review</h4>${S.stab === "cast" && html`<div class="finding warn">${I("warning")}<span>warn · The blouse reads as purple; the bible says plum.</span></div>`}<${ReviewBtns} id=${x.id}/></div>`}
+          ${cur && x.st === "back" && html`<div class="isec"><h4>Review</h4><div class="finding err">${I("warning-circle")}<span>Sent back by the agent: the observer found an error (a third hand). Redrawing.</span></div></div>`}
+          <div class="isec"><h4>Prompt and settings</h4><p class="subtle">The agent hasn't returned ${shown}'s spec.json and request.json.</p></div>
+        </div></aside>`; };
     // An older version keeps its own state: accepted if status says so; the review and findings belong to the current one.
     const pic = (x, src, chip) => (shownOf(x) === x.ver
       ? html`<div class="pic"><img src=${src} alt=""/>${chip}</div>`
       : html`<div class="pic"><span class="empty">${shownOf(x)}'s picture isn't in this sample.</span>${shownOf(x) === x.accepted && Status("accepted")}</div>`);
-    const now = (x) => shownOf(x) === x.ver;
     const asset = S.stab !== "bible" && { cast: P.cast, scenes: P.places, props: P.props }[S.stab].find((x) => x.id === S.asel);
     const open = ["margaret", "garden"], decided = open.filter((k) => S.cards[k] && (S.cards[k] !== "back" || (S.cardWhy[k] || "").trim())).length;
     return html`<div class="main">
@@ -182,26 +200,24 @@
           <section class="panel wide"><h3>${I("film-strip")}Episodes<span class="grow"></span><span class="muted" style="font-size:11.5px;font-weight:500">12 of 24 written · the next range is written when EP007 starts</span></h3>
             <div class="eplist">${P.bible.eps.map(([c, t, s], i) => html`<div class="eprow"><img src=${P.eps[i].cover} alt=""/><span class="mono">${c}</span><b>${t}</b><span class="muted grow">${s}</span></div>`)}</div></section>
         </div>`}
-        ${S.stab === "cast" && html`<div class="castgrid">${P.cast.map((c) => html`<article class=${"castcard" + (S.asel === c.id ? " sel" : "")} ...${picked(c.id)}>
+        ${S.stab === "cast" && html`<div class="castgrid">${P.cast.map((c) => html`<article class=${"castcard" + (S.asel === c.id ? " sel" : "")} ...${picked(c.id)} ...${openCard(c.id)}>
           ${pic(c, c.sheet, Status(c.st, c.st === "back" ? "Sent back · 1 error" : c.st === "you" ? "Waiting for you · 1 warn" : undefined))}
           <div class="ctxt">${head(c)}
             <small class="muted">${c.role}</small>
             <div class="aka"><span class="muted">Also called</span>${(P.names[c.id] || []).map((n) => html`<span class="tag">${n}</span>`)}</div>
-            ${now(c) && c.st === "you" && html`<div class="finding warn">${I("warning")}<span>warn · The blouse reads as purple; the bible says plum.</span></div><${ReviewBtns} id=${c.id}/>`}
-            ${now(c) && c.st === "back" && html`<div class="finding err">${I("warning-circle")}<span>Sent back by the agent: the observer found an error (a third hand). Redrawing.</span></div>`}
           </div></article>`)}</div>`}
-        ${S.stab === "scenes" && html`<div class="worldgrid">${P.places.map((p) => html`<article class=${"placecard" + (S.asel === p.id ? " sel" : "")} ...${picked(p.id)}>
+        ${S.stab === "scenes" && html`<div class="worldgrid">${P.places.map((p) => html`<article class=${"placecard" + (S.asel === p.id ? " sel" : "")} ...${picked(p.id)} ...${openCard(p.id)}>
           ${pic(p, p.pic, p.st !== "accepted" && Status(p.st))}
           <div class="ctxt">${head(p)}
             <p class="desc">${p.desc}</p>
             <div class="aka"><span class="muted">Views</span>${p.views.map((v) => html`<span class="tag">${v}</span>`)}</div>
             <div class="aka"><span class="muted">Times</span>${p.times.map(([t, v]) => html`<span class="tag">${t} · ${v}</span>`)}</div>
-            ${now(p) && p.st === "you" && html`<${ReviewBtns} id=${p.id}/>`}</div></article>`)}</div>`}
-        ${S.stab === "props" && html`<div class="worldgrid">${P.props.map((p) => html`<article class=${"placecard" + (S.asel === p.id ? " sel" : "")} ...${picked(p.id)}>${pic(p, p.pic, p.st !== "accepted" && Status(p.st))}
+</div></article>`)}</div>`}
+        ${S.stab === "props" && html`<div class="worldgrid">${P.props.map((p) => html`<article class=${"placecard" + (S.asel === p.id ? " sel" : "")} ...${picked(p.id)} ...${openCard(p.id)}>${pic(p, p.pic, p.st !== "accepted" && Status(p.st))}
           <div class="ctxt">${head(p)}<small class="muted">Key prop</small><p class="desc">${p.desc}</p></div></article>`)}</div>`}
         ${S.stab !== "bible" && html`<div class="sendstrip"><span class="muted">Looks and plates · ${decided} of 2 decided</span><span class="grow"></span>
           <button class="btn primary sm" disabled=${decided < 2} onClick=${() => toast("Review sent: Margaret Cole and Garden wedding.")}>Send review</button></div>`}
-      </div><${AgentPanel}/></div></div>`;
+      </div>${asset ? html`<${AssetDetail} x=${asset}/>` : html`<${AgentPanel}/>`}</div></div>`;
   }
 
   /* ───── Graph: lineage, read-only ───── */

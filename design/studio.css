@@ -545,6 +545,7 @@ input.search:focus { border-color: var(--text-primary); }
 .eprow .mono { font-size: 11.5px; color: var(--text-muted); }
 .castgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; padding: 0 16px 80px; }
 .castcard, .placecard { border-radius: var(--radius-2xl); border: 1px solid var(--border); background: var(--surface); overflow: hidden; display: flex; flex-direction: column; }
+.castcard[role="button"], .placecard[role="button"] { cursor: pointer; } .castcard[role="button"]:hover, .placecard[role="button"]:hover { border-color: var(--border-input); }
 .castcard .pic { position: relative; aspect-ratio: 16/9; background: var(--surface-container); }
 .castcard .pic img, .placecard .pic img { width: 100%; height: 100%; object-fit: cover; }
 .castcard .pic .st, .placecard .pic .st { position: absolute; left: 8px; top: 8px; }

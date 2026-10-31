@@ -431,7 +431,7 @@
         <button class="ibtn" aria-label="Close" onClick=${() => set({ sel: null })}>${I("x")}</button></div>
       <div class="nstate"><span class="mono">current ${node.ver || "v1"} · ${acc}</span>${why && html`<span class="why">${I("warning")}${why}</span>`}</div>
       ${needs && html`<p class="needs">${needs}</p>`}
-      ${home ? html`<p class="subtle nhome">Its versions, prompt and review are in Assets › ${{ cast: "Characters", scenes: "Locations", props: "Props" }[home]}.</p>`
+      ${home ? html`<p class="subtle nhome">Its versions, prompt and review: <button class="linkbtn" onClick=${() => openHome(node.id, "EP006 · Canvas")}>Assets › ${{ cast: "Characters", scenes: "Locations", props: "Props" }[home]} › ${node.label}</button></p>`
         : html`<div class="ndisc">${parts.map(([k, l]) => html`<button aria-expanded=${String(open === k)} aria-controls="npart" onClick=${() => set({ dtab: open === k ? null : k })}>${l}${I(open === k ? "caret-up" : "caret-down")}</button>`)}</div>`}
       ${!home && open && html`<div id="npart" class="npart" role="region" aria-label=${parts.find(([k]) => k === open)[1]}>
         ${open === "prompt" && (spec ? html`<ol class="refs">${spec.images.map((u, i) => html`<li title=${"Image " + (i + 1)}><img src=${u} alt=""/><b>${i + 1}</b></li>`)}</ol>
