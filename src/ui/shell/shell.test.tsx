@@ -75,7 +75,8 @@ describe("the top bar", () => {
     const { router } = await renderAt(<TopBar crumbs={crumbs} waiting={[]} ready next />, "/d/d1/e/EP002/canvas");
     const where = screen.getByRole("navigation", { name: "Where this belongs" });
     expect(within(where).getAllByRole("link").map((link) => link.textContent)).toEqual(["Projects", "The Stepmother"]);
-    expect(within(where).getByText("EP002")).toHaveAttribute("aria-current", "page");
+    // The current crumb carries aria-current; its words sit in a .ctext span inside it (3366e15).
+    expect(within(where).getByText("EP002").closest("[aria-current]")).toHaveAttribute("aria-current", "page");
     expect(screen.queryByRole("button", { name: /^Back/ })).toBeNull();
     await user.click(within(where).getByRole("link", { name: "The Stepmother" }));
     await waitFor(() => expect(href(router)).toBe("/d/d1/episodes"));
