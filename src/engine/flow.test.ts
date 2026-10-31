@@ -6,6 +6,7 @@ import { mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { MAX_ATTACHMENT, MAX_ATTACHMENT_MIB } from "../shared/types.ts";
 import type { CastCard, ChatView, DeliveryRow, DramaView, EpisodePage, FileItem, ReviewSummary, ReviewView, ScriptPage, SessionRecord, SubmissionView } from "../shared/types.ts";
 
 const DATA = mkdtempSync(path.join(tmpdir(), "studio-flow-"));
@@ -102,6 +103,10 @@ async function scenario(title: string) {
   const screenplay = new FormData();
   screenplay.set("file", new File(["EPISODE 1\nLin enters. Wei waits."], "full-screenplay.pdf", { type: "application/pdf" }));
   const attached = await call<FileItem>("POST", `/api/dramas/${id}/references`, screenplay);
+  // The route refuses what a Computer can't be handed, and says that limit, the one constant.
+  const huge = new FormData();
+  huge.set("file", new File([new Uint8Array(MAX_ATTACHMENT + 1)], "huge.pdf", { type: "application/pdf" }));
+  await expect(call("POST", `/api/dramas/${id}/references`, huge)).rejects.toThrow(`huge.pdf is over ${MAX_ATTACHMENT_MIB} MiB`);
   await expect(
     call("POST", `/api/reviews/${rewrite.id}/decision`, { submissionId: crypto.randomUUID(), items: [], words: "Yes, this is my script.", verdict: "approve", file: attached.id }),
   ).rejects.toThrow("Only an answer to the agent's question");

@@ -2,8 +2,7 @@
 // an episode whose session ended, stop the drama or retry it, talk to an agent.
 import { closeSession, computerRef, fleet, runningComputers, sessionRef, stop as stopComputer } from "./computers.ts";
 import { stopEvents } from "./follow.ts";
-import type { Mode, Reviewing } from "../shared/types.ts";
-import { MAX_ATTACHMENT } from "./config.ts";
+import { MAX_ATTACHMENT, MAX_ATTACHMENT_MIB, type Mode, type Reviewing } from "../shared/types.ts";
 import { createHash } from "node:crypto";
 import { get, newId, now, run, transaction } from "./db.ts";
 import { save } from "./library.ts";
@@ -77,7 +76,7 @@ export async function createDrama(input: NewDrama, mode: Mode): Promise<string> 
   if (!input.title.trim()) throw new StudioError("title-missing", "Give the drama a title.");
   if (!input.files.length) throw new StudioError("screenplay-missing", "Add the screenplay.");
   const large = input.files.find((file) => file.bytes.byteLength > MAX_ATTACHMENT);
-  if (large) throw new StudioError("file-too-large", `${large.name} is over 64 MiB, more than a Computer can be handed.`, 400, large.name);
+  if (large) throw new StudioError("file-too-large", `${large.name} is over ${MAX_ATTACHMENT_MIB} MiB, more than a Computer can be handed.`, 400, large.name);
   const screenplay = input.screenplay;
   if (!Number.isInteger(screenplay) || screenplay < 0 || screenplay >= input.files.length) throw new StudioError("screenplay-unchosen", "Choose which file is the screenplay.");
   checkInputs(input.preset, input.screenplayLanguage, Boolean(input.rehearsal));

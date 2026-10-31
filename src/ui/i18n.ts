@@ -1,5 +1,6 @@
 // Chinese and English, from the first release.
 import { useEffect, useState } from "react";
+import { MAX_ATTACHMENT_MIB } from "../shared/types.ts";
 
 const en = {
   "app.name": "Pine Drama",
@@ -903,7 +904,7 @@ const en = {
   "error.preset-unknown": "The studio offers no preset {detail}.",
   "error.sample-unknown": "There is no such sample project.",
   "error.length-missing": "Choose the episode length.",
-  "error.file-too-large": "{detail} is over 64 MiB, more than a Computer can be handed.",
+  "error.file-too-large": `{detail} is over ${MAX_ATTACHMENT_MIB} MiB, more than a Computer can be handed.`,
   "error.not-found": "It's no longer here.",
   "review.gone": "This review was answered or replaced.",
   "review.goneOpen": "Open Reviews",
@@ -1916,7 +1917,7 @@ const zh: Record<Key, string> = {
   "error.preset-unknown": "工作室不提供 preset {detail}。",
   "error.sample-unknown": "没有这个示例项目。",
   "error.length-missing": "请选择每集时长。",
-  "error.file-too-large": "{detail} 超过 64 MiB，无法交给电脑。",
+  "error.file-too-large": `{detail} 超过 ${MAX_ATTACHMENT_MIB} MiB，无法交给电脑。`,
   "error.not-found": "找不到了。",
   "review.gone": "这项待审已答复或被替换。",
   "review.goneOpen": "打开待审",

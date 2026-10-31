@@ -3,7 +3,8 @@
 // starts a second run.
 import path from "node:path";
 import { readFileSync } from "node:fs";
-import { MAX_ATTACHMENT, REHEARSAL_KIT } from "./config.ts";
+import { REHEARSAL_KIT } from "./config.ts";
+import { MAX_ATTACHMENT } from "../shared/types.ts";
 import { all, get, newId, now, run, transaction } from "./db.ts";
 import { computerRef, fleet, sessionRef } from "./computers.ts";
 import { followEvents, followTurn, recordTurn } from "./follow.ts";

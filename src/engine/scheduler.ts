@@ -3,6 +3,7 @@
 // and a cap on episodes waiting for the maker); keep idle timeouts long while a session
 // waits on the maker; stop Computers with nothing to do; retry what didn't go through.
 import { IDLE_WAITING_S, IDLE_WORKING_S, WAITING_CAP } from "./config.ts";
+import { MAX_ATTACHMENT_MIB } from "../shared/types.ts";
 import {
   START_ATTEMPTS,
   allowedIdle,
@@ -295,7 +296,7 @@ function startEpisode(drama: DramaRow, episode: EpisodeRow, computer: ComputerRo
         files = [...files, ...(own.length || handoff ? own : all<FileRow>("select * from files where episode_id = ? and kind != 'observation' order by id", episode.id))];
       }
       const { sent, skipped } = await attach(session, files);
-      if (skipped.length) console.warn(`${code}: too large to hand over (over 64 MiB): ${skipped.join(", ")}`);
+      if (skipped.length) console.warn(`${code}: too large to hand over (over ${MAX_ATTACHMENT_MIB} MiB): ${skipped.join(", ")}`);
       // What it was given, as sent: the handed-over project, with the episode's own pack when one went too.
       const from = !handoff ? "inputs" : sent.some((name) => name.startsWith(`${code}.tar.part-`)) ? "episode-pack" : "project";
       run("update sessions set started_from = ? where id = ?", from, session.id);

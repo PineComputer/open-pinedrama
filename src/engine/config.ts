@@ -42,8 +42,6 @@ export const IDLE_WAITING_S = 3 * 60 * 60;
 /** At most this many episodes wait for the maker before the line stops starting new ones. */
 export const WAITING_CAP = 4;
 
-/** Pine's limits on files given to a session and returned by a turn. */
-export const MAX_ATTACHMENT = 64 * 1024 * 1024;
 
 /** A turn that ends without a question or a finished episode gets this many "continue" runs. */
 export const MAX_CONTINUES = 2;
