@@ -21,13 +21,14 @@ import { api, useResource } from "../api.ts";
 import { buttonClass, IconButton } from "../components/Button.tsx";
 import { Dialog } from "../components/Dialog.tsx";
 import { EmptyState } from "../components/EmptyState.tsx";
+import { Missing } from "../components/Missing.tsx";
 import { Menu } from "../components/Menu.tsx";
 import { type Status, StatusChip } from "../components/StatusChip.tsx";
 import { type TKey, useT } from "../i18n.ts";
 import { Icon } from "../icons.tsx";
 import { headingText, openSession, subjectLabel } from "../labels.ts";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { homeLink, placeLink, usePage, usePlace } from "../place.ts";
+import { homeLink, placeLink, shotsItem, usePage, usePlace } from "../place.ts";
 import { useText } from "../viewing.tsx";
 import { NodePanel } from "./NodePanel.tsx";
 import { NodeBar } from "./NodeBar.tsx";
@@ -530,7 +531,7 @@ function Plane({ drama }: { drama: DramaView }) {
     // Each segment's group starts with its shots (D66): ours, before drama-cli's stages in their columns.
     const segmentOf = (section: string) => section.slice(code.length + 1);
     const segments = [...new Set(shown.map((stage) => stage.section).filter((section) => section.startsWith(`${code} seg`)))];
-    const shotsId = (section: string) => `shots:${section}`;
+    const shotsId = (section: string) => shotsItem(code, segmentOf(section));
     // A shots card is as tall as its row's pictures, at most drama-cli's HEIGHT: its list scrolls inside (ShotsNode).
     const pictureHeight = (id: string) => (sizes[id] ? LABEL + Math.round((WIDTH * sizes[id][1]) / sizes[id][0]) : HEIGHT);
     const firstRow = (section: string) => shown.filter((stage) => stage.section === section).sort((a, b) => a.column - b.column || (a.id < b.id ? -1 : 1)).slice(0, 3);
@@ -672,6 +673,8 @@ function Plane({ drama }: { drama: DramaView }) {
   });
 
   if (!state || !code) return <EmptyState title={t("canvas.emptyTitle")}>{t("canvas.emptyText")}</EmptyState>;
+  // An item the link names is one of this board's nodes, drama-cli's stages or the shots it built, else Not found (IA §14.1).
+  if (lineage && page?.item && !picker && !mapped.nodes.some((node) => node.id === page.item)) return <Missing dramaId={drama.id} what={page.item} />;
   const save = (all: Node[]) => void api(`/api/dramas/${drama.id}/canvas/${code}`, { method: "PUT", json: { positions: Object.fromEntries(all.map((node) => [node.id, node.position])) } });
   const go = (other: string) => void navigate({ ...placeLink({ dramaId: drama.id, surface: "canvas", episode: other }), replace: true });
   /**

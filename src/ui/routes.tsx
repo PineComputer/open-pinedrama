@@ -4,6 +4,7 @@
 // whether the drama has them is checked when the drama's page loads (DramaPage, App.tsx).
 import { createRootRoute, createRoute, createRouter, notFound, redirect, type RouterHistory } from "@tanstack/react-router";
 import { stageOf } from "../shared/lineage.ts";
+import { shotsOf } from "./place.ts";
 import { App, DramaPage, Gallery, GalleryPage, MissingObject, NotFound, SettingsPage, useDrama } from "./App.tsx";
 import { isSettingUp } from "./labels.ts";
 import { Board, SetupPanel } from "./screens/Board.tsx";
@@ -66,7 +67,7 @@ const dramaRoute = createRoute({
   path: "/d/$dramaId",
   validateSearch: (search: Record<string, unknown>): { item?: string; version?: string; view?: string } => ({ item: text(search.item), version: text(search.version), view: text(search.view) }),
   beforeLoad: ({ search }) => {
-    if (search.item !== undefined && !stageOf(search.item)) throw notFound({ data: { what: search.item } });
+    if (search.item !== undefined && !stageOf(search.item) && !shotsOf(search.item)) throw notFound({ data: { what: search.item } });
     if (search.version !== undefined && (search.item === undefined || !/^(v[0-9]+|t[0-9]{2,})$/.test(search.version))) throw notFound({ data: { what: `version=${search.version}` } });
     if (search.view !== undefined && search.view !== "lineage") throw notFound({ data: { what: `view=${search.view}` } });
   },
@@ -148,7 +149,7 @@ const episodeRoute = createRoute({
     stringify: ({ episodeCode }) => ({ episodeCode }),
   },
   beforeLoad: ({ params, search }) => {
-    const episode = search.item === undefined ? undefined : stageOf(search.item)?.where.episode;
+    const episode = search.item === undefined ? undefined : (stageOf(search.item)?.where.episode ?? shotsOf(search.item)?.episode);
     if (episode !== undefined && episode !== params.episodeCode) throw notFound({ data: { what: search.item } });
   },
   notFoundComponent: MissingObject,

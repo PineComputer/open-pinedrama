@@ -80,6 +80,18 @@ export function usePlace(): Place | null {
   return { dramaId: params.dramaId, surface, episode: params.episodeCode, item: search.item ?? named(page, params), version: search.version };
 }
 
+/**
+ * The Canvas's own item for a segment's shots (D66): no drama-cli stage, the node the Canvas builds from the episode's
+ * breakdown.json at the start of the segment's group. Its home is the episode's Canvas, which checks it on its board.
+ */
+export const shotsItem = (episode: string, segment: string) => `shots:${episode} ${segment}`;
+
+/** The episode and segment a shots item names; none for anything else. */
+export function shotsOf(item: string): { episode: string; segment: string } | undefined {
+  const named = /^shots:(EP[0-9]{3}) ([^\s/]+)$/.exec(item);
+  return named ? { episode: named[1], segment: named[2] } : undefined;
+}
+
 /** The item's one home (IA §16), with it picked there; Lineage is that home's view. */
 export function homeLink(dramaId: string, item: string, surface: Surface = "canvas", version?: string) {
   const stage = stageOf(item);

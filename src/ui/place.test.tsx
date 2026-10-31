@@ -1,9 +1,14 @@
 // The studio's URLs (routes.tsx, place.ts): a drama page's place keeps its episode and item apart, so switching view
 // keeps both and an asset's id is never taken for an episode (Codex's IA review, B1); a link lands on the item's one
 // home (IA §16); a URL that names an episode or item the drama can't have says so (Codex's rebuttal, IA §14.1).
+import "./test/flow.ts";
 import { createMemoryHistory, RouterProvider } from "@tanstack/react-router";
 import { cleanup, render, screen, waitFor } from "@testing-library/react";
+import { readFileSync } from "node:fs";
+import path from "node:path";
 import { describe, expect, it } from "vitest";
+import { parseLineage } from "../shared/lineage.ts";
+import { parseStatus } from "../shared/project.ts";
 import type { DramaView } from "../shared/types.ts";
 import { homeLink, type Place, placeLink } from "./place.ts";
 import { studioRouter } from "./routes.tsx";
@@ -102,7 +107,7 @@ describe("a drama's page", () => {
     ["an item", "/d/d1/e/EP001/canvas?item=episodes%2FEP001%2Fbreakdown", "episodes/EP001/breakdown"],
     ["an asset", "/d/d1/assets/characters/ivy", "ivy"],
   ])("says when the drama has no such %s, with the way back to it", async (_, path, what) => {
-    engine();
+    board();
     render(<RouterProvider router={studioRouter(createMemoryHistory({ initialEntries: [path] }))} />);
     expect(await screen.findByText(`This project has no ${what}.`)).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Back to the project" })).toHaveAttribute("href", "/d/d1/episodes");
@@ -154,6 +159,35 @@ describe("a drama's page", () => {
     // A pick writes ?item, as Canvas does: the same board stays, never swapped for Loading and drawn anew.
     await router.navigate({ to: "/d/$dramaId/e/$episodeCode/canvas", params: { dramaId: "d1", episodeCode: "EP001" }, search: { item: "episodes/EP001/breakdown" }, replace: true });
     expect(screen.getByText("The board fills in as the agent works")).toBe(board);
+  });
+
+  // The Canvas's board: drama-cli's lineage of EP001 (seg01's blocking, first frame, storyboard and take, the plate
+  // at Day) and the shots node the Canvas builds for seg01 (D66).
+  function board() {
+    engine();
+    const status = JSON.parse(readFileSync(path.resolve("fixtures/status", "boards.json"), "utf8"));
+    const { budget: _budget, ...state } = parseStatus(status);
+    answer("/api/dramas/d1/project", { state, sessions: [], problems: [], names: null });
+    answer("/api/dramas/d1/files", []);
+    answer("/api/dramas/d1/lineage", { lineage: parseLineage(JSON.parse(readFileSync(path.resolve("fixtures/lineage", "shot.json"), "utf8"))), problems: [] });
+    answer("/api/dramas/d1/canvas/EP001", { positions: {} });
+  }
+
+  it.each([
+    ["a segment's shots, the Canvas's own node (D66)", "shots:EP001 seg01"],
+    ["a plate at a time of day", "assets/scenes/office/times/Day"],
+    ["a first-frame reference", "episodes/EP001/first_frame_reference/seg01"],
+  ])("opens the Canvas with %s picked, never Not found", async (_, item) => {
+    board();
+    render(<RouterProvider router={studioRouter(createMemoryHistory({ initialEntries: [`/d/d1/e/EP001/canvas?item=${encodeURIComponent(item)}`] }))} />);
+    await waitFor(() => expect(document.querySelector(`.react-flow__node[data-id="${item}"]`)).toHaveClass("selected"));
+    expect(screen.queryByText(/This project has no/)).toBeNull();
+  });
+
+  it("says Not found for an item that is no node of the Canvas's board", async () => {
+    board();
+    render(<RouterProvider router={studioRouter(createMemoryHistory({ initialEntries: [`/d/d1/e/EP001/canvas?item=${encodeURIComponent("shots:EP001 seg09")}`] }))} />);
+    expect(await screen.findByText("This project has no shots:EP001 seg09.")).toBeInTheDocument();
   });
 
   it("says Not found for a path the studio has no page for, never falling back to Home", async () => {

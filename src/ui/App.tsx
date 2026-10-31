@@ -139,7 +139,8 @@ export function DramaPage() {
   const shelf = page === "characters" ? "look" : page === "locations" ? "plate" : page === "props" ? "prop" : undefined;
   // What the URL names is checked against drama-cli's lineage, except on Script, which checks its own item against the
   // screenplay versions recorded: a version waits for the maker before the lineage has a screenplay node.
-  const asked = page === "script" ? undefined : search.item;
+  // The Canvas checks its own item against its own board too: its shots nodes are its own (D66), no lineage node.
+  const asked = page === "script" || page === "canvas" || page === "canvasPick" ? undefined : search.item;
   // Loaded on every page of the project, not only once a link names an item: a pick on Canvas writes ?item, and a lineage
   // first fetched then would put Loading in the page's place and remount it, losing the board's view.
   const lineage = useResource<LineageView>(`/api/dramas/${place.dramaId}/lineage`, [`project:${place.dramaId}`]);
