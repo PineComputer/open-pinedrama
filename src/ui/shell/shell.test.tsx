@@ -223,6 +223,13 @@ describe("the sidebar", () => {
     expect(standing).toHaveTextContent("Agent turns and video, priced when each turn ends.");
   });
 
+  it("marks a replay's spend as simulated, so it never reads as a charge", () => {
+    render(<DramaSidebar drama={{ ...drama, mode: "replay" }} tab="board" />);
+    const standing = screen.getByRole("status", { name: "Where the drama stands" });
+    expect(within(standing).getByText("Simulated spend")).toBeInTheDocument();
+    expect(within(standing).queryByText("Spent")).not.toBeInTheDocument();
+  });
+
   it("switches to another drama from its head", async () => {
     const user = userEvent.setup();
     answer("/api/dramas", [{ id: "d1", title: "The Stepmother" }, { id: "d2", title: "Night Class" }]);

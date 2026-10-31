@@ -4,12 +4,13 @@ import { expect, test } from "@playwright/test";
 import { TOKEN } from "../playwright.config.ts";
 import { newProblems } from "./axe.ts";
 
-const COMPONENTS = ["Button", "StatusChip", "Segmented", "Tabs", "Dialog, Menu, Tooltip, Toast", "EmptyState", "Steps", "StopCard", "BudgetMeter"];
+// design/SPEC.md's components, as the gallery shows them.
+const COMPONENTS = ["Button", "IconButton", "StatusChip", "Segmented", "Tabs", "FilterChip", "Dialog, Menu, Tooltip, Toast", "EmptyState", "StopBanner", "StopCard", "BudgetMeter"];
 
 test("the gallery shows every component, and axe finds nothing", async ({ page }) => {
   await page.goto(`/api/open?ticket=${TOKEN}`);
   await page.goto("/dev/gallery");
-  for (const name of COMPONENTS) await expect(page.getByRole("heading", { level: 2, name })).toBeVisible();
+  for (const name of COMPONENTS) await expect(page.getByRole("heading", { level: 2, name, exact: true })).toBeVisible();
   expect(await newProblems(page)).toEqual([]);
 });
 

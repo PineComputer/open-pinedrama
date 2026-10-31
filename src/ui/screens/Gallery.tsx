@@ -1,22 +1,21 @@
-// Every component of the design system in every state, in the light and the dark theme, for
-// review and for the end-to-end checks (e2e/gallery.spec.ts). Only in development and in the
-// build the end-to-end tests make (VITE_GALLERY=1); a release has no such page.
+// design/'s components (design/SPEC.md, "Components") in their states, in the light and the dark
+// theme, for review and for the end-to-end checks (e2e/gallery.spec.ts): the design's own markup,
+// and the kit's components the screens draw with. Only in development and in the build the
+// end-to-end tests make (VITE_GALLERY=1); a release has no such page.
 import { useEffect, useState } from "react";
-import { BudgetMeter } from "../components/BudgetMeter.tsx";
+import { Tabs as TabsPrimitive } from "radix-ui";
+import { toast } from "sonner";
+import type { Refusal } from "../../shared/refusal.ts";
 import { Button, IconButton } from "../components/Button.tsx";
 import { Dialog } from "../components/Dialog.tsx";
 import { EmptyState } from "../components/EmptyState.tsx";
 import { Menu } from "../components/Menu.tsx";
 import { Segmented } from "../components/Segmented.tsx";
-import { FindingCount, type Status, StatusChip } from "../components/StatusChip.tsx";
-import { Steps } from "../components/Steps.tsx";
+import { type Status, StatusChip } from "../components/StatusChip.tsx";
 import { StopCard } from "../components/StopCard.tsx";
-import type { Refusal } from "../../shared/refusal.ts";
-import { Tabs } from "../components/Tabs.tsx";
-import { toast } from "sonner";
 import { Tooltip } from "../components/Tooltip.tsx";
+import { Icon } from "../icons.tsx";
 import { applyTheme, type ThemeChoice, themeChoice } from "../theme/theme.ts";
-import { buttonVariants } from "@/components/ui/button";
 
 // The three kinds of stop, in drama-cli's words (shared/refusal.ts).
 const STOPS: Refusal[] = [
@@ -39,7 +38,8 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 export default function Gallery() {
   const [theme, setTheme] = useState<ThemeChoice>(themeChoice);
   const [surface, setSurface] = useState("studio");
-  const [tab, setTab] = useState("boards");
+  const [filter, setFilter] = useState("all");
+  const [order, setOrder] = useState("number");
   const [dialog, setDialog] = useState(false);
   // For this page only: the maker's own choice, in Settings, stays as it was.
   useEffect(() => applyTheme(theme), [theme]);
@@ -51,78 +51,152 @@ export default function Gallery() {
       </header>
 
       <Section title="Button">
-        <Button variant="default">Primary</Button>
-        <Button variant="outline">Secondary</Button>
-        <Button variant="ghost">Ghost</Button>
-        <Button variant="destructive" size="sm" icon="stop">Stop drama</Button>
-        <Button variant="default" size="lg" icon="upload">Upload script</Button>
-        <Button variant="outline" size="sm">Small</Button>
+        <button type="button" className="btn primary">Primary</button>
+        <button type="button" className="btn">Secondary</button>
+        <button type="button" className="btn ghost">Ghost</button>
+        <button type="button" className="btn sm danger">
+          <Icon name="stop" className="ic" />
+          Stop drama
+        </button>
+        <button type="button" className="btn lg primary">
+          <Icon name="upload" className="ic" />
+          Upload script
+        </button>
+        <button type="button" className="btn sm primary">
+          Next review <span className="n">4</span>
+        </button>
         <Button variant="outline" busy>Sending</Button>
         <Button variant="outline" disabledReason="Give every item a verdict first">Send review</Button>
+      </Section>
+
+      <Section title="IconButton">
+        <button type="button" className="ibtn" aria-label="Fit the board">
+          <Icon name="frame-corners" className="ic" />
+        </button>
+        <button type="button" className="ibtn on" aria-label="Sidebar" aria-pressed="true">
+          <Icon name="list" className="ic" />
+        </button>
         <IconButton label="Fit the board" icon="frame-corners" />
-        <IconButton label="Sidebar" icon="list" on />
       </Section>
 
       <Section title="StatusChip">
         {STATUSES.map((status) => (
           <StatusChip key={status} status={status} />
         ))}
-        <FindingCount severity="error" count={1} />
-        <FindingCount severity="warn" count={3} />
       </Section>
 
       <Section title="Segmented">
-        <Segmented label="Surface" value={surface} onChange={setSurface} options={[{ value: "studio", label: "Studio" }, { value: "canvas", label: "Canvas" }, { value: "graph", label: "Graph" }]} />
+        <div className="seg" role="group" aria-label="Surface">
+          {[
+            ["studio", "Studio", "squares-four"],
+            ["canvas", "Canvas", "flow-arrow"],
+            ["graph", "Graph", "tree-structure"],
+          ].map(([value, label, icon]) => (
+            <button key={value} type="button" aria-pressed={surface === value} onClick={() => setSurface(value)}>
+              <Icon name={icon as "list"} className="ic" />
+              {label}
+            </button>
+          ))}
+        </div>
+        <Segmented label="Order" value={order} onChange={setOrder} options={[{ value: "number", label: "Episode order" }, { value: "needs", label: "Needs you first" }]} />
       </Section>
 
       <Section title="Tabs">
-        <Tabs label="EP004" value={tab} onChange={setTab} tabs={[{ value: "boards", label: "Storyboards", count: 6 }, { value: "takes", label: "Takes" }, { value: "cut", label: "Cut" }]}>
-          <p className="ds-gallery-note">The {tab} of EP004.</p>
-        </Tabs>
+        <TabsPrimitive.Root defaultValue="bible">
+          <div className="tabsrow">
+            <TabsPrimitive.List className="utabs" aria-label="Story">
+              {[
+                ["bible", "Bible", undefined],
+                ["cast", "Cast", 8],
+                ["scenes", "Scenes", 6],
+                ["props", "Props", 1],
+              ].map(([value, label, count]) => (
+                <TabsPrimitive.Trigger key={value} value={String(value)}>
+                  {label}
+                  {count !== undefined && <small> {count}</small>}
+                </TabsPrimitive.Trigger>
+              ))}
+            </TabsPrimitive.List>
+          </div>
+          {["bible", "cast", "scenes", "props"].map((value) => (
+            <TabsPrimitive.Content key={value} value={value} className="ds-gallery-note">
+              The drama's {value}.
+            </TabsPrimitive.Content>
+          ))}
+        </TabsPrimitive.Root>
+      </Section>
+
+      <Section title="FilterChip">
+        {[
+          ["all", "All", 24],
+          ["you", "Needs you", 3],
+          ["work", "At work", 2],
+          ["line", "In line", 18],
+        ].map(([value, label, count]) => (
+          <button key={value} type="button" className="fchip" aria-pressed={filter === value} onClick={() => setFilter(String(value))}>
+            {label}
+            <small>{count}</small>
+          </button>
+        ))}
       </Section>
 
       <Section title="Dialog, Menu, Tooltip, Toast">
-        <Button variant="outline" onClick={() => setDialog(true)}>Open a dialog</Button>
+        <button type="button" className="btn" onClick={() => setDialog(true)}>
+          Open a dialog
+        </button>
         <Dialog open={dialog} onOpenChange={setDialog} title="Stop the drama?" description="Every Computer it has running stops. What they made stays." confirm={{ label: "Stop it", danger: true, run: () => toast("Stopped.") }} />
         <Menu label="More" items={[{ label: "Lineage", run: () => toast("Lineage.") }, { label: "Download", run: () => toast("Downloaded.") }, { label: "Not now", run: () => undefined, disabled: true }]} />
         <Tooltip text="Spent of budget">
-          <button type="button" className={buttonVariants({ variant: "outline" })}>Hover or focus me</button>
+          <button type="button" className="btn">
+            Hover or focus me
+          </button>
         </Tooltip>
-        <Button variant="outline" onClick={() => toast("Review sent. Everything you accepted is recorded.", { action: { label: "Next review", onClick: () => undefined } })}>Show a toast</Button>
+        <button type="button" className="btn" onClick={() => toast("Review sent. Everything you accepted is recorded.", { action: { label: "Next review", onClick: () => undefined } })}>
+          Show a toast
+        </button>
       </Section>
 
       <Section title="EmptyState">
-        <EmptyState title="No dramas yet" action={<Button variant="default">Upload script</Button>}>
+        <EmptyState title="No dramas yet" action={<button type="button" className="btn primary">Upload script</button>}>
           Upload a screenplay in any format; the agent turns it into a correct Fountain screenplay and takes it from there.
         </EmptyState>
       </Section>
 
-      <Section title="Steps">
-        <Steps
-          label="Analyzing"
-          steps={[
-            { title: "Read the file", detail: "41 pages", state: "done", time: "0:12" },
-            { title: "Converted to Fountain", detail: "24 episodes, 212 scenes", state: "done", time: "2:05" },
-            { title: "Checking the screenplay", state: "now", time: "1:42" },
-            { title: "Your review of the Fountain", state: "you" },
-            { title: "Story: bible, cast, locations, props", state: "later" },
-          ]}
-        />
+      <Section title="StopBanner">
+        <div style={{ flex: "1 1 100%", display: "grid", gap: 8 }}>
+          <div className="banner" role="status">
+            <Icon name="circle-notch" className="ic" />
+            <b>Stopping — keep the app open</b>
+          </div>
+          <div className="banner done">
+            <b>Bride on Bail is stopped</b>
+            <span className="grow">Nothing runs and nothing is spent until you resume.</span>
+            <button type="button" className="btn sm primary">
+              Resume
+            </button>
+          </div>
+        </div>
       </Section>
 
       <Section title="StopCard">
         {STOPS.map((refusal) => (
           <div key={refusal.code} style={{ flex: "1 1 320px", alignSelf: "flex-start" }}>
-            <StopCard refusal={refusal} />
+            <StopCard refusal={refusal} episode="EP003" />
           </div>
         ))}
       </Section>
 
       <Section title="BudgetMeter">
-        <BudgetMeter spentUsd={41.2} budgetUsd={300} />
-        <BudgetMeter spentUsd={252} budgetUsd={300} />
-        <BudgetMeter spentUsd={300} budgetUsd={300} />
-        <BudgetMeter spentUsd={12.5} budgetUsd={null} />
+        {[
+          [14, 2],
+          [84, 6],
+          [100, 0],
+        ].map(([spent, flying]) => (
+          <div key={spent} className="meter" role="meter" aria-label="Spent of the budget" aria-valuemin={0} aria-valuemax={100} aria-valuenow={spent} style={{ width: 220 }}>
+            <i style={{ width: `${spent}%` }} />
+            {flying > 0 && <i className="fly" style={{ width: `${flying}%` }} />}
+          </div>
+        ))}
       </Section>
     </main>
   );

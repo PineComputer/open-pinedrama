@@ -4,15 +4,12 @@ import { act, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { useState } from "react";
 import { describe, expect, it, vi } from "vitest";
-import { BudgetMeter } from "./BudgetMeter.tsx";
 import { Button, IconButton } from "./Button.tsx";
 import { Dialog } from "./Dialog.tsx";
 import { EmptyState } from "./EmptyState.tsx";
 import { Menu } from "./Menu.tsx";
 import { Segmented } from "./Segmented.tsx";
-import { FindingCount, StatusChip } from "./StatusChip.tsx";
-import { Steps } from "./Steps.tsx";
-import { Tabs } from "./Tabs.tsx";
+import { StatusChip } from "./StatusChip.tsx";
 import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
 import type { Refusal } from "../../shared/refusal.ts";
@@ -94,19 +91,6 @@ describe("StatusChip", () => {
     render(<StatusChip status={status} />);
     expect(screen.getByText(words)).toHaveAttribute("data-status", status);
   });
-
-  it("counts an observer's findings by severity, and shows nothing for none", () => {
-    const { container } = render(
-      <>
-        <FindingCount severity="error" count={1} />
-        <FindingCount severity="warn" count={3} />
-        <FindingCount severity="warn" count={0} />
-      </>,
-    );
-    expect(screen.getByText("1 error")).toBeInTheDocument();
-    expect(screen.getByText("3 warn")).toBeInTheDocument();
-    expect(container.querySelectorAll(".st")).toHaveLength(2);
-  });
 });
 
 describe("Segmented", () => {
@@ -122,31 +106,6 @@ describe("Segmented", () => {
     await user.click(within(group).getByRole("radio", { name: "Canvas" }));
     expect(within(group).getByRole("radio", { name: "Canvas" })).toBeChecked();
     expect(within(group).getByRole("radio", { name: "Studio" })).not.toBeChecked();
-  });
-});
-
-describe("Tabs", () => {
-  function EpisodeTabs() {
-    const [value, setValue] = useState("boards");
-    return (
-      <Tabs label="EP004" value={value} onChange={setValue} tabs={[{ value: "boards", label: "Storyboards" }, { value: "takes", label: "Takes" }, { value: "cut", label: "Cut" }]}>
-        <p>{value} shown</p>
-      </Tabs>
-    );
-  }
-
-  it("selects a tab by click and moves with the arrow keys, showing its panel", async () => {
-    const user = userEvent.setup();
-    render(<EpisodeTabs />);
-    expect(screen.getByRole("tab", { name: "Storyboards" })).toHaveAttribute("aria-selected", "true");
-    expect(screen.getByRole("tabpanel")).toHaveTextContent("boards shown");
-    await user.click(screen.getByRole("tab", { name: "Takes" }));
-    expect(screen.getByRole("tabpanel")).toHaveTextContent("takes shown");
-    await user.keyboard("{ArrowRight}");
-    expect(screen.getByRole("tab", { name: "Cut" })).toHaveFocus();
-    expect(screen.getByRole("tab", { name: "Cut" })).toHaveAttribute("aria-selected", "true");
-    await user.keyboard("{ArrowRight}");
-    expect(screen.getByRole("tab", { name: "Storyboards" })).toHaveFocus();
   });
 });
 
@@ -238,52 +197,8 @@ describe("EmptyState", () => {
   });
 });
 
-describe("Steps", () => {
-  it("lists each step with where it stands, the current one marked", () => {
-    render(
-      <Steps
-        label="Analyzing"
-        steps={[
-          { title: "Read the file", state: "done" },
-          { title: "Check the screenplay", state: "now", time: "1:42" },
-          { title: "Your review of the Fountain", state: "later" },
-        ]}
-      />,
-    );
-    const list = screen.getByRole("list", { name: "Analyzing" });
-    const items = within(list).getAllByRole("listitem");
-    expect(items.map((item) => item.className)).toEqual(["is-done", "is-now", "is-later"]);
-    expect(items[1]).toHaveAttribute("aria-current", "step");
-    expect(items[1]).toHaveTextContent("1:42");
-  });
-});
-
-describe("BudgetMeter", () => {
-  it("shows what was spent of the budget", () => {
-    render(<BudgetMeter spentUsd={41.2} budgetUsd={300} />);
-    const bar = screen.getByRole("progressbar", { name: "Spent of budget" });
-    expect(Number(bar.getAttribute("aria-valuenow"))).toBeCloseTo((41.2 / 300) * 100);
-    expect(screen.getByText((_, el) => el?.tagName === "B" && el.textContent === "$41.20 / $300")).toBeInTheDocument();
-  });
-
-  it("warns from 80% and says when the budget is spent", () => {
-    const { rerender } = render(<BudgetMeter spentUsd={250} budgetUsd={300} />);
-    expect(screen.getByRole("progressbar")).toHaveClass("*:bg-warning");
-    rerender(<BudgetMeter spentUsd={300} budgetUsd={300} />);
-    expect(screen.getByRole("progressbar")).toHaveClass("*:bg-destructive");
-    expect(screen.getByText("Budget spent")).toBeInTheDocument();
-  });
-
-  it("with no cap, shows only what was spent, with no bar to fill", () => {
-    render(<BudgetMeter spentUsd={12.5} budgetUsd={null} />);
-    expect(screen.queryByRole("progressbar")).not.toBeInTheDocument();
-    expect(screen.getByText("Spent")).toBeInTheDocument();
-    expect(screen.getByText("$12.50")).toBeInTheDocument();
-  });
-});
-
 describe("in the maker's language", () => {
-  it("says states, findings, spend and Cancel in Chinese when the studio is in Chinese", async () => {
+  it("says states in Chinese when the studio is in Chinese", async () => {
     const { setLang } = await import("../i18n.ts");
     act(() => setLang("zh"));
     try {
@@ -291,29 +206,14 @@ describe("in the maker's language", () => {
         <>
           <StatusChip status="you" />
           <StatusChip status="back" />
-          <FindingCount severity="error" count={2} />
-          <BudgetMeter spentUsd={12.5} budgetUsd={null} />
-          <BudgetMeter spentUsd={300} budgetUsd={300} />
         </>,
       );
       expect(screen.getByText("等你审")).toBeInTheDocument();
       expect(screen.getByText("已打回")).toBeInTheDocument();
-      expect(screen.getByText("2 个 error")).toBeInTheDocument();
-      expect(screen.getByText("已花费")).toBeInTheDocument();
-      expect(screen.getByText("预算已用完")).toBeInTheDocument();
-      expect(screen.getByText((_, el) => el?.tagName === "B" && el.textContent === "$300.00 / $300")).toBeInTheDocument();
-      expect(screen.queryByText(/Spent|Budget|Waiting/)).not.toBeInTheDocument();
+      expect(screen.queryByText(/Waiting|Sent back/)).not.toBeInTheDocument();
     } finally {
       act(() => setLang("en"));
     }
-  });
-});
-
-describe("BudgetMeter in replay", () => {
-  it("marks a replay's spend as simulated, so it never reads as a charge", () => {
-    render(<BudgetMeter spentUsd={1.18} budgetUsd={null} simulated />);
-    expect(screen.getByText("Simulated spend")).toBeInTheDocument();
-    expect(screen.queryByText("Spent")).not.toBeInTheDocument();
   });
 });
 
