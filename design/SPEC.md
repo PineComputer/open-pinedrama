@@ -47,7 +47,8 @@ Phosphor regular, 70 names (icons.js). Sizes: 16 default, 18 in IconButton and N
 | SendBar | .sendbar | Pips per item, "n of m decided", "Send review". |
 | SetupSteps | .setup | 26px numbered circles: you = warning fill, work = pulsing ring. |
 | Dropzone | .dropzone | Dashed, surface-container; over = --selected. |
-| PresetPicker | .preset | Radio cards, 2 columns. Shows no recommendation (the person chooses). |
+| PresetPicker | .presets › .preset | The kit's RadioGroup (Radix: role radio, aria-checked, data-state) as cards, 2 columns. Shows no recommendation (the person chooses). |
+| ReviewingChoice | .presets.one › .preset | The same RadioGroup, one column: "Your reviews", each option its label and hint. |
 | FountainDiff | .fpanes | "Your file" (numbered) · "Fountain" (screenplay.md). Clicking a line highlights both sides. A question line uses warning-bg with Day/Night Segmented. |
 | AcceptInWords | .faccept | Textarea plus Send back and "Accept the rewrite". Accept needs the answer and the words. |
 | CastCard | .castcard | A character in Assets › Characters. 16:9 sheet; name, version, role, "Also called" tags, Finding, card verdicts (.mini). |

@@ -56,13 +56,13 @@
                   <span class="plus">${I("upload")}</span><b>Drop your screenplay</b><small>Fountain, Word, PDF or plain text · or click to choose</small></button>`}
             </section>
             <section class="panel"><h3>${I("sliders-horizontal")}Preset</h3><p class="muted" style="margin-bottom:10px">How the drama is made: language, look and audience. You choose; it can't be changed later.</p>
-              <div class="presets">${P.presets.map((p) => html`<button class="preset" aria-pressed=${String(S.preset === p.id)} onClick=${() => set({ preset: p.id })}>
+              <div class="presets" role="radiogroup" aria-label="Preset">${P.presets.map((p, i) => html`<button type="button" class="preset" role="radio" aria-checked=${String(S.preset === p.id)} data-state=${S.preset === p.id ? "checked" : "unchecked"} tabindex=${S.preset ? (S.preset === p.id ? 0 : -1) : (i === 0 ? 0 : -1)} onClick=${() => set({ preset: p.id })}>
                 <span class="radio"></span><span class="grow"><b>${p.t}</b><small>${p.d}</small><code>${p.id}</code></span></button>`)}</div></section>
             <section class="panel"><h3>${I("clock")}Episodes and budget</h3>
               <div class="fields">
                 <label><span>Episode length</span><div class="seg">${["60", "90", "120"].map((v) => html`<button aria-pressed=${String(S.len === v)} onClick=${() => set({ len: v })}>${v} s</button>`)}</div></label>
                 ${/* What the maker reviews; the studio approves the rest (the product's ReviewingChoice, its texts verbatim).
-                     The DOM is Radix RadioGroup's (role radio, aria-checked, data-state), which the port uses for the keys. */ ""}
+                     Like the preset cards, Radix RadioGroup's DOM (role radio, aria-checked, data-state): one kit control, two uses. */ ""}
                 <div class="field"><span>Your reviews</span>
                   <div class="presets one" role="radiogroup" aria-label="Your reviews">${[
                     ["every", "Every step", "You approve the leads' looks, the shared references, and each episode's storyboards, takes and cut."],
