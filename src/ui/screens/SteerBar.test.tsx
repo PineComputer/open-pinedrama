@@ -95,6 +95,19 @@ describe("the SteerBar", () => {
     expect(await within(bar).findByRole("link", { name: "Review" })).toHaveAttribute("href", "/r/r9?key=lin");
   });
 
+  it("routes Review by the item's kind: a segment's storyboards review is not its take's (D69)", async () => {
+    const openBoards: ReviewSummary = { ...openLooks, id: "r7", kind: "storyboards", episode: "EP001" };
+    engine([openBoards]);
+    answer("/api/reviews/r7", { ...storyboardReview(), id: "r7", kind: "storyboards", episode: "EP001", reviewItems: [{ key: "seg01", label: "seg01", files: [] }], otherFiles: [] });
+    await renderAt(<Canvas drama={drama("working")} />, "/d/d1/e/EP001/canvas");
+    const board = await pick(/^Storyboard · line-art/);
+    expect(await within(board.bar).findByRole("link", { name: "Review" })).toHaveAttribute("href", "/r/r7?key=seg01");
+    await board.user.keyboard("{Escape}");
+    const take = await pick(/^Take · t01/);
+    expect(await within(take.bar).findByRole("button", { name: "Send back" })).toBeInTheDocument();
+    expect(within(take.bar).queryByRole("link", { name: "Review" })).toBeNull();
+  });
+
   it("offers no Review where no review holds the item", async () => {
     engine();
     await renderAt(<Canvas drama={drama("working")} />, "/d/d1/canvas");

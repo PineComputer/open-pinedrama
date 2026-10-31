@@ -26,7 +26,9 @@ function reviewKey(node: Item): string {
 function useOpenReview(drama: DramaView, node: Item): ReviewView | undefined {
   const queue = useResource<ReviewSummary[]>("/api/reviews", ["reviews"]);
   const [found, setFound] = useState<ReviewView>();
-  const kinds = node.kind === "cut" ? ["cut"] : node.episode ? ["storyboards", "takes"] : ["looks", "references"];
+  // The review of the item's own kind (D69): a take's is the takes review, a segment's pictures' the storyboards
+  // review, the cut's the cut review; a segment's stages share its key, so the kind tells them apart.
+  const kinds = node.kind === "cut" ? ["cut"] : node.kind === "take" ? ["takes"] : node.episode ? ["storyboards"] : ["looks", "references"];
   const candidates = (queue.data ?? []).filter((review) => review.dramaId === drama.id && review.state === "open" && kinds.includes(review.kind) && (!node.episode || review.episode === node.episode));
   const ids = candidates.map((review) => review.id).join(",");
   useEffect(() => {
