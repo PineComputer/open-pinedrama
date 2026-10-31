@@ -1,5 +1,6 @@
 // The engine's HTTP API as the UI calls it, in process through Hono's app.request(): who may
 // call it, and the answers the UI reads, in the shared types (docs/TESTING.md).
+import { createHash } from "node:crypto";
 import { existsSync, mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -65,6 +66,21 @@ describe("the answers the UI reads", () => {
     expect(chosen.status).toBe(200);
     expect(((await chosen.json()) as AppInfo).mode).toBe("replay");
     expect(existsSync(path.join(data, "studio.db"))).toBe(true);
+  });
+
+  it("gives a replayed sample the same id on every fresh studio, so a rebuild keeps its URLs (QA Y5)", async () => {
+    expect((await call("/api/connection/replay", { method: "POST" })).status).toBe(200);
+    const start = async (language: string) => {
+      const made = await call("/api/dramas/sample", { method: "POST", body: JSON.stringify({ language, sample: "bride-on-bail" }), headers: { "content-type": "application/json" } });
+      expect(made.status).toBe(200);
+      return ((await made.json()) as { id: string }).id;
+    };
+    // This test's data folder is empty, as a rebuilt studio's is: the id is the sample's and language's, nothing random.
+    const base = `drama_${createHash("sha256").update("sample:bride-on-bail:en").digest("hex").slice(0, 16)}`;
+    expect(await start("en")).toBe(base);
+    // Started again in the same studio, it is another drama, numbered in the order it was started.
+    expect(await start("en")).toBe(`${base}-2`);
+    expect(await start("zh")).toBe(`drama_${createHash("sha256").update("sample:bride-on-bail:zh").digest("hex").slice(0, 16)}`);
   });
 
   it("lists the sample drama once it is made, as a card", async () => {

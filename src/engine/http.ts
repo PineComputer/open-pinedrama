@@ -20,7 +20,7 @@ import { appInfo, connectPine, disconnect, useReplay } from "./connection.ts";
 import { retryStarts } from "./computers.ts";
 import { DEFAULT_ENDPOINT } from "./settings.ts";
 import { all, run } from "./db.ts";
-import { chat, chooseInputs, createDrama, desktop, finishEpisode, rehearse, resumeEpisode, stopDrama, updateDrama, resumeDrama, stopEpisode } from "./dramas.ts";
+import { chat, chooseInputs, createDrama, desktop, finishEpisode, rehearse, resumeEpisode, sampleDramaId, stopDrama, updateDrama, resumeDrama, stopEpisode } from "./dramas.ts";
 import { StudioError } from "./errors.ts";
 import { STORIES } from "./replay-fleet.ts";
 import { fileRow, openBlob, save, toItem } from "./library.ts";
@@ -187,6 +187,8 @@ export function app(): Hono {
       if (!story) throw new StudioError("sample-unknown", `No sample drama "${sample}"; there are ${Object.keys(STORIES).join(", ")}.`);
       const name = `sample-screenplay.${zh ? "zh" : "en"}.md`;
       const id = await createDrama({
+        // In replay a sample keeps its id across rebuilds (sampleDramaId); a rehearsal on Pine is a real drama.
+        ...(mode === "replay" ? { id: sampleDramaId(sample, zh ? "zh" : "en") } : {}),
         title: story[zh ? "zh" : "en"].title,
         language: zh ? "zh" : "en",
         format: "9:16, 480p",

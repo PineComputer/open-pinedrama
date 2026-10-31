@@ -4,6 +4,7 @@ import { closeSession, computerRef, fleet, runningComputers, sessionRef, stop as
 import { stopEvents } from "./follow.ts";
 import type { Mode, Reviewing } from "../shared/types.ts";
 import { MAX_ATTACHMENT } from "./config.ts";
+import { createHash } from "node:crypto";
 import { get, newId, now, run, transaction } from "./db.ts";
 import { save } from "./library.ts";
 import { publish } from "./live.ts";
@@ -15,6 +16,8 @@ import { approveUnreviewed, decide, pendingReview } from "./reviews.ts";
 import { startRun } from "./runs.ts";
 
 export interface NewDrama {
+  /** The drama's id when it must be known ahead (a replayed sample's, sampleDramaId); otherwise a new one. */
+  id?: string;
   title: string;
   /** zh | en: the maker's language, which the agent writes its questions and summaries in. */
   language: string;
@@ -55,6 +58,18 @@ const clamp = (value: number, low: number, high: number) => Math.min(high, Math.
 const reviewingOf = (value: string | undefined, otherwise: Reviewing): Reviewing => (["every", "key", "none"].includes(value ?? "") ? (value as Reviewing) : otherwise);
 
 /**
+ * A replayed sample's id: the same for the same sample, language and how many of it this studio started before, so a
+ * studio rebuilt and seeded the same way keeps every URL and open tab (QA Y5). Real dramas keep random ids (newId).
+ */
+export function sampleDramaId(sample: string, language: string): string {
+  const base = `drama_${createHash("sha256").update(`sample:${sample}:${language}`).digest("hex").slice(0, 16)}`;
+  const taken = (id: string) => get<{ id: string }>("select id from dramas where id = ?", id) !== undefined;
+  let n = 1;
+  while (taken(n === 1 ? base : `${base}-${n}`)) n++;
+  return n === 1 ? base : `${base}-${n}`;
+}
+
+/**
  * A new drama, made for the mode the studio is in. Its screenplay is stored first; the
  * drama appears (and the scheduler can see it) only once all of it is.
  */
@@ -66,7 +81,7 @@ export async function createDrama(input: NewDrama, mode: Mode): Promise<string> 
   const screenplay = input.screenplay;
   if (!Number.isInteger(screenplay) || screenplay < 0 || screenplay >= input.files.length) throw new StudioError("screenplay-unchosen", "Choose which file is the screenplay.");
   checkInputs(input.preset, input.screenplayLanguage, Boolean(input.rehearsal));
-  const id = newId("drama");
+  const id = input.id ?? newId("drama");
   const fileIds: number[] = [];
   // The maker's files are kept as they are, as sources; the studio writes brief.md from what the maker set.
   const length = LENGTHS[input.length ?? ""] ? input.length! : "60";
