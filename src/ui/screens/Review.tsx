@@ -863,6 +863,7 @@ export function CutRoom({ review, done }: { review: ReviewView; done: () => void
   const episodeFiles = useResource<FileItem[]>(review.episode ? `/api/dramas/${review.dramaId}/files?episode=${review.episode}` : null, [`drama:${review.dramaId}`]);
   const takeSpec = clip ? (episodeFiles.data ?? []).find((other) => other.kind === "spec" && other.path.endsWith(`/segments/${clip.segment}/${clip.take}/spec.json`)) : undefined;
   const spec = specFacts(useText(takeSpec).text);
+  const drama = useResource<DramaView>(`/api/dramas/${review.dramaId}`, [`drama:${review.dramaId}`]);
   // A second press that lands before the button re-renders busy finds this set: one decision goes, not two.
   const sending = useRef(false);
   const send = useAction(async () => {
@@ -889,7 +890,7 @@ export function CutRoom({ review, done }: { review: ReviewView; done: () => void
 
   return (
     <div className="room is-cut">
-      <CutViewer lines={lines} selected={selected} onSelect={setSelected} file={file} tag={`${code} · ${t("kind.cut").toLowerCase()} ${file.version ?? ""}`.trim()} notes={notes} videoRef={video} onTime={setPlayhead} />
+      <CutViewer format={drama.data?.format} lines={lines} selected={selected} onSelect={setSelected} file={file} tag={`${code} · ${t("kind.cut").toLowerCase()} ${file.version ?? ""}`.trim()} notes={notes} videoRef={video} onTime={setPlayhead} />
       <aside className="insp" aria-label={t("review.inspector")}>
         <div className="ihead">
           <b>

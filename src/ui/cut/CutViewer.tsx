@@ -171,12 +171,14 @@ export interface CutViewerProps {
   actions?: CutActions;
   /** The breakdown's lines at their times in the cut, for the lines track. */
   lines?: CutLine[];
+  /** The drama's format as the maker gave it ("9:16, 480p"), for the controls' line, as the design reads it. */
+  format?: string;
   /** The segment selected on the timeline, by its place in the plan, and what to do when the maker selects one. */
   selected?: number;
   onSelect?: (clip: number) => void;
 }
 
-export function CutViewer({ file, tag, notes = [], onTime, videoRef, actions = WATCH_ONLY, lines = [], selected, onSelect }: CutViewerProps) {
+export function CutViewer({ file, tag, notes = [], onTime, videoRef, actions = WATCH_ONLY, lines = [], format, selected, onSelect }: CutViewerProps) {
   const { t } = useT();
   const video = useRef<HTMLVideoElement>(null);
   useImperativeHandle(videoRef, () => video.current!, []);
@@ -242,7 +244,7 @@ export function CutViewer({ file, tag, notes = [], onTime, videoRef, actions = W
             {time.toFixed(1)}s <small>/ {length.toFixed(1)}s</small>
           </span>
           <span className="grow" />
-          <span className="muted">{[fps ? `${fps} fps` : "", t("cut.segmentsCount", { n: clips.length })].filter(Boolean).join(" · ")}</span>
+          <span className="muted">{[...(format ? format.split(/,\s*/) : []), fps ? `${fps} fps` : "", t("cut.segmentsCount", { n: clips.length })].filter(Boolean).join(" · ")}</span>
         </div>
         {!plan && <p className="muted">{t("cut.noPlan")}</p>}
         {plan && "error" in plan && <p className="muted">{t("cut.planError", { error: plan.error })}</p>}
