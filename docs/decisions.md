@@ -1275,8 +1275,13 @@ timeline
   "vN · not accepted" in the work colour, not the maker's amber; "Made from an out-of-date version" and the
   video prompts' "Compiled" stay as Lineage's own facts.
 - **Amended.** 31 October 2026, master's decision on work-03's retest (C17): a Lineage node shows an
-  acceptance chip only when drama-cli's status reports that stage; otherwise it shows its version and
-  freshness only. drama-cli's lineage writes `accepted` as null whenever a stage's folder has no
+  acceptance chip only when drama-cli's status reports that stage with an `accepted` field; otherwise it
+  shows its version and freshness only. The video prompts, which status reports with `current` and `stale`
+  only ("The video prompts are never accepted", v0.7.5 `drama_cli/stages.py:4671`), get no chip by the same
+  rule. One interim exception: the screenplay takes an acceptance (D115) but status has no entry for it (the
+  report names the bible and no screenplay, `stages.py:4649–4651`), a gap in drama-cli's status, so the
+  screenplay reads its lineage `accepted` until status reports it; then the exception is deleted (master
+  proposes it to merecdesperez44323-lab with C15's line kinds). drama-cli's lineage writes `accepted` as null whenever a stage's folder has no
   accepted.json (v0.7.5 `drama_cli/lineage.py:80–84`), so it cannot tell "not accepted yet" from "never takes
   an acceptance", while status lists the stages that take one. On FITL r2 EP001's cut, 63 of 70 plate views
   (a plate's steps inside its folder, `stages.location_stages`, which status does not report) had read "v2 ·
