@@ -1012,6 +1012,11 @@ timeline
   `rowConstraints`. Words: "location & props会不会有点儿太大了。。。我担心笔记本上都显示不了几个， 不够精致呢"
   (*aren't the locations and props a bit too big… I worry a laptop shows only a few; not refined
   enough*), relayed by master.
+- **Amended.** 30 October 2026, 411a70a: Locations' cards are as big as Props': their rows take the
+  height Props' pictures give theirs, not the plates' own ratio (Double Life r4's near-square plates had
+  come out about 150 px wide in 180 px rows); Characters and Props are unchanged. The earlier "too big"
+  was seen at 150% screen zoom; at normal zoom Characters and Props were right (master). Words:
+  "location和props一样大就好了" (*locations the same size as props is fine*), relayed by master.
 ## D57. 2026-10-30 · Assets has no tabs; the project tree is its navigation
 - **Context.** Assets offered Characters, Locations and Props twice: as rows in the project tree and
   as tabs on the page.
