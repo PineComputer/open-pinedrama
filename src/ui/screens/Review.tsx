@@ -8,7 +8,7 @@ import { Button, buttonClass } from "../components/Button.tsx";
 import { Segmented } from "../components/Segmented.tsx";
 import { StatusChip } from "../components/StatusChip.tsx";
 import { StopCard } from "../components/StopCard.tsx";
-import { CutViewer, cutLines, fmt } from "../cut/CutViewer.tsx";
+import { CutViewer, alignedLines, cutLines, fmt } from "../cut/CutViewer.tsx";
 import { shotListOf } from "../../shared/shots.ts";
 import { Icon } from "../icons.tsx";
 import { Markdown } from "../Markdown.tsx";
@@ -869,10 +869,12 @@ export function CutRoom({ review, done }: { review: ReviewView; done: () => void
   const timed = notes.map((note, n) => ({ note, n })).sort((a, b) => (a.note.time ?? 0) - (b.note.time ?? 0));
   // The breakdown's lines on the lines track, and the selected segment's take and its spec for Properties.
   const breakdown = useText(review.breakdown ?? review.otherFiles.find((other) => other.kind === "breakdown" && /markdown|text/.test(other.type))).text;
-  const lines = plan ? cutLines(plan.clips, (segment) => shotListOf(breakdown, segment)) : [];
+  // drama-cli's asr-align times the lines in this cut (a cut.srt returned with or after it); without it, an estimate.
+  const episodeFiles = useResource<FileItem[]>(review.episode ? `/api/dramas/${review.dramaId}/files?episode=${review.episode}` : null, [`drama:${review.dramaId}`]);
+  const srt = useText((episodeFiles.data ?? []).filter((other) => other.kind === "subtitles" && other.createdAt >= file.createdAt).at(-1)).text;
+  const lines = srt ? alignedLines(srt) : plan ? cutLines(plan.clips, (segment) => shotListOf(breakdown, segment)) : [];
   const [selected, setSelected] = useState<number>();
   const clip = selected !== undefined ? plan?.clips[selected] : undefined;
-  const episodeFiles = useResource<FileItem[]>(review.episode ? `/api/dramas/${review.dramaId}/files?episode=${review.episode}` : null, [`drama:${review.dramaId}`]);
   const takeSpec = clip ? (episodeFiles.data ?? []).find((other) => other.kind === "spec" && other.path.endsWith(`/segments/${clip.segment}/${clip.take}/spec.json`)) : undefined;
   const spec = specFacts(useText(takeSpec).text);
   const drama = useResource<DramaView>(`/api/dramas/${review.dramaId}`, [`drama:${review.dramaId}`]);
@@ -904,7 +906,7 @@ export function CutRoom({ review, done }: { review: ReviewView; done: () => void
 
   return (
     <div className="room is-cut">
-      <CutViewer format={drama.data?.format} lines={lines} selected={selected} onSelect={setSelected} file={file} tag={`${code} · ${t("kind.cut").toLowerCase()} ${file.version ?? ""}`.trim()} notes={notes} videoRef={video} onTime={setPlayhead} />
+      <CutViewer format={drama.data?.format} lines={lines} linesAligned={Boolean(srt)} selected={selected} onSelect={setSelected} file={file} tag={`${code} · ${t("kind.cut").toLowerCase()} ${file.version ?? ""}`.trim()} notes={notes} videoRef={video} onTime={setPlayhead} />
       <aside className="insp" aria-label={t("review.inspector")}>
         <div className="ihead">
           <b>

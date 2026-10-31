@@ -6,7 +6,7 @@ import { fireEvent, render, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { CutPlan, FileItem } from "../../shared/types.ts";
-import { CutViewer, EDITING, WATCH_ONLY, cutLines, cutRows } from "./CutViewer.tsx";
+import { CutViewer, EDITING, WATCH_ONLY, alignedLines, cutLines, cutRows } from "./CutViewer.tsx";
 
 const cut = (cutPlan?: CutPlan): FileItem => ({
   id: 7,
@@ -89,6 +89,16 @@ describe("cutLines", () => {
 
   it("has none for a segment the breakdown gives no lines for", () => {
     expect(cutLines(PLAN.clips, () => undefined)).toEqual([]);
+  });
+});
+
+describe("alignedLines", () => {
+  it("are drama-cli's asr-align cues, at the times its cut.srt gives them", () => {
+    const srt = "1\n00:00:01,200 --> 00:00:02,700\nWei: You're late.\n\n2\n00:00:06,000 --> 00:00:07,500\nMother:\nEat.\n";
+    expect(alignedLines(srt)).toEqual([
+      { start: 1.2, length: expect.closeTo(1.5, 6), text: "Wei: You're late." },
+      { start: 6, length: expect.closeTo(1.5, 6), text: "Mother: Eat." },
+    ]);
   });
 });
 

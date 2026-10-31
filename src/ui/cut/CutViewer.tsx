@@ -15,6 +15,7 @@ import "@xzdarcy/react-timeline-editor/dist/react-timeline-editor.css";
 import { MediaController, MediaPlayButton } from "media-chrome/react";
 import { type Ref, useEffect, useId, useImperativeHandle, useRef, useState } from "react";
 import WaveSurfer from "wavesurfer.js";
+import SrtParser from "srt-parser-2";
 import type { CutClip, FileItem, Note } from "../../shared/types.ts";
 import { Icon } from "../icons.tsx";
 import { useT } from "../i18n.ts";
@@ -99,10 +100,11 @@ export interface CutLine {
 }
 
 /**
- * The breakdown's spoken lines of each segment, at their times in the cut. drama-cli writes a line as
- * "Name: {words}", the words in braces (the breakdown's dialogue form, as Seedance takes it); a
- * segment's lines share its time evenly, in order. The breakdown says what is said, not when, so the
- * times are where in its segment a line falls, our own reading, not drama-cli's alignment.
+ * The breakdown's spoken lines of each segment, at estimated times in the cut. drama-cli writes a line
+ * as "Name: {words}", the words in braces (the breakdown's dialogue form, as Seedance takes it); a
+ * segment's lines share its time evenly, in order. The breakdown says what is said, not when, so these
+ * times are an estimate, shown as one (the track says "Approximate"); drama-cli's `asr-align` times them
+ * for real (alignedLines).
  */
 export function cutLines(clips: CutClip[], shotsOf: (segment: string) => string[] | undefined): CutLine[] {
   return clips.flatMap((clip) => {
@@ -113,6 +115,11 @@ export function cutLines(clips: CutClip[], shotsOf: (segment: string) => string[
     const each = (clip.end - clip.start) / Math.max(spoken.length, 1);
     return spoken.map((text, n) => ({ start: clip.start + n * each, length: each, text }));
   });
+}
+
+/** The cut's lines as drama-cli's `asr-align` timed them in the cut, its cut.srt (short_drama drama_cli/asr_align.py). */
+export function alignedLines(srt: string): CutLine[] {
+  return new SrtParser().fromSrt(srt).map((cue) => ({ start: cue.startSeconds, length: cue.endSeconds - cue.startSeconds, text: cue.text.replace(/\s*\n\s*/g, " ") }));
 }
 
 /**
@@ -171,6 +178,8 @@ export interface CutViewerProps {
   actions?: CutActions;
   /** The breakdown's lines at their times in the cut, for the lines track. */
   lines?: CutLine[];
+  /** Whether the lines' times are drama-cli's alignment; else an estimate, and the track says so. */
+  linesAligned?: boolean;
   /** The drama's format as the maker gave it ("9:16, 480p"), for the controls' line, as the design reads it. */
   format?: string;
   /** The segment selected on the timeline, by its place in the plan, and what to do when the maker selects one. */
@@ -178,7 +187,7 @@ export interface CutViewerProps {
   onSelect?: (clip: number) => void;
 }
 
-export function CutViewer({ file, tag, notes = [], onTime, videoRef, actions = WATCH_ONLY, lines = [], format, selected, onSelect }: CutViewerProps) {
+export function CutViewer({ file, tag, notes = [], onTime, videoRef, actions = WATCH_ONLY, lines = [], linesAligned = false, format, selected, onSelect }: CutViewerProps) {
   const { t } = useT();
   const video = useRef<HTMLVideoElement>(null);
   useImperativeHandle(videoRef, () => video.current!, []);
@@ -297,6 +306,7 @@ export function CutViewer({ file, tag, notes = [], onTime, videoRef, actions = W
             <span className="trk-h">
               <Icon name="chats" className="ic" />
               {t("cut.lines")}
+              {!linesAligned && lines.length > 0 && <small className="muted">{t("cut.approximate")}</small>}
             </span>
             <div className="trk-lane" role="group" aria-label={t("cut.lines")}>
               {lines.map((line) => (

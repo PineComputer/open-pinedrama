@@ -242,7 +242,7 @@
               <span class="head" style=${`left:${(S.cutT / c.dur) * 100}%`}></span></div>
             <div class="tracks">
               <div class="trk"><span class="trk-h">Sound</span><div class="trk-lane wave">${Array.from({ length: 96 }, (_, i) => html`<i style=${`height:${18 + Math.round(70 * Math.abs(Math.sin(i * 0.37) * Math.cos(i * 0.11)))}%`}></i>`)}</div></div>
-              <div class="trk"><span class="trk-h">${I("chats")}Lines</span><div class="trk-lane">${c.lines.map(([t, d, text]) => html`<button class="line" style=${`left:${(t / c.dur) * 100}%;width:${(d / c.dur) * 100}%`} title=${text} onClick=${() => seek(t)}>${text}</button>`)}</div></div>
+              <div class="trk"><span class="trk-h">${I("chats")}Lines <small class="muted" title="Spread over each segment; drama-cli's asr-align gives the real times">Approximate</small></span><div class="trk-lane">${c.lines.map(([t, d, text]) => html`<button class="line" style=${`left:${(t / c.dur) * 100}%;width:${(d / c.dur) * 100}%`} title=${text} onClick=${() => seek(t)}>${text}</button>`)}</div></div>
             </div>
           </div>
         </section>

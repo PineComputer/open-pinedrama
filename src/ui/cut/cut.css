@@ -30,3 +30,4 @@
 .trk { grid-template-columns: 64px minmax(0, 1fr); }
 .trk-lane.wave { display: block; min-width: 0; padding: 0; }
 .trk-lane.wave > .muted { display: block; padding: 0 8px; font-size: 11px; line-height: 26px; }
+.trk-h small { margin-left: 2px; font-size: 10px; font-weight: 500; }
