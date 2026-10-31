@@ -70,6 +70,25 @@ describe("Script", () => {
     await waitFor(() => expect(document.querySelector("pre.original")?.textContent).toBe("EPISODE 1\nTENEMENT FLAT, MORNING\n"));
   });
 
+  it("offers a file it can't show, a legacy .doc say, as a download with the kinds it can show, never loading on", async () => {
+    const doc = file({ kind: "screenplay", name: "stepmother.doc", type: "application/msword" });
+    answer("/api/dramas/d1/script", { inputs: [doc], screenplayFile: doc.id, versions: [] });
+    await renderAt(<Script dramaId="d1" />, "/d/d1/script");
+    expect(await screen.findByText("The agent reads this file; it can't be shown here.")).toBeInTheDocument();
+    expect(screen.getByText("The studio shows .txt .md .markdown .fountain .docx .pdf files.")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Download · stepmother.doc" })).toHaveAttribute("href", `${doc.url}&download=1`);
+    expect(screen.queryByText("Loading…")).not.toBeInTheDocument();
+  });
+
+  it("says so when the original's fetch fails, never loading on", async () => {
+    answer("/api/dramas/d1/script", { inputs: [original], screenplayFile: original.id, versions: [] });
+    server.use(http.get(original.url, () => new HttpResponse(null, { status: 500 })));
+    await renderAt(<Script dramaId="d1" />, "/d/d1/script");
+    expect(await screen.findByText("This file couldn't be loaded.")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Download · stepmother.txt" })).toBeInTheDocument();
+    expect(screen.queryByText("Loading…")).not.toBeInTheDocument();
+  });
+
   it("opens at an episode's section when an episode asks for it (?ep=)", async () => {
     answer("/api/dramas/d1/script", page(false));
     texts();

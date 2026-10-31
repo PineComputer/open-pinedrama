@@ -10,7 +10,7 @@ import { Icon, type IconName } from "../icons.tsx";
 import { useT } from "../i18n.ts";
 import { errorText } from "../labels.ts";
 import { homeLink, useRoute } from "../place.ts";
-import { useDocumentText, useText } from "../viewing.tsx";
+import { Unreadable, isDocument, useDocumentText, useText } from "../viewing.tsx";
 
 type View = "fountain" | "original" | "compare";
 
@@ -210,7 +210,7 @@ function ScriptBody({ dramaId, data, ep, rewriting }: { dramaId: string; data: S
   const shown = data.versions.find((version) => search.item === "screenplay" && version.version === search.version) ?? data.versions[0];
   const [picked, setPicked] = useState<View>();
   const fountain = useText(shown?.file).text;
-  const mine = useDocumentText(original).text;
+  const mine = useDocumentText(original);
   // The compare reads the version's own record: the original as validate checked it, and validate's line map.
   const checked = useText(shown?.original).text;
   const validated = useText(shown?.validate).text;
@@ -323,7 +323,17 @@ function ScriptBody({ dramaId, data, ep, rewriting }: { dramaId: string; data: S
               <Compare original={checked} fountain={fountain} map={map} name={original?.name ?? "original.txt"} version={shown!.version} />
             )
           ) : (
-            <div className="edbody scriptdoc">{mine === undefined ? <p className="quiet">{t(original ? "loading" : "script.none")}</p> : <pre className="original">{mine}</pre>}</div>
+            <div className="edbody scriptdoc">
+              {!original ? (
+                <p className="quiet">{t("script.none")}</p>
+              ) : !isDocument(original) || mine.failed || mine.text === "" ? (
+                <Unreadable file={original} failed={mine.failed} />
+              ) : mine.text === undefined ? (
+                <p className="quiet">{t("loading")}</p>
+              ) : (
+                <pre className="original">{mine.text}</pre>
+              )}
+            </div>
           )}
         </section>
       </div>

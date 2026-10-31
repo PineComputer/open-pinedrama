@@ -3,7 +3,7 @@
 import { type MouseEvent, type RefObject, useEffect, useState } from "react";
 import { shotListOf } from "../shared/shots.ts";
 import type { FileItem, Note } from "../shared/types.ts";
-import { EXTRACTED, extractText } from "./extract.ts";
+import { EXTRACTED, EXTRACTED_TYPES, extractText } from "./extract.ts";
 import { type TKey, useT } from "./i18n.ts";
 import { Markdown } from "./Markdown.tsx";
 
@@ -107,7 +107,8 @@ export function useText(file: FileItem | undefined): { text?: string; failed: bo
 }
 
 /** Files read as text as they are; Word and PDF files are read for their text (extract.ts). */
-const TEXT = /\.(md|markdown|txt|fountain)$/i;
+const TEXT_TYPES = ["txt", "md", "markdown", "fountain"];
+const TEXT = new RegExp(`\\.(${TEXT_TYPES.join("|")})$`, "i");
 
 /** Whether the page can show a file as text: a text file, or a Word or PDF file's text. */
 export const isDocument = (file: { name: string; type: string }) => file.type.startsWith("text/") || TEXT.test(file.name) || EXTRACTED.test(file.name);
@@ -129,21 +130,29 @@ export function useDocumentText(file: { url: string; name: string; type: string 
   return state.url === file?.url ? { text: state.text, failed: state.failed } : { failed: false };
 }
 
+/**
+ * A file the page doesn't show as text, with its download: one it can't read names the kinds it can; a fetch that
+ * failed says so, never loading on.
+ */
+export function Unreadable({ file, failed }: { file: FileItem; failed: boolean }) {
+  const { t } = useT();
+  return (
+    <div className="stack">
+      <p className={failed ? "error" : "empty-note"}>{t(failed ? "script.readFailed" : "script.noPreview")}</p>
+      {!failed && !isDocument(file) && <p className="quiet small">{t("script.shownTypes", { types: [...TEXT_TYPES, ...EXTRACTED_TYPES].map((type) => `.${type}`).join(" ") })}</p>}
+      <a className="link start" href={`${file.url}&download=1`}>
+        {t("episode.download")} · {file.name}
+      </a>
+    </div>
+  );
+}
+
 /** One document set for reading, with its download; a file the page can't read says so and downloads. */
 export function DocumentView({ file }: { file: FileItem }) {
   const { t } = useT();
   const readable = isDocument(file);
   const { text, failed } = useDocumentText(readable ? file : undefined);
-  if (!readable || failed || text === "") {
-    return (
-      <div className="stack">
-        <p className="empty-note">{t("script.noPreview")}</p>
-        <a className="link start" href={`${file.url}&download=1`}>
-          {t("episode.download")} · {file.name}
-        </a>
-      </div>
-    );
-  }
+  if (!readable || failed || text === "") return <Unreadable file={file} failed={failed} />;
   if (text === undefined) return <p className="quiet">{t("loading")}</p>;
   return (
     <>

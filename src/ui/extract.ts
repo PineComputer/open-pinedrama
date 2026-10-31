@@ -6,7 +6,8 @@
 // pdf.js marks an end of line). Both load only when such a file comes.
 
 /** Word and PDF files, whose text the page reads with a parser. */
-export const EXTRACTED = /\.(docx|pdf)$/i;
+export const EXTRACTED_TYPES = ["docx", "pdf"];
+export const EXTRACTED = new RegExp(`\\.(${EXTRACTED_TYPES.join("|")})$`, "i");
 
 /** The file name of a Word or PDF file's text: its stem with .txt. */
 export function textName(name: string): string {
