@@ -270,6 +270,9 @@ function QuestionRoom({ review, done }: { review: ReviewView; done: () => void }
   );
 }
 
+/** What an item shows, by its files: a new version of it changes them. */
+const idsOf = (item: ReviewItem) => item.files.map((file) => file.id);
+
 /** A take counts as watched once it has played to within this fraction of its end (the maker watches every take, D76). */
 const WATCHED = 0.98;
 
@@ -296,6 +299,8 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
     ),
   );
   const [words, setWords, forgetWords] = useDraft(review.id, "words", () => review.decision?.words ?? "");
+  // Each drafted item's base: the files it showed when its draft began (Conflict, below).
+  const [bases, setBases, forgetBases] = useDraft<Record<string, number[]>>(review.id, "bases", () => ({}));
   // The review is one submission (Submission, Codex's IA round 3): read only while it is on its way, sent, or not known
   // to have arrived; only the engine's word that it was not submitted gives the draft back, to send again.
   const { sending, send: submit, check } = useSubmission({
@@ -439,6 +444,19 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
   const update = (key: string, change: (value: Drafts[string]) => Drafts[string]) => {
     remember(`item:${key}`);
     setDrafts((current) => ({ ...current, [key]: change(current[key] ?? { notes: [] }) }));
+    const now = items.find((i) => i.key === key);
+    if (now && !bases[key]) setBases((current) => ({ ...current, [key]: idsOf(now) }));
+  };
+  // Codex's IA round 3, Conflict: a draft is made on the versions it was begun on (its base). When the agent returns a
+  // newer version of a drafted item, the draft is kept and the room says so: Compare, Keep drafting (on the new
+  // version) or Discard; until then nothing is sent, since the draft's words were about another version.
+  const changedUnder = items.filter((i) => bases[i.key] && bases[i.key].join() !== idsOf(i).join());
+  const conflict = item && changedUnder.includes(item) ? item : undefined;
+  const keepDrafting = (i: ReviewItem) => setBases((current) => ({ ...current, [i.key]: idsOf(i) }));
+  const discard = (i: ReviewItem) => {
+    remember(`item:${i.key}`);
+    setDrafts((current) => ({ ...current, [i.key]: { notes: [] } }));
+    setBases(({ [i.key]: _gone, ...rest }) => rest);
   };
   const setVerdict = (verdict: Verdict) => item && update(item.key, (value) => ({ ...value, verdict }));
   const go = (next: number) => {
@@ -489,6 +507,8 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
 
   const send = () => {
     setConfirming(false);
+    // A draft whose base changed is never sent as it is (Conflict).
+    if (changedUnder.length) return;
     void submit();
   };
   // Sent: the engine has it. The draft is done with, and the room moves on as it did.
@@ -497,6 +517,7 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
     forgetDrafts();
     forgetWords();
     forgetSentAs();
+    forgetBases();
     done();
   }, [sending.state]);
 
@@ -863,6 +884,25 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
           <Returned files={review.otherFiles} />
         </div>
         <div className="verdict">
+          {conflict && (
+            <div className="finding warn" role="status">
+              <Icon name="warning" className="ic" />
+              <span>
+                {t("review.conflict", { item: labelOf(conflict) })}{" "}
+                {before && (
+                  <button type="button" className="link" onClick={() => setEarlier(true)}>
+                    {t("review.conflictCompare")}
+                  </button>
+                )}{" "}
+                <button type="button" className="link" onClick={() => keepDrafting(conflict)}>
+                  {t("review.conflictKeep")}
+                </button>{" "}
+                <button type="button" className="link" onClick={() => discard(conflict)}>
+                  {t("review.conflictDiscard")}
+                </button>
+              </span>
+            </div>
+          )}
           <div className="vrow">
             <button type="button" className="vbtn acc" aria-pressed={draft?.verdict === "approve"} disabled={!open || mustWatch} aria-describedby={mustWatch ? "must-watch" : undefined} onClick={accept}>
               <Icon name="check" />
@@ -933,7 +973,7 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
             )}
             {/* Send again is Submission's while the engine says nothing was submitted: one send action at a time. */}
             {sending.state === "idle" && (
-              <Button variant="primary" disabled={!open || !complete} disabledReason={open && !complete ? t("review.needVerdicts") : undefined} onClick={() => setConfirming(true)}>
+              <Button variant="primary" disabled={!open || !complete || changedUnder.length > 0} disabledReason={open && changedUnder.length ? t("review.conflictFirst") : open && !complete ? t("review.needVerdicts") : undefined} onClick={() => setConfirming(true)}>
                 {t("review.send")} <span className="key">⌘↵</span>
               </Button>
             )}

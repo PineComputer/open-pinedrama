@@ -3,6 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { cutReview, file, storyboardReview } from "../test/fixtures.ts";
 import { accept, answer, calls } from "../test/server.ts";
+import { changed } from "../test/live.ts";
 import { itemStage, Review } from "./Review.tsx";
 import { renderAt } from "../test/router.tsx";
 
@@ -34,6 +35,40 @@ describe("the review room for storyboards", () => {
     const reel = screen.getByRole("navigation", { name: "To decide" });
     expect(within(reel).getAllByRole("button", { name: /^seg0/ }).map((item) => item.textContent)).toEqual(["seg01 · v1Accepted", "seg02 · v1Not decided"]);
     expect(screen.getByRole("heading", { level: 2, name: /\bseg02\b/ })).toBeInTheDocument();
+  });
+
+  it("keeps a draft when a newer version of its item arrives, says so, and sends nothing until the maker chooses (Codex's IA round 3, Conflict)", async () => {
+    const user = userEvent.setup();
+    const review = await open();
+    await screen.findByRole("button", { name: "Accept A" });
+    await user.keyboard("a");
+    await user.keyboard("a");
+    // The agent returns a newer version of seg01 while the draft is open.
+    answer(`/api/reviews/${review.id}`, { ...review, reviewItems: review.reviewItems.map((i) => (i.key === "seg01" ? { ...i, files: i.files.map((f) => ({ ...f, id: f.id + 1000 })) } : i)) });
+    changed("reviews");
+    const reel = screen.getByRole("navigation", { name: "To decide" });
+    await user.click(within(reel).getByRole("button", { name: /^seg01/ }));
+    expect(await screen.findByText(/A newer version of seg01 arrived while you drafted/)).toBeInTheDocument();
+    // The draft is kept, and Send refuses it as it is.
+    expect(within(reel).getAllByRole("button", { name: /^seg0/ }).map((i) => i.textContent)).toEqual(["seg01 · v1Accepted", "seg02 · v1Accepted"]);
+    expect(screen.getByRole("button", { name: /^Send review/ })).toBeDisabled();
+    // Keep drafting: the draft now stands on the new version, and can be sent.
+    await user.click(screen.getByRole("button", { name: "Keep drafting" }));
+    expect(screen.queryByText(/A newer version of seg01 arrived/)).toBeNull();
+    expect(screen.getByRole("button", { name: /^Send review/ })).toBeEnabled();
+  });
+
+  it("discards a drafted item whose base changed, on the maker's word", async () => {
+    const user = userEvent.setup();
+    const review = await open();
+    await screen.findByRole("button", { name: "Accept A" });
+    await user.keyboard("a");
+    answer(`/api/reviews/${review.id}`, { ...review, reviewItems: review.reviewItems.map((i) => (i.key === "seg01" ? { ...i, files: i.files.map((f) => ({ ...f, id: f.id + 1000 })) } : i)) });
+    changed("reviews");
+    const reel = screen.getByRole("navigation", { name: "To decide" });
+    await user.click(within(reel).getByRole("button", { name: /^seg01/ }));
+    await user.click(await screen.findByRole("button", { name: "Discard" }));
+    expect(within(reel).getAllByRole("button", { name: /^seg0/ }).map((i) => i.textContent)[0]).toBe("seg01 · v1Not decided");
   });
 
   it("undoes the last change to the draft and resets all of it, saying how much it changes (Codex's re-review, D2)", async () => {
