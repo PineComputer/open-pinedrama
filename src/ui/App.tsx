@@ -161,10 +161,13 @@ export function App() {
       <NavRail path={path} dramaId={dramaId} sidebarOpen={sidebarOpen} onToggleSidebar={toggleSidebar} />
       {sidebarOpen && sidebar}
       <div className="main">
-        <TopBar crumbs={crumbs} waiting={waiting} ready={ready}>
-          {drama.data && <ExportMenu drama={drama.data} />}
-          {drama.data && <StopControl drama={drama.data} />}
-        </TopBar>
+        {/* design/'s Home has no top bar: the page starts at the greeting. */}
+        {screen.type !== Slate && (
+          <TopBar crumbs={crumbs} waiting={waiting} ready={ready}>
+            {drama.data && <ExportMenu drama={drama.data} />}
+            {drama.data && <StopControl drama={drama.data} />}
+          </TopBar>
+        )}
         <div className="body" style={{ position: "relative" }}>
           <main className="scrollmain ds-scroll">{screen}</main>
           {drama.data && dramaId && <Agent drama={drama.data} episode={match("/d/:id/e/:code", path)?.code ?? reviewed?.episode} mode={agentMode} onMode={setAgentMode} canvas={tab === "canvas" || tab === "graph" || tab === "cut" || Boolean(review)} />}

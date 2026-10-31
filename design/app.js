@@ -50,10 +50,10 @@
     if (S.screen === "home" || S.screen === "upload") return html`<aside class=${"side " + (S.side ? "" : "closed")} aria-label="Sidebar">
       <div class="head"><div class="who" style="padding-left:4px">${Mark()}<b style="font-size:14px">Pine Drama</b></div></div>
       <div class="scroll">
-        <div class="sec">STUDIO</div>
+        <div class="sec">Studio</div>
         <button class="navi" aria-current="page">${I("film-strip")}Dramas<span class="end">${I("caret-right")}</span></button>
         <button class="navi" disabled title="Phase 2">${I("cube")}Computers<span class="end">${I("caret-right")}</span></button>
-        <div class="sec">ACCOUNT</div>
+        <div class="sec">Account</div>
         <button class="navi" disabled title="Phase 2">${I("coins")}Usage<span class="end">${I("caret-right")}</span></button>
         <button class="navi" onClick=${() => toast("Settings: notifications, appearance, data.")}>${I("gear-six")}Settings<span class="end">${I("caret-right")}</span></button>
       </div>
@@ -62,7 +62,7 @@
     const cur = { episodes: null, episode: "EP006", canvas: "EP006", review: "EP006", cut: "EP006" }[S.screen];
     if (SETUP.includes(S.screen)) return html`<aside class=${"side " + (S.side ? "" : "closed")} aria-label="Project">
       <div class="head"><button class="proj" onClick=${() => go("home")} title="All dramas"><span class="newthumb">${I("file-text")}</span><span class="grow"><b>${P.project.title}</b><small>Setup · 1 session</small></span>${I("caret-down", "subtle")}</button></div>
-      <div class="scroll"><div class="sec">SETUP</div>${window.EXTRA.SetupSteps()}</div>
+      <div class="scroll"><div class="sec">Setup</div>${window.EXTRA.SetupSteps()}</div>
       <div class="foot" title=${SPENT_COVERS}><div style="display:flex;justify-content:space-between"><span>Spent</span><b class="mono" style="color:var(--text-primary)">$0.40 <span class="muted">/ $1,000</span></b></div><span>Nothing in flight</span><span class="muted" style="font-size:11px">${SPENT_COVERS}</span></div>
     </aside>`;
     return html`<aside class=${"side " + (S.side ? "" : "closed")} aria-label="Project">

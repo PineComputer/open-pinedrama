@@ -226,7 +226,7 @@ const en = {
   "sidebar.yourStudio": "Your studio",
   "nav.computers": "Computers",
   "nav.usage": "Usage",
-  "sidebar.setup": "SETUP",
+  "sidebar.setup": "Setup",
   "sidebar.setupSession": "Setup · 1 session",
   "setupSteps.done": "Read",
   "setupSteps.checking": "Checking the screenplay",
