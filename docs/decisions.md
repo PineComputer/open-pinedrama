@@ -1001,7 +1001,14 @@ timeline
   swaps with no effect at all, which feels bad*), relayed by master.
 - **Recorded in.** Commits 0934071, e5ee6a7 (justified rows) and 0563502, 0ae52a9 (the viewer;
   design and product), 368dfb9 (the transition and the controls' pill); work-02's notes to the docs.
-
+- **Amended.** 30 October 2026, 019ad21 (design and product): the grid is dense, rows near 180 px and up
+  to 12 cards a row, so a wider window shows more cards, not bigger ones, and a shelf that fits one row
+  keeps its height. Ours, untested: a shelf of tall pictures (9:16) takes taller rows, up to 270 px, so a
+  card is about 150 px wide with its name on two lines; the row height follows the shelf's median ratio.
+  Grounds: Google Photos' and liblib's dense grids; react-photo-album's `targetRowHeight` and
+  `rowConstraints`. Words: "location & props会不会有点儿太大了。。。我担心笔记本上都显示不了几个， 不够精致呢"
+  (*aren't the locations and props a bit too big… I worry a laptop shows only a few; not refined
+  enough*), relayed by master.
 ## D57. 2026-10-30 · Assets has no tabs; the project tree is its navigation
 - **Context.** Assets offered Characters, Locations and Props twice: as rows in the project tree and
   as tabs on the page.
