@@ -119,6 +119,10 @@ version marked from its links, and one action, asking the agent to redo them. No
 
 **Before release.** Generate a public sample set for replay, on a budget merecdesperez44323-lab sets, to replace the sample pictures from our own test runs (fixtures/replay/).
 
+**Before the main merge.**
+
+- Regenerate on GitHub CI before the main merge: the gallery's screenshot baselines (e2e/screenshots.spec.ts-snapshots/) were made on the pine-dev box during the sprint, where box-ci is the reference; GitHub's ubuntu-latest renders about 1% of their pixels differently, over the spec's 0.2%.
+
 ## Every item is done when
 
 1. Its test failed before the change and passes after it.
