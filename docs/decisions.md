@@ -22,7 +22,7 @@ timeline
   2026-10-23 : D5 pre-production in one session
   2026-10-24 : D6 idle timeouts follow the work : D7 spend shown, never in a goal
   2026-10-29 : D8 phase 1 steers
-  2026-10-30 : D9 design/ is the UI source : D10 tsc gate : D11 mature libraries : D12 real samples in LFS : D13 decisions taken once : D14 credentials stop : D15 Codex review loop : D16 navigation and one home : D17 every take and cut watched : D18 cut editing as an edit spec : D19 TanStack Router : D20 Export by owner : D21 Analyzing and Out of date routes : D22 redo by owner : D23 the asset detail : D24 the cut edit goal : D25 one Submission : D26 crumbs and Back : D27 Reviews : D28 model badge : D29 canvas zoom, inline video : D30 URL rules : D31 agent scope : D32 narrow windows : D33 review options : D34 Episodes filters : D35 every element cites its ground : D36 Delivery is the cuts' home : D37 a picked node zooms : D38 shared redo after release : D39 a take plays on its node : D40 where a stop shows
+  2026-10-30 : D9 design/ is the UI source : D10 tsc gate : D11 mature libraries : D12 real samples in LFS : D13 decisions taken once : D14 credentials stop : D15 Codex review loop : D16 navigation and one home : D17 every take and cut watched : D18 cut editing as an edit spec : D19 TanStack Router : D20 Export by owner : D21 Analyzing and Out of date routes : D22 redo by owner : D23 the asset detail : D24 the cut edit goal : D25 one Submission : D26 crumbs and Back : D27 Reviews : D28 model badge : D29 canvas zoom, inline video : D30 URL rules : D31 agent scope : D32 narrow windows : D33 review options : D34 Episodes filters : D35 every element cites its ground : D36 Delivery is the cuts' home : D37 a picked node zooms : D38 shared redo after release : D39 a take plays on its node : D40 where a stop shows : D41 Script is the screenplay's home : D42 Story and Assets apart
 ```
 
 ## D1. 2026-10-22 · A desktop app on Electron
@@ -586,7 +586,7 @@ timeline
   group pattern.
 - **Consequences.** None beyond New drama.
 - **Words.** Master's: "The labels say what you watch".
-- **Recorded in.** Product 36c6d18; design 126de62 and 70f30d2.
+- **Recorded in.** Product 36c6d18 and 16a0aae; design 126de62 and 70f30d2.
 
 ## D34. 2026-10-30 · The Episodes board filters by the maker's states
 - **Context.** The board's filters named internal states.
@@ -689,6 +689,31 @@ timeline
 - **Consequences.** None beyond the StopCard and its notice.
 - **Words.** None recorded.
 - **Recorded in.** work-04's note to the docs, 30 October 2026.
+
+## D41. 2026-10-30 · Script is the screenplay's home only
+- **Context.** Script showed the screenplay, the bible and every breakdown, so the bible had two
+  pages and a breakdown no home of its own.
+- **Decision.** Script holds the screenplay and its Fountain versions only. The bible lives in Story
+  and each breakdown in its episode; both leave Script's page and its API.
+- **Alternatives.** None recorded.
+- **Grounds.** One home per object ([design principles](design-principles.md#1-one-home-per-object));
+  [D16](#d16-2026-10-30--the-navigation-a-studio-wide-rail-the-dramas-tree-one-home-per-object).
+- **Consequences.** None beyond Script.
+- **Words.** None recorded.
+- **Recorded in.** Commits a419382 and 4dd6016; work-02's note to the docs.
+
+## D42. 2026-10-30 · Story and Assets are two pages; Home's shelves use the maker's states
+- **Context.** Story and Assets shared one page with tabs (Bible, Cast, Locations, Props).
+- **Decision.** Story (the bible's logline, beats and episodes) and Assets (Characters, Locations,
+  Props) are two pages, each a home in the drama tree. Home's shelves are named with the five
+  maker-facing states' words.
+- **Alternatives.** One page with tabs.
+- **Grounds.** One home per object and five maker-facing states
+  ([design principles](design-principles.md), 1 and 4); Codex's review: Story and Assets are
+  separate <sup>[4](#ref-4)</sup>.
+- **Consequences.** None beyond Story, Assets and Home.
+- **Words.** None recorded.
+- **Recorded in.** Commit 3c15dc3; work-02's note to the docs.
 
 ## References
 
