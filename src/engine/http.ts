@@ -31,7 +31,7 @@ import { decide, resumeWithDecision } from "./reviews.ts";
 import { lineageView } from "./lineage.ts";
 import { forgetPositions, positionsOf, readPositions, replacePositions } from "./canvas.ts";
 import { submission } from "./submission.ts";
-import { sendMessage } from "./scope-messages.ts";
+import { scopeMessages, sendMessage } from "./scope-messages.ts";
 import { projectView, sessionStatus } from "./status.ts";
 import { assetPictures, castCards, deliveryRows, episodePage, scriptPage, seasonEntries } from "./browse.ts";
 import { diagnostics } from "./diagnostics.ts";
@@ -426,6 +426,8 @@ export function app(): Hono {
       return fail(c, error);
     }
   });
+
+  api.get("/api/dramas/:id/messages", (c) => c.json(scopeMessages(c.req.param("id"), c.req.query("scope") ?? "")));
 
   api.get("/api/submissions/:id", (c) => {
     const found = submission(c.req.param("id"));

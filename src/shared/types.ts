@@ -390,13 +390,28 @@ export interface ItemDecision {
 }
 
 /**
- * What the engine took of one submission, a review's decision or a message to the setup's scope (submission.ts): sending,
+ * What the engine took of one submission, a review's decision or a message to a scope (submission.ts): sending,
  * on its way to the session; sent, taken. No submission (404) means nothing was taken, so it may be sent again.
  */
 export interface SubmissionView {
   id: string;
   sessionId: string;
   state: "sending" | "sent";
+}
+
+/**
+ * A message the maker sent to a scope that went to a new session of it (D71), as the conversation shows it: queued for
+ * that session, working in it, done at its handback, failed, or stopped with the project (Resume reopens none).
+ */
+export interface MessageView {
+  id: string;
+  /** "setup", or the episode's code. */
+  scope: string;
+  text: string;
+  state: "queued" | "working" | "done" | "failed" | "stopped";
+  /** The new session it went to; empty until one opens. */
+  sessionId: string;
+  at: string;
 }
 
 export interface Decision {

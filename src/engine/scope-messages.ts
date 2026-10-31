@@ -3,7 +3,7 @@
 // none open, a new session of that scope is queued for it (scheduler.ts, startMessage), on the project last handed over
 // (and, for an episode, its own newest pack), the message verbatim as its goal, within the drama's parallel limit, and it
 // closes at its handback (flow.ts). One submission per message, kept by its id: the same id again never sends twice.
-import type { SubmissionView } from "../shared/types.ts";
+import type { MessageView, SubmissionView } from "../shared/types.ts";
 import { chat } from "./dramas.ts";
 import { all, get, now, run } from "./db.ts";
 import { StudioError } from "./errors.ts";
@@ -24,6 +24,7 @@ export interface MessageRow {
   state: "sending" | "sent" | "queued" | "working" | "done" | "failed" | "stopped";
   session_id: string | null;
   note: string | null;
+  created_at: string;
 }
 
 const view = (row: MessageRow): SubmissionView => ({ id: row.id, sessionId: row.session_id ?? "", state: row.state === "sending" ? "sending" : "sent" });
@@ -101,6 +102,18 @@ export function markMessage(id: string, state: MessageRow["state"], fields: { se
 /** The drama stopped: its messages waiting for or running in a new session end, so none holds a place after Resume. */
 export function stopMessages(dramaId: string): void {
   run("update scope_messages set state = 'stopped', updated_at = ? where drama_id = ? and state in ('queued', 'working')", now(), dramaId);
+}
+
+/** A scope's messages that went to a new session of it, oldest first; those an open session took are in its chat. */
+export function scopeMessages(dramaId: string, scope: string): MessageView[] {
+  return all<MessageRow>("select * from scope_messages where drama_id = ? and scope = ? and state not in ('sending', 'sent') order by created_at, id", dramaId, scope).map((row) => ({
+    id: row.id,
+    scope: row.scope,
+    text: row.text,
+    state: row.state as MessageView["state"],
+    sessionId: row.session_id ?? "",
+    at: row.created_at,
+  }));
 }
 
 /** The submission view of a message, for GET /api/submissions/:id. */

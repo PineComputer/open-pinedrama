@@ -6,7 +6,7 @@ import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import type { CastCard, ChatView, DeliveryRow, DramaView, EpisodePage, FileItem, ReviewSummary, ReviewView, ScriptPage, SubmissionView } from "../shared/types.ts";
+import type { CastCard, ChatView, DeliveryRow, DramaView, EpisodePage, FileItem, MessageView, ReviewSummary, ReviewView, ScriptPage, SubmissionView } from "../shared/types.ts";
 
 const DATA = mkdtempSync(path.join(tmpdir(), "studio-flow-"));
 process.env.STUDIO_DATA_DIR = DATA;
@@ -650,6 +650,11 @@ describe("a drama in replay", () => {
     expect(await send("setup", "sub-9")).toMatchObject({ id: "sub-9", state: "sent", sessionId: "" });
     await call("POST", `/api/dramas/${id}/stop`);
     expect(kept("sub-9")).toBe("stopped");
+    // The conversation lists it as stopped with the project, after the setup's earlier message, done.
+    expect((await call<MessageView[]>("GET", `/api/dramas/${id}/messages?scope=setup`)).map((message) => [message.id, message.state])).toEqual([
+      ["sub-7", "done"],
+      ["sub-9", "stopped"],
+    ]);
     await call("POST", `/api/dramas/${id}/resume`);
     await call("PATCH", `/api/dramas/${id}`, { parallel: 1 });
     expect(await send("setup", "sub-10")).toMatchObject({ id: "sub-10", state: "sent", sessionId: "" });
