@@ -22,7 +22,7 @@ timeline
   2026-10-23 : D5 pre-production in one session
   2026-10-24 : D6 idle timeouts follow the work : D7 spend shown, never in a goal
   2026-10-29 : D8 phase 1 steers
-  2026-10-30 : D9 design/ is the UI source : D10 tsc gate : D11 mature libraries : D12 real samples in LFS : D13 decisions taken once : D14 credentials stop : D15 Codex review loop : D16 navigation and one home : D17 every take and cut watched : D18 cut editing as an edit spec : D19 TanStack Router : D20 Export by owner : D21 Analyzing and Out of date routes : D22 redo by owner : D23 the asset detail : D24 the cut edit goal : D25 one Submission : D26 crumbs and Back : D27 Reviews : D28 model badge : D29 canvas zoom, inline video : D30 URL rules : D31 agent scope : D32 narrow windows : D33 review options : D34 Episodes filters : D35 every element cites its ground : D36 Delivery is the cuts' home : D37 a picked node zooms : D38 shared redo after release : D39 a take plays on its node : D40 where a stop shows : D41 Script is the screenplay's home : D42 Story and Assets apart : D43 stable sample ids : D44 the cut leaves the switch : D45 samples' own screenplays : D46 Project : D47 a draft's changed base : D48 the List's ?version : D49 project types : D50 Home cards : D51 one column, rail labels : D52 Home first, disabled : D53 account footer : D54 icon-only rail : D55 the cover follows the format : D56 Assets grid and inspector : D57 no tabs in Assets : D58 Canvas nodes whole : D59 Canvas opens in Hand : D60 replay's freshness : D61 Bible : D62 Script holds the process : D63 Segments matrix : D64 a visualization of drama-cli : D65 no accent bar : D66 an episode is its Canvas
+  2026-10-30 : D9 design/ is the UI source : D10 tsc gate : D11 mature libraries : D12 real samples in LFS : D13 decisions taken once : D14 credentials stop : D15 Codex review loop : D16 navigation and one home : D17 every take and cut watched : D18 cut editing as an edit spec : D19 TanStack Router : D20 Export by owner : D21 Analyzing and Out of date routes : D22 redo by owner : D23 the asset detail : D24 the cut edit goal : D25 one Submission : D26 crumbs and Back : D27 Reviews : D28 model badge : D29 canvas zoom, inline video : D30 URL rules : D31 agent scope : D32 narrow windows : D33 review options : D34 Episodes filters : D35 every element cites its ground : D36 Delivery is the cuts' home : D37 a picked node zooms : D38 shared redo after release : D39 a take plays on its node : D40 where a stop shows : D41 Script is the screenplay's home : D42 Story and Assets apart : D43 stable sample ids : D44 the cut leaves the switch : D45 samples' own screenplays : D46 Project : D47 a draft's changed base : D48 the List's ?version : D49 project types : D50 Home cards : D51 one column, rail labels : D52 Home first, disabled : D53 account footer : D54 icon-only rail : D55 the cover follows the format : D56 Assets grid and inspector : D57 no tabs in Assets : D58 Canvas nodes whole : D59 Canvas opens in Hand : D60 replay's freshness : D61 Bible : D62 Script holds the process : D63 Segments matrix : D64 a visualization of drama-cli : D65 no accent bar : D66 an episode is its Canvas : D67 shape and alignment
 ```
 
 ## D1. 2026-10-22 · A desktop app on Electron
@@ -1160,6 +1160,22 @@ timeline
   canvas*), relayed by master.
 - **Recorded in.** Design commits 2c9ab0a (no Segments table) and db414082 (the layout); master's,
   work-04's and work-06's notes, 30 October 2026.
+
+## D67. 2026-10-30 · Shape and alignment follow one rule
+- **Context.** Rounded and square corners were mixed and edges did not line up, Script's most of all.
+- **Decision.** Corners by role: pill; surface 2xl; a card of work large; anything inside it medium;
+  a mark small; an edge 0. Nested corners are concentric. No bordered box sits inside a surface (ours).
+  One content column runs on the 16 px gutter; spacing follows the tokens' 4-point grid. The rule is in
+  [design system](studio/design-system.md#shape-and-alignment) and its values in `design/SPEC.md`,
+  "Shape and alignment".
+- **Alternatives.** None recorded.
+- **Grounds.** merecdesperez44323-lab's request; Material 3's shape scale; Apple's HIG, Layout and
+  Materials; VS Code's workbench. "No bordered box inside a surface" is our own.
+- **Consequences.** An audit of `design/studio.css` against the rule follows in its own commit.
+- **Words.** "这个多圆角 非圆角 又都对不齐， 太丑了 ，能不能优雅好看点儿。。。不要这么vibecoding" (*rounded and
+  square corners, and nothing lines up; too ugly; can it be more elegant… not so vibe-coded*),
+  relayed by master.
+- **Recorded in.** Commit 8459785; work-04's note to the docs.
 
 ## References
 
