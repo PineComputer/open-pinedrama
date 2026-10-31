@@ -1002,6 +1002,9 @@ export function CutRoom({ review, done }: { review: ReviewView; done: () => void
   const [verdict, setVerdict, forgetVerdict] = useDraft<Verdict | undefined>(review.id, "cut.verdict", () => saved?.verdict);
   const [notes, setNotes, forgetNotes] = useDraft<Note[]>(review.id, "cut.notes", () => saved?.notes.filter((note) => note.time !== undefined) ?? []);
   const [reason, setReason, forgetReason] = useDraft(review.id, "cut.reason", () => saved?.notes.find((note) => note.time === undefined)?.text ?? "");
+  // The UI actions rule (merecdesperez44323-lab, 2026-10-30): a decision on this exact cut, each with one sentence: the
+  // maker's words to accept (drama-cli's accept records the person's words), a reason to send back; as Script's (D62).
+  const [words, setWords, forgetWords] = useDraft(review.id, "cut.words", () => review.decision?.words ?? "");
   const [draft, setDraft] = useState("");
   const [playhead, setPlayhead] = useState(0);
   const video = useRef<HTMLVideoElement>(null);
@@ -1026,7 +1029,7 @@ export function CutRoom({ review, done }: { review: ReviewView; done: () => void
   const { sending, send, check } = useSubmission({
     submit: () => {
       const why: Note[] = verdict === "revise" ? [{ fileId: file.id, text: reason.trim() }] : [];
-      return api(`/api/reviews/${review.id}/decision`, { method: "POST", json: { submissionId: submission.current, words: "", items: [{ key: item.key, verdict: verdict!, notes: [...why, ...notes], base: idsOf(item) }] } satisfies Decision });
+      return api(`/api/reviews/${review.id}/decision`, { method: "POST", json: { submissionId: submission.current, words: verdict === "approve" ? words.trim() : "", items: [{ key: item.key, verdict: verdict!, notes: [...why, ...notes], base: idsOf(item) }] } satisfies Decision });
     },
     taken: async () => (await api<ReviewView>(`/api/reviews/${review.id}`)).state !== "open",
   });
@@ -1037,13 +1040,14 @@ export function CutRoom({ review, done }: { review: ReviewView; done: () => void
     forgetVerdict();
     forgetNotes();
     forgetReason();
+    forgetWords();
     done();
   }, [sending.state]);
   const seek = (seconds: number) => {
     if (video.current) video.current.currentTime = seconds;
     setPlayhead(seconds);
   };
-  const why = !verdict ? t("cut.chooseFirst") : verdict === "revise" && !reason.trim() ? t("cut.sayWhy") : undefined;
+  const why = !verdict ? t("cut.chooseFirst") : verdict === "revise" && !reason.trim() ? t("cut.sayWhy") : verdict === "approve" && !words.trim() ? t("cut.sayWords") : undefined;
   const code = review.episode ?? "";
 
   return (
@@ -1167,6 +1171,8 @@ export function CutRoom({ review, done }: { review: ReviewView; done: () => void
               {t("cut.sendBack")}
             </button>
           </div>
+          {verdict === "approve" && open && <textarea aria-label={t("cut.words", { v: file.version ?? "" })} placeholder={t("cut.wordsHint", { v: file.version ?? "" })} value={words} onChange={(event) => setWords(event.target.value)} />}
+          {verdict === "approve" && !open && words && <p className="muted">{words}</p>}
           {verdict === "revise" && open && <textarea aria-label={t("cut.why")} placeholder={t("cut.whyHint")} value={reason} onChange={(event) => setReason(event.target.value)} />}
           {verdict === "revise" && !open && reason && <p className="muted">{reason}</p>}
           <Submission sending={sending} to={t("submission.agentOf", { who: code })} kept={t("review.kept")} onSend={() => void send()} onCheck={() => void check()} />

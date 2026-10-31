@@ -391,7 +391,8 @@ describe("the review room for a cut", () => {
     expect(screen.queryByRole("button", { name: "0:05, go to this note" })).toBeNull();
   });
 
-  it("accepts the cut with its notes as remarks", async () => {
+  // The UI actions rule: Accept, like Send back, is one sentence on the exact cut; the maker's own words are required.
+  it("accepts the cut in the maker's own words, with its notes as remarks", async () => {
     const user = userEvent.setup();
     const review = await open(cutReview());
     await at(1);
@@ -399,9 +400,12 @@ describe("the review room for a cut", () => {
     await user.click(screen.getByRole("button", { name: "Accept cut" }));
     expect(screen.queryByRole("textbox", { name: "Why it goes back" })).toBeNull();
     await user.click(screen.getByRole("button", { name: "Send review" }));
+    expect(calls("POST", `/api/reviews/${review.id}/decision`)).toHaveLength(0);
+    await user.type(screen.getByRole("textbox", { name: "Accept cut v2 in your own words" }), "Yes, deliver this cut.");
+    await user.click(screen.getByRole("button", { name: "Send review" }));
     expect(calls("POST", `/api/reviews/${review.id}/decision`)[0].body).toEqual({
       submissionId: expect.any(String),
-      words: "",
+      words: "Yes, deliver this cut.",
       items: [{ key: "cut", verdict: "approve", notes: [{ fileId: review.reviewItems[0].files[0].id, time: 1, text: "Lovely open" }], base: review.reviewItems[0].files.map((f) => f.id) }],
     });
   });

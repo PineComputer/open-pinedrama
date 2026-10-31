@@ -78,6 +78,8 @@ test("a cut sent back with two notes at their times, recut, and accepted", async
   await expect(page.getByRole("button", { name: "Accept cut" })).toBeVisible();
   expect(await newProblems(page)).toEqual([]);
   await page.getByRole("button", { name: "Accept cut" }).click();
+  // Accept is one sentence in the maker's own words, as Send back is a reason (the UI actions rule).
+  await page.getByRole("textbox", { name: "Accept cut v2 in your own words" }).fill("Yes, deliver this cut.");
   await page.getByRole("button", { name: "Send review" }).click();
   await expect(page).not.toHaveURL(new RegExp(`/r/${second.id}$`));
 });

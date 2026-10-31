@@ -316,12 +316,12 @@
     const seek = (t) => { if (vref.current) vref.current.currentTime = t; set({ cutT: t }); };
     const fmt = (t) => "0:" + String(Math.floor(t)).padStart(2, "0");
     // Review: notes, a verdict and its reason. Undo restores the state before the last step; Reset restores the start.
-    const rev = { notes: S.cutNotes || c.notes, v: S.cutV, why: S.cutWhy };
-    const revStart = { notes: c.notes, v: null, why: "" };
-    const revChanged = rev.notes !== c.notes || rev.v || rev.why;
+    const rev = { notes: S.cutNotes || c.notes, v: S.cutV, why: S.cutWhy, words: S.cutWords || "" };
+    const revStart = { notes: c.notes, v: null, why: "", words: "" };
+    const revChanged = rev.notes !== c.notes || rev.v || rev.why || rev.words;
     const revHist = S.cutRevHist || [];
     const revDo = (patch) => set({ cutRevHist: [...revHist, rev], ...patch });
-    const revSet = (r) => set({ cutNotes: r.notes, cutV: r.v, cutWhy: r.why });
+    const revSet = (r) => set({ cutNotes: r.notes, cutV: r.v, cutWhy: r.why, cutWords: r.words });
     const sent = S.cutSent;
     const seen = S.cutSeen || 0, watched = seen >= c.dur - 0.25;
     // Edit: the draft spec, its base (cut v1, or cut v2 once re-checked against it), and where Apply has got to.
@@ -404,11 +404,14 @@
               <button class="vbtn acc" aria-pressed=${String(rev.v === "accept")} disabled=${!watched} title=${watched ? "Accept" : "Watch the cut to the end first"} onClick=${() => revDo({ cutV: rev.v === "accept" ? null : "accept" })}>${I("check")}Accept cut</button>
               <button class="vbtn back" aria-pressed=${String(rev.v === "back")} onClick=${() => revDo({ cutV: rev.v === "back" ? null : "back" })}>${I("arrow-counter-clockwise")}Send back</button></div>
             <span class="hint">${I(watched ? "check-circle" : "clock")}${watched ? "Watched to the end." : `Watched ${Math.round((seen / c.dur) * 100)}% · Accept unlocks at the end, as for a take.`}</span>
+            ${/* UI actions rule (merecdesperez44323-lab, 2026-10-30): a decision on the exact version, each with one sentence: your
+                 words to accept (drama-cli's accept records the person's words), a reason to send back. As Script's (D62). */ ""}
+            ${rev.v === "accept" && html`<textarea placeholder=${`Accept cut ${c.base.v} in your own words (required), e.g. “Yes, deliver this cut.”`} value=${rev.words} onFocus=${() => set({ cutRevHist: [...revHist, rev] })} onInput=${(e) => set({ cutWords: e.target.value })}></textarea>`}
             ${rev.v === "back" && html`<textarea placeholder="Why it goes back (required). Your timed notes go with it." value=${rev.why} onFocus=${() => set({ cutRevHist: [...revHist, rev] })} onInput=${(e) => set({ cutWhy: e.target.value })}></textarea>`}
             <div class="draftbar"><span>${revChanged ? html`<b>Your review is a draft</b>` : "No review yet"}</span><span class="grow"></span>
-              <button class="btn sm ghost" title="Undo your last step" disabled=${!revHist.length} onClick=${() => set({ cutRevHist: revHist.slice(0, -1), ...{ cutNotes: revHist[revHist.length - 1].notes, cutV: revHist[revHist.length - 1].v, cutWhy: revHist[revHist.length - 1].why } })}>Undo</button>
+              <button class="btn sm ghost" title="Undo your last step" disabled=${!revHist.length} onClick=${() => set({ cutRevHist: revHist.slice(0, -1), ...{ cutNotes: revHist[revHist.length - 1].notes, cutV: revHist[revHist.length - 1].v, cutWhy: revHist[revHist.length - 1].why, cutWords: revHist[revHist.length - 1].words } })}>Undo</button>
               <button class="btn sm ghost" title="Back to how the review started" disabled=${!revChanged} onClick=${() => { revSet(revStart); set({ cutRevHist: [] }); }}>Reset</button>
-              <button class="btn sm primary" disabled=${!rev.v || (rev.v === "back" && !rev.why.trim())} onClick=${() => { set({ cutSent: rev.v, cutPlaying: false }); submit("cutReview"); }}>Send review</button></div>`}</div>`
+              <button class="btn sm primary" disabled=${!rev.v || (rev.v === "back" ? !rev.why.trim() : !rev.words.trim())} onClick=${() => { set({ cutSent: rev.v, cutPlaying: false }); submit("cutReview"); }}>Send review</button></div>`}</div>`
           : html`
           <div class="iscroll" inert=${edLocked}>${edLocked && html`<p class="draftnote" style="margin:10px 0 0">${I("lock-simple")}<span>This edit is sent; it is read only. A new edit starts once cut v2 is in, or from this draft if it comes back.</span></p>`}
             <div class="isec"><h4>Based on <span class="muted">cut ${baseV}</span></h4>
