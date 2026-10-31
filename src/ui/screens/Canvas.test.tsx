@@ -125,11 +125,63 @@ describe("the canvas", () => {
     render(<Canvas drama={drama} />);
     const pill = await screen.findByRole("toolbar", { name: "Canvas" });
     for (const name of ["Zoom in", "Zoom out", "Fit the board", "Lay out again"]) expect(within(pill).getByRole("button", { name })).toBeInTheDocument();
-    expect(within(pill).getByRole("status", { name: "Zoom" })).toHaveTextContent(/%$/);
+    expect(within(pill).getByRole("button", { name: "Zoom" })).toHaveTextContent(/%$/);
     // Shown, as the design shows it; the pill hides it.
     expect(screen.getByRole("img", { name: "Minimap: move the view" })).toBeInTheDocument();
     await user.click(within(pill).getByRole("button", { name: "Minimap: move the view" }));
     expect(screen.queryByRole("img", { name: "Minimap: move the view" })).toBeNull();
+  });
+
+  it("switches between Move and Hand from the tool menu and with V and H", async () => {
+    const user = userEvent.setup();
+    engine(project());
+    render(<Canvas drama={drama} />);
+    const tool = await screen.findByRole("button", { name: "Tool" });
+    expect(tool).toHaveAttribute("title", "Move");
+    await user.click(tool);
+    await user.click(await screen.findByRole("menuitemradio", { name: /Hand/ }));
+    expect(tool).toHaveAttribute("title", "Hand");
+    await user.keyboard("v");
+    await waitFor(() => expect(tool).toHaveAttribute("title", "Move"));
+    await user.keyboard("h");
+    await waitFor(() => expect(tool).toHaveAttribute("title", "Hand"));
+  });
+
+  it("zooms to a preset from the zoom menu", async () => {
+    const user = userEvent.setup();
+    engine(project());
+    render(<Canvas drama={drama} />);
+    const zoom = await screen.findByRole("button", { name: "Zoom" });
+    await user.click(zoom);
+    for (const name of ["Zoom in", "Zoom out", "Fit the board", "Zoom to 50%", "Zoom to 100%", "Zoom to 800%"]) expect(screen.getByRole("menuitem", { name: new RegExp(name) })).toBeInTheDocument();
+    expect(screen.getByRole("spinbutton", { name: "Zoom, in percent" })).toBeInTheDocument();
+    await user.click(screen.getByRole("menuitem", { name: /Zoom to 100%/ }));
+    await waitFor(() => expect(zoom).toHaveTextContent("100%"));
+  });
+
+  it("lists its shortcuts under ? and on the ? key, the edit keys left for phase 2", async () => {
+    const user = userEvent.setup();
+    engine(project());
+    render(<Canvas drama={drama} />);
+    await user.click(await screen.findByRole("button", { name: "Shortcuts" }));
+    const list = await screen.findByRole("alertdialog", { name: "Canvas shortcuts" });
+    expect(list).toHaveTextContent(/V.*Move.*H.*Hand.*Space \+ drag.*⌘ A.*Pick every item.*Esc/);
+    expect(list).toHaveTextContent("Copy, paste, delete, group and undo come with phase 2");
+    await user.click(within(list).getByRole("button", { name: "Close" }));
+    await user.keyboard("?");
+    expect(await screen.findByRole("alertdialog", { name: "Canvas shortcuts" })).toBeInTheDocument();
+  });
+
+  it("picks every item on ⌘A, with no single panel, and lets go on Esc", async () => {
+    const user = userEvent.setup();
+    engine(project());
+    render(<Canvas drama={drama} />);
+    await screen.findByRole("button", { name: /^林/ });
+    await user.keyboard("{Meta>}a{/Meta}");
+    await waitFor(() => expect(document.querySelectorAll(".cnode.sel").length).toBeGreaterThan(1));
+    expect(screen.queryByRole("region", { name: /what it is made from/ })).toBeNull();
+    await user.keyboard("{Escape}");
+    await waitFor(() => expect(document.querySelectorAll(".cnode.sel")).toHaveLength(0));
   });
 
   it("points to what waits for the maker, beside the agent", async () => {

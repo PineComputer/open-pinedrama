@@ -1,5 +1,5 @@
 // Phosphor Icons (@phosphor-icons/react), regular weight, by the names the studio uses for them.
-import { type Icon as PhosphorIcon, ArrowCounterClockwiseIcon, ArrowLeftIcon, ArrowRightIcon, ArrowSquareOutIcon, ArrowUpIcon, ArrowsInIcon, ArrowsOutIcon, BookOpenIcon, CaretDownIcon, CaretLeftIcon, CaretRightIcon, CaretUpIcon, ChatCenteredIcon, ChatsIcon, CheckCircleIcon, CheckIcon, CircleNotchIcon, ClockIcon, CoinsIcon, CrosshairSimpleIcon, CubeIcon, CursorIcon, DotsThreeIcon, DownloadSimpleIcon, EyeIcon, FileTextIcon, FilmStripIcon, FlowArrowIcon, FolderIcon, FrameCornersIcon, GearSixIcon, GridNineIcon, HouseIcon, ImageIcon, ImageSquareIcon, InfoIcon, ListBulletsIcon, ListChecksIcon, ListNumbersIcon, ListIcon, LockSimpleIcon, MagnifyingGlassIcon, MapPinIcon, MinusIcon, MoonStarsIcon, NotePencilIcon, PaperPlaneTiltIcon, PathIcon, PauseIcon, PlayIcon, PlusIcon, RobotIcon, ScissorsIcon, SealCheckIcon, SkipBackIcon, SkipForwardIcon, SlidersHorizontalIcon, SparkleIcon, SpeakerSlashIcon, SquareHalfBottomIcon, SquareHalfIcon, SquaresFourIcon, StackIcon, StopIcon, SubtitlesIcon, SunDimIcon, TreeStructureIcon, UploadIcon, UserIcon, UsersIcon, VideoCameraIcon, WarningCircleIcon, WarningIcon, XCircleIcon, XIcon } from "@phosphor-icons/react";
+import { type Icon as PhosphorIcon, ArrowCounterClockwiseIcon, ArrowLeftIcon, ArrowRightIcon, ArrowSquareOutIcon, ArrowUpIcon, ArrowsInIcon, ArrowsOutIcon, BookOpenIcon, CaretDownIcon, CaretLeftIcon, CaretRightIcon, CaretUpIcon, ChatCenteredIcon, ChatsIcon, CheckCircleIcon, CheckIcon, CircleNotchIcon, ClockIcon, CoinsIcon, CrosshairSimpleIcon, CubeIcon, CursorIcon, DotsThreeIcon, DownloadSimpleIcon, EyeIcon, FileTextIcon, FilmStripIcon, FlowArrowIcon, FolderIcon, FrameCornersIcon, GearSixIcon, HandIcon, GridNineIcon, HouseIcon, ImageIcon, ImageSquareIcon, InfoIcon, ListBulletsIcon, ListChecksIcon, ListNumbersIcon, ListIcon, LockSimpleIcon, MagnifyingGlassIcon, MapPinIcon, MinusIcon, MoonStarsIcon, NotePencilIcon, PaperPlaneTiltIcon, PathIcon, PauseIcon, PlayIcon, PlusIcon, QuestionIcon, RobotIcon, ScissorsIcon, SealCheckIcon, SkipBackIcon, SkipForwardIcon, SlidersHorizontalIcon, SparkleIcon, SpeakerSlashIcon, SquareHalfBottomIcon, SquareHalfIcon, SquaresFourIcon, StackIcon, StopIcon, SubtitlesIcon, SunDimIcon, TreeStructureIcon, UploadIcon, UserIcon, UsersIcon, VideoCameraIcon, WarningCircleIcon, WarningIcon, XCircleIcon, XIcon } from "@phosphor-icons/react";
 
 const ICONS = {
   "arrow-counter-clockwise": ArrowCounterClockwiseIcon,
@@ -34,6 +34,7 @@ const ICONS = {
   "frame-corners": FrameCornersIcon,
   "gear-six": GearSixIcon,
   "grid-nine": GridNineIcon,
+  hand: HandIcon,
   house: HouseIcon,
   image: ImageIcon,
   "image-square": ImageSquareIcon,
@@ -53,6 +54,7 @@ const ICONS = {
   pause: PauseIcon,
   play: PlayIcon,
   plus: PlusIcon,
+  question: QuestionIcon,
   robot: RobotIcon,
   scissors: ScissorsIcon,
   "seal-check": SealCheckIcon,

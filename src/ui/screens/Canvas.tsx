@@ -6,8 +6,9 @@
 // this episode's segment groups and cut. React Flow gives the plane, dragging, selection and the
 // viewport; where the maker moved items is kept per episode as the studio's view state. Phase 1
 // only reads: the inspector steers the agent, and the hand actions stand disabled.
-import { Background, BackgroundVariant, type Edge, Handle, MiniMap, type Node, type NodeProps, NodeToolbar, Position, ReactFlow, ReactFlowProvider, useNodesInitialized, useNodesState, useReactFlow, useStore, useViewport } from "@xyflow/react";
-import { createContext, type ReactNode, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { Background, BackgroundVariant, type Edge, Handle, MiniMap, type Node, type NodeProps, NodeToolbar, Position, ReactFlow, ReactFlowProvider, useKeyPress, useNodesInitialized, useNodesState, useReactFlow, useStore, useViewport } from "@xyflow/react";
+import { createContext, Fragment, type ReactNode, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { DropdownMenu } from "radix-ui";
 import { HEIGHT, layout, WIDTH } from "../../shared/layout.ts";
 import type { LineageNode, LineageView } from "../../shared/lineage.ts";
 import { type Item, itemOf, PIPELINE } from "../../shared/pipeline.ts";
@@ -16,6 +17,7 @@ import { specBeside, specFacts } from "../../shared/spec.ts";
 import type { DramaView, FileItem } from "../../shared/types.ts";
 import { api, useResource } from "../api.ts";
 import { IconButton } from "../components/Button.tsx";
+import { Dialog } from "../components/Dialog.tsx";
 import { EmptyState } from "../components/EmptyState.tsx";
 import { Menu } from "../components/Menu.tsx";
 import { type Status, StatusChip } from "../components/StatusChip.tsx";
@@ -89,6 +91,8 @@ interface BoardContext {
   panel: (node: Node<ItemData>) => ReactNode;
   /** The files the stops returned, where each node's spec.json is found beside its picture. */
   files: FileItem[];
+  /** The one item picked, whose bar and panel show; none while several are. */
+  picked?: string;
 }
 
 const Board = createContext<BoardContext | null>(null);
@@ -110,11 +114,11 @@ function ItemNode(props: NodeProps<Node<ItemData>>) {
   const align = centre - PANEL / 2 < 0 ? "start" : centre + PANEL / 2 > paneWidth ? "end" : "center";
   return (
     <div className={`cnode is-${data.stage.kind}${selected ? " sel" : ""}`} data-followed={data.followed || undefined}>
-      <NodeToolbar isVisible={selected} position={Position.Top} align={align}>
+      <NodeToolbar isVisible={board.picked === id} position={Position.Top} align={align}>
         {board.bar(props as unknown as Node<ItemData>)}
       </NodeToolbar>
       {board.dock === "under" && (
-        <NodeToolbar isVisible={selected} position={Position.Bottom} align={align}>
+        <NodeToolbar isVisible={board.picked === id} position={Position.Bottom} align={align}>
           {board.panel(props as unknown as Node<ItemData>)}
         </NodeToolbar>
       )}
@@ -179,22 +183,126 @@ export function Canvas({ drama }: { drama: DramaView }) {
   );
 }
 
-/** The zoom pill, as the prototype's: fit, out, the zoom, in, and the minimap; and drama-cli's layout again. */
-function ZoomPill({ minimap, onMinimap, onLayOut }: { minimap: boolean; onMinimap: () => void; onLayOut: () => void }) {
+/** How a drag on the board acts: Move picks and drags items and draws a box to pick several; Hand drags the board (design/app.js, the canvas's tools). */
+type Tool = "move" | "hand";
+
+/** The zooms the zoom menu offers, as liblib.tv's (design/app.js, the zoom menu). */
+const PRESETS = [50, 100, 800];
+
+/**
+ * The zoom pill, as the design's: the tool menu, fit, out, the zoom with its menu, in, the minimap, drama-cli's layout
+ * again and the shortcut list. The menus are Radix's DropdownMenu in the design's .menu (as components/Dialog.tsx draws
+ * Radix's AlertDialog in its .dialog); every move is React Flow's own.
+ */
+function ZoomPill({ tool, onTool, minimap, onMinimap, onLayOut, onKeys }: { tool: Tool; onTool: (tool: Tool) => void; minimap: boolean; onMinimap: () => void; onLayOut: () => void; onKeys: () => void }) {
   const { t } = useT();
   const flow = useReactFlow();
+  const zoom = Math.round(useViewport().zoom * 100);
+  const to = (percent: number) => void flow.zoomTo(Math.min(8, Math.max(0.05, percent / 100)), { duration: 200 });
   return (
     <div className="ctool" role="toolbar" aria-label={t("canvas.tools")}>
+      <DropdownMenu.Root>
+        <DropdownMenu.Trigger asChild>
+          <button type="button" className="ibtn" aria-label={t("canvas.tool")} title={t(tool === "hand" ? "canvas.hand" : "canvas.move")}>
+            <Icon name={tool === "hand" ? "hand" : "cursor"} />
+          </button>
+        </DropdownMenu.Trigger>
+        <DropdownMenu.Portal>
+          <DropdownMenu.Content className="menu tmenu-pop" side="top" align="start" sideOffset={8}>
+            <DropdownMenu.RadioGroup value={tool} onValueChange={(value) => onTool(value as Tool)}>
+              {(
+                [
+                  ["move", "cursor", "canvas.move", "V"],
+                  ["hand", "hand", "canvas.hand", "H"],
+                ] as const
+              ).map(([value, icon, label, key]) => (
+                <DropdownMenu.RadioItem key={value} value={value} className="mi row">
+                  <Icon name={icon} />
+                  <b>{t(label)}</b>
+                  <kbd>{key}</kbd>
+                </DropdownMenu.RadioItem>
+              ))}
+            </DropdownMenu.RadioGroup>
+          </DropdownMenu.Content>
+        </DropdownMenu.Portal>
+      </DropdownMenu.Root>
+      <i className="sep" aria-hidden="true" />
       <IconButton label={t("canvas.fit")} icon="frame-corners" onClick={() => void flow.fitView({ ...FIT, duration: 500 })} />
       <IconButton label={t("canvas.zoomOut")} icon="minus" onClick={() => void flow.zoomOut({ duration: 200 })} />
-      <span className="z" role="status" aria-label={t("canvas.zoom")}>
-        {Math.round(useViewport().zoom * 100)}%
-      </span>
+      <DropdownMenu.Root>
+        <DropdownMenu.Trigger asChild>
+          <button type="button" className="z" aria-label={t("canvas.zoom")}>
+            {zoom}%
+          </button>
+        </DropdownMenu.Trigger>
+        <DropdownMenu.Portal>
+          <DropdownMenu.Content className="menu zmenu-pop" side="top" align="start" sideOffset={8}>
+            <label className="zin">
+              <input
+                type="number"
+                min={5}
+                max={800}
+                defaultValue={zoom}
+                aria-label={t("canvas.zoomPercent")}
+                // Typing stays in the field: the menu's own keys (typeahead, arrows) don't take it.
+                onKeyDown={(event) => {
+                  event.stopPropagation();
+                  if (event.key === "Enter") to(Number(event.currentTarget.value) || 100);
+                }}
+              />
+              <span>%</span>
+            </label>
+            <DropdownMenu.Item className="mi row" onSelect={() => void flow.zoomIn({ duration: 200 })}>
+              <b>{t("canvas.zoomIn")}</b>
+              <kbd>⌘ +</kbd>
+            </DropdownMenu.Item>
+            <DropdownMenu.Item className="mi row" onSelect={() => void flow.zoomOut({ duration: 200 })}>
+              <b>{t("canvas.zoomOut")}</b>
+              <kbd>⌘ −</kbd>
+            </DropdownMenu.Item>
+            <DropdownMenu.Item className="mi row" onSelect={() => void flow.fitView({ ...FIT, duration: 500 })}>
+              <b>{t("canvas.fit")}</b>
+              <kbd>⌘ 0</kbd>
+            </DropdownMenu.Item>
+            <DropdownMenu.Separator asChild>
+              <hr />
+            </DropdownMenu.Separator>
+            {PRESETS.map((percent) => (
+              <DropdownMenu.Item key={percent} className="mi row" onSelect={() => to(percent)}>
+                <b>{t("canvas.zoomTo", { n: percent })}</b>
+              </DropdownMenu.Item>
+            ))}
+          </DropdownMenu.Content>
+        </DropdownMenu.Portal>
+      </DropdownMenu.Root>
       <IconButton label={t("canvas.zoomIn")} icon="plus" onClick={() => void flow.zoomIn({ duration: 200 })} />
       <IconButton label={t("canvas.minimap")} icon="map-pin" on={minimap} aria-pressed={minimap} onClick={onMinimap} />
       <IconButton label={t("canvas.layOut")} icon="tree-structure" onClick={onLayOut} />
+      <IconButton label={t("canvas.keys")} icon="question" onClick={onKeys} />
     </div>
   );
+}
+
+/** The canvas's keys, read-only ones only, as infinite-canvas's shortcut list (design/app.js, the canvas's keys). React Flow's useKeyPress skips them while the maker types. */
+function useCanvasKeys(on: { tool: (tool: Tool) => void; keys: () => void; letGo: () => void; pickAll: () => void }) {
+  const flow = useReactFlow();
+  const press = (keys: string | string[], act: () => void, preventDefault = false) => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const pressed = useKeyPress(keys, { preventDefault });
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    useEffect(() => {
+      if (pressed) act();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [pressed]);
+  };
+  press("v", () => on.tool("move"));
+  press("h", () => on.tool("hand"));
+  press("?", on.keys);
+  press("Escape", on.letGo);
+  press(["Meta+a", "Control+a"], on.pickAll, true);
+  press(["Meta+=", "Control+=", "Meta++", "Control++"], () => void flow.zoomIn({ duration: 200 }), true);
+  press(["Meta+-", "Control+-"], () => void flow.zoomOut({ duration: 200 }), true);
+  press(["Meta+0", "Control+0"], () => void flow.fitView({ ...FIT, duration: 500 }), true);
 }
 
 function Plane({ drama }: { drama: DramaView }) {
@@ -322,14 +430,20 @@ function Plane({ drama }: { drama: DramaView }) {
     centred.current = target;
     void flow.setCenter(node.internals.positionAbsolute.x + (node.width ?? 0) / 2, node.internals.positionAbsolute.y + (node.height ?? 0) / 2, { zoom: flow.getZoom(), duration: 500 });
   }, [follow, target, nodes, code]);
-  const picked = nodes.find((node) => node.selected && node.type === "item") as Node<ItemData> | undefined;
-  // Escape lets go of the picked item, and with it the detail card.
-  useEffect(() => {
-    if (!picked) return;
-    const away = (event: KeyboardEvent) => event.key === "Escape" && setNodes((all) => all.map((node) => ({ ...node, selected: false })));
-    window.addEventListener("keydown", away);
-    return () => window.removeEventListener("keydown", away);
-  }, [picked, setNodes]);
+  // The panel is one item's: none while several are picked (⌘A, or a box drawn with Move).
+  const selected = nodes.filter((node) => node.selected && node.type === "item");
+  const picked = selected.length === 1 ? (selected[0] as Node<ItemData>) : undefined;
+  const [tool, setTool] = useState<Tool>("move");
+  const [keysOpen, setKeysOpen] = useState(false);
+  useCanvasKeys({
+    tool: setTool,
+    keys: () => setKeysOpen(true),
+    letGo: () => setNodes((all) => all.map((node) => ({ ...node, selected: false }))),
+    pickAll: () => {
+      setFollow(false);
+      setNodes((all) => all.map((node) => ({ ...node, selected: node.type === "item" })));
+    },
+  });
 
   if (!state || !code) return <EmptyState title={t("canvas.emptyTitle")}>{t("canvas.emptyText")}</EmptyState>;
   const save = (all: Node[]) => void api(`/api/dramas/${drama.id}/canvas/${code}`, { method: "PUT", json: { positions: Object.fromEntries(all.map((node) => [node.id, node.position])) } });
@@ -377,7 +491,7 @@ function Plane({ drama }: { drama: DramaView }) {
   const edges = picked ? mapped.edges.map((edge) => (edge.source === picked.id || edge.target === picked.id ? { ...edge, className: "hot" } : edge)) : mapped.edges;
 
   return (
-    <Board.Provider value={{ pick, dock, bar, panel, files: files.data ?? [] }}>
+    <Board.Provider value={{ pick, dock, bar, panel, files: files.data ?? [], picked: picked?.id }}>
       <section className="ds-canvas" aria-label={t("surface.canvas")}>
         <ReactFlow
           nodes={nodes}
@@ -390,6 +504,11 @@ function Plane({ drama }: { drama: DramaView }) {
           // A move the maker makes has an event; following's own moves don't.
           onMoveStart={(event) => event && setFollow(false)}
           panOnScroll
+          // Move: a drag on the board draws a box to pick; the board moves with the middle or right button, or with Space held (React Flow's panActivationKeyCode).
+          // Hand: a drag anywhere moves the board, items stay put.
+          panOnDrag={tool === "hand" ? true : [1, 2]}
+          selectionOnDrag={tool === "move"}
+          nodesDraggable={tool === "move"}
           zoomOnPinch
           minZoom={0.05}
           maxZoom={4}
@@ -423,7 +542,30 @@ function Plane({ drama }: { drama: DramaView }) {
               </Link>
             )}
         </div>
-        <ZoomPill minimap={minimap} onMinimap={() => setMinimap(!minimap)} onLayOut={() => void api(`/api/dramas/${drama.id}/canvas/${code}`, { method: "DELETE" }).then(() => positions.reload())} />
+        <ZoomPill tool={tool} onTool={setTool} minimap={minimap} onMinimap={() => setMinimap(!minimap)} onLayOut={() => void api(`/api/dramas/${drama.id}/canvas/${code}`, { method: "DELETE" }).then(() => positions.reload())} onKeys={() => setKeysOpen(true)} />
+        <Dialog open={keysOpen} onOpenChange={setKeysOpen} title={t("keys.title")} description={t("keys.later")} cancel={t("keys.close")}>
+          <dl className="keys">
+            {(
+              [
+                ["V", "keys.move"],
+                ["H", "keys.hand"],
+                ["Space + drag", "keys.space"],
+                ["⌘ +  /  ⌘ −", "keys.zoom"],
+                ["⌘ 0", "keys.fit"],
+                ["⌘ A", "keys.all"],
+                ["Esc", "keys.esc"],
+                ["?", "keys.list"],
+              ] as const
+            ).map(([key, what]) => (
+              <Fragment key={key}>
+                <dt>
+                  <kbd>{key}</kbd>
+                </dt>
+                <dd>{t(what)}</dd>
+              </Fragment>
+            ))}
+          </dl>
+        </Dialog>
         {picked && dock === "right" && panel(picked)}
       </section>
     </Board.Provider>
