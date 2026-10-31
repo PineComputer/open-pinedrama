@@ -150,6 +150,17 @@ describe("a drama's page", () => {
     await waitFor(() => expect(screen.getByRole("region", { name: "Versions" })).toHaveTextContent("v1 · not accepted"));
   });
 
+  it("shows the bible drama-cli accepted on its own page while the setup still runs, not the setup's progress (Codex rc5, C16)", async () => {
+    engine();
+    answer("/api/dramas/d1", { ...drama, status: "setup", episodes: { total: 0, done: 0, waiting: 0, working: 0 }, setup: { state: "working", reached: 2 }, episodeRows: [] });
+    const names = { title: "T", characters: {}, locations: {}, props: {}, episodes: { EP001: "The flood" }, logline: "After the flood, a cart of hope.", tone: "", beats: [], summaries: {}, endHooks: {}, seconds: {}, lines: {}, descriptions: { locations: {}, props: {} } };
+    answer("/api/dramas/d1/project", { state: { bible: { current: "v4", accepted: "v4", usable: true, candidate: null, run: [], errors: [], coverage: { episodes: 1 } }, characters: {}, locations: {}, props: {}, episodes: {} }, sessions: [], problems: [], names });
+    render(<RouterProvider router={studioRouter(createMemoryHistory({ initialEntries: ["/d/d1/bible"] }))} />);
+    expect(await screen.findByText("After the flood, a cart of hope.")).toBeInTheDocument();
+    expect(screen.getByText(/Bible v4 · accepted/)).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "Setting up" })).toBeNull();
+  });
+
   it.each([
     ["a screenplay version drama-cli didn't record", "/d/d1/script?item=screenplay&version=v9", "screenplay v9"],
     ["another item on Script", "/d/d1/script?item=bible", "bible"],

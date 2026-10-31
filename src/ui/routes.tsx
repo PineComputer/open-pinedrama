@@ -106,14 +106,10 @@ const scriptRoute = createRoute({
     return <Script dramaId={drama.id} ep={scriptRoute.useSearch().ep} settingUp={isSettingUp(drama)} asking={asking} />;
   },
 });
-const bibleRoute = createRoute({
-  ...leaf("bible"),
-  staticData: { page: "bible" },
-  component: function BiblePage() {
-    const drama = useDrama();
-    return isSettingUp(drama) ? <SetupPanel drama={drama} /> : <Bible dramaId={drama.id} />;
-  },
-});
+// The bible's home is the bible, as drama-cli's status and the bible it returned say, however far the setup has got: a
+// running setup never hides finished text (D64 as amended, Codex rc5 C16); its progress is the Episodes page's and
+// the sidebar's.
+const bibleRoute = createRoute({ ...leaf("bible"), staticData: { page: "bible" }, component: () => <Bible dramaId={useDrama().id} /> });
 const charactersRoute = createRoute({
   ...leaf("assets/characters/{-$assetId}"),
   staticData: { page: "characters" },
