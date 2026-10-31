@@ -1,0 +1,166 @@
+{
+  "path": "screenplay.fountain",
+  "original": "inputs/screenplay.md",
+  "rewrite": true,
+  "removed": [
+    "inputs/screenplay.md:1: removed: 后妈来了示例剧本",
+    "inputs/screenplay.md:5: removed: 内景清晨",
+    "inputs/screenplay.md:14: removed: 外景傍晚"
+  ],
+  "added": [],
+  "not_produced": [],
+  "lines": [
+    {
+      "line": 1,
+      "text": "# 后妈来了（示例剧本）",
+      "to": [],
+      "kinds": []
+    },
+    {
+      "line": 3,
+      "text": "第1集",
+      "to": [
+        1
+      ],
+      "kinds": [
+        "section"
+      ]
+    },
+    {
+      "line": 5,
+      "text": "内景　筒子楼　清晨",
+      "to": [
+        3
+      ],
+      "kinds": [
+        "scene heading"
+      ]
+    },
+    {
+      "line": 6,
+      "text": "林晓雨提着一只旧皮箱站在门口。屋里，魏振正在给弟弟妹妹盛粥，头也不抬。",
+      "to": [
+        5
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 7,
+      "text": "魏振：你就是我爸娶的那个？",
+      "to": [
+        7,
+        8
+      ],
+      "kinds": [
+        "dialogue 魏振"
+      ]
+    },
+    {
+      "line": 8,
+      "text": "林晓雨：我叫林晓雨。以后家里的事，我来管。",
+      "to": [
+        10,
+        11
+      ],
+      "kinds": [
+        "dialogue 林晓雨"
+      ]
+    },
+    {
+      "line": 9,
+      "text": "魏振把碗重重放下。",
+      "to": [
+        13
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 10,
+      "text": "魏振：这个家不用你管。",
+      "to": [
+        15,
+        16
+      ],
+      "kinds": [
+        "dialogue 魏振"
+      ]
+    },
+    {
+      "line": 12,
+      "text": "第2集",
+      "to": [
+        18
+      ],
+      "kinds": [
+        "section"
+      ]
+    },
+    {
+      "line": 14,
+      "text": "外景　厂区大门　傍晚",
+      "to": [
+        20
+      ],
+      "kinds": [
+        "scene heading"
+      ]
+    },
+    {
+      "line": 15,
+      "text": "林晓雨在门卫室外等人。魏振推着自行车出来，看见她，转身就走。",
+      "to": [
+        22
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 16,
+      "text": "林晓雨：你妹妹的学费，我交了。",
+      "to": [
+        24,
+        25
+      ],
+      "kinds": [
+        "dialogue 林晓雨"
+      ]
+    },
+    {
+      "line": 17,
+      "text": "魏振停下脚步。",
+      "to": [
+        27
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 18,
+      "text": "魏振：谁让你多管闲事？",
+      "to": [
+        29,
+        30
+      ],
+      "kinds": [
+        "dialogue 魏振"
+      ]
+    }
+  ],
+  "ready": true,
+  "problems": [],
+  "summary": {
+    "episodes": 2,
+    "scenes": 2,
+    "dialogue": 5,
+    "speakers": {
+      "魏振": 3,
+      "林晓雨": 2
+    }
+  }
+}

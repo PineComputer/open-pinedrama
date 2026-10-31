@@ -15,7 +15,7 @@ export interface Sample {
 /** A file Git LFS stands in for until it is fetched (git-lfs's pointer format, spec v1). */
 const POINTER = "version https://git-lfs.github.com/spec/";
 
-const TYPES: Record<string, string> = { ".jpg": "image/jpeg", ".png": "image/png", ".mp4": "video/mp4", ".json": "application/json", ".zip": "application/zip", ".md": "text/markdown", ".fountain": "text/plain", ".srt": "application/x-subrip" };
+const TYPES: Record<string, string> = { ".jpg": "image/jpeg", ".png": "image/png", ".mp4": "video/mp4", ".json": "application/json", ".zip": "application/zip", ".md": "text/markdown", ".fountain": "text/plain", ".txt": "text/plain", ".srt": "application/x-subrip" };
 
 /** The path as samples.json keys it: its version as vN, without the extension; none for a redrawn version. */
 export function sampleKey(relPath: string): string | undefined {

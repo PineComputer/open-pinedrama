@@ -1,0 +1,166 @@
+{
+  "path": "screenplay.fountain",
+  "original": "inputs/screenplay.md",
+  "rewrite": true,
+  "removed": [
+    "inputs/screenplay.md:1: removed: thestepmothersamplescreenplay",
+    "inputs/screenplay.md:5: removed: intmorning",
+    "inputs/screenplay.md:14: removed: extdusk"
+  ],
+  "added": [],
+  "not_produced": [],
+  "lines": [
+    {
+      "line": 1,
+      "text": "# The Stepmother (sample screenplay)",
+      "to": [],
+      "kinds": []
+    },
+    {
+      "line": 3,
+      "text": "EPISODE 1",
+      "to": [
+        1
+      ],
+      "kinds": [
+        "section"
+      ]
+    },
+    {
+      "line": 5,
+      "text": "INT. TENEMENT FLAT - MORNING",
+      "to": [
+        3
+      ],
+      "kinds": [
+        "scene heading"
+      ]
+    },
+    {
+      "line": 6,
+      "text": "LIN XIAOYU stands in the doorway with an old suitcase. Inside, WEI ZHEN ladles porridge for his younger siblings without looking up.",
+      "to": [
+        5
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 7,
+      "text": "WEI ZHEN: So you're the one my father married?",
+      "to": [
+        7,
+        8
+      ],
+      "kinds": [
+        "dialogue WEI ZHEN"
+      ]
+    },
+    {
+      "line": 8,
+      "text": "LIN XIAOYU: I'm Lin Xiaoyu. From today, I run this house.",
+      "to": [
+        10,
+        11
+      ],
+      "kinds": [
+        "dialogue LIN XIAOYU"
+      ]
+    },
+    {
+      "line": 9,
+      "text": "Wei Zhen sets the bowl down hard.",
+      "to": [
+        13
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 10,
+      "text": "WEI ZHEN: This house doesn't need running.",
+      "to": [
+        15,
+        16
+      ],
+      "kinds": [
+        "dialogue WEI ZHEN"
+      ]
+    },
+    {
+      "line": 12,
+      "text": "EPISODE 2",
+      "to": [
+        18
+      ],
+      "kinds": [
+        "section"
+      ]
+    },
+    {
+      "line": 14,
+      "text": "EXT. FACTORY GATE - DUSK",
+      "to": [
+        20
+      ],
+      "kinds": [
+        "scene heading"
+      ]
+    },
+    {
+      "line": 15,
+      "text": "Lin waits outside the gatehouse. Wei Zhen wheels his bicycle out, sees her, and turns away.",
+      "to": [
+        22
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 16,
+      "text": "LIN XIAOYU: I paid your sister's school fees.",
+      "to": [
+        24,
+        25
+      ],
+      "kinds": [
+        "dialogue LIN XIAOYU"
+      ]
+    },
+    {
+      "line": 17,
+      "text": "He stops.",
+      "to": [
+        27
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 18,
+      "text": "WEI ZHEN: Who asked you to?",
+      "to": [
+        29,
+        30
+      ],
+      "kinds": [
+        "dialogue WEI ZHEN"
+      ]
+    }
+  ],
+  "ready": true,
+  "problems": [],
+  "summary": {
+    "episodes": 2,
+    "scenes": 2,
+    "dialogue": 5,
+    "speakers": {
+      "WEI ZHEN": 3,
+      "LIN XIAOYU": 2
+    }
+  }
+}

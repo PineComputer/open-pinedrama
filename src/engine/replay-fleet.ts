@@ -477,13 +477,14 @@ export function screenplayOf(story: Story, lang: Lang): string {
 }
 
 /**
- * The sample's own screenplay as drama-cli's rewrite returns it, at version v1: the Fountain and its review where the sample has
- * them (samples.json), the one written from its episodes where it has no screenplay of its own, else none. Never another sample's.
+ * The sample's own screenplay as drama-cli's rewrite returns it, at version v1: the Fountain, its review.md, validate.json (with the
+ * line map, D172) and original.txt where the sample has them (samples.json), the one written from its episodes where it has no
+ * screenplay of its own, else none. Never another sample's.
  */
 const rewriteFiles = (story: Story, set: string, lang: Lang): Out[] =>
   story.derivedScreenplay
     ? [{ path: "drama/screenplay/v1/screenplay.fountain", type: typeOf("screenplay.fountain"), bytes: text(screenplayOf(story, lang)) }]
-    : ["screenplay.fountain", "review.md"].flatMap((name) => sample(set, `drama/screenplay/v1/${name}`) ?? []);
+    : ["screenplay.fountain", "review.md", "validate.json", "original.txt"].flatMap((name) => sample(set, `drama/screenplay/v1/${name}`) ?? []);
 
 /**
  * The screenplay a sample drama starts from, as the maker would upload it: the sample's own original (samples.json,

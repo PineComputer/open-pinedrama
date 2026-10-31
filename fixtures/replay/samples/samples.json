@@ -57,7 +57,9 @@
   "drama/episodes/EP006/edit/vN/cut": "en/cut.mp4",
   "inputs/screenplay": "en/inputs/screenplay.md",
   "drama/screenplay/vN/screenplay": "en/screenplay/screenplay.fountain",
-  "drama/screenplay/vN/review": "en/screenplay/review.md"
+  "drama/screenplay/vN/review": "en/screenplay/review.md",
+  "drama/screenplay/vN/validate": "en/screenplay/validate.json",
+  "drama/screenplay/vN/original": "en/screenplay/original.txt"
  },
  "zh": {
   "drama/assets/characters/lin/vN/image-1": "zh/lin.jpg",
@@ -110,7 +112,9 @@
   "drama/episodes/EP006/edit/vN/cut": "zh/cut.mp4",
   "inputs/screenplay": "zh/inputs/screenplay.md",
   "drama/screenplay/vN/screenplay": "zh/screenplay/screenplay.fountain",
-  "drama/screenplay/vN/review": "zh/screenplay/review.md"
+  "drama/screenplay/vN/review": "zh/screenplay/review.md",
+  "drama/screenplay/vN/validate": "zh/screenplay/validate.json",
+  "drama/screenplay/vN/original": "zh/screenplay/original.txt"
  },
  "bride-on-bail": {
   "drama/assets/characters/dunn/vN/asset/asset": "full/bride-on-bail/specs/assets__characters__dunn__asset__asset.json",
