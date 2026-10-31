@@ -3,7 +3,6 @@
 // other names, the episodes it is in) and its world (places and key props). Every name is the
 // bible's. Decisions are made in the review room: a card waiting for one links there.
 import Lightbox from "yet-another-react-lightbox";
-import "yet-another-react-lightbox/styles.css";
 import { type Photo, RowsPhotoAlbum } from "react-photo-album";
 import "react-photo-album/rows.css";
 import { useEffect, useState } from "react";

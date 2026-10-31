@@ -19,7 +19,10 @@
 @import "./components/components.css" layer(components);
 @import "./shell/shell.css" layer(components);
 @import "./screens/canvas.css" layer(components);
+/* Libraries' stylesheets go into the same layer: an unlayered rule beats every layered one whatever its specificity
+   (CSS Cascade 5, cascade layers), so the design's rules for a library's parts (.assetviewer) would never hold. */
 @import "@xyflow/react/dist/style.css" layer(components);
+@import "yet-another-react-lightbox/styles.css" layer(components);
 @import "./cut/cut.css" layer(components);
 
 /* Dark mode follows data-theme on <html> (theme/theme.ts), as Tailwind's docs set a data attribute. */

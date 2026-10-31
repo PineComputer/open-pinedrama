@@ -55,7 +55,14 @@ test("an episode chosen in the tree stays selected across the surfaces", async (
       return name !== asset && new RegExp(`${quoted} · (S\\d+ )?v\\d+$`).test(crumbs);
     })
     .toBe(true);
-  // The viewer's own controls stay clear of the panel beside the picture: each is the topmost element at its centre.
+  // The picture fits the stage left of the panel, whole, and the viewer's own controls stay clear of the panel: each is
+  // the topmost element at its centre.
+  const panelLeft = (await detail.boundingBox())!.x;
+  const picture = viewer.locator(".yarl__slide_current .yarl__slide_image");
+  await expect(picture).toBeVisible();
+  const box = (await picture.boundingBox())!;
+  expect(box.x).toBeGreaterThanOrEqual(0);
+  expect(box.x + box.width).toBeLessThanOrEqual(panelLeft);
   for (const label of ["Previous asset", "Next asset", "Close"]) {
     const control = viewer.getByRole("button", { name: label });
     expect(await control.evaluate((el) => {
@@ -63,7 +70,11 @@ test("an episode chosen in the tree stays selected across the surfaces", async (
       return el.contains(document.elementFromPoint(box.left + box.width / 2, box.top + box.height / 2));
     }), label).toBe(true);
   }
+  // Esc closes it, focus goes back to the card that opened it (WAI-ARIA APG modal dialog), and the crumbs lead on.
   await page.keyboard.press("Escape");
   await expect(page).toHaveURL(new RegExp(`/d/${id}/assets/characters$`));
   await expect(viewer).toBeHidden();
+  await expect(page.locator(`article.assetcard a.cardname[href$="/assets/characters/${asset}"]`)).toBeFocused();
+  await page.getByRole("navigation", { name: "Where this belongs" }).getByRole("link", { name: "Assets" }).click();
+  await expect(page).toHaveURL(new RegExp(`/d/${id}/assets/`));
 });
