@@ -7,6 +7,8 @@ the record names, its grounds, its consequences, the words it rests on, and wher
 Nothing is added that the record does not contain: "none recorded" says so. Words in quotation
 marks are verbatim, and a Chinese quote is followed by our English gloss in italics;
 merecdesperez44323-lab is named by that GitHub id. Other documents cite an entry by its number.
+One keeper numbers the entries, in order (work-03); others send their decision with its grounds and
+words, never a number of their own, so no two entries share one.
 
 The entries up to D7 come from the first proposal and build plan (22–24 October 2026); D8 onward
 from the redesign. Those plans, `PROPOSAL.md`, `IMPLEMENTATION_PLAN.md` and `REDESIGN_PLAN.md`, were
@@ -20,7 +22,7 @@ timeline
   2026-10-23 : D5 pre-production in one session
   2026-10-24 : D6 idle timeouts follow the work : D7 spend shown, never in a goal
   2026-10-29 : D8 phase 1 steers
-  2026-10-30 : D9 design/ is the UI source : D10 tsc gate : D11 mature libraries : D12 real samples in LFS : D13 decisions taken once : D14 credentials stop : D15 Codex review loop : D16 navigation and one home : D17 every take and cut watched : D18 cut editing as an edit spec : D19 TanStack Router : D20 Export by owner : D21 Analyzing and Out of date routes : D22 redo by owner : D23 the asset detail : D24 the cut edit goal : D25 one Submission : D26 crumbs and Back : D27 Reviews : D28 model badge : D29 canvas zoom, inline video : D30 URL rules : D31 agent scope : D32 narrow windows : D33 review options : D34 Episodes filters : D35 every element cites its ground : D36 Delivery is the cuts' home : D37 where a stop shows : D38 shared redo after release
+  2026-10-30 : D9 design/ is the UI source : D10 tsc gate : D11 mature libraries : D12 real samples in LFS : D13 decisions taken once : D14 credentials stop : D15 Codex review loop : D16 navigation and one home : D17 every take and cut watched : D18 cut editing as an edit spec : D19 TanStack Router : D20 Export by owner : D21 Analyzing and Out of date routes : D22 redo by owner : D23 the asset detail : D24 the cut edit goal : D25 one Submission : D26 crumbs and Back : D27 Reviews : D28 model badge : D29 canvas zoom, inline video : D30 URL rules : D31 agent scope : D32 narrow windows : D33 review options : D34 Episodes filters : D35 every element cites its ground : D36 Delivery is the cuts' home : D37 a picked node zooms : D38 shared redo after release : D39 a take plays on its node : D40 where a stop shows
 ```
 
 ## D1. 2026-10-22 · A desktop app on Electron
@@ -452,49 +454,6 @@ timeline
 - **Words.** None recorded.
 - **Recorded in.** Commits 0f283df and 3107cf7; #71; work-07's notes, 30 October 2026.
 
-## D36. 2026-10-30 · Delivery is the one home of the accepted cuts
-- **Context.** Delivery could play a cut, making a second copy of the cut's home.
-- **Decision.** Delivery lists the accepted cuts; each row links to EPxxx › Cut and to the cut's
-  Lineage. The page has no player. In the cut room, the design's own space under the send bar keeps
-  the agent's ball clear of it.
-- **Alternatives.** A player on Delivery.
-- **Grounds.** One home per object ([design principles](design-principles.md#1-one-home-per-object));
-  WCAG 2.2, 2.4.11 Focus Not Obscured and 2.5.8 Target Size, for the ball.
-- **Consequences.** None beyond Delivery and the cut room.
-- **Words.** None recorded.
-- **Recorded in.** work-07's notes, 30 October 2026; commit 7e51b8e.
-
-## D37. 2026-10-30 · A stop shows in full where it belongs, as a notice elsewhere
-- **Context.** EP007's red-line StopCard showed in full on every Bride on Bail page, Assets and
-  Lineage included (QA, 30 October 2026).
-- **Decision.** A stop that belongs to one episode is the full StopCard in that episode only; on
-  every other page of the drama it is a compact notice with "Open EPxxx". A stop that belongs to
-  the whole drama stays the full card everywhere in it.
-- **Alternatives.** The full card on every page.
-- **Grounds.** The IA proposal, section 10 (cross-episode stops as a compact notice)
-  <sup>[3](#ref-3)</sup>; [interaction](studio/interaction.md#stops-and-recovery), the stops table;
-  one home per object ([design principles](design-principles.md#1-one-home-per-object)).
-- **Consequences.** None beyond the StopCard and its notice.
-- **Words.** None recorded.
-- **Recorded in.** work-04's note to the docs, 30 October 2026.
-
-## D38. 2026-10-30 · Redoing a shared reference takes a new setup session, after release
-- **Context.** Out of date offers a redo to the session that owns each item (D22). Shared
-  references belong to the setup session, which closes once it hands the project over (D5).
-- **Decision.** Redoing a look, location or prop after the handover will start a new setup session
-  on the drama's project; it is not available tonight. Tonight, Out of date redoes episode-owned
-  items, through the episode's own session; the setup group's redo stays disabled, saying why.
-- **Alternatives.** Keeping the setup session open after the handover.
-- **Grounds.** An open setup session keeps a Computer running while it idles
-  ([D6](#d6-2026-10-24--idle-timeouts-follow-the-work-1-h-working-3-h-waiting-on-the-maker)), and
-  a setup session redrawing shared references while episode sessions work on copies of the project
-  would compete with them (D5: episodes never make a new version of anything shared). Master's
-  decision on work-05's question, 30 October 2026.
-- **Consequences.** QA journey 3 redoes an EP006 item; the shared-reference redo is in
-  [architecture](architecture.md#11-before-release), "Before release".
-- **Words.** None recorded.
-- **Recorded in.** Master's notes to work-05 and the docs, 30 October 2026.
-
 ## D25. 2026-10-30 · One Submission state for every send
 - **Context.** A review's send, a cut's Apply and a redo each go to an agent and can time out.
   Codex's third round asked that an unknown outcome be checked, never sent again.
@@ -566,7 +525,8 @@ timeline
 - **Alternatives.** None recorded.
 - **Grounds.** merecdesperez44323-lab's request; React Flow's zoom to a node and media-chrome's
   controls (D11).
-- **Consequences.** Being built.
+- **Consequences.** Built as [D37](#d37-2026-10-30--a-picked-node-zooms-to-a-readable-size) and
+  [D39](#d39-2026-10-30--a-take-or-cut-plays-on-its-canvas-node).
 - **Words.** "do you think it's possible when we click the nodes on canvas , the node zoom in on the
   screen to be human friendly to view. and also do you think we can add something like this:  p ,
   play, time slider, sound, full screen" (relayed by master, verbatim; the stray "p" is theirs).
@@ -655,6 +615,18 @@ timeline
   the decisions .md just like drama-cli" (relayed by master, verbatim).
 - **Recorded in.** Master's notes to the docs and the lanes, 30 October 2026.
 
+## D36. 2026-10-30 · Delivery is the one home of the accepted cuts
+- **Context.** Delivery could play a cut, making a second copy of the cut's home.
+- **Decision.** Delivery lists the accepted cuts; each row links to EPxxx › Cut and to the cut's
+  Lineage. The page has no player. In the cut room, the design's own space under the send bar keeps
+  the agent's ball clear of it.
+- **Alternatives.** A player on Delivery.
+- **Grounds.** One home per object ([design principles](design-principles.md#1-one-home-per-object));
+  WCAG 2.2, 2.4.11 Focus Not Obscured and 2.5.8 Target Size, for the ball.
+- **Consequences.** None beyond Delivery and the cut room.
+- **Words.** None recorded.
+- **Recorded in.** work-07's notes, 30 October 2026; commit 7e51b8e.
+
 ## D37. 2026-10-30 · A picked node zooms to a readable size
 - **Context.** A node picked on Canvas kept the board's zoom, often too small to read its picture.
 - **Decision.** Picking a node zooms it, animated, to fill the room its bar and panel leave, up to
@@ -669,6 +641,23 @@ timeline
 - **Words.** "when we click the nodes on canvas, the node zoom in on the screen to be human friendly
   to view", as master relayed it.
 - **Recorded in.** Master's note to work-06, 30 October 2026.
+
+## D38. 2026-10-30 · Redoing a shared reference takes a new setup session, after release
+- **Context.** Out of date offers a redo to the session that owns each item (D22). Shared
+  references belong to the setup session, which closes once it hands the project over (D5).
+- **Decision.** Redoing a look, location or prop after the handover will start a new setup session
+  on the drama's project; it is not available tonight. Tonight, Out of date redoes episode-owned
+  items, through the episode's own session; the setup group's redo stays disabled, saying why.
+- **Alternatives.** Keeping the setup session open after the handover.
+- **Grounds.** An open setup session keeps a Computer running while it idles
+  ([D6](#d6-2026-10-24--idle-timeouts-follow-the-work-1-h-working-3-h-waiting-on-the-maker)), and
+  a setup session redrawing shared references while episode sessions work on copies of the project
+  would compete with them (D5: episodes never make a new version of anything shared). Master's
+  decision on work-05's question, 30 October 2026.
+- **Consequences.** QA journey 3 redoes an EP006 item; the shared-reference redo is in
+  [architecture](architecture.md#11-before-release), "Before release".
+- **Words.** None recorded.
+- **Recorded in.** Master's notes to work-05 and the docs, 30 October 2026.
 
 ## D39. 2026-10-30 · A take or cut plays on its Canvas node
 - **Context.** A take or cut node previewed its video on hover, muted, with no way to play it with
@@ -686,6 +675,20 @@ timeline
 - **Words.** yurun's request, as master relayed it: a take or cut node gets inline video controls,
   like liblib's video node.
 - **Recorded in.** Master's note to work-06, 30 October 2026.
+
+## D40. 2026-10-30 · A stop shows in full where it belongs, as a notice elsewhere
+- **Context.** EP007's red-line StopCard showed in full on every Bride on Bail page, Assets and
+  Lineage included (QA, 30 October 2026).
+- **Decision.** A stop that belongs to one episode is the full StopCard in that episode only; on
+  every other page of the drama it is a compact notice with "Open EPxxx". A stop that belongs to
+  the whole drama stays the full card everywhere in it.
+- **Alternatives.** The full card on every page.
+- **Grounds.** The IA proposal, section 10 (cross-episode stops as a compact notice)
+  <sup>[3](#ref-3)</sup>; [interaction](studio/interaction.md#stops-and-recovery), the stops table;
+  one home per object ([design principles](design-principles.md#1-one-home-per-object)).
+- **Consequences.** None beyond the StopCard and its notice.
+- **Words.** None recorded.
+- **Recorded in.** work-04's note to the docs, 30 October 2026.
 
 ## References
 
