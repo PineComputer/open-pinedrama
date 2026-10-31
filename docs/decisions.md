@@ -1184,7 +1184,9 @@ timeline
   infinite-canvas exports do it this way now*) and "因为你现在左边那个表格， 太 ad hoc， 太冗余了， 还不如就直接canvas"
   (*because the table on the left now is too ad hoc, too redundant; better to go straight to the
   canvas*), relayed by master.
-- **Recorded in.** Design commits 2c9ab0a (no Segments table) and db414082 (the layout); master's,
+- **Recorded in.** Design commits 2c9ab0a (no Segments table) and db414082 (the layout); product
+  commits fe94569 (the List and the view switch removed) and e802ff3 (each segment's shots first in
+  its group); master's,
   work-04's and work-06's notes, 30 October 2026.
 
 ## D67. 2026-10-30 · Shape and alignment follow one rule
@@ -1227,7 +1229,8 @@ timeline
 - **Consequences.** [D66](#d66-2026-10-30--an-episode-is-its-canvas-laid-out-as-drama-clis-export)'s
   layout keeps its places; only the lines between nodes change.
 - **Words.** None recorded.
-- **Recorded in.** Design commit 3c06e2e; the product port follows; work-06's note to the docs.
+- **Recorded in.** Design commit 3c06e2e; product commit e802ff3 (the shots node's edges are the
+  breakdown's recorded reads); work-06's notes to the docs.
 
 ## D69. 2026-10-30 · Review routes by the selected object's identity
 - **Context.** A Canvas node's Review opened a generic review, whatever the node was (Codex's round 4,
@@ -1240,7 +1243,7 @@ timeline
   Codex's round 4, F7.
 - **Consequences.** None beyond the Canvas's Review.
 - **Words.** None recorded.
-- **Recorded in.** Design commit 3c06e2e; the product port follows; work-06's note to the docs.
+- **Recorded in.** Design commit 3c06e2e; product commit 3f94c78; work-06's notes to the docs.
 
 ## References
 
