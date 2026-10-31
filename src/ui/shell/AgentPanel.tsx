@@ -48,6 +48,13 @@ function workText(item: WorkItem, names: Names | null): string {
   return item.subject;
 }
 
+/** A decision's second line, as the design's reads: "2 takes · seg01, seg03", "1 item · The Wedding"; a question's own words. */
+function decisionLine(item: ReviewSummary, t: (key: TKey, values?: Record<string, string | number>) => string): string {
+  if (item.kind === "question") return item.question;
+  const count = t(item.kind === "takes" ? (item.items === 1 ? "agent.takeOne" : "agent.takes") : item.items === 1 ? "agent.itemOne" : "agent.items", { n: item.items });
+  return [count, item.subjects.slice(0, 3).join(", ")].filter(Boolean).join(" · ");
+}
+
 function Running({ drama, session, inView, inFlight, onPick }: { drama: DramaView; session: SessionView; inView: boolean; inFlight: number; onPick: () => void }) {
   const { t } = useT();
   const [watching, setWatching] = useState(false);
@@ -95,11 +102,17 @@ export function AgentPanel({ drama, episode, mode, onMode }: { drama: DramaView;
   const inbox = useResource<ReviewSummary[]>(`/api/inbox?drama=${id}`, ["inbox"]);
   const files = useResource<FileItem[]>(`/api/dramas/${id}/files`, [`drama:${id}`]);
   const sessions = useResource<ChatView[]>(`/api/dramas/${id}/sessions`, [`drama:${id}`]);
-  const running = drama.crew.flatMap((computer) => computer.sessions.filter((session) => session.state === "open"));
+  // What runs, as the design's Running lists it: the sessions at work; one that waits for the maker is a decision instead.
+  const running = drama.crew.flatMap((computer) => computer.sessions.filter((session) => session.state === "open" && !session.waiting));
   const [picked, setPicked] = useState<string>();
-  // The session in view: the one picked, else the episode's in view, else one that asks, else the first.
+  // The session in view: the one picked, else the episode's in view, else one at work (its process shows), else one that asks, else the first.
   const chats = sessions.data ?? [];
-  const inView = chats.find((chat) => chat.sessionId === picked) ?? chats.find((chat) => episode && chat.label === episode) ?? chats.find((chat) => chat.sends === "answer") ?? chats[0];
+  const inView =
+    chats.find((chat) => chat.sessionId === picked) ??
+    chats.find((chat) => episode && chat.label === episode) ??
+    chats.find((chat) => running.some((session) => session.id === chat.sessionId)) ??
+    chats.find((chat) => chat.sends === "answer") ??
+    chats[0];
   const chat = useResource<ChatView>(inView ? `/api/sessions/${inView.sessionId}/chat` : null, inView ? [`session:${inView.sessionId}`] : []);
   const links = new Map((files.data ?? []).map((file) => [file.path, file.url]));
   const names = project.data?.names ?? null;
@@ -108,7 +121,7 @@ export function AgentPanel({ drama, episode, mode, onMode }: { drama: DramaView;
   const recent = state ? recentWork(state, files.data ?? [], 6) : [];
   const steps = (chat.data?.messages ?? []).filter((message) => message.kind === "activity").slice(-7);
   const said = (chat.data?.messages ?? []).filter((message) => message.kind === "progress" || message.kind === "question" || message.kind === "result").slice(-2);
-  const working = running.some((session) => !session.waiting);
+  const working = running.length > 0;
   const who = inView?.label || t("talk.setup");
   const last = said.at(-1);
   return (
@@ -156,7 +169,7 @@ export function AgentPanel({ drama, episode, mode, onMode }: { drama: DramaView;
                 {item.thumb?.video ? <video src={`${item.thumb.url}#t=0.5`} muted playsInline preload="metadata" style={{ width: 34, height: 46, borderRadius: 6, objectFit: "cover" }} /> : item.thumb ? <img src={item.thumb.url} alt="" /> : <span />}
                 <span>
                   <b>{[item.episode, t(`kind.${item.kind}` as TKey)].filter(Boolean).join(" · ")}</b>
-                  <small>{t("agent.items", { n: item.items })}</small>
+                  <small>{decisionLine(item, t)}</small>
                 </span>
                 <span className="age">{ago(item.createdAt, lang)}</span>
               </Link>
