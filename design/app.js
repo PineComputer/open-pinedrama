@@ -4,7 +4,7 @@
   const { html, render, useEffect, useRef } = window.htmPreact;
   const root = document.getElementById("root");
   const SPENT_COVERS = "Agent turns and video, priced when each turn ends.";
-  const SCREENS = ["home", "reviews", "upload", "script", "story", "episodes", "episode", "canvas", "graph", "review", "cut", "delivery", "outofdate"];
+  const SCREENS = ["home", "reviews", "upload", "script", "story", "episodes", "canvas", "graph", "review", "cut", "delivery", "outofdate"];
   const hash = (location.hash || "").slice(1);
   const S = {
     screen: SCREENS.includes(hash) ? hash : "home", theme: "dark", tab: "all", filter: "all", waitFor: null, pin: null,
@@ -21,17 +21,17 @@
      below, keeping what it follows or is pinned to. */
   const narrow = () => window.matchMedia("(max-width: 1100px)").matches;
   /* IA r2 (§16): each object has one home. A link lands on the home with the object selected (S.asel in Assets, S.sel on
-     Canvas, S.esel in the List, S.gsel in Lineage), and remembers where it came from (S.from), so Back returns there. */
+     Canvas, S.gsel in Lineage), and remembers where it came from (S.from), so Back returns there. */
   const homeTab = (id) => (P.cast.some((c) => c.id === id) ? "cast" : P.places.some((p) => p.id === id) ? "scenes" : P.props.some((p) => p.id === id) ? "props" : null);
-  const jump = (to, label) => { set({ sel: null, agentOpen: false, drawer: false, toolOpen: false, zoomOpen: false, ...to, from: { screen: S.screen, sel: S.sel, esel: S.esel, osel: S.osel, asel: S.asel, at: S.at, label } }); try { history.replaceState(null, "", "#" + to.screen); } catch (e) { /* the hash is a convenience */ } };
+  const jump = (to, label) => { set({ sel: null, agentOpen: false, drawer: false, toolOpen: false, zoomOpen: false, ...to, from: { screen: S.screen, sel: S.sel, osel: S.osel, asel: S.asel, at: S.at, label } }); try { history.replaceState(null, "", "#" + to.screen); } catch (e) { /* the hash is a convenience */ } };
   /* Codex round 3 (fix 3): a link names the object's kind and version as well as its item (S.at = { kind, ver }), so it
      lands on that version, never on the item's newest. Kinds are drama-cli's lineage kinds (look, plate, prop, blocking,
      first_frame_reference, storyboard, take, cut); a plate's view or a storyboard's style rides along as at.view / at.style. */
   const KIND = { cast: "look", scenes: "plate", props: "prop" };
   const current = (id) => [...P.cast, ...P.places, ...P.props].find((x) => x.id === id);
   const openHome = (id, label, at) => jump({ screen: "story", stab: homeTab(id), asel: id, at: at || { kind: KIND[homeTab(id)], ver: current(id).ver } }, label);
-  /* A segment's stage version, in its episode: Segments by default, or Canvas. */
-  const openStage = (id, at, label, screen = "episode") => jump({ screen, esel: id, sel: screen === "canvas" ? id : null, at }, label);
+  /* A segment's stage version, on its episode's Canvas, picked. */
+  const openStage = (id, at, label) => jump({ screen: "canvas", sel: id, at }, label);
   /* A segment's versions, one tile each, as Canvas shows them; the take is the one picked by default. */
   const stagesOf = (g) => [g.board && { kind: "storyboard", ver: "v1", pic: g.board }, g.still && { kind: "take", ver: g.take, pic: g.still }].filter(Boolean);
   const pickedAt = (g) => (S.at && ["storyboard", "take"].includes(S.at.kind) ? S.at : stagesOf(g).slice(-1)[0]);
@@ -41,7 +41,7 @@
   const TABS = { cast: "Characters", scenes: "Locations", props: "Props" };
   const own = {
     drama: () => [html`<img class="crumbimg" src=${P.eps[0].cover} alt=""/>${P.project.title}`, () => go("episodes")],
-    ep: () => ["EP006", () => go("episode")],
+    ep: () => ["EP006", () => go("canvas")],
     assets: () => ["Assets", () => set({ screen: "story", stab: "cast", asel: null, at: null, from: null })],
     tab: (k) => [TABS[k], () => set({ screen: "story", stab: k, asel: null, at: null, from: null })],
   };
@@ -130,7 +130,7 @@
         <button class="navi" aria-current=${S.screen === "story" && (S.stab || "bible") !== "bible" ? "page" : "false"} onClick=${() => set({ screen: "story", stab: "cast", asel: null, at: null })}>${I("stack")}Assets<span class="cnt">2</span></button>
         <ul class="tree sub">${[["cast", "Characters", P.cast.length], ["scenes", "Locations", P.places.length], ["props", "Props", P.props.length]].map(([k, l, n]) => html`<li><button aria-current=${String(S.screen === "story" && S.stab === k)} onClick=${() => set({ screen: "story", stab: k, asel: null, at: null })}><span class="now">${l}</span><span class="n">${n}</span></button></li>`)}</ul>
         <button class="navi" aria-current=${S.screen === "episodes" ? "page" : "false"} onClick=${() => go("episodes")}>${I("film-strip")}Episodes<span class="cnt">4</span></button>
-        <ul class="tree">${P.eps.slice(0, 8).map((e) => html`<li><button aria-current=${String(cur === e.code)} onClick=${() => e.code === "EP006" ? go("episode") : go("episodes")}>
+        <ul class="tree">${P.eps.slice(0, 8).map((e) => html`<li><button aria-current=${String(cur === e.code)} onClick=${() => e.code === "EP006" ? go("canvas") : go("episodes")}>
           <span class="code">${e.code}</span><span class="now">${e.now}</span><span class=${"dot " + e.status} title=${{ you: "Needs you", work: "Working", accepted: "Done", line: "In line" }[e.status]}></span></button></li>
           ${cur === e.code && e.cut && html`<li class="treecut"><button aria-current=${String(S.screen === "cut")} onClick=${() => go("cut")}><span class="code">› Cut</span><span class="now">${e.cut.latest}${e.cut.st === "you" ? " waits for you" : ""}</span><span class=${"dot " + e.cut.st}></span></button></li>`}`)}
           <li style="padding:6px 8px;color:var(--text-subtle);font-size:11.5px">EP009–EP024 · 16 in line</li></ul>
@@ -167,7 +167,7 @@
     const none = S.state === "nostop";
     const why = "Ready after the agent's next stop returns it.";
     // Lineage sits inside its episode when its item is the episode's or it was opened from there (A2); Out of date is drama-wide.
-    const ep = ["episode", "canvas", "cut"].includes(S.screen) || (S.screen === "graph" && window.EXTRA.lineageInEpisode());
+    const ep = ["canvas", "cut"].includes(S.screen) || (S.screen === "graph" && window.EXTRA.lineageInEpisode());
     const scope = ep ? "EP006" : "the shared project";
     const from = ep ? "EP006's session · stop at 18:12" : "The setup's session · stop at 17:40";
     const name = ep ? "bride-on-bail-ep006" : "bride-on-bail";
@@ -207,15 +207,13 @@
       ? html`<div class="banner" role="status">${I("circle-notch")}<b>Stopping — keep the app open</b><span>Waiting on EP003's 4 takes in flight. They are recorded when they come back, never shot again.</span></div>`
       : html`<div class="banner done"><b>${P.project.title} is stopped</b><span class="grow">No agent turn runs and nothing new is sent until you resume.</span><button class="btn sm primary" onClick=${resume}>Resume</button></div>`;
   }
-  /* IA draft: an episode's two views. Bible, Assets, the board and Delivery have none; Lineage opens from an item. */
-  function EpisodeViews() {
-    if (S.screen !== "episode" && S.screen !== "canvas") return null;
-    // Two views of one episode, one selection (master's decision: Cut leaves the switch; WAI-ARIA APG tabs switch panels
-    // of one thing). The episode's cut is another object with its own home: the header's link and the tree's row.
-    return html`<div class="seg" role="group" aria-label="EP006 view">
-      ${[["Segments", "squares-four", "episode"], ["Canvas", "flow-arrow", "canvas"]].map(([l, ic, sc]) =>
-        html`<button aria-pressed=${String(S.screen === sc)} onClick=${() => { const on = S.sel || S.esel, at = S.at; go(sc); set({ sel: sc === "canvas" ? on : null, esel: on, at }); }}>${I(ic)}${l}</button>`)}
-    </div>`;
+  /* The episode's head over its Canvas, the episode's one page (D-entry pending: merecdesperez44323-lab dropped the
+     Segments table, "还不如就直接canvas"): its code and title, its script, and its cut, an object with its own home. */
+  function EpisodeHead() {
+    const ep = P.eps[5];
+    return html`<span class="ephead"><b>${ep.code}</b><span class="muted">${ep.title}</span>
+      <button class="btn sm ghost" onClick=${() => jump({ screen: "script", scriptEp: ep.code }, ep.code)}>${I("file-text")}Episode script</button>
+      ${ep.cut && html`<button class="btn sm ghost" onClick=${() => go("cut")}>${I("scissors")}Cut ${ep.cut.latest}${Status(ep.cut.st, ep.cut.st === "you" ? "Waits for you" : undefined)}</button>`}</span>`;
   }
   function ProjectChips() {
     return html`<span class="chip" title="The preset this drama is made with. Chosen at upload.">${html`<img class="thumb" src=${P.cast[0].face} alt=""/>`}${P.project.preset}</span>
@@ -224,10 +222,10 @@
   }
 
   /* ───── agent panel ───── */
-  /* IA draft (E): the session the agent panel speaks to. It follows the episode in view (Segments, Canvas, its review, its
+  /* IA draft (E): the session the agent panel speaks to. It follows the episode in view (Canvas, its review, its
      cut, Lineage from one of its items); a page with no episode in view follows none, and never guesses one. A pin wins.
      The session's process, messages and composer follow it together; an unsent draft stays with its own session. */
-  const inEpisode = () => ["episode", "canvas", "review", "cut"].includes(S.screen) || (S.screen === "graph" && window.EXTRA.lineageInEpisode());
+  const inEpisode = () => ["canvas", "review", "cut"].includes(S.screen) || (S.screen === "graph" && window.EXTRA.lineageInEpisode());
   const talkTo = () => S.pin || (inEpisode() ? "EP006" : null);
   const switchTo = (pin) => { const from = talkTo(), next = pin || (inEpisode() ? "EP006" : null); set({ pin, drafts: { ...S.drafts, [from || ""]: S.draft }, draft: (S.drafts || {})[next || ""] || "" }); };
   function AgentPanel({ float }) {
@@ -306,7 +304,7 @@
     return [
       { dr: "Bride on Bail", what: "EP006", d: "2 takes · seg01, seg03", age: "4 min", thumb: P.takes[0].poster, open: () => go("review") },
       { dr: "Bride on Bail", what: "Looks and plates", d: "2 items · Margaret Cole, Garden wedding", age: "12 min", thumb: P.cast[3].face, open: () => openHome("margaret", back()) },
-      { dr: "Bride on Bail", what: "EP004", d: "6 storyboards · scene 1 and 2", age: "26 min", thumb: "img/board-seg03.jpg", open: only("EP004's Segments with its 6 storyboards picked") },
+      { dr: "Bride on Bail", what: "EP004", d: "6 storyboards · scene 1 and 2", age: "26 min", thumb: "img/board-seg03.jpg", open: only("EP004's Canvas with its 6 storyboards picked") },
       { dr: "Bride on Bail", what: "EP001", d: "Cut v2 · The Wedding", age: "1 h", thumb: P.eps[0].cover, open: only("EP001 › Cut v2") },
       { dr: "Last Toast", what: "EP007", d: "Red line · decide in your words", age: "2 h", open: () => toast("Last Toast: only Bride on Bail opens in this direction.") },
     ].map((w) => ({ ...w, pic: cover(w.dr) }));
@@ -359,11 +357,11 @@
     const f = [["all", "All", 24], ["you", "Needs you", 3], ["work", "Working", 20], ["done", "Done", 0]];
     // "Working" holds the episodes in line too: their place in line is the card's detail.
     const list = P.eps.filter((e) => S.filter === "all" || e.status === S.filter || (S.filter === "work" && e.status === "line"));
-    const open = (e) => e.code === "EP006" ? go("episode") : toast(e.code + ": only EP006 opens in this direction.");
+    const open = (e) => e.code === "EP006" ? go("canvas") : toast(e.code + ": only EP006 opens in this direction.");
     return html`<div class="main">
       <${TopBar} crumbs=${[own.drama(), "Episodes"]}/>
       <div class="body"><div class="scrollmain">
-        <div class="bar2"><${EpisodeViews}/><span class="grow"></span><${ProjectChips}/></div>
+        <div class="bar2"><span class="grow"></span><${ProjectChips}/></div>
         <${StopBanner}/>
         <div class="filters">${f.map(([k, l, n]) => html`<button class="fchip" aria-pressed=${String(S.filter === k)} onClick=${() => set({ filter: k })}>${l}<small>${n}</small></button>`)}
           <span class="grow"></span><span class="search" style="width:200px">${I("magnifying-glass")}Find an episode…</span><button class="select">Episode order ${I("caret-down")}</button></div>
@@ -520,7 +518,7 @@
                     <button class="vb" aria-label="Enter fullscreen mode" onClick=${() => toast("Plays the take full screen.")}>${I("corners-out")}</button></div>` : html`<div class="none">${n.seg.take} accepted</div>`}</div></div>`)}
           </div>
         </div>
-        <div class="ctop"><${EpisodeViews}/><button class="follow" aria-pressed=${String(S.follow)} onClick=${() => set({ follow: !S.follow })}>${S.follow && html`<span class="live"></span>`}${S.follow ? "Following the agent" : "Follow the agent"}</button>
+        <div class="ctop"><${EpisodeHead}/><button class="follow" aria-pressed=${String(S.follow)} onClick=${() => set({ follow: !S.follow })}>${S.follow && html`<span class="live"></span>`}${S.follow ? "Following the agent" : "Follow the agent"}</button>
           <span class="grow"></span><${ProjectChips}/></div>
         ${S.dramaStop && html`<div style="position:absolute;left:0;right:0;top:60px"><${StopBanner}/></div>`}
         ${sel && (() => {
@@ -613,7 +611,7 @@
     const pct = (S.t / dur) * 100, seen = ((S.maxT[tk.id] || 0) / dur) * 100;
     const needsWords = v === "back" || v === "note";
     // IA r2 (§16): the room decides; it is no home. A take, its versions and an accepted take live in their segment in
-    // EP006's Segments, and a character in Assets: the room links there, landing on it, and Back returns to the room.
+    // EP006's Canvas, and a character in Assets: the room links there, landing on it, and Back returns to the room.
     const seg = P.scenes.flatMap((sc) => sc.segs).find((g) => g.id === tk.seg);
     const inSeg = (id, ver, label) => openStage(id, { kind: "take", ver }, label);
     const here = "Review · " + tk.seg + " " + tk.take;
@@ -627,7 +625,7 @@
             <img src=${t.poster} alt=""/><span><b>${t.seg} · ${t.take}</b><small>${t.scene.split(" · ").slice(0, 1)} · ${t.dur} s</small>
             ${S.verdict[t.id] ? Status(S.verdict[t.id] === "accept" ? "accepted" : S.verdict[t.id] === "back" ? "back" : "accepted", S.verdict[t.id] === "accept" ? "Accept" : S.verdict[t.id] === "back" ? "Send back" : "Accept with note") : S.watched[t.id] ? Status("you", "Watched") : Status("you", "Not watched")}</span></button>`)}
           <h3 style="margin-top:14px">Accepted in EP006</h3>
-          <button class="ritem" title="Open seg02 in EP006's Segments" onClick=${() => inSeg("seg02", "t01", "Review · EP006 takes")}><img src=${"img/cover-ep6.jpg"} alt=""/><span><b>seg02 · t01</b><small>Scene 1 · 15 s</small>${Status("accepted")}</span></button>
+          <button class="ritem" title="Open seg02 on EP006's Canvas" onClick=${() => inSeg("seg02", "t01", "Review · EP006 takes")}><img src=${"img/cover-ep6.jpg"} alt=""/><span><b>seg02 · t01</b><small>Scene 1 · 15 s</small>${Status("accepted")}</span></button>
         </nav>
         <section class="stage" aria-label="Stage">
           <div class="screen">
@@ -699,13 +697,11 @@
     return html`<section class="proto" aria-label="Prototype controls">
       <div class="ph"><b>Prototype controls</b><span class="grow"></span><button class="ibtn" aria-label="Close the prototype controls" aria-expanded="true" onClick=${() => set({ proto: false })}>${I("x")}</button></div>
       <p>Not part of the app: they set what the sample shows. Phase 1: steering, and editing the cut's spec · Canvas and Lineage read-only · sample project, our own test pictures.</p>
-      <span class="pl">Screen</span><div class="seg wrap" role="group" aria-label="Screen">${[["home", "Home"], ["reviews", "Reviews"], ["upload", "Upload"], ["script", "Script"], ["story", "Bible"], ["episodes", "Episodes"], ["episode", "Episode"], ["canvas", "Canvas"], ["graph", "Graph"], ["review", "Review"], ["cut", "Cut"], ["delivery", "Delivery"], ["outofdate", "Out of date"]].map(([k, l]) => html`<button aria-pressed=${String(S.screen === k)} onClick=${() => go(k)}>${l}</button>`)}</div>
+      <span class="pl">Screen</span><div class="seg wrap" role="group" aria-label="Screen">${[["home", "Home"], ["reviews", "Reviews"], ["upload", "Upload"], ["script", "Script"], ["story", "Bible"], ["episodes", "Episodes"], ["canvas", "Canvas"], ["graph", "Graph"], ["review", "Review"], ["cut", "Cut"], ["delivery", "Delivery"], ["outofdate", "Out of date"]].map(([k, l]) => html`<button aria-pressed=${String(S.screen === k)} onClick=${() => go(k)}>${l}</button>`)}</div>
       <label class="select">State<select aria-label="State" value=${S.state} onChange=${(e) => { const v = e.target.value; set({ state: v, dramaStop: v === "stopping" ? "stopping" : v === "stopped" ? "stopped" : null }); }}>
         ${[["normal", "Normal"], ["scriptRewriting", "Script: rewriting"], ["scriptFailed", "Script: check failed"], ["scriptYou", "Script: waiting for you"], ["scriptOriginal", "Script: only the original"], ["fresh", "Nothing out of date"], ["cutnewer", "Cut: a newer cut exists"], ["cutinputs", "Cut: draft inputs changed"], ["cutrefused", "Cut: drama-cli refuses the edit"], ["nostop", "No stop yet"], ["stopping", "Stopping"], ["stopped", "Stopped"], ["redline", "Red line"], ["budget", "Refused (no code)"], ["cap", "Cap reached"], ["env", "Pine access denied"], ["spendlimit", "Pine credits used up"]].map(([k, l]) => html`<option value=${k}>${l}</option>`)}</select></label>
       <label class="select" title="What a send, a check or a Reconcile finds">Outcome<select aria-label="Outcome" value=${S.outcome} onChange=${(e) => set({ outcome: e.target.value })}>
         ${[["ok", "Goes through"], ["refused", "Not submitted (the engine says)"], ["unknown", "No answer"]].map(([k, l]) => html`<option value=${k}>${l}</option>`)}</select></label>
-      <label class="select" title="What EP006's Segments show">Episode<select aria-label="Episode" value=${S.epFrame || "now"} onChange=${(e) => set({ epFrame: e.target.value, ecol: null, esel: null, at: null })}>
-        ${[["now", "As the sample is"], ["done", "Done"], ["boards", "Storyboards wait for you"], ["redline", "A send-back and a red line"], ["shooting", "A take being shot"]].map(([k, l]) => html`<option value=${k}>${l}</option>`)}</select></label>
       <div class="seg" role="group" aria-label="Theme">${[["dark", "Dark", "moon-stars"], ["light", "Light", "sun-dim"]].map(([k, l, ic]) => html`<button aria-pressed=${String(S.theme === k)} onClick=${() => set({ theme: k })}>${I(ic)}${l}</button>`)}</div>
     </section>`;
   }
@@ -716,6 +712,6 @@
     return html`<div class="app"><${Rail}/><${Side}/>${main}</div><${Proto}/><${Dialog}/>
       <div class="toasts" aria-live="polite">${S.toasts.map((t) => html`<div class="toast">${t.text}${t.action && html`<button onClick=${t.action.run}>${t.action.label}</button>`}</div>`)}</div>`;
   }
-  window.PD = { html, I, S, set, go, own, jump, openHome, openStage, openLineage, stagesOf, pickedAt, toast, money, Status, TopBar, StopBanner, EpisodeViews, ProjectChips, AgentPanel, SPENT_COVERS, useEffect, useRef, Mark, draw, Submission, submit, recheck };
+  window.PD = { html, I, S, set, go, own, jump, openHome, openStage, openLineage, stagesOf, pickedAt, toast, money, Status, TopBar, StopBanner, ProjectChips, AgentPanel, SPENT_COVERS, useEffect, useRef, Mark, draw, Submission, submit, recheck };
   // screens.js draws first, once its screens are registered.
 })();

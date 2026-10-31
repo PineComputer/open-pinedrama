@@ -11,7 +11,7 @@ const OUT = process.env.DESIGN_DIFF_OUT ?? ".design-diff";
 const STUDIO = process.env.STUDIO_URL ?? "http://127.0.0.1:4600";
 const TICKET = process.env.STUDIO_TICKET ?? "qa";
 // Each screen by its button in the prototype's Screen control (design/app.js, the prototype controls).
-const SCREENS = ["Home", "Reviews", "Upload", "Script", "Bible", "Episodes", "Episode", "Canvas", "Review", "Cut", "Delivery", "Out of date"] as const;
+const SCREENS = ["Home", "Reviews", "Upload", "Script", "Bible", "Episodes", "Canvas", "Review", "Cut", "Delivery", "Out of date"] as const;
 const TYPES: Record<string, string> = { ".html": "text/html", ".js": "text/javascript", ".css": "text/css", ".jpg": "image/jpeg", ".mp4": "video/mp4", ".svg": "image/svg+xml" };
 
 let server: Server;
@@ -51,7 +51,7 @@ for (const theme of ["dark", "light"] as const) {
     const takes = queue.find((r) => r.state === "open" && r.episode === "EP006" && r.kind === "takes");
     const routes: Record<(typeof SCREENS)[number], string> = {
       Home: "/", Reviews: "/reviews", Upload: "/new", Script: `/d/${rewriting}/script`,
-      Bible: `/d/${bride}/story`, Episodes: `/d/${bride}/episodes`, Episode: `/d/${bride}/e/EP006/list`, Canvas: `/d/${bride}/e/EP006/canvas`,
+      Bible: `/d/${bride}/story`, Episodes: `/d/${bride}/episodes`, Canvas: `/d/${bride}/e/EP006/canvas`,
       Review: takes ? `/r/${takes.id}` : "/reviews", Cut: `/d/${bride}/e/EP001/cut`, Delivery: `/d/${bride}/delivery`, "Out of date": `/d/${bride}/out-of-date`,
     };
     const rows: string[] = [];

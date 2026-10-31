@@ -624,42 +624,17 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
   .body { flex-direction: column; overflow: auto; } .body > .scrollmain { flex: none; overflow: visible; } .body > .insp { flex: none; } .faccept { grid-template-columns: 1fr; }
 }
 
-/* Episode · Segments: Delivery's table, a row per segment and a column per stage (ShotGrid's and ftrack's shot-by-task
-   grid); a cell is the newest version's picture at the project's ratio, its version and its state chip. */
-.deliv.mx td { vertical-align: top; }
-.deliv.mx td, .deliv.mx thead th { padding-left: 6px; padding-right: 6px; }
-.deliv.mx tr.mxscene th { padding: 16px 10px 6px; text-transform: none; letter-spacing: 0; font-size: 12px; color: var(--text-primary); border-bottom: 1px solid var(--border); }
-.deliv.mx tr.mxrow.sel > td { background: var(--selected); }
-.mxseg { display: grid; gap: 4px; justify-items: start; } .mxseg b { color: var(--text-primary); font-size: 12.5px; }
-.mxcell { display: grid; grid-template-columns: 40px auto; gap: 8px; align-items: start; padding: 4px; border: 0; border-radius: var(--radius-medium); background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; }
-.mxcell:hover { background: var(--hover); }
-.mxcell[aria-pressed="true"] { box-shadow: inset 0 0 0 2px var(--accent); }
-.mxcell img { width: 40px; aspect-ratio: 9 / 16; border-radius: 5px; object-fit: cover; background: var(--surface-container); }
-.mxmeta { display: grid; gap: 4px; justify-items: start; font-size: 11.5px; }
-.shotlist td.nw { white-space: nowrap; }
-.mxcell.refs { grid-template-columns: auto auto; align-items: center; }
-.mxthumbs { display: flex; } .mxthumbs img { width: 28px; height: 28px; aspect-ratio: auto; border-radius: 50%; border: 2px solid var(--surface); margin-left: -6px; } .mxthumbs img:first-child { margin-left: 0; }
-.mxnone { display: inline-block; padding: 8px 4px; color: var(--text-subtle); font-size: 11.5px; }
-.deliv.mx tr.mxnote td, .deliv.mx tr.mxshots td { padding-top: 0; white-space: normal; }
-.shotlist { width: 100%; border-collapse: collapse; font-size: 12px; }
-.shotlist th { padding: 4px 8px; text-align: left; font-size: 10.5px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: .4px; }
-.shotlist td { padding: 4px 8px; border-top: 1px solid var(--border-subtle); color: var(--text-secondary); }
-.deliv td.wrap, .shotlist td.wrap { white-space: normal; min-width: 180px; }
+/* Bible's episodes table: long cells wrap. */
+.deliv td.wrap { white-space: normal; min-width: 180px; }
 /* A disclosure (WAI-ARIA APG Disclosure): the caret and the row's key open what sits under the row. */
 .disc { display: inline-flex; align-items: center; gap: 8px; padding: 4px 6px; border: 0; border-radius: var(--radius-medium); background: none; color: var(--text-secondary); font: inherit; cursor: pointer; }
 .disc:hover { background: var(--hover); } .disc .ic { width: 12px; height: 12px; }
 .disc img { width: 24px; height: 34px; border-radius: 4px; object-fit: cover; }
 .deliv tr.beatsrow td { white-space: normal; padding-top: 0; }
 .delivwrap.flush { padding: 0; }
-/* The cell inspector: a reference opens its home in Assets; the take's Seedance prompt, labelled. */
-.reflist { display: grid; gap: 2px; }
-.refrow { display: flex; align-items: center; gap: 10px; padding: 6px; border: 0; border-radius: var(--radius-medium); background: none; color: var(--text-primary); font: inherit; font-size: 12.5px; text-align: left; cursor: pointer; }
-.refrow:hover:not(:disabled) { background: var(--hover); } .refrow:disabled { cursor: default; color: var(--text-secondary); }
-.refrow img { width: 32px; height: 32px; border-radius: 6px; object-fit: cover; } .refrow .ic { width: 14px; height: 14px; color: var(--text-muted); }
-pre.prompt { margin: 0; padding: 10px; border-radius: var(--radius-medium); background: var(--surface-container); color: var(--text-secondary); font: 11.5px/1.55 var(--font-mono); white-space: pre-wrap; }
-.ephead { display: flex; align-items: baseline; gap: 14px; padding: 4px 16px 14px; }
-.ephead h2 { margin: 0; font-size: 20px; font-weight: 700; }
-.ephead h2 .muted { font-size: 16px; font-weight: 600; }
+/* The episode's head over its Canvas: code and title, its script, its cut (EpisodeHead). */
+.ephead { display: flex; align-items: center; gap: 10px; padding: 4px 6px 4px 12px; border-radius: var(--radius-pill); background: color-mix(in srgb, var(--canvas) 80%, transparent); backdrop-filter: blur(8px); }
+.ephead b { font-size: 14px; font-weight: 700; } .ephead .muted { font-size: 13px; }
 .segnode .card > button.on { outline: 2px solid var(--accent); outline-offset: 1px; }
 .segnode .card > button { padding: 0; border: 0; font: inherit; color: inherit; text-align: inherit; cursor: pointer; }
 /* A take's inline player (D39): media-chrome's control bar over the foot of the take, on the picked take and on hover;
