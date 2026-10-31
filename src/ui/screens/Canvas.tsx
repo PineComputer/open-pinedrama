@@ -80,9 +80,15 @@ const DOCK_KEY = "studio.canvas.dock";
 
 /** The panel width under a node (design/studio.css, the canvas's node panel). */
 const PANEL = 560;
-/** Room, in screen pixels, the bar takes above the picked node and the panel under it at most (design/studio.css, .nbar and .npanel), and the docked panel with its margin. */
+/**
+ * Room, in screen pixels, the bar takes above the picked node, the panel under it as it opens (its state, what needs the
+ * maker and the disclosure row, about 155 px in a browser, IA §15; a part opened later scrolls in it), and the docked
+ * panel with its margin (design/studio.css, .nbar and .npanel).
+ */
 const BAR = 56;
-const PANEL_HEIGHT = 420;
+const PANEL_HEIGHT = 180;
+/** The zoom pill's row at the board's foot (design/studio.css .ctool: about 44 px high, 16 px in), which a panel under a node keeps clear of. */
+const FOOT = 64;
 const DOCKED = 420;
 /** The board's top the pills take (design/studio.css .ctop: 14 px in, 34 px high, and a margin), which nothing is placed under. */
 const PILLS = 64;
@@ -594,7 +600,7 @@ function Plane({ drama }: { drama: DramaView }) {
   const place = (id: string) => {
     if (!before.current) before.current = flow.getViewport();
     const px = (n: number) => `${n}px` as const;
-    const padding = { top: px(PILLS + BAR), bottom: px(dock === "under" ? PANEL_HEIGHT : 24), left: px(24), right: px(24) };
+    const padding = { top: px(PILLS + BAR), bottom: px(dock === "under" ? PANEL_HEIGHT + FOOT : FOOT), left: px(24), right: px(24) };
     // fitView's own sum, on the node's bounds now (fitView({ nodes }) waits for the next nodes update), in what a docked panel leaves.
     void flow.setViewport(getViewportForBounds(flow.getNodesBounds([id]), paneWidth - (dock === "right" ? DOCKED : 0), paneHeight, 0.05, READABLE, padding), { duration: 400 });
   };
