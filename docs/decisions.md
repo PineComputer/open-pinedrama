@@ -20,7 +20,7 @@ timeline
   2026-10-23 : D5 pre-production in one session
   2026-10-24 : D6 idle timeouts follow the work : D7 spend shown, never in a goal
   2026-10-29 : D8 phase 1 steers
-  2026-10-30 : D9 design/ is the UI source : D10 tsc gate : D11 mature libraries : D12 real samples in LFS : D13 decisions taken once : D14 credentials stop : D15 Codex review loop : D16 navigation and one home : D17 every take and cut watched : D18 cut editing as an edit spec : D19 TanStack Router : D20 Export by owner : D21 Analyzing and Out of date routes
+  2026-10-30 : D9 design/ is the UI source : D10 tsc gate : D11 mature libraries : D12 real samples in LFS : D13 decisions taken once : D14 credentials stop : D15 Codex review loop : D16 navigation and one home : D17 every take and cut watched : D18 cut editing as an edit spec : D19 TanStack Router : D20 Export by owner : D21 Analyzing and Out of date routes : D22 redo by owner : D23 the asset detail : D24 the cut edit goal : D25 one Submission : D26 crumbs and Back : D27 Reviews : D28 model badge : D29 canvas zoom, inline video : D30 URL rules : D31 agent scope : D32 narrow windows : D33 review options : D34 Episodes filters
 ```
 
 ## D1. 2026-10-22 · A desktop app on Electron
@@ -375,8 +375,8 @@ timeline
   - `/d/$dramaId/analyzing` stays a top-level drama route. Analyzing and the Fountain review are
     setup steps, a process like the review room, not views of Script, the accepted screenplay's
     home.
-  - Out of date is `/d/$dramaId/out-of-date`: a drama-level filter beside Reviews whose rows link
-    to each item's home. Until work-02's list replaces it, today's drama-wide Graph is its content.
+  - Out of date is `/d/$dramaId/out-of-date`: a drama-level list beside Reviews, of the items that
+    are out of date across Assets and episodes, whose rows link to each item's home (D22).
 - **Alternatives.** Analyzing as a view of Script; Out of date as a filter on the Episodes board
   (the IA proposal, section 8.4).
 - **Grounds.** work-02's calls, agreed by master on 30 October 2026; Codex's re-review, G6 (Script
@@ -384,6 +384,199 @@ timeline
 - **Consequences.** The router port (D19) carries both routes.
 - **Words.** None recorded.
 - **Recorded in.** work-05's routing brief, relayed to the docs on 30 October 2026.
+
+## D22. 2026-10-30 · Out of date is redone by its owner's session, one row or the whole group
+- **Context.** Out of date lists items from Assets and from episodes; each was made by a different
+  session. The dry run of the IA draft (QA journey 3) found the redo only per group: the maker could
+  not ask for one exact version.
+- **Decision.**
+  - Rows are grouped by the session that owns them: the setup's agent for shared assets, each
+    episode's agent for its own items. Each group has "Redo all"; each row has "Redo this". Either
+    is one submission to that session (D25), after a one-line impact.
+  - A row's reason is drama-cli's `problems`, verbatim, shown as "An input changed: <kind>
+    <version>" only where the engine knows the file, with the exact words under details. "Made from
+    X, which is out of date" for an item made from a stale one is our own wording.
+  - Leaving Out of date marks the row in the URL (`?item=`, replacing the history entry), so Back
+    returns to it.
+- **Alternatives.** One redo button for the whole drama; a redo per group only (the IA draft).
+- **Grounds.** The agent panel speaks to one session (the IA proposal, section 9) <sup>[3](#ref-3)</sup>;
+  confirm only when spend grows or done work is affected
+  ([design principles](design-principles.md#5-confirm-only-when-spend-grows-or-done-work-is-affected));
+  one home per object, rule 2 ([design principles](design-principles.md#1-one-home-per-object));
+  drama-cli's own reasons (short_drama `drama_cli/artifacts.py`).
+- **Consequences.** The set is the drama tree's count: drama-cli's stale items plus what was made
+  from them (`outOfDate`, `src/shared/lineage.ts`). Per-row "Redo this" is being built.
+- **Words.** None recorded.
+- **Recorded in.** Commits e3e05a9 and c72fad6 (the list), 420a21d (one submission per owner);
+  work-02's, work-05's and master's notes to the docs, 30 October 2026.
+
+## D23. 2026-10-30 · An asset's one home is its detail in Assets
+- **Context.** The dry run of the IA draft (QA journey 1) found a character's versions reachable
+  nowhere: an Assets card did nothing when clicked, and the canvas panel said its versions "are in
+  Assets".
+- **Decision.** `/d/$dramaId/assets/<shelf>/<asset>` is the asset's home. Clicking a card, or its
+  name, opens the detail beside the grid, in place of the agent panel: the versions (in view,
+  current, accepted), where it stands and why it is out of date, its review, the episodes it is in,
+  its files, and Lineage. The canvas panel's "in Assets" links there.
+- **Alternatives.** A second copy of the versions in the canvas panel.
+- **Grounds.** One home per object ([design principles](design-principles.md#1-one-home-per-object));
+  Lineage's inspector, which sits beside its graph the same way.
+- **Consequences.** Journey 1 (find a character, inspect its versions) completes on its home.
+- **Words.** None recorded.
+- **Recorded in.** Design 55b0da3; product 0742f8b.
+
+## D24. 2026-10-30 · A cut edit is built by drama-cli, after the engine checks its base
+- **Context.** D18 lets the maker edit a draft of the cut's edit spec; this is how the edit reaches
+  drama-cli.
+- **Decision.** The cut's review takes the maker's edit bound to its base cut and every clip's
+  sha256. The engine checks that base and those hashes first, then sends the edit once, as the goal
+  to run `drama-cli edit build` and check it with `drama-cli edit validate`; the result returns as a
+  new cut version for review.
+- **Alternatives.** None recorded.
+- **Grounds.** [D18](#d18-2026-10-30--cut-editing-edits-a-draft-of-drama-clis-edit-spec): drama-cli
+  stays the single producer; D13's idempotency.
+- **Consequences.** `src/engine/goals.ts` (the edit goal) and the cut's review in the engine.
+- **Words.** None recorded.
+- **Recorded in.** Commits 0f283df and 3107cf7; #71.
+
+## D25. 2026-10-30 · One Submission state for every send
+- **Context.** A review's send, a cut's Apply and a redo each go to an agent and can time out.
+  Codex's third round asked that an unknown outcome be checked, never sent again.
+- **Decision.** Every send is a Submission with one state: sending; sent; unknown (no answer:
+  offline or a 5xx), which is checked with the engine (`GET /api/submissions/:id`); failed (a 4xx
+  refusal, or a check that finds nothing taken), which may be sent again under the same submission
+  id. "Sent" says no more than that. Where the maker still has something (a draft), the state says
+  what is kept; a redo keeps nothing. A redo is `POST /api/sessions/:id/redo`, once per submission id.
+- **Alternatives.** A disabled button alone; resending on a timeout.
+- **Grounds.** [D13](#d13-2026-10-30--a-review-decision-is-taken-once-by-its-submission-id); Codex's
+  round 3, fix 1; Stripe's idempotent requests
+  ([design principles](design-principles.md#9-design-for-failure)).
+- **Consequences.** Reviews, Cut and Out of date show the same states.
+- **Words.** None recorded.
+- **Recorded in.** Design e379653 and 3b5e851; engine 420a21d.
+
+## D26. 2026-10-30 · Crumbs say where a thing belongs; Back says where you came from
+- **Context.** The prototype's own controls sat in a bar that looked like the app, and the top
+  bar's chevron Back went Home from Lineage (QA journey 2).
+- **Decision.**
+  - The prototype's controls (screen, state, outcome, theme) are folded behind a "Prototype
+    controls" button, closed by default; they are not the app.
+  - The crumbs ("Where this belongs") name where the page belongs, drama first, each ancestor a
+    link, ending at the picked stage and its version as drama-cli's status names it.
+  - "Back to …" is the only came-from control. Its label travels in the history entry's state,
+    never in the URL; Back is the browser's. There is no chevron.
+  - The review room links each item to its home; Lineage's "Open in …" leads to the item's home;
+    Lineage's episode is read from its item, so the crumbs, Export and the agent agree; Lineage
+    opens with its focus and its direct neighbours in view, at full size.
+- **Alternatives.** One Back that sometimes means history and sometimes the parent.
+- **Grounds.** Codex's walkthroughs; one home per object, rule 2
+  ([design principles](design-principles.md#1-one-home-per-object)); a URL that carries a label
+  would have to be validated (Codex's rebuttal, the IA proposal, section 14.1) <sup>[3](#ref-3)</sup>.
+- **Consequences.** design:diff and the QA journeys open the prototype controls first.
+- **Words.** None recorded.
+- **Recorded in.** Design 2f2a07b, 2bba5b3, e29f172; product a07d9fa, 49e0801.
+
+## D27. 2026-10-30 · Reviews replaces Inbox and To review everywhere
+- **Context.** The queue had three names (IA proposal, section 4).
+- **Decision.** Reviews / 待审 in the UI, `GET /api/reviews`, the live scope `reviews`,
+  `Reviews.tsx` and the `reviews.*` strings; Inbox and To review are retired. The Chinese strings
+  follow the [glossary](glossary.md): 视频版本 for a take, 剪辑成片 for a cut, 地点, 素材, 交付, 已过期.
+- **Alternatives.** None recorded.
+- **Grounds.** One name per thing (the IA proposal, section 4) <sup>[3](#ref-3)</sup>; the glossary.
+- **Consequences.** No compatibility route; open-qa.mjs and design:diff moved in the same minute.
+- **Words.** None recorded.
+- **Recorded in.** Commit a07d9fa.
+
+## D28. 2026-10-30 · The model badge stays on canvas nodes
+- **Context.** The IA proposal's first draft of section 15 put everything but the work and what
+  needs the maker behind progressive disclosure, which would hide a node's model (`sd25`).
+- **Decision.** A canvas node keeps its model badge beside its name.
+- **Alternatives.** The model in the inspector only.
+- **Grounds.** merecdesperez44323-lab approved the node labels earlier, model included (master's
+  note, 30 October 2026).
+- **Consequences.** `design/app.js`, the canvas node's `.model`.
+- **Words.** None recorded.
+- **Recorded in.** Master's note to the docs, 30 October 2026.
+
+## D29. 2026-10-30 · Picking a canvas node zooms it to a readable size; video plays inline
+- **Context.** A canvas node is small at the board's zoom; a take could only be watched in its
+  review.
+- **Decision.** Picking a node zooms the canvas so the node is readable on screen. A take or cut
+  plays inline with play, a time slider, sound and full screen, on media-chrome.
+- **Alternatives.** None recorded.
+- **Grounds.** merecdesperez44323-lab's request; React Flow's zoom to a node and media-chrome's
+  controls (D11).
+- **Consequences.** Being built.
+- **Words.** "do you think it's possible when we click the nodes on canvas , the node zoom in on the
+  screen to be human friendly to view. and also do you think we can add something like this:"…"play,
+  time slider, sound, full screen" (relayed by master; not in a transcript the docs can read).
+- **Recorded in.** Master's note to the docs, 30 October 2026.
+
+## D30. 2026-10-30 · URLs are validated against the drama; the current object comes from the route
+- **Context.** D19 types the routes; these are the rules the port keeps.
+- **Decision.**
+  - An episode code matches drama-cli's `^EP[0-9]{3}$`; an item is a drama-cli stage folder; an
+    episode, item or asset the drama doesn't have shows "This drama has no …" with a way back.
+  - In the review room an item is `?key=` (the review item's key), so `item` means only a drama-cli
+    stage id.
+  - `/d/$dramaId` opens `/episodes`, `/e/$code` opens `/list`; `/d/$dramaId/canvas` is a temporary
+    picker that opens the episode it picks.
+  - The current object is read from the innermost route match (`usePlace`), never by parsing paths.
+  - The Episode List lands on the stage `?item` names; a row's click picks its newest version; On
+    Canvas and Lineage keep the stage.
+- **Alternatives.** None recorded.
+- **Grounds.** drama-cli's episode code (short_drama `drama_cli/schemas/bible.py:197`); one name per
+  thing and one current-object contract (the IA proposal, sections 4 and 10); Codex's rebuttal,
+  section 14.1 <sup>[3](#ref-3)</sup>.
+- **Consequences.** `src/ui/routes.tsx`, `src/ui/place.ts`.
+- **Words.** None recorded.
+- **Recorded in.** Commit b6e234d; work-04's and work-05's notes, 30 October 2026.
+
+## D31. 2026-10-30 · The agent panel speaks to the pinned session, else the episode in view
+- **Context.** The agent panel showed another episode than the canvas (Codex's review, B3).
+- **Decision.** The panel speaks to the pinned session, else the episode in view, else none; it
+  never guesses. Follow and Unpin sit in a scope bar; any open session can be pinned, working or
+  waiting; a pin keeps its name after its session ends.
+- **Alternatives.** None recorded.
+- **Grounds.** Always clear what you act on
+  ([design principles](design-principles.md#3-always-clear-what-you-act-on)); Codex's re-review, E.
+- **Consequences.** None beyond the panel.
+- **Words.** None recorded.
+- **Recorded in.** Commit a07d9fa.
+
+## D32. 2026-10-30 · Narrow windows: the sidebar is a drawer, the agent is the ball
+- **Context.** Codex's re-review found the agent lost at 1280 px (F, H).
+- **Decision.** Below 1100 px the sidebar opens as a drawer; at 1280 px and below the agent panel
+  is the ball. Media queries go through usehooks-ts 3.1.1, pinned.
+- **Alternatives.** Hand-written media queries.
+- **Grounds.** The IA proposal, round 2, F <sup>[3](#ref-3)</sup>; D11.
+- **Consequences.** The smallest supported window is still pending
+  ([information architecture](studio/information-architecture.md#narrow-windows)).
+- **Words.** None recorded.
+- **Recorded in.** Commit a07d9fa.
+
+## D33. 2026-10-30 · The review options name what the maker watches
+- **Context.** "Your reviews" named its options by policy, not by what the maker would see.
+- **Decision.** The options read "Looks, photoreal storyboards, takes and cuts" and "Photoreal
+  storyboards, takes and cuts" (写实分镜), as three radio rows on Radix's RadioGroup, the same
+  control as the preset cards.
+- **Alternatives.** None recorded.
+- **Grounds.** [D17](#d17-2026-10-30--the-maker-watches-every-take-and-every-cut); the WAI-ARIA radio
+  group pattern.
+- **Consequences.** None beyond New drama.
+- **Words.** Master's: "The labels say what you watch".
+- **Recorded in.** Product 36c6d18; design 126de62 and 70f30d2.
+
+## D34. 2026-10-30 · The Episodes board filters by the maker's states
+- **Context.** The board's filters named internal states.
+- **Decision.** All, Needs you, Working, Done; Working holds the episodes in line too, their place in
+  line in the card's detail, with no chip of its own. The drama tree's counts come from the resource
+  each page shows.
+- **Alternatives.** None recorded.
+- **Grounds.** [Five maker-facing states](design-principles.md#4-five-maker-facing-states).
+- **Consequences.** None beyond the board.
+- **Words.** None recorded.
+- **Recorded in.** Design 2f2a07b (`design/app.js`, Episodes).
 
 ## References
 
