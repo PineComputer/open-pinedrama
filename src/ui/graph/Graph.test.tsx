@@ -8,7 +8,7 @@ import { screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { readFileSync } from "node:fs";
 import path from "node:path";
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { parseLineage, type LineageView } from "../../shared/lineage.ts";
 import { parseBibleNames } from "../../shared/names.ts";
 import type { ProjectView } from "../../shared/project.ts";
@@ -19,6 +19,7 @@ import { Graph } from "./Graph.tsx";
 import { renderAt } from "../test/router.tsx";
 
 mockReactFlow();
+afterEach(() => vi.restoreAllMocks());
 
 const fixture = (folder: string, name: string) => JSON.parse(readFileSync(path.resolve("fixtures", folder, `${name}.json`), "utf8"));
 const view = (name: string): LineageView => ({ lineage: parseLineage(fixture("lineage", name)), problems: [] });
@@ -72,6 +73,17 @@ describe("the Graph", () => {
     expect(within(made).getByRole("button", { name: /^EP001 seg01 take/ })).toBeInTheDocument();
     await userEvent.click(within(made).getByRole("button", { name: /^EP001 seg01 take/ }));
     expect(await screen.findByRole("complementary", { name: "EP001 seg01 take" })).toBeInTheDocument();
+  });
+
+  it("opens with the focus in view beside what it was made from, scrolling the plane rather than shrinking it (QA J2)", async () => {
+    engine("time-plate-replaced");
+    vi.spyOn(HTMLElement.prototype, "clientWidth", "get").mockReturnValue(400);
+    const scrolled: number[] = [];
+    vi.spyOn(HTMLElement.prototype, "scrollLeft", "set").mockImplementation((value: number) => void scrolled.push(value));
+    await renderAt(<Graph dramaId="d1" />, "/d/d1/e/EP001/list?item=episodes%2FEP001%2Fsegments%2Fseg01&view=lineage");
+    expect(await card(/^EP001 seg01 take t01/)).toBeInTheDocument();
+    // The take stands in a far column: 400 px of plane can't show it from the left edge, so the plane scrolls to it.
+    await waitFor(() => expect(Math.max(0, ...scrolled)).toBeGreaterThan(400));
   });
 
   it("says what is stale in drama-cli's own words", async () => {

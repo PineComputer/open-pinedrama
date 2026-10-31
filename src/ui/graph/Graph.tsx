@@ -9,7 +9,7 @@
 // episode's own versions in its session, a shared one in the setup's, since an episode's session
 // never makes a new version of a shared reference (goals.ts). No price is shown.
 import { type Edge, Handle, type Node, type NodeProps, Position, ReactFlow } from "@xyflow/react";
-import { type CSSProperties, useContext, useEffect, useState } from "react";
+import { type CSSProperties, useContext, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { madeFromStale, trace, type Lineage, type LineageNode, type LineageView } from "../../shared/lineage.ts";
 import { nameOf, type Names } from "../../shared/names.ts";
@@ -163,6 +163,21 @@ export function Graph({ dramaId }: { dramaId: string }) {
   const center = item && byId.has(item) ? item : fallback;
   const shown = lineage && center ? lineageOf(lineage, center) : { ids: [], links: [] };
   const key = `${center}|${shown.ids.join(",")}`;
+  const wrap = useRef<HTMLDivElement>(null);
+  // The Lineage opens with its focus in view, beside what it was made from and what was made from it (QA J2): the plane
+  // keeps the prototype's scale and scrolls, so the plane scrolls to them; when they don't fit, to the focus itself.
+  useEffect(() => {
+    const box = wrap.current;
+    if (!box || !places || places.key !== key || !center || !lineage) return;
+    const near = [center, ...lineage.links.flatMap((link) => (link.to === center ? [link.from] : link.from === center ? [link.to] : []))].filter((id) => places.at.has(id));
+    const scroll = (axis: "x" | "y", size: number, view: number) => {
+      const starts = near.map((id) => places.at.get(id)![axis] + INSET[axis]);
+      const low = Math.min(...starts), high = Math.max(...starts) + size, own = places.at.get(center)![axis] + INSET[axis];
+      return Math.max(0, high - low <= view ? (low + high - view) / 2 : own + size / 2 - view / 2);
+    };
+    box.scrollLeft = scroll("x", CARD.width, box.clientWidth);
+    box.scrollTop = scroll("y", CARD.height, box.clientHeight);
+  }, [places, key, center, lineage]);
   useEffect(() => {
     let live = true;
     void layered(shown.ids, shown.links, (id) => PIPELINE[byId.get(id)!.kind].column).then((at) => live && setPlaces({ key, at }));
@@ -333,7 +348,7 @@ export function Graph({ dramaId }: { dramaId: string }) {
           </div>
         )}
         {/* The plane scrolls, so it takes the keyboard's focus to scroll it (axe, scrollable-region-focusable). */}
-        <div className="graphwrap" role="group" aria-label={t("surface.graph")} tabIndex={0}>
+        <div ref={wrap} className="graphwrap" role="group" aria-label={t("surface.graph")} tabIndex={0}>
           <div className="graph" style={size}>
             {columns.map((column) => (
               <span key={column.x} className="gcol" style={{ left: column.x }}>
