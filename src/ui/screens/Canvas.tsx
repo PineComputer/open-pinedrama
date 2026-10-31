@@ -632,7 +632,7 @@ function Plane({ drama }: { drama: DramaView }) {
     const frames = nodes.filter((node) => node.type === "frame");
     const left = Math.min(...frames.map((node) => node.position.x));
     const top = Math.min(...frames.map((node) => node.position.y));
-    void flow.setViewport({ x: OPEN.x - left * OPEN.zoom, y: OPEN.y - top * OPEN.zoom, zoom: OPEN.zoom }, { duration: 300 });
+    void flow.setViewport({ x: OPEN.x - left * OPEN.zoom, y: clear() + OPEN.y - PILLS - top * OPEN.zoom, zoom: OPEN.zoom }, { duration: 300 });
   }, [code, nodes, measured, files.data]);
   useEffect(() => {
     if (!following || !target || opened.current !== code || centred.current === target) return;
@@ -653,6 +653,10 @@ function Plane({ drama }: { drama: DramaView }) {
   }, [dock, paneWidth, paneHeight, picked?.id]);
   // Hand by default (D59): phase 1 only reads, so dragging moves the board (Figma's view-only mode, liblib's hand); V gives Move.
   const [tool, setTool] = useState<Tool>("hand");
+  // The room the bar over the board takes (.ctop: the episode's head, Follow, what waits), as laid out: its rows wrap
+  // on a narrow board, so the board's top is measured, never assumed one row (PILLS).
+  const ctop = useRef<HTMLDivElement>(null);
+  const clear = () => Math.max(PILLS, (ctop.current?.offsetTop ?? 0) + (ctop.current?.offsetHeight ?? 0) + 8);
   // The item the last pick wrote into the URL.
   const written = useRef<string | null>(page?.item ?? null);
   // Where the board stood before a pick zoomed in (D37): letting go returns there; Fit forgets it.
@@ -695,7 +699,7 @@ function Plane({ drama }: { drama: DramaView }) {
   const place = (id: string) => {
     if (!before.current) before.current = flow.getViewport();
     const px = (n: number) => `${n}px` as const;
-    const padding = { top: px(PILLS + BAR), bottom: px(dock === "under" ? PANEL_HEIGHT + FOOT : FOOT), left: px(24), right: px(24) };
+    const padding = { top: px(clear() + BAR), bottom: px(dock === "under" ? PANEL_HEIGHT + FOOT : FOOT), left: px(24), right: px(24) };
     // fitView's own sum, on the node's bounds now (fitView({ nodes }) waits for the next nodes update), in what a docked panel leaves.
     void flow.setViewport(getViewportForBounds(flow.getNodesBounds([id]), paneWidth - (dock === "right" ? DOCKED : 0), paneHeight, 0.05, READABLE, padding), { duration: 400 });
   };
@@ -814,7 +818,7 @@ function Plane({ drama }: { drama: DramaView }) {
           {/* The minimap steps aside while a node's panel is open, under the node (React Flow draws node toolbars under its panels) or docked over the minimap's corner. */}
           {minimap && !picked && <MiniMap position="bottom-right" pannable zoomable className="ds-minimap" style={MINIMAP} />}
         </ReactFlow>
-        <div className="ctop">
+        <div className="ctop" ref={ctop}>
             <div className="ds-epswitch">
               <button type="button" className={"ibtn"} aria-label={t("canvas.prevEpisode")} disabled={at <= 0} onClick={() => go(codes[at - 1])}>
                 <Icon name="caret-left" />
