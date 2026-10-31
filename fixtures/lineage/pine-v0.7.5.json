@@ -1,0 +1,242 @@
+{
+ "last_node_id": 5,
+ "last_link_id": 0,
+ "nodes": [
+  {
+   "id": 1,
+   "type": "DramaCliStep",
+   "title": "cai_xiaoyan face",
+   "pos": [
+    0,
+    410
+   ],
+   "size": [
+    300,
+    340
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "file",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "links": []
+    }
+   ],
+   "properties": {
+    "id": "assets/characters/cai_xiaoyan/states/face",
+    "kind": "look",
+    "column": 1,
+    "version": "v1",
+    "accepted": "v1",
+    "fresh": true,
+    "shows": "assets/characters/cai_xiaoyan/states/face/v1/image-1.jpg",
+    "reads": [
+     "bible"
+    ],
+    "label": "cai_xiaoyan face",
+    "section": "Characters"
+   }
+  },
+  {
+   "id": 2,
+   "type": "DramaCliStep",
+   "title": "chen_haiqing",
+   "pos": [
+    360,
+    410
+   ],
+   "size": [
+    300,
+    340
+   ],
+   "flags": {},
+   "order": 1,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "file",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "links": []
+    }
+   ],
+   "properties": {
+    "id": "assets/characters/chen_haiqing",
+    "kind": "look",
+    "column": 1,
+    "version": "v1",
+    "accepted": null,
+    "fresh": true,
+    "shows": "assets/characters/chen_haiqing/v1/image-1.jpg",
+    "reads": [
+     "bible"
+    ],
+    "label": "chen_haiqing",
+    "section": "Characters"
+   }
+  },
+  {
+   "id": 3,
+   "type": "DramaCliStep",
+   "title": "chen_haiqing face",
+   "pos": [
+    0,
+    810
+   ],
+   "size": [
+    300,
+    340
+   ],
+   "flags": {},
+   "order": 2,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "file",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "links": []
+    }
+   ],
+   "properties": {
+    "id": "assets/characters/chen_haiqing/states/face",
+    "kind": "look",
+    "column": 1,
+    "version": "v1",
+    "accepted": "v1",
+    "fresh": true,
+    "shows": "assets/characters/chen_haiqing/states/face/v1/image-1.jpg",
+    "reads": [
+     "bible"
+    ],
+    "label": "chen_haiqing face",
+    "section": "Characters"
+   }
+  },
+  {
+   "id": 4,
+   "type": "DramaCliStep",
+   "title": "bible",
+   "pos": [
+    0,
+    70
+   ],
+   "size": [
+    300,
+    340
+   ],
+   "flags": {
+    "collapsed": true
+   },
+   "order": 3,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "file",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "links": []
+    }
+   ],
+   "properties": {
+    "id": "bible",
+    "kind": "bible",
+    "column": 0,
+    "version": "v1",
+    "accepted": "v1",
+    "fresh": true,
+    "shows": "bible/v1/bible.md",
+    "reads": [
+     "screenplay"
+    ],
+    "label": "bible",
+    "section": "Text"
+   }
+  },
+  {
+   "id": 5,
+   "type": "DramaCliStep",
+   "title": "screenplay",
+   "pos": [
+    0,
+    160
+   ],
+   "size": [
+    300,
+    340
+   ],
+   "flags": {
+    "collapsed": true
+   },
+   "order": 4,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "file",
+     "label": " ",
+     "type": "DRAMA_CLI_FILE",
+     "links": []
+    }
+   ],
+   "properties": {
+    "id": "screenplay",
+    "kind": "screenplay",
+    "column": 0,
+    "version": "v2",
+    "accepted": "v2",
+    "fresh": true,
+    "shows": "screenplay/v2/screenplay.fountain",
+    "reads": [],
+    "label": "screenplay",
+    "section": "Text"
+   }
+  }
+ ],
+ "links": [],
+ "groups": [
+  {
+   "id": 1,
+   "title": "Text",
+   "font_size": 24,
+   "bounding": [
+    -20,
+    0,
+    340,
+    210
+   ]
+  },
+  {
+   "id": 2,
+   "title": "Characters",
+   "font_size": 24,
+   "bounding": [
+    -20,
+    340,
+    700,
+    830
+   ]
+  }
+ ],
+ "config": {},
+ "extra": {
+  "ds": {
+   "scale": 0.75,
+   "offset": [
+    80,
+    80
+   ]
+  },
+  "drama_cli": {
+   "project": "/work/drama"
+  }
+ },
+ "version": 0.4
+}

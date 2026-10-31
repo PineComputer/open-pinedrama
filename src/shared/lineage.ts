@@ -48,7 +48,10 @@ export interface LineageNode {
   accepted: string | null;
   /** Whether the working version is fresh; null when it has no manifest to judge. */
   fresh: boolean | null;
-  /** Why not, or what drama-cli could not read about it, in its words. */
+  /**
+   * Why not, or what drama-cli could not read about it, in its words. Empty also from an export
+   * older than the field (see lineageNode): a stale version then shows without its reason.
+   */
   problems: string[];
   /** The file it shows, relative to the project. */
   shows: string | null;
@@ -200,7 +203,9 @@ function lineageNode(value: unknown, field: string): { number: number; node: Lin
       version: maybeText(at(props, "version", place), join(place, "version")),
       accepted: maybeText(at(props, "accepted", place), join(place, "accepted")),
       fresh,
-      problems: texts(at(props, "problems", place), join(place, "problems")),
+      // `problems` arrives in short_drama #668, after drama-cli v0.7.5, the release Pine pins (PineSandbox #926): the
+      // studio reads the export of the version Pine pins, so it is optional until Pine pins #668, then required.
+      problems: "problems" in props ? texts(props.problems, join(place, "problems")) : [],
       shows: maybeText(at(props, "shows", place), join(place, "shows")),
       reads: texts(at(props, "reads", place), join(place, "reads")),
       label: text(at(props, "label", place), join(place, "label")),

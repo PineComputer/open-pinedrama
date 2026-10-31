@@ -66,8 +66,14 @@ describe("drama-cli's lineage, as its comfyui export writes it", () => {
     expect(lineage.project).toBe("/work/drama");
   });
 
+  it("reads a stale version without its reasons from an export older than short_drama #668", () => {
+    const raw = sample() as any;
+    delete raw.nodes[5].properties.problems;
+    expect(parseLineage(raw).nodes.find((n) => n.id === TAKE)).toMatchObject({ fresh: false, problems: [] });
+  });
+
   it.each([
-    ["a node's reasons", (raw: any) => delete raw.nodes[5].properties.problems, "nodes.5.properties.problems"],
+    ["a node's reasons as a list", (raw: any) => (raw.nodes[5].properties.problems = "stale"), "nodes.5.properties.problems"],
     ["a node's freshness", (raw: any) => (raw.nodes[5].properties.fresh = "no"), "nodes.5.properties.fresh"],
     ["a kind drama-cli doesn't write", (raw: any) => (raw.nodes[0].properties.kind = "poster"), "nodes.0.properties.kind"],
     ["a stage of another kind's path", (raw: any) => (raw.nodes[1].properties.kind = "prop"), "nodes.1.properties.id"],
@@ -155,5 +161,16 @@ describe("real exports of drama-cli's (fixtures/lineage)", () => {
     expect(lineage.nodes.find((node) => node.id === PLATE)!.fresh).toBe(false);
     expect(lineage.nodes.find((node) => node.id === TAKE)!.fresh).toBe(true);
     expect(madeFromStale(lineage)).toContain(TAKE);
+  });
+
+  it("read from drama-cli v0.7.5, the release Pine pins, whose nodes carry no problems (short_drama #668 adds them)", () => {
+    const lineage = real("pine-v0.7.5");
+    expect(lineage.nodes.map((node) => [node.id, node.fresh, node.problems])).toEqual([
+      ["assets/characters/cai_xiaoyan/states/face", true, []],
+      ["assets/characters/chen_haiqing", true, []],
+      ["assets/characters/chen_haiqing/states/face", true, []],
+      ["bible", true, []],
+      ["screenplay", true, []],
+    ]);
   });
 });

@@ -106,12 +106,12 @@ describe("the drama's lineage", () => {
     const warn = vi.spyOn(console, "warn").mockImplementation(() => undefined);
     lineage.recordLineage("setup", turn("setup"), twoEpisodes("shot"));
     const bad = turn("setup");
-    const old = exported("shot");
-    old.nodes[0].properties.problems = undefined;
-    lineage.recordLineage("setup", bad, new TextEncoder().encode(JSON.stringify(old)));
+    const spoiled = exported("shot");
+    spoiled.nodes[0].properties.fresh = "no";
+    lineage.recordLineage("setup", bad, new TextEncoder().encode(JSON.stringify(spoiled)));
     const view = lineage.lineageView("d1");
     expect(view.lineage?.nodes.length).toBeGreaterThan(0);
-    expect(view.problems).toEqual([{ sessionId: "setup", turnId: bad, error: "drama-cli's lineage: nodes.0.properties.problems should be present." }]);
+    expect(view.problems).toEqual([{ sessionId: "setup", turnId: bad, error: "drama-cli's lineage: nodes.0.properties.fresh should be true, false or null." }]);
     expect(warn).toHaveBeenCalledOnce();
     warn.mockRestore();
   });
