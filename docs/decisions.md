@@ -1173,12 +1173,17 @@ timeline
   Materials; VS Code's workbench. "No bordered box inside a surface" is our own.
 - **Consequences.** The audit replaced raw radii with role tokens, turned Upload's preset cards and
   the review room's sent-back card into rows, and set Reviews' chips, Home's tabs and the list rows
-  on one column (7dd3279); Script's in 8ee5070; the Canvas's is work-06's.
+  on one column (7dd3279); Script's in 8ee5070; the Canvas's is work-06's. The product's own CSS takes the
+  roles from tokens only (0318183): keys, the seal, inline code and thumbnails under 40 px
+  `--radius-small`; thumbnails from 40 px, the note picture and fenced code `--radius-medium`; chips,
+  the rail's replay tag and the player's progress track `--radius-pill`. Tailwind's radius scale maps
+  onto the tokens once, in the theme (`xl` is `--radius-2xl`), and no component uses a raw radius.
+  Inline code, which SPEC's table does not name, takes the mark's radius (ours).
 - **Words.** "这个多圆角 非圆角 又都对不齐， 太丑了 ，能不能优雅好看点儿。。。不要这么vibecoding" (*rounded and
   square corners, and nothing lines up; too ugly; can it be more elegant… not so vibe-coded*),
   relayed by master.
-- **Recorded in.** Commits 8459785 (the rule), 7dd3279 and 8ee5070 (the audit); work-04's notes to
-  the docs.
+- **Recorded in.** Commits 8459785 (the rule), 7dd3279 and 8ee5070 (the audit), 0318183 (the
+  product's CSS); work-04's and work-05's notes to the docs.
 
 ## References
 
