@@ -18,7 +18,7 @@ interface Stage {
 }
 
 // Each kind's column: drama-cli's lineage.py, KINDS.
-const COLUMN: Record<string, number> = { bible: 0, look: 1, plate: 1, prop: 1, breakdown: 2, blocking: 3, storyboard: 4, take: 6, cut: 7 };
+const COLUMN: Record<string, number> = { screenplay: 0, bible: 0, look: 1, plate: 1, prop: 1, breakdown: 2, blocking: 3, storyboard: 4, take: 6, cut: 7 };
 const STYLES = ["line-art", "photoreal"];
 const PLACE = "assets/scenes/home";
 // The files drama-cli shows for a version (drama_cli/lineage.py, SHOWN_SUFFIXES), and replay's own placeholder pictures (SVG).
@@ -37,6 +37,7 @@ function stages(progress: ReplayProgress): Stage[] {
     reads,
     from,
   });
+  const screenplay = progress.screenplay?.current ? [stage("screenplay", "screenplay", progress.screenplay)] : [];
   const bible = progress.bible ? [stage("bible", "bible", { current: progress.bible, accepted: progress.bible })] : [];
   const reads = bible.length ? ["bible"] : [];
   const leads = Object.entries(progress.looks).map(([id, made]) => stage(`assets/characters/${id}`, "look", made, reads));
@@ -59,7 +60,7 @@ function stages(progress: ReplayProgress): Stage[] {
       ...(made.cut ? [stage(`${base}/edit`, "cut", made.cut, [], Object.keys(made.takes ?? {}).map((segment) => `${base}/segments/${segment}`))] : []),
     ];
   });
-  return [...bible, ...leads, ...references, ...episodes];
+  return [...screenplay, ...bible, ...leads, ...references, ...episodes];
 }
 
 /**
@@ -153,8 +154,8 @@ interface Export {
 /**
  * A sample drama's own export (drama-cli's `export comfyui` of the finished run) cut to what the drama has made by
  * this stop, as a real stop's export holds only that: every stage replay makes is kept once its progress has it, a
- * plate's view with its plate, and every other one (a first-frame reference, the video prompts, the subtitles, the
- * screenplay) once everything it is made from is kept. Links, inputs, outputs and groups follow the nodes kept; nothing else changes.
+ * plate's view with its plate, and every other one (a first-frame reference, the video prompts, the subtitles) once
+ * everything it is made from is kept. Links, inputs, outputs and groups follow the nodes kept; nothing else changes.
  */
 export function lineageAt(progress: ReplayProgress, exported: Uint8Array): Uint8Array {
   const workflow = JSON.parse(new TextDecoder().decode(exported)) as Export;

@@ -158,18 +158,20 @@ describe("a sample drama's own lineage at a stop", () => {
 
   it("holds only what the drama has made by then, and what is made from that alone", () => {
     // The leads' looks are drawn; no place yet, no episode.
-    const early = at({ preset: "en-us-live-sfw", bible: "v1", looks: { lin: v1 }, references: {}, episodes: {} });
+    const early = at({ preset: "en-us-live-sfw", screenplay: v1, bible: "v1", looks: { lin: v1 }, references: {}, episodes: {} });
     expect(early.nodes.map((n) => n.properties.id)).toEqual(["screenplay", "bible", "assets/characters/lin"]);
+    // Before the rewrite returns a version, the export's screenplay waits too, as drama-cli's lineage has none yet.
+    expect(at({ preset: "en-us-live-sfw", bible: null, looks: {}, references: {}, episodes: {} }).nodes.map((n) => n.properties.id)).not.toContain("screenplay");
     expect(early.links.map(([id]) => id)).toEqual([1, 2]);
     expect(early.nodes.find((n) => n.id === 2)!.outputs[0].links).toEqual([2]);
     expect(early.groups.map((g) => g.title)).toEqual(["Text", "Characters"]);
     // With the place drawn, its plate and the view made from it come in.
-    const later = at({ preset: "en-us-live-sfw", bible: "v1", looks: { lin: v1 }, references: { home: { ...v1, path: "assets/scenes/home" } }, episodes: {} });
+    const later = at({ preset: "en-us-live-sfw", screenplay: v1, bible: "v1", looks: { lin: v1 }, references: { home: { ...v1, path: "assets/scenes/home" } }, episodes: {} });
     expect(later.nodes.map((n) => n.properties.id)).toContain("assets/scenes/home/front");
     expect(later.nodes.map((n) => n.properties.id)).toContain("assets/scenes/home/floor-plan");
     expect(later.links.map(([id]) => id)).toEqual([1, 2, 3, 5]);
     // Once EP001's boards are drawn, its blocking and the first-frame reference made from it come in.
-    const boards = at({ preset: "en-us-live-sfw", bible: "v1", looks: { lin: v1 }, references: { home: { ...v1, path: "assets/scenes/home" } }, episodes: { EP001: { segments: ["seg01"], boards: { seg01: v1 } } } });
+    const boards = at({ preset: "en-us-live-sfw", screenplay: v1, bible: "v1", looks: { lin: v1 }, references: { home: { ...v1, path: "assets/scenes/home" } }, episodes: { EP001: { segments: ["seg01"], boards: { seg01: v1 } } } });
     expect(boards.nodes.map((n) => n.properties.id)).toContain("episodes/EP001/first_frame_reference/seg01");
   });
 });

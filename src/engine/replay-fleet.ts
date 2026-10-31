@@ -557,6 +557,8 @@ function setupScript(lang: Lang, preset: string, story: { id: string; story: Sto
   const say = words(story.story)[lang];
   const set = pictures(story.id, lang);
   let stage: "start" | "rewrite" | "asked" | "leads" | "references" | "handed" = "start";
+  // The rewrite stop's v1, accepted by any answer, as the script goes on after it; none for a sample with no screenplay of its own.
+  const rewritten = rewriteFiles(story.story, set, lang).length > 0;
   const versions = new Map<string, number>();
   const bible = story.story.versions.bible ?? "v1";
   const next = (key: string, path: string) => {
@@ -585,6 +587,7 @@ function setupScript(lang: Lang, preset: string, story: { id: string; story: Sto
   const made = (key: string): Made => ({ current: `v${versions.get(key)}`, accepted: accepted.has(key) ? `v${accepted.get(key)}` : null });
   const progress = (): ReplayProgress => ({
     preset,
+    ...(rewritten && stage !== "start" ? { screenplay: { current: "v1", accepted: stage === "rewrite" ? null : "v1" } } : {}),
     bible: stage === "rewrite" || stage === "asked" ? null : bible,
     looks: Object.fromEntries(leads.filter((c) => versions.has(c.id)).map((c) => [c.id, made(c.id)])),
     references: Object.fromEntries([...shared.values()].filter((reference) => versions.has(reference.key)).map((reference) => [reference.key, { ...made(reference.key), path: reference.path }])),
@@ -792,6 +795,7 @@ export function episodeScript(code: string, lang: Lang, preset: string, story: {
     const accepted = (path: string): Made => ({ current: `v${firstOf(story.story, path)}`, accepted: `v${firstOf(story.story, path)}` });
     return {
       preset,
+      ...(rewriteFiles(story.story, set, lang).length ? { screenplay: { current: "v1", accepted: "v1" } } : {}),
       bible: story.story.versions.bible ?? "v1",
       // Every reference approved at the version it was first drawn at (firstOf), as the setup left it.
       looks: Object.fromEntries(say.cast.slice(0, 2).map((c) => [c.id, accepted(`assets/characters/${c.id}`)])),

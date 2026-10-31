@@ -34,6 +34,8 @@ export interface Reference extends Made {
 
 export interface ReplayProgress {
   preset: string;
+  /** The screenplay's version, where the sample's rewrite returns one: in drama-cli's lineage, not its status (drama_cli/stages.py, status). */
+  screenplay?: Made;
   bible: Version;
   /** A lead's base look, by id, and the shared references by the key the maker names each by (a further look as id/look). */
   looks: Record<string, Made>;

@@ -2,6 +2,7 @@
 // Fountain its rewrite returns come from the sample itself, and a sample with no screenplay of its own gets one written from its
 // episodes, never another sample's.
 import { describe, expect, it } from "vitest";
+import { parseLineage } from "../shared/lineage.ts";
 import { ReplayFleet, sampleScreenplay, screenplayOf, STORIES } from "./replay-fleet.ts";
 
 const story = (episodes: { title: string; segments: { heading: string; shots: string[] }[] }[]) =>
@@ -59,6 +60,9 @@ describe("a sample's screenplay", () => {
     expect(validate.rewrite).toBe(true);
     expect(validate.lines.some((line) => line.to.length > 0)).toBe(true);
     expect(await read("drama/screenplay/v1/original.txt")).toBe(new TextDecoder().decode(sampleScreenplay(Object.keys(STORIES)[0], "en").bytes));
+    // drama-cli's lineage has the screenplay at v1, not yet accepted, as the tree's Script row reads it (D64 as amended, C14).
+    const lineage = parseLineage(JSON.parse(await read("handoff/lineage.json")));
+    expect(lineage.nodes.find((node) => node.id === "screenplay")).toMatchObject({ kind: "screenplay", version: "v1", accepted: null });
   });
 
 
