@@ -1217,6 +1217,19 @@ timeline
   center on this: an effective visualization of drama-cli's working process, and that's it*),
   relayed by master.
 - **Recorded in.** Master's note to the docs, 30 October 2026.
+- **Amended.** 31 October 2026, Codex's end-to-end review of rc5 (C14, C16, C17), master's rule: what the
+  studio shows as an item's state comes from drama-cli's status and project snapshot
+  (`handoff/status.json`: current, candidate, accepted, usable), never from the studio's own inference or
+  from its review verdicts. The maker's verdicts stay as separately attributed history (who decided, when,
+  in which review). A setup that is still running never hides text that is already finished. Found on
+  e080855: Script and the tree said "v2 · the agent is rewriting your file into Fountain" and Rewriting
+  after v1 was accepted, while `bible` ran, because a working setup at its first stage was read as a
+  rewrite (`src/ui/routes.tsx:105`; C14; on T11, a v3 that never existed); the tree said "Bible Not
+  started" while status said candidate v7 (C14); Bible's own page showed the setup's progress instead of an
+  accepted, usable v4 for as long as the setup ran (`routes.tsx:116`; C16); a character's face read "current
+  v1 · none accepted" while status recorded it accepted and usable, because Assets read acceptance from the
+  studio's review verdicts (`src/ui/screens/Cast.tsx:50–56`, `193–194`; C17). Evidence:
+  `short-drama-runs/qa/codex-e2e-rc2.md`, "rc5".
 
 ## D65. 2026-10-30 · The tree's current row is a tint, without an accent bar
 - **Context.** The project tree marked its current row with a curved accent bar on its left
