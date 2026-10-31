@@ -78,34 +78,33 @@ function engine() {
 }
 
 describe("the agent panel", () => {
-  it("keeps each session with the Computer it runs on, and Watch says whose desktop it shows and what else it runs", async () => {
+  it("names the session's Computer, and Watch says whose desktop it shows and what else that Computer runs", async () => {
+    const user = userEvent.setup();
     engine();
     const two = { ...drama, crew: [...drama.crew, { id: "c2", label: "Computer 2", state: "running", idleTimeoutMinutes: 180, sessions: [{ id: "s3", name: "setup", role: "setup", state: "open", waiting: false }] }] } as unknown as DramaView;
-    await renderAt(<AgentPanel drama={two} onCollapse={() => {}} />);
-    const sessions = screen.getByRole("region", { name: "Sessions" });
-    expect(within(sessions).getByRole("button", { name: /^EP001\s*on Computer 1 · Shooting seg01$/ })).toBeInTheDocument();
-    expect(within(sessions).getByRole("button", { name: /^EP002\s*on Computer 1 · / })).toBeInTheDocument();
+    await renderAt(<AgentPanel drama={two} episode="EP001" onCollapse={() => {}} />);
+    expect(screen.getByRole("status")).toHaveTextContent("on Computer 1");
     // Computer 1 runs EP001 and EP002; Computer 2 the setup alone.
-    expect(within(sessions).getAllByRole("button", { name: "Watch Computer 1's desktop (also running EP002)" })).toHaveLength(1);
-    expect(within(sessions).getAllByRole("button", { name: "Watch Computer 1's desktop (also running EP001)" })).toHaveLength(1);
-    expect(within(sessions).getByRole("button", { name: "Watch Computer 2's desktop" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Watch Computer 1's desktop (also running EP002)" })).toBeInTheDocument();
+    // The picker lists the other open sessions, each with its Computer.
+    const picker = screen.getByRole("combobox", { name: "Session" });
+    expect(within(picker).getAllByRole("option").map((option) => option.textContent)).toEqual(["EP001 (this page)", "EP002 · on Computer 1 · waits for you", "Setup · on Computer 2 · at work"]);
+    await user.selectOptions(picker, "setup");
+    expect(screen.getByRole("button", { name: "Watch Computer 2's desktop" })).toBeInTheDocument();
   });
 
-  it("tells which session of its scope each is and what came before it, and how a scope's last session ended", async () => {
+  it("tells which session of its scope it is and what came before it, and how a scope's last session ended", async () => {
     engine();
     answer("/api/dramas/d1/session-history", [
       { id: "s0", scope: "EP001", computer: "PC-2", state: "lost", createdAt: "2026-10-30T08:00:00Z", closedAt: "2026-10-30T09:00:00Z" },
       { id: "s1", scope: "EP001", computer: "PC-1", state: "open", createdAt: "2026-10-30T09:30:00Z" },
-      { id: "s2", scope: "EP002", computer: "PC-1", state: "open", createdAt: "2026-10-30T09:31:00Z" },
       { id: "s9", scope: "EP003", computer: "PC-2", state: "lost", createdAt: "2026-10-30T08:00:00Z", closedAt: "2026-10-30T09:00:00Z" },
     ]);
     const stopped = { ...drama, episodeRows: [row(1, "working"), row(2, "waiting"), row(3, "stopped")] } as unknown as DramaView;
-    await renderAt(<AgentPanel drama={stopped} episode="EP003" onCollapse={() => {}} />);
-    const sessions = screen.getByRole("region", { name: "Sessions" });
-    expect(await within(sessions).findByText("Session 2 on PC-1, after PC-2 stopped")).toBeInTheDocument();
-    // A first session has nothing before it.
-    expect(within(sessions).queryByText(/^Session 1 /)).toBeNull();
-    expect(screen.getByText("Its last session, 1, was on PC-2 when it stopped.")).toBeInTheDocument();
+    const { rerender } = await renderAt(<AgentPanel drama={stopped} episode="EP001" onCollapse={() => {}} />);
+    expect(await within(screen.getByRole("status")).findByText(/Session 2 on PC-1, after PC-2 stopped/)).toBeInTheDocument();
+    rerender(<AgentPanel drama={stopped} episode="EP003" onCollapse={() => {}} />);
+    expect(screen.getByRole("status")).toHaveTextContent("Its last session, 1, was on PC-2 when it stopped.");
   });
 
   it("says a Computer restarted under its own label kept its identity, not its files (D72)", async () => {
@@ -115,27 +114,19 @@ describe("the agent panel", () => {
       { id: "s1", scope: "EP001", computer: "PC-1", state: "open", createdAt: "2026-10-30T09:30:00Z" },
     ]);
     await renderAt(<AgentPanel drama={drama} episode="EP001" onCollapse={() => {}} />);
-    const sessions = screen.getByRole("region", { name: "Sessions" });
-    expect(await within(sessions).findByText("Session 2 on PC-1, restarted after it stopped; its files came back from the pack")).toBeInTheDocument();
-    expect(within(sessions).queryByText(/after PC-1 stopped/)).toBeNull();
+    const status = screen.getByRole("status");
+    expect(await within(status).findByText(/Session 2 on PC-1, restarted after it stopped; its files came back from the pack/)).toBeInTheDocument();
+    expect(status).not.toHaveTextContent("after PC-1 stopped");
   });
 
-  it("shows the sessions, the decisions waiting, and what was made, named as the bible names them", async () => {
+  it("is the conversation with one session and nothing else: Decisions, Recent work and Next have their own homes", async () => {
     engine();
-    await renderAt(<AgentPanel drama={drama} onCollapse={() => {}} />);
-    // Every open session, at work or waiting for the maker, so any can be pinned (design/app.js, AgentPanel's Sessions).
-    const sessions = screen.getByRole("region", { name: "Sessions" });
-    expect(within(sessions).getByRole("button", { name: /EP001\s*on Computer 1 · Shooting seg01/ })).toBeInTheDocument();
-    expect(within(sessions).getByRole("button", { name: /^EP002/ })).toBeInTheDocument();
-    const decisions = screen.getByRole("region", { name: "Decisions" });
-    expect(await within(decisions).findByRole("link", { name: /EP002 · Storyboards\s*3 items · seg01, seg02, seg03/ })).toHaveAttribute("href", "/r/r2");
-    // Recent work needs the files as well as the project.
-    const recent = await screen.findByRole("region", { name: "Recent work" });
-    await waitFor(() => expect(within(recent).getAllByText(/^Look · 林/).map((line) => line.textContent)).toEqual(["Look · 林 v2", "Look · 林 v1"]));
+    await renderAt(<AgentPanel drama={drama} episode="EP001" onCollapse={() => {}} />);
+    expect(await screen.findByRole("region", { name: "Conversation" })).toHaveTextContent("Shooting the first take now.");
+    for (const gone of ["Sessions", "Decisions", "Recent work"]) expect(screen.queryByRole("region", { name: gone })).toBeNull();
+    expect(screen.queryByRole("heading", { name: "Next" })).toBeNull();
   });
 
-  // D31 as amended: every drama page has a scope, its episode, else the setup; the line always names its target.
-  // The sidebar follows the engine of this version: a message reaches only the scope's open session.
   it("follows the setup on a page of no episode, and once it has handed over, says so with no line to send", async () => {
     engine();
     await renderAt(<AgentPanel drama={drama} onCollapse={() => {}} />);
@@ -167,6 +158,16 @@ describe("the agent panel", () => {
     expect(screen.queryByRole("textbox", { name: "Message the agent" })).toBeNull();
     await user.click(within(screen.getByRole("status")).getByRole("button", { name: "Resume" }));
     await waitFor(() => expect(calls("POST", "/api/episodes/e3/resume")).toHaveLength(1));
+  });
+
+  it("reaches an episode whose Computer stopped from the picker, where its Resume is", async () => {
+    const user = userEvent.setup();
+    engine();
+    const stopped = { ...drama, episodeRows: [row(1, "working"), row(2, "waiting"), row(3, "stopped")] } as unknown as DramaView;
+    await renderAt(<AgentPanel drama={stopped} episode="EP001" onCollapse={() => {}} />);
+    await user.selectOptions(screen.getByRole("combobox", { name: "Session" }), "EP003 · Computer stopped");
+    expect(screen.getByRole("status")).toHaveTextContent("EP003's Computer stopped. Resume continues it in a new session with its files.");
+    expect(within(screen.getByRole("status")).getByRole("button", { name: "Resume" })).toBeInTheDocument();
   });
 
   it("says a done episode can't be reopened in this version, with no line and no Resume", async () => {
@@ -282,36 +283,34 @@ describe("the agent panel", () => {
     expect(sent.submissionId).toMatch(/\S/);
   });
 
-  it("sends the maker to the review a session waits on rather than a line to it", async () => {
+  it("sends the maker to the review a session waits on, once, from the status line, with no line to it", async () => {
     engine();
     await renderAt(<AgentPanel drama={drama} episode="EP002" onCollapse={() => {}} />);
-    expect(screen.getByRole("status")).toHaveTextContent("Following EP002's session: it waits for you");
-    expect(await screen.findByRole("link", { name: "Open the review it waits on" })).toHaveAttribute("href", "/r/r2");
+    expect(await screen.findByRole("link", { name: "EP002's session waits for your review: open it" })).toHaveAttribute("href", "/r/r2");
+    expect(screen.getAllByRole("link", { name: /review/ })).toHaveLength(1);
     expect(screen.queryByRole("textbox", { name: "Message the agent" })).toBeNull();
   });
 
-  it("follows the episode in view, and a pin wins until the maker follows it again (IA draft E)", async () => {
+  it("follows the episode in view, and the picker pins another until the maker picks the page again (IA draft E)", async () => {
     const user = userEvent.setup();
     engine();
     await renderAt(<AgentPanel drama={drama} episode="EP002" onCollapse={() => {}} />);
     const scope = screen.getByRole("status");
-    expect(scope).toHaveTextContent("Following EP002's session: it waits for you");
-    expect(await screen.findByRole("link", { name: "Open the review it waits on" })).toHaveAttribute("href", "/r/r2");
-    await user.click(within(screen.getByRole("region", { name: "Sessions" })).getByRole("button", { name: /^EP001/ }));
+    expect(await screen.findByRole("link", { name: "EP002's session waits for your review: open it" })).toBeInTheDocument();
+    await user.selectOptions(screen.getByRole("combobox", { name: "Session" }), "EP001");
     expect(scope).toHaveTextContent("Pinned to EP001's session: working");
     // The process, the messages and the line all go with the pin.
     expect(await screen.findByText("To EP001's session")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /EP001 · Process/ })).toBeInTheDocument();
-    await user.click(within(scope).getByRole("button", { name: "Follow EP002's session" }));
-    expect(scope).toHaveTextContent("Following EP002's session: it waits for you");
-    expect(await screen.findByRole("link", { name: "Open the review it waits on" })).toBeInTheDocument();
+    await user.selectOptions(screen.getByRole("combobox", { name: "Session" }), "EP002");
+    expect(await screen.findByRole("link", { name: "EP002's session waits for your review: open it" })).toBeInTheDocument();
   });
 
-  it("stops one episode after the maker confirms, and only then", async () => {
+  it("stops the episode it speaks to after the maker confirms, and only then", async () => {
     const user = userEvent.setup();
     engine();
     accept("/api/episodes/e1/stop");
-    await renderAt(<AgentPanel drama={drama} onCollapse={() => {}} />);
+    await renderAt(<AgentPanel drama={drama} episode="EP001" onCollapse={() => {}} />);
     await user.click(screen.getByRole("button", { name: "Stop EP001" }));
     const dialog = screen.getByRole("alertdialog", { name: "Stop EP001?" });
     await user.click(within(dialog).getByRole("button", { name: "Cancel" }));

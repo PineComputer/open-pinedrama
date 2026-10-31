@@ -13,7 +13,7 @@
     screen: SCREENS.includes(hash) ? hash : "home", theme: "dark", tab: "all", filter: "all", waitFor: null, pin: null,
     dialog: null, toasts: [], dramaStop: null, draft: "", drafts: {}, drawer: false,
     // The conversation each session has had: the maker's words and decisions, the one log (D70).
-    chats: { EP006: ["You sent back EP006 seg01 t01: “He should hold the blanket folded before he speaks.”", "You sent back EP006 seg03 t01: “Too wide at the start; we lose Luca's face.”"] },
+    chats: {},
     // The agent sidebar is open or collapsed to its icon, the viewer's choice kept on this browser; until they choose,
     // narrow windows start collapsed (D32).
     agent: (() => { try { const v = localStorage.getItem("studio.agent"); if (v === "open" || v === "closed") return v; } catch (e) { /* storage may be blocked */ } return window.matchMedia("(max-width: 1280px)").matches ? "closed" : "open"; })(),
@@ -259,13 +259,17 @@
   function AgentPanel() {
     if (studioPage()) return null;
     const dec = decisions(), to = talkTo(), ep7 = to === "EP007";
-    /* Each session with the Computer it runs on, by the Computer's own label (computers.label); Watch says whose desktop it
-       shows and what else that Computer runs; a session that isn't its scope's first says what came before it
-       (GET /api/dramas/:id/session-history). The sample: Computer 1 runs EP003 (after Computer 2 stopped under its first
-       session) and EP006; Computer 2 ran EP005. */
-    const runRow = (code, what) => html`<div class="arow"><div class="what"><b>${code}</b><span>on Computer 1 · ${S.dramaStop === "stopped" ? "Stopped with the drama" : S.dramaStop ? (code === "EP003" ? "Stopping… waiting on 4 takes in flight" : "Stopping…") : what}</span>${code === "EP003" && html`<small>Session 2 on Computer 1, after Computer 2 stopped</small>`}</div>
-      ${!S.dramaStop && html`<button class="btn sm ghost" aria-label="Watch Computer 1's desktop (also running EP006)" title="Watch Computer 1's desktop (also running EP006)" onClick=${() => toast("Watch opens Computer 1's desktop, view-only.")}>Watch</button>
-      <button class="btn sm ghost" onClick=${() => set({ dialog: { title: "Stop " + code + "?", body: code === "EP003" ? "4 takes are in flight. They are waited on and recorded, never sent again. The episode stops after them." : "No take is in flight. The episode stops now and can be resumed.", ok: "Stop " + code, danger: true, cancel: "Keep running", run: () => toast(code + " stopped.") } })}>Stop</button>`}</div>`;
+    /* The sidebar is the conversation with one session and nothing else (master, from merecdesperez44323-lab: "这里面为什么
+       乱七八糟的啥都有？"): Decisions are Reviews', recent work the canvas's and Assets', the next review the top bar's. The
+       sample's sessions, each on its Computer (computers.label): Computer 1 runs EP003 (its second session, after
+       Computer 2 stopped under its first) and EP006; Computer 2 runs EP007 and ran EP005. */
+    const ON = { EP003: "Computer 1", EP006: "Computer 1", EP007: "Computer 2" };
+    const OPEN = ["EP003", "EP006", "EP007"];
+    const watchName = (code) => { const others = OPEN.filter((c) => c !== code && ON[c] === ON[code]); return "Watch " + ON[code] + "'s desktop" + (others.length ? " (also running " + others.join(", ") + ")" : ""); };
+    const stopIt = (code) => set({ dialog: { title: "Stop " + code + "?", body: code === "EP003" ? "4 takes are in flight. They are waited on and recorded, never sent again. The episode stops after them." : "No take is in flight. The episode stops now and can be resumed.", ok: "Stop " + code, danger: true, cancel: "Keep running", run: () => toast(code + " stopped.") } });
+    const pageScope = followed();
+    // What the maker said or decided before the sample's moment, oldest first: the conversation starts with it.
+    const EARLIER = { EP006: ["You sent back EP006 seg01 t01: “He should hold the blanket folded before he speaks.”", "You sent back EP006 seg03 t01: “Too wide at the start; we lose Luca's face.”"] };
     const busy = !S.dramaStop;
     if (S.agent !== "open") return html`<button class=${"ball" + (busy ? " busy" : "")} aria-expanded="false" title="Open the agent sidebar (⌥⌘B)"
       aria-label=${"Agent" + (to ? ", " + (S.pin ? "pinned to " : "following ") + to : "") + (dec.length ? ", " + dec.length + " decisions wait" : "")} onClick=${() => setAgent("open")}>${I("robot")}${dec.length ? html`<span class="badge">${dec.length}</span>` : null}</button>`;
@@ -275,32 +279,41 @@
       <div class="ascope" role="status">${(() => {
         const st = stateOf(to), lead = S.pin ? html`${I("map-pin")}Pinned to` : "Following";
         const dot = st === "running" ? html`<span class="live" aria-hidden="true"></span>` : st === "waiting" ? html`<span class="adot you" aria-hidden="true"></span>` : null;
-        const words = st === "none" ? html`<span>${whyNone(to)}${to === "EP005" && html`<small class="muted" style="display:block">Its last session, 1, was on Computer 2 when it stopped.</small>`}</span>${to === "EP005" && html`<button class="btn sm" onClick=${() => toast("EP005 continues in a new session with its files.")}>Resume</button>`}`
-          : html`<span>${lead} <b>${whose(to)}</b>: ${st === "running" ? "working" : "it waits for you"}</span>`;
-        const back = S.pin ? html`<button class="btn sm ghost" onClick=${() => switchTo(null)}>${inEpisode() ? "Follow EP006" : "Follow the setup session"}</button>`
-          : html`<button class="btn sm ghost" onClick=${() => switchTo("EP007")}>Pin to EP007</button>`;
-        return html`${dot}${words}<span class="grow"></span>${back}`;
+        // A waiting review shows once, here, as the link to it.
+        const words = st === "none" ? whyNone(to)
+          : to === "EP006" ? html`<button class="linkbtn" onClick=${() => go("review")}>EP006's session waits for your review: open it</button>`
+          : html`${lead} <b>${whose(to)}</b>: ${st === "running" ? "working" : "it waits for you"}`;
+        const under = st !== "none" ? ["on " + ON[to], to === "EP003" && "Session 2 on Computer 1, after Computer 2 stopped"].filter(Boolean).join(" · ")
+          : to === "EP005" ? "Its last session, 1, was on Computer 2 when it stopped." : "";
+        return html`${dot}<span class="grow">${words}${under && html`<small class="muted">${under}</small>`}</span>${to === "EP005" && html`<button class="btn sm" onClick=${() => toast("EP005 continues in a new session with its files.")}>Resume</button>`}`;
       })()}</div>
+      <div class="apick">
+        <select class="select" aria-label="Session" value=${to} onChange=${(e) => switchTo(e.target.value === pageScope ? null : e.target.value)}>
+          <option value=${pageScope}>${pageScope === "Setup" ? "Setup" : pageScope} (this page)</option>
+          ${OPEN.filter((c) => c !== pageScope).map((c) => html`<option value=${c}>${c} · on ${ON[c]} · ${stateOf(c) === "running" ? "at work" : "waits for you"}</option>`)}
+          ${/* An episode whose Computer stopped has no session but a Resume: the picker reaches it too. */ ""}
+          ${pageScope !== "EP005" && html`<option value="EP005">EP005 · Computer stopped</option>`}
+        </select><span class="grow"></span>
+        ${stateOf(to) !== "none" && !S.dramaStop && html`<button class="btn sm ghost" aria-label=${watchName(to)} title=${watchName(to)} onClick=${() => toast(watchName(to) + ", view-only.")}>Watch</button>
+          <button class="btn sm ghost" aria-label=${"Stop " + to} onClick=${() => stopIt(to)}>Stop</button>`}
+      </div>
       <div class="ascroll">
-        <section class="asec"><h3>Sessions <span class="c">3</span></h3>${runRow("EP003", "Running · shooting 4 takes · 2 back")}
-          <div class="arow"><div class="what"><b>EP006</b><span>on Computer 1 · 2 takes wait for you</span></div><button class="btn sm ghost" onClick=${() => go("review")}>Review</button></div>
-          ${(() => {
+        ${(EARLIER[to] || []).length > 0 && html`<section class="asec">${EARLIER[to].map((m) => html`<p class="msg you">${m}</p>`)}</section>`}
+        ${to === "EP005" && (() => {
             // C3: Reconcile asks the provider what became of the request and ends in one of three outcomes, each saying what
-            // happens next (the prototype's Outcome control picks which); it never resubmits on its own.
+            // happens next (the prototype's Outcome control picks which); it never resubmits on its own. A run control (D70).
             const r = S.recon;
             const reconcile = () => { set({ recon: "checking" }); setTimeout(() => set({ recon: S.outcome === "refused" ? "failed" : S.outcome === "unknown" ? "unknown" : "found" }), 1200); };
-            if (r === "found") return html`<div class="arow"><div class="what"><b>EP005</b><span>Running · collecting seg03's take</span><small>Found: the provider finished seg03's video. The agent collects it and carries on; nothing is generated again.</small></div></div>`;
-            return html`<div class="arow failed"><div class="what"><b>EP005</b>
+            if (r === "found") return html`<section class="asec"><p class="msg">Found: the provider finished seg03's video. The agent collects it and carries on; nothing is generated again.</p></section>`;
+            return html`<section class="asec"><div class="arow failed"><div class="what">
               ${r === "checking" ? html`<span>Checking seg03's request with the provider…</span><small>Nothing is sent again while it checks.</small>`
-              : r === "failed" ? html`<span>seg03's request failed at the provider</span><small>Shooting it again is one new request, and it spends: ask EP005's agent in the conversation.</small>`
+              : r === "failed" ? html`<span>seg03's request failed at the provider</span><small>Shooting it again is one new request, and it spends: ask EP005's agent once it is resumed.</small>`
               : r === "unknown" ? html`<span>Still unknown: the provider hasn't said</span><small>Nothing is sent again. Check again later; the agent keeps waiting on it.</small>`
-              : html`<span>Failed while shooting seg03 · <code>ProviderError.Unknown</code></span><small>drama-cli: the video request's outcome is unknown. It isn't sent again until it is reconciled.</small><small class="subtle">A failed session doesn't mean its jobs failed.</small>`}</div>
+              : html`<span>Failed while shooting seg03 · <code>ProviderError.Unknown</code></span><small>drama-cli: the video request's outcome is unknown. It isn't sent again until it is reconciled.</small>`}</div>
               ${r === "checking" ? html`<span class="muted" style="font-size:12px">Checking…</span>`
-              : r === "failed" ? html`<span class="muted" style="font-size:12px">Ask the agent below to shoot it again.</span>`
-              : html`<button class="btn sm" title="drama-cli's recovery for an unknown outcome" onClick=${reconcile}>${r === "unknown" ? "Check again" : "Reconcile"}</button>`}</div>`;
-          })()}</section>
-        <section class="asec"><h3>Decisions <span class="c">${dec.length}</span></h3>
-          ${dec.map((d) => html`<button class="dec" onClick=${d.open}><img src=${d.thumb} alt=""/><span><b>${d.what}</b><small>${d.d}</small></span><span class="age">${d.age}</span></button>`)}</section>
+              : r === "failed" ? null
+              : html`<button class="btn sm" title="drama-cli's recovery for an unknown outcome" onClick=${reconcile}>${r === "unknown" ? "Check again" : "Reconcile"}</button>`}</div></section>`;
+          })()}
         ${ep7 ? html`<section class="asec"><div class="process"><button aria-expanded=${String(S.procOpen !== false)} onClick=${() => set({ procOpen: S.procOpen === false })}>${I("list-checks")}EP007 · Process<span class="cnt">3 steps</span>${I(S.procOpen === false ? "caret-right" : "caret-down")}</button>
           ${S.procOpen !== false && html`<ol class="steps">
             <li>${I("check-circle")}<span>Status <code>drama-cli status</code></span><time>0:02</time></li>
@@ -318,12 +331,8 @@
         <section class="asec"><p class="msg">I shot seg01 again with the blanket folded before Luca speaks, and seg03 again opening on his face, as you asked. Both new takes wait for you.</p></section>`
         : null}
         ${to && (S.chats?.[to] || []).length > 0 && html`<section class="asec" aria-label="Conversation">${S.chats[to].map((m) => html`<p class="msg you">${m}</p>`)}</section>`}
-        <section class="asec"><h3>Recent work</h3>
-          <div class="arow"><div class="what"><b>EP006 seg03 take t02</b><span>waits for you</span></div></div>
-          <div class="arow"><div class="what"><b>Margaret Cole base look v3</b><span>waits for you</span></div></div></section>
-        <section class="asec"><h3>Next</h3><div class="nextchips"><button onClick=${() => go("review")}>Review EP006 takes</button><button onClick=${() => go("canvas")}>Review looks and plates</button></div></section>
       </div>
-      ${stateOf(to) !== "none" && (() => {
+      ${stateOf(to) !== "none" && to !== "EP006" && (() => {
         // The line to the scope's open session, naming it.
         const target = whose(to);
         const send = () => { set({ chats: { ...S.chats, [to]: [...((S.chats || {})[to] || []), S.draft.trim()] }, draft: "" }); toast("Sent to " + target + "."); };

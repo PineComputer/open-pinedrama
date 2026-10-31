@@ -94,36 +94,6 @@ export function stageOfFile(path: string): FileStage | undefined {
   return undefined;
 }
 
-function stageAt(state: State, at: string[]): StageStatus | undefined {
-  let node: unknown = state;
-  for (const key of at) node = node && typeof node === "object" ? (node as Record<string, unknown>)[key] : undefined;
-  return node as StageStatus | undefined;
-}
-
-export interface WorkItem extends FileStage {
-  /** accepted: the version the report accepted; review: the working version, not accepted; replaced: an earlier one. */
-  state: "accepted" | "review" | "replaced";
-  createdAt: string;
-}
-
-/** The versions the stops returned, newest first, each once, with where it stands by the report. */
-export function recentWork(state: State, files: { path: string; createdAt: string }[], limit = 12): WorkItem[] {
-  const seen = new Set<string>();
-  const items: WorkItem[] = [];
-  for (const file of [...files].sort((a, b) => b.createdAt.localeCompare(a.createdAt))) {
-    const found = stageOfFile(file.path);
-    if (!found) continue;
-    const key = `${found.at.join("/")}@${found.version}`;
-    if (seen.has(key)) continue;
-    seen.add(key);
-    const stage = stageAt(state, found.at);
-    const standing = stage?.accepted === found.version ? "accepted" : stage?.current === found.version ? "review" : "replaced";
-    items.push({ ...found, state: standing, createdAt: file.createdAt });
-    if (items.length === limit) break;
-  }
-  return items;
-}
-
 /** A drama's scale, as drama-cli's status lists it: episodes, their scenes (scene chains) and their segments. */
 export function scaleOf(state: State): { episodes: number; scenes: number; segments: number } {
   const episodes = Object.values(state.episodes);

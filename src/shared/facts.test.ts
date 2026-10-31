@@ -3,7 +3,7 @@
 // stands. Facts only; the screens word them in the maker's language.
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { recentWork, scaleOf, stageOfFile, toDo } from "./facts.ts";
+import { scaleOf, stageOfFile, toDo } from "./facts.ts";
 import { parseStatus } from "./project.ts";
 
 function state(name: string, change?: (report: Record<string, any>) => void) {
@@ -62,50 +62,6 @@ describe("a returned file's stage", () => {
 
   it("is none for a file no stage keeps", () => {
     expect(stageOfFile("handoff/status.json")).toBeUndefined();
-  });
-});
-
-describe("recent work", () => {
-  const files = [
-    { path: "drama/episodes/EP001/multi_panel_storyboard/seg01/line-art/v1/image-1.png", createdAt: "2026-10-30T10:03:00Z" },
-    { path: "drama/assets/characters/lin/v1/image-1.png", createdAt: "2026-10-30T10:01:00Z" },
-    { path: "drama/assets/characters/lin/v2/image-1.png", createdAt: "2026-10-30T10:02:00Z" },
-    { path: "handoff/status.json", createdAt: "2026-10-30T10:04:00Z" },
-  ];
-
-  it("is the newest versions first, each with where it stands", () => {
-    const work = recentWork(
-      state("boards", (report) => {
-        report.characters.lin = { ...report.characters.lin, current: "v2", candidate: "v2", accepted: "v1", usable: false, why: "not accepted" };
-        report.episodes.EP001.multi_panel_storyboard.seg01["line-art"] = { ...report.episodes.EP001.multi_panel_storyboard.seg01["line-art"], current: "v1", candidate: "v1", accepted: null, usable: false };
-      }),
-      files,
-    );
-    expect(work.map((item) => [item.kind, item.subject, item.version, item.state])).toEqual([
-      ["storyboard", "EP001 seg01 line-art", "v1", "review"],
-      ["look", "lin", "v2", "review"],
-      // v1 stays the accepted version while v2 waits for review.
-      ["look", "lin", "v1", "accepted"],
-    ]);
-  });
-
-  it("says replaced for a version neither working nor accepted", () => {
-    const work = recentWork(
-      state("boards", (report) => {
-        report.characters.lin = { ...report.characters.lin, current: "v3", candidate: null, accepted: "v3", usable: true };
-      }),
-      [files[1]],
-    );
-    expect(work[0].state).toBe("replaced");
-  });
-
-  it("says accepted for the version the report accepted", () => {
-    expect(recentWork(state("boards"), [files[0]])[0].state).toBe("accepted");
-  });
-
-  it("keeps a version once, however many of its files came back", () => {
-    const both = [files[0], { path: "drama/episodes/EP001/multi_panel_storyboard/seg01/line-art/v1/crop.png", createdAt: "2026-10-30T10:03:30Z" }];
-    expect(recentWork(state("boards"), both)).toHaveLength(1);
   });
 });
 

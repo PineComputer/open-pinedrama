@@ -46,7 +46,7 @@ test("a maker starts the sample drama, answers the agent and reviews the leads",
   // Then the leads' looks, approved together, opened from the review queue: the bar's
   // count still includes the answered question until the agent's next turn begins.
   await page.getByRole("navigation", { name: "Places" }).getByRole("link", { name: /^Reviews/ }).click();
-  // The queue, in the work; the agent panel beside it lists the same decision.
+  // The queue, in the work (the Reviews page is the decisions' one home).
   const looks = page.getByRole("main").getByRole("link", { name: /^Leads' looks/ });
   await expect(looks).toBeVisible({ timeout: 30_000 });
   expect(await newProblems(page)).toEqual([]);

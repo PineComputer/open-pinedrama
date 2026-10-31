@@ -3,18 +3,17 @@
 // view and what it last said; recent work; the next steps; and a line to that session. Its one form
 // (D32 as amended): a right sidebar, open or collapsed to the ball. Phase 1 steers only: nothing here edits the work.
 import { useEffect, useRef, useState } from "react";
-import { recentWork, type WorkItem } from "../../shared/facts.ts";
-import { nameOf, type Names } from "../../shared/names.ts";
+import type { Names } from "../../shared/names.ts";
 import { type ProjectView, takesInFlight } from "../../shared/project.ts";
-import type { ChatView, ComputerView, DecisionRecord, DramaView, FileItem, ReviewSummary, SessionRecord, SessionView, SubmissionView } from "../../shared/types.ts";
-import { ago, api, ApiError, useAction, useResource } from "../api.ts";
+import type { ChatView, ComputerView, DecisionRecord, DramaView, FileItem, SessionRecord, SessionView, SubmissionView } from "../../shared/types.ts";
+import { api, ApiError, useAction, useResource } from "../api.ts";
 import { Submission, useSubmission } from "../components/Submission.tsx";
 import { Dialog } from "../components/Dialog.tsx";
 import { Icon } from "../icons.tsx";
-import { type TKey, useT } from "../i18n.ts";
+import { useT } from "../i18n.ts";
 import { errorText, openSession, itemName } from "../labels.ts";
 import { Markdown } from "../Markdown.tsx";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import { Watch } from "../screens/Crew.tsx";
 
 export type AgentMode = "open" | "closed";
@@ -60,20 +59,6 @@ export function useAgentMode(active: boolean): [AgentMode, (mode: AgentMode) => 
   return [mode, choose];
 }
 
-function workText(item: WorkItem, names: Names | null): string {
-  if (item.kind === "look") return nameOf(names, "character", item.subject);
-  if (item.kind === "location") return nameOf(names, "location", item.subject);
-  if (item.kind === "prop") return nameOf(names, "prop", item.subject);
-  return item.subject;
-}
-
-/** A decision's second line, as the design's reads: "2 takes · seg01, seg03", "1 item · The Wedding"; a question's own words. */
-function decisionLine(item: ReviewSummary, t: (key: TKey, values?: Record<string, string | number>) => string): string {
-  if (item.kind === "question") return item.question;
-  const count = t(item.kind === "takes" ? (item.items === 1 ? "agent.takeOne" : "agent.takes") : item.items === 1 ? "agent.itemOne" : "agent.items", { n: item.items });
-  return [count, item.subjects.slice(0, 3).join(", ")].filter(Boolean).join(" · ");
-}
-
 /**
  * A session among its scope's (GET /api/dramas/:id/session-history, oldest first): which one it is and what came before it,
  * so the Computer and the task stay told together (master): "session 2 on PC-1, after PC-1 stopped". Nothing for a first.
@@ -87,23 +72,18 @@ function sessionTold(records: SessionRecord[], sessionId: string, t: ReturnType<
   return t("agent.sessionAfter", { n: at + 1, computer: records[at].computer, before: before.state === "lost" ? t("agent.afterStopped", { computer: before.computer }) : t("agent.afterEnded", { n: at }) });
 }
 
-function Running({ drama, session, computer, told, inView, inFlight, onPick }: { drama: DramaView; session: SessionView; computer: ComputerView; told?: string; inView: boolean; inFlight: number; onPick: () => void }) {
+/** Watch and Stop for the session the panel speaks to: Watch says whose desktop it shows and what else it runs. */
+function SessionActions({ drama, session, computer, inFlight }: { drama: DramaView; session: SessionView; computer: ComputerView; inFlight: number }) {
   const { t } = useT();
   const [watching, setWatching] = useState(false);
   const [asking, setAsking] = useState(false);
   const [error, setError] = useState<unknown>();
   const row = drama.episodeRows.find((episode) => episode.code === session.episode);
   const label = session.episode ?? t("crew.setup");
-  // Watch shows the Computer's desktop: it says whose, and what else that Computer runs.
   const others = computer.sessions.filter((other) => other.id !== session.id && other.state === "open").map((other) => other.episode ?? t("crew.setup"));
   const watchName = others.length ? t("agent.watchShared", { computer: computer.label, others: others.join(", ") }) : t("agent.watchComputer", { computer: computer.label });
   return (
-    <div className="arow" aria-current={inView ? "true" : undefined}>
-      <button type="button" className="what" title={t("agent.pinTo", { who: label })} style={{ border: 0, background: "none", padding: 0, textAlign: "left", cursor: "pointer", color: "inherit" }} onClick={onPick}>
-        <b>{label}</b>
-        <span>{[t("agent.onComputer", { computer: computer.label }), session.waiting ? t("crew.waiting") : (session.activity ?? t("board.atWork"))].join(" · ")}</span>
-        {told && <small>{told}</small>}
-      </button>
+    <>
       <button type="button" className="btn sm ghost" aria-label={watchName} title={watchName} onClick={() => setWatching(true)}>
         {t("agent.watchShort")}
       </button>
@@ -127,7 +107,7 @@ function Running({ drama, session, computer, told, inView, inFlight, onPick }: {
       )}
       {error !== undefined && <span className="error small">{errorText(error, t)}</span>}
       {watching && <Watch session={session} onClose={() => setWatching(false)} />}
-    </div>
+    </>
   );
 }
 
@@ -136,11 +116,9 @@ function Running({ drama, session, computer, told, inView, inFlight, onPick }: {
  * Bible, the shared assets, and the pages of no one episode). A pin changes the scope to another episode or the setup.
  */
 export function AgentPanel({ drama, episode, onCollapse }: { drama: DramaView; episode?: string; onCollapse: () => void }) {
-  const { t, lang } = useT();
-  const navigate = useNavigate();
+  const { t } = useT();
   const id = drama.id;
   const project = useResource<ProjectView>(`/api/dramas/${id}/project`, [`project:${id}`]);
-  const queue = useResource<ReviewSummary[]>(`/api/reviews?drama=${id}`, ["reviews"]);
   const files = useResource<FileItem[]>(`/api/dramas/${id}/files`, [`drama:${id}`]);
   const sessions = useResource<ChatView[]>(`/api/dramas/${id}/sessions`, [`drama:${id}`]);
   const history = useResource<SessionRecord[]>(`/api/dramas/${id}/session-history`, [`drama:${id}`]);
@@ -154,9 +132,11 @@ export function AgentPanel({ drama, episode, onCollapse }: { drama: DramaView; e
   const [processOpen, setProcessOpen] = useState(true);
   // An episode is a scope only if the project has it: a page that names one it hasn't (Not found) follows the setup.
   const row = (code?: string) => (code ? drama.episodeRows.find((episodeRow) => episodeRow.code === code) : undefined);
-  const scope = pinned ?? (row(episode) ? episode! : "setup");
+  const pageScope = row(episode) ? episode! : "setup";
+  const scope = pinned ?? pageScope;
   // The scope's open session, if any: what the status line and the line's target say.
   const live = openSession(drama, scope);
+  const liveComputer = live ? drama.crew.find((computer) => computer.sessions.some((session) => session.id === live.id)) : undefined;
   const status: "running" | "waiting" | "none" = !live ? "none" : live.waiting ? "waiting" : "running";
   // A message reaches only the scope's open session (POST /api/dramas/:id/messages; this version opens none for it). With
   // none open, the status line says why in the engine's words and no line is offered that can only be refused: an
@@ -192,12 +172,15 @@ export function AgentPanel({ drama, episode, onCollapse }: { drama: DramaView; e
   const links = new Map((files.data ?? []).map((file) => [file.path, file.url]));
   const names = project.data?.names ?? null;
   const state = project.data?.state ?? null;
-  const decisions = (queue.data ?? []).filter((item) => item.state === "open");
-  const recent = state ? recentWork(state, files.data ?? [], 6) : [];
   const steps = (chat.data?.messages ?? []).filter((message) => message.kind === "activity").slice(-7);
   // The conversation, the one log (D70): what the maker said or decided and what the agent said, the newest last;
   // the studio's own goals and the agent's steps are not part of it.
   const conversation = (chat.data?.messages ?? []).filter((message) => (message.kind === "input" && !message.brief) || message.kind === "answer" || message.kind === "progress" || message.kind === "question" || message.kind === "result").slice(-8);
+  // The newest at the bottom, in view, as chat apps keep it.
+  const scroller = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (scroller.current) scroller.current.scrollTop = scroller.current.scrollHeight;
+  }, [conversation.length, inView?.sessionId]);
   return (
     <aside className="agent" id="agent" aria-label={t("agent.label")}>
       <div className="ahead">
@@ -208,77 +191,66 @@ export function AgentPanel({ drama, episode, onCollapse }: { drama: DramaView; e
         </button>
       </div>
       {/* One status line, one dot, as the maker's states read (D31 as amended): working while the scope's session runs,
-          needs you while it waits, no dot when none is open, and then why. */}
+          needs you while it waits (its review, once, as the link to it), no dot when none is open, and then why. Under it
+          the session's Computer and place in its history, the picker, and Watch and Stop for that session. */}
       <div className="ascope" role="status">
         {status === "running" ? <span className="live" aria-hidden="true" /> : status === "waiting" ? <span className="adot you" aria-hidden="true" /> : null}
         {pinned && <Icon name="map-pin" className="ic" />}
-        <span>
-          {closed
-            ? closed
-            : t(pinned ? (status === "running" ? "agent.pinnedRunning" : "agent.pinnedWaiting") : status === "running" ? "agent.followRunning" : "agent.followWaiting", { who: name(scope) })}
+        <span className="grow">
+          {closed ? (
+            closed
+          ) : live && chat.data?.sends === "review" && chat.data.reviewId ? (
+            chat.data.rewrite ? (
+              <Link to="/d/$dramaId/script" params={{ dramaId: id }} search={{ item: "screenplay", version: chat.data.rewrite }}>
+                {t("agent.decideOnScript", { v: chat.data.rewrite })}
+              </Link>
+            ) : (
+              <Link to="/r/$reviewId" params={{ reviewId: chat.data.reviewId }}>
+                {t("agent.waitsOnReview", { who: name(scope) })}
+              </Link>
+            )
+          ) : (
+            t(pinned ? (status === "running" ? "agent.pinnedRunning" : "agent.pinnedWaiting") : status === "running" ? "agent.followRunning" : "agent.followWaiting", { who: name(scope) })
+          )}
+          <small className="muted">
+            {live && liveComputer
+              ? [t("agent.onComputer", { computer: liveComputer.label }), sessionTold(recordsOf(scope), live.id, t)].filter(Boolean).join(" · ")
+              : lastRecord
+                ? t(lastRecord.state === "lost" ? "agent.lastLost" : "agent.lastClosed", { n: recordsOf(scope).length, computer: lastRecord.computer })
+                : null}
+          </small>
         </span>
-        <span className="grow" />
         {resumable && (
           <button type="button" className="btn sm" disabled={resume.busy} onClick={() => void resume.run()}>
             {t("agent.resume")}
           </button>
         )}
-        {pinned && (
-          <button type="button" className="btn sm ghost" onClick={() => setPinned(undefined)}>
-            {t("agent.followScope", { who: name(row(episode) ? episode! : "setup") })}
-          </button>
-        )}
+      </div>
+      <div className="apick">
+        {/* The picker: the page's scope first, then every other open session, each with its Computer (D31's Pin). */}
+        <select className="select" aria-label={t("agent.sessionPicker")} value={scope} onChange={(event) => setPinned(event.target.value === pageScope ? undefined : event.target.value)}>
+          <option value={pageScope}>{t("agent.pickPage", { who: pageScope === "setup" ? t("talk.setup") : pageScope })}</option>
+          {open
+            .filter(({ session }) => (session.episode ?? "setup") !== pageScope)
+            .map(({ session, computer }) => (
+              <option key={session.id} value={session.episode ?? "setup"}>
+                {[session.episode ?? t("talk.setup"), t("agent.onComputer", { computer: computer.label }), session.waiting ? t("crew.waiting") : t("crew.atWork")].join(" · ")}
+              </option>
+            ))}
+          {/* An episode whose Computer stopped has no session but a Resume: the picker reaches it too. */}
+          {drama.episodeRows
+            .filter((episodeRow) => (episodeRow.state === "stopped" || episodeRow.state === "failed") && episodeRow.code !== pageScope)
+            .map((episodeRow) => (
+              <option key={episodeRow.code} value={episodeRow.code}>
+                {[episodeRow.code, t("agent.computerStoppedShort")].join(" · ")}
+              </option>
+            ))}
+        </select>
+        <span className="grow" />
+        {live && liveComputer && <SessionActions drama={drama} session={live} computer={liveComputer} inFlight={live.episode && state?.episodes[live.episode] ? takesInFlight(state.episodes[live.episode]) : 0} />}
       </div>
       {resume.error !== undefined && <p className="error small" style={{ margin: "6px 16px 0" }}>{errorText(resume.error, t)}</p>}
-      {/* With none open, how the scope's last session ended and on which Computer. */}
-      {!live && lastRecord && (
-        <p className="muted small" style={{ margin: "6px 16px 0" }}>
-          {t(lastRecord.state === "lost" ? "agent.lastLost" : "agent.lastClosed", { n: recordsOf(scope).length, computer: lastRecord.computer })}
-        </p>
-      )}
-      <div className="ascroll">
-        <section className="asec" aria-label={t("agent.sessions")}>
-          <h3>
-            {t("agent.sessions")} <span className="c">{open.length}</span>
-          </h3>
-          {open.length ? (
-            <div style={{ display: "grid", gap: 6 }}>
-              {open.map(({ session, computer }) => (
-                <Running
-                  key={session.id}
-                  drama={drama}
-                  session={session}
-                  computer={computer}
-                  told={sessionTold(recordsOf(session.episode ?? "setup"), session.id, t)}
-                  inView={session.id === inView?.sessionId}
-                  inFlight={session.episode && state?.episodes[session.episode] ? takesInFlight(state.episodes[session.episode]) : 0}
-                  onPick={() => setPinned(session.episode ?? "setup")}
-                />
-              ))}
-            </div>
-          ) : (
-            <p className="muted" style={{ fontSize: 12 }}>{t("talk.none")}</p>
-          )}
-        </section>
-        <section className="asec" aria-label={t("agent.decisions")}>
-          <h3>
-            {t("agent.decisions")} <span className="c">{decisions.length}</span>
-          </h3>
-          {decisions.length ? (
-            decisions.map((item) => (
-              <Link key={item.id} to="/r/$reviewId" params={{ reviewId: item.id }} className="dec">
-                {item.thumb?.video ? <video src={`${item.thumb.url}#t=0.5`} muted playsInline preload="metadata" style={{ width: 34, height: 46, borderRadius: 6, objectFit: "cover" }} /> : item.thumb ? <img src={item.thumb.url} alt="" /> : <span />}
-                <span>
-                  <b>{[item.episode, t(`kind.${item.kind}` as TKey)].filter(Boolean).join(" · ")}</b>
-                  <small>{decisionLine(item, t)}</small>
-                </span>
-                <span className="age">{ago(item.createdAt, lang)}</span>
-              </Link>
-            ))
-          ) : (
-            <p className="muted" style={{ fontSize: 12 }}>{t("agent.noDecisions")}</p>
-          )}
-        </section>
+      <div className="ascroll" ref={scroller}>
         {inView && steps.length > 0 && (
           <section className="asec">
             <div className="process">
@@ -319,37 +291,6 @@ export function AgentPanel({ drama, episode, onCollapse }: { drama: DramaView; e
                 <Markdown key={message.id} text={message.text} links={links} className="msg" />
               ),
             )}
-          </section>
-        )}
-        {recent.length > 0 && (
-          <section className="asec" aria-label={t("agent.recent")}>
-            <h3>{t("agent.recent")}</h3>
-            <div style={{ display: "grid", gap: 6 }}>
-              {recent.map((item) => (
-                <div key={`${item.at.join("/")}@${item.version}`} className="arow">
-                  <div className="what">
-                    <b>
-                      {t(`agent.kind.${item.kind}` as TKey)} · {workText(item, names)} {item.version}
-                    </b>
-                    <span>
-                      {t(`agent.work.${item.state}` as TKey)} · {ago(item.createdAt, lang)}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </section>
-        )}
-        {decisions.length > 0 && (
-          <section className="asec">
-            <h3>{t("agent.next")}</h3>
-            <div className="nextchips">
-              {decisions.slice(0, 3).map((item) => (
-                <button key={item.id} type="button" onClick={() => void navigate({ to: "/r/$reviewId", params: { reviewId: item.id } })}>
-                  {t("agent.reviewNext", { what: [item.episode, t(`kind.${item.kind}` as TKey)].filter(Boolean).join(" ") })}
-                </button>
-              ))}
-            </div>
           </section>
         )}
       </div>
@@ -410,22 +351,8 @@ function Line({ dramaId, scope, target, chat, onSent }: { dramaId: string; scope
     submission.current = crypto.randomUUID();
     onSent();
   }, [sending.state]);
-  if (chat?.sends === "review" && chat.reviewId)
-    return (
-      <div className="composer">
-        <div className="crow">
-          {chat.rewrite ? (
-            <Link to="/d/$dramaId/script" params={{ dramaId }} search={{ item: "screenplay", version: chat.rewrite }} className="grow">
-              {t("agent.decideOnScript", { v: chat.rewrite })}
-            </Link>
-          ) : (
-            <Link to="/r/$reviewId" params={{ reviewId: chat.reviewId }} className="grow">
-              {t("talk.openReview")}
-            </Link>
-          )}
-        </div>
-      </div>
-    );
+  // Waiting on a review the session takes no message; the status line links to it (once).
+  if (chat?.sends === "review") return null;
   const busy = sending.state === "sending" || sending.state === "checking";
   const placeholder = chat?.sends === "answer" ? t("talk.answer") : chat?.sends === "steer" ? t("talk.steer") : t("talk.run");
   return (
