@@ -254,6 +254,18 @@ input.search:focus { border-color: var(--text-primary); }
 .astep .ic { width: 14px; height: 14px; flex: none; color: var(--text-subtle); }
 .astep.now { color: var(--text-secondary); } .astep.now .ic { color: var(--text-primary); animation: spin 1.2s linear infinite; } .msg.you small { display: block; margin-top: 4px; font-size: 11.5px; }
 .asec .msg + .msg { margin-top: var(--space-sm); }
+/* What drama-cli said, in the conversation (D70): its own message, set apart from the agent's bubbles by a border on the
+   panel's ground rather than a fill; who said it and its code as chips, its whole words in NodePanel's mono Why. */
+.msg.said { background: var(--surface); border: 1px solid var(--border-subtle); }
+.msg.said .saidhead { display: flex; align-items: center; gap: var(--space-sm); margin: 0 0 6px; font-size: 11.5px; }
+.msg.said .saidhead code { min-width: 0; font: 11.5px var(--font-mono); color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.msg.said .saidhead .st { flex: none; }
+.msg.said .st .ic { width: 12px; height: 12px; }
+.msg.said > p + p { margin: 0; }
+.msg.said .why { display: block; margin-top: 6px; font: 11.5px/1.5 var(--font-mono); color: var(--text-secondary); word-break: break-word; }
+.msg.said:focus-visible { outline: 2px solid var(--text-primary); outline-offset: 2px; }
+.composer .chip { height: 28px; margin: 0 0 6px; padding: 0 4px 0 10px; max-width: 100%; }
+.composer .chip .mono { overflow: hidden; text-overflow: ellipsis; }
 .nextchips { display: flex; flex-wrap: wrap; gap: 6px; }
 .nextchips button { height: 28px; padding: 0 12px; border-radius: var(--radius-pill); border: 1px solid var(--border-input); background: var(--surface); color: var(--text-secondary); font-size: 12px; cursor: pointer; }
 .nextchips button:hover { background: var(--hover); color: var(--text-primary); }
@@ -471,18 +483,6 @@ input.search:focus { border-color: var(--text-primary); }
 .newthumb { width: 30px; height: 40px; border-radius: var(--radius-small); background: var(--surface-container-high); display: grid; place-items: center; color: var(--text-muted); }
 
 /* ── setup steps ── */
-
-/* ── stop cards ── */
-.stopcard { margin: 0 16px 16px; border-radius: var(--radius-2xl); border: 1px solid var(--border); background: var(--surface); overflow: hidden; }
-/* White letters on the error's red, darkened to 75% so they hold 4.5:1 in every theme (the dark ones' reds are light). */
-.stopcard > header { display: flex; align-items: center; gap: 8px; padding: 9px 16px; font-size: 12px; font-weight: 700; color: #fff; background: color-mix(in srgb, var(--error) 75%, #000); }
-.stopcard.budget > header, .stopcard.cap > header, .stopcard.env > header { background: var(--surface-container-high); color: var(--text-primary); }
-.stopcard > header .ic { width: 15px; height: 15px; }
-.stopcard .sbody { padding: 14px 16px 16px; display: grid; gap: 12px; }
-.stopcard h2 { margin: 0; font-size: 15px; line-height: inherit; font-weight: 700; }
-.stopcard .kv { grid-template-columns: 110px 1fr; }
-.stopcard .said { font-size: 11.5px; line-height: 1.6; padding: 8px 10px; border-radius: var(--radius-medium); background: var(--surface-container); color: var(--text-secondary); word-break: break-word; }
-.stopcard .acts { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 
 /* ── upload ── */
 .formgrid { display: grid; grid-template-columns: 1fr 320px; gap: 18px; align-items: start; }
@@ -718,8 +718,6 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
 .arow.failed { background: color-mix(in srgb, var(--error) 8%, var(--surface-container)); align-items: flex-start; }
 .arow.failed .what span, .arow.failed .what small { white-space: normal; } .arow.failed code { font: 11px var(--font-mono); color: var(--text-primary); }
 .arow .what small { color: var(--text-secondary); font-size: 11.5px; line-height: 1.45; }
-.notice-red { margin: 0 16px 12px; padding: 8px 12px; border-radius: var(--radius-large); border: 1px solid color-mix(in srgb, var(--error) 45%, transparent); background: color-mix(in srgb, var(--error) 8%, var(--surface)); display: flex; align-items: center; gap: 10px; font-size: 12.5px; color: var(--text-secondary); }
-.notice-red .ic { width: 16px; height: 16px; color: var(--error); } .notice-red b { color: var(--text-primary); }
 .panel.queue { display: grid; gap: 2px; padding: 8px; }
 .npanel .nstate { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; padding: 0 14px 8px; font-size: 11.5px; color: var(--text-muted); }
 .npanel .nstate .why { display: inline-flex; align-items: center; gap: 4px; color: var(--warning-text); } .npanel .nstate .ic { width: 13px; height: 13px; }
@@ -780,6 +778,13 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
 .delivep img, .delivep .noimg { width: 27px; height: 48px; border-radius: var(--radius-small); object-fit: cover; background: var(--surface-container); }
 .delivep b { display: block; color: var(--text-primary); font-size: 12px; } .delivep small { color: var(--text-muted); }
 .linkbtn { border: 0; padding: 0; background: none; color: var(--text-primary); font: inherit; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+/* The page's one line for what waits in the agent's conversation (D70): under the page head, the 16 px edge, one line. */
+.saysline { min-width: 0; margin: 0 16px 12px; min-height: 36px; padding: 4px 4px 4px 12px; border-radius: var(--radius-large); border: 1px solid var(--border-subtle); display: flex; align-items: center; gap: 10px; font-size: 12.5px; color: var(--text-secondary); }
+.saysline > .fill { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.saysline b { color: var(--text-primary); } .saysline > .ic { width: 16px; height: 16px; color: var(--text-muted); }
+.saysline .linkbtn { margin-right: 8px; white-space: nowrap; } .saysline .btn { flex: none; }
+/* On Canvas the line is the head's last row, over the board, so the pick's fit clears it with the head (.ctop). */
+.ctop .saysline { flex: 1 0 100%; margin: 0; background: var(--surface); }
 /* Out of date (screens.js, OutOfDate): Delivery's table, a group's row with its owner's action, the reason wrapping. */
 .deliv tr.grp td { padding-top: 16px; color: var(--text-primary); }
 /* Out of date fits its column: its cells wrap, a reason's path breaks anywhere, so no row runs off to the right. */

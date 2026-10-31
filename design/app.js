@@ -210,12 +210,87 @@
       <button class="btn primary sm" onClick=${() => go("review")} aria-label=${"Next review in " + P.project.title + ", " + n + " waiting"}>Next review <span class="n">${n}</span></button>`}
     </header>`;
   }
-  function StopBanner() {
-    // IA draft: a red line stops EP007 only. Elsewhere it is a compact notice; the full StopCard sits on EP007.
-    if (S.state === "redline") return html`<div class="notice-red" role="status">${I("warning")}<span><b>EP007 stopped on a red line</b> in the screenplay. Other episodes carry on.</span><span class="fill"></span><button class="btn sm" onClick=${() => toast("Opens EP007, where its stop card waits for your decision.")}>Open EP007</button></div>`;
-    if (["budget", "cap", "env"].includes(S.state)) return html`<${window.EXTRA.StopCard} kind=${S.state}/>`;
-    // A pause is one state, the top bar's Paused with Resume: no banner for it.
+  /* What drama-cli says that the maker must read is a message in its session's conversation, drama-cli's and apart from
+     the agent's own words (merecdesperez44323-lab, verbatim: "这些 drama-cli说的话， 我们以后是不是统一 就是所有的
+     drama-cli说的话都比如放在右边 agent那里啥的？ 这样 user model比较统一啊我觉得"; D70: the UI decides, the chat acts). The page
+     keeps one quiet line under its head (SaysLine). Only what drama-cli recorded is drama-cli's: a refusal row, a ready
+     version's validate problems. A reason it recorded nowhere (rc5 T4: a screenplay not ready writes no validate.json and
+     no refusal row) comes in the agent's own question, as the agent's (ASKS). `open`: the question that carries it waits
+     for the maker's answer; once the session ended, it is history. The words are drama-cli's form with example values. */
+  const SANDBOX = "/var/lib/sandbox/sessions/amber-grove-f3d957/files/drama";
+  const SAID = {
+    redline: { id: "said-redline", to: "EP007", code: "RedLine", open: true,
+      said: "Bible bible/b0004 is not usable: red line: EP007 scene 4, a guard strikes Luca in the cell on screen. See bible/b0004/bible.md; report it to the person and pass their decision back with drama-cli bible --config drama-cli.cfg.yaml EP007-EP012 --feedback '<their decision>'",
+      ask: "drama-cli won't break EP007 down: its scene 4 shows a guard striking Luca in the cell, a red line in the screenplay. It's yours to decide: change the scene in the script, or stop EP007 here. Other episodes carry on." },
+    // A refusal drama-cli gives no code of its own (a bare Refused) is shown as it came, never matched on its words.
+    budget: { id: "said-budget", to: "EP003", code: "Refused", open: true,
+      said: "Budget exceeded: spent 996.40 + reserved 3.20 + this 1.20 > budget 1000.00",
+      ask: "drama-cli refused the next take: the drama's budget is spent. Work in flight is waited on and recorded, never sent again. Do you raise the budget, or stop here?" },
+    // drama-cli's action for a cap is ask_person (drama_cli/errors.py): the maker answers; the studio invents no one-time allowance.
+    cap: { id: "said-cap", to: "EP003", code: "SetLimitExceeded.max_new_versions", open: true,
+      said: "episodes/EP003/multi_panel_storyboard/seg06/line-art has had 3 new paid versions after its first, the limit defaults.max_new_versions (3); ask the person before making it again: they lift the limit for that item by raising defaults.max_new_versions in the config, then set it back; then run drama-cli storyboard --config drama-cli.cfg.yaml EP003 seg06",
+      ask: "seg06's storyboard has reached drama-cli's limit of new versions. Shall I raise the limit for it once, as drama-cli describes, or stop here?" },
+    // On Pine the provider keys are Pine's (doc/drama-cli/module.md): a refusal of access points to the Pine session's access,
+    // never to a key the maker sets. drama-cli's AccessDenied.ModuleRuntime is ask_person (drama_cli/pine_runtime_client.py).
+    env: { id: "said-env", to: "EP003", code: "AccessDenied.ModuleRuntime", open: true,
+      said: "Pine returned HTTP 403: session or generation access is denied; restore access and check the active turn before continuing",
+      ask: "Pine refused this session's access, so nothing new was generated. Requests already sent are checked, never sent again. Tell me once your Pine access is back." },
+    // rc3 T1: two refusals, with the sandbox's long paths, and the setup stopped after them.
+    setup1: { id: "said-setup1", to: "Setup", code: "InvalidParameter.inputs.screenplay", open: false,
+      said: `${SANDBOX}/the original.txt has no accepted screenplay version bible can read (${SANDBOX}/screenplay/v1 was checked against another original): accept ${SANDBOX}/screenplay/v2 with drama-cli accept ${SANDBOX}/screenplay v2 --reason <why> --person <their words> --config ${SANDBOX}/drama-cli.cfg.yaml` },
+    setup2: { id: "said-setup2", to: "Setup", code: "InvalidParameter.file", open: false,
+      said: `${SANDBOX}/rewrite.fountain:41: scene_time: the scene heading's time is '黄昏': write 日 or 夜, and put a finer time in the action after it; fix ${SANDBOX}/rewrite.fountain, never ${SANDBOX}/the original.txt, and validate it again: drama-cli screenplay validate ${SANDBOX}/rewrite.fountain --config ${SANDBOX}/drama-cli.cfg.yaml` },
+  };
+  const SAYS = { redline: [SAID.redline], budget: [SAID.budget], cap: [SAID.cap], env: [SAID.env], several: [SAID.redline, SAID.cap], ended: [SAID.setup1, SAID.setup2] };
+  /* The agent's own question where drama-cli recorded nothing: rc5 T4, a screenplay not ready (an unresolved 日/夜) writes
+     no validate.json, so the reason is the agent's words. And a question on an episode with a cut, whose decision, Finish,
+     stays on the page beside the line (master and work-04, D70). */
+  const ASKS = {
+    agentAsks: { id: "ask-setup", to: "Setup", ask: "Before I validate the screenplay: scenes 1-3 and 2-5 say 傍晚, and drama-cli reads only 日 or 夜 in a heading. Which is each, 日 or 夜? You can also attach a corrected screenplay." },
+    finishAsks: { id: "ask-finish", to: "EP006", finish: "EP006", ask: "EP006's cut v2 is accepted and nothing waits in it. Shall I finish EP006 with it, or is there more you want changed?" },
+  };
+  // What waits for the maker's answer, drama-cli's or the agent's own, and what ended; an answer sent ends its question.
+  const answered = (m) => (S.answered || {})[m.to];
+  const asking = () => [...(SAYS[S.state] || []).filter((m) => m.open), ...(ASKS[S.state] ? [ASKS[S.state]] : [])].filter((m) => !answered(m));
+  const ended = () => (SAYS[S.state] || []).filter((m) => !m.open);
+  const asks = (to) => asking().some((m) => m.to === to);
+  /* A line of drama-cli's as the maker first reads it: its words up to the first "; " or ". ", each path from the
+     project's folder. Cut, never reworded: the whole message, paths included, is a click away. Our own rule. */
+  const firstLine = (said) => said.split(SANDBOX + "/").join("").split(/; |\. /)[0];
+  /* Open in Agent: the sidebar, open (⌥⌘B's toggle), on the session the message is in, scrolled to it. */
+  const openInAgent = (m) => {
+    if (m.to !== talkTo()) switchTo(m.to === followed() ? null : m.to);
+    setAgent("open");
+    setTimeout(() => { const el = document.getElementById(m.id); if (el) { el.scrollIntoView({ block: "center" }); el.focus({ preventScroll: true }); } }, 80);
+  };
+  /* The page's one line, under its head, in the same place on every drama page: a question waits (several are counted,
+     the first opened), or the session ended on what drama-cli said. No card; Accept and Send back on an exact item stay
+     where they are, and Finish on an episode with a cut stays beside its line. */
+  function SaysLine() {
+    const open = asking(), done = ended();
+    if (open.length) {
+      const m = open[0];
+      return html`<div class="saysline" role="status">${Status("you", "Waiting for your answer")}
+        <span class="fill">${open.length > 1 ? html`${open.length} questions: <b>${open.map((q) => q.to).join(", ")}</b>`
+          : html`<b>${m.to}</b> · ${m.said ? html`<span class="muted">drama-cli:</span> ${firstLine(m.said)}` : html`<span class="muted">the agent asks you</span>`}`}</span>
+        ${m.finish && html`<button class="btn sm" onClick=${() => toast(m.finish + " is finished with cut v2.")}>Finish ${m.finish} with its latest cut</button>`}
+        <button class="linkbtn" onClick=${() => openInAgent(m)}>Open in Agent</button></div>`;
+    }
+    if (done.length) {
+      const m = done[done.length - 1];
+      return html`<div class="saysline" role="status">${I("stop")}<span class="fill">Stopped: <b>${m.to}</b> · ${firstLine(m.said)}${done.length > 1 ? html` <span class="muted">and ${done.length - 1} more</span>` : ""}</span>
+        <button class="linkbtn" onClick=${() => openInAgent(m)}>see Agent</button></div>`;
+    }
+    // A pause is one state, the top bar's Paused with Resume: no line for it.
     return null;
+  }
+  /* One thing drama-cli said, in the conversation: who said it and its code as chips, its first line, and its whole
+     words, paths included, collapsed (NodePanel's Why in mono). Open, it waits for the answer in the composer below. */
+  function Said({ m }) {
+    return html`<div class="msg said" id=${m.id} tabindex="-1" aria-label=${"drama-cli said, " + m.code}>
+      <p class="saidhead"><span class="st">${I("info")}drama-cli</span><code>${m.code}</code><span class="fill"></span>${m.open && !answered(m) ? Status("you", "Waiting for your answer") : html`<span class="muted">${m.open ? "Answered" : "Ended"}</span>`}</p>
+      <p>${firstLine(m.said)}</p>
+      <details class="basedet"><summary>What drama-cli said</summary><span class="why">${m.said}</span></details></div>`;
   }
   /* The episode's head over its Canvas, the episode's one page (D66: merecdesperez44323-lab dropped the
      Segments table, "还不如就直接canvas"): its code and title, its script, and its cut, an object with its own home. */
@@ -248,8 +323,8 @@
      the line goes and the status says why: the setup handed the project over; an episode is done; or its Computer
      stopped, and Resume, a run control (D70), continues it in a new session with its files. The sample's sessions:
      EP003 runs, EP006 and EP007 wait, EP005's Computer stopped, the setup has handed over, the rest are done. */
-  const stateOf = (to) => (S.dramaStop ? "none" : to === "EP003" ? "running" : to === "EP006" || to === "EP007" ? "waiting" : "none");
-  const whyNone = (to) => (to === "Setup" ? "The setup handed over the project. This version can't reopen it."
+  const stateOf = (to) => (S.dramaStop ? "none" : asks(to) ? "waiting" : to === "EP003" ? "running" : to === "EP006" || to === "EP007" ? "waiting" : "none");
+  const whyNone = (to) => (to === "Setup" ? (S.state === "ended" ? "The setup stopped after what drama-cli said below. This version can't reopen it." : "The setup handed over the project. This version can't reopen it.")
     : to === "EP005" ? "EP005's Computer stopped. Resume continues it in a new session with its files."
     : to + " is done. This version can't reopen a finished episode.");
   const switchTo = (pin) => { const from = talkTo(), next = pin || followed(); set({ pin, drafts: { ...S.drafts, [from || ""]: S.draft }, draft: (S.drafts || {})[next || ""] || "" }); };
@@ -268,7 +343,8 @@
        乱七八糟的啥都有？"): Decisions are Reviews', recent work the canvas's and Assets', the next review the top bar's. The
        sample's sessions, each on its Computer (computers.label): Computer 1 runs EP003 (its second session, after
        Computer 2 stopped under its first) and EP006; Computer 2 runs EP007 and ran EP005. */
-    const ON = { EP003: "Computer 1", EP006: "Computer 1", EP007: "Computer 2" };
+    // The setup's session runs on Computer 1 while it asks (the sample's agentAsks), as it did before the handover.
+    const ON = { Setup: "Computer 1", EP003: "Computer 1", EP006: "Computer 1", EP007: "Computer 2" };
     const OPEN = ["EP003", "EP006", "EP007"];
     const watchName = (code) => { const others = OPEN.filter((c) => c !== code && ON[c] === ON[code]); return "Watch " + ON[code] + "'s desktop" + (others.length ? " (also running " + others.join(", ") + ")" : ""); };
     const stopIt = (code) => set({ dialog: { title: "Stop " + code + "?", body: code === "EP003" ? "4 takes are in flight. They are waited on and recorded, never sent again. The episode stops after them." : "No take is in flight. The episode stops now and can be resumed.", ok: "Stop " + code, danger: true, cancel: "Keep running", run: () => toast(code + " stopped.") } });
@@ -277,7 +353,7 @@
     const EARLIER = { EP006: ["You sent back EP006 seg01 t01: “He should hold the blanket folded before he speaks.”", "You sent back EP006 seg03 t01: “Too wide at the start; we lose Luca's face.”"] };
     const busy = !S.dramaStop;
     if (agentMode() !== "open") return html`<button class=${"ball" + (busy ? " busy" : "")} aria-expanded="false" title="Open the agent sidebar (⌥⌘B)"
-      aria-label=${"Agent" + (to ? ", " + (S.pin ? "pinned to " : "following ") + to : "") + (dec.length ? ", " + dec.length + " decisions wait" : "")} onClick=${() => setAgent("open")}>${I("robot")}${dec.length ? html`<span class="badge">${dec.length}</span>` : null}</button>`;
+      aria-label=${"Agent" + (to ? ", " + (S.pin ? "pinned to " : "following ") + to : "") + (dec.length ? ", " + dec.length + " decisions wait" : "") + (asking().length ? ", " + asking().length + " waiting for your answer" : "")} onClick=${() => setAgent("open")}>${I("robot")}${dec.length ? html`<span class="badge">${dec.length}</span>` : null}</button>`;
     return html`<aside class="agent" id="agent" aria-label="Agent">
       <div class="ahead"><h2>Agent</h2><span class="fill"></span>
         <button class="ibtn" aria-label="Collapse the agent sidebar" aria-expanded="true" aria-controls="agent" title="Collapse (⌥⌘B)" onClick=${() => setAgent("closed")}>${I("sidebar-simple", "flipx")}</button></div>
@@ -322,20 +398,30 @@
         ${/* The agent's steps in place in the conversation, each a compact line (a step done, or turning while it runs); its
              messages as bubbles. No separate process card: the conversation is the log. */ ""}
         ${ep7 ? html`<section class="asec"><p class="astep">${I("check-circle")}<span>Status <code>drama-cli status</code></span></p><p class="astep">${I("check-circle")}<span>Breakdown EP007: refused, a red line in the screenplay</span></p>
-          <p class="msg">drama-cli won't break EP007 down: its scene 4 shows a guard striking Luca in the cell, a red line in the screenplay. It's yours to decide: change the scene in the script, or stop EP007 here. Other episodes carry on.</p></section>`
+          ${!(SAYS[S.state] || []).some((m) => m.to === "EP007") && html`<p class="msg">${SAID.redline.ask}</p>`}</section>`
         : to === "EP006" ? html`<section class="asec"><p class="astep">${I("check-circle")}<span>Status <code>drama-cli status</code></span></p><p class="astep">${I("check-circle")}<span>seg01 shot again: blanket folded first</span></p><p class="astep">${I("check-circle")}<span>seg03 shot again: opens on Luca</span></p><p class="astep">${I("check-circle")}<span>Downloaded both takes</span></p>
           <p class="msg">I shot seg01 again with the blanket folded before Luca speaks, and seg03 again opening on his face, as you asked. Both new takes wait for you.</p></section>`
         : to === "EP003" ? html`<section class="asec"><p class="astep">${I("check-circle")}<span>seg01 shot: t01</span></p><p class="astep now">${I("circle-notch")}<span>Shooting 4 takes</span></p></section>`
         : null}
+        ${/* drama-cli's words, each its own message, then the agent's question that carries them (D70). */ ""}
+        ${(SAYS[S.state] || []).some((m) => m.to === to) && html`<section class="asec" aria-label="What drama-cli said">${(SAYS[S.state] || []).filter((m) => m.to === to).map((m) => html`<${Said} m=${m}/>${m.ask && html`<p class="msg">${m.ask}</p>`}`)}</section>`}
+        ${ASKS[S.state] && ASKS[S.state].to === to && html`<section class="asec"><p class="msg" id=${ASKS[S.state].id} tabindex="-1">${ASKS[S.state].ask}</p></section>`}
         ${to && (S.chats?.[to] || []).length > 0 && html`<section class="asec" aria-label="Conversation">${S.chats[to].map((m) => html`<p class="msg you">${m}</p>`)}</section>`}
       </div>
-      ${stateOf(to) !== "none" && to !== "EP006" && (() => {
-        // The line to the scope's open session, naming it.
-        const target = whose(to);
-        const send = () => { set({ chats: { ...S.chats, [to]: [...((S.chats || {})[to] || []), S.draft.trim()] }, draft: "" }); toast("Sent to " + target + "."); };
-        return html`<div class="composer"><textarea aria-label="Message" placeholder=${"Message " + target + "…"} value=${S.draft} onInput=${(e) => set({ draft: e.target.value })}
+      ${stateOf(to) !== "none" && (to !== "EP006" || asks(to)) && (() => {
+        // The line to the scope's open session, naming it. While a question waits it is the answer, which can carry one
+        // file (D75: a screenplay or a picture, up to 20 MiB; the words still required), as a chat composer attaches one.
+        const target = whose(to), answer = asks(to), file = answer && S.attach;
+        const send = () => {
+          const words = [S.draft.trim(), ...(file ? ["The file I attached: attachments/" + file] : [])].join("\n");
+          set({ chats: { ...S.chats, [to]: [...((S.chats || {})[to] || []), words] }, draft: "", attach: null, answered: answer ? { ...(S.answered || {}), [to]: true } : S.answered });
+          toast((answer ? "Answer sent to " : "Sent to ") + target + ".");
+        };
+        return html`<div class="composer"><textarea aria-label=${answer ? "Your answer" : "Message"} placeholder=${(answer ? "Answer " : "Message ") + target + "…"} value=${S.draft} onInput=${(e) => set({ draft: e.target.value })}
           onKeyDown=${(e) => { if (e.key === "Enter" && (e.metaKey || e.ctrlKey) && S.draft.trim()) send(); }}></textarea>
-        <div class="crow"><span>To <b>${target}</b></span><button class="send" aria-label=${"Send to " + target} disabled=${!S.draft.trim()} onClick=${send}>${I("arrow-up")}</button></div></div>`;
+        ${file && html`<span class="chip plain">${I("file-text")}<span class="mono">${file}</span><button class="ibtn" aria-label=${"Remove " + file} onClick=${() => set({ attach: null })}>${I("x")}</button></span>`}
+        <div class="crow">${answer && !file && html`<button class="ibtn" aria-label="Attach a file" title="A screenplay or a picture, up to 20 MiB." onClick=${() => set({ attach: "screenplay-v2.fountain" })}>${I("plus")}</button>`}
+          <span>To <b>${target}</b></span><button class="send" aria-label=${(answer ? "Send answer to " : "Send to ") + target} disabled=${!S.draft.trim()} onClick=${send}>${I("arrow-up")}</button></div></div>`;
       })()}
     </aside>`;
   }
@@ -410,7 +496,7 @@
       <${TopBar} crumbs=${[own.drama(), "Episodes"]}/>
       <div class="body"><div class="scrollmain">
         <div class="bar2"><span class="fill"></span><${ProjectChips}/></div>
-        <${StopBanner}/>
+        <${SaysLine}/>
         <div class="filters">${f.map(([k, l, n]) => html`<button class="fchip" aria-pressed=${String(S.filter === k)} onClick=${() => set({ filter: k })}>${l}<small>${n}</small></button>`)}
           <span class="fill"></span><span class="search" style="width:200px">${I("magnifying-glass")}Find an episode…</span><button class="select">Episode order ${I("caret-down")}</button></div>
         <div class="epgrid">${list.map((e) => html`<button class="epcard" onClick=${() => open(e)}>
@@ -643,8 +729,7 @@
           </div>
         </div>
         <div class="ctop"><${EpisodeHead}/><button class="follow" aria-pressed=${String(S.follow)} onClick=${() => set({ follow: !S.follow })}>${S.follow && html`<span class="live"></span>`}${S.follow ? "Following the agent" : "Follow the agent"}</button>
-          <span class="fill"></span><${ProjectChips}/></div>
-        ${S.dramaStop && html`<div style="position:absolute;left:0;right:0;top:60px"><${StopBanner}/></div>`}
+          <span class="fill"></span><${ProjectChips}/><${SaysLine}/></div>
         ${sel && (() => {
           // Above the node its action bar. Its panel goes where the board has room, never over the node or its bar: under
           // the node, else above the bar, else docked right (Codex re-review F: the Case file's panel covered its own bar).
@@ -747,7 +832,7 @@
     const here = "Review · " + tk.seg + " " + tk.take;
     return html`<div class="main">
       <${TopBar} crumbs=${[own.drama(), own.ep(), here]} right=${html`<span class="muted hide-s" style="font-size:12px">${P.takes.length - done} of ${P.takes.length} waiting</span>`}/>
-      <${StopBanner}/>
+      <${SaysLine}/>
       <div class="room">
         <nav class="reel" aria-label="Takes waiting">
           <h3>EP006 · waiting for you</h3>
@@ -828,8 +913,8 @@
       <div class="ph"><b>Prototype controls</b><span class="fill"></span><button class="ibtn" aria-label="Close the prototype controls" aria-expanded="true" onClick=${() => set({ proto: false })}>${I("x")}</button></div>
       <p>Not part of the app: they set what the sample shows. Phase 1: viewing and deciding, and editing the cut's spec (D70) · Canvas and Lineage read-only · sample project, our own test pictures.</p>
       <span class="pl">Screen</span><div class="seg wrap" role="group" aria-label="Screen">${[["home", "Home"], ["reviews", "Reviews"], ["upload", "Upload"], ["script", "Script"], ["story", "Bible"], ["episodes", "Episodes"], ["canvas", "Canvas"], ["graph", "Graph"], ["review", "Review"], ["cut", "Cut"], ["delivery", "Delivery"], ["outofdate", "Out of date"]].map(([k, l]) => html`<button aria-pressed=${String(S.screen === k)} onClick=${() => go(k)}>${l}</button>`)}</div>
-      <label class="select">State<select aria-label="State" value=${S.state} onChange=${(e) => { const v = e.target.value; set({ state: v, dramaStop: v === "stopping" ? "stopping" : v === "stopped" ? "stopped" : null, sver: null, sform: null, sdraft: "", sdec: null, subs: { ...(S.subs || {}), script: undefined } }); }}>
-        ${[["normal", "Normal"], ["scriptRewriting", "Script: rewriting"], ["scriptYou", "Script: v1 waiting for you"], ["scriptBack", "Script: v1 sent back, v2 rewriting"], ["scriptYou2", "Script: v2 waiting for you"], ["scriptOriginal", "Script: only the original"], ["fresh", "Nothing out of date"], ["cutnewer", "Cut: a newer cut exists"], ["cutinputs", "Cut: draft inputs changed"], ["cutrefused", "Cut: drama-cli refuses the edit"], ["nostop", "No stop yet"], ["stopping", "Stopping"], ["stopped", "Stopped"], ["redline", "Red line"], ["budget", "Refused (no code)"], ["cap", "Cap reached"], ["env", "Pine access denied"], ["spendlimit", "Pine credits used up"]].map(([k, l]) => html`<option value=${k}>${l}</option>`)}</select></label>
+      <label class="select">State<select aria-label="State" value=${S.state} onChange=${(e) => { const v = e.target.value; set({ state: v, dramaStop: v === "stopping" ? "stopping" : v === "stopped" ? "stopped" : null, answered: {}, attach: null, sver: null, sform: null, sdraft: "", sdec: null, subs: { ...(S.subs || {}), script: undefined } }); }}>
+        ${[["normal", "Normal"], ["scriptRewriting", "Script: rewriting"], ["scriptYou", "Script: v1 waiting for you"], ["scriptBack", "Script: v1 sent back, v2 rewriting"], ["scriptYou2", "Script: v2 waiting for you"], ["scriptOriginal", "Script: only the original"], ["fresh", "Nothing out of date"], ["cutnewer", "Cut: a newer cut exists"], ["cutinputs", "Cut: draft inputs changed"], ["cutrefused", "Cut: drama-cli refuses the edit"], ["nostop", "No stop yet"], ["stopping", "Stopping"], ["stopped", "Stopped"], ["redline", "drama-cli: red line"], ["budget", "drama-cli: refused (no code)"], ["cap", "drama-cli: cap reached"], ["env", "drama-cli: Pine access denied"], ["several", "drama-cli: two questions open"], ["ended", "drama-cli: setup stopped after two (rc3 T1)"], ["agentAsks", "The agent asks (nothing recorded, rc5 T4)"], ["finishAsks", "The agent asks to finish EP006"], ["spendlimit", "Pine credits used up"]].map(([k, l]) => html`<option value=${k}>${l}</option>`)}</select></label>
       <label class="select" title="What a send, a check or a Reconcile finds">Outcome<select aria-label="Outcome" value=${S.outcome} onChange=${(e) => set({ outcome: e.target.value })}>
         ${[["ok", "Goes through"], ["refused", "Not submitted (the engine says)"], ["unknown", "No answer"]].map(([k, l]) => html`<option value=${k}>${l}</option>`)}</select></label>
       <div class="seg" role="group" aria-label="Theme">${[["dark", "Dark", "moon-stars"], ["light", "Light", "sun-dim"]].map(([k, l, ic]) => html`<button aria-pressed=${String(S.theme === k)} onClick=${() => set({ theme: k })}>${I(ic)}${l}</button>`)}</div>
@@ -845,6 +930,6 @@
   window.addEventListener("keydown", (e) => {
     if (e.code === "KeyB" && e.altKey && (e.metaKey || e.ctrlKey) && !studioPage()) { e.preventDefault(); setAgent(agentMode() === "open" ? "closed" : "open"); }
   });
-  window.PD = { html, I, S, set, go, own, jump, openHome, openStage, openLineage, stageNode, toast, money, Status, TopBar, StopBanner, ProjectChips, AgentPanel, SPENT_COVERS, useEffect, useRef, Mark, draw, Submission, submit, recheck };
+  window.PD = { html, I, S, set, go, own, jump, openHome, openStage, openLineage, stageNode, toast, money, Status, TopBar, SaysLine, ProjectChips, AgentPanel, SPENT_COVERS, useEffect, useRef, Mark, draw, Submission, submit, recheck };
   // screens.js draws first, once its screens are registered.
 })();

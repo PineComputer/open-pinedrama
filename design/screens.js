@@ -1,35 +1,7 @@
 /* The rest of the flow in the pro direction: Upload, Analyzing, Fountain review, Bible, Graph (lineage) and Cut,
-   plus the setup steps and the stop cards. Uses the shell and helpers app.js exposes as window.PD. */
+   plus the setup steps. Uses the shell and helpers app.js exposes as window.PD. */
 (() => {
-  const { html, I, S, set, go, own, jump, openHome, openStage, openLineage, stageNode, Submission, submit, toast, money, Status, TopBar, StopBanner, ProjectChips, SPENT_COVERS, useEffect, useRef } = window.PD;
-
-  /* ───── stop cards: drama-cli's refusal shown as data ───── */
-  function StopCard({ kind }) {
-    const K = {
-      redline: { icon: "warning", head: "Stopped · a red line in the screenplay", title: "EP007's bible range names a red line", code: "RedLine",
-        said: "Bible bible/b0004 is not usable: red line: EP007 scene 4, a guard strikes Luca in the cell on screen. See bible/b0004/bible.md; report it to the person and pass their decision back with drama-cli bible --config drama-cli.cfg.yaml EP007-EP012 --feedback '<their decision>'",
-        acts: [["Decide in your words", "primary"], ["Open the scene", ""]], note: "Only a red line in your screenplay stops for you. Other episodes carry on." },
-      // A refusal drama-cli gives no code of its own (a bare Refused) is shown as it came, never matched on its words.
-      budget: { icon: "info", head: "drama-cli refused", title: "The agent needs you to read this", code: "Refused",
-        said: "Budget exceeded: spent 996.40 + reserved 3.20 + this 1.20 > budget 1000.00",
-        acts: [["Answer the agent", "primary"], ["Stop the drama", "danger"]], note: "Work in flight is waited on and recorded, never sent again." },
-      cap: { icon: "stack", head: "Stopped · limit reached", title: "EP004 seg06's storyboard reached its limit of new versions", code: "SetLimitExceeded.max_new_versions",
-        said: "episodes/EP004/multi_panel_storyboard/seg06/line-art has had 3 new paid versions after its first, the limit defaults.max_new_versions (3); ask the person before making it again: they lift the limit for that item by raising defaults.max_new_versions in the config, then set it back; then run drama-cli storyboard --config drama-cli.cfg.yaml EP004 seg06",
-        // drama-cli's action for a cap is ask_person (drama_cli/errors.py): the maker answers; the studio invents no one-time allowance.
-        acts: [["Answer the agent", "primary"], ["See seg06's versions", ""]], note: "drama-cli asks you before it spends again. Say in your answer whether to raise the limit, as drama-cli describes, or to stop here; the agent follows drama-cli's steps." },
-      // On Pine the provider keys are Pine's (doc/drama-cli/module.md): a refusal of access points to the Pine session's access,
-      // never to a key the maker sets. drama-cli's AccessDenied.ModuleRuntime is ask_person (drama_cli/pine_runtime_client.py).
-      env: { icon: "lock-simple", head: "Stopped · Pine access denied", title: "Pine refused this session's access", code: "AccessDenied.ModuleRuntime",
-        said: "Pine returned HTTP 403: session or generation access is denied; restore access and check the active turn before continuing",
-        acts: [["Check your Pine access", "primary"], ["Answer the agent", ""]], note: "Nothing new was generated. Requests already sent are checked, never sent again. You never handle provider keys on Pine." },
-    }[kind];
-    return html`<section class=${"stopcard " + kind} aria-label=${K.head}>
-      <header>${I(K.icon)}<span>${K.head}</span><span class="fill"></span><span class="mono">${{ cap: "EP004", redline: "EP007" }[kind] || ""}</span></header>
-      <div class="sbody"><h3>${K.title}</h3>
-        <dl class="kv"><dt>Code</dt><dd class="mono">${K.code}</dd><dt>drama-cli said</dt><dd class="said mono">${K.said}</dd></dl>
-        <div class="acts">${K.acts.map(([l, c]) => html`<button class=${"btn sm " + c} onClick=${() => toast("Prototype: " + l + ".")}>${l}</button>`)}<span class="subtle" style="font-size:11.5px">${K.note}</span></div>
-        <span class="subtle" style="font-size:11px">The message is drama-cli's, as it wrote it (example values).</span></div></section>`;
-  }
+  const { html, I, S, set, go, own, jump, openHome, openStage, openLineage, stageNode, Submission, submit, toast, money, Status, TopBar, SaysLine, ProjectChips, SPENT_COVERS, useEffect, useRef } = window.PD;
 
   /* ───── Upload ───── */
   function Upload() {
@@ -145,7 +117,7 @@
       <${TopBar} crumbs=${(S.stab || "bible") === "bible" ? [own.drama(), "Bible"] : [own.drama(), own.assets(), ...(asset ? [own.tab(S.stab), asset.name + " · " + shownOf(asset)] : [own.tab(S.stab)[0]])]}/>
       <div class="body"><div class="scrollmain">
         <div class="bar2"><span class="fill"></span><${ProjectChips}/></div>
-        <${StopBanner}/>
+        <${SaysLine}/>
         <div style="padding:0 16px"><div class="tabsrow" style="margin:4px 0 18px">${story ? html`<div><h2 class="pagetitle">Bible</h2><p class="muted pagesub">The logline, and for each episode its title, summary, end hook and beats, written from your script.</p></div>` : html`<h2 class="pagetitle">${{ cast: "Characters", scenes: "Locations", props: "Props" }[S.stab]} <span class="muted">· ${{ cast: P.cast, scenes: P.places, props: P.props }[S.stab].length}</span></h2>`}
           <span class="fill"></span><span class="muted" style="font-size:12px">${story ? `${P.bible.version} · accepted · covers ${P.bible.covers}, the whole screenplay` : "Shared by every episode"}</span></div></div>
         ${/* The bible as drama-cli writes it (bible.json): the logline and the tone, then one row per episode with its title,
@@ -215,7 +187,7 @@
     const label = "Lineage · " + sel.t;
     return html`<div class="main">
       <${TopBar} crumbs=${crumbs}/>
-      <${StopBanner}/>
+      <${SaysLine}/>
       <div class="body"><div class="scrollmain">
         <div class="bar2"><span class="fill"></span><${ProjectChips}/></div>
         <div class="graphwrap" role="group" aria-label="Graph" tabindex="0"><div class="graph" style=${`width:${24 * 2 + 6 * W + 5 * GX}px;height:${24 * 2 + 4 * H + 3 * GY + 24}px`}>
@@ -274,7 +246,7 @@
       <${TopBar} crumbs=${[own.drama(), "Out of date"]}/>
       <div class="body"><div class="scrollmain">
         <div class="bar2"><span class="delivsum">${items.length ? html`<b>${items.length} items</b> are out of date. Ask the agent in the sidebar to redo them.` : "Nothing is out of date."}</span></div>
-        <${StopBanner}/>
+        <${SaysLine}/>
         ${items.length > 0 && html`<div class="delivwrap"><table class="deliv ood"><thead><tr><th>Item</th><th>Version</th><th>Why</th><th aria-label="Lineage"></th></tr></thead>
           <tbody>${group("Assets", "Assets")}${["EP006"].map((ep) => group(ep, "Episodes · " + ep))}</tbody></table></div>`}
       </div></div></div>`;
@@ -345,7 +317,7 @@
     let acc = 0;
     return html`<div class="main">
       <${TopBar} crumbs=${[own.drama(), own.ep(), "Cut " + c.base.v]}/>
-      <${StopBanner}/>
+      <${SaysLine}/>
       <div class="room is-cut">
         <section class="stage">
           <div class="screen"><div class="player">
@@ -461,7 +433,7 @@
       <div class="body"><div class="scrollmain">
         <div class="bar2"><span class="delivsum"><b>${delivered.length} of ${P.project.episodes}</b> episodes delivered · ${waiting.length} cuts wait for you</span><span class="fill"></span>
           <button class="btn sm" disabled=${!delivered.length} onClick=${() => toast(`Downloads the ${delivered.length} accepted cut${delivered.length > 1 ? "s" : ""} as one zip, each file named by episode and cut version.`)}>${I("download-simple")}Download accepted (${delivered.length})</button></div>
-        <${StopBanner}/>
+        <${SaysLine}/>
         <div class="delivwrap"><table class="deliv"><thead><tr><th>Episode</th><th>Delivered cut</th><th>Latest cut</th><th>Status</th><th aria-label="Download"></th></tr></thead>
           <tbody>${P.eps.slice(0, 8).map((e) => { const c = e.cut; return html`<tr>
             <td><span class="delivep">${e.cover ? html`<img src=${e.cover} alt=""/>` : html`<span class="noimg"></span>`}<span><b class="mono">${e.code}</b><small>${e.title}</small></span></span></td>
@@ -587,7 +559,7 @@
       <${TopBar} crumbs=${[own.drama(), "Script"]}/>
       <div class="body"><div class="scrollmain">
         <div class="bar2"><span class="fill"></span><${ProjectChips}/></div>
-        <${StopBanner}/>
+        <${SaysLine}/>
         <div class="scripthead"><div class="fill"><h2 class="pagetitle">Script</h2>
           <p class="muted pagesub">Your screenplay from upload to acceptance: the agent rewrites it into Fountain, drama-cli validates it, and you accept it. Sample: ${sc.project}'s real files.</p></div></div>
         ${S.scriptEp && hasFountain && !target && html`<div class="notice" role="status">${I("info")}<span><b>${S.scriptEp} isn't in this sample's screenplay.</b> The sample is The Stepmother's two episodes; for a real project Script opens at ${S.scriptEp}'s section.</span></div>`}
@@ -623,6 +595,6 @@
         </div>
       </div></div></div>`;
   }
-  window.EXTRA = { BackTo, lineageOf, outOfDateAt, lineageInEpisode, outofdate: OutOfDate, script: Script, upload: Upload, story: Bible, graph: Graph, cut: Cut, delivery: Delivery, StopCard, scriptRow };
+  window.EXTRA = { BackTo, lineageOf, outOfDateAt, lineageInEpisode, outofdate: OutOfDate, script: Script, upload: Upload, story: Bible, graph: Graph, cut: Cut, delivery: Delivery, scriptRow };
   window.PD.draw();
 })();
