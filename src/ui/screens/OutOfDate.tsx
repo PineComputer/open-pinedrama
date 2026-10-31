@@ -129,8 +129,12 @@ export function OutOfDate({ dramaId }: { dramaId: string }) {
   const order = (a: LineageNode, b: LineageNode) => a.column - b.column || (a.where.segment ?? "").localeCompare(b.where.segment ?? "", "en", { numeric: true }) || a.id.localeCompare(b.id);
   const setup = nodes.filter((node) => !node.where.episode).sort((a, b) => SETUP_ORDER.indexOf(a.kind) - SETUP_ORDER.indexOf(b.kind) || a.id.localeCompare(b.id));
   const codes = [...new Set(nodes.flatMap((node) => (node.where.episode ? [node.where.episode] : [])))].sort();
+  // The setup's: the story (screenplay, bible) and the assets, each under its own name (IA §1).
+  const story = setup.filter((node) => node.kind === "screenplay" || node.kind === "bible");
+  const assets = setup.filter((node) => !story.includes(node));
   const groups: Group[] = [
-    ...(setup.length ? [{ key: "setup", head: t("ood.assets"), owner: "", rows: setup }] : []),
+    ...(story.length ? [{ key: "story", head: t("step.story"), owner: "", rows: story }] : []),
+    ...(assets.length ? [{ key: "assets", head: t("ood.assets"), owner: "", rows: assets }] : []),
     ...codes.map((code) => ({ key: code, head: t("ood.episode", { code }), owner: code, rows: nodes.filter((node) => node.where.episode === code).sort(order) })),
   ];
   // Who redoes a group, and why it can't be asked now (Graph's own reasons: no session open, or one waiting on a review).

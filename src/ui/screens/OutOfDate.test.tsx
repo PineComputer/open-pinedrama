@@ -99,6 +99,17 @@ describe("the drama's Out of date", () => {
     expect(button).toHaveAttribute("title", "The agent waits on your review first: decide it, then ask.");
   });
 
+  it("keeps the story apart from the assets, both the setup's", async () => {
+    engine("location-plate-replaced");
+    const lineage = view("location-plate-replaced").lineage!;
+    answer("/api/dramas/d1/lineage", { lineage: { ...lineage, nodes: lineage.nodes.map((node) => (node.id === "bible" ? { ...node, fresh: false, problems: ["Changed file: screenplay/v2/screenplay.fountain"] } : node)) }, problems: [] });
+    await renderAt(<OutOfDate dramaId="d1" />, "/d/d1/out-of-date");
+    const story = await waitFor(() => group(/^Story$/));
+    expect(within(story).getByRole("button", { name: "Ask the setup's agent to redo them" })).toBeInTheDocument();
+    expect(within(row(/bible/i)).getByText("An input changed: Screenplay v2")).toBeInTheDocument();
+    expect(group(/^Assets$/)).not.toBe(story);
+  });
+
   it("says when nothing is out of date, with no action", async () => {
     engine("time-plate-replaced");
     answer("/api/dramas/d1/lineage", { lineage: { ...view("time-plate-replaced").lineage!, nodes: view("time-plate-replaced").lineage!.nodes.map((node) => ({ ...node, fresh: true, problems: [] })) }, problems: [] });
