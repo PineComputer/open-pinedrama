@@ -8,7 +8,7 @@ async function firstStop(goal: string) {
   const { id, credentials } = await fleet.newCredentials();
   await fleet.createComputer(credentials);
   const ref = { id } as Parameters<ReplayFleet["createSession"]>[0];
-  const session = await fleet.createSession(ref);
+  const session = await fleet.createSession(ref, "test", "read_write");
   const turn = await fleet.wait(ref, session, (await fleet.run(ref, session, goal, "k")).turnId, 60_000);
   const read = async (path: string) => new TextDecoder().decode(new Uint8Array(await new Response(await fleet.openFile(ref, session, path)).arrayBuffer()));
   return { turn, read };

@@ -237,6 +237,9 @@ async function scenario(title: string) {
     return rows.EP001.state === "done" && rows.EP003.state !== "queued" ? view : undefined;
   });
   expect(after.episodeRows.find((row) => row.code === "EP001")!.stages.cut.state).toBe("done");
+  // Every session, the setup's and each episode's, may publish to its Computer's artifacts (Codex's rc3 run, C10).
+  expect(fleet.sessionsCreated.length).toBeGreaterThan(2);
+  expect(new Set(fleet.sessionsCreated.map((session) => session.artifactAccess))).toEqual(new Set(["read_write"]));
   // The setup handed over, from the maker's inputs; each episode started on the project it handed over.
   const history = await call<SessionRecord[]>("GET", `/api/dramas/${id}/session-history`);
   expect(history.filter((session) => session.scope === "setup").map((session) => [session.startedFrom, session.handedOver])).toEqual([["inputs", true]]);

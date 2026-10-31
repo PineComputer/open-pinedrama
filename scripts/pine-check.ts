@@ -157,7 +157,7 @@ try {
 
   // Session A: attachments in, a plain turn, files out (also from a nested folder).
   const a = await step("session A", async () => {
-    const session = await fleet.createSession(computer, "check A");
+    const session = await fleet.createSession(computer, "check A", "read_write");
     sessions.push(session);
     return { value: session, note: session.name };
   });
@@ -247,7 +247,7 @@ try {
 
     if (parts) {
       await step("restore in session B", async () => {
-        const b = await fleet.createSession(computer, "check B");
+        const b = await fleet.createSession(computer, "check B", "read_write");
         sessions.push(b);
         for (const part of parts.downloaded) await fleet.writeFile(computer, b, part.name, part.body);
         const goal = [

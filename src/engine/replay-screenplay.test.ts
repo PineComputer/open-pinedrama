@@ -50,7 +50,7 @@ describe("a sample's screenplay", () => {
     const { id, credentials } = await fleet.newCredentials();
     await fleet.createComputer(credentials);
     const ref = { id } as Parameters<ReplayFleet["createSession"]>[0];
-    const session = await fleet.createSession(ref);
+    const session = await fleet.createSession(ref, "test", "read_write");
     // The setup's goal as replay recognises it (scriptFor: "vertical short drama from my screenplay"), naming the sample by its title.
     const goal = `Make a vertical short drama from my screenplay. Title: ${STORIES[Object.keys(STORIES)[0]].en.title}.`;
     await fleet.wait(ref, session, (await fleet.run(ref, session, goal, "k")).turnId, 60_000);
@@ -67,7 +67,7 @@ describe("a sample's screenplay", () => {
     const { id, credentials } = await fleet.newCredentials();
     await fleet.createComputer(credentials);
     const ref = { id } as Parameters<ReplayFleet["createSession"]>[0];
-    const session = await fleet.createSession(ref);
+    const session = await fleet.createSession(ref, "test", "read_write");
     const turn = await fleet.wait(ref, session, (await fleet.run(ref, session, `Make a vertical short drama from my screenplay. Title: ${STORIES["double-life-rewrite"].en.title}.`, "k")).turnId, 60_000);
     // The agent asks about this screenplay, with drama-cli's own counts, not The Stepmother's.
     expect(turn.question).toContain("6 episodes, 9 scenes");

@@ -15,6 +15,9 @@ export interface SessionRef {
   token: string;
 }
 
+/** What a session's agent may do with its Computer's artifacts, fixed for the session's life (PineSandbox docs/pine/portal/artifacts.md, "In a session"). */
+export type ArtifactAccess = "none" | "read_only" | "read_write";
+
 export interface TurnFile {
   path: string;
   size: number;
@@ -98,7 +101,7 @@ export interface Fleet {
   /** Changes the running Computer's idle timeout; resolves with the one Pine applied. */
   setIdleTimeout(computer: ComputerRef, seconds: number): Promise<number>;
   stop(computer: ComputerRef): Promise<boolean>;
-  createSession(computer: ComputerRef, label: string): Promise<SessionRef>;
+  createSession(computer: ComputerRef, label: string, artifactAccess: ArtifactAccess): Promise<SessionRef>;
   closeSession(computer: ComputerRef, name: string): Promise<void>;
   writeFile(computer: ComputerRef, session: SessionRef, name: string, content: Uint8Array): Promise<void>;
   run(computer: ComputerRef, session: SessionRef, goal: string, key: string, maxWallMs?: number): Promise<TurnInfo>;

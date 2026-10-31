@@ -5,7 +5,7 @@
 // reads the Computer's row afresh, since the action before it may have changed it.
 import { IDLE_WAITING_S, IDLE_WORKING_S } from "./config.ts";
 import { all, get, newId, now, run } from "./db.ts";
-import { type Attached, type ComputerRef, type Fleet, type Limits, type SessionRef, isBusy } from "./fleet.ts";
+import { type ArtifactAccess, type Attached, type ComputerRef, type Fleet, type Limits, type SessionRef, isBusy } from "./fleet.ts";
 import { publish } from "./live.ts";
 import { type ComputerRow, type SessionRow, computer as computerRow, openSessionsOf, raiseCost } from "./records.ts";
 import { seal, unseal } from "./seal.ts";
@@ -262,9 +262,17 @@ export async function stop(row: ComputerRow): Promise<void> {
   });
 }
 
+/**
+ * Every session may save to its Computer's artifacts and make public links: drama-cli publishes a generated reference
+ * there for the video provider only when the session's access is read_write (short_drama drama_cli/asset.py:154,
+ * managed_publication), and Pine's default, none, refuses it ("Cannot determine Pine artifact access"; PineSandbox
+ * docs/pine/portal/artifacts.md, "In a session"; sessions.md, "Artifact access"; Codex's rc3 run, C10).
+ */
+const SESSION_ARTIFACT_ACCESS: ArtifactAccess = "read_write";
+
 export async function openSession(row: ComputerRow, role: "setup" | "episode", episodeId: string | null, label: string): Promise<SessionRow> {
   return serialized(row.id, async () => {
-    const created = await fleet().createSession(computerRef(computerRow(row.id) ?? row), label);
+    const created = await fleet().createSession(computerRef(computerRow(row.id) ?? row), label, SESSION_ARTIFACT_ACCESS);
     const id = newId("ses");
     run(
       "insert into sessions (id, computer_id, drama_id, name, token, role, episode_id, state, created_at) values (?, ?, ?, ?, ?, ?, ?, 'open', ?)",

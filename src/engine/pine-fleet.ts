@@ -16,7 +16,7 @@ import {
   type ProjectPolicy,
   type Session,
 } from "@pinesandbox/computer";
-import type { Attached, ComputerRef, Fleet, FleetEvent, Limits, SessionRef, TurnInfo } from "./fleet.ts";
+import type { ArtifactAccess, Attached, ComputerRef, Fleet, FleetEvent, Limits, SessionRef, TurnInfo } from "./fleet.ts";
 
 /** What the studio keeps of the project's policy. */
 export function limitsOf(policy: ProjectPolicy): Limits {
@@ -54,14 +54,24 @@ function priced(cost: { total?: unknown; llm?: unknown; additional?: unknown } |
   return { cost: total, media: additional };
 }
 
-function turnInfo(turn: AgentTurn): TurnInfo {
+/**
+ * A turn as the engine reads it. Its files are the ones in the session's working directory: with artifact access, a
+ * result may also name files saved to the Computer's artifacts (root artifact_store), which are read with the artifact
+ * client, not the session's file API (PineSandbox docs/pine/portal/artifacts.md, "A turn returns its deliverables";
+ * sdks/pine-computer/typescript/CHANGELOG.md 0.3.5). The studio asks for every file in the drama's folder (goals.ts), so
+ * those are left out, and said so.
+ */
+export function turnInfo(turn: AgentTurn): TurnInfo {
+  const results = turn.result?.artifacts ?? [];
+  const saved = results.filter((file) => file.root === "artifact_store");
+  if (saved.length) console.warn(`Turn ${turn.turnId}: left out files saved to the Computer's artifacts, not its working directory: ${saved.map((file) => file.relativePath).join(", ")}`);
   return {
     turnId: turn.turnId,
     state: turn.state,
     question: said(turn.question),
     summary: said(turn.result?.summary ?? ""),
     nextTurnId: turn.nextTurnId,
-    files: (turn.result?.artifacts ?? []).map((file) => ({
+    files: results.filter((file) => file.root !== "artifact_store").map((file) => ({
       path: file.relativePath,
       size: file.size,
       sha256: file.sha256,
@@ -169,8 +179,9 @@ export class PineFleet implements Fleet {
     return this.computer(ref).stop();
   }
 
-  async createSession(ref: ComputerRef, label: string) {
-    const session = await this.computer(ref).createSession({ label, browser: true });
+  // Every session has a browser window since SDK 0.3.5, which removed the browser option (its CHANGELOG, "Removed").
+  async createSession(ref: ComputerRef, label: string, artifactAccess: ArtifactAccess) {
+    const session = await this.computer(ref).createSession({ label, artifactAccess });
     return { name: session.name, token: session.token };
   }
 

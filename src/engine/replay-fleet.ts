@@ -11,7 +11,7 @@ import { typeOf } from "./classify.ts";
 import { FIXTURES } from "./config.ts";
 import { revisedKeys } from "./decisions.ts";
 import { DRAMA_SKILL } from "./goals.ts";
-import type { Attached, ComputerRef, Fleet, FleetEvent, Limits, SessionRef, TurnFile, TurnInfo } from "./fleet.ts";
+import type { ArtifactAccess, Attached, ComputerRef, Fleet, FleetEvent, Limits, SessionRef, TurnFile, TurnInfo } from "./fleet.ts";
 import { blocking, lookSheet, plate, prop, storyboard } from "./placeholders.ts";
 import { samplesFrom } from "./replay-samples.ts";
 import { lineageAt, replayLineage } from "./replay-lineage.ts";
@@ -903,7 +903,11 @@ export class ReplayFleet implements Fleet {
     return true;
   }
 
-  async createSession(ref: ComputerRef) {
+  /** Each session as it was asked for, in order: what its agent may do with the Computer's artifacts. */
+  readonly sessionsCreated: { label: string; artifactAccess: ArtifactAccess }[] = [];
+
+  async createSession(ref: ComputerRef, label: string, artifactAccess: ArtifactAccess) {
+    this.sessionsCreated.push({ label, artifactAccess });
     const machine = this.machine(ref);
     const name = `session-${(this.counter += 1)}`;
     machine.sessions.set(name, { name, token: `ps_${crypto.randomUUID()}`, taskId: `task-${name}`, turns: new Map(), keys: new Map(), events: [], files: new Map() });
