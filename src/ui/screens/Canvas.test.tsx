@@ -80,6 +80,16 @@ describe("the canvas", () => {
     await waitFor(() => expect(calls("GET", "/api/dramas/d1/files")).toHaveLength(2));
   });
 
+  it("takes a new lineage as a stop returns one", async () => {
+    engine(project());
+    render(<Canvas drama={drama} />);
+    await screen.findByRole("button", { name: /^林/ });
+    await waitFor(() => expect(calls("GET", "/api/dramas/d1/lineage")).toHaveLength(1));
+    // The engine says a saved lineage changed the project (src/engine/lineage.ts), as Graph hears it.
+    changed("project:d1");
+    await waitFor(() => expect(calls("GET", "/api/dramas/d1/lineage")).toHaveLength(2));
+  });
+
   it("shows of the shared looks, plates and props only those the episode's stages were made from, where drama-cli put them", async () => {
     engine(project());
     render(<Canvas drama={drama} />);

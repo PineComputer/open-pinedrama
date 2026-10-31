@@ -313,7 +313,7 @@ function Plane({ drama }: { drama: DramaView }) {
   const project = useResource<ProjectView>(`/api/dramas/${drama.id}/project`, [`project:${drama.id}`]);
   // The engine publishes drama:<id> when a turn's files are saved (follow.ts), so the pictures follow the work.
   const files = useResource<FileItem[]>(`/api/dramas/${drama.id}/files`, [`drama:${drama.id}`]);
-  const lineageView = useResource<LineageView>(`/api/dramas/${drama.id}/lineage`, [`drama:${drama.id}`]);
+  const lineageView = useResource<LineageView>(`/api/dramas/${drama.id}/lineage`, [`project:${drama.id}`]);
   const lineage = lineageView.data?.lineage ?? null;
   const state = project.data?.state ?? null;
   const names = project.data?.names ?? null;
