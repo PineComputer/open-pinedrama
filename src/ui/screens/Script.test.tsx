@@ -188,6 +188,35 @@ describe("Script, while the setup runs", () => {
   });
 });
 
+describe("Script's Original", () => {
+  // rc5 T5: the agent validated an answer's attachment as v1 (its original.txt byte-identical to it), but Original
+  // showed the first upload (Codex rc5 C18; D75 as amended).
+  const attached = file({ kind: "reference", name: "家里家外-excerpt.txt", type: "text/plain" });
+  const recorded = file({ kind: "screenplay-version", name: "original.txt", type: "text/plain", version: "v1" });
+
+  it("shows the file drama-cli validated the version against, an answer's attachment say, not the first upload", async () => {
+    const user = userEvent.setup();
+    answer("/api/dramas/d1/script", { inputs: [original], screenplayFile: original.id, versions: [{ version: "v1", file: v1, original: recorded, source: attached }] });
+    texts();
+    server.use(http.get(attached.url, () => HttpResponse.text("第一集\n陈家小院 日\n")));
+    await renderAt(<Script dramaId="d1" />, "/d/d1/script");
+    await user.click(await screen.findByRole("radio", { name: "Original" }));
+    await waitFor(() => expect(document.querySelector("pre.original")?.textContent).toBe("第一集\n陈家小院 日\n"));
+    expect(document.querySelector(".edtab")).toHaveTextContent("家里家外-excerpt.txt");
+    expect(screen.queryByText(/isn't one of this project's files/)).not.toBeInTheDocument();
+  });
+
+  it("keeps the upload and says so when the version's original is none of the project's files", async () => {
+    const user = userEvent.setup();
+    answer("/api/dramas/d1/script", { inputs: [original], screenplayFile: original.id, versions: [{ version: "v1", file: v1, original: recorded, source: null }] });
+    texts();
+    await renderAt(<Script dramaId="d1" />, "/d/d1/script");
+    await user.click(await screen.findByRole("radio", { name: "Original" }));
+    await waitFor(() => expect(document.querySelector("pre.original")?.textContent).toBe("EPISODE 1\nTENEMENT FLAT, MORNING\n"));
+    expect(screen.getByText("drama-cli validated v1 against a text that isn't one of this project's files; Original shows stepmother.txt.")).toBeInTheDocument();
+  });
+});
+
 describe("Script's Fountain", () => {
   it("shows the file as it is, line for line, and says this drama-cli records no line kinds (D62 as amended; Codex rc5 C15)", async () => {
     // rc5 T1's lines that fountain-js read as character cues and dialogue, where drama-cli's table has actions and Cai's line.

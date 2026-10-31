@@ -238,11 +238,15 @@ function ScriptBody({ dramaId, data, stage, ep, settingUp, asking }: { dramaId: 
   const { t } = useT();
   const { search } = useRoute();
   const navigate = useNavigate();
-  const original: FileItem | undefined = data.inputs.find((file) => file.id === data.screenplayFile);
+  const uploaded: FileItem | undefined = data.inputs.find((file) => file.id === data.screenplayFile);
   // New drama sends a Word or PDF screenplay as its text and keeps the file it came from beside it, in the library
   // (NewDrama.tsx, start; extract.ts, textName): the original is then that text, and the file is linked, not copied.
-  const source = original && data.inputs.find((file) => file !== original && EXTRACTED.test(file.name) && textName(file.name) === original.name);
+  const extractedFrom = uploaded && data.inputs.find((file) => file !== uploaded && EXTRACTED.test(file.name) && textName(file.name) === uploaded.name);
   const shown = data.versions.find((version) => search.item === "screenplay" && version.version === search.version) ?? data.versions[0];
+  // The original is the stored file drama-cli validated the shown version against (its original.txt, matched by SHA-256);
+  // one that matches none keeps the upload and says so (D75 as amended for C18).
+  const unmatched = Boolean(shown?.original) && shown?.source === null;
+  const original = shown?.source ?? uploaded;
   const [picked, setPicked] = useState<View>();
   const fountain = useText(shown?.file).text;
   const mine = useDocumentText(original);
@@ -302,19 +306,19 @@ function ScriptBody({ dramaId, data, stage, ep, settingUp, asking }: { dramaId: 
             {data.versions.map((version) => (
               <VersionRow key={version.version} version={version} stage={stage} shown={version === shown} onShow={() => show(version)} />
             ))}
-            {original && (
+            {uploaded && (
               <li className="done">
                 <span className="dot accepted" />
                 <div className="fill">
-                  {source ? (
+                  {extractedFrom ? (
                     <span>
                       {t("script.extractedFrom")}{" "}
-                      <a className="link" href={`${source.url}&download=1`} title={t("episode.download")}>
-                        {source.name}
+                      <a className="link" href={`${extractedFrom.url}&download=1`} title={t("episode.download")}>
+                        {extractedFrom.name}
                       </a>
                     </span>
                   ) : (
-                    <span>{t("script.uploaded", { name: original.name })}</span>
+                    <span>{t("script.uploaded", { name: uploaded.name })}</span>
                   )}
                   {/* A project set up before drama-cli recorded rewrites: the history says so where the versions would be. */}
                   {!data.versions.length && !settingUp && <small className="muted">{t("script.notRecorded")}</small>}
@@ -344,6 +348,7 @@ function ScriptBody({ dramaId, data, stage, ep, settingUp, asking }: { dramaId: 
           </div>
           {shown && !comparable && (shown.validate === undefined || validated !== undefined) && <p className="muted ednote">{t("script.noLineMap", { version: shown.version })}</p>}
           {view === "fountain" && shown && <p className="muted ednote">{t("script.noLineKinds")}</p>}
+          {view === "original" && unmatched && original && <p className="muted ednote">{t("script.sourceUnmatched", { version: shown!.version, name: original.name })}</p>}
           {view !== "compare" && comparable && original?.name.toLowerCase().endsWith(".fountain") && (
             <p className="muted ednote">{t("script.alreadyFountain", { version: shown!.version })}</p>
           )}
