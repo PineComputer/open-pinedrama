@@ -2,6 +2,7 @@
 // a turn ends with a question and becomes answerable only once that turn's files are
 // saved; the maker's decision goes back as one answer to the turn that asked
 // (docs/architecture.md, section 6.2, rules 1 to 3).
+import { createHash } from "node:crypto";
 import type { CutEdit, Decision, FileItem, FileKind, ReviewItem, ReviewKind, Reviewing } from "../shared/types.ts";
 import { classify } from "./classify.ts";
 import { computerRef, fleet, sessionRef } from "./computers.ts";
@@ -13,7 +14,7 @@ import { decisionGoal, editGoal } from "./goals.ts";
 import { type FileRow, filesOfStop, toItem, versionNumber } from "./library.ts";
 import { publish } from "./live.ts";
 import { attach, saveRun, sendRun } from "./runs.ts";
-import { type ReviewRow, type SessionRow, type TurnRow, computer as computerRow, episode as episodeRow, episodeCode, review as reviewRow, session as sessionRow } from "./records.ts";
+import { type ReviewRow, type SessionRow, type TurnRow, computer as computerRow, drama as dramaRow, episode as episodeRow, episodeCode, review as reviewRow, session as sessionRow } from "./records.ts";
 
 /**
  * What a stop asks the maker for, from the files it returned. In the setup, looks alone are
@@ -90,12 +91,26 @@ export function pendingReview(sessionId: string): ReviewRow | undefined {
   return get<ReviewRow>("select * from reviews where session_id = ? and state in ('saving', 'open', 'sending') order by created_at desc limit 1", sessionId);
 }
 
+/**
+ * A review's id. In replay, derived from the drama (whose id is already stable, D43), the scope (the setup or the episode) and
+ * the stop's place among that scope's reviews, so a link to a review survives a rebuild that seeds the same samples again (D73);
+ * on Pine, random as every other id.
+ */
+export function reviewId(session: SessionRow): string {
+  if (dramaRow(session.drama_id)?.mode !== "replay") return newId("rev");
+  const episode = session.episode_id ? episodeRow(session.episode_id) : undefined;
+  const scope = episode ? episodeCode(episode) : "setup";
+  const n = get<{ n: number }>("select count(*) as n from reviews where drama_id = ? and episode_id is ?", session.drama_id, session.episode_id ?? null)?.n ?? 0;
+  const id = `rev_${createHash("sha256").update(`${session.drama_id}:${scope}:${n + 1}`).digest("hex").slice(0, 16)}`;
+  return get("select 1 from reviews where id = ?", id) ? newId("rev") : id;
+}
+
 /** A question just ended a turn: record it, not yet answerable. */
 export function questionAsked(session: SessionRow, turnId: string, question: string): void {
   run(
     `insert into reviews (id, drama_id, episode_id, session_id, turn_id, kind, state, question, created_at)
      values (?, ?, ?, ?, ?, 'question', 'saving', ?, ?) on conflict(turn_id) do nothing`,
-    newId("rev"),
+    reviewId(session),
     session.drama_id,
     session.episode_id,
     session.id,

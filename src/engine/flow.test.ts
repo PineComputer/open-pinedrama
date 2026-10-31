@@ -557,6 +557,15 @@ describe("a drama in replay", () => {
   }, 30_000);
 
   // Replay's other sample dramas tell their own names: Bride on Bail's setup stops on its screenplay's red line, as
+  it("gives a replayed review a stable id, from its drama, its scope and its place, so a link survives a rebuild (D73)", async () => {
+    const { createHash } = await import("node:crypto");
+    fleet.stops = "ask";
+    const { id } = await call<{ id: string }>("POST", "/api/dramas/sample", { language: "en", sample: "double-life-rewrite" });
+    const rewrite = await until("the screenplay rewrite", openReview(id, () => true));
+    // The same seed makes the same drama id (D43) and so the same review id: the setup's first stop.
+    expect(rewrite.id).toBe(`rev_${createHash("sha256").update(`${id}:setup:1`).digest("hex").slice(0, 16)}`);
+  });
+
   // drama-cli refuses the bible for one, and goes on with its own leads once the maker has decided.
   it("plays another sample drama with its own names, started as long ago as its data says", async () => {
     const { run } = await import("./db.ts");
