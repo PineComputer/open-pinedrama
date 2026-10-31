@@ -1005,6 +1005,9 @@ timeline
   to 12 cards a row, so a wider window shows more cards, not bigger ones, and a shelf that fits one row
   keeps its height. Ours, untested: a shelf of tall pictures (9:16) takes taller rows, up to 270 px, so a
   card is about 150 px wide with its name on two lines; the row height follows the shelf's median ratio.
+  Known edge case, accepted by master: react-photo-album justifies every row, so a short last row can come
+  out taller than the target (334 px against 245 at worst seen); justified rows stay, with no switch to a
+  cell grid.
   Grounds: Google Photos' and liblib's dense grids; react-photo-album's `targetRowHeight` and
   `rowConstraints`. Words: "location & props会不会有点儿太大了。。。我担心笔记本上都显示不了几个， 不够精致呢"
   (*aren't the locations and props a bit too big… I worry a laptop shows only a few; not refined
