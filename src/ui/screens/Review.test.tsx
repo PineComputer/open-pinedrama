@@ -36,6 +36,24 @@ describe("the review room for storyboards", () => {
     expect(screen.getByRole("heading", { level: 2, name: /\bseg02\b/ })).toBeInTheDocument();
   });
 
+  it("undoes the last change to the draft and resets all of it, saying how much it changes (Codex's re-review, D2)", async () => {
+    const user = userEvent.setup();
+    await open();
+    await screen.findByRole("button", { name: "Accept A" });
+    const reel = screen.getByRole("navigation", { name: "To decide" });
+    const reelText = () => within(reel).getAllByRole("button", { name: /^seg0/ }).map((item) => item.textContent);
+    expect(screen.getByRole("button", { name: "Undo" })).toBeDisabled();
+    await user.keyboard("a");
+    await user.keyboard("a");
+    expect(reelText()).toEqual(["seg01 · v1Accepted", "seg02 · v1Accepted"]);
+    expect(screen.getByText("Draft: 2 changed")).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Undo" }));
+    expect(reelText()).toEqual(["seg01 · v1Accepted", "seg02 · v1Not decided"]);
+    await user.click(screen.getByRole("button", { name: "Reset" }));
+    expect(reelText()).toEqual(["seg01 · v1Not decided", "seg02 · v1Not decided"]);
+    expect(screen.getByRole("button", { name: "Reset" })).toBeDisabled();
+  });
+
   it("keeps Send review disabled until every item has a verdict, and one sent back its reason", async () => {
     const user = userEvent.setup();
     await open();
