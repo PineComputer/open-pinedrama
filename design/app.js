@@ -278,14 +278,14 @@
         <button class="ibtn" aria-label="Close" onClick=${() => set({ sel: null })}>${I("x")}</button></div>
       <div class="utabs" role="tablist">${tabs.map(([k, l]) => html`<button role="tab" aria-selected=${String(tab === k)} onClick=${() => set({ dtab: k })}>${l}</button>`)}</div>
       <div role="tabpanel">
-        ${tab === "prompt" && (spec ? html`<div class="prompt">${spec.prompt.split("\n").map((line) => html`<p>${chips(line)}</p>`)}</div>
-          <ol class="refs">${spec.images.map((u, i) => html`<li><img src=${u} alt=""/><span>Image ${i + 1}</span></li>`)}</ol>` : html`<p class="subtle">The agent hasn't returned this version's spec.json and request.json.</p>`)}
+        ${tab === "prompt" && (spec ? html`<ol class="refs">${spec.images.map((u, i) => html`<li title=${"Image " + (i + 1)}><img src=${u} alt=""/><b>${i + 1}</b></li>`)}</ol>
+          <div class="prompt">${spec.prompt.split("\n").map((line) => html`<p>${chips(line)}</p>`)}</div>` : html`<p class="subtle">The agent hasn't returned this version's spec.json and request.json.</p>`)}
         ${tab === "versions" && html`<ol class="versions">${spec.versions.map(([v, st, said]) => html`<li><b class="mono">${v}</b>${Status(st)}${said && html`<span class="subtle">${said}</span>`}</li>`)}</ol>`}
         ${tab === "request" && html`<pre class="mono">${JSON.stringify({ model: spec.model, content: [{ type: "text", text: spec.prompt.slice(0, 60) + "…" }, ...spec.images.map((u) => ({ type: "image_url", image_url: { url: "@" + u }, role: "reference_image" }))], duration: spec.seconds, ratio: spec.ratio, resolution: spec.resolution }, null, 2)}</pre>`}
         ${tab === "details" && html`<dl><dt>Kind</dt><dd>${node.role}</dd><dt>Version</dt><dd class="mono">${node.ver}</dd><dt>Used by</dt><dd>${uses || "—"}</dd><dt>Reads</dt><dd>${reads || "—"}</dd>${node.problems && node.problems.length ? html`<dt>Why</dt><dd>${node.problems.map((said) => html`<span class="why">${said}</span>`)}</dd>` : null}</dl>`}
       </div>
       <div class="nfoot">
-        ${spec && [spec.model, spec.ratio, spec.resolution, spec.seconds + " s"].map((v) => html`<span class="pill mono">${v}</span>`)}
+        ${spec && html`<span class="pill mono">${spec.model}</span><span class="pill mono">${[spec.ratio, spec.resolution, spec.seconds + " s"].join(" · ")}</span>`}
         <span class="grow"></span>
         <button class="btn sm" disabled title="Phase 2: the agent makes every item for now">${I("upload")}Upload</button>
         <button class="btn sm" disabled title="Phase 2: the agent makes every item for now">${I("sparkle")}Generate</button>
