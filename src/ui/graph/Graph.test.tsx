@@ -52,6 +52,20 @@ describe("the Graph", () => {
     expect(screen.queryByRole("button", { name: /assets\/characters/ })).toBeNull();
   });
 
+  it("says where a version stands by the studio's one rule: unaccepted is \"vN · not accepted\", never the maker's colour, as Lineage reads no review (D64; Codex rc5 C17)", async () => {
+    engine("shot");
+    await renderAt(<Graph dramaId="d1" />, "/d/d1/out-of-date");
+    // The take's t01, which drama-cli's lineage records as not accepted: the chip's colour and words are one standing.
+    await userEvent.click(await card(/^EP001 seg01 take/));
+    const take = await card(/^EP001 seg01 take t01/);
+    const chip = take.querySelector(".st");
+    expect(chip).toHaveTextContent("t01 · not accepted");
+    expect(chip).toHaveAttribute("data-status", "work");
+    expect(take.querySelector(".st.you")).toBeNull();
+    // An accepted one says so.
+    expect((await card(/^林 v1/)).querySelector(".st")).toHaveTextContent("Accepted");
+  });
+
   it("leaves Lineage for the item's one home: a look in Assets, a storyboard in its episode, never Home (IA §16; Codex's IA review, B1)", async () => {
     engine("shot");
     const { unmount } = await renderAt(<Graph dramaId="d1" />, "/d/d1/assets/characters/lin?view=lineage");

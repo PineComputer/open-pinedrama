@@ -17,7 +17,8 @@ import { EmptyState } from "../components/EmptyState.tsx";
 import { useResource } from "../api.ts";
 import { type TKey, useT } from "../i18n.ts";
 import { Icon, type IconName } from "../icons.tsx";
-import { errorText, useNames } from "../labels.ts";
+import { type Chip, errorText, ofLineage, useNames, versionStanding } from "../labels.ts";
+import { StatusChip } from "../components/StatusChip.tsx";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { homeLink, usePage, usePlace } from "../place.ts";
 import { AsideSlot } from "../shell/aside.ts";
@@ -69,20 +70,6 @@ function defaultFocus(lineage: Lineage, episode: string | undefined): string | u
   return (lineage.nodes.find((node) => node.kind === "bible") ?? lineage.nodes[0])?.id;
 }
 
-interface Standing {
-  status: "stale" | "line" | "accepted" | "you";
-  label?: string;
-}
-
-function standingOf(node: LineageNode, fromStale: boolean, t: T): Standing {
-  if (node.fresh === false) return { status: "stale" };
-  if (fromStale) return { status: "stale", label: t("graph.madeFromStale") };
-  if (node.version === null) return { status: "line", label: t("graph.noVersion") };
-  // drama-cli never accepts video prompts: it judges them request by request (fresh above).
-  if (node.kind === "video_prompts") return { status: "accepted", label: t("graph.compiled") };
-  if (node.accepted === node.version) return { status: "accepted" };
-  return { status: "you", label: t("graph.notAccepted") };
-}
 
 /** A version's picture: its image, a video's first frame over the poster given (a take's storyboard), or its kind's icon. */
 function Picture({ node, file, poster, style }: { node: LineageNode; file?: FileItem; poster?: FileItem; style?: CSSProperties }) {
@@ -92,25 +79,14 @@ function Picture({ node, file, poster, style }: { node: LineageNode; file?: File
   return <Icon name={ICONS[node.kind]} className="ic" />;
 }
 
-/** The prototype's status chip (studio-pro/app.js, Status). */
-function Status({ standing, t }: { standing: Standing; t: T }) {
-  return (
-    <span className={`st ${standing.status}`}>
-      <i />
-      {standing.label ?? t(`status.${standing.status}` as TKey)}
-    </span>
-  );
-}
-
 interface CardData extends Record<string, unknown> {
   node: LineageNode;
   name: string;
   file?: FileItem;
   poster?: FileItem;
-  standing: Standing;
+  standing?: Chip;
   relation: "sel" | "up" | "down";
   stale: boolean;
-  t: T;
 }
 
 /** A version on the plane: the prototype's .gnode (studio-pro/screens.js, Graph), its picture over its name, version and state. */
@@ -130,7 +106,7 @@ function Card({ data }: NodeProps<Node<CardData>>) {
         <Picture node={node} file={data.file} poster={data.poster} />
       </span>
       <span className="gtxt">
-        <b>{data.name}</b> <span className="mono">{node.version}</span> <Status standing={data.standing} t={data.t} />
+        <b>{data.name}</b> <span className="mono">{node.version}</span> {data.standing && <StatusChip {...data.standing} />}
       </span>
     </button>
   );
@@ -189,7 +165,15 @@ export function Graph({ dramaId }: { dramaId: string }) {
 
   const marked = madeFromStale(lineage);
   const name = (node: LineageNode) => stageName(node, names, t);
-  const standing = (node: LineageNode) => standingOf(node, marked.has(node.id), t);
+  // Where a version stands, by the one rule (labels.ts, versionStanding; D64) over drama-cli's lineage, after two facts of
+  // Lineage's own: a version drama-cli calls fresh but made from an out-of-date one says so, and video prompts, which
+  // drama-cli never accepts (it judges them request by request), are compiled once made. Lineage reads no review, so
+  // nothing here waits for the maker: an unaccepted version is "vN · not accepted", never the maker's colour.
+  const standing = (node: LineageNode): Chip | undefined => {
+    if (node.fresh !== false && marked.has(node.id)) return { status: "stale", label: t("graph.madeFromStale") };
+    if (node.kind === "video_prompts" && node.version !== null && node.fresh !== false) return { status: "accepted", label: t("graph.compiled") };
+    return versionStanding(ofLineage(node), undefined, undefined, t);
+  };
   const isStale = (id: string) => byId.get(id)?.fresh === false || marked.has(id);
   const fileOf = (node: LineageNode) => (node.shows ? files.data?.find((file) => file.path === `drama/${node.shows}`) : undefined);
   // A video's poster until its first frame loads: a take's, the storyboard it was shot from; a cut's, its first take's.
@@ -223,7 +207,7 @@ export function Graph({ dramaId }: { dramaId: string }) {
           // The card's size, which React Flow lays out before it measures the node (and all jsdom gives).
           width: CARD.width,
           height: CARD.height,
-          data: { node, name: name(node), file: fileOf(node), poster: posterOf(node), standing: standing(node), relation: id === center ? "sel" : up.has(id) ? "up" : "down", stale: isStale(id), t },
+          data: { node, name: name(node), file: fileOf(node), poster: posterOf(node), standing: standing(node), relation: id === center ? "sel" : up.has(id) ? "up" : "down", stale: isStale(id) },
         };
       })
     : [];
