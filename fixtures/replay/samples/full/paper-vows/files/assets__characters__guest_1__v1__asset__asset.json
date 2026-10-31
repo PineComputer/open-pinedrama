@@ -1,0 +1,11 @@
+{
+ "Id": "asset-20261022180000-px8r4",
+ "Name": "double-life-r4 guest_1 base v1",
+ "AssetType": "Image",
+ "Status": "Active",
+ "Moderation": {
+  "Strategy": "Default"
+ },
+ "CreateTime": "2026-10-22T10:00:01Z",
+ "UpdateTime": "2026-10-22T10:00:03Z"
+}

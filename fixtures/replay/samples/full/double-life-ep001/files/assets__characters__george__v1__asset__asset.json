@@ -1,0 +1,11 @@
+{
+ "Id": "asset-20261021071739-j4lf7",
+ "Name": "double-life-ep001 george base v1",
+ "AssetType": "Image",
+ "Status": "Active",
+ "Moderation": {
+  "Strategy": "Default"
+ },
+ "CreateTime": "2026-10-20T23:17:40Z",
+ "UpdateTime": "2026-10-20T23:17:42Z"
+}

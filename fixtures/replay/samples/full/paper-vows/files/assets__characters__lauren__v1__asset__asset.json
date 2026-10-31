@@ -1,0 +1,11 @@
+{
+ "Id": "asset-20261022121223-bghz8",
+ "Name": "double-life-r4 lauren S0 v1",
+ "AssetType": "Image",
+ "Status": "Active",
+ "Moderation": {
+  "Strategy": "Default"
+ },
+ "CreateTime": "2026-10-22T04:12:25Z",
+ "UpdateTime": "2026-10-22T04:12:27Z"
+}

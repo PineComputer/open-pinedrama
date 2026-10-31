@@ -106,6 +106,8 @@ describe("a sample drama's own lineage at a stop", () => {
         node(5, "assets/scenes/home/front", "plate", "Locations", [["assets/scenes/home", 5]], []),
         node(6, "episodes/EP001/blocking/seg01", "blocking", "EP001 seg01", [["assets/characters/lin", 4]], [6]),
         node(7, "episodes/EP001/first_frame_reference/seg01", "first_frame_reference", "EP001 seg01", [["episodes/EP001/blocking/seg01", 6]], []),
+        // drama-cli draws a plate's floor plan from nothing, then the plate from its views.
+        node(8, "assets/scenes/home/floor-plan", "plate", "Locations", [], []),
       ],
       links: [
         [1, 1, 0, 2, 0, "DRAMA_CLI_FILE"],
@@ -130,6 +132,7 @@ describe("a sample drama's own lineage at a stop", () => {
     // With the place drawn, its plate and the view made from it come in.
     const later = at({ preset: "en-us-live-sfw", bible: "v1", looks: { lin: v1 }, references: { home: { ...v1, path: "assets/scenes/home" } }, episodes: {} });
     expect(later.nodes.map((n) => n.properties.id)).toContain("assets/scenes/home/front");
+    expect(later.nodes.map((n) => n.properties.id)).toContain("assets/scenes/home/floor-plan");
     expect(later.links.map(([id]) => id)).toEqual([1, 2, 3, 5]);
     // Once EP001's boards are drawn, its blocking and the first-frame reference made from it come in.
     const boards = at({ preset: "en-us-live-sfw", bible: "v1", looks: { lin: v1 }, references: { home: { ...v1, path: "assets/scenes/home" } }, episodes: { EP001: { segments: ["seg01"], boards: { seg01: v1 } } } });

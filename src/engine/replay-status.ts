@@ -12,6 +12,8 @@ export interface Made {
 
 export interface EpisodeMade {
   segments: string[];
+  /** The breakdown's version, as the project a sample comes from numbered it (DramaData.versions), where not v1. */
+  breakdown?: string;
   /** Each segment's scene heading, as the screenplay heads its scene. */
   headings?: Record<string, string>;
   /** The storyboard styles drawn for each segment, where not both (replay-fleet.ts, DramaData.styles). */
@@ -65,7 +67,7 @@ function episode(code: string, made: EpisodeMade, references: Record<string, Ref
   const takes = made.takes;
   const missing = Object.entries(references).filter(([, reference]) => reference.current === null || reference.current !== reference.accepted);
   return {
-    breakdown: { ...stage(`${base}/breakdown`, accepted("v1")), accepted_file: `/work/drama/${base}/breakdown/v1/breakdown.json` },
+    breakdown: { ...stage(`${base}/breakdown`, accepted(made.breakdown ?? "v1")), accepted_file: `/work/drama/${base}/breakdown/${made.breakdown ?? "v1"}/breakdown.json` },
     edit: stage(`${base}/edit`, made.cut ?? none),
     video_prompts: { current: takes ? "v1" : null, stale: [] },
     blocking: made.boards ? each((segment) => stage(`${base}/blocking/${segment}`, accepted("v1"))) : {},

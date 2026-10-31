@@ -1,0 +1,11 @@
+{
+ "Id": "asset-20261022180343-nkrq6",
+ "Name": "double-life-r4 cassie S1 v2",
+ "AssetType": "Image",
+ "Status": "Active",
+ "Moderation": {
+  "Strategy": "Default"
+ },
+ "CreateTime": "2026-10-22T10:03:45Z",
+ "UpdateTime": "2026-10-22T10:03:47Z"
+}

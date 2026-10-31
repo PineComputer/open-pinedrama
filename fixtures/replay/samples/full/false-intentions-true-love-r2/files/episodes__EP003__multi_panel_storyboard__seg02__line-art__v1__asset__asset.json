@@ -1,0 +1,11 @@
+{
+ "Id": "asset-20261027204254-6lssw",
+ "Name": "image-1",
+ "AssetType": "Image",
+ "Status": "Active",
+ "Moderation": {
+  "Strategy": "Default"
+ },
+ "CreateTime": "2026-10-27T12:42:56Z",
+ "UpdateTime": "2026-10-27T12:42:58Z"
+}

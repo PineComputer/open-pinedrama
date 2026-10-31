@@ -40,14 +40,14 @@ for (const theme of ["dark", "light"] as const) {
     const dramas = await page.evaluate(async () => (await (await fetch("/api/dramas")).json()));
     const list: { id: string; title: string }[] = dramas.dramas ?? dramas;
     const bride = list.find((d) => d.title === "Bride on Bail")?.id;
-    const setup = list.find((d) => d.title === "The Stepmother")?.id;
-    // The prototype's Fountain is the rewrite's review: a drama waiting for the maker to accept its rewrite (open-qa.mjs leaves 后妈来了 there), else Bride's script.
+    // The prototype's Analyzing and Fountain are the setup's first screens: a drama waiting for the maker to accept its rewrite
+    // (open-qa.mjs leaves 后妈来了 there), else Bride's.
     const rewriting = list.find((d) => d.title === "后妈来了")?.id ?? bride;
     expect(bride, "Bride on Bail is seeded in the product").toBeTruthy();
     const inbox: { id: string; state: string; episode?: string; kind: string }[] = await page.evaluate(async (d) => (await (await fetch(`/api/inbox?drama=${d}`)).json()), bride);
     const takes = inbox.find((r) => r.state === "open" && r.episode === "EP006" && r.kind === "takes");
     const routes: Record<(typeof SCREENS)[number], string> = {
-      home: "/", upload: "/new", analyzing: `/d/${setup}`, fountain: `/d/${rewriting}/script`, story: `/d/${bride}/story`, episodes: `/d/${bride}`,
+      home: "/", upload: "/new", analyzing: `/d/${rewriting}/analyzing`, fountain: `/d/${rewriting}/script`, story: `/d/${bride}/story`, episodes: `/d/${bride}`,
       canvas: `/d/${bride}/canvas?item=EP006`, graph: `/d/${bride}/graph`, review: takes ? `/r/${takes.id}` : `/d/${bride}/review`, cut: `/d/${bride}/cut`,
     };
     const rows: string[] = [];

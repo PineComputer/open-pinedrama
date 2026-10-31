@@ -1,0 +1,11 @@
+{
+ "Id": "asset-20261019091351-krdvl",
+ "Name": "houma-ep001-v2 bin_ke_jia base v1",
+ "AssetType": "Image",
+ "Status": "Active",
+ "Moderation": {
+  "Strategy": "Default"
+ },
+ "CreateTime": "2026-10-19T01:13:52Z",
+ "UpdateTime": "2026-10-19T01:13:53Z"
+}

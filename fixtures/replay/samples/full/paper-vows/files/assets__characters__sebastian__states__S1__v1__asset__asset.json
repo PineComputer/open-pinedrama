@@ -1,0 +1,11 @@
+{
+ "Id": "asset-20261022181218-ng85l",
+ "Name": "double-life-r4 sebastian S1 v1",
+ "AssetType": "Image",
+ "Status": "Active",
+ "Moderation": {
+  "Strategy": "Default"
+ },
+ "CreateTime": "2026-10-22T10:12:19Z",
+ "UpdateTime": "2026-10-22T10:12:21Z"
+}

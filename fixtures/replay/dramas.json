@@ -2455,8 +2455,8 @@
  },
  "paper-vows": {
   "title": {
-   "en": "The Double Life of My Billionaire Husband",
-   "zh": "The Double Life of My Billionaire Husband"
+   "en": "The Double Life of My Billionaire Husband (r4)",
+   "zh": "The Double Life of My Billionaire Husband (r4)"
   },
   "logline": {
    "en": "To pay for her mother's dialysis, Natalie agrees to marry the jailed Klein outcast Sebastian Klein in Cassie's place, but the 'loser' who walks out of jail is a man running a secret plan, and the Quinn wedding is its final puzzle piece.",
@@ -2477,6 +2477,262 @@
   "styles": [
    "line-art"
   ],
+  "versions": {
+   "assets/characters/cassie": "v1",
+   "assets/characters/cassie/states/S1": "v2",
+   "assets/characters/daniel": "v1",
+   "assets/characters/george": "v1",
+   "assets/characters/george/states/S1": "v1",
+   "assets/characters/guest_1": "v1",
+   "assets/characters/guest_2": "v1",
+   "assets/characters/lauren": "v1",
+   "assets/characters/lauren/states/S1": "v1",
+   "assets/characters/natalie": "v1",
+   "assets/characters/natalie/states/S1": "v1",
+   "assets/characters/natalie/states/S2": "v3",
+   "assets/characters/natalie/states/S3": "v1",
+   "assets/characters/natalie/states/S4": "v1",
+   "assets/characters/officer": "v1",
+   "assets/characters/officiant": "v1",
+   "assets/characters/sebastian": "v2",
+   "assets/characters/sebastian/states/S1": "v1",
+   "assets/characters/sebastian/states/S2": "v1",
+   "assets/characters/sebastian/states/S3": "v1",
+   "assets/characters/sebastian/states/S4": "v1",
+   "assets/props/agreement": "v1",
+   "assets/props/blanket": "v1",
+   "assets/props/bouquet": "v1",
+   "assets/props/breakfast": "v1",
+   "assets/props/car_key": "v1",
+   "assets/props/champagne_glasses": "v1",
+   "assets/props/coins": "v1",
+   "assets/props/daniel_phone": "v1",
+   "assets/props/dress_bag": "v1",
+   "assets/props/expensive_car": "v1",
+   "assets/props/folder": "v1",
+   "assets/props/front_door_key": "v1",
+   "assets/props/gift_box": "v1",
+   "assets/props/guest_phone": "v1",
+   "assets/props/hospital_statement": "v3",
+   "assets/props/lace_bra": "v1",
+   "assets/props/lauren_phone": "v1",
+   "assets/props/natalie_bag": "v1",
+   "assets/props/natalie_phone": "v1",
+   "assets/props/pillow": "v1",
+   "assets/props/release_form": "v2",
+   "assets/props/sebastian_phone": "v1",
+   "assets/scenes/jail_cell": "v1",
+   "assets/scenes/jail_cell/back": "v1",
+   "assets/scenes/jail_cell/floor-plan": "v1",
+   "assets/scenes/jail_cell/front": "v1",
+   "assets/scenes/jail_cell/left-side": "v1",
+   "assets/scenes/jail_cell/right-side": "v1",
+   "assets/scenes/jail_front_desk": "v1",
+   "assets/scenes/jail_front_desk/back": "v1",
+   "assets/scenes/jail_front_desk/floor-plan": "v1",
+   "assets/scenes/jail_front_desk/front": "v1",
+   "assets/scenes/jail_front_desk/left-side": "v1",
+   "assets/scenes/jail_front_desk/right-side": "v1",
+   "assets/scenes/jail_street": "v1",
+   "assets/scenes/jail_street/back": "v1",
+   "assets/scenes/jail_street/floor-plan": "v1",
+   "assets/scenes/jail_street/front": "v1",
+   "assets/scenes/jail_street/left-side": "v1",
+   "assets/scenes/jail_street/right-side": "v1",
+   "assets/scenes/mansion_living_room": "v4",
+   "assets/scenes/mansion_living_room/back": "v5",
+   "assets/scenes/mansion_living_room/floor-plan": "v5",
+   "assets/scenes/mansion_living_room/front": "v5",
+   "assets/scenes/mansion_living_room/left-side": "v5",
+   "assets/scenes/mansion_living_room/right-side": "v5",
+   "assets/scenes/sebastian_apartment": "v1",
+   "assets/scenes/sebastian_apartment/back": "v1",
+   "assets/scenes/sebastian_apartment/floor-plan": "v1",
+   "assets/scenes/sebastian_apartment/front": "v1",
+   "assets/scenes/sebastian_apartment/left-side": "v1",
+   "assets/scenes/sebastian_apartment/right-side": "v1",
+   "assets/scenes/sebastian_apartment/times/Night": "v1",
+   "assets/scenes/sebastian_apartment/times/Night/back": "v1",
+   "assets/scenes/sebastian_apartment/times/Night/front": "v1",
+   "assets/scenes/sebastian_apartment/times/Night/left-side": "v1",
+   "assets/scenes/sebastian_apartment/times/Night/right-side": "v1",
+   "assets/scenes/wedding_garden": "v1",
+   "assets/scenes/wedding_garden/back": "v1",
+   "assets/scenes/wedding_garden/floor-plan": "v1",
+   "assets/scenes/wedding_garden/front": "v1",
+   "assets/scenes/wedding_garden/left-side": "v1",
+   "assets/scenes/wedding_garden/right-side": "v1",
+   "bible": "v3",
+   "episodes/EP001/blocking/seg01": "v6",
+   "episodes/EP001/blocking/seg02": "v6",
+   "episodes/EP001/blocking/seg03": "v8",
+   "episodes/EP001/breakdown": "v2",
+   "episodes/EP001/edit": "v1",
+   "episodes/EP001/first_frame_reference/seg01": "v1",
+   "episodes/EP001/multi_panel_storyboard/seg01/line-art": "v4",
+   "episodes/EP001/multi_panel_storyboard/seg02/line-art": "v7",
+   "episodes/EP001/multi_panel_storyboard/seg03/line-art": "v2",
+   "episodes/EP001/segments/seg01": "t02",
+   "episodes/EP001/segments/seg02": "t02",
+   "episodes/EP001/segments/seg03": "t01",
+   "episodes/EP001/video_prompts": "v4",
+   "episodes/EP002/asr_align": "v1",
+   "episodes/EP002/blocking/seg01": "v1",
+   "episodes/EP002/blocking/seg02": "v1",
+   "episodes/EP002/blocking/seg03": "v1",
+   "episodes/EP002/blocking/seg04": "v1",
+   "episodes/EP002/breakdown": "v2",
+   "episodes/EP002/edit": "v1",
+   "episodes/EP002/first_frame_reference/seg01": "v2",
+   "episodes/EP002/first_frame_reference/seg02": "v1",
+   "episodes/EP002/first_frame_reference/seg03": "v2",
+   "episodes/EP002/multi_panel_storyboard/seg01/line-art": "v1",
+   "episodes/EP002/multi_panel_storyboard/seg02/line-art": "v4",
+   "episodes/EP002/multi_panel_storyboard/seg03/line-art": "v5",
+   "episodes/EP002/multi_panel_storyboard/seg04/line-art": "v6",
+   "episodes/EP002/segments/seg01": "t03",
+   "episodes/EP002/segments/seg02": "t03",
+   "episodes/EP002/segments/seg03": "t04",
+   "episodes/EP002/segments/seg04": "t01",
+   "episodes/EP002/video_prompts": "v5",
+   "episodes/EP003/asr_align": "v1",
+   "episodes/EP003/blocking/seg01": "v1",
+   "episodes/EP003/blocking/seg02": "v1",
+   "episodes/EP003/blocking/seg03": "v1",
+   "episodes/EP003/blocking/seg04": "v1",
+   "episodes/EP003/breakdown": "v2",
+   "episodes/EP003/edit": "v1",
+   "episodes/EP003/multi_panel_storyboard/seg01/line-art": "v1",
+   "episodes/EP003/multi_panel_storyboard/seg02/line-art": "v1",
+   "episodes/EP003/multi_panel_storyboard/seg03/line-art": "v1",
+   "episodes/EP003/multi_panel_storyboard/seg04/line-art": "v1",
+   "episodes/EP003/segments/seg01": "t01",
+   "episodes/EP003/segments/seg02": "t01",
+   "episodes/EP003/segments/seg03": "t01",
+   "episodes/EP003/segments/seg04": "t01",
+   "episodes/EP003/video_prompts": "v1",
+   "episodes/EP004/asr_align": "v1",
+   "episodes/EP004/blocking/seg01": "v2",
+   "episodes/EP004/blocking/seg02": "v2",
+   "episodes/EP004/blocking/seg03": "v2",
+   "episodes/EP004/blocking/seg04": "v2",
+   "episodes/EP004/breakdown": "v3",
+   "episodes/EP004/edit": "v1",
+   "episodes/EP004/first_frame_reference/seg01": "v1",
+   "episodes/EP004/multi_panel_storyboard/seg01/line-art": "v1",
+   "episodes/EP004/multi_panel_storyboard/seg02/line-art": "v1",
+   "episodes/EP004/multi_panel_storyboard/seg03/line-art": "v1",
+   "episodes/EP004/multi_panel_storyboard/seg04/line-art": "v1",
+   "episodes/EP004/segments/seg01": "t02",
+   "episodes/EP004/segments/seg02": "t01",
+   "episodes/EP004/segments/seg03": "t01",
+   "episodes/EP004/segments/seg04": "t01",
+   "episodes/EP004/video_prompts": "v2",
+   "episodes/EP005/asr_align": "v1",
+   "episodes/EP005/blocking/seg01": "v1",
+   "episodes/EP005/blocking/seg02": "v1",
+   "episodes/EP005/blocking/seg03": "v2",
+   "episodes/EP005/blocking/seg04": "v2",
+   "episodes/EP005/breakdown": "v1",
+   "episodes/EP005/edit": "v2",
+   "episodes/EP005/first_frame_reference/seg01": "v1",
+   "episodes/EP005/multi_panel_storyboard/seg01/line-art": "v1",
+   "episodes/EP005/multi_panel_storyboard/seg02/line-art": "v1",
+   "episodes/EP005/multi_panel_storyboard/seg03/line-art": "v3",
+   "episodes/EP005/multi_panel_storyboard/seg04/line-art": "v2",
+   "episodes/EP005/segments/seg01": "t02",
+   "episodes/EP005/segments/seg02": "t03",
+   "episodes/EP005/segments/seg03": "t02",
+   "episodes/EP005/segments/seg04": "t01",
+   "episodes/EP005/video_prompts": "v3",
+   "episodes/EP006/asr_align": "v3",
+   "episodes/EP006/blocking/seg01": "v1",
+   "episodes/EP006/blocking/seg02": "v1",
+   "episodes/EP006/blocking/seg03": "v1",
+   "episodes/EP006/blocking/seg04": "v1",
+   "episodes/EP006/breakdown": "v1",
+   "episodes/EP006/edit": "v2",
+   "episodes/EP006/first_frame_reference/seg01": "v1",
+   "episodes/EP006/first_frame_reference/seg03": "v1",
+   "episodes/EP006/multi_panel_storyboard/seg01/line-art": "v1",
+   "episodes/EP006/multi_panel_storyboard/seg02/line-art": "v1",
+   "episodes/EP006/multi_panel_storyboard/seg03/line-art": "v1",
+   "episodes/EP006/multi_panel_storyboard/seg04/line-art": "v1",
+   "episodes/EP006/segments/seg01": "t02",
+   "episodes/EP006/segments/seg02": "t01",
+   "episodes/EP006/segments/seg03": "t02",
+   "episodes/EP006/segments/seg04": "t02",
+   "episodes/EP006/video_prompts": "v2"
+  },
+  "extras": {
+   "setup": [
+    "assets/scenes/jail_cell/back/v1/image-1.jpg",
+    "assets/scenes/jail_cell/floor-plan/v1/image-1.jpg",
+    "assets/scenes/jail_cell/front/v1/image-1.jpg",
+    "assets/scenes/jail_cell/left-side/v1/image-1.jpg",
+    "assets/scenes/jail_cell/right-side/v1/image-1.jpg",
+    "assets/scenes/jail_front_desk/back/v1/image-1.jpg",
+    "assets/scenes/jail_front_desk/floor-plan/v1/image-1.jpg",
+    "assets/scenes/jail_front_desk/front/v1/image-1.jpg",
+    "assets/scenes/jail_front_desk/left-side/v1/image-1.jpg",
+    "assets/scenes/jail_front_desk/right-side/v1/image-1.jpg",
+    "assets/scenes/jail_street/back/v1/image-1.jpg",
+    "assets/scenes/jail_street/floor-plan/v1/image-1.jpg",
+    "assets/scenes/jail_street/front/v1/image-1.jpg",
+    "assets/scenes/jail_street/left-side/v1/image-1.jpg",
+    "assets/scenes/jail_street/right-side/v1/image-1.jpg",
+    "assets/scenes/mansion_living_room/back/v5/image-1.jpg",
+    "assets/scenes/mansion_living_room/floor-plan/v5/image-1.jpg",
+    "assets/scenes/mansion_living_room/front/v5/image-1.jpg",
+    "assets/scenes/mansion_living_room/left-side/v5/image-1.jpg",
+    "assets/scenes/mansion_living_room/right-side/v5/image-1.jpg",
+    "assets/scenes/sebastian_apartment/back/v1/image-1.jpg",
+    "assets/scenes/sebastian_apartment/floor-plan/v1/image-1.jpg",
+    "assets/scenes/sebastian_apartment/front/v1/image-1.jpg",
+    "assets/scenes/sebastian_apartment/left-side/v1/image-1.jpg",
+    "assets/scenes/sebastian_apartment/right-side/v1/image-1.jpg",
+    "assets/scenes/sebastian_apartment/times/Night/back/v1/image-1.jpg",
+    "assets/scenes/sebastian_apartment/times/Night/front/v1/image-1.jpg",
+    "assets/scenes/sebastian_apartment/times/Night/left-side/v1/image-1.jpg",
+    "assets/scenes/sebastian_apartment/times/Night/right-side/v1/image-1.jpg",
+    "assets/scenes/wedding_garden/back/v1/image-1.jpg",
+    "assets/scenes/wedding_garden/floor-plan/v1/image-1.jpg",
+    "assets/scenes/wedding_garden/front/v1/image-1.jpg",
+    "assets/scenes/wedding_garden/left-side/v1/image-1.jpg",
+    "assets/scenes/wedding_garden/right-side/v1/image-1.jpg"
+   ],
+   "EP001": [
+    "episodes/EP001/first_frame_reference/seg01/v1/image-1.jpg",
+    "episodes/EP001/video_prompts/v4/prompts.md"
+   ],
+   "EP002": [
+    "episodes/EP002/asr_align/v1/cut.srt",
+    "episodes/EP002/first_frame_reference/seg01/v2/image-1.jpg",
+    "episodes/EP002/first_frame_reference/seg02/v1/image-1.jpg",
+    "episodes/EP002/first_frame_reference/seg03/v2/image-1.jpg",
+    "episodes/EP002/video_prompts/v5/prompts.md"
+   ],
+   "EP003": [
+    "episodes/EP003/asr_align/v1/cut.srt",
+    "episodes/EP003/video_prompts/v1/prompts.md"
+   ],
+   "EP004": [
+    "episodes/EP004/asr_align/v1/cut.srt",
+    "episodes/EP004/first_frame_reference/seg01/v1/image-1.jpg",
+    "episodes/EP004/video_prompts/v2/prompts.md"
+   ],
+   "EP005": [
+    "episodes/EP005/asr_align/v1/cut.srt",
+    "episodes/EP005/first_frame_reference/seg01/v1/image-1.jpg",
+    "episodes/EP005/video_prompts/v3/prompts.md"
+   ],
+   "EP006": [
+    "episodes/EP006/asr_align/v3/cut.srt",
+    "episodes/EP006/first_frame_reference/seg01/v1/image-1.jpg",
+    "episodes/EP006/first_frame_reference/seg03/v1/image-1.jpg",
+    "episodes/EP006/video_prompts/v2/prompts.md"
+   ]
+  },
   "ago": 135,
   "cast": [
    {
@@ -2514,6 +2770,34 @@
     ]
    },
    {
+    "id": "george",
+    "name": {
+     "en": "George",
+     "zh": "George"
+    },
+    "short": {
+     "en": "George",
+     "zh": "George"
+    },
+    "looks": [
+     "S1"
+    ]
+   },
+   {
+    "id": "lauren",
+    "name": {
+     "en": "Lauren",
+     "zh": "Lauren"
+    },
+    "short": {
+     "en": "Lauren",
+     "zh": "Lauren"
+    },
+    "looks": [
+     "S1"
+    ]
+   },
+   {
     "id": "cassie",
     "name": {
      "en": "Cassie",
@@ -2539,18 +2823,15 @@
     }
    },
    {
-    "id": "george",
+    "id": "officer",
     "name": {
-     "en": "George",
-     "zh": "George"
+     "en": "Officer",
+     "zh": "Officer"
     },
     "short": {
-     "en": "George",
-     "zh": "George"
-    },
-    "looks": [
-     "S1"
-    ]
+     "en": "Officer",
+     "zh": "Officer"
+    }
    },
    {
     "id": "guest_1",
@@ -2572,31 +2853,6 @@
     "short": {
      "en": "Guest 2",
      "zh": "Guest 2"
-    }
-   },
-   {
-    "id": "lauren",
-    "name": {
-     "en": "Lauren",
-     "zh": "Lauren"
-    },
-    "short": {
-     "en": "Lauren",
-     "zh": "Lauren"
-    },
-    "looks": [
-     "S1"
-    ]
-   },
-   {
-    "id": "officer",
-    "name": {
-     "en": "Officer",
-     "zh": "Officer"
-    },
-    "short": {
-     "en": "Officer",
-     "zh": "Officer"
     }
    },
    {
@@ -2662,13 +2918,13 @@
      "en": "Sebastian's apartment, living room",
      "zh": "Sebastian's apartment, living room"
     },
-    "times": [
-     "Night"
-    ],
     "description": {
      "en": "The living room of a small but bright, clean and stylish present-day one-bedroom downtown apartment, with white walls, a pale oak floor and warm modern-minimalist décor. Back wall: on its left half, a large floor-to-ceiling window with sheer linen curtains looking out over the city skyline; by day, sunlight streams in through it from behind, and by night the city lights glow through it. On the right half of the back wall is the white panelled bedroom door, the only bedroom. Left wall: the apartment's front door, a dark-grey panelled door with a brass handle, which is the way in, with wall hooks and a slim oak shoe bench beside it. Right wall: a compact open kitchenette with white flat-front cabinets, a pale stone counter and two oak stools tucked under the counter's overhang. Front wall (behind the camera): low oak bookshelves. A charcoal-grey linen three-seat couch stands in the middle of the room, slightly left of centre, its back to the camera, facing the back wall's window, with a brass arc floor lamp at its left end and a low round oak coffee table in front of it. A small round light-oak dining table with two upholstered chairs stands in the right half of the room, between the couch and the kitchenette, nearer the bedroom door. A glass globe pendant lamp hangs over the dining table. At night the warm floor lamp from the left and the pendant over the table are the light sources; by day the window on the back wall gives soft, bright light.",
      "zh": "The living room of a small but bright, clean and stylish present-day one-bedroom downtown apartment, with white walls, a pale oak floor and warm modern-minimalist décor. Back wall: on its left half, a large floor-to-ceiling window with sheer linen curtains looking out over the city skyline; by day, sunlight streams in through it from behind, and by night the city lights glow through it. On the right half of the back wall is the white panelled bedroom door, the only bedroom. Left wall: the apartment's front door, a dark-grey panelled door with a brass handle, which is the way in, with wall hooks and a slim oak shoe bench beside it. Right wall: a compact open kitchenette with white flat-front cabinets, a pale stone counter and two oak stools tucked under the counter's overhang. Front wall (behind the camera): low oak bookshelves. A charcoal-grey linen three-seat couch stands in the middle of the room, slightly left of centre, its back to the camera, facing the back wall's window, with a brass arc floor lamp at its left end and a low round oak coffee table in front of it. A small round light-oak dining table with two upholstered chairs stands in the right half of the room, between the couch and the kitchenette, nearer the bedroom door. A glass globe pendant lamp hangs over the dining table. At night the warm floor lamp from the left and the pendant over the table are the light sources; by day the window on the back wall gives soft, bright light."
-    }
+    },
+    "times": [
+     "Night"
+    ]
    },
    {
     "id": "wedding_garden",
@@ -3008,6 +3264,23 @@
        ]
       }
      }
+    ],
+    "cut": [
+     {
+      "segment": "seg01",
+      "in": 0,
+      "out": 30.041666666666668
+     },
+     {
+      "segment": "seg02",
+      "in": 0,
+      "out": 29.041666666666668
+     },
+     {
+      "segment": "seg03",
+      "in": 0,
+      "out": 30.041666666666668
+     }
     ]
    },
    {
@@ -3113,6 +3386,28 @@
         "Sebastian leans in close and whispers into Daniel's ear, a hand on Daniel's shoulder; Daniel listens with his eyes narrowing, then nods."
        ]
       }
+     }
+    ],
+    "cut": [
+     {
+      "segment": "seg01",
+      "in": 0,
+      "out": 20.041667
+     },
+     {
+      "segment": "seg02",
+      "in": 0,
+      "out": 13.041667
+     },
+     {
+      "segment": "seg03",
+      "in": 0,
+      "out": 15.041667
+     },
+     {
+      "segment": "seg04",
+      "in": 0,
+      "out": 18.041667
      }
     ]
    },
@@ -3482,6 +3777,38 @@
        ]
       }
      }
+    ],
+    "cut": [
+     {
+      "segment": "seg01",
+      "in": 0,
+      "out": 28.041667
+     },
+     {
+      "segment": "seg02",
+      "in": 0,
+      "out": 10.833333
+     },
+     {
+      "segment": "seg02",
+      "in": 12.708333,
+      "out": 23.041667
+     },
+     {
+      "segment": "seg03",
+      "in": 0,
+      "out": 11.958333
+     },
+     {
+      "segment": "seg03",
+      "in": 14.875,
+      "out": 28.041667
+     },
+     {
+      "segment": "seg04",
+      "in": 0,
+      "out": 15.041667
+     }
     ]
    },
    {
@@ -3614,238 +3941,12 @@
      }
     ]
    }
-  ],
-  "versions": {
-   "bible": "v3",
-   "assets/characters/cassie": "v1",
-   "assets/characters/cassie/states/S1": "v2",
-   "assets/characters/daniel": "v1",
-   "assets/characters/george": "v1",
-   "assets/characters/george/states/S1": "v1",
-   "assets/characters/guest_1": "v1",
-   "assets/characters/guest_2": "v1",
-   "assets/characters/lauren": "v1",
-   "assets/characters/lauren/states/S1": "v1",
-   "assets/characters/natalie": "v1",
-   "assets/characters/natalie/states/S1": "v1",
-   "assets/characters/natalie/states/S2": "v3",
-   "assets/characters/natalie/states/S3": "v1",
-   "assets/characters/natalie/states/S4": "v1",
-   "assets/characters/officer": "v1",
-   "assets/characters/officiant": "v1",
-   "assets/characters/sebastian": "v2",
-   "assets/characters/sebastian/states/S1": "v1",
-   "assets/characters/sebastian/states/S2": "v1",
-   "assets/characters/sebastian/states/S3": "v1",
-   "assets/characters/sebastian/states/S4": "v1",
-   "assets/props/agreement": "v1",
-   "assets/props/blanket": "v1",
-   "assets/props/bouquet": "v1",
-   "assets/props/breakfast": "v1",
-   "assets/props/car_key": "v1",
-   "assets/props/champagne_glasses": "v1",
-   "assets/props/coins": "v1",
-   "assets/props/daniel_phone": "v1",
-   "assets/props/dress_bag": "v1",
-   "assets/props/expensive_car": "v1",
-   "assets/props/folder": "v1",
-   "assets/props/front_door_key": "v1",
-   "assets/props/gift_box": "v1",
-   "assets/props/guest_phone": "v1",
-   "assets/props/hospital_statement": "v3",
-   "assets/props/lace_bra": "v1",
-   "assets/props/lauren_phone": "v1",
-   "assets/props/natalie_bag": "v1",
-   "assets/props/natalie_phone": "v1",
-   "assets/props/pillow": "v1",
-   "assets/props/release_form": "v2",
-   "assets/props/sebastian_phone": "v1",
-   "assets/scenes/jail_cell": "v1",
-   "assets/scenes/jail_cell/back": "v1",
-   "assets/scenes/jail_cell/floor-plan": "v1",
-   "assets/scenes/jail_cell/front": "v1",
-   "assets/scenes/jail_cell/left-side": "v1",
-   "assets/scenes/jail_cell/right-side": "v1",
-   "assets/scenes/jail_front_desk": "v1",
-   "assets/scenes/jail_front_desk/back": "v1",
-   "assets/scenes/jail_front_desk/floor-plan": "v1",
-   "assets/scenes/jail_front_desk/front": "v1",
-   "assets/scenes/jail_front_desk/left-side": "v1",
-   "assets/scenes/jail_front_desk/right-side": "v1",
-   "assets/scenes/jail_street": "v1",
-   "assets/scenes/jail_street/back": "v1",
-   "assets/scenes/jail_street/floor-plan": "v1",
-   "assets/scenes/jail_street/front": "v1",
-   "assets/scenes/jail_street/left-side": "v1",
-   "assets/scenes/jail_street/right-side": "v1",
-   "assets/scenes/mansion_living_room": "v4",
-   "assets/scenes/mansion_living_room/back": "v5",
-   "assets/scenes/mansion_living_room/floor-plan": "v5",
-   "assets/scenes/mansion_living_room/front": "v5",
-   "assets/scenes/mansion_living_room/left-side": "v5",
-   "assets/scenes/mansion_living_room/right-side": "v5",
-   "assets/scenes/sebastian_apartment": "v1",
-   "assets/scenes/sebastian_apartment/back": "v1",
-   "assets/scenes/sebastian_apartment/floor-plan": "v1",
-   "assets/scenes/sebastian_apartment/front": "v1",
-   "assets/scenes/sebastian_apartment/left-side": "v1",
-   "assets/scenes/sebastian_apartment/right-side": "v1",
-   "assets/scenes/sebastian_apartment/times/Night": "v1",
-   "assets/scenes/sebastian_apartment/times/Night/back": "v1",
-   "assets/scenes/sebastian_apartment/times/Night/front": "v1",
-   "assets/scenes/sebastian_apartment/times/Night/left-side": "v1",
-   "assets/scenes/sebastian_apartment/times/Night/right-side": "v1",
-   "assets/scenes/wedding_garden": "v1",
-   "assets/scenes/wedding_garden/back": "v1",
-   "assets/scenes/wedding_garden/floor-plan": "v1",
-   "assets/scenes/wedding_garden/front": "v1",
-   "assets/scenes/wedding_garden/left-side": "v1",
-   "assets/scenes/wedding_garden/right-side": "v1",
-   "episodes/EP001/blocking/seg01": "v6",
-   "episodes/EP001/blocking/seg02": "v6",
-   "episodes/EP001/blocking/seg03": "v8",
-   "episodes/EP001/edit": "v1",
-   "episodes/EP001/first_frame_reference/seg01": "v1",
-   "episodes/EP001/multi_panel_storyboard/seg01/line-art": "v4",
-   "episodes/EP001/multi_panel_storyboard/seg02/line-art": "v7",
-   "episodes/EP001/multi_panel_storyboard/seg03/line-art": "v2",
-   "episodes/EP001/segments/seg01": "t02",
-   "episodes/EP001/segments/seg02": "t02",
-   "episodes/EP001/segments/seg03": "t01",
-   "episodes/EP002/blocking/seg01": "v1",
-   "episodes/EP002/blocking/seg02": "v1",
-   "episodes/EP002/blocking/seg03": "v1",
-   "episodes/EP002/blocking/seg04": "v1",
-   "episodes/EP002/edit": "v1",
-   "episodes/EP002/first_frame_reference/seg01": "v2",
-   "episodes/EP002/first_frame_reference/seg02": "v1",
-   "episodes/EP002/first_frame_reference/seg03": "v2",
-   "episodes/EP002/multi_panel_storyboard/seg01/line-art": "v1",
-   "episodes/EP002/multi_panel_storyboard/seg02/line-art": "v4",
-   "episodes/EP002/multi_panel_storyboard/seg03/line-art": "v5",
-   "episodes/EP002/multi_panel_storyboard/seg04/line-art": "v6",
-   "episodes/EP002/segments/seg01": "t03",
-   "episodes/EP002/segments/seg02": "t03",
-   "episodes/EP002/segments/seg03": "t04",
-   "episodes/EP002/segments/seg04": "t01",
-   "episodes/EP003/blocking/seg01": "v1",
-   "episodes/EP003/blocking/seg02": "v1",
-   "episodes/EP003/blocking/seg03": "v1",
-   "episodes/EP003/blocking/seg04": "v1",
-   "episodes/EP003/edit": "v1",
-   "episodes/EP003/multi_panel_storyboard/seg01/line-art": "v1",
-   "episodes/EP003/multi_panel_storyboard/seg02/line-art": "v1",
-   "episodes/EP003/multi_panel_storyboard/seg03/line-art": "v1",
-   "episodes/EP003/multi_panel_storyboard/seg04/line-art": "v1",
-   "episodes/EP003/segments/seg01": "t01",
-   "episodes/EP003/segments/seg02": "t01",
-   "episodes/EP003/segments/seg03": "t01",
-   "episodes/EP003/segments/seg04": "t01",
-   "episodes/EP004/blocking/seg01": "v2",
-   "episodes/EP004/blocking/seg02": "v2",
-   "episodes/EP004/blocking/seg03": "v2",
-   "episodes/EP004/blocking/seg04": "v2",
-   "episodes/EP004/edit": "v1",
-   "episodes/EP004/first_frame_reference/seg01": "v1",
-   "episodes/EP004/multi_panel_storyboard/seg01/line-art": "v1",
-   "episodes/EP004/multi_panel_storyboard/seg02/line-art": "v1",
-   "episodes/EP004/multi_panel_storyboard/seg03/line-art": "v1",
-   "episodes/EP004/multi_panel_storyboard/seg04/line-art": "v1",
-   "episodes/EP004/segments/seg01": "t02",
-   "episodes/EP004/segments/seg02": "t01",
-   "episodes/EP004/segments/seg03": "t01",
-   "episodes/EP004/segments/seg04": "t01",
-   "episodes/EP005/blocking/seg01": "v1",
-   "episodes/EP005/blocking/seg02": "v1",
-   "episodes/EP005/blocking/seg03": "v2",
-   "episodes/EP005/blocking/seg04": "v2",
-   "episodes/EP005/edit": "v2",
-   "episodes/EP005/first_frame_reference/seg01": "v1",
-   "episodes/EP005/multi_panel_storyboard/seg01/line-art": "v1",
-   "episodes/EP005/multi_panel_storyboard/seg02/line-art": "v1",
-   "episodes/EP005/multi_panel_storyboard/seg03/line-art": "v3",
-   "episodes/EP005/multi_panel_storyboard/seg04/line-art": "v2",
-   "episodes/EP005/segments/seg01": "t02",
-   "episodes/EP005/segments/seg02": "t03",
-   "episodes/EP005/segments/seg03": "t02",
-   "episodes/EP005/segments/seg04": "t01",
-   "episodes/EP006/blocking/seg01": "v1",
-   "episodes/EP006/blocking/seg02": "v1",
-   "episodes/EP006/blocking/seg03": "v1",
-   "episodes/EP006/blocking/seg04": "v1",
-   "episodes/EP006/edit": "v2",
-   "episodes/EP006/first_frame_reference/seg01": "v1",
-   "episodes/EP006/first_frame_reference/seg03": "v1",
-   "episodes/EP006/multi_panel_storyboard/seg01/line-art": "v1",
-   "episodes/EP006/multi_panel_storyboard/seg02/line-art": "v1",
-   "episodes/EP006/multi_panel_storyboard/seg03/line-art": "v1",
-   "episodes/EP006/multi_panel_storyboard/seg04/line-art": "v1",
-   "episodes/EP006/segments/seg01": "t02",
-   "episodes/EP006/segments/seg02": "t01",
-   "episodes/EP006/segments/seg03": "t02",
-   "episodes/EP006/segments/seg04": "t02"
-  },
-  "extras": {
-   "setup": [
-    "assets/scenes/jail_cell/back/v1/image-1.jpg",
-    "assets/scenes/jail_cell/floor-plan/v1/image-1.jpg",
-    "assets/scenes/jail_cell/front/v1/image-1.jpg",
-    "assets/scenes/jail_cell/left-side/v1/image-1.jpg",
-    "assets/scenes/jail_cell/right-side/v1/image-1.jpg",
-    "assets/scenes/jail_front_desk/back/v1/image-1.jpg",
-    "assets/scenes/jail_front_desk/floor-plan/v1/image-1.jpg",
-    "assets/scenes/jail_front_desk/front/v1/image-1.jpg",
-    "assets/scenes/jail_front_desk/left-side/v1/image-1.jpg",
-    "assets/scenes/jail_front_desk/right-side/v1/image-1.jpg",
-    "assets/scenes/jail_street/back/v1/image-1.jpg",
-    "assets/scenes/jail_street/floor-plan/v1/image-1.jpg",
-    "assets/scenes/jail_street/front/v1/image-1.jpg",
-    "assets/scenes/jail_street/left-side/v1/image-1.jpg",
-    "assets/scenes/jail_street/right-side/v1/image-1.jpg",
-    "assets/scenes/mansion_living_room/back/v5/image-1.jpg",
-    "assets/scenes/mansion_living_room/floor-plan/v5/image-1.jpg",
-    "assets/scenes/mansion_living_room/front/v5/image-1.jpg",
-    "assets/scenes/mansion_living_room/left-side/v5/image-1.jpg",
-    "assets/scenes/mansion_living_room/right-side/v5/image-1.jpg",
-    "assets/scenes/sebastian_apartment/back/v1/image-1.jpg",
-    "assets/scenes/sebastian_apartment/floor-plan/v1/image-1.jpg",
-    "assets/scenes/sebastian_apartment/front/v1/image-1.jpg",
-    "assets/scenes/sebastian_apartment/left-side/v1/image-1.jpg",
-    "assets/scenes/sebastian_apartment/right-side/v1/image-1.jpg",
-    "assets/scenes/sebastian_apartment/times/Night/back/v1/image-1.jpg",
-    "assets/scenes/sebastian_apartment/times/Night/front/v1/image-1.jpg",
-    "assets/scenes/sebastian_apartment/times/Night/left-side/v1/image-1.jpg",
-    "assets/scenes/sebastian_apartment/times/Night/right-side/v1/image-1.jpg",
-    "assets/scenes/wedding_garden/back/v1/image-1.jpg",
-    "assets/scenes/wedding_garden/floor-plan/v1/image-1.jpg",
-    "assets/scenes/wedding_garden/front/v1/image-1.jpg",
-    "assets/scenes/wedding_garden/left-side/v1/image-1.jpg",
-    "assets/scenes/wedding_garden/right-side/v1/image-1.jpg"
-   ],
-   "EP001": [
-    "episodes/EP001/first_frame_reference/seg01/v1/image-1.jpg"
-   ],
-   "EP002": [
-    "episodes/EP002/first_frame_reference/seg01/v2/image-1.jpg",
-    "episodes/EP002/first_frame_reference/seg02/v1/image-1.jpg",
-    "episodes/EP002/first_frame_reference/seg03/v2/image-1.jpg"
-   ],
-   "EP004": [
-    "episodes/EP004/first_frame_reference/seg01/v1/image-1.jpg"
-   ],
-   "EP005": [
-    "episodes/EP005/first_frame_reference/seg01/v1/image-1.jpg"
-   ],
-   "EP006": [
-    "episodes/EP006/first_frame_reference/seg01/v1/image-1.jpg",
-    "episodes/EP006/first_frame_reference/seg03/v1/image-1.jpg"
-   ]
-  }
+  ]
  },
  "late-sunshine": {
   "title": {
-   "en": "False Intentions, True Love",
-   "zh": "False Intentions, True Love"
+   "en": "False Intentions, True Love (r1)",
+   "zh": "False Intentions, True Love (r1)"
   },
   "logline": {
    "en": "Five years after 纪宏远 drove away her first love, 纪然 refuses to be traded into a marriage with 路少泽 and holds an open audition for a husband. The late, rain-soaked 'college student' 林青羽 who walks in is secretly a boss in disguise, and the younger brother of her best friend Su Yaqing.",
@@ -4146,13 +4247,22 @@
     "assets/scenes/su_living_room/times/Day/right-side/v1/image-1.jpg"
    ],
    "EP001": [
-    "episodes/EP001/first_frame_reference/seg04/v1/image-1.jpg"
+    "episodes/EP001/first_frame_reference/seg04/v1/image-1.jpg",
+    "episodes/EP001/video_prompts/v2/prompts.md"
    ],
    "EP002": [
-    "episodes/EP002/first_frame_reference/seg01/v1/image-1.jpg"
+    "episodes/EP002/first_frame_reference/seg01/v1/image-1.jpg",
+    "episodes/EP002/video_prompts/v1/prompts.md"
    ],
    "EP003": [
-    "episodes/EP003/first_frame_reference/seg01/v1/image-1.jpg"
+    "episodes/EP003/first_frame_reference/seg01/v1/image-1.jpg",
+    "episodes/EP003/video_prompts/v2/prompts.md"
+   ],
+   "EP004": [
+    "episodes/EP004/video_prompts/v1/prompts.md"
+   ],
+   "EP005": [
+    "episodes/EP005/video_prompts/v1/prompts.md"
    ]
   },
   "ago": 380,
@@ -5108,8 +5218,8 @@
  },
  "double-life-ep001": {
   "title": {
-   "en": "The Double Life of My Billionaire Husband",
-   "zh": "The Double Life of My Billionaire Husband"
+   "en": "The Double Life of My Billionaire Husband (r1)",
+   "zh": "The Double Life of My Billionaire Husband (r1)"
   },
   "logline": {
    "en": "To pay for her mother's kidney dialysis, Natalie begs her father George for $50,000 in the Quinn family mansion, and her stepmother Lauren and stepsister Cassie name their price: she must marry the jailed outcast Sebastian Klein in Cassie's place.",
@@ -5151,7 +5261,11 @@
    "episodes/EP001/segments/seg05": "t02",
    "episodes/EP001/video_prompts": "v2"
   },
-  "extras": {},
+  "extras": {
+   "EP001": [
+    "episodes/EP001/video_prompts/v2/prompts.md"
+   ]
+  },
   "ago": 4320,
   "cast": [
    {
@@ -5418,7 +5532,11 @@
    "episodes/EP001/segments/seg04": "t01",
    "episodes/EP001/video_prompts": "v1"
   },
-  "extras": {},
+  "extras": {
+   "EP001": [
+    "episodes/EP001/video_prompts/v1/prompts.md"
+   ]
+  },
   "ago": 1560,
   "cast": [
    {
@@ -5670,8 +5788,8 @@
  },
  "false-intentions-true-love-r2": {
   "title": {
-   "en": "False Intentions, True Love",
-   "zh": "False Intentions, True Love"
+   "en": "False Intentions, True Love (r2)",
+   "zh": "False Intentions, True Love (r2)"
   },
   "logline": {
    "en": "Pushed by her father into a marriage with Lu Shaoze, the ex he once drove away, Ji Ran holds a public interview to pick a husband for herself. The late, soaked \"college student\" Lin Qingyu is secretly a rich young boss and Su Yaqing's stepbrother, and he will not take no for an answer.",
@@ -5963,26 +6081,31 @@
     "episodes/EP001/first_frame_reference/seg03/v1/image-1.jpg",
     "episodes/EP001/first_frame_reference/seg04/v1/image-1.jpg",
     "episodes/EP001/first_frame_reference/seg05/v2/image-1.jpg",
-    "episodes/EP001/first_frame_reference/seg06/v1/image-1.jpg"
+    "episodes/EP001/first_frame_reference/seg06/v1/image-1.jpg",
+    "episodes/EP001/video_prompts/v2/prompts.md"
    ],
    "EP002": [
     "episodes/EP002/first_frame_reference/seg01/v1/image-1.jpg",
-    "episodes/EP002/first_frame_reference/seg02/v1/image-1.jpg"
+    "episodes/EP002/first_frame_reference/seg02/v1/image-1.jpg",
+    "episodes/EP002/video_prompts/v1/prompts.md"
    ],
    "EP003": [
     "episodes/EP003/first_frame_reference/seg01/v1/image-1.jpg",
-    "episodes/EP003/first_frame_reference/seg02/v1/image-1.jpg"
+    "episodes/EP003/first_frame_reference/seg02/v1/image-1.jpg",
+    "episodes/EP003/video_prompts/v1/prompts.md"
    ],
    "EP004": [
     "episodes/EP004/first_frame_reference/seg01/v1/image-1.jpg",
     "episodes/EP004/first_frame_reference/seg02/v1/image-1.jpg",
     "episodes/EP004/first_frame_reference/seg03/v1/image-1.jpg",
-    "episodes/EP004/first_frame_reference/seg04/v1/image-1.jpg"
+    "episodes/EP004/first_frame_reference/seg04/v1/image-1.jpg",
+    "episodes/EP004/video_prompts/v1/prompts.md"
    ],
    "EP005": [
     "episodes/EP005/first_frame_reference/seg01/v1/image-1.jpg",
     "episodes/EP005/first_frame_reference/seg02/v1/image-1.jpg",
-    "episodes/EP005/first_frame_reference/seg04/v1/image-1.jpg"
+    "episodes/EP005/first_frame_reference/seg04/v1/image-1.jpg",
+    "episodes/EP005/video_prompts/v1/prompts.md"
    ]
   },
   "ago": 720,

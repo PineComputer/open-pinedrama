@@ -1,0 +1,11 @@
+{
+ "Id": "asset-20261028054145-qdcnl",
+ "Name": "image-1",
+ "AssetType": "Image",
+ "Status": "Active",
+ "Moderation": {
+  "Strategy": "Default"
+ },
+ "CreateTime": "2026-10-27T21:41:47Z",
+ "UpdateTime": "2026-10-27T21:41:48Z"
+}

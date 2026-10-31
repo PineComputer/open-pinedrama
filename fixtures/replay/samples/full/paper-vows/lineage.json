@@ -19637,7 +19637,7 @@
    ]
   },
   "drama_cli": {
-   "project": "/work/drama"
+   "project": "."
   }
  },
  "version": 0.4

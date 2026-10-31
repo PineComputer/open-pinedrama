@@ -1,0 +1,11 @@
+{
+ "Id": "asset-20261022181329-dbnpg",
+ "Name": "double-life-r4 EP002 seg02 blocking v1",
+ "AssetType": "Image",
+ "Status": "Active",
+ "Moderation": {
+  "Strategy": "Default"
+ },
+ "CreateTime": "2026-10-22T10:13:30Z",
+ "UpdateTime": "2026-10-22T10:13:32Z"
+}

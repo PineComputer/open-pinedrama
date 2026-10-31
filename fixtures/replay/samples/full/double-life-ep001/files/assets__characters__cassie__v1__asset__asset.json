@@ -1,0 +1,11 @@
+{
+ "Id": "asset-20261021071735-5rlc7",
+ "Name": "double-life-ep001 cassie base v1",
+ "AssetType": "Image",
+ "Status": "Active",
+ "Moderation": {
+  "Strategy": "Default"
+ },
+ "CreateTime": "2026-10-20T23:17:37Z",
+ "UpdateTime": "2026-10-20T23:17:39Z"
+}

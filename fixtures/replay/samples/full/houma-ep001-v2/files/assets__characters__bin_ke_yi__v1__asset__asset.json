@@ -1,0 +1,11 @@
+{
+ "Id": "asset-20261019091337-cm9r2",
+ "Name": "houma-ep001-v2 bin_ke_yi base v1",
+ "AssetType": "Image",
+ "Status": "Active",
+ "Moderation": {
+  "Strategy": "Default"
+ },
+ "CreateTime": "2026-10-19T01:13:39Z",
+ "UpdateTime": "2026-10-19T01:13:41Z"
+}

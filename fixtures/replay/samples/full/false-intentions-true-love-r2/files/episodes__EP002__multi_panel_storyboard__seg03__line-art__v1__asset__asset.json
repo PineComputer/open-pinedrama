@@ -1,0 +1,11 @@
+{
+ "Id": "asset-20261027203326-czw4m",
+ "Name": "image-1",
+ "AssetType": "Image",
+ "Status": "Active",
+ "Moderation": {
+  "Strategy": "Default"
+ },
+ "CreateTime": "2026-10-27T12:33:27Z",
+ "UpdateTime": "2026-10-27T12:33:28Z"
+}

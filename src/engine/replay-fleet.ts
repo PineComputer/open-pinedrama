@@ -70,12 +70,13 @@ const clip = (set: string, p: string, name: "take" | "cut"): Out => sample(set, 
 /** A JSON file as replay returns it. */
 const json = (p: string, value: unknown): Out => ({ path: p, type: "application/json", bytes: text(JSON.stringify(value, null, 1)) });
 /**
- * A picture's or take's spec.json and request.json in its version's folder, as drama-cli writes them: the sample's,
- * copied from the run it comes from, where it has them; else a spec of drama-cli's shape for the placeholder.
+ * A picture's or take's spec.json and request.json in its version's folder, as drama-cli writes them, and its
+ * asset-library record (asset/asset.json, whose Id a request names as asset://<Id>): the sample's, copied from the run it
+ * comes from, where it has them; else a spec of drama-cli's shape for the placeholder.
  */
 const specs = (set: string, dir: string, placeholder: Record<string, unknown>): Out[] => {
-  const request = sample(set, `${dir}/request.json`);
-  return [sample(set, `${dir}/spec.json`) ?? json(`${dir}/spec.json`, placeholder), ...(request ? [request] : [])];
+  const own = [`${dir}/request.json`, `${dir}/asset/asset.json`].flatMap((p) => sample(set, p) ?? []);
+  return [sample(set, `${dir}/spec.json`) ?? json(`${dir}/spec.json`, placeholder), ...own];
 };
 /** A placeholder picture's spec: drama-cli's image spec, with the samples' model (fixtures/replay/samples/full). */
 const imageSpec = (prompt: string, aspect: "16:9" | "9:16") => ({ provider: "openai", model: "gpt-image-2.5-sunburst", prompt, aspect_ratio: aspect, size: aspect === "16:9" ? "2048x1152" : "1152x2048", quality: "high" });
@@ -231,8 +232,12 @@ const inLanguage = (d: DramaData, lang: Lang): Story => ({
 /** The number an item is first drawn at: its version in the project the sample comes from, else 1 (v1, t01). */
 const firstOf = (s: Story, path: string) => Number((s.versions[path] ?? "v1").slice(1));
 
-/** The sample's own files a stop returns beside what replay draws (DramaData.extras). */
-const extrasOf = (s: Story, set: string, stop: string): Out[] => (s.extras[stop] ?? []).flatMap((rel) => sample(set, `drama/${rel}`) ?? []);
+/** The sample's own files a stop returns beside what replay draws (DramaData.extras), each picture with what drama-cli keeps beside it. */
+const extrasOf = (s: Story, set: string, stop: string): Out[] =>
+  (s.extras[stop] ?? []).flatMap((rel) => {
+    const dir = `drama/${rel.slice(0, rel.lastIndexOf("/"))}`;
+    return [`drama/${rel}`, `${dir}/spec.json`, `${dir}/request.json`, `${dir}/asset/asset.json`].flatMap((p) => sample(set, p) ?? []);
+  });
 
 /** An episode's code by its place in the drama, as drama-cli numbers them. */
 const codeOf = (i: number) => `EP${String(i + 1).padStart(3, "0")}`;
@@ -261,7 +266,7 @@ function sharedOf(s: Story): Shared[] {
 }
 
 /** An episode's segments and their scene headings, as drama-cli's status reports them (replay-status.ts, EpisodeMade). */
-const madeOf = (s: Story, e: Story["episodes"][number]) => ({ segments: e.segments.map((seg) => seg.id), headings: Object.fromEntries(e.segments.map((seg) => [seg.id, seg.heading])), styles: s.styles, ...(e.segments.some((seg) => seg.uses) ? { uses: Object.fromEntries(e.segments.filter((seg) => seg.uses).map((seg) => [seg.id, seg.uses!])) } : {}) });
+const madeOf = (s: Story, e: Story["episodes"][number], code: string) => ({ segments: e.segments.map((seg) => seg.id), ...(s.versions[`episodes/${code}/breakdown`] ? { breakdown: s.versions[`episodes/${code}/breakdown`] } : {}), headings: Object.fromEntries(e.segments.map((seg) => [seg.id, seg.heading])), styles: s.styles, ...(e.segments.some((seg) => seg.uses) ? { uses: Object.fromEntries(e.segments.filter((seg) => seg.uses).map((seg) => [seg.id, seg.uses!])) } : {}) });
 
 /** "3 looks", "1 look": a count with its noun. */
 const count = (n: number, noun: string) => `${n} ${noun}${n === 1 ? "" : "s"}`;
@@ -390,10 +395,21 @@ const words = (s: Story) => {
   };
 };
 
-/** The sample dramas replay plays, by id (fixtures/replay/dramas.json); the first is the one New drama's sample starts. Names are invented. */
+/**
+ * The sample dramas replay plays, by id (fixtures/replay/dramas.json); the first is the one New drama's sample starts.
+ * A goal names its drama only by title (storyOf), so two samples with one title in a language would play as one: refused.
+ */
 export const STORIES: Record<string, Record<Lang, Story>> = Object.fromEntries(
   Object.entries(JSON.parse(readFileSync(path.join(FIXTURES, "dramas.json"), "utf8")) as Record<string, DramaData>).map(([id, d]) => [id, { en: inLanguage(d, "en"), zh: inLanguage(d, "zh") }]),
 );
+for (const lang of ["en", "zh"] as const) {
+  const seen = new Map<string, string>();
+  for (const [id, story] of Object.entries(STORIES)) {
+    const other = seen.get(story[lang].title);
+    if (other) throw new Error(`Replay's samples ${other} and ${id} share the ${lang} title "${story[lang].title}" (fixtures/replay/dramas.json); a goal names its drama by title, so give each its own.`);
+    seen.set(story[lang].title, id);
+  }
+}
 
 /** The story a goal's drama tells, by the title its brief gives (goals.ts brief: "Title: …."); the first sample's for any other. */
 function storyOf(goal: string, lang: Lang): { id: string; story: Story } {
@@ -498,7 +514,7 @@ function setupScript(lang: Lang, preset: string, story: { id: string; story: Sto
     bible: stage === "rewrite" || stage === "asked" ? null : bible,
     looks: Object.fromEntries(leads.filter((c) => versions.has(c.id)).map((c) => [c.id, made(c.id)])),
     references: Object.fromEntries([...shared.values()].filter((reference) => versions.has(reference.key)).map((reference) => [reference.key, { ...made(reference.key), path: reference.path }])),
-    episodes: stage === "references" || stage === "handed" ? Object.fromEntries(story.story.episodes.map((e, i) => [codeOf(i), madeOf(story.story, e)])) : {},
+    episodes: stage === "references" || stage === "handed" ? Object.fromEntries(story.story.episodes.map((e, i) => [codeOf(i), madeOf(story.story, e, codeOf(i))])) : {},
   });
   const play = (answer: string): Step => {
     const redo = revisedKeys(answer);
@@ -531,7 +547,11 @@ function setupScript(lang: Lang, preset: string, story: { id: string; story: Sto
       return {
         progress: say.preparing,
         files: [
-          ...say.episodes.map((_, i) => ({ path: `drama/episodes/${codeOf(i)}/breakdown/v1/breakdown.md`, type: "text/markdown", bytes: text(breakdownOf(say, story.story, i)) })),
+          // Each breakdown at its version, the sample's own text where it has one (its breakdown.md), else replay's.
+          ...say.episodes.map((_, i) => {
+            const at = `drama/episodes/${codeOf(i)}/breakdown/v${firstOf(story.story, `episodes/${codeOf(i)}/breakdown`)}/breakdown.md`;
+            return sample(set, at) ?? { path: at, type: "text/markdown", bytes: text(breakdownOf(say, story.story, i)) };
+          }),
           ...[...shared.keys()].flatMap(draw),
           ...extrasOf(story.story, set, "setup"),
         ],
@@ -671,7 +691,7 @@ function episodeScript(code: string, lang: Lang, preset: string, story: { id: st
   const progress = (): ReplayProgress => {
     const ids = segments.map((seg) => seg.id);
     const own: EpisodeMade = {
-      ...madeOf(story.story, episode),
+      ...madeOf(story.story, episode, code),
       boards: Object.fromEntries(ids.map((id) => [id, { current: `v${boardVersion.get(id)}`, accepted: boardAccepted.has(id) ? `v${boardAccepted.get(id)}` : null }])),
     };
     if (takes.size) own.takes = Object.fromEntries([...takes].map(([id, count]) => [id, { count, accepted: takeAccepted.has(id) }]));
@@ -683,7 +703,7 @@ function episodeScript(code: string, lang: Lang, preset: string, story: { id: st
       // Every reference approved at the version it was first drawn at (firstOf), as the setup left it.
       looks: Object.fromEntries(say.cast.slice(0, 2).map((c) => [c.id, accepted(`assets/characters/${c.id}`)])),
       references: Object.fromEntries(sharedOf(story.story).map((reference) => [reference.key, { ...accepted(reference.path), path: reference.path }])),
-      episodes: Object.fromEntries(story.story.episodes.map((e, i) => [codeOf(i), codeOf(i) === code ? own : madeOf(story.story, e)])),
+      episodes: Object.fromEntries(story.story.episodes.map((e, i) => [codeOf(i), codeOf(i) === code ? own : madeOf(story.story, e, codeOf(i))])),
     };
   };
   // Each stop and the finish also hand back the episode's own folder, packed, the status and the lineage.

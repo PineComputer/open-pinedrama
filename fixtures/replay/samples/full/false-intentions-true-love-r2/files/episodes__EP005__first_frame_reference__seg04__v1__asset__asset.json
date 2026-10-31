@@ -1,0 +1,11 @@
+{
+ "Id": "asset-20261028055141-g594m",
+ "Name": "image-1",
+ "AssetType": "Image",
+ "Status": "Active",
+ "Moderation": {
+  "Strategy": "Default"
+ },
+ "CreateTime": "2026-10-27T21:51:42Z",
+ "UpdateTime": "2026-10-27T21:51:43Z"
+}

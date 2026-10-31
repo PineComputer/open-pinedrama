@@ -48,7 +48,7 @@ function stages(progress: ReplayProgress): Stage[] {
     const texts = [...reads, `${base}/breakdown`];
     const segments = made.boards ? made.segments : [];
     return [
-      stage(`${base}/breakdown`, "breakdown", { current: "v1", accepted: "v1" }, reads),
+      stage(`${base}/breakdown`, "breakdown", { current: made.breakdown ?? "v1", accepted: made.breakdown ?? "v1" }, reads),
       // A segment's own references where the recording names them (EpisodeMade.uses), else the leads and the home place.
       ...segments.map((segment) => stage(`${base}/blocking/${segment}`, "blocking", { current: "v1", accepted: "v1" }, texts, made.uses?.[segment]?.filter((use) => use.startsWith("assets/scenes/")) ?? place)),
       ...segments.flatMap((segment) => (made.styles ?? STYLES).map((style) => stage(`${base}/multi_panel_storyboard/${segment}/${style}`, "storyboard", made.boards![segment], texts, [...(made.uses?.[segment] ?? [...looks, ...place]), `${base}/blocking/${segment}`]))),
@@ -115,8 +115,9 @@ export function replayLineage(progress: ReplayProgress, returned: Iterable<strin
   return { path: "handoff/lineage.json", type: "application/json", bytes: new TextEncoder().encode(JSON.stringify(workflow, null, 1)) };
 }
 
-// A plate's views (drama-cli's LOCATION_STEPS): replay draws no stage of its own for them.
-const VIEW = /^assets\/scenes\/.+\/(?:floor-plan|front|back|left-side|right-side)$/;
+// A plate's views (drama-cli's LOCATION_STEPS): replay draws no stage of its own for them; each comes with its plate,
+// assets/scenes/<id> or assets/scenes/<id>/times/<time>, the path above it.
+const VIEW = /^(assets\/scenes\/.+)\/(?:floor-plan|front|back|left-side|right-side)$/;
 
 interface ExportNode {
   id: number;
@@ -132,9 +133,9 @@ interface Export {
 
 /**
  * A sample drama's own export (drama-cli's `export comfyui` of the finished run) cut to what the drama has made by
- * this stop, as a real stop's export holds only that: every stage replay makes is kept once its progress has it, and
- * every other one (a plate's view, a first-frame reference, the video prompts, the screenplay) once everything it is
- * made from is kept. Links, inputs, outputs and groups follow the nodes kept; nothing else changes.
+ * this stop, as a real stop's export holds only that: every stage replay makes is kept once its progress has it, a
+ * plate's view with its plate, and every other one (a first-frame reference, the video prompts, the subtitles, the
+ * screenplay) once everything it is made from is kept. Links, inputs, outputs and groups follow the nodes kept; nothing else changes.
  */
 export function lineageAt(progress: ReplayProgress, exported: Uint8Array): Uint8Array {
   const workflow = JSON.parse(new TextDecoder().decode(exported)) as Export;
@@ -145,9 +146,9 @@ export function lineageAt(progress: ReplayProgress, exported: Uint8Array): Uint8
     const id = node.properties.id;
     if (!kept.has(id)) {
       kept.set(id, false);
-      const modelled = node.properties.kind in COLUMN && !VIEW.test(id);
+      const plate = VIEW.exec(id)?.[1];
       const upstream = (node.inputs ?? []).map((input) => byId.get(input.name)).filter((one) => one !== undefined);
-      kept.set(id, modelled ? made.has(id) : upstream.every(keep));
+      kept.set(id, plate ? made.has(plate) : node.properties.kind in COLUMN ? made.has(id) : upstream.every(keep));
     }
     return kept.get(id)!;
   };
