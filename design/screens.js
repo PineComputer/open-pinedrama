@@ -1,7 +1,7 @@
 /* The rest of the flow in the pro direction: Upload, Analyzing, Fountain review, Story, Graph (lineage) and Cut,
    plus the setup steps and the stop cards. Uses the shell and helpers app.js exposes as window.PD. */
 (() => {
-  const { html, I, S, set, go, toast, money, Status, TopBar, StopBanner, EpisodeViews, ProjectChips, AgentPanel, SPENT_COVERS, useEffect, useRef } = window.PD;
+  const { html, I, S, set, go, openHome, openLineage, toast, money, Status, TopBar, StopBanner, EpisodeViews, ProjectChips, AgentPanel, SPENT_COVERS, useEffect, useRef } = window.PD;
 
   /* ───── setup steps (sidebar) ───── */
   function SetupSteps() {
@@ -177,17 +177,27 @@
   }
 
   /* ───── Graph: lineage, read-only ───── */
+  // `of` is the item a node is shown by on Canvas and in the List; `home` where the object lives (IA_PROPOSAL §16).
   const G = [
-    { id: "sp", col: 0, row: 1, t: "Screenplay", v: "v2", k: "screenplay", pic: null, icon: "file-text" },
-    { id: "bible", col: 1, row: 1, t: "Bible", v: "b0003", k: "bible", pic: null, icon: "book-open" },
-    { id: "luca", col: 2, row: 0, t: "Luca Moreno", v: "S0 v2", k: "look", pic: "img/face-luca.jpg" },
-    { id: "ethan", col: 2, row: 1, t: "Ethan Cole", v: "S0 v1", k: "look", pic: "img/face-ethan.jpg" },
-    { id: "apt", col: 2, row: 2, t: "Luca's apartment", v: "v2", k: "plate", pic: "img/plate-apartment.jpg" },
-    { id: "file", col: 2, row: 3, t: "Case file", v: "v1", k: "prop", pic: "img/prop-folder.jpg", stale: true },
-    { id: "ep6seg03", col: 3, row: 1, t: "EP006 seg03 storyboard", v: "v1", k: "storyboard", pic: "img/board-seg03.jpg", stale: true },
-    { id: "take", col: 4, row: 1, t: "EP006 seg03 take", v: "t02", k: "take", pic: "img/still-s3t2.jpg", stale: true },
-    { id: "cut", col: 5, row: 1, t: "EP006 cut", v: "v1", k: "cut", pic: "img/cover-ep6.jpg", stale: true },
+    { id: "sp", col: 0, row: 1, t: "Screenplay", v: "v2", k: "screenplay", pic: null, icon: "file-text", home: ["Script", { screen: "script" }] },
+    { id: "bible", col: 1, row: 1, t: "Bible", v: "b0003", k: "bible", pic: null, icon: "book-open", home: ["Story", { screen: "story", stab: "bible" }] },
+    { id: "luca", col: 2, row: 0, t: "Luca Moreno", v: "S0 v2", k: "look", pic: "img/face-luca.jpg", of: "luca" },
+    { id: "ethan", col: 2, row: 1, t: "Ethan Cole", v: "S0 v1", k: "look", pic: "img/face-ethan.jpg", of: "ethan" },
+    { id: "apt", col: 2, row: 2, t: "Luca's apartment", v: "v2", k: "plate", pic: "img/plate-apartment.jpg", of: "apartment" },
+    { id: "file", col: 2, row: 3, t: "Case file", v: "v1", k: "prop", pic: "img/prop-folder.jpg", stale: true, of: "file" },
+    { id: "ep6seg03", col: 3, row: 1, t: "EP006 seg03 storyboard", v: "v1", k: "storyboard", pic: "img/board-seg03.jpg", stale: true, ep: "seg03" },
+    { id: "take", col: 4, row: 1, t: "EP006 seg03 take", v: "t02", k: "take", pic: "img/still-s3t2.jpg", stale: true, ep: "seg03", of: "seg03" },
+    { id: "cut", col: 5, row: 1, t: "EP006 cut", v: "v1", k: "cut", pic: "img/cover-ep6.jpg", stale: true, home: ["EP006 › Cut", { screen: "cut" }] },
   ];
+  /* The Lineage an item opens on: seg03's node opens its take, the version that waits for you. */
+  const lineageOf = (id) => (G.find((n) => n.of === id) || {}).id;
+  /* "← Back to …": where a link came from (S.from), with its selection. */
+  function BackTo() {
+    const f = S.from;
+    if (!f) return null;
+    const back = () => { set({ screen: f.screen, sel: f.sel, esel: f.esel, from: null }); try { history.replaceState(null, "", "#" + f.screen); } catch (e) { /* the hash is a convenience */ } };
+    return html`<button class="btn sm ghost backto" onClick=${back}>${I("arrow-left")}Back to ${f.label}</button>`;
+  }
   const GE = [["sp", "bible"], ["bible", "luca"], ["bible", "ethan"], ["bible", "apt"], ["bible", "file"], ["luca", "ep6seg03"], ["ethan", "ep6seg03"], ["apt", "ep6seg03"], ["file", "ep6seg03"], ["ep6seg03", "take"], ["take", "cut"]];
   function Graph() {
     const W = 156, H = 112, GX = 34, GY = 22, pos = (n) => ({ x: 24 + n.col * (W + GX), y: 24 + n.row * (H + GY) });
@@ -196,11 +206,18 @@
     const walk = (id, dir, acc) => GE.forEach(([a, b]) => { const [f, t] = dir ? [a, b] : [b, a]; if (f === id && !acc.has(t)) { acc.add(t); walk(t, dir, acc); } });
     walk(sel.id, false, up); walk(sel.id, true, down);
     const cols = ["Screenplay", "Bible", "Looks, plates, props", "Storyboards", "Takes", "Cut"];
+    // A2: the crumbs, the inspector and the picked node name one object. "Out of date" is the drama-wide summary; picking
+    // an item there makes it that item's Lineage. An item opened from an episode sits inside it, as Export does.
+    const inEp = sel.ep || (S.from && ["canvas", "episode"].includes(S.from.screen));
+    const crumbs = S.stale ? [P.project.title, "Out of date"] : [P.project.title, ...(inEp ? ["EP006"] : []), sel.t.replace(/^EP006 /, "") + " · " + sel.v, "Lineage"];
+    // Lineage is a view of relations, not a home (§16): the inspector links to where the object lives.
+    const home = sel.ep ? ["EP006 · " + sel.ep, { screen: "canvas", sel: sel.ep, esel: sel.ep }] : sel.home;
+    const label = "Lineage · " + sel.t;
     return html`<div class="main">
-      <${TopBar} crumbs=${S.stale ? [P.project.title, "Out of date"] : [P.project.title, "EP006", "seg03 · take t02", "Lineage"]}/>
+      <${TopBar} crumbs=${crumbs}/>
       <${StopBanner}/>
       <div class="body"><div class="scrollmain">
-        <div class="bar2"><${EpisodeViews}/><span class="grow"></span><${ProjectChips}/></div>
+        <div class="bar2"><${BackTo}/><span class="grow"></span><${ProjectChips}/></div>
         <div class="stalebar">${I("warning")}<span><b>4 items are out of date.</b> Case file v1 was made from bible b0002, and b0003 is accepted. What was made from it is out of date until the agent redraws it.</span><span class="grow"></span><button class="btn sm" onClick=${() => toast("Sent to the agent as a steering note: redo the 4 out-of-date items.")}>Ask the agent to redo them</button></div>
         <div class="graphwrap" role="group" aria-label="Graph" tabindex="0"><div class="graph" style=${`width:${24 * 2 + 6 * W + 5 * GX}px;height:${24 * 2 + 4 * H + 3 * GY + 24}px`}>
           ${cols.map((c, i) => html`<span class="gcol" style=${`left:${24 + i * (W + GX)}px`}>${c}</span>`)}
@@ -208,13 +225,15 @@
             const on = (a === sel.id || up.has(a)) && (b === sel.id || up.has(b)) || (a === sel.id || down.has(a)) && (b === sel.id || down.has(b));
             return html`<path class=${(on ? "on " : "") + (by[b].stale && by[a].stale || a === "file" ? "stale" : "")} d=${`M${x1},${y1} C${m},${y1} ${m},${y2} ${x2},${y2}`}/>`; })}</svg>
           ${G.map((n) => { const p = pos(n), rel = n.id === sel.id ? "sel" : up.has(n.id) ? "up" : down.has(n.id) ? "down" : "dim";
-            return html`<button class=${"gnode " + rel + (n.stale ? " stale" : "")} style=${`left:${p.x}px;top:${p.y + 24}px;width:${W}px;height:${H}px`} onClick=${() => set({ gsel: n.id })}>
+            return html`<button class=${"gnode " + rel + (n.stale ? " stale" : "")} style=${`left:${p.x}px;top:${p.y + 24}px;width:${W}px;height:${H}px`} aria-pressed=${String(!S.stale && n.id === sel.id)} onClick=${() => set({ gsel: n.id, stale: false })}>
               <span class="gpic">${n.pic ? html`<img src=${n.pic} alt=""/>` : I(n.icon)}</span>
               <span class="gtxt"><b>${n.t}</b><span class="mono">${n.v}</span>${n.stale ? html`<span class="st stale"><i></i>Out of date</span>` : html`<span class="st accepted"><i></i>Accepted</span>`}</span></button>`; })}
         </div></div>
         <div class="glegend"><span><i class="l up"></i>Made from (upstream)</span><span><i class="l down"></i>Made from it (downstream)</span><span><i class="l stale"></i>Out of date</span><span class="subtle">Read-only. Click a version to trace it.</span></div>
       </div>
-      <aside class="insp"><div class="ihead"><b>${sel.t}</b><small>${sel.k} · ${sel.v}</small></div>
+      <aside class="insp"><div class="ihead"><b>${sel.t}</b><small>${sel.k} · ${sel.v}</small>
+        ${sel.of && !sel.ep ? html`<button class="btn sm" onClick=${() => openHome(sel.of, label)}>Open in Assets</button>`
+          : home ? html`<button class="btn sm" onClick=${() => { set({ ...home[1], from: { screen: "graph", label } }); try { history.replaceState(null, "", "#" + home[1].screen); } catch (e) { /* the hash is a convenience */ } }}>Open in ${home[0]}</button>` : null}</div>
         <div class="iscroll">
           ${sel.pic && html`<div class="isec"><img src=${sel.pic} alt="" style="width:100%;border-radius:10px;max-height:240px;object-fit:cover;object-position:top"/></div>`}
           <div class="isec"><h4>State</h4>${sel.stale ? html`<div class="finding warn">${I("warning")}<span>${sel.id === "file" ? "Made from bible b0002; b0003 is accepted." : "Made from Case file v1, which is stale."} The agent redraws it.</span></div>` : html`<span class="muted">Fresh: made from the accepted versions.</span>`}</div>
@@ -294,21 +313,26 @@
   /* ───── Episode: its segments scene by scene, the take beside its shot text (reveric's 分镜 list) ───── */
   function Episode() {
     const ep = P.eps[5];
+    // Back from Lineage, or from Canvas with a pick: the picked row is in view.
+    // Only the list scrolls (scrollIntoView would move the page's frame too).
+    useEffect(() => { const row = document.querySelector(".segrow.sel"), box = row && row.closest(".scrollmain"); if (!box) return;
+      const r = row.getBoundingClientRect(), b = box.getBoundingClientRect(); box.scrollTop += r.top - b.top - (b.height - r.height) / 2; }, []);
     const place = (id) => (P.places.find((p) => p.id === id) || {}).name || id;
     return html`<div class="main">
       <${TopBar} crumbs=${[P.project.title, "Episodes", ep.code]}/>
       <div class="body"><div class="scrollmain">
-        <div class="bar2"><${EpisodeViews}/><span class="grow"></span><${ProjectChips}/></div>
+        <div class="bar2"><${BackTo}/><${EpisodeViews}/><span class="grow"></span><${ProjectChips}/></div>
         <${StopBanner}/>
         <div class="ephead"><h2>${ep.code}<span class="muted"> · ${ep.title}</span></h2><span class="muted">${ep.now}</span><span class="grow"></span><span class="mono muted">${money(ep.spent)}</span></div>
         ${P.scenes.map((sc) => html`<section class="panel segscene"><h3>${I("film-strip")}Scene ${sc.n} · ${place(sc.place)} · ${sc.time}<span class="grow"></span>
             <span class="muted" style="font-size:11.5px;font-weight:500">${sc.segs.filter((g) => g.st === "accepted").length} of ${sc.segs.length} accepted</span></h3>
-          ${sc.segs.map((g) => html`<div class="segrow">
+          ${sc.segs.map((g) => html`<div class=${"segrow" + (S.esel === g.id ? " sel" : "")} aria-current=${String(S.esel === g.id)} onClick=${() => set({ esel: g.id })}>
             <img src=${g.still || g.board} alt=""/>
             <div class="segtext">
               <div class="seghead"><b>${g.id}</b>${Status(g.st, g.st === "you" ? "Take waits for you" : undefined)}<span class="grow"></span>
                 <span class="mono muted">sd25 · 9:16 · ${g.s} s · ${g.take}</span>
-                <button class="btn sm ghost" onClick=${() => go("canvas")}>On Canvas ${I("arrow-right")}</button></div>
+                <button class="ibtn" title=${lineageOf(g.id) ? "Lineage" : "Lineage: this sample traces seg03 and what it reads"} aria-label="Lineage" disabled=${!lineageOf(g.id)} onClick=${(e) => { e.stopPropagation(); set({ esel: g.id }); openLineage(lineageOf(g.id), "List · " + g.id); }}>${I("tree-structure")}</button>
+                <button class="btn sm ghost" onClick=${(e) => { e.stopPropagation(); go("canvas"); set({ sel: g.id, esel: g.id }); }}>On Canvas ${I("arrow-right")}</button></div>
               <p class="shottext">${g.text}</p></div></div>`)}</section>`)}
       </div><${AgentPanel}/></div></div>`;
   }
@@ -336,6 +360,6 @@
           <div class="lrow static">Your original · bride-on-bail.docx<span class="mono subtle">uploaded 17:31</span></div></section>
       </div><${AgentPanel}/></div></div>`;
   }
-  window.EXTRA = { script: Script, upload: Upload, analyzing: Analyzing, fountain: Fountain, story: Story, graph: Graph, cut: Cut, episode: Episode, StopCard, SetupSteps };
+  window.EXTRA = { BackTo, lineageOf, script: Script, upload: Upload, analyzing: Analyzing, fountain: Fountain, story: Story, graph: Graph, cut: Cut, episode: Episode, StopCard, SetupSteps };
   window.PD.draw();
 })();

@@ -300,11 +300,17 @@ input.search:focus { border-color: var(--text-primary); }
 .npanel { display: grid; gap: 10px; padding: 12px 14px; border-radius: var(--radius-2xl); }
 .npanel .nhead { display: flex; align-items: center; gap: 8px; font-size: 13.5px; }
 /* Docked right: the same panel, full height at the board's right edge. */
-.npanel.docked { right: 20px; top: 64px; bottom: 84px; width: 400px; grid-template-rows: auto auto 1fr auto; }
-.npanel.docked [role="tabpanel"] { max-height: none; min-height: 0; align-content: start; }
-.npanel .utabs { gap: 16px; border-bottom: 1px solid color-mix(in srgb, var(--text-primary) 10%, transparent); }
-.npanel .utabs button { height: 30px; font-size: 12px; }
-.npanel [role="tabpanel"] { display: grid; gap: 10px; max-height: 240px; overflow-y: auto; font-size: 12.5px; }
+.npanel:not(.docked) { overflow-y: auto; align-content: start; }
+.npanel.docked { right: 20px; top: 64px; max-height: calc(100% - 148px); width: 400px; overflow-y: auto; align-content: start; }
+.npanel .needs { margin: 0; font-size: 12.5px; color: var(--text-primary); }
+.npanel .nhome { margin: 0; font-size: 12px; }
+/* §15 progressive disclosure: prompt, versions, request and details open on demand, one at a time. */
+.npanel .ndisc { display: flex; flex-wrap: wrap; gap: 6px; }
+.npanel .ndisc button { height: 26px; display: inline-flex; align-items: center; gap: 4px; padding: 0 8px 0 10px; border: 1px solid color-mix(in srgb, var(--text-primary) 12%, transparent); border-radius: 999px; background: none; color: var(--text-secondary); font-size: 12px; cursor: pointer; }
+.npanel .ndisc button .ic { width: 12px; height: 12px; }
+.npanel .ndisc button[aria-expanded="true"] { background: color-mix(in srgb, var(--text-primary) 8%, transparent); color: var(--text-primary); font-weight: 600; }
+.npanel .npart { display: grid; gap: 10px; max-height: 240px; overflow-y: auto; font-size: 12.5px; }
+.npanel.docked .npart { max-height: none; }
 .npanel .prompt { display: grid; gap: 6px; line-height: 1.6; color: var(--text-primary); }
 .npanel .prompt p { margin: 0; }
 /* A reference in the prompt as liblib.tv shows it: its picture and its name in one bordered chip, inline in the words. */
@@ -361,6 +367,7 @@ input.search:focus { border-color: var(--text-primary); }
 .insp .ihead { padding: 14px 16px 12px; border-bottom: 1px solid var(--border); }
 .insp .ihead b { font-size: 14px; font-weight: 700; }
 .insp .ihead small { display: block; color: var(--text-muted); font-size: 11.5px; margin-top: 2px; }
+.insp .ihead .btn { margin-top: 10px; }
 .insp .iscroll { flex: 1; overflow: auto; padding: 4px 16px 16px; }
 .isec { padding: 12px 0; border-bottom: 1px solid var(--border-subtle); }
 .isec h4 { margin: 0 0 8px; font-size: 11px; font-weight: 600; color: var(--text-muted); letter-spacing: .4px; text-transform: uppercase; display: flex; align-items: center; gap: 8px; }
@@ -628,6 +635,10 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
 .segrow { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 14px; padding: 10px 6px; border-radius: var(--radius-large); align-items: start; }
 .segrow + .segrow { border-top: 1px solid var(--border-subtle); }
 .segrow:hover { background: var(--hover); }
+/* §16: a link lands on the object's home with the object picked (S.esel in the List, S.asel in Assets). */
+.segrow { cursor: pointer; }
+.segrow.sel, .castcard.sel, .placecard.sel { box-shadow: inset 0 0 0 2px var(--accent); }
+.backto .ic { width: 14px; height: 14px; }
 .segrow img, .segrow video { width: 64px; aspect-ratio: 9 / 16; border-radius: 6px; object-fit: cover; background: var(--surface-container); }
 .segrow .seghead { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; min-width: 0; }
 .segrow .seghead b { font: 600 12.5px var(--font-mono); }

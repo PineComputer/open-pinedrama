@@ -17,10 +17,16 @@
   let drawing = false;
   const draw = () => { if (!drawing) { drawing = true; requestAnimationFrame(() => { drawing = false; render(html`<${App}/>`, root); }); } };
   const set = (p) => { Object.assign(S, typeof p === "function" ? p(S) : p); draw(); };
-  const go = (screen) => { set({ screen, sel: null, agentOpen: false, playing: false, drawer: false }); try { history.replaceState(null, "", "#" + screen); } catch (e) { /* the hash is a convenience */ } };
+  const go = (screen) => { set({ screen, sel: null, agentOpen: false, playing: false, drawer: false, from: null }); try { history.replaceState(null, "", "#" + screen); } catch (e) { /* the hash is a convenience */ } };
   /* IA draft (F): below 1100 px the drama tree is a drawer the rail's menu button opens; the agent is the ball at 1280 and
      below, keeping what it follows or is pinned to. */
   const narrow = () => window.matchMedia("(max-width: 1100px)").matches;
+  /* IA r2 (§16): each object has one home. A link lands on the home with the object selected (S.asel in Assets, S.sel on
+     Canvas, S.esel in the List, S.gsel in Lineage), and remembers where it came from (S.from), so Back returns there. */
+  const homeTab = (id) => (P.cast.some((c) => c.id === id) ? "cast" : P.places.some((p) => p.id === id) ? "scenes" : P.props.some((p) => p.id === id) ? "props" : null);
+  const jump = (to, label) => { set({ sel: null, agentOpen: false, drawer: false, toolOpen: false, zoomOpen: false, ...to, from: { screen: S.screen, sel: S.sel, esel: S.esel, label } }); try { history.replaceState(null, "", "#" + to.screen); } catch (e) { /* the hash is a convenience */ } };
+  const openHome = (id, label) => jump({ screen: "story", stab: homeTab(id), asel: id }, label);
+  const openLineage = (gid, label) => jump({ screen: "graph", gsel: gid, stale: false }, label);
   let tid = 0;
   const toast = (text, action) => { const id = ++tid; set({ toasts: [...S.toasts, { id, text, action }] }); setTimeout(() => set({ toasts: S.toasts.filter((t) => t.id !== id) }), 4200); };
   const money = (n) => "$" + n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -164,7 +170,7 @@
     if (S.screen !== "episode" && S.screen !== "canvas") return null;
     return html`<div class="seg" role="group" aria-label="EP006 view">
       ${[["List", "list-bullets", "episode"], ["Canvas", "flow-arrow", "canvas"]].map(([l, ic, sc]) =>
-        html`<button aria-pressed=${String(S.screen === sc)} onClick=${() => go(sc)}>${I(ic)}${l}</button>`)}
+        html`<button aria-pressed=${String(S.screen === sc)} onClick=${() => { const at = S.sel || S.esel; go(sc); set({ sel: sc === "canvas" ? at : null, esel: at }); }}>${I(ic)}${l}</button>`)}
     </div>`;
   }
   function ProjectChips() {
@@ -351,39 +357,45 @@
   /* The picked node's panel, directly under it, as infinite-canvas's prompt panel and astorie's node panel stand (glass): the prompt
      with each Image N as a chip of that picture and the pictures it names, the versions with what the person decided, request.json,
      and what the node is; a pill row of drama-cli's settings; the hand controls disabled until phase 2. Read-only. */
-  function NodePanel({ node, style, uses, reads }) {
+  /* Out of date in this sample: the Case file, made from bible b0002 while b0003 is accepted. */
+  const outOfDate = (n) => n.st === "stale" || n.id === "file";
+  function NodePanel({ node, style, uses, reads, docked: forced }) {
     const spec = node.seg && node.seg.spec;
-    const tab = S.dtab || "prompt";
-    const tabs = [["prompt", "Prompt"], ...(spec ? [["versions", "Versions"], ["request", "Request"]] : []), ["details", "Details"]];
+    // A shared reference's home is Assets (§16): its versions, prompt and review live there, and the canvas only links to it.
+    const home = homeTab(node.id);
+    const open = S.dtab;
+    const parts = home ? [] : [["prompt", "Prompt"], ...(spec ? [["versions", "Versions"], ["request", "Request"]] : []), ["details", "Details"]];
     const chips = (line) => line.split(/(Image \d+)/).map((part) => { const m = part.match(/^Image (\d+)$/); return m ? html`<span class="pchip"><img src=${spec.images[m[1] - 1]} alt=""/>${part}</span>` : part; });
-    // Under the node by default, the industry's convention; docked right on asking. The viewer's choice is kept in this browser.
-    const docked = S.dock === "right";
+    // Under the node by default, the industry's convention; docked right on asking, or when the board has no room for it
+    // above or below the node. The viewer's choice is kept in this browser.
+    const docked = forced || S.dock === "right";
     const dock = (to) => { set({ dock: to }); try { localStorage.setItem("studio.canvas.dock", to); } catch (e) { /* a convenience */ } };
-    return html`<div class=${"npanel" + (docked ? " docked" : "")} role="dialog" aria-label=${node.label} style=${docked ? "" : style}>
-      <div class="nhead"><b class="grow">${node.label}</b>${Status(node.st === "stale" ? "accepted" : node.st)}${node.st === "stale" || node.id === "file" ? Status("stale", "Out of date") : Status("line", "Up to date")}
-        <button class="ibtn" title=${docked ? "Under the node" : "Dock right"} aria-label=${docked ? "Under the node" : "Dock right"} onClick=${() => dock(docked ? "under" : "right")}>${I(docked ? "square-half-bottom" : "square-half")}</button>
+    const acc = node.accepted === node.ver ? "accepted" : node.accepted ? `accepted ${node.accepted}` : "none accepted";
+    const why = node.problems ? node.problems.join("; ") : node.id === "file" ? "Changed file: bible/v3/bible.json" : "";
+    // §15 progressive disclosure: by default its state and what needs the maker; prompt, versions, request and details on demand.
+    const needs = node.st === "you" ? (home ? "Waits for your review in Assets." : `Take ${node.ver} waits for you: watch it, then accept, send back or note.`)
+      : outOfDate(node) ? "Nothing for you: the agent redraws what is out of date." : node.st === "back" ? "Nothing for you: the agent redoes it." : "";
+    return html`<div class=${"npanel" + (docked ? " docked" : "")} role="dialog" aria-label=${node.label} style=${style}>
+      <div class="nhead"><b class="grow">${node.label}</b>${Status(node.st === "stale" ? "accepted" : node.st)}${outOfDate(node) ? Status("stale", "Out of date") : Status("line", "Up to date")}
+        ${!forced && html`<button class="ibtn" title=${docked ? "Under the node" : "Dock right"} aria-label=${docked ? "Under the node" : "Dock right"} onClick=${() => dock(docked ? "under" : "right")}>${I(docked ? "square-half-bottom" : "square-half")}</button>`}
         <button class="ibtn" aria-label="Close" onClick=${() => set({ sel: null })}>${I("x")}</button></div>
-      ${(() => {
-        // IA draft: the two status axes. Review (accepted / sent back / waiting) and freshness (up to date / out of date, with
-        // drama-cli's reason). The accepted version is drama-cli's status's (node.accepted), never the one before the current.
-        const acc = node.accepted === node.ver ? "accepted" : node.accepted ? `accepted ${node.accepted}` : "none accepted";
-        const why = node.problems ? node.problems.join("; ") : node.id === "file" ? "Changed file: bible/v3/bible.json" : "";
-        return html`<div class="nstate"><span class="mono">current ${node.ver || "v1"} · ${acc}</span>${why && html`<span class="why">${I("warning")}${why}</span>`}</div>`;
-      })()}
-      <div class="utabs" role="tablist">${tabs.map(([k, l]) => html`<button role="tab" aria-selected=${String(tab === k)} onClick=${() => set({ dtab: k })}>${l}</button>`)}</div>
-      <div role="tabpanel">
-        ${tab === "prompt" && (spec ? html`<ol class="refs">${spec.images.map((u, i) => html`<li title=${"Image " + (i + 1)}><img src=${u} alt=""/><b>${i + 1}</b></li>`)}</ol>
+      <div class="nstate"><span class="mono">current ${node.ver || "v1"} · ${acc}</span>${why && html`<span class="why">${I("warning")}${why}</span>`}</div>
+      ${needs && html`<p class="needs">${needs}</p>`}
+      ${home ? html`<p class="subtle nhome">Its versions, prompt and review are in Assets › ${{ cast: "Characters", scenes: "Locations", props: "Props" }[home]}.</p>`
+        : html`<div class="ndisc">${parts.map(([k, l]) => html`<button aria-expanded=${String(open === k)} aria-controls="npart" onClick=${() => set({ dtab: open === k ? null : k })}>${l}${I(open === k ? "caret-up" : "caret-down")}</button>`)}</div>`}
+      ${!home && open && html`<div id="npart" class="npart" role="region" aria-label=${parts.find(([k]) => k === open)[1]}>
+        ${open === "prompt" && (spec ? html`<ol class="refs">${spec.images.map((u, i) => html`<li title=${"Image " + (i + 1)}><img src=${u} alt=""/><b>${i + 1}</b></li>`)}</ol>
           <div class="prompt">${spec.prompt.split("\n").map((line) => html`<p>${chips(line)}</p>`)}</div>` : html`<p class="subtle">The agent hasn't returned this version's spec.json and request.json.</p>`)}
-        ${tab === "versions" && html`<ol class="versions">${spec.versions.map(([v, st, said]) => html`<li><b class="mono">${v}</b>${Status(st)}${said && html`<span class="subtle">${said}</span>`}</li>`)}</ol>`}
-        ${tab === "request" && html`<pre class="mono">${JSON.stringify({ model: spec.model, content: [{ type: "text", text: spec.prompt.slice(0, 60) + "…" }, ...spec.images.map((u) => ({ type: "image_url", image_url: { url: "@" + u }, role: "reference_image" }))], duration: spec.seconds, ratio: spec.ratio, resolution: spec.resolution }, null, 2)}</pre>`}
-        ${tab === "details" && html`<dl><dt>Kind</dt><dd>${node.role}</dd><dt>Version</dt><dd class="mono">${node.ver}</dd><dt>Used by</dt><dd>${uses || "—"}</dd><dt>Reads</dt><dd>${reads || "—"}</dd>${node.problems && node.problems.length ? html`<dt>Why</dt><dd>${node.problems.map((said) => html`<span class="why">${said}</span>`)}</dd>` : null}</dl>`}
+        ${open === "versions" && html`<ol class="versions">${spec.versions.map(([v, st, said]) => html`<li><b class="mono">${v}</b>${Status(st)}${said && html`<span class="subtle">${said}</span>`}</li>`)}</ol>`}
+        ${open === "request" && html`<pre class="mono">${JSON.stringify({ model: spec.model, content: [{ type: "text", text: spec.prompt.slice(0, 60) + "…" }, ...spec.images.map((u) => ({ type: "image_url", image_url: { url: "@" + u }, role: "reference_image" }))], duration: spec.seconds, ratio: spec.ratio, resolution: spec.resolution }, null, 2)}</pre>`}
+        ${open === "details" && html`<dl><dt>Kind</dt><dd>${node.role}</dd><dt>Version</dt><dd class="mono">${node.ver}</dd><dt>Used by</dt><dd>${uses || "—"}</dd><dt>Reads</dt><dd>${reads || "—"}</dd>${node.problems && node.problems.length ? html`<dt>Why</dt><dd>${node.problems.map((said) => html`<span class="why">${said}</span>`)}</dd>` : null}</dl>`}
       </div>
       <div class="nfoot">
         ${spec && html`<span class="pill mono">${spec.model}</span><span class="pill mono">${[spec.ratio, spec.resolution, spec.seconds + " s"].join(" · ")}</span>`}
         <span class="grow"></span>
         <button class="btn sm" disabled title="Phase 2: the agent makes every item for now">${I("upload")}Upload</button>
         <button class="btn sm" disabled title="Phase 2: the agent makes every item for now">${I("sparkle")}Generate</button>
-      </div>
+      </div>`}
     </div>`;
   }
 
@@ -391,11 +403,20 @@
     const ref = useRef(null);
     const byId = Object.fromEntries(NODES.map((n) => [n.id, n]));
     const { x, y, k } = S.cam;
+    // B5: a picked node is placed under the pills with its bar above it and room for its panel below (or beside, docked).
+    const PILLS = 64, BAR = 46, PANEL = 220, DOCKED = 440;
+    const place = (n, kk = k) => { const el = ref.current; if (!el) return { k: kk, x, y };
+      const tall = BAR + ((n.h || 196) + 26) * kk + (S.dock === "right" ? 0 : 10 + PANEL);
+      const top = Math.max(PILLS, PILLS + (el.clientHeight - PILLS - tall) / 2);
+      return { k: kk, x: (el.clientWidth - (S.dock === "right" ? DOCKED : 0)) / 2 - (n.x + (n.w || 300) / 2) * kk, y: top + BAR - (n.y - 26) * kk }; };
+    const pick = (n) => set({ sel: n.id, follow: false, cam: place(n) });
+    // Arriving with a pick (Back from Lineage or Assets, or the List's selection) places it, as a click would.
+    useEffect(() => { const n = S.sel && byId[S.sel]; if (n) pick(n); }, []);
     useEffect(() => {
       if (!S.follow) return;
       const order = ["seg01", "seg03", "seg04", "seg02"]; let i = 0;
       const t = setInterval(() => { if (!S.follow || S.screen !== "canvas") return; const n = byId[order[i++ % order.length]]; const el = ref.current; if (!el) return;
-        const kk = 0.62; set({ cam: { k: kk, x: el.clientWidth / 2 - (n.x + n.w / 2) * kk, y: el.clientHeight / 2 - (n.y + n.h / 2) * kk }, sel: n.id }); }, 6000);
+        set({ cam: place(n, 0.62), sel: n.id }); }, 6000);
       return () => clearInterval(t);
     }, [S.follow]);
     useEffect(() => {
@@ -426,31 +447,38 @@
             <svg class="wires" width="1" height="1">${EDGES.map(wire)}</svg>
             ${NODES.filter((n) => n.kind === "group").map((g) => html`<div class="group" style=${`left:${g.x}px;top:${g.y}px;width:${g.w}px;height:${g.h}px`}><span class="gl">${g.label}</span></div>`)}
             ${NODES.filter((n) => n.kind !== "group" && n.kind !== "seg").map((n) => html`<div class=${"cnode " + (S.sel === n.id ? "sel" : "")} style=${`left:${n.x}px;top:${n.y - 26}px;width:${n.w}px`}>
-              <div class="lab">${I(n.kind === "cast" ? "user" : n.kind === "place" ? "image" : "cube")}<span class="name">${n.label}</span><span class="model">${n.model}</span>${n.st !== "accepted" && Status(n.st)}</div>
-              <div class="card" style=${`height:${n.h}px`} onClick=${() => set({ sel: n.id, follow: false })}><img src=${n.pic} alt="" draggable="false"/></div></div>`)}
+              <div class="lab">${I(n.kind === "cast" ? "user" : n.kind === "place" ? "image" : "cube")}<span class="name">${n.label}</span>${n.st !== "accepted" ? Status(n.st) : outOfDate(n) && Status("stale")}</div>
+              <div class="card" style=${`height:${n.h}px`} onClick=${() => pick(n)}><img src=${n.pic} alt="" draggable="false"/></div></div>`)}
             ${NODES.filter((n) => n.kind === "seg").map((n) => html`<div class=${"segnode cnode " + (S.sel === n.id ? "sel" : "")} style=${`left:${n.x}px;top:${n.y - 26}px`}>
-              <div class="lab">${I("film-strip")}<span class="name">${n.label}</span><span class="subtle" style="font-weight:500">${n.seg.s} s</span><span class="model">${n.model}</span>${n.st !== "accepted" && Status(n.st)}</div>
-              <div class="card" onClick=${() => set({ sel: n.id, follow: false })}>
+              <div class="lab">${I("film-strip")}<span class="name">${n.label}</span><span class="subtle" style="font-weight:500">${n.seg.s} s</span>${n.st !== "accepted" && Status(n.st)}</div>
+              <div class="card" onClick=${() => pick(n)}>
                 ${n.seg.board ? html`<div class="board-img"><img src=${n.seg.board} alt="" draggable="false"/><span>board v1</span></div>` : html`<div class="none">board accepted</div>`}
                 ${n.seg.still ? html`<div><img src=${n.seg.still} alt="" draggable="false"/><span>${n.seg.take}</span><span class="play"><i>${I("play")}</i></span></div>` : html`<div class="none">${n.seg.take} accepted</div>`}</div></div>`)}
           </div>
         </div>
-        <div class="ctop"><${EpisodeViews}/><button class="follow" aria-pressed=${String(S.follow)} onClick=${() => set({ follow: !S.follow })}>${S.follow && html`<span class="live"></span>`}${S.follow ? "Following the agent" : "Follow the agent"}</button>
+        <div class="ctop"><${window.EXTRA.BackTo}/><${EpisodeViews}/><button class="follow" aria-pressed=${String(S.follow)} onClick=${() => set({ follow: !S.follow })}>${S.follow && html`<span class="live"></span>`}${S.follow ? "Following the agent" : "Follow the agent"}</button>
           <span class="grow"></span><${ProjectChips}/></div>
         ${S.dramaStop && html`<div style="position:absolute;left:0;right:0;top:60px"><${StopBanner}/></div>`}
         ${sel && (() => {
-          // Above the node its action bar; under it its panel, 560 px wide, kept inside the board.
-          const W = 560, bw = ref.current ? ref.current.clientWidth : 1100, bh = ref.current ? ref.current.clientHeight : 800;
+          // Above the node its action bar. Its panel goes where the board has room, never over the node or its bar: under
+          // the node, else above the bar, else docked right (Codex re-review F: the Case file's panel covered its own bar).
+          const W = 560, MIN = 180, bw = ref.current ? ref.current.clientWidth : 1100, bh = ref.current ? ref.current.clientHeight : 800;
           const cx = x + (sel.x + (sel.w || 300) / 2) * k, top = y + (sel.y - 26) * k, bottom = y + (sel.y + (sel.h || 196)) * k;
-          const left = Math.max(12, Math.min(bw - W - 12, cx - W / 2));
+          const barTop = Math.max(PILLS, top - BAR), left = Math.max(12, Math.min(bw - W - 12, cx - W / 2));
+          const below = bh - bottom - 10 - 12, above = barTop - 8 - PILLS;
+          const at = S.dock === "right" ? "" : below >= MIN ? `top:${bottom + 10}px;max-height:${below}px` : above >= MIN ? `bottom:${bh - barTop + 8}px;max-height:${above}px` : null;
           const uses = EDGES.filter((e) => e[0] === sel.id).map((e) => e[1]).join(", "), reads = EDGES.filter((e) => e[1] === sel.id).map((e) => byId[e[0]].label).join(", ");
-          return html`<div class="nbar" role="toolbar" aria-label=${"Act on " + sel.label} style=${`left:${Math.max(12, cx - 150)}px;top:${Math.max(64, top - 46)}px`}>
-              ${sel.st === "you" ? html`<button class="btn sm primary" onClick=${() => sel.kind === "seg" ? go("review") : toast("Opens the looks review.")}>Review</button>` : null}
+          const home = homeTab(sel.id), gid = window.EXTRA.lineageOf(sel.id), from = "Canvas · " + sel.label;
+          return html`<div class="nbar" role="toolbar" aria-label=${"Act on " + sel.label} style=${`left:${Math.max(12, cx - 150)}px;top:${barTop}px`}>
+              ${home
+                // A reference's home is Assets: the canvas links there, with no second copy of its review (§16).
+                ? html`<button class=${"btn sm " + (sel.st === "you" ? "primary" : "ghost")} onClick=${() => openHome(sel.id, from)}>${sel.st === "you" ? "Review in Assets" : "Open in Assets"}</button>`
+                : html`${sel.st === "you" ? html`<button class="btn sm primary" onClick=${() => go("review")}>Review</button>` : null}
               <button class="ibtn" title="Send back" aria-label="Send back" onClick=${() => toast("Send back: say why, and the agent redoes it.")}>${I("arrow-counter-clockwise")}</button>
-              <button class="ibtn" title="Note" aria-label="Note" onClick=${() => toast("A note for the agent at work on it.")}>${I("note-pencil")}</button>
-              <button class="ibtn" title="Lineage" aria-label="Lineage" onClick=${() => set({ screen: "graph", stale: false })}>${I("tree-structure")}</button>
+              <button class="ibtn" title="Note" aria-label="Note" onClick=${() => toast("A note for the agent at work on it.")}>${I("note-pencil")}</button>`}
+              <button class="ibtn" title=${gid ? "Lineage" : "Lineage: this sample traces seg03 and what it reads"} aria-label="Lineage" disabled=${!gid} onClick=${() => openLineage(gid, from)}>${I("tree-structure")}</button>
               <button class="ibtn" title="Download" aria-label="Download" onClick=${() => toast("Downloads the picture.")}>${I("download-simple")}</button></div>
-            <${NodePanel} node=${sel} uses=${uses} reads=${reads} style=${`left:${left}px;top:${Math.min(bottom + 10, bh - 300)}px;width:${W}px`}/>`;
+            <${NodePanel} node=${sel} uses=${uses} reads=${reads} docked=${at === null} style=${at ? `left:${left}px;width:${W}px;${at}` : ""}/>`;
         })()}
         ${S.minimap && html`<div class="minimap" aria-hidden="true">${NODES.filter((n) => n.kind !== "group").map((n) => html`<i style=${`left:${8 + n.x * 0.11}px;top:${8 + n.y * 0.08}px;width:${n.w * 0.11}px;height:${n.h * 0.08}px`}></i>`)}
           <b style=${`left:${8 - x * 0.11 / k}px;top:${8 - y * 0.08 / k}px;width:${(ref.current ? ref.current.clientWidth : 900) * 0.11 / k}px;height:${(ref.current ? ref.current.clientHeight : 600) * 0.08 / k}px`}></b></div>`}
@@ -613,6 +641,6 @@
     return html`<${Proto}/><div class="app"><${Rail}/><${Side}/>${main}</div><${Dialog}/>
       <div class="toasts" aria-live="polite">${S.toasts.map((t) => html`<div class="toast">${t.text}${t.action && html`<button onClick=${t.action.run}>${t.action.label}</button>`}</div>`)}</div>`;
   }
-  window.PD = { html, I, S, set, go, toast, money, Status, TopBar, StopBanner, EpisodeViews, ProjectChips, AgentPanel, SPENT_COVERS, useEffect, useRef, Mark, decisions, draw };
+  window.PD = { html, I, S, set, go, openHome, openLineage, toast, money, Status, TopBar, StopBanner, EpisodeViews, ProjectChips, AgentPanel, SPENT_COVERS, useEffect, useRef, Mark, decisions, draw };
   // screens.js draws first, once its screens are registered.
 })();
