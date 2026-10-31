@@ -326,7 +326,7 @@ export function NodePanel({
           ))}
         </div>
       )}
-      {/* The UI views and decides; to redo or change it, the agent's chat (UI_ACTIONS_RULE, design/app.js .nask). */}
+      {/* The UI views and decides; to redo or change it, the agent's chat (D70, design/app.js .nask). */}
       <p className="subtle nask">{t("canvas.askAgent")}</p>
     </section>
   );

@@ -1,6 +1,6 @@
 // The canvas's node bar and panel, used as a maker uses them: pick an item, then view it, Review it where its
 // review is open (Accept and Send back are decided there, on that exact item), or trace its lineage. Redo, notes
-// and other steering are the agent chat's (UI_ACTIONS_RULE); the canvas never records a verdict.
+// and other steering are the agent chat's (D70); the canvas never records a verdict.
 import "../test/flow.ts";
 import { fireEvent, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -121,7 +121,7 @@ describe("the node bar", () => {
     expect(within(bar).queryByRole("link", { name: "Review" })).toBeNull();
   });
 
-  it("views and decides only: Review, Lineage and Download, and one line to the agent for the rest (UI_ACTIONS_RULE)", async () => {
+  it("views and decides only: Review, Lineage and Download, and one line to the agent for the rest (D70)", async () => {
     engine();
     await renderAt(<Canvas drama={drama("working")} />, "/d/d1/e/EP001/canvas");
     const { bar } = await pick(/^林/);

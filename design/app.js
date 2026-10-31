@@ -632,7 +632,7 @@
               ${home
                 // A reference's home is Assets: the canvas links there, with no second copy of its review (§16).
                 ? html`<button class=${"btn sm " + (sel.st === "you" ? "primary" : "ghost")} onClick=${() => openHome(sel.asset || sel.id, from, sel.at)}>${sel.st === "you" ? "Review in Assets" : "Open in Assets"}</button>`
-                // The UI views and decides (UI_ACTIONS_RULE, merecdesperez44323-lab): Review leads to Accept or Send back on this
+                // The UI views and decides (D70): Review leads to Accept or Send back on this
                 // exact item; redo, notes and other steering go to the agent sidebar.
                 : html`${sel.st === "you" && reviewOf(sel, from) ? html`<button class="btn sm primary" onClick=${reviewOf(sel, from)}>Review</button>` : null}`}
               <button class="ibtn" title=${gid ? "Lineage" : "Lineage: this sample traces seg03 and what it reads"} aria-label="Lineage" disabled=${!gid} onClick=${() => openLineage(gid, from)}>${I("tree-structure")}</button>

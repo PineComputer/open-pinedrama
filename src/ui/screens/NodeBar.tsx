@@ -1,5 +1,5 @@
 // The canvas's node bar (design/app.js, the picked node's .nbar): what the maker can do with the item they picked,
-// which is to view it and decide on it (UI_ACTIONS_RULE, merecdesperez44323-lab: the UI keeps "对这一项做决定";
+// which is to view it and decide on it (D70, merecdesperez44323-lab: the UI keeps "对这一项做决定";
 // redo, notes and other steering go to the agent's chat). Review opens the item in the review of its own kind when one
 // holding it is open (D69), where Accept and Send back are decided on that exact item; Lineage opens its relations;
 // Download saves its picture.
