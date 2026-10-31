@@ -35,4 +35,15 @@ test("an episode chosen in the tree stays selected across the surfaces", async (
   await page.goBack();
   await expect(page).toHaveURL(new RegExp(`/d/${id}/e/EP001/canvas$`));
   await expect(views.getByRole("button", { name: "Canvas" })).toHaveAttribute("aria-pressed", "true");
+
+  // D26: an asset's detail ends the crumbs at the asset and its working version, its shelf a link back.
+  await page.goto(`/d/${id}/assets/characters`);
+  const card = page.locator("article.castcard").first();
+  const name = (await card.locator(".cardname").innerText()).trim();
+  await card.locator(".cardname").click();
+  await expect(page).toHaveURL(new RegExp(`/d/${id}/assets/characters/[^/?]+`));
+  const where = page.getByRole("navigation", { name: "Where this belongs" });
+  await expect(where.getByRole("link", { name: "Characters" })).toBeVisible();
+  const quoted = name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  await expect(where).toContainText(new RegExp(`${quoted} · (S\\d+ )?v\\d+$`));
 });
