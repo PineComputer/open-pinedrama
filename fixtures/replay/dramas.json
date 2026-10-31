@@ -6972,5 +6972,1239 @@
     ]
    }
   ]
+ },
+ "double-life-rewrite": {
+  "title": {
+   "en": "The Double Life: screenplay rewrite",
+   "zh": "The Double Life: screenplay rewrite"
+  },
+  "logline": {
+   "en": "To pay for her mother's dialysis, Natalie agrees to marry the jailed Klein outcast Sebastian Klein in Cassie's place, but the 'loser' who walks out of jail is a man running a secret plan, and the Quinn wedding is its final puzzle piece.",
+   "zh": "To pay for her mother's dialysis, Natalie agrees to marry the jailed Klein outcast Sebastian Klein in Cassie's place, but the 'loser' who walks out of jail is a man running a secret plan, and the Quinn wedding is its final puzzle piece."
+  },
+  "genres": {
+   "en": [
+    "Romance",
+    "Contract marriage",
+    "Revenge"
+   ],
+   "zh": [
+    "爱情",
+    "契约婚姻",
+    "复仇"
+   ]
+  },
+  "styles": [
+   "line-art"
+  ],
+  "ago": 135,
+  "cast": [
+   {
+    "id": "natalie",
+    "name": {
+     "en": "Natalie",
+     "zh": "Natalie"
+    },
+    "short": {
+     "en": "Natalie",
+     "zh": "Natalie"
+    },
+    "looks": [
+     "S1",
+     "S2",
+     "S3",
+     "S4"
+    ]
+   },
+   {
+    "id": "sebastian",
+    "name": {
+     "en": "Sebastian",
+     "zh": "Sebastian"
+    },
+    "short": {
+     "en": "Sebastian",
+     "zh": "Sebastian"
+    },
+    "looks": [
+     "S1",
+     "S2",
+     "S3",
+     "S4"
+    ]
+   },
+   {
+    "id": "george",
+    "name": {
+     "en": "George",
+     "zh": "George"
+    },
+    "short": {
+     "en": "George",
+     "zh": "George"
+    },
+    "looks": [
+     "S1"
+    ]
+   },
+   {
+    "id": "lauren",
+    "name": {
+     "en": "Lauren",
+     "zh": "Lauren"
+    },
+    "short": {
+     "en": "Lauren",
+     "zh": "Lauren"
+    },
+    "looks": [
+     "S1"
+    ]
+   },
+   {
+    "id": "cassie",
+    "name": {
+     "en": "Cassie",
+     "zh": "Cassie"
+    },
+    "short": {
+     "en": "Cassie",
+     "zh": "Cassie"
+    },
+    "looks": [
+     "S1"
+    ]
+   },
+   {
+    "id": "daniel",
+    "name": {
+     "en": "Daniel",
+     "zh": "Daniel"
+    },
+    "short": {
+     "en": "Daniel",
+     "zh": "Daniel"
+    }
+   },
+   {
+    "id": "officer",
+    "name": {
+     "en": "Officer",
+     "zh": "Officer"
+    },
+    "short": {
+     "en": "Officer",
+     "zh": "Officer"
+    }
+   },
+   {
+    "id": "guest_1",
+    "name": {
+     "en": "Guest 1",
+     "zh": "Guest 1"
+    },
+    "short": {
+     "en": "Guest 1",
+     "zh": "Guest 1"
+    }
+   },
+   {
+    "id": "guest_2",
+    "name": {
+     "en": "Guest 2",
+     "zh": "Guest 2"
+    },
+    "short": {
+     "en": "Guest 2",
+     "zh": "Guest 2"
+    }
+   },
+   {
+    "id": "officiant",
+    "name": {
+     "en": "Officiant",
+     "zh": "Officiant"
+    },
+    "short": {
+     "en": "Officiant",
+     "zh": "Officiant"
+    }
+   }
+  ],
+  "places": [
+   {
+    "id": "jail_cell",
+    "name": {
+     "en": "Jail, a cell",
+     "zh": "Jail, a cell"
+    },
+    "description": {
+     "en": "A narrow, present-day concrete jail cell painted dull grey-green, with a scuffed grey concrete floor. Back wall: a small high rectangular window with steel bars, through which a pale shaft of daylight slants down into the cell. Left wall: a steel bunk bolted lengthwise along the wall, with a thin grey mattress, a folded grey wool blanket and a flat pillow. Right wall: the barred steel cell door, the only way in, which opens onto a dim corridor; beside it in the back-right corner stands a stainless-steel toilet-sink unit. Front wall (behind the camera): bare concrete with a small steel shelf. A caged fluorescent tube on the ceiling gives a flat, cold white top light.",
+     "zh": "A narrow, present-day concrete jail cell painted dull grey-green, with a scuffed grey concrete floor. Back wall: a small high rectangular window with steel bars, through which a pale shaft of daylight slants down into the cell. Left wall: a steel bunk bolted lengthwise along the wall, with a thin grey mattress, a folded grey wool blanket and a flat pillow. Right wall: the barred steel cell door, the only way in, which opens onto a dim corridor; beside it in the back-right corner stands a stainless-steel toilet-sink unit. Front wall (behind the camera): bare concrete with a small steel shelf. A caged fluorescent tube on the ceiling gives a flat, cold white top light."
+    }
+   },
+   {
+    "id": "jail_front_desk",
+    "name": {
+     "en": "Jail, front desk",
+     "zh": "Jail, front desk"
+    },
+    "description": {
+     "en": "A present-day jail processing and release area with beige walls and a grey linoleum floor. A chest-high grey laminate front desk runs across the room, parallel to the back wall and a few steps in front of it, with a computer monitor and a tray on its top. Back wall: grey metal filing cabinets, a plain round wall clock and, at the back wall's left end, a heavy steel security door with a small wire-glass pane, which leads back to the cells. Right wall: a heavy steel exit door with a push bar and a small wire-glass window, the way out to the street. Left wall: a row of small grey steel property lockers and a steel bench bolted to the floor beneath them. Front wall (behind the camera): a cork notice board. Rectangular fluorescent ceiling panels give cool, even top light, and daylight comes in faintly through the exit door's small window on the right wall.",
+     "zh": "A present-day jail processing and release area with beige walls and a grey linoleum floor. A chest-high grey laminate front desk runs across the room, parallel to the back wall and a few steps in front of it, with a computer monitor and a tray on its top. Back wall: grey metal filing cabinets, a plain round wall clock and, at the back wall's left end, a heavy steel security door with a small wire-glass pane, which leads back to the cells. Right wall: a heavy steel exit door with a push bar and a small wire-glass window, the way out to the street. Left wall: a row of small grey steel property lockers and a steel bench bolted to the floor beneath them. Front wall (behind the camera): a cork notice board. Rectangular fluorescent ceiling panels give cool, even top light, and daylight comes in faintly through the exit door's small window on the right wall."
+    }
+   },
+   {
+    "id": "jail_street",
+    "name": {
+     "en": "Street outside the jail",
+     "zh": "Street outside the jail"
+    },
+    "description": {
+     "en": "A quiet present-day city street outside a jail, in bright daylight. Back side: a tall chain-link fence topped with coils of razor wire, and behind it the blocky grey concrete jail building with narrow slit windows. A steel pedestrian gate in the fence, opposite the camera, is the way out of the jail. A wide grey concrete sidewalk runs along the fence, and the curb runs parallel to it across the frame, with an empty parking lane of dark asphalt in front of it. Left side: the road and the fence stretch away into the distance, with a streetlamp at the curb. Right side: the sidewalk continues past a row of young trees and a bus-stop pole. Front side (behind the camera): the far lane of the road and low buildings opposite. Sunlight falls from high on the left and casts short shadows to the right; the sky is clear.",
+     "zh": "A quiet present-day city street outside a jail, in bright daylight. Back side: a tall chain-link fence topped with coils of razor wire, and behind it the blocky grey concrete jail building with narrow slit windows. A steel pedestrian gate in the fence, opposite the camera, is the way out of the jail. A wide grey concrete sidewalk runs along the fence, and the curb runs parallel to it across the frame, with an empty parking lane of dark asphalt in front of it. Left side: the road and the fence stretch away into the distance, with a streetlamp at the curb. Right side: the sidewalk continues past a row of young trees and a bus-stop pole. Front side (behind the camera): the far lane of the road and low buildings opposite. Sunlight falls from high on the left and casts short shadows to the right; the sky is clear."
+    }
+   },
+   {
+    "id": "mansion_living_room",
+    "name": {
+     "en": "The Quinn family mansion, living room",
+     "zh": "The Quinn family mansion, living room"
+    },
+    "description": {
+     "en": "A spacious, luxurious present-day living room in a wealthy suburban mansion, in cream, white and gold. Back wall: three tall arched French windows with sheer white curtains and gold tie-backs, through which daylight floods in from behind and slightly above, the main light source. Left wall: a white marble fireplace with a large gilt-framed mirror above it and two tall vases of white orchids on the mantel. Right wall: a wide open double doorway with white panelled doors, the way in from the marble entrance hall, and a gold console table beside it. Front wall (behind the camera): built-in white bookshelves. A crystal chandelier hangs from the centre of the ceiling and adds warm fill light. A long cream tufted three-seat sofa stands in the middle of the room with its back to the windows on the back wall, facing the camera. A low rectangular glass-and-gold coffee table stands in front of the sofa. A single cream upholstered armchair stands across the coffee table from the sofa, nearer the camera, its back to the camera and facing the sofa. A pale-grey patterned rug lies under the sofa, the table and the armchair, on a polished light wood floor.",
+     "zh": "A spacious, luxurious present-day living room in a wealthy suburban mansion, in cream, white and gold. Back wall: three tall arched French windows with sheer white curtains and gold tie-backs, through which daylight floods in from behind and slightly above, the main light source. Left wall: a white marble fireplace with a large gilt-framed mirror above it and two tall vases of white orchids on the mantel. Right wall: a wide open double doorway with white panelled doors, the way in from the marble entrance hall, and a gold console table beside it. Front wall (behind the camera): built-in white bookshelves. A crystal chandelier hangs from the centre of the ceiling and adds warm fill light. A long cream tufted three-seat sofa stands in the middle of the room with its back to the windows on the back wall, facing the camera. A low rectangular glass-and-gold coffee table stands in front of the sofa. A single cream upholstered armchair stands across the coffee table from the sofa, nearer the camera, its back to the camera and facing the sofa. A pale-grey patterned rug lies under the sofa, the table and the armchair, on a polished light wood floor."
+    }
+   },
+   {
+    "id": "sebastian_apartment",
+    "name": {
+     "en": "Sebastian's apartment, living room",
+     "zh": "Sebastian's apartment, living room"
+    },
+    "description": {
+     "en": "The living room of a small but bright, clean and stylish present-day one-bedroom downtown apartment, with white walls, a pale oak floor and warm modern-minimalist décor. Back wall: on its left half, a large floor-to-ceiling window with sheer linen curtains looking out over the city skyline; by day, sunlight streams in through it from behind, and by night the city lights glow through it. On the right half of the back wall is the white panelled bedroom door, the only bedroom. Left wall: the apartment's front door, a dark-grey panelled door with a brass handle, which is the way in, with wall hooks and a slim oak shoe bench beside it. Right wall: a compact open kitchenette with white flat-front cabinets, a pale stone counter and two oak stools tucked under the counter's overhang. Front wall (behind the camera): low oak bookshelves. A charcoal-grey linen three-seat couch stands in the middle of the room, slightly left of centre, its back to the camera, facing the back wall's window, with a brass arc floor lamp at its left end and a low round oak coffee table in front of it. A small round light-oak dining table with two upholstered chairs stands in the right half of the room, between the couch and the kitchenette, nearer the bedroom door. A glass globe pendant lamp hangs over the dining table. At night the warm floor lamp from the left and the pendant over the table are the light sources; by day the window on the back wall gives soft, bright light.",
+     "zh": "The living room of a small but bright, clean and stylish present-day one-bedroom downtown apartment, with white walls, a pale oak floor and warm modern-minimalist décor. Back wall: on its left half, a large floor-to-ceiling window with sheer linen curtains looking out over the city skyline; by day, sunlight streams in through it from behind, and by night the city lights glow through it. On the right half of the back wall is the white panelled bedroom door, the only bedroom. Left wall: the apartment's front door, a dark-grey panelled door with a brass handle, which is the way in, with wall hooks and a slim oak shoe bench beside it. Right wall: a compact open kitchenette with white flat-front cabinets, a pale stone counter and two oak stools tucked under the counter's overhang. Front wall (behind the camera): low oak bookshelves. A charcoal-grey linen three-seat couch stands in the middle of the room, slightly left of centre, its back to the camera, facing the back wall's window, with a brass arc floor lamp at its left end and a low round oak coffee table in front of it. A small round light-oak dining table with two upholstered chairs stands in the right half of the room, between the couch and the kitchenette, nearer the bedroom door. A glass globe pendant lamp hangs over the dining table. At night the warm floor lamp from the left and the pendant over the table are the light sources; by day the window on the back wall gives soft, bright light."
+    },
+    "times": [
+     "Night"
+    ]
+   },
+   {
+    "id": "wedding_garden",
+    "name": {
+     "en": "Garden of the wedding venue",
+     "zh": "Garden of the wedding venue"
+    },
+    "description": {
+     "en": "A small, elegant present-day outdoor wedding garden on a manicured green lawn, in sunny daylight. Back side: a white wooden wedding arch at the end of the aisle, hung with sheer white drapes and garlands of white roses, peonies and greenery, with a tall clipped hedge and leafy trees behind it. A straight aisle of white petals on a pale runner runs down the middle of the lawn from the camera to the arch, between two short rows of white folding chairs that face the arch. Left side: a clipped boxwood hedge and, in front of it, a small round white high cocktail table holding a silver tray. Right side: white rose bushes along a low cream stone garden wall. Front side (behind the camera): a gravel path from the venue's terrace, the way in, where the aisle begins. Sunlight comes from high on the right and gives warm, soft highlights.",
+     "zh": "A small, elegant present-day outdoor wedding garden on a manicured green lawn, in sunny daylight. Back side: a white wooden wedding arch at the end of the aisle, hung with sheer white drapes and garlands of white roses, peonies and greenery, with a tall clipped hedge and leafy trees behind it. A straight aisle of white petals on a pale runner runs down the middle of the lawn from the camera to the arch, between two short rows of white folding chairs that face the arch. Left side: a clipped boxwood hedge and, in front of it, a small round white high cocktail table holding a silver tray. Right side: white rose bushes along a low cream stone garden wall. Front side (behind the camera): a gravel path from the venue's terrace, the way in, where the aisle begins. Sunlight comes from high on the right and gives warm, soft highlights."
+    }
+   }
+  ],
+  "props": [
+   {
+    "id": "agreement",
+    "name": {
+     "en": "agreement",
+     "zh": "agreement"
+    },
+    "description": {
+     "en": "A single white US-letter sheet of paper, handwritten in blue ink in Natalie's neat cursive. It is headed 'Agreement' and lists three numbered rules, with Natalie's signature and Sebastian's signature beneath it. It is later called their divorce agreement.",
+     "zh": "A single white US-letter sheet of paper, handwritten in blue ink in Natalie's neat cursive. It is headed 'Agreement' and lists three numbered rules, with Natalie's signature and Sebastian's signature beneath it. It is later called their divorce agreement."
+    }
+   },
+   {
+    "id": "blanket",
+    "name": {
+     "en": "blanket",
+     "zh": "blanket"
+    },
+    "description": {
+     "en": "A soft oatmeal-grey knitted throw blanket, about 130 by 170 cm, with a chunky cable-knit texture.",
+     "zh": "A soft oatmeal-grey knitted throw blanket, about 130 by 170 cm, with a chunky cable-knit texture."
+    }
+   },
+   {
+    "id": "bouquet",
+    "name": {
+     "en": "bouquet",
+     "zh": "bouquet"
+    },
+    "description": {
+     "en": "A modest round bridal bouquet of white roses and baby's breath with a little greenery, its stems wrapped in ivory satin ribbon, about 25 cm across.",
+     "zh": "A modest round bridal bouquet of white roses and baby's breath with a little greenery, its stems wrapped in ivory satin ribbon, about 25 cm across."
+    }
+   },
+   {
+    "id": "breakfast",
+    "name": {
+     "en": "breakfast",
+     "zh": "breakfast"
+    },
+    "description": {
+     "en": "Two white ceramic plates of scrambled eggs, buttered toast and sliced strawberries, with two white mugs of black coffee and cutlery, set out on the dining table.",
+     "zh": "Two white ceramic plates of scrambled eggs, buttered toast and sliced strawberries, with two white mugs of black coffee and cutlery, set out on the dining table."
+    }
+   },
+   {
+    "id": "car_key",
+    "name": {
+     "en": "car key",
+     "zh": "car key"
+    },
+    "description": {
+     "en": "A sleek black Mercedes-Benz smart key fob with chrome edging and the silver three-pointed-star logo, about 7 cm long, the key to the black Mercedes-Maybach.",
+     "zh": "A sleek black Mercedes-Benz smart key fob with chrome edging and the silver three-pointed-star logo, about 7 cm long, the key to the black Mercedes-Maybach."
+    }
+   },
+   {
+    "id": "champagne_glasses",
+    "name": {
+     "en": "glasses of champagne",
+     "zh": "glasses of champagne"
+    },
+    "description": {
+     "en": "Tall, slim crystal champagne flutes filled with pale golden sparkling champagne, served from a round silver tray.",
+     "zh": "Tall, slim crystal champagne flutes filled with pale golden sparkling champagne, served from a round silver tray."
+    }
+   },
+   {
+    "id": "coins",
+    "name": {
+     "en": "two coins",
+     "zh": "two coins"
+    },
+    "description": {
+     "en": "Two silver US quarter-dollar coins, about 24 mm across, with George Washington's profile on the face.",
+     "zh": "Two silver US quarter-dollar coins, about 24 mm across, with George Washington's profile on the face."
+    }
+   },
+   {
+    "id": "daniel_phone",
+    "name": {
+     "en": "Daniel's phone",
+     "zh": "Daniel's phone"
+    },
+    "description": {
+     "en": "A Samsung Galaxy S24 Ultra in titanium black with the Samsung wordmark on the back. Its screen shows a payment confirmation with a green check mark.",
+     "zh": "A Samsung Galaxy S24 Ultra in titanium black with the Samsung wordmark on the back. Its screen shows a payment confirmation with a green check mark."
+    }
+   },
+   {
+    "id": "dress_bag",
+    "name": {
+     "en": "the bag containing her wedding dress",
+     "zh": "the bag containing her wedding dress"
+    },
+    "description": {
+     "en": "A long white zippered garment bag of matte nylon, about 150 cm long, on a wooden hanger, with the ivory satin of the wedding dress faintly visible through it.",
+     "zh": "A long white zippered garment bag of matte nylon, about 150 cm long, on a wooden hanger, with the ivory satin of the wedding dress faintly visible through it."
+    }
+   },
+   {
+    "id": "expensive_car",
+    "name": {
+     "en": "expensive car",
+     "zh": "expensive car"
+    },
+    "description": {
+     "en": "A sleek, polished black luxury sedan with tinted windows, chrome trim, dark alloy wheels and no visible badges or plates text.",
+     "zh": "A sleek, polished black luxury sedan with tinted windows, chrome trim, dark alloy wheels and no visible badges or plates text."
+    }
+   },
+   {
+    "id": "folder",
+    "name": {
+     "en": "folder",
+     "zh": "folder"
+    },
+    "description": {
+     "en": "A plain manila card folder, letter size, holding typed report pages, photographs and a copy of the hospital statement.",
+     "zh": "A plain manila card folder, letter size, holding typed report pages, photographs and a copy of the hospital statement."
+    }
+   },
+   {
+    "id": "front_door_key",
+    "name": {
+     "en": "key",
+     "zh": "key"
+    },
+    "description": {
+     "en": "A single brass Schlage house key, about 6 cm long, with the Schlage name stamped on its bow, on a plain silver split ring.",
+     "zh": "A single brass Schlage house key, about 6 cm long, with the Schlage name stamped on its bow, on a plain silver split ring."
+    }
+   },
+   {
+    "id": "gift_box",
+    "name": {
+     "en": "wedding-gift box",
+     "zh": "wedding-gift box"
+    },
+    "description": {
+     "en": "An empty square white cardboard gift box, about 25 by 25 by 12 cm, with its lid off. A loose white satin ribbon and bow hang from it, and the inside is lined with white tissue paper. Cassie later crushes it into a crumpled shape.",
+     "zh": "An empty square white cardboard gift box, about 25 by 25 by 12 cm, with its lid off. A loose white satin ribbon and bow hang from it, and the inside is lined with white tissue paper. Cassie later crushes it into a crumpled shape."
+    }
+   },
+   {
+    "id": "guest_phone",
+    "name": {
+     "en": "Guest 1's phone",
+     "zh": "Guest 1's phone"
+    },
+    "description": {
+     "en": "An Apple iPhone 15 in pink with the Apple logo on the back, held up vertically to record video, the camera app open on screen with a red record button.",
+     "zh": "An Apple iPhone 15 in pink with the Apple logo on the back, held up vertically to record video, the camera app open on screen with a red record button."
+    }
+   },
+   {
+    "id": "hospital_statement",
+    "name": {
+     "en": "hospital statement",
+     "zh": "hospital statement"
+    },
+    "description": {
+     "en": "A single US-letter sheet of white paper with a pale-blue hospital header band, rows of printed billing lines and a bold total at the bottom, slightly creased from folding.",
+     "zh": "A single US-letter sheet of white paper with a pale-blue hospital header band, rows of printed billing lines and a bold total at the bottom, slightly creased from folding."
+    }
+   },
+   {
+    "id": "lace_bra",
+    "name": {
+     "en": "lace bra",
+     "zh": "lace bra"
+    },
+    "description": {
+     "en": "A folded pale-blush lace bra, small and light, that falls out of Natalie's bag. It is shown only briefly and in passing.",
+     "zh": "A folded pale-blush lace bra, small and light, that falls out of Natalie's bag. It is shown only briefly and in passing."
+    }
+   },
+   {
+    "id": "lauren_phone",
+    "name": {
+     "en": "Lauren's phone",
+     "zh": "Lauren's phone"
+    },
+    "description": {
+     "en": "An Apple iPhone 15 Pro Max in natural titanium in a lilac-purple leather case, with the Apple logo visible on the back. Its screen shows a banking app's transfer page.",
+     "zh": "An Apple iPhone 15 Pro Max in natural titanium in a lilac-purple leather case, with the Apple logo visible on the back. Its screen shows a banking app's transfer page."
+    }
+   },
+   {
+    "id": "natalie_bag",
+    "name": {
+     "en": "bag",
+     "zh": "bag"
+    },
+    "description": {
+     "en": "Natalie's soft pale-blue pebbled-leather Coach shoulder tote, about 35 cm wide, with its small leather Coach logo tag on the front. Its magnetic top is left unfastened.",
+     "zh": "Natalie's soft pale-blue pebbled-leather Coach shoulder tote, about 35 cm wide, with its small leather Coach logo tag on the front. Its magnetic top is left unfastened."
+    }
+   },
+   {
+    "id": "natalie_phone",
+    "name": {
+     "en": "Natalie's phone",
+     "zh": "Natalie's phone"
+    },
+    "description": {
+     "en": "An Apple iPhone 13 in blue in a clear case, with the Apple logo on the back. Its lock screen shows a bank notification banner.",
+     "zh": "An Apple iPhone 13 in blue in a clear case, with the Apple logo on the back. Its lock screen shows a bank notification banner."
+    }
+   },
+   {
+    "id": "pillow",
+    "name": {
+     "en": "pillow",
+     "zh": "pillow"
+    },
+    "description": {
+     "en": "A plump white bed pillow in a crisp white cotton case, about 50 by 70 cm.",
+     "zh": "A plump white bed pillow in a crisp white cotton case, about 50 by 70 cm."
+    }
+   },
+   {
+    "id": "release_form",
+    "name": {
+     "en": "release form on a clipboard",
+     "zh": "release form on a clipboard"
+    },
+    "description": {
+     "en": "A brown hardboard clipboard with a silver metal clip holding a white printed form with signature lines, and a cheap black ballpoint pen clipped beside it.",
+     "zh": "A brown hardboard clipboard with a silver metal clip holding a white printed form with signature lines, and a cheap black ballpoint pen clipped beside it."
+    }
+   },
+   {
+    "id": "sebastian_phone",
+    "name": {
+     "en": "Sebastian's phone",
+     "zh": "Sebastian's phone"
+    },
+    "description": {
+     "en": "An Apple iPhone 15 Pro in black titanium with the Apple logo on the back. Its screen shows a private-banking notification on a dark background.",
+     "zh": "An Apple iPhone 15 Pro in black titanium with the Apple logo on the back. Its screen shows a private-banking notification on a dark background."
+    }
+   }
+  ],
+  "episodes": [
+   {
+    "title": {
+     "en": "Sold to the Outcast",
+     "zh": "Sold to the Outcast"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "heading": {
+       "en": "1-1 Day | Int. The Quinn family mansion, living room",
+       "zh": "1-1 Day | Int. The Quinn family mansion, living room"
+      },
+      "shots": {
+       "en": [
+        "The cream-and-gold living room in daylight. Natalie sits in the armchair in the foreground centre with her back to the camera. George sits at frame left and Lauren at frame right on the cream sofa in front of the arched windows, with the glass coffee table between them and Natalie.",
+        "The hospital statement lies on the glass coffee table, its bold total at the bottom.",
+        "Lauren's shoulder and hair fill the foreground edge. Natalie in the armchair leans slightly forward toward her father, hands clasped, eyes hopeful.",
+        "Only Natalie, framed tight on her face and shoulders; her eyes glisten as she pleads.",
+        "George at the fireplace end of the sofa, frame left, rubs his hands together and glances right at Lauren beside him at frame right.",
+        "Lauren uncrosses her legs and fixes Natalie, toward the camera, with a cold stare, lip curled."
+       ],
+       "zh": [
+        "The cream-and-gold living room in daylight. Natalie sits in the armchair in the foreground centre with her back to the camera. George sits at frame left and Lauren at frame right on the cream sofa in front of the arched windows, with the glass coffee table between them and Natalie.",
+        "The hospital statement lies on the glass coffee table, its bold total at the bottom.",
+        "Lauren's shoulder and hair fill the foreground edge. Natalie in the armchair leans slightly forward toward her father, hands clasped, eyes hopeful.",
+        "Only Natalie, framed tight on her face and shoulders; her eyes glisten as she pleads.",
+        "George at the fireplace end of the sofa, frame left, rubs his hands together and glances right at Lauren beside him at frame right.",
+        "Lauren uncrosses her legs and fixes Natalie, toward the camera, with a cold stare, lip curled."
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "heading": {
+       "en": "1-1 Day | Int. The Quinn family mansion, living room",
+       "zh": "1-1 Day | Int. The Quinn family mansion, living room"
+      },
+      "shots": {
+       "en": [
+        "Cassie appears in the open double doorway at frame right with a mocking pout. Natalie in the foreground armchair, and George and Lauren on the sofa, all turn their heads right toward her.",
+        "Cassie strolls across the rug from the doorway and stops beside the armchair on its doorway side, frame right of Natalie, standing over the seated Natalie.",
+        "Cassie looks down at Natalie with a smirk, one hand on her hip.",
+        "Only Natalie, framed tight on her face; she lowers her eyes, her jaw tightening.",
+        "Natalie picks up the hospital statement from the coffee table and rises from the armchair; Cassie, at the armchair's frame-right side, steps back half a pace toward the doorway.",
+        "Natalie walks past Cassie toward the double doorway, the statement in her hand, and stops a few steps short of the doorway."
+       ],
+       "zh": [
+        "Cassie appears in the open double doorway at frame right with a mocking pout. Natalie in the foreground armchair, and George and Lauren on the sofa, all turn their heads right toward her.",
+        "Cassie strolls across the rug from the doorway and stops beside the armchair on its doorway side, frame right of Natalie, standing over the seated Natalie.",
+        "Cassie looks down at Natalie with a smirk, one hand on her hip.",
+        "Only Natalie, framed tight on her face; she lowers her eyes, her jaw tightening.",
+        "Natalie picks up the hospital statement from the coffee table and rises from the armchair; Cassie, at the armchair's frame-right side, steps back half a pace toward the doorway.",
+        "Natalie walks past Cassie toward the double doorway, the statement in her hand, and stops a few steps short of the doorway."
+       ]
+      }
+     },
+     {
+      "id": "seg03",
+      "heading": {
+       "en": "1-1 Day | Int. The Quinn family mansion, living room",
+       "zh": "1-1 Day | Int. The Quinn family mansion, living room"
+      },
+      "shots": {
+       "en": [
+        "Cassie folds her arms and nods.",
+        "Only Cassie, framed on her face and shoulders; she wrinkles her nose in disgust and flicks her hair over her shoulder.",
+        "Only Natalie; her fingers tighten on the hospital statement as she stares at Cassie, who is off screen beside her toward the doorway.",
+        "Lauren at frame right nods firmly beside George at frame left.",
+        "Lauren turns left to George and pats his knee.",
+        "Only Lauren, framed tight on her face; she looks back toward Natalie with a thin mauve-lipped smile."
+       ],
+       "zh": [
+        "Cassie folds her arms and nods.",
+        "Only Cassie, framed on her face and shoulders; she wrinkles her nose in disgust and flicks her hair over her shoulder.",
+        "Only Natalie; her fingers tighten on the hospital statement as she stares at Cassie, who is off screen beside her toward the doorway.",
+        "Lauren at frame right nods firmly beside George at frame left.",
+        "Lauren turns left to George and pats his knee.",
+        "Only Lauren, framed tight on her face; she looks back toward Natalie with a thin mauve-lipped smile."
+       ]
+      }
+     }
+    ],
+    "cut": [
+     {
+      "segment": "seg01",
+      "in": 0,
+      "out": 30.041666666666668
+     },
+     {
+      "segment": "seg02",
+      "in": 0,
+      "out": 29.041666666666668
+     },
+     {
+      "segment": "seg03",
+      "in": 0,
+      "out": 30.041666666666668
+     }
+    ]
+   },
+   {
+    "title": {
+     "en": "The Perfect Alibi",
+     "zh": "The Perfect Alibi"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "heading": {
+       "en": "2-1 Day | Int. Jail, a cell",
+       "zh": "2-1 Day | Int. Jail, a cell"
+      },
+      "shots": {
+       "en": [
+        "The blocky grey concrete jail building behind a tall chain-link fence topped with coils of razor wire, under a clear sky.",
+        "Sebastian lies on the steel bunk along the left wall, his back to the barred cell door, facing the grey-green wall, a shaft of daylight slanting down from the barred high window.",
+        "Officer steps up to the barred cell door from the dim corridor, grips a steel bar with one hand and glares toward the bunk.",
+        "Sebastian lies facing the wall with his eyes open, calm, and does not turn around; the Officer is off screen.",
+        "Officer bangs his key ring hard against the steel bars of the cell door, his face red and furious.",
+        "Sebastian rolls over toward the barred cell door and slowly sits up on the edge of the steel bunk, his feet in the white slip-on canvas shoes on the floor, while the Officer stands at the barred door with his hand on the bars."
+       ],
+       "zh": [
+        "The blocky grey concrete jail building behind a tall chain-link fence topped with coils of razor wire, under a clear sky.",
+        "Sebastian lies on the steel bunk along the left wall, his back to the barred cell door, facing the grey-green wall, a shaft of daylight slanting down from the barred high window.",
+        "Officer steps up to the barred cell door from the dim corridor, grips a steel bar with one hand and glares toward the bunk.",
+        "Sebastian lies facing the wall with his eyes open, calm, and does not turn around; the Officer is off screen.",
+        "Officer bangs his key ring hard against the steel bars of the cell door, his face red and furious.",
+        "Sebastian rolls over toward the barred cell door and slowly sits up on the edge of the steel bunk, his feet in the white slip-on canvas shoes on the floor, while the Officer stands at the barred door with his hand on the bars."
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "heading": {
+       "en": "2-2 Day | Int. Jail, front desk",
+       "zh": "2-2 Day | Int. Jail, front desk"
+      },
+      "shots": {
+       "en": [
+        "Sebastian fastens the steel-and-black wristwatch around his wrist while the Officer picks up the release form on a clipboard from the desk and holds it out to him over the counter.",
+        "Officer points the ballpoint pen at Sebastian, frowning under his bushy moustache.",
+        "Sebastian's hand, the wristwatch now on it, takes the release form on a clipboard and the black ballpoint pen; the Officer is off screen.",
+        "Sebastian raises his eyes from the clipboard to the Officer with a cocky smirk.",
+        "Sebastian signs the release form on the clipboard with a flourish and a smile, while the Officer behind the desk shakes his head."
+       ],
+       "zh": [
+        "Sebastian fastens the steel-and-black wristwatch around his wrist while the Officer picks up the release form on a clipboard from the desk and holds it out to him over the counter.",
+        "Officer points the ballpoint pen at Sebastian, frowning under his bushy moustache.",
+        "Sebastian's hand, the wristwatch now on it, takes the release form on a clipboard and the black ballpoint pen; the Officer is off screen.",
+        "Sebastian raises his eyes from the clipboard to the Officer with a cocky smirk.",
+        "Sebastian signs the release form on the clipboard with a flourish and a smile, while the Officer behind the desk shakes his head."
+       ]
+      }
+     },
+     {
+      "id": "seg03",
+      "heading": {
+       "en": "2-3 Day | Ext. Street outside the jail",
+       "zh": "2-3 Day | Ext. Street outside the jail"
+      },
+      "shots": {
+       "en": [
+        "Sebastian walks out through the steel pedestrian gate onto the sunny sidewalk, squints at the sky and straightens his shirt collar with both hands.",
+        "The black expensive car waits at the curb with Daniel standing beside its rear passenger door, hands folded; Sebastian walks along the sidewalk toward him.",
+        "Daniel opens the rear passenger door of the car; Sebastian stops at the open door, facing Daniel, one hand resting on the door frame.",
+        "Daniel gives a crisp nod behind his rimless glasses.",
+        "Daniel, holding the open car door, leans in slightly toward Sebastian and lowers his voice.",
+        "Sebastian adjusts his wristwatch and a slow, satisfied smirk spreads across his face; Daniel is off screen."
+       ],
+       "zh": [
+        "Sebastian walks out through the steel pedestrian gate onto the sunny sidewalk, squints at the sky and straightens his shirt collar with both hands.",
+        "The black expensive car waits at the curb with Daniel standing beside its rear passenger door, hands folded; Sebastian walks along the sidewalk toward him.",
+        "Daniel opens the rear passenger door of the car; Sebastian stops at the open door, facing Daniel, one hand resting on the door frame.",
+        "Daniel gives a crisp nod behind his rimless glasses.",
+        "Daniel, holding the open car door, leans in slightly toward Sebastian and lowers his voice.",
+        "Sebastian adjusts his wristwatch and a slow, satisfied smirk spreads across his face; Daniel is off screen."
+       ]
+      }
+     },
+     {
+      "id": "seg04",
+      "heading": {
+       "en": "2-3 Day | Ext. Street outside the jail",
+       "zh": "2-3 Day | Ext. Street outside the jail"
+      },
+      "shots": {
+       "en": [
+        "Sebastian taps the top of the open car door with his fingers and tilts his head at Daniel.",
+        "Daniel shakes his head once.",
+        "Daniel straightens his glasses, standing by the open car door, and looks Sebastian in the eye.",
+        "Sebastian raises one eyebrow, intrigued.",
+        "Sebastian looks off toward the jail fence and his smirk widens.",
+        "Sebastian leans in close and whispers into Daniel's ear, a hand on Daniel's shoulder; Daniel listens with his eyes narrowing, then nods."
+       ],
+       "zh": [
+        "Sebastian taps the top of the open car door with his fingers and tilts his head at Daniel.",
+        "Daniel shakes his head once.",
+        "Daniel straightens his glasses, standing by the open car door, and looks Sebastian in the eye.",
+        "Sebastian raises one eyebrow, intrigued.",
+        "Sebastian looks off toward the jail fence and his smirk widens.",
+        "Sebastian leans in close and whispers into Daniel's ear, a hand on Daniel's shoulder; Daniel listens with his eyes narrowing, then nods."
+       ]
+      }
+     }
+    ],
+    "cut": [
+     {
+      "segment": "seg01",
+      "in": 0,
+      "out": 20.041667
+     },
+     {
+      "segment": "seg02",
+      "in": 0,
+      "out": 13.041667
+     },
+     {
+      "segment": "seg03",
+      "in": 0,
+      "out": 15.041667
+     },
+     {
+      "segment": "seg04",
+      "in": 0,
+      "out": 18.041667
+     }
+    ]
+   },
+   {
+    "title": {
+     "en": "The Groom Arrives",
+     "zh": "The Groom Arrives"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "heading": {
+       "en": "3-1 Day | Ext. Garden of the wedding venue",
+       "zh": "3-1 Day | Ext. Garden of the wedding venue"
+      },
+      "shots": {
+       "en": [
+        "Tall crystal flutes of pale golden champagne stand on the silver tray on the white cocktail table, catching the sunlight, with the boxwood hedge out of focus behind them.",
+        "Natalie stands under the flower-hung arch with the bouquet and George stands beside her on the rose-bush side. The space on her other side is empty. Lauren stands at the front row of chairs in the foreground, turned toward them.",
+        "Under the arch, George turns toward Natalie with a nervous, placating smile and pats her arm once.",
+        "Natalie turns her face to George, her eyes steady and serious above the veil.",
+        "George drops his gaze and glances toward Lauren at the front row, avoiding his daughter's eyes.",
+        "Lauren turns her wrist and checks her slim gold wristwatch with an impatient tap of one finger."
+       ],
+       "zh": [
+        "Tall crystal flutes of pale golden champagne stand on the silver tray on the white cocktail table, catching the sunlight, with the boxwood hedge out of focus behind them.",
+        "Natalie stands under the flower-hung arch with the bouquet and George stands beside her on the rose-bush side. The space on her other side is empty. Lauren stands at the front row of chairs in the foreground, turned toward them.",
+        "Under the arch, George turns toward Natalie with a nervous, placating smile and pats her arm once.",
+        "Natalie turns her face to George, her eyes steady and serious above the veil.",
+        "George drops his gaze and glances toward Lauren at the front row, avoiding his daughter's eyes.",
+        "Lauren turns her wrist and checks her slim gold wristwatch with an impatient tap of one finger."
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "heading": {
+       "en": "3-1 Day | Ext. Garden of the wedding venue",
+       "zh": "3-1 Day | Ext. Garden of the wedding venue"
+      },
+      "shots": {
+       "en": [
+        "Guest 2 and Guest 1 stand at the round white cocktail table in front of the hedge, flutes in hand, and lean their heads together.",
+        "Guest 2 shields her mouth with her flute and glances toward the arch, eyes wide.",
+        "Guest 1 nods eagerly and rolls her eyes, swirling her champagne.",
+        "Guest 2 leans closer, lowering her voice, her freckled face lit with relish.",
+        "Guest 1 takes a sip from her flute and smirks over its rim toward the empty side of the arch.",
+        "Guest 2 covers a giggle with her hand while Guest 1 clinks her flute against Guest 2's flute."
+       ],
+       "zh": [
+        "Guest 2 and Guest 1 stand at the round white cocktail table in front of the hedge, flutes in hand, and lean their heads together.",
+        "Guest 2 shields her mouth with her flute and glances toward the arch, eyes wide.",
+        "Guest 1 nods eagerly and rolls her eyes, swirling her champagne.",
+        "Guest 2 leans closer, lowering her voice, her freckled face lit with relish.",
+        "Guest 1 takes a sip from her flute and smirks over its rim toward the empty side of the arch.",
+        "Guest 2 covers a giggle with her hand while Guest 1 clinks her flute against Guest 2's flute."
+       ]
+      }
+     },
+     {
+      "id": "seg03",
+      "heading": {
+       "en": "3-1 Day | Ext. Garden of the wedding venue",
+       "zh": "3-1 Day | Ext. Garden of the wedding venue"
+      },
+      "shots": {
+       "en": [
+        "Cassie struts from the stone garden wall to the head of the aisle, arms crossed, and stops a step in front of Natalie on the rose-bush side, facing her. Natalie's veil and shoulder appear at the frame edge.",
+        "Cassie tilts her head with a sugary, mocking smile, her gold hoops swinging.",
+        "Natalie lowers her eyes to the bouquet and presses her lips together.",
+        "Cassie glances at the empty side of the arch and gives a fake pout.",
+        "Cassie leans in toward Natalie's ear with a cruel, gleeful grin.",
+        "George winces, opens his mouth, then closes it and looks away toward the guests."
+       ],
+       "zh": [
+        "Cassie struts from the stone garden wall to the head of the aisle, arms crossed, and stops a step in front of Natalie on the rose-bush side, facing her. Natalie's veil and shoulder appear at the frame edge.",
+        "Cassie tilts her head with a sugary, mocking smile, her gold hoops swinging.",
+        "Natalie lowers her eyes to the bouquet and presses her lips together.",
+        "Cassie glances at the empty side of the arch and gives a fake pout.",
+        "Cassie leans in toward Natalie's ear with a cruel, gleeful grin.",
+        "George winces, opens his mouth, then closes it and looks away toward the guests."
+       ]
+      }
+     },
+     {
+      "id": "seg04",
+      "heading": {
+       "en": "3-1 Day | Ext. Garden of the wedding venue",
+       "zh": "3-1 Day | Ext. Garden of the wedding venue"
+      },
+      "shots": {
+       "en": [
+        "Sebastian's black patent oxfords step off the gravel path onto the start of the petal-strewn aisle runner.",
+        "At the cocktail table, Guest 1 and Guest 2 turn their heads toward the start of the aisle, and Guest 2 lowers her flute mid-sip.",
+        "Sebastian walks up the aisle between the white chairs toward the arch with an unhurried stride, straightening his shirt cuff, a calm half-smile on his face. He ends halfway up the aisle.",
+        "Guest 1's mouth falls open and her eyes follow Sebastian along the aisle.",
+        "Sebastian reaches the front row of chairs on the boxwood-hedge side, where Lauren stands in his path, and gives her a polite, lazy nod.",
+        "Lauren steps back against the front-row chair, her eyes widening as she looks him up and down, one hand rising to her pearl necklace."
+       ],
+       "zh": [
+        "Sebastian's black patent oxfords step off the gravel path onto the start of the petal-strewn aisle runner.",
+        "At the cocktail table, Guest 1 and Guest 2 turn their heads toward the start of the aisle, and Guest 2 lowers her flute mid-sip.",
+        "Sebastian walks up the aisle between the white chairs toward the arch with an unhurried stride, straightening his shirt cuff, a calm half-smile on his face. He ends halfway up the aisle.",
+        "Guest 1's mouth falls open and her eyes follow Sebastian along the aisle.",
+        "Sebastian reaches the front row of chairs on the boxwood-hedge side, where Lauren stands in his path, and gives her a polite, lazy nod.",
+        "Lauren steps back against the front-row chair, her eyes widening as she looks him up and down, one hand rising to her pearl necklace."
+       ]
+      }
+     }
+    ],
+    "cut": [
+     {
+      "segment": "seg01",
+      "in": 0,
+      "out": 23.041667
+     },
+     {
+      "segment": "seg02",
+      "in": 0,
+      "out": 19.041667
+     },
+     {
+      "segment": "seg03",
+      "in": 0,
+      "out": 22.041667
+     },
+     {
+      "segment": "seg04",
+      "in": 0,
+      "out": 29.041667
+     }
+    ]
+   },
+   {
+    "title": {
+     "en": "Pay Her",
+     "zh": "Pay Her"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "heading": {
+       "en": "4-1 Day | Ext. Garden of the wedding venue",
+       "zh": "4-1 Day | Ext. Garden of the wedding venue"
+      },
+      "shots": {
+       "en": [
+        "Natalie, bouquet at her waist, faces Sebastian under the flower-hung arch, with George beside her on the rose-bush side and the Officiant behind them. Cassie, a step in front of Natalie, tips the empty white gift box toward her with a smirk; Lauren stands against the front-row chair on the hedge side, and Guest 1 and Guest 2 watch from the cocktail table by the hedge with their flutes.",
+        "Lauren, leaning against the front-row chair on the hedge side, looks Natalie up and down and arches a brow; behind her, out of focus, Guest 1 and Guest 2 stand at the cocktail table with their flutes.",
+        "Natalie, under the arch, turns her head toward Lauren and holds her stepmother's eyes with a level, cold gaze.",
+        "Sebastian, on the hedge side of the arch, leans slightly toward Natalie with a lazy, amused half-smile, the back of Natalie's veil in the foreground.",
+        "Natalie, bouquet still at her waist, looks up at Sebastian and a small smile breaks across her face.",
+        "The Officiant, hands clasped, looks from Natalie to Sebastian; their shoulders show at both frame edges."
+       ],
+       "zh": [
+        "Natalie, bouquet at her waist, faces Sebastian under the flower-hung arch, with George beside her on the rose-bush side and the Officiant behind them. Cassie, a step in front of Natalie, tips the empty white gift box toward her with a smirk; Lauren stands against the front-row chair on the hedge side, and Guest 1 and Guest 2 watch from the cocktail table by the hedge with their flutes.",
+        "Lauren, leaning against the front-row chair on the hedge side, looks Natalie up and down and arches a brow; behind her, out of focus, Guest 1 and Guest 2 stand at the cocktail table with their flutes.",
+        "Natalie, under the arch, turns her head toward Lauren and holds her stepmother's eyes with a level, cold gaze.",
+        "Sebastian, on the hedge side of the arch, leans slightly toward Natalie with a lazy, amused half-smile, the back of Natalie's veil in the foreground.",
+        "Natalie, bouquet still at her waist, looks up at Sebastian and a small smile breaks across her face.",
+        "The Officiant, hands clasped, looks from Natalie to Sebastian; their shoulders show at both frame edges."
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "heading": {
+       "en": "4-1 Day | Ext. Garden of the wedding venue",
+       "zh": "4-1 Day | Ext. Garden of the wedding venue"
+      },
+      "shots": {
+       "en": [
+        "Cassie steps past the front of Natalie to Sebastian's hedge side under the arch and reaches for his arm with a seductive smile, the empty gift box in her other hand; Natalie and the Officiant stand behind them.",
+        "Sebastian steps back out of Cassie's reach to Natalie's side and glances at Natalie; Cassie's hand closes on air and she backs off toward Lauren at the front-row chair on the hedge side.",
+        "At the cocktail table by the hedge, Guest 2 laughs into her champagne glass while Guest 1 beside her, flute in hand, covers a grin.",
+        "Cassie's smile drops; she flushes and glares toward the cocktail table, her fingers tightening on the gift box.",
+        "Natalie, under the arch, turns toward Lauren at the front-row chair on the hedge side and holds out her palm; George beside her grips the bouquet.",
+        "Lauren's hands clutch her small handbag tight against her hip, her diamond ring flashing."
+       ],
+       "zh": [
+        "Cassie steps past the front of Natalie to Sebastian's hedge side under the arch and reaches for his arm with a seductive smile, the empty gift box in her other hand; Natalie and the Officiant stand behind them.",
+        "Sebastian steps back out of Cassie's reach to Natalie's side and glances at Natalie; Cassie's hand closes on air and she backs off toward Lauren at the front-row chair on the hedge side.",
+        "At the cocktail table by the hedge, Guest 2 laughs into her champagne glass while Guest 1 beside her, flute in hand, covers a grin.",
+        "Cassie's smile drops; she flushes and glares toward the cocktail table, her fingers tightening on the gift box.",
+        "Natalie, under the arch, turns toward Lauren at the front-row chair on the hedge side and holds out her palm; George beside her grips the bouquet.",
+        "Lauren's hands clutch her small handbag tight against her hip, her diamond ring flashing."
+       ]
+      }
+     },
+     {
+      "id": "seg03",
+      "heading": {
+       "en": "4-1 Day | Ext. Garden of the wedding venue",
+       "zh": "4-1 Day | Ext. Garden of the wedding venue"
+      },
+      "shots": {
+       "en": [
+        "At the cocktail table by the hedge, Guest 1 sets her flute on the silver tray, pulls her pink phone from her clutch and raises it vertically toward the family to record, and Guest 2 leans in beside her with her champagne glass.",
+        "Lauren, at the front-row chair on the hedge side, spins toward the cocktail table and jabs a finger at Guest 1, Cassie beside her.",
+        "Sebastian, beside Natalie under the arch, spreads one hand toward the raised phone with a cool smile, his eyes on Lauren.",
+        "Natalie's eyes glisten and her jaw sets as she looks at Lauren.",
+        "George crosses from beside Natalie under the arch to Lauren's aisle side at the front-row chair, the bouquet in one hand, and grips her arm with the other, his face set.",
+        "Lauren pulls her phone in its lilac case from her handbag and stabs furiously at the banking transfer page with her thumb."
+       ],
+       "zh": [
+        "At the cocktail table by the hedge, Guest 1 sets her flute on the silver tray, pulls her pink phone from her clutch and raises it vertically toward the family to record, and Guest 2 leans in beside her with her champagne glass.",
+        "Lauren, at the front-row chair on the hedge side, spins toward the cocktail table and jabs a finger at Guest 1, Cassie beside her.",
+        "Sebastian, beside Natalie under the arch, spreads one hand toward the raised phone with a cool smile, his eyes on Lauren.",
+        "Natalie's eyes glisten and her jaw sets as she looks at Lauren.",
+        "George crosses from beside Natalie under the arch to Lauren's aisle side at the front-row chair, the bouquet in one hand, and grips her arm with the other, his face set.",
+        "Lauren pulls her phone in its lilac case from her handbag and stabs furiously at the banking transfer page with her thumb."
+       ]
+      }
+     },
+     {
+      "id": "seg04",
+      "heading": {
+       "en": "4-1 Day | Ext. Garden of the wedding venue",
+       "zh": "4-1 Day | Ext. Garden of the wedding venue"
+      },
+      "shots": {
+       "en": [
+        "Cassie's hands crush the empty white gift box into a crumpled shape, its ribbon twisting.",
+        "Lauren turns on her heel from the front-row chair and marches down the petal aisle toward the gravel path, her face rigid.",
+        "George lays the bouquet on the front-row chair on the boxwood-hedge side, and he, Cassie with the crumpled box, Guest 1 and Guest 2 hurry down the aisle after Lauren and out onto the gravel path, leaving Natalie, Sebastian and the Officiant alone under the arch.",
+        "Sebastian places the brass house key into Natalie's open palm.",
+        "Natalie, at the rose-bush end of the arch, looks from the key up to Sebastian with a puzzled frown.",
+        "Sebastian leans closer to Natalie with a slow, confident smile."
+       ],
+       "zh": [
+        "Cassie's hands crush the empty white gift box into a crumpled shape, its ribbon twisting.",
+        "Lauren turns on her heel from the front-row chair and marches down the petal aisle toward the gravel path, her face rigid.",
+        "George lays the bouquet on the front-row chair on the boxwood-hedge side, and he, Cassie with the crumpled box, Guest 1 and Guest 2 hurry down the aisle after Lauren and out onto the gravel path, leaving Natalie, Sebastian and the Officiant alone under the arch.",
+        "Sebastian places the brass house key into Natalie's open palm.",
+        "Natalie, at the rose-bush end of the arch, looks from the key up to Sebastian with a puzzled frown.",
+        "Sebastian leans closer to Natalie with a slow, confident smile."
+       ]
+      }
+     }
+    ],
+    "cut": [
+     {
+      "segment": "seg01",
+      "in": 0,
+      "out": 29.041667
+     },
+     {
+      "segment": "seg02",
+      "in": 0,
+      "out": 26.041667
+     },
+     {
+      "segment": "seg03",
+      "in": 0,
+      "out": 23.041667
+     },
+     {
+      "segment": "seg04",
+      "in": 0,
+      "out": 19.041667
+     }
+    ]
+   },
+   {
+    "title": {
+     "en": "The Contract Bedroom",
+     "zh": "The Contract Bedroom"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "heading": {
+       "en": "5-1 Night | Int. Sebastian's apartment, living room",
+       "zh": "5-1 Night | Int. Sebastian's apartment, living room"
+      },
+      "shots": {
+       "en": [
+        "Natalie stops in the bedroom doorway in her wedding gown and looks into the single bedroom. Sebastian stands on the window side of the coffee table, watching her.",
+        "Natalie turns her head from the bedroom toward Sebastian, her brows raised.",
+        "Sebastian stands by the coffee table and tips his head toward the couch with a relaxed look.",
+        "Natalie folds her arms across her bodice and lifts her chin.",
+        "Sebastian picks up the blank sheet of paper and the blue pen from the coffee table and holds them out toward Natalie.",
+        "Natalie walks from the doorway to the couch, sets her bag on the floor at the kitchenette end, sits there, takes the paper and pen from Sebastian and leans over the coffee table. Sebastian stays on the window side of the table."
+       ],
+       "zh": [
+        "Natalie stops in the bedroom doorway in her wedding gown and looks into the single bedroom. Sebastian stands on the window side of the coffee table, watching her.",
+        "Natalie turns her head from the bedroom toward Sebastian, her brows raised.",
+        "Sebastian stands by the coffee table and tips his head toward the couch with a relaxed look.",
+        "Natalie folds her arms across her bodice and lifts her chin.",
+        "Sebastian picks up the blank sheet of paper and the blue pen from the coffee table and holds them out toward Natalie.",
+        "Natalie walks from the doorway to the couch, sets her bag on the floor at the kitchenette end, sits there, takes the paper and pen from Sebastian and leans over the coffee table. Sebastian stays on the window side of the table."
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "heading": {
+       "en": "5-1 Night | Int. Sebastian's apartment, living room",
+       "zh": "5-1 Night | Int. Sebastian's apartment, living room"
+      },
+      "shots": {
+       "en": [
+        "Sebastian holds up two fingers, then lowers his hand to the coffee table.",
+        "Natalie's hand signs her name at the bottom of the handwritten agreement.",
+        "Sebastian takes the pen from Natalie, bends over the coffee table and signs beneath her name while she watches.",
+        "Natalie lifts her unfastened pale-blue bag from the floor and sets it on the coffee table, its top gaping open.",
+        "A folded pale-blush lace bra slips out of the open bag and lands on the signed agreement.",
+        "Natalie, cheeks flushing, quickly scoops the lace bra back into her bag."
+       ],
+       "zh": [
+        "Sebastian holds up two fingers, then lowers his hand to the coffee table.",
+        "Natalie's hand signs her name at the bottom of the handwritten agreement.",
+        "Sebastian takes the pen from Natalie, bends over the coffee table and signs beneath her name while she watches.",
+        "Natalie lifts her unfastened pale-blue bag from the floor and sets it on the coffee table, its top gaping open.",
+        "A folded pale-blush lace bra slips out of the open bag and lands on the signed agreement.",
+        "Natalie, cheeks flushing, quickly scoops the lace bra back into her bag."
+       ]
+      }
+     },
+     {
+      "id": "seg03",
+      "heading": {
+       "en": "5-1 Night | Int. Sebastian's apartment, living room",
+       "zh": "5-1 Night | Int. Sebastian's apartment, living room"
+      },
+      "shots": {
+       "en": [
+        "Sebastian pulls off his bow tie and tuxedo jacket and drops them over the couch arm.",
+        "Across the cut, Sebastian now wears a fitted white ribbed undershirt and black lounge trousers; he settles onto the couch at its kitchenette end and sets his black phone face down on the coffee table beside the agreement.",
+        "The bedroom door opens and Natalie steps into the doorway, barefoot, in the powder-blue camisole and sleep shorts with the ivory robe hanging open.",
+        "Sebastian looks up from the couch toward the doorway, one arm along the couch back.",
+        "Natalie holds the door frame, her eyes fixed on him, nervous and determined.",
+        "Sebastian rises and walks to the bedroom door, stopping one step in front of Natalie."
+       ],
+       "zh": [
+        "Sebastian pulls off his bow tie and tuxedo jacket and drops them over the couch arm.",
+        "Across the cut, Sebastian now wears a fitted white ribbed undershirt and black lounge trousers; he settles onto the couch at its kitchenette end and sets his black phone face down on the coffee table beside the agreement.",
+        "The bedroom door opens and Natalie steps into the doorway, barefoot, in the powder-blue camisole and sleep shorts with the ivory robe hanging open.",
+        "Sebastian looks up from the couch toward the doorway, one arm along the couch back.",
+        "Natalie holds the door frame, her eyes fixed on him, nervous and determined.",
+        "Sebastian rises and walks to the bedroom door, stopping one step in front of Natalie."
+       ]
+      }
+     },
+     {
+      "id": "seg04",
+      "heading": {
+       "en": "5-1 Night | Int. Sebastian's apartment, living room",
+       "zh": "5-1 Night | Int. Sebastian's apartment, living room"
+      },
+      "shots": {
+       "en": [
+        "Natalie gives him a last look and closes the bedroom door between them.",
+        "Sebastian walks from the closed bedroom door back to the couch and sits at its kitchenette end.",
+        "Sebastian's black phone lights up on the coffee table beside the signed agreement.",
+        "Sebastian picks up the phone and taps open the notification, his face turning calm and focused in its glow.",
+        "The phone screen shows the private-banking notification on its dark background, as in the prop reference.",
+        "Sebastian's hand slides the phone face down beneath the signed agreement."
+       ],
+       "zh": [
+        "Natalie gives him a last look and closes the bedroom door between them.",
+        "Sebastian walks from the closed bedroom door back to the couch and sits at its kitchenette end.",
+        "Sebastian's black phone lights up on the coffee table beside the signed agreement.",
+        "Sebastian picks up the phone and taps open the notification, his face turning calm and focused in its glow.",
+        "The phone screen shows the private-banking notification on its dark background, as in the prop reference.",
+        "Sebastian's hand slides the phone face down beneath the signed agreement."
+       ]
+      }
+     }
+    ],
+    "cut": [
+     {
+      "segment": "seg01",
+      "in": 0,
+      "out": 28.041667
+     },
+     {
+      "segment": "seg02",
+      "in": 0,
+      "out": 10.833333
+     },
+     {
+      "segment": "seg02",
+      "in": 12.708333,
+      "out": 23.041667
+     },
+     {
+      "segment": "seg03",
+      "in": 0,
+      "out": 11.958333
+     },
+     {
+      "segment": "seg03",
+      "in": 14.875,
+      "out": 28.041667
+     },
+     {
+      "segment": "seg04",
+      "in": 0,
+      "out": 15.041667
+     }
+    ]
+   },
+   {
+    "title": {
+     "en": "Couch Coins",
+     "zh": "Couch Coins"
+    },
+    "segments": [
+     {
+      "id": "seg01",
+      "heading": {
+       "en": "6-1 Day | Int. Sebastian's apartment, living room",
+       "zh": "6-1 Day | Int. Sebastian's apartment, living room"
+      },
+      "shots": {
+       "en": [
+        "Sunlit living room. Natalie sets two plates of scrambled eggs, toast and strawberries on the round dining table. Sebastian, by the charcoal couch, shakes out the oatmeal-grey blanket and starts folding it.",
+        "Sebastian folds the blanket in half against his chest and looks across toward the dining table with a lazy half-smile.",
+        "Natalie sets a mug of black coffee beside a plate without looking up, her jaw set.",
+        "Sebastian's smile widens slightly; he drops the folded blanket onto the couch cushions.",
+        "Natalie lifts the long white dress bag off the back of the dining chair and drapes it over her left arm.",
+        "Natalie's shoulder and the dress bag fill the frame edge; Sebastian, beyond her by the couch, nods at the bag and raises an eyebrow."
+       ],
+       "zh": [
+        "Sunlit living room. Natalie sets two plates of scrambled eggs, toast and strawberries on the round dining table. Sebastian, by the charcoal couch, shakes out the oatmeal-grey blanket and starts folding it.",
+        "Sebastian folds the blanket in half against his chest and looks across toward the dining table with a lazy half-smile.",
+        "Natalie sets a mug of black coffee beside a plate without looking up, her jaw set.",
+        "Sebastian's smile widens slightly; he drops the folded blanket onto the couch cushions.",
+        "Natalie lifts the long white dress bag off the back of the dining chair and drapes it over her left arm.",
+        "Natalie's shoulder and the dress bag fill the frame edge; Sebastian, beyond her by the couch, nods at the bag and raises an eyebrow."
+       ]
+      }
+     },
+     {
+      "id": "seg02",
+      "heading": {
+       "en": "6-1 Day | Int. Sebastian's apartment, living room",
+       "zh": "6-1 Day | Int. Sebastian's apartment, living room"
+      },
+      "shots": {
+       "en": [
+        "Natalie walks to the front door on the left wall, takes the cropped ivory bouclé jacket off the wall hook and pulls it on over her dress, the dress bag still on her arm; Sebastian stays by the couch watching her.",
+        "Natalie, now in the open cropped jacket, opens the dark-grey front door, glances back once, steps out and the door swings shut behind her.",
+        "Sebastian walks to the round dining table and stops on its couch side, opening his hand over the table.",
+        "Sebastian's fingers set the two coins down beside his face-down phone.",
+        "Sebastian picks up the phone, taps it and lifts it to his ear; his lazy smile drops into a cold, focused look.",
+        "Sebastian speaks low into the phone, eyes fixed on the closed front door."
+       ],
+       "zh": [
+        "Natalie walks to the front door on the left wall, takes the cropped ivory bouclé jacket off the wall hook and pulls it on over her dress, the dress bag still on her arm; Sebastian stays by the couch watching her.",
+        "Natalie, now in the open cropped jacket, opens the dark-grey front door, glances back once, steps out and the door swings shut behind her.",
+        "Sebastian walks to the round dining table and stops on its couch side, opening his hand over the table.",
+        "Sebastian's fingers set the two coins down beside his face-down phone.",
+        "Sebastian picks up the phone, taps it and lifts it to his ear; his lazy smile drops into a cold, focused look.",
+        "Sebastian speaks low into the phone, eyes fixed on the closed front door."
+       ]
+      }
+     },
+     {
+      "id": "seg03",
+      "heading": {
+       "en": "6-2 Day | Int. Sebastian's apartment, living room",
+       "zh": "6-2 Day | Int. Sebastian's apartment, living room"
+      },
+      "shots": {
+       "en": [
+        "Daniel lays the manila folder on the round dining table in front of Sebastian, who sits in the dining chair.",
+        "Sebastian flips the folder open; a single creased sheet slides out onto the table.",
+        "The hospital statement lies on the table beside the open folder, its header and total legible.",
+        "Sebastian's shoulder at the frame edge; Daniel, across the table, adjusts his rimless glasses.",
+        "Daniel is off screen. Sebastian picks up the hospital statement and reads it, his jaw tightening.",
+        "Sebastian lowers the sheet, his steel-grey eyes hard."
+       ],
+       "zh": [
+        "Daniel lays the manila folder on the round dining table in front of Sebastian, who sits in the dining chair.",
+        "Sebastian flips the folder open; a single creased sheet slides out onto the table.",
+        "The hospital statement lies on the table beside the open folder, its header and total legible.",
+        "Sebastian's shoulder at the frame edge; Daniel, across the table, adjusts his rimless glasses.",
+        "Daniel is off screen. Sebastian picks up the hospital statement and reads it, his jaw tightening.",
+        "Sebastian lowers the sheet, his steel-grey eyes hard."
+       ]
+      }
+     },
+     {
+      "id": "seg04",
+      "heading": {
+       "en": "6-2 Day | Int. Sebastian's apartment, living room",
+       "zh": "6-2 Day | Int. Sebastian's apartment, living room"
+      },
+      "shots": {
+       "en": [
+        "Sebastian sits at the dining table; Daniel slips his phone away, takes a black car key fob from his pocket and sets it beside the two coins.",
+        "The black car key fob lies next to the two silver quarters.",
+        "Sebastian picks up the car key and turns it once between his fingers.",
+        "Daniel folds his hands in front of him, a faint doubtful look behind his glasses.",
+        "Sebastian gives a slow, private smile.",
+        "Sebastian's hand scoops the two coins off the table and slides them into his chino pocket."
+       ],
+       "zh": [
+        "Sebastian sits at the dining table; Daniel slips his phone away, takes a black car key fob from his pocket and sets it beside the two coins.",
+        "The black car key fob lies next to the two silver quarters.",
+        "Sebastian picks up the car key and turns it once between his fingers.",
+        "Daniel folds his hands in front of him, a faint doubtful look behind his glasses.",
+        "Sebastian gives a slow, private smile.",
+        "Sebastian's hand scoops the two coins off the table and slides them into his chino pocket."
+       ]
+      }
+     }
+    ],
+    "cut": [
+     {
+      "segment": "seg01",
+      "in": 0,
+      "out": 27.041667
+     },
+     {
+      "segment": "seg02",
+      "in": 0,
+      "out": 15.041667
+     },
+     {
+      "segment": "seg03",
+      "in": 0,
+      "out": 28.041667
+     },
+     {
+      "segment": "seg04",
+      "in": 0,
+      "out": 22.041667
+     }
+    ]
+   }
+  ]
  }
 }

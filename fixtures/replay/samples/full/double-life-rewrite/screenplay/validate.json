@@ -1,0 +1,2635 @@
+{
+  "path": "screenplay.fountain",
+  "original": "inputs/screenplay.md",
+  "rewrite": true,
+  "removed": [
+    "inputs/screenplay.md:3: removed: 11dayintthe",
+    "inputs/screenplay.md:47: removed: 21dayinta",
+    "inputs/screenplay.md:92: removed: ca",
+    "inputs/screenplay.md:92: removed: tion",
+    "inputs/screenplay.md:154: removed: ca",
+    "inputs/screenplay.md:154: removed: tion",
+    "inputs/screenplay.md:184: removed: ca",
+    "inputs/screenplay.md:184: removed: tion",
+    "inputs/screenplay.md:210: removed: ca",
+    "inputs/screenplay.md:210: removed: tion",
+    "inputs/screenplay.md:247: removed: ca",
+    "inputs/screenplay.md:247: removed: tion"
+  ],
+  "added": [
+    "screenplay.fountain:219: added: er",
+    "screenplay.fountain:219: added: su",
+    "screenplay.fountain:375: added: er",
+    "screenplay.fountain:375: added: su",
+    "screenplay.fountain:448: added: er",
+    "screenplay.fountain:448: added: su",
+    "screenplay.fountain:508: added: er",
+    "screenplay.fountain:508: added: su",
+    "screenplay.fountain:590: added: er",
+    "screenplay.fountain:590: added: su"
+  ],
+  "not_produced": [
+    "screenplay.fountain:5: not produced: Characters: Natalie, George, Lauren, Cassie",
+    "screenplay.fountain:119: not produced: Characters: Sebastian, Officer",
+    "screenplay.fountain:148: not produced: Characters: Sebastian, Officer",
+    "screenplay.fountain:165: not produced: Characters: Sebastian, Daniel",
+    "screenplay.fountain:217: not produced: Characters: Natalie, George, Lauren, Cassie, Guest 1, Guest 2, Sebastian",
+    "screenplay.fountain:294: not produced: Characters: Natalie, Sebastian, Officiant, George, Lauren, Cassie, Guest 1, Guest 2",
+    "screenplay.fountain:406: not produced: Characters: Natalie, Sebastian",
+    "screenplay.fountain:516: not produced: Characters: Natalie, Sebastian, Daniel (V.O.)",
+    "screenplay.fountain:563: not produced: Characters: Sebastian, Daniel"
+  ],
+  "lines": [
+    {
+      "line": 1,
+      "text": "Episode 1",
+      "to": [
+        1
+      ],
+      "kinds": [
+        "section"
+      ]
+    },
+    {
+      "line": 3,
+      "text": "1-1 Day | Int. The Quinn family mansion, living room",
+      "to": [
+        3
+      ],
+      "kinds": [
+        "scene heading"
+      ]
+    },
+    {
+      "line": 4,
+      "text": "Characters: Natalie, George, Lauren, Cassie",
+      "to": [
+        5
+      ],
+      "kinds": [
+        "note"
+      ]
+    },
+    {
+      "line": 5,
+      "text": "▲ The Quinn family mansion.",
+      "to": [
+        7
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 6,
+      "text": "▲ On the coffee table lies a hospital statement: patient Jennifer Quinn, pay this amount $53,000.",
+      "to": [
+        9
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 7,
+      "text": "▲ Natalie, George's daughter from his first marriage, sits facing her father George and her stepmother Lauren.",
+      "to": [
+        11
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 8,
+      "text": "Natalie: Hey, Dad can I borrow $50,000?",
+      "to": [
+        13,
+        14
+      ],
+      "kinds": [
+        "dialogue NATALIE"
+      ]
+    },
+    {
+      "line": 9,
+      "text": "Natalie: Mom needs kidney dialysis and we really don't have any money.",
+      "to": [
+        16,
+        17
+      ],
+      "kinds": [
+        "dialogue NATALIE"
+      ]
+    },
+    {
+      "line": 10,
+      "text": "George: Natalie, the thing is",
+      "to": [
+        19,
+        20
+      ],
+      "kinds": [
+        "dialogue GEORGE"
+      ]
+    },
+    {
+      "line": 11,
+      "text": "Lauren: How shameless of you to come here and beg us for money?",
+      "to": [
+        22,
+        23
+      ],
+      "kinds": [
+        "dialogue LAUREN"
+      ]
+    },
+    {
+      "line": 12,
+      "text": "Natalie: I'll pay you guys back, I promise.",
+      "to": [
+        25,
+        26
+      ],
+      "kinds": [
+        "dialogue NATALIE"
+      ]
+    },
+    {
+      "line": 13,
+      "text": "George: Lauren, maybe we can let her borrow the money.",
+      "to": [
+        28,
+        29
+      ],
+      "kinds": [
+        "dialogue GEORGE"
+      ]
+    },
+    {
+      "line": 14,
+      "text": "George: I mean, it's her mother that's sick.",
+      "to": [
+        31,
+        32
+      ],
+      "kinds": [
+        "dialogue GEORGE"
+      ]
+    },
+    {
+      "line": 15,
+      "text": "Lauren: You're still thinking about your ex-wife?",
+      "to": [
+        34,
+        35
+      ],
+      "kinds": [
+        "dialogue LAUREN"
+      ]
+    },
+    {
+      "line": 16,
+      "text": "George: No, no.",
+      "to": [
+        37,
+        38
+      ],
+      "kinds": [
+        "dialogue GEORGE"
+      ]
+    },
+    {
+      "line": 17,
+      "text": "Lauren: Do I need to remind you this is your family now?",
+      "to": [
+        40,
+        41
+      ],
+      "kinds": [
+        "dialogue LAUREN"
+      ]
+    },
+    {
+      "line": 18,
+      "text": "Lauren: George, without me you'd have nothing.",
+      "to": [
+        43,
+        44
+      ],
+      "kinds": [
+        "dialogue LAUREN"
+      ]
+    },
+    {
+      "line": 19,
+      "text": "Cassie: Aww.",
+      "to": [
+        46,
+        47
+      ],
+      "kinds": [
+        "dialogue CASSIE"
+      ]
+    },
+    {
+      "line": 20,
+      "text": "▲ Cassie, Lauren's daughter, walks in and stands over Natalie.",
+      "to": [
+        49
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 21,
+      "text": "Cassie: If it isn’t my loser sister asking for money like a beggar? How pathetic?",
+      "to": [
+        51,
+        52
+      ],
+      "kinds": [
+        "dialogue CASSIE"
+      ]
+    },
+    {
+      "line": 22,
+      "text": "▲ Natalie lowers her eyes.",
+      "to": [
+        54
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 23,
+      "text": "▲ Natalie picks up the hospital statement and gets up to leave.",
+      "to": [
+        56
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 24,
+      "text": "Natalie: This is a mistake.",
+      "to": [
+        58,
+        59
+      ],
+      "kinds": [
+        "dialogue NATALIE"
+      ]
+    },
+    {
+      "line": 25,
+      "text": "Cassie: Wait, we'll give you the money.",
+      "to": [
+        61,
+        62
+      ],
+      "kinds": [
+        "dialogue CASSIE"
+      ]
+    },
+    {
+      "line": 26,
+      "text": "▲ Natalie stops.",
+      "to": [
+        64
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 27,
+      "text": "Lauren: What?",
+      "to": [
+        66,
+        67
+      ],
+      "kinds": [
+        "dialogue LAUREN"
+      ]
+    },
+    {
+      "line": 28,
+      "text": "Cassie: If you marry Sebastian Klein in my place.",
+      "to": [
+        69,
+        70
+      ],
+      "kinds": [
+        "dialogue CASSIE"
+      ]
+    },
+    {
+      "line": 29,
+      "text": "Lauren: My daughter is so smart. That's a good idea.",
+      "to": [
+        72,
+        73
+      ],
+      "kinds": [
+        "dialogue LAUREN"
+      ]
+    },
+    {
+      "line": 30,
+      "text": "Natalie: Sebastian Klein? The illegitimate son of the Klein family?",
+      "to": [
+        75,
+        76
+      ],
+      "kinds": [
+        "dialogue NATALIE"
+      ]
+    },
+    {
+      "line": 31,
+      "text": "Natalie: Isn't he in jail right now?",
+      "to": [
+        78,
+        79
+      ],
+      "kinds": [
+        "dialogue NATALIE"
+      ]
+    },
+    {
+      "line": 32,
+      "text": "Cassie: Yup.",
+      "to": [
+        81,
+        82
+      ],
+      "kinds": [
+        "dialogue CASSIE"
+      ]
+    },
+    {
+      "line": 33,
+      "text": "Cassie: He's a dirt bag and a good for nothing loser.",
+      "to": [
+        84,
+        85
+      ],
+      "kinds": [
+        "dialogue CASSIE"
+      ]
+    },
+    {
+      "line": 34,
+      "text": "Cassie: That's why I can't marry him.",
+      "to": [
+        87,
+        88
+      ],
+      "kinds": [
+        "dialogue CASSIE"
+      ]
+    },
+    {
+      "line": 35,
+      "text": "Lauren: That's right.",
+      "to": [
+        90,
+        91
+      ],
+      "kinds": [
+        "dialogue LAUREN"
+      ]
+    },
+    {
+      "line": 36,
+      "text": "Lauren: Natalie is also your daughter.",
+      "to": [
+        93,
+        94
+      ],
+      "kinds": [
+        "dialogue LAUREN"
+      ]
+    },
+    {
+      "line": 37,
+      "text": "Lauren: She can be the one who marries Sebastard De-Klein.",
+      "to": [
+        96,
+        97
+      ],
+      "kinds": [
+        "dialogue LAUREN"
+      ]
+    },
+    {
+      "line": 38,
+      "text": "Natalie: No, I'm not going to.",
+      "to": [
+        99,
+        100
+      ],
+      "kinds": [
+        "dialogue NATALIE"
+      ]
+    },
+    {
+      "line": 39,
+      "text": "Cassie: Do you want us to pay for your mother's medical bills or not?",
+      "to": [
+        102,
+        103
+      ],
+      "kinds": [
+        "dialogue CASSIE"
+      ]
+    },
+    {
+      "line": 40,
+      "text": "▲ George says nothing. Lauren waits.",
+      "to": [
+        105
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 41,
+      "text": "Natalie: Fine.",
+      "to": [
+        107,
+        108
+      ],
+      "kinds": [
+        "dialogue NATALIE"
+      ]
+    },
+    {
+      "line": 42,
+      "text": "Natalie: I'll marry Sebastian Klein.",
+      "to": [
+        110,
+        111
+      ],
+      "kinds": [
+        "dialogue NATALIE"
+      ]
+    },
+    {
+      "line": 43,
+      "text": "▲ Cassie smirks. Lauren smiles.",
+      "to": [
+        113
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 45,
+      "text": "Episode 2",
+      "to": [
+        115
+      ],
+      "kinds": [
+        "section"
+      ]
+    },
+    {
+      "line": 47,
+      "text": "2-1 Day | Int. Jail, a cell",
+      "to": [
+        117
+      ],
+      "kinds": [
+        "scene heading"
+      ]
+    },
+    {
+      "line": 48,
+      "text": "Characters: Sebastian, Officer",
+      "to": [
+        119
+      ],
+      "kinds": [
+        "note"
+      ]
+    },
+    {
+      "line": 49,
+      "text": "▲ The jail, behind razor wire.",
+      "to": [
+        121
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 50,
+      "text": "▲ Sebastian Klein, an inmate, lies on his bunk with his back to the cell door.",
+      "to": [
+        123
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 51,
+      "text": "▲ An officer comes to the cell door.",
+      "to": [
+        125
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 52,
+      "text": "Officer: Klein, get up.",
+      "to": [
+        127,
+        128
+      ],
+      "kinds": [
+        "dialogue OFFICER"
+      ]
+    },
+    {
+      "line": 53,
+      "text": "Officer: It's time to go.",
+      "to": [
+        130,
+        131
+      ],
+      "kinds": [
+        "dialogue OFFICER"
+      ]
+    },
+    {
+      "line": 54,
+      "text": "▲ Sebastian doesn't move.",
+      "to": [
+        133
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 55,
+      "text": "Officer: Hurry the fuck up, Klein! I said move it!",
+      "to": [
+        135,
+        136
+      ],
+      "kinds": [
+        "dialogue OFFICER"
+      ]
+    },
+    {
+      "line": 56,
+      "text": "▲ Sebastian rolls over and slowly sits up.",
+      "to": [
+        138
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 57,
+      "text": "Sebastian: Geez, officer, what is the rush?",
+      "to": [
+        140,
+        141
+      ],
+      "kinds": [
+        "dialogue SEBASTIAN"
+      ]
+    },
+    {
+      "line": 58,
+      "text": "Officer: Most people wanna get out of here faster.",
+      "to": [
+        143,
+        144
+      ],
+      "kinds": [
+        "dialogue OFFICER"
+      ]
+    },
+    {
+      "line": 60,
+      "text": "2-2 Day | Int. Jail, front desk",
+      "to": [
+        146
+      ],
+      "kinds": [
+        "scene heading"
+      ]
+    },
+    {
+      "line": 61,
+      "text": "Characters: Sebastian, Officer",
+      "to": [
+        148
+      ],
+      "kinds": [
+        "note"
+      ]
+    },
+    {
+      "line": 62,
+      "text": "▲ Sebastian, in his own clothes again, puts his watch back on. The officer hands him his release form on a clipboard.",
+      "to": [
+        150
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 63,
+      "text": "Officer: Don't drive recklessly again.",
+      "to": [
+        152,
+        153
+      ],
+      "kinds": [
+        "dialogue OFFICER"
+      ]
+    },
+    {
+      "line": 64,
+      "text": "Officer: Next time, it won't be just three days.",
+      "to": [
+        155,
+        156
+      ],
+      "kinds": [
+        "dialogue OFFICER"
+      ]
+    },
+    {
+      "line": 65,
+      "text": "Sebastian: I can't make any promises, officer.",
+      "to": [
+        158,
+        159
+      ],
+      "kinds": [
+        "dialogue SEBASTIAN"
+      ]
+    },
+    {
+      "line": 66,
+      "text": "▲ Sebastian signs the form with a smile.",
+      "to": [
+        161
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 68,
+      "text": "2-3 Day | Ext. Street outside the jail",
+      "to": [
+        163
+      ],
+      "kinds": [
+        "scene heading"
+      ]
+    },
+    {
+      "line": 69,
+      "text": "Characters: Sebastian, Daniel",
+      "to": [
+        165
+      ],
+      "kinds": [
+        "note"
+      ]
+    },
+    {
+      "line": 70,
+      "text": "▲ Sebastian walks out onto the street and straightens his collar.",
+      "to": [
+        167
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 71,
+      "text": "▲ An expensive car waits at the curb. Daniel, Sebastian's assistant, stands beside it.",
+      "to": [
+        169
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 72,
+      "text": "▲ Sebastian walks up to the car. Daniel opens the door for him.",
+      "to": [
+        171
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 73,
+      "text": "Sebastian: Daniel, everything going according to plan?",
+      "to": [
+        173,
+        174
+      ],
+      "kinds": [
+        "dialogue SEBASTIAN"
+      ]
+    },
+    {
+      "line": 74,
+      "text": "Daniel: Yes, boss.",
+      "to": [
+        176,
+        177
+      ],
+      "kinds": [
+        "dialogue DANIEL"
+      ]
+    },
+    {
+      "line": 75,
+      "text": "Daniel: You being in jail is the perfect alibi.",
+      "to": [
+        179,
+        180
+      ],
+      "kinds": [
+        "dialogue DANIEL"
+      ]
+    },
+    {
+      "line": 76,
+      "text": "Daniel: Your father doesn't suspect a thing.",
+      "to": [
+        182,
+        183
+      ],
+      "kinds": [
+        "dialogue DANIEL"
+      ]
+    },
+    {
+      "line": 77,
+      "text": "Sebastian: Oh, and what about the Quinn family? Any issues there?",
+      "to": [
+        185,
+        186
+      ],
+      "kinds": [
+        "dialogue SEBASTIAN"
+      ]
+    },
+    {
+      "line": 78,
+      "text": "Daniel: No.",
+      "to": [
+        188,
+        189
+      ],
+      "kinds": [
+        "dialogue DANIEL"
+      ]
+    },
+    {
+      "line": 79,
+      "text": "Daniel: The Quinns have agreed to marry their daughter to you.",
+      "to": [
+        191,
+        192
+      ],
+      "kinds": [
+        "dialogue DANIEL"
+      ]
+    },
+    {
+      "line": 80,
+      "text": "Sebastian: Huh, interesting.",
+      "to": [
+        194,
+        195
+      ],
+      "kinds": [
+        "dialogue SEBASTIAN"
+      ]
+    },
+    {
+      "line": 81,
+      "text": "Sebastian: They kept their end of the bargain.",
+      "to": [
+        197,
+        198
+      ],
+      "kinds": [
+        "dialogue SEBASTIAN"
+      ]
+    },
+    {
+      "line": 82,
+      "text": "▲ Sebastian leans in and whispers in Daniel's ear.",
+      "to": [
+        200
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 83,
+      "text": "Daniel: You got it, boss.",
+      "to": [
+        202,
+        203
+      ],
+      "kinds": [
+        "dialogue DANIEL"
+      ]
+    },
+    {
+      "line": 84,
+      "text": "Sebastian: This is the final puzzle piece.",
+      "to": [
+        205,
+        206
+      ],
+      "kinds": [
+        "dialogue SEBASTIAN"
+      ]
+    },
+    {
+      "line": 85,
+      "text": "Sebastian: So it begins.",
+      "to": [
+        208,
+        209
+      ],
+      "kinds": [
+        "dialogue SEBASTIAN"
+      ]
+    },
+    {
+      "line": 86,
+      "text": "▲ Daniel goes round to the driver's door.",
+      "to": [
+        211
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 88,
+      "text": "Episode 3",
+      "to": [
+        213
+      ],
+      "kinds": [
+        "section"
+      ]
+    },
+    {
+      "line": 90,
+      "text": "3-1 Day | Ext. Garden of the wedding venue",
+      "to": [
+        215
+      ],
+      "kinds": [
+        "scene heading"
+      ]
+    },
+    {
+      "line": 91,
+      "text": "Characters: Natalie, George, Lauren, Cassie, Guest 1, Guest 2, Sebastian",
+      "to": [
+        217
+      ],
+      "kinds": [
+        "note"
+      ]
+    },
+    {
+      "line": 92,
+      "text": "Caption: 3 Weeks Later",
+      "to": [
+        219
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 93,
+      "text": "▲ A small outdoor wedding: an arch hung with drapes and flowers, glasses of champagne on a tray.",
+      "to": [
+        221
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 94,
+      "text": "▲ Natalie, in her wedding dress, waits under the arch with her bouquet. George stands beside her. There is no groom.",
+      "to": [
+        223
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 95,
+      "text": "George: Don't worry, Natalie. I'm sure the groom will be here soon.",
+      "to": [
+        225,
+        226
+      ],
+      "kinds": [
+        "dialogue GEORGE"
+      ]
+    },
+    {
+      "line": 96,
+      "text": "Natalie: Just to be sure, as long as I do this, you'll give me the money, right?",
+      "to": [
+        228,
+        229
+      ],
+      "kinds": [
+        "dialogue NATALIE"
+      ]
+    },
+    {
+      "line": 97,
+      "text": "▲ Lauren checks her watch.",
+      "to": [
+        231
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 98,
+      "text": "Lauren: Yes, Natalie. Just get the wedding over with and we'll give you the money, okay?",
+      "to": [
+        233,
+        234
+      ],
+      "kinds": [
+        "dialogue LAUREN"
+      ]
+    },
+    {
+      "line": 99,
+      "text": "Natalie: You better keep your word.",
+      "to": [
+        236,
+        237
+      ],
+      "kinds": [
+        "dialogue NATALIE"
+      ]
+    },
+    {
+      "line": 100,
+      "text": "▲ Two guests whisper over their champagne.",
+      "to": [
+        239
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 101,
+      "text": "Guest 2: I can't believe they're marrying their daughter off to Sebastian Klein.",
+      "to": [
+        241,
+        242
+      ],
+      "kinds": [
+        "dialogue GUEST 2"
+      ]
+    },
+    {
+      "line": 102,
+      "text": "Guest 1: I know, right? The Klein family is powerful, but Sebastian's a bastard and outcast.",
+      "to": [
+        244,
+        245
+      ],
+      "kinds": [
+        "dialogue GUEST 1"
+      ]
+    },
+    {
+      "line": 103,
+      "text": "Guest 2: I heard that he hangs out with thugs all day and he can't keep a job.",
+      "to": [
+        247,
+        248
+      ],
+      "kinds": [
+        "dialogue GUEST 2"
+      ]
+    },
+    {
+      "line": 104,
+      "text": "Guest 1: Oh, he's late for his own wedding.",
+      "to": [
+        250,
+        251
+      ],
+      "kinds": [
+        "dialogue GUEST 1"
+      ]
+    },
+    {
+      "line": 105,
+      "text": "▲ Cassie walks up to Natalie, arms crossed.",
+      "to": [
+        253
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 106,
+      "text": "Cassie: Excited for your wedding? How does it feel to be marrying a bastard child?",
+      "to": [
+        255,
+        256
+      ],
+      "kinds": [
+        "dialogue CASSIE"
+      ]
+    },
+    {
+      "line": 107,
+      "text": "Cassie: Not even his own family showed up for his wedding. I mean, clearly, they don't value him.",
+      "to": [
+        258,
+        259
+      ],
+      "kinds": [
+        "dialogue CASSIE"
+      ]
+    },
+    {
+      "line": 108,
+      "text": "Cassie: Oh, I also heard he's ugly as fuck.",
+      "to": [
+        261,
+        262
+      ],
+      "kinds": [
+        "dialogue CASSIE"
+      ]
+    },
+    {
+      "line": 109,
+      "text": "Natalie: Can you be quiet? At least show some respect.",
+      "to": [
+        264,
+        265
+      ],
+      "kinds": [
+        "dialogue NATALIE"
+      ]
+    },
+    {
+      "line": 110,
+      "text": "▲ Sebastian, the groom, walks up the aisle. The guests turn to look.",
+      "to": [
+        267
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 111,
+      "text": "▲ Sebastian passes Lauren.",
+      "to": [
+        269
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 112,
+      "text": "Sebastian: Excuse me.",
+      "to": [
+        271,
+        272
+      ],
+      "kinds": [
+        "dialogue SEBASTIAN"
+      ]
+    },
+    {
+      "line": 113,
+      "text": "Lauren: Ooh.",
+      "to": [
+        274,
+        275
+      ],
+      "kinds": [
+        "dialogue LAUREN"
+      ]
+    },
+    {
+      "line": 114,
+      "text": "▲ Sebastian takes his place beside Natalie under the arch.",
+      "to": [
+        277
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 115,
+      "text": "Sebastian: I'm sorry I'm late.",
+      "to": [
+        279,
+        280
+      ],
+      "kinds": [
+        "dialogue SEBASTIAN"
+      ]
+    },
+    {
+      "line": 116,
+      "text": "Sebastian: You must be the bride.",
+      "to": [
+        282,
+        283
+      ],
+      "kinds": [
+        "dialogue SEBASTIAN"
+      ]
+    },
+    {
+      "line": 117,
+      "text": "Sebastian: I'm your groom, Sebastian Klein.",
+      "to": [
+        285,
+        286
+      ],
+      "kinds": [
+        "dialogue SEBASTIAN"
+      ]
+    },
+    {
+      "line": 118,
+      "text": "▲ Natalie looks at him, stunned. Cassie stares.",
+      "to": [
+        288
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 120,
+      "text": "Episode 4",
+      "to": [
+        290
+      ],
+      "kinds": [
+        "section"
+      ]
+    },
+    {
+      "line": 122,
+      "text": "4-1 Day | Ext. Garden of the wedding venue",
+      "to": [
+        292
+      ],
+      "kinds": [
+        "scene heading"
+      ]
+    },
+    {
+      "line": 123,
+      "text": "Characters: Natalie, Sebastian, Officiant, George, Lauren, Cassie, Guest 1, Guest 2",
+      "to": [
+        294
+      ],
+      "kinds": [
+        "note"
+      ]
+    },
+    {
+      "line": 124,
+      "text": "▲ Cassie, in an opaque, fitted mini dress with a low neckline, tips an empty wedding-gift box toward Natalie.",
+      "to": [
+        296
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 125,
+      "text": "Cassie: Nothing. Just like your husband's bank account.",
+      "to": [
+        298,
+        299
+      ],
+      "kinds": [
+        "dialogue CASSIE"
+      ]
+    },
+    {
+      "line": 126,
+      "text": "Lauren: A rented dress and a broke groom. At least they match.",
+      "to": [
+        301,
+        302
+      ],
+      "kinds": [
+        "dialogue LAUREN"
+      ]
+    },
+    {
+      "line": 127,
+      "text": "Natalie: You picked him.",
+      "to": [
+        304,
+        305
+      ],
+      "kinds": [
+        "dialogue NATALIE"
+      ]
+    },
+    {
+      "line": 128,
+      "text": "Sebastian: Don't worry. My family doesn't like me either.",
+      "to": [
+        307,
+        308
+      ],
+      "kinds": [
+        "dialogue SEBASTIAN"
+      ]
+    },
+    {
+      "line": 129,
+      "text": "Natalie: Good. One less family to impress.",
+      "to": [
+        310,
+        311
+      ],
+      "kinds": [
+        "dialogue NATALIE"
+      ]
+    },
+    {
+      "line": 130,
+      "text": "Officiant: Natalie, Sebastian. Are you both ready to marry?",
+      "to": [
+        313,
+        314
+      ],
+      "kinds": [
+        "dialogue OFFICIANT"
+      ]
+    },
+    {
+      "line": 131,
+      "text": "Natalie: Yes.",
+      "to": [
+        316,
+        317
+      ],
+      "kinds": [
+        "dialogue NATALIE"
+      ]
+    },
+    {
+      "line": 132,
+      "text": "Sebastian: Let's give them something to hate.",
+      "to": [
+        319,
+        320
+      ],
+      "kinds": [
+        "dialogue SEBASTIAN"
+      ]
+    },
+    {
+      "line": 133,
+      "text": "Officiant: Then I pronounce you married.",
+      "to": [
+        322,
+        323
+      ],
+      "kinds": [
+        "dialogue OFFICIANT"
+      ]
+    },
+    {
+      "line": 134,
+      "text": "▲ Sebastian offers Natalie his hand.",
+      "to": [
+        325
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 135,
+      "text": "▲ Natalie draws him closer by his lapels.",
+      "to": [
+        327
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 136,
+      "text": "▲ They share a brief kiss.",
+      "to": [
+        329
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 137,
+      "text": "▲ Cassie reaches for Sebastian's arm.",
+      "to": [
+        331
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 138,
+      "text": "Cassie: Didn't know you could do that. Want to try with the prettier sister?",
+      "to": [
+        333,
+        334
+      ],
+      "kinds": [
+        "dialogue CASSIE"
+      ]
+    },
+    {
+      "line": 139,
+      "text": "▲ Sebastian steps out of Cassie's reach.",
+      "to": [
+        336
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 140,
+      "text": "Sebastian: I already did.",
+      "to": [
+        338,
+        339
+      ],
+      "kinds": [
+        "dialogue SEBASTIAN"
+      ]
+    },
+    {
+      "line": 141,
+      "text": "▲ Guest 2 laughs into her champagne glass.",
+      "to": [
+        341
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 142,
+      "text": "Natalie: Wedding's over, Lauren. Where's the money?",
+      "to": [
+        343,
+        344
+      ],
+      "kinds": [
+        "dialogue NATALIE"
+      ]
+    },
+    {
+      "line": 143,
+      "text": "▲ Lauren grips her handbag.",
+      "to": [
+        346
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 144,
+      "text": "Lauren: We'll discuss that later.",
+      "to": [
+        348,
+        349
+      ],
+      "kinds": [
+        "dialogue LAUREN"
+      ]
+    },
+    {
+      "line": 145,
+      "text": "Sebastian: Fifty thousand. You promised. Pay her.",
+      "to": [
+        351,
+        352
+      ],
+      "kinds": [
+        "dialogue SEBASTIAN"
+      ]
+    },
+    {
+      "line": 146,
+      "text": "Cassie: Already begging? You two really are perfect together.",
+      "to": [
+        354,
+        355
+      ],
+      "kinds": [
+        "dialogue CASSIE"
+      ]
+    },
+    {
+      "line": 147,
+      "text": "Sebastian: Funny. You're the ones who can't afford to keep your word.",
+      "to": [
+        357,
+        358
+      ],
+      "kinds": [
+        "dialogue SEBASTIAN"
+      ]
+    },
+    {
+      "line": 148,
+      "text": "▲ Guest 1 raises her phone toward the family.",
+      "to": [
+        360
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 149,
+      "text": "Lauren: Put that away!",
+      "to": [
+        362,
+        363
+      ],
+      "kinds": [
+        "dialogue LAUREN"
+      ]
+    },
+    {
+      "line": 150,
+      "text": "Sebastian: Smile, Lauren. Tell everyone how you used her mother's hospital bill to buy this wedding.",
+      "to": [
+        365,
+        366
+      ],
+      "kinds": [
+        "dialogue SEBASTIAN"
+      ]
+    },
+    {
+      "line": 151,
+      "text": "George: Lauren. Pay her. Now.",
+      "to": [
+        368,
+        369
+      ],
+      "kinds": [
+        "dialogue GEORGE"
+      ]
+    },
+    {
+      "line": 152,
+      "text": "▲ Lauren taps furiously on her phone.",
+      "to": [
+        371
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 153,
+      "text": "▲ Natalie's phone chimes.",
+      "to": [
+        373
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 154,
+      "text": "Caption: Transfer received: $50,000.",
+      "to": [
+        375
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 155,
+      "text": "Natalie: Got it.",
+      "to": [
+        377,
+        378
+      ],
+      "kinds": [
+        "dialogue NATALIE"
+      ]
+    },
+    {
+      "line": 156,
+      "text": "Sebastian: There. Now you can afford to look generous.",
+      "to": [
+        380,
+        381
+      ],
+      "kinds": [
+        "dialogue SEBASTIAN"
+      ]
+    },
+    {
+      "line": 157,
+      "text": "▲ Cassie crushes the empty gift box.",
+      "to": [
+        383
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 158,
+      "text": "▲ Lauren marches away.",
+      "to": [
+        385
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 159,
+      "text": "▲ George, Cassie and the guests follow Lauren.",
+      "to": [
+        387
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 160,
+      "text": "▲ Sebastian places a key in Natalie's hand.",
+      "to": [
+        389
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 161,
+      "text": "Natalie: What's this?",
+      "to": [
+        391,
+        392
+      ],
+      "kinds": [
+        "dialogue NATALIE"
+      ]
+    },
+    {
+      "line": 162,
+      "text": "Sebastian: Our front door. You're coming home with me tonight.",
+      "to": [
+        394,
+        395
+      ],
+      "kinds": [
+        "dialogue SEBASTIAN"
+      ]
+    },
+    {
+      "line": 163,
+      "text": "▲ Natalie closes her fingers around the key.",
+      "to": [
+        397
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 164,
+      "text": "Natalie: Fine. But whose bed am I sleeping in?",
+      "to": [
+        399,
+        400
+      ],
+      "kinds": [
+        "dialogue NATALIE"
+      ]
+    },
+    {
+      "line": 166,
+      "text": "Episode 5",
+      "to": [
+        402
+      ],
+      "kinds": [
+        "section"
+      ]
+    },
+    {
+      "line": 168,
+      "text": "5-1 Night | Int. Sebastian's apartment, living room",
+      "to": [
+        404
+      ],
+      "kinds": [
+        "scene heading"
+      ]
+    },
+    {
+      "line": 169,
+      "text": "Characters: Natalie, Sebastian",
+      "to": [
+        406
+      ],
+      "kinds": [
+        "note"
+      ]
+    },
+    {
+      "line": 170,
+      "text": "▲ Natalie stops at the bedroom door, still in her wedding dress.",
+      "to": [
+        408
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 171,
+      "text": "Natalie: One bedroom?",
+      "to": [
+        410,
+        411
+      ],
+      "kinds": [
+        "dialogue NATALIE"
+      ]
+    },
+    {
+      "line": 172,
+      "text": "Sebastian: Yours. I'll take the couch.",
+      "to": [
+        413,
+        414
+      ],
+      "kinds": [
+        "dialogue SEBASTIAN"
+      ]
+    },
+    {
+      "line": 173,
+      "text": "Natalie: A wedding isn't permission.",
+      "to": [
+        416,
+        417
+      ],
+      "kinds": [
+        "dialogue NATALIE"
+      ]
+    },
+    {
+      "line": 174,
+      "text": "Sebastian: Then set the rules.",
+      "to": [
+        419,
+        420
+      ],
+      "kinds": [
+        "dialogue SEBASTIAN"
+      ]
+    },
+    {
+      "line": 175,
+      "text": "▲ Natalie writes an agreement on a sheet of paper.",
+      "to": [
+        422
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 176,
+      "text": "Natalie: Married outside. Separate lives in here.",
+      "to": [
+        424,
+        425
+      ],
+      "kinds": [
+        "dialogue NATALIE"
+      ]
+    },
+    {
+      "line": 177,
+      "text": "Sebastian: No other dates while we're married.",
+      "to": [
+        427,
+        428
+      ],
+      "kinds": [
+        "dialogue SEBASTIAN"
+      ]
+    },
+    {
+      "line": 178,
+      "text": "Natalie: My room. My phone. My business. Knock first.",
+      "to": [
+        430,
+        431
+      ],
+      "kinds": [
+        "dialogue NATALIE"
+      ]
+    },
+    {
+      "line": 179,
+      "text": "Sebastian: Done. Lock it if you want.",
+      "to": [
+        433,
+        434
+      ],
+      "kinds": [
+        "dialogue SEBASTIAN"
+      ]
+    },
+    {
+      "line": 180,
+      "text": "Natalie: When does this end?",
+      "to": [
+        436,
+        437
+      ],
+      "kinds": [
+        "dialogue NATALIE"
+      ]
+    },
+    {
+      "line": 181,
+      "text": "Sebastian: My trust fund clears. We divorce. You walk away free.",
+      "to": [
+        439,
+        440
+      ],
+      "kinds": [
+        "dialogue SEBASTIAN"
+      ]
+    },
+    {
+      "line": 182,
+      "text": "Natalie: You pay the lawyers. I'm not paying to escape.",
+      "to": [
+        442,
+        443
+      ],
+      "kinds": [
+        "dialogue NATALIE"
+      ]
+    },
+    {
+      "line": 183,
+      "text": "Sebastian: Both of them. You won't owe a cent.",
+      "to": [
+        445,
+        446
+      ],
+      "kinds": [
+        "dialogue SEBASTIAN"
+      ]
+    },
+    {
+      "line": 184,
+      "text": "Caption: Separate rooms. No other partners. Divorce after trust-fund release.",
+      "to": [
+        448
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 185,
+      "text": "▲ Natalie signs the agreement.",
+      "to": [
+        450
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 186,
+      "text": "▲ Sebastian signs beneath her name.",
+      "to": [
+        452
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 187,
+      "text": "▲ Natalie lifts her unfastened bag onto the table.",
+      "to": [
+        454
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 188,
+      "text": "▲ A lace bra falls onto the signed agreement.",
+      "to": [
+        456
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 189,
+      "text": "▲ Natalie scoops the bra into her bag.",
+      "to": [
+        458
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 190,
+      "text": "Sebastian: New clause?",
+      "to": [
+        460,
+        461
+      ],
+      "kinds": [
+        "dialogue SEBASTIAN"
+      ]
+    },
+    {
+      "line": 191,
+      "text": "Natalie: No. And not an invitation.",
+      "to": [
+        463,
+        464
+      ],
+      "kinds": [
+        "dialogue NATALIE"
+      ]
+    },
+    {
+      "line": 192,
+      "text": "▲ Sebastian drops a pillow onto the couch.",
+      "to": [
+        466
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 193,
+      "text": "▲ Natalie goes into the bedroom.",
+      "to": [
+        468
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 194,
+      "text": "▲ Sebastian settles onto the couch in a fitted undershirt.",
+      "to": [
+        470
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 195,
+      "text": "▲ Natalie returns to the doorway in an opaque, lace-trimmed camisole and matching sleep shorts, her robe open.",
+      "to": [
+        472
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 196,
+      "text": "Sebastian: Forget something?",
+      "to": [
+        474,
+        475
+      ],
+      "kinds": [
+        "dialogue SEBASTIAN"
+      ]
+    },
+    {
+      "line": 197,
+      "text": "Natalie: That kiss at the wedding. Was it just for them?",
+      "to": [
+        477,
+        478
+      ],
+      "kinds": [
+        "dialogue NATALIE"
+      ]
+    },
+    {
+      "line": 198,
+      "text": "▲ Sebastian stands a step away from her.",
+      "to": [
+        480
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 199,
+      "text": "Sebastian: What do you think?",
+      "to": [
+        482,
+        483
+      ],
+      "kinds": [
+        "dialogue SEBASTIAN"
+      ]
+    },
+    {
+      "line": 200,
+      "text": "▲ Natalie takes his hand.",
+      "to": [
+        485
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 201,
+      "text": "Natalie: I want to find out.",
+      "to": [
+        487,
+        488
+      ],
+      "kinds": [
+        "dialogue NATALIE"
+      ]
+    },
+    {
+      "line": 202,
+      "text": "▲ Natalie kisses him.",
+      "to": [
+        490
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 203,
+      "text": "▲ Sebastian kisses her back.",
+      "to": [
+        492
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 204,
+      "text": "▲ Natalie steps back.",
+      "to": [
+        494
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 205,
+      "text": "Natalie: That's enough for tonight.",
+      "to": [
+        496,
+        497
+      ],
+      "kinds": [
+        "dialogue NATALIE"
+      ]
+    },
+    {
+      "line": 206,
+      "text": "Sebastian: Your call.",
+      "to": [
+        499,
+        500
+      ],
+      "kinds": [
+        "dialogue SEBASTIAN"
+      ]
+    },
+    {
+      "line": 207,
+      "text": "▲ Natalie closes the bedroom door.",
+      "to": [
+        502
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 208,
+      "text": "▲ Sebastian's phone lights up beside the agreement.",
+      "to": [
+        504
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 209,
+      "text": "▲ Sebastian opens the banking notification.",
+      "to": [
+        506
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 210,
+      "text": "Caption: Private banking — Total assets: $2,400,000,000.",
+      "to": [
+        508
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 211,
+      "text": "▲ Sebastian slips the phone beneath their divorce agreement.",
+      "to": [
+        510
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 213,
+      "text": "Episode 6",
+      "to": [
+        512
+      ],
+      "kinds": [
+        "section"
+      ]
+    },
+    {
+      "line": 215,
+      "text": "6-1 Day | Int. Sebastian's apartment, living room",
+      "to": [
+        514
+      ],
+      "kinds": [
+        "scene heading"
+      ]
+    },
+    {
+      "line": 216,
+      "text": "Characters: Natalie, Sebastian, Daniel (V.O.)",
+      "to": [
+        516
+      ],
+      "kinds": [
+        "note"
+      ]
+    },
+    {
+      "line": 217,
+      "text": "▲ Natalie, now in an opaque, fitted sleeveless wrap dress, sets breakfast on the table.",
+      "to": [
+        518
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 218,
+      "text": "▲ Sebastian folds his blanket on the couch.",
+      "to": [
+        520
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 219,
+      "text": "Sebastian: Still want that divorce?",
+      "to": [
+        522,
+        523
+      ],
+      "kinds": [
+        "dialogue SEBASTIAN"
+      ]
+    },
+    {
+      "line": 220,
+      "text": "Natalie: Eat. One kiss didn't change the contract.",
+      "to": [
+        525,
+        526
+      ],
+      "kinds": [
+        "dialogue NATALIE"
+      ]
+    },
+    {
+      "line": 221,
+      "text": "▲ Natalie picks up the bag containing her wedding dress.",
+      "to": [
+        528
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 222,
+      "text": "Sebastian: Another wedding already?",
+      "to": [
+        530,
+        531
+      ],
+      "kinds": [
+        "dialogue SEBASTIAN"
+      ]
+    },
+    {
+      "line": 223,
+      "text": "Natalie: Dress return. I need the deposit back.",
+      "to": [
+        533,
+        534
+      ],
+      "kinds": [
+        "dialogue NATALIE"
+      ]
+    },
+    {
+      "line": 224,
+      "text": "Sebastian: Keep it. I'll buy it.",
+      "to": [
+        536,
+        537
+      ],
+      "kinds": [
+        "dialogue SEBASTIAN"
+      ]
+    },
+    {
+      "line": 225,
+      "text": "Natalie: With what? Couch coins?",
+      "to": [
+        539,
+        540
+      ],
+      "kinds": [
+        "dialogue NATALIE"
+      ]
+    },
+    {
+      "line": 226,
+      "text": "▲ Natalie drops two coins into his palm.",
+      "to": [
+        542
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 227,
+      "text": "Natalie: Found those under my bag. Don't spend it all at once.",
+      "to": [
+        544,
+        545
+      ],
+      "kinds": [
+        "dialogue NATALIE"
+      ]
+    },
+    {
+      "line": 228,
+      "text": "▲ Natalie puts on a cropped jacket.",
+      "to": [
+        547
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 229,
+      "text": "▲ Natalie leaves the apartment.",
+      "to": [
+        549
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 230,
+      "text": "▲ Sebastian sets the coins beside his phone.",
+      "to": [
+        551
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 231,
+      "text": "▲ Sebastian calls Daniel.",
+      "to": [
+        553
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 232,
+      "text": "Sebastian: Find out what the Quinns have been doing to her.",
+      "to": [
+        555,
+        556
+      ],
+      "kinds": [
+        "dialogue SEBASTIAN"
+      ]
+    },
+    {
+      "line": 233,
+      "text": "Daniel (V.O.): On it, boss.",
+      "to": [
+        558,
+        559
+      ],
+      "kinds": [
+        "dialogue DANIEL"
+      ]
+    },
+    {
+      "line": 235,
+      "text": "6-2 Day | Int. Sebastian's apartment, living room",
+      "to": [
+        561
+      ],
+      "kinds": [
+        "scene heading"
+      ]
+    },
+    {
+      "line": 236,
+      "text": "Characters: Sebastian, Daniel",
+      "to": [
+        563
+      ],
+      "kinds": [
+        "note"
+      ]
+    },
+    {
+      "line": 237,
+      "text": "▲ Daniel puts a folder in front of Sebastian.",
+      "to": [
+        565
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 238,
+      "text": "Daniel: Her father left. Natalie and her mother got nothing.",
+      "to": [
+        567,
+        568
+      ],
+      "kinds": [
+        "dialogue DANIEL"
+      ]
+    },
+    {
+      "line": 239,
+      "text": "▲ Sebastian opens the folder.",
+      "to": [
+        570
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 240,
+      "text": "▲ A copy of Jennifer Quinn's hospital statement falls onto the table.",
+      "to": [
+        572
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 241,
+      "text": "Daniel: She's been paying for treatment alone. They offered help only if she took Cassie's place.",
+      "to": [
+        574,
+        575
+      ],
+      "kinds": [
+        "dialogue DANIEL"
+      ]
+    },
+    {
+      "line": 242,
+      "text": "Sebastian: They sold her.",
+      "to": [
+        577,
+        578
+      ],
+      "kinds": [
+        "dialogue SEBASTIAN"
+      ]
+    },
+    {
+      "line": 243,
+      "text": "▲ Sebastian closes the folder.",
+      "to": [
+        580
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 244,
+      "text": "Daniel: The fifty thousand arrived. It won't cover everything.",
+      "to": [
+        582,
+        583
+      ],
+      "kinds": [
+        "dialogue DANIEL"
+      ]
+    },
+    {
+      "line": 245,
+      "text": "Sebastian: Pay the balance. Every future treatment, too.",
+      "to": [
+        585,
+        586
+      ],
+      "kinds": [
+        "dialogue SEBASTIAN"
+      ]
+    },
+    {
+      "line": 246,
+      "text": "▲ Daniel enters the payment on his phone.",
+      "to": [
+        588
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 247,
+      "text": "Caption: Hospital payment confirmed.",
+      "to": [
+        590
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 248,
+      "text": "Daniel: What name do I give her?",
+      "to": [
+        592,
+        593
+      ],
+      "kinds": [
+        "dialogue DANIEL"
+      ]
+    },
+    {
+      "line": 249,
+      "text": "Sebastian: Not mine.",
+      "to": [
+        595,
+        596
+      ],
+      "kinds": [
+        "dialogue SEBASTIAN"
+      ]
+    },
+    {
+      "line": 250,
+      "text": "▲ Daniel places a car key beside Natalie's two coins.",
+      "to": [
+        598
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 251,
+      "text": "Daniel: Your car's downstairs.",
+      "to": [
+        600,
+        601
+      ],
+      "kinds": [
+        "dialogue DANIEL"
+      ]
+    },
+    {
+      "line": 252,
+      "text": "▲ Sebastian picks up the key.",
+      "to": [
+        603
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 253,
+      "text": "Daniel: She still thinks you're broke.",
+      "to": [
+        605,
+        606
+      ],
+      "kinds": [
+        "dialogue DANIEL"
+      ]
+    },
+    {
+      "line": 254,
+      "text": "Sebastian: Let her.",
+      "to": [
+        608,
+        609
+      ],
+      "kinds": [
+        "dialogue SEBASTIAN"
+      ]
+    },
+    {
+      "line": 255,
+      "text": "▲ Sebastian pockets the two coins.",
+      "to": [
+        611
+      ],
+      "kinds": [
+        "action"
+      ]
+    },
+    {
+      "line": 256,
+      "text": "Daniel: Where are you going?",
+      "to": [
+        613,
+        614
+      ],
+      "kinds": [
+        "dialogue DANIEL"
+      ]
+    },
+    {
+      "line": 257,
+      "text": "Sebastian: To my wife. Her family had their fun. Now it's my turn.",
+      "to": [
+        616,
+        617
+      ],
+      "kinds": [
+        "dialogue SEBASTIAN"
+      ]
+    },
+    {
+      "line": 258,
+      "text": "▲ Sebastian leaves the apartment.",
+      "to": [
+        619
+      ],
+      "kinds": [
+        "action"
+      ]
+    }
+  ],
+  "ready": true,
+  "problems": [],
+  "summary": {
+    "episodes": 6,
+    "scenes": 9,
+    "dialogue": 132,
+    "speakers": {
+      "NATALIE": 33,
+      "GEORGE": 6,
+      "LAUREN": 14,
+      "CASSIE": 14,
+      "OFFICER": 6,
+      "SEBASTIAN": 39,
+      "DANIEL": 14,
+      "GUEST 2": 2,
+      "GUEST 1": 2,
+      "OFFICIANT": 2
+    }
+  }
+}

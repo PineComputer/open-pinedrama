@@ -61,4 +61,19 @@ describe("a sample's screenplay", () => {
     expect(await read("drama/screenplay/v1/original.txt")).toBe(new TextDecoder().decode(sampleScreenplay(Object.keys(STORIES)[0], "en").bytes));
   });
 
+
+  it("is The Double Life's real rewrite on its own sample, with drama-cli's line map, never another sample's", async () => {
+    const fleet = new ReplayFleet();
+    const { id, credentials } = await fleet.newCredentials();
+    await fleet.createComputer(credentials);
+    const ref = { id } as Parameters<ReplayFleet["createSession"]>[0];
+    const session = await fleet.createSession(ref);
+    await fleet.wait(ref, session, (await fleet.run(ref, session, `Make a vertical short drama from my screenplay. Title: ${STORIES["double-life-rewrite"].en.title}.`, "k")).turnId, 60_000);
+    const read = async (file: string) => new TextDecoder().decode(new Uint8Array(await new Response(await fleet.openFile(ref, session, file)).arrayBuffer()));
+    const validate = JSON.parse(await read("drama/screenplay/v1/validate.json")) as { rewrite: boolean; lines: { to: number[] }[] };
+    expect(validate.rewrite).toBe(true);
+    expect(validate.lines.filter((line) => line.to.length > 0).length).toBeGreaterThan(100);
+    expect(await read("drama/screenplay/v1/original.txt")).toBe(new TextDecoder().decode(sampleScreenplay("double-life-rewrite", "en").bytes));
+  });
+
 });

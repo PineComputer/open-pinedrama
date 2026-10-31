@@ -2231,5 +2231,12 @@
   "drama/episodes/EP004/breakdown/v3/breakdown.json": "full/false-intentions-true-love-r2/files/episodes__EP004__breakdown__v3__breakdown.json",
   "drama/episodes/EP005/breakdown/v3/breakdown.md": "full/false-intentions-true-love-r2/files/episodes__EP005__breakdown__v3__breakdown.md",
   "drama/episodes/EP005/breakdown/v3/breakdown.json": "full/false-intentions-true-love-r2/files/episodes__EP005__breakdown__v3__breakdown.json"
+ },
+ "double-life-rewrite": {
+  "inputs/screenplay": "full/double-life-rewrite/inputs/screenplay.md",
+  "drama/screenplay/vN/screenplay": "full/double-life-rewrite/screenplay/screenplay.fountain",
+  "drama/screenplay/vN/review": "full/double-life-rewrite/screenplay/review.md",
+  "drama/screenplay/vN/validate": "full/double-life-rewrite/screenplay/validate.json",
+  "drama/screenplay/vN/original": "full/double-life-rewrite/screenplay/original.txt"
  }
 }
