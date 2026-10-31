@@ -48,12 +48,8 @@
   function applyTheme() { document.documentElement.setAttribute("data-palette", "classic"); document.documentElement.setAttribute("data-theme", S.theme); }
 
   /* ───── shell ───── */
-  const decisions = () => [
-    { t: "EP006 · takes", d: "2 takes · seg01, seg03", age: "4 min", pic: P.takes[0].poster, go: "review" },
-    { t: "Looks and plates", d: "2 items · Margaret Cole, Garden wedding", age: "12 min", pic: P.cast[3].face, go: "canvas" },
-    { t: "EP004 · storyboards", d: "6 items · scene 1 and 2", age: "26 min", pic: "img/board-seg03.jpg", go: "episodes" },
-    { t: "EP001 · cut v2", d: "1 item · The Wedding", age: "1 h", pic: P.eps[0].cover, go: "episodes" },
-  ];
+  // §16: the agent panel's Decisions are this drama's rows of the one queue (waits), landing where each is decided.
+  const decisions = () => waits().filter((w) => w.dr === P.project.title);
   /* IA draft: the rail is studio-wide only: Dramas, Reviews, Settings. Computers and Usage stay hidden until they work.
      A drama's places are in its sidebar, never here. */
   function Rail() {
@@ -218,7 +214,7 @@
               : html`<button class="btn sm" title="drama-cli's recovery for an unknown outcome" onClick=${reconcile}>${r === "unknown" ? "Check again" : "Reconcile"}</button>`}</div>`;
           })()}</section>
         <section class="asec"><h3>Decisions <span class="c">${dec.length}</span></h3>
-          ${dec.map((d) => html`<button class="dec" onClick=${() => go(d.go)}><img src=${d.pic} alt=""/><span><b>${d.t}</b><small>${d.d}</small></span><span class="age">${d.age}</span></button>`)}</section>
+          ${dec.map((d) => html`<button class="dec" onClick=${d.open}><img src=${d.thumb} alt=""/><span><b>${d.what}</b><small>${d.d}</small></span><span class="age">${d.age}</span></button>`)}</section>
         ${ep7 ? html`<section class="asec"><div class="process"><button onClick=${() => {}}>${I("list-checks")}EP007 · Process<span class="cnt">3 steps</span></button>
           <ol class="steps">
             <li>${I("check-circle")}<span>Status <code>drama-cli status</code></span><time>0:02</time></li>
@@ -251,18 +247,20 @@
       ${S.agentOpen && html`<${AgentPanel} float/>`}`}`;
   }
 
-  /* Home's "Waiting for you": every drama's decisions, each row named by its drama and pictured by its cover.
+  /* Home's "Waiting for you": every drama's decisions, each row named by its drama and pictured by its cover (the agent
+     panel pictures the item: thumb).
      §16: a row lands where that decision is made, with its items picked: takes in the review room, looks and plates
      on their cards in Assets, storyboards in their episode, a cut on its episode's Cut. Back returns. */
   const waits = () => {
     const cover = (t) => P.projects.find((p) => p.t === t).cover;
-    const back = () => (S.screen === "reviews" ? "Reviews" : "Home");
+    // "Back to …" names the page the row was opened from: Home, Reviews, or any page under the agent panel.
+    const back = () => ({ home: "Home", reviews: "Reviews", story: S.stab === "bible" ? "Story" : "Assets", episode: "EP006", canvas: "EP006 · Canvas", graph: "Lineage", cut: "EP006 › Cut", delivery: "Delivery", script: "Script" })[S.screen];
     const only = (where) => () => toast("Opens " + where + ". This sample opens EP006 only.");
     return [
-      { dr: "Bride on Bail", what: "EP006", d: "2 takes · seg01, seg03", age: "4 min", open: () => go("review") },
-      { dr: "Bride on Bail", what: "Looks and plates", d: "2 items · Margaret Cole, Garden wedding", age: "12 min", open: () => openHome("margaret", back()) },
-      { dr: "Bride on Bail", what: "EP004", d: "6 storyboards · scene 1 and 2", age: "26 min", open: only("EP004's List with its 6 storyboards picked") },
-      { dr: "Bride on Bail", what: "EP001", d: "Cut v2 · The Wedding", age: "1 h", open: only("EP001 › Cut v2") },
+      { dr: "Bride on Bail", what: "EP006", d: "2 takes · seg01, seg03", age: "4 min", thumb: P.takes[0].poster, open: () => go("review") },
+      { dr: "Bride on Bail", what: "Looks and plates", d: "2 items · Margaret Cole, Garden wedding", age: "12 min", thumb: P.cast[3].face, open: () => openHome("margaret", back()) },
+      { dr: "Bride on Bail", what: "EP004", d: "6 storyboards · scene 1 and 2", age: "26 min", thumb: "img/board-seg03.jpg", open: only("EP004's List with its 6 storyboards picked") },
+      { dr: "Bride on Bail", what: "EP001", d: "Cut v2 · The Wedding", age: "1 h", thumb: P.eps[0].cover, open: only("EP001 › Cut v2") },
       { dr: "Last Toast", what: "EP007", d: "Red line · decide in your words", age: "2 h", open: () => toast("Last Toast: only Bride on Bail opens in this direction.") },
     ].map((w) => ({ ...w, pic: cover(w.dr) }));
   };
@@ -653,6 +651,6 @@
     return html`<${Proto}/><div class="app"><${Rail}/><${Side}/>${main}</div><${Dialog}/>
       <div class="toasts" aria-live="polite">${S.toasts.map((t) => html`<div class="toast">${t.text}${t.action && html`<button onClick=${t.action.run}>${t.action.label}</button>`}</div>`)}</div>`;
   }
-  window.PD = { html, I, S, set, go, openHome, openLineage, toast, money, Status, TopBar, StopBanner, EpisodeViews, ProjectChips, AgentPanel, SPENT_COVERS, useEffect, useRef, Mark, decisions, draw };
+  window.PD = { html, I, S, set, go, openHome, openLineage, toast, money, Status, TopBar, StopBanner, EpisodeViews, ProjectChips, AgentPanel, SPENT_COVERS, useEffect, useRef, Mark, draw };
   // screens.js draws first, once its screens are registered.
 })();
