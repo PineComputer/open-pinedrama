@@ -125,7 +125,9 @@ describe("the canvas", () => {
     render(<Canvas drama={drama} />);
     const pill = await screen.findByRole("toolbar", { name: "Canvas" });
     for (const name of ["Zoom in", "Zoom out", "Fit the board", "Lay out again"]) expect(within(pill).getByRole("button", { name })).toBeInTheDocument();
-    expect(within(pill).getByRole("button", { name: "Zoom" })).toHaveTextContent(/%$/);
+    // Named with the zoom it shows, so the visible "96%" is part of its name (WCAG 2.5.3).
+    const zoom = within(pill).getByRole("button", { name: /^Zoom \d+%$/ });
+    expect(zoom.getAttribute("aria-label")).toContain(zoom.textContent!);
     // Shown, as the design shows it; the pill hides it.
     expect(screen.getByRole("img", { name: "Minimap: move the view" })).toBeInTheDocument();
     await user.click(within(pill).getByRole("button", { name: "Minimap: move the view" }));
@@ -151,7 +153,7 @@ describe("the canvas", () => {
     const user = userEvent.setup();
     engine(project());
     render(<Canvas drama={drama} />);
-    const zoom = await screen.findByRole("button", { name: "Zoom" });
+    const zoom = await screen.findByRole("button", { name: /^Zoom \d+%$/ });
     await user.click(zoom);
     for (const name of ["Zoom in", "Zoom out", "Fit the board", "Zoom to 50%", "Zoom to 100%", "Zoom to 800%"]) expect(screen.getByRole("menuitem", { name: new RegExp(name) })).toBeInTheDocument();
     expect(screen.getByRole("spinbutton", { name: "Zoom, in percent" })).toBeInTheDocument();

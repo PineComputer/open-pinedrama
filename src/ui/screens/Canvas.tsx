@@ -232,7 +232,8 @@ function ZoomPill({ tool, onTool, minimap, onMinimap, onLayOut, onKeys }: { tool
       <IconButton label={t("canvas.zoomOut")} icon="minus" onClick={() => void flow.zoomOut({ duration: 200 })} />
       <DropdownMenu.Root>
         <DropdownMenu.Trigger asChild>
-          <button type="button" className="z" aria-label={t("canvas.zoom")}>
+          {/* Named with the zoom it shows (WCAG 2.5.3: the visible label is part of the name). */}
+          <button type="button" className="z" aria-label={t("canvas.zoomAt", { n: zoom })}>
             {zoom}%
           </button>
         </DropdownMenu.Trigger>
