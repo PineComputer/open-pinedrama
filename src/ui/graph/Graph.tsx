@@ -261,7 +261,7 @@ export function Graph({ dramaId }: { dramaId: string }) {
           </div>
         )}
         <section className="isec" aria-labelledby="graph-state">
-          <h4 id="graph-state">{t("graph.state")}</h4>
+          <h2 id="graph-state">{t("graph.state")}</h2>
           {selected.fresh === false ? (
             <div className="finding warn">
               <Icon name="warning" className="ic" />
@@ -278,15 +278,15 @@ export function Graph({ dramaId }: { dramaId: string }) {
           )}
         </section>
         <section className="isec" aria-labelledby="graph-up">
-          <h4 id="graph-up">
+          <h2 id="graph-up">
             {t("graph.madeFrom")} <span className="muted">{up.size}</span>
-          </h4>
+          </h2>
           {list(up)}
         </section>
         <section className="isec" aria-labelledby="graph-down">
-          <h4 id="graph-down">
+          <h2 id="graph-down">
             {t("graph.madeFromIt")} <span className="muted">{down.size}</span>
-          </h4>
+          </h2>
           {list(down)}
         </section>
       </div>
@@ -297,6 +297,9 @@ export function Graph({ dramaId }: { dramaId: string }) {
   return (
     <div className="body graph-screen">
       <div className="scrollmain">
+        {/* The page's title is the view and the version it traces, for assistive technology; the crumbs and the
+            inspector's head show them (axe page-has-heading-one; Codex rc5 C21, as 1e89c3d gives the Canvas). */}
+        <h1 className="sr-only">{[t("surface.graph"), name(selected)].join(" · ")}</h1>
         {view.data.problems.map((problem) => (
           <p key={problem.turnId} className="notice">
             {t("graph.problem", { error: problem.error })}

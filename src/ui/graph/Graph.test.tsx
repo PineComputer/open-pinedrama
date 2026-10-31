@@ -43,6 +43,10 @@ describe("the Graph", () => {
     engine("shot");
     await renderAt(<Graph dramaId="d1" />, "/d/d1/out-of-date");
     expect(await screen.findByRole("complementary", { name: "EP001 seg01 storyboard (line-art)" })).toBeInTheDocument();
+    // One h1, the view and the version it traces; the inspector's sections are h2 under it (axe page-has-heading-one,
+    // heading-order; Codex rc5 C21).
+    expect(screen.getAllByRole("heading").map((heading) => heading.tagName)).toEqual(["H1", "H2", "H2", "H2"]);
+    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("Lineage · EP001 seg01 storyboard (line-art)");
     // The take's lineage holds the look and the plate.
     await userEvent.click(await card(/^EP001 seg01 take/));
     expect(await screen.findByRole("complementary", { name: "EP001 seg01 take" })).toBeInTheDocument();
