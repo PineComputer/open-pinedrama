@@ -1256,9 +1256,10 @@ timeline
   status.bible (Not started, Accepted, or "vN · not accepted"). For C17, cd45a3d (work-04): Assets'
   card chip, detail chip and "current · accepted" line come from drama-cli's status, each character's
   `states/` and each location's `times/` included; the maker's verdict shows apart, as "Your decision on
-  vN". Not yet the whole fix (master): an item the maker approved and drama-cli has not accepted still
-  read "Waiting for you"; that is only for an open review on the item, otherwise "vN · not accepted", the
-  approval kept under "Your decision on vN" (follow-up pending, work-04).
+  vN". Completed in 9a2d903 (work-04), on master's send-back: an asset reads "Waiting for you" only while a
+  review of that exact version is open; otherwise a working version drama-cli hasn't accepted reads "vN ·
+  not accepted", as the Bible row does, even when the maker approved it, and that approval shows only under
+  "Your decision on vN".
 
 ## D65. 2026-10-30 · The tree's current row is a tint, without an accent bar
 - **Context.** The project tree marked its current row with a curved accent bar on its left
