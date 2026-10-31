@@ -44,7 +44,7 @@ describe("an episode's segments", () => {
   it("link a segment to Canvas, and say when the breakdown lists no shots for it", async () => {
     project();
     render(<Segments dramaId="d1" page={page} />);
-    expect(await screen.findByRole("link", { name: "On Canvas" })).toHaveAttribute("href", "/d/d1/canvas?item=EP001");
+    expect(await screen.findByRole("link", { name: "On Canvas" })).toHaveAttribute("href", "/d/d1/canvas?episode=EP001&item=episodes%2FEP001%2Fsegments%2Fseg01");
     expect(screen.getByText("The breakdown lists no shots for it yet.")).toBeInTheDocument();
   });
 });

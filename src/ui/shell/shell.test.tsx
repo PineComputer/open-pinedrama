@@ -65,10 +65,21 @@ describe("the drama's bar", () => {
     const surfaces = screen.getByRole("group", { name: "Surface" });
     expect(within(surfaces).getByRole("button", { name: "Studio" })).toHaveAttribute("aria-pressed", "true");
     await user.click(within(surfaces).getByRole("button", { name: "Canvas" }));
-    expect(location.pathname + location.search).toBe("/d/d1/canvas?item=EP002");
+    expect(location.pathname + location.search).toBe("/d/d1/canvas?episode=EP002");
     expect(within(surfaces).getByRole("button", { name: "Canvas" })).toHaveAttribute("aria-pressed", "true");
     await user.click(within(surfaces).getByRole("button", { name: "Studio" }));
     expect(location.pathname).toBe("/d/d1/e/EP002");
+  });
+
+  it("takes a character picked on Graph to Story, never to Home or an episode (Codex's IA review, B1)", async () => {
+    const user = userEvent.setup();
+    at("/d/d1/graph?item=assets%2Fcharacters%2Fivy");
+    render(<DramaBar drama={drama} />);
+    const surfaces = screen.getByRole("group", { name: "Surface" });
+    await user.click(within(surfaces).getByRole("button", { name: "Canvas" }));
+    expect(location.pathname + location.search).toBe("/d/d1/canvas?item=assets%2Fcharacters%2Fivy");
+    await user.click(within(surfaces).getByRole("button", { name: "Studio" }));
+    expect(location.pathname).toBe("/d/d1/story");
   });
 });
 

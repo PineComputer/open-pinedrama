@@ -123,6 +123,19 @@ describe("the agent panel", () => {
     expect(screen.getByRole("textbox", { name: "Message the agent" })).toBeDisabled();
   });
 
+  it("follows the episode in view, and says so when the maker pins another session by hand (Codex's IA review, B3)", async () => {
+    const user = userEvent.setup();
+    engine();
+    render(<AgentPanel drama={drama} episode="EP002" mode="docked" onMode={() => {}} />);
+    // EP002's session waits on its review: the panel follows it there.
+    expect(await screen.findByRole("link", { name: "Open the review it waits on" })).toHaveAttribute("href", "/r/r2");
+    await user.click(within(screen.getByRole("region", { name: "Running" })).getByRole("button", { name: /^EP001/ }));
+    expect(await screen.findByText(/^To EP001's session · Pinned to EP001/)).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "Follow the page" }));
+    expect(await screen.findByRole("link", { name: "Open the review it waits on" })).toBeInTheDocument();
+    expect(screen.queryByText(/Pinned to/)).not.toBeInTheDocument();
+  });
+
   it("stops one episode after the maker confirms, and only then", async () => {
     const user = userEvent.setup();
     engine();

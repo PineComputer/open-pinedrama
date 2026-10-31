@@ -124,6 +124,8 @@ export function AgentPanel({ drama, episode, mode, onMode }: { drama: DramaView;
   const said = (chat.data?.messages ?? []).filter((message) => message.kind === "progress" || message.kind === "question" || message.kind === "result").slice(-2);
   const working = running.length > 0;
   const who = inView?.label || t("talk.setup");
+  // A session picked by hand that isn't the one the page shows.
+  const pinned = picked && inView?.sessionId === picked && inView.label !== episode ? inView : undefined;
   const last = said.at(-1);
   return (
     <aside className={mode === "floating" ? "agent float glass" : "agent"} aria-label={t("agent.label")}>
@@ -243,13 +245,14 @@ export function AgentPanel({ drama, episode, mode, onMode }: { drama: DramaView;
           </section>
         )}
       </div>
-      <Composer chat={chat.data} onSent={chat.reload} />
+      <Composer chat={chat.data} onSent={chat.reload} pinned={pinned ? pinned.label || t("talk.setup") : undefined} onFollow={() => setPicked(undefined)} />
     </aside>
   );
 }
 
 /** A line to the session in view: it answers, steers or starts a run, as the session stands. */
-function Composer({ chat, onSent }: { chat?: ChatView; onSent: () => void }) {
+/** `pinned`: the session the maker picked by hand, when it isn't the page's; `onFollow` goes back to following the page. */
+function Composer({ chat, onSent, pinned, onFollow }: { chat?: ChatView; onSent: () => void; pinned?: string; onFollow: () => void }) {
   const { t } = useT();
   const [text, setText] = useState("");
   const [error, setError] = useState<unknown>();
@@ -285,7 +288,19 @@ function Composer({ chat, onSent }: { chat?: ChatView; onSent: () => void }) {
             {t("talk.openReview")}
           </Link>
         ) : (
-          <span className="grow">{chat ? t("agent.to", { who: chat.label || t("talk.setup") }) : ""}</span>
+          <span className="grow">
+            {chat ? t("agent.to", { who: chat.label || t("talk.setup") }) : ""}
+            {/* Following the page is the default; a session picked by hand says so, with the way back (Codex's IA review, B3). */}
+            {pinned && (
+              <>
+                {" · "}
+                {t("agent.pinned", { who: pinned })}{" "}
+                <button type="button" className="link" onClick={onFollow}>
+                  {t("agent.followPage")}
+                </button>
+              </>
+            )}
+          </span>
         )}
         {error !== undefined && <span className="error small">{errorText(error, t)}</span>}
         <button type="button" className="send" aria-label={t("talk.send")} disabled={!text.trim()} onClick={() => void send()}>

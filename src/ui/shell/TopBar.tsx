@@ -10,26 +10,18 @@ import { Dialog } from "../components/Dialog.tsx";
 import { Icon, type IconName } from "../icons.tsx";
 import { type TKey, useT } from "../i18n.ts";
 import { errorText, moneyText } from "../labels.ts";
-import { Link, match, navigate, usePath } from "../router.tsx";
+import { Link, match, navigate, placeHref, placeOf, type Surface, usePath } from "../router.tsx";
 import type { ProjectView } from "../../shared/project.ts";
 
-type Surface = "studio" | "canvas" | "graph";
-
-/** The surface a path shows, and the item selected on it: an episode in Studio, ?item= on Canvas and Graph. */
-export function surfaceOf(path: string, query: URLSearchParams): { surface: Surface; item?: string } {
-  const surface = match("/d/:id/:tab?", path)?.tab;
-  if (surface === "canvas" || surface === "graph") return { surface, item: query.get("item") ?? undefined };
-  return { surface: "studio", item: match("/d/:id/e/:code", path)?.code };
-}
 
 function SurfaceSwitch({ drama }: { drama: DramaView }) {
   const { t } = useT();
   const { path, query } = usePath();
-  const { surface, item } = surfaceOf(path, query);
+  // The same episode and item on the other surface (router.tsx, Place): an item is never read as an episode.
+  const place = placeOf(path, query) ?? { dramaId: drama.id, surface: "studio" as const };
+  const surface = place.surface;
   const go = (next: Surface) => {
-    if (next === surface) return;
-    if (next === "studio") navigate(item ? `/d/${drama.id}/e/${item}` : `/d/${drama.id}`);
-    else navigate(`/d/${drama.id}/${next}${item ? `?item=${encodeURIComponent(item)}` : ""}`);
+    if (next !== surface) navigate(placeHref({ ...place, dramaId: drama.id, surface: next }));
   };
   const options: [Surface, TKey, IconName][] = [
     ["studio", "surface.studio", "squares-four"],

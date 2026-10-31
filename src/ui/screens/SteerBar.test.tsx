@@ -185,7 +185,8 @@ describe("the SteerBar", () => {
     render(<Canvas drama={drama("working")} />);
     const { user, bar } = await pick(/^林/);
     await user.click(within(bar).getByRole("button", { name: "Lineage" }));
-    expect(location.pathname + location.search).toBe("/d/d1/graph?item=character%3Alin");
+    // Graph centred on the item's stage, drama-cli's folder (a board id such as character:lin isn't a stage Graph has).
+    expect(location.pathname + location.search).toBe("/d/d1/graph?item=assets%2Fcharacters%2Flin");
     window.history.pushState(null, "", "/");
   });
 

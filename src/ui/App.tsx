@@ -4,7 +4,8 @@ import { ApiError, useResource } from "./api.ts";
 import { type TKey, useT } from "./i18n.ts";
 import { errorText, isSetupScreen, scriptWaits } from "./labels.ts";
 import { useReviewNotifications } from "./notify.ts";
-import { match, usePath } from "./router.tsx";
+import { Link, match, placeOf, usePath } from "./router.tsx";
+import { EmptyState } from "./components/EmptyState.tsx";
 import { Drama } from "./screens/Drama.tsx";
 import { InboxScreen } from "./screens/Inbox.tsx";
 import { NewDrama } from "./screens/NewDrama.tsx";
@@ -88,8 +89,18 @@ function Agent({ drama, episode, mode, onMode, canvas }: { drama: DramaView; epi
   return <AgentPanel drama={drama} episode={episode} mode={shown} onMode={onMode} />;
 }
 
+/** A path the studio has no page for, with the way back to the dramas. */
+function NotFound({ path }: { path: string }) {
+  const { t } = useT();
+  return (
+    <EmptyState title={t("notFound.title")} action={<Link className="btn primary" to="/">{t("notFound.home")}</Link>}>
+      {t("notFound.text", { path })}
+    </EmptyState>
+  );
+}
+
 export function App() {
-  const { path } = usePath();
+  const { path, query } = usePath();
   const [asideSlot, setAsideSlot] = useState<HTMLElement | null>(null);
   const app = useResource<AppInfo>("/api/app", ["app"]);
   const ready = app.data !== undefined && app.data.mode !== "none";
@@ -123,6 +134,8 @@ export function App() {
   const home: Crumb = { label: t("nav.dramas"), to: "/" };
   const inDrama: Crumb | undefined = drama.data && { label: drama.data.title, to: `/d/${drama.data.id}` };
   let crumbs: Crumb[] = [home];
+  // The episode in view, wherever it shows (its page, Canvas, Graph, a review of it): the sidebar marks it and the agent follows it (B3).
+  const followed = placeOf(path, query)?.episode ?? reviewed?.episode;
   let screen = <Slate />;
   let params: Record<string, string> | null;
   const tab = match("/d/:id/e/:code", path) ? "episode" : (match("/d/:id/:tab?", path)?.tab ?? "board");
@@ -135,11 +148,16 @@ export function App() {
   } else if (path === "/settings") {
     screen = <Settings app={app.data} onChange={app.reload} />;
     crumbs = [{ label: t("settings.title") }];
+  } else if (path !== "/" && !page && !review) {
+    // A path the studio has no page for says so; it never falls back to Home (Codex's IA review, B1).
+    screen = <NotFound path={path} />;
+    crumbs = [home, { label: t("notFound.title") }];
   } else if ((params = review)) {
     screen = <Review key={params.id} id={params.id} />;
     crumbs = [home, ...(inDrama ? [inDrama] : []), ...(reviewed?.episode ? [{ label: reviewed.episode, to: `/d/${reviewed.dramaId}/e/${reviewed.episode}` }] : []), { label: reviewed ? t(`kind.${reviewed.kind}`) : t("inbox.title") }];
   } else if (page) {
-    if (drama.data) screen = <Drama drama={drama.data} tab={tab} episode={match("/d/:id/e/:code", path)?.code} />;
+    if (tab !== "board" && tab !== "episode" && !TABS[tab]) screen = <NotFound path={path} />;
+    else if (drama.data) screen = <Drama drama={drama.data} tab={tab} episode={match("/d/:id/e/:code", path)?.code} />;
     else
       screen = (
         <div className="page">
@@ -154,7 +172,7 @@ export function App() {
 
   const sidebar =
     drama.data && dramaId ? (
-      <DramaSidebar drama={drama.data} tab={review ? "review" : tab} episode={match("/d/:id/e/:code", path)?.code ?? reviewed?.episode} />
+      <DramaSidebar drama={drama.data} tab={review ? "review" : tab} episode={followed} />
     ) : (
       <HomeSidebar path={path} replay={app.data.mode === "replay"} />
     );
@@ -178,7 +196,7 @@ export function App() {
           </AsideSlot.Provider>
           <div ref={setAsideSlot} style={{ display: "contents" }} />
           {/* design/'s setup screens (Analyzing, the Fountain review) go full width, with no agent beside them. */}
-          {drama.data && dramaId && !(page && isSetupScreen(drama.data, tab)) && <Agent drama={drama.data} episode={match("/d/:id/e/:code", path)?.code ?? reviewed?.episode} mode={agentMode} onMode={setAgentMode} canvas={tab === "canvas" || tab === "graph" || tab === "cut" || Boolean(review)} />}
+          {drama.data && dramaId && !(page && isSetupScreen(drama.data, tab)) && <Agent drama={drama.data} episode={followed} mode={agentMode} onMode={setAgentMode} canvas={tab === "canvas" || tab === "graph" || tab === "cut" || Boolean(review)} />}
         </div>
       </div>
     </div>

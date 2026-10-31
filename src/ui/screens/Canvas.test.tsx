@@ -104,7 +104,7 @@ describe("the canvas", () => {
 
   it("shows the episode chosen elsewhere, and moves between episodes with its switcher", async () => {
     const user = userEvent.setup();
-    window.history.pushState(null, "", "/d/d1/canvas?item=EP002");
+    window.history.pushState(null, "", "/d/d1/canvas?episode=EP002");
     engine(project((report) => {
       report.episodes.EP002 = { ...report.episodes.EP001, scene_chains: [{ scene_heading: "EXT. YARD - NIGHT #2-1#", segments: ["seg01"] }] };
     }));
@@ -114,7 +114,7 @@ describe("the canvas", () => {
     expect(screen.queryByRole("group", { name: "EP001 seg01 · INT. OFFICE - DAY" })).toBeNull();
     expect(screen.queryByRole("group", { name: "Cast" })).toBeNull();
     await user.click(screen.getByRole("button", { name: "Previous episode" }));
-    expect(location.search).toBe("?item=EP001");
+    expect(location.search).toBe("?episode=EP001");
     expect(await screen.findByRole("group", { name: "EP001 seg01 · INT. OFFICE - DAY" })).toBeInTheDocument();
     window.history.pushState(null, "", "/");
   });

@@ -24,7 +24,7 @@ import { type Status, StatusChip } from "../components/StatusChip.tsx";
 import { type TKey, useT } from "../i18n.ts";
 import { Icon } from "../icons.tsx";
 import { headingText, subjectLabel } from "../labels.ts";
-import { Link, navigate, usePath } from "../router.tsx";
+import { Link, navigate, placeHref, placeOf, usePath } from "../router.tsx";
 import { Still } from "../Still.tsx";
 import { useText } from "../viewing.tsx";
 import { NodePanel } from "./NodePanel.tsx";
@@ -316,7 +316,9 @@ function Plane({ drama }: { drama: DramaView }) {
   const lineage = lineageView.data?.lineage ?? null;
   const state = project.data?.state ?? null;
   const names = project.data?.names ?? null;
-  const item = usePath().query.get("item");
+  // The episode in view and the item picked, as the page's place names them (router.tsx).
+  const { path, query } = usePath();
+  const page = placeOf(path, query);
   const codes = useMemo(() => (state ? Object.keys(state.episodes).sort((a, b) => a.localeCompare(b, "en", { numeric: true })) : []), [state]);
   // The stage the agent saved work for last: the lineage stage whose folder holds the newest file.
   const newest = useMemo(() => {
@@ -324,9 +326,10 @@ function Plane({ drama }: { drama: DramaView }) {
     return file && lineage ? lineage.nodes.filter((stage) => file.path.includes(`/${stage.id}/`)).sort((a, b) => b.id.length - a.id.length)[0] : undefined;
   }, [files.data, lineage]);
   // One episode per board: the one chosen (the tree, Studio, Graph or the switcher), else the one the agent last saved work for, else the first.
-  const code = item && codes.includes(item) ? item : newest?.where.episode && codes.includes(newest.where.episode) ? newest.where.episode : codes[0];
+  const code = page?.episode && codes.includes(page.episode) ? page.episode : newest?.where.episode && codes.includes(newest.where.episode) ? newest.where.episode : codes[0];
   const positions = useResource<{ positions: Positions }>(code ? `/api/dramas/${drama.id}/canvas/${code}` : null, [`drama:${drama.id}`]);
-  const [follow, setFollow] = useState(true);
+  // An item the link names is shown picked, so the board doesn't follow the agent away from it.
+  const [follow, setFollow] = useState(!page?.item);
   const [minimap, setMinimap] = useState(true);
   const [dock, setDock] = useState<Dock>(() => {
     try {
@@ -407,7 +410,10 @@ function Plane({ drama }: { drama: DramaView }) {
 
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
   // New data keeps what the maker picked.
-  useEffect(() => setNodes((before) => mapped.nodes.map((node) => ({ ...node, selected: before.find((one) => one.id === node.id)?.selected ?? false }))), [mapped.nodes, setNodes]);
+  useEffect(
+    () => setNodes((before) => mapped.nodes.map((node) => ({ ...node, selected: before.find((one) => one.id === node.id)?.selected ?? node.id === page?.item }))),
+    [mapped.nodes, setNodes, page?.item],
+  );
   // A board opens fitted to the episode, as the prototype's does; following then moves only to work saved after that.
   const opened = useRef<string>(undefined);
   const centred = useRef<string>(undefined);
@@ -455,7 +461,7 @@ function Plane({ drama }: { drama: DramaView }) {
 
   if (!state || !code) return <EmptyState title={t("canvas.emptyTitle")}>{t("canvas.emptyText")}</EmptyState>;
   const save = (all: Node[]) => void api(`/api/dramas/${drama.id}/canvas/${code}`, { method: "PUT", json: { positions: Object.fromEntries(all.map((node) => [node.id, node.position])) } });
-  const go = (other: string) => navigate(`/d/${drama.id}/canvas?item=${other}`, { replace: true });
+  const go = (other: string) => navigate(placeHref({ dramaId: drama.id, surface: "canvas", episode: other }), { replace: true });
   /**
    * Bring the picked node into the board's visible area at the maker's zoom: its bar's top below the pills, never above
    * the board's top edge (where it would land under what stands over the board, a stop card say), with its panel under
@@ -481,7 +487,9 @@ function Plane({ drama }: { drama: DramaView }) {
   const at = codes.indexOf(code);
   const byId = new Map(mapped.nodes.map((node) => [node.id, node]));
   const labelOf = (id: string) => (byId.get(id)?.data as ItemData | undefined)?.label ?? id;
-  const bar = (node: Node<ItemData>) => <SteerBar drama={drama} node={node.data.item} label={node.data.label} picture={node.data.work} episodeTitle={names?.episodes[code]} />;
+  const bar = (node: Node<ItemData>) => (
+    <SteerBar drama={drama} node={node.data.item} label={node.data.label} picture={node.data.work} episodeTitle={names?.episodes[code]} lineage={placeHref({ dramaId: drama.id, surface: "graph", episode: node.data.stage.where.episode, item: node.data.stage.id })} />
+  );
   const panel = (node: Node<ItemData>) => (
     <NodePanel
       dramaId={drama.id}

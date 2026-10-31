@@ -59,3 +59,36 @@ export function Link({ to, onClick, ...rest }: AnchorHTMLAttributes<HTMLAnchorEl
     />
   );
 }
+
+export type Surface = "studio" | "canvas" | "graph";
+
+/**
+ * What a drama's page shows (Codex's IA review, 7.2): the drama, the surface, the episode in view and the item picked
+ * on it, a lineage stage's id (drama-cli's stage folder, as shared/lineage.ts gives it). One reader and one builder, so
+ * an item is never taken for an episode: the episode travels as ?episode=, the item as ?item=.
+ */
+export interface Place {
+  dramaId: string;
+  surface: Surface;
+  episode?: string;
+  item?: string;
+}
+
+export function placeOf(path: string, query: URLSearchParams): Place | null {
+  const episodePage = match("/d/:id/e/:code", path);
+  if (episodePage) return { dramaId: episodePage.id, surface: "studio", episode: episodePage.code };
+  const page = match("/d/:id/:tab?", path);
+  if (!page) return null;
+  if (page.tab === "canvas" || page.tab === "graph") return { dramaId: page.id, surface: page.tab, episode: query.get("episode") ?? undefined, item: query.get("item") ?? undefined };
+  return { dramaId: page.id, surface: "studio" };
+}
+
+export function placeHref({ dramaId, surface, episode, item }: Place): string {
+  const base = `/d/${encodeURIComponent(dramaId)}`;
+  // Studio shows an episode on its page; a shared asset (drama-cli's assets/ folders) in Story; else the episodes.
+  if (surface === "studio") return episode ? `${base}/e/${encodeURIComponent(episode)}` : item?.startsWith("assets/") ? `${base}/story` : base;
+  const query = new URLSearchParams();
+  if (episode) query.set("episode", episode);
+  if (item) query.set("item", item);
+  return `${base}/${surface}${query.size ? `?${query}` : ""}`;
+}

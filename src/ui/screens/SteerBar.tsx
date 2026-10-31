@@ -51,12 +51,15 @@ export function SteerBar({
   label,
   picture,
   episodeTitle,
+  lineage,
 }: {
   drama: DramaView;
   node: Item;
   label: string;
   picture?: FileItem;
   episodeTitle?: string;
+  /** Where its lineage opens: Graph centred on the item's stage (router.tsx, placeHref). */
+  lineage: string;
 }) {
   const { t } = useT();
   const review = useOpenReview(drama, node);
@@ -114,7 +117,7 @@ export function SteerBar({
             <IconButton label={t("steer.note")} icon="note-pencil" on={mode === "note"} aria-pressed={mode === "note"} onClick={() => setMode(mode === "note" ? null : "note")} />
           </>
         )}
-        <IconButton label={t("steer.lineage")} icon="tree-structure" onClick={() => navigate(`/d/${drama.id}/graph?item=${encodeURIComponent(node.id)}`)} />
+        <IconButton label={t("steer.lineage")} icon="tree-structure" onClick={() => navigate(lineage)} />
         {picture && (
           <Tooltip text={t("steer.download")}>
             <a className={"ibtn"} href={`${picture.url}&download=1`} aria-label={t("steer.download")}>

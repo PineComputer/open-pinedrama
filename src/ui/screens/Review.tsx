@@ -12,7 +12,7 @@ import { CutViewer, alignedLines, cutLines, fmt } from "../cut/CutViewer.tsx";
 import { shotListOf } from "../../shared/shots.ts";
 import { Icon } from "../icons.tsx";
 import { Markdown } from "../Markdown.tsx";
-import { Link, navigate, usePath } from "../router.tsx";
+import { Link, navigate, placeHref, usePath } from "../router.tsx";
 import { standing as stageStanding } from "./Canvas.tsx";
 import { Still } from "../Still.tsx";
 import { DocumentView, Pinboard, isDocument, isImage, isVideo, useShotList, useSize, useText, variantLabel } from "../viewing.tsx";
@@ -983,7 +983,7 @@ export function CutRoom({ review, done }: { review: ReviewView; done: () => void
                 <input type="range" disabled defaultValue={80} aria-label={t("cut.volume")} />
                 <p className="muted">{t("cut.editingLater")}</p>
               </div>
-              <Link to={`/d/${review.dramaId}/canvas?item=${code}`} className={buttonClass({ size: "sm" })}>
+              <Link to={placeHref({ dramaId: review.dramaId, surface: "canvas", episode: code })} className={buttonClass({ size: "sm" })}>
                 <Icon name="flow-arrow" className="ic" />
                 {t("cut.openOnCanvas")}
               </Link>
