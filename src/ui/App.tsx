@@ -18,7 +18,7 @@ import { DramaSidebar, HomeSidebar } from "./shell/Sidebar.tsx";
 import { type Crumb, StopControl, TopBar } from "./shell/TopBar.tsx";
 import { ExportMenu } from "./shell/ExportMenu.tsx";
 import { AsideSlot } from "./shell/aside.ts";
-import { buttonVariants } from "@/components/ui/button";
+import { buttonClass } from "./components/Button.tsx";
 
 /** Before the studio can be used: this window isn't the studio's, or the engine isn't answering. */
 function Gate({ error, onRetry }: { error: unknown; onRetry: () => void }) {
@@ -29,7 +29,7 @@ function Gate({ error, onRetry }: { error: unknown; onRetry: () => void }) {
       <h1>{t(signedOut ? "gate.signedOutTitle" : "gate.offlineTitle")}</h1>
       <p className="empty-note">{t(signedOut ? "gate.signedOut" : "gate.offline")}</p>
       {!signedOut && (
-        <button className={buttonVariants({ variant: "outline" })} onClick={onRetry}>
+        <button className={buttonClass()} onClick={onRetry}>
           {t("gate.retry")}
         </button>
       )}

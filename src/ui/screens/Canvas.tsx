@@ -29,7 +29,6 @@ import { Still } from "../Still.tsx";
 import { useText } from "../viewing.tsx";
 import { NodePanel } from "./NodePanel.tsx";
 import { SteerBar } from "./SteerBar.tsx";
-import { buttonVariants } from "@/components/ui/button";
 
 type Positions = Record<string, { x: number; y: number }>;
 
@@ -522,11 +521,11 @@ function Plane({ drama }: { drama: DramaView }) {
         </ReactFlow>
         <div className="ctop">
             <div className="ds-epswitch">
-              <button type="button" className={buttonVariants({ variant: "ghost", size: "icon" })} aria-label={t("canvas.prevEpisode")} disabled={at <= 0} onClick={() => go(codes[at - 1])}>
+              <button type="button" className={"ibtn"} aria-label={t("canvas.prevEpisode")} disabled={at <= 0} onClick={() => go(codes[at - 1])}>
                 <Icon name="caret-left" />
               </button>
               <Menu label={t("canvas.episode")} wide="ds-epswitch-pick" trigger={<>{[code, names?.episodes[code]].filter(Boolean).join(" · ")}<Icon name="caret-down" /></>} items={codes.map((other) => ({ label: [other, names?.episodes[other]].filter(Boolean).join(" · "), run: () => go(other) }))} />
-              <button type="button" className={buttonVariants({ variant: "ghost", size: "icon" })} aria-label={t("canvas.nextEpisode")} disabled={at >= codes.length - 1} onClick={() => go(codes[at + 1])}>
+              <button type="button" className={"ibtn"} aria-label={t("canvas.nextEpisode")} disabled={at >= codes.length - 1} onClick={() => go(codes[at + 1])}>
                 <Icon name="caret-right" />
               </button>
             </div>

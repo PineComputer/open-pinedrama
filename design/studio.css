@@ -44,7 +44,8 @@ p { font-size: inherit; line-height: inherit; color: inherit; margin: 0; }
 .seg button { display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 12px; border: 0; border-radius: var(--radius-pill); background: transparent; color: var(--text-muted); font-size: 12.5px; font-weight: 600; cursor: pointer; }
 .seg button .ic { width: 15px; height: 15px; }
 .seg button:hover { color: var(--text-secondary); }
-.seg button[aria-pressed="true"] { background: var(--surface-container-high); color: var(--text-primary); box-shadow: 0 0 0 1px var(--border-input); }
+/* A radio among the segments (a single choice, as Radix's ToggleGroup gives it) is pressed the same way. */
+.seg button[aria-pressed="true"], .seg button[aria-checked="true"] { background: var(--surface-container-high); color: var(--text-primary); box-shadow: 0 0 0 1px var(--border-input); }
 
 /* chips */
 .chip { display: inline-flex; align-items: center; gap: 8px; height: 34px; padding: 0 12px 0 4px; border-radius: var(--radius-pill); border: 1px solid var(--border); background: var(--surface-container); color: var(--text-primary); font-size: 12.5px; font-weight: 600; white-space: nowrap; }

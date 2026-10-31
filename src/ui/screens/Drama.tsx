@@ -16,7 +16,7 @@ import { Graph } from "../graph/Graph.tsx";
 import { Episode } from "./Episode.tsx";
 import { Script } from "./Script.tsx";
 import { InboxList } from "./Inbox.tsx";
-import { buttonVariants } from "@/components/ui/button";
+import { buttonClass } from "../components/Button.tsx";
 
 /** What holds the drama up that the maker should know: it belongs to the other mode, or its Computers won't start. */
 /** A stop waiting on the maker (a red line, a limit, another refusal), as the design's StopBanner shows it on every page of the drama. */
@@ -85,7 +85,7 @@ function Notices({ drama }: { drama: DramaView }) {
             </div>
             {retry.error !== undefined && <div className="error small">{errorText(retry.error, t)}</div>}
           </div>
-          <button className={buttonVariants({ variant: "outline", size: "sm" })} disabled={retry.busy} onClick={() => void retry.run()}>
+          <button className={buttonClass({ size: "sm" })} disabled={retry.busy} onClick={() => void retry.run()}>
             {t("stalled.retry")}
           </button>
         </div>

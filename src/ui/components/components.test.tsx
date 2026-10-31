@@ -20,7 +20,7 @@ describe("Button", () => {
   it("runs its action on click and on Enter", async () => {
     const user = userEvent.setup();
     const run = vi.fn();
-    render(<Button variant="outline" onClick={run}>Upload script</Button>);
+    render(<Button onClick={run}>Upload script</Button>);
     await user.click(screen.getByRole("button", { name: "Upload script" }));
     screen.getByRole("button", { name: "Upload script" }).focus();
     await user.keyboard("{Enter}");
@@ -30,7 +30,7 @@ describe("Button", () => {
   it("does nothing while disabled, and says why", async () => {
     const user = userEvent.setup();
     const run = vi.fn();
-    render(<Button variant="outline" onClick={run} disabledReason="Give every item a verdict first">Send review</Button>);
+    render(<Button onClick={run} disabledReason="Give every item a verdict first">Send review</Button>);
     const button = screen.getByRole("button", { name: "Send review" });
     expect(button).toBeDisabled();
     expect(button).toHaveAccessibleDescription("Give every item a verdict first");
@@ -41,7 +41,7 @@ describe("Button", () => {
   it("is busy while its action runs: announced, and not pressed twice", async () => {
     const user = userEvent.setup();
     const run = vi.fn();
-    render(<Button variant="outline" onClick={run} busy>Send review</Button>);
+    render(<Button onClick={run} busy>Send review</Button>);
     const button = screen.getByRole("button", { name: "Send review" });
     expect(button).toHaveAttribute("aria-busy", "true");
     await user.click(button);
@@ -51,17 +51,18 @@ describe("Button", () => {
   it("comes in the variants and sizes the design names", () => {
     render(
       <>
-        <Button variant="default" size="lg">Primary</Button>
-        <Button variant="outline">Secondary</Button>
+        <Button variant="primary" size="lg">Primary</Button>
+        <Button>Secondary</Button>
         <Button variant="ghost" size="sm">Ghost</Button>
-        <Button variant="destructive" size="sm">Stop drama</Button>
+        <Button variant="danger" size="sm">Stop drama</Button>
       </>,
     );
-    const shape = (name: string) => [screen.getByRole("button", { name }).dataset.variant, screen.getByRole("button", { name }).dataset.size];
-    expect(shape("Primary")).toEqual(["default", "lg"]);
-    expect(shape("Secondary")).toEqual(["outline", "default"]);
-    expect(shape("Ghost")).toEqual(["ghost", "sm"]);
-    expect(shape("Stop drama")).toEqual(["destructive", "sm"]);
+    // design/'s classes (studio.css .btn): secondary and md are the plain .btn.
+    const shape = (name: string) => screen.getByRole("button", { name }).className;
+    expect(shape("Primary")).toBe("btn primary lg");
+    expect(shape("Secondary")).toBe("btn");
+    expect(shape("Ghost")).toBe("btn ghost sm");
+    expect(shape("Stop drama")).toBe("btn danger sm");
   });
 });
 
@@ -73,7 +74,7 @@ describe("IconButton", () => {
 
   it("says when it is on, as the rail's current place is", () => {
     render(<IconButton label="Sidebar" icon="list" on />);
-    expect(screen.getByRole("button", { name: "Sidebar" })).toHaveClass("bg-selected");
+    expect(screen.getByRole("button", { name: "Sidebar" })).toHaveClass("ibtn", "on");
   });
 });
 
@@ -114,7 +115,7 @@ describe("Dialog", () => {
     const [open, setOpen] = useState(false);
     return (
       <>
-        <Button variant="outline" onClick={() => setOpen(true)}>Stop the drama</Button>
+        <Button onClick={() => setOpen(true)}>Stop the drama</Button>
         <Dialog open={open} onOpenChange={setOpen} title="Stop the drama?" description="Every Computer it has running stops." confirm={{ label: "Stop it", danger: true, run: onConfirm }} />
       </>
     );
@@ -177,7 +178,7 @@ describe("Toast", () => {
     render(
       <>
         <Toaster />
-        <Button variant="outline" onClick={() => toast("Review sent.", { action: { label: "Undo", onClick: () => undefined } })}>
+        <Button onClick={() => toast("Review sent.", { action: { label: "Undo", onClick: () => undefined } })}>
           Send
         </Button>
       </>,

@@ -1,6 +1,5 @@
 // A few more actions behind one button: shadcn/ui's DropdownMenu.
 import type { ReactNode } from "react";
-import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 export interface MenuItem {
@@ -19,9 +18,9 @@ export function Menu({ label, items, trigger, wide }: { label: string; items: Me
             {trigger}
           </button>
         ) : (
-          <Button variant="ghost" size="icon" aria-label={label}>
+          <button type="button" className="ibtn" aria-label={label}>
             {trigger ?? "⋯"}
-          </Button>
+          </button>
         )}
       </DropdownMenuTrigger>
       <DropdownMenuContent align={wide ? "start" : "end"} className="min-w-50">

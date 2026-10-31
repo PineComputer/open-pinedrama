@@ -255,10 +255,10 @@ export function NodePanel({
           </span>
         ))}
         <span className="grow" />
-        <Button variant="outline" size="sm" icon="upload" disabledReason={t("canvas.phase2")} onClick={() => actions.upload(item.id)}>
+        <Button size="sm" icon="upload" disabledReason={t("canvas.phase2")} onClick={() => actions.upload(item.id)}>
           {t("canvas.upload")}
         </Button>
-        <Button variant="outline" size="sm" icon="sparkle" disabledReason={t("canvas.phase2")} onClick={() => actions.generate(item.id)}>
+        <Button size="sm" icon="sparkle" disabledReason={t("canvas.phase2")} onClick={() => actions.generate(item.id)}>
           {t("canvas.generate")}
         </Button>
       </div>

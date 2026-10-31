@@ -9,13 +9,12 @@ import { useEffect, useState } from "react";
 import type { Item } from "../../shared/pipeline.ts";
 import type { ChatView, DramaView, FileItem, ReviewSummary, ReviewView } from "../../shared/types.ts";
 import { api, useAction, useResource } from "../api.ts";
-import { Button, IconButton } from "../components/Button.tsx";
+import { Button, IconButton, buttonClass } from "../components/Button.tsx";
 import { useT } from "../i18n.ts";
 import { errorText, nowText } from "../labels.ts";
 import { Tooltip } from "../components/Tooltip.tsx";
 import { Icon } from "../icons.tsx";
 import { Link, navigate } from "../router.tsx";
-import { buttonVariants } from "@/components/ui/button";
 
 /** The key a review gives the item (src/engine/reviews.ts, itemsOf): a look by its character, a place or prop by its kind and id, a segment's stage by the segment's id, the cut as "cut". */
 function reviewKey(node: Item): string {
@@ -100,11 +99,11 @@ export function SteerBar({
       <div className="nbar" role="toolbar" aria-label={t("steer.label", { item: label })}>
         {reviewHref ? (
           <>
-            <Link to={reviewHref} className={buttonVariants({ variant: "default", size: "sm" })}>
+            <Link to={reviewHref} className={buttonClass({ variant: "primary", size: "sm" })}>
               {t("steer.review")}
             </Link>
             <Tooltip text={t("steer.backInReview")}>
-              <Link to={reviewHref} className={buttonVariants({ variant: "ghost", size: "icon" })} aria-label={t("steer.backInReview")}>
+              <Link to={reviewHref} className={"ibtn"} aria-label={t("steer.backInReview")}>
                 <Icon name="arrow-counter-clockwise" />
               </Link>
             </Tooltip>
@@ -118,7 +117,7 @@ export function SteerBar({
         <IconButton label={t("steer.lineage")} icon="tree-structure" onClick={() => navigate(`/d/${drama.id}/graph?item=${encodeURIComponent(node.id)}`)} />
         {picture && (
           <Tooltip text={t("steer.download")}>
-            <a className={buttonVariants({ variant: "ghost", size: "icon" })} href={`${picture.url}&download=1`} aria-label={t("steer.download")}>
+            <a className={"ibtn"} href={`${picture.url}&download=1`} aria-label={t("steer.download")}>
               <Icon name="download-simple" />
             </a>
           </Tooltip>
@@ -130,7 +129,7 @@ export function SteerBar({
           <div className="off" role="status">
             <span>{t(waits.sends === "review" ? "steer.waitsReview" : waits.sends === "answer" ? "steer.waitsAnswer" : "steer.waitsNone", { who })}</span>
             {waits.sends === "review" && waits.reviewId && (
-              <Link to={`/r/${waits.reviewId}`} className={buttonVariants({ variant: "outline", size: "sm" })}>
+              <Link to={`/r/${waits.reviewId}`} className={buttonClass({ size: "sm" })}>
                 {t("steer.openWaiting")}
               </Link>
             )}
@@ -138,7 +137,7 @@ export function SteerBar({
         ) : session && chat.data ? (
           <div className="say">
             <textarea aria-label={t(mode === "back" ? "steer.why" : "steer.yourNote")} placeholder={t(mode === "back" ? "steer.whyHint" : "steer.noteHint", { item })} value={words} onChange={(event) => setWords(event.target.value)} />
-            <Button variant="default" size="sm" busy={send.busy} disabled={!words.trim()} onClick={() => void send.run()}>
+            <Button variant="primary" size="sm" busy={send.busy} disabled={!words.trim()} onClick={() => void send.run()}>
               {t("steer.send")}
             </Button>
             {send.error !== undefined && <span className="error small">{errorText(send.error, t)}</span>}
@@ -147,12 +146,12 @@ export function SteerBar({
           <div className="off" role="status">
             <span>{t("steer.notRunning", { who, state: row ? nowText(row, t) : drama.status === "stopped" ? t("board.stopped") : t("talk.none") })}</span>
             {row && (row.state === "stopped" || row.state === "failed") && (
-              <Button variant="outline" size="sm" busy={resumeEpisode.busy} onClick={() => void resumeEpisode.run()}>
+              <Button size="sm" busy={resumeEpisode.busy} onClick={() => void resumeEpisode.run()}>
                 {t("steer.resume", { who })}
               </Button>
             )}
             {!row && drama.status === "stopped" && (
-              <Button variant="outline" size="sm" busy={resumeDrama.busy} onClick={() => void resumeDrama.run()}>
+              <Button size="sm" busy={resumeDrama.busy} onClick={() => void resumeDrama.run()}>
                 {t("steer.resume", { who: drama.title })}
               </Button>
             )}

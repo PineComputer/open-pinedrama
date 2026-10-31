@@ -4,7 +4,7 @@ import type { DramaView, FileItem, ItemDecision, Note, ReviewItem, ReviewView, V
 import { api, clock, useAction, useResource } from "../api.ts";
 import { type TKey, useT } from "../i18n.ts";
 import { errorText, fileKind, headingText, moneyText, subjectLabel, useNames } from "../labels.ts";
-import { Button } from "../components/Button.tsx";
+import { Button, buttonClass } from "../components/Button.tsx";
 import { Segmented } from "../components/Segmented.tsx";
 import { StatusChip } from "../components/StatusChip.tsx";
 import { StopCard } from "../components/StopCard.tsx";
@@ -16,7 +16,6 @@ import { Link, navigate, usePath } from "../router.tsx";
 import { standing as stageStanding } from "./Canvas.tsx";
 import { Still } from "../Still.tsx";
 import { DocumentView, Pinboard, isDocument, isImage, isVideo, useShotList, useSize, useText, variantLabel } from "../viewing.tsx";
-import { buttonVariants } from "@/components/ui/button";
 import { specBeside, specFacts } from "../../shared/spec.ts";
 import type { ProjectView } from "../../shared/project.ts";
 
@@ -228,13 +227,13 @@ function QuestionRoom({ review, done }: { review: ReviewView; done: () => void }
           {[send.error, finish.error].map((failed, n) => failed !== undefined && <p key={n} className="error">{errorText(failed, t)}</p>)}
           <div className="question-actions">
             {open && (
-              <button className={buttonVariants({ variant: "default" })} disabled={send.busy || !answer.trim()} onClick={() => void send.run()}>
+              <button className={buttonClass({ variant: "primary" })} disabled={send.busy || !answer.trim()} onClick={() => void send.run()}>
                 {t("review.sendAnswer")} <span className="key">⌘↵</span>
               </button>
             )}
             {review.finishable && review.episode && (
               <span className="finish">
-                <button className={buttonVariants({ variant: "outline" })} disabled={finish.busy} onClick={() => void finish.run()}>
+                <button className={buttonClass()} disabled={finish.busy} onClick={() => void finish.run()}>
                   {t("review.finish", { code: review.episode })}
                 </button>
                 <span className="quiet small">{t("review.finishHint")}</span>
@@ -802,10 +801,10 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
                 </div>
               )}
             </div>
-            <button className={buttonVariants({ variant: "ghost" })} onClick={() => setConfirming(false)}>
+            <button className={buttonClass({ variant: "ghost" })} onClick={() => setConfirming(false)}>
               {t("review.keep")}
             </button>
-            <button className={buttonVariants({ variant: "default" })} disabled={busy} onClick={send}>
+            <button className={buttonClass({ variant: "primary" })} disabled={busy} onClick={send}>
               {t("review.sendNow")} <span className="key">⌘↵</span>
             </button>
           </div>
@@ -822,7 +821,7 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
             </span>
             <span className="num">{t("review.decided", { n: count, m: items.length })}</span>
             {error !== undefined && <span className="error">{errorText(error, t)}</span>}
-            <Button variant="default" disabled={!open || !complete || busy} disabledReason={open && !complete ? t("review.needVerdicts") : undefined} onClick={() => setConfirming(true)}>
+            <Button variant="primary" disabled={!open || !complete || busy} disabledReason={open && !complete ? t("review.needVerdicts") : undefined} onClick={() => setConfirming(true)}>
               {t("review.send")} <span className="key">⌘↵</span>
             </Button>
           </div>
@@ -969,7 +968,7 @@ export function CutRoom({ review, done }: { review: ReviewView; done: () => void
                 <input type="range" disabled defaultValue={80} aria-label={t("cut.volume")} />
                 <p className="muted">{t("cut.editingLater")}</p>
               </div>
-              <Link to={`/d/${review.dramaId}/canvas?item=${code}`} className={buttonVariants({ variant: "outline", size: "sm" })}>
+              <Link to={`/d/${review.dramaId}/canvas?item=${code}`} className={buttonClass({ size: "sm" })}>
                 <Icon name="flow-arrow" className="ic" />
                 {t("cut.openOnCanvas")}
               </Link>

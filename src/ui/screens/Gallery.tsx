@@ -65,8 +65,8 @@ export default function Gallery() {
         <button type="button" className="btn sm primary">
           Next review <span className="n">4</span>
         </button>
-        <Button variant="outline" busy>Sending</Button>
-        <Button variant="outline" disabledReason="Give every item a verdict first">Send review</Button>
+        <Button busy>Sending</Button>
+        <Button disabledReason="Give every item a verdict first">Send review</Button>
       </Section>
 
       <Section title="IconButton">

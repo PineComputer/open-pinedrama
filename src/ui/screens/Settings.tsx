@@ -7,7 +7,7 @@ import { errorText } from "../labels.ts";
 import { useNotifySetting } from "../notify.ts";
 import { setTheme, type ThemeChoice, themeChoice } from "../theme/theme.ts";
 import { ConnectForm } from "./Welcome.tsx";
-import { buttonVariants } from "@/components/ui/button";
+import { buttonClass } from "../components/Button.tsx";
 import { cn } from "cn";
 
 /** Reveric's notice links to it, as its NOTICES ask (AGPLv3 section 7(b); docs/REUSED.md). */
@@ -48,7 +48,7 @@ export function Settings({ app, onChange }: { app: AppInfo; onChange: () => void
                 ) : (
                   <>
                     <div className="inline">
-                      <button className={buttonVariants({ variant: "outline" })} disabled={disconnect.busy} onClick={() => void disconnect.run()}>
+                      <button className={buttonClass()} disabled={disconnect.busy} onClick={() => void disconnect.run()}>
                         {disconnect.busy ? t("settings.disconnecting") : t("settings.disconnect")}
                       </button>
                       <span className="quiet small">{t("settings.disconnectHint")}</span>
@@ -63,7 +63,7 @@ export function Settings({ app, onChange }: { app: AppInfo; onChange: () => void
                 {connecting ? (
                   <ConnectForm onDone={onChange} />
                 ) : (
-                  <button className={cn(buttonVariants({ variant: "outline" }), "start")} onClick={() => setConnecting(true)}>
+                  <button className={cn(buttonClass(), "start")} onClick={() => setConnecting(true)}>
                     {t("settings.connect")}
                   </button>
                 )}
@@ -115,7 +115,7 @@ export function Settings({ app, onChange }: { app: AppInfo; onChange: () => void
           <span className="label">{t("settings.troubleshooting")}</span>
           <div className="block">
             <div className="inline">
-              <a className={buttonVariants({ variant: "outline" })} href="/api/diagnostics" download>
+              <a className={buttonClass()} href="/api/diagnostics" download>
                 {t("settings.diagnostics")}
               </a>
             </div>

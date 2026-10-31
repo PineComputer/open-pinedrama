@@ -11,7 +11,7 @@ import { Cast } from "./Cast.tsx";
 import { type ScreenplayLanguage, screenplayLanguageOf } from "../../shared/screenplay-language.ts";
 import { isDocument, useDocumentText } from "../viewing.tsx";
 import { PresetChoice, ScreenplayStructure } from "./NewDrama.tsx";
-import { buttonVariants } from "@/components/ui/button";
+import { buttonClass } from "../components/Button.tsx";
 import { Icon } from "../icons.tsx";
 import { Menu } from "../components/Menu.tsx";
 
@@ -181,7 +181,7 @@ function ChooseInputs({ drama }: { drama: DramaView }) {
         </div>
       )}
       <div className="actions">
-        <button className={buttonVariants({ variant: "default" })} disabled={choose.busy || screenplay === null || !structure?.language || (!drama.rehearsal && !preset) || (drama.inputs.needsLength && !length)} onClick={() => void choose.run()}>
+        <button className={buttonClass({ variant: "primary" })} disabled={choose.busy || screenplay === null || !structure?.language || (!drama.rehearsal && !preset) || (drama.inputs.needsLength && !length)} onClick={() => void choose.run()}>
           {t("setup.choose")}
         </button>
         {choose.error !== undefined && <span className="error small">{errorText(choose.error, t)}</span>}
@@ -257,11 +257,11 @@ export function SetupPanel({ drama }: { drama: DramaView }) {
           {setup.state === "stopped" && setup.reason === "choose-inputs" && <ChooseInputs drama={drama} />}
           {setup.state === "stopped" && setup.reason !== "choose-inputs" && (
             <div className="step-action">
-              <button className={buttonVariants({ variant: "outline" })} disabled={retry.busy} onClick={() => void retry.run()}>
+              <button className={buttonClass()} disabled={retry.busy} onClick={() => void retry.run()}>
                 {t("setup.retry")}
               </button>
               {setup.reason === "no-drama-skill" && (
-                <button className={buttonVariants({ variant: "outline" })} disabled={rehearse.busy} onClick={() => void rehearse.run()}>
+                <button className={buttonClass()} disabled={rehearse.busy} onClick={() => void rehearse.run()}>
                   {t("setup.rehearse")}
                 </button>
               )}
