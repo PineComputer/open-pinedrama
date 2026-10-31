@@ -60,6 +60,8 @@ describe("a stop that asks about a drama-cli refusal returns the refusal", () =>
   ])("in %s, as drama-cli printed it, afresh at each such stop and at no other", (_where, goal) => {
     expect(times(goal, REFUSALS)).toBe(1);
     expect(goal).toContain("written afresh at each such stop");
+    // A command's own report isn't a refusal: screenplay validate's goes in the question (Codex's rc3 run, C8; cli.md).
+    expect(goal).toContain("Only a line that starts `{\"error\":` is a refusal: a command's own report, such as `screenplay validate`'s `{\"ready\": false, \"problems\": ...}`, is not one, so put its problems in your question instead.");
     expect(goal).toContain("at any other stop, return none");
   });
 

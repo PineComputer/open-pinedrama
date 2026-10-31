@@ -41,6 +41,9 @@ describe("a stop's refusals", () => {
     ["a param that isn't text", `${line({ ...CAP, param: 3 })}\n`, /line 1: error\.param/],
     ["a blank line between refusals", `${line(CAP)}\n\n${line(RED_LINE)}\n`, /line 2/],
     ["an empty file", "", /at least one refusal/],
+    // Codex's rc3 run, C8 (qa/rc2-trace/rc3-t9-refusal.json): screenplay validate's report returned as a refusal. It is
+    // drama-cli's report, not its error; the goals now say so (goals.ts RETURN_REFUSALS), and one returned anyway is named.
+    ["screenplay validate's report", "{\"path\": \"/var/lib/sandbox/sessions/mellow-delta-d600df/files/drama/inputs/screenplay.txt\", \"original\": \"/var/lib/sandbox/sessions/mellow-delta-d600df/files/drama/inputs/screenplay.txt\", \"rewrite\": false, \"ready\": false, \"problems\": [\"/var/lib/sandbox/sessions/mellow-delta-d600df/files/drama/inputs/screenplay.txt:1: empty: the screenplay has no scene heading: drama-cli reads Fountain (https://fountain.io/syntax), whose scenes open with a heading such as 内景 or 外景, the place, a dash, 日 or 夜 and the scene number, e.g. .外景 码头路 - 夜 #1-2#; a scene heading opens with INT. or EXT., or is forced with a leading period, as every Chinese one is (Fountain, Scene Headings)\"], \"summary\": {\"episodes\": 0, \"scenes\": 0, \"dialogue\": 0, \"speakers\": {}}}\n", /line 1: error should be an object/],
   ])("refuse %s, naming the line and the field", (_what, text, problem) => {
     expect(() => parseRefusals(text)).toThrow(RefusalError);
     expect(() => parseRefusals(text)).toThrow(problem);

@@ -176,10 +176,13 @@ export const RETURN_SPECS =
  * v0.7.4). The status report has none of them, and a stop's question words them in the agent's
  * own terms; the studio reads which kind of stop it is (a red line, a cap) from the code. JSON
  * Lines (jsonlines.org) holds several, one per line as drama-cli prints each. Written afresh at
- * each such stop, so none from an earlier stop is returned again.
+ * each such stop, so none from an earlier stop is returned again. A command's own report is no
+ * refusal: `screenplay validate` prints `{"path", ..., "ready", "problems", "summary"}` and exits 1
+ * when the screenplay has problems (short_drama doc/drama-cli/cli.md, the command table,
+ * `screenplay validate`), and its problems are the question's to word (Codex's rc3 run, C8).
  */
 export const RETURN_REFUSALS =
-  "When you stop to ask me because a drama-cli command refused, also save each refusal you ask me about, exactly the JSON line the command printed (`{\"error\": ...}`), one per line, in handoff/refusals.jsonl, written afresh at each such stop, and return it with your other files; at any other stop, return none. It is for the studio; don't ask me about it.";
+  "When you stop to ask me because a drama-cli command refused, also save each refusal you ask me about, exactly the JSON line the command printed (`{\"error\": ...}`), one per line, in handoff/refusals.jsonl, written afresh at each such stop, and return it with your other files; at any other stop, return none. Only a line that starts `{\"error\":` is a refusal: a command's own report, such as `screenplay validate`'s `{\"ready\": false, \"problems\": ...}`, is not one, so put its problems in your question instead. It is for the studio; don't ask me about it.";
 
 /** How a new session restores the project last handed over, into its own work directory. */
 function restoreProject(drama: DramaBrief, screenplay: string | undefined): string {
