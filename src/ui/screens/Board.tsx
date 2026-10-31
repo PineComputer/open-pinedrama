@@ -43,7 +43,7 @@ function Card({ row, wide, dramaId }: { row: EpisodeRow; wide: boolean; dramaId:
   const trouble = row.state === "stopped" || row.state === "failed";
   const chip = chipOf(row);
   // The design's EpisodeCard (design/app.js, Episodes): the card opens the episode, or the review it waits on.
-  const to = row.state === "waiting" && row.reviewId ? linkOptions({ to: "/r/$reviewId", params: { reviewId: row.reviewId } }) : linkOptions({ to: "/d/$dramaId/e/$episodeCode/list", params: { dramaId, episodeCode: row.code } });
+  const to = row.state === "waiting" && row.reviewId ? linkOptions({ to: "/r/$reviewId", params: { reviewId: row.reviewId } }) : linkOptions({ to: "/d/$dramaId/e/$episodeCode/canvas", params: { dramaId, episodeCode: row.code } });
   return (
     <div style={{ display: "grid", gap: 6 }}>
       <Link {...to} className="epcard" aria-label={row.title ? `${row.code} · ${row.title}` : row.code}>

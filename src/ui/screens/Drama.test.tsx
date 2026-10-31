@@ -24,21 +24,21 @@ describe("a stop waiting on the maker", () => {
     answer("/api/reviews/r9", { id: "r9", refusals: [{ code: "RedLine", message: "Bible v2 is not usable: red line: EP007 scene 4.", param: null, action: "ask_person" }] });
     const drama = { id: "d1", mode: "replay", title: "Bride on Bail", status: "production", format: "9:16, 480p", spent: { total: 0, media: 0 }, crew: [], episodeRows: [], setup: { state: "done", reached: 5 } } as unknown as DramaView;
     const { unmount } = await renderAt(
-      <Drama drama={drama} page="list">
+      <Drama drama={drama} page="canvas">
         <p>EP004</p>
       </Drama>,
-      "/d/d1/e/EP004/list",
+      "/d/d1/e/EP004/canvas",
     );
     const notice = await screen.findByText("EP007 stopped on a red line in the screenplay.");
     expect(notice.closest(".notice-red")).toHaveTextContent("Other episodes carry on.");
-    expect(screen.getByRole("link", { name: "Open EP007" })).toHaveAttribute("href", "/d/d1/e/EP007/list");
+    expect(screen.getByRole("link", { name: "Open EP007" })).toHaveAttribute("href", "/d/d1/e/EP007/canvas");
     expect(screen.queryByRole("region", { name: "The screenplay crosses a red line" })).toBeNull();
     unmount();
     await renderAt(
-      <Drama drama={drama} page="list">
+      <Drama drama={drama} page="canvas">
         <p>EP007</p>
       </Drama>,
-      "/d/d1/e/EP007/list",
+      "/d/d1/e/EP007/canvas",
     );
     expect(await screen.findByRole("region", { name: "The screenplay crosses a red line" })).toBeInTheDocument();
     expect(screen.queryByText("EP007 stopped on a red line in the screenplay.")).toBeNull();

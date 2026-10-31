@@ -61,7 +61,7 @@ describe("the Story", () => {
     await user.click(within(lin).getByRole("link", { name: "Lin Xiaoyu" }));
     const detail = await screen.findByRole("complementary", { name: "Lin Xiaoyu: versions, state and review" });
     expect(detail).toHaveTextContent("Also called Xiaoyu");
-    expect(within(detail).getByRole("link", { name: "EP001" })).toHaveAttribute("href", "/d/d1/e/EP001/list");
+    expect(within(detail).getByRole("link", { name: "EP001" })).toHaveAttribute("href", "/d/d1/e/EP001/canvas");
   });
 
   it("opens a card's asset at its home: the detail links to its review and shows its earlier versions (J1)", async () => {
@@ -139,7 +139,7 @@ describe("the Story", () => {
   it("keeps the bible on Story, a page of its own with no asset tabs (IA §16)", async () => {
     engine();
     await renderAt(<Cast dramaId="d1" />, "/d/d1/story");
-    expect(await screen.findByRole("link", { name: /EP001\s*The stepmother arrives/ })).toHaveAttribute("href", "/d/d1/e/EP001/list");
+    expect(await screen.findByRole("link", { name: /EP001\s*The stepmother arrives/ })).toHaveAttribute("href", "/d/d1/e/EP001/canvas");
     expect(screen.queryByRole("tab")).not.toBeInTheDocument();
   });
 

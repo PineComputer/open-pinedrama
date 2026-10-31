@@ -13,7 +13,6 @@ import { Cast } from "./screens/Cast.tsx";
 import { Crew } from "./screens/Crew.tsx";
 import { CutTab } from "./screens/CutTab.tsx";
 import { Delivery } from "./screens/Delivery.tsx";
-import { Episode } from "./screens/Episode.tsx";
 import { ReviewsScreen } from "./screens/Reviews.tsx";
 import { NewDrama } from "./screens/NewDrama.tsx";
 import { OutOfDate } from "./screens/OutOfDate.tsx";
@@ -146,16 +145,7 @@ const episodeIndexRoute = createRoute({
   getParentRoute: () => episodeRoute,
   path: "/",
   beforeLoad: ({ params, search }) => {
-    throw redirect({ to: "/d/$dramaId/e/$episodeCode/list", params, search, replace: true });
-  },
-});
-const listRoute = createRoute({
-  getParentRoute: () => episodeRoute,
-  path: "list",
-  staticData: { page: "list" },
-  component: function ListPage() {
-    const { dramaId, episodeCode } = listRoute.useParams();
-    return <Episode key={`${dramaId}/${episodeCode}`} dramaId={dramaId} code={episodeCode} />;
+    throw redirect({ to: "/d/$dramaId/e/$episodeCode/canvas", params, search, replace: true });
   },
 });
 const canvasRoute = createRoute({ getParentRoute: () => episodeRoute, path: "canvas", staticData: { page: "canvas" }, component: () => <Canvas drama={useDrama()} /> });
@@ -189,7 +179,7 @@ const routeTree = rootRoute.addChildren([
     outOfDateRoute,
     crewRoute,
     canvasPickRoute,
-    episodeRoute.addChildren([episodeIndexRoute, listRoute, canvasRoute, cutRoute]),
+    episodeRoute.addChildren([episodeIndexRoute, canvasRoute, cutRoute]),
   ]),
 ]);
 

@@ -33,7 +33,7 @@ test("the Graph traces a version both ways on the sample drama", async ({ page }
 
   // Each item's one home (IA §16), where Lineage is a view of it.
   const home = (node: { kind: string; where: { subject?: string; episode?: string } }) =>
-    node.kind === "look" ? `/d/${id}/assets/characters/${node.where.subject}` : node.kind === "plate" ? `/d/${id}/assets/locations/${node.where.subject}` : `/d/${id}/e/${node.where.episode}/list`;
+    node.kind === "look" ? `/d/${id}/assets/characters/${node.where.subject}` : node.kind === "plate" ? `/d/${id}/assets/locations/${node.where.subject}` : `/d/${id}/e/${node.where.episode}/canvas`;
   await page.goto(`${home(look)}?view=lineage`);
   const graph = page.getByRole("group", { name: "Lineage" });
   // The version in focus, named as the bible names it.
@@ -79,13 +79,8 @@ test("the Graph traces a version both ways on the sample drama", async ({ page }
     await expect(picked.first()).toBeVisible();
     expect(await page.locator("article.assetcard").count()).toBeGreaterThan(await picked.count());
   }
-  // From the storyboard's home, its episode's Canvas keeps it picked, and List brings it back.
+  // The storyboard's home is its episode's Canvas (D66), with it picked.
   await page.goto(`${home(storyboard)}?item=${encodeURIComponent(storyboard.id)}`);
-  const views = page.getByRole("group", { name: `${storyboard.where.episode} view` });
-  await views.getByRole("button", { name: "Canvas" }).click();
-  await expect(page).toHaveURL(new RegExp(`/d/${id}/e/${storyboard.where.episode}/canvas\\?`));
-  expect(query(page.url()).get("item")).toBe(storyboard.id);
-  await views.getByRole("button", { name: "List" }).click();
-  await expect.poll(() => new URL(page.url()).pathname).toBe(home(storyboard));
+  await expect(page.getByRole("region", { name: "Canvas" })).toBeVisible();
   expect(query(page.url()).get("item")).toBe(storyboard.id);
 });

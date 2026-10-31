@@ -167,7 +167,7 @@ function AssetPanel({ card, names, dramaId, onShow }: { card: CastCard; names: N
   const index = Math.max(0, named);
   const pick = (i: number) => {
     const version = versions[i]?.files[0]?.version;
-    if (stage && version) void navigate({ ...homeLink(dramaId, stage, "list", version), replace: true });
+    if (stage && version) void navigate({ ...homeLink(dramaId, stage, "canvas", version), replace: true });
   };
   const shown = versions[Math.min(index, versions.length - 1)];
   const sheet = shown?.files.find((file) => !file.style) ?? shown?.files[0];
@@ -247,7 +247,7 @@ function AssetPanel({ card, names, dramaId, onShow }: { card: CastCard; names: N
             <h4>{t("cast.in")}</h4>
             <div className="aka">
               {card.episodes.map((code) => (
-                <Link key={code} to="/d/$dramaId/e/$episodeCode/list" params={{ dramaId, episodeCode: code }} className="tag">
+                <Link key={code} to="/d/$dramaId/e/$episodeCode/canvas" params={{ dramaId, episodeCode: code }} className="tag">
                   {code}
                 </Link>
               ))}
@@ -406,7 +406,7 @@ export function Cast({ dramaId, compact = false }: { dramaId: string; compact?: 
               {episodes.map(([code, title]) => {
                 const frame = drama.data?.episodeRows.find((row) => row.code === code)?.frame;
                 return (
-                  <Link key={code} to="/d/$dramaId/e/$episodeCode/list" params={{ dramaId: dramaId, episodeCode: code }} className="eprow">
+                  <Link key={code} to="/d/$dramaId/e/$episodeCode/canvas" params={{ dramaId: dramaId, episodeCode: code }} className="eprow">
                     {frame ? <img src={frame.url} alt="" /> : <span />}
                     <span className="mono">{code}</span>
                     <b>{title}</b>

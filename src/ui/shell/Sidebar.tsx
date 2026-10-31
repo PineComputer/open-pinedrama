@@ -24,7 +24,7 @@ export function stepOf(drama: DramaView, page: Page | undefined): Step | undefin
   if (page === "script" || page === "analyzing") return "script";
   if (page === "story" || page === "characters" || page === "locations" || page === "props" || (page === "episodes" && settingUp)) return "story";
   if (page === "delivery" || page === "cut") return "cut";
-  return page === "episodes" || page === "list" ? "episodes" : undefined;
+  return page === "episodes" || page === "canvas" ? "episodes" : undefined;
 }
 
 /**
@@ -202,7 +202,7 @@ export function DramaSidebar({ drama, page, episode, drawer }: { drama: DramaVie
               return [
                 <li key={row.id}>
                   {/* The name is what the button shows, then where it stands, said rather than shown (WCAG 2.5.3). */}
-                  <button type="button" aria-current={row.code === episode ? "true" : "false"} onClick={() => void navigate({ to: "/d/$dramaId/e/$episodeCode/list", params: { dramaId, episodeCode: row.code } })}>
+                  <button type="button" aria-current={row.code === episode ? "true" : "false"} onClick={() => void navigate({ to: "/d/$dramaId/e/$episodeCode/canvas", params: { dramaId, episodeCode: row.code } })}>
                     <span className="code">{row.code}</span> <span className="now">{nowText(row, t)}</span>
                     <span className="sr-only">, {t(`tree.${mark}` as TKey)}</span>
                     <span className={`dot ${DOT[mark]}`} aria-hidden="true" title={t(`tree.${mark}` as TKey)} />

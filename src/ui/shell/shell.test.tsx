@@ -54,22 +54,8 @@ describe("the drama's bar", () => {
     expect(screen.getByText("$41.20")).toBeInTheDocument();
   });
 
-  it("inside an episode, switches between its List and Canvas, keeping the item picked; the cut is not a view (IA §3)", async () => {
-    const user = userEvent.setup();
-    const { router } = await renderAt(<DramaBar drama={drama} />, "/d/d1/e/EP002/list?item=episodes%2FEP002%2Fsegments%2Fseg01");
-    const views = screen.getByRole("group", { name: "EP002 view" });
-    expect(within(views).getAllByRole("button").map((button) => [button.textContent, button.getAttribute("aria-pressed")])).toEqual([
-      ["List", "true"],
-      ["Canvas", "false"],
-    ]);
-    await user.click(within(views).getByRole("button", { name: "Canvas" }));
-    await waitFor(() => expect(href(router)).toBe("/d/d1/e/EP002/canvas?item=episodes%2FEP002%2Fsegments%2Fseg01"));
-    await user.click(within(views).getByRole("button", { name: "List" }));
-    await waitFor(() => expect(href(router)).toBe("/d/d1/e/EP002/list?item=episodes%2FEP002%2Fsegments%2Fseg01"));
-  });
-
-  it("has no views off an episode, nor on an item's Lineage: Story, Assets, the board and Delivery are one page each", async () => {
-    for (const path of ["/d/d1/story", "/d/d1/assets/characters/ivy", "/d/d1/episodes", "/d/d1/delivery", "/d/d1/e/EP002/list?item=episodes%2FEP002%2Fsegments%2Fseg01&view=lineage"]) {
+  it("has no view switch: an episode's one view is its Canvas (D66), and Story, Assets, the board and Delivery are one page each", async () => {
+    for (const path of ["/d/d1/e/EP002/canvas?item=episodes%2FEP002%2Fsegments%2Fseg01", "/d/d1/story", "/d/d1/assets/characters/ivy", "/d/d1/episodes", "/d/d1/delivery", "/d/d1/e/EP002/canvas?item=episodes%2FEP002%2Fsegments%2Fseg01&view=lineage"]) {
       const { unmount } = await renderAt(<DramaBar drama={drama} />, path);
       expect(screen.queryByRole("group", { name: /view$/ })).toBeNull();
       unmount();
@@ -86,7 +72,7 @@ describe("the top bar", () => {
 
   it("says where this belongs, each step up a link, with no Back of its own (design/'s TopBar, 2f2a07b)", async () => {
     const user = userEvent.setup();
-    const { router } = await renderAt(<TopBar crumbs={crumbs} waiting={[]} ready next />, "/d/d1/e/EP002/list");
+    const { router } = await renderAt(<TopBar crumbs={crumbs} waiting={[]} ready next />, "/d/d1/e/EP002/canvas");
     const where = screen.getByRole("navigation", { name: "Where this belongs" });
     expect(within(where).getAllByRole("link").map((link) => link.textContent)).toEqual(["Projects", "The Stepmother"]);
     expect(within(where).getByText("EP002")).toHaveAttribute("aria-current", "page");
@@ -99,7 +85,7 @@ describe("the top bar", () => {
     const user = userEvent.setup();
     const { router } = await renderAt(<TopBar crumbs={crumbs} waiting={[]} ready next />, "/r/r1");
     expect(screen.queryByRole("button", { name: /^Back to/ })).toBeNull();
-    await router.navigate({ to: "/d/$dramaId/e/$episodeCode/list", params: { dramaId: "d1", episodeCode: "EP002" }, search: { item: "episodes/EP002/segments/seg01" }, state: { backTo: "the review of EP002 seg01" } });
+    await router.navigate({ to: "/d/$dramaId/e/$episodeCode/canvas", params: { dramaId: "d1", episodeCode: "EP002" }, search: { item: "episodes/EP002/segments/seg01" }, state: { backTo: "the review of EP002 seg01" } });
     await user.click(await screen.findByRole("button", { name: "Back to the review of EP002 seg01" }));
     // Back is the browser's (the history's): renderAt's router follows navigations, not the history moving under it.
     await waitFor(() => expect(router.history.location.href).toBe("/r/r1"));
@@ -123,7 +109,7 @@ describe("the rail", () => {
     renderAt(<NavRail page="home" waiting={0} replay={false} drawerToggle={false} drawer={false} onToggleDrawer={() => {}} {...props} />, path);
 
   it("is one icon-only rail: each place named and tooltipped by its label, the count in Reviews' name (D51; WCAG 2.5.3)", async () => {
-    await rail({ page: "list", waiting: 3 }, "/d/d1/e/EP002/list");
+    await rail({ page: "canvas", waiting: 3 }, "/d/d1/e/EP002/canvas");
     const nav = screen.getByRole("navigation", { name: "Places" });
     expect(within(nav).getAllByRole("link").map((link) => [link.getAttribute("aria-label"), link.getAttribute("title"), link.getAttribute("aria-current")])).toEqual([
       ["Projects", "Projects", "page"],
@@ -173,7 +159,7 @@ describe("the rail", () => {
   it("opens and closes a narrow project page's tree with ☰", async () => {
     const user = userEvent.setup();
     let toggled = 0;
-    await rail({ page: "list", drawerToggle: true, drawer: true, onToggleDrawer: () => toggled++ }, "/d/d1/e/EP002/list");
+    await rail({ page: "canvas", drawerToggle: true, drawer: true, onToggleDrawer: () => toggled++ }, "/d/d1/e/EP002/canvas");
     const toggle = screen.getByRole("button", { name: "Hide the sidebar" });
     expect(toggle).toHaveAttribute("aria-expanded", "true");
     await user.click(toggle);
@@ -235,7 +221,7 @@ describe("the sidebar", () => {
       "EP004 In line, #1, in line",
     ]);
     await user.click(within(tree).getAllByRole("button")[1]);
-    await waitFor(() => expect(href(router)).toBe("/d/d1/e/EP002/list"));
+    await waitFor(() => expect(href(router)).toBe("/d/d1/e/EP002/canvas"));
   });
 
   it("folds the episodes that only wait in line at its end into one line", async () => {
@@ -249,7 +235,7 @@ describe("the sidebar", () => {
   it("shows the episode in view's cut as its child row, with where it stands, and opens it (IA §16)", async () => {
     const user = userEvent.setup();
     const withCut = { ...drama, episodeRows: drama.episodeRows.map((r) => (r.code === "EP003" ? { ...r, stages: { ...r.stages, cut: { state: "review" } } } : r)) } as DramaView;
-    const { router } = await renderAt(<DramaSidebar drama={withCut} page="list" episode="EP003" drawer={false} />, "/d/d1/e/EP003/list");
+    const { router } = await renderAt(<DramaSidebar drama={withCut} page="canvas" episode="EP003" drawer={false} />, "/d/d1/e/EP003/canvas");
     const cut = within(screen.getByRole("list", { name: "Episodes" })).getByRole("button", { name: /^› Cut/ });
     expect(cut).toHaveTextContent("Waiting for you");
     await user.click(cut);
@@ -257,7 +243,7 @@ describe("the sidebar", () => {
   });
 
   it("marks the episode in view", async () => {
-    const { router } = await renderAt(<DramaSidebar drama={drama} page="list" episode="EP003" drawer={false} />, "/d/d1/e/EP003/list");
+    const { router } = await renderAt(<DramaSidebar drama={drama} page="canvas" episode="EP003" drawer={false} />, "/d/d1/e/EP003/canvas");
     expect(within(screen.getByRole("list", { name: "Episodes" })).getAllByRole("button")[2]).toHaveAttribute("aria-current", "true");
   });
 

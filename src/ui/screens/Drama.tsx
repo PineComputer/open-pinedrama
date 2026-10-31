@@ -51,7 +51,7 @@ function Notices({ drama }: { drama: DramaView }) {
               <b>{t(stop.stop?.kind === "red-line" ? "stop.elsewhereRedLine" : "stop.elsewhere", { episode: stop.episode })}</b> {t("stop.othersCarryOn")}
             </span>
             <span className="grow" />
-            <Link className="btn sm" to="/d/$dramaId/e/$episodeCode/list" params={{ dramaId: drama.id, episodeCode: stop.episode }}>
+            <Link className="btn sm" to="/d/$dramaId/e/$episodeCode/canvas" params={{ dramaId: drama.id, episodeCode: stop.episode }}>
               {t("stop.openEpisode", { episode: stop.episode })}
             </Link>
           </div>

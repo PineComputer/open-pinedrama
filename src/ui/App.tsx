@@ -231,7 +231,7 @@ export function App() {
   };
   const picked = stage?.where.segment ? [stage.where.segment, [t(`graph.kind.${stage.kind}` as TKey), version].filter(Boolean).join(" ")].join(" · ") : undefined;
   const ofDrama = (...rest: Crumb[]): Crumb[] => [...(inDrama ? [inDrama] : []), ...rest];
-  const episodeCrumb = (code: string, dramaOf: string): Crumb => ({ label: code, to: linkOptions({ to: "/d/$dramaId/e/$episodeCode/list", params: { dramaId: dramaOf, episodeCode: code } }) });
+  const episodeCrumb = (code: string, dramaOf: string): Crumb => ({ label: code, to: linkOptions({ to: "/d/$dramaId/e/$episodeCode/canvas", params: { dramaId: dramaOf, episodeCode: code } }) });
   // The episode in view, wherever it shows (its List, Canvas or Cut, a review of it): the sidebar marks it and the agent follows it (B3).
   const followed = place?.episode ?? reviewed?.episode;
   let crumbs: Crumb[];

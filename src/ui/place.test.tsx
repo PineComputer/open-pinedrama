@@ -22,28 +22,31 @@ describe("a drama page's place", () => {
   it.each<[string, { episode?: string; item: string }, string]>([
     ["a character", { item: "assets/characters/ivy" }, "/d/d1/assets/characters/ivy"],
     ["a location's time", { item: "assets/scenes/cell/times/Night" }, "/d/d1/assets/locations/cell?item=assets%2Fscenes%2Fcell%2Ftimes%2FNight"],
-    ["an episode's storyboard", { episode: "EP006", item: "episodes/EP006/multi_panel_storyboard/seg01/line-art" }, "/d/d1/e/EP006/list?item=episodes%2FEP006%2Fmulti_panel_storyboard%2Fseg01%2Fline-art"],
+    ["an episode's storyboard", { episode: "EP006", item: "episodes/EP006/multi_panel_storyboard/seg01/line-art" }, "/d/d1/e/EP006/canvas?item=episodes%2FEP006%2Fmulti_panel_storyboard%2Fseg01%2Fline-art"],
     ["an episode's cut", { episode: "EP006", item: "episodes/EP006/edit" }, "/d/d1/e/EP006/cut?item=episodes%2FEP006%2Fedit"],
   ])("keeps %s picked from Lineage to Canvas and to its home", (_, picked, home) => {
     expect(hrefOf({ dramaId: "d1", surface: "lineage", ...picked })).toBe(`${home}${home.includes("?") ? "&" : "?"}view=lineage`);
     expect(hrefOf({ dramaId: "d1", surface: "canvas", ...picked })).toBe(
       `/d/d1/${picked.episode ? `e/${picked.episode}/` : ""}canvas?item=${encodeURIComponent(picked.item)}`,
     );
-    expect(hrefOf({ dramaId: "d1", surface: "list", ...picked })).toBe(home);
+    expect(router.buildLocation(homeLink("d1", picked.item)).href).toBe(home);
   });
 
   it.each<[string, Place, string]>([
-    ["List", { dramaId: "d1", surface: "list", episode: "EP006", item: "episodes/EP006/multi_panel_storyboard/seg03/line-art", version: "v1" }, "/d/d1/e/EP006/list?item=episodes%2FEP006%2Fmulti_panel_storyboard%2Fseg03%2Fline-art&version=v1"],
+    ["a storyboard on its Canvas", { dramaId: "d1", surface: "canvas", episode: "EP006", item: "episodes/EP006/multi_panel_storyboard/seg03/line-art", version: "v1" }, "/d/d1/e/EP006/canvas?item=episodes%2FEP006%2Fmulti_panel_storyboard%2Fseg03%2Fline-art&version=v1"],
     ["Canvas", { dramaId: "d1", surface: "canvas", episode: "EP006", item: "episodes/EP006/segments/seg03", version: "t02" }, "/d/d1/e/EP006/canvas?item=episodes%2FEP006%2Fsegments%2Fseg03&version=t02"],
     ["Lineage", { dramaId: "d1", surface: "lineage", item: "episodes/EP006/edit", version: "v1" }, "/d/d1/e/EP006/cut?item=episodes%2FEP006%2Fedit&version=v1&view=lineage"],
-    ["a character's home", { dramaId: "d1", surface: "list", item: "assets/characters/ivy", version: "v2" }, "/d/d1/assets/characters/ivy?item=assets%2Fcharacters%2Fivy&version=v2"],
   ])("keeps the version a link names on %s (Codex round 3, fix 3)", (_, place, href) => {
     expect(hrefOf(place)).toBe(href);
   });
 
-  it("opens an episode on its List, and Lineage with nothing picked on the drama's Out of date", () => {
-    expect(hrefOf({ dramaId: "d1", surface: "list", episode: "EP002" })).toBe("/d/d1/e/EP002/list");
-    expect(hrefOf({ dramaId: "d1", surface: "list" })).toBe("/d/d1/episodes");
+  it("keeps the version a link names on a character's home", () => {
+    expect(router.buildLocation(homeLink("d1", "assets/characters/ivy", "canvas", "v2")).href).toBe("/d/d1/assets/characters/ivy?item=assets%2Fcharacters%2Fivy&version=v2");
+  });
+
+  it("opens an episode on its Canvas, its only view (D66), and Lineage with nothing picked on the drama's Out of date", () => {
+    expect(hrefOf({ dramaId: "d1", surface: "canvas", episode: "EP002" })).toBe("/d/d1/e/EP002/canvas");
+    expect(hrefOf({ dramaId: "d1", surface: "canvas" })).toBe("/d/d1/canvas");
     expect(hrefOf({ dramaId: "d1", surface: "lineage" })).toBe("/d/d1/out-of-date");
   });
 
@@ -55,16 +58,16 @@ describe("a drama page's place", () => {
 describe("the routes", () => {
   it("open a drama on its Episodes, and an episode on its List", async () => {
     expect((await load("/d/d1")).location.pathname).toBe("/d/d1/episodes");
-    expect((await load("/d/d1/e/EP002?item=episodes%2FEP002%2Fbreakdown")).location.href).toBe("/d/d1/e/EP002/list?item=episodes%2FEP002%2Fbreakdown");
+    expect((await load("/d/d1/e/EP002?item=episodes%2FEP002%2Fbreakdown")).location.href).toBe("/d/d1/e/EP002/canvas?item=episodes%2FEP002%2Fbreakdown");
   });
 
   it.each([
-    ["an episode code that isn't drama-cli's", "/d/d1/e/EP2/list"],
+    ["an episode code that isn't drama-cli's", "/d/d1/e/EP2/canvas"],
     ["an item that is no stage", "/d/d1/episodes?item=ivy"],
-    ["another episode's item", "/d/d1/e/EP002/list?item=episodes%2FEP003%2Fbreakdown"],
+    ["another episode's item", "/d/d1/e/EP002/canvas?item=episodes%2FEP003%2Fbreakdown"],
     ["a view the studio hasn't", "/d/d1/episodes?view=grid"],
-    ["a version that isn't drama-cli's", "/d/d1/e/EP006/list?item=episodes%2FEP006%2Fsegments%2Fseg03&version=latest"],
-    ["a version of no item", "/d/d1/e/EP006/list?version=t02"],
+    ["a version that isn't drama-cli's", "/d/d1/e/EP006/canvas?item=episodes%2FEP006%2Fsegments%2Fseg03&version=latest"],
+    ["a version of no item", "/d/d1/e/EP006/canvas?version=t02"],
   ])("say Not found for %s", async (_, path) => {
     expect((await load(path)).matches.some((match) => match.status === "notFound")).toBe(true);
   });
@@ -94,8 +97,8 @@ describe("a drama's page", () => {
   }
 
   it.each([
-    ["an episode", "/d/d1/e/EP009/list", "EP009"],
-    ["an item", "/d/d1/e/EP001/list?item=episodes%2FEP001%2Fbreakdown", "episodes/EP001/breakdown"],
+    ["an episode", "/d/d1/e/EP009/canvas", "EP009"],
+    ["an item", "/d/d1/e/EP001/canvas?item=episodes%2FEP001%2Fbreakdown", "episodes/EP001/breakdown"],
     ["an asset", "/d/d1/assets/characters/ivy", "ivy"],
   ])("says when the drama has no such %s, with the way back to it", async (_, path, what) => {
     engine();

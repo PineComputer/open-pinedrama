@@ -11,14 +11,14 @@ import { collapseAllNested, defaultStyles, JsonView } from "react-json-view-lite
 import "react-json-view-lite/dist/index.css";
 import type { Item } from "../../shared/pipeline.ts";
 import { specBeside, specFacts } from "../../shared/spec.ts";
-import type { CastCard, EpisodePage, FileItem, Receipt } from "../../shared/types.ts";
+import type { CastCard, EpisodePage, FileItem, Judged, Receipt } from "../../shared/types.ts";
+import { Link } from "@tanstack/react-router";
 import { useResource } from "../api.ts";
 import { Button, IconButton } from "../components/Button.tsx";
 import { type Status, StatusChip } from "../components/StatusChip.tsx";
 import { type TKey, useT } from "../i18n.ts";
 import { Icon } from "../icons.tsx";
 import { useText } from "../viewing.tsx";
-import { JudgedLine } from "./Episode.tsx";
 import type { NodeActions } from "./Canvas.tsx";
 
 /** The JSON tree in our tokens: react-json-view-lite's own layout classes, with ours for the colours (canvas.css). */
@@ -94,6 +94,48 @@ function Prompt({ text, pictures }: { text: string; pictures: (FileItem | undefi
       ))}
     </>
   );
+}
+
+/** What the maker decided on what a review showed, with the way back to that review. */
+export function JudgedLine({ review }: { review?: Judged }) {
+  const { t } = useT();
+  if (!review) return <div className="judged quiet">{t("judged.none")}</div>;
+  const link = (
+    <Link to="/r/$reviewId" params={{ reviewId: review.reviewId }} className="link inherit">
+      {t("judged.open")}
+    </Link>
+  );
+  if (review.state === "open" || review.state === "saving") {
+    return (
+      <div className="judged waiting">
+        {t("judged.waiting")} · {link}
+      </div>
+    );
+  }
+  if (review.verdict === "approve") {
+    return (
+      <div className="judged approved">
+        <Icon name="check" /> {t("judged.approve")} · {link}
+      </div>
+    );
+  }
+  if (review.verdict === "revise") {
+    return (
+      <div className="judged revised">
+        <div>
+          <Icon name="note-pencil" /> {t("judged.revise")} · {link}
+        </div>
+        {review.notes.length > 0 && (
+          <ol className="judged-notes">
+            {review.notes.map((note, index) => (
+              <li key={index}>{note.text}</li>
+            ))}
+          </ol>
+        )}
+      </div>
+    );
+  }
+  return <div className="judged quiet">{t(review.state === "sending" ? "judged.sending" : "judged.ended")} · {link}</div>;
 }
 
 /** The kind of cast card that holds a shared reference's versions (engine/browse.ts castCards). */

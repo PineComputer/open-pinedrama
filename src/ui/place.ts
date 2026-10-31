@@ -24,7 +24,6 @@ export type Page =
   | "outOfDate"
   | "crew"
   | "canvasPick"
-  | "list"
   | "canvas"
   | "cut";
 
@@ -35,7 +34,7 @@ declare module "@tanstack/react-router" {
 }
 
 /** An episode-scoped List or Canvas, or Lineage: a view of the item's relations on its home (IA §16, rule 3). */
-export type Surface = "list" | "canvas" | "lineage";
+export type Surface = "canvas" | "lineage";
 
 export interface Place {
   dramaId: string;
@@ -78,12 +77,12 @@ export function usePage(): Page | undefined {
 export function usePlace(): Place | null {
   const { page, params, search } = useRoute();
   if (!params.dramaId) return null;
-  const surface: Surface = search.view === "lineage" || page === "outOfDate" ? "lineage" : page === "canvas" || page === "canvasPick" ? "canvas" : "list";
+  const surface: Surface = search.view === "lineage" || page === "outOfDate" ? "lineage" : "canvas";
   return { dramaId: params.dramaId, surface, episode: params.episodeCode, item: search.item ?? named(page, params), version: search.version };
 }
 
 /** The item's one home (IA §16), with it picked there; Lineage is that home's view. */
-export function homeLink(dramaId: string, item: string, surface: "list" | "lineage" = "list", version?: string) {
+export function homeLink(dramaId: string, item: string, surface: Surface = "canvas", version?: string) {
   const stage = stageOf(item);
   if (!stage) throw new Error(`${item} is no stage folder of drama-cli's`);
   const view = surface === "lineage" ? "lineage" : undefined;
@@ -106,7 +105,7 @@ export function homeLink(dramaId: string, item: string, surface: "list" | "linea
     case "cut":
       return linkOptions({ to: "/d/$dramaId/e/$episodeCode/cut", params: { dramaId, episodeCode: where.episode! }, search: { item, version, view } });
     default:
-      return linkOptions({ to: "/d/$dramaId/e/$episodeCode/list", params: { dramaId, episodeCode: where.episode! }, search: { item, version, view } });
+      return linkOptions({ to: "/d/$dramaId/e/$episodeCode/canvas", params: { dramaId, episodeCode: where.episode! }, search: { item, version, view } });
   }
 }
 
@@ -117,6 +116,6 @@ export function placeLink({ dramaId, surface, episode, item, version }: Place) {
       ? linkOptions({ to: "/d/$dramaId/e/$episodeCode/canvas", params: { dramaId, episodeCode: episode }, search: { item, version } })
       : linkOptions({ to: "/d/$dramaId/canvas", params: { dramaId }, search: { item, version } });
   if (item) return homeLink(dramaId, item, surface, version);
-  if (episode) return linkOptions({ to: "/d/$dramaId/e/$episodeCode/list", params: { dramaId, episodeCode: episode }, search: { view: surface === "lineage" ? "lineage" : undefined } });
+  if (episode) return linkOptions({ to: "/d/$dramaId/e/$episodeCode/canvas", params: { dramaId, episodeCode: episode }, search: { view: surface === "lineage" ? "lineage" : undefined } });
   return surface === "lineage" ? linkOptions({ to: "/d/$dramaId/out-of-date", params: { dramaId } }) : linkOptions({ to: "/d/$dramaId/episodes", params: { dramaId } });
 }

@@ -35,47 +35,17 @@ export function BackTo() {
   );
 }
 
-/**
- * An episode's two views (IA §3; design/app.js, EpisodeViews): List and Canvas show the same home, keeping the pick. The
- * episode's cut is another object with its own home, linked from the episode's header and the drama tree (master's
- * decision; WAI-ARIA APG tabs switch panels of one thing; principles "One home per object", "One action, one meaning").
- */
-function EpisodeViews({ dramaId, episode }: { dramaId: string; episode: string }) {
-  const { t } = useT();
-  const navigate = useNavigate();
-  const page = usePage();
-  const place = usePlace();
-  const params = { dramaId, episodeCode: episode };
-  const item = place?.item;
-  const views = [
-    { page: "list", label: "view.list", icon: "list-bullets", to: linkOptions({ to: "/d/$dramaId/e/$episodeCode/list", params, search: { item } }) },
-    { page: "canvas", label: "surface.canvas", icon: "flow-arrow", to: linkOptions({ to: "/d/$dramaId/e/$episodeCode/canvas", params, search: { item } }) },
-  ] as const satisfies readonly { page: Page; label: TKey; icon: IconName; to: LinkOptions }[];
-  return (
-    <div className="seg" role="group" aria-label={t("view.label", { code: episode })}>
-      {views.map((view) => (
-        <button key={view.page} type="button" aria-pressed={view.page === page} onClick={() => void navigate(view.to)}>
-          <Icon name={view.icon} className="ic" />
-          {t(view.label)}
-        </button>
-      ))}
-    </div>
-  );
-}
 
 /** The drama's bar (design/app.js, bar2): Back to where a link came from, an episode's views inside one, and the chips: preset, format, spend. */
 export function DramaBar({ drama }: { drama: DramaView }) {
   const place = usePlace();
   const page = usePage();
-  // Lineage is a view of an item, not an episode's view (IA §3): as design/'s Lineage, it has Back to and no views.
-  const inEpisode = place?.episode !== undefined && place.surface !== "lineage" && (page === "list" || page === "canvas");
   const { t, lang } = useT();
   // The budget is drama-cli's (every session's project carries the drama's one config), as the design's chip reads "$X of $1,000".
   const project = useResource<ProjectView>(`/api/dramas/${drama.id}/project`, [`project:${drama.id}`]);
   const cap = project.data?.sessions[0]?.budget.budgetUsd ?? null;
   return (
     <div className="bar2">
-      {inEpisode && <EpisodeViews dramaId={drama.id} episode={place.episode!} />}
       <span className="grow" />
       {drama.preset && (
         <span className="chip plain" title={t("chip.preset")}>

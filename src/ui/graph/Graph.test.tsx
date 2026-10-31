@@ -57,8 +57,8 @@ describe("the Graph", () => {
     const { unmount } = await renderAt(<Graph dramaId="d1" />, "/d/d1/assets/characters/lin?view=lineage");
     expect(await screen.findByRole("link", { name: "Open in Assets" })).toHaveAttribute("href", "/d/d1/assets/characters/lin");
     unmount();
-    await renderAt(<Graph dramaId="d1" />, "/d/d1/e/EP001/list?item=episodes%2FEP001%2Fmulti_panel_storyboard%2Fseg01%2Fline-art&view=lineage");
-    expect(await screen.findByRole("link", { name: "Open in EP001" })).toHaveAttribute("href", "/d/d1/e/EP001/list?item=episodes%2FEP001%2Fmulti_panel_storyboard%2Fseg01%2Fline-art");
+    await renderAt(<Graph dramaId="d1" />, "/d/d1/e/EP001/canvas?item=episodes%2FEP001%2Fmulti_panel_storyboard%2Fseg01%2Fline-art&view=lineage");
+    expect(await screen.findByRole("link", { name: "Open in EP001" })).toHaveAttribute("href", "/d/d1/e/EP001/canvas?item=episodes%2FEP001%2Fmulti_panel_storyboard%2Fseg01%2Fline-art");
   });
 
   it("names a cut's home EPxxx › Cut, apart from the episode's List", async () => {
@@ -100,7 +100,7 @@ describe("the Graph", () => {
     vi.spyOn(HTMLElement.prototype, "clientWidth", "get").mockReturnValue(400);
     const scrolled: number[] = [];
     vi.spyOn(HTMLElement.prototype, "scrollLeft", "set").mockImplementation((value: number) => void scrolled.push(value));
-    await renderAt(<Graph dramaId="d1" />, "/d/d1/e/EP001/list?item=episodes%2FEP001%2Fsegments%2Fseg01&view=lineage");
+    await renderAt(<Graph dramaId="d1" />, "/d/d1/e/EP001/canvas?item=episodes%2FEP001%2Fsegments%2Fseg01&view=lineage");
     expect(await card(/^EP001 seg01 take t01/)).toBeInTheDocument();
     // The take stands in a far column: 400 px of plane can't show it from the left edge, so the plane scrolls to it.
     await waitFor(() => expect(Math.max(0, ...scrolled)).toBeGreaterThan(400));
@@ -108,7 +108,7 @@ describe("the Graph", () => {
 
   it("says what is stale in drama-cli's own words", async () => {
     engine("time-plate-replaced");
-    await renderAt(<Graph dramaId="d1" />, "/d/d1/e/EP001/list?item=episodes%2FEP001%2Fsegments%2Fseg01&view=lineage");
+    await renderAt(<Graph dramaId="d1" />, "/d/d1/e/EP001/canvas?item=episodes%2FEP001%2Fsegments%2Fseg01&view=lineage");
     expect(await card(/^EP001 seg01 take t01/)).toHaveTextContent("Out of date");
     expect(screen.getByRole("region", { name: "State" })).toHaveTextContent("Changed selection: assets/scenes/office/times/Day/accepted.json");
   });
