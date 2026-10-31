@@ -203,10 +203,13 @@ export function app(): Hono {
         screenplayLanguage: zh ? "zh" : "en",
         screenplay: 0,
       }, mode);
-      // A sample started as long ago as its data says (db.ts, nowFor), so the recent work spreads the samples out.
-      const backdate = story.en.ago * 60_000;
-      const started = new Date(Date.now() - backdate).toISOString();
-      run("update dramas set backdate_ms = ?, created_at = ?, updated_at = ? where id = ?", backdate, started, started, id);
+      // In replay, a sample started as long ago as its data says (db.ts, nowFor), so the recent work spreads the samples
+      // out; a rehearsal on Pine is a real drama, stamped when it really starts.
+      if (mode === "replay") {
+        const backdate = story.en.ago * 60_000;
+        const started = new Date(Date.now() - backdate).toISOString();
+        run("update dramas set backdate_ms = ?, created_at = ?, updated_at = ? where id = ?", backdate, started, started, id);
+      }
       return c.json({ id });
     } catch (error) {
       return fail(c, error);

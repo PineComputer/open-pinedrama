@@ -96,6 +96,23 @@ describe("the answers the UI reads", () => {
     expect(cards[0]).toMatchObject({ id, title: "The Stepmother", mode: "replay", preset: "en-us-live-sfw", rehearsal: false });
   });
 
+  it("backdates a sample only in replay: a rehearsal on Pine is stamped when it starts", async () => {
+    const { setFleet } = await import("./computers.ts");
+    const limits = { maxComputers: null, maxIdleSeconds: null, maxRuntimeSeconds: null, idleAdjustable: false };
+    const { get } = await import("./db.ts");
+    const stamp = () => get<{ backdate_ms: number; created_at: string }>("select backdate_ms, created_at from dramas order by rowid desc limit 1")!;
+    expect((await call("/api/connection/replay", { method: "POST" })).status).toBe(200);
+    expect((await call("/api/dramas/sample", { method: "POST", body: JSON.stringify({ language: "en" }), headers: { "content-type": "application/json" } })).status).toBe(200);
+    expect(stamp().backdate_ms).toBeGreaterThan(0);
+    // A stand-in for a Pine project: the sample route reads only the fleet's mode and project.
+    setFleet({ mode: "pine", project: "p1" } as unknown as import("./fleet.ts").Fleet, limits);
+    const before = Date.now();
+    expect((await call("/api/dramas/sample", { method: "POST", body: JSON.stringify({ language: "en" }), headers: { "content-type": "application/json" } })).status).toBe(200);
+    expect(stamp().backdate_ms).toBe(0);
+    expect(Date.parse(stamp().created_at)).toBeGreaterThanOrEqual(before - 1000);
+    setFleet(undefined, limits);
+  });
+
   it("says on a card what the agent last said and when, leaving out a fact not known yet", async () => {
     expect((await call("/api/connection/replay", { method: "POST" })).status).toBe(200);
     const made = await call("/api/dramas/sample", { method: "POST", body: JSON.stringify({ language: "en" }), headers: { "content-type": "application/json" } });
