@@ -287,6 +287,21 @@ describe("a picked item's hand actions and panel (P6.8)", () => {
     expect(within(panel).getByRole("tabpanel")).toHaveTextContent("The agent hasn't returned this version's spec.json and request.json.");
   });
 
+  it("says why a version is stale in drama-cli's own words, and adds no Why where nothing is wrong", async () => {
+    withBreakdown();
+    const view = lineageView();
+    view.lineage.nodes.find((node) => node.id === "assets/characters/lin")!.problems = ["Changed file: bible/v1/bible.json"];
+    answer("/api/dramas/d1/lineage", view);
+    render(<Canvas drama={drama("working")} />);
+    const { user, panel } = await panelOf(/^林/);
+    await user.click(within(panel).getByRole("tab", { name: "Details" }));
+    expect(within(panel).getByRole("tabpanel")).toHaveTextContent(/Why\s*Changed file: bible\/v1\/bible\.json/);
+    await user.keyboard("{Escape}");
+    const take = await panelOf(/^Take · t01/);
+    await take.user.click(within(take.panel).getByRole("tab", { name: "Details" }));
+    expect(within(take.panel).getByRole("tabpanel")).not.toHaveTextContent("Why");
+  });
+
   it("says what drama-cli's lineage made it from and what uses it, in the panel's Details", async () => {
     withBreakdown();
     render(<Canvas drama={drama("working")} />);

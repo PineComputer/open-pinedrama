@@ -121,6 +121,8 @@ export interface PanelFacts {
   version: string;
   usedBy: string;
   reads: string;
+  /** Why the version isn't fresh or isn't accepted, in drama-cli's own words (the lineage node's problems). */
+  problems: string[];
 }
 
 export function NodePanel({
@@ -208,6 +210,18 @@ export function NodePanel({
             <dd>{facts.usedBy || "—"}</dd>
             <dt>{t("canvas.reads")}</dt>
             <dd>{facts.reads || "—"}</dd>
+            {facts.problems.length > 0 && (
+              <>
+                <dt>{t("canvas.why")}</dt>
+                <dd>
+                  {facts.problems.map((said) => (
+                    <span key={said} className="why">
+                      {said}
+                    </span>
+                  ))}
+                </dd>
+              </>
+            )}
           </dl>
         </Tabs.Content>
       </Tabs.Root>

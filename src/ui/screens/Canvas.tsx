@@ -364,6 +364,7 @@ function Plane({ drama }: { drama: DramaView }) {
         version: node.data.stage.version ?? "—",
         usedBy: mapped.edges.filter((edge) => edge.source === node.id).map((edge) => labelOf(edge.target)).join(", "),
         reads: mapped.edges.filter((edge) => edge.target === node.id).map((edge) => labelOf(edge.source)).join(", "),
+        problems: node.data.stage.problems,
       }}
       dock={dock}
       onDock={dockTo}
