@@ -276,15 +276,7 @@ export function App() {
     // The design's frame (design/app.js, App and each screen): the rail, the sidebar, then the main column, its
     // top bar over a body that holds the work beside the agent's panel.
     <div className="app">
-      <NavRail
-        page={page}
-        waiting={waiting.length}
-        wide={!inProject && (narrow ? drawer : true)}
-        replay={app.data.mode === "replay"}
-        narrow={narrow}
-        drawer={drawer}
-        onToggleDrawer={() => setDrawer(!drawer)}
-      />
+      <NavRail page={page} waiting={waiting.length} replay={app.data.mode === "replay"} drawerToggle={inProject && narrow} drawer={drawer} onToggleDrawer={() => setDrawer(!drawer)} />
       {/* On a wide window the column is always shown; ☰ opens it as a drawer on a narrow one (merecdesperez44323-lab; Apple HIG sidebars). */}
       {(narrow ? drawer : true) && sidebar}
       <div className="main">

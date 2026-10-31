@@ -119,61 +119,61 @@ describe("the top bar", () => {
 });
 
 describe("the rail", () => {
-  it("is studio-wide: Dramas, Reviews with every drama's count, Settings, and no drama's places (IA §2)", async () => {
-    await renderAt(<NavRail page="list" waiting={3} wide={false} replay={false} narrow={false} drawer={false} onToggleDrawer={() => {}} />, "/d/d1/e/EP002/list");
-    const rail = screen.getByRole("navigation", { name: "Places" });
-    // Each place says its name under its icon (merecdesperez44323-lab's Y1); Reviews' name holds its count too (WCAG 2.5.3).
-    expect(within(rail).getAllByRole("link").map((link) => [link.textContent, link.getAttribute("aria-current")])).toEqual([
-      ["Home", null],
-      ["Projects", "page"],
-      ["Reviews 3 waiting", "false"],
-      ["Settings", "false"],
+  const rail = (props: Partial<Parameters<typeof NavRail>[0]> = {}, path = "/") =>
+    renderAt(<NavRail page="home" waiting={0} replay={false} drawerToggle={false} drawer={false} onToggleDrawer={() => {}} {...props} />, path);
+
+  it("is one icon-only rail: each place named and tooltipped by its label, the count in Reviews' name (D51; WCAG 2.5.3)", async () => {
+    await rail({ page: "list", waiting: 3 }, "/d/d1/e/EP002/list");
+    const nav = screen.getByRole("navigation", { name: "Places" });
+    expect(within(nav).getAllByRole("link").map((link) => [link.getAttribute("aria-label"), link.getAttribute("title"), link.getAttribute("aria-current")])).toEqual([
+      ["Projects", "Projects", "page"],
+      ["Reviews, 3 waiting", "Reviews", "false"],
+      ["Pine Computer community", "Pine Computer community", null],
+      ["Pine Computer on X", "Pine Computer on X", null],
+      ["Settings", "Settings", "false"],
     ]);
-    expect(within(rail).getByRole("link", { name: "Reviews 3 waiting" })).toHaveAttribute("href", "/reviews");
+    expect(within(nav).getByRole("link", { name: "Reviews, 3 waiting" })).toHaveAttribute("href", "/reviews");
+    // No ☰ on a wide window or off a project: there is no column to open.
+    expect(within(nav).queryByRole("button", { name: /sidebar/ })).toBeNull();
   });
 
-  it("marks Reviews on the queue and on a review, and says no count when nothing waits", async () => {
+  it("marks Reviews on the queue and on a review", async () => {
     for (const [page, path] of [["reviews", "/reviews"], ["review", "/r/r1"]] as const) {
-      const { unmount } = await renderAt(<NavRail page={page} waiting={0} wide={false} replay={false} narrow={false} drawer={false} onToggleDrawer={() => {}} />, path);
-      const rail = screen.getByRole("navigation", { name: "Places" });
-      expect(within(rail).getByRole("link", { name: "Reviews" })).toHaveAttribute("aria-current", "page");
-      expect(within(rail).getByRole("link", { name: "Projects" })).toHaveAttribute("aria-current", "false");
+      const { unmount } = await rail({ page }, path);
+      const nav = screen.getByRole("navigation", { name: "Places" });
+      expect(within(nav).getByRole("link", { name: "Reviews" })).toHaveAttribute("aria-current", "page");
+      expect(within(nav).getByRole("link", { name: "Projects" })).toHaveAttribute("aria-current", "false");
       unmount();
     }
   });
 
-  it("is the one left column off a project, icon and label side by side, and an icon rail inside one (merecdesperez44323-lab; liblib, VS Code)", async () => {
-    const { unmount } = await renderAt(<NavRail page="home" waiting={2} wide replay narrow={false} drawer={false} onToggleDrawer={() => {}} />, "/");
-    const rail = screen.getByRole("navigation", { name: "Places" });
-    expect(rail).toHaveClass("rail", "wide");
-    expect(within(rail).getByText("Pine Drama")).toBeInTheDocument();
-    expect(within(rail).getByText("Replay · sample work, no spend")).toBeInTheDocument();
-    expect(within(rail).getByRole("link", { name: "Projects" })).not.toHaveAttribute("title");
-    unmount();
-    await renderAt(<NavRail page="list" waiting={2} wide={false} replay narrow={false} drawer={false} onToggleDrawer={() => {}} />, "/d/d1/e/EP001/list");
-    const icons = screen.getByRole("navigation", { name: "Places" });
-    expect(icons).not.toHaveClass("wide");
-    // Inside a project each place's label is its tooltip, and still its name.
-    expect(within(icons).getByRole("link", { name: "Projects" })).toHaveAttribute("title", "Projects");
-    expect(within(icons).queryByText("Pine Drama")).toBeNull();
-  });
-
-  it("shows Home first, disabled until the gallery of sample projects exists, and not in the tab order (merecdesperez44323-lab)", async () => {
-    await renderAt(<NavRail page="home" waiting={0} wide replay={false} narrow={false} drawer={false} onToggleDrawer={() => {}} />, "/");
-    const rail = screen.getByRole("navigation", { name: "Places" });
-    expect(within(rail).queryByRole("button", { name: /sidebar/ })).toBeNull();
-    const home = within(rail).getByRole("link", { name: "Home" });
-    expect(home).toHaveAttribute("aria-disabled", "true");
+  it("shows Home first, a disabled button until the gallery of sample projects exists (D52)", async () => {
+    await rail();
+    const nav = screen.getByRole("navigation", { name: "Places" });
+    const home = within(nav).getByRole("button", { name: "Home, coming later" });
+    expect(home).toBeDisabled();
     expect(home).toHaveAttribute("title", "Coming later: a gallery of sample projects");
-    expect(home).not.toHaveAttribute("href");
-    expect(home.tabIndex).toBe(-1);
-    expect(within(rail).getAllByRole("link").map((link) => link.querySelector(".raillabel")?.textContent)).toEqual(["Home", "Projects", "Reviews", "Settings"]);
   });
 
-  it("on a narrow window, opens and closes the drawer with ☰; on a wide one has no ☰ (merecdesperez44323-lab; Apple HIG sidebars)", async () => {
+  it("links Pine Computer's community on Discord and on X, opened outside the studio (D53)", async () => {
+    await rail();
+    for (const [name, href] of [["Pine Computer community", "https://discord.gg/JxAHeXhvF"], ["Pine Computer on X", "https://x.com/pine_computer"]]) {
+      const link = screen.getByRole("link", { name });
+      expect(link).toHaveAttribute("href", href);
+      expect(link).toHaveAttribute("target", "_blank");
+      expect(link).toHaveAttribute("rel", "noopener noreferrer");
+    }
+  });
+
+  it("says it's a replay, with what that means as its tooltip", async () => {
+    await rail({ replay: true });
+    expect(screen.getByText("Replay")).toHaveAttribute("title", "Replay · sample work, no spend");
+  });
+
+  it("opens and closes a narrow project page's tree with ☰", async () => {
     const user = userEvent.setup();
     let toggled = 0;
-    await renderAt(<NavRail page="home" waiting={0} wide replay={false} narrow drawer onToggleDrawer={() => toggled++} />);
+    await rail({ page: "list", drawerToggle: true, drawer: true, onToggleDrawer: () => toggled++ }, "/d/d1/e/EP002/list");
     const toggle = screen.getByRole("button", { name: "Hide the sidebar" });
     expect(toggle).toHaveAttribute("aria-expanded", "true");
     await user.click(toggle);

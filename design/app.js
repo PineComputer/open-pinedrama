@@ -95,36 +95,28 @@
   /* merecdesperez44323-lab ("project应该和icon 平铺", "左侧就不需要单独有一个column了"): off a project the studio's nav is the one left
      column, rows of icon and label side by side (liblib); inside a project it is the icon rail (VS Code's activity bar)
      beside the project tree, its labels as tooltips. ☰ opens and closes that column, the same everywhere. */
+  // Pine Computer's community, opened in the system browser (the desktop app's window-open handler; a new tab on the web).
+  const COMMUNITY = [["https://discord.gg/JxAHeXhvF", "discord-logo", "Pine Computer community"], ["https://x.com/pine_computer", "x-logo", "Pine Computer on X"]];
   const studioPage = () => ["home", "upload", "reviews"].includes(S.screen);
+  /* One icon-only rail on every screen (merecdesperez44323-lab chose it: "可以的"; VS Code's activity bar). Each place's
+     label is its tooltip and its accessible name, the count in the name too (Apple HIG: icon-only buttons need both;
+     WCAG 2.5.3); the current place is the icon's pill. ☰ only below 1100 px, inside a project, where the tree is a drawer. */
   function Rail() {
     const dramas = !["reviews"].includes(S.screen);
-    // merecdesperez44323-lab ("it's meaningless for this icon on the left top corner"): on wide windows the column is always shown, and ☰
-    // is only the narrow window's way to open it as a drawer (Apple HIG sidebars; Material's navigation drawer).
-    const wide = studioPage() && (narrow() ? !!S.drawer : true);
-    const place = (label, icon, current, onClick, extra) => html`<button class=${"ibtn labelled" + (extra ? " railcount" : "")} title=${wide ? undefined : label} aria-label=${extra ? extra.name : undefined} aria-current=${current ? "page" : "false"} onClick=${onClick}>${I(icon)}<span class="raillabel">${label}</span>${extra && extra.badge}</button>`;
-    return html`<nav class=${"rail" + (wide ? " wide" : "")} aria-label="Main">
-      <div class="railhead">${narrow() && html`<button class="ibtn" aria-label="Show or hide the sidebar" aria-expanded=${String(!!S.drawer)} onClick=${() => set({ drawer: !S.drawer })}>${I("list")}</button>`}
-        ${wide && html`<span class="brand">${Mark()}<b>Pine Drama</b></span>`}</div>
-      <hr/>
-      ${/* merecdesperez44323-lab: "you need to have a home page top of the drama project icon … currently just put Home and make if gray and not
-         clicable": a place to come (a gallery of sample projects), shown and disabled until it exists. */ ""}
-      <span class="ibtn labelled disabled" role="link" aria-disabled="true" title="Coming later: a gallery of sample projects">${I("house")}<span class="raillabel">Home</span></span>
+    const place = (label, icon, current, onClick, badge) => html`<button class=${"ibtn" + (badge ? " railcount" : "")} title=${label} aria-label=${badge ? label + ", " + badge + " waiting" : label} aria-current=${current ? "page" : "false"} onClick=${onClick}>${I(icon)}${badge && html`<span class="badge">${badge}</span>`}</button>`;
+    return html`<nav class="rail" aria-label="Main">
+      ${narrow() && !studioPage() && html`<button class="ibtn" aria-label="Show or hide the sidebar" aria-expanded=${String(!!S.drawer)} onClick=${() => set({ drawer: !S.drawer })}>${I("list")}</button><hr/>`}
+      ${/* Home: a place to come (a gallery of sample projects), shown and disabled until it exists (D52). */ ""}
+      <button class="ibtn" disabled title="Home · coming later: a gallery of sample projects" aria-label="Home, coming later">${I("house")}</button>
       ${place("Projects", "film-strip", dramas, () => go("home"))}
-      ${place("Reviews", "list-checks", S.screen === "reviews", () => set({ waitFor: null, screen: "reviews" }), { name: "Reviews, 5 waiting", badge: html`<span class="badge">5</span>` })}
+      ${place("Reviews", "list-checks", S.screen === "reviews", () => set({ waitFor: null, screen: "reviews" }), 5)}
       <span class="grow"></span>
-      ${/* merecdesperez44323-lab: the Pine Computer account, its community and the credits at the rail's foot, above Settings (liblib's and
-         astorie's account footers; Apple HIG sidebar footer). Sample values: Pine's portal API has no account or balance
-         endpoint yet (master), so the studio shows none of these until it does; the replay line stands in for credits. */ ""}
-      ${wide ? html`<div class="acct">
-          <div class="acctrow"><span class="av">Y</span><span class="grow"><b>Your Pine project</b><small>Pine Computer</small></span></div>
-          ${S.state === "spendlimit"
-            ? html`<div class="credits problem" role="status">${I("warning-circle")}<span class="grow"><b>Credits used up</b><small>Nothing new starts until you top up; work in flight finishes.</small></span><button class="btn sm primary" onClick=${() => toast("Opens Pine's billing page.")}>Top up</button></div>`
-            : html`<div class="credits">${I("coins")}<span class="grow">Credits <b class="mono">$184.60</b></span><button class="linkbtn" onClick=${() => toast("Opens Pine's billing page.")}>Top up</button></div>`}
-          <button class="acctlink" onClick=${() => toast("Opens the Pine Computer community on Discord.")}>${I("chat-centered")}<span class="grow">Pine Computer community</span>${I("caret-right")}</button>
-        </div>`
-        : html`<span class="ibtn labelled acctdot" title="Your Pine project · credits $184.60">${S.state === "spendlimit" ? I("warning-circle") : html`<span class="av">Y</span>`}<span class="raillabel">Your Pine project</span></span>`}
+      ${/* The foot (D53): Pine Computer's community, and the account with its credits, design-only until Pine's portal API has
+         them (sample values). */ ""}
+      ${COMMUNITY.map(([href, icon, label]) => html`<a class="ibtn" href=${href} target="_blank" rel="noopener noreferrer" title=${label} aria-label=${label}>${I(icon)}</a>`)}
+      <button class="ibtn acctdot" title=${S.state === "spendlimit" ? "Your Pine project · credits used up: top up" : "Your Pine project · credits $184.60"} aria-label="Your Pine project" onClick=${() => toast("Opens the Pine project: credits, Top up.")}>${S.state === "spendlimit" ? I("warning-circle") : html`<span class="av">Y</span>`}</button>
       ${place("Settings", "gear-six", false, () => toast("Settings: notifications, appearance, data."))}
-      ${!wide && html`<div style="margin-top:6px">${Mark()}</div>`}
+      <div style="margin-top:6px">${Mark()}</div>
     </nav>`;
   }
   function Side() {
