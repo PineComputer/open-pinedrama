@@ -77,6 +77,15 @@ describe("the drama's Out of date", () => {
     expect(group(/^Assets$/)).not.toBe(written);
   });
 
+  it("says freshness is unknown when drama-cli's lineage couldn't be read, never that nothing is out of date (Codex rc3, C12)", async () => {
+    engine("time-plate-replaced");
+    answer("/api/dramas/d1/lineage", { lineage: null, problems: [{ sessionId: "s1", turnId: "t1", error: "drama-cli's lineage: nodes.0.properties.problems should be present." }] });
+    await renderAt(<OutOfDate dramaId="d1" />, "/d/d1/out-of-date");
+    expect(await screen.findByText("Freshness unknown: lineage unreadable.")).toBeInTheDocument();
+    expect(screen.getByText(/couldn't be read: drama-cli's lineage: nodes\.0\.properties\.problems should be present\./)).toBeInTheDocument();
+    expect(screen.queryByText("Nothing is out of date.")).toBeNull();
+  });
+
   it("says when nothing is out of date, with no action", async () => {
     engine("time-plate-replaced");
     answer("/api/dramas/d1/lineage", { lineage: { ...view("time-plate-replaced").lineage!, nodes: view("time-plate-replaced").lineage!.nodes.map((node) => ({ ...node, fresh: true, problems: [] })) }, problems: [] });

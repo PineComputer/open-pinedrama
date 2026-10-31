@@ -9,7 +9,7 @@ import { useResource } from "../api.ts";
 import { stageName } from "../graph/Graph.tsx";
 import { Icon, type IconName } from "../icons.tsx";
 import { type TKey, useT } from "../i18n.ts";
-import { errorText, useNames } from "../labels.ts";
+import { errorText, lineageUnreadable, useNames } from "../labels.ts";
 import { homeLink, useRoute } from "../place.ts";
 
 const ICON: Record<LineageKind, IconName> = {
@@ -80,6 +80,16 @@ export function OutOfDate({ dramaId }: { dramaId: string }) {
   const marked = useRoute().search.item;
   if (view.error !== undefined && !view.data) return <p className="error">{errorText(view.error, t)}</p>;
   if (!view.data) return <p className="quiet">{t("loading")}</p>;
+  // Unreadable is not clean: freshness is unknown, said with drama-cli's problems (Codex rc3, C12).
+  const unreadable = lineageUnreadable(view.data, t);
+  if (unreadable)
+    return (
+      <div className="bar2">
+        <span className="delivsum">
+          <b>{t("ood.unknown")}</b> {unreadable}
+        </span>
+      </div>
+    );
   const lineage = view.data.lineage;
   const ids = lineage ? outOfDate(lineage) : new Set<string>();
   const nodes = (lineage?.nodes ?? []).filter((node) => ids.has(node.id));

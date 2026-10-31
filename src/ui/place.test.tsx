@@ -149,6 +149,17 @@ describe("a drama's page", () => {
     expect(crumbs().textContent).toMatch(/luca · v1$/);
   });
 
+  it("opens an asset page from what it has when drama-cli's lineage couldn't be read, and says why, never that the asset is missing (Codex rc3, C12)", async () => {
+    engine();
+    answer("/api/dramas/d1/lineage", { lineage: null, problems: [{ sessionId: "s1", turnId: "t1", error: "drama-cli's lineage: nodes.0.properties.problems should be present." }] });
+    answer("/api/dramas/d1/project", { state: { bible: null, characters: { luca: { current: "v2", accepted: "v2" } }, locations: {}, props: {}, episodes: {} }, sessions: [], problems: [], names: null });
+    answer("/api/dramas/d1/cast", []);
+    render(<RouterProvider router={studioRouter(createMemoryHistory({ initialEntries: ["/d/d1/assets/characters/luca"] }))} />);
+    expect(await screen.findByText("drama-cli's lineage couldn't be read: drama-cli's lineage: nodes.0.properties.problems should be present.")).toBeInTheDocument();
+    await waitFor(() => expect(screen.getByRole("navigation", { name: "Where this belongs" }).textContent).toMatch(/luca/));
+    expect(screen.queryByText(/This project has no/)).not.toBeInTheDocument();
+  });
+
   it("has the project's lineage before a pick names an item, so the page isn't swapped for Loading (and the board remounted)", async () => {
     engine();
     answer("/api/dramas/d1/lineage", { lineage: { nodes: [{ id: "episodes/EP001/breakdown" }], links: [], groups: [] }, problems: [] });

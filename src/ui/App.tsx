@@ -6,7 +6,7 @@ import type { ProjectView } from "../shared/project.ts";
 import type { AppInfo, DramaView, ReviewSummary, ReviewView } from "../shared/types.ts";
 import { ApiError, useResource } from "./api.ts";
 import { type TKey, useT } from "./i18n.ts";
-import { errorText, subjectLabel, useNames } from "./labels.ts";
+import { errorText, lineageUnreadable, subjectLabel, useNames } from "./labels.ts";
 import { useReviewNotifications } from "./notify.ts";
 import { type Page, usePlace, useRoute } from "./place.ts";
 import { EmptyState } from "./components/EmptyState.tsx";
@@ -151,7 +151,10 @@ export function DramaPage() {
       </div>
     );
   if (place.episode && !drama.data.episodeRows.some((row) => row.code === place.episode)) return <Missing dramaId={place.dramaId} what={place.episode} />;
-  if (asked !== undefined || assetId !== undefined) {
+  // A lineage drama-cli returned but the studio couldn't read says so, and the page opens from what it has (an asset
+  // page from its pictures), unchecked: never "This project has no …" for what may well be there (Codex rc3, C12).
+  const unreadable = lineage.data && lineageUnreadable(lineage.data, t);
+  if ((asked !== undefined || assetId !== undefined) && !unreadable) {
     if (lineage.error !== undefined) return <p className="error">{errorText(lineage.error, t)}</p>;
     if (!lineage.data) return <p className="quiet">{t("loading")}</p>;
     const nodes = lineage.data.lineage?.nodes ?? [];
@@ -160,6 +163,11 @@ export function DramaPage() {
   }
   return (
     <Drama drama={drama.data} page={page}>
+      {unreadable && (asked !== undefined || assetId !== undefined) && (
+        <p className="notice" role="status">
+          {unreadable}
+        </p>
+      )}
       {place.surface === "lineage" && page !== "outOfDate" ? <Graph dramaId={drama.data.id} /> : <Outlet />}
     </Drama>
   );

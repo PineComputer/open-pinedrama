@@ -1,6 +1,7 @@
 // Words for states the engine reports as data, in the maker's language.
 import type { DramaView, EpisodeRow, FileKind, ReviewKind, SessionView, Spend } from "../shared/types.ts";
 import { nameOf, type Names } from "../shared/names.ts";
+import type { LineageView } from "../shared/lineage.ts";
 import type { ProjectView } from "../shared/project.ts";
 import { ApiError, useResource } from "./api.ts";
 import type { useT } from "./i18n.ts";
@@ -116,6 +117,14 @@ export function plainText(markdown: string): string {
     .replace(/^\s*(?:[-+]|\d+[.)])\s+/gm, "")
     .replace(/\s+/g, " ")
     .trim();
+}
+
+/**
+ * Why drama-cli's lineage couldn't be read, in its problems' words, or undefined when it could, or when there is none yet
+ * (no export returned: lineage null, no problems). An unreadable lineage is never taken for an empty one (Codex rc3, C12).
+ */
+export function lineageUnreadable(view: Pick<LineageView, "lineage" | "problems">, t: T): string | undefined {
+  return view.lineage === null && view.problems.length ? t("lineage.unreadable", { problems: view.problems.map((problem) => problem.error).join("; ") }) : undefined;
 }
 
 /** What work has cost, in US dollars as Pine prices it; "at least" where some turns couldn't be priced. */
