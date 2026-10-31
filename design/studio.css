@@ -99,11 +99,11 @@ a.tag:hover { background: var(--hover); color: var(--text-primary); }
 .navi:disabled:hover { background: transparent; }
 .tree { list-style: none; margin: 2px 0 4px 18px; padding: 0 0 0 8px; border-left: 1px solid var(--border); }
 .tree button { width: 100%; display: grid; grid-template-columns: 50px 1fr 8px; align-items: center; gap: 6px; height: 28px; padding: 0 8px; border: 0; border-radius: var(--radius-small); background: none; color: var(--text-muted); font-size: 12px; cursor: pointer; text-align: left; }
-.tree button:hover { background: var(--hover); color: var(--text-secondary); }
-/* Exactly one tree row is current, by the route (aria-current). Hover only tints; in some palettes it is lighter than
-   --selected, so current also carries what hover never has: an accent bar on its edge and bold text (VS Code's active
-   item; principle "Always clear what you act on"). */
-.tree button[aria-current="true"] { background: var(--selected); color: var(--text-primary); font-weight: 600; box-shadow: inset 2px 0 0 var(--accent); }
+/* Exactly one tree row is current, by the route (aria-current): a filled --selected row in bold, no edge bar (VS Code's
+   explorer; the bar drew a curved bracket on the rounded row). Hover is a fainter tint than --selected, since --hover is
+   lighter than --selected in some palettes and would read as a second selection (principle "Always clear what you act on"). */
+.tree button:hover { background: color-mix(in srgb, var(--hover) 50%, transparent); color: var(--text-secondary); }
+.tree button[aria-current="true"] { background: var(--selected); color: var(--text-primary); font-weight: 600; }
 .tree .code { font-family: var(--font-mono); font-size: 11px; }
 .tree .now { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--text-subtle); }
