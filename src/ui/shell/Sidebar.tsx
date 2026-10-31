@@ -10,7 +10,7 @@ import { useResource } from "../api.ts";
 import { Menu } from "../components/Menu.tsx";
 import { Icon } from "../icons.tsx";
 import { type TKey, useT } from "../i18n.ts";
-import { cutStanding, isSettingUp, moneyText, nowText, SETUP_STEPS } from "../labels.ts";
+import { cutStanding, isPaused, isSettingUp, moneyText, nowText, SETUP_STEPS } from "../labels.ts";
 import { Mark } from "../Mark.tsx";
 import type { Page } from "../place.ts";
 import { DramaThumb } from "../components/DramaThumb.tsx";
@@ -172,7 +172,7 @@ export function DramaSidebar({ drama, page, episode, drawer }: { drama: DramaVie
                 <li key={row.id}>
                   {/* The name is what the button shows, then where it stands, said rather than shown (WCAG 2.5.3). */}
                   <button type="button" aria-current={row.code === episode ? "true" : "false"} onClick={() => void navigate({ to: "/d/$dramaId/e/$episodeCode/canvas", params: { dramaId, episodeCode: row.code } })}>
-                    <span className="code">{row.code}</span> <span className="now">{nowText(row, t)}</span>
+                    <span className="code">{row.code}</span> <span className="now">{nowText(row, t, isPaused(drama))}</span>
                     <span className="sr-only">, {t(`tree.${mark}` as TKey)}</span>
                     <span className={`dot ${DOT[mark]}`} aria-hidden="true" title={t(`tree.${mark}` as TKey)} />
                   </button>

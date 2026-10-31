@@ -22,7 +22,16 @@ function waitsText(kind: ReviewKind, items: number, t: T): string {
   return t(items === 1 ? "slate.waitsOne" : "slate.waitsMany", { what: countText(kind, items, t) });
 }
 
-export function nowText(row: EpisodeRow, t: T): string {
+/**
+ * Whether the maker paused the project (D74): its pause outranks an episode's state, so an episode stopped with it reads
+ * Paused, and the project's Resume (the top bar's) is its one way on (master, "one action, one meaning").
+ */
+export function isPaused(drama: Pick<DramaView, "status" | "setup">): boolean {
+  return drama.status === "stopped" && drama.setup.reason === "by-maker";
+}
+
+/** paused: the project is paused (isPaused); an episode stopped with it says so, an engine stop with its note keeps its words. */
+export function nowText(row: EpisodeRow, t: T, paused: boolean): string {
   switch (row.state) {
     case "queued":
       return t("board.inLine", { n: row.position ?? 1 });
@@ -33,7 +42,7 @@ export function nowText(row: EpisodeRow, t: T): string {
     case "done":
       return t("board.done");
     case "stopped":
-      return row.note ? plainText(row.note) : t("board.stopped");
+      return row.note ? plainText(row.note) : t(paused ? "pause.paused" : "board.stopped");
     default:
       return row.note ? plainText(row.note) : t("board.failed");
   }

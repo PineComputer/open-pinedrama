@@ -41,6 +41,7 @@ const drama = {
       ],
     },
   ],
+  setup: { state: "done", reached: 5 },
   episodeRows: [row(1, "working"), row(2, "waiting")],
 } as unknown as DramaView;
 
@@ -186,6 +187,18 @@ describe("the agent panel", () => {
     await user.selectOptions(screen.getByRole("combobox", { name: "Session" }), "EP003 · Computer stopped");
     expect(screen.getByRole("status")).toHaveTextContent("EP003's Computer stopped. Resume continues it in a new session with its files.");
     expect(within(screen.getByRole("status")).getByRole("button", { name: "Resume" })).toBeInTheDocument();
+  });
+
+  it("while the maker has paused the project, says an episode stopped with it is paused, resumed from the top bar only (D74)", async () => {
+    const user = userEvent.setup();
+    engine();
+    const paused = { ...drama, status: "stopped", setup: { state: "done", reached: 5, reason: "by-maker" }, crew: [], episodeRows: [row(1, "stopped"), row(2, "done"), row(3, "stopped")] } as unknown as DramaView;
+    await renderAt(<AgentPanel drama={paused} episode="EP001" onCollapse={() => {}} />);
+    expect(screen.getByRole("status")).toHaveTextContent("Paused with the project. Resume it from the top bar.");
+    expect(screen.queryByRole("button", { name: "Resume" })).toBeNull();
+    await user.selectOptions(screen.getByRole("combobox", { name: "Session" }), "EP003 · Paused");
+    expect(screen.getByRole("status")).toHaveTextContent("Paused with the project. Resume it from the top bar.");
+    expect(screen.queryByRole("button", { name: "Resume" })).toBeNull();
   });
 
   it("says a done episode can't be reopened in this version, with no line and no Resume", async () => {

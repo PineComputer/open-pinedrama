@@ -11,7 +11,7 @@ import { Submission, useSubmission } from "../components/Submission.tsx";
 import { Dialog } from "../components/Dialog.tsx";
 import { Icon } from "../icons.tsx";
 import { useT } from "../i18n.ts";
-import { errorText, openSession, itemName } from "../labels.ts";
+import { errorText, isPaused, openSession, itemName } from "../labels.ts";
 import { Markdown } from "../Markdown.tsx";
 import { Link } from "@tanstack/react-router";
 import { Watch } from "../screens/Crew.tsx";
@@ -140,7 +140,9 @@ export function AgentPanel({ drama, episode, onCollapse }: { drama: DramaView; e
   // A message reaches only the scope's open session (POST /api/dramas/:id/messages; this version opens none for it). With
   // none open, the status line says why in the engine's words and no line is offered that can only be refused: an
   // episode whose Computer stopped (Resume, a run control under D70, continues it in a new session with its files), a
-  // done episode, the setup once it handed the project over, or a session that is starting or hasn't started.
+  // done episode, the setup once it handed the project over, or a session that is starting or hasn't started. While the
+  // maker has paused the project, an episode stopped with it is paused, and only the top bar resumes it (D74).
+  const paused = isPaused(drama);
   const scopeRow = row(scope);
   const closed: string | undefined = live
     ? undefined
@@ -148,15 +150,17 @@ export function AgentPanel({ drama, episode, onCollapse }: { drama: DramaView; e
       ? drama.status === "setup"
         ? t("agent.setupStarting")
         : t("agent.setupHandedOver")
-      : scopeRow?.state === "stopped" || scopeRow?.state === "failed"
-        ? t("agent.computerStopped", { who: scope })
-        : scopeRow?.state === "done"
-          ? t("agent.episodeDone", { who: scope })
-          : scopeRow?.state === "queued"
-            ? t("agent.notStarted", { who: scope })
-            : t("agent.sessionStarting", { who: scope });
+      : paused && scopeRow?.state === "stopped"
+        ? t("agent.pausedWithProject")
+        : scopeRow?.state === "stopped" || scopeRow?.state === "failed"
+          ? t("agent.computerStopped", { who: scope })
+          : scopeRow?.state === "done"
+            ? t("agent.episodeDone", { who: scope })
+            : scopeRow?.state === "queued"
+              ? t("agent.notStarted", { who: scope })
+              : t("agent.sessionStarting", { who: scope });
   const lastRecord = recordsOf(scope).at(-1);
-  const resumable = !live && scopeRow && (scopeRow.state === "stopped" || scopeRow.state === "failed") ? scopeRow : undefined;
+  const resumable = !live && !paused && scopeRow && (scopeRow.state === "stopped" || scopeRow.state === "failed") ? scopeRow : undefined;
   const resume = useAction(() => api(`/api/episodes/${resumable!.id}/resume`, { method: "POST" }));
   // The scope's conversation: its open session's, else the newest it had (the setup's chat has no episode label).
   const chats = sessions.data ?? [];
@@ -245,7 +249,7 @@ export function AgentPanel({ drama, episode, onCollapse }: { drama: DramaView; e
             .filter((episodeRow) => (episodeRow.state === "stopped" || episodeRow.state === "failed") && episodeRow.code !== pageScope)
             .map((episodeRow) => (
               <option key={episodeRow.code} value={episodeRow.code}>
-                {[episodeRow.code, t("agent.computerStoppedShort")].join(" · ")}
+                {[episodeRow.code, t(paused && episodeRow.state === "stopped" ? "pause.paused" : "agent.computerStoppedShort")].join(" · ")}
               </option>
             ))}
         </select>

@@ -26,6 +26,22 @@ describe("Board", () => {
     expect(screen.getByRole("button", { name: /Needs you/ })).toHaveTextContent(/2$/);
   });
 
+  it("while the maker has paused the project, says Paused on an episode stopped with it, with no Resume of its own (D74)", async () => {
+    const paused = { ...drama, status: "stopped", setup: { state: "done", reached: 5, reason: "by-maker" }, episodeRows: [row(1, "done"), row(2, "stopped"), { ...row(3, "stopped"), note: "Its Computer failed to start." }] } as unknown as DramaView;
+    await renderAt(<Board drama={paused} />);
+    expect(screen.getByRole("link", { name: "EP002 · Episode 2" })).toHaveTextContent(/Paused.*Paused/);
+    // An engine stop keeps its own words.
+    expect(screen.getByRole("link", { name: "EP003 · Episode 3" })).toHaveTextContent("Its Computer failed to start.");
+    expect(screen.queryByRole("button", { name: "Resume" })).toBeNull();
+  });
+
+  it("offers an episode's own Resume where its Computer stopped while the project runs", async () => {
+    const running = { ...drama, status: "production", setup: { state: "done", reached: 5 }, episodeRows: [row(1, "done"), row(2, "stopped")] } as unknown as DramaView;
+    await renderAt(<Board drama={running} />);
+    expect(screen.getByRole("link", { name: "EP002 · Episode 2" })).toHaveTextContent("Its Computer stopped");
+    expect(screen.getByRole("button", { name: "Resume" })).toBeInTheDocument();
+  });
+
   it("orders the episodes by number, or what needs the maker first", async () => {
     const user = userEvent.setup();
     await renderAt(<Board drama={drama} />);

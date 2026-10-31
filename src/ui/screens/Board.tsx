@@ -4,7 +4,7 @@ import { api, useAction } from "../api.ts";
 import { Segmented } from "../components/Segmented.tsx";
 import { type Status, StatusChip } from "../components/StatusChip.tsx";
 import { type TKey, useT } from "../i18n.ts";
-import { errorText, moneyText, nowText, SETUP_STEPS } from "../labels.ts";
+import { errorText, isPaused, moneyText, nowText, SETUP_STEPS } from "../labels.ts";
 import { Link, linkOptions } from "@tanstack/react-router";
 import { Still } from "../Still.tsx";
 import { Cast } from "./Cast.tsx";
@@ -15,8 +15,8 @@ import { buttonClass } from "../components/Button.tsx";
 import { Icon } from "../icons.tsx";
 import { Menu } from "../components/Menu.tsx";
 
-/** Where an episode stands, as its card's chip says it. */
-function chipOf(row: EpisodeRow): { status: Status; label: TKey } {
+/** Where an episode stands, as its card's chip says it; paused with the project (isPaused), Paused. */
+function chipOf(row: EpisodeRow, paused: boolean): { status: Status; label: TKey } {
   switch (row.state) {
     case "waiting":
       return { status: "you", label: "board.filter.you" };
@@ -25,7 +25,7 @@ function chipOf(row: EpisodeRow): { status: Status; label: TKey } {
     case "done":
       return { status: "accepted", label: "board.done" };
     case "stopped":
-      return { status: "back", label: "drama.stopped" };
+      return { status: "back", label: paused ? "pause.paused" : "drama.stopped" };
     default:
       return { status: "failed", label: "status.failed" };
   }
@@ -37,11 +37,12 @@ function chipOf(row: EpisodeRow): { status: Status; label: TKey } {
  * strip, then its title, what is happening now and what it has spent. One waiting for the maker
  * also has its own way straight to the review.
  */
-function Card({ row, wide, dramaId }: { row: EpisodeRow; wide: boolean; dramaId: string }) {
+/** paused: the project is paused (isPaused); its episodes then have no Resume of their own, the top bar's resumes them. */
+function Card({ row, wide, dramaId, paused }: { row: EpisodeRow; wide: boolean; dramaId: string; paused: boolean }) {
   const { t, lang } = useT();
   const resume = useAction(() => api(`/api/episodes/${row.id}/resume`, { method: "POST" }));
-  const trouble = row.state === "stopped" || row.state === "failed";
-  const chip = chipOf(row);
+  const trouble = !paused && (row.state === "stopped" || row.state === "failed");
+  const chip = chipOf(row, paused);
   // The design's EpisodeCard (design/app.js, Episodes): the card opens the episode, or the review it waits on.
   const to = row.state === "waiting" && row.reviewId ? linkOptions({ to: "/r/$reviewId", params: { reviewId: row.reviewId } }) : linkOptions({ to: "/d/$dramaId/e/$episodeCode/canvas", params: { dramaId, episodeCode: row.code } });
   return (
@@ -59,7 +60,7 @@ function Card({ row, wide, dramaId }: { row: EpisodeRow; wide: boolean; dramaId:
         </div>
         <b>{row.title || row.code}</b>
         <small>
-          <span>{nowText(row, t)}</span>
+          <span>{nowText(row, t, paused)}</span>
           <span className="mono">{row.spent.total > 0 ? moneyText(row.spent, t, lang) : ""}</span>
         </small>
       </Link>
@@ -139,7 +140,7 @@ export function Board({ drama }: { drama: DramaView }) {
       ) : (
         <div className="epgrid">
           {shown.map((row) => (
-            <Card key={row.id} row={row} wide={wide} dramaId={drama.id} />
+            <Card key={row.id} row={row} wide={wide} dramaId={drama.id} paused={isPaused(drama)} />
           ))}
         </div>
       )}
