@@ -10,6 +10,7 @@ import { Fragment, useMemo, useState } from "react";
 import { collapseAllNested, defaultStyles, JsonView } from "react-json-view-lite";
 import "react-json-view-lite/dist/index.css";
 import type { Item } from "../../shared/pipeline.ts";
+import type { Shot } from "../../shared/breakdown.ts";
 import { specBeside, specFacts } from "../../shared/spec.ts";
 import type { CastCard, EpisodePage, FileItem, Judged, Receipt } from "../../shared/types.ts";
 import { Link } from "@tanstack/react-router";
@@ -210,6 +211,7 @@ export function NodePanel({
   item,
   look,
   style,
+  shots,
   on,
   work,
   files,
@@ -219,8 +221,10 @@ export function NodePanel({
   onClose,
 }: {
   dramaId: string;
-  /** The item it is the panel of; none for a segment's shots, whose text is on the node and which has Details only (D66). */
+  /** The item it is the panel of; none for a segment's shots, which have Details only (D66). */
   item?: Item;
+  /** A segment's shots, whole, for its Details: the node lists one line of each. */
+  shots?: Shot[];
   /** A character's look (S1…) or a place's time of day (Night), as the lineage names the stage; none for a base look or a plate. */
   look?: string;
   /** A storyboard's style (line-art, photoreal), as the lineage names the stage. */
@@ -314,6 +318,21 @@ export function NodePanel({
               <dt>{t("canvas.reads")}</dt>
               <dd>{facts.reads || "—"}</dd>
             </dl>
+          )}
+          {open === "details" && shots && (
+            <ol className="shotsfull">
+              {shots.map((shot) => (
+                <li key={shot.time}>
+                  <b className="mono">{shot.time}</b> <span className="subtle">{[shot.size, shot.angle].join(" · ")}</span>
+                  <p>{shot.camera}</p>
+                  <p>{shot.visual}</p>
+                  <p className="subtle">{shot.audio}</p>
+                  {shot.dialogue.map((line) => (
+                    <p key={line}>{line}</p>
+                  ))}
+                </li>
+              ))}
+            </ol>
           )}
         </div>
       )}

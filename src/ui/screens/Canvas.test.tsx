@@ -110,6 +110,28 @@ describe("the canvas", () => {
     expect(document.querySelector(".ctop .live")).toBeNull();
   });
 
+  it("keeps a long segment's shots in a card no taller than its row's pictures, the list scrolling inside when picked", async () => {
+    const shot = { time: "0-2s", size: "close-up", angle: "eye level", camera: "Static.", visual: "林 looks up.", audio: "Room tone." };
+    const breakdown = { id: 50, name: "breakdown.json", path: "/work/drama/episodes/EP001/breakdown/v1/breakdown.json", type: "application/json", size: 1, kind: "breakdown", episode: "EP001", url: "/f/50", createdAt: "2026-10-30T10:00:00Z" } as unknown as FileItem;
+    engine(project(), [breakdown]);
+    const thirteen = Array.from({ length: 13 }, (_, n) => ({ ...shot, time: `${2 * n}-${2 * n + 2}s` }));
+    server.use(http.get("/f/50", () => HttpResponse.text(JSON.stringify({ episode: "EP001", title: "x", segments: [{ id: "seg01", dialogue: [{ speaker: "lin", line: "到了。" }], shots: thirteen.map((one, n) => (n === 0 ? { ...one, lines: [0] } : one)) }] }))));
+    await renderAt(<Canvas drama={drama} />, "/d/d1/e/EP001/canvas");
+    const card = (await screen.findByText("13 shots · 26 s")).closest(".react-flow__node") as HTMLElement;
+    // drama-cli's HEIGHT at most (shared/layout.ts), however many shots: a long segment no longer pushes the board down.
+    expect(Number.parseFloat(card.style.height)).toBeLessThanOrEqual(340);
+    expect(card.querySelectorAll(".srows li")).toHaveLength(13);
+    // Picked, the list scrolls inside: React Flow leaves a wheel or drag on a nowheel, nodrag element to the element.
+    const user = userEvent.setup();
+    within(card).getByRole("button", { name: "Shots" }).focus();
+    await user.keyboard("{Enter}");
+    await waitFor(() => expect(card.querySelector(".srows")).toHaveClass("nowheel", "nodrag"));
+    // The whole shot, its lines included, in the panel's Details.
+    const panel = await screen.findByRole("region", { name: /what it is made from/ });
+    await user.click(within(panel).getByRole("button", { name: "Details" }));
+    expect(within(panel).getByRole("region", { name: "Details" })).toHaveTextContent("lin: 到了。");
+  });
+
   it("heads the episode with its script, opened at that episode, and its cut, opened at its home (D66)", async () => {
     engine(project());
     // The episode's cut, as drama-cli's lineage records a built cut (lineage.KINDS: cut, episodes/<EP>/edit) waiting for the maker.
@@ -128,12 +150,13 @@ describe("the canvas", () => {
     const shot = { time: "0-3s", size: "wide shot", angle: "eye level", camera: "Static wide shot.", visual: "林 walks into the office.", audio: "Room tone." };
     const breakdown = { id: 50, name: "breakdown.json", path: "/work/drama/episodes/EP001/breakdown/v1/breakdown.json", type: "application/json", size: 1, kind: "breakdown", episode: "EP001", url: "/f/50", createdAt: "2026-10-30T10:00:00Z" } as unknown as FileItem;
     engine(project(), [breakdown]);
-    server.use(http.get("/f/50", () => HttpResponse.text(JSON.stringify({ episode: "EP001", title: "x", segments: [{ id: "seg01", shots: [shot, { ...shot, time: "3-7s", visual: "She stops." }] }] }))));
+    server.use(http.get("/f/50", () => HttpResponse.text(JSON.stringify({ episode: "EP001", title: "x", segments: [{ id: "seg01", dialogue: [], shots: [shot, { ...shot, time: "3-7s", visual: "She stops." }] }] }))));
     await renderAt(<Canvas drama={drama} />, "/d/d1/e/EP001/canvas");
     const group = await screen.findByRole("group", { name: "EP001 seg01 · INT. OFFICE - DAY" });
     const shots = (await screen.findByText("2 shots · 7 s")).closest(".react-flow__node") as HTMLElement;
-    expect(shots).toHaveTextContent("wide shot · eye level · Static wide shot.");
-    expect(shots).toHaveTextContent("She stops.");
+    // One line a shot: its time, size and what is seen.
+    expect(shots).toHaveTextContent("0-3s · wide shot · 林 walks into the office.");
+    expect(shots).toHaveTextContent("3-7s · wide shot · She stops.");
     // First in its segment's group, left of drama-cli's stages.
     const x = (node: Element) => Number((node as HTMLElement).style.transform.match(/translate\((-?[\d.]+)px/)![1]);
     const storyboard = screen.getByRole("button", { name: /^Storyboard · line-art/ }).closest(".react-flow__node")!;

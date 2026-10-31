@@ -445,13 +445,13 @@
       const at = (kind, ver) => ({ seg: g, at: { kind, ver } });
       const blocking = (g.refs || []).find(([name]) => /^Blocking/.test(name)), frame = (g.refs || []).find(([name]) => /^First frame/.test(name));
       return [`EP006 ${g.id}`, [
-        node({ id: `${g.id}/shots`, kind: "shots", label: "Shots", st: "accepted", ver: "v1", accepted: "v1", role: "Shot list · breakdown.json", h: 52 + g.shots.length * 84, seg: g }),
+        node({ id: `${g.id}/shots`, kind: "shots", label: "Shots", st: "accepted", ver: "v1", accepted: "v1", role: "Shot list · breakdown.json", h: CARD, seg: g }),
         blocking && node({ id: `${g.id}/blocking`, kind: "blocking", pic: blocking[1], label: "Blocking", st: "accepted", ver: "v1", accepted: "v1", role: "Blocking reference", model: "gpt-image-2.5", ...at("blocking", "v1") }),
         frame && node({ id: `${g.id}/frame`, kind: "frame", pic: frame[1], label: "First frame", st: "accepted", ver: frame[0].split(" ").pop(), accepted: frame[0].split(" ").pop(), role: "First-frame reference", model: "gpt-image-2.5", ...at("first_frame_reference", frame[0].split(" ").pop()) }),
         node({ id: `${g.id}/storyboard`, kind: "storyboard", pic: g.board, label: "Storyboard · line-art", st: g.boardSt || "accepted", ver: "v1", accepted: "v1", role: "Storyboard · line-art", model: "gpt-image-2.5", ...at("storyboard", "v1"), at: { kind: "storyboard", ver: "v1", style: "line-art" } }),
         g.photo && node({ id: `${g.id}/photoreal`, kind: "photoreal", pic: g.photo, label: "Storyboard · photoreal", st: g.photoSt || "accepted", ver: "v1", accepted: "v1", role: "Storyboard · photoreal", model: "gpt-image-2.5", seg: g, at: { kind: "storyboard", ver: "v1", style: "photoreal" } }),
         node({ id: `${g.id}/take`, kind: "take", pic: g.still, label: `Take · ${g.take}`, st: g.st, ver: g.take, accepted: g.accepted, role: `${g.s} s · ${g.cast.length} in frame`, model: "sd25", ...at("take", g.take) }),
-      ].filter(Boolean), scene[g.id]];
+      ].filter(Boolean).map((n, i, row) => (n.kind === "shots" ? { ...n, h: Math.min(CARD, Math.max(...row.slice(1, 4).map((m) => m.h))) } : n)), scene[g.id]];
     });
     const place = (title, x, y, list, perRow, label) => {
       let row = y;
@@ -540,6 +540,7 @@
         ${open === "versions" && html`<ol class="versions">${spec.versions.map(([v, st, said]) => html`<li><b class="mono">${v}</b>${Status(st)}${said && html`<span class="subtle">${said}</span>`}</li>`)}</ol>`}
         ${open === "request" && html`<pre class="mono">${JSON.stringify({ model: spec.model, content: [{ type: "text", text: spec.prompt.slice(0, 60) + "…" }, ...spec.images.map((u) => ({ type: "image_url", image_url: { url: "@" + u }, role: "reference_image" }))], duration: spec.seconds, ratio: spec.ratio, resolution: spec.resolution }, null, 2)}</pre>`}
         ${open === "details" && html`<dl><dt>Kind</dt><dd>${node.role}</dd><dt>Version</dt><dd class="mono">${node.ver}</dd><dt>Used by</dt><dd>${uses || "—"}</dd><dt>Reads</dt><dd>${reads || "—"}</dd>${node.problems && node.problems.length ? html`<dt>Why</dt><dd>${node.problems.map((said) => html`<span class="why">${said}</span>`)}</dd>` : null}</dl>`}
+        ${open === "details" && node.kind === "shots" && html`<ol class="shotsfull">${node.seg.shots.map(([time, size, angle, camera, visual, audio]) => html`<li><b class="mono">${time}</b> <span class="subtle">${size} · ${angle}</span><p>${camera}</p><p>${visual}</p><p class="subtle">${audio}</p></li>`)}</ol>`}
       </div>
       ${spec && html`<div class="nfoot"><span class="pill mono">${spec.model}</span><span class="pill mono">${[spec.ratio, spec.resolution, spec.seconds + " s"].join(" · ")}</span></div>`}`}
       <p class="subtle nask">To redo or change it, ask the agent in the sidebar.</p>
@@ -621,7 +622,7 @@
                 // Far out it keeps its title bar only, as ComfyUI collapses a node (and the export draws text).
                 ? html`<div class="card shotlist" style=${`height:${n.h}px`} onClick=${() => pick(n)}>
                     <b class="stitle">${n.seg.shots.length} shots · ${n.seg.s} s</b>
-                    <ol class="srows">${n.seg.shots.map(([time, size, angle, camera, visual, audio]) => html`<li><span class="mono">${time}</span><span class="sfacts">${size} · ${angle} · ${camera}</span><span class="svis">${visual}</span><span class="saud">${audio}</span></li>`)}</ol></div>`
+                    <ol class="srows">${n.seg.shots.map(([time, size, , , visual]) => html`<li title=${visual}><span class="mono">${time}</span> · ${size} · ${visual}</li>`)}</ol></div>`
                 : html`<div class="card" style=${n.pic && S.dims[n.pic] ? sized(n.pic) : `height:${n.h}px`} onClick=${() => pick(n)}>
                     ${n.pic ? html`<img src=${n.pic} alt="" draggable="false" onLoad=${measure(n.pic)}/>` : html`<div class="none">Not in this sample</div>`}
                     ${n.kind === "take" && n.pic && html`<span class="play"><i>${I("play")}</i></span>

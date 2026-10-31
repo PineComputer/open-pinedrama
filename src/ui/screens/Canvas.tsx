@@ -235,19 +235,22 @@ interface ShotsData extends Record<string, unknown> {
   error?: string;
 }
 
-/** The shots' height on the board: the label, the title and each shot's four short lines (design/studio.css .shotlist). */
-const shotsHeight = (count: number) => LABEL + 52 + count * 88;
 
 /**
- * A segment's shot list, ours (D66): each shot's time, size · angle · camera, what is seen and what is heard, as
- * drama-cli's breakdown.json gives them, beside the pictures they made. Far out it keeps its title only, as ComfyUI
- * collapses a node (and drama-cli's export draws the breakdown as text in its Text group, which stays off the board).
+ * A segment's shot list, ours (D66): one line per shot (its time, size and the first words of what is seen), from
+ * drama-cli's breakdown.json, beside the pictures they made, in a card no taller than its row's pictures, so a long
+ * segment never pushes the board down. Picked, or hovered where it reads, the list scrolls inside the card: React
+ * Flow's nowheel and nodrag on the scroll area, its documented way to scroll inside a node, as ComfyUI's text nodes
+ * scroll. The whole shot (camera, what is seen and heard, the lines) is in the panel's Details. Far out it keeps its
+ * title only, as ComfyUI collapses a node.
  */
 function ShotsNode(props: NodeProps<Node<ShotsData>>) {
   const { id, data, selected } = props;
   const { t } = useT();
   const board = useContext(Board)!;
   const far = useViewport().zoom < 0.35;
+  const [hover, setHover] = useState(false);
+  const scrolls = !far && (selected || hover);
   const shots = data.shots ?? [];
   const seconds = shots.length ? Number(shots[shots.length - 1].time.match(/-(\d+)s$/)?.[1] ?? 0) : 0;
   return (
@@ -261,20 +264,17 @@ function ShotsNode(props: NodeProps<Node<ShotsData>>) {
         <Icon name="list-numbers" />
         <span className="name">{data.label}</span>
       </div>
-      <div className="card shotlist" onClick={() => board.pick(id)}>
+      <div className="card shotlist" onClick={() => board.pick(id)} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
         {data.error ? (
           <p className="error">{data.error}</p>
         ) : data.shots ? (
           <>
             <b className="stitle">{t("canvas.shotsTitle", { n: shots.length, s: seconds })}</b>
             {!far && (
-              <ol className="srows">
+              <ol className={`srows${scrolls ? " nowheel nodrag" : ""}`}>
                 {shots.map((shot) => (
-                  <li key={shot.time}>
-                    <span className="mono">{shot.time}</span>
-                    <span className="sfacts">{[shot.size, shot.angle, shot.camera].join(" · ")}</span>
-                    <span className="svis">{shot.visual}</span>
-                    <span className="saud">{shot.audio}</span>
+                  <li key={shot.time} title={shot.visual}>
+                    <span className="mono">{shot.time}</span> · {shot.size} · {shot.visual}
                   </li>
                 ))}
               </ol>
@@ -535,8 +535,10 @@ function Plane({ drama }: { drama: DramaView }) {
     const segmentOf = (section: string) => section.slice(code.length + 1);
     const segments = [...new Set(shown.map((stage) => stage.section).filter((section) => section.startsWith(`${code} seg`)))];
     const shotsId = (section: string) => `shots:${section}`;
-    const shotCount = (section: string) => shotsOf.shots?.get(segmentOf(section))?.length ?? 0;
-    const heightOf = (id: string) => (id.startsWith("shots:") ? shotsHeight(shotCount(id.slice(6))) : sizes[id] ? LABEL + Math.round((WIDTH * sizes[id][1]) / sizes[id][0]) : HEIGHT);
+    // A shots card is as tall as its row's pictures, at most drama-cli's HEIGHT: its list scrolls inside (ShotsNode).
+    const pictureHeight = (id: string) => (sizes[id] ? LABEL + Math.round((WIDTH * sizes[id][1]) / sizes[id][0]) : HEIGHT);
+    const firstRow = (section: string) => shown.filter((stage) => stage.section === section).sort((a, b) => a.column - b.column || (a.id < b.id ? -1 : 1)).slice(0, 3);
+    const heightOf = (id: string) => (id.startsWith("shots:") ? Math.min(HEIGHT, Math.max(0, ...firstRow(id.slice(6)).map((stage) => pictureHeight(stage.id))) || HEIGHT) : pictureHeight(id));
     const { places, groups } = layout([...segments.map((section) => ({ id: shotsId(section), column: -1, section })), ...shown], heightOf);
     // The scene's heading as the other screens show it, without Fountain's scene number (labels.ts, headingText).
     const scene = (segment: string) => {
@@ -736,6 +738,7 @@ function Plane({ drama }: { drama: DramaView }) {
             reads: "",
             problems: breakdownStage?.problems ?? [],
           }}
+          shots={shots.data.shots}
           dock={dock}
           onDock={dockTo}
           onClose={() => pick(null)}
