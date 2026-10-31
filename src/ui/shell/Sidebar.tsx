@@ -5,7 +5,7 @@
 import { Link, linkOptions, type LinkOptions, useNavigate } from "@tanstack/react-router";
 import type { LineageView } from "../../shared/lineage.ts";
 import type { ProjectView, SessionReport } from "../../shared/project.ts";
-import type { CastCard, DramaCard, DramaView, EpisodeRow, ReviewSummary } from "../../shared/types.ts";
+import type { CastCard, DramaCard, DramaView, EpisodeRow, ReviewSummary, ScriptPage } from "../../shared/types.ts";
 import { useResource } from "../api.ts";
 import { Menu } from "../components/Menu.tsx";
 import { Icon } from "../icons.tsx";
@@ -14,7 +14,7 @@ import { isSettingUp, moneyText, nowText, scriptWaits, SETUP_STEPS } from "../la
 import { Mark } from "../Mark.tsx";
 import type { Page } from "../place.ts";
 import { DramaThumb } from "../components/DramaThumb.tsx";
-import { dramaTree, type Mark as EpisodeMark, markOf } from "./tree.ts";
+import { dramaTree, type Mark as EpisodeMark, markOf, scriptNow } from "./tree.ts";
 
 export type Step = "script" | "bible" | "episodes" | "cut";
 
@@ -83,6 +83,8 @@ export function DramaSidebar({ drama, page, episode, drawer }: { drama: DramaVie
   const tree = dramaTree({ cast: cast.data ?? [], reviews: reviews.data ?? [], lineage: lineage.data?.lineage ?? null, rows: drama.episodeRows });
   // The script is done once the maker has answered the setup's first question about it.
   const scriptDone = drama.setup.reached > 1 || drama.episodeRows.length > 0;
+  const script = useResource<ScriptPage>(`/api/dramas/${drama.id}/script`, [`drama:${drama.id}`]);
+  const scriptRow = script.data && scriptNow(script.data.versions, isSettingUp(drama) && drama.setup.state === "working" && drama.setup.reached <= 1, scriptDone);
   // The tree folds the episodes that only wait in line at its end into one line ("EP009–EP024 · 16 in line"), as the design does.
   const lineStart = drama.episodeRows.findLastIndex((row) => row.state !== "queued") + 1;
   const folded = drama.episodeRows.length - lineStart > 1 ? drama.episodeRows.slice(lineStart) : [];
@@ -169,7 +171,12 @@ export function DramaSidebar({ drama, page, episode, drawer }: { drama: DramaVie
         <Link to="/d/$dramaId/script" params={params} className="navi" aria-current={at(page === "script")}>
           <Icon name="file-text" className="ic" />
           {t("step.script")}
-          {needs(tree.needs.script) || (scriptDone && <span className="end"><Icon name="check" className="ic" /></span>)}
+          {scriptRow && (
+            <>
+              <span className="now">{t(`tree.script.${scriptRow.now}`)}</span>
+              <span className={`dot ${DOT[scriptRow.mark]}`} aria-hidden="true" />
+            </>
+          )}
         </Link>
         <Link to="/d/$dramaId/bible" params={params} className="navi" aria-current={at(page === "bible")}>
           <Icon name="book-open" className="ic" />

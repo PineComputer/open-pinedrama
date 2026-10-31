@@ -1,8 +1,8 @@
 // The drama tree's counts, from what each of the drama's places shows.
 import { describe, expect, it } from "vitest";
 import type { Lineage, LineageKind, LineageNode } from "../../shared/lineage.ts";
-import { type CastCard, type EpisodeRow, type ReviewKind, type ReviewState, type ReviewSummary, STAGES } from "../../shared/types.ts";
-import { dramaTree } from "./tree.ts";
+import { type CastCard, type EpisodeRow, type ReviewKind, type ReviewState, type ReviewSummary, type ScreenplayVersion, STAGES } from "../../shared/types.ts";
+import { dramaTree, scriptNow } from "./tree.ts";
 
 function review(kind: ReviewKind, state: ReviewState = "open", episode?: string): ReviewSummary {
   return { id: `${kind}-${episode ?? "drama"}-${state}`, dramaId: "d1", dramaTitle: "The Stepmother", episode, kind, state, question: "", items: 1, subjects: [], createdAt: "2026-10-30T10:00:00Z" };
@@ -22,7 +22,7 @@ describe("the drama tree", () => {
       rows: [],
       reviews: [review("looks"), review("references"), review("storyboards", "open", "EP004"), review("takes", "open", "EP006"), review("cut", "open", "EP001"), review("question"), review("question", "open", "EP007"), review("takes", "answered", "EP002"), review("looks", "saving")],
     });
-    expect(tree.needs).toEqual({ script: 1, assets: 2, delivery: 1 });
+    expect(tree.needs).toEqual({ assets: 2, delivery: 1 });
     expect(tree.reviews).toBe(7);
   });
 
@@ -50,5 +50,14 @@ describe("the drama tree", () => {
     const row = (code: string, state: EpisodeRow["state"]) => ({ id: code, number: 1, code, title: "", state, stages: Object.fromEntries(STAGES.map((stage) => [stage, { state: "none" }])), spent: { total: 0, media: 0, partial: false }, updatedAt: "" }) as unknown as EpisodeRow;
     const rows = [row("EP001", "waiting"), row("EP002", "working"), row("EP003", "stopped"), row("EP004", "failed"), row("EP005", "queued"), row("EP006", "done")];
     expect(dramaTree({ cast: [], reviews: [], lineage: null, rows }).episodes).toBe(3);
+  });
+
+  it("says where the screenplay stands on Script's row, as an episode row does", () => {
+    const version = (state?: "open" | "answered", verdict?: "approve" | "revise"): ScreenplayVersion => ({ version: "v1", question: state && { reviewId: "r1", state, verdict } });
+    expect(scriptNow([version("open")], false, false)).toEqual({ now: "waiting", mark: "you" });
+    expect(scriptNow([version("answered", "revise")], true, false)).toEqual({ now: "rewriting", mark: "work" });
+    expect(scriptNow([version("answered", "approve")], false, false)).toEqual({ now: "accepted", mark: "done" });
+    expect(scriptNow([], false, false)).toEqual({ now: "original", mark: "done" });
+    expect(scriptNow([], true, false)).toEqual({ now: "rewriting", mark: "work" });
   });
 });

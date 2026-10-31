@@ -2,9 +2,9 @@
 // each of the drama's places, how many characters, locations and props its Assets shelves hold, its open reviews and
 // what is out of date. Each count comes from the resource the place itself shows, so the tree and the page agree.
 import { type Lineage, outOfDate } from "../../shared/lineage.ts";
-import type { CastCard, EpisodeRow, ReviewKind, ReviewSummary } from "../../shared/types.ts";
+import type { CastCard, EpisodeRow, ReviewKind, ReviewSummary, ScreenplayVersion } from "../../shared/types.ts";
 
-export type TreePlace = "script" | "assets" | "delivery";
+export type TreePlace = "assets" | "delivery";
 
 /**
  * Where an episode stands in the tree, as its dot shows it (principle "Five maker-facing states"): it needs the maker when
@@ -31,14 +31,26 @@ export interface DramaTree {
 }
 
 // Where each kind of review is decided off an episode: looks and shared references on their cards in Assets, a cut in
-// Delivery's row, a question before there are episodes about the screenplay. What waits in an episode is its dot.
+// Delivery's row. What waits in an episode is its dot; Script says where the screenplay stands (scriptNow).
 const PLACE: Partial<Record<ReviewKind, TreePlace>> = { looks: "assets", references: "assets", cut: "delivery" };
 
+/**
+ * Where the screenplay stands, for the tree's Script row, as an episode row says it (design/screens.js, scriptRow; the
+ * five maker states' dots): the version that waits for the maker, the agent rewriting, accepted, or only the original.
+ */
+export function scriptNow(versions: ScreenplayVersion[], rewriting: boolean, past: boolean): { now: "waiting" | "rewriting" | "accepted" | "original"; mark: Mark } | undefined {
+  if (versions.some((version) => version.question?.state === "open")) return { now: "waiting", mark: "you" };
+  if (rewriting) return { now: "rewriting", mark: "work" };
+  if (past || versions.some((version) => version.question?.verdict === "approve")) return { now: "accepted", mark: "done" };
+  if (!versions.length) return { now: "original", mark: "done" };
+  return undefined;
+}
+
 export function dramaTree({ cast, reviews, lineage, rows }: { cast: CastCard[]; reviews: ReviewSummary[]; lineage: Lineage | null; rows: EpisodeRow[] }): DramaTree {
-  const needs: Record<TreePlace, number> = { script: 0, assets: 0, delivery: 0 };
+  const needs: Record<TreePlace, number> = { assets: 0, delivery: 0 };
   const open = reviews.filter((review) => review.state === "open");
   for (const review of open) {
-    const place = review.kind === "question" ? (review.episode ? undefined : "script") : PLACE[review.kind];
+    const place = PLACE[review.kind];
     if (place) needs[place]++;
   }
   const shelf = (kind: CastCard["kind"]) => cast.filter((card) => card.kind === kind).length;
