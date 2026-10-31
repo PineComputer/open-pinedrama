@@ -22,7 +22,7 @@ timeline
   2026-10-23 : D5 pre-production in one session
   2026-10-24 : D6 idle timeouts follow the work : D7 spend shown, never in a goal
   2026-10-29 : D8 phase 1 steers
-  2026-10-30 : D9 design/ is the UI source : D10 tsc gate : D11 mature libraries : D12 real samples in LFS : D13 decisions taken once : D14 credentials stop : D15 Codex review loop : D16 navigation and one home : D17 every take and cut watched : D18 cut editing as an edit spec : D19 TanStack Router : D20 Export by owner : D21 Analyzing and Out of date routes : D22 redo by owner : D23 the asset detail : D24 the cut edit goal : D25 one Submission : D26 crumbs and Back : D27 Reviews : D28 model badge : D29 canvas zoom, inline video : D30 URL rules : D31 agent scope : D32 narrow windows : D33 review options : D34 Episodes filters : D35 every element cites its ground : D36 Delivery is the cuts' home : D37 a picked node zooms : D38 shared redo after release : D39 a take plays on its node : D40 where a stop shows : D41 Script is the screenplay's home : D42 Story and Assets apart : D43 stable sample ids : D44 the cut leaves the switch : D45 samples' own screenplays : D46 Project : D47 a draft's changed base : D48 the List's ?version : D49 project types : D50 Home cards : D51 one column, rail labels : D52 Home first, disabled
+  2026-10-30 : D9 design/ is the UI source : D10 tsc gate : D11 mature libraries : D12 real samples in LFS : D13 decisions taken once : D14 credentials stop : D15 Codex review loop : D16 navigation and one home : D17 every take and cut watched : D18 cut editing as an edit spec : D19 TanStack Router : D20 Export by owner : D21 Analyzing and Out of date routes : D22 redo by owner : D23 the asset detail : D24 the cut edit goal : D25 one Submission : D26 crumbs and Back : D27 Reviews : D28 model badge : D29 canvas zoom, inline video : D30 URL rules : D31 agent scope : D32 narrow windows : D33 review options : D34 Episodes filters : D35 every element cites its ground : D36 Delivery is the cuts' home : D37 a picked node zooms : D38 shared redo after release : D39 a take plays on its node : D40 where a stop shows : D41 Script is the screenplay's home : D42 Story and Assets apart : D43 stable sample ids : D44 the cut leaves the switch : D45 samples' own screenplays : D46 Project : D47 a draft's changed base : D48 the List's ?version : D49 project types : D50 Home cards : D51 one column, rail labels : D52 Home first, disabled : D53 account footer
 ```
 
 ## D1. 2026-10-22 · A desktop app on Electron
@@ -673,7 +673,7 @@ timeline
   (`MediaControlBar` and its parts), the player the cut room uses, with the cut room's tokens.
 - **Consequences.** design/app.js and design/studio.css (.vbar); src/ui/screens/Canvas.tsx (NodePlayer);
   src/ui/screens/canvas.css; design/SPEC.md, CanvasNode.
-- **Words.** yurun's request, as master relayed it: a take or cut node gets inline video controls,
+- **Words.** merecdesperez44323-lab's request, as master relayed it: a take or cut node gets inline video controls,
   like liblib's video node.
 - **Recorded in.** Master's note to work-06, 30 October 2026.
 
@@ -718,13 +718,13 @@ timeline
 
 ## D43. 2026-10-30 · A replayed sample keeps its id across rebuilds
 - **Context.** Every rebuild of the QA studio gave each replayed sample a new random id, so a link
-  or an open tab from before showed "It's no longer here" (yurun's bug Y5).
+  or an open tab from before showed "It's no longer here" (merecdesperez44323-lab's bug Y5).
 - **Decision.** A replayed sample drama's id is derived from its sample and language (SHA-256 of
   `sample:<sample>:<lang>`, 16 hex digits), numbered -2, -3… for further starts in the same studio.
   Real projects and Pine rehearsals keep random ids.
 - **Alternatives.** None recorded.
 - **Grounds.** Design for failure ([design principles](design-principles.md#9-design-for-failure));
-  yurun's bug Y5 (`qa/yurun-bugs.md`), via master.
+  merecdesperez44323-lab's bug Y5 in the QA bug list, via master.
 - **Consequences.** open-qa.mjs keeps its seed order fixed, since the numbering follows it.
 - **Words.** None recorded.
 - **Recorded in.** Commit 866221c; work-05's note to the docs.
@@ -744,7 +744,7 @@ timeline
 - **Recorded in.** Commit af44899.
 
 ## D45. 2026-10-30 · Replay samples carry their own screenplays; legal review before release
-- **Context.** Every replayed drama showed The Stepmother's screenplay (yurun's bug Y7).
+- **Context.** Every replayed drama showed The Stepmother's screenplay (merecdesperez44323-lab's bug Y7).
   CONTRIBUTING forbade real scripts and aired material in the repository, while the samples already
   carry pictures, bibles and cuts from runs that reconstruct aired dramas.
 - **Decision.** Each sample returns its own screenplay or none, never another's: the real runs'
@@ -839,7 +839,7 @@ timeline
 
 ## D51. 2026-10-30 · Home has one column; the rail shows each icon with its label
 - **Context.** Home kept a sidebar column whose only item was New project, already the grid's first
-  card (yurun's bugs Y2, Y3).
+  card (merecdesperez44323-lab's bugs Y2, Y3).
 - **Decision.** The navigation has two modes. Off a project, the rail is the one left column: each
   place as its icon and label side by side (Projects, Reviews with its count, Settings), and no
   second column. Inside a project, the icon rail stands beside the project tree, its labels as
@@ -875,6 +875,21 @@ timeline
   have a home page top of the drama project icon. and in the future we should have some pre-defined
   project as gallary. currently just put Home and make if gray and not clicable", relayed by master.
 - **Recorded in.** Commit 2778a0d; master's and work-04's notes, 30 October 2026.
+
+## D53. 2026-10-30 · The rail's footer holds the Pine account, credits and community
+- **Context.** The studio showed nothing of the maker's Pine account: who is signed in, what is
+  left to spend, or where to get help.
+- **Decision.** The rail's footer holds the Pine Computer account (avatar and the Pine project), the
+  credits with Top up (Pine's billing page), a reached spend limit as a problem with its next step,
+  and "Pine Computer community" (Discord). In `design/` only: Pine's portal API has no account or
+  balance endpoint, so nothing is shown until it has one, and the community link waits for its URL.
+- **Alternatives.** None recorded.
+- **Grounds.** merecdesperez44323-lab's request, via master; liblib's and Astorie's account footers;
+  Apple's HIG, Sidebars (a footer for account items); errors give the next step
+  ([design principles](design-principles.md#6-errors-give-the-next-step)).
+- **Consequences.** Not ported until Pine's portal offers the account and balance.
+- **Words.** None recorded.
+- **Recorded in.** Design commit 7ea1a05; work-04's note to the docs.
 
 ## References
 
