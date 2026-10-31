@@ -1,5 +1,5 @@
 // Words for states the engine reports as data, in the maker's language.
-import type { EpisodeRow, FileKind, ReviewKind, Spend } from "../shared/types.ts";
+import type { DramaView, EpisodeRow, FileKind, ReviewKind, Spend } from "../shared/types.ts";
 import { TEMPLATES } from "../shared/presets.ts";
 import { nameOf, type Names } from "../shared/names.ts";
 import type { ProjectView } from "../shared/project.ts";
@@ -51,6 +51,24 @@ export function subjectLabel(names: Names | null, subject: string, kind?: "look"
 }
 
 /** Markdown said as plain words, for a one-line preview: link labels, no markup. */
+/** Whether a drama is still being set up: before its episodes, or stopped before it had any. */
+export function isSettingUp(drama: Pick<DramaView, "status" | "episodeRows">): boolean {
+  return drama.status === "setup" || (drama.status === "stopped" && !drama.episodeRows.length);
+}
+
+/**
+ * Whether the setup waits on the maker's review of the screenplay: it waits at its first question
+ * (drama.setup.reached 1, "asking"), which is the rewrite's (design/screens.js, SetupSteps: Script, Your review).
+ */
+export function scriptWaits(drama: Pick<DramaView, "status" | "episodeRows" | "setup">): boolean {
+  return isSettingUp(drama) && drama.setup.state === "waiting" && drama.setup.reached <= 1;
+}
+
+/** Whether a drama's tab is one of the setup's own screens, Analyzing and the Fountain review, which design/ draws without the surface bar and the agent. */
+export function isSetupScreen(drama: Pick<DramaView, "status" | "episodeRows">, tab: string): boolean {
+  return isSettingUp(drama) && (tab === "script" || tab === "analyzing");
+}
+
 /** A scene heading as a person reads it: without the scene number Fountain writes at its end between #s (fountain.io, "Scene Numbers"). */
 export function headingText(heading: string): string {
   return heading.replace(/\s*#[^#\n]*#\s*$/, "");

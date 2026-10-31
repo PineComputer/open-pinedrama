@@ -2,7 +2,7 @@ import { lazy, Suspense, useEffect, useState } from "react";
 import type { AppInfo, DramaView, ReviewSummary } from "../shared/types.ts";
 import { ApiError, useResource } from "./api.ts";
 import { type TKey, useT } from "./i18n.ts";
-import { errorText } from "./labels.ts";
+import { errorText, isSetupScreen, scriptWaits } from "./labels.ts";
 import { useReviewNotifications } from "./notify.ts";
 import { match, usePath } from "./router.tsx";
 import { Drama } from "./screens/Drama.tsx";
@@ -148,6 +148,8 @@ export function App() {
       );
     const code = match("/d/:id/e/:code", path)?.code;
     crumbs = [home, ...(inDrama ? [inDrama] : []), ...(code ? [{ label: t("step.episodes"), to: inDrama?.to }, { label: code }] : TABS[tab] ? [{ label: t(TABS[tab]) }] : [{ label: t("step.episodes") }])];
+    // The setup's own screens, as design/'s crumbs read: Setup › Script, or Setup › Fountain review while the rewrite waits on the maker.
+    if (drama.data && isSetupScreen(drama.data, tab)) crumbs = [home, ...(inDrama ? [inDrama] : []), { label: t("sidebar.setup") }, { label: t(tab === "script" && scriptWaits(drama.data) ? "crumb.fountainReview" : "step.script") }];
   }
 
   const sidebar =
@@ -175,7 +177,8 @@ export function App() {
             <main className="scrollmain ds-scroll">{screen}</main>
           </AsideSlot.Provider>
           <div ref={setAsideSlot} style={{ display: "contents" }} />
-          {drama.data && dramaId && <Agent drama={drama.data} episode={match("/d/:id/e/:code", path)?.code ?? reviewed?.episode} mode={agentMode} onMode={setAgentMode} canvas={tab === "canvas" || tab === "graph" || tab === "cut" || Boolean(review)} />}
+          {/* design/'s setup screens (Analyzing, the Fountain review) go full width, with no agent beside them. */}
+          {drama.data && dramaId && !(page && isSetupScreen(drama.data, tab)) && <Agent drama={drama.data} episode={match("/d/:id/e/:code", path)?.code ?? reviewed?.episode} mode={agentMode} onMode={setAgentMode} canvas={tab === "canvas" || tab === "graph" || tab === "cut" || Boolean(review)} />}
         </div>
       </div>
     </div>

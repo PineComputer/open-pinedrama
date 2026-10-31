@@ -3,7 +3,7 @@ import { StopCard } from "../components/StopCard.tsx";
 import { Link } from "../router.tsx";
 import { api, useAction, useResource } from "../api.ts";
 import { useT } from "../i18n.ts";
-import { errorText } from "../labels.ts";
+import { errorText, isSettingUp, isSetupScreen } from "../labels.ts";
 import { Icon } from "../icons.tsx";
 import { DramaBar, stillStopping } from "../shell/TopBar.tsx";
 import { Analyzing } from "./Analyzing.tsx";
@@ -99,11 +99,11 @@ export function Drama({ drama, tab, episode }: { drama: DramaView; tab: string; 
   const { t } = useT();
   const id = drama.id;
   // Before there are episodes, the setup's progress is the story being made.
-  const settingUp = drama.status === "setup" || (drama.status === "stopped" && !drama.episodeRows.length);
+  const settingUp = isSettingUp(drama);
   return (
     <section className="ds-workin">
-      {/* The cut's room is the design's Cut screen, with no surface bar above it. */}
-      {tab !== "cut" && <DramaBar drama={drama} />}
+      {/* The cut's room is the design's Cut screen, and the setup's Script its Analyzing and Fountain review: no surface bar above them. */}
+      {tab !== "cut" && !isSetupScreen(drama, tab) && <DramaBar drama={drama} />}
       {tab !== "cut" && <Notices drama={drama} />}
       {tab === "board" && (settingUp ? <SetupPanel drama={drama} /> : <Board drama={drama} />)}
       {tab === "episode" && episode && <Episode key={`${id}/${episode}`} dramaId={id} code={episode} />}

@@ -223,7 +223,7 @@ export function SetupPanel({ drama }: { drama: DramaView }) {
       <div className="work-head">
         <h2>{t("setup.title")}</h2>
       </div>
-      <div className="setup">
+      <div className="setup-panel">
         <div className="steps">
           {steps.map((label, index) => {
             const on = index === current;

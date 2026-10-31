@@ -199,6 +199,18 @@ describe("the sidebar", () => {
     expect(standing).not.toHaveTextContent("0 of 0");
   });
 
+  it("while the setup waits on the rewrite, gives the four steps with Script for the maker's review", () => {
+    const waiting = { ...drama, status: "setup", setup: { state: "waiting", reached: 1 }, episodeRows: [] } as unknown as DramaView;
+    render(<DramaSidebar drama={waiting} tab="script" />);
+    const steps = screen.getByRole("list", { name: "Steps" });
+    expect(within(steps).getAllByRole("listitem").map((step) => [step.className, step.textContent])).toEqual([
+      ["you", "1ScriptYour review"],
+      ["line", "2StoryAfter your review"],
+      ["line", "3EpisodesAfter the looks"],
+      ["line", "4CutPer episode"],
+    ]);
+  });
+
   it("says at its foot what the drama spent against its budget, what is in flight and how many are at work", async () => {
     const budget = (reservedUsd: number) => ({ budgetUsd: 1000, spentUsd: 0, reservedUsd, remainingUsd: 1000 });
     answer("/api/dramas/d1/project", { state: null, sessions: [{ budget: budget(4.8) }, { budget: budget(2.4) }], problems: [], names: null });

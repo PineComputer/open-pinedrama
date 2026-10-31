@@ -8,7 +8,7 @@ import { useResource } from "../api.ts";
 import { Menu } from "../components/Menu.tsx";
 import { Icon, type IconName } from "../icons.tsx";
 import { type TKey, useT } from "../i18n.ts";
-import { moneyText, nowText, SETUP_STEPS } from "../labels.ts";
+import { isSettingUp, moneyText, nowText, scriptWaits, SETUP_STEPS } from "../labels.ts";
 import { Mark } from "../Mark.tsx";
 import { Link, navigate } from "../router.tsx";
 
@@ -31,7 +31,7 @@ function markOf(row: EpisodeRow): Mark {
 
 /** The step a drama's page is on: before there are episodes, its board is the story being made. */
 export function stepOf(drama: DramaView, tab: string): Step | undefined {
-  const settingUp = drama.status === "setup" || (drama.status === "stopped" && !drama.episodeRows.length);
+  const settingUp = isSettingUp(drama);
   if (tab === "script" || tab === "analyzing") return "script";
   if (tab === "story" || (tab === "board" && settingUp)) return "story";
   if (tab === "cut") return "cut";
@@ -135,14 +135,14 @@ export function DramaSidebar({ drama, tab, episode }: { drama: DramaView; tab: s
   const STEP_OF: Record<ReviewKind, Step> = { question: "story", looks: "story", references: "story", storyboards: "episodes", takes: "episodes", cut: "cut" };
   const needs: Record<Step, number> = { script: 0, story: 0, episodes: 0, cut: 0 };
   for (const review of reviews.data ?? []) if (review.state === "open") needs[STEP_OF[review.kind]]++;
-  // The script is done once the setup has read it.
-  const scriptDone = drama.setup.reached > 0 || drama.episodeRows.length > 0;
+  // The script is done once the maker has answered the setup's first question about it.
+  const scriptDone = drama.setup.reached > 1 || drama.episodeRows.length > 0;
   // The tree folds the episodes that only wait in line at its end into one line ("EP009–EP024 · 16 in line"), as the design does.
   const lineStart = drama.episodeRows.findLastIndex((row) => row.state !== "queued") + 1;
   const folded = drama.episodeRows.length - lineStart > 1 ? drama.episodeRows.slice(lineStart) : [];
   const shownRows = drama.episodeRows.slice(0, drama.episodeRows.length - folded.length);
   const { episodes } = drama;
-  const settingUp = drama.status === "setup" || (drama.status === "stopped" && !drama.episodeRows.length);
+  const settingUp = isSettingUp(drama);
   const head = (
     <div className="head">
       <Menu
@@ -169,8 +169,8 @@ export function DramaSidebar({ drama, tab, episode }: { drama: DramaView; tab: s
     // The setup's steps, as the design's SetupSteps: Script, Story, Episodes and Cut, each where it stands.
     const reached = drama.setup.reached;
     const rows: { key: Step; label: TKey; state: "done" | "you" | "work" | "line"; detail: TKey; to?: string }[] = [
-      { key: "script", label: "step.script", state: scriptDone ? "done" : needs.script || drama.setup.state === "waiting" ? "you" : "work", detail: scriptDone ? "setupSteps.done" : "setupSteps.checking", to: `/d/${drama.id}/script` },
-      { key: "story", label: "step.story", state: !scriptDone ? "line" : drama.setup.state === "waiting" ? "you" : reached >= 4 ? "done" : "work", detail: !scriptDone ? "setupSteps.afterScript" : drama.setup.state === "waiting" ? "setupSteps.yourReview" : "setupSteps.making", to: `/d/${drama.id}/story` },
+      { key: "script", label: "step.script", state: scriptDone ? "done" : scriptWaits(drama) ? "you" : "work", detail: scriptDone ? "setupSteps.done" : scriptWaits(drama) ? "setupSteps.yourReview" : "setupSteps.checking", to: `/d/${drama.id}/script` },
+      { key: "story", label: "step.story", state: !scriptDone ? "line" : drama.setup.state === "waiting" ? "you" : reached >= 4 ? "done" : "work", detail: !scriptDone ? "setupSteps.afterYourReview" : drama.setup.state === "waiting" ? "setupSteps.yourReview" : "setupSteps.making", to: `/d/${drama.id}/story` },
       { key: "episodes", label: "step.episodes", state: reached >= 4 ? "work" : "line", detail: reached >= 4 ? "setupSteps.making" : "setupSteps.afterLooks" },
       { key: "cut", label: "step.cut", state: "line", detail: "setupSteps.perEpisode" },
     ];
