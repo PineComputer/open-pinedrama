@@ -396,7 +396,7 @@ h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 700; lett
 .graph-screen .graph .gnode { position: relative; }
 .graph-screen .ghandle { opacity: 0; pointer-events: none; }
 /* The inspector's lists end clear of the agent's floating button, which stands over the bottom right. */
-.graph-screen .insp .iscroll { padding-bottom: 88px; }
+.graph-insp .iscroll { padding-bottom: 88px; }
 .graph-screen .react-flow__edge-path { fill: none; stroke: var(--border-input); stroke-width: 1.4; }
 .graph-screen .react-flow__edge.on .react-flow__edge-path { stroke: var(--text-primary); stroke-width: 1.8; }
 .graph-screen .react-flow__edge.stale .react-flow__edge-path { stroke-dasharray: 5 4; }

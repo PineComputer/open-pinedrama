@@ -9,7 +9,8 @@
 // episode's own versions in its session, a shared one in the setup's, since an episode's session
 // never makes a new version of a shared reference (goals.ts). No price is shown.
 import { type Edge, Handle, type Node, type NodeProps, Position, ReactFlow } from "@xyflow/react";
-import { type CSSProperties, useEffect, useState } from "react";
+import { type CSSProperties, useContext, useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { madeFromStale, trace, type Lineage, type LineageNode, type LineageView } from "../../shared/lineage.ts";
 import { nameOf, type Names } from "../../shared/names.ts";
 import { PIPELINE } from "../../shared/pipeline.ts";
@@ -20,6 +21,7 @@ import { type TKey, useT } from "../i18n.ts";
 import { Icon, type IconName } from "../icons.tsx";
 import { errorText, useNames } from "../labels.ts";
 import { navigate, usePath } from "../router.tsx";
+import { AsideSlot } from "../shell/aside.ts";
 import { CARD, layered, lineageOf, type Point } from "./focus.ts";
 
 type T = ReturnType<typeof useT>["t"];
@@ -141,6 +143,7 @@ const INSET = { x: 24, y: 48 };
 
 export function Graph({ dramaId }: { dramaId: string }) {
   const { t } = useT();
+  const slot = useContext(AsideSlot);
   const view = useResource<LineageView>(`/api/dramas/${dramaId}/lineage`, [`project:${dramaId}`]);
   const files = useResource<FileItem[]>(`/api/dramas/${dramaId}/files`, [`drama:${dramaId}`]);
   const sessions = useResource<ChatView[]>(`/api/dramas/${dramaId}/sessions`, [`drama:${dramaId}`]);
@@ -248,6 +251,53 @@ export function Graph({ dramaId }: { dramaId: string }) {
       <span className="muted">{t("graph.nothing")}</span>
     );
 
+  // The inspector beside the scroll area, as design/'s Graph has it (shell/aside.ts).
+  const inspector = (
+    <aside className="insp graph-insp" aria-label={name(selected)}>
+      <div className="ihead">
+        <b>{name(selected)}</b>
+        <small>
+          {t(`graph.kind.${selected.kind}` as TKey)} · {selected.version ?? t("graph.noVersion")}
+        </small>
+      </div>
+      <div className="iscroll">
+        {(fileOf(selected) || posterOf(selected)) && (
+          <div className="isec">
+            <Picture node={selected} file={fileOf(selected)} poster={posterOf(selected)} style={{ width: "100%", borderRadius: 10, maxHeight: 240, objectFit: "cover", objectPosition: "top" }} />
+          </div>
+        )}
+        <section className="isec" aria-labelledby="graph-state">
+          <h4 id="graph-state">{t("graph.state")}</h4>
+          {selected.fresh === false ? (
+            <div className="finding warn">
+              <Icon name="warning" className="ic" />
+              <span>{selected.problems.join("; ")}</span>
+            </div>
+          ) : marked.has(selected.id) ? (
+            <div className="finding warn">
+              <Icon name="warning" className="ic" />
+              <span>{t("graph.fromStale", { names: [...up].filter((id) => byId.get(id)?.fresh === false).map((id) => name(byId.get(id)!)).join(", ") })}</span>
+            </div>
+          ) : (
+            <span className="muted">{t(selected.fresh === null ? "graph.unjudged" : "graph.fresh")}</span>
+          )}
+        </section>
+        <section className="isec" aria-labelledby="graph-up">
+          <h4 id="graph-up">
+            {t("graph.madeFrom")} <span className="muted">{up.size}</span>
+          </h4>
+          {list(up)}
+        </section>
+        <section className="isec" aria-labelledby="graph-down">
+          <h4 id="graph-down">
+            {t("graph.madeFromIt")} <span className="muted">{down.size}</span>
+          </h4>
+          {list(down)}
+        </section>
+      </div>
+    </aside>
+  );
+
   // The prototype's Graph screen (studio-pro/screens.js, Graph): the body, its scrolling main and the inspector.
   return (
     <div className="body graph-screen">
@@ -321,49 +371,7 @@ export function Graph({ dramaId }: { dramaId: string }) {
           <span className="subtle">{t("graph.readOnly")}</span>
         </div>
       </div>
-      <aside className="insp" aria-label={name(selected)}>
-        <div className="ihead">
-          <b>{name(selected)}</b>
-          <small>
-            {t(`graph.kind.${selected.kind}` as TKey)} · {selected.version ?? t("graph.noVersion")}
-          </small>
-        </div>
-        <div className="iscroll">
-          {(fileOf(selected) || posterOf(selected)) && (
-            <div className="isec">
-              <Picture node={selected} file={fileOf(selected)} poster={posterOf(selected)} style={{ width: "100%", borderRadius: 10, maxHeight: 240, objectFit: "cover", objectPosition: "top" }} />
-            </div>
-          )}
-          <section className="isec" aria-labelledby="graph-state">
-            <h4 id="graph-state">{t("graph.state")}</h4>
-            {selected.fresh === false ? (
-              <div className="finding warn">
-                <Icon name="warning" className="ic" />
-                <span>{selected.problems.join("; ")}</span>
-              </div>
-            ) : marked.has(selected.id) ? (
-              <div className="finding warn">
-                <Icon name="warning" className="ic" />
-                <span>{t("graph.fromStale", { names: [...up].filter((id) => byId.get(id)?.fresh === false).map((id) => name(byId.get(id)!)).join(", ") })}</span>
-              </div>
-            ) : (
-              <span className="muted">{t(selected.fresh === null ? "graph.unjudged" : "graph.fresh")}</span>
-            )}
-          </section>
-          <section className="isec" aria-labelledby="graph-up">
-            <h4 id="graph-up">
-              {t("graph.madeFrom")} <span className="muted">{up.size}</span>
-            </h4>
-            {list(up)}
-          </section>
-          <section className="isec" aria-labelledby="graph-down">
-            <h4 id="graph-down">
-              {t("graph.madeFromIt")} <span className="muted">{down.size}</span>
-            </h4>
-            {list(down)}
-          </section>
-        </div>
-      </aside>
+      {slot ? createPortal(inspector, slot) : inspector}
     </div>
   );
 }

@@ -17,6 +17,7 @@ import { NavRail } from "./shell/NavRail.tsx";
 import { DramaSidebar, HomeSidebar } from "./shell/Sidebar.tsx";
 import { type Crumb, StopControl, TopBar } from "./shell/TopBar.tsx";
 import { ExportMenu } from "./shell/ExportMenu.tsx";
+import { AsideSlot } from "./shell/aside.ts";
 import { buttonVariants } from "@/components/ui/button";
 
 /** Before the studio can be used: this window isn't the studio's, or the engine isn't answering. */
@@ -89,6 +90,7 @@ function Agent({ drama, episode, mode, onMode, canvas }: { drama: DramaView; epi
 
 export function App() {
   const { path } = usePath();
+  const [asideSlot, setAsideSlot] = useState<HTMLElement | null>(null);
   const app = useResource<AppInfo>("/api/app", ["app"]);
   const ready = app.data !== undefined && app.data.mode !== "none";
   const inbox = useResource<ReviewSummary[]>(ready ? "/api/inbox" : null, ["inbox"]);
@@ -169,7 +171,10 @@ export function App() {
           </TopBar>
         )}
         <div className="body" style={{ position: "relative" }}>
-          <main className="scrollmain ds-scroll">{screen}</main>
+          <AsideSlot.Provider value={asideSlot}>
+            <main className="scrollmain ds-scroll">{screen}</main>
+          </AsideSlot.Provider>
+          <div ref={setAsideSlot} style={{ display: "contents" }} />
           {drama.data && dramaId && <Agent drama={drama.data} episode={match("/d/:id/e/:code", path)?.code ?? reviewed?.episode} mode={agentMode} onMode={setAgentMode} canvas={tab === "canvas" || tab === "graph" || tab === "cut" || Boolean(review)} />}
         </div>
       </div>

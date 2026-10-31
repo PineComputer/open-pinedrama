@@ -184,7 +184,7 @@ export function AgentPanel({ drama, episode, mode, onMode }: { drama: DramaView;
               <button type="button">
                 <Icon name="list-checks" className="ic" />
                 {t("agent.process", { who })}
-                <span className="cnt">{t("agent.stepsCount", { n: steps.length })}</span>
+                <span className="cnt">{steps.length === 1 ? t("agent.stepOne") : t("agent.stepsCount", { n: steps.length })}</span>
               </button>
               <ol className="steps">
                 {steps.map((step, n) => {
