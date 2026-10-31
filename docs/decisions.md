@@ -840,15 +840,19 @@ timeline
 ## D51. 2026-10-30 · Home has one column; the rail shows each icon with its label
 - **Context.** Home kept a sidebar column whose only item was New project, already the grid's first
   card (yurun's bugs Y2, Y3).
-- **Decision.** Home has no sidebar column. The rail shows each place as its icon and label side by
-  side.
+- **Decision.** The navigation has two modes. Off a project, the rail is the one left column: each
+  place as its icon and label side by side (Projects, Reviews with its count, Settings), and no
+  second column. Inside a project, the icon rail stands beside the project tree, its labels as
+  tooltips. ☰ opens and closes that column everywhere.
 - **Alternatives.** None recorded.
-- **Grounds.** merecdesperez44323-lab's decision; a second way to do something that already has one
-  is never added ([design principles](design-principles.md#14-every-element-cites-its-ground)).
+- **Grounds.** merecdesperez44323-lab's decision; liblib's and VS Code's navigation; Apple's HIG,
+  Sidebars; a second way to do something that already has one is never added
+  ([design principles](design-principles.md#14-every-element-cites-its-ground)).
 - **Consequences.** None beyond Home and the rail.
 - **Words.** "这个区域有new project就够了， 左侧就不需要单独有一个column了" (*New project in this area is enough;
-  the left needs no column of its own*), relayed by master.
-- **Recorded in.** Master's note to the docs, 30 October 2026.
+  the left needs no column of its own*), and "project应该和icon 平铺" (*"project" should sit beside the
+  icon*), relayed by master.
+- **Recorded in.** Commit 1fcae42 (design and port); master's and work-04's notes, 30 October 2026.
 
 ## References
 
