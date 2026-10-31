@@ -796,7 +796,6 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
 .scripthead { display: flex; align-items: flex-end; gap: 16px; flex-wrap: wrap; padding: 4px 16px 14px; }
 .scripthead p { margin: 4px 0 0; font-size: 12.5px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
 .panel.scriptdoc { margin: 0 16px 14px; padding: 18px 22px; }
-.scriptpanes { padding: 0 16px; margin-bottom: 14px; grid-template-columns: 1fr 1.3fr; }
 .scriptpanes .fdoc .fl { cursor: default; } .scriptpanes .fdoc .fl:hover { background: none; }
 .panel.scriptversions { margin: 0 16px 24px; }
 /* IA draft r2 (F): narrow windows. The same drama tree as a drawer below 1100 px, opened by the rail's menu button; the
@@ -865,3 +864,30 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
 /* With the detail open the grid keeps several columns, and a tall plate never makes a card taller than the detail. */
 .assetsplit .assetgrid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; }
 .assetcard .pic { max-height: 240px; margin: 0 auto; }
+/* Script (design draft; D-entry pending): the page holds the screenplay from upload to acceptance. The views on the
+   left, the version history on the right (GitHub's PR timeline; Figma's and Google Docs' version history). */
+.notice { display: flex; gap: 8px; align-items: flex-start; margin: 0 16px 12px; padding: 10px 12px; border-radius: var(--radius-large); border: 1px solid var(--border); background: var(--surface-container); font-size: 12.5px; color: var(--text-secondary); }
+.notice .ic { width: 16px; height: 16px; flex: none; margin-top: 1px; } .notice b { color: var(--text-primary); }
+.scriptlayout { display: grid; gap: 14px; padding: 0 16px 40px; min-width: 0; }
+.scriptmain { min-width: 0; display: grid; gap: 12px; }
+.scriptbar { display: flex; align-items: center; gap: 10px; }
+.scriptbody { display: grid; grid-template-columns: 170px minmax(0, 1fr); gap: 12px; align-items: start; }
+.outline { position: sticky; top: 8px; display: grid; gap: 10px; font-size: 12.5px; }
+.outline button { display: block; width: 100%; text-align: left; border: 0; background: none; color: var(--text-secondary); padding: 3px 6px; border-radius: var(--radius-medium); cursor: pointer; font: inherit; }
+.outline button:hover { background: var(--hover); color: var(--text-primary); }
+.outline .ep { font-weight: 600; color: var(--text-primary); } .outline .sc { padding-left: 16px; font-size: 12px; }
+.orig button.chg { box-shadow: inset 3px 0 0 var(--warning-text); }
+.scripthistory { padding: 12px 16px; } .scripthistory h3 { margin: 0; }
+.scriptpanes { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; padding: 0; }
+.history { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 0; }
+.history li { display: grid; grid-template-columns: 14px 1fr; gap: 10px; padding: 0 0 14px; position: relative; font-size: 12.5px; color: var(--text-secondary); }
+.history li::before { content: ""; position: absolute; left: 3px; top: 12px; bottom: 0; width: 1px; background: var(--border); }
+.history li:last-child::before { display: none; }
+.history .dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 4px; position: relative; z-index: 1; }
+.history .grow { display: grid; gap: 4px; } .history time { font: 11px var(--font-mono); color: var(--text-subtle); }
+.history code { white-space: normal; font-size: 11.5px; } .history .btn { justify-self: start; }
+.whatchanged summary { cursor: pointer; color: var(--text-primary); font-size: 12px; }
+.whatchanged pre { max-height: 320px; overflow: auto; font-size: 11.5px; }
+.scripthistory > details > summary { cursor: pointer; font-size: 12.5px; color: var(--text-secondary); margin-top: 6px; }
+.navi .now { margin-left: auto; font-size: 11.5px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.navi .dot { flex: none; width: 7px; height: 7px; border-radius: 50%; }

@@ -4,15 +4,14 @@
   const { html, render, useEffect, useRef } = window.htmPreact;
   const root = document.getElementById("root");
   const SPENT_COVERS = "Agent turns and video, priced when each turn ends.";
-  const SCREENS = ["home", "reviews", "upload", "analyzing", "fountain", "script", "story", "episodes", "episode", "canvas", "graph", "review", "cut", "delivery", "outofdate"];
-  const SETUP = ["analyzing", "fountain"];
+  const SCREENS = ["home", "reviews", "upload", "script", "story", "episodes", "episode", "canvas", "graph", "review", "cut", "delivery", "outofdate"];
   const hash = (location.hash || "").slice(1);
   const S = {
     screen: SCREENS.includes(hash) ? hash : "home", theme: "dark", tab: "all", filter: "all", waitFor: null, pin: null,
     dialog: null, toasts: [], dramaStop: null, draft: "", chats: {}, drafts: {}, drawer: false,
     cam: { x: 40, y: 96, k: 0.62 }, tool: "hand", toolOpen: false, zoomOpen: false, keysOpen: false, sel: null, dock: (() => { try { return localStorage.getItem("studio.canvas.dock") || "under"; } catch (e) { return "under"; } })(), follow: true, agentOpen: false, panning: null, minimap: true,
     ti: 0, playing: false, t: 0, watched: {}, maxT: {}, verdict: {}, reason: {}, showPrev: false, subs: {}, outcome: "ok", over: false,
-    state: "normal", proto: false, file: null, preset: null, len: "90", reviewing: "every", budget: "1000", ana: 0, tod: null, words: "", stab: "bible", cards: {}, cardWhy: {}, gsel: "ep6seg03", dims: {}, cutT: 0, cutPlaying: false, cutNotes: null, noteDraft: "", cutV: null, cutWhy: "",
+    state: "normal", proto: false, file: null, preset: null, len: "90", reviewing: "every", budget: "1000", sview: null, ssel: null, saccept: false, words: "", stab: "bible", cards: {}, cardWhy: {}, gsel: "ep6seg03", dims: {}, cutT: 0, cutPlaying: false, cutNotes: null, noteDraft: "", cutV: null, cutWhy: "",
   };
   let drawing = false;
   const draw = () => { if (!drawing) { drawing = true; requestAnimationFrame(() => { drawing = false; render(html`<${App}/>`, root); }); } };
@@ -123,15 +122,10 @@
     // Off a project the rail is the one column (Rail): no second one.
     if (studioPage()) return null;
     const cur = { episodes: null, episode: "EP006", canvas: "EP006", review: "EP006", cut: "EP006" }[S.screen];
-    if (SETUP.includes(S.screen)) return html`<aside class=${"side" + (S.drawer ? " drawer-open" : "")} aria-label="Project">
-      <div class="head"><button class="proj" onClick=${() => go("home")} title="All dramas"><span class="newthumb">${I("file-text")}</span><span class="grow"><b>${P.project.title}</b><small>Setup · 1 session</small></span>${I("caret-down", "subtle")}</button></div>
-      <div class="scroll"><div class="sec">Setup</div>${window.EXTRA.SetupSteps()}</div>
-      <div class="foot" title=${SPENT_COVERS}><div style="display:flex;justify-content:space-between"><span>Spent</span><b class="mono" style="color:var(--text-primary)">$0.40 <span class="muted">/ $1,000</span></b></div><span>Nothing in flight</span><span class="muted" style="font-size:11px">${SPENT_COVERS}</span></div>
-    </aside>`;
     return html`<aside class=${"side" + (S.drawer ? " drawer-open" : "")} aria-label="Project">
       <div class="head"><button class="proj" onClick=${() => go("home")} title="All dramas"><img src=${P.eps[0].cover} alt=""/><span class="grow"><b>${P.project.title}</b><small>${P.project.episodes} episodes · ${P.project.spec}</small></span>${I("caret-down", "subtle")}</button></div>
       <div class="scroll">
-        <button class="navi" aria-current=${S.screen === "script" ? "page" : "false"} onClick=${() => go("script")}>${I("file-text")}Script</button>
+        <button class="navi" aria-current=${S.screen === "script" ? "page" : "false"} onClick=${() => go("script")}>${I("file-text")}Script${(([line, st]) => html`<span class="now">${line}</span><span class=${"dot " + st}></span>`)(window.EXTRA.scriptRow())}</button>
         <button class="navi" aria-current=${S.screen === "story" && (S.stab || "bible") === "bible" ? "page" : "false"} onClick=${() => set({ screen: "story", stab: "bible", asel: null, at: null })}>${I("book-open")}Story</button>
         <button class="navi" aria-current=${S.screen === "story" && (S.stab || "bible") !== "bible" ? "page" : "false"} onClick=${() => set({ screen: "story", stab: "cast", asel: null, at: null })}>${I("stack")}Assets<span class="cnt">2</span></button>
         <ul class="tree sub">${[["cast", "Characters", P.cast.length], ["scenes", "Locations", P.places.length], ["props", "Props", P.props.length]].map(([k, l, n]) => html`<li><button aria-current=${String(S.screen === "story" && S.stab === k)} onClick=${() => set({ screen: "story", stab: k, asel: null, at: null })}><span class="now">${l}</span><span class="n">${n}</span></button></li>`)}</ul>
@@ -705,9 +699,9 @@
     return html`<section class="proto" aria-label="Prototype controls">
       <div class="ph"><b>Prototype controls</b><span class="grow"></span><button class="ibtn" aria-label="Close the prototype controls" aria-expanded="true" onClick=${() => set({ proto: false })}>${I("x")}</button></div>
       <p>Not part of the app: they set what the sample shows. Phase 1: steering, and editing the cut's spec · Canvas and Lineage read-only · sample project, our own test pictures.</p>
-      <span class="pl">Screen</span><div class="seg wrap" role="group" aria-label="Screen">${[["home", "Home"], ["reviews", "Reviews"], ["upload", "Upload"], ["analyzing", "Analyzing"], ["fountain", "Fountain"], ["script", "Script"], ["story", "Story"], ["episodes", "Episodes"], ["episode", "Episode"], ["canvas", "Canvas"], ["graph", "Graph"], ["review", "Review"], ["cut", "Cut"], ["delivery", "Delivery"], ["outofdate", "Out of date"]].map(([k, l]) => html`<button aria-pressed=${String(S.screen === k)} onClick=${() => go(k)}>${l}</button>`)}</div>
+      <span class="pl">Screen</span><div class="seg wrap" role="group" aria-label="Screen">${[["home", "Home"], ["reviews", "Reviews"], ["upload", "Upload"], ["script", "Script"], ["story", "Story"], ["episodes", "Episodes"], ["episode", "Episode"], ["canvas", "Canvas"], ["graph", "Graph"], ["review", "Review"], ["cut", "Cut"], ["delivery", "Delivery"], ["outofdate", "Out of date"]].map(([k, l]) => html`<button aria-pressed=${String(S.screen === k)} onClick=${() => go(k)}>${l}</button>`)}</div>
       <label class="select">State<select aria-label="State" value=${S.state} onChange=${(e) => { const v = e.target.value; set({ state: v, dramaStop: v === "stopping" ? "stopping" : v === "stopped" ? "stopped" : null }); }}>
-        ${[["normal", "Normal"], ["fresh", "Nothing out of date"], ["cutnewer", "Cut: a newer cut exists"], ["cutinputs", "Cut: draft inputs changed"], ["cutrefused", "Cut: drama-cli refuses the edit"], ["nostop", "No stop yet"], ["stopping", "Stopping"], ["stopped", "Stopped"], ["redline", "Red line"], ["budget", "Refused (no code)"], ["cap", "Cap reached"], ["env", "Pine access denied"], ["spendlimit", "Pine credits used up"]].map(([k, l]) => html`<option value=${k}>${l}</option>`)}</select></label>
+        ${[["normal", "Normal"], ["scriptRewriting", "Script: rewriting"], ["scriptFailed", "Script: check failed"], ["scriptYou", "Script: waiting for you"], ["scriptOriginal", "Script: only the original"], ["fresh", "Nothing out of date"], ["cutnewer", "Cut: a newer cut exists"], ["cutinputs", "Cut: draft inputs changed"], ["cutrefused", "Cut: drama-cli refuses the edit"], ["nostop", "No stop yet"], ["stopping", "Stopping"], ["stopped", "Stopped"], ["redline", "Red line"], ["budget", "Refused (no code)"], ["cap", "Cap reached"], ["env", "Pine access denied"], ["spendlimit", "Pine credits used up"]].map(([k, l]) => html`<option value=${k}>${l}</option>`)}</select></label>
       <label class="select" title="What a send, a check or a Reconcile finds">Outcome<select aria-label="Outcome" value=${S.outcome} onChange=${(e) => set({ outcome: e.target.value })}>
         ${[["ok", "Goes through"], ["refused", "Not submitted (the engine says)"], ["unknown", "No answer"]].map(([k, l]) => html`<option value=${k}>${l}</option>`)}</select></label>
       <div class="seg" role="group" aria-label="Theme">${[["dark", "Dark", "moon-stars"], ["light", "Light", "sun-dim"]].map(([k, l, ic]) => html`<button aria-pressed=${String(S.theme === k)} onClick=${() => set({ theme: k })}>${I(ic)}${l}</button>`)}</div>

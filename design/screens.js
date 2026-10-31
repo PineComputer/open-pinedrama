@@ -3,15 +3,6 @@
 (() => {
   const { html, I, S, set, go, own, jump, openHome, openStage, openLineage, stagesOf, pickedAt, Submission, submit, toast, money, Status, TopBar, StopBanner, EpisodeViews, ProjectChips, AgentPanel, SPENT_COVERS, useEffect, useRef } = window.PD;
 
-  /* ───── setup steps (sidebar) ───── */
-  function SetupSteps() {
-    const fountain = S.screen === "fountain";
-    const steps = [["Script", fountain ? "you" : "work", fountain ? "Your review" : "Checking the screenplay", fountain ? "fountain" : "analyzing"],
-      ["Story", "line", "After your review"], ["Episodes", "line", "After the looks"], ["Cut", "line", "Per episode"]];
-    return html`<ol class="setup">${steps.map(([t, st, d, sc], i) => html`<li class=${st}><button disabled=${!sc} aria-current=${String(S.screen === sc)} onClick=${() => sc && go(sc)}>
-      <span class="n">${st === "accepted" ? I("check") : i + 1}</span><span><b>${t}</b><small>${d}</small></span></button></li>`)}</ol>`;
-  }
-
   /* ───── stop cards: drama-cli's refusal shown as data ───── */
   function StopCard({ kind }) {
     const K = {
@@ -79,60 +70,9 @@
               <li><b>You review what changed</b><small>Answer its questions, then accept in your own words.</small></li>
               <li><b>The agent writes the bible and draws the cast and places</b><small>You review the looks before any episode starts.</small></li>
               <li><b>Episodes: storyboards, then takes</b><small>You watch every video version (Take) and decide.</small></li></ol>
-            <button class="btn lg primary" style="width:100%" disabled=${!ready} onClick=${() => { set({ ana: 0 }); go("analyzing"); }}>Start</button>
+            <button class="btn lg primary" style="width:100%" disabled=${!ready} onClick=${() => { go("script"); set({ state: "scriptRewriting", sview: null }); }}>Start</button>
             <small class="muted">${ready ? "Starts the setup session." : !S.file ? "Add a screenplay to start." : "Choose a preset to start."}</small></aside>
         </div></div></div></div>`;
-  }
-
-  /* ───── Analyzing ───── */
-  function Analyzing() {
-    useEffect(() => { if (S.ana >= P.setupSteps.length) return; const t = setTimeout(() => set({ ana: S.ana + 1 }), 1100); return () => clearTimeout(t); });
-    const done = S.ana >= P.setupSteps.length;
-    return html`<div class="main">
-      <${TopBar} crumbs=${[own.drama(), "Setup", "Script"]}/>
-      <${StopBanner}/>
-      <div class="scrollmain"><div class="wrap" style="max-width:1120px">
-        <div class="greet"><div class="grow"><span class="kick">Step 1 of 4 · Script</span><h1>${done ? "Your Fountain is ready" : "Analyzing your script"}</h1>
-          <p>${done ? "The agent rewrote your file into Fountain and checked it. One question waits for you." : "The agent rewrites your file into Fountain, the screenplay format drama-cli reads, and checks it."}</p></div>
-          ${done ? html`<button class="btn lg primary" onClick=${() => go("fountain")}>${I("eye")}Review the rewrite</button>`
-            : html`<button class="btn danger" onClick=${() => set({ dialog: { title: "Stop analyzing?", body: "No video is in flight at this step. The agent's turns so far are billed. The drama keeps your file; you can start again.", ok: "Stop analyzing", danger: true, cancel: "Keep going", run: () => { toast("Analyzing stopped."); go("home"); } } })}>${I("stop")}Stop analyzing</button>`}</div>
-        <div class="anagrid">
-          <section class="panel"><h3>${I("list-checks")}Process<span class="grow"></span><span class="muted mono" style="font-size:11.5px">${Math.min(S.ana, P.setupSteps.length)} of ${P.setupSteps.length}</span></h3>
-            <div class="bigbar"><i style=${`width:${(Math.min(S.ana, P.setupSteps.length) / P.setupSteps.length) * 100}%`}></i></div>
-            <ol class="steps big">${P.setupSteps.map((s, i) => html`<li class=${i === S.ana ? "now" : i > S.ana ? "later" : ""}>${I(i < S.ana ? "check-circle" : i === S.ana ? "circle-notch" : "circle")}<span>${s.t} ${s.c && html`<code>${s.c}</code>`}</span><time>${i < S.ana ? s.time : ""}</time></li>`)}</ol>
-            <p class="muted" style="font-size:12px;margin-top:10px">drama-cli's screenplay check calls no paid model. ${SPENT_COVERS}</p></section>
-          <section class="panel"><h3>${I("file-text")}The Fountain so far<span class="grow"></span><span class="tag">read-only</span></h3>
-            <div class="fpeek">${P.fountain.slice(0, 4 + S.ana * 4).map((l) => l.gap ? html`<div class="gap"></div>` : html`<div class=${"fl " + l.el}>${l.tx}</div>`)}</div></section>
-        </div></div></div></div>`;
-  }
-
-  /* ───── Fountain review ───── */
-  function Fountain() {
-    const ok = S.tod && S.words.trim().length >= 3;
-    const hit = (l) => S.fsel && l.from && l.from.includes(S.fsel);
-    return html`<div class="main">
-      <${TopBar} crumbs=${[own.drama(), "Setup", "Fountain review"]}/>
-      <${StopBanner}/>
-      <div class="frev">
-        <div class="frevhead"><div class="grow"><span class="kick">Step 1 of 4 · Your review</span><h2>Check what the rewrite changed</h2>
-          <p class="muted">7 lines changed form, nothing was removed, and 1 question waits. Click a line to see where it came from.</p></div>
-          <div class="facts"><span><b>24</b> episodes</span><span><b>212</b> scenes</span><span><b>0</b> red lines</span></div></div>
-        <div class="fpanes">
-          <section class="fpane"><h4>Your file</h4><ol class="orig">${P.orig.map((l, i) => html`<li><button type="button" class=${S.fsel === i + 1 ? "on" : ""} aria-pressed=${String(S.fsel === i + 1)} onClick=${() => set({ fsel: i + 1 })}><span>${i + 1}</span>${l}</button></li>`)}</ol></section>
-          <section class="fpane fnt"><h4>Fountain <span class="tag">screenplay.md</span></h4>
-            <div class="fdoc">${P.fountain.map((l) => l.gap ? html`<div class="gap"></div>`
-              : l.ask ? html`<div class=${"fl " + l.el + " ask"}>INT. LUCA'S APARTMENT - <span class="q">${S.tod ? S.tod.toUpperCase() : "?"}</span> #6-2#
-                  ${l.why && html`<span class="why">${l.why}</span>`}
-                  <span class="seg ask" role="group" aria-label="Time of day">${["Day", "Night"].map((v) => html`<button aria-pressed=${String(S.tod === v)} onClick=${() => set({ tod: v })}>${v}</button>`)}</span></div>`
-              : html`<button type="button" class=${"fl " + l.el + (hit(l) ? " on" : "")} aria-pressed=${String(Boolean(hit(l)))} onClick=${() => l.from && set({ fsel: l.from[0] })}>${l.tx}
-                  ${hit(l) && l.why && html`<span class="why">${l.why}</span>`}</button>`)}</div></section>
-        </div>
-        <div class="faccept">
-          <textarea placeholder="Accept the rewrite in your own words, e.g. “Yes, this is my script.” (required)" value=${S.words} onInput=${(e) => set({ words: e.target.value })}></textarea>
-          <div class="fbtns"><button class="btn" onClick=${() => set({ dialog: { title: "Send the rewrite back?", body: "Tell the agent what to change. It rewrites and checks again: drama-cli's check is free, the agent's turns are billed.", ok: "Send back", cancel: "Cancel", run: () => toast("Sent back to the agent.") } })}>${I("arrow-counter-clockwise")}Send back</button>
-            <button class="btn primary" disabled=${!ok} onClick=${() => { toast("Rewrite accepted, with your words. The agent starts the bible."); go("story"); }}>${I("check")}Accept the rewrite</button></div>
-          <small class="muted">${!S.tod ? "Answer the question first: Day or Night." : !ok ? "Accepting needs your own words." : "Your words are recorded with the accepted file."}</small></div>
-      </div></div>`;
   }
 
   /* ───── Story: bible, cast, world ───── */
@@ -552,26 +492,76 @@
   /* ───── Script: the screenplay's home (IA draft, A3) ─────
      The accepted Fountain, read; your original beside it on demand. A rewrite waiting for you is a review: it opens in
      Fountain review, not here. */
+  /* ───── Script: the screenplay's one home, from the upload to your acceptance (D-entry pending) ─────
+     merecdesperez44323-lab: "script, 这个part就把用户上传、drama-cli修改、revise、变成fountain， 用户确认， 这些在这个part都搞定，
+     包括对比啥的， 改了啥". So the setup's Analyzing and Fountain review fold in here: they were steps ② to ④ of one thing.
+     The sample is The Stepmother's real files (P.script); its states are the Prototype controls' "Script: …" states. */
+  const SCRIPT_STATES = { scriptRewriting: "rewriting", scriptFailed: "failed", scriptYou: "you", scriptOriginal: "original" };
+  const scriptState = () => SCRIPT_STATES[S.state] || "accepted";
+  // drama-cli's screenplay check (drama_cli/screenplay.py, _slug's scene_time rule), with this sample's values: what the
+  // check says when a rewrite keeps the original's "MORNING".
+  const CHECK_FAILED = "line 3 · scene_time · the scene heading's time is 'MORNING': write DAY or NIGHT, and put a finer time in the action after it";
+  // The Script row in the project tree says the same, as an episode row does (now-line + dot, the five maker states).
+  const scriptRow = () => ({ rewriting: ["Rewriting", "work"], failed: ["Rewriting", "work"], you: ["Waiting for you", "you"], accepted: ["Accepted", "accepted"], original: ["Original only", "accepted"] })[scriptState()];
   function Script() {
-    const beside = S.scriptBeside;
-    const lines = P.fountain.map((l) => (l.ask ? { ...l, tx: l.tx.replace(" - ? ", " - DAY "), ask: false } : l));
-    const doc = html`<div class="fdoc">${lines.map((l) => (l.gap ? html`<div class="gap"></div>` : html`<div class=${"fl " + l.el}>${l.tx}</div>`))}</div>`;
+    const sc = P.script, st = scriptState();
+    const fl = sc.fountain, map = sc.map;
+    const hasFountain = st !== "rewriting" && st !== "original";
+    const view = S.sview && (hasFountain || S.sview === "original") ? S.sview : hasFountain ? "fountain" : "original";
+    // Episode → scene outline from the printed lines (VS Code's Outline view): a section is an episode, a heading a scene.
+    const outline = []; fl.forEach((l, i) => { if (l.el === "section") outline.push({ ep: l.text.replace(/^#\s*/, ""), i, scenes: [] }); else if (l.el === "heading" && outline.length) outline[outline.length - 1].scenes.push({ t: l.text.replace(/\s*#[^#]*#\s*$/, ""), i }); });
+    const jumpTo = (i) => document.getElementById("fl-" + i)?.scrollIntoView({ block: "start", behavior: "smooth" });
+    const changed = new Set(map.filter((r) => !r.same).map((r) => r.o));
+    const lit = S.ssel ? new Set((map.find((r) => r.o === S.ssel) || { to: [] }).to.map((n) => n - 1)) : new Set();
+    const Line = (l, i) => (l.gap ? html`<div class="gap"></div>` : html`<div id=${"fl-" + i} class=${"fl " + l.el + (lit.has(l.source) ? " on" : "")}>${l.text}</div>`);
+    const review = html`<details class="whatchanged"><summary>What changed</summary><pre class="document plain">${sc.review}</pre></details>`;
+    // The history, newest on top (GitHub's pull-request timeline; Figma's and Google Docs' version history): each step as
+    // drama-cli recorded it, drama-cli's own words where it refused.
+    const events = {
+      rewriting: [["work", "v1 · the agent is rewriting your file into Fountain", null], ["done", "Original uploaded · " + sc.file, "17:31"]],
+      failed: [["work", "v2 · the agent revises it, then drama-cli checks again", null],
+        ["err", html`v1 · check failed: <code>${CHECK_FAILED}</code> <span class="subtle">(example values)</span>`, "17:38"], ["done", "Original uploaded · " + sc.file, "17:31"]],
+      you: [["you", html`v1 · check passed · <b>waiting for you</b>`, "17:38", true], ["done", "Original uploaded · " + sc.file, "17:31"]],
+      accepted: [["done", "v1 · accepted in your words: “Yes, this is my script.”", "17:40"], ["done", "v1 · check passed (drama-cli screenplay check)", "17:38", true], ["done", "Original uploaded · " + sc.file, "17:31"]],
+      original: [["done", "Original uploaded · " + sc.file, "17:31"]],
+    }[st];
+    const History = html`<ol class="history">${events.map(([kind, text, at, withReview]) => html`<li class=${kind}>
+        <span class="dot ${kind === "you" ? "you" : kind === "work" ? "work" : kind === "err" ? "redline" : "accepted"}"></span>
+        <div class="grow"><span>${text}</span>${at && html`<time>${at}</time>`}
+          ${withReview && review}
+          ${kind === "you" && html`<button class="btn sm primary" onClick=${() => set({ sview: "compare", saccept: true })}>Accept</button>`}</div></li>`)}</ol>`;
     return html`<div class="main">
       <${TopBar} crumbs=${[own.drama(), "Script"]}/>
       <div class="body"><div class="scrollmain">
         <div class="bar2"><span class="grow"></span><${ProjectChips}/></div>
         <${StopBanner}/>
-        <div class="scripthead"><div class="grow"><h2 class="pagetitle">Script</h2><p class="muted pagesub">Your screenplay as the agent rewrote it into Fountain and you accepted it; your original beside it.</p>
-            <p class="muted">screenplay.fountain v2 · ${Status("accepted")} accepted in your words: “Yes, this is my script. Day for the second scene.”</p></div>
-          <div class="seg" role="group" aria-label="Show"><button aria-pressed=${String(!beside)} onClick=${() => set({ scriptBeside: false })}>Fountain</button><button aria-pressed=${String(!!beside)} onClick=${() => set({ scriptBeside: true })}>Beside your original</button></div></div>
-        ${beside ? html`<div class="fpanes scriptpanes"><section class="fpane"><h4>Your file <span class="tag">bride-on-bail.docx</span></h4><ol class="orig">${P.orig.map((l, i) => html`<li><button type="button"><span>${i + 1}</span>${l}</button></li>`)}</ol></section>
-            <section class="fpane fnt"><h4>Fountain <span class="tag">v2 · accepted</span></h4>${doc}</section></div>`
-          : html`<section class="panel scriptdoc">${doc}</section>`}
-        <section class="panel scriptversions"><h3>${I("stack")}Versions</h3>
-          <div class="lrow static">v2 · the agent's rewrite, accepted<span class="mono subtle">today 17:40</span></div>
-          <div class="lrow static">Your original · bride-on-bail.docx<span class="mono subtle">uploaded 17:31</span></div></section>
+        <div class="scripthead"><div class="grow"><h2 class="pagetitle">Script</h2>
+          <p class="muted pagesub">Your screenplay from upload to acceptance: the agent rewrites it into Fountain, drama-cli checks it, and you accept it. Sample: ${sc.project}'s real files.</p></div></div>
+        ${st === "original" && html`<div class="notice" role="status">${I("info")}<span><b>Only the original was recorded for this project.</b> It was set up before drama-cli kept the rewrite, its check and your acceptance, so there are none to show.</span></div>`}
+        <div class="scriptlayout">
+          <section class="panel scripthistory" aria-label="Versions"><h3>${I("stack")}Versions</h3>
+            ${st === "accepted" ? html`<details><summary>Accepted v1 · 3 steps</summary>${History}</details>` : History}</section>
+          ${st === "you" && S.saccept && html`<div class="faccept">
+            <textarea placeholder="Accept the rewrite in your own words, e.g. “Yes, this is my script.” (required)" value=${S.words} onInput=${(e) => set({ words: e.target.value })}></textarea>
+            <div class="fbtns"><button class="btn" onClick=${() => toast("Sent back to the agent with your words.")}>${I("arrow-counter-clockwise")}Send back</button>
+              <button class="btn primary" disabled=${S.words.trim().length < 3} onClick=${() => { toast("Rewrite accepted, with your words. The agent starts the bible."); set({ state: "normal", saccept: false }); }}>${I("check")}Accept the rewrite</button></div>
+            <small class="muted">${S.words.trim().length < 3 ? "Accepting needs your own words." : "Your words are recorded with the accepted file."}</small></div>`}
+          <div class="scriptmain">
+          <div class="scriptbar"><div class="seg" role="group" aria-label="View">${[["fountain", "Fountain"], ["original", "Original"], ["compare", "Compare"]].map(([k, l]) =>
+              html`<button aria-pressed=${String(view === k)} disabled=${!hasFountain && k !== "original"} title=${!hasFountain && k !== "original" ? "No Fountain recorded yet" : ""} onClick=${() => set({ sview: k })}>${l}</button>`)}</div>
+            <span class="grow"></span>${hasFountain && html`<span class="muted mono" style="font-size:11.5px">v1 · screenplay/v1/screenplay.fountain</span>`}</div>
+          ${view === "fountain" ? html`<div class="scriptbody"><nav class="outline" aria-label="Outline">${outline.map((e) => html`<div><button class="ep" onClick=${() => jumpTo(e.i)}>${e.ep}</button>
+                ${e.scenes.map((x) => html`<button class="sc" onClick=${() => jumpTo(x.i)}>${x.t}</button>`)}</div>`)}</nav>
+              <section class="panel scriptdoc"><div class="fdoc">${fl.map(Line)}</div></section></div>`
+            : view === "compare" ? html`<div class="fpanes scriptpanes"><section class="fpane"><h4>Original <span class="tag">${sc.file}</span></h4>
+                <ol class="orig">${sc.original.split("\n").map((t, i) => html`<li><button type="button" class=${(S.ssel === i + 1 ? "on " : "") + (changed.has(i + 1) ? "chg" : "")} aria-pressed=${String(S.ssel === i + 1)} onClick=${() => set({ ssel: i + 1 })}><span>${i + 1}</span>${t}</button></li>`)}</ol></section>
+              <section class="fpane fnt"><h4>Fountain <span class="tag">v1</span></h4><div class="fdoc">${fl.map(Line)}</div>
+                ${S.ssel && html`<p class="muted" style="font-size:12px">Line ${S.ssel} became: <code>${(map.find((r) => r.o === S.ssel) || { became: "a blank line" }).became}</code></p>`}</section></div>`
+            : html`<section class="panel scriptdoc"><pre class="document plain">${sc.original}</pre></section>`}
+        </div>
+        </div>
       </div><${AgentPanel}/></div></div>`;
   }
-  window.EXTRA = { BackTo, lineageOf, outOfDateAt, lineageInEpisode, outofdate: OutOfDate, script: Script, upload: Upload, analyzing: Analyzing, fountain: Fountain, story: Story, graph: Graph, cut: Cut, delivery: Delivery, episode: Episode, StopCard, SetupSteps };
+  window.EXTRA = { BackTo, lineageOf, outOfDateAt, lineageInEpisode, outofdate: OutOfDate, script: Script, upload: Upload, story: Story, graph: Graph, cut: Cut, delivery: Delivery, episode: Episode, StopCard, scriptRow };
   window.PD.draw();
 })();
