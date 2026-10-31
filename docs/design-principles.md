@@ -51,6 +51,7 @@ states, codes and recovery actions, shown as they are.
 
 ```mermaid
 flowchart LR
+  P0[0 A visualization of drama-cli's work]
   subgraph Where["Where things are"]
     P1[1 One home per object]
     P3[3 Always clear what you act on]
@@ -73,10 +74,44 @@ flowchart LR
     P13[13 Light process early]
     P14[14 Every element cites its ground]
   end
+  P0 --> Where
+  P0 --> How
+  P0 --> State
   P8 --> P4
   P9 --> P6
   P1 --> P3
 ```
+
+## 0. A visualization of drama-cli's work
+
+**Rule.** The studio is a visualization of drama-cli's work, plus the points where the maker
+decides. Each page maps to drama-cli's stages and records, and every other principle serves this
+one:
+
+| Page | drama-cli |
+|---|---|
+| Script | the screenplay, `screenplay validate` and its accepted versions |
+| Bible | `bible` |
+| Assets | `cast`, `scenes`, `props` |
+| An episode's Segments | `breakdown`, then storyboards (line-art, photoreal), references and takes (`shoot`) |
+| Cut | `edit` |
+| Reviews | the decisions `accept` records |
+| Out of date | drama-cli's staleness |
+
+Names follow drama-cli; the studio invents no page, state or data of its own; machinery (request
+specs, prompts) appears only on demand, in an item's detail.
+
+**Source.** merecdesperez44323-lab: "其实我们就围绕着， 这个是有效的 、针对 drama-cli工作过程的  可视化， 就好了" (*really, we just center on this: an effective visualization of drama-cli's working process, and that's it*)
+([D64](decisions.md#d64-2026-10-30--the-studio-is-a-visualization-of-drama-clis-work)).
+
+**How others do it.** ComfyUI and Airflow draw the graph their engine runs, with each node's state
+as the engine reports it; GitHub Actions shows a workflow's jobs and steps as the runner records
+them. None adds states of its own to the run.
+
+**In the studio.** [D61](decisions.md#d61-2026-10-30--story-is-renamed-bible-as-drama-cli-calls-it),
+[D62](decisions.md#d62-2026-10-30--script-is-the-home-of-the-whole-screenplay-process) and
+[D63](decisions.md#d63-2026-10-30--an-episodes-views-are-segments-and-canvas-segments-is-a-matrix)
+follow from it.
 
 ## 1. One home per object
 
