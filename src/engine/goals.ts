@@ -262,6 +262,31 @@ export function decisionGoal(answer: string, code: string | null): string {
   return [answer, `${code ? `Carry on with episode ${code}` : "Carry on"} from there as the goal says, stopping for my review at the next point that needs me, returning the files with your question.`].join("\n\n");
 }
 
+/** A clip of the maker's edit of a cut: a returned take's file, the part of it to play in seconds, and its sound. */
+export interface EditClip {
+  path: string;
+  in: number;
+  out: number;
+  audio: "source" | "silence";
+}
+
+/**
+ * The maker's edit of a cut, made in the studio on the cut under review: the agent writes it as drama-cli's cut plan
+ * (short_drama doc/drama-cli/review.md, "Build and inspect a cut": each clip a take's path and sha256, in, out, and
+ * audio source or silence), builds and validates it, and stops for the maker to watch the new cut. drama-cli, not the
+ * studio, says whether the cut can be joined by stream copy; a trim or silence needs --encode, which the maker asks
+ * for by editing (short_drama doc/drama-cli/design.md, "The cut's encoding").
+ */
+export function editGoal(code: string, base: string, clips: EditClip[]): string {
+  const config = "--config drama/drama-cli.cfg.yaml";
+  return [
+    `I edited ${code}'s cut (${base}) myself. Build my edit as the next version of the cut: these clips in this order, and nothing else changed.`,
+    ...clips.map((clip, index) => `${index + 1}. ${clip.path}, from ${clip.in} s to ${clip.out} s, ${clip.audio === "silence" ? "silent" : "with its own sound"}`),
+    `Write it as a cut plan for drama-cli edit: the cut's output as before, each clip's path and sha256 as drama-cli takes them, and "audio" "source" or "silence" as listed. Build it with \`drama-cli edit build ${code} <the plan> ${config}\`; if drama-cli says the cut can't be joined by stream copy, build it again with --encode, as my edit asks for. Then check it with \`drama-cli edit validate ${code} ${config}\`.`,
+    "If drama-cli refuses my edit, stop and tell me its message and the action it gives; change nothing on your own. Otherwise ask me to watch the new cut, returning it with its cut.json.",
+  ].join("\n");
+}
+
 /** The kit a rehearsal's sessions are given (fixtures/rehearsal), under this name. */
 export const STANDIN_KIT = "standin.py";
 
