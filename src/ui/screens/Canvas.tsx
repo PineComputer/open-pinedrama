@@ -18,7 +18,7 @@ import type { ProjectView, StageStatus } from "../../shared/project.ts";
 import { specBeside, specFacts } from "../../shared/spec.ts";
 import type { DramaView, FileItem } from "../../shared/types.ts";
 import { api, useResource } from "../api.ts";
-import { IconButton } from "../components/Button.tsx";
+import { buttonClass, IconButton } from "../components/Button.tsx";
 import { Dialog } from "../components/Dialog.tsx";
 import { EmptyState } from "../components/EmptyState.tsx";
 import { Menu } from "../components/Menu.tsx";
@@ -518,6 +518,7 @@ function Plane({ drama }: { drama: DramaView }) {
 
   // The episode's breakdown.json at the version drama-cli's lineage works on, and each segment's shots in it (D66).
   const breakdownStage = lineage?.nodes.find((stage) => stage.id === `episodes/${code}/breakdown`);
+  const cutStage = lineage?.nodes.find((stage) => stage.id === `episodes/${code}/edit`);
   const breakdownFile = files.data?.find((file) => file.kind === "breakdown" && file.path.endsWith(`/episodes/${code}/breakdown/${breakdownStage?.version}/breakdown.json`));
   const breakdownText = useText(breakdownFile).text;
   const shotsOf = useMemo((): { shots?: Map<string, Shot[]>; error?: string } => {
@@ -550,8 +551,9 @@ function Plane({ drama }: { drama: DramaView }) {
       return heading && headingText(heading);
     };
     const title = (group: string) => {
-      const shared = { Characters: "look", Locations: "plate", Props: "prop" } as const;
-      if (group in shared) return t(PIPELINE[shared[group as keyof typeof shared]].label);
+      // drama-cli's own group titles (export.py, section()), in the words Assets' shelves use: Characters, Locations, Props.
+      const shared = { Characters: "cast.characters", Locations: "cast.locations", Props: "cast.props" } as const;
+      if (group in shared) return t(shared[group as keyof typeof shared]);
       const segment = group.slice(code.length + 1);
       return segment === "cut" ? t("canvas.cutGroup", { episode: code }) : [group, scene(segment)].filter(Boolean).join(" · ");
     };
@@ -818,6 +820,18 @@ function Plane({ drama }: { drama: DramaView }) {
                 <Icon name="caret-right" />
               </button>
             </div>
+            {/* The episode's head (D66, design/app.js EpisodeHead): its script, and its cut, an object with its own home. */}
+            <Link to="/d/$dramaId/script" params={{ dramaId: drama.id }} search={{ ep: code }} className={buttonClass({ size: "sm", variant: "ghost" })}>
+              <Icon name="file-text" />
+              {t("canvas.episodeScript")}
+            </Link>
+            {cutStage?.version && (
+              <Link {...homeLink(drama.id, cutStage.id)} className={buttonClass({ size: "sm", variant: "ghost" })}>
+                <Icon name="scissors" />
+                {t("canvas.cutVersion", { v: cutStage.version })}
+                {standingOf(cutStage) !== "accepted" && <StatusChip status={standingOf(cutStage)} label={t(`status.${standingOf(cutStage)}` as TKey)} />}
+              </Link>
+            )}
             <button type="button" className="follow" aria-pressed={follow} onClick={() => { centred.current = undefined; setFollow(!follow); }}>
               {follow && <span className="live" aria-hidden="true" />}
               {t(follow ? "canvas.following" : "canvas.follow")}

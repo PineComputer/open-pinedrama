@@ -68,6 +68,7 @@ describe("the routes", () => {
     ["a view the studio hasn't", "/d/d1/episodes?view=grid"],
     ["a version that isn't drama-cli's", "/d/d1/e/EP006/canvas?item=episodes%2FEP006%2Fsegments%2Fseg03&version=latest"],
     ["a version of no item", "/d/d1/e/EP006/canvas?version=t02"],
+    ["a script at an episode code that isn't drama-cli's", "/d/d1/script?ep=EP2"],
   ])("say Not found for %s", async (_, path) => {
     expect((await load(path)).matches.some((match) => match.status === "notFound")).toBe(true);
   });

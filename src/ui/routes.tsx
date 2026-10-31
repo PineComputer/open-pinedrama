@@ -91,7 +91,16 @@ const episodesRoute = createRoute({
     return isSettingUp(drama) ? <SetupPanel drama={drama} /> : <Board drama={drama} />;
   },
 });
-const scriptRoute = createRoute({ ...leaf("script"), staticData: { page: "script" }, component: () => <Script dramaId={useDrama().id} /> });
+// Script at an episode (?ep=EPxxx, drama-cli's code): the Canvas's "Episode script" opens it there (D66, design/app.js EpisodeHead).
+const scriptRoute = createRoute({
+  ...leaf("script"),
+  staticData: { page: "script" },
+  validateSearch: (search: Record<string, unknown>): { ep?: string } => ({ ep: text(search.ep) }),
+  beforeLoad: ({ search }) => {
+    if (search.ep !== undefined && !/^EP[0-9]{3}$/.test(search.ep)) throw notFound({ data: { what: `ep=${search.ep}` } });
+  },
+  component: () => <Script dramaId={useDrama().id} />,
+});
 // Analyzing and the Fountain review are setup steps, a process like the review room, not views of Script's (D21).
 const analyzingRoute = createRoute({ ...leaf("analyzing"), staticData: { page: "analyzing" }, component: () => <Analyzing dramaId={useDrama().id} /> });
 const bibleRoute = createRoute({

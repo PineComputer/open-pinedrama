@@ -92,6 +92,12 @@ describe("the canvas", () => {
     await waitFor(() => expect(calls("GET", "/api/dramas/d1/lineage")).toHaveLength(2));
   });
 
+  it("heads the episode with its script, opened at that episode (D66)", async () => {
+    engine(project());
+    await renderAt(<Canvas drama={drama} />, "/d/d1/e/EP001/canvas");
+    expect(await screen.findByRole("link", { name: "Episode script" })).toHaveAttribute("href", "/d/d1/script?ep=EP001");
+  });
+
   it("starts each segment's group with its shots from drama-cli's breakdown.json, wired to the stages that read it (D66)", async () => {
     const shot = { time: "0-3s", size: "wide shot", angle: "eye level", camera: "Static wide shot.", visual: "林 walks into the office.", audio: "Room tone." };
     const breakdown = { id: 50, name: "breakdown.json", path: "/work/drama/episodes/EP001/breakdown/v1/breakdown.json", type: "application/json", size: 1, kind: "breakdown", episode: "EP001", url: "/f/50", createdAt: "2026-10-30T10:00:00Z" } as unknown as FileItem;
@@ -125,8 +131,8 @@ describe("the canvas", () => {
     await renderAt(<Canvas drama={drama} />, "/d/d1/canvas");
     expect(await screen.findByRole("group", { name: "EP001 seg01 · INT. OFFICE - DAY" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /^Storyboard · line-art/ })).toBeInTheDocument();
-    expect(screen.getByRole("group", { name: "Cast" })).toBeInTheDocument();
-    expect(screen.getByRole("group", { name: "Places" })).toBeInTheDocument();
+    expect(screen.getByRole("group", { name: "Characters" })).toBeInTheDocument();
+    expect(screen.getByRole("group", { name: "Locations" })).toBeInTheDocument();
     // drama-cli's Text group, the bible and the breakdowns, stays off the board.
     expect(screen.queryByRole("group", { name: "Text" })).toBeNull();
     expect(screen.getByRole("button", { name: /^EP001 · x/ })).toBeInTheDocument();
@@ -142,7 +148,7 @@ describe("the canvas", () => {
     // EP002 has made nothing yet, so nothing of EP001's, nor the references EP001 used, stands on its board.
     expect(await screen.findByRole("button", { name: "Next episode" })).toBeDisabled();
     expect(screen.queryByRole("group", { name: "EP001 seg01 · INT. OFFICE - DAY" })).toBeNull();
-    expect(screen.queryByRole("group", { name: "Cast" })).toBeNull();
+    expect(screen.queryByRole("group", { name: "Characters" })).toBeNull();
     await user.click(screen.getByRole("button", { name: "Previous episode" }));
     await waitFor(() => expect(href(router)).toBe("/d/d1/e/EP001/canvas"));
     expect(await screen.findByRole("group", { name: "EP001 seg01 · INT. OFFICE - DAY" })).toBeInTheDocument();
