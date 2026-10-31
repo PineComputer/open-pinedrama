@@ -115,7 +115,7 @@ function Standing({ drama, sessions }: { drama: DramaView; sessions: SessionRepo
           ? [inFlight > 0 ? t("budget.inFlight", { money: usd(inFlight) }) : "", t("statusbar.atWork", { n: episodes.working })].filter(Boolean).join(" · ")
           : t("statusbar.setup", { step: t(SETUP_STEPS[Math.min(drama.setup.reached, SETUP_STEPS.length - 1)]) })}
       </span>
-      <span className="muted" style={{ fontSize: 11 }}>
+      <span className="subtle" style={{ fontSize: 11 }}>
         {t("spent.about")}
       </span>
     </div>

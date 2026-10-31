@@ -81,7 +81,7 @@ a.tag:hover { background: var(--hover); color: var(--text-primary); }
 .side .proj b { display: block; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .side .proj small { color: var(--text-muted); font-size: 11px; }
 .side .scroll { flex: 1; overflow: auto; padding: 10px 8px; }
-.side .sec { padding: 14px 10px 6px; font-size: 11px; font-weight: 500; color: var(--text-muted); letter-spacing: .5px; text-transform: uppercase; }
+.side .sec { padding: 14px 10px 6px; font-size: 11px; font-weight: 500; color: var(--text-subtle); letter-spacing: .5px; text-transform: uppercase; }
 .navi { width: 100%; display: flex; align-items: center; gap: 10px; height: 36px; padding: 0 10px; border: 0; border-radius: var(--radius-medium); background: transparent; color: var(--text-secondary); font-size: 13px; cursor: pointer; text-align: left; }
 .navi .ic { width: 16px; height: 16px; color: var(--text-muted); }
 .navi:hover { background: var(--hover); }
@@ -420,7 +420,7 @@ input.search:focus { border-color: var(--text-primary); }
 .lrow { width: 100%; display: flex; justify-content: space-between; gap: 8px; padding: 7px 8px; border: 0; border-radius: var(--radius-medium); background: none; color: var(--text-secondary); font-size: 12.5px; text-align: left; cursor: pointer; }
 .lrow:hover { background: var(--hover); color: var(--text-primary); }
 .lrow.static { cursor: default; } .lrow.static:hover { background: none; }
-/* A row's version reads at 4.5:1 on its hover ground too (axe): --text-subtle only marks. */
+/* A row's version reads at 4.5:1 on its hover ground too (axe): --text-subtle reaches it on the surfaces, not on --hover. */
 .lrow .mono.subtle { color: var(--text-secondary); }
 .newthumb { width: 30px; height: 40px; border-radius: 6px; background: var(--surface-container-high); display: grid; place-items: center; color: var(--text-muted); }
 
@@ -564,8 +564,6 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
 .glegend { display: flex; gap: 18px; flex-wrap: wrap; padding: 12px 16px 24px; font-size: 12px; color: var(--text-muted); align-items: center; }
 .glegend .l { display: inline-block; width: 22px; height: 0; border-top: 2px solid var(--text-primary); vertical-align: middle; margin-right: 6px; }
 .glegend .l.stale { border-top-style: dashed; border-color: var(--text-muted); }
-/* The legend's note is letters, so --text-muted (4.5:1 on the canvas and the surface); --text-subtle only marks. */
-.glegend .subtle { color: var(--text-muted); }
 
 /* ── cut ── */
 .cuttl { flex: none; padding: 10px 18px 16px; border-top: 1px solid var(--border); }

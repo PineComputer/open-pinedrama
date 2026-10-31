@@ -1,8 +1,8 @@
 /* The studio's own base, on the design's tokens (design/themes.css, design/tokens.css):
    the layout sizes and motion Reveric has no token for, from the pro direction's spec, and the
    element defaults the studio needs. Every colour is one of Reveric's tokens or a mix of them.
-   Text takes --text-primary, --text-secondary or --text-muted; --text-subtle is for marks, rules
-   and icons only (contrast.test.ts). */
+   Text takes --text-primary, --text-secondary, --text-muted or --text-subtle, each read at 4.5:1 on
+   the grounds contrast.test.ts lists for it. */
 
 :root {
   --rail: 52px;

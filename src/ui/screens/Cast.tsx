@@ -47,7 +47,7 @@ function Card({ card, look, names, dramaId }: { card: CastCard; look: CastCard["
       <div className="ctxt">
         <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
           <b className="grow">{name}</b>
-          <span className="mono muted" style={{ fontSize: 11 }}>
+          <span className="mono subtle" style={{ fontSize: 11 }}>
             {file.version}
           </span>
         </div>
@@ -130,7 +130,7 @@ function PlaceCard({ card, names, dramaId }: { card: CastCard; names: Names | nu
       <div className="ctxt">
         <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
           <b className="grow">{name}</b>
-          <span className="mono muted" style={{ fontSize: 11 }}>
+          <span className="mono subtle" style={{ fontSize: 11 }}>
             {file.version}
           </span>
         </div>

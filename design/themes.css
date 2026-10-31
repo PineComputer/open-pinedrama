@@ -13,6 +13,12 @@
    driven by designs/theme.js. data-theme is the resolved brightness, so
    existing `:root[data-theme="dark"]` overrides keep working.
 
+   The studio letters text in --text-subtle, so every theme's --text-subtle is
+   lifted toward --text-primary just far enough to read at 4.5:1 (WCAG AA) on
+   canvas, surface, surface-dim and surface-container; ivory's --text-muted,
+   under 4.5:1 as copied, is lifted to 5:1 so it stays above --text-subtle.
+   These values differ from reveric_colors.dart.
+
    Derived tokens (--shadow-base, --scrim, --glass) are mockup-only helpers
    for translucency; tint any token with
    color-mix(in srgb, var(--accent) 12%, transparent).
@@ -41,7 +47,7 @@
   --text-primary:   #141A18;
   --text-secondary: #3D4643;
   --text-muted:     #646E6A;
-  --text-subtle:    #A2ACA8;
+  --text-subtle:    #666E6B;
   --text-tertiary:  #646E6A;
 
   --accent:       #1C2623;
@@ -88,7 +94,7 @@
   --text-primary:   #E8EEEB;
   --text-secondary: #BEC8C4;
   --text-muted:     #85918C;
-  --text-subtle:    #5A6561;
+  --text-subtle:    #818B87;
   --text-tertiary:  #85918C;
 
   --accent:       #E4ECE8;
@@ -134,7 +140,7 @@
   --text-primary:   #000000;
   --text-secondary: #333333;
   --text-muted:     #666666;
-  --text-subtle:    #999999;
+  --text-subtle:    #6D6D6D;
   --text-tertiary:  #666666;
 
   --accent:       #000000;
@@ -180,7 +186,7 @@
   --text-primary:   #FFFFFF;
   --text-secondary: #CCCCCC;
   --text-muted:     #888888;
-  --text-subtle:    #666666;
+  --text-subtle:    #828282;
   --text-tertiary:  #888888;
 
   --accent:       #FFFFFF;
@@ -225,8 +231,8 @@
 
   --text-primary:   #2E3026;
   --text-secondary: #555848;
-  --text-muted:     #767866;
-  --text-subtle:    #92957F;
+  --text-muted:     #626454;
+  --text-subtle:    #696C5B;
   --text-tertiary:  #767866;
 
   --accent:       #A2AF9B;
@@ -271,8 +277,8 @@
 
   --text-primary:   #EBECDC;
   --text-secondary: #B8B8A6;
-  --text-muted:     #7A7A68;
-  --text-subtle:    #5A5A48;
+  --text-muted:     #9A9A88;
+  --text-subtle:    #919180;
   --text-tertiary:  #7A7A68;
 
   --accent:       #A2AF9B;

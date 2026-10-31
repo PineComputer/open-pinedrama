@@ -80,7 +80,7 @@
         <div style="display:flex;justify-content:space-between"><span>Spent</span><b class="mono" style="color:var(--text-primary)">${money(P.project.spent)} <span class="muted">/ $1,000</span></b></div>
         <div class="meter"><i style=${`width:${P.project.spent / 10}%`}></i><i class="fly" style=${`width:${P.project.inflight / 10}%`}></i></div>
         <span>${money(P.project.inflight)} in flight · 2 at work</span>
-        <span class="muted" style="font-size:11px">${SPENT_COVERS}</span>
+        <span class="subtle" style="font-size:11px">${SPENT_COVERS}</span>
       </div>
     </aside>`;
   }

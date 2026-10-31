@@ -150,7 +150,7 @@
         </div>`}
         ${S.stab === "cast" && html`<div class="castgrid">${P.cast.map((c) => html`<article class="castcard">
           <div class="pic"><img src=${c.sheet} alt=""/>${Status(c.st, c.st === "back" ? "Sent back · 1 error" : c.st === "you" ? "Waiting for you · 1 warn" : undefined)}</div>
-          <div class="ctxt"><div style="display:flex;align-items:baseline;gap:8px"><b class="grow">${c.name}</b><span class="mono muted" style="font-size:11px">${c.ver}</span></div>
+          <div class="ctxt"><div style="display:flex;align-items:baseline;gap:8px"><b class="grow">${c.name}</b><span class="mono subtle" style="font-size:11px">${c.ver}</span></div>
             <small class="muted">${c.role}</small>
             <div class="aka"><span class="muted">Also called</span>${(P.names[c.id] || []).map((n) => html`<span class="tag">${n}</span>`)}</div>
             ${c.st === "you" && html`<div class="finding warn">${I("warning")}<span>warn · The blouse reads as purple; the bible says plum.</span></div><${ReviewBtns} id=${c.id}/>`}
@@ -158,13 +158,13 @@
           </div></article>`)}</div>`}
         ${S.stab === "scenes" && html`<div class="worldgrid">${P.places.map((p) => html`<article class="placecard">
           <div class="pic"><img src=${p.pic} alt=""/>${p.st !== "accepted" && Status(p.st)}</div>
-          <div class="ctxt"><div style="display:flex;align-items:baseline;gap:8px"><b class="grow">${p.name}</b><span class="mono muted" style="font-size:11px">${p.ver}</span></div>
+          <div class="ctxt"><div style="display:flex;align-items:baseline;gap:8px"><b class="grow">${p.name}</b><span class="mono subtle" style="font-size:11px">${p.ver}</span></div>
             <p class="desc">${p.desc}</p>
             <div class="aka"><span class="muted">Views</span>${p.views.map((v) => html`<span class="tag">${v}</span>`)}</div>
             <div class="aka"><span class="muted">Times</span>${p.times.map(([t, v]) => html`<span class="tag">${t} · ${v}</span>`)}</div>
             ${p.st === "you" && html`<${ReviewBtns} id=${p.id}/>`}</div></article>`)}</div>`}
         ${S.stab === "props" && html`<div class="worldgrid">${P.props.map((p) => html`<article class="placecard"><div class="pic"><img src=${p.pic} alt=""/>${p.st !== "accepted" && Status(p.st)}</div>
-          <div class="ctxt"><div style="display:flex;align-items:baseline;gap:8px"><b class="grow">${p.name}</b><span class="mono muted" style="font-size:11px">${p.ver}</span></div><small class="muted">Key prop</small><p class="desc">${p.desc}</p></div></article>`)}</div>`}
+          <div class="ctxt"><div style="display:flex;align-items:baseline;gap:8px"><b class="grow">${p.name}</b><span class="mono subtle" style="font-size:11px">${p.ver}</span></div><small class="muted">Key prop</small><p class="desc">${p.desc}</p></div></article>`)}</div>`}
         ${S.stab !== "bible" && html`<div class="sendstrip"><span class="muted">Looks and plates · ${decided} of 2 decided</span><span class="grow"></span>
           <button class="btn primary sm" disabled=${decided < 2} onClick=${() => toast("Review sent: Margaret Cole and Garden wedding.")}>Send review</button></div>`}
       </div><${AgentPanel}/></div></div>`;
@@ -258,7 +258,7 @@
                 <span class="muted">Volume</span><input type="range" disabled value="80" aria-label="Volume"/>
                 <p class="muted">drama-cli makes every cut; editing here comes later.</p></div>
               <button class="btn sm" onClick=${() => go("canvas")}>${I("flow-arrow")}Open on Canvas</button></div>`; })()}
-            <div class="isec"><h4>Made from</h4>${c.segs.map(([s, t, d]) => html`<div class="lrow static">${s} · take ${t}<span class="mono muted">${d} s</span></div>`)}</div>
+            <div class="isec"><h4>Made from</h4>${c.segs.map(([s, t, d]) => html`<div class="lrow static">${s} · take ${t}<span class="mono subtle">${d} s</span></div>`)}</div>
             <div class="isec" style="border-bottom:0"><h4>What happens</h4><p class="muted" style="font-size:12.5px;line-height:1.55">Send back with your notes and the agent plans the cut again; building a cut is free. Accept, and EP006 is delivered.</p></div>
           </div>
           <div class="verdict"><div class="vrow" style="grid-template-columns:1fr 1fr">
