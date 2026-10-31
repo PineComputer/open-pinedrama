@@ -22,7 +22,7 @@ timeline
   2026-10-23 : D5 pre-production in one session
   2026-10-24 : D6 idle timeouts follow the work : D7 spend shown, never in a goal
   2026-10-29 : D8 phase 1 steers
-  2026-10-30 : D9 design/ is the UI source : D10 tsc gate : D11 mature libraries : D12 real samples in LFS : D13 decisions taken once : D14 credentials stop : D15 Codex review loop : D16 navigation and one home : D17 every take and cut watched : D18 cut editing as an edit spec : D19 TanStack Router : D20 Export by owner : D21 Analyzing and Out of date routes : D22 redo by owner : D23 the asset detail : D24 the cut edit goal : D25 one Submission : D26 crumbs and Back : D27 Reviews : D28 model badge : D29 canvas zoom, inline video : D30 URL rules : D31 agent scope : D32 narrow windows : D33 review options : D34 Episodes filters : D35 every element cites its ground : D36 Delivery is the cuts' home : D37 a picked node zooms : D38 shared redo after release : D39 a take plays on its node : D40 where a stop shows : D41 Script is the screenplay's home : D42 Story and Assets apart : D43 stable sample ids : D44 the cut leaves the switch : D45 samples' own screenplays : D46 Project : D47 a draft's changed base : D48 the List's ?version : D49 project types : D50 Home cards : D51 one column, rail labels : D52 Home first, disabled : D53 account footer : D54 icon-only rail : D55 the cover follows the format : D56 Assets grid and inspector : D57 no tabs in Assets : D58 Canvas nodes whole : D59 Canvas opens in Hand : D60 replay's freshness : D61 Bible : D62 Script holds the process : D63 Segments matrix : D64 a visualization of drama-cli : D65 no accent bar : D66 an episode is its Canvas : D67 shape and alignment : D68 recorded edges only : D69 review by identity : D70 the UI decides, the chat acts
+  2026-10-30 : D9 design/ is the UI source : D10 tsc gate : D11 mature libraries : D12 real samples in LFS : D13 decisions taken once : D14 credentials stop : D15 Codex review loop : D16 navigation and one home : D17 every take and cut watched : D18 cut editing as an edit spec : D19 TanStack Router : D20 Export by owner : D21 Analyzing and Out of date routes : D22 redo by owner : D23 the asset detail : D24 the cut edit goal : D25 one Submission : D26 crumbs and Back : D27 Reviews : D28 model badge : D29 canvas zoom, inline video : D30 URL rules : D31 agent scope : D32 narrow windows : D33 review options : D34 Episodes filters : D35 every element cites its ground : D36 Delivery is the cuts' home : D37 a picked node zooms : D38 shared redo after release : D39 a take plays on its node : D40 where a stop shows : D41 Script is the screenplay's home : D42 Story and Assets apart : D43 stable sample ids : D44 the cut leaves the switch : D45 samples' own screenplays : D46 Project : D47 a draft's changed base : D48 the List's ?version : D49 project types : D50 Home cards : D51 one column, rail labels : D52 Home first, disabled : D53 account footer : D54 icon-only rail : D55 the cover follows the format : D56 Assets grid and inspector : D57 no tabs in Assets : D58 Canvas nodes whole : D59 Canvas opens in Hand : D60 replay's freshness : D61 Bible : D62 Script holds the process : D63 Segments matrix : D64 a visualization of drama-cli : D65 no accent bar : D66 an episode is its Canvas : D67 shape and alignment : D68 recorded edges only : D69 review by identity : D70 the UI decides, the chat acts : D71 the setup's scope opens a session
 ```
 
 ## D1. 2026-10-22 · A desktop app on Electron
@@ -414,6 +414,9 @@ timeline
 - **Recorded in.** Commits e3e05a9 and c72fad6 (the list), 420a21d (one submission per owner);
   work-02's, work-05's and master's notes to the docs, 30 October 2026.
 - **Amended by.** [D70](#d70-2026-10-30--the-ui-decides-the-chat-acts): the redo buttons leave the UI; the agent chat redoes.
+- **Amended by.** b1b7692 (D70): Out of date is a view, its rows, reasons, Lineage and links, with no
+  redo or other action and one line pointing to the agent in the sidebar; e7e948b deletes the episode
+  redo route and its submissions table, which had no caller left.
 ## D23. 2026-10-30 · An asset's one home is its detail in Assets
 - **Context.** The dry run of the IA draft (QA journey 1) found a character's versions reachable
   nowhere: an Assets card did nothing when clicked, and the canvas panel said its versions "are in
@@ -464,7 +467,8 @@ timeline
   offline or a 5xx), which is checked with the engine (`GET /api/submissions/:id`); failed (a 4xx
   refusal, or a check that finds nothing taken), which may be sent again under the same submission
   id. "Sent" says no more than that. Where the maker still has something (a draft), the state says
-  what is kept; a redo keeps nothing. A redo is `POST /api/sessions/:id/redo`, once per submission id.
+  what is kept; a redo keeps nothing. A redo was `POST /api/sessions/:id/redo`, deleted in e7e948b with D70; submissions now belong to
+  reviews and to setup messages (D71).
 - **Alternatives.** A disabled button alone; resending on a timeout.
 - **Grounds.** [D13](#d13-2026-10-30--a-review-decision-is-taken-once-by-its-submission-id); Codex's
   round 3, fix 1; Stripe's idempotent requests
@@ -679,6 +683,8 @@ timeline
   opens a new setup session, from Out of date's shared groups (an impact confirmation, then a review
   of the new versions).
 - **Amended by.** [D70](#d70-2026-10-30--the-ui-decides-the-chat-acts): the shared redo's button leaves the UI; the agent chat asks for it.
+- **Amended by.** [D71](#d71-2026-10-30--a-message-to-the-setups-scope-opens-a-new-setup-session) (d097690): any message to the setup's
+  scope after the handover opens a new setup session; `/setup-message` replaces `/shared-redo`.
 ## D39. 2026-10-30 · A take or cut plays on its Canvas node
 - **Context.** A take or cut node previewed its video on hover, muted, with no way to play it with
   sound, scrub it or see it large without leaving the board.
@@ -1295,10 +1301,29 @@ timeline
 - **Recorded in.** `short-drama-runs/qa/UI_ACTIONS_RULE.md`; master's note to the docs, 30 October 2026;
   808365f (work-04: the conversation shows each decision from its submission record; the review
   keeps Accept and Send back; "Accept with note" and the agent panel's "Shoot seg03 again" removed);
-  d7b8509 (the cut's Accept, work-07); 0331bf4 (the Canvas, work-06: the node bar, renamed from the steer bar,
+  d7b8509 (the cut's Accept, work-07);
+  b1b7692 (Out of date is a view, work-05); 0331bf4 (the Canvas, work-06: the node bar, renamed from the steer bar,
   keeps Review into the item's own review (D69), Lineage and Download; Send back, Note, the steering box and
   its sends, Resume and the disabled Upload and Generate leave it; one line points to the agent: "To redo or
   change it, ask the agent in the sidebar.").
+
+## D71. 2026-10-30 · A message to the setup's scope opens a new setup session
+- **Context.** After the handover the setup session is closed (D5), yet the maker's requests about
+  the script, the bible and the shared references go to the agent chat (D70), so they need an agent
+  to reach.
+- **Decision.** After the handover, a message to the setup's scope (Script, Bible, Assets) opens a new
+  setup session on the newest handed-over project, once per submission id and within the parallel
+  limit, with the message verbatim as its goal; the session closes at its handback.
+  `POST /api/dramas/:id/setup-message` replaces the shared redo's route.
+- **Alternatives.** Keeping the setup session open after the handover
+  ([D38](#d38-2026-10-30--redoing-a-shared-reference-takes-a-new-setup-session-after-release)'s reasons
+  against it stand).
+- **Grounds.** [D70](#d70-2026-10-30--the-ui-decides-the-chat-acts): requests go to the chat, so the
+  setup's scope must reach an agent after the handover; D25's one submission per id; master's brief
+  (Codex's round 4: the setup session as the recipient for Script, Bible and Assets).
+- **Consequences.** D38's shared redo becomes this general case.
+- **Words.** None recorded.
+- **Recorded in.** Commit d097690; work-05's note to the docs.
 
 ## References
 
