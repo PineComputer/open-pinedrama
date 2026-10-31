@@ -573,7 +573,7 @@ describe("a drama in replay", () => {
     expect(projectView(id).names?.descriptions.props.file).toMatch(/manila folder/);
   }, 30_000);
 
-  it("takes a message to the setup's scope after the handover in a new setup session, once per submission, which closes when it hands back (D38)", async () => {
+  it("takes a message to the setup's scope after the handover in a new setup session, once per submission, which closes when it hands back (D71)", async () => {
     const { run, all, get } = await import("./db.ts");
     run("update dramas set status = 'done'");
     fleet.stops = "ask";

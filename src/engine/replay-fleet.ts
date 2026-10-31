@@ -788,7 +788,7 @@ export function episodeScript(code: string, lang: Lang, preset: string, story: {
 }
 
 /**
- * A message to the setup's scope after the handover (goals.ts, setupMessageGoal; D38). Replay doesn't read what the maker
+ * A message to the setup's scope after the handover (goals.ts, setupMessageGoal; D71). Replay doesn't read what the maker
  * wrote: the session notes the message, packs the project as it was handed over and hands it back.
  */
 function setupMessageScript(goal: string, lang: Lang, preset: string, story: { id: string; story: Story }): Player {

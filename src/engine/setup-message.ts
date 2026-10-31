@@ -3,7 +3,7 @@
 // id, as redo.ts keeps an episode's), queued until the scheduler opens a new setup session for it on a Computer within the
 // drama's parallel limit (scheduler.ts, startSetupMessage). That session restores the newest handed-over project, takes
 // the message as its goal, asks the maker to review whatever it makes, hands the project back and closes (flow.ts).
-// Running episode sessions are not told: what they made from earlier versions shows out of date at their next stop (D38).
+// Running episode sessions are not told: what they made from earlier versions shows out of date at their next stop (D71).
 import type { SubmissionView } from "../shared/types.ts";
 import { all, get, now, run } from "./db.ts";
 import { StudioError } from "./errors.ts";

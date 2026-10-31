@@ -74,7 +74,7 @@ export async function onEnded(session: SessionRow, info: TurnInfo, stop: boolean
 }
 
 /**
- * A setup message's session (D38) finishes when it hands the project back, and closes, as the setup's did; short of that
+ * A setup message's session (D71) finishes when it hands the project back, and closes, as the setup's did; short of that
  * it gets the same bounded "continue" runs, then the maker is told; a turn that breaks off for good fails the message.
  */
 async function messageEnded(session: SessionRow, info: TurnInfo, request: SetupMessageRow) {

@@ -237,7 +237,7 @@ export function episodeGoal(drama: DramaBrief, code: string, attachments: string
 }
 
 /**
- * A message to the setup's scope after the handover (D38), in a new setup session: restore the project last handed over,
+ * A message to the setup's scope after the handover (D71), in a new setup session: restore the project last handed over,
  * do what the maker's message asks within the script, the bible and the shared references, stop for the maker's review of
  * anything new, then hand the project back and finish. Episodes keep the copies they work on (D5), so none of theirs is
  * touched.

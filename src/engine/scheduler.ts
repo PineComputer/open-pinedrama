@@ -325,7 +325,7 @@ function startEpisode(drama: DramaRow, episode: EpisodeRow, computer: ComputerRo
 }
 
 /**
- * A message to the setup's scope after the handover (D38): a new setup session on the project last handed over, its goal
+ * A message to the setup's scope after the handover (D71): a new setup session on the project last handed over, its goal
  * the maker's message. One that won't open goes back to the queue, after a pause; one that keeps failing says why.
  */
 function startSetupMessage(drama: DramaRow, request: SetupMessageRow, computer: ComputerRow): void {
@@ -478,7 +478,7 @@ export async function reconcile(): Promise<void> {
 export function tick(): void {
   if (!hasFleet() || paused) return; // nothing to run on until the maker connects a project or chooses replay
   // Only the dramas made for this mode: a replay drama never starts a Pine Computer. A finished drama comes back for a
-  // message to its setup's scope (D38).
+  // message to its setup's scope (D71).
   for (const drama of all<DramaRow>(
     "select * from dramas where (status in ('setup', 'production') or (status = 'done' and exists (select 1 from setup_messages r where r.drama_id = dramas.id and r.state in ('queued', 'working')))) and mode = ?",
     fleet().mode,

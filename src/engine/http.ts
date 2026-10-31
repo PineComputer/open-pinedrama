@@ -426,7 +426,7 @@ export function app(): Hono {
     }
   });
 
-  // A message to the setup's scope after the handover (D38): queued for a new setup session, once per submission id.
+  // A message to the setup's scope after the handover (D71): queued for a new setup session, once per submission id.
   api.post("/api/dramas/:id/setup-message", async (c) => {
     try {
       const { submissionId, text } = (await c.req.json()) as { submissionId: string; text: string };
