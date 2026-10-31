@@ -1349,6 +1349,10 @@ timeline
   `drama-not-running`. `POST /api/sessions/:id/chat` and `/setup-message` are removed. A screenplay
   rewrite question is decided only on Script: the chat refuses it with `decide-in-review`
   ([D62](#d62-2026-10-30--script-is-the-home-of-the-whole-screenplay-process)). No words recorded.
+- **Amended.** 30 October 2026, 0d26bd9 (master's brief): the maker's Stop ends the project's messages
+  queued for, or working in, a new session; their state becomes "stopped", which is final (the word
+  episodes and projects already use). Resume reopens none; the maker sends again. Master's words: "nothing
+  is reopened silently: the maker sends again if they want". No words from merecdesperez44323-lab.
 ## References
 
 <a id="ref-1"></a>[1] G. Starke, P. Hruschka. *arc42*, section 9, "Architecture decisions".
