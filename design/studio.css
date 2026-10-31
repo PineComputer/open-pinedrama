@@ -293,7 +293,7 @@ input.search:focus { border-color: var(--text-primary); }
    button clear of it; an inspector at the window's right edge (Lineage's, the review room's, the cut's) ends with that room
    under its last control. The canvas is a board the maker pans, under its minimap, toolbar and ball alike. */
 .app:has(> .ball) { --ball-room: calc(52px + 2 * var(--space-3xl)); }
-.app:has(> .ball) .scrollmain:not(:has(> .room, .ds-canvas, .frev)) { padding-bottom: var(--ball-room); }
+.app:has(> .ball) .scrollmain:not(:has(> .room, .ds-canvas)) { padding-bottom: var(--ball-room); }
 .app:has(> .ball) .insp { padding-bottom: var(--ball-room); }
 .app:has(> .ball) .sendstrip { padding-right: var(--ball-room); }
 .ball { position: fixed; right: 20px; bottom: 20px; width: 52px; height: 52px; border-radius: 50%; border: 1px solid var(--border-input); background: var(--surface-container-high); color: var(--text-primary); display: grid; place-items: center; cursor: pointer; box-shadow: var(--shadow-overlay); z-index: 31; }
@@ -503,22 +503,11 @@ input.search:focus { border-color: var(--text-primary); }
 .nextsteps { margin: 0; padding: 0 0 0 18px; list-style: decimal; display: grid; gap: 12px; font-size: 13px; }
 .nextsteps b { display: block; font-weight: 600; } .nextsteps small { color: var(--text-muted); font-size: 12px; }
 
-/* ── analyzing ── */
-.anagrid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
-.bigbar { height: 4px; border-radius: var(--radius-pill); background: var(--surface-container-high); overflow: hidden; margin-bottom: 10px; }
-.bigbar i { display: block; height: 100%; background: var(--text-primary); transition: width .4s; }
-.steps.big li { font-size: 13px; padding: 8px 4px; }
-.steps.big li.later { color: var(--text-subtle); } .steps.big li.later .ic { color: var(--text-subtle); }
-.fpeek, .fdoc { font: 13px/1.55 "Courier Prime", ui-monospace, Menlo, monospace; color: var(--text-primary); }
-.fpeek { max-height: 380px; overflow: auto; padding: 14px 16px; border-radius: var(--radius-large); background: var(--surface-container); }
+.fdoc { font: 13px/1.55 "Courier Prime", ui-monospace, Menlo, monospace; color: var(--text-primary); }
 .fl { padding: 1px 0; white-space: pre-wrap; overflow-wrap: anywhere; } .gap { height: 12px; }
 .fl.heading, .fl.section { font-weight: 700; } .fl.character { padding-left: 38%; } .fl.dialogue { padding: 0 18%; } .fl.paren { padding-left: 32%; } .fl.transition { text-align: right; }
 
 /* ── fountain review ── */
-.frev { flex: 1; min-height: 0; display: flex; flex-direction: column; }
-.frevhead { display: flex; align-items: flex-end; gap: 16px; padding: 18px 24px 14px; flex-wrap: wrap; }
-.frevhead h2 { margin: 0 0 4px; font: 700 22px/1.3 var(--font-display); letter-spacing: -.3px; }
-.frevhead .facts { display: flex; gap: 8px; } .frevhead .facts span { padding: 6px 12px; border-radius: 999px; border: 1px solid var(--border); font-size: 12px; color: var(--text-muted); } .frevhead .facts b { color: var(--text-primary); }
 .fpanes { flex: 1; min-height: 0; display: grid; grid-template-columns: 1fr 1.3fr; gap: 14px; padding: 0 24px; }
 .fpane { min-height: 0; overflow: auto; border-radius: var(--radius-2xl); border: 1px solid var(--border); background: var(--surface); padding: 14px 16px; }
 .fpane h4 { margin: 0 0 10px; display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 600; color: var(--text-muted); letter-spacing: .4px; text-transform: uppercase; }
@@ -623,7 +612,7 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
   .stage { flex: none; height: 72vh; } .screen { min-height: 0; padding: 12px; } .insp { width: auto; border-left: 0; flex: none; } .insp .iscroll { overflow: visible; } .search { width: 100%; }
   .crumb > :nth-last-child(n+4) { display: none; } .controls { flex-wrap: wrap; gap: 10px; } .controls .muted { display: none; }
   .epgrid { grid-template-columns: repeat(2, 1fr); } .bar2 .chip { display: none; }
-  .formgrid, .anagrid, .biblegrid, .presets { grid-template-columns: 1fr; } .fpanes { grid-template-columns: 1fr; flex: none; padding: 0 16px; } .frev { overflow: auto; } .frevhead { flex-direction: column; align-items: stretch; padding: 16px; }
+  .formgrid, .biblegrid, .presets { grid-template-columns: 1fr; } .fpanes { grid-template-columns: 1fr; flex: none; padding: 0 16px; }
   .body { flex-direction: column; overflow: auto; } .body > .scrollmain { flex: none; overflow: visible; } .body > .insp { flex: none; }
 }
 

@@ -21,7 +21,7 @@ export type Step = "script" | "bible" | "episodes" | "cut";
 /** The step a drama's page is on: before there are episodes, its board is the bible being made. */
 export function stepOf(drama: DramaView, page: Page | undefined): Step | undefined {
   const settingUp = isSettingUp(drama);
-  if (page === "script" || page === "analyzing") return "script";
+  if (page === "script") return "script";
   if (page === "bible" || page === "characters" || page === "locations" || page === "props" || (page === "episodes" && settingUp)) return "bible";
   if (page === "delivery" || page === "cut") return "cut";
   return page === "episodes" || page === "canvas" ? "episodes" : undefined;
@@ -166,7 +166,7 @@ export function DramaSidebar({ drama, page, episode, drawer }: { drama: DramaVie
       {head}
       {/* The drama tree is named after its drama, as its head shows it. */}
       <nav className="scroll" aria-label={drama.title}>
-        <Link to="/d/$dramaId/script" params={params} className="navi" aria-current={at(page === "script" || page === "analyzing")}>
+        <Link to="/d/$dramaId/script" params={params} className="navi" aria-current={at(page === "script")}>
           <Icon name="file-text" className="ic" />
           {t("step.script")}
           {needs(tree.needs.script) || (scriptDone && <span className="end"><Icon name="check" className="ic" /></span>)}

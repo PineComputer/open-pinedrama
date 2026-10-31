@@ -124,3 +124,13 @@ describe("Script, a version waiting for the maker", () => {
     expect(screen.getByRole("textbox", { name: "Why v2 goes back (required)" })).toHaveValue("");
   });
 });
+
+describe("Script, while the agent rewrites", () => {
+  it("says which version the agent is writing, above those recorded, and not that only the original exists", async () => {
+    answer("/api/dramas/d1/script", { inputs: [original], screenplayFile: original.id, versions: [] });
+    texts();
+    await renderAt(<Script dramaId="d1" rewriting />, "/d/d1/script");
+    expect(await screen.findByText("v1 · the agent is rewriting your file into Fountain")).toBeInTheDocument();
+    expect(screen.queryByText("Only the original was recorded for this project.")).not.toBeInTheDocument();
+  });
+});

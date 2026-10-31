@@ -24,13 +24,10 @@ test("a maker uploads one screenplay, chooses a preset and starts", async ({ pag
   expect(await newProblems(page)).toEqual([]);
 
   await next.getByRole("button", { name: "Start" }).click();
-  await expect(page).toHaveURL(/\/d\/[^/]+\/analyzing$/);
-  await expect(page.getByRole("heading", { name: /Analyzing your script|Your Fountain is ready/ })).toBeVisible();
-  expect(await newProblems(page)).toEqual([]);
-
-  await page.getByRole("link", { name: "Review the rewrite" }).click();
-  // Script decides on the version that waits (D62): Accept and Send back as peers in its history.
+  // Script holds the setup's first steps (D62): the agent rewriting, then the version that waits, decided on with Accept
+  // and Send back as peers in its history.
   await expect(page).toHaveURL(/\/d\/[^/]+\/script$/);
+  expect(await newProblems(page)).toEqual([]);
   const decision = page.getByRole("group", { name: /^Your decision on v\d+$/ });
   await expect(decision.getByRole("button", { name: "Accept" })).toBeInViewport();
   await expect(decision.getByRole("button", { name: "Send back" })).toBeVisible();

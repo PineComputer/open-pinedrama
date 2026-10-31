@@ -15,7 +15,6 @@ export type Page =
   | "gallery"
   | "episodes"
   | "script"
-  | "analyzing"
   | "bible"
   | "characters"
   | "locations"

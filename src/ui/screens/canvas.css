@@ -1,7 +1,7 @@
 /* The canvas on React Flow: its parts take our tokens through its own variables, and the nodes,
    frames and pills are the pro prototype's (design-references/studio-pro/studio.css,
    "canvas"), scoped to the canvas. Every colour is a token (CONTRIBUTING.md). */
-/* The board fills what the drama's bar leaves, as the design's .board fills its main (design/studio.css), and as the review room fills it (styles.css .frev). */
+/* The board fills what the drama's bar leaves, as the design's .board fills its main (design/studio.css). */
 .ds-scroll:has(.ds-canvas) { display: flex; flex-direction: column; }
 .ds-workin:has(> .ds-canvas) { flex: 1; min-height: 0; display: flex; flex-direction: column; }
 .ds-canvas { position: relative; flex: 1; min-height: 420px; overflow: hidden; }

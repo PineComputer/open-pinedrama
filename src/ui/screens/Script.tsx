@@ -113,7 +113,7 @@ function VersionRow({ version, shown, onShow }: { version: ScreenplayVersion; sh
 /** drama-cli's episode number in a scene number, #<episode>-<scene># (short_drama doc/drama-cli/write-a-screenplay.md). */
 const episodeOfScene = (text: string) => text.match(/#(\d+)-\d+#\s*$/)?.[1];
 
-function ScriptBody({ dramaId, data, ep }: { dramaId: string; data: ScriptPage; ep?: string }) {
+function ScriptBody({ dramaId, data, ep, rewriting }: { dramaId: string; data: ScriptPage; ep?: string; rewriting: boolean }) {
   const { t } = useT();
   const { search } = useRoute();
   const navigate = useNavigate();
@@ -150,7 +150,7 @@ function ScriptBody({ dramaId, data, ep }: { dramaId: string; data: ScriptPage; 
           <p className="muted pagesub">{t("script.subtitle")}</p>
         </div>
       </div>
-      {!data.versions.length && (
+      {!data.versions.length && !rewriting && (
         <div className="notice" role="status">
           <Icon name="info" className="ic" />
           <span>
@@ -171,6 +171,14 @@ function ScriptBody({ dramaId, data, ep }: { dramaId: string; data: ScriptPage; 
             {t("script.versions")}
           </h3>
           <ol className="history">
+            {rewriting && (
+              <li className="work">
+                <span className="dot work" />
+                <div className="grow">
+                  <span>{t("script.rewriting", { version: `v${data.versions.length + 1}` })}</span>
+                </div>
+              </li>
+            )}
             {data.versions.map((version) => (
               <VersionRow key={version.version} version={version} shown={version === shown} onShow={() => show(version)} />
             ))}
@@ -232,10 +240,10 @@ function ScriptBody({ dramaId, data, ep }: { dramaId: string; data: ScriptPage; 
  * one in a read-only editor, as Fountain, as the maker's original, or the two compared. The selected version is the
  * URL's (?item=screenplay&version=vN, D48).
  */
-export function Script({ dramaId, ep }: { dramaId: string; ep?: string }) {
+export function Script({ dramaId, ep, rewriting = false }: { dramaId: string; ep?: string; rewriting?: boolean }) {
   const { t } = useT();
   const { data, error } = useResource<ScriptPage>(`/api/dramas/${dramaId}/script`, [`drama:${dramaId}`]);
   if (error !== undefined && !data) return <p className="error">{errorText(error, t)}</p>;
   if (!data) return <p className="quiet">{t("loading")}</p>;
-  return <ScriptBody dramaId={dramaId} data={data} ep={ep} />;
+  return <ScriptBody dramaId={dramaId} data={data} ep={ep} rewriting={rewriting} />;
 }

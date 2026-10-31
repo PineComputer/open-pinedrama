@@ -43,8 +43,8 @@ for (const theme of ["dark", "light"] as const) {
     const dramas = await page.evaluate(async () => (await (await fetch("/api/dramas")).json()));
     const list: { id: string; title: string }[] = dramas.dramas ?? dramas;
     const bride = list.find((d) => d.title === "Bride on Bail")?.id;
-    // The prototype's Analyzing and Fountain are the setup's first screens: a drama waiting for the maker to accept its rewrite
-    // (open-qa.mjs leaves 后妈来了 there), else Bride's.
+    // Script holds the setup's first steps (D62): a drama waiting for the maker to accept its rewrite (open-qa.mjs leaves
+    // 后妈来了 there), else Bride's.
     const rewriting = list.find((d) => d.title === "后妈来了")?.id ?? bride;
     expect(bride, "Bride on Bail is seeded in the product").toBeTruthy();
     const queue: { id: string; state: string; episode?: string; kind: string }[] = await page.evaluate(async (d) => (await (await fetch(`/api/reviews?drama=${d}`)).json()), bride);

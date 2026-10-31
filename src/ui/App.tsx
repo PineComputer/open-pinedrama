@@ -6,7 +6,7 @@ import type { ProjectView } from "../shared/project.ts";
 import type { AppInfo, DramaView, ReviewSummary, ReviewView } from "../shared/types.ts";
 import { ApiError, useResource } from "./api.ts";
 import { type TKey, useT } from "./i18n.ts";
-import { errorText, isSetupScreen, scriptWaits, subjectLabel, useNames } from "./labels.ts";
+import { errorText, subjectLabel, useNames } from "./labels.ts";
 import { useReviewNotifications } from "./notify.ts";
 import { type Page, usePlace, useRoute } from "./place.ts";
 import { EmptyState } from "./components/EmptyState.tsx";
@@ -50,7 +50,6 @@ function shelfOf(page: "characters" | "locations" | "props", dramaId: string) {
 // The label each drama page's crumb shows.
 const LABEL: Partial<Record<Page, TKey>> = {
   script: "step.script",
-  analyzing: "step.script",
   bible: "step.bible",
   characters: "cast.characters",
   locations: "cast.locations",
@@ -207,8 +206,7 @@ export function App() {
   const [drawer, setDrawer] = useState(false);
   const pathname = useLocation({ select: (location) => location.pathname });
   useEffect(() => setDrawer(false), [pathname]);
-  // design/'s setup screens (Analyzing, the Fountain review) go full width, with no agent beside them.
-  const agentShown = Boolean(drama.data && dramaId && !(page && isSetupScreen(drama.data, page)));
+  const agentShown = Boolean(drama.data && dramaId);
   const [agentMode, setAgentMode] = useAgentMode(agentShown);
   const { t } = useT();
   useReviewNotifications(queue.data && waiting);
@@ -251,8 +249,6 @@ export function App() {
     if (page === "cut") crumbs = ofDrama(episode, { label: [t("step.cut"), cutVersion].filter(Boolean).join(" ") });
     else crumbs = picked ? ofDrama(episode, { label: picked }) : ofDrama({ label: place.episode });
   }
-  // The setup's own screens, as design/'s crumbs read: Setup › Script, or Setup › Fountain review while the rewrite waits on the maker.
-  else if (drama.data && isSetupScreen(drama.data, page)) crumbs = ofDrama({ label: t("sidebar.setup") }, { label: t(page === "script" && scriptWaits(drama.data) ? "crumb.fountainReview" : "step.script") });
   // An Assets shelf sits under Assets, as the drama tree has it (IA §2): Drama › Assets › Characters.
   else if (drama.data && (page === "characters" || page === "locations" || page === "props"))
     crumbs = ofDrama(

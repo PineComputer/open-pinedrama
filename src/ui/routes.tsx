@@ -6,7 +6,6 @@ import { createRootRoute, createRoute, createRouter, notFound, redirect, type Ro
 import { stageOf } from "../shared/lineage.ts";
 import { App, DramaPage, Gallery, GalleryPage, MissingObject, NotFound, SettingsPage, useDrama } from "./App.tsx";
 import { isSettingUp } from "./labels.ts";
-import { Analyzing } from "./screens/Analyzing.tsx";
 import { Board, SetupPanel } from "./screens/Board.tsx";
 import { Canvas } from "./screens/Canvas.tsx";
 import { Bible } from "./screens/Bible.tsx";
@@ -99,10 +98,13 @@ const scriptRoute = createRoute({
   beforeLoad: ({ search }) => {
     if (search.ep !== undefined && !/^EP[0-9]{3}$/.test(search.ep)) throw notFound({ data: { what: `ep=${search.ep}` } });
   },
-  component: () => <Script dramaId={useDrama().id} ep={scriptRoute.useSearch().ep} />,
+  component: function ScriptPage() {
+    const drama = useDrama();
+    // The setup at the screenplay, working: the agent is rewriting it (a first version, or the next after a Send back).
+    const rewriting = isSettingUp(drama) && drama.setup.state === "working" && drama.setup.reached <= 1;
+    return <Script dramaId={drama.id} ep={scriptRoute.useSearch().ep} rewriting={rewriting} />;
+  },
 });
-// Analyzing and the Fountain review are setup steps, a process like the review room, not views of Script's (D21).
-const analyzingRoute = createRoute({ ...leaf("analyzing"), staticData: { page: "analyzing" }, component: () => <Analyzing dramaId={useDrama().id} /> });
 const bibleRoute = createRoute({
   ...leaf("bible"),
   staticData: { page: "bible" },
@@ -180,7 +182,6 @@ const routeTree = rootRoute.addChildren([
     dramaIndexRoute,
     episodesRoute,
     scriptRoute,
-    analyzingRoute,
     bibleRoute,
     charactersRoute,
     locationsRoute,

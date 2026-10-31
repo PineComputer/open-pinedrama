@@ -69,11 +69,6 @@ export function scriptWaits(drama: Pick<DramaView, "status" | "episodeRows" | "s
   return isSettingUp(drama) && drama.setup.state === "waiting" && drama.setup.reached <= 1;
 }
 
-/** Whether a drama's tab is one of the setup's own screens, Analyzing and the Fountain review, which design/ draws without the surface bar and the agent. */
-export function isSetupScreen(drama: Pick<DramaView, "status" | "episodeRows">, tab: string): boolean {
-  return isSettingUp(drama) && (tab === "script" || tab === "analyzing");
-}
-
 /** A scene heading as a person reads it: without the scene number Fountain writes at its end between #s (fountain.io, "Scene Numbers"). */
 export function headingText(heading: string): string {
   return heading.replace(/\s*#[^#\n]*#\s*$/, "");

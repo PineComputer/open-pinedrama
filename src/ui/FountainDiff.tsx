@@ -1,4 +1,4 @@
-// The Fountain review (P5.4), ported from design/screens.js: the maker's file beside the Fountain drama-cli recorded,
+// Script's Compare (D62), until drama-cli records its line map: the maker's file beside the Fountain drama-cli recorded,
 // compared line by line by jsdiff (diffLines). Each change, and each run of lines that came back as they were, is one
 // group, so a click on a line marks it and what it became on the other side. The Fountain is printed as screenplay
 // lines (fountain-js), each tied to the file's line it was written on.

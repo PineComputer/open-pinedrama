@@ -210,7 +210,7 @@ export function NewDrama() {
     for (const item of files) form.append("files", item);
     try {
       const { id } = await api<{ id: string }>("/api/dramas", { method: "POST", body: form });
-      void navigate({ to: "/d/$dramaId/analyzing", params: { dramaId: id } });
+      void navigate({ to: "/d/$dramaId/script", params: { dramaId: id } });
     } catch (reason) {
       setError(reason);
       setBusy(false);

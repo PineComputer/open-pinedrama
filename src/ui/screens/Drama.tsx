@@ -5,7 +5,7 @@ import { StopCard } from "../components/StopCard.tsx";
 import { type Page, usePlace } from "../place.ts";
 import { api, useAction, useResource } from "../api.ts";
 import { useT } from "../i18n.ts";
-import { errorText, isSetupScreen } from "../labels.ts";
+import { errorText } from "../labels.ts";
 import { Icon } from "../icons.tsx";
 import { DramaBar, stillStopping } from "../shell/TopBar.tsx";
 import { buttonClass } from "../components/Button.tsx";
@@ -104,11 +104,11 @@ function Notices({ drama }: { drama: DramaView }) {
 
 /** A drama's page: what holds it up, its surface and chips, and the page in view (routes.tsx). The shell (App) loads the drama and gives its sidebar. */
 export function Drama({ drama, page, children }: { drama: DramaView; page: Page | undefined; children: ReactNode }) {
-  // The cut's room is the design's Cut screen, and the setup's Script its Analyzing and Fountain review: no surface bar above them.
+  // The cut's room is the design's Cut screen: no surface bar above it.
   const room = page === "cut" || page === "delivery";
   return (
     <section className="ds-workin">
-      {!room && !(page && isSetupScreen(drama, page)) && <DramaBar drama={drama} />}
+      {!room && <DramaBar drama={drama} />}
       {!room && <Notices drama={drama} />}
       {children}
     </section>
