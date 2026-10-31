@@ -509,7 +509,14 @@
               <div class="lab">${I("film-strip")}<span class="name">${n.label}</span><span class="subtle" style="font-weight:500">${n.seg.s} s</span><span class="model">${n.model}</span>${n.st !== "accepted" && Status(n.st)}</div>
               <div class="card">
                 ${n.seg.board ? html`<button class=${"board-img" + (S.sel === n.id && pickedAt(n.seg).kind === "storyboard" ? " on" : "")} aria-label=${n.label + " storyboard v1"} onClick=${() => pick(n, { kind: "storyboard", ver: "v1" })}><img src=${n.seg.board} alt="" draggable="false"/><span>board v1</span></button>` : html`<div class="none">board accepted</div>`}
-                ${n.seg.still ? html`<button class=${S.sel === n.id && pickedAt(n.seg).kind === "take" ? "on" : ""} aria-label=${n.label + " take " + n.seg.take} onClick=${() => pick(n, { kind: "take", ver: n.seg.take })}><img src=${n.seg.still} alt="" draggable="false"/><span>${n.seg.take}</span><span class="play"><i>${I("play")}</i></span></button>` : html`<div class="none">${n.seg.take} accepted</div>`}</div></div>`)}
+                ${n.seg.still ? html`<button class=${"take-tile" + (S.sel === n.id && pickedAt(n.seg).kind === "take" ? " on" : "")} aria-label=${n.label + " take " + n.seg.take} onClick=${() => pick(n, { kind: "take", ver: n.seg.take })}><img src=${n.seg.still} alt="" draggable="false"/><span>${n.seg.take}</span><span class="play"><i>${I("play")}</i></span></button>
+                  ${/* The take's inline player (yurun, D38): shown on the picked take and on hover, in media-chrome's control bar order,
+                     as Premiere's, Frame.io's and YouTube's: play, time, the slider, duration, sound, full screen. Muted until the sound is on. */ ""}
+                  <div class=${"vbar" + (S.sel === n.id && pickedAt(n.seg).kind === "take" ? " shown" : "")} role="group" aria-label=${"Play " + n.label + " take " + n.seg.take}>
+                    <button class="vb" aria-label="Play" onClick=${() => toast("Plays the take here, muted until you turn the sound on.")}>${I("play")}</button>
+                    <span class="vt">0:00</span><span class="vtrack"><i></i></span><span class="vt">0:${String(n.seg.s).padStart(2, "0")}</span>
+                    <button class="vb" aria-label="Unmute" onClick=${() => toast("Turns the take's sound on.")}>${I("speaker-slash")}</button>
+                    <button class="vb" aria-label="Enter fullscreen mode" onClick=${() => toast("Plays the take full screen.")}>${I("corners-out")}</button></div>` : html`<div class="none">${n.seg.take} accepted</div>`}</div></div>`)}
           </div>
         </div>
         <div class="ctop"><${EpisodeViews}/><button class="follow" aria-pressed=${String(S.follow)} onClick=${() => set({ follow: !S.follow })}>${S.follow && html`<span class="live"></span>`}${S.follow ? "Following the agent" : "Follow the agent"}</button>

@@ -441,6 +441,25 @@ describe("a picked item's hand actions and panel (P6.8)", () => {
     restore();
   });
 
+  it("plays a take on its node: media-chrome's bar on hover and on the picked node, in the editors' order, muted (D38)", async () => {
+    engine();
+    const take = { id: 30, name: "video.mp4", path: "/work/drama/episodes/EP001/segments/seg01/t01/video.mp4", type: "video/mp4", size: 1, kind: "take", url: "/f/30?v=1", createdAt: "2026-10-30T10:00:00Z" };
+    answer("/api/dramas/d1/files", [take]);
+    await renderAt(<Canvas drama={drama("working")} />, "/d/d1/e/EP001/canvas");
+    const node = () => screen.getByRole("button", { name: /^Take · t01/ }).closest(".cnode")!;
+    await waitFor(() => expect(node().querySelector("video")).not.toBeNull());
+    expect(node().querySelector("video")!.muted).toBe(true);
+    expect(node().querySelector(".vbar")).toBeNull();
+    const user = userEvent.setup();
+    await user.hover(node().querySelector(".card")!);
+    expect(node().querySelector(".vbar")).not.toBeNull();
+    await user.unhover(node().querySelector(".card")!);
+    expect(node().querySelector(".vbar")).toBeNull();
+    await pick(/^Take · t01/);
+    const bar = node().querySelector(".vbar")!;
+    expect([...bar.children].map((part) => part.tagName.toLowerCase())).toEqual(["media-play-button", "media-time-display", "media-time-range", "media-duration-display", "media-mute-button", "media-fullscreen-button"]);
+  });
+
   it("says when the versions can't be read, rather than that there are none", async () => {
     withBreakdown();
     server.use(http.get("/api/dramas/d1/episodes/EP001", () => HttpResponse.json({ code: "internal", error: "boom" }, { status: 500 })));

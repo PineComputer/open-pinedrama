@@ -9,6 +9,7 @@
 import { Background, BackgroundVariant, type Edge, getViewportForBounds, type Viewport, Handle, MiniMap, type Node, type NodeProps, NodeToolbar, Position, ReactFlow, ReactFlowProvider, useKeyPress, useNodesInitialized, useNodesState, useReactFlow, useStore, useViewport } from "@xyflow/react";
 import { createContext, Fragment, type ReactNode, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { DropdownMenu } from "radix-ui";
+import { MediaControlBar, MediaController, MediaDurationDisplay, MediaFullscreenButton, MediaMuteButton, MediaPlayButton, MediaTimeDisplay, MediaTimeRange } from "media-chrome/react";
 import { HEIGHT, layout, WIDTH } from "../../shared/layout.ts";
 import type { LineageNode, LineageView } from "../../shared/lineage.ts";
 import { type Item, itemOf, PIPELINE } from "../../shared/pipeline.ts";
@@ -26,7 +27,6 @@ import { Icon } from "../icons.tsx";
 import { headingText, subjectLabel } from "../labels.ts";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { homeLink, placeLink, usePage, usePlace } from "../place.ts";
-import { Still } from "../Still.tsx";
 import { useText } from "../viewing.tsx";
 import { NodePanel } from "./NodePanel.tsx";
 import { SteerBar } from "./SteerBar.tsx";
@@ -103,6 +103,68 @@ const Board = createContext<BoardContext | null>(null);
 
 const ICON = { character: "user", location: "image", prop: "cube", blocking: "squares-four", frame: "image-square", segment: "grid-nine", take: "film-strip", cut: "scissors" } as const;
 
+/**
+ * A take's or cut's inline player (D38; design/app.js, the take's .vbar): media-chrome's controller around the video,
+ * its control bar on the picked node and on hover, in the order Premiere, Frame.io and YouTube give it: play, time, the
+ * slider, duration, sound, full screen. Muted until the maker turns the sound on, so a hover previews it silently; the
+ * bar takes no drag or pan of the board (React Flow's nodrag and nopan).
+ */
+function NodePlayer({ url, label, bar, preview }: { url: string; label: string; bar: boolean; preview: boolean }) {
+  const { t } = useT();
+  return (
+    <MediaController className="player" aria-label={t("canvas.player", { item: label })}>
+      <video
+        slot="media"
+        src={`${url}#t=0.5`}
+        muted
+        playsInline
+        loop
+        preload="metadata"
+        onMouseEnter={preview ? (event) => void event.currentTarget.play().catch(() => undefined) : undefined}
+        onMouseLeave={
+          preview
+            ? (event) => {
+                event.currentTarget.pause();
+                event.currentTarget.currentTime = 0.5;
+              }
+            : undefined
+        }
+      />
+      {bar && (
+        <MediaControlBar className="vbar shown nodrag nopan">
+          <MediaPlayButton className="vb" noTooltip>
+            <span slot="play">
+              <Icon name="play" className="ic" />
+            </span>
+            <span slot="pause">
+              <Icon name="pause" className="ic" />
+            </span>
+          </MediaPlayButton>
+          <MediaTimeDisplay className="vt" />
+          <MediaTimeRange className="vtrack" />
+          <MediaDurationDisplay className="vt" />
+          <MediaMuteButton className="vb" noTooltip>
+            <span slot="off">
+              <Icon name="speaker-slash" className="ic" />
+            </span>
+            <span slot="high">
+              <Icon name="speaker-high" className="ic" />
+            </span>
+          </MediaMuteButton>
+          <MediaFullscreenButton className="vb" noTooltip>
+            <span slot="enter">
+              <Icon name="corners-out" className="ic" />
+            </span>
+            <span slot="exit">
+              <Icon name="corners-in" className="ic" />
+            </span>
+          </MediaFullscreenButton>
+        </MediaControlBar>
+      )}
+    </MediaController>
+  );
+}
+
 /** A stage as the prototype's node: its label above (kind icon, name, where it stands), its picture filling the card. */
 function ItemNode(props: NodeProps<Node<ItemData>>) {
   const { id, data, selected, positionAbsoluteX, width = 0 } = props;
@@ -116,6 +178,7 @@ function ItemNode(props: NodeProps<Node<ItemData>>) {
   const paneWidth = useStore((store) => store.width);
   const centre = x + (positionAbsoluteX + width / 2) * zoom;
   const align = centre - PANEL / 2 < 0 ? "start" : centre + PANEL / 2 > paneWidth ? "end" : "center";
+  const [hover, setHover] = useState(false);
   return (
     <div className={`cnode is-${data.stage.kind}${selected ? " sel" : ""}`} data-followed={data.followed || undefined}>
       <NodeToolbar isVisible={board.picked === id} position={Position.Top} align={align}>
@@ -134,9 +197,9 @@ function ItemNode(props: NodeProps<Node<ItemData>>) {
         {model && <span className="model">{model}</span>}
         {data.status !== "accepted" && <StatusChip status={data.status} label={t(`status.${data.status}` as TKey)} />}
       </div>
-      <div className={`card${data.stage.kind === "storyboard" ? " board-img" : ""}`}>
-        {video ? <Still still={{ url: data.work!.url, video: true }} live /> : data.work ? <img src={data.work.url} alt="" draggable={false} /> : <div className="none">{t("canvas.noPicture")}</div>}
-        {video && (
+      <div className={`card${data.stage.kind === "storyboard" ? " board-img" : ""}`} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
+        {video ? <NodePlayer url={data.work!.url} label={data.label} bar={selected || hover} preview={!selected} /> : data.work ? <img src={data.work.url} alt="" draggable={false} /> : <div className="none">{t("canvas.noPicture")}</div>}
+        {video && !(selected || hover) && (
           <span className="play" aria-hidden="true">
             <i>
               <Icon name="play" />

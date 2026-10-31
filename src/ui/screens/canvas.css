@@ -50,6 +50,13 @@
 .ds-canvas .cnode .lab .name { overflow: hidden; text-overflow: ellipsis; }
 .ds-canvas .cnode .card { position: relative; flex: 1; min-height: 0; }
 .ds-canvas .cnode .card .still { object-position: top; background-position: top; }
+/* A take's or cut's inline player (D38): media-chrome's controller fills the card, its video as the still was; its control
+   bar is design/'s .vbar over the card's foot, media-chrome's parts given the bar's look through their own properties. */
+.ds-canvas .cnode .card .player { display: block; width: 100%; height: 100%; --media-control-background: transparent; --media-control-hover-background: transparent; --media-primary-color: var(--text-primary); }
+.ds-canvas .cnode .card .player video { width: 100%; height: 100%; object-fit: cover; object-position: top; }
+.ds-canvas .cnode .card .vbar { position: absolute; left: 0; right: 0; bottom: 0; }
+.ds-canvas .cnode .vbar .vb, .ds-canvas .cnode .vbar .vt { padding: 0 2px; font: inherit; }
+.ds-canvas .cnode .vbar .vtrack { height: 22px; --media-range-padding: 0; --media-range-track-height: 3px; --media-range-track-border-radius: 999px; --media-range-track-background: color-mix(in srgb, var(--text-primary) 25%, transparent); --media-range-bar-color: var(--text-primary); --media-time-range-buffered-color: transparent; --media-range-thumb-width: 9px; --media-range-thumb-height: 9px; --media-range-thumb-background: var(--text-primary); --media-preview-time-text-shadow: none; }
 .ds-canvas .cnode .card.board-img { background: var(--surface-container); }
 .ds-canvas .cnode .card.board-img img { object-fit: contain; }
 .ds-canvas .cnode .card .none { display: grid; place-items: center; height: 100%; color: var(--text-muted); font-size: 11px; }

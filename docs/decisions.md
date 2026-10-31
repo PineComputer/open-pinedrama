@@ -670,6 +670,23 @@ timeline
   to view", as master relayed it.
 - **Recorded in.** Master's note to work-06, 30 October 2026.
 
+## D38. 2026-10-30 · A take or cut plays on its Canvas node
+- **Context.** A take or cut node previewed its video on hover, muted, with no way to play it with
+  sound, scrub it or see it large without leaving the board.
+- **Decision.** A take or cut node carries an inline player: media-chrome's controller around the
+  video and its control bar over the card's foot, on the picked node and on hover: play, time, the
+  slider, duration, sound, full screen. The video is muted until the maker turns the sound on, so a
+  hover still previews it silently. The bar takes no drag or pan of the board.
+- **Alternatives.** Open a player in a dialog; a snapshot button as liblib's has, left out: media-chrome
+  has none, and a hand-made one is ad hoc (D35).
+- **Grounds.** liblib.tv's video node; the control order of Premiere, Frame.io and YouTube; media-chrome
+  (`MediaControlBar` and its parts), the player the cut room uses, with the cut room's tokens.
+- **Consequences.** design/app.js and design/studio.css (.vbar); src/ui/screens/Canvas.tsx (NodePlayer);
+  src/ui/screens/canvas.css; design/SPEC.md, CanvasNode.
+- **Words.** yurun's request, as master relayed it: a take or cut node gets inline video controls,
+  like liblib's video node.
+- **Recorded in.** Master's note to work-06, 30 October 2026.
+
 ## References
 
 <a id="ref-1"></a>[1] G. Starke, P. Hruschka. *arc42*, section 9, "Architecture decisions".

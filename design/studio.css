@@ -279,11 +279,11 @@ input.search:focus { border-color: var(--text-primary); }
 .group > .gl { position: absolute; left: 16px; top: 14px; font-size: 13px; font-weight: 600; color: var(--text-muted); }
 .segnode { position: absolute; width: 300px; }
 .segnode .card { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 6px; height: 196px; }
-.segnode .card > :is(div, button) { position: relative; border-radius: 6px; overflow: hidden; background: var(--surface-container); }
-.segnode .card > :is(div, button) img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
+.segnode .card > :is(div, button):not(.vbar) { position: relative; border-radius: 6px; overflow: hidden; background: var(--surface-container); }
+.segnode .card > :is(div, button):not(.vbar) img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
 .segnode .card > .board-img { background: #fff; }
 .segnode .card > .board-img img { object-fit: contain; }
-.segnode .card > :is(div, button) > span:not(.play) { position: absolute; left: 5px; bottom: 5px; font: 600 10px var(--font-mono); padding: 2px 5px; border-radius: 4px; background: color-mix(in srgb, var(--canvas) 72%, transparent); color: var(--text-primary); }
+.segnode .card > :is(div, button):not(.vbar) > span:not(.play) { position: absolute; left: 5px; bottom: 5px; font: 600 10px var(--font-mono); padding: 2px 5px; border-radius: 4px; background: color-mix(in srgb, var(--canvas) 72%, transparent); color: var(--text-primary); }
 .segnode .card > div.none { display: grid; place-items: center; color: var(--text-subtle); font-size: 11px; }
 .segnode .play { position: absolute; inset: 0; display: grid; place-items: center; }
 .segnode .play i { width: 32px; height: 32px; border-radius: 50%; background: color-mix(in srgb, var(--canvas) 55%, transparent); display: grid; place-items: center; color: var(--text-primary); border: 1px solid color-mix(in srgb, var(--text-primary) 25%, transparent); }
@@ -658,6 +658,15 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
 .stile span { position: absolute; left: 3px; bottom: 3px; padding: 0 4px; border-radius: 4px; background: color-mix(in srgb, var(--canvas) 70%, transparent); color: var(--text-primary); font: 600 9.5px/1.6 var(--font-mono); }
 .stile[aria-pressed="true"] img, .segnode .card > button.on { outline: 2px solid var(--accent); outline-offset: 1px; }
 .segnode .card > button { padding: 0; border: 0; font: inherit; color: inherit; text-align: inherit; cursor: pointer; }
+/* A take's inline player (D38): media-chrome's control bar over the foot of the take, on the picked take and on hover;
+   the cut room's player tokens (.controls: text-primary on a blurred canvas). */
+.segnode .card > .take-tile, .segnode .card > .vbar { grid-area: 1 / 2; }
+.cnode .vbar { align-self: end; justify-self: stretch; position: relative; z-index: 2; margin: 4px; display: none; align-items: center; gap: 4px; padding: 2px 6px; border-radius: 8px; background: color-mix(in srgb, var(--canvas) 72%, transparent); backdrop-filter: blur(10px); color: var(--text-primary); font: 600 10px var(--font-mono); }
+.cnode .card:hover .vbar, .cnode .vbar.shown { display: flex; }
+.cnode .vbar .vb { width: 22px; height: 22px; padding: 0; border: 0; border-radius: 50%; background: none; color: inherit; display: grid; place-items: center; cursor: pointer; }
+.cnode .vbar .vb .ic { width: 13px; height: 13px; }
+.cnode .vbar .vtrack { flex: 1; min-width: 24px; height: 3px; border-radius: 999px; background: color-mix(in srgb, var(--text-primary) 25%, transparent); }
+.cnode .vbar .vtrack i { display: block; width: 0; height: 100%; border-radius: inherit; background: var(--text-primary); }
 .segrow .segat { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0 0 6px; font-size: 12px; }
 .backto .ic { width: 14px; height: 14px; }
 .top .backto { margin-left: 6px; flex: none; border: 1px solid var(--border); }
