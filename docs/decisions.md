@@ -1035,13 +1035,17 @@ timeline
 - **Decision.** Script is the one home of the screenplay's process: the upload, drama-cli's check,
   the agent's revisions into Fountain, the maker's acceptance, and the comparison of what changed.
   The tree's Script row carries its state as an episode row does (its now-line and dot), and the page
-  shows the process as a vertical version history, newest on top, each version with drama-cli's
-  check result and what changed. There is no horizontal stepper. Whether Analyzing and the Fountain
-  review fold into Script is pending work-02's draft in `design/`.
+  shows the process as a vertical version history, newest on top: drama-cli's words where its check
+  refuses, each version opening its review.md, Accept on the one that waits, collapsed once accepted.
+  There is no horizontal stepper. Its views are Fountain (with an Episode → Scene outline), Original
+  (as uploaded) and Compare (from review.md's line map). Analyzing and the Fountain review fold into
+  Script, which replaces [D21](#d21-2026-10-30--analyzing-and-out-of-date-have-drama-level-routes-of-their-own)'s
+  Analyzing route when the draft is ported.
 - **Alternatives.** The setup steps as their own route (D21); a horizontal stage line beside the
   vertical tree, which merecdesperez44323-lab rejected.
-- **Grounds.** merecdesperez44323-lab's decision; one home per object
-  ([design principles](design-principles.md#1-one-home-per-object)).
+- **Grounds.** merecdesperez44323-lab's decision; GitHub's pull-request timeline; Figma's and Google
+  Docs' version history; VS Code's Outline; Nielsen's first heuristic, visibility of system status;
+  one home per object and five maker-facing states ([design principles](design-principles.md), 1 and 4).
 - **Consequences.** Design first, then the product after Codex's review and merecdesperez44323-lab's
   yes; D21's Analyzing route may change with the draft.
 - **Words.** "script, 这个part就把用户上传、drama-cli修改、revise、变成fountain， 用户确认， 这些在这个part都搞定， 包括对比啥的， 改了啥"
@@ -1049,7 +1053,7 @@ timeline
   the user's confirmation, all here, including the comparison and what changed*); and "既有竖着的 又有横着的
   进度条，会不会有点儿confusing啊 … 是不是就统一都放在竖着里边啊" (*progress both vertical and horizontal, isn't
   that a bit confusing … shouldn't it all go in the vertical one*), relayed by master.
-- **Recorded in.** Master's note to the docs, 30 October 2026.
+- **Recorded in.** Design commit 46b2c73; master's and work-02's notes, 30 October 2026.
 
 ## D63. 2026-10-30 · An episode's views are Segments and Canvas; Segments is a matrix
 - **Context.** An episode's List showed each segment's tiles in a row, without its shots or
