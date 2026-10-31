@@ -1019,15 +1019,18 @@ timeline
 ## D61. 2026-10-30 · Story is renamed Bible, as drama-cli calls it
 - **Context.** The project's page for the bible was called Story (D42), while drama-cli, its files
   and the glossary call the document the bible.
-- **Decision.** The page is Bible. This supersedes [D42](#d42-2026-10-30--story-and-assets-are-two-pages-homes-shelves-use-the-makers-states)'s
+- **Decision.** The page is Bible, showing bible.json's fields: the logline, the tone, and an
+  episodes table (title, summary, end hook, seconds) with each episode's beats in a disclosure; no
+  genre tags, since the bible has none. This supersedes [D42](#d42-2026-10-30--story-and-assets-are-two-pages-homes-shelves-use-the-makers-states)'s
   name; Bible and Assets stay two pages.
 - **Alternatives.** Story (D42).
 - **Grounds.** merecdesperez44323-lab's decision; names follow drama-cli's (short_drama `AGENTS.md`,
-  design rule 8).
+  design rule 8); drama-cli's Bible schema (`drama_cli/schemas/bible.py`); the WAI-ARIA disclosure
+  pattern.
 - **Consequences.** The glossary moves Story to Bible; design first, then the product after Codex's
   review and merecdesperez44323-lab's yes.
 - **Words.** "肯定啊， 就是和 drama-cli一致啊" (*of course, the same as drama-cli*), relayed by master.
-- **Recorded in.** Master's note to the docs, 30 October 2026.
+- **Recorded in.** Design commit a294559; master's and work-04's notes, 30 October 2026.
 
 ## D62. 2026-10-30 · Script is the home of the whole screenplay process
 - **Context.** The screenplay's process was spread over Upload, Analyzing, the Fountain review and
@@ -1059,18 +1062,20 @@ timeline
 - **Context.** An episode's List showed each segment's tiles in a row, without its shots or
   references side by side.
 - **Decision.** An episode is Segments | Canvas. Segments is a grid: a row per segment, columns for
-  its shots (the breakdown), the line-art storyboard, the photoreal storyboard, the references and
-  the take. The inspector holds the picked item and its Seedance prompt. Lineage stays a view of an
+  its shots (breakdown.json's Shot fields), the line-art storyboard, the photoreal storyboard, the
+  references and the take, each cell with its newest version and state. A cell opens in the
+  inspector, the only place the Seedance prompt shows, labelled. Lineage stays a view of an
   item, not a tab. This supersedes the List of
   [D16](#d16-2026-10-30--the-navigation-a-studio-wide-rail-the-dramas-tree-one-home-per-object)'s
   List | Canvas.
 - **Alternatives.** The List of segment rows (D16).
-- **Grounds.** merecdesperez44323-lab's decision.
+- **Grounds.** merecdesperez44323-lab's decision; ShotGrid's and ftrack's shot-by-task grid; the
+  WAI-ARIA table pattern; drama-cli's Breakdown schema (`drama_cli/schemas/breakdown.py`).
 - **Consequences.** work-04 drafts it in `design/`; the product changes after Codex's review and
   merecdesperez44323-lab's yes.
 - **Words.** "就是 镜头、线稿、写实、参考图、take。 那我理解就是 一个 矩阵了" (*that is: shots, line art,
   photoreal, reference pictures, take; so as I understand it, a matrix*), relayed by master.
-- **Recorded in.** Master's note to the docs, 30 October 2026.
+- **Recorded in.** Design commit a294559; master's and work-04's notes, 30 October 2026.
 
 ## D64. 2026-10-30 · The studio is a visualization of drama-cli's work
 - **Context.** Pages, names and states had been added screen by screen; merecdesperez44323-lab named
