@@ -251,15 +251,19 @@
       ${S.agentOpen && html`<${AgentPanel} float/>`}`}`;
   }
 
-  /* Home's "Waiting for you": every drama's decisions, each row named by its drama and pictured by its cover. */
+  /* Home's "Waiting for you": every drama's decisions, each row named by its drama and pictured by its cover.
+     §16: a row lands where that decision is made, with its items picked: takes in the review room, looks and plates
+     on their cards in Assets, storyboards in their episode, a cut on its episode's Cut. Back returns. */
   const waits = () => {
     const cover = (t) => P.projects.find((p) => p.t === t).cover;
+    const back = () => (S.screen === "reviews" ? "Reviews" : "Home");
+    const only = (where) => () => toast("Opens " + where + ". This sample opens EP006 only.");
     return [
-      { dr: "Bride on Bail", what: "EP006", d: "2 takes · seg01, seg03", age: "4 min", go: "review" },
-      { dr: "Bride on Bail", what: "Looks and plates", d: "2 items · Margaret Cole, Garden wedding", age: "12 min", go: "canvas" },
-      { dr: "Bride on Bail", what: "EP004", d: "6 storyboards · scene 1 and 2", age: "26 min", go: "episodes" },
-      { dr: "Bride on Bail", what: "EP001", d: "Cut v2 · The Wedding", age: "1 h", go: "episodes" },
-      { dr: "Last Toast", what: "EP007", d: "Red line · decide in your words", age: "2 h" },
+      { dr: "Bride on Bail", what: "EP006", d: "2 takes · seg01, seg03", age: "4 min", open: () => go("review") },
+      { dr: "Bride on Bail", what: "Looks and plates", d: "2 items · Margaret Cole, Garden wedding", age: "12 min", open: () => openHome("margaret", back()) },
+      { dr: "Bride on Bail", what: "EP004", d: "6 storyboards · scene 1 and 2", age: "26 min", open: only("EP004's List with its 6 storyboards picked") },
+      { dr: "Bride on Bail", what: "EP001", d: "Cut v2 · The Wedding", age: "1 h", open: only("EP001 › Cut v2") },
+      { dr: "Last Toast", what: "EP007", d: "Red line · decide in your words", age: "2 h", open: () => toast("Last Toast: only Bride on Bail opens in this direction.") },
     ].map((w) => ({ ...w, pic: cover(w.dr) }));
   };
   /* ───── Reviews: every drama's decisions, one queue, one filter (IA draft) ───── */
@@ -269,10 +273,10 @@
     return html`<div class="main">
       <${TopBar} crumbs=${S.waitFor ? ["Reviews", S.waitFor] : ["Reviews"]}/>
       <div class="scrollmain"><div class="wrap" style="max-width:880px">
-        <div class="greet"><div class="grow"><h1>Reviews</h1><p>Every decision the agent waits on, newest first. Each opens its review room.</p></div></div>
+        <div class="greet"><div class="grow"><h1>Reviews</h1><p>Every decision the agent waits on, newest first. Each opens where you decide it.</p></div></div>
         <div class="filters">${[[null, "All", all.length], ...dramas.map((d) => [d, d, all.filter((w) => w.dr === d).length])].map(([k, l, n]) =>
           html`<button class="fchip" aria-pressed=${String(S.waitFor === k)} onClick=${() => set({ waitFor: k })}>${l}<small>${n}</small></button>`)}</div>
-        <section class="panel queue">${list.map((w) => html`<button class="wait" onClick=${() => (w.go ? go(w.go) : toast(w.dr + ": only Bride on Bail opens in this direction."))}><img src=${w.pic} alt=""/>
+        <section class="panel queue">${list.map((w) => html`<button class="wait" onClick=${w.open}><img src=${w.pic} alt=""/>
           <span><b>${w.dr} · ${w.what}</b><small>${w.d} · ${w.age}</small></span></button>`)}</section>
       </div></div></div>`;
   }
@@ -295,7 +299,7 @@
               <button class="btn lg primary" onClick=${() => go("review")}>${I("play")}Review takes</button></div></div>
         </div>
         <div class="right"><h3>Waiting for you</h3>
-          ${waits().slice(0, 4).map((w) => html`<button class="wait" onClick=${() => (w.go ? go(w.go) : toast(w.dr + ": only Bride on Bail opens in this direction."))}><img src=${w.pic} alt=""/><span><b>${w.dr} · ${w.what}</b><small>${w.d} · ${w.age}</small></span></button>`)}
+          ${waits().slice(0, 4).map((w) => html`<button class="wait" onClick=${w.open}><img src=${w.pic} alt=""/><span><b>${w.dr} · ${w.what}</b><small>${w.d} · ${w.age}</small></span></button>`)}
           <button class="seeall" onClick=${() => set({ waitFor: null, screen: "reviews" })}>See all ${waits().length} in Reviews ${I("caret-right")}</button></div>
       </section>
       <div class="tabsrow"><div class="utabs" role="tablist">${tabs.map(([k, l, n]) => html`<button role="tab" aria-selected=${String(S.tab === k)} onClick=${() => set({ tab: k })}>${l}<small>${n}</small></button>`)}</div>
