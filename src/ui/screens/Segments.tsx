@@ -10,6 +10,7 @@ import { useResource } from "../api.ts";
 import { StatusChip } from "../components/StatusChip.tsx";
 import { Icon } from "../icons.tsx";
 import { type TKey, useT } from "../i18n.ts";
+import { headingText } from "../labels.ts";
 import { Link } from "../router.tsx";
 import { isVideo, useText } from "../viewing.tsx";
 import { standing } from "./Canvas.tsx";
@@ -60,7 +61,7 @@ export function Segments({ dramaId, page }: { dramaId: string; page: EpisodePage
   const chains = episode?.sceneChains ?? [];
   const listed = new Set(chains.flatMap((chain) => chain.segments));
   const loose = page.segments.map((segment) => segment.key).filter((key) => !listed.has(key));
-  const scenes = [...chains.map((chain, n) => ({ heading: t("review.sceneLine", { n: n + 1, heading: chain.sceneHeading }), segments: chain.segments })), ...(loose.length ? [{ heading: t("canvas.unlisted"), segments: loose }] : [])];
+  const scenes = [...chains.map((chain, n) => ({ heading: t("review.sceneLine", { n: n + 1, heading: headingText(chain.sceneHeading) }), segments: chain.segments })), ...(loose.length ? [{ heading: t("canvas.unlisted"), segments: loose }] : [])];
   const accepted = (segment: string) => standing(episode?.segments[segment]) === "accepted";
   return scenes.map((scene) => (
     <section key={scene.heading} className="panel segscene" aria-label={scene.heading}>

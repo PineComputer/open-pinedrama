@@ -28,7 +28,7 @@ describe("an episode's segments", () => {
   it("are grouped by scene, each scene saying how many of its segments are accepted", async () => {
     project();
     render(<Segments dramaId="d1" page={page} />);
-    const scene = await screen.findByRole("region", { name: "Scene 1 · INT. OFFICE - DAY #1-1#" });
+    const scene = await screen.findByRole("region", { name: "Scene 1 · INT. OFFICE - DAY" });
     expect(within(scene).getByText("0 of 1 accepted")).toBeInTheDocument();
     expect(within(scene).getByText("seg01")).toBeInTheDocument();
   });

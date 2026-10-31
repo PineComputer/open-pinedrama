@@ -42,6 +42,11 @@ export function subjectLabel(names: Names | null, subject: string, kind?: "look"
 }
 
 /** Markdown said as plain words, for a one-line preview: link labels, no markup. */
+/** A scene heading as a person reads it: without the scene number Fountain writes at its end between #s (fountain.io, "Scene Numbers"). */
+export function headingText(heading: string): string {
+  return heading.replace(/\s*#[^#\n]*#\s*$/, "");
+}
+
 export function plainText(markdown: string): string {
   return markdown
     .replace(/\[([^\]\n]+)\]\([^)\n]*\)/g, "$1")

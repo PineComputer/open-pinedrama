@@ -3,7 +3,7 @@ import { useEffect, useId, useMemo, useRef, useState } from "react";
 import type { DramaView, FileItem, ItemDecision, Note, ReviewItem, ReviewView, Verdict } from "../../shared/types.ts";
 import { api, clock, useAction, useResource } from "../api.ts";
 import { type TKey, useT } from "../i18n.ts";
-import { errorText, fileKind, moneyText, subjectLabel, useNames } from "../labels.ts";
+import { errorText, fileKind, headingText, moneyText, subjectLabel, useNames } from "../labels.ts";
 import { Button } from "../components/Button.tsx";
 import { Segmented } from "../components/Segmented.tsx";
 import { StatusChip } from "../components/StatusChip.tsx";
@@ -300,7 +300,7 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
   const chains = review.episode ? (project.data?.state?.episodes[review.episode]?.sceneChains ?? []) : [];
   const sceneOf = (key: string) => {
     const n = chains.findIndex((chain) => chain.segments.includes(key));
-    return n < 0 ? undefined : t("review.sceneLine", { n: n + 1, heading: chains[n].sceneHeading });
+    return n < 0 ? undefined : t("review.sceneLine", { n: n + 1, heading: headingText(chains[n].sceneHeading) });
   };
   // What the episode has spent so far, as the design's inspector shows it under a take.
   const drama = useResource<DramaView>(review.episode ? `/api/dramas/${review.dramaId}` : null, [`drama:${review.dramaId}`]);
@@ -312,7 +312,10 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
   const acceptedBefore = takes
     ? Object.entries(segments)
         .filter(([key, stage]) => stageStanding(stage) === "accepted" && !items.some((i) => i.key === key))
-        .map(([key, stage]) => ({ key, version: stage.current ?? undefined, take: (episodeFiles.data ?? []).filter((f) => f.kind === "take" && f.segment === key).at(-1) }))
+        .map(([key, stage]) => {
+          const newest = (kind: string) => (episodeFiles.data ?? []).filter((f) => f.kind === kind && f.segment === key).at(-1);
+          return { key, version: stage.current ?? undefined, take: newest("last-frame") ?? newest("take") };
+        })
     : [];
 
   const item: ReviewItem | undefined = items[index];
@@ -495,7 +498,7 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
             {acceptedBefore.map(({ key, version, take }) => (
               <div key={key} className="ritem">
                 <span className="thumb">
-                  <Still still={take && { url: take.url, video: true }} />
+                  <Still still={take && { url: take.url, video: isVideo(take) }} />
                 </span>
                 <span className="what">
                   <b>{[key, version].filter(Boolean).join(" · ")}</b>
@@ -659,7 +662,8 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
                 {shots.map((shot, n) => (
                   <li key={shot}>
                     <span>{String(n + 1).padStart(2, "0")}</span>
-                    {shot}
+                    {/* The number stands for the label drama-cli writes ("Shot 1 (0-3s): …", the Seedance guide's form). */}
+                    {shot.replace(/^Shot \d+(?: \([^)]*\))?:\s*/i, "")}
                   </li>
                 ))}
               </ol>
