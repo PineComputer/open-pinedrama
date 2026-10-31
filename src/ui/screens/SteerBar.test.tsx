@@ -66,6 +66,17 @@ function engine(queue: ReviewSummary[] = [], sends: ChatView["sends"] = "steer",
 
 const openLooks: ReviewSummary = { id: "r9", dramaId: "d1", dramaTitle: "The Stepmother", kind: "looks", state: "open", question: "Ready.", items: 1, subjects: ["Lin Xiaoyu"], createdAt: "2026-10-30T10:00:00Z" };
 
+/** React Flow's pane (its renderer, which it measures) at a laptop's board size: jsdom lays nothing out, and the shim gives a 100%-wide element 100 px. For the tests that fit a node in it. */
+function boardOfSize(width: number, height: number) {
+  const proto = HTMLElement.prototype;
+  const was = { w: Object.getOwnPropertyDescriptor(proto, "offsetWidth")!, h: Object.getOwnPropertyDescriptor(proto, "offsetHeight")! };
+  Object.defineProperties(proto, {
+    offsetWidth: { get(this: HTMLElement) { return this.classList.contains("react-flow__renderer") ? width : was.w.get!.call(this); }, configurable: true },
+    offsetHeight: { get(this: HTMLElement) { return this.classList.contains("react-flow__renderer") ? height : was.h.get!.call(this); }, configurable: true },
+  });
+  return () => Object.defineProperties(proto, { offsetWidth: was.w, offsetHeight: was.h });
+}
+
 async function pick(name: RegExp) {
   const user = userEvent.setup();
   // Picked from the keyboard: a mouse press on a node starts React Flow's drag, which jsdom can't drive.
@@ -390,7 +401,8 @@ describe("a picked item's hand actions and panel (P6.8)", () => {
 
   it("places the picked node's bar inside the board's visible area, under the pills, and again after a dock", async () => {
     withBreakdown();
-    await renderAt(<Canvas drama={drama("working")} />, "/d/d1/canvas");
+    const restore = boardOfSize(1000, 900);
+    await renderAt(<Canvas drama={drama("working")} />, "/d/d1/e/EP001/canvas");
     // React Flow writes the viewport and each node's absolute place on the page, and measures its pane as the page lays it out.
     const translate = (element: Element) => (element as HTMLElement).style.transform.match(/translate\((-?[\d.]+)px,\s*(-?[\d.]+)px\)(?:\s*scale\(([\d.]+)\))?/)!.slice(1).map(Number);
     const screen = () => {
@@ -400,7 +412,7 @@ describe("a picked item's hand actions and panel (P6.8)", () => {
       return { left: x * zoom + vx, top: y * zoom + vy, width: (node as HTMLElement).offsetWidth * zoom };
     };
     const { user, panel } = await panelOf(/^Take · t01/);
-    const pane = (document.querySelector(".react-flow") as HTMLElement).offsetWidth;
+    const pane = (document.querySelector(".react-flow__renderer") as HTMLElement).offsetWidth;
     // The bar (56 px) stands above the node, and its top is never above the pills' 64 px.
     await waitFor(() => {
       const under = screen();
@@ -412,6 +424,21 @@ describe("a picked item's hand actions and panel (P6.8)", () => {
     await waitFor(() => expect(screen().left + screen().width / 2).toBeCloseTo((pane - 420) / 2, 0));
     expect(screen().top - 56).toBeGreaterThanOrEqual(64);
     localStorage.removeItem("studio.canvas.dock");
+    restore();
+  });
+
+  it("zooms a picked node to a readable size, and back to where the board was on Escape (D37)", async () => {
+    withBreakdown();
+    const restore = boardOfSize(1000, 900);
+    await renderAt(<Canvas drama={drama("working")} />, "/d/d1/e/EP001/canvas");
+    const zoom = () => Number((document.querySelector(".react-flow__viewport") as HTMLElement).style.transform.match(/scale\(([\d.]+)\)/)![1]);
+    await waitFor(() => expect(zoom()).toBeCloseTo(0.55, 2));
+    const { user } = await panelOf(/^Take · t01/);
+    await waitFor(() => expect(zoom()).toBeGreaterThan(0.55));
+    expect(zoom()).toBeLessThanOrEqual(1.5);
+    await user.keyboard("{Escape}");
+    await waitFor(() => expect(zoom()).toBeCloseTo(0.55, 2));
+    restore();
   });
 
   it("says when the versions can't be read, rather than that there are none", async () => {

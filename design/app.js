@@ -428,7 +428,7 @@
     return html`<div class=${"npanel" + (docked ? " docked" : "")} role="dialog" aria-label=${node.label} style=${style}>
       <div class="nhead"><b class="grow">${node.label}</b>${Status(node.st === "stale" ? "accepted" : node.st)}${outOfDate(node) ? Status("stale", "Out of date") : Status("line", "Up to date")}
         ${!forced && html`<button class="ibtn" title=${docked ? "Under the node" : "Dock right"} aria-label=${docked ? "Under the node" : "Dock right"} onClick=${() => dock(docked ? "under" : "right")}>${I(docked ? "square-half-bottom" : "square-half")}</button>`}
-        <button class="ibtn" aria-label="Close" onClick=${() => set({ sel: null })}>${I("x")}</button></div>
+        <button class="ibtn" aria-label="Close" onClick=${() => set({ sel: null, cam: S.camBack || S.cam, camBack: null })}>${I("x")}</button></div>
       <div class="nstate"><span class="mono">current ${node.ver || "v1"} · ${acc}</span>${why && html`<span class="why">${I("warning")}${why}</span>`}</div>
       ${needs && html`<p class="needs">${needs}</p>`}
       ${home ? html`<p class="subtle nhome">Its versions, prompt and review: <button class="linkbtn" onClick=${() => openHome(node.id, "EP006 · Canvas")}>Assets › ${{ cast: "Characters", scenes: "Locations", props: "Props" }[home]} › ${node.label}</button></p>`
@@ -459,7 +459,13 @@
       const tall = BAR + ((n.h || 196) + 26) * kk + (S.dock === "right" ? 0 : 10 + PANEL);
       const top = Math.max(PILLS, PILLS + (el.clientHeight - PILLS - tall) / 2);
       return { k: kk, x: (el.clientWidth - (S.dock === "right" ? DOCKED : 0)) / 2 - (n.x + (n.w || 300) / 2) * kk, y: top + BAR - (n.y - 26) * kk }; };
-    const pick = (n, at) => set({ sel: n.id, at: at || null, follow: false, cam: place(n) });
+    // yurun: a picked node zooms in to a readable size (D37). Figma's Zoom to selection (Shift+2), as React Flow's
+    // fitView({ nodes }) does it: the node fills the room its bar and panel leave, up to 150%. Esc or Fit returns.
+    const readable = (n) => { const el = ref.current; if (!el) return k;
+      const roomH = el.clientHeight - PILLS - BAR - (S.dock === "right" ? 0 : 10 + PANEL) - 16, roomW = el.clientWidth - (S.dock === "right" ? DOCKED : 0) - 80;
+      return Math.min(1.5, roomH / ((n.h || 196) + 26), roomW / (n.w || 300)); };
+    const pick = (n, at) => set({ sel: n.id, at: at || null, follow: false, camBack: S.camBack || S.cam, cam: place(n, readable(n)) });
+    const letGo = () => set({ sel: null, cam: S.camBack || S.cam, camBack: null });
     // Arriving with a pick (Back from Lineage or Assets, or the List's selection) places it, as a click would.
     useEffect(() => { const n = S.sel && byId[S.sel]; if (n) pick(n, S.at); }, []);
     useEffect(() => {
@@ -474,7 +480,7 @@
       const kd = (e) => { if (/textarea|input/i.test(e.target.tagName) || S.screen !== "canvas") return; const mod = e.metaKey || e.ctrlKey;
         if (!mod && e.key === "v") set({ tool: "move" }); else if (!mod && e.key === "h") set({ tool: "hand" });
         else if (!mod && e.key === "?") set({ keysOpen: true });
-        else if (e.key === "Escape") set({ sel: null, toolOpen: false, zoomOpen: false, keysOpen: false });
+        else if (e.key === "Escape") { set({ toolOpen: false, zoomOpen: false, keysOpen: false }); if (S.sel) letGo(); }
         else if (mod && (e.key === "=" || e.key === "+")) { e.preventDefault(); zoom(1.15); } else if (mod && e.key === "-") { e.preventDefault(); zoom(0.85); }
         else if (mod && e.key === "0") { e.preventDefault(); fit(); } };
       window.addEventListener("keydown", kd); return () => window.removeEventListener("keydown", kd);
@@ -485,7 +491,7 @@
     const wheel = (e) => { e.preventDefault(); const r = ref.current.getBoundingClientRect(); const mx = e.clientX - r.left, my = e.clientY - r.top;
       const nk = Math.min(1.6, Math.max(0.25, k * (e.deltaY < 0 ? 1.1 : 0.9))); set({ follow: false, cam: { k: nk, x: mx - (mx - x) * (nk / k), y: my - (my - y) * (nk / k) } }); };
     const zoom = (f) => set({ follow: false, cam: { ...S.cam, k: Math.min(1.6, Math.max(0.25, k * f)) } });
-    const fit = () => set({ follow: false, cam: { x: 40, y: 96, k: 0.62 } });
+    const fit = () => set({ follow: false, camBack: null, cam: { x: 40, y: 96, k: 0.62 } });
     const wire = ([a, b]) => { const A = byId[a], B = byId[b]; const x1 = A.x + A.w, y1 = A.y + A.h / 2, x2 = B.x, y2 = B.y + B.h / 2; const m = (x1 + x2) / 2;
       return html`<path class=${S.sel === a || S.sel === b ? "hot" : ""} d=${`M${x1},${y1} C${m},${y1} ${m},${y2} ${x2},${y2}`}/>`; };
     const sel = S.sel && byId[S.sel];
@@ -554,7 +560,7 @@
         ${S.keysOpen && html`<div class="scrim" onClick=${(e) => { if (e.target === e.currentTarget) set({ keysOpen: false }); }}>
           <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="keys-t"><h2 id="keys-t">Canvas shortcuts</h2>
             <p class="subtle">Copy, paste, delete, group and undo come with phase 2, when the canvas makes items by hand.</p>
-            <dl class="keys">${[["V", "Move: pick and drag items, draw a box to pick several"], ["H", "Hand: drag the board"], ["Space + drag", "Drag the board, whatever the tool"], ["⌘ +  /  ⌘ −", "Zoom in / out"], ["⌘ 0", "Fit to screen"], ["⌘ A", "Pick every item"], ["Esc", "Let go of the pick and close its panel"], ["?", "This list"]].map(([key, what]) => html`<dt><kbd>${key}</kbd></dt><dd>${what}</dd>`)}</dl>
+            <dl class="keys">${[["V", "Move: pick and drag items, draw a box to pick several"], ["H", "Hand: drag the board"], ["Space + drag", "Drag the board, whatever the tool"], ["⌘ +  /  ⌘ −", "Zoom in / out"], ["⌘ 0", "Fit to screen"], ["⌘ A", "Pick every item"], ["Esc", "Let go of the pick, close its panel and zoom back"], ["?", "This list"]].map(([key, what]) => html`<dt><kbd>${key}</kbd></dt><dd>${what}</dd>`)}</dl>
             <div class="acts"><button class="btn" onClick=${() => set({ keysOpen: false })}>Close</button></div></div></div>`}
         ${S.agentOpen && html`<${AgentPanel} float/>`}
         <button class="ball busy" aria-label="Agent, 4 decisions wait" onClick=${() => set({ agentOpen: !S.agentOpen })}>${I("robot")}<span class="badge">4</span></button>

@@ -620,6 +620,21 @@ timeline
   the decisions .md just like drama-cli" (relayed by master, verbatim).
 - **Recorded in.** Master's notes to the docs and the lanes, 30 October 2026.
 
+## D37. 2026-10-30 · A picked node zooms to a readable size
+- **Context.** A node picked on Canvas kept the board's zoom, often too small to read its picture.
+- **Decision.** Picking a node zooms it, animated, to fill the room its bar and panel leave, up to
+  150%: under the pills, its bar above it, its panel under it or docked. Esc, the panel's Close and
+  Fit zoom back to where the board was. A pick zooms by itself, as asked, with no extra key.
+- **Alternatives.** Zoom only on a double-click or a key, as Figma's Zoom to selection (Shift+2)
+  does; a mode the maker must learn, for what a pick is for here.
+- **Grounds.** Figma's "Zoom to selection"; React Flow's `fitView({ nodes })`, with padding for the
+  bar and the panel; Nielsen's user control and freedom, for the way back.
+- **Consequences.** design/app.js Canvas (readable, letGo); src/ui/screens/Canvas.tsx (place,
+  letGo); design/SPEC.md, CanvasNode.
+- **Words.** "when we click the nodes on canvas, the node zoom in on the screen to be human friendly
+  to view", as master relayed it.
+- **Recorded in.** Master's note to work-06, 30 October 2026.
+
 ## References
 
 <a id="ref-1"></a>[1] G. Starke, P. Hruschka. *arc42*, section 9, "Architecture decisions".

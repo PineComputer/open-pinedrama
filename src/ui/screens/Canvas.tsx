@@ -6,7 +6,7 @@
 // this episode's segment groups and cut. React Flow gives the plane, dragging, selection and the
 // viewport; where the maker moved items is kept per episode as the studio's view state. Phase 1
 // only reads: the inspector steers the agent, and the hand actions stand disabled.
-import { Background, BackgroundVariant, type Edge, Handle, MiniMap, type Node, type NodeProps, NodeToolbar, Position, ReactFlow, ReactFlowProvider, useKeyPress, useNodesInitialized, useNodesState, useReactFlow, useStore, useViewport } from "@xyflow/react";
+import { Background, BackgroundVariant, type Edge, getViewportForBounds, type Viewport, Handle, MiniMap, type Node, type NodeProps, NodeToolbar, Position, ReactFlow, ReactFlowProvider, useKeyPress, useNodesInitialized, useNodesState, useReactFlow, useStore, useViewport } from "@xyflow/react";
 import { createContext, Fragment, type ReactNode, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { DropdownMenu } from "radix-ui";
 import { HEIGHT, layout, WIDTH } from "../../shared/layout.ts";
@@ -84,6 +84,8 @@ const PANEL_HEIGHT = 420;
 const DOCKED = 420;
 /** The board's top the pills take (design/studio.css .ctop: 14 px in, 34 px high, and a margin), which nothing is placed under. */
 const PILLS = 64;
+/** The most a pick zooms a node in (D37): its picture readable, its label not past the pills. */
+const READABLE = 1.5;
 
 interface BoardContext {
   pick: (id: string | null) => void;
@@ -196,7 +198,7 @@ const PRESETS = [50, 100, 800];
  * again and the shortcut list. The menus are Radix's DropdownMenu in the design's .menu (as components/Dialog.tsx draws
  * Radix's AlertDialog in its .dialog); every move is React Flow's own.
  */
-function ZoomPill({ tool, onTool, minimap, onMinimap, onLayOut, onKeys }: { tool: Tool; onTool: (tool: Tool) => void; minimap: boolean; onMinimap: () => void; onLayOut: () => void; onKeys: () => void }) {
+function ZoomPill({ tool, onTool, minimap, onMinimap, onLayOut, onKeys, onFit }: { tool: Tool; onTool: (tool: Tool) => void; minimap: boolean; onMinimap: () => void; onLayOut: () => void; onKeys: () => void; onFit: () => void }) {
   const { t } = useT();
   const flow = useReactFlow();
   const zoom = Math.round(useViewport().zoom * 100);
@@ -229,7 +231,7 @@ function ZoomPill({ tool, onTool, minimap, onMinimap, onLayOut, onKeys }: { tool
         </DropdownMenu.Portal>
       </DropdownMenu.Root>
       <i className="sep" aria-hidden="true" />
-      <IconButton label={t("canvas.fit")} icon="frame-corners" onClick={() => void flow.fitView({ ...FIT, duration: 500 })} />
+      <IconButton label={t("canvas.fit")} icon="frame-corners" onClick={onFit} />
       <IconButton label={t("canvas.zoomOut")} icon="minus" onClick={() => void flow.zoomOut({ duration: 200 })} />
       <DropdownMenu.Root>
         <DropdownMenu.Trigger asChild>
@@ -263,7 +265,7 @@ function ZoomPill({ tool, onTool, minimap, onMinimap, onLayOut, onKeys }: { tool
               <b>{t("canvas.zoomOut")}</b>
               <kbd>⌘ −</kbd>
             </DropdownMenu.Item>
-            <DropdownMenu.Item className="mi row" onSelect={() => void flow.fitView({ ...FIT, duration: 500 })}>
+            <DropdownMenu.Item className="mi row" onSelect={onFit}>
               <b>{t("canvas.fit")}</b>
               <kbd>⌘ 0</kbd>
             </DropdownMenu.Item>
@@ -287,7 +289,7 @@ function ZoomPill({ tool, onTool, minimap, onMinimap, onLayOut, onKeys }: { tool
 }
 
 /** The canvas's keys, read-only ones only, as infinite-canvas's shortcut list (design/app.js, the canvas's keys). React Flow's useKeyPress skips them while the maker types. */
-function useCanvasKeys(on: { tool: (tool: Tool) => void; keys: () => void; letGo: () => void; pickAll: () => void }) {
+function useCanvasKeys(on: { tool: (tool: Tool) => void; keys: () => void; letGo: () => void; pickAll: () => void; fit: () => void }) {
   const flow = useReactFlow();
   const press = (keys: string | string[], act: () => void, preventDefault = false) => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -305,7 +307,7 @@ function useCanvasKeys(on: { tool: (tool: Tool) => void; keys: () => void; letGo
   press(["Meta+a", "Control+a"], on.pickAll, true);
   press(["Meta+=", "Control+=", "Meta++", "Control++"], () => void flow.zoomIn({ duration: 200 }), true);
   press(["Meta+-", "Control+-"], () => void flow.zoomOut({ duration: 200 }), true);
-  press(["Meta+0", "Control+0"], () => void flow.fitView({ ...FIT, duration: 500 }), true);
+  press(["Meta+0", "Control+0"], on.fit, true);
 }
 
 function Plane({ drama }: { drama: DramaView }) {
@@ -463,11 +465,26 @@ function Plane({ drama }: { drama: DramaView }) {
   const [tool, setTool] = useState<Tool>("move");
   // The item the last pick wrote into the URL.
   const written = useRef<string | null>(page?.item ?? null);
+  // Where the board stood before a pick zoomed in (D37): letting go returns there; Fit forgets it.
+  const before = useRef<Viewport | null>(null);
+  const letGo = () => {
+    setNodes((all) => all.map((node) => ({ ...node, selected: false })));
+    if (before.current) void flow.setViewport(before.current, { duration: 400 });
+    before.current = null;
+    if (picker || written.current === null) return;
+    written.current = null;
+    void navigate({ ...placeLink({ dramaId: drama.id, surface: "canvas", episode: code }), replace: true });
+  };
+  const fit = () => {
+    before.current = null;
+    void flow.fitView({ ...FIT, duration: 500 });
+  };
   const [keysOpen, setKeysOpen] = useState(false);
   useCanvasKeys({
     tool: setTool,
     keys: () => setKeysOpen(true),
-    letGo: () => setNodes((all) => all.map((node) => ({ ...node, selected: false }))),
+    letGo,
+    fit,
     pickAll: () => {
       setFollow(false);
       setNodes((all) => all.map((node) => ({ ...node, selected: node.type === "item" })));
@@ -478,27 +495,24 @@ function Plane({ drama }: { drama: DramaView }) {
   const save = (all: Node[]) => void api(`/api/dramas/${drama.id}/canvas/${code}`, { method: "PUT", json: { positions: Object.fromEntries(all.map((node) => [node.id, node.position])) } });
   const go = (other: string) => void navigate({ ...placeLink({ dramaId: drama.id, surface: "canvas", episode: other }), replace: true });
   /**
-   * Bring the picked node into the board's visible area at the maker's zoom: its bar's top below the pills, never above
-   * the board's top edge (where it would land under what stands over the board, a stop card say), with its panel under
-   * it, or left of the docked panel. The area is React Flow's own pane, so a dock or a resize places it again.
+   * Zoom the picked node to a readable size (D37, Figma's Zoom to selection), as React Flow's fitView({ nodes }) fits it
+   * (its getViewportForBounds):
+   * in the room left below the pills and its bar, above its panel or left of the docked one, never past READABLE. The
+   * room is React Flow's own pane, so a dock or a resize places it again.
    */
   const place = (id: string) => {
-    const node = flow.getInternalNode(id);
-    if (!node) return;
-    const zoom = flow.getZoom();
-    const { x, y } = node.internals.positionAbsolute;
-    const w = node.width ?? 0;
-    const h = node.height ?? 0;
-    const tall = BAR + h * zoom + (dock === "under" ? PANEL_HEIGHT : 0);
-    const top = Math.max(PILLS, PILLS + (paneHeight - PILLS - tall) / 2);
-    const centre = (paneWidth - (dock === "right" ? DOCKED : 0)) / 2;
-    void flow.setViewport({ x: centre - (x + w / 2) * zoom, y: top + BAR - y * zoom, zoom }, { duration: 400 });
+    if (!before.current) before.current = flow.getViewport();
+    const px = (n: number) => `${n}px` as const;
+    const padding = { top: px(PILLS + BAR), bottom: px(dock === "under" ? PANEL_HEIGHT : 24), left: px(24), right: px(24) };
+    // fitView's own sum, on the node's bounds now (fitView({ nodes }) waits for the next nodes update), in what a docked panel leaves.
+    void flow.setViewport(getViewportForBounds(flow.getNodesBounds([id]), paneWidth - (dock === "right" ? DOCKED : 0), paneHeight, 0.05, READABLE, padding), { duration: 400 });
   };
   // A pick goes into the URL, replacing it, so Back from where the bar leads (Lineage, a home) returns to it.
   const pick = (id: string | null) => {
     setFollow(false);
-    setNodes((all) => all.map((node) => ({ ...node, selected: node.id === id })));
-    if (id) place(id);
+    // The pick is placed once React Flow has it (the effect on picked above).
+    if (id) setNodes((all) => all.map((node) => ({ ...node, selected: node.id === id })));
+    else letGo();
     // The drama's Canvas is on its way to the episode's (the effect above), which then holds the pick. One pick, one
     // navigation: a key on a node reaches both its label and React Flow's own selection.
     if (picker || written.current === id) return;
@@ -601,7 +615,7 @@ function Plane({ drama }: { drama: DramaView }) {
               </Link>
             )}
         </div>
-        <ZoomPill tool={tool} onTool={setTool} minimap={minimap} onMinimap={() => setMinimap(!minimap)} onLayOut={() => void api(`/api/dramas/${drama.id}/canvas/${code}`, { method: "DELETE" }).then(() => positions.reload())} onKeys={() => setKeysOpen(true)} />
+        <ZoomPill onFit={fit} tool={tool} onTool={setTool} minimap={minimap} onMinimap={() => setMinimap(!minimap)} onLayOut={() => void api(`/api/dramas/${drama.id}/canvas/${code}`, { method: "DELETE" }).then(() => positions.reload())} onKeys={() => setKeysOpen(true)} />
         <Dialog open={keysOpen} onOpenChange={setKeysOpen} title={t("keys.title")} description={t("keys.later")} cancel={t("keys.close")}>
           <dl className="keys">
             {(
