@@ -395,8 +395,8 @@
               <button class="vbtn acc" aria-pressed=${String(rev.v === "accept")} disabled=${!watched} title=${watched ? "Accept" : "Watch the cut to the end first"} onClick=${() => revDo({ cutV: rev.v === "accept" ? null : "accept" })}>${I("check")}Accept cut</button>
               <button class="vbtn back" aria-pressed=${String(rev.v === "back")} onClick=${() => revDo({ cutV: rev.v === "back" ? null : "back" })}>${I("arrow-counter-clockwise")}Send back</button></div>
             <span class="hint">${I(watched ? "check-circle" : "clock")}${watched ? "Watched to the end." : `Watched ${Math.round((seen / c.dur) * 100)}% · Accept unlocks at the end, as for a take.`}</span>
-            ${/* UI actions rule (merecdesperez44323-lab, 2026-10-30): a decision on the exact version, each with one sentence: your
-                 words to accept (drama-cli's accept records the person's words), a reason to send back. As Script's (D62). */ ""}
+            ${/* D70: a decision on the exact version, each with one sentence: your words to accept (drama-cli's accept
+                 records the person's words), a reason to send back. As Script's (D62). */ ""}
             ${rev.v === "accept" && html`<textarea placeholder=${`Accept cut ${c.base.v} in your own words (required), e.g. “Yes, deliver this cut.”`} value=${rev.words} onFocus=${() => set({ cutRevHist: [...revHist, rev] })} onInput=${(e) => set({ cutWords: e.target.value })}></textarea>`}
             ${rev.v === "back" && html`<textarea placeholder="Why it goes back (required). Your timed notes go with it." value=${rev.why} onFocus=${() => set({ cutRevHist: [...revHist, rev] })} onInput=${(e) => set({ cutWhy: e.target.value })}></textarea>`}
             <div class="draftbar"><span>${revChanged ? html`<b>Your review is a draft</b>` : "No review yet"}</span><span class="grow"></span>

@@ -1002,8 +1002,8 @@ export function CutRoom({ review, done }: { review: ReviewView; done: () => void
   const [verdict, setVerdict, forgetVerdict] = useDraft<Verdict | undefined>(review.id, "cut.verdict", () => saved?.verdict);
   const [notes, setNotes, forgetNotes] = useDraft<Note[]>(review.id, "cut.notes", () => saved?.notes.filter((note) => note.time !== undefined) ?? []);
   const [reason, setReason, forgetReason] = useDraft(review.id, "cut.reason", () => saved?.notes.find((note) => note.time === undefined)?.text ?? "");
-  // The UI actions rule (merecdesperez44323-lab, 2026-10-30): a decision on this exact cut, each with one sentence: the
-  // maker's words to accept (drama-cli's accept records the person's words), a reason to send back; as Script's (D62).
+  // D70: a decision on this exact cut, each with one sentence: the maker's words to accept (drama-cli's accept records
+  // the person's words), a reason to send back; as Script's (D62).
   const [words, setWords, forgetWords] = useDraft(review.id, "cut.words", () => review.decision?.words ?? "");
   const [draft, setDraft] = useState("");
   const [playhead, setPlayhead] = useState(0);
