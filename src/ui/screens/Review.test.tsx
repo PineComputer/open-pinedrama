@@ -179,6 +179,8 @@ describe("the review room for a cut", () => {
     vi.spyOn(HTMLMediaElement.prototype, "pause").mockImplementation(() => undefined);
   });
   afterEach(() => vi.restoreAllMocks());
+  // The episode's files, where Properties finds a take's spec.json.
+  beforeEach(() => answer("/api/dramas/d1/files", []));
 
   async function at(seconds: number) {
     const video = (await screen.findByRole("region", { name: "The work in view" })).querySelector("video") as HTMLVideoElement;

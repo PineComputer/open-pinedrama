@@ -449,7 +449,13 @@ const canvasOf = (set: string): Out[] => {
 const archive = (name: string, stop = 1): Out => ({ path: `handoff/${name}.tar.part-aa`, type: "application/octet-stream", bytes: text(`replay stand-in for ${name}.tar, packed at stop ${stop}`) });
 
 function breakdownOf(say: Say, story: Story, i: number): string {
-  return [say.breakdownTitle(codeOf(i)), ...story.episodes[i].segments.flatMap((seg) => [`\n## ${seg.id}`, ...seg.shots.map((shot, n) => say.shot(n + 1, shot))])].join("\n");
+  // A spoken line ("Wei: You're late.") is written as drama-cli writes dialogue, its words in braces
+  // ("- Wei: {You're late.}"); any other shot as a numbered shot.
+  const line = (shot: string, n: number) => {
+    const spoken = /^([^:：{}]{1,40})[:：]\s*(.+)$/u.exec(shot);
+    return spoken ? `- ${spoken[1]}: {${spoken[2]}}` : say.shot(n, shot);
+  };
+  return [say.breakdownTitle(codeOf(i)), ...story.episodes[i].segments.flatMap((seg) => [`\n## ${seg.id}`, ...seg.shots.map((shot, n) => line(shot, n + 1))])].join("\n");
 }
 
 /**

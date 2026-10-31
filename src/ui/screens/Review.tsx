@@ -8,7 +8,8 @@ import { Button } from "../components/Button.tsx";
 import { Segmented } from "../components/Segmented.tsx";
 import { StatusChip } from "../components/StatusChip.tsx";
 import { StopCard } from "../components/StopCard.tsx";
-import { CutViewer, fmt } from "../cut/CutViewer.tsx";
+import { CutViewer, cutLines, fmt } from "../cut/CutViewer.tsx";
+import { shotListOf } from "../../shared/shots.ts";
 import { Icon } from "../icons.tsx";
 import { Markdown } from "../Markdown.tsx";
 import { Link, navigate, usePath } from "../router.tsx";
@@ -854,10 +855,26 @@ export function CutRoom({ review, done }: { review: ReviewView; done: () => void
   const plan = file.cutPlan && "clips" in file.cutPlan ? file.cutPlan : undefined;
   const length = plan?.clips.at(-1)?.end ?? 0;
   const timed = notes.map((note, n) => ({ note, n })).sort((a, b) => (a.note.time ?? 0) - (b.note.time ?? 0));
+  // The breakdown's lines on the lines track, and the selected segment's take and its spec for Properties.
+  const breakdown = useText(review.breakdown ?? review.otherFiles.find((other) => other.kind === "breakdown" && /markdown|text/.test(other.type))).text;
+  const lines = plan ? cutLines(plan.clips, (segment) => shotListOf(breakdown, segment)) : [];
+  const [selected, setSelected] = useState<number>();
+  const clip = selected !== undefined ? plan?.clips[selected] : undefined;
+  const episodeFiles = useResource<FileItem[]>(review.episode ? `/api/dramas/${review.dramaId}/files?episode=${review.episode}` : null, [`drama:${review.dramaId}`]);
+  const takeSpec = clip ? (episodeFiles.data ?? []).find((other) => other.kind === "spec" && other.path.endsWith(`/segments/${clip.segment}/${clip.take}/spec.json`)) : undefined;
+  const spec = specFacts(useText(takeSpec).text);
+  // A second press that lands before the button re-renders busy finds this set: one decision goes, not two.
+  const sending = useRef(false);
   const send = useAction(async () => {
+    if (sending.current) return;
+    sending.current = true;
     const why: Note[] = verdict === "revise" ? [{ fileId: file.id, text: reason.trim() }] : [];
     const decision: { items: ItemDecision[]; words: string } = { words: "", items: [{ key: item.key, verdict: verdict!, notes: [...why, ...notes] }] };
-    await api(`/api/reviews/${review.id}/decision`, { method: "POST", json: decision });
+    try {
+      await api(`/api/reviews/${review.id}/decision`, { method: "POST", json: decision });
+    } finally {
+      sending.current = false;
+    }
     forgetVerdict();
     forgetNotes();
     forgetReason();
@@ -872,7 +889,7 @@ export function CutRoom({ review, done }: { review: ReviewView; done: () => void
 
   return (
     <div className="room is-cut">
-      <CutViewer file={file} tag={`${code} · ${t("kind.cut").toLowerCase()} ${file.version ?? ""}`.trim()} notes={notes} videoRef={video} onTime={setPlayhead} />
+      <CutViewer lines={lines} selected={selected} onSelect={setSelected} file={file} tag={`${code} · ${t("kind.cut").toLowerCase()} ${file.version ?? ""}`.trim()} notes={notes} videoRef={video} onTime={setPlayhead} />
       <aside className="insp" aria-label={t("review.inspector")}>
         <div className="ihead">
           <b>
@@ -918,6 +935,43 @@ export function CutRoom({ review, done }: { review: ReviewView; done: () => void
               </div>
             )}
           </div>
+          {clip && (
+            <div className="isec">
+              <h4>
+                {t("cut.properties")} <span className="muted">{clip.segment}</span>
+              </h4>
+              <dl className="kv">
+                <dt>{t("cut.segment")}</dt>
+                <dd>{clip.segment}</dd>
+                <dt>{t("cut.takeLabel")}</dt>
+                <dd>{clip.take}</dd>
+                <dt>{t("cut.model")}</dt>
+                <dd>{spec?.model ?? "—"}</dd>
+                <dt>{t("cut.duration")}</dt>
+                <dd className="mono">{(clip.end - clip.start).toFixed(1)} s</dd>
+                <dt>{t("cut.picture")}</dt>
+                <dd>{[spec?.ratio, spec?.resolution, plan?.fps ? `${plan.fps} fps` : undefined].filter(Boolean).join(" · ") || "—"}</dd>
+              </dl>
+              {/* Phase 2 edits these; drawn off now, as the design has them. */}
+              <div className="propoff">
+                <span className="muted">{t("cut.speed")}</span>
+                <div className="seg" aria-disabled="true">
+                  {["0.5×", "1×", "1.5×", "2×"].map((speed) => (
+                    <button key={speed} type="button" disabled aria-pressed={speed === "1×"}>
+                      {speed}
+                    </button>
+                  ))}
+                </div>
+                <span className="muted">{t("cut.volume")}</span>
+                <input type="range" disabled defaultValue={80} aria-label={t("cut.volume")} />
+                <p className="muted">{t("cut.editingLater")}</p>
+              </div>
+              <Link to={`/d/${review.dramaId}/canvas?item=${code}`} className={buttonVariants({ variant: "outline", size: "sm" })}>
+                <Icon name="flow-arrow" className="ic" />
+                {t("cut.openOnCanvas")}
+              </Link>
+            </div>
+          )}
           {plan && (
             <div className="isec">
               <h4>{t("cut.madeFrom")}</h4>

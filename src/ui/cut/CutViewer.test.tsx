@@ -6,7 +6,7 @@ import { fireEvent, render, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { CutPlan, FileItem } from "../../shared/types.ts";
-import { CutViewer, EDITING, WATCH_ONLY, cutRows } from "./CutViewer.tsx";
+import { CutViewer, EDITING, WATCH_ONLY, cutLines, cutRows } from "./CutViewer.tsx";
 
 const cut = (cutPlan?: CutPlan): FileItem => ({
   id: 7,
@@ -70,6 +70,25 @@ describe("cutRows", () => {
       { id: "note-0", start: 6, end: 6, effectId: "note", movable: false, flexible: false },
       { id: "note-3", start: 2, end: 2, effectId: "note", movable: false, flexible: false },
     ]);
+  });
+});
+
+describe("cutLines", () => {
+  it("puts each segment's spoken lines, drama-cli's \"Name: {words}\", in order across its time in the cut", () => {
+    const shots: Record<string, string[]> = {
+      seg01: ["Characters: Lin, Wei", "Shot 1 (0-2s): Lin enters the yard", "Wei: {You're late.}", "Lin: {The bus.}", "End: Lin by the gate"],
+      seg02: ["Shot 1 (0-2s): The family at dinner"],
+      seg03: ["Mother: {Eat.}"],
+    };
+    expect(cutLines(PLAN.clips, (segment) => shots[segment])).toEqual([
+      { start: 0, length: 2, text: "Wei: You're late." },
+      { start: 2, length: 2, text: "Lin: The bus." },
+      { start: 6, length: 2, text: "Mother: Eat." },
+    ]);
+  });
+
+  it("has none for a segment the breakdown gives no lines for", () => {
+    expect(cutLines(PLAN.clips, () => undefined)).toEqual([]);
   });
 });
 

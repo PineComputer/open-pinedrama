@@ -34,6 +34,11 @@ test("a cut sent back with two notes at their times, recut, and accepted", async
   await expect(page.locator("media-controller video")).toHaveAttribute("src", first.reviewItems[0].files[0].url);
   const segments = page.getByRole("group", { name: "Segments" });
   await expect(segments.getByRole("button", { name: /^seg0\d · t0\d$/ })).toHaveCount(3);
+  // The breakdown's spoken lines on the lines track; a segment selected shows its Properties, its take's spec among them.
+  await expect(page.getByRole("group", { name: "Lines" }).getByRole("button").first()).toBeVisible();
+  await segments.getByRole("button", { name: /^seg01 · t0\d$/ }).click();
+  await expect(page.getByText("Properties")).toBeVisible();
+  await expect(page.getByRole("link", { name: "Open on Canvas" })).toBeVisible();
   expect(await newProblems(page)).toEqual([]);
 
   for (const [seconds, text] of [[1, "Cut in sooner"], [3, "Hold on her face"]] as const) {

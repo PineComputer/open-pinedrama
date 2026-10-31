@@ -14,6 +14,7 @@ import { type EditData, Timeline, type TimelineState } from "@xzdarcy/react-time
 import "@xzdarcy/react-timeline-editor/dist/react-timeline-editor.css";
 import { MediaController, MediaPlayButton } from "media-chrome/react";
 import { type Ref, useEffect, useId, useImperativeHandle, useRef, useState } from "react";
+import WaveSurfer from "wavesurfer.js";
 import type { CutClip, FileItem, Note } from "../../shared/types.ts";
 import { Icon } from "../icons.tsx";
 import { useT } from "../i18n.ts";
@@ -90,6 +91,73 @@ function useFrames(url: string, clips: CutClip[]): Record<number, string> {
   return frames;
 }
 
+/** A line of the breakdown at its time in the cut: its text, and when it starts and how long it runs, in seconds. */
+export interface CutLine {
+  start: number;
+  length: number;
+  text: string;
+}
+
+/**
+ * The breakdown's spoken lines of each segment, at their times in the cut. drama-cli writes a line as
+ * "Name: {words}", the words in braces (the breakdown's dialogue form, as Seedance takes it); a
+ * segment's lines share its time evenly, in order. The breakdown says what is said, not when, so the
+ * times are where in its segment a line falls, our own reading, not drama-cli's alignment.
+ */
+export function cutLines(clips: CutClip[], shotsOf: (segment: string) => string[] | undefined): CutLine[] {
+  return clips.flatMap((clip) => {
+    const spoken = (shotsOf(clip.segment) ?? []).flatMap((shot) => {
+      const line = /^(.+?):\s*\{(.+)\}\s*$/u.exec(shot);
+      return line ? [`${line[1]}: ${line[2]}`] : [];
+    });
+    const each = (clip.end - clip.start) / Math.max(spoken.length, 1);
+    return spoken.map((text, n) => ({ start: clip.start + n * each, length: each, text }));
+  });
+}
+
+/**
+ * The cut's sound as a waveform, drawn by wavesurfer.js from the cut's file, its progress following the
+ * cut's video; it plays nothing itself (wavesurfer given the video would put its own copy of the file in
+ * the video's place). Its colours are the design's (.trk-lane.wave), read from the page's tokens.
+ */
+function Waveform({ video, url }: { video: HTMLVideoElement | null; url: string }) {
+  const { t } = useT();
+  const box = useRef<HTMLDivElement>(null);
+  const [silent, setSilent] = useState(false);
+  useEffect(() => {
+    if (!box.current || !video) return;
+    const style = getComputedStyle(box.current);
+    const wave = WaveSurfer.create({
+      container: box.current,
+      url,
+      height: "auto",
+      waveColor: style.getPropertyValue("--text-muted").trim() || "#888",
+      progressColor: style.getPropertyValue("--text-primary").trim() || "#fff",
+      cursorWidth: 0,
+      barWidth: 2,
+      barGap: 1,
+      barRadius: 1,
+      normalize: true,
+      interact: false,
+    });
+    // A cut with no sound track (replay's samples are pictures only) has nothing to draw: the lane says so.
+    wave.on("error", () => setSilent(true));
+    const follow = () => wave.setTime(video.currentTime);
+    video.addEventListener("timeupdate", follow);
+    video.addEventListener("seeked", follow);
+    return () => {
+      video.removeEventListener("timeupdate", follow);
+      video.removeEventListener("seeked", follow);
+      wave.destroy();
+    };
+  }, [video, url]);
+  return (
+    <div className="trk-lane wave" ref={box}>
+      {silent && <span className="muted">{t("cut.noSound")}</span>}
+    </div>
+  );
+}
+
 export interface CutViewerProps {
   file: FileItem;
   /** The player's tag: the episode and the cut's version. */
@@ -101,9 +169,14 @@ export interface CutViewerProps {
   /** The cut's video, for a caller that seeks it, pauses it or reads where it is. */
   videoRef?: Ref<HTMLVideoElement>;
   actions?: CutActions;
+  /** The breakdown's lines at their times in the cut, for the lines track. */
+  lines?: CutLine[];
+  /** The segment selected on the timeline, by its place in the plan, and what to do when the maker selects one. */
+  selected?: number;
+  onSelect?: (clip: number) => void;
 }
 
-export function CutViewer({ file, tag, notes = [], onTime, videoRef, actions = WATCH_ONLY }: CutViewerProps) {
+export function CutViewer({ file, tag, notes = [], onTime, videoRef, actions = WATCH_ONLY, lines = [], selected, onSelect }: CutViewerProps) {
   const { t } = useT();
   const video = useRef<HTMLVideoElement>(null);
   useImperativeHandle(videoRef, () => video.current!, []);
@@ -119,6 +192,8 @@ export function CutViewer({ file, tag, notes = [], onTime, videoRef, actions = W
   const fps = plan && "fps" in plan ? plan.fps : undefined;
   const length = clips.at(-1)?.end ?? 0;
   const frames = useFrames(file.url, clips);
+  // The video element itself, once mounted, for the waveform to follow.
+  const [element, setElement] = useState<HTMLVideoElement | null>(null);
 
   useEffect(() => {
     const element = lane.current;
@@ -143,7 +218,7 @@ export function CutViewer({ file, tag, notes = [], onTime, videoRef, actions = W
     <section className="stage" aria-label={t("review.stage")}>
       <div className="screen">
         <MediaController id={controller} className="player" {...(fps ? { keyboardforwardseekoffset: String(1 / fps), keyboardbackwardseekoffset: String(1 / fps) } : {})}>
-          <video slot="media" ref={video} src={file.url} playsInline preload="metadata" onTimeUpdate={(event) => moved(event.currentTarget.currentTime)} onSeeked={(event) => moved(event.currentTarget.currentTime)} />
+          <video slot="media" ref={(node) => { video.current = node; setElement(node); }} src={file.url} playsInline preload="metadata" onTimeUpdate={(event) => moved(event.currentTarget.currentTime)} onSeeked={(event) => moved(event.currentTarget.currentTime)} />
           <span className="tag2">{tag}</span>
           <MediaPlayButton {...joined} className="bigplay" noTooltip>
             <i slot="play">
@@ -195,7 +270,7 @@ export function CutViewer({ file, tag, notes = [], onTime, videoRef, actions = W
               const n = Number(action.id);
               const clip = clips[n];
               return (
-                <button type="button" className="tlseg" style={frames[n] ? { backgroundImage: `url(${frames[n]})` } : undefined} onClick={() => seek(clip.start)}>
+                <button type="button" className={selected === n ? "tlseg on" : "tlseg"} aria-pressed={selected === n} style={frames[n] ? { backgroundImage: `url(${frames[n]})` } : undefined} onClick={() => { onSelect?.(n); seek(clip.start); }}>
                   <span>
                     {clip.segment} · {clip.take}
                   </span>
@@ -210,6 +285,25 @@ export function CutViewer({ file, tag, notes = [], onTime, videoRef, actions = W
             onActionMoveEnd={({ action, start }) => actions.move(Number(action.id), start)}
             onActionResizeEnd={({ action, start, end }) => actions.trim(Number(action.id), start, end)}
           />
+        </div>
+        <div className="tracks">
+          <div className="trk">
+            <span className="trk-h">{t("cut.sound")}</span>
+            <Waveform video={element} url={file.url} />
+          </div>
+          <div className="trk">
+            <span className="trk-h">
+              <Icon name="chats" className="ic" />
+              {t("cut.lines")}
+            </span>
+            <div className="trk-lane" role="group" aria-label={t("cut.lines")}>
+              {lines.map((line) => (
+                <button key={`${line.start}/${line.text}`} type="button" className="line" title={line.text} style={{ left: `${(line.start / (length || 1)) * 100}%`, width: `${(line.length / (length || 1)) * 100}%` }} onClick={() => seek(line.start)}>
+                  {line.text}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </section>
