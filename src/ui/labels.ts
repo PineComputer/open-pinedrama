@@ -1,12 +1,49 @@
 // Words for states the engine reports as data, in the maker's language.
-import type { DramaView, EpisodeRow, FileKind, ReviewKind, SessionView, Spend } from "../shared/types.ts";
+import type { DramaView, EpisodeRow, FileKind, Judged, ReviewKind, SessionView, Spend } from "../shared/types.ts";
 import { nameOf, type Names } from "../shared/names.ts";
-import type { LineageView } from "../shared/lineage.ts";
-import type { ProjectView } from "../shared/project.ts";
+import type { LineageNode, LineageView } from "../shared/lineage.ts";
+import type { ProjectView, StageStatus } from "../shared/project.ts";
 import { ApiError, useResource } from "./api.ts";
-import type { useT } from "./i18n.ts";
+import type { Status } from "./components/StatusChip.tsx";
+import type { TKey, useT } from "./i18n.ts";
 
 type T = ReturnType<typeof useT>["t"];
+
+/**
+ * A stage's versions as drama-cli reports them, by its status or its lineage: the working one, the accepted one, and
+ * whether drama-cli calls the working one out of date (status: accepted and not usable; lineage: not fresh).
+ */
+export interface Versions {
+  current: string | null;
+  accepted: string | null;
+  stale: boolean;
+}
+
+export const ofStatus = (stage: StageStatus): Versions => ({ current: stage.current, accepted: stage.accepted, stale: stage.current !== null && stage.current === stage.accepted && !stage.usable });
+export const ofLineage = (node: LineageNode): Versions => ({ current: node.version, accepted: node.accepted, stale: node.fresh === false });
+
+/** A status chip's state and words. */
+export interface Chip {
+  status: Status;
+  label: string;
+}
+
+/**
+ * Where one version of a stage stands, as its chip says it (D64, amended; Codex rc5 C17). Waiting for you only while a
+ * review of that very version is open; otherwise drama-cli's word, whatever the maker decided, whose decision is
+ * history shown as theirs: none made is in line; the working version out of date, accepted, or "vN · not accepted" as
+ * the Bible row says it (tree.ts bibleNow), the next step being the agent's; an earlier version accepted only if it is
+ * the accepted one, else no chip. No version given means the working one.
+ */
+export function versionStanding(stage: Versions | undefined, version: string | null | undefined, review: Pick<Judged, "state"> | undefined, t: T): Chip | undefined {
+  const chip = (status: Status, label = t(`status.${status}` as TKey)): Chip => ({ status, label });
+  if (review?.state === "open" || review?.state === "saving") return chip("you");
+  if (!stage) return undefined;
+  if (stage.current === null) return chip("line");
+  if (version && version !== stage.current) return version === stage.accepted ? chip("accepted") : undefined;
+  if (stage.stale) return chip("stale");
+  return stage.current === stage.accepted ? chip("accepted") : chip("work", t("tree.bible.candidate", { version: stage.current }));
+}
 
 /** How many items a review holds, in what they are, as design/ counts them: "2 takes", "6 storyboards", "1 item"; nothing for none. */
 export function countText(kind: ReviewKind, items: number, t: T): string {

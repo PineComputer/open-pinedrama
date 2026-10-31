@@ -3,7 +3,7 @@ import { useEffect, useId, useMemo, useRef, useState } from "react";
 import type { Decision, DramaView, FileItem, Note, ReviewItem, ReviewKind, ReviewView, SubmissionView, Verdict } from "../../shared/types.ts";
 import { api, ApiError, clock, useAction, useResource } from "../api.ts";
 import { type TKey, useT } from "../i18n.ts";
-import { errorText, fileKind, headingText, moneyText, subjectLabel, useNames } from "../labels.ts";
+import { errorText, fileKind, headingText, moneyText, ofStatus, subjectLabel, useNames, versionStanding } from "../labels.ts";
 import { Button, buttonClass } from "../components/Button.tsx";
 import { Segmented } from "../components/Segmented.tsx";
 import { StatusChip } from "../components/StatusChip.tsx";
@@ -16,7 +16,6 @@ import { Icon } from "../icons.tsx";
 import { Markdown } from "../Markdown.tsx";
 import { Link, Navigate, useNavigate } from "@tanstack/react-router";
 import { homeLink, placeLink, useRoute } from "../place.ts";
-import { standing as stageStanding } from "./Canvas.tsx";
 import { Still } from "../Still.tsx";
 import { DocumentView, Pinboard, formatRatio, isDocument, isImage, isVideo, useShotList, useSize, useText, variantLabel } from "../viewing.tsx";
 import { specBeside, specFacts } from "../../shared/spec.ts";
@@ -430,7 +429,7 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
   const segments = review.episode ? (project.data?.state?.episodes[review.episode]?.segments ?? {}) : {};
   const acceptedBefore = takes
     ? Object.entries(segments)
-        .filter(([key, stage]) => stageStanding(stage) === "accepted" && !items.some((i) => i.key === key))
+        .filter(([key, stage]) => versionStanding(ofStatus(stage), undefined, undefined, t)?.status === "accepted" && !items.some((i) => i.key === key))
         .map(([key, stage]) => {
           const newest = (kind: string) => (episodeFiles.data ?? []).filter((f) => f.kind === kind && f.segment === key).at(-1);
           return { key, version: stage.current ?? undefined, take: newest("last-frame") ?? newest("take") };

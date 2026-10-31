@@ -16,9 +16,10 @@ import type { CastCard, EpisodePage, FileItem, Judged, Receipt } from "../../sha
 import { Link } from "@tanstack/react-router";
 import { useResource } from "../api.ts";
 import { IconButton } from "../components/Button.tsx";
-import { type Status, StatusChip } from "../components/StatusChip.tsx";
-import { type TKey, useT } from "../i18n.ts";
+import { StatusChip } from "../components/StatusChip.tsx";
+import { useT } from "../i18n.ts";
 import { Icon } from "../icons.tsx";
+import type { Chip } from "../labels.ts";
 import { useText } from "../viewing.tsx";
 
 /** The JSON tree in our tokens: react-json-view-lite's own layout classes, with ours for the colours (canvas.css). */
@@ -141,39 +142,40 @@ export function JudgedLine({ review }: { review?: Judged }) {
 /** The kind of cast card that holds a shared reference's versions (engine/browse.ts castCards). */
 const CARD = { character: "look", location: "location", prop: "prop" } as const;
 
+/** Whether a stage is a shared reference, whose versions its cast card holds, rather than an episode's. */
+export const isShared = (item: Item) => item.kind === "character" || item.kind === "location" || item.kind === "prop";
+
 /**
- * The picked stage's own versions the stops returned, newest first, each with what the maker decided: a shared
- * reference's from its cast card (by its look, or a place's time of day, "" for its plate); a segment's blocking, first
- * frame, storyboard of its style, or take from its episode's page, each only its own kind (another stage's history is its
- * lineage, not its versions); an episode's cut from that page's cuts. While the record loads, or if it can't be read, it
- * says so rather than "none".
+ * A stage's own versions the stops returned, oldest first, each with what the maker decided: a shared reference's from
+ * its cast card (by its look, or a place's time of day, "" for its plate); a segment's blocking, first frame, storyboard
+ * of its style, or take from its episode's page, each only its own kind (another stage's history is its lineage, not
+ * its versions); an episode's cut from that page's cuts.
  */
+export function versionRows(item: Item, look: string | undefined, style: string | undefined, cast: CastCard[] | undefined, page: EpisodePage | undefined): { receipt: Receipt; version?: string }[] {
+  // A receipt counts for this stage when it returned a file of it; its version is that file's.
+  const own = (receipts: Receipt[], mine: (file: FileItem) => boolean) => receipts.flatMap((receipt) => (receipt.files.some(mine) ? [{ receipt, version: receipt.files.find(mine)!.version }] : []));
+  if (isShared(item)) {
+    const card = cast?.find((one) => one.kind === CARD[item.kind as keyof typeof CARD] && one.subject === item.subject);
+    const which = look ?? (item.kind === "character" ? "base" : "");
+    return [...(card?.looks.find((one) => one.look === which)?.versions ?? [])].reverse().map((receipt) => ({ receipt, version: receipt.files.map((file) => file.version).find(Boolean) }));
+  }
+  if (item.kind === "cut") return own(page?.cuts ?? [], (file) => file.kind === "cut");
+  const segment = page?.segments.find((one) => one.key === item.subject);
+  if (item.kind === "take") return own(segment?.takes ?? [], (file) => file.kind === "take");
+  if (item.kind === "segment") return own(segment?.boards ?? [], (file) => file.kind === "storyboard" && file.style === style);
+  return own(segment?.stills ?? [], (file) => file.kind === item.kind);
+}
+
+/** The picked stage's versions (versionRows). While the record loads, or if it can't be read, it says so rather than "none". */
 function Versions({ dramaId, item, look, style, on }: { dramaId: string; item: Item; look?: string; style?: string; on: string }) {
   const { t } = useT();
-  const shared = item.kind === "character" || item.kind === "location" || item.kind === "prop";
+  const shared = isShared(item);
   const cast = useResource<CastCard[]>(shared ? `/api/dramas/${dramaId}/cast` : null, [`drama:${dramaId}`]);
   const page = useResource<EpisodePage>(shared ? null : `/api/dramas/${dramaId}/episodes/${item.episode}`, [`drama:${dramaId}`]);
   const source = shared ? cast : page;
   if (source.error !== undefined) return <p className="quiet">{t("canvas.versionsFailed")}</p>;
   if (source.data === undefined) return <p className="quiet">{t("loading")}</p>;
-  // A receipt counts for this stage when it returned a file of it; its version is that file's.
-  const own = (receipts: Receipt[], mine: (file: FileItem) => boolean) => receipts.flatMap((receipt) => (receipt.files.some(mine) ? [{ receipt, version: receipt.files.find(mine)!.version }] : []));
-  let rows: { receipt: Receipt; version?: string }[];
-  if (shared) {
-    const card = cast.data?.find((one) => one.kind === CARD[item.kind as keyof typeof CARD] && one.subject === item.subject);
-    const which = look ?? (item.kind === "character" ? "base" : "");
-    rows = [...(card?.looks.find((one) => one.look === which)?.versions ?? [])].reverse().map((receipt) => ({ receipt, version: receipt.files.map((file) => file.version).find(Boolean) }));
-  } else if (item.kind === "cut") {
-    rows = own(page.data?.cuts ?? [], (file) => file.kind === "cut");
-  } else {
-    const segment = page.data?.segments.find((one) => one.key === item.subject);
-    rows =
-      item.kind === "take"
-        ? own(segment?.takes ?? [], (file) => file.kind === "take")
-        : item.kind === "segment"
-          ? own(segment?.boards ?? [], (file) => file.kind === "storyboard" && file.style === style)
-          : own(segment?.stills ?? [], (file) => file.kind === item.kind);
-  }
+  const rows = versionRows(item, look, style, cast.data, page.data);
   if (!rows.length) return <p className="quiet">{t("canvas.noVersions")}</p>;
   return (
     <ol className="versions">
@@ -195,7 +197,8 @@ type Part = (typeof PARTS)[number];
 
 export interface PanelFacts {
   label: string;
-  status: Status;
+  /** Where the working version stands, as its chip says it (labels.ts, versionStanding). */
+  standing?: Chip;
   kind: string;
   /** The working version, and the one accepted, as drama-cli's lineage says. */
   version: string;
@@ -259,13 +262,14 @@ export function NodePanel({
   const accepted = facts.accepted === on ? t("canvas.accepted") : facts.accepted ? t("canvas.acceptedOther", { v: facts.accepted }) : t("canvas.noneAccepted");
   // drama-cli's words; an export before short_drama #668 (v0.7.5, Pine's pin) says it is stale and not why, as Lineage and Out of date say.
   const why = facts.problems.length ? facts.problems.join("; ") : facts.fresh === false ? t("graph.staleNoReason") : undefined;
-  const needs = facts.status === "you" ? "canvas.needs.you" : facts.status === "stale" ? "canvas.needs.stale" : facts.status === "back" ? "canvas.needs.back" : undefined;
+  const status = facts.standing?.status;
+  const needs = status === "you" ? "canvas.needs.you" : status === "stale" ? "canvas.needs.stale" : status === "back" ? "canvas.needs.back" : undefined;
 
   return (
     <section className={`npanel nodrag nowheel${dock === "right" ? " docked" : ""}`} aria-label={t("canvas.panel", { item: facts.label })}>
       <div className="nhead">
         <b className="fill">{facts.label}</b>
-        <StatusChip status={facts.status} label={t(`status.${facts.status}` as TKey)} />
+        {facts.standing && <StatusChip {...facts.standing} />}
         {dock === "right" ? <IconButton label={t("canvas.dockUnder")} icon="square-half-bottom" onClick={() => onDock("under")} /> : <IconButton label={t("canvas.dockRight")} icon="square-half" onClick={() => onDock("right")} />}
         <IconButton label={t("steer.close")} icon="x" onClick={onClose} />
       </div>

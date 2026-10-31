@@ -14,23 +14,23 @@ import { breakdownShots, type Shot } from "../../shared/breakdown.ts";
 import { HEIGHT, layout, WIDTH } from "../../shared/layout.ts";
 import type { LineageNode, LineageView } from "../../shared/lineage.ts";
 import { type Item, itemOf, PIPELINE } from "../../shared/pipeline.ts";
-import type { ProjectView, StageStatus } from "../../shared/project.ts";
+import type { ProjectView } from "../../shared/project.ts";
 import { specBeside, specFacts } from "../../shared/spec.ts";
-import type { DramaView, FileItem } from "../../shared/types.ts";
+import type { CastCard, DramaView, EpisodePage, FileItem } from "../../shared/types.ts";
 import { api, useResource } from "../api.ts";
 import { buttonClass, IconButton } from "../components/Button.tsx";
 import { Dialog } from "../components/Dialog.tsx";
 import { EmptyState } from "../components/EmptyState.tsx";
 import { Missing } from "../components/Missing.tsx";
 import { Menu } from "../components/Menu.tsx";
-import { type Status, StatusChip } from "../components/StatusChip.tsx";
+import { StatusChip } from "../components/StatusChip.tsx";
 import { type TKey, useT } from "../i18n.ts";
 import { Icon } from "../icons.tsx";
-import { cutStanding, headingText, openSession, subjectLabel } from "../labels.ts";
+import { type Chip, cutStanding, headingText, ofLineage, openSession, subjectLabel, versionStanding } from "../labels.ts";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { homeLink, placeLink, shotsItem, usePage, usePlace } from "../place.ts";
 import { useText } from "../viewing.tsx";
-import { NodePanel } from "./NodePanel.tsx";
+import { NodePanel, versionRows } from "./NodePanel.tsx";
 import { NodeBar } from "./NodeBar.tsx";
 
 type Positions = Record<string, { x: number; y: number }>;
@@ -38,26 +38,13 @@ type Positions = Record<string, { x: number; y: number }>;
 /** drama-cli's shared groups (export.py, section); an episode's own are titled by its code. */
 const SHARED = ["Characters", "Locations", "Props"];
 
-/** Where a stage stands, in the status chip's words: usable is accepted; none made is in line; made and not accepted waits for the maker; accepted but no longer usable is stale. */
-export function standing(stage: StageStatus | undefined): Status {
-  if (!stage || stage.current === null) return "line";
-  if (stage.usable) return "accepted";
-  return stage.current !== stage.accepted ? "you" : "stale";
-}
-
-/** The same, by drama-cli's lineage: none made is in line; stale where drama-cli says so; made and not accepted waits for the maker. */
-function standingOf(stage: LineageNode): Status {
-  if (stage.version === null) return "line";
-  if (stage.fresh === false) return "stale";
-  return stage.version === stage.accepted ? "accepted" : "you";
-}
-
 
 interface ItemData extends Record<string, unknown> {
   stage: LineageNode;
   item: Item;
   label: string;
-  status: Status;
+  /** Where its working version stands (labels.ts, versionStanding). */
+  standing?: Chip;
   /** The file drama-cli shows for the working version (the lineage's `shows`): a picture, or a take's or cut's video. */
   work?: FileItem;
   /** That file's own width and height, once loaded. */
@@ -195,7 +182,7 @@ function ItemNode(props: NodeProps<Node<ItemData>>) {
         <Icon name={ICON[data.item.kind]} />
         <span className="name">{data.label}</span>
         {model && <span className="model">{model}</span>}
-        {data.status !== "accepted" && <StatusChip status={data.status} label={t(`status.${data.status}` as TKey)} />}
+        {data.standing && data.standing.status !== "accepted" && <StatusChip {...data.standing} />}
         {/* Its size in pixels, in the label's right corner, as liblib's node shows it. */}
         {data.size && <span className="dims">{t("canvas.size", { w: data.size[0], h: data.size[1] })}</span>}
       </div>
@@ -469,6 +456,10 @@ function Plane({ drama }: { drama: DramaView }) {
   }, [files.data, lineage]);
   // One episode per board: the one chosen (the tree, Studio, Graph or the switcher), else the one the agent last saved work for, else the first.
   const code = page?.episode && codes.includes(page.episode) ? page.episode : newest?.where.episode && codes.includes(newest.where.episode) ? newest.where.episode : codes[0];
+  // What the maker decided on each stage's versions (NodePanel, versionRows): a node waits for them only while a review
+  // of its very version is open (labels.ts, versionStanding).
+  const cast = useResource<CastCard[]>(`/api/dramas/${drama.id}/cast`, [`drama:${drama.id}`]);
+  const episodePage = useResource<EpisodePage>(code ? `/api/dramas/${drama.id}/episodes/${code}` : null, [`drama:${drama.id}`]);
   const positions = useResource<{ positions: Positions }>(code ? `/api/dramas/${drama.id}/canvas/${code}` : null, [`drama:${drama.id}`]);
   // The drama's Canvas (the rail's) opens the episode picked here, once what picks it has loaded, on that episode's own Canvas.
   const named = page?.item;
@@ -558,6 +549,11 @@ function Plane({ drama }: { drama: DramaView }) {
       const segment = group.slice(code.length + 1);
       return segment === "cut" ? t("canvas.cutGroup", { episode: code }) : [group, scene(segment)].filter(Boolean).join(" · ");
     };
+    // The working version's own review, if a stop returned it to the maker.
+    const standingOf = (stage: LineageNode, of: Item) => {
+      const review = versionRows(of, stage.where.look ?? stage.where.time, stage.where.style, cast.data, episodePage.data).find((row) => row.version === stage.version)?.receipt.review;
+      return versionStanding(ofLineage(stage), undefined, review, t);
+    };
     const label = (stage: LineageNode, of: Item) => {
       const version = stage.version ?? "—";
       if (of.kind === "character") return [subjectLabel(names, of.subject), stage.where.look].filter(Boolean).join(" · ");
@@ -587,7 +583,7 @@ function Plane({ drama }: { drama: DramaView }) {
           position: moved[stage.id] ?? { x: places.get(stage.id)![0] - group.x, y: places.get(stage.id)![1] - group.y },
           width: WIDTH,
           height: heightOf(stage.id),
-          data: { stage, item: of, label: label(stage, of), status: standingOf(stage), work: stage.shows ? files.data?.find((file) => file.path.endsWith(`/${stage.shows}`)) : undefined, size: sizes[stage.id], followed: following && target === stage.id },
+          data: { stage, item: of, label: label(stage, of), standing: standingOf(stage, of), work: stage.shows ? files.data?.find((file) => file.path.endsWith(`/${stage.shows}`)) : undefined, size: sizes[stage.id], followed: following && target === stage.id },
         },
       ];
     });
@@ -606,7 +602,7 @@ function Plane({ drama }: { drama: DramaView }) {
     return { nodes: [...frames, ...shotNodes, ...items], edges };
     // t is made anew each render; the words change only with the language.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [lineage, state, code, positions.data, files.data, names, following, target, lang, sizes, shotsOf]);
+  }, [lineage, state, code, positions.data, files.data, names, following, target, lang, sizes, shotsOf, cast.data, episodePage.data]);
 
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
   // New data keeps what the maker picked.
@@ -742,7 +738,7 @@ function Plane({ drama }: { drama: DramaView }) {
           files={files.data ?? []}
           facts={{
             label: shots.data.label,
-            status: breakdownStage ? standingOf(breakdownStage) : "line",
+            standing: breakdownStage ? versionStanding(ofLineage(breakdownStage), undefined, undefined, t) : { status: "line", label: t("status.line") },
             kind: t("canvas.shotList"),
             version: breakdownStage?.version ?? "—",
             accepted: breakdownStage?.accepted ?? null,
@@ -771,7 +767,7 @@ function Plane({ drama }: { drama: DramaView }) {
       files={files.data ?? []}
       facts={{
         label: node.data.label,
-        status: node.data.status,
+        standing: node.data.standing,
         kind: t(PIPELINE[node.data.stage.kind].label),
         version: node.data.stage.version ?? "—",
         accepted: node.data.stage.accepted,

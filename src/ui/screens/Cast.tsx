@@ -14,7 +14,7 @@ import { useResource } from "../api.ts";
 import { StatusChip } from "../components/StatusChip.tsx";
 import { Icon } from "../icons.tsx";
 import { useT } from "../i18n.ts";
-import { errorText, subjectLabel, useNames } from "../labels.ts";
+import { errorText, ofStatus, subjectLabel, useNames, versionStanding } from "../labels.ts";
 import { Link, linkOptions, useNavigate } from "@tanstack/react-router";
 import { homeLink, type Page, useRoute } from "../place.ts";
 import { JudgedLine } from "./NodePanel.tsx";
@@ -68,20 +68,12 @@ function stageStatus(state: State, card: CastCard, entry: CastCard["looks"][numb
 /** Whether a review of exactly this version waits for the maker. */
 const awaits = (receipt: Receipt | undefined) => receipt?.review?.state === "open" || receipt?.review?.state === "saving";
 
-/**
- * Where one version stands, as a chip. Waiting for you only while a review of this very item is open; otherwise
- * drama-cli's status: the working version not accepted reads as the Bible row does ("vN · not accepted", tree.ts
- * bibleNow), whatever the maker decided on it, since the next step is the agent's; accepted, or out of date once
- * drama-cli calls it unusable; an earlier version only if it is the accepted one (D64, amended; Codex rc5 C17).
- */
+/** Where one version stands, as its chip says it (labels.ts, versionStanding): drama-cli's status, and its own review. */
 function VersionChip({ stage, receipt }: { stage: StageStatus | undefined; receipt: Receipt | undefined }) {
   const { t } = useT();
   const version = (receipt?.files.find((file) => !file.style) ?? receipt?.files[0])?.version;
-  if (awaits(receipt)) return <StatusChip status="you" />;
-  if (!stage || !version) return null;
-  if (version === stage.current && stage.current !== stage.accepted) return <StatusChip status="work" label={t("tree.bible.candidate", { version })} />;
-  if (version === stage.current) return <StatusChip status={stage.usable ? "accepted" : "stale"} />;
-  return version === stage.accepted ? <StatusChip status="accepted" /> : null;
+  const chip = versionStanding(stage && ofStatus(stage), version ?? null, receipt?.review, t);
+  return chip ? <StatusChip {...chip} /> : null;
 }
 
 /** The newest version of an entry and the picture it shows: the plate's sheet, not one of its views. */

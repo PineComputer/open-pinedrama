@@ -37,6 +37,8 @@ function engine(view: ProjectView | null, files: FileItem[] = []) {
   answer("/api/dramas/d1/lineage", lineageView());
   answer("/api/dramas/d1/canvas/EP001", { positions: {} });
   answer("/api/dramas/d1/canvas/EP002", { positions: {} });
+  answer("/api/dramas/d1/cast", []);
+  answer("/api/dramas/d1/episodes/EP001", { segments: [], cuts: [], other: [] } as never);
 }
 
 describe("the canvas", () => {
@@ -52,9 +54,31 @@ describe("the canvas", () => {
   it("says where each item stands, by drama-cli's lineage", async () => {
     engine(project());
     await renderAt(<Canvas drama={drama} />, "/d/d1/canvas");
-    // The take's t01 isn't accepted: it waits for the maker. An accepted item carries no chip, as the prototype's.
-    expect(await screen.findByRole("button", { name: /^Take · t01.*Waiting for you/ })).toBeInTheDocument();
+    // The take's t01 isn't accepted, and no review of it is open: the next step is the agent's, so it says so, as the
+    // Bible row does, and never waits for the maker. An accepted item carries no chip, as the prototype's.
+    const take = await screen.findByRole("button", { name: /^Take · t01/ });
+    await waitFor(() => expect(take).toHaveTextContent("t01 · not accepted"));
+    expect(take).not.toHaveTextContent("Waiting for you");
     expect(screen.getByRole("button", { name: /^林$/ })).toBeInTheDocument();
+  });
+
+  it("waits for the maker only while a review of that very version is open; an approval drama-cli hasn't recorded is not accepted (D64; Codex rc5 C17)", async () => {
+    engine(project());
+    // EP001's page as the engine lists it: seg01's t01, returned to the maker in a review, open, then approved by them.
+    const takeFile = { ...file(5, "/work/drama/episodes/EP001/segments/seg01/t01/video.mp4"), kind: "take", type: "video/mp4", version: "t01" };
+    const reviewed = (state: string, verdict?: string) =>
+      answer("/api/dramas/d1/episodes/EP001", { segments: [{ key: "seg01", boards: [], stills: [], takes: [{ turnId: "t1", files: [takeFile], review: { reviewId: "r1", kind: "takes", state, verdict, notes: [] } }] }], cuts: [], other: [] } as never);
+    reviewed("open");
+    const { unmount } = await renderAt(<Canvas drama={drama} />, "/d/d1/canvas");
+    const waiting = await screen.findByRole("button", { name: /^Take · t01/ });
+    await waitFor(() => expect(waiting).toHaveTextContent("Waiting for you"));
+    unmount();
+    // The maker approved it; drama-cli's lineage still records t01 not accepted: the agent's step, so it doesn't wait for them.
+    reviewed("answered", "approve");
+    await renderAt(<Canvas drama={drama} />, "/d/d1/canvas");
+    const approved = await screen.findByRole("button", { name: /^Take · t01/ });
+    await waitFor(() => expect(approved).toHaveTextContent("t01 · not accepted"));
+    expect(approved).not.toHaveTextContent("Waiting for you");
   });
 
   it("shows each item's current picture, not an older one", async () => {
