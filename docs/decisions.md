@@ -431,8 +431,9 @@ timeline
 - **Context.** D18 lets the maker edit a draft of the cut's edit spec; this is how the edit reaches
   drama-cli.
 - **Decision.**
-  - The edit is a draft of drama-cli edit's cut plan: an accepted take per segment, the order, in
-    and out, and source sound or silence. The review's notes are never counted as edits.
+  - The edit is a draft of drama-cli edit's cut plan: a take of each segment that the episode
+    returned, the order, in and out, and source sound or silence. The design offers accepted takes
+    only; the studio does not yet know which takes are accepted. The review's notes are never counted as edits.
   - Apply sends it as the cut review's decision under one submission id (D25). The engine first
     refuses, sending nothing, unless the base is the cut under review and still the episode's newest
     (`edit-base-changed`) and each clip's take file has the sha256 chosen (`edit-inputs-changed`).
@@ -625,7 +626,7 @@ timeline
   WCAG 2.2, 2.4.11 Focus Not Obscured and 2.5.8 Target Size, for the ball.
 - **Consequences.** None beyond Delivery and the cut room.
 - **Words.** None recorded.
-- **Recorded in.** work-07's notes, 30 October 2026; commit 7e51b8e.
+- **Recorded in.** work-07's notes, 30 October 2026; commits 5ff4a4d (the Delivery page) and 7e51b8e.
 
 ## D37. 2026-10-30 · A picked node zooms to a readable size
 - **Context.** A node picked on Canvas kept the board's zoom, often too small to read its picture.

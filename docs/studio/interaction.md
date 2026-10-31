@@ -148,7 +148,7 @@ sequenceDiagram
 The studio edits only a draft of drama-cli's edit spec; nothing is encoded in the studio. Edits
 (take, order, in and out, audio) are counted apart from notes; one build per Apply
 ([D18](../decisions.md#d18-2026-10-30--cut-editing-edits-a-draft-of-drama-clis-edit-spec)). Phase 1
-opens an accepted take per segment, the order, in and out, and source sound or silence; the engine
+opens a take of each segment that the episode returned (the design offers accepted takes only), the order, in and out, and source sound or silence; the engine
 refuses an Apply whose base cut or clips changed, and a newer cut is edited in its own review
 ([D24](../decisions.md#d24-2026-10-30--a-cut-edit-is-built-by-drama-cli-after-the-engine-checks-its-base)).
 
