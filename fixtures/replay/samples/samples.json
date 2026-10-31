@@ -646,6 +646,7 @@
   "drama/episodes/EP006/segments/seg04/t02/request": "full/paper-vows/files/episodes__EP006__segments__seg04__t02__request.json",
   "drama/episodes/EP006/segments/seg04/t02/spec": "full/paper-vows/files/episodes__EP006__segments__seg04__t02__spec.json",
   "drama/episodes/EP006/segments/seg04/t02/video": "full/paper-vows/files/episodes__EP006__segments__seg04__t02__video.mp4",
+  "handoff/infinite-canvas": "full/paper-vows/infinite-canvas.zip",
   "handoff/lineage": "full/paper-vows/lineage.json"
  },
  "late-sunshine": {
@@ -1203,6 +1204,7 @@
   "drama/episodes/EP005/segments/seg05/t01/request": "full/late-sunshine/files/episodes__EP005__segments__seg05__t01__request.json",
   "drama/episodes/EP005/segments/seg05/t01/spec": "full/late-sunshine/files/episodes__EP005__segments__seg05__t01__spec.json",
   "drama/episodes/EP005/segments/seg05/t01/video": "full/late-sunshine/files/episodes__EP005__segments__seg05__t01__video.mp4",
+  "handoff/infinite-canvas": "full/late-sunshine/infinite-canvas.zip",
   "handoff/lineage": "full/late-sunshine/lineage.json"
  },
  "double-life-ep001": {
@@ -1258,6 +1260,7 @@
   "drama/episodes/EP001/segments/seg05/t02/request": "full/double-life-ep001/files/episodes__EP001__segments__seg05__t02__request.json",
   "drama/episodes/EP001/segments/seg05/t02/spec": "full/double-life-ep001/files/episodes__EP001__segments__seg05__t02__spec.json",
   "drama/episodes/EP001/segments/seg05/t02/video": "full/double-life-ep001/files/episodes__EP001__segments__seg05__t02__video.mp4",
+  "handoff/infinite-canvas": "full/double-life-ep001/infinite-canvas.zip",
   "handoff/lineage": "full/double-life-ep001/lineage.json"
  },
  "houma-ep001-v2": {
@@ -1321,6 +1324,7 @@
   "drama/episodes/EP001/segments/seg04/t01/request": "full/houma-ep001-v2/files/episodes__EP001__segments__seg04__t01__request.json",
   "drama/episodes/EP001/segments/seg04/t01/spec": "full/houma-ep001-v2/files/episodes__EP001__segments__seg04__t01__spec.json",
   "drama/episodes/EP001/segments/seg04/t01/video": "full/houma-ep001-v2/files/episodes__EP001__segments__seg04__t01__video.mp4",
+  "handoff/infinite-canvas": "full/houma-ep001-v2/infinite-canvas.zip",
   "handoff/lineage": "full/houma-ep001-v2/lineage.json"
  },
  "false-intentions-true-love-r2": {
@@ -1866,6 +1870,7 @@
   "drama/episodes/EP005/segments/seg04/t01/request": "full/false-intentions-true-love-r2/files/episodes__EP005__segments__seg04__t01__request.json",
   "drama/episodes/EP005/segments/seg04/t01/spec": "full/false-intentions-true-love-r2/files/episodes__EP005__segments__seg04__t01__spec.json",
   "drama/episodes/EP005/segments/seg04/t01/video": "full/false-intentions-true-love-r2/files/episodes__EP005__segments__seg04__t01__video.mp4",
+  "handoff/infinite-canvas": "full/false-intentions-true-love-r2/infinite-canvas.zip",
   "handoff/lineage": "full/false-intentions-true-love-r2/lineage.json"
  }
 }

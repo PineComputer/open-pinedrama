@@ -70,6 +70,10 @@ describe("replay's samples", () => {
     const sample = samplesFrom(folder({ "samples.json": JSON.stringify({ "paper-vows": { "handoff/lineage": "full/paper-vows/lineage.json" } }), "full/paper-vows/lineage.json": '{"nodes":[],"links":[]}' }));
     expect(sample("paper-vows", "handoff/lineage.json")).toMatchObject({ path: "handoff/lineage.json", type: "application/json" });
   });
+  it("serve a sample drama's infinite-canvas zip, drama-cli's export, at handoff/infinite-canvas.zip", () => {
+    const sample = samplesFrom(folder({ "samples.json": JSON.stringify({ "paper-vows": { "handoff/infinite-canvas": "full/paper-vows/infinite-canvas.zip" } }), "full/paper-vows/infinite-canvas.zip": "PK\u0003\u0004" }));
+    expect(sample("paper-vows", "handoff/infinite-canvas.zip")).toMatchObject({ path: "handoff/infinite-canvas.zip", type: "application/zip" });
+  });
 
   it("are named in replay's own samples.json by the keys sampleKey makes, so every one can be found", () => {
     const table = JSON.parse(readFileSync(path.join("fixtures/replay/samples/samples.json"), "utf8")) as Record<string, unknown>;
