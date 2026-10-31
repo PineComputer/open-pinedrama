@@ -1200,11 +1200,12 @@ timeline
   `doc/drama-cli/write-a-screenplay.md`), where it had opened at the episode's section.
 - **Amended.** 31 October 2026, 95a8245 (work-02), under D64 as amended for C14: Script shows only
   drama-cli's recorded versions; the "vN · the agent is rewriting your file into Fountain" row and the
-  tree's Rewriting state are gone, and the agent's steps stay in the sidebar. The tree's Script row is
-  Accepted only when drama-cli's lineage records the screenplay's working version as accepted (its status
-  has no screenplay entry, short_drama `drama_cli/stages.py`, status), Waiting while the agent's question
-  on a version is open, and Original only with no version. "This project's rewrite wasn't recorded." shows
-  only once the setup is over.
+  tree's Rewriting state are gone, and the agent's steps stay in the sidebar. The tree's Script row uses
+  the one chip rule (`versionStanding`, 6a4fa30) on drama-cli's lineage screenplay node (its status has no
+  screenplay entry, short_drama `drama_cli/stages.py`, status), and reads Original only with no version: a
+  version approved in the studio that drama-cli hasn't accepted reads "v1 · not accepted" (95a8245 had
+  covered only Accepted, Waiting and Original only). "This project's rewrite wasn't recorded." shows only
+  once the setup is over.
 ## D63. 2026-10-30 · An episode's views are Segments and Canvas; Segments is a matrix
 - **Context.** An episode's List showed each segment's tiles in a row, without its shots or
   references side by side.
@@ -1258,7 +1259,10 @@ timeline
   studio's review verdicts (`src/ui/screens/Cast.tsx:50–56`, `193–194`; C17). Evidence:
   `short-drama-runs/qa/codex-e2e-rc2.md`, "rc5". Fixed for C14 in 95a8245 (work-02): no rewrite is
   inferred from a running setup; the tree's Script row reads drama-cli's lineage and its Bible row
-  status.bible (Not started, Accepted, or "vN · not accepted"). For C17, cd45a3d (work-04): Assets'
+  status.bible (Not started, Accepted, or "vN · not accepted"); in 6a4fa30 (work-02, C14 part 2, from
+  work-03's retest) Script's row, Bible's row and Script's version rows go through `versionStanding`
+  (`ofLineage`, `ofStatus`), `scriptNow` and `bibleNow` are deleted, and a version approved in the studio
+  that drama-cli hasn't accepted reads "v1 · not accepted". For C17, cd45a3d (work-04): Assets'
   card chip, detail chip and "current · accepted" line come from drama-cli's status, each character's
   `states/` and each location's `times/` included; the maker's verdict shows apart, as "Your decision on
   vN". Completed in 9a2d903 (work-04), on master's send-back: an asset reads "Waiting for you" only while a
