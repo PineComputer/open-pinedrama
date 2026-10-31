@@ -3,9 +3,9 @@
 The studio's design documents: what each one says, and the rules every document follows. The
 layout and its rules are the ones drama-cli's documentation uses (short_drama `doc/README.md`),
 which merecdesperez44323-lab approved for that repository on 20 October 2026 and asked for here
-on 30 October 2026 ("有专业的文档结构，比如 decision啊…每个决策都要有依据…都要是英语，多用 mermaid"; *a professional
-document structure, such as decisions… every decision needs grounds… all in English, plenty of
-Mermaid*).
+on 30 October 2026 ("有专业的文档结构， 比如 decision啊， 啥的"…"而且每个决策都要有依据什么的。"…"都要是英语， 多用  mermald啥的，
+包括设计稿啥的"; *a professional document structure, such as decisions and the like… and every
+decision needs its grounds… all in English, plenty of Mermaid and the like, the designs included*).
 
 ## How these docs are organised
 
