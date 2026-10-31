@@ -30,7 +30,7 @@ export interface Frame {
 
 /**
  * Each stage's top-left corner and each group's frame, as export.py's layout makes them; strings sort as Python sorts them.
- * A stage's height may be its own (the canvas gives each picture its own ratio, D-entry pending): a row is as tall as its
+ * A stage's height may be its own (the canvas gives each picture its own ratio, D58): a row is as tall as its
  * tallest, and the rows and groups below move down by it, so drama-cli's columns, groups and order stay and nothing overlaps.
  * Without heights it is export.py's layout exactly.
  */

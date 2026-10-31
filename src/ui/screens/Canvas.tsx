@@ -212,7 +212,7 @@ function ItemNode(props: NodeProps<Node<ItemData>>) {
         {/* Its size in pixels, in the label's right corner, as liblib's node shows it. */}
         {data.size && <span className="dims">{t("canvas.size", { w: data.size[0], h: data.size[1] })}</span>}
       </div>
-      {/* The picture or video at its own ratio, whole (liblib's node): its box follows the file, the media contained. */}
+      {/* The picture or video at its own ratio, whole (D58, liblib's node): its box follows the file, the media contained. */}
       <div
         className={`card${data.stage.kind === "storyboard" ? " board-img" : ""}`}
         style={data.size ? { aspectRatio: `${data.size[0]} / ${data.size[1]}` } : undefined}
@@ -558,7 +558,7 @@ function Plane({ drama }: { drama: DramaView }) {
     if (picked) place(picked.id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dock, paneWidth, paneHeight, picked?.id]);
-  // Hand by default: phase 1 only reads, so dragging moves the board (Figma's view-only mode, liblib's hand); V gives Move.
+  // Hand by default (D59): phase 1 only reads, so dragging moves the board (Figma's view-only mode, liblib's hand); V gives Move.
   const [tool, setTool] = useState<Tool>("hand");
   // The item the last pick wrote into the URL.
   const written = useRef<string | null>(page?.item ?? null);
