@@ -1281,14 +1281,14 @@ timeline
   rule. One interim exception: the screenplay takes an acceptance (D115) but status has no entry for it (the
   report names the bible and no screenplay, `stages.py:4649–4651`), a gap in drama-cli's status, so the
   screenplay reads its lineage `accepted` until status reports it; then the exception is deleted (master
-  proposes it to merecdesperez44323-lab with C15's line kinds). Recorded in e35dc79 (work-04):
-  `reportedStage` (`src/shared/project.ts`) finds the stage status reports with `accepted`, and `nodeStanding`
-  (`src/ui/labels.ts`) gives only those an acceptance chip, on Lineage and the Canvas alike; other nodes show
-  only Out of date when drama-cli says so; "Compiled" (`graph.compiled`) is deleted. drama-cli's lineage writes `accepted` as null whenever a stage's folder has no
-  accepted.json (v0.7.5 `drama_cli/lineage.py:80–84`), so it cannot tell "not accepted yet" from "never takes
-  an acceptance", while status lists the stages that take one. On FITL r2 EP001's cut, 63 of 70 plate views
+  proposes it to merecdesperez44323-lab with C15's line kinds). drama-cli's lineage writes `accepted` as null
+  whenever a stage's folder has no accepted.json (v0.7.5 `drama_cli/lineage.py:80–84`), so it cannot tell "not
+  accepted yet" from "never takes an acceptance", while status lists the stages that take one. On FITL r2 EP001's cut, 63 of 70 plate views
   (a plate's steps inside its folder, `stages.location_stages`, which status does not report) had read "v2 ·
-  not accepted" on a finished episode. Assigned to work-04 (`Graph.tsx`).
+  not accepted" on a finished episode. Recorded in e35dc79 (work-04): `reportedStage`
+  (`src/shared/project.ts`) finds the stages status reports with `accepted`, and `nodeStanding`
+  (`src/ui/labels.ts`) gives only those an acceptance chip, on Lineage and the Canvas alike; other nodes show
+  only Out of date when drama-cli says so; "Compiled" (`graph.compiled`) is deleted.
 
 ## D65. 2026-10-30 · The tree's current row is a tint, without an accent bar
 - **Context.** The project tree marked its current row with a curved accent bar on its left
