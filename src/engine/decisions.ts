@@ -41,12 +41,11 @@ function where(note: Note, paths: Map<number, string>, images?: Map<number, stri
 
 export function answerText(decision: Omit<Decision, "submissionId">, context: DecisionContext): string {
   const words = decision.words.trim();
-  // A screenplay rewrite is accepted with the person's words as drama-cli accept's --person, verbatim (short_drama
-  // doc/drama-cli/cli.md, screenplay validate: it prints the accept command, --person for a rewrite; D115), or sent back.
-  if (context.kind === "question" && context.rewrite && decision.verdict === "approve")
-    return `I accept screenplay ${context.rewrite}. Accept it with my words, verbatim, as --person in the accept command screenplay validate printed for it (drama-cli accept <project>/screenplay ${context.rewrite} --person): "${words}"`;
-  if (context.kind === "question" && context.rewrite && decision.verdict === "revise")
-    return `I send screenplay ${context.rewrite} back: do not accept it. What to change, in my words: "${words}"`;
+  // A screenplay rewrite's verdict, said outright with the maker's words verbatim; it names no drama-cli command: how the
+  // verdict is recorded is the drama skill's (master, for the UI-only tag: the engine changes nothing the agent is told to
+  // run beyond main's goals; ENGINE_DIFF_AUDIT B6).
+  if (context.kind === "question" && context.rewrite && decision.verdict === "approve") return `I accept the rewrite (screenplay ${context.rewrite}). My words: "${words}"`;
+  if (context.kind === "question" && context.rewrite && decision.verdict === "revise") return `Send the rewrite (screenplay ${context.rewrite}) back. What to change: "${words}"`;
   if (context.kind === "question") return words;
   // An edit is the maker's own next cut, apart from notes (Codex's IA re-review D1): the goal says it all.
   if (context.edit) return [`My review of ${context.subject}.`, context.edit, ...(words ? [`In my own words: "${words}"`] : [])].join("\n");

@@ -49,10 +49,10 @@ describe("answerText", () => {
     const accepted = answerText({ items: [], words, verdict: "approve" }, rewrite);
     const sentBack = answerText({ items: [], words, verdict: "revise" }, rewrite);
     expect(accepted).not.toBe(sentBack);
-    expect(accepted).toBe(
-      `I accept screenplay v2. Accept it with my words, verbatim, as --person in the accept command screenplay validate printed for it (drama-cli accept <project>/screenplay v2 --person): "Yes, this is my script."`,
-    );
-    expect(sentBack).toBe(`I send screenplay v2 back: do not accept it. What to change, in my words: "Yes, this is my script."`);
+    expect(accepted).toBe(`I accept the rewrite (screenplay v2). My words: "Yes, this is my script."`);
+    expect(sentBack).toBe(`Send the rewrite (screenplay v2) back. What to change: "Yes, this is my script."`);
+    // It names no drama-cli command: the skill decides how the verdict is recorded.
+    expect(accepted + sentBack).not.toMatch(/drama-cli|--person/);
   });
 
   it("sends a plain question's answer as the maker wrote it", () => {
