@@ -62,7 +62,7 @@ flowchart LR
     C1[its views]
   end
   subgraph Agent["Agent panel"]
-    A1[sessions, decisions, activity, composer]
+    A1[one session: status, picker, conversation, message line]
   end
   Rail --> Tree --> Content
   Content --- Agent
@@ -89,7 +89,7 @@ the IA proposal, sections 2, 8.3 and 12 <sup>[1](#ref-1)</sup>.
 | Segment and its takes | inside its episode: a group on its Canvas | review items, Lineage |
 | Cut | EPxxx › Cut | Delivery's rows, review items |
 | Accepted cuts | Project › Delivery | — |
-| A decision waiting | Reviews, one queue; a project's Reviews is its filter | Home's "Waiting for you" (the newest four and "See all N"), a card's "N need you", Next review, the agent panel's Decisions |
+| A decision waiting | Reviews, one queue; a project's Reviews is its filter | Home's "Waiting for you" (the newest four and "See all N"), a card's "N need you", Next review |
 | What the agent is doing | the agent panel | — |
 
 A link says where it goes and lands on the home with the object selected; Back returns. Search

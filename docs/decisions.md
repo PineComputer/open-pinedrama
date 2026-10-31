@@ -297,7 +297,8 @@ timeline
   principles*).
 - **Recorded in.** The IA proposal, sections 2–5, 10–12 and 16–17 <sup>[3](#ref-3)</sup>;
   [design principles](design-principles.md).
-
+- **Amended.** 30 October 2026, 9579a5a: the agent panel no longer repeats the decisions waiting;
+  Reviews is their one home, and the panel is the conversation with one session ([D31](#d31-2026-10-30--the-agent-panel-speaks-to-the-pinned-session-else-the-episode-in-view)).
 ## D17. 2026-10-30 · The maker watches every take and every cut
 - **Context.** Upload's "Your reviews" let the engine approve takes and the cut on the maker's
   behalf (`approveUnreviewed`), while the screens promised the maker watches every take (Codex's
@@ -582,6 +583,9 @@ timeline
   session, yet the light above is green; isn't that contradictory?*), relayed by master.
   A setup waiting on a screenplay rewrite points to Script ("v1 waits for your Accept or Send back on
   Script") with no answer box in the sidebar, as D70 and D62's explicit verdict (db1a5f5) require.
+- **Amended.** 30 October 2026, 9579a5a: the agent sidebar is only the conversation with one session: its
+  status line, the session picker with Watch and Stop, the conversation and the message line. Decisions,
+  Recent work and Next leave it: a decision's one home is Reviews ([D16](#d16-2026-10-30--the-navigation-a-studio-wide-rail-the-dramas-tree-one-home-per-object)).
 ## D32. 2026-10-30 · Narrow windows: the sidebar is a drawer, the agent is the ball
 - **Context.** Codex's re-review found the agent lost at 1280 px (F, H).
 - **Decision.** Below 1100 px the sidebar opens as a drawer; at 1280 px and below the agent panel
@@ -1416,10 +1420,12 @@ timeline
   `<drama id>:<scope>:<n>`. On Pine a review's id stays random.
 - **Alternatives.** Random ids, with links that break on every rebuild.
 - **Grounds.** Master's brief; design for failure ([design principles](design-principles.md#9-design-for-failure)).
-- **Consequences.** The same seed gives the same review ids; the not-found message is to say what to do
-  instead (work-04).
+- **Consequences.** The same seed gives the same review ids. A review that is gone says what to do: "This
+  review was answered or replaced." with "Open Reviews" (0e6f0f0); a gone review names no project, so the
+  link opens the whole queue.
 - **Words.** None recorded.
-- **Recorded in.** `reviewId` in `src/engine/reviews.ts`; its test in `src/engine/flow.test.ts`.
+- **Recorded in.** Commits fb80b8c (`reviewId` in `src/engine/reviews.ts`, its test in `src/engine/flow.test.ts`)
+  and 0e6f0f0 (the not-found wording, work-04).
 
 ## References
 
