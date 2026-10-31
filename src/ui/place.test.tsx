@@ -2,12 +2,12 @@
 // keeps both and an asset's id is never taken for an episode (Codex's IA review, B1); a link lands on the item's one
 // home (IA §16); a URL that names an episode or item the drama can't have says so (Codex's rebuttal, IA §14.1).
 import { createMemoryHistory, RouterProvider } from "@tanstack/react-router";
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import type { DramaView } from "../shared/types.ts";
 import { homeLink, type Place, placeLink } from "./place.ts";
 import { studioRouter } from "./routes.tsx";
-import { answer } from "./test/server.ts";
+import { answer, calls } from "./test/server.ts";
 
 const router = studioRouter(createMemoryHistory());
 const hrefOf = (place: Place) => router.buildLocation(placeLink(place)).href;
@@ -102,6 +102,18 @@ describe("a drama's page", () => {
     render(<RouterProvider router={studioRouter(createMemoryHistory({ initialEntries: [path] }))} />);
     expect(await screen.findByText(`This project has no ${what}.`)).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Back to the project" })).toHaveAttribute("href", "/d/d1/episodes");
+  });
+
+  it("has the project's lineage before a pick names an item, so the page isn't swapped for Loading (and the board remounted)", async () => {
+    engine();
+    answer("/api/dramas/d1/lineage", { lineage: { nodes: [{ id: "episodes/EP001/breakdown" }], links: [], groups: [] }, problems: [] });
+    const router = studioRouter(createMemoryHistory({ initialEntries: ["/d/d1/e/EP001/canvas"] }));
+    render(<RouterProvider router={router} />);
+    const board = await screen.findByText("The board fills in as the agent works");
+    await waitFor(() => expect(calls("GET", "/api/dramas/d1/lineage").length).toBeGreaterThan(0));
+    // A pick writes ?item, as Canvas does: the same board stays, never swapped for Loading and drawn anew.
+    await router.navigate({ to: "/d/$dramaId/e/$episodeCode/canvas", params: { dramaId: "d1", episodeCode: "EP001" }, search: { item: "episodes/EP001/breakdown" }, replace: true });
+    expect(screen.getByText("The board fills in as the agent works")).toBe(board);
   });
 
   it("says Not found for a path the studio has no page for, never falling back to Home", async () => {

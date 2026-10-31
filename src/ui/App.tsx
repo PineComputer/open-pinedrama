@@ -160,7 +160,9 @@ export function DramaPage() {
   const { assetId } = params;
   const shelf = page === "characters" ? "look" : page === "locations" ? "plate" : page === "props" ? "prop" : undefined;
   const asked = search.item;
-  const lineage = useResource<LineageView>(asked !== undefined || assetId !== undefined ? `/api/dramas/${place.dramaId}/lineage` : null, [`project:${place.dramaId}`]);
+  // Loaded on every page of the project, not only once a link names an item: a pick on Canvas writes ?item, and a lineage
+  // first fetched then would put Loading in the page's place and remount it, losing the board's view.
+  const lineage = useResource<LineageView>(`/api/dramas/${place.dramaId}/lineage`, [`project:${place.dramaId}`]);
   if (!drama.data)
     return (
       <div className="page">
