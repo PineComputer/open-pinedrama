@@ -124,14 +124,20 @@ function AssetGrid({ cards, names, dramaId, picked }: { cards: CastCard[]; names
     const [width, height] = sizes[url] ?? [4, 3];
     return { key: card.subject, src: url, width, height, card };
   });
+  const ratios = photos.map((photo) => photo.width / photo.height).sort((a, b) => a - b);
+  const median = ratios[Math.floor(ratios.length / 2)] ?? 4 / 3;
+  const rowHeight = Math.round(Math.min(270, Math.max(180, 150 / median)));
   return (
     <div className="assetgrid">
       <RowsPhotoAlbum
         photos={photos}
-        // Rows near the design's card height, never more than four a row nor a lone row taller than 300px, so near-square
-        // multi-view plates don't squeeze six into one short row (react-photo-album's own row constraints).
-        targetRowHeight={230}
-        rowConstraints={{ maxPhotos: 4, singleRowMaxHeight: 300 }}
+        // A dense grid, as Google Photos' and liblib's asset grids are, so a wider window shows more cards, not bigger
+        // ones: merecdesperez44323-lab found 230px rows of at most four too big. Rows near 180px; ours, untested: a card
+        // carries its name, so a shelf of tall pictures (9:16 props and plates) gets rows tall enough for cards about
+        // 150px wide, a name in two lines, up to 270px. A shelf that fits in one row keeps that height instead of
+        // stretching to the window (react-photo-album's row constraints).
+        targetRowHeight={rowHeight}
+        rowConstraints={{ maxPhotos: 12, singleRowMaxHeight: rowHeight }}
         spacing={12}
         defaultContainerWidth={960}
         render={{
