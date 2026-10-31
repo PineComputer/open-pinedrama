@@ -108,7 +108,8 @@ const ICON = { character: "user", location: "image", prop: "cube", blocking: "sq
 /**
  * A take's or cut's inline player (D39; design/app.js, the take's .vbar): media-chrome's controller around the video,
  * its control bar on the picked node and on hover, in the order Premiere, Frame.io and YouTube give it: play, time, the
- * slider, duration, sound, full screen. Muted until the maker turns the sound on, so a hover previews it silently; the
+ * slider, duration, sound, full screen. Muted until the maker turns the sound on, so a hover previews it silently, and
+ * leaving pauses it where it is; the
  * bar takes no drag or pan of the board (React Flow's nodrag and nopan).
  */
 function NodePlayer({ url, label, bar, preview, onSize }: { url: string; label: string; bar: boolean; preview: boolean; onSize: (width: number, height: number) => void }) {
@@ -124,14 +125,9 @@ function NodePlayer({ url, label, bar, preview, onSize }: { url: string; label: 
         preload="metadata"
         onLoadedMetadata={(event) => onSize(event.currentTarget.videoWidth, event.currentTarget.videoHeight)}
         onMouseEnter={preview ? (event) => void event.currentTarget.play().catch(() => undefined) : undefined}
-        onMouseLeave={
-          preview
-            ? (event) => {
-                event.currentTarget.pause();
-                event.currentTarget.currentTime = 0.5;
-              }
-            : undefined
-        }
+        // Leaving pauses where it is, and the next hover plays on from there (LibTV's nodes, YouTube's hover previews):
+        // the video stays mounted, so each node keeps its own position while the board lives.
+        onMouseLeave={preview ? (event) => event.currentTarget.pause() : undefined}
       />
       {bar && (
         <MediaControlBar className="vbar shown nodrag nopan">

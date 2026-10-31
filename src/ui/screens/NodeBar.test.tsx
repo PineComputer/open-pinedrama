@@ -6,7 +6,7 @@ import { fireEvent, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { readFileSync } from "node:fs";
 import path from "node:path";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { parseLineage } from "../../shared/lineage.ts";
 import { parseBibleNames } from "../../shared/names.ts";
 import { parseStatus, type ProjectView } from "../../shared/project.ts";
@@ -428,6 +428,28 @@ describe("a picked item's panel (P6.8)", () => {
     expect(getComputedStyle(picture).objectFit).toBe("contain");
     expect(getComputedStyle(video).objectFit).toBe("contain");
     sheet.remove();
+  });
+
+  it("pauses a take's hover preview where it is when the pointer leaves, and plays on from there (LibTV)", async () => {
+    engine();
+    const take = { id: 30, name: "video.mp4", path: "/work/drama/episodes/EP001/segments/seg01/t01/video.mp4", type: "video/mp4", size: 1, kind: "take", url: "/f/30?v=1", createdAt: "2026-10-30T10:00:00Z" };
+    answer("/api/dramas/d1/files", [take]);
+    const play = vi.spyOn(HTMLMediaElement.prototype, "play").mockResolvedValue(undefined);
+    const pause = vi.spyOn(HTMLMediaElement.prototype, "pause").mockImplementation(() => undefined);
+    await renderAt(<Canvas drama={drama("working")} />, "/d/d1/e/EP001/canvas");
+    const video = await waitFor(() => screen.getByRole("button", { name: /^Take · t01/ }).closest(".cnode")!.querySelector("video")!);
+    let at = 0.5;
+    Object.defineProperty(video, "currentTime", { configurable: true, get: () => at, set: (value: number) => (at = value) });
+    fireEvent.mouseEnter(video);
+    expect(play).toHaveBeenCalled();
+    at = 3.2;
+    fireEvent.mouseLeave(video);
+    expect(pause).toHaveBeenCalled();
+    expect(video.currentTime).toBe(3.2);
+    // The same video element: nothing remounted it.
+    expect(screen.getByRole("button", { name: /^Take · t01/ }).closest(".cnode")!.querySelector("video")).toBe(video);
+    play.mockRestore();
+    pause.mockRestore();
   });
 
   it("says when the versions can't be read, rather than that there are none", async () => {

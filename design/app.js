@@ -627,7 +627,8 @@
                     ${n.pic ? html`<img src=${n.pic} alt="" draggable="false" onLoad=${measure(n.pic)}/>` : html`<div class="none">Not in this sample</div>`}
                     ${n.kind === "take" && n.pic && html`<span class="play"><i>${I("play")}</i></span>
                       ${/* The take's inline player (D39): on the picked take and on hover, in media-chrome's control bar order, as
-                         Premiere's, Frame.io's and YouTube's: play, time, the slider, duration, sound, full screen. Muted until the sound is on. */ ""}
+                         Premiere's, Frame.io's and YouTube's: play, time, the slider, duration, sound, full screen. Muted until the sound is on;
+                         a hover previews it, and leaving pauses it where it is (LibTV, YouTube's hover previews). */ ""}
                       <div class=${"vbar" + (S.sel === n.id ? " shown" : "")} role="group" aria-label=${"Play " + n.seg.id + " take " + n.ver}>
                         <button class="vb" aria-label="Play" onClick=${(e) => { e.stopPropagation(); toast("Plays the take here, muted until you turn the sound on."); }}>${I("play")}</button>
                         <span class="vt">0:00</span><span class="vtrack"><i></i></span><span class="vt">0:${String(n.seg.s).padStart(2, "0")}</span>
