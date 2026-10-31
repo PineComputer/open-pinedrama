@@ -85,8 +85,8 @@ the IA proposal, sections 2, 8.3 and 12 <sup>[1](#ref-1)</sup>.
 | Screenplay and its Fountain versions | Project › Script | — |
 | Bible, logline, beats | Project › Story | — |
 | Character, location, prop, and their versions | Project › Assets › … | an episode canvas's reference node, Lineage, review items |
-| Episode | Project › Episodes › EPxxx, in two views, List and Canvas | the Episodes board, Home's cards |
-| Segment and its takes | inside its episode: a List row, a Canvas node | review items, Lineage |
+| Episode | Project › Episodes › EPxxx, its Canvas ([D66](../decisions.md#d66-2026-10-30--an-episode-is-its-canvas-laid-out-as-drama-clis-export)) | the Episodes board, Home's cards |
+| Segment and its takes | inside its episode: a group on its Canvas | review items, Lineage |
 | Cut | EPxxx › Cut | Delivery's rows, review items |
 | Accepted cuts | Project › Delivery | — |
 | A decision waiting | Reviews, one queue; a project's Reviews is its filter | Home's "Waiting for you" (the newest four and "See all N"), a card's "N need you", Next review, the agent panel's Decisions |
@@ -101,7 +101,7 @@ and 16 <sup>[1](#ref-1)</sup>.
 | Scope | Views |
 |---|---|
 | Drama | Script, Story, Assets, Episodes (a board of episode cards), Delivery |
-| Episode | **List** (segment rows) and **Canvas** (the board in drama-cli's layout, with the shared references it reads, read-only, linking to Assets); its **Cut** |
+| Episode | **Canvas** alone, in drama-cli's export layout: each segment's group holds its shot list, blocking, storyboards and take, with the shared references it reads, read-only, linking to Assets; its **Cut**. No view switch ([D66](../decisions.md#d66-2026-10-30--an-episode-is-its-canvas-laid-out-as-drama-clis-export); the product keeps List \| Canvas until the port) |
 | An item or version | its detail, with **Lineage** (what it was made from, what was made from it) as a view of the same home, not a peer page |
 
 Setup has its own steps, not views of Script: **Analyzing** and the **Fountain review**

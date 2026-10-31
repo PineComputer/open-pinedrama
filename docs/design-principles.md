@@ -93,7 +93,7 @@ one:
 | Script | the screenplay, `screenplay validate` and its accepted versions |
 | Bible | `bible` |
 | Assets | `cast`, `scenes`, `props` |
-| An episode's Segments | `breakdown`, then storyboards (line-art, photoreal), references and takes (`shoot`) |
+| An episode's Canvas | `breakdown`, then blocking, storyboards (line-art, photoreal) and takes (`shoot`), in drama-cli's export layout |
 | Cut | `edit` |
 | Reviews | the decisions `accept` records |
 | Out of date | drama-cli's staleness |
@@ -140,7 +140,7 @@ flowchart TB
     Script["Drama › Script<br/>screenplay"]
     Story["Drama › Story<br/>bible, logline, beats"]
     Assets["Drama › Assets › …<br/>characters, locations, props"]
-    Episode["Drama › Episodes › EPxxx<br/>List | Canvas"]
+    Episode["Project › Episodes › EPxxx<br/>Canvas"]
     Cut["EPxxx › Cut"]
     Delivery["Drama › Delivery<br/>accepted cuts"]
     Reviews["Reviews<br/>one queue"]

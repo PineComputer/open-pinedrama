@@ -22,7 +22,7 @@ timeline
   2026-10-23 : D5 pre-production in one session
   2026-10-24 : D6 idle timeouts follow the work : D7 spend shown, never in a goal
   2026-10-29 : D8 phase 1 steers
-  2026-10-30 : D9 design/ is the UI source : D10 tsc gate : D11 mature libraries : D12 real samples in LFS : D13 decisions taken once : D14 credentials stop : D15 Codex review loop : D16 navigation and one home : D17 every take and cut watched : D18 cut editing as an edit spec : D19 TanStack Router : D20 Export by owner : D21 Analyzing and Out of date routes : D22 redo by owner : D23 the asset detail : D24 the cut edit goal : D25 one Submission : D26 crumbs and Back : D27 Reviews : D28 model badge : D29 canvas zoom, inline video : D30 URL rules : D31 agent scope : D32 narrow windows : D33 review options : D34 Episodes filters : D35 every element cites its ground : D36 Delivery is the cuts' home : D37 a picked node zooms : D38 shared redo after release : D39 a take plays on its node : D40 where a stop shows : D41 Script is the screenplay's home : D42 Story and Assets apart : D43 stable sample ids : D44 the cut leaves the switch : D45 samples' own screenplays : D46 Project : D47 a draft's changed base : D48 the List's ?version : D49 project types : D50 Home cards : D51 one column, rail labels : D52 Home first, disabled : D53 account footer : D54 icon-only rail : D55 the cover follows the format : D56 Assets grid and inspector : D57 no tabs in Assets : D58 Canvas nodes whole : D59 Canvas opens in Hand : D60 replay's freshness : D61 Bible : D62 Script holds the process : D63 Segments matrix : D64 a visualization of drama-cli : D65 no accent bar
+  2026-10-30 : D9 design/ is the UI source : D10 tsc gate : D11 mature libraries : D12 real samples in LFS : D13 decisions taken once : D14 credentials stop : D15 Codex review loop : D16 navigation and one home : D17 every take and cut watched : D18 cut editing as an edit spec : D19 TanStack Router : D20 Export by owner : D21 Analyzing and Out of date routes : D22 redo by owner : D23 the asset detail : D24 the cut edit goal : D25 one Submission : D26 crumbs and Back : D27 Reviews : D28 model badge : D29 canvas zoom, inline video : D30 URL rules : D31 agent scope : D32 narrow windows : D33 review options : D34 Episodes filters : D35 every element cites its ground : D36 Delivery is the cuts' home : D37 a picked node zooms : D38 shared redo after release : D39 a take plays on its node : D40 where a stop shows : D41 Script is the screenplay's home : D42 Story and Assets apart : D43 stable sample ids : D44 the cut leaves the switch : D45 samples' own screenplays : D46 Project : D47 a draft's changed base : D48 the List's ?version : D49 project types : D50 Home cards : D51 one column, rail labels : D52 Home first, disabled : D53 account footer : D54 icon-only rail : D55 the cover follows the format : D56 Assets grid and inspector : D57 no tabs in Assets : D58 Canvas nodes whole : D59 Canvas opens in Hand : D60 replay's freshness : D61 Bible : D62 Script holds the process : D63 Segments matrix : D64 a visualization of drama-cli : D65 no accent bar : D66 an episode is its Canvas
 ```
 
 ## D1. 2026-10-22 · A desktop app on Electron
@@ -1076,6 +1076,7 @@ timeline
 - **Words.** "就是 镜头、线稿、写实、参考图、take。 那我理解就是 一个 矩阵了" (*that is: shots, line art,
   photoreal, reference pictures, take; so as I understand it, a matrix*), relayed by master.
 - **Recorded in.** Design commit a294559; master's and work-04's notes, 30 October 2026.
+- **Superseded by.** [D66](#d66-2026-10-30--an-episode-is-its-canvas-laid-out-as-drama-clis-export): an episode is its Canvas alone.
 
 ## D64. 2026-10-30 · The studio is a visualization of drama-cli's work
 - **Context.** Pages, names and states had been added screen by screen; merecdesperez44323-lab named
@@ -1107,6 +1108,28 @@ timeline
 - **Consequences.** None beyond the tree.
 - **Words.** "不要左边这个弧线， 太丑了" (*no curve on the left, it's too ugly*), relayed by master.
 - **Recorded in.** Commit 8c67ffa; work-04's note to the docs.
+
+## D66. 2026-10-30 · An episode is its Canvas, laid out as drama-cli's export
+- **Context.** The Segments matrix (D63) repeated in a table what the Canvas already showed.
+- **Decision.** An episode's page is its Canvas alone, laid out as drama-cli's export lays it out
+  (short_drama `drama_cli/export.py:46-98`, `section()` and `layout()`): each segment's group holds its
+  shot list (breakdown.json), then its blocking, line-art storyboard, photoreal storyboard and take.
+  An episode has no view switch. This supersedes
+  [D63](#d63-2026-10-30--an-episodes-views-are-segments-and-canvas-segments-is-a-matrix) and the List
+  of [D16](#d16-2026-10-30--the-navigation-a-studio-wide-rail-the-dramas-tree-one-home-per-object).
+- **Alternatives.** The Segments matrix (D63); a List.
+- **Grounds.** merecdesperez44323-lab's decision; the studio visualizes drama-cli's work
+  ([D64](#d64-2026-10-30--the-studio-is-a-visualization-of-drama-clis-work)), here in drama-cli's own
+  layout.
+- **Consequences.** No view switch in an episode; the glossary retires Segments and List as views;
+  the Codex round-4 brief changes (master). Design first, then the product after Codex's review and
+  merecdesperez44323-lab's yes; until the port the product keeps List | Canvas.
+- **Words.** "我在想你这样是不是都不需要左边这个tab了， 你就直接把 segment里的3段 shot list 分别都放在画布里是不是就行了？"
+  (*I'm wondering whether you need the tab on the left at all; couldn't you just put the segment's
+  three shot lists on the canvas?*) and "因为你现在左边那个表格， 太 ad hoc， 太冗余了， 还不如就直接canvas"
+  (*because the table on the left now is too ad hoc, too redundant; better to go straight to the
+  canvas*), relayed by master.
+- **Recorded in.** Master's note to the docs, 30 October 2026.
 
 ## References
 
