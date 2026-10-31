@@ -445,11 +445,13 @@
     // Each stage is its own node, on its own version (S.at, which a link may name).
     const at = item.at, ood = at && item.seg && window.EXTRA.outOfDateAt(item.seg.id, at);
     const node = { ...item, label: item.seg ? `EP006 ${item.seg.id} · ${item.label}` : item.label, stale: !!ood };
+    // A stage this sample has no picture of says so, with no state it can't show (master's review of v12).
+    const missing = node.kind !== "shots" && !node.pic;
     const spec = node.kind === "take" && node.seg.spec;
     // A shared reference's home is Assets (§16): its versions, prompt and review live there, and the canvas only links to it.
     const home = homeTab(node.id);
     const open = S.dtab;
-    const parts = home ? [] : node.kind === "shots" ? [["details", "Details"]] : [["prompt", "Prompt"], ...(spec ? [["versions", "Versions"], ["request", "Request"]] : []), ["details", "Details"]];
+    const parts = home ? [] : node.kind === "shots" || missing ? [["details", "Details"]] : [["prompt", "Prompt"], ...(spec ? [["versions", "Versions"], ["request", "Request"]] : []), ["details", "Details"]];
     const chips = (line) => line.split(/(Image \d+)/).map((part) => { const m = part.match(/^Image (\d+)$/); return m ? html`<span class="pchip"><img src=${spec.images[m[1] - 1]} alt=""/>${part}</span>` : part; });
     // Under the node by default, the industry's convention; docked right on asking, or when the board has no room for it
     // above or below the node. The viewer's choice is kept in this browser.
@@ -461,11 +463,11 @@
     const needs = node.st === "you" ? (home ? "Waits for your review in Assets." : `Take ${node.ver} waits for you: watch it, then accept, send back or note.`)
       : outOfDate(node) ? "Nothing for you: the agent redraws what is out of date." : node.st === "back" ? "Nothing for you: the agent redoes it." : "";
     return html`<div class=${"npanel" + (docked ? " docked" : "")} role="dialog" aria-label=${node.label} style=${style}>
-      <div class="nhead"><b class="grow">${node.label}</b>${Status(node.st === "stale" ? "accepted" : node.st)}${outOfDate(node) ? Status("stale", "Out of date") : Status("line", "Up to date")}
+      <div class="nhead"><b class="grow">${node.label}</b>${!missing && html`${Status(node.st === "stale" ? "accepted" : node.st)}${outOfDate(node) ? Status("stale", "Out of date") : Status("line", "Up to date")}`}
         ${!forced && html`<button class="ibtn" title=${docked ? "Under the node" : "Dock right"} aria-label=${docked ? "Under the node" : "Dock right"} onClick=${() => dock(docked ? "under" : "right")}>${I(docked ? "square-half-bottom" : "square-half")}</button>`}
         <button class="ibtn" aria-label="Close" onClick=${() => set({ sel: null, cam: S.camBack || S.cam, camBack: null })}>${I("x")}</button></div>
-      <div class="nstate"><span class="mono">current ${node.ver || "v1"} · ${acc}</span>${why && html`<span class="why">${I("warning")}${why}</span>`}</div>
-      ${needs && html`<p class="needs">${needs}</p>`}
+      ${missing ? html`<p class="needs">Not in this sample: the replay has no picture of this stage.</p>` : html`<div class="nstate"><span class="mono">current ${node.ver || "v1"} · ${acc}</span>${why && html`<span class="why">${I("warning")}${why}</span>`}</div>
+      ${needs && html`<p class="needs">${needs}</p>`}`}
       ${home ? html`<p class="subtle nhome">Its versions, prompt and review: <button class="linkbtn" onClick=${() => openHome(node.id, "EP006 · Canvas")}>Assets › ${{ cast: "Characters", scenes: "Locations", props: "Props" }[home]} › ${node.label}</button></p>`
         : html`<div class="ndisc">${parts.map(([k, l]) => html`<button aria-expanded=${String(open === k)} aria-controls="npart" onClick=${() => set({ dtab: open === k ? null : k })}>${l}${I(open === k ? "caret-up" : "caret-down")}</button>`)}</div>`}
       ${!home && open && html`<div id="npart" class="npart" role="region" aria-label=${parts.find(([k]) => k === open)[1]}>
@@ -544,7 +546,7 @@
             <svg class="wires" width="1" height="1">${EDGES.map(wire)}</svg>
             ${NODES.filter((n) => n.kind === "group").map((g) => html`<div class="group" style=${`left:${g.x}px;top:${g.y}px;width:${g.w}px;height:${g.h}px`}><span class="gl">${g.label}</span></div>`)}
             ${NODES.filter((n) => n.kind !== "group").map((n) => html`<div class=${"cnode is-" + n.kind + (S.sel === n.id ? " sel" : "")} style=${`left:${n.x}px;top:${n.y - LABEL}px;width:${n.w}px`}>
-              <div class="lab">${I(ICON[n.kind])}<span class="name">${n.label}</span>${n.model && html`<span class="model">${n.model}</span>`}${n.st !== "accepted" ? Status(n.st) : outOfDate(n) && Status("stale")}${n.pic && dims(n.pic)}</div>
+              <div class="lab">${I(ICON[n.kind])}<span class="name">${n.label}</span>${n.model && html`<span class="model">${n.model}</span>`}${n.kind !== "shots" && !n.pic ? null : n.st !== "accepted" ? Status(n.st) : outOfDate(n) && Status("stale")}${n.pic && dims(n.pic)}</div>
               ${n.kind === "shots"
                 // A segment's shots, as breakdown.json's Shot gives them: time, size, angle, camera, then what is seen and heard.
                 // Far out it keeps its title bar only, as ComfyUI collapses a node (and the export draws text).
@@ -552,7 +554,7 @@
                     <b class="stitle">${n.seg.shots.length} shots · ${n.seg.s} s</b>
                     <ol class="srows">${n.seg.shots.map(([time, size, angle, camera, visual, audio]) => html`<li><span class="mono">${time}</span><span class="sfacts">${size} · ${angle} · ${camera}</span><span class="svis">${visual}</span><span class="saud">${audio}</span></li>`)}</ol></div>`
                 : html`<div class="card" style=${n.pic && S.dims[n.pic] ? sized(n.pic) : `height:${n.h}px`} onClick=${() => pick(n)}>
-                    ${n.pic ? html`<img src=${n.pic} alt="" draggable="false" onLoad=${measure(n.pic)}/>` : html`<div class="none">${n.kind === "take" ? n.ver + " accepted" : "accepted"}</div>`}
+                    ${n.pic ? html`<img src=${n.pic} alt="" draggable="false" onLoad=${measure(n.pic)}/>` : html`<div class="none">Not in this sample</div>`}
                     ${n.kind === "take" && n.pic && html`<span class="play"><i>${I("play")}</i></span>
                       ${/* The take's inline player (D39): on the picked take and on hover, in media-chrome's control bar order, as
                          Premiere's, Frame.io's and YouTube's: play, time, the slider, duration, sound, full screen. Muted until the sound is on. */ ""}
