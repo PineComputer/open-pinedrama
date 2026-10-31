@@ -859,3 +859,6 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
 .viewstrip button[aria-pressed="true"] img { border-color: var(--text-primary); box-shadow: 0 0 0 1px var(--text-primary); }
 .viewstrip small { font-size: 10.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .clamp3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+/* With the detail open the grid keeps several columns, and a tall plate never makes a card taller than the detail. */
+.assetsplit .assetgrid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; }
+.assetcard .pic { max-height: 240px; margin: 0 auto; }
