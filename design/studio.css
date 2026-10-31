@@ -454,14 +454,6 @@ input.search:focus { border-color: var(--text-primary); }
 .newthumb { width: 30px; height: 40px; border-radius: var(--radius-small); background: var(--surface-container-high); display: grid; place-items: center; color: var(--text-muted); }
 
 /* ── setup steps ── */
-.setup { list-style: none; margin: 0; padding: 0 2px; display: grid; gap: 2px; }
-.setup button { width: 100%; display: grid; grid-template-columns: 26px 1fr; gap: 10px; align-items: center; padding: 8px; border: 0; border-radius: var(--radius-medium); background: none; text-align: left; color: inherit; cursor: pointer; }
-.setup button:disabled { cursor: default; opacity: .6; }
-.setup button[aria-current="true"] { background: var(--selected); }
-.setup .n { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font: 600 11.5px var(--font-mono); border: 1px solid var(--border-input); color: var(--text-muted); }
-.setup .you .n { background: var(--warning-text); border-color: var(--warning-text); color: var(--on-accent); }
-.setup .work .n { border-color: var(--text-primary); color: var(--text-primary); animation: pulse 1.6s infinite; }
-.setup b { display: block; font-size: 13px; } .setup small { color: var(--text-secondary); font-size: 11.5px; }
 
 /* ── stop cards ── */
 .stopcard { margin: 0 16px 16px; border-radius: var(--radius-2xl); border: 1px solid var(--border); background: var(--surface); overflow: hidden; }

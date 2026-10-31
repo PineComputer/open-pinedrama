@@ -255,16 +255,17 @@ describe("the sidebar", () => {
     expect(standing).not.toHaveTextContent("0 of 0");
   });
 
-  it("while the setup waits on the rewrite, gives the four steps with Script for the maker's review", async () => {
+  it("while the setup waits on the rewrite, is the one project tree: Script waits for the maker, what isn't reached says Not started (D62)", async () => {
     const waiting = { ...drama, status: "setup", setup: { state: "waiting", reached: 1 }, episodeRows: [] } as unknown as DramaView;
+    answer("/api/dramas/d1/script", { inputs: [], screenplayFile: null, versions: [{ version: "v1", question: { reviewId: "r1", state: "open" } }] });
+    answer("/api/dramas/d1/cast", []);
     await renderAt(<DramaSidebar drama={waiting} page="script" drawer={false} />);
-    const steps = screen.getByRole("list", { name: "Steps" });
-    expect(within(steps).getAllByRole("listitem").map((step) => [step.className, step.textContent])).toEqual([
-      ["you", "1ScriptYour review"],
-      ["line", "2BibleAfter your review"],
-      ["line", "3EpisodesAfter the looks"],
-      ["line", "4CutPer episode"],
-    ]);
+    const tree = screen.getByRole("navigation", { name: waiting.title });
+    expect(await within(tree).findByRole("link", { name: /^Script/ })).toHaveTextContent("ScriptWaiting for you");
+    await waitFor(() => expect(within(tree).getByRole("link", { name: /^Assets/ })).toHaveTextContent("AssetsNot started"));
+    expect(within(tree).getByRole("link", { name: /^Bible/ })).toHaveTextContent("BibleNot started");
+    expect(within(tree).getByRole("link", { name: /^Episodes/ })).toHaveTextContent("EpisodesNot started");
+    expect(screen.queryByRole("list", { name: "Steps" })).not.toBeInTheDocument();
   });
 
   it("says at its foot what the drama spent against its budget, what is in flight and how many are at work", async () => {
