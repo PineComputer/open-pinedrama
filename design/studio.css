@@ -647,11 +647,18 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
 /* A take's inline player (D39): media-chrome's control bar over the foot of the take, on the picked take and on hover;
    the cut room's player tokens (.controls: text-primary on a blurred canvas). */
 .segnode .card > .take-tile, .segnode .card > .vbar { grid-area: 1 / 2; }
+/* The take keeps its whole frame: its box at the project's ratio, the picture contained and letterboxed in the
+   players' black, on the node and full screen alike (YouTube, Premiere and Frame.io letterbox or pillarbox). */
+.segnode .card:has(> .take-tile) { grid-template-columns: 1fr auto; }
+.segnode .card > .take-tile { height: 100%; background: #000; }
+/* The bar fits the take's width, never widens it (CSS Containment, inline-size). */
+.segnode .card > .vbar { contain: inline-size; overflow: hidden; }
+.segnode .card > button.take-tile img, .cnode .card video { object-fit: contain; background: #000; }
 .cnode .vbar { align-self: end; justify-self: stretch; position: relative; z-index: 2; margin: 4px; display: none; align-items: center; gap: 4px; padding: 2px 6px; border-radius: 8px; background: color-mix(in srgb, var(--canvas) 72%, transparent); backdrop-filter: blur(10px); color: var(--text-primary); font: 600 10px var(--font-mono); }
 .cnode .card:hover .vbar, .cnode .vbar.shown { display: flex; }
 .cnode .vbar .vb { width: 22px; height: 22px; padding: 0; border: 0; border-radius: 50%; background: none; color: inherit; display: grid; place-items: center; cursor: pointer; }
 .cnode .vbar .vb .ic { width: 13px; height: 13px; }
-.cnode .vbar .vtrack { flex: 1; min-width: 24px; height: 3px; border-radius: 999px; background: color-mix(in srgb, var(--text-primary) 25%, transparent); }
+.cnode .vbar .vtrack { flex: 1; min-width: 0; height: 3px; border-radius: 999px; background: color-mix(in srgb, var(--text-primary) 25%, transparent); }
 .cnode .vbar .vtrack i { display: block; width: 0; height: 100%; border-radius: inherit; background: var(--text-primary); }
 .segrow .segat { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0 0 6px; font-size: 12px; }
 .backto .ic { width: 14px; height: 14px; }

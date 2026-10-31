@@ -14,7 +14,7 @@ import type { ChatView, DramaView, EpisodeRow, ReviewSummary } from "../../share
 import { storyboardReview } from "../test/fixtures.ts";
 import { http, HttpResponse } from "msw";
 import { accept, answer, calls, sent, server } from "../test/server.ts";
-import { Canvas, PHASE_ONE } from "./Canvas.tsx";
+import { Canvas, formatRatio, PHASE_ONE } from "./Canvas.tsx";
 import { href, renderAt } from "../test/router.tsx";
 
 const fixture = (name: string) => JSON.parse(readFileSync(path.resolve("fixtures/status", `${name}.json`), "utf8"));
@@ -458,6 +458,28 @@ describe("a picked item's hand actions and panel (P6.8)", () => {
     await pick(/^Take · t01/);
     const bar = node().querySelector(".vbar")!;
     expect([...bar.children].map((part) => part.tagName.toLowerCase())).toEqual(["media-play-button", "media-time-display", "media-time-range", "media-duration-display", "media-mute-button", "media-fullscreen-button"]);
+  });
+
+  it("keeps a take's whole frame: its box at the project's ratio, the video contained, on the node and full screen", async () => {
+    engine();
+    const take = { id: 30, name: "video.mp4", path: "/work/drama/episodes/EP001/segments/seg01/t01/video.mp4", type: "video/mp4", size: 1, kind: "take", url: "/f/30?v=1", createdAt: "2026-10-30T10:00:00Z" };
+    answer("/api/dramas/d1/files", [take]);
+    // The design's and the canvas's own rules, as the page applies them (jsdom computes styles from the sheets it has).
+    const sheet = document.createElement("style");
+    sheet.textContent = ["design/studio.css", "src/ui/screens/canvas.css"].map((file) => readFileSync(path.resolve(file), "utf8")).join("\n");
+    document.head.append(sheet);
+    await renderAt(<Canvas drama={{ ...drama("working"), format: "9:16, 480p" }} />, "/d/d1/e/EP001/canvas");
+    const node = () => screen.getByRole("button", { name: /^Take · t01/ }).closest(".cnode")!;
+    await waitFor(() => expect(node().querySelector("video")).not.toBeNull());
+    expect(getComputedStyle(node().querySelector(".card")!).aspectRatio).toBe("9 / 16");
+    expect(getComputedStyle(node().querySelector("video")!).objectFit).toBe("contain");
+    sheet.remove();
+  });
+
+  it("says nothing of a ratio the project's format doesn't state", () => {
+    expect(formatRatio("9:16, 480p")).toBe("9 / 16");
+    expect(formatRatio("16 : 9")).toBe("16 / 9");
+    expect(formatRatio("vertical, 480p")).toBeUndefined();
   });
 
   it("says when the versions can't be read, rather than that there are none", async () => {

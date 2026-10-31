@@ -97,6 +97,14 @@ interface BoardContext {
   files: FileItem[];
   /** The one item picked, whose bar and panel show; none while several are. */
   picked?: string;
+  /** A take's or cut's box ratio: the project's own format ("9:16, 480p" gives "9 / 16"); none where it states no ratio. */
+  ratio?: string;
+}
+
+/** The ratio a project's format states, as CSS's aspect-ratio writes it; none where it states none (never assumed). */
+export function formatRatio(format: string): string | undefined {
+  const stated = /^\s*(\d+)\s*:\s*(\d+)/.exec(format);
+  return stated ? `${stated[1]} / ${stated[2]}` : undefined;
 }
 
 const Board = createContext<BoardContext | null>(null);
@@ -197,7 +205,13 @@ function ItemNode(props: NodeProps<Node<ItemData>>) {
         {model && <span className="model">{model}</span>}
         {data.status !== "accepted" && <StatusChip status={data.status} label={t(`status.${data.status}` as TKey)} />}
       </div>
-      <div className={`card${data.stage.kind === "storyboard" ? " board-img" : ""}`} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
+      {/* A take or cut keeps its whole frame: its box at the project's ratio, the video contained (design/studio.css). */}
+      <div
+        className={`card${data.stage.kind === "storyboard" ? " board-img" : ""}${video && board.ratio ? " framed" : ""}`}
+        style={video && board.ratio ? { aspectRatio: board.ratio } : undefined}
+        onMouseEnter={() => setHover(true)}
+        onMouseLeave={() => setHover(false)}
+      >
         {video ? <NodePlayer url={data.work!.url} label={data.label} bar={selected || hover} preview={!selected} /> : data.work ? <img src={data.work.url} alt="" draggable={false} /> : <div className="none">{t("canvas.noPicture")}</div>}
         {video && !(selected || hover) && (
           <span className="play" aria-hidden="true">
@@ -627,7 +641,7 @@ function Plane({ drama }: { drama: DramaView }) {
   const edges = picked ? mapped.edges.map((edge) => (edge.source === picked.id || edge.target === picked.id ? { ...edge, className: "hot" } : edge)) : mapped.edges;
 
   return (
-    <Board.Provider value={{ pick, dock, bar, panel, files: files.data ?? [], picked: picked?.id }}>
+    <Board.Provider value={{ pick, dock, bar, panel, files: files.data ?? [], picked: picked?.id, ratio: formatRatio(drama.format) }}>
       <section className="ds-canvas" aria-label={t("surface.canvas")}>
         <ReactFlow
           nodes={nodes}

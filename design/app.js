@@ -406,6 +406,9 @@
      and what the node is; a pill row of drama-cli's settings; the hand controls disabled until phase 2. Read-only. */
   /* Out of date in this sample: the Case file, made from bible b0002 while b0003 is accepted. */
   const outOfDate = (n) => n.st === "stale" || n.stale || n.id === "file";
+  /* A take's or cut's box takes the project's own format as its ratio (its spec, "9:16 · 480p"), so the whole frame shows,
+     letterboxed like every player's; none where the format states no ratio. */
+  const framed = (format) => { const m = /^\s*(\d+)\s*:\s*(\d+)/.exec(format || ""); return m ? `aspect-ratio:${m[1]} / ${m[2]}` : ""; };
   function NodePanel({ node: item, style, uses, reads, docked: forced }) {
     // A segment's panel is on its picked version: the storyboard tile shows the storyboard's version, the take tile the take's.
     const at = item.seg ? pickedAt(item.seg) : null, ood = at && window.EXTRA.outOfDateAt(item.id, at);
@@ -511,7 +514,7 @@
               <div class="lab">${I("film-strip")}<span class="name">${n.label}</span><span class="subtle" style="font-weight:500">${n.seg.s} s</span><span class="model">${n.model}</span>${n.st !== "accepted" && Status(n.st)}</div>
               <div class="card">
                 ${n.seg.board ? html`<button class=${"board-img" + (S.sel === n.id && pickedAt(n.seg).kind === "storyboard" ? " on" : "")} aria-label=${n.label + " storyboard v1"} onClick=${() => pick(n, { kind: "storyboard", ver: "v1" })}><img src=${n.seg.board} alt="" draggable="false"/><span>board v1</span></button>` : html`<div class="none">board accepted</div>`}
-                ${n.seg.still ? html`<button class=${"take-tile" + (S.sel === n.id && pickedAt(n.seg).kind === "take" ? " on" : "")} aria-label=${n.label + " take " + n.seg.take} onClick=${() => pick(n, { kind: "take", ver: n.seg.take })}><img src=${n.seg.still} alt="" draggable="false"/><span>${n.seg.take}</span><span class="play"><i>${I("play")}</i></span></button>
+                ${n.seg.still ? html`<button class=${"take-tile" + (S.sel === n.id && pickedAt(n.seg).kind === "take" ? " on" : "")} style=${framed(P.project.spec)} aria-label=${n.label + " take " + n.seg.take} onClick=${() => pick(n, { kind: "take", ver: n.seg.take })}><img src=${n.seg.still} alt="" draggable="false"/><span>${n.seg.take}</span><span class="play"><i>${I("play")}</i></span></button>
                   ${/* The take's inline player (merecdesperez44323-lab, D39): shown on the picked take and on hover, in media-chrome's control bar order,
                      as Premiere's, Frame.io's and YouTube's: play, time, the slider, duration, sound, full screen. Muted until the sound is on. */ ""}
                   <div class=${"vbar" + (S.sel === n.id && pickedAt(n.seg).kind === "take" ? " shown" : "")} role="group" aria-label=${"Play " + n.label + " take " + n.seg.take}>
