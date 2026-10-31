@@ -17,15 +17,25 @@
   let drawing = false;
   const draw = () => { if (!drawing) { drawing = true; requestAnimationFrame(() => { drawing = false; render(html`<${App}/>`, root); }); } };
   const set = (p) => { Object.assign(S, typeof p === "function" ? p(S) : p); draw(); };
-  const go = (screen) => { set({ screen, sel: null, agentOpen: false, playing: false, drawer: false, from: null }); try { history.replaceState(null, "", "#" + screen); } catch (e) { /* the hash is a convenience */ } };
+  const go = (screen) => { set({ screen, sel: null, agentOpen: false, playing: false, drawer: false, from: null, at: null }); try { history.replaceState(null, "", "#" + screen); } catch (e) { /* the hash is a convenience */ } };
   /* IA draft (F): below 1100 px the drama tree is a drawer the rail's menu button opens; the agent is the ball at 1280 and
      below, keeping what it follows or is pinned to. */
   const narrow = () => window.matchMedia("(max-width: 1100px)").matches;
   /* IA r2 (§16): each object has one home. A link lands on the home with the object selected (S.asel in Assets, S.sel on
      Canvas, S.esel in the List, S.gsel in Lineage), and remembers where it came from (S.from), so Back returns there. */
   const homeTab = (id) => (P.cast.some((c) => c.id === id) ? "cast" : P.places.some((p) => p.id === id) ? "scenes" : P.props.some((p) => p.id === id) ? "props" : null);
-  const jump = (to, label) => { set({ sel: null, agentOpen: false, drawer: false, toolOpen: false, zoomOpen: false, ...to, from: { screen: S.screen, sel: S.sel, esel: S.esel, osel: S.osel, label } }); try { history.replaceState(null, "", "#" + to.screen); } catch (e) { /* the hash is a convenience */ } };
-  const openHome = (id, label) => jump({ screen: "story", stab: homeTab(id), asel: id }, label);
+  const jump = (to, label) => { set({ sel: null, agentOpen: false, drawer: false, toolOpen: false, zoomOpen: false, ...to, from: { screen: S.screen, sel: S.sel, esel: S.esel, osel: S.osel, at: S.at, label } }); try { history.replaceState(null, "", "#" + to.screen); } catch (e) { /* the hash is a convenience */ } };
+  /* Codex round 3 (fix 3): a link names the object's kind and version as well as its item (S.at = { kind, ver }), so it
+     lands on that version, never on the item's newest. Kinds are drama-cli's lineage kinds (look, plate, prop, blocking,
+     first_frame_reference, storyboard, take, cut); a plate's view or a storyboard's style rides along as at.view / at.style. */
+  const KIND = { cast: "look", scenes: "plate", props: "prop" };
+  const current = (id) => [...P.cast, ...P.places, ...P.props].find((x) => x.id === id);
+  const openHome = (id, label, at) => jump({ screen: "story", stab: homeTab(id), asel: id, at: at || { kind: KIND[homeTab(id)], ver: current(id).ver } }, label);
+  /* A segment's stage version, in its episode: the List by default, or Canvas. */
+  const openStage = (id, at, label, screen = "episode") => jump({ screen, esel: id, sel: screen === "canvas" ? id : null, at }, label);
+  /* A segment's versions, one tile each, as List and Canvas show them; the take is the one picked by default. */
+  const stagesOf = (g) => [g.board && { kind: "storyboard", ver: "v1", pic: g.board }, g.still && { kind: "take", ver: g.take, pic: g.still }].filter(Boolean);
+  const pickedAt = (g) => (S.at && ["storyboard", "take"].includes(S.at.kind) ? S.at : stagesOf(g).slice(-1)[0]);
   const openLineage = (gid, label) => jump({ screen: "graph", gsel: gid }, label);
   let tid = 0;
   const toast = (text, action) => { const id = ++tid; set({ toasts: [...S.toasts, { id, text, action }] }); setTimeout(() => set({ toasts: S.toasts.filter((t) => t.id !== id) }), 4200); };
@@ -188,7 +198,7 @@
     // EP006 › Cut is the episode's cut (IA §16): a link to its home, beside the episode's two views.
     return html`<div class="seg" role="group" aria-label="EP006 view">
       ${[["List", "list-bullets", "episode"], ["Canvas", "flow-arrow", "canvas"], ["Cut", "scissors", "cut"]].map(([l, ic, sc]) =>
-        html`<button aria-pressed=${String(S.screen === sc)} onClick=${() => { const at = S.sel || S.esel; go(sc); set({ sel: sc === "canvas" ? at : null, esel: at }); }}>${I(ic)}${l}</button>`)}
+        html`<button aria-pressed=${String(S.screen === sc)} onClick=${() => { const on = S.sel || S.esel, at = S.at; go(sc); set({ sel: sc === "canvas" ? on : null, esel: on, at }); }}>${I(ic)}${l}</button>`)}
     </div>`;
   }
   function ProjectChips() {
@@ -382,8 +392,13 @@
      with each Image N as a chip of that picture and the pictures it names, the versions with what the person decided, request.json,
      and what the node is; a pill row of drama-cli's settings; the hand controls disabled until phase 2. Read-only. */
   /* Out of date in this sample: the Case file, made from bible b0002 while b0003 is accepted. */
-  const outOfDate = (n) => n.st === "stale" || n.id === "file";
-  function NodePanel({ node, style, uses, reads, docked: forced }) {
+  const outOfDate = (n) => n.st === "stale" || n.stale || n.id === "file";
+  function NodePanel({ node: item, style, uses, reads, docked: forced }) {
+    // A segment's panel is on its picked version: the storyboard tile shows the storyboard's version, the take tile the take's.
+    const at = item.seg ? pickedAt(item.seg) : null, ood = at && window.EXTRA.outOfDateAt(item.id, at);
+    const node = !at ? item : at.kind === "storyboard"
+      ? { ...item, label: item.label + " · storyboard " + at.ver, ver: at.ver, accepted: at.ver, st: "accepted", stale: !!ood, seg: null }
+      : { ...item, label: item.label + " · take " + at.ver, stale: !!ood };
     const spec = node.seg && node.seg.spec;
     // A shared reference's home is Assets (§16): its versions, prompt and review live there, and the canvas only links to it.
     const home = homeTab(node.id);
@@ -395,7 +410,7 @@
     const docked = forced || S.dock === "right";
     const dock = (to) => { set({ dock: to }); try { localStorage.setItem("studio.canvas.dock", to); } catch (e) { /* a convenience */ } };
     const acc = node.accepted === node.ver ? "accepted" : node.accepted ? `accepted ${node.accepted}` : "none accepted";
-    const why = node.problems ? node.problems.join("; ") : node.id === "file" ? "Changed file: bible/v3/bible.json" : "";
+    const why = node.problems ? node.problems.join("; ") : node.id === "file" ? "Changed file: bible/v3/bible.json" : ood ? `Made from ${ood.from}, which is out of date` : "";
     // §15 progressive disclosure: by default its state and what needs the maker; prompt, versions, request and details on demand.
     const needs = node.st === "you" ? (home ? "Waits for your review in Assets." : `Take ${node.ver} waits for you: watch it, then accept, send back or note.`)
       : outOfDate(node) ? "Nothing for you: the agent redraws what is out of date." : node.st === "back" ? "Nothing for you: the agent redoes it." : "";
@@ -433,9 +448,9 @@
       const tall = BAR + ((n.h || 196) + 26) * kk + (S.dock === "right" ? 0 : 10 + PANEL);
       const top = Math.max(PILLS, PILLS + (el.clientHeight - PILLS - tall) / 2);
       return { k: kk, x: (el.clientWidth - (S.dock === "right" ? DOCKED : 0)) / 2 - (n.x + (n.w || 300) / 2) * kk, y: top + BAR - (n.y - 26) * kk }; };
-    const pick = (n) => set({ sel: n.id, follow: false, cam: place(n) });
+    const pick = (n, at) => set({ sel: n.id, at: at || null, follow: false, cam: place(n) });
     // Arriving with a pick (Back from Lineage or Assets, or the List's selection) places it, as a click would.
-    useEffect(() => { const n = S.sel && byId[S.sel]; if (n) pick(n); }, []);
+    useEffect(() => { const n = S.sel && byId[S.sel]; if (n) pick(n, S.at); }, []);
     useEffect(() => {
       if (!S.follow) return;
       const order = ["seg01", "seg03", "seg04", "seg02"]; let i = 0;
@@ -475,9 +490,9 @@
               <div class="card" style=${`height:${n.h}px`} onClick=${() => pick(n)}><img src=${n.pic} alt="" draggable="false"/></div></div>`)}
             ${NODES.filter((n) => n.kind === "seg").map((n) => html`<div class=${"segnode cnode " + (S.sel === n.id ? "sel" : "")} style=${`left:${n.x}px;top:${n.y - 26}px`}>
               <div class="lab">${I("film-strip")}<span class="name">${n.label}</span><span class="subtle" style="font-weight:500">${n.seg.s} s</span><span class="model">${n.model}</span>${n.st !== "accepted" && Status(n.st)}</div>
-              <div class="card" onClick=${() => pick(n)}>
-                ${n.seg.board ? html`<div class="board-img"><img src=${n.seg.board} alt="" draggable="false"/><span>board v1</span></div>` : html`<div class="none">board accepted</div>`}
-                ${n.seg.still ? html`<div><img src=${n.seg.still} alt="" draggable="false"/><span>${n.seg.take}</span><span class="play"><i>${I("play")}</i></span></div>` : html`<div class="none">${n.seg.take} accepted</div>`}</div></div>`)}
+              <div class="card">
+                ${n.seg.board ? html`<button class=${"board-img" + (S.sel === n.id && pickedAt(n.seg).kind === "storyboard" ? " on" : "")} aria-label=${n.label + " storyboard v1"} onClick=${() => pick(n, { kind: "storyboard", ver: "v1" })}><img src=${n.seg.board} alt="" draggable="false"/><span>board v1</span></button>` : html`<div class="none">board accepted</div>`}
+                ${n.seg.still ? html`<button class=${S.sel === n.id && pickedAt(n.seg).kind === "take" ? "on" : ""} aria-label=${n.label + " take " + n.seg.take} onClick=${() => pick(n, { kind: "take", ver: n.seg.take })}><img src=${n.seg.still} alt="" draggable="false"/><span>${n.seg.take}</span><span class="play"><i>${I("play")}</i></span></button>` : html`<div class="none">${n.seg.take} accepted</div>`}</div></div>`)}
           </div>
         </div>
         <div class="ctop"><${window.EXTRA.BackTo}/><${EpisodeViews}/><button class="follow" aria-pressed=${String(S.follow)} onClick=${() => set({ follow: !S.follow })}>${S.follow && html`<span class="live"></span>`}${S.follow ? "Following the agent" : "Follow the agent"}</button>
@@ -492,12 +507,12 @@
           const below = bh - bottom - 10 - 12, above = barTop - 8 - PILLS;
           const at = S.dock === "right" ? "" : below >= MIN ? `top:${bottom + 10}px;max-height:${below}px` : above >= MIN ? `bottom:${bh - barTop + 8}px;max-height:${above}px` : null;
           const uses = EDGES.filter((e) => e[0] === sel.id).map((e) => e[1]).join(", "), reads = EDGES.filter((e) => e[1] === sel.id).map((e) => byId[e[0]].label).join(", ");
-          const home = homeTab(sel.id), gid = window.EXTRA.lineageOf(sel.id), from = "Canvas · " + sel.label;
+          const home = homeTab(sel.id), stage = sel.seg ? pickedAt(sel.seg) : null, gid = window.EXTRA.lineageOf(sel.id, stage && stage.kind), from = "Canvas · " + sel.label + (stage ? " · " + stage.kind + " " + stage.ver : "");
           return html`<div class="nbar" role="toolbar" aria-label=${"Act on " + sel.label} style=${`left:${Math.max(12, cx - 150)}px;top:${barTop}px`}>
               ${home
                 // A reference's home is Assets: the canvas links there, with no second copy of its review (§16).
                 ? html`<button class=${"btn sm " + (sel.st === "you" ? "primary" : "ghost")} onClick=${() => openHome(sel.id, from)}>${sel.st === "you" ? "Review in Assets" : "Open in Assets"}</button>`
-                : html`${sel.st === "you" ? html`<button class="btn sm primary" onClick=${() => go("review")}>Review</button>` : null}
+                : html`${sel.st === "you" && (!stage || stage.kind === "take") ? html`<button class="btn sm primary" onClick=${() => go("review")}>Review</button>` : null}
               <button class="ibtn" title="Send back" aria-label="Send back" onClick=${() => toast("Send back: say why, and the agent redoes it.")}>${I("arrow-counter-clockwise")}</button>
               <button class="ibtn" title="Note" aria-label="Note" onClick=${() => toast("A note for the agent at work on it.")}>${I("note-pencil")}</button>`}
               <button class="ibtn" title=${gid ? "Lineage" : "Lineage: this sample traces seg03 and what it reads"} aria-label="Lineage" disabled=${!gid} onClick=${() => openLineage(gid, from)}>${I("tree-structure")}</button>
@@ -575,7 +590,7 @@
     // IA r2 (§16): the room decides; it is no home. A take, its versions and an accepted take live in their segment in
     // EP006's List, and a character in Assets: the room links there, landing on it, and Back returns to the room.
     const seg = P.scenes.flatMap((sc) => sc.segs).find((g) => g.id === tk.seg);
-    const inSeg = (id, label) => jump({ screen: "episode", esel: id }, label);
+    const inSeg = (id, ver, label) => openStage(id, { kind: "take", ver }, label);
     const here = "Review · " + tk.seg + " " + tk.take;
     return html`<div class="main">
       <${TopBar} crumbs=${[P.project.title, "EP006", "Takes"]} right=${html`<span class="muted hide-s" style="font-size:12px">${P.takes.length - done} of ${P.takes.length} waiting</span>`}/>
@@ -587,7 +602,7 @@
             <img src=${t.poster} alt=""/><span><b>${t.seg} · ${t.take}</b><small>${t.scene.split(" · ").slice(0, 1)} · ${t.dur} s</small>
             ${S.verdict[t.id] ? Status(S.verdict[t.id] === "accept" ? "accepted" : S.verdict[t.id] === "back" ? "back" : "accepted", S.verdict[t.id] === "accept" ? "Accept" : S.verdict[t.id] === "back" ? "Send back" : "Accept with note") : S.watched[t.id] ? Status("you", "Watched") : Status("you", "Not watched")}</span></button>`)}
           <h3 style="margin-top:14px">Accepted in EP006</h3>
-          <button class="ritem" title="Open seg02 in EP006's List" onClick=${() => inSeg("seg02", "Review · EP006 takes")}><img src=${"img/cover-ep6.jpg"} alt=""/><span><b>seg02 · t01</b><small>Scene 1 · 15 s</small>${Status("accepted")}</span></button>
+          <button class="ritem" title="Open seg02 in EP006's List" onClick=${() => inSeg("seg02", "t01", "Review · EP006 takes")}><img src=${"img/cover-ep6.jpg"} alt=""/><span><b>seg02 · t01</b><small>Scene 1 · 15 s</small>${Status("accepted")}</span></button>
         </nav>
         <section class="stage" aria-label="Stage">
           <div class="screen">
@@ -608,7 +623,7 @@
         </section>
         <aside class="insp" aria-label="Inspector">
           <div class="ihead"><b>EP006 ${tk.seg} · take ${tk.take}</b><small>${tk.scene}</small>
-            <button class="btn sm" onClick=${() => inSeg(tk.seg, here)}>Open ${tk.seg} in EP006</button></div>
+            <button class="btn sm" onClick=${() => inSeg(tk.seg, tk.take, here)}>Open ${tk.seg} in EP006</button></div>
           <div class="iscroll">
             <div class="isec"><h4>What you asked last time</h4><div class="asked">“${tk.prev.said}”</div>
               <button class="prevtake" onClick=${() => set({ showPrev: !prev })}><img src=${tk.prev.poster} alt=""/><span><b class="mono" style="font-size:12px">${tk.prev.take} · sent back by you</b><small class="muted" style="display:block;font-size:11.5px">${prev ? "Showing it on the stage" : "Play it on the stage to compare"}</small></span></button></div>
@@ -673,6 +688,6 @@
     return html`<${Proto}/><div class="app"><${Rail}/><${Side}/>${main}</div><${Dialog}/>
       <div class="toasts" aria-live="polite">${S.toasts.map((t) => html`<div class="toast">${t.text}${t.action && html`<button onClick=${t.action.run}>${t.action.label}</button>`}</div>`)}</div>`;
   }
-  window.PD = { html, I, S, set, go, jump, openHome, openLineage, toast, money, Status, TopBar, StopBanner, EpisodeViews, ProjectChips, AgentPanel, SPENT_COVERS, useEffect, useRef, Mark, draw, Submission, submit, recheck };
+  window.PD = { html, I, S, set, go, jump, openHome, openStage, openLineage, stagesOf, pickedAt, toast, money, Status, TopBar, StopBanner, EpisodeViews, ProjectChips, AgentPanel, SPENT_COVERS, useEffect, useRef, Mark, draw, Submission, submit, recheck };
   // screens.js draws first, once its screens are registered.
 })();

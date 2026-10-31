@@ -271,11 +271,11 @@ input.search:focus { border-color: var(--text-primary); }
 .group > .gl { position: absolute; left: 16px; top: 14px; font-size: 13px; font-weight: 600; color: var(--text-muted); }
 .segnode { position: absolute; width: 300px; }
 .segnode .card { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 6px; height: 196px; }
-.segnode .card > div { position: relative; border-radius: 6px; overflow: hidden; background: var(--surface-container); }
-.segnode .card > div img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
-.segnode .card > div.board-img { background: #fff; }
-.segnode .card > div.board-img img { object-fit: contain; }
-.segnode .card > div > span:not(.play) { position: absolute; left: 5px; bottom: 5px; font: 600 10px var(--font-mono); padding: 2px 5px; border-radius: 4px; background: color-mix(in srgb, var(--canvas) 72%, transparent); color: var(--text-primary); }
+.segnode .card > :is(div, button) { position: relative; border-radius: 6px; overflow: hidden; background: var(--surface-container); }
+.segnode .card > :is(div, button) img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
+.segnode .card > .board-img { background: #fff; }
+.segnode .card > .board-img img { object-fit: contain; }
+.segnode .card > :is(div, button) > span:not(.play) { position: absolute; left: 5px; bottom: 5px; font: 600 10px var(--font-mono); padding: 2px 5px; border-radius: 4px; background: color-mix(in srgb, var(--canvas) 72%, transparent); color: var(--text-primary); }
 .segnode .card > div.none { display: grid; place-items: center; color: var(--text-subtle); font-size: 11px; }
 .segnode .play { position: absolute; inset: 0; display: grid; place-items: center; }
 .segnode .play i { width: 32px; height: 32px; border-radius: 50%; background: color-mix(in srgb, var(--canvas) 55%, transparent); display: grid; place-items: center; color: var(--text-primary); border: 1px solid color-mix(in srgb, var(--text-primary) 25%, transparent); }
@@ -638,6 +638,14 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
 /* §16: a link lands on the object's home with the object picked (S.esel in the List, S.asel in Assets). */
 .segrow { cursor: pointer; }
 .segrow.sel, .castcard.sel, .placecard.sel { box-shadow: inset 0 0 0 2px var(--accent); }
+/* Codex round 3 (fix 3): a segment's versions are tiles; a link to one version lands on its tile, picked. */
+.segrow { grid-template-columns: auto minmax(0, 1fr); }
+.segrow .stiles { display: flex; gap: 6px; }
+.stile { position: relative; padding: 0; border: 0; background: none; border-radius: 6px; cursor: pointer; }
+.stile span { position: absolute; left: 3px; bottom: 3px; padding: 0 4px; border-radius: 4px; background: color-mix(in srgb, var(--canvas) 70%, transparent); color: var(--text-primary); font: 600 9.5px/1.6 var(--font-mono); }
+.stile[aria-pressed="true"] img, .segnode .card > button.on { outline: 2px solid var(--accent); outline-offset: 1px; }
+.segnode .card > button { padding: 0; border: 0; font: inherit; color: inherit; text-align: inherit; cursor: pointer; }
+.segrow .segat { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0 0 6px; font-size: 12px; }
 .backto .ic { width: 14px; height: 14px; }
 .segrow img, .segrow video { width: 64px; aspect-ratio: 9 / 16; border-radius: 6px; object-fit: cover; background: var(--surface-container); }
 .segrow .seghead { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; min-width: 0; }

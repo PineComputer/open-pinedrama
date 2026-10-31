@@ -1,7 +1,7 @@
 /* The rest of the flow in the pro direction: Upload, Analyzing, Fountain review, Story, Graph (lineage) and Cut,
    plus the setup steps and the stop cards. Uses the shell and helpers app.js exposes as window.PD. */
 (() => {
-  const { html, I, S, set, go, jump, openHome, openLineage, Submission, submit, toast, money, Status, TopBar, StopBanner, EpisodeViews, ProjectChips, AgentPanel, SPENT_COVERS, useEffect, useRef } = window.PD;
+  const { html, I, S, set, go, jump, openHome, openStage, openLineage, stagesOf, pickedAt, Submission, submit, toast, money, Status, TopBar, StopBanner, EpisodeViews, ProjectChips, AgentPanel, SPENT_COVERS, useEffect, useRef } = window.PD;
 
   /* ───── setup steps (sidebar) ───── */
   function SetupSteps() {
@@ -202,7 +202,7 @@
     { id: "cut", col: 5, row: 1, t: "EP006 cut", v: "v1", k: "cut", pic: "img/cover-ep6.jpg", stale: true, episode: "EP006", home: ["EP006 › Cut", { screen: "cut" }] },
   ];
   /* The Lineage an item opens on: seg03's node opens its take, the version that waits for you. */
-  const lineageOf = (id) => (G.find((n) => n.of === id) || {}).id;
+  const lineageOf = (id, kind) => (G.find((n) => (n.of === id || n.ep === id) && (!kind || n.k === kind)) || {}).id;
   /* A2: whether the Lineage in view sits inside EP006: its item is the episode's (a storyboard, a take, the cut, wherever it
      was opened from: Cut, Delivery, Out of date), or it was opened from one of the episode's pages. The crumbs, Export and
      the agent panel all read this one answer. */
@@ -212,7 +212,7 @@
   function BackTo() {
     const f = S.from;
     if (!f) return null;
-    const back = () => { set({ screen: f.screen, sel: f.sel, esel: f.esel, osel: f.osel, asel: null, from: null }); try { history.replaceState(null, "", "#" + f.screen); } catch (e) { /* the hash is a convenience */ } };
+    const back = () => { set({ screen: f.screen, sel: f.sel, esel: f.esel, osel: f.osel, at: f.at, asel: null, from: null }); try { history.replaceState(null, "", "#" + f.screen); } catch (e) { /* the hash is a convenience */ } };
     return html`<button class="btn sm ghost backto" onClick=${back}>${I("arrow-left")}Back to ${f.label}</button>`;
   }
   const GE = [["sp", "bible"], ["bible", "luca"], ["bible", "ethan"], ["bible", "apt"], ["bible", "file"], ["luca", "ep6seg03"], ["ethan", "ep6seg03"], ["apt", "ep6seg03"], ["file", "ep6seg03"], ["ep6seg03", "take"], ["take", "cut"]];
@@ -227,7 +227,8 @@
     const inEp = lineageInEpisode();
     const crumbs = [P.project.title, ...(inEp ? ["EP006"] : []), sel.t.replace(/^EP006 /, "") + " · " + sel.v, "Lineage"];
     // Lineage is a view of relations, not a home (§16): the inspector links to where the object lives.
-    const home = sel.ep ? ["EP006 · " + sel.ep, { screen: "canvas", sel: sel.ep, esel: sel.ep }] : sel.home;
+    const at = { kind: sel.k, ver: sel.v };
+    const home = sel.ep ? ["EP006 · " + sel.ep, { screen: "canvas", sel: sel.ep, esel: sel.ep, at }] : sel.home && [sel.home[0], { ...sel.home[1], at }];
     const label = "Lineage · " + sel.t;
     return html`<div class="main">
       <${TopBar} crumbs=${crumbs}/>
@@ -247,7 +248,7 @@
         <div class="glegend"><span><i class="l up"></i>Made from (upstream)</span><span><i class="l down"></i>Made from it (downstream)</span><span><i class="l stale"></i>Out of date</span><span class="subtle">Read-only. Click a version to trace it.</span></div>
       </div>
       <aside class="insp"><div class="ihead"><b>${sel.t}</b><small>${sel.k} · ${sel.v}</small>
-        ${sel.of && !sel.ep ? html`<button class="btn sm" onClick=${() => openHome(sel.of, label)}>Open in Assets</button>`
+        ${sel.of && !sel.ep ? html`<button class="btn sm" onClick=${() => openHome(sel.of, label, at)}>Open in Assets</button>`
           : home ? html`<button class="btn sm" onClick=${() => { set({ ...home[1], from: { screen: "graph", label } }); try { history.replaceState(null, "", "#" + home[1].screen); } catch (e) { /* the hash is a convenience */ } }}>Open in ${home[0]}</button>` : null}</div>
         <div class="iscroll">
           ${sel.pic && html`<div class="isec"><img src=${sel.pic} alt="" style="width:100%;border-radius:10px;max-height:240px;object-fit:cover;object-position:top"/></div>`}
@@ -266,10 +267,12 @@
   const OOD = [
     { id: "walter", group: "Assets", kind: "Character", icon: "user", t: "Walter Cole", v: "S0 v3", full: "Walter Cole S0 v3", why: "Changed file: bible/v3/bible.json", home: () => openHome("walter", "Out of date") },
     { id: "file", group: "Assets", kind: "Prop", icon: "cube", t: "Case file", v: "v1", full: "Case file v1", why: "Changed file: bible/v3/bible.json", gid: "file", home: () => openHome("file", "Out of date") },
-    { id: "ep6seg03", group: "EP006", kind: "Storyboard", icon: "squares-four", t: "seg03", v: "v1", full: "seg03 storyboard v1", from: "Case file v1", gid: "ep6seg03", home: () => jump({ screen: "episode", esel: "seg03" }, "Out of date") },
-    { id: "take", group: "EP006", kind: "Take", icon: "play", t: "seg03", v: "t02", full: "seg03 take t02", from: "seg03 storyboard v1", gid: "take", home: () => jump({ screen: "episode", esel: "seg03" }, "Out of date") },
-    { id: "cut", group: "EP006", kind: "Cut", icon: "scissors", t: "EP006 cut", v: "v1", full: "EP006 cut v1", from: "seg03 take t02", gid: "cut", home: () => jump({ screen: "cut" }, "Out of date") },
+    { id: "ep6seg03", group: "EP006", kind: "Storyboard", icon: "squares-four", t: "seg03", v: "v1", full: "seg03 storyboard v1", from: "Case file v1", gid: "ep6seg03", home: () => openStage("seg03", { kind: "storyboard", ver: "v1" }, "Out of date") },
+    { id: "take", group: "EP006", kind: "Take", icon: "play", t: "seg03", v: "t02", full: "seg03 take t02", from: "seg03 storyboard v1", gid: "take", home: () => openStage("seg03", { kind: "take", ver: "t02" }, "Out of date") },
+    { id: "cut", group: "EP006", kind: "Cut", icon: "scissors", t: "EP006 cut", v: "v1", full: "EP006 cut v1", from: "seg03 take t02", gid: "cut", home: () => jump({ screen: "cut", at: { kind: "cut", ver: "v1" } }, "Out of date") },
   ];
+  /* The Out of date row of a segment's stage version, if it has one. */
+  const outOfDateAt = (seg, at) => OOD.find((r) => r.t === seg && r.kind.toLowerCase() === at.kind && r.v === at.ver);
   function OutOfDate() {
     const items = S.state === "fresh" ? [] : OOD;
     // Leaving for a home or Lineage marks the row (its own key, apart from Canvas's pick), so Back returns to it.
@@ -499,14 +502,15 @@
         <div class="ephead"><h2>${ep.code}<span class="muted"> · ${ep.title}</span></h2><span class="muted">${ep.now}</span><span class="grow"></span><span class="mono muted">${money(ep.spent)}</span></div>
         ${P.scenes.map((sc) => html`<section class="panel segscene"><h3>${I("film-strip")}Scene ${sc.n} · ${place(sc.place)} · ${sc.time}<span class="grow"></span>
             <span class="muted" style="font-size:11.5px;font-weight:500">${sc.segs.filter((g) => g.st === "accepted").length} of ${sc.segs.length} accepted</span></h3>
-          ${sc.segs.map((g) => html`<div class=${"segrow" + (S.esel === g.id ? " sel" : "")} aria-current=${String(S.esel === g.id)} onClick=${() => set({ esel: g.id })}>
-            <img src=${g.still || g.board} alt=""/>
+          ${sc.segs.map((g) => { const on = S.esel === g.id, at = pickedAt(g), ood = on && at && outOfDateAt(g.id, at); return html`<div class=${"segrow" + (on ? " sel" : "")} aria-current=${String(on)} onClick=${() => set({ esel: g.id, at: null })}>
+            <div class="stiles">${stagesOf(g).map((t) => html`<button class="stile" aria-pressed=${String(on && at.kind === t.kind)} aria-label=${g.id + " " + t.kind + " " + t.ver} onClick=${(e) => { e.stopPropagation(); set({ esel: g.id, at: { kind: t.kind, ver: t.ver } }); }}><img src=${t.pic} alt=""/><span>${t.kind === "take" ? t.ver : "board " + t.ver}</span></button>`)}</div>
             <div class="segtext">
               <div class="seghead"><b>${g.id}</b>${Status(g.st, g.st === "you" ? "Take waits for you" : undefined)}<span class="grow"></span>
                 <span class="mono muted">sd25 · 9:16 · ${g.s} s · ${g.take}</span>
-                <button class="ibtn" title=${lineageOf(g.id) ? "Lineage" : "Lineage: this sample traces seg03 and what it reads"} aria-label="Lineage" disabled=${!lineageOf(g.id)} onClick=${(e) => { e.stopPropagation(); set({ esel: g.id }); openLineage(lineageOf(g.id), "List · " + g.id); }}>${I("tree-structure")}</button>
-                <button class="btn sm ghost" onClick=${(e) => { e.stopPropagation(); go("canvas"); set({ sel: g.id, esel: g.id }); }}>On Canvas ${I("arrow-right")}</button></div>
-              <p class="shottext">${g.text}</p></div></div>`)}</section>`)}
+                <button class="ibtn" title=${lineageOf(g.id, at.kind) ? "Lineage of " + at.kind + " " + at.ver : "Lineage: this sample traces seg03 and what it reads"} aria-label="Lineage" disabled=${!lineageOf(g.id, at.kind)} onClick=${(e) => { e.stopPropagation(); set({ esel: g.id, at }); openLineage(lineageOf(g.id, at.kind), "List · " + g.id + " " + at.kind + " " + at.ver); }}>${I("tree-structure")}</button>
+                <button class="btn sm ghost" onClick=${(e) => { e.stopPropagation(); const keep = on ? S.at : null; go("canvas"); set({ sel: g.id, esel: g.id, at: keep }); }}>On Canvas ${I("arrow-right")}</button></div>
+              ${on && at && html`<p class="segat"><b class="mono">${at.kind} ${at.ver}</b>${ood ? Status("stale") : null}${ood ? html`<span class="muted">Made from ${ood.from}, which is out of date</span>` : null}</p>`}
+              <p class="shottext">${g.text}</p></div></div>`; })}</section>`)}
       </div><${AgentPanel}/></div></div>`;
   }
 
@@ -533,6 +537,6 @@
           <div class="lrow static">Your original · bride-on-bail.docx<span class="mono subtle">uploaded 17:31</span></div></section>
       </div><${AgentPanel}/></div></div>`;
   }
-  window.EXTRA = { BackTo, lineageOf, lineageInEpisode, outofdate: OutOfDate, script: Script, upload: Upload, analyzing: Analyzing, fountain: Fountain, story: Story, graph: Graph, cut: Cut, delivery: Delivery, episode: Episode, StopCard, SetupSteps };
+  window.EXTRA = { BackTo, lineageOf, outOfDateAt, lineageInEpisode, outofdate: OutOfDate, script: Script, upload: Upload, analyzing: Analyzing, fountain: Fountain, story: Story, graph: Graph, cut: Cut, delivery: Delivery, episode: Episode, StopCard, SetupSteps };
   window.PD.draw();
 })();
