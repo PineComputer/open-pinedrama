@@ -137,10 +137,10 @@ export function DramaSidebar({ drama, tab, episode }: { drama: DramaView; tab: s
   for (const review of reviews.data ?? []) if (review.state === "open") needs[STEP_OF[review.kind]]++;
   // The script is done once the setup has read it.
   const scriptDone = drama.setup.reached > 0 || drama.episodeRows.length > 0;
-  // The tree shows the first eight episodes and folds the rest into one line once they only wait in line, as the design does.
-  const tail = drama.episodeRows.slice(8);
-  const folded = tail.length && tail.every((row) => row.state === "queued") ? tail : [];
-  const shownRows = folded.length ? drama.episodeRows.slice(0, 8) : drama.episodeRows;
+  // The tree folds the episodes that only wait in line at its end into one line ("EP009–EP024 · 16 in line"), as the design does.
+  const lineStart = drama.episodeRows.findLastIndex((row) => row.state !== "queued") + 1;
+  const folded = drama.episodeRows.length - lineStart > 1 ? drama.episodeRows.slice(lineStart) : [];
+  const shownRows = drama.episodeRows.slice(0, drama.episodeRows.length - folded.length);
   const { episodes } = drama;
   const settingUp = drama.status === "setup" || (drama.status === "stopped" && !drama.episodeRows.length);
   const head = (

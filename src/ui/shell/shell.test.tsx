@@ -176,6 +176,15 @@ describe("the sidebar", () => {
     expect(location.pathname).toBe("/d/d1/e/EP002");
   });
 
+  it("folds the episodes that only wait in line at its end into one line", () => {
+    at("/d/d1");
+    const queued = drama.episodeRows[3];
+    render(<DramaSidebar drama={{ ...drama, episodeRows: [...drama.episodeRows, { ...queued, id: "e5", code: "EP005" }] }} tab="board" />);
+    const tree = screen.getByRole("list", { name: "Episodes" });
+    expect(within(tree).getAllByRole("button").map((button) => button.textContent?.slice(0, 5))).toEqual(["EP001", "EP002", "EP003"]);
+    expect(within(tree).getByText("EP004–EP005 · 2 in line")).toBeInTheDocument();
+  });
+
   it("marks the episode in view", () => {
     at("/d/d1/e/EP003");
     render(<DramaSidebar drama={drama} tab="episode" episode="EP003" />);
