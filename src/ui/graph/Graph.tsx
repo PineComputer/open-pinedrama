@@ -223,9 +223,11 @@ export function Graph({ dramaId }: { dramaId: string }) {
         };
       })
     : [];
-  // The prototype's wires: those of the trace are "on" (here, every wire drawn), a stale chain's dashed.
+  // The prototype's wires: those of the trace are "on" (here, every wire drawn), a stale chain's dashed; each its
+  // curve with both control points halfway across (screens.js, Graph: C m,y1 m,y2), React Flow's simplebezier.
   const flowEdges: Edge[] = shown.links.map((link) => ({
     id: `${link.from}>${link.to}`,
+    type: "simplebezier",
     source: link.from,
     target: link.to,
     className: ["on", isStale(link.from) && isStale(link.to) && "stale"].filter(Boolean).join(" "),

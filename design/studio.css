@@ -542,7 +542,7 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
 .gwires path { fill: none; stroke: var(--border-input); stroke-width: 1.4; }
 .gwires path.on { stroke: var(--text-primary); stroke-width: 1.8; }
 .gwires path.stale { stroke-dasharray: 5 4; }
-.gnode { position: absolute; display: grid; grid-template-rows: 1fr auto; border-radius: var(--radius-large); border: 1px solid var(--border); background: var(--surface); overflow: hidden; padding: 0; text-align: left; color: inherit; cursor: pointer; transition: opacity .15s, border-color .15s; }
+.gnode { position: absolute; display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: 1fr auto; border-radius: var(--radius-large); border: 1px solid var(--border); background: var(--surface); overflow: hidden; padding: 0; text-align: left; color: inherit; cursor: pointer; transition: opacity .15s, border-color .15s; }
 .gnode .gpic { display: grid; place-items: center; background: var(--surface-container); color: var(--text-muted); min-height: 0; overflow: hidden; }
 .gnode .gpic img { width: 100%; height: 100%; object-fit: cover; object-position: center 40%; }
 .gnode .gpic .ic { width: 26px; height: 26px; }

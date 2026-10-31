@@ -389,7 +389,9 @@ h1, h2, h3 { margin: 0; font-family: var(--font-display); font-weight: 700; lett
    .graph, .gcol, .gnode, .glegend, .insp). What React Flow adds needs these: its wires take the prototype's
    .gwires values, its node box keeps the card's size so it can measure it, and the screen keeps a height
    inside the work area. */
-.graph-screen { height: calc(100vh - var(--top) - 96px); min-height: 560px; border: 1px solid var(--border); border-radius: var(--radius-large); overflow: hidden; }
+/* Its height is the window's under the top bar and the .bar2 above it (12px padding around its 36px switch), as
+   the prototype's .body runs to the bottom. */
+.graph-screen { height: calc(100vh - var(--top) - 60px); min-height: 560px; overflow: hidden; }
 .graph-screen .graph .react-flow { position: absolute; inset: 0; background: transparent; }
 .graph-screen .graph .gnode { position: relative; }
 .graph-screen .ghandle { opacity: 0; pointer-events: none; }
