@@ -1,7 +1,7 @@
 /* The rest of the flow in the pro direction: Upload, Analyzing, Fountain review, Story, Graph (lineage) and Cut,
    plus the setup steps and the stop cards. Uses the shell and helpers app.js exposes as window.PD. */
 (() => {
-  const { html, I, S, set, go, toast, money, Status, TopBar, StopBanner, SurfaceSwitch, ProjectChips, AgentPanel, SPENT_COVERS, useEffect, useRef } = window.PD;
+  const { html, I, S, set, go, toast, money, Status, TopBar, StopBanner, EpisodeViews, ProjectChips, AgentPanel, SPENT_COVERS, useEffect, useRef } = window.PD;
 
   /* ───── setup steps (sidebar) ───── */
   function SetupSteps() {
@@ -18,9 +18,10 @@
       redline: { icon: "warning", head: "Stopped · a red line in the screenplay", title: "EP007's bible range names a red line", code: "RedLine",
         said: "Bible bible/b0004 is not usable: red line: EP007 scene 4, a guard strikes Luca in the cell on screen. See bible/b0004/bible.md; report it to the person and pass their decision back with drama-cli bible --config drama-cli.cfg.yaml EP007-EP012 --feedback '<their decision>'",
         acts: [["Decide in your words", "primary"], ["Open the scene", ""]], note: "Only a red line in your screenplay stops for you. Other episodes carry on." },
-      budget: { icon: "coins", head: "Stopped · budget", title: "The budget is spent", code: "Refused",
+      // A refusal drama-cli gives no code of its own (a bare Refused) is shown as it came, never matched on its words.
+      budget: { icon: "info", head: "drama-cli refused", title: "The agent needs you to read this", code: "Refused",
         said: "Budget exceeded: spent 996.40 + reserved 3.20 + this 1.20 > budget 1000.00",
-        acts: [["Raise the budget", "primary"], ["Stop the drama", "danger"]], note: "Work in flight is waited on and recorded, never sent again." },
+        acts: [["Answer the agent", "primary"], ["Stop the drama", "danger"]], note: "Work in flight is waited on and recorded, never sent again." },
       cap: { icon: "stack", head: "Stopped · limit reached", title: "EP004 seg06's storyboard reached its limit of new versions", code: "SetLimitExceeded.max_new_versions",
         said: "episodes/EP004/multi_panel_storyboard/seg06/line-art has had 3 new paid versions after its first, the limit defaults.max_new_versions (3); ask the person before making it again: they lift the limit for that item by raising defaults.max_new_versions in the config, then set it back; then run drama-cli storyboard --config drama-cli.cfg.yaml EP004 seg06",
         acts: [["Allow one more version of seg06", "primary"], ["Review its versions", ""]], note: "Allowing raises the limit for this item, runs it once, then sets the limit back." },
@@ -65,7 +66,7 @@
               <li><b>The agent rewrites your file into Fountain and checks it</b><small>Free. Minutes.</small></li>
               <li><b>You review what changed</b><small>Answer its questions, then accept in your own words.</small></li>
               <li><b>The agent writes the bible and draws the cast and places</b><small>You review the looks before any episode starts.</small></li>
-              <li><b>Episodes: storyboards, then takes</b><small>You watch every take and decide.</small></li></ol>
+              <li><b>Episodes: storyboards, then takes</b><small>You watch every video version (Take) and decide.</small></li></ol>
             <button class="btn lg primary" style="width:100%" disabled=${!ready} onClick=${() => { set({ ana: 0 }); go("analyzing"); }}>Start</button>
             <small class="muted">${ready ? "Starts the setup session." : !S.file ? "Add a screenplay to start." : "Choose a preset to start."}</small></aside>
         </div></div></div></div>`;
@@ -132,12 +133,12 @@
       ${(v === "back" || v === "note") && html`<input class="why" placeholder=${v === "back" ? "Why it goes back (required)" : "Your note"} value=${S.cardWhy[id] || ""} onInput=${(e) => set({ cardWhy: { ...S.cardWhy, [id]: e.target.value } })}/>`}`;
   }
   function Story() {
-    const tabs = [["bible", "Bible"], ["cast", "Cast", P.cast.length], ["scenes", "Scenes", P.places.length], ["props", "Props", P.props.length]];
+    const tabs = [["bible", "Bible"], ["cast", "Characters", P.cast.length], ["scenes", "Locations", P.places.length], ["props", "Props", P.props.length]];
     const open = ["margaret", "garden"], decided = open.filter((k) => S.cards[k] && (S.cards[k] !== "back" || (S.cardWhy[k] || "").trim())).length;
     return html`<div class="main">
-      <${TopBar} crumbs=${[P.project.title, "Story"]}/>
+      <${TopBar} crumbs=${(S.stab || "bible") === "bible" ? [P.project.title, "Story"] : [P.project.title, "Assets", { cast: "Characters", scenes: "Locations", props: "Props" }[S.stab]]}/>
       <div class="body"><div class="scrollmain">
-        <div class="bar2"><${SurfaceSwitch}/><span class="grow"></span><${ProjectChips}/></div>
+        <div class="bar2"><${EpisodeViews}/><span class="grow"></span><${ProjectChips}/></div>
         <${StopBanner}/>
         <div style="padding:0 16px"><div class="tabsrow" style="margin:4px 0 18px"><div class="utabs" role="tablist">${tabs.map(([k, l, n]) => html`<button role="tab" aria-selected=${String(S.stab === k)} onClick=${() => set({ stab: k })}>${l}${n && html`<small>${n}</small>`}</button>`)}</div>
           <span class="grow"></span><span class="muted" style="font-size:12px">Bible b0003 · accepted · EP001–EP012 written</span></div></div>
@@ -191,10 +192,10 @@
     walk(sel.id, false, up); walk(sel.id, true, down);
     const cols = ["Screenplay", "Bible", "Looks, plates, props", "Storyboards", "Takes", "Cut"];
     return html`<div class="main">
-      <${TopBar} crumbs=${[P.project.title, "Lineage"]}/>
+      <${TopBar} crumbs=${S.stale ? [P.project.title, "Out of date"] : [P.project.title, "EP006", "seg03 · take t02", "Lineage"]}/>
       <${StopBanner}/>
       <div class="body"><div class="scrollmain">
-        <div class="bar2"><${SurfaceSwitch}/><span class="grow"></span><${ProjectChips}/></div>
+        <div class="bar2"><${EpisodeViews}/><span class="grow"></span><${ProjectChips}/></div>
         <div class="stalebar">${I("warning")}<span><b>4 items are stale.</b> Case file v1 was made from bible b0002, and b0003 is accepted. What was made from it is stale until the agent redraws it.</span><span class="grow"></span><button class="btn sm" onClick=${() => toast("Sent to the agent as a steering note: redo the 4 stale items.")}>Ask the agent to redo them</button></div>
         <div class="graphwrap" role="group" aria-label="Graph" tabindex="0"><div class="graph" style=${`width:${24 * 2 + 6 * W + 5 * GX}px;height:${24 * 2 + 4 * H + 3 * GY + 24}px`}>
           ${cols.map((c, i) => html`<span class="gcol" style=${`left:${24 + i * (W + GX)}px`}>${c}</span>`)}
@@ -225,7 +226,7 @@
     const fmt = (t) => "0:" + String(Math.floor(t)).padStart(2, "0");
     let acc = 0;
     return html`<div class="main">
-      <${TopBar} crumbs=${[P.project.title, "EP006", "Cut v1"]}/>
+      <${TopBar} crumbs=${[P.project.title, "Delivery", "EP006 · Cut v1"]}/>
       <${StopBanner}/>
       <div class="room is-cut">
         <section class="stage">
@@ -265,7 +266,16 @@
             <button class="vbtn acc" aria-pressed=${String(S.cutV === "accept")} onClick=${() => set({ cutV: S.cutV === "accept" ? null : "accept" })}>${I("check")}Accept cut</button>
             <button class="vbtn back" aria-pressed=${String(S.cutV === "back")} onClick=${() => set({ cutV: S.cutV === "back" ? null : "back" })}>${I("arrow-counter-clockwise")}Send back</button></div>
             ${S.cutV === "back" && html`<textarea placeholder="Why it goes back (required). Your timed notes go with it." value=${S.cutWhy} onInput=${(e) => set({ cutWhy: e.target.value })}></textarea>`}
-            <button class="btn primary" disabled=${!S.cutV || (S.cutV === "back" && !S.cutWhy.trim())} onClick=${() => toast(S.cutV === "accept" ? "EP006 cut accepted." : "Cut sent back with " + notes.length + " notes.")}>Send review</button></div>
+            <button class="btn primary" disabled=${!S.cutV || (S.cutV === "back" && !S.cutWhy.trim())} onClick=${() => toast(S.cutV === "accept" ? "EP006 cut accepted." : "Cut sent back with " + notes.length + " notes.")}>Send review</button>
+            ${(() => {
+              // IA draft: edits are a draft of drama-cli's own edit spec until Apply; the agent builds and validates it.
+              const n = notes.length - c.notes.length, moved = S.state === "cutchanged";
+              return html`<div class="draftbar"><span>Edit spec · based on cut v1 · ${n > 0 ? html`<b>Draft: ${n} changes</b>` : "no changes"}</span><span class="grow"></span>
+                <button class="btn sm ghost" title="Revert the last change" disabled=${n <= 0} onClick=${() => set({ cutNotes: notes.slice(0, -1) })}>Undo</button>
+                <button class="btn sm ghost" title="Discard the draft" disabled=${n <= 0} onClick=${() => { set({ cutNotes: null }); toast("Draft discarded. Nothing was applied."); }}>Reset</button>
+                <button class="btn sm" disabled=${n <= 0 || moved} onClick=${() => toast("Applied: the agent runs drama-cli edit build and edit validate; cut v2 comes back for your review.")}>Apply</button></div>
+                ${moved && html`<p class="draftwarn">${I("warning")}The cut changed since you started (cut v2 is in). Re-check your draft against it before Apply.</p>`}`;
+            })()}</div>
         </aside></div></div>`;
   }
 
@@ -276,7 +286,7 @@
     return html`<div class="main">
       <${TopBar} crumbs=${[P.project.title, "Episodes", ep.code]}/>
       <div class="body"><div class="scrollmain">
-        <div class="bar2"><${SurfaceSwitch}/><span class="grow"></span><${ProjectChips}/></div>
+        <div class="bar2"><${EpisodeViews}/><span class="grow"></span><${ProjectChips}/></div>
         <${StopBanner}/>
         <div class="ephead"><h2>${ep.code}<span class="muted"> · ${ep.title}</span></h2><span class="muted">${ep.now}</span><span class="grow"></span><span class="mono muted">${money(ep.spent)}</span></div>
         ${P.scenes.map((sc) => html`<section class="panel segscene"><h3>${I("film-strip")}Scene ${sc.n} · ${place(sc.place)} · ${sc.time}<span class="grow"></span>

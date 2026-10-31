@@ -4,11 +4,11 @@
   const { html, render, useEffect, useRef } = window.htmPreact;
   const root = document.getElementById("root");
   const SPENT_COVERS = "Agent turns and video, priced when each turn ends.";
-  const SCREENS = ["home", "upload", "analyzing", "fountain", "story", "episodes", "episode", "canvas", "graph", "review", "cut"];
+  const SCREENS = ["home", "reviews", "upload", "analyzing", "fountain", "story", "episodes", "episode", "canvas", "graph", "review", "cut"];
   const SETUP = ["analyzing", "fountain"];
   const hash = (location.hash || "").slice(1);
   const S = {
-    screen: SCREENS.includes(hash) ? hash : "home", theme: "dark", side: true, tab: "all", filter: "all", waitFor: null,
+    screen: SCREENS.includes(hash) ? hash : "home", theme: "dark", side: true, tab: "all", filter: "all", waitFor: null, pin: null,
     dialog: null, toasts: [], dramaStop: null, draft: "", chat: [],
     cam: { x: 40, y: 96, k: 0.62 }, tool: "move", toolOpen: false, zoomOpen: false, keysOpen: false, sel: null, dock: (() => { try { return localStorage.getItem("studio.canvas.dock") || "under"; } catch (e) { return "under"; } })(), follow: true, agentOpen: false, panning: null, minimap: true,
     ti: 0, playing: false, t: 0, watched: {}, maxT: {}, verdict: {}, reason: {}, showPrev: false, sent: false, over: false,
@@ -35,27 +35,28 @@
     { t: "EP004 · storyboards", d: "6 items · scene 1 and 2", age: "26 min", pic: "img/board-seg03.jpg", go: "episodes" },
     { t: "EP001 · cut v2", d: "1 item · The Wedding", age: "1 h", pic: P.eps[0].cover, go: "episodes" },
   ];
+  /* IA draft: the rail is studio-wide only: Dramas, Reviews, Settings. Computers and Usage stay hidden until they work.
+     A drama's places are in its sidebar, never here. */
   function Rail() {
-    const items = [["house", "Home", "home"], ["file-text", "Script", "fountain"], ["users", "Story", "story"], ["film-strip", "Episodes", "episodes"], ["flow-arrow", "Canvas", "canvas"], ["tree-structure", "Lineage", "graph"], ["video-camera", "Review room", "review"], ["scissors", "Cut", "cut"]];
+    const dramas = !["reviews"].includes(S.screen);
     return html`<nav class="rail" aria-label="Main">
       <button class="ibtn" aria-label="Show or hide the sidebar" onClick=${() => set({ side: !S.side })}>${I("list")}</button>
       <hr/>
-      ${items.map(([ic, label, sc]) => html`<button class="ibtn" title=${label} aria-label=${label} aria-current=${S.screen === sc ? "page" : "false"} onClick=${() => go(sc)}>${I(ic)}</button>`)}
+      <button class="ibtn" title="Dramas" aria-label="Dramas" aria-current=${dramas ? "page" : "false"} onClick=${() => go("home")}>${I("film-strip")}</button>
+      <button class="ibtn railcount" title="Reviews" aria-label="Reviews, 5 waiting" aria-current=${S.screen === "reviews" ? "page" : "false"} onClick=${() => set({ waitFor: null, screen: "reviews" })}>${I("list-checks")}<span class="badge">5</span></button>
       <span class="grow"></span>
-      <button class="ibtn" title="Settings" aria-label="Settings" onClick=${() => toast("Settings: Computers, notifications, appearance, data.")}>${I("gear-six")}</button>
+      <button class="ibtn" title="Settings" aria-label="Settings" onClick=${() => toast("Settings: notifications, appearance, data.")}>${I("gear-six")}</button>
       <div style="margin-top:6px">${Mark()}</div>
     </nav>`;
   }
   function Side() {
-    if (S.screen === "home" || S.screen === "upload") return html`<aside class=${"side " + (S.side ? "" : "closed")} aria-label="Sidebar">
+    if (S.screen === "home" || S.screen === "upload" || S.screen === "reviews") return html`<aside class=${"side " + (S.side ? "" : "closed")} aria-label="Sidebar">
       <div class="head"><div class="who" style="padding-left:4px">${Mark()}<b style="font-size:14px">Pine Drama</b></div></div>
       <div class="scroll">
-        <div class="sec">Studio</div>
-        <button class="navi" aria-current="page">${I("film-strip")}Dramas<span class="end">${I("caret-right")}</span></button>
-        <button class="navi" disabled title="Phase 2">${I("cube")}Computers<span class="end">${I("caret-right")}</span></button>
-        <div class="sec">Account</div>
-        <button class="navi" disabled title="Phase 2">${I("coins")}Usage<span class="end">${I("caret-right")}</span></button>
-        <button class="navi" onClick=${() => toast("Settings: notifications, appearance, data.")}>${I("gear-six")}Settings<span class="end">${I("caret-right")}</span></button>
+        <div class="sec">Dramas</div>
+        ${P.projects.map((p, i) => html`<button class="navi" aria-current=${String(S.screen !== "reviews" && i === 0 && S.screen !== "home" && S.screen !== "upload")} onClick=${() => (i === 0 ? go("episodes") : toast(p.t + ": only Bride on Bail opens in this direction."))}>
+          <img class="dthumb" src=${p.cover} alt=""/><span class="grow">${p.t}</span><span class=${"dot " + p.st}></span></button>`)}
+        <button class="navi" onClick=${() => go("upload")}>${I("plus")}New drama</button>
       </div>
       <div class="foot"><div class="who"><span class="av">Y</span><span class="grow">Your studio</span>${I("caret-right")}</div></div>
     </aside>`;
@@ -69,17 +70,22 @@
       <div class="head"><button class="proj" onClick=${() => go("home")} title="All dramas"><img src=${P.eps[0].cover} alt=""/><span class="grow"><b>${P.project.title}</b><small>${P.project.episodes} episodes · ${P.project.spec}</small></span>${I("caret-down", "subtle")}</button></div>
       <div class="scroll">
         <button class="navi" onClick=${() => go("fountain")}>${I("file-text")}Script<span class="end">${I("check")}</span></button>
-        <button class="navi" aria-current=${S.screen === "story" ? "page" : "false"} onClick=${() => go("story")}>${I("users")}Story<span class="cnt">2</span></button>
+        <button class="navi" aria-current=${S.screen === "story" && (S.stab || "bible") === "bible" ? "page" : "false"} onClick=${() => set({ screen: "story", stab: "bible" })}>${I("book-open")}Story</button>
+        <button class="navi" onClick=${() => set({ screen: "story", stab: "cast" })}>${I("stack")}Assets<span class="cnt">2</span></button>
+        <ul class="tree sub">${[["cast", "Characters", P.cast.length], ["scenes", "Locations", P.places.length], ["props", "Props", P.props.length]].map(([k, l, n]) => html`<li><button aria-current=${String(S.screen === "story" && S.stab === k)} onClick=${() => set({ screen: "story", stab: k })}><span class="now">${l}</span><span class="n">${n}</span></button></li>`)}</ul>
         <button class="navi" aria-current=${S.screen === "episodes" ? "page" : "false"} onClick=${() => go("episodes")}>${I("film-strip")}Episodes<span class="cnt">4</span></button>
         <ul class="tree">${P.eps.slice(0, 8).map((e) => html`<li><button aria-current=${String(cur === e.code)} onClick=${() => e.code === "EP006" ? go("episode") : go("episodes")}>
           <span class="code">${e.code}</span><span class="now">${e.now}</span><span class=${"dot " + e.status}></span></button></li>`)}
           <li style="padding:6px 8px;color:var(--text-subtle);font-size:11.5px">EP009–EP024 · 16 in line</li></ul>
-        <button class="navi" aria-current=${S.screen === "cut" ? "page" : "false"} onClick=${() => go("cut")}>${I("scissors")}Cut<span class="cnt">1</span></button>
+        <button class="navi" aria-current=${S.screen === "cut" ? "page" : "false"} onClick=${() => go("cut")}>${I("scissors")}Delivery<span class="cnt">1</span></button>
+        <hr class="sidehr"/>
+        <button class="navi" aria-current=${S.screen === "reviews" ? "page" : "false"} onClick=${() => set({ waitFor: P.project.title, screen: "reviews" })}>${I("list-checks")}Reviews<span class="cnt">4</span></button>
+        <button class="navi" aria-current=${S.screen === "graph" && S.stale ? "page" : "false"} onClick=${() => set({ screen: "graph", stale: true })}>${I("warning")}Out of date<span class="n">4</span></button>
       </div>
       <div class="foot" title=${SPENT_COVERS}>
-        <div style="display:flex;justify-content:space-between"><span>Spent</span><b class="mono" style="color:var(--text-primary)">${money(P.project.spent)} <span class="muted">/ $1,000</span></b></div>
+        <dl class="spend"><dt>Spent</dt><dd class="mono">${money(P.project.spent)}</dd><dt>Reserved</dt><dd class="mono">${money(P.project.inflight)}</dd><dt>Budget</dt><dd class="mono">$1,000</dd></dl>
         <div class="meter"><i style=${`width:${P.project.spent / 10}%`}></i><i class="fly" style=${`width:${P.project.inflight / 10}%`}></i></div>
-        <span>${money(P.project.inflight)} in flight · 2 at work</span>
+        <span>This drama · 2 at work</span>
         <span class="subtle" style="font-size:11px">${SPENT_COVERS}</span>
       </div>
     </aside>`;
@@ -121,17 +127,20 @@
     </header>`;
   }
   function StopBanner() {
-    if (["redline", "budget", "cap", "env"].includes(S.state)) return html`<${window.EXTRA.StopCard} kind=${S.state}/>`;
+    // IA draft: a red line stops EP007 only. Elsewhere it is a compact notice; the full StopCard sits on EP007.
+    if (S.state === "redline") return html`<div class="notice-red" role="status">${I("warning")}<span><b>EP007 stopped on a red line</b> in the screenplay. Other episodes carry on.</span><span class="grow"></span><button class="btn sm" onClick=${() => toast("Opens EP007, where its stop card waits for your decision.")}>Open EP007</button></div>`;
+    if (["budget", "cap", "env"].includes(S.state)) return html`<${window.EXTRA.StopCard} kind=${S.state}/>`;
     if (!S.dramaStop) return null;
     return S.dramaStop === "stopping"
       ? html`<div class="banner" role="status">${I("circle-notch")}<b>Stopping — keep the app open</b><span>Waiting on EP003's 4 takes in flight. They are recorded when they come back, never shot again.</span></div>`
       : html`<div class="banner done"><b>${P.project.title} is stopped</b><span class="grow">Nothing runs and nothing is spent until you resume.</span><button class="btn sm primary" onClick=${resume}>Resume</button></div>`;
   }
-  function SurfaceSwitch() {
-    const cur = S.screen === "canvas" ? "Canvas" : S.screen === "graph" ? "Graph" : "Studio";
-    return html`<div class="seg" role="group" aria-label="Surface">
-      ${[["Studio", "squares-four", "episodes"], ["Canvas", "flow-arrow", "canvas"], ["Graph", "tree-structure", "graph"]].map(([l, ic, sc]) =>
-        html`<button aria-pressed=${String(cur === l)} onClick=${() => go(cur === "Studio" && l === "Studio" ? S.screen : sc)}>${I(ic)}${l}</button>`)}
+  /* IA draft: an episode's two views. Story, Assets, the board and Delivery have none; Lineage opens from an item. */
+  function EpisodeViews() {
+    if (S.screen !== "episode" && S.screen !== "canvas") return null;
+    return html`<div class="seg" role="group" aria-label="EP006 view">
+      ${[["List", "list-bullets", "episode"], ["Canvas", "flow-arrow", "canvas"]].map(([l, ic, sc]) =>
+        html`<button aria-pressed=${String(S.screen === sc)} onClick=${() => go(sc)}>${I(ic)}${l}</button>`)}
     </div>`;
   }
   function ProjectChips() {
@@ -149,8 +158,13 @@
     return html`<aside class=${"agent " + (float ? "float" : "")} aria-label="Agent panel">
       <div class="ahead"><span class="live"></span><h2>Agent</h2><span class="grow"></span>
         ${float ? html`<button class="ibtn" aria-label="Close the agent panel" onClick=${() => set({ agentOpen: false })}>${I("x")}</button>` : html`<button class="ibtn" aria-label="Collapse" onClick=${() => toast("The panel collapses to the agent ball, as on Canvas.")}>${I("arrows-in")}</button>`}</div>
+      <div class="ascope">${S.pin
+        ? html`${I("map-pin")}<span>Pinned to <b>${S.pin}</b></span><span class="grow"></span><button class="btn sm ghost" onClick=${() => set({ pin: null })}>Follow EP006</button>`
+        : html`<span class="live"></span><span>Following <b>EP006</b></span><span class="grow"></span><button class="btn sm ghost" onClick=${() => set({ pin: "EP007" })}>Pin to EP007</button>`}</div>
       <div class="ascroll">
-        <section class="asec"><h3>Running <span class="c">2</span></h3>${runRow("EP003", "Shooting 4 takes · 2 back")}${runRow("EP005", "Blocking seg03")}</section>
+        <section class="asec"><h3>Sessions <span class="c">3</span></h3>${runRow("EP003", "Running · shooting 4 takes · 2 back")}
+          <div class="arow"><div class="what"><b>EP006</b><span>Waiting · 2 takes wait for you</span></div><button class="btn sm ghost" onClick=${() => go("review")}>Review</button></div>
+          <div class="arow failed"><div class="what"><b>EP005</b><span>Failed while shooting seg03 · <code>ProviderError.Unknown</code></span><small>drama-cli: the video request's outcome is unknown. It isn't sent again until it is reconciled.</small><small class="subtle">A failed session doesn't mean its jobs failed.</small></div><button class="btn sm" title="drama-cli's recovery for this refusal" onClick=${() => toast("Reconciling EP005 seg03: the agent asks the provider what became of the request; nothing is resubmitted.")}>Reconcile</button></div></section>
         <section class="asec"><h3>Decisions <span class="c">${dec.length}</span></h3>
           ${dec.map((d) => html`<button class="dec" onClick=${() => go(d.go)}><img src=${d.pic} alt=""/><span><b>${d.t}</b><small>${d.d}</small></span><span class="age">${d.age}</span></button>`)}</section>
         <section class="asec"><div class="process"><button onClick=${() => {}}>${I("list-checks")}EP006 · Process<span class="cnt">7 steps</span></button>
@@ -168,8 +182,8 @@
         <section class="asec"><h3>Next</h3><div class="nextchips"><button onClick=${() => go("review")}>Review EP006 takes</button><button onClick=${() => go("canvas")}>Review looks and plates</button></div></section>
       </div>
       <div class="composer"><textarea placeholder="Message the agent…" value=${S.draft} onInput=${(e) => set({ draft: e.target.value })}
-          onKeyDown=${(e) => { if (e.key === "Enter" && (e.metaKey || e.ctrlKey) && S.draft.trim()) { set({ chat: [...S.chat, S.draft.trim()], draft: "" }); toast("Sent to EP006's session."); } }}></textarea>
-        <div class="crow"><span>To EP006's session · steers its current turn</span><button class="send" aria-label="Send" disabled=${!S.draft.trim()} onClick=${() => { set({ chat: [...S.chat, S.draft.trim()], draft: "" }); toast("Sent to EP006's session."); }}>${I("arrow-up")}</button></div></div>
+          onKeyDown=${(e) => { if (e.key === "Enter" && (e.metaKey || e.ctrlKey) && S.draft.trim()) { set({ chat: [...S.chat, S.draft.trim()], draft: "" }); toast("Sent to " + (S.pin || "EP006") + "'s session."); } }}></textarea>
+        <div class="crow"><span>To ${S.pin || "EP006"}'s session · ${S.pin ? "pinned" : "the episode in view"}</span><button class="send" aria-label="Send" disabled=${!S.draft.trim()} onClick=${() => { set({ chat: [...S.chat, S.draft.trim()], draft: "" }); toast("Sent to " + (S.pin || "EP006") + "'s session."); }}>${I("arrow-up")}</button></div></div>
     </aside>`;
   }
 
@@ -184,6 +198,20 @@
       { dr: "Last Toast", what: "EP007", d: "Red line · decide in your words", age: "2 h" },
     ].map((w) => ({ ...w, pic: cover(w.dr) }));
   };
+  /* ───── Reviews: every drama's decisions, one queue, one filter (IA draft) ───── */
+  function Reviews() {
+    const all = waits(), dramas = [...new Set(all.map((w) => w.dr))];
+    const list = all.filter((w) => !S.waitFor || w.dr === S.waitFor);
+    return html`<div class="main">
+      <${TopBar} crumbs=${S.waitFor ? ["Reviews", S.waitFor] : ["Reviews"]}/>
+      <div class="scrollmain"><div class="wrap" style="max-width:880px">
+        <div class="greet"><div class="grow"><h1>Reviews</h1><p>Every decision the agent waits on, newest first. Each opens its review room.</p></div></div>
+        <div class="filters">${[[null, "All", all.length], ...dramas.map((d) => [d, d, all.filter((w) => w.dr === d).length])].map(([k, l, n]) =>
+          html`<button class="fchip" aria-pressed=${String(S.waitFor === k)} onClick=${() => set({ waitFor: k })}>${l}<small>${n}</small></button>`)}</div>
+        <section class="panel queue">${list.map((w) => html`<button class="wait" onClick=${() => (w.go ? go(w.go) : toast(w.dr + ": only Bride on Bail opens in this direction."))}><img src=${w.pic} alt=""/>
+          <span><b>${w.dr} · ${w.what}</b><small>${w.d} · ${w.age}</small></span></button>`)}</section>
+      </div></div></div>`;
+  }
   /* ───── Home ───── */
   function Home() {
     const tabs = [["all", "All", 4], ["you", "Needs you", 1], ["work", "At work", 1], ["done", "Finished", 1]];
@@ -202,8 +230,9 @@
               <button class="btn" onClick=${() => go("episodes")}>Open drama</button>
               <button class="btn lg primary" onClick=${() => go("review")}>${I("play")}Review takes</button></div></div>
         </div>
-        <div class="right"><h3>Waiting for you${S.waitFor && html`<span class="tag">${S.waitFor}<button aria-label="Show every drama's" onClick=${() => set({ waitFor: null })}>${I("x")}</button></span>`}</h3>
-          ${waits().filter((w) => !S.waitFor || w.dr === S.waitFor).map((w) => html`<button class="wait" onClick=${() => (w.go ? go(w.go) : toast(w.dr + ": only Bride on Bail opens in this direction."))}><img src=${w.pic} alt=""/><span><b>${w.dr} · ${w.what}</b><small>${w.d} · ${w.age}</small></span></button>`)}</div>
+        <div class="right"><h3>Waiting for you</h3>
+          ${waits().slice(0, 4).map((w) => html`<button class="wait" onClick=${() => (w.go ? go(w.go) : toast(w.dr + ": only Bride on Bail opens in this direction."))}><img src=${w.pic} alt=""/><span><b>${w.dr} · ${w.what}</b><small>${w.d} · ${w.age}</small></span></button>`)}
+          <button class="seeall" onClick=${() => set({ waitFor: null, screen: "reviews" })}>See all ${waits().length} in Reviews ${I("caret-right")}</button></div>
       </section>
       <div class="tabsrow"><div class="utabs" role="tablist">${tabs.map(([k, l, n]) => html`<button role="tab" aria-selected=${String(S.tab === k)} onClick=${() => set({ tab: k })}>${l}<small>${n}</small></button>`)}</div>
         <span class="grow"></span><span class="search">${I("magnifying-glass")}Search dramas…</span><button class="select">Last edited ${I("caret-down")}</button></div>
@@ -212,7 +241,7 @@
           <div class="pic"><img src=${p.cover} alt=""/><span class="bar"><i style=${`width:${p.p}%`}></i></span></div>
           <div class="txt"><b>${p.t}</b><small>${p.m}</small><small>${p.spent} spent</small><div class="tags">${p.tags.map((t) => html`<span class="tag">${t}</span>`)}</div></div></button>
           ${p.st === "you" || p.st === "redline"
-            ? html`<button class=${"st " + p.st} aria-pressed=${String(S.waitFor === p.t)} title=${"Show what waits for you in " + p.t} onClick=${() => set({ waitFor: S.waitFor === p.t ? null : p.t })}><i></i>${p.lab}</button>`
+            ? html`<button class=${"st " + p.st} title=${"Open Reviews for " + p.t} onClick=${() => set({ waitFor: p.t, screen: "reviews" })}><i></i>${p.lab}</button>`
             : Status(p.st, p.lab)}</div>`)}
         <button class=${"newcard " + (S.over ? "over" : "")} onClick=${upload}
           onDragOver=${(e) => { e.preventDefault(); if (!S.over) set({ over: true }); }} onDragLeave=${() => set({ over: false })} onDrop=${(e) => { e.preventDefault(); set({ over: false }); upload(); }}>
@@ -229,7 +258,7 @@
     return html`<div class="main">
       <${TopBar} crumbs=${[P.project.title, "Episodes"]}/>
       <div class="body"><div class="scrollmain">
-        <div class="bar2"><${SurfaceSwitch}/><span class="grow"></span><${ProjectChips}/></div>
+        <div class="bar2"><${EpisodeViews}/><span class="grow"></span><${ProjectChips}/></div>
         <${StopBanner}/>
         <div class="filters">${f.map(([k, l, n]) => html`<button class="fchip" aria-pressed=${String(S.filter === k)} onClick=${() => set({ filter: k })}>${l}<small>${n}</small></button>`)}
           <span class="grow"></span><span class="search" style="width:200px">${I("magnifying-glass")}Find an episode…</span><button class="select">Episode order ${I("caret-down")}</button></div>
@@ -273,9 +302,16 @@
     const docked = S.dock === "right";
     const dock = (to) => { set({ dock: to }); try { localStorage.setItem("studio.canvas.dock", to); } catch (e) { /* a convenience */ } };
     return html`<div class=${"npanel" + (docked ? " docked" : "")} role="dialog" aria-label=${node.label} style=${docked ? "" : style}>
-      <div class="nhead"><b class="grow">${node.label}</b>${Status(node.st)}
+      <div class="nhead"><b class="grow">${node.label}</b>${Status(node.st === "stale" ? "accepted" : node.st)}${node.st === "stale" || node.id === "file" ? Status("stale", "Out of date") : Status("line", "Up to date")}
         <button class="ibtn" title=${docked ? "Under the node" : "Dock right"} aria-label=${docked ? "Under the node" : "Dock right"} onClick=${() => dock(docked ? "under" : "right")}>${I(docked ? "square-half-bottom" : "square-half")}</button>
         <button class="ibtn" aria-label="Close" onClick=${() => set({ sel: null })}>${I("x")}</button></div>
+      ${(() => {
+        // IA draft: the two status axes. Review (accepted / sent back / waiting) and freshness (up to date / out of date, with
+        // drama-cli's reason); "current vN · accepted vM" when the newest version isn't the accepted one.
+        const prev = (v) => String(v || "").replace(/(t|v)(\d+)$/, (m, p, n) => p + String(Math.max(1, n - 1)).padStart(p === "t" ? 2 : 1, "0"));
+        const why = node.problems ? node.problems.join("; ") : node.id === "file" ? "Changed file: bible/v3/bible.json" : "";
+        return html`<div class="nstate">${node.st === "you" && node.ver ? html`<span class="mono">current ${node.ver} · accepted ${prev(node.ver)}</span>` : html`<span class="mono">current ${node.ver || "v1"} · accepted</span>`}${why && html`<span class="why">${I("warning")}${why}</span>`}</div>`;
+      })()}
       <div class="utabs" role="tablist">${tabs.map(([k, l]) => html`<button role="tab" aria-selected=${String(tab === k)} onClick=${() => set({ dtab: k })}>${l}</button>`)}</div>
       <div role="tabpanel">
         ${tab === "prompt" && (spec ? html`<ol class="refs">${spec.images.map((u, i) => html`<li title=${"Image " + (i + 1)}><img src=${u} alt=""/><b>${i + 1}</b></li>`)}</ol>
@@ -341,7 +377,7 @@
                 ${n.seg.still ? html`<div><img src=${n.seg.still} alt="" draggable="false"/><span>${n.seg.take}</span><span class="play"><i>${I("play")}</i></span></div>` : html`<div class="none">${n.seg.take} accepted</div>`}</div></div>`)}
           </div>
         </div>
-        <div class="ctop"><${SurfaceSwitch}/><button class="follow" aria-pressed=${String(S.follow)} onClick=${() => set({ follow: !S.follow })}>${S.follow && html`<span class="live"></span>`}${S.follow ? "Following the agent" : "Follow the agent"}</button>
+        <div class="ctop"><${EpisodeViews}/><button class="follow" aria-pressed=${String(S.follow)} onClick=${() => set({ follow: !S.follow })}>${S.follow && html`<span class="live"></span>`}${S.follow ? "Following the agent" : "Follow the agent"}</button>
           <span class="grow"></span><${ProjectChips}/></div>
         ${S.dramaStop && html`<div style="position:absolute;left:0;right:0;top:60px"><${StopBanner}/></div>`}
         ${sel && (() => {
@@ -354,7 +390,7 @@
               ${sel.st === "you" ? html`<button class="btn sm primary" onClick=${() => sel.kind === "seg" ? go("review") : toast("Opens the looks review.")}>Review</button>` : null}
               <button class="ibtn" title="Send back" aria-label="Send back" onClick=${() => toast("Send back: say why, and the agent redoes it.")}>${I("arrow-counter-clockwise")}</button>
               <button class="ibtn" title="Note" aria-label="Note" onClick=${() => toast("A note for the agent at work on it.")}>${I("note-pencil")}</button>
-              <button class="ibtn" title="Lineage" aria-label="Lineage" onClick=${() => toast("Lineage: where this version comes from and what is made from it.")}>${I("tree-structure")}</button>
+              <button class="ibtn" title="Lineage" aria-label="Lineage" onClick=${() => set({ screen: "graph", stale: false })}>${I("tree-structure")}</button>
               <button class="ibtn" title="Download" aria-label="Download" onClick=${() => toast("Downloads the picture.")}>${I("download-simple")}</button></div>
             <${NodePanel} node=${sel} uses=${uses} reads=${reads} style=${`left:${left}px;top:${Math.min(bottom + 10, bh - 300)}px;width:${W}px`}/>`;
         })()}
@@ -399,7 +435,8 @@
     const onTime = (e) => { const t = e.target.currentTime; const m = Math.max(S.maxT[tk.id] || 0, prev ? 0 : t);
       set({ t, maxT: { ...S.maxT, [tk.id]: m }, watched: !prev && t >= dur - 0.25 ? { ...S.watched, [tk.id]: true } : S.watched }); };
     const seek = (e) => { const r = e.currentTarget.getBoundingClientRect(); const t = Math.max(0, Math.min(dur, ((e.clientX - r.left) / r.width) * dur)); if (vref.current) vref.current.currentTime = t; set({ t }); };
-    const setV = (val) => set({ verdict: { ...S.verdict, [tk.id]: S.verdict[tk.id] === val ? undefined : val } });
+    // IA draft: each verdict change is one step of the draft, so Undo reverts one and Reset discards them all.
+    const setV = (val) => set({ vhist: [...(S.vhist || []), S.verdict], verdict: { ...S.verdict, [tk.id]: S.verdict[tk.id] === val ? undefined : val } });
     useEffect(() => {
       const kd = (e) => { if (/textarea|input/i.test(e.target.tagName) || S.screen !== "review") return;
         if (e.key === " ") { e.preventDefault(); set({ playing: !S.playing }); }
@@ -448,7 +485,7 @@
               <button class="prevtake" onClick=${() => set({ showPrev: !prev })}><img src=${tk.prev.poster} alt=""/><span><b class="mono" style="font-size:12px">${tk.prev.take} · sent back by you</b><small class="muted" style="display:block;font-size:11.5px">${prev ? "Showing it on the stage" : "Play it on the stage to compare"}</small></span></button></div>
             <div class="isec"><h4>Take</h4><dl class="kv"><dt>Length</dt><dd>${tk.dur} s planned · ${tk.dur} s shot</dd><dt>Spec</dt><dd>${P.project.spec}</dd><dt>In frame</dt><dd>${tk.seg === "seg01" ? "Luca Moreno" : "Luca Moreno, Ethan Cole"}</dd><dt>Episode so far</dt><dd title=${SPENT_COVERS}>${money(P.eps[5].spent)} spent</dd></dl></div>
             <div class="isec"><h4>Shots</h4><ol class="shots">${tk.shots.map((s, i) => html`<li><span>${String(i + 1).padStart(2, "0")}</span>${s}</li>`)}</ol></div>
-            <div class="isec" style="border-bottom:0"><h4>Who decides</h4><p class="muted" style="margin:0;font-size:12.5px;line-height:1.55">You watch every take and decide. No model checks a take for you. Accept unlocks once you have watched it to the end.</p></div>
+            <div class="isec" style="border-bottom:0"><h4>Who decides</h4><p class="muted" style="margin:0;font-size:12.5px;line-height:1.55">You watch every video version (Take) and decide. No model checks a Take for you. Accept unlocks once you have watched it to the end.</p></div>
           </div>
           <div class="verdict">
             <div class="vrow">
@@ -461,7 +498,9 @@
           </div>
           <div style="padding:10px 16px 0;border-top:1px solid var(--border);background:var(--surface-dim)"><input class="search" style="width:100%;height:32px" placeholder="Your words for the record, e.g. Approved. seg03 opens on Luca." value=${S.words || ""} onInput=${(e) => set({ words: e.target.value })}/></div>
           <div class="sendbar"><span class="pips">${P.takes.map((t) => html`<i class=${S.verdict[t.id] === "accept" ? "a" : S.verdict[t.id] === "back" ? "b" : S.verdict[t.id] === "note" ? "n" : ""}></i>`)}</span>
-            <span class="muted grow" style="font-size:12px">${done} of ${P.takes.length} decided</span>
+            <span class="muted grow" style="font-size:12px">${done} of ${P.takes.length} decided${(S.vhist || []).length ? html` · <b style="color:var(--text-primary)">Draft: ${(S.vhist || []).length} changes</b>` : ""}</span>
+            <button class="btn sm ghost" title="Revert the last change" disabled=${!(S.vhist || []).length || S.sent} onClick=${() => { const h = [...S.vhist], last = h.pop(); set({ vhist: h, verdict: last }); }}>Undo</button>
+            <button class="btn sm ghost" title="Discard the draft" disabled=${!(S.vhist || []).length || S.sent} onClick=${() => { set({ verdict: {}, reason: {}, words: "", vhist: [] }); toast("Draft discarded. Nothing was sent."); }}>Reset</button>
             <button class="btn primary sm" disabled=${done < P.takes.length || S.sent} onClick=${() => set({ dialog: { title: "Send your review?", body: P.takes.map((t) => `${t.seg} ${t.take}: ${S.verdict[t.id] === "accept" ? "Accept" : S.verdict[t.id] === "note" ? "Accept with a note" : "Send back — “" + (S.reason[t.id] || "").trim() + "”"}`).join("\n"), ok: "Send review", cancel: "Keep reviewing", run: () => { set({ sent: true }); toast("Review sent to EP006's agent."); } } })}>Send review</button></div>
         </aside>
       </div></div>`;
@@ -481,22 +520,22 @@
   function Proto() {
     return html`<div class="proto" role="navigation" aria-label="Prototype">
       <b>Pine Drama Studio · pro direction</b><span class="sep"></span>
-      <div class="seg" role="group" aria-label="Screen">${[["home", "Home"], ["upload", "Upload"], ["analyzing", "Analyzing"], ["fountain", "Fountain"], ["story", "Story"], ["episodes", "Episodes"], ["episode", "Episode"], ["canvas", "Canvas"], ["graph", "Graph"], ["review", "Review"], ["cut", "Cut"]].map(([k, l]) => html`<button aria-pressed=${String(S.screen === k)} onClick=${() => go(k)}>${l}</button>`)}</div>
+      <div class="seg" role="group" aria-label="Screen">${[["home", "Home"], ["reviews", "Reviews"], ["upload", "Upload"], ["analyzing", "Analyzing"], ["fountain", "Fountain"], ["story", "Story"], ["episodes", "Episodes"], ["episode", "Episode"], ["canvas", "Canvas"], ["graph", "Graph"], ["review", "Review"], ["cut", "Cut"]].map(([k, l]) => html`<button aria-pressed=${String(S.screen === k)} onClick=${() => go(k)}>${l}</button>`)}</div>
       <span class="sep"></span>
       <label class="select" style="gap:8px">State<select aria-label="State" value=${S.state} onChange=${(e) => { const v = e.target.value; set({ state: v, dramaStop: v === "stopping" ? "stopping" : v === "stopped" ? "stopped" : null }); }}>
-        ${[["normal", "Normal"], ["nostop", "No stop yet"], ["stopping", "Stopping"], ["stopped", "Stopped"], ["redline", "Red line"], ["budget", "Budget spent"], ["cap", "Cap reached"], ["env", "Credentials refused"]].map(([k, l]) => html`<option value=${k}>${l}</option>`)}</select></label>
+        ${[["normal", "Normal"], ["cutchanged", "Cut changed upstream"], ["nostop", "No stop yet"], ["stopping", "Stopping"], ["stopped", "Stopped"], ["redline", "Red line"], ["budget", "Refused (no code)"], ["cap", "Cap reached"], ["env", "Credentials refused"]].map(([k, l]) => html`<option value=${k}>${l}</option>`)}</select></label>
       <span class="sep"></span>
       <div class="seg" role="group" aria-label="Theme">${[["dark", "Dark", "moon-stars"], ["light", "Light", "sun-dim"]].map(([k, l, ic]) => html`<button aria-pressed=${String(S.theme === k)} onClick=${() => set({ theme: k })}>${I(ic)}${l}</button>`)}</div>
-      <span class="sep"></span><span>Steering only · Canvas and Graph read-only · sample project, our own test pictures</span>
+      <span class="sep"></span><span>Phase 1: steering, and editing the cut's spec · Canvas and Lineage read-only · sample project, our own test pictures</span>
     </div>`;
   }
   function App() {
     applyTheme();
     const sc = S.screen;
-    const main = { home: html`<${Home}/>`, episodes: html`<${Episodes}/>`, canvas: html`<${Canvas}/>`, review: html`<${Review}/>` }[sc] || html`<${window.EXTRA[sc]}/>`;
+    const main = { home: html`<${Home}/>`, reviews: html`<${Reviews}/>`, episodes: html`<${Episodes}/>`, canvas: html`<${Canvas}/>`, review: html`<${Review}/>` }[sc] || html`<${window.EXTRA[sc]}/>`;
     return html`<${Proto}/><div class="app"><${Rail}/><${Side}/>${main}</div><${Dialog}/>
       <div class="toasts" aria-live="polite">${S.toasts.map((t) => html`<div class="toast">${t.text}${t.action && html`<button onClick=${t.action.run}>${t.action.label}</button>`}</div>`)}</div>`;
   }
-  window.PD = { html, I, S, set, go, toast, money, Status, TopBar, StopBanner, SurfaceSwitch, ProjectChips, AgentPanel, SPENT_COVERS, useEffect, useRef, Mark, decisions, draw };
+  window.PD = { html, I, S, set, go, toast, money, Status, TopBar, StopBanner, EpisodeViews, ProjectChips, AgentPanel, SPENT_COVERS, useEffect, useRef, Mark, decisions, draw };
   // screens.js draws first, once its screens are registered.
 })();
