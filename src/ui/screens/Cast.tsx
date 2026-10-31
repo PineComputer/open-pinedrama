@@ -129,7 +129,10 @@ function AssetGrid({ cards, names, dramaId, picked }: { cards: CastCard[]; names
     <div className="assetgrid">
       <RowsPhotoAlbum
         photos={photos}
-        targetRowHeight={180}
+        // Rows near the design's card height, never more than four a row nor a lone row taller than 300px, so near-square
+        // multi-view plates don't squeeze six into one short row (react-photo-album's own row constraints).
+        targetRowHeight={230}
+        rowConstraints={{ maxPhotos: 4, singleRowMaxHeight: 300 }}
         spacing={12}
         defaultContainerWidth={960}
         render={{
