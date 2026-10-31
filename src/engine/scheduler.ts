@@ -25,13 +25,13 @@ import {
 } from "./computers.ts";
 import { all, get, now, run } from "./db.ts";
 import { followEvents, followTurn, isFollowed, unsettledTurns } from "./follow.ts";
-import { DRAMA_SKILL, episodeGoal, projectScreenplay, rehearsed, resumeGoal, setupGoal, sharedRedoGoal } from "./goals.ts";
+import { DRAMA_SKILL, episodeGoal, projectScreenplay, rehearsed, resumeGoal, setupGoal, setupMessageGoal } from "./goals.ts";
 import type { FileRow } from "./library.ts";
 import { publish } from "./live.ts";
 import { type ComputerRow, type DramaRow, type EpisodeRow, type SessionRow, computer as computerRow, episodeCode, latestTurn, openSessionsOf, session as sessionRow } from "./records.ts";
 import { approveUnreviewed, reconcileSending } from "./reviews.ts";
 import { noteDramaSkill } from "./settings.ts";
-import { type SharedRedoRow, markRedo, queuedRedos } from "./shared-redo.ts";
+import { type SetupMessageRow, markSetupMessage, queuedSetupMessages } from "./setup-message.ts";
 import { attach, attachKit, episodeArchive, hasRun, inputs, projectArchive, references, sendRun, startRun, unconfirmedRuns } from "./runs.ts";
 
 /** Work the clock started and hasn't finished, so a slow call never starts twice. */
@@ -325,30 +325,30 @@ function startEpisode(drama: DramaRow, episode: EpisodeRow, computer: ComputerRo
 }
 
 /**
- * A shared reference's redo after the handover (D38): a new setup session on the project last handed over, its goal the
- * redo the maker asked for. One that won't open goes back to the queue, after a pause; one that keeps failing says why.
+ * A message to the setup's scope after the handover (D38): a new setup session on the project last handed over, its goal
+ * the maker's message. One that won't open goes back to the queue, after a pause; one that keeps failing says why.
  */
-function startSharedRedo(drama: DramaRow, redo: SharedRedoRow, computer: ComputerRow): void {
-  markRedo(redo.id, "working");
+function startSetupMessage(drama: DramaRow, request: SetupMessageRow, computer: ComputerRow): void {
+  markSetupMessage(request.id, "working");
   const release = reserve(computer.id);
-  const started = once(`redo:${redo.id}`, async () => {
+  const started = once(`message:${request.id}`, async () => {
     let session: SessionRow | undefined;
     try {
       session = await openSession(computer, "setup", null, "Setup");
       release();
-      markRedo(redo.id, "working", { sessionId: session.id });
+      markSetupMessage(request.id, "working", { sessionId: session.id });
       await attach(session, projectArchive(drama.id));
       if (drama.rehearsal) await attachKit(session);
-      await startRun(session, "redo", goalOf(drama, sharedRedoGoal(drama, redo.text, screenplayOf(drama))));
-      failures.delete(`redo:${redo.id}`);
+      await startRun(session, "message", goalOf(drama, setupMessageGoal(drama, request.text, screenplayOf(drama))));
+      failures.delete(`message:${request.id}`);
     } catch (error) {
       if (!session || !hasRun(session.id)) {
         if (session) await closeSession(session);
-        if (failedAgain(`redo:${redo.id}`) >= START_ATTEMPTS) {
-          failures.delete(`redo:${redo.id}`);
-          markRedo(redo.id, "failed", { sessionId: null, note: message(error) });
+        if (failedAgain(`message:${request.id}`) >= START_ATTEMPTS) {
+          failures.delete(`message:${request.id}`);
+          markSetupMessage(request.id, "failed", { sessionId: null, note: message(error) });
         } else {
-          run("update shared_redos set state = 'queued', session_id = null, updated_at = ? where id = ?", now(), redo.id);
+          run("update setup_messages set state = 'queued', session_id = null, updated_at = ? where id = ?", now(), request.id);
         }
       }
       throw error;
@@ -360,8 +360,8 @@ function startSharedRedo(drama: DramaRow, redo: SharedRedoRow, computer: Compute
   if (!started) release();
 }
 
-/** The shared redos running now, which count against the drama's parallel limit like its episodes. */
-const workingRedos = (dramaId: string) => get<{ n: number }>("select count(*) as n from shared_redos where drama_id = ? and state = 'working'", dramaId)?.n ?? 0;
+/** The setup messages running now, which count against the drama's parallel limit like its episodes. */
+const workingSetupMessages = (dramaId: string) => get<{ n: number }>("select count(*) as n from setup_messages where drama_id = ? and state = 'working'", dramaId)?.n ?? 0;
 
 /**
  * Episodes whose start was cut short (the engine stopped after it opened their session but
@@ -381,15 +381,15 @@ function recoverStarts(drama: DramaRow): void {
 function fill(drama: DramaRow): void {
   recoverStarts(drama);
   const count = (state: string) => get<{ n: number }>("select count(*) as n from episodes where drama_id = ? and state = ?", drama.id, state)?.n ?? 0;
-  let active = count("working") + count("waiting") + workingRedos(drama.id);
+  let active = count("working") + count("waiting") + workingSetupMessages(drama.id);
   const waiting = count("waiting");
-  // A shared redo goes first: what episodes start after it restore the project it hands back.
-  for (const redo of queuedRedos(drama.id)) {
+  // A setup message goes first: what episodes start after it restore the project it hands back.
+  for (const request of queuedSetupMessages(drama.id)) {
     if (active >= drama.parallel) return;
-    if (backingOff(`redo:${redo.id}`)) continue;
+    if (backingOff(`message:${request.id}`)) continue;
     const computer = claimComputer(drama);
     if (!computer) return;
-    startSharedRedo(drama, redo, computer);
+    startSetupMessage(drama, request, computer);
     active += 1;
   }
   const queued = all<EpisodeRow>("select * from episodes where drama_id = ? and state = 'queued' order by number", drama.id);
@@ -478,9 +478,9 @@ export async function reconcile(): Promise<void> {
 export function tick(): void {
   if (!hasFleet() || paused) return; // nothing to run on until the maker connects a project or chooses replay
   // Only the dramas made for this mode: a replay drama never starts a Pine Computer. A finished drama comes back for a
-  // shared redo the maker asked for (D38).
+  // message to its setup's scope (D38).
   for (const drama of all<DramaRow>(
-    "select * from dramas where (status in ('setup', 'production') or (status = 'done' and exists (select 1 from shared_redos r where r.drama_id = dramas.id and r.state in ('queued', 'working')))) and mode = ?",
+    "select * from dramas where (status in ('setup', 'production') or (status = 'done' and exists (select 1 from setup_messages r where r.drama_id = dramas.id and r.state in ('queued', 'working')))) and mode = ?",
     fleet().mode,
   )) {
     if (drama.status === "setup") ensureSetup(drama);

@@ -6,7 +6,7 @@ import type { SubmissionView } from "../shared/types.ts";
 import { chat } from "./dramas.ts";
 import { get, now, run } from "./db.ts";
 import { StudioError } from "./errors.ts";
-import { sharedRedoView } from "./shared-redo.ts";
+import { setupMessageView } from "./setup-message.ts";
 
 interface Row {
   id: string;
@@ -26,7 +26,7 @@ export function submission(id: string): SubmissionView | undefined {
   if (row) return { id: row.id, sessionId: row.session_id, state: row.state, ...(row.message ? { message: row.message } : {}) };
   const decided = get<{ session_id: string; state: string }>("select session_id, state from reviews where submission_id = ?", id);
   if (decided) return { id, sessionId: decided.session_id, state: decided.state === "sending" ? "sending" : "sent" };
-  return sharedRedoView(id);
+  return setupMessageView(id);
 }
 
 export async function redo(sessionId: string, submissionId: string, text: string): Promise<SubmissionView> {

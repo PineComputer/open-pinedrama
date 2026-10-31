@@ -237,13 +237,14 @@ export function episodeGoal(drama: DramaBrief, code: string, attachments: string
 }
 
 /**
- * A shared reference redone after the handover (D38), in a new setup session: restore the project last handed over, make
- * the named looks, locations or props again as the skill says, stop for the maker's review of the new versions, and once
- * approved, hand the project back and finish. Episodes keep the copies they work on (D5), so nothing else is touched.
+ * A message to the setup's scope after the handover (D38), in a new setup session: restore the project last handed over,
+ * do what the maker's message asks within the script, the bible and the shared references, stop for the maker's review of
+ * anything new, then hand the project back and finish. Episodes keep the copies they work on (D5), so none of theirs is
+ * touched.
  */
-export function sharedRedoGoal(drama: DramaBrief, request: string, screenplay?: string): string {
+export function setupMessageGoal(drama: DramaBrief, message: string, screenplay?: string): string {
   return [
-    `Use the ${DRAMA_SKILL} skill to make shared references of "${drama.title}" again in this new session; the setup session ended.`,
+    `Use the ${DRAMA_SKILL} skill for "${drama.title}" in this new session: the setup session ended, and I have a message about the drama's script, bible or shared references.`,
     brief(drama),
     "The attached project.tar.part-* files are the drama's drama-cli project as it was last handed over.",
     restoreProject(drama, screenplay),
@@ -251,10 +252,10 @@ export function sharedRedoGoal(drama: DramaBrief, request: string, screenplay?: 
     RETURN_STATUS,
     RETURN_LINEAGE,
     RETURN_SPECS,
-    request,
-    "Make only those looks, locations and key props again, each as a new version; change nothing else: no bible, breakdown, blocking reference, first-frame reference, storyboard or take.",
-    "Stop and ask me to review the new versions, returning them with your question.",
-    "After I approve, accept them, pack the whole drama/ folder, records included, into parts of at most 60 MB (`mkdir -p handoff && tar -cf - -C drama . | split -b 60m - handoff/project.tar.part-`), return the parts, and finish.",
+    `My message:\n${message}`,
+    "Do what it asks as the drama skill says, within the script, the bible and the shared looks, locations and key props; change nothing of an episode's own: no breakdown, blocking reference, first-frame reference, storyboard or take.",
+    "If you make new versions, stop and ask me to review them, returning them with your question; after I approve, accept them.",
+    "Before you finish, pack the whole drama/ folder, records included, into parts of at most 60 MB (`mkdir -p handoff && tar -cf - -C drama . | split -b 60m - handoff/project.tar.part-`), return the parts, and finish with your answer to my message.",
     writeIn(drama),
   ]
     .filter(Boolean)
