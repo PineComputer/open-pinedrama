@@ -117,7 +117,9 @@ export function replayStatus(progress: ReplayProgress): { path: string; type: st
     scenes,
     props,
     episodes: Object.fromEntries(Object.entries(progress.episodes).map(([code, made]) => [code, episode(code, made, progress.references)])),
-    budget: { budget_usd: null, spent_usd: 0, reserved_usd: 0, remaining_usd: null, cost_valuation: null },
+    // The budget drama-cli init writes into a project's config (short_drama D119, budget_usd 1000), as a real project's
+    // status reports it; replay spends nothing of it.
+    budget: { budget_usd: 1000, spent_usd: 0, reserved_usd: 0, remaining_usd: 1000, cost_valuation: null },
   };
   return { path: "handoff/status.json", type: "application/json", bytes: new TextEncoder().encode(JSON.stringify(report, null, 2)) };
 }
