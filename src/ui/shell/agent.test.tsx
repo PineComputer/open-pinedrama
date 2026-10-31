@@ -78,12 +78,25 @@ function engine() {
 }
 
 describe("the agent panel", () => {
+  it("keeps each session with the Computer it runs on, and Watch says whose desktop it shows and what else it runs", async () => {
+    engine();
+    const two = { ...drama, crew: [...drama.crew, { id: "c2", label: "Computer 2", state: "running", idleTimeoutMinutes: 180, sessions: [{ id: "s3", name: "setup", role: "setup", state: "open", waiting: false }] }] } as unknown as DramaView;
+    await renderAt(<AgentPanel drama={two} onCollapse={() => {}} />);
+    const sessions = screen.getByRole("region", { name: "Sessions" });
+    expect(within(sessions).getByRole("button", { name: /^EP001\s*on Computer 1 · Shooting seg01$/ })).toBeInTheDocument();
+    expect(within(sessions).getByRole("button", { name: /^EP002\s*on Computer 1 · / })).toBeInTheDocument();
+    // Computer 1 runs EP001 and EP002; Computer 2 the setup alone.
+    expect(within(sessions).getAllByRole("button", { name: "Watch Computer 1's desktop (also running EP002)" })).toHaveLength(1);
+    expect(within(sessions).getAllByRole("button", { name: "Watch Computer 1's desktop (also running EP001)" })).toHaveLength(1);
+    expect(within(sessions).getByRole("button", { name: "Watch Computer 2's desktop" })).toBeInTheDocument();
+  });
+
   it("shows the sessions, the decisions waiting, and what was made, named as the bible names them", async () => {
     engine();
     await renderAt(<AgentPanel drama={drama} onCollapse={() => {}} />);
     // Every open session, at work or waiting for the maker, so any can be pinned (design/app.js, AgentPanel's Sessions).
     const sessions = screen.getByRole("region", { name: "Sessions" });
-    expect(within(sessions).getByRole("button", { name: /EP001\s*Shooting seg01/ })).toBeInTheDocument();
+    expect(within(sessions).getByRole("button", { name: /EP001\s*on Computer 1 · Shooting seg01/ })).toBeInTheDocument();
     expect(within(sessions).getByRole("button", { name: /^EP002/ })).toBeInTheDocument();
     const decisions = screen.getByRole("region", { name: "Decisions" });
     expect(await within(decisions).findByRole("link", { name: /EP002 · Storyboards\s*3 items · seg01, seg02, seg03/ })).toHaveAttribute("href", "/r/r2");

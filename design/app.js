@@ -259,8 +259,10 @@
   function AgentPanel() {
     if (studioPage()) return null;
     const dec = decisions(), to = talkTo(), ep7 = to === "EP007";
-    const runRow = (code, what) => html`<div class="arow"><div class="what"><b>${code}</b><span>${S.dramaStop === "stopped" ? "Stopped with the drama" : S.dramaStop ? (code === "EP003" ? "Stopping… waiting on 4 takes in flight" : "Stopping…") : what}</span></div>
-      ${!S.dramaStop && html`<button class="btn sm ghost" onClick=${() => toast("Watch opens the Computer's desktop, view-only.")}>Watch</button>
+    /* Each session with the Computer it runs on, by the Computer's own label (computers.label); Watch says whose desktop it
+       shows and what else that Computer runs. The sample: Computer 1 runs EP003 and EP006, Computer 2 ran EP005. */
+    const runRow = (code, what) => html`<div class="arow"><div class="what"><b>${code}</b><span>on Computer 1 · ${S.dramaStop === "stopped" ? "Stopped with the drama" : S.dramaStop ? (code === "EP003" ? "Stopping… waiting on 4 takes in flight" : "Stopping…") : what}</span></div>
+      ${!S.dramaStop && html`<button class="btn sm ghost" aria-label="Watch Computer 1's desktop (also running EP006)" title="Watch Computer 1's desktop (also running EP006)" onClick=${() => toast("Watch opens Computer 1's desktop, view-only.")}>Watch</button>
       <button class="btn sm ghost" onClick=${() => set({ dialog: { title: "Stop " + code + "?", body: code === "EP003" ? "4 takes are in flight. They are waited on and recorded, never sent again. The episode stops after them." : "No take is in flight. The episode stops now and can be resumed.", ok: "Stop " + code, danger: true, cancel: "Keep running", run: () => toast(code + " stopped.") } })}>Stop</button>`}</div>`;
     const busy = !S.dramaStop;
     if (S.agent !== "open") return html`<button class=${"ball" + (busy ? " busy" : "")} aria-expanded="false" title="Open the agent sidebar (⌥⌘B)"
@@ -279,7 +281,7 @@
       })()}</div>
       <div class="ascroll">
         <section class="asec"><h3>Sessions <span class="c">3</span></h3>${runRow("EP003", "Running · shooting 4 takes · 2 back")}
-          <div class="arow"><div class="what"><b>EP006</b><span>Waiting · 2 takes wait for you</span></div><button class="btn sm ghost" onClick=${() => go("review")}>Review</button></div>
+          <div class="arow"><div class="what"><b>EP006</b><span>on Computer 1 · 2 takes wait for you</span></div><button class="btn sm ghost" onClick=${() => go("review")}>Review</button></div>
           ${(() => {
             // C3: Reconcile asks the provider what became of the request and ends in one of three outcomes, each saying what
             // happens next (the prototype's Outcome control picks which); it never resubmits on its own.

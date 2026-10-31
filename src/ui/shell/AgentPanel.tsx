@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { recentWork, type WorkItem } from "../../shared/facts.ts";
 import { nameOf, type Names } from "../../shared/names.ts";
 import { type ProjectView, takesInFlight } from "../../shared/project.ts";
-import type { ChatView, DecisionRecord, DramaView, FileItem, ReviewSummary, SessionView, SubmissionView } from "../../shared/types.ts";
+import type { ChatView, ComputerView, DecisionRecord, DramaView, FileItem, ReviewSummary, SessionView, SubmissionView } from "../../shared/types.ts";
 import { ago, api, ApiError, useAction, useResource } from "../api.ts";
 import { Submission, useSubmission } from "../components/Submission.tsx";
 import { Dialog } from "../components/Dialog.tsx";
@@ -74,20 +74,23 @@ function decisionLine(item: ReviewSummary, t: (key: TKey, values?: Record<string
   return [count, item.subjects.slice(0, 3).join(", ")].filter(Boolean).join(" · ");
 }
 
-function Running({ drama, session, inView, inFlight, onPick }: { drama: DramaView; session: SessionView; inView: boolean; inFlight: number; onPick: () => void }) {
+function Running({ drama, session, computer, inView, inFlight, onPick }: { drama: DramaView; session: SessionView; computer: ComputerView; inView: boolean; inFlight: number; onPick: () => void }) {
   const { t } = useT();
   const [watching, setWatching] = useState(false);
   const [asking, setAsking] = useState(false);
   const [error, setError] = useState<unknown>();
   const row = drama.episodeRows.find((episode) => episode.code === session.episode);
   const label = session.episode ?? t("crew.setup");
+  // Watch shows the Computer's desktop: it says whose, and what else that Computer runs.
+  const others = computer.sessions.filter((other) => other.id !== session.id && other.state === "open").map((other) => other.episode ?? t("crew.setup"));
+  const watchName = others.length ? t("agent.watchShared", { computer: computer.label, others: others.join(", ") }) : t("agent.watchComputer", { computer: computer.label });
   return (
     <div className="arow" aria-current={inView ? "true" : undefined}>
       <button type="button" className="what" title={t("agent.pinTo", { who: label })} style={{ border: 0, background: "none", padding: 0, textAlign: "left", cursor: "pointer", color: "inherit" }} onClick={onPick}>
         <b>{label}</b>
-        <span>{session.waiting ? t("crew.waiting") : (session.activity ?? t("board.atWork"))}</span>
+        <span>{[t("agent.onComputer", { computer: computer.label }), session.waiting ? t("crew.waiting") : (session.activity ?? t("board.atWork"))].join(" · ")}</span>
       </button>
-      <button type="button" className="btn sm ghost" aria-label={t("agent.watch", { who: label })} onClick={() => setWatching(true)}>
+      <button type="button" className="btn sm ghost" aria-label={watchName} title={watchName} onClick={() => setWatching(true)}>
         {t("agent.watchShort")}
       </button>
       {row && (
@@ -127,7 +130,9 @@ export function AgentPanel({ drama, episode, onCollapse }: { drama: DramaView; e
   const files = useResource<FileItem[]>(`/api/dramas/${id}/files`, [`drama:${id}`]);
   const sessions = useResource<ChatView[]>(`/api/dramas/${id}/sessions`, [`drama:${id}`]);
   // The drama's sessions, at work or waiting for the maker (design/app.js, AgentPanel's Sessions): each can be pinned.
-  const open = drama.crew.flatMap((computer) => computer.sessions.filter((session) => session.state === "open"));
+  // Each with the Computer it runs on (a session has one scope and runs on one Computer), so the panel keeps the Computer
+  // and the task it does together (master, from merecdesperez44323-lab: "把电脑和这个task能对应上").
+  const open = drama.crew.flatMap((computer) => computer.sessions.filter((session) => session.state === "open").map((session) => ({ session, computer })));
   // A scope pinned by the maker: an episode's code or "setup".
   const [pinned, setPinned] = useState<string>();
   const [processOpen, setProcessOpen] = useState(true);
@@ -215,11 +220,12 @@ export function AgentPanel({ drama, episode, onCollapse }: { drama: DramaView; e
           </h3>
           {open.length ? (
             <div style={{ display: "grid", gap: 6 }}>
-              {open.map((session) => (
+              {open.map(({ session, computer }) => (
                 <Running
                   key={session.id}
                   drama={drama}
                   session={session}
+                  computer={computer}
                   inView={session.id === inView?.sessionId}
                   inFlight={session.episode && state?.episodes[session.episode] ? takesInFlight(state.episodes[session.episode]) : 0}
                   onPick={() => setPinned(session.episode ?? "setup")}
