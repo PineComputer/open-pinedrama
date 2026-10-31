@@ -128,12 +128,19 @@ function subject(review: ReviewRow): string {
   }
 }
 
-/** Reviews whose decision this process is sending right now. */
-const sending = new Set<string>();
-
 /** Sends the maker's decision as the answer to the turn that asked. */
+/**
+ * Sends a decision once (Codex's IA review, 14.6): the same submission again, a double click or a retry after a lost
+ * reply, gets the review as that first sending left it, and sends nothing; another submission for a review already
+ * decided is refused. The claim is taken before anything is awaited, so two requests can't both take it.
+ */
 export async function decide(reviewId: string, decision: Decision): Promise<ReviewRow> {
-  if (sending.has(reviewId)) throw new StudioError("decision-sending", "This decision is being sent.", 409);
+  if (typeof decision.submissionId !== "string" || !decision.submissionId) throw new StudioError("submission-missing", "A decision needs its submissionId.");
+  const review = reviewRow(reviewId);
+  if (review?.submission_id) {
+    if (review.submission_id === decision.submissionId) return review;
+    throw new StudioError("review-decided", "This review was already decided, in another window or an earlier send. Reload it to see the decision.", 409);
+  }
   sending.add(reviewId);
   try {
     return await send(reviewId, decision);
@@ -141,6 +148,9 @@ export async function decide(reviewId: string, decision: Decision): Promise<Revi
     sending.delete(reviewId);
   }
 }
+
+/** Reviews whose decision this process is sending right now, which reconcileSending leaves to it. */
+const sending = new Set<string>();
 
 /**
  * The kinds of review the studio approves for the maker, by what they chose to review (Reviewing). Never a take or a
@@ -172,7 +182,7 @@ export async function approveUnreviewed(dramaId?: string): Promise<void> {
     // one waits for them, whatever they chose.
     if (files.some((file) => file.kind === "storyboard" && file.style === "photoreal")) continue;
     const { items } = itemsOf(review.kind, files);
-    await decide(review.id, { words: UNREVIEWED, items: items.map((item) => ({ key: item.key, verdict: "approve", notes: [] })) }).catch((error) =>
+    await decide(review.id, { submissionId: newId("sub"), words: UNREVIEWED, items: items.map((item) => ({ key: item.key, verdict: "approve", notes: [] })) }).catch((error) =>
       console.error(`review ${review.id}: not approved on its own:`, (error as Error).message),
     );
   }
@@ -207,7 +217,7 @@ export async function reconcileSending(): Promise<void> {
         followTurn(session.id, info.nextTurnId);
       } else if (info.state === "needs_input" || info.state === "completed") {
         // Not taken (a stop that ended its turn has its decision saved as a run along with the review's answered state).
-        run("update reviews set state = 'open' where id = ? and state = 'sending'", review.id);
+        run("update reviews set state = 'open', submission_id = null where id = ? and state = 'sending'", review.id);
       }
     } catch (error) {
       console.error(`review ${review.id}:`, (error as Error).message); // asked again at the next reconcile
@@ -228,6 +238,7 @@ async function send(reviewId: string, decision: Decision): Promise<ReviewRow> {
   // Keep verdicts for this review's items only, and a note's file only if it belongs to that item.
   const itemFiles = new Map(items.map((item) => [item.key, new Set(item.files.map((file) => file.id))]));
   const kept: Decision = {
+    submissionId: decision.submissionId,
     words: decision.words ?? "",
     items: (decision.items ?? [])
       .filter((item) => itemFiles.has(item.key))
@@ -247,7 +258,7 @@ async function send(reviewId: string, decision: Decision): Promise<ReviewRow> {
   const pictures = [...new Set(kept.items.flatMap((item) => item.notes.flatMap((note) => (note.image !== undefined ? [note.image] : []))))].map((id) => references.get(id)!);
 
   // Kept as written for a session that later resumes the work; said again below with where its pictures are.
-  run("update reviews set state = 'sending', decision = ?, answer = ?, decided_at = ? where id = ?", JSON.stringify(kept), answerText(kept, context), now(), reviewId);
+  run("update reviews set state = 'sending', decision = ?, submission_id = ?, answer = ?, decided_at = ? where id = ?", JSON.stringify(kept), decision.submissionId, answerText(kept, context), now(), reviewId);
   publish(`drama:${review.drama_id}`, "inbox");
 
   const session = sessionRow(review.session_id);
@@ -263,7 +274,8 @@ async function send(reviewId: string, decision: Decision): Promise<ReviewRow> {
     const { sent } = await attach(session, pictures);
     answer = answerText(kept, { ...context, images: new Map(pictures.map((file, index) => [file.id, sent[index]])) });
   } catch (error) {
-    run("update reviews set state = 'open' where id = ?", reviewId);
+    // Not sent: the review is open again, and the same submission may try again.
+    run("update reviews set state = 'open', submission_id = null where id = ?", reviewId);
     publish(`drama:${review.drama_id}`, "inbox");
     throw new StudioError("send-failed", `Couldn't send the decision: ${(error as Error).message}`, 502, (error as Error).message);
   }
@@ -293,7 +305,8 @@ async function send(reviewId: string, decision: Decision): Promise<ReviewRow> {
   } catch (error) {
     const status = (error as { status?: number }).status;
     // The turn can't take an answer any more: the session moved on or ended. Keep the decision.
-    run("update reviews set state = ? where id = ?", status === 404 || status === 409 ? "ended" : "open", reviewId);
+    const ended = status === 404 || status === 409;
+    run("update reviews set state = ?, submission_id = ? where id = ?", ended ? "ended" : "open", ended ? decision.submissionId : null, reviewId);
     publish(`drama:${review.drama_id}`, "inbox");
     if (status !== 404 && status !== 409) throw new StudioError("send-failed", `Couldn't send the decision: ${(error as Error).message}`, 502, (error as Error).message);
   }

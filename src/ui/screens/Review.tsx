@@ -1,6 +1,6 @@
 import { MediaController, MediaPlayButton, MediaTimeRange } from "media-chrome/react";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
-import type { DramaView, FileItem, ItemDecision, Note, ReviewItem, ReviewView, Verdict } from "../../shared/types.ts";
+import type { Decision, DramaView, FileItem, Note, ReviewItem, ReviewView, Verdict } from "../../shared/types.ts";
 import { api, clock, useAction, useResource } from "../api.ts";
 import { type TKey, useT } from "../i18n.ts";
 import { errorText, fileKind, headingText, moneyText, subjectLabel, useNames } from "../labels.ts";
@@ -165,10 +165,12 @@ function AgentSays({ review }: { review: ReviewView }) {
 function QuestionRoom({ review, done }: { review: ReviewView; done: () => void }) {
   const { t } = useT();
   const [answer, setAnswer, forget] = useDraft(review.id, "answer", () => review.decision?.words ?? "");
+  // One id for this draft's sending, kept for a retry: the engine takes a decision once (reviews.ts, decide).
+  const submission = useRef(crypto.randomUUID());
   const files = [...review.reviewItems.flatMap((item) => item.files), ...review.otherFiles];
   const open = review.state === "open";
   const send = useAction(async () => {
-    await api(`/api/reviews/${review.id}/decision`, { method: "POST", json: { items: [], words: answer } });
+    await api(`/api/reviews/${review.id}/decision`, { method: "POST", json: { submissionId: submission.current, items: [], words: answer } });
     forget();
     done();
   });
@@ -254,6 +256,8 @@ const WATCHED = 0.98;
 
 function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
   const { t, lang } = useT();
+  // One id for this draft's sending, kept for a retry: the engine takes a decision once (reviews.ts, decide).
+  const submission = useRef(crypto.randomUUID());
   const names = useNames(review.dramaId);
   const items = review.reviewItems;
   const open = review.state === "open";
@@ -412,7 +416,8 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
   const send = async () => {
     setBusy(true);
     setError(undefined);
-    const decision: { items: ItemDecision[]; words: string } = {
+    const decision: Decision = {
+      submissionId: submission.current,
       words,
       items: items.map((i) => ({ key: i.key, verdict: drafts[i.key]?.verdict ?? "approve", notes: drafts[i.key]?.notes ?? [] })),
     };
@@ -854,6 +859,8 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
  */
 export function CutRoom({ review, done }: { review: ReviewView; done: () => void }) {
   const { t } = useT();
+  // One id for this draft's sending, kept for a retry: the engine takes a decision once (reviews.ts, decide).
+  const submission = useRef(crypto.randomUUID());
   const item = review.reviewItems[0];
   const file = item.files.find(isVideo) ?? item.files[0];
   const open = review.state === "open";
@@ -885,7 +892,7 @@ export function CutRoom({ review, done }: { review: ReviewView; done: () => void
     if (sending.current) return;
     sending.current = true;
     const why: Note[] = verdict === "revise" ? [{ fileId: file.id, text: reason.trim() }] : [];
-    const decision: { items: ItemDecision[]; words: string } = { words: "", items: [{ key: item.key, verdict: verdict!, notes: [...why, ...notes] }] };
+    const decision: Decision = { submissionId: submission.current, words: "", items: [{ key: item.key, verdict: verdict!, notes: [...why, ...notes] }] };
     try {
       await api(`/api/reviews/${review.id}/decision`, { method: "POST", json: decision });
     } catch (failed) {

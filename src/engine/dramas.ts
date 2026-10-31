@@ -261,7 +261,7 @@ export async function chat(sessionId: string, text: string): Promise<void> {
     // The session waits on the maker: a plain question can be answered from here, through the
     // same gate as the review room; anything to look at is decided in the room, item by item.
     if (review.kind !== "question") throw new StudioError("decide-in-review", "Decide this in its review, where the files are.", 409);
-    await decide(review.id, { items: [], words: text });
+    await decide(review.id, { submissionId: newId("sub"), items: [], words: text });
   } else if (turn?.state === "needs_input") {
     throw new StudioError("question-closed", "This question can't be answered any more.", 409);
   } else if (turn && !turn.ended_at && turn.state !== "answered") {

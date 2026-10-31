@@ -30,12 +30,12 @@ export async function review(page: Page, drama: string, kind: ReviewSummary["kin
 /** Accepts every item of the review but those named, which go back with a reason. */
 export async function decide(page: Page, view: ReviewView, sendBack: string[] = []) {
   const items = view.reviewItems.map((item) => ({ key: item.key, verdict: sendBack.includes(item.key) ? "revise" : "approve", notes: sendBack.includes(item.key) ? [{ text: "Try again." }] : [] }));
-  await call(page, `/api/reviews/${view.id}/decision`, { items, words: view.kind === "question" ? "He is 32." : "Reviewed." });
+  await call(page, `/api/reviews/${view.id}/decision`, { submissionId: crypto.randomUUID(), items, words: view.kind === "question" ? "He is 32." : "Reviewed." });
 }
 
 /** The setup's first stop: the screenplay rewritten into drama-cli's Fountain, accepted in the maker's words. */
 export async function acceptRewrite(page: Page, drama: string) {
   const rewrite = await review(page, drama, "question");
   expect(rewrite.question).toContain("Fountain");
-  await call(page, `/api/reviews/${rewrite.id}/decision`, { items: [], words: "Yes, this is my script." });
+  await call(page, `/api/reviews/${rewrite.id}/decision`, { submissionId: crypto.randomUUID(), items: [], words: "Yes, this is my script." });
 }

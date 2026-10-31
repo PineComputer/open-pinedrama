@@ -35,7 +35,7 @@ function where(note: Note, paths: Map<number, string>, images?: Map<number, stri
   return parts.length ? ` (${parts.join(", ")})` : "";
 }
 
-export function answerText(decision: Decision, context: DecisionContext): string {
+export function answerText(decision: Omit<Decision, "submissionId">, context: DecisionContext): string {
   const words = decision.words.trim();
   if (context.kind === "question") return words;
 

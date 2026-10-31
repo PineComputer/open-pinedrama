@@ -110,6 +110,7 @@ export interface ReviewRow {
   state: ReviewState;
   question: string;
   decision: string | null;
+  submission_id: string | null;
   answer: string | null;
   created_at: string;
   decided_at: string | null;

@@ -68,7 +68,7 @@ describe("AcceptInWords", () => {
     await user.type(screen.getByRole("textbox", { name: "Your words" }), "Yes, this is my script.");
     await user.click(accepting);
     await waitFor(() => expect(calls("POST", "/api/reviews/r1/decision")).toHaveLength(1));
-    expect(calls("POST", "/api/reviews/r1/decision")[0].body).toEqual({ items: [], words: "Yes, this is my script." });
+    expect(calls("POST", "/api/reviews/r1/decision")[0].body).toEqual({ submissionId: expect.any(String), items: [], words: "Yes, this is my script." });
   });
 
   it("sends it back with what to change", async () => {
@@ -79,6 +79,6 @@ describe("AcceptInWords", () => {
     await user.type(screen.getByRole("textbox", { name: "Your words" }), "Scene 2 is at night.");
     await user.click(screen.getByRole("button", { name: "Send back" }));
     await waitFor(() => expect(calls("POST", "/api/reviews/r1/decision")).toHaveLength(1));
-    expect(calls("POST", "/api/reviews/r1/decision")[0].body).toEqual({ items: [], words: "Scene 2 is at night." });
+    expect(calls("POST", "/api/reviews/r1/decision")[0].body).toEqual({ submissionId: expect.any(String), items: [], words: "Scene 2 is at night." });
   });
 });

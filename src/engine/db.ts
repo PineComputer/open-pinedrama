@@ -127,6 +127,7 @@ create table if not exists reviews (
   state text not null,              -- saving | open | sending | answered | ended
   question text not null,
   decision text,                    -- JSON Decision
+  submission_id text,               -- the decision's submission (reviews.ts, decide): one decision per review
   answer text,
   created_at text not null,
   decided_at text
@@ -230,6 +231,7 @@ export function db(): DatabaseSync {
     add("turns", "settled", "integer not null default 0", "update turns set settled = files_saved");
     add("episodes", "carry", "text not null default ''");
     add("dramas", "reason", "text not null default ''");
+    add("reviews", "submission_id", "text");
     add("computers", "stop_by", "text");
     add("computers", "project", "text not null default ''");
     add("dramas", "rehearsal", "integer not null default 0");

@@ -69,6 +69,7 @@ describe("the review room for storyboards", () => {
     const sent = calls("POST", `/api/reviews/${review.id}/decision`);
     expect(sent).toHaveLength(1);
     expect(sent[0].body).toEqual({
+      submissionId: expect.any(String),
       words: "Good start.",
       items: [
         { key: "seg01", verdict: "approve", notes: [] },
@@ -311,6 +312,7 @@ describe("the review room for a cut", () => {
     const sent = calls("POST", `/api/reviews/${review.id}/decision`);
     expect(sent).toHaveLength(1);
     expect(sent[0].body).toEqual({
+      submissionId: expect.any(String),
       words: "",
       items: [
         {
@@ -347,6 +349,7 @@ describe("the review room for a cut", () => {
     expect(screen.queryByRole("textbox", { name: "Why it goes back" })).toBeNull();
     await user.click(screen.getByRole("button", { name: "Send review" }));
     expect(calls("POST", `/api/reviews/${review.id}/decision`)[0].body).toEqual({
+      submissionId: expect.any(String),
       words: "",
       items: [{ key: "cut", verdict: "approve", notes: [{ fileId: review.reviewItems[0].files[0].id, time: 1, text: "Lovely open" }] }],
     });

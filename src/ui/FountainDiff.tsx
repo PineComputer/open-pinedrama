@@ -5,7 +5,7 @@
 // question, in the maker's words.
 import { diffLines } from "diff";
 import { Fountain } from "fountain-js";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { api, useAction } from "./api.ts";
 import { fountainLines } from "./fountainLines.ts";
 import { Icon } from "./icons.tsx";
@@ -128,8 +128,10 @@ export function FountainReview({ original, fountain, reviewId }: { original: str
 export function AcceptInWords({ reviewId, onSent }: { reviewId: string; onSent?: () => void }) {
   const { t } = useT();
   const [words, setWords] = useState("");
+  // One id for this answer's sending, kept for a retry: the engine takes a decision once (reviews.ts, decide).
+  const submission = useRef(crypto.randomUUID());
   const send = useAction(async () => {
-    await api(`/api/reviews/${reviewId}/decision`, { method: "POST", json: { items: [], words: words.trim() } });
+    await api(`/api/reviews/${reviewId}/decision`, { method: "POST", json: { submissionId: submission.current, items: [], words: words.trim() } });
     onSent?.();
   });
   const ready = words.trim().length > 0 && !send.busy;

@@ -48,13 +48,14 @@ const openReview = (dramaId: string, filter: (review: ReviewSummary) => boolean)
 /** The setup's first stop: the screenplay rewritten into drama-cli's Fountain, accepted in the maker's words. */
 async function acceptRewrite(dramaId: string) {
   const rewrite = await until("the screenplay rewrite", openReview(dramaId, () => true));
-  await call("POST", `/api/reviews/${rewrite.id}/decision`, { items: [], words: "Yes, this is my script." });
+  await call("POST", `/api/reviews/${rewrite.id}/decision`, { submissionId: crypto.randomUUID(), items: [], words: "Yes, this is my script." });
   return rewrite;
 }
 
 async function approveAll(id: string, words = "Approved.") {
   const review = await call<ReviewView>("GET", `/api/reviews/${id}`);
   return call<ReviewView>("POST", `/api/reviews/${id}/decision`, {
+    submissionId: crypto.randomUUID(),
     words,
     items: review.reviewItems.map((item) => ({ key: item.key, verdict: "approve", notes: [] })),
   });
@@ -96,7 +97,7 @@ async function scenario(title: string) {
   // The setup asks a question, then for the leads' looks, with their sheets saved first.
   await acceptRewrite(id);
   const question = await until("the setup question", openReview(id, (item) => item.kind === "question"));
-  await call("POST", `/api/reviews/${question.id}/decision`, { items: [], words: "He is 32." });
+  await call("POST", `/api/reviews/${question.id}/decision`, { submissionId: crypto.randomUUID(), items: [], words: "He is 32." });
   const looks = await until("the looks review", openReview(id, (item) => item.kind === "looks"));
   const looksView = await call<ReviewView>("GET", `/api/reviews/${looks.id}`);
   expect(looksView.reviewItems.map((item) => item.key)).toEqual(["lin", "wei"]);
@@ -109,6 +110,7 @@ async function scenario(title: string) {
   const reference = await call<FileItem>("POST", `/api/dramas/${id}/references`, picture);
   await expect(call("POST", `/api/dramas/${id}/references`, new FormData())).rejects.toThrow(/picture/);
   const revised = await call<ReviewView>("POST", `/api/reviews/${looks.id}/decision`, {
+    submissionId: crypto.randomUUID(),
     words: "Fix Wei's jacket.",
     items: [
       { key: "lin", verdict: "approve", notes: [] },
@@ -349,7 +351,7 @@ describe("a drama in replay", () => {
     const { id } = await call<{ id: string }>("POST", "/api/dramas", form);
     await acceptRewrite(id);
     const question = await until("the setup question", openReview(id, (item) => item.kind === "question"));
-    await call("POST", `/api/reviews/${question.id}/decision`, { items: [], words: "He is 32." });
+    await call("POST", `/api/reviews/${question.id}/decision`, { submissionId: crypto.randomUUID(), items: [], words: "He is 32." });
     await approveAll((await until("the looks", openReview(id, (item) => item.kind === "looks"))).id);
     await approveAll((await until("the shared references", openReview(id, (item) => item.kind === "references"))).id);
     const first = await until("EP001 storyboards", openReview(id, (item) => item.episode === "EP001" && item.kind === "storyboards"));
@@ -365,6 +367,53 @@ describe("a drama in replay", () => {
     expect(ids(await call<ReviewView>("GET", `/api/reviews/${again.id}`))).toEqual(ids(await call<ReviewView>("GET", `/api/reviews/${first.id}`)));
   }, 30_000);
 
+  // Codex's IA review, 14.6: a decision is taken once. The same submission again gets the first result and sends
+  // nothing; another window's for a decided review is refused; a send that failed may be tried again under its id.
+  it("takes each decision once, whatever repeats or races it", async () => {
+    const { get, run } = await import("./db.ts");
+    run("update dramas set status = 'done'");
+    fleet.stops = "ask";
+    const form = new FormData();
+    for (const [key, value] of Object.entries({ title: "Decided once", language: "en", preset: "en-us-live-sfw", screenplayLanguage: "en", screenplay: "0", parallel: "1", perComputer: "1" })) form.set(key, value);
+    form.append("files", new File(["EPISODE 1\nLin enters."], "screenplay.txt", { type: "text/plain" }));
+    const { id } = await call<{ id: string }>("POST", "/api/dramas", form);
+    const decide = (review: string, submissionId: string, words: string) => call<ReviewView>("POST", `/api/reviews/${review}/decision`, { submissionId, items: [], words });
+    const turns = (review: string) => get<{ n: number }>("select count(*) as n from turns where session_id = (select session_id from reviews where id = ?)", review)!.n;
+
+    // A send that fails reopens the review; the same submission, tried again, goes.
+    const rewrite = await until("the screenplay rewrite", openReview(id, () => true));
+    const answer = fleet.answer;
+    fleet.answer = async () => {
+      throw new Error("the line dropped");
+    };
+    await expect(decide(rewrite.id, "first", "Yes, this is my script.")).rejects.toThrow(/the line dropped/);
+    fleet.answer = answer;
+    const sent = await decide(rewrite.id, "first", "Yes, this is my script.");
+    expect(sent.state).toBe("answered");
+    // The same submission again, a reply lost on the way say: the first result, and nothing sent.
+    const before = turns(rewrite.id);
+    const again = await decide(rewrite.id, "first", "Yes, this is my script.");
+    expect([again.state, again.answer]).toEqual([sent.state, sent.answer]);
+    expect(turns(rewrite.id)).toBe(before);
+
+    // Two windows send at once: one decision goes, the other is refused.
+    const question = await until("the setup question", openReview(id, (item) => item.kind === "question"));
+    const raced = await Promise.allSettled([decide(question.id, "window-a", "He is 32."), decide(question.id, "window-b", "He is 40.")]);
+    expect(raced.map((result) => result.status)).toEqual(["fulfilled", "rejected"]);
+    expect((raced[1] as PromiseRejectedResult).reason.message).toMatch(/already decided/);
+    expect(get<{ answer: string }>("select answer from reviews where id = ?", question.id)!.answer).toContain("He is 32.");
+
+    // A second press while the first is still on its way: the first one only.
+    const looks = await until("the looks", openReview(id, (item) => item.kind === "looks"));
+    const view = await call<ReviewView>("GET", `/api/reviews/${looks.id}`);
+    const approve = () => call<ReviewView>("POST", `/api/reviews/${looks.id}/decision`, { submissionId: "press", words: "Approved.", items: view.reviewItems.map((item) => ({ key: item.key, verdict: "approve", notes: [] })) });
+    const atFirst = turns(looks.id);
+    const [first, second] = await Promise.all([approve(), approve()]);
+    expect(first.state).toBe("answered");
+    expect(["sending", "answered"]).toContain(second.state);
+    expect(turns(looks.id)).toBe(atFirst + 1);
+  });
+
   // The maker reviews only what they chose: the studio approves the rest as the agent stops for it, but never a photoreal
   // storyboard, a take or a cut. The person alone reviews the photoreal storyboard (D141) and watches every video version
   // (Take) and every cut (D76), whatever they chose.
@@ -379,7 +428,7 @@ describe("a drama in replay", () => {
     // A question always waits for the maker.
     await acceptRewrite(id);
     const question = await until("the setup question", openReview(id, (item) => item.kind === "question"));
-    await call("POST", `/api/reviews/${question.id}/decision`, { items: [], words: "He is 32." });
+    await call("POST", `/api/reviews/${question.id}/decision`, { submissionId: crypto.randomUUID(), items: [], words: "He is 32." });
     // Looks and references go on by themselves. EP001's storyboards show its photoreal boards, so they wait for the maker
     // under every setting, and so do its takes and its cut.
     const boards = await until("EP001's storyboards", openReview(id, (item) => item.episode === "EP001" && item.kind === "storyboards"));
@@ -431,13 +480,13 @@ describe("a drama in replay", () => {
     const { id } = await call<{ id: string }>("POST", "/api/dramas", form);
     await acceptRewrite(id);
     const question = await until("the setup question", openReview(id, () => true));
-    await call("POST", `/api/reviews/${question.id}/decision`, { items: [], words: "He is 32." });
+    await call("POST", `/api/reviews/${question.id}/decision`, { submissionId: crypto.randomUUID(), items: [], words: "He is 32." });
     const looks = await until("the leads' looks, asked in words", openReview(id, (item) => item.id !== question.id));
     expect(looks.kind).toBe("question");
     const view = await call<ReviewView>("GET", `/api/reviews/${looks.id}`);
     expect(view.reviewItems).toEqual([]);
     expect(view.otherFiles.filter((file) => file.kind === "look").map((file) => file.subject)).toEqual(["lin", "wei"]);
-    await call("POST", `/api/reviews/${looks.id}/decision`, { items: [], words: "Approved." });
+    await call("POST", `/api/reviews/${looks.id}/decision`, { submissionId: crypto.randomUUID(), items: [], words: "Approved." });
     await until("the shared references, asked in words", openReview(id, (item) => item.id !== looks.id && item.id !== question.id));
   }, 30_000);
 
@@ -456,7 +505,7 @@ describe("a drama in replay", () => {
     expect(ago(row<{ created_at: string }>("select created_at from dramas where id = ?", id)!.created_at)).toBeGreaterThan(1.9);
     await acceptRewrite(id);
     const age = await until("the setup question", openReview(id, (item) => item.kind === "question"));
-    await call("POST", `/api/reviews/${age.id}/decision`, { items: [], words: "He is 32." });
+    await call("POST", `/api/reviews/${age.id}/decision`, { submissionId: crypto.randomUUID(), items: [], words: "He is 32." });
     const looks = await until("the leads' looks", openReview(id, (item) => item.kind === "looks"));
     expect(ago(row<{ created_at: string }>("select created_at from reviews where id = ?", age.id)!.created_at)).toBeGreaterThan(1.9);
     expect(ago(row<{ at: string }>("select max(m.at) at from messages m join sessions s on s.id = m.session_id where s.drama_id = ?", id)!.at)).toBeGreaterThan(1.9);
@@ -484,14 +533,14 @@ describe("a drama in replay", () => {
     const { id } = await call<{ id: string }>("POST", "/api/dramas", form);
     await acceptRewrite(id);
     const question = await until("the setup question", openReview(id, (item) => item.kind === "question"));
-    await call("POST", `/api/reviews/${question.id}/decision`, { items: [], words: "He is 32." });
+    await call("POST", `/api/reviews/${question.id}/decision`, { submissionId: crypto.randomUUID(), items: [], words: "He is 32." });
     for (const kind of ["looks", "references"] as const) await approveAll((await until(kind, openReview(id, (item) => item.kind === kind))).id);
     await approveAll((await until("EP001 storyboards", openReview(id, (item) => item.episode === "EP001" && item.kind === "storyboards"))).id);
     const sendBack = async (review: ReviewSummary) => {
       const view = await call<ReviewView>("GET", `/api/reviews/${review.id}`);
       expect(view.refusals).toEqual([]);
       const items = view.reviewItems.map((item) => ({ key: item.key, verdict: item.key === "seg01" ? "revise" : "approve", notes: item.key === "seg01" ? [{ text: "Try again." }] : [] }));
-      await call("POST", `/api/reviews/${review.id}/decision`, { words: "seg01 again.", items });
+      await call("POST", `/api/reviews/${review.id}/decision`, { submissionId: crypto.randomUUID(), words: "seg01 again.", items });
     };
     // t01, then two new takes, shoot.max_new_takes in the replayed project.
     let seen: string[] = [];
@@ -515,7 +564,7 @@ describe("a drama in replay", () => {
     const { stopKind } = await import("../shared/refusal.ts");
     expect(stopKind(view.refusals[0])).toEqual({ kind: "cap", key: "shoot.max_new_takes" });
     // Sent back again without the limit raised, the same refusal comes back, the same file afresh: this stop has it too.
-    await call("POST", `/api/reviews/${capped.id}/decision`, { items: [], words: "Revise:\n- seg01: once more" });
+    await call("POST", `/api/reviews/${capped.id}/decision`, { submissionId: crypto.randomUUID(), items: [], words: "Revise:\n- seg01: once more" });
     const again = await until("the take cap's question again", openReview(id, (item) => item.episode === "EP001" && item.kind === "question" && item.id !== capped.id));
     expect((await call<ReviewView>("GET", `/api/reviews/${again.id}`)).refusals).toEqual(view.refusals);
   }, 30_000);

@@ -29,7 +29,8 @@ export type ErrorCode =
   | "message-empty"
   | "question-closed"
   | "decide-in-review"
-  | "decision-sending"
+  | "submission-missing"
+  | "review-decided"
   | "review-saving"
   | "review-closed"
   | "answer-missing"
@@ -367,6 +368,11 @@ export interface Decision {
   items: ItemDecision[];
   /** The maker's own words, quoted in the record of what they approved. */
   words: string;
+  /**
+   * The id the studio gives one sending of a draft, the same on a retry: a decision sent again under it is the first
+   * one (no second decision, no second goal to the agent); another id for a decided review is refused.
+   */
+  submissionId: string;
 }
 
 export interface ReviewView extends ReviewSummary {
