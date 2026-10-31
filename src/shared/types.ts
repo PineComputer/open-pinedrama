@@ -459,7 +459,7 @@ export interface ChatMessage {
   brief?: boolean;
   /**
    * An input that was the maker's decision on a review, sent in the agent's terms; shown as the maker made it, each item
-   * accepted or sent back with its version and reason, and their words (UI_ACTIONS_RULE: the chat is the one log).
+   * accepted or sent back with its version and reason, and their words (D70: the chat is the one log).
    */
   decision?: DecisionRecord;
 }

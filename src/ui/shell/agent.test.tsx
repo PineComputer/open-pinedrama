@@ -114,7 +114,7 @@ describe("the agent panel", () => {
     expect(await screen.findByText("To the setup session · ended at the handover")).toBeInTheDocument();
   });
 
-  it("shows each decision the maker sent in the conversation, item by item, with its reason (UI_ACTIONS_RULE)", async () => {
+  it("shows each decision the maker sent in the conversation, item by item, with its reason (D70)", async () => {
     engine();
     const decided = chat("s1", "EP001", "steer");
     decided.messages.push({

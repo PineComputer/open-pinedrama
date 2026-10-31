@@ -12,7 +12,7 @@
   const S = {
     screen: SCREENS.includes(hash) ? hash : "home", theme: "dark", tab: "all", filter: "all", waitFor: null, pin: null,
     dialog: null, toasts: [], dramaStop: null, draft: "", drafts: {}, drawer: false,
-    // The conversation each session has had: the maker's words and decisions, the one log (UI_ACTIONS_RULE).
+    // The conversation each session has had: the maker's words and decisions, the one log (D70).
     chats: { EP006: ["You sent back EP006 seg01 t01: “He should hold the blanket folded before he speaks.”", "You sent back EP006 seg03 t01: “Too wide at the start; we lose Luca's face.”"] },
     // The agent sidebar is open or collapsed to its icon, the viewer's choice kept on this browser; until they choose,
     // narrow windows start collapsed (D32).
@@ -691,7 +691,7 @@
     // Codex round 3 (fix 1): the review is one submission (Submission), never sent twice; the draft locks once it may have arrived.
     const sendState = (S.subs || {}).review;
     const locked = !!sendState && sendState !== "failed";
-    /* UI_ACTIONS_RULE: every decision also appears in the agent conversation of the session it goes to, as the maker made
+    /* D70: every decision also appears in the agent conversation of the session it goes to, as the maker made
        it: each take accepted (with their words) or sent back (with its reason). Mirrored once the send goes through. */
     const sendIt = () => {
       set({ rfield: null }); submit("review");

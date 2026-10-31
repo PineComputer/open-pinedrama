@@ -146,7 +146,7 @@ export function AgentPanel({ drama, episode, setup = false, onCollapse }: { dram
   const decisions = (queue.data ?? []).filter((item) => item.state === "open");
   const recent = state ? recentWork(state, files.data ?? [], 6) : [];
   const steps = (chat.data?.messages ?? []).filter((message) => message.kind === "activity").slice(-7);
-  // The conversation, the one log (UI_ACTIONS_RULE): what the maker said or decided and what the agent said, the newest last;
+  // The conversation, the one log (D70): what the maker said or decided and what the agent said, the newest last;
   // the studio's own goals and the agent's steps are not part of it.
   const conversation = (chat.data?.messages ?? []).filter((message) => (message.kind === "input" && !message.brief) || message.kind === "answer" || message.kind === "progress" || message.kind === "question" || message.kind === "result").slice(-8);
   const working = running.length > 0;
@@ -319,7 +319,7 @@ export function AgentPanel({ drama, episode, setup = false, onCollapse }: { dram
 
 /**
  * A decision the maker submitted, as the conversation shows it: each item accepted or sent back, by name and version, with
- * the reason the maker gave it (its notes), else their words (UI_ACTIONS_RULE: every decision also appears in the chat).
+ * the reason the maker gave it (its notes), else their words (D70: every decision also appears in the chat).
  */
 function Decided({ decision, episode }: { decision: DecisionRecord; episode: string }) {
   const { t } = useT();

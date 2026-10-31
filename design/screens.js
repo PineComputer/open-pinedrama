@@ -81,7 +81,7 @@
     const setv = (val) => set({ cards: { ...S.cards, [id]: v === val ? undefined : val } });
     return html`<div class="cardacts"><button class=${"mini acc"} aria-pressed=${String(v === "accept")} onClick=${() => setv("accept")}>${I("check")}Accept</button>
       <button class="mini back" aria-pressed=${String(v === "back")} onClick=${() => setv("back")}>${I("arrow-counter-clockwise")}Send back</button></div>
-      ${/* UI_ACTIONS_RULE: two decisions on the exact item, each with one sentence: the maker's words, or the reason. */ ""}
+      ${/* D70: two decisions on the exact item, each with one sentence: the maker's words, or the reason. */ ""}
       ${v && html`<input class="why" placeholder=${v === "back" ? "Why it goes back (required)" : "Your words, kept with the accepted version"} value=${S.cardWhy[id] || ""} onInput=${(e) => set({ cardWhy: { ...S.cardWhy, [id]: e.target.value } })}/>`}`;
   }
   function Bible() {

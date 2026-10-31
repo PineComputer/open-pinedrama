@@ -1,4 +1,4 @@
-// The conversation is the one log of what the maker decided (UI_ACTIONS_RULE): a decision the maker sent shows in its
+// The conversation is the one log of what the maker decided (D70): a decision the maker sent shows in its
 // session's chat as they made it, each item accepted or sent back with its version and its reason, read from the record.
 import { mkdtempSync } from "node:fs";
 import { tmpdir } from "node:os";
