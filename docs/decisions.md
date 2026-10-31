@@ -1112,15 +1112,21 @@ timeline
 ## D66. 2026-10-30 · An episode is its Canvas, laid out as drama-cli's export
 - **Context.** The Segments matrix (D63) repeated in a table what the Canvas already showed.
 - **Decision.** An episode's page is its Canvas alone, laid out as drama-cli's export lays it out
-  (short_drama `drama_cli/export.py:46-98`, `section()` and `layout()`): each segment's group holds its
-  shot list (breakdown.json), then its blocking, line-art storyboard, photoreal storyboard and take.
+  (short_drama `drama_cli/export.py:46-98`, `section()` and `layout()`): Characters, Locations and
+  Props two to a row on the left; one group per segment, four to a row, in drama-cli's column order
+  (blocking, line-art storyboard, photoreal storyboard, take); the cut on the right; each stage its
+  own node. One difference is ours: each segment's shots (breakdown.json's Shot fields) are a text
+  node at the start of its group, where the export keeps the breakdown as one text node in its Text
+  group, off the board, so that the shots read beside the pictures they made. Zoomed out under 35%,
+  a node shows only its title bar, as ComfyUI collapses a node.
   An episode has no view switch: an episode head (its code and title, the episode's script, its Cut
   and version) stands over the Canvas, and a link lands on the Canvas with its node picked. This
   supersedes
   [D63](#d63-2026-10-30--an-episodes-views-are-segments-and-canvas-segments-is-a-matrix) and the List
   of [D16](#d16-2026-10-30--the-navigation-a-studio-wide-rail-the-dramas-tree-one-home-per-object).
 - **Alternatives.** The Segments matrix (D63); a List.
-- **Grounds.** merecdesperez44323-lab's decision; the studio visualizes drama-cli's work
+- **Grounds.** merecdesperez44323-lab's decision; drama-cli's export layout, one layout for both;
+  ComfyUI's collapsed node; the studio visualizes drama-cli's work
   ([D64](#d64-2026-10-30--the-studio-is-a-visualization-of-drama-clis-work)), here in drama-cli's own
   layout.
 - **Consequences.** No view switch in an episode; the glossary retires Segments and List as views;
@@ -1128,10 +1134,12 @@ timeline
   merecdesperez44323-lab's yes; until the port the product keeps List | Canvas.
 - **Words.** "我在想你这样是不是都不需要左边这个tab了， 你就直接把 segment里的3段 shot list 分别都放在画布里是不是就行了？"
   (*I'm wondering whether you need the tab on the left at all; couldn't you just put the segment's
-  three shot lists on the canvas?*) and "因为你现在左边那个表格， 太 ad hoc， 太冗余了， 还不如就直接canvas"
+  three shot lists on the canvas?*), "现在的 export出来 comfyui & infinite canvas也是这样做的。" (*the ComfyUI and
+  infinite-canvas exports do it this way now*) and "因为你现在左边那个表格， 太 ad hoc， 太冗余了， 还不如就直接canvas"
   (*because the table on the left now is too ad hoc, too redundant; better to go straight to the
   canvas*), relayed by master.
-- **Recorded in.** Design commit 2c9ab0a; master's and work-04's notes, 30 October 2026.
+- **Recorded in.** Design commits 2c9ab0a (no Segments table) and db414082 (the layout); master's,
+  work-04's and work-06's notes, 30 October 2026.
 
 ## References
 
