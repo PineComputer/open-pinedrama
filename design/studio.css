@@ -148,7 +148,7 @@ input.search::placeholder { color: var(--text-muted); }
 input.search:focus { border-color: var(--text-primary); }
 .select { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 10px; border-radius: var(--radius-medium); border: 1px solid var(--border-input); background: var(--surface); color: var(--text-secondary); font-size: 12.5px; cursor: pointer; }
 .select .ic { width: 13px; height: 13px; color: var(--text-muted); }
-/* D50 as amended: the cover follows the project's format, 3:4 for a vertical drama (DramaBox's and 红果's poster grids),
+/* D55: the cover follows the project's format, 3:4 for a vertical drama (DramaBox's and Hongguo's poster grids),
    16:9 for a wide one; the title and a time under it; six a row at 1440. */
 .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 18px; }
 .pcard { position: relative; display: flex; flex-direction: column; border-radius: var(--radius-large); border: 1px solid var(--border); background: var(--surface); overflow: hidden; transition: border-color .12s, transform .12s; }

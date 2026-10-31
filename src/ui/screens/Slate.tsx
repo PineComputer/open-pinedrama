@@ -128,7 +128,7 @@ function Card({ drama, redLine }: { drama: DramaCard; redLine: boolean }) {
   return (
     <div className="pcard">
       <Link to="/d/$dramaId/episodes" params={{ dramaId: drama.id }} className="open">
-        {/* D50 as amended: the format decides the cover's shape, portrait for a vertical drama, wide for a 16:9 one. */}
+        {/* D55: the format decides the cover's shape, portrait for a vertical drama, wide for a 16:9 one. */}
         <div className={drama.format.startsWith("16:9") ? "pic wide" : "pic"}>
           <Cover drama={drama} />
         </div>
