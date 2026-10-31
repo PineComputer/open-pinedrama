@@ -112,7 +112,7 @@
   function StopControl() {
     if (S.dramaStop === "stopping") return html`<button class="btn sm" disabled>${I("circle-notch")}Stopping…</button>`;
     if (S.dramaStop === "stopped") return html`<span class="stopped-chip">${I("stop")}Stopped</span><button class="btn sm" onClick=${resume}>Resume</button>`;
-    return html`<button class="btn sm danger" onClick=${() => set({ dialog: { title: "Stop " + P.project.title + "?", body: "EP003 has 4 takes in flight and EP005 is blocking seg03. The takes are waited on and recorded, never sent again; then every episode stops. Nothing is lost, and you can resume.", ok: "Stop drama", danger: true, cancel: "Keep running", run: stopDrama } })}>${I("stop")}Stop drama</button>`;
+    return html`<button class="btn sm danger" onClick=${() => set({ dialog: { title: "Stop " + P.project.title + "?", body: "EP003 has 4 takes in flight and EP005 is blocking seg03. The takes are waited on and recorded, never sent again, and charged if the provider made them; a take whose outcome stays unknown may not be recoverable. Then every episode stops, and you can resume.", ok: "Stop drama", danger: true, cancel: "Keep running", run: stopDrama } })}>${I("stop")}Stop drama</button>`;
   }
   function stopDrama() { set({ dramaStop: "stopping" }); setTimeout(() => { if (S.dramaStop === "stopping") { set({ dramaStop: "stopped" }); toast(P.project.title + " stopped.", { label: "Resume", run: resume }); } }, 5000); }
   function resume() { set({ dramaStop: null }); toast(P.project.title + " resumed."); }
@@ -163,7 +163,7 @@
     if (!S.dramaStop) return null;
     return S.dramaStop === "stopping"
       ? html`<div class="banner" role="status">${I("circle-notch")}<b>Stopping — keep the app open</b><span>Waiting on EP003's 4 takes in flight. They are recorded when they come back, never shot again.</span></div>`
-      : html`<div class="banner done"><b>${P.project.title} is stopped</b><span class="grow">Nothing runs and nothing is spent until you resume.</span><button class="btn sm primary" onClick=${resume}>Resume</button></div>`;
+      : html`<div class="banner done"><b>${P.project.title} is stopped</b><span class="grow">No agent turn runs and nothing new is sent until you resume.</span><button class="btn sm primary" onClick=${resume}>Resume</button></div>`;
   }
   /* IA draft: an episode's two views. Story, Assets, the board and Delivery have none; Lineage opens from an item. */
   function EpisodeViews() {
@@ -190,7 +190,7 @@
     const dec = decisions(), to = talkTo(), ep7 = to === "EP007";
     const runRow = (code, what) => html`<div class="arow"><div class="what"><b>${code}</b><span>${S.dramaStop === "stopped" ? "Stopped with the drama" : S.dramaStop ? (code === "EP003" ? "Stopping… waiting on 4 takes in flight" : "Stopping…") : what}</span></div>
       ${!S.dramaStop && html`<button class="btn sm ghost" onClick=${() => toast("Watch opens the Computer's desktop, view-only.")}>Watch</button>
-      <button class="btn sm ghost" onClick=${() => set({ dialog: { title: "Stop " + code + "?", body: code === "EP003" ? "4 takes are in flight. They are waited on and recorded, never sent again. The episode stops after them." : "Nothing paid is in flight. The episode stops now and can be resumed.", ok: "Stop " + code, danger: true, cancel: "Keep running", run: () => toast(code + " stopped.") } })}>Stop</button>`}</div>`;
+      <button class="btn sm ghost" onClick=${() => set({ dialog: { title: "Stop " + code + "?", body: code === "EP003" ? "4 takes are in flight. They are waited on and recorded, never sent again. The episode stops after them." : "No take is in flight. The episode stops now and can be resumed.", ok: "Stop " + code, danger: true, cancel: "Keep running", run: () => toast(code + " stopped.") } })}>Stop</button>`}</div>`;
     return html`<aside class=${"agent " + (float ? "float" : "")} aria-label="Agent panel">
       <div class="ahead"><span class="live"></span><h2>Agent</h2><span class="grow"></span>
         ${float ? html`<button class="ibtn" aria-label="Close the agent panel" onClick=${() => set({ agentOpen: false })}>${I("x")}</button>` : html`<button class="ibtn" aria-label="Collapse" onClick=${() => toast("The panel collapses to the agent ball, as on Canvas.")}>${I("arrows-in")}</button>`}</div>

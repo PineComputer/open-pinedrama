@@ -47,7 +47,7 @@
     return html`<div class="main">
       <header class="top"><button class="ibtn" aria-label="Back" onClick=${() => go("home")}>${I("caret-left")}</button><div class="crumb"><span>Dramas</span>${I("caret-right")}<b>New drama</b></div><span class="grow"></span></header>
       <div class="scrollmain"><div class="wrap" style="max-width:1040px">
-        <div class="greet"><div class="grow"><h1>New drama</h1><p>Check the file, choose how it is made, and start. Nothing is spent until the agent writes the bible.</p></div></div>
+        <div class="greet"><div class="grow"><h1>New drama</h1><p>Check the file, choose how it is made, and start. drama-cli's screenplay check is free; the agent's turns are billed from the start.</p></div></div>
         <div class="formgrid">
           <div class="fcol">
             <section class="panel"><h3>${I("file-text")}Screenplay</h3>
@@ -66,7 +66,7 @@
           </div>
           <aside class="panel next"><h3>What happens next</h3>
             <ol class="nextsteps">
-              <li><b>The agent rewrites your file into Fountain and checks it</b><small>Free. Minutes.</small></li>
+              <li><b>The agent rewrites your file into Fountain and checks it</b><small>Minutes. drama-cli's check is free; the agent's turns are billed.</small></li>
               <li><b>You review what changed</b><small>Answer its questions, then accept in your own words.</small></li>
               <li><b>The agent writes the bible and draws the cast and places</b><small>You review the looks before any episode starts.</small></li>
               <li><b>Episodes: storyboards, then takes</b><small>You watch every video version (Take) and decide.</small></li></ol>
@@ -86,12 +86,12 @@
         <div class="greet"><div class="grow"><span class="kick">Step 1 of 4 · Script</span><h1>${done ? "Your Fountain is ready" : "Analyzing your script"}</h1>
           <p>${done ? "The agent rewrote your file into Fountain and checked it. One question waits for you." : "The agent rewrites your file into Fountain, the screenplay format drama-cli reads, and checks it."}</p></div>
           ${done ? html`<button class="btn lg primary" onClick=${() => go("fountain")}>${I("eye")}Review the rewrite</button>`
-            : html`<button class="btn danger" onClick=${() => set({ dialog: { title: "Stop analyzing?", body: "Nothing paid is in flight at this step. The project keeps your file; you can start again.", ok: "Stop analyzing", danger: true, cancel: "Keep going", run: () => { toast("Analyzing stopped."); go("home"); } } })}>${I("stop")}Stop analyzing</button>`}</div>
+            : html`<button class="btn danger" onClick=${() => set({ dialog: { title: "Stop analyzing?", body: "No video is in flight at this step. The agent's turns so far are billed. The drama keeps your file; you can start again.", ok: "Stop analyzing", danger: true, cancel: "Keep going", run: () => { toast("Analyzing stopped."); go("home"); } } })}>${I("stop")}Stop analyzing</button>`}</div>
         <div class="anagrid">
           <section class="panel"><h3>${I("list-checks")}Process<span class="grow"></span><span class="muted mono" style="font-size:11.5px">${Math.min(S.ana, P.setupSteps.length)} of ${P.setupSteps.length}</span></h3>
             <div class="bigbar"><i style=${`width:${(Math.min(S.ana, P.setupSteps.length) / P.setupSteps.length) * 100}%`}></i></div>
             <ol class="steps big">${P.setupSteps.map((s, i) => html`<li class=${i === S.ana ? "now" : i > S.ana ? "later" : ""}>${I(i < S.ana ? "check-circle" : i === S.ana ? "circle-notch" : "circle")}<span>${s.t} ${s.c && html`<code>${s.c}</code>`}</span><time>${i < S.ana ? s.time : ""}</time></li>`)}</ol>
-            <p class="muted" style="font-size:12px;margin-top:10px">Free so far: reading and checking a screenplay calls no paid model.</p></section>
+            <p class="muted" style="font-size:12px;margin-top:10px">drama-cli's screenplay check calls no paid model. ${SPENT_COVERS}</p></section>
           <section class="panel"><h3>${I("file-text")}The Fountain so far<span class="grow"></span><span class="tag">read-only</span></h3>
             <div class="fpeek">${P.fountain.slice(0, 4 + S.ana * 4).map((l) => l.gap ? html`<div class="gap"></div>` : html`<div class=${"fl " + l.el}>${l.tx}</div>`)}</div></section>
         </div></div></div></div>`;
@@ -120,7 +120,7 @@
         </div>
         <div class="faccept">
           <textarea placeholder="Accept the rewrite in your own words, e.g. “Yes, this is my script.” (required)" value=${S.words} onInput=${(e) => set({ words: e.target.value })}></textarea>
-          <div class="fbtns"><button class="btn" onClick=${() => set({ dialog: { title: "Send the rewrite back?", body: "Tell the agent what to change. It rewrites and checks again; nothing is spent.", ok: "Send back", cancel: "Cancel", run: () => toast("Sent back to the agent.") } })}>${I("arrow-counter-clockwise")}Send back</button>
+          <div class="fbtns"><button class="btn" onClick=${() => set({ dialog: { title: "Send the rewrite back?", body: "Tell the agent what to change. It rewrites and checks again: drama-cli's check is free, the agent's turns are billed.", ok: "Send back", cancel: "Cancel", run: () => toast("Sent back to the agent.") } })}>${I("arrow-counter-clockwise")}Send back</button>
             <button class="btn primary" disabled=${!ok} onClick=${() => { toast("Rewrite accepted, with your words. The agent starts the bible."); go("story"); }}>${I("check")}Accept the rewrite</button></div>
           <small class="muted">${!S.tod ? "Answer the question first: Day or Night." : !ok ? "Accepting needs your own words." : "Your words are recorded with the accepted file."}</small></div>
       </div></div>`;
