@@ -37,7 +37,11 @@ describe("the drama's Out of date", () => {
     expect(group(/^Episodes · EP001$/)).toBeInTheDocument();
     // The plate drama-cli calls stale, its reason in drama-cli's words (classify doesn't know an accepted.json).
     const plate = row(/Day/);
+    // A changed selection reads as the stage it names and the version it selects now (one line for its accepted.json and
+    // current.json), drama-cli's words under it.
+    expect(within(plate).getByText("An input changed: Place v2")).toBeInTheDocument();
     expect(within(plate).getByText("Changed selection: assets/scenes/office/accepted.json")).toBeInTheDocument();
+    expect(within(plate).getByText("Changed selection: assets/scenes/office/current.json")).toBeInTheDocument();
     expect(within(plate).getByText(/^Stale artifact: Changed selection/)).toBeInTheDocument();
     // What drama-cli calls fresh but was made from it says so, naming what it was made from.
     expect(within(row(/take/i)).getByText(/^Made from .*, which is out of date\.$/)).toBeInTheDocument();
@@ -144,13 +148,16 @@ describe("the drama's Out of date", () => {
 describe("a drama-cli reason, as the maker reads it", () => {
   function Probe({ problem }: { problem: string }) {
     const { t } = useT();
-    return <span>{readable(problem, t) ?? "unknown"}</span>;
+    return <span>{readable(problem, t, (stage) => (stage === "episodes/EP006/multi_panel_storyboard/seg04/line-art" ? "v2" : undefined)) ?? "unknown"}</span>;
   }
 
   it.each([
     ["Changed file: bible/v3/bible.json", "An input changed: Bible v3"],
     ["Changed file: assets/props/letter/v2/image-1.png", "An input changed: Prop v2"],
-    ["Changed selection: assets/scenes/office/times/Day/accepted.json", "unknown"],
+    ["Changed selection: episodes/EP006/multi_panel_storyboard/seg04/line-art/accepted.json", "An input changed: Storyboard v2"],
+    ["Changed selection: episodes/EP006/multi_panel_storyboard/seg04/line-art/current.json", "An input changed: Storyboard v2"],
+    ["Changed selection: assets/scenes/office/times/Day/accepted.json", "An input changed: Place"],
+    ["Changed selection: somewhere/else/accepted.json", "unknown"],
     ["the export could not read it", "unknown"],
   ])("reads %s by what classify knows of its file", async (problem, line) => {
     await renderAt(<Probe problem={problem} />);

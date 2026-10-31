@@ -5,7 +5,7 @@
 import { Link, useRouter } from "@tanstack/react-router";
 import { useRef, useState } from "react";
 import { classify } from "../../engine/classify.ts";
-import { type LineageKind, type LineageNode, type LineageView, outOfDate } from "../../shared/lineage.ts";
+import { type LineageKind, type LineageNode, type LineageView, outOfDate, stageOf } from "../../shared/lineage.ts";
 import type { ChatView, SubmissionView } from "../../shared/types.ts";
 import { api, ApiError, useResource } from "../api.ts";
 import { Dialog } from "../components/Dialog.tsx";
@@ -57,12 +57,17 @@ const FILE_KIND: Partial<Record<ReturnType<typeof classify>["kind"], LineageKind
  * A drama-cli reason ("Changed file: bible/v3/bible.json") as a maker reads it: the file it names, by what classify knows
  * of its path and nothing more ("An input changed: Bible v3"); undefined when classify doesn't know the file.
  */
-export function readable(problem: string, t: T): string | undefined {
+export function readable(problem: string, t: T, acceptedOf: (stage: string) => string | null | undefined = () => undefined): string | undefined {
   const named = problem.match(/^[^:]+:\s+(\S+)$/);
   if (!named) return undefined;
   const hints = classify(named[1]);
   const kind = FILE_KIND[hints.kind];
-  return kind && t("ood.inputChanged", { what: [t(`graph.kind.${kind}` as TKey), hints.version].filter(Boolean).join(" ") });
+  if (kind) return t("ood.inputChanged", { what: [t(`graph.kind.${kind}` as TKey), hints.version].filter(Boolean).join(" ") });
+  // A changed selection names a stage folder's pointer (drama_cli/artifacts.py:234): the stage, by its folder
+  // (shared/lineage.ts, stageOf), and the version it selects now, as the lineage has it.
+  const pointer = named[1].match(/^(.+)\/(?:accepted|current)\.json$/);
+  const stage = pointer && stageOf(pointer[1]);
+  return stage ? t("ood.inputChanged", { what: [t(`graph.kind.${stage.kind}` as TKey), acceptedOf(pointer[1])].filter(Boolean).join(" ") }) : undefined;
 }
 
 interface Group {
@@ -158,22 +163,29 @@ export function OutOfDate({ dramaId }: { dramaId: string }) {
   };
   // Leaving for a home or Lineage marks the row first (?item= on this page), so Back returns to it.
   const mark = (node: LineageNode) => router.history.replace(router.buildLocation({ to: "/d/$dramaId/out-of-date", params: { dramaId }, search: { item: node.id } }).href);
-  const reason = (node: LineageNode) =>
-    node.fresh === false ? (
-      node.problems.map((problem) => {
-        const line = readable(problem, t);
-        return line ? (
-          <details key={problem}>
-            <summary>{line}</summary>
-            <code>{problem}</code>
-          </details>
-        ) : (
-          <div key={problem}>{problem}</div>
-        );
-      })
-    ) : (
-      madeFrom(node)
-    );
+  // drama-cli's reasons, those that read the same once readable (a stage's accepted.json and current.json) in one line,
+  // their exact words under it; the rest as drama-cli wrote them.
+  const reason = (node: LineageNode) => {
+    if (node.fresh !== false) return madeFrom(node);
+    const lines = new Map<string, string[]>();
+    const raw: string[] = [];
+    for (const problem of node.problems) {
+      const line = readable(problem, t, (stage) => byId.get(stage)?.accepted);
+      if (line) lines.set(line, [...(lines.get(line) ?? []), problem]);
+      else raw.push(problem);
+    }
+    return [
+      ...[...lines].map(([line, words]) => (
+        <details key={line}>
+          <summary>{line}</summary>
+          {words.map((word) => (
+            <code key={word}>{word}</code>
+          ))}
+        </details>
+      )),
+      ...raw.map((problem) => <div key={problem}>{problem}</div>),
+    ];
+  };
   return (
     <>
       <div className="bar2">
