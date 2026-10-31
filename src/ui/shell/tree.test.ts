@@ -54,10 +54,16 @@ describe("the drama tree", () => {
 
   it("says where the screenplay stands on Script's row, as an episode row does", () => {
     const version = (state?: "open" | "answered", verdict?: "approve" | "revise"): ScreenplayVersion => ({ version: "v1", question: state && { reviewId: "r1", state, verdict } });
-    expect(scriptNow([version("open")], false, false)).toEqual({ now: "waiting", mark: "you" });
-    expect(scriptNow([version("answered", "revise")], true, false)).toEqual({ now: "rewriting", mark: "work" });
-    expect(scriptNow([version("answered", "approve")], false, false)).toEqual({ now: "accepted", mark: "done" });
-    expect(scriptNow([], false, false)).toEqual({ now: "original", mark: "done" });
-    expect(scriptNow([], true, false)).toEqual({ now: "rewriting", mark: "work" });
+    expect(scriptNow([version("open")], false)).toEqual({ now: "waiting", mark: "you" });
+    expect(scriptNow([version("answered", "revise")], true)).toEqual({ now: "rewriting", mark: "work" });
+    expect(scriptNow([version("answered", "approve")], false)).toEqual({ now: "accepted", mark: "done" });
+    expect(scriptNow([], true)).toEqual({ now: "rewriting", mark: "work" });
+  });
+
+  it("never says Accepted without a recorded acceptance: a project with no recorded version is Original only, waiting in line", () => {
+    // The Double Life (r4), past its setup with episodes made, recorded no screenplay version.
+    expect(scriptNow([], false)).toEqual({ now: "original", mark: "line" });
+    // A version answered before the verdict existed is no recorded acceptance either.
+    expect(scriptNow([{ version: "v1", question: { reviewId: "r1", state: "answered", words: "Yes." } }], false)).toBeUndefined();
   });
 });

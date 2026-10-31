@@ -848,7 +848,9 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
 /* With the detail open the grid keeps several columns, and a tall plate never makes a card taller than the detail. */
 /* Script (design draft; D62): the page holds the screenplay from upload to acceptance. The views on the
    left, the version history on the right (GitHub's PR timeline; Figma's and Google Docs' version history). */
-.notice { display: flex; gap: 8px; align-items: flex-start; margin: 0 16px 12px; padding: 10px 12px; border-radius: var(--radius-large); border: 1px solid var(--border); background: var(--surface-container); font-size: 12.5px; color: var(--text-secondary); }
+/* A notice: a fact about the page, in the page's one 16px content column, its icon and words left-aligned, a filled
+   block with no border (D67: no bordered box and no full-bleed strip). The product's notices use this one rule. */
+.notice { display: flex; gap: 8px; align-items: flex-start; margin: 0 16px 12px; padding: 10px 12px; border-radius: var(--radius-large); background: var(--surface-container); font-size: 12.5px; color: var(--text-secondary); text-align: left; }
 .notice .ic { width: 16px; height: 16px; flex: none; margin-top: 1px; } .notice b { color: var(--text-primary); }
 .scriptlayout { display: grid; gap: 16px; padding: 0 16px 40px; min-width: 0; }
 .scriptpanes { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; padding: 0; }

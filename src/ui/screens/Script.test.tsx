@@ -89,7 +89,10 @@ describe("Script", () => {
     answer("/api/dramas/d1/script", { inputs: [original], screenplayFile: original.id, versions: [] });
     texts();
     await renderAt(<Script dramaId="d1" />, "/d/d1/script");
-    expect(await screen.findByText("Only the original was recorded for this project.")).toBeInTheDocument();
+    // The history says it under the upload, on the page's column, with no banner (D67).
+    const versions = await screen.findByRole("region", { name: "Versions" });
+    expect(await within(versions).findByText("This project's rewrite wasn't recorded.")).toBeInTheDocument();
+    expect(document.querySelector(".notice")).not.toBeInTheDocument();
     // One view only, so no switch to offer.
     expect(screen.queryByRole("radio", { name: "Fountain" })).not.toBeInTheDocument();
   });
@@ -132,7 +135,7 @@ describe("Script, while the agent rewrites", () => {
     texts();
     await renderAt(<Script dramaId="d1" rewriting />, "/d/d1/script");
     expect(await screen.findByText("v1 · the agent is rewriting your file into Fountain")).toBeInTheDocument();
-    expect(screen.queryByText("Only the original was recorded for this project.")).not.toBeInTheDocument();
+    expect(screen.queryByText("This project's rewrite wasn't recorded.")).not.toBeInTheDocument();
   });
 });
 

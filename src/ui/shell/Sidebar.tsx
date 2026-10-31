@@ -69,10 +69,8 @@ export function DramaSidebar({ drama, page, episode, drawer }: { drama: DramaVie
   const cast = useResource<CastCard[]>(`/api/dramas/${drama.id}/cast`, [`drama:${drama.id}`]);
   const lineage = useResource<LineageView>(`/api/dramas/${drama.id}/lineage`, [`project:${drama.id}`]);
   const tree = dramaTree({ cast: cast.data ?? [], reviews: reviews.data ?? [], lineage: lineage.data?.lineage ?? null, rows: drama.episodeRows });
-  // The script is done once the maker has answered the setup's first question about it.
-  const scriptDone = drama.setup.reached > 1 || drama.episodeRows.length > 0;
   const script = useResource<ScriptPage>(`/api/dramas/${drama.id}/script`, [`drama:${drama.id}`]);
-  const scriptRow = script.data && scriptNow(script.data.versions, isSettingUp(drama) && drama.setup.state === "working" && drama.setup.reached <= 1, scriptDone);
+  const scriptRow = script.data && scriptNow(script.data.versions, isSettingUp(drama) && drama.setup.state === "working" && drama.setup.reached <= 1);
   // The tree folds the episodes that only wait in line at its end into one line ("EP009–EP024 · 16 in line"), as the design does.
   const lineStart = drama.episodeRows.findLastIndex((row) => row.state !== "queued") + 1;
   const folded = drama.episodeRows.length - lineStart > 1 ? drama.episodeRows.slice(lineStart) : [];

@@ -249,14 +249,6 @@ function ScriptBody({ dramaId, data, ep, rewriting }: { dramaId: string; data: S
           <p className="muted pagesub">{t("script.subtitle")}</p>
         </div>
       </div>
-      {!data.versions.length && !rewriting && (
-        <div className="notice" role="status">
-          <Icon name="info" className="ic" />
-          <span>
-            <b>{t("script.onlyOriginal")}</b> {t("script.onlyOriginalWhy")}
-          </span>
-        </div>
-      )}
       {ep && fountain !== undefined && target < 0 && (
         <div className="notice" role="status">
           <Icon name="info" className="ic" />
@@ -286,6 +278,8 @@ function ScriptBody({ dramaId, data, ep, rewriting }: { dramaId: string; data: S
                 <span className="dot accepted" />
                 <div className="grow">
                   <span>{t("script.uploaded", { name: original.name })}</span>
+                  {/* A project set up before drama-cli recorded rewrites: the history says so where the versions would be. */}
+                  {!data.versions.length && !rewriting && <small className="muted">{t("script.notRecorded")}</small>}
                 </div>
               </li>
             )}

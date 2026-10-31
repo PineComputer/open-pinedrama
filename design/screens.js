@@ -483,7 +483,7 @@
   const SCRIPT_STATES = { scriptRewriting: "rewriting", scriptYou: "you", scriptBack: "back", scriptYou2: "you2", scriptOriginal: "original" };
   const scriptState = () => SCRIPT_STATES[S.state] || "accepted";
   // The Script row in the project tree says the same, as an episode row does (now-line + dot, the five maker states).
-  const scriptRow = () => ({ rewriting: ["Rewriting", "work"], back: ["Rewriting", "work"], you: ["Waiting for you", "you"], you2: ["Waiting for you", "you"], accepted: ["Accepted", "accepted"], original: ["Original only", "accepted"] })[scriptState()];
+  const scriptRow = () => ({ rewriting: ["Rewriting", "work"], back: ["Rewriting", "work"], you: ["Waiting for you", "you"], you2: ["Waiting for you", "you"], accepted: ["Accepted", "accepted"], original: ["Original only", "line"] })[scriptState()];
   /* The sample's versions. Only a rewrite that passes drama-cli's screenplay validate is recorded, as the next vN with its
      review.md (short_drama doc/drama-cli/cli.md, screenplay: "A ready FILE is recorded as a version"); an attempt that
      fails is no record, so it is not here: the agent reports it in its own process in the sidebar. v1 is The Stepmother's
@@ -574,7 +574,8 @@
       back: [["work", null, "v2 · the agent revises v1 with your reason", null], v1back, uploaded],
       you2: onWaiting(v2, "17:44", [v1back, uploaded]),
       accepted: [["done", v2, "accepted in your words: “Yes, this is my script.”", "17:46"], v1back, uploaded],
-      original: [uploaded],
+      // A project set up before drama-cli recorded rewrites: the history says so under the upload, no banner (D67).
+      original: [["done", null, html`Original uploaded · ${sc.file}<br/><small class="muted">This project's rewrite wasn't recorded.</small>`, "17:31"]],
     }[st];
     const History = html`<ol class="history">${events.map(([kind, d, text, at]) => html`<li class=${kind + (d && d === shown ? " sel" : "")}>
         <span class="dot ${kind === "you" ? "you" : kind === "work" ? "work" : kind === "line" ? "line" : "accepted"}"></span>
@@ -590,7 +591,6 @@
         <div class="scripthead"><div class="grow"><h2 class="pagetitle">Script</h2>
           <p class="muted pagesub">Your screenplay from upload to acceptance: the agent rewrites it into Fountain, drama-cli validates it, and you accept it. Sample: ${sc.project}'s real files.</p></div></div>
         ${S.scriptEp && hasFountain && !target && html`<div class="notice" role="status">${I("info")}<span><b>${S.scriptEp} isn't in this sample's screenplay.</b> The sample is The Stepmother's two episodes; for a real project Script opens at ${S.scriptEp}'s section.</span></div>`}
-        ${st === "original" && html`<div class="notice" role="status">${I("info")}<span><b>Only the original was recorded for this project.</b> It was set up before drama-cli kept the rewrite, its check and your acceptance, so there are none to show.</span></div>`}
         <div class="scriptlayout">
           <section class="scripthistory" aria-label="Versions"><h3>${I("stack")}Versions</h3>
             ${accepted ? html`<details open=${!!S.sver}><summary>Accepted ${events[0][1]?.v || ""} · ${events.length} steps</summary>${History}</details>` : History}</section>

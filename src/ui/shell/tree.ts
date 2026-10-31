@@ -36,13 +36,14 @@ const PLACE: Partial<Record<ReviewKind, TreePlace>> = { looks: "assets", referen
 
 /**
  * Where the screenplay stands, for the tree's Script row, as an episode row says it (design/screens.js, scriptRow; the
- * five maker states' dots): the version that waits for the maker, the agent rewriting, accepted, or only the original.
+ * five maker states' dots), from the versions Script shows: the version that waits for the maker, the agent rewriting,
+ * accepted only by a recorded acceptance (an approve verdict), or only the original when no version was recorded.
  */
-export function scriptNow(versions: ScreenplayVersion[], rewriting: boolean, past: boolean): { now: "waiting" | "rewriting" | "accepted" | "original"; mark: Mark } | undefined {
+export function scriptNow(versions: ScreenplayVersion[], rewriting: boolean): { now: "waiting" | "rewriting" | "accepted" | "original"; mark: Mark } | undefined {
   if (versions.some((version) => version.question?.state === "open")) return { now: "waiting", mark: "you" };
   if (rewriting) return { now: "rewriting", mark: "work" };
-  if (past || versions.some((version) => version.question?.verdict === "approve")) return { now: "accepted", mark: "done" };
-  if (!versions.length) return { now: "original", mark: "done" };
+  if (versions.some((version) => version.question?.verdict === "approve")) return { now: "accepted", mark: "done" };
+  if (!versions.length) return { now: "original", mark: "line" };
   return undefined;
 }
 
