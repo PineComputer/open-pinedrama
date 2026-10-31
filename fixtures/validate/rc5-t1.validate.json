@@ -1,0 +1,66 @@
+{
+  "path": "/work/drama/inputs/screenplay.fountain",
+  "original": "/work/drama/inputs/screenplay.fountain",
+  "rewrite": false,
+  "ready": true,
+  "problems": [],
+  "summary": {
+    "episodes": 1,
+    "scenes": 1,
+    "dialogue": 2,
+    "speakers": {
+      "陈海清": 1,
+      "蔡晓磊": 1
+    }
+  },
+  "file_lines": [
+    {
+      "line": 1,
+      "kind": "section"
+    },
+    {
+      "line": 3,
+      "kind": "heading"
+    },
+    {
+      "line": 5,
+      "kind": "action"
+    },
+    {
+      "line": 6,
+      "kind": "action"
+    },
+    {
+      "line": 8,
+      "kind": "note"
+    },
+    {
+      "line": 10,
+      "kind": "action"
+    },
+    {
+      "line": 11,
+      "kind": "action"
+    },
+    {
+      "line": 13,
+      "kind": "character"
+    },
+    {
+      "line": 14,
+      "kind": "dialogue"
+    },
+    {
+      "line": 16,
+      "kind": "note"
+    },
+    {
+      "line": 17,
+      "kind": "character"
+    },
+    {
+      "line": 18,
+      "kind": "dialogue"
+    }
+  ]
+}

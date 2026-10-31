@@ -1,5 +1,7 @@
 // Script, the screenplay's one home (D62): the versions drama-cli recorded, newest first, the selected one in a
 // read-only editor, and the maker's decision on the version that waits, Accept and Send back as peers.
+import { readFileSync } from "node:fs";
+import path from "node:path";
 import { screen, waitFor, within } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
 import userEvent from "@testing-library/user-event";
@@ -218,13 +220,37 @@ describe("Script's Original", () => {
 });
 
 describe("Script's Fountain", () => {
-  it("shows the file as it is, line for line, and says this drama-cli records no line kinds (D62 as amended; Codex rc5 C15)", async () => {
-    // rc5 T1's lines that fountain-js read as character cues and dialogue, where drama-cli's table has actions and Cai's line.
-    const file = "1981 年，长江中上游洪水灾害后。\n\nΔ陈海清拾起推车\n\n[[旁白]]\n@蔡晓磊\n你回来了？\n";
-    answer("/api/dramas/d1/script", { inputs: [original], screenplayFile: original.id, versions: [{ version: "v1", file: v1 }] });
-    server.use(http.get(original.url, () => HttpResponse.text("")), http.get(v1.url, () => HttpResponse.text(file)));
+  const validate = file({ kind: "screenplay-version", name: "validate.json", type: "application/json", version: "v1" });
+  const fixture = (name: string) => readFileSync(path.resolve("fixtures/validate", name), "utf8");
+
+  it("styles each line by the kind drama-cli's record gives it, rc5's Chinese action and forced @ cue included (D173; Codex rc5 C15)", async () => {
+    // drama-cli v0.7.6's own record of rc5 T1's lines (fixtures/validate), where fountain-js had read the action as a
+    // character cue and the @ cue after a note as dialogue.
+    const text = fixture("rc5-t1.fountain");
+    answer("/api/dramas/d1/script", { inputs: [original], screenplayFile: original.id, versions: [{ version: "v1", file: v1, validate }] });
+    server.use(http.get(original.url, () => HttpResponse.text("")), http.get(v1.url, () => HttpResponse.text(text)), http.get(validate.url, () => HttpResponse.text(fixture("rc5-t1.validate.json"))));
     await renderAt(<Script dramaId="d1" />, "/d/d1/script");
-    await waitFor(() => expect(document.querySelector("pre.fountain")?.textContent).toBe(`${file}\n`));
+    const kind = (line: string) => [...document.querySelectorAll(".fdoc > div")].find((element) => element.textContent === line)?.className;
+    await waitFor(() => expect(kind("# 第1集")).toBe("fl section"));
+    expect(kind(".外景 工厂院子 - 夜 #1-1#")).toBe("fl heading");
+    expect(kind("1981 年，长江中上游洪水灾害后。")).toBe("fl");
+    expect(kind("[[蔡晓磊【蔡晓艳哥哥】]]")).toBe("fl");
+    expect(kind("@蔡晓磊")).toBe("fl character");
+    expect(kind("春红啊，幸亏妹妹赶紧把医生喊过来，她把医药费付了，这才把我们娃儿命保住了。")).toBe("fl dialogue");
+    // Every line of the file, in order, a blank one between elements a gap.
+    expect([...document.querySelectorAll(".fdoc > div")].map((element) => (element.className === "gap" ? "" : element.textContent))).toEqual(text.split("\n"));
+    expect(screen.queryByText(/doesn't record what kind each line is/)).not.toBeInTheDocument();
+  });
+
+  it("shows the file as plain text, line for line, and says so, when the record has no kinds (drama-cli v0.7.5; D62 as amended)", async () => {
+    // rc5 T1's lines that fountain-js read as character cues and dialogue, where drama-cli's table has actions and Cai's line.
+    const text = "1981 年，长江中上游洪水灾害后。\n\nΔ陈海清拾起推车\n\n[[旁白]]\n@蔡晓磊\n你回来了？\n";
+    const record = { path: "screenplay.fountain", original: "inputs/screenplay.fountain", rewrite: false, ready: true, problems: [], summary: { episodes: 0, scenes: 0, dialogue: 1, speakers: { 蔡晓磊: 1 } } };
+    answer("/api/dramas/d1/script", { inputs: [original], screenplayFile: original.id, versions: [{ version: "v1", file: v1, validate }] });
+    server.use(http.get(original.url, () => HttpResponse.text("")), http.get(v1.url, () => HttpResponse.text(text)), http.get(validate.url, () => HttpResponse.json(record)));
+    await renderAt(<Script dramaId="d1" />, "/d/d1/script");
+    await waitFor(() => expect(document.querySelector("pre.fountain")?.textContent).toBe(`${text}\n`));
+    expect(document.querySelector(".fdoc")).not.toBeInTheDocument();
     expect(screen.getByText("This drama-cli version doesn't record what kind each line is, so the Fountain shows as plain text.")).toBeInTheDocument();
   });
 });

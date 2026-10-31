@@ -135,6 +135,20 @@ function lineMap(text: string | undefined): OriginalLine[] | undefined {
 }
 
 /**
+ * validate.json's file_lines: each line of the version's file (counted from 1) with the Fountain element drama-cli read it
+ * as, screenplay-tools' ElementType in lower case; none for a record made before drama-cli wrote them (short_drama D173).
+ */
+function lineKinds(text: string | undefined): Map<number, string> | undefined {
+  if (text === undefined) return undefined;
+  const { file_lines } = JSON.parse(text) as { file_lines?: { line: number; kind: string }[] };
+  return file_lines && new Map(file_lines.map(({ line, kind }) => [line, kind]));
+}
+
+// The class design/studio.css styles a kind with (.fl.heading, ...); the prototype styles no other kind. Fountain's
+// Parenthetical and Transition are .paren and .trans, since .transition is a Tailwind utility (css-names.test.ts).
+const PRINTED: Record<string, string> = { section: "section", heading: "heading", character: "character", dialogue: "dialogue", parenthetical: "paren", transition: "trans" };
+
+/**
  * VS Code's side-by-side diff, aligned by drama-cli's record (D62; Codex round 4, F5): each original line is one row with
  * every line of the version it became beside it (one to many, many to one), the lines between two of them in their own
  * row, a hatched filler where a side has none. The rows come from validate.json's `to`, never a diff of ours.
@@ -252,12 +266,15 @@ function ScriptBody({ dramaId, data, stage, ep, settingUp, asking }: { dramaId: 
   const mine = useDocumentText(original);
   // The compare reads the version's own record: the original as validate checked it, and validate's line map.
   const checked = useText(shown?.original).text;
-  const validated = useText(shown?.validate).text;
+  const record = useText(shown?.validate);
+  const validated = record.text;
   const map = lineMap(validated);
   const comparable = Boolean(map && shown?.original);
-  // The Fountain as the file's own lines: which kind each line is comes only from drama-cli's record of it, which this
-  // drama-cli doesn't write, so no parser of the studio's guesses one (D62 as amended for C15).
+  // The Fountain as the file's own lines, each styled by the kind drama-cli's record gives it and by nothing else: a
+  // record without kinds shows the file as plain text and says so (D62 as amended for C15).
   const lines = fountain === undefined ? [] : fountain.replace(/\r/g, "").split("\n");
+  const kinds = lineKinds(validated);
+  const recorded = !shown?.validate || validated !== undefined || record.failed;
   // An episode's "Episode script" (its Canvas head, ?ep=EPxxx) opens the Fountain at that episode's first scene, by
   // the scene number drama-cli writes at a heading's end.
   const target = ep ? lines.findIndex((line) => Number(episodeOfScene(line)) === Number(ep.slice(2))) : -1;
@@ -347,15 +364,28 @@ function ScriptBody({ dramaId, data, stage, ep, settingUp, asking }: { dramaId: 
             {views.length > 1 && <Segmented label={t("script.view")} value={view} options={views.map(([value, label, icon]) => ({ value, label: t(label), icon }))} onChange={choose} />}
           </div>
           {shown && !comparable && (shown.validate === undefined || validated !== undefined) && <p className="muted ednote">{t("script.noLineMap", { version: shown.version })}</p>}
-          {view === "fountain" && shown && <p className="muted ednote">{t("script.noLineKinds")}</p>}
+          {view === "fountain" && shown && recorded && !kinds && <p className="muted ednote">{t("script.noLineKinds")}</p>}
           {view === "original" && unmatched && original && <p className="muted ednote">{t("script.sourceUnmatched", { version: shown!.version, name: original.name })}</p>}
           {view !== "compare" && comparable && original?.name.toLowerCase().endsWith(".fountain") && (
             <p className="muted ednote">{t("script.alreadyFountain", { version: shown!.version })}</p>
           )}
           {view === "fountain" ? (
             <div className="edbody scriptdoc">
-              {fountain === undefined ? (
+              {fountain === undefined || !recorded ? (
                 <p className="quiet">{t("loading")}</p>
+              ) : kinds ? (
+                // design/screens.js, Script: a line of an element as .fl and its kind, a blank line between them a gap.
+                <div className="fdoc">
+                  {lines.map((line, index) =>
+                    !kinds.has(index + 1) && !line.trim() ? (
+                      <div key={index} className="gap" />
+                    ) : (
+                      <div key={index} id={`fl-${index}`} className={`fl ${PRINTED[kinds.get(index + 1) ?? ""] ?? ""}`.trim()}>
+                        {line}
+                      </div>
+                    ),
+                  )}
+                </div>
               ) : (
                 <pre className="fountain">
                   {lines.map((line, index) => (
