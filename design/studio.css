@@ -851,12 +851,6 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
 .notice .ic { width: 16px; height: 16px; flex: none; margin-top: 1px; } .notice b { color: var(--text-primary); }
 .scriptlayout { display: grid; gap: 14px; padding: 0 16px 40px; min-width: 0; }
 .scriptmain { min-width: 0; display: grid; gap: 12px; }
-.scriptbar { display: flex; align-items: center; gap: 10px; }
-.scriptbody { display: grid; grid-template-columns: 170px minmax(0, 1fr); gap: 12px; align-items: start; }
-.outline { position: sticky; top: 8px; display: grid; gap: 10px; font-size: 12.5px; }
-.outline button { display: block; width: 100%; text-align: left; border: 0; background: none; color: var(--text-secondary); padding: 3px 6px; border-radius: var(--radius-medium); cursor: pointer; font: inherit; }
-.outline button:hover { background: var(--hover); color: var(--text-primary); }
-.outline .ep { font-weight: 600; color: var(--text-primary); } .outline .sc { padding-left: 16px; font-size: 12px; }
 .orig button.chg { box-shadow: inset 3px 0 0 var(--warning-text); }
 .scripthistory { padding: 12px 16px; } .scripthistory h3 { margin: 0; }
 .scriptpanes { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; padding: 0; }
@@ -872,4 +866,22 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
 .scripthistory > details > summary { cursor: pointer; font-size: 12.5px; color: var(--text-secondary); margin-top: 6px; }
 .navi .now { margin-left: auto; font-size: 11.5px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .navi .dot { flex: none; width: 7px; height: 7px; border-radius: 50%; }
-.outline button.on { background: var(--selected); color: var(--text-primary); }
+/* Script as an editor (VS Code's editor title area and diff editor): the open file as a tab, its actions as icon
+   buttons; Compare is two panes with a gutter, a changed row tinted, scrolling together. */
+.edbar { display: flex; align-items: center; gap: 4px; border-bottom: 1px solid var(--border); }
+.edtab { display: inline-flex; align-items: center; gap: 6px; padding: 8px 12px; border: 1px solid var(--border); border-bottom: 0; border-radius: var(--radius-medium) var(--radius-medium) 0 0; background: var(--surface); font-size: 12.5px; margin-bottom: -1px; }
+.edtab b { font: 600 12.5px var(--font-mono); } .edtab .ic { width: 15px; height: 15px; color: var(--text-muted); }
+.edbar .ibtn[aria-pressed="true"] { background: var(--selected); color: var(--text-primary); }
+.diffed { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0; border: 1px solid var(--border); border-radius: var(--radius-large); overflow: hidden; background: var(--surface); }
+.dpane { max-height: 560px; overflow: auto; font: 12.5px/1.6 var(--font-mono); } .dpane.a { border-right: 1px solid var(--border); }
+.dhead { position: sticky; top: 0; z-index: 1; padding: 6px 10px; background: var(--surface-container); border-bottom: 1px solid var(--border); font-size: 11.5px; color: var(--text-muted); }
+.drow { display: grid; grid-template-columns: 36px 1fr; width: 100%; border: 0; background: none; color: var(--text-primary); font: inherit; text-align: left; padding: 0; }
+button.drow { cursor: pointer; } button.drow:hover { background: var(--hover); }
+.drow .ln { padding: 0 8px; text-align: right; color: var(--text-subtle); user-select: none; }
+.drow .tx { padding: 0 10px; white-space: pre-wrap; overflow-wrap: anywhere; }
+.drow.chg.del { background: color-mix(in srgb, var(--error) 14%, transparent); } .drow.chg.del .ln { box-shadow: inset 3px 0 0 var(--error); }
+.drow.chg.add { background: color-mix(in srgb, var(--success) 14%, transparent); } .drow.chg.add .ln { box-shadow: inset 3px 0 0 var(--success); }
+.drow.on { outline: 1px solid var(--text-primary); outline-offset: -1px; }
+.dnote { grid-column: 1 / -1; margin: 0; padding: 8px 10px; border-top: 1px solid var(--border); font-size: 12px; }
+.edtab .ro { display: inline-flex; align-items: center; gap: 4px; margin-left: 6px; font-size: 11px; color: var(--text-muted); } .edtab .ro .ic { width: 12px; height: 12px; }
+.scriptdoc, .dpane { cursor: default; user-select: text; }

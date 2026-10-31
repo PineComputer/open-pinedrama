@@ -481,17 +481,23 @@
     const sc = P.script, st = scriptState();
     const fl = sc.fountain, map = sc.map;
     const hasFountain = st !== "rewriting" && st !== "original";
-    // An episode's "Episode script" (Segments) opens Script on that episode: Fountain, scrolled to its section, marked.
+    // An episode's "Episode script" (Segments) opens Script's document scrolled to that episode's section.
     const epNum = S.scriptEp ? Number(S.scriptEp.replace(/\D/g, "")) : null;
-    const view = S.sview && (hasFountain || S.sview === "original") && !(S.scriptEp && hasFountain) ? S.sview : hasFountain ? "fountain" : "original";
-    // Episode → scene outline from the printed lines (VS Code's Outline view): a section is an episode, a heading a scene.
-    const outline = []; fl.forEach((l, i) => { if (l.el === "section") outline.push({ ep: l.text.replace(/^#\s*/, ""), i, scenes: [] }); else if (l.el === "heading" && outline.length) outline[outline.length - 1].scenes.push({ t: l.text.replace(/\s*#[^#]*#\s*$/, ""), i }); });
-    const jumpTo = (i) => document.getElementById("fl-" + i)?.scrollIntoView({ block: "start", behavior: "smooth" });
-    const target = epNum && outline.find((e) => Number(e.ep.replace(/\D/g, "")) === epNum);
-    useEffect(() => { if (target && view === "fountain") jumpTo(target.i); }, [S.scriptEp, view]);
+    const view = S.scriptEp && hasFountain ? "fountain" : S.sview && (hasFountain || S.sview === "original") ? S.sview : hasFountain ? "fountain" : "original";
+    const sectionAt = epNum && fl.findIndex((l) => l.el === "section" && Number(l.text.replace(/\D/g, "")) === epNum);
+    const target = sectionAt !== null && sectionAt >= 0 ? sectionAt : null;
+    useEffect(() => { if (target !== null && view === "fountain") document.getElementById("fl-" + target)?.scrollIntoView({ block: "start", behavior: "smooth" }); }, [S.scriptEp, view]);
+    // What changed is drama-cli's record, review.md's line map, never a diff of our own: an original line it rewrote, and
+    // the Fountain lines it became.
     const changed = new Set(map.filter((r) => !r.same).map((r) => r.o));
+    const became = new Set(map.filter((r) => !r.same).flatMap((r) => r.to.map((n) => n - 1)));
     const lit = S.ssel ? new Set((map.find((r) => r.o === S.ssel) || { to: [] }).to.map((n) => n - 1)) : new Set();
     const Line = (l, i) => (l.gap ? html`<div class="gap"></div>` : html`<div id=${"fl-" + i} class=${"fl " + l.el + (lit.has(l.source) ? " on" : "")}>${l.text}</div>`);
+    // VS Code's diff editor: two panes, line numbers in the gutter, a changed row tinted, the panes scrolling together.
+    const sync = (from) => (e) => { const other = e.currentTarget.parentElement.querySelector(from === "a" ? ".dpane.b" : ".dpane.a"); const a = e.currentTarget;
+      if (other && !other.dataset.syncing) { a.dataset.syncing = "1"; other.scrollTop = (a.scrollTop / Math.max(1, a.scrollHeight - a.clientHeight)) * (other.scrollHeight - other.clientHeight); requestAnimationFrame(() => delete a.dataset.syncing); } };
+    const origLines = sc.original.split("\n");
+    const fountainRows = sc.fountainText.split("\n");
     const review = html`<details class="whatchanged"><summary>What changed</summary><pre class="document plain">${sc.review}</pre></details>`;
     // The history, newest on top (GitHub's pull-request timeline; Figma's and Google Docs' version history): each step as
     // drama-cli recorded it, drama-cli's own words where it refused.
@@ -526,16 +532,22 @@
               <button class="btn primary" disabled=${S.words.trim().length < 3} onClick=${() => { toast("Rewrite accepted, with your words. The agent starts the bible."); set({ state: "normal", saccept: false }); }}>${I("check")}Accept the rewrite</button></div>
             <small class="muted">${S.words.trim().length < 3 ? "Accepting needs your own words." : "Your words are recorded with the accepted file."}</small></div>`}
           <div class="scriptmain">
-          <div class="scriptbar"><div class="seg" role="group" aria-label="View">${[["fountain", "Fountain"], ["original", "Original"], ["compare", "Compare"]].map(([k, l]) =>
-              html`<button aria-pressed=${String(view === k)} disabled=${!hasFountain && k !== "original"} title=${!hasFountain && k !== "original" ? "No Fountain recorded yet" : ""} onClick=${() => set({ sview: k, scriptEp: null })}>${l}</button>`)}</div>
-            <span class="grow"></span>${hasFountain && html`<span class="muted mono" style="font-size:11.5px">v1 · screenplay/v1/screenplay.fountain</span>`}</div>
-          ${view === "fountain" ? html`<div class="scriptbody"><nav class="outline" aria-label="Outline">${outline.map((e) => html`<div><button class=${"ep" + (e === target ? " on" : "")} aria-current=${e === target ? "location" : undefined} onClick=${() => jumpTo(e.i)}>${e.ep}</button>
-                ${e.scenes.map((x) => html`<button class="sc" onClick=${() => jumpTo(x.i)}>${x.t}</button>`)}</div>`)}</nav>
-              <section class="panel scriptdoc"><div class="fdoc">${fl.map(Line)}</div></section></div>`
-            : view === "compare" ? html`<div class="fpanes scriptpanes"><section class="fpane"><h4>Original <span class="tag">${sc.file}</span></h4>
-                <ol class="orig">${sc.original.split("\n").map((t, i) => html`<li><button type="button" class=${(S.ssel === i + 1 ? "on " : "") + (changed.has(i + 1) ? "chg" : "")} aria-pressed=${String(S.ssel === i + 1)} onClick=${() => set({ ssel: i + 1 })}><span>${i + 1}</span>${t}</button></li>`)}</ol></section>
-              <section class="fpane fnt"><h4>Fountain <span class="tag">v1</span></h4><div class="fdoc">${fl.map(Line)}</div>
-                ${S.ssel && html`<p class="muted" style="font-size:12px">Line ${S.ssel} became: <code>${(map.find((r) => r.o === S.ssel) || { became: "a blank line" }).became}</code></p>`}</section></div>`
+          ${/* VS Code's editor title area: the open file as a tab, its actions as icon buttons on the right (Apple HIG:
+               an icon-only toolbar button has a tooltip and a name). */ ""}
+          <div class="edbar"><div class="edtab" role="tab" aria-selected="true">${I(view === "original" ? "file-text" : view === "compare" ? "square-half" : "film-strip")}
+              <b>${view === "compare" ? sc.file + " ↔ screenplay.fountain" : view === "original" ? sc.file : "screenplay.fountain"}</b>
+              ${view !== "original" && html`<span class="tag">v1</span>`}
+              ${/* Read-only for now (VS Code's read-only editor, files.readonly): a change goes through the agent, Send back
+                   while a version waits for you, or ask the agent after acceptance; drama-cli checks the new version. */ ""}
+              <span class="ro" title="Read-only: ask the agent for a change; it writes a new version that drama-cli checks and you accept">${I("lock-simple")}Read-only</span></div>
+            <span class="grow"></span>
+            ${[["original", "Show the original", "file-text"], ["fountain", "Show the Fountain", "film-strip"], ["compare", "Compare the original and the Fountain", "square-half"]].map(([k, l, ic]) =>
+              html`<button class="ibtn" title=${!hasFountain && k !== "original" ? l + " · no Fountain recorded yet" : l} aria-label=${l} aria-pressed=${String(view === k)} disabled=${!hasFountain && k !== "original"} onClick=${() => set({ sview: k, scriptEp: null })}>${I(ic)}</button>`)}</div>
+          ${view === "fountain" ? html`<section class="panel scriptdoc"><div class="fdoc">${fl.map(Line)}</div></section>`
+            : view === "compare" ? html`<div class="diffed" aria-label="Changes: the original beside the Fountain">
+                <div class="dpane a" onScroll=${sync("a")}><div class="dhead">${sc.file}</div>${origLines.map((t, i) => html`<button type="button" class=${"drow" + (changed.has(i + 1) ? " chg del" : "") + (S.ssel === i + 1 ? " on" : "")} onClick=${() => set({ ssel: i + 1 })}><span class="ln">${i + 1}</span><span class="tx">${t}</span></button>`)}</div>
+                <div class="dpane b" onScroll=${sync("b")}><div class="dhead">screenplay.fountain <span class="tag">v1</span></div>${fountainRows.map((t, i) => html`<div class=${"drow" + (became.has(i) ? " chg add" : "") + (lit.has(i) ? " on" : "")}><span class="ln">${i + 1}</span><span class="tx">${t}</span></div>`)}</div>
+                ${S.ssel && html`<p class="muted dnote">Line ${S.ssel} became: <code>${(map.find((r) => r.o === S.ssel) || { became: "a blank line" }).became}</code> · drama-cli's record (review.md)</p>`}</div>`
             : html`<section class="panel scriptdoc"><pre class="document plain">${sc.original}</pre></section>`}
         </div>
         </div>
