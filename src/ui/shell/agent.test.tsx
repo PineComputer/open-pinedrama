@@ -119,6 +119,16 @@ describe("the agent panel", () => {
     expect(status).not.toHaveTextContent("after PC-1 stopped");
   });
 
+  it("shows a step and a message the agent gave in the same words, one after the other, once, as the step", async () => {
+    engine();
+    const twice = chat("s1", "EP001", "steer");
+    twice.messages.push({ id: 4, kind: "activity", text: "Redrawing seg04's storyboard", at: "2026-10-30T10:03:00Z" }, { id: 5, kind: "progress", text: "Redrawing seg04's storyboard", at: "2026-10-30T10:03:01Z" });
+    answer("/api/sessions/s1/chat", twice);
+    await renderAt(<AgentPanel drama={drama} episode="EP001" onCollapse={() => {}} />);
+    const said = await screen.findByRole("region", { name: "Conversation" });
+    expect(await within(said).findAllByText("Redrawing seg04's storyboard")).toHaveLength(1);
+  });
+
   it("is the conversation with one session and nothing else: Decisions, Recent work and Next have their own homes", async () => {
     engine();
     await renderAt(<AgentPanel drama={drama} episode="EP001" onCollapse={() => {}} />);
@@ -264,16 +274,12 @@ describe("the agent panel", () => {
     const user = userEvent.setup();
     engine();
     await renderAt(<AgentPanel drama={drama} episode="EP001" onCollapse={() => {}} />);
-    const process = (await screen.findByRole("button", { name: /EP001 · Process/ })).parentElement as HTMLElement;
-    // The process shows once the sessions are in, with its steps once the session's chat is.
-    expect(within(process).getAllByRole("listitem").map((item) => item.textContent)).toEqual(["Compiled the video prompts", "Shooting seg01"]);
-    // A disclosure: its steps fold away under it.
-    const toggle = within(process).getByRole("button", { expanded: true });
-    await user.click(toggle);
-    expect(toggle).toHaveAttribute("aria-expanded", "false");
-    expect(within(process).queryAllByRole("listitem")).toHaveLength(0);
-    await user.click(toggle);
-    expect(screen.getByText("Shooting the first take now.")).toBeInTheDocument();
+    // The conversation is the log: the agent's steps in place, each a compact line, the newest turning while the session
+    // works, then what it said; no separate process card.
+    const said = await screen.findByRole("region", { name: "Conversation" });
+    expect(await within(said).findByText("Shooting the first take now.")).toBeInTheDocument();
+    expect([...said.querySelectorAll(".astep")].map((step) => step.textContent)).toEqual(["Compiled the video prompts", "Shooting seg01"]);
+    expect(screen.queryByRole("button", { name: /· Process/ })).toBeNull();
     accept("/api/dramas/d1/messages", { id: "sub", sessionId: "s1", state: "sent" });
     await user.type(screen.getByRole("textbox", { name: "Message the agent" }), "Keep the letter in her left hand.");
     await user.click(screen.getByRole("button", { name: "Send" }));
@@ -301,7 +307,7 @@ describe("the agent panel", () => {
     expect(scope).toHaveTextContent("Pinned to EP001's session: working");
     // The process, the messages and the line all go with the pin.
     expect(await screen.findByText("To EP001's session")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: /EP001 · Process/ })).toBeInTheDocument();
+    expect(await within(screen.getByRole("region", { name: "Conversation" })).findByText("Shooting seg01")).toBeInTheDocument();
     await user.selectOptions(screen.getByRole("combobox", { name: "Session" }), "EP002");
     expect(await screen.findByRole("link", { name: "EP002's session waits for your review: open it" })).toBeInTheDocument();
   });

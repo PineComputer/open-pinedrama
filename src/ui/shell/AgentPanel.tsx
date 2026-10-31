@@ -129,7 +129,6 @@ export function AgentPanel({ drama, episode, onCollapse }: { drama: DramaView; e
   const open = drama.crew.flatMap((computer) => computer.sessions.filter((session) => session.state === "open").map((session) => ({ session, computer })));
   // A scope pinned by the maker: an episode's code or "setup".
   const [pinned, setPinned] = useState<string>();
-  const [processOpen, setProcessOpen] = useState(true);
   // An episode is a scope only if the project has it: a page that names one it hasn't (Not found) follows the setup.
   const row = (code?: string) => (code ? drama.episodeRows.find((episodeRow) => episodeRow.code === code) : undefined);
   const pageScope = row(episode) ? episode! : "setup";
@@ -172,10 +171,14 @@ export function AgentPanel({ drama, episode, onCollapse }: { drama: DramaView; e
   const links = new Map((files.data ?? []).map((file) => [file.path, file.url]));
   const names = project.data?.names ?? null;
   const state = project.data?.state ?? null;
-  const steps = (chat.data?.messages ?? []).filter((message) => message.kind === "activity").slice(-7);
-  // The conversation, the one log (D70): what the maker said or decided and what the agent said, the newest last;
-  // the studio's own goals and the agent's steps are not part of it.
-  const conversation = (chat.data?.messages ?? []).filter((message) => (message.kind === "input" && !message.brief) || message.kind === "answer" || message.kind === "progress" || message.kind === "question" || message.kind === "result").slice(-8);
+  // The conversation, the one log (D70): what the maker said or decided, what the agent said, and its steps in place, the
+  // newest last; the studio's own goals are not part of it. A step and a message the agent gave in the same words, one
+  // after the other, are one event: shown once, as the step.
+  const conversation = (chat.data?.messages ?? [])
+    .filter((message) => (message.kind === "input" && !message.brief) || message.kind === "answer" || message.kind === "activity" || message.kind === "progress" || message.kind === "question" || message.kind === "result")
+    .filter((message, n, all) => !(message.kind === "progress" && n > 0 && all[n - 1].kind === "activity" && all[n - 1].text === message.text))
+    .slice(-20);
+  const lastStep = conversation.findLast((message) => message.kind === "activity");
   // The newest at the bottom, in view, as chat apps keep it.
   const scroller = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -251,33 +254,6 @@ export function AgentPanel({ drama, episode, onCollapse }: { drama: DramaView; e
       </div>
       {resume.error !== undefined && <p className="error small" style={{ margin: "6px 16px 0" }}>{errorText(resume.error, t)}</p>}
       <div className="ascroll" ref={scroller}>
-        {inView && steps.length > 0 && (
-          <section className="asec">
-            <div className="process">
-              {/* A disclosure, as design/'s: the steps fold away under their heading. */}
-              <button type="button" aria-expanded={processOpen} onClick={() => setProcessOpen((was) => !was)}>
-                <Icon name="list-checks" className="ic" />
-                {t("agent.process", { who: scope === "setup" ? t("talk.setup") : scope })}
-                <span className="cnt">{steps.length === 1 ? t("agent.stepOne") : t("agent.stepsCount", { n: steps.length })}</span>
-                <Icon name={processOpen ? "caret-down" : "caret-right"} className="ic" />
-              </button>
-              {processOpen && (
-                <ol className="steps">
-                  {steps.map((step, n) => {
-                    const now = n === steps.length - 1 && status === "running";
-                    return (
-                      <li key={step.id} className={now ? "now" : undefined}>
-                        <Icon name={now ? "circle-notch" : "check-circle"} className="ic" />
-                        <span>{step.text}</span>
-                        <time />
-                      </li>
-                    );
-                  })}
-                </ol>
-              )}
-            </div>
-          </section>
-        )}
         {conversation.length > 0 && (
           <section className="asec" aria-label={t("agent.conversation")}>
             {conversation.map((message) =>
@@ -286,6 +262,12 @@ export function AgentPanel({ drama, episode, onCollapse }: { drama: DramaView; e
               ) : message.kind === "input" || message.kind === "answer" ? (
                 <p key={message.id} className="msg you">
                   {message.text}
+                </p>
+              ) : message.kind === "activity" ? (
+                // A step: one compact muted line in place, done, or turning while it is the one the session works on.
+                <p key={message.id} className={message === lastStep && status === "running" ? "astep now" : "astep"}>
+                  <Icon name={message === lastStep && status === "running" ? "circle-notch" : "check-circle"} className="ic" />
+                  <span>{message.text}</span>
                 </p>
               ) : (
                 <Markdown key={message.id} text={message.text} links={links} className="msg" />

@@ -314,21 +314,13 @@
               : r === "failed" ? null
               : html`<button class="btn sm" title="drama-cli's recovery for an unknown outcome" onClick=${reconcile}>${r === "unknown" ? "Check again" : "Reconcile"}</button>`}</div></section>`;
           })()}
-        ${ep7 ? html`<section class="asec"><div class="process"><button aria-expanded=${String(S.procOpen !== false)} onClick=${() => set({ procOpen: S.procOpen === false })}>${I("list-checks")}EP007 · Process<span class="cnt">3 steps</span>${I(S.procOpen === false ? "caret-right" : "caret-down")}</button>
-          ${S.procOpen !== false && html`<ol class="steps">
-            <li>${I("check-circle")}<span>Status <code>drama-cli status</code></span><time>0:02</time></li>
-            <li>${I("check-circle")}<span>Breakdown EP007: refused, a red line in the screenplay</span><time>1:10</time></li>
-            <li class="now">${I("circle-notch")}<span>Waiting for your decision</span><time></time></li></ol>`}</div></section>
-        <section class="asec"><p class="msg">drama-cli won't break EP007 down: its scene 4 shows a guard striking Luca in the cell, a red line in the screenplay. It's yours to decide: change the scene in the script, or stop EP007 here. Other episodes carry on.</p></section>`
-
-        : to === "EP006" ? html`<section class="asec"><div class="process"><button aria-expanded=${String(S.procOpen !== false)} onClick=${() => set({ procOpen: S.procOpen === false })}>${I("list-checks")}EP006 · Process<span class="cnt">7 steps</span>${I(S.procOpen === false ? "caret-right" : "caret-down")}</button>
-          ${S.procOpen !== false && html`<ol class="steps">
-            <li>${I("check-circle")}<span>Status <code>drama-cli status</code></span><time>0:02</time></li>
-            <li>${I("check-circle")}<span>seg01 shot again: blanket folded first</span><time>2:40</time></li>
-            <li>${I("check-circle")}<span>seg03 shot again: opens on Luca</span><time>2:12</time></li>
-            <li>${I("check-circle")}<span>Downloaded both takes</span><time>0:18</time></li>
-            <li class="now">${I("circle-notch")}<span>Waiting for your review</span><time></time></li></ol>`}</div></section>
-        <section class="asec"><p class="msg">I shot seg01 again with the blanket folded before Luca speaks, and seg03 again opening on his face, as you asked. Both new takes wait for you.</p></section>`
+        ${/* The agent's steps in place in the conversation, each a compact line (a step done, or turning while it runs); its
+             messages as bubbles. No separate process card: the conversation is the log. */ ""}
+        ${ep7 ? html`<section class="asec"><p class="astep">${I("check-circle")}<span>Status <code>drama-cli status</code></span></p><p class="astep">${I("check-circle")}<span>Breakdown EP007: refused, a red line in the screenplay</span></p>
+          <p class="msg">drama-cli won't break EP007 down: its scene 4 shows a guard striking Luca in the cell, a red line in the screenplay. It's yours to decide: change the scene in the script, or stop EP007 here. Other episodes carry on.</p></section>`
+        : to === "EP006" ? html`<section class="asec"><p class="astep">${I("check-circle")}<span>Status <code>drama-cli status</code></span></p><p class="astep">${I("check-circle")}<span>seg01 shot again: blanket folded first</span></p><p class="astep">${I("check-circle")}<span>seg03 shot again: opens on Luca</span></p><p class="astep">${I("check-circle")}<span>Downloaded both takes</span></p>
+          <p class="msg">I shot seg01 again with the blanket folded before Luca speaks, and seg03 again opening on his face, as you asked. Both new takes wait for you.</p></section>`
+        : to === "EP003" ? html`<section class="asec"><p class="astep">${I("check-circle")}<span>seg01 shot: t01</span></p><p class="astep now">${I("circle-notch")}<span>Shooting 4 takes</span></p></section>`
         : null}
         ${to && (S.chats?.[to] || []).length > 0 && html`<section class="asec" aria-label="Conversation">${S.chats[to].map((m) => html`<p class="msg you">${m}</p>`)}</section>`}
       </div>
