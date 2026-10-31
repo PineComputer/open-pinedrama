@@ -540,6 +540,11 @@ input.search:focus { border-color: var(--text-primary); }
 .castcard .pic { position: relative; aspect-ratio: 16/9; background: var(--surface-container); }
 .castcard .pic img, .placecard .pic img { width: 100%; height: 100%; object-fit: cover; }
 .castcard .pic .st, .placecard .pic .st { position: absolute; left: 8px; top: 8px; }
+/* Fix 3: an older version picked by a link; its picture is not in the sample. */
+.castcard .pic .empty, .placecard .pic .empty { position: absolute; inset: 0; display: grid; place-items: center; padding: 12px; text-align: center; color: var(--text-subtle); font-size: 12px; }
+.vstrip { display: flex; flex-wrap: wrap; gap: 4px; }
+.vstrip button { height: 22px; padding: 0 8px; border-radius: 999px; border: 1px solid var(--border); background: none; color: var(--text-secondary); font: 11px var(--font-mono); cursor: pointer; }
+.vstrip button[aria-pressed="true"] { border-color: var(--text-primary); color: var(--text-primary); }
 .ctxt { padding: 12px 14px 14px; display: grid; gap: 6px; }
 .ctxt b { font-size: 14px; font-weight: 700; }
 .aka { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-size: 11.5px; }
