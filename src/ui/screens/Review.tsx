@@ -509,8 +509,9 @@ function MediaRoom({ review, done }: { review: ReviewView; done: () => void }) {
             ))}
           </>
         )}
-        {open && (
-          <button type="button" className={buttonVariants({ variant: "ghost", size: "sm" })} onClick={() => setDrafts((current) => Object.fromEntries(items.map((i) => [i.key, { ...current[i.key], verdict: "approve" }])))} disabled={takes}>
+        {/* Takes are watched one by one (D76): the design's take reel has no Accept all. */}
+        {open && !takes && (
+          <button type="button" className="btn sm ghost" onClick={() => setDrafts((current) => Object.fromEntries(items.map((i) => [i.key, { ...current[i.key], verdict: "approve" }])))}>
             {t("review.approveAll")}
           </button>
         )}

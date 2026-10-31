@@ -144,7 +144,8 @@ describe("the review room for takes", () => {
     answer(`/api/reviews/${review.id}`, review);
     answer("/api/dramas/d1/files", []);
     render(<Review id={review.id} />);
-    expect(await screen.findByRole("button", { name: "Accept all" })).toBeDisabled();
+    await screen.findByRole("button", { name: "Send back B" });
+    expect(screen.queryByRole("button", { name: "Accept all" })).toBeNull();
   });
 });
 
