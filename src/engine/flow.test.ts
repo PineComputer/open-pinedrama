@@ -6,7 +6,7 @@ import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import type { CastCard, ChatView, DeliveryRow, DramaView, EpisodePage, FileItem, ReviewSummary, ReviewView, ScriptPage, SubmissionView } from "../shared/types.ts";
+import type { CastCard, ChatView, DeliveryRow, DramaView, EpisodePage, FileItem, ReviewSummary, ReviewView, ScriptPage, SessionRecord, SubmissionView } from "../shared/types.ts";
 
 const DATA = mkdtempSync(path.join(tmpdir(), "studio-flow-"));
 process.env.STUDIO_DATA_DIR = DATA;
@@ -522,6 +522,16 @@ describe("a drama in replay", () => {
     expect(await openReview(id, () => true)()).toBeUndefined();
     await call("POST", `/api/dramas/${id}/resume`);
     await until("the setup question again", openReview(id, (item) => item.kind === "question"));
+    // The session history keeps the one the stop ended beside the one that carried on, each with its Computer, oldest first.
+    const history = await call<SessionRecord[]>("GET", `/api/dramas/${id}/session-history`);
+    expect(history.map((session) => [session.scope, session.state])).toEqual([
+      ["setup", "lost"],
+      ["setup", "open"],
+    ]);
+    // Resume starts the drama's stopped Computer again (computers.ts restart): the same PC-1, a new session on it.
+    expect(history.map((session) => session.computer)).toEqual(["PC-1", "PC-1"]);
+    expect(history[0].closedAt).toBeDefined();
+    expect(history[1].closedAt).toBeUndefined();
   }, 30_000);
 
   // Or ask about files it neither returns nor names. It may be asking something else entirely (a reference it

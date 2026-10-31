@@ -36,7 +36,7 @@ import { projectView, sessionStatus } from "./status.ts";
 import { assetPictures, castCards, deliveryRows, episodePage, scriptPage, seasonEntries } from "./browse.ts";
 import { diagnostics } from "./diagnostics.ts";
 import { zipLength, zipStream } from "./zip.ts";
-import { chatView, dramaCards, dramaFiles, dramaView, reviewList, reviewView } from "./views.ts";
+import { chatView, dramaCards, dramaFiles, dramaView, reviewList, reviewView, sessionHistory } from "./views.ts";
 
 const LOOPBACK = /^(127\.0\.0\.1|localhost|\[::1\])(:\d+)?$/;
 
@@ -360,6 +360,11 @@ export function app(): Hono {
   api.get("/api/dramas/:id/sessions", (c) => {
     const rows = all<SessionRow>("select * from sessions where drama_id = ? and state = 'open' order by created_at", c.req.param("id"));
     return c.json(rows.map(chatView));
+  });
+
+  api.get("/api/dramas/:id/session-history", (c) => {
+    const id = c.req.param("id");
+    return dramaRow(id) ? c.json(sessionHistory(id)) : c.json(failure("not-found", "No such drama."), 404);
   });
 
   api.post("/api/episodes/:id/finish", async (c) => {

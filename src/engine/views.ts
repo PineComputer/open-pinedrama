@@ -10,6 +10,7 @@ import {
   type ReviewKind,
   type ReviewSummary,
   type ReviewView,
+  type SessionRecord,
   STAGES,
   type Stage,
   type StageCell,
@@ -413,6 +414,22 @@ export function reviewView(review: ReviewRow): ReviewView {
     ...turnRefusals(review.turn_id),
     rewrite: review.kind === "question" ? rewriteOf(files) : undefined,
   };
+}
+
+/** Every session the drama had, oldest first, with the Computer it ran on: where each scope's work went on after a stop. */
+export function sessionHistory(dramaId: string): SessionRecord[] {
+  return all<SessionRow & { label: string; number: number | null }>(
+    `select s.*, c.label, e.number from sessions s join computers c on c.id = s.computer_id left join episodes e on e.id = s.episode_id
+     where s.drama_id = ? order by s.created_at, s.rowid`,
+    dramaId,
+  ).map((row) => ({
+    id: row.id,
+    scope: row.number === null ? "setup" : episodeCode({ number: row.number }),
+    computer: row.label,
+    state: row.state as SessionRecord["state"],
+    createdAt: row.created_at,
+    ...(row.closed_at ? { closedAt: row.closed_at } : {}),
+  }));
 }
 
 export function chatView(session: SessionRow): ChatView {

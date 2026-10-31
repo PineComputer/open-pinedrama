@@ -292,6 +292,19 @@ export interface SessionView {
   waiting: boolean;
 }
 
+/** One session the drama ever had, open or ended, for where each scope's work ran (GET /api/dramas/:id/session-history). */
+export interface SessionRecord {
+  id: string;
+  /** "setup", or the episode's code. */
+  scope: string;
+  /** The label of the Computer it ran on (PC-1, PC-2, …). */
+  computer: string;
+  /** open; closed when the studio let it go; lost when its Computer stopped under it. */
+  state: "open" | "closed" | "lost";
+  createdAt: string;
+  closedAt?: string;
+}
+
 export interface ComputerView {
   id: string;
   label: string;
