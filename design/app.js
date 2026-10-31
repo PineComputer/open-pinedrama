@@ -99,18 +99,27 @@
   function resume() { set({ dramaStop: null }); toast(P.project.title + " resumed."); }
   /* Export: the drama as other tools read it, downloaded from what the agent's stops return (handoff/lineage.json,
      handoff/infinite-canvas.zip, written by drama-cli export). Disabled, with why, until a stop has returned them. */
+  /* IA draft: Export gives what its owner made, never whichever session returned last. In an episode
+     (its List, Canvas or Cut) it is that episode's own export, the newest by when its session's turn
+     started: the shared project and that episode. Elsewhere it is the shared project, the setup's.
+     Each says which session made it, and when. */
   function ExportMenu() {
-    if (["home", "upload"].includes(S.screen)) return null;
+    if (["home", "upload", "reviews"].includes(S.screen)) return null;
     const none = S.state === "nostop";
     const why = "Ready after the agent's next stop returns it.";
+    const ep = ["episode", "canvas", "cut"].includes(S.screen);
+    const scope = ep ? "EP006" : "the shared project";
+    const from = ep ? "EP006's session · stop at 18:12" : "The setup's session · stop at 17:40";
+    const name = ep ? "bride-on-bail-ep006" : "bride-on-bail";
     const item = (label, ext, hint, file) => html`<button class="mi" role="menuitem" aria-disabled=${String(none)} title=${none ? why : ""}
         onClick=${() => { if (none) return; set({ exportOpen: false }); toast("Downloaded " + file + "."); }}>
       <b>${label} <span class="mono muted">${ext}</span></b><small>${none ? why : hint}</small></button>`;
     return html`<div class="exportmenu">
       <button class="btn sm" aria-haspopup="menu" aria-expanded=${String(!!S.exportOpen)} onClick=${() => set({ exportOpen: !S.exportOpen })}>${I("download-simple")}Export${I("caret-down")}</button>
-      ${S.exportOpen && html`<div class="menu" role="menu" aria-label="Export">
-        ${item("ComfyUI workflow", ".json", "The project's lineage, as drama-cli exports it.", "bride-on-bail-lineage.json")}
-        ${item("infinite-canvas", ".zip", "Open infinite-canvas → Import → choose this file.", "bride-on-bail-infinite-canvas.zip")}
+      ${S.exportOpen && html`<div class="menu" role="menu" aria-label=${"Export " + scope}>
+        <div class="mh"><b>${ep ? "EP006" : "Shared project"}</b><small>${none ? "No stop has returned it yet." : from}</small></div>
+        ${item("ComfyUI workflow", ".json", ep ? "The shared project and EP006, as drama-cli exports them." : "The bible, breakdowns and shared references, as drama-cli exports them.", name + "-lineage.json")}
+        ${item("infinite-canvas", ".zip", "Open infinite-canvas → Import → choose this file.", name + "-infinite-canvas.zip")}
       </div>`}
     </div>`;
   }
