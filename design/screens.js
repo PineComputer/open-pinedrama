@@ -579,10 +579,14 @@
     const sc = P.script, st = scriptState();
     const fl = sc.fountain, map = sc.map;
     const hasFountain = st !== "rewriting" && st !== "original";
-    const view = S.sview && (hasFountain || S.sview === "original") ? S.sview : hasFountain ? "fountain" : "original";
+    // An episode's "Episode script" (Segments) opens Script on that episode: Fountain, scrolled to its section, marked.
+    const epNum = S.scriptEp ? Number(S.scriptEp.replace(/\D/g, "")) : null;
+    const view = S.sview && (hasFountain || S.sview === "original") && !(S.scriptEp && hasFountain) ? S.sview : hasFountain ? "fountain" : "original";
     // Episode → scene outline from the printed lines (VS Code's Outline view): a section is an episode, a heading a scene.
     const outline = []; fl.forEach((l, i) => { if (l.el === "section") outline.push({ ep: l.text.replace(/^#\s*/, ""), i, scenes: [] }); else if (l.el === "heading" && outline.length) outline[outline.length - 1].scenes.push({ t: l.text.replace(/\s*#[^#]*#\s*$/, ""), i }); });
     const jumpTo = (i) => document.getElementById("fl-" + i)?.scrollIntoView({ block: "start", behavior: "smooth" });
+    const target = epNum && outline.find((e) => Number(e.ep.replace(/\D/g, "")) === epNum);
+    useEffect(() => { if (target && view === "fountain") jumpTo(target.i); }, [S.scriptEp, view]);
     const changed = new Set(map.filter((r) => !r.same).map((r) => r.o));
     const lit = S.ssel ? new Set((map.find((r) => r.o === S.ssel) || { to: [] }).to.map((n) => n - 1)) : new Set();
     const Line = (l, i) => (l.gap ? html`<div class="gap"></div>` : html`<div id=${"fl-" + i} class=${"fl " + l.el + (lit.has(l.source) ? " on" : "")}>${l.text}</div>`);
@@ -609,6 +613,7 @@
         <${StopBanner}/>
         <div class="scripthead"><div class="grow"><h2 class="pagetitle">Script</h2>
           <p class="muted pagesub">Your screenplay from upload to acceptance: the agent rewrites it into Fountain, drama-cli checks it, and you accept it. Sample: ${sc.project}'s real files.</p></div></div>
+        ${S.scriptEp && hasFountain && !target && html`<div class="notice" role="status">${I("info")}<span><b>${S.scriptEp} isn't in this sample's screenplay.</b> The sample is The Stepmother's two episodes; for a real project Script opens at ${S.scriptEp}'s section.</span></div>`}
         ${st === "original" && html`<div class="notice" role="status">${I("info")}<span><b>Only the original was recorded for this project.</b> It was set up before drama-cli kept the rewrite, its check and your acceptance, so there are none to show.</span></div>`}
         <div class="scriptlayout">
           <section class="panel scripthistory" aria-label="Versions"><h3>${I("stack")}Versions</h3>
@@ -620,9 +625,9 @@
             <small class="muted">${S.words.trim().length < 3 ? "Accepting needs your own words." : "Your words are recorded with the accepted file."}</small></div>`}
           <div class="scriptmain">
           <div class="scriptbar"><div class="seg" role="group" aria-label="View">${[["fountain", "Fountain"], ["original", "Original"], ["compare", "Compare"]].map(([k, l]) =>
-              html`<button aria-pressed=${String(view === k)} disabled=${!hasFountain && k !== "original"} title=${!hasFountain && k !== "original" ? "No Fountain recorded yet" : ""} onClick=${() => set({ sview: k })}>${l}</button>`)}</div>
+              html`<button aria-pressed=${String(view === k)} disabled=${!hasFountain && k !== "original"} title=${!hasFountain && k !== "original" ? "No Fountain recorded yet" : ""} onClick=${() => set({ sview: k, scriptEp: null })}>${l}</button>`)}</div>
             <span class="grow"></span>${hasFountain && html`<span class="muted mono" style="font-size:11.5px">v1 · screenplay/v1/screenplay.fountain</span>`}</div>
-          ${view === "fountain" ? html`<div class="scriptbody"><nav class="outline" aria-label="Outline">${outline.map((e) => html`<div><button class="ep" onClick=${() => jumpTo(e.i)}>${e.ep}</button>
+          ${view === "fountain" ? html`<div class="scriptbody"><nav class="outline" aria-label="Outline">${outline.map((e) => html`<div><button class=${"ep" + (e === target ? " on" : "")} aria-current=${e === target ? "location" : undefined} onClick=${() => jumpTo(e.i)}>${e.ep}</button>
                 ${e.scenes.map((x) => html`<button class="sc" onClick=${() => jumpTo(x.i)}>${x.t}</button>`)}</div>`)}</nav>
               <section class="panel scriptdoc"><div class="fdoc">${fl.map(Line)}</div></section></div>`
             : view === "compare" ? html`<div class="fpanes scriptpanes"><section class="fpane"><h4>Original <span class="tag">${sc.file}</span></h4>

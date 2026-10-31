@@ -16,7 +16,7 @@
   let drawing = false;
   const draw = () => { if (!drawing) { drawing = true; requestAnimationFrame(() => { drawing = false; render(html`<${App}/>`, root); }); } };
   const set = (p) => { Object.assign(S, typeof p === "function" ? p(S) : p); draw(); };
-  const go = (screen) => { set({ screen, sel: null, agentOpen: false, playing: false, drawer: false, from: null, at: null, asel: null }); try { history.replaceState(null, "", "#" + screen); } catch (e) { /* the hash is a convenience */ } };
+  const go = (screen) => { set({ screen, sel: null, agentOpen: false, playing: false, drawer: false, from: null, at: null, asel: null, scriptEp: null }); try { history.replaceState(null, "", "#" + screen); } catch (e) { /* the hash is a convenience */ } };
   /* IA draft (F): below 1100 px the drama tree is a drawer the rail's menu button opens; the agent is the ball at 1280 and
      below, keeping what it follows or is pinned to. */
   const narrow = () => window.matchMedia("(max-width: 1100px)").matches;
