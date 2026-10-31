@@ -185,6 +185,7 @@ export function episodeViews(dramaId: string): EpisodeView[] {
       frame: frame ? still(frame) : undefined,
       position: episode.state === "queued" ? queued.indexOf(episode) + 1 : undefined,
       waitingFor: episode.state === "waiting" ? (open?.state === "saving" ? "saving" : open?.kind ?? "question") : undefined,
+      waitingItems: episode.state === "waiting" && open ? itemsOf(open.kind, filesOfStop(open)).items.length : undefined,
       computer: computerLabel(session),
       reviewId: open?.id,
       spent: spend("episode_id", episode.id),

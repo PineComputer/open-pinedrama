@@ -13,6 +13,7 @@ import { isDocument, useDocumentText } from "../viewing.tsx";
 import { PresetChoice, ScreenplayStructure } from "./NewDrama.tsx";
 import { buttonVariants } from "@/components/ui/button";
 import { Icon } from "../icons.tsx";
+import { Menu } from "../components/Menu.tsx";
 
 /** Where an episode stands, as its card's chip says it. */
 function chipOf(row: EpisodeRow): { status: Status; label: TKey } {
@@ -109,20 +110,28 @@ export function Board({ drama }: { drama: DramaView }) {
           {(Object.keys(FILTERS) as Filter[]).map((key) => (
             <button key={key} type="button" className="fchip" aria-pressed={filter === key} onClick={() => setFilter(key)}>
               {t(`board.filter.${key}` as TKey)}
-              <small> {rows.filter(FILTERS[key]).length}</small>
+              <small>{rows.filter(FILTERS[key]).length}</small>
             </button>
           ))}
           <span className="grow" />
           <label className="search" style={{ width: 200 }}>
             <Icon name="magnifying-glass" className="ic" />
-            <input type="search" value={find} placeholder={t("board.find")} aria-label={t("board.find")} onChange={(event) => setFind(event.target.value)} style={{ border: 0, background: "none", outline: "none", color: "inherit", font: "inherit", minWidth: 0, flex: 1 }} />
+            <input type="search" value={find} placeholder={t("board.find")} aria-label={t("board.find")} onChange={(event) => setFind(event.target.value)} />
           </label>
-          <label className="select">
-            <select value={order} aria-label={t("board.order")} onChange={(event) => setOrder(event.target.value as "number" | "needs")}>
-              <option value="number">{t("board.orderNumber")}</option>
-              <option value="needs">{t("board.orderNeeds")}</option>
-            </select>
-          </label>
+          <Menu
+            label={t("board.order")}
+            wide="select"
+            trigger={
+              <>
+                {t(order === "needs" ? "board.orderNeeds" : "board.orderNumber")}
+                <Icon name="caret-down" className="ic" />
+              </>
+            }
+            items={[
+              { label: t("board.orderNumber"), run: () => setOrder("number") },
+              { label: t("board.orderNeeds"), run: () => setOrder("needs") },
+            ]}
+          />
         </div>
       )}
       {!rows.length ? (

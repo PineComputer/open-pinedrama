@@ -1,5 +1,5 @@
 // Words for states the engine reports as data, in the maker's language.
-import type { EpisodeRow, FileKind, Spend } from "../shared/types.ts";
+import type { EpisodeRow, FileKind, ReviewKind, Spend } from "../shared/types.ts";
 import { TEMPLATES } from "../shared/presets.ts";
 import { nameOf, type Names } from "../shared/names.ts";
 import type { ProjectView } from "../shared/project.ts";
@@ -8,6 +8,15 @@ import type { useT } from "./i18n.ts";
 
 type T = ReturnType<typeof useT>["t"];
 
+/** What waits for the maker, as design/'s cards say it: "2 takes wait for you", "The cut waits for you", "A question waits for you". */
+function waitsText(kind: ReviewKind, items: number, t: T): string {
+  if (kind === "question" || !items) return t("slate.waitsQuestion");
+  if (kind === "cut") return t("board.waitsCut");
+  const one = items === 1;
+  const noun = kind === "takes" ? (one ? "slate.take" : "slate.takes") : kind === "storyboards" ? (one ? "board.storyboard" : "board.storyboards") : one ? "slate.item" : "slate.items";
+  return t(one ? "slate.waitsOne" : "slate.waitsMany", { what: t(noun, { n: items }) });
+}
+
 export function nowText(row: EpisodeRow, t: T): string {
   switch (row.state) {
     case "queued":
@@ -15,7 +24,7 @@ export function nowText(row: EpisodeRow, t: T): string {
     case "working":
       return row.activity ? plainText(row.activity) : t(row.computer ? "board.atWork" : "board.starting");
     case "waiting":
-      return row.waitingFor === "saving" ? t("board.saving") : t("board.waits", { kind: t(`kind.${row.waitingFor ?? "question"}`) });
+      return row.waitingFor === "saving" ? t("board.saving") : waitsText(row.waitingFor ?? "question", row.waitingItems ?? 0, t);
     case "done":
       return t("board.done");
     case "stopped":

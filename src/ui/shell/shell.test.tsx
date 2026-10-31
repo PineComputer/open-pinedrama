@@ -13,7 +13,7 @@ import { DramaBar, TopBar } from "./TopBar.tsx";
 
 function row(number: number, state: EpisodeRow["state"]): EpisodeRow {
   const code = `EP00${number}`;
-  return { id: `e${number}`, number, code, title: `Episode ${number}`, state, stages: {} as EpisodeRow["stages"], spent: { total: 0, media: 0, partial: false }, updatedAt: "2026-10-30T10:00:00Z", ...(state === "waiting" ? { waitingFor: "storyboards" as const } : {}) };
+  return { id: `e${number}`, number, code, title: `Episode ${number}`, state, stages: {} as EpisodeRow["stages"], spent: { total: 0, media: 0, partial: false }, updatedAt: "2026-10-30T10:00:00Z", ...(state === "waiting" ? { waitingFor: "storyboards" as const, waitingItems: 6 } : {}) };
 }
 
 const drama = {
@@ -167,7 +167,7 @@ describe("the sidebar", () => {
     const tree = screen.getByRole("list", { name: "Episodes" });
     // The name starts with what the button shows (WCAG 2.5.3), then where the episode stands.
     expect(within(tree).getAllByRole("button").map((button) => button.textContent)).toEqual([
-      "EP001 Waits for you: Storyboards, needs you",
+      "EP001 6 storyboards wait for you, needs you",
       "EP002 Starting, at work",
       "EP003 Done, finished",
       "EP004 In line, #1, in line",

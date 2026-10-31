@@ -246,6 +246,8 @@ export interface EpisodeRow {
   position?: number;
   /** What it waits for the maker on; "saving" while the review's files are saved. */
   waitingFor?: ReviewKind | "saving";
+  /** How many items the review it waits on holds. */
+  waitingItems?: number;
   computer?: string;
   reviewId?: string;
   /** What its sessions have cost so far, generated video included. */
