@@ -11,7 +11,7 @@
     screen: SCREENS.includes(hash) ? hash : "home", theme: "dark", side: true, tab: "all", filter: "all", waitFor: null, pin: null,
     dialog: null, toasts: [], dramaStop: null, draft: "", chats: {}, drafts: {}, drawer: false,
     cam: { x: 40, y: 96, k: 0.62 }, tool: "move", toolOpen: false, zoomOpen: false, keysOpen: false, sel: null, dock: (() => { try { return localStorage.getItem("studio.canvas.dock") || "under"; } catch (e) { return "under"; } })(), follow: true, agentOpen: false, panning: null, minimap: true,
-    ti: 0, playing: false, t: 0, watched: {}, maxT: {}, verdict: {}, reason: {}, showPrev: false, rsend: null, outcome: "ok", over: false,
+    ti: 0, playing: false, t: 0, watched: {}, maxT: {}, verdict: {}, reason: {}, showPrev: false, subs: {}, outcome: "ok", over: false,
     state: "normal", file: null, preset: null, len: "90", reviewing: "every", budget: "1000", ana: 0, tod: null, words: "", stab: "bible", cards: {}, cardWhy: {}, gsel: "ep6seg03", cutT: 0, cutPlaying: false, cutNotes: null, noteDraft: "", cutV: null, cutWhy: "",
   };
   let drawing = false;
@@ -44,6 +44,26 @@
     return html`<span class=${"st " + (label ? st : cls)} title=${detail}><i></i>${label || word}</span>`;
   };
   const Mark = () => html`<span class="mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5 6.6 9.2h2.9L5.4 14.4h3.4L4.5 19.8h6.3V22h2.4v-2.2h6.3l-4.3-5.4h3.4l-4.1-5.2h2.9z"/></svg></span>`;
+
+  /* Codex round 3 (fix 1): one submission's state, shared by the Review send, Out of date's redo and the cut's Apply.
+     A dropped connection proves nothing: the request may have arrived. An answer that never came is Unknown, and Check
+     asks the engine; only the engine's word that nothing was submitted makes it Failed, with Send again under the same
+     submission. A check can stay inconclusive, so Check again stays. Sent says the engine has it, and no more: what the
+     agent then does shows from its session's status. State: S.subs[id], idle when absent; the prototype's Outcome
+     select decides what a send or a check finds. */
+  const FINDS = { ok: "sent", refused: "failed", unknown: "unknown" };
+  const setSub = (id, st) => set({ subs: { ...(S.subs || {}), [id]: st } });
+  const submit = (id) => { setSub(id, "sending"); setTimeout(() => setSub(id, FINDS[S.outcome]), 1200); };
+  const recheck = (id) => { setSub(id, "checking"); setTimeout(() => setSub(id, FINDS[S.outcome]), 1200); };
+  /* to: who receives it ("EP006's agent"); onSend: Send again, as the first send went (a confirm, then submit(id)). */
+  function Submission({ id, to, onSend }) {
+    const st = (S.subs || {})[id];
+    if (!st) return null;
+    if (st === "sending" || st === "checking") return html`<span class="subst" role="status">${I("circle-notch")}<span>${st === "sending" ? `Sending to ${to}…` : `Asking whether ${to} has it…`}</span></span>`;
+    if (st === "sent") return html`<span class="subst" role="status">${I("check-circle")}<span><b>Sent to ${to}.</b></span></span>`;
+    if (st === "unknown") return html`<span class="subst" role="status">${I("warning")}<span><b>No answer yet.</b> <span class="muted">It may have arrived. Check asks whether ${to} has it; it is never sent twice.</span></span><button class="btn sm" onClick=${() => recheck(id)}>Check again</button></span>`;
+    return html`<span class="subst" role="alert">${I("warning-circle")}<span><b>Not submitted.</b> <span class="muted">The engine says it never reached ${to}. Your draft is kept.</span></span><button class="btn sm" onClick=${onSend}>Send again</button></span>`;
+  }
 
   function applyTheme() { document.documentElement.setAttribute("data-palette", "classic"); document.documentElement.setAttribute("data-theme", S.theme); }
 
@@ -202,7 +222,7 @@
             // C3: Reconcile asks the provider what became of the request and ends in one of three outcomes, each saying what
             // happens next (the prototype's Outcome control picks which); it never resubmits on its own.
             const r = S.recon;
-            const reconcile = () => { set({ recon: "checking" }); setTimeout(() => set({ recon: S.outcome === "failed" ? "failed" : S.outcome === "unknown" ? "unknown" : "found" }), 1200); };
+            const reconcile = () => { set({ recon: "checking" }); setTimeout(() => set({ recon: S.outcome === "refused" ? "failed" : S.outcome === "unknown" ? "unknown" : "found" }), 1200); };
             if (r === "found") return html`<div class="arow"><div class="what"><b>EP005</b><span>Running · collecting seg03's take</span><small>Found: the provider finished seg03's video. The agent collects it and carries on; nothing is generated again.</small></div></div>`;
             return html`<div class="arow failed"><div class="what"><b>EP005</b>
               ${r === "checking" ? html`<span>Checking seg03's request with the provider…</span><small>Nothing is sent again while it checks.</small>`
@@ -533,12 +553,14 @@
     const changed = P.takes.filter((t) => S.verdict[t.id] || (S.reason[t.id] || "").trim()).length + ((S.words || "").trim() ? 1 : 0);
     // B2: a review goes draft → sending → sent (the agent is on it, read only), or failed (the draft kept, to send
     // again under the same submission) or unknown (being checked; it is never sent twice). Nothing sent stays a draft.
-    const sendState = S.rsend;
-    const locked = sendState === "sending" || sendState === "sent" || sendState === "unknown";
-    const outcome = (then) => setTimeout(() => set({ rsend: then === "failed" ? "failed" : then === "unknown" ? "unknown" : "sent" }), 1200);
-    const sendIt = () => { set({ rsend: "sending", rfield: null }); outcome(S.outcome); };
+    // Codex round 3 (fix 1): the review is one submission (Submission), never sent twice; the draft locks once it may have arrived.
+    const sendState = (S.subs || {}).review;
+    const locked = !!sendState && sendState !== "failed";
+    const sendIt = () => { set({ rfield: null }); submit("review"); };
+    // The first send and Send again ask the same way: the draft may have changed in between.
+    const confirmSend = () => set({ dialog: { title: "Send your review?", body: P.takes.map((t) => `${t.seg} ${t.take}: ${S.verdict[t.id] === "accept" ? "Accept" : S.verdict[t.id] === "note" ? "Accept with note" : "Send back — “" + (S.reason[t.id] || "").trim() + "”"}`).join("\n") + (P.takes.some((t) => S.verdict[t.id] === "back") ? "\nSending back shoots new takes: that spends." : ""), ok: "Send review", cancel: "Keep reviewing", run: sendIt } });
     useEffect(() => {
-      const kd = (e) => { if (/textarea|input/i.test(e.target.tagName) || S.screen !== "review" || ["sending", "sent", "unknown"].includes(S.rsend)) return;
+      const kd = (e) => { if (/textarea|input/i.test(e.target.tagName) || S.screen !== "review" || ((S.subs || {}).review && (S.subs || {}).review !== "failed")) return;
         if (e.key === " ") { e.preventDefault(); set({ playing: !S.playing }); }
         else if (e.key === "a" && S.watched[P.takes[S.ti].id]) setV("accept");
         else if (e.key === "b") setV("back"); else if (e.key === "n") setV("note");
@@ -604,17 +626,16 @@
             <span class="hint subtle">Keys: Space play · A accept · B send back · N accept with note · ↑↓ next take</span>
           </div>
           <div style="padding:10px 16px 0;border-top:1px solid var(--border);background:var(--surface-dim)"><input class="search" style="width:100%;height:32px" readonly=${locked} placeholder="Your words for the record, e.g. Approved. seg03 opens on Luca." value=${S.words || ""} onInput=${(e) => step("words", { words: e.target.value })}/></div>
-          ${sendState === "sending" || sendState === "sent" || sendState === "unknown"
-            ? html`<div class="sendbar sent" role="status">${I(sendState === "sent" ? "check-circle" : "circle-notch")}
-                <span class="grow" style="font-size:12px">${sendState === "sending" ? html`<b>Sending to EP006's agent…</b>` : sendState === "sent" ? html`<b>Sent to EP006 · the agent is on it.</b> <span class="muted">Your decisions are kept as sent; to change one, tell the agent in the panel.</span>` : html`<b>Sent, no answer yet.</b> <span class="muted">Checking whether EP006's agent has it. It is never sent twice.</span>`}</span>
-                ${sendState === "unknown" && html`<button class="btn sm" onClick=${() => { set({ rsend: "sending" }); outcome("sent"); }}>Check again</button>`}</div>`
+          ${locked
+            ? html`<div class="sendbar sent"><${Submission} id="review" to="EP006's agent" onSend=${confirmSend}/>
+                ${sendState === "sent" && html`<span class="muted" style="font-size:12px">Your decisions are kept as sent; to change one, tell the agent in the panel.</span>`}</div>`
             : html`<div class="sendbar">
-            ${sendState === "failed" && html`<span class="error-line" role="alert">${I("warning-circle")}Not sent: the connection dropped. Your draft is kept; send it again.</span>`}
+            ${sendState === "failed" && html`<${Submission} id="review" to="EP006's agent" onSend=${confirmSend}/>`}
             <span class="pips">${P.takes.map((t) => html`<i class=${S.verdict[t.id] === "accept" ? "a" : S.verdict[t.id] === "back" ? "b" : S.verdict[t.id] === "note" ? "n" : ""}></i>`)}</span>
             <span class="muted grow" style="font-size:12px">${done} of ${P.takes.length} decided${changed ? html` · <b style="color:var(--text-primary)">Draft: ${changed} ${changed === 1 ? "item" : "items"} changed</b>` : ""}</span>
             <button class="btn sm ghost" title="Undo the last change" disabled=${!(S.rhist || []).length} onClick=${() => { const h = [...S.rhist], last = h.pop(); set({ rhist: h, rfield: null, ...last }); }}>Undo</button>
             <button class="btn sm ghost" title="Discard the whole draft" disabled=${!changed} onClick=${() => { set({ verdict: {}, reason: {}, words: "", rhist: [], rfield: null }); toast("Draft discarded. Nothing was sent."); }}>Reset</button>
-            <button class="btn primary sm" disabled=${done < P.takes.length} onClick=${() => set({ dialog: { title: "Send your review?", body: P.takes.map((t) => `${t.seg} ${t.take}: ${S.verdict[t.id] === "accept" ? "Accept" : S.verdict[t.id] === "note" ? "Accept with note" : "Send back — “" + (S.reason[t.id] || "").trim() + "”"}`).join("\n") + (P.takes.some((t) => S.verdict[t.id] === "back") ? "\nSending back shoots new takes: that spends." : ""), ok: sendState === "failed" ? "Send again" : "Send review", cancel: "Keep reviewing", run: sendIt } })}>${sendState === "failed" ? "Send again" : "Send review"}</button></div>`}
+            ${sendState !== "failed" && html`<button class="btn primary sm" disabled=${done < P.takes.length} onClick=${confirmSend}>Send review</button>`}</div>`}
         </aside>
       </div></div>`;
   }
@@ -637,8 +658,8 @@
       <span class="sep"></span>
       <label class="select" style="gap:8px">State<select aria-label="State" value=${S.state} onChange=${(e) => { const v = e.target.value; set({ state: v, dramaStop: v === "stopping" ? "stopping" : v === "stopped" ? "stopped" : null }); }}>
         ${[["normal", "Normal"], ["fresh", "Nothing out of date"], ["cutnewer", "Cut: a newer cut exists"], ["cutinputs", "Cut: draft inputs changed"], ["nostop", "No stop yet"], ["stopping", "Stopping"], ["stopped", "Stopped"], ["redline", "Red line"], ["budget", "Refused (no code)"], ["cap", "Cap reached"], ["env", "Pine access denied"]].map(([k, l]) => html`<option value=${k}>${l}</option>`)}</select></label>
-      <label class="select" style="gap:8px" title="What happens when something is sent: a review, a Reconcile">Outcome<select aria-label="Outcome" value=${S.outcome} onChange=${(e) => set({ outcome: e.target.value })}>
-        ${[["ok", "Goes through"], ["failed", "Fails"], ["unknown", "Unknown"]].map(([k, l]) => html`<option value=${k}>${l}</option>`)}</select></label>
+      <label class="select" style="gap:8px" title="What a send, a check or a Reconcile finds">Outcome<select aria-label="Outcome" value=${S.outcome} onChange=${(e) => set({ outcome: e.target.value })}>
+        ${[["ok", "Goes through"], ["refused", "Not submitted (the engine says)"], ["unknown", "No answer"]].map(([k, l]) => html`<option value=${k}>${l}</option>`)}</select></label>
       <span class="sep"></span>
       <div class="seg" role="group" aria-label="Theme">${[["dark", "Dark", "moon-stars"], ["light", "Light", "sun-dim"]].map(([k, l, ic]) => html`<button aria-pressed=${String(S.theme === k)} onClick=${() => set({ theme: k })}>${I(ic)}${l}</button>`)}</div>
       <span class="sep"></span><span>Phase 1: steering, and editing the cut's spec · Canvas and Lineage read-only · sample project, our own test pictures</span>
@@ -651,6 +672,6 @@
     return html`<${Proto}/><div class="app"><${Rail}/><${Side}/>${main}</div><${Dialog}/>
       <div class="toasts" aria-live="polite">${S.toasts.map((t) => html`<div class="toast">${t.text}${t.action && html`<button onClick=${t.action.run}>${t.action.label}</button>`}</div>`)}</div>`;
   }
-  window.PD = { html, I, S, set, go, jump, openHome, openLineage, toast, money, Status, TopBar, StopBanner, EpisodeViews, ProjectChips, AgentPanel, SPENT_COVERS, useEffect, useRef, Mark, draw };
+  window.PD = { html, I, S, set, go, jump, openHome, openLineage, toast, money, Status, TopBar, StopBanner, EpisodeViews, ProjectChips, AgentPanel, SPENT_COVERS, useEffect, useRef, Mark, draw, Submission, submit, recheck };
   // screens.js draws first, once its screens are registered.
 })();

@@ -782,3 +782,8 @@ input.why { height: 32px; border-radius: var(--radius-medium); border: 1px solid
 @media (max-width: 1100px) {
   .side.drawer-open { display: flex; position: fixed; left: var(--rail); top: var(--proto); bottom: 0; z-index: 60; box-shadow: var(--shadow-dialog); }
 }
+/* Codex round 3 (fix 1): one submission's state (app.js, Submission), wherever something is sent. */
+.subst { display: inline-flex; align-items: center; gap: 8px; min-width: 0; font-size: 12px; }
+.subst .ic { width: 16px; height: 16px; flex: none; }
+.subst[role="alert"] .ic { color: var(--error); }
+.subst .btn { flex: none; }

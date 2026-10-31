@@ -278,7 +278,7 @@
     // A redo remakes items, which spends: it asks first with its impact (§15), and is one submission to the owner's session
     // (§14.6): sending → sent, failed (send again, the same submission) or unknown (checked, never sent twice), shown here.
     const sent = S.redo || {};
-    const send = (g) => { set({ redo: { ...sent, [g]: "sending" } }); setTimeout(() => set({ redo: { ...S.redo, [g]: { ok: "sent", failed: "failed", unknown: "unknown" }[S.outcome] } }), 1200); };
+    const send = (g) => { set({ redo: { ...sent, [g]: "sending" } }); setTimeout(() => set({ redo: { ...S.redo, [g]: { ok: "sent", refused: "failed", unknown: "unknown" }[S.outcome] } }), 1200); };
     const check = (g) => { set({ redo: { ...sent, [g]: "checking" } }); setTimeout(() => set({ redo: { ...S.redo, [g]: "sent" } }), 1200); };
     const redo = (g, rows) => set({ dialog: { title: `Ask ${owner(g)} to redo ${rows.length} items?`,
       body: `${owner(g)[0].toUpperCase() + owner(g).slice(1)} will remake ${rows.length} items: ${rows.map((r) => r.full).join(", ")}. It spends from the drama's budget; the earlier versions stay.`,
@@ -358,7 +358,7 @@
     const apply = () => {
       set({ cutApply: "sending" });
       setTimeout(() => set({ cutApply: "building" }), 900);
-      setTimeout(() => set({ cutApply: { ok: "ready", failed: "failed", unknown: "unknown" }[S.outcome] }), 4200);
+      setTimeout(() => set({ cutApply: { ok: "ready", refused: "failed", unknown: "unknown" }[S.outcome] }), 4200);
     };
     const discard = () => { set({ cutEd: cutBase(), cutEdHist: [], cutRebased: false, cutCheck: null, cutCompare: false }); toast("Draft discarded. Nothing was applied."); };
     let acc = 0;
