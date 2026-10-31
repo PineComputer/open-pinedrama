@@ -99,27 +99,40 @@
     const head = (x) => { const shown = shownOf(x); return html`
       <div style="display:flex;align-items:baseline;gap:8px"><b class="grow">${x.name}</b><span class="mono subtle" style="font-size:11px">${shown}</span>
         ${shown !== x.ver && html`<span class="mono muted" style="font-size:11px">current ${x.ver}</span>`}</div>`; };
-    /* J1: an asset's one home is its card here, opened as a detail beside the grid (as Lineage's inspector sits beside
-       its graph): its versions, state, findings and review, its spec, and Lineage. The canvas and Lineage link to it. */
+    /* J1: an asset's one home is its card here, opened in the viewer below: its versions, state, findings and review,
+       and Lineage. The canvas and Lineage link to it. */
     const openCard = (id) => ({ role: "button", tabindex: 0, onClick: () => set({ asel: id, at: null }), onKeyDown: (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); set({ asel: id, at: null }); } } });
-    const AssetDetail = ({ x }) => { const shown = shownOf(x), all = versionsOf(x), cur = shown === x.ver, lin = lineageOf(x.id);
+    /* The asset viewer (merecdesperez44323-lab: "弹出大图可以，做吧"): a lightbox over the grid, as LibTV's asset viewer,
+       Google Photos and Lightroom have it: the picture as large as the window allows at its own ratio on a dimmed backdrop,
+       the details in a side panel, ←/→ through the shelf, Esc back to the grid with focus on the card (WAI-ARIA APG modal
+       dialog). The product uses yet-another-react-lightbox; this is its draft. One place to view an asset. */
+    const AssetViewer = ({ x, list }) => { const shown = shownOf(x), all = versionsOf(x), cur = shown === x.ver, lin = lineageOf(x.id);
       const src = x.sheet || x.pic, kind = { cast: "Character", scenes: "Location", props: "Prop" }[S.stab];
-      return html`<aside class="insp" aria-label=${x.name}>
-        <div class="ihead"><div style="display:flex;align-items:center;gap:8px"><b class="grow">${x.name}</b><button class="ibtn" aria-label="Close" onClick=${() => set({ asel: null, at: null })}>${I("x")}</button></div>
-          <small>${kind} · ${kindOf} ${shown}</small>
-          <button class="btn sm" disabled=${!lin} title=${lin ? "" : "Lineage: this sample traces seg03 and what it reads"} onClick=${() => openLineage(lin, x.name + " · Assets")}>${I("tree-structure")}Lineage</button></div>
-        <div class="iscroll">
-          <div class="isec">${cur ? html`<img class="assetbig" src=${src} alt=""/>` : html`<p class="subtle">${shown}'s picture isn't in this sample.</p>`}
-            ${x.views && html`<div class="viewstrip" role="group" aria-label="Views">${x.views.map((v, i) => html`<button aria-pressed=${String(i === 0)} onClick=${() => toast("Shows the " + v + " view large. This sample has the plate only.")}><img src=${src} alt=""/><small>${v}</small></button>`)}</div>`}</div>
-          ${x.desc && html`<div class="isec"><p class=${"desc" + (S.more ? "" : " clamp3")}>${x.desc}</p><button class="linkbtn" onClick=${() => set({ more: !S.more })}>${S.more ? "Less" : "More"}</button></div>`}
-          <div class="isec"><h4>Versions <span class="muted">${all.length}</span></h4>
+      const i = list.findIndex((y) => y.id === x.id);
+      const step = (d) => set({ asel: list[(i + d + list.length) % list.length].id, at: null });
+      const close = () => { set({ asel: null, at: null }); setTimeout(() => document.querySelector(`[data-asset="${x.id}"]`)?.focus()); };
+      useEffect(() => { const key = (e) => { if (e.key === "Escape") close(); else if (e.key === "ArrowLeft") step(-1); else if (e.key === "ArrowRight") step(1); };
+        window.addEventListener("keydown", key); return () => window.removeEventListener("keydown", key); }, [x.id]);
+      useEffect(() => { document.querySelector(".lbox")?.focus(); }, []);
+      return html`<div class="lbox" role="dialog" aria-modal="true" aria-label=${x.name} tabindex="-1">
+        <div class="lbstage">
+          ${cur ? html`<img src=${src} alt=${x.name}/>` : html`<p class="subtle">${shown}'s picture isn't in this sample.</p>`}
+          ${list.length > 1 && html`<button class="lbnav prev" aria-label="Previous asset" title="Previous (←)" onClick=${() => step(-1)}>${I("caret-left")}</button>
+            <button class="lbnav next" aria-label="Next asset" title="Next (→)" onClick=${() => step(1)}>${I("caret-right")}</button>`}
+          <span class="lbcount mono">${i + 1} / ${list.length}</span></div>
+        <aside class="lbpanel" aria-label="Details">
+          <div class="lbhead"><b class="grow">${x.name}</b><button class="ibtn" aria-label="Close (Esc)" title="Close (Esc)" onClick=${close}>${I("x")}</button></div>
+          <p class="muted lbkind">${kind} · ${kindOf} ${shown}</p>
+          <div class="lbrow">${cur ? Status(x.st === "stale" ? "accepted" : x.st) : shown === x.accepted ? Status("accepted") : html`<span class="subtle">Not the accepted version.</span>`}${x.problems && Status("stale", "Out of date")}
+            <span class="grow"></span><button class="btn sm" disabled=${!lin} title=${lin ? "" : "Lineage: this sample traces seg03 and what it reads"} onClick=${() => { set({ asel: null }); openLineage(lin, x.name + " · Assets"); }}>${I("tree-structure")}Lineage</button></div>
+          ${cur && x.st === "you" && html`<div class="lbsec"><h4>Your review</h4>${S.stab === "cast" && html`<div class="finding warn">${I("warning")}<span>warn · The blouse reads as purple; the bible says plum.</span></div>`}<${ReviewBtns} id=${x.id}/></div>`}
+          ${cur && x.st === "back" && html`<div class="lbsec"><div class="finding err">${I("warning-circle")}<span>Sent back by the agent: the observer found an error (a third hand). Redrawing.</span></div></div>`}
+          ${cur && x.problems && html`<div class="lbsec"><h4>Why it's out of date</h4>${x.problems.map((said) => html`<div class="finding warn">${I("warning")}<span>${said}</span></div>`)}</div>`}
+          <div class="lbsec"><h4>Versions <span class="muted">${all.length}</span></h4>
             <div class="vstrip" role="group" aria-label=${"Versions of " + x.name}>${all.map((v) => html`<button aria-pressed=${String(v === shown)} onClick=${() => set({ at: { kind: kindOf, ver: v } })}>${v.replace(/^.* /, "")}</button>`)}</div>
-            <p class="mono subtle" style="font-size:11.5px;margin:8px 0 6px">current ${x.ver} · ${x.accepted ? "accepted " + x.accepted : "none accepted"}</p>
-            <div style="display:flex;gap:6px;flex-wrap:wrap">${cur ? Status(x.st === "stale" ? "accepted" : x.st) : shown === x.accepted ? Status("accepted") : html`<span class="subtle">Not the accepted version.</span>`}${x.problems && Status("stale", "Out of date")}</div></div>
-          ${cur && x.problems && html`<div class="isec"><h4>Why it's out of date</h4>${x.problems.map((said) => html`<div class="finding warn">${I("warning")}<span>${said}</span></div>`)}<p class="subtle">The agent redraws it.</p></div>`}
-          ${cur && x.st === "you" && html`<div class="isec"><h4>Your review</h4>${S.stab === "cast" && html`<div class="finding warn">${I("warning")}<span>warn · The blouse reads as purple; the bible says plum.</span></div>`}<${ReviewBtns} id=${x.id}/></div>`}
-          ${cur && x.st === "back" && html`<div class="isec"><h4>Review</h4><div class="finding err">${I("warning-circle")}<span>Sent back by the agent: the observer found an error (a third hand). Redrawing.</span></div></div>`}
-        </div></aside>`; };
+            <p class="mono subtle" style="font-size:11.5px;margin:8px 0 0">current ${x.ver} · ${x.accepted ? "accepted " + x.accepted : "none accepted"}</p></div>
+          ${x.desc && html`<div class="lbsec"><p class=${"desc" + (S.more ? "" : " clamp3")}>${x.desc}</p><button class="linkbtn" onClick=${() => set({ more: !S.more })}>${S.more ? "Less" : "More"}</button></div>`}
+        </aside></div>`; };
     // An older version keeps its own state: accepted if status says so; the review and findings belong to the current one.
     const pic = (x, src, chip) => (shownOf(x) === x.ver
       ? html`<div class="pic"><img src=${src} alt=""/>${chip}</div>`
@@ -151,7 +164,8 @@
           <div class="ctxt"><span class="cardname"><b>${x.name}</b></span><span class="mono subtle">${shownOf(x)}</span></div></article>`)}</div>`}
         ${S.stab !== "bible" && html`<div class="sendstrip"><span class="muted">Looks and plates · ${decided} of 2 decided</span><span class="grow"></span>
           <button class="btn primary sm" disabled=${decided < 2} onClick=${() => toast("Review sent: Margaret Cole and Garden wedding.")}>Send review</button></div>`}
-      </div>${asset ? html`<${AssetDetail} x=${asset}/>` : html`<${AgentPanel}/>`}</div></div>`;
+      </div><${AgentPanel}/></div>
+      ${asset && html`<${AssetViewer} x=${asset} list=${{ cast: P.cast, scenes: P.places, props: P.props }[S.stab]}/>`}</div>`;
   }
 
   /* ───── Graph: lineage, read-only ───── */
