@@ -42,7 +42,7 @@ export function Bible({ dramaId }: { dramaId: string }) {
       <div style={{ padding: "0 16px" }}>
         <div className="tabsrow" style={{ margin: "4px 0 18px" }}>
           <div>
-            <h2 className="pagetitle">{t("step.bible")}</h2>
+            <h1 className="pagetitle">{t("step.bible")}</h1>
             <p className="muted pagesub">{t("bible.subtitle")}</p>
           </div>
           <span className="fill" />
@@ -74,10 +74,10 @@ export function Bible({ dramaId }: { dramaId: string }) {
             </section>
           )}
           <section className="panel wide" aria-label={t("cast.episodes")}>
-            <h3>
+            <h2>
               <Icon name="film-strip" className="ic" />
               {t("cast.episodes")}
-            </h3>
+            </h2>
             <div className="delivwrap flush">
               <table className="deliv bibleeps">
                 <thead>

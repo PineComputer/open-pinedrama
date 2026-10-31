@@ -37,7 +37,9 @@ describe("the Bible", () => {
     await renderAt(<Bible dramaId="d1" />, "/d/d1/bible");
     expect(await screen.findByText("A stepmother wins the house.")).toBeInTheDocument();
     expect(screen.getByText("Warm domestic drama, fast.")).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Bible" })).toBeInTheDocument();
+    // The page's title is its one h1, its sections h2 under it (axe page-has-heading-one, heading-order; Codex rc5 C21).
+    expect(screen.getByRole("heading", { level: 1, name: "Bible" })).toBeInTheDocument();
+    expect(screen.getAllByRole("heading").map((heading) => heading.tagName)).toEqual(["H1", ...screen.getAllByRole("heading").slice(1).map(() => "H2")]);
   });
 
   it("shows an episode's seconds rounded for reading, drama-cli's exact est_seconds in its title", async () => {

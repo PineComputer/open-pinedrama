@@ -294,13 +294,13 @@ function AssetPanel({ card, state, names, dramaId, onShow }: { card: CastCard; s
         </div>
         {review && !waiting && (
           <div className="isec">
-            <h4>{t("asset.yourDecision", { v: sheet?.version ?? "" })}</h4>
+            <h2>{t("asset.yourDecision", { v: sheet?.version ?? "" })}</h2>
             <JudgedLine review={review} />
           </div>
         )}
         {card.episodes.length > 0 && (
           <div className="isec">
-            <h4>{t("cast.in")}</h4>
+            <h2>{t("cast.in")}</h2>
             <div className="aka">
               {card.episodes.map((code) => (
                 <Link key={code} to="/d/$dramaId/e/$episodeCode/canvas" params={{ dramaId, episodeCode: code }} className="tag">
@@ -311,9 +311,9 @@ function AssetPanel({ card, state, names, dramaId, onShow }: { card: CastCard; s
           </div>
         )}
         <div className="isec">
-          <h4>
+          <h2>
             {t("asset.versions")} <span className="muted">{versions.length}</span>
-          </h4>
+          </h2>
           <div className="vstrip" role="group" aria-label={t("cast.versions", { name })}>
             {versions.map((version, i) => (
               <button key={version.turnId} type="button" aria-pressed={i === index} onClick={() => pick(i)}>
@@ -404,9 +404,9 @@ export function Cast({ dramaId, compact = false }: { dramaId: string; compact?: 
     <>
       <div style={{ padding: "0 16px" }}>
         <div className="tabsrow" style={{ margin: "4px 0 18px" }}>
-          <h2 className="pagetitle">
+          <h1 className="pagetitle">
             {label} <span className="muted">· {cards.length}</span>
-          </h2>
+          </h1>
           <span className="fill" />
           <span className="muted" style={{ fontSize: 12 }}>
             {t("cast.shared")}

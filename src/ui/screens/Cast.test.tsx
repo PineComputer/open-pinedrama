@@ -65,7 +65,7 @@ describe("Assets", () => {
     const user = userEvent.setup();
     engine();
     await renderAt(<Cast dramaId="d1" />, "/d/d1/assets/characters");
-    expect(await screen.findByRole("heading", { name: /Characters\s*· 1/ })).toBeInTheDocument();
+    expect(await screen.findByRole("heading", { level: 1, name: /Characters\s*· 1/ })).toBeInTheDocument();
     expect(screen.queryByRole("tab")).not.toBeInTheDocument();
     const lin = await screen.findByRole("article", { name: "Lin Xiaoyu" });
     expect(lin.querySelector(".ctxt")).toHaveTextContent(/^Lin Xiaoyuv2$/);
@@ -75,6 +75,8 @@ describe("Assets", () => {
     await user.click(within(lin).getByRole("link", { name: "Lin Xiaoyu" }));
     const detail = await screen.findByRole("complementary", { name: "Lin Xiaoyu: versions, state and review" });
     expect(detail).toHaveTextContent("Also called Xiaoyu");
+    // The detail's sections are h2 under the page's h1 (axe heading-order; Codex rc5 C21).
+    expect(new Set(within(detail).getAllByRole("heading").map((heading) => heading.tagName))).toEqual(new Set(["H2"]));
     expect(within(detail).getByRole("link", { name: "EP001" })).toHaveAttribute("href", "/d/d1/e/EP001/canvas");
   });
 

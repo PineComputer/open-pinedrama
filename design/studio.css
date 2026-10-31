@@ -399,7 +399,7 @@ input.search:focus { border-color: var(--text-primary); }
 .insp .ihead .btn { margin-top: 10px; }
 .insp .iscroll { flex: 1; overflow: auto; padding: 4px 16px 16px; }
 .isec { padding: 12px 0; border-bottom: 1px solid var(--border-subtle); }
-.isec h4 { margin: 0 0 8px; font-size: 11px; font-weight: 600; color: var(--text-muted); letter-spacing: .4px; text-transform: uppercase; display: flex; align-items: center; gap: 8px; }
+.isec :is(h2, h4) { margin: 0 0 8px; font-size: 11px; font-weight: 600; color: var(--text-muted); letter-spacing: .4px; text-transform: uppercase; display: flex; align-items: center; gap: 8px; }
 .kv { display: grid; grid-template-columns: 90px 1fr; gap: 6px 10px; font-size: 12.5px; }
 .kv dt { color: var(--text-muted); } .kv dd { margin: 0; color: var(--text-primary); font-variant-numeric: tabular-nums; }
 .shots { margin: 0; padding: 0; list-style: none; display: grid; gap: 4px; }
@@ -455,8 +455,8 @@ input.search:focus { border-color: var(--text-primary); }
 
 /* ── shared panels ── */
 .panel { border-radius: var(--radius-2xl); border: 1px solid var(--border); background: var(--surface); padding: var(--space-2xl) var(--space-3xl); min-width: 0; }
-.panel h3 { margin: 0 0 12px; display: flex; align-items: center; gap: 8px; font-size: 13.5px; font-weight: 700; color: var(--text-primary); }
-.panel h3 .ic { width: 16px; height: 16px; color: var(--text-muted); }
+.panel :is(h2, h3) { margin: 0 0 12px; display: flex; align-items: center; gap: 8px; font-size: 13.5px; font-weight: 700; color: var(--text-primary); }
+.panel :is(h2, h3) .ic { width: 16px; height: 16px; color: var(--text-muted); }
 .kick { display: block; font-size: 11.5px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; }
 .finding { display: flex; gap: 8px; align-items: flex-start; padding: 8px 10px; border-radius: var(--radius-medium); font-size: 12px; line-height: 1.45; color: var(--text-secondary); }
 .finding .ic { width: 14px; height: 14px; margin-top: 1px; }
@@ -933,7 +933,7 @@ button.drow { cursor: pointer; } button.drow:hover { background: var(--hover); }
 /* Script's surfaces (SPEC.md, Shape and alignment): Versions and the editor are surfaces (radius-2xl, 16px down and 20px
    across), on the one 16px column, 16px apart; inside the editor no second box, the tab square where it meets the bar. */
 .scripthistory { border: 1px solid var(--border); border-radius: var(--radius-2xl); background: var(--surface); padding: 16px 20px; }
-.scripthistory h3 { display: flex; align-items: center; gap: 6px; margin: 0; font-size: 12px; font-weight: 600; color: var(--text-muted); }
+.scripthistory h2 { display: flex; align-items: center; gap: 6px; margin: 0; font-size: 12px; font-weight: 600; color: var(--text-muted); }
 .editor { border: 1px solid var(--border); border-radius: var(--radius-2xl); background: var(--surface); overflow: hidden; min-width: 0; }
 .editor .edbar { padding: 0 6px 0 0; background: var(--surface-container); }
 .editor .edtab { border: 0; border-right: 1px solid var(--border); border-radius: 0; margin: 0; padding: 10px 14px; background: var(--surface); }

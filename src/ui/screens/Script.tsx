@@ -272,7 +272,7 @@ function ScriptBody({ dramaId, data, ep, settingUp, asking }: { dramaId: string;
     <>
       <div className="scripthead">
         <div className="fill">
-          <h2 className="pagetitle">{t("step.script")}</h2>
+          <h1 className="pagetitle">{t("step.script")}</h1>
           <p className="muted pagesub">{t("script.subtitle")}</p>
         </div>
       </div>
@@ -284,10 +284,10 @@ function ScriptBody({ dramaId, data, ep, settingUp, asking }: { dramaId: string;
       )}
       <div className="scriptlayout">
         <section className="scripthistory" aria-label={t("script.versions")}>
-          <h3>
+          <h2>
             <Icon name="stack" className="ic" />
             {t("script.versions")}
-          </h3>
+          </h2>
           <ol className="history">
             {/* A question on a version is that version's row; one before any version is about the upload. */}
             {asking && !data.versions.length && <AskedRow reviewId={asking} />}

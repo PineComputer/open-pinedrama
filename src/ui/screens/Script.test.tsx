@@ -48,6 +48,11 @@ describe("Script", () => {
     ]);
     expect(within(versions).getByText(/accepted in your words: “Yes, this is my script\.”/)).toBeInTheDocument();
     expect(document.querySelector(".edtab")).toHaveTextContent("screenplay.fountainv2Read-only");
+    // Script's title is the page's h1, Versions an h2 under it (axe page-has-heading-one, heading-order; Codex rc5 C21).
+    expect(screen.getAllByRole("heading").map((heading) => [heading.tagName, heading.textContent])).toEqual([
+      ["H1", "Script"],
+      ["H2", "Versions"],
+    ]);
   });
 
   it("shows the version picked in its history, and the URL names it (D48)", async () => {
