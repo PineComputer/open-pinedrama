@@ -220,11 +220,11 @@ export function CutEdit({ review, file, clips, files, code }: { review: ReviewVi
               <label className="muted" htmlFor="edit-in">
                 {t("edit.in")}
               </label>
-              <input id="edit-in" className="mono" type="number" step="0.1" min={0} value={clip.in} onChange={(event) => put(selected, { in: Math.max(0, Number(event.target.value)) })} />
+              <input id="edit-in" className="mono" type="number" step="0.1" min={0} value={Number(clip.in.toFixed(3))} onChange={(event) => put(selected, { in: Math.max(0, Number(event.target.value)) })} />
               <label className="muted" htmlFor="edit-out">
                 {t("edit.out")}
               </label>
-              <input id="edit-out" className="mono" type="number" step="0.1" min={clip.in} value={clip.out} onChange={(event) => put(selected, { out: Number(event.target.value) })} />
+              <input id="edit-out" className="mono" type="number" step="0.1" min={clip.in} value={Number(clip.out.toFixed(3))} onChange={(event) => put(selected, { out: Number(event.target.value) })} />
               <span className="muted">{t("edit.sound")}</span>
               <div className="seg">
                 {(["source", "silence"] as const).map((audio) => (
