@@ -1072,12 +1072,17 @@ timeline
   the agent's revisions into Fountain, the maker's acceptance, and the comparison of what changed.
   The tree's Script row carries its state as an episode row does (its now-line and dot), and the page
   shows the process as a vertical version history, newest on top: drama-cli's words where its check
-  refuses, each version opening its review.md, Accept on the one that waits, collapsed once accepted.
+  refuses, collapsed once accepted. Each version is selectable and carries its own document,
+  review.md and validate result; a refused version stays in the history. On the version that waits,
+  Accept and Send back are peers: Accept needs the maker's words and Send back a reason, both
+  required, and either is one submission to the setup session through the shared Submission
+  ([D25](#d25-2026-10-30--one-submission-state-for-every-send)), not a toast.
   There is no horizontal stepper. The page is a read-only editor, as VS Code's: the open file as a
   tab with a lock and "Read-only", and icon actions on the right (Show the original, Show the
   Fountain, Compare), each with a tooltip and an accessible name. Compare is a diff editor (two panes,
-  a gutter, changed rows tinted, scrolling in step), whose changes come from drama-cli's review.md
-  line map, never a diff of the studio's own. There is no outline: Script is the document, and an
+  a gutter, changed rows tinted, one scroll) whose rows are aligned by drama-cli's review.md line map,
+  one line to many, with hatched fillers where a side has none: never a diff of the studio's own and
+  no scrolling by percentage. There is no outline: Script is the document, and an
   episode's script scrolls to its section. A change goes through the agent: Send back while a
   version waits; after acceptance the maker asks the agent, which writes a new version that
   drama-cli checks and the maker accepts. Analyzing and the Fountain review fold into
@@ -1087,7 +1092,8 @@ timeline
   vertical tree, which merecdesperez44323-lab rejected.
 - **Grounds.** merecdesperez44323-lab's decision; GitHub's pull-request timeline; Figma's and Google
   Docs' version history; VS Code's editor title area, diff editor and read-only editor
-  (`files.readonly`); Apple's HIG, toolbar icon buttons with a tooltip and a name; Nielsen's first heuristic, visibility of system status;
+  (`files.readonly`) and side-by-side diff; GitHub's review (Approve and Request changes, with a
+  comment); Codex's round 4, F3 and F5; Apple's HIG, toolbar icon buttons with a tooltip and a name; Nielsen's first heuristic, visibility of system status;
   one home per object and five maker-facing states ([design principles](design-principles.md), 1 and 4).
 - **Consequences.** Design first, then the product after Codex's review and merecdesperez44323-lab's
   yes; D21's Analyzing route may change with the draft.
@@ -1101,7 +1107,8 @@ timeline
   有点儿重复啊， 是不是就直接诶就简单是文档算了" (*and there are episodes here and episodes below, a bit
   repetitive; shouldn't it simply be a document*); "当然 是否允许用户改是个问题， 暂时先不允许用户改？"
   (*whether to let the user edit is a question; not for now?*), relayed by master.
-- **Recorded in.** Design commits 46b2c73 and f12ca5e (the editor); master's and work-02's notes,
+- **Recorded in.** Design commits 46b2c73, f12ca5e (the editor) and a1fc671 (the decision and
+  Compare); master's and work-02's notes,
   30 October 2026.
 
 ## D63. 2026-10-30 · An episode's views are Segments and Canvas; Segments is a matrix
